@@ -34,10 +34,10 @@ function cleanResult(raw) {
   // buang markdown (*bold* / _italic_) — gak mau simbol aneh di menu
   t = t.replace(/[*_~`]+/g, "");
   t = t.replace(/\s{2,}/g, " ").trim();
-  // max ±110 karakter biar masih 1-2 baris rapi di menu
-  if (t.length > 110) t = t.slice(0, 110).trim();
+  // max ±300 karakter — 2-3 kalimat pengenalan yang lengkap
+  if (t.length > 300) t = t.slice(0, 300).trim();
   // tolak hasil yang gak masuk akal (terlalu pendek / cuma tanda baca)
-  if (t.length < 5 || !/[a-zA-Z]/.test(t)) return null;
+  if (t.length < 20 || !/[a-zA-Z]/.test(t)) return null;
   return t;
 }
 
@@ -45,21 +45,22 @@ function cleanResult(raw) {
 // (semacam system prompt — IKY cuma punya 1 param text, jadi digabung)
 function buildPrompt() {
   const botName = config.bot?.name || "Nova AI";
-  const owner = config.owner?.name || "Aizat";
   return (
     `[IDENTITAS KAMU]\n` +
-    `Kamu adalah ${botName}, bot WhatsApp buatan ${owner}. ` +
-    `Bot ini punya ratusan fitur: downloader TikTok/YouTube/Instagram, ` +
-    `pembuat stiker, AI chat & AI image, game & RPG, convert media, ` +
-    `tools grup, dan banyak lagi.\n\n` +
+    `Kamu adalah ${botName}, bot WhatsApp serba bisa. ` +
+    `JANGAN sebut pembuat/owner bot sama sekali.\n\n` +
     `[TUGAS]\n` +
-    `Buat SATU kalimat pembuka menu yang menyapa pengguna sesuai waktu ` +
-    `${timeOfDay()} sambil memperkenalkan diri sebagai bot atau mengajak ` +
-    `mencoba fiturnya (sebut maksimal 2 fitur, variasikan fitur yang disebut). ` +
-    `Bahasa Indonesia santai-ramah, maksimal 18 kata, tanpa emoji, ` +
-    `tanpa tanda kutip, tanpa kata "Nova AI Official". ` +
-    `PENTING: setiap jawaban WAJIB kalimatnya berbeda dari biasanya — jangan ` +
-    `pakai pola kalimat yang sama. Balas dengan kalimatnya saja.`
+    `Buat pengenalan diri 2-3 kalimat untuk membuka menu: sapa pengguna ` +
+    `sesuai waktu ${timeOfDay()}, lalu jelaskan dengan runtut kegunaan ` +
+    `fitur-fitur bot — contoh: download video/audio dari TikTok, YouTube, ` +
+    `dan Instagram; bikin stiker dari gambar/video; ngobrol dan bikin gambar ` +
+    `pakai AI; main game & RPG seru; convert media ke format apa pun; ` +
+    `plus tools grup dan ratusan fitur lain. Variasikan fitur yang dijelaskan ` +
+    `dan urutan kalimatnya di setiap jawaban. Bahasa Indonesia santai-ramah, ` +
+    `total maksimal 45 kata, tanpa emoji, tanpa tanda kutip, tanpa markdown. ` +
+    `PENTING: setiap jawaban WAJIB berbeda pola kalimatnya — jangan pakai ` +
+    `pembuka "Selamat pagi/siang/sore/malam, aku/saya ${botName}" terus. ` +
+    `Balas dengan pengenalannya saja.`
   );
 }
 
