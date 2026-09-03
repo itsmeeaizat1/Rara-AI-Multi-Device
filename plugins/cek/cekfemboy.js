@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
         ? `Hai @${mentioned.split("@")[0]}
 
 ${result.hasil}`
-        : `Kamu ingin ngecek tingkat kefemboyan @${mentioned.split("@")[0]} yak? 
+        : `Cek tingkat kefemboyan @${mentioned.split("@")[0]}
 
 ${result.hasil}`;
 
