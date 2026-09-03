@@ -174,6 +174,7 @@ function collectRpgUsers(senderJid) {
       cinta:       cintaAffection,
       lovePower,
       hasSpouse,
+      warWin:      (rpg?.cinta?.warWin || rpg?.coupleWarWins || 0),
       rpg, // raw object — buat metrik deep-path mini game (mancing/ojek/slot/dll)
     })
   }
@@ -457,10 +458,11 @@ const ALL_FIELDS = [
   { key: 'limit',       group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟɪᴍɪᴛ',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
 ]
 
-// Section header — pembeda kategori di .leaderboard all (mini game di atas, rpg di bawah)
+// Section header — pembeda kategori di .leaderboard all (mini game di atas, rpg, couple di bawah)
 const SECTIONS = [
-  { group: 'game', title: 'ᴍɪɴɪ ɢᴀᴍᴇ & ꜱᴛᴀᴛꜱ' },
-  { group: 'rpg',  title: 'ʀᴘɢ ᴄᴏʀᴇ' },
+  { group: 'game',   title: 'ᴍɪɴɪ ɢᴀᴍᴇ & ꜱᴛᴀᴛꜱ' },
+  { group: 'rpg',    title: 'ʀᴘɢ ᴄᴏʀᴇ' },
+  { group: 'couple', title: 'ᴄᴏᴜᴘʟᴇ' },
 ]
 
 async function showAllLeaderboards(m, sock) {
@@ -498,21 +500,48 @@ async function showAllLeaderboards(m, sock) {
     sec.boardBlocks.push(block)
   }
 
-  // Board cinta (khusus yang udah punya pasangan) → masuk section RPG
-  const cintaUsers = users.filter((u) => u.hasSpouse).sort((a, b) => b.lovePower - a.lovePower)
+  // ── Section COUPLE — board khusus yang udah punya pasangan ──
+  const cintaUsers = users.filter((u) => u.hasSpouse)
   if (cintaUsers.length > 0) {
-    const rpgSec = sections.find(s => s.group === 'rpg')
-    const champ = cintaUsers[0]
-    rpgSec.summaryLines.push(`Cinta: ${formatNumber(champ.lovePower)} LP (@${champ.jid.split('@')[0]})`)
-    mentions.push(mkJid(champ))
+    const coupleSec = sections.find(s => s.group === 'couple')
 
-    let block = `▌ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴄɪɴᴛᴀ\n`
-    cintaUsers.slice(0, 5).forEach((u, i) => {
-      const medal = MEDALS[i] || `${i + 1}.`
-      block += `${medal} @${u.jid.split('@')[0]}${u.jid === senderJid ? ' *(You)*' : ''}\n   ${formatNumber(u.cinta)} affection | ${formatNumber(u.lovePower)} LP\n`
-      mentions.push(mkJid(u))
-    })
-    rpgSec.boardBlocks.push(block)
+    // helper biar gak ngulang
+    const pushCoupleBoard = (title, summaryLabel, sorted, subLabel) => {
+      const champ = sorted[0]
+      coupleSec.summaryLines.push(`${summaryLabel} (@${champ.jid.split('@')[0]})`)
+      mentions.push(mkJid(champ))
+      let block = `▌${title}\n`
+      sorted.slice(0, 5).forEach((u, i) => {
+        const medal = MEDALS[i] || `${i + 1}.`
+        block += `${medal} @${u.jid.split('@')[0]}${u.jid === senderJid ? ' *(You)*' : ''}\n   ${subLabel(u)}\n`
+        mentions.push(mkJid(u))
+      })
+      const myRank = sorted.findIndex((u) => u.jid === senderJid)
+      if (myRank !== -1) block += `Kamu: #${myRank + 1} dari ${formatNumber(sorted.length)}\n`
+      coupleSec.boardBlocks.push(block)
+    }
+
+    // Love Power — kekuatan cinta (affection + level + bonus job)
+    pushCoupleBoard(
+      'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴄɪɴᴛᴀ',
+      `Cinta: ${formatNumber(cintaUsers.slice().sort((a, b) => b.lovePower - a.lovePower)[0].lovePower)} LP`,
+      cintaUsers.slice().sort((a, b) => b.lovePower - a.lovePower),
+      (u) => `${formatNumber(u.cinta)} affection | ${formatNumber(u.lovePower)} LP`
+    )
+    // Affection — poin kasih sayang murni
+    pushCoupleBoard(
+      'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴀꜰꜰᴇᴄᴛɪᴏɴ',
+      `Affection: ${formatNumber(cintaUsers.slice().sort((a, b) => b.cinta - a.cinta)[0].cinta)} pts`,
+      cintaUsers.slice().sort((a, b) => b.cinta - a.cinta),
+      (u) => `${formatNumber(u.cinta)} affection | ${formatNumber(u.lovePower)} LP`
+    )
+    // Couple War — kemenangan duel pasangan
+    pushCoupleBoard(
+      'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴄᴏᴜᴘʟᴇ ᴡᴀʀ',
+      `Couple War: ${cintaUsers.slice().sort((a, b) => b.warWin - a.warWin)[0].warWin} wins`,
+      cintaUsers.slice().sort((a, b) => b.warWin - a.warWin),
+      (u) => `${u.warWin} couple war wins`
+    )
   }
 
   // ── Assemble: bagian VISIBLE — ringkasan juara #1 tiap board, dikelompokin per kategori ──
