@@ -2,7 +2,7 @@
 // twitterdl.js — Download video dari Twitter/X (Sanka API + scrape fallback)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
@@ -92,6 +92,7 @@ async function handler(m, { sock }) {
       caption,
     }, { quoted: m });
     await m.react("🐣");
+    await m.reply(novaBerhasil("twitterdl"));
   } catch (err) {
     console.error("twitterdl error:", err);
     await m.react("❌");

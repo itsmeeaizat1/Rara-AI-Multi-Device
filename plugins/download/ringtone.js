@@ -2,7 +2,7 @@
 // ringtone.js — Search & download ringtone (meloboom scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { novaBox, novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ringtone",
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[Ringtone]", err);
     await m.react("❌");
-    m.reply(novaError("Ringtone", "Gagal mencari ringtone. Coba lagi nanti!"));
+    m.reply(novaGagal("Ringtone"));
   }
 }
 

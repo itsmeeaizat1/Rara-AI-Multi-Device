@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { cocofun } from 'btch-downloader'
-import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cocofundl',
     alias: ["cocofundl", "cfdl"],
@@ -46,6 +46,7 @@ async function handler(m, { sock }) {
           video: { url: videoUrl }, caption: _cap,
           contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m });
+        await m.reply(novaBerhasil("Cocofundl"));
     } catch (err) {
         return m.reply(novaError('CocoFun', 'Ada error nih, coba lagi ya'))
     }

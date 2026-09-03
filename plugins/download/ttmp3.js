@@ -7,7 +7,7 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const pluginConfig = {
@@ -122,6 +122,7 @@ async function handler(m, { sock }) {
     });
     await m.reply(infoText);
     await m.react("🐣");
+    await m.reply(novaBerhasil("Ttmp3"));
 
     await sock.sendMessage(m.chat, {
       audio: Buffer.isBuffer(audioSource) ? audioSource : { url: audioSource },

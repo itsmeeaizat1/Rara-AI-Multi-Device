@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { spawn } from 'child_process'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
@@ -266,7 +266,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           message: quoted,
         });
       } catch (e) {
-        return m.reply(novaError("VoiceChanger", "Gagal download audio nih, coba reply ulang"));
+        return m.reply(novaGagal("VoiceChanger"));
       }
 
       if (!audioBuffer || audioBuffer.length < 100) {
@@ -442,7 +442,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         message: quoted,
       });
     } catch (e) {
-      return m.reply(novaError("VoiceChanger", "Gagal download audio nih, coba reply ulang"));
+      return m.reply(novaGagal("VoiceChanger"));
     }
 
     if (!audioBuffer || audioBuffer.length < 100) {
@@ -493,6 +493,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
     } catch (e) { console.error('[voicechanger.js]:', e.message); }
 
+      await m.reply(novaBerhasil("voicechanger"));
   } catch (e) {
     console.error("voicechanger error:", e.message);
     return m.reply(claraWrap("Voice Changer", "Error: " + e.message));

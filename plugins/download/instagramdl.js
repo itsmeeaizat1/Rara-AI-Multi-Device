@@ -4,7 +4,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "instagramdl",
@@ -105,11 +105,12 @@ async function handler(m, { sock }) {
 
     if (!result || !result.medias?.length) {
       await m.react("❌");
-      return m.reply(novaError("Instagram DL", "Gagal ambil media — pastikan URL valid dan akunnya publik ya"));
+      return m.reply(novaGagal("Instagram DL"));
     }
 
     const ctxInfo = { forwardingScore: 0, isForwarded: false };
     await m.react("🐣");
+    await m.reply(novaBerhasil("Instagram DL"));
 
     for (const item of result.medias) {
       if (item.type === "video") {
@@ -125,7 +126,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[instagramdl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("Instagram DL", "Ada error nih, coba lagi ya"));
+    return m.reply(novaGangguan("Instagram DL"));
   }
 }
 

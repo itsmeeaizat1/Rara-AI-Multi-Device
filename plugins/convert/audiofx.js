@@ -3,7 +3,7 @@ import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, bracketBox, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, bracketBox, novaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const EFFECTS = {
     bass:      { emoji: '🔊', filter: 'bass=g=20:f=110:w=0.6', desc: 'Bass boost' },
@@ -141,14 +141,14 @@ async function handler(m, { sock }) {
     try {
         const buffer = await media.download()
         if (!buffer?.length) {
-            return m.reply(novaError("AudioFX", "Gagal download media nih"))
+            return m.reply(novaGagal("AudioFX"))
         }
 
         fs.writeFileSync(inputPath, buffer)
         await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + fx.filter + '" -vn "' + outputPath + '"')
 
         if (!fs.existsSync(outputPath)) {
-            return m.reply(novaError("AudioFX", "Gagal proses audio nih"))
+            return m.reply(novaGagal("AudioFX"))
         }
 
         const audioBuffer = fs.readFileSync(outputPath)
@@ -156,6 +156,7 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, audioBuffer, null, m, {
             type: 'audio'
         })
+        await m.reply(novaBerhasil("audiofun"));
     } catch (error) {
         m.reply(te(m.prefix, m.command, m.pushName))
     } finally {

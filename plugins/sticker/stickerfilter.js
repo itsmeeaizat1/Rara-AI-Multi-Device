@@ -2,7 +2,7 @@
 // stickerfilter.js — Apply filter ke sticker (local @napi-rs/canvas, no API)
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { claraWrap, novaError, novaGuide, novaNoQuoted } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaGuide, novaNoQuoted, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stickerfilter",
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const stickerBuffer = await m.quoted.download();
     if (!stickerBuffer || stickerBuffer.length < 100) {
-      return m.reply(novaError("Sticker Filter", "Gagal download sticker!"));
+      return m.reply(novaGagal("Sticker Filter"));
     }
 
     const filteredBuffer = await applyFilter(stickerBuffer, filter);
@@ -141,6 +141,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, { sticker: exifBuf }, { quoted: m });
     await m.react("🐣");
+    await m.reply(novaBerhasil("stickerfilter"));
   } catch (err) {
     console.error("[StickerFilter]", err);
     await m.react("❌");

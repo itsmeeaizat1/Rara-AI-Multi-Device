@@ -3,7 +3,7 @@ import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import axios from "axios";
 import he from "he";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const BASE_URL = "https://workers-playground-cool-wood-c008.accoutydusra.workers.dev";
 
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     const result = normalizeResult(info);
 
     if (res.status >= 300 || data.success !== true || result.length === 0) {
-      return m.reply(novaError("Threads", "Gagal ambil data — mungkin privat atau sudah dihapus"));
+      return m.reply(novaGagal("Threads"));
     }
 
     const captionText = mediaCaption({
@@ -127,9 +127,10 @@ async function handler(m, { sock }) {
       media.contextInfo = thCard;
       await sock.sendMessage(m.chat, media, { quoted: m });
     }
+    await m.reply(novaBerhasil("Threads"));
   } catch (err) {
     console.error("[ThreadsDL]", err.message);
-    m.reply(novaError("Threads", "Ada error nih, coba lagi ya"));
+    m.reply(novaGangguan("Threads"));
   }
 }
 

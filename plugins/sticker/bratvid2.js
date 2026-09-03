@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "bratvid2",
@@ -40,10 +40,11 @@ async function handler(m, { sock }) {
             author: config.sticker.author,
         });
         await fs.promises.unlink(tempFile).catch(() => {});
+        await m.reply(novaBerhasil("bratvid2"));
     } catch (error) {
         await fs.promises.unlink(tempFile).catch(() => {});
         console.error("[bratvid2] Error:", error.message);
-        m.reply(claraWrap("bratvid2", te(m.prefix, m.command, m.pushName), "error"));
+        m.reply(novaGangguan("bratvid2"));
     }
 }
 

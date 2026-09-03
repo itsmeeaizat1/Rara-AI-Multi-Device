@@ -2,7 +2,7 @@
 // happymod.js — Search game mod dari Happymod (direct scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "happymod",
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[Happymod]", err);
     await m.react("❌");
-    m.reply(novaError("Happymod", "Gagal mencari di Happymod. Coba lagi nanti!"));
+    m.reply(novaGagal("Happymod"));
   }
 }
 

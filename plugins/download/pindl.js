@@ -8,7 +8,7 @@ import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pindl",
@@ -54,6 +54,7 @@ async function handler(m, { sock }) {
         }
         break;
       }
+      await m.reply(novaBerhasil("Pinterest"));
       return;
     }
 
@@ -117,9 +118,10 @@ async function handler(m, { sock }) {
         }
       }
     }
+    await m.reply(novaBerhasil("Pinterest"));
   } catch (error) {
     console.error("[PinDL] Error:", error);
-    m.reply(novaError("Pinterest DL", `Gagal mengunduh media Pinterest — ${error.message || 'terjadi kesalahan'}`));
+    m.reply(novaGangguan("Pinterest DL"));
   }
 }
 export { pluginConfig as config, handler };

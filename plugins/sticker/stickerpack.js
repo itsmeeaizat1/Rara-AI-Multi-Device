@@ -1,5 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Scrape Telegram sticker pack via combot.org (tanpa API key)
+import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+
 import _sharp from 'sharp'
 import axios from "axios"
 import config from "../../config.js"
@@ -110,7 +112,7 @@ async function handler(m, { sock }) {
         // Step 3: Get sticker URLs from pack page
         const stickerUrls = await getStickerSetUrls(randomPack)
         if (!stickerUrls.length) {
-            return m.reply(novaError("StickerPack", "Gagal ambil sticker dari pack nih"))
+            return m.reply(novaGagal("StickerPack"))
         }
 
         const limited = stickerUrls.slice(0, MAX_STICKERS)
@@ -127,7 +129,7 @@ async function handler(m, { sock }) {
         }
 
         if (!stickerBuffers.length) {
-            return m.reply(novaError("StickerPack", "Gagal download sticker nih"))
+            return m.reply(novaGagal("StickerPack"))
         }
 
         // Step 5: Send sticker pack
@@ -160,12 +162,13 @@ async function handler(m, { sock }) {
             if (sent > 0) {
                 await m.reply(claraWrap("stickerpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
             } else {
-                await m.reply(novaError("StickerPack", "Gagal kirim sticker nih"))
+                await m.reply(novaGagal("StickerPack"))
             }
         }
+        await m.reply(novaBerhasil("stickerpack"));
     } catch (error) {
         console.error("[StickerPack] Error:", error.message)
-        m.reply(claraWrap("stickerpack", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaGangguan("stickerpack"))
     }
 }
 

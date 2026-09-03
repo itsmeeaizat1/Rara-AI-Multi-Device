@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -59,6 +59,7 @@ const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title
       tipText(`Ketik ${prefix}terabox <link> untuk download file lain`);
 
     await m.reply(text);
+      await m.reply(novaBerhasil("terabox2"));
   } catch (error) {
     return m.reply(novaError("Terabox", `Gagal mengunduh file — ${error.message || 'terjadi kesalahan, coba lagi nanti ya'}`));
   }

@@ -2,7 +2,7 @@
 // an1.js — Search game mod dari AN1 (direct scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "an1",
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[AN1]", err);
     await m.react("❌");
-    m.reply(novaError("AN1", "Gagal mencari game di AN1. Coba lagi nanti!"));
+    m.reply(novaGagal("AN1"));
   }
 }
 

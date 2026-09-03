@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/capcut → /download/all-in-one | Fallback: btch-downloader
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { capcut } from "btch-downloader";
-import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "capcutdl",
@@ -64,6 +64,7 @@ async function handler(m, { sock }) {
         format: "Video", method: "IkyyXD",
       });
       await m.react("🐣");
+    await m.reply(novaBerhasil("capcutdl"));
       return await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption,
         contextInfo: { forwardingScore: 0, isForwarded: false },

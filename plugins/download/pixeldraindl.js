@@ -6,7 +6,7 @@ import path from 'path'
 import fs from 'fs'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
@@ -67,8 +67,9 @@ async function handler(m, { sock }) {
     } else if (sizeInMB > 100) {
       await m.reply(claraWrap("Pixeldraindl", `⚠️ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
     }
+      await m.reply(novaBerhasil("pixeldraindl"));
   } catch (error) {
-    m.reply(novaError("PixelDrain", "Ada error nih, coba lagi ya"));
+    m.reply(novaGangguan("PixelDrain"));
   }
 }
 

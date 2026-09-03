@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
@@ -63,7 +63,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
-      return m.reply(novaError("Audio8D", "Gagal proses 8D audio nih"));
+      return m.reply(novaGagal("Audio8D"));
     }
 
     const buf = fs.readFileSync(outputPath);
@@ -80,9 +80,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
+      await m.reply(novaBerhasil("audio8d"));
   } catch (e) {
     console.error("audio8d error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaGangguan("audio8d"));
   }
 }
 

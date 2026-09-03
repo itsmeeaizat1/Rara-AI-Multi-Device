@@ -2,7 +2,7 @@
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { addExifToWebp, isAnimatedWebp, DEFAULT_METADATA } from '../../src/lib/nova-exif.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'swm',
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
         const buffer = await quoted.download()
         
         if (!buffer || buffer.length === 0) {
-            return m.reply(novaError("SWM", "Gagal download sticker nih"))
+            return m.reply(novaGagal("SWM"))
         }
         
         const exifOpts = { packname, author, emojis: ['🤖'] }
@@ -84,9 +84,10 @@ async function handler(m, { sock, config: botConfig }) {
                 await sock.sendImageAsSticker(m.chat, buffer, m, exifOpts)
             }
         }
+        await m.reply(novaBerhasil("Swm"));
     } catch (error) {
         console.error('[SWM] Error:', error.message)
-        m.reply(claraWrap("swm", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaGangguan("Swm"))
     }
 }
 

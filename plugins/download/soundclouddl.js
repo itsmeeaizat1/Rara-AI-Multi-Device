@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // soundclouddl.js — Download lagu dari SoundCloud via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "soundclouddl",
@@ -40,18 +40,19 @@ async function handler(m, { sock }) {
       });
       await m.reply(caption);
       await m.react("🐣");
+    await m.reply(novaBerhasil("soundclouddl"));
       await sock.sendMessage(m.chat, {
         audio: { url: audio.url },
         mimetype: "audio/mpeg",
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaError("SoundCloud DL", "Gagal download — coba link lain ya"));
+      await m.reply(novaGagal("SoundCloud DL"));
     }
   } catch (error) {
     console.error("[soundclouddl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("SoundCloud DL", "Ada error nih, coba lagi ya"));
+    return m.reply(novaGangguan("SoundCloud DL"));
   }
 }
 

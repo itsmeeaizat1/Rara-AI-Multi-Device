@@ -4,7 +4,7 @@ import path from "path";
 import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stikergrid",
@@ -179,7 +179,7 @@ async function handler(m, { sock, db }) {
       }
 
       if (!buffer) {
-        await m.reply(novaError("StikerGrid", "Gagal download foto nih, coba kirim ulang"));
+        await m.reply(novaGagal("StikerGrid"));
         return;
       }
 
@@ -304,12 +304,13 @@ async function processCollage(session, chatJid, sock, m) {
         react: { text: "✅", key: m.key },
       });
     } catch (_) { console.error('[stikergrid.js]:', _?.message || _); }
+      await m.reply(novaBerhasil("stikergrid"));
   } catch (err) {
     console.log("[StikerGrid] Error:", err.message);
     clearTimeout(session?.timer);
     sessions.delete(chatJid);
     await sock.sendMessage(chatJid, {
-      text: claraWrap("Stiker Grid", te(m.prefix || ".", "stikergrid", m.pushName || "User"), "error"),
+      text: novaGangguan("stikergrid"),
     });
   }
 }

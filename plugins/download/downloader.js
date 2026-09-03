@@ -6,7 +6,7 @@ import yts from "yt-search";
 import { aiodl, detectPlatform } from "../../src/scraper/aio.js";
 import scdl from "../../src/scraper/soundclouddl.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { toSC, novaError, novaGuide, novaBox, mediaCaption, bracketBox } from "../../src/lib/nova-menu-style.js";
+import { toSC, novaError, novaGuide, novaBox, mediaCaption, bracketBox, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
@@ -142,9 +142,10 @@ async function downloadYouTube(url, format, sock, m, meta = {}) {
       await offerConvert(sock, m, { buffer, type: "video", platform: "YouTube", title, sourceUrl: url });
     }
     await m.react("🐣");
+    await m.reply(novaBerhasil("YouTube"));
   } catch (err) {
     await m.react("❌");
-    m.reply(novaError("YouTube DL", err.message || "Gagal download YouTube"));
+    m.reply(novaGangguan("YouTube DL"));
   }
 }
 
@@ -210,6 +211,7 @@ async function handleAIO(url, format, platformName, sock, m) {
     await offerConvert(sock, m, { buffer, type: "video", platform: platformName, title: result.title, sourceUrl: url });
   }
   await m.react("🐣");
+  await m.reply(novaBerhasil(platformName));
 }
 
 // === SoundCloud handler ===
@@ -241,6 +243,7 @@ async function handleSoundCloud(url, sock, m) {
     }),
   }, { quoted: m });
   await m.react("🐣");
+  await m.reply(novaBerhasil("SoundCloud"));
 }
 
 // === Spotify handler ===
@@ -270,6 +273,7 @@ async function handleSpotify(url, sock, m) {
     caption, contextInfo: saluranCtx(),
   }, { quoted: m });
   await m.react("🐣");
+  await m.reply(novaBerhasil("Spotify"));
 }
 
 // === Mediafire handler ===
@@ -300,6 +304,7 @@ async function handleMediafire(url, sock, m) {
     caption, contextInfo: saluranCtx(),
   }, { quoted: m });
   await m.react("🐣");
+  await m.reply(novaBerhasil("MediaFire"));
 }
 
 // === Main handler ===

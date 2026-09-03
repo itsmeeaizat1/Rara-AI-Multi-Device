@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
 import axios from "axios";
 
@@ -50,12 +50,13 @@ async function handler(m, { sock }) {
       if (!convertUrl) throw new Error("Gagal convert ke GIF");
 
       await m.react("🐣");
+    await m.reply(novaBerhasil("togif"));
       await sock.sendMessage(m.chat, { video: { url: convertUrl }, gifPlayback: true }, { quoted: m });
     }
   } catch (e) {
     console.error("togif error:", e.message);
     await m.react("❌");
-    m.reply(claraWrap("togif", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaGangguan("togif"));
   }
 }
 
