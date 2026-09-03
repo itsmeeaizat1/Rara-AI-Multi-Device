@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const prompt = `Review kode berikut, jelaskan error jika ada, berikan saran perbaikan. Balas dalam Bahasa Indonesia:\n\n${code}`;
     const result = await callAI(prompt, { systemPrompt: "Kamu adalah code reviewer ahli. Berikan review singkat dan jelas." });
-    await m.reply(claraWrap("AI Code Review", "💻") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("AI Code Review", "💻") + "\n\n" + result);
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

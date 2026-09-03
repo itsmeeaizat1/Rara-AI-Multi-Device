@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Isi: ${item.arabic || item.text || "-"}`,
       ]) + "\n\n";
     }
-    text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
+    text +=  tipText(`Ketik ${prefix}menu untuk kembali`);
     await m.reply(claraWrap("hadith", text));
   } catch (e) {
     await m.reply(novaError("Religi", [`Alasan: *${e.message}*`].join("\n")));

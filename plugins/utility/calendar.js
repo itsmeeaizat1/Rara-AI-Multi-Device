@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       });
       let text = claraHeader("Kalender Event", "📅") + "\n\n";
       db.calendar[gid].forEach((e, i) => { text += `${i+1}. 📅 *${e.date}* - ${e.name}\n`; });
-      text += "\n" + separator("━", 22) + "\n" + tipText(`${prefix}calendar del <nomor> untuk hapus`);
+      text += "\n" + tipText(`${prefix}calendar del <nomor> untuk hapus`);
       await m.reply(text);
     }
   } catch (e) {

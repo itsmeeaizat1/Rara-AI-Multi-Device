@@ -187,16 +187,13 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         claraWrap("ꜱTatuꜱ", [`Chat: *${chatLabel}*`, `Status: *${currentStatus}*`, `Kota: *${currentCity}*`, `Izin: *${permissionLabel}*`].join("\n")) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
+        
         claraWrap("Fitur", ["🔔 Reminder 5 menit sebelum", "🕌 Notifikasi waktu sholat", "📿 Info iqamah/jamaah", "🤲 Auto pengingat harian"].join("\n")) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
+        
         claraWrap("Izin", ["🔒 owner: hanya owner", "👤 user: semua user", "🔑 owner+user: owner + user", "🛡️ owner+admin: owner + admin grup (bot harus admin)"].join("\n")) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
+        
         tipText("Fitur default: OFF sampai owner menyalakan") +
         "\n" +
         tipText("Mode user: bisa aktifkan di chat pribadi untuk pengingat pribadi") +
@@ -350,16 +347,13 @@ async function handler(m, { sock, config: botConfig }) {
       "\n\n" +
       reminderText +
       "\n\n" +
-      separator("━", 22) +
-      "\n" +
+      
       claraWrap("Jadwal Adzan", prayerLines) +
       "\n\n" +
-      separator("━", 22) +
-      "\n" +
+      
       claraWrap("Jadwal Iqamah", iqamahLines) +
       "\n\n" +
-      separator("━", 22) +
-      "\n" +
+      
       tipText("Auto reminder: 5 menit sebelum setiap sholat") +
       "\n" +
       tipText(`Ketik ${prefix}jadwalsholat <kota> untuk cek kota lain`) +

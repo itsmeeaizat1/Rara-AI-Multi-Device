@@ -348,7 +348,7 @@ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
       text += `\`${prefix}switch channel ${key}\`\n\n`
       if (info.enabled) onCount++; else offCount++
     }
-    text += separator("━", 22) + "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Toggle semua: \`${prefix}switch channel all on/off\``)
+    text += "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Toggle semua: \`${prefix}switch channel all on/off\``)
     return m.reply(text)
   }
 
