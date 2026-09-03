@@ -3,6 +3,7 @@
 // Primary: IkyyXD /download/igv2 → all-in-one | Fallback: builtin ig.js
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
 import instagramDownloader from "../../src/scraper/ig.js";
 import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -40,6 +41,7 @@ async function handler(m, { sock }) {
         if (item.type === "video") {
           const _cap = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Video", method: "IkyyXD" });
           await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap, contextInfo: ctxInfo }, { quoted: m });
+          await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: result.title, sourceUrl: url });
         } else {
           const _cap2 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Image", method: "IkyyXD" });
           await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap2, contextInfo: ctxInfo }, { quoted: m });
@@ -60,6 +62,7 @@ async function handler(m, { sock }) {
           if (item.type === "video") {
             const _cap3 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Video", method: "ig scraper" });
             await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap3, contextInfo: ctxInfo }, { quoted: m });
+            await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: igResult.title, sourceUrl: url });
           } else {
             const _cap4 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Image", method: "ig scraper" });
             await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap4, contextInfo: ctxInfo }, { quoted: m });

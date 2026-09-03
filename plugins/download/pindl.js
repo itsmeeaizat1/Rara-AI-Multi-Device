@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
 import { pinterestdl } from "../../src/lib/nova-pinterest.js";
 import path from "path";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
@@ -47,6 +48,7 @@ async function handler(m, { sock }) {
       for (const item of ikyyResult.medias) {
         if (item.type === "video") {
           await sock.sendMessage(m.chat, { video: { url: item.url }, caption, contextInfo: ctxInfo }, { quoted: m });
+          await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Pinterest", title: ikyyResult.title, sourceUrl: url });
         } else {
           await sock.sendMessage(m.chat, { image: { url: item.url }, caption, contextInfo: ctxInfo }, { quoted: m });
         }
@@ -72,6 +74,7 @@ async function handler(m, { sock }) {
           video: { url: media.url }, caption: fbCaption,
           contextInfo: mediaPreviewCard({ title: result.title || "Pinterest Media", body: "Pinterest • Video", sourceUrl: url, thumbnailUrl: result.author?.avatar || "" }),
         }, { quoted: m });
+        await offerConvert(sock, m, { mediaUrl: media.url, type: "video", platform: "Pinterest", title: result.title, sourceUrl: url });
       } else if (media.type === "image") {
         if (media.url.includes("gif")) {
           const tempPath = path.join(process.cwd(), "temp");
