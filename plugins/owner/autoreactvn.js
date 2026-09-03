@@ -94,10 +94,10 @@ async function handler(m, { sock, args }) {
     if (!rawTriggers) {
       return m.reply(
         "Format salah!\n\nKirim/reply VN dengan caption:\n" +
-        "```" + m.prefix + "autoreactvn set <trigger>```\n\n" +
+        m.prefix + "autoreactvn set <trigger>\n\n" +
         "Contoh:\n" +
-        "```" + m.prefix + "autoreactvn set hai```\n" +
-        "```" + m.prefix + "autoreactvn set ga mungkin,bohong,emang```"
+        m.prefix + "autoreactvn set hai\n" +
+        m.prefix + "autoreactvn set ga mungkin,bohong,emang"
       );
     }
 
@@ -120,7 +120,7 @@ async function handler(m, { sock, args }) {
     if (!isAudio) {
       let txt = "Tidak ada voice note!\n\nCara set:\n";
       txt += "1. Reply/kirim voice note (VN)\n";
-      txt += "2. Caption: ```" + m.prefix + "autoreactvn set " + rawTriggers + "```\n\n";
+      txt += "2. Caption: " + m.prefix + "autoreactvn set " + rawTriggers + "\n\n";
       txt += "Trigger yang akan diset: " + triggerList.length + " kata\n";
       triggerList.forEach((t, i) => {
         txt += "  " + (i + 1) + ". " + t + "\n";
@@ -191,12 +191,12 @@ async function handler(m, { sock, args }) {
   if (action === "del" || action === "rm") {
     const trigger = args.slice(1).join(" ").trim().toLowerCase();
     if (!trigger) {
-      return m.reply(claraWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n```" + m.prefix + "autoreactvn del <trigger>```"));
+      return m.reply(claraWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n" + m.prefix + "autoreactvn del <trigger>"));
     }
 
     const index = triggers.findIndex(t => t.trigger === trigger);
     if (index === -1) {
-      return m.reply(claraWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
+      return m.reply(claraWrap("Info", "❌ Trigger " + trigger + " tidak ditemukan!"));
     }
 
     const vnFile = triggers[index].vnFile;
@@ -237,15 +237,15 @@ async function handler(m, { sock, args }) {
         "Private: " + (privMs / 1000).toFixed(1) + " detik\n" +
         "Grup: " + (grpMs / 1000).toFixed(1) + " detik\n\n" +
         "Set jeda:\n" +
-        "1. ```" + m.prefix + "autoreactvn jeda 5``` — jeda private\n" +
-        "2. ```" + m.prefix + "autoreactvn jedagrup 15``` — jeda grup\n" +
+        "1. " + m.prefix + "autoreactvn jeda 5 — jeda private\n" +
+        "2. " + m.prefix + "autoreactvn jedagrup 15 — jeda grup\n" +
         "Minimal 1 detik, gak bisa off"
       );
     }
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 1) {
-      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n```" + m.prefix + "autoreactvn jeda 5```"));
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n" + m.prefix + "autoreactvn jeda 5"));
     }
 
     db.setting("autoreactvnJedaPrivate", seconds * 1000);
@@ -265,13 +265,13 @@ async function handler(m, { sock, args }) {
       const grpMs = db.setting("autoreactvnJedaGrup") ?? 10000;
       return m.reply(
         "Jeda Grup: " + (grpMs / 1000).toFixed(1) + " detik\n\n" +
-        "Set: ```" + m.prefix + "autoreactvn jedagrup 15```"
+        "Set: " + m.prefix + "autoreactvn jedagrup 15"
       );
     }
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 1) {
-      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n```" + m.prefix + "autoreactvn jedagrup 15```"));
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n" + m.prefix + "autoreactvn jedagrup 15"));
     }
 
     db.setting("autoreactvnJedaGrup", seconds * 1000);
@@ -338,16 +338,16 @@ async function handler(m, { sock, args }) {
   let txt = "AUTOREACTVN\n\n";
   txt += "Auto-reply pesan dengan voice note\n\n";
   txt += "PERINTAH:\n";
-  txt += "1. ```" + m.prefix + "autoreactvn on``` — Aktifkan\n";
-  txt += "2. ```" + m.prefix + "autoreactvn off``` — Nonaktifkan\n";
-  txt += "3. ```" + m.prefix + "autoreactvn set <trigger1,trigger2,...>``` — Set 1 VN untuk multiple trigger\n";
-  txt += "4. ```" + m.prefix + "autoreactvn del <trigger>``` — Hapus trigger\n";
-  txt += "5. ```" + m.prefix + "autoreactvn list``` — Lihat semua trigger\n";
-  txt += "6. ```" + m.prefix + "autoreactvn jeda <detik>``` — Jeda private chat\n";
-  txt += "7. ```" + m.prefix + "autoreactvn jedagrup <detik>``` — Jeda grup\n\n";
+  txt += "1. " + m.prefix + "autoreactvn on — Aktifkan\n";
+  txt += "2. " + m.prefix + "autoreactvn off — Nonaktifkan\n";
+  txt += "3. " + m.prefix + "autoreactvn set <trigger1,trigger2,...> — Set 1 VN untuk multiple trigger\n";
+  txt += "4. " + m.prefix + "autoreactvn del <trigger> — Hapus trigger\n";
+  txt += "5. " + m.prefix + "autoreactvn list — Lihat semua trigger\n";
+  txt += "6. " + m.prefix + "autoreactvn jeda <detik> — Jeda private chat\n";
+  txt += "7. " + m.prefix + "autoreactvn jedagrup <detik> — Jeda grup\n\n";
   txt += "CONTOH:\n";
-  txt += "```" + m.prefix + "autoreactvn set hai``` — 1 trigger\n";
-  txt += "```" + m.prefix + "autoreactvn set ga mungkin,bohong,emang,serius,beneran``` — 5 trigger 1 VN\n\n";
+  txt += m.prefix + "autoreactvn set hai — 1 trigger\n";
+  txt += m.prefix + "autoreactvn set ga mungkin,bohong,emang,serius,beneran — 5 trigger 1 VN\n\n";
   txt += "Status: " + (db.setting("autoreactvnEnabled") ? "✅ AKTIF" : "❌ NONAKTIF");
   txt += " | Triggers: " + triggers.length;
   txt += " | Jeda: " + jedaStatus;

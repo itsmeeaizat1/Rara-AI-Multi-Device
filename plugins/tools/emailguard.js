@@ -191,7 +191,7 @@ async function handler(m, { sock }) {
     ];
 
     if (result.disposable) {
-      lines.push("*DISPOSABLE/TEMP MAIL*");
+      lines.push("*ᴅɪꜱᴘᴏꜱᴀʙʟᴇ/ᴛᴇᴍᴘ ᴍᴀɪʟ*");
       lines.push("Email ini sekali pakai — tidak boleh dipakai untuk akun penting!");
       lines.push("");
     }

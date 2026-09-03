@@ -40,7 +40,7 @@ function delFund(db, gid) {
 function progressBar(current, target) {
   const pct = Math.min(100, Math.floor((current / target) * 100));
   const filled = Math.floor(pct / 10);
-  return "[" + "#".repeat(filled) + "-".repeat(10 - filled) + "] " + pct + "%";
+  return "▰".repeat(filled) + "▱".repeat(10 - filled) + " " + pct + "%";
 }
 
 async function handler(m, { sock, db, config: botConfig }) {
