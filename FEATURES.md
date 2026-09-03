@@ -1161,10 +1161,10 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 
 ## 🖼️ Quote Card Sticker & Chat Mockup
 
-- `.qc <warna> <text>` — Sticker quote card ala Telegram (avatar + nama + teks dalam bubble)
-- Reply pesan + `.qc <warna>` — pakai teks pesan yang di-reply
+- `.qc <text>` — Sticker quote card ala Telegram (avatar + nama + teks dalam bubble), background putih default
+- `.qc <warna> <text>` — background custom (47 pilihan warna: pink, blue, dll)
+- Reply pesan + `.qc` — pakai teks pesan yang di-reply (background putih)
 - Engine: API quotly (brat.siputzx.my.id/quoted) sebagai primary, fallback otomatis ke render lokal @napi-rs/canvas kalau API down
-- 47 pilihan warna background (pink, blue, white, dll — lihat `.qc` tanpa argumen)
 - Cooldown: 10s, Energi: 1, Max 80 karakter
 - `.iqc <text>` — Mockup screenshot chat HP (status bar, jam, baterai, provider) dikirim sebagai gambar biasa (bukan stiker, karena hasilnya portrait)
 - Engine: api.nexray.eu.cc/maker/v1/iqc
