@@ -84,6 +84,9 @@ async function messageHandler(msg, sock) {
 
   const db = getDatabase();
 
+  // Statistik realtime: tiap pesan masuk dihitung (semua user, termasuk owner)
+  try { db.incrementStat("messagesReceived"); } catch {}
+
   // === AutoFlow: cek rule automation (keyword/media) tiap pesan masuk ===
   try { _autoflowHandleMessage(sock, m); } catch {}
 
@@ -703,7 +706,10 @@ try {
   try {
     const { handleCommand: handleCase } = await import("../case/nova.js");
     const caseResult = await handleCase(m, sock);
-    if (caseResult?.handled) return;
+    if (caseResult?.handled) {
+      try { db.incrementStat("commandsRun"); } catch {}
+      return;
+    }
   } catch (error) {
     if (config.dev?.debugLog) logger.error("case", error.message);
   }
@@ -940,6 +946,8 @@ try {
       try { await m.react("🕒"); } catch {}
     }
 
+    // Statistik realtime: command valid diproses (+1, semua user termasuk owner)
+    try { db.incrementStat("commandsRun"); } catch {}
     await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000 });
     recordPluginExecution(command, true, null);
     try { await postExecutionCheck(command, sock); } catch {}

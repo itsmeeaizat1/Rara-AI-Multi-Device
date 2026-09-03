@@ -547,68 +547,114 @@ export { CHARS, EMOJIS, formatUptime, formatDate, formatNumber, formatFileSize, 
 async function getImportantDay(date = new Date()) {
  const mm = String(date.getMonth() + 1).padStart(2, "0");
  const dd = String(date.getDate()).padStart(2, "0");
- const yyyy = date.getFullYear();
  const key = `${mm}-${dd}`;
 
- // Daftar hari penting nasional & internasional (fix date)
+ // Daftar hari penting nasional & internasional — 100% STATIS.
+ // API api-harilibur.vercel.app sudah mati (DEPLOYMENT_DISABLED), jadi jangan
+ // gantungin endpoint pihak ketiga untuk info section menu (owner rule: hindari API unstable).
  const hariPenting = {
- "01-01": "Tahun Baru Masehi",
- "01-25": "Hari Nutrisi Nasional",
- "02-04": "Hari Kanker Sedunia",
- "02-09": "Hari Pers Nasional",
- "02-14": "Hari Emansipasi Wanita",
- "03-08": "Hari Wanita Sedunia",
- "03-21": "Hari Down Syndrome Sedunia",
- "04-07": "Hari Kesehatan Nasional",
- "04-21": "Hari Kartini",
- "04-22": "Hari Bumi",
- "05-01": "Hari Buruh Internasional",
- "05-02": "Hari Pendidikan Nasional (Hardiknas)",
- "05-20": "Hari Kebangkitan Nasional",
- "05-31": "Hari Anti Tembakau Sedunia",
- "06-01": "Hari Lahir Pancasila",
- "06-29": "Hari Bakti TNI AU",
- "07-22": "Hari Sumpah Pemuda",
- "08-17": "Hari Kemerdekaan RI",
- "09-01": "Hari Polisi Internasional",
- "09-30": "Hari Penghapusan Ekstrimisme",
- "10-01": "Hari Kesaktian Pancasila",
- "10-02": "Hari Batik Nasional",
- "10-05": "Hari TNI",
- "10-10": "Hari Mental Sedunia",
- "10-28": "Hari Sumpah Pemuda",
- "11-10": "Hari Pahlawan",
- "11-20": "Hari Anak Sedunia",
- "12-01": "Hari AIDS Sedunia",
- "12-22": "Hari Ibu",
- "12-25": "Hari Raya Natal",
+  // ── Januari ──
+  "01-01": "Tahun Baru Masehi",
+  "01-10": "Hari Lapangan Terbang Nasional",
+  "01-25": "Hari Gizi & Nutrisi Nasional",
+  // ── Februari ──
+  "02-04": "Hari Kanker Sedunia",
+  "02-09": "Hari Pers Nasional",
+  "02-14": "Hari Kasih Sayang Sedunia (Valentine)",
+  "02-15": "Hari Kanker Anak Sedunia",
+  "02-21": "Hari Bahasa Ibu Internasional",
+  // ── Maret ──
+  "03-08": "Hari Wanita Sedunia",
+  "03-15": "Hari Hak Konsumen Dunia",
+  "03-21": "Hari Sindrom Down, Puisi & Hutan Sedunia",
+  "03-22": "Hari Air Sedunia",
+  "03-23": "Hari Meteorologi Sedunia",
+  "03-24": "Hari TBC Sedunia",
+  "03-27": "Hari Teater Sedunia",
+  // ── April ──
+  "04-02": "Hari Peduli Autisme Sedunia",
+  "04-07": "Hari Kesehatan Dunia",
+  "04-21": "Hari Kartini",
+  "04-22": "Hari Bumi",
+  "04-23": "Hari Buku Sedunia",
+  // ── Mei ──
+  "05-01": "Hari Buruh Internasional",
+  "05-02": "Hari Pendidikan Nasional (Hardiknas)",
+  "05-08": "Hari Palang Merah Sedunia",
+  "05-12": "Hari Perawat Internasional",
+  "05-15": "Hari Keluarga Sedunia",
+  "05-17": "Hari Buku Nasional & Hari Telekomunikasi Dunia",
+  "05-20": "Hari Kebangkitan Nasional (Harkitnas)",
+  "05-21": "Hari Kebudayaan Nasional",
+  "05-22": "Hari Keanekaragaman Hayati Sedunia",
+  "05-31": "Hari Tanpa Tembakau Sedunia",
+  // ── Juni ──
+  "06-01": "Hari Lahir Pancasila",
+  "06-05": "Hari Lingkungan Hidup Dunia",
+  "06-08": "Hari Lautan Sedunia",
+  "06-12": "Hari Penghapusan Pekerja Anak Sedunia",
+  "06-14": "Hari Donor Darah Sedunia",
+  "06-20": "Hari Pengungsi Sedunia",
+  "06-21": "Hari Musik Dunia (Fete de la Musique)",
+  "06-26": "Hari Anti Narkoba Internasional",
+  "06-29": "Hari Bakti TNI AU",
+  // ── Juli ──
+  "07-11": "Hari Populasi Dunia",
+  "07-17": "Hari Konstitusi Republik Indonesia",
+  "07-22": "Hari Jurnalistik Nasional",
+  "07-23": "Hari Anak Nasional",
+  "07-29": "Hari Harimau Sedunia",
+  // ── Agustus ──
+  "08-10": "Hari Veteran Nasional",
+  "08-12": "Hari Pemuda Internasional",
+  "08-17": "Hari Proklamasi Kemerdekaan RI",
+  "08-19": "Hari Kemanusiaan Dunia",
+  // ── September ──
+  "09-05": "Hari Amal Internasional",
+  "09-08": "Hari Melek Aksara Internasional",
+  "09-15": "Hari Demokrasi Internasional",
+  "09-16": "Hari Ozon Sedunia",
+  "09-21": "Hari Perdamaian Internasional",
+  "09-26": "Hari Maritim Dunia",
+  "09-27": "Hari Pariwisata Dunia",
+  "09-28": "Hari Akses Universal Informasi",
+  "09-29": "Hari Jantung Dunia",
+  "09-30": "Hari Penerjemahan Internasional",
+  // ── Oktober ──
+  "10-01": "Hari Kesaktian Pancasila & Hari Vegetarian Dunia",
+  "10-02": "Hari Batik Nasional",
+  "10-04": "Hari Hewan Dunia",
+  "10-05": "Hari TNI & Hari Guru Dunia",
+  "10-10": "Hari Kesehatan Jiwa Dunia",
+  "10-11": "Hari Gadis Internasional",
+  "10-13": "Hari Pengurangan Risiko Bencana",
+  "10-15": "Hari Cuci Tangan Pakai Sabun Dunia",
+  "10-16": "Hari Pangan Dunia",
+  "10-17": "Hari Pengentasan Kemiskinan Dunia",
+  "10-24": "Hari Perserikatan Bangsa-Bangsa (PBB)",
+  "10-28": "Hari Sumpah Pemuda",
+  // ── November ──
+  "11-10": "Hari Pahlawan Nasional",
+  "11-12": "Hari Ayah Nasional",
+  "11-14": "Hari Diabetes Dunia",
+  "11-19": "Hari Pria Internasional",
+  "11-20": "Hari Anak Sedunia & Hari Industri Nasional",
+  "11-21": "Hari Televisi Dunia",
+  "11-25": "Hari Guru Nasional & Hari Anti Kekerasan terhadap Perempuan",
+  // ── Desember ──
+  "12-01": "Hari AIDS Sedunia",
+  "12-03": "Hari Penyandang Disabilitas Internasional",
+  "12-05": "Hari Relawan Internasional",
+  "12-09": "Hari Anti Korupsi Internasional",
+  "12-10": "Hari Hak Asasi Manusia (HAM) Internasional",
+  "12-11": "Hari Gunung Internasional",
+  "12-18": "Hari Bahasa Arab Internasional",
+  "12-20": "Hari Solidaritas Manusia Internasional",
+  "12-22": "Hari Ibu",
+  "12-25": "Hari Raya Natal",
  };
 
- // Cek dari daftar statis dulu
- if (hariPenting[key]) {
- return `${dd} ${getMonthName(mm)} ${yyyy} - ${hariPenting[key]}`;
- }
-
- // Fallback: cek dari API online (api-harilibur) - dengan timeout 5 detik
- try {
- const controller = new AbortController();
- const timeoutId = setTimeout(() => controller.abort(), 5000);
- const res = await fetch(
- `https://api-harilibur.vercel.app/api?year=${yyyy}&month=${parseInt(mm)}`,
- { signal: controller.signal }
- );
- clearTimeout(timeoutId);
- if (res.ok) {
- const data = await res.json();
- const today = `${yyyy}-${mm}-${dd}`;
- const match = data.find((h) => h.holiday_date === today && h.is_national_holiday);
- if (match) return `${dd} ${getMonthName(mm)} ${yyyy} - ${match.holiday_name}`;
- }
- } catch {
- // API unreachable atau timeout, return default
- }
-
- return "";
+ return hariPenting[key] || "";
 }
 
 // Helper untuk nama bulan dalam bahasa Indonesia

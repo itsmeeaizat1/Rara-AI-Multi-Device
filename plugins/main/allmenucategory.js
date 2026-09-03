@@ -14,7 +14,7 @@ import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton, CATEGORY_EMOJI } from "../../src/lib/nova-category-list.js";
-import { commandListLine, toSC } from "../../src/lib/nova-menu-style.js";
+import { commandListLine, toSC, novaInfoSections } from "../../src/lib/nova-menu-style.js";
 import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
@@ -152,21 +152,8 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
       const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
 
       // Build info section text
-      let infoText = "";
-      let maxLabel = 6;
-      for (const item of menuInfo) {
-        if (item && item.label) {
-          const ll = toSC(item.label).length;
-          if (ll > maxLabel) maxLabel = ll;
-        }
-      }
-      for (const item of menuInfo) {
-        if (typeof item === "string") {
-          infoText += `│ ${toSC(item)}\n`;
-        } else if (item && item.label !== undefined) {
-          infoText += `│ • ${toSC(item.label).padEnd(maxLabel)} : ${item.value}\n`;
-        }
-      }
+      // Info section: box terpisah per kategori (helper shared, konsisten menu/allmenu)
+      let infoText = novaInfoSections(menuInfo);
 
       // Compact index — cuma nama kategori + jumlah command, BUKAN dump semua command
       // (yang itu tugas allmenu, bukan allmenucategory)
@@ -183,8 +170,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         catEntries.push({ cat, catName, emoji, total });
       }
 
-      let txt = `╭─「 ✦ ${toSC("Info")} ✦ 」
-${infoText}╰────  •  ────
+      let txt = `${infoText}
 ╭─「 ✦ ${toSC("Daftar Kategori")} ✦ 」
 │ *${toSC("Total")}:* ${catEntries.length} ${toSC("kategori")}
 │ *${toSC("Total Fitur")}:* ${totalAllCmds} ${toSC("command")}
@@ -252,28 +238,14 @@ ${infoText}╰────  •  ────
     // ── Info section lengkap (sama kayak menu/allmenu) ──
     const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
 
-    let infoText = "";
-    let maxLabel = 6;
-    for (const item of menuInfo) {
-      if (item && item.label) {
-        const ll = toSC(item.label).length;
-        if (ll > maxLabel) maxLabel = ll;
-      }
-    }
-    for (const item of menuInfo) {
-      if (typeof item === "string") {
-        infoText += `│ ${toSC(item)}\n`;
-      } else if (item && item.label !== undefined) {
-        infoText += `│ • ${toSC(item.label).padEnd(maxLabel)} : ${item.value}\n`;
-      }
-    }
+    // Info section: box terpisah per kategori (helper shared, konsisten menu/allmenu)
+    let infoText = novaInfoSections(menuInfo);
 
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
     // Readmore trick — sembunyikan daftar command panjang biar gak wall-of-text
     const readMore = allCommands.length > 15 ? String.fromCharCode(8206).repeat(4001) : "";
-    let txt = `╭─「 ✦ ${toSC("Info")} ✦ 」
-${infoText}╰────  •  ────
+    let txt = `${infoText}
 ${readMore}╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
 │ *${toSC("Total")}:* ${totalFitur} ${toSC("fitur")}
 │

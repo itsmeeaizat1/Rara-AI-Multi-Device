@@ -785,6 +785,9 @@ async function serialize(sock, msg, store = {}) {
   m.reply = async (text, options = {}) => {
     if (!text && text !== 0) return null;
 
+    // Statistik realtime: pesan keluar bot dihitung
+    try { getDatabase().incrementStat("messagesSent"); } catch {}
+
     // Multi-language: auto-translate UI text ke bahasa user (Google Translate)
     try {
       if (typeof text === "string" && needsTranslation(m.sender)) {

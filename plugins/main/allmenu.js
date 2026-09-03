@@ -184,7 +184,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
     // ── Info section lengkap (user, bot, database, server, weather) ──
-    const { info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime });
+    const { greeting: aiIntro, info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime });
     const info = menuInfo;
 
     // ── Category sections ──
@@ -218,23 +218,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       menuCats.push({ name: catName, commands: allCmds });
     }
 
-    const intro = [
-      "Yoo, hai! 👋",
-      "Kenalin, aku Nova —",
-      "bot WhatsApp yang bakal",
-      "jadi partner setiamu.",
-      "",
-      "Aku gak cuma bot biasa.",
-      "Aku bisa jadi tempat kamu",
-      "download video terbaru,",
-      "ngubah momen jadi stiker,",
-      "nyari bahan tugas, atau",
-      "sekadar nemenin pas lagi",
-      "bosen.",
-      "",
-      "Gak perlu install apa-apa.",
-      "Cuma ketik .allmenu untuk melihat semua fitur",
-    ];
+    const intro = aiIntro || `${getTimeGreeting()}!`; // Pengenalan AI — berubah tiap menu dimuat
 
     const txt = novaMenuLayout({
       intro,
