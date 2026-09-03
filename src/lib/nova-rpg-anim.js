@@ -1,10 +1,16 @@
 // nova-rpg-anim.js — RPG Animation Helper
-// Progressive message-based animation system for WhatsApp RPG
-// Upgrade: animasi scene ala bot klasik (Alya) — tahapan naratif + scene emoji
-// bergerak per stage, bukan sekadar progress bar singkat.
+// Sistem animasi RPG modern: "morphing message" — SATU pesan yang di-edit
+// berjenjang antar scene (edit-in-place), bukan banjir pesan era bot lama.
+// Scene emoji bergerak + caption naratif + counter tahap & progress bar
+// dalam satu frame pesan yang selalu ter-update.
 //
-// Konvensi caption ala misi klasik:
+// Konvensi caption naratif:
 //   🔍 = mulai mencari, ✔️ = tahap selesai, ➕ = sedang berlangsung, 💹 = hasil/uang
+//
+// Fallback otomatis: jika edit pesan gagal (device lama/dll), stage berikutnya
+// dikirim sebagai pesan baru — animasi tetap jalan di semua kondisi.
+
+import { toSC } from "./nova-menu-style.js";
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -24,17 +30,55 @@ export async function rpgProgress(m, sock, steps, delay = 1200) {
   }
 }
 
+const sceneBar = (cur, total) => "▰".repeat(cur) + "▱".repeat(Math.max(0, total - cur));
+
 /**
- * Kirim rangkaian scene animasi (semua stage dikirim, game mengirim hasil sendiri)
+ * Engine animasi "morphing message" modern.
+ * Stage 1 dikirim sebagai pesan baru; stage berikutnya meng-EDIT pesan yang sama
+ * (edit-in-place ala bot modern) — satu pesan yang ber-morph antar scene.
+ * Jeda antar stage disertai indikator "mengetik..." agar terasa hidup.
+ * Jika edit tidak tersedia/gagal → fallback kirim pesan baru per stage.
+ *
  * @param {object} m - Baileys message object
  * @param {object} sock - Baileys socket
  * @param {string[]} scenes - Array scene (boleh multi-line)
  * @param {number} delay - Jeda antar scene (ms), default 3000
+ * @param {string} [title] - Judul frame (otomatis smallcaps)
  */
-export async function rpgScene(m, sock, scenes, delay = 3000) {
-  for (const scene of scenes) {
-    await m.reply(scene);
+export async function rpgScene(m, sock, scenes, delay = 3000, title = "") {
+  const total = scenes.length;
+  if (total === 0) return;
+  const head = title ? `「 ✦ ${toSC(title)} ✦ 」\n\n` : "";
+  const frame = (i) =>
+    `${head}${scenes[i]}\n\n${toSC("tahap")} ${i + 1}/${total} ${sceneBar(i + 1, total)}`;
+
+  // Stage 1 — kirim pesan pertama, simpan key untuk mode edit
+  let key = null;
+  if (sock?.sendMessage && m.chat) {
+    try {
+      const sent = await sock.sendMessage(m.chat, { text: frame(0) });
+      key = sent?.key || null;
+    } catch {
+      key = null;
+    }
+  }
+  if (!key) await m.reply(frame(0));
+
+  // Stage 2..n — edit pesan yang sama; fallback pesan baru jika edit gagal
+  for (let i = 1; i < total; i++) {
+    if (sock?.sendPresenceUpdate) {
+      try { await sock.sendPresenceUpdate("composing", m.chat); } catch {}
+    }
     await sleep(delay);
+    if (key) {
+      try {
+        await sock.sendMessage(m.chat, { text: frame(i), edit: key });
+        continue;
+      } catch {
+        key = null; // edit gagal → mode fallback
+      }
+    }
+    await m.reply(frame(i));
   }
 }
 
@@ -220,17 +264,17 @@ const SCENE_GENERIC = (emoji, location) => [
 export async function animGather(m, sock, emoji, location, delay = 3000) {
   // normalisasi label: buang "..." buntut agar caption tidak dobel titik
   const spot = String(location || "").replace(/\s*\.{2,}$/, "");
-  let scenes;
+  let scenes, title;
   switch (emoji) {
-    case "🎣": scenes = SCENE_FISHING(spot || "Memancing di danau"); break;
-    case "⛏️": scenes = SCENE_MINING(location || "Menambang di gua"); break;
-    case "🪓": scenes = SCENE_NEBANG(location || "Menebang pohon di hutan"); break;
-    case "👷": scenes = SCENE_NGULI(location || "Bekerja sebagai kuli"); break;
-    case "🗑️": scenes = SCENE_SAMPAH(location || "Mengumpulkan sampah"); break;
-    case "🌿": scenes = SCENE_FORAGE(location || "Mencari tanaman liar"); break;
-    default: scenes = SCENE_GENERIC(emoji, location || "Bekerja");
+    case "🎣": scenes = SCENE_FISHING(spot || "Memancing di danau"); title = "mancing"; break;
+    case "⛏️": scenes = SCENE_MINING(location || "Menambang di gua"); title = "menambang"; break;
+    case "🪓": scenes = SCENE_NEBANG(location || "Menebang pohon di hutan"); title = "menebang pohon"; break;
+    case "👷": scenes = SCENE_NGULI(location || "Bekerja sebagai kuli"); title = "kuli bangunan"; break;
+    case "🗑️": scenes = SCENE_SAMPAH(location || "Mengumpulkan sampah"); title = "memungut sampah"; break;
+    case "🌿": scenes = SCENE_FORAGE(location || "Mencari tanaman liar"); title = "mencari tanaman"; break;
+    default: scenes = SCENE_GENERIC(emoji, location || "Bekerja"); title = "";
   }
-  await rpgScene(m, sock, scenes, delay);
+  await rpgScene(m, sock, scenes, delay, title);
 }
 
 /**
@@ -238,20 +282,20 @@ export async function animGather(m, sock, emoji, location, delay = 3000) {
  */
 export async function animKerja(m, sock, jobName, activity, delay = 3000) {
   const scenes = [
-    `🔍 ${jobName}: berangkat ke tempat kerja...`,
+    `🔍 Berangkat ke tempat kerja...`,
     `✔️ Mulai bekerja sebagai ${jobName}...`,
     `➕ ${activity}...`,
     `➕ Menyelesaikan tugas...`,
     `➕ 💹 Menerima gaji...`,
   ];
-  await rpgScene(m, sock, scenes, delay);
+  await rpgScene(m, sock, scenes, delay, jobName);
 }
 
 /**
  * Animasi ojek online — minimap ala misi klasik
  */
 export async function animOjek(m, sock, delay = 3000) {
-  await rpgScene(m, sock, SCENE_OJEK, delay);
+  await rpgScene(m, sock, SCENE_OJEK, delay, "ojek online");
 }
 
 /**
@@ -489,7 +533,7 @@ export async function animFarm(m, sock, action, delay = 3000) {
 
 ✔️ Panen berhasil! 💹`,
   ];
-  await rpgScene(m, sock, scenes, delay);
+  await rpgScene(m, sock, scenes, delay, "berkebon");
 }
 
 /**
@@ -502,7 +546,7 @@ export async function animHunt(m, sock, target) {
     `🔥 Dor!`,
     `✔️ Nah ini dia!`,
   ];
-  await rpgScene(m, sock, scenes, 2500);
+  await rpgScene(m, sock, scenes, 2500, "berburu");
 }
 
 /**
