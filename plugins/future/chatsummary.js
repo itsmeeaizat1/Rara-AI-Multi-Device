@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Rangkum chat grup berikut dalam 3-5 poin utama. Bahasa Indonesia.\n\n${chatText.substring(0, 2000)}`, {
       systemPrompt: "Kamu adalah chat summarizer. Berikan rangkuman singkat.",
     });
-    await m.reply(claraWrap("Chat Summary", "📋") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("Chat Summary", "📋") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       let text = claraWrap("Birthday List", "🎂") + "\n\n";
       db.birthdays.forEach((b, i) => { text += `${i+1}. 🎂 ${b.name} - ${b.date}\n`; });
-      text += "\n" + separator("━", 22);
+      text += "\n";
       await m.reply(text);
     }
   } catch (e) { await m.reply("Error: " + e.message); }

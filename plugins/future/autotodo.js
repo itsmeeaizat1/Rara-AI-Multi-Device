@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Dari teks berikut, deteksi semua tugas/to-do yang perlu dilakukan. List dengan format: 1. tugas\n2. tugas\n dst. Jika tidak ada tugas, jawab: TIDAK ADA TUGAS. Bahasa Indonesia.\n\n${text.substring(0, 500)}`, {
       systemPrompt: "Kamu adalah task detector. Berikan jawaban singkat.",
     });
-    await m.reply(claraWrap("Auto Todo", "📋") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("Auto Todo", "📋") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

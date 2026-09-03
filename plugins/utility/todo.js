@@ -46,7 +46,7 @@ async function handler(m, { sock, config: botConfig }) {
       todos.forEach((t, i) => {
         text += `${t.done ? "✅" : "⬜"} ${i+1}. ${t.text}\n`;
       });
-      text += "\n" + separator("━", 22) + "\n" + tipText(`${prefix}todo done <nomor> | ${prefix}todo del <nomor>`);
+      text += "\n" + tipText(`${prefix}todo done <nomor> | ${prefix}todo del <nomor>`);
       await m.reply(text);
     }
   } catch (e) {

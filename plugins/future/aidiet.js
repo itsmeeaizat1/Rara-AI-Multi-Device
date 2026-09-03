@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
       systemPrompt: "Kamu adalah ahli gizi. Berikan estimasi yang realistis.",
       image: base64,
     });
-    await m.reply(claraWrap("AI Diet", "🍽️") + "\n\n" + result + "\n\n" + separator("━", 22) + "\n" + tipText("Estimasi saja, bukan hasil medis"));
+    await m.reply(claraWrap("AI Diet", "🍽️") + "\n\n" + result + "\n\n" +  tipText("Estimasi saja, bukan hasil medis"));
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

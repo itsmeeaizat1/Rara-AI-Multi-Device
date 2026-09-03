@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Berikan 5 rekomendasi kado untuk: ${info}. Format: nama kado - singkat alasan. Bahasa Indonesia.`, {
       systemPrompt: "Kamu adalah ahli rekomendasi kado. Berikan jawaban singkat dan praktis.",
     });
-    await m.reply(claraWrap("AI Gift", "🎁") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("AI Gift", "🎁") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

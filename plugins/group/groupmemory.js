@@ -51,8 +51,7 @@ function buildMemoryBook(prefix, groupName) {
     "\n" +
     claraWrap("Top Member", topMembers) +
     "\n\n" +
-    separator("━", 22) +
-    "\n" +
+    
     tipText("Catatan: ini versi statis simulasi dulu") +
     "\n" +
     tipText(`Ketik ${prefix}groupmemory untuk update lain waktu`) +

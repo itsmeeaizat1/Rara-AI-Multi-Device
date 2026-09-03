@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Kamu adalah tutor. Jawab pertanyaan berikut dengan cara yang mudah dipahami, berikan penjelasan & contoh. Bahasa Indonesia.\n\n${input}`, {
       systemPrompt: "Kamu adalah tutor yang sabar. Berikan penjelasan sederhana & contoh praktis.",
     });
-    await m.reply(claraWrap("AI Tutor", "📚") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("AI Tutor", "📚") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

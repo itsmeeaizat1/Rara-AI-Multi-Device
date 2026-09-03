@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Cek fakta claim berikut. Tentukan: BENAR, SEBAGIAN BENAR, atau SALAH. Berikan penjelasan singkat dalam Bahasa Indonesia.\n\nClaim: "${claim.substring(0, 500)}"`, {
       systemPrompt: "Kamu adalah fact checker. Berikan analisis singkat dan objektif.",
     });
-    await m.reply(claraWrap("Fact Check", "🔍") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("Fact Check", "🔍") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

@@ -55,8 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n\n" +
       claraWrap("Grup Bot", lines) +
       "\n\n" +
-      separator("━", 22) +
-      "\n" +
+      
       tipText(`Total grup: ${groups.length}`) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

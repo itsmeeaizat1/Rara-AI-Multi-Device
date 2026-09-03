@@ -61,8 +61,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n\n" +
       claraWrap("Intel", lines) +
       "\n\n" +
-      separator("━", 22) +
-      "\n" +
+      
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await m.reply(claraWrap("spy", text));

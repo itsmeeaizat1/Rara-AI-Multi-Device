@@ -40,8 +40,6 @@ async function handler(m, { sock, config: botConfig }) {
         "\n\n" +
         claraWrap("Pakai", [`*${prefix}aichat-model list* — lihat daftar model`, `*${prefix}aichat-model <provider> <model>* — ganti model aktif`, `Contoh: *${prefix}aichat-model gemini gemini-1.5-pro*`].join("\n")) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
       await m.reply(text, "aichat-model");
@@ -65,8 +63,6 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Model Tidak Valid", [`Model *${modelArg || ""}* tidak tersedia untuk provider *${providerArg}*.`,
           `Model tersedia: *${(provider.models || [].join("\n")).join(", ")}*`,
         ]) +
-        "\n\n" +
-        separator("━", 22) +
         "\n" +
         tipText(`Ketik ${prefix}aichat-model list untuk lihat daftar`) +
         "\n" +

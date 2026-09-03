@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const prompt = `Rangkum teks berikut dalam 5 poin utama, dalam Bahasa Indonesia:\n\n${text.substring(0, 3000)}`;
     const result = await callAI(prompt, { systemPrompt: "Kamu adalah asisten yang merangkum dokumen dengan jelas." });
-    await m.reply(claraWrap("AI Doc Summary", "📄") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("AI Doc Summary", "📄") + "\n\n" + result );
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

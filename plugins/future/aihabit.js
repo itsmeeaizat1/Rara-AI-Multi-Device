@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.habits[sender].forEach((h, i) => {
         text += `${i+1}. ${h.name} - 🔥 ${h.streak} hari\n`;
       });
-      text += "\n" + separator("━", 22) + "\n" + tipText(`${prefix}aihabit done <nomor> untuk check-in`);
+      text += "\n" + tipText(`${prefix}aihabit done <nomor> untuk check-in`);
       await m.reply(text);
     }
   } catch (e) { await m.reply("Error: " + e.message); }
