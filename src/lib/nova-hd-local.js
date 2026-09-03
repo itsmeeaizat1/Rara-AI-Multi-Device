@@ -42,7 +42,7 @@ const MODELS = {
     scale: 2,
     tile: 544,   // input px per tile (RAM aman)
     maxSide: 640, // input di-resize max ini dulu biar proses cepat
-    label: "Enhance HD 2x (Local AI)",
+    label: "Enhance HD (Local AI)",
   },
   real: {
     id: "Xenova/swin2SR-realworld-sr-x4-64-bsrgan-psnr",

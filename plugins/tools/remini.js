@@ -19,7 +19,7 @@ const pluginConfig = {
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar) — enhance HD 2x, local AI tanpa watermark\n.remini real — 4x ala Remini (unblur/restore)\n.remini 1080 — ukuran hasil maksimal untuk user biasa\n.remini 2k / 4k / 5k — ukuran HD, khusus Owner\n.remini real 4k — bisa digabung (mode + ukuran)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — enhance HD, default hasil 1080p, local AI tanpa watermark\n.remini real — 4x ala Remini (unblur/restore)\n.remini 1080 — sama kayak default (1080p)\n.remini 2k / 4k / 5k — ukuran HD, khusus Owner\n.remini real 4k — bisa digabung (mode + ukuran)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -268,7 +268,9 @@ async function handler(m, { sock, args }) {
     // Catatan: "4x" sekarang = pilihan ukuran 4K, bukan mode real — real tetep via "real"/"ultra"
     const SIZES = { "1080": 1920, fhd: 1920, fullhd: 1920, "2k": 2560, qhd: 2560, "4k": 3840, uhd: 3840, "5k": 5120 };
     const sizeArg = argList.find((a) => SIZES[a]);
-    const targetOut = sizeArg ? SIZES[sizeArg] : null;
+    // DEFAULT = 1080p (request owner 2026-09-04): .remini doang → output presisi
+    // 1920px, sama kayak .remini 1080. Sebelumnya default cuma 1280 (input 640 2x).
+    const targetOut = sizeArg ? SIZES[sizeArg] : 1920;
 
     // Ukuran di atas 1080p = OWNER ONLY (proses berat, bisa 3-5 menit per gambar)
     if (targetOut > 1920 && !m.isOwner) {
