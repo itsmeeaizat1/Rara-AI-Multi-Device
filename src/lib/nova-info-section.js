@@ -5,6 +5,7 @@
 import os from "os";
 import fs from "fs";
 import { formatUptime, getTimeGreeting, getImportantDay } from "./nova-formatter.js";
+import { getAiGreeting } from "./nova-greeting.js";
 import { getWeatherDetail } from "./nova-weather-footer.js";
 import { toSC } from "./nova-menu-style.js";
 import { getDatabase } from "./nova-database.js";
@@ -149,7 +150,12 @@ export async function buildMenuInfo(m, ctx = {}) {
   }
 
   // ── Build info array ──
-  const greeting = `${getTimeGreeting()}, ${m.pushName || "User"}`;
+  // Ucapan AI berubah-ubah (IkyyXD free — jangan nguras token DeepSeek)
+  let aiGreeting = null;
+  try { aiGreeting = await getAiGreeting(); } catch {}
+  const greeting = aiGreeting
+    ? `${aiGreeting}, ${m.pushName || "User"}`
+    : `${getTimeGreeting()}, ${m.pushName || "User"}`;
 
   const info = [
     greeting,

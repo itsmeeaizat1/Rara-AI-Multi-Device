@@ -97,6 +97,7 @@
 | SFile | `sfile.mobi` / `sfile.co` | sfiledl | ✅ Free |
 | GitHub DL | `github.com` / `raw.githubusercontent.com` | githubdl | ✅ Free |
 | SF Converter | `du.sf-converter.com` | audio convert | ✅ Free |
+| IkyyXD AI | `api.ikyyxd.my.id/ai/gemini?text=<prompt>` | Ucapan AI menu/allmenu (nova-greeting) | ✅ Free no-key |
 | IkyyXD | `api.ikyyxd.my.id` | ytstalk, tiktokstalk, ffstalk, mlstalk, nikparser, gsmarena, lirik, ssweb, buatserti, qrcode, base64, tiktok, ytmp3, ytmp4, instagram, facebook, twitter, spotify, soundcloud, mediafire, pinterest, gdrive, telegraph, snackvideo, likee, zippyshare, threads, capcut, dailymotion, yt | ⚠️ IP block (test di VPS) |
 | AliceE APIs | `aliceeapis.my.id` | API multi-fitur (download, stalker, tools, AI) | ✅ Free |
 
