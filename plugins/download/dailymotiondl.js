@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -54,6 +55,7 @@ async function handler(m, { sock }) {
     if (result.thumbnail) {
       await sock.sendMessage(m.chat, {
         image: { url: result.thumbnail }, caption,
+        contextInfo: mediaPreviewCard({ title: result.title || "Dailymotion Video", body: "Dailymotion", sourceUrl: text, thumbnailUrl: result.thumbnail }),
       }, { quoted: m });
     }
 
@@ -82,6 +84,7 @@ async function handler(m, { sock }) {
         m.chat,
         {
           document: buffer,
+          contextInfo: mediaPreviewCard({ title: result.title || "Dailymotion Video", body: "Dailymotion • MP4", sourceUrl: text, thumbnailUrl: result.thumbnail || "" }),
           mimetype: "video/mp4",
           fileName:
             (result.title || "video").replace(/[<>:"/\\|?*]/g, "") + ".mp4",

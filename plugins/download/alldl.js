@@ -21,6 +21,7 @@ import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
@@ -236,6 +237,7 @@ async function handler(m, { sock }) {
         result = {
           title: polled.title,
           download_url: polled.download_url,
+          thumbnail_url: polled.thumbnail_url,
           type: isAudio ? "audio" : "video",
           format,
         };
@@ -315,12 +317,17 @@ async function handler(m, { sock }) {
     }
 
     // Format metadata kaya jika dari AIO
-    const ctxInfo = saluranCtx();
     const title = result.title || "Downloaded";
     const formatLabel = isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${result.format || "HD"}`;
     const methodTag = usedMethod === "savenow" ? "SaveNow" : "AIO Scraper";
 
     const aioMeta = result.aioResult || {};
+    const ctxInfo = mediaPreviewCard({
+      title,
+      body: `${platform.name} • ${isAudio ? "MP3 Audio" : isImage ? "Image" : "Video"}`,
+      sourceUrl: url,
+      thumbnailUrl: aioMeta.thumbnail || result.thumbnail_url || "",
+    });
     const caption = mediaCaption({
       platform: platform.name,
       platformIcon: platform.icon,
