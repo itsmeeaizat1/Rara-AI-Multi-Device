@@ -10,6 +10,7 @@ import { GeminiVision } from "../scraper/geminiVision.js";
 import { getDatabase } from "./nova-database.js";
 import { pinterest } from "btch-downloader";
 import config from "../../config.js";
+import { transcribeAudio } from "./nova-stt.js";
 import axios from "axios";
 import path from "path";
 import fs from "fs";
@@ -979,14 +980,20 @@ async function handleAutoAI(m, sock) {
     }
   }
 
-  if (!isBotQuoted && !isMentioned) return false;
+  // 🔹 VN SUPPORT: voice note LANGSUNG (tanpa perlu tag bot) dianggap
+  // ajakan ngobrol — VN gak bisa ngetik "@bot" jadi gak mungkin di-mention.
+  // VN di-reply + tag bot juga ke-cover via m.quoted.isAudio.
+  const hasAudio = m.isAudio || (m.quoted && (m.quoted.isAudio || m.quoted.type === "audioMessage"));
+  const isDirectVn = !!m.isAudio;
 
-  const userMessage = m.body || "";
+  if (!isBotQuoted && !isMentioned && !isDirectVn) return false;
+
+  let userMessage = m.body || "";
   const hasImage =
     m.isImage ||
     (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
 
-  if (!userMessage && !hasImage) return false;
+  if (!userMessage && !hasImage && !hasAudio) return false;
 
   const senderNumber = m.sender.split("@")[0];
 
@@ -1006,6 +1013,32 @@ async function handleAutoAI(m, sock) {
         }
       } catch (e) {
         console.log("[AutoAI] Image download failed:", e.message);
+      }
+    }
+
+    // 🔹 VN: download → transkripsi → teks jadi bahan obrolan
+    if (hasAudio) {
+      try {
+        const audioBuffer = m.isAudio && m.download
+          ? await m.download()
+          : (m.quoted?.download ? await m.quoted.download() : null);
+        if (audioBuffer) {
+          const audioMime =
+            (m.isAudio ? m.message?.audioMessage?.mimetype : m.quoted?.message?.audioMessage?.mimetype) ||
+            "audio/ogg; codecs=opus";
+          try { await sock.sendPresenceUpdate("recording", m.chat); } catch {}
+          const transcript = await transcribeAudio(audioBuffer, audioMime);
+          if (transcript) {
+            userMessage = transcript;
+            console.log(`[AutoAI] VN ditranskripsi (${m.sender.split("@")[0]}): ${transcript.slice(0, 80)}`);
+          } else {
+            console.log("[AutoAI] VN gagal ditranskripsi (STT kosong) — skip");
+            return false; // STT gagal (gak ada key/API mati) → jangan jawab ngawur
+          }
+        }
+      } catch (e) {
+        console.log("[AutoAI] VN download/transcribe gagal:", e.message);
+        return false;
       }
     }
 
