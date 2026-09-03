@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
   if (!option) {
     const status = db.setting("anticulik") || "off";
 
-    return m.reply(claraWrap("Anti Culik", `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ*\n\n` +
+    return m.reply(claraWrap("Anti Culik", 
         `Bot akan otomatis keluar dari grup jika ditambah oleh orang yang tidak dikenal tanpa izin.\n\n` +
         `*ꜱᴛᴀᴛᴜꜱ:*\n` +
         `Mode: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +

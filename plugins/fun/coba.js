@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = m.text?.trim();
     
     if (!text) {
-        return m.reply(claraWrap("Coba", `🎯 *ᴄᴏʙᴀ*\n\nMasukkan sesuatu!\n\n*ᴄᴏɴᴛᴏʜ:*\n.coba tebak apa yang aku pikirkan`));
+        return m.reply(claraWrap("Coba", `Masukkan sesuatu!\n\n*ᴄᴏɴᴛᴏʜ:*\n.coba tebak apa yang aku pikirkan`));
     }
     
     const { text: answer, fromAI } = await askFunAI({

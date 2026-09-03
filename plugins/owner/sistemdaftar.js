@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   const stats = getRegistrationStats(db);
 
   if (!normalizedArgs) {
-    return m.reply( claraWrap("sIstem Daftar", `⚙️ *sIstem Daftar*\n\n` +
+    return m.reply( claraWrap("sIstem Daftar", 
         `Status: ${currentStatus ? "✅ ON (Wajib Daftar)" : "❌ OFF"}\n\n` +
         `*Statistik:*\n` +
         `Total registered: *${stats.totalRegistered}*\n` +

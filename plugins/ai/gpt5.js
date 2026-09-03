@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await GPT5(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("GPT-5 Gagal", `❌ *GPT-5 Gagal*\n\n${result.error || "Gagal dapet respons nih"}`));
+      return m.reply(claraWrap("GPT-5 Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
 

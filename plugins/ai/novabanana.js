@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-      return m.reply(claraWrap("Gagal", `❌ *ɢᴀɢᴀʟ*\n\nGagal mengunduh gambar`));
+      return m.reply(claraWrap("Gagal", `Gagal mengunduh gambar`));
     }
 
     const resultBuffer = await live3d(mediaBuffer, prompt).then(

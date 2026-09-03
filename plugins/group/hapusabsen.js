@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const chatId = m.chat
     
     if (!global.absensi[chatId]) {
-        return m.reply(claraWrap("Tidak Ada Absen", `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴀʙꜱᴇɴ*\n\n` +
+        return m.reply(claraWrap("Tidak Ada Absen", 
             `Tidak ada sesi absen di grup ini!`))
     }
     
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     
     delete global.absensi[chatId]
     
-    await m.reply(claraWrap("ABSEN DITUTUP!", `✅ *ABSEN DITUTUP!*\n\n` +
+    await m.reply(claraWrap("ABSEN DITUTUP!", 
         `Penyebab?\n` +
         `📝 ${absen.keterangan}\n` +
         `👥 Total hadir: ${totalPeserta}\n\n` +

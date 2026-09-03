@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
   }
 
   if (!detail || detail.length < 3) {
-    return m.reply(claraWrap("Detail stok terlalu pendek.", `❌ *ᴅᴇᴛᴀɪʟ ꜱᴛᴏᴋ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.*\n\nMinimal 3 karakter diperlukan agar data stok dapat digunakan 🔑`));
+    return m.reply(claraWrap("Detail stok terlalu pendek.", `Minimal 3 karakter diperlukan agar data stok dapat digunakan 🔑`));
   }
 
   if (!product.stockItems) product.stockItems = [];

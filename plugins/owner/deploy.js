@@ -21,9 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const name = m.args[0]
     if (!name) {
-        return m.reply(claraWrap("Deploy", `🚀 *DEPLOY*
-
-│ Masukkan nama website
+        return m.reply(claraWrap("Deploy", `│ Masukkan nama website
 │ Reply kode HTML atau file .html
 
 💡 *Contoh:*

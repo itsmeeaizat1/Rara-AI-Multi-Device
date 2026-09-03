@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     }
 
     if (!newDetail || newDetail.length < 3) {
-        return m.reply(claraWrap("Detail terlalu pendek.", `❌ *ᴅᴇᴛᴀɪʟ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.*\n\nMinimal 3 karakter diperlukan 🔑`))
+        return m.reply(claraWrap("Detail terlalu pendek.", `Minimal 3 karakter diperlukan 🔑`))
     }
 
     const oldDetail = stockItems[itemNo].detail

@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = input.split(/[&,]/).map(s => s.trim()).filter(s => s)
     
     if (parts.length < 2) {
-        { const __navText = claraWrap("Cek Jodoh", `💕 *ᴄᴇᴋ ᴊᴏᴅᴏʜ*\n\nMasukkan 2 nama!\n\n💡 *Contoh:* ${m.prefix}cekjodoh Budi & Ani`); return await m.reply(__navText, "cekjodoh"); }
+        { const __navText = claraWrap("Cek Jodoh", `Masukkan 2 nama!\n\n💡 *Contoh:* ${m.prefix}cekjodoh Budi & Ani`); return await m.reply(__navText, "cekjodoh"); }
     }
     
     const percent = Math.floor(Math.random() * 101)

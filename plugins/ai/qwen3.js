@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const result = await callIkyy(text, {});
 
     if (!result.status) {
-      return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n${result.error || "Gagal dapet respons nih"}`));
+      return m.reply(claraWrap("Qwen3 Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);

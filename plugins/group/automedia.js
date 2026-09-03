@@ -39,16 +39,16 @@ async function handler(m, { sock }) {
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {
         if (current) {
-            return m.reply(claraWrap("Automedia", `🎬 *ᴀᴜᴛᴏᴍᴇᴅɪᴀ*\n\nSudah aktif!`))
+            return m.reply(claraWrap("Automedia", `Sudah aktif!`))
         }
         db.setGroup(m.chat, { automedia: true })
         await db.save()
-        return m.reply(claraWrap("Automedia", `🎬 *ᴀᴜᴛᴏᴍᴇᴅɪᴀ*\n\n✅ Berhasil diaktifkan!\nSticker akan otomatis jadi gambar/video`))
+        return m.reply(claraWrap("Automedia", `✅ Berhasil diaktifkan!\nSticker akan otomatis jadi gambar/video`))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
         if (!current) {
-            return m.reply(claraWrap("Automedia", `🎬 *ᴀᴜᴛᴏᴍᴇᴅɪᴀ*\n\nSudah nonaktif!`))
+            return m.reply(claraWrap("Automedia", `Sudah nonaktif!`))
         }
         db.setGroup(m.chat, { automedia: false })
         await db.save()

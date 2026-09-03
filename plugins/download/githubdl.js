@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     }
     
     if (!repo) {
-        { const __navText = claraWrap("Repo Dibutuhkan", `❌ *ʀᴇᴘᴏ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\nMasukkan nama repository`); return await m.reply( __navText, "githubdl"); }
+        { const __navText = claraWrap("Repo Dibutuhkan", `Masukkan nama repository`); return await m.reply( __navText, "githubdl"); }
     }
     try {
         const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)

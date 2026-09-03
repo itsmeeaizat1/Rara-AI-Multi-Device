@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        { const __navText = claraWrap("Japanese sTyle", `🎌 *ᴊᴀᴘᴀɴᴇꜱᴇ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar untuk diubah ke style Japanese\n\n\`${m.prefix}tojapanese\``); return await m.reply(__navText, "tojapanese"); }
+        { const __navText = claraWrap("Japanese sTyle", `Kirim/reply gambar untuk diubah ke style Japanese\n\n\`${m.prefix}tojapanese\``); return await m.reply(__navText, "tojapanese"); }
     }
     try {
         let buffer

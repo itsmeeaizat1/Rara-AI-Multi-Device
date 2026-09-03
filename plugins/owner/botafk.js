@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         const afkDuration = Date.now() - currentAfk.since
         const duration = formatDuration(afkDuration)
         
-        return m.reply(claraWrap("Bot Kembali Online", `✅ *Bot Kembali Online*\n\n` +
+        return m.reply(claraWrap("Bot Kembali Online", 
             `⏱️ Durasi: \`${duration}\`\n` +
             `📝 Alasan: \`${currentAfk.reason || '-'}\`\n` +
             `\n` +
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
             since: Date.now()
         })
         
-        return m.reply( claraWrap("Bot Afk Aktif", `💤 *Bot Afk Aktif*\n\n` +
+        return m.reply( claraWrap("Bot Afk Aktif", 
             `📝 Alasan: \`${reason}\`\n` +
             `⏰ sEjak: \`${moment().tz('Asia/Jakarta').format('HH:mm:ss')}\`\n` +
             `\n` +
