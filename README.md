@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.qc%20tanpa%20warna%20langsung%20jadi%20quot-success?style=for-the-badge)
-> *Commit: "feat: .qc tanpa warna langsung jadi quote background putih"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20playvideo%20gagal%20diputar%20%E2%80%94%20video%20AV1-success?style=for-the-badge)
+> *Commit: "fix: playvideo gagal diputar — video AV1 gak didukung WhatsApp player"*
 <!--END_SECTION:latest-update-->
 
 ---
