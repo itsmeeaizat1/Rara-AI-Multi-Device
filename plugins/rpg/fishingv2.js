@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fishingv2.js — Fishing v2 dengan rods & bait system
-import { animFishV2 } from "../../src/lib/nova-rpg-anim.js";
+import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -166,7 +166,7 @@ async function handler(m, { sock }) {
     msg += `Rarity: *${fish.rarity}* | Price: *${fish.price}g*\n`;
     msg += `Total: *${data.totalCaught}* | Best: *${data.bestCatch}*\n`;
 
-    await animFishV2(m, sock);
+    await animGather(m, sock, "🎣", "Memancing di laut lepas");
     return m.reply(msg);
   } catch (err) {
     console.error("fishingv2 error:", err);

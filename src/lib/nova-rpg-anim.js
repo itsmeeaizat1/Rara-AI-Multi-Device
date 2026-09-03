@@ -1,5 +1,10 @@
 // nova-rpg-anim.js — RPG Animation Helper
 // Progressive message-based animation system for WhatsApp RPG
+// Upgrade: animasi scene ala bot klasik (Alya) — tahapan naratif + scene emoji
+// bergerak per stage, bukan sekadar progress bar singkat.
+//
+// Konvensi caption ala misi klasik:
+//   🔍 = mulai mencari, ✔️ = tahap selesai, ➕ = sedang berlangsung, 💹 = hasil/uang
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -20,15 +25,233 @@ export async function rpgProgress(m, sock, steps, delay = 1200) {
 }
 
 /**
- * Animasi kerja — simulasi proses bekerja
+ * Kirim rangkaian scene animasi (semua stage dikirim, game mengirim hasil sendiri)
+ * @param {object} m - Baileys message object
+ * @param {object} sock - Baileys socket
+ * @param {string[]} scenes - Array scene (boleh multi-line)
+ * @param {number} delay - Jeda antar scene (ms), default 3000
  */
-export async function animKerja(m, sock, jobName, activity) {
-  const steps = [
-    `👔 ${jobName}: ${activity}...`,
-    `⏳ Sedang bekerja...`,
-    `📦 Menyelesaikan tugas...`,
+export async function rpgScene(m, sock, scenes, delay = 3000) {
+  for (const scene of scenes) {
+    await m.reply(scene);
+    await sleep(delay);
+  }
+}
+
+/* ================= SCENE LIBRARY (ala Alya) =================
+   Tiap game dapat scene sendiri: karakter/objek bergerak tiap stage
+   + caption naratif. Delay default 3s → total animasi ~12s. */
+
+const SCENE_FISHING = (spot) => [
+  `~~🌊🌊🌊🎣🌊🌊🌊~~
+   ~ ~ ~ ~
+
+🔍 ${spot}...`,
+
+  `~~🌊🌊🐟🌊🎣🌊🌊~~
+   ~ ~ ~ ~
+
+➕ Ada ikan mendekat ke umpan...`,
+
+  `~~🌊🌊🐟🎣🌊🌊🌊~~
+   ~ ~ ~ ~
+
+➕ Kail ditarik ikan!`,
+
+  `~~🌊🎣🐟🌊🌊🌊🌊~~
+   ~ ~ ~ ~
+
+➕ Menarik kail dengan sekuat tenaga...`,
+
+  `🎣🐟💥💦
+
+✔️ Ikan berhasil keluar dari air!`];
+
+const SCENE_MINING = (spot) => [
+  `🕳️🕯️
+🧑⛏️⬛⬛⬛⬛⬛
+🪨🪨🪨🪨🪨🪨🪨
+
+🔍 ${spot}, mulai mengayunkan pickaxe...`,
+
+  `🕳️🕯️
+🧑⛏️💥⬛⬛⬛
+🪨🪨🪨🪨🪨🪨🪨
+
+✔️ Batu mulai retak!`,
+
+  `🕳️🕯️
+🧑⛏️✨⬛⬛⬛
+🪨🪨💎🪨🪨🪨🪨
+
+➕ Menemukan urat bijih...`,
+
+  `🕳️🕯️
+🧑⛏️💎🪨🪨
+🪨💎🪨✨💎🪨🪨
+
+✔️ Bijih berhasil dipecahkan!`];
+
+const SCENE_NEBANG = (spot) => [
+  `🧑🪓  🌳
+
+🔍 ${spot}, mulai mengayunkan kapak...`,
+
+  `🧑🪓💥 🌳
+
+➕ Tak! Tak! Batang mulai retak...`,
+
+  `🧑🪓💥🌳
+      ↘️
+
+➕ Pohon makin miring...`,
+
+  `🧑🪓💨
+
+🌳💨💨
+
+✔️ TOBRAK! Pohon tumbang! 🪵🪵🪵`];
+
+const SCENE_NGULI = (spot) => [
+  `👷🧱🧱🧱
+🧱🧱🧱🧱🧱
+
+🔍 ${spot}, menyiapkan material...`,
+
+  `👷🧱🧱🧱
+🧱🧱🧱🧱🧱
+
+➕ Mengangkut material ke atas...`,
+
+  `👷🧱🧱
+🧱🧱🧱🧱🧱🧱
+
+➕ Menata bata satu per satu...`,
+
+  `👷🏗️
+🧱🧱🧱🧱🧱🧱🧱
+
+✔️ Gedung makin tinggi!`];
+
+const SCENE_SAMPAH = (spot) => [
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️
+
+🔍 ${spot}, menyusuri gang kompleks...`,
+
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️🍾🥫
+
+➕ Menemukan botol dan kaleng...`,
+
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️📦
+
+➕ Memungut sampah plastik...`,
+
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️📦✅
+
+✔️ Karung penuh! Berhasil terkumpul 💹`];
+
+const SCENE_FORAGE = (spot) => [
+  `🌿🌿🌳🌿🌿
+
+🔍 ${spot}, masuk ke semak-semak...`,
+
+  `🌿🌿🌳🌿🌿
+🧑🌿🍄
+
+➕ Menyusuri area di belakang rumah...`,
+
+  `🌿🌿🌳🌿🌿
+🧑🌿🌱🍄🌿
+
+➕ Menemukan tanaman liar...`,
+
+  `🌿🌿🌳🌿🌿
+🧑🌿🌱🍄🌿✅
+
+✔️ Panen tanaman berhasil!`];
+
+const SCENE_OJEK = [
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+🚶⬛⬛⬛⬛⬛⬛🛵⬛
+🏘️🏘️🏘️🌳  🌳 🏘️
+
+🔍 Mencari pelanggan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+🚶⬛⬛⬛⬛⬛⬛🛵⬛
+🏘️🏘️🏘️🌳  🌳 🏘️
+
+✔️ Mendapatkan orderan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+🛵⬛⬛⬛⬛⬛⬛⬛⬛
+🏘️🏘️🏘️🌳  🌳 🏘️ 🚶
+
+➕ Mengantar ke tujuan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+⬛⬛⬛⬛⬛⬛🛵⬛⬛
+🏘️🏘️🏘️🌳  🌳 🏘️
+
+➕ Sampai di tujuan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+⬛⬛⬛⬛⬛⬛🛵⬛⬛
+🏘️🏘️🏘️🌳  🌳 🏘️ 🚶
+
+➕ 💹 Menerima gaji...`];
+
+const SCENE_GENERIC = (emoji, location) => [
+  `${emoji} ${location}...`,
+  `${emoji} ➕ Sedang fokus mengerjakan...`,
+  `${emoji} ➕ Hampir selesai...`,
+  `${emoji} ✔️ Berhasil!`];
+
+/* ================= PUBLIC ANIM API ================= */
+
+/**
+ * Animasi gather — dispatch scene tematik berdasarkan emoji.
+ * Dipakai: mancing 🎣, mining ⛏️, nebang 🪓, nguli 👷, sampah 🗑️, forage 🌿
+ */
+export async function animGather(m, sock, emoji, location, delay = 3000) {
+  // normalisasi label: buang "..." buntut agar caption tidak dobel titik
+  const spot = String(location || "").replace(/\s*\.{2,}$/, "");
+  let scenes;
+  switch (emoji) {
+    case "🎣": scenes = SCENE_FISHING(spot || "Memancing di danau"); break;
+    case "⛏️": scenes = SCENE_MINING(location || "Menambang di gua"); break;
+    case "🪓": scenes = SCENE_NEBANG(location || "Menebang pohon di hutan"); break;
+    case "👷": scenes = SCENE_NGULI(location || "Bekerja sebagai kuli"); break;
+    case "🗑️": scenes = SCENE_SAMPAH(location || "Mengumpulkan sampah"); break;
+    case "🌿": scenes = SCENE_FORAGE(location || "Mencari tanaman liar"); break;
+    default: scenes = SCENE_GENERIC(emoji, location || "Bekerja");
+  }
+  await rpgScene(m, sock, scenes, delay);
+}
+
+/**
+ * Animasi kerja — tahapan naratif misi klasik + scene lapangan
+ */
+export async function animKerja(m, sock, jobName, activity, delay = 3000) {
+  const scenes = [
+    `🔍 ${jobName}: berangkat ke tempat kerja...`,
+    `✔️ Mulai bekerja sebagai ${jobName}...`,
+    `➕ ${activity}...`,
+    `➕ Menyelesaikan tugas...`,
+    `➕ 💹 Menerima gaji...`,
   ];
-  await rpgProgress(m, sock, steps, 1000);
+  await rpgScene(m, sock, scenes, delay);
+}
+
+/**
+ * Animasi ojek online — minimap ala misi klasik
+ */
+export async function animOjek(m, sock, delay = 3000) {
+  await rpgScene(m, sock, SCENE_OJEK, delay);
 }
 
 /**
@@ -61,18 +284,6 @@ export async function animBattle(m, sock, attacker, defender, rounds) {
       await sleep(700);
     }
   }
-}
-
-/**
- * Animasi mining/digging/fishing — progress bar
- */
-export async function animGather(m, sock, emoji, location) {
-  await m.reply(`${emoji} ${location}...`);
-  await sleep(600);
-  await m.reply(`⏳ Progress: ▰▰▱▱▱`);
-  await sleep(500);
-  await m.reply(`⏳ Progress: ▰▰▰▰▱`);
-  await sleep(500);
 }
 
 /**
@@ -261,27 +472,37 @@ export async function animFishV2(m, sock) {
 }
 
 /**
- * Animasi farm/berkebon
+ * Animasi farm/berkebon — tahapan naratif
  */
-export async function animFarm(m, sock, action) {
-  const steps = [
-    `🌱 ${action || "Menanam"} benih...`,
-    "💧 Menyiram tanaman...",
-    "⏳ Menunggu tumbuh... ▰▰▰▱▱",
+export async function animFarm(m, sock, action, delay = 3000) {
+  const scenes = [
+    `🌱 ${action || "Menanam"} benih...
+
+🔍 Membajak tanah dan menabur benih...`,
+    `🌱➕💧
+
+➕ Menyiram dan merawat tanaman...`,
+    `🌱🌿🌿
+
+➕ Tanaman mulai tumbuh subur...`,
+    `🌿🌿🌿✅
+
+✔️ Panen berhasil! 💹`,
   ];
-  await rpgProgress(m, sock, steps, 800);
+  await rpgScene(m, sock, scenes, delay);
 }
 
 /**
- * Animasi hunt — berburu liar
+ * Animasi hunt — berburu mangsa ala misi klasik
  */
 export async function animHunt(m, sock, target) {
-  await m.reply(`🏹 Memburu ${target}...`);
-  await sleep(800);
-  await m.reply("🔍 Melacak jejak... ▰▰▱▱▱");
-  await sleep(600);
-  await m.reply("⚔️ Menyerang! ▰▰▰▰▰");
-  await sleep(400);
+  const scenes = [
+    `🔍 Sedang mencari mangsa...`,
+    `🎯 Dapat sasaran!`,
+    `🔥 Dor!`,
+    `✔️ Nah ini dia!`,
+  ];
+  await rpgScene(m, sock, scenes, 2500);
 }
 
 /**
