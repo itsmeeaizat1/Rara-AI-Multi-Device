@@ -438,22 +438,29 @@ async function showGroupLeaderboard(m, sock) {
 const READMORE = String.fromCharCode(8206).repeat(4001)
 
 const ALL_FIELDS = [
-  // RPG core
-  { key: 'gold',        title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴏʟᴅ',     label: (u) => `${formatNumber(u.gold)} gold`,           raw: 'Gold' },
-  { key: 'totalExp',    title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟᴇᴠᴇʟ',    label: (u) => `Lv.${u.level} (${formatNumber(u.exp)} XP)`, raw: 'Level' },
-  { key: 'pvpRating',   title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴘᴠᴘ',       label: (u) => `${u.pvpRating} rating (W:${u.pvpWins} L:${u.pvpLosses})`, raw: 'PvP' },
-  { key: 'gems',        title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴇᴍꜱ',      label: (u) => `${formatNumber(u.gems)} gems`,            raw: 'Gems' },
-  { key: 'bossKills',   title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʙᴏꜱꜱ',      label: (u) => `${u.bossKills} boss kills`,              raw: 'Boss' },
-  { key: 'dungeonClears', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴅᴜɴɢᴇᴏɴ', label: (u) => `${u.dungeonClears} dungeon clears`,      raw: 'Dungeon' },
-  { key: 'limit',       title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟɪᴍɪᴛ',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
-  // Mini game & stat (deep-path) — digabung dari rpg/leaderboard.js
+  // ── Section 1: MINI GAME & STATS (di atas) ──
   ...GAME_CATEGORIES.map(g => ({
     key: 'game:' + g.key,
+    group: 'game',
     title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ' + toSC(String(g.raw).toLowerCase()),
     label: (u) => `${formatNumber(deepValue(u.rpg, g.metric))} ${g.label.toLowerCase()}`,
     raw: g.raw,
     sortBy: (users) => users.map(u => ({ ...u, _s: deepValue(u.rpg, g.metric) })).sort((a, b) => b._s - a._s),
   })),
+  // ── Section 2: RPG CORE (di bawah) ──
+  { key: 'gold',        group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴏʟᴅ',     label: (u) => `${formatNumber(u.gold)} gold`,           raw: 'Gold' },
+  { key: 'totalExp',    group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟᴇᴠᴇʟ',    label: (u) => `Lv.${u.level} (${formatNumber(u.exp)} XP)`, raw: 'Level' },
+  { key: 'pvpRating',   group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴘᴠᴘ',       label: (u) => `${u.pvpRating} rating (W:${u.pvpWins} L:${u.pvpLosses})`, raw: 'PvP' },
+  { key: 'gems',        group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴇᴍꜱ',      label: (u) => `${formatNumber(u.gems)} gems`,            raw: 'Gems' },
+  { key: 'bossKills',   group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʙᴏꜱꜱ',      label: (u) => `${u.bossKills} boss kills`,              raw: 'Boss' },
+  { key: 'dungeonClears', group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴅᴜɴɢᴇᴏɴ', label: (u) => `${u.dungeonClears} dungeon clears`,      raw: 'Dungeon' },
+  { key: 'limit',       group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟɪᴍɪᴛ',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
+]
+
+// Section header — pembeda kategori di .leaderboard all (mini game di atas, rpg di bawah)
+const SECTIONS = [
+  { group: 'game', title: 'ᴍɪɴɪ ɢᴀᴍᴇ & ꜱᴛᴀᴛꜱ' },
+  { group: 'rpg',  title: 'ʀᴘɢ ᴄᴏʀᴇ' },
 ]
 
 async function showAllLeaderboards(m, sock) {
@@ -465,17 +472,17 @@ async function showAllLeaderboards(m, sock) {
 
   const mkJid = (u) => u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net'
   const mentions = []
-  const boards = []
 
-  // Bagian VISIBLE — ringkasan juara #1 tiap board
-  const summary = [`Total Player: *${formatNumber(users.length)}*`, ``]
+  // Kumpulin board per section — biar ada pembeda kategori (mini game di atas, rpg di bawah)
+  const sections = SECTIONS.map(s => ({ ...s, summaryLines: [], boardBlocks: [] }))
 
   for (const f of ALL_FIELDS) {
+    const sec = sections.find(s => s.group === (f.group || 'rpg')) || sections[sections.length - 1]
     const sorted = f.sortBy ? f.sortBy(users) : [...users].sort((a, b) => (b[f.key] || 0) - (a[f.key] || 0))
     const champ = sorted[0]
     // board mini game yang belum ada datanya sama sekali → skip (gak usah nampilin 0-an)
     if (f.sortBy && !(champ?._s > 0)) continue
-    summary.push(`${f.raw}: ${f.label(champ)} (@${champ.jid.split('@')[0]})`)
+    sec.summaryLines.push(`${f.raw}: ${f.label(champ)} (@${champ.jid.split('@')[0]})`)
     mentions.push(mkJid(champ))
 
     // Bagian READMORE — top 5 per board
@@ -488,14 +495,15 @@ async function showAllLeaderboards(m, sock) {
     })
     const myRank = sorted.findIndex((u) => u.jid === senderJid)
     if (myRank !== -1) block += `Kamu: #${myRank + 1} dari ${formatNumber(sorted.length)}\n`
-    boards.push(block)
+    sec.boardBlocks.push(block)
   }
 
-  // Board cinta (khusus yang udah punya pasangan)
+  // Board cinta (khusus yang udah punya pasangan) → masuk section RPG
   const cintaUsers = users.filter((u) => u.hasSpouse).sort((a, b) => b.lovePower - a.lovePower)
   if (cintaUsers.length > 0) {
+    const rpgSec = sections.find(s => s.group === 'rpg')
     const champ = cintaUsers[0]
-    summary.push(`Cinta: ${formatNumber(champ.lovePower)} LP (@${champ.jid.split('@')[0]})`)
+    rpgSec.summaryLines.push(`Cinta: ${formatNumber(champ.lovePower)} LP (@${champ.jid.split('@')[0]})`)
     mentions.push(mkJid(champ))
 
     let block = `▌ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴄɪɴᴛᴀ\n`
@@ -504,10 +512,23 @@ async function showAllLeaderboards(m, sock) {
       block += `${medal} @${u.jid.split('@')[0]}${u.jid === senderJid ? ' *(You)*' : ''}\n   ${formatNumber(u.cinta)} affection | ${formatNumber(u.lovePower)} LP\n`
       mentions.push(mkJid(u))
     })
-    boards.push(block)
+    rpgSec.boardBlocks.push(block)
   }
 
-  summary.push(``, `👇 Buka *Baca selengkapnya* buat liat Top 5 tiap board`)
+  // ── Assemble: bagian VISIBLE — ringkasan juara #1 tiap board, dikelompokin per kategori ──
+  const summary = [`Total Player: *${formatNumber(users.length)}*`, ``]
+  const boards = []
+  for (const sec of sections) {
+    if (sec.summaryLines.length === 0) continue // kategori tanpa data → skip sekalian headernya
+    summary.push(`── ${sec.title} ──`)
+    summary.push(...sec.summaryLines)
+    summary.push(``)
+    // Bagian READMORE — section header juga jadi pembeda kategori
+    boards.push(`▌── ${sec.title} ──`)
+    boards.push(...sec.boardBlocks)
+  }
+
+  summary.push(`👇 Buka *Baca selengkapnya* buat liat Top 5 tiap board`)
 
   const content = summary.join('\n') + `\n` + READMORE + `\n\n` + boards.join(`\n`)
   await m.reply(claraWrap('Leaderboard All', content, { mentions }))
