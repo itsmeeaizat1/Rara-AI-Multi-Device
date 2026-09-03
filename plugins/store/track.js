@@ -81,7 +81,7 @@ function progressBar(status) {
   const percent = getProgressPercent(status);
   const filled = Math.round(percent / 12.5);
   const empty = 8 - filled;
-  return "[" + "=".repeat(filled) + " ".repeat(empty) + "] " + percent + "%";
+  return "▰".repeat(filled) + "▱".repeat(empty) + " " + percent + "%";
 }
 
 async function handler(m, { sock }) {

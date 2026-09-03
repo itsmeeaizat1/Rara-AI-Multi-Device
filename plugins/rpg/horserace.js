@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
 
       raceResults.forEach((h, index) => {
         const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "  ";
-        const track = "═".repeat(h.progress) + "🐎" + "═".repeat(10 - h.progress);
+        const track = "▰".repeat(h.progress) + "🐎" + "▱".repeat(10 - h.progress);
         msg += `${medal} #${h.id} ${h.name.padEnd(14)} [🏁${track}]\n`;
       });
 
