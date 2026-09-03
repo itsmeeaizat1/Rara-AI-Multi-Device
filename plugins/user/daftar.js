@@ -279,7 +279,7 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
 
   return (
     `*Selamat datang di Menu Daftar!*\n\n` +
-    `✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
+    `Dengan daftar, data akun kamu jadi lebih aman\n` +
     `dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
     `*ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
     `${benefits.map((item) => `${item}`).join("\n")}\n\n` +

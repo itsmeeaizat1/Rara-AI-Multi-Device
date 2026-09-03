@@ -24,7 +24,7 @@ const WAIFU_POOL = [
   { name: "Emilia", anime: "Re:Zero", rarity: "UR", stars: 5, emoji: "🤍" },
   { name: "Miku Nakano", anime: "Quintessential", rarity: "UR", stars: 5, emoji: "🎧" },
   // SSR (3%)
-  { name: "Zero Two", anime: "Darling in the Franxx", rarity: "SSR", stars: 4, emoji: "🌸" },
+  { name: "Zero Two", anime: "Darling in the Franxx", rarity: "SSR", stars: 4, emoji: "" },
   { name: "Marin Kitagawa", anime: "My Dress-Up Darling", rarity: "SSR", stars: 4, emoji: "👗" },
   { name: "Ai Hoshino", anime: "Oshi no Ko", rarity: "SSR", stars: 4, emoji: "⭐" },
   { name: "Yor Forger", anime: "Spy x Family", rarity: "SSR", stars: 4, emoji: "🗡️" },
@@ -41,7 +41,7 @@ const WAIFU_POOL = [
   { name: "Reze", anime: "Chainsaw Man", rarity: "SR", stars: 3, emoji: "💣" },
   // R (34%)
   { name: "Misty", anime: "Pokemon", rarity: "R", stars: 2, emoji: "💧" },
-  { name: "Sakura", anime: "Naruto", rarity: "R", stars: 2, emoji: "🌸" },
+  { name: "Sakura", anime: "Naruto", rarity: "R", stars: 2, emoji: "" },
   { name: "Ino", anime: "Naruto", rarity: "R", stars: 2, emoji: "💐" },
   { name: "Orihime", anime: "Bleach", rarity: "R", stars: 2, emoji: "🔮" },
   { name: "Rukia", anime: "Bleach", rarity: "R", stars: 2, emoji: "❄️" },
@@ -222,7 +222,7 @@ async function handler(m, { sock }) {
     // Animasi pull
     const isRare = waifu.rarity === "SSR" || waifu.rarity === "UR";
     let msg = "";
-    msg += `${isRare ? "✨ PULL BERHASIL! ✨" : "Pull selesai!"}\n`;
+    msg += `${isRare ? " PULL BERHASIL! " : "Pull selesai!"}\n`;
     msg += `
 `;
     msg += `${waifu.emoji} *${waifu.name}*\n`;

@@ -32,7 +32,7 @@ const SOUNDS = {
   "vineboom": { url: "https://www.myinstants.com/media/sounds/vine-boom.mp3", emoji: "💥" },
   "degla": { url: "https://www.myinstants.com/media/sounds/degladegla.mp3", emoji: "🔇" },
   "naruto": { url: "https://www.myinstants.com/media/sounds/naruto.mp3", emoji: "🍥" },
-  "kawaii": { url: "https://www.myinstants.com/media/sounds/kawaii.mp3", emoji: "✨" },
+  "kawaii": { url: "https://www.myinstants.com/media/sounds/kawaii.mp3", emoji: "" },
   "niconico": { url: "https://www.myinstants.com/media/sounds/niconiconii.mp3", emoji: "🎵" },
   "sugoi": { url: "https://www.myinstants.com/media/sounds/sugoi.mp3", emoji: "🔥" },
   "laugh": { url: "https://www.myinstants.com/media/sounds/laugh.mp3", emoji: "😂" },

@@ -53,7 +53,7 @@ async function handler(m, { sock,  args }) {
     }
     
     if (info.codeAnalysis?.fixed?.code) {
-      text += `*✨ Kode Perbaikan:*\n\`\`\`${meta.detectedLanguage}\n${info.codeAnalysis.fixed.code}\n\`\`\`\n\n`;
+      text += `* Kode Perbaikan:*\n\`\`\`${meta.detectedLanguage}\n${info.codeAnalysis.fixed.code}\n\`\`\`\n\n`;
     }
     
     if (bugInfo.details && bugInfo.details.length > 0) {

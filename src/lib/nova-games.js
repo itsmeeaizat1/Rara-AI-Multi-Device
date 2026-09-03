@@ -29,7 +29,7 @@ try {
 
 const WIN_MESSAGES = [
   "🌟 *GG WP! Otakmu encer!*",
-  "✨ *KEREN ABIS! Lu emang pinter!*",
+  "*KEREN ABIS! Lu emang pinter!*",
   "🎉 *MANTAPPPP! Jawaban sempurna!*",
   "💫 *EPIC! Gak ada lawan lu!*",
   "🏆 *NGERI! Otak lu kayak Google!*",

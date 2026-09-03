@@ -22,13 +22,13 @@ const pluginConfig = {
     isEnabled: true
 }
 
-const DREAM_LEVELS = ['Lucid ✨', 'Mystic 🌟', 'Ethereal 💫', 'Divine 🌙', 'Legendary 🎇']
+const DREAM_LEVELS = ['Lucid', 'Mystic 🌟', 'Ethereal 💫', 'Divine 🌙', 'Legendary 🎇']
 const DREAM_QUALITIES = ['Peaceful 😌', 'Adventure 🚀', 'Mystical 🔮', 'Prophecy 📖', 'Epic 🗺️']
 
 const ELEMENTS = [
     '🌊 Lautan Kristal Bercahaya',
     '🌈 Pelangi Mengambang',
-    '🌺 Taman Melayang',
+    'Taman Melayang',
     '⭐ Konstelasi Hidup',
     '🌙 Bulan Kembar',
     '🏰 Kastil Awan',
@@ -41,7 +41,7 @@ const EVENTS = [
     '🎭 Topeng menari sendiri',
     '🌊 Hujan bintang jatuh ke laut',
     '🎪 Parade makhluk ajaib',
-    '🌺 Bunga bernyanyi lagu kuno',
+    'Bunga bernyanyi lagu kuno',
     '🎨 Lukisan menjadi hidup',
     '🎵 Musik terlihat sebagai warna',
     '⚡ Petir membentuk tangga ke langit'
@@ -60,7 +60,7 @@ const ENCOUNTERS = [
 ]
 
 const POWERS = [
-    '✨ Mengendalikan Waktu',
+    'Mengendalikan Waktu',
     '🌊 Berbicara dengan Elemen',
     '🎭 Shapeshifting',
     '🌈 Manipulasi Realitas',

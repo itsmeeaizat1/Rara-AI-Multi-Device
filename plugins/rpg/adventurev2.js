@@ -200,8 +200,7 @@ async function handler(m, { sock }) {
         expGain = 50 + Math.floor(Math.random() * 100);
         addExp(m, expGain);
         hpChange = heal;
-        extraText = `
-✨ Blessing: HP +${heal} | Mana +${mana} | Energy +${energy}\n`;
+        extraText = `Blessing: HP +${heal} | Mana +${mana} | Energy +${energy}\n`;
         title = "ᴋᴜɪʟ sᴀᴋʀᴀʟ";
         break;
       }

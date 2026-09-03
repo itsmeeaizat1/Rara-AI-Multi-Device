@@ -23,11 +23,11 @@ async function handler(m, { sock, config: botConfig }) {
                     
     let desc = ''
     if (percent >= 90) {
-        desc = 'Cantik banget kayak bidadari! 👸✨'
+        desc = 'Cantik banget kayak bidadari! 👸'
     } else if (percent >= 70) {
         desc = 'Cantik banget! 💕'
     } else if (percent >= 50) {
-        desc = 'Manis dan cantik~ 🌸'
+        desc = 'Manis dan cantik~'
     } else if (percent >= 30) {
         desc = 'Lumayan cantik 😊'
     } else {

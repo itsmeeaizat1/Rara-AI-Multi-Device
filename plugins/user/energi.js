@@ -75,7 +75,7 @@ text += `*〔 💎 Status 〕* ${userStatus}\n\n`
         text += `⚠️ Energi hampir habis!\n`
         text += `Gunakan \`.buyenergi\` untuk beli`
     } else if (isUnlimited) {
-        text += `✨ Energi unlimited aktif!`
+        text += `Energi unlimited aktif!`
     }
     
     await m.reply(claraWrap("energi", text))

@@ -25,7 +25,7 @@ const VARIANTS = {
     id: 1,
     name: "EXTERNAL AD REPLY",
     desc: "InteractiveMessage + externalAdReply (thumbnail + weather) — desain aktif",
-    emoji: "✨",
+    emoji: "",
   },
 };
 
@@ -71,7 +71,7 @@ async function handler(m, { sock, db }) {
 
   const bodys =
     `💬📨 *REPLY VARIANT*\n\n` +
-    `Atur tampilan balasan bot ketika membalas pesan user 💬✨\n` +
+    `Atur tampilan balasan bot ketika membalas pesan user 💬 \n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n`
 
   await sock.sendButton(

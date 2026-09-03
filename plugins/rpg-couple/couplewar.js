@@ -170,12 +170,12 @@ async function handler(m, { sock }) {
     msg += `💥 Final Power: *${targetFinalPower}*\n\n`;
     msg += `  🏆 *Pemenang: ${winnerTeam}*\n`;
     msg += `💕 Affection: *+${winAff}*\n`;
-    msg += `✨ EXP: *+${winExp}*\n`;
+    msg += `EXP: *+${winExp}*\n`;
     msg += `💰 Gold: *+${winGold}*\n`;
     msg += `📊 Power Gap: *${powerDiff}*\n\n`;
     msg += `  💀 *Kalah: ${loserTeam}*\n`;
     msg += `💕 Affection: *${lossAff}*\n`;
-    msg += `✨ EXP: *+${lossExp}*\n`;
+    msg += `EXP: *+${lossExp}*\n`;
     msg += `💰 Gold: *+${lossGold}*\n\n`;
     
     await m.reply(msg);

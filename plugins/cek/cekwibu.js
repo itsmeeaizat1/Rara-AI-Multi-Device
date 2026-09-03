@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (percent >= 70) {
         desc = 'Wibu parah! Kimochi~ 😍'
     } else if (percent >= 50) {
-        desc = 'Lumayan wibu 🌸'
+        desc = 'Lumayan wibu'
     } else if (percent >= 30) {
         desc = 'Sedikit wibu 😊'
     } else {

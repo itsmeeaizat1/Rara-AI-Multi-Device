@@ -28,7 +28,7 @@ const romanticQuotes = [
   "Aku bukan pilot, tapi aku bisa buat hatimu terbang tinggi bersamaku 💕",
   "Kamu tau kenapa aku suka hujan? Karena hujan itu seperti kamu, sejuk di hati 🌧️",
   "Kamu adalah alasan kenapa aku senyum tanpa sebab 😊",
-  "Kalau kamu bintang, aku mau jadi langit yang selalu nemenin kamu ✨",
+  "Kalau kamu bintang, aku mau jadi langit yang selalu nemenin kamu",
   "Aku gak butuh GPS, karena hatiku udah nunjuk ke arahmu 💘",
   "Boleh pinjam hatimu? Janji bakal dijaga selamanya 💖",
   "Kalau cinta itu adalah lagu, kamu adalah melodi terindahnya 🎵",

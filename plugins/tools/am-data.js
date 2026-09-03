@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
           : "")
       : "-";
 
-    let msg = claraWrap("Alight Motion Data", [`*ᴊᴜᴅᴜʟ* → ${info.title || "-"}`, `*ᴜᴋᴜʀᴀɴ* → ${fmtSize(info.size)}`, `*ᴅᴏᴡɴʟᴏᴀᴅ* → ${info.downloads ?? 0}x`, `*ʟɪᴋᴇꜱ* → ${info.likes ?? 0}`, `*ᴠᴇʀꜱɪ* → \`${info.amVersionString || "-"}\``, `*ᴘʟᴀᴛꜰᴏʀᴍ* → ${info.amPlatform || "-"}`, `*ᴍᴀx ꜰꜰ* → v${info.maxFFVer || "-"}`, `*ᴛᴀɴɢɢᴀʟ* → ${fmtDate(info.shareDate)}`, ``, `🎬 *ᴘʀᴏᴊᴇᴄᴛ*`, projects, ``, `✨ *ᴇꜰꜰᴇᴄᴛꜱ* → ${effects}`].join("\n"));
+    let msg = claraWrap("Alight Motion Data", [`*ᴊᴜᴅᴜʟ* → ${info.title || "-"}`, `*ᴜᴋᴜʀᴀɴ* → ${fmtSize(info.size)}`, `*ᴅᴏᴡɴʟᴏᴀᴅ* → ${info.downloads ?? 0}x`, `*ʟɪᴋᴇꜱ* → ${info.likes ?? 0}`, `*ᴠᴇʀꜱɪ* → \`${info.amVersionString || "-"}\``, `*ᴘʟᴀᴛꜰᴏʀᴍ* → ${info.amPlatform || "-"}`, `*ᴍᴀx ꜰꜰ* → v${info.maxFFVer || "-"}`, `*ᴛᴀɴɢɢᴀʟ* → ${fmtDate(info.shareDate)}`, ``, `🎬 *ᴘʀᴏᴊᴇᴄᴛ*`, projects, ``, `*ᴇꜰꜰᴇᴄᴛꜱ* → ${effects}`].join("\n"));
 
     if (info.largeThumbUrl) {
       await sock.sendMedia(m.chat, info.largeThumbUrl, null, m, {

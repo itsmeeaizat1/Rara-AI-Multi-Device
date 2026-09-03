@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     let desc = ''
     if (percent >= 90) {
-        desc = 'Mantappp! kamu adalah orang paling Baik di dunia ini! 😇✨'
+        desc = 'Mantappp! kamu adalah orang paling Baik di dunia ini! 😇'
     } else if (percent >= 70) {
         desc = 'Baik hati dan tidak sombong! 💝'
     } else if (percent >= 50) {

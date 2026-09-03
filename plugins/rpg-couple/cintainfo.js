@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
         msg += `❤️ HP: *+${bonus.hp}*\n`;
         msg += `⚔️ ATK: *+${bonus.atk}*\n`;
         msg += `🛡️ DEF: *+${bonus.def}*\n`;
-        msg += `✨ EXP: *+${bonus.exp}%*\n`;
+        msg += `EXP: *+${bonus.exp}%*\n`;
         msg += `💰 Gold: *+${bonus.gold}%*\n`;
       }
 

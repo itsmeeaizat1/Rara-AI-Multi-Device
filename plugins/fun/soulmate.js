@@ -22,7 +22,7 @@ const pluginConfig = {
     isEnabled: true
 }
 
-const ELEMENTS = ['Api 🔥', 'Air 💧', 'Tanah 🌍', 'Angin 🌪️', 'Petir ⚡', 'Es ❄️', 'Cahaya ✨', 'Bayangan 🌑']
+const ELEMENTS = ['Api 🔥', 'Air 💧', 'Tanah 🌍', 'Angin 🌪️', 'Petir ⚡', 'Es ❄️', 'Cahaya', 'Bayangan 🌑']
 const ZODIAC = ['♈ Aries', '♉ Taurus', '♊ Gemini', '♋ Cancer', '♌ Leo', '♍ Virgo', 
                '♎ Libra', '♏ Scorpio', '♐ Sagittarius', '♑ Capricorn', '♒ Aquarius', '♓ Pisces']
 const SOUL_TYPES = [
@@ -41,7 +41,7 @@ function generateSoulData(name, seed) {
 
 function getMatchDescription(score) {
     if (score >= 90) return "💫 Takdir Sejati"
-    if (score >= 80) return "✨ Harmoni Sempurna"
+    if (score >= 80) return "Harmoni Sempurna"
     if (score >= 70) return "🌟 Koneksi Kuat"
     if (score >= 60) return "⭐ Potensi Bagus"
     if (score >= 50) return "🌙 Perlu Perjuangan"

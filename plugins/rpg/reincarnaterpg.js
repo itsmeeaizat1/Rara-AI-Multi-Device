@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     rpg.atk += 5; rpg.def += 5;
     saveRpg(m, rpg);
     await m.react("🐣");
-  await animGeneric(m, sock, "✨", "Reincarnation");
+  await animGeneric(m, sock, "", "Reincarnation");
     return m.reply(claraWrap("reincarnaterpg", `🔁 Kamu telah bereinkarnasi!\nReinkarnasi ke-${rpg.reincarnation}\nBonus permanen: +5% power\nATK & DEF +5 permanen`, "success"));
   } catch (e) {
     return m.reply(claraWrap("reincarnaterpg", "Terjadi error.", "error"));

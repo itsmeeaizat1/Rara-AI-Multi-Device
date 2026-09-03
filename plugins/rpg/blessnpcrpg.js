@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     saveRpg(m, rpg);
     await m.react("🐣");
   await animGeneric(m, sock, "🙏", "Blessing NPC");
-    return m.reply(claraWrap("blessnpcrpg", `✨ NPC memberkati kamu!\nEffect: *${buff}*`, "success"));
+    return m.reply(claraWrap("blessnpcrpg", `NPC memberkati kamu!\nEffect: *${buff}*`, "success"));
   } catch (e) { return m.reply(claraWrap("blessnpcrpg", "Error.", "error")); }
 }
 export { pluginConfig as config, handler };

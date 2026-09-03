@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
         
         const res = await f(url, 'arrayBuffer')
         const caption = mediaCaption({
-            platformIcon: '🌸',
+            platformIcon: '',
             platformName: 'Asupan',
             title: 'Random Video Asupan',
             format: 'Video',

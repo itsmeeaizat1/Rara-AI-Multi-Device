@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
       m.chat, 
       { 
         image: pixelatedBuffer, 
-        caption: `👾 *PIXEL ART BERHASIL!*\n\nIni dia fotomu dalam gaya pixel art retro 8-bit. Keren kan? ✨` 
+        caption: `👾 *PIXEL ART BERHASIL!*\n\nIni dia fotomu dalam gaya pixel art retro 8-bit. Keren kan?` 
       }, 
       { quoted: m }
     );

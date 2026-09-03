@@ -41,7 +41,7 @@ const PLATFORMS = {
   threads:     { alias: ["th"], formats: ["image", "video"], icon: "🧵", needsUrl: true },
   dailymotion: { alias: ["dm"], formats: ["video", "audio"], icon: "🎬", needsUrl: true },
   snackvideo:  { alias: ["sv"], formats: ["video", "audio"], icon: "🍿", needsUrl: true },
-  likee:       { alias: ["lk"], formats: ["video", "audio"], icon: "✨", needsUrl: true },
+  likee:       { alias: ["lk"], formats: ["video", "audio"], icon: "", needsUrl: true },
   terabox:     { alias: ["tb"], formats: ["file", "video"], icon: "📦", needsUrl: true },
 };
 

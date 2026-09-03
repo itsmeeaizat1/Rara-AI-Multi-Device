@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
       msg += `👔 Job: *${currentJob.name}*\n`;
       msg += `📊 Job Level: *${rpg.jobLevel || 1}*\n`;
       msg += `📖 Job EXP: *${rpg.jobExp || 0}/${rpg.jobExpNext || 50}*\n`;
-      msg += `✨ Skill Points: *${rpg.skillPoints || 0}*\n`;
+      msg += `Skill Points: *${rpg.skillPoints || 0}*\n`;
       msg += `
 `;
 
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
         const mySkills = rpg.skills || [];
 
         let msg = "";
-        msg += `✨ Skill Points: *${rpg.skillPoints || 0}*\n`;
+        msg += `Skill Points: *${rpg.skillPoints || 0}*\n`;
         msg += `👔 Job: *${JOB_DB[rpg.job]?.name || "Pemula"}*\n`;
         msg += `
 `;

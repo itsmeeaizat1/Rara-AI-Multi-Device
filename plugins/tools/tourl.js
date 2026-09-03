@@ -608,7 +608,7 @@ async function handler(m, { sock }) {
   }
 
   let text = `🚀 *UPLOAD BERHASIL!* 🚀\n\n`;
-  text += `Yeay! Media kamu udah berhasil di-upload ke server awan. Silakan pilih linknya dan salin pakai tombol di bawah ya kak! ✨\n\n`;
+  text += `Yeay! Media kamu udah berhasil di-upload ke server awan. Silakan pilih linknya dan salin pakai tombol di bawah ya kak! \n\n`;
 
   let contentTxt = "";
   results.forEach((r, i) => {
