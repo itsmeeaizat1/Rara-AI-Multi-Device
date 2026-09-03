@@ -2,7 +2,7 @@
 // survival.js — Survival mode (HP, hunger, thirst management)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animSurvival } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "survival",
@@ -100,8 +100,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "hunt" || subCmd === "berburu") {
       await m.react("🕒");
-    await m.reply("🏕️ Mode survival...");
-    await rpgSleep(900);
+    await animSurvival(m, sock);
       const success = Math.random() > 0.3;
       if (success) {
         data.hunger = Math.min(MAX_HUNGER, data.hunger + 30);

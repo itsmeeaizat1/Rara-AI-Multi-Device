@@ -1,5 +1,16 @@
 // nova-rpg-anim.js — RPG Animation Helper
-// Progressive message-based animation system for WhatsApp RPG
+// Sistem animasi RPG modern: "morphing message" — SATU pesan yang di-edit
+// berjenjang antar scene (edit-in-place), bukan banjir pesan era bot lama.
+// Scene emoji bergerak + caption naratif + counter tahap & progress bar
+// dalam satu frame pesan yang selalu ter-update.
+//
+// Konvensi caption naratif:
+//   🔍 = mulai mencari, ✔️ = tahap selesai, ➕ = sedang berlangsung, 💹 = hasil/uang
+//
+// Fallback otomatis: jika edit pesan gagal (device lama/dll), stage berikutnya
+// dikirim sebagai pesan baru — animasi tetap jalan di semua kondisi.
+
+import { toSC } from "./nova-menu-style.js";
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -19,31 +30,299 @@ export async function rpgProgress(m, sock, steps, delay = 1200) {
   }
 }
 
+const sceneBar = (cur, total) => "▰".repeat(cur) + "▱".repeat(Math.max(0, total - cur));
+
 /**
- * Animasi kerja — simulasi proses bekerja
+ * Engine animasi "morphing message" modern.
+ * Stage 1 dikirim sebagai pesan baru; stage berikutnya meng-EDIT pesan yang sama
+ * (edit-in-place ala bot modern) — satu pesan yang ber-morph antar scene.
+ * Jeda antar stage disertai indikator "mengetik..." agar terasa hidup.
+ * Jika edit tidak tersedia/gagal → fallback kirim pesan baru per stage.
+ *
+ * @param {object} m - Baileys message object
+ * @param {object} sock - Baileys socket
+ * @param {string[]} scenes - Array scene (boleh multi-line)
+ * @param {number} delay - Jeda antar scene (ms), default 3000
+ * @param {string} [title] - Judul frame (otomatis smallcaps)
  */
-export async function animKerja(m, sock, jobName, activity) {
-  const steps = [
-    `👔 ${jobName}: ${activity}...`,
-    `⏳ Sedang bekerja...`,
-    `📦 Menyelesaikan tugas...`,
+export async function rpgScene(m, sock, scenes, delay = 3000, title = "") {
+  const total = scenes.length;
+  if (total === 0) return;
+  const head = title ? `「 ✦ ${toSC(title)} ✦ 」\n\n` : "";
+  const frame = (i) =>
+    `${head}${scenes[i]}\n\n${toSC("tahap")} ${i + 1}/${total} ${sceneBar(i + 1, total)}`;
+
+  // Stage 1 — kirim pesan pertama, simpan key untuk mode edit
+  let key = null;
+  if (sock?.sendMessage && m.chat) {
+    try {
+      const sent = await sock.sendMessage(m.chat, { text: frame(0) });
+      key = sent?.key || null;
+    } catch {
+      key = null;
+    }
+  }
+  if (!key) await m.reply(frame(0));
+
+  // Stage 2..n — edit pesan yang sama; fallback pesan baru jika edit gagal
+  for (let i = 1; i < total; i++) {
+    if (sock?.sendPresenceUpdate) {
+      try { await sock.sendPresenceUpdate("composing", m.chat); } catch {}
+    }
+    await sleep(delay);
+    if (key) {
+      try {
+        await sock.sendMessage(m.chat, { text: frame(i), edit: key });
+        continue;
+      } catch {
+        key = null; // edit gagal → mode fallback
+      }
+    }
+    await m.reply(frame(i));
+  }
+}
+
+/* ================= SCENE LIBRARY (ala Alya) =================
+   Tiap game dapat scene sendiri: karakter/objek bergerak tiap stage
+   + caption naratif. Delay default 3s → total animasi ~12s. */
+
+const SCENE_FISHING = (spot) => [
+  `~~🌊🌊🌊🎣🌊🌊🌊~~
+   ~ ~ ~ ~
+
+🔍 ${spot}...`,
+
+  `~~🌊🌊🐟🌊🎣🌊🌊~~
+   ~ ~ ~ ~
+
+➕ Ada ikan mendekat ke umpan...`,
+
+  `~~🌊🌊🐟🎣🌊🌊🌊~~
+   ~ ~ ~ ~
+
+➕ Kail ditarik ikan!`,
+
+  `~~🌊🎣🐟🌊🌊🌊🌊~~
+   ~ ~ ~ ~
+
+➕ Menarik kail dengan sekuat tenaga...`,
+
+  `🎣🐟💥💦
+
+✔️ Ikan berhasil keluar dari air!`];
+
+const SCENE_MINING = (spot) => [
+  `🕳️🕯️
+🧑⛏️⬛⬛⬛⬛⬛
+🪨🪨🪨🪨🪨🪨🪨
+
+🔍 ${spot}, mulai mengayunkan pickaxe...`,
+
+  `🕳️🕯️
+🧑⛏️💥⬛⬛⬛
+🪨🪨🪨🪨🪨🪨🪨
+
+✔️ Batu mulai retak!`,
+
+  `🕳️🕯️
+🧑⛏️⬛⬛⬛
+🪨🪨💎🪨🪨🪨🪨
+
+➕ Menemukan urat bijih...`,
+
+  `🕳️🕯️
+🧑⛏️💎🪨🪨
+🪨💎🪨💎🪨🪨
+
+✔️ Bijih berhasil dipecahkan!`];
+
+const SCENE_NEBANG = (spot) => [
+  `🧑🪓  🌳
+
+🔍 ${spot}, mulai mengayunkan kapak...`,
+
+  `🧑🪓💥 🌳
+
+➕ Tak! Tak! Batang mulai retak...`,
+
+  `🧑🪓💥🌳
+      ↘️
+
+➕ Pohon makin miring...`,
+
+  `🧑🪓💨
+
+🌳💨💨
+
+✔️ TOBRAK! Pohon tumbang! 🪵🪵🪵`];
+
+const SCENE_NGULI = (spot) => [
+  `👷🧱🧱🧱
+🧱🧱🧱🧱🧱
+
+🔍 ${spot}, menyiapkan material...`,
+
+  `👷🧱🧱🧱
+🧱🧱🧱🧱🧱
+
+➕ Mengangkut material ke atas...`,
+
+  `👷🧱🧱
+🧱🧱🧱🧱🧱🧱
+
+➕ Menata bata satu per satu...`,
+
+  `👷🏗️
+🧱🧱🧱🧱🧱🧱🧱
+
+✔️ Gedung makin tinggi!`];
+
+const SCENE_SAMPAH = (spot) => [
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️
+
+🔍 ${spot}, menyusuri gang kompleks...`,
+
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️🍾🥫
+
+➕ Menemukan botol dan kaleng...`,
+
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️📦
+
+➕ Memungut sampah plastik...`,
+
+  `🏘️🏘️🏘️🌳🏘️
+🚶🗑️📦✅
+
+✔️ Karung penuh! Berhasil terkumpul 💹`];
+
+const SCENE_FORAGE = (spot) => [
+  `🌿🌿🌳🌿🌿
+
+🔍 ${spot}, masuk ke semak-semak...`,
+
+  `🌿🌿🌳🌿🌿
+🧑🌿🍄
+
+➕ Menyusuri area di belakang rumah...`,
+
+  `🌿🌿🌳🌿🌿
+🧑🌿🌱🍄🌿
+
+➕ Menemukan tanaman liar...`,
+
+  `🌿🌿🌳🌿🌿
+🧑🌿🌱🍄🌿✅
+
+✔️ Panen tanaman berhasil!`];
+
+const SCENE_OJEK = [
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+🚶⬛⬛⬛⬛⬛⬛🛵⬛
+🏘️🏘️🏘️🌳  🌳 🏘️
+
+🔍 Mencari pelanggan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+🚶⬛⬛⬛⬛⬛⬛🛵⬛
+🏘️🏘️🏘️🌳  🌳 🏘️
+
+✔️ Mendapatkan orderan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+🛵⬛⬛⬛⬛⬛⬛⬛⬛
+🏘️🏘️🏘️🌳  🌳 🏘️ 🚶
+
+➕ Mengantar ke tujuan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+⬛⬛⬛⬛⬛⬛🛵⬛⬛
+🏘️🏘️🏘️🌳  🌳 🏘️
+
+➕ Sampai di tujuan...`,
+
+  `⬛⬛⬛⬛⬛⬛⬛⬛⬛
+⬛⬛⬛⬛⬛⬛🛵⬛⬛
+🏘️🏘️🏘️🌳  🌳 🏘️ 🚶
+
+➕ 💹 Menerima gaji...`];
+
+const SCENE_GENERIC = (emoji, location) => [
+  `${emoji} ${location}...`,
+  `${emoji} ➕ Sedang fokus mengerjakan...`,
+  `${emoji} ➕ Hampir selesai...`,
+  `${emoji} ✔️ Berhasil!`];
+
+/* ================= PUBLIC ANIM API ================= */
+
+/**
+ * Animasi gather — dispatch scene tematik berdasarkan emoji.
+ * Dipakai: mancing 🎣, mining ⛏️, nebang 🪓, nguli 👷, sampah 🗑️, forage 🌿
+ */
+export async function animGather(m, sock, emoji, location, delay = 3000) {
+  // normalisasi label: buang "..." buntut agar caption tidak dobel titik
+  const spot = String(location || "").replace(/\s*\.{2,}$/, "");
+  let scenes, title;
+  switch (emoji) {
+    case "🎣": scenes = SCENE_FISHING(spot || "Memancing di danau"); title = "mancing"; break;
+    case "⛏️": scenes = SCENE_MINING(location || "Menambang di gua"); title = "menambang"; break;
+    case "🪓": scenes = SCENE_NEBANG(location || "Menebang pohon di hutan"); title = "menebang pohon"; break;
+    case "👷": scenes = SCENE_NGULI(location || "Bekerja sebagai kuli"); title = "kuli bangunan"; break;
+    case "🗑️": scenes = SCENE_SAMPAH(location || "Mengumpulkan sampah"); title = "memungut sampah"; break;
+    case "🌿": scenes = SCENE_FORAGE(location || "Mencari tanaman liar"); title = "mencari tanaman"; break;
+    default: scenes = SCENE_GENERIC(emoji, location || "Bekerja"); title = "";
+  }
+  await rpgScene(m, sock, scenes, delay, title);
+}
+
+/**
+ * Animasi kerja — tahapan naratif misi klasik + scene lapangan
+ */
+export async function animKerja(m, sock, jobName, activity, delay = 3000) {
+  const scenes = [
+    `🔍 Berangkat ke tempat kerja...`,
+    `✔️ Mulai bekerja sebagai ${jobName}...`,
+    `➕ ${activity}...`,
+    `➕ Menyelesaikan tugas...`,
+    `➕ 💹 Menerima gaji...`,
   ];
-  await rpgProgress(m, sock, steps, 1000);
+  await rpgScene(m, sock, scenes, delay, jobName);
+}
+
+/**
+ * Animasi ojek online — minimap ala misi klasik
+ */
+export async function animOjek(m, sock, delay = 3000) {
+  await rpgScene(m, sock, SCENE_OJEK, delay, "ojek online");
 }
 
 /**
  * Animasi bertarung — round-by-round combat log
  */
-export async function animBattle(m, sock, attacker, defender, rounds) {
-  let log = `⚔️ ╭─「 BATTLE START 」\n`;
-  log += `│ ${attacker} vs ${defender}\n`;
-  log += `╰────\n`;
-  await m.reply(log);
-  await sleep(800);
+export async function animBattle(m, sock, attacker, defender, rounds, delay = 1400) {
+  const total = rounds.length;
+  const shown = [];
+  let key = null;
+  const frame = () => `⚔️ ${attacker} vs ${defender}\n\n` + shown.join("\n");
+  const sendFrame = async () => {
+    if (key) {
+      try { await sock.sendMessage(m.chat, { text: frame(), edit: key }); return; }
+      catch { key = null; }
+    } else if (sock?.sendMessage && m.chat) {
+      try {
+        const s = await sock.sendMessage(m.chat, { text: frame() });
+        key = s?.key || null;
+        if (key) return;
+      } catch {}
+    }
+    await m.reply(frame());
+  };
 
-  for (let i = 0; i < rounds.length; i++) {
+  for (let i = 0; i < total; i++) {
     const r = rounds[i];
-    let line = `┊ Round ${i + 1}: `;
+    let line = `➕ R${i + 1}: `;
     if (r.dodged) {
       line += `💨 ${defender} menghindar!`;
     } else if (r.crit) {
@@ -54,99 +333,87 @@ export async function animBattle(m, sock, attacker, defender, rounds) {
     if (r.monsterDmg && !r.dodged) {
       line += ` | ${defender} balas *${r.monsterDmg}*`;
     }
-    line += `\n   ${defender} HP: ${Math.max(0, r.monsterHp)}❤️`;
+    line += ` — ${defender} HP: ${Math.max(0, r.monsterHp)}❤️`;
 
-    if (i % 2 === 1 || i === rounds.length - 1) {
-      await m.reply(line);
-      await sleep(700);
+    if (i % 2 === 1 || i === total - 1) {
+      shown.push(line);
+      await sendFrame();
+      await sleep(delay);
     }
   }
 }
 
 /**
- * Animasi mining/digging/fishing — progress bar
- */
-export async function animGather(m, sock, emoji, location) {
-  await m.reply(`${emoji} ${location}...`);
-  await sleep(600);
-  await m.reply(`⏳ Progress: ▰▰▱▱▱`);
-  await sleep(500);
-  await m.reply(`⏳ Progress: ▰▰▰▰▱`);
-  await sleep(500);
-}
-
-/**
  * Animasi slot machine — spinning reels
  */
-export async function animSlot(m, sock, symbols) {
-  const spinSyms = ["🍒", "🍋", "🍊", "🔔", "⭐", "💎"];
-  await m.reply("🎰 Spinning...");
-  await sleep(500);
-  for (let i = 0; i < 2; i++) {
-    const r = spinSyms[Math.floor(Math.random() * spinSyms.length)];
-    const r2 = spinSyms[Math.floor(Math.random() * spinSyms.length)];
-    const r3 = spinSyms[Math.floor(Math.random() * spinSyms.length)];
-    await m.reply(`🎰 [ ${r} | ${r2} | ${r3} ]`);
-    await sleep(400);
-  }
-  await m.reply(`🎰 [ ${symbols[0]} | ${symbols[1]} | ${symbols[2]} ] ◄`);
-  await sleep(300);
+export async function animSlot(m, sock, symbols, delay = 1500) {
+  const rnd = () => ["🍒", "🍋", "🍊", "🔔", "⭐", "💎"][Math.floor(Math.random() * 6)];
+  await rpgScene(m, sock, [
+    `🎰 [ ${rnd()} | ${rnd()} | ${rnd()} ]`,
+    `🎰 [ ${symbols[0]} | ${rnd()} | ${rnd()} ]`,
+    `🎰 [ ${symbols[0]} | ${symbols[1]} | ${rnd()} ]`,
+    `🎰 [ ${symbols[0]} | ${symbols[1]} | ${symbols[2]} ] ◄`,
+  ], delay, "slot");
 }
 
 /**
  * Animasi roulette — ball spinning
  */
-export async function animRoulette(m, sock) {
-  await m.reply("🎡 Roulette spinning...");
-  await sleep(800);
-  await m.reply("🎡 Bola berputar... 🔄");
-  await sleep(700);
-  await m.reply("🎡 Melambat...");
-  await sleep(500);
+export async function animRoulette(m, sock, delay = 1800) {
+  await rpgScene(m, sock, [
+    `🎡 Roulette berputar...`,
+    `➕ Bola meluncur di roda... 🔄`,
+    `➕ Bola melambat...`,
+    `✔️ Bola berhenti!`,
+  ], delay, "roulette");
 }
 
 /**
  * Animasi dungeon — entering
  */
-export async function animDungeon(m, sock, stageCount) {
-  await m.reply(`🏰 Memasuki dungeon... (${stageCount} stage)`);
-  await sleep(1000);
+export async function animDungeon(m, sock, stageCount, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🏰 Berdiri di depan gerbang dungeon...`,
+    `➕ Menyusuri lorong gelap (${stageCount} stage)...`,
+    `➕ Suara geraman terdengar dari kejauhan...`,
+    `✔️ Ruang bos terdeteksi!`,
+  ], delay, "dungeon");
 }
 
 /**
  * Animasi adventure — journey
  */
-export async function animAdventure(m, sock, biome) {
-  const steps = [
+export async function animAdventure(m, sock, biome, delay = 2000) {
+  await rpgScene(m, sock, [
     `🧭 Berangkat ke ${biome}...`,
-    `🚶 Menjelajah area...`,
-    `🔍 Mencari sesuatu...`,
-  ];
-  await rpgProgress(m, sock, steps, 900);
+    `➕ Menjelajah area...`,
+    `➕ Mencari sesuatu yang berkilau...`,
+    `✔️ Menemukan sesuatu!`,
+  ], delay, "petualangan");
 }
 
 /**
  * Animasi crafting — progress bar
  */
-export async function animCraft(m, sock, craftName) {
-  await m.reply(`🔨 Crafting ${craftName}...`);
-  await sleep(600);
-  await m.reply(`⏳ ▰▰▰▱▱`);
-  await sleep(500);
-  await m.reply(`⏳ ▰▰▰▰▰ ✅`);
-  await sleep(300);
+export async function animCraft(m, sock, craftName, delay = 1800) {
+  await rpgScene(m, sock, [
+    `🔨 Menyiapkan material untuk ${craftName}...`,
+    `➕ Menempa dan merakit...`,
+    `➕ Finishing dan mengasah...`,
+    `✔️ ${craftName} selesai dibuat!`,
+  ], delay, "crafting");
 }
 
 /**
  * Animasi gacha — suspense reveal
  */
-export async function animGacha(m, sock) {
-  await m.reply("🎁 Membuka gacha...");
-  await sleep(800);
-  await m.reply("Cahaya muncul...");
-  await sleep(700);
-  await m.reply("🌟 Reveal...");
-  await sleep(500);
+export async function animGacha(m, sock, delay = 1800) {
+  await rpgScene(m, sock, [
+    `🎁 Membuka kotak gacha...`,
+    ` Cahaya mulai memancar...`,
+    `➕ Kaget! Ada sesuatu di dalam...`,
+    `✔️ Reveal!`,
+  ], delay, "gacha");
 }
 
 export { sleep as rpgSleep };
@@ -154,50 +421,46 @@ export { sleep as rpgSleep };
 /**
  * Animasi heal/rest — recovery process
  */
-export async function animHeal(m, sock) {
-  await m.reply("🧪 Menyiapkan ramuan...");
-  await sleep(600);
-  await m.reply("💚 HP regenerating... ▰▰▱▱▱");
-  await sleep(500);
-  await m.reply("💚 HP regenerating... ▰▰▰▰▰ ✅");
-  await sleep(300);
+export async function animHeal(m, sock, delay = 1800) {
+  await rpgScene(m, sock, [
+    `🧪 Menyiapkan ramuan...`,
+    `➕ Meminum dan merasakan efeknya...`,
+    `✔️ HP pulih kembali! 💚`,
+  ], delay, "heal");
 }
 
 /**
  * Animasi bank — transaksi
  */
-export async function animBank(m, sock, action) {
+export async function animBank(m, sock, action, delay = 1800) {
   const emoji = action === "nabung" ? "🏦" : "💸";
-  await m.reply(`${emoji} Memproses ${action}...`);
-  await sleep(700);
-  await m.reply("⏳ Menghitung koin... ▰▰▰▱▱");
-  await sleep(500);
-  await m.reply("⏳ Selesai! ▰▰▰▰▰ ✅");
-  await sleep(300);
+  await rpgScene(m, sock, [
+    `${emoji} Memproses ${action}...`,
+    `➕ Menghitung koin...`,
+    `✔️ Transaksi selesai!`,
+  ], delay, "bank");
 }
 
 /**
  * Animasi shop/buy — pembelian
  */
-export async function animShop(m, sock, action) {
-  await m.reply(`🛒 ${action === "buy" ? "Membeli" : "Menjual"} item...`);
-  await sleep(600);
-  await m.reply("⏳ Memproses transaksi... ▰▰▰▱▱");
-  await sleep(400);
-  await m.reply("⏳ Selesai! ▰▰▰▰▰ ✅");
-  await sleep(300);
+export async function animShop(m, sock, action, delay = 1800) {
+  await rpgScene(m, sock, [
+    `🛒 ${action === "buy" ? "Membeli" : "Menjual"} item...`,
+    `➕ Memproses transaksi...`,
+    `✔️ Selesai!`,
+  ], delay, "toko");
 }
 
 /**
  * Animasi daily reward — unboxing
  */
-export async function animDaily(m, sock) {
-  await m.reply("📅 Cek login harian...");
-  await sleep(600);
-  await m.reply("🎁 Membuka reward box...");
-  await sleep(800);
-  await m.reply("Reveal...");
-  await sleep(400);
+export async function animDaily(m, sock, delay = 1800) {
+  await rpgScene(m, sock, [
+    `📅 Cek login harian...`,
+    `🎁 Membuka kotak reward...`,
+    `✔️ Reveal!`,
+  ], delay, "daily reward");
 }
 
 /**
@@ -215,35 +478,34 @@ export async function animLevelUp(m, sock, level) {
 /**
  * Animasi quest/mission
  */
-export async function animQuest(m, sock, questName) {
-  await m.reply(`📜 Menerima quest: ${questName}...`);
-  await sleep(700);
-  await m.reply("⚔️ Menjalankan misi...");
-  await sleep(800);
+export async function animQuest(m, sock, questName, delay = 2000) {
+  await rpgScene(m, sock, [
+    `📜 Menerima quest: ${questName}...`,
+    `➕ Menjalankan misi...`,
+    `✔️ Misi selesai!`,
+  ], delay, "quest");
 }
 
 /**
  * Animasi crafting upgrade/enchant
  */
-export async function animEnchant(m, sock, itemName) {
-  await m.reply(`Meng-enchant ${itemName}...`);
-  await sleep(600);
-  await m.reply("⏳ ▰▰▱▱▱ Glow effect...");
-  await sleep(500);
-  await m.reply("⏳ ▰▰▰▰▰ ✅ Berhasil!");
-  await sleep(300);
+export async function animEnchant(m, sock, itemName, delay = 1800) {
+  await rpgScene(m, sock, [
+    ` Meng-enchant ${itemName}...`,
+    `➕ Mantra mulai meresap...`,
+    `✔️ Berhasil!`,
+  ], delay, "enchant");
 }
 
 /**
  * Animasi investasi
  */
-export async function animInvest(m, sock, amount) {
-  await m.reply(`📈 Menginvestasikan ${amount} gold...`);
-  await sleep(700);
-  await m.reply("📊 Market analyzing... ▰▰▰▱▱");
-  await sleep(500);
-  await m.reply("📊 Done! ▰▰▰▰▰");
-  await sleep(300);
+export async function animInvest(m, sock, amount, delay = 1800) {
+  await rpgScene(m, sock, [
+    `📈 Menginvestasikan ${amount} gold...`,
+    `➕ Menganalisis pasar...`,
+    `✔️ Investasi tercatat!`,
+  ], delay, "investasi");
 }
 
 /**
@@ -261,79 +523,267 @@ export async function animFishV2(m, sock) {
 }
 
 /**
- * Animasi farm/berkebon
+ * Animasi farm/berkebon — tahapan naratif
  */
-export async function animFarm(m, sock, action) {
-  const steps = [
-    `🌱 ${action || "Menanam"} benih...`,
-    "💧 Menyiram tanaman...",
-    "⏳ Menunggu tumbuh... ▰▰▰▱▱",
+export async function animFarm(m, sock, action, delay = 3000) {
+  const scenes = [
+    `🌱 ${action || "Menanam"} benih...
+
+🔍 Membajak tanah dan menabur benih...`,
+    `🌱➕💧
+
+➕ Menyiram dan merawat tanaman...`,
+    `🌱🌿🌿
+
+➕ Tanaman mulai tumbuh subur...`,
+    `🌿🌿🌿✅
+
+✔️ Panen berhasil! 💹`,
   ];
-  await rpgProgress(m, sock, steps, 800);
+  await rpgScene(m, sock, scenes, delay, "berkebon");
 }
 
 /**
- * Animasi hunt — berburu liar
+ * Animasi hunt — berburu mangsa ala misi klasik
  */
 export async function animHunt(m, sock, target) {
-  await m.reply(`🏹 Memburu ${target}...`);
-  await sleep(800);
-  await m.reply("🔍 Melacak jejak... ▰▰▱▱▱");
-  await sleep(600);
-  await m.reply("⚔️ Menyerang! ▰▰▰▰▰");
-  await sleep(400);
+  const scenes = [
+    `🔍 Sedang mencari mangsa...`,
+    `🎯 Dapat sasaran!`,
+    `🔥 Dor!`,
+    `✔️ Nah ini dia!`,
+  ];
+  await rpgScene(m, sock, scenes, 2500, "berburu");
 }
 
 /**
  * Animasi arena PvP
  */
-export async function animArena(m, sock, p1, p2) {
-  await m.reply(`⚔️ ╭─「 ARENA PVP 」`);
-  await sleep(500);
-  await m.reply(`│ ${p1} vs ${p2}`);
-  await sleep(500);
-  await m.reply("│ Fight starts in 3...");
-  await sleep(500);
-  await m.reply("│ 2...");
-  await sleep(500);
-  await m.reply("│ 1... FIGHT! 🥊");
-  await sleep(300);
+export async function animArena(m, sock, p1, p2, delay = 1500) {
+  await rpgScene(m, sock, [
+    `⚔️ ${p1} vs ${p2}`,
+    `➕ Kedua petarung saling menatap...`,
+    `➕ 3... 2... 1...`,
+    `✔️ FIGHT! 🥊`,
+  ], delay, "arena pvp");
 }
 
 /**
  * Animasi auction — bidding
  */
-export async function animAuction(m, sock, item) {
-  await m.reply(`🏛️ Lelang: ${item} dimulai!`);
-  await sleep(800);
-  await m.reply("💰 Menerima tawaran... ▰▰▱▱▱");
-  await sleep(600);
-  await m.reply("💰 Tawaran naik! ▰▰▰▰▰");
-  await sleep(400);
+export async function animAuction(m, sock, item, delay = 1800) {
+  await rpgScene(m, sock, [
+    `🏛️ Lelang ${item} dimulai!`,
+    `💰 Menerima tawaran...`,
+    `➕ Tawaran makin tinggi!`,
+    `✔️ Hammer jatuh!`,
+  ], delay, "lelang");
 }
 
 /**
  * Animasi skill learning
  */
-export async function animLearnSkill(m, sock, skillName) {
-  await m.reply(`📖 Mempelajari ${skillName}...`);
-  await sleep(800);
-  await m.reply("⏳ ▰▰▱▱▱ Reading scroll...");
-  await sleep(500);
-  await m.reply("⏳ ▰▰▰▰▱ Practicing...");
-  await sleep(500);
-  await m.reply("✅ Mastered!");
-  await sleep(300);
+export async function animLearnSkill(m, sock, skillName, delay = 2000) {
+  await rpgScene(m, sock, [
+    `📖 Mempelajari ${skillName}...`,
+    `➕ Membaca gulungan...`,
+    `➕ Berlatih gerakan...`,
+    `✔️ Skill dikuasai!`,
+  ], delay, "belajar skill");
 }
 
 /**
  * Animasi generic — untuk plugin yang butuh animasi simple
  */
-export async function animGeneric(m, sock, emoji, label, steps) {
+export async function animGeneric(m, sock, emoji, label, steps, delay = 2000) {
   const fullSteps = steps || [
     `${emoji} ${label}...`,
-    `⏳ Progress... ▰▰▰▱▱`,
-    `⏳ Done! ▰▰▰▰▰ ✅`,
+    `➕ Sedang diproses...`,
+    `✔️ Selesai!`,
   ];
-  await rpgProgress(m, sock, fullSteps, 800);
+  await rpgScene(m, sock, fullSteps, delay, label || "");
+}
+
+/* ============ ANIMASI EVENT & GAME POPULER (morphing) ============ */
+
+/**
+ * Sabung ayam — arena adu ayam
+ */
+export async function animSabung(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🐓 Arena sabung semakin ramai...\n\n🐓 🥊 🐓`,
+    `➕ Kedua ayam saling menerjang!\n\n🐓💥🐓`,
+    `➕ Ronde panas! Bulu beterbangan...\n\n💨🐓💥🐓💨`,
+    `✔️ Ronde selesai! Menunggu hasil pertarungan...`,
+  ], delay, "sabung ayam");
+}
+
+/**
+ * Duel dadu — lemparan dadu
+ */
+export async function animDice(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🎲 Melempar dadu ke meja...`,
+    `➕ Dadu berputar... 🎲🔄`,
+    `➕ Dadu melambat...`,
+    `✔️ Angka keluar!`,
+  ], delay, "duel dadu");
+}
+
+/**
+ * Hi-Lo dadu — tebak besar/kecil
+ */
+export async function animHiLo(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🎲 Melempar dadu...`,
+    `➕ Dadu bergulir di meja...`,
+    `✔️ Angka keluar!`,
+  ], delay, "hi-lo dadu");
+}
+
+/**
+ * Pacuan kuda — balapan kuda
+ */
+export async function animHorserace(m, sock, horseName, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🐎 ${horseName} masuk lintasan...`,
+    `🏁 Start! Kuda-kuda melesat...`,
+    `➕ Tikungan terakhir, posisi terdepan diperebutkan!`,
+    `✔️ Melewati garis finis!`,
+  ], delay, "pacuan kuda");
+}
+
+/**
+ * Lotre — pembelian tiket undian
+ */
+export async function animLottery(m, sock, count, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🎟️ Membeli ${count} tiket undian...`,
+    `➕ Menghitung nomor keberuntungan...`,
+    `✔️ Tiket resmi masuk undian!`,
+  ], delay, "lotre");
+}
+
+/**
+ * Gajian — ambil gaji harian
+ */
+export async function animGajian(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🏦 Menuju kasir kantor...`,
+    `➕ Menghitung gaji...`,
+    `✔️ Gaji cair! 💹`,
+  ], delay, "gajian");
+}
+
+/**
+ * Heist — merampok target
+ */
+export async function animHeist(m, sock, emoji, targetName, delay = 2000) {
+  await rpgScene(m, sock, [
+    `${emoji || "🥷"} Menyusup ke ${targetName}...`,
+    `➕ Merampok isi brankas...`,
+    `✔️ Kabur dengan jarahan!`,
+  ], delay, "heist");
+}
+
+/**
+ * Harta karun — penggalian harta
+ */
+export async function animTreasure(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🗺️ Mendekati titik X di peta...`,
+    `➕ Menggali dengan cangkul...`,
+    `➕ Ada kilau emas dari dalam tanah! `,
+    `✔️ Peti harta ditemukan!`,
+  ], delay, "harta karun");
+}
+
+/**
+ * Casino — putaran mesin
+ */
+export async function animCasino(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🎰 Mesin mulai berputar...`,
+    `➕ Reel pertama melambat...`,
+    `➕ Reel kedua berhenti...`,
+    `✔️ Reel terakhir menentukan nasib!`,
+  ], delay, "casino");
+}
+
+/**
+ * Begal — merampok di jalan
+ */
+export async function animBegal(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🦹 Mengintai target dari kegelapan...`,
+    `➕ Menyergap dengan gerakan cepat...`,
+    `✔️ Aksi selesai! Lari dari TKP...`,
+  ], delay, "begal");
+}
+
+/**
+ * Boss fight — serang boss
+ */
+export async function animBossFight(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🐲 Boss muncul di hadapanmu!`,
+    `➕ Menghindari serangan besar...`,
+    `➕ Menemukan celah pertahanannya!`,
+    `✔️ Melepaskan serangan pamungkas!`,
+  ], delay, "boss fight");
+}
+
+/**
+ * Guild war — perang antar guild
+ */
+export async function animGuildWar(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `⚔️ Guild berkumpul di markas...`,
+    `➕ Barisan maju ke medan perang...`,
+    `✔️ Peperangan dimulai!`,
+  ], delay, "guild war");
+}
+
+/**
+ * Invasi — serbu wilayah musuh
+ */
+export async function animInvasion(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `⚔️ Pasukanmu bergerak ke wilayah musuh...`,
+    `➕ Menembus pertahanan luar...`,
+    `✔️ Pertempuran sengit berlangsung!`,
+  ], delay, "invasi");
+}
+
+/**
+ * Rift — dimensi retak
+ */
+export async function animRift(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🌀 Portal rift terbuka...`,
+    `➕ Melangkah ke dimensi retak...`,
+    `✔️ Sesuatu berkilau di dalam!`,
+  ], delay, "rift");
+}
+
+/**
+ * Survival — bertahan hidup
+ */
+export async function animSurvival(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🏕️ Membangun kamp di alam liar...`,
+    `➕ Bertahan dari malam berbahaya...`,
+    `✔️ Kamu berhasil bertahan hidup!`,
+  ], delay, "mode survival");
+}
+
+/**
+ * Bansos — antre bantuan sosial
+ */
+export async function animBansos(m, sock, delay = 2000) {
+  await rpgScene(m, sock, [
+    `🤲 Mengantri di posko bansos...`,
+    `➕ Menunjukkan kartu penerima...`,
+    `✔️ Paket bansos diterima! 💹`,
+  ], delay, "bansos");
 }

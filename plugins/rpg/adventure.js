@@ -131,6 +131,9 @@ async function handler(m, { sock }) {
 
     const event = rollEvent();
     const message = event.messages[Math.floor(Math.random() * event.messages.length)];
+
+    // Animasi petualangan (morphing message)
+    await animAdventure(m, sock, event.type);
     let expGain = 0, goldGain = 0, gemGain = 0;
     let drops = [];
     let extraText = "";
@@ -242,7 +245,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const freshRpg = ensureRpg(m, m.pushName);
     let msg = `╭─「 ✦ ᴘᴇᴛᴜɴᴀɴɢᴀɴ ✦ 」\n`;
-    msg += `│ 🧭 Lokasi: ${biome}\n`;
+    msg += `│ 🧭 Lokasi: ${event.type}\n`;
     msg += `│ 📝 ${message}\n`;
     msg += `│\n`;
     if (expGain > 0) msg += `│ ✦ EXP  : *+${expGain}*\n`;

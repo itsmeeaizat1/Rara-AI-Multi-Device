@@ -1,6 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animTreasure } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "treasurehunt",
@@ -33,8 +33,7 @@ const LOCATIONS = [
 
 async function handler(m, { sock }) {
   await m.react("🕒");
-    await m.reply("🗺️ Mencari harta karun...");
-    await rpgSleep(900);
+    await animTreasure(m, sock);
   try {
     const db = await getDatabase();
     const sender = m.sender;

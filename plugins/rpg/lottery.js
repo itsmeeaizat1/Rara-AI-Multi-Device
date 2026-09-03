@@ -1,6 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animLottery } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "lottery",
@@ -90,6 +90,7 @@ async function handler(m, { sock }) {
       }
       lottery.totalSales = (lottery.totalSales || 0) + totalCost;
 
+      await animLottery(m, sock, count);
       await db.setPlayerData?.("global", "lottery", lottery);
       await db.setPlayerData?.(sender, "wallet", userWallet);
 

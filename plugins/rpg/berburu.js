@@ -7,7 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
-import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animBattle, animHunt, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -59,6 +59,9 @@ async function handler(m, { sock }) {
     const playerAtk = rpg.atk + equip.atk + (rpg.lifesteal || 0);
     const playerDef = rpg.def + equip.def;
     const playerHp = rpg.hp;
+
+    // Prolog berburu — narasi ala misi klasik sebelum battle
+    await animHunt(m, sock, monster.name);
 
     // Battle intro
     await m.reply(`🎯 Ditemukan *${monster.name}* (Lv.${monster.minLv}-${monster.maxLv})!\n⚔️ Bersiap bertarung...`);
