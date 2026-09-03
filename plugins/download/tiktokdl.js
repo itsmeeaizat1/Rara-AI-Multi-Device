@@ -110,7 +110,7 @@ async function tiktokDl(url) {
 
 const pluginConfig = {
   name: ["tiktok", "tt", "ttmp4"],
-  alias: ["quick_reply", "tiktok", "tt", "ttmp4"],
+  alias: ["tiktok", "tt", "ttmp4"],
   category: "download",
   description: "Download video/slide TikTok tanpa watermark",
   usage: ".tiktok <url>",
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
   const command = m?.command;
   if (!text) {
-    return m.reply( claraWrap("Quick_reply", `📌 Contoh: *${prefix + command} https://vt.tiktok.com/...*`), { commandName: "tiktok" });
+    return m.reply(claraWrap("TikTok", `Masukkan link video TikTok\n\nContoh: \`${prefix + command} https://vt.tiktok.com/xxx\``), { commandName: "tiktok" });
   }
   try {
     // Try IkyyXD tiktok first (uses "query" param + apikey)

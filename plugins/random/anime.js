@@ -14,7 +14,7 @@ const nexrayTypes = [
 
 const pluginConfig = {
   name: ["loli", ...nexrayTypes],
-  alias: ["quick_reply", "loli"],
+  alias: ["loli"],
   category: "random",
   description: "Random gambar anime/reaction (Nexray Source)",
   usage: ".<nama> (lihat daftar di bawah)",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     }
 
   } catch (err) {
-    return m.reply(claraWrap("quick_reply", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(claraWrap("Random Anime", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
