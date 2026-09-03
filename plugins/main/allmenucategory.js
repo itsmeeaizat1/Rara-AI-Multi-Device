@@ -1,20 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Commands per kategori (Clara-MD box style + thumbnail menu.jpg)
+// allmenucategory.js — Commands per kategori (layout standar novaMenuLayout — sama kayak .menu/.allmenu)
 import * as botmodePlugin from "../group/botmode.js";
-import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
+import { getCasesByCategory } from "../../case/nova.js";
 import config from "../../config.js";
 import {
   getCommandsByCategory,
   getCategories,
   getPlugin,
 } from "../../src/lib/nova-plugins.js";
-import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
-import fs from "fs";
 import path from "path";
-import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { buildCategoryButton, CATEGORY_EMOJI } from "../../src/lib/nova-category-list.js";
-import { commandListLine, toSC, novaInfoSections, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
+import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
+import { toSC, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
 import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
@@ -48,22 +45,21 @@ const CATEGORY_NAMES = {
   stalker: "Stalker", tts: "TTS", vps: "VPS",
 };
 
+// Legend symbol akses fitur (sama kayak .allmenu)
+const LEGEND = [
+  { sym: "Ⓤ", desc: "User - semua user bisa" },
+  { sym: "Ⓕ", desc: "Free - ada quota gratis" },
+  { sym: "Ⓟ", desc: "Premium - khusus premium" },
+  { sym: "Ⓞ", desc: "Owner - hanya owner" },
+  { sym: "Ⓛ", desc: "Limit - akses fitur" },
+  { sym: "ʀ", desc: "Register - wajib daftar" },
+  { sym: "Ⓐ", desc: "Admin - khusus admin grup" },
+  { sym: "Ⓖ", desc: "Grup - khusus di grup" },
+];
+
 function getCommandSymbols(cmdName) {
   const plugin = getPlugin(cmdName);
   return getAccessSymbols(plugin?.config);
-}
-
-let _thumbCache = null;
-function getThumb() {
-  if (_thumbCache) return _thumbCache;
-  try {
-    const p = path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
-    if (fs.existsSync(p)) {
-      _thumbCache = fs.readFileSync(p);
-      console.log("[allmenucategory] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
-    }
-  } catch (e) { console.error("[allmenucategory] ❌ Thumbnail load failed:", e.message); }
-  return _thumbCache;
 }
 
 async function handler(m, { sock, db, config: botConfig, uptime }) {
@@ -74,7 +70,6 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
     const categories = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const casesByCategory = getCasesByCategory();
-    const menuThumb = getThumb();
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
     // ── Mode 1: Tanpa argumen → semua kategori ──
@@ -140,15 +135,10 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         return total > 0;
       });
 
-      // ── Info section lengkap dari shared builder ──
-      const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
+      // ── Info section lengkap dari shared builder (sama kayak .menu/.allmenu) ──
+      const { greeting: aiIntro, info: menuInfo } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
 
-      // Build info section text
-      // Info section: box terpisah per kategori (helper shared, konsisten menu/allmenu)
-      let infoText = novaInfoSections(menuInfo);
-
-      // Compact index — cuma nama kategori + jumlah command, BUKAN dump semua command
-      // (yang itu tugas allmenu, bukan allmenucategory)
+      // Index kategori — layout standar: baris • tanpa emoji, smallcaps
       let totalAllCmds = 0;
       const catEntries = [];
       for (const cat of visibleCats) {
@@ -158,20 +148,24 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         if (total === 0) continue;
         totalAllCmds += total;
         const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
-        const emoji = CATEGORY_EMOJI?.[cat] || "📋";
-        catEntries.push({ cat, catName, emoji, total });
+        catEntries.push({ cat, catName, total });
       }
 
-      let txt = `${infoText}
-╭─「 ✦ ${toSC("Daftar Kategori")} ✦ 」
-│ *${toSC("Total")}:* ${catEntries.length} ${toSC("kategori")}
-│ *${toSC("Total Fitur")}:* ${totalAllCmds} ${toSC("command")}
-│
-`;
-      for (const entry of catEntries) {
-        txt += `│ ${entry.emoji} \`\`${entry.catName}\`\` — ${entry.total} cmd\n`;
-      }
-      txt += `│\n│ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰────  •  ────\n\nNova AI WhatsApp Bot`;
+      // Section index pakai novaMenuLayout: intro AI + box info terpisah + section kategori
+      const txt = novaMenuLayout({
+        intro: aiIntro || "Halo!",
+        introTitle: "Nova",
+        info: menuInfo,
+        categories: [
+          {
+            name: "Daftar Kategori",
+            // baris kategori dipakai sebagai "command" — smallcaps di sini
+            // (novaMenuLayout gak nge-smallcaps nama command, biar .cmd tetep apa adanya)
+            commands: catEntries.map((e) => ({ name: `${toSC(e.catName)} — ${e.total} cmd` })),
+          },
+        ],
+        prefix: "",
+      });
 
       const navButtons = [
         { id: `${prefix}menu`, text: toSC("Menu") },
@@ -198,7 +192,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╭─「 ✦ Error ✦ 」\n│ Kategori \`${categoryArg}\` tidak ditemukan\n│ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰────  •  ────`
+        `╭─「 ✦ ${toSC("Kategori")} ✦ 」\n│ ${toSC("Kategori")} \`${categoryArg}\` ${toSC("tidak ditemukan")}\n│ ${toSC("Ketik")} \`${prefix}allmenucategory\` ${toSC("untuk daftar kategori")}\n╰────  •  ────`
       );
       return;
     }
@@ -219,40 +213,32 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╭─「 ✦ Kosong ✦ 」\n│ Kategori \`${matchedCat}\` tidak ada command\n╰────  •  ────`
+        `╭─「 ✦ ${toSC("Kosong")} ✦ 」\n│ ${toSC("Kategori")} \`${matchedCat}\` ${toSC("tidak ada command")}\n╰────  •  ────`
       );
       return;
     }
 
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat.charAt(0).toUpperCase() + matchedCat.slice(1);
-    const totalFitur = allCommands.length;
 
     // ── Info section lengkap (sama kayak menu/allmenu) ──
-    const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
+    const { greeting: aiIntro, info: menuInfo } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
 
-    // Info section: box terpisah per kategori (helper shared, konsisten menu/allmenu)
-    let infoText = novaInfoSections(menuInfo);
-
-    // Compact 2-column layout — beda dari allmenu yang dump semua kategori
-    const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
-    // Readmore trick — sembunyikan daftar command panjang biar gak wall-of-text
-    const readMore = allCommands.length > 15 ? String.fromCharCode(8206).repeat(4001) : "";
-    let txt = `${infoText}
-${readMore}╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
-│ *${toSC("Total")}:* ${totalFitur} ${toSC("fitur")}
-│
-`;
-    for (let i = 0; i < allCommands.length; i++) {
-      const cmd = allCommands[i];
-      const symbols = getCommandSymbols(cmd);
-      const pinfo = getPlugin(cmd);
-      const usage = pinfo?.config?.usage || "";
-      const desc = pinfo?.config?.description || "";
-      // Truncate description to keep it compact
-      txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n`;
-    }
-
-    txt += `│\n╰────  •  ────\n\n${toSC("Nova AI WhatsApp Bot")}`;
+    // Layout standar — sama persis kayak .allmenu: intro AI + box info terpisah
+    // + legend symbol + section kategori (│ ✦ .cmd symbol) + readmore
+    const txt = novaMenuLayout({
+      intro: aiIntro || "Halo!",
+      introTitle: "Nova",
+      info: menuInfo,
+      legend: LEGEND,
+      categories: [
+        {
+          name: catName,
+          commands: allCommands.map((cmd) => ({ name: cmd, symbols: getCommandSymbols(cmd) })),
+        },
+      ],
+      prefix,
+      readMoreBeforeCategories: true,
+    });
 
     const navButtons2 = [
       buildCategoryButton(m, db, prefix, toSC("Kategori Lain")),
