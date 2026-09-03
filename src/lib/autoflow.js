@@ -131,6 +131,24 @@ async function execute(conn, m, rule, extra = {}) {
           await send({ audio: fs.readFileSync(a.value), mimetype: "audio/mpeg", ptt: true });
         }
         break;
+      case "aiimage": {
+        // 🔹 AI IMAGE: bot bikin gambar hasil generate AI (value = prompt,
+        // @user otomatis diganti nama pengirim). Chain: provider vision
+        // (gemini nano banana dst) → fallback free pollinations.
+        try {
+          const senderName = m?.pushName || (user ? user.split("@")[0] : "user");
+          const { callImageGen } = await import("./nova-ai-service.js");
+          const prompt = String(a.value || "").replace(/@user/g, senderName).trim() || "sesuatu yang menarik";
+          const img = await callImageGen("gemini", prompt);
+          await send({
+            image: Buffer.from(img.base64, "base64"),
+            caption: "🎨 " + prompt.slice(0, 150),
+          });
+        } catch (e) {
+          console.log(`[AutoFlow] aiimage gagal: ${e.message}`);
+        }
+        break;
+      }
       case "kick":
         if (user) await conn.groupParticipantsUpdate(chat, [user], "remove");
         break;
