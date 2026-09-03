@@ -562,7 +562,7 @@ function novaInfoSections(info = [], sc = true) {
   return out;
 }
 
-function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null } = {}) {
+function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null, footerName = null } = {}) {
   const scFn = sc ? toSC : (s) => String(s);
   
   let out = "";
@@ -627,7 +627,10 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
   
   // ── Final close ──
   out += `╰────  •  ────`;
-  
+
+  // ── Footer nama bot (smallcaps) — penutup di akhir list command ──
+  if (footerName) out += `\n\n${scFn(String(footerName))}`;
+
   return out;
 }
 

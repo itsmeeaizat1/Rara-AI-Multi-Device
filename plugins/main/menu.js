@@ -117,6 +117,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
       info,
       categories: menuCats,
       prefix,
+      footerName: botConfig?.bot?.name || "Nova AI Whatsapp Bot",
     });
 
     let result = txt;

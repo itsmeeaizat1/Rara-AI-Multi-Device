@@ -234,6 +234,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       categories: menuCats,
       prefix,
       readMoreBeforeCategories: true,
+      footerName: botName,
     });
 
     let finalText = txt;
