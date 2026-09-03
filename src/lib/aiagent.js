@@ -9,6 +9,16 @@ import fs from "fs";
 
 // ================= DAFTAR TOOLS (whitelist) =================
 // AI hanya boleh MEMILIH nama di daftar ini — tidak bisa eksekusi di luar
+// 🔹 Map jid user → id participant PERSIS dari metadata grup (aman utk grup LID)
+async function resolveParticipantId(conn, m, jid) {
+  try {
+    const gc = await conn.groupMetadata(m.chat)
+    const { findParticipantByNumber } = await import('./nova-lid.js')
+    const p = findParticipantByNumber(gc.participants, jid)
+    return p?.id || jid
+  } catch { return jid }
+}
+
 export const TOOLS = {
   // ─── BUKA/TUTUP GRUP ───
   closegc: {
@@ -29,25 +39,37 @@ export const TOOLS = {
     perm: 'admin', args: ['user'], danger: true,
     desc: 'mengeluarkan member dari grup',
     done: '✅ User dikeluarkan dari grup.',
-    run: (conn, m, a) => conn.groupParticipantsUpdate(m.chat, [a.user], 'remove')
+    run: async (conn, m, a) => {
+      const pid = await resolveParticipantId(conn, m, a.user)
+      return conn.groupParticipantsUpdate(m.chat, [pid], 'remove')
+    }
   },
   add: {
     perm: 'admin', args: ['user'], danger: false,
     desc: 'menambahkan nomor ke grup',
     done: '✅ User ditambahkan ke grup.',
-    run: (conn, m, a) => conn.groupParticipantsUpdate(m.chat, [a.user], 'add')
+    run: async (conn, m, a) => {
+      const pid = await resolveParticipantId(conn, m, a.user)
+      return conn.groupParticipantsUpdate(m.chat, [pid], 'add')
+    }
   },
   promote: {
     perm: 'admin', args: ['user'], danger: false,
     desc: 'menjadikan member sebagai admin',
     done: '✅ User sekarang menjadi admin.',
-    run: (conn, m, a) => conn.groupParticipantsUpdate(m.chat, [a.user], 'promote')
+    run: async (conn, m, a) => {
+      const pid = await resolveParticipantId(conn, m, a.user)
+      return conn.groupParticipantsUpdate(m.chat, [pid], 'promote')
+    }
   },
   demote: {
     perm: 'admin', args: ['user'], danger: false,
     desc: 'menurunkan admin menjadi member biasa',
     done: '✅ User diturunkan menjadi member biasa.',
-    run: (conn, m, a) => conn.groupParticipantsUpdate(m.chat, [a.user], 'demote')
+    run: async (conn, m, a) => {
+      const pid = await resolveParticipantId(conn, m, a.user)
+      return conn.groupParticipantsUpdate(m.chat, [pid], 'demote')
+    }
   },
 
   // ─── BLOKIR / UNBLOKIR (kick + blocklist lokal) ───
@@ -56,7 +78,8 @@ export const TOOLS = {
     desc: 'mengeluarkan dan memblokir user dari grup (tidak bisa masuk lagi)',
     done: '✅ User diblokir dan dikeluarkan dari grup.',
     run: async (conn, m, a) => {
-      await conn.groupParticipantsUpdate(m.chat, [a.user], 'remove')
+      const pid = await resolveParticipantId(conn, m, a.user)
+      await conn.groupParticipantsUpdate(m.chat, [pid], 'remove')
       try {
         const { getDatabase } = await import('./nova-database.js')
         const db = getDatabase()
@@ -269,43 +292,84 @@ export async function resolveUserByName(sock, m, nameQuery) {
   const query = String(nameQuery).toLowerCase().trim()
   if (!query) return null
 
+  // Kalimat user sering nempel partikel ("kick budi dong ya") —
+  // siapkan beberapa varian query: lengkap → tanpa kata pengisi → kata terpanjang
+  const fillers = /\b(dong|dulu|dongg|ya|yah|deh|sih|kak|kakak|bang|bangs|nih|tuh|banget|yang|itu|dia|tolong|coba|please|aja|saja|sekarang|cepet|gpp|gak apa apa)\b/gi
+  const stripped = query.replace(fillers, ' ').replace(/\s+/g, ' ').trim()
+  const longest = stripped.split(' ').filter(Boolean).sort((a, b) => b.length - a.length)[0] || ''
+  const queries = [query]
+  if (stripped && stripped !== query) queries.push(stripped)
+  if (longest && longest.length >= 3 && !queries.includes(longest)) queries.push(longest)
+
   try {
     const gc = await sock.groupMetadata(m.chat)
     const participantJids = new Set(gc.participants.map(p => p.id))
-    const candidates = []
-    const seen = new Set()
 
-    // Sumber 1: Baileys contact store (nama dari kontak WA / notify name)
-    for (const jid of participantJids) {
-      const ct = sock.store?.contacts?.[jid]
-      const name = ct?.name || ct?.notify || ct?.verifiedName || ''
-      const num = jid.split('@')[0]
-      if (name && name.toLowerCase().includes(query) && !seen.has(jid)) {
-        candidates.push({ jid, name })
-        seen.add(jid)
-      } else if (num.includes(digitsOnly) && digitsOnly.length >= 5 && !seen.has(jid)) {
-        candidates.push({ jid, name: num })
-        seen.add(jid)
-      }
+    // sumber pesan grup (paling fresh) disiapkan sekali di luar per-variant
+    let groupMsgs = null
+    if (sock.store?.messages?.get) {
+      try {
+        const chatMsgs = sock.store.messages.get(m.chat)
+        if (chatMsgs) {
+          groupMsgs = typeof chatMsgs.values === 'function'
+            ? [...chatMsgs.values()]
+            : Object.values(chatMsgs)
+          groupMsgs.reverse() // pesan terbaru dulu → nama paling fresh menang
+        }
+      } catch { /* store messages tidak tersedia */ }
     }
 
-    // Sumber 2: histori aktivitas grup (nama tersimpan dari pushName saat chat)
-    if (candidates.length === 0) {
+    for (const q of queries) {
+      const candidates = []
+      const seen = new Set()
+
+      // Sumber 1: Baileys contact store (nama kontak/notify — kini juga terisi
+      // dari pushName member grup, lihat fix connection.js)
+      for (const jid of participantJids) {
+        const ct = sock.store?.contacts?.[jid]
+        const name = ct?.name || ct?.notify || ct?.verifiedName || ''
+        const num = jid.split('@')[0]
+        if (name && name.toLowerCase().includes(q) && !seen.has(jid)) {
+          candidates.push({ jid, name })
+          seen.add(jid)
+        } else if (digitsOnly.length >= 5 && num.includes(digitsOnly) && !seen.has(jid)) {
+          candidates.push({ jid, name: num })
+          seen.add(jid)
+        }
+      }
+
+      // Sumber 2: histori aktivitas grup (nama tersimpan dari pushName saat chat)
       try {
         const { getLeaderboard } = await import('./nova-activity-tracker.js')
         const members = getLeaderboard(m.chat, 9999)
         for (const mem of members) {
           if (!participantJids.has(mem.jid)) continue
-          if (mem.name && mem.name.toLowerCase().includes(query) && !seen.has(mem.jid)) {
+          if (mem.name && mem.name.toLowerCase().includes(q) && !seen.has(mem.jid)) {
             candidates.push({ jid: mem.jid, name: mem.name })
             seen.add(mem.jid)
           }
         }
       } catch { /* activity tracker tidak tersedia, lanjut tanpa itu */ }
-    }
 
-    if (candidates.length === 1) return candidates[0].jid
-    if (candidates.length > 1) return { multiple: candidates }
+      // Sumber 3: pushName dari pesan-pesan terakhir di grup ini
+      // (paling andal buat member aktif — gak tergantung restart/contacts)
+      if (groupMsgs) {
+        for (const msg of groupMsgs) {
+          const pj = msg?.key?.participant
+          const pn = msg?.pushName || ''
+          if (!pj || !pn) continue
+          if (!participantJids.has(pj)) continue
+          if (pn.toLowerCase().includes(q) && !seen.has(pj)) {
+            candidates.push({ jid: pj, name: pn })
+            seen.add(pj)
+          }
+        }
+      }
+
+      if (candidates.length === 1) return candidates[0].jid
+      if (candidates.length > 1) return { multiple: candidates }
+      // query varian berikutnya
+    }
     return null
   } catch (e) {
     console.error('[aiagent] resolveUserByName error:', e.message)
