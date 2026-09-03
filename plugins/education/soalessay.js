@@ -276,7 +276,7 @@ async function handler(m, { sock, args }) {
     }
 
     const nextQ = session.questions[session.current];
-    txt += `${"=".repeat(30)}\n`;
+    txt += `\n`;
     txt += `Soal Essay ${session.current + 1}/${session.questions.length}\n\n`;
     txt += `${nextQ.q}\n\n`;
     txt += `Tulis jawabanmu atau ketik *ꜱᴋɪᴘ* untuk lewati`;
