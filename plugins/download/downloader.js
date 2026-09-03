@@ -8,6 +8,7 @@ import scdl from "../../src/scraper/soundclouddl.js";
 import mediafire from "../../src/scraper/mediafire.js";
 import { toSC, novaError, novaGuide, novaBox, mediaCaption, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 const pluginConfig = {
   name: "downloader",
@@ -85,7 +86,7 @@ async function handleYouTube(query, format, sock, m) {
   const info = `Judul: ${title}\nChannel: ${channel}\nDurasi: ${duration}\nViews: ${views}\nFormat: ${format === "audio" ? "MP3" : "MP4"}\nStatus: Downloading...`;
   await m.reply(info);
 
-  await downloadYouTube(video.url, format, sock, m, { title, channel, duration, views });
+  await downloadYouTube(video.url, format, sock, m, { title, channel, duration, views, thumbnail: video.thumbnail });
 }
 
 async function downloadYouTube(url, format, sock, m, meta = {}) {
@@ -118,18 +119,24 @@ async function downloadYouTube(url, format, sock, m, meta = {}) {
       method: "yt-dlp",
     });
 
+    const ytCard = mediaPreviewCard({
+      title,
+      body: format === "audio" ? "YouTube • MP3 Audio" : "YouTube • MP4 Video",
+      sourceUrl: url,
+      thumbnailUrl: meta.thumbnail || "",
+    });
     if (format === "audio") {
       await sock.sendMessage(m.chat, {
         audio: buffer,
         mimetype: "audio/mpeg",
         fileName: title.replace(/[^\w\s-]/g, "").trim().slice(0, 40) + ".mp3",
-        contextInfo: saluranCtx(),
+        contextInfo: ytCard,
       }, { quoted: m });
     } else {
       await sock.sendMessage(m.chat, {
         video: buffer,
         caption,
-        contextInfo: saluranCtx(),
+        contextInfo: ytCard,
       }, { quoted: m });
     }
     await m.react("🐣");
@@ -144,7 +151,12 @@ async function handleAIO(url, format, platformName, sock, m) {
   const result = await aiodl(url);
   if (!result?.media?.length) throw new Error(`Gagal mengambil media dari ${platformName}`);
 
-  const ctxInfo = saluranCtx();
+  const ctxInfo = mediaPreviewCard({
+    title: result.title || platformName,
+    body: platformName.charAt(0).toUpperCase() + platformName.slice(1),
+    sourceUrl: url,
+    thumbnailUrl: result.thumbnail || "",
+  });
   let picked = null;
 
   if (format === "audio") {
@@ -217,7 +229,13 @@ async function handleSoundCloud(url, sock, m) {
   await sock.sendMessage(m.chat, {
     audio: buffer, mimetype: "audio/mpeg",
     fileName: result.title.replace(/[^\w\s-]/g, "").trim().slice(0, 40) + ".mp3",
-    caption, contextInfo: saluranCtx(),
+    caption,
+    contextInfo: mediaPreviewCard({
+      title: result.title,
+      body: "SoundCloud • MP3 Audio",
+      sourceUrl: url,
+      thumbnailUrl: result.thumbnail || "",
+    }),
   }, { quoted: m });
   await m.react("🐣");
 }
