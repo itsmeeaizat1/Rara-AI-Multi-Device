@@ -198,6 +198,13 @@ export async function buildMenuInfo(m, ctx = {}) {
     totalCommands = new Set(plugins.getAllCommandNames()).size;
   } catch {}
 
+  // ── RPG data (energi game + semua mata uang di database) ──
+  const rpgData = user?.rpg || {};
+  const rpgEnergy = rpgData.energy ?? 100;
+  const rpgMaxEnergy = rpgData.maxEnergy ?? 100;
+  const userKoin = user?.koin ?? 0;
+  const userSaldo = user?.saldo ?? 0;
+
   // ── Build info array ──
   // Ucapan AI berubah tiap menu dimuat (IkyyXD free — jangan nguras token DeepSeek)
   let aiGreeting = null;
@@ -213,10 +220,16 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Nama", value: m.pushName || "-" },
     { label: "Role", value: userRole },
     { label: "Level", value: `${formatNum(userLevel)} (${expPct}%)` },
-    { label: "Energi", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
+    { label: "Limit", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
+    { label: "Energi", value: m.isOwner ? "∞ Unlimited" : `${formatNum(rpgEnergy)} / ${formatNum(rpgMaxEnergy)}` },
     { label: "Exp", value: formatNum(userExp) },
-    { label: "Gold", value: formatNum(user?.rpg?.gold ?? 0) },
-    { label: "Bank", value: formatNum(user?.rpg?.bank?.deposit ?? 0) },
+    { label: "Gold", value: formatNum(rpgData.gold ?? 0) },
+    { label: "Gems", value: formatNum(rpgData.gems ?? 0) },
+    { label: "Diamonds", value: formatNum(rpgData.diamonds ?? 0) },
+    { label: "Tokens", value: formatNum(rpgData.tokens ?? 0) },
+    { label: "Koin", value: userKoin === -1 ? "∞ Unlimited" : formatNum(userKoin) },
+    { label: "Saldo", value: formatNum(userSaldo) },
+    { label: "Bank", value: formatNum(rpgData.bank?.deposit ?? 0) },
     ...(m.isGroup ? [{ label: "Grup Mode", value: (groupMode || "md").toUpperCase() }] : []),
     "",
     "Info Waktu",
