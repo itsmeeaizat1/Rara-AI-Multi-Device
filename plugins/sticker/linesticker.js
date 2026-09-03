@@ -3,7 +3,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import config from "../../config.js";
-import { claraWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "linesticker",
@@ -110,9 +110,10 @@ async function handler(m, { sock }) {
     if (sent > 0) {
       await m.reply(claraWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
       await m.react("🐣");
+    await m.reply(novaBerhasil("linesticker"));
     } else {
       await m.react("❌");
-      m.reply(novaError("LineSticker", "Gagal mengirim sticker!"));
+      m.reply(novaGagal("LineSticker"));
     }
   } catch (err) {
     console.error("[LineSticker]", err);

@@ -10,7 +10,7 @@ import fs from "fs";
 import path from "path";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "smeme",
   alias: ["smeme"],
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
       mediaBuffer = await m.download();
     }
     if (!mediaBuffer) {
-      return m.reply(novaError("Smeme", "Gagal download media nih"));
+      return m.reply(novaGagal("Smeme"));
     }
     let imageBuffer;
     try {
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
       }
     }
     if (!imageUrl) {
-      return m.reply(novaError("Smeme", "Gagal upload gambar nih, coba lagi ya"));
+      return m.reply(novaGagal("Smeme"));
     }
     console.log("[SMEME] Image uploaded:", imageUrl);
     const encodeText = (text) => {
@@ -141,9 +141,10 @@ async function handler(m, { sock }) {
       packname: config.sticker?.packname || "Nova-AI",
       author: config.sticker?.author || "Bot",
     });
+      await m.reply(novaBerhasil("smeme"));
   } catch (error) {
     console.log("[SMEME] Error:", error.message);
-    m.reply(claraWrap("smeme", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaGangguan("smeme"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ptv.js — Download video Pinterest (pakai scraper pindl.js lokal)
 import { PinDL } from "../../src/scraper/pindl.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ptv",
@@ -48,10 +48,11 @@ async function handler(m, { sock }) {
       caption,
     }, { quoted: m });
     await m.react("🐣");
+    await m.reply(novaBerhasil("ptv"));
   } catch (err) {
     console.error("[PTV]", err);
     await m.react("❌");
-    m.reply(novaError("Pinterest Video", "Gagal download. Pastikan URL valid dan berisi video!"));
+    m.reply(novaGagal("Pinterest Video"));
   }
 }
 

@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/ytmp3 → Sanka AIO → ytdl fallback
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -87,6 +87,7 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("ytmp3"));
 
     if (result.isFallback) {
       const mp3Buffer = await fallbackToMp3Buffer(result.download);
@@ -105,7 +106,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[YTMP3]", err);
     await m.react("❌");
-    m.reply(novaError("YTmp3", "Gagal mengunduh audio YouTube — coba lagi nanti atau ganti link ya!"));
+    m.reply(novaGagal("YTmp3"));
   }
 }
 

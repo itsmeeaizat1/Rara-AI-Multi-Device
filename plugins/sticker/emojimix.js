@@ -2,7 +2,7 @@
 // emojimix.js — Gabungkan 2 emoji (oiapi → gstatic CDN, no API key)
 import axios from "axios";
 import config from "../../config.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "emojimix",
@@ -91,6 +91,7 @@ async function handler(m, { sock }) {
       author: config.sticker?.author || "Aizat",
     });
     await m.react("🐣");
+    await m.reply(novaBerhasil("emojimix"));
   } catch (err) {
     console.error("[EmojiMix]", err);
     await m.react("❌");

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("sfiledl2"));
     await sock.sendMessage(m.chat, {
       document: buffer,
       mimetype: "application/octet-stream",
@@ -48,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
       caption: _cap,
     }, { quoted: m });
   } catch (error) {
-    await m.reply(novaError("SFile DL", `Gagal mengunduh file: ${error.message}`));
+    await m.reply(novaGagal("SFile DL"));
   }
 
   return { handled: true };

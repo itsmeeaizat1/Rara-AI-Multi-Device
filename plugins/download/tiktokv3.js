@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tiktokv3.js — TikTok Downloader v3 (Sanka API + tikwm fallback)
 import axios from "axios";
-import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
@@ -82,8 +82,13 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const r = await tiktokDownload(url);
     await m.react("🐣");
+    await m.reply(novaBerhasil("TikTok V3"));
 
     const videoUrl = r.video?.noWatermark || r.video?.url || r.video?.watermark || r.video;
+    if (!videoUrl && !r.images) {
+      await m.react("❌");
+      return m.reply(novaGagal("TikTok V3"));
+    }
     if (videoUrl && !r.images) {
       const vidRes = await axios.get(videoUrl, {
         responseType: "arraybuffer", timeout: 60000,
@@ -128,7 +133,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[tiktokv3]", err);
     await m.react("❌");
-    m.reply(claraWrap("tiktokv3", "Gagal download. URL mungkin invalid atau private.", "error"));
+    m.reply(novaGangguan("TikTok V3"));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { snackvideo } from 'btch-downloader'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "snackvideodl",
     alias: ["snackvideodl", "svdl"],
@@ -51,8 +51,9 @@ async function handler(m, { sock }) {
             contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m })
         
+        await m.reply(novaBerhasil("snackvideodl"));
     } catch (err) {
-        return m.reply(novaError("SnackVideo", "Gagal memproses video SnackVideo. Coba lagi nanti!"))
+        return m.reply(novaGagal("SnackVideo"))
     }
 }
 

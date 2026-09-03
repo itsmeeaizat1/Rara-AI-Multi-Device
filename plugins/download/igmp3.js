@@ -2,7 +2,7 @@
 // igmp3.js — Download audio dari Instagram (pakai scraper ig.js lokal)
 import { PinDL } from "../../src/scraper/pindl.js";
 import { igDownload } from "../../src/scraper/ig.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "igmp3",
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     } catch (e) {
       console.error("[igmp3.js] ig scraper:", e.message);
       await m.react("❌");
-      return m.reply(novaError("IG MP3", "Gagal mengunduh dari Instagram. Pastikan URL valid!"));
+      return m.reply(novaGagal("IG MP3"));
     }
 
     if (!result || (!result.url && !result.download)) {
@@ -67,10 +67,11 @@ async function handler(m, { sock }) {
     }, { quoted: m });
     await m.reply(caption);
     await m.react("🐣");
+    await m.reply(novaBerhasil("igmp3"));
   } catch (err) {
     console.error("[IG MP3]", err);
     await m.react("❌");
-    m.reply(novaError("IG MP3", "Gagal download audio Instagram. Coba lagi nanti!"));
+    m.reply(novaGagal("IG MP3"));
   }
 }
 

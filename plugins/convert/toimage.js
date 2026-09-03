@@ -5,7 +5,7 @@ import os from "os";
 import { exec } from "child_process";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "toimage",
@@ -45,13 +45,14 @@ async function handler(m, { sock }) {
 
     const imgBuffer = fs.readFileSync(outputPath);
     await m.react("🐣");
+    await m.reply(novaBerhasil("toimage"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "✅ Sticker → Image" }, { quoted: m });
 
     try { fs.unlinkSync(inputPath); fs.unlinkSync(outputPath); } catch {}
   } catch (e) {
     console.error("toimage error:", e.message);
     await m.react("❌");
-    m.reply(claraWrap("toimage", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaGangguan("toimage"));
   }
 }
 

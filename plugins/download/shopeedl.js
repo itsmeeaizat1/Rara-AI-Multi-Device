@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // shopeedl.js — Download video Shopee (scrape shopeenowatermark.com)
 import axios from "axios";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const pluginConfig = {
@@ -105,10 +105,11 @@ async function handler(m, { sock }) {
       caption,
     }, { quoted: m });
     await m.react("🐣");
+    await m.reply(novaBerhasil("shopeedl"));
   } catch (err) {
     console.error("[ShopeeDL]", err);
     await m.react("❌");
-    m.reply(novaError("Shopee DL", "Gagal download video Shopee. Pastikan URL valid!"));
+    m.reply(novaGagal("Shopee DL"));
   }
 }
 

@@ -1,5 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Scrape Pinterest langsung (tanpa API pihak ketiga)
+import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+
 import _sharp from 'sharp'
 import axios from "axios"
 import config from "../../config.js"
@@ -102,7 +104,7 @@ async function handler(m, { sock }) {
         }
 
         if (!stickerBuffers.length) {
-            return m.reply(novaError("PinPack", "Gagal download gambar nih"))
+            return m.reply(novaGagal("PinPack"))
         }
 
         const packname = `Pinterest: ${query}`
@@ -134,12 +136,13 @@ async function handler(m, { sock }) {
             if (sent > 0) {
                 await m.reply(claraWrap("pinpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
             } else {
-                await m.reply(novaError("PinPack", "Gagal kirim sticker nih"))
+                await m.reply(novaGagal("PinPack"))
             }
         }
+        await m.reply(novaBerhasil("pinpack"));
     } catch (error) {
         console.error("[PinPack] Error:", error.message)
-        m.reply(claraWrap("pinpack", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaGangguan("pinpack"))
     }
 }
 

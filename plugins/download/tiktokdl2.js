@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, mediaCaption, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, mediaCaption, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -261,6 +261,7 @@ async function handler(m, { sock }) {
 
         throw new Error('Tidak ada media yang dapat diunduh')
 
+        await m.reply(novaBerhasil("Tiktokdl2"));
     } catch (err) {
         console.error('[TikTokDL2] Error:', err)
         m.reply(novaError("TikTok DL 2", err.message || "Gagal mengunduh video TikTok"));

@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import axios from "axios";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaBox, novaError, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import {
   AUDIO_FORMATS,
@@ -186,10 +186,11 @@ async function handler(m, { sock }) {
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
     await m.react("🐣");
+    await m.reply(novaBerhasil("Convert"));
   } catch (e) {
     console.error("[convert.js]", e.message);
     await m.react("❌");
-    return m.reply(novaError("Convert", `Gagal convert: ${e.message || "error gak diketahui"}`));
+    return m.reply(novaGangguan("Convert"));
   }
 }
 

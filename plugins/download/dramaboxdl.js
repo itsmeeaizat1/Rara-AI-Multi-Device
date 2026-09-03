@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dramaboxdl — Download video dari DramaBox via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -31,6 +31,7 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const video = result.medias.find(m => m.type === "video") || result.medias[0];
       await m.react("🐣");
+    await m.reply(novaBerhasil("dramaboxdl"));
 const _cap = mediaCaption({ platformIcon: "🎬", platformName: "DramaBox", title: result.title || "DramaBox Video", format: "Video", method: "IkyyXD" });
       await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption: _cap,
@@ -38,7 +39,7 @@ const _cap = mediaCaption({ platformIcon: "🎬", platformName: "DramaBox", titl
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaError("DramaBox DL", "Gagal ambil video — pastikan URL valid ya"));
+      await m.reply(novaGagal("DramaBox DL"));
     }
   } catch (error) {
     console.error("[dramaboxdl.js]:", error.message);

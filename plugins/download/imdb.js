@@ -2,7 +2,7 @@
 // imdb.js — Info film dari IMDB
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBox, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "imdb",
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("imdb error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("imdb", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaGangguan("imdb"));
   }
 }
 

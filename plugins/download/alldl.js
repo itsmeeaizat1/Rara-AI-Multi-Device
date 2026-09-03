@@ -24,7 +24,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alldl",
@@ -286,12 +286,7 @@ async function handler(m, { sock }) {
       }
       // Clear session
       dlSessions.delete(m.sender);
-      return m.reply(
-        novaError(
-          "AllDL",
-          `Gagal download media dari ${platform.name} — coba lagi nanti atau pilih format lain ya!`
-        )
-      );
+      return m.reply(novaGagal("AllDL"));
     }
 
     // Download buffer
@@ -381,9 +376,10 @@ async function handler(m, { sock }) {
         );
         await offerConvert(sock, m, { buffer, type: "video", platform: platform.name, title, sourceUrl: url });
       }
+      await m.reply(novaBerhasil("AllDL"));
     } catch (sendErr) {
       console.error("[alldl] Send error:", sendErr.message);
-      m.reply(novaError("AllDL", `Gagal mengirim media ke WhatsApp: ${sendErr.message.slice(0, 80)}`));
+      m.reply(novaGangguan("AllDL"));
     }
 
     // Clear session

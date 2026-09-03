@@ -829,6 +829,24 @@ function novaGuide(commandName, intro, example, note) {
 export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide, pickRandom };
 
 // ═══════════════════════════════════════════════
+// Pesan status universal (request owner):
+// berhasil → "Berhasil kak 🥳"
+// gagal → "Yah gagal kak, coba lagi 😩"
+// fitur gangguan → "Yah fiturnya lagi gangguan kak, coba lain waktu ya 😥"
+// ═══════════════════════════════════════════════
+export function novaBerhasil(fitur = "Berhasil") {
+  return novaBox(fitur, ["Berhasil kak 🥳"]);
+}
+
+export function novaGagal(fitur = "Gagal") {
+  return novaBox(fitur, ["Yah gagal kak,", "coba lagi 😩"]);
+}
+
+export function novaGangguan(fitur = "Error") {
+  return novaBox(fitur, ["Yah fiturnya lagi gangguan", "kak, coba lain waktu ya 😥"]);
+}
+
+// ═══════════════════════════════════════════════
 // novaBox — Universal box builder dengan right border konsisten
 // ═══════════════════════════════════════════════
 /**

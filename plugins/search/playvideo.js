@@ -5,7 +5,7 @@ import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
-import { novaError, novaGuide, claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, claraWrap, toSC, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
@@ -181,7 +181,7 @@ async function sendPlayVideo(sock, m, video, quality) {
   const vid = await downloadVideo(video.url, quality);
   if (!vid?.buffer || vid.buffer.length < 10000) {
     await m.react("❌");
-    return m.reply(novaError("PlayVideo", "Gagal download video, coba lagi nanti ya!"));
+    return m.reply(novaGagal("PlayVideo"));
   }
   console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
 
@@ -214,7 +214,7 @@ async function sendPlayVideo(sock, m, video, quality) {
 
   // 1. Notifikasi sukses dulu (sesuai request owner)
   await m.react("🐣");
-  await m.reply(novaBox("Playvideo", ["Berhasil kak 🥳"]));
+  await m.reply(novaBerhasil("Playvideo"));
 
   // 2. Baru videonya (caption info nempel di situ)
   await sock.sendMessage(
@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
     } catch (err) {
       console.error("[PlayVideo]", err.message || err);
       await m.react("❌");
-      return m.reply(novaError("PlayVideo", err.message || "Gagal download video, coba lagi nanti ya!"));
+      return m.reply(novaGangguan("PlayVideo"));
     }
     return;
   }
@@ -283,7 +283,7 @@ async function handler(m, { sock }) {
     const video = await searchYoutube(query);
     if (!video) {
       await m.react("❌");
-      return m.reply(novaError("PlayVideo", "Video tidak ditemukan, coba kata kunci lain ya!"));
+      return m.reply(novaGagal("PlayVideo"));
     }
     console.log(`[PlayVideo] Found: ${video.title} → ${video.url} (${quality}p)`);
 
@@ -320,7 +320,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[PlayVideo]", err.message || err);
     await m.react("❌");
-    return m.reply(novaError("PlayVideo", err.message || "Gagal download video, coba lagi nanti ya!"));
+    return m.reply(novaGangguan("PlayVideo"));
   }
 }
 

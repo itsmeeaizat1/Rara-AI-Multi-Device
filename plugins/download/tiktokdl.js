@@ -2,7 +2,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
@@ -157,6 +157,7 @@ async function handler(m, { sock }) {
           mediaType: 2,
         }),
       }, { quoted: m });
+      await m.reply(novaBerhasil("TikTok"));
       await offerConvert(sock, m, { mediaUrl: video.url, type: "video", platform: "TikTok", title: ikyyResult.title, sourceUrl: text });
       return;
     }
@@ -199,6 +200,7 @@ async function handler(m, { sock }) {
           mediaType: 2,
         }),
       }, { quoted: m });
+      await m.reply(novaBerhasil("TikTok"));
       await offerConvert(sock, m, { mediaUrl: zann.url, type: "video", platform: "TikTok", title: result.title, sourceUrl: text });
 
       await sock.sendMessage(
@@ -247,7 +249,7 @@ async function handler(m, { sock }) {
     }
   } catch (e) {
     console.error(e);
-    m.reply(novaError("TikTok", "Gagal download — coba lagi atau pakai .tt2 ya"));
+    m.reply(novaGangguan("TikTok"));
   }
 }
 

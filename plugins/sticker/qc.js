@@ -3,6 +3,7 @@
 // + render lokal @napi-rs/canvas (fallback otomatis kalau API down)
 import axios from 'axios'
 import canvasPkg from '@napi-rs/canvas';
+import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 const { createCanvas, loadImage } = canvasPkg;
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -263,10 +264,11 @@ async function handler(m, { sock }) {
             packname: config.sticker?.packname || 'Nova-AI',
             author: config.sticker?.author || 'Bot'
         })
+        await m.reply(novaBerhasil("Qc"));
     } catch (error) {
         console.error("[qc] Error:", error.message)
         await m.react("❌")
-        m.reply(claraWrap("qc", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaGangguan("Qc"))
     }
 }
 

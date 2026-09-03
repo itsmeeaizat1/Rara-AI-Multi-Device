@@ -3,7 +3,7 @@ import { bratGen } from "brat-canvas";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "brat",
@@ -73,6 +73,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const pngBuffer = await bratGen(text, { C_BG: "#ffffff", C_TEXT: "#000000" });
     await m.react("🐣");
+    await m.reply(novaBerhasil("brat"));
     await sock.sendImageAsSticker(m.chat, pngBuffer, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
@@ -80,7 +81,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[brat] Error:", error.message);
     await m.react("❌");
-    m.reply(claraWrap("brat", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaGangguan("brat"));
   }
 }
 
