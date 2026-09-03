@@ -19,3 +19,6 @@ __pycache__/
 # User uploads - never push to repo
 incoming_files/
 scripts/
+
+# Model AI lokal (Swin2SR/Real-ESRGAN) — diunduh otomatis di pemakaian pertama
+src/data/models/
