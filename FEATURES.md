@@ -618,15 +618,15 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## 📥 All Downloader
 
-- `.alldl <url>` — All-in-one downloader dengan pilihan format interaktif; media dikirim dengan preview card (thumbnail asli dari API sumber + judul + link — nova-media-card.js)
+- `.alldl <url>` — All-in-one downloader; setelah link dideteksi bot kasih TEKS LIST pilihan format (bukan tombol — preview card + template buttons gak support di WA modern), user ketik `.alldl hd` / `.alldl video` / `.alldl audio` / `.alldl image` (synonim: mp3/musik/foto/gambar/1080/720 dll dikenali); atau langsung sekalian `.alldl <url> <format>` = langsung proses; media dikirim dengan preview card (thumbnail asli dari API sumber + judul + link — nova-media-card.js)
 - `.downloader <platform> <format> <url/keyword>` — Unified downloader (youtube, tiktok, facebook, instagram, twitter, pinterest, soundcloud, spotify, mediafire, dll); media dikirim dengan preview card (thumbnail asli dari API sumber + judul + link — nova-media-card.js)
 - Alias: `.dl`, `.download`, `.get`
-- Flow: paste link → bot detect platform → pilih format (tombol) → download
+- Flow: paste link → bot detect platform → bot kasih teks list format → user ketik `.alldl <format>` → download (atau langsung `.alldl <url> <format>`)
 - Pilihan: Video HD, Video SD, Audio MP3, Image/Foto (sesuai platform)
 - Auto-detect: YouTube, TikTok, Instagram, Facebook, Twitter/X, Pinterest, Threads, Reddit, CapCut, Dailymotion, SoundCloud, Spotify, Vimeo, SnackVideo, Likee
 - Strategy: SaveNow API (primary) → AIO scraper (fallback)
 - Session 3 menit (link disimpan sementara saat user pilih format)
-- Contoh: `.alldl https://youtu.be/xxx` → klik tombol → download
+- Contoh: `.alldl https://youtu.be/xxx` → ketik `.alldl video` → download
 
 ## 📊 Auto Report Harian
 

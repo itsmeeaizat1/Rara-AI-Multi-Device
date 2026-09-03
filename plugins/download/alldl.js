@@ -23,7 +23,6 @@ import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
-import { sendMenuPreview } from "../../src/lib/send-menu.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -124,29 +123,39 @@ async function downloadBuffer(url, maxSizeMB = 100) {
   return Buffer.from(response.data);
 }
 
-// === Build format options berdasarkan platform ===
+// === Format options berdasarkan platform ===
+// Pilihan ditampilkan sebagai TEKS LIST (bukan tombol) — preview card +
+// template buttons gak support di WA modern (owner request 2026-09-03)
 function buildOptions(platform) {
   const opts = [];
 
   if (platform.hasVideo) {
-    opts.push({ id: "alldl_hd", text: toSC("Video HD") });
-    opts.push({ id: "alldl_video", text: toSC("Video SD") });
+    opts.push({ id: "alldl_hd", keyword: "hd", label: "Video HD (1080p)" });
+    opts.push({ id: "alldl_video", keyword: "video", label: "Video SD (720p)" });
   }
   if (platform.hasAudio) {
-    opts.push({ id: "alldl_audio", text: toSC("Audio MP3") });
+    opts.push({ id: "alldl_audio", keyword: "audio", label: "Audio MP3" });
   }
   if (platform.hasImage) {
-    opts.push({ id: "alldl_image", text: toSC("Image / Foto") });
+    opts.push({ id: "alldl_image", keyword: "image", label: "Image / Foto" });
   }
 
   // Fallback: kalau gak ada opsi, kasih semua
   if (opts.length === 0) {
-    opts.push({ id: "alldl_video", text: toSC("Video") });
-    opts.push({ id: "alldl_audio", text: toSC("Audio MP3") });
+    opts.push({ id: "alldl_video", keyword: "video", label: "Video" });
+    opts.push({ id: "alldl_audio", keyword: "audio", label: "Audio MP3" });
   }
 
-  return opts.slice(0, 4); // max 4 buttons
+  return opts.slice(0, 4);
 }
+
+// Map kata user → id pilihan (synonim biar gampang)
+const KEYWORD_MAP = {
+  hd: "alldl_hd", 1080: "alldl_hd", fhd: "alldl_hd",
+  video: "alldl_video", vid: "alldl_video", vidio: "alldl_video", mp4: "alldl_video", sd: "alldl_video", 720: "alldl_video",
+  audio: "alldl_audio", mp3: "alldl_audio", musik: "alldl_audio", music: "alldl_audio", lagu: "alldl_audio",
+  image: "alldl_image", img: "alldl_image", foto: "alldl_image", gambar: "alldl_image", picture: "alldl_image",
+};
 
 // === Format mapping ===
 function formatForChoice(choice) {
@@ -168,13 +177,217 @@ function isImageChoice(choice) {
 }
 
 // === Main handler ===
+// Jalankan download dari session aktif — dipakai jalur tombol (legacy) & teks
+async function runSessionDownload(sock, m, session, choice) {
+  const { url, platform } = session;
+  const format = formatForChoice(choice);
+  const isAudio = isAudioChoice(choice);
+  const isImage = isImageChoice(choice);
+  const apiKey = getSaveNowKey();
+  // Kirim info proses
+  let progressMsg = await m.reply(
+    bracketBox(platform.icon, `${toSC("Downloading")} — ${toSC(platform.name)}`, [
+      `${toSC("Format")}: ${isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${format}p`}`,
+      `⏳ ${toSC("Sedang diproses...")}`,
+    ])
+  );
+
+  let result = null;
+  let usedMethod = "ikyy";
+
+  // TRY 1: IkyyXD all-in-one (primary)
+  if (!isImage) {
+    try {
+      const ikyyResult = await ikyyAio(url);
+      if (ikyyResult?.medias?.length) {
+        const videoMedia = ikyyResult.medias.find((x) => x.type === "video");
+        const audioMedia = ikyyResult.medias.find((x) => x.type === "audio");
+
+        let picked;
+        if (isAudio) picked = audioMedia || videoMedia;
+        else picked = videoMedia || audioMedia;
+
+        if (picked) {
+          result = {
+            title: ikyyResult.title || "Downloaded",
+            download_url: picked.url,
+            type: picked.type,
+            format: picked.quality || format,
+          };
+        }
+      }
+    } catch (ikyyErr) {
+      console.error("[alldl] IkyyXD failed:", ikyyErr.message);
+      usedMethod = "savenow";
+    }
+  } else {
+    usedMethod = "savenow";
+  }
+
+  // TRY 2: SaveNow (untuk video & audio, fallback dari IkyyXD)
+  if (!result && apiKey && !isImage) {
+    try {
+      const req = await savenowDownload(url, format, apiKey);
+      const polled = await savenowPoll(req.progress_url, req.title, req.thumbnail_url);
+      result = {
+        title: polled.title,
+        download_url: polled.download_url,
+        thumbnail_url: polled.thumbnail_url,
+        type: isAudio ? "audio" : "video",
+        format,
+      };
+    } catch (savenowErr) {
+      console.error("[alldl] SaveNow failed:", savenowErr.message);
+      usedMethod = "aio";
+    }
+  } else {
+    usedMethod = "aio";
+  }
+
+  // TRY 3: AIO scraper (fallback terakhir atau untuk image)
+  if (!result) {
+    try {
+      const aioResult = await aiodl(url);
+      if (aioResult?.media?.length) {
+        const videoMedia = aioResult.media.find((x) => x.type === "video");
+        const audioMedia = aioResult.media.find((x) => x.type === "audio");
+        const imageMedia = aioResult.media.find((x) => x.type === "image");
+
+        let picked;
+        if (isImage) picked = imageMedia || videoMedia;
+        else if (isAudio) picked = audioMedia || videoMedia;
+        else picked = videoMedia || imageMedia || audioMedia;
+
+        if (!picked) throw new Error("No suitable media found");
+
+        result = {
+          title: aioResult.title || "Downloaded",
+          download_url: picked.url,
+          type: picked.type,
+          format: picked.quality || format,
+          aioResult: aioResult,
+        };
+      }
+    } catch (aioErr) {
+      console.error("[alldl] AIO failed:", aioErr.message);
+    }
+  }
+
+  // Gagal semua
+  if (!result || !result.download_url) {
+    if (progressMsg?.key) {
+      try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
+    }
+    // Clear session
+    dlSessions.delete(m.sender);
+    return m.reply(novaGagal("AllDL"));
+  }
+
+  // Download buffer
+  const maxSize = isAudio ? 50 : 100;
+  let buffer = null;
+  try {
+    buffer = await downloadBuffer(result.download_url, maxSize);
+  } catch (dlErr) {
+    if (progressMsg?.key) {
+      try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
+    }
+    dlSessions.delete(m.sender);
+    return m.reply(
+      novaError(
+        "AllDL",
+        `File terlalu besar untuk dikirim langsung. Download manual di:\n${result.download_url}`
+      )
+    );
+  }
+
+  // Hapus pesan progress
+  if (progressMsg?.key) {
+    try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
+  }
+
+  // Format metadata kaya jika dari AIO
+  const title = result.title || "Downloaded";
+  const formatLabel = isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${result.format || "HD"}`;
+  const methodTag = usedMethod === "savenow" ? "SaveNow" : "AIO Scraper";
+
+  const aioMeta = result.aioResult || {};
+  const ctxInfo = mediaPreviewCard({
+    title,
+    body: `${platform.name} • ${isAudio ? "MP3 Audio" : isImage ? "Image" : "Video"}`,
+    sourceUrl: url,
+    thumbnailUrl: aioMeta.thumbnail || result.thumbnail_url || "",
+  });
+  const caption = mediaCaption({
+    platform: platform.name,
+    platformIcon: platform.icon,
+    title: title,
+    author: aioMeta.author || null,
+    authorHandle: aioMeta.authorHandle || null,
+    duration: aioMeta.duration || null,
+    uploadDate: aioMeta.uploadDate || null,
+    views: aioMeta.views || null,
+    likes: aioMeta.likes || null,
+    comments: aioMeta.comments || null,
+    shares: aioMeta.shares || null,
+    downloads: aioMeta.downloads || null,
+    description: aioMeta.description || null,
+    format: formatLabel,
+    method: methodTag,
+  });
+
+  try {
+    if (result.type === "audio" || isAudio) {
+      await sock.sendMessage(
+        m.chat,
+        {
+          audio: buffer,
+          mimetype: "audio/mpeg",
+          fileName: title.replace(/[^\w\s-]/g, "").trim().slice(0, 40) + ".mp3",
+          contextInfo: ctxInfo,
+        },
+        { quoted: m }
+      );
+    } else if (result.type === "image" || isImage) {
+      await sock.sendMessage(
+        m.chat,
+        {
+          image: buffer,
+          caption,
+          contextInfo: ctxInfo,
+        },
+        { quoted: m }
+      );
+    } else {
+      await sock.sendMessage(
+        m.chat,
+        {
+          video: buffer,
+          caption,
+          contextInfo: ctxInfo,
+        },
+        { quoted: m }
+      );
+      await offerConvert(sock, m, { buffer, type: "video", platform: platform.name, title, sourceUrl: url });
+    }
+    await m.reply(novaBerhasil("AllDL"));
+  } catch (sendErr) {
+    console.error("[alldl] Send error:", sendErr.message);
+    m.reply(novaGangguan("AllDL"));
+  }
+
+  // Clear session
+  dlSessions.delete(m.sender);
+  return;
+}
+
 async function handler(m, { sock }) {
   const prefix = m.prefix || ".";
   const body = m.body?.trim() || "";
   const command = m.command?.toLowerCase() || "";
 
-  // ── MODE 1: Button click response ──
-  // command = alldl_video / alldl_audio / alldl_image / alldl_hd
+  // ── MODE 1: Button click response (legacy — tombol udah gak dikirim lagi,
+  // tapi alias dibiarkan supaya client lama yang masih render tombol tetap jalan)
   if (["alldl_video", "alldl_audio", "alldl_image", "alldl_hd"].includes(command)) {
     const session = dlSessions.get(m.sender);
     if (!session) {
@@ -183,209 +396,43 @@ async function handler(m, { sock }) {
         novaGuide("AllDL", "Sesi download sudah kedaluwarsa nih! Silakan kirim ulang linknya ya.", `${prefix}alldl <url>`)
       );
     }
-
-    const { url, platform } = session;
-    const choice = command;
-    const format = formatForChoice(choice);
-    const isAudio = isAudioChoice(choice);
-    const isImage = isImageChoice(choice);
-    const apiKey = getSaveNowKey();
-    // Kirim info proses
-    let progressMsg = await m.reply(
-      bracketBox(platform.icon, `${toSC("Downloading")} — ${toSC(platform.name)}`, [
-        `${toSC("Format")}: ${isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${format}p`}`,
-        `⏳ ${toSC("Sedang diproses...")}`,
-      ])
-    );
-
-    let result = null;
-    let usedMethod = "ikyy";
-
-    // TRY 1: IkyyXD all-in-one (primary)
-    if (!isImage) {
-      try {
-        const ikyyResult = await ikyyAio(url);
-        if (ikyyResult?.medias?.length) {
-          const videoMedia = ikyyResult.medias.find((x) => x.type === "video");
-          const audioMedia = ikyyResult.medias.find((x) => x.type === "audio");
-
-          let picked;
-          if (isAudio) picked = audioMedia || videoMedia;
-          else picked = videoMedia || audioMedia;
-
-          if (picked) {
-            result = {
-              title: ikyyResult.title || "Downloaded",
-              download_url: picked.url,
-              type: picked.type,
-              format: picked.quality || format,
-            };
-          }
-        }
-      } catch (ikyyErr) {
-        console.error("[alldl] IkyyXD failed:", ikyyErr.message);
-        usedMethod = "savenow";
-      }
-    } else {
-      usedMethod = "savenow";
-    }
-
-    // TRY 2: SaveNow (untuk video & audio, fallback dari IkyyXD)
-    if (!result && apiKey && !isImage) {
-      try {
-        const req = await savenowDownload(url, format, apiKey);
-        const polled = await savenowPoll(req.progress_url, req.title, req.thumbnail_url);
-        result = {
-          title: polled.title,
-          download_url: polled.download_url,
-          thumbnail_url: polled.thumbnail_url,
-          type: isAudio ? "audio" : "video",
-          format,
-        };
-      } catch (savenowErr) {
-        console.error("[alldl] SaveNow failed:", savenowErr.message);
-        usedMethod = "aio";
-      }
-    } else {
-      usedMethod = "aio";
-    }
-
-    // TRY 3: AIO scraper (fallback terakhir atau untuk image)
-    if (!result) {
-      try {
-        const aioResult = await aiodl(url);
-        if (aioResult?.media?.length) {
-          const videoMedia = aioResult.media.find((x) => x.type === "video");
-          const audioMedia = aioResult.media.find((x) => x.type === "audio");
-          const imageMedia = aioResult.media.find((x) => x.type === "image");
-
-          let picked;
-          if (isImage) picked = imageMedia || videoMedia;
-          else if (isAudio) picked = audioMedia || videoMedia;
-          else picked = videoMedia || imageMedia || audioMedia;
-
-          if (!picked) throw new Error("No suitable media found");
-
-          result = {
-            title: aioResult.title || "Downloaded",
-            download_url: picked.url,
-            type: picked.type,
-            format: picked.quality || format,
-            aioResult: aioResult,
-          };
-        }
-      } catch (aioErr) {
-        console.error("[alldl] AIO failed:", aioErr.message);
-      }
-    }
-
-    // Gagal semua
-    if (!result || !result.download_url) {
-      if (progressMsg?.key) {
-        try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
-      }
-      // Clear session
-      dlSessions.delete(m.sender);
-      return m.reply(novaGagal("AllDL"));
-    }
-
-    // Download buffer
-    const maxSize = isAudio ? 50 : 100;
-    let buffer = null;
-    try {
-      buffer = await downloadBuffer(result.download_url, maxSize);
-    } catch (dlErr) {
-      if (progressMsg?.key) {
-        try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
-      }
-      dlSessions.delete(m.sender);
-      return m.reply(
-        novaError(
-          "AllDL",
-          `File terlalu besar untuk dikirim langsung. Download manual di:\n${result.download_url}`
-        )
-      );
-    }
-
-    // Hapus pesan progress
-    if (progressMsg?.key) {
-      try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
-    }
-
-    // Format metadata kaya jika dari AIO
-    const title = result.title || "Downloaded";
-    const formatLabel = isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${result.format || "HD"}`;
-    const methodTag = usedMethod === "savenow" ? "SaveNow" : "AIO Scraper";
-
-    const aioMeta = result.aioResult || {};
-    const ctxInfo = mediaPreviewCard({
-      title,
-      body: `${platform.name} • ${isAudio ? "MP3 Audio" : isImage ? "Image" : "Video"}`,
-      sourceUrl: url,
-      thumbnailUrl: aioMeta.thumbnail || result.thumbnail_url || "",
-    });
-    const caption = mediaCaption({
-      platform: platform.name,
-      platformIcon: platform.icon,
-      title: title,
-      author: aioMeta.author || null,
-      authorHandle: aioMeta.authorHandle || null,
-      duration: aioMeta.duration || null,
-      uploadDate: aioMeta.uploadDate || null,
-      views: aioMeta.views || null,
-      likes: aioMeta.likes || null,
-      comments: aioMeta.comments || null,
-      shares: aioMeta.shares || null,
-      downloads: aioMeta.downloads || null,
-      description: aioMeta.description || null,
-      format: formatLabel,
-      method: methodTag,
-    });
-
-    try {
-      if (result.type === "audio" || isAudio) {
-        await sock.sendMessage(
-          m.chat,
-          {
-            audio: buffer,
-            mimetype: "audio/mpeg",
-            fileName: title.replace(/[^\w\s-]/g, "").trim().slice(0, 40) + ".mp3",
-            contextInfo: ctxInfo,
-          },
-          { quoted: m }
-        );
-      } else if (result.type === "image" || isImage) {
-        await sock.sendMessage(
-          m.chat,
-          {
-            image: buffer,
-            caption,
-            contextInfo: ctxInfo,
-          },
-          { quoted: m }
-        );
-      } else {
-        await sock.sendMessage(
-          m.chat,
-          {
-            video: buffer,
-            caption,
-            contextInfo: ctxInfo,
-          },
-          { quoted: m }
-        );
-        await offerConvert(sock, m, { buffer, type: "video", platform: platform.name, title, sourceUrl: url });
-      }
-      await m.reply(novaBerhasil("AllDL"));
-    } catch (sendErr) {
-      console.error("[alldl] Send error:", sendErr.message);
-      m.reply(novaGangguan("AllDL"));
-    }
-
-    // Clear session
-    dlSessions.delete(m.sender);
-    return;
+    return runSessionDownload(sock, m, session, command);
   }
+
+  // ── MODE 1.5: Pilihan format via TEKS ──
+  // Setelah bot kasih list format, user tinggal ketik: .alldl hd / .alldl video /
+  // .alldl audio / .alldl image (tanpa URL)
+  {
+    const textRaw = (m.text || "").trim();
+    const hasUrl = /https?:\/\//.test(textRaw);
+    const firstWord = (m.args?.[0] || "").toLowerCase();
+    if (!hasUrl && KEYWORD_MAP[firstWord]) {
+      const session = dlSessions.get(m.sender);
+      if (!session) {
+        await m.react("❗");
+        return m.reply(
+          novaGuide("AllDL", "Sesi download sudah kedaluwarsa nih! Silakan kirim ulang linknya ya.", `${prefix}alldl <url>`)
+        );
+      }
+      const wanted = KEYWORD_MAP[firstWord];
+      const valid = buildOptions(session.platform).some((o) => o.id === wanted);
+      if (!valid) {
+        await m.react("❗");
+        const list = buildOptions(session.platform)
+          .map((o) => `• ${prefix}alldl ${o.keyword} — ${toSC(o.label)}`)
+          .join("\n");
+        return m.reply(
+          bracketBox(session.platform.icon, toSC("All Downloader"), [
+            toSC("Format itu gak tersedia buat platform ini! Pilihan yang valid:"),
+            "",
+            list,
+          ])
+        );
+      }
+      return runSessionDownload(sock, m, session, wanted);
+    }
+  }
+
 
   // ── MODE 2: Initial command — .alldl <url> ──
   const text = m.text?.trim();
@@ -415,28 +462,31 @@ async function handler(m, { sock }) {
 
   // Detect platform
   const platform = detectInfo(url);
-  // Simpan session
+
+  // Format bisa langsung disebut sekalian: ".alldl <url> video" → langsung proses
+  const extraWords = text.split(/\s+/).filter((w) => !w.startsWith("http"));
+  const fmtWord = extraWords.map((w) => KEYWORD_MAP[w.toLowerCase()]).find(Boolean);
   dlSessions.set(m.sender, { url, platform, startedAt: Date.now() });
   setTimeout(() => dlSessions.delete(m.sender), SESSION_TIMEOUT);
 
-  // Build pilihan berdasarkan platform
-  const options = buildOptions(platform);
+  if (fmtWord && buildOptions(platform).some((o) => o.id === fmtWord)) {
+    return runSessionDownload(sock, m, { url, platform, startedAt: Date.now() }, fmtWord);
+  }
 
-  // Kirim pesan dengan tombol pilihan
+  // Pilihan format ditampilkan sebagai TEKS LIST (bukan tombol) —
+  // preview card + template buttons gak support di WA modern
+  const options = buildOptions(platform);
+  const optionLines = options.map((o) => `${prefix}alldl ${o.keyword} — ${toSC(o.label)}`);
   const infoText = bracketBox(platform.icon, `${toSC("All Downloader")} — ${toSC(platform.name)}`, [
     `${toSC("Link terdeteksi!")}`,
-    `${toSC("Pilih format download di bawah")}`,
     "",
     `${toSC("URL")}: ${url.slice(0, 50)}${url.length > 50 ? "..." : ""}`,
+    "",
+    `${toSC("Pilih format — ketik salah satu:")}`,
+    ...optionLines,
   ]);
-  await sendMenuPreview(sock, m, {
-    text: infoText,
-    footer: "",
-    buttons: options,
-    title: `${toSC("Nova AI")} — ${toSC("Downloader")}`,
-    body: toSC(platform.name),
-    sourceUrl: url,
-  });
+  await m.react("🐣");
+  return m.reply(`${infoText}\n\n${tipText(`Sesi 3 menit — atau langsung sekalian: ${prefix}alldl <url> <format>`)}`);
 }
 
 export { pluginConfig as config, handler };
