@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     const token = config.vercel?.token
     if (!token) {
-        { const __navText = claraWrap("Vercel token belum diset", '❌ *Vercel token belum diset*'); return await m.reply(__navText); }
+        { const __navText = claraWrap("Vercel token belum diset", "Owner belum mengatur token Vercel di config."); return await m.reply(__navText); }
     }
     let htmlContent
 

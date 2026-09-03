@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { novaError } from '../../src/lib/nova-menu-style.js'
 import config from '../../config.js'
 
 const pluginConfig = {
@@ -41,7 +42,7 @@ atau reply file .html`
 
     const token = config.vercel?.token
     if (!token) {
-        return await m.reply('❌ *Vercel token belum diset*')
+        return await m.reply(novaError('Deploy', 'Vercel token belum diset oleh owner.'))
     }
     let htmlContent
 
