@@ -1,7 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// Quote Card sticker — hybrid: API quotly (primary, hasil ala Telegram/Alya)
+// + render lokal @napi-rs/canvas (fallback otomatis kalau API down)
 import axios from 'axios'
 import canvasPkg from '@napi-rs/canvas';
-const { createCanvas, loadImage, registerFont } = canvasPkg;
+const { createCanvas, loadImage } = canvasPkg;
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js"
@@ -10,7 +12,7 @@ const pluginConfig = {
     name: 'qc',
     alias: ["qc"],
     category: 'sticker',
-    description: 'Membuat sticker quote chat dengan warna custom (lokal canvas)',
+    description: 'Membuat sticker quote chat dengan warna custom (API + fallback lokal canvas)',
     usage: '.qc <warna> <text>',
     example: '.qc pink Hai semuanya!',
     isOwner: false,
@@ -47,6 +49,53 @@ async function getProfilePicture(sock, jid) {
     }
 }
 
+// ═══ PRIMARY: API quotly (brat.siputzx.my.id) — style Telegram quote card ═══
+async function renderViaApi({ username, text, avatarUrl, backgroundColor }) {
+    const json = {
+        messages: [
+            {
+                from: {
+                    id: Math.floor(Math.random() * 10),
+                    first_name: username,
+                    last_name: "",
+                    name: "",
+                    photo: { url: avatarUrl }
+                },
+                text,
+                entities: [],
+                avatar: true,
+                media: { url: "" },
+                mediaType: "",
+                replyMessage: { name: "", text: "", entities: [], chatId: Math.floor(Math.random() * 10) }
+            }
+        ],
+        backgroundColor,
+        width: 512,
+        height: 512,
+        scale: 2,
+        type: "quote",
+        format: "png",
+        emojiStyle: "apple"
+    }
+
+    const response = await axios.post('https://brat.siputzx.my.id/quoted', json, {
+        timeout: 20000,
+        responseType: 'arraybuffer',
+        validateStatus: () => true
+    })
+
+    if (response.status !== 200) throw new Error(`api_status_${response.status}`)
+    const contentType = response.headers['content-type'] || ''
+    if (!contentType.includes('image') && !contentType.includes('octet-stream')) {
+        throw new Error('api_not_image')
+    }
+
+    const buffer = Buffer.from(response.data)
+    if (buffer.length < 500) throw new Error('api_empty_result')
+    return buffer
+}
+
+// ═══ FALLBACK: render lokal @napi-rs/canvas (kalau API down) ═══
 function wrapText(ctx, text, maxWidth) {
     const words = text.split(' ')
     const lines = []
@@ -64,15 +113,13 @@ function wrapText(ctx, text, maxWidth) {
     return lines
 }
 
-async function renderQuoteCard(opts) {
-    const { username, text, avatarUrl, backgroundColor } = opts
+async function renderViaCanvas({ username, text, avatarUrl, backgroundColor }) {
     const scale = 2
-    const baseWidth = 400
+    const maxCardWidth = 400
     const padding = 24
     const avatarSize = 50
     const gap = 14
 
-    // Load avatar
     let avatarImg
     try {
         const res = await axios.get(avatarUrl, { responseType: 'arraybuffer', timeout: 10000 })
@@ -81,32 +128,39 @@ async function renderQuoteCard(opts) {
         avatarImg = await loadImage(DEFAULT_PP)
     }
 
-    // Measure text
-    const measureCanvas = createCanvas(baseWidth, 200)
+    const measureCanvas = createCanvas(maxCardWidth, 200)
     const mctx = measureCanvas.getContext('2d')
     mctx.font = `${15 * scale}px sans-serif`
-    const maxWidth = (baseWidth - padding * 2 - avatarSize - gap) * scale
-    const lines = wrapText(mctx, text, maxWidth)
+    const maxTextWidth = (maxCardWidth - padding * 2 - avatarSize - gap) * scale
+    const lines = wrapText(mctx, text, maxTextWidth)
+
+    // Lebar bubble menyesuaikan konten (bukan selalu full width) — biar kartu
+    // pendek gak jadi kotak kecil gepeng saat dijadikan stiker persegi
+    const longestLineWidth = Math.max(...lines.map(l => mctx.measureText(l).width), mctx.measureText(username).width)
+    const contentWidth = avatarSize * scale + gap * scale + longestLineWidth
+    const minCardWidth = 260 * scale
+    const maxCardWidthPx = maxCardWidth * scale
+    const bubbleW = Math.min(Math.max(contentWidth + padding * scale, minCardWidth), maxCardWidthPx)
+
     const lineH = 22 * scale
     const textBlockH = lines.length * lineH
     const nameH = 20 * scale
     const bubblePadding = 16 * scale
     const bubbleH = nameH + textBlockH + bubblePadding * 2
-    const bubbleW = baseWidth * scale
 
-    const canvasW = bubbleW + padding * 2 * scale
-    const canvasH = Math.max(bubbleH + padding * 2 * scale, (avatarSize + bubblePadding) * scale + padding * 2 * scale)
+    // Frame persegi (mendekati 1:1) biar gak gepeng saat jadi stiker WA 512x512
+    const contentSize = Math.max(bubbleW, bubbleH) + padding * 2 * scale
+    const canvasW = contentSize
+    const canvasH = contentSize
 
     const canvas = createCanvas(canvasW, canvasH)
     const ctx = canvas.getContext('2d')
 
-    // Background
     ctx.fillStyle = backgroundColor
     ctx.fillRect(0, 0, canvasW, canvasH)
 
-    // Bubble
-    const bubbleX = padding * scale
-    const bubbleY = padding * scale
+    const bubbleX = (canvasW - bubbleW) / 2
+    const bubbleY = (canvasH - bubbleH) / 2
     const radius = 18 * scale
 
     ctx.beginPath()
@@ -121,10 +175,11 @@ async function renderQuoteCard(opts) {
     ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY)
     ctx.closePath()
 
-    ctx.fillStyle = '#ffffff'
+    // Bubble putih kalau background bukan putih; kalau background putih, bubble abu muda
+    // biar tetap ada kontras dan gak "blank" (bug lama)
+    ctx.fillStyle = backgroundColor.toLowerCase() === '#ffffff' ? '#f0f0f0' : '#ffffff'
     ctx.fill()
 
-    // Avatar (circle)
     const avX = bubbleX + bubblePadding
     const avY = bubbleY + bubblePadding
     ctx.save()
@@ -134,12 +189,10 @@ async function renderQuoteCard(opts) {
     ctx.drawImage(avatarImg, avX, avY, avatarSize * scale, avatarSize * scale)
     ctx.restore()
 
-    // Username
     ctx.fillStyle = '#7a7a7a'
     ctx.font = `${13 * scale}px sans-serif`
     ctx.fillText(username, avX + avatarSize * scale + gap * scale, avY + 16 * scale)
 
-    // Message text
     ctx.fillStyle = '#1a1a1a'
     ctx.font = `${15 * scale}px sans-serif`
     const textX = bubbleX + bubblePadding
@@ -188,15 +241,20 @@ async function handler(m, { sock }) {
     }
 
     try {
+        await m.react("🕒")
+
         const username = m.pushName || 'User'
         const avatar = await getProfilePicture(sock, m.sender)
 
-        const buffer = await renderQuoteCard({
-            username,
-            text: message,
-            avatarUrl: avatar,
-            backgroundColor,
-        })
+        let buffer
+        try {
+            buffer = await renderViaApi({ username, text: message, avatarUrl: avatar, backgroundColor })
+        } catch (apiErr) {
+            console.warn("[qc] API gagal, fallback ke canvas lokal:", apiErr.message)
+            buffer = await renderViaCanvas({ username, text: message, avatarUrl: avatar, backgroundColor })
+        }
+
+        await m.react("🐣")
 
         await sock.sendImageAsSticker(m.chat, buffer, m, {
             packname: config.sticker?.packname || 'Nova-AI',
@@ -204,6 +262,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
         console.error("[qc] Error:", error.message)
+        await m.react("❌")
         m.reply(claraWrap("qc", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
