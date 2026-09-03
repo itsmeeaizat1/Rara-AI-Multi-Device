@@ -5,6 +5,7 @@ import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -211,6 +212,12 @@ async function handler(m, { sock }) {
         mimetype: "audio/mpeg",
         ptt: false,
         fileName: `${(audio.title || video.title).replace(/[^\w\s-]/g, "").substring(0, 50)}.mp3`,
+        contextInfo: mediaPreviewCard({
+          title: titleForLyrics,
+          body: `YouTube Audio • ${kbps}kbps`,
+          sourceUrl: video.url,
+          thumbnailUrl: video.thumbnail,
+        }),
       },
       { quoted: m },
     );

@@ -6,6 +6,7 @@ import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
 import { novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -227,6 +228,13 @@ async function handler(m, { sock }) {
         caption,
         mimetype: "video/mp4",
         fileName: `${(vid.title || video.title).replace(/[^\w\s-]/g, "").substring(0, 50)}.mp4`,
+        contextInfo: mediaPreviewCard({
+          title: titleForLyrics,
+          body: `YouTube Video • ${quality === "1080" ? "HD" : quality + "p"}`,
+          sourceUrl: video.url,
+          thumbnailUrl: video.thumbnail,
+          mediaType: 2,
+        }),
       },
       { quoted: m },
     );
