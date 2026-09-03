@@ -3,7 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animInvasion } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -31,6 +31,7 @@ async function handler(m, { sock }) {
     if ((rpg.energy || 0) < 30) return m.reply(claraWrap("invasion", "Energi tidak cukup. Butuh 30 energi.", "info"));
 
     await m.react("🕒");
+    await animInvasion(m, sock);
     const result = INVASION_RESULTS[Math.floor(Math.random() * INVASION_RESULTS.length)];
     rpg.energy = (rpg.energy || 0) - 30;
 
