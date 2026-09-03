@@ -50,26 +50,33 @@ const pluginConfig = {
 // ============================================================
 // SETTINGS
 // ============================================================
+const DEFAULT_AUTOSMARTWELCOME = {
+  enabled: false,
+  mode: 1, // 1=teks personal, 2=canvas+caption, 3=full AI teks panjang
+  personality: "ramah, santai, kadang lucu — typical Indonesian bot community vibe",
+  activeGroups: [], // group jids, kosong = semua grup
+  stats: {
+    totalWelcome: 0,
+    totalAI: 0,
+    totalFallback: 0,
+    byGroup: {}, // { jid: { count, lastWelcome } }
+    lastWelcome: null,
+  },
+  history: [], // last 50 welcomes
+  lastWelcomeTime: {}, // { participantJid: timestamp } — anti-spam cooldown
+};
+
 function getSettings() {
   const db = getDatabase();
   if (!db.db.data.automation) db.db.data.automation = {};
   if (!db.db.data.automation.autoSmartWelcome) {
-    db.db.data.automation.autoSmartWelcome = {
-      enabled: false,
-      mode: 1, // 1=teks personal, 2=canvas+caption, 3=full AI teks panjang
-      personality: "ramah, santai, kadang lucu — typical Indonesian bot community vibe",
-      activeGroups: [], // group jids, kosong = semua grup
-      stats: {
-        totalWelcome: 0,
-        totalAI: 0,
-        totalFallback: 0,
-        byGroup: {}, // { jid: { count, lastWelcome } }
-        lastWelcome: null,
-      },
-      history: [], // last 50 welcomes
-      lastWelcomeTime: {}, // { participantJid: timestamp } — anti-spam cooldown
-    };
+    db.db.data.automation.autoSmartWelcome = DEFAULT_AUTOSMARTWELCOME;
     db.db.write();
+  } else {
+    // SCHEMA EVOLUTION: settings lama (persist sebelum field baru ada)
+    // di-merge dengan defaults biar gak TypeError "reading 'push'/undefined"
+    // saat fitur jalan. Field user yang udah ada gak ketimpa.
+    db.db.data.automation.autoSmartWelcome = { ...DEFAULT_AUTOSMARTWELCOME, ...db.db.data.automation.autoSmartWelcome };
   }
   return db.db.data.automation.autoSmartWelcome;
 }

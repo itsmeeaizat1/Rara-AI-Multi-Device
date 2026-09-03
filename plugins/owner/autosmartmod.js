@@ -83,38 +83,45 @@ const SENSITIVITY_MAP = {
 // ============================================================
 // SETTINGS
 // ============================================================
+const DEFAULT_SMARTMOD = {
+  enabled: false,
+  sensitivity: "medium",
+  actions: {
+    minor: "warn",
+    moderate: "warn",
+    severe: "kick",
+  },
+  thresholds: SENSITIVITY_MAP.medium,
+  cooldown: 15,
+  appealEnabled: true,
+  whitelist: [],
+  groupSettings: {},
+  reportTime: "21:00",
+  stats: {
+    totalChecked: 0,
+    totalFlagged: 0,
+    bySeverity: { minor: 0, moderate: 0, severe: 0 },
+    byGroup: {},
+    actions: { warn: 0, mute: 0, kick: 0, delete: 0 },
+    falsePositives: 0,
+    lastReport: null,
+  },
+  cases: [],
+  violations: {},
+  lastReport: null,
+};
+
 function getSettings() {
   const db = getDatabase();
   if (!db.db.data.automation) db.db.data.automation = {};
   if (!db.db.data.automation.smartMod) {
-    db.db.data.automation.smartMod = {
-      enabled: false,
-      sensitivity: "medium",
-      actions: {
-        minor: "warn",
-        moderate: "warn",
-        severe: "kick",
-      },
-      thresholds: SENSITIVITY_MAP.medium,
-      cooldown: 15,
-      appealEnabled: true,
-      whitelist: [],
-      groupSettings: {},
-      reportTime: "21:00",
-      stats: {
-        totalChecked: 0,
-        totalFlagged: 0,
-        bySeverity: { minor: 0, moderate: 0, severe: 0 },
-        byGroup: {},
-        actions: { warn: 0, mute: 0, kick: 0, delete: 0 },
-        falsePositives: 0,
-        lastReport: null,
-      },
-      cases: [],
-      violations: {},
-      lastReport: null,
-    };
+    db.db.data.automation.smartMod = DEFAULT_SMARTMOD;
     db.db.write();
+  } else {
+    // SCHEMA EVOLUTION: settings lama (persist sebelum field baru ada)
+    // di-merge dengan defaults biar gak TypeError "reading 'push'/undefined"
+    // saat fitur jalan. Field user yang udah ada gak ketimpa.
+    db.db.data.automation.smartMod = { ...DEFAULT_SMARTMOD, ...db.db.data.automation.smartMod };
   }
   return db.db.data.automation.smartMod;
 }

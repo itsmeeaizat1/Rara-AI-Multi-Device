@@ -173,9 +173,23 @@ const DEFAULT_PROVIDERS = {
     chatEndpoint: "https://api.ikyyxd.my.id/ai/gemini",
     method: "GET",
     authHeader: () => ({}),
-    buildParams: ({ messages, apiKey }) => {
-      const lastUser = [...messages].reverse().find(m => m.role === "user");
-      const text = lastUser?.content || "";
+    // FIX: dulu systemPrompt DIBUANG (cuma pesan user terakhir yang dikirim)
+    // — fitur AI otomatis (autoconflict/autosmartwelcome/dll) kehilangan
+    // instruksi pentingnya (format JSON, persona). Sekarang: systemPrompt +
+    // riwayat singkat digabung ke param text (API Ikyy cuma terima satu text).
+    buildParams: ({ messages, systemPrompt, apiKey }) => {
+      let text = "";
+      if (systemPrompt) text += `${String(systemPrompt).slice(0, 1200)}\n\n`;
+      const recent = (messages || []).filter((m) => m.role !== "system").slice(-6);
+      if (recent.length > 1) {
+        text += "Riwayat singkat:\n";
+        for (const m of recent.slice(0, -1)) {
+          text += `${m.role === "assistant" ? "AI" : "User"}: ${String(m.content).slice(0, 300)}\n`;
+        }
+        text += "\n";
+      }
+      const lastUser = [...messages].reverse().find((m) => m.role === "user");
+      text += lastUser?.content || "";
       const sessionId = `nova_${Date.now()}`;
       return { text, sessionsId: sessionId, apikey: apiKey };
     },
@@ -661,61 +675,111 @@ async function callAI(firstArg, secondArg) {
     // Language preference not set, continue normally
   }
 
-  const effectiveApiKey = String(apiKey || "");
-  const effectiveModel = String(model || provider.defaultModel);
-  const normalizedMessages = normalizeMessages(messages, systemPrompt && provider.supportsSystem ? systemPrompt : undefined);
+  // ═══ AUTO-FALLBACK KE IKYY (free, no-key) ═══
+  // Fitur AI otomatis (autoconflict, autosmartmod, autosmartwelcome,
+  // autosummary, autocontent, autopredict, dll) manggil callAI dengan
+  // providerKey "openai" + apiKey dari config.aiHelp. Kalau owner belum
+  // set key itu, request ke api.openai.com balas 401 → fitur diam-diam
+  // gak jalan walau toggle-nya ON. Fix: key kosong + bukan provider GET
+  // (Ikyy dll) + tanpa apiEndpoint custom → otomatis pindah ke
+  // ikyy_gemini (api.ikyyxd.my.id, free no-key, terverifikasi hidup).
+  let effectiveApiKey = String(apiKey || "");
+  let activeProviderKey = providerKey;
+  let activeProvider = provider;
+  if (
+    !effectiveApiKey &&
+    !apiEndpoint &&
+    provider.method !== "GET" &&
+    providerKey !== "ikyy_gemini"
+  ) {
+    const ikyyFallback = resolveProvider("ikyy_gemini", {});
+    if (ikyyFallback) {
+      activeProviderKey = "ikyy_gemini";
+      activeProvider = ikyyFallback;
+      console.log(`[AI-Service] key "${providerKey}" kosong → fallback ke IkyyXD Gemini (free)`);
+    }
+  }
 
-  const url = apiEndpoint || (typeof provider.chatEndpoint === "function" ? provider.chatEndpoint(effectiveModel) : provider.chatEndpoint);
-  const finalUrl = String(url || "").replace("__API_KEY__", encodeURIComponent(effectiveApiKey));
+  const effectiveModel = String(model || activeProvider.defaultModel);
+  const normalizedMessages = normalizeMessages(messages, systemPrompt && activeProvider.supportsSystem ? systemPrompt : undefined);
 
-  // ═══ GET-based providers (IkyyXD API) ═══
-  if (provider.method === "GET" && provider.buildParams) {
-    const params = provider.buildParams({ model: effectiveModel, messages: normalizedMessages, systemPrompt, apiKey: effectiveApiKey });
-    const queryString = new URLSearchParams(
-      Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== "")
-    ).toString();
-    const getUrl = `${finalUrl}?${queryString}`;
+  // ═══ RESILIENCE: provider utama gagal → retry sekali via IkyyXD Gemini ═══
+  // Endpoint custom (mis. Tio AI) suka mati diam-diam → fitur AI otomatis
+  // (autoconflict, autosmartmod, autosmartwelcome, dll) mati walau ON.
+  // Owner request: fitur WAJIB tetap jalan → gagal = fallback Ikyy (free).
+  async function requestOnce(prov, provKey) {
+    const url2 = typeof prov.chatEndpoint === "function" ? prov.chatEndpoint(effectiveModel) : prov.chatEndpoint;
+    const finalUrl2 = String(url2 || "").replace("__API_KEY__", encodeURIComponent(effectiveApiKey));
 
-    const res = await fetch(getUrl, {
-      method: "GET",
-      headers: { "User-Agent": "Mozilla/5.0", ...provider.authHeader(effectiveApiKey) },
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`AI ${providerKey} error ${res.status}: ${errText}`);
+    if (prov.method === "GET" && prov.buildParams) {
+      const params = prov.buildParams({ model: effectiveModel, messages: normalizedMessages, systemPrompt, apiKey: effectiveApiKey });
+      const queryString = new URLSearchParams(
+        Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== ""),
+      ).toString();
+      const getUrl = `${finalUrl2}?${queryString}`;
+      const res = await fetch(getUrl, {
+        method: "GET",
+        headers: { "User-Agent": "Mozilla/5.0", ...prov.authHeader(effectiveApiKey) },
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`AI ${provKey} error ${res.status}: ${errText.slice(0, 200)}`);
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!data?.status) throw new Error(`AI ${provKey}: ${data?.message || " respon gagal"}`);
+      const text = prov.parseResponse(data);
+      if (!text) throw new Error("AI mengembalikan respon kosong.");
+      return text;
     }
 
+    const body2 = prov.buildBody({ model: effectiveModel, messages: normalizedMessages, systemPrompt });
+    const res = await fetch(finalUrl2, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(effectiveApiKey ? prov.authHeader(effectiveApiKey) : prov.authHeader("")),
+      },
+      body: JSON.stringify({ ...body2, temperature, max_tokens: maxTokens }),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`AI ${provKey} error ${res.status}: ${text.slice(0, 200)}`);
+    }
     const data = await res.json().catch(() => ({}));
-    if (!data?.status) throw new Error(`AI ${providerKey}: ${data?.message || " respon gagal"}`);
-    const text = provider.parseResponse(data);
+    const text = prov.parseResponse(data);
     if (!text) throw new Error("AI mengembalikan respon kosong.");
     return text;
   }
 
-  // ═══ POST-based providers (default) ═══
-  const body = provider.buildBody({ model: effectiveModel, messages: normalizedMessages, systemPrompt });
-
-  const res = await fetch(finalUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(effectiveApiKey ? provider.authHeader(effectiveApiKey) : provider.authHeader("")),
-    },
-    body: JSON.stringify({ ...body, temperature, max_tokens: maxTokens }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`AI ${providerKey} error ${res.status}: ${text}`);
+  try {
+    return await requestOnce(activeProvider, activeProviderKey);
+  } catch (mainErr) {
+    // udah di Ikyy? jangan fallback ke dirinya sendiri
+    if (activeProviderKey === "ikyy_gemini") throw mainErr;
+    const ikyyRetry = resolveProvider("ikyy_gemini", {});
+    if (!ikyyRetry) throw mainErr;
+    console.log(`[AI-Service] ${activeProviderKey} gagal (${mainErr.message.slice(0, 100)}) → fallback IkyyXD Gemini`);
+    const retryMessages = normalizeMessages(messages, systemPrompt);
+    const savedMessages = normalizedMessages;
+    try {
+      const res = await fetch(
+        `https://api.ikyyxd.my.id/ai/gemini?${new URLSearchParams(ikyyRetry.buildParams({ model: "gemini", messages: retryMessages, systemPrompt, apiKey: "" }))}`,
+        { method: "GET", headers: { "User-Agent": "Mozilla/5.0" } },
+      );
+      if (!res.ok) throw new Error(`Ikyy error ${res.status}`);
+      const data = await res.json().catch(() => ({}));
+      if (!data?.status) throw new Error(data?.message || "respon gagal");
+      const text = ikyyRetry.parseResponse(data);
+      if (!text) throw new Error("respon kosong");
+      return text;
+    } catch (retryErr) {
+      console.log(`[AI-Service] fallback Ikyy juga gagal: ${retryErr.message}`);
+      throw mainErr; // lempar error asli biar caller tahu
+    } finally {
+      void savedMessages;
+    }
   }
-
-  const data = await res.json().catch(() => ({}));
-  const text = provider.parseResponse(data);
-  if (!text) throw new Error("AI mengembalikan respon kosong.");
-  return text;
 }
-
 
 // ═══════════════════════════════════════════════════════════
 // AUTO-LATEST GEMINI MODEL RESOLVER
