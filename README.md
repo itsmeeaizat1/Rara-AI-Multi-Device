@@ -1,13 +1,16 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.696+ Command, 1.702 Plugin & 43 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.191+ Command, 1.810 Plugin & 41 Kategori!</b></p>
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-21.17.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1702-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-2696%2B-blueviolet?style=flat-square&logo=terminal">
-  <img src="https://img.shields.io/badge/Kategori-43-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Version-22.0.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Total_Plugin-1810-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-2191%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Kategori-41-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Downloader-52-yellow?style=flat-square&logo=download">
+  <img src="https://img.shields.io/badge/RPG_Game-166-ff69b4?style=flat-square&logo=target">
+  <img src="https://img.shields.io/badge/AI_Plugin-172-9cf?style=flat-square&logo=ai">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
 </p>
@@ -43,7 +46,24 @@ Automation:
 
 ---
 
-## ✨ Fitur Unggulan v21.17.0
+## ✨ Fitur Unggulan v22.0.0
+
+### 🆕 Baru di v22.0.0
+
+| Fitur | Deskripsi | Command |
+|-------|-----------|---------|
+| Nova AI Agent | AI jawab lengkap + eksekusi command & kick/promote/demote via nama | `.novaai` |
+| Panel Pterodactyl 100 Slot | Kontrol 100 panel via argumen slot, config pusat src/lib/panel/ | `.cpanel` / `.setpanel` |
+| Panel Login Per-User | User login akun panel sendiri (session 7 hari), kontrol server miliknya | `.panel <user> <pass>,1` |
+| TikTok Keyword Search | Search video TikTok via keyword ala .play | `.tt <keyword>` / `.ttvideo` / `.ttaudio` / `.ttimage` |
+| IG Per-Format DL | Download IG per format dari URL post | `.igvideo` / `.igimage` / `.igaudio` |
+| Upscale AI Lokal | Engine Swin2SR/Real-ESRGAN lokal, tanpa watermark (1080p-5K, >1080p owner) | `.remini` / `.remini real` |
+| Convert Universal | 12 format audio + 13 format video, session chaining 10 menit | `.convert` / `.alldl <url> <format>` |
+| Energi vs Limit | Energi game (RPG/Couple) terpisah dari limit akses fitur | `.heal` / `.topenergi` / `.toplimit` |
+| Animasi RPG Morphing | Morphing message semua game RPG (43 animasi, gaya Alya) | `.adventure` / `.mining` dll |
+| Menu AI Greeting | Pengenalan bot di menu digenerate AI tiap load | `.menu` |
+| Status Universal | Pesan berhasil/gagal/gangguan seragam di semua fitur media | otomatis |
+| Auto Status Page | Halaman ON/OFF 33 fitur automasi sekaligus (owner) | `.autostatus` |
 
 ### 🤖 AI & Automation
 
@@ -122,8 +142,8 @@ Automation:
 | Fitur | Deskripsi | Command |
 |-------|-----------|---------|
 | YouTube DL | MP3/MP4 via FastDL, YTConvert | `.ytmp3` / `.ytmp4` |
-| TikTok DL | No watermark via TikWM, TiklyDown, TTSave | `.tiktokdl` / `.tiktokv3` |
-| Instagram DL | Post, story, reel | `.instagramdl` |
+| TikTok DL | No watermark via TikWM + keyword search video random | `.tiktokdl` / `.tt <keyword>` |
+| Instagram DL | Post, story, reel + per-format (video/foto/audio) | `.instagramdl` / `.igvideo` / `.igaudio` |
 | Facebook DL | Video FB via SaveFBs | `.fbdl` |
 | Spotify DL | Track & playlist | `.spotifydl` / `.spotifyplay` |
 | SoundCloud DL | Audio streaming | `.soundcloud` |
@@ -164,7 +184,7 @@ Automation:
 | To Japanese | Convert ke style Japanese | `.tojapanese` |
 | To Real (AI) | AI enhance foto jadi real | `.toreal` |
 | AI Image Gen | Text to image (Pollinations, SDXL, DALL-E) | `.txt2img` / `.sdxl` |
-| Upscale HD | Enhance resolusi foto | `.remini` / `.imgupscale` |
+| Upscale HD | Engine lokal Swin2SR/Real-ESRGAN, 1080p-5K tanpa watermark | `.remini` / `.imgupscale` |
 | Remove BG | Hapus background foto | `.unblurimg` |
 | Stiker Frame | 12 jenis bingkai stiker | `.stikerframe` |
 | Stiker Grid | Kolase 2-4 foto jadi 1 stiker | `.stikergrid` |
@@ -354,15 +374,20 @@ Automation:
 
 ---
 
-## 📊 Statistik Bot v21.17.0
+## 📊 Statistik Bot v22.0.0
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.702 |
-| Total Command | 2.696+ |
-| Kategori | 43 |
-| RPG Module | 85 |
+| Total Plugin | 1.810 |
+| Total Command | 2.191+ |
+| Kategori | 41 |
+| RPG Module | 166 (159 rpg + 7 couple) |
+| AI Plugin | 172 |
 | AI Model | 34 |
+| Downloader | 52 |
+| Panel Pterodactyl | 100 slot (28 plugin kontrol) |
+| Convert Plugin | 31 |
+| Tools Plugin | 194 |
 | Tools Plugin | 149+ |
 | Menu Variasi | 6 |
 | Nav Button Plugin | 1.019 |

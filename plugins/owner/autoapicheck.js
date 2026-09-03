@@ -113,7 +113,7 @@ async function pingApi(url, timeoutMs = 8000) {
     const res = await fetch(url, {
       method: "GET",
       signal: controller.signal,
-      headers: { "User-Agent": "NovaBot/21.4.0" },
+      headers: { "User-Agent": "NovaBot/22.0.0" },
     });
     const elapsed = Date.now() - start;
     clearTimeout(timeout);
