@@ -695,9 +695,8 @@ async function startConnection(options = {}) {
           const waktu = now.toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "full", timeStyle: "short" });
           const isFirstPair = !fs.existsSync(path.join(process.cwd(), "storage", ".first_pair_done"));
 
-          // Info section lengkap — pakai builder + renderer yang SAMA kayak menu
-          // (Info User/Waktu/Bot/Database/Server/Cuaca) biar tampilan konsisten
-          let greeting = null;
+          // Cukup section INFO SERVER aja (request owner) — tapi tetap dirender
+          // pakai builder + renderer yang sama kayak menu biar tampilan konsisten
           let infoSections = [];
           try {
             const { buildMenuInfo } = await import("./lib/nova-info-section.js");
@@ -707,10 +706,15 @@ async function startConnection(options = {}) {
               { sender: ownerNums[0] + "@s.whatsapp.net", pushName: "Owner", isOwner: true, isPremium: true, isGroup: false },
               { db: getDatabase(), config, uptime: process.uptime() * 1000 }
             );
-            greeting = built.greeting;
-            // Ping di-skip — gak ada pesan masuk yang bisa diukur latency-nya
-            const infoNoPing = (built.info || []).filter((it) => !(it && it.label === "Ping"));
-            infoSections = novaInfoSections(infoNoPing).trim().split("\n");
+            const info = built.info || [];
+            // Ambil potongan dari header "Info Server" sampai section berikutnya
+            const start = info.findIndex((it) => it === "Info Server");
+            if (start >= 0) {
+              const end = info.findIndex((it, i) => i > start && typeof it === "string" && it.trim() !== "");
+              const serverOnly = info.slice(start, end === -1 ? info.length : end);
+              // Ping di-skip — gak ada pesan masuk yang bisa diukur latency-nya
+              infoSections = novaInfoSections(serverOnly.filter((it) => !(it && it.label === "Ping"))).trim().split("\n");
+            }
           } catch (e) {
             colors.logger.warn("notif", "info section gagal dibangun: " + e.message);
           }
@@ -724,7 +728,6 @@ async function startConnection(options = {}) {
             "│",
             "╰────  •  ────",
             "",
-            ...(greeting ? ["_" + greeting + "_", ""] : []),
             ...infoSections,
             "",
             isFirstPair
