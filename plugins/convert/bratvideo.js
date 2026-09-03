@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bratvideo",
@@ -52,6 +52,7 @@ async function handler(m, { sock, text }) {
     fs.writeFileSync(outputPath, buffer);
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("bratvideo"));
     await sock.sendVideoAsSticker(m.chat, outputPath, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,

@@ -2,7 +2,7 @@
 // applemusicdl — Download lagu dari Apple Music via IkyyXD
 // Primary: IkyyXD /download/applemusic | Fallback: manual info (no audio)
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { claraWrap, novaError, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "applemusicdl",
@@ -36,6 +36,7 @@ async function handler(m, { sock }) {
       const audio = result.medias.find(m => m.type === "audio") || result.medias[0];
 
       await m.react("🐣");
+    await m.reply(novaBerhasil("applemusicdl"));
       const _cap = mediaCaption({ platformIcon: "🍎", platformName: "Apple Music", title: result.title || "Apple Music Track", author: result.author || null, format: "🎵 MP3", method: "IkyyXD" });
       await m.reply(_cap);
       await sock.sendMessage(m.chat, {
@@ -52,7 +53,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[applemusicdl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("AppleMusic DL", "Ada error nih, coba lagi ya"));
+    return m.reply(novaGangguan("AppleMusic DL"));
   }
 }
 

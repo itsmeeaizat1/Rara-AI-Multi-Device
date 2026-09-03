@@ -9,7 +9,7 @@ import { Canvas, loadImage, FontLibrary } from "skia-canvas";
 import sharp from "sharp";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Register Anton font (Impact-like, free Google Font)
 const FONT_PATH = path.join(process.cwd(), "assets", "fonts", "Anton.ttf");
@@ -183,7 +183,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer) {
-      await m.reply(novaError("SmemeV2", "Gagal download media nih, coba reply ulang"));
+      await m.reply(novaGagal("SmemeV2"));
       return;
     }
 
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
       memeBuffer = await generateMeme(mediaBuffer, topText, bottomText);
     } catch (e) {
       console.error("[SMEMEV2] Generate failed:", e.message);
-      await m.reply(novaError("SmemeV2", "Gagal generate meme nih, mungkin format gak didukung"));
+      await m.reply(novaGagal("SmemeV2"));
       return;
     }
 
@@ -227,9 +227,10 @@ async function handler(m, { sock }) {
       packname: config.sticker?.packname || "Nova-AI",
       author: config.sticker?.author || "Bot",
     });
+      await m.reply(novaBerhasil("smemev2"));
   } catch (error) {
     console.error("[SMEMEV2] Error:", error.message);
-    await m.reply(claraWrap("smemev2", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaGangguan("smemev2"));
   }
 }
 

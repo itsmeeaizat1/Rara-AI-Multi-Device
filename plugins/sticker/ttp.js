@@ -4,7 +4,7 @@
 import { createCanvas } from "@napi-rs/canvas";
 import config from "../../config.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ttp",
@@ -86,6 +86,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, { sticker: stickerBuffer }, { quoted: m });
     await m.react("🐣");
+    await m.reply(novaBerhasil("ttp"));
   } catch (err) {
     console.error("[TTP]", err);
     await m.react("❌");

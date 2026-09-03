@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaReply } from "../../src/lib/nova-menu-style.js";
+import { novaReply, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bratcewek",
@@ -35,12 +35,10 @@ async function handler(m, { sock }) {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
+      await m.reply(novaBerhasil("bratcewek"));
   } catch (error) {
     console.error("[bratcewek] Error:", error.message);
-    const msg = novaReply({
-      title: "Brat Cewek",
-      status: `❌ Gagal generate: ${error.message}`,
-    });
+    const msg = novaGangguan("bratcewek");
     await m.reply(msg);
   }
 }

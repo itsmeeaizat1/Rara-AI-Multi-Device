@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { RedNoteDL } from "../../src/scraper/rednote.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rednotedl",
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const result = await RedNoteDL(text);
 
     if (!result.status) {
-      return m.reply(novaError("RedNote", result.error || "Gagal download nih"));
+      return m.reply(novaGagal("RedNote"));
     }
 
     if (result.type === "video" && result.results?.[0]) {
@@ -57,9 +57,10 @@ async function handler(m, { sock }) {
         );
       }
     }
+    await m.reply(novaBerhasil("RedNote"));
   } catch (e) {
     console.error(e);
-    m.reply(novaError("RedNote", "Gagal ambil data — coba lagi ya"));
+    m.reply(novaGangguan("RedNote"));
   }
 }
 

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,12 +41,13 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("mp4"));
     await sock.sendMessage(m.chat, {
       video: buffer,
       caption: _cap,
     }, { quoted: m });
   } catch (error) {
-    await m.reply(novaError("MP4 Downloader", `Gagal mengunduh MP4: ${error.message}`));
+    await m.reply(novaGagal("MP4 Downloader"));
   }
 
   return { handled: true };

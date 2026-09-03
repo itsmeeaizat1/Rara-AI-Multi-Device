@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/douyin → /download/all-in-one | Fallback: azbry API
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import axios from "axios";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyindl",
@@ -83,13 +83,14 @@ async function handler(m, { sock }) {
       } else if (r.audio) {
         await m.reply(caption2);
         await m.react("🐣");
+    await m.reply(novaBerhasil("douyindl"));
         await sock.sendMessage(m.chat, {
           audio: { url: r.audio },
           mimetype: "audio/mpeg",
         }, { quoted: m });
       } else {
         await m.react("❌");
-        await m.reply(novaError("Douyin DL", "Gagal ambil media — coba link lain ya"));
+        await m.reply(novaGagal("Douyin DL"));
       }
       return;
     } catch (e) {
@@ -97,11 +98,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaError("Douyin DL", "Gagal download — coba link lain ya"));
+    return m.reply(novaGagal("Douyin DL"));
   } catch (error) {
     console.error("[douyindl.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("Douyin DL", "Ada error nih, coba lagi ya"));
+    return m.reply(novaGangguan("Douyin DL"));
   }
 }
 

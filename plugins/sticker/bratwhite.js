@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaReply } from "../../src/lib/nova-menu-style.js";
+import { novaReply, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bratwhite",
@@ -42,13 +42,11 @@ async function handler(m, { sock }) {
       author: config.sticker.author,
     });
     await fs.promises.unlink(tempFile).catch(() => {});
+      await m.reply(novaBerhasil("bratwhite"));
   } catch (error) {
     await fs.promises.unlink(tempFile).catch(() => {});
     console.error("[bratwhite] Error:", error.message);
-    const msg = novaReply({
-      title: "bratwhite",
-      status: `❌ Gagal generate: ${error.message}`,
-    });
+    const msg = novaGangguan("bratwhite");
     await m.reply(msg);
   }
 }

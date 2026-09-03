@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tiktokv4.js — TikTok Downloader V4 via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { claraWrap, novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tiktokv4",
@@ -38,18 +38,19 @@ async function handler(m, { sock }) {
         format: "Video (No Watermark)", method: "IkyyXD",
       });
       await m.react("🐣");
+    await m.reply(novaBerhasil("tiktokv4"));
       await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption,
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(novaError("TikTok V4", "Gagal ambil video — coba link lain ya"));
+      await m.reply(novaGagal("TikTok V4"));
     }
   } catch (error) {
     console.error("[tiktokv4.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("TikTok V4", "Ada error nih, coba lagi ya"));
+    return m.reply(novaGangguan("TikTok V4"));
   }
 }
 

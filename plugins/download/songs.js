@@ -2,7 +2,7 @@
 // songs.js — Cari & play lagu (iTunes)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBox, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBox, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "songs",
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("songs error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("songs", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaGangguan("songs"));
   }
 }
 

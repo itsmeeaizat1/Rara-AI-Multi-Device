@@ -2,7 +2,7 @@
 // ytmp3v3.js — YouTube MP3 v3 (@distube/ytdl-core, direct engine)
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
-import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ytmp3v3",
@@ -48,6 +48,7 @@ async function handler(m, { sock }) {
     const buffer = Buffer.concat(chunks);
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("ytmp3v3"));
 
     const durStr = `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`;
     let msg = mediaCaption({

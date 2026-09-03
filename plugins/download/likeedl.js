@@ -4,7 +4,7 @@
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import likee from "../../src/scraper/likee.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "likeedl",
@@ -47,6 +47,7 @@ async function handler(m, { sock }) {
       const data = await likee(url);
       if (data?.status && (data?.video || data?.url)) {
         await m.react("🐣");
+    await m.reply(novaBerhasil("likeedl"));
         return await sock.sendMedia(m.chat, data.video || data.url, data?.title || null, m, {
           type: "video",
           contextInfo: { forwardingScore: 0, isForwarded: false },
@@ -57,7 +58,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaError("Likee DL", "Gagal ambil video — coba link lain ya"));
+    return m.reply(novaGagal("Likee DL"));
   } catch (error) {
     console.error("[likeedl.js]:", error.message);
     await m.react("❌");

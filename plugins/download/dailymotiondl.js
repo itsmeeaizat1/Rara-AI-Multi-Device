@@ -6,7 +6,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { DailymotionDL } from "../../src/scraper/dailymotion.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const exec = promisify(execFile);
 
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     const result = await DailymotionDL(text);
 
     if (!result.status) {
-      return m.reply(novaError("Dailymotion", result.error || "Gagal download nih"));
+      return m.reply(novaGagal("Dailymotion"));
     }
 
     const caption = mediaCaption({
@@ -92,11 +92,12 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
+      await m.reply(novaBerhasil("Dailymotion"));
       await offerConvert(sock, m, { buffer, type: "video", platform: "Dailymotion", title: result.title, sourceUrl: text });
     }
   } catch (e) {
     console.error(e);
-    m.reply(novaError("Dailymotion", "Gagal ambil data — coba lagi ya"));
+    m.reply(novaGangguan("Dailymotion"));
   }
 }
 
