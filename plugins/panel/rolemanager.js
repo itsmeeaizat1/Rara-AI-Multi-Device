@@ -5,12 +5,16 @@ import { addRole, removeRole, listByRole, canManageRole, getUserRole, VALID_SERV
 const ROLES = ['owner', 'ceo', 'reseller']
 const allCommands = []
 
+// nama command suffix hanya v1-v5 (biar menu gak bengkak); slot 6-100 pakai bentuk bare + arg
+const MENU_SERVERS = VALID_SERVERS.slice(0, 5)
 ROLES.forEach(role => {
-    VALID_SERVERS.forEach(ver => {
+    MENU_SERVERS.forEach(ver => {
         allCommands.push(`add${role}${ver}`)
         allCommands.push(`del${role}${ver}`)
         allCommands.push(`list${role}${ver}`)
     })
+    // bentuk generik: .addreseller 50 @user / .addreseller v50 @user (v1-v100)
+    allCommands.push(`add${role}`, `del${role}`, `list${role}`)
 })
 
 const pluginConfig = {
@@ -40,14 +44,22 @@ function getNumber(jid) {
     return clean ? clean.split('@')[0] : null
 }
 
-function parseCommand(cmd) {
-    const match = cmd.match(/^(add|del|list)(owner|ceo|reseller)(v[1-5])$/i)
-    if (!match) return null
-    return {
-        action: match[1].toLowerCase(),
-        role: match[2].toLowerCase(),
-        server: match[3].toLowerCase()
+function parseCommand(cmd, args) {
+    // .addresellerv3 (suffix) / .addreseller 50 (arg) — v1-v100
+    const suffixMatch = cmd.match(/^(add|del|list)(owner|ceo|reseller)(v\d{1,3})$/i)
+    if (suffixMatch) {
+        const num = parseInt(suffixMatch[3].replace('v', ''), 10)
+        if (!(num >= 1 && num <= 100)) return null
+        return { action: suffixMatch[1], role: suffixMatch[2], server: 'v' + num }
     }
+    const bareMatch = cmd.match(/^(add|del|list)(owner|ceo|reseller)$/i)
+    if (bareMatch) {
+        const am = String(args?.[0] || '').trim().match(/^v?(\d{1,3})$/i)
+        const num = am ? parseInt(am[1], 10) : 1
+        if (!(num >= 1 && num <= 100)) return null
+        return { action: bareMatch[1], role: bareMatch[2], server: 'v' + num }
+    }
+    return null
 }
 
 function capitalize(str) {
@@ -55,7 +67,7 @@ function capitalize(str) {
 }
 
 function handler(m, { sock }) {
-    const parsed = parseCommand(m.command)
+    const parsed = parseCommand(m.command, m.args)
     if (!parsed) {
         return m.reply(claraWrap("rolemanager", `❌ Command tidak valid.`))
     }

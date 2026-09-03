@@ -76,14 +76,9 @@ function formatDate() {
 }
 
 function getServerConfig(pteroConfig, serverKey) {
-  const serverConfigs = {
-    s1: pteroConfig.server1,
-    s2: pteroConfig.server2,
-    s3: pteroConfig.server3,
-    s4: pteroConfig.server4,
-    s5: pteroConfig.server5,
-  }
-  return serverConfigs[serverKey] || null
+  const num = parseInt(String(serverKey || "").replace("s", ""), 10)
+  if (!(num >= 1 && num <= 100)) return null
+  return pteroConfig["server" + num] || null
 }
 
 function validateServerConfig(serverConfig) {
@@ -95,11 +90,10 @@ function validateServerConfig(serverConfig) {
 
 function getAvailableServers(pteroConfig) {
   const available = []
-  if (pteroConfig.server1?.domain && pteroConfig.server1?.apikey) available.push("v1")
-  if (pteroConfig.server2?.domain && pteroConfig.server2?.apikey) available.push("v2")
-  if (pteroConfig.server3?.domain && pteroConfig.server3?.apikey) available.push("v3")
-  if (pteroConfig.server4?.domain && pteroConfig.server4?.apikey) available.push("v4")
-  if (pteroConfig.server5?.domain && pteroConfig.server5?.apikey) available.push("v5")
+  for (let i = 1; i <= 100; i++) {
+    const cfg = pteroConfig?.[`server${i}`]
+    if (cfg?.domain && cfg?.apikey) available.push(`v${i}`)
+  }
   return available
 }
 
@@ -155,12 +149,15 @@ async function handler(m, { sock }) {
   // Atau:   .cp 1gb 1gb 100,628xxx
   let parts = text.replace(/,/g, ' ').split(/\s+/).filter(Boolean)
 
-  // Optional: server version di awal (v1-v5)
+  // Optional: server version di awal (v1-v100)
   let serverVersion = 'v1'
   let serverKey = 's1'
-  if (parts[0] && /^v[1-5]$/i.test(parts[0])) {
-    serverVersion = parts[0].toLowerCase()
-    serverKey = 's' + serverVersion.replace('v', '')
+  if (parts[0] && /^v(\d{1,3})$/i.test(parts[0])) {
+    const verNum = parseInt(parts[0].replace(/^v/i, ''), 10)
+    if (verNum >= 1 && verNum <= 100) {
+      serverVersion = 'v' + verNum
+      serverKey = 's' + verNum
+    }
     parts = parts.slice(1)
   }
 

@@ -29,14 +29,16 @@ const SERVER_VERSIONS = ["v1", "v2", "v3", "v4", "v5"];
 
 const allCommands = [];
 RAM_OPTIONS.forEach((ram) => {
+  allCommands.push(ram); // bentuk generik: .1gb v50 username
   SERVER_VERSIONS.forEach((ver) => {
-    allCommands.push(`${ram}${ver}`);
+    allCommands.push(`${ram}${ver}`); // bentuk lama: .1gbv1 username
   });
 });
+allCommands.push("createserver");
 
 const pluginConfig = {
   name: allCommands,
-  alias: ["Panel", "1gbv1"],
+  alias: ["createpanel"],
   category: "panel",
   description: "Create server panel dengan spesifikasi RAM (v1-v5)",
   usage: ".1gbv1 username atau .1gbv2 username,628xxx",
@@ -79,25 +81,39 @@ function formatDate() {
   return timeHelper.formatDateTime("D MMMM YYYY HH:mm");
 }
 
-function parseCommand(cmd) {
-  const match = cmd.match(/^(\d+gb|unli)(v[1-5])$/i);
-  if (!match) return null;
-  return {
-    ram: match[1].toLowerCase(),
-    server: match[2].toLowerCase(),
-    serverKey: "s" + match[2].toLowerCase().replace("v", ""),
-  };
+function parseCommand(cmd, args) {
+  // bentuk lama: .1gbv1 (suffix vN di nama command)
+  const match = cmd.match(/^(\d+gb|unli(mited)?)(v\d{1,3})$/i);
+  if (match) {
+    const num = parseInt(match[3].replace("v", ""), 10);
+    if (num >= 1 && num <= 100) {
+      return {
+        ram: match[1].toLowerCase(),
+        server: "v" + num,
+        serverKey: "s" + num,
+      };
+    }
+    return null;
+  }
+  // bentuk generik: .1gb v50 username → panel di argumen pertama
+  const bare = cmd.match(/^(\d+gb|unli(mited)?)$/i);
+  if (bare) {
+    const toks = (args || []).map((t) => String(t || "").trim());
+    let num = 1;
+    const argMatch = toks[0]?.match(/^v(\d{1,3})$/i);
+    if (argMatch) {
+      const n = parseInt(argMatch[1], 10);
+      if (n >= 1 && n <= 100) num = n;
+    }
+    return { ram: bare[1].toLowerCase(), server: "v" + num, serverKey: "s" + num, panelFromArgs: argMatch ? num : null };
+  }
+  return null;
 }
 
 function getServerConfig(pteroConfig, serverKey) {
-  const serverConfigs = {
-    s1: pteroConfig.server1,
-    s2: pteroConfig.server2,
-    s3: pteroConfig.server3,
-    s4: pteroConfig.server4,
-    s5: pteroConfig.server5,
-  };
-  return serverConfigs[serverKey] || null;
+  const num = parseInt(String(serverKey || "").replace("s", ""), 10);
+  if (!(num >= 1 && num <= 100)) return null;
+  return pteroConfig["server" + num] || null;
 }
 
 function validateServerConfig(serverConfig) {
@@ -109,16 +125,10 @@ function validateServerConfig(serverConfig) {
 
 function getAvailableServers(pteroConfig) {
   const available = [];
-  if (pteroConfig.server1?.domain && pteroConfig.server1?.apikey)
-    available.push("v1");
-  if (pteroConfig.server2?.domain && pteroConfig.server2?.apikey)
-    available.push("v2");
-  if (pteroConfig.server3?.domain && pteroConfig.server3?.apikey)
-    available.push("v3");
-  if (pteroConfig.server4?.domain && pteroConfig.server4?.apikey)
-    available.push("v4");
-  if (pteroConfig.server5?.domain && pteroConfig.server5?.apikey)
-    available.push("v5");
+  for (let i = 1; i <= 100; i++) {
+    const cfg = pteroConfig?.[`server${i}`];
+    if (cfg?.domain && cfg?.apikey) available.push(`v${i}`);
+  }
   return available;
 }
 
@@ -168,7 +178,8 @@ async function generateClientApiKey(domain, email, password) {
 async function handler(m, { sock }) {
   const pteroConfig = config.pterodactyl;
 
-  const parsed = parseCommand(m.command);
+  const mArgs = m.args || [];
+  const parsed = parseCommand(m.command, mArgs);
   if (!parsed) {
     return m.reply( claraWrap("Panel", `❌ Format command tidak valid.`), "Panel");
   }
@@ -206,7 +217,11 @@ async function handler(m, { sock }) {
 
   let targetUser = null;
   let username = null;
-  const argStr = m.text?.trim() || "";
+  let argStr = m.text?.trim() || "";
+  // bentuk generik .1gb v50 username → buang token vN dari argumen
+  if (parsed.panelFromArgs) {
+    argStr = argStr.replace(/^v\d{1,3}\s*/i, "").trim();
+  }
 
   if (argStr.includes(",")) {
     const parts = argStr.split(",");

@@ -3,53 +3,32 @@
 // API keys di-import dari apikey.js
 
 import { apiKeys } from "./apikey.js";
+import { PANELS } from "../panel/config.js";
 
 export const vercel = {
   token: apiKeys.vercelToken,
 };
 
-export const pterodactyl = {
-  server1: {
-    domain: apiKeys.pterodactyl.server1.domain,
-    apikey: apiKeys.pterodactyl.server1.apikey,
-    capikey: apiKeys.pterodactyl.server1.capikey,
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server2: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server3: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server4: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server5: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-};
+export const pterodactyl = (() => {
+  // 100 slot config panel Pterodactyl (server1 - server100)
+  // Sumber default: src/lib/panel/config.js (PANELS — edit domain di situ)
+  // Key kosong di file → fallback ke misc.json (apiKeys.pterodactyl, di-set via .setkey)
+  // Override .setpanel (ptero-panels.json) di-merge config.js saat startup
+  const slots = {};
+  for (let i = 1; i <= 100; i++) {
+    const file = PANELS[i] || {};
+    const legacy = apiKeys.pterodactyl?.[`server${i}`] || {};
+    slots[`server${i}`] = {
+      domain: file.domain || legacy.domain || "",
+      apikey: file.apikey || legacy.apikey || "",
+      capikey: file.capikey || legacy.capikey || "",
+      egg: file.egg || "15",
+      nestid: file.nestid || "5",
+      location: file.location || "1",
+    };
+  }
+  return slots;
+})();
 
 export const digitalocean = {
   token: apiKeys.digitalOceanToken,

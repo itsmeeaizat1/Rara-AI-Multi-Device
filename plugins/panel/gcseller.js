@@ -47,16 +47,18 @@ function getGcSellerVersion(chatJid) {
 }
 
 const allCommands = []
-VALID_SERVERS.forEach(ver => {
+// suffix v1-v5 biar menu gak bengkak; slot 6-100 pakai bare + arg: .addgcseller 50
+VALID_SERVERS.slice(0, 5).forEach(ver => {
     allCommands.push(`addgcseller${ver}`, `resetgcseller${ver}`)
 })
+allCommands.push('addgcseller', 'resetgcseller')
 
 const pluginConfig = {
     name: allCommands,
     alias: [],
     category: 'panel',
     description: 'Daftarkan grup sebagai GC Seller panel (akses command create server)',
-    usage: '.addgcsellerv1 (di dalam grup)',
+    usage: '.addgcsellerv1 / .addgcseller 50 (di dalam grup, v1-v100)',
     example: '.addgcsellerv1',
     isOwner: true,
     isGroup: true,
@@ -74,17 +76,26 @@ function hasAccess(senderJid, isOwner) {
     return ownerPanels.includes(number)
 }
 
-function parseCommand(cmd) {
-    const match = cmd.match(/^(addgcseller|resetgcseller)(v[1-5])$/i)
-    if (!match) return null
-    return {
-        action: match[1].toLowerCase().startsWith('add') ? 'add' : 'reset',
-        version: match[2].toLowerCase()
+function parseCommand(cmd, args) {
+    // .addgcsellerv3 (suffix) / .addgcseller 50 (arg) — v1-v100
+    const suffix = cmd.match(/^(addgcseller|resetgcseller)(v\d{1,3})$/i)
+    if (suffix) {
+        const num = parseInt(suffix[2].replace('v', ''), 10)
+        if (!(num >= 1 && num <= 100)) return null
+        return { action: suffix[1].toLowerCase().startsWith('add') ? 'add' : 'reset', version: 'v' + num }
     }
+    const bare = cmd.match(/^(addgcseller|resetgcseller)$/i)
+    if (bare) {
+        const am = String(args?.[0] || '').trim().match(/^v?(\d{1,3})$/i)
+        const num = am ? parseInt(am[1], 10) : 1
+        if (!(num >= 1 && num <= 100)) return null
+        return { action: bare[1].toLowerCase().startsWith('add') ? 'add' : 'reset', version: 'v' + num }
+    }
+    return null
 }
 
 function handler(m, { sock }) {
-    const parsed = parseCommand(m.command)
+    const parsed = parseCommand(m.command, m.args)
     if (!parsed) return m.reply( '❌ Command tidak valid.', "gcseller")
 
     if (!hasAccess(m.sender, m.isOwner)) {
