@@ -1,0 +1,105 @@
+{
+  "_note": "MULTI-PROVIDER AI CONFIG (dibaca LIVE tanpa restart bot). Dua fungsi: (1) RANTAI otak AI .novaai/.autonovaai/autoflow aichat — urutan array 'chain' = prioritas kebawah: yang paling atas paling sering dipakai; kalau down/expired/rate-limit otomatis geser ke bawah sampai ada yang work. (2) KEY fitur AI SATUAN — .grok/.openai/.deepseek/.claude/dll ambil key provider-nya dari sini. CARA PAKAI: TINGGAL ISI 'apikey' provider yang lo punya — apikey kosong = provider di-skip otomatis dari rantai. Provider dari IKYY (source ikyy, key shared 'kyzz') udah preset — gak perlu diisi, langsung nembak API-nya tanpa ambil key dari file lain. Format: 'openai' (kompatibel groq/deepseek/zhipu/kimi/xai/dll), 'anthropic' (claude), method 'get' (API GET ala ikyy).",
+  "chain": [
+    "groq",
+    "openai",
+    "ikyy_gemini",
+    "ikyy_gpt5mini",
+    "deepseek",
+    "zhipu",
+    "kimi",
+    "claude",
+    "ikyy_cici",
+    "ikyy_gemma"
+  ],
+  "providers": {
+    "groq": {
+      "label": "Groq — utama, paling cepat",
+      "url": "https://api.groq.com/openai/v1/chat/completions",
+      "method": "post",
+      "format": "openai",
+      "model": "openai/gpt-oss-120b",
+      "apikey": "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"
+    },
+    "openai": {
+      "label": "OpenAI (resmi)",
+      "url": "https://api.openai.com/v1/chat/completions",
+      "method": "post",
+      "format": "openai",
+      "model": "gpt-4o-mini",
+      "apikey": ""
+    },
+    "ikyy_gemini": {
+      "label": "IkyyXD Gemini — free (preset, gak perlu diisi)",
+      "url": "https://api.ikyyxd.my.id/ai/gemini",
+      "method": "get",
+      "textParam": "text",
+      "apikey": "kyzz",
+      "free": true
+    },
+    "ikyy_gpt5mini": {
+      "label": "IkyyXD GPT-5 Mini — free (preset)",
+      "url": "https://api.ikyyxd.my.id/ai/gpt-5-mini",
+      "method": "get",
+      "textParam": "question",
+      "apikey": "kyzz",
+      "free": true
+    },
+    "deepseek": {
+      "label": "DeepSeek",
+      "url": "https://api.deepseek.com/chat/completions",
+      "method": "post",
+      "format": "openai",
+      "model": "deepseek-chat",
+      "apikey": ""
+    },
+    "zhipu": {
+      "label": "Zhipu AI (GLM)",
+      "url": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "method": "post",
+      "format": "openai",
+      "model": "glm-4-flash",
+      "apikey": ""
+    },
+    "kimi": {
+      "label": "Kimi (Moonshot AI)",
+      "url": "https://api.moonshot.cn/v1/chat/completions",
+      "method": "post",
+      "format": "openai",
+      "model": "kimi-k2-0905-preview",
+      "apikey": ""
+    },
+    "claude": {
+      "label": "Claude (Anthropic)",
+      "url": "https://api.anthropic.com/v1/messages",
+      "method": "post",
+      "format": "anthropic",
+      "model": "claude-sonnet-4-20250514",
+      "apikey": ""
+    },
+    "ikyy_cici": {
+      "label": "IkyyXD Cici — cadangan free (preset)",
+      "url": "https://api.ikyyxd.my.id/ai/cici",
+      "method": "get",
+      "textParam": "prompt",
+      "apikey": "kyzz",
+      "free": true
+    },
+    "ikyy_gemma": {
+      "label": "IkyyXD Gemma — cadangan terakhir free (preset)",
+      "url": "https://api.ikyyxd.my.id/ai/google-gemma",
+      "method": "get",
+      "textParam": "question",
+      "apikey": "kyzz",
+      "free": true
+    },
+    "grok": {
+      "label": "Grok (xAI) — buat fitur satuan .grok (gak di rantai)",
+      "url": "https://api.x.ai/v1/chat/completions",
+      "method": "post",
+      "format": "openai",
+      "model": "grok-3-mini",
+      "apikey": ""
+    }
+  }
+}
