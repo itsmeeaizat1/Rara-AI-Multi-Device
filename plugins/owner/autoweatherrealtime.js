@@ -25,7 +25,7 @@ const pluginConfig = {
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
   usage: ".autoweatherrealtime <on/off/lokasi/notification/jadwal/target/test>",
-  example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime notification on",
+  example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -125,7 +125,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "│ • " + prefix + "autoweatherrealtime lokasi serang\n" +
         "│ • " + prefix + "autoweatherrealtime notification on\n" +
         "│ • " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-        "│ • " + prefix + "autoweatherrealtime target <jid grup>\n" +
+        "│ • " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
         "│ • " + prefix + "autoweatherrealtime test\n" +
         "╰────  •  ────"
       );
@@ -249,7 +249,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           "│ • " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
           "│ • " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
           "│\n" +
-          "│ 📌 " + toSC("Set target") + ": " + prefix + "autoweatherrealtime target <jid>\n" +
+          "│ 📌 " + toSC("Set target") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
           "│ 📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
           "╰────  •  ────"
         );
@@ -319,7 +319,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
           "│\n" +
-          "│ ⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime target <jid grup>\n" +
+          "│ ⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
           "│ " + toSC("Atau jalankan di dalam grup untuk auto-set") + "\n" +
           "╰────  •  ────"
         );
@@ -380,7 +380,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       "│ • " + prefix + "autoweatherrealtime lokasi serang\n" +
       "│ • " + prefix + "autoweatherrealtime notification on/off\n" +
       "│ • " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-      "│ • " + prefix + "autoweatherrealtime target <jid>\n" +
+      "│ • " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
       "│ • " + prefix + "autoweatherrealtime test\n" +
       "╰────  •  ────"
     );
