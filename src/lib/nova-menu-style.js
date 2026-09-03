@@ -906,15 +906,15 @@ export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide
 // fitur gangguan → "Yah fiturnya lagi gangguan kak, coba lain waktu ya 😥"
 // ═══════════════════════════════════════════════
 export function novaBerhasil(fitur = "Berhasil") {
-  return novaBox(fitur, ["Berhasil kak 🥳"]);
+  return "Berhasil kak 🥳";
 }
 
 export function novaGagal(fitur = "Gagal") {
-  return novaBox(fitur, ["Yah gagal kak,", "coba lagi 😩"]);
+  return "Yah gagal kak, coba lagi 😩";
 }
 
 export function novaGangguan(fitur = "Error") {
-  return novaBox(fitur, ["Yah fiturnya lagi gangguan", "kak, coba lain waktu ya 😥"]);
+  return "Yah fiturnya lagi gangguan kak, coba lain waktu ya 😥";
 }
 
 // ═══════════════════════════════════════════════
