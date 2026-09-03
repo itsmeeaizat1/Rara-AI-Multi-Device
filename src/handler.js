@@ -707,7 +707,10 @@ try {
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAutoAI, isAutoAIEnabled } = await import("./lib/nova-auto-ai.js");
-      if (typeof isAutoAIEnabled === "function" && isAutoAIEnabled(m, sock)) {
+      // FIX: dulu isAutoAIEnabled(m, sock) — lib expect chatId STRING,
+      // object m jadi key "[object Object]" → selalu false → autoai
+      // GAK PERNAH aktif walau di-on. Sekarang m.chat.
+      if (typeof isAutoAIEnabled === "function" && isAutoAIEnabled(m.chat)) {
         await handleAutoAI(m, sock);
       }
     } catch {}
@@ -717,6 +720,18 @@ try {
 
   // From here, only process commands
   if (!m.isCommand) return;
+
+  // AutoAI AFK-mode: saat autoai aktif di grup ini, command non-owner
+  // diblokir (sesuai desain .autoai — enableCommands default false,
+  // buka via .autoai enablecommand). Owner & .autoai selalu lolos.
+  // React 🚫 doang, tanpa reply — biar grup gak kebanjiran notif.
+  try {
+    const { isCommandBlockedByAutoAI } = await import("./lib/nova-auto-ai.js");
+    if (typeof isCommandBlockedByAutoAI === "function" && isCommandBlockedByAutoAI(m)) {
+      if (!m.isNewsletter) { try { await m.react("🚫"); } catch {} }
+      return;
+    }
+  } catch {}
 
   // Check mode (self/public) — MOVED HERE (before case handler & notFound)
   // Ini memastikan SEMUA command (case handler, plugin, notFound) di-blokir di self mode
