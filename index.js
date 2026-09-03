@@ -14,6 +14,12 @@
 import path from "path";
 import fs from "fs";
 import config from "./config.js";
+// 🔹 SECURITY: log sanitizer — sensor apikey/token/authorization di SEMUA
+// console.log/error/warn sebelum modul lain di-import (biar semua log,
+// termasuk yg jalan saat startup, ikut ke-sensor). Penting kalau panel
+// hosting disewakan — penyewa lain gak boleh liat API key lewat console.
+import { installLogSanitizer } from "./src/lib/nova-log-sanitizer.js";
+installLogSanitizer();
 // 🔹 AI AGENT: load all AI provider keys
 import {
   getDeepSeekKey, getGroqKey,
