@@ -34,6 +34,23 @@ export const TOOLS = {
     run: (conn, m) => conn.groupSettingUpdate(m.chat, 'not_announcement')
   },
 
+  // ─── GENERATE GAMBAR (AI IMAGE) ───
+  genimage: {
+    perm: 'user', args: ['prompt'], danger: false,
+    desc: 'generate/membuat GAMBAR dari teks via AI image (contoh: "buatkan gambar kucing astronot")',
+    done: '✅ Gambarnya udah dibuatin di atas ya.',
+    run: async (conn, m, a) => {
+      const prompt = String(a?.prompt || a?.text || '').trim();
+      if (!prompt) throw new Error('deskripsi gambarnya apa?');
+      const { callImageGen } = await import('./nova-ai-service.js');
+      const img = await callImageGen('gemini', prompt);
+      await conn.sendMessage(m.chat, {
+        image: Buffer.from(img.base64, 'base64'),
+        caption: '🎨 ' + prompt.slice(0, 150),
+      }, { quoted: m });
+    }
+  },
+
   // ─── MANAJEMEN MEMBER ───
   kick: {
     perm: 'admin', args: ['user'], danger: true,
@@ -621,6 +638,7 @@ Aturan WAJIB:
 
 Contoh:
 "tutup grup" → {"tool":"closegc","args":{},"execCommand":null,"reply":"Baik, menutup grup."}
+"buatkan gambar kucing astronot" → {"tool":"genimage","args":{"prompt":"seekor kucing astronot di bulan, kartun lucu"},"execCommand":null,"reply":"Oke, gambarnya aku buatkan ya."}
 "kick aizat 2" → {"tool":"kick","args":{"user":"aizat 2"},"execCommand":null,"reply":"Oke, coba kick aizat 2."}
 "blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"Oke, user diblokir."}
 "ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Oke."}
