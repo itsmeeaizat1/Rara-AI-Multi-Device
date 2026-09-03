@@ -30,7 +30,6 @@ const pluginConfig = {
   isPrivate: false,
   cooldown: 5,
   energi: 0,
-  noLoading: true,
   isEnabled: true
 }
 
