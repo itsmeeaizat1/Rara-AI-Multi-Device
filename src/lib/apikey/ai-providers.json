@@ -100,6 +100,12 @@
       "format": "openai",
       "model": "grok-3-mini",
       "apikey": ""
+    },
+    "meta": {
+      "apikey": ""
+    },
+    "openrouter": {
+      "apikey": ""
     }
   }
 }

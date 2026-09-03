@@ -18,6 +18,17 @@ const PROVIDER_COMMANDS = {
   groq: "groq",
   grok: "xai",
   xai: "xai",
+  deepseek: "deepseek",
+  ds: "deepseek",
+  zhipu: "zhipu",
+  glm: "zhipu",
+  kimi: "kimi",
+  moonshot: "kimi",
+  meta: "meta",
+  muse: "meta",
+  llama: "meta",
+  openrouter: "openrouter",
+  or: "openrouter",
   qwen: "qwen",
   cohere: "cohere",
   perplexity: "perplexity",
@@ -178,6 +189,7 @@ async function handler(m, { sock, config, db, args, text }) {
           prefix + "claude <tanya>",
           prefix + "groq <tanya>",
           prefix + "grok <tanya>",
+          prefix + "kimi <tanya>",
         ];
         const box = novaBox ? novaBox("Tidak Support Gambar", lines) : lines.join("\n");
         await m.reply(box);
@@ -234,6 +246,7 @@ async function handler(m, { sock, config, db, args, text }) {
           prefix + "gemini buat gambar <apa yang mau dibikin>",
           prefix + "openai buat gambar <apa yang mau dibikin>",
           prefix + "grok buat gambar <apa yang mau dibikin>",
+          prefix + "zhipu buat gambar <apa yang mau dibikin>",
         ];
         const box = novaBox ? novaBox("Tidak Support Generate Gambar", lines) : lines.join("\n");
         await m.reply(box);
