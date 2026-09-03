@@ -10,17 +10,21 @@ import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import {
   AUDIO_FORMATS,
   VIDEO_FORMATS,
+  IMAGE_FORMATS,
   getConvertSession,
+  setConvertSession,
 } from "../../src/lib/nova-convert.js";
+
+const IMAGE_MIME = { jpg: "image/jpeg", png: "image/png", webp: "image/webp" };
 
 const pluginConfig = {
   name: "convert",
   alias: ["convert", "conv"],
   aliases: ["convert", "conv", "konversi", "konvert", "cv"],
   category: "convert",
-  description: "Convert media terakhir yang kamu unduh ke format lain (audio & video lengkap)",
-  usage: ".convert <format> — audio: mp3, wav, flac, aac, m4a, ogg, opus, wma, ac3, amr | video: mp4, mkv, avi, mov, webm, flv, 3gp, wmv, mpeg, m4v, ts, ogv, gif",
-  example: ".convert mp3 / .convert avi",
+  description: "Convert media ke format lain — reply media langsung, upload dengan caption, atau dari media terakhir yang diunduh (audio, video, gambar lengkap)",
+  usage: ".convert <format> — reply media / upload media + caption .convert <format> — audio: mp3, wav, flac, aac, m4a, ogg, opus, wma, ac3, amr | video: mp4, mkv, avi, mov, webm, flv, 3gp, wmv, mpeg, m4v, ts, ogv, gif | gambar: jpg, png, webp",
+  example: ".convert mp3 (reply video) / .convert png (reply gambar)",
   isOwner: false, isPremium: false,
   cooldown: 5, energi: 3, isEnabled: true,
 };
@@ -31,6 +35,7 @@ const MAX_OUTPUT_MB = 95; // WhatsApp limit ~100MB
 function formatListText() {
   const audio = Object.entries(AUDIO_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`).join("\n");
   const video = Object.entries(VIDEO_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`).join("\n");
+  const image = Object.entries(IMAGE_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`).join("\n");
   return claraWrap("Convert", [
     "📌 Tentukan format tujuan!",
     "",
@@ -42,11 +47,20 @@ function formatListText() {
     "— Video —",
     video,
     "",
-    "📌 Cara pakai:",
-    "1. Download media dulu (.tiktok, .play, dll)",
-    "2. Ketik .convert <format>",
+    "— Gambar —",
+    image,
     "",
-    "Contoh: .convert mp3",
+    "📌 Cara pakai:",
+    "1. Reply media (video/audio/",
+    "gambar/sticker) dengan",
+    "caption .convert <format>",
+    "2. Atau kirim media dengan",
+    "caption .convert <format>",
+    "3. Atau download media dulu",
+    "(.tiktok, .play, dll) lalu ketik",
+    ".convert <format>",
+    "",
+    "Contoh: .convert mp3 (reply video)",
   ].join("\n"));
 }
 
@@ -57,29 +71,79 @@ async function handler(m, { sock }) {
   // Validasi format dulu biar list error-nya informatif
   const isAudio = !!AUDIO_FORMATS[format];
   const isVideo = !!VIDEO_FORMATS[format];
-  if (!format || (!isAudio && !isVideo)) {
+  const isImage = !!IMAGE_FORMATS[format];
+  if (!format || (!isAudio && !isVideo && !isImage)) {
     return m.reply(formatListText());
   }
 
+  // ── Jalur 1: reply media / upload media + caption — convert langsung ──
+  const media = m.quoted?.isMedia ? m.quoted : m.isMedia ? m : null;
+  if (media) {
+    const buffer = await media.download();
+    if (!buffer) {
+      await m.react("❌");
+      return m.reply(novaError("Convert", "Gagal mengunduh media-nya. Coba ulangi lagi ya."));
+    }
+
+    // Deteksi jenis media
+    let type = null;
+    let title = "Media Upload";
+    if (media.isVideo) type = "video";
+    else if (media.isAudio || media.isSticker || media.isImage) type = media.isAudio ? "audio" : "image";
+    else if (media.isDocument) {
+      const doc = media.message?.documentMessage || {};
+      const mime = doc.mimetype || "";
+      title = doc.fileName || "Media Upload";
+      if (mime.startsWith("video/")) type = "video";
+      else if (mime.startsWith("audio/")) type = "audio";
+      else if (mime.startsWith("image/")) type = "image";
+    }
+
+    if (!type) {
+      await m.react("❗");
+      return m.reply(novaError("Convert", "File ini bukan media yang bisa di-convert. Kirim video, audio, gambar, atau sticker ya."));
+    }
+
+    // Validasi format vs jenis media
+    if (type === "audio" && (isVideo || isImage)) {
+      await m.react("❗");
+      return m.reply(novaError("Convert", "Media ini audio, jadi cuma bisa convert ke format audio (mp3, wav, aac, dll)."));
+    }
+    if (type === "image" && !isImage && format !== "gif") {
+      await m.react("❗");
+      return m.reply(novaError("Convert", "Media ini gambar, jadi cuma bisa convert ke format gambar (jpg, png, webp) atau gif."));
+    }
+
+    // Masukin ke session biar chaining .convert <format> laennya tetap bisa
+    setConvertSession(m, { buffer, type, platform: "Upload", title });
+  }
+
+  // ── Jalur 2: session dari media terakhir yang diunduh ──
   const session = getConvertSession(m);
   if (!session || (!session.filePath && !session.mediaUrl)) {
     await m.react("❗");
     return m.reply(
       novaGuide(
         "Convert",
-        "Belum ada media buat di-convert nih! Session convert udah kedaluwarsa atau belum ada.\n\nDownload media dulu (.tiktok, .play, dll) — nanti otomatis muncul tawaran convert di bawah medianya.",
+        "Belum ada media buat di-convert nih!\n\n📌 Cara pakai:\n1. Reply media (video/audio/gambar) dengan caption .convert <format>\n2. Atau kirim media dengan caption .convert <format>\n3. Atau download media dulu (.tiktok, .play, dll) — session convert aktif 10 menit setelahnya.",
         `${m.prefix}convert mp3`
       )
     );
   }
 
   // Session audio cuma bisa convert ke format audio
-  if (session.type === "audio" && isVideo) {
+  if (session.type === "audio" && (isVideo || isImage)) {
     await m.react("❗");
     return m.reply(novaError("Convert", "Media ini audio, jadi cuma bisa convert ke format audio (mp3, wav, aac, dll)."));
   }
 
-  const fmt = isAudio ? AUDIO_FORMATS[format] : VIDEO_FORMATS[format];
+  // Session gambar cuma bisa convert ke format gambar / gif
+  if (session.type === "image" && !isImage && format !== "gif") {
+    await m.react("❗");
+    return m.reply(novaError("Convert", "Media ini gambar, jadi cuma bisa convert ke format gambar (jpg, png, webp) atau gif."));
+  }
+
+  const fmt = isAudio ? AUDIO_FORMATS[format] : isImage ? IMAGE_FORMATS[format] : VIDEO_FORMATS[format];
   await m.react("🕒");
 
   try {
@@ -88,7 +152,8 @@ async function handler(m, { sock }) {
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const id = `${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
     const inputPath = path.join(tmpDir, `in_${id}`);
-    const outputPath = path.join(tmpDir, `out_${id}.${fmt.ext}`);
+    const outExt = fmt.ext || format;
+    const outputPath = path.join(tmpDir, `out_${id}.${outExt}`);
 
     if (session.filePath && fs.existsSync(session.filePath)) {
       fs.copyFileSync(session.filePath, inputPath);
@@ -111,7 +176,9 @@ async function handler(m, { sock }) {
 
     // ── Build perintah ffmpeg ──
     let cmd;
-    if (isAudio) {
+    if (isImage) {
+      cmd = `ffmpeg -y -i "${inputPath}" "${outputPath}"`;
+    } else if (isAudio) {
       let extra = "";
       if (format === "amr") extra = " -ar 8000 -ac 1";
       if (format === "opus") extra = " -ar 48000";
@@ -147,7 +214,13 @@ async function handler(m, { sock }) {
     });
     const sizeMB = (buf.length / 1024 / 1024).toFixed(2);
 
-    if (isAudio) {
+    if (isImage) {
+      await sock.sendMessage(m.chat, {
+        image: buf,
+        mimetype: IMAGE_MIME[format] || "image/jpeg",
+        contextInfo: card,
+      }, { quoted: m });
+    } else if (isAudio) {
       const isPtt = format === "ogg" || format === "opus";
       await sock.sendMessage(m.chat, {
         audio: buf,
