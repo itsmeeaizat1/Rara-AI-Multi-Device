@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
       msg += `✦ EXP: *+${expGain}*\n`;
       msg += `
 `;
-      msg += `⚠️ Rampok lagi = makin besar cooldown\n`;
+      msg += `❗ Rampok lagi = makin besar cooldown\n`;
       
       return m.reply(msg);
     } else {

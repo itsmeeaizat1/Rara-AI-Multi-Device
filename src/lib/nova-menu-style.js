@@ -314,7 +314,8 @@ function claraWrap(title, body, type = "info") {
   } else if (type === "success" && lines.length) {
     lines[0] = lines[0].startsWith("✅") ? lines[0] : `✅ ${lines[0]}`;
   } else if (type === "warn" && lines.length) {
-    lines[0] = lines[0].startsWith("⚠") ? lines[0] : `⚠ ${lines[0]}`;
+    // Aturan owner: peringatan pakai ❗ (cooldown game dsb.) — bukan ⚠
+    lines[0] = lines[0].startsWith("❗") ? lines[0] : `❗ ${lines[0]}`;
   }
 
   // Semua type (info/guide/error/success/warn) pakai box-drawing yang sama
