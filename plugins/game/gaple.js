@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Gaple — Multiplayer Domino Game
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -45,7 +45,12 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (!games.has(chatId)) {
       games.set(chatId, { players: [], deck: createDeck(), table: [], currentPlayer: 0, stopVotes: [] });
-      return m.reply("🀄 Permainan Gaple dimulai!\n📌 .gaple join — bergabung\n📌 .gaple start — mulai (min 2)");
+      return m.reply(novaBox("Gaple", [
+        "Permainan dimulai",
+        "---",
+        ".gaple join — bergabung",
+        ".gaple start — mulai (min 2)",
+      ]));
     }
 
     const game = games.get(chatId);
@@ -71,7 +76,15 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     }
 
     if (sub === "info") {
-      return m.reply("🀄 .gaple join — Gabung\n🎮 .gaple start — Mulai (min 2)\n🃏 .gaple play <no> <left|right> — Main kartu\n📥 .gaple draw — Ambil kartu\n✋ .gaple pass — Lewati\n📋 .gaple hand — Lihat kartu (DM)\n⏹️ .gaple stop — Hentikan");
+      return m.reply(novaBox("Gaple", [
+        ".gaple join — Gabung",
+        ".gaple start — Mulai (min 2)",
+        ".gaple play <no> <left|right> — Main kartu",
+        ".gaple draw — Ambil kartu",
+        ".gaple pass — Lewati",
+        ".gaple hand — Lihat kartu (DM)",
+        ".gaple stop — Hentikan",
+      ]));
     }
 
     if (sub === "hand") {
