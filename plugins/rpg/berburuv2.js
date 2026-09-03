@@ -6,7 +6,7 @@ import {
   getEquipStats, rollDrop, ITEM_DB, getRandomMonster,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
     const cd = checkCooldown(m, "lastHuntV2");
     if (cd) {
-      await m.react("🚫");
+      await reactCooldown(m);
       return m.reply(claraWrap("berburuv2", `Cooldown berburu tersisa *${formatTime(cd)}*`, "warn"));
     }
 

@@ -8,7 +8,7 @@ import {
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { animGather, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
 
     const cd = checkCooldown(m, "lastMine");
     if (cd) {
-      await m.react("🚫");
+      await reactCooldown(m);
       return m.reply(claraWrap("mining", `Cooldown mining tersisa *${formatTime(cd)}*`, "warn"));
     }
 

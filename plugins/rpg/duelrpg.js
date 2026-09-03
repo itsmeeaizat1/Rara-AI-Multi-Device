@@ -5,7 +5,7 @@ import {
   ensureRpg, saveRpg, getEquipStats, addExp, addGold,
   pvpResult, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
 
     const cd = checkCooldown(m, "lastPvP");
     if (cd) {
-      await m.react("🚫");
+      await reactCooldown(m);
       return m.reply(claraWrap("duelrpg", `Cooldown PvP tersisa *${formatTime(cd)}*`, "warn"));
     }
 
