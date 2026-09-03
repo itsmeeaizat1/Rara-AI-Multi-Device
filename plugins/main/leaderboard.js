@@ -16,6 +16,8 @@ const pluginConfig = {
   alias: [
     "leaderboard", "lb", "papanperingkat", "topplayer",
     "leaderboardrpg", "lbrpg", "toprpg", "papanrpg",
+    "leaderboardminigame", "lbminigame", "topminigame",
+    "leaderboardcouple", "lbcouple", "leaderboadscouple", "leaderboardcinta",
     "topkoin", "topexp", "toplimit", "topenergi", "toplevel", "topbalance",
     "topgold", "topgems", "toppvp", "topboss", "topdungeon",
     "topcinta", "toplove", "topcouple",
@@ -23,8 +25,8 @@ const pluginConfig = {
   ],
   category: 'main',
   description: 'Pusat leaderboard — RPG (gold/level/pvp/dll) + Mini Game (mancing/mining/ojek/slot/gacha/dll) + Group (aktivitas) — SEMUA dalam 1 command',
-  usage: '.leaderboard [all|rpg|gold|level|pvp|gems|boss|dungeon|limit|cinta|survival|mancing|mining|ojek|slot|gacha|masak|...|group|me|reset|stats]',
-  example: '.leaderboard all\n.leaderboard survival\n.leaderboard mancing\n.leaderboard gold',
+  usage: '.leaderboard [all|minigame|rpg|couple|gold|level|pvp|gems|boss|dungeon|limit|cinta|survival|mancing|mining|ojek|slot|gacha|masak|...|group|me|reset|stats]',
+  example: '.leaderboard all\n.leaderboardminigame\n.leaderboardrpg\n.leaderboardcouple\n.leaderboard survival',
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -74,6 +76,14 @@ function getMode(cmd, args) {
   const c = (cmd || '').toLowerCase()
   const a = (args[0] || '').toLowerCase()
 
+  // ── Akses leaderboard per kategori game (masing2 kategori) ──
+  if (c.includes('minigame') || c.includes('lbgame') || c.includes('topminigame'))
+    return 'cat:game'
+  if (c.includes('leaderboardcouple') || c.includes('lbcouple') || c.includes('leaderboadscouple') || c.includes('leaderboardcinta'))
+    return 'cat:couple'
+  if (c.includes('leaderboardrpg') || c.includes('lbrpg') || c.includes('toprpg') || c.includes('papanrpg'))
+    return 'cat:rpg'
+
   // Group activity aliases
   if (['aktifitas', 'aktif', 'topaktif', 'activity'].some(x => c.includes(x)))
     return 'group'
@@ -99,7 +109,10 @@ function getMode(cmd, args) {
 
   // Arg-based routing
   if (a === 'all' || a === 'semua') return 'all'
-  if (a === 'rpg' || a === 'rpg2' || a === 'overview') return 'rpg:overview'
+  if (a === 'minigame' || a === 'game' || a === 'mini') return 'cat:game'
+  if (a === 'couple' || a === 'rpgcinta') return 'cat:couple'
+  if (a === 'rpg' || a === 'rpg2') return 'cat:rpg'
+  if (a === 'overview') return 'rpg:overview'
   if (a === 'group' || a === 'grup') return 'group'
   if (['gold', 'koin', 'coin', 'bal', 'balance', 'money'].includes(a)) return 'rpg:gold'
   if (['exp', 'xp', 'level'].includes(a)) return 'rpg:exp'
@@ -465,12 +478,14 @@ const SECTIONS = [
   { group: 'couple', title: 'ʀᴘɢ ᴄɪɴᴛᴀ' },
 ]
 
-async function showAllLeaderboards(m, sock) {
+// onlyGroup = null → semua kategori (mode all); 'game'/'rpg'/'couple' → cuma kategori itu (akses per game)
+async function showAllLeaderboards(m, sock, onlyGroup = null, titleOverride = null) {
   const senderJid = m.sender.replace(/@s\.whatsapp\.net/, '')
   const users = collectRpgUsers(senderJid)
+  const boardTitle = titleOverride || 'Leaderboard All'
 
   if (users.length === 0)
-    return m.reply(claraWrap('Leaderboard All', 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
+    return m.reply(claraWrap(boardTitle, 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
 
   const mkJid = (u) => u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net'
   const mentions = []
@@ -548,19 +563,27 @@ async function showAllLeaderboards(m, sock) {
   const summary = [`Total Player: *${formatNumber(users.length)}*`, ``]
   const boards = []
   for (const sec of sections) {
+    if (onlyGroup && sec.group !== onlyGroup) continue // akses per kategori → cuma kategori itu
     if (sec.summaryLines.length === 0) continue // kategori tanpa data → skip sekalian headernya
-    summary.push(`── ${sec.title} ──`)
+    if (!onlyGroup) summary.push(`── ${sec.title} ──`)
     summary.push(...sec.summaryLines)
     summary.push(``)
-    // Bagian READMORE — section header juga jadi pembeda kategori
-    boards.push(`▌── ${sec.title} ──`)
+    // Bagian READMORE — section header juga jadi pembeda kategori (skip kalau cuma 1 kategori)
+    if (!onlyGroup) boards.push(`▌── ${sec.title} ──`)
     boards.push(...sec.boardBlocks)
   }
+
+  // kategori yang dimilih gak ada datanya sama sekali → jangan kirim pesan kosong
+  if (boards.length === 0) {
+    const emptyCat = SECTIONS.find(s => s.group === onlyGroup)
+    return m.reply(claraWrap(boardTitle, `Belum ada data untuk kategori *${emptyCat ? emptyCat.title.toLowerCase() : 'ini'}*.\nMain dulu biar skormu terekam!`))
+  }
+
 
   summary.push(`👇 Buka *Baca selengkapnya* buat liat Top 5 tiap board`)
 
   const content = summary.join('\n') + `\n` + READMORE + `\n\n` + boards.join(`\n`)
-  await m.reply(claraWrap('Leaderboard All', content, { mentions }))
+  await m.reply(claraWrap(boardTitle, content, { mentions }))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -574,6 +597,11 @@ async function showMenu(m, sock) {
   const text = [
     '⚡ Jalur cepat: .leaderboard all',
     'Semua ranking game jadi 1 pesan (readmore).',
+    '',
+    'Per kategori game:',
+    '  .leaderboardminigame — Semua board mini game',
+    '  .leaderboardrpg — Semua board RPG core',
+    '  .leaderboardcouple — Semua board RPG cinta',
     '',
     'Pilih jenis leaderboard:',
     '',
@@ -637,6 +665,9 @@ async function handler(m, { sock, config: cfg }) {
 
   if (mode === 'menu') return showMenu(m, sock)
   if (mode === 'all') return showAllLeaderboards(m, sock)
+  if (mode === 'cat:game') return showAllLeaderboards(m, sock, 'game', 'ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴍɪɴɪ ɢᴀᴍᴇ')
+  if (mode === 'cat:rpg') return showAllLeaderboards(m, sock, 'rpg', 'ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ʀᴘɢ')
+  if (mode === 'cat:couple') return showAllLeaderboards(m, sock, 'couple', 'ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴄᴏᴜᴘʟᴇ')
   if (mode === 'group') return showGroupLeaderboard(m, sock)
   if (mode === 'limit') return showRpgLeaderboard(m, sock, 'limit')
   if (mode.startsWith('game:')) return showGameLeaderboard(m, sock, mode.slice(5))
