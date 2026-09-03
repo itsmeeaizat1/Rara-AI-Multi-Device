@@ -49,12 +49,13 @@ async function handler(m, { sock }) {
       const data = await mediafire(url);
       if (data?.download_url || data?.link) {
         await m.react("🐣");
-    await m.reply(novaBerhasil("mediafiredl"));
         const _cap2 = mediaCaption({ platformIcon: "🔥", platformName: "MediaFire", title: data?.title || data?.name || "MediaFire File", format: data?.ext || "File", method: "builtin" });
-        return await sock.sendMessage(m.chat, {
+        await sock.sendMessage(m.chat, {
           document: { url: data.download_url || data.link }, caption: _cap2,
           contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m });
+        await m.reply(novaBerhasil("mediafiredl"));
+        return;
       }
     } catch (e) {
       console.error("[mediafiredl.js] builtin fallback failed:", e.message);

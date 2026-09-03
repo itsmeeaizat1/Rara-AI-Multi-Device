@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("toblur"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🙈 Wajah sudah diblur otomatis!" }, { quoted: m });
+    await m.reply(novaBerhasil("toblur"));
   } catch (e) {
     console.error("toblur error:", e.message);
     await m.react("❌");

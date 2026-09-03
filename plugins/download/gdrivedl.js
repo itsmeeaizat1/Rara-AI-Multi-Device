@@ -31,7 +31,6 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const file = result.medias[0];
       await m.react("🐣");
-    await m.reply(novaBerhasil("gdrivedl"));
 const _cap = mediaCaption({ platformIcon: "📁", platformName: "Google Drive", title: result.title || "Google Drive File", format: "File", method: "IkyyXD" });
       await sock.sendMessage(m.chat, {
         document: { url: file.url }, caption: _cap,
@@ -40,6 +39,7 @@ const _cap = mediaCaption({ platformIcon: "📁", platformName: "Google Drive", 
     } else {
       await m.react("❌");
       await m.reply(novaGagal("GDrive DL"));
+      await m.reply(novaBerhasil("gdrivedl"));
     }
   } catch (error) {
     console.error("[gdrivedl.js]:", error.message);

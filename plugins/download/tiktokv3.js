@@ -82,12 +82,12 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const r = await tiktokDownload(url);
     await m.react("🐣");
-    await m.reply(novaBerhasil("TikTok V3"));
 
     const videoUrl = r.video?.noWatermark || r.video?.url || r.video?.watermark || r.video;
     if (!videoUrl && !r.images) {
       await m.react("❌");
-      return m.reply(novaGagal("TikTok V3"));
+      await m.reply(novaGagal("TikTok V3"));
+      await m.reply(novaBerhasil("TikTok V3"));
     }
     if (videoUrl && !r.images) {
       const vidRes = await axios.get(videoUrl, {

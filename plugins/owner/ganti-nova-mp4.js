@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isVideo = m.type === 'videoMessage' || (m.quoted && m.quoted.type === 'videoMessage')
     
     if (!isVideo) {
-        return m.reply( claraWrap("Ganti-nova.mp4", `🎬 *Ganti Nova.Mp4*\n\nKirim/reply video untuk mengganti\nFile: assets/video/nova.mp4`), { commandName: "ganti-nova.mp4" })
+        return m.reply( claraWrap("Ganti-nova.mp4", `Kirim/reply video untuk mengganti\nFile: assets/video/nova.mp4`), { commandName: "ganti-nova.mp4" })
     }
     
     try {

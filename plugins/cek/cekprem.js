@@ -53,31 +53,30 @@ async function handler(m, { sock }) {
     const user = db.getUser(jid)
     const now = Date.now()
 
-    let txt = `💎 *ᴅᴇᴛᴀɪʟ ᴘʀᴇᴍɪᴜᴍ*\n\n`
-    txt += `👤 User: @${targetNumber}\n`
+    const lines = [`User: @${targetNumber}`];
 
     if (isConfigOwner) {
-        txt += `🏷️ Role: *👑 Owner (Permanent)*\n`
+        lines.push('Role: Owner (Permanent)');
     } else if (typeof premData === 'string' || !premData?.expired) {
-        txt += `🏷️ Role: *💎 Premium (Permanent)*\n`
+        lines.push('Role: Premium (Permanent)');
     } else {
         const remaining = Math.ceil((premData.expired - now) / (1000 * 60 * 60 * 24))
         const totalDays = premData.addedAt ? Math.ceil((premData.expired - premData.addedAt) / (1000 * 60 * 60 * 24)) : '?'
-        txt += `📛 Nama: *${premData.name || 'Unknown'}*\n`
-        txt += `📅 Mulai: *${premData.addedAt ? formatDate(premData.addedAt) : 'Unknown'}*\n`
-        txt += `⏳ Expired: *${formatDate(premData.expired)}*\n`
-        txt += `🗓️ Durasi: *${totalDays} hari*\n`
-        txt += `📊 Sisa: *${remaining > 0 ? remaining + ' hari' : '⚠️ Expired'}*\n`
+        lines.push(`Nama: ${premData.name || 'Unknown'}`)
+        lines.push(`Mulai: ${premData.addedAt ? formatDate(premData.addedAt) : 'Unknown'}`)
+        lines.push(`Expired: ${formatDate(premData.expired)}`)
+        lines.push(`Durasi: ${totalDays} hari`)
+        lines.push(`Sisa: ${remaining > 0 ? remaining + ' hari' : 'Expired'}`)
     }
 
     if (user) {
-        txt += `⚡ Energi: *${user.energi === -1 ? '∞' : (user.energi ?? 0)}*\n`
-        txt += `💰 Koin: *${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}*\n`
-        txt += `⭐ Exp: *${(user.exp ?? 0).toLocaleString('id-ID')}*\n`
-        txt += `📊 Level: *${user.level ?? 1}*\n`
+        lines.push(`Energi: ${user.energi === -1 ? '∞' : (user.energi ?? 0)}`)
+        lines.push(`Koin: ${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}`)
+        lines.push(`Exp: ${(user.exp ?? 0).toLocaleString('id-ID')}`)
+        lines.push(`Level: ${user.level ?? 1}`)
     }
 
-    await m.reply(txt, { mentions: [jid] });
+    await m.reply(claraWrap("Cek Premium", lines), { mentions: [jid] });
 }
 
 export { pluginConfig as config, handler }

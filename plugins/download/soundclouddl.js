@@ -40,7 +40,6 @@ async function handler(m, { sock }) {
       });
       await m.reply(caption);
       await m.react("🐣");
-    await m.reply(novaBerhasil("soundclouddl"));
       await sock.sendMessage(m.chat, {
         audio: { url: audio.url },
         mimetype: "audio/mpeg",
@@ -48,6 +47,7 @@ async function handler(m, { sock }) {
     } else {
       await m.react("❌");
       await m.reply(novaGagal("SoundCloud DL"));
+      await m.reply(novaBerhasil("soundclouddl"));
     }
   } catch (error) {
     console.error("[soundclouddl.js]:", error.message);

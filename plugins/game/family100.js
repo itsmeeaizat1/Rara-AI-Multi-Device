@@ -5,7 +5,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaUsage } from "../../src/lib/nova-menu-style.js";
+import { novaBox, toSC } from "../../src/lib/nova-menu-style.js";
 import { normalizeAnswer, getSimilarity, isReplyToGame } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
@@ -151,31 +151,30 @@ function checkFamilyAnswer(session, userAnswer) {
   return { status: "wrong" };
 }
 
-// ─── Board Renderer ───
+// ─── Board Renderer ─── array plain — │ & format dibuang, novaBox yang nyusun
 function renderBoard(session) {
   const lines = [];
   for (let i = 0; i < session.answers.length; i++) {
     const ans = session.answers[i];
     if (ans.revealed) {
-      const finder = ans.foundBy ? ` _(@${ans.foundBy.split("@")[0]})_ ` : " ";
-      lines.push(`│ ${i + 1}. *${ans.text.toUpperCase()}*${finder}✅`);
+      const finder = ans.foundBy ? ` (@${ans.foundBy.split("@")[0]})` : "";
+      lines.push(`${i + 1}. ${ans.text.toUpperCase()} ✅${finder}`);
     } else {
-      lines.push(`│ ${i + 1}. _???????????_`);
+      lines.push(`${i + 1}. ???????????`);
     }
   }
-  return lines.join("\n");
+  return lines;
 }
 
 // ─── Score Renderer ───
 function renderScores(session) {
   const entries = Object.entries(session.scores);
-  if (entries.length === 0) return "";
+  if (entries.length === 0) return [];
   entries.sort((a, b) => b[1].points - a[1].points);
-  const lines = entries.slice(0, 5).map(([jid, s], i) => {
+  return entries.slice(0, 5).map(([jid, s], i) => {
     const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`;
     return `${medal} @${jid.split("@")[0]} — ${s.correct} jawaban, ${s.points} pts`;
   });
-  return lines.join("\n");
 }
 
 // ─── Surrender Words ───
@@ -256,13 +255,17 @@ async function handler(m, { sock }) {
       const session = getSession(chatId);
       if (session) {
         const remaining = getRemainingTime(chatId);
-        let text = `⚠️ *Game Family 100 masih berjalan!*\n\n`;
-        text += `${session.question}\n\n`;
-        text += renderBoard(session);
-        text += `\n
-Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n`;
-        text += `│ Sisa waktu: *${formatTime(remaining)}*\n\n`;
-        text += `_Ketik "nyerah" untuk menyerah dan lihat semua jawaban_`;
+        const text = novaBox("Family 100", [
+          "⚠️ Game masih berjalan",
+          "---",
+          session.question,
+          ...renderBoard(session),
+          "---",
+          `${toSC("Ditemukan")} : ${session.foundCount}/${session.totalAnswers}`,
+          `${toSC("Sisa Waktu")} : ${formatTime(remaining)}`,
+          "---",
+          'Ketik "nyerah" untuk menyerah dan lihat semua jawaban',
+        ]);
         await m.reply(text);
         return;
       }
@@ -279,23 +282,25 @@ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n`;
       await m.reply("❌ Soalnya rusak nih 😵\nCoba ulang ya!");
       return;
     }
-    let text = ``;
-    text += `│  ➥ *${questionData.soal}*\n`;
-    text += `│\n`;
-    text += renderBoard({
-      answers: questionData.jawaban.map((j, i) => ({
-        text: j,
-        index: i,
-        revealed: false,
-      })),
-      totalAnswers: questionData.jawaban.length,
-    });
-    text += `\n
-Total jawaban: *${questionData.jawaban.length}*\n`;
-    text += `│ Waktu: *${formatTime(120000)}*\n`;
-    text += `│ Hadiah: *Limit, Koin, EXP (random per jawaban)*\n\n`;
-    text += `_Balas pesan ini atau ketik jawaban langsung_\n_Ketik "nyerah" untuk menyerah_\n`;
-    text += ``;
+    const text = novaBox("Family 100", [
+      `➥ ${questionData.soal}`,
+      "---",
+      ...renderBoard({
+        answers: questionData.jawaban.map((j, i) => ({
+          text: j,
+          index: i,
+          revealed: false,
+        })),
+        totalAnswers: questionData.jawaban.length,
+      }),
+      "---",
+      `${toSC("Total Jawaban")} : ${questionData.jawaban.length}`,
+      `${toSC("Waktu")} : ${formatTime(120000)}`,
+      `${toSC("Hadiah")} : Limit, Koin, EXP (random per jawaban)`,
+      "---",
+      "Balas pesan ini atau ketik jawaban langsung",
+      'Ketik "nyerah" untuk menyerah',
+    ]);
 
     const sentMsg = await m.reply(text);
     const session = createSession(
@@ -307,24 +312,20 @@ Total jawaban: *${questionData.jawaban.length}*\n`;
 
     setSessionTimer(chatId, async () => {
       try {
+        // Reveal jawaban = hasil game → plain text tanpa box (aturan hasil plain)
         let endText = `${pick(TIMEOUT_MSGS)}\n\n`;
         endText += `${session.question}\n\n`;
-        endText += `🌟 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
+        endText += `Jawaban lengkap:\n\n`;
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
-          if (ans.revealed) {
-            endText += `${i + 1}. ${ans.text} ✅\n`;
-          } else {
-            endText += `${i + 1}. ${ans.text} ❌\n`;
-          }
+          endText += `${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}\n`;
         }
-        endText += `
-Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
+        endText += `\nDitemukan: ${session.foundCount}/${session.totalAnswers}\n\n`;
         const scores = renderScores(session);
-        if (scores) {
-          endText += `🏆 *ꜱᴋᴏʀ ᴀᴋʜɪʀ:*\n${scores}\n\n`;
+        if (scores.length) {
+          endText += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
         }
-        endText += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳\n\n`;
+        endText += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳`;
         await sock.sendMessage(chatId, { text: endText });
       } catch (e) {
         console.error("[family100] Timeout handler error:", e.message);
@@ -362,24 +363,20 @@ async function answerHandler(m, sock) {
       // Build reveal text BEFORE ending session
       // Format hasil (request owner): jawaban plain tanpa bold/uppercase,
       // bold cuma di header — biar gak berlebihan.
+      // Reveal jawaban = hasil game → plain text tanpa box (aturan hasil plain)
       let text = `${pick(SURRENDER_MSGS)}\n\n`;
       text += `${session.question}\n\n`;
-      text += `🌟 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
+      text += `Jawaban lengkap:\n\n`;
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
-        if (ans.revealed) {
-          text += `${i + 1}. ${ans.text} ✅\n`;
-        } else {
-          text += `${i + 1}. ${ans.text} ❌\n`;
-        }
+        text += `${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}\n`;
       }
-      text += `
-Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
+      text += `\nDitemukan: ${session.foundCount}/${session.totalAnswers}\n\n`;
       const scores = renderScores(session);
-      if (scores) {
-        text += `🏆 *ꜱᴋᴏʀ ᴀᴋʜɪʀ:*\n${scores}\n\n`;
+      if (scores.length) {
+        text += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
       }
-      text += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳\n\n`;
+      text += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳`;
 
       const mentionJids = Object.keys(session.scores).length > 0
         ? Object.keys(session.scores)
@@ -417,19 +414,21 @@ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
       session.scores[sender].correct++;
       const points = session.totalAnswers - result.answer.index;
       session.scores[sender].points += points;
-      let replyText = `✅ *ʙᴇɴᴀʀ!*\n`;
-      replyText += `*@${sender.split("@")[0]}* menebak: *${result.answer.text.toUpperCase()}*\n`;
-      replyText += `│ Dapat *${points} poin*\n`;
-      replyText += `│ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
-      replyText += `${session.question}\n\n`;
-      replyText += renderBoard(session);
-      replyText += `\n
-Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
+      const replyLines = [
+        `✅ @${sender.split("@")[0]} menebak: ${result.answer.text.toUpperCase()}`,
+        `${toSC("Dapat")} : ${points} poin`,
+        `${toSC("Ditemukan")} : ${session.foundCount}/${session.totalAnswers}`,
+        "---",
+        session.question,
+        ...renderBoard(session),
+        "---",
+        `${toSC("Sisa Waktu")} : ${formatTime(getRemainingTime(chatId))}`,
+      ];
       const scores = renderScores(session);
-      if (scores) {
-        replyText += `\n🏆 *ꜱᴋᴏʀ:*\n${scores}\n`;
+      if (scores.length) {
+        replyLines.push({ sub: "Skor" }, ...scores);
       }
-      replyText += `\n`;
+      const replyText = novaBox("Family 100", replyLines);
 
       try {
         await sock.sendMessage(chatId, {
@@ -444,7 +443,7 @@ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
       if (session.foundCount >= session.totalAnswers) {
         // Build win text BEFORE ending session
         const entries = Object.entries(session.scores);
-        let winText = `${pick(WIN_MSGS)}\n\n`;
+        const winLines = [pick(WIN_MSGS)];
 
         if (entries.length > 0) {
           entries.sort((a, b) => b[1].points - a[1].points);
@@ -466,16 +465,19 @@ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
             console.error("[family100] Reward error:", e.message);
           }
 
-          winText += `🥇 *Juara:* @${topJid.split("@")[0]}\n`;
-          winText += `│ ${topScore.correct} jawaban benar\n`;
-          winText += `│ ${topScore.points} total poin\n\n`;
-          winText += `🎁 *Hadiah:*\n`;
-          if (reward.limit > 0) winText += `│ +${reward.limit} Limit\n`;
-          if (reward.koin > 0) winText += `│ +${reward.koin} Koin\n`;
-          if (reward.exp > 0) winText += `│ +${reward.exp} EXP\n`;
+          winLines.push(
+            "---",
+            `🥇 ${toSC("Juara")} : @${topJid.split("@")[0]}`,
+            `${toSC("Jawaban Benar")} : ${topScore.correct}`,
+            `${toSC("Total Poin")} : ${topScore.points}`,
+            "---",
+            { sub: "Hadiah" },
+          );
+          if (reward.limit > 0) winLines.push(`+${reward.limit} Limit`);
+          if (reward.koin > 0) winLines.push(`+${reward.koin} Koin`);
+          if (reward.exp > 0) winLines.push(`+${reward.exp} EXP`);
         }
-
-        winText += `\n`;
+        const winText = novaBox("Family 100", winLines);
 
         // End session FIRST, then send
         endSession(chatId);
@@ -500,9 +502,7 @@ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
       const percent = Math.round(result.similarity * 100);
       await m.react("🔥");
       try {
-        await m.reply(
-          `🔥 *Hampir!* Jawabanmu *${percent}%* mirip!\n_Sisa waktu: *${formatTime(remaining)}*_`
-        );
+        await m.reply(`🔥 Hampir! Jawabanmu ${percent}% mirip — sisa ${formatTime(remaining)}`);
       } catch {}
       return true;
     }
@@ -510,9 +510,7 @@ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
     if (result.status === "wrong") {
       const remaining = getRemainingTime(chatId);
       try {
-        await m.reply(
-          `❌ *Belum ada yang cocok!*\n_Sisa: *${formatTime(remaining)}*_`
-        );
+        await m.reply(`❌ Belum ada yang cocok — sisa ${formatTime(remaining)}`);
       } catch {}
       return true;
     }

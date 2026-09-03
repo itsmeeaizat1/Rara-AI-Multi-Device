@@ -54,8 +54,8 @@ async function handler(m, { sock }) {
         }
         break;
       }
-      await m.reply(novaBerhasil("Pinterest"));
       return;
+      await m.reply(novaBerhasil("Pinterest"));
     }
 
     // Fallback to builtin scraper

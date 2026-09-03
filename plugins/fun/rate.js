@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim();
     
     if (!text) {
-        return m.reply( claraWrap("Rate", `⭐ *ʀᴀᴛᴇ*\n\nMasukkan sesuatu untuk dinilai!\n\n*ᴄᴏɴᴛᴏʜ:*\n.rate wajahku`), { commandName: "rate" });
+        return m.reply( claraWrap("Rate", `Masukkan sesuatu untuk dinilai!\n\n*ᴄᴏɴᴛᴏʜ:*\n.rate wajahku`), { commandName: "rate" });
     }
     
     const rating = ratings[Math.floor(Math.random() * ratings.length)];

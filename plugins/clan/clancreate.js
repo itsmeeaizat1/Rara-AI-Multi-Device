@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     db.setUser(m.sender, { clanId })
     await db.save()
 
-    await m.reply(claraWrap("CLAN CREATED", `${emblem} *ᴄʟᴀɴ ᴄʀᴇᴀᴛᴇᴅ*\n\n` +
+    await m.reply(claraWrap("CLAN CREATED", 
         `*${clanName}*\n` +
         `Leader: @${m.sender.split('@')[0]}\n` +
         `Status: Open · 1/50 members\n\n` +

@@ -64,11 +64,12 @@ async function handler(m, { sock }) {
         format: "Video", method: "IkyyXD",
       });
       await m.react("🐣");
-    await m.reply(novaBerhasil("capcutdl"));
-      return await sock.sendMessage(m.chat, {
+      await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption,
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m });
+      await m.reply(novaBerhasil("capcutdl"));
+      return;
     }
 
     await m.react("❌");

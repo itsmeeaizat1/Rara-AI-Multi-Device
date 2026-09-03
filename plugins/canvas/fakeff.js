@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const nama = m.text;
   if (!nama) {
-    { const __navText = claraWrap("FAKE FF", `*ꜰᴀᴋᴇ ꜰꜰ*\n\n💡 *Contoh:* ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff"); };
+    { const __navText = claraWrap("FAKE FF", `💡 *Contoh:* ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff"); };
   }
   try {
     await sock.sendMedia(

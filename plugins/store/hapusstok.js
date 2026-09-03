@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if (productNo < 0 || productNo >= products.length) {
-        return m.reply(claraWrap("Nomor produk tidak valid.", `❌ *ɴᴏᴍᴏʀ ᴘʀᴏᴅᴜᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${products.length} 📋`))
+        return m.reply(claraWrap("Nomor produk tidak valid.", `Rentang: 1-${products.length} 📋`))
     }
 
     const product = products[productNo]

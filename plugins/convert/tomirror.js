@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("tomirror"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "📱 Mirror iPhone style!" }, { quoted: m });
+    await m.reply(novaBerhasil("tomirror"));
   } catch (e) {
     console.error("tomirror error:", e.message);
     await m.react("❌");

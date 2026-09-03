@@ -49,11 +49,12 @@ async function handler(m, { sock }) {
         const videoUrl = data?.HD || data?.hd || data?.SD || data?.sd || data?.url;
         if (videoUrl) {
           await m.react("🐣");
-    await m.reply(novaBerhasil("facebookdl"));
-          return await sock.sendMedia(m.chat, videoUrl, data?.title || null, m, {
+          await sock.sendMedia(m.chat, videoUrl, data?.title || null, m, {
             type: "video",
             contextInfo: { forwardingScore: 0, isForwarded: false },
           });
+          await m.reply(novaBerhasil("facebookdl"));
+          return;
         }
       }
     } catch (e) {

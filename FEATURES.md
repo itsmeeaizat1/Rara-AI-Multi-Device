@@ -552,6 +552,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - **Roblox API** — Roblox player search (robloxplayer)
 - **LINE CDN** — Line sticker download (linesticker)
 - **tikwm.com** — TikTok video download (asupantiktok)
+- **tikwm.com challenge pipeline** — TikTok keyword search: /api/challenge/search → /api/challenge/posts (buat .tt keyword, .ttvideo, .ttaudio, .ttimage, .ttsearch, .playtiktok, .ptvsearch; ganti api.azbry.com yang mati 403)
 - **Pixeldrain API** — File download (pixeldraindl)
 - **OMDb/TMDB** — Movie search (film, filmget)
 - **Jikan.moe** — Anime info
@@ -1129,7 +1130,14 @@ Download Upgrades:
 - .threaddl <url> - download - Download foto/video Threads; card nempel di caption (album) atau di media (single — nova-media-card.js)
 - .dailymotiondl <url> - download - Download video Dailymotion (thumbnail dikirim + MP4 via ffmpeg); preview card menyertai (nova-media-card.js)
 - .ttmp3 <url> - download - Download audio TikTok (mp3 langsung / ekstrak via ffmpeg); audio dikirim dengan preview card (cover asli TikTok + judul + link — nova-media-card.js)
-- .tiktok/.tt/.ttmp4 <url> - download - Download video/slide TikTok tanpa watermark (IkyyXD → tikwm); video dikirim dengan preview card (cover asli TikTok + judul + link via contextInfo.externalAdReply — nova-media-card.js)
+- .tiktok/.tt/.ttmp4 <url/keyword> - download - Download video/slide TikTok tanpa watermark (IkyyXD → tikwm); input link → download, input keyword → kirim video random dari hasil search TikTok ala .play (react 🕒→🐣, preview card, offerConvert); video dikirim dengan preview card (cover asli TikTok + judul + link via contextInfo.externalAdReply — nova-media-card.js)
+- .ttvideo <keyword> - download - Search TikTok by keyword → kirim VIDEO random no-watermark; pipeline: tikwm challenge/search → challenge/posts (scrape langsung, tanpa API key)
+- .ttaudio <keyword> - download - Search TikTok by keyword → kirim ORIGINAL SOUND (mp3) dari video random + judul sound; kirim sebagai audio message + offerConvert
+- .ttimage <keyword> - download - Search TikTok by keyword → kirim FOTO dari post slideshow random (max 5 foto per post, caption + preview card di foto pertama); kalau semua hasil video → saran .ttvideo
+- .ttsearch <keyword> - search - List video TikTok dari keyword search dengan stats + link canonical; media dikirim dari field download (no watermark)
+- .playtiktok <keyword> - search - Cari + kirim satu video TikTok dari keyword (hasil pertama); caption mediaCaption (views/likes/comments/shares + link), preview card asli
+- .ptvsearch <keyword> - search - Cari video TikTok → kirim random sebagai PTV (video note)
+- .igvideo/.igimage/.igaudio <url> - download - Download Instagram per format dari link post: .igvideo → video aja (preview card + offerConvert), .igimage → foto aja (carousel max 10, caption di foto pertama), .igaudio → audio MP3 (pakai track audio dari API kalau ada, kalau gak ada diekstrak via ffmpeg libmp3lame 128k); fetch chain IkyyXD instagram → ikyyAio → ig.js lokal (mirror instagramdl); catatan: keyword search IG gak mungkin — Meta blokir semua search tanpa login
 - .tiktokv3 - download - TikTok v3 (IkyyXD → Sanka → tikwm; support slideshow foto); semua media dikirim dengan preview card (cover asli TikTok — nova-media-card.js)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)

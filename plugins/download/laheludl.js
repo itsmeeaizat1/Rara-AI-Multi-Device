@@ -33,7 +33,6 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const video = result.medias.find(m => m.type === "video") || result.medias[0];
       await m.react("🐣");
-    await m.reply(novaBerhasil("laheludl"));
 const _cap = mediaCaption({ platformIcon: "😂", platformName: "Lahelu", title: result.title || "Lahelu Video", format: "Video", method: "IkyyXD" });
       await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption: _cap,
@@ -42,6 +41,7 @@ const _cap = mediaCaption({ platformIcon: "😂", platformName: "Lahelu", title:
     } else {
       await m.react("❌");
       await m.reply(novaGagal("Lahelu DL"));
+      await m.reply(novaBerhasil("laheludl"));
     }
   } catch (error) {
     console.error("[laheludl.js]:", error.message);

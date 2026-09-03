@@ -115,7 +115,7 @@ function handler(m, { sock }) {
             `\`${m.prefix}listprod\` - Lihat produk`
     }
 
-    return m.reply(claraWrap("Mode Diubah", `✅ *ᴍᴏᴅᴇ ᴅɪᴜʙᴀʜ*\n\n` +
+    return m.reply(claraWrap("Mode Diubah", 
         `Mode: *${mode.toUpperCase()}* (${MODES[mode].name})\n` +
         `Grup: *${m.chat.split('@')[0]}*\n` +
         extraInfo +

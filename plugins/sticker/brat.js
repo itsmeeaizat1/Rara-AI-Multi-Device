@@ -73,11 +73,11 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const pngBuffer = await bratGen(text, { C_BG: "#ffffff", C_TEXT: "#000000" });
     await m.react("🐣");
-    await m.reply(novaBerhasil("brat"));
     await sock.sendImageAsSticker(m.chat, pngBuffer, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
+    await m.reply(novaBerhasil("brat"));
   } catch (error) {
     console.error("[brat] Error:", error.message);
     await m.react("❌");

@@ -158,7 +158,7 @@ async function srtAnswerHandler(m, sock) {
             } else {
                 fs.writeFileSync(filepath, buffer);
                 session.count++;
-                { const __navText = claraWrap("GAMBAR BERHASIL DISIMPAN", `✅ *GAMBAR BERHASIL DISIMPAN*\n\nGambar telah diamankan ke dalam penyimpanan lokal bot.\n- Total gambar ditambahkan pada sesi ini: *${session.count}*`); await m.reply(__navText); };
+                { const __navText = claraWrap("GAMBAR BERHASIL DISIMPAN", `Gambar telah diamankan ke dalam penyimpanan lokal bot.\n- Total gambar ditambahkan pada sesi ini: *${session.count}*`); await m.reply(__navText); };
             }
         }
         return true;

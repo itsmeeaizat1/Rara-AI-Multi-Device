@@ -122,7 +122,6 @@ async function handler(m, { sock }) {
     });
     await m.reply(infoText);
     await m.react("🐣");
-    await m.reply(novaBerhasil("Ttmp3"));
 
     await sock.sendMessage(m.chat, {
       audio: Buffer.isBuffer(audioSource) ? audioSource : { url: audioSource },
@@ -137,6 +136,7 @@ async function handler(m, { sock }) {
     }, { quoted: m });
     // cleanup
     cleanupTempFiles();
+    await m.reply(novaBerhasil("Ttmp3"));
   } catch (err) {
     cleanupTempFiles();
     console.error("[TikTokDL] Error:", err);

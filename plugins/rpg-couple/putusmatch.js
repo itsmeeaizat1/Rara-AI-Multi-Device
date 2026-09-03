@@ -3,6 +3,7 @@
 
 import { ensureRpg, getRpgData, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { getCintaData, breakUp, formatDurasi } from "../../src/lib/nova-rpg-cinta.js";
+import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "putusmatch",
@@ -29,11 +30,7 @@ async function handler(m, { sock }) {
     const cinta = getCintaData(m);
 
     if (!cinta.spouse) {
-      return m.reply(
-        "" +
-        `💔 Kamu tidak punya pasangan!\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("Putus", "Kamu tidak punya pasangan!", "warn"));
     }
 
     // Penalty gold
@@ -46,16 +43,16 @@ async function handler(m, { sock }) {
 
     breakUp(m);
 
-    let msg = "";
-    msg += `💔 @${m.sender.split("@")[0]} putus dengan *${cinta.spouseName}*\n`;
-    msg += `⏰ Durasi: *${formatDurasi(durasi)}*\n`;
-    if (durasiHari > 0) msg += `📅 ${durasiHari} hari bersama\n`;
-    if (wasMarried) msg += `💍 Status: *Dicerai otomatis*\n`;
-    msg += `\n  📊 *Penalty:*\n`;
-    msg += `💰 Gold: *-${goldLost}*\n`;
-    msg += `💔 Affection direset ke *0*\n\n`;
-    
-    await m.reply(msg);
+    const msgLines = [
+      `💔 @${m.sender.split("@")[0]} putus dengan ${cinta.spouseName}`,
+      `Durasi: ${formatDurasi(durasi)}`,
+    ];
+    if (durasiHari > 0) msgLines.push(`${durasiHari} hari bersama`);
+    if (wasMarried) msgLines.push("Status: Dicerai otomatis");
+    msgLines.push("---", { sub: "Penalty" },
+      `Gold: -${goldLost}`,
+      "Affection direset ke 0");
+    await m.reply(novaBox("Putus", msgLines));
     await m.react("💔");
   } catch (e) {
     console.error("[putusmatch] Error:", e.message);

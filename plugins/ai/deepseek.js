@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("DeepSeek V4", `🧠 *DeepSeek V4*\n\n` +
+    return m.reply(claraWrap("DeepSeek V4", 
         `AI yang bisa mikir dulu sebelum jawab — cocok buat pertanyaan yang butuh penalaran.\n\n` +
         `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}deepseek <pertanyaan>*\n\n` +

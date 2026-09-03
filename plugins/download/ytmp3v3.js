@@ -48,7 +48,6 @@ async function handler(m, { sock }) {
     const buffer = Buffer.concat(chunks);
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("ytmp3v3"));
 
     const durStr = `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`;
     let msg = mediaCaption({
@@ -77,7 +76,8 @@ async function handler(m, { sock }) {
         },
       },
     });
-    return m.reply(msg);
+    await m.reply(msg);
+    await m.reply(novaBerhasil("ytmp3v3"));
   } catch (err) {
     console.error("ytmp3v3 error:", err);
     await m.react("❌");
