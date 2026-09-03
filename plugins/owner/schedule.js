@@ -284,7 +284,7 @@ function buildTaskPayload(id, parsed, extra = {}) {
 }
 
 function buildHelpText(m) {
-  return `📅 *SCHEDULE PLANNER*
+  return `📅 *ꜱᴄʜᴇᴅᴜʟᴇ ᴘʟᴀɴɴᴇʀ*
 
 Fitur ini buat bikin jadwal atau reminder bebas.
 Bisa dipakai untuk sekolah, pelajaran, kerja, meeting, ngedate, turnamen, atau agenda apa aja.
@@ -581,7 +581,7 @@ function buildCategoryListText(tasks) {
     (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
   );
 
-  let text = "🏷️ *KATEGORI JADWAL AKTIF*\n\n";
+  let text = "🏷️ *ᴋᴀᴛᴇɢᴏʀɪ ᴊᴀᴅᴡᴀʟ ᴀᴋᴛɪꜰ*\n\n";
 
   for (const [category, total] of entries) {
     text += `${category} (${total})\n`;
@@ -592,7 +592,7 @@ function buildCategoryListText(tasks) {
 }
 
 function buildPresetListText() {
-  let text = "⚡ *QUICK PRESET SCHEDULE*\n\n";
+  let text = "⚡ *Qᴜɪᴄᴋ ᴘʀᴇꜱᴇᴛ ꜱᴄʜᴇᴅᴜʟᴇ*\n\n";
 
   for (const [name, preset] of Object.entries(presetTemplates)) {
     text += `*${name}*\n`;
@@ -632,7 +632,7 @@ function buildListText(tasks, header = null) {
 
 function buildDetailText(task) {
   const msUntil = getMsUntilTime(task.hour, task.minute);
-  return `📌 *DETAIL JADWAL*
+  return `📌 *ᴅᴇᴛᴀɪʟ ᴊᴀᴅᴡᴀʟ*
 
 🆔 ID: \`${task.id}\`
 🏷️ Kategori: ${getTaskCategory(task)}
@@ -668,7 +668,7 @@ async function handler(m, { sock, args }) {
 
         const msUntil = getMsUntilTime(parsed.hour, parsed.minute);
 
-        await m.reply(`✅ *JADWAL BERHASIL DIBUAT*
+        await m.reply(`✅ *ᴊᴀᴅᴡᴀʟ ʙᴇʀʜᴀꜱɪʟ ᴅɪʙᴜᴀᴛ*
 
 🆔 ID: \`${id}\`
 🏷️ Kategori: ${parsed.category}
@@ -709,7 +709,7 @@ ${truncateText(parsed.customText, 180)}`);
 
         const msUntil = getMsUntilTime(parsed.hour, parsed.minute);
 
-        await m.reply(`✅ *PRESET JADWAL BERHASIL DIBUAT*
+        await m.reply(`✅ *ᴘʀᴇꜱᴇᴛ ᴊᴀᴅᴡᴀʟ ʙᴇʀʜᴀꜱɪʟ ᴅɪʙᴜᴀᴛ*
 
 🆔 ID: \`${id}\`
 ⚡ Preset: ${parsed.presetKey}
@@ -760,7 +760,7 @@ ${truncateText(parsed.customText, 180)}`);
 
         const msUntil = getMsUntilTime(parsed.hour, parsed.minute);
 
-        await m.reply(`✅ *JADWAL BERHASIL DIUPDATE*
+        await m.reply(`✅ *ᴊᴀᴅᴡᴀʟ ʙᴇʀʜᴀꜱɪʟ ᴅɪᴜᴘᴅᴀᴛᴇ*
 
 🆔 ID: \`${task.id}\`
 🏷️ Kategori: ${parsed.category}
@@ -885,7 +885,7 @@ ${truncateText(parsed.customText, 180)}`);
         ...new Set(tasks.map((task) => getTaskCategory(task))),
       ];
 
-      const text = `📊 *SCHEDULE PLANNER STATUS*
+      const text = `📊 *ꜱᴄʜᴇᴅᴜʟᴇ ᴘʟᴀɴɴᴇʀ ꜱᴛᴀᴛᴜꜱ*
 
 📝 Jadwal aktif: ${status.scheduledMessagesCount}
 🏷️ Kategori aktif: ${categories.length ? categories.join(", ") : "-"}

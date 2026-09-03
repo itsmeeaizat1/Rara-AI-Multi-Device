@@ -32,7 +32,7 @@ Reply kode HTML atau file .html
 
     if (!m.quoted) {
         return m.reply(
-`❌ *HTML TIDAK DITEMUKAN*
+`❌ *ʜᴛᴍʟ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*
 
 Reply pesan berisi HTML
 atau reply file .html`
@@ -56,7 +56,7 @@ atau reply file .html`
             htmlContent = buffer.toString()
         } else {
             return m.reply(
-`❌ *FORMAT TIDAK DIDUKUNG*
+`❌ *ꜰᴏʀᴍᴀᴛ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*
 
 Reply teks HTML
 atau file .html`
@@ -65,7 +65,7 @@ atau file .html`
 
         if (!/<html|<!doctype html|<head|<body/i.test(htmlContent)) {
             return m.reply(
-`❌ *BUKAN HTML VALID*
+`❌ *ʙᴜᴋᴀɴ ʜᴛᴍʟ ᴠᴀʟɪᴅ*
 
 Pastikan berisi struktur HTML`
             )
@@ -121,7 +121,7 @@ Pastikan berisi struktur HTML`
             // fallback tetap ke default domain
         }
         await m.reply(
-`✅ *DEPLOY SUCCESS*
+`✅ *ᴅᴇᴘʟᴏʏ ꜱᴜᴄᴄᴇꜱꜱ*
 
 Nama: ${name}
 Platform: Vercel
@@ -139,7 +139,7 @@ URL: https://${domain}`
             error.message
 
         m.reply(
-`❌ *DEPLOY FAILED*
+`❌ *ᴅᴇᴘʟᴏʏ ꜰᴀɪʟᴇᴅ*
 
 ${err}`
         )

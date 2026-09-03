@@ -76,7 +76,9 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    const caption = `✅ *TO REAL* Image enhanced to realistic
+    const caption = `✅ *ᴛᴏ ʀᴇᴀʟ*
+
+ Image enhanced to realistic
 Engine: nexray AI`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {

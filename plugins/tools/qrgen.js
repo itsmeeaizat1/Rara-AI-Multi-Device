@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
-    const caption = `✅ *QR CODE*
+    const caption = `✅ *Qʀ ᴄᴏᴅᴇ*
 
 Content: ${text.slice(0, 60)}${text.length > 60 ? "..." : ""}
 Engine: qrcode (local)`;

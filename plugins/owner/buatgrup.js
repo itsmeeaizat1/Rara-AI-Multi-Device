@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
     const args = text.split('|')
 
     if (args.length < 2) {
-        let txt = `👥 *BUAT GRUP BARU* 👥\n\n`
+        let txt = `👥 *ʙᴜᴀᴛ ɢʀᴜᴘ ʙᴀʀᴜ* 👥\n\n`
         txt += `Halo kak Owner! Mau bikin grup baru secara instan?\n\n`
         txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`
         txt += `👉 \`${m.prefix}buatgrup Nama Grup | 628xxx,628yyy | Durasi(menit)\`\n\n`
@@ -64,8 +64,8 @@ async function handler(m, { sock }) {
     try {
         const group = await sock.groupCreate(name, participants)
         
-        let successTxt = `👥 *GRUP BERHASIL DIBUAT* 👥\n\n`
-        successTxt += `*ɴᴀᴍᴀ:* ${name}\n`
+        let successTxt = `👥 *ɢʀᴜᴘ ʙᴇʀʜᴀꜱɪʟ ᴅɪʙᴜᴀᴛ* 👥\n\n`
+        successTxt += ` *ɴᴀᴍᴀ:* ${name}\n`
         successTxt += `🆔 *ɪᴅ:* ${group.id}\n`
         successTxt += `👤 *ᴘᴇꜱᴇʀᴛᴀ:* ${participants.length} orang\n`
         
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
                         .filter(id => id !== botJid)
 
                     if (membersToKick.length > 0) {
-                        await sock.sendMessage(group.id, { text: `⏳ *MASA AKTIF GRUP HABIS* ⏳\n\nSesuai perintah Owner, waktu grup ini telah habis. Sayonara semuanya! 👋` })
+                        await sock.sendMessage(group.id, { text: `⏳ *ᴍᴀꜱᴀ ᴀᴋᴛɪꜰ ɢʀᴜᴘ ʜᴀʙɪꜱ* ⏳\n\nSesuai perintah Owner, waktu grup ini telah habis. Sayonara semuanya! 👋` })
                         await sock.groupParticipantsUpdate(group.id, membersToKick, 'remove')
                     }
                     

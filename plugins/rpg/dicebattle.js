@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
       msg += `💀 *${result}!*\n`;
       msg += `Kehilangan: ${bet} gold\n`;
     } else {
-      msg += `🤝 *SERI!* Bet dikembalikan.\n`;
+      msg += `🤝 *ꜱᴇʀɪ!* Bet dikembalikan.\n`;
     }
         return m.reply(msg);
   } catch (err) {

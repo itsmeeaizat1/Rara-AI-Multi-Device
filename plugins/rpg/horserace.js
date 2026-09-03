@@ -141,9 +141,9 @@ async function handler(m, { sock }) {
       msg += `🎯 *Pilihanmu:* #${selectedHorse.id} ${selectedHorse.name}\n`;
 
       if (isWon) {
-        msg += `🎉 *MENANG!* Kamu mendapatkan *+${winReward} Gold* (${selectedHorse.odds}x)\n`;
+        msg += `🎉 *ᴍᴇɴᴀɴɢ!* Kamu mendapatkan *+${winReward} Gold* (${selectedHorse.odds}x)\n`;
       } else {
-        msg += `💀 *KALAH!* Taruhan sebesar ${betAmount} Gold hangus.\n`;
+        msg += `💀 *ᴋᴀʟᴀʜ!* Taruhan sebesar ${betAmount} Gold hangus.\n`;
       }
 
       msg += `💰 Total Gold Sekarang: *${wallet.gold} Gold*\n`;

@@ -311,7 +311,7 @@ async function endGiveaway(giveawayId, sock, db) {
     giveaway.chatId,
     {
       text:
-        `🎊 *GIVEAWAY BERAKHIR!*\n\n` +
+        `🎊 *ɢɪᴠᴇᴀᴡᴀʏ ʙᴇʀᴀᴋʜɪʀ!*\n\n` +
         `${winnerText}\n` +
         `\n` +
         `🎁 Title: *${giveaway.title}*\n` +
@@ -542,7 +542,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(giveaway.chatId, {
       text:
-        `🔄 *GIVEAWAY REROLL!*\n\n` +
+        `🔄 *ɢɪᴠᴇᴀᴡᴀʏ ʀᴇʀᴏʟʟ!*\n\n` +
         `${winnerText}\n` +
         `\n` +
         `🎁 Title: *${giveaway.title}*\n` +

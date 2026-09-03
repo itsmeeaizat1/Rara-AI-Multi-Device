@@ -64,7 +64,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
           `💎 Belum ada premium di jadibot ini\nGunakan \`${m.prefix}addprem\` untuk menambah`,
         );
       }
-      let txt = `💎 *DAFTAR PREMIUM JADIBOT* — ${jadibotId}\n\n`;
+      let txt = `💎 *ᴅᴀꜰᴛᴀʀ ᴘʀᴇᴍɪᴜᴍ ᴊᴀᴅɪʙᴏᴛ* — ${jadibotId}\n\n`;
       const mentions = jbPremiums
         .map((p) => (typeof p === "string" ? p : p.jid))
         .map(toMentionJid)

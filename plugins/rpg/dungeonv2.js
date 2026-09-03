@@ -246,7 +246,7 @@ async function handler(m, { sock }) {
         msg += `💰 Gold: *+${goldGain}*\n`;
         if (floorConfig.isBoss) {
           msg += `💎 Gems: *+${3 + Math.floor(rpg.level / 10)}*\n`;
-          msg += `🎉 *BOSS DEFEATED!*\n`;
+          msg += `🎉 *ʙᴏꜱꜱ ᴅᴇꜰᴇᴀᴛᴇᴅ!*\n`;
         }
         if (dropText) msg += `📦 Drops: *${dropText}*\n`;
         msg += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
@@ -256,7 +256,7 @@ async function handler(m, { sock }) {
         if (rpg.dungeonV2.floor < MAX_FLOORS) {
           msg += `📌 .dungeonv2 enter — lanjut floor ${rpg.dungeonV2.floor + 1}\n`;
         } else {
-          msg += `🎉 *DUNGEON CLEARED!* Semua floor selesai!\n`;
+          msg += `🎉 *ᴅᴜɴɢᴇᴏɴ ᴄʟᴇᴀʀᴇᴅ!* Semua floor selesai!\n`;
           rpg.dungeonV2 = { active: false, floor: 0, clearLog: [] };
           saveRpg(m, { dungeonV2: rpg.dungeonV2 });
         }

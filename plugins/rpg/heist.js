@@ -98,10 +98,10 @@ async function handler(m, { sock }) {
     msg += `
 `;
     if (success) {
-      msg += `🏆 *BERHASIL!*\n`;
+      msg += `🏆 *ʙᴇʀʜᴀꜱɪʟ!*\n`;
       msg += `Reward: *+${goldChange} gold*\n`;
     } else {
-      msg += `💀 *TERTANGKAP!*\n`;
+      msg += `💀 *ᴛᴇʀᴛᴀɴɢᴋᴀᴘ!*\n`;
       msg += `Denda: *-${target.fine} gold*\n`;
     }
         return m.reply(msg);

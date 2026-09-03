@@ -307,7 +307,7 @@ async function handler(m, { sock }) {
     const confirmedCount = data.orders.filter((o) => o.status === "confirmed").length;
     const doneCount = data.orders.filter((o) => o.status === "done").length;
 
-    let txt = "*NOVA STORE*\n\n";
+    let txt = "*ɴᴏᴠᴀ ꜱᴛᴏʀᴇ*\n\n";
     txt += "Nama: " + (config.storeName || "Nova Store") + "\n";
     txt += "Deskripsi: " + (config.storeDesc || "-") + "\n";
     txt += "Notif Buyer: " + (config.autoNotify ? "ON" : "OFF") + "\n";

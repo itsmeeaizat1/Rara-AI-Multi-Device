@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
       status = "Aktif (broadcast akan jalan)";
     }
 
-    return m.reply( "*PENGATURAN SALURAN*\n\n" +
+    return m.reply( "*ᴘᴇɴɢᴀᴛᴜʀᴀɴ ꜱᴀʟᴜʀᴀɴ*\n\n" +
       "ID: " + currentId + "\n" +
       "Nama: " + currentName + "\n" +
       "Link: " + currentLink + "\n" +
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     if (saluranLink) config.saluran.link = saluranLink;
 
 
-    let replyText = "*SALURAN BERHASIL DI-SET*\n\n";
+    let replyText = "*ꜱᴀʟᴜʀᴀɴ ʙᴇʀʜᴀꜱɪʟ ᴅɪ-ꜱᴇᴛ*\n\n";
     replyText += "ID: " + saluranId + "\n";
     replyText += "Link: " + saluranLink + "\n";
     replyText += "Nama: " + (config.saluran?.name || "Nova AI Official") + "\n\n";

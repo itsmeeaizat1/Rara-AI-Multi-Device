@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     const execTime = (tEnd - tStart).toFixed(2)
 
     const serverDetails =
-      `🏓 *PONG!* (${execTime}ms)\n\n` +
+      `🏓 *ᴘᴏɴɢ!* (${execTime}ms)\n\n` +
       `Berikut adalah detail spesifikasi dan performa server secara lengkap:\n\n` +
 
       `🖥️ *ɪɴꜰᴏʀᴍᴀꜱɪ ꜱɪꜱᴛᴇᴍ*\n` +
