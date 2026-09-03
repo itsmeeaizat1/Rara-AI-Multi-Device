@@ -202,6 +202,7 @@ export async function buildMenuInfo(m, ctx = {}) {
   const rpgData = user?.rpg || {};
   const rpgEnergy = rpgData.energy ?? 100;
   const rpgMaxEnergy = rpgData.maxEnergy ?? 100;
+  const rpgEnergyPct = rpgMaxEnergy > 0 ? Math.round((rpgEnergy / rpgMaxEnergy) * 100) : 0;
   const userKoin = user?.koin ?? 0;
   const userSaldo = user?.saldo ?? 0;
 
@@ -221,7 +222,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Role", value: userRole },
     { label: "Level", value: `${formatNum(userLevel)} (${expPct}%)` },
     { label: "Limit", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
-    { label: "Energi", value: m.isOwner ? "∞ Unlimited" : `${formatNum(rpgEnergy)} / ${formatNum(rpgMaxEnergy)}` },
+    { label: "Energi", value: m.isOwner ? "∞ Unlimited" : `${formatNum(rpgEnergy)} (${rpgEnergyPct}%)` },
     { label: "Exp", value: formatNum(userExp) },
     { label: "Gold", value: formatNum(rpgData.gold ?? 0) },
     { label: "Gems", value: formatNum(rpgData.gems ?? 0) },
