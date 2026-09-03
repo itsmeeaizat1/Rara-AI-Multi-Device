@@ -10,7 +10,9 @@ import crypto from "crypto";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { enhanceLocal } from "../../src/lib/nova-hd-local.js";
+// Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
+// responsif selama render (dulu ngeblok event loop total, command lain mati)
+import { enhanceLocalAsync, hdQueueInfo } from "../../src/lib/nova-hd-pool.js";
 
 const pluginConfig = {
   name: "remini",
@@ -309,12 +311,19 @@ async function handler(m, { sock, args }) {
     } else {
       // Default: local AI — tanpa watermark. Kalau gagal, fallback ke BeautyPlus.
       try {
+        // notice antrian: kalau lagi ada render lain, kasih tahu posisinya
+        // (render dieksekusi satu-satu biar CPU VPS gak jebol)
+        const q = hdQueueInfo();
+        if (q.busy) {
+          const pos = q.ahead + 1;
+          m.reply(claraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${pos}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
+        }
         // targetOut = sisi terpanjang hasil. input maxSide = target / scale
         // (gambar kecil tetap gak di-upscale paksa — tanpa piksel palsu)
         const opts = targetOut
           ? { maxSide: Math.max(128, Math.round(targetOut / (localMode === "real" ? 4 : 2))), enlarge: true }
           : {};
-        const r = await enhanceLocal(mediaBuffer, localMode, opts);
+        const r = await enhanceLocalAsync(mediaBuffer, localMode, opts);
         resultBuffer = r.buffer;
         label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
         outWidth = r.width;
