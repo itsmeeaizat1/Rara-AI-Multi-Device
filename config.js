@@ -17,7 +17,7 @@ import { rpg } from "./src/lib/config/rpg.js";
 import { ui, dev } from "./src/lib/config/ui.js";
 import { weather, weatherScheduler, lokerScheduler } from "./src/lib/config/schedulers.js";
 import { vercel, pterodactyl, digitalocean, alightmotion } from "./src/lib/config/external.js";
-import { applyPteroOverrides } from "./src/lib/nova-ptero-store.js";
+import { applyPteroOverrides } from "./src/lib/panel/index.js";
 import { database, backup, scheduler, emailOtp } from "./src/lib/config/system.js";
 import { payment, donasi } from "./src/lib/config/payment.js";
 

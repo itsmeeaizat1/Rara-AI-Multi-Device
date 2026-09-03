@@ -2,7 +2,7 @@
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js"
-import { setPanelField, clearPanelField, MAX_PANELS } from "../../src/lib/nova-ptero-store.js"
+import { setPanelField, clearPanelField, MAX_PANELS } from "../../src/lib/panel/index.js"
 
 const pluginConfig = {
     name: 'setpanel',
