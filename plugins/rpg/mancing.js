@@ -4,7 +4,8 @@
 import {
   ensureRpg, addExp, addGold, useEnergy,
   addItem, ITEM_DB,
-  checkCooldown, setCooldown, formatTime
+  checkCooldown, setCooldown, formatTime,
+  bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
@@ -74,6 +75,9 @@ async function handler(m, { sock }) {
       }
     }
 
+    const totalCatch = drops.reduce((a, d) => a + d.qty, 0);
+    if (totalCatch > 0) await bumpPlayerStat(m, "mancing", "totalCatch", totalCatch);
+
     const expGain = Math.floor(Math.random() * (EXP_RANGE[1] - EXP_RANGE[0] + 1)) + EXP_RANGE[0];
     const goldGain = Math.floor(Math.random() * (GOLD_RANGE[1] - GOLD_RANGE[0] + 1)) + GOLD_RANGE[0];
     addExp(m, expGain);
@@ -95,7 +99,7 @@ async function handler(m, { sock }) {
     msg += `EXP: +${expGain}\n`;
     msg += `Gold: +${goldGain}`;
     msg += dropText + "\n\n";
-    msg += `Energy: ${rpg.energy - FISH_ENERGY}/${rpg.maxEnergy}`;
+    msg += `Energy: ${rpg.energy}/${rpg.maxEnergy}`;
 
     return m.reply(msg);
   } catch (err) {

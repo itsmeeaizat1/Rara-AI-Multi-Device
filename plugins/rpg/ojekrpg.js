@@ -3,7 +3,8 @@
 
 import {
   ensureRpg, addExp, addGold, useEnergy,
-  checkCooldown, setCooldown, formatTime
+  checkCooldown, setCooldown, formatTime,
+  bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { rpgProgress } from "../../src/lib/nova-rpg-anim.js";
@@ -76,6 +77,7 @@ async function handler(m, { sock }) {
 
     const totalGold = baseFare + tip;
     addGold(m, totalGold);
+    await bumpPlayerStat(m, "ojekrpg", "totalOjek", 1);
     addExp(m, expGain);
 
     setCooldown(m, "lastOjek", OJEK_COOLDOWN);
@@ -93,7 +95,7 @@ async function handler(m, { sock }) {
     msg += `
 `;
     msg += `💼 Gold: *${rpg.gold + totalGold}*\n`;
-    msg += `⚡ Energy: *${rpg.energy - OJEK_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
     
     return m.reply(msg);
   } catch (err) {

@@ -703,6 +703,20 @@ export function checkAchievements(m) {
 // LEADERBOARD
 // ═══════════════════════════════════════════════════
 
+// ── Stat counter per-game untuk leaderboard ──
+// Naikkan rpg.<key>.<field> sebanyak amount, tersimpan via setPlayerData
+// (aman bersama fix whitelist setUser — key per-game tidak terhapus lagi).
+export async function bumpPlayerStat(m, key, field, amount = 1) {
+  try {
+    if (!m?.sender || amount <= 0) return 0;
+    const db = getDatabase();
+    const data = (await db.getPlayerData(m.sender, key)) || {};
+    data[field] = (data[field] || 0) + amount;
+    await db.setPlayerData(m.sender, key, data);
+    return data[field];
+  } catch { return 0; }
+}
+
 export function getLeaderboard(type = "level", limit = 10) {
   try {
     const db = getDatabase();
@@ -721,7 +735,16 @@ export function getLeaderboard(type = "level", limit = 10) {
         case "achievement": value = rpg.achievementPoints || 0; break;
         case "gems": value = rpg.gems || 0; break;
         case "tokens": value = rpg.tokens || 0; break;
-        default: value = rpg.level || 1;
+        case "joblevel": value = rpg.jobLevel || 1; break;
+        default: {
+          // Deep path per-game: "survival.daysSurvived", "slotmachine.wins",
+          // "gachawaifu.pulls", "cookingv2.cookedHistory", dll.
+          // Array di ujung path dihitung sebagai jumlah item (length).
+          let v = rpg;
+          for (const k of String(type).split(".")) v = v?.[k];
+          if (Array.isArray(v)) v = v.length;
+          value = typeof v === "number" ? v : 0;
+        }
       }
       players.push({ name: user.name || user.number || "Unknown", number: user.number || "", value, rpg });
     }

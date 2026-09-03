@@ -3,7 +3,8 @@
 
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
-  checkCooldown, setCooldown, formatTime
+  checkCooldown, setCooldown, formatTime,
+  bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
@@ -70,6 +71,7 @@ async function handler(m, { sock }) {
     const bonusGold = Math.floor(goldGain * streakBonus);
 
     addGold(m, goldGain + bonusGold);
+    await bumpPlayerStat(m, "nguli", "totalNguli", 1);
     addExp(m, expGain);
 
     saveRpg(m, { nguliStreak: streak, lastNguliWork: Date.now() });
@@ -87,7 +89,7 @@ async function handler(m, { sock }) {
     msg += `✦ EXP: *+${expGain}*\n`;
     msg += `
 `;
-    msg += `⚡ Energy: *${rpg.energy - NGULI_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
     
     return m.reply(msg);
   } catch (err) {

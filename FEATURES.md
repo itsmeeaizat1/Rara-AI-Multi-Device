@@ -47,7 +47,7 @@
 - `.berburu` — rpg — Berburu monster untuk EXP, Gold, dan item drop (combat system)
 - `.mining` — rpg — Menambang ore (copper, iron, gold, mithril) untuk material
 - `.mancing` — rpg — Memancing ikan dan pearl untuk material
-- `.kerja` — rpg — Bekerja untuk gold dan EXP, scaling dengan job level
+- `.kerja` — rpg — Bekerja untuk gold dan EXP, scaling dengan job level. Tanpa argumen menampilkan menu pilihan jenis kerjaan (pemula/petarung/penyihir/pemanah/pembunuh/tank/tabib/berserker)
 - `.heal` — rpg — Recover HP, Energy, Mana dengan potion atau istirahat
 - `.invrpg` — rpg — Cek inventory RPG (item, material, equipment)
 - `.shoprpg` — rpg — Beli/jual item RPG (potion, equipment, keys)
