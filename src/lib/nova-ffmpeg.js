@@ -131,10 +131,15 @@ async function toVoiceNote(inputBuffer) {
  * @param {Buffer} inputBuffer - Buffer video mentah dari hasil download
  * @returns {Promise<Buffer>} Buffer MP4 H.264+AAC siap kirim ke WhatsApp
  */
-async function toWhatsAppVideo(inputBuffer) {
+async function toWhatsAppVideo(inputBuffer, opts = {}) {
     if (!inputBuffer || !Buffer.isBuffer(inputBuffer)) {
         throw new Error('toWhatsAppVideo: input must be a Buffer')
     }
+
+    // maxHeight opsional: kalau video lebih tinggi dari resolusi yang diminta
+    // user (mis. fallback sumber cuma punya 720p tapi user minta 480p),
+    // downscale ke maxHeight (gak pernah upscale)
+    const maxHeight = parseInt(opts.maxHeight, 10) || 0
 
     const tempDir = path.join(process.cwd(), 'tmp')
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true })
@@ -148,6 +153,7 @@ async function toWhatsAppVideo(inputBuffer) {
 
         let videoCodec = ''
         let audioCodec = ''
+        let srcHeight = 0
         try {
             videoCodec = await runProbe(
                 `ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of csv=p=0 "${inputPath}"`
@@ -155,6 +161,16 @@ async function toWhatsAppVideo(inputBuffer) {
         } catch (e) {
             logger?.warn?.(`[toWhatsAppVideo] probe video gagal: ${e.message}`)
         }
+        if (maxHeight) {
+            try {
+                srcHeight = parseInt(await runProbe(
+                    `ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "${inputPath}"`
+                ), 10) || 0
+            } catch {
+                // probe height gagal → skip downscale, kirim apa adanya
+            }
+        }
+        const needScale = maxHeight > 0 && srcHeight > maxHeight
         try {
             audioCodec = await runProbe(
                 `ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of csv=p=0 "${inputPath}"`
@@ -163,7 +179,7 @@ async function toWhatsAppVideo(inputBuffer) {
             // wajar kalau video tanpa audio track
         }
 
-        const needsTranscode = videoCodec !== 'h264' || (audioCodec && audioCodec !== 'aac')
+        const needsTranscode = videoCodec !== 'h264' || (audioCodec && audioCodec !== 'aac') || needScale
 
         // Target bitrate video: ~1.4x bitrate sumber asli (H.264 butuh sedikit lebih
         // tinggi dari AV1/VP9 buat kualitas setara), dibatasi 400k-1500k biar file
@@ -189,6 +205,7 @@ async function toWhatsAppVideo(inputBuffer) {
                 '-profile:v baseline',
                 '-level 3.1',
                 '-pix_fmt yuv420p',
+                ...(needScale ? ['-vf', `scale=-2:${maxHeight}`] : []),
                 `-b:v ${targetBitrate}k`,
                 `-maxrate ${Math.round(targetBitrate * 1.2)}k`,
                 `-bufsize ${targetBitrate * 2}k`,

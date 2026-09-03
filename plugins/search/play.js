@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // play.js — Search YouTube → download audio → kirim langsung
+// Bitrate: 128 / 256 (default) / 320 kbps
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
+import { novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -28,13 +30,25 @@ const pluginConfig = {
   name: "play",
   alias: ["play"],
   category: "search",
-  description: "Cari & download audio YouTube",
-  usage: ".play <query>",
-  example: ".play komang",
+  description: "Cari & download audio YouTube (128/256/320 kbps)",
+  usage: ".play [128/256/320] <query>",
+  example: ".play komang / .play 320 komang",
   cooldown: 15,
   energi: 1,
   isEnabled: true,
 };
+
+// Parse bitrate dari argumen pertama: 128/192/256/320 (default 256)
+function parseBitrateArgs(args) {
+  let kbps = "256";
+  let query = args.join(" ").trim();
+  const first = String(args[0] || "").toLowerCase().replace(/kbps$/, "").replace(/p$/, "");
+  if (/^(128|192|256|320)$/.test(first)) {
+    kbps = first;
+    query = args.slice(1).join(" ").trim();
+  }
+  return { kbps, query };
+}
 
 async function searchYoutube(query) {
   // Try 1: IkyyXD search (always works)
@@ -80,8 +94,18 @@ async function searchYoutube(query) {
   return null;
 }
 
-async function downloadAudio(url) {
-  // Try 1: ytdl.js (ymcdn)
+async function downloadAudio(url, kbps) {
+  // Try 1: yt-dlp / cobalt (nova-ytdlp) — kontrol bitrate persis
+  try {
+    const result = await downloadAudioYtDlp(url, kbps);
+    if (result?.buffer?.length > 10000) {
+      return { buffer: result.buffer, title: result.title };
+    }
+  } catch (e) {
+    console.error("[Play] nova-ytdlp error:", e.message);
+  }
+
+  // Try 2: ytdl.js (ymcdn)
   try {
     const result = await ytdl(url, "mp3");
     if (result?.status && result?.dl) {
@@ -94,7 +118,7 @@ async function downloadAudio(url) {
     console.error("[Play] ytdl.js error:", e.message);
   }
 
-  // Try 2: IkyyXD ytmp3
+  // Try 3: IkyyXD ytmp3
   try {
     const { data } = await axios.get(`${IKYY}/download/ytmp3`, {
       params: { url, apikey: "kyzz" },
@@ -118,10 +142,22 @@ async function downloadAudio(url) {
   return null;
 }
 
-async function handler(m, { sock, text }) {
-  const query = (text || m.text || "").trim();
+async function handler(m, { sock }) {
+  const args = m.args || [];
+  const { kbps, query } = parseBitrateArgs(args);
+
+  // Usage: pilihan bitrate (default 256kbps)
   if (!query) {
-    return m.reply(novaGuide("Play", "Kirim judul lagu yang mau diputar!", `${m.prefix}play komang`));
+    return m.reply(claraWrap("Play", [
+      `📌 Pilih Bitrate Audio:`,
+      ``,
+      `128ᴋʙᴘs · 256ᴋʙᴘs · 320ᴋʙᴘs`,
+      ``,
+      `💡 Contoh:`,
+      `${m.prefix}play komang → 256ᴋʙᴘs (default)`,
+      `${m.prefix}play 320 komang → 320ᴋʙᴘs`,
+      `${m.prefix}play 128 komang → 128ᴋʙᴘs`,
+    ]));
   }
 
   try {
@@ -133,15 +169,15 @@ async function handler(m, { sock, text }) {
       await m.react("❌");
       return m.reply(novaError("Play", "Lagu tidak ditemukan, coba kata kunci lain ya!"));
     }
-    console.log(`[Play] Found: ${video.title} → ${video.url}`);
+    console.log(`[Play] Found: ${video.title} → ${video.url} (${kbps}kbps)`);
 
     // Step 2: Download audio
-    const audio = await downloadAudio(video.url);
+    const audio = await downloadAudio(video.url, kbps);
     if (!audio?.buffer || audio.buffer.length < 10000) {
       await m.react("❌");
       return m.reply(novaError("Play", "Gagal download audio, coba lagi nanti ya!"));
     }
-    console.log(`[Play] Audio OK: ${audio.buffer.length} bytes`);
+    console.log(`[Play] Audio OK: ${audio.buffer.length} bytes (${kbps}kbps)`);
 
     // Step 3: Ambil lirik (best-effort, gak block kalau gagal/timeout)
     const titleForLyrics = audio.title || video.title;
@@ -150,7 +186,7 @@ async function handler(m, { sock, text }) {
     // Step 4: Info section lengkap — dikirim sebagai teks karena WhatsApp
     // TIDAK support caption pada pesan audio (caption gak akan pernah muncul)
     const infoLines = [
-      `*YouTube Play — Audio*`,
+      `*YouTube Play — Audio ${kbps}kbps*`,
       ``,
       `*Judul:* ${titleForLyrics}`,
       `*Artis/Channel:* ${lyricsData?.artist || video.author}`,
