@@ -390,6 +390,44 @@ const DEFAULT_PROVIDERS = {
     visionModel: "grok-2-vision-1212",
     supportsSystem: true,
   },
+  // ═══ Zhipu AI (GLM) — CN platform, glm-4.7-flash GRATIS + cogview image gen ═══
+  zhipu: {
+    name: "Zhipu GLM",
+    models: ["glm-4.7-flash", "glm-4.6", "glm-4.6v-flash"],
+    defaultModel: "glm-4.7-flash",
+    chatEndpoint: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
+    buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 1024 }),
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
+    supportsVision: false,
+    // 🔹 IMAGE GEN: cogview-3-flash GRATIS (payload openai-compat, respon url)
+    imageGen: { model: "cogview-3-flash", endpoint: "https://open.bigmodel.cn/api/paas/v4/images/generations", format: "openai" },
+    supportsSystem: true,
+  },
+  // ═══ Kimi (Moonshot) — kimi-k3 flagship, VISION NATIVE (image_url data URI) ═══
+  kimi: {
+    name: "Kimi (Moonshot)",
+    models: ["kimi-k3", "kimi-k2.6", "kimi-k2.7-code-highspeed"],
+    defaultModel: "kimi-k3",
+    chatEndpoint: "https://api.moonshot.ai/v1/chat/completions",
+    authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
+    buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 1024 }),
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
+    supportsVision: true,
+    supportsSystem: true,
+  },
+  // ═══ Meta AI — Meta Model API (Muse Spark), OpenAI-compatible, api.meta.ai ═══
+  meta: {
+    name: "Meta AI (Muse Spark)",
+    models: ["muse-spark-1.3", "muse-spark-1.1"],
+    defaultModel: "muse-spark-1.3",
+    chatEndpoint: "https://api.meta.ai/v1/chat/completions",
+    authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
+    buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 1024 }),
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
+    supportsVision: false,
+    supportsSystem: true,
+  },
   qwen: {
     name: "Qwen (Alibaba)",
     models: ["qwen-max", "qwen-plus", "qwen-turbo", "qwen-long"],
@@ -587,7 +625,12 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
   const gen = provider?.imageGen;
   if (!gen) throw new Error(`AI "${providerKey || "-"}" tidak support generate gambar — coba .gemini/.openai/.grok`);
   const apiKey = String(opts.apiKey || resolveApiKeyForProvider(providerKey, opts.aiConfig || {}) || "").trim();
-  if (!apiKey) throw new Error(`API key "${providerKey}" belum diisi — isi di src/lib/apikey/ai-providers.json`);
+  // key kosong = provider gak bisa dicoba → langsung free fallback
+  // (biar gambar tetap keluar; key diisi → provider utama dipakai)
+  if (!apiKey) {
+    console.log(`[ImageGen] ${providerKey} key kosong → fallback Pollinations (free tanpa key)`);
+    return await freeFallback();
+  }
 
   const promptText = String(prompt || "").trim() || "sesuatu yang menarik dan indah";
 
