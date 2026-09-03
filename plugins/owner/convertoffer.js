@@ -18,7 +18,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const db = getDatabase();
   const option = (m.text || "").toLowerCase().trim();
-  const current = db.setting("convertOffer") ?? true;
+  const current = db.setting("convertOffer") ?? false;
 
   if (!option) {
     return m.reply(novaBox("Convertoffer", [
