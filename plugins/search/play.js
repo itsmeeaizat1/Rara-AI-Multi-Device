@@ -4,31 +4,11 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
-import { novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { sendMenuPreview } from "../../src/lib/send-menu.js";
-import { toSC } from "../../src/lib/nova-menu-style.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
-
-// Session pilihan bitrate (klik tombol) — TTL 5 menit
-const PLAY_TTL = 5 * 60 * 1000;
-const playSessions = new Map(); // m.sender → { video, startedAt }
-
-function savePlaySession(m, video) {
-  const key = m.sender;
-  const old = playSessions.get(key);
-  if (old?.timer) clearTimeout(old.timer);
-  const s = { video, startedAt: Date.now(), timer: null };
-  s.timer = setTimeout(() => playSessions.delete(key), PLAY_TTL);
-  playSessions.set(key, s);
-}
-function getPlaySession(m) {
-  const s = playSessions.get(m.sender);
-  if (!s || Date.now() - s.startedAt > PLAY_TTL) { if (s?.timer) clearTimeout(s.timer); playSessions.delete(m.sender); return null; }
-  return s;
-}
 
 async function fetchLyricsSnippet(title) {
   try {
@@ -60,18 +40,20 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Parse bitrate dari argumen pertama: 128/192/256/320 (default 256)
+// Parse bitrate dari argumen — bisa di posisi AWAL (".play 256 faded")
+// ATAU AKHIR (".play faded 256"), default 256 kalau gak disebut sama sekali
 function parseBitrateArgs(args) {
+  const norm = (s) => String(s || "").toLowerCase().replace(/kbps$/, "").replace(/p$/, "");
+  const list = [...args];
   let kbps = "256";
-  let explicit = false;
-  let query = args.join(" ").trim();
-  const first = String(args[0] || "").toLowerCase().replace(/kbps$/, "").replace(/p$/, "");
-  if (/^(128|192|256|320)$/.test(first)) {
-    kbps = first;
-    explicit = true;
-    query = args.slice(1).join(" ").trim();
+
+  if (list.length && /^(128|192|256|320)$/.test(norm(list[0]))) {
+    kbps = norm(list.shift());
+  } else if (list.length && /^(128|192|256|320)$/.test(norm(list[list.length - 1]))) {
+    kbps = norm(list.pop());
   }
-  return { kbps, query, explicit };
+
+  return { kbps, query: list.join(" ").trim() };
 }
 
 async function searchYoutube(query) {
@@ -166,7 +148,7 @@ async function downloadAudio(url, kbps) {
   return null;
 }
 
-// Kirim audio hasil download — dipakai jalur langsung & klik tombol
+// Kirim audio hasil download
 async function sendPlayAudio(sock, m, video, kbps) {
   await m.react("🕒");
 
@@ -227,27 +209,8 @@ async function sendPlayAudio(sock, m, video, kbps) {
 }
 
 async function handler(m, { sock }) {
-  // ── Mode 2: Klik tombol bitrate (.play_128 / .play_256 / .play_320) ──
-  const cmd = (m.command || "").toLowerCase();
-  if (/^play_(128|192|256|320)$/.test(cmd)) {
-    const session = getPlaySession(m);
-    if (!session) {
-      await m.react("❗");
-      return m.reply(novaGuide("Play", "Pilihan bitrate udah kedaluwarsa nih! Cari ulang lagunya ya: .play <judul>", ".play komang"));
-    }
-    const kbps = cmd.split("_")[1];
-    try {
-      await sendPlayAudio(sock, m, session.video, kbps);
-    } catch (err) {
-      console.error("[Play]", err.message || err);
-      await m.react("❌");
-      return m.reply(novaGangguan("Play"));
-    }
-    return;
-  }
-
   const args = m.args || [];
-  const { kbps, query, explicit } = parseBitrateArgs(args);
+  const { kbps, query } = parseBitrateArgs(args);
 
   // Usage: pilihan bitrate (default 256kbps)
   if (!query) {
@@ -274,34 +237,7 @@ async function handler(m, { sock }) {
     }
     console.log(`[Play] Found: ${video.title} → ${video.url} (${kbps}kbps)`);
 
-    // Step 2: Kalau user belum pilih bitrate eksplisit → tawarkan tombol
-    if (!explicit) {
-      savePlaySession(m, video);
-      await m.react("🐣");
-      const infoText = [
-        `Lagu ketemu!`,
-        ``,
-        `Judul: ${video.title}`,
-        `Channel: ${video.author}`,
-        `Durasi: ${video.duration}`,
-        ``,
-        `Pilih bitrate audio di bawah`,
-      ].join("\n");
-      return await sendMenuPreview(sock, m, {
-        text: infoText,
-        footer: "",
-        buttons: [
-          { id: "play_128", text: toSC("128 kbps") },
-          { id: "play_256", text: toSC("256 kbps") },
-          { id: "play_320", text: toSC("320 kbps") },
-        ],
-        title: `${toSC("Nova AI")} — ${toSC("Play")}`,
-        body: toSC(video.title.slice(0, 40)),
-        sourceUrl: video.url,
-      });
-    }
-
-    // Step 3: Bitrate eksplisit (mis. .play 320 judul) → langsung kirim
+    // Langsung proses & kirim — bitrate eksplisit kalau disebut, default 256kbps kalau gak
     await sendPlayAudio(sock, m, video, kbps);
   } catch (err) {
     console.error("[Play]", err.message || err);
