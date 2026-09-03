@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20playvideo%20gagal%20diputar%20%E2%80%94%20video%20AV1-success?style=for-the-badge)
-> *Commit: "fix: playvideo gagal diputar — video AV1 gak didukung WhatsApp player"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.play%20pilihan%20bitrate%20128%2F256%2F320%20-success?style=for-the-badge)
+> *Commit: "feat: .play pilihan bitrate 128/256/320 (default 256) + .playvideo pilihan resolusi 360/480/720/hd (default 480p)"*
 <!--END_SECTION:latest-update-->
 
 ---
