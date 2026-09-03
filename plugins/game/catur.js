@@ -160,12 +160,12 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (command === "caturhelp") {
       let t = "♟️ *Panduan Catur*\n";
       t += "Bermain catur langsung di grup!\n\n";
-      t += "🎮 Memulai:\n➤ .catur @tag — Tantang pemain\n➤ .caturterima — Terima tantangan\n➤ .caturtolak — Tolak tantangan\n\n";
-      t += "⚙️ Kontrol:\n➤ .caturlangkah e2 e4 — Pindah bidak\n➤ .caturpapan — Lihat papan\n➤ .caturmenyerah — Menyerah\n➤ .caturdraw — Ajukan seri\n➤ .caturskip — Lewati giliran\n\n";
-      t += "📊 Skor:\n➤ .caturnilai — Skormu\n➤ .caturrank — Ranking\n➤ .caturtop10 — Top 10\n➤ .caturskorreset — Reset skor (owner)\n\n";
-      t += "♟️ Info:\n➤ .caturstatus — Status game\n➤ .caturgiliran — Siapa giliran\n➤ .caturhistory — Riwayat langkah\n➤ .caturanalisa — Langkah terakhir\n➤ .caturlawan — Lihat lawan\n\n";
-      t += "⏱️ Timer:\n➤ .caturtimer — Timer giliran (3 min)\n➤ .caturnotif — Notif AFK\n➤ .caturafk — Batal karena AFK\n\n";
-      t += "📌 Lainnya:\n➤ .caturrematch — Main ulang\n➤ .caturhapus — Hapus game (admin)\n➤ .caturreset — Reset semua (owner)";
+      t += "🎮 Memulai:\n.catur @tag — Tantang pemain\n.caturterima — Terima tantangan\n.caturtolak — Tolak tantangan\n\n";
+      t += "⚙️ Kontrol:\n.caturlangkah e2 e4 — Pindah bidak\n.caturpapan — Lihat papan\n.caturmenyerah — Menyerah\n.caturdraw — Ajukan seri\n.caturskip — Lewati giliran\n\n";
+      t += "📊 Skor:\n.caturnilai — Skormu\n.caturrank — Ranking\n.caturtop10 — Top 10\n.caturskorreset — Reset skor (owner)\n\n";
+      t += "♟️ Info:\n.caturstatus — Status game\n.caturgiliran — Siapa giliran\n.caturhistory — Riwayat langkah\n.caturanalisa — Langkah terakhir\n.caturlawan — Lihat lawan\n\n";
+      t += "⏱️ Timer:\n.caturtimer — Timer giliran (3 min)\n.caturnotif — Notif AFK\n.caturafk — Batal karena AFK\n\n";
+      t += "📌 Lainnya:\n.caturrematch — Main ulang\n.caturhapus — Hapus game (admin)\n.caturreset — Reset semua (owner)";
       return m.reply(t);
     }
 

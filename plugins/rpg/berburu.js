@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
     const logSlice = combatLog.slice(0, 4);
     await animBattle(m, sock, m.pushName || "Player", monster.name, logSlice);
     if (combatLog.length > 4) {
-      await m.reply(`┊ ...dan ${combatLog.length - 4} ronde lagi!`);
+      await m.reply(`...dan ${combatLog.length - 4} ronde lagi!`);
       await rpgSleep(500);
     }
 
