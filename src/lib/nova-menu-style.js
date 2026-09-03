@@ -487,6 +487,48 @@ function novaInfoBox(title, items = [], opts = {}) {
  * @param {boolean} opts.sc - Apply smallcaps (default: true)
  * @returns {string}
  */
+// ═══════════════════════════════════════════════
+// novaInfoSections — render info array jadi BOX TERPISAH per section
+// String = judul section (buka box baru), {label,value} = baris info.
+// Alignment label dihitung PER SECTION biar rapi.
+// ═══════════════════════════════════════════════
+function novaInfoSections(info = [], sc = true) {
+  const scFn = sc ? toSC : (s) => String(s);
+  let out = "";
+  let open = false;
+  let maxLabel = 6;
+  // Pre-scan: maxLabel per section
+  const sectionMax = new Map();
+  let current = -1;
+  for (let i = 0; i < info.length; i++) {
+    const item = info[i];
+    if (typeof item === "string") {
+      if (item.trim() !== "") { current = i; sectionMax.set(i, 6); }
+    } else if (item && item.label !== undefined && current >= 0) {
+      const len = scFn(item.label).length;
+      if (len > sectionMax.get(current)) sectionMax.set(current, len);
+    }
+  }
+
+  for (let i = 0; i < info.length; i++) {
+    const item = info[i];
+    if (typeof item === "string") {
+      const s = item.trim();
+      if (!s) continue;
+      if (open) out += `╰────  •  ────\n\n`;
+      out += `╭─「 ✦ ${scFn(s)} ✦ 」\n`;
+      maxLabel = sectionMax.get(i) || 6;
+      open = true;
+    } else if (item && item.label !== undefined && open) {
+      const label = scFn(item.label).padEnd(maxLabel);
+      const value = item.value !== undefined && item.value !== null ? String(item.value) : "";
+      out += `│ • ${label} : ${value}\n`;
+    }
+  }
+  if (open) out += `╰────  •  ────\n`;
+  return out;
+}
+
 function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false } = {}) {
   const scFn = sc ? toSC : (s) => String(s);
   
@@ -495,46 +537,23 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
   // ── Intro section (opsional) ──
   if (intro) {
     out += `╭─「 ✦ ${scFn(introTitle)} ✦ 」\n`;
-    out += `│\n`;
     // intro bisa string (multi-line) atau array of lines
     const introLines = Array.isArray(intro) ? intro : intro.split("\n");
     for (const line of introLines) {
       if (line === "" || line === " ") {
         out += `│\n`;
       } else {
-        // Intro tetap normal case (bukan smallcaps) — ini pesan personal
-        out += `│ ${line}\n`;
+        // Intro smallcaps — konsisten sama standar menu (owner request)
+        out += `│ ${scFn(line)}\n`;
       }
     }
-    out += `│\n`;
     out += `╰────  •  ────\n\n`;
   }
   
-  // ── Info section ──
-  out += `╭─「 ✦ ${scFn(infoTitle)} ✦ 」\n`;
-  
-  // Hitung max label width untuk alignment
-  let maxLabel = 0;
-  for (const item of info) {
-    if (item && item.label) {
-      const labelLen = scFn(item.label).length;
-      if (labelLen > maxLabel) maxLabel = labelLen;
-    }
-  }
-  maxLabel = Math.max(maxLabel, 6); // min 6 char
-  
-  for (const item of info) {
-    if (typeof item === "string") {
-      out += `│ ${scFn(item)}\n`;
-    } else if (item && item.label !== undefined) {
-      const label = scFn(item.label).padEnd(maxLabel);
-      const value = item.value !== undefined ? String(item.value) : "";
-      out += `│ • ${label} : ${value}\n`;
-    }
-  }
-
-  // ── Close info box sebelum daftar kategori ──
-  out += `╰────  •  ────\n`;
+  // ── Info section: BOX TERPISAH per kategori (Info User, Info Waktu, dst) ──
+  const infoOut = novaInfoSections(info, sc);
+  out += infoOut;
+  if (infoOut) out += "\n";
 
   // ── Readmore trick: sembunyikan daftar command panjang di balik "Baca Selengkapnya" ──
   // biar pas allmenu dibuka gak langsung wall-of-text, cuma info section yang kelihatan.
@@ -612,6 +631,7 @@ export {
   toSC, scLine, isRealEmoji,
   novaInfoBox,
   novaMenuLayout,
+  novaInfoSections,
   novaReply,
   buildBox, novaCaption,
   botHeader, botSignature, sectionBox,

@@ -4,6 +4,7 @@
 
 import os from "os";
 import fs from "fs";
+import path from "path";
 import { formatUptime, getTimeGreeting, getImportantDay } from "./nova-formatter.js";
 import { getAiGreeting } from "./nova-greeting.js";
 import { getWeatherDetail } from "./nova-weather-footer.js";
@@ -25,6 +26,58 @@ function getIslamicDate(date = new Date()) {
   } catch { return "-"; }
 }
 
+function formatNum(n) {
+  const num = Number(n) || 0;
+  try { return num.toLocaleString("id-ID"); } catch { return String(num); }
+}
+
+// Versi Baileys terpasang (package "nova" = ourin-baileys fork)
+let _baileysVersion = null;
+function getBaileysVersion() {
+  if (_baileysVersion) return _baileysVersion;
+  try {
+    const pkgPath = path.join(process.cwd(), "node_modules", "nova", "package.json");
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+    _baileysVersion = `${pkg.name} v${pkg.version}`;
+  } catch {
+    try {
+      const rootPkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8"));
+      _baileysVersion = `ourin-baileys ${rootPkg.dependencies?.nova || ""}`.trim();
+    } catch { _baileysVersion = "-"; }
+  }
+  return _baileysVersion;
+}
+
+// Lokasi server — IP geolocation (ipwho.is, HTTPS, no-key), cache 6 jam
+let _locCache = { data: null, ts: 0 };
+async function getServerLocation() {
+  const now = Date.now();
+  if (_locCache.data && now - _locCache.ts < 6 * 3600 * 1000) return _locCache.data;
+  try {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch("https://ipwho.is/?fields=success,city,region,country", { signal: controller.signal });
+    clearTimeout(t);
+    const data = await res.json();
+    if (data?.success && data.city) {
+      _locCache = { data: `${data.city}, ${data.region}, ${data.country}`, ts: now };
+      return _locCache.data;
+    }
+  } catch {}
+  return "-";
+}
+
+// Ping — latency pesan user sampai diproses bot
+function getMessagePingMs(m) {
+  try {
+    const ts = m?.timestamp || m?.messageTimestamp || 0;
+    if (!ts) return "-";
+    const ms = Date.now() - ts * 1000;
+    if (ms < 0 || ms > 3600 * 1000) return "-";
+    return `${Math.max(0, Math.round(ms))} ms`;
+  } catch { return "-"; }
+}
+
 /**
  * Build info section lengkap untuk menu/allmenu/allmenucategory
  * Weather dimasukkan LANGSUNG ke dalam info array (bukan terpisah)
@@ -38,6 +91,10 @@ function getIslamicDate(date = new Date()) {
 export async function buildMenuInfo(m, ctx = {}) {
   const { db, config: botConfig, uptime } = ctx;
   const now = new Date();
+
+  // Ping dihitung SEKALI di awal (sebelum network call cuaca/greeting) — kalau
+  // dihitung pas build info array, latency ketutup waktu proses API jadi bengkak.
+  const pingMs = getMessagePingMs(m);
 
   // ── Time & date ──
   let timeStr = "";
@@ -90,8 +147,8 @@ export async function buildMenuInfo(m, ctx = {}) {
       totalGroups = Object.keys(allGroups).length;
       totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
       const dbStats = db.getStats();
-      totalCommandsRun = dbStats.commandsRun || dbStats.totalCommands || 0;
-      totalMessagesIn = dbStats.messagesReceived || dbStats.totalMessages || 0;
+      totalCommandsRun = dbStats.commandsRun || 0;
+      totalMessagesIn = dbStats.messagesReceived || 0;
       totalMessagesOut = dbStats.messagesSent || 0;
     } catch {}
   }
@@ -150,48 +207,55 @@ export async function buildMenuInfo(m, ctx = {}) {
   }
 
   // ── Build info array ──
-  // Ucapan AI berubah-ubah (IkyyXD free — jangan nguras token DeepSeek)
+  // Ucapan AI berubah tiap menu dimuat (IkyyXD free — jangan nguras token DeepSeek)
   let aiGreeting = null;
   try { aiGreeting = await getAiGreeting(); } catch {}
   const greeting = aiGreeting
-    ? `${aiGreeting}, ${m.pushName || "User"}`
+    ? `${String(aiGreeting).replace(/[.,!?]+\s*$/, "")}, ${m.pushName || "User"}`
     : `${getTimeGreeting()}, ${m.pushName || "User"}`;
 
+  const serverLocation = await getServerLocation();
+
   const info = [
-    greeting,
-    "",
     "Info User",
     { label: "Nama", value: m.pushName || "-" },
     { label: "Role", value: userRole },
-    { label: "Level", value: `${userLevel} (${expPct}%)` },
+    { label: "Level", value: `${formatNum(userLevel)} (${expPct}%)` },
     { label: "Energi", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
+    { label: "Exp", value: formatNum(userExp) },
+    { label: "Gold", value: formatNum(user?.rpg?.gold ?? 0) },
+    { label: "Bank", value: formatNum(user?.rpg?.bank?.deposit ?? 0) },
     ...(m.isGroup ? [{ label: "Grup Mode", value: (groupMode || "md").toUpperCase() }] : []),
     "",
-    "Waktu & Tanggal",
+    "Info Waktu",
     { label: "Jam", value: timeStr },
     { label: "Hari", value: `${dayName} (${weton})` },
     { label: "Tanggal", value: dateStr },
     { label: "Hijriah", value: islamicDate },
-    ...(importantDay && importantDay !== "-" ? [{ label: "Hari Penting", value: importantDay }] : []),
+    { label: "Hari Penting", value: importantDay || "Tidak ada" },
     "",
     "Info Bot",
     { label: "Nama", value: botName },
     { label: "Mode", value: (botConfig?.mode || "public").toUpperCase() },
     { label: "Prefix", value: prefix },
+    { label: "Tipe", value: "Baileys MD (Multi Device)" },
+    { label: "Baileys", value: getBaileysVersion() },
     { label: "Uptime", value: runtimeStr },
     "",
     "Info Database",
-    { label: "User", value: `${totalUsers} (${totalPremium} Premium)` },
+    { label: "User", value: `${formatNum(totalUsers)} (${formatNum(totalPremium)} Premium)` },
     { label: "Grup", value: `${totalActiveGroups} / ${totalGroups}` },
-    { label: "Terdaftar", value: `${totalRegistered}` },
-    { label: "Diblokir", value: `${totalBanned}` },
-    { label: "Commands", value: `${totalCommandsRun}` },
-    { label: "Messages", value: `${totalMessagesIn} / ${totalMessagesOut}` },
+    { label: "Terdaftar", value: `${formatNum(totalRegistered)}` },
+    { label: "Diblokir", value: `${formatNum(totalBanned)}` },
+    { label: "Commands", value: formatNum(totalCommandsRun) },
+    { label: "Messages", value: `${formatNum(totalMessagesIn)} / ${formatNum(totalMessagesOut)}` },
     "",
     "Info Server",
     { label: "Platform", value: platform },
     { label: "Hostname", value: hostname },
+    { label: "Lokasi", value: serverLocation },
     { label: "Uptime", value: serverUptime },
+    { label: "Ping", value: pingMs },
     { label: "RAM", value: `${(usedMem / 1024 / 1024).toFixed(0)}/${(totalMem / 1024 / 1024).toFixed(0)} MB (${memPercent}%)` },
     { label: "CPU", value: `${cpuCores} cores / ${cpuSpeed} MHz` },
     { label: "Load", value: loadAvg },
