@@ -6,12 +6,35 @@
 // Model diunduh SEKALI ke src/data/models/ lalu cache permanen — setelah itu offline.
 // Tiling otomatis buat gambar besar biar RAM aman di VPS (tile diproses berurutan).
 import path from "path";
+import fs from "fs";
 import sharp from "sharp";
 import { pipeline, RawImage, env } from "@huggingface/transformers";
 
 // Cache model di folder data bot (persisten, gak kehapus saat npm install)
 env.cacheDir = path.join(process.cwd(), "src", "data", "models");
 env.allowLocalModels = false; // jangan scan folder lokal — langsung pakai cache/download
+
+// OFFLINE-FAST: kalau model SUDAH ada di cache dir, baca 100% LOKAL tanpa
+// sentuh network (tiap load transformers.js nge-HEAD ke huggingface.co buat
+// cek ETag walaupun file sudah ada — network lambat/gangguan = load model
+// macet menit2). Trik: layout cache (cacheDir/<org>/<model>/onnx/...) sama
+// persis sama konvensi localModelPath → tinggal arahkan localModelPath ke
+// cacheDir + allowRemoteModels=false. Model belum ada → remote ON supaya
+// unduhan pertama jalan normal seperti biasa.
+function ensureRemoteMode(id) {
+  const dir = path.join(env.cacheDir, ...id.split("/"), "onnx");
+  const cached = fs.existsSync(path.join(dir, "model.onnx"));
+  if (cached) {
+    env.allowLocalModels = true;
+    env.localModelPath = env.cacheDir;
+    env.allowRemoteModels = false;
+  } else {
+    env.allowLocalModels = false;
+    env.localModelPath = env.cacheDir;
+    env.allowRemoteModels = true;
+  }
+  return cached;
+}
 
 const MODELS = {
   hd: {
@@ -35,8 +58,12 @@ const pipeCache = new Map();
 
 async function getPipe(id) {
   if (!pipeCache.has(id)) {
+    const t = Date.now();
+    const offline = ensureRemoteMode(id);
+    console.log(`[HD-Local] load model ${id.split("/").pop()} (${offline ? "cache offline" : "download"})...`);
     // Load sekali per proses — pemakaian berikutnya instan
     pipeCache.set(id, await pipeline("image-to-image", id, { dtype: "fp32" }));
+    console.log(`[HD-Local] model siap dalam ${((Date.now() - t) / 1000).toFixed(1)}s`);
   }
   return pipeCache.get(id);
 }
