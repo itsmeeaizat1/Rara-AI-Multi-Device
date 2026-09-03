@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
     if (char.profile?.club) caption += `🎯 Club: *${char.profile.club}*\n`;
     if (char.profile?.hobby) caption += `⭐ Hobby: *${char.profile.hobby}*\n`;
     if (char.profile?.CV) caption += `🎤 CV: *${char.profile.CV}*\n`;
-    caption += `╰┈┈┈┈┈┈┈┈\n\n`;
+    caption += `---\n\n`;
 
         if (char.type) caption += `🏷️ Type: *${char.type}*\n`;
     if (char.role) caption += `🎭 Role: *${char.role}*\n`;
@@ -121,13 +121,13 @@ async function handler(m, { sock }) {
       caption += `🔫 Weapon: *${char.profile.weaponType}*\n`;
     if (char.profile?.weaponName)
       caption += `⚔️ Weapon Name: *${char.profile.weaponName}*\n`;
-    caption += `╰┈┈┈┈┈┈┈┈\n\n`;
+    caption += `---\n\n`;
 
     if (char.skills && char.skills.length > 0) {
             for (const skill of char.skills.slice(0, 4)) {
         caption += `🔹 *${skill.name}* (${skill.type})\n`;
       }
-      caption += `╰┈┈┈┈┈┈┈┈`;
+      caption += `---`;
     }
 
     if (char.img) {

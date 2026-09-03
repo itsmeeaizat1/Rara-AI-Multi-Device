@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         text += `🌐 NS: ${records["NS"].slice(0, 3).join(", ")}\n`;
       if (records["TXT"])
         text += `📝 TXT: ${records["TXT"].length} records\n`;
-      text += `╰┈┈┈┈┈┈┈┈\n\n`;
+      text += `---\n\n`;
     }
 
     if (whoisData && !whoisData.includes("error") && whoisData.length < 2000) {
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
       text += `⏰ Expires: ${expires.slice(0, 20)}\n`;
       if (nameservers.length > 0)
         text += `🌐 NS: ${nameservers.join(", ")}\n`;
-      text += `╰┈┈┈┈┈┈┈┈`;
+      text += `---`;
     }
     await sendToolsPreview(sock, m.chat, text, "🔍 *ᴅɴꜱ ʟᴏᴏᴋᴜᴘ*", domain, {
       quoted: m,

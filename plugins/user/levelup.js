@@ -47,7 +47,7 @@ function handler(m, { sock }) {
         "" +
         `> \`.levelup on\` - Aktifkan\n` +
         `> \`.levelup off\` - Nonaktifkan\n` +
-        `╰┈┈┈┈┈┈┈┈`))
+        `---`))
 }
 
 export { pluginConfig as config, handler }

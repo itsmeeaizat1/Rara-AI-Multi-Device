@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
         text += `... dan ${birthdays.length - 15} lainnya\n`
     }
     
-    text += `╰┈┈┈┈┈┈┈┈\n\n`
+    text += `---\n\n`
     text += `Set birthday: .setbirthday DD-MM`
     
     await m.reply(claraWrap("birthdaylist", text), { mentions });

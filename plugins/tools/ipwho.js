@@ -66,17 +66,17 @@ async function handler(m, { sock }) {
       `🌐 Continent: ${data.continent || "-"}\n` +
       `📮 Postal: ${data.postal || "-"}\n` +
       `⏰ Timezone: ${data.timezone?.id || "-"}\n` +
-      `╰┈┈┈┈┈┈┈┈\n\n` +
+      `---\n\n` +
       "" +
       `🏢 ISP: ${data.connection?.isp || "-"}\n` +
       `🌐 ORG: ${data.connection?.org || "-"}\n` +
       `📡 ASN: ${data.connection?.asn || "-"}\n` +
-      `╰┈┈┈┈┈┈┈┈\n\n` +
+      `---\n\n` +
       "" +
       `🔒 VPN: ${data.security?.vpn ? "✅ Yes" : "❌ No"}\n` +
       `🌐 Proxy: ${data.security?.proxy ? "✅ Yes" : "❌ No"}\n` +
       `🤖 Tor: ${data.security?.tor ? "✅ Yes" : "❌ No"}\n` +
-      `╰┈┈┈┈┈┈┈┈`;
+      `---`;
     await sendToolsPreview(sock, m.chat, text, "🌐 *ɪᴘ ʟᴏᴏᴋᴜᴘ*", data.country, {
       quoted: m,
     });

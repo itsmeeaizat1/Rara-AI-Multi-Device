@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     text += `👤 Artist: ${music.artist || "-"}\n`;
     text += `💿 Album: ${music.album || "-"}\n`;
     text += `📅 Release: ${music.release || "-"}\n`;
-    text += `╰┈┈┈┈┈┈┈┈\n\n`;
+    text += `---\n\n`;
 
     const buttons = [];
 

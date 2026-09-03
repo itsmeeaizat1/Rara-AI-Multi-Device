@@ -42,17 +42,17 @@ async function handler(m, { sock }) {
  `\`\`\`Kontrol penuh sistem bot\`\`\`\n` +
  `\`\`\`Manajemen user & group\`\`\`\n` +
  `\`\`\`Akses panel & server\`\`\`\n` +
- `╰┈┈┈┈┈┈┈┈\n\n` +
+ `---\n` +
  "" +
  `\`Owner ditambahkan melalui:\`\n` +
  `• \`\`\`${prefix}addowner <nomor>\`\`\`\n` +
  `• Atau langsung di config.js\n` +
- `╰┈┈┈┈┈┈┈┈\n\n` +
+ `---\n` +
  "" +
  `\`Total: ${totalCommands} command\`\n` +
- `┃\n` +
+ `│\n` +
  commandList.map(c => `${commandListLine(prefix, c.name, c.usage)}`).join('\n') +
- `\n╰┈┈┈┈┈┈┈┈\n\n` +
+ `\n---\n\n` +
  `Hubungi owner untuk mendapatkan akses!`
 
  await m.reply(claraWrap("benefitowner", message))

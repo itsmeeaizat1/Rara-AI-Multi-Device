@@ -104,15 +104,15 @@ async function handler(m, { sock }) {
  const pluginName = m.args?.[0]?.trim();
 
  if (!pluginName) {
- return m.reply( `📦 *Get Plugin*\n\n` +
+ return m.reply(claraWrap("Getplugin", `📦 *Get Plugin*\n\n` +
  `Dapatkan source code plugin\n\n` +
  "" +
  `.getplugin <nama>\n` +
- `╰┈┈┈┈┈┈┈┈\n\n` +
+ `---\n\n` +
  `*Contoh:*\n` +
  `.getplugin menu\n` +
  `.getplugin sticker\n` +
- `.getplugin game/tebakgambar`, "getplugin");
+ `.getplugin game/tebakgambar`));
  }
 
  const pluginsDir = path.join(process.cwd(), "plugins");
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
  });
  }
 
- return m.reply( text, "getplugin");
+ return m.reply(claraWrap("Getplugin", text));
  }
 
  const code = fs.readFileSync(pluginInfo.path);

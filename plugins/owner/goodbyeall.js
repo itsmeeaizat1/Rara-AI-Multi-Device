@@ -47,13 +47,13 @@ async function handler(m, { sock }) {
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `✅ Goodbye: *AKTIF*\n` +
-                `╰┈┈┈┈┈┈┈┈\n\n` +
+                `---\n\n` +
                 `Member yang keluar akan dikirim pesan perpisahan!`))       } else {
             return m.reply(claraWrap("goodbyeall", `❌ *Goodbye Global Off*\n\n` +
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `❌ Goodbye: *NONAKTIF*\n` +
-                `╰┈┈┈┈┈┈┈┈\n\n` +
+                `---\n\n` +
                 `Goodbye dinonaktifkan di semua grup.`))
         }
     } catch (error) {

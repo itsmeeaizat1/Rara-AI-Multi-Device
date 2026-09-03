@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     text += `🎭 Genre: ${film.tags || "-"}\n`;
     text += `🎬 Director: ${film.director || "-"}\n`;
     text += `👥 Actors: ${film.actors || "-"}\n`;
-    text += `╰┈┈┈┈┈┈┈┈\n\n`;
+    text += `---\n\n`;
 
     text += `📝 *ꜱʏɴᴏᴘꜱɪꜱ:*\n`;
     text += `${film.synopsis || "-"}\n\n`;

@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
           `Register hari ini: *${stats.registeredToday}*\n` +
           `Unreg hari ini: *${stats.unregisteredToday}*\n` +
           `Sesi aktif: *${stats.activeSessions}*\n` +
-          `╰┈┈┈┈┈┈┈┈`,
+          `---`,
         contextInfo: getRegistrationContextInfo(),
       },
       { quoted: m },

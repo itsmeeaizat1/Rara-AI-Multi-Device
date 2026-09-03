@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
             `👥 Total: ${absen.peserta.length}\n` +
             `├┈┈「 📝 *DaғTar Hadir* 」\n` +
             `${list}\n` +
-            `╰┈┈┈┈┈┈┈┈\n\n` +
+            `---\n\n` +
             `_Ketik *${m.prefix}absen* untuk hadir_\n` +
             `_Ketik *${m.prefix}cekabsen* untuk melihat daftar_`))
 }

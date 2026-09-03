@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
             `• \`summarize\` - Ringkasan\n` +
             `• \`code-beginner\` - Kode pemula\n` +
             `• \`code-advanced\` - Kode lanjutan\n` +
-            `╰┈┈┈┈┈┈┈┈\n\n` +
+            `---\n\n` +
             `*Contoh:*\n` +
             `${m.prefix}dolphin apa itu AI?\n` +
             `${m.prefix}dolphin --creative buat puisi`

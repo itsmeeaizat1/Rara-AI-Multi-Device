@@ -79,7 +79,7 @@ async function handler(m, { sock, store }) {
         "" +
         `${status}\n` +
         `Type: ${type}\n` +
-        `╰┈┈┈┈┈┈┈┈\n\n` +
+        `---\n\n` +
         `\`\`\`${output}\`\`\``
     )
 }

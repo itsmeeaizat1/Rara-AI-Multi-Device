@@ -47,13 +47,13 @@ async function handler(m, { sock }) {
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `✅ Welcome: *AKTIF*\n` +
-                `╰┈┈┈┈┈┈┈┈\n\n` +
+                `---\n\n` +
                 `Semua member baru akan disambut otomatis!`))       } else {
             return m.reply(claraWrap("welcomeall", `❌ *Welcome Global Off*\n\n` +
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `❌ Welcome: *NONAKTIF*\n` +
-                `╰┈┈┈┈┈┈┈┈\n\n` +
+                `---\n\n` +
                 `Welcome dinonaktifkan di semua grup.`))
         }
     } catch (error) {
