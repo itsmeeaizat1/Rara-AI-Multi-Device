@@ -13,7 +13,7 @@ import { getProviderApiKey } from "./apikey/ai-chain.js";
 const DEFAULT_PROVIDERS = {
   openai: {
     name: "OpenAI",
-    models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
+    models: ["gpt-5.5", "gpt-5.5-pro", "gpt-4o", "gpt-4o-mini", "gpt-4-turbo"],
     defaultModel: "gpt-4o-mini",
     chatEndpoint: "https://api.openai.com/v1/chat/completions",
     authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
@@ -57,8 +57,10 @@ const DEFAULT_PROVIDERS = {
   },
   anthropic: {
     name: "Anthropic Claude",
-    models: ["claude-sonnet-4-20250514", "claude-3-5-haiku-20241022", "claude-3-haiku-20240307"],
-    defaultModel: "claude-3-5-haiku-20241022",
+    // lineup Sep 2026 (sonnet-4/opus-4 di-RETIRE Juni 2026 — calls fail!)
+    // opus-5 = the best model in the world for coding (docs resmi Anthropic)
+    models: ["claude-opus-5", "claude-sonnet-5", "claude-fable-5-1", "claude-haiku-4-5-20251001"],
+    defaultModel: "claude-sonnet-5",
     chatEndpoint: "https://api.anthropic.com/v1/messages",
     authHeader: (key) => ({
       "x-api-key": key,
@@ -353,7 +355,7 @@ const DEFAULT_PROVIDERS = {
   tio_anthropic: {
     name: "Tio AI (Anthropic)",
     models: ["claude-sonnet-4-20250514", "claude-3-5-haiku-20241022", "claude-3-haiku-20240307"],
-    defaultModel: "claude-sonnet-4-20250514",
+    defaultModel: "claude-sonnet-5",
     chatEndpoint: "https://ai.tioo.eu.org/v1/messages",
     authHeader: (key) => ({
       "x-api-key": key,
@@ -388,6 +390,30 @@ const DEFAULT_PROVIDERS = {
     supportsVision: true,
     imageGen: { model: "grok-2-image-1212", endpoint: "https://api.x.ai/v1/images/generations", format: "openai" },
     visionModel: "grok-2-vision-1212",
+    supportsSystem: true,
+  },
+  // ═══ Codestral (Mistral) — specialist coding, FIM, 256k ctx ═══
+  codestral: {
+    name: "Codestral (Mistral)",
+    models: ["codestral-latest"],
+    defaultModel: "codestral-latest",
+    chatEndpoint: "https://api.mistral.ai/v1/chat/completions",
+    authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
+    buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.2, max_tokens: 2048 }),
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
+    supportsVision: false,
+    supportsSystem: true,
+  },
+  // ═══ Kimi Code — kimi-k2.7-code-highspeed (coding, 256k, image input) ═══
+  kimicode: {
+    name: "Kimi Code (Moonshot)",
+    models: ["kimi-k2.7-code-highspeed", "kimi-k2.7-code"],
+    defaultModel: "kimi-k2.7-code-highspeed",
+    chatEndpoint: "https://api.moonshot.ai/v1/chat/completions",
+    authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
+    buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.2, max_tokens: 2048 }),
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
+    supportsVision: true,
     supportsSystem: true,
   },
   // ═══ Zhipu AI (GLM) — CN platform, glm-4.7-flash GRATIS + cogview image gen ═══
@@ -718,7 +744,11 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
 /**
  * Resolve API key per provider — cek global key, apikeys.json, dan aiConfig
  */
-function resolveApiKeyForProvider(providerKey, aiConfig = {}) {
+// 🔹 provider "anak" yang key-nya nimpa slot induknya
+const KEY_ALIAS = { codestral: "mistral", kimicode: "kimi" };
+
+function resolveApiKeyForProvider(rawProviderKey, aiConfig = {}) {
+  const providerKey = KEY_ALIAS[rawProviderKey] || rawProviderKey;
   // 🔹 1) CONFIG BARU: src/lib/apikey/ai-providers.json — single source of
   // truth. Fitur AI satuan (.grok, .openai, .deepseek, ikyy_*, dll) ambil
   // key dari sini. Keluarga ikyy otomatis pakai shared key ikyy (kyzz).
