@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!expenses.length) { await m.reply(claraWrap("aiexpense", "Belum ada pengeluaran.")); return { handled: true }; }
       let total = 0; let text = claraWrap("Pengeluaran", "💰") + "\n\n";
       expenses.slice(-20).forEach((e, i) => { text += `${i+1}. ${e.desc} - *Rp${e.amount.toLocaleString("id-ID")}*\n`; total += e.amount; });
-      text += `\n*Total: Rp${total.toLocaleString("id-ID")}*\n\n` + separator("━", 22);
+      text += `\n*Total: Rp${total.toLocaleString("id-ID")}*`;
       await m.reply(text);
       return { handled: true };
     }

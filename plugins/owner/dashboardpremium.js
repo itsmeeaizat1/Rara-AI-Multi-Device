@@ -34,9 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (premiumList.length === 0) {
       return m.reply(
-        claraWrap("Dashboard Premium", "💎") + "\n\n" +
-        "Belum ada user premium terdaftar.\n\n" +
-        separator("━", 22) + "\n" +
+        claraWrap("Dashboard Premium", "Belum ada user premium terdaftar.") + "\n\n" +
         tipText(`Gunakan ${prefix}addprem untuk menambah premium`)
       );
     }
@@ -75,9 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    text += separator("━", 30) + "\n";
-    text += "TOP PREMIUM BUYERS\n";
-    text += separator("━", 30) + "\n\n";
+    text += claraWrap("Top Premium Buyers", "") + "\n\n";
 
     // Show top 10 (visible), rest after readmore
     const top10 = sorted.slice(0, 10);
@@ -109,8 +105,8 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    text += "\n" + separator("━", 30) + "\n";
-    text += "Aktif — Expired\n\n";
+    text += "\n";
+    text += claraWrap("Keterangan", "Aktif — Expired") + "\n\n";
     text += tipText(`Ketik ${prefix}listprem untuk list premium aktif`);
 
     await m.reply( text, "dashboardpremium");

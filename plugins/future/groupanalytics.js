@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
       text += "\n*ᴊᴀᴍ ᴛᴇʀꜱɪʙᴜᴋ:*\n";
       topHours.forEach(([h, c]) => { text += `${h}:00 - ${c} pesan\n`; });
     }
-    text += "\n" + separator("━", 22) + "\n" + tipText("Stats direset setiap hari");
+    text += "\n" + tipText("Stats direset setiap hari");
     await m.reply(text);
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };

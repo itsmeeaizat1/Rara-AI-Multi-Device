@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
     const pollMsg = claraHeader("AI Poll: " + topic, "📊") + "\n\n";
     let text = pollMsg;
     choices.forEach((c, i) => { text += `${["1️⃣","2️⃣","3️⃣","4️⃣"][i]} ${c}\n`; });
-    text += "\n" + separator("━", 22) + "\n" + tipText("Ketik nomor pilihanmu!");
+    text += "\n" + tipText("Ketik nomor pilihanmu!");
     await m.reply(text);
     if (!global.aiPolls) global.aiPolls = {};
     global.aiPolls[m.key.remoteJid] = { topic, choices, votes: {} };

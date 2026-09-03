@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Peta: https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}`,
       ]) + "\n\n";
     });
-    text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
+    text +=  tipText(`Ketik ${prefix}menu untuk kembali`);
     await m.reply(claraWrap("geocode", text));
   } catch (e) {
     await m.reply(novaError("Tools", "Gagal nih"));

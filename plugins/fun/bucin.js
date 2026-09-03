@@ -4,7 +4,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { bracketBox, novaEmpty, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaEmpty, novaError } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,10 +46,10 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    const text = bracketBox("💕", "Quotes Bucin", [
-      "```" + quote + "```",
+    const text = novaBox("Quotes Bucin", [
+      quote,
       "",
-      "Semoga harimu makin manis! 💕",
+      "Semoga harimu makin manis!",
     ]);
 
     await m.reply(text);

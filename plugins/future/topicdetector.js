@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Dari chat grup berikut, tentukan topik utama yang sedang dibicarakan. Berikan 1-3 topik utama dalam Bahasa Indonesia.\n\n${chatText.substring(0, 1500)}`, {
       systemPrompt: "Kamu adalah topic detector. Berikan jawaban singkat.",
     });
-    await m.reply(claraWrap("Topic Detector", "🔍") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("Topic Detector", "🔍") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

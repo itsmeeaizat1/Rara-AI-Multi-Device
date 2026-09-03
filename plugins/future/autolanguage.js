@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Deteksi bahasa teks berikut, lalu translate ke Bahasa Indonesia. Format: Bahasa: [nama bahasa]\nTerjemahan: [hasil]\n\n${text.substring(0, 500)}`, {
       systemPrompt: "Kamu adalah translator. Berikan jawaban singkat.",
     });
-    await m.reply(claraWrap("Auto Language", "🌐") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("Auto Language", "🌐") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

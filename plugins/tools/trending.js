@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!items.length) throw new Error("Gagal ambil nih trending");
     let text = claraWrap("Trending Indonesia", "📈") + "\n\n";
     items.forEach((item, i) => { text += `${i+1}. *${item}*\n`; });
-    text += "\n" + separator("━", 22) + "\n" + tipText(`Sumber: Google Trends Indonesia`);
+    text += "\n" + tipText(`Sumber: Google Trends Indonesia`);
     await m.reply(claraWrap("trending", text));
   } catch (e) {
     await m.reply(novaError("Tools", "Gagal nih"));
