@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
             const failed = results.length - success
 
             const label = action === 'approve' ? 'Diterima' : 'Ditolak'
-            return m.reply(claraWrap(`${label.toUpperCase()} SEMUA`, `✅ *${label.toUpperCase()} SEMUA*\n\n` +
+            return m.reply(claraWrap(`${label.toUpperCase()} SEMUA`, 
                 `✅ Berhasil: ${success}\n` +
                 `❌ Gagal: ${failed}\n` +
                 `📊 Total: ${results.length}`))

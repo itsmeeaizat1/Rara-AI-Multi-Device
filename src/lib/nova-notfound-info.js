@@ -19,12 +19,14 @@ export async function buildNotFoundReply(m, ctx, command, closest, level, totalH
   if (level === 0) {
     lines.push("\u2502 " + toSC("Command") + " *" + prefix + command + "* " + toSC("tidak ditemukan"));
     if (closest) {
+      lines.push("\u2502");
       lines.push("\u2502 " + toSC("Mungkin maksudmu") + ": *" + prefix + closest + "* ?");
     }
     lines.push("\u2502");
     lines.push("\u2502 \u{1F4A1} " + toSC("Ketik") + " *" + prefix + "tanyaai* " + toSC("untuk tanya AI"));
   } else if (level === 1) {
     lines.push("\u2502 \u26A0 " + toSC("Kamu sudah salah ketik") + " " + totalHits + "x " + toSC("dalam 1 menit"));
+    lines.push("\u2502");
     lines.push("\u2502 " + toSC("Command") + " *" + prefix + command + "* " + toSC("tidak ditemukan"));
     if (closest) {
       lines.push("\u2502 " + toSC("Mungkin") + ": *" + prefix + closest + "*");
@@ -33,11 +35,13 @@ export async function buildNotFoundReply(m, ctx, command, closest, level, totalH
     lines.push("\u2502 \u{1F4A1} " + toSC("Cek") + " *" + prefix + "menu* " + toSC("untuk daftar lengkap"));
   } else if (level === 2) {
     lines.push("\u2502 \u26A0 " + toSC("Sudah") + " " + totalHits + "x " + toSC("command tidak ditemukan") + "!");
+    lines.push("\u2502");
     lines.push("\u2502 " + toSC("Tolong cek") + " *" + prefix + "menu* " + toSC("dulu ya"));
     lines.push("\u2502");
     lines.push("\u2502 \u{1F4A1} " + toSC("Atau tanya") + " *" + prefix + "tanyaai* \u2014 " + toSC("AI bantu cari"));
   } else if (level === 4) {
     lines.push("\u2502 \u{1F6A2} " + toSC("Kamu mengirim") + " " + totalHits + " " + toSC("command salah") + "!");
+    lines.push("\u2502");
     lines.push("\u2502 " + toSC("Bot tidak mengenal command tersebut"));
     lines.push("\u2502");
     lines.push("\u2502 \u{1F4A1} " + toSC("Daripada tebak-tebakan, langsung tanya AI") + ":");

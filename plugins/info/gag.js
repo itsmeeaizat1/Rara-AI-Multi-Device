@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       });
     }
 
-    { const __navText = claraWrap(caption.trim().split("\n").filter(l => l.trim())); await m.reply(__navText); };
+    { const __navText = claraWrap(caption.trim().split("\n")); await m.reply(__navText); };
   } catch (error) {
     console.error("[GAG Info]", error.message);
     m.reply(novaError("GAG", "Ada error nih, coba lagi ya"));

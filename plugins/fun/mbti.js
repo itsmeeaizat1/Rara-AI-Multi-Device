@@ -95,7 +95,7 @@ async function handler(m, { sock, args }) {
         txt += `B. ${q.rightTrait}\n\n`;
         txt += `Balas dengan *A* atau *B*`;
 
-        await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
+        await m.reply(claraWrap("MBTI", txt.split("\n")));
       } catch (e) {
         console.error("[MBTI] Error:", e.message);
         await m.reply(novaError("MBTI", `Gagal mulai test MBTI nih: ${e.message}`));
@@ -178,7 +178,7 @@ async function handler(m, { sock, args }) {
       if (r.shareUrl) txt += `Detail: ${r.shareUrl}\n\n`;
       txt += `_Test selesai! 32/32 pertanyaan terjawab_`;
 
-      await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
+      await m.reply(claraWrap("MBTI", txt.split("\n")));
     } catch (e) {
       console.error("[MBTI] Calculate error:", e.message);
       await m.reply(novaError("MBTI", `Gagal hitung hasil nih: ${e.message}`));
@@ -196,7 +196,7 @@ async function handler(m, { sock, args }) {
   txt += `Balas dengan *A* atau *B*\n`;
   txt += `Ketik *ᴄᴀɴᴄᴇʟ* untuk batal`;
 
-  await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
+  await m.reply(claraWrap("MBTI", txt.split("\n")));
 }
 
 export { pluginConfig as config, handler };

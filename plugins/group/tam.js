@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     .slice(0, limit);
 
   if (!sorted.length) {
-    return m.reply(claraWrap("Top Active Member", `📊 *ᴛᴏᴘ ᴀᴄᴛɪᴠᴇ ᴍᴇᴍʙᴇʀ*\n\n` + `- Belum ada data aktivitas di grup ini`));
+    return m.reply(claraWrap("Top Active Member", `` + `- Belum ada data aktivitas di grup ini`));
   }
 
   const pollVotes = sorted.map((u, i) => {

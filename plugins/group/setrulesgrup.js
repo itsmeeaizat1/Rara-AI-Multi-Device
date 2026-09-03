@@ -23,7 +23,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim() || (m.quoted?.body || m.quoted?.text || '')
 
     if (!text) {
-        return m.reply( claraWrap("sEt Grup Rules", `📝 *ꜱᴇᴛ ɢʀᴜᴘ ʀᴜʟᴇꜱ*\n\n` +
+        return m.reply( claraWrap("sEt Grup Rules", 
             `Masukkan teks rules yang baru\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}setrulesgrup 1. Jangan spam
@@ -32,7 +32,7 @@ function handler(m, { sock }) {
 
     db.setGroup(m.chat, { groupRules: text })
 
-    m.reply(claraWrap("Grup Rules Diupdate", `✅ *ɢʀᴜᴘ ʀᴜʟᴇꜱ ᴅɪᴜᴘᴅᴀᴛᴇ*\n\n` +
+    m.reply(claraWrap("Grup Rules Diupdate", 
         `Rules grup berhasil diubah!\n` +
         `Ketik \`${m.prefix}rulesgrup\` untuk melihat.`))
 }

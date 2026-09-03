@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       contextInfo: saluranCtx(),
     });
   } catch (error) {
-    m.reply(claraWrap("Username Tidak Ditemukan", `🚩 *ᴜꜱᴇʀɴᴀᴍᴇ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nUsername: ${query}`));
+    m.reply(claraWrap("Username Tidak Ditemukan", `Username: ${query}`));
   }
 }
 

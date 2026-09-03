@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await ClaudeHaiku(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("Claude Haiku Gagal", `❌ *ᴄʟᴀᴜᴅᴇ ʜᴀɪᴋᴜ ɢᴀɢᴀʟ*\n\n${result.error || "Gagal dapet respons nih"}`));
+      return m.reply(claraWrap("Claude Haiku Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);

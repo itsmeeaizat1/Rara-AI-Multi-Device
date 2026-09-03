@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
         type: "image",
       });
     } else {
-      await m.reply(claraWrap(text.split("\n").filter(l => l.trim())));
+      await m.reply(claraWrap("Info Turnamen", text.split("\n")));
     }
   } catch (error) {
     m.reply(claraWrap("infotourney", te(m.prefix, m.command, m.pushName), "error"));

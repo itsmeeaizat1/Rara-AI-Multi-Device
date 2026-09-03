@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   const isPublicGroup = publicGroups.includes(m.chat);
 
   if (isPublicGroup && !isSelfGroup) {
-    return m.reply(claraWrap("Grup Ini sUdah Mode Public", `ℹ️ *ɢʀᴜᴘ ɪɴɪ ꜱᴜᴅᴀʜ ᴍᴏᴅᴇ ᴘᴜʙʟɪᴄ*\n\n` +
+    return m.reply(claraWrap("Grup Ini sUdah Mode Public", 
         `Bot merespon semua member di grup ini\n\n` +
         `_Gunakan ${m.prefix}selfthisgc untuk menutup akses_`));
   }
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     db.setting("publicGroups", [...publicGroups, m.chat]);
   }
 
-  return m.reply(claraWrap("Mode Public Diaktifkasi", `🌐 *ᴍᴏᴅᴇ ᴘᴜʙʟɪᴄ ᴅɪᴀᴋᴛɪꜰᴋᴀꜱɪ*\n\n` +
+  return m.reply(claraWrap("Mode Public Diaktifkasi", 
       `Bot sekarang merespon semua member di grup ini\n` +
       `Override mode global aktif untuk grup ini\n\n` +
       `📋 *ɢʀᴜᴘ ʟᴀɪɴ ᴛɪᴅᴀᴋ ᴛᴇʀᴘᴇɴɢᴀʀᴜʜ*\n\n` +

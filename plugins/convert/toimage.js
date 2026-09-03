@@ -45,10 +45,10 @@ async function handler(m, { sock }) {
 
     const imgBuffer = fs.readFileSync(outputPath);
     await m.react("🐣");
-    await m.reply(novaBerhasil("toimage"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "✅ Sticker → Image" }, { quoted: m });
 
     try { fs.unlinkSync(inputPath); fs.unlinkSync(outputPath); } catch {}
+    await m.reply(novaBerhasil("toimage"));
   } catch (e) {
     console.error("toimage error:", e.message);
     await m.react("❌");

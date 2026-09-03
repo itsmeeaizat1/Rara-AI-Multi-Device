@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   }
   try {
     const data = await new GetPastebin().fetch(text);
-    await m.reply(claraWrap("Get Paste", data.split("\n").filter(l => l.trim())));
+    await m.reply(claraWrap("Get Paste", data.split("\n")));
   } catch (err) {
     m.reply(claraWrap("getpaste", te(m.prefix, m.command, m.pushName), "error"))
   }

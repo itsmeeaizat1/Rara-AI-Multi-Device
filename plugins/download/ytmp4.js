@@ -87,12 +87,12 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("ytmp4"));
     await sock.sendMessage(m.chat, {
       video: { url: result.download },
       caption,
       contextInfo: { externalAdReply: { title: result.title || ytMeta.title || "YouTube Video", body: "Nova AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
     }, { quoted: m });
+    await m.reply(novaBerhasil("ytmp4"));
   } catch (err) {
     console.error("[YTMP4]", err);
     await m.react("❌");

@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     }
     
     if (!mediaSource) {
-        await m.reply( claraWrap("GAGAL", `❌ *ɢᴀɢᴀʟ*\n\n` +
+        await m.reply( claraWrap("GAGAL", 
             `Tidak ada audio/video yang terdeteksi!\n\n` +
             `*ᴄᴀʀᴀ ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
             `1. Kirim audio/video + caption \`${m.prefix}tovn\`\n` +
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            await m.reply(claraWrap("GAGAL", `❌ *ɢᴀɢᴀʟ*\n\n` +
+            await m.reply(claraWrap("GAGAL", 
                 `Tidak dapat mengunduh media.\n` +
                 `Media mungkin sudah tidak tersedia.`))
             return
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
         await queueFFmpeg(ffmpegCmd)
 
         if (!fs.existsSync(outputPath)) {
-            await m.reply(claraWrap("KONVERsI GAGAL", `❌ *ᴋᴏɴᴠᴇʀꜱɪ ɢᴀɢᴀʟ*\n\n` +
+            await m.reply(claraWrap("KONVERsI GAGAL", 
                 `Gagal mengkonversi ke voice note.\n` +
                 `Pastikan ffmpeg terinstall dengan benar.`))
             return
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
             ptt: true
         })
     } catch (error) {
-        await m.reply(claraWrap("ERROR", `❌ *ᴇʀʀᴏʀ*\n\n` +
+        await m.reply(claraWrap("ERROR", 
             `Terjadi kesalahan saat memproses.\n` +
             `_${error.message}_`))
     } finally {

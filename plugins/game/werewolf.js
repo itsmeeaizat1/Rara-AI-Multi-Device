@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Werewolf — Social Deduction Game (5-15 players)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import {
   emoji_role, sesi, playerOnGame, playerOnRoom, playerExit,
@@ -45,7 +45,12 @@ async function handler(m, { sock, text, command }) {
       if (ww[chatId]) return m.reply(claraWrap("werewolf", "Group masih dalam sesi permainan.", "info"));
       if (playerOnGame(sender, ww)) return m.reply(claraWrap("werewolf", "Kamu masih dalam sesi game lain.", "info"));
       ww[chatId] = { room: chatId, owner: sender, status: false, iswin: null, cooldown: 0, day: 0, time: "malem", player: [], dead: [], voting: false, seer: false, guardian: [] };
-      return m.reply("Room dibuat!\n.ww join — bergabung\n.ww start — mulai (min 5)");
+      return m.reply(novaBox("Werewolf", [
+        "Room dibuat",
+        "---",
+        ".ww join — bergabung",
+        ".ww start — mulai (min 5)",
+      ]));
     }
 
     // JOIN
@@ -76,7 +81,11 @@ async function handler(m, { sock, text, command }) {
       for (const p of ww[chatId].player) {
         await sock.sendMessage(p.id, { text: "🎭 *WEREWOLF ROLE*\n\nHalo @" + p.id.split("@")[0] + ", role kamu adalah *" + p.role.toUpperCase() + "* " + emoji_role(p.role) + "\n\nJangan kasih tau siapapun!", mentions: [p.id] });
       }
-      await m.reply("🎮 Game dimulai!\nCek chat pribadi untuk role!", { mentions: ww[chatId].player.map(p => p.id) });
+      await m.reply(novaBox("Werewolf", [
+        "Game dimulai",
+        "---",
+        "Cek chat pribadi untuk role",
+      ]), { mentions: ww[chatId].player.map(p => p.id) });
       return await run(sock, chatId, ww);
     }
 

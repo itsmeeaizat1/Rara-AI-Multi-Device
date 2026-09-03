@@ -289,7 +289,24 @@ function tipText(text) {
 
 function claraWrap(title, body, type = "info") {
   const raw = Array.isArray(body) ? body : String(body).split("\n");
-  const lines = raw.filter(l => l.trim());
+  // FIX: dulu .filter(l => l.trim()) buang SEMUA baris kosong, termasuk
+  // pemisah paragraf yang disengaja (\n\n atau "" di array) — bikin info
+  // yang beda topik nempel jadi satu (contoh: .play pilih bitrate <>
+  // contoh, .tojpg not-found <> mungkin maksudmu). Sekarang: baris kosong
+  // di TENGAH dipertahankan jadi spasi paragraf (buildBox render │),
+  // cuma baris kosong di awal/akhir (sisa split) & blank dobel yang dibuang.
+  let lines = raw.map(l => (l === undefined || l === null) ? "" : String(l));
+  while (lines.length && !lines[0].trim()) lines.shift();
+  while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+  const collapsed = [];
+  let prevBlank = false;
+  for (const l of lines) {
+    const isBlank = !l.trim();
+    if (isBlank && prevBlank) continue;
+    collapsed.push(l);
+    prevBlank = isBlank;
+  }
+  lines = collapsed;
 
   // Prefix icon di baris pertama untuk status type (error/success/warn)
   if (type === "error" && lines.length) {
@@ -906,15 +923,15 @@ export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide
 // fitur gangguan → "Yah fiturnya lagi gangguan kak, coba lain waktu ya 😥"
 // ═══════════════════════════════════════════════
 export function novaBerhasil(fitur = "Berhasil") {
-  return novaBox(fitur, ["Berhasil kak 🥳"]);
+  return "Berhasil kak 🥳";
 }
 
 export function novaGagal(fitur = "Gagal") {
-  return novaBox(fitur, ["Yah gagal kak,", "coba lagi 😩"]);
+  return "Yah gagal kak, coba lagi 😩";
 }
 
 export function novaGangguan(fitur = "Error") {
-  return novaBox(fitur, ["Yah fiturnya lagi gangguan", "kak, coba lain waktu ya 😥"]);
+  return "Yah fiturnya lagi gangguan kak, coba lain waktu ya 😥";
 }
 
 // ═══════════════════════════════════════════════

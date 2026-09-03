@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = m.args.join(' ')
 
     if (!text) {
-        return m.reply(claraWrap("Math Gpt", `📐 *ᴍᴀᴛʜ ɢᴘᴛ*\n\nMasukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
+        return m.reply(claraWrap("Math Gpt", `Masukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
     }
     try {
         const url = `https://api.nexray.eu.cc/ai/mathgpt?text=${encodeURIComponent(text)}`

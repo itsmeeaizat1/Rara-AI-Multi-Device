@@ -39,16 +39,16 @@ async function handler(m, { sock }) {
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {
         if (current) {
-            return m.reply(claraWrap("Autosticker", `🖼️ *ᴀᴜᴛᴏꜱᴛɪᴄᴋᴇʀ*\n\nSudah aktif!`))
+            return m.reply(claraWrap("Autosticker", `Sudah aktif!`))
         }
         db.setGroup(m.chat, { autosticker: true })
         await db.save()
-        return m.reply(claraWrap("Autosticker", `🖼️ *ᴀᴜᴛᴏꜱᴛɪᴄᴋᴇʀ*\n\n✅ Berhasil diaktifkan!\nGambar/video akan otomatis jadi sticker`))
+        return m.reply(claraWrap("Autosticker", `✅ Berhasil diaktifkan!\nGambar/video akan otomatis jadi sticker`))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
         if (!current) {
-            return m.reply(claraWrap("Autosticker", `🖼️ *ᴀᴜᴛᴏꜱᴛɪᴄᴋᴇʀ*\n\nSudah nonaktif!`))
+            return m.reply(claraWrap("Autosticker", `Sudah nonaktif!`))
         }
         db.setGroup(m.chat, { autosticker: false })
         await db.save()

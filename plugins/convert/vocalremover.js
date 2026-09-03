@@ -38,7 +38,6 @@ async function handler(m, { sock, command }) {
     if (!res.data?.status) { await m.react("❌"); return m.reply(claraWrap("vocalremover", "Gagal memproses audio dari API.")); }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("vocalremover"));
 
     // vocalremover → kirim instrumental | instrumenremover → kirim vocal
     const isVocalRemover = command === "vocalremover" || command === "vocalremove";
@@ -55,6 +54,7 @@ async function handler(m, { sock, command }) {
       fileName: fileName,
       caption: caption,
     }, { quoted: m });
+    await m.reply(novaBerhasil("vocalremover"));
   } catch (e) {
     console.error("vocalremover error:", e.message);
     await m.react("❌");

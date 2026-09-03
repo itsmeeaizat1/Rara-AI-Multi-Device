@@ -40,13 +40,13 @@ async function handler(m, { sock }) {
 
         const p = personalities[Math.floor(Math.random() * personalities.length)]
     
-    let txt = mentioned === m.sender ? `Hai @${mentioned.split('@')[0]}
-    
-Tingkat kepribadian kamu *${p.type} - ${p.title}*
-\`\`\`${p.desc}\`\`\`` : `Kamu ingin ngecek kepribadian @${mentioned.split('@')[0]} yak? 
-    
-Kepribadian dia adalah *${p.type} - ${p.title}*
-\`\`\`${p.desc}\`\`\``
+    let txt = mentioned === m.sender
+      ? [`Hai @${mentioned.split('@')[0]}`,
+         `Tingkat kepribadian kamu: ${p.type} - ${p.title}`,
+         `"${p.desc}"`].join("\n")
+      : [`Cek kepribadian @${mentioned.split('@')[0]}`,
+         `Kepribadian dia adalah: ${p.type} - ${p.title}`,
+         `"${p.desc}"`].join("\n")
     
     await m.reply(claraWrap("cekkepribadian", txt), { mentions: [mentioned] });
 }

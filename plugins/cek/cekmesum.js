@@ -48,16 +48,14 @@ async function handler(m, { sock, config: botConfig }) {
 
   let txt =
     mentioned === m.sender
-      ? `Hai @${mentioned.split("@")[0]}
-    
-Tingkat kemesuman kamu *${percent}%*
-\`\`\`${desc}\`\`\``
-      : `Kamu ingin ngecek tingkat kemesuman @${mentioned.split("@")[0]} yak? 
-    
-Tingkat kemesuman dia sebesar *${percent}%*
-\`\`\`${desc}\`\`\``;
+      ? [`Hai @${mentioned.split("@")[0]}`,
+         `Tingkat kemesuman kamu: ${percent}%`,
+         `"${desc}"`].join("\n")
+      : [`Cek tingkat kemesuman @${mentioned.split("@")[0]}`,
+         `Tingkat kemesuman dia: ${percent}%`,
+         `"${desc}"`].join("\n");
 
-  await m.reply(claraWrap("cekmesum", txt), { mentions: [mentioned] });;
+  await m.reply(claraWrap("cekmesum", txt), { mentions: [mentioned] });
 }
 
 export { pluginConfig as config, handler };

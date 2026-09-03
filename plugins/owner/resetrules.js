@@ -22,7 +22,7 @@ function handler(m, { sock }) {
     
     db.setting('botRules', null)
     
-    m.reply(claraWrap("Bot Rules Direset", `✅ *Bot Rules Direset*\n\n` +
+    m.reply(claraWrap("Bot Rules Direset", 
         `Rules bot berhasil direset ke default!\n` +
         `Ketik \`${m.prefix}rules\` untuk melihat.`))
 }

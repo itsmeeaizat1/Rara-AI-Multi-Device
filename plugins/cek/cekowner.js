@@ -53,17 +53,18 @@ async function handler(m, { sock }) {
     const ownerList = db.data.owner || []
     const isInOwnerDb = ownerList.includes(targetNumber)
 
-    let txt = `📋 *ᴄᴇᴋ ᴜꜱᴇʀ ɪɴꜰᴏ*\n\n`
-    txt += `👤 User: @${targetNumber}\n`
-    txt += `🏷️ Role: *${roles.join(' • ')}*\n`
-    txt += `📊 Owner DB: *${isInOwnerDb ? 'Ya' : 'Tidak'}*\n`
+    const lines = [
+      `User: @${targetNumber}`,
+      `Role: ${roles.join(' • ')}`,
+      `Owner DB: ${isInOwnerDb ? 'Ya' : 'Tidak'}`,
+    ];
     if (user) {
-        txt += `⚡ Energi: *${user.energi === -1 ? '∞' : (user.energi ?? 0)}*\n`
-        txt += `💰 Koin: *${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}*\n`
-        txt += `⭐ Level: *${user.level ?? 1}*\n`
+        lines.push(`Energi: ${user.energi === -1 ? '∞' : (user.energi ?? 0)}`);
+        lines.push(`Koin: ${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}`);
+        lines.push(`Level: ${user.level ?? 1}`);
     }
 
-    await m.reply(claraWrap("cekowner", txt), { mentions: [targetJid] });
+    await m.reply(claraWrap("Cek Owner", lines), { mentions: [targetJid] });
 }
 
 export { pluginConfig as config, handler }

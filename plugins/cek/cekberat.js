@@ -46,13 +46,13 @@ async function handler(m, { sock, config: botConfig }) {
         if (aiResult.text) desc = aiResult.text;
     } catch {}
 
-    let txt = mentioned === m.sender ? `Hai @${mentioned.split('@')[0]}
-    
-Berat badan kamu *${berat} kg*
-\`\`\`${desc}\`\`\`` : `Kamu ingin ngecek berat badan @${mentioned.split('@')[0]} yak? 
-    
-Berat badan dia sebesar *${berat} kg*
-\`\`\`${desc}\`\`\``
+    let txt = mentioned === m.sender
+      ? [`Hai @${mentioned.split('@')[0]}`,
+         `Berat badan kamu: ${berat} kg`,
+         `"${desc}"`].join("\n")
+      : [`Cek berat badan @${mentioned.split('@')[0]}`,
+         `Berat badan dia: ${berat} kg`,
+         `"${desc}"`].join("\n")
     
     await m.reply(claraWrap("cekberat", txt), { mentions: [mentioned] });
 }

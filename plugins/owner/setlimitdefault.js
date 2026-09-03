@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const db = getDatabase()
         const currentDefault = db.setting('defaultLimit') || config.limits?.default || 25
         
-        return m.reply(claraWrap("sEt DeғAult Limit", `📊 *sEt DeғAult Limit*\n\n` +
+        return m.reply(claraWrap("sEt DeғAult Limit", 
             `Limit default saat ini: \`${currentDefault}\`\n\n` +
             `*Cara pakai:*\n` +
             `\`${m.prefix}setlimitdefault <jumlah>\`\n\n` +
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     const db = getDatabase()
     db.setting('defaultLimit', newLimit)
     
-    await m.reply(claraWrap("Berhasil", `✅ *Berhasil*\n\n` +
+    await m.reply(claraWrap("Berhasil", 
         `Default limit diubah menjadi: \`${newLimit}\`\n` +
         `User baru akan mendapat limit ini`))
 }

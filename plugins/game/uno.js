@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // UNO — Multiplayer Card Game
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -45,7 +45,12 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (!games.has(chatId)) {
       games.set(chatId, { players: [], deck: createDeck(), discardPile: [], currentPlayer: 0, direction: 1, currentCard: null, drawStack: 0, stopVotes: new Set(), awaitingColorChoice: false });
-      return m.reply("🎴 Permainan UNO dimulai!\n.uno join — bergabung\n.uno start — mulai (min 2)");
+      return m.reply(novaBox("Uno", [
+        "Permainan dimulai",
+        "---",
+        ".uno join — bergabung",
+        ".uno start — mulai (min 2)",
+      ]));
     }
 
     const game = games.get(chatId);
@@ -66,7 +71,16 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     }
 
     if (sub === "info") {
-      return m.reply("Panduan UNO:\n.uno join — Gabung\n.uno start — Mulai (min 2)\n.uno play <no> — Main kartu\n.uno draw — Ambil kartu\n.uno pass — Lewati\n.uno hand — Lihat kartu (DM)\n.uno color <red|yellow|green|blue> — Pilih warna\n.uno stop — Hentikan");
+      return m.reply(novaBox("Panduan Uno", [
+        ".uno join — Gabung",
+        ".uno start — Mulai (min 2)",
+        ".uno play <no> — Main kartu",
+        ".uno draw — Ambil kartu",
+        ".uno pass — Lewati",
+        ".uno hand — Lihat kartu (DM)",
+        ".uno color <red|yellow|green|blue> — Pilih warna",
+        ".uno stop — Hentikan",
+      ]));
     }
 
     if (sub === "hand") {

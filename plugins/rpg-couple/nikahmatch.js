@@ -2,7 +2,7 @@
 // RPG Cinta — Lamar pasangan untuk menikah (butuh min affection + dating days)
 
 import { ensureRpg, getRpgData, removeGold } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 import {
   getCintaData, marry,
   MARRIAGE_MIN_AFFECTION, MARRIAGE_MIN_DATING_DAYS, formatDurasi
@@ -75,14 +75,15 @@ async function handler(m, { sock }) {
       timestamp: Date.now(),
     };
 
-    await m.reply(
-      `💍 @${m.sender.split("@")[0]} melamar @${cinta.spouse.split("@")[0]}\n` +
-      `Pasangan: *${cinta.spouseName}*\n` +
-      `Affection: *${cinta.affection}*\n` +
-      `Berlaku: *1 jam*\n\n` +
-      `_Balas *terima* atau *tolak*_\n` +
-      `Atau \`${m.prefix}rpgterimanikah\` / \`${m.prefix}rpgtolaknikah\``
-    );
+    await m.reply(novaBox("Nikah", [
+      `💍 @${m.sender.split("@")[0]} melamar @${cinta.spouse.split("@")[0]}`,
+      `Pasangan: ${cinta.spouseName}`,
+      `Affection: ${cinta.affection}`,
+      `Berlaku: 1 jam`,
+      "---",
+      "Balas terima atau tolak",
+      `Atau ${m.prefix}rpgterimanikah / ${m.prefix}rpgtolaknikah`,
+    ]));
     await m.react("💍");
   } catch (e) {
     console.error("[rpgnikah] Error:", e.message);

@@ -8,6 +8,7 @@ import {
 } from "../../src/lib/nova-rpg-cinta.js";
 import { checkCooldown } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { claraWrap, novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "couplewar",
@@ -32,49 +33,39 @@ async function handler(m, { sock }) {
     const myCinta = getCintaData(m);
 
     if (!myCinta.spouse) {
-      return m.reply(
-        `💔 Kamu belum punya pasangan!\n` +
-        `Jomblo mau war sama siapa? 😂\n\n`
-      );
+      return m.reply(claraWrap("Couple War", [
+        "Kamu belum punya pasangan!",
+        "Jomblo mau war sama siapa?",
+      ], "warn"));
     }
 
     let targetJid = m.mentionedJid?.[0] || (m.quoted ? m.quoted.sender : null);
     if (!targetJid) {
-      return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}couplewar @target\`\n` +
-        `Tag salah satu pasangan lawan\n\n`
-      );
+      return m.reply(novaGuide("couplewar", "Duel pasangan kamu vs pasangan orang lain!", `${m.prefix}couplewar @target`, "Tag salah satu pasangan lawan"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(
-        `❌ War sama diri sendiri? Itu skizofrenia 😂\n\n`
-      );
+      return m.reply(claraWrap("Couple War", "War sama diri sendiri? Itu skizofrenia", "error"));
     }
 
     if (targetJid === myCinta.spouse) {
-      return m.reply(
-        `❌ Nggak bisa war sama pasangan sendiri! 😅\n\n`
-      );
+      return m.reply(claraWrap("Couple War", "Nggak bisa war sama pasangan sendiri!", "error"));
     }
 
     ensureRpg({ sender: targetJid, pushName: targetJid.split("@")[0] }, targetJid.split("@")[0]);
     const targetCinta = getCintaData({ sender: targetJid, pushName: targetJid.split("@")[0] });
 
     if (!targetCinta.spouse) {
-      return m.reply(
-        `💔 @${targetJid.split("@")[0]} belum punya pasangan!\n` +
-        `Jomblo vs jomblo namanya duel bukan couple war 😂\n\n`
-      );
+      return m.reply(claraWrap("Couple War", [
+        `@${targetJid.split("@")[0]} belum punya pasangan!`,
+        "Jomblo vs jomblo namanya duel bukan couple war",
+      ], "warn"));
     }
 
     // Cooldown check
     const cd = checkCooldown(m, "couplewar");
     if (cd) {
-      return m.reply(
-        `⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n`
-      );
+      return m.reply(claraWrap("Couple War", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
     }
 
     // Get couple powers
@@ -159,26 +150,29 @@ async function handler(m, { sock }) {
     const winnerTeam = iWin ? `${myName} & ${myPartnerName}` : `${targetName} & ${targetPartnerName}`;
     const loserTeam = iWin ? `${targetName} & ${targetPartnerName}` : `${myName} & ${myPartnerName}`;
 
-    let msg = ``;
-    msg += `  🏠 *Team 1: ${myName} & ${myPartnerName}*\n`;
-    msg += `⚔️ Couple Power: *${myCouplePower}*\n`;
-    msg += `🎲 Roll: *+${myRoll}*\n`;
-    msg += `💥 Final Power: *${myFinalPower}*\n\n`;
-    msg += `  🏠 *Team 2: ${targetName} & ${targetPartnerName}*\n`;
-    msg += `⚔️ Couple Power: *${targetCouplePower}*\n`;
-    msg += `🎲 Roll: *+${targetRoll}*\n`;
-    msg += `💥 Final Power: *${targetFinalPower}*\n\n`;
-    msg += `  🏆 *Pemenang: ${winnerTeam}*\n`;
-    msg += `💕 Affection: *+${winAff}*\n`;
-    msg += `EXP: *+${winExp}*\n`;
-    msg += `💰 Gold: *+${winGold}*\n`;
-    msg += `📊 Power Gap: *${powerDiff}*\n\n`;
-    msg += `  💀 *Kalah: ${loserTeam}*\n`;
-    msg += `💕 Affection: *${lossAff}*\n`;
-    msg += `EXP: *+${lossExp}*\n`;
-    msg += `💰 Gold: *+${lossGold}*\n\n`;
-    
-    await m.reply(msg);
+    const msgLines = [
+      { sub: `Team 1: ${myName} & ${myPartnerName}` },
+      `Couple Power: ${myCouplePower}`,
+      `Roll: +${myRoll}`,
+      `Final Power: ${myFinalPower}`,
+      "---",
+      { sub: `Team 2: ${targetName} & ${targetPartnerName}` },
+      `Couple Power: ${targetCouplePower}`,
+      `Roll: +${targetRoll}`,
+      `Final Power: ${targetFinalPower}`,
+      "---",
+      { sub: `Pemenang: ${winnerTeam}` },
+      `Affection: +${winAff}`,
+      `EXP: +${winExp}`,
+      `Gold: +${winGold}`,
+      `Power Gap: ${powerDiff}`,
+      "---",
+      { sub: `Kalah: ${loserTeam}` },
+      `Affection: ${lossAff}`,
+      `EXP: +${lossExp}`,
+      `Gold: +${lossGold}`,
+    ];
+    await m.reply(novaBox("Couple War", msgLines));
     await m.react(iWin ? "🏆" : "💥");
   } catch (e) {
     console.error("[couplewar] Error:", e.message);

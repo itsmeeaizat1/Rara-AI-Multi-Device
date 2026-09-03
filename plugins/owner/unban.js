@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     const targetNumber = resolveTarget(m)
 
     if (!targetNumber || targetNumber.length < 10 || targetNumber.length > 15) {
-        return m.reply( claraWrap("Unban User", `✅ *Unban User*\n\n` +
+        return m.reply( claraWrap("Unban User", 
             `Masukkan nomor atau tag user\n\n` +
             `\`Contoh: ${m.prefix}unban 6281234567890\``), "unban")
     }
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     bannedList.splice(index, 1)
     db.setting('bannedUsers', bannedList)
     config.bannedUsers = bannedList
-    await m.reply(claraWrap("User Diunban", `✅ *User Diunban*\n\n` +
+    await m.reply(claraWrap("User Diunban", `` +
         "" +
         `📱 Nomor: \`${targetNumber}\`\n` +
         `✅ sTatus: \`Unbanned\`\n` +

@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = input.split(/[&,]/).map(s => s.trim()).filter(s => s)
     
     if (parts.length < 2) {
-        { const __navText = claraWrap("Cek Jodoh", `💕 *ᴄᴇᴋ ᴊᴏᴅᴏʜ*\n\nMasukkan 2 nama!\n\n💡 *Contoh:* ${m.prefix}cekjodoh Budi & Ani`); return await m.reply(__navText, "cekjodoh"); }
+        { const __navText = claraWrap("Cek Jodoh", `Masukkan 2 nama!\n\n💡 *Contoh:* ${m.prefix}cekjodoh Budi & Ani`); return await m.reply(__navText, "cekjodoh"); }
     }
     
     const percent = Math.floor(Math.random() * 101)
@@ -53,13 +53,13 @@ async function handler(m, { sock, config: botConfig }) {
         if (aiResult.text) desc = aiResult.text;
     } catch {}
 
-    let txt = mentioned === m.sender ? `Hai @${mentioned.split('@')[0]}
-    
-Tingkat kejodohan kamu *${percent}%*
-\`\`\`${desc}\`\`\`` : `Kamu ingin ngecek tingkat kejodohan @${mentioned.split('@')[0]} yak? 
-    
-Tingkat kejodohan dia sebesar *${percent}%*
-\`\`\`${desc}\`\`\``
+    let txt = mentioned === m.sender
+      ? [`Hai @${mentioned.split('@')[0]}`,
+         `Tingkat kejodohan kamu: ${percent}%`,
+         `"${desc}"`].join("\n")
+      : [`Cek tingkat kejodohan @${mentioned.split('@')[0]}`,
+         `Tingkat kejodohan dia: ${percent}%`,
+         `"${desc}"`].join("\n")
     
     await m.reply(claraWrap("Cek Jodoh", txt), { mentions: [mentioned] })
 }

@@ -2,6 +2,7 @@
 // RPG Cinta — Kencan (Date Quest) — kasih affection + exp, burn energy + gold
 
 import { getRpgData, useEnergy, addExp, addGold, removeGold, checkCooldown } from "../../src/lib/nova-rpg-service.js";
+import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 import {
   getCintaData, addAffection, getCouplePower,
   KENCAN_ACTIVITIES, KENCAN_COOLDOWN_HOURS, formatDurasi
@@ -29,22 +30,16 @@ async function handler(m, { sock }) {
     const cinta = getCintaData(m);
 
     if (!cinta.spouse) {
-      return m.reply(
-        "" +
-        `💔 Kamu belum punya pasangan!\n` +
-        `Gunakan \`${m.prefix}rpgcouple @tag\` dulu\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("Kencan", [
+        "Kamu belum punya pasangan!",
+        `Gunakan ${m.prefix}jadianmatch @tag dulu`,
+      ], "warn"));
     }
 
     // Cooldown check
     const cd = checkCooldown(m, "rpgkencan");
     if (cd) {
-      return m.reply(
-        "" +
-        `⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("Kencan", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
     }
 
     const args = m.args || [];
@@ -52,42 +47,36 @@ async function handler(m, { sock }) {
 
     if (pick === null || isNaN(pick) || pick < 0 || pick >= KENCAN_ACTIVITIES.length) {
       // Tampilkan menu kencan
-      let msg = "";
-      msg += `❤️ Pasangan: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n`;
-      msg += `💕 Affection: *${cinta.affection || 0}*\n`;
-      msg += `💰 Gold: *${rpg.gold || 0}*\n`;
-      msg += `⚡ Energy: *${rpg.energy || 0}/${rpg.maxEnergy || 100}*\n\n`;
-      msg += `  📋 *Pilih Aktivitas Kencan:*\n\n`;
+      const menuLines = [
+        `Pasangan: ${cinta.spouseName || cinta.spouse.split("@")[0]}`,
+        `Affection: ${cinta.affection || 0}`,
+        `Gold: ${rpg.gold || 0}`,
+        `Energi: ${rpg.energy || 0}/${rpg.maxEnergy || 100}`,
+        "---",
+        { sub: "Pilih Aktivitas Kencan" },
+      ];
       KENCAN_ACTIVITIES.forEach((a, i) => {
-        msg += `${i + 1}. ${a.emoji} ${a.name}\n`;
-        msg += `💰 ${a.cost} gold | ⚡ ${a.energy} energy\n`;
-        msg += `💕 +${a.affection} affection | +${a.exp} exp\n\n`;
+        menuLines.push(`${i + 1}. ${a.emoji} ${a.name}`);
+        menuLines.push(`   ${a.cost} gold | ${a.energy} energi | +${a.affection} affection | +${a.exp} exp`);
       });
-      msg += `  Ketik: \`${m.prefix}rpgkencan <nomor>\`\n\n`;
-            return m.reply(msg);
+      menuLines.push("---", `Ketik: ${m.prefix}rpgkencan <nomor>`);
+      return m.reply(novaBox("Kencan", menuLines));
     }
 
     const activity = KENCAN_ACTIVITIES[pick];
 
     // Cek gold
     if ((rpg.gold || 0) < activity.cost) {
-      return m.reply(
-        "" +
-        `❌ Gold tidak cukup!\n` +
-        `Butuh: *${activity.cost} gold*\n` +
-        `Punya: *${rpg.gold || 0} gold*\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("Kencan", [
+        "Gold tidak cukup!",
+        `Butuh: ${activity.cost} gold`,
+        `Punya: ${rpg.gold || 0} gold`,
+      ], "error"));
     }
 
     // Cek energy
     if (!useEnergy(m, activity.energy, sock)) {
-      return m.reply(
-        "" +
-        `❌ Energy tidak cukup!\n` +
-        `Butuh: *${activity.energy} energy*\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("Kencan", `Energi tidak cukup! Butuh: ${activity.energy} energi`, "error"));
     }
 
     // Eksekusi kencan
@@ -119,16 +108,17 @@ async function handler(m, { sock }) {
     ];
     const event = events[Math.floor(Math.random() * events.length)];
 
-    let msg = "";
-    msg += `${activity.emoji} Aktivitas: *${activity.name}*\n`;
-    msg += `💬 "${event}"\n`;
-    msg += `❤️ Bersama: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n\n`;
-    msg += `  📊 *Hasil:*\n`;
-    msg += `💕 Affection: *+${activity.affection}* (Total: ${myCinta.affection})\n`;
-    msg += `EXP: *+${activity.exp}*\n`;
-    msg += `💰 Gold: *-${activity.cost}*\n`;
-    msg += `⚡ Energy: *-${activity.energy}*\n\n`;
-    
+    const msg = novaBox("Kencan", [
+      `${activity.emoji} ${activity.name}`,
+      `"${event}"`,
+      `Bersama: ${cinta.spouseName || cinta.spouse.split("@")[0]}`,
+      "---",
+      { sub: "Hasil" },
+      `Affection: +${activity.affection} (Total: ${myCinta.affection})`,
+      `EXP: +${activity.exp}`,
+      `Gold: -${activity.cost}`,
+      `Energi: -${activity.energy}`,
+    ]);
     await m.reply(msg);
     await m.react(activity.emoji);
   } catch (e) {

@@ -6,6 +6,7 @@ import {
   getCintaData, getLovePower, getCouplePower, getMarriageBonus,
   formatDurasi
 } from "../../src/lib/nova-rpg-cinta.js";
+import { novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cintainfo",
@@ -34,48 +35,48 @@ async function handler(m, { sock }) {
     const name = rpg.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = "";
-    msg += `👤 Nama: *${name}*\n`;
-    msg += `⭐ Level: *${rpg.level || 1}*\n`;
+    const lines = [
+      `Nama: ${name}`,
+      `Level: ${rpg.level || 1}`,
+    ];
 
     if (cinta.spouse) {
-      msg += `❤️ Pasangan: *${cinta.spouseName}*\n`;
+      lines.push("---", `Pasangan: ${cinta.spouseName}`);
 
       if (cinta.datingDate) {
         const pacarDurasi = now - cinta.datingDate;
-        msg += `💕 Pacaran: *${formatDurasi(pacarDurasi)}*\n`;
+        lines.push(`Pacaran: ${formatDurasi(pacarDurasi)}`);
       }
 
       if (cinta.married) {
-        msg += `💍 Status: *Menikah*\n`;
+        lines.push("Status: Menikah");
         if (cinta.marriedDate) {
           const nikahDurasi = now - cinta.marriedDate;
-          msg += `📅 Nikah: *${formatDurasi(nikahDurasi)}*\n`;
+          lines.push(`Nikah: ${formatDurasi(nikahDurasi)}`);
         }
       } else {
-        msg += `💍 Status: *Belum menikah*\n`;
+        lines.push("Status: Belum menikah");
       }
 
       // Affection bar
       const aff = cinta.affection || 0;
       const affBar = Math.min(10, Math.floor(aff / 50));
-      msg += `💕 Affection: *${aff}* [${"❤️".repeat(affBar)}${"🤍".repeat(10 - affBar)}]\n`;
+      lines.push(`Affection: ${aff} [${"❤️".repeat(affBar)}${"🤍".repeat(10 - affBar)}]`);
 
       // Love power
       const myPower = getLovePower({ sender: targetJid, pushName: name });
       const couplePower = getCouplePower({ sender: targetJid, pushName: name });
-      msg += `⚔️ Love Power: *${myPower}*\n`;
-      msg += `💪 Couple Power: *${couplePower}*\n`;
+      lines.push(`Love Power: ${myPower}`, `Couple Power: ${couplePower}`);
 
       // Marriage bonus
       const bonus = getMarriageBonus({ sender: targetJid, pushName: name });
       if (bonus) {
-        msg += `\n  🎁 *Marriage Bonus:*\n`;
-        msg += `❤️ HP: *+${bonus.hp}*\n`;
-        msg += `⚔️ ATK: *+${bonus.atk}*\n`;
-        msg += `🛡️ DEF: *+${bonus.def}*\n`;
-        msg += `EXP: *+${bonus.exp}%*\n`;
-        msg += `💰 Gold: *+${bonus.gold}%*\n`;
+        lines.push("---", { sub: "Marriage Bonus" },
+          `HP: +${bonus.hp}`,
+          `ATK: +${bonus.atk}`,
+          `DEF: +${bonus.def}`,
+          `EXP: +${bonus.exp}%`,
+          `Gold: +${bonus.gold}%`);
       }
 
       // War record
@@ -83,29 +84,25 @@ async function handler(m, { sock }) {
       const warLose = cinta.warLose || 0;
       const totalWar = warWin + warLose;
       const winRate = totalWar > 0 ? Math.floor((warWin / totalWar) * 100) : 0;
-      msg += `\n  ⚔️ *Couple War Record:*\n`;
-      msg += `🏆 Menang: *${warWin}*\n`;
-      msg += `💥 Kalah: *${warLose}*\n`;
-      msg += `📊 Win Rate: *${winRate}%*\n`;
+      lines.push("---", { sub: "Couple War Record" },
+        `Menang: ${warWin}`,
+        `Kalah: ${warLose}`,
+        `Win Rate: ${winRate}%`);
     } else if (cinta.tembakTarget) {
-      msg += `🏹 Status: *Menunggu jawaban*\n`;
-      msg += `🎯 Target: *${cinta.tembakTarget.split("@")[0]}*\n`;
+      lines.push("---", "Status: Menunggu jawaban", `Target: ${cinta.tembakTarget.split("@")[0]}`);
     } else {
-      msg += `💔 Status: *Jomblo*\n`;
-      msg += `Mulai dengan \`${m.prefix}jadianmatch @tag\`\n`;
+      lines.push("---", "Status: Jomblo", `Mulai dengan ${m.prefix}jadianmatch @tag`);
     }
 
     // Kencan stats
     if (cinta.totalKencan || cinta.breakupCount || cinta.divorceCount) {
-      msg += `\n  📊 *Statistik:*\n`;
-      if (cinta.totalKencan) msg += `💕 Total Kencan: *${cinta.totalKencan}x*\n`;
-      if (cinta.breakupCount) msg += `💔 Total Putus: *${cinta.breakupCount}x*\n`;
-      if (cinta.divorceCount) msg += `💔 Total Cerai: *${cinta.divorceCount}x*\n`;
+      lines.push("---", { sub: "Statistik" });
+      if (cinta.totalKencan) lines.push(`Total Kencan: ${cinta.totalKencan}x`);
+      if (cinta.breakupCount) lines.push(`Total Putus: ${cinta.breakupCount}x`);
+      if (cinta.divorceCount) lines.push(`Total Cerai: ${cinta.divorceCount}x`);
     }
 
-    msg += ``;
-
-    await m.reply(msg);
+    await m.reply(novaBox("Cinta Info", lines));
     await m.react("💑");
   } catch (e) {
     console.error("[cintainfo] Error:", e.message);
