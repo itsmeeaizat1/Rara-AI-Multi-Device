@@ -143,6 +143,8 @@ async function handler(m, { sock, config, db }) {
         `Kata: ${words} | Karakter: ${chars}`,
         `Akurasi: ${accuracy}`,
         `Quote: ${session.author}`,
+        "",
+        "Yuk balapan lagi kak, biar jempolmu makin kencang ⌨️🥳",
       ]));
     } else {
       // Calculate accuracy based on correct chars
@@ -164,6 +166,8 @@ async function handler(m, { sock, config, db }) {
         `Waktu: ${elapsed.toFixed(1)}s`,
         "",
         `Quote asli: "${session.text}"`,
+        "",
+        "Yuk balapan lagi kak, biar makin cepat ⌨️🥳",
       ]));
     }
   } catch (e) {

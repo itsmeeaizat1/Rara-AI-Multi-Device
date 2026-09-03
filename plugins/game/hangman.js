@@ -175,6 +175,7 @@ async function handler(m, { sock, config, db }) {
           sessions.delete(m.chat);
           return m.reply(claraWrap("Hangman", [
             `💀 Game over! Kata: ${session.word}`,
+            "Yuk coba kata lain kak, jangan takut kena gantung 🥳",
             "",
             HANGMAN_STAGES[MAX_WRONG],
           ]));
@@ -199,6 +200,8 @@ async function handler(m, { sock, config, db }) {
         return m.reply(claraWrap("Hangman", [
           `🎉 Benar! Kata: ${session.word}`,
           `Salah: ${session.wrong}/${MAX_WRONG}`,
+          "",
+          "Yuk tebak kata lain kak, biar makin jago 🥳",
         ]));
       } else {
         session.wrong++;
@@ -206,6 +209,7 @@ async function handler(m, { sock, config, db }) {
           sessions.delete(m.chat);
           return m.reply(claraWrap("Hangman", [
             `💀 Game over! Kata: ${session.word}`,
+            "Yuk coba kata lain kak, jangan takut kena gantung 🥳",
             "",
             HANGMAN_STAGES[MAX_WRONG],
           ]));

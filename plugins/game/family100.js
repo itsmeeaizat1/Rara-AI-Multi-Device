@@ -309,13 +309,13 @@ Total jawaban: *${questionData.jawaban.length}*\n`;
       try {
         let endText = `${pick(TIMEOUT_MSGS)}\n\n`;
         endText += `${session.question}\n\n`;
-        endText += `📊 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
+        endText += `🌟 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
           if (ans.revealed) {
-            endText += `│ ${i + 1}. *${ans.text.toUpperCase()}* ✅\n`;
+            endText += `${i + 1}. ${ans.text} ✅\n`;
           } else {
-            endText += `│ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
+            endText += `${i + 1}. ${ans.text} ❌\n`;
           }
         }
         endText += `
@@ -324,7 +324,7 @@ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
         if (scores) {
           endText += `🏆 *ꜱᴋᴏʀ ᴀᴋʜɪʀ:*\n${scores}\n\n`;
         }
-        endText += ``;
+        endText += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳\n\n`;
         await sock.sendMessage(chatId, { text: endText });
       } catch (e) {
         console.error("[family100] Timeout handler error:", e.message);
@@ -360,15 +360,17 @@ async function answerHandler(m, sock) {
     // ─── SURRENDER ───
     if (isSurrender(userAnswer)) {
       // Build reveal text BEFORE ending session
+      // Format hasil (request owner): jawaban plain tanpa bold/uppercase,
+      // bold cuma di header — biar gak berlebihan.
       let text = `${pick(SURRENDER_MSGS)}\n\n`;
       text += `${session.question}\n\n`;
-      text += `📊 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
+      text += `🌟 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
         if (ans.revealed) {
-          text += `│ ${i + 1}. *${ans.text.toUpperCase()}* ✅\n`;
+          text += `${i + 1}. ${ans.text} ✅\n`;
         } else {
-          text += `│ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
+          text += `${i + 1}. ${ans.text} ❌\n`;
         }
       }
       text += `
@@ -377,7 +379,7 @@ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
       if (scores) {
         text += `🏆 *ꜱᴋᴏʀ ᴀᴋʜɪʀ:*\n${scores}\n\n`;
       }
-      text += ``;
+      text += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳\n\n`;
 
       const mentionJids = Object.keys(session.scores).length > 0
         ? Object.keys(session.scores)

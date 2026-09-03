@@ -73,7 +73,8 @@ Total pemain: ${game.players.length}`);
         msg += `🎲 Dadu: ${dice}\n`;
         msg += `🪜 Tangga! Naik ke ${pos}\n`;
         msg += `📍 @${sender.split("@")[0]} di posisi ${pos}\n`;
-        if (pos >= 100) { msg += `🏆 MENANG!\n`; games.delete(from); }
+        if (pos >= 100) { msg += `🏆 MENANG!\n`;
+          msg += `Yuk main ular tangga lagi kak untuk dadi yang lebih baik 🥳\n`; games.delete(from); }
         game.positions[sender] = pos;
         game.turn++;
         return m.reply(msg.trim());
@@ -87,7 +88,8 @@ Total pemain: ${game.players.length}`);
         msg += `🎲 Dadu: ${dice}\n`;
         msg += `🐍 Ular! Turun ke ${pos}\n`;
         msg += `📍 @${sender.split("@")[0]} di posisi ${pos}\n`;
-        if (pos >= 100) { msg += `🏆 MENANG!\n`; games.delete(from); }
+        if (pos >= 100) { msg += `🏆 MENANG!\n`;
+          msg += `Yuk main ular tangga lagi kak untuk dadi yang lebih baik 🥳\n`; games.delete(from); }
         game.positions[sender] = pos;
         game.turn++;
         return m.reply(msg.trim());
@@ -101,7 +103,8 @@ Total pemain: ${game.players.length}`);
       let msg = "";
       msg += `🎲 Dadu: ${dice}\n`;
       msg += `📍 @${sender.split("@")[0]} di posisi ${pos}/100\n`;
-      if (pos >= 100) { msg += `🏆 MENANG!\n`; games.delete(from); }
+      if (pos >= 100) { msg += `🏆 MENANG!\n`;
+          msg += `Yuk main ular tangga lagi kak untuk dadi yang lebih baik 🥳\n`; games.delete(from); }
       return m.reply(msg.trim());
     }
 

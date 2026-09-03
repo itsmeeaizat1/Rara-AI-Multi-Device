@@ -84,6 +84,7 @@ async function handler(m, { sock }) {
         msg += `💥 BOOM!\n`;
         msg += `Kamu memotong kabel ${result.color}\n`;
         msg += `Itu kabel bom! Kamu kalah!\n`;
+        msg += `Yuk coba lagi kak, jangan kalah sama bom 🥳\n`;
                 return m.reply(msg);
       }
       if (game.state === "defused") {
@@ -93,6 +94,7 @@ async function handler(m, { sock }) {
         msg += `✅ Berhasil jinakkan bom!\n`;
         msg += `Kabel aman: ${game.cutCards.join(", ")}\n`;
         msg += `🎉 Selamat! Kamu menang!\n`;
+        msg += `Yuk jinakkan bom lagi kak, biar sarafmu makin baja 🥳\n`;
                 return m.reply(msg);
       }
       let msg = "";
