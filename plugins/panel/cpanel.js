@@ -4,6 +4,8 @@
 // Status  : .cpanel status <namaserver> <idpanel>
 // Upload  : .cpanel upload <namaserver> <idpanel> (reply file)
 // Create  : .cpanel <ram> <username>,<nomor>,<idpanel>  → akun dikirim ke nomor
+// Login   : .cpanel login <username>,<password>,<idpanel> → akses kontrol server sendiri (7 hari)
+// Logout  : .cpanel logout <idpanel>
 // Menu lama dipindah ke .panelmenu
 
 import axios from "axios";
@@ -17,6 +19,7 @@ import { isGcSeller } from "./gcseller.js";
 import { checkPanelJeda, setPanelLastUsed } from "../../src/lib/nova-panel-jeda.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import { downloadMediaMessage } from "nova";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const MAX_PANELS = 100;
 const POWER_SIGNALS = ["start", "stop", "restart", "kill"];
@@ -39,8 +42,8 @@ const pluginConfig = {
   name: ["cpanel"],
   alias: ["panel"],
   category: "panel",
-  description: "Kontrol panel Pterodactyl: start/stop/restart/kill, status, upload file, buat akun (v1-v100)",
-  usage: ".cpanel start <namaserver> <idpanel> | .cpanel status <nama> <id> | .cpanel upload <nama> <id> | .cpanel unli aizat,628xxx,1",
+  description: "Pusat kontrol panel Pterodactyl: power/status/upload (admin atau login user), buat akun, session login 7 hari (v1-v100)",
+  usage: ".cpanel start|stop|restart|kill|status|upload <namaserver> <idpanel> | .cpanel login user,pass,1 (kontrol server sendiri) | .cpanel unli aizat,628xxx,1",
   example: ".cpanel start Aizat1 1",
   isOwner: false,
   isPremium: false,
@@ -84,6 +87,25 @@ function getAvailableSlots() {
   return out;
 }
 
+// ══ Session login user (kontrol server sendiri tanpa role) ══
+const SESSION_MS = 7 * 24 * 60 * 60 * 1000; // 7 hari
+
+function loadSessions() {
+  const db = getDatabase();
+  return db.setting("panelSessions") || {};
+}
+function saveSessions(sessions) {
+  const db = getDatabase();
+  db.setting("panelSessions", sessions);
+}
+function getSession(m, panelId) {
+  const s = loadSessions()[cleanJid(m.sender)];
+  if (!s || !s.ptlc) return null;
+  if (Date.now() > (s.expiresAt || 0)) return null;
+  if (panelId && s.panelId !== panelId) return null;
+  return s;
+}
+
 function buildGuide(m) {
   const p = m.prefix || ".";
   const available = getAvailableSlots();
@@ -96,6 +118,9 @@ function buildGuide(m) {
   txt += `Status & Upload:\n`;
   txt += `${p}cpanel status <namaserver> <idpanel>\n`;
   txt += `${p}cpanel upload <namaserver> <idpanel> (reply file)\n\n`;
+  txt += `Login User (kontrol server sendiri):\n`;
+  txt += `${p}cpanel login <username>,<password>,<idpanel>\n`;
+  txt += `${p}cpanel logout <idpanel>\n\n`;
   txt += `Buat Akun Panel:\n`;
   txt += `${p}cpanel <ram> <username>,<nomor>,<idpanel>\n`;
   txt += `Contoh: ${p}cpanel unli aizat,628174887770,1\n`;
@@ -151,22 +176,44 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet via: ${m.prefix || "."}setpanel v${panelId} <domain>`));
     }
     const ver = "v" + panelId;
-    if (!m.isOwner && !isGcSeller(m.chat, ver) && !hasAccessToServer(m.sender, ver, false)) {
+    // akses: owner / gc-seller / role panel  →  ATAU  session login user (server sendiri)
+    const isAdminAccess = m.isOwner || isGcSeller(m.chat, ver) || hasAccessToServer(m.sender, ver, false);
+    const session = !isAdminAccess ? getSession(m, panelId) : null;
+    if (!isAdminAccess && !session) {
       const role = getUserRole(m.sender, ver) || "Tidak ada";
-      return m.reply(claraWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}`));
+      return m.reply(claraWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}\n\nLogin pakai akun panelmu:\n${m.prefix || "."}cpanel login <username>,<password>,${panelId}`));
     }
 
     await m.react("🕒");
     try {
-      const found = await findServerByName(slot, serverName);
-      if (!found.exact) {
-        await m.react("❗");
-        let txt = `Server "${serverName}" tidak ditemukan di panel ${ver.toUpperCase()} (total ${found.total} server).`;
-        if (found.suggestions.length) txt += `\n\nNama mirip: ${found.suggestions.join(", ")}`;
-        txt += `\n\nLihat daftar: ${m.prefix || "."}listserver ${panelId}`;
-        return m.reply(claraWrap("cpanel", txt));
+      let attr, clientKey = null;
+      if (session) {
+        // user login: daftar server milik akunnya via client API (ptlc cuma bisa lihat server sendiri)
+        const cli = await axios.get(`${slot.domain}/api/client?per_page=100`, {
+          headers: { Authorization: `Bearer ${session.ptlc}`, Accept: "application/json" },
+        });
+        const mine = (cli.data.data || []).map((s) => s.attributes);
+        const hit = mine.find((a) => a.name.toLowerCase() === String(serverName).toLowerCase());
+        if (!hit) {
+          await m.react("❗");
+          const names = mine.slice(0, 10).map((a) => a.name);
+          let txt = `Server "${serverName}" tidak ditemukan di akunmu (panel ${ver.toUpperCase()}).`;
+          if (names.length) txt += `\n\nServer milik akun ${session.username}: ${names.join(", ")}`;
+          return m.reply(claraWrap("cpanel", txt));
+        }
+        attr = { id: hit.internal_id, uuid: hit.uuid, name: hit.name };
+        clientKey = session.ptlc;
+      } else {
+        const found = await findServerByName(slot, serverName);
+        if (!found.exact) {
+          await m.react("❗");
+          let txt = `Server "${serverName}" tidak ditemukan di panel ${ver.toUpperCase()} (total ${found.total} server).`;
+          if (found.suggestions.length) txt += `\n\nNama mirip: ${found.suggestions.join(", ")}`;
+          txt += `\n\nLihat daftar: ${m.prefix || "."}listserver ${panelId}`;
+          return m.reply(claraWrap("cpanel", txt));
+        }
+        attr = found.exact.attributes;
       }
-      const attr = found.exact.attributes;
 
       // ── power control (application API) ──
       if (POWER_SIGNALS.includes(sub)) {
@@ -186,17 +233,18 @@ async function handler(m, { sock }) {
         return m.reply(`Server ${attr.name} di panel ${ver.toUpperCase()} berhasil ${label} kak 🥳`);
       }
 
-      // client API (butuh capikey)
-      if (!slot.capikey) {
+      // client API: user login pakai ptlc session-nya; admin pakai capikey
+      if (!clientKey && !slot.capikey) {
         await m.react("❗");
-        return m.reply(claraWrap("cpanel", `Fitur ${sub} butuh Client API key (capikey) panel ${ver.toUpperCase()}.\n\nSet via: ${m.prefix || "."}setpanel v${panelId} capikey ptlc_xxxx`));
+        return m.reply(claraWrap("cpanel", `Fitur ${sub} butuh Client API key (capikey) panel ${ver.toUpperCase()} — atau login dulu via ${m.prefix || "."}cpanel login.\n\nSet capikey via: ${m.prefix || "."}setpanel v${panelId} capikey ptlc_xxxx`));
       }
+      if (!clientKey) clientKey = slot.capikey;
 
       // ── status ──
       if (sub === "status") {
         const res = await axios.get(
           `${slot.domain}/api/client/servers/${attr.uuid}/resources`,
-          { headers: { Authorization: `Bearer ${slot.capikey}`, Accept: "application/json" } }
+          { headers: { Authorization: `Bearer ${clientKey}`, Accept: "application/json" } }
         );
         const st = res.data.attributes || {};
         const state = String(st.current_state || "unknown");
@@ -227,7 +275,7 @@ async function handler(m, { sock }) {
         // ambil upload URL dari client API
         const upRes = await axios.get(
           `${slot.domain}/api/client/servers/${attr.uuid}/files/upload`,
-          { headers: { Authorization: `Bearer ${slot.capikey}`, Accept: "application/json" } }
+          { headers: { Authorization: `Bearer ${clientKey}`, Accept: "application/json" } }
         );
         const uploadUrl = upRes.data.attributes;
         const fd = new FormData();
@@ -245,6 +293,135 @@ async function handler(m, { sock }) {
       }
       return m.reply(novaGagal("cpanel"));
     }
+  }
+
+  // ══════════ LOGIN USER ══════════
+  if (sub === "login") {
+    // .cpanel login <username>,<password>,<idpanel>
+    const raw = args.slice(1).join(" ");
+    const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
+    const username = parts[0];
+    const password = parts[1];
+    const panelId = parsePanelId(parts[2]);
+    if (!username || !password || !panelId) {
+      return m.reply(claraWrap("cpanel", `Format salah.\n\n${m.prefix || "."}cpanel login <username>,<password>,<idpanel>\n\nContoh: ${m.prefix || "."}cpanel login aizat,rahasia123,1`));
+    }
+    const slot = getSlot(panelId);
+    if (!slot?.domain || !slot?.apikey) {
+      return m.reply(claraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}`));
+    }
+    const ver = "v" + panelId;
+
+    await m.react("🕒");
+    try {
+      // 1. cari email user via application API (login Ptero pakai email, bukan username)
+      let email = null;
+      let page = 1;
+      let totalPages = 1;
+      while (page <= totalPages && !email) {
+        const res = await axios.get(
+          `${slot.domain}/api/application/users?page=${page}&per_page=100`,
+          {
+            headers: {
+              Authorization: `Bearer ${slot.apikey}`,
+              "Content-Type": "application/json",
+              Accept: "Application/vnd.pterodactyl.v1+json",
+            },
+          }
+        );
+        const hit = (res.data.data || []).find(
+          (u) => u.attributes.username.toLowerCase() === username.toLowerCase()
+        );
+        if (hit) email = hit.attributes.email;
+        totalPages = res.data.meta?.pagination?.total_pages || 1;
+        page++;
+      }
+      if (!email) {
+        await m.react("❗");
+        return m.reply(claraWrap("cpanel", `Username "${username}" tidak ditemukan di panel ${ver.toUpperCase()}.`));
+      }
+
+      // 2. verifikasi password via login API
+      let authToken;
+      try {
+        const loginRes = await axios.post(
+          `${slot.domain}/api/auth/login`,
+          { email, password },
+          { headers: { "Content-Type": "application/json", Accept: "application/json" }, timeout: 10000 }
+        );
+        authToken = loginRes.data?.token || loginRes.data?.data?.token;
+      } catch (e) {
+        await m.react("❗");
+        return m.reply(claraWrap("cpanel", `Username atau password salah. Coba lagi.`));
+      }
+      if (!authToken) {
+        await m.react("❗");
+        return m.reply(claraWrap("cpanel", `Login gagal, coba lagi nanti.`));
+      }
+
+      // 3. buat client API key (ptlc) untuk session
+      const keyRes = await axios.post(
+        `${slot.domain}/api/client/account/api_keys`,
+        { description: "Nova Bot Control Session", allowed_ips: [] },
+        {
+          headers: { Authorization: `Bearer ${authToken}`, "Content-Type": "application/json", Accept: "application/json" },
+          timeout: 10000,
+        }
+      );
+      const ptlc = keyRes.data?.secret || keyRes.data?.data?.secret;
+      if (!ptlc) {
+        await m.react("❗");
+        return m.reply(claraWrap("cpanel", `Login berhasil tapi gagal membuat session key. Coba lagi.`));
+      }
+
+      // 4. simpan session 7 hari
+      const sessions = loadSessions();
+      sessions[cleanJid(m.sender)] = {
+        ptlc,
+        username: username.toLowerCase(),
+        email,
+        panelId,
+        domain: slot.domain,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + SESSION_MS,
+      };
+      saveSessions(sessions);
+
+      await m.react("🐣");
+      const p = m.prefix || ".";
+      return m.reply(`Login panel ${ver.toUpperCase()} berhasil kak 🥳\n\nUsername: ${username}\nSession aktif 7 hari\n\nKontrol server milik akunmu:\n${p}cpanel status <namaserver> ${panelId}\n${p}cpanel start <namaserver> ${panelId}\n${p}cpanel stop <namaserver> ${panelId}\n${p}cpanel restart <namaserver> ${panelId}\n${p}cpanel kill <namaserver> ${panelId}\n${p}cpanel upload <namaserver> ${panelId} (reply file)\n\nLogout: ${p}cpanel logout ${panelId}`);
+    } catch (err) {
+      console.error("[cpanel login]", err?.response?.data || err.message);
+      await m.react("❌");
+      return m.reply(novaGangguan("cpanel"));
+    }
+  }
+
+  // ══════════ LOGOUT ══════════
+  if (sub === "logout") {
+    const panelId = parsePanelId(args[1]);
+    const sessions = loadSessions();
+    const key = cleanJid(m.sender);
+    if (!sessions[key]) {
+      return m.reply(claraWrap("cpanel", `Kamu tidak punya session login aktif.`));
+    }
+    if (panelId && sessions[key].panelId !== panelId) {
+      return m.reply(claraWrap("cpanel", `Session kamu bukan di panel v${panelId}. Session kamu: v${sessions[key].panelId}`));
+    }
+    const uname = sessions[key].username;
+    delete sessions[key];
+    saveSessions(sessions);
+    return m.reply(`Logout panel berhasil kak 🥳 (${uname})`);
+  }
+
+  // ══════════ CEK SESSION ══════════
+  if (sub === "me") {
+    const s = getSession(m, null);
+    if (!s) {
+      return m.reply(claraWrap("cpanel", `Belum login.\n\nLogin: ${m.prefix || "."}cpanel login <username>,<password>,<idpanel>`));
+    }
+    const days = Math.max(0, Math.ceil((s.expiresAt - Date.now()) / 86400000));
+    return m.reply(`Session Panel\n\nUsername: ${s.username}\nPanel: v${s.panelId}\nBerlaku: ${days} hari lagi`);
   }
 
   // ══════════ BUAT AKUN PANEL ══════════
@@ -365,12 +542,16 @@ async function handler(m, { sock }) {
       credTxt += `Nama Server: ${server.name}\n`;
       credTxt += `Server ID: ${server.id}\n\n`;
       credTxt += `Login di domain di atas untuk mengelola server.\n`;
-      credTxt += `Simpan data ini, jangan bagikan ke siapapun!`;
+      credTxt += `Kontrol via bot (login sekali, aktif 7 hari):\n`;
+      credTxt += `.cpanel login ${user.username},${password},${panelId}\n`;
+      credTxt += `.cpanel status <namaserver> ${panelId}\n`;
+      credTxt += `.cpanel start <namaserver> ${panelId}\n`;
+      credTxt += `\nSimpan data ini, jangan bagikan ke siapapun!`;
       await sock.sendMessage(targetUser, { text: credTxt });
 
       await m.react("🐣");
       await setPanelLastUsed();
-      return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nRAM: ${ramLabel}\nData akun sudah dikirim ke ${targetUser.split("@")[0]}`);
+      return m.reply(`Akun panel untuk ${user.username} berhasil dibuat di panel ${ver.toUpperCase()} kak 🥳\n\nRAM: ${ramLabel}\nData akun sudah dikirim ke ${targetUser.split("@")[0]}\n\nKontrol server sendiri (user):\n${m.prefix || "."}cpanel login ${user.username},<password>,${panelId}`);
     } catch (err) {
       console.error("[cpanel create]", err?.response?.data || err.message);
       await m.react("❌");

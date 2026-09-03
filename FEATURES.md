@@ -480,7 +480,7 @@ addenergi, addexp, addkoin, addlevel, addowner, addpartner, addplugin, addprem, 
 
 ### 🖥️ Panel (19 plugin)
 - 100 slot config panel Pterodactyl (v1-v100): .setpanel v1-v100 domain/apikey/capikey, semua fitur panel support id slot via argumen (.listserver 50, .addreseller 50 @user, .1gb v50 user, .cp v50 1gb 1gb 100 628xxx, .delpanel 50, .addgcseller 50)
-- .cpanel (pusat kontrol v1-v100): start/stop/restart/kill <namaserver> <idpanel>, status <nama> <id>, upload <nama> <id> (reply file), create akun <ram> <username>,<nomor>,<idpanel> → kredensial dikirim ke nomor (password auto-generate)
+- .cpanel (pusat kontrol v1-v100): start/stop/restart/kill <namaserver> <idpanel>, status <nama> <id>, upload <nama> <id> (reply file), create akun <ram> <username>,<nomor>,<idpanel> → kredensial dikirim ke nomor (password auto-generate), login user <username>,<password>,<idpanel> (session 7 hari — user kontrol server miliknya sendiri, verifikasi email+password via API panel, cuma bisa lihat/kontrol server akunnya), logout, me
 - .panelmenu: menu panel lama (dipindah dari .cpanel)
 addseller, cekjeda, cekserver, cp, cpanel, delpanel, installtemabilling, installtemaenigma, installtemanebula, installtemastellar, jedacreate, restartserver, root, seller, startserver, stopserver
 
