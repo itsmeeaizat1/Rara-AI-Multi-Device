@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
             if (existingCmds.length > 10) {
                 txt += `... dan ${existingCmds.length - 10} lainnya\n`
             }
-            txt += `╰┈┈┈┈┈┈┈┈`
+            txt += `---`
         }
         
         return await m.reply(claraWrap("addcmdsticker", txt))

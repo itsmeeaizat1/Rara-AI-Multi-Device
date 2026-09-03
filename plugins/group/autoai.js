@@ -259,7 +259,7 @@ async function handler(m, { sock }) {
           "" +
           `🎭 Karakter: *${characterName}*\n` +
           `📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n` +
-          `╰┈┈┈┈┈┈┈┈\n\n` +
+          `---\n\n` +
           `ℹ️ AutoAI aktif di seluruh grup\n` +
           `ℹ️ Grup yang sudah punya config tetap pakai config sendiri\n` +
           `ℹ️ Ketik *.autoai global off* untuk menonaktifkan`,
@@ -339,13 +339,13 @@ async function handler(m, { sock }) {
     txt += `🧠 Logic: ${customLogic.substring(0, 100)}${customLogic.length > 100 ? "..." : ""}\n`;
     txt += `📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
-    txt += `╰┈┈┈┈┈┈┈┈\n\n`;
+    txt += `---\n\n`;
     txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
     txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
     txt +=
       responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
     txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
-    return m.reply(txt, { mentions: [m.sender] });
+    return m.reply(claraWrap("Auto AI", txt), { mentions: [m.sender] });
   }
 
   const customPersona = db.db.data.autoai_personas[charKey];
@@ -367,13 +367,13 @@ async function handler(m, { sock }) {
         txt += `🎭 Karakter: *${customPersona.name}* (custom)\n`;
     txt += `📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
-    txt += `╰┈┈┈┈┈┈┈┈\n\n`;
+    txt += `---\n\n`;
     txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
     txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
     txt +=
       responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
     txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
-    return m.reply(txt, { mentions: [m.sender] });
+    return m.reply(claraWrap("Auto AI", txt), { mentions: [m.sender] });
   }
 
   if (!characters[charKey]) {
@@ -405,14 +405,14 @@ async function handler(m, { sock }) {
     txt += `🎭 Karakter: *${characters[charKey].name}*\n`;
   txt += `📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
   txt += `👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
-  txt += `╰┈┈┈┈┈┈┈┈\n\n`;
+  txt += `---\n\n`;
   txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
   txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
   txt +=
     responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
   txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
 
-  await m.reply(txt, { mentions: [m.sender] });
+  await m.reply(claraWrap("Auto AI", txt), { mentions: [m.sender] });
 }
 
 async function generateVoiceResponse(text, sock, chatId, quotedMsg) {

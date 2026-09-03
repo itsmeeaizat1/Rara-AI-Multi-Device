@@ -37,12 +37,12 @@ async function handler(m, { sock }) {
         
         text += ""
         text += `${m.prefix}setbirthday DD-MM\n`
-        text += `╰┈┈┈┈┈┈┈┈\n\n`
+        text += `---\n\n`
         text += `*ᴄᴏɴᴛᴏʜ:*\n`
         text += `${m.prefix}setbirthday 25-12\n`
         text += `${m.prefix}setbirthday 01-01`
         
-        return await m.reply( text, "setbirthday")
+        return await m.reply(claraWrap("setbirthday", text))
     }
     
     const dateRegex = /^(\d{1,2})[-\/](\d{1,2})$/
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         "" +
         `📅 Tanggal: *${day} ${months[month - 1]}*\n` +
         `👤 User: @${cleanJid}\n` +
-        `╰┈┈┈┈┈┈┈┈\n\n` +
+        `---\n\n` +
         `Bot akan mengucapkan selamat\n` +
         `ulang tahun di hari spesialmu! 🎉`,
         { mentions: [userJid] }

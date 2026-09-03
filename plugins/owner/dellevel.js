@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         "" +
         `> \`.dellevel <jumlah>\` - ke diri sendiri\n` +
         `> \`.dellevel <jumlah> @user\` - ke orang lain\n` +
-        `╰┈┈┈┈┈┈┈┈\n\n` +
+        `---\n\n` +
         `Contoh: \`${m.prefix}dellevel 5\``, "dellevel");
   }
 
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
       `🚄 Exp Removed: *-${expToRemove.toLocaleString("id-ID")}*\n` +
       `📊 Level: *${oldLevel} → ${newLevel}*\n` +
       `${getRole(newLevel)}\n` +
-      `╰┈┈┈┈┈┈┈┈`));
+      `---`));
 }
 
 export { pluginConfig as config, handler };

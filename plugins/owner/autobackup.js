@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     txt += `📅 Last Backup: ${status.lastBackup ? timeHelper.fromTimestamp(status.lastBackup, "DD MMMM YYYY HH:mm:ss") : "-"}\n`;
     txt += `#️⃣ Total: ${status.backupCount} backup\n`;
     txt += `📤 Dikirim ke: ${ownerNum}\n`;
-    txt += `╰┈┈┈┈┈┈┈┈\n\n`;
+    txt += `---\n\n`;
 
     txt += `*Cara Pakai:*\n`;
     txt += `\`${m.prefix}autobackup on <interval>\`\n`;
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     txt += `*Contoh:*\n`;
     txt += `\`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
 
-    return await m.reply( txt, "autobackup");
+    return await m.reply(claraWrap("Autobackup", txt));
   }
 
   switch (action) {
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
           `⏱️ Interval: ${result.interval}\n` +
           `📤 Dikirim ke: ${ownerNum}\n` +
           `📦 Exclude: node_modules, .git, storages, dll\n` +
-          `╰┈┈┈┈┈┈┈┈\n\n` +
+          `---\n\n` +
           `Backup pertama akan dikirim dalam ${result.interval}`,
       );
     }
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       txt += `📅 Last: ${status.lastBackup ? timeHelper.fromTimestamp(status.lastBackup, "DD MMMM YYYY HH:mm:ss") : "-"}\n`;
       txt += `#️⃣ Total: ${status.backupCount} backup\n`;
       txt += `📤 Target: ${ownerNum}\n`;
-      txt += `╰┈┈┈┈┈┈┈┈`;
+      txt += `---`;
 
       return await m.reply(claraWrap("autobackup", txt));
     }

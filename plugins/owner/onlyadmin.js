@@ -28,13 +28,14 @@ async function handler(m, { sock }) {
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        return m.reply('✅ *Onlyadmin Aktif*\n\n' +
-            '' +
-            '┃ ✅ Admin grup\n' +
-            '┃ ✅ Owner bot\n' +
-            '┃ ❌ Member biasa\n' +
-            '\n' +
-            '> Gunakan `.onlyadmin off` untuk menonaktifkan')
+        return m.reply(claraWrap("Onlyadmin", [
+            "*Onlyadmin Aktif*",
+            "✅ Admin grup",
+            "✅ Owner bot",
+            "❌ Member biasa",
+            "---",
+            `Gunakan \`${m.prefix}onlyadmin off\` untuk menonaktifkan`,
+        ], "success"))
     }
 
     if (cmd === 'publicadmin') {
@@ -45,23 +46,26 @@ async function handler(m, { sock }) {
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        return m.reply('✅ *Onlyadmin Aktif*\n\n' +
-            '' +
-            '┃ ✅ Admin grup\n' +
-            '┃ ✅ Owner bot\n' +
-            '┃ ✅ Private chat (semua)\n' +
-            '┃ ❌ Member biasa di grup\n' +
-            '\n' +
-            '> Gunakan `.onlyadmin off` untuk menonaktifkan')
+        return m.reply(claraWrap("Onlyadmin", [
+            "*Onlyadmin Aktif*",
+            "✅ Admin grup",
+            "✅ Owner bot",
+            "✅ Private chat (semua)",
+            "❌ Member biasa di grup",
+            "---",
+            `Gunakan \`${m.prefix}onlyadmin off\` untuk menonaktifkan`,
+        ], "success"))
     }
 
     if (!args || args === 'status') {
-        return m.reply( `🔒 *Onlyadmin*\n\n` +
-            `Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
-            `*Penggunaan:*\n` +
-            `\`.onlyadmin on\` — Aktifkan\n` +
-            `\`.onlyadmin off\` — Nonaktifkan\n\n` +
-            `_Hanya admin grup, owner, dan private chat yang bisa akses bot_`, "onlyadmin")
+        return m.reply(claraWrap("Onlyadmin", [
+            `Status : ${current ? "✅ Aktif" : "❌ Nonaktif"}`,
+            "---",
+            `📌 \`${m.prefix}onlyadmin on\` — Aktifkan`,
+            `📌 \`${m.prefix}onlyadmin off\` — Nonaktifkan`,
+            "---",
+            "Hanya admin grup, owner, dan private chat yang bisa akses bot",
+        ]))
     }
 
     if (args === 'on') {
@@ -69,13 +73,13 @@ async function handler(m, { sock }) {
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        return m.reply('✅ *Onlyadmin Aktif*\n\n' +
-            '' +
-            '┃ ✅ Admin grup\n' +
-            '┃ ✅ Owner bot\n' +
-            '┃ ✅ Private chat (semua)\n' +
-            '┃ ❌ Member biasa di grup\n' +
-            '')
+        return m.reply(claraWrap("Onlyadmin", [
+            "*Onlyadmin Aktif*",
+            "✅ Admin grup",
+            "✅ Owner bot",
+            "✅ Private chat (semua)",
+            "❌ Member biasa di grup",
+        ], "success"))
     }
 
     if (args === 'off') {

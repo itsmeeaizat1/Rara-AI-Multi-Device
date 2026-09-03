@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
         for (let i = 0; i < customWords.length; i++) {
             text += `${i + 1}. ${customWords[i]}\n`
         }
-        text += `╰┈┈┈┈┈┈┈┈\n\n`
+        text += `---\n\n`
     }
     
     text += ""
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     for (let i = 0; i < defaultWords.length; i++) {
         text += `${i + 1}. ${defaultWords[i]}\n`
     }
-    text += `╰┈┈┈┈┈┈┈┈\n\n`
+    text += `---\n\n`
     
     text += `Total: *${customWords.length + defaultWords.length}* kata\n`
     text += `\`.addtoxic <kata>\` untuk tambah\n`

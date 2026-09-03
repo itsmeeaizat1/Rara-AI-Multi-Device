@@ -222,13 +222,13 @@ function buildConfirmationRewardBlock(user) {
   if (user?.hasClaimedRegisterReward) {
     return `
 │ Bonus daftar pertama sudah pernah diambil
-│ Daftar ulang tidak mendapat reward lagi\n╰┈┈┈┈┈┈┈┈`;
+│ Daftar ulang tidak mendapat reward lagi`;
   }
 
   return `
 │ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
 │ ⚡ +${rewards.energi} Energi
-│ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈`;
+│ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP`;
 }
 
 function buildSuccessRewardBlock(alreadyClaimedReward, randomBonus) {
@@ -237,13 +237,13 @@ function buildSuccessRewardBlock(alreadyClaimedReward, randomBonus) {
   if (alreadyClaimedReward) {
     return `
 │ Bonus daftar sudah pernah diklaim
-│ Tidak ada reward tambahan kali ini\n╰┈┈┈┈┈┈┈┈`;
+│ Tidak ada reward tambahan kali ini`;
   }
 
   return `
 │ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
 │ ⚡ +${rewards.energi} Energi
-│ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈`;
+│ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP`;
 }
 
 function generateSerialNumber() {

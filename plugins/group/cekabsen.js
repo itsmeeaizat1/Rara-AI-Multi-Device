@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   const dateStr = now.format("D MMMM YYYY");
   const createdDate = moment(absen.createdAt).tz("Asia/Jakarta");
   const timeStr = createdDate.format("HH:mm");
-  let list = "┃ _Belum ada yang absen_";
+  let list = "│ _Belum ada yang absen_";
   if (absen.peserta.length > 0) {
     list = absen.peserta
       .map((jid, i) => `${i + 1}. @${jid.split("@")[0]}`)
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
       `👑 Dibuat: @${absen.createdBy.split("@")[0]}\n` +
       `├┈┈「 👥 *PESERTA (${absen.peserta.length})* 」\n` +
       `${list}\n` +
-      `╰┈┈┈┈┈┈┈┈\n\n` +
+      `---\n\n` +
       `Ketik *${m.prefix}absen* untuk hadir`));
 }
 export { pluginConfig as config, handler };

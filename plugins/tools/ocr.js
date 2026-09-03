@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         .split("\n")
         .map((l) => `${l}`)
         .join("\n")}\n` +
-      `╰┈┈┈┈┈┈┈┈\n\n` +
+      `---\n\n` +
       `Total: ${extractedText.length} karakter`;
     await sendToolsPreview(
       sock,

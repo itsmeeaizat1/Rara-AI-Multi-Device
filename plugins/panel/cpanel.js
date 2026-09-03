@@ -112,16 +112,16 @@ async function handler(m, { sock }) {
         
         txt += ""
         txt += `Status: ${doHasToken} Token\n`
-        txt += `┃\n`
+        txt += `│\n`
         txt += `Create Vps:\n`
         txt += `\`${prefix}vps1g1c\` - 1GB/1CPU\n`
         txt += `\`${prefix}vps2g1c\` - 2GB/1CPU\n`
         txt += `\`${prefix}vps4g2c\` - 4GB/2CPU\n`
         txt += `\`${prefix}vps8g4c\` - 8GB/4CPU\n`
-        txt += `┃\n`
+        txt += `│\n`
         txt += `Manage:\n`
         txt += `\`${prefix}listvps\` | \`${prefix}cekvps\` | \`${prefix}delvps\` | \`${prefix}sisavps\`\n`
-        txt += `┃\n`
+        txt += `│\n`
         txt += `Kontrol:\n`
         txt += `\`${prefix}turnon\` | \`${prefix}turnoff\` | \`${prefix}restartvps\`\n`
         txt += `\n`

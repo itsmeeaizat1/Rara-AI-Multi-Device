@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
             "" +
             `Ketik: *.resetdb confirm*\n` +
             `dalam 60 detik\n` +
-            `╰┈┈┈┈┈┈┈┈\n\n` +
+            `---\n\n` +
             `❌ Aksi ini TIDAK BISA dibatalkan!`))
     }
     
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
             `👤 Users: ${userCount}\n` +
             `👥 Groups: ${groupCount}\n` +
             `⚔️ Clans: ${clanCount}\n` +
-            `╰┈┈┈┈┈┈┈┈\n\n` +
+            `---\n\n` +
             `Backup disimpan di:\n` +
             `\`${path.basename(backupPath)}\``)
         

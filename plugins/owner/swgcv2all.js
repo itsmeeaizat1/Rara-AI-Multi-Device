@@ -80,12 +80,14 @@ async function handler(m, { sock }) {
     rawContent = { text: text };
   } else {
     return m.reply(
+      claraWrap(
+      "Swgcv2all",
       `👋 *sWgcv2 All Global*\n\n` +
       `Kirim pesan *Status Grup V2* ke SEMUA grup sekaligus.\n\n` +
       "" +
       `${m.prefix}swgcv2all Halo semua!\n` +
       `atau reply gambar/video dengan caption ${m.prefix}swgcv2all\n` +
-      `╰┈┈┈┈┈┈┈┈`
+      `---`),
     );
   }
   try {
@@ -169,7 +171,7 @@ async function handler(m, { sock }) {
       `🌐 Total Grup: *${groupIds.length}*\n` +
       `✅ Sukses: *${successCount}*\n` +
       `❌ Gagal: *${failCount}*\n` +
-      `╰┈┈┈┈┈┈┈┈\n\n` +
+      `---\n\n` +
       `Broadcast Status Grup V2 (Ring Pink) berhasil dikirim ke semua grup!`));
 
   } catch (error) {

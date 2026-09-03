@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
         text += `🕕 ${diffDays} hari lagi\n`
     }
     
-    text += `╰┈┈┈┈┈┈┈┈`
+    text += `---`
     
     if (isToday) {
         text += `\n\n🎊 *ʜᴀᴘᴘʏ ʙɪʀᴛʜᴅᴀʏ!* 🎊\n`
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         text += `sukses selalu! 🎉🎂`
     }
     
-    await m.reply(text, { mentions: [target] })
+    await m.reply(claraWrap("Birthday", text), { mentions: [target] })
 }
 
 export { pluginConfig as config, handler }

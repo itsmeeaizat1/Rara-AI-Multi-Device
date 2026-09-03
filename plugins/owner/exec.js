@@ -99,7 +99,7 @@ async function handler(m, { sock, store }) {
         `├┈┈「 📊 *Result* 」\n` +
         `${status}\n` +
         `Type: ${type}\n` +
-        `╰┈┈┈┈┈┈┈┈\n\n` +
+        `---\n\n` +
         `\`\`\`${output}\`\`\``
     )
 }

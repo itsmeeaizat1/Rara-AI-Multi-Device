@@ -171,11 +171,11 @@ async function handler(m, { sock }) {
     text += `${label1} ${name1}\n`;
   text += `❤️\n`;
   text += `${label2} ${name2}\n`;
-  text += `╰┈┈┈┈┈┈┈┈\n\n`;
+  text += `---\n\n`;
     text += `${progressBar} *${compatibility}%*\n`;
   text += `${compatibilityEmoji(compatibility)}\n`;
   text += `Status: *${compatibilityText(compatibility)}*\n`;
-  text += `╰┈┈┈┈┈┈┈┈\n\n`;
+  text += `---\n\n`;
   if (usedRegistration) {
     text += `_Dijodohkan berdasarkan data registrasi_\n`;
   }
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
   }
   text += `_"${quote}"_`;
 
-  await m.reply(text, { mentions: [person1, person2] });
+  await m.reply(claraWrap("Jodoh Random", text), { mentions: [person1, person2] });
 }
 
 export { pluginConfig as config, handler };

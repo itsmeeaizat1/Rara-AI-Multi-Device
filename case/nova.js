@@ -9,6 +9,13 @@ import {
 } from "../src/lib/nova-plugins.js";
 import config from "../config.js";
 import { getStaticThumbnail } from "../src/lib/nova-asset-manager.js";
+import {
+  buildBox,
+  novaReply,
+  claraWrap,
+  toSC,
+  tipText,
+} from "../src/lib/nova-menu-style.js";
 
 // Preview card (externalAdReply) standar bot — thumbnail dari asset manager,
 // link dari config.saluran. Data chanel lama (id newsletter hardcoded) dihapus total,
@@ -31,41 +38,6 @@ async function buildListAdReply(title) {
   return ctx;
 }
 
-function toSmallCaps(text) {
-  const smallCapsMap = {
-    a: "ᴀ",
-    b: "ʙ",
-    c: "ᴄ",
-    d: "ᴅ",
-    e: "ᴇ",
-    f: "ꜰ",
-    g: "ɢ",
-    h: "ʜ",
-    i: "ɪ",
-    j: "ᴊ",
-    k: "ᴋ",
-    l: "ʟ",
-    m: "ᴍ",
-    n: "ɴ",
-    o: "ᴏ",
-    p: "ᴘ",
-    q: "ǫ",
-    r: "ʀ",
-    s: "s",
-    t: "ᴛ",
-    u: "ᴜ",
-    v: "ᴠ",
-    w: "ᴡ",
-    x: "x",
-    y: "ʏ",
-    z: "ᴢ",
-  };
-  return text
-    .toLowerCase()
-    .split("")
-    .map((c) => smallCapsMap[c] || c)
-    .join("");
-}
 
 function formatNumber(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -120,13 +92,14 @@ async function handleCommand(m, sock) {
           if (latency > 100 && latency <= 300) pingStatus = "🟡 Good";
           else if (latency > 300) pingStatus = "🔴 Poor";
 
-          const text =
-            `⚡ *CASE SYSTEM PING*\n\n` +
-            `╭┈┈「 📊 *sᴛᴀᴛᴜs* 」\n` +
-            `┃ ◦ Latency: *${latency}ms*\n` +
-            `┃ ◦ Process: *${processTime}ms*\n` +
-            `┃ ◦ Status: ${pingStatus}\n` +
-            `╰┈┈`;
+          const text = novaReply({
+            title: "Case Ping",
+            info: [
+              { label: toSC("Latency"), value: `${latency}ms` },
+              { label: toSC("Process"), value: `${processTime}ms` },
+              { label: toSC("Status"), value: pingStatus },
+            ],
+          });
 
           await m.reply(text);
           await m.react("✅");
@@ -137,7 +110,7 @@ async function handleCommand(m, sock) {
         } catch (error) {
           console.error("[CPing] Error:", error);
           await m.react("❌");
-          await m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> ${error.message}`);
+          await m.reply(claraWrap("Gagal", error.message, "error"));
         }
         return { handled: true };
       }
@@ -168,32 +141,27 @@ async function handleCommand(m, sock) {
             totalCases += casesByCategory[cat].length;
           }
 
-          let text = `╔══════════════════╗\n`;
-          text += `   📦 *${toSmallCaps("CASE LIST")}*\n`;
-          text += `╚══════════════════╝\n\n`;
-          text += `╭┈┈「 📊 *ɪɴꜰᴏ* 」\n`;
-          text += `┃ ◦ Total: *${totalCases}* cases\n`;
-          text += `┃ ◦ Kategori: *${Object.keys(casesByCategory).length}*\n`;
-          text += `╰┈┈\n\n`;
+          const prefix = m.prefix || ".";
+          const lines = [
+            `${toSC("Total")} : ${totalCases} case`,
+            `${toSC("Kategori")} : ${Object.keys(casesByCategory).length}`,
+            "---",
+          ];
 
           for (const category in casesByCategory) {
             const commands = casesByCategory[category];
-            const emoji = CATEGORY_EMOJIS[category] || "📌";
-            const categoryName = toSmallCaps(category);
-
-            text += `╭┈┈「 ${emoji} *${categoryName}* 」\n`;
-            commands.forEach((cmd, i) => {
-              const prefix = m.prefix || ".";
+            lines.push({ subHeader: toSC(category) });
+            commands.forEach((cmd) => {
               const aliases = caseAliases[cmd]
                 ? ` (${caseAliases[cmd].slice(0, 2).join(", ")})`
                 : "";
-              text += `┃ ${i + 1}. ${prefix}${cmd}${aliases}\n`;
+              lines.push(`${prefix}${cmd}${aliases}`);
             });
-            text += `╰┈┈\n\n`;
           }
 
-          text += `*━━━━━━━━━━━━━━━*\n`;
-          text += `💡 *ᴛɪᴘ:* Gunakan \`.listallplugin\` untuk melihat plugin`;
+          lines.push("---");
+          lines.push(tipText(`Gunakan ${prefix}listallplugin untuk melihat semua plugin`));
+          const text = buildBox("Case List", lines);
 
           await sock.sendMessage(
             m.chat,
@@ -209,7 +177,7 @@ async function handleCommand(m, sock) {
         } catch (error) {
           console.error("[ListAllCase] Error:", error);
           await m.react("❌");
-          await m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> ${error.message}`);
+          await m.reply(claraWrap("Gagal", error.message, "error"));
         }
         return { handled: true };
       }
@@ -238,39 +206,33 @@ async function handleCommand(m, sock) {
             return { handled: true };
           }
 
-          let text = `╔══════════════════╗\n`;
-          text += `   🔌 *${toSmallCaps("PLUGIN LIST")}*\n`;
-          text += `╚══════════════════╝\n\n`;
-          text += `╭┈┈「 📊 *ɪɴꜰᴏ* 」\n`;
-          text += `┃ ◦ Total: *${totalPlugins}* plugins\n`;
-          text += `┃ ◦ Kategori: *${categories.length}*\n`;
-          text += `╰┈┈\n\n`;
+          const prefix = m.prefix || ".";
+          const lines = [
+            `${toSC("Total")} : ${totalPlugins} plugin`,
+            `${toSC("Kategori")} : ${categories.length}`,
+            "---",
+          ];
 
           for (const category of categories.sort()) {
             const commands = commandsByCategory[category] || [];
             if (commands.length === 0) continue;
 
-            const emoji = CATEGORY_EMOJIS[category] || "📌";
-            const categoryName = toSmallCaps(category);
+            lines.push({ subHeader: toSC(category) });
 
-            text += `╭┈┈「 ${emoji} *${categoryName}* 」\n`;
-
-            commands.sort().forEach((cmd, i) => {
+            commands.sort().forEach((cmd) => {
               const plugin = pluginStore.commands.get(cmd);
               if (plugin && plugin.config) {
-                const prefix = m.prefix || ".";
                 const aliases = plugin.config.alias
                   ? ` (${plugin.config.alias.slice(0, 2).join(", ")})`
                   : "";
-                text += `┃ ${i + 1}. ${prefix}${cmd}${aliases}\n`;
+                lines.push(`${prefix}${cmd}${aliases}`);
               }
             });
-
-            text += `╰┈┈\n\n`;
           }
 
-          text += `*━━━━━━━━━━━━━━━*\n`;
-          text += `💡 *ᴛɪᴘ:* Gunakan \`.listallcase\` untuk melihat case`;
+          lines.push("---");
+          lines.push(tipText(`Gunakan ${prefix}carifitur <nama fitur> untuk mencari fitur`));
+          const text = buildBox("Plugin List", lines);
 
           await sock.sendMessage(
             m.chat,
@@ -286,7 +248,7 @@ async function handleCommand(m, sock) {
         } catch (error) {
           console.error("[ListAllPlugin] Error:", error);
           await m.react("❌");
-          await m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> ${error.message}`);
+          await m.reply(claraWrap("Gagal", error.message, "error"));
         }
         return { handled: true };
       }
@@ -298,7 +260,7 @@ async function handleCommand(m, sock) {
   } catch (error) {
     console.error("[CaseHandler] Error:", error);
     try {
-      await m.reply(`❌ *ᴇʀʀᴏʀ*\n\n> ${error.message}`);
+      await m.reply(claraWrap("Error", error.message, "error"));
     } catch {}
     return { handled: true, error: error.message };
   }

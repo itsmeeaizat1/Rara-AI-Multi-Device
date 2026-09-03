@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         for (const cmd of existingCmds) {
             txt += `🖼️ → \`.${cmd.command}\`\n`
         }
-        txt += `╰┈┈┈┈┈┈┈┈\n\n`
+        txt += `---\n\n`
         
         txt += `*ʜᴀᴘᴜꜱ ᴅᴇɴɢᴀɴ:*\n`
         txt += `\`${pfx}delstickercmd <command>\`\n`

@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
 `
         }
         
-        text += `╰┈┈┈┈┈┈┈┈\n\n`
+        text += `---\n\n`
         text += `Gunakan: \`.buyfitur <id>\`\n`
         text += `Atau jadi *ᴘʀᴇᴍɪᴜᴍ* unlock semua!`
         
