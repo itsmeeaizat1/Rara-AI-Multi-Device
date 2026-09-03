@@ -1,0 +1,168 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// tiktokmedia.js — TikTok search by keyword dengan pilihan format (ala .play):
+//   .ttvideo <keyword> → kirim video random (no watermark)
+//   .ttaudio <keyword> → kirim original sound dari video random
+//   .ttimage <keyword> → kirim foto dari post slideshow random
+// Source: tikwm challenge pipeline (src/scraper/tiktoksearch.js)
+
+import { offerConvert } from "../../src/lib/nova-convert.js";
+import { claraWrap, novaGangguan, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
+
+const pluginConfig = {
+  name: ["ttvideo", "ttaudio", "ttimage"],
+  alias: ["ttvideo", "ttaudio", "ttimage"],
+  category: "download",
+  description: "Cari TikTok dari keyword — kirim video / audio / gambar",
+  usage: ".ttvideo <keyword> · .ttaudio <keyword> · .ttimage <keyword>",
+  example: ".ttvideo viral · .ttaudio sad song · .ttimage pp candid",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 1,
+  isEnabled: true,
+};
+
+function fmtDuration(seconds) {
+  const s = Number(seconds) || 0;
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+function usageReply(m) {
+  const p = m.prefix;
+  return m.reply(claraWrap("TikTok Search", [
+    `📌 Cari TikTok dari keyword, kirim sesuai formatnya:`,
+    ``,
+    `💡 Contoh:`,
+    `${p}ttvideo viral`,
+    `${p}ttaudio sad song`,
+    `${p}ttimage pp candid`,
+  ]));
+}
+
+async function handler(m, { sock }) {
+  const query = m.text?.trim();
+  const command = m.command;
+  if (!query) return usageReply(m);
+
+  try {
+    await m.react("🕒");
+    const videos = await tiktokSearchVideo(query, { count: 20 });
+
+    if (!videos || videos.length === 0) {
+      await m.react("❗");
+      return m.reply(claraWrap("TikTok Search", `Gak nemu hasil untuk keyword: ${query}`));
+    }
+
+    // ─── .ttvideo → video random (no watermark) ───
+    if (command === "ttvideo") {
+      const pool = videos.filter((v) => v.download);
+      if (!pool.length) {
+        await m.react("❗");
+        return m.reply(claraWrap("TikTok Search", `Semua hasil untuk "${query}" berupa foto, bukan video.\nCoba .ttimage ${query}`));
+      }
+      const video = pool[Math.floor(Math.random() * pool.length)];
+      const caption = mediaCaption({
+        platformIcon: "🎵",
+        platformName: "TikTok",
+        title: video.title || "TikTok Video",
+        author: video.author?.nickname || null,
+        authorHandle: video.author?.uniqueId || null,
+        duration: fmtDuration(video.duration),
+        views: video.stats?.plays,
+        likes: video.stats?.likes,
+        format: "Video HD (No Watermark)",
+        method: "TikTok Search",
+      }) + (video.link ? `\nLink: ${video.link}` : "");
+
+      await sock.sendMessage(m.chat, {
+        video: { url: video.download },
+        caption,
+        contextInfo: mediaPreviewCard({
+          title: video.title || "TikTok Video",
+          body: `TikTok • Search: ${query}`,
+          sourceUrl: video.link || "",
+          thumbnailUrl: video.cover || video.originCover || "",
+          mediaType: 2,
+        }),
+      }, { quoted: m });
+      await m.react("🐣");
+      await offerConvert(sock, m, { mediaUrl: video.download, type: "video", platform: "TikTok", title: video.title, sourceUrl: video.link });
+      return;
+    }
+
+    // ─── .ttaudio → original sound dari video random ───
+    if (command === "ttaudio") {
+      const pool = videos.filter((v) => v.music);
+      if (!pool.length) {
+        await m.react("❗");
+        return m.reply(claraWrap("TikTok Search", `Gak nemu sound buat keyword: ${query}`));
+      }
+      const video = pool[Math.floor(Math.random() * pool.length)];
+      const musicTitle = video.musicInfo?.title || "Original Sound";
+      const caption = mediaCaption({
+        platformIcon: "🎵",
+        platformName: "TikTok",
+        title: musicTitle,
+        author: video.musicInfo?.author || video.author?.nickname || null,
+        format: "🎵 MP3",
+        method: "TikTok Search",
+      }) + (video.link ? `\nDari video: ${video.link}` : "");
+
+      await sock.sendMessage(m.chat, {
+        audio: { url: video.music },
+        mimetype: "audio/mpeg",
+      }, { quoted: m });
+      await m.reply(caption);
+      await m.react("🐣");
+      await offerConvert(sock, m, { mediaUrl: video.music, type: "audio", platform: "TikTok", title: musicTitle, sourceUrl: video.link });
+      return;
+    }
+
+    // ─── .ttimage → foto dari post slideshow random ───
+    if (command === "ttimage") {
+      const pool = videos.filter((v) => v.images.length > 0);
+      if (!pool.length) {
+        await m.react("❗");
+        return m.reply(claraWrap("TikTok Search", `Hasil untuk "${query}" gak ada post foto, semuanya video.\nCoba .ttvideo ${query}`));
+      }
+      const post = pool[Math.floor(Math.random() * pool.length)];
+      const images = post.images.slice(0, 5); // max 5 foto per post biar gak banjir
+      const caption = mediaCaption({
+        platformIcon: "🎵",
+        platformName: "TikTok",
+        title: post.title || "TikTok Photo Post",
+        author: post.author?.nickname || null,
+        authorHandle: post.author?.uniqueId || null,
+        format: `Foto (${images.length} dari ${post.images.length})`,
+        method: "TikTok Search",
+      }) + (post.link ? `\nLink: ${post.link}` : "");
+
+      for (let i = 0; i < images.length; i++) {
+        const content = { image: { url: images[i] } };
+        if (i === 0) {
+          content.caption = caption;
+          content.contextInfo = mediaPreviewCard({
+            title: post.title || "TikTok Photo",
+            body: `TikTok • Search: ${query}`,
+            sourceUrl: post.link || "",
+            thumbnailUrl: images[0],
+            mediaType: 1,
+          });
+        }
+        await sock.sendMessage(m.chat, content, { quoted: m });
+      }
+      await m.react("🐣");
+      return;
+    }
+  } catch (error) {
+    console.error("[TikTokMedia]", error.message || error);
+    await m.react("❌");
+    return m.reply(novaGangguan("TikTok Search"));
+  }
+}
+
+export { pluginConfig as config, handler };

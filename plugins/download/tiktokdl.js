@@ -5,6 +5,7 @@ import { AIRich } from "../../src/lib/nova-builder.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 
 async function tiktokDl(url) {
   function formatNumber(integer) {
@@ -112,9 +113,9 @@ const pluginConfig = {
   name: ["tiktok", "tt", "ttmp4"],
   alias: ["tiktok", "tt", "ttmp4"],
   category: "download",
-  description: "Download video/slide TikTok tanpa watermark",
-  usage: ".tiktok <url>",
-  example: ".tiktok https://vt.tiktok.com/xxx",
+  description: "Download video TikTok (link) atau kirim video random dari keyword (ala .play)",
+  usage: ".tiktok <url/keyword>",
+  example: ".tiktok https://vt.tiktok.com/xxx · .tt viral",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -129,8 +130,55 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
   const command = m?.command;
   if (!text) {
-    return m.reply(claraWrap("TikTok", `Masukkan link video TikTok\n\nContoh: \`${prefix + command} https://vt.tiktok.com/xxx\``), { commandName: "tiktok" });
+    return m.reply(claraWrap("TikTok", [
+      `📌 Kirim link video TikTok ATAU keyword buat cari video random:`,
+      ``,
+      `💡 Contoh:`,
+      `${prefix + command} https://vt.tiktok.com/xxx`,
+      `${prefix + command} viral`,
+    ]), { commandName: "tiktok" });
   }
+  // ─── Jalur keyword search (bukan URL) — ala .play ───
+  const isUrl = /https?:\/\/|tiktok\.com|vt\.tiktok|douyin/i.test(text);
+  if (!isUrl) {
+    try {
+      await m.react("🕒");
+      const videos = await tiktokSearchVideo(text, { count: 15 });
+      if (!videos || videos.length === 0) {
+        await m.react("❗");
+        return m.reply(claraWrap("TikTok Search", `Gak nemu video untuk keyword: ${text}`));
+      }
+      const video = videos[Math.floor(Math.random() * videos.length)];
+      const caption = mediaCaption({
+        platformIcon: "🎵",
+        platformName: "TikTok",
+        title: video.title || "TikTok Video",
+        author: video.author?.nickname || video.author?.uniqueId || null,
+        duration: video.duration ? `${Math.floor(video.duration / 60)}:${String(video.duration % 60).padStart(2, "0")}` : null,
+        format: "Video HD (No Watermark)",
+        method: "TikTok Search",
+      });
+      await sock.sendMessage(m.chat, {
+        video: { url: video.download || video.link },
+        caption,
+        contextInfo: mediaPreviewCard({
+          title: video.title || "TikTok Video",
+          body: `TikTok • Search: ${text}`,
+          sourceUrl: video.link || text,
+          thumbnailUrl: video.cover || video.originCover || "",
+          mediaType: 2,
+        }),
+      }, { quoted: m });
+      await m.react("🐣");
+      await offerConvert(sock, m, { mediaUrl: video.download || video.link, type: "video", platform: "TikTok", title: video.title, sourceUrl: video.link });
+      return;
+    } catch (err) {
+      console.error("[TikTok Search]", err.message || err);
+      await m.react("❌");
+      return m.reply(novaGangguan("TikTok Search"));
+    }
+  }
+
   try {
     // Try IkyyXD tiktok first (uses "query" param + apikey)
     const ikyyResult = await ikyyDl("tiktok", text, { urlParam: "query", extraParams: { apikey: "kyzz" } });

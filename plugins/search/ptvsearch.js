@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     const randomVideo = videos[Math.floor(Math.random() * videos.length)];
 
     await sock.sendMessage(m.chat, {
-      video: { url: randomVideo.link },
+      video: { url: randomVideo.download || randomVideo.link },
       mimetype: "video/mp4",
       ptv: true,
     });
