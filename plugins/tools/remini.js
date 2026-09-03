@@ -17,7 +17,7 @@ const pluginConfig = {
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar) — enhance HD 2x, local AI tanpa watermark\n.remini real — 4x ala Remini (unblur/restore)\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (di atas 1080p otomatis dikirim via document)\n.remini real 4k — bisa digabung (mode + ukuran)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — enhance HD 2x, local AI tanpa watermark\n.remini real — 4x ala Remini (unblur/restore)\n.remini 1080 — ukuran hasil maksimal untuk user biasa\n.remini 2k / 4k / 5k — ukuran HD, khusus Owner\n.remini real 4k — bisa digabung (mode + ukuran)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -267,6 +267,15 @@ async function handler(m, { sock, args }) {
     const SIZES = { "1080": 1920, fhd: 1920, fullhd: 1920, "2k": 2560, qhd: 2560, "4k": 3840, uhd: 3840, "5k": 5120 };
     const sizeArg = argList.find((a) => SIZES[a]);
     const targetOut = sizeArg ? SIZES[sizeArg] : null;
+
+    // Ukuran di atas 1080p = OWNER ONLY (proses berat, bisa 3-5 menit per gambar)
+    if (targetOut > 1920 && !m.isOwner) {
+      await m.react("🚫");
+      return m.reply(
+        claraWrap("remini", "Ukuran di atas 1080p hanya untuk Owner. User biasa bisa pakai ukuran biasa atau .remini 1080.", "error"),
+        "remini"
+      );
+    }
 
     let mediaBuffer;
     if (m.quoted?.isMedia || m.quoted?.type === "imageMessage") {
