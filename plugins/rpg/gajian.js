@@ -5,7 +5,7 @@ import {
   ensureRpg, addExp, addGold, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animGajian } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -31,9 +31,6 @@ const GAJIAN_EXP = 100;
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
-    await m.reply("💰 Mengambil gajian...");
-    await rpgSleep(900);
-
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("gajian", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
@@ -42,6 +39,8 @@ async function handler(m, { sock }) {
       await m.react("🚫");
       return m.reply(claraWrap("gajian", `Cooldown gajian tersisa *${formatTime(cd)}*`, "warn"));
     }
+
+    await animGajian(m, sock);
 
     addGold(m, GAJIAN_GOLD);
     addExp(m, GAJIAN_EXP);

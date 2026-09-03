@@ -3,7 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animRift } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -38,8 +38,7 @@ async function handler(m, { sock, command }) {
     if (command === "rift") {
       if ((rpg.energy || 0) < 20) return m.reply(claraWrap("rift", "Energi tidak cukup. Butuh 20 energi.", "info"));
       await m.react("🕒");
-    await m.reply("🌀 Memasuki rift...");
-    await rpgSleep(900);
+    await animRift(m, sock);
       const effect = RIFT_EFFECTS[Math.floor(Math.random() * RIFT_EFFECTS.length)];
       rpg.energy = (rpg.energy || 0) - 20;
 

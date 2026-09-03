@@ -2,7 +2,7 @@
 // heist.js — Heist system (rob targets, risk vs reward)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { animGeneric, animHeist } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "heist",
@@ -72,8 +72,7 @@ async function handler(m, { sock }) {
     } catch {}
 
     await m.react("🕒");
-    await m.reply(`${target.emoji} Memasuki ${target.name}...`);
-    await new Promise(r => setTimeout(r, 2000));
+    await animHeist(m, sock, target.emoji, target.name);
 
     const success = Math.random() < target.successRate;
     const narrative = success
