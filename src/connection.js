@@ -693,22 +693,39 @@ async function startConnection(options = {}) {
 
           const now = new Date();
           const waktu = now.toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "full", timeStyle: "short" });
-          const platform = process.platform;
-          const hostname = os.hostname();
-          const nodeVer = process.version;
           const isFirstPair = !fs.existsSync(path.join(process.cwd(), "storage", ".first_pair_done"));
+
+          // Info section lengkap — pakai builder + renderer yang SAMA kayak menu
+          // (Info User/Waktu/Bot/Database/Server/Cuaca) biar tampilan konsisten
+          let greeting = null;
+          let infoSections = [];
+          try {
+            const { buildMenuInfo } = await import("./lib/nova-info-section.js");
+            const { novaInfoSections } = await import("./lib/nova-menu-style.js");
+            const { getDatabase } = await import("./lib/nova-database.js");
+            const built = await buildMenuInfo(
+              { sender: ownerNums[0] + "@s.whatsapp.net", pushName: "Owner", isOwner: true, isPremium: true, isGroup: false },
+              { db: getDatabase(), config, uptime: process.uptime() * 1000 }
+            );
+            greeting = built.greeting;
+            // Ping di-skip — gak ada pesan masuk yang bisa diukur latency-nya
+            const infoNoPing = (built.info || []).filter((it) => !(it && it.label === "Ping"));
+            infoSections = novaInfoSections(infoNoPing).trim().split("\n");
+          } catch (e) {
+            colors.logger.warn("notif", "info section gagal dibangun: " + e.message);
+          }
 
           const notifText = [
             "╭─「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
             "│",
-            "│ • Bot      : " + (config.bot?.name || "Nova-AI"),
-            "│ • Versi    : " + (config.bot?.version || "v20.0.0"),
-            "│ • Nomor    : " + botNum,
-            "│ • Waktu    : " + waktu,
-            "│ • Host     : " + hostname,
-            "│ • Platform : " + platform + " | Node: " + nodeVer,
+            "│ • Bot   : " + (config.bot?.name || "Nova-AI"),
+            "│ • Nomor : " + botNum,
+            "│ • Waktu : " + waktu,
             "│",
             "╰────  •  ────",
+            "",
+            ...(greeting ? ["_" + greeting + "_", ""] : []),
+            ...infoSections,
             "",
             isFirstPair
               ? "_Bot baru saja tersambung untuk pertama kali._"
