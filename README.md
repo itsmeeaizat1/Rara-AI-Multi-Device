@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20yt-dlp%20ikut%20keinstall%20via%20npm%20(you-success?style=for-the-badge)
-> *Commit: "feat: yt-dlp ikut keinstall via npm (youtube-dl-exec) — gak perlu pip install lagi"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20preview%20card%20(externalAdReply)%20di%20-success?style=for-the-badge)
+> *Commit: "feat: preview card (externalAdReply) di pesan media hasil unduhan"*
 <!--END_SECTION:latest-update-->
 
 ---
