@@ -1,19 +1,23 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
-// Engine: BeautyPlus img-enhancer (pixocial) — enhance wajah, unblur, upscale AI
-// Endpoint vyro.ai (Remini asli) sudah mati total — ini pengganti yang paling dekat
-// Fitur: recolor wajah, unblur, upscale AI — persis pengalaman app Remini
+// ENGINE UTAMA: Local AI (Swin2SR/Real-ESRGAN via ONNX) — 100% lokal, TANPA WATERMARK
+//   .remini        → enhance HD 2x (cepat, default)
+//   .remini real   → 4x ala Remini buat foto asli (unblur/restore)
+// ENGINE OPSI: BeautyPlus img-enhancer (.remini bp <mode>) — hasil bisa ada watermark
+//   mode bp: hd, face, 16k, product, text, concert
+// Endpoint vyro.ai (Remini asli) sudah mati total — local AI ini penggantinya
 import crypto from "crypto";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { enhanceLocal } from "../../src/lib/nova-hd-local.js";
 
 const pluginConfig = {
   name: "remini",
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar)\n.remini hd — enhance standar (default)\n.remini face — restore wajah\n.remini 16k — ultra 16K\n.remini product — foto produk\n.remini text — foto teks/dokumen\n.remini concert — foto konser\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — enhance HD 2x, local AI tanpa watermark\n.remini real — 4x ala Remini (unblur/restore)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -252,7 +256,11 @@ async function handler(m, { sock, args }) {
 
     const argList = (args || []).map((a) => String(a).toLowerCase());
     const wantDoc = argList.includes("doc");
-    const mode = argList.find((a) => MODES[a]) || "hd";
+    const wantBp = argList.includes("bp");
+    // Local AI (default): hd → 2x cepat, real → 4x ala Remini — TANPA WATERMARK
+    const localMode = argList.some((a) => ["real", "4x", "ultra"].includes(a)) ? "real" : "hd";
+    // BeautyPlus (opsi): hasil bisa ada watermark
+    const bpMode = wantBp ? argList.find((a, i) => i > 0 && MODES[a]) || "hd" : null;
 
     let mediaBuffer;
     if (m.quoted?.isMedia || m.quoted?.type === "imageMessage") {
@@ -271,12 +279,35 @@ async function handler(m, { sock, args }) {
       return m.reply(claraWrap("remini", "Ukuran gambar maksimal 15MB untuk fitur ini.", "error"), "remini");
     }
 
-    const { buffer: resultBuffer, label } = await reminiEnhance(mediaBuffer, mode);
+    let resultBuffer;
+    let label;
+    let engineNote = "Engine: Local AI (tanpa watermark)";
+
+    if (bpMode) {
+      // Explicit .remini bp <mode> → pakai BeautyPlus apa hasilnya
+      const r = await reminiEnhance(mediaBuffer, bpMode);
+      resultBuffer = r.buffer;
+      label = r.label;
+      engineNote = "Engine: BeautyPlus (bisa ada watermark)";
+    } else {
+      // Default: local AI — tanpa watermark. Kalau gagal, fallback ke BeautyPlus.
+      try {
+        const r = await enhanceLocal(mediaBuffer, localMode);
+        resultBuffer = r.buffer;
+        label = `${r.label} - ${r.width}x${r.height}`;
+      } catch (e) {
+        console.error("[REMINI] local engine gagal, fallback ke BeautyPlus:", e.message);
+        const r = await reminiEnhance(mediaBuffer, "hd");
+        resultBuffer = r.buffer;
+        label = r.label;
+        engineNote = "Engine: BeautyPlus (fallback - bisa ada watermark)";
+      }
+    }
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
 
     await m.react("🐣");
 
-    const caption = `*Remini AI Enhanced*\nMode: ${label}\nQuality: ${sizeMB}MB`;
+    const caption = `*Remini AI Enhanced*\nMode: ${label}\n${engineNote}\nQuality: ${sizeMB}MB`;
     if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
       return await sock.sendMessage(
         m.chat,
