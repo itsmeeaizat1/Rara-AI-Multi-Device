@@ -2,7 +2,7 @@
 import axios from "axios";
 import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "vocalremover",
@@ -38,6 +38,7 @@ async function handler(m, { sock, command }) {
     if (!res.data?.status) { await m.react("❌"); return m.reply(claraWrap("vocalremover", "Gagal memproses audio dari API.")); }
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("vocalremover"));
 
     // vocalremover → kirim instrumental | instrumenremover → kirim vocal
     const isVocalRemover = command === "vocalremover" || command === "vocalremove";
@@ -57,7 +58,7 @@ async function handler(m, { sock, command }) {
   } catch (e) {
     console.error("vocalremover error:", e.message);
     await m.react("❌");
-    m.reply(claraWrap("vocalremover", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaGangguan("vocalremover"));
   }
 }
 

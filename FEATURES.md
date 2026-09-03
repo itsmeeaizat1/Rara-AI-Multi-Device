@@ -11,6 +11,18 @@
 ---
 
 
+## 🗨️ Pesan Status Universal v22.0.0
+
+Tiga pesan status standar untuk SEMUA fitur media (download, play/playvideo, stiker, tool convert) — request owner 2026-09-03:
+
+- **Berhasil** → `Berhasil kak 🥳` (novaBerhasil) — muncul setelah media/stiker/hasil sukses terkirim
+- **Gagal** → `Yah gagal kak, coba lagi 😩` (novaGagal) — hasil kosong / download gagal / API return error
+- **Fitur gangguan** → `Yah fiturnya lagi gangguan kak, coba lain waktu ya 😥` (novaGangguan) — exception / catch block / API down
+
+Helper: `novaBerhasil(fitur)`, `novaGagal(fitur)`, `novaGangguan(fitur)` di `src/lib/nova-menu-style.js` (box open-format + smallcaps title). Semua pesan validasi/panduan (URL invalid, file kegedean, video kepanjangan) TETAP memakai pesan informatif aslinya. Plugin hasil teks (googlesearch, imdb, ringtone, an1, happymod, songs, tocase, tocode) tidak menerima pesan Berhasil tapi tetap menerima Gagal/Gangguan.
+
+Cakupan: 50 plugin download, 26 plugin sticker, 35 plugin convert, play/playvideo, convert.js (.convert), sticker.js.
+
 ## 🔊 Play System v21.7.0
 
 - nova-ytdlp.js: yt-dlp binary scraper (gratis, no API key) + cobalt fallback

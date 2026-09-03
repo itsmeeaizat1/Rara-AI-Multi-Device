@@ -2,7 +2,7 @@
 // spotifydl.js — Download lagu Spotify (spotifydown API)
 import path from "node:path";
 import axios from "axios";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const SPOTIFYDOWN_API = "https://api.spotifydown.org";
@@ -111,10 +111,11 @@ async function handler(m, { sock }) {
     }, { quoted: m });
     await m.reply(caption);
     await m.react("🐣");
+    await m.reply(novaBerhasil("spotifydl"));
   } catch (err) {
     console.error("[SpotifyDL]", err);
     await m.react("❌");
-    m.reply(novaError("Spotify DL", "Gagal download lagu Spotify. Pastikan URL valid!"));
+    m.reply(novaGagal("Spotify DL"));
   }
 }
 

@@ -4,7 +4,7 @@
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { fbdown } from "btch-downloader";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "facebookdl",
@@ -49,6 +49,7 @@ async function handler(m, { sock }) {
         const videoUrl = data?.HD || data?.hd || data?.SD || data?.sd || data?.url;
         if (videoUrl) {
           await m.react("🐣");
+    await m.reply(novaBerhasil("facebookdl"));
           return await sock.sendMedia(m.chat, videoUrl, data?.title || null, m, {
             type: "video",
             contextInfo: { forwardingScore: 0, isForwarded: false },
@@ -60,7 +61,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaError("Facebook DL", "Gagal ambil video — pastikan URL valid dan videonya publik ya"));
+    return m.reply(novaGagal("Facebook DL"));
   } catch (error) {
     console.error("[facebookdl.js]:", error.message);
     await m.react("❌");

@@ -4,10 +4,10 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
-import { novaError, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
-import { toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { toSC } from "../../src/lib/nova-menu-style.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
@@ -173,7 +173,7 @@ async function sendPlayAudio(sock, m, video, kbps) {
   const audio = await downloadAudio(video.url, kbps);
   if (!audio?.buffer || audio.buffer.length < 10000) {
     await m.react("❌");
-    return m.reply(novaError("Play", "Gagal download audio, coba lagi nanti ya!"));
+    return m.reply(novaGagal("Play"));
   }
   console.log(`[Play] Audio OK: ${audio.buffer.length} bytes (${kbps}kbps)`);
 
@@ -198,7 +198,7 @@ async function sendPlayAudio(sock, m, video, kbps) {
 
   // 1. Notifikasi sukses dulu (sesuai request owner)
   await m.react("🐣");
-  await m.reply(novaBox("Play", ["Berhasil kak 🥳"]));
+  await m.reply(novaBerhasil("Play"));
 
   // 2. Info section lengkap — dikirim sebagai teks karena WhatsApp
   // TIDAK support caption pada pesan audio (caption gak akan pernah muncul)
@@ -241,7 +241,7 @@ async function handler(m, { sock }) {
     } catch (err) {
       console.error("[Play]", err.message || err);
       await m.react("❌");
-      return m.reply(novaError("Play", err.message || "Gagal memutar lagu, coba lagi nanti ya!"));
+      return m.reply(novaGangguan("Play"));
     }
     return;
   }
@@ -270,7 +270,7 @@ async function handler(m, { sock }) {
     const video = await searchYoutube(query);
     if (!video) {
       await m.react("❌");
-      return m.reply(novaError("Play", "Lagu tidak ditemukan, coba kata kunci lain ya!"));
+      return m.reply(novaGagal("Play"));
     }
     console.log(`[Play] Found: ${video.title} → ${video.url} (${kbps}kbps)`);
 
@@ -306,7 +306,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[Play]", err.message || err);
     await m.react("❌");
-    return m.reply(novaError("Play", err.message || "Gagal memutar lagu, coba lagi nanti ya!"));
+    return m.reply(novaGangguan("Play"));
   }
 }
 

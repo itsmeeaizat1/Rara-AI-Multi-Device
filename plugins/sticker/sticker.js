@@ -5,7 +5,7 @@ import { exec } from 'child_process'
 import { promisify } from 'util'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec)
 
 const pluginConfig = {
@@ -140,7 +140,7 @@ async function handler(m, { sock, config: botConfig }) {
         }
         
         if (!buffer) {
-            await m.reply(novaError("Sticker", "Gagal download media nih"))
+            await m.reply(novaGagal("Sticker"))
             return
         }
         
@@ -202,8 +202,10 @@ async function handler(m, { sock, config: botConfig }) {
         } else if (isVideo) {
             await sock.sendVideoAsSticker(m.chat, buffer, m, { packname, author })
         }
+        await m.reply(novaBerhasil("Sticker"))
     } catch (error) {
-        m.reply(claraWrap("sticker", te(m.prefix, m.command, m.pushName), "error"))
+        console.error('[sticker.js]', error.message || error)
+        m.reply(novaGangguan("Sticker"))
     }
 }
 

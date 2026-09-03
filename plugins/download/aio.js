@@ -4,7 +4,7 @@
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aio",
@@ -81,6 +81,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("aio"));
   } catch (error) {
     console.error("[aio.js]:", error.message);
     await m.react("❌");

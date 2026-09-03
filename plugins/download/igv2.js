@@ -5,7 +5,7 @@ import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -37,6 +37,7 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const ctxInfo = mediaPreviewCard({ title: result.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: result.thumbnail || "" });
       await m.react("🐣");
+      await m.reply(novaBerhasil("IG V2"));
       for (const item of result.medias) {
         if (item.type === "video") {
           const _cap = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Video", method: "IkyyXD" });
@@ -58,6 +59,7 @@ async function handler(m, { sock }) {
       if (igResult?.media?.length) {
         const ctxInfo = mediaPreviewCard({ title: igResult.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: igResult.thumbnail || "" });
         await m.react("🐣");
+      await m.reply(novaBerhasil("IG V2"));
         for (const item of igResult.media) {
           if (item.type === "video") {
             const _cap3 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Video", method: "ig scraper" });
@@ -76,11 +78,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaError("IG V2", "Gagal ambil media — pastikan URL valid dan akunnya publik ya"));
+    return m.reply(novaGagal("IG V2"));
   } catch (error) {
     console.error("[igv2.js]:", error.message);
     await m.react("❌");
-    return m.reply(novaError("IG V2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaGangguan("IG V2"));
   }
 }
 

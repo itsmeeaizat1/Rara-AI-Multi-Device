@@ -4,7 +4,7 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import te from "../../src/lib/nova-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { claraWrap, claraLine, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -49,6 +49,7 @@ async function handler(m, { sock }) {
       const data = await mediafire(url);
       if (data?.download_url || data?.link) {
         await m.react("🐣");
+    await m.reply(novaBerhasil("mediafiredl"));
         const _cap2 = mediaCaption({ platformIcon: "🔥", platformName: "MediaFire", title: data?.title || data?.name || "MediaFire File", format: data?.ext || "File", method: "builtin" });
         return await sock.sendMessage(m.chat, {
           document: { url: data.download_url || data.link }, caption: _cap2,
@@ -60,7 +61,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("❌");
-    return m.reply(novaError("MediaFire DL", "Gagal ambil file — pastikan URL valid ya"));
+    return m.reply(novaGagal("MediaFire DL"));
   } catch (error) {
     console.error("[mediafiredl.js]:", error.message);
     await m.react("❌");

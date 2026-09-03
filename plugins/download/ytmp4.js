@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/ytmp4 (uses "q" param) → Sanka AIO → ytdl fallback
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -87,6 +87,7 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("ytmp4"));
     await sock.sendMessage(m.chat, {
       video: { url: result.download },
       caption,
@@ -95,7 +96,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[YTMP4]", err);
     await m.react("❌");
-    m.reply(novaError("YTmp4", "Gagal mengunduh video YouTube — coba lagi nanti atau ganti link ya!"));
+    m.reply(novaGagal("YTmp4"));
   }
 }
 

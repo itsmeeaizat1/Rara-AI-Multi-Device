@@ -2,7 +2,7 @@
 import axios from "axios";
 import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tojepang",
@@ -45,11 +45,12 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("tojepang"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🗾 Kamu sudah di Jepang!" }, { quoted: m });
   } catch (e) {
     console.error("tojepang error:", e.message);
     await m.react("❌");
-    m.reply(claraWrap("tojepang", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaGangguan("tojepang"));
   }
 }
 

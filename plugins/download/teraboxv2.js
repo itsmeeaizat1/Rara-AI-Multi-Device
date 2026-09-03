@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // teraboxv2.js — Download TeraBox v2 (pakai scraper terabox.js lokal)
 import { TeraBoxDL } from "../../src/scraper/terabox.js";
-import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "teraboxv2",
@@ -67,10 +67,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
+    await m.reply(novaBerhasil("teraboxv2"));
   } catch (err) {
     console.error("[TeraBox v2]", err);
     await m.react("❌");
-    m.reply(novaError("TeraBox v2", "Gagal download dari TeraBox. Coba lagi nanti!"));
+    m.reply(novaGagal("TeraBox v2"));
   }
 }
 

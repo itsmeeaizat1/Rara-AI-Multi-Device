@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // googlesearch.js — Google search via DuckDuckGo (scrape, no API key)
 import axios from "axios";
-import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "googlesearch",
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[GoogleSearch]", err);
     await m.react("❌");
-    m.reply(novaError("Google Search", "Gagal melakukan pencarian. Coba lagi nanti!"));
+    m.reply(novaGagal("Google Search"));
   }
 }
 
