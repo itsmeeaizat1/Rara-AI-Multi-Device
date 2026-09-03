@@ -3,7 +3,7 @@
 // .openai .gemini .claude .groq .grok .xai .qwen .cohere .perplexity .fireworks
 // .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina
 // .mistral .together .github + IkyyXD & Tio providers
-import { callAI, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
+import { callAI, callImageGen, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
 import { novaBox } from "../../src/lib/nova-menu-style.js";
 
 // Command → providerKey mapping
@@ -66,9 +66,9 @@ const pluginConfig = {
   name: "openai",
   alias: allCommands,
   category: "ai",
-  description: "Chat langsung dengan AI provider pilihanmu (35+ provider)",
-  usage: ".<provider> [model] <pesan>",
-  example: ".openai apa itu AI\n.gemini gemini-2.0-flash jelaskan kuantum\n.groq qwen/qwen3.8-27b hai\n.grok buat puisi",
+  description: "Chat langsung dengan AI provider pilihanmu (35+ provider) — provider vision support gambar (upload/reply)",
+  usage: ".<provider> [model] <pesan>\n.<provider vision> <tanya> (kirim/reply gambar) — scan gambar, bantu tugas, dll",
+  example: ".openai apa itu AI\n.gemini gemini-2.0-flash jelaskan kuantum\n.gemini (reply gambar) selesaikan soal ini\n.claude (kirim gambar + caption) jelaskan\n.groq hai\n.grok buat puisi",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -93,8 +93,15 @@ async function handler(m, { sock, config, db, args, text }) {
 
     const fullText = (text || "").trim();
 
-    // No text → show info
-    if (!fullText) {
+    // 🔹 VISION: upload gambar + caption .<provider> <tanya> ATAU reply gambar.
+    // Provider support vision (gemini/openai/claude/groq/grok/mistral) → gambar
+    // ikut dikirim ke API. Provider teks doang → bot jelasin sendiri gak support.
+    const directImage = m.isImage ? m : null;
+    const quotedImage = m.quoted?.isImage ? m.quoted : null;
+    const imageSource = directImage || quotedImage;
+
+    // No text → show info (kecuali ada gambar — langsung scan)
+    if (!fullText && !imageSource) {
       const models = (provider.models || []).join(", ");
       const keyStatus = FREE_PROVIDERS.has(providerKey) ? "Gratis" : (resolveApiKeyForProvider(providerKey, {}) ? "Terisi" : "Belum diisi");
       const lines = [
@@ -152,6 +159,110 @@ async function handler(m, { sock, config, db, args, text }) {
           "Atau ketik " + prefix + "ai-set apiKey " + providerKey + " <key>",
         ];
         const box = novaBox ? novaBox("API Key Diperlukan", lines) : lines.join("\n");
+        await m.reply(box);
+        return { handled: true };
+      }
+    }
+
+    // 🔹 JALUR VISION — ada gambar: cek dulu provider-nya sanggup apa gak
+    if (imageSource) {
+      if (!provider.supportsVision) {
+        try { await m.react("❗"); } catch {}
+        const lines = [
+          "Provider  : " + provider.name,
+          "Status   : AI ini tidak support gambar (teks saja)",
+          "---",
+          "Kirim pertanyaan teks aja, atau scan gambarnya pakai AI vision:",
+          prefix + "gemini <tanya>  (reply/kirim gambar)",
+          prefix + "openai <tanya>",
+          prefix + "claude <tanya>",
+          prefix + "groq <tanya>",
+          prefix + "grok <tanya>",
+        ];
+        const box = novaBox ? novaBox("Tidak Support Gambar", lines) : lines.join("\n");
+        await m.reply(box);
+        return { handled: true };
+      }
+      try { await m.react("🕒"); } catch {}
+      try {
+        const buffer = await (directImage ? m.download() : m.quoted.download());
+        const mime = imageSource.mimetype || imageSource.mtype || "image/jpeg";
+        const prompt = userMessage || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
+        // kalau user gak pilih model eksplisit → pakai model vision provider
+        const visionModel = (model && provider.models?.includes(model) && userMessage !== fullText)
+          ? model
+          : (provider.visionModel || model);
+        const reply = await callAI({
+          providerKey,
+          model: visionModel,
+          messages: [{ role: "user", content: prompt, image: { mimeType: mime, data: buffer.toString("base64") } }],
+          systemPrompt: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang membantu. Analisis gambar dengan detail dan berguna."),
+          apiKey,
+          apiEndpoint: "",
+        });
+        try { await m.react("🐣"); } catch {}
+        await m.reply(String(reply || "").slice(0, 4096) || "Tidak ada jawaban.");
+        return { handled: true };
+      } catch (e) {
+        try { await m.react("❌"); } catch {}
+        const lines = [
+          "Provider : " + provider.name,
+          "Error    : " + String(e.message || e).slice(0, 200),
+          "---",
+          "Coba lagi, atau pakai " + prefix + "gemini buat scan gambar.",
+        ];
+        const box = novaBox ? novaBox("Gagal Analisis Gambar", lines) : lines.join("\n");
+        await m.reply(box);
+        return { handled: true };
+      }
+    }
+
+    // 🔹 JALUR IMAGE GEN — user minta bikin gambar (tanpa gambar dilampirkan):
+    // provider support generate (gemini/openai/grok) → bikin gambar;
+    // provider gak support → bot jelasin sendiri.
+    const askGen =
+      /\b(buat|buatkan|bikin|bikinkan|generate|generasi)\b/i.test(userMessage) &&
+      /\b(gambar|image|logo|ilustrasi|art|meme)\b/i.test(userMessage);
+    if (askGen) {
+      if (!provider.imageGen) {
+        try { await m.react("❗"); } catch {}
+        const lines = [
+          "Provider  : " + provider.name,
+          "Status   : AI ini tidak bisa generate gambar (teks saja)",
+          "---",
+          "Coba AI yang bisa bikin gambar:",
+          prefix + "gemini buat gambar <apa yang mau dibikin>",
+          prefix + "openai buat gambar <apa yang mau dibikin>",
+          prefix + "grok buat gambar <apa yang mau dibikin>",
+        ];
+        const box = novaBox ? novaBox("Tidak Support Generate Gambar", lines) : lines.join("\n");
+        await m.reply(box);
+        return { handled: true };
+      }
+      try { await m.react("🕒"); } catch {}
+      try {
+        const cleanPrompt = userMessage
+          .replace(/^(tolong|coba|please)\s+/i, "")
+          .replace(/^\s*(buatkan|buat|bikinkan|bikin|generate|generasi)\s+/i, "")
+          .replace(/^\s*(sebuah|satu)\s+/i, "")
+          .replace(/^\s*(gambar|image|ilustrasi|logo|art|meme)\s*(dari|tentang|buat|dengan|of)?\s*/i, "")
+          .trim() || userMessage;
+        const img = await callImageGen(providerKey, cleanPrompt, { apiKey });
+        try { await m.react("🐣"); } catch {}
+        await sock.sendMessage(m.chat, {
+          image: Buffer.from(img.base64, "base64"),
+          caption: "🎨 " + cleanPrompt.slice(0, 150) + (img.via && img.via !== providerKey ? "\n_(engine: " + img.via + ")_" : ""),
+        }, { quoted: m });
+        return { handled: true };
+      } catch (e) {
+        try { await m.react("❌"); } catch {}
+        const lines = [
+          "Provider : " + provider.name,
+          "Error    : " + String(e.message || e).slice(0, 200),
+          "---",
+          "Coba lagi beberapa saat, atau pakai " + prefix + "gemini.",
+        ];
+        const box = novaBox ? novaBox("Gagal Generate Gambar", lines) : lines.join("\n");
         await m.reply(box);
         return { handled: true };
       }

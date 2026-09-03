@@ -11,7 +11,7 @@ const DB = "./src/data/autoflow.json";
 // ===== daftar resmi (validasi di KODE, bukan percaya AI mentah-mentah) =====
 const TRIGGERS = ["keyword", "schedule", "join", "leave", "media", "any"];
 const MEDIA = ["image", "video", "sticker", "audio"];
-const ACTIONS = ["reply", "react", "image", "audio", "kick", "closegc", "opengc", "aichat"];
+const ACTIONS = ["reply", "react", "image", "audio", "kick", "closegc", "opengc", "aichat", "aiimage"];
 const SCOPES = ["all", "group", "private"];
 
 const nextId = (rules) => {
@@ -33,6 +33,7 @@ Aturan:
 - trigger.any: SEMUA pesan teks jadi pemicu, TANPA kata kunci tertentu. Pakai ini kalau user minta bot ikut ngobrol/nimbrung/respon SEMUA chat tanpa nyebut kata pemicu spesifik (contoh: "kalau ada yang chat ikut ngobrol", "balas semua orang yang ngetik", "jadi asisten yang selalu jawab"). Tanpa value.
 - action.reply: value = teks balasan TETAP/statis (sama setiap kali). @user otomatis diganti nama pengirim
 - action.aichat: balasan digenerate AI SETIAP KALI (dinamis, beda-beda, natural kayak ngobrol asli) — BUKAN teks statis. value = deskripsi gaya bicara/persona/instruksi bebas (boleh kosong = default ramah santai). WAJIB dipasangkan sama trigger.any (atau keyword kalau mau AI cuma jawab pas kata tertentu disebut, tapi jawabannya tetap dinamis).
+- action.aiimage: bot BIKIN GAMBAR hasil generate AI (dinamis, beda-beda tiap kali) — value = deskripsi/prompt gambar (WAJIB diisi, contoh "meme lucu tentang kopi"). @user diganti nama pengirim. Pakai kalau user minta bot bikin/menggambar sesuatu
 - action.react: value = SATU emoji
 - action.image: value = path gambar di folder assets, contoh "./assets/image/menu/menuthumbnail.jpg". Jika user tidak menyebut file spesifik, pakai itu
 - action.audio: value = path audio, contoh "./assets/audio/menu.mp3". Jika tidak disebut, pakai itu
@@ -62,7 +63,7 @@ function validate(r) {
   if (r.trigger.type === "media" && !MEDIA.includes(r.trigger.value))
     return "media harus image/video/sticker/audio";
   // trigger "any" TANPA value — respon semua pesan, gak butuh kata pemicu
-  if (["reply", "react"].includes(r.action.type) && !r.action.value)
+  if (["reply", "react", "aiimage"].includes(r.action.type) && !r.action.value)
     return `aksi ${r.action.type} butuh isian`;
   if (["image", "audio"].includes(r.action.type) && !r.action.value)
     return `aksi ${r.action.type} butuh path file`;
@@ -91,6 +92,7 @@ function describe(r) {
   else if (a.type === "image") ac = `bot kirim gambar ${a.value}`;
   else if (a.type === "audio") ac = `bot kirim audio ${a.value}`;
   else if (a.type === "aichat") ac = `bot ikut ngobrol pakai AI${a.value ? " (gaya: " + a.value + ")" : " (gaya default)"}`;
+  else if (a.type === "aiimage") ac = `bot bikin gambar AI: ${a.value}`;
   else ac = `bot jalankan ${a.type}`;
   return `${tr} → ${ac}`;
 }
