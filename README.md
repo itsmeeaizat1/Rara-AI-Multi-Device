@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20toggle%20owner%20.convertoffer%20on%2Foff%20-success?style=for-the-badge)
-> *Commit: "feat: toggle owner .convertoffer on/off untuk tawaran convert otomatis"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20pull%20request%20%232%20from%20itsmeeaizat%2Ff-success?style=for-the-badge)
+> *Commit: "Merge pull request #2 from itsmeeaizat/feat/friendly-status-messages"*
 <!--END_SECTION:latest-update-->
 
 ---
