@@ -9,8 +9,8 @@ import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nov
 import * as timeHelper from '../../src/lib/nova-time.js'
 import te from '../../src/lib/nova-error.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
-const allCommands = VALID_SERVERS.map((v) => `cadmin${v}`);
-const allAliases = VALID_SERVERS.map((v) => `createadmin${v}`);
+const allCommands = VALID_SERVERS.slice(0, 5).map((v) => `cadmin${v}`);
+const allAliases = VALID_SERVERS.slice(0, 5).map((v) => `createadmin${v}`);
 
 const pluginConfig = {
   name: allCommands,
@@ -42,21 +42,23 @@ function formatDate() {
   return timeHelper.formatDateTime("D MMMM YYYY HH:mm");
 }
 
-function parseServerVersion(cmd) {
-  const match = cmd.match(/v([1-5])$/i);
-  if (!match) return { server: "v1", serverKey: "s1" };
-  return { server: "v" + match[1], serverKey: "s" + match[1] };
+function parseServerVersion(cmd, args) {
+  let num = null;
+  const suffix = String(cmd || "").match(/v(\d{1,3})$/i);
+  if (suffix) num = parseInt(suffix[1], 10);
+  // Override via argumen: .cadmin 50 user / .cadmin v50 user (support v1-v100)
+  if (args && args.length) {
+    const am = String(args[0] || "").trim().match(/^v?(\d{1,3})$/i);
+    if (am) num = parseInt(am[1], 10);
+  }
+  if (num === null || !(num >= 1 && num <= 100)) num = 1;
+  return { server: "v" + num, serverKey: "s" + num };
 }
 
 function getServerConfig(pteroConfig, serverKey) {
-  const serverConfigs = {
-    s1: pteroConfig.server1,
-    s2: pteroConfig.server2,
-    s3: pteroConfig.server3,
-    s4: pteroConfig.server4,
-    s5: pteroConfig.server5,
-  };
-  return serverConfigs[serverKey] || null;
+  const num = parseInt(String(serverKey || "").replace("s", ""), 10);
+  if (!(num >= 1 && num <= 100)) return null;
+  return pteroConfig["server" + num] || null;
 }
 
 function validateConfig(serverConfig) {
@@ -68,7 +70,7 @@ function validateConfig(serverConfig) {
 
 function getAvailableServers(pteroConfig) {
   const available = [];
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 100; i++) {
     const cfg = pteroConfig[`server${i}`];
     if (cfg?.domain && cfg?.apikey) available.push(`v${i}`);
   }
@@ -78,7 +80,7 @@ function getAvailableServers(pteroConfig) {
 async function handler(m, { sock }) {
   const pteroConfig = config.pterodactyl;
 
-  const { server: serverVersion, serverKey } = parseServerVersion(m.command);
+  const { server: serverVersion, serverKey } = parseServerVersion(m.command, m.args);
   const serverLabel = serverVersion.toUpperCase();
 
   if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {

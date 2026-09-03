@@ -1,16 +1,15 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import fs from 'fs'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import path from 'path'
 import config from '../../config.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js"
+import { setPanelField, clearPanelField, MAX_PANELS } from "../../src/lib/panel/index.js"
 
 const pluginConfig = {
     name: 'setpanel',
     alias: ["setpanel"],
     category: 'owner',
     description: 'Update domain & key panel pterodactyl (untuk Cloudflare tunnel dinamis)',
-    usage: '.setpanel <v1-v5> <domain> atau .setpanel <v1-v5> apikey <key> atau .setpanel <v1-v5> capikey <key>',
+    usage: '.setpanel <v1-v100> <domain> atau .setpanel <v1-v100> apikey <key> atau .setpanel <v1-v100> capikey <key>',
     example: '.setpanel v1 https://abc.trycloudflare.com',
     isOwner: true,
     isPremium: false,
@@ -21,27 +20,12 @@ const pluginConfig = {
     isEnabled: true
 }
 
-const CONFIG_PATH = path.join(process.cwd(), 'config.js')
 
 function updateConfigField(serverKey, field, value) {
-    if (!fs.existsSync(CONFIG_PATH)) return { success: false, error: 'config.js tidak ditemukan' }
-
-    let content = fs.readFileSync(CONFIG_PATH, 'utf8')
-
-    // Pattern: cari server block, lalu cari field di dalamnya
-    // Contoh: server1: { ... domain: "" ... }
-    const serverBlockPattern = new RegExp(
-        '(' + serverKey + '\\s*:\\s*\\{[^}]*?' + field + '\\s*:\\s*)"[^"]*"',
-        's'
-    )
-
-    if (serverBlockPattern.test(content)) {
-        content = content.replace(serverBlockPattern, '$1"' + value + '"')
-        fs.writeFileSync(CONFIG_PATH, content, 'utf8')
-        return { success: true }
-    }
-
-    return { success: false, error: 'Field ' + field + ' di ' + serverKey + ' tidak ditemukan' }
+    // Persistence via JSON store (src/data/ptero-panels.json) — merge otomatis ke config saat startup
+    // (menggantikan edit config.js via regex yang gak match lagi sejak config pindah ke external.js)
+    const num = String(serverKey || '').replace('server', '')
+    return setPanelField(num, field, value)
 }
 
 async function handler(m, { sock }) {
@@ -54,13 +38,18 @@ async function handler(m, { sock }) {
         const getStatus = (cfg) => (cfg?.domain && cfg?.apikey) ? 'ON' : 'OFF'
 
         let txt = 'SET PANEL CONFIG\n\n'
-        txt += 'Update domain & key panel langsung dari sini.\nCocok untuk Cloudflare tunnel yang URL-nya berubah.\n\n'
-        txt += 'Status Panel:\n'
-        for (let i = 1; i <= 5; i++) {
+        txt += 'Update domain & key panel langsung dari sini.\nCocok untuk Cloudflare tunnel yang URL-nya berubah.\n'
+        txt += 'Slot panel: v1 - v100 (100 domain panel berbeda)\n\n'
+        txt += 'Status Panel (yang terkonfigurasi):\n'
+        let configured = 0
+        for (let i = 1; i <= MAX_PANELS; i++) {
             const s = ptero['server' + i] || {}
+            if (!s.domain && !s.apikey) continue
+            configured++
             txt += '  v' + i + ': ' + getStatus(s) + '\n'
             if (s.domain) txt += '    Domain: ' + s.domain + '\n'
         }
+        if (configured === 0) txt += '  (belum ada panel terkonfigurasi)\n'
 
         txt += '\nCara pakai:\n'
         txt += '  ' + prefix + 'setpanel v1 https://domain.com\n'
@@ -85,8 +74,11 @@ async function handler(m, { sock }) {
     if (args[0].toLowerCase() === 'status') {
         const ptero = config.pterodactyl || {}
         let txt = 'PANEL STATUS\n\n'
-        for (let i = 1; i <= 5; i++) {
+        let configured = 0
+        for (let i = 1; i <= MAX_PANELS; i++) {
             const s = ptero['server' + i] || {}
+            if (!s.domain && !s.apikey) continue
+            configured++
             const hasDomain = s.domain ? 'YES' : 'NO'
             const hasApi = s.apikey ? 'YES' : 'NO'
             const hasCApi = s.capikey ? 'YES' : 'NO'
@@ -97,14 +89,17 @@ async function handler(m, { sock }) {
             if (s.egg) txt += '  Egg: ' + s.egg + ' | Nest: ' + s.nestid + ' | Loc: ' + s.location + '\n'
             txt += '\n'
         }
+        if (configured === 0) txt += '(belum ada panel terkonfigurasi)\n'
+        txt += 'Total terkonfigurasi: ' + configured + '/' + MAX_PANELS + ' slot\n'
         return m.reply(claraWrap('setpanel', txt))
     }
 
     // Parse: .setpanel v1 <domain> atau .setpanel v1 <field> <value>
     const serverArg = args[0].toLowerCase()
-    const serverNum = serverArg.match(/^v?([1-5])$/)?.[1]
-    if (!serverNum) {
-        return m.reply(claraWrap('setpanel', 'Server tidak valid. Gunakan v1 sampai v5.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 https://domain.com'))
+    const serverNum = serverArg.match(/^v?(\d{1,3})$/)?.[1]
+    const serverNumInt = parseInt(serverNum, 10)
+    if (!serverNum || !(serverNumInt >= 1 && serverNumInt <= MAX_PANELS)) {
+        return m.reply(claraWrap('setpanel', 'Server tidak valid. Gunakan v1 sampai v100.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 https://domain.com'))
     }
 
     const serverKey = 'server' + serverNum
