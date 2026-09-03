@@ -4,7 +4,8 @@
 //
 // Sumber nilai (urutan prioritas):
 //   1. Override store: src/data/ptero-panels.json (di-set via .setpanel, menang)
-//   2. Default: config.pterodactyl.serverN (dari src/lib/config/external.js / apikey.js)
+//   2. File config: src/lib/panel/config.js (PANELS — daftar domain v1-v100, edit di situ)
+//   3. Legacy: misc.json via apikey.js (ptero_serverN_domain/apikey/capikey)
 //
 // config.js memanggil applyPteroOverrides() saat startup → config.pterodactyl
 // sudah termasuk override, jadi plugin lama tetap jalan tanpa perubahan.
