@@ -4,7 +4,6 @@
 
 import os from "os";
 import fs from "fs";
-import path from "path";
 import { formatUptime, getTimeGreeting, getImportantDay } from "./nova-formatter.js";
 import { getAiGreeting } from "./nova-greeting.js";
 import { getWeatherDetail } from "./nova-weather-footer.js";
@@ -29,23 +28,6 @@ function getIslamicDate(date = new Date()) {
 function formatNum(n) {
   const num = Number(n) || 0;
   try { return num.toLocaleString("id-ID"); } catch { return String(num); }
-}
-
-// Versi Baileys terpasang (package "nova" = ourin-baileys fork)
-let _baileysVersion = null;
-function getBaileysVersion() {
-  if (_baileysVersion) return _baileysVersion;
-  try {
-    const pkgPath = path.join(process.cwd(), "node_modules", "nova", "package.json");
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
-    _baileysVersion = `${pkg.name} v${pkg.version}`;
-  } catch {
-    try {
-      const rootPkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8"));
-      _baileysVersion = `ourin-baileys ${rootPkg.dependencies?.nova || ""}`.trim();
-    } catch { _baileysVersion = "-"; }
-  }
-  return _baileysVersion;
 }
 
 // Lokasi server — IP geolocation (ipwho.is, HTTPS, no-key), cache 6 jam
@@ -239,7 +221,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Mode", value: (botConfig?.mode || "public").toUpperCase() },
     { label: "Prefix", value: prefix },
     { label: "Tipe", value: "Baileys MD (Multi Device)" },
-    { label: "Baileys", value: getBaileysVersion() },
+    { label: "Baileys", value: "ESM" },
     { label: "Uptime", value: runtimeStr },
     "",
     "Info Database",
