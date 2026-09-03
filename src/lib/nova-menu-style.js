@@ -529,7 +529,7 @@ function novaInfoSections(info = [], sc = true) {
   return out;
 }
 
-function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false } = {}) {
+function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false, legend = null } = {}) {
   const scFn = sc ? toSC : (s) => String(s);
   
   let out = "";
@@ -555,6 +555,15 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
   out += infoOut;
   if (infoOut) out += "\n";
 
+  // ── Legend symbol akses fitur (request owner) ──
+  if (legend && legend.length > 0) {
+    out += `╭─「 ✦ ${scFn("Keterangan Symbol")} ✦ 」\n`;
+    for (const l of legend) {
+      if (l && l.sym) out += `│ • ${l.sym} : ${scFn(l.desc || "")}\n`;
+    }
+    out += `╰────  •  ────\n\n`;
+  }
+
   // ── Readmore trick: sembunyikan daftar command panjang di balik "Baca Selengkapnya" ──
   // biar pas allmenu dibuka gak langsung wall-of-text, cuma info section yang kelihatan.
   if (readMoreBeforeCategories && categories.length > 0) {
@@ -572,9 +581,14 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
     out += `╭─「 ✦ ${catName} ✦ 」\n`;
     out += `│\n`;
     
-    // Commands: │ ✦ .command
+    // Commands: │ ✦ .command (+ symbol akses di kanan)
     for (const cmd of cat.commands) {
-      out += `│ ✦ ${prefix}${cmd}\n`;
+      if (cmd && typeof cmd === "object") {
+        const sym = cmd.symbols ? ` ${String(cmd.symbols).trim()}` : "";
+        out += `│ ✦ ${prefix}${cmd.name}${sym}\n`;
+      } else {
+        out += `│ ✦ ${prefix}${cmd}\n`;
+      }
     }
   }
   

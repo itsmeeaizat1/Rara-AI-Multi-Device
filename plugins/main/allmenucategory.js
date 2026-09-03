@@ -50,15 +50,29 @@ const CATEGORY_NAMES = {
 
 function getCommandSymbols(cmdName) {
   const plugin = getPlugin(cmdName);
-  if (!plugin || !plugin.config) return "";
+  const cfg = plugin?.config;
+  if (!cfg) return "";
+  // Khusus owner → cukup satu symbol
+  if (cfg.isOwner) return " Ⓞ";
   const symbols = [];
-  if (plugin.config.isOwner) symbols.push("Ⓞ");
-  if (plugin.config.isPremium) symbols.push("ⓟ");
-  if (plugin.config.limit && plugin.config.limit > 0) symbols.push("Ⓛ");
-  if (plugin.config.isAdmin) symbols.push("Ⓐ");
-  if (plugin.config.isGroup) symbols.push("Ⓖ");
-  if (plugin.config.isPrivate) symbols.push("Ⓟ");
-  return symbols.length > 0 ? " " + symbols.join(" ") : "";
+  if (cfg.isPremium) {
+    // Khusus premium
+    symbols.push("Ⓟ");
+  } else if ((cfg.energi || 0) > 0 || (cfg.limit || 0) > 0) {
+    // Fitur berquota: free dapat quota gratis, premium unlimited (aturan global bot)
+    symbols.push("Ⓕ", "Ⓟ", "Ⓤ");
+  } else {
+    // Fitur umum: semua user bisa
+    symbols.push("Ⓤ");
+  }
+  symbols.push("Ⓞ"); // owner juga bisa pakai semua fitur
+  if ((cfg.limit || 0) > 0) symbols.push("Ⓛ");
+  // Fitur RPG wajib .daftar dulu (rpg data dibuat saat daftar)
+  if (String(cfg.category || "") === "rpg") symbols.push("ʀ");
+  // Restriksi konteks
+  if (cfg.isAdmin) symbols.push("Ⓐ");
+  if (cfg.isGroup && !cfg.isPrivate) symbols.push("Ⓖ");
+  return " " + symbols.join(" ");
 }
 
 let _thumbCache = null;

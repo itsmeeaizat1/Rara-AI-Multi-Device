@@ -77,15 +77,29 @@ const CATEGORY_NAMES = {
 
 function getCommandSymbols(cmdName) {
   const plugin = getPlugin(cmdName);
-  if (!plugin || !plugin.config) return "";
+  const cfg = plugin?.config;
+  if (!cfg) return "";
+  // Khusus owner → cukup satu symbol
+  if (cfg.isOwner) return " Ⓞ";
   const symbols = [];
-  if (plugin.config.isOwner) symbols.push("Ⓞ");
-  if (plugin.config.isPremium) symbols.push("ⓟ");
-  if (plugin.config.limit && plugin.config.limit > 0) symbols.push("Ⓛ");
-  if (plugin.config.isAdmin) symbols.push("Ⓐ");
-  if (plugin.config.isGroup) symbols.push("Ⓖ");
-  if (plugin.config.isPrivate) symbols.push("Ⓟ");
-  return symbols.length > 0 ? " " + symbols.join(" ") : "";
+  if (cfg.isPremium) {
+    // Khusus premium
+    symbols.push("Ⓟ");
+  } else if ((cfg.energi || 0) > 0 || (cfg.limit || 0) > 0) {
+    // Fitur berquota: free dapat quota gratis, premium unlimited (aturan global bot)
+    symbols.push("Ⓕ", "Ⓟ", "Ⓤ");
+  } else {
+    // Fitur umum: semua user bisa
+    symbols.push("Ⓤ");
+  }
+  symbols.push("Ⓞ"); // owner juga bisa pakai semua fitur
+  if ((cfg.limit || 0) > 0) symbols.push("Ⓛ");
+  // Fitur RPG wajib .daftar dulu (rpg data dibuat saat daftar)
+  if (String(cfg.category || "") === "rpg") symbols.push("ʀ");
+  // Restriksi konteks
+  if (cfg.isAdmin) symbols.push("Ⓐ");
+  if (cfg.isGroup && !cfg.isPrivate) symbols.push("Ⓖ");
+  return " " + symbols.join(" ");
 }
 
 let _thumbCache = null;
@@ -215,16 +229,30 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       const allCmds = [...pluginCmds, ...caseCmds];
       if (allCmds.length === 0) continue;
       const catName = CATEGORY_NAMES[category] || category.charAt(0).toUpperCase() + category.slice(1);
-      menuCats.push({ name: catName, commands: allCmds });
+      // Command + symbol akses di kanan (Ⓕ free / Ⓟ premium / Ⓞ owner / dst)
+      menuCats.push({ name: catName, commands: allCmds.map((cmd) => ({ name: cmd, symbols: getCommandSymbols(cmd) })) });
     }
 
     const intro = aiIntro || `${getTimeGreeting()}!`; // Pengenalan AI — berubah tiap menu dimuat
+
+    // Legend symbol akses fitur (request owner — tampil di bawah info section)
+    const legend = [
+      { sym: "Ⓤ", desc: "User - semua user bisa" },
+      { sym: "Ⓕ", desc: "Free - ada quota gratis" },
+      { sym: "Ⓟ", desc: "Premium - khusus premium" },
+      { sym: "Ⓞ", desc: "Owner - hanya owner" },
+      { sym: "Ⓛ", desc: "Limit - pakai energi/limit" },
+      { sym: "ʀ", desc: "Register - wajib daftar" },
+      { sym: "Ⓐ", desc: "Admin - khusus admin grup" },
+      { sym: "Ⓖ", desc: "Grup - khusus di grup" },
+    ];
 
     const txt = novaMenuLayout({
       intro,
       introTitle: "Nova",
       infoTitle: "Info",
       info,
+      legend,
       categories: menuCats,
       prefix,
       readMoreBeforeCategories: true,
