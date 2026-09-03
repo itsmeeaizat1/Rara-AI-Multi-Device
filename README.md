@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20pull%20request%20%232%20from%20itsmeeaizat%2Ff-success?style=for-the-badge)
-> *Commit: "Merge pull request #2 from itsmeeaizat/feat/friendly-status-messages"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20pull%20request%20%233%20from%20itsmeeaizat%2Ff-success?style=for-the-badge)
+> *Commit: "Merge pull request #3 from itsmeeaizat/feat/autostatus-page"*
 <!--END_SECTION:latest-update-->
 
 ---
