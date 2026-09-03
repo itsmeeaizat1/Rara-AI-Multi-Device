@@ -46,7 +46,7 @@ const CATEGORIES = [
   { key: "sampah",      icon: "🗑️", label: "Total Buang Sampah",    metric: "sampah.totalSampah" },
   { key: "masak",        icon: "🍳", label: "Total Masakan",         metric: "cookingv2.cookedHistory" },
   { key: "slot",         icon: "🎰", label: "Kemenangan Slot",       metric: "slotmachine.wins" },
-  { key: "gacha",        icon: "🌸", label: "Total Pull Gacha",      metric: "gachawaifu.pulls" },
+  { key: "gacha",        icon: "🎁", label: "Total Pull Gacha",      metric: "gachawaifu.pulls" },
 ];
 
 function findCategory(input) {
