@@ -114,8 +114,16 @@ const store = {
         if (!this.chats.has(jid)) {
           this.chats.set(jid, { id: jid });
         }
-        if (msg.pushName && jid.endsWith("@s.whatsapp.net")) {
-          this.contacts[jid] = { ...this.contacts[jid], notify: msg.pushName };
+        // Simpan pushName: private chat → jid user; GRUP → jid participant
+        // (FIX kick-by-name: dulu nama member grup gak pernah kesimpen ke
+        // contact store, jadi .novaai kick <nama> gak pernah nemu JID-nya)
+        if (msg.pushName) {
+          if (jid.endsWith("@s.whatsapp.net")) {
+            this.contacts[jid] = { ...this.contacts[jid], notify: msg.pushName };
+          } else if (msg.key?.participant) {
+            const pj = decodeAndNormalize(msg.key.participant);
+            if (pj) this.contacts[pj] = { ...this.contacts[pj], notify: msg.pushName };
+          }
         }
       }
     });

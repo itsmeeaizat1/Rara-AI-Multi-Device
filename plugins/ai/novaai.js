@@ -337,7 +337,10 @@ async function handler(m, { sock, conn, config, db }) {
           const list = resolved.multiple.map(c => `• ${c.name} (${c.jid.split("@")[0]})`).join("\n");
           return m.reply(`❌ Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`);
         }
-        user = resolved || null;
+        if (!resolved) {
+          return m.reply("❌ Nama \"" + user + "\" tidak ditemukan di grup ini.\nCoba @mention langsung, reply pesannya, atau tulis nomornya (62xxx).");
+        }
+        user = resolved;
       }
     }
     user = String(user || "").replace(/[^0-9]/g, "");
