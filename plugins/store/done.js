@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
     minute: "2-digit",
   });
 
-  const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+  const saluranId = config.saluran?.id || "@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
   const typeIcon = trx.productType === "fisik" ? "📦" : "🔑";

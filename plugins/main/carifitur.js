@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
         `🔍 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n\nGak nemu fitur dengan keyword nih \`${keyword}\``,
       );
     }
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
     let text = `🔍 *Hasil Pencarian: "${keyword}"*\n`;
     text += `Ditemukan *${matches.length}* fitur\n`;

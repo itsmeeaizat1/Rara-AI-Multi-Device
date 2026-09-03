@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     const ba = new BluArchive();
     const char = await ba.char(name);
 
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let caption = `🎮 *${char.name?.toUpperCase()}*\n\n`;

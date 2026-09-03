@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     const app = data.data;
     const file = data.file;
 
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     if (file?.url) {

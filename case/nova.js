@@ -8,6 +8,28 @@ import {
   pluginStore,
 } from "../src/lib/nova-plugins.js";
 import config from "../config.js";
+import { getStaticThumbnail } from "../src/lib/nova-asset-manager.js";
+
+// Preview card (externalAdReply) standar bot — thumbnail dari asset manager,
+// link dari config.saluran. Data chanel lama (id newsletter hardcoded) dihapus total,
+// id chanel sekarang ngikut config.saluran.id (placeholder "@newsletter" — diganti
+// owner sendiri di config, bukan nempel di code).
+async function buildListAdReply(title) {
+  const ctx = {
+    externalAdReply: {
+      title: String(title || config.bot?.name || "Nova AI").substring(0, 60),
+      body: "Nova AI Whatsapp Bot",
+      mediaType: 1,
+      sourceUrl: config.saluran?.link || config.info?.website || "",
+      renderLargerThumbnail: false,
+    },
+  };
+  try {
+    const thumb = await getStaticThumbnail();
+    if (thumb) ctx.externalAdReply.thumbnail = thumb;
+  } catch {}
+  return ctx;
+}
 
 function toSmallCaps(text) {
   const smallCapsMap = {
@@ -175,18 +197,7 @@ async function handleCommand(m, sock) {
 
           await sock.sendMessage(
             m.chat,
-            {
-              text,
-              contextInfo: {
-                forwardingScore: 9999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                  newsletterJid: "120363400911374213@newsletter",
-                  newsletterName: "Nova Case System",
-                  serverMessageId: 127,
-                },
-              },
-            },
+            { text, contextInfo: await buildListAdReply("List Semua Case") },
             { quoted: m },
           );
 
@@ -263,18 +274,7 @@ async function handleCommand(m, sock) {
 
           await sock.sendMessage(
             m.chat,
-            {
-              text,
-              contextInfo: {
-                forwardingScore: 9999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                  newsletterJid: "120363400911374213@newsletter",
-                  newsletterName: "Nova Plugin System",
-                  serverMessageId: 127,
-                },
-              },
-            },
+            { text, contextInfo: await buildListAdReply("List Semua Plugin") },
             { quoted: m },
           );
 

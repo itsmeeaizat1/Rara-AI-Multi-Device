@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
     ? fs.readFileSync(imagePath)
     : null;
 
-  const saluranId = botConfig.saluran?.id || "120363400911374213@newsletter";
+  const saluranId = botConfig.saluran?.id || "@newsletter";
   const saluranName =
     botConfig.saluran?.name || botConfig.bot?.name || "Nova-AI";
 

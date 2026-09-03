@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const lokasi = jadwalData.lokasi || kota.lokasi;
     const daerah = jadwalData.daerah || "";
     const today = moment.tz("Asia/Jakarta").format("dddd, DD MMMM YYYY");
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*

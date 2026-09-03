@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("converter", `❌ *ɢᴀɢᴀʟ ᴄᴏɴᴠᴇʀᴛ*\n\n${result.error}`));
     }
 
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     await sock.sendMessage(

@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Infotourney", "❌ Tidak ada turnamen yang ditemukan"));
     }
 
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let text = `🏆 *ɪɴꜰᴏ ᴛᴜʀɴᴀᴍᴇɴ ᴍᴏʙɪʟᴇ ʟᴇɢᴇɴᴅꜱ*\n\n`;
