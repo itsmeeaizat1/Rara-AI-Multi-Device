@@ -36,11 +36,9 @@ async function handler(m, { args, prefix }) {
     activeGames.set(chatId, { target, attempts: 0, maxAttempts: 10 });
     return m.reply(
       "" +
-      `┊ 🎯 Aku pilih angka 1-100\n` +
-      `┊ 🔄 Kamu punya 10 kesempatan\n` +
-      `┊\n` +
-      `┊ Ketik ${prefix}tebakangka <angka>\n` +
-      `┊ Contoh: ${prefix}tebakangka 50\n` +
+      `🎯 Aku pilih angka 1-100, kamu punya 10 kesempatan!\n\n` +
+      `📌 Ketik ${prefix}tebakangka <angka>\n` +
+      `💡 Contoh: ${prefix}tebakangka 50` +
       ""
     );
   }
@@ -64,36 +62,48 @@ async function handler(m, { args, prefix }) {
     const expGain = 20 + remaining * 5;
     activeGames.delete(chatId);
     try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
+    const e = m.energiInfo;
+    const energiLine = e
+      ? (e.unlimited
+          ? `│ • ⚡ Energi: ∞ (unlimited)\n`
+          : (e.deducted > 0 ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n` : `│ • ⚡ Energi: gratis\n`))
+      : "";
     return m.reply(
-      "" +
-      `┊ 🎉 Benar! Angkanya ${game.target}\n` +
-      `┊ 🔄 Tebakan ke-${game.attempts} dari ${game.maxAttempts}\n` +
-      `┊ 🏆 +${expGain} EXP\n` +
-      `┊ Yuk tebak angka lain kak, biar makin jago nebak 🥳\n` +
-      ""
+      `🎉 Benar! Angkanya ${game.target}\n\n` +
+      `╭─「 ✦ ᴛᴇʙᴀᴋ ᴀɴɢᴋᴀ ✦ 」\n\n` +
+      `│ • Angka: ${game.target}\n` +
+      `│ • Tebakan ke-${game.attempts} dari ${game.maxAttempts}\n\n` +
+      energiLine +
+      `│ • ✨ EXP: +${expGain}\n` +
+      `\n╰────  •  ────` +
+      `\n\nYuk tebak angka lain kak, biar makin jago nebak 🥳`
     );
   }
 
   if (game.attempts >= game.maxAttempts) {
     activeGames.delete(chatId);
+    const e = m.energiInfo;
+    const energiLine = e
+      ? (e.unlimited
+          ? `│ • ⚡ Energi: ∞ (unlimited)\n`
+          : (e.deducted > 0 ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n` : `│ • ⚡ Energi: gratis\n`))
+      : "";
     return m.reply(
-      "" +
-      `┊ 😭 Kesempatan habis!\n` +
-      `┊ Angkanya: ${game.target}\n` +
-      `┊ Coba lagi: ${prefix}tebakangka mulai\n` +
-      `┊ Yuk coba lagi kak, angkanya gak akan kabur 🥳\n` +
-      ""
+      `😭 Kesempatan habis!\n\n` +
+      `╭─「 ✦ ᴛᴇʙᴀᴋ ᴀɴɢᴋᴀ ✦ 」\n\n` +
+      `│ • Angka: ${game.target}\n\n` +
+      energiLine +
+      `\n╰────  •  ────` +
+      `\n\nYuk coba lagi kak, angkanya gak akan kabur 🥳`
     );
   }
 
   const hint = guess < game.target ? "lebih besar ⬆️" : "lebih kecil ⬇️";
   const sisa = game.maxAttempts - game.attempts;
   return m.reply(
-    "" +
-    `┊ 📊 Tebakan: ${guess}\n` +
-    `┊ 💡 Hint: ${hint}\n` +
-    `┊ 🔄 Sisa: ${sisa} kesempatan\n` +
-    ""
+    `📊 Tebakan: ${guess}\n` +
+    `💡 Hint: ${hint}\n` +
+    `🔄 Sisa: ${sisa} kesempatan`
   );
 }
 

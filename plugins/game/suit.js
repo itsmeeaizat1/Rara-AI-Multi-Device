@@ -44,29 +44,46 @@ async function handler(m, { args, prefix }) {
   const botPick = CHOICES[Math.floor(Math.random() * CHOICES.length)];
   const result = getResult(pilihan, botPick);
 
+  // Info energi kekuras (dari handler setelah pemotongan)
+  const e = m.energiInfo;
+  const energiLine = e
+    ? (e.unlimited
+        ? `│ • ⚡ Energi: ∞ (unlimited)\n`
+        : (e.deducted > 0
+            ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`
+            : `│ • ⚡ Energi: gratis\n`))
+    : "";
+
   let text = "";
   if (result === "menang") {
     const expGain = 5 + Math.floor(Math.random() * 10);
     text = "";
-    text += `┊ Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
-    text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
-    text += `┊\n`;
-    text += `┊ 🎉 Kamu menang! +${expGain} EXP\n`;
-    text += `┊ Yuk suit lagi kak, biar tanganmu makin sakti ✊🥳\n`;
+    text += `🎉 Kamu menang!\n\n`;
+    text += `╭─「 ✦ ꜱᴜɪᴛ ✦ 」\n\n`;
+    text += `│ • Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
+    text += `│ • Bot: ${EMOJI[botPick]} ${botPick}\n\n`;
+    text += energiLine;
+    text += `│ • ✨ EXP: +${expGain}\n`;
+    text += `\n╰────  •  ────`;
+    text += `\n\nYuk suit lagi kak, biar tanganmu makin sakti ✊🥳`;
         try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
   } else if (result === "kalah") {
     text = "";
-    text += `┊ Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
-    text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
-    text += `┊\n`;
-    text += `┊ 😂 Kamu kalah! Coba lagi ya\n`;
-    text += `┊ Yuk revans kak, pias balik ✊🥳\n`;
+    text += `😂 Kamu kalah!\n\n`;
+    text += `╭─「 ✦ ꜱᴜɪᴛ ✦ 」\n\n`;
+    text += `│ • Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
+    text += `│ • Bot: ${EMOJI[botPick]} ${botPick}\n\n`;
+    text += energiLine;
+    text += `\n╰────  •  ────`;
+    text += `\n\nYuk revans kak, pias balik ✊🥳`;
       } else {
     text = "";
-    text += `┊ Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
-    text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
-    text += `┊\n`;
-    text += `┊ 🤝 Seri! Pilih lagi\n`;
+    text += `🤝 Seri! Pilih lagi\n\n`;
+    text += `╭─「 ✦ ꜱᴜɪᴛ ✦ 」\n\n`;
+    text += `│ • Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
+    text += `│ • Bot: ${EMOJI[botPick]} ${botPick}\n\n`;
+    text += energiLine;
+    text += `\n╰────  •  ────`;
       }
 
   await m.reply(text);
