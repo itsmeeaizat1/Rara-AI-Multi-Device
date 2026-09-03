@@ -1,9 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // playvideo.js — Search YouTube → download video → kirim langsung
+// Resolusi: 360p / 480p (default) / 720p / HD 1080p
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
+import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
@@ -29,13 +31,25 @@ const pluginConfig = {
   name: "playvideo",
   alias: ["playvideo"],
   category: "search",
-  description: "Cari & download video YouTube",
-  usage: ".playvideo <query>",
-  example: ".playvideo komang",
+  description: "Cari & download video YouTube (360p/480p/720p/HD)",
+  usage: ".playvideo [360/480/720/hd] <query>",
+  example: ".playvideo komang / .playvideo 720 komang",
   cooldown: 20,
   energi: 2,
   isEnabled: true,
 };
+
+// Parse resolusi dari argumen pertama: 360/480/720/1080/hd (default 480)
+function parseQualityArgs(args) {
+  let quality = "480";
+  let query = args.join(" ").trim();
+  const first = String(args[0] || "").toLowerCase().replace(/p$/, "");
+  if (/^(360|480|720|1080|hd)$/.test(first)) {
+    quality = first === "hd" ? "1080" : first;
+    query = args.slice(1).join(" ").trim();
+  }
+  return { quality, query };
+}
 
 async function searchYoutube(query) {
   // Try 1: IkyyXD search
@@ -83,8 +97,18 @@ async function searchYoutube(query) {
   return null;
 }
 
-async function downloadVideo(url) {
-  // Try 1: IkyyXD ytmp4 (pakai "q" param)
+async function downloadVideo(url, quality) {
+  // Try 1: yt-dlp / cobalt (nova-ytdlp) — dukung pilihan resolusi persis
+  try {
+    const result = await downloadVideoYtDlp(url, quality);
+    if (result?.buffer?.length > 10000) {
+      return { buffer: result.buffer, title: result.title };
+    }
+  } catch (e) {
+    console.error("[PlayVideo] nova-ytdlp error:", e.message);
+  }
+
+  // Try 2: IkyyXD ytmp4 (tanpa kontrol kualitas — biasanya 720p)
   try {
     const { data } = await axios.get(`${IKYY}/download/ytmp4`, {
       params: { q: url, apikey: "kyzz" },
@@ -107,7 +131,7 @@ async function downloadVideo(url) {
     console.error("[PlayVideo] IkyyXD ytmp4 error:", e.message);
   }
 
-  // Try 2: ytdl.js mp4
+  // Try 3: ytdl.js mp4
   try {
     const result = await ytdl(url, "mp4");
     if (result?.status && result?.dl) {
@@ -127,10 +151,22 @@ async function downloadVideo(url) {
   return null;
 }
 
-async function handler(m, { sock, text }) {
-  const query = (text || m.text || "").trim();
+async function handler(m, { sock }) {
+  const args = m.args || [];
+  const { quality, query } = parseQualityArgs(args);
+
+  // Usage: pilihan resolusi (default 480p)
   if (!query) {
-    return m.reply(novaGuide("PlayVideo", "Kirim judul video yang mau dicari!", `${m.prefix}playvideo komang`));
+    return m.reply(claraWrap("Playvideo", [
+      `📌 Pilih Resolusi Video:`,
+      ``,
+      `360p · 480p · 720p · ʜᴅ (1080p)`,
+      ``,
+      `💡 Contoh:`,
+      `${m.prefix}playvideo komang → 480p (default)`,
+      `${m.prefix}playvideo 720 komang → 720p`,
+      `${m.prefix}playvideo hd komang → ʜᴅ 1080p`,
+    ]));
   }
 
   try {
@@ -142,21 +178,21 @@ async function handler(m, { sock, text }) {
       await m.react("❌");
       return m.reply(novaError("PlayVideo", "Video tidak ditemukan, coba kata kunci lain ya!"));
     }
-    console.log(`[PlayVideo] Found: ${video.title} → ${video.url}`);
+    console.log(`[PlayVideo] Found: ${video.title} → ${video.url} (${quality}p)`);
 
     // Step 2: Download video
-    const vid = await downloadVideo(video.url);
+    const vid = await downloadVideo(video.url, quality);
     if (!vid?.buffer || vid.buffer.length < 10000) {
       await m.react("❌");
       return m.reply(novaError("PlayVideo", "Gagal download video, coba lagi nanti ya!"));
     }
     console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
 
-    // Step 2.5: Pastikan H.264+AAC (banyak sumber savetube/ytdl diam-diam kasih
-    // AV1/VP9 yang gagal diputar di WhatsApp walau ekstensinya .mp4)
+    // Step 2.5: Pastikan H.264+AAC (sumber savetube/ytdl diam-diam kasih AV1/VP9
+    // yang gagal diputar di WA) + downscale ke resolusi yang diminta kalau perlu
     try {
-      vid.buffer = await toWhatsAppVideo(vid.buffer);
-      console.log(`[PlayVideo] Video setelah convert: ${vid.buffer.length} bytes`);
+      vid.buffer = await toWhatsAppVideo(vid.buffer, { maxHeight: parseInt(quality, 10) });
+      console.log(`[PlayVideo] Video setelah convert ${quality}p: ${vid.buffer.length} bytes`);
     } catch (convErr) {
       console.error("[PlayVideo] Convert error, kirim buffer asli:", convErr.message);
     }
@@ -167,7 +203,7 @@ async function handler(m, { sock, text }) {
 
     // Step 4: Info section lengkap
     const captionLines = [
-      `*YouTube Play — Video*`,
+      `*YouTube Play — Video ${quality === "1080" ? "HD" : quality + "p"}*`,
       ``,
       `*Judul:* ${titleForLyrics}`,
       `*Artis/Channel:* ${lyricsData?.artist || video.author}`,
