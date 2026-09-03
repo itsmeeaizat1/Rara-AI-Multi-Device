@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20preview%20card%20di%20semua%20downloader%20m-success?style=for-the-badge)
-> *Commit: "feat: preview card di semua downloader media gambar"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20merge%20PR%20%231%20%E2%80%94%20media%20converter%20univ-success?style=for-the-badge)
+> *Commit: "feat: merge PR #1 — media converter universal + tombol pilihan format play/playvideo"*
 <!--END_SECTION:latest-update-->
 
 ---
