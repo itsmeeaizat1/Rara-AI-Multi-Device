@@ -85,9 +85,9 @@ class GameFactory {
               text += `\`\`\`${existing.question[cfg.questionField]}\`\`\`\n\n`;
             }
             if (cfg.hintEnabled !== false) {
-              text += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+              text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
             }
-            text += `│ ❏ Sisa waktu: *${formatTime(remaining)}*\n\n`;
+            text += `│ • Sisa waktu: ${formatTime(remaining)}\n\n`;
             text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_\n`;
             text += `╰────  •  ────`;
             await m.reply(text);
@@ -125,10 +125,10 @@ class GameFactory {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
           if (cfg.hintEnabled !== false) {
-            caption += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+            caption += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
-          caption += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
+          caption += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
+          caption += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
           caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
           caption += `╰────  •  ────`;
 
@@ -139,10 +139,10 @@ class GameFactory {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
           if (cfg.hintEnabled !== false) {
-            text += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+            text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
-          text += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
+          text += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
+          text += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
           text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
           text += `╰────  •  ────`;
 
@@ -163,9 +163,9 @@ class GameFactory {
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ ❏ Jawaban: *${answer}*\n`;
+            text += `│ • Jawaban: ${answer}\n`;
             if (question.deskripsi) {
-              text += `│ ❏ Info: ${question.deskripsi}\n`;
+              text += `│ • Info: ${question.deskripsi}\n`;
             }
             text += `\n_Gak ada yang bisa jawab nih~_\n`;
             text += `╰────  •  ────`;
@@ -213,10 +213,10 @@ class GameFactory {
           if (cfg.questionField && session.question[cfg.questionField]) {
             text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
           }
-          text += `│ ❏ Jawaban: ${answer}\n`;
+          text += `│ • Jawaban: ${answer}\n`;
           text += renderEnergiLine(m, cfg);
           if (session.question.deskripsi) {
-            text += `│ ❏ Info: ${session.question.deskripsi}\n`;
+            text += `│ • Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split('@')[0]} menyerah_\n`;
           text += `╰────  •  ────`;
@@ -276,21 +276,21 @@ class GameFactory {
           // Pesan hasil: bold cuma di pembuka, value plain (request owner)
           let text = `${pick(WIN_MSGS)}\n\n`;
           text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
-          text += `│ ❏ Jawaban: ${answer}\n`;
-          text += `│ ❏ Pemenang: @${m.sender.split('@')[0]}\n`;
-          text += `│ ❏ Percobaan: ${session.attempts}x\n\n`;
+          text += `│ • Jawaban: ${answer}\n`;
+          text += `│ • Pemenang: @${m.sender.split('@')[0]}\n`;
+          text += `│ • Percobaan: ${session.attempts}x\n\n`;
 
           // Info section: yang kekuras (energi) & yang nambah (reward)
           text += renderEnergiLine(m, cfg);
-          if (reward.limit > 0) text += `│ ❏ 🎫 Limit: +${reward.limit}\n`;
-          if (reward.koin > 0) text += `│ ❏ 🪙 Koin: +${fmtNum(reward.koin)}\n`;
-          if (reward.exp > 0) text += `│ ❏ ✨ EXP: +${fmtNum(reward.exp)}\n`;
-          if (reward.gold > 0) text += `│ ❏ 🪭 Gold: +${fmtNum(reward.gold)}\n`;
-          if (reward.gems > 0) text += `│ ❏ 💎 Gems: +${reward.gems}\n`;
-          if (reward.diamonds > 0) text += `│ ❏ 💎 Diamonds: +${reward.diamonds}\n`;
+          if (reward.limit > 0) text += `│ • 🎫 Limit: +${reward.limit}\n`;
+          if (reward.koin > 0) text += `│ • 🪙 Koin: +${fmtNum(reward.koin)}\n`;
+          if (reward.exp > 0) text += `│ • ✨ EXP: +${fmtNum(reward.exp)}\n`;
+          if (reward.gold > 0) text += `│ • 🪭 Gold: +${fmtNum(reward.gold)}\n`;
+          if (reward.gems > 0) text += `│ • 💎 Gems: +${reward.gems}\n`;
+          if (reward.diamonds > 0) text += `│ • 💎 Diamonds: +${reward.diamonds}\n`;
 
           if (session.question.deskripsi) {
-            text += `\n│ ❏ Info: ${session.question.deskripsi}\n`;
+            text += `\n│ • Info: ${session.question.deskripsi}\n`;
           }
 
           text += `\n╰────  •  ────`;
@@ -334,10 +334,10 @@ class GameFactory {
         if (cfg.questionField && session.question[cfg.questionField]) {
           text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
         }
-        text += `│ ❏ Jawaban: ${answer}\n`;
+        text += `│ • Jawaban: ${answer}\n`;
         text += renderEnergiLine(m, cfg);
         if (session.question.deskripsi) {
-          text += `│ ❏ Info: ${session.question.deskripsi}\n`;
+          text += `│ • Info: ${session.question.deskripsi}\n`;
         }
         text += `\n╰────  •  ────`;
         text += `\n\n${gameCTA(gameType)}`;
