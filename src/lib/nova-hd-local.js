@@ -51,7 +51,10 @@ function tileStarts(len, tile) {
   return out;
 }
 
-export async function enhanceLocal(buffer, mode = "hd", { maxSide: maxSideOverride } = {}) {
+// enlarge=true → input kecil di-scale PERSIS ke maxSide dulu (hasil pas ukuran
+// yang diminta user, contoh .remini real 4k → output 3840px). Default false →
+// gambar kecil tetap ukuran asli (tanpa piksel palsu).
+export async function enhanceLocal(buffer, mode = "hd", { maxSide: maxSideOverride, enlarge = false } = {}) {
   const cfg = MODELS[mode] || MODELS.hd;
   const maxSide = Math.max(128, Number(maxSideOverride) || cfg.maxSide);
   const scale = cfg.scale;
@@ -60,8 +63,9 @@ export async function enhanceLocal(buffer, mode = "hd", { maxSide: maxSideOverri
   // ── 1. Preprocess: EXIF rotate + resize (fit inside maxSide) + raw RGB ──
   let img = sharp(buffer, { failOn: "none" }).rotate();
   const meta = await img.metadata().catch(() => null);
-  if (meta && Math.max(meta.width || 0, meta.height || 0) > maxSide) {
-    img = img.resize({ width: maxSide, height: maxSide, fit: "inside", withoutEnlargement: true });
+  const longest = Math.max(meta?.width || 0, meta?.height || 0);
+  if (meta && (longest > maxSide || (enlarge && longest !== maxSide))) {
+    img = img.resize({ width: maxSide, height: maxSide, fit: "inside", withoutEnlargement: !enlarge });
   }
   const { data, info } = await img.removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const W = info.width;
