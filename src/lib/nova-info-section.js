@@ -188,6 +188,15 @@ export async function buildMenuInfo(m, ctx = {}) {
     } catch {}
   }
 
+  // ── Total fitur & perintah (dari plugin store) ──
+  let totalFeatures = null;
+  let totalCommands = null;
+  try {
+    const plugins = await import("./nova-plugins.js");
+    totalFeatures = new Set(plugins.getAllPlugins()).size;
+    totalCommands = new Set(plugins.getAllCommandNames()).size;
+  } catch {}
+
   // ── Build info array ──
   // Ucapan AI berubah tiap menu dimuat (IkyyXD free — jangan nguras token DeepSeek)
   let aiGreeting = null;
@@ -218,8 +227,11 @@ export async function buildMenuInfo(m, ctx = {}) {
     "",
     "Info Bot",
     { label: "Nama", value: botName },
+    { label: "Versi", value: botConfig?.bot?.version || "v20.0.0" },
     { label: "Mode", value: (botConfig?.mode || "public").toUpperCase() },
     { label: "Prefix", value: prefix },
+    ...(totalCommands ? [{ label: "Total Perintah", value: formatNum(totalCommands) }] : []),
+    ...(totalFeatures ? [{ label: "Total Fitur", value: formatNum(totalFeatures) }] : []),
     { label: "Tipe", value: "Baileys MD (Multi Device)" },
     { label: "Baileys", value: "ESM" },
     { label: "Uptime", value: runtimeStr },
