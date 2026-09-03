@@ -1092,8 +1092,8 @@ V2 Upgrades (from Alya API endpoints):
 Download Upgrades:
 - .ytmp3v3 - download - YouTube MP3 v3 (@distube/ytdl-core direct engine)
 - .ytmp4v3 - download - YouTube MP4 v3 (@distube/ytdl-core direct engine)
-- .play [bitrate] <query> - search - Cari & download audio YouTube; pilihan bitrate 128/256/320 kbps (default 256); .play polos = usage pilihan bitrate; engine: yt-dlp (bitrate persis) → ytdl.js → IkyyXD
-- .playvideo [resolusi] <query> - search - Cari & download video YouTube; pilihan resolusi 360/480/720/hd (default 480p); .playvideo polos = usage pilihan resolusi; auto-convert H.264+AAC (fix AV1 gak bisa diputar) + downscale sesuai resolusi; engine: yt-dlp → IkyyXD → ytdl.js
+- .play [bitrate] <query> - search - Cari & download audio YouTube; pilihan bitrate 128/256/320 kbps (default 256); .play polos = usage pilihan bitrate; engine: yt-dlp (bitrate persis; binary via youtube-dl-exec, ikut keinstall pas npm install) → ytdl.js → IkyyXD
+- .playvideo [resolusi] <query> - search - Cari & download video YouTube; pilihan resolusi 360/480/720/hd (default 480p); .playvideo polos = usage pilihan resolusi; auto-convert H.264+AAC (fix AV1 gak bisa diputar) + downscale sesuai resolusi; engine: yt-dlp (binary via youtube-dl-exec, ikut keinstall pas npm install) → IkyyXD → ytdl.js
 - .tiktokv3 - download - TikTok v3 (nexray API, support slideshow)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
