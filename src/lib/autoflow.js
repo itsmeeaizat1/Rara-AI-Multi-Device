@@ -3,11 +3,64 @@
 // Membaca rule dari database/autoflow.json (file yang sama dengan .autonovaai)
 
 import fs from "fs";
+import { askAI } from "./aiagent.js";
 
 const DB = "./src/data/autoflow.json";
 const cooldown = new Map();
 
 let _conn = null; // koneksi otomatis terisi dari pesan pertama
+
+// ================= MEMORY PER-USER (aichat) =================
+// Tiap kombinasi rule+chat+sender dapet riwayat obrolannya SENDIRI.
+// Contoh: user 62817366363 bahas ular → riwayatnya gak nyampur sama
+// user 62817366632 yang bahas topik lain di grup yang sama.
+// Disimpan ke file biar konteks gak hilang pas bot restart.
+const MEM_DB = "./src/data/autoflow-memory.json";
+const MAX_HISTORY = 24; // 12 pertukaran terakhir (user+AI) per orang — cukup buat konteks
+
+let _memCache = null;
+let _memDirty = false;
+function loadMem() {
+  if (_memCache) return _memCache;
+  try { _memCache = JSON.parse(fs.readFileSync(MEM_DB, "utf8")); } catch { _memCache = {}; }
+  return _memCache;
+}
+function saveMem() {
+  try {
+    fs.mkdirSync("./src/data", { recursive: true });
+    fs.writeFileSync(MEM_DB, JSON.stringify(_memCache || {}, null, 2));
+    _memDirty = false;
+  } catch (e) {
+    console.log("[AutoFlow] gagal simpan memory aichat:", e.message);
+  }
+}
+function pushMem(key, userText, aiText) {
+  const mem = loadMem();
+  if (!Array.isArray(mem[key])) mem[key] = [];
+  mem[key].push({ r: "u", t: String(userText).slice(0, 400) });
+  if (aiText) mem[key].push({ r: "a", t: String(aiText).slice(0, 400) });
+  if (mem[key].length > MAX_HISTORY) mem[key] = mem[key].slice(-MAX_HISTORY);
+  // debounce write biar gak spam I/O di grup ramai
+  if (!_memDirty) {
+    _memDirty = true;
+    setTimeout(saveMem, 1500);
+  }
+}
+// reset memory: (ruleId, chat, sender) — semua opsional, kosong = reset SEMUA
+export function clearAichatMemory(ruleId, chat, sender) {
+  const mem = loadMem();
+  if (!ruleId && !chat && !sender) { _memCache = {}; }
+  else {
+    for (const k of Object.keys(mem)) {
+      const [r, ch] = k.split(":");
+      if (ruleId && r !== ruleId) continue;
+      if (chat && ch !== chat) continue;
+      if (sender && k !== `${ruleId}:${chat}:${sender}`) continue;
+      delete mem[k];
+    }
+  }
+  saveMem();
+}
 
 export const load = () => {
   try { return JSON.parse(fs.readFileSync(DB, "utf8")); } catch { return []; }
@@ -63,6 +116,35 @@ async function execute(conn, m, rule, extra = {}) {
       case "opengc":
         await conn.groupSettingUpdate(chat, "not_announcement");
         break;
+      case "aichat": {
+        // 🔹 FREE CHAT: balasan digenerate AI tiap kali (bukan teks statis)
+        // a.value = persona/instruction bebas, contoh "ngobrol santai kayak temen"
+        const userText = m?.text || m?.body || "";
+        if (!userText.trim()) break;
+        const persona = a.value?.trim() ||
+          "Kamu asisten WhatsApp yang ramah dan santai. Balas singkat dan natural seperti chat biasa, jangan kaku, jangan mengaku sebagai AI kalau tidak ditanya.";
+
+        // 🔹 MEMORY PER-USER: tiap orang punya riwayatnya sendiri
+        // (key = rule:chat:sender) — topik si A gak kebawa ke obrolan si B
+        const memKey = `${rule.id}:${chat}:${user || "anon"}`;
+        const senderName = m?.pushName || (user ? user.split("@")[0] : "user");
+        const hist = loadMem()[memKey] || [];
+        const ctx = hist.length
+          ? `Riwayat obrolanmu dengan ${senderName} (terbaru di bawah, gunakan sebagai konteks, jangan ulangi jawaban yang sama):\n` +
+            hist.map((h) => (h.r === "u" ? `${senderName}: ` : "Kamu: ") + h.t).join("\n")
+          : "";
+
+        try {
+          const aiReply = await askAI(persona + (ctx ? "\n\n" + ctx : ""), userText);
+          if (aiReply?.trim()) {
+            await conn.sendMessage(chat, { text: aiReply.trim() }, opts);
+            pushMem(memKey, userText, aiReply.trim());
+          }
+        } catch (e) {
+          console.log(`[AutoFlow] aichat gagal: ${e.message}`);
+        }
+        break;
+      }
     }
     // catat statistik pemakaian
     const rules = load();
@@ -86,10 +168,16 @@ export async function handleMessage(conn, m) {
   if (conn) _conn = conn; // cache koneksi buat trigger jadwal
 
   const body = String(m.body || m.text || "").toLowerCase().trim();
-  const rules = load().filter((r) => r.enabled && ["keyword", "media"].includes(r.trigger?.type));
+  const rules = load().filter((r) => r.enabled && ["keyword", "media", "any"].includes(r.trigger?.type));
   if (!rules.length) return;
 
+  // trigger "any" (free chat) sengaja TIDAK jalan buat pesan command (.xxx)
+  // biar gak konflik/dobel proses sama command bot lain
+  const isCmdMsg = !!m.isCommand;
+
   for (const rule of rules) {
+    if (rule.trigger.type === "any" && isCmdMsg) continue;
+
     // cek scope
     const s = rule.scope || "all";
     if (s === "group" && !m.isGroup) continue;
@@ -112,6 +200,8 @@ export async function handleMessage(conn, m) {
         : body.includes(val);
     } else if (rule.trigger.type === "media") {
       match = m.mtype === MEDIA_TYPE[rule.trigger.value];
+    } else if (rule.trigger.type === "any") {
+      match = !!body; // butuh ada teksnya, biar aichat ada bahan jawab
     }
     if (!match) continue;
 
