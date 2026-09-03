@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20preview%20card%20di%20.ttmp3%20%2B%20unified%20.-success?style=for-the-badge)
-> *Commit: "feat: preview card di .ttmp3 + unified .downloader (YT/AIO/SoundCloud)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20preview%20card%20di%20semua%20downloader%20m-success?style=for-the-badge)
+> *Commit: "feat: preview card di semua downloader media gambar"*
 <!--END_SECTION:latest-update-->
 
 ---
