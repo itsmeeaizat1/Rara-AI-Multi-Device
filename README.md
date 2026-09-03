@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-docs%3A%20tambah%20dokumentasi%20.qc%20dan%20.iqc%20di-success?style=for-the-badge)
-> *Commit: "docs: tambah dokumentasi .qc dan .iqc di FEATURES.md"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.qc%20tanpa%20warna%20langsung%20jadi%20quot-success?style=for-the-badge)
+> *Commit: "feat: .qc tanpa warna langsung jadi quote background putih"*
 <!--END_SECTION:latest-update-->
 
 ---
