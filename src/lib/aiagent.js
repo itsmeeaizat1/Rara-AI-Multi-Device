@@ -480,117 +480,12 @@ export function localParse(text) {
   return null // tidak match → lanjut ke AI provider
 }
 
-// ================= OTAK AI — MULTI-PROVIDER CHAIN (request owner) =================
-// Urutan PRIORITAS: yang paling atas paling sering dipakai. Kalau provider #1
-// aktif & key valid → SEMUA respon cuma dari #1. Kalau down / key expired /
-// rate-limit → otomatis deteksi & lanjut ke #2, dst sampai kebawah.
-// Key kosong di apikeys.json = provider di-skip otomatis (gak nyoba).
-// Tambah/isi key owner: edit src/lib/apikey/apikeys.json
-// (groqkey, deepseekkey, zhipu, kimi, claude, ikyyxd).
-const readApiKeys = () => {
-  try { return JSON.parse(fs.readFileSync('src/lib/apikey/apikeys.json', 'utf8')) } catch { return {} }
-}
-
-const PROVIDERS = [
-  // 1️⃣ GROQ — utama (cepat, key aktif)
-  {
-    name: 'groq',
-    method: 'post',
-    url: 'https://api.groq.com/openai/v1/chat/completions',
-    key: () => process.env.GROQ_KEY || readApiKeys().groqkey || global.groqkey || '',
-    model: 'openai/gpt-oss-120b',
-    headers: (k) => ({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${k}`
-    })
-  },
-  // 2️⃣ IKYYXD GEMINI — free (key ikyyxd)
-  {
-    name: 'ikyy-gemini',
-    method: 'get',
-    textParam: 'text',
-    url: 'https://api.ikyyxd.my.id/ai/gemini',
-    key: () => readApiKeys().ikyyxd || '',
-    headers: () => ({ 'Content-Type': 'application/json' })
-  },
-  // 3️⃣ IKYYXD GPT-5-MINI (openai-style, free) — key ikyyxd
-  {
-    name: 'ikyy-gpt5mini',
-    method: 'get',
-    textParam: 'question',
-    url: 'https://api.ikyyxd.my.id/ai/gpt-5-mini',
-    key: () => readApiKeys().ikyyxd || '',
-    headers: () => ({ 'Content-Type': 'application/json' })
-  },
-  // 4️⃣ DEEPSEEK — key deepseekkey di apikeys.json
-  {
-    name: 'deepseek',
-    method: 'post',
-    url: 'https://api.deepseek.com/chat/completions',
-    key: () => process.env.DEEPSEEK_KEY || readApiKeys().deepseekkey || global.deepseekkey || '',
-    model: 'deepseek-chat',
-    headers: (k) => ({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${k}`
-    })
-  },
-  // 5️⃣ ZHIPU AI (GLM) — key "zhipu" di apikeys.json
-  {
-    name: 'zhipu',
-    method: 'post',
-    url: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
-    key: () => readApiKeys().zhipu || process.env.ZHIPU_KEY || '',
-    model: 'glm-4-flash',
-    headers: (k) => ({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${k}`
-    })
-  },
-  // 6️⃣ KIMI (Moonshot AI) — key "kimi" di apikeys.json
-  {
-    name: 'kimi',
-    method: 'post',
-    url: 'https://api.moonshot.cn/v1/chat/completions',
-    key: () => readApiKeys().kimi || process.env.MOONSHOT_KEY || '',
-    model: 'kimi-k2-0905-preview',
-    headers: (k) => ({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${k}`
-    })
-  },
-  // 7️⃣ CLAUDE (Anthropic) — key "claude" di apikeys.json (format anthropic khusus)
-  {
-    name: 'claude',
-    method: 'post',
-    format: 'anthropic',
-    url: 'https://api.anthropic.com/v1/messages',
-    key: () => readApiKeys().claude || process.env.ANTHROPIC_KEY || '',
-    model: 'claude-sonnet-4-20250514',
-    headers: (k) => ({
-      'Content-Type': 'application/json',
-      'x-api-key': k,
-      'anthropic-version': '2023-06-01'
-    })
-  },
-  // 8️⃣ IKYYXD CICI — cadangan free (gak butuh key lain)
-  {
-    name: 'ikyy-cici',
-    method: 'get',
-    textParam: 'prompt',
-    url: 'https://api.ikyyxd.my.id/ai/cici',
-    key: () => readApiKeys().ikyyxd || '',
-    headers: () => ({ 'Content-Type': 'application/json' })
-  },
-  // 9️⃣ IKYYXD GEMMA — cadangan terakhir free
-  {
-    name: 'ikyy-gemma',
-    method: 'get',
-    textParam: 'question',
-    url: 'https://api.ikyyxd.my.id/ai/google-gemma',
-    key: () => readApiKeys().ikyyxd || '',
-    headers: () => ({ 'Content-Type': 'application/json' })
-  }
-]
+// ================= OTAK AI — MULTI-PROVIDER CHAIN =================
+// 🔹 AI AGENT: rantai provider sekarang dari CONFIG FILE biar owner tinggal
+// set apikey tanpa sentuh kode: src/lib/apikey/ai-providers.json (list kebawah,
+// urutan = prioritas). Dibaca LIVE tiap panggilan — edit file, langsung aktif.
+// Provider free (source ikyy) preset key, langsung nembak API-nya.
+import { getAiChain } from "./apikey/ai-chain.js";
 
 // 🔹 AI AGENT: Fungsi umum nanya ke AI — coba provider satu-satu sampai sukses
 // history opsional: [{role:'user'|'assistant', content}] — dipakai biar AI
@@ -601,17 +496,21 @@ export async function askAI(system, user, history = []) {
   const histAsText = histTrimmed.length
     ? histTrimmed.map(h => `${h.role === 'user' ? 'User' : 'Asisten'}: ${h.content}`).join('\n') + '\n'
     : ''
-  for (const p of PROVIDERS) {
+  const providers = getAiChain()
+  if (!providers.length) throw new Error('Rantai AI kosong — cek src/lib/apikey/ai-providers.json')
+  for (const p of providers) {
     const key = p.key?.()
-    // key kosong = provider gak dikonfigurasi → skip (bukan error, cuma belum diisi owner)
-    if (p.key && !key) continue
+    // key kosong & bukan provider free → skip (belum diisi owner)
+    if (!key && !p.free) continue
     try {
       let text
       if (p.method === 'get') {
         const fullPrompt = `${system}\n\n${histAsText}User: ${user}`
         // tiap endpoint GET beda nama param teks (text/question/prompt)
         const tp = p.textParam || 'text'
-        const url = `${p.url}?apikey=${encodeURIComponent(key)}&${tp}=${encodeURIComponent(fullPrompt)}`
+        const url = key
+          ? `${p.url}?apikey=${encodeURIComponent(key)}&${tp}=${encodeURIComponent(fullPrompt)}`
+          : `${p.url}?${tp}=${encodeURIComponent(fullPrompt)}`
         const res = await fetch(url, { headers: p.headers(key) })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = await res.json()
