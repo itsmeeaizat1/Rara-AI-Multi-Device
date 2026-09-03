@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'fix%2Floading-react-and-ai-a-success?style=for-the-badge)
-> *Commit: "Merge branch 'fix/loading-react-and-ai-agent-facts'"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20ganti%20ikon%20kategori%20gacha%20%F0%9F%8C%B8%20%E2%86%92%20%F0%9F%8E%81%20a-success?style=for-the-badge)
+> *Commit: "fix: ganti ikon kategori gacha 🌸 → 🎁 agar konsisten bebas simbol bunga"*
 <!--END_SECTION:latest-update-->
 
 ---
