@@ -248,7 +248,7 @@ function getAccessSymbols(cfg) {
   // Urutan owner (konfirmasi): ʀ ꜰ Ⓟ Ⓛ ᴜ ᴏ → R F P L U O
   const symbols = [];
   const cat = String(cfg.category || "");
-  const gameCtx = ["rpg", "game"].includes(cat);
+  const gameCtx = ["rpg", "game", "rpg couple"].includes(cat);
   // ʀ Register (wajib .daftar — RPG) — PALING DEPAN
   if (cat === "rpg") symbols.push("ʀ");
   if (cfg.isPremium) {
