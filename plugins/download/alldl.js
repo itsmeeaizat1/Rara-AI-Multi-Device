@@ -22,6 +22,7 @@ import { aiodl } from "../../src/scraper/aio.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
@@ -378,6 +379,7 @@ async function handler(m, { sock }) {
           },
           { quoted: m }
         );
+        await offerConvert(sock, m, { buffer, type: "video", platform: platform.name, title, sourceUrl: url });
       }
     } catch (sendErr) {
       console.error("[alldl] Send error:", sendErr.message);

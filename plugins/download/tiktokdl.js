@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { offerConvert } from "../../src/lib/nova-convert.js";
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
@@ -156,6 +157,7 @@ async function handler(m, { sock }) {
           mediaType: 2,
         }),
       }, { quoted: m });
+      await offerConvert(sock, m, { mediaUrl: video.url, type: "video", platform: "TikTok", title: ikyyResult.title, sourceUrl: text });
       return;
     }
 
@@ -197,6 +199,7 @@ async function handler(m, { sock }) {
           mediaType: 2,
         }),
       }, { quoted: m });
+      await offerConvert(sock, m, { mediaUrl: zann.url, type: "video", platform: "TikTok", title: result.title, sourceUrl: text });
 
       await sock.sendMessage(
         m.chat,

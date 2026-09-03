@@ -5,10 +5,30 @@ import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
-import { novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { sendMenuPreview } from "../../src/lib/send-menu.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
+
+// Session pilihan resolusi (klik tombol) — TTL 5 menit
+const PV_TTL = 5 * 60 * 1000;
+const pvSessions = new Map(); // m.sender → { video, startedAt }
+
+function savePvSession(m, video) {
+  const key = m.sender;
+  const old = pvSessions.get(key);
+  if (old?.timer) clearTimeout(old.timer);
+  const s = { video, startedAt: Date.now(), timer: null };
+  s.timer = setTimeout(() => pvSessions.delete(key), PV_TTL);
+  pvSessions.set(key, s);
+}
+function getPvSession(m) {
+  const s = pvSessions.get(m.sender);
+  if (!s || Date.now() - s.startedAt > PV_TTL) { if (s?.timer) clearTimeout(s.timer); pvSessions.delete(m.sender); return null; }
+  return s;
+}
 
 async function fetchLyricsSnippet(title) {
   try {
@@ -43,13 +63,15 @@ const pluginConfig = {
 // Parse resolusi dari argumen pertama: 360/480/720/1080/hd (default 480)
 function parseQualityArgs(args) {
   let quality = "480";
+  let explicit = false;
   let query = args.join(" ").trim();
   const first = String(args[0] || "").toLowerCase().replace(/p$/, "");
   if (/^(360|480|720|1080|hd)$/.test(first)) {
     quality = first === "hd" ? "1080" : first;
+    explicit = true;
     query = args.slice(1).join(" ").trim();
   }
-  return { quality, query };
+  return { quality, query, explicit };
 }
 
 async function searchYoutube(query) {
@@ -152,9 +174,93 @@ async function downloadVideo(url, quality) {
   return null;
 }
 
+// Kirim video hasil download — dipakai jalur langsung & klik tombol
+async function sendPlayVideo(sock, m, video, quality) {
+  await m.react("🕒");
+
+  const vid = await downloadVideo(video.url, quality);
+  if (!vid?.buffer || vid.buffer.length < 10000) {
+    await m.react("❌");
+    return m.reply(novaError("PlayVideo", "Gagal download video, coba lagi nanti ya!"));
+  }
+  console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
+
+  // Pastikan H.264+AAC (sumber savetube/ytdl diam-diam kasih AV1/VP9
+  // yang gagal diputar di WA) + downscale ke resolusi yang diminta kalau perlu
+  try {
+    vid.buffer = await toWhatsAppVideo(vid.buffer, { maxHeight: parseInt(quality, 10) });
+    console.log(`[PlayVideo] Video setelah convert ${quality}p: ${vid.buffer.length} bytes`);
+  } catch (convErr) {
+    console.error("[PlayVideo] Convert error, kirim buffer asli:", convErr.message);
+  }
+
+  // Ambil lirik (best-effort, gak block kalau gagal/timeout)
+  const titleForLyrics = vid.title || video.title;
+  const lyricsData = await fetchLyricsSnippet(titleForLyrics);
+
+  const captionLines = [
+    `*YouTube Play — Video ${quality === "1080" ? "HD" : quality + "p"}*`,
+    ``,
+    `*Judul:* ${titleForLyrics}`,
+    `*Artis/Channel:* ${lyricsData?.artist || video.author}`,
+    `*Durasi:* ${video.duration}`,
+    `*Views:* ${video.views ? video.views.toLocaleString("id-ID") : "-"}`,
+    `*Deskripsi:* ${video.description ? video.description.slice(0, 150) + (video.description.length > 150 ? "..." : "") : "-"}`,
+    `*Link:* ${video.url}`,
+  ];
+  if (lyricsData?.snippet) {
+    captionLines.push(``, `*Lirik:*`, lyricsData.snippet, ``, `Lirik lengkap: .lirik ${titleForLyrics}`);
+  }
+
+  // 1. Notifikasi sukses dulu (sesuai request owner)
+  await m.react("🐣");
+  await m.reply(novaBox("Playvideo", ["Berhasil kak 🥳"]));
+
+  // 2. Baru videonya (caption info nempel di situ)
+  await sock.sendMessage(
+    m.chat,
+    {
+      video: vid.buffer,
+      caption: captionLines.join("\n"),
+      mimetype: "video/mp4",
+      fileName: `${(vid.title || video.title).replace(/[^\w\s-]/g, "").substring(0, 50)}.mp4`,
+      contextInfo: mediaPreviewCard({
+        title: titleForLyrics,
+        body: `YouTube Video • ${quality === "1080" ? "HD" : quality + "p"}`,
+        sourceUrl: video.url,
+        thumbnailUrl: video.thumbnail,
+        mediaType: 2,
+      }),
+    },
+    { quoted: m },
+  );
+
+  // 3. Tawaran convert di bawahnya
+  await offerConvert(sock, m, { buffer: vid.buffer, type: "video", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
+}
+
 async function handler(m, { sock }) {
+  // ── Mode 2: Klik tombol resolusi (.playvideo_360/480/720/hd) ──
+  const cmd = (m.command || "").toLowerCase();
+  if (/^playvideo_(360|480|720|hd|1080)$/.test(cmd)) {
+    const session = getPvSession(m);
+    if (!session) {
+      await m.react("❗");
+      return m.reply(novaGuide("Playvideo", "Pilihan resolusi udah kedaluwarsa nih! Cari ulang videonya ya: .playvideo <judul>", ".playvideo komang"));
+    }
+    const quality = cmd.split("_")[1] === "hd" ? "1080" : cmd.split("_")[1];
+    try {
+      await sendPlayVideo(sock, m, session.video, quality);
+    } catch (err) {
+      console.error("[PlayVideo]", err.message || err);
+      await m.react("❌");
+      return m.reply(novaError("PlayVideo", err.message || "Gagal download video, coba lagi nanti ya!"));
+    }
+    return;
+  }
+
   const args = m.args || [];
-  const { quality, query } = parseQualityArgs(args);
+  const { quality, query, explicit } = parseQualityArgs(args);
 
   // Usage: pilihan resolusi (default 480p)
   if (!query) {
@@ -181,63 +287,36 @@ async function handler(m, { sock }) {
     }
     console.log(`[PlayVideo] Found: ${video.title} → ${video.url} (${quality}p)`);
 
-    // Step 2: Download video
-    const vid = await downloadVideo(video.url, quality);
-    if (!vid?.buffer || vid.buffer.length < 10000) {
-      await m.react("❌");
-      return m.reply(novaError("PlayVideo", "Gagal download video, coba lagi nanti ya!"));
-    }
-    console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
-
-    // Step 2.5: Pastikan H.264+AAC (sumber savetube/ytdl diam-diam kasih AV1/VP9
-    // yang gagal diputar di WA) + downscale ke resolusi yang diminta kalau perlu
-    try {
-      vid.buffer = await toWhatsAppVideo(vid.buffer, { maxHeight: parseInt(quality, 10) });
-      console.log(`[PlayVideo] Video setelah convert ${quality}p: ${vid.buffer.length} bytes`);
-    } catch (convErr) {
-      console.error("[PlayVideo] Convert error, kirim buffer asli:", convErr.message);
-    }
-
-    // Step 3: Ambil lirik (best-effort, gak block kalau gagal/timeout)
-    const titleForLyrics = vid.title || video.title;
-    const lyricsData = await fetchLyricsSnippet(titleForLyrics);
-
-    // Step 4: Info section lengkap
-    const captionLines = [
-      `*YouTube Play — Video ${quality === "1080" ? "HD" : quality + "p"}*`,
-      ``,
-      `*Judul:* ${titleForLyrics}`,
-      `*Artis/Channel:* ${lyricsData?.artist || video.author}`,
-      `*Durasi:* ${video.duration}`,
-      `*Views:* ${video.views ? video.views.toLocaleString("id-ID") : "-"}`,
-      `*Deskripsi:* ${video.description ? video.description.slice(0, 150) + (video.description.length > 150 ? "..." : "") : "-"}`,
-      `*Link:* ${video.url}`,
-    ];
-
-    if (lyricsData?.snippet) {
-      captionLines.push(``, `*Lirik:*`, lyricsData.snippet, ``, `Lirik lengkap: .lirik ${titleForLyrics}`);
+    // Step 2: Kalau user belum pilih resolusi eksplisit → tawarkan tombol
+    if (!explicit) {
+      savePvSession(m, video);
+      await m.react("🐣");
+      const infoText = [
+        `Video ketemu!`,
+        ``,
+        `Judul: ${video.title}`,
+        `Channel: ${video.author}`,
+        `Durasi: ${video.duration}`,
+        ``,
+        `Pilih resolusi di bawah`,
+      ].join("\n");
+      return await sendMenuPreview(sock, m, {
+        text: infoText,
+        footer: "",
+        buttons: [
+          { id: "playvideo_360", text: toSC("360p") },
+          { id: "playvideo_480", text: toSC("480p") },
+          { id: "playvideo_720", text: toSC("720p") },
+          { id: "playvideo_hd", text: toSC("HD 1080p") },
+        ],
+        title: `${toSC("Nova AI")} — ${toSC("Playvideo")}`,
+        body: toSC(video.title.slice(0, 40)),
+        sourceUrl: video.url,
+      });
     }
 
-    const caption = captionLines.join("\n");
-
-    await m.react("🐣");
-    await sock.sendMessage(
-      m.chat,
-      {
-        video: vid.buffer,
-        caption,
-        mimetype: "video/mp4",
-        fileName: `${(vid.title || video.title).replace(/[^\w\s-]/g, "").substring(0, 50)}.mp4`,
-        contextInfo: mediaPreviewCard({
-          title: titleForLyrics,
-          body: `YouTube Video • ${quality === "1080" ? "HD" : quality + "p"}`,
-          sourceUrl: video.url,
-          thumbnailUrl: video.thumbnail,
-          mediaType: 2,
-        }),
-      },
-      { quoted: m },
-    );
+    // Step 3: Resolusi eksplisit (mis. .playvideo 720 judul) → langsung kirim
+    await sendPlayVideo(sock, m, video, quality);
   } catch (err) {
     console.error("[PlayVideo]", err.message || err);
     await m.react("❌");
