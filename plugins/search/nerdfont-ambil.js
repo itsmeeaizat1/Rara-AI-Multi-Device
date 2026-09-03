@@ -74,7 +74,7 @@ function formatNumber(num) {
 async function handler(m, { sock }) {
   const query = m.text?.trim()?.toLowerCase();
   if (!query)
-    { const __navText = claraWrap("NERD FONT", `*ɴᴇʀᴅ ꜰᴏɴᴛ*\n\nMasukan nama font yang ingin didownload`); return await m.reply(__navText); };
+    { const __navText = claraWrap("NERD FONT", `Masukan nama font yang ingin didownload`); return await m.reply(__navText); };
   try {
     const res = await nerdfonts();
     const data = res.find(

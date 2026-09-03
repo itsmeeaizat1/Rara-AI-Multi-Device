@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
   fileName = fileName.toLowerCase().replace(/[^a-z0-9\-_]/g, "");
 
   if (!fileName) {
-    { const __navText = claraWrap("GAGAL", `❌ *GAGAL*\n\nNama file tidak valid`); return await m.reply(__navText); };
+    { const __navText = claraWrap("GAGAL", `Nama file tidak valid`); return await m.reply(__navText); };
   }
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        await m.reply(claraWrap("Cara Pakai", `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        await m.reply(claraWrap("Cara Pakai", 
             `Reply pesan user + \`${m.prefix}resetwarn\`\n` +
             `Atau: \`${m.prefix}resetwarn @user\``))
         return
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     delete warnings[targetUser]
     db.setGroup(m.chat, { ...groupData, warnings: warnings })
     
-    await m.reply(claraWrap("Warning Direset", `✅ *ᴡᴀʀɴɪɴɢ ᴅɪʀᴇꜱᴇᴛ*\n` +
+    await m.reply(claraWrap("Warning Direset", 
         `Warning @${targetName} berhasil direset!\n` +
         `Sebelumnya: *${prevCount}/${maxWarns}*\n` +
         `Sekarang: *0/${maxWarns}*`,

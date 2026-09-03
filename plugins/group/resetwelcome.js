@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     }
     
     db.setGroup(m.chat, { welcomeMsg: null })
-    { const __navText = claraWrap("Welcome Direset", `✅ *ᴡᴇʟᴄᴏᴍᴇ ᴅɪʀᴇꜱᴇᴛ*\n\nKembali ke pesan default`); await m.reply(__navText); }
+    { const __navText = claraWrap("Welcome Direset", `Kembali ke pesan default`); await m.reply(__navText); }
 }
 
 export { pluginConfig as config, handler }

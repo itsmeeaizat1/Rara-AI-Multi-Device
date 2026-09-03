@@ -29,7 +29,7 @@ function handler(m, { sock }) {
     const status = groupData.antilinkall || "off";
     const mode = groupData.antilinkallMode || "remove";
 
-    return m.reply(claraWrap("Antilink All", `🔗 *Antilink All*\n\n` +
+    return m.reply(claraWrap("Antilink All", 
         `Status: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n` +
         `Mode: *${mode.toUpperCase()}*\n\n` +
         `*DETEKSI:*\n` +

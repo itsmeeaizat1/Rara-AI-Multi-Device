@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!isImage) {
-    return m.reply(claraWrap("Black sTyle", `🖤 *ʙʟᴀᴄᴋ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar\n\n\`${m.prefix}toblack\``), "toblack");
+    return m.reply(claraWrap("Black sTyle", `Kirim/reply gambar\n\n\`${m.prefix}toblack\``), "toblack");
   }
 
   const PROMPT = `Transform skin tone to a darker complexion, maintain facial features, realistic shadows, high detail, natural skin texture, no distortion`;

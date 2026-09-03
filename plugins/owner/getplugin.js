@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
  const pluginName = m.args?.[0]?.trim();
 
  if (!pluginName) {
- return m.reply(claraWrap("Getplugin", `📦 *Get Plugin*\n\n` +
+ return m.reply(claraWrap("Getplugin", 
  `Dapatkan source code plugin\n\n` +
  "" +
  `.getplugin <nama>\n` +

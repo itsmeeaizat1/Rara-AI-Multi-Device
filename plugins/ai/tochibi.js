@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        { const __navText = claraWrap("Chibi sTyle", `🎀 *ᴄʜɪʙɪ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar untuk diubah ke style Chibi\n\n\`${m.prefix}tochibi\``); return await m.reply(__navText, "tochibi"); }
+        { const __navText = claraWrap("Chibi sTyle", `Kirim/reply gambar untuk diubah ke style Chibi\n\n\`${m.prefix}tochibi\``); return await m.reply(__navText, "tochibi"); }
     }
     try {
         let buffer

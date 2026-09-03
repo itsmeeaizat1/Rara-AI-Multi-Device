@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const word = m.args.join(' ').trim().toLowerCase()
     
     if (!word) {
-        return m.reply( claraWrap("Del Toxic", `🗑️ *ᴅᴇʟ ᴛᴏxɪᴄ*\n\n` +
+        return m.reply( claraWrap("Del Toxic", 
             `Gunakan: \`.deltoxic <kata>\`\n\n` +
             `\`Contoh: ${m.prefix}deltoxic katakasar\``), "deltoxic")
     }
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     
     toxicWords.splice(index, 1)
     db.setGroup(m.chat, { toxicWords })
-    await m.reply(claraWrap("Kata Toxic Dihapus", `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+    await m.reply(claraWrap("Kata Toxic Dihapus", `` +
         "" +
         `📝 Kata: \`${word}\`\n` +
         `📊 sIsa: \`${toxicWords.length}\` kata\n` +
