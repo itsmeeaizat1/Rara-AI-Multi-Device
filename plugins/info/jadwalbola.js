@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
     }
 
     text += `Total: *${matches.length}* pertandingan`;
-    await m.reply(claraWrap(text.split("\n").filter(l => l.trim())));
+    await m.reply(claraWrap("Jadwal Bola", text.split("\n")));
   } catch (err) {
     return m.reply(claraWrap("jadwalbola", te(m.prefix, m.command, m.pushName), "error"));
   }
