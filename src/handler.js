@@ -975,8 +975,10 @@ try {
     }
 
     // === PROCESSING NOTIFICATION (all commands) ===
+    // noLoading: plugin non-game yang instan (mis. leaderboard) — tanpa reaksi loading 🕒/🐣
+    const noLoading = plugin.config?.noLoading === true;
     const procNotifOn = dbInstance?.setting?.("procNotif") ?? true;
-    if (procNotifOn && !m.isNewsletter) {
+    if (procNotifOn && !m.isNewsletter && !noLoading) {
       try { await m.react("🕒"); } catch {}
     }
 
@@ -989,7 +991,7 @@ try {
     try { resetNotFoundTracker(m.sender); } catch {}
 
     // React 🐣 after processing completes (skip if plugin set custom reaction)
-    if (procNotifOn && !m.isNewsletter && !m.__customReact) {
+    if (procNotifOn && !m.isNewsletter && !m.__customReact && !noLoading) {
       try { await m.react("🐣"); } catch {}
     }
 
