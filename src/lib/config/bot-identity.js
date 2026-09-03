@@ -19,7 +19,7 @@ export const botIdentity = {
 
   bot: {
     name: "Nova AI Whatsapp Bot",
-    version: "21.4.0",
+    version: "22.0.0",
     developer: "Aizat",
     menuImage: {
       mode: "asset",
