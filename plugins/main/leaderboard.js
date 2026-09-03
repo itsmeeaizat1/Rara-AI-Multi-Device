@@ -14,16 +14,17 @@ import {
 const pluginConfig = {
   name: "leaderboard",
   alias: [
-    "leaderboard", "leaderboardrpg", "lbrpg", "toprpg", "papanrpg",
+    "leaderboard", "lb", "papanperingkat", "topplayer",
+    "leaderboardrpg", "lbrpg", "toprpg", "papanrpg",
     "topkoin", "topexp", "toplimit", "topenergi", "toplevel", "topbalance",
     "topgold", "topgems", "toppvp", "topboss", "topdungeon",
     "topcinta", "toplove", "topcouple",
     "aktifitas", "aktif", "topaktif", "activity"
   ],
   category: 'main',
-  description: 'Pusat leaderboard — RPG (gold/exp/level/pvp/gems/boss/dungeon/cinta) & Group (aktivitas)',
-  usage: '.leaderboard [all|rpg|gold|exp|level|pvp|gems|boss|dungeon|cinta|group|me|reset|stats]',
-  example: '.leaderboard all\n.leaderboard rpg\n.leaderboard gold\n.leaderboard pvp',
+  description: 'Pusat leaderboard — RPG (gold/level/pvp/dll) + Mini Game (mancing/mining/ojek/slot/gacha/dll) + Group (aktivitas) — SEMUA dalam 1 command',
+  usage: '.leaderboard [all|rpg|gold|level|pvp|gems|boss|dungeon|limit|cinta|survival|mancing|mining|ojek|slot|gacha|masak|...|group|me|reset|stats]',
+  example: '.leaderboard all\n.leaderboard survival\n.leaderboard mancing\n.leaderboard gold',
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -34,6 +35,37 @@ const pluginConfig = {
 }
 
 const MEDALS = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+
+// ═══════════════════════════════════════════════════════════
+// MINI GAME & STAT CATEGORIES — metrik deep-path ke rpg.<game>.<field>
+// (dipindah dari plugins/rpg/leaderboard.js yang sekarang dihapus)
+// ═══════════════════════════════════════════════════════════
+const GAME_CATEGORIES = [
+  { key: 'kerja',       label: 'Job Level',          metric: 'joblevel',                  raw: 'Kerja' },
+  { key: 'kills',       label: 'Total Kills',        metric: 'totalKills',                raw: 'Kills' },
+  { key: 'achievement', label: 'Achievement Poin',  metric: 'achievementPoints',         raw: 'Achievement' },
+  { key: 'survival',    label: 'Hari Survival',     metric: 'survival.daysSurvived',     raw: 'Survival' },
+  { key: 'mancing',     label: 'Total Tangkapan',   metric: 'mancing.totalCatch',        raw: 'Mancing' },
+  { key: 'mancingv2',   label: 'Tangkapan V2',      metric: 'fishingv2.totalCaught',     raw: 'Mancing V2' },
+  { key: 'berburu',     label: 'Buruan Berhasil',   metric: 'berburu.totalHunt',         raw: 'Berburu' },
+  { key: 'mining',      label: 'Bijih Ditambang',   metric: 'mining.totalMine',          raw: 'Mining' },
+  { key: 'nebang',      label: 'Pohon Ditebang',    metric: 'nebang.totalNebang',        raw: 'Nebang' },
+  { key: 'nguli',       label: 'Total Kerja Kuli',   metric: 'nguli.totalNguli',          raw: 'Nguli' },
+  { key: 'ojek',        label: 'Total Anter Ojek',  metric: 'ojekrpg.totalOjek',         raw: 'Ojek' },
+  { key: 'sampah',      label: 'Total Buang Sampah', metric: 'sampah.totalSampah',        raw: 'Sampah' },
+  { key: 'masak',       label: 'Total Masakan',     metric: 'cookingv2.cookedHistory',    raw: 'Masak' },
+  { key: 'slot',        label: 'Kemenangan Slot',   metric: 'slotmachine.wins',          raw: 'Slot' },
+  { key: 'gacha',       label: 'Total Pull Gacha',  metric: 'gachawaifu.pulls',          raw: 'Gacha' },
+]
+
+// Resolve deep path "survival.daysSurvived" → rpg.survival.daysSurvived.
+// Array di ujung path dihitung sebagai jumlah item (length) — konsisten dgn getLeaderboard nova-rpg-service.
+function deepValue(rpg, metricPath) {
+  let v = rpg
+  for (const k of String(metricPath || '').split('.')) v = v?.[k]
+  if (Array.isArray(v)) v = v.length
+  return typeof v === 'number' ? v : 0
+}
 
 // ═══════════════════════════════════════════════════════════
 // ROUTING — tentukan jenis leaderboard dari command/alias
@@ -77,6 +109,9 @@ function getMode(cmd, args) {
   if (['boss', 'raid', 'bos'].includes(a)) return 'rpg:boss'
   if (['dungeon', 'dg'].includes(a)) return 'rpg:dungeon'
   if (['cinta', 'love', 'couple'].includes(a)) return 'rpg:cinta'
+  // Mini game & stat categories (dari rpg/leaderboard.js yang digabung)
+  const gameCat = GAME_CATEGORIES.find(g => g.key === a || (a === 'fish' && g.key === 'mancing') || (a === 'waifu' && g.key === 'gacha'))
+  if (gameCat) return 'game:' + gameCat.key
   // Group sub-commands via arg
   if (['me', 'saya', 'my', 'reset', 'clear', 'stats', 'stat', 'info', 'on', 'off', 'enable', 'disable'].includes(a))
     return 'group'
@@ -139,6 +174,7 @@ function collectRpgUsers(senderJid) {
       cinta:       cintaAffection,
       lovePower,
       hasSpouse,
+      rpg, // raw object — buat metrik deep-path mini game (mancing/ojek/slot/dll)
     })
   }
 
@@ -264,6 +300,44 @@ async function showRpgLeaderboard(m, sock, subType) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// MINI GAME / STAT LEADERBOARD — metrik deep-path per game
+// ═══════════════════════════════════════════════════════════
+async function showGameLeaderboard(m, sock, catKey) {
+  const senderJid = m.sender.replace(/@s\.whatsapp\.net/, '')
+  const cat = GAME_CATEGORIES.find(g => g.key === catKey) || GAME_CATEGORIES[0]
+  const users = collectRpgUsers(senderJid)
+
+  if (users.length === 0)
+    return m.reply(claraWrap('Leaderboard', 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
+
+  // hitung metrik tiap user lalu sort
+  const scored = users
+    .map(u => ({ ...u, score: deepValue(u.rpg, cat.metric) }))
+    .sort((a, b) => b.score - a.score)
+
+  if (scored[0].score <= 0 && !scored.some(u => u.score > 0))
+    return m.reply(claraWrap(`Leaderboard ${cat.raw}`, `Belum ada data untuk kategori *${cat.key}*.\nMain dulu biar skormu terekam!`))
+
+  const top10 = scored.slice(0, 10)
+  const mentions = []
+
+  let text = ''
+  top10.forEach((u, i) => {
+    const medal = MEDALS[i] || `${i + 1}.`
+    const isMe = u.jid === senderJid ? ' *(You)*' : ''
+    text += `\n${medal} @${u.jid.split('@')[0]}${isMe}`
+    text += `\n${cat.label}: ${formatNumber(u.score)}`
+    mentions.push(u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net')
+  })
+
+  const myRank = scored.findIndex(u => u.jid === senderJid)
+  if (myRank !== -1) text += `\n\nPosisi kamu: *#${myRank + 1}* dari *${formatNumber(scored.length)}* player (${formatNumber(scored[myRank].score)} ${cat.label.toLowerCase()}).`
+  else text += `\n\nKamu belum terdaftar di database RPG.`
+
+  await m.reply(claraWrap(`TOP GLOBAL ${cat.raw.toUpperCase()}`, text, { mentions }))
+}
+
+// ═══════════════════════════════════════════════════════════
 // GROUP ACTIVITY LEADERBOARD
 // ═══════════════════════════════════════════════════════════
 async function showGroupLeaderboard(m, sock) {
@@ -364,6 +438,7 @@ async function showGroupLeaderboard(m, sock) {
 const READMORE = String.fromCharCode(8206).repeat(4001)
 
 const ALL_FIELDS = [
+  // RPG core
   { key: 'gold',        title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴏʟᴅ',     label: (u) => `${formatNumber(u.gold)} gold`,           raw: 'Gold' },
   { key: 'totalExp',    title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟᴇᴠᴇʟ',    label: (u) => `Lv.${u.level} (${formatNumber(u.exp)} XP)`, raw: 'Level' },
   { key: 'pvpRating',   title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴘᴠᴘ',       label: (u) => `${u.pvpRating} rating (W:${u.pvpWins} L:${u.pvpLosses})`, raw: 'PvP' },
@@ -371,6 +446,14 @@ const ALL_FIELDS = [
   { key: 'bossKills',   title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʙᴏꜱꜱ',      label: (u) => `${u.bossKills} boss kills`,              raw: 'Boss' },
   { key: 'dungeonClears', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴅᴜɴɢᴇᴏɴ', label: (u) => `${u.dungeonClears} dungeon clears`,      raw: 'Dungeon' },
   { key: 'limit',       title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟɪᴍɪᴛ',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
+  // Mini game & stat (deep-path) — digabung dari rpg/leaderboard.js
+  ...GAME_CATEGORIES.map(g => ({
+    key: 'game:' + g.key,
+    title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ' + toSC(String(g.raw).toLowerCase()),
+    label: (u) => `${formatNumber(deepValue(u.rpg, g.metric))} ${g.label.toLowerCase()}`,
+    raw: g.raw,
+    sortBy: (users) => users.map(u => ({ ...u, _s: deepValue(u.rpg, g.metric) })).sort((a, b) => b._s - a._s),
+  })),
 ]
 
 async function showAllLeaderboards(m, sock) {
@@ -388,8 +471,10 @@ async function showAllLeaderboards(m, sock) {
   const summary = [`Total Player: *${formatNumber(users.length)}*`, ``]
 
   for (const f of ALL_FIELDS) {
-    const sorted = [...users].sort((a, b) => (b[f.key] || 0) - (a[f.key] || 0))
+    const sorted = f.sortBy ? f.sortBy(users) : [...users].sort((a, b) => (b[f.key] || 0) - (a[f.key] || 0))
     const champ = sorted[0]
+    // board mini game yang belum ada datanya sama sekali → skip (gak usah nampilin 0-an)
+    if (f.sortBy && !(champ?._s > 0)) continue
     summary.push(`${f.raw}: ${f.label(champ)} (@${champ.jid.split('@')[0]})`)
     mentions.push(mkJid(champ))
 
@@ -449,7 +534,23 @@ async function showMenu(m, sock) {
     '  gems    — Top player by gems',
     '  boss    — Top player by boss kills',
     '  dungeon — Top player by dungeon clears',
+    '  limit   — Top kuota akses fitur',
     '  cinta   — Top couple by love power',
+    '',
+    'Mini Game & Stats:',
+    '  kerja       — Job level',
+    '  kills       — Total kills',
+    '  survival    — Hari survival',
+    '  mancing     — Total tangkapan',
+    '  berburu     — Buruan berhasil',
+    '  mining      — Bijih ditambang',
+    '  nebang      — Pohon ditebang',
+    '  nguli       — Kerja kuli',
+    '  ojek        — Antar ojek',
+    '  sampah      — Buang sampah',
+    '  masak       — Total masakan',
+    '  slot        — Kemenangan slot',
+    '  gacha       — Pull gacha',
     '',
     'Group:',
     '  group   — Aktivitas member minggu ini',
@@ -466,6 +567,8 @@ async function showMenu(m, sock) {
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top Gold', id: `${m.prefix}topgold` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top PvP', id: `${m.prefix}toppvp` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top Boss', id: `${m.prefix}topboss` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Mancing', id: `${m.prefix}leaderboard mancing` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Gacha', id: `${m.prefix}leaderboard gacha` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Group', id: `${m.prefix}leaderboard group` }) },
       ],
     })
@@ -486,6 +589,7 @@ async function handler(m, { sock, config: cfg }) {
   if (mode === 'all') return showAllLeaderboards(m, sock)
   if (mode === 'group') return showGroupLeaderboard(m, sock)
   if (mode === 'limit') return showRpgLeaderboard(m, sock, 'limit')
+  if (mode.startsWith('game:')) return showGameLeaderboard(m, sock, mode.slice(5))
 
   // RPG subtypes
   const rpgSub = mode.split(':')[1] || 'overview'
