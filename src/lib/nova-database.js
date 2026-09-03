@@ -7,7 +7,7 @@ const FLUSH_INTERVAL_MS = 5000;
 
 const defaultUsers = {};
 const defaultGroups = {};
-const defaultSettings = { selfMode: true, autoreactvnEnabled: false, autoJokeEnabled: false, autoFactEnabled: false, autoRoastEnabled: false, autoHadithEnabled: false, autoChallengeEnabled: false, autoMemeEnabled: false, autoTipsEnabled: false, autoHoroscopeEnabled: false, autoDoaEnabled: false, autoQuestionEnabled: false, autoAiEnabled: false, autoChatSummaryEnabled: false, autoCompressEnabled: false, autoGreetEnabled: false, autoMuteEnabled: false, disabledCommands: [], disabledCategories: [] };
+const defaultSettings = { selfMode: true, autoreactvnEnabled: false, disabledCommands: [], disabledCategories: [] };
 const defaultStats = {};
 const defaultSewa = { enabled: false, groups: {} };
 
