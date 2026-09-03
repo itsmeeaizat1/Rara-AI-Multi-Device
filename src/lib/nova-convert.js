@@ -1,6 +1,7 @@
 // NOVA CONVERT — Universal media converter session & format registry
 // Dipakai plugin download buat nawarin convert setelah media kekirim,
 // dan plugin .convert buat eksekusi konversi via ffmpeg.
+import { getDatabase } from "./nova-database.js";
 import fs from "fs";
 import path from "path";
 import os from "os";
@@ -113,8 +114,21 @@ export function getConvertSession(m) {
 // Dipanggil plugin download SETELAH media terkirim.
 // mediaUrl = link CDN langsung (bisa di-download ulang), ATAU
 // buffer = media yang barusan diunduh (disimpan ke temp file).
+// Toggle owner: .convertoffer on/off — default ON.
+// Kalau OFF, tawaran convert gak dikirim (session tetep kebikin,
+// jadi .convert <format> tetap bisa dipakai manual).
+export function isConvertOfferEnabled() {
+  try {
+    const db = getDatabase();
+    return db.setting("convertOffer") ?? true;
+  } catch {
+    return true;
+  }
+}
+
 export async function offerConvert(sock, m, { mediaUrl, buffer, type = "video", platform = "Media", title = "", sourceUrl = "" }) {
   try {
+    if (!isConvertOfferEnabled()) return;
     setConvertSession(m, { mediaUrl, buffer, type, platform, title, sourceUrl });
 
     // Copy sesuai request owner: "Apakah kakak ingin mengconvert file ini?"
