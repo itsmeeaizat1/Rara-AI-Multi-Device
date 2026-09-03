@@ -13,9 +13,9 @@
   "autoQuestionEnabled": false,
   "ownerNumbers": [],
   "ownerType": 2,
-  "welcomeType": 7,
-  "replyVariant": 7,
-  "menuVariant": 3,
+  "welcomeType": 1,
+  "replyVariant": 1,
+  "menuVariant": 1,
   "botAfk": {
     "active": false
   },
@@ -29,11 +29,10 @@
   "giveaways": {},
   "botMode": "public",
   "audioMenu": true,
-  "transactionSessions": {},
   "premiumUsers": [],
   "similarity": true,
   "botRules": "1.tes\\n2. tes",
-  "goodbyeType": 7,
+  "goodbyeType": 1,
   "onlyAdmin": false,
   "selfAdmin": false,
   "publicAdmin": false,
@@ -53,11 +52,10 @@
   "panelCreateLastUsed": 1775377733441,
   "autoJoinGc": false,
   "autoSholat": false,
-  "errorLog": [],
   "jpmBlacklist": [],
   "bannedUsers": [],
-  "allmenuVariant": 3,
-  "menucatVariant": 5,
+  "allmenuVariant": 1,
+  "menucatVariant": 1,
   "notifMakan": {},
   "storeProducts": [],
   "storeTrxCounter": 3,
@@ -80,18 +78,6 @@
   "autoRead": false,
   "contacts": {},
   "notiflimit": false,
-  "pgTopups": {},
-  "pgPayments": {},
-  "storeAutoProducts": [],
   "allmenuAudioStyle": 3,
-  "sitagrup": {},
-  "srtEnabled": true,
-  "autoweather": {
-    "628123456789@s.whatsapp.net": {
-      "enabled": false,
-      "region": "all",
-      "lastAlert": 0,
-      "alertCount": 0
-    }
-  }
+  "srtEnabled": true
 }
