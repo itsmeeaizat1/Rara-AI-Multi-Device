@@ -115,13 +115,15 @@ export function getStabilityKey() { return apikeysData.stability || ""; }
 export function getJinaKey() { return apikeysData.jina || ""; }
 
 export function getPteroConfig() {
-  return {
-    server1: {
-      domain: miscData.ptero_server1_domain || "",
-      apikey: miscData.ptero_server1_apikey || "",
-      capikey: miscData.ptero_server1_capikey || "",
-    },
-  };
+  const slots = {};
+  for (let i = 1; i <= 100; i++) {
+    slots[`server${i}`] = {
+      domain: miscData[`ptero_server${i}_domain`] || "",
+      apikey: miscData[`ptero_server${i}_apikey`] || "",
+      capikey: miscData[`ptero_server${i}_capikey`] || "",
+    };
+  }
+  return slots;
 }
 
 /**

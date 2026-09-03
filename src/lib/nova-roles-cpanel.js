@@ -2,7 +2,8 @@
 import fs from 'fs'
 import path from 'path'
 const CPANEL_DIR = path.join(process.cwd(), "src", "data", 'cpanel')
-const VALID_SERVERS = ['v1', 'v2', 'v3', 'v4', 'v5']
+// 100 slot panel Pterodactyl (v1-v100) — logic aja, registrasi nama command di plugin masing2
+const VALID_SERVERS = Array.from({ length: 100 }, (_, i) => 'v' + (i + 1))
 const VALID_ROLES = ['owner', 'ceo', 'reseller']
 
 function ensureDir() {

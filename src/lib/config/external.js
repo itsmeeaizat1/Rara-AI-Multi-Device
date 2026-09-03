@@ -8,48 +8,24 @@ export const vercel = {
   token: apiKeys.vercelToken,
 };
 
-export const pterodactyl = {
-  server1: {
-    domain: apiKeys.pterodactyl.server1.domain,
-    apikey: apiKeys.pterodactyl.server1.apikey,
-    capikey: apiKeys.pterodactyl.server1.capikey,
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server2: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server3: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server4: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-  server5: {
-    domain: "",
-    apikey: "",
-    capikey: "",
-    egg: "15",
-    nestid: "5",
-    location: "1",
-  },
-};
+export const pterodactyl = (() => {
+  // 100 slot config panel Pterodactyl (server1 - server100)
+  // server1 default dari apikey.js; sisanya diisi via .setpanel (disimpan ke src/data/ptero-panels.json)
+  const slots = {
+    server1: {
+      domain: apiKeys.pterodactyl.server1.domain,
+      apikey: apiKeys.pterodactyl.server1.apikey,
+      capikey: apiKeys.pterodactyl.server1.capikey,
+      egg: "15",
+      nestid: "5",
+      location: "1",
+    },
+  };
+  for (let i = 2; i <= 100; i++) {
+    slots[`server${i}`] = { domain: "", apikey: "", capikey: "", egg: "15", nestid: "5", location: "1" };
+  }
+  return slots;
+})();
 
 export const digitalocean = {
   token: apiKeys.digitalOceanToken,

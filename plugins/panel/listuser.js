@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-const allCommands = VALID_SERVERS.map(v => `listuser${v}`)
+const allCommands = VALID_SERVERS.slice(0, 5).map(v => `listuser${v}`)
 const allAliases = [
     ...VALID_SERVERS.map(v => `users${v}`),
     ...VALID_SERVERS.map(v => `listpanel${v}`)
@@ -14,7 +14,7 @@ const pluginConfig = {
     name: allCommands,
     alias: allAliases,
     category: 'panel',
-    description: 'List semua user di panel (v1-v5)',
+    description: 'List semua user di panel (v1-v100)',
     usage: '.listuserv1 atau .listuserv2',
     example: '.listuserv1',
     isOwner: false,
@@ -26,21 +26,23 @@ const pluginConfig = {
     isEnabled: true
 }
 
-function parseServerVersion(cmd) {
-    const match = cmd.match(/v([1-5])$/i)
-    if (!match) return { server: 'v1', serverKey: 's1' }
-    return { server: 'v' + match[1], serverKey: 's' + match[1] }
+function parseServerVersion(cmd, args) {
+    let num = null
+    const suffix = String(cmd || '').match(/v(\d{1,3})$/i)
+    if (suffix) num = parseInt(suffix[1], 10)
+    // Override via argumen: .listserver 50 / .listserver v50 (support v1-v100)
+    if (args && args.length) {
+        const am = String(args[0] || '').trim().match(/^v?(\d{1,3})$/i)
+        if (am) num = parseInt(am[1], 10)
+    }
+    if (num === null || !(num >= 1 && num <= 100)) num = 1
+    return { server: 'v' + num, serverKey: 's' + num }
 }
 
 function getServerConfig(pteroConfig, serverKey) {
-    const serverConfigs = {
-        's1': pteroConfig.server1,
-        's2': pteroConfig.server2,
-        's3': pteroConfig.server3,
-        's4': pteroConfig.server4,
-        's5': pteroConfig.server5
-    }
-    return serverConfigs[serverKey] || null
+    const num = parseInt(String(serverKey || '').replace('s', ''), 10)
+    if (!(num >= 1 && num <= 100)) return null
+    return pteroConfig['server' + num] || null
 }
 
 function validateServerConfig(serverConfig) {
@@ -52,7 +54,7 @@ function validateServerConfig(serverConfig) {
 
 function getAvailableServers(pteroConfig) {
     const available = []
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 100; i++) {
         const cfg = pteroConfig[`server${i}`]
         if (cfg?.domain && cfg?.apikey) available.push(`v${i}`)
     }
@@ -62,7 +64,7 @@ function getAvailableServers(pteroConfig) {
 async function handler(m, { sock }) {
     const pteroConfig = config.pterodactyl
     
-    const { server: serverVersion, serverKey } = parseServerVersion(m.command)
+    const { server: serverVersion, serverKey } = parseServerVersion(m.command, m.args)
     const serverLabel = serverVersion.toUpperCase()
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
