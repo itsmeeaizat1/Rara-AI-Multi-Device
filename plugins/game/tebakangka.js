@@ -66,7 +66,9 @@ async function handler(m, { args, prefix }) {
     const energiLine = e
       ? (e.unlimited
           ? `│ • ⚡ Energi: ∞ (unlimited)\n`
-          : (e.deducted > 0 ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n` : `│ • ⚡ Energi: gratis\n`))
+          : (e.deducted > 0
+              ? (e.game ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n` : `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`)
+              : `│ • ⚡ Energi: gratis\n`))
       : "";
     return m.reply(
       `🎉 Benar! Angkanya ${game.target}\n\n` +
@@ -86,7 +88,9 @@ async function handler(m, { args, prefix }) {
     const energiLine = e
       ? (e.unlimited
           ? `│ • ⚡ Energi: ∞ (unlimited)\n`
-          : (e.deducted > 0 ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n` : `│ • ⚡ Energi: gratis\n`))
+          : (e.deducted > 0
+              ? (e.game ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n` : `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`)
+              : `│ • ⚡ Energi: gratis\n`))
       : "";
     return m.reply(
       `😭 Kesempatan habis!\n\n` +

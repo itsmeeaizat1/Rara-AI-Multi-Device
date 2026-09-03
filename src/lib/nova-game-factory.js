@@ -24,7 +24,9 @@ function renderEnergiLine(m, cfg) {
   const e = m?.energiInfo;
   if (e) {
     if (e.unlimited) return `│ ❈ Energi: ∞ (unlimited)\n`;
-    if (e.deducted > 0) return `│ ❈ Energi: -${e.deducted} (sisa ${e.sisa})\n`;
+    if (e.deducted > 0) return e.game
+      ? `│ ❈ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n`   // energi game (rpg.energy/maxEnergy)
+      : `│ ❈ Energi: -${e.deducted} (sisa ${e.sisa})\n`;           // limit akses fitur
     return `│ ❈ Energi: gratis\n`;
   }
   if (cfg.energi > 0) return `│ ❈ Energi: -${cfg.energi}\n`;
