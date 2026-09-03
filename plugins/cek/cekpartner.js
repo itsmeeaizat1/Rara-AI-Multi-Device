@@ -51,19 +51,20 @@ async function handler(m, { sock }) {
     const totalDays = info.addedAt ? Math.ceil((info.expired - info.addedAt) / (1000 * 60 * 60 * 24)) : '?'
     const user = db.getUser(jid)
 
-    let txt = `🤝 *ᴅᴇᴛᴀɪʟ ᴘᴀʀᴛɴᴇʀ*\n\n`
-    txt += `👤 User: @${targetNumber}\n`
-    txt += `📛 Nama: *${info.name || 'Unknown'}*\n`
-    txt += `📅 Mulai: *${info.addedAt ? formatDate(info.addedAt) : 'Unknown'}*\n`
-    txt += `⏳ Expired: *${formatDate(info.expired)}*\n`
-    txt += `🗓️ Durasi: *${totalDays} hari*\n`
-    txt += `📊 Sisa: *${remaining > 0 ? remaining + ' hari' : '⚠️ Expired'}*\n`
+    const lines = [
+      `User: @${targetNumber}`,
+      `Nama: ${info.name || 'Unknown'}`,
+      `Mulai: ${info.addedAt ? formatDate(info.addedAt) : 'Unknown'}`,
+      `Expired: ${formatDate(info.expired)}`,
+      `Durasi: ${totalDays} hari`,
+      `Sisa: ${remaining > 0 ? remaining + ' hari' : 'Expired'}`,
+    ];
     if (user) {
-        txt += `⚡ Energi: *${user.energi === -1 ? '∞' : (user.energi ?? 0)}*\n`
-        txt += `💰 Koin: *${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}*\n`
+        lines.push(`Energi: ${user.energi === -1 ? '∞' : (user.energi ?? 0)}`);
+        lines.push(`Koin: ${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}`);
     }
 
-    await m.reply(txt, { mentions: [jid] });
+    await m.reply(claraWrap("Cek Partner", lines), { mentions: [jid] });
 }
 
 export { pluginConfig as config, handler }
