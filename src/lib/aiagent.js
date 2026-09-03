@@ -656,6 +656,11 @@ export async function askAI(system, user, history = []) {
         text = data.choices?.[0]?.message?.content
       }
       if (!text) throw new Error('balasan kosong')
+      // FIX: model gpt-oss (groq) sering ngelorotin control char (\u0000 dsb)
+      // di akhir output — bikin JSON.parse gagal ("Rule ditolak") & karakter
+      // hantu di pesan WA. Strip semua C0 control kecuali newline & tab.
+      text = String(text).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim()
+      if (!text) throw new Error('balasan kosong setelah dibersihin')
       console.log(`[AI] provider "${p.name}" sukses`)
       return text
     } catch (e) {
