@@ -29,6 +29,8 @@ const PROVIDER_COMMANDS = {
   llama: "meta",
   openrouter: "openrouter",
   or: "openrouter",
+  codestral: "codestral",
+  kimicode: "kimicode",
   qwen: "qwen",
   cohere: "cohere",
   perplexity: "perplexity",
