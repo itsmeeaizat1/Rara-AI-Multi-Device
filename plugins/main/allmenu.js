@@ -19,7 +19,7 @@ import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox, novaMenuLayout } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
 import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
@@ -77,29 +77,7 @@ const CATEGORY_NAMES = {
 
 function getCommandSymbols(cmdName) {
   const plugin = getPlugin(cmdName);
-  const cfg = plugin?.config;
-  if (!cfg) return "";
-  // Khusus owner → cukup satu symbol
-  if (cfg.isOwner) return " Ⓞ";
-  const symbols = [];
-  if (cfg.isPremium) {
-    // Khusus premium
-    symbols.push("Ⓟ");
-  } else if ((cfg.energi || 0) > 0 || (cfg.limit || 0) > 0) {
-    // Fitur berquota: free dapat quota gratis, premium unlimited (aturan global bot)
-    symbols.push("Ⓕ", "Ⓟ", "Ⓤ");
-  } else {
-    // Fitur umum: semua user bisa
-    symbols.push("Ⓤ");
-  }
-  symbols.push("Ⓞ"); // owner juga bisa pakai semua fitur
-  if ((cfg.limit || 0) > 0) symbols.push("Ⓛ");
-  // Fitur RPG wajib .daftar dulu (rpg data dibuat saat daftar)
-  if (String(cfg.category || "") === "rpg") symbols.push("ʀ");
-  // Restriksi konteks
-  if (cfg.isAdmin) symbols.push("Ⓐ");
-  if (cfg.isGroup && !cfg.isPrivate) symbols.push("Ⓖ");
-  return " " + symbols.join(" ");
+  return getAccessSymbols(plugin?.config);
 }
 
 let _thumbCache = null;
@@ -241,7 +219,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { sym: "Ⓕ", desc: "Free - ada quota gratis" },
       { sym: "Ⓟ", desc: "Premium - khusus premium" },
       { sym: "Ⓞ", desc: "Owner - hanya owner" },
-      { sym: "Ⓛ", desc: "Limit - pakai energi/limit" },
+      { sym: "Ⓛ", desc: "Limit - akses fitur" },
       { sym: "ʀ", desc: "Register - wajib daftar" },
       { sym: "Ⓐ", desc: "Admin - khusus admin grup" },
       { sym: "Ⓖ", desc: "Grup - khusus di grup" },
