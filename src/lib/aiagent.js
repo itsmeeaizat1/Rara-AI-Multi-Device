@@ -517,14 +517,21 @@ const PROVIDERS = [
 ]
 
 // 🔹 AI AGENT: Fungsi umum nanya ke AI — coba provider satu-satu sampai sukses
-export async function askAI(system, user) {
+// history opsional: [{role:'user'|'assistant', content}] — dipakai biar AI
+// TAHU percakapan sebelumnya (fix bug: user jawab "iya" dianggap sesi baru).
+export async function askAI(system, user, history = []) {
+  const histTrimmed = Array.isArray(history) ? history.slice(-12) : []
+  // Fold history jadi teks buat provider GET (cuma bisa kirim 1 field teks)
+  const histAsText = histTrimmed.length
+    ? histTrimmed.map(h => `${h.role === 'user' ? 'User' : 'Asisten'}: ${h.content}`).join('\n') + '\n'
+    : ''
   for (const p of PROVIDERS) {
     const key = p.key?.()
     if (p.key && !key) continue
     try {
       let text
       if (p.method === 'get') {
-        const fullPrompt = `${system}\n\n${user}`
+        const fullPrompt = `${system}\n\n${histAsText}User: ${user}`
         const url = `${p.url}?apikey=${encodeURIComponent(key)}&text=${encodeURIComponent(fullPrompt)}`
         const res = await fetch(url, { headers: p.headers(key) })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -538,6 +545,7 @@ export async function askAI(system, user) {
             model: p.model,
             messages: [
               { role: 'system', content: system },
+              ...histTrimmed.map(h => ({ role: h.role === 'assistant' ? 'assistant' : 'user', content: h.content })),
               { role: 'user', content: user }
             ],
             temperature: 0.1,
@@ -577,8 +585,15 @@ export async function think(text, ctx = {}) {
   const execSection = ctx.executableCmds
     ? `\n\n== COMMAND BOT LAIN YANG BISA KAMU JALANKAN (via execCommand) ==\nCommand yang boleh: ${ctx.executableCmds}\nDaftar lengkap per kategori:\n${ctx.commandList || ''}\nKalau user minta sesuatu yang cocok dengan salah satu command ini (misal "jadikan stiker gambar ini" → command "s", "downloadin video tiktok ini" → command sesuai), isi field "execCommand" dengan NAMA command (tanpa titik/prefix) dan "execArgs" dengan argumennya (boleh kosong string). Field "tool" tetap null untuk kasus ini.`
     : ''
+  // ctx.history diisi kalau ada percakapan sebelumnya di sesi ini (dikirim
+  // sebagai pesan multi-turn ke provider) — WAJIB dipakai biar reply nyambung,
+  // JANGAN pernah kasih sapaan generik ("Halo! Ada yang bisa dibantu?") kalau
+  // histori sudah ada, karena artinya user sedang MELANJUTKAN topik.
+  const historyNote = (ctx.history && ctx.history.length)
+    ? `\n\nPENTING — SESI PERCAKAPAN AKTIF: kamu sudah ngobrol sama user ini sebelumnya (lihat pesan-pesan sebelum pesan terbaru). WAJIB nyambungin jawaban ke topik/konteks obrolan sebelumnya. Kalau user cuma jawab singkat ("iya", "mau", "boleh", "lanjut", dll), itu artinya user MENYETUJUI/MERESPON pertanyaan/tawaran kamu di pesan sebelumnya — TERUSKAN topik itu (misal kalau sebelumnya nawarin resep, langsung kasih resepnya), JANGAN balas sapaan generik seolah obrolan baru dimulai.`
+    : ''
 
-  const sys = `Kamu adalah otak dari bot WhatsApp bernama "${ctx.botname || 'Bot'}".
+  const sys = `Kamu adalah otak dari bot WhatsApp bernama "${ctx.botname || 'Bot'}".${historyNote}
 Tugasmu MENERJEMAHKAN perintah user menjadi SATU objek JSON saja.
 
 PENTING — FAKTA TERKINI (training data kamu punya cutoff lama, WAJIB pakai info ini, JANGAN tebak dari training data lama):
@@ -611,7 +626,9 @@ Contoh:
 "jam berapa sekarang" → {"tool":null,"execCommand":null,"reply":"Sekarang jam ${jamSekarang}."}
 "siapa presiden indonesia" → {"tool":null,"execCommand":null,"reply":"Presiden Indonesia saat ini adalah Prabowo Subianto, didampingi Wakil Presiden Gibran Rakabuming Raka."}`
 
-  const raw = await askAI(sys, text)
+  // ctx.history: percakapan sebelumnya dari session — fix bug "iya" dianggap
+  // sesi baru (AI dulu selalu dipanggil single-shot tanpa histori sama sekali)
+  const raw = await askAI(sys, text, ctx.history || [])
   const clean = raw.replace(/```json|```/g, '').trim()
   const start = clean.indexOf('{')
   const end = clean.lastIndexOf('}')

@@ -30,10 +30,17 @@ const DEFAULT_PROVIDERS = {
     buildBody: ({ messages, systemPrompt }) => {
       const contents = messages
         .filter((m) => m.role !== "system")
-        .map((m) => ({
-          role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
-        }));
+        .map((m) => {
+          // Vision: kalau message punya .image ({mimeType, data:base64}), kirim
+          // sebagai inline_data part bareng teksnya — Gemini native multimodal.
+          const parts = [];
+          if (m.content) parts.push({ text: m.content });
+          if (m.image?.data) parts.push({ inline_data: { mime_type: m.image.mimeType || "image/jpeg", data: m.image.data } });
+          return {
+            role: m.role === "assistant" ? "model" : "user",
+            parts: parts.length ? parts : [{ text: "" }],
+          };
+        });
       const body = { contents, generationConfig: { temperature: 0.7, maxOutputTokens: 8192 } };
       if (systemPrompt) {
         body.systemInstruction = { parts: [{ text: systemPrompt }] };
@@ -552,7 +559,11 @@ function normalizeMessages(messages, systemPrompt) {
   if (systemPrompt) out.push({ role: "system", content: systemPrompt });
   for (const m of messages || []) {
     const role = ["user", "assistant"].includes(m.role) ? m.role : "user";
-    out.push({ role, content: String(m.content || "") });
+    const item = { role, content: String(m.content || "") };
+    // Vision: teruskan gambar (base64) apa adanya — provider yang support
+    // (gemini buildBody) yang nanti nyusun jadi inline_data part.
+    if (m.image?.data) item.image = m.image;
+    out.push(item);
   }
   return out;
 }
@@ -877,6 +888,50 @@ async function callGemini(prompt, opts = {}) {
 
 
 
+/**
+ * callGeminiVision — analisis gambar via Google Gemini (multimodal native).
+ * Dipakai buat .novaai scan gambar / selesaikan tugas dari foto, dll.
+ * Key: apikeys.json "google" (dipakai juga oleh callGemini() teks biasa).
+ * @param {string} prompt - Pertanyaan/instruksi soal gambar
+ * @param {Buffer} imageBuffer - Buffer gambar
+ * @param {object} opts - { apiKey, model, systemPrompt, mimeType, senderJid }
+ * @returns {Promise<string>} Jawaban AI
+ */
+async function callGeminiVision(prompt, imageBuffer, opts = {}) {
+  if (!Buffer.isBuffer(imageBuffer) || !imageBuffer.length) throw new Error("Gambar tidak valid.");
+
+  let apiKey = opts.apiKey || "";
+  if (!apiKey) {
+    try {
+      const { getApiKeys } = await import("./config/env-loader.js");
+      const keys = getApiKeys();
+      apiKey = keys.google || keys.gemini || "";
+    } catch {}
+  }
+  if (!apiKey) {
+    try {
+      const config = (await import("../../config.js")).default;
+      apiKey = config.geminiApiKey || config.aiHelp?.geminiApiKey || "";
+    } catch {}
+  }
+  if (!apiKey) throw new Error("Google Gemini API key belum diset (owner: .setkey google <key>).");
+
+  const base64 = imageBuffer.toString("base64");
+  const mimeType = opts.mimeType || "image/jpeg";
+  const model = opts.model || (await resolveLatestGeminiModel(apiKey).catch(() => FALLBACK_LATEST));
+
+  return await callAI({
+    providerKey: "gemini",
+    apiKey,
+    model,
+    messages: [{ role: "user", content: prompt, image: { mimeType, data: base64 } }],
+    systemPrompt: opts.systemPrompt || "",
+    temperature: opts.temperature ?? 0.4,
+    maxTokens: opts.maxTokens ?? 4096,
+    senderJid: opts.senderJid || "",
+  });
+}
+
 // ═══════════════════════════════════════════════════════════
 // IKYYXD API HELPER
 // api.ikyyxd.my.id — GET-based AI API
@@ -987,6 +1042,7 @@ export {
   getAllProviders,
   callAI,
   callGemini,
+  callGeminiVision,
   resolveLatestGeminiModel,
   normalizeMessages,
 };

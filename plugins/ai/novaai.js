@@ -8,7 +8,7 @@
 // ============================================================
 
 import { TOOLS, localParse, think, resolveUserByName } from "../../src/lib/aiagent.js";
-import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
@@ -101,7 +101,9 @@ function buildSystemPrompt(prefix, botName) {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
     timeZone: "Asia/Jakarta",
   });
-  return `Kamu adalah ${botName}, asisten AI WhatsApp bot yang ramah, cerdas, dan responsif. Kamu menjawab dalam bahasa Indonesia dengan gaya santai tapi informatif. Gunakan emoji secukupnya.
+  return `Kamu adalah ${botName}, asisten AI WhatsApp bot yang ramah, cerdas, dan responsif. Kamu menjawab dalam bahasa Indonesia dengan gaya santai tapi informatif.
+
+GAYA EKSPRESI (WAJIB PATUH): BERTINGKAH LAH SEPERTI MANUSIA ASLI yang sedang mengobrol santai di WhatsApp. Emoji itu OPSIONAL dan natural — pakai hanya kalau memang sesuai momen atau untuk menegaskan suasana hati, TIDAK perlu di setiap pesan, dan JANGAN PERNAH paksa/wajibkan emoji. Tanpa emoji sama sekali juga bagus. Yang penting nada bicaramu mengalir natural seperti teman ngobrol: kadang santai, kadang antusias, kadang netral, sesuai konteks. JANGAN kaku/robotik, jangan template yang sama tiap pesan, dan jangan bertele-tele berlebihan.
 
 PENTING — FAKTA TERKINI (training data kamu punya cutoff lama, WAJIB pakai info ini):
 - Hari ini: ${tanggalHariIni}
@@ -170,9 +172,9 @@ const pluginConfig = {
   name: "novaai",
   alias: ["novaai", "tanyaai", "nova-ai", "nova", "tanya"],
   category: "ai",
-  description: "AI Agent — ngatur grup, ngobrol, & jalanin command bot via bahasa natural",
-  usage: ".novaai <perintah/pertanyaan>",
-  example: ".novaai tutup grup\n.novaai apa itu nodejs\n.novaai carikan musik faded\n.novaai kick @user",
+  description: "AI Agent — ngatur grup, ngobrol multi-turn nyambung, scan gambar, & jalanin command bot via bahasa natural",
+  usage: ".novaai <perintah/pertanyaan>\n.novaai (reply/kirim gambar) — scan gambar: selesaikan tugas, baca foto, dll\n.novaai reset — hapus sesi chat",
+  example: ".novaai tutup grup\n.novaai apa itu nodejs\n.novaai carikan musik faded\n.novaai kick @user\n.novaai (reply foto soal) selesaikan soal ini",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -187,7 +189,9 @@ async function handler(m, { sock, conn, config, db }) {
   const text = m.args.join(" ").trim() ||
     m.text?.replace(/^\.novaai\s+/i, "").replace(/^\.tanyaai\s+/i, "").replace(/^\.nova-ai\s+/i, "").trim();
 
-  if (!text) {
+  // ada gambar (langsung/reply) → teks boleh kosong, langsung scan (jangan print help)
+  const hasImageForVision = m.isImage || m.quoted?.isImage;
+  if (!text && !hasImageForVision) {
     const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
     const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
     const categories = {
@@ -221,8 +225,8 @@ async function handler(m, { sock, conn, config, db }) {
         if (TOOLS[tool]) out += '│ • ' + (examples[tool] || tool) + '\n';
       }
     }
-    out += '\n│\n│ 💡 Reset sesi chat: .novaai reset\n';
-    out += '│ 💡 Tanya apa saja, atau suruh aku ngapa\n│';
+    out += '\n│\n│ 📸 Scan gambar: kirim foto + caption .novaai <tanya>\n';
+    out += '│ 💡 Reset sesi chat: .novaai reset\n│ 💡 Tanya apa saja, atau suruh aku ngapa\n│';
     return m.reply(out + '\n╰────  •  ────');
   }
 
@@ -239,10 +243,48 @@ async function handler(m, { sock, conn, config, db }) {
   // React 🧠
   try { await sock.sendMessage(m.chat, { react: { text: "🧠", key: m.key } }); } catch {}
 
+  // 🔹 VISION: upload gambar + caption .novaai <pertanyaan> (tanpa pertanyaan
+  // = analisis umum) ATAU reply gambar dengan .novaai <pertanyaan> — AI scan
+  // gambar: selesaikan soal tugas, baca struk, jelasin foto, dll (Gemini native)
+  const directImage = m.isImage ? m : null;
+  const quotedImage = m.quoted?.isImage ? m.quoted : null;
+  const imageSource = directImage || quotedImage;
+  if (imageSource) {
+    const key = sessionKey(m);
+    const history = getSession(key);
+    const question = text || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
+    try {
+      appendSession(key, "user", `(mengirim gambar) ${question}`);
+      const buffer = await (directImage ? m.download() : m.quoted.download());
+      const answer = await callGeminiVision(question, buffer, {
+        systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI"),
+        senderJid: m.sender,
+      });
+      appendSession(key, "assistant", answer);
+      const { text: visibleText, action } = parseAIResponse(answer);
+      if (visibleText) await m.reply(visibleText.length > 4096 ? visibleText.slice(0, 4096) + "..." : visibleText);
+      if (action) {
+        if (db) config.__db = db;
+        const result = await executeCommand(action, m, sock, config);
+        if (!result.success && result.message) await m.reply(claraWrap("Info", `⚠️ ${result.message}`));
+      }
+      return;
+    } catch (e) {
+      console.error("[novaai] vision gagal:", e.message);
+      return m.reply("╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n│\n│ ❌ Gagal menganalisis gambar: " + e.message + "\n│\n╰────  •  ────");
+    }
+  }
+
+  // 🔹 SESSION: histori obrolan dikirim ke AI biar reply NYAMBUNG — fix bug
+  // user jawab "iya" / "mau" malah dibalas sapaan generik kayak sesi baru.
+  const sessionKeyNow = sessionKey(m);
+  const histSnapshot = [...getSession(sessionKeyNow)];
+  appendSession(sessionKeyNow, "user", text);
+
   // TAHAP 1: localParse (instan, tanpa API) — cek pola grup
   let decision = localParse(text);
 
-  // TAHAP 2: think() — kalimat rumit → AI provider
+  // TAHAP 2: think() — kalimat rumit → AI provider (dengan histori sesi)
   if (!decision) {
     try {
       const prefixForThink = config?.command?.prefix || ".";
@@ -250,7 +292,8 @@ async function handler(m, { sock, conn, config, db }) {
         botname: config?.bot?.name || "Nova AI",
         mentions: (m.mentionedJid || []).map(j => j.split("@")[0]).join(", "),
         executableCmds: buildExecutableList(),
-        commandList: buildCommandContext(prefixForThink)
+        commandList: buildCommandContext(prefixForThink),
+        history: histSnapshot.slice(-12),
       });
     } catch (e) {
       // 🔹 CHAT FALLBACK: coba callIkyy/callAI sebelum menyerah
@@ -259,8 +302,8 @@ async function handler(m, { sock, conn, config, db }) {
         const botName = config?.bot?.name || "Nova AI";
         const systemPrompt = buildSystemPrompt(prefix, botName);
         const key = sessionKey(m);
-        const history = getSession(key);
-        appendSession(key, "user", text);
+        // user text sudah di-append di atas (jalur utama) — pakai snapshot-nya
+        const history = [...getSession(key)];
         const messages = [...history.slice(-20).map(i => ({ role: i.role, content: i.content }))];
         const aiConfig = config?.aiHelp || {};
         let reply;
@@ -294,6 +337,8 @@ async function handler(m, { sock, conn, config, db }) {
   // 🔹 CHAT: tool null = user ngobrol atau minta execCommand (dari think() JSON langsung)
   if (!decision?.tool || !TOOLS[decision.tool]) {
     if (decision?.reply) {
+      // catat jawaban AI ke sesi — biar turn berikutnya tetap nyambung
+      appendSession(sessionKeyNow, "assistant", decision.reply);
       const { text: visibleText, action } = parseAIResponse(decision.reply);
       if (visibleText) await m.reply(visibleText.length > 4096 ? visibleText.slice(0, 4096) + "..." : visibleText);
       // 🔹 AUTO-EXECUTE: dari field execCommand (think() JSON) ATAU tag [ACTION] di teks reply
