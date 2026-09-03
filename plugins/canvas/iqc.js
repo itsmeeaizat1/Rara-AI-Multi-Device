@@ -1,9 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
 import moment from "moment-timezone";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import config from "../../config.js";
+import { novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "iqc",
@@ -27,6 +25,8 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Iqc Chat", `📱 *ɪqᴄ ᴄʜᴀᴛ*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
   }
   try {
+    await m.react("🕒");
+
     const now = new Date();
     const time = moment(now).tz("Asia/Jakarta").format("HH:mm");
 
@@ -34,21 +34,27 @@ async function handler(m, { sock }) {
 
     const res = await axios.get(apiUrl, {
       responseType: "arraybuffer",
-      timeout: 30000
+      timeout: 30000,
+      validateStatus: () => true,
     });
 
-    if (res.headers["content-type"] && !res.headers["content-type"].includes("image")) {
+    if (res.status !== 200 || !res.headers["content-type"]?.includes("image")) {
       throw new Error("Gagal bikin IQC nih, format bukan gambar");
     }
 
     const cardBuffer = Buffer.from(res.data);
     await m.react("🐣");
-    await sock.sendImageAsSticker(m.chat, cardBuffer, m, {
-      packname: config.sticker?.packname || "Nova-AI",
-      author: config.sticker?.author || "IQC",
-    });
+
+    // Dikirim sebagai gambar biasa (bukan stiker) — hasilnya mockup screenshot
+    // chat iPhone/Android yang portrait, akan gepeng/rusak kalau dipaksa jadi stiker 512x512
+    await sock.sendMessage(
+      m.chat,
+      { image: cardBuffer, caption: "*ɪqᴄ ᴄʜᴀᴛ*" },
+      { quoted: m }
+    );
   } catch (error) {
     console.error("[IQC]", error.message);
+    await m.react("❌");
     m.reply(novaError("IQC", "Gagal bikin gambar chat nih, coba lagi ya"));
   }
 }
