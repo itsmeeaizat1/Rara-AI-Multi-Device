@@ -13,8 +13,8 @@ const pluginConfig = {
     alias: ["qc"],
     category: 'sticker',
     description: 'Membuat sticker quote chat dengan warna custom (API + fallback lokal canvas)',
-    usage: '.qc <warna> <text>',
-    example: '.qc pink Hai semuanya!',
+    usage: '.qc <text> atau .qc <warna> <text>',
+    example: '.qc hai / .qc pink hai',
     isOwner: false,
     isPremium: false,
     isGroup: false,
@@ -207,26 +207,29 @@ async function renderViaCanvas({ username, text, avatarUrl, backgroundColor }) {
 async function handler(m, { sock }) {
     const args = m.args || []
 
-    if (args.length < 2) {
+    // Usage hanya muncul kalau .qc polos tanpa text dan tanpa reply
+    if (args.length === 0 && !m.quoted) {
         const colorList = Object.keys(COLORS).join(', ')
         return m.reply(
             `💬 *ǫᴜᴏᴛᴇ ꜱᴛɪᴄᴋᴇʀ*\n\n` +
-            `\`${m.prefix}qc <warna> <text>\`\n` +
-            `Reply pesan + \`${m.prefix}qc <warna>\`\n` +
+            `\`${m.prefix}qc <text>\` — background putih (default)\n` +
+            `\`${m.prefix}qc <warna> <text>\` — background sesuai warna\n` +
+            `Reply pesan + \`${m.prefix}qc\` — quote pesan itu (putih)\n` +
             `\n` +
             `Contoh: \`${m.prefix}qc pink Hai semuanya!\`\n\n` +
             `${colorList}\n`
         )
     }
 
-    const color = args[0].toLowerCase()
-    const backgroundColor = COLORS[color]
-
-    if (!backgroundColor) {
-        return m.reply(`❌ *Error*\n\nWarna \`${color}\` tidak ditemukan!\nGunakan salah satu warna yang tersedia.`)
+    // Argumen pertama = warna yang dikenal → pakai warna itu.
+    // Bukan warna → semua argumen dianggap text, background default putih.
+    let color = 'white'
+    let message = args.join(' ')
+    if (args.length > 0 && COLORS[args[0].toLowerCase()]) {
+        color = args[0].toLowerCase()
+        message = args.slice(1).join(' ')
     }
-
-    let message = args.slice(1).join(' ')
+    const backgroundColor = COLORS[color]
 
     if (m.quoted && !message) {
         message = m.quoted.text || m.quoted.body || ''
