@@ -58,7 +58,7 @@ function formatStock(d) {
   if (d.weather?.active) {
     lines.push(`- ⛅ *WEATHER: ${d.weather.type.toUpperCase()}*`);
     if (Array.isArray(d.weather.effects)) {
-      for (const eff of d.weather.effects) lines.push(`   - ✨ ${eff}`);
+      for (const eff of d.weather.effects) lines.push(`- ${eff}`);
     }
     lines.push("");
   }

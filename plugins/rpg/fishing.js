@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const isRare = fish.rarity === "S" || fish.rarity === "SS" || fish.rarity === "SSS";
     let msg = "";
-    msg += `${isRare ? "✨ TANGKAPAN BERHASIL! ✨" : "Berhasil menangkap!"}\n`;
+    msg += `${isRare ? " TANGKAPAN BERHASIL! " : "Berhasil menangkap!"}\n`;
     msg += `
 `;
     msg += `${fish.emoji} *${fish.name}*\n`;

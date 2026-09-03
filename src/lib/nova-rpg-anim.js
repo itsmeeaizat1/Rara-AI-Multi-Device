@@ -143,7 +143,7 @@ export async function animCraft(m, sock, craftName) {
 export async function animGacha(m, sock) {
   await m.reply("🎁 Membuka gacha...");
   await sleep(800);
-  await m.reply("✨ Cahaya muncul...");
+  await m.reply("Cahaya muncul...");
   await sleep(700);
   await m.reply("🌟 Reveal...");
   await sleep(500);
@@ -196,7 +196,7 @@ export async function animDaily(m, sock) {
   await sleep(600);
   await m.reply("🎁 Membuka reward box...");
   await sleep(800);
-  await m.reply("✨ Reveal...");
+  await m.reply("Reveal...");
   await sleep(400);
 }
 
@@ -226,7 +226,7 @@ export async function animQuest(m, sock, questName) {
  * Animasi crafting upgrade/enchant
  */
 export async function animEnchant(m, sock, itemName) {
-  await m.reply(`✨ Meng-enchant ${itemName}...`);
+  await m.reply(`Meng-enchant ${itemName}...`);
   await sleep(600);
   await m.reply("⏳ ▰▰▱▱▱ Glow effect...");
   await sleep(500);

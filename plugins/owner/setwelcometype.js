@@ -23,7 +23,7 @@ const VARIANTS = {
   1: { name: "Text Only", desc: "Pesan teks biasa tanpa gambar", emoji: "📝" },
   2: { name: "Canvas Hexagon", desc: "Gambar canvas lokal dengan hexagon avatar (dark blue)", emoji: "🎨" },
   3: { name: "API Thumbnail", desc: "Background autoresbot API + PP user + total member (vertical layout)", emoji: "🖼️" },
-  4: { name: "Glassmorphism", desc: "Glass card style dengan foto profil bulat", emoji: "✨" },
+  4: { name: "Glassmorphism", desc: "Glass card style dengan foto profil bulat", emoji: "" },
   5: { name: "Simple", desc: "Pesan teks simple + foto profile", emoji: "📄" },
 };
 
@@ -69,7 +69,7 @@ async function handler(m, { sock, db }) {
     `*V1 Text Only* 📝 — Pesan teks biasa tanpa gambar\n\n` +
     `*V2 Canvas Hexagon* 🎨 — Gambar canvas lokal dengan hexagon avatar, dark blue style\n\n` +
     `*V3 API Thumbnail* 🖼️ — Background dari autoresbot API, layout vertikal: judul → "Selamat datang di (group)" → PP user di tengah → "Member: total" di bawah\n\n` +
-    `*V4 Glassmorphism* ✨ — Glass card style dengan foto profil bulat\n\n` +
+    `*V4 Glassmorphism* — Glass card style dengan foto profil bulat\n\n` +
     `*V5 Simple* 📄 — Pesan teks simple + foto profile\n\n` +
     `Pilih tipe welcome dari tombol di bawah`;
 

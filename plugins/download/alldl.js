@@ -67,7 +67,7 @@ const PLATFORM_MAP = [
   { keys: ["spotify.com", "spoti.fi"], name: "Spotify", icon: "🟢", hasAudio: true, hasVideo: false, hasImage: false },
   { keys: ["vimeo.com"], name: "Vimeo", icon: "🎥", hasAudio: true, hasVideo: true, hasImage: false },
   { keys: ["snackvideo.com"], name: "SnackVideo", icon: "🍿", hasAudio: true, hasVideo: true, hasImage: false },
-  { keys: ["likee.video", "like.video"], name: "Likee", icon: "✨", hasAudio: true, hasVideo: true, hasImage: false },
+  { keys: ["likee.video", "like.video"], name: "Likee", icon: "", hasAudio: true, hasVideo: true, hasImage: false },
 ];
 
 function detectInfo(url) {

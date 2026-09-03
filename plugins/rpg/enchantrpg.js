@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
     }
 
     if (!rpg[slot]) {
-  await animGeneric(m, sock, "✨", "Enchanting");
+  await animGeneric(m, sock, "", "Enchanting");
       return m.reply(claraWrap("enchantrpg", `Slot *${SLOT_LABEL[slot]}* kosong. Equip item dulu dengan .equiprpg.`, "warn"));
     }
 

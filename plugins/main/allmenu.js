@@ -233,7 +233,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       "bosen.",
       "",
       "Gak perlu install apa-apa.",
-      "Cuma ketik .allmenu untuk melihat semua fitur ✨",
+      "Cuma ketik .allmenu untuk melihat semua fitur",
     ];
 
     const txt = novaMenuLayout({

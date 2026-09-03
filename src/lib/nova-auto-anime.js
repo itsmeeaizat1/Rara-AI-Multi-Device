@@ -246,7 +246,7 @@ async function notifyAndSend(sock, groupIds, linkObj, meta) {
     }
 
     const caption =
-        `*ANIME UPDATE! ✨*\n\n` +
+        `*ANIME UPDATE! *\n\n` +
         `📺 Judul: *${meta.title}*\n` +
         `🎞️ Episode: ${meta.episode}\n` +
         `📊 Kualitas: *${linkObj.quality}*`

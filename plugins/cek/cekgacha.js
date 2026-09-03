@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     const mentioned = m.mentionedJid[0] || m.sender
                     
     let desc = ''
-    if (percent >= 90) desc = 'HOKI PARAH! SSR GUARANTEED! ✨💎'
+    if (percent >= 90) desc = 'HOKI PARAH! SSR GUARANTEED! 💎'
     else if (percent >= 70) desc = 'Lucky! Pasti dapet SR keatas! 🍀'
     else if (percent >= 50) desc = 'Hoki-hoki dikit 😊'
     else if (percent >= 30) desc = 'Hmm... pray harder! 🙏'

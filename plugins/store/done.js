@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
     invoiceTxt += `📦 _Produk fisik akan dikirim oleh admin. Silakan konfirmasi alamat pengiriman._\n\n`;
   }
 
-  invoiceTxt += `🙏 Terima kasih telah berbelanja! _Next order ya_ ✨`;
+  invoiceTxt += `🙏 Terima kasih telah berbelanja! _Next order ya_`;
 
   try {
     await sock.sendMessage(buyerJid, {

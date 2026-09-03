@@ -95,8 +95,7 @@ async function handler(m, { sock }) {
       profile.gold += goldGain;
       profile.exp += expGain;
       eventDetail = `🗡️ Kamu berhasil mengalahkan monster!
-💰 +${goldGain.toLocaleString()} Gold
-✨ +${expGain} EXP`;
+💰 +${goldGain.toLocaleString()} Gold +${expGain} EXP`;
     } else if (event.type === "treasure") {
       const goldGain = Math.floor(Math.random() * 1200) + 800;
       profile.gold += goldGain;
@@ -104,7 +103,7 @@ async function handler(m, { sock }) {
     } else if (event.type === "nothing") {
       const expGain = 50;
       profile.exp += expGain;
-      eventDetail = `✨ Kamu mendapatkan *+${expGain} EXP* dari pengalaman patroli.`;
+      eventDetail = `Kamu mendapatkan *+${expGain} EXP* dari pengalaman patroli.`;
     } else if (event.type === "trap") {
       const hpLoss = Math.floor(Math.random() * 16) + 15;
       profile.hp = Math.max(0, profile.hp - hpLoss);

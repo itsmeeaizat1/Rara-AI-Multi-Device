@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
 
     const resultBuffer = fs.readFileSync(outputPath);
 
-    await sock.sendMedia(m.chat, resultBuffer, `✨ *ᴘʀᴏꜱᴇꜱ ꜱᴇʟᴇꜱᴀɪ* ✨\n\nIni dia hasil videonya kak, udah jauh lebih mulus dan HD kan? 😍`, m, {
+    await sock.sendMedia(m.chat, resultBuffer, `*ᴘʀᴏꜱᴇꜱ ꜱᴇʟᴇꜱᴀɪ* \n\nIni dia hasil videonya kak, udah jauh lebih mulus dan HD kan? 😍`, m, {
       type: "video",
       mimetype: "video/mp4",
       fileName: `HDVID-${Date.now()}.mp4`,

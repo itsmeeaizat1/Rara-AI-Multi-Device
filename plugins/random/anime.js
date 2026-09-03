@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
               deviceListMetadataVersion: 2,
             },
             interactiveMessage: {
-              body: { text: `✨ *Random ${cmd.toUpperCase()}*` },
+              body: { text: `*Random ${cmd.toUpperCase()}*` },
               footer: { text: "Tekan tombol di bawah untuk memuat gambar lain" },
               header: {
                 hasMediaAttachment: true,

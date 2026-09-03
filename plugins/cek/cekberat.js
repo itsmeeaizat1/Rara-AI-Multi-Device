@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (berat >= 55) {
         desc = 'Ideal banget! 👍'
     } else if (berat >= 45) {
-        desc = 'Langsing nih~ 🌸'
+        desc = 'Langsing nih~'
     } else {
         desc = 'Kurus banget, makan yang banyak! 🍔'
     }

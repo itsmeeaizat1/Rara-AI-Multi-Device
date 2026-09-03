@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (percent >= 90) {
         desc = 'KECE BADAI! 😎🔥'
     } else if (percent >= 70) {
-        desc = 'Kece banget! ✨'
+        desc = 'Kece banget!'
     } else if (percent >= 50) {
         desc = 'Lumayan kece~ 👍'
     } else if (percent >= 30) {

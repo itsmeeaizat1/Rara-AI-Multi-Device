@@ -71,7 +71,7 @@ const CHEAT_TYPES = {
   dailystreak: { label: "Daily Streak", icon: "📅", type: "rpg", field: "dailyStreak" },
   // RPG profession
   joblevel: { label: "Job Level", icon: "📈", type: "rpg", field: "jobLevel" },
-  skillpoints: { label: "Skill Points", icon: "✨", type: "rpg", field: "skillPoints" },
+  skillpoints: { label: "Skill Points", icon: "", type: "rpg", field: "skillPoints" },
   // RPG misc
   level: { label: "Level (direct)", icon: "📊", type: "rpg" },
   rebirth: { label: "Rebirth Count", icon: "🔄", type: "rpg", field: "rebirthCount" },

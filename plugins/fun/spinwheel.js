@@ -22,7 +22,7 @@ const SPIN_ANIMATIONS = [
   "🛞 Roda berputar cepat...",
   "🎯 Roda melambat...",
   "📍 Roda berhenti...",
-  "✨ Hasil keluar!",
+  "Hasil keluar!",
 ];
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {

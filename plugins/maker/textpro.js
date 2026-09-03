@@ -24,7 +24,7 @@ const pluginConfig = {
 const STYLES = {
   neon: { url: "https://en.ephoto360.com/create-impressive-neon-glitch-text-effects-online-768.html", emoji: "🔴", desc: "Neon glitch text" },
   glitch: { url: "https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html", emoji: "⚡", desc: "Glitch effect" },
-  glow: { url: "https://en.ephoto360.com/create-glowing-text-effects-online-706.html", emoji: "✨", desc: "Glowing text" },
+  glow: { url: "https://en.ephoto360.com/create-glowing-text-effects-online-706.html", emoji: "", desc: "Glowing text" },
   blackpink: { url: "https://en.ephoto360.com/online-blackpink-style-logo-maker-effect-711.html", emoji: "🖤", desc: "Blackpink style" },
   gradient: { url: "https://en.ephoto360.com/create-3d-gradient-text-effect-online-600.html", emoji: "🎨", desc: "3D gradient text" },
   gold: { url: "https://en.ephoto360.com/create-a-luxury-gold-text-effect-online-594.html", emoji: "🥇", desc: "Luxury gold text" },

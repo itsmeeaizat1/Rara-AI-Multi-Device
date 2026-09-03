@@ -249,7 +249,7 @@ function findSimilarCommands(input, commands, options = {}) {
                 emoji = '🌟'
             } else if (finalSimilarity >= 0.3) {
                 reason = 'Sedikit mirip'
-                emoji = '✨'
+                emoji = ''
             }
             
             results.push({

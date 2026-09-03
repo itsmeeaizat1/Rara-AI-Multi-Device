@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
       msg += `⚗️ Berhasil meracik *${recipe.name}*!\n`;
       msg += `\n`;
       msg += `💰 Biaya: -${recipe.gold} Gold\n`;
-      msg += `✨ Efek: ${recipe.effect}\n`;
+      msg += `Efek: ${recipe.effect}\n`;
       msg += `🧪 Total Potion: ${data.potions[potionKey]}\n`;
       
       await m.react('🐣');
