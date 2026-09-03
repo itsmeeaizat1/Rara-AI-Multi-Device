@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
       .map((jid, i) => `${i + 1}. @${jid.split("@")[0]}`)
       .join("\n");
   }
-  const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+  const saluranId = config.saluran?.id || "@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
   await m.reply(claraWrap("DAFTAR YANG UDAH ABSEN", `📋 *ᴅᴀꜰᴛᴀʀ ʏᴀɴɢ ᴜᴅᴀʜ ᴀʙꜱᴇɴ*\n\n` +
       "" +

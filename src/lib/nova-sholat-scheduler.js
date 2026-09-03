@@ -216,7 +216,7 @@ async function sendReminderNotification(sholat, reminderTime, kotaNama) {
     if (groupList.length === 0) return;
 
     const db = getDatabase();
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     const msg = `${REMINDER_MESSAGES[sholat] || ""}\n\n⏰ *${reminderTime} WIB*\n📍 *${kotaNama}*\n\n> _${REMINDER_MINUTES} menit lagi menuju waktu sholat_`;
@@ -258,7 +258,7 @@ async function sendIqamahNotification(sholat, iqamahTime, kotaNama) {
     if (groupList.length === 0) return;
 
     const db = getDatabase();
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     const delay = IQAMAH_DELAY[sholat] || 10;
@@ -299,7 +299,7 @@ async function sendSholatNotifications(sholat, waktu) {
       nama: "KOTA JAKARTA",
     };
 
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let groupList = [];

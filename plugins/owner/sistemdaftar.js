@@ -4,7 +4,7 @@ import config from "../../config.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 function getRegistrationContextInfo() {
-  const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+  const saluranId = config.saluran?.id || "@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
   return {

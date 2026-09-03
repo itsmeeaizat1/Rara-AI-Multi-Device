@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
 
     const apps = data.data.slice(0, 15);
 
-    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let caption = `📱 *Hasil pencarian dari ${text}*\n\n`;

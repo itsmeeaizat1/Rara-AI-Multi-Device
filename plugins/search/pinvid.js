@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
         albumErr.message,
       );
 
-      const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+      const saluranId = config.saluran?.id || "@newsletter";
       const saluranName =
         config.saluran?.name || config.bot?.name || "Nova-AI";
 
