@@ -116,6 +116,7 @@
 | UnblurImage | `api.unblurimage.ai` / `unblurimage.ai` | unblurimg | ✅ Free |
 | UnWatermark | `api.unwatermark.ai` | unwatermark | ✅ Free |
 | AIEnhancer | `aienhancer.ai` | ai-image upscaler | ✅ Free |
+| BeautyPlus Enhancer | `www.beautyplus.com/core-api/v2/img-enhancer` + `strategy.pixocial.com/upload/policy` | remini (AI enhance: hd/face/16k/product/text/concert) | ✅ Free (guest flow, signature x-sign HMAC) |
 | Carbon | `carbon.now.sh` | carbon code image | ✅ Free |
 | LaTeX | `latex.codecogs.com` | latex render | ✅ Free |
 | QuickChart | `quickchart.io` | chart QR, barcode | ✅ Free |
