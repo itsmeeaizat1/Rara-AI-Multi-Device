@@ -1,13 +1,56 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { exec } from "child_process";
 import { promisify } from "util";
-import { chat as geminiChat } from "../scraper/geminiVision.js";
+// FIX: dulu import { chat as geminiChat } — "chat" TIDAK diexport geminiVision.js
+// (cuma GeminiVision) → geminiChat undefined → TypeError tiap respon → autoai
+// cuma pernah jawab fallback. Sekarang: teks pakai API Ikyy (free no-key,
+// terverifikasi hidup — sama kayak nova-greeting), gambar pakai GeminiVision
+// kalau API key diset, kalau gak ada → tetap jalan via Ikky teks.
+import { GeminiVision } from "../scraper/geminiVision.js";
 import { getDatabase } from "./nova-database.js";
 import { pinterest } from "btch-downloader";
 import config from "../../config.js";
 import axios from "axios";
 import path from "path";
 import fs from "fs";
+// ── Engine chat: API Ikyy (free, no-key) ──────────────────────────────
+// https://api.ikyyxd.my.id/ai/gemini?text=... → { status: true, result }
+// Terverifikasi hidup 2026-09-03 (dipakai juga nova-greeting.js).
+const IKYY_AI_URL = "https://api.ikyyxd.my.id/ai/gemini";
+const IKYY_TIMEOUT_MS = 25000;
+const IKYY_MAX_HISTORY = 6; // 6 pesan terakhir biar prompt gak kepanjangan
+
+async function ikyyChat({ message, instruction, history }) {
+  let prompt = "";
+  if (instruction) prompt += `${instruction}\n\n`;
+  const recent = (history || []).slice(-IKYY_MAX_HISTORY);
+  if (recent.length) {
+    prompt += "Riwayat percakapan singkat:\n";
+    for (const h of recent) {
+      prompt += `${h.role === "user" ? "User" : "Kamu"}: ${String(h.content || "").slice(0, 300)}\n`;
+    }
+    prompt += "\n";
+  }
+  prompt += `User: ${message}\n\nBalas langsung isi jawabannya (TANPA prefix "Kamu:" atau "Jawaban:"), bahasa Indonesia santai kayak chat WhatsApp.`;
+
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), IKYY_TIMEOUT_MS);
+  try {
+    const res = await fetch(
+      `${IKYY_AI_URL}?text=${encodeURIComponent(prompt)}`,
+      { signal: ctrl.signal, headers: { "User-Agent": "NovaBot/1.0" } },
+    );
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json?.status !== true || !json.result) return null;
+    return String(json.result).trim();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const userCooldowns = new Map();
 const COOLDOWN_MS = 3000;
 
@@ -1007,13 +1050,27 @@ async function handleAutoAI(m, sock) {
 
     let aiResponse = "";
     try {
-      const result = await geminiChat({
-        message: fullMessage,
-        instruction: fullInstruction,
-        imageBuffer,
-        history,
-      });
-      aiResponse = result.text || getFallbackResponse();
+      // gambar → GeminiVision (khusus kalau API key diset), gagal/teks → Ikky
+      if (imageBuffer) {
+        try {
+          const v = await GeminiVision({
+            imageBuffer,
+            prompt: fullMessage,
+            instruction: fullInstruction,
+          });
+          if (v?.status && v?.text) aiResponse = v.text;
+        } catch (e) {
+          console.log("[AutoAI] GeminiVision gagal, fallback Ikyy:", e.message);
+        }
+      }
+      if (!aiResponse) {
+        const text = await ikyyChat({
+          message: fullMessage,
+          instruction: fullInstruction,
+          history,
+        });
+        aiResponse = text || getFallbackResponse();
+      }
     } catch (apiError) {
       console.error("[AutoAI API Error]", apiError.message);
       aiResponse = getFallbackResponse();
@@ -1145,10 +1202,41 @@ async function handleAutoAI(m, sock) {
   }
 }
 
+// FIX: dulu cuma baca config per-grup — mode .autoai global on GAK PERNAH
+// aktif. Sekarang: config grup (enabled:false = opt-out eksplisit) menang,
+// kalau gak ada → fallback ke global. Signature: chatId STRING (m.chat),
+// handler dulu kirim object m → selalu false.
 function isAutoAIEnabled(chatId) {
+  if (!chatId || typeof chatId !== "string") return false;
   const db = getDatabase();
-  if (!db?.db?.data?.autoai) return false;
-  return db.db.data.autoai[chatId]?.enabled || false;
+  if (!db?.db?.data) return false;
+  const cfg = db.db.data.autoai?.[chatId];
+  if (cfg && typeof cfg.enabled !== "undefined") return !!cfg.enabled;
+  return !!db.db.data.autoai_global?.enabled;
+}
+
+// Desain .autoai (AFK mode): saat autoai aktif, command non-owner diblokir
+// kecuali cfg.enableCommands (default false) — dipanggil dari handler.
+// Owner & command .autoai sendiri selalu lolos (biar bisa .autoai off).
+function isCommandBlockedByAutoAI(m) {
+  if (!m?.isCommand) return false;
+  if (m.isOwner || m.fromMe) return false;
+  if ((m.command || "").toLowerCase() === "autoai") return false;
+  const db = getDatabase();
+  if (!db?.db?.data) return false;
+  const cfg = db.db.data.autoai?.[m.chat];
+  let enabled, enableCommands;
+  if (cfg && typeof cfg.enabled !== "undefined") {
+    enabled = !!cfg.enabled;
+    enableCommands = !!cfg.enableCommands;
+  } else if (db.db.data.autoai_global?.enabled) {
+    enabled = true;
+    enableCommands = false;
+  } else {
+    return false;
+  }
+  if (!enabled || enableCommands) return false;
+  return true;
 }
 
 function getAutoAICharacter(chatId) {
@@ -1165,4 +1253,4 @@ function clearUserSession(chatId, senderNumber) {
   return true;
 }
 
-export { handleAutoAI, isAutoAIEnabled, getAutoAICharacter, clearUserSession };
+export { handleAutoAI, isAutoAIEnabled, isCommandBlockedByAutoAI, ikyyChat, getAutoAICharacter, clearUserSession };
