@@ -20,6 +20,7 @@ const DEFAULT_PROVIDERS = {
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 1024 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || data?.choices?.[0]?.message?.reasoning || "",
     supportsVision: true,
+    imageGen: { model: "gpt-image-1", endpoint: "https://api.openai.com/v1/images/generations", format: "openai" },
     supportsSystem: true,
   },
   gemini: {
@@ -50,6 +51,8 @@ const DEFAULT_PROVIDERS = {
     },
     parseResponse: (data) => data?.candidates?.[0]?.content?.parts?.[0]?.text || "",
     supportsVision: true,
+    // 🔹 IMAGE GEN (nano banana) — generate gambar via API yang sama
+    imageGen: { model: "gemini-2.5-flash-image", format: "gemini" },
     supportsSystem: true,
   },
   anthropic: {
@@ -80,7 +83,7 @@ const DEFAULT_PROVIDERS = {
     authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 1024 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
-    supportsVision: false,
+    supportsVision: false, // Groq udah nyabut semua model vision (llama-4) — teks doang
     supportsSystem: true,
   },
   together: {
@@ -376,13 +379,15 @@ const DEFAULT_PROVIDERS = {
   // ═══════════════════════════════════════════════════════
   xai: {
     name: "xAI (Grok)",
-    models: ["grok-3", "grok-3-mini", "grok-2", "grok-2-mini"],
+    models: ["grok-3", "grok-3-mini", "grok-2", "grok-2-mini", "grok-2-vision-1212"],
     defaultModel: "grok-3",
     chatEndpoint: "https://api.x.ai/v1/chat/completions",
     authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 1024 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
-    supportsVision: false,
+    supportsVision: true,
+    imageGen: { model: "grok-2-image-1212", endpoint: "https://api.x.ai/v1/images/generations", format: "openai" },
+    visionModel: "grok-2-vision-1212",
     supportsSystem: true,
   },
   qwen: {
@@ -570,6 +575,104 @@ function normalizeMessages(messages, systemPrompt) {
 }
 
 /**
+ * callImageGen — GENERATE GAMBAR via provider yang support (AI image).
+ * Provider support: gemini (nano banana, key google aktif), openai
+ * (gpt-image-1), xai/grok (grok-2-image). Dipakai fitur AI satuan
+ * (.gemini/.openai/.grok "buat gambar ..."), tool genimage .novaai,
+ * dan action aiimage .autonovaai/autoflow.
+ * @returns {{base64:string, mimeType:string}}
+ */
+export async function callImageGen(providerKey, prompt, opts = {}) {
+  const provider = resolveProvider(providerKey, {});
+  const gen = provider?.imageGen;
+  if (!gen) throw new Error(`AI "${providerKey || "-"}" tidak support generate gambar — coba .gemini/.openai/.grok`);
+  const apiKey = String(opts.apiKey || resolveApiKeyForProvider(providerKey, opts.aiConfig || {}) || "").trim();
+  if (!apiKey) throw new Error(`API key "${providerKey}" belum diisi — isi di src/lib/apikey/ai-providers.json`);
+
+  const promptText = String(prompt || "").trim() || "sesuatu yang menarik dan indah";
+
+  // fallback FREE TANPA KEY: kalau provider-nya error (key mati/kosong/
+  // rate-limit), gambar tetap keluar via Pollinations (flux, free) —
+  // fitur wajib jalan walau semua key AI mati.
+  async function freeFallback() {
+    // rasio ASPECT (1:1, 16:9, dst) → ukuran piksel. JANGAN parseInt ratio
+    // langsung ("1:1" → 1x1 pixel, hasilnya gambar 1px!)
+    const RATIO_PX = {
+      "1:1": [1024, 1024], "16:9": [1280, 720], "9:16": [720, 1280],
+      "4:3": [1024, 768], "3:4": [768, 1024], "3:2": [1200, 800], "2:3": [800, 1200],
+    };
+    const [w, h] = RATIO_PX[String(opts.ratio || "1:1")] || [1024, 1024];
+    // pollinations kadang balikin placeholder kecil pas antri — retry 3x
+    // dengan seed beda + threshold ukuran minimal gambar beneran
+    let lastErr = "";
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const seed = Math.floor(Math.random() * 1e9);
+        const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText.slice(0, 400))}?width=${w}&height=${h}&nologo=true&model=flux&seed=${seed}`;
+        const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+        if (!res.ok) { lastErr = `pollinations ${res.status}`; continue; }
+        const buf = Buffer.from(await res.arrayBuffer());
+        // validasi gambar asli: magic bytes JPEG/PNG/WebP (bukan placeholder/error page)
+        const magic = buf.slice(0, 4).toString("hex");
+        const isImg = magic.startsWith("ffd8ff") || magic.startsWith("89504e47") || magic.startsWith("5249464");
+        if (!isImg || buf.length < 5000) { lastErr = `hasil bukan gambar valid (${buf.length}B)`; continue; }
+        return { base64: buf.toString("base64"), mimeType: res.headers.get("content-type") || "image/jpeg", via: "pollinations (free)" };
+      } catch (e) { lastErr = e.message.slice(0, 80); }
+    }
+    throw new Error(`Gagal generate gambar free (${lastErr})`);
+  }
+
+  if (gen.format === "gemini") {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${gen.model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: promptText }] }],
+        generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
+      }),
+    });
+    if (!res.ok) {
+      console.log(`[ImageGen] ${providerKey} gagal (${res.status}) → fallback Pollinations (free tanpa key)`);
+      return await freeFallback();
+    }
+    const data = await res.json().catch(() => ({}));
+    const parts = data?.candidates?.[0]?.content?.parts || [];
+    const imgPart = parts.find((p) => p.inlineData?.data || p.inline_data?.data);
+    if (!imgPart) {
+      const note = parts.find((p) => p.text)?.text;
+      throw new Error("AI tidak menghasilkan gambar" + (note ? ` (${String(note).slice(0, 100)})` : ""));
+    }
+    return {
+      base64: imgPart.inlineData?.data || imgPart.inline_data?.data,
+      mimeType: imgPart.inlineData?.mimeType || imgPart.inline_data?.mime_type || "image/png",
+      via: providerKey,
+    };
+  }
+
+  // format openai-compatible (openai gpt-image-1, xai grok-2-image, dll)
+  const res = await fetch(gen.endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: gen.model, prompt: promptText, n: 1, ...(gen.extra || {}) }),
+  });
+  if (!res.ok) {
+    console.log(`[ImageGen] ${providerKey} gagal (${res.status}) → fallback Pollinations (free tanpa key)`);
+    return await freeFallback();
+  }
+  const data = await res.json().catch(() => ({}));
+  const item = data?.data?.[0];
+  if (item?.b64_json) return { base64: item.b64_json, mimeType: "image/png", via: providerKey };
+  if (item?.url) {
+    const imgRes = await fetch(item.url);
+    if (!imgRes.ok) throw new Error(`Gagal unduh hasil gambar (${imgRes.status})`);
+    const buf = Buffer.from(await imgRes.arrayBuffer());
+    return { base64: buf.toString("base64"), mimeType: imgRes.headers.get("content-type") || "image/png" };
+  }
+  throw new Error("Respon image gen tidak dikenal");
+}
+
+/**
  * Resolve API key per provider — cek global key, apikeys.json, dan aiConfig
  */
 function resolveApiKeyForProvider(providerKey, aiConfig = {}) {
@@ -694,6 +797,10 @@ async function callAI(firstArg, secondArg) {
     // Language preference not set, continue normally
   }
 
+  // 🔹 VISION: deteksi gambar duluan — request gambar GAK BOLEH turun ke
+  // provider teks (ikyy dll), gambarnya bakal hilang diam-diam.
+  const hasImage = (messages || []).some((x) => x.image?.data);
+
   // ═══ AUTO-FALLBACK KE IKYY (free, no-key) ═══
   // Fitur AI otomatis (autoconflict, autosmartmod, autosmartwelcome,
   // autosummary, autocontent, autopredict, dll) manggil callAI dengan
@@ -709,7 +816,8 @@ async function callAI(firstArg, secondArg) {
     !effectiveApiKey &&
     !apiEndpoint &&
     provider.method !== "GET" &&
-    providerKey !== "ikyy_gemini"
+    providerKey !== "ikyy_gemini" &&
+    !hasImage
   ) {
     const ikyyFallback = resolveProvider("ikyy_gemini", {});
     if (ikyyFallback) {
@@ -720,7 +828,41 @@ async function callAI(firstArg, secondArg) {
   }
 
   const effectiveModel = String(model || activeProvider.defaultModel);
-  const normalizedMessages = normalizeMessages(messages, systemPrompt && activeProvider.supportsSystem ? systemPrompt : undefined);
+  let normalizedMessages = normalizeMessages(messages, systemPrompt && activeProvider.supportsSystem ? systemPrompt : undefined);
+
+  // 🔹 VISION: pesan bawa gambar (.image base64) → susun format konten sesuai
+  // arsitektur provider. gemini: buildBody-nya udah baca m.image (inline_data
+  // native) — biarkan apa adanya. anthropic: image block base64. lainnya
+  // (openai-compat: groq/xai/mistral/dll): array image_url data URI.
+  if (hasImage) {
+    if (activeProvider.method === "GET" || activeProviderKey.startsWith("ikyy")) {
+      // provider GET (ikyy dll) gak bisa terima gambar — JANGAN diem-diem
+      // buang gambarnya; kasih error jelas biar pemanggil tahu harus pindah.
+      throw new Error(`AI "${activeProviderKey}" tidak support gambar — pakai provider vision (.gemini/.openai/.claude/.groq/.grok)`);
+    }
+    if (providerKey !== "gemini") {
+      normalizedMessages = normalizedMessages.map((x) => {
+        if (!x.image?.data) return x;
+        const mime = x.image.mimeType || "image/jpeg";
+        if (activeProviderKey === "anthropic") {
+          return {
+            role: x.role,
+            content: [
+              { type: "text", text: String(x.content || "") },
+              { type: "image", source: { type: "base64", media_type: mime, data: x.image.data } },
+            ],
+          };
+        }
+        return {
+          role: x.role,
+          content: [
+            { type: "text", text: String(x.content || "") },
+            { type: "image_url", image_url: { url: `data:${mime};base64,${x.image.data}` } },
+          ],
+        };
+      });
+    }
+  }
 
   // ═══ RESILIENCE: provider utama gagal → retry sekali via IkyyXD Gemini ═══
   // Endpoint custom (mis. Tio AI) suka mati diam-diam → fitur AI otomatis
@@ -752,13 +894,18 @@ async function callAI(firstArg, secondArg) {
     }
 
     const body2 = prov.buildBody({ model: effectiveModel, messages: normalizedMessages, systemPrompt });
+    // gemini & sejenisnya bangun body sendiri (generationConfig) — inject
+    // temperature/max_tokens top-level bikin 400 "Unknown name temperature"
+    const finalBody = body2?.generationConfig || body2?.systemInstruction
+      ? body2
+      : { ...body2, temperature, max_tokens: maxTokens };
     const res = await fetch(finalUrl2, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         ...(effectiveApiKey ? prov.authHeader(effectiveApiKey) : prov.authHeader("")),
       },
-      body: JSON.stringify({ ...body2, temperature, max_tokens: maxTokens }),
+      body: JSON.stringify(finalBody),
     });
     if (!res.ok) {
       const text = await res.text();
@@ -774,7 +921,7 @@ async function callAI(firstArg, secondArg) {
     return await requestOnce(activeProvider, activeProviderKey);
   } catch (mainErr) {
     // udah di Ikyy? jangan fallback ke dirinya sendiri
-    if (activeProviderKey === "ikyy_gemini") throw mainErr;
+    if (activeProviderKey === "ikyy_gemini" || hasImage) throw mainErr; // ada gambar → jangan fallback ke provider teks (gambar bakal hilang diam2)
     const ikyyRetry = resolveProvider("ikyy_gemini", {});
     if (!ikyyRetry) throw mainErr;
     console.log(`[AI-Service] ${activeProviderKey} gagal (${mainErr.message.slice(0, 100)}) → fallback IkyyXD Gemini`);

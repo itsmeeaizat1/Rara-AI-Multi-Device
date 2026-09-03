@@ -214,7 +214,8 @@ async function handler(m, { sock, conn, config, db }) {
       approvalon: '.novaai aktifkan approval', approvaloff: '.novaai matikan approval',
       hidetag: '.novaai tag semua [pesan]', tagadmin: '.novaai tag admin [pesan]',
       poll: '.novaai poll [pertanyaan | opsi1, opsi2]', delmsg: '.novaai hapus pesan (reply)',
-      leavegc: '.novaai keluar grup (owner only)'
+      leavegc: '.novaai keluar grup (owner only)',
+      genimage: '.novaai buatkan gambar kucing astronot'
     };
     let out = '╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n│\n';
     out += '│ 🧠 AI Agent — ' + Object.keys(TOOLS).length + ' perintah grup\n';
