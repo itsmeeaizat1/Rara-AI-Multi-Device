@@ -53,29 +53,36 @@ const pluginConfig = {
 // ============================================================
 // SETTINGS
 // ============================================================
+const DEFAULT_AUTOSUMMARY = {
+  enabled: false,
+  mode: "full", // full or brief
+  sendTime: "22:00", // default 22:00 WIB
+  sendTo: "group", // group or owner
+  activeGroups: [], // empty = all groups
+  maxMessagesPerGroup: 500, // max messages to buffer per group per day
+  stats: {
+    totalSummaries: 0,
+    totalMessagesSummarized: 0,
+    totalTopics: 0,
+    totalAI: 0,
+    totalFallback: 0,
+    lastSummary: null,
+    byGroup: {}, // { jid: { count, lastSummary, messages } }
+  },
+  history: [], // last 14 summaries
+};
+
 function getSettings() {
   const db = getDatabase();
   if (!db.db.data.automation) db.db.data.automation = {};
   if (!db.db.data.automation.autoSummary) {
-    db.db.data.automation.autoSummary = {
-      enabled: false,
-      mode: "full", // full or brief
-      sendTime: "22:00", // default 22:00 WIB
-      sendTo: "group", // group or owner
-      activeGroups: [], // empty = all groups
-      maxMessagesPerGroup: 500, // max messages to buffer per group per day
-      stats: {
-        totalSummaries: 0,
-        totalMessagesSummarized: 0,
-        totalTopics: 0,
-        totalAI: 0,
-        totalFallback: 0,
-        lastSummary: null,
-        byGroup: {}, // { jid: { count, lastSummary, messages } }
-      },
-      history: [], // last 14 summaries
-    };
+    db.db.data.automation.autoSummary = DEFAULT_AUTOSUMMARY;
     db.db.write();
+  } else {
+    // SCHEMA EVOLUTION: settings lama (persist sebelum field baru ada)
+    // di-merge dengan defaults biar gak TypeError "reading 'push'/undefined"
+    // saat fitur jalan. Field user yang udah ada gak ketimpa.
+    db.db.data.automation.autoSummary = { ...DEFAULT_AUTOSUMMARY, ...db.db.data.automation.autoSummary };
   }
   return db.db.data.automation.autoSummary;
 }
