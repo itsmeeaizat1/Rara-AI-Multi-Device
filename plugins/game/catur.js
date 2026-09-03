@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Catur — Multiplayer Chess System (28 sub-commands)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import fs from "fs";
 import path from "path";
@@ -82,7 +82,12 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (caturData[chatId]) return m.reply(claraWrap("catur", "Masih ada game di chat ini.", "info"));
       caturData[chatId] = { player1: sender, player2: lawan, turn: "white", board: papanAwal(), status: "pending", winner: null, history: [] };
       saveCaturData(caturData);
-      return m.reply("♟️ Tantangan dikirim ke @" + lawan.split("@")[0] + "!\n\n📌 Balas dengan .caturterima untuk main\n📌 .caturhelp untuk panduan", { mentions: [lawan] });
+      return m.reply(novaBox("Catur", [
+        "Tantangan dikirim ke @" + lawan.split("@")[0],
+        "---",
+        "Balas dengan .caturterima untuk main",
+        ".caturhelp untuk panduan",
+      ]), { mentions: [lawan] });
     }
 
     // ═══ CATURTERIMA ═══
@@ -158,15 +163,44 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     // ═══ CATURHELP ═══
     if (command === "caturhelp") {
-      let t = "♟️ *Panduan Catur*\n";
-      t += "Bermain catur langsung di grup!\n\n";
-      t += "🎮 Memulai:\n.catur @tag — Tantang pemain\n.caturterima — Terima tantangan\n.caturtolak — Tolak tantangan\n\n";
-      t += "⚙️ Kontrol:\n.caturlangkah e2 e4 — Pindah bidak\n.caturpapan — Lihat papan\n.caturmenyerah — Menyerah\n.caturdraw — Ajukan seri\n.caturskip — Lewati giliran\n\n";
-      t += "📊 Skor:\n.caturnilai — Skormu\n.caturrank — Ranking\n.caturtop10 — Top 10\n.caturskorreset — Reset skor (owner)\n\n";
-      t += "♟️ Info:\n.caturstatus — Status game\n.caturgiliran — Siapa giliran\n.caturhistory — Riwayat langkah\n.caturanalisa — Langkah terakhir\n.caturlawan — Lihat lawan\n\n";
-      t += "⏱️ Timer:\n.caturtimer — Timer giliran (3 min)\n.caturnotif — Notif AFK\n.caturafk — Batal karena AFK\n\n";
-      t += "📌 Lainnya:\n.caturrematch — Main ulang\n.caturhapus — Hapus game (admin)\n.caturreset — Reset semua (owner)";
-      return m.reply(t);
+      return m.reply(novaBox("Panduan Catur", [
+        "Bermain catur langsung di grup!",
+        "---",
+        { sub: "Memulai" },
+        ".catur @tag — Tantang pemain",
+        ".caturterima — Terima tantangan",
+        ".caturtolak — Tolak tantangan",
+        "---",
+        { sub: "Kontrol" },
+        ".caturlangkah e2 e4 — Pindah bidak",
+        ".caturpapan — Lihat papan",
+        ".caturmenyerah — Menyerah",
+        ".caturdraw — Ajukan seri",
+        ".caturskip — Lewati giliran",
+        "---",
+        { sub: "Skor" },
+        ".caturnilai — Skormu",
+        ".caturrank — Ranking",
+        ".caturtop10 — Top 10",
+        ".caturskorreset — Reset skor (owner)",
+        "---",
+        { sub: "Info" },
+        ".caturstatus — Status game",
+        ".caturgiliran — Siapa giliran",
+        ".caturhistory — Riwayat langkah",
+        ".caturanalisa — Langkah terakhir",
+        ".caturlawan — Lihat lawan",
+        "---",
+        { sub: "Timer" },
+        ".caturtimer — Timer giliran (3 min)",
+        ".caturnotif — Notif AFK",
+        ".caturafk — Batal karena AFK",
+        "---",
+        { sub: "Lainnya" },
+        ".caturrematch — Main ulang",
+        ".caturhapus — Hapus game (admin)",
+        ".caturreset — Reset semua (owner)",
+      ]));
     }
 
     // ═══ CATURRANK ═══
