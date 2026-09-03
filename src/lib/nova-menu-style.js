@@ -238,6 +238,42 @@ function bracketBox(emoji, label, lines = []) {
   return buildBox(`${emojiStr}${toSC(label)}`, lines);
 }
 
+// getAccessSymbols — symbol akses fitur dari config plugin (shared, request owner):
+// Ⓤ User (semua user), Ⓕ Free (quota gratis), Ⓟ Premium, Ⓞ Owner,
+// Ⓛ Limit (akses fitur — BUKAN energi game), ʀ Register (wajib .daftar — RPG), Ⓐ Admin, Ⓖ Grup
+function getAccessSymbols(cfg) {
+  if (!cfg) return "";
+  // Khusus owner → satu symbol saja
+  if (cfg.isOwner) return " Ⓞ";
+  const symbols = [];
+  if (cfg.isPremium) {
+    // Khusus premium
+    symbols.push("Ⓟ");
+  } else if ((cfg.energi || 0) > 0) {
+    // Berbiaya — BEDA konteks (owner: energi itu cuma buat game, limit itu akses fitur)
+    const gameCtx = ["rpg", "game"].includes(String(cfg.category || ""));
+    if (gameCtx) {
+      // Game (rpg/game): potongnya ENERGI game — bukan limit akses fitur
+      symbols.push("Ⓤ");
+    } else {
+      // Fitur (ai/download/tools/dll): potongnya LIMIT akses fitur
+      // → free dapat quota gratis (Ⓕ), premium unlimited (Ⓟ), pakai limit (Ⓛ)
+      symbols.push("Ⓕ", "Ⓟ", "Ⓤ");
+    }
+  } else {
+    // Fitur umum tanpa biaya: semua user bisa (catatan: config.limit itu
+    // default 1 di nova-plugins.js & gak pernah dipotong — jadi diabaikan)
+    symbols.push("Ⓤ");
+  }
+  symbols.push("Ⓞ"); // owner juga bisa pakai semua fitur
+  // Ⓛ (limit akses fitur) — setelah Ⓞ, sesuai contoh owner (F P U O → +L)
+  if ((cfg.energi || 0) > 0 && !["rpg", "game"].includes(String(cfg.category || ""))) symbols.push("Ⓛ");
+  if (String(cfg.category || "") === "rpg") symbols.push("ʀ"); // wajib .daftar dulu
+  if (cfg.isAdmin) symbols.push("Ⓐ");
+  if (cfg.isGroup && !cfg.isPrivate) symbols.push("Ⓖ");
+  return " " + symbols.join(" ");
+}
+
 // commandListLine: baris command di list menu (allmenu/allmenucategory)
 function commandListLine(prefix, cmdName, usage = "", symbols = "") {
   const paramMatches = usage ? String(usage).match(/<[^>]+>/g) : null;
@@ -646,6 +682,7 @@ export {
   novaInfoBox,
   novaMenuLayout,
   novaInfoSections,
+  getAccessSymbols,
   novaReply,
   buildBox, novaCaption,
   botHeader, botSignature, sectionBox,

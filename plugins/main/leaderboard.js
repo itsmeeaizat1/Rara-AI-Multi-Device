@@ -15,7 +15,7 @@ const pluginConfig = {
   name: "leaderboard",
   alias: [
     "leaderboard", "leaderboardrpg", "lbrpg", "toprpg", "papanrpg",
-    "topkoin", "topexp", "topenergi", "toplevel", "topbalance",
+    "topkoin", "topexp", "toplimit", "topenergi", "toplevel", "topbalance",
     "topgold", "topgems", "toppvp", "topboss", "topdungeon",
     "topcinta", "toplove", "topcouple",
     "aktifitas", "aktif", "topaktif", "activity"
@@ -50,8 +50,8 @@ function getMode(cmd, args) {
     return 'rpg:gold'
   if (c.includes('topexp') || c.includes('xp') || c.includes('toplevel'))
     return 'rpg:exp'
-  if (c.includes('energi') || c.includes('energy'))
-    return 'rpg:energi'
+  if (c.includes('limit') || c.includes('energi') || c.includes('energy'))
+    return 'limit'
   if (c.includes('toppvp') || c.includes('pvp'))
     return 'rpg:pvp'
   if (c.includes('topgems') || c.includes('gems'))
@@ -70,7 +70,7 @@ function getMode(cmd, args) {
   if (a === 'group' || a === 'grup') return 'group'
   if (['gold', 'koin', 'coin', 'bal', 'balance', 'money'].includes(a)) return 'rpg:gold'
   if (['exp', 'xp', 'level'].includes(a)) return 'rpg:exp'
-  if (['energi', 'energy'].includes(a)) return 'rpg:energi'
+  if (['limit', 'energi', 'energy'].includes(a)) return 'limit'
   if (['pvp', 'arena', 'duel'].includes(a)) return 'rpg:pvp'
   if (['gems', 'gem'].includes(a)) return 'rpg:gems'
   if (['boss', 'raid', 'bos'].includes(a)) return 'rpg:boss'
@@ -118,7 +118,9 @@ function collectRpgUsers(senderJid) {
       exp:         rpg?.exp || userData.exp || 0,
       totalExp:    rpg?.totalExp || 0,
       level:       rpg?.level || userData.level || 1,
-      energy:      rpg?.energy || userData.energi || 0,
+      // Limit akses fitur (user.energi, refill harian) — BEDA dari energi game (rpg.energy/maxEnergy)
+      // -1 = unlimited (owner/premium) → tampil 0 biar gak nyampah di ranking
+      limit:      (typeof userData.energi === 'number' && userData.energi >= 0) ? userData.energi : 0,
       gems:        rpg?.gems || 0,
       tokens:      rpg?.tokens || 0,
       // Combat stats
@@ -233,7 +235,7 @@ async function showRpgLeaderboard(m, sock, subType) {
     gems:     { title: 'TOP GLOBAL GEMS',      key: 'gems',       label: (u) => `${formatNumber(u.gems)} gems` },
     boss:     { title: 'TOP GLOBAL BOSS KILL', key: 'bossKills',  label: (u) => `${u.bossKills} boss kills` },
     dungeon:  { title: 'TOP GLOBAL DUNGEON',  key: 'dungeonClears', label: (u) => `${u.dungeonClears} dungeon clears` },
-    energi:   { title: 'TOP GLOBAL ENERGI',    key: 'energy',     label: (u) => `${formatNumber(u.energy)} energi` },
+    limit:    { title: 'TOP GLOBAL LIMIT',     key: 'limit',      label: (u) => `${formatNumber(u.limit)} limit` },
   }
 
   const field = FIELDS[subType] || FIELDS['gold']
@@ -405,6 +407,7 @@ async function handler(m, { sock, config: cfg }) {
 
   if (mode === 'menu') return showMenu(m, sock)
   if (mode === 'group') return showGroupLeaderboard(m, sock)
+  if (mode === 'limit') return showRpgLeaderboard(m, sock, 'limit')
 
   // RPG subtypes
   const rpgSub = mode.split(':')[1] || 'overview'

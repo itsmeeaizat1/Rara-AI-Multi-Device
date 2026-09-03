@@ -11,6 +11,7 @@ import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova
 import {
   getCommandsByCategory,
   getCategories,
+  getPlugin,
 } from "../../src/lib/nova-plugins.js";
 import fs from "fs";
 import os from "os";
@@ -18,7 +19,7 @@ import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, closeBoxRight, novaBox, novaMenuLayout } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, closeBoxRight, novaBox, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
 import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
@@ -99,10 +100,12 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const info = menuInfo;
 
     // ── Categories ──
+    // Command + symbol akses di kanan (Ⓕ free / Ⓟ premium / Ⓞ owner / dst)
+    const sym = (cmd) => getAccessSymbols(getPlugin(cmd)?.config);
     const menuCats = [
-      { name: "Menu", commands: ["menu", "allmenu", "allmenucategory", "tanyaai"] },
-      { name: "Info", commands: ["info", "owner", "rules", "donasi"] },
-      { name: "Store", commands: ["sewa", "buyprem"] },
+      { name: "Menu", commands: ["menu", "allmenu", "allmenucategory", "tanyaai"].map((cmd) => ({ name: cmd, symbols: sym(cmd) })) },
+      { name: "Info", commands: ["info", "owner", "rules", "donasi"].map((cmd) => ({ name: cmd, symbols: sym(cmd) })) },
+      { name: "Store", commands: ["sewa", "buyprem"].map((cmd) => ({ name: cmd, symbols: sym(cmd) })) },
     ];
 
     const intro = aiIntro || `${getTimeGreeting()}!`; // Pengenalan AI — berubah tiap menu dimuat
