@@ -85,6 +85,16 @@ async function messageHandler(msg, sock) {
 
   const db = getDatabase();
 
+  // === KILL-SWITCH GLOBAL: .bot off → bot TOTAL silent ===
+  // Di-cek di titik PALING AWAL — sebelum stat, auto-flow, anti, dan semua fitur.
+  // Satu-satunya yang lolos: command .bot (biar bisa .bot on / cek status).
+  // State disimpan di settings.botPower oleh plugins/owner/bot.js (owner only).
+  try {
+    if (db.db?.data?.settings?.botPower === false) {
+      if (String(m.command || "").toLowerCase() !== "bot") return; // diem total — gak ada respon apa pun
+    }
+  } catch {}
+
   // Statistik realtime: tiap pesan masuk dihitung (semua user, termasuk owner)
   try { db.incrementStat("messagesReceived"); } catch {}
 
