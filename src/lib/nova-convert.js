@@ -114,15 +114,15 @@ export function getConvertSession(m) {
 // Dipanggil plugin download SETELAH media terkirim.
 // mediaUrl = link CDN langsung (bisa di-download ulang), ATAU
 // buffer = media yang barusan diunduh (disimpan ke temp file).
-// Toggle owner: .convertoffer on/off — default ON.
+// Toggle owner: .convertoffer on/off — default OFF (harus diaktifkan owner manual).
 // Kalau OFF, tawaran convert gak dikirim (session tetep kebikin,
 // jadi .convert <format> tetap bisa dipakai manual).
 export function isConvertOfferEnabled() {
   try {
     const db = getDatabase();
-    return db.setting("convertOffer") ?? true;
+    return db.setting("convertOffer") ?? false;
   } catch {
-    return true;
+    return false;
   }
 }
 
