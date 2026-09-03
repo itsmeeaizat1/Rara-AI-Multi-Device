@@ -3,6 +3,7 @@
 // Intercept-nya ada di paling awal src/handler.js — sebelum semua fitur, anti, auto, dan statistik.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import config from "../../config.js";
 
 const pluginConfig = {
     name: "bot",
@@ -22,7 +23,8 @@ const pluginConfig = {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Broadcast perubahan status ke semua user terdaftar (DM) + semua grup yang di-join.
+// Broadcast perubahan status ke semua grup yang di-join + channel utama (kalo bot admin di sana).
+// DM user sengaja GAK dikirimin — broadcast massal DM paling berisiko bikin nomor keban WhatsApp.
 // Fire-and-forget — owner udah dapet konfirmasi duluan, gak perlu nunggu selesai.
 async function broadcastStatusChange(sock, db, isOff) {
     const text = isOff
@@ -40,17 +42,24 @@ async function broadcastStatusChange(sock, db, isOff) {
             'Terima kasih sudah menunggu.',
         ].join('\n')
 
-    // kumpulin target: DM user udah daftar + semua grup
+    // kumpulin target: semua grup yang di-join
     const targets = new Set()
-    try {
-        const users = db.db?.data?.users || {}
-        for (const [jid, u] of Object.entries(users)) {
-            if (u?.isRegistered && jid.endsWith('@s.whatsapp.net')) targets.add(jid)
-        }
-    } catch {}
     try {
         for (const jid of Object.keys(db.getAllGroups() || {})) targets.add(jid)
     } catch {}
+
+    // channel utama (config.saluran.id via .setsaluran) — CUMA kalo bot admin di sana
+    // biar gak kirim ke channel orang lain / gak kena error akses
+    const channelId = config.saluran?.id || ''
+    if (channelId && channelId !== '@newsletter') {
+        try {
+            const meta = await sock.newsletterMetadata('jid', channelId).catch(() => null)
+            if (!meta || meta.viewer_role === 'ADMIN' || meta.viewer_role === 'OWNER') {
+                targets.add(channelId) // admin (atau metadata gak kebaca) → aman kirim
+            }
+            // bukan admin → skip diam-diam, gak ada risiko kena flag
+        } catch {}
+    }
 
     let ok = 0
     let fail = 0
@@ -95,13 +104,8 @@ async function handler(m, { sock }) {
         await m.react("🐣")
 
         // hitung target broadcast buat info ke owner (kirimnya di background)
-        let dmCount = 0
-        let grupCount = 0
-        try {
-            const users = db.db?.data?.users || {}
-            dmCount = Object.values(users).filter((u) => u?.isRegistered).length
-            grupCount = Object.keys(db.getAllGroups() || {}).length
-        } catch {}
+        const grupCount = (() => { try { return Object.keys(db.getAllGroups() || {}).length } catch { return 0 } })()
+        const channelName = config.saluran?.name || null
 
         // fire-and-forget — jangan bikin owner nunggu ratusan pesan keluar
         broadcastStatusChange(sock, db, true).catch(() => {})
@@ -112,8 +116,9 @@ async function handler(m, { sock }) {
             'Bot gak akan merespon fitur apa pun',
             '(gak ada reply, gak ada reaksi, gak ada auto).',
             '',
-            `Notifikasi dikirim ke *${dmCount}* user daftar`,
-            `+ *${grupCount}* grup yang di-join.`,
+            `Notifikasi dikirim ke *${grupCount}* grup`,
+            `+ channel ${channelName ? '*' + channelName + '*' : '-'} (bot admin).`,
+            'DM user gak dikirimin — biar nomor aman dari banned.',
             '',
             'Satu-satunya command yang hidup: *.bot on*',
         ].join('\n')))
@@ -129,21 +134,16 @@ async function handler(m, { sock }) {
         await m.react("🐣")
 
         // hitung target broadcast buat info ke owner
-        let dmCount = 0
-        let grupCount = 0
-        try {
-            const users = db.db?.data?.users || {}
-            dmCount = Object.values(users).filter((u) => u?.isRegistered).length
-            grupCount = Object.keys(db.getAllGroups() || {}).length
-        } catch {}
+        const grupCount = (() => { try { return Object.keys(db.getAllGroups() || {}).length } catch { return 0 } })()
+        const channelName = config.saluran?.name || null
 
         broadcastStatusChange(sock, db, false).catch(() => {})
 
         return m.reply(claraWrap('Bot Dinyalakan', [
             'Bot kembali *ᴏɴ* — semua fitur aktif lagi.',
             '',
-            `Notifikasi dikirim ke *${dmCount}* user daftar`,
-            `+ *${grupCount}* grup yang di-join.`,
+            `Notifikasi dikirim ke *${grupCount}* grup`,
+            `+ channel ${channelName ? '*' + channelName + '*' : '-'} (bot admin).`,
             '',
             'Terima kasih udah nunggu 🥳',
         ].join('\n')))
