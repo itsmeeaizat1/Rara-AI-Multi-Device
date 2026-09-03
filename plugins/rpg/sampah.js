@@ -3,7 +3,8 @@
 
 import {
   ensureRpg, addExp, addGold, useEnergy, addItem,
-  checkCooldown, setCooldown, formatTime
+  checkCooldown, setCooldown, formatTime,
+  bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
@@ -82,6 +83,7 @@ async function handler(m, { sock }) {
     }
 
     addGold(m, totalGold);
+    await bumpPlayerStat(m, "sampah", "totalSampah", 1);
     addExp(m, totalExp);
 
     setCooldown(m, "lastSampah", SAMPAH_COOLDOWN);
@@ -99,7 +101,7 @@ async function handler(m, { sock }) {
 `;
     msg += `💰 Total gold: *+${totalGold}*\n`;
     msg += `✦ Total EXP: *+${totalExp}*\n`;
-    msg += `⚡ Energy: *${rpg.energy - SAMPAH_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
     
     return m.reply(msg);
   } catch (err) {

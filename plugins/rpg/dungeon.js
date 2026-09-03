@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
     if (bossBonus) msg += `│ ${bossBonus}\n`;
     msg += `│\n`;
     msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - DG_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
     msg += `╰──── • ────`;
 
     return m.reply(msg);

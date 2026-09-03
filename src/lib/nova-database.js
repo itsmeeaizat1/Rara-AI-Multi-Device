@@ -397,6 +397,14 @@ class Database {
       regSerial: data.regSerial ?? existing.regSerial ?? null,
       regEmail: data.regEmail ?? existing.regEmail ?? null,
       rpg: {
+        // ── BUG FIX: preserve keys di luar whitelist ──
+        // Dulu rpg di-rebuild dari whitelist tertutup, jadi SEMUA state plugin RPG
+        // yang disimpan via setPlayerData (survival, fishing, cooking, slotmachine,
+        // auction, warehouse, _ownerInit, dll — 34 file plugin) TERHAPUS setiap
+        // kali setUser() dipanggil. Gejala: HP survival balik full setelah hunt,
+        // streak/record game gak tersimpan, owner defaults dijalankan berulang.
+        ...(existing.rpg || {}),
+        ...(data.rpg || {}),
         // Combat
         hp: data.rpg?.hp ?? existing.rpg?.hp ?? config.rpg?.combatDefaults?.hp ?? 100,
         maxHp: data.rpg?.maxHp ?? existing.rpg?.maxHp ?? config.rpg?.combatDefaults?.maxHp ?? 100,
@@ -544,7 +552,12 @@ class Database {
     const isOwnerUser = config.isOwner?.(jid) || config.isOwner?.(cleanJid);
     if (!isOwnerUser) return null;
 
-    const user = this.getUser(jid);
+    // ── BUG FIX: dulu this.getUser(jid) di sini → getUser() memanggil
+    // ensureOwnerDefaults() lagi saat _ownerInit belum tersimpan → rekursi tak
+    // terbatas (stack overflow, tertangkap silent oleh catch di getUser), jadi
+    // owner defaults TIDAK PERNAH tersimpan dan ini terjadi di setiap operasi DB
+    // untuk owner. Baca langsung dari store tanpa lewat getUser().
+    const user = this.db.data.users[cleanJid] || null;
     const alreadyInit = user?.rpg?._ownerInit;
     if (alreadyInit) return user;
 
