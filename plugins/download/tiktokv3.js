@@ -4,6 +4,7 @@ import axios from "axios";
 import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 const pluginConfig = {
   name: "tiktokv3",
@@ -50,6 +51,7 @@ async function tiktokDownload(url) {
 }
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim() || m.text?.trim() || "";
   try {
     // Try IkyyXD tiktokv3 first
     const ikyyResult = await ikyyDl("tiktokv3", text);
@@ -65,12 +67,12 @@ async function handler(m, { sock }) {
       });
       await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption,
-        contextInfo: { forwardingScore: 0, isForwarded: false },
+        contextInfo: mediaPreviewCard({ title: ikyyResult.title || "TikTok Video", body: "TikTok V3", sourceUrl: text, thumbnailUrl: ikyyResult.thumbnail || "" }),
       }, { quoted: m });
       return;
     }
 
-    const url = m.args.join(" ").trim();
+    const url = text;
     if (!url || !url.match(/tiktok\.com|vt\.tiktok/i)) {
       return m.reply(claraWrap("tiktokv3", `Kirim URL TikTok yang valid.\n\nContoh: ${m.prefix}tiktokv3 https://www.tiktok.com/@user/video/123`, "guide"));
     }
@@ -101,10 +103,11 @@ async function handler(m, { sock }) {
       await sock.sendMessage(m.chat, {
         video: buffer,
         caption,
+        contextInfo: mediaPreviewCard({ title: r.title || r.desc || "TikTok Video", body: "TikTok V3", sourceUrl: url, thumbnailUrl: r.cover || "" }),
       }, { quoted: m });
     } else if (r.images && r.images.length > 0) {
       for (const img of r.images.slice(0, 5)) {
-        await sock.sendMessage(m.chat, { image: { url: img } }, { quoted: m });
+        await sock.sendMessage(m.chat, { image: { url: img }, contextInfo: mediaPreviewCard({ title: r.title || r.desc || "TikTok Photo", body: "TikTok V3 • Image", sourceUrl: url, thumbnailUrl: r.cover || img }) }, { quoted: m });
       }
     }
 

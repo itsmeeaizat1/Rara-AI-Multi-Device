@@ -2,6 +2,7 @@
 // igv2 — Download video/foto Instagram via IkyyXD igv2 endpoint
 // Primary: IkyyXD /download/igv2 → all-in-one | Fallback: builtin ig.js
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import instagramDownloader from "../../src/scraper/ig.js";
 import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -33,7 +34,7 @@ async function handler(m, { sock }) {
     const result = await ikyyDownload(url, "igv2");
 
     if (result?.medias?.length) {
-      const ctxInfo = { forwardingScore: 0, isForwarded: false };
+      const ctxInfo = mediaPreviewCard({ title: result.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: result.thumbnail || "" });
       await m.react("🐣");
       for (const item of result.medias) {
         if (item.type === "video") {
@@ -53,7 +54,7 @@ async function handler(m, { sock }) {
     try {
       const igResult = await instagramDownloader(url);
       if (igResult?.media?.length) {
-        const ctxInfo = { forwardingScore: 0, isForwarded: false };
+        const ctxInfo = mediaPreviewCard({ title: igResult.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: igResult.thumbnail || "" });
         await m.react("🐣");
         for (const item of igResult.media) {
           if (item.type === "video") {

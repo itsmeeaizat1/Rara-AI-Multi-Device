@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { pinterestdl } from "../../src/lib/nova-pinterest.js";
 import path from "path";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
@@ -36,7 +37,7 @@ async function handler(m, { sock }) {
     // Try IkyyXD pindl first
     const ikyyResult = await ikyyDl("pindl", url);
     if (ikyyResult?.medias?.length) {
-      const ctxInfo = { forwardingScore: 0, isForwarded: false };
+      const ctxInfo = mediaPreviewCard({ title: ikyyResult.title || "Pinterest Media", body: "Pinterest", sourceUrl: url, thumbnailUrl: ikyyResult.thumbnail || "" });
       const caption = mediaCaption({
         platformIcon: "📌", platformName: "Pinterest",
         title: ikyyResult.title || "Pinterest Media",
@@ -69,7 +70,7 @@ async function handler(m, { sock }) {
       if (media.type === "video") {
         await sock.sendMessage(m.chat, {
           video: { url: media.url }, caption: fbCaption,
-          contextInfo: { forwardingScore: 0, isForwarded: false },
+          contextInfo: mediaPreviewCard({ title: result.title || "Pinterest Media", body: "Pinterest • Video", sourceUrl: url, thumbnailUrl: result.author?.avatar || "" }),
         }, { quoted: m });
       } else if (media.type === "image") {
         if (media.url.includes("gif")) {
@@ -106,13 +107,10 @@ async function handler(m, { sock }) {
             if (fs.existsSync(mp4Path)) fs.unlinkSync(mp4Path);
           }
         } else {
-          await sock.sendMedia(m.chat, media.url, null, m, {
-            type: "image",
-            contextInfo: {
-              forwardingScore: 0,
-              isForwarded: false,
-            },
-          });
+          await sock.sendMessage(m.chat, {
+            image: { url: media.url },
+            contextInfo: mediaPreviewCard({ title: result.title || "Pinterest Media", body: "Pinterest • Image", sourceUrl: url, thumbnailUrl: result.author?.avatar || media.url }),
+          }, { quoted: m });
         }
       }
     }

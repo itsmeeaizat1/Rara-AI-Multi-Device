@@ -604,7 +604,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## 📥 All Downloader
 
-- `.alldl <url>` — All-in-one downloader dengan pilihan format interaktif
+- `.alldl <url>` — All-in-one downloader dengan pilihan format interaktif; media dikirim dengan preview card (thumbnail asli dari API sumber + judul + link — nova-media-card.js)
 - `.downloader <platform> <format> <url/keyword>` — Unified downloader (youtube, tiktok, facebook, instagram, twitter, pinterest, soundcloud, spotify, mediafire, dll); media dikirim dengan preview card (thumbnail asli dari API sumber + judul + link — nova-media-card.js)
 - Alias: `.dl`, `.download`, `.get`
 - Flow: paste link → bot detect platform → pilih format (tombol) → download
@@ -1094,9 +1094,13 @@ Download Upgrades:
 - .ytmp4v3 - download - YouTube MP4 v3 (@distube/ytdl-core direct engine)
 - .play [bitrate] <query> - search - Cari & download audio YouTube; pilihan bitrate 128/256/320 kbps (default 256); .play polos = usage pilihan bitrate; engine: yt-dlp (bitrate persis; binary via youtube-dl-exec, ikut keinstall pas npm install) → ytdl.js → IkyyXD; audio dikirim dengan preview card (thumbnail asli YT + judul + link via contextInfo.externalAdReply — nova-media-card.js)
 - .playvideo [resolusi] <query> - search - Cari & download video YouTube; pilihan resolusi 360/480/720/hd (default 480p); .playvideo polos = usage pilihan resolusi; auto-convert H.264+AAC (fix AV1 gak bisa diputar) + downscale sesuai resolusi; engine: yt-dlp (binary via youtube-dl-exec, ikut keinstall pas npm install) → IkyyXD → ytdl.js; video dikirim dengan preview card (thumbnail asli YT + judul + link via contextInfo.externalAdReply — nova-media-card.js)
+- .pindl <url> - download - Download video/foto/GIF Pinterest (IkyyXD → builtin scraper); media dikirim dengan preview card (thumbnail/avatar — nova-media-card.js)
+- .rednotedl <url> - download - Download video/foto RedNote/XiaoHongShu; media dikirim dengan preview card (nova-media-card.js)
+- .threaddl <url> - download - Download foto/video Threads; card nempel di caption (album) atau di media (single — nova-media-card.js)
+- .dailymotiondl <url> - download - Download video Dailymotion (thumbnail dikirim + MP4 via ffmpeg); preview card menyertai (nova-media-card.js)
 - .ttmp3 <url> - download - Download audio TikTok (mp3 langsung / ekstrak via ffmpeg); audio dikirim dengan preview card (cover asli TikTok + judul + link — nova-media-card.js)
 - .tiktok/.tt/.ttmp4 <url> - download - Download video/slide TikTok tanpa watermark (IkyyXD → tikwm); video dikirim dengan preview card (cover asli TikTok + judul + link via contextInfo.externalAdReply — nova-media-card.js)
-- .tiktokv3 - download - TikTok v3 (nexray API, support slideshow)
+- .tiktokv3 - download - TikTok v3 (IkyyXD → Sanka → tikwm; support slideshow foto); semua media dikirim dengan preview card (cover asli TikTok — nova-media-card.js)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
 
@@ -1322,7 +1326,7 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 
 - .dramaboxdl - download - Download video dari DramaBox via IkyyXD
 - .gdrivedl - download - Download file dari Google Drive via IkyyXD
-- .igv2 - download - Download video/foto Instagram V2 via IkyyXD (fallback: builtin ig.js)
+- .igv2 - download - Download video/foto Instagram V2 via IkyyXD (fallback: builtin ig.js); media dikirim dengan preview card (thumbnail dari API — nova-media-card.js)
 - .laheludl - download - Download video dari Lahelu via IkyyX
 - .tiktokv4 - download - Download video TikTok V4 via IkyyXD
 - .soundclouddl - download - Download lagu dari SoundCloud via IkyyXD (apikey)D

@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import axios from "axios";
 import he from "he";
 import te from "../../src/lib/nova-error.js";
@@ -110,12 +111,20 @@ async function handler(m, { sock }) {
       }
     }
 
+    const thCard = mediaPreviewCard({
+      title: cleanText(info.title) || "Threads Post",
+      body: `Threads • ${result.length} file`,
+      sourceUrl: url,
+      thumbnailUrl: result.find((x) => x.Type === "image")?.Result_url || result[0]?.Result_url || "",
+    });
+
     if (mediaList.length > 1) {
-      await sock.sendMessage(m.chat, { text: captionText }, { quoted: m });
+      await sock.sendMessage(m.chat, { text: captionText, contextInfo: thCard }, { quoted: m });
       await sock.sendMessage(m.chat, { albumMessage: mediaList }, { quoted: m });
     } else if (mediaList.length === 1) {
       const media = mediaList[0];
       media.caption = captionText;
+      media.contextInfo = thCard;
       await sock.sendMessage(m.chat, media, { quoted: m });
     }
   } catch (err) {
