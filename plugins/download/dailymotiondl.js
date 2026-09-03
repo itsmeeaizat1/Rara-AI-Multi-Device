@@ -92,6 +92,7 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
+      await offerConvert(sock, m, { buffer, type: "video", platform: "Dailymotion", title: result.title, sourceUrl: text });
     }
   } catch (e) {
     console.error(e);
