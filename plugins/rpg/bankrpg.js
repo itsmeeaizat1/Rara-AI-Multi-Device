@@ -6,6 +6,7 @@ import {
   ensureRpg, saveRpg, addGold, removeGold
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -55,23 +56,17 @@ async function handler(m, { sock }) {
     }
 
     if (!action || action === "cek") {
-      let msg = "";
-      msg += `👤 ${m.pushName || "Player"}\n`;
-      msg += `
-`;
-      msg += `💰 Gold di tangan: *${rpg.gold}*\n`;
-      msg += `🏦 Gold di bank: *${bank.deposit}*\n`;
-      if (interest > 0) {
-        msg += `Bunga diterima: *+${interest} gold*\n`;
-      }
-      msg += `📈 Bunga: *5% per hari*\n`;
-      msg += `
-`;
-      msg += `📌 .bankrpg nabung <jumlah> — simpan\n`;
-      msg += `📌 .bankrpg tarik <jumlah> — tarik\n`;
-      msg += `📌 .bankrpg cek — cek saldo\n`;
-      
-      return m.reply(msg);
+      return m.reply(claraWrap("bankrpg", [
+        m.pushName || "Player",
+        "---",
+        `Gold di tangan : ${rpg.gold}`,
+        `Gold di bank : ${bank.deposit}`,
+        ...(interest > 0 ? [`Bunga diterima : +${interest} gold`] : []),
+        "Bunga : 5% per hari",
+        "---",
+        "📌 .bankrpg nabung <jumlah> — simpan",
+        "💡 .bankrpg tarik <jumlah> — tarik",
+      ], "info"));
     }
 
     if (action === "nabung" || action === "simpan" || action === "deposit") {
@@ -96,17 +91,18 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = "";
-      msg += `✅ Berhasil menabung!\n`;
-      msg += `
-`;
-      msg += `💵 Setor: *${amount} gold*\n`;
-      msg += `🏦 Saldo bank: *${bank.deposit} gold*\n`;
-      msg += `💰 Sisa di tangan: *${rpg.gold - amount} gold*\n`;
-      msg += `📈 Bunga 5% harian akan otomatis masuk\n`;
-      
       await animBank(m, sock, "nabung");
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "bankrpg", icon: "🏦",
+        flavor: "✅ *BERHASIL MENABUNG!*",
+        body: [
+          `│ • Setor : ${amount} Gold`,
+          `│ • Saldo bank : ${bank.deposit} Gold`,
+          `│ • Sisa di tangan : ${rpg.gold - amount} Gold`,
+          "│ • Bunga : 5% per hari masuk otomatis",
+        ].join("\n"),
+        cta: gameCTA("bankrpg"),
+      }));
     }
 
     if (action === "tarik" || action === "ambil" || action === "withdraw") {
@@ -126,16 +122,17 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = "";
-      msg += `✅ Berhasil menarik!\n`;
-      msg += `
-`;
-      msg += `💵 Tarik: *${amount} gold*\n`;
-      msg += `🏦 Sisa saldo bank: *${bank.deposit} gold*\n`;
-      msg += `💰 Gold di tangan: *${rpg.gold + amount} gold*\n`;
-      
       await animBank(m, sock, "tarik");
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "bankrpg", icon: "🏦",
+        flavor: "💵 *BERHASIL MENARIK!*",
+        body: [
+          `│ • Tarik : ${amount} Gold`,
+          `│ • Sisa saldo bank : ${bank.deposit} Gold`,
+          `│ • Gold di tangan : ${rpg.gold + amount} Gold`,
+        ].join("\n"),
+        cta: gameCTA("bankrpg"),
+      }));
     }
 
     return m.reply(claraWrap("bankrpg", "Aksi tidak dikenal. Gunakan: nabung, tarik, atau cek", "warn"));

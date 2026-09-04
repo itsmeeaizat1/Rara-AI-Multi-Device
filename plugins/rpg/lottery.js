@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animLottery } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -44,18 +45,15 @@ async function handler(m, { sock }) {
       const prizePool = Math.floor(totalRevenue * 0.7);
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = "";
-      msg += `🎟️ *Harga Tiket:* ${ticketPrice} Gold\n`;
-      msg += `📊 *Total Tiket Terjual:* ${totalTickets} Tiket\n`;
-      msg += `🏆 *Total Hadiah (70%):* ${prizePool} Gold\n`;
-      msg += `🎫 *Tiket Milikmu:* ${myTickets} Tiket
-
-`;
-      msg += `Cara Membeli Tiket:\n`;
-      msg += `${m.prefix}lottery buy <jumlah_tiket>\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply(claraWrap("lottery", [
+        `Harga tiket : ${ticketPrice} Gold`,
+        `Tiket terjual : ${totalTickets}`,
+        `Total hadiah (70%) : ${prizePool} Gold`,
+        `Tiket milikmu : ${myTickets}`,
+        "---",
+        `📌 ${m.prefix}lottery buy <jumlah_tiket> — beli tiket`,
+      ], "info"));
     }
 
     if (subCmd === "buy" || subCmd === "beli") {
@@ -96,15 +94,18 @@ async function handler(m, { sock }) {
 
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = "";
-      msg += `🎟️ Berhasil membeli *${count}* tiket lotre!\n`;
-      msg += `\n`;
-      msg += `💰 Total Biaya: -${totalCost} Gold\n`;
-      msg += `🎫 Total Tiket Kamu Saat Ini: *${myTickets} Tiket*\n`;
-      msg += `👛 Sisa Gold: *${userWallet.gold} Gold*\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "lottery", icon: "🎟️",
+        flavor: "🎟️ *TIKET TERBELI!*",
+        body: [
+          `│ • Pembelian : ${count} tiket`,
+          `│ • Total biaya : -${totalCost} Gold`,
+          `│ • Tiket kamu : ${myTickets}`,
+          `│ • Sisa gold : ${userWallet.gold} Gold`,
+        ].join("\n"),
+        cta: gameCTA("lottery"),
+      }));
     }
 
     if (subCmd === "draw" || subCmd === "undak") {
@@ -151,17 +152,19 @@ async function handler(m, { sock }) {
       winnerWallet.gold = (winnerWallet.gold || 0) + prizePool;
       await db.setPlayerData?.(winnerSender, "wallet", winnerWallet);
 
-      let msg = "";
-      msg += `🎊 *ᴘᴇɴɢᴜɴᴅɪᴀɴ ʟᴏᴛʀᴇ ꜱᴀᴋʀᴀʟ* 🎊\n`;
-      msg += `\n`;
-      msg += `🎟️ Total Tiket Terundi: ${totalTickets} Tiket\n`;
-      msg += `🏆 Total Hadiah: *${prizePool} Gold*\n`;
-      msg += `👑 *Pemenang Utama:* @${winnerName}\n`;
-      msg += `\n`;
-      msg += `Selamat kepada pemenang! Hadiah telah dikirim ke dompet.\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "lottery", icon: "🎊",
+        flavor: "🎊 *PENGUNDIAN LOTRE SAKRAL!*",
+        body: [
+          `│ • Tiket terundi : ${totalTickets}`,
+          `│ • Total hadiah : ${prizePool} Gold`,
+          `│ • 👑 Pemenang : @${winnerName}`,
+          "",
+          "Hadiah sudah dikirim ke dompet pemenang!",
+        ].join("\n"),
+        cta: gameCTA("lottery"),
+      }), { mentions: [winnerSender] });
     }
 
     await m.react('❌');

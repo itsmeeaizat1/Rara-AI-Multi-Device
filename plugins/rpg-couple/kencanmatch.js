@@ -3,6 +3,7 @@
 
 import { getRpgData, useEnergy, addExp, addGold, removeGold, checkCooldown } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import {
   getCintaData, addAffection, getCouplePower,
   KENCAN_ACTIVITIES, KENCAN_COOLDOWN_HOURS, formatDurasi
@@ -108,17 +109,19 @@ async function handler(m, { sock }) {
     ];
     const event = events[Math.floor(Math.random() * events.length)];
 
-    const msg = novaBox("Kencan", [
-      `${activity.emoji} ${activity.name}`,
-      `"${event}"`,
-      `Bersama: ${cinta.spouseName || cinta.spouse.split("@")[0]}`,
-      "---",
-      { sub: "Hasil" },
-      `Affection: +${activity.affection} (Total: ${myCinta.affection})`,
-      `EXP: +${activity.exp}`,
-      `Gold: -${activity.cost}`,
-      `Energi: -${activity.energy}`,
-    ]);
+    const msg = novaGameBox({
+      title: "rpg cinta", icon: "💘",
+      flavor: `${activity.emoji} *${activity.name.toUpperCase()}!*`,
+      body: [
+        `"${event}"`,
+        `│ • 💑 Bersama : ${cinta.spouseName || cinta.spouse.split("@")[0]}`,
+        `│ • 💕 Affection : +${activity.affection} (Total: ${myCinta.affection})`,
+        `│ • ✨ EXP : +${activity.exp}`,
+        `│ • 💰 Gold : -${activity.cost}`,
+        `│ • ⚡ Energi : -${activity.energy}`,
+      ].join("\n"),
+      cta: gameCTA("kencanmatch"),
+    });
     await m.reply(msg);
     await m.react(activity.emoji);
   } catch (e) {

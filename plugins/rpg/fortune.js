@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -89,17 +90,22 @@ async function handler(m, { sock }) {
 
     await db.setPlayerData?.(sender, "fortune", player);
 
-    let msg = "";
-    msg += `🎰 Memutar Roda Keberuntungan...\n`;
-    msg += `\n`;
-    msg += `🎡 [ 500g | 100g | 50⚡ | 💎1 | 1000g | 10⭐ | 🏆5000g | 💀ZONK ]\n`;
-    msg += `\n`;
-    msg += `🎯 *Hasil Putaran:* ${result.icon} *${result.name}*\n`;
-    msg += `💰 Biaya Spin: -${spinCost} Gold\n`;
-    msg += `👛 Sisa Gold: *${player.gold} Gold*\n`;
-    
     await m.react('🐣');
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "fortune", icon: "🥠",
+      flavor: result.type === "none"
+        ? "💀 *ZONK!*"
+        : result.name.startsWith("JACKPOT")
+        ? "🎊 *JACKPOT!*"
+        : "🎡 *REZEKI NOMPLOK!*",
+      body: [
+        "🎡 [ 500g | 100g | 50⚡ | 💎1 | 1000g | 10⭐ | 🏆5000g | 💀ZONK ]",
+        `│ • 🎯 Hasil putaran : ${result.icon} ${result.name}`,
+        `│ • 💰 Biaya spin : -${spinCost} Gold`,
+        `│ • 👛 Sisa gold : ${player.gold} Gold`,
+      ].join("\n"),
+      cta: gameCTA("fortune"),
+    }));
   } catch (err) {
     console.error("fortune error:", err);
     await m.react('❌');

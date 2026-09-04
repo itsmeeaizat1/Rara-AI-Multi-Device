@@ -7,6 +7,7 @@ import {
 } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -130,7 +131,7 @@ async function handler(m, { sock }) {
         msg += `${rank} ${p.name}\n`;
         msg += `Rating: *${p.rating}* | W:${p.wins} L:${p.losses} (${wr}%)\n`;
       }
-            return m.reply(msg);
+            return m.reply(claraWrap("arenav3", msg));
     }
 
     // Need mode
@@ -148,7 +149,7 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `⚡ Cost: *${ARENA_ENERGY} energy*\n`;
-            return m.reply(msg);
+            return m.reply(claraWrap("arenav3", msg));
     }
 
     // Check cooldown & energy
@@ -242,38 +243,32 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = "";
-    out += `⚔️ ${player.name} vs ${opponent.name}\n`;
-    out += `📊 Mode: *${mode.toUpperCase()}*\n`;
-    out += `
-`;
-    out += `📋 *ᴄᴏᴍʙᴀᴛ ʟᴏɢ*\n`;
-    for (const l of combat.log.slice(-6)) {
-      out += `${l}\n`;
-    }
-    out += `
-`;
-
-    if (won) {
-      out += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-      out += `✦ EXP: *+${expGain}*\n`;
-      out += `💰 Gold: *+${goldGain}*\n`;
-      if (gemGain > 0) out += `💎 Gems: *+${gemGain}*\n`;
-      if (ratingChange > 0) out += `📈 Rating: *+${ratingChange}* (${freshRpg.pvpRating})\n`;
-    } else if (draw) {
-      out += `🤝 *ᴅʀᴀᴡ!*\n`;
-      out += `✦ EXP: *+${expGain}*\n`;
-    } else {
-      out += `💀 *ᴅᴇғᴇᴀᴛ!*\n`;
-      if (ratingChange < 0) out += `📉 Rating: *${ratingChange}* (${freshRpg.pvpRating})\n`;
-    }
-
-    out += `
-`;
-    out += `❤️ HP: *${freshRpg.hp}/${rpg.maxHp}*\n`;
-    out += `⚡ Energy: *${freshRpg.energy}/${rpg.maxEnergy}*\n`;
-    
-    return m.reply(out);
+    return m.reply(novaGameBox({
+      title: "arenav3", icon: "⚔️",
+      flavor: won ? "🏆 *VICTORY!*" : draw ? "🤝 *SERI!*" : "💀 *DEFEAT!*",
+      body: [
+        `⚔️ ${player.name} vs ${opponent.name}`,
+        `│ • 📊 Mode : ${mode.toUpperCase()}`,
+        "",
+        "📋 Combat log:",
+        ...combat.log.slice(-6),
+        "",
+        ...(won ? [
+          `│ • ✨ EXP : +${expGain}`,
+          `│ • 💰 Gold : +${goldGain}`,
+          ...(gemGain > 0 ? [`│ • 💎 Gems : +${gemGain}`] : []),
+          ...(ratingChange > 0 ? [`│ • 📈 Rating : +${ratingChange} (${freshRpg.pvpRating})`] : []),
+        ] : draw ? [
+          `│ • ✨ EXP : +${expGain}`,
+        ] : [
+          ...(ratingChange < 0 ? [`│ • 📉 Rating : ${ratingChange} (${freshRpg.pvpRating})`] : []),
+        ]),
+        "",
+        `│ • ❤️ HP : ${freshRpg.hp}/${rpg.maxHp}`,
+        `│ • ⚡ Energy : ${freshRpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("arenav3"),
+    }));
   } catch (err) {
     console.error("arenav3 error:", err);
     await m.react("❌");

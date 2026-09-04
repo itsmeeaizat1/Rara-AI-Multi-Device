@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -75,43 +76,37 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === "list") {
-      let msg = "";
-      msg += `Daftar Resep Potion & Bahan:
-
-`;
-      for (const [key, item] of Object.entries(RECIPES)) {
-        msg += `🧪 *${item.name}* (\`${key}\`)\n`;
-        msg += `• Bahan: ${item.desc}\n`;
-        msg += `• Efek: ${item.effect}
-
-`;
-      }
-      msg += `Cara Meracik:\n`;
-      msg += `${m.prefix}alchemist brew <nama_potion>\n`;
-            await m.react('🐣');
-      return m.reply(msg);
+      await m.react('🐣');
+      return m.reply(claraWrap("alchemist", [
+        "Daftar resep potion :",
+        ...Object.entries(RECIPES).flatMap(([key, item]) => [
+          `${item.name} (${key})`,
+          `   Bahan : ${item.desc}`,
+          `   Efek : ${item.effect}`,
+        ]),
+        "---",
+        `📌 ${m.prefix}alchemist brew <nama_potion>`,
+      ], "info"));
     }
 
     if (subCmd === "inventory" || subCmd === "inv") {
-      let msg = "";
-      msg += `💰 Gold: ${data.gold || 0}
-
-`;
-      msg += `🌿 *Bahan Herbal & Material:*\n`;
-      msg += `• Herb: ${data.materials.herb || 0}\n`;
-      msg += `• Water: ${data.materials.water || 0}\n`;
-      msg += `• Crystal: ${data.materials.crystal || 0}\n`;
-      msg += `• Mushroom: ${data.materials.mushroom || 0}\n`;
-      msg += `• Snake Venom: ${data.materials.snake_venom || 0}
-
-`;
-      msg += `🧪 *Hasil Ramuan (Potions):*\n`;
-      msg += `• Health Potion: ${data.potions.health_potion || 0}\n`;
-      msg += `• Mana Potion: ${data.potions.mana_potion || 0}\n`;
-      msg += `• Stamina Potion: ${data.potions.stamina_potion || 0}\n`;
-      msg += `• Antidote: ${data.potions.antidote || 0}\n`;
-            await m.react('🐣');
-      return m.reply(msg);
+      await m.react('🐣');
+      return m.reply(claraWrap("alchemist", [
+        `Gold : ${data.gold || 0}`,
+        "---",
+        "Bahan herbal & material :",
+        `Herb : ${data.materials.herb || 0}`,
+        `Water : ${data.materials.water || 0}`,
+        `Crystal : ${data.materials.crystal || 0}`,
+        `Mushroom : ${data.materials.mushroom || 0}`,
+        `Snake venom : ${data.materials.snake_venom || 0}`,
+        "---",
+        "Ramuan (potions) :",
+        `Health potion : ${data.potions.health_potion || 0}`,
+        `Mana potion : ${data.potions.mana_potion || 0}`,
+        `Stamina potion : ${data.potions.stamina_potion || 0}`,
+        `Antidote : ${data.potions.antidote || 0}`,
+      ], "info"));
     }
 
     if (subCmd === "brew" || subCmd === "racik") {
@@ -167,15 +162,18 @@ async function handler(m, { sock }) {
       data.potions[potionKey] = (data.potions[potionKey] || 0) + 1;
       await db.setPlayerData?.(sender, "alchemist", data);
 
-      let msg = "";
-      msg += `⚗️ Berhasil meracik *${recipe.name}*!\n`;
-      msg += `\n`;
-      msg += `💰 Biaya: -${recipe.gold} Gold\n`;
-      msg += `Efek: ${recipe.effect}\n`;
-      msg += `🧪 Total Potion: ${data.potions[potionKey]}\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "alchemist", icon: "⚗️",
+        flavor: "⚗️ *RAMUAN JADI!*",
+        body: [
+          `│ • Ramuan : ${recipe.name}`,
+          `│ • 💰 Biaya : -${recipe.gold} Gold`,
+          `│ • ✨ Efek : ${recipe.effect}`,
+          `│ • 🧪 Total potion : ${data.potions[potionKey]}`,
+        ].join("\n"),
+        cta: gameCTA("alchemist"),
+      }));
     }
 
     // Default help guide

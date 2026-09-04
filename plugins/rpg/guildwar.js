@@ -2,6 +2,7 @@
 // guildwar.js — Guild War (guild vs guild battle)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGuildWar } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -45,7 +46,7 @@ async function handler(m, { sock }) {
         msg += `
 `;
         msg += `${m.prefix}guildwar declare <nama guild>\n`;
-                return m.reply(msg);
+                return m.reply(claraWrap("guildwar", msg));
       }
 
       const enemy = ENEMY_GUILDS.find(g => g.name.toLowerCase().includes(enemyName.toLowerCase()));
@@ -65,39 +66,40 @@ async function handler(m, { sock }) {
       const margin = Math.abs(playerPower - enemyPower);
 
       let reward = 0;
+      let loss = 0;
       if (won) {
         reward = Math.floor(enemy.treasury * 0.3 + margin * 0.5);
         try { await db.addGold?.(m.sender, reward); } catch {}
         guildData.power = (guildData.power || 3000) + 500;
         guildData.wins = (guildData.wins || 0) + 1;
       } else {
-        const loss = Math.floor(guildData.treasury * 0.1 || 500);
+        loss = Math.floor(guildData.treasury * 0.1 || 500);
         try { await db.minGold?.(m.sender, loss); } catch {}
         guildData.losses = (guildData.losses || 0) + 1;
       }
       await db.setPlayerData?.(m.sender, "guild", guildData);
 
       await m.react("🐣");
-      let msg = "";
-      msg += `${guildData.emoji || "🏰"} ${guildData.name}\n`;
-      msg += `vs\n`;
-      msg += `${enemy.emoji} ${enemy.name}\n`;
-      msg += `
-`;
-      msg += `Your Power: *${playerPower.toLocaleString()}*\n`;
-      msg += `Enemy Power: *${enemyPower.toLocaleString()}*\n`;
-      msg += `
-`;
-      if (won) {
-        msg += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-        msg += `Reward: *+${reward.toLocaleString()} gold*\n`;
-        msg += `Guild Power: +500\n`;
-      } else {
-        msg += `💀 *ᴅᴇꜰᴇᴀᴛ!*\n`;
-        msg += `Kerugian: *-${loss || 500} gold*\n`;
-      }
-      msg += `Record: ${guildData.wins || 0}W / ${guildData.losses || 0}L\n`;
-            return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "guildwar", icon: "🛡️",
+        flavor: won ? "🏆 *VICTORY!*" : "💀 *DEFEAT!*",
+        body: [
+          `${guildData.emoji || "🏰"} ${guildData.name} vs ${enemy.emoji} ${enemy.name}`,
+          "",
+          `│ • 💪 Power kamu : ${playerPower.toLocaleString()}`,
+          `│ • 🥷 Power musuh : ${enemyPower.toLocaleString()}`,
+          ...(won
+            ? [
+                `│ • 💰 Reward : +${reward.toLocaleString()} gold`,
+                "│ • ⬆️ Guild power : +500",
+              ]
+            : [
+                `│ • 💸 Kerugian : -${loss || 500} gold`,
+              ]),
+          `│ • 📊 Record : ${guildData.wins || 0}W / ${guildData.losses || 0}L`,
+        ].join("\n"),
+        cta: gameCTA("guildwar"),
+      }));
     }
 
     // INFO (default)
@@ -108,7 +110,7 @@ async function handler(m, { sock }) {
     msg += `
 `;
     msg += `${m.prefix}guildwar declare <enemy> - serang!\n`;
-        return m.reply(msg);
+        return m.reply(claraWrap("guildwar", msg));
   } catch (err) {
     console.error("guildwar error:", err);
     await m.react("❌");
