@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -54,7 +55,7 @@ async function handler(m, { sock }) {
         msg += `💡 Ketik *${m.prefix}summon list* untuk memanggil spirit.\n`;
       }
             await m.react("🐣");
-      return m.reply(msg);
+      return m.reply(claraWrap("summon", msg));
     }
 
     if (!input || input === "list") {
@@ -70,7 +71,7 @@ async function handler(m, { sock }) {
       });
       listMsg += `💡 *Cek Buff:* ${m.prefix}summon status\n`;
             await m.react("🐣");
-      return m.reply(listMsg);
+      return m.reply(claraWrap("summon", listMsg));
     }
 
     const spirit = SPIRITS.find(s => s.id === input || s.aliases.includes(input));
@@ -106,27 +107,24 @@ async function handler(m, { sock }) {
       expiresAt: expiresAt,
     };
 
-    let msg = "";
-    msg += `🔮 *Ritual Pemanggilan Elementalis*\n`;
-    msg += `🕯️ Menggambar lingkaran sihir di atas tanah...\n`;
-    msg += `Mengalirkan ${SUMMON_COST_GOLD} Gold & ${SUMMON_COST_ENERGI} Energi ke dalam altar...\n`;
-    msg += `🌟 Cahaya berkilau! *${spirit.name}* ${spirit.emoji} berhasil dipanggil!
-
-`;
-    msg += `📜 *Buff Aktif:*\n`;
-    msg += `• Spirit: *${spirit.name}*\n`;
-    msg += `• Efek: *${spirit.effect}*\n`;
-    msg += `• Durasi: *30 Menit*
-
-`;
-    msg += `⚡ Sisa Energi: *${profile.energi}*\n`;
-    msg += `💰 Sisa Gold: *${profile.gold.toLocaleString()}*\n`;
-    
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "summon", summonData);
 
     await m.react("🐣");
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "summon", icon: "🔮",
+      flavor: "🌟 *SPIRIT BERHASIL DIPANGGIL!*",
+      body: [
+        `Lingkaran sihir berkilau! ${spirit.name} ${spirit.emoji} muncul dari altar.`,
+        "",
+        `│ • Spirit : ${spirit.name} ${spirit.emoji}`,
+        `│ • Efek buff : ${spirit.effect}`,
+        `│ • ⏳ Durasi : 30 menit`,
+        `│ • ⚡ Sisa energi : ${profile.energi}`,
+        `│ • 💰 Sisa gold : ${profile.gold.toLocaleString()}`,
+      ].join("\n"),
+      cta: gameCTA("summon"),
+    }));
   } catch (err) {
     console.error("summon error:", err);
     await m.react("❌");

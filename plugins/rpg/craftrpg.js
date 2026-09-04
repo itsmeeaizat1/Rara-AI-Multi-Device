@@ -5,6 +5,7 @@ import {
   ensureRpg, addItem, removeItem, ITEM_DB, getItemCount
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animCraft } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -143,7 +144,7 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 Ketik .craftrpg <id> untuk craft\n`;
       
-      return m.reply(msg);
+      return m.reply(claraWrap("craftrpg", msg));
     }
 
     // Find recipe
@@ -178,17 +179,17 @@ async function handler(m, { sock }) {
     addItem(m, recipe.result, recipe.qty);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `✅ Craft berhasil!\n`;
-    msg += `
-`;
-    msg += `📦 Hasil: *${recipe.name}* x${recipe.qty}\n`;
-    msg += `📂 Material digunakan:\n`;
-    for (const mat of recipe.materials) {
-      msg += `- ${mat.qty}x ${ITEM_DB[mat.id]?.name || mat.id}\n`;
-    }
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "craftrpg", icon: "⚒️",
+      flavor: "✅ *CRAFT BERHASIL!*",
+      body: [
+        `│ • 📦 Hasil : ${recipe.name} x${recipe.qty}`,
+        `│ • 🧱 Material dipakai : ${recipe.materials.map(mat => `${mat.qty}x ${ITEM_DB[mat.id]?.name || mat.id}`).join(", ")}`,
+        "",
+        "Item masuk inventory. Cek dengan .inventoryrpg!",
+      ].join("\n"),
+      cta: gameCTA("craftrpg"),
+    }));
   } catch (err) {
     console.error("craftrpg error:", err);
     await m.react("❌");

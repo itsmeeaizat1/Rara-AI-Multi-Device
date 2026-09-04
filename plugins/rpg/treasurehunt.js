@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animTreasure } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -52,7 +53,7 @@ async function handler(m, { sock }) {
       listMsg += `💡 *Penggunaan:* ${m.prefix}treasurehunt <nama_lokasi>\n`;
       listMsg += `📝 *Contoh:* ${m.prefix}treasurehunt pantai\n`;
             await m.react("🐣");
-      return m.reply(listMsg);
+      return m.reply(claraWrap("treasurehunt", listMsg));
     }
 
     const loc = LOCATIONS.find(l => l.id === input || l.aliases.includes(input));
@@ -74,44 +75,58 @@ async function handler(m, { sock }) {
     }
 
     const roll = Math.floor(Math.random() * 100) + 1;
-    let msg = "";
-    msg += `📍 Lokasi: *${loc.name}*\n`;
-    msg += `⛏️ *Penggalian:* ${loc.digText}
-
-`;
 
     const inventory = await db.getPlayerData?.(sender, "inventory") || { items: {} };
     if (!inventory.items) inventory.items = {};
 
+    let resultFlavor = "";
+    let resultLines = [];
     if (roll <= 20) {
-      msg += `❌ *Hasil:* Zonk! Tidak menemukan apa-apa...\n`;
-      msg += `💨 Kamu hanya mendapatkan tanah dan batu tak berharga.\n`;
+      resultFlavor = "💨 *ZONK!*";
+      resultLines = [
+        "Zonk! Tidak menemukan apa-apa...",
+        "Kamu hanya mendapatkan tanah dan batu tak berharga.",
+      ];
     } else if (roll <= 24) {
       const legGold = Math.floor(Math.random() * 15000) + 10000;
       profile.gold = (profile.gold || 0) + legGold;
       inventory.items["Peti Harta Legendaris"] = (inventory.items["Peti Harta Legendaris"] || 0) + 1;
-      msg += ` *ʜᴀʀᴛᴀ ʟᴇɢᴇɴᴅᴀʀɪꜱ!* \n`;
-      msg += `👑 Kamu menemukan Peti Emas Kuno Berkilau!\n`;
-      msg += `💰 Gold: *+${legGold.toLocaleString()} Gold*\n`;
-      msg += `📦 Item: *Peti Harta Legendaris x1*\n`;
+      resultFlavor = "👑 *HARTA LEGENDARIS!*";
+      resultLines = [
+        "Kamu menemukan Peti Emas Kuno Berkilau!",
+        `│ • 👑 Temuan : Peti Harta Legendaris x1`,
+        `│ • 💰 Gold : +${legGold.toLocaleString()}`,
+      ];
     } else {
       const goldReward = Math.floor(Math.random() * (loc.maxGold - loc.minGold + 1)) + loc.minGold;
       const itemReward = loc.items[Math.floor(Math.random() * loc.items.length)];
       profile.gold = (profile.gold || 0) + goldReward;
       inventory.items[itemReward] = (inventory.items[itemReward] || 0) + 1;
-      msg += `🎁 *Hasil Temuan:* Berhasil!\n`;
-      msg += `💰 Gold: *+${goldReward.toLocaleString()} Gold*\n`;
-      msg += `📦 Item: *${itemReward} x1*\n`;
+      resultFlavor = "🎁 *HARTA DITEMUKAN!*";
+      resultLines = [
+        `│ • 📦 Temuan : ${itemReward} x1`,
+        `│ • 💰 Gold : +${goldReward.toLocaleString()}`,
+      ];
     }
 
-    msg += `⚡ Sisa Energi: *${profile.energi}*\n`;
-    msg += `💰 Total Gold: *${(profile.gold || 0).toLocaleString()}*\n`;
-    
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "inventory", inventory);
 
     await m.react("🐣");
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "treasurehunt", icon: "🗺️",
+      flavor: resultFlavor,
+      body: [
+        `📍 ${loc.name}`,
+        loc.digText,
+        "",
+        ...resultLines,
+        "",
+        `│ • ⚡ Sisa energi : ${profile.energi}`,
+        `│ • 💰 Total gold : ${(profile.gold || 0).toLocaleString()}`,
+      ].join("\n"),
+      cta: gameCTA("treasurehunt"),
+    }));
   } catch (err) {
     console.error("treasurehunt error:", err);
     await m.react("❌");

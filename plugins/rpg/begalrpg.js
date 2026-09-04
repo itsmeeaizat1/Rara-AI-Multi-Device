@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animBegal } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -100,19 +101,20 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("🐣");
-      let msg = "";
-      msg += `🗡️ ${m.pushName} merampok ${targetJid.split("@")[0]}\n`;
-      msg += `
-`;
-      msg += `✅ Berhasil rampok!\n`;
-      msg += `📊 Success rate: *${Math.floor(successRate)}%*\n`;
-      msg += `💰 Dapat: *${actualStolen} gold*\n`;
-      msg += `✦ EXP: *+${expGain}*\n`;
-      msg += `
-`;
-      msg += `❗ Rampok lagi = makin besar cooldown\n`;
-      
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "begalrpg", icon: "🗡️",
+        flavor: "🥷 *BERHASIL MERAMPOK!*",
+        body: [
+          `🗡️ ${m.pushName} merampok ${targetJid.split("@")[0]}`,
+          "",
+          `│ • 📊 Success rate : ${Math.floor(successRate)}%`,
+          `│ • 💰 Rampokan : +${actualStolen} gold`,
+          `│ • ✨ EXP : +${expGain}`,
+          "",
+          "❗ Rampok lagi = makin besar cooldown",
+        ].join("\n"),
+        cta: gameCTA("begalrpg"),
+      }));
     } else {
       // Caught! Penalty
       const fine = Math.floor(rpg.gold * CAUGHT_PENALTY);
@@ -126,17 +128,18 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("❌");
-      let msg = "";
-      msg += `🗡️ ${m.pushName} mencoba rampok ${targetJid.split("@")[0]}\n`;
-      msg += `
-`;
-      msg += `❌ Ketahuan! Kamu ditangkap!\n`;
-      msg += `💸 Denda: *-${actualFine} gold*\n`;
-      msg += `
-`;
-      msg += `💡 Level lebih tinggi dari target = success rate lebih besar\n`;
-      
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "begalrpg", icon: "🗡️",
+        flavor: "🚨 *KETAHUAN! KAMU DITANGKAP!*",
+        body: [
+          `🗡️ ${m.pushName} mencoba rampok ${targetJid.split("@")[0]}`,
+          "",
+          `│ • 💸 Denda : -${actualFine} gold`,
+          "",
+          "💡 Level lebih tinggi dari target = success rate lebih besar",
+        ].join("\n"),
+        cta: gameCTA("begalrpg"),
+      }));
     }
   } catch (err) {
     console.error("begalrpg error:", err);

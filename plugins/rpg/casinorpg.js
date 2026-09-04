@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -104,26 +105,26 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastGacha", CASINO_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🎰 ${s1} | ${s2} | ${s3}\n`;
-    msg += `
-`;
-    msg += `📊 Hasil: *${result}*\n`;
-
-    if (payout > 0) {
-      msg += `💰 Multiplier: *${multiplier}x*\n`;
-      msg += `💵 Bet: *${bet} gold*\n`;
-      msg += `🎉 Menang: *+${payout - bet} gold* (net)\n`;
-    } else {
-      msg += `💵 Bet: *${bet} gold*\n`;
-      msg += `💸 Kalah: *-${bet} gold*\n`;
-    }
-
-    msg += `
-`;
-    msg += `💼 Gold: *${rpg.gold - bet + payout}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "casinorpg", icon: "🎰",
+      flavor: result === "JACKPOT!" ? "🎊 *JACKPOT!*" : payout > 0 ? "🎉 *MENANG!*" : "💸 *ZONK!*",
+      body: [
+        `🎰 ${s1} | ${s2} | ${s3}`,
+        "",
+        `│ • 📊 Hasil : ${result}`,
+        ...(payout > 0 ? [
+          `│ • 💰 Multiplier : ${multiplier}x`,
+          `│ • 💵 Bet : ${bet} gold`,
+          `│ • 🎉 Menang : +${payout - bet} gold (net)`,
+        ] : [
+          `│ • 💵 Bet : ${bet} gold`,
+          `│ • 💸 Kalah : -${bet} gold`,
+        ]),
+        "",
+        `│ • 💼 Gold : ${rpg.gold - bet + payout}`,
+      ].join("\n"),
+      cta: gameCTA("casinorpg"),
+    }));
   } catch (err) {
     console.error("casinorpg error:", err);
     await m.react("❌");

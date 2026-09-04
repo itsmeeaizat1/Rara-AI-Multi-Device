@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -63,7 +64,7 @@ async function handler(m, { sock }) {
       listMsg += `💡 *Penggunaan:* ${m.prefix}upgrade2 <weapon|armor|accessory>\n`;
       listMsg += `📝 *Contoh:* ${m.prefix}upgrade2 weapon\n`;
             await m.react("🐣");
-      return m.reply(listMsg);
+      return m.reply(claraWrap("upgrade2", listMsg));
     }
 
     const type = Object.keys(EQUIP_TYPES).find(k => k === input || input.includes(k));
@@ -97,39 +98,36 @@ async function handler(m, { sock }) {
     const roll = Math.floor(Math.random() * 100) + 1;
     const isSuccess = roll <= rate;
 
-    let msg = "";
-    msg += `🔨 *Tempat Penempaan Besi*\n`;
-    msg += `${EQUIP_TYPES[type].emoji} Target: *${EQUIP_TYPES[type].name}*\n`;
-    msg += `📊 Tingkat: *Lvl ${currentLvl}* ➔ *Lvl ${targetLvl}*\n`;
-    msg += `💰 Biaya: *${cost.toLocaleString()} Gold*\n`;
-    msg += `🎯 Peluang Sukses: *${rate}%*
-
-`;
-    msg += `💥 *Animasi Penempaan:*\n`;
-    msg += `KELANG! KELANG! Api tempa membara dan palu menghantam besi murni...
-
-`;
-
     if (isSuccess) {
       equipData[type] = targetLvl;
-      msg += ` *ʜᴀꜱɪʟ: ʙᴇʀʜᴀꜱɪʟ!* 🎉\n`;
-      if (targetLvl === 10) {
-        msg += `⚡ *ᴄᴏɴɢʀᴀᴛᴜʟᴀᴛɪᴏɴꜱ!* Equipment telah mencapai status *⚡ LEGENDARY STATUS ⚡*!\n`;
-      } else {
-        msg += `🌟 *${EQUIP_TYPES[type].name}* milikmu naik ke *Level ${targetLvl}*!\n`;
-      }
-    } else {
-      msg += `❌ *ʜᴀꜱɪʟ: ɢᴀɢᴀʟ!* 💥\n`;
-      msg += `💨 Tempaan retak dan gagal berkilau. Level tetap di *Lvl ${currentLvl}*, namun Gold hangus!\n`;
     }
 
-    msg += `💰 Sisa Gold: *${profile.gold.toLocaleString()} Gold*\n`;
-    
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "upgrade2", equipData);
 
     await m.react("🐣");
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "upgrade2", icon: "🔨",
+      flavor: isSuccess
+        ? (targetLvl === 10 ? "⚡ *LEGENDARY STATUS!*" : "🎉 *TEMPAAN BERHASIL!*")
+        : "💥 *TEMPAAN GAGAL!*",
+      body: [
+        `${EQUIP_TYPES[type].emoji} ${EQUIP_TYPES[type].name} : Lvl ${currentLvl} ➔ Lvl ${targetLvl}`,
+        `│ • 💰 Biaya : ${cost.toLocaleString()} gold`,
+        `│ • 🎯 Peluang sukses : ${rate}%`,
+        "",
+        "KELANG! KELANG! Api tempa membara dan palu menghantam besi murni...",
+        "",
+        ...(isSuccess
+          ? [targetLvl === 10
+              ? "⚡ SELAMAT! Equipment kamu telah mencapai LEGENDARY STATUS!"
+              : `🌟 ${EQUIP_TYPES[type].name} milikmu naik ke Level ${targetLvl}!`]
+          : [`Tempaan retak dan gagal berkilau. Level tetap di Lvl ${currentLvl}, namun gold hangus!`]),
+        "",
+        `│ • 💰 Sisa gold : ${profile.gold.toLocaleString()}`,
+      ].join("\n"),
+      cta: gameCTA("upgrade2"),
+    }));
   } catch (err) {
     console.error("upgrade2 error:", err);
     await m.react("❌");

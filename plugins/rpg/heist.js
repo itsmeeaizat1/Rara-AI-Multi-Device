@@ -2,6 +2,7 @@
 // heist.js — Heist system (rob targets, risk vs reward)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric, animHeist } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -52,7 +53,7 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `${m.prefix}heist <target>\n`;
-            return m.reply(msg);
+            return m.reply(claraWrap("heist", msg));
     }
 
     const target = TARGETS.find(t => t.name.toLowerCase().includes(targetName));
@@ -89,21 +90,20 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = "";
-    msg += `Target: ${target.emoji} *${target.name}*\n`;
-    msg += `
-`;
-    msg += `${narrative}\n`;
-    msg += `
-`;
-    if (success) {
-      msg += `🏆 *ʙᴇʀʜᴀꜱɪʟ!*\n`;
-      msg += `Reward: *+${goldChange} gold*\n`;
-    } else {
-      msg += `💀 *ᴛᴇʀᴛᴀɴɢᴋᴀᴘ!*\n`;
-      msg += `Denda: *-${target.fine} gold*\n`;
-    }
-        return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "heist", icon: target.emoji,
+      flavor: success ? "🏆 *BERHASIL!*" : "💀 *TERTANGKAP!*",
+      body: [
+        `│ • 🎯 Target : ${target.name}`,
+        "",
+        narrative,
+        "",
+        ...(success
+          ? [`│ • 💰 Reward : +${goldChange} gold`]
+          : [`│ • 💸 Denda : -${target.fine} gold`]),
+      ].join("\n"),
+      cta: gameCTA("heist"),
+    }));
   } catch (err) {
     console.error("heist error:", err);
     await m.react("❌");

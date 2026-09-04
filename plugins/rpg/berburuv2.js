@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -142,35 +143,28 @@ async function handler(m, { sock }) {
 
       setCooldown(m, "lastHuntV2", HUNT_COOLDOWN);
 
-      let dropText = drops.length > 0 ? drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join(", ") : "";
+      const dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join(", ");
 
       await m.react("🐣");
-      let out = "";
-      out += `👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
-      out += `⚔️ ${rounds} ronde bertarung\n`;
-      out += `
-`;
-      for (const l of log.slice(-4)) {
-        out += `${l}\n`;
-      }
-      out += `
-`;
-      out += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-      out += `✦ EXP: *+${expGain}*\n`;
-      out += `💰 Gold: *+${goldGain}*\n`;
-      if (dropText) out += `📦 Drops: *${dropText}*\n`;
-      out += `
-`;
-      if (combo > 1) {
-        out += `🔥 Combo: *${combo}x* (bonus +${Math.floor(comboBonus * 100)}%)\n`;
-      }
-      if (combo >= 5) {
-        out += `🎯 Combo tinggi! Tetap berburu untuk bonus lebih besar!\n`;
-      }
-      out += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-      out += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-      
-      return m.reply(out);
+      return m.reply(novaGameBox({
+        title: "berburuv2", icon: "🏹",
+        flavor: "🏆 *VICTORY!*",
+        body: [
+          `│ • 👹 Monster : ${monster.name}${monster.isRare ? " [RARE!]" : ""}`,
+          `│ • ⚔️ Ronde : ${rounds}`,
+          "",
+          ...log.slice(-4),
+          "",
+          `│ • ✨ EXP : +${expGain}`,
+          `│ • 💰 Gold : +${goldGain}`,
+          ...(dropText ? [`│ • 📦 Drops : ${dropText}`] : []),
+          ...(combo > 1 ? [`│ • 🔥 Combo : ${combo}x (bonus +${Math.floor(comboBonus * 100)}%)`] : []),
+          ...(combo >= 5 ? ["🎯 Combo tinggi! Tetap berburu untuk bonus lebih besar!"] : []),
+          `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
+          `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+        ].join("\n"),
+        cta: gameCTA("berburuv2"),
+      }));
     } else {
       // Defeat — combo resets
       saveRpg(m, {
@@ -180,19 +174,19 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastHuntV2", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let out = "";
-      out += `👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
-      out += `⚔️ ${rounds} ronde bertarung\n`;
-      out += `
-`;
-      out += `💀 *ᴅᴇғᴇᴀᴛᴇᴅ!*\n`;
-      out += `💥 DMG: *${dmgTaken}*\n`;
-      out += `❤️ HP: *${Math.max(1, rpg.hp - dmgTaken)}/${rpg.maxHp}*\n`;
-      out += `
-`;
-      out += `💡 Combo direset. Equip lebih kuat & coba lagi!\n`;
-      
-      return m.reply(out);
+      return m.reply(novaGameBox({
+        title: "berburuv2", icon: "🏹",
+        flavor: "💀 *DEFEATED!*",
+        body: [
+          `│ • 👹 Monster : ${monster.name}${monster.isRare ? " [RARE!]" : ""}`,
+          `│ • ⚔️ Ronde : ${rounds}`,
+          `│ • 💥 DMG diterima : ${dmgTaken}`,
+          `│ • ❤️ HP : ${Math.max(1, rpg.hp - dmgTaken)}/${rpg.maxHp}`,
+          "",
+          "💡 Combo direset. Equip lebih kuat & coba lagi!",
+        ].join("\n"),
+        cta: gameCTA("berburuv2"),
+      }));
     }
   } catch (err) {
     console.error("berburuv2 error:", err);

@@ -9,6 +9,7 @@ import {
 } from "../../src/lib/nova-rpg-service.js";
 import { animBattle, animHunt, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -122,39 +123,43 @@ async function handler(m, { sock }) {
       saveRpg(m, { hp: newHp });
       setCooldown(m, "lastHunt", HUNT_COOLDOWN);
 
-      let dropText = "";
-      if (drops.length > 0) {
-        dropText = drops.map(d => `│ +${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n");
-      }
+      const dropLines = drops.map(d => `│ • 📦 ${ITEM_DB[d.item]?.name || d.item} : +${d.qty}x`);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʜᴜɴᴛ ʙᴇʀʜᴀsɪʟ ✦ 」\n`;
-      msg += `│ 🐉 Monster: *${monster.name}*\n`;
-      msg += `│ ⚔️ Ronde: *${rounds}*\n`;
-      msg += `│ 💔 DMG Diterima: *${playerDmgTaken}*\n`;
-      msg += `│\n`;
-      msg += `│ ✦ EXP  : *+${expGain}*\n`;
-      msg += `│ 💰 Gold : *+${goldGain}*\n`;
-      if (dropText) msg += dropText + "\n";
-      msg += `│\n`;
-      msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-      msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-      msg += `╰──── • ────`;
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "berburu", icon: "🎯",
+        flavor: "🏆 *HUNT BERHASIL!*",
+        body: [
+          `│ • 🐉 Monster : ${monster.name}`,
+          `│ • ⚔️ Ronde : ${rounds}`,
+          `│ • 💔 DMG diterima : ${playerDmgTaken}`,
+          "",
+          `│ • ✨ EXP : +${expGain}`,
+          `│ • 💰 Gold : +${goldGain}`,
+          ...dropLines,
+          `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
+          `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+        ].join("\n"),
+        cta: gameCTA("berburu"),
+      }));
     } else {
       const newHp = Math.max(1, rpg.hp - playerDmgTaken);
       saveRpg(m, { hp: newHp });
       setCooldown(m, "lastHunt", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭─「 ❌ ʜᴜɴᴛ ɢᴀɢᴀʟ ✦ 」\n`;
-      msg += `│ 🐉 Monster: *${monster.name}*\n`;
-      msg += `│ 💔 DMG Diterima: *${playerDmgTaken}*\n`;
-      msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-      msg += `│\n`;
-      msg += `│ 💡 Tingkatkan equipment atau level dulu!\n`;
-      msg += `╰──── • ────`;
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "berburu", icon: "🎯",
+        flavor: "💀 *HUNT GAGAL!*",
+        body: [
+          `│ • 🐉 Monster : ${monster.name}`,
+          `│ • 💔 DMG diterima : ${playerDmgTaken}`,
+          `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
+          "",
+          "💡 Tingkatkan equipment atau level dulu!",
+        ].join("\n"),
+        cta: gameCTA("berburu"),
+      }));
     }
   } catch (err) {
     console.error("berburu error:", err);

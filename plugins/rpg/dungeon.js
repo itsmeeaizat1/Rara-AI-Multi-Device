@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -132,13 +133,18 @@ async function handler(m, { sock }) {
     }
 
     // Boss bonus: clear semua stage
-    let bossBonus = "";
+    let bossBonusLines = [];
     if (stagesCleared === stageCount) {
       const bonusGold = totalGold * 2;
       const bonusExp = totalExp * 2;
       addGold(m, bonusGold);
       addExp(m, bonusExp);
-      bossBonus = `\n👑 *Boss Bonus* — Clear all stages!\nGold: +${bonusGold} | EXP: +${bonusExp}\n`;
+      bossBonusLines = [
+        "",
+        "👑 Boss Bonus — semua stage clear!",
+        `│ • 💰 Bonus gold : +${bonusGold}`,
+        `│ • ✨ Bonus EXP : +${bonusExp}`,
+      ];
     }
 
     // Save HP
@@ -146,31 +152,36 @@ async function handler(m, { sock }) {
     saveRpg(m, { hp: newHp });
     setCooldown(m, "lastDungeon", DG_COOLDOWN);
 
-    let dropText = "";
+    let dropLines = [];
     if (totalDrops.length > 0) {
       const grouped = {};
       for (const d of totalDrops) {
         grouped[d.item] = (grouped[d.item] || 0) + d.qty;
       }
-      dropText = Object.entries(grouped).map(([item, qty]) => `+${qty}x ${ITEM_DB[item]?.name || item}`).join("\n");
-      dropText = "\n" + dropText;
+      dropLines = Object.entries(grouped).map(([item, qty]) => `│ • 📦 Drop : +${qty}x ${ITEM_DB[item]?.name || item}`);
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴅᴜɴɢᴇᴏɴ ✦ 」\n`;
-    msg += `│ 🏰 Stage: *${stagesCleared}/${stageCount}*\n`;
-    msg += `│ ${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n`;
-    msg += `│\n`;
-    msg += `│ ✦ EXP  : *+${totalExp}*\n`;
-    msg += `│ 💰 Gold : *+${totalGold}*\n`;
-    if (dropText) msg += dropText + "\n";
-    if (bossBonus) msg += `│ ${bossBonus}\n`;
-    msg += `│\n`;
-    msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    msg += `╰──── • ────`;
-
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "dungeon", icon: "🏰",
+      flavor: stagesCleared === stageCount
+        ? "🏆 *DUNGEON DIBERSIHKAN!*"
+        : stagesCleared > 0
+        ? "⚔️ *EKSPEDISI SELESAI!*"
+        : "💀 *GAGAL DI DUNGEON!*",
+      body: [
+        `│ • 🏰 Stage clear : ${stagesCleared}/${stageCount}`,
+        `│ • ${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}`,
+        `│ • ✨ EXP : +${totalExp}`,
+        `│ • 💰 Gold : +${totalGold}`,
+        ...dropLines,
+        ...bossBonusLines,
+        "",
+        `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
+        `│ • ⚡ Energi : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("dungeon"),
+    }));
   } catch (err) {
     console.error("dungeon error:", err);
     await m.react("❌");

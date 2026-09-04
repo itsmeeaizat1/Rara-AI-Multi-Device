@@ -2,6 +2,7 @@
 // rangerpost.js — Ranger Post (daily patrol duty, earn salary)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -61,20 +62,23 @@ async function handler(m, { sock }) {
       }
       await db.setPlayerData?.(m.sender, "rangerpost", data);
       await m.react("🐣");
-      let msg = "";
-      msg += `🎖️ Daily Check-in Berhasil!\n`;
-      msg += `Salary: *+${salary} gold*\n`;
-      msg += `Days: *${data.days}*\n`;
-      msg += `Ranger Level: *${data.level || 1}*\n`;
-      if (data.days % 7 === 0) msg += `⭐ LEVEL UP! Ranger Lv.${data.level}\n`;
-      msg += `
-`;
-      msg += `Tugas hari ini:\n`;
-      TASKS.forEach(t => {
-        const done = data.tasksDone?.includes(t.id);
-        msg += `${t.emoji} ${t.name} ${done ? "✅" : `→ ${m.prefix}rangerpost task ${t.id}`}\n`;
-      });
-            return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "rangerpost", icon: "🎖️",
+        flavor: "🎖️ *CHECK-IN BERHASIL!*",
+        body: [
+          `│ • 💰 Salary harian : +${salary} gold`,
+          `│ • 📅 Hari bertugas : ${data.days}`,
+          `│ • 🎖️ Ranger level : ${data.level || 1}`,
+          ...(data.days % 7 === 0 ? ["", `⭐ LEVEL UP! Ranger Lv.${data.level}`] : []),
+          "",
+          "Tugas hari ini:",
+          ...TASKS.map(t => {
+            const done = data.tasksDone?.includes(t.id);
+            return `${t.emoji} ${t.name} ${done ? "✅" : `→ ${m.prefix}rangerpost task ${t.id}`}`;
+          }),
+        ].join("\n"),
+        cta: gameCTA("rangerpost"),
+      }));
     }
 
     if (subCmd === "task" || subCmd === "tugas") {
@@ -103,25 +107,22 @@ async function handler(m, { sock }) {
       data.tasksDone.push(taskId);
       await db.setPlayerData?.(m.sender, "rangerpost", data);
 
-      await m.react("🐣");
-      let msg = "";
-      msg += `${task.emoji} *${task.name}*\n`;
-      msg += `${task.desc}\n`;
-      msg += `
-`;
-      msg += `${narrative}\n`;
-      msg += `
-`;
-      if (success) {
-        msg += `🏆 *ʙᴇʀʜᴀꜱɪʟ!*\n`;
-        msg += `Reward: +${task.reward} gold\n`;
-      } else {
-        msg += `💀 *ɢᴀɢᴀʟ!*\n`;
-        msg += `Tidak ada reward\n`;
-      }
       const remaining = 3 - data.tasksDone.length;
-      msg += `Sisa tugas: *${remaining}*\n`;
-            return m.reply(msg);
+
+      await m.react("🐣");
+      return m.reply(novaGameBox({
+        title: "rangerpost", icon: "🎖️",
+        flavor: success ? "🏆 *BERHASIL!*" : "💀 *GAGAL!*",
+        body: [
+          `${task.emoji} ${task.name} — ${task.desc}`,
+          "",
+          narrative,
+          "",
+          success ? `│ • 💰 Reward : +${task.reward} gold` : "Tidak ada reward kali ini",
+          `│ • 📋 Sisa tugas : ${remaining}`,
+        ].join("\n"),
+        cta: gameCTA("rangerpost"),
+      }));
     }
 
     // STATUS (default)
@@ -137,7 +138,7 @@ async function handler(m, { sock }) {
       msg += `${t.emoji} ${t.name} ${done ? "✅" : "📋"}\n`;
       if (!done) msg += `Reward: ${t.reward}g | ${m.prefix}rangerpost task ${t.id}\n`;
     });
-        return m.reply(msg);
+        return m.reply(claraWrap("rangerpost", msg));
   } catch (err) {
     console.error("rangerpost error:", err);
     await m.react("❌");

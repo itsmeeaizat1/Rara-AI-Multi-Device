@@ -7,6 +7,7 @@ import {
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -79,19 +80,21 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastNguli", NGULI_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `👷 Pekerjaan: ${job.name}\n`;
-    msg += `
-`;
-    msg += `📦 *ʜᴀsɪʟ* ${streak > 1 ? `(streak: ${streak})` : ""}\n`;
-    msg += `💰 Gold: *+${goldGain}*\n`;
-    if (bonusGold > 0) msg += `Streak bonus: *+${bonusGold} gold*\n`;
-    msg += `✦ EXP: *+${expGain}*\n`;
-    msg += `
-`;
-    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "nguli", icon: "👷",
+      flavor: "💪 *GAJIAN KULI!*",
+      body: [
+        `│ • 👷 Pekerjaan : ${job.name}`,
+        "",
+        `│ • 💰 Gold : +${goldGain}`,
+        ...(bonusGold > 0 ? [`│ • 🔥 Streak bonus : +${bonusGold} gold`] : []),
+        `│ • ✨ EXP : +${expGain}`,
+        ...(streak > 1 ? [`│ • 🔥 Streak : ${streak}x`] : []),
+        "",
+        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("nguli"),
+    }));
   } catch (err) {
     console.error("nguli error:", err);
     await m.react("❌");
