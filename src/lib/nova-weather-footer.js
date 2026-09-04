@@ -166,13 +166,15 @@ function windDirectionText(deg) {
 }
 
 function uvText(value) {
+  // Plain text — smallcaps-nya di-wrap toSC di buildFooter (menu box),
+  // biar notifikasi plain text tetap natural.
   const n = Number(value);
   if (!Number.isFinite(n)) return "-";
-  if (n <= 2) return `${fmt(n)} ${toSC("(Rendah)")}`;
-  if (n <= 5) return `${fmt(n)} ${toSC("(Sedang)")}`;
-  if (n <= 7) return `${fmt(n)} ${toSC("(Tinggi)")}`;
-  if (n <= 10) return `${fmt(n)} ${toSC("(Sangat Tinggi)")}`;
-  return `${fmt(n)} ${toSC("(Ekstrem)")}`;
+  if (n <= 2) return `${fmt(n)} (Rendah)`;
+  if (n <= 5) return `${fmt(n)} (Sedang)`;
+  if (n <= 7) return `${fmt(n)} (Tinggi)`;
+  if (n <= 10) return `${fmt(n)} (Sangat Tinggi)`;
+  return `${fmt(n)} (Ekstrem)`;
 }
 
 function normalizeOpenMeteo(data) {
@@ -245,7 +247,7 @@ function buildFooter(normalized) {
     `│ *${toSC("Angin")}:* ${fmt(normalized.wind_speed_10m, " km/jam")} 🌬️`,
     `│ *${toSC("Arah angin")}:* ${toSC(windDirectionText(normalized.wind_direction_10m))} 🧭`,
     `│ *${toSC("Tutupan awan")}:* ${fmt(normalized.cloud_cover, "%")} ☁️`,
-    `│ *${toSC("UV index")}:* ${uvText(normalized.uv_index)} ☀️`,
+    `│ *${toSC("UV index")}:* ${toSC(uvText(normalized.uv_index))} ☀️`,
     `│ *${toSC("Curah hujan")}:* ${fmt(normalized.precipitation, " mm")} 🌧️`,
     `╰────  •  ────`,
   ];

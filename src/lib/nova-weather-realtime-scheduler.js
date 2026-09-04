@@ -3,8 +3,7 @@
 // Cek setiap menit, kirim cuaca ke grup target sesuai jadwal
 
 import { getDatabase } from "./nova-database.js";
-import { getWeatherFooter, clearWeatherCache } from "./nova-weather-footer.js";
-import { toSC } from "./nova-menu-style.js";
+import { getWeatherDetail, clearWeatherCache } from "./nova-weather-footer.js";
 
 let schedulerInterval = null;
 let lastSent = {}; // { "pagi": "2026-09-02", ... } — track per key per day
@@ -52,23 +51,19 @@ export async function checkAndSend(sock) {
       console.log(`[weather-realtime] Sending ${sched.label} notification to ${settings.target}`);
       try {
         clearWeatherCache();
-        const footer = await getWeatherFooter(true);
-        if (!footer) {
+        const detail = await getWeatherDetail();
+        if (!detail) {
           console.log("[weather-realtime] No weather data, skipping");
           continue;
         }
 
+        // Owner request: notifikasi cuaca BUKAN menu → plain text natural,
+        // tanpa box-drawing & tanpa smallcaps.
         const greeting = getGreeting(hour);
-        // Footer cuaca udah box utuh — ambil ISI-nya aja (buang header
-        // & closer biar gak dobel box: satu pesan = satu box rapi).
-        const body = footer.split("\n").slice(1, -1).join("\n");
         const message =
-          "╭─「 ✦ " + toSC("Cuaca " + (sched.label || "")) + " ✦ 」\n" +
-          "│ " + greeting + "\n" +
-          "│ " + toSC("Cuaca terkini untuk hari ini") + "\n" +
-          "│\n" +
-          body + "\n" +
-          "╰────  •  ────";
+          `${greeting}! ${detail.emoji}\n` +
+          `Cuaca ${detail.location} hari ini: ${detail.kondisi}, suhu ${detail.suhu} (terasa seperti ${detail.terasa})\n` +
+          `Kelembapan ${detail.kelembapan}, angin ${detail.angin} dari ${detail.arahAngin}, tutupan awan ${detail.tutupanAwan}, UV ${detail.uv}, curah hujan ${detail.curahHujan}.`;
 
         await sock.sendMessage(settings.target, { text: message });
         console.log("[weather-realtime] ✅ Sent to", settings.target);
@@ -80,10 +75,10 @@ export async function checkAndSend(sock) {
 }
 
 function getGreeting(hour) {
-  if (hour < 11) return toSC("Selamat pagi");
-  if (hour < 15) return toSC("Selamat siang");
-  if (hour < 18) return toSC("Selamat sore");
-  return toSC("Selamat malam");
+  if (hour < 11) return "Selamat pagi";
+  if (hour < 15) return "Selamat siang";
+  if (hour < 18) return "Selamat sore";
+  return "Selamat malam";
 }
 
 export function getSchedulerStatus() {
