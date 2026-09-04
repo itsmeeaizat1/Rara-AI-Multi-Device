@@ -4,6 +4,9 @@
 
 ## Statistik
 
+- **.topup** (main, baru): Katalog topup terpadu 4 JALUR — digenerate langsung dari TOPUP_ITEMS di src/lib/store/nova-store.js jadi selalu sinkron dengan harga terbaru (gak ada harga stale). Sub: `.topup` (katalog lengkap: Akun limit/koin, RPG diamond/harta/gems/tokens, Item game, Cinta affection), `.topup status` / `.topup pesanan` (cek pesanan pending semua jalur + hint batal), `.topup akun|rpg|item|cinta` (filter per jalur). Format: box-drawing + smallcaps, harga `Rp 10.000 / <paket>`, item game Rp 200/poin nilai min Rp 5.000. Kartu Topup di .payment kini nyebut 4 jalur + arahan ke .topup.
+
+
 - **RPG ENGINE FORMAT BATCH 2 (branch feat/rpg-dekaku, 40 file plugins/rpg):** SEMUA hasil aksi RPG kini pakai format engine novaGameBox (flavor bold pembuka + box judul CAPS + isi `│ • Label : value` tanpa bold + closer + CTA gameCTA tematik kak-language). Konversi 40 file: adventure, adventurev2, arenav3, begalrpg, berburu, berburuv2, berdagang, berkebon, bossraid, casinorpg, casinov2, craftrpg, duelrpg, dungeon, dungeonv2 (termasuk blok defeat), enchantrpg, fortune, guildwar, heist, hilorpg, investrpg, jobrpg, kerja, mining, miningv2, nebang, nguli, ojekrpg, patrol, pet, rafflerpg, rangerpost, redeem, roulette, sabungayam, sampah, slotmachine, summon, treasurehunt, upgrade2. GAME_CTA +40 entri (total CTA engine kini 52+6 romantis). Panel/menu/status/list yang tadinya dikirim RAW (m.reply(msg)) kini dibungkus claraWrap box smallcaps (25 titik di 17 file). Audit final: 0 raw reply sisa, 0 CTA gak terdaftar, semua 40 file syntax OK. Tes regresi: test-rpg-dekaku 12/12 + test-rpg-cinta-engine 6/6 pass. Render terverifikasi: mining (flavor ⛏️ *TAMBANG BERHASIL!* + body + CTA).
 
 

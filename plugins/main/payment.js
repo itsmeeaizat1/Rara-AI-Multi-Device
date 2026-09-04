@@ -26,7 +26,7 @@ const pluginConfig = {
   name: "payment",
   alias: ["payment", "katalog", "orderbot"],
   category: "store",
-  description: "Katalog Sewa Bot, Premium, Topup Limit & Donasi — geser kartu kiri/kanan",
+  description: "Katalog Sewa Bot, Premium, Topup 4 Jalur & Donasi — geser kartu kiri/kanan",
   usage: ".payment",
   example: ".payment",
   isOwner: false,
@@ -111,7 +111,8 @@ function buildTopupBody() {
     const label = t.amount === -1 ? (t.label || "Unlimited") : `+${t.amount} Limit`;
     lines.push(`${label.padEnd(12)} : ${t.price}`);
   }
-  lines.push("", "</> Catatan </>", "- Limit topup gak hangus selama bot hidup", "- Bisa buat sendiri atau minta ditaruh ke teman");
+  lines.push("", "</> Jalur Topup Lain </>", "- RPG: diamond, gold, gems, tokens", "- Item game & affection RPG cinta", "", "Katalog + harga lengkap: ketik .topup");
+  lines.push("", "</> Catatan </>", "- Topup gak hangus selama bot hidup", "- Bisa buat sendiri atau minta ditaruh ke teman");
   return lines.join("\n");
 }
 
@@ -172,7 +173,7 @@ async function handler(m, { sock }) {
       buildCard({
         image: readCardImage("payment-topup-card.jpg"),
         body: buildTopupBody(),
-        footer: `Topup Limit ${botName}`,
+        footer: `Topup Nova ${botName}`,
         button: orderButton(ownerNumber, `Halo ${ownerName}, saya mau topup limit fitur ${botName} 🙏`),
       }),
       buildCard({
