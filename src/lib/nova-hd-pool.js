@@ -20,11 +20,15 @@ function startWorker() {
   worker.unref();
 
   worker.on("message", ({ id, ok, result, error }) => {
-    const job = queue.find((j) => j.id === id);
-    if (!job) return;
+    // FIX BUG: job di-SHIFT keluar queue saat dispatch — kalau dicari di queue
+    // lagi (kode lama queue.find()) gak akan pernah ketemu → promise hang
+    // selamanya (.remini "selesai" di worker tapi hasil gak pernah dikirim,
+    // gak error juga). Job yang lagi dieksekusi disimpen di variabel `running`.
+    if (!running || running.id !== id) return;
+    const job = running;
+    running = null;
     if (ok) job.resolve(result);
     else job.reject(new Error(error || "hd worker error"));
-    running = false;
     pump();
   });
 
@@ -44,7 +48,9 @@ function startWorker() {
 
 // worker mati di tengah antrian → semua job gagal, user bisa retry
 function failAll(err) {
-  running = false;
+  const active = running; // job yang lagi dieksekusi worker juga ikut gagal
+  running = null;
+  if (active) active.reject(err);
   while (queue.length) {
     const j = queue.shift();
     j.reject(err);
@@ -57,11 +63,11 @@ function pump() {
   if (workerBroken) {
     // fallback inline: jalan di main thread (blok, tapi tetap jalan)
     const job = queue.shift();
-    running = true;
+    running = job;
     enhanceLocal(job.buffer, job.mode, job.opts)
       .then((r) => { job.resolve(r); })
       .catch((e) => { job.reject(e); })
-      .finally(() => { running = false; pump(); });
+      .finally(() => { running = null; pump(); });
     return;
   }
   if (!worker) {
@@ -73,7 +79,7 @@ function pump() {
     }
   }
   const job = queue.shift();
-  running = true;
+  running = job; // simpen job-nya, bukan cuma true — biar handler message bisa resolve
   worker.__lastId = job.id;
   worker.postMessage(
     { id: job.id, buffer: job.buffer, mode: job.mode, opts: job.opts },
@@ -98,5 +104,5 @@ export function enhanceLocalAsync(buffer, mode = "hd", opts = {}) {
 
 /** Info antrian buat notice UX: { ahead, busy } — ahead = jumlah job nunggu */
 export function hdQueueInfo() {
-  return { ahead: queue.length, busy: running };
+  return { ahead: queue.length, busy: !!running };
 }
