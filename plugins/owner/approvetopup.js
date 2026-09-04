@@ -6,8 +6,13 @@
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
-import { TOPUP_ITEMS } from "../../src/lib/store/nova-store.js";
-import { ensureTopups } from "../main/buylimit.js";
+import {
+  TOPUP_ITEMS,
+  ensureTopups,
+} from "../../src/lib/store/nova-store.js";
+// Helper apply JALUR RPG / CINTA / ITEM
+import { addItem } from "../../src/lib/nova-rpg-service.js";
+import { addAffection } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
   name: "approvetopup",
@@ -42,7 +47,12 @@ async function handler(m, { sock }) {
     }
     let txt = `${toSC("ᴘᴇꜱᴀɴᴀɴ ᴛᴏᴘᴜᴘ ᴘᴇɴᴅɪɴɢ")} — ${pending.length}\n`;
     for (const [jid, o] of pending) {
-      txt += `\n• ${o.phoneNumber} (${o.name || "Unknown"})\n  ${o.type === "limit" ? "⚡" : "🪙"} ${o.qty.toLocaleString("id-ID")} ${TOPUP_ITEMS[o.type]?.unit || o.type} — ${o.price}\n  Waktu: ${new Date(o.orderedAt).toLocaleString("id-ID")}\n`;
+      const it = TOPUP_ITEMS[o.type];
+      const icon = o.type === "rpgitem" ? "📦" : it?.icon || "▫️";
+      const label = o.type === "rpgitem"
+        ? `${o.itemName} (${o.itemId}) x${o.qty}`
+        : `${o.qty.toLocaleString("id-ID")} ${it?.unit || o.type}`;
+      txt += `\n• ${o.phoneNumber} (${o.name || "Unknown"})\n  ${icon} ${label} — ${o.price}\n  Jalur: ${o.jalur || "?"} • Waktu: ${new Date(o.orderedAt).toLocaleString("id-ID")}\n`;
     }
     txt += `\n📌 Approve: *${prefix}approvetopup <nomor>*\n💡 Tolak: *${prefix}approvetopup <nomor> tolak <alasan>*`;
     return m.reply(claraWrap("approvetopup", txt));
@@ -71,20 +81,24 @@ async function handler(m, { sock }) {
     order.rejectReason = reason;
     topups.history.push(order);
     db.db.write();
+    const rejLabel = order.type === "rpgitem"
+      ? `${order.itemName} x${order.qty}`
+      : `${order.qty.toLocaleString("id-ID")} ${item?.unit || order.type}`;
     await sock.sendMessage(jid, {
-      text: `❌ *ᴘᴇꜱᴀɴᴀɴ ᴛᴏᴘᴜᴘ ᴅɪᴛᴏʟᴀᴋ*\n\nItem: *${order.qty.toLocaleString("id-ID")} ${item?.unit || order.type}*\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
+      text: `❌ *ᴘᴇꜱᴀɴᴀɴ ᴛᴏᴘᴜᴘ ᴅɪᴛᴏʟᴀᴋ*\n\nItem: *${rejLabel}*\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
     }).catch(() => {});
     return m.reply(claraWrap("approvetopup",
       `Status: *ᴅɪᴛᴏʟᴀᴋ*\nPesanan ${order.type} dari *${target}* ditolak`));
   }
 
-  // Approve → terapkan ke user
-  const user = db.getUser(jid) || db.setUser(jid);
-  if (!user) {
-    return m.reply(claraWrap("approvetopup", `Gagal: user *${target}* tidak bisa diakses`));
-  }
+  // Approve → terapkan sesuai JALUR pesanan
+  const it = TOPUP_ITEMS[order.type];
+  const fakeM = { sender: jid, pushName: order.name || "Player" }; // buat helper rpg/cinta/item
+  let applyNote = "";
 
   if (order.type === "limit") {
+    const user = db.getUser(jid) || db.setUser(jid);
+    if (!user) return m.reply(claraWrap("approvetopup", `Gagal: user *${target}* tidak bisa diakses`));
     // -1 = unlimited, jangan diubah
     if (user.energi !== -1) {
       user.energi = (user.energi ?? config.energi?.default ?? 25) + order.qty;
@@ -92,6 +106,24 @@ async function handler(m, { sock }) {
     }
   } else if (order.type === "koin") {
     db.updateKoin(jid, order.qty);
+  } else if (it?.apply?.startsWith("rpgCurrency:")) {
+    // JALUR RPG: diamond / harta(gold) / gems / tokens
+    const currency = it.apply.split(":")[1];
+    db.updateRpgCurrency(jid, currency, order.qty);
+  } else if (order.type === "affection") {
+    // JALUR CINTA
+    const after = addAffection(fakeM, order.qty);
+    if (after === undefined || after === null) {
+      return m.reply(claraWrap("approvetopup", `Gagal: data cinta user *${target}* tidak bisa diakses`));
+    }
+    applyNote = `Affection sekarang: ${after.toLocaleString("id-ID")}`;
+  } else if (order.type === "rpgitem") {
+    // JALUR ITEM: masuk inventory game
+    const ok = addItem(fakeM, order.itemId, order.qty);
+    if (!ok) {
+      return m.reply(claraWrap("approvetopup", `Gagal: item *${order.itemId}* tidak bisa dimasukkan ke inventory`));
+    }
+    applyNote = `Item masuk inventory: ${order.itemName} x${order.qty}`;
   } else {
     return m.reply(claraWrap("approvetopup", `Tipe pesanan tidak dikenal: *${order.type}*`));
   }
@@ -104,13 +136,15 @@ async function handler(m, { sock }) {
   if (topups.history.length > 200) topups.history = topups.history.slice(-200);
   db.db.write();
 
-  const unitLabel = item?.unit || order.type;
+  const unitLabel = order.type === "rpgitem"
+    ? `${order.itemName} (x${order.qty})`
+    : `${order.qty.toLocaleString("id-ID")} ${item?.unit || order.type}`;
   await sock.sendMessage(jid, {
-    text: `✅ *ᴛᴏᴘᴜᴘ ʙᴇʀʜᴀꜱɪʟ*\n\n+${order.qty.toLocaleString("id-ID")} ${unitLabel} sudah masuk ke akun kamu!\nTotal bayar: *${order.price}*\n\nTerima kasih sudah topup 🥳`,
+    text: `✅ *ᴛᴏᴘᴜᴘ ʙᴇʀʜᴀꜱɪʟ*\n\n+${unitLabel} sudah masuk ke akun kamu!\nTotal bayar: *${order.price}*\n\nTerima kasih sudah topup 🥳`,
   }).catch(() => {});
 
   return m.reply(claraWrap("approvetopup",
-    `Status: *ʙᴇʀʜᴀꜱɪʟ*\nUser: *${order.phoneNumber}*\nItem: *+${order.qty.toLocaleString("id-ID")} ${unitLabel}*\nHarga: *${order.price}*\n\n${order.type === "limit" && user.energi === -1 ? "User unlimited (limit -1) — tidak ditambah" : "Item sudah masuk otomatis & user dinotif"}`));
+    `Status: *ʙᴇʀʜᴀꜱɪʟ*\nUser: *${order.phoneNumber}*\nItem: *+${unitLabel}*\nJalur: *${order.jalur || "akun"}*\nHarga: *${order.price}*\n\n${order.type === "limit" && db.getUser(jid)?.energi === -1 ? "User unlimited (limit -1) — tidak ditambah" : applyNote || "Item sudah masuk otomatis & user dinotif"}`));
 }
 
 export { pluginConfig as config, handler };
