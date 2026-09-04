@@ -133,9 +133,9 @@ async function handler(m, { sock }) {
   const price = calcTopupPrice(ITEM_KEY, qty);
   const pending = topups.pending[sender];
   const isReplace = pending && pending.status === "pending";
-  if (pending && pending.type === "koin") {
+  if (pending && pending.type === "limit") {
     return m.reply(claraWrap("buykoin",
-      `Masih ada pesanan *buykoin* pending\nSelesaikan / batal dulu: *.buykoin batal*`));
+      `Masih ada pesanan *buylimit* pending\nSelesaikan / batal dulu: *.buylimit batal*`));
   }
 
   topups.pending[sender] = {
