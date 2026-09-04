@@ -18,7 +18,7 @@ import os from "os";
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
+import { buildNavButtons } from "../../src/lib/nova-menu-card.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
 import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
@@ -243,14 +243,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     // ── Send: nativeFlowMessage buttons (proven pattern) + real image header ──
     // "Kategori" pakai single_select → klik buka popup list semua kategori
-    const navButtons = [
-      { id: `${prefix}menu`, text: toSC("Menu") },
-      { id: `${prefix}allmenu`, text: toSC("All Menu") },
-      buildCategoryButton(m, db, prefix),
-      { id: `${prefix}tanyaai`, text: toSC("Tanya AI") },
-      { id: `${prefix}info`, text: toSC("Info") },
-      { id: `${prefix}owner`, text: toSC("Owner") },
-    ];
+    const navButtons = buildNavButtons(m, db, prefix);
     await sendMenuCard(sock, m, {
       text: finalText,
       footer: "",

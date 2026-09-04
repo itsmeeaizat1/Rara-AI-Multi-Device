@@ -2,6 +2,7 @@
 import config, { getOwnerName } from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { sendMenuCard, buildNavButtons } from "../../src/lib/nova-menu-card.js";
 
 const pluginConfig = {
   name: "owner",
@@ -48,9 +49,12 @@ async function handler(m, { sock, config: botConfig }) {
       `Owner bot ini ramah dan open-minded kok 😊`,
       `Silakan save kontak di atas ya!`,
     ].join("\n");
-    await sock.sendMessage(m.chat, {
+    await sendMenuCard(sock, m, {
       text: claraWrap("👨‍💻 Owner", followUpText),
-    }, { quoted: zanne });
+      footer: "",
+      buttons: buildNavButtons(m, db, "."),
+      title: botName,
+    });
   } else {
     // Type 1: Teks keren + contact card
     const ownerText = [
@@ -65,7 +69,12 @@ async function handler(m, { sock, config: botConfig }) {
       `Silakan save kontak di bawah ya!`,
     ].join("\n");
 
-    await m.reply(claraWrap("👨‍💻 Owner", ownerText));
+    await sendMenuCard(sock, m, {
+      text: claraWrap("👨‍💻 Owner", ownerText),
+      footer: "",
+      buttons: buildNavButtons(m, db, "."),
+      title: botName,
+    });
 
     for (const number of ownerNumbers) {
       const cleanNumber = number.replace(/[^0-9]/g, "");

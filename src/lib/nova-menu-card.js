@@ -27,6 +27,8 @@ import path from "path";
 import sharp from "sharp";
 import { generateWAMessageFromContent, proto } from "nova";
 import { getTimeGreeting } from "./nova-formatter.js";
+import { buildCategoryButton } from "./nova-category-list.js";
+import { toSC } from "./nova-menu-style.js";
 import config from "../../config.js";
 
 let _thumbnailBuffer = null;
@@ -49,6 +51,85 @@ function getThumbnailBuffer(imagePath) {
     console.error("[nova-menu-card] Gagal baca thumbnail:", e.message);
     return null;
   }
+}
+
+/**
+ * Set tombol nav standar (request owner 2026-09-04) — dipakai SEMUA command
+ * ber-tombol: .menu, .allmenu, .allmenucategory, .sewa, .owner.
+ *
+ * 5 tombol:
+ * 1. Menu          → quick_reply .menu
+ * 2. Semua Menu    → quick_reply .allmenu
+ * 3. ☰ Semua Kategori → single_select popup list kategori (buildCategoryButton)
+ * 4. ☰ Sewa        → single_select popup: Beli Premium / Sewa Bot
+ * 5. Owner         → single_select popup: Laporkan Bug / Join Grup Resmi /
+ *                    Ikuti Saluran Resmi / Donasi
+ *
+ * @param {object} m
+ * @param {object} db
+ * @param {string} [prefix="."]
+ * @returns {Array} buttons siap dipakai di sendMenuCard
+ */
+function buildNavButtons(m, db, prefix = ".") {
+  const sewaRows = [
+    {
+      header: "",
+      title: "Beli Premium",
+      description: "Buka semua fitur premium bot",
+      id: `${prefix}premium`,
+    },
+    {
+      header: "",
+      title: "Sewa Bot",
+      description: "Masukkan bot ke grup kamu",
+      id: `${prefix}sewa`,
+    },
+  ];
+
+  const ownerRows = [
+    {
+      header: "",
+      title: "Laporkan Bug",
+      description: "Laporkan error/bug ke owner",
+      id: `${prefix}bugreport`,
+    },
+    {
+      header: "",
+      title: "Join Grup Resmi",
+      description: "Gabung grup resmi bot",
+      id: `${prefix}gcbot`,
+    },
+    {
+      header: "",
+      title: "Ikuti Saluran Resmi",
+      description: "Update info bot langsung",
+      id: `${prefix}channelnovaofficial`,
+    },
+    {
+      header: "",
+      title: "Donasi",
+      description: "Dukung bot dengan donasi",
+      id: `${prefix}donasi`,
+    },
+  ];
+
+  return [
+    { id: `${prefix}menu`, text: toSC("Menu") },
+    { id: `${prefix}allmenu`, text: toSC("Semua Menu") },
+    buildCategoryButton(m, db, prefix, `☰ ${toSC("Semua Kategori")}`),
+    {
+      type: "single_select",
+      text: `☰ ${toSC("Sewa")}`,
+      title: toSC("Pilih Layanan"),
+      sections: [{ title: toSC("Layanan Bot"), rows: sewaRows }],
+    },
+    {
+      type: "single_select",
+      text: toSC("Owner"),
+      title: toSC("Owner Bot"),
+      sections: [{ title: toSC("Hubungi Owner"), rows: ownerRows }],
+    },
+  ];
 }
 
 /**
@@ -193,4 +274,4 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
   }
 }
 
-export { sendMenuCard };
+export { sendMenuCard, buildNavButtons };
