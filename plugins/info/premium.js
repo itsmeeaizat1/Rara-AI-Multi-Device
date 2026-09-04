@@ -348,4 +348,4 @@ async function handler(m, { sock, config: botConfig, db }) {
   return { handled: true };
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, PREMIUM_PRICES };
