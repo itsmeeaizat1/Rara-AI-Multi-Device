@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -76,19 +77,23 @@ export function checkFlood(m, sock, db) {
           delete cfg.warns[sender];
           db.save();
           sock.sendMessage(groupId, {
-            text: "Anti Flood\n@" + sender.split("@")[0] + " dikeluarkan karena flood!\nTotal warning: " + warnCount + "/" + maxWarn + "\nLimit: " + limit + " pesan dalam " + windowSec + " detik",
+            text: novaWarning("ANTI FLOOD — TINDAKAN", [
+              ["Pengirim", "@" + sender.split("@")[0]],
+              ["Pelanggaran", "Flood " + tracker.count + " pesan dalam " + elapsed.toFixed(1) + " detik"],
+              ["Peringatan", warnCount + " dari " + maxWarn],
+              ["Tindakan", "Dikeluarkan dari grup otomatis"],
+            ], "Batas: " + limit + " pesan dalam " + windowSec + " detik. Flood tidak diperbolehkan di grup ini."),
             mentions: [sender],
           });
         } catch (e) { console.error('[antiflood.js]:', e.message); }
       } else {
         sock.sendMessage(groupId, {
-          text: claraWrap("Anti Flood", [
-            "FLOOD TERDETEKSI!",
-            "@" + sender.split("@")[0] + " kirim " + tracker.count + " pesan dalam " + elapsed.toFixed(1) + " detik",
-            "Warning: " + warnCount + "/" + maxWarn,
-            "Action: " + action.toUpperCase(),
-            "Kalau sampe " + maxWarn + "x warning = kick!",
-          ], "warn"),
+          text: novaWarning("ANTI FLOOD — PERINGATAN", [
+            ["Pengirim", "@" + sender.split("@")[0]],
+            ["Pelanggaran", "Flood " + tracker.count + " pesan dalam " + elapsed.toFixed(1) + " detik"],
+            ["Peringatan", warnCount + " dari " + maxWarn],
+            ["Tindakan", "Pesan dihapus (" + action + ")"],
+          ], "Batas: " + limit + " pesan dalam " + windowSec + " detik. " + maxWarn + "x peringatan = dikeluarkan dari grup."),
           mentions: [sender],
         });
       }

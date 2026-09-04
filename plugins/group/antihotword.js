@@ -18,6 +18,8 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
+
 export async function checkHotWord(m, sock, db) {
   const groupId = m.key.remoteJid;
   const cfg = db.data?.groups?.[groupId]?.antihotword;
@@ -55,7 +57,14 @@ export async function checkHotWord(m, sock, db) {
         } catch (e) { console.error('[antihotword.js]:', e.message); }
 
         sock.sendMessage(groupId, {
-          text: "Anti Hot Word\nHOT WORD TERDETEKSI!\nKata: " + word + "\nOleh: @" + sender.split("@")[0] + "\nTotal deteksi: " + cfg.totalDetected + "\n\nPesan: " + text.slice(0, 80) + "\n\n" + (action === "warn" ? "Warning telah dicatat." : "Admin harap cek pesan ini."),
+          text: novaWarning("ANTI HOT WORD — PERINGATAN", [
+            ["Pengirim", "@" + sender.split("@")[0]],
+            ["Pelanggaran", "Hot word terdeteksi"],
+            ["Terdeteksi", word],
+            ["Total deteksi", String(cfg.totalDetected)],
+            ["Tindakan", action === "warn" ? "Peringatan dicatat" : "Admin diminta cek pesan ini"],
+            ["Potongan pesan", text.slice(0, 80)],
+          ], "Kata sensitif tidak diperbolehkan di grup ini."),
           mentions: [sender, ...adminMentions],
         });
       }

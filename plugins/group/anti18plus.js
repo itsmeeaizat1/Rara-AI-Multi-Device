@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 
@@ -357,51 +358,48 @@ async function handleAntiNSFW(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text:
-                                                        'User: @' + senderTag + '\n' +
-                            'Pelanggaran: ' + typeLabel + '\n' +
-                            'Warn: ' + currentWarn + '/' + maxWarn + '\n' +
-                            'Terdeteksi: ' + matchesStr + '\n' +
-                            'Aksi: KICK OTOMATIS\n' +
-                            '\n' +
-                            '_User telah dikeluarkan karena mencapai batas peringatan_',
+                        text: novaWarning("ANTI NSFW — TINDAKAN", [
+                            ["Pengirim", `@${senderTag}`],
+                            ["Pelanggaran", typeLabel],
+                            ["Terdeteksi", matchesStr],
+                            ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                            ["Tindakan", "Dikeluarkan dari grup otomatis"],
+                        ], "Konten NSFW tidak diperbolehkan di grup ini."),
                         mentions: [m.sender],
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text:
-                                                        'User: @' + senderTag + '\n' +
-                            'Pelanggaran: ' + typeLabel + '\n' +
-                            'Warn: ' + currentWarn + '/' + maxWarn + '\n' +
-                            'Terdeteksi: ' + matchesStr + '\n' +
-                            'Aksi: WARN (bot bukan admin)\n' +
-                            '\n' +
-                            '_Bot tidak bisa kick karena bukan admin_',
+                        text: novaWarning("ANTI NSFW — INFO", [
+                            ["Pengirim", `@${senderTag}`],
+                            ["Pelanggaran", typeLabel],
+                            ["Terdeteksi", matchesStr],
+                            ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                            ["Tindakan", "Tidak dieksekusi — bot bukan admin"],
+                        ], "Jadikan bot admin agar auto-kick bisa berjalan."),
                         mentions: [m.sender],
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text:
-                                                'User: @' + senderTag + '\n' +
-                        'Pelanggaran: ' + typeLabel + '\n' +
-                        'Warn: ' + currentWarn + '/' + maxWarn + '\n' +
-                        'Terdeteksi: ' + matchesStr + '\n' +
-                        'Auto-kick: OFF (mode warn only)\n' +
-                        '\n' +
-                        '_User mencapai batas peringatan, tapi auto-kick dimatikan_',
+                    text: novaWarning("ANTI NSFW — PERINGATAN MAKSIMAL", [
+                        ["Pengirim", `@${senderTag}`],
+                        ["Pelanggaran", typeLabel],
+                        ["Terdeteksi", matchesStr],
+                        ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                        ["Tindakan", "Auto-kick dimatikan di grup ini"],
+                    ], "Konten NSFW terus-menerus — admin dapat mengeluarkanmu secara manual."),
                     mentions: [m.sender],
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text:
-                                        'User: @' + senderTag + '\n' +
-                    'Pelanggaran: ' + typeLabel + '\n' +
-                    'Warn: ' + currentWarn + '/' + maxWarn + '\n' +
-                    'Terdeteksi: ' + matchesStr + '\n' +
-                    '\n' +
-                    '_Tolong hentikan! ' + (maxWarn - currentWarn) + ' peringatan lagi = kick_',
+                text: novaWarning("ANTI NSFW — PERINGATAN", [
+                    ["Pengirim", `@${senderTag}`],
+                    ["Pelanggaran", typeLabel],
+                    ["Terdeteksi", matchesStr],
+                    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                    ["Tindakan", "Pesan dihapus"],
+                ], `Hentikan — ${maxWarn - currentWarn} peringatan lagi kamu akan dikeluarkan dari grup.`),
                 mentions: [m.sender],
             })
         }

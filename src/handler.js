@@ -7,7 +7,7 @@ import { recordPluginExecution, postExecutionCheck } from "./lib/nova-plugin-hea
 import { getDatabase } from "./lib/nova-database.js";
 import { ensureRpg, saveRpg } from "./lib/nova-rpg-service.js";
 import { checkPermission, checkMode } from "./lib/nova-middleware.js";
-import { handleAntiRemoveFromUpsert as _handleAntiRemove } from "./lib/nova-group-protection.js";
+import { handleAntiRemoveFromUpsert as _handleAntiRemove , novaWarning } from "./lib/nova-group-protection.js";
 import config from "../config.js";
 import { c, logger, logMessage } from "./lib/nova-logger.js";
 import { trackNotFound, isNotFoundMuted, resetNotFoundTracker } from "./lib/nova-notfound-antispam.js";
@@ -22,15 +22,6 @@ async function handleAntiRemoveFromUpsert(msg, sock, db) {
 
 
 // Simple inline wrapper for anti-spam DM messages
-function simpleWrap(title, lines) {
-  const body = lines.map(l => l === "" ? "│" : l.startsWith("│") ? l : "│ " + l).join("\n");
-  return "╭─「 ✦ " + title + " ✦ 」\n" +
-    "│\n" +
-    body + "\n" +
-    "│\n" +
-    "╰────  •  ────";
-}
-
 // Track cooldowns per user per command
 const cooldownMap = new Map();
 
@@ -297,13 +288,12 @@ try {
             tracker[sender].messages = [];
 
             await sock.sendMessage(m.chat, {
-              text: simpleWrap("Anti-Spam DM", [
-                `Kamu terlalu banyak mengirim pesan!`,
-                `Warning habis (${dmSettings.maxWarn}x)`,
-                "",
-                `Kamu di-mute selama ${dmSettings.muteMin} menit.`,
-                `Bot tidak akan merespon pesanmu sampai mute selesai.`,
-              ]),
+              text: novaWarning("ANTI SPAM — TINDAKAN", [
+                ["Pengirim", "@" + sender.split("@")[0]],
+                ["Pelanggaran", "Pesan terlalu cepat dan berulang"],
+                ["Peringatan", dmSettings.maxWarn + " dari " + dmSettings.maxWarn],
+                ["Tindakan", "Di-mute selama " + dmSettings.muteMin + " menit"],
+              ], "Bot tidak akan merespon pesanmu sampai masa mute selesai."),
             });
             return;
           } else {
@@ -312,13 +302,12 @@ try {
             const remaining = dmSettings.maxWarn - tracker[sender].warnCount;
 
             await sock.sendMessage(m.chat, {
-              text: simpleWrap("Anti-Spam DM", [
-                `Jangan spam bot!`,
-                `Warning ${tracker[sender].warnCount}/${dmSettings.maxWarn}`,
-                "",
-                `Sisa peringatan: ${remaining}x`,
-                `Setelah itu kamu akan di-mute ${dmSettings.muteMin} menit.`,
-              ]),
+              text: novaWarning("ANTI SPAM — PERINGATAN", [
+                ["Pengirim", "@" + sender.split("@")[0]],
+                ["Pelanggaran", "Pesan terlalu cepat dan berulang"],
+                ["Peringatan", tracker[sender].warnCount + " dari " + dmSettings.maxWarn],
+                ["Tindakan", "Teguran tercatat"],
+              ], `Sisa peringatan: ${remaining}x. Setelah itu kamu akan di-mute ${dmSettings.muteMin} menit.`),
             });
             return;
           }

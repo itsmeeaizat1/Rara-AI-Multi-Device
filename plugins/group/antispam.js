@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js"
+import { novaWarning } from "../../src/lib/nova-group-protection.js"
 import { claraLine } from "../../src/lib/nova-menu-style.js";
 
 function claraWrap(title, text) {
@@ -158,28 +159,40 @@ async function handleSpamAction(m, sock, db) {
         spamTracker.set(chatKey, userData)
         
         if (userData.warnings >= 3) {
-            await m.reply(`⚠️ Peringatan spam maksimal\n\n` +
-                `Teruntuk: @${senderId.split("@")[0]}\n\n` +
-                `Kamu telah mendapatkan 3 kali teguran peringatan karena mengirim pesan spam secara berkelanjutan. Harap segera berhenti melakukan spam atau jajaran admin grup dapat mengambil tindakan tegas terhadap pelanggaran ini!`)
+            await m.reply(novaWarning("ANTI SPAM — PERINGATAN MAKSIMAL", [
+                ["Pengirim", `@${senderId.split("@")[0]}`],
+                ["Pelanggaran", "Spam terdeteksi"],
+                ["Peringatan", "3 dari 3"],
+                ["Tindakan", "Tercatat oleh sistem"],
+            ], "Kamu telah menerima 3 kali teguran karena spam berkelanjutan. Harap segera berhenti atau jajaran admin dapat mengambil tindakan tegas."))
             userData.warnings = 0 
             userData.count = 0
             spamTracker.set(chatKey, userData)
         } else {
-            await m.reply(`⚠️ Teguran spam terdeteksi\n\n` +
-                `Peringatan ke-${userData.warnings} dari maksimal 3 peringatan\n\n` +
-                `Halo @${senderId.split("@")[0]}, tolong jangan melakukan pengiriman pesan berulang-ulang di grup ini secara cepat! Sistem kami mendeteksi aktivitasmu sebagai spam. Mohon hargai kenyamanan member lainnya`)
+            await m.reply(novaWarning("ANTI SPAM — PERINGATAN", [
+                ["Pengirim", `@${senderId.split("@")[0]}`],
+                ["Pelanggaran", "Spam terdeteksi"],
+                ["Peringatan", `${userData.warnings} dari 3`],
+                ["Tindakan", "Teguran tercatat"],
+            ], "Tolong jangan mengirim pesan berulang-ulang secara cepat. Mohon hargai kenyamanan member lainnya."))
             userData.count = 0 
             spamTracker.set(chatKey, userData)
         }
     } else if (action === "kick") {
         if (m.isBotAdmin) {
-            await m.reply(claraWrap("antispam", `🛑 *ꜱᴘᴀᴍᴍᴇʀ ᴅɪᴋᴇʟᴜᴀʀᴋᴀɴ*\n\n` +
-                `Maaf sekali @${senderId.split("@")[0]}, kamu akan dikeluarkan secara paksa oleh sistem karena kamu terdeteksi melakukan aksi spam brutal di grup ini!`))
+            await m.reply(novaWarning("ANTI SPAM — TINDAKAN", [
+                ["Pengirim", `@${senderId.split("@")[0]}`],
+                ["Pelanggaran", "Spam brutal terdeteksi"],
+                ["Tindakan", "Dikeluarkan dari grup otomatis"],
+            ], "Kamu dikeluarkan karena spam berkelanjutan di grup ini."))
             await sock.groupParticipantsUpdate(m.chat, [senderId], "remove")
             spamTracker.delete(chatKey)
         } else {
-            await m.reply(claraWrap("antispam", `⚠️ *ꜱᴘᴀᴍ ᴛᴇʀᴅᴇᴛᴇᴋꜱɪ*\n\n` +
-                `Telah terdeteksi aktivitas spam brutal dari @${senderId.split("@")[0]}, namun sistem bot sayangnya tidak dapat menendang member tersebut karena bot saat ini tidak memiliki akses sebagai admin grup. Tolong jadikan bot admin agar fitur ini bekerja maksimal`))
+            await m.reply(novaWarning("ANTI SPAM — INFO", [
+                ["Pengirim", `@${senderId.split("@")[0]}`],
+                ["Pelanggaran", "Spam brutal terdeteksi"],
+                ["Tindakan", "Tidak dieksekusi — bot bukan admin"],
+            ], "Jadikan bot admin agar tindakan anti spam bisa berjalan maksimal."))
             userData.count = 0
             spamTracker.set(chatKey, userData)
         }
