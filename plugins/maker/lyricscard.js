@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { claraWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,15 +34,15 @@ async function handler(m, { conn, text, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input || !input.includes("|")) {
-      return m.reply(claraWrap("Lyrics Card", [
+      return m.reply(claraWrap("lyricscard", [
         "Buat card lirik lagu estetik.",
         "",
-        "Format: " + usedPrefix + "lyricscard <lirik>|<judul>|<artis>",
+        "📌 Format: " + usedPrefix + "lyricscard <lirik>|<judul>|<artis>",
         "atau: " + usedPrefix + "lyricscard <lirik>|<judul>|<artis>|<bg>",
         "",
         "Theme: " + Object.keys(THEMES).join(", "),
         "",
-        "Contoh:",
+        "💡 Contoh:",
         usedPrefix + "lyricscard Don't stop believing|Don't Stop|Journey|night",
       ].join("\n")));
     }
@@ -54,7 +54,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     const themeName = (parts[3] || "dark").toLowerCase();
     const theme = THEMES[themeName] || THEMES.dark;
 
-    if (lyrics.length > 300) return m.reply(claraWrap("Lyrics Card", "Lirik maksimal 300 karakter."));
+    if (lyrics.length > 300) return m.reply(claraWrap("lyricscard", "Lirik maksimal 300 karakter."));
 
     const canvas = await getCanvas();
     const W = 800, H = 600;
@@ -131,18 +131,14 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     ctx.fillText('Nova AI', W - 30, H - 25);
 
     const outBuf = cv.toBuffer('image/png');
+    await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: outBuf,
-      caption: claraWrap("Lyrics Card", [
-        "Berhasil dibuat!",
-        "Lagu: " + song,
-        "Artis: " + artist,
-        "Theme: " + themeName,
-      ].join("\n")),
+      caption: novaBerhasil(),
     });
   } catch (e) {
     console.error("lyricscard error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(claraWrap("lyricscard", "Gagal buat lyrics card. Coba lagi.", "error"));
   }
 }
 

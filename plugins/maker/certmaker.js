@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { claraWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -25,12 +25,12 @@ async function handler(m, { conn, text, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input || !input.includes("|")) {
-      return m.reply(claraWrap("Certificate Maker", [
+      return m.reply(claraWrap("certmaker", [
         "Buat sertifikat custom.",
         "",
-        "Format: " + usedPrefix + "certmaker <nama>|<judul>|<pemberi>|<tanggal>",
+        "📌 Format: " + usedPrefix + "certmaker <nama>|<judul>|<pemberi>|<tanggal>",
         "",
-        "Contoh:",
+        "💡 Contoh:",
         usedPrefix + "certmaker Budi Santoso|Siswa Terbaik|Kepala Sekolah|18 Agustus 2026",
       ].join("\n")));
     }
@@ -41,7 +41,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     const issuer = parts[2] || "Nova AI";
     const date = parts[3] || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-    if (name.length > 40) return m.reply(claraWrap("Certificate Maker", "Nama maksimal 40 karakter."));
+    if (name.length > 40) return m.reply(claraWrap("certmaker", "Nama maksimal 40 karakter."));
 
     const canvas = await getCanvas();
     const W = 1000, H = 700;
@@ -141,21 +141,16 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     const buf = cv.toBuffer('image/png');
     fs.writeFileSync(outPath, buf);
 
+    await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: buf,
-      caption: claraWrap("Certificate Maker", [
-        "Sertifikat berhasil dibuat!",
-        "Nama: " + name,
-        "Judul: " + title,
-        "Pemberi: " + issuer,
-        "Tanggal: " + date,
-      ].join("\n")),
+      caption: novaBerhasil(),
     });
 
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("certmaker error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(claraWrap("certmaker", "Gagal buat sertifikat. Coba lagi.", "error"));
   }
 }
 

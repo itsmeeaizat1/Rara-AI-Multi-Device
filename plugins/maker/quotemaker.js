@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { claraWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -36,16 +36,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input) {
-      return m.reply(claraWrap("Quote Maker", [
+      return m.reply(claraWrap("quotemaker", [
         "Buat quote card dari teks sendiri.",
         "",
-        "Format: " + usedPrefix + "quotemaker <teks> | <author> | <bg>",
+        "📌 Format: " + usedPrefix + "quotemaker <teks> | <author> | <bg>",
         "atau: " + usedPrefix + "quotemaker <teks> | <author>",
         "atau: " + usedPrefix + "quotemaker <teks>",
         "",
         "Background: " + Object.keys(BG_PRESETS).join(", "),
         "",
-        "Contoh: " + usedPrefix + "quotemaker Hidup itu singkat | Aizat | sunset",
+        "💡 Contoh: " + usedPrefix + "quotemaker Hidup itu singkat | Aizat | sunset",
       ].join("\n")));
     }
 
@@ -56,7 +56,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const bg = BG_PRESETS[bgName] || BG_PRESETS.dark;
 
     if (quoteText.length > 200) {
-      return m.reply(claraWrap("Quote Maker", "Teks maksimal 200 karakter."));
+      return m.reply(claraWrap("quotemaker", "Teks maksimal 200 karakter."));
     }
 
     const canvas = await getCanvas();
@@ -122,19 +122,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const buf = cv.toBuffer('image/png');
     fs.writeFileSync(outPath, buf);
 
+    await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: buf,
-      caption: claraWrap("Quote Maker", [
-        "Berhasil dibuat!",
-        "Author: " + (author || "-"),
-        "Theme: " + bgName,
-      ].join("\n")),
+      caption: novaBerhasil(),
     });
 
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("quotemaker error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(claraWrap("quotemaker", "Gagal buat quote. Coba lagi.", "error"));
   }
 }
 

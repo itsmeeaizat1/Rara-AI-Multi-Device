@@ -2,7 +2,7 @@
 import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nowm",
@@ -224,7 +224,7 @@ async function handler(m, { sock }) {
     qmsg.mimetype?.includes("image");
 
   if (!isImage) {
-    return m.reply( claraWrap("Watermark Remover", [
+    return m.reply( claraWrap("nowm", [
       "Hapus watermark, logo, teks, atau object dari gambar.",
       "",
       "CARA PAKAI:",
@@ -249,7 +249,7 @@ async function handler(m, { sock }) {
   try {
     const imageBuffer = await qmsg.download();
     if (!imageBuffer) {
-      return m.reply(claraWrap("Watermark Remover", "Gagal download gambar. Coba lagi."));
+      return m.reply(claraWrap("nowm", "Gagal download gambar. Coba lagi."));
     }
 
     // Resize if too large (ClipDrop max 16MP, but keep small for speed)
@@ -262,7 +262,7 @@ async function handler(m, { sock }) {
         .toBuffer();
     }
 
-    await m.reply(claraWrap("Watermark Remover", [
+    await m.reply(claraWrap("nowm", [
       "Status: Menganalisis gambar...",
       "Mode: " + (position ? "Region (" + position + ")" : "Auto detect"),
       "API: " + (apiKey ? "ClipDrop (AI)" : "Local (fallback)"),
@@ -285,7 +285,7 @@ async function handler(m, { sock }) {
           : status === 401
             ? "API key tidak valid. Fallback ke local mode."
             : "ClipDrop error (" + (apiErr.message || "unknown") + "). Fallback ke local mode.";
-        await m.reply(claraWrap("Watermark Remover", errMsg));
+        await m.reply(claraWrap("nowm", errMsg));
         resultBuffer = await localWatermarkRemove(processedBuffer, maskBuffer);
       }
     } else {
@@ -293,25 +293,18 @@ async function handler(m, { sock }) {
     }
 
     if (!resultBuffer) {
-      return m.reply(claraWrap("Watermark Remover", "Gagal memproses gambar. Coba gambar lain."));
+      return m.reply(claraWrap("nowm", "Gagal memproses gambar. Coba gambar lain."));
     }
     await sock.sendMessage(
       m.chat,
       {
         image: resultBuffer,
-        caption: claraWrap("Watermark Remover", [
-          "Berhasil!",
-          "Mode: " + (position ? position : "auto detect"),
-          "Engine: " + (usedApi ? "ClipDrop AI" : "Local (sharp)"),
-          "",
-          "Untuk hasil terbaik, set ClipDrop API key",
-          "di config.js (clipdropApiKey)",
-        ].join("\n")),
+        caption: novaBerhasil() + "\nEngine: " + (usedApi ? "ClipDrop AI" : "Local"),
       },
       { quoted: m },
     );
   } catch (e) {
-    m.reply(claraWrap("Watermark Remover", "Gagal: " + e.message));
+    m.reply(claraWrap("nowm", "Gagal: " + e.message));
   }
 }
 

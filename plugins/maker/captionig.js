@@ -107,18 +107,20 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push(cap)
       lines.push("")
       lines.push("Mood tersedia: " + MOOD_LIST.join(", "))
-      return m.reply(claraWrap("Caption IG", lines.join("\n")))
+      await m.react("🐣")
+      return m.reply(lines.join("\n"))
     }
 
     const mood = MOOD_LIST.find(m => m.includes(input) || m === input)
     if (!mood) {
-      return m.reply(claraWrap("Caption IG", "Mood tidak ditemukan: " + input + "\nTersedia: " + MOOD_LIST.join(", ")))
+      return m.reply(claraWrap("captionig", "Mood tidak ditemukan: " + input + "\nTersedia: " + MOOD_LIST.join(", ")))
     }
 
     const cap = CAPTION[mood][Math.floor(Math.random() * CAPTION[mood].length)]
-    return m.reply(claraWrap("Caption: " + mood, cap))
+    await m.react("🐣")
+    return m.reply(cap)
   } catch (e) {
-    return m.reply(claraWrap("Caption IG", "Error: " + e.message))
+    return m.reply(claraWrap("captionig", "Error: " + e.message))
   }
 }
 
