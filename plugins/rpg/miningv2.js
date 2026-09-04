@@ -6,6 +6,7 @@ import {
   ITEM_DB, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -84,7 +85,7 @@ async function handler(m, { sock }) {
     addItem(m, ore.id, qty);
 
     // Check for bonus events
-    let bonusText = "";
+    let bonusLines = [];
     let hpDmg = 0;
 
     for (const bonus of BONUS_FINDS) {
@@ -93,27 +94,23 @@ async function handler(m, { sock }) {
           case "gem": {
             const gemQty = Math.floor(Math.random() * (bonus.amount[1] - bonus.amount[0] + 1)) + bonus.amount[0];
             addGems(m, gemQty);
-            bonusText += `
-${bonus.msg} *+${gemQty} gems*`;
+            bonusLines.push(`│ • 💎 Bonus : +${gemQty} gems`);
             break;
           }
           case "fossil": {
             addItem(m, bonus.item, 1);
-            bonusText += `
-${bonus.msg} *+1x Fosil*`;
+            bonusLines.push(`│ • 🦴 Bonus : +1x Fosil`);
             break;
           }
           case "chest": {
             const chestGold = Math.floor(Math.random() * (bonus.gold[1] - bonus.gold[0] + 1)) + bonus.gold[0];
             addGold(m, chestGold);
-            bonusText += `
-${bonus.msg} *+${chestGold} gold*`;
+            bonusLines.push(`│ • 🎁 Bonus : +${chestGold} gold`);
             break;
           }
           case "cavein": {
             hpDmg = Math.floor(Math.random() * (bonus.dmg[1] - bonus.dmg[0] + 1)) + bonus.dmg[0];
-            bonusText += `
-${bonus.msg} *-${hpDmg} HP*`;
+            bonusLines.push(`│ • 🪨 Cave-in! : -${hpDmg} HP`);
             break;
           }
         }
@@ -132,24 +129,23 @@ ${bonus.msg} *-${hpDmg} HP*`;
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = "";
-    out += `⛏️ Menambang di Level ${rpg.level}...\n`;
-    out += `
-`;
-    out += `📦 *ʜᴀsɪʟ*\n`;
-    out += `🪨 ${ore.name} Ore: *+${qty}x*\n`;
-    out += `💰 Gold: *+${goldGain}*\n`;
-    out += `✦ EXP: *+${expGain}*\n`;
-    if (bonusText) out += bonusText + "\n";
-    out += `
-`;
-    if (streak > 1) {
-      out += `🔥 Mining streak: *${streak}x* (+${Math.floor(streakBonus * 100)}%)\n`;
-    }
-    out += `❤️ HP: *${freshRpg.hp}/${rpg.maxHp}*\n`;
-    out += `⚡ Energy: *${freshRpg.energy}/${rpg.maxEnergy}*\n`;
-    
-    return m.reply(out);
+    return m.reply(novaGameBox({
+      title: "miningv2", icon: "⛏️",
+      flavor: "⛏️ *TAMBANG SUKSES!*",
+      body: [
+        `Menambang di Level ${rpg.level}...`,
+        "",
+        `│ • 🪨 ${ore.name} Ore : +${qty}x`,
+        `│ • 💰 Gold : +${goldGain}`,
+        `│ • ✨ EXP : +${expGain}`,
+        ...bonusLines,
+        ...(streak > 1 ? [`│ • 🔥 Streak : ${streak}x (+${Math.floor(streakBonus * 100)}%)`] : []),
+        "",
+        `│ • ❤️ HP : ${freshRpg.hp}/${rpg.maxHp}`,
+        `│ • ⚡ Energy : ${freshRpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("miningv2"),
+    }));
   } catch (err) {
     console.error("miningv2 error:", err);
     await m.react("❌");

@@ -7,6 +7,7 @@ import {
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animOjek } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -79,21 +80,22 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastOjek", OJEK_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🏍️ Penumpang: *${passenger.name}*\n`;
-    msg += `📍 Jarak: *${distance} km*\n`;
-    msg += `
-`;
-    msg += `📦 *ʜᴀsɪʟ* ${tip > 0 ? "+ tip!" : ""}\n`;
-    msg += `💰 Ongkos: *+${baseFare}*\n`;
-    if (tip > 0) msg += `Tip: *+${tip} gold*\n`;
-    msg += `✦ EXP: *+${expGain}*\n`;
-    msg += `
-`;
-    msg += `💼 Gold: *${rpg.gold + totalGold}*\n`;
-    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "ojekrpg", icon: "🏍️",
+      flavor: "🏍️ *ONGKOS MASUK!*",
+      body: [
+        `│ • 🏍️ Penumpang : ${passenger.name}`,
+        `│ • 📍 Jarak : ${distance} km`,
+        "",
+        `│ • 💰 Ongkos : +${baseFare}`,
+        ...(tip > 0 ? [`│ • 🎁 Tip : +${tip} gold`] : []),
+        `│ • ✨ EXP : +${expGain}`,
+        "",
+        `│ • 💰 Total gold : ${rpg.gold + totalGold}`,
+        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("ojekrpg"),
+    }));
   } catch (err) {
     console.error("ojekrpg error:", err);
     await m.react("❌");

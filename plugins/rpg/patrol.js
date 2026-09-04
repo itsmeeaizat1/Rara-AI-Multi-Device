@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -19,6 +20,15 @@ const pluginConfig = {
 };
 
 const PATROL_COST = 15;
+
+const PATROL_FLAVOR = {
+  monster: "⚔️ *MONSTER DIKALAHKAN!*",
+  treasure: "💎 *HARTA DITEMUKAN!*",
+  nothing: "🛡️ *PATROLI AMAN!*",
+  trap: "⚠️ *KENA JEBAKAN!*",
+  merchant: "🛒 *PEDAGANG MISTERIUS!*",
+  shrine: "⛩️ *KUIL SUCI DITEMUKAN!*",
+};
 
 const EVENTS = [
   {
@@ -94,53 +104,58 @@ async function handler(m, { sock }) {
       const expGain = Math.floor(Math.random() * 200) + 100;
       profile.gold += goldGain;
       profile.exp += expGain;
-      eventDetail = `🗡️ Kamu berhasil mengalahkan monster!
-💰 +${goldGain.toLocaleString()} Gold +${expGain} EXP`;
+      eventDetail = [
+        "Kamu berhasil mengalahkan monster!",
+        `│ • 💰 Gold : +${goldGain.toLocaleString()}`,
+        `│ • ✨ EXP : +${expGain}`,
+      ].join("\n");
     } else if (event.type === "treasure") {
       const goldGain = Math.floor(Math.random() * 1200) + 800;
       profile.gold += goldGain;
-      eventDetail = `💰 Kamu menemukan perbekalan bernilai *+${goldGain.toLocaleString()} Gold*!`;
+      eventDetail = `│ • 💰 Harta ditemukan : +${goldGain.toLocaleString()} Gold`;
     } else if (event.type === "nothing") {
       const expGain = 50;
       profile.exp += expGain;
-      eventDetail = `Kamu mendapatkan *+${expGain} EXP* dari pengalaman patroli.`;
+      eventDetail = `│ • ✨ EXP : +${expGain} dari pengalaman patroli`;
     } else if (event.type === "trap") {
       const hpLoss = Math.floor(Math.random() * 16) + 15;
       profile.hp = Math.max(0, profile.hp - hpLoss);
-      eventDetail = `💔 Kamu terkena luka jebakan dan kehilangan *-${hpLoss} HP*!`;
+      eventDetail = `│ • 💔 Kena jebakan : -${hpLoss} HP`;
     } else if (event.type === "merchant") {
       const inventory = await db.getPlayerData?.(sender, "inventory") || { items: {} };
       if (!inventory.items) inventory.items = {};
       inventory.items["Ramuan Suci"] = (inventory.items["Ramuan Suci"] || 0) + 1;
       await db.setPlayerData?.(sender, "inventory", inventory);
-      eventDetail = `🎁 Pedagang memberimu *Ramuan Suci x1* secara gratis!`;
+      eventDetail = `│ • 🎁 Dapat hadiah : Ramuan Suci x1`;
     } else if (event.type === "shrine") {
       const hpHeal = 40;
       const energyRestored = 20;
       profile.hp = Math.min(profile.maxHp, profile.hp + hpHeal);
       profile.energi += energyRestored;
-      eventDetail = `💚 HP pulih *+${hpHeal}* dan Energi pulih *+${energyRestored}*!`;
+      eventDetail = [
+        `│ • 💚 HP : +${hpHeal}`,
+        `│ • ⚡ Energi : +${energyRestored}`,
+      ].join("\n");
     }
 
-    let msg = "";
-    msg += `🧭 *Patroli Wilayah*\n`;
-    msg += `📝 *Narasi:* ${event.narrative}
-
-`;
-    msg += `${event.icon} *Event:* ${event.name}\n`;
-    msg += `📋 *Dampak Event:*
-${eventDetail}
-
-`;
-    msg += `📊 *Status Karakter:*\n`;
-    msg += `❤️ HP: *${profile.hp}/${profile.maxHp}*\n`;
-    msg += `⚡ Energi: *${profile.energi}*\n`;
-    msg += `💰 Total Gold: *${profile.gold.toLocaleString()}*\n`;
-    
     await db.setPlayerData?.(sender, "profile", profile);
 
     await m.react("🐣");
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "patrol", icon: "🧭",
+      flavor: PATROL_FLAVOR[event.type] || "🧭 *PATROLI SELESAI!*",
+      body: [
+        event.narrative,
+        "",
+        `│ • ${event.icon} Event : ${event.name}`,
+        eventDetail,
+        "",
+        `│ • ❤️ HP : ${profile.hp}/${profile.maxHp}`,
+        `│ • ⚡ Energi : ${profile.energi}`,
+        `│ • 💰 Total Gold : ${profile.gold.toLocaleString()}`,
+      ].join("\n"),
+      cta: gameCTA("patrol"),
+    }));
   } catch (err) {
     console.error("patrol error:", err);
     await m.react("❌");

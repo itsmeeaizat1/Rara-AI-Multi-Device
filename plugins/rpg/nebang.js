@@ -7,6 +7,7 @@ import {
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -76,27 +77,27 @@ async function handler(m, { sock }) {
     if (Math.random() * 100 < tree.dropChance) {
       const qty = Math.floor(Math.random() * 3) + 1;
       addItem(m, tree.drop, qty);
-      dropText = `
-🪵 +${qty}x ${ITEM_DB[tree.drop]?.name || tree.drop}`;
+      dropText = `│ • 🪵 ${ITEM_DB[tree.drop]?.name || tree.drop} : +${qty}x`;
     }
 
     setCooldown(m, "lastNebang", NEBANG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🌲 Pohon: *${tree.name}*\n`;
-    msg += `🪓 Kamu menebang dengan susah payah...\n`;
-    msg += `
-`;
-    msg += `📦 *ʜᴀsɪʟ ɴᴇʙᴀɴɢ*\n`;
-    msg += `💰 Gold: *+${goldGain}*\n`;
-    msg += `✦ EXP: *+${expGain}*\n`;
-    if (dropText) msg += dropText + "\n";
-    msg += `
-`;
-    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "nebang", icon: "🪓",
+      flavor: "🪓 *TEBANG SELESAI!*",
+      body: [
+        `│ • 🌲 Pohon : ${tree.name}`,
+        "Kamu menebang dengan susah payah...",
+        "",
+        `│ • 💰 Gold : +${goldGain}`,
+        `│ • ✨ EXP : +${expGain}`,
+        ...(dropText ? [dropText] : []),
+        "",
+        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("nebang"),
+    }));
   } catch (err) {
     console.error("nebang error:", err);
     await m.react("❌");

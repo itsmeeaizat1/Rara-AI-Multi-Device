@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime, MONSTER_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -147,43 +148,55 @@ async function handler(m, { sock }) {
       });
       setCooldown(m, "lastBossRaid", BOSS_COOLDOWN);
 
-      let dropText = "";
+      const dropLines = [];
       if (drops.length > 0) {
         const grouped = {};
         for (const d of drops) grouped[d.item] = (grouped[d.item] || 0) + d.qty;
-        dropText = Object.entries(grouped).map(([item, qty]) => `+${qty}x ${ITEM_DB[item]?.name || item}`).join("\n");
-        dropText = "\n" + dropText;
+        for (const [item, qty] of Object.entries(grouped)) {
+          dropLines.push(`│ • 📦 ${ITEM_DB[item]?.name || item} : +${qty}x`);
+        }
       }
 
       await m.react("🐣");
-      let msg = `Boss: *${boss.name}*\n`;
-      msg += `${keyText}\n`;
-      msg += `Pertarungan: *${rounds} ronde*\n\n`;
-      msg += `🏆 *Victory!*\n`;
-      msg += `EXP: *+${expGain}*\n`;
-      msg += `Gold: *+${goldGain}*\n`;
-      msg += `Gems: *+${gemGain}*`;
-      if (dropText) msg += dropText;
-      if (Math.random() < 0.1) msg += `\nBonus: *+1x Batu Reinkarnasi*`;
-      msg += `\n\n`;
-      msg += `HP: *${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}*\n`;
-      msg += `Boss Kills: *${(rpg.bossKills || 0) + 1}*`;
-
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "bossraid", icon: "👹",
+        flavor: "🏆 *BOSS DIKALAHKAN!*",
+        body: [
+          `│ • 👹 Boss : ${boss.name}`,
+          keyText,
+          `│ • ⚔️ Pertarungan : ${rounds} ronde`,
+          "",
+          `│ • ✨ EXP : +${expGain}`,
+          `│ • 💰 Gold : +${goldGain}`,
+          `│ • 💎 Gems : +${gemGain}`,
+          ...dropLines,
+          ...(Math.random() < 0.1 ? [`│ • 🎁 Bonus : +1x Batu Reinkarnasi`] : []),
+          "",
+          `│ • ❤️ HP : ${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}`,
+          `│ • 👑 Boss kills : ${(rpg.bossKills || 0) + 1}`,
+        ].join("\n"),
+        cta: gameCTA("bossraid"),
+      }));
     } else {
       saveRpg(m, { hp: Math.max(1, rpg.hp - totalDmgTaken) });
       setCooldown(m, "lastBossRaid", BOSS_COOLDOWN);
 
       await m.react("❌");
-      let msg = `Boss: *${boss.name}*\n`;
-      msg += `${keyText}\n`;
-      msg += `Pertarungan: *${rounds} ronde*\n\n`;
-      msg += `💀 *Defeated!*\n`;
-      msg += `DMG Diterima: *${totalDmgTaken}*\n`;
-      msg += `HP Tersisa: *${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}*\n\n`;
-      msg += `💡 Tingkatkan equipment & level dulu\nGunakan .craftrpg untuk bikin item lebih kuat`;
-
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "bossraid", icon: "👹",
+        flavor: "💀 *KALAH DARI BOSS!*",
+        body: [
+          `│ • 👹 Boss : ${boss.name}`,
+          keyText,
+          `│ • ⚔️ Pertarungan : ${rounds} ronde`,
+          `│ • 💥 DMG diterima : ${totalDmgTaken}`,
+          `│ • ❤️ HP : ${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}`,
+          "",
+          "💡 Tingkatkan equipment & level dulu",
+          "Gunakan .craftrpg untuk bikin item lebih kuat",
+        ].join("\n"),
+        cta: gameCTA("bossraid"),
+      }));
     }
   } catch (err) {
     console.error("bossraid error:", err);

@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animRoulette } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -197,22 +198,20 @@ async function handler(m, { sock }) {
       properties.push("Angka Nol (0)");
     }
 
-    let output = "";
-    output += `🎡 Hasil Spin: ${winningColor} *${winningNumber}* (${properties.join(" / ")})\n`;
-    output += `🎯 Taruhan: *${betTypeInput.toUpperCase()}*\n`;
-    output += `💵 Jumlah Bet: *${bet} gold*\n`;
-    output += `
-`;
-    if (won) {
-      output += `🎉 *ᴍᴇɴᴀɴɢ!* Multiplier: *${multiplier}x*\n`;
-      output += `💰 Total Payout: *+${payout} gold* (Net: +${netProfit})\n`;
-    } else {
-      output += `❌ *ᴋᴀʟᴀʜ!* Bola mendarat di ${winningColor} ${winningNumber}\n`;
-      output += `💸 Kerugian: *-${bet} gold*\n`;
-    }
-    output += `💼 Sisa Gold: *${updatedGold} gold*\n`;
-    
-    return m.reply(output);
+    return m.reply(novaGameBox({
+      title: "roulette", icon: "🎡",
+      flavor: won ? "🎉 *MENANG!*" : "💀 *KALAH!*",
+      body: [
+        `Hasil spin : ${winningColor} ${winningNumber} (${properties.join(" / ")})`,
+        `│ • 🎯 Taruhan : ${betTypeInput.toUpperCase()}`,
+        `│ • 💵 Jumlah bet : ${bet} gold`,
+        won
+          ? `│ • 🏆 Payout : +${payout} gold (${multiplier}x, net +${netProfit})`
+          : `│ • 💸 Rugi : -${bet} gold`,
+        `│ • 💰 Sisa gold : ${updatedGold} gold`,
+      ].join("\n"),
+      cta: gameCTA("roulette"),
+    }));
   } catch (err) {
     console.error("roulette error:", err);
     await m.react("❌");

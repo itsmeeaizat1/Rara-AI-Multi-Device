@@ -1,6 +1,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { animSlot } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "slotmachine",
@@ -75,15 +76,19 @@ async function handler(m, { sock }) {
 
     let multiplier = 0;
     let resultMsg = "";
+    let resultFlavor = "";
     if (r1 === r2 && r2 === r3) {
       multiplier = MULTIPLIERS_3[r1] || 2;
-      resultMsg = `🎉 JACKPOT 3 MATCH (${r1})! Multiplier: *${multiplier}x*`;
+      resultMsg = `JACKPOT 3 MATCH (${r1})! Multiplier: ${multiplier}x`;
+      resultFlavor = "🎰 *JACKPOT!*";
     } else if (r1 === r2 || r2 === r3 || r1 === r3) {
       multiplier = 1.5;
-      resultMsg = `2 MATCH! Multiplier: *1.5x*`;
+      resultMsg = `2 MATCH! Multiplier: 1.5x`;
+      resultFlavor = "✨ *DUA MATCH!*";
     } else {
       multiplier = 0;
-      resultMsg = `❌ ZONK! Semua simbol berbeda.`;
+      resultMsg = `ZONK! Semua simbol berbeda.`;
+      resultFlavor = "💀 *ZONK!*";
     }
 
     // Slot spinning animation
@@ -100,18 +105,20 @@ async function handler(m, { sock }) {
     await db.setPlayerData?.(sender, "slotmachine", stats);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ sʟᴏᴛ ᴍᴀᴄʜɪɴᴇ ✦ 」\n`;
-    msg += `│ 📊 ${resultMsg}\n`;
-    msg += `│\n`;
-    msg += `│ 💵 Taruhan: *${bet} gold*\n`;
-    if (netProfit > 0) {
-      msg += `│ 💰 Menang : *+${netProfit} gold*\n`;
-    } else {
-      msg += `│ 💸 Kalah  : *-${bet} gold*\n`;
-    }
-    msg += `│ 💼 Sisa Gold: *${updatedGold} gold*\n`;
-    msg += `╰──── • ────`;
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "slotmachine", icon: "🎰",
+      flavor: resultFlavor,
+      body: [
+        `│ • 🎰 Reel : ${r1} ${r2} ${r3}`,
+        resultMsg,
+        `│ • 💵 Taruhan : ${bet} gold`,
+        netProfit > 0
+          ? `│ • 🏆 Menang : +${netProfit} gold`
+          : `│ • 💸 Kalah : -${bet} gold`,
+        `│ • 💰 Sisa gold : ${updatedGold} gold`,
+      ].join("\n"),
+      cta: gameCTA("slotmachine"),
+    }));
   } catch (err) {
     console.error("slotmachine error:", err);
     await m.react("❌");

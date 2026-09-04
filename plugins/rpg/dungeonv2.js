@@ -8,6 +8,7 @@ import {
   getMonstersByLevel, getRandomMonster
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -78,7 +79,7 @@ async function handler(m, { sock }) {
         msg += `
 `;
         msg += `📌 .dungeonv2 enter — mulai dungeon\n`;
-                return m.reply(msg);
+                return m.reply(claraWrap("dungeonv2", msg));
       }
 
       let msg = "";
@@ -95,7 +96,7 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .dungeonv2 enter — lanjut floor\n`;
       msg += `📌 .dungeonv2 leave — keluar (kalah)\n`;
-            return m.reply(msg);
+            return m.reply(claraWrap("dungeonv2", msg));
     }
 
     // ── LEAVE ──
@@ -230,37 +231,34 @@ async function handler(m, { sock }) {
         }
 
         await m.react("🐣");
-        let msg = "";
-        msg += `🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
-        msg += `👹 Monster: *${monster.name}*\n`;
-        msg += `
-`;
-        msg += `⚔️ ${rounds} ronde bertarung\n`;
-        for (const l of combatLog.slice(-4)) {
-          msg += `${l}\n`;
-        }
-        msg += `
-`;
-        msg += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-        msg += `✦ EXP: *+${expGain}*\n`;
-        msg += `💰 Gold: *+${goldGain}*\n`;
-        if (floorConfig.isBoss) {
-          msg += `💎 Gems: *+${3 + Math.floor(rpg.level / 10)}*\n`;
-          msg += `🎉 *ʙᴏꜱꜱ ᴅᴇꜰᴇᴀᴛᴇᴅ!*\n`;
-        }
-        if (dropText) msg += `📦 Drops: *${dropText}*\n`;
-        msg += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-        msg += `
-`;
-
+        let nextLine = "";
         if (rpg.dungeonV2.floor < MAX_FLOORS) {
-          msg += `📌 .dungeonv2 enter — lanjut floor ${rpg.dungeonV2.floor + 1}\n`;
+          nextLine = `📌 .dungeonv2 enter — lanjut floor ${rpg.dungeonV2.floor + 1}`;
         } else {
-          msg += `🎉 *ᴅᴜɴɢᴇᴏɴ ᴄʟᴇᴀʀᴇᴅ!* Semua floor selesai!\n`;
+          nextLine = "🎊 Dungeon cleared! Semua floor selesai!";
           rpg.dungeonV2 = { active: false, floor: 0, clearLog: [] };
           saveRpg(m, { dungeonV2: rpg.dungeonV2 });
         }
-                return m.reply(msg);
+        return m.reply(novaGameBox({
+          title: "dungeonv2", icon: "🏰",
+          flavor: floorConfig.isBoss ? "🎉 *BOSS DIKALAHKAN!*" : "🏆 *VICTORY!*",
+          body: [
+            `│ • 🏰 Floor : ${rpg.dungeonV2.floor}/${MAX_FLOORS} — ${floorConfig.name}`,
+            `│ • 👹 Monster : ${monster.name}`,
+            "",
+            `⚔️ ${rounds} ronde bertarung:`,
+            ...combatLog.slice(-4),
+            "",
+            `│ • ✨ EXP : +${expGain}`,
+            `│ • 💰 Gold : +${goldGain}`,
+            ...(floorConfig.isBoss ? [`│ • 💎 Gems : +${3 + Math.floor(rpg.level / 10)}`] : []),
+            ...(dropText ? [`│ • 📦 Drops : ${dropText}`] : []),
+            `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
+            "",
+            nextLine,
+          ].join("\n"),
+          cta: gameCTA("dungeonv2"),
+        }));
       } else {
         // Defeat — dungeon ends
         const newHp = Math.max(1, rpg.hp - dmgTaken);
@@ -269,18 +267,19 @@ async function handler(m, { sock }) {
         setCooldown(m, "lastDungeonV2", DG2_COOLDOWN);
 
         await m.react("❌");
-        let msg = "";
-        msg += `🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
-        msg += `👹 Monster: *${monster.name}*\n`;
-        msg += `
-`;
-        msg += `💀 *ᴅᴇғᴇᴀᴛᴇᴅ!*\n`;
-        msg += `💥 DMG diterima: *${dmgTaken}*\n`;
-        msg += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-        msg += `
-`;
-        msg += `💡 Equip item & level up untuk dungeon lebih dalam\n`;
-                return m.reply(msg);
+        return m.reply(novaGameBox({
+          title: "dungeonv2", icon: "💀",
+          flavor: "💀 *DIKALAHKAN MONSTER!*",
+          body: [
+            `│ • Lantai : ${rpg.dungeonV2.floor}/${MAX_FLOORS} — ${floorConfig.name}`,
+            `│ • Monster : ${monster.name}`,
+            `│ • 💥 DMG diterima : ${dmgTaken}`,
+            `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
+            "",
+            "💡 Equip item & level up untuk dungeon lebih dalam",
+          ].join("\n"),
+          cta: gameCTA("dungeonv2"),
+        }));
       }
     }
 

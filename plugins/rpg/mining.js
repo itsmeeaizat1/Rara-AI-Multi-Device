@@ -9,6 +9,7 @@ import {
 } from "../../src/lib/nova-rpg-service.js";
 import { animGather, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -87,22 +88,26 @@ async function handler(m, { sock }) {
 
     let dropText = "";
     if (drops.length > 0) {
-      dropText = drops.map(d => `│ +${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n");
+      dropText = drops.map(d => `│ • 🪨 ${ITEM_DB[d.item]?.name || d.item} : +${d.qty}x`).join("\n");
     } else {
-      dropText = `│ Tidak dapet ore kali ini 😅`;
+      dropText = `Tidak dapet ore kali ini 😅`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʜᴀsɪʟ ᴛᴀᴍʙᴀɴɢ ✦ 」\n`;
-    msg += `│ ⛏️ Lokasi: Gua\n`;
-    msg += `│\n`;
-    msg += `│ ✦ EXP  : *+${expGain}*\n`;
-    msg += `│ 💰 Gold : *+${goldGain}*\n`;
-    msg += `${dropText}\n`;
-    msg += `│\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    msg += `╰──── • ────`;
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "mining", icon: "⛏️",
+      flavor: "⛏️ *TAMBANG BERHASIL!*",
+      body: [
+        `│ • ⛏️ Lokasi : Gua`,
+        "",
+        `│ • ✨ EXP : +${expGain}`,
+        `│ • 💰 Gold : +${goldGain}`,
+        dropText,
+        "",
+        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("mining"),
+    }));
   } catch (err) {
     console.error("mining error:", err);
     await m.react("❌");

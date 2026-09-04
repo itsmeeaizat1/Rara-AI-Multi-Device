@@ -8,6 +8,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -57,7 +58,7 @@ async function handler(m, { sock }) {
           let msg = "";
           msg += `🌱 Tanaman siap dipanen!\n`;
           msg += `📦 ${crop.name} — ketik *.berkebon panen*\n`;
-                    return m.reply(msg);
+                    return m.reply(claraWrap("berkebon", msg));
         }
       }
     }
@@ -94,7 +95,7 @@ async function handler(m, { sock }) {
         msg += `📌 .berkebon tanam <id> untuk mulai\n`;
       }
 
-            return m.reply(msg);
+            return m.reply(claraWrap("berkebon", msg));
     }
 
     if (action === "tanam" || action === "plant") {
@@ -124,17 +125,19 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = "";
-      msg += `✅ Berhasil tanam!\n`;
-      msg += `🌱 Tanaman: *${crop.name}*\n`;
-      msg += `⏰ Grow time: *${crop.growTime / 60000} menit*\n`;
-      msg += `
-`;
-      msg += `Ketik .berkebon cek untuk cek progress\n`;
-      msg += `Ketik .berkebon panen saat sudah siap\n`;
-      
       await animFarm(m, sock, "Menanam");
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "berkebon", icon: "🌱",
+        flavor: "🌱 *BERHASIL MENANAM!*",
+        body: [
+          `│ • 🌱 Tanaman : ${crop.name}`,
+          `│ • ⏰ Grow time : ${crop.growTime / 60000} menit`,
+          "",
+          "Ketik .berkebon cek untuk cek progress",
+          "Ketik .berkebon panen saat sudah siap",
+        ].join("\n"),
+        cta: gameCTA("berkebon"),
+      }));
     }
 
     if (action === "panen" || action === "harvest") {
@@ -170,20 +173,19 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = "";
-      msg += `✅ Panen berhasil!\n`;
-      msg += `🌾 Tanaman: *${crop.name}*\n`;
-      msg += `
-`;
-      msg += `📦 *ʜᴀsɪʟ ᴘᴀɴᴇɴ*\n`;
-      msg += `💰 Gold: *+${goldGain}*\n`;
-      msg += `✦ EXP: *+${expGain}*\n`;
-      msg += `📦 Item: *+${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}*\n`;
-      msg += `
-`;
-      msg += `📌 Ketik .berkebon tanam <id> untuk tanam lagi\n`;
-      
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "berkebon", icon: "🌾",
+        flavor: "🌾 *PANEN BERHASIL!*",
+        body: [
+          `│ • 🌾 Tanaman : ${crop.name}`,
+          `│ • 💰 Gold : +${goldGain}`,
+          `│ • ✨ EXP : +${expGain}`,
+          `│ • 📦 Item : +${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}`,
+          "",
+          "Ketik .berkebon tanam <id> untuk tanam lagi",
+        ].join("\n"),
+        cta: gameCTA("berkebon"),
+      }));
     }
 
     return m.reply(claraWrap("berkebon", "Aksi tidak dikenal. Gunakan: tanam, panen, atau cek", "warn"));

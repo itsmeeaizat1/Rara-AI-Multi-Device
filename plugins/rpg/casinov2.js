@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animCasino } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -112,7 +113,7 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `💵 Min: *${MIN_BET}* | Max: *${MAX_BET}*\n`;
-            return m.reply(msg);
+            return m.reply(claraWrap("casinov2", msg));
     }
 
     if (!bet || bet < MIN_BET) {
@@ -138,23 +139,23 @@ async function handler(m, { sock }) {
     await animCasino(m, sock);
     removeGold(m, bet, sock);
 
-    let result, msg = "";
+    let result, resultBox = null;
 
     switch (game) {
       case "slot": {
         result = playSlot(bet);
         if (result.payout > 0) { addGold(m, result.payout); addExp(m, Math.floor(result.payout / 20)); }
-        msg = "";
-        msg += `🎰 ${result.s1} | ${result.s2} | ${result.s3}\n`;
-        msg += `📊 ${result.result}\n`;
-        msg += `
-`;
-        if (result.payout > 0) {
-          msg += `💰 Multiplier: *${result.mult}x*\n`;
-          msg += `💵 Payout: *${result.payout} gold*\n`;
-        } else {
-          msg += `💸 Rugi: *-${bet} gold*\n`;
-        }
+        resultBox = {
+          icon: "🎰",
+          flavor: result.payout > 0 ? (result.mult >= 15 ? "🎊 *JACKPOT!*" : "🎉 *MENANG!*") : "💀 *ZONK!*",
+          lines: [
+            `│ • 🎰 Reel : ${result.s1} | ${result.s2} | ${result.s3}`,
+            `│ • 📊 Hasil : ${result.result}`,
+            "",
+            result.payout > 0 ? `│ • Multiplier : ${result.mult}x` : `│ • 💸 Rugi : -${bet} gold`,
+            ...(result.payout > 0 ? [`│ • 💰 Payout : ${result.payout} gold`] : []),
+          ],
+        };
         break;
       }
 
@@ -166,17 +167,16 @@ async function handler(m, { sock }) {
         }
         result = playDice(bet, guess);
         if (result.win) { addGold(m, result.payout); addExp(m, 20); }
-        msg = "";
-        msg += `🎲 Kamu tebak: *${guess}*\n`;
-        msg += `🎲 Hasil: *${result.roll}*\n`;
-        msg += `
-`;
-        if (result.win) {
-          msg += `🎉 Menang! (5x payout)\n`;
-          msg += `💰 Payout: *${result.payout} gold*\n`;
-        } else {
-          msg += `💸 Rugi: *-${bet} gold*\n`;
-        }
+        resultBox = {
+          icon: "🎲",
+          flavor: result.win ? "🎉 *MENANG!*" : "💀 *KALAH!*",
+          lines: [
+            `│ • 🎲 Tebakanmu : ${guess}`,
+            `│ • 🎯 Hasil dadu : ${result.roll}`,
+            "",
+            result.win ? `│ • 💰 Payout : ${result.payout} gold (5x)` : `│ • 💸 Rugi : -${bet} gold`,
+          ],
+        };
         break;
       }
 
@@ -189,17 +189,16 @@ async function handler(m, { sock }) {
         const normalized = ["kepala", "heads"].includes(guess) ? "heads" : "tails";
         result = playCoinflip(bet, normalized);
         if (result.win) { addGold(m, result.payout); addExp(m, 10); }
-        msg = "";
-        msg += `🪙 Kamu pilih: *${normalized}*\n`;
-        msg += `🪙 Hasil: *${result.result}*\n`;
-        msg += `
-`;
-        if (result.win) {
-          msg += `🎉 Menang! (2x payout)\n`;
-          msg += `💰 Payout: *${result.payout} gold*\n`;
-        } else {
-          msg += `💸 Rugi: *-${bet} gold*\n`;
-        }
+        resultBox = {
+          icon: "🪙",
+          flavor: result.win ? "🎉 *MENANG!*" : "💀 *KALAH!*",
+          lines: [
+            `│ • 🪙 Pilihanmu : ${normalized}`,
+            `│ • 🪙 Hasil : ${result.result}`,
+            "",
+            result.win ? `│ • 💰 Payout : ${result.payout} gold (2x)` : `│ • 💸 Rugi : -${bet} gold`,
+          ],
+        };
         break;
       }
 
@@ -212,17 +211,16 @@ async function handler(m, { sock }) {
         result = playRoulette(bet, betType);
         if (result.win) { addGold(m, result.payout); addExp(m, Math.floor(result.payout / 30)); }
         const colorEmoji = { red: "🔴", black: "⚫", green: "🟢" }[result.color];
-        msg = "";
-        msg += `🎡 Hasil: *${colorEmoji} ${result.number}*\n`;
-        msg += `📌 Bet: *${betType}*\n`;
-        msg += `
-`;
-        if (result.win) {
-          msg += `🎉 Menang!\n`;
-          msg += `💰 Payout: *${result.payout} gold*\n`;
-        } else {
-          msg += `💸 Rugi: *-${bet} gold*\n`;
-        }
+        resultBox = {
+          icon: "🎡",
+          flavor: result.win ? "🎉 *MENANG!*" : "💀 *KALAH!*",
+          lines: [
+            `│ • 🎡 Hasil : ${colorEmoji} ${result.number} (${result.color})`,
+            `│ • 📌 Bet kamu : ${betType}`,
+            "",
+            result.win ? `│ • 💰 Payout : ${result.payout} gold` : `│ • 💸 Rugi : -${bet} gold`,
+          ],
+        };
         break;
       }
 
@@ -232,10 +230,17 @@ async function handler(m, { sock }) {
     }
 
     setCooldown(m, "lastCasinoV2", CASINO_CD);
-    msg += `💼 Gold: *${rpg.gold - bet + (result.payout || 0)}*\n`;
-    
+
     await m.react("🐣");
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "casinov2", icon: resultBox.icon,
+      flavor: resultBox.flavor,
+      body: [
+        ...resultBox.lines,
+        `│ • 💼 Sisa gold : ${rpg.gold - bet + (result.payout || 0)}`,
+      ].join("\n"),
+      cta: gameCTA("casinov2"),
+    }));
   } catch (err) {
     console.error("casinov2 error:", err);
     await m.react("❌");
