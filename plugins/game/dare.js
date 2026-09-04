@@ -3,6 +3,7 @@
 
 import fs from "fs";
 import {novaBox, novaEmpty, novaError, novaGuide, novaNoInput} from "../../src/lib/nova-menu-style.js";
+import { novaGameBox } from "../../src/lib/nova-games.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -42,7 +43,7 @@ export async function handler(m, { sock }) {
   try {
     const dare = getRandomDare();
     if (!dare) {
-      await m.reply("❌ Hmm, dare-nya lagi kosong nih 🫠\nCoba lagi yuk!");
+      await m.reply(novaGameBox({ title: "dare", icon: "🎯", flavor: "🫠 *KOSONG!*", body: "Dare-nya lagi kosong nih, coba lagi yuk!" }));
       return;
     }
 
@@ -58,7 +59,7 @@ export async function handler(m, { sock }) {
   } catch (e) {
     console.error("[dare] Error:", e.message);
     try {
-      await m.reply("❌ Yah, ada error nih 😵\nCoba lagi bentar ya");
+      await m.reply(novaGameBox({ title: "dare", icon: "🎯", flavor: "😵 *ERROR!*", body: "Yah ada error nih, coba lagi bentar ya!" }));
     } catch {}
   }
 }
