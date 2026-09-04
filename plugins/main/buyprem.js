@@ -29,13 +29,8 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Harga premium per durasi
-const PREMIUM_PRICES = [
-  { duration: "7d", label: "7 Hari", price: "Rp 10.000", days: 7 },
-  { duration: "30d", label: "30 Hari", price: "Rp 25.000", days: 30 },
-  { duration: "90d", label: "90 Hari", price: "Rp 60.000", days: 90 },
-  { duration: "lifetime", label: "Permanent", price: "Rp 150.000", days: 0 },
-];
+// Harga premium: dari src/lib/sewa/sewa.js (utak atik harga di situ)
+import { PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
 
 // Session sementara untuk user yang lagi proses beli
 const buySessions = new Map();
@@ -130,7 +125,7 @@ async function handler(m, { sock }) {
   // Kalau ada argumen durasi langsung → cari paket matching
   if (args) {
     const pkg = PREMIUM_PRICES.find(
-      (p) => p.duration === args.toLowerCase() || p.label.toLowerCase() === args.toLowerCase(),
+      (p) => p.duration === args.toLowerCase() || p.label.toLowerCase() === args.toLowerCase() || (p.desc || "").toLowerCase() === args.toLowerCase(),
     );
 
     if (pkg) {
