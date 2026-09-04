@@ -1,15 +1,23 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * nova-menu-card.js
- * Helper untuk kirim menu: THUMBNAIL (real image attachment) + TOMBOL (nativeFlowMessage).
+ * Helper untuk kirim menu: BANNER LINK-PREVIEW (externalAdReply, TIDAK
+ * kesimpen ke galeri) + TOMBOL (nativeFlowMessage).
  *
- * Pattern PROVEN JALAN (dipakai di plugins/group/cekidgc.js):
+ * UPDATE 2026-09-04 (request owner — referensi bot "Raiden MD"):
+ * Header sebelumnya pakai REAL image attachment (hasMediaAttachment:true)
+ * yang konsekuensinya thumbnail BISA disave ke galeri penerima. Owner
+ * sekarang minta gaya link-preview card: banner besar + baris kecil di
+ * bawahnya (ikon tag otomatis dari WhatsApp + judul + subjudul), PERSIS
+ * seperti render externalAdReply dengan renderLargerThumbnail:true —
+ * dan gambar model ini TIDAK punya opsi "simpan ke galeri" di WhatsApp
+ * (cuma link-preview, bukan attachment asli).
+ *
+ * Pattern PROVEN untuk tombol (dipakai di plugins/group/cekidgc.js):
  * - contextInfo diletakkan LANGSUNG di dalam interactiveMessage (bukan di
  *   messageContextInfo.contextInfo) via proto.Message.InteractiveMessage.fromObject().
- *   Nesting yang salah inilah yang bikin thumbnail muncul sebagai location pin.
- * - Header pakai REAL image attachment (prepareWAMessageMedia + hasMediaAttachment: true),
- *   bukan externalAdReply link-preview trick. Konsekuensinya thumbnail BISA tersimpan
- *   ke galeri penerima — trade-off yang disetujui demi tombol bisa muncul reliable.
+ * - externalAdReply ditaruh di contextInfo YANG SAMA (proto InteractiveMessage
+ *   punya field contextInfo sendiri) — jadi banner + tombol tetap satu pesan.
  * - nativeFlowMessage buttons: support quick_reply, cta_copy, single_select, dst.
  *   Max ~6 buttons per pesan (WhatsApp bisa nolak render kalau kebanyakan).
  */
@@ -17,7 +25,9 @@
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";
-import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
+import { generateWAMessageFromContent, proto } from "nova";
+import { getTimeGreeting } from "./nova-formatter.js";
+import config from "../../config.js";
 
 let _thumbnailBuffer = null;
 
@@ -79,19 +89,20 @@ function buildNativeButtons(buttons = []) {
 }
 
 /**
- * Kirim menu dengan thumbnail (real image header) + tombol (nativeFlowMessage)
- * dalam SATU interactiveMessage. Pattern sama dengan cekidgc.js yang proven jalan.
+ * Kirim menu dengan banner link-preview (externalAdReply, gak kesimpen galeri)
+ * + tombol (nativeFlowMessage) dalam SATU interactiveMessage.
  *
  * @param {object} sock - WhatsApp socket
  * @param {object} m - Message object
  * @param {object} opts
  * @param {string} opts.text - Isi teks menu (body)
  * @param {string} opts.footer - Footer text
- * @param {string} [opts.thumbnailPath] - Path ke file gambar thumbnail
+ * @param {string} [opts.thumbnailPath] - Path ke file gambar banner
  * @param {Array} opts.buttons - Max 6 tombol (lihat buildNativeButtons)
- * @param {string} [opts.title] - Judul header (opsional, biasanya kosong kalau ada image)
+ * @param {string} [opts.title] - Nama bot, dipakai di subjudul "Kode: <title>"
+ * @param {string} [opts.adTitle] - Override judul banner (default: greeting waktu, mis. "Selamat Pagi 🌅")
  */
-async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "" }) {
+async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "", adTitle = "" }) {
   try {
     // WhatsApp Channel (saluran/newsletter) TIDAK support interactiveMessage/
     // nativeFlowMessage sama sekali — follower akan lihat "Anda menerima info
@@ -111,23 +122,29 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
     const rawBuffer = getThumbnailBuffer(thumbPath);
 
-    let headerMedia = null;
+    let adThumbnail = null;
     if (rawBuffer) {
       try {
-        const resized = await sharp(rawBuffer)
-          .resize(640, 360, { fit: "cover" })
+        adThumbnail = await sharp(rawBuffer)
+          .resize(640, 640, { fit: "cover" })
           .jpeg({ quality: 85 })
           .toBuffer();
-        headerMedia = await prepareWAMessageMedia(
-          { image: resized },
-          { upload: sock.waUploadToServer },
-        );
       } catch (e) {
-        console.error("[nova-menu-card] Gagal proses/upload thumbnail:", e.message);
+        console.error("[nova-menu-card] Gagal proses thumbnail:", e.message);
       }
     }
 
     const nativeButtons = buildNativeButtons(buttons);
+
+    const externalAdReply = {
+      title: adTitle || getTimeGreeting(),
+      body: `Kode: ${title || config.bot?.name || "Nova AI"}`,
+      mediaType: 1,
+      renderLargerThumbnail: true,
+      showAdAttribution: false,
+      sourceUrl: config.info?.website || config.saluran?.link || "",
+      ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
+    };
 
     const interactiveObj = {
       body: proto.Message.InteractiveMessage.Body.fromObject({ text }),
@@ -135,25 +152,19 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         buttons: nativeButtons,
       }),
+      // Header TANPA media attachment — banner besar dihandle lewat
+      // contextInfo.externalAdReply di bawah (link-preview, gak kesimpen galeri).
+      header: proto.Message.InteractiveMessage.Header.fromObject({
+        title: "",
+        hasMediaAttachment: false,
+      }),
       contextInfo: {
         mentionedJid: m.sender ? [m.sender] : [],
         forwardingScore: 0,
         isForwarded: false,
+        externalAdReply,
       },
     };
-
-    if (headerMedia) {
-      interactiveObj.header = proto.Message.InteractiveMessage.Header.fromObject({
-        title: title || "",
-        hasMediaAttachment: true,
-        ...headerMedia,
-      });
-    } else if (title) {
-      interactiveObj.header = proto.Message.InteractiveMessage.Header.fromObject({
-        title,
-        hasMediaAttachment: false,
-      });
-    }
 
     const msg = generateWAMessageFromContent(
       m.chat,
