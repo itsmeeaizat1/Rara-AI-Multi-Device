@@ -13,6 +13,7 @@ import { getAllPlugins, getCategories, getCommandsByCategory } from "../../src/l
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
+import { premiumPrice as PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
 
 const pluginConfig = {
   name: "premium",
@@ -30,13 +31,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// ── HARGA PREMIUM ──
-const PREMIUM_PRICES = [
-  { duration: "7d", label: "Harian", desc: "7 Hari", price: "Rp 10.000", days: 7 },
-  { duration: "30d", label: "Bulanan", desc: "30 Hari", price: "Rp 25.000", days: 30 },
-  { duration: "90d", label: "Triwulan", desc: "90 Hari", price: "Rp 60.000", days: 90 },
-  { duration: "lifetime", label: "Permanent", desc: "Seumur Hidup", price: "Rp 150.000", days: 0 },
-];
+// ── HARGA PREMIUM: dari src/lib/sewa/sewa.js (utak atik harga di situ) ──
 
 function formatDate(ts) {
   return new Date(ts).toLocaleDateString("id-ID", {
@@ -348,4 +343,4 @@ async function handler(m, { sock, config: botConfig, db }) {
   return { handled: true };
 }
 
-export { pluginConfig as config, handler, PREMIUM_PRICES };
+export { pluginConfig as config, handler };

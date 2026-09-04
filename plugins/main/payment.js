@@ -2,8 +2,8 @@
 /**
  * .payment — Katalog Layanan Bot (WhatsApp native carousel, geser
  * kiri/kanan ala katalog toko). 4 kartu:
- *   1. Sewa Bot      → harga dari src/lib/sewa.js (sama dengan .sewa)
- *   2. Beli Premium  → harga dari PREMIUM_PRICES plugins/info/premium.js (sama dengan .premium)
+ *   1. Sewa Bot      → harga dari src/lib/sewa/sewa.js
+ *   2. Beli Premium  → harga premium dari src/lib/sewa/sewa.js
  *   3. Topup Limit   → harga dari energi.topup di src/lib/config/features.js
  *   4. Donasi        → metode dari donasi di config/setpayment.js
  *
@@ -19,8 +19,7 @@
 import fs from "fs";
 import path from "path";
 import config from "../../config.js";
-import { sewaPrice } from "../../src/lib/sewa.js";
-import { PREMIUM_PRICES } from "../info/premium.js";
+import { sewaPrice, PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
