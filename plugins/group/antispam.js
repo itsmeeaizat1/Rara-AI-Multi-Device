@@ -90,7 +90,7 @@ async function handler(m, { sock, db }) {
     if (action === "on" || action === "off") {
         const isEnable = action === "on"
         if (groupData.antispam === isEnable) {
-            return m.reply(claraWrap("Antispam", `✅ Fitur antispam sudah ${isEnable ? "aktif" : "nonaktif"} di grup ini, tidak ada perubahan yang dibuat`))
+            return m.reply(claraWrap("Antispam", `Fitur antispam sudah ${isEnable ? "aktif" : "nonaktif"} di grup ini, tidak ada perubahan yang dibuat`, "success"))
         }
         
         groupData.antispam = isEnable

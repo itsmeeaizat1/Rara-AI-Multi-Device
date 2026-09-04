@@ -19,7 +19,7 @@ const pluginConfig = {
 
 function handler(m, { sock, db }) {
     if (!m.isAdmin && !m.isOwner) {
-        return m.reply(claraWrap("Notifsholat", `❌ Hanya admin grup yang bisa menggunakan fitur ini`));
+        return m.reply(claraWrap("Notifsholat", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"));
     }
 
     const args = m.args[0]?.toLowerCase();
@@ -51,13 +51,13 @@ function handler(m, { sock, db }) {
     if (args === 'on') {
         group.notifSholat = true;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `✅ *ɴᴏᴛɪꜰ ꜱʜᴏʟᴀᴛ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\nGrup ini akan menerima pengingat waktu sholat\nLokasi: ${kotaSetting.nama}`));
+        return m.reply(claraWrap("Notifsholat", `notif sholat diaktifkan\n\nGrup ini akan menerima pengingat waktu sholat\nLokasi: ${kotaSetting.nama}`, "success"));
     }
 
     if (args === 'off') {
         group.notifSholat = false;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `❌ *ɴᴏᴛɪꜰ ꜱʜᴏʟᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`));
+        return m.reply(claraWrap("Notifsholat", `notif sholat dinonaktifkan`, "error"));
     }
 }
 

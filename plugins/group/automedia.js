@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         }
         db.setGroup(m.chat, { automedia: true })
         await db.save()
-        return m.reply(claraWrap("Automedia", `✅ Berhasil diaktifkan!\nSticker akan otomatis jadi gambar/video`))
+        return m.reply(claraWrap("Automedia", `Berhasil diaktifkan!\nSticker akan otomatis jadi gambar/video`, "success"))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         { const __navText = `🎬 *ᴀᴜᴛᴏᴍᴇᴅɪᴀ*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
-    return m.reply(`❌ Gunakan: \`${m.prefix}automedia on/off\``)
+    return m.reply(claraWrap("Auto media", `Gunakan: \`${m.prefix}automedia on/off\``, "error"))
 }
 
 async function autoMediaHandler(m, sock) {

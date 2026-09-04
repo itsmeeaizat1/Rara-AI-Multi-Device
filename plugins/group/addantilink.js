@@ -35,7 +35,7 @@ function handler(m, { sock }) {
     const antilinkList = groupData.antilinkList || []
     
     if (antilinkList.includes(link)) {
-        return m.reply(`⚠️ Link \`${link}\` sudah ada di daftar antilink!`)
+        return m.reply(claraWrap("Addantilink", `Link \`${link}\` sudah ada di daftar antilink!`, "warn"))
     }
     
     antilinkList.push(link)

@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const participants = groupMeta.participants || [];
 
     if (participants.length === 0) {
-      await m.reply(claraWrap("Tagall", `❌ *ɢᴀɢᴀʟ*\n\nTidak ada member di grup ini.`));
+      await m.reply(claraWrap("Tagall", `gagal\n\nTidak ada member di grup ini.`, "error"));
       return;
     }
 
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     });
 
     if (targetParticipants.length === 0) {
-      await m.reply(claraWrap("Tagall", `❌ *ɢᴀɢᴀʟ*\n\nTidak ada member lain yang bisa di-tag.`));
+      await m.reply(claraWrap("Tagall", `gagal\n\nTidak ada member lain yang bisa di-tag.`, "error"));
       return;
     }
 

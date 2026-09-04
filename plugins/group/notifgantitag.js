@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   const currentStatus = groupData.notifLabelChange === true;
   if (sub === "on" && sub2 === "all") {
     if (!m.isOwner) {
-      return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
+      return m.reply(claraWrap("Notifgantitag", `Hanya owner yang bisa menggunakan fitur ini!`, "error"));
     }
     try {
       const groups = await sock.groupFetchAllParticipating();
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   }
   if (sub === "off" && sub2 === "all") {
     if (!m.isOwner) {
-      return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
+      return m.reply(claraWrap("Notifgantitag", `Hanya owner yang bisa menggunakan fitur ini!`, "error"));
     }
     try {
       const groups = await sock.groupFetchAllParticipating();
@@ -67,10 +67,7 @@ async function handler(m, { sock }) {
   }
   if (sub === "on") {
     if (currentStatus) {
-      return m.reply(`⚠️ *Notif Label Already Active*\n\n` +
-          `Status: *✅ ON*\n` +
-          `Notifikasi ganti label sudah aktif di grup ini.\n\n` +
-          `_Gunakan \`${m.prefix}notifgantitag off\` untuk menonaktifkan._`);
+      return m.reply(claraWrap("Notif Gantitag", `Notifikasi ganti label sudah aktif di grup ini.\nGunakan \`${m.prefix}notifgantitag off\` untuk menonaktifkan.`, "warn"));
     }
     db.setGroup(m.chat, { notifLabelChange: true });
     return m.reply(claraWrap("notifgantitag", `✅ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ᴀᴋᴛɪꜰ*\n\n` +

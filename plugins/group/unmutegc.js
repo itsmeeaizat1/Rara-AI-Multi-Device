@@ -26,8 +26,7 @@ async function handler(m, { sock }) {
   const groupData = db.getGroup(m.chat) || {};
 
   if (!groupData.mutegc) {
-    return m.reply(claraWrap("Mute GC Tidak Aktif", 
-        `Member sudah bisa menggunakan command bot di grup ini`));
+    return m.reply(claraWrap("Mute GC Tidak Aktif", `Member sudah bisa menggunakan command bot di grup ini`, "info"));
   }
 
   db.setGroup(m.chat, { mutegc: false });

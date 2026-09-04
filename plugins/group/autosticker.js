@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         }
         db.setGroup(m.chat, { autosticker: true })
         await db.save()
-        return m.reply(claraWrap("Autosticker", `✅ Berhasil diaktifkan!\nGambar/video akan otomatis jadi sticker`))
+        return m.reply(claraWrap("Autosticker", `Berhasil diaktifkan!\nGambar/video akan otomatis jadi sticker`, "success"))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         { const __navText = `🖼️ *ᴀᴜᴛᴏꜱᴛɪᴄᴋᴇʀ*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
-    return m.reply(`❌ Gunakan: \`${m.prefix}autosticker on/off\``)
+    return m.reply(claraWrap("Auto sticker", `Gunakan: \`${m.prefix}autosticker on/off\``, "error"))
 }
 
 async function autoStickerHandler(m, sock) {

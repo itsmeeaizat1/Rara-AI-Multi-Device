@@ -153,16 +153,16 @@ function handler(m, { sock }) {
   if (args === "on") {
     db.setGroup(m.chat, { ...groupData, antibot: true });
     db.save();
-    return m.reply(claraWrap("Antibot", `✅ *ᴀɴᴛɪʙᴏᴛ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`));
+    return m.reply(claraWrap("Antibot", `antibot diaktifkan`, "success"));
   }
 
   if (args === "off") {
     db.setGroup(m.chat, { ...groupData, antibot: false });
     db.save();
-    return m.reply(claraWrap("Antibot", `❌ *ᴀɴᴛɪʙᴏᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`));
+    return m.reply(claraWrap("Antibot", `antibot dinonaktifkan`, "error"));
   }
 
-  return m.reply(`❌ Gunakan \`.antibot on\` atau \`.antibot off\``);
+  return m.reply(claraWrap("Anti bot", `Gunakan \`.antibot on\` atau \`.antibot off\``, "error"));
 }
 
 function isBotMessage(m) {

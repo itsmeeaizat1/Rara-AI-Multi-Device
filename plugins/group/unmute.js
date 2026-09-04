@@ -27,7 +27,7 @@ function handler(m, { sock }) {
     if (!group.mute) return m.reply(claraWrap("Unmute", '❌ Grup tidak sedang di-mute.'))
 
     db.setGroup(m.chat, { ...group, mute: false })
-    m.reply(`✅ Grup *${groupName}* berhasil di-unmute oleh @${m.sender.split('@')[0]}\n\nSemua member sekarang bisa mengirim pesan.`, { mentions: [m.sender] })
+    m.reply(claraWrap("Unmute", `Grup ${groupName} berhasil di-unmute oleh @${m.sender.split('@')[0]}\nSemua member sekarang bisa mengirim pesan.`, "success"), { mentions: [m.sender] })
 }
 
 export { pluginConfig as config, handler }

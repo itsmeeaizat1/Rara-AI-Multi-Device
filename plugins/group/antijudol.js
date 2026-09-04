@@ -51,7 +51,7 @@ function handler(m, { sock }) {
             db.setGroup(m.chat, { antijudol: 'on', antijudolMode: 'remove' })
             return m.reply(claraWrap("Antijudol", '✅ *AntiJudol mode DELETE diaktifkan*'))
         }
-        return m.reply(`❌ Metode tidak valid! Gunakan: \`kick\` atau \`remove\``)
+        return m.reply(claraWrap("Anti judol", `Metode tidak valid! Gunakan: \`kick\` atau \`remove\``, "error"))
     }
 
     if (option === 'kick') {

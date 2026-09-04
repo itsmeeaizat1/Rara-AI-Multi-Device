@@ -40,13 +40,13 @@ function handler(m, { sock }) {
     }
 
     if (!db.db.data.sewa.enabled) {
-        return m.reply(claraWrap("Checksewa", `ℹ️ Sistem sewa tidak aktif\n\nBot ini bisa digunakan di semua grup.`))
+        return m.reply(claraWrap("Checksewa", `ℹ️ Sistem sewa tidak aktif\n\nBot ini bisa digunakan di semua grup.`, "info"))
     }
 
     const sewaData = db.db.data.sewa.groups[m.chat]
 
     if (!sewaData) {
-        return m.reply(claraWrap("Checksewa", `❌ Grup ini tidak terdaftar dalam sistem sewa\n\nHubungi owner bot untuk info sewa.`))
+        return m.reply(claraWrap("Checksewa", `Grup ini tidak terdaftar dalam sistem sewa\n\nHubungi owner bot untuk info sewa.`, "error"))
     }
 
     const groupName = sewaData.name || m.chat.split('@')[0]

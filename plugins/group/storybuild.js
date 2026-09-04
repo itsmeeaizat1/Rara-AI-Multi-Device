@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "storybuild",
@@ -65,10 +65,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "add") {
-      if (!story.active) return m.reply(claraWrap("Story Build", `Belum ada cerita. Mulai: ${usedPrefix}storybuild start <tema>`));
+      if (!story.active) return m.reply(claraWrap("Story Build", `Belum ada cerita. Mulai: ${usedPrefix}storybuild start <tema>`, "info"));
       const sentence = text.split(" ").slice(1).join(" ").trim();
-      if (!sentence) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}storybuild add <kalimat kamu>`));
-      if (story.currentRound >= story.maxRounds) return m.reply(claraWrap("Story Build", `Maksimal ${story.maxRounds} putaran. Ketik ${usedPrefix}storybuild end untuk rangkum.`));
+      if (!sentence) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}storybuild add <kalimat kamu>`, "info"));
+      if (story.currentRound >= story.maxRounds) return m.reply(claraWrap("Story Build", `Maksimal ${story.maxRounds} putaran. Ketik ${usedPrefix}storybuild end untuk rangkum.`, "info"));
 
       const lastAuthor = story.sentences[story.sentences.length - 1]?.author;
       if (lastAuthor === sender) return m.reply(claraWrap("Story Build", "Tunggu giliran orang lain dulu!"));
@@ -147,7 +147,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("storybuild error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Storybuild", e.message));
   }
 }
 

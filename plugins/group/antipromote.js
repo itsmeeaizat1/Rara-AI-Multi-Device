@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antipromote",
@@ -47,27 +47,27 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "whitelist" || sub === "wl") {
       const target = m.mentionedJid?.[0];
-      if (!target) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}antipromote whitelist @user`));
+      if (!target) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}antipromote whitelist @user`, "info"));
       if (data.whitelist.includes(target)) {
         data.whitelist = data.whitelist.filter(j => j !== target);
         await db.save();
-        return m.reply(claraWrap("Anti Promote", `@${target.split("@")[0]} dihapus dari whitelist.`));
+        return m.reply(claraWrap("Anti Promote", `@${target.split("@")[0]} dihapus dari whitelist.`, "info"));
       } else {
         data.whitelist.push(target);
         await db.save();
-        return m.reply(claraWrap("Anti Promote", `@${target.split("@")[0]} ditambahkan ke whitelist (bebas promote/demote).`));
+        return m.reply(claraWrap("Anti Promote", `@${target.split("@")[0]} ditambahkan ke whitelist (bebas promote/demote).`, "info"));
       }
     }
 
     if (sub === "promote" || sub === "demote") {
       const toggle = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(toggle)) {
-        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}antipromote ${sub} on|off`));
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}antipromote ${sub} on|off`, "info"));
       }
       if (sub === "promote") data.blockPromote = toggle === "on";
       if (sub === "demote") data.blockDemote = toggle === "on";
       await db.save();
-      return m.reply(claraWrap("Anti Promote", `Block ${sub}: ${toggle === "on" ? "AKTIF" : "MATI"}`));
+      return m.reply(claraWrap("Anti Promote", `Block ${sub}: ${toggle === "on" ? "AKTIF" : "MATI"}`, "info"));
     }
 
     if (sub === "status") {
@@ -93,7 +93,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         const time = new Date(l.time).toLocaleString("id-ID");
         return `${i + 1}. ${l.action} @${l.target.split("@")[0]} by @${l.by.split("@")[0]} | ${l.reverted ? "REVERTED" : "ALLOWED"} | ${time}`;
       }).join("\n");
-      return m.reply(claraWrap("Anti Promote", `Log (${data.log.length}):\n\n${logs}`));
+      return m.reply(claraWrap("Anti Promote", `Log (${data.log.length}):\n\n${logs}`, "info"));
     }
 
     if (sub === "clearlog") {
@@ -116,7 +116,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("antipromote error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Anti promote", e.message));
   }
 }
 

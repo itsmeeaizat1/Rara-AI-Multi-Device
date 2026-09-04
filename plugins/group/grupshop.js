@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "grupshop",
@@ -59,10 +59,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "buy") {
       const itemId = parseInt(args[1]);
-      if (!itemId) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop buy <id>`));
+      if (!itemId) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop buy <id>`, "info"));
       const item = shop.items.find(i => i.id === itemId);
       if (!item) return m.reply(claraWrap("Info", `Item ID ${itemId} tidak ditemukan.`));
-      if (wallet.coins < item.price) return m.reply(claraWrap("Info", `Koin kurang! Butuh ${item.price}, kamu punya ${wallet.coins}.`));
+      if (wallet.coins < item.price) return m.reply(claraWrap("Info", `Koin kurang! Butuh ${item.price}, kamu punya ${wallet.coins}.`, "info"));
       wallet.coins -= item.price;
       if (item.type === "badge") wallet.badges.push(item.name);
       else if (item.type === "title") wallet.titles.push(item.name);
@@ -82,7 +82,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const price = parseInt(args[args.length - 2]);
       const type = (args[args.length - 1] || "").toLowerCase();
       if (!itemName || !price || !type) {
-        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop add <item> <price> <type>\nType: badge, title, privilege, cosmetic`));
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop add <item> <price> <type>\nType: badge, title, privilege, cosmetic`, "info"));
       }
       const newId = shop.pendingId++;
       shop.items.push({ id: newId, name: itemName, price, type, desc: "Custom item" });
@@ -96,17 +96,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         .slice(0, 10);
       if (sorted.length === 0) return m.reply(claraWrap("Group Shop", "Belum ada member dengan koin."));
       const lb = sorted.map(([jid, w], i) => `${i + 1}. @${jid.split("@")[0]} - ${w.coins} koin`).join("\n");
-      return m.reply(claraWrap("Group Shop", `Top Coin Holders:\n\n${lb}`));
+      return m.reply(claraWrap("Group Shop", `Top Coin Holders:\n\n${lb}`, "info"));
     }
 
     if (sub === "give" && isOwner) {
       const target = m.mentionedJid?.[0] || args[1]?.replace(/[@.]/g, "") + "@s.whatsapp.net";
       const amount = parseInt(args[2]);
-      if (!target || !amount) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop give @user <amount>`));
+      if (!target || !amount) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop give @user <amount>`, "info"));
       if (!shop.wallet[target]) shop.wallet[target] = { coins: 0, badges: [], titles: [], privileges: [] };
       shop.wallet[target].coins += amount;
       await db.save();
-      return m.reply(claraWrap("Group Shop", `Berhasil kasih ${amount} koin ke @${target.split("@")[0]}`));
+      return m.reply(claraWrap("Group Shop", `Berhasil kasih ${amount} koin ke @${target.split("@")[0]}`, "info"));
     }
 
     const itemList = shop.items.map(i => `${i.id}. ${i.name} - ${i.price} koin (${i.type})`).join("\n");
@@ -126,7 +126,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].filter(Boolean).join("\n")));
   } catch (e) {
     console.error("grupshop error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Grupshop", e.message));
   }
 }
 

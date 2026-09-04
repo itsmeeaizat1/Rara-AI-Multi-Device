@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "grupdashboard",
@@ -38,11 +38,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "auto") {
       const toggle = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(toggle)) {
-        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupdashboard auto on|off`));
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupdashboard auto on|off`, "info"));
       }
       stats.autoPost = toggle === "on";
       await db.save();
-      return m.reply(claraWrap("Group Dashboard", `Auto-post ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan post summary harian otomatis.`));
+      return m.reply(claraWrap("Group Dashboard", `Auto-post ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan post summary harian otomatis.`, "info"));
     }
 
     if (sub === "reset") {
@@ -91,7 +91,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     return m.reply(claraWrap("Group Dashboard", lines));
   } catch (e) {
     console.error("grupdashboard error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Grupdashboard", e.message));
   }
 }
 

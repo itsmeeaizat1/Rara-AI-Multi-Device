@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
 
   if (action === "off") {
     db.setGroup(m.chat, { antimedia: false });
-    await m.reply(claraWrap("Antimedia", `❌ *ᴀɴᴛɪᴍᴇᴅɪᴀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`));
+    await m.reply(claraWrap("Antimedia", `antimedia dinonaktifkan`, "error"));
     return;
   }
 
-  await m.reply(`❌ Gunakan \`.antimedia on\` atau \`.antimedia off\``);
+  await m.reply(claraWrap("Anti media", `Gunakan \`.antimedia on\` atau \`.antimedia off\``, "error"));
 }
 
 export { pluginConfig as config, handler, checkAntimedia };

@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     return;
   }
 
-  await m.reply(`Gunakan \`${m.prefix}antifoto on\` atau \`${m.prefix}antifoto off\``);
+  await m.reply(claraWrap("Anti foto", `Gunakan \`${m.prefix}antifoto on\` atau \`${m.prefix}antifoto off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiFoto };

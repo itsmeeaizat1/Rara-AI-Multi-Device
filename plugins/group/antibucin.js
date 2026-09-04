@@ -279,19 +279,19 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Antibucin", `
 │ Deteksi bucin/gombal diaktifkan
 │ Sistem: Warn 3x lalu kick
-`))
+`, "info"))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antibucin: 'off' })
         return m.reply(claraWrap("Antibucin", `
 │ Deteksi bucin dinonaktifkan
-`))
+`, "info"))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antibucin", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { bucinMaxWarn: count })
-        return m.reply(claraWrap("Antibucin", `Max peringatan: *${count}x*`))
+        return m.reply(claraWrap("Antibucin", `Max peringatan: ${count}x`, "info"))
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -311,13 +311,13 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.bucinWarns?.[target]) delete updated.bucinWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antibucin", `Warn warn bucin @${target.split('@')[0]} direset`), { mentions: [target] })
+        return m.reply(claraWrap("Antibucin", `Warn warn bucin @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.bucinWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antibucin", `Semua warn bucin direset`))
+        return m.reply(claraWrap("Antibucin", `Semua warn bucin direset`, "info"))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antibucin` untuk daftar command')
 }

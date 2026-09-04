@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
     if (m.command === 'listmutemember' || m.command === 'listmute') {
         if (mutedMembers.length === 0) {
-            return m.reply("🔇 Tidak ada member yang dimute di grup ini")
+            return m.reply(claraWrap("Unmutemember", `Tidak ada member yang dimute di grup ini`, "info"))
         }
 
         let txt = `🔇 *List Muted Members*\n\n`
@@ -79,18 +79,13 @@ async function handler(m, { sock }) {
     })
 
     if (index === -1) {
-        return m.reply(claraWrap("Unmutemember", `❌ *ɢᴀɢᴀʟ*\n\nMember @${targetNumber} tidak sedang dimute`))
+        return m.reply(claraWrap("Unmutemember", `gagal\n\nMember @${targetNumber} tidak sedang dimute`, "error"))
     }
 
     mutedMembers.splice(index, 1)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(`*Member Diunmute*\n\n` +
-        "" +
-        `👤 Member: @${targetNumber}\n` +
-        `🔊 sTatus: \`Unmuted\`\n` +
-        `📊 sIsa Mute: \`${mutedMembers.length}\` Member\n` +
-        "")
+    await m.reply(claraWrap("Unmutemember", `Member: @${targetNumber}\nStatus: Unmuted\nSisa mute: ${mutedMembers.length} member`, "success"))
 }
 
 export { pluginConfig as config, handler }

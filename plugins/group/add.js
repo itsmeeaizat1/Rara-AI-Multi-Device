@@ -23,18 +23,19 @@ async function handler(m, { sock }) {
     const args = m.args || []
     
     if (args.length === 0) {
-        return m.reply(`*Add Member*\n\n` +
-            `Cara pakai:\n` +
-            `1. Di grup: \`${m.prefix}add <nomor>\`\n` +
-            `2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`\n` +
-            `3. Di private: \`${m.prefix}add <nomor> <link_grup>\`\n\n` +
-            `Contoh:\n` +
-            `\`${m.prefix}add 6281234567890\`\n` +
-            `\`${m.prefix}add 628123 628456 628789\`\n` +
-            `\`${m.prefix}add 628123 https://chat.whatsapp.com/xxx\`\n\n` +
-            `Syarat:\n` +
-            `- Bot harus admin di grup target\n` +
-            `- Yang jalankan command harus admin`)
+        return m.reply(claraWrap("Add", `📌 Cara pakai:
+1. Di grup: \`${m.prefix}add <nomor>\`
+2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`
+3. Di private: \`${m.prefix}add <nomor> <link_grup>\`
+---
+💡 Contoh:
+\`${m.prefix}add 6281234567890\`
+\`${m.prefix}add 628123 628456 628789\`
+\`${m.prefix}add 628123 https://chat.whatsapp.com/xxx\`
+---
+Syarat:
+• Bot harus admin di grup target
+• Yang jalankan command harus admin`, "info"))
     }
     
     let targetGroup = m.isGroup ? m.chat : null
@@ -67,7 +68,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetGroup) {
-        return m.reply(`❌ *Gagal*\n\nJalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
+        return m.reply(claraWrap("Add", `Jalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``, "error"))
     }
     
     try {
@@ -108,7 +109,7 @@ async function handler(m, { sock }) {
         }
         
         if (validNumbers.length === 0) {
-            return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nSemua nomor sudah ada di grup!`))
+            return m.reply(claraWrap("Add", `gagal\n\nSemua nomor sudah ada di grup!`, "error"))
         }
         const results = await sock.groupParticipantsUpdate(targetGroup, validNumbers, 'add')
         
@@ -158,9 +159,9 @@ async function handler(m, { sock }) {
     } catch (error) {
         
         if (error.message?.includes('not-authorized')) {
-            await m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nBot tidak memiliki izin untuk menambah member!`))
+            await m.reply(claraWrap("Add", `gagal\n\nBot tidak memiliki izin untuk menambah member!`, "error"))
         } else if (error.message?.includes('forbidden')) {
-            await m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nBot tidak memiliki akses ke grup ini!`))
+            await m.reply(claraWrap("Add", `gagal\n\nBot tidak memiliki akses ke grup ini!`, "error"))
         } else {
             m.reply(claraWrap("add", te(m.prefix, m.command, m.pushName), "error"))
         }

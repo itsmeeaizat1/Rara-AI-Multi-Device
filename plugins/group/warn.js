@@ -47,11 +47,11 @@ async function handler(m, { sock }) {
     if (args[0]?.toLowerCase() === 'max') {
         const newMax = parseInt(args[1])
         if (isNaN(newMax) || newMax < 1 || newMax > 20) {
-            return m.reply(claraWrap("warn", `❌ *ɢᴀɢᴀʟ*\n\nBatas referensi warning harus berupa angka 1-20.\n💡 *Contoh:* *${m.prefix}warn max 5*`))
+            return m.reply(claraWrap("warn", `gagal\n\nBatas referensi warning harus berupa angka 1-20.\n💡 Contoh: ${m.prefix}warn max 5`, "error"))
         }
         groupData.maxWarnings = newMax
         db.setGroup(m.chat, groupData)
-        return m.reply(claraWrap("Warn", `✅ *ʙᴀᴛᴀꜱ ᴡᴀʀɴɪɴɢ ᴅɪᴜʙᴀʜ*\n\nMaksimal warning grup ini telah diupdate menjadi *${newMax} kali*.`))
+        return m.reply(claraWrap("Warn", `batas warning diubah\n\nMaksimal warning grup ini telah diupdate menjadi ${newMax} kali.`, "success"))
     }
 
     let targetUser = null
@@ -71,14 +71,14 @@ async function handler(m, { sock }) {
         const groupMeta = m.groupMetadata
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === targetUser)
         if (participant?.admin) {
-            await m.reply(claraWrap("warn", `❌ Tidak bisa memberikan warning kepada admin grup.`))
+            await m.reply(claraWrap("warn", `Tidak bisa memberikan warning kepada admin grup.`, "error"))
             return
         }
     } catch (e) { console.error('[warn.js]:', e.message); }
     
     const botJid = sock.user?.id?.split(':')[0] + '@s.whatsapp.net'
     if (targetUser === botJid) {
-        await m.reply(claraWrap("Warn", `❌ Gak usah warn aku, aku cuma bot.`))
+        await m.reply(claraWrap("Warn", `Gak usah warn aku, aku cuma bot.`, "error"))
         return
     }
     

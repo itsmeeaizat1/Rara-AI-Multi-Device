@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
 
   db.setGroup(m.chat, { goodbyeMsg: text, goodbye: true, leave: true });
   db.save();
-  await m.reply(claraWrap("Setgoodbye", `✅ Goodbye berhasil di set menjadi *${text}*\nMau reset? ketik ${m.prefix}resetgoodbye`));
+  await m.reply(claraWrap("Setgoodbye", `Goodbye berhasil di set menjadi ${text}\nMau reset? ketik ${m.prefix}resetgoodbye`, "success"));
 }
 
 export { pluginConfig as config, handler };

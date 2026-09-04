@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     try {
         await sock.removeProfilePicture(m.chat)
         
-        await m.reply(claraWrap("Delppgc", `✅ PP Grup sekarang sudah botak`))
+        await m.reply(claraWrap("Delppgc", `PP Grup sekarang sudah botak`, "success"))
     } catch (error) {
         await m.reply(
             `❌ *ɢᴀɢᴀʟ*\n\n` +

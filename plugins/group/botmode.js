@@ -86,7 +86,7 @@ function handler(m, { sock }) {
     }
 
     if (!Object.keys(MODES).includes(mode)) {
-        return m.reply(claraWrap("botmodegc", `❌ Mode tidak valid. Pilihan: \`${Object.keys(MODES).join(', ')}\``))
+        return m.reply(claraWrap("botmodegc", `Mode tidak valid. Pilihan: \`${Object.keys(MODES).join(', ')}\``, "error"))
     }
 
 

@@ -3,6 +3,9 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
+
+- **FORMAT REPLY KATEGORI GRUP DISTANDARISASI 100% (2026-09-05, branch feat/group-reply-format):** Audit 177 plugin kategori grup: 57 reply command mentah (usage/guide/toggle/error pakai teks polos, bold *, atau template literal gak seragam) + ~190 claraWrap "double-format" (body smallcaps manual + bold asterisk + ikon ❌/✅/⚠ inline padahal claraWrap sudah auto smallcaps title & ikon via type param) — SEMUA dinormalisasi ke format standar V1: claraWrap("Title", `body bersih`, "type") dengan body plain natural Indonesia (bold dihapus sesuai aturan bold hemat, smallcaps manual dihapus karena toSC otomatis, ikon status dari type param: error=❌/success=✅/warn=❗). Cakupan: 83 file (antibot/antilinkgc/autoreply/notifmakan/notiftidur/kick/demote/promote/warn/tagall/spinbottle/game/slowmode/clearchat/antitoxic/anticaps/dsb). Fix bonus: korupsi addtoxic.js baris 36 dari sesi lama (teks `❌ *; return await m.reply(__navText); }Agal*` — sisa bug find/replace) dikembalikan ke normal. Reply HASIL fitur (tagall hidetag output) TETAP plain text sesuai aturan. Tes: test-anti-plain-text 26/26 PASS, test-anti-detail-format 9/9 PASS, node --check 177/177 OK. Backup: backup/pre-group-reply-format-20260905.
+
 - **Total Plugin:** 1720
 - **Total Command:** 2.118+
 - **Total Kategori:** 39

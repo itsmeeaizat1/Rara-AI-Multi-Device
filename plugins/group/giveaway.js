@@ -68,10 +68,10 @@ async function handleSession(m, sock) {
     session.winners = winners;
     session.step = "q2";
 
-    m.reply(claraWrap("Quick_reply", `✅ Detail tersimpan!
+    m.reply(claraWrap("Quick_reply", `Detail tersimpan!
 │ 🎁 ${title}
 │ ⏱️ ${formatDuration(duration)}
-│ 👥 ${winners} pemenang\n\n_Mengambil daftar grup..._`));
+│ 👥 ${winners} pemenang\n\n_Mengambil daftar grup..._`, "success"));
 
     try {
       const rawGroups = await fetchGroupsSafe(sock);
@@ -504,21 +504,21 @@ async function handler(m, { sock }) {
   if (deleteCmds.includes(cmd)) {
     if (!m.isAdmin && !m.isOwner) return m.reply(claraWrap("Quick_reply", "⚠️ Hanya admin!"));
     const giveawayId = args[0];
-    if (!giveawayId) return m.reply(claraWrap("Quick_reply", `⚠️ Format: ${prefix}${cmd} GA-XXXXXX`));
+    if (!giveawayId) return m.reply(claraWrap("Quick_reply", `Format: ${prefix}${cmd} GA-XXXXXX`, "warn"));
 
     const giveaways = db.setting("giveaways") || {};
     if (!giveaways[giveawayId]) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
 
     delete giveaways[giveawayId];
     db.setting("giveaways", giveaways);
-    await m.reply(`✅ Giveaway \`${giveawayId}\` berhasil dihapus!`);
+    await m.reply(claraWrap("Quick_reply", `Giveaway \`${giveawayId}\` berhasil dihapus!`, "success"));
     return;
   }
 
   if (rerollCmds.includes(cmd)) {
     if (!m.isAdmin && !m.isOwner) return m.reply(claraWrap("Quick_reply", "⚠️ Hanya admin!"));
     const giveawayId = args[0];
-    if (!giveawayId) return m.reply(claraWrap("Quick_reply", `⚠️ Format: ${prefix}${cmd} GA-XXXXXX`));
+    if (!giveawayId) return m.reply(claraWrap("Quick_reply", `Format: ${prefix}${cmd} GA-XXXXXX`, "warn"));
 
     const giveaways = db.setting("giveaways") || {};
     const giveaway = giveaways[giveawayId];

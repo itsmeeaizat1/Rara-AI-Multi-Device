@@ -38,11 +38,11 @@ async function handler(m, { sock, db }) {
 
     if (action === 'off') {
         db.setGroup(m.chat, { ...group, antiremove: 'off' })
-        await m.reply(claraWrap("Antiremove", `❌ *ᴀɴᴛɪʀᴇᴍᴏᴠᴇ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
+        await m.reply(claraWrap("Antiremove", `antiremove dinonaktifkan`, "error"))
         return
     }
 
-    await m.reply(`❌ Gunakan \`.antiremove on\` atau \`.antiremove off\``)
+    await m.reply(claraWrap("Anti remove", `Gunakan \`.antiremove on\` atau \`.antiremove off\``, "error"))
 }
 
 export { pluginConfig as config, handler }

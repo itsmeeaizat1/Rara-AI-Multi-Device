@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automute",
@@ -60,11 +60,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "on") {
       if (data.schedules.length === 0) {
-        return m.reply(claraWrap("Auto Mute", `Belum ada jadwal. Set dulu dengan ${usedPrefix}automute set <mulai> <selesai>`));
+        return m.reply(claraWrap("Auto Mute", `Belum ada jadwal. Set dulu dengan ${usedPrefix}automute set <mulai> <selesai>`, "info"));
       }
       data.enabled = true;
       await db.save();
-      return m.reply(claraWrap("Auto Mute", `Auto-mute diaktifkan! ${data.schedules.length} jadwal aktif.`));
+      return m.reply(claraWrap("Auto Mute", `Auto-mute diaktifkan! ${data.schedules.length} jadwal aktif.`, "info"));
     }
 
     if (sub === "off") {
@@ -88,11 +88,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "del" || sub === "remove") {
       const idx = parseInt(args[1]) - 1;
       if (isNaN(idx) || idx < 0 || idx >= data.schedules.length) {
-        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}automute del <nomor>`));
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}automute del <nomor>`, "info"));
       }
       data.schedules.splice(idx, 1);
       await db.save();
-      return m.reply(claraWrap("Auto Mute", `Jadwal ${idx + 1} dihapus.`));
+      return m.reply(claraWrap("Auto Mute", `Jadwal ${idx + 1} dihapus.`, "info"));
     }
 
     return m.reply(claraWrap("Auto Mute", [
@@ -109,7 +109,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("automute error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Auto mute", e.message));
   }
 }
 

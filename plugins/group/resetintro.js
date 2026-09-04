@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const groupData = db.getGroup(m.chat) || db.setGroup(m.chat)
     
     if (!groupData.intro) {
-        { const __navText = claraWrap("resetintro", `❌ Grup ini sudah menggunakan intro default!`); return await m.reply(__navText); }
+        { const __navText = claraWrap("resetintro", `Grup ini sudah menggunakan intro default!`, "error"); return await m.reply(__navText); }
     }
     
     delete groupData.intro

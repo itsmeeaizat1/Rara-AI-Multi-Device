@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const targetName = targetUser.split("@")[0];
 
     if (userWarnings.length === 0) {
-      await m.reply(`✅ @${targetName} tidak memiliki warning.`, {
+      await m.reply(claraWrap("Listwarn", `@${targetName} tidak memiliki warning.`, "success"), {
         mentions: [targetUser],
       });
       return;
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     );
 
     if (usersWithWarnings.length === 0) {
-      { const __navText = claraWrap("listwarn", `✅ Tidak ada member dengan warning di grup ini.`); await m.reply(__navText); };
+      { const __navText = claraWrap("listwarn", `Tidak ada member dengan warning di grup ini.`, "success"); await m.reply(__navText); };
       return;
     }
 

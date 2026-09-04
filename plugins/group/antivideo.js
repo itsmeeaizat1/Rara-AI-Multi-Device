@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     return;
   }
 
-  await m.reply(`Gunakan \`${m.prefix}antivideo on\` atau \`${m.prefix}antivideo off\``);
+  await m.reply(claraWrap("Anti vid", `Gunakan \`${m.prefix}antivideo on\` atau \`${m.prefix}antivideo off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiVideo };

@@ -62,11 +62,11 @@ async function handler(m, { sock }) {
 
     if (action === 'off') {
         db.setGroup(m.chat, { antidocument: false })
-        await m.reply(claraWrap("Antidocument", `❌ *ᴀɴᴛɪᴅᴏᴄᴜᴍᴇɴᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
+        await m.reply(claraWrap("Antidocument", `antidocument dinonaktifkan`, "error"))
         return
     }
 
-    await m.reply(`❌ Gunakan \`.antidocument on\` atau \`.antidocument off\``)
+    await m.reply(claraWrap("Anti document", `Gunakan \`.antidocument on\` atau \`.antidocument off\``, "error"))
 }
 
 export { pluginConfig as config, handler, checkAntidocument }

@@ -52,20 +52,20 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(claraWrap("Notifmakan", `❌ *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘᴇɴɢɪɴɢᴀᴛ ᴍᴀᴋᴀɴ* yang aktif di chat ini`))
+            return m.reply(claraWrap("Notifmakan", `belum ada pengingat makan yang aktif di chat ini`, "error"))
         }
         toggleNotif('makan', sender, chatJid, false)
-        return m.reply(`✅ *Pengingat Makan Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notifmakan on\` untuk mengaktifkan kembali`)
+        return m.reply(claraWrap("Notif makan", `Pengingat Makan Dinonaktifkan 🔕\n\nKetik \`${m.prefix}notifmakan on\` untuk mengaktifkan kembali`, "success"))
     }
 
     if (sub === 'on') {
         if (existing?.enabled && args.length === 1) {
-            return m.reply(`⚠️ *Pengingat makan sudah aktif!*\n\n⏰ Jadwal: ${existing.jadwal.map(j => `*${j}*`).join(', ')} WIB\n\nGunakan \`${m.prefix}notifmakan edit\` untuk mengubah jadwal`)
+            return m.reply(claraWrap("Notif makan", `Pengingat makan sudah aktif!\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB\n\nGunakan \`${m.prefix}notifmakan edit\` untuk mengubah jadwal`, "warn"))
         }
 
         if (existing && args.length === 1) {
             toggleNotif('makan', sender, chatJid, true)
-            return m.reply(`✅ *Pengingat makan diaktifkan kembali!* 🔔\n\n⏰ Jadwal: ${existing.jadwal.map(j => `*${j}*`).join(', ')} WIB`)
+            return m.reply(claraWrap("Notif makan", `Pengingat makan diaktifkan kembali! 🔔\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB`, "success"))
         }
 
         const timeInput = args[1]
@@ -75,7 +75,7 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`07.00,12.30,19.00\``)
+            return m.reply(claraWrap("Notif makan", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`07.00,12.30,19.00\``, "error"))
         }
 
         const menu = args.slice(2).join(' ').trim()
@@ -100,12 +100,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply(`❌ *Masukkan jadwal baru!*\n\n💡 *Contoh:* \`${m.prefix}notifmakan edit 08.00,13.00,20.00\``)
+            return m.reply(claraWrap("Notif makan", `Masukkan jadwal baru!\n\n💡 Contoh: \`${m.prefix}notifmakan edit 08.00,13.00,20.00\``, "error"))
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`08.00,13.00,20.00\``)
+            return m.reply(claraWrap("Notif makan", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`08.00,13.00,20.00\``, "error"))
         }
 
         const menu = args.slice(2).join(' ').trim() || existing.menu || ''

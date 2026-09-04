@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
       await m.reply(novaEmpty("Anticustom List", "Belum ada rule AntiCustom di grup ini."));
       return;
     }
-    await m.reply(claraWrap("Anticustom", `📋 *ʟɪꜱᴛ ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ*\n\n${rules.map(formatRule).join("\n\n")}`));
+    await m.reply(claraWrap("Anticustom", `📋 list anticustom\n\n${rules.map(formatRule).join("\n\n")}`, "info"));
     return;
   }
 
@@ -281,7 +281,7 @@ async function handler(m, { sock }) {
     }
 
     db.setGroup(m.chat, { anticustomRules: nextRules });
-    await m.reply(`✅ Rule dengan judul \`${name}\` berhasil dihapus.`);
+    await m.reply(claraWrap("Anti custom", `Rule dengan judul \`${name}\` berhasil dihapus.`, "success"));
     return;
   }
 
@@ -378,7 +378,7 @@ async function replyHandler(m, { sock }) {
   if (session.step === "confirm") {
     if (/^(batal|cancel|tidak|nggak|ga|gak|no)$/i.test(text)) {
       clearSession(sessionKey);
-      await m.reply(claraWrap("Anticustom", `✅ Oke, sesi AntiCustom dibatalkan. Kalau mau mulai lagi, ketik \`${m.prefix || "."}anticustom add\`.`));
+      await m.reply(claraWrap("Anticustom", `Oke, sesi AntiCustom dibatalkan. Kalau mau mulai lagi, ketik \`${m.prefix || "."}anticustom add\`.`, "success"));
       return true;
     }
 

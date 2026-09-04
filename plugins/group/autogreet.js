@@ -70,7 +70,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (!msg) return m.reply(novaGuide("AutoGreet", "Pesan tidak boleh kosong nih!", usedPrefix + "autogreet set " + slot + " Pesan kamu"));
       data.greetings[slot] = msg;
       await db.save();
-      return m.reply(claraWrap("Auto Greet", `Pesan ${slot} diupdate:\n"${msg}"`));
+      return m.reply(claraWrap("Auto Greet", `Pesan ${slot} diupdate:\n"${msg}"`, "info"));
     }
 
     if (sub === "status") {
@@ -105,7 +105,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("autogreet error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Auto greet", e.message));
   }
 }
 
