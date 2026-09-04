@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -162,13 +163,17 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "alchemist", data);
 
       await m.react('🐣');
-      return m.reply([
-        `*Berhasil meracik ${recipe.name}!*`,
-        "",
-        `Biaya : -${recipe.gold} Gold`,
-        `Efek : ${recipe.effect}`,
-        `Total potion : ${data.potions[potionKey]}`,
-      ].join("\n"));
+      return m.reply(novaGameBox({
+        title: "alchemist", icon: "⚗️",
+        flavor: "⚗️ *RAMUAN JADI!*",
+        body: [
+          `│ • Ramuan : ${recipe.name}`,
+          `│ • 💰 Biaya : -${recipe.gold} Gold`,
+          `│ • ✨ Efek : ${recipe.effect}`,
+          `│ • 🧪 Total potion : ${data.potions[potionKey]}`,
+        ].join("\n"),
+        cta: gameCTA("alchemist"),
+      }));
     }
 
     // Default help guide

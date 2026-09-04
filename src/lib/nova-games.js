@@ -114,10 +114,18 @@ const GAME_CTA = {
   tebakkabupaten: "Yuk tebak kabupaten lain kak, biar kenal Indonesia makin jauh 📍🥳",
   tebaklogo: "Yuk tebak logo lain kak, biar kenal merek dunia 🏢🥳",
   tebakmakanan: "Yuk tebak makanan lagi kak, biar lapar sekaligus pinter 🍜🥳",
+  // RPG FEATURES (kategori rpg — hasil aksi pakai format engine juga)
+  bankrpg: "Yuk nabung lagi kak, biar goldmu makin aman 🏦🥳",
+  lottery: "Yuk beli tiket lagi kak, siapa tau rezekinya nyantol 🎟️🥳",
+  horserace: "Yuk pasang taruhan lagi kak, biar kudamu makin hoki 🐎🥳",
+  bounty: "Yuk buru buronan lain kak, biar namamu makin dikenal 🎯🥳",
+  blacksmith: "Yuk tempa lagi kak, biar senjatamu makin tajam ⚒️🥳",
+  alchemist: "Yuk racik ramuan lain kak, biar makin jago meramu ⚗️🥳",
 };
 
 // Fallback kalau game-nya belum punya CTA khusus
 const GENERIC_CTAS = [
+
   "Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳",
   "Yuk coba soal lain kak, siapa tau skor lebih tinggi 🥳",
   "Yuk main lagi kak, biar makin jago 🥳",
