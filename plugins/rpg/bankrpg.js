@@ -55,23 +55,17 @@ async function handler(m, { sock }) {
     }
 
     if (!action || action === "cek") {
-      let msg = "";
-      msg += `👤 ${m.pushName || "Player"}\n`;
-      msg += `
-`;
-      msg += `💰 Gold di tangan: *${rpg.gold}*\n`;
-      msg += `🏦 Gold di bank: *${bank.deposit}*\n`;
-      if (interest > 0) {
-        msg += `Bunga diterima: *+${interest} gold*\n`;
-      }
-      msg += `📈 Bunga: *5% per hari*\n`;
-      msg += `
-`;
-      msg += `📌 .bankrpg nabung <jumlah> — simpan\n`;
-      msg += `📌 .bankrpg tarik <jumlah> — tarik\n`;
-      msg += `📌 .bankrpg cek — cek saldo\n`;
-      
-      return m.reply(msg);
+      return m.reply(claraWrap("bankrpg", [
+        m.pushName || "Player",
+        "---",
+        `Gold di tangan : ${rpg.gold}`,
+        `Gold di bank : ${bank.deposit}`,
+        ...(interest > 0 ? [`Bunga diterima : +${interest} gold`] : []),
+        "Bunga : 5% per hari",
+        "---",
+        "📌 .bankrpg nabung <jumlah> — simpan",
+        "💡 .bankrpg tarik <jumlah> — tarik",
+      ], "info"));
     }
 
     if (action === "nabung" || action === "simpan" || action === "deposit") {
@@ -96,17 +90,15 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = "";
-      msg += `✅ Berhasil menabung!\n`;
-      msg += `
-`;
-      msg += `💵 Setor: *${amount} gold*\n`;
-      msg += `🏦 Saldo bank: *${bank.deposit} gold*\n`;
-      msg += `💰 Sisa di tangan: *${rpg.gold - amount} gold*\n`;
-      msg += `📈 Bunga 5% harian akan otomatis masuk\n`;
-      
       await animBank(m, sock, "nabung");
-      return m.reply(msg);
+      return m.reply([
+        "*Berhasil menabung!*",
+        "",
+        `Setor : ${amount} gold`,
+        `Saldo bank : ${bank.deposit} gold`,
+        `Sisa di tangan : ${rpg.gold - amount} gold`,
+        "Bunga 5% harian masuk otomatis.",
+      ].join("\n"));
     }
 
     if (action === "tarik" || action === "ambil" || action === "withdraw") {
@@ -126,16 +118,14 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = "";
-      msg += `✅ Berhasil menarik!\n`;
-      msg += `
-`;
-      msg += `💵 Tarik: *${amount} gold*\n`;
-      msg += `🏦 Sisa saldo bank: *${bank.deposit} gold*\n`;
-      msg += `💰 Gold di tangan: *${rpg.gold + amount} gold*\n`;
-      
       await animBank(m, sock, "tarik");
-      return m.reply(msg);
+      return m.reply([
+        "*Berhasil menarik!*",
+        "",
+        `Tarik : ${amount} gold`,
+        `Sisa saldo bank : ${bank.deposit} gold`,
+        `Gold di tangan : ${rpg.gold + amount} gold`,
+      ].join("\n"));
     }
 
     return m.reply(claraWrap("bankrpg", "Aksi tidak dikenal. Gunakan: nabung, tarik, atau cek", "warn"));
