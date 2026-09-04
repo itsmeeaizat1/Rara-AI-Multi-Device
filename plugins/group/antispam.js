@@ -158,16 +158,16 @@ async function handleSpamAction(m, sock, db) {
         spamTracker.set(chatKey, userData)
         
         if (userData.warnings >= 3) {
-            await m.reply(claraWrap("antispam", `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ ꜱᴘᴀᴍ ᴍᴀᴋꜱɪᴍᴀʟ*\n\n` +
+            await m.reply(`⚠️ Peringatan spam maksimal\n\n` +
                 `Teruntuk: @${senderId.split("@")[0]}\n\n` +
-                `Kamu telah mendapatkan 3 kali teguran peringatan karena mengirim pesan spam secara berkelanjutan. Harap segera berhenti melakukan spam atau jajaran admin grup dapat mengambil tindakan tegas terhadap pelanggaran ini!`))
+                `Kamu telah mendapatkan 3 kali teguran peringatan karena mengirim pesan spam secara berkelanjutan. Harap segera berhenti melakukan spam atau jajaran admin grup dapat mengambil tindakan tegas terhadap pelanggaran ini!`)
             userData.warnings = 0 
             userData.count = 0
             spamTracker.set(chatKey, userData)
         } else {
-            await m.reply(claraWrap("antispam", `⚠️ *ᴛᴇɢᴜʀᴀɴ ꜱᴘᴀᴍ ᴛᴇʀᴅᴇᴛᴇᴋꜱɪ*\n\n` +
+            await m.reply(`⚠️ Teguran spam terdeteksi\n\n` +
                 `Peringatan ke-${userData.warnings} dari maksimal 3 peringatan\n\n` +
-                `Halo @${senderId.split("@")[0]}, tolong jangan melakukan pengiriman pesan berulang-ulang di grup ini secara cepat! Sistem kami mendeteksi aktivitasmu sebagai spam. Mohon hargai kenyamanan member lainnya`))
+                `Halo @${senderId.split("@")[0]}, tolong jangan melakukan pengiriman pesan berulang-ulang di grup ini secara cepat! Sistem kami mendeteksi aktivitasmu sebagai spam. Mohon hargai kenyamanan member lainnya`)
             userData.count = 0 
             spamTracker.set(chatKey, userData)
         }
