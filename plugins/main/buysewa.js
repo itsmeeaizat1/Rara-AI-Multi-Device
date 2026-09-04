@@ -114,6 +114,55 @@ async function sendQRIS(sock, m) {
   }
 }
 
+/**
+ * Rekam link grup yang user kirim ke sistem registrasi sewa
+ * (db.sewa.registrations) — sama seperti .daftarsewa:
+ * terekam groupId, nama grup, inviteCode, durasi, harga,
+ * tanggal (registeredAt), status pending.
+ * Owner tinggal .approvesewa <nomor> → bot auto-join.
+ */
+async function recordRegistration(sock, m, pkg, groupLink) {
+  const db = getDatabase();
+  if (!groupLink || !groupLink.includes("chat.whatsapp.com/")) {
+    return { recorded: false, reason: "nolink" };
+  }
+  const inviteCode = groupLink.split("chat.whatsapp.com/")[1]?.split(/[\s?]/)[0];
+  if (!inviteCode) return { recorded: false, reason: "invalid" };
+
+  const metadata = await sock.groupGetInviteInfo(inviteCode).catch(() => null);
+  if (!metadata?.id) return { recorded: false, reason: "invalid" };
+
+  const groupId = metadata.id;
+
+  if (!db.db.data.sewa) db.db.data.sewa = { enabled: false, groups: {}, registrations: {} };
+  if (!db.db.data.sewa.registrations) db.db.data.sewa.registrations = {};
+
+  if (db.db.data.sewa.groups[groupId]) {
+    return { recorded: false, reason: "already", groupName: metadata.subject || "Unknown" };
+  }
+  const existingReg = Object.values(db.db.data.sewa.registrations).find(
+    (r) => r.groupId === groupId && r.status === "pending",
+  );
+  if (existingReg) {
+    return { recorded: false, reason: "pending", groupName: metadata.subject || "Unknown" };
+  }
+
+  db.db.data.sewa.registrations[m.sender] = {
+    sender: m.sender,
+    phoneNumber: m.sender.split("@")[0],
+    name: m.pushName || "Unknown",
+    groupId,
+    groupName: metadata.subject || "Unknown",
+    inviteCode,
+    duration: pkg.duration,
+    price: getSewaPrice(pkg.duration),
+    status: "pending",
+    registeredAt: Date.now(),
+  };
+  db.db.write();
+  return { recorded: true, groupId, groupName: metadata.subject || "Unknown", inviteCode };
+}
+
 async function notifyOwner(sock, m, pkg, groupLink) {
   const ownerNumbers = config.owner?.number || ["628174887770"];
   const buyerNumber = m.sender?.replace(/[^0-9]/g, "") || "";
@@ -131,7 +180,10 @@ async function notifyOwner(sock, m, pkg, groupLink) {
 │ ${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}
 
 ${toSC("User ini menunggu konfirmasi pembayaran sewa.")}
-${toSC("Jika sudah bayar, ketik")}: *.addsewa ${groupLink || "<link-grup>"} ${pkg.duration}*`;
+${toSC("Jika sudah bayar, ketik")}: *.approvesewa ${m.sender?.split("@")[0] || "<nomor-pembeli>"}*` +
+    (groupLink && groupLink.includes("chat.whatsapp.com")
+      ? `\n${toSC("Pendaftaran grup sudah terekam otomatis — tinggal approve")}`
+      : `\n${toSC("Grup belum terekam — minta pembeli")}: *.daftarsewa*`);
 
   for (const num of ownerNumbers) {
     try {
@@ -166,6 +218,20 @@ async function handler(m, { sock }) {
 
     if (pkg) {
       const price = getSewaPrice(pkg.duration);
+      const reg = await recordRegistration(sock, m, pkg, groupLink);
+
+      if (reg.reason === "already") {
+        return m.reply(claraWrap("buysewa",
+          `Grup *${reg.groupName}* sudah terdaftar di sistem sewa\nTidak perlu daftar lagi`));
+      }
+      if (reg.reason === "pending") {
+        return m.reply(claraWrap("buysewa",
+          `Grup *${reg.groupName}* sudah ada pendaftar\nStatus: menunggu approve owner`));
+      }
+      if (reg.reason === "invalid") {
+        return m.reply(claraWrap("buysewa",
+          `Link grup tidak valid / tidak bisa diakses\n\nPastikan link undangan masih aktif\nFormat: https://chat.whatsapp.com/xxx`));
+      }
 
       buySewaSessions.set(sender, { ...pkg, price, groupLink, startedAt: Date.now() });
       setTimeout(() => buySewaSessions.delete(sender), SESSION_TIMEOUT);
@@ -184,6 +250,22 @@ async function handler(m, { sock }) {
         `4. Owner approve → bot auto-join grup!`,
       ]);
 
+      let regBox = "";
+      if (reg.recorded) {
+        regBox = bracketBox("✅", "Pendaftaran Terekam", [
+          `Grup: *${reg.groupName}*`,
+          `Durasi: *${pkg.duration}*`,
+          `Waktu: *${new Date().toLocaleString("id-ID")}*`,
+          `Status: *Menunggu approve owner*`,
+        ]);
+      } else {
+        regBox = bracketBox("⚠️", "Grup Belum Terekam", [
+          `Ketik *.daftarsewa* atau sertakan link grup:`,
+          `*${prefix}buysewa ${pkg.duration} https://chat.whatsapp.com/xxx*`,
+          `Biar pendaftaran masuk sistem rekam`,
+        ]);
+      }
+
       const contactBox = bracketBox("👨‍💻", "Kontak Owner", [
         `Nama: *${config.owner?.name || "Owner"}*`,
         `Nomor: wa.me/${(config.owner?.number || ["628174887770"])[0]}`,
@@ -191,6 +273,7 @@ async function handler(m, { sock }) {
 
       const fullText =
         priceBox + "\n\n" +
+        regBox + "\n\n" +
         stepsBox + "\n\n" +
         contactBox + "\n\n" +
         tipText(`Ketik ${prefix}buysewa batal untuk batalkan`);
@@ -218,10 +301,10 @@ async function handler(m, { sock }) {
   const priceBox = bracketBox("💰", "Paket Sewa", priceLines);
 
   const howBox = bracketBox("📝", "Cara Beli", [
-    `Ketik: *${prefix}buysewa <durasi>*`,
-    `Contoh: *${prefix}buysewa 30d*`,
-    `Untuk grup ini: *${prefix}buysewa 30d*`,
-    `Via link: *${prefix}buysewa 30d https://chat.whatsapp.com/xxx*`,
+    `Ketik: *${prefix}buysewa <durasi> <link grup>*`,
+    `Contoh: *${prefix}buysewa 30d https://chat.whatsapp.com/xxx*`,
+    `Link grup WAJIB — biar pendaftaran masuk sistem rekam`,
+    `Atau daftar dulu: *${prefix}daftarsewa*`,
   ]);
 
   const paymentBox = bracketBox("💳", "Metode Pembayaran", buildPaymentMethods());
