@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -140,24 +141,32 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(sender, "bounty", player);
 
         await m.react('🐣');
-        return m.reply([
-          `*Berhasil mengalahkan ${target.name}!*`,
-          "",
-          `Kesulitan : ${target.difficulty}`,
-          `Imbalan : +${rewardGold} Gold`,
-          `Sisa energi : ${player.energi}`,
-        ].join("\n"));
+        return m.reply(novaGameBox({
+          title: "bounty", icon: "🎯",
+          flavor: "⚔️ *BURONAN TUMBANG!*",
+          body: [
+            `│ • Target : ${target.name}`,
+            `│ • Kesulitan : ${target.difficulty}`,
+            `│ • 💰 Imbalan : +${rewardGold} Gold`,
+            `│ • ⚡ Sisa energi : ${player.energi}`,
+          ].join("\n"),
+          cta: gameCTA("bounty"),
+        }));
       } else {
         await db.setPlayerData?.(sender, "bounty", player);
 
         await m.react('❌');
-        return m.reply([
-          `*Kalah bertarung melawan ${target.name}!*`,
-          "",
-          "Buronan melarikan diri dan melukaimu.",
-          `Energi terpakai : -${target.energiCost}`,
-          `Sisa energi : ${player.energi}`,
-        ].join("\n"));
+        return m.reply(novaGameBox({
+          title: "bounty", icon: "🎯",
+          flavor: "💥 *KAMU KALAH!*",
+          body: [
+            `│ • Target : ${target.name}`,
+            "│ • 🩹 Buronan melarikan diri dan melukaimu",
+            `│ • ⚡ Energi terpakai : -${target.energiCost}`,
+            `│ • ⚡ Sisa energi : ${player.energi}`,
+          ].join("\n"),
+          cta: gameCTA("bounty"),
+        }));
       }
     }
 

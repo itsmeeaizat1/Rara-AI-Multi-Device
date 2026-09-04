@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animHorserace } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -120,33 +121,30 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "horserace", wallet);
 
-      const lines = [
-        "*Balapan kuda selesai!*",
-        "",
-        "Papan lintasan :",
-        ...raceResults.map((h, index) => {
-          const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "  ";
-          const track = "▰".repeat(h.progress) + "🐎" + "▱".repeat(10 - h.progress);
-          return `${medal} #${h.id} ${h.name.padEnd(14)} [${track}]`;
-        }),
-        "",
-        `Pemenang : #${winner.id} ${winner.name}`,
-        `Pilihanmu : #${selectedHorse.id} ${selectedHorse.name}`,
-      ];
-      if (isWon) {
-        lines.push(`MENANG! Kamu mendapatkan +${winReward} Gold (${selectedHorse.odds}x).`);
-      } else {
-        lines.push(`KALAH! Taruhan sebesar ${betAmount} Gold hangus.`);
-      }
-      lines.push(`Total gold sekarang : ${wallet.gold} Gold`);
-      
       if (isWon) {
         await m.react('🐣');
       } else {
         await m.react('❌');
       }
 
-      return m.reply(lines.join("\n"));
+      return m.reply(novaGameBox({
+        title: "horserace", icon: "🏁",
+        flavor: isWon ? "🎉 *KUDA KAMU JUARA!*" : "💀 *KUDA KAMU KALAH!*",
+        body: [
+          "Papan lintasan :",
+          ...raceResults.map((h, index) => {
+            const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "  ";
+            const track = "▰".repeat(h.progress) + "🐎" + "▱".repeat(10 - h.progress);
+            return `${medal} #${h.id} ${h.name.padEnd(14)} [${track}]`;
+          }),
+          "",
+          `│ • Pemenang : #${winner.id} ${winner.name}`,
+          `│ • Pilihanmu : #${selectedHorse.id} ${selectedHorse.name}`,
+          isWon ? `│ • 💰 Hadiah : +${winReward} Gold (${selectedHorse.odds}x)` : `│ • 💸 Taruhan hangus : -${betAmount} Gold`,
+          `│ • 💰 Total gold : ${wallet.gold} Gold`,
+        ].join("\n"),
+        cta: gameCTA("horserace"),
+      }));
     }
 
     await m.react('❌');

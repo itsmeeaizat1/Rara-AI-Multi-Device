@@ -6,6 +6,7 @@ import {
   ensureRpg, saveRpg, addGold, removeGold
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -91,14 +92,17 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
       await animBank(m, sock, "nabung");
-      return m.reply([
-        "*Berhasil menabung!*",
-        "",
-        `Setor : ${amount} gold`,
-        `Saldo bank : ${bank.deposit} gold`,
-        `Sisa di tangan : ${rpg.gold - amount} gold`,
-        "Bunga 5% harian masuk otomatis.",
-      ].join("\n"));
+      return m.reply(novaGameBox({
+        title: "bankrpg", icon: "🏦",
+        flavor: "✅ *BERHASIL MENABUNG!*",
+        body: [
+          `│ • Setor : ${amount} Gold`,
+          `│ • Saldo bank : ${bank.deposit} Gold`,
+          `│ • Sisa di tangan : ${rpg.gold - amount} Gold`,
+          "│ • Bunga : 5% per hari masuk otomatis",
+        ].join("\n"),
+        cta: gameCTA("bankrpg"),
+      }));
     }
 
     if (action === "tarik" || action === "ambil" || action === "withdraw") {
@@ -119,13 +123,16 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
       await animBank(m, sock, "tarik");
-      return m.reply([
-        "*Berhasil menarik!*",
-        "",
-        `Tarik : ${amount} gold`,
-        `Sisa saldo bank : ${bank.deposit} gold`,
-        `Gold di tangan : ${rpg.gold + amount} gold`,
-      ].join("\n"));
+      return m.reply(novaGameBox({
+        title: "bankrpg", icon: "🏦",
+        flavor: "💵 *BERHASIL MENARIK!*",
+        body: [
+          `│ • Tarik : ${amount} Gold`,
+          `│ • Sisa saldo bank : ${bank.deposit} Gold`,
+          `│ • Gold di tangan : ${rpg.gold + amount} Gold`,
+        ].join("\n"),
+        cta: gameCTA("bankrpg"),
+      }));
     }
 
     return m.reply(claraWrap("bankrpg", "Aksi tidak dikenal. Gunakan: nabung, tarik, atau cek", "warn"));

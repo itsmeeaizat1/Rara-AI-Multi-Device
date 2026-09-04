@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animLottery } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -94,13 +95,17 @@ async function handler(m, { sock }) {
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
       await m.react('🐣');
-      return m.reply([
-        `*Berhasil membeli ${count} tiket lotre!*`,
-        "",
-        `Total biaya : -${totalCost} Gold`,
-        `Tiket kamu sekarang : ${myTickets}`,
-        `Sisa gold : ${userWallet.gold} Gold`,
-      ].join("\n"));
+      return m.reply(novaGameBox({
+        title: "lottery", icon: "🎟️",
+        flavor: "🎟️ *TIKET TERBELI!*",
+        body: [
+          `│ • Pembelian : ${count} tiket`,
+          `│ • Total biaya : -${totalCost} Gold`,
+          `│ • Tiket kamu : ${myTickets}`,
+          `│ • Sisa gold : ${userWallet.gold} Gold`,
+        ].join("\n"),
+        cta: gameCTA("lottery"),
+      }));
     }
 
     if (subCmd === "draw" || subCmd === "undak") {
@@ -148,15 +153,18 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(winnerSender, "wallet", winnerWallet);
 
       await m.react('🐣');
-      return m.reply([
-        "*PENGUNDIAN LOTRE SAKRAL*",
-        "",
-        `Total tiket terundi : ${totalTickets}`,
-        `Total hadiah : ${prizePool} Gold`,
-        `Pemenang utama : @${winnerName}`,
-        "",
-        "Selamat kepada pemenang! Hadiah telah dikirim ke dompet.",
-      ].join("\n"), { mentions: [winnerSender] });
+      return m.reply(novaGameBox({
+        title: "lottery", icon: "🎊",
+        flavor: "🎊 *PENGUNDIAN LOTRE SAKRAL!*",
+        body: [
+          `│ • Tiket terundi : ${totalTickets}`,
+          `│ • Total hadiah : ${prizePool} Gold`,
+          `│ • 👑 Pemenang : @${winnerName}`,
+          "",
+          "Hadiah sudah dikirim ke dompet pemenang!",
+        ].join("\n"),
+        cta: gameCTA("lottery"),
+      }), { mentions: [winnerSender] });
     }
 
     await m.react('❌');
