@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
             return pJid === targetNumber && (p.admin === 'admin' || p.admin === 'superadmin')
         })
         if (isTargetAdmin) {
-            return m.reply(claraWrap("Mutemember", `❌ *ɢᴀɢᴀʟ*\n\nTidak dapat mute admin grup`))
+            return m.reply(claraWrap("Mutemember", `gagal\n\nTidak dapat mute admin grup`, "error"))
         }
     }
 
@@ -75,19 +75,13 @@ async function handler(m, { sock }) {
     })
 
     if (alreadyMuted) {
-        return m.reply(claraWrap("Mutemember", `❌ *ɢᴀɢᴀʟ*\n\nMember @${targetNumber} sudah dimute`))
+        return m.reply(claraWrap("Mutemember", `gagal\n\nMember @${targetNumber} sudah dimute`, "error"))
     }
 
     mutedMembers.push(targetJid)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(`*Member Dimute*\n\n` +
-        `👤 Member: @${targetNumber}\n` +
-        `🔇 sTatus: \`Muted\`\n` +
-        `📊 Total Mute: \`${mutedMembers.length}\` Member\n` +
-        `\n` +
-        `Semua pesan dari member ini akan dihapus otomatis\n` +
-        `Gunakan \`${m.prefix}unmutemember\` untuk unmute`)
+    await m.reply(claraWrap("Mutemember", `Member: @${targetNumber}\nStatus: Muted\nTotal mute: ${mutedMembers.length} member\nSemua pesan dari member ini akan dihapus otomatis\nGunakan \`${m.prefix}unmutemember\` untuk unmute`, "success"))
 }
 
 function isMutedMember(groupJid, senderJid, db) {

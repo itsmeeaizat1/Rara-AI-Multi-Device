@@ -109,7 +109,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ctx.fillText("Nova AI Bot | Generated " + new Date().toLocaleDateString("id-ID"), W / 2, H - 30);
 
       const buffer = canvas.toBuffer("image/png");
-      await conn.sendMessage(groupId, { image: buffer, caption: claraWrap("Group Stats Card", `Statistik ${groupName}`) });
+      await conn.sendMessage(groupId, { image: buffer, caption: claraWrap("Group Stats Card", `Statistik ${groupName}`, "info") });
     } catch (canvasErr) {
       console.error("Canvas error:", canvasErr.message);
       return m.reply(claraWrap("Group Stats Card", [

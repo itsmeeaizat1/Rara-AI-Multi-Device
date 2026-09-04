@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
       );
     delete db.db.data.autoai_personas[pKey];
     db.save();
-    return m.reply(claraWrap("Autoai", `✅ Persona "${pKey}" berhasil dihapus`));
+    return m.reply(claraWrap("Autoai", `Persona "${pKey}" berhasil dihapus`, "success"));
   }
 
   if (subcmd === "enablecommand" || subcmd === "enablecmd") {

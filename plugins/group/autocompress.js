@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autocompress",
@@ -61,7 +61,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         if (!px || px < 320 || px > 3840) return m.reply(claraWrap("Usage", "Max width 320-3840px.\nContoh: .autocompress set maxwidth 1280"));
         data.maxWidth = px;
         await db.save();
-        return m.reply(claraWrap("Auto Compress", `Max width diatur ke ${px}px.`));
+        return m.reply(claraWrap("Auto Compress", `Max width diatur ke ${px}px.`, "info"));
       }
 
       if (key === "quality" || key === "q") {
@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         }
         data.format = val.toLowerCase();
         await db.save();
-        return m.reply(claraWrap("Auto Compress", `Format diatur ke: ${data.format.toUpperCase()}.`));
+        return m.reply(claraWrap("Auto Compress", `Format diatur ke: ${data.format.toUpperCase()}.`, "info"));
       }
 
       return m.reply(claraWrap("Auto Compress", [
@@ -117,7 +117,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ctx.font = "16px Arial";
         ctx.fillText("Compress Test", 30, 55);
         const buf = canvas.toBuffer("image/jpeg", { quality: data.quality / 100 });
-        await conn.sendMessage(groupId, { image: buf, caption: claraWrap("Auto Compress", `Test compress: ${data.maxWidth}px, Q${data.quality}, ${buf.length} bytes`) });
+        await conn.sendMessage(groupId, { image: buf, caption: claraWrap("Auto Compress", `Test compress: ${data.maxWidth}px, Q${data.quality}, ${buf.length} bytes`, "info") });
       } catch (e) {
         return m.reply(claraWrap("Auto Compress", [
           "Canvas module tidak tersedia.",
@@ -143,7 +143,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("autocompress error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Auto compress", e.message));
   }
 }
 

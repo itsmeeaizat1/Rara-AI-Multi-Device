@@ -71,12 +71,12 @@ async function handler(m, { sock, db }) {
             delete group.scheduleOpen;
             db.setGroup(m.chat, group);
             
-            await m.reply(claraWrap("jadwalgroup", `✅ *BERHASIL*\n\nJadwal *BUKA GRUP* otomatis telah dihapus.`));
+            await m.reply(claraWrap("jadwalgroup", `BERHASIL\n\nJadwal BUKA GRUP otomatis telah dihapus.`, "success"));
         } else {
             delete group.scheduleClose;
             db.setGroup(m.chat, group);
             
-            await m.reply(claraWrap("jadwalgroup", `✅ *BERHASIL*\n\nJadwal *TUTUP GRUP* otomatis telah dihapus.`));
+            await m.reply(claraWrap("jadwalgroup", `BERHASIL\n\nJadwal TUTUP GRUP otomatis telah dihapus.`, "success"));
         }
         return;
     }

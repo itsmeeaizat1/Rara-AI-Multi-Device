@@ -47,10 +47,10 @@ function handler(m, { sock }) {
     
     if (args === 'off') {
         db.setGroup(m.chat, { ...groupData, autodl: false })
-        return m.reply(claraWrap("Autodl", `❌ *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ɴᴏɴᴀᴋᴛɪꜰ*`))
+        return m.reply(claraWrap("Autodl", `auto download nonaktif`, "error"))
     }
     
-    return m.reply(`❌ *Argumen Tidak Valid*\n\nGunakan: \`on\` atau \`off\``)
+    return m.reply(claraWrap("Auto dl", `Argumen Tidak Valid\n\nGunakan: \`on\` atau \`off\``, "error"))
 }
 
 export { pluginConfig as config, handler }

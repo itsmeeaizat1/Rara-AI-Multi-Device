@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         `Siapapun bisa menambahkan bot ke grup`));
   }
 
-  return m.reply(claraWrap("Anticulik", `❌ *ᴏᴘꜱɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan *${m.prefix}anticulik on* atau *${m.prefix}anticulik off*`));
+  return m.reply(claraWrap("Anticulik", `opsi tidak valid\n\nGunakan ${m.prefix}anticulik on atau ${m.prefix}anticulik off`, "error"));
 }
 
 async function handleAntiCulik(event, sock, db) {

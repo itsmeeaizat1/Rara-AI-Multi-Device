@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "eventrsvp",
@@ -64,7 +64,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "going" || sub === "maybe" || sub === "notgoing") {
       const id = parseInt(args[1]);
-      if (!id || !data.events[id]) return m.reply(claraWrap("Info", `Event ID ${id} tidak ditemukan. Ketik ${usedPrefix}eventrsvp list`));
+      if (!id || !data.events[id]) return m.reply(claraWrap("Info", `Event ID ${id} tidak ditemukan. Ketik ${usedPrefix}eventrsvp list`, "info"));
       const rsvpKey = sub;
       for (const key of ["going", "maybe", "notgoing"]) {
         data.events[id].rsvp[key] = data.events[id].rsvp[key].filter(j => j !== sender);
@@ -72,19 +72,19 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       data.events[id].rsvp[rsvpKey].push(sender);
       await db.save();
       const labels = { going: "Going", maybe: "Maybe", notgoing: "Not Going" };
-      return m.reply(claraWrap("Event RSVP", `Kamu pilih *${labels[rsvpKey]}* untuk "${data.events[id].title}"`));
+      return m.reply(claraWrap("Event RSVP", `Kamu pilih ${labels[rsvpKey]} untuk "${data.events[id].title}"`, "info"));
     }
 
     if (sub === "list") {
       const events = Object.values(data.events).filter(e => e);
-      if (events.length === 0) return m.reply(claraWrap("Event RSVP", `Belum ada event. Buat dengan ${usedPrefix}eventrsvp create <judul> | <waktu> | <lokasi>`));
+      if (events.length === 0) return m.reply(claraWrap("Event RSVP", `Belum ada event. Buat dengan ${usedPrefix}eventrsvp create <judul> | <waktu> | <lokasi>`, "info"));
       const list = events.map(e => {
         const g = e.rsvp.going.length;
         const m = e.rsvp.maybe.length;
         const n = e.rsvp.notgoing.length;
         return `${e.id}. ${e.title}\n    ${e.time} | ${e.location}\n    Going: ${g} | Maybe: ${m} | Not: ${n}`;
       }).join("\n\n");
-      return m.reply(claraWrap("Event RSVP", `Daftar Event:\n\n${list}`));
+      return m.reply(claraWrap("Event RSVP", `Daftar Event:\n\n${list}`, "info"));
     }
 
     if (sub === "info") {
@@ -111,7 +111,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (!id || !data.events[id]) return m.reply(claraWrap("Info", `Event ID tidak ditemukan.`));
       delete data.events[id];
       await db.save();
-      return m.reply(claraWrap("Event RSVP", `Event ID ${id} dihapus.`));
+      return m.reply(claraWrap("Event RSVP", `Event ID ${id} dihapus.`, "info"));
     }
 
     if (sub === "remind") {
@@ -146,7 +146,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("eventrsvp error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Eventrsvp", e.message));
   }
 }
 

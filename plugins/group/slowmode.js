@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === 'off') {
         db.setGroup(m.chat, { ...groupData, slowmode: { enabled: false } })
-        return m.reply(claraWrap("Slowmode", `✅ Slowmode *ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
+        return m.reply(claraWrap("Slowmode", `Slowmode dinonaktifkan`, "success"))
     }
 
     let mode = 'all'
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     } else {
         delay = parseInt(subCmd)
         if (isNaN(delay)) {
-            return m.reply(claraWrap("Slowmode", `❌ Gunakan *.slowmode on 30* atau *.slowmode onlycommand 30*`))
+            return m.reply(claraWrap("Slowmode", `Gunakan .slowmode on 30 atau .slowmode onlycommand 30`, "error"))
         }
     }
 

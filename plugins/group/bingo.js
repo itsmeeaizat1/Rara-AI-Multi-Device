@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bingo",
@@ -98,7 +98,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "join") {
-      if (!game.active) return m.reply(claraWrap("Bingo", `Belum ada game. Mulai dengan ${usedPrefix}bingo start`));
+      if (!game.active) return m.reply(claraWrap("Bingo", `Belum ada game. Mulai dengan ${usedPrefix}bingo start`, "info"));
       if (game.players[sender]) {
         return m.reply(claraWrap("Bingo", "Kamu sudah join!"));
       }
@@ -118,7 +118,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "claim") {
       if (!game.active) return m.reply(claraWrap("Bingo", "Tidak ada game aktif."));
-      if (!game.players[sender]) return m.reply(claraWrap("Bingo", `Kamu belum join! Ketik ${usedPrefix}bingo join`));
+      if (!game.players[sender]) return m.reply(claraWrap("Bingo", `Kamu belum join! Ketik ${usedPrefix}bingo join`, "info"));
       if (game.players[sender].won) return m.reply(claraWrap("Bingo", "Kamu sudah menang!"));
       const card = game.players[sender].card;
       if (checkBingo(card, game.called)) {
@@ -137,7 +137,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "card") {
       if (!game.active) return m.reply(claraWrap("Bingo", "Tidak ada game aktif."));
-      if (!game.players[sender]) return m.reply(claraWrap("Bingo", `Belum join. Ketik ${usedPrefix}bingo join`));
+      if (!game.players[sender]) return m.reply(claraWrap("Bingo", `Belum join. Ketik ${usedPrefix}bingo join`, "info"));
       return m.reply(claraWrap("Bingo", [
         `Kartu kamu:`,
         "",
@@ -167,7 +167,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "players") {
       if (!game.active) return m.reply(claraWrap("Bingo", "Tidak ada game aktif."));
       const playerList = Object.entries(game.players).map(([jid, p], i) => `${i + 1}. @${jid.split("@")[0]}${p.won ? " (MENANG)" : ""}`).join("\n");
-      return m.reply(claraWrap("Bingo", `Pemain (${Object.keys(game.players).length}):\n\n${playerList}`));
+      return m.reply(claraWrap("Bingo", `Pemain (${Object.keys(game.players).length}):\n\n${playerList}`, "info"));
     }
 
     return m.reply(claraWrap("Bingo", [
@@ -184,7 +184,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("bingo error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Bingo", e.message));
   }
 }
 

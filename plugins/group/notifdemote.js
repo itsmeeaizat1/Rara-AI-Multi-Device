@@ -18,7 +18,7 @@ const pluginConfig = {
 
 function handler(m, { sock, db }) {
     if (!m.isAdmin && !m.isOwner) {
-        return m.reply(claraWrap("Notifdemote", `❌ Hanya admin grup yang bisa menggunakan fitur ini`))
+        return m.reply(claraWrap("Notifdemote", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"))
     }
     
     const args = m.args[0]?.toLowerCase()
@@ -26,19 +26,19 @@ function handler(m, { sock, db }) {
     
     if (!['on', 'off'].includes(args)) {
         const status = group.notifDemote === true ? '✅ Aktif' : '❌ Nonaktif'
-        return m.reply(`*Notif Demote*\n\nStatus: ${status}\n\n*Penggunaan:*\n\`${m.prefix}notifdemote on\` - Aktifkan\n\`${m.prefix}notifdemote off\` - Nonaktifkan`)
+        return m.reply(claraWrap("Notif demote", `Notif Demote\n\nStatus: ${status}\n\nPenggunaan:\n\`${m.prefix}notifdemote on\` - Aktifkan\n\`${m.prefix}notifdemote off\` - Nonaktifkan`, "info"))
     }
     
     if (args === 'on') {
         group.notifDemote = true
         db.setGroup(m.chat, group)
-        return m.reply(claraWrap("Notifdemote", `✅ *ɴᴏᴛɪꜰ ᴅᴇᴍᴏᴛᴇ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`))
+        return m.reply(claraWrap("Notifdemote", `notif demote diaktifkan`, "success"))
     }
     
     if (args === 'off') {
         group.notifDemote = false
         db.setGroup(m.chat, group)
-        return m.reply(claraWrap("Notifdemote", `❌ *ɴᴏᴛɪꜰ ᴅᴇᴍᴏᴛᴇ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
+        return m.reply(claraWrap("Notifdemote", `notif demote dinonaktifkan`, "error"))
     }
 }
 

@@ -51,20 +51,20 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(claraWrap("Notiftidur", `❌ *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ* yang aktif di chat ini`))
+            return m.reply(claraWrap("Notiftidur", `belum ada pengingat tidur yang aktif di chat ini`, "error"))
         }
         toggleNotif('tidur', sender, chatJid, false)
-        return m.reply(`✅ *Pengingat Tidur Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)
+        return m.reply(claraWrap("Notif tidur", `Pengingat Tidur Dinonaktifkan 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`, "success"))
     }
 
     if (sub === 'on') {
         if (existing?.enabled && args.length === 1) {
-            return m.reply(`⚠️ *Pengingat tidur sudah aktif!*\n\n⏰ Jadwal: ${existing.jadwal.map(j => `*${j}*`).join(', ')} WIB\n\nGunakan \`${m.prefix}notiftidur edit\` untuk mengubah jadwal`)
+            return m.reply(claraWrap("Notif tidur", `Pengingat tidur sudah aktif!\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB\n\nGunakan \`${m.prefix}notiftidur edit\` untuk mengubah jadwal`, "warn"))
         }
 
         if (existing && args.length === 1) {
             toggleNotif('tidur', sender, chatJid, true)
-            return m.reply(`✅ *Pengingat tidur diaktifkan kembali!* 🔔\n\n⏰ Jadwal: ${existing.jadwal.map(j => `*${j}*`).join(', ')} WIB`)
+            return m.reply(claraWrap("Notif tidur", `Pengingat tidur diaktifkan kembali! 🔔\n\n⏰ Jadwal: ${existing.jadwal.map(j => `${j}`).join(', ')} WIB`, "success"))
         }
 
         const timeInput = args[1]
@@ -74,7 +74,7 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`22.00\` atau \`23.30\``)
+            return m.reply(claraWrap("Notif tidur", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`22.00\` atau \`23.30\``, "error"))
         }
 
         setNotifTidur(sender, chatJid, jadwal)
@@ -96,12 +96,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply(`❌ *Masukkan jadwal baru!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur edit 23.00\``)
+            return m.reply(claraWrap("Notif tidur", `Masukkan jadwal baru!\n\n💡 Contoh: \`${m.prefix}notiftidur edit 23.00\``, "error"))
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`23.00\` atau \`22.30\``)
+            return m.reply(claraWrap("Notif tidur", `Format jam salah!\n\nGunakan format HH.MM atau HH:MM\n💡 Contoh: \`23.00\` atau \`22.30\``, "error"))
         }
 
         setNotifTidur(sender, chatJid, jadwal)

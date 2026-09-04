@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anticaps",
@@ -59,21 +59,21 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         if (!pct || pct < 30 || pct > 100) return m.reply(claraWrap("Usage", "Threshold 30-100%.\nContoh: .anticaps set threshold 80"));
         data.threshold = pct;
         await db.save();
-        return m.reply(claraWrap("Anti Caps", `Threshold diatur ke ${pct}%.`));
+        return m.reply(claraWrap("Anti Caps", `Threshold diatur ke ${pct}%.`, "info"));
       }
       if (key === "minletters" || key === "min") {
         const num = parseInt(val);
         if (!num || num < 3) return m.reply(claraWrap("Usage", "Min letters minimal 3.\nContoh: .anticaps set minletters 10"));
         data.minLetters = num;
         await db.save();
-        return m.reply(claraWrap("Anti Caps", `Min letters diatur ke ${num}.`));
+        return m.reply(claraWrap("Anti Caps", `Min letters diatur ke ${num}.`, "info"));
       }
       if (key === "maxwarn" || key === "maxwarnings") {
         const num = parseInt(val);
         if (!num || num < 1) return m.reply(claraWrap("Usage", "Max warning minimal 1.\nContoh: .anticaps set maxwarn 3"));
         data.maxWarnings = num;
         await db.save();
-        return m.reply(claraWrap("Anti Caps", `Max warning diatur ke ${num}x.`));
+        return m.reply(claraWrap("Anti Caps", `Max warning diatur ke ${num}x.`, "info"));
       }
       if (key === "action") {
         if (!["warn", "mute", "kick"].includes((val || "").toLowerCase())) {
@@ -115,7 +115,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (target) {
         if (data.members[target]) data.members[target].warnings = 0;
         await db.save();
-        return m.reply(claraWrap("Anti Caps", `Warning @${target.split("@")[0]} direset.`));
+        return m.reply(claraWrap("Anti Caps", `Warning @${target.split("@")[0]} direset.`, "info"));
       }
       data.members = {};
       await db.save();
@@ -137,7 +137,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("anticaps error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Anti caps", e.message));
   }
 }
 

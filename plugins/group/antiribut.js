@@ -289,19 +289,19 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Antiribut", `
 │ Deteksi keributan diaktifkan
 │ Sistem: Warn 3x lalu kick
-`))
+`, "info"))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antiribut: 'off' })
         return m.reply(claraWrap("Antiribut", `
 │ Deteksi keributan dinonaktifkan
-`))
+`, "info"))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antiribut", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { ributMaxWarn: count })
-        return m.reply(claraWrap("Antiribut", `Max peringatan: *${count}x*`))
+        return m.reply(claraWrap("Antiribut", `Max peringatan: ${count}x`, "info"))
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -321,13 +321,13 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.ributWarns?.[target]) delete updated.ributWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antiribut", `Warn warn ribut @${target.split('@')[0]} direset`), { mentions: [target] })
+        return m.reply(claraWrap("Antiribut", `Warn warn ribut @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.ributWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antiribut", `Semua warn ribut direset`))
+        return m.reply(claraWrap("Antiribut", `Semua warn ribut direset`, "info"))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antiribut` untuk daftar command')
 }

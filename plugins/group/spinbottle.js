@@ -121,7 +121,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.phase = "idle";
       game.target = null;
       await db.save();
-      return m.reply(claraWrap("Spin The Bottle", `Giliran selesai. Spin lagi: ${usedPrefix}spinbottle spin`));
+      return m.reply(claraWrap("Spin The Bottle", `Giliran selesai. Spin lagi: ${usedPrefix}spinbottle spin`, "info"));
     }
 
     if (sub === "stop") {

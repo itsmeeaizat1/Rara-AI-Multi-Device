@@ -29,11 +29,11 @@ async function handler(m, { sock }) {
     }
     
     if (word.length < 2) {
-        return m.reply(claraWrap("Addtoxic", `❌ *ɢᴀɢᴀʟ*\n\nKata terlalu pendek (min 2 huruf)`))
+        return m.reply(claraWrap("Addtoxic", `gagal\n\nKata terlalu pendek (min 2 huruf)`, "error"))
     }
     
     if (word.length > 30) {
-        return m.reply(claraWrap("Addtoxic", `❌ *; return await m.reply(__navText); }Agal*\n\nKata terlalu panjang (max 30 huruf)`))
+        return m.reply(claraWrap("Addtoxic", `Kata terlalu panjang (max 30 huruf)`, "error"))
     }
     
     const groupData = db.getGroup(m.chat) || {}

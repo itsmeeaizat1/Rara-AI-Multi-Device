@@ -52,9 +52,7 @@ function handler(m, { sock }) {
     antilinkList.splice(index, 1)
     db.setGroup(m.chat, { antilinkList })
     
-    m.reply(`✅ *Antilink Dihapus*\n\n` +
-        `Link: \`${link}\`\n` +
-        `Sisa: *${antilinkList.length}* link`)
+    m.reply(claraWrap("Delantilink", `Link: \`${link}\`\nSisa: ${antilinkList.length} link`, "success"))
 }
 
 export { pluginConfig as config, handler }

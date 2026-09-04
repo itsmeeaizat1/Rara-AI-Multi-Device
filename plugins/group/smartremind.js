@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "smartremind",
@@ -76,27 +76,27 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "auto") {
       const toggle = (args[1] || "").toLowerCase();
-      if (!["on", "off"].includes(toggle)) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind auto on|off`));
+      if (!["on", "off"].includes(toggle)) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind auto on|off`, "info"));
       data.autoDetect = toggle === "on";
       await db.save();
-      return m.reply(claraWrap("Smart Remind", `Auto-detect ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan scan pesan untuk jadwal otomatis.`));
+      return m.reply(claraWrap("Smart Remind", `Auto-detect ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan scan pesan untuk jadwal otomatis.`, "info"));
     }
 
     if (sub === "list") {
       const active = data.reminders.filter(r => !r.done);
       if (active.length === 0) return m.reply(claraWrap("Smart Remind", "Belum ada reminder aktif."));
       const list = active.map(r => `${r.id}. ${r.text} - ${new Date(r.time).toLocaleString("id-ID")}`).join("\n");
-      return m.reply(claraWrap("Smart Remind", `Reminder Aktif:\n\n${list}`));
+      return m.reply(claraWrap("Smart Remind", `Reminder Aktif:\n\n${list}`, "info"));
     }
 
     if (sub === "del" || sub === "remove") {
       const id = parseInt(args[1]);
-      if (!id) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind del <id>`));
+      if (!id) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind del <id>`, "info"));
       const idx = data.reminders.findIndex(r => r.id === id);
       if (idx === -1) return m.reply(claraWrap("Info", `\u274c Reminder ID ${id} tidak ditemukan.`));
       data.reminders.splice(idx, 1);
       await db.save();
-      return m.reply(claraWrap("Smart Remind", `Reminder ID ${id} dihapus.`));
+      return m.reply(claraWrap("Smart Remind", `Reminder ID ${id} dihapus.`, "info"));
     }
 
     if (!text) {
@@ -149,7 +149,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("smartremind error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Smartremind", e.message));
   }
 }
 

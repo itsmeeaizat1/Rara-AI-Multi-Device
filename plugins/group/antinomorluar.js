@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
   if (action === "on") {
     const prefix = prefixArg || groupData.nomorluarBlock || "60";
     db.setGroup(m.chat, { antinomorluar: true, nomorluarBlock: prefix });
-    return m.reply(claraWrap("Antinomorluar", `Anti Nomor Luar diaktifkan\nPrefix diblokir: ${prefix}`));
+    return m.reply(claraWrap("Antinomorluar", `Anti Nomor Luar diaktifkan\nPrefix diblokir: ${prefix}`, "info"));
   }
 
   if (action === "off") {
@@ -87,14 +87,14 @@ async function handler(m, { sock }) {
 
   if (action === "set") {
     if (!prefixArg) {
-      return m.reply(`Masukkan prefix nomor!\n💡 *Contoh:* \`${m.prefix}antinomorluar set 60\``);
+      return m.reply(claraWrap("Anti nomorluar", `Masukkan prefix nomor!\n💡 Contoh: \`${m.prefix}antinomorluar set 60\``, "info"));
     }
     db.setGroup(m.chat, { nomorluarBlock: prefixArg });
     const isOn = groupData.antinomorluar;
-    return m.reply(claraWrap("Antinomorluar", `Prefix diblokir diubah ke: ${prefixArg}\nStatus: ${isOn ? "ON" : "OFF"}`));
+    return m.reply(claraWrap("Antinomorluar", `Prefix diblokir diubah ke: ${prefixArg}\nStatus: ${isOn ? "ON" : "OFF"}`, "info"));
   }
 
-  return m.reply(`Gunakan:\n\`${m.prefix}antinomorluar on 60\`\n\`${m.prefix}antinomorluar set 60,44\`\n\`${m.prefix}antinomorluar off\``);
+  return m.reply(claraWrap("Anti nomorluar", `Gunakan:\n\`${m.prefix}antinomorluar on 60\`\n\`${m.prefix}antinomorluar set 60,44\`\n\`${m.prefix}antinomorluar off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiNomorLuar };

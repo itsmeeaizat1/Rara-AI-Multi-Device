@@ -320,19 +320,19 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Antikasar", `
 │ Deteksi kata kasar diaktifkan
 │ Sistem: Warn 3x lalu kick
-`))
+`, "info"))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antikasar: 'off' })
         return m.reply(claraWrap("Antikasar", `
 │ Deteksi kata kasar dinonaktifkan
-`))
+`, "info"))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antikasar", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { kasarMaxWarn: count })
-        return m.reply(claraWrap("Antikasar", `Max peringatan: *${count}x*`))
+        return m.reply(claraWrap("Antikasar", `Max peringatan: ${count}x`, "info"))
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -352,13 +352,13 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.kasarWarns?.[target]) delete updated.kasarWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antikasar", `Warn warn kasar @${target.split('@')[0]} direset`), { mentions: [target] })
+        return m.reply(claraWrap("Antikasar", `Warn warn kasar @${target.split('@')[0]} direset`, "info"), { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.kasarWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antikasar", `Semua warn kasar direset`))
+        return m.reply(claraWrap("Antikasar", `Semua warn kasar direset`, "info"))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antikasar` untuk daftar command')
 }

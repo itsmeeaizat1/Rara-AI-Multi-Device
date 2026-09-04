@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "typingracegroup",
@@ -70,7 +70,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "join") {
-      if (!game.active || game.phase !== "join") return m.reply(claraWrap("Info", `Belum ada race. Ketik ${usedPrefix}typingrace start`));
+      if (!game.active || game.phase !== "join") return m.reply(claraWrap("Info", `Belum ada race. Ketik ${usedPrefix}typingrace start`, "info"));
       if (game.players.includes(sender)) return m.reply(claraWrap("Info", "\u274c Sudah join!"));
       game.players.push(sender);
       await db.save();
@@ -102,9 +102,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "done") {
       if (!game.active || game.phase !== "racing") return m.reply(claraWrap("Info", "\u274c Tidak ada race berjalan."));
-      if (game.winner) return m.reply(claraWrap("Info", `\U0001f3c6 Race sudah selesai! Pemenang: @${game.winner.split("@")[0]}`));
+      if (game.winner) return m.reply(claraWrap("Info", `\U0001f3c6 Race sudah selesai! Pemenang: @${game.winner.split("@")[0]}`, "info"));
       const typed = text.split(" ").slice(1).join(" ").trim();
-      if (!typed) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}typingrace done <kalimat>`));
+      if (!typed) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}typingrace done <kalimat>`, "info"));
 
       if (typed === game.sentence) {
         const elapsed = (Date.now() - game.startedAt) / 1000;
@@ -172,7 +172,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("typingrace error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Typingracegroup", e.message));
   }
 }
 

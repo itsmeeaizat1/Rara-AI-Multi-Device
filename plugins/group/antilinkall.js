@@ -52,33 +52,33 @@ function handler(m, { sock }) {
 
   if (option === "off") {
     db.setGroup(m.chat, { antilinkall: "off" });
-    return m.reply(claraWrap("Antilinkall", `❌ *Antilink All Nonaktif*\n\nLink tidak akan difilter lagi`));
+    return m.reply(claraWrap("Antilinkall", `Antilink All Nonaktif\n\nLink tidak akan difilter lagi`, "error"));
   }
 
   if (option.startsWith("metode")) {
     const method = m.args?.[1]?.toLowerCase();
     if (method === "kick") {
       db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "kick" });
-      return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Kick*\n\nUser yang kirim link akan di-kick`));
+      return m.reply(claraWrap("Antilinkall", `Antilink All — Mode Kick\n\nUser yang kirim link akan di-kick`, "success"));
     } else if (method === "remove" || method === "delete") {
       db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "remove" });
-      return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Delete*\n\nPesan dengan link akan dihapus`));
+      return m.reply(claraWrap("Antilinkall", `Antilink All — Mode Delete\n\nPesan dengan link akan dihapus`, "success"));
     } else {
-      return m.reply(claraWrap("Antilinkall", `❌ *Metode Tidak Valid*\n\nGunakan *kick* atau *remove*\n💡 *Contoh:* *${m.prefix}antilinkall metode kick*`));
+      return m.reply(claraWrap("Antilinkall", `Metode Tidak Valid\n\nGunakan kick atau remove\n💡 Contoh: ${m.prefix}antilinkall metode kick`, "error"));
     }
   }
 
   if (option === "kick") {
     db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "kick" });
-    return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Kick*\n\nUser yang kirim link akan di-kick`));
+    return m.reply(claraWrap("Antilinkall", `Antilink All — Mode Kick\n\nUser yang kirim link akan di-kick`, "success"));
   }
 
   if (option === "remove" || option === "delete") {
     db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "remove" });
-    return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Delete*\n\nPesan dengan link akan dihapus`));
+    return m.reply(claraWrap("Antilinkall", `Antilink All — Mode Delete\n\nPesan dengan link akan dihapus`, "success"));
   }
 
-  return m.reply(claraWrap("Antilinkall", `❌ *Opsi Tidak Valid*\n\nGunakan *on*, *off*, *metode kick*, atau *metode remove*`));
+  return m.reply(claraWrap("Antilinkall", `Opsi Tidak Valid\n\nGunakan on, off, metode kick, atau metode remove`, "error"));
 }
 
 export { pluginConfig as config, handler };

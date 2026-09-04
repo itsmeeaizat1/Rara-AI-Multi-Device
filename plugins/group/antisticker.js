@@ -62,11 +62,11 @@ async function handler(m, { sock }) {
 
     if (action === 'off') {
         db.setGroup(m.chat, { antisticker: false })
-        await m.reply(claraWrap("Antisticker", `❌ *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
+        await m.reply(claraWrap("Antisticker", `antisticker dinonaktifkan`, "error"))
         return
     }
 
-    await m.reply(`❌ Gunakan \`.antisticker on\` atau \`.antisticker off\``)
+    await m.reply(claraWrap("Anti sticker", `Gunakan \`.antisticker on\` atau \`.antisticker off\``, "error"))
 }
 
 export { pluginConfig as config, handler, checkAntisticker }

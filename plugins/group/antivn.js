@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     return;
   }
 
-  await m.reply(`Gunakan \`${m.prefix}antivn on\` atau \`${m.prefix}antivn off\``);
+  await m.reply(claraWrap("Anti vn", `Gunakan \`${m.prefix}antivn on\` atau \`${m.prefix}antivn off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiVn };

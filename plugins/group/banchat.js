@@ -48,9 +48,7 @@ async function handler(m, { sock }) {
         }
         
         if (groupData.isBanned) {
-            return m.reply(`⚠️ *Grup Sudah Diban*\n\n` +
-                `Grup ini sudah dalam status banned.\n` +
-                `Gunakan \`.unbanchat\` untuk membuka akses.`)       }
+            return m.reply(claraWrap("Banchat", `Grup ini sudah dalam status banned.\nGunakan .unbanchat untuk membuka akses.`, "warn"))       }
         
         db.setGroup(m.chat, { ...groupData, isBanned: true })
         

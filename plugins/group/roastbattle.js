@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "roastbattle",
@@ -29,7 +29,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "challenge") {
       const target = m.mentionedJid?.[0];
-      if (!target) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle challenge @user`));
+      if (!target) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle challenge @user`, "info"));
       if (target === sender) return m.reply(claraWrap("Info", "\u274c Tidak bisa challenge diri sendiri!"));
       if (game.active) return m.reply(claraWrap("Roast Battle", "Sudah ada battle berjalan."));
       game.active = true;
@@ -65,7 +65,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "submit") {
       const roastText = text.split(" ").slice(1).join(" ").trim();
-      if (!roastText) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle submit <roast kamu>`));
+      if (!roastText) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle submit <roast kamu>`, "info"));
       if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada battle aktif."));
 
       if (game.state === "p1_submit") {
@@ -119,13 +119,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           game.active = false;
           game.state = "idle";
           await db.save();
-          return m.reply(claraWrap("Roast Battle", `${roundResult}\n\n${winner}`));
+          return m.reply(claraWrap("Roast Battle", `${roundResult}\n\n${winner}`, "info"));
         }
 
         game.round++;
         game.state = "p1_submit";
         await db.save();
-        return m.reply(claraWrap("Roast Battle", `${roundResult}\n\nRonde ${game.round} mulai!\n@${game.p1.split("@")[0]}, ketik ${usedPrefix}roastbattle submit <roast>`));
+        return m.reply(claraWrap("Roast Battle", `${roundResult}\n\nRonde ${game.round} mulai!\n@${game.p1.split("@")[0]}, ketik ${usedPrefix}roastbattle submit <roast>`, "info"));
       }
 
       return m.reply(claraWrap("Roast Battle", "Tidak dalam fase submit."));
@@ -165,7 +165,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("roastbattle error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Roastbattle", e.message));
   }
 }
 

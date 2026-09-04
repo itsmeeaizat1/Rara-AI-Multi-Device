@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   const isEnable = args === "on";
 
   if (group.game === isEnable) {
-    return m.reply(claraWrap("Game", `🎮 Fitur game sudah *${isEnable ? "AKTIF" : "NONAKTIF"}* di grup ini.`));
+    return m.reply(claraWrap("Game", `🎮 Fitur game sudah ${isEnable ? "AKTIF" : "NONAKTIF"} di grup ini.`, "info"));
   }
 
   group.game = isEnable;

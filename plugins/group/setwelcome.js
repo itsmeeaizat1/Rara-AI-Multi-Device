@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
 
   db.setGroup(m.chat, { welcomeMsg: text, welcome: true });
   db.save();
-  await m.reply(claraWrap("Setwelcome", `✅ Welcome berhasil di set menjadi *${text}*\nMau reset? ketik ${m.prefix}resetwelcome`));
+  await m.reply(claraWrap("Setwelcome", `Welcome berhasil di set menjadi ${text}\nMau reset? ketik ${m.prefix}resetwelcome`, "success"));
 }
 
 export { pluginConfig as config, handler };

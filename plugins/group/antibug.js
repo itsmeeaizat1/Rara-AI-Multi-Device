@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Antibug", `Anti Bug dinonaktifkan`));
   }
 
-  return m.reply(`Gunakan \`${m.prefix}antibug on\` atau \`${m.prefix}antibug off\``);
+  return m.reply(claraWrap("Anti bug", `Gunakan \`${m.prefix}antibug on\` atau \`${m.prefix}antibug off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiBug };
