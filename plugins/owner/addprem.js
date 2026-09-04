@@ -3,6 +3,9 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
+// Bonus aktivasi premium — sinkron dengan src/lib/store/nova-store.js
+// (nilainya dipakai .buyprem buat nampilin "Paket Termasuk 3 Role")
+import { PREMIUM_BONUS } from "../../src/lib/store/nova-store.js";
 import {
   addJadibotPremium,
   removeJadibotPremium,
@@ -190,8 +193,9 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     user.isPremium = true;
 
     db.setUser(jid, user);
-    db.updateExp(jid, 200000);
-    db.updateKoin(jid, 20000);
+    // Bonus role koin+exp — nilai terpusat di nova-store.js (PREMIUM_BONUS)
+    db.updateExp(jid, PREMIUM_BONUS.exp);
+    db.updateKoin(jid, PREMIUM_BONUS.koin);
 
     db.save();
 
