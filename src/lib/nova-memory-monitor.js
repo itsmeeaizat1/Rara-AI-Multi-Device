@@ -1,55 +1,72 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// Memory watchdog — DEFAULT OFF (request owner 2026-09-04): watchdog gak
+// aktif sampai owner nyalain manual via .memwatch on. Kenapa? Fitur .remini
+// Local AI emang butuh RAM 1-3GB — watchdog yang matiin bot pas RAM
+// tinggi itu ganggu render. Owner yang paling tahu kapan mau pakai.
 import { logger } from "./nova-logger.js";
 
-// Limit dinaikin dari 1024MB → 2048MB (2026-09-04, fix owner report):
-// fitur .remini Local AI (Swin2SR/ONNX) DIDESAIN butuh RSS ~1-3GB pas proses
-// (tiling + model in-memory) — limit lama 1GB PASTI ketrigger tiap kali ada
-// yang enhance gambar, bot restart paksa DI TENGAH render → job ilang tanpa
-// pesan error (proses mati duluan sebelum sempet reply). Kalau limit lama
-// dipertahankan, fitur .remini gak akan PERNAH bisa selesai secara wajar.
-// CATATAN: 2048MB ini asumsi container punya RAM cukup (≥3GB dianjurkan).
-// Kalau panel/VPS RAM-nya lebih kecil dari itu, OS bisa OOM-kill proses
-// duluan sebelum watchdog ini kesempat jalan (OOM kill lebih kasar —
-// gak ada log graceful kayak ini). Owner: cek RAM aktual container,
-// sesuaikan RSS_LIMIT_MB di bawah biar pas (idealnya limit ≈ 70% RAM total).
-const RSS_LIMIT_MB = 2048;
-const RSS_LIMIT = RSS_LIMIT_MB * 1024 * 1024;
+const DEFAULT_LIMIT_MB = 2048; // dipakai kalau owner gak set custom pas .memwatch on
 const CHECK_INTERVAL = 5 * 60 * 1000;
 
 let monitorTimer = null;
-let isHdBusyFn = null; // hook opsional: cek apakah ada render .remini lagi jalan
+let isHdBusyFn = null; // hook: cek apakah ada render .remini lagi jalan
 
 function formatMB(bytes) {
   return (bytes / 1024 / 1024).toFixed(1) + "MB";
 }
 
+// ── STATE (db-driven, default OFF — live tanpa restart) ──
+async function getState() {
+  try {
+    const { getDatabase } = await import("./nova-database.js");
+    const db = getDatabase();
+    const raw = db.get("memoryWatch");
+    if (raw && typeof raw === "object") {
+      return {
+        enabled: !!raw.enabled,
+        limitMB: Number(raw.limitMB) > 256 ? Math.round(Number(raw.limitMB)) : DEFAULT_LIMIT_MB,
+      };
+    }
+  } catch {}
+  return { enabled: false, limitMB: DEFAULT_LIMIT_MB };
+}
+
+async function setState(next) {
+  const { getDatabase } = await import("./nova-database.js");
+  const db = getDatabase();
+  db.set("memoryWatch", next);
+  return next;
+}
+
 // Dipanggil dari index.js biar monitor tahu status antrian .remini —
-// restart DITUNDA (bukan dibatalkan) selama ada render aktif, biar job
-// gak ilang di tengah jalan. Limit RAM tetap ditegakkan begitu render kelar.
+// kalau ON, restart ditunda selama ada render HD aktif.
 function registerHdBusyCheck(fn) {
   isHdBusyFn = typeof fn === "function" ? fn : null;
 }
 
-function startMemoryMonitor() {
+async function startMemoryMonitor() {
   if (monitorTimer) return;
 
-  monitorTimer = setInterval(() => {
-    const mem = process.memoryUsage();
+  monitorTimer = setInterval(async () => {
+    const state = await getState();
+    // DEFAULT OFF: state.enabled false → watchdog diem total (gak restart, gak log)
+    if (!state.enabled) return;
 
+    const mem = process.memoryUsage();
     if (global.gc) global.gc();
 
-    if (mem.rss >= RSS_LIMIT) {
+    if (mem.rss >= state.limitMB * 1024 * 1024) {
       const hdBusy = isHdBusyFn ? isHdBusyFn() : false;
       if (hdBusy) {
         logger.warn(
           "memory",
-          `RSS ${formatMB(mem.rss)} exceeded ${formatMB(RSS_LIMIT)} limit tapi ada render .remini aktif — restart DITUNDA sampai render selesai`,
+          `RSS ${formatMB(mem.rss)} melewati limit ${state.limitMB}MB tapi ada render .remini aktif — restart DITUNDA sampai render selesai`,
         );
-        return; // cek lagi cycle berikutnya — job HD gak digugurin di tengah proses
+        return;
       }
       logger.warn(
         "memory",
-        `RSS ${formatMB(mem.rss)} exceeded ${formatMB(RSS_LIMIT)} limit, restarting`,
+        `RSS ${formatMB(mem.rss)} melewati limit ${state.limitMB}MB, restarting`,
       );
       process.exit(1);
     }
@@ -63,7 +80,7 @@ function startMemoryMonitor() {
   if (monitorTimer.unref) monitorTimer.unref();
   logger.success(
     "memory",
-    `monitoring active, limit ${formatMB(RSS_LIMIT)}, check every ${CHECK_INTERVAL / 60000}m`,
+    `watchdog siap (default OFF — aktifkan via .memwatch on), cek tiap ${CHECK_INTERVAL / 60000}m`,
   );
 }
 
@@ -74,4 +91,4 @@ function stopMemoryMonitor() {
   }
 }
 
-export { startMemoryMonitor, stopMemoryMonitor, registerHdBusyCheck };
+export { startMemoryMonitor, stopMemoryMonitor, registerHdBusyCheck, getState, setState };
