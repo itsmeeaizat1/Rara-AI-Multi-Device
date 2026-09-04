@@ -59,13 +59,15 @@ export async function checkAndSend(sock) {
         }
 
         const greeting = getGreeting(hour);
+        // Footer cuaca udah box utuh — ambil ISI-nya aja (buang header
+        // & closer biar gak dobel box: satu pesan = satu box rapi).
+        const body = footer.split("\n").slice(1, -1).join("\n");
         const message =
           "╭─「 ✦ " + toSC("Cuaca " + (sched.label || "")) + " ✦ 」\n" +
-          "│\n" +
           "│ " + greeting + "\n" +
           "│ " + toSC("Cuaca terkini untuk hari ini") + "\n" +
           "│\n" +
-          footer + "\n" +
+          body + "\n" +
           "╰────  •  ────";
 
         await sock.sendMessage(settings.target, { text: message });

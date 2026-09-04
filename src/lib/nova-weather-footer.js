@@ -168,11 +168,11 @@ function windDirectionText(deg) {
 function uvText(value) {
   const n = Number(value);
   if (!Number.isFinite(n)) return "-";
-  if (n <= 2) return `${fmt(n)} (Rendah)`;
-  if (n <= 5) return `${fmt(n)} (Sedang)`;
-  if (n <= 7) return `${fmt(n)} (Tinggi)`;
-  if (n <= 10) return `${fmt(n)} (Sangat Tinggi)`;
-  return `${fmt(n)} (Ekstrem)`;
+  if (n <= 2) return `${fmt(n)} ${toSC("(Rendah)")}`;
+  if (n <= 5) return `${fmt(n)} ${toSC("(Sedang)")}`;
+  if (n <= 7) return `${fmt(n)} ${toSC("(Tinggi)")}`;
+  if (n <= 10) return `${fmt(n)} ${toSC("(Sangat Tinggi)")}`;
+  return `${fmt(n)} ${toSC("(Ekstrem)")}`;
 }
 
 function normalizeOpenMeteo(data) {
