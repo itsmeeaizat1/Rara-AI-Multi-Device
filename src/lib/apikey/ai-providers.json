@@ -93,18 +93,18 @@
       "apikey": "kyzz",
       "free": true
     },
-    "grok": {
-      "label": "Grok (xAI) — buat fitur satuan .grok (gak di rantai)",
-      "url": "https://api.x.ai/v1/chat/completions",
-      "method": "post",
-      "format": "openai",
-      "model": "grok-3-mini",
-      "apikey": ""
-    },
     "meta": {
       "apikey": ""
     },
     "openrouter": {
+      "apikey": ""
+    },
+    "xai": {
+      "label": "xAI Grok — buat fitur satuan .grok/.xai (gak di rantai)",
+      "url": "https://api.x.ai/v1/chat/completions",
+      "method": "post",
+      "format": "openai",
+      "model": "grok-3-mini",
       "apikey": ""
     }
   }
