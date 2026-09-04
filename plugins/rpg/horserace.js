@@ -38,26 +38,18 @@ async function handler(m, { sock }) {
     if (typeof wallet.gold !== "number") wallet.gold = 2000;
 
     if (subCmd === "list" || !subCmd) {
-      let msg = "";
-      msg += `💰 Gold Kamu: *${wallet.gold}*
-
-`;
-      msg += `Daftar Kuda Pertandingan:
-
-`;
-
-      HORSES.forEach((horse) => {
-        msg += `🐎 *#${horse.id} ${horse.name}*\n`;
-        msg += `• Odds: *${horse.odds}x* (${horse.tag})
-
-`;
-      });
-
-      msg += `Perintah Taruhan:\n`;
-      msg += `${m.prefix}horserace bet <Nomor_Kuda> <Jumlah_Gold>\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply(claraWrap("horserace", [
+        `Gold kamu : ${wallet.gold}`,
+        "---",
+        "Daftar kuda pertandingan :",
+        ...HORSES.flatMap((horse) => [
+          `#${horse.id} ${horse.name}`,
+          `   Odds : ${horse.odds}x (${horse.tag})`,
+        ]),
+        "---",
+        `📌 ${m.prefix}horserace bet <nomor_kuda> <jumlah_gold>`,
+      ], "info"));
     }
 
     if (subCmd === "bet" || subCmd === "pasang") {
@@ -128,28 +120,25 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "horserace", wallet);
 
-      let msg = "";
-      msg += `🏁 Balapan Kuda Selesai!\n`;
-      msg += `\n`;
-      msg += `Papan Lintasan Balap:\n`;
-
-      raceResults.forEach((h, index) => {
-        const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "  ";
-        const track = "▰".repeat(h.progress) + "🐎" + "▱".repeat(10 - h.progress);
-        msg += `${medal} #${h.id} ${h.name.padEnd(14)} [🏁${track}]\n`;
-      });
-
-      msg += `\n`;
-      msg += `🏆 *Pemenang:* #${winner.id} ${winner.name}\n`;
-      msg += `🎯 *Pilihanmu:* #${selectedHorse.id} ${selectedHorse.name}\n`;
-
+      const lines = [
+        "*Balapan kuda selesai!*",
+        "",
+        "Papan lintasan :",
+        ...raceResults.map((h, index) => {
+          const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "  ";
+          const track = "▰".repeat(h.progress) + "🐎" + "▱".repeat(10 - h.progress);
+          return `${medal} #${h.id} ${h.name.padEnd(14)} [${track}]`;
+        }),
+        "",
+        `Pemenang : #${winner.id} ${winner.name}`,
+        `Pilihanmu : #${selectedHorse.id} ${selectedHorse.name}`,
+      ];
       if (isWon) {
-        msg += `🎉 *ᴍᴇɴᴀɴɢ!* Kamu mendapatkan *+${winReward} Gold* (${selectedHorse.odds}x)\n`;
+        lines.push(`MENANG! Kamu mendapatkan +${winReward} Gold (${selectedHorse.odds}x).`);
       } else {
-        msg += `💀 *ᴋᴀʟᴀʜ!* Taruhan sebesar ${betAmount} Gold hangus.\n`;
+        lines.push(`KALAH! Taruhan sebesar ${betAmount} Gold hangus.`);
       }
-
-      msg += `💰 Total Gold Sekarang: *${wallet.gold} Gold*\n`;
+      lines.push(`Total gold sekarang : ${wallet.gold} Gold`);
       
       if (isWon) {
         await m.react('🐣');
@@ -157,7 +146,7 @@ async function handler(m, { sock }) {
         await m.react('❌');
       }
 
-      return m.reply(msg);
+      return m.reply(lines.join("\n"));
     }
 
     await m.react('❌');

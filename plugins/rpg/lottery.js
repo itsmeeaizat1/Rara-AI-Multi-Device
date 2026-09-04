@@ -44,18 +44,15 @@ async function handler(m, { sock }) {
       const prizePool = Math.floor(totalRevenue * 0.7);
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = "";
-      msg += `🎟️ *Harga Tiket:* ${ticketPrice} Gold\n`;
-      msg += `📊 *Total Tiket Terjual:* ${totalTickets} Tiket\n`;
-      msg += `🏆 *Total Hadiah (70%):* ${prizePool} Gold\n`;
-      msg += `🎫 *Tiket Milikmu:* ${myTickets} Tiket
-
-`;
-      msg += `Cara Membeli Tiket:\n`;
-      msg += `${m.prefix}lottery buy <jumlah_tiket>\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply(claraWrap("lottery", [
+        `Harga tiket : ${ticketPrice} Gold`,
+        `Tiket terjual : ${totalTickets}`,
+        `Total hadiah (70%) : ${prizePool} Gold`,
+        `Tiket milikmu : ${myTickets}`,
+        "---",
+        `📌 ${m.prefix}lottery buy <jumlah_tiket> — beli tiket`,
+      ], "info"));
     }
 
     if (subCmd === "buy" || subCmd === "beli") {
@@ -96,15 +93,14 @@ async function handler(m, { sock }) {
 
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = "";
-      msg += `🎟️ Berhasil membeli *${count}* tiket lotre!\n`;
-      msg += `\n`;
-      msg += `💰 Total Biaya: -${totalCost} Gold\n`;
-      msg += `🎫 Total Tiket Kamu Saat Ini: *${myTickets} Tiket*\n`;
-      msg += `👛 Sisa Gold: *${userWallet.gold} Gold*\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply([
+        `*Berhasil membeli ${count} tiket lotre!*`,
+        "",
+        `Total biaya : -${totalCost} Gold`,
+        `Tiket kamu sekarang : ${myTickets}`,
+        `Sisa gold : ${userWallet.gold} Gold`,
+      ].join("\n"));
     }
 
     if (subCmd === "draw" || subCmd === "undak") {
@@ -151,17 +147,16 @@ async function handler(m, { sock }) {
       winnerWallet.gold = (winnerWallet.gold || 0) + prizePool;
       await db.setPlayerData?.(winnerSender, "wallet", winnerWallet);
 
-      let msg = "";
-      msg += `🎊 *ᴘᴇɴɢᴜɴᴅɪᴀɴ ʟᴏᴛʀᴇ ꜱᴀᴋʀᴀʟ* 🎊\n`;
-      msg += `\n`;
-      msg += `🎟️ Total Tiket Terundi: ${totalTickets} Tiket\n`;
-      msg += `🏆 Total Hadiah: *${prizePool} Gold*\n`;
-      msg += `👑 *Pemenang Utama:* @${winnerName}\n`;
-      msg += `\n`;
-      msg += `Selamat kepada pemenang! Hadiah telah dikirim ke dompet.\n`;
-      
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply([
+        "*PENGUNDIAN LOTRE SAKRAL*",
+        "",
+        `Total tiket terundi : ${totalTickets}`,
+        `Total hadiah : ${prizePool} Gold`,
+        `Pemenang utama : @${winnerName}`,
+        "",
+        "Selamat kepada pemenang! Hadiah telah dikirim ke dompet.",
+      ].join("\n"), { mentions: [winnerSender] });
     }
 
     await m.react('❌');
