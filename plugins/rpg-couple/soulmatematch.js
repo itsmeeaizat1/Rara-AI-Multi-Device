@@ -4,6 +4,7 @@
 import { getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { getCintaData } from "../../src/lib/nova-rpg-cinta.js";
 import { claraWrap, novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "soulmatematch",
@@ -106,24 +107,24 @@ async function handler(m, { sock }) {
     const tier = getTier(score);
     const fact = pick(FACTS);
 
-    const msgLines = [
-      `${myName} ${tier.emoji} ${targetName}`,
-      "---",
-      `Score: ${score}/100`,
-      `Tier: ${tier.label}`,
-      `"${tier.note}"`,
-      "---",
-      { sub: "Soul Insight" },
-      `"${fact}"`,
-      "---",
-      { sub: "RPG Comparison" },
-      `Level: ${myRpg.level || 1} vs ${targetRpg.level || 1}`,
-      `Job: ${myJob} vs ${targetJob}`,
+    const soulLines = [
+      `│ • 💑 ${myName} ${tier.emoji} ${targetName}`,
+      `│ • 💞 Kecocokan : ${score}/100 — ${tier.label}`,
+      `│ • "${tier.note}"`,
+      "",
+      `│ • 💡 Soul insight : "${fact}"`,
+      `│ • Level : ${myRpg.level || 1} vs ${targetRpg.level || 1}`,
+      `│ • Job : ${myJob} vs ${targetJob}`,
     ];
     if (myCinta.spouse === targetJid) {
-      msgLines.push(`Bonus +15 karena sudah berpacaran!`, `Affection: ${myCinta.affection || 0}`);
+      soulLines.push(`│ • 💕 Bonus +15 karena sudah berpacaran (Affection: ${myCinta.affection || 0})`);
     }
-    await m.reply(novaBox("Soulmate Match", msgLines));
+    await m.reply(novaGameBox({
+      title: "rpg cinta", icon: "💞",
+      flavor: `${tier.emoji} *KECOCOKAN ${score}%!*`,
+      body: soulLines.join("\n"),
+      cta: gameCTA("soulmatematch"),
+    }));
     await m.react(tier.emoji);
   } catch (e) {
     console.error("[soulmatematch] Error:", e.message);
