@@ -11,7 +11,7 @@ import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
-import { sewaPrice } from "../../src/lib/sewa.js";
+import { sewaPrice } from "../../src/lib/sewa/sewa.js";
 
 const pluginConfig = {
   name: "buysewa",

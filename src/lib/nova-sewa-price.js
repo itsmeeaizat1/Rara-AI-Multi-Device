@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sewaPrice } from "./sewa.js";
+import { sewaPrice } from "./sewa/sewa.js";
 
 /**
  * Helper untuk hitung harga sewa berdasarkan durasi
