@@ -67,7 +67,7 @@ import { handleAntiTagSW } from "./src/lib/nova-group-protection.js";
 // import { initWeatherScheduler } from "./src/lib/nova-weather-scheduler.js";  // moved to dynamic import below
 // import { initLokerScheduler } from "./src/lib/nova-loker-scheduler.js";  // moved to dynamic import below
 // import { initAutoJpmScheduler } from "./src/lib/nova-auto-jpm.js";  // moved to dynamic import below
-import { startMemoryMonitor } from "./src/lib/nova-memory-monitor.js";
+import { startMemoryMonitor, registerHdBusyCheck } from "./src/lib/nova-memory-monitor.js";
 import { startTempCleaner } from "./src/lib/nova-temp-cleaner.js";
 import { init as initCacheCleaner } from "./src/lib/nova-cache-cleaner.js";
 import { startDailyPruner } from "./src/lib/nova-data-pruner.js";
@@ -473,6 +473,11 @@ async function main() {
 
         const devLabel = config.dev?.enabled ? ` ${c.yellow("• dev")}` : "";
         startMemoryMonitor();
+        // hubungin watchdog memory ke status antrian .remini — restart
+        // ditunda selama ada render HD aktif (job gak boleh ilang di tengah)
+        import("./src/lib/nova-hd-pool.js")
+          .then(({ hdQueueInfo }) => registerHdBusyCheck(() => hdQueueInfo().busy))
+          .catch(() => {});
         startTempCleaner();
         startDailyPruner();
         initCacheCleaner();
