@@ -7,6 +7,7 @@ import {
 } from "../../src/lib/nova-rpg-service.js";
 import { animKerja } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -125,17 +126,21 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastWork", WORK_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʜᴀsɪʟ ᴋᴇʀᴊᴀ ✦ 」\n`;
-    msg += `│ 👔 Pekerjaan: *${jobName}* (Lv.${jobLv})\n`;
-    msg += `│ 📋 Aktivitas: ${activity}\n`;
-    msg += `│\n`;
-    msg += `│ ✦ EXP    : *+${expGain}*\n`;
-    msg += `│ 💰 Gold   : *+${goldGain}*\n`;
-    msg += `│ 📖 Job EXP: *+${jobExpGain}*\n`;
-    msg += `│\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    msg += `╰──── • ────`;
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "kerja", icon: "💼",
+      flavor: "💼 *GAJIAN!*",
+      body: [
+        `│ • 👔 Pekerjaan : ${jobName} (Lv.${jobLv})`,
+        `│ • 📋 Aktivitas : ${activity}`,
+        "",
+        `│ • ✨ EXP : +${expGain}`,
+        `│ • 💰 Gold : +${goldGain}`,
+        `│ • 📖 Job EXP : +${jobExpGain}`,
+        "",
+        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("kerja"),
+    }));
   } catch (err) {
     console.error("kerja error:", err);
     await m.react("❌");

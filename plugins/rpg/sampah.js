@@ -7,6 +7,7 @@ import {
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -76,9 +77,9 @@ async function handler(m, { sock }) {
 
       if (Math.random() * 100 < trash.chance) {
         addItem(m, trash.drop, 1);
-        found.push(`${trash.name} (+${goldGain}g, +${expGain}exp)`);
+        found.push(`${trash.name} (+${goldGain} gold, +${expGain} EXP)`);
       } else {
-        found.push(`${trash.name} (+${goldGain}g, +${expGain}exp)`);
+        found.push(`${trash.name} (+${goldGain} gold, +${expGain} EXP)`);
       }
     }
 
@@ -89,21 +90,19 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSampah", SAMPAH_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🗑️ Kamu mengumpulkan sampah...\n`;
-    msg += `
-`;
-    msg += `📦 *ʜᴀsɪʟ ᴋᴜʟᴇᴛsᴀᴍᴘᴀʜ*\n`;
-    for (const f of found) {
-      msg += `♻️ ${f}\n`;
-    }
-    msg += `
-`;
-    msg += `💰 Total gold: *+${totalGold}*\n`;
-    msg += `✦ Total EXP: *+${totalExp}*\n`;
-    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "sampah", icon: "🗑️",
+      flavor: "♻️ *SAMPAH BERHASIL DIKUMPULKAN!*",
+      body: [
+        `Hasil kulet sampah (${count} item):`,
+        ...found.map(f => `│ • ${f}`),
+        "",
+        `│ • 💰 Total gold : +${totalGold}`,
+        `│ • ✨ Total EXP : +${totalExp}`,
+        `│ • ⚡ Energi : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("sampah"),
+    }));
   } catch (err) {
     console.error("sampah error:", err);
     await m.react("❌");

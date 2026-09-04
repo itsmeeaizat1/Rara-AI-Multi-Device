@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { rpgProgress } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -99,32 +100,24 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastDagang", DAGANG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🏘️ Dari: *${buyVillage.name}*\n`;
-    msg += `📍 Ke: *${sellVillage.name}*\n`;
-    msg += `📦 Barang: *${good.name}* x${qty}\n`;
-    msg += `
-`;
-    msg += `💵 Beli: *${buyPrice} gold/pcs* (Total: ${cost})\n`;
-    msg += `💰 Jual: *${sellPrice} gold/pcs* (Total: ${revenue})\n`;
-    msg += `
-`;
-
-    if (profit > 0) {
-      msg += `✅ Profit: *+${profit} gold*\n`;
-    } else if (profit < 0) {
-      msg += `❌ Rugi: *${profit} gold*\n`;
-    } else {
-      msg += `🟰 Break even: *0 gold*\n`;
-    }
-
-    msg += `✦ EXP: *+${expGain}*\n`;
-    msg += `
-`;
-    msg += `💼 Gold: *${rpg.gold - cost + revenue}*\n`;
-    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "berdagang", icon: "📦",
+      flavor: profit > 0 ? "📈 *UNTUNG!*" : profit < 0 ? "📉 *RUGI!*" : "🟰 *BALIK MODAL!*",
+      body: [
+        `│ • 🏘️ Dari : ${buyVillage.name}`,
+        `│ • 📍 Ke : ${sellVillage.name}`,
+        `│ • 📦 Barang : ${good.name} x${qty}`,
+        "",
+        `│ • 💵 Beli : ${buyPrice} gold/pcs (Total: ${cost})`,
+        `│ • 💰 Jual : ${sellPrice} gold/pcs (Total: ${revenue})`,
+        ...(profit > 0 ? [`│ • ✅ Profit : +${profit} gold`] : profit < 0 ? [`│ • ❌ Rugi : ${profit} gold`] : [`│ • 🟰 Hasil : 0 gold (break even)`]),
+        `│ • ✨ EXP : +${expGain}`,
+        "",
+        `│ • 💼 Gold : ${rpg.gold - cost + revenue}`,
+        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+      ].join("\n"),
+      cta: gameCTA("berdagang"),
+    }));
   } catch (err) {
     console.error("berdagang error:", err);
     await m.react("❌");

@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animEnchant } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -42,19 +43,19 @@ async function handler(m, { sock }) {
     const upgradeCost = Math.max(500, (currentLevel + 1) * 500);
 
     if (subCmd === "info" || !subCmd) {
-      let msg = "";
-      msg += `⚔️ *Senjata:* ${weapon.name}\n`;
-      msg += `📊 *Level:* ${currentLevel} / ${maxLevel}\n`;
-      msg += `💥 *Total ATK:* ${currentAtk} (+${currentLevel * 5})\n`;
-      msg += `💰 *Biaya Upgrade:* ${upgradeCost} Gold\n`;
-      msg += `🎲 *Tingkat Keberhasilan:* 80%\n\n`;
-      msg += `*Catatan Upgrade:*\n`;
-      msg += `• Setiap level menambah +5 ATK\n`;
-      msg += `• Gagal tempa: senjata tidak hilang/turun level\n\n`;
-      msg += `Perintah Upgrade:\n`;
-      msg += `${m.prefix}blacksmith upgrade <nama_senjata>\n`;
       await m.react('🐣');
-      return m.reply(msg);
+      return m.reply(claraWrap("blacksmith", [
+        `Senjata : ${weapon.name}`,
+        `Level : ${currentLevel} / ${maxLevel}`,
+        `Total ATK : ${currentAtk} (+${currentLevel * 5})`,
+        `Biaya upgrade : ${upgradeCost} Gold`,
+        `Peluang berhasil : 80%`,
+        "---",
+        "Setiap level menambah +5 ATK",
+        "Gagal tempa: senjata tidak hilang/turun level",
+        "---",
+        `📌 ${m.prefix}blacksmith upgrade <nama_senjata>`,
+      ], "info"));
     }
 
     if (subCmd === "upgrade" || subCmd === "tempa") {
@@ -102,26 +103,32 @@ async function handler(m, { sock }) {
         const newAtk = weapon.baseAtk + weapon.level * 5;
         await db.setPlayerData?.(sender, "weapon", weapon);
 
-        let msg = "";
-        msg += `⚒️ Berhasil menempa *${weapon.name}*!\n`;
-        msg += `\n`;
-        msg += `📊 Level Baru: *+${weapon.level}* / ${maxLevel}\n`;
-        msg += `💥 Total ATK: *${newAtk}* (+5 ATK)\n`;
-        msg += `💰 Biaya: -${upgradeCost} Gold\n`;
-        
         await m.react('🐣');
-        return m.reply(msg);
+        return m.reply(novaGameBox({
+          title: "blacksmith", icon: "⚒️",
+          flavor: "⚒️ *TEMPAAN BERHASIL!*",
+          body: [
+            `│ • Senjata : ${weapon.name}`,
+            `│ • Level baru : ${weapon.level} / ${maxLevel}`,
+            `│ • 💥 Total ATK : ${newAtk} (+5 ATK)`,
+            `│ • 💰 Biaya : -${upgradeCost} Gold`,
+          ].join("\n"),
+          cta: gameCTA("blacksmith"),
+        }));
       } else {
         await db.setPlayerData?.(sender, "weapon", weapon);
 
-        let msg = "";
-        msg += `💥 Tempaan gagal! Percikan api membakar material.\n`;
-        msg += `\n`;
-        msg += `🛡️ Senjata *${weapon.name}* tetap di Level *${currentLevel}*.\n`;
-        msg += `💰 Biaya terpakai: -${upgradeCost} Gold\n`;
-        
         await m.react('❌');
-        return m.reply(msg);
+        return m.reply(novaGameBox({
+          title: "blacksmith", icon: "⚒️",
+          flavor: "🔥 *TEMPAAN GAGAL!*",
+          body: [
+            `│ • Senjata : ${weapon.name}`,
+            `│ • Level tetap : ${currentLevel}`,
+            `│ • 💰 Biaya terpakai : -${upgradeCost} Gold`,
+          ].join("\n"),
+          cta: gameCTA("blacksmith"),
+        }));
       }
     }
 

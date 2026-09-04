@@ -6,6 +6,7 @@ import {
   pvpResult, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -184,37 +185,36 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastPvP", PVP_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `⚔️ ${m.pushName} vs ${targetJid.split("@")[0]}\n`;
-    msg += `
-`;
-
     // Combat log (5 terakhir)
     const recentLog = log.slice(-5);
-    for (const l of recentLog) {
-      msg += `${l}\n`;
-    }
-    msg += `
-`;
-
-    if (draw) {
-      msg += `🤝 *Hasil: Seri!* (Timeout ${maxRounds} ronde)\n`;
-      msg += `Tidak ada reward untuk kedua pihak\n`;
-    } else if (iWon) {
-      msg += `🏆 *Hasil: ${m.pushName} Menang!*\n`;
-      msg += `✦ EXP: *+${expGain}*\n`;
-      msg += `💰 Gold: *+${goldGain}*\n`;
-      msg += `📊 Rating: *${rpg.pvpRating + (iWon ? 15 : 0)}*\n`;
-    } else {
-      msg += `💀 *Hasil: ${m.pushName} Kalah!*\n`;
-      msg += `💰 Gold: *${goldGain}*\n`;
-      msg += `📊 Rating: *${rpg.pvpRating - 15}*\n`;
-    }
-    msg += `
-`;
-    msg += `❤️ HP kamu: *${Math.max(1, myHp)}/${rpg.maxHp}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "duelrpg", icon: "⚔️",
+      flavor: draw ? "🤝 *DUEL SERI!*" : iWon ? "🏆 *MENANG!*" : "💀 *KALAH!*",
+      body: [
+        `⚔️ ${m.pushName} vs ${targetJid.split("@")[0]}`,
+        "",
+        ...recentLog,
+        "",
+        ...(draw
+          ? [
+              `│ • 🤝 Hasil : Seri (timeout ${maxRounds} ronde)`,
+              "Tidak ada reward untuk kedua pihak",
+            ]
+          : iWon
+          ? [
+              `│ • ✨ EXP : +${expGain}`,
+              `│ • 💰 Gold : +${goldGain}`,
+              `│ • 📊 Rating : ${rpg.pvpRating + 15}`,
+            ]
+          : [
+              `│ • 💰 Gold : ${goldGain}`,
+              `│ • 📊 Rating : ${rpg.pvpRating - 15}`,
+            ]),
+        "",
+        `│ • ❤️ HP kamu : ${Math.max(1, myHp)}/${rpg.maxHp}`,
+      ].join("\n"),
+      cta: gameCTA("duelrpg"),
+    }));
   } catch (err) {
     console.error("duelrpg error:", err);
     await m.react("❌");

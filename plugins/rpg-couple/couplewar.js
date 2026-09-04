@@ -9,6 +9,7 @@ import {
 import { checkCooldown } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "couplewar",
@@ -150,29 +151,22 @@ async function handler(m, { sock }) {
     const winnerTeam = iWin ? `${myName} & ${myPartnerName}` : `${targetName} & ${targetPartnerName}`;
     const loserTeam = iWin ? `${targetName} & ${targetPartnerName}` : `${myName} & ${myPartnerName}`;
 
-    const msgLines = [
-      { sub: `Team 1: ${myName} & ${myPartnerName}` },
-      `Couple Power: ${myCouplePower}`,
-      `Roll: +${myRoll}`,
-      `Final Power: ${myFinalPower}`,
-      "---",
-      { sub: `Team 2: ${targetName} & ${targetPartnerName}` },
-      `Couple Power: ${targetCouplePower}`,
-      `Roll: +${targetRoll}`,
-      `Final Power: ${targetFinalPower}`,
-      "---",
-      { sub: `Pemenang: ${winnerTeam}` },
-      `Affection: +${winAff}`,
-      `EXP: +${winExp}`,
-      `Gold: +${winGold}`,
-      `Power Gap: ${powerDiff}`,
-      "---",
-      { sub: `Kalah: ${loserTeam}` },
-      `Affection: ${lossAff}`,
-      `EXP: +${lossExp}`,
-      `Gold: +${lossGold}`,
-    ];
-    await m.reply(novaBox("Couple War", msgLines));
+    await m.reply(novaGameBox({
+      title: "rpg cinta", icon: "⚔️",
+      flavor: iWin ? "🏆 *PASANGANMU MENANG!*" : "💥 *PASANGANMU KALAH!*",
+      body: [
+        `Team 1 : ${myName} & ${myPartnerName}`,
+        `│ • Couple Power : ${myCouplePower} | Roll : +${myRoll} | Final : ${myFinalPower}`,
+        "",
+        `Team 2 : ${targetName} & ${targetPartnerName}`,
+        `│ • Couple Power : ${targetCouplePower} | Roll : +${targetRoll} | Final : ${targetFinalPower}`,
+        "",
+        `│ • 🏆 Pemenang : ${winnerTeam}`,
+        `│ • 💕 Affection : +${winAff} | ✨ EXP : +${winExp} | 💰 Gold : +${winGold}`,
+        `│ • Kalah (${loserTeam}) : 💕 ${lossAff} | ✨ +${lossExp} | 💰 +${lossGold}`,
+      ].join("\n"),
+      cta: gameCTA("couplewar"),
+    }));
     await m.react(iWin ? "🏆" : "💥");
   } catch (e) {
     console.error("[couplewar] Error:", e.message);

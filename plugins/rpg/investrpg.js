@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -60,21 +61,17 @@ async function handler(m, { sock }) {
       saveRpg(m, { invest: rpg.invest });
 
       await m.react("🐣");
-      let msg = "";
-      msg += `📈 Investasi selesai!\n`;
-      msg += `
-`;
-      msg += `💵 Modal: *${investAmount} gold*\n`;
-      if (profit >= 0) {
-        msg += `📊 Return: *${returnValue} gold*\n`;
-        msg += `✅ Profit: *+${profit} gold*\n`;
-      } else {
-        msg += `📊 Return: *${returnValue} gold*\n`;
-        msg += `❌ Rugi: *${profit} gold*\n`;
-      }
-      msg += `💰 Gold sekarang: *${rpg.gold + returnValue}*\n`;
-      
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "investrpg", icon: "📈",
+        flavor: profit >= 0 ? "📈 *INVESTASI PROFIT!*" : "📉 *INVESTASI RUGI!*",
+        body: [
+          `│ • Modal : ${investAmount} Gold`,
+          `│ • Return : ${returnValue} Gold`,
+          profit >= 0 ? `│ • ✅ Profit : +${profit} Gold` : `│ • ❌ Rugi : ${profit} Gold`,
+          `│ • 💰 Gold sekarang : ${rpg.gold + returnValue} Gold`,
+        ].join("\n"),
+        cta: gameCTA("investrpg"),
+      }));
     }
 
     // Start new investment
@@ -91,7 +88,7 @@ async function handler(m, { sock }) {
 `;
         msg += `Ketik .investrpg lagi saat waktu habis\n`;
         msg += `untuk mengambil hasil investasi\n`;
-                return m.reply(msg);
+                return m.reply(claraWrap("investrpg", msg));
       }
 
       let msg = "";
@@ -104,7 +101,7 @@ async function handler(m, { sock }) {
 `;
       msg += `⚠️ Risk: 70% profit, 30% rugi\n`;
       msg += `📊 Return: 80-120% dalam 1 jam\n`;
-            return m.reply(msg);
+            return m.reply(claraWrap("investrpg", msg));
     }
 
     const amount = parseInt(action);
@@ -137,19 +134,19 @@ async function handler(m, { sock }) {
     saveRpg(m, { invest: rpg.invest });
 
     await m.react("🐣");
-    let msg = "";
-    msg += `✅ Investasi dimulai!\n`;
-    msg += `
-`;
-    msg += `💵 Modal: *${amount} gold*\n`;
-    msg += `⏰ Durasi: *1 jam*\n`;
-    msg += `📊 Estimasi return: *${Math.floor(amount * 0.8)}-${Math.floor(amount * 1.2)} gold*\n`;
-    msg += `
-`;
-    msg += `Ketik .investrpg lagi setelah 1 jam\n`;
-    msg += `untuk mengambil hasil investasi\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "investrpg", icon: "📈",
+      flavor: "📈 *INVESTASI DIMULAI!*",
+      body: [
+        `│ • 💵 Modal : ${amount} Gold`,
+        `│ • ⏰ Durasi : 1 jam`,
+        `│ • 📊 Estimasi return : ${Math.floor(amount * 0.8)}-${Math.floor(amount * 1.2)} Gold`,
+        "",
+        "Ketik .investrpg lagi setelah 1 jam",
+        "untuk mengambil hasil investasi",
+      ].join("\n"),
+      cta: gameCTA("investrpg"),
+    }));
   } catch (err) {
     console.error("investrpg error:", err);
     await m.react("❌");

@@ -5,6 +5,7 @@ import {
   ensureRpg, enchantItem, getItemCount, ITEM_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -84,7 +85,7 @@ async function handler(m, { sock }) {
       msg += `Material default: *Mithril Ore*\n`;
       msg += `⚠️ Semakin tinggi enchant, semakin rendah success rate\n`;
       
-      return m.reply(msg);
+      return m.reply(claraWrap("enchantrpg", msg));
     }
 
     if (!rpg[slot]) {
@@ -105,29 +106,31 @@ async function handler(m, { sock }) {
 
     if (result.success) {
       await m.react("🐣");
-      let msg = "";
-      msg += `✅ Enchant berhasil!\n`;
-      msg += `
-`;
-      msg += `📂 Slot: *${SLOT_LABEL[slot]}*\n`;
-      msg += `⬆️ Enchant Level: *+${result.enchant}*\n`;
-      msg += `📦 Material: *1x ${ITEM_DB[materialId]?.name || materialId}*\n`;
-      msg += `
-`;
-      msg += `💡 Stats equipment naik 10% per level\n`;
-            return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "enchantrpg", icon: "✨",
+        flavor: "✨ *ENCHANT BERHASIL!*",
+        body: [
+          `│ • 📂 Slot : ${SLOT_LABEL[slot]}`,
+          `│ • ⬆️ Enchant level : +${result.enchant}`,
+          `│ • 🧱 Material : 1x ${ITEM_DB[materialId]?.name || materialId}`,
+          "",
+          "💡 Stats equipment naik 10% per level",
+        ].join("\n"),
+        cta: gameCTA("enchantrpg"),
+      }));
     } else {
       await m.react("❌");
-      let msg = "";
-      msg += `❌ Enchant gagal!\n`;
-      msg += `
-`;
-      msg += `📂 Slot: *${SLOT_LABEL[slot]}*\n`;
-      msg += `📦 Material: *1x ${ITEM_DB[materialId]?.name || materialId}* (habis)\n`;
-      msg += `
-`;
-      msg += `💡 Success rate makin rendah tiap level\n`;
-            return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "enchantrpg", icon: "💥",
+        flavor: "💥 *ENCHANT GAGAL!*",
+        body: [
+          `│ • 📂 Slot : ${SLOT_LABEL[slot]}`,
+          `│ • 🧱 Material : 1x ${ITEM_DB[materialId]?.name || materialId} (habis)`,
+          "",
+          "💡 Success rate makin rendah tiap level",
+        ].join("\n"),
+        cta: gameCTA("enchantrpg"),
+      }));
     }
   } catch (err) {
     console.error("enchantrpg error:", err);

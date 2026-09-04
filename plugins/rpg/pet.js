@@ -2,6 +2,7 @@
 // pet.js — Pet System (adopsi, feed, level up, battle)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -88,7 +89,17 @@ async function handler(m, { sock }) {
       await savePetData(db, m.sender, pet);
       await m.react("🐣");
   await animGeneric(m, sock, "🐾", "Summoning Pet");
-      return m.reply(claraWrap("pet", `${petTemplate.emoji} Berhasil adopsi *${petTemplate.type}*!\nATK: ${pet.atk} | DEF: ${pet.def} | HP: ${pet.hp}\nJangan lupa feed dengan ${m.prefix}pet feed`));
+      return m.reply(novaGameBox({
+        title: "pet", icon: "🐾",
+        flavor: "🐾 *PET BARU DIADOPSI!*",
+        body: [
+          `│ • ${petTemplate.emoji} Pet : ${petTemplate.type}`,
+          `│ • ⚔️ ATK : ${pet.atk} | 🛡️ DEF : ${pet.def} | ❤️ HP : ${pet.hp}`,
+          "",
+          `Jangan lupa feed dengan ${m.prefix}pet feed`,
+        ].join("\n"),
+        cta: gameCTA("pet"),
+      }));
     }
 
     // CEK PET
@@ -127,7 +138,17 @@ async function handler(m, { sock }) {
 
       await savePetData(db, m.sender, pet);
       await m.react("🐣");
-      return m.reply(claraWrap("pet", `${pet.emoji} *${pet.type}* sudah diberi makan!\nHunger: ${pet.hunger}/100 | EXP: +20${pet.level > 1 ? " | LEVEL UP! Lv." + pet.level : ""}`));
+      return m.reply(novaGameBox({
+        title: "pet", icon: "🍖",
+        flavor: "🍖 *PET DIBERI MAKAN!*",
+        body: [
+          `│ • ${pet.emoji} Pet : ${pet.type}`,
+          `│ • 🍖 Hunger : ${pet.hunger}/100`,
+          `│ • ✨ EXP : +20`,
+          ...(pet.level > 1 ? [`│ • 🎉 Level up! : Lv.${pet.level}`] : []),
+        ].join("\n"),
+        cta: gameCTA("pet"),
+      }));
     }
 
     // BATTLE
@@ -168,18 +189,22 @@ async function handler(m, { sock }) {
       await savePetData(db, m.sender, pet);
       await m.react("🐣");
 
-      let msg = "";
-      msg += `${pet.emoji} ${pet.type} Lv.${pet.level} vs ${enemyPet.emoji} ${enemyPet.type} Lv.${enemyLevel}\n`;
-      msg += `
-`;
-      msg += `${won ? "🏆 MENANG!" : "💀 KALAH!"}\n`;
-      if (won) {
-        msg += `Reward: +${200 + enemyLevel * 50} gold | +50 EXP\n`;
-        msg += `${pet.level > 1 ? `LEVEL UP! Lv.${pet.level}!\n` : ""}`;
-      }
-      msg += `Hunger: -20 (${pet.hunger}/100)\n`;
-      msg += `Record: ${pet.wins}W/${pet.battles - pet.wins}L\n`;
-            return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "pet", icon: "🐾",
+        flavor: won ? "🏆 *PET KAMU MENANG!*" : "💀 *PET KAMU KALAH!*",
+        body: [
+          `${pet.emoji} ${pet.type} Lv.${pet.level} vs ${enemyPet.emoji} ${enemyPet.type} Lv.${enemyLevel}`,
+          "",
+          ...(won ? [
+            `│ • 💰 Reward : +${200 + enemyLevel * 50} gold`,
+            `│ • ✨ EXP : +50`,
+            ...(pet.level > 1 ? [`│ • 🎉 Level up! : Lv.${pet.level}`] : []),
+          ] : []),
+          `│ • 🍖 Hunger : -20 (${pet.hunger}/100)`,
+          `│ • 📊 Record : ${pet.wins}W/${pet.battles - pet.wins}L`,
+        ].join("\n"),
+        cta: gameCTA("pet"),
+      }));
     }
 
     // INFO (default)
@@ -196,7 +221,7 @@ async function handler(m, { sock }) {
 `;
     msg += `${m.prefix}pet feed - beri makan\n`;
     msg += `${m.prefix}pet battle - fight pet liar\n`;
-        return m.reply(msg);
+        return m.reply(claraWrap("pet", msg));
   } catch (err) {
     console.error("pet error:", err);
     await m.react("❌");

@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animHiLo } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -117,33 +118,31 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastHilo", HILO_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🃏 Tebak: *${isHigh ? "TINGGI" : "RENDAH"}*\n`;
-    msg += `💵 Bet: *${bet} gold*\n`;
-    msg += `
-`;
-    msg += `📊 Hasil:\n`;
-    for (const l of log) {
-      msg += `${l}\n`;
-    }
-    msg += `
-`;
-
-    if (wins > 0) {
-      msg += `🎉 Menang *${wins}* ronde!\n`;
-      msg += `📊 Multiplier: *${multiplier}x*\n`;
-      msg += `💰 Payout: *${payout} gold*\n`;
-      msg += `✦ EXP: *+${expGain}*\n`;
-    } else {
-      msg += `💀 Kalah di ronde pertama!\n`;
-      msg += `💸 Rugi: *-${bet} gold*\n`;
-    }
-
-    msg += `
-`;
-    msg += `💼 Gold: *${rpg.gold - bet + payout}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "hilorpg", icon: "🃏",
+      flavor: wins > 0 ? "🎉 *MENANG!*" : "💀 *KALAH!*",
+      body: [
+        `│ • 🃏 Tebakan : ${isHigh ? "TINGGI" : "RENDAH"}`,
+        `│ • 💵 Bet : ${bet} gold`,
+        "",
+        ...log,
+        "",
+        ...(wins > 0
+          ? [
+              `│ • 🎉 Ronde menang : ${wins}`,
+              `│ • 📊 Multiplier : ${multiplier}x`,
+              `│ • 💰 Payout : ${payout} gold`,
+              `│ • ✨ EXP : +${expGain}`,
+            ]
+          : [
+              "Kalah di ronde pertama!",
+              `│ • 💸 Rugi : -${bet} gold`,
+            ]),
+        "",
+        `│ • 💼 Sisa gold : ${rpg.gold - bet + payout}`,
+      ].join("\n"),
+      cta: gameCTA("hilorpg"),
+    }));
   } catch (err) {
     console.error("hilorpg error:", err);
     await m.react("❌");

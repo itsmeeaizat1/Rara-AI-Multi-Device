@@ -3,6 +3,7 @@
 
 import { ensureRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getCintaData, startDating, DATING_MIN_LEVEL, formatDurasi } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
@@ -84,12 +85,16 @@ async function handler(m, { sock }) {
       startDating(m, targetJid, targetName);
       startDating({ sender: targetJid, pushName: targetName }, m.sender, m.pushName || "Player");
 
-      return m.reply(novaBox("RPG Cinta", [
-        `💕 Cie cie! @${m.sender.split("@")[0]} dan @${targetJid.split("@")[0]} resmi jadian!`,
-        `Affection awal: 50`,
-        "---",
-        `Mulai kencan dengan ${m.prefix}rpgkencan`,
-      ]));
+      return m.reply(novaGameBox({
+      title: "rpg cinta", icon: "💕",
+      flavor: "💕 *CIE CIE, RESMI JADIAN!*",
+      body: [
+        `│ • 💑 @${m.sender.split("@")[0]} & @${targetJid.split("@")[0]}`,
+        "│ • 💕 Affection awal : 50",
+        `│ • Mulai kencan : ${m.prefix}rpgkencan`,
+      ].join("\n"),
+      cta: gameCTA("jadianmatch"),
+    }));
     }
 
     // Simpan tembakan
@@ -107,13 +112,17 @@ async function handler(m, { sock }) {
       timestamp: Date.now(),
     };
 
-    await m.reply(novaBox("RPG Cinta", [
-      `🏹 @${m.sender.split("@")[0]} mengajak @${targetJid.split("@")[0]} berpacaran`,
-      `Berlaku: 1 jam`,
-      "---",
-      "Balas terima atau tolak",
-      `Atau ${m.prefix}rpgterima / ${m.prefix}rpgtolak`,
-    ]));
+    await m.reply(novaGameBox({
+      title: "rpg cinta", icon: "💘",
+      flavor: "🏹 *PANAH CUPID TERKIRIM!*",
+      body: [
+        `│ • Cupid : @${m.sender.split("@")[0]} ➜ @${targetJid.split("@")[0]}`,
+        "│ • Berlaku : 1 jam",
+        "│ • Balas pesan ini: terima / tolak",
+        `│ • Atau ${m.prefix}rpgterima / ${m.prefix}rpgtolak`,
+      ].join("\n"),
+      cta: gameCTA("jadianmatch"),
+    }));
     await m.react("🏹");
   } catch (e) {
     console.error("[rpgcouple] Error:", e.message);
@@ -148,12 +157,16 @@ async function answerHandler(m, sock) {
       startDating(m, shooter, shooterName);
       delete global.rpgCintaSessions[sessKey];
       await m.react("💕");
-      await m.reply(novaBox("RPG Cinta", [
-        `💕 Cie cie! @${m.sender.split("@")[0]} dan @${shooter.split("@")[0]} resmi jadian!`,
-        `Affection awal: 50`,
-        "---",
-        `Mulai kencan dengan ${m.prefix}rpgkencan`,
-      ]));
+      await m.reply(novaGameBox({
+        title: "rpg cinta", icon: "💕",
+        flavor: "💕 *CIE CIE, RESMI JADIAN!*",
+        body: [
+          `│ • 💑 @${m.sender.split("@")[0]} & @${shooter.split("@")[0]}`,
+          "│ • 💕 Affection awal : 50",
+          `│ • Mulai kencan : ${m.prefix}rpgkencan`,
+        ].join("\n"),
+        cta: gameCTA("jadianmatch"),
+      }));
       return true;
     }
 

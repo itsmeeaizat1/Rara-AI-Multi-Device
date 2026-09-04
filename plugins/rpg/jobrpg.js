@@ -6,6 +6,7 @@ import {
   getAvailableSkills, JOB_DB, SKILL_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -68,7 +69,7 @@ async function handler(m, { sock }) {
       msg += `📌 .jobrpg change <job> — ganti job\n`;
       msg += `📌 .jobrpg skill list — lihat skill tersedia\n`;
       
-      return m.reply(msg);
+      return m.reply(claraWrap("jobrpg", msg));
     }
 
     // List all jobs
@@ -89,7 +90,7 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .jobrpg change <nama_job> untuk ganti\n`;
       
-      return m.reply(msg);
+      return m.reply(claraWrap("jobrpg", msg));
     }
 
     // Change job
@@ -106,21 +107,22 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = "";
-        msg += `✅ Job berhasil diganti!\n`;
-        msg += `
-`;
-        msg += `👔 Job baru: *${result.job.name}*\n`;
-        msg += `📊 Stats bonus:\n`;
-        msg += `ATK +${result.job.atkBonus} | DEF +${result.job.defBonus}\n`;
-        msg += `SPD +${result.job.spdBonus} | HP +${result.job.hpBonus}\n`;
-        msg += `MP +${result.job.mpBonus}\n`;
-        msg += `
-`;
-        msg += `⚠️ Skill lama direset, skill points dikembalikan\n`;
-        msg += `Ketik .jobrpg skill list untuk lihat skill baru\n`;
-        
-        return m.reply(msg);
+        return m.reply(novaGameBox({
+          title: "jobrpg", icon: "💼",
+          flavor: "✅ *JOB BERHASIL DIGANTI!*",
+          body: [
+            `│ • 👔 Job baru : ${result.job.name}`,
+            `│ • ⚔️ ATK : +${result.job.atkBonus}`,
+            `│ • 🛡️ DEF : +${result.job.defBonus}`,
+            `│ • 💨 SPD : +${result.job.spdBonus}`,
+            `│ • ❤️ HP : +${result.job.hpBonus}`,
+            `│ • 🔮 MP : +${result.job.mpBonus}`,
+            "",
+            "⚠️ Skill lama direset, skill points dikembalikan.",
+            "Ketik .jobrpg skill list untuk lihat skill baru.",
+          ].join("\n"),
+          cta: gameCTA("jobrpg"),
+        }));
       } else {
         return m.reply(claraWrap("jobrpg", result.reason || "Gagal ganti job.", "warn"));
       }
@@ -174,7 +176,7 @@ async function handler(m, { sock }) {
         }
 
         
-        return m.reply(msg);
+        return m.reply(claraWrap("jobrpg", msg));
       }
 
       // Unlock skill
@@ -186,12 +188,17 @@ async function handler(m, { sock }) {
 
         if (result.success) {
           await m.react("🐣");
-          let msg = "";
-          msg += `✅ Skill berhasil dibuka!\n`;
-          msg += `⚡ ${result.skill.name} (${skillId})\n`;
-          msg += `MP: ${result.skill.mpCost} | Power: ${result.skill.power}x\n`;
-          msg += `Sisa skill points: *${rpg.skillPoints - 1}*\n`;
-                    return m.reply(msg);
+          return m.reply(novaGameBox({
+            title: "jobrpg", icon: "⚡",
+            flavor: "⚡ *SKILL TERBUKA!*",
+            body: [
+              `│ • ⚡ Skill : ${result.skill.name} (${skillId})`,
+              `│ • 🔮 MP : ${result.skill.mpCost}`,
+              `│ • 💥 Power : ${result.skill.power}x`,
+              `│ • 🎯 Sisa skill points : ${rpg.skillPoints - 1}`,
+            ].join("\n"),
+            cta: gameCTA("jobrpg"),
+          }));
         } else {
           return m.reply(claraWrap("jobrpg", result.reason || "Gagal unlock skill.", "warn"));
         }
@@ -206,11 +213,17 @@ async function handler(m, { sock }) {
 
         if (result.success) {
           await m.react("🐣");
-          let msg = "";
-          msg += `✅ Skill berhasil di-upgrade!\n`;
-          msg += `⚡ ${result.skill.name} → Lv.${result.skill.level}\n`;
-          msg += `Power: ${result.skill.power}x | MP: ${result.skill.mpCost}\n`;
-                    return m.reply(msg);
+          return m.reply(novaGameBox({
+            title: "jobrpg", icon: "⬆️",
+            flavor: "⬆️ *SKILL DI-UPGRADE!*",
+            body: [
+              `│ • ⚡ Skill : ${result.skill.name}`,
+              `│ • 📈 Level : Lv.${result.skill.level}`,
+              `│ • 💥 Power : ${result.skill.power}x`,
+              `│ • 🔮 MP : ${result.skill.mpCost}`,
+            ].join("\n"),
+            cta: gameCTA("jobrpg"),
+          }));
         } else {
           return m.reply(claraWrap("jobrpg", result.reason || "Gagal upgrade skill.", "warn"));
         }

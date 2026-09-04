@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -66,7 +67,7 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .rafflerpg buy — beli & buka tiket\n`;
       
-      return m.reply(msg);
+      return m.reply(claraWrap("rafflerpg", msg));
     }
 
     if (action !== "buy" && action !== "beli") {
@@ -105,15 +106,19 @@ async function handler(m, { sock }) {
     if (!prize) {
       // Zonk
       await m.react("🐣");
-      let msg = "";
-      msg += `🎫 Tiket: *${TICKET_PRICE} gold*\n`;
-      msg += `🎰 Membuka tiket...\n`;
-      msg += `
-`;
-      msg += `💀 *ᴢᴏɴᴋ!* Tidak menang apapun\n`;
-      msg += `Coba lagi ya! Jackpot 50.000 gold menunggu\n`;
-      
-      return m.reply(msg);
+      return m.reply(novaGameBox({
+        title: "rafflerpg", icon: "🎟️",
+        flavor: "💀 *ZONK!*",
+        body: [
+          "Tiket dibuka... tapi tidak menang apapun!",
+          "",
+          `│ • 🎫 Tiket : ${TICKET_PRICE} gold`,
+          `│ • 💰 Gold : ${rpg.gold - TICKET_PRICE}`,
+          "",
+          "Coba lagi ya! Jackpot 50.000 gold menunggu",
+        ].join("\n"),
+        cta: gameCTA("rafflerpg"),
+      }));
     }
 
     // Give prize
@@ -122,32 +127,28 @@ async function handler(m, { sock }) {
     addExp(m, expGain);
 
     // Jackpot bonus: gems
-    let gemText = "";
+    let gemsBonus = 0;
     if (prize.type === "jackpot") {
       addGems(m, 10);
-      gemText = `
-💎 Bonus: *+10 gems*!\n`;
+      gemsBonus = 10;
     } else if (prize.type === "big") {
       addGems(m, 3);
-      gemText = `
-💎 Bonus: *+3 gems*!\n`;
+      gemsBonus = 3;
     }
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🎫 Tiket: *${TICKET_PRICE} gold*\n`;
-    msg += `🎰 Membuka tiket...\n`;
-    msg += `
-`;
-    msg += `🎉 *${prize.label}*\n`;
-    msg += `💰 Menang: *${prize.gold} gold*\n`;
-    msg += `✦ EXP: *+${expGain}*\n`;
-    if (gemText) msg += gemText;
-    msg += `
-`;
-    msg += `💼 Gold: *${rpg.gold - TICKET_PRICE + prize.gold}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "rafflerpg", icon: "🎟️",
+      flavor: `🎉 *${prize.label.toUpperCase()}*`,
+      body: [
+        `│ • 🎫 Tiket : ${TICKET_PRICE} gold`,
+        `│ • 🎁 Hadiah : +${prize.gold} gold`,
+        `│ • ✨ EXP : +${expGain}`,
+        ...(gemsBonus ? [`│ • 💎 Bonus gems : +${gemsBonus}`] : []),
+        `│ • 💰 Gold : ${rpg.gold - TICKET_PRICE + prize.gold}`,
+      ].join("\n"),
+      cta: gameCTA("rafflerpg"),
+    }));
   } catch (err) {
     console.error("rafflerpg error:", err);
     await m.react("❌");

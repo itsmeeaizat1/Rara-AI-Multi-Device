@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { animSabung } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -146,35 +147,25 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSabung", SABUNG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = "";
-    msg += `🐓 Ayam Kamu vs ${enemyName}\n`;
-    msg += `💵 Bet: *${bet} gold*\n`;
-    msg += `
-`;
-    msg += `📊 *ᴘᴇʀᴛᴀʀᴜɴɢᴀɴ*\n`;
-    for (const l of log.slice(-5)) {
-      msg += `${l}\n`;
-    }
-    msg += `
-`;
-
-    if (won) {
-      msg += `🏆 *ᴍᴇɴᴀɴɢ!*\n`;
-      msg += `💰 Payout: *${payout} gold* (net +${payout - bet})\n`;
-      msg += `✦ EXP: *+${expGain}*\n`;
-    } else if (draw) {
-      msg += `🤝 *Seri!* Bet dikembalikan\n`;
-      msg += `💰 Refund: *${payout} gold*\n`;
-    } else {
-      msg += `💀 *Kalah!*\n`;
-      msg += `💸 Rugi: *-${bet} gold*\n`;
-    }
-
-    msg += `
-`;
-    msg += `💼 Gold: *${rpg.gold - bet + payout}*\n`;
-    
-    return m.reply(msg);
+    return m.reply(novaGameBox({
+      title: "sabungayam", icon: "🐓",
+      flavor: won ? "🏆 *AYAMMU MENANG!*" : draw ? "🤝 *SERI!*" : "💀 *KALAH!*",
+      body: [
+        `Ayam Kamu vs ${enemyName}`,
+        "",
+        "Pertarungan:",
+        ...log.slice(-5),
+        "",
+        `│ • 💵 Bet : ${bet} gold`,
+        ...(won
+          ? [`│ • 🏆 Payout : ${payout} gold (net +${payout - bet})`, `│ • ✨ EXP : +${expGain}`]
+          : draw
+          ? [`│ • 💰 Refund : ${payout} gold`]
+          : [`│ • 💸 Rugi : -${bet} gold`]),
+        `│ • 💰 Gold : ${rpg.gold - bet + payout}`,
+      ].join("\n"),
+      cta: gameCTA("sabungayam"),
+    }));
   } catch (err) {
     console.error("sabungayam error:", err);
     await m.react("❌");
