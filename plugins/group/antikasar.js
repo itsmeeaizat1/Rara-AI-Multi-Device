@@ -2,6 +2,7 @@
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
 
 const pluginConfig = {
     name: 'antikasar',
@@ -227,44 +228,47 @@ async function handleAntiKasar(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: `User: @${senderTag}
-Pelanggaran: 🤬 Kata Kasar
-Warn: ${currentWarn}/${maxWarn}
-Terdeteksi: ${matchesStr}
-Aksi: KICK OTOMATIS
-
-_User dikeluarkan karena kata kata kasar_`,
+                        text: novaWarning("ANTI KASAR — TINDAKAN", [
+                            ["Pengirim", `@${senderTag}`],
+                            ["Pelanggaran", "Kata kasar terdeteksi"],
+                            ["Terdeteksi", matchesStr],
+                            ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                            ["Tindakan", "Dikeluarkan dari grup otomatis"],
+                        ], "Kata kasar tidak diperbolehkan di grup ini."),
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: `User: @${senderTag}
-Pelanggaran: 🤬 Kata Kasar
-Warn: ${currentWarn}/${maxWarn}
-Aksi: Bot bukan admin
-`,
+                        text: novaWarning("ANTI KASAR — INFO", [
+                            ["Pengirim", `@${senderTag}`],
+                            ["Pelanggaran", "Kata kasar terdeteksi"],
+                            ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                            ["Tindakan", "Tidak dieksekusi — bot bukan admin"],
+                        ], "Jadikan bot admin agar auto-kick bisa berjalan."),
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: `User: @${senderTag}
-Pelanggaran: 🤬 Kata Kasar
-Warn: ${currentWarn}/${maxWarn}
-Auto-kick: OFF
-
-_Kata kasar berlebihan tapi auto-kick dimatikan_`,
+                    text: novaWarning("ANTI KASAR — PERINGATAN MAKSIMAL", [
+                    ["Pengirim", `@${senderTag}`],
+                    ["Pelanggaran", "Kata kasar terdeteksi"],
+                    ["Terdeteksi", matchesStr],
+                    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                    ["Tindakan", "Auto-kick dimatikan di grup ini"],
+                ], "Jaga perkataanmu — admin dapat mengeluarkanmu secara manual."),
                     mentions: [m.sender]
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: `User: @${senderTag}
-Pelanggaran: 🤬 Kata Kasar
-Warn: ${currentWarn}/${maxWarn}
-Terdeteksi: ${matchesStr}
-
-_Jaga perkataan! ${maxWarn - currentWarn} lagi = kick_`,
+                text: novaWarning("ANTI KASAR — PERINGATAN", [
+                ["Pengirim", `@${senderTag}`],
+                ["Pelanggaran", "Kata kasar terdeteksi"],
+                ["Terdeteksi", matchesStr],
+                ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+                ["Tindakan", "Pesan dihapus"],
+            ], `Jaga perkataanmu — ${maxWarn - currentWarn} peringatan lagi kamu akan dikeluarkan dari grup.`),
                 mentions: [m.sender]
             })
         }

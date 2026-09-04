@@ -2,6 +2,7 @@
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
 
 const pluginConfig = {
     name: 'antiribut',
@@ -196,44 +197,47 @@ async function handleAntiRibut(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: `User: @${senderTag}
-Pelanggaran: ⚔️ Keributan
-Warn: ${currentWarn}/${maxWarn}
-Terdeteksi: ${matchesStr}
-Aksi: KICK OTOMATIS
-
-_User dikeluarkan karena membuat keributan_`,
+                        text: novaWarning("ANTI KERIBUTAN — TINDAKAN", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Keributan terdeteksi"],
+    ["Terdeteksi", matchesStr],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Dikeluarkan dari grup otomatis"],
+], "Keributan tidak diperbolehkan di grup ini."),
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: `User: @${senderTag}
-Pelanggaran: ⚔️ Keributan
-Warn: ${currentWarn}/${maxWarn}
-Aksi: Bot bukan admin
-`,
+                        text: novaWarning("ANTI KERIBUTAN — INFO", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Keributan terdeteksi"],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Tidak dieksekusi — bot bukan admin"],
+], "Jadikan bot admin agar auto-kick bisa berjalan."),
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: `User: @${senderTag}
-Pelanggaran: ⚔️ Keributan
-Warn: ${currentWarn}/${maxWarn}
-Auto-kick: OFF
-
-_Keributan terus tapi auto-kick dimatikan_`,
+                    text: novaWarning("ANTI KERIBUTAN — PERINGATAN MAKSIMAL", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Keributan terdeteksi"],
+    ["Terdeteksi", matchesStr],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Auto-kick dimatikan di grup ini"],
+], "Jaga sikapmu — admin dapat mengeluarkanmu secara manual."),
                     mentions: [m.sender]
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: `User: @${senderTag}
-Pelanggaran: ⚔️ Keributan
-Warn: ${currentWarn}/${maxWarn}
-Terdeteksi: ${matchesStr}
-
-_Jaga suasana! ${maxWarn - currentWarn} lagi = kick_`,
+                text: novaWarning("ANTI KERIBUTAN — PERINGATAN", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Keributan terdeteksi"],
+    ["Terdeteksi", matchesStr],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Pesan dihapus"],
+], `Jaga suasana grup — ${maxWarn - currentWarn} peringatan lagi kamu akan dikeluarkan dari grup.`),
                 mentions: [m.sender]
             })
         }

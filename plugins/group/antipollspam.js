@@ -21,6 +21,8 @@ const pluginConfig = {
 // Poll tracker: groupId -> { jid -> { count, firstPoll } }
 const pollTracker = {};
 
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
+
 export function checkPollSpam(m, sock, db) {
   const groupId = m.key.remoteJid;
   const cfg = db.data?.groups?.[groupId]?.antipollspam;
@@ -73,12 +75,23 @@ export function checkPollSpam(m, sock, db) {
       }
 
       sock.sendMessage(groupId, {
-        text: "Anti Poll Spam\nPOLL SPAM TERDETEKSI!\n@" + sender.split("@")[0] + " buat " + tracker.count + " poll dalam " + Math.round(elapsed / 60000) + " menit\nLimit: " + limit + " poll per " + (cfg.window || 30) + " menit\nWarning: " + warnCount + "/" + (cfg.maxWarn || 3),
+        text: novaWarning("ANTI POLL SPAM — PERINGATAN", [
+          ["Pengirim", "@" + sender.split("@")[0]],
+          ["Pelanggaran", tracker.count + " poll dalam " + Math.round(elapsed / 60000) + " menit"],
+          ["Batas", limit + " poll per " + (cfg.window || 30) + " menit"],
+          ["Peringatan", warnCount + " dari " + (cfg.maxWarn || 3)],
+          ["Tindakan", "Pesan dihapus"],
+        ], "Jangan spam poll di grup ini."),
         mentions: [sender],
       });
     } else if (action === "delete") {
       sock.sendMessage(groupId, {
-        text: "Anti Poll Spam\nPoll dari @" + sender.split("@")[0] + " dihapus (spam poll)\nLimit: " + limit + " poll per " + (cfg.window || 30) + " menit",
+        text: novaWarning("ANTI POLL SPAM — PERINGATAN", [
+          ["Pengirim", "@" + sender.split("@")[0]],
+          ["Pelanggaran", "Spam poll terdeteksi"],
+          ["Batas", limit + " poll per " + (cfg.window || 30) + " menit"],
+          ["Tindakan", "Poll dihapus"],
+        ], "Jangan spam poll di grup ini."),
         mentions: [sender],
       });
     }

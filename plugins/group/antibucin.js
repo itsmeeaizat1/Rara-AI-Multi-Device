@@ -2,6 +2,7 @@
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
 
 const pluginConfig = {
     name: 'antibucin',
@@ -186,44 +187,47 @@ async function handleAntiBucin(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: `User: @${senderTag}
-Pelanggaran: 💕 Bucin
-Warn: ${currentWarn}/${maxWarn}
-Terdeteksi: ${matchesStr}
-Aksi: KICK OTOMATIS
-
-_User dikeluarkan karena terlalu bucin_`,
+                        text: novaWarning("ANTI BUCIN — TINDAKAN", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Bucin berlebihan terdeteksi"],
+    ["Terdeteksi", matchesStr],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Dikeluarkan dari grup otomatis"],
+], "Bucin berlebihan tidak diperbolehkan di grup ini."),
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: `User: @${senderTag}
-Pelanggaran: 💕 Bucin
-Warn: ${currentWarn}/${maxWarn}
-Aksi: Bot bukan admin
-`,
+                        text: novaWarning("ANTI BUCIN — INFO", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Bucin berlebihan terdeteksi"],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Tidak dieksekusi — bot bukan admin"],
+], "Jadikan bot admin agar auto-kick bisa berjalan."),
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: `User: @${senderTag}
-Pelanggaran: 💕 Bucin
-Warn: ${currentWarn}/${maxWarn}
-Auto-kick: OFF
-
-_Bucin berlebihan tapi auto-kick dimatikan_`,
+                    text: novaWarning("ANTI BUCIN — PERINGATAN MAKSIMAL", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Bucin berlebihan terdeteksi"],
+    ["Terdeteksi", matchesStr],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Auto-kick dimatikan di grup ini"],
+], "Kurangi gombalanmu — admin dapat mengeluarkanmu secara manual."),
                     mentions: [m.sender]
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: `User: @${senderTag}
-Pelanggaran: 💕 Bucin
-Warn: ${currentWarn}/${maxWarn}
-Terdeteksi: ${matchesStr}
-
-_Tolong kurangi gombal/bucin! ${maxWarn - currentWarn} lagi = kick_`,
+                text: novaWarning("ANTI BUCIN — PERINGATAN", [
+    ["Pengirim", `@${senderTag}`],
+    ["Pelanggaran", "Bucin berlebihan terdeteksi"],
+    ["Terdeteksi", matchesStr],
+    ["Peringatan", `${currentWarn} dari ${maxWarn}`],
+    ["Tindakan", "Pesan dihapus"],
+], `Kurangi gombalanmu — ${maxWarn - currentWarn} peringatan lagi kamu akan dikeluarkan dari grup.`),
                 mentions: [m.sender]
             })
         }

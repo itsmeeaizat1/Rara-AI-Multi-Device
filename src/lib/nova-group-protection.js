@@ -11,42 +11,59 @@ const CACHE_MAX_SIZE = 5000;
 // antivideo, antivn) via import { gpMsg } biar gak ada lagi copy-paste function.
 // config.groupProtection.<key> di config.js selalu diutamakan kalau owner mau custom.
 const GP_DEFAULTS = {
-  // Owner rule: pesan anti-* yang muncul otomatis saat pelanggaran = PLAIN TEXT
-  // (tanpa box-drawing, tanpa smallcaps) — bukan menu / reply command.
-  antilink: "Anti Link\n@%user% mengirim link — pesan sudah dihapus",
-  antilinkKick: "Anti Link\n@%user% di-kick karena mengirim link",
-  antilinkGc: "Anti Link WA\n@%user% mengirim link WA — pesan sudah dihapus",
-  antilinkGcKick: "Anti Link WA\n@%user% di-kick karena mengirim link WA",
-  antilinkAll: "Anti Link\n@%user% mengirim link — pesan sudah dihapus",
-  antilinkAllKick: "Anti Link\n@%user% di-kick karena mengirim link",
-  antitagsw: "Anti Tag SW\nTag status dari @%user% sudah dihapus",
-  antiswgc: "Anti SW Group\nSW group type %type% dari @%user% sudah dihapus",
-  antijudol: "Anti Judol\n@%user% terdeteksi kirim konten judol — pesan sudah dihapus",
-  antijudolKick: "Anti Judol\n@%user% di-kick karena kirim konten judol",
-  antiphising: "Anti Phising\n@%user% terdeteksi kirim konten phising — pesan sudah dihapus",
-  antiphisingKick: "Anti Phising\n@%user% di-kick karena kirim konten phising",
-  anticustom: "Anti Custom\n@%user% melanggar rule custom \"%rule%\" — pesan sudah dihapus",
-  anticustomKick: "Anti Custom\n@%user% di-kick karena melanggar rule custom \"%rule%\"",
-  antiviewonce: "Anti ViewOnce\nMedia sekali lihat dari @%user% dibuka otomatis",
-  antiremove: "Anti Delete\n@%user% menghapus pesan",
-  antihidetag: "Anti Hidetag\nHidetag dari @%user% sudah dihapus",
-  antitoxicWarn: "Anti Toxic\n@%user% berkata kasar — warn %warn%/%max%, selanjutnya di-%method%",
-  antitoxicAction: "Anti Toxic\n@%user% di-%method% karena toxic (%warn%/%max%)",
-  antidocument: "Anti Document\nDokumen dari @%user% sudah dihapus",
-  antisticker: "Anti Sticker\nSticker dari @%user% sudah dihapus",
-  antimedia: "Anti Media\nMedia dari @%user% sudah dihapus",
-  antifoto: "Anti Foto\nFoto dari @%user% sudah dihapus",
-  antivideo: "Anti Video\nVideo dari @%user% sudah dihapus",
-  antivn: "Anti VN\nVoice note dari @%user% sudah dihapus",
-  antibot: "Anti Bot\n@%user% terdeteksi sebagai bot dan sudah di-kick",
-  notAdmin: "Anti Bot\nBot bukan admin — tidak bisa menghapus pesan",
+  // Owner rule: pesan anti-* OTOMATIS saat pelanggaran = plain text natural
+  // tapi MENDAETAIL ala auto-broadcast: judul bold + Label: value + waktu WIB.
+  // Tanpa box-drawing & smallcaps — bukan menu / reply command.
+  antilink: "*ANTI LINK — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim link terlarang\nTindakan: Pesan dihapus\nWaktu: %time%\n\nLink tidak diperbolehkan di grup ini.",
+  antilinkKick: "*ANTI LINK — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim link terlarang\nTindakan: Pesan dihapus + dikeluarkan dari grup\nWaktu: %time%\n\nLink tidak diperbolehkan di grup ini.",
+  antilinkGc: "*ANTI LINK WA — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim link grup WhatsApp\nTindakan: Pesan dihapus\nWaktu: %time%\n\nLink grup WhatsApp tidak diperbolehkan di grup ini.",
+  antilinkGcKick: "*ANTI LINK WA — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim link grup WhatsApp\nTindakan: Pesan dihapus + dikeluarkan dari grup\nWaktu: %time%\n\nLink grup WhatsApp tidak diperbolehkan di grup ini.",
+  antilinkAll: "*ANTI LINK — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim link\nTindakan: Pesan dihapus\nWaktu: %time%\n\nSemua jenis link tidak diperbolehkan di grup ini.",
+  antilinkAllKick: "*ANTI LINK — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim link\nTindakan: Pesan dihapus + dikeluarkan dari grup\nWaktu: %time%\n\nSemua jenis link tidak diperbolehkan di grup ini.",
+  antitagsw: "*ANTI TAG SW — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Menandai status (tag SW)\nTindakan: Pesan dihapus\nWaktu: %time%\n\nTag status tidak diperbolehkan di grup ini.",
+  antiswgc: "*ANTI SW GROUP — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim status grup (%type%)\nTindakan: Pesan dihapus\nWaktu: %time%\n\nStatus grup tidak diperbolehkan di grup ini.",
+  antijudol: "*ANTI JUDOL — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim konten perjudian online\nTindakan: Pesan dihapus\nWaktu: %time%\n\nKonten judol dilarang keras di grup ini.",
+  antijudolKick: "*ANTI JUDOL — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim konten perjudian online\nTindakan: Pesan dihapus + dikeluarkan dari grup\nWaktu: %time%\n\nKonten judol dilarang keras di grup ini.",
+  antiphising: "*ANTI PHISING — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim konten phising / penipuan\nTindakan: Pesan dihapus\nWaktu: %time%\n\nKonten phising dilarang keras di grup ini.",
+  antiphisingKick: "*ANTI PHISING — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim konten phising / penipuan\nTindakan: Pesan dihapus + dikeluarkan dari grup\nWaktu: %time%\n\nKonten phising dilarang keras di grup ini.",
+  anticustom: "*ANTI CUSTOM — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Melanggar aturan \"%rule%\"\nTindakan: Pesan dihapus\nWaktu: %time%\n\nPatuhi aturan yang berlaku di grup ini.",
+  anticustomKick: "*ANTI CUSTOM — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Melanggar aturan \"%rule%\"\nTindakan: Pesan dihapus + dikeluarkan dari grup\nWaktu: %time%\n\nPatuhi aturan yang berlaku di grup ini.",
+  antiviewonce: "*ANTI VIEW ONCE — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim media sekali lihat (view once)\nTindakan: Media dibuka otomatis\nWaktu: %time%\n\nMedia sekali lihat tidak diperbolehkan di grup ini.",
+  antiremove: "*ANTI DELETE — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Menghapus pesan\nTindakan: Isi pesan dipulihkan di bawah\nWaktu: %time%\n\nMenghapus pesan tidak mencegah isi terlihat di grup ini.",
+  antihidetag: "*ANTI HIDETAG — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim hidetag (mention tersembunyi)\nTindakan: Pesan dihapus\nWaktu: %time%\n\nHidetag tidak diperbolehkan di grup ini.",
+  antitoxicWarn: "*ANTI TOXIC — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Berkata kasar (toxic)\nTindakan: Pesan dihapus\nPeringatan: %warn% dari %max%\nWaktu: %time%\n\nPeringatan %warn% dari %max%. Setelah habis kamu akan di-%method% dari grup.",
+  antitoxicAction: "*ANTI TOXIC — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Berkata kasar (toxic)\nTindakan: Di-%method% dari grup\nTotal: %max% peringatan\nWaktu: %time%\n\nKamu di-%method% karena toxic sebanyak %max% kali.",
+  antidocument: "*ANTI DOCUMENT — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim dokumen\nTindakan: Pesan dihapus\nWaktu: %time%\n\nDokumen tidak diperbolehkan di grup ini.",
+  antisticker: "*ANTI STICKER — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim stiker\nTindakan: Pesan dihapus\nWaktu: %time%\n\nStiker tidak diperbolehkan di grup ini.",
+  antimedia: "*ANTI MEDIA — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim media\nTindakan: Pesan dihapus\nWaktu: %time%\n\nMedia tidak diperbolehkan di grup ini.",
+  antifoto: "*ANTI FOTO — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim foto\nTindakan: Pesan dihapus\nWaktu: %time%\n\nFoto tidak diperbolehkan di grup ini.",
+  antivideo: "*ANTI VIDEO — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim video\nTindakan: Pesan dihapus\nWaktu: %time%\n\nVideo tidak diperbolehkan di grup ini.",
+  antivn: "*ANTI VN — PERINGATAN*\n\nPengirim: @%user%\nPelanggaran: Mengirim voice note\nTindakan: Pesan dihapus\nWaktu: %time%\n\nVoice note tidak diperbolehkan di grup ini.",
+  antibot: "*ANTI BOT — TINDAKAN*\n\nPengirim: @%user%\nPelanggaran: Terdeteksi sebagai akun bot\nTindakan: Dikeluarkan dari grup\nWaktu: %time%\n\nHanya manusia yang diperbolehkan chat di grup ini.",
+  notAdmin: "*ANTI BOT — INFO*\n\nPengirim: @%user%\nPelanggaran: Akun bot terdeteksi\nTindakan: Tidak dieksekusi — bot bukan admin\nWaktu: %time%\n\nJadikan bot admin agar tindakan bisa dijalankan.",
 };
 
 function gpMsg(key, replacements = {}) {
   let text = config.groupProtection?.[key] || GP_DEFAULTS[key] || "";
-  for (const [k, v] of Object.entries(replacements)) {
+  // %time% auto-isi (WIB) — gak perlu dikirim dari call-site
+  const r = {
+    time: new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }),
+    ...replacements,
+  };
+  for (const [k, v] of Object.entries(r)) {
     text = text.replace(new RegExp(`%${k}%`, "g"), v);
   }
+  return text;
+}
+
+// Helper format warning anti terpusat — dipakai plugin yang bangun pesan inline:
+// judul bold + baris "Label: value" + waktu WIB + closing (plain text natural).
+function novaWarning(title, rows, closing = "") {
+  const time = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
+  let text = `*${title}*\n\n`;
+  text += rows.map(([label, value]) => `${label}: ${value}`).join("\n");
+  text += `\nWaktu: ${time}`;
+  if (closing) text += `\n\n${closing}`;
   return text;
 }
 
@@ -1477,6 +1494,7 @@ async function handleAntiHidetag(m, sock, db) {
 
 export {
   gpMsg,
+  novaWarning,
   handleAntilink,
   handleAntiTagSW,
   handleAntiSwGc,

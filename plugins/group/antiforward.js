@@ -18,6 +18,8 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+import { novaWarning } from "../../src/lib/nova-group-protection.js";
+
 export function checkForward(m, sock, db) {
   const groupId = m.key.remoteJid;
   const cfg = db.data?.groups?.[groupId]?.antiforward;
@@ -55,7 +57,12 @@ export function checkForward(m, sock, db) {
       }
 
       sock.sendMessage(groupId, {
-        text: "Anti Forward\nPESAN FORWARDED TERDETEKSI!\n@" + sender.split("@")[0] + " mengirim pesan yang diteruskan " + forwardingScore + "x\nWarning: " + warnCount + "/" + (cfg.maxWarn || 3) + "\nForward pesan dilarang di grup ini!",
+        text: novaWarning("ANTI FORWARD — PERINGATAN", [
+          ["Pengirim", "@" + sender.split("@")[0]],
+          ["Pelanggaran", "Mengirim pesan yang diteruskan " + forwardingScore + "x"],
+          ["Peringatan", warnCount + " dari " + (cfg.maxWarn || 3)],
+          ["Tindakan", "Pesan dihapus"],
+        ], "Forward pesan dilarang di grup ini."),
         mentions: [sender],
       });
     }
