@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { getSupportStatus } from "../../src/lib/support/support.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,12 +51,23 @@ async function handler(m, { sock, config: botConfig }) {
       ? groups.map((name, i) => `${i + 1}. ${name}`)
       : ["Belum ada grup."];
 
+    // Section Join Grup Resmi — link dari src/lib/support/support.js
+    const st = getSupportStatus();
+    const joinSection = st.groupSet
+      ? claraWrap("Join Grup Resmi", [
+          `Nama: ${st.raw.group.name}`,
+          `Link: ${st.raw.group.link}`,
+          "",
+          `Klik link di atas untuk gabung grup resmi bot`,
+        ]) + "\n\n"
+      : "";
+
     const text =
       claraWrap("Grup Bot", "👥") +
       "\n\n" +
       claraWrap("Grup Bot", lines) +
       "\n\n" +
-      
+      joinSection +
       tipText(`Total grup: ${groups.length}`) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

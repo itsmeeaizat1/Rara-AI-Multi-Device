@@ -3,6 +3,7 @@ import config from "../../config.js";
 import fs from "fs";
 import sharp from "sharp";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { getSupport } from "../../src/lib/support/support.js";
 
 const pluginConfig = {
   name: "channelnovaofficial",
@@ -52,7 +53,8 @@ async function handler(m, { sock, db }) {
   const saluran = config.saluran || {};
   const channelId = saluran?.id || "@newsletter";
   const channelName = saluran?.name || config.bot?.name || "Nova AI";
-  const channelLink = "https://whatsapp.com/channel/example";
+  // Link saluran — dari src/lib/support/support.js (set via .setsupport saluran)
+  const channelLink = getSupport().saluran.link;
   const botName = config.bot?.name || "Nova AI";
   const botVersion = config.bot?.version || "1.0.0";
   const ownerNumber = config.owner?.[0] || config.owner || "";
