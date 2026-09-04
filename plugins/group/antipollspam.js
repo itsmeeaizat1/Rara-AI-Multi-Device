@@ -73,20 +73,12 @@ export function checkPollSpam(m, sock, db) {
       }
 
       sock.sendMessage(groupId, {
-        text: claraWrap("Anti Poll Spam", [
-          "POLL SPAM TERDETEKSI!",
-          "@" + sender.split("@")[0] + " buat " + tracker.count + " poll dalam " + Math.round(elapsed / 60000) + " menit",
-          "Limit: " + limit + " poll per " + (cfg.window || 30) + " menit",
-          "Warning: " + warnCount + "/" + (cfg.maxWarn || 3),
-        ], "warn"),
+        text: "Anti Poll Spam\nPOLL SPAM TERDETEKSI!\n@" + sender.split("@")[0] + " buat " + tracker.count + " poll dalam " + Math.round(elapsed / 60000) + " menit\nLimit: " + limit + " poll per " + (cfg.window || 30) + " menit\nWarning: " + warnCount + "/" + (cfg.maxWarn || 3),
         mentions: [sender],
       });
     } else if (action === "delete") {
       sock.sendMessage(groupId, {
-        text: claraWrap("Anti Poll Spam", [
-          "Poll dari @" + sender.split("@")[0] + " dihapus (spam poll)",
-          "Limit: " + limit + " poll per " + (cfg.window || 30) + " menit",
-        ], "warn"),
+        text: "Anti Poll Spam\nPoll dari @" + sender.split("@")[0] + " dihapus (spam poll)\nLimit: " + limit + " poll per " + (cfg.window || 30) + " menit",
         mentions: [sender],
       });
     }

@@ -76,11 +76,7 @@ export function checkFlood(m, sock, db) {
           delete cfg.warns[sender];
           db.save();
           sock.sendMessage(groupId, {
-            text: claraWrap("Anti Flood", [
-              "@" + sender.split("@")[0] + " dikeluarkan karena flood!",
-              "Total warning: " + warnCount + "/" + maxWarn,
-              "Limit: " + limit + " pesan dalam " + windowSec + " detik",
-            ], "warn"),
+            text: "Anti Flood\n@" + sender.split("@")[0] + " dikeluarkan karena flood!\nTotal warning: " + warnCount + "/" + maxWarn + "\nLimit: " + limit + " pesan dalam " + windowSec + " detik",
             mentions: [sender],
           });
         } catch (e) { console.error('[antiflood.js]:', e.message); }

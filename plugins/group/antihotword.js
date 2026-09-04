@@ -55,16 +55,7 @@ export async function checkHotWord(m, sock, db) {
         } catch (e) { console.error('[antihotword.js]:', e.message); }
 
         sock.sendMessage(groupId, {
-          text: claraWrap("Anti Hot Word", [
-            "HOT WORD TERDETEKSI!",
-            "Kata: *" + word + "*",
-            "Oleh: @" + sender.split("@")[0],
-            "Total deteksi: " + cfg.totalDetected,
-            "",
-            "Pesan: " + text.slice(0, 80),
-            "",
-            action === "warn" ? "Warning telah dicatat." : "Admin harap cek pesan ini.",
-          ], "warn"),
+          text: "Anti Hot Word\nHOT WORD TERDETEKSI!\nKata: " + word + "\nOleh: @" + sender.split("@")[0] + "\nTotal deteksi: " + cfg.totalDetected + "\n\nPesan: " + text.slice(0, 80) + "\n\n" + (action === "warn" ? "Warning telah dicatat." : "Admin harap cek pesan ini."),
           mentions: [sender, ...adminMentions],
         });
       }
