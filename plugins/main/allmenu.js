@@ -255,7 +255,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try { await m.reply(`╭─「 ✦ ${toSC("Menu")} ✦ 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰────  •  ────`); } catch {}
+    try { await m.reply(novaError("Allmenu", "Ada error nih, coba lagi ya")); } catch {}
   }
 }
 

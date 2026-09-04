@@ -50,7 +50,7 @@ ${prefix}menu untuk melihat semua fitur`;
     await m.react("");
   } catch (e) {
     console.error("[aboutnova] handler error:", e.message);
-    try { await m.reply("❌ Ada error nih, coba lagi ya"); } catch {}
+    try { await m.reply(novaError("Aboutnova", "Ada error nih, coba lagi ya")); } catch {}
   }
 }
 

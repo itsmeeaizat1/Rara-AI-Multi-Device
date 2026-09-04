@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     if (!id) return m.reply(claraWrap("Belanja", "Format: .belanja pesan <id produk> [qty] [catatan]"));
 
     const product = getProduct(id);
-    if (!product) return m.reply("Produk tidak ditemukan: " + id);
+    if (!product) return m.reply(claraWrap("Belanja", `Produk tidak ditemukan: ${id}`, "error"));
 
     const qty = parseInt(args[2]) || 1;
     const note = args.slice(3).join(" ").trim();
