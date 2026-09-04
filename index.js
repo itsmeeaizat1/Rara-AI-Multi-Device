@@ -55,6 +55,7 @@ import {
 } from "./src/handler.js";
 import { loadPlugins, pluginStore } from "./src/lib/nova-plugins.js";
 import { initDatabase, getDatabase } from "./src/lib/nova-database.js";
+import { syncSewaOverrides } from "./src/lib/sewa/sewa.js";
 import {
   initScheduler,
   loadScheduledMessages,
@@ -298,6 +299,8 @@ async function main() {
   if (Array.isArray(savedPremium)) config.premiumUsers = savedPremium;
   const savedBanned = db.setting("bannedUsers");
   if (Array.isArray(savedBanned)) config.bannedUsers = savedBanned;
+  // Harga sewa & premium live (override .setsewa) — apply setelah DB ready
+  try { syncSewaOverrides(); } catch (e) { console.error("[startup] syncSewaOverrides gagal:", e.message); }
 
   const pCount = Array.isArray(savedPremium) ? savedPremium.length : 0;
   const bCount = Array.isArray(savedBanned) ? savedBanned.length : 0;
