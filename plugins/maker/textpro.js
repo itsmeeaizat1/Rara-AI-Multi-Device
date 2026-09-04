@@ -3,7 +3,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import FormData from "form-data";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "textpro",
@@ -103,22 +103,22 @@ async function handler(m, { sock }) {
     const list = Object.entries(STYLES)
       .map(([k, v]) => `${v.emoji} ${k} — ${v.desc}`)
       .join("\n");
-    return m.reply(claraWrap("Text Pro", [
+    return m.reply(claraWrap("textpro", [
       "Daftar style tersedia:",
       "",
       list,
       "",
       `Cara: ${m.prefix}textpro <style> <teks>`,
-      `Contoh: ${m.prefix}textpro neon Halo Dunia`,
+      `💡 Contoh: ${m.prefix}textpro neon Halo Dunia`,
     ].join("\n")));
   }
 
   if (!STYLES[style]) {
-    return m.reply(claraWrap("Text Pro", `Style tidak ditemukan: ${style}\nKetik ${m.prefix}textpro list`));
+    return m.reply(claraWrap("textpro", `Style tidak ditemukan: ${style}\nKetik ${m.prefix}textpro list`));
   }
 
   if (!content) {
-    return m.reply(claraWrap("Text Pro", `Masukkan teks!\nContoh: ${m.prefix}textpro ${style} Halo Dunia`));
+    return m.reply(claraWrap("textpro", `Masukkan teks!\n💡 Contoh: ${m.prefix}textpro ${style} Halo Dunia`));
   }
 
   try {
@@ -133,12 +133,12 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: buffer,
-      caption: claraWrap("Text Pro", `${st.emoji} ${style} — ${st.desc}\nTeks: ${content}`),
+      caption: novaBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
     }, { quoted: m });
   } catch (err) {
     console.error("[textpro] Error:", err.message);
     await m.react("❌");
-    m.reply(claraWrap("Text Pro", `Gagal generate: ${err.message}`));
+    m.reply(claraWrap("textpro", "Gagal generate. Coba lagi.", "error"));
   }
 }
 

@@ -2,7 +2,7 @@
 // nulis2.js — Nulis v2 (nexray maker API, tulis tangan)
 import axios from "axios";
 import { nexrayNulis } from "../../src/scraper/nexray-maker.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nulis2",
@@ -19,7 +19,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("nulis2", `Mau nulis apa?\n\nContoh: ${m.prefix}nulis2 Halo dunia`, "guide"));
+      return m.reply(claraWrap("nulis2", `Mau nulis apa?\n\n💡 Contoh: ${m.prefix}nulis2 Halo dunia`, "guide"));
     }
     if (text.length > 300) {
       return m.reply(claraWrap("nulis2", "Teks terlalu panjang! Maksimal 300 karakter.", "error"));
@@ -34,8 +34,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    const caption = claraWrap("Nulis V2", `Teks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}
-Engine: nexray maker`);
+    const caption = novaBerhasil() + `\nTeks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {
     console.error("nulis2 error:", err);

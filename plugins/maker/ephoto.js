@@ -117,20 +117,24 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (command === 'ephoto') {
-        const effectList = Object.keys(EFFECT_URLS).map(e => `\`${m.prefix}${e}\``).join('\n')
-        return m.reply(`*Ephoto Effects*\n\n` +
-            `Buat efek text keren!\n\n` +
-            `Daftar Efek:\n${effectList}\n\n` +
-            `Contoh: ${m.prefix}glitchtext Nova-AI`)
+        const effectList = Object.keys(EFFECT_URLS).map(e => `${m.prefix}${e}`).join('\n')
+        return m.reply(claraWrap("ephoto", [
+            "Buat efek text keren!",
+            "",
+            "Daftar Efek:",
+            effectList,
+            "",
+            "💡 Contoh: " + m.prefix + "glitchtext Nova-AI",
+        ]))
     }
     
     if (!text) {
-        return m.reply(`❌ Masukkan text!\nContoh: ${m.prefix}${command} Nova-AI`)
+        return m.reply(claraWrap("ephoto", "Masukkan text!\n💡 Contoh: " + m.prefix + command + " Nova-AI"))
     }
     
     const effectUrl = EFFECT_URLS[command]
     if (!effectUrl) {
-        return m.reply(claraWrap("ephoto", `❌ Efek tidak ditemukan`))
+        return m.reply(claraWrap("ephoto", "Efek tidak ditemukan"))
     }
     try {
         const imageUrl = await ephoto(effectUrl, text)

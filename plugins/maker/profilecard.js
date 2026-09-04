@@ -167,19 +167,20 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ctx.fillText('Nova AI', W - 25, H - 25);
 
     const outBuf = cv.toBuffer('image/png');
+    await m.react("🐣");
     await conn.sendMessage(m.key.remoteJid, {
       image: outBuf,
-      caption: claraWrap("Profile Card", [
+      caption: [
         name + " (@" + target.split('@')[0] + ")",
         "Level: " + level + " | Rank: " + rank,
         "XP: " + expProgress + "/" + expNeeded + " (" + Math.floor(progressPercent) + "%)",
         "Limit: " + limit + " | Money: " + money,
         "Role: " + role + " | Energi: " + energi,
-      ].join("\n")),
+      ].join("\n"),
     });
   } catch (e) {
     console.error("profilecard error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(claraWrap("profilecard", "Gagal buat profile card. Coba lagi.", "error"));
   }
 }
 

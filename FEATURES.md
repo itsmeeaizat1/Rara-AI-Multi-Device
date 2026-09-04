@@ -4,6 +4,9 @@
 
 ## Statistik
 
+- **FORMAT MAKER RAPIH (branch feat/maker-format-rapih, 10 file plugins/maker):** (1) CAPTION hasil media (certmaker, lyricscard, quotemaker, profilecard, nowm, nulis2, textpro, watermark) kini PLAIN TEXT ala standar hasil fitur — `Berhasil kak 🥳` (novaBerhasil) + detail singkat, TANPA box-drawing & smallcaps (dulunya semua caption dibungkus claraWrap). (2) captionig: hasil caption PLAIN biar bisa langsung di-copy user (dulu di-smallcaps jadi gak bisa dipakai), reply random + per-mood. (3) Semua error catch mentah `m.reply("Error: ...")` → claraWrap box error friendly (certmaker, lyricscard, quotemaker, profilecard, watermark). (4) ephoto: usage list efek dari raw markdown → claraWrap box standar; validasi no-input → box. (5) Judul claraWrap distandardisasi ke nama command lowercase (certmaker, lyricscard, quotemaker, profilecard, watermark, nowm, textpro, captionig; "Info" → "watermark"). (6) Guide usage/contoh kini pakai ikon 📌 Format / 💡 Contoh di semua maker. (7) React 🐣 sebelum kirim hasil ditambahin di file yang belum ada.
+
+
 - **.topup** (main, baru): Katalog topup terpadu 4 JALUR — digenerate langsung dari TOPUP_ITEMS di src/lib/store/nova-store.js jadi selalu sinkron dengan harga terbaru (gak ada harga stale). Sub: `.topup` (katalog lengkap: Akun limit/koin, RPG diamond/harta/gems/tokens, Item game, Cinta affection), `.topup status` / `.topup pesanan` (cek pesanan pending semua jalur + hint batal), `.topup akun|rpg|item|cinta` (filter per jalur). Format: box-drawing + smallcaps, harga `Rp 10.000 / <paket>`, item game Rp 200/poin nilai min Rp 5.000. Kartu Topup di .payment kini nyebut 4 jalur + arahan ke .topup.
 
 
