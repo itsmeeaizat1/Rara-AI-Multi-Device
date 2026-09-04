@@ -30,7 +30,9 @@ export function stopWeatherRealtimeScheduler() {
   }
 }
 
-async function checkAndSend(sock) {
+// Di-export untuk testing (scripts/test-weather-realtime.mjs) —
+// jadwal palsu yang match menit ini dipakai buat verifikasi trigger.
+export async function checkAndSend(sock) {
   const db = getDatabase();
   const settings = db.setting("weatherRealtime");
   if (!settings || !settings.notification || !settings.target) return;
