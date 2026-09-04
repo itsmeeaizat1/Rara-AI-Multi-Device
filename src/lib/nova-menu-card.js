@@ -27,7 +27,7 @@ import path from "path";
 import sharp from "sharp";
 import { generateWAMessageFromContent, proto } from "nova";
 import { getTimeGreeting } from "./nova-formatter.js";
-import { buildCategoryButton } from "./nova-category-list.js";
+import { buildCategoryRows } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
 import config from "../../config.js";
 
@@ -54,17 +54,21 @@ function getThumbnailBuffer(imagePath) {
 }
 
 /**
- * Set tombol nav standar (request owner 2026-09-04) — dipakai SEMUA command
+ * Set tombol nav standar (revisi owner 2026-09-04 #3) — dipakai SEMUA command
  * ber-tombol: .menu, .allmenu, .allmenucategory, .sewa, .owner.
  *
- * 6 tombol (revisi owner 2026-09-04):
- * 1. Menu          → quick_reply .menu
- * 2. Semua Menu    → quick_reply .allmenu
- * 3. ☰ Semua Kategori → single_select popup list kategori (buildCategoryButton)
- * 4. ☰ Sewa        → single_select popup: Beli Premium / Sewa Bot
- * 5. Owner         → single_select popup: Laporkan Bug / Kirim Masukan
- * 6. ☰ Support     → single_select popup: Join Grup Resmi / Ikuti Saluran
- *                    Resmi / Donasi
+ * Chip nativeFlow gak bisa disusun vertikal (WhatsApp render-nya kiri-kanan),
+ * jadi nav sekarang SATU tombol single_select → pas diklik muncul DAFTAR
+ * VERTIKAL berisi semua opsi, dikelompokin per section:
+ *   1. ᴍᴇɴᴜ        : Menu / Semua Menu
+ *   2. ᴋᴀᴛᴇɢᴏʀɪ    : semua kategori (reuse buildCategoryRows)
+ *   3. ʟᴀʏᴀɴᴀɴ     : Beli Premium / Sewa Bot
+ *   4. ᴏᴡɴᴇʀ       : Laporkan Bug / Kirim Masukan
+ *   5. ꜱᴜᴘᴘᴏʀᴛ    : Join Grup Resmi / Ikuti Saluran Resmi / Donasi
+ *
+ * Mekanisme popup persis kayak popup Kategori yang udah proven jalan
+ * (tap row → id terkirim sebagai pesan, dihandle nova-serialize
+ * listResponseMessage).
  *
  * @param {object} m
  * @param {object} db
@@ -72,7 +76,30 @@ function getThumbnailBuffer(imagePath) {
  * @returns {Array} buttons siap dipakai di sendMenuCard
  */
 function buildNavButtons(m, db, prefix = ".") {
-  const sewaRows = [
+  const menuRows = [
+    {
+      header: "",
+      title: "Menu",
+      description: "Buka menu utama bot",
+      id: `${prefix}menu`,
+    },
+    {
+      header: "",
+      title: "Semua Menu",
+      description: "Semua command dalam satu list",
+      id: `${prefix}allmenu`,
+    },
+  ];
+
+  // Semua kategori — reuse builder popup kategori yang udah proven
+  let categoryRows = [];
+  try {
+    categoryRows = buildCategoryRows(m, db, prefix);
+  } catch (e) {
+    console.error("[buildNavButtons] category rows gagal:", e.message);
+  }
+
+  const layananRows = [
     {
       header: "",
       title: "Beli Premium",
@@ -123,27 +150,24 @@ function buildNavButtons(m, db, prefix = ".") {
     },
   ];
 
+  const sections = [
+    { title: toSC("Menu"), rows: menuRows },
+  ];
+  if (categoryRows.length > 0) {
+    sections.push({ title: toSC("Semua Kategori"), rows: categoryRows });
+  }
+  sections.push(
+    { title: toSC("Layanan"), rows: layananRows },
+    { title: toSC("Owner"), rows: ownerRows },
+    { title: toSC("Support"), rows: supportRows },
+  );
+
   return [
-    { id: `${prefix}menu`, text: toSC("Menu") },
-    { id: `${prefix}allmenu`, text: toSC("Semua Menu") },
-    buildCategoryButton(m, db, prefix, `☰ ${toSC("Semua Kategori")}`),
     {
       type: "single_select",
-      text: `☰ ${toSC("Sewa")}`,
-      title: toSC("Pilih Layanan"),
-      sections: [{ title: toSC("Layanan Bot"), rows: sewaRows }],
-    },
-    {
-      type: "single_select",
-      text: toSC("Owner"),
-      title: toSC("Owner Bot"),
-      sections: [{ title: toSC("Hubungi Owner"), rows: ownerRows }],
-    },
-    {
-      type: "single_select",
-      text: `☰ ${toSC("Support")}`,
-      title: toSC("Support Bot"),
-      sections: [{ title: toSC("Dukung Bot"), rows: supportRows }],
+      text: `☰ ${toSC("Menu Bot")}`,
+      title: toSC("Pilih Menu"),
+      sections,
     },
   ];
 }
