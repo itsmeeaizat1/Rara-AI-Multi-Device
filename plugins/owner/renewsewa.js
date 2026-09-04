@@ -63,13 +63,37 @@ async function resolveGroupId(sock, input) {
     try {
       const metadata = await sock.groupGetInviteInfo(inviteCode);
       if (!metadata?.id) return null;
-      return { id: metadata.id, name: metadata.subject || "Unknown" };
+      return { id: metadata.id, name: metadata.subject || "Unknown", inviteCode };
     } catch {
       return null;
     }
   }
   const groupId = input.includes("@g.us") ? input : input + "@g.us";
-  return { id: groupId, name: null };
+  return { id: groupId, name: null, inviteCode: null };
+}
+
+/**
+ * Cek apakah bot masih anggota grup — kalau sudah keluar
+ * (auto-out expired), coba join lagi via inviteCode.
+ * @returns {{ isMember: boolean, rejoined: boolean }}
+ */
+async function ensureBotInGroup(sock, groupId, inviteCode) {
+  try {
+    const botJid = sock.user?.id?.split(":")[0] + "@s.whatsapp.net";
+    const metadata = await sock.groupMetadata(groupId).catch(() => null);
+    const isMember = metadata?.participants?.some((p) => {
+      const pJid = p.id?.split(":")[0] + "@s.whatsapp.net";
+      return pJid === botJid || p.id === botJid;
+    });
+    if (isMember) return { isMember: true, rejoined: false };
+    if (inviteCode) {
+      await sock.groupAcceptInvite(inviteCode);
+      return { isMember: true, rejoined: true };
+    }
+    return { isMember: false, rejoined: false };
+  } catch {
+    return { isMember: false, rejoined: false };
+  }
 }
 
 async function handler(m, { sock }) {
@@ -108,7 +132,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("renewsewa", `❌ Grup tidak ditemukan`));
     }
 
-    const { id: groupId } = result;
+    const { id: groupId, inviteCode } = result;
     const existing = db.db.data.sewa.groups[groupId];
 
     if (!existing) {
@@ -139,6 +163,16 @@ async function handler(m, { sock }) {
     delete existing._warned1h;
     db.db.write();
 
+    // Sinkron dengan sistem join/out otomatis: kalau bot sudah keluar
+    // (sewa expired → auto-out), coba join lagi via link undangan
+    const presence = await ensureBotInGroup(sock, groupId, inviteCode);
+    if (!presence.isMember && !presence.rejoined) {
+      console.error(
+        "[renewsewa] bot tidak ada di grup & tidak punya invite link untuk rejoin:",
+        groupId,
+      );
+    }
+
     const groupName = existing.name || groupId.split("@")[0];
     const expiredStr = existing.isLifetime
       ? "Permanent"
@@ -158,7 +192,12 @@ async function handler(m, { sock }) {
     let text = `✅ *ꜱᴇᴡᴀ ᴅɪᴘᴇʀᴘᴀɴᴊᴀɴɢ*\n\n`;
     text += `Grup: *${groupName}*\n`;
     text += `Tambahan: *${formatDuration(durationStr)}*\n`;
-    text += `Expired baru: *${expiredStr}*`;
+    text += `Expired baru: *${expiredStr}*\n`;
+    if (presence.rejoined) {
+      text += `\n✅ Bot sudah keluar sebelumnya — otomatis join ulang ke grup`;
+    } else if (!presence.isMember) {
+      text += `\n⚠️ Bot belum ada di grup — ulangi pakai LINK undangan biar bot bisa join lagi`;
+    }
 
     try {
       await sock.sendText(
