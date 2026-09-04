@@ -57,13 +57,14 @@ function getThumbnailBuffer(imagePath) {
  * Set tombol nav standar (request owner 2026-09-04) — dipakai SEMUA command
  * ber-tombol: .menu, .allmenu, .allmenucategory, .sewa, .owner.
  *
- * 5 tombol:
+ * 6 tombol (revisi owner 2026-09-04):
  * 1. Menu          → quick_reply .menu
  * 2. Semua Menu    → quick_reply .allmenu
  * 3. ☰ Semua Kategori → single_select popup list kategori (buildCategoryButton)
  * 4. ☰ Sewa        → single_select popup: Beli Premium / Sewa Bot
- * 5. Owner         → single_select popup: Laporkan Bug / Join Grup Resmi /
- *                    Ikuti Saluran Resmi / Donasi
+ * 5. Owner         → single_select popup: Laporkan Bug / Kirim Masukan
+ * 6. ☰ Support     → single_select popup: Join Grup Resmi / Ikuti Saluran
+ *                    Resmi / Donasi
  *
  * @param {object} m
  * @param {object} db
@@ -93,6 +94,15 @@ function buildNavButtons(m, db, prefix = ".") {
       description: "Laporkan error/bug ke owner",
       id: `${prefix}bugreport`,
     },
+    {
+      header: "",
+      title: "Kirim Masukan",
+      description: "Kirim saran/ide fitur ke owner",
+      id: `${prefix}masukan`,
+    },
+  ];
+
+  const supportRows = [
     {
       header: "",
       title: "Join Grup Resmi",
@@ -128,6 +138,12 @@ function buildNavButtons(m, db, prefix = ".") {
       text: toSC("Owner"),
       title: toSC("Owner Bot"),
       sections: [{ title: toSC("Hubungi Owner"), rows: ownerRows }],
+    },
+    {
+      type: "single_select",
+      text: `☰ ${toSC("Support")}`,
+      title: toSC("Support Bot"),
+      sections: [{ title: toSC("Dukung Bot"), rows: supportRows }],
     },
   ];
 }
