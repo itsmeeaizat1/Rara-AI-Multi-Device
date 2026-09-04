@@ -606,7 +606,7 @@ async function handleTextProtection({
 
     if (!isBotAdminCheck(groupMeta.participants, botNum)) {
       await sock.sendMessage(m.chat, {
-        text: gpMsg("notAdmin"),
+        text: gpMsg("notAdmin", { user: m.sender.split("@")[0] }),
         mentions: [m.sender],
       });
       return true;
@@ -658,7 +658,7 @@ async function handleAntilink(m, sock, db) {
 
     if (!isBotAdminCheck(groupMeta.participants, botNum)) {
       await sock.sendMessage(m.chat, {
-        text: gpMsg("notAdmin"),
+        text: gpMsg("notAdmin", { user: m.sender.split("@")[0] }),
         mentions: [m.sender],
       });
       return true;
@@ -725,7 +725,7 @@ async function handleAntiTagSW(rawMsg, sock, db) {
     if (isAdminCheck(groupMeta.participants, senderNum)) return false;
     if (!isBotAdminCheck(groupMeta.participants, botNum)) {
       await sock.sendMessage(chatId, {
-        text: gpMsg("notAdmin"),
+        text: gpMsg("notAdmin", { user: senderTag }),
         mentions: [sender],
       });
       return true;
@@ -1365,7 +1365,7 @@ async function handleAntiCustom(m, sock, db) {
     if (isAdminCheck(groupMeta.participants, senderNum)) return false;
     if (!isBotAdminCheck(groupMeta.participants, botNum)) {
       await sock.sendMessage(m.chat, {
-        text: gpMsg("notAdmin"),
+        text: gpMsg("notAdmin", { user: m.sender.split("@")[0] }),
         mentions: [m.sender],
       });
       return true;
@@ -1423,7 +1423,7 @@ async function handleAntiSwGc(rawMsg, sock, db) {
       return false;
     if (!isBotAdminCheck(groupMeta.participants, botNum)) {
       await sock.sendMessage(chatId, {
-        text: gpMsg("notAdmin"),
+        text: gpMsg("notAdmin", { user: senderTag }),
         mentions: sender?.includes("@") ? [sender] : [],
       });
       return true;
