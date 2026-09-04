@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
                 const minutes = Math.floor((uptime % 3600) / 60);
                 const seconds = Math.floor(uptime % 60);
                 const uptimeStr = `${hours}h ${minutes}m ${seconds}s`;
-                m.reply(claraWrap("System", `🖥️ *ᴄᴘᴜ ɪɴꜰᴏ*\n\nModel: ${model}\nSpeed: ${speed} MHz\nCores: ${cores}\nServer Uptime: ${uptimeStr}`));
+                m.reply(claraWrap("System", `🖥️ cpu info\n\nModel: ${model}\nSpeed: ${speed} MHz\nCores: ${cores}\nServer Uptime: ${uptimeStr}`, "info"));
             }
             break;
 
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
                 else if (latency < 500) speed = '⚡ Good';
                 else if (latency < 1000) speed = '🐢 Oke';
                 else speed = '🐌 Slow';
-                m.reply(claraWrap("System", `📶 *Pong!*\nLatency: ${latency}ms\nResponse: ${speed}`));
+                m.reply(claraWrap("System", `📶 Pong!\nLatency: ${latency}ms\nResponse: ${speed}`, "info"));
             }
             break;
         }

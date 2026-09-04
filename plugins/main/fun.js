@@ -40,7 +40,7 @@ ${cmdLines}│ Total: ${funCmds.length} Fitur*
     await m.react("");
   } catch (e) {
     console.error("[fun] handler error:", e.message);
-    try { await m.reply("❌ Ada error nih, coba lagi ya"); } catch {}
+    try { await m.reply(novaError("Fun", "Ada error nih, coba lagi ya")); } catch {}
   }
 }
 

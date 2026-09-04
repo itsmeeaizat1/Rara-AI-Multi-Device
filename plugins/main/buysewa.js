@@ -221,16 +221,13 @@ async function handler(m, { sock }) {
       const reg = await recordRegistration(sock, m, pkg, groupLink);
 
       if (reg.reason === "already") {
-        return m.reply(claraWrap("buysewa",
-          `Grup *${reg.groupName}* sudah terdaftar di sistem sewa\nTidak perlu daftar lagi`));
+        return m.reply(claraWrap("buysewa", `Grup ${reg.groupName} sudah terdaftar di sistem sewa\nTidak perlu daftar lagi`, "info"));
       }
       if (reg.reason === "pending") {
-        return m.reply(claraWrap("buysewa",
-          `Grup *${reg.groupName}* sudah ada pendaftar\nStatus: menunggu approve owner`));
+        return m.reply(claraWrap("buysewa", `Grup ${reg.groupName} sudah ada pendaftar\nStatus: menunggu approve owner`, "info"));
       }
       if (reg.reason === "invalid") {
-        return m.reply(claraWrap("buysewa",
-          `Link grup tidak valid / tidak bisa diakses\n\nPastikan link undangan masih aktif\nFormat: https://chat.whatsapp.com/xxx`));
+        return m.reply(claraWrap("buysewa", `Link grup tidak valid / tidak bisa diakses\n\nPastikan link undangan masih aktif\nFormat: https://chat.whatsapp.com/xxx`, "info"));
       }
 
       buySewaSessions.set(sender, { ...pkg, price, groupLink, startedAt: Date.now() });

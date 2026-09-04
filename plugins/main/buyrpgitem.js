@@ -140,19 +140,16 @@ async function handler(m, { sock }) {
   const qtyRaw = args.length > 1 ? Number(args[1]) : RPG_ITEM_MIN_QTY;
   const itemDef = ITEM_DB[itemId];
   if (!itemDef) {
-    return m.reply(claraWrap("buyrpgitem",
-      `Item *${itemId}* tidak ada di katalog\n\n📌 Ketik *${prefix}buyrpgitem* buat lihat semua item`));
+    return m.reply(claraWrap("buyrpgitem", `Item ${itemId} tidak ada di katalog\n\n📌 Ketik ${prefix}buyrpgitem buat lihat semua item`, "info"));
   }
   if (!Number.isInteger(qtyRaw) || qtyRaw < RPG_ITEM_MIN_QTY || qtyRaw > RPG_ITEM_MAX_QTY) {
-    return m.reply(claraWrap("buyrpgitem",
-      `Jumlah harus angka bulat ${RPG_ITEM_MIN_QTY}-${RPG_ITEM_MAX_QTY}\n\n📌 Contoh: *${prefix}buyrpgitem ${itemId} 5*`));
+    return m.reply(claraWrap("buyrpgitem", `Jumlah harus angka bulat ${RPG_ITEM_MIN_QTY}-${RPG_ITEM_MAX_QTY}\n\n📌 Contoh: ${prefix}buyrpgitem ${itemId} 5`, "info"));
   }
 
   const price = calcRpgItemPrice(itemId, qtyRaw);
   const pending = topups.pending[sender];
   if (pending && pending.status === "pending" && pending.type !== "rpgitem") {
-    return m.reply(claraWrap("buyrpgitem",
-      `Masih ada pesanan *${pending.itemName || pending.name}* pending\nSelesaikan / batal dulu: *.${topupCancelHint(pending.type)} batal*`));
+    return m.reply(claraWrap("buyrpgitem", `Masih ada pesanan ${pending.itemName || pending.name} pending\nSelesaikan / batal dulu: .${topupCancelHint(pending.type)} batal`, "info"));
   }
   const isReplace = pending && pending.status === "pending";
 

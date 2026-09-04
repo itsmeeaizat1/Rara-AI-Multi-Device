@@ -330,7 +330,7 @@ async function showGameLeaderboard(m, sock, catKey) {
     .sort((a, b) => b.score - a.score)
 
   if (scored[0].score <= 0 && !scored.some(u => u.score > 0))
-    return m.reply(claraWrap(`Leaderboard ${cat.raw}`, `Belum ada data untuk kategori *${cat.key}*.\nMain dulu biar skormu terekam!`))
+    return m.reply(claraWrap(`Leaderboard ${cat.raw}`, `Belum ada data untuk kategori ${cat.key}.\nMain dulu biar skormu terekam!`))
 
   const top10 = scored.slice(0, 10)
   const mentions = []
@@ -576,7 +576,7 @@ async function showAllLeaderboards(m, sock, onlyGroup = null, titleOverride = nu
   // kategori yang dimilih gak ada datanya sama sekali → jangan kirim pesan kosong
   if (boards.length === 0) {
     const emptyCat = SECTIONS.find(s => s.group === onlyGroup)
-    return m.reply(claraWrap(boardTitle, `Belum ada data untuk kategori *${emptyCat ? emptyCat.title.toLowerCase() : 'ini'}*.\nMain dulu biar skormu terekam!`))
+    return m.reply(claraWrap(boardTitle, `Belum ada data untuk kategori ${emptyCat ? emptyCat.title.toLowerCase() : 'ini'}.\nMain dulu biar skormu terekam!`))
   }
 
 

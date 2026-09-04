@@ -42,11 +42,7 @@ async function handler(m, { sock }) {
     const uptime = status ? formatUptime(Date.now() - status.startedAt) : '-'
     try {
         await stopJadibot(sender, false)
-        await m.reply(`*Jadibot Dihentikan*\n\n` +
-            `Nomor: *@${sender.split('@')[0]}*\n` +
-            `Uptime: *${uptime}*\n` +
-            `💾 Session: *ᴛᴇʀꜱɪᴍᴘᴀɴ*\n\n` +
-            `Ketik \`${m.prefix}jadibot\` untuk mengaktifkan kembali.`)
+        await m.reply(claraWrap("Stopjadibot", `Jadibot dihentikan\n\nNomor: @${sender.split('@')[0]}\nUptime: ${uptime}\nSession: Tersimpan\n\nKetik \`${m.prefix}jadibot\` untuk mengaktifkan kembali.`, "success"))
     } catch (e) {
         await m.reply(novaError("StopJadiBot", `Gagal hentikan jadibot nih: ${e.message}`))
     }
