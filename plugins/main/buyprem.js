@@ -31,6 +31,7 @@ const pluginConfig = {
 
 // Harga premium: dari src/lib/sewa/sewa.js (utak atik harga di situ)
 import { PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
+import { premiumRoles } from "../../src/lib/store/nova-store.js";
 
 // Session sementara untuk user yang lagi proses beli
 const buySessions = new Map();
@@ -138,6 +139,13 @@ async function handler(m, { sock }) {
         `Durasi: *${pkg.duration}*`,
       ]);
 
+      const roles = premiumRoles();
+      const rolesBox = bracketBox("⭐", `Paket Termasuk ${roles.length} Role`, [
+        `1. *${roles[0].label}* — ${roles[0].value}`,
+        `2. *${roles[1].label}* — ${roles[1].value}`,
+        `3. *${roles[2].label}* — ${roles[2].value}`,
+      ]);
+
       const stepsBox = bracketBox("📝", "Cara Pembayaran", [
         `1. Bayar *${pkg.price}* via QRIS/E-Wallet`,
         `2. Screenshot bukti transfer`,
@@ -152,6 +160,7 @@ async function handler(m, { sock }) {
 
       const fullText =
         priceBox + "\n\n" +
+        rolesBox + "\n\n" +
         stepsBox + "\n\n" +
         contactBox + "\n\n" +
         tipText(`Ketik ${prefix}buyprem batal untuk batalkan`);
@@ -168,14 +177,10 @@ async function handler(m, { sock }) {
     `${i + 1}. *${p.label}* — ${p.price}`,
   );
 
-  const benefitBox = bracketBox("⭐", "Keuntungan Premium", [
-    `Limit harian: *${config.energi?.premium || 100}x* (vs ${config.energi?.default || 25}x biasa)`,
-    `Cooldown lebih rendah`,
-    `Akses fitur eksklusif`,
-    `Prioritas response`,
-    `No watermark di beberapa fitur`,
+  const roles = premiumRoles();
+  const benefitBox = bracketBox("⭐", `Paket Premium = ${roles.length} Role`, [
+    ...roles.map((r, i) => `${i + 1}. *${r.label}* — ${r.value}`),
   ]);
-
   const priceBox = bracketBox("💰", "Paket Premium", priceLines);
 
   const howBox = bracketBox("📝", "Cara Beli", [
