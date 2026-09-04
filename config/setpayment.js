@@ -9,7 +9,7 @@
 
 export const payment = {
   // QRIS — isi dengan path gambar atau URL, kosongin "" untuk nonaktif
-  qrisUrl: "./assets/image/aizat-store-qris.jpg",
+  qrisUrl: "./assets/image/store/aizat-store-qris.jpg",
 
   // E-Wallet — isi number untuk aktif, kosongin untuk nonaktif
   methods: [
@@ -58,5 +58,5 @@ export const donasi = {
   ],
 
   // QRIS untuk donasi — isi path gambar, kosongin "" untuk nonaktif
-  qris: "./assets/image/aizat-store-qris.jpg",
+  qris: "./assets/image/store/aizat-store-qris.jpg",
 };

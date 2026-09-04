@@ -53,20 +53,27 @@ function ownerWaLink(ownerNumber, text) {
   return `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
 }
 
-function orderButton(ownerNumber, text) {
-  return {
-    nativeFlowMessage: {
-      buttons: [
-        {
-          name: "cta_url",
-          buttonParamsJson: JSON.stringify({
-            display_text: "Order Di Sini!",
-            url: ownerWaLink(ownerNumber, text),
-          }),
-        },
-      ],
+function orderButton(ownerNumber, text, withQris = true) {
+  const buttons = [
+    {
+      name: "cta_url",
+      buttonParamsJson: JSON.stringify({
+        display_text: "Order Di Sini!",
+        url: ownerWaLink(ownerNumber, text),
+      }),
     },
-  };
+  ];
+  // Tombol kedua: bot kirim gambar QRIS langsung di chat (quick_reply → .qris)
+  if (withQris) {
+    buttons.push({
+      name: "quick_reply",
+      buttonParamsJson: JSON.stringify({
+        display_text: "Kirim QRIS",
+        id: ".qris",
+      }),
+    });
+  }
+  return { nativeFlowMessage: { buttons } };
 }
 
 function buildSewaBody(botName) {
