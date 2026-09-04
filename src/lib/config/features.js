@@ -28,6 +28,15 @@ export const energi = {
   default: 300,
   premium: 1000,
   owner: -1,
+  // HARGA TOPUP LIMIT — dipakai katalog .payment (kartu Topup Limit Fitur).
+  // Owner jual manual via .topuplimit @user <jumlah> — ubah harga di sini,
+  // katalog .payment auto-update.
+  topup: [
+    { amount: 500, price: "Rp 5.000" },
+    { amount: 1500, price: "Rp 10.000" },
+    { amount: 3000, price: "Rp 20.000" },
+    { amount: -1, label: "Unlimited", price: "Nego" },
+  ],
 };
 
 export const welcome = { defaultEnabled: false };
