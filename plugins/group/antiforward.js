@@ -55,12 +55,7 @@ export function checkForward(m, sock, db) {
       }
 
       sock.sendMessage(groupId, {
-        text: claraWrap("Anti Forward", [
-          "PESAN FORWARDED TERDETEKSI!",
-          "@" + sender.split("@")[0] + " mengirim pesan yang diteruskan " + forwardingScore + "x",
-          "Warning: " + warnCount + "/" + (cfg.maxWarn || 3),
-          "Forward pesan dilarang di grup ini!",
-        ], "warn"),
+        text: "Anti Forward\nPESAN FORWARDED TERDETEKSI!\n@" + sender.split("@")[0] + " mengirim pesan yang diteruskan " + forwardingScore + "x\nWarning: " + warnCount + "/" + (cfg.maxWarn || 3) + "\nForward pesan dilarang di grup ini!",
         mentions: [sender],
       });
     }

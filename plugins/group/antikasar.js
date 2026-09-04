@@ -227,34 +227,31 @@ async function handleAntiKasar(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: `
-│ 👤 User: @${senderTag}
-│ 🏷️ Pelanggaran: 🤬 Kata Kasar
-│ ⚠️ Warn: ${currentWarn}/${maxWarn}
-│ 🔍 Terdeteksi: ${matchesStr}
-│ ❌ Aksi: KICK OTOMATIS
+                        text: `User: @${senderTag}
+Pelanggaran: 🤬 Kata Kasar
+Warn: ${currentWarn}/${maxWarn}
+Terdeteksi: ${matchesStr}
+Aksi: KICK OTOMATIS
 
 _User dikeluarkan karena kata kata kasar_`,
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: `
-│ 👤 User: @${senderTag}
-│ 🏷️ Pelanggaran: 🤬 Kata Kasar
-│ ⚠️ Warn: ${currentWarn}/${maxWarn}
-│ ⚠️ Aksi: Bot bukan admin
+                        text: `User: @${senderTag}
+Pelanggaran: 🤬 Kata Kasar
+Warn: ${currentWarn}/${maxWarn}
+Aksi: Bot bukan admin
 `,
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: `
-│ 👤 User: @${senderTag}
-│ 🏷️ Pelanggaran: 🤬 Kata Kasar
-│ ⚠️ Warn: ${currentWarn}/${maxWarn}
-│ 📌 Auto-kick: OFF
+                    text: `User: @${senderTag}
+Pelanggaran: 🤬 Kata Kasar
+Warn: ${currentWarn}/${maxWarn}
+Auto-kick: OFF
 
 _Kata kasar berlebihan tapi auto-kick dimatikan_`,
                     mentions: [m.sender]
@@ -262,11 +259,10 @@ _Kata kasar berlebihan tapi auto-kick dimatikan_`,
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: `
-│ 👤 User: @${senderTag}
-│ 🏷️ Pelanggaran: 🤬 Kata Kasar
-│ ⚠️ Warn: ${currentWarn}/${maxWarn}
-│ 🔍 Terdeteksi: ${matchesStr}
+                text: `User: @${senderTag}
+Pelanggaran: 🤬 Kata Kasar
+Warn: ${currentWarn}/${maxWarn}
+Terdeteksi: ${matchesStr}
 
 _Jaga perkataan! ${maxWarn - currentWarn} lagi = kick_`,
                 mentions: [m.sender]
@@ -332,9 +328,7 @@ async function handler(m, { sock }) {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antikasar", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { kasarMaxWarn: count })
-        return m.reply(`
-│ Max peringatan: *${count}x*
-`)
+        return m.reply(claraWrap("Antikasar", `Max peringatan: *${count}x*`))
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -354,16 +348,13 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.kasarWarns?.[target]) delete updated.kasarWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(`
-│ 👤 User: @${target.split('@')[0]}
-│ Warn Kasar: Direset
-`, { mentions: [target] })
+        return m.reply(claraWrap("Antikasar", `Warn warn kasar @${target.split('@')[0]} direset`), { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.kasarWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antikasar", '│'))
+        return m.reply(claraWrap("Antikasar", `Semua warn kasar direset`))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antikasar` untuk daftar command')
 }
