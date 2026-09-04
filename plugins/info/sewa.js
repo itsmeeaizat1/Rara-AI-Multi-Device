@@ -6,6 +6,7 @@ import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import config from "../../config.js";
 import { sewaPrice } from "../../src/lib/sewa.js";
+import { sendMenuCard, buildNavButtons } from "../../src/lib/nova-menu-card.js";
 import fs from "fs";
 
 const pluginConfig = {
@@ -248,7 +249,13 @@ async function handler(m, { sock, config: botConfig, db }) {
       tipText("Ketik " + prefix + "daftarsewa untuk daftar sekarang!") + "\n" +
       tipText("Ketik " + prefix + "menu untuk kembali ke menu");
 
-    await m.reply( fullText, "sewa");
+    // Kirim via sendMenuCard: banner link-preview + 5 tombol nav standar
+    await sendMenuCard(sock, m, {
+      text: fullText,
+      footer: "",
+      buttons: buildNavButtons(m, db, prefix),
+      title: botConfig.bot?.name || "Nova AI",
+    });
 
     // Auto-reply QRIS image kalau tersedia
     const qrisUrl = config.payment?.qrisUrl || "";
