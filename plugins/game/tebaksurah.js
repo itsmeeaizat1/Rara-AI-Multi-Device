@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox } from "../../src/lib/nova-games.js";
 
 const sessions = new Map();
 
@@ -49,7 +50,7 @@ async function handler(m, { sock, db }) {
         return m.reply(msg);
       } else {
         await m.react("❌");
-        return m.reply("❌ Salah! Coba lagi.");
+        return m.reply(novaGameBox({ title: "tebaksurah", icon: "📖", flavor: "❌ *BELUM TEPAT!*", body: "Jawabanmu belum benar, coba lagi ya kak!" }));
       }
     }
 

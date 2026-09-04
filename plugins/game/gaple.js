@@ -58,7 +58,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (sub === "join") {
       if (game.players.find(p => p.id === sender)) return m.reply(claraWrap("gaple", "Sudah bergabung.", "info"));
       game.players.push({ id: sender, hand: [] });
-      return m.reply("✅ @" + sender.split("@")[0] + " bergabung!\nTotal: " + game.players.length + " pemain", { mentions: [sender] });
+      return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "🁣 *GABUNG!*", body: "@" + sender.split("@")[0] + " masuk meja!\nTotal: " + game.players.length + " pemain" }), { mentions: [sender] });
     }
 
     if (sub === "start") {
@@ -92,7 +92,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!p) return m.reply(claraWrap("gaple", "Belum bergabung.", "info"));
       const ht = p.hand.map((c, i) => i + ": [" + c[0] + "|" + c[1] + "]").join("\n");
       await sock.sendMessage(sender, { text: "🀱 *Kartu Gaple-mu:*\n\n" + ht });
-      return m.reply("📩 Kartu dikirim via DM!");
+      return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "📩 *BATAU DIBAGI!*", body: "Cek DM kamu — kartu domino sudah dikirim rahasia." }));
     }
 
     if (sub === "play") {
@@ -104,7 +104,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const card = p.hand[idx];
       if (!tryPlace(game.table, card, side)) return m.reply(claraWrap("gaple", "Kartu tidak cocok dengan ujung meja.", "info"));
       p.hand.splice(idx, 1);
-      if (p.hand.length === 0) { games.delete(chatId); return m.reply("🎉 @" + sender.split("@")[0] + " MENANG!", { mentions: [sender] }); }
+      if (p.hand.length === 0) { games.delete(chatId); return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "🎉 *GAPLE MASTER!*", body: "@" + sender.split("@")[0] + " habiskan semua batanya!", cta: gameCTA("gaple") }), { mentions: [sender] }); }
       game.currentPlayer = getNext(game);
       return sendStatus(m, sock, game);
     }
@@ -114,7 +114,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!p || p.id !== sender) return m.reply(claraWrap("gaple", "Bukan giliranmu!", "info"));
       if (!game.deck.length) return m.reply(claraWrap("gaple", "Deck kosong.", "info"));
       const c = game.deck.pop(); p.hand.push(c);
-      m.reply("📥 Ambil: [" + c[0] + "|" + c[1] + "]");
+      m.reply(novaGameBox({ title: "gaple", icon: "🁣", body: "📥 Ambil: [" + c[0] + "|" + c[1] + "]" }));
       game.currentPlayer = getNext(game);
       return sendStatus(m, sock, game);
     }
@@ -129,10 +129,10 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (sub === "stop") {
       const p = game.players.find(p => p.id === sender);
       if (!p) return m.reply(claraWrap("gaple", "Belum bergabung.", "info"));
-      if (isAdmins || isOwner) { games.delete(chatId); return m.reply("⏹️ Gaple dihentikan oleh admin."); }
+      if (isAdmins || isOwner) { games.delete(chatId); return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "⏹️ *STOP!*", body: "Gaple dihentikan oleh admin.", cta: gameCTA("gaple") })); }
       if (!game.stopVotes.includes(sender)) game.stopVotes.push(sender);
-      if (game.stopVotes.length === game.players.length) { games.delete(chatId); return m.reply("⏹️ Gaple dihentikan (semua setuju)."); }
-      return m.reply("📢 Butuh " + (game.players.length - game.stopVotes.length) + " lagi.");
+      if (game.stopVotes.length === game.players.length) { games.delete(chatId); return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "⏹️ *STOP!*", body: "Gaple dihentikan — semua pemain setuju.", cta: gameCTA("gaple") })); }
+      return m.reply(novaGameBox({ title: "gaple", icon: "🁣", body: "📢 Butuh " + (game.players.length - game.stopVotes.length) + " vote lagi buat stop." }));
     }
 
     return m.reply(claraWrap("gaple", "Perintah tidak dikenali. .gaple info untuk panduan.", "guide"));

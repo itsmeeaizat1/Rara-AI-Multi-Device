@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ulartangga.js — Game ular tangga (snakes & ladders)
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const SNAKES = { 29: 7, 24: 12, 72: 36, 90: 56, 75: 64, 91: 72, 97: 78 };
@@ -53,8 +54,8 @@ async function handler(m, { sock }) {
       game.players.push(sender);
       game.positions[sender] = 1;
       await m.react("🐣");
-      return m.reply(`✅ @${sender.split("@")[0]} bergabung!
-Total pemain: ${game.players.length}`);
+      return m.reply(novaGameBox({ title: "ulartangga", icon: "🐍", flavor: "🎲 *MASUK ARENA!*", body: `@${sender.split("@")[0]} bergabung!
+Total pemain: ${game.players.length}` }));
     }
 
     if (action === "roll") {
@@ -115,7 +116,7 @@ Total pemain: ${game.players.length}`);
     if (action === "end") {
       games.delete(from);
       await m.react("🐣");
-      return m.reply("Game dihentikan.");
+      return m.reply(novaGameBox({ title: "ulartangga", icon: "🐍", flavor: "🏁 *PERMAINAN DIHENTIKAN!*", body: "Papan ditutup, ularnya tidur lagi. Ketik .ulartangga buat main lagi." }));
     }
   } catch (err) {
     console.error("ulartangga error:", err);

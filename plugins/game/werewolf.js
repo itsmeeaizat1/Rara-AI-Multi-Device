@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Werewolf — Social Deduction Game (5-15 players)
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 import {
   emoji_role, sesi, playerOnGame, playerOnRoom, playerExit,
@@ -99,7 +100,7 @@ async function handler(m, { sock, text, command }) {
       if (byId === false) return m.reply(claraWrap("werewolf", "Player tidak terdaftar.", "info"));
       if (byId.db.isdead) return m.reply(claraWrap("werewolf", "Player sudah mati.", "info"));
       if (byId.db.id === sender) return m.reply(claraWrap("werewolf", "Tidak bisa kill diri sendiri.", "info"));
-      m.reply("Berhasil membunuh player " + n).then(() => { dataPlayer(sender, ww).status = true; killWerewolf(sender, n, ww); });
+      m.reply(novaGameBox({ title: "werewolf", icon: "🐺", flavor: "🩸 *SERANGAN SUKSES!*", body: "Kamu berhasil membunuh player " + n + " malam ini. Jangan lupa pura-pura tidur ya 😈" })).then(() => { dataPlayer(sender, ww).status = true; killWerewolf(sender, n, ww); });
       return;
     }
 
@@ -112,7 +113,7 @@ async function handler(m, { sock, text, command }) {
       const byId = getPlayerById2(sender, n, ww);
       if (byId === false) return m.reply(claraWrap("werewolf", "Player tidak terdaftar.", "info"));
       const result = dreamySeer(sender, n, ww);
-      m.reply("Identitas player " + n + ": " + result).then(() => { dataPlayer(sender, ww).status = true; });
+      m.reply(novaGameBox({ title: "werewolf", icon: "🐺", flavor: "🔮 *RAMALAN SEER!*", body: "Identitas player " + n + ": " + result })).then(() => { dataPlayer(sender, ww).status = true; });
       return;
     }
 
@@ -123,7 +124,7 @@ async function handler(m, { sock, text, command }) {
       const n = mustNumber(targetRaw);
       if (!n) return m.reply(claraWrap("werewolf", "Format: .ww deff <nomor>", "guide"));
       protectGuardian(sender, n, ww);
-      m.reply("Berhasil melindungi player " + n).then(() => { dataPlayer(sender, ww).status = true; });
+      m.reply(novaGameBox({ title: "werewolf", icon: "🐺", flavor: "🛡️ *PERLINDUNGAN AKTIF!*", body: "Kamu berhasil melindungi player " + n + " dari serangan malam ini." })).then(() => { dataPlayer(sender, ww).status = true; });
       return;
     }
 
@@ -134,7 +135,7 @@ async function handler(m, { sock, text, command }) {
       const n = mustNumber(targetRaw);
       if (!n) return m.reply(claraWrap("werewolf", "Format: .ww sorcerer <nomor>", "guide"));
       const result = sorcerer(sender, n, ww);
-      m.reply("Identitas player " + n + ": " + result).then(() => { dataPlayer(sender, ww).status = true; });
+      m.reply(novaGameBox({ title: "werewolf", icon: "🐺", flavor: "🪄 *SIHIR SORCERER!*", body: "Identitas player " + n + ": " + result })).then(() => { dataPlayer(sender, ww).status = true; });
       return;
     }
 
@@ -145,7 +146,7 @@ async function handler(m, { sock, text, command }) {
       const n = mustNumber(targetRaw);
       if (!n) return m.reply(claraWrap("werewolf", "Format: .ww vote <nomor>", "guide"));
       vote(chatId, n, sender, ww);
-      return m.reply("✅ Vote berhasil");
+      return m.reply(novaGameBox({ title: "werewolf", icon: "🐺", flavor: "🗳️ *VOTE TERCATAT!*", body: "Pilihanmu masuk. Tunggu hasil sidang warga ya." }));
     }
 
     // EXIT
@@ -161,7 +162,7 @@ async function handler(m, { sock, text, command }) {
       if (!ww[chatId]) return m.reply(claraWrap("werewolf", "Tidak ada sesi.", "info"));
       if (ww[chatId].owner !== sender) return m.reply(claraWrap("werewolf", "Hanya owner room yang bisa hapus.", "info"));
       delete ww[chatId];
-      return m.reply("✅ Sesi dihapus.");
+      return m.reply(novaGameBox({ title: "werewolf", icon: "🐺", flavor: "✅ *SESI DIBUBARKAN!*", body: "Desa kembali tenang... untuk sekarang." }));
     }
 
     // PLAYER LIST

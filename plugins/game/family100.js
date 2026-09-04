@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { novaBox, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { normalizeAnswer, getSimilarity, isReplyToGame } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
@@ -273,13 +274,13 @@ async function handler(m, { sock }) {
 
     const data = loadData();
     if (!data || data.length === 0) {
-      await m.reply("❌ Soalnya lagi kosong nih 🫠\nCoba lagi nanti ya!");
+      await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🫠 *BANK SOAL KOSONG!*", body: "Soalnya lagi kosong nih kak, coba lagi nanti ya!" }));
       return;
     }
 
     const questionData = data[Math.floor(Math.random() * data.length)];
     if (!questionData || !questionData.jawaban || questionData.jawaban.length === 0) {
-      await m.reply("❌ Soalnya rusak nih 😵\nCoba ulang ya!");
+      await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "😵 *SOAL RUSAK!*", body: "Soalnya kepotong nih, coba ulang ya kak!" }));
       return;
     }
     const text = novaBox("Family 100", [
@@ -334,7 +335,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[family100] Handler error:", e.message);
     try {
-      await m.reply("❌ *Terjadi error saat memulai game!*");
+      await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *ERROR SAAT MULAI!*", body: "Ada gangguan saat memulai game, coba lagi ya kak!" }));
     } catch {}
   }
 }
@@ -502,7 +503,7 @@ async function answerHandler(m, sock) {
       const percent = Math.round(result.similarity * 100);
       await m.react("🔥");
       try {
-        await m.reply(`🔥 Hampir! Jawabanmu ${percent}% mirip — sisa ${formatTime(remaining)}`);
+        await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🔥 *HAMPIR SEMPURNA!*", body: `Jawabanmu ${percent}% mirip — sisa ${formatTime(remaining)}` }));
       } catch {}
       return true;
     }
@@ -510,7 +511,7 @@ async function answerHandler(m, sock) {
     if (result.status === "wrong") {
       const remaining = getRemainingTime(chatId);
       try {
-        await m.reply(`❌ Belum ada yang cocok — sisa ${formatTime(remaining)}`);
+        await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *BELUM COCOK!*", body: `Belum ada jawaban yang masuk — sisa ${formatTime(remaining)}` }));
       } catch {}
       return true;
     }

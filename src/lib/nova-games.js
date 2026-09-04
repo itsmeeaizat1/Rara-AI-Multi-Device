@@ -101,6 +101,19 @@ const GAME_CTA = {
   tebakmakanan: "Yuk tebak makanan lain kak, biar makin kenyal pengetahuanmu 🍜🥳",
   // MULTI ANSWER
   family100: "Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳",
+  // BOARD / CARD GAMES (novaGameBox)
+  catur: "Yuk main catur lagi kak, biar taktikmu makin tajam ♟️🥳",
+  uno: "Yuk gas round Uno lagi kak, biar kamu jadi master UNO 🃏🥳",
+  gaple: "Yuk main gaple lagi kak, biar kartumu makin panas 🔥🥳",
+  werewolf: "Yuk main werewolf lagi kak, biar naluri detektifmu makin tajam 🐺🥳",
+  family100: "Yuk jawab survey lain kak, biar skormu makin gede 💯🥳",
+  ulartangga: "Yuk lompatin ular tangga lagi kak, biar adrenalinmu naik 🐍🥳",
+  truth: "Yuk pilih truth lagi kak, jangan takut jujur ya 🎤🥳",
+  dare: "Yuk pilih dare lagi kak, biar berani melintir 🎯🥳",
+  tebaksurah: "Yuk tebak surah lain kak, biar hafalanmu makin kuat 📖🥳",
+  tebakkabupaten: "Yuk tebak kabupaten lain kak, biar kenal Indonesia makin jauh 📍🥳",
+  tebaklogo: "Yuk tebak logo lain kak, biar kenal merek dunia 🏢🥳",
+  tebakmakanan: "Yuk tebak makanan lagi kak, biar lapar sekaligus pinter 🍜🥳",
 };
 
 // Fallback kalau game-nya belum punya CTA khusus
@@ -452,5 +465,19 @@ games.register("tebakjkt48", { emoji: "🎤", title: "TEBAK JKT48", description:
 games.register("tebakkabupaten", { emoji: "📍", title: "TEBAK KABUPATEN", description: "Tebak kabupaten Indonesia", hasImage: true, imageField: "url", answerField: "title", questionField: null, timeout: 60000, alias: [] });
 games.register("tebaklogo", { emoji: "🏢", title: "TEBAK LOGO", description: "Tebak logo perusahaan", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
 games.register("tebakmakanan", { emoji: "🍜", title: "TEBAK MAKANAN", description: "Tebak makanan Indonesia", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
+
+// ─── novaGameBox — format khas game buat game papan/kartu (catur, uno, dll) ───
+// Beda dari claraWrap (menu/reply klasik): game bebas ekspresi —
+// opener flavor bold+emoji, judul CAPS di box, body bebas (papan/giliran/jawaban), CTA tematik.
+export function novaGameBox(opts) {
+  const { title, icon = "🎮", body, flavor = null, cta = null } = opts;
+  let text = "";
+  if (flavor) text += flavor + "\n\n";
+  text += `╭─「 ✦ ${icon} ${String(title).toUpperCase()} ✦ 」\n\n`;
+  text += body + "\n";
+  text += `╰────  •  ────`;
+  if (cta) text += `\n\n${cta}`;
+  return text;
+}
 
 export { NovaGames, games, gameCTA };

@@ -58,7 +58,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (sub === "join") {
       if (game.players.find(p => p.id === sender)) return m.reply(claraWrap("uno", "Kamu sudah bergabung.", "info"));
       game.players.push({ id: sender, hand: [] });
-      return m.reply("✅ @" + sender.split("@")[0] + " bergabung!\nTotal: " + game.players.length + " pemain", { mentions: [sender] });
+      return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "🃏 *GABUNG!*", body: "@" + sender.split("@")[0] + " masuk meja!\nTotal: " + game.players.length + " pemain" }), { mentions: [sender] });
     }
 
     if (sub === "start") {
@@ -88,7 +88,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!p) return m.reply(claraWrap("uno", "Kamu belum bergabung.", "info"));
       const hand = p.hand.map((c, i) => i + ": " + c.color + " " + c.value).join("\n");
       await sock.sendMessage(sender, { text: "🎴 *Kartu UNO-mu:*\n\n" + hand });
-      return m.reply("📩 Kartu dikirim via DM!");
+      return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "📩 *KARTU TERKIRIM!*", body: "Cek DM kamu — kartu sudah dikirim rahasia ke pesan pribadi." }));
     }
 
     if (sub === "draw") {
@@ -96,11 +96,11 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!p || p.id !== sender) return m.reply(claraWrap("uno", "Bukan giliranmu!", "info"));
       if (game.drawStack > 0) {
         for (let i = 0; i < game.drawStack; i++) { if (!game.deck.length) { game.deck = shuffle(game.discardPile); game.discardPile = []; } p.hand.push(game.deck.pop()); }
-        m.reply("📥 Kamu ambil " + game.drawStack + " kartu (penalti)."); game.drawStack = 0;
+        m.reply(novaGameBox({ title: "uno", icon: "🃏", body: "📥 Kamu ambil " + game.drawStack + " kartu — sanksi penalti tuntas!" })); game.drawStack = 0;
       } else {
         if (!game.deck.length) { game.deck = shuffle(game.discardPile); game.discardPile = []; }
         const c = game.deck.pop(); p.hand.push(c);
-        m.reply("📥 Kamu ambil: " + c.color + " " + c.value);
+        m.reply(novaGameBox({ title: "uno", icon: "🃏", body: "📥 Kamu ambil: " + c.color + " " + c.value }));
       }
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
@@ -118,7 +118,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       else if (card.value === "10") game.currentPlayer = getNextPlayer(game);
       else if (card.value === "11") game.direction *= -1;
       game.currentCard = card; game.discardPile.push(card); p.hand.splice(idx, 1);
-      if (p.hand.length === 0) { games.delete(chatId); return m.reply("🎉 @" + sender.split("@")[0] + " MENANG!", { mentions: [sender] }); }
+      if (p.hand.length === 0) { games.delete(chatId); return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "🎉 *UNO! MENANG TOTAL!*", body: "@" + sender.split("@")[0] + " habiskan semua kartunya!", cta: gameCTA("uno") }), { mentions: [sender] }); }
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
     }
@@ -142,10 +142,10 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (sub === "stop") {
       const p = game.players.find(p => p.id === sender);
       if (!p) return m.reply(claraWrap("uno", "Kamu belum bergabung.", "info"));
-      if (isAdmins || isOwner) { games.delete(chatId); return m.reply("⏹️ UNO dihentikan oleh admin."); }
+      if (isAdmins || isOwner) { games.delete(chatId); return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "⏹️ *STOP!*", body: "UNO dihentikan oleh admin.", cta: gameCTA("uno") })); }
       game.stopVotes.add(sender);
-      if (game.stopVotes.size === game.players.length) { games.delete(chatId); return m.reply("⏹️ UNO dihentikan (semua setuju)."); }
-      return m.reply("📢 Butuh " + (game.players.length - game.stopVotes.size) + " lagi untuk setuju.");
+      if (game.stopVotes.size === game.players.length) { games.delete(chatId); return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "⏹️ *STOP!*", body: "UNO dihentikan — semua pemain setuju.", cta: gameCTA("uno") })); }
+      return m.reply(novaGameBox({ title: "uno", icon: "🃏", body: "📢 Butuh " + (game.players.length - game.stopVotes.size) + " vote lagi buat stop." }));
     }
 
     return m.reply(claraWrap("uno", "Perintah tidak dikenali. .uno info untuk panduan.", "guide"));
