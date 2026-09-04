@@ -5,7 +5,7 @@ import { getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import config from "../../config.js";
-import { sewaPrice } from "../../src/lib/sewa.js";
+import { sewaPrice } from "../../src/lib/sewa/sewa.js";
 import { sendMenuCard, buildNavButtons } from "../../src/lib/nova-menu-card.js";
 import fs from "fs";
 
