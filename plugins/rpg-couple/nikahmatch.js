@@ -3,6 +3,7 @@
 
 import { ensureRpg, getRpgData, removeGold } from "../../src/lib/nova-rpg-service.js";
 import {claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import {
   getCintaData, marry,
   MARRIAGE_MIN_AFFECTION, MARRIAGE_MIN_DATING_DAYS, formatDurasi
@@ -75,15 +76,19 @@ async function handler(m, { sock }) {
       timestamp: Date.now(),
     };
 
-    await m.reply(novaBox("Nikah", [
-      `💍 @${m.sender.split("@")[0]} melamar @${cinta.spouse.split("@")[0]}`,
-      `Pasangan: ${cinta.spouseName}`,
-      `Affection: ${cinta.affection}`,
-      `Berlaku: 1 jam`,
-      "---",
-      "Balas terima atau tolak",
-      `Atau ${m.prefix}rpgterimanikah / ${m.prefix}rpgtolaknikah`,
-    ]));
+    await m.reply(novaGameBox({
+      title: "rpg cinta", icon: "💍",
+      flavor: "💍 *LAMARAN TERKIRIM!*",
+      body: [
+        `│ • 💍 @${m.sender.split("@")[0]} melamar @${cinta.spouse.split("@")[0]}`,
+        `│ • 💑 Pasangan : ${cinta.spouseName}`,
+        `│ • 💕 Affection : ${cinta.affection}`,
+        "│ • Berlaku : 1 jam",
+        "│ • Balas pesan ini: terima / tolak",
+        `│ • Atau ${m.prefix}rpgterimanikah / ${m.prefix}rpgtolaknikah`,
+      ].join("\n"),
+      cta: gameCTA("nikahmatch"),
+    }));
     await m.react("💍");
   } catch (e) {
     console.error("[rpgnikah] Error:", e.message);
@@ -116,9 +121,17 @@ async function answerHandler(m, sock) {
       marry(m);
       delete global.rpgNikahSessions[sessKey];
       await m.react("💍");
-      await m.reply(
-        claraWrap("Nikah", `@${m.sender.split("@")[0]} dan @${proposer.split("@")[0]} resmi menikah!\nBiaya: *${MARRIAGE_COST} gold*\nSemoga sakinah, mawaddah, warahmah 🤲\nMarriage bonus aktif untuk RPG battle!`)
-      );
+      await m.reply(novaGameBox({
+        title: "rpg cinta", icon: "💍",
+        flavor: "💍 *SELAMAT MENIKAH!*",
+        body: [
+          `│ • 💑 @${m.sender.split("@")[0]} & @${proposer.split("@")[0]}`,
+          `│ • 💰 Biaya pernikahan : ${MARRIAGE_COST} gold`,
+          "│ • 🤲 Semoga sakinah, mawaddah, warahmah",
+          "│ • Marriage bonus aktif untuk RPG battle!",
+        ].join("\n"),
+        cta: gameCTA("nikahmatch"),
+      }));
       return true;
     }
 

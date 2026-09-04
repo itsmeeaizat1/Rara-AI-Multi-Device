@@ -121,6 +121,13 @@ const GAME_CTA = {
   bounty: "Yuk buru buronan lain kak, biar namamu makin dikenal 🎯🥳",
   blacksmith: "Yuk tempa lagi kak, biar senjatamu makin tajam ⚒️🥳",
   alchemist: "Yuk racik ramuan lain kak, biar makin jago meramu ⚗️🥳",
+  // RPG CINTA (rpg couple — tema romantis)
+  jadianmatch: "Yuk tembak-tembakan lagi kak, siapa tau ketemu jodoh 💘🥳",
+  kencanmatch: "Yuk kencan lagi kak, biar hubunganmu makin mesra 💕🥳",
+  nikahmatch: "Yuk bahagia terus sama pasanganmu kak, biar awet sampai tua 💍🥳",
+  soulmatematch: "Yuk ukur kecocokan lagi kak, siapa tau dia memang jodohmu 💞🥳",
+  couplewar: "Yuk war pasangan lain kak, biar cintamu makin disegani ⚔️🥳",
+  putusmatch: "Yuk move on kak, siapa tau jodoh berikutnya lebih baik 💪🥳",
 };
 
 // Fallback kalau game-nya belum punya CTA khusus

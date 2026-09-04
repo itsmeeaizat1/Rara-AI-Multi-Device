@@ -4,6 +4,9 @@
 
 ## Statistik
 
+- **RPG CINTA ENGINE FORMAT (branch feat/rpg-dekaku, 6 file rpg-couple):** Hasil fitur RPG cinta kini pakai format engine mini-game dengan TEMA ROMANTIS via novaGameBox: flavor bold romantis (💕 *CIE CIE RESMI JADIAN!*, 💍 *SELAMAT MENIKAH!*, 💔 *HATI PATAH... PUTUS!*), box judul RPG CINTA + ikon hati per fitur (jadian 💕, kencan 💘, nikah 💍, soulmate 💞, war ⚔️, putus 💔), body `│ • Label : value` dengan ikon cinta (💑💕✨💰⚡), CTA romantis kak-language via gameCTA. GAME_CTA +6 entri romantis. Konversi: jadianmatch (3 blok: tembak langsung, ajakan cupid, terima via reply), kencanmatch (hasil kencan), nikahmatch (lamaran + terima), soulmatematch (hasil kecocokan), couplewar (hasil war), putusmatch (hasil putus). cintainfo tetap panel novaBox (status info). Panel/menu/error tetep box standar. Tes: scripts/test-rpg-cinta-engine.mjs — 6/6 pass (edge paths gak crash, warn box jalan, panel tetap box) + render kencan terverifikasi visual.
+
+
 - **DEKAKU RPG BATCH 1 (branch feat/rpg-dekaku, 6 file):** Audit 158 file kategori rpg → 58 file masih pakai template lama 'emoji-per-baris + bold label' (kaku). Konversi batch 1: bankrpg, lottery, horserace, bounty, blacksmith, alchemist. Standar (revisi owner): panel/info → claraWrap box smallcaps (usage 📌💡), hasil aksi → FORMAT ENGINE MINI-GAME via novaGameBox (flavor bold pembuka + box judul CAPS + isi `│ • Label : value` + closer + CTA kak-language tematik via gameCTA). GAME_CTA ditambah 6 entri RPG (bankrpg/lottery/horserace/bounty/blacksmith/alchemist). lottery draw mention pemenang via mentions. Tes: scripts/test-rpg-dekaku.mjs — 12/12 pass (box check, engine check flavor+box+CTA, bold-hemat check, no-emoji check, no-bold-label check). Batch berikutnya: ~52 file sisanya (adventure, guildrpg, jobrpg, skilltree, kingdom, dll).
 
 
