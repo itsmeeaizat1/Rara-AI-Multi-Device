@@ -754,6 +754,31 @@ async function createGoodbyeCardV4(username, avatarUrl, groupName, memberCount) 
   return canvas.toBuffer("image/png");
 }
 
+// Deteksi negara dari prefix nomor telepon (62 = Indonesia, dll)
+const COUNTRY_PREFIXES = [
+  ["880", "Bangladesh"], ["966", "Arab Saudi"], ["971", "UEA"],
+  ["234", "Nigeria"],
+  ["62", "Indonesia"], ["60", "Malaysia"], ["65", "Singapura"],
+  ["66", "Thailand"], ["63", "Filipina"], ["84", "Vietnam"],
+  ["81", "Jepang"], ["82", "Korea Selatan"], ["86", "China"],
+  ["91", "India"], ["92", "Pakistan"], ["90", "Turki"],
+  ["44", "Inggris"], ["49", "Jerman"], ["33", "Prancis"],
+  ["39", "Italia"], ["34", "Spanyol"], ["31", "Belanda"],
+  ["41", "Swiss"], ["48", "Polandia"], ["52", "Meksiko"],
+  ["55", "Brasil"], ["61", "Australia"], ["64", "Selandia Baru"],
+  ["20", "Mesir"], ["27", "Afrika Selatan"],
+  ["1", "Amerika Serikat"], ["7", "Rusia"],
+];
+
+function detectCountry(jid) {
+  const num = String(jid || "").split("@")[0].split(":")[0].replace(/[^0-9]/g, "");
+  if (!num) return "Tidak diketahui";
+  for (const [code, country] of COUNTRY_PREFIXES) {
+    if (num.startsWith(code)) return `${country} (+${code})`;
+  }
+  return "Tidak diketahui";
+}
+
 export {
   createWideDiscordCard,
   createGoodbyeCard,
@@ -762,4 +787,5 @@ export {
   createWelcomeCardV4,
   createGoodbyeCardV4,
   fetchAutoresbotBg,
+  detectCountry,
 };

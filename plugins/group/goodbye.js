@@ -1,8 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // goodbye.js — V1 (teks) + V2 (canvas hexagon) + V3 (autoresbot API bg + vertical)
-import { novaError, novaGuide, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { createGoodbyeCard, createGoodbyeCardV3 } from "../../src/lib/nova-welcome-card.js";
+import { createGoodbyeCard, createGoodbyeCardV3, detectCountry } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
@@ -11,26 +12,20 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      const text =
-        novaGuide('Goodbye', 'Pesan goodbye saat member keluar grup', `${prefix}goodbye on/off`) +
-        "\n" +
-        tipText(`Ketik ${prefix}setgoodbyetype v1/v2/v3 untuk pilih tipe`);
-
-      await m.reply(claraWrap("goodbye2", text));
+      await m.reply(novaGuide('Goodbye', `Pesan perpisahan saat member keluar grup. Pilih tipe dengan ${prefix}setgoodbyetype v1/v2/v3.`, `${prefix}goodbye on`));
       return { handled: true };
     }
 
     const db = getDatabase();
     db.setGroup(m.chat, { goodbye: args === "on" });
 
-    const text =
-      claraWrap("Goodbye", ["Fitur: *ɢᴏᴏᴅʙʏᴇ ᴍᴇꜱꜱᴀɢᴇ*",
-        `Status: *${args === "on" ? "ON" : "OFF"}*`,
-        `Group: *${m.chat}*`].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}setgoodbyetype v1/v2/v3 untuk pilih tipe`);
-
-    await m.reply(claraWrap("goodbye2", text));
+    await m.reply(claraWrap("goodbye", [
+      `Fitur : goodbye message`,
+      `Status : ${args === "on" ? "ON" : "OFF"}`,
+      `Grup : ${m.chat}`,
+      "",
+      `💡 Ketik ${prefix}setgoodbyetype v1/v2/v3 untuk pilih tipe`,
+    ].join("\n")));
   } catch (error) {
     await m.reply(novaError("Goodbye", `Gagal: ${error.message}`));
   }
@@ -55,15 +50,57 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   const username = participantJid.split("@")[0].split(":")[0];
   const prefix = config.command?.prefix || ".";
 
+  // Info user dari database + deteksi negara dari nomor
+  const userData = db.getUser(participantJid) || {};
+  const displayName = userData.name || userData.regName || username;
+  const country = detectCountry(participantJid);
+
+  // Pesan custom goodbyeMsg yang di-set owner (kalau ada)
+  const now = new Date();
+  let customText = "";
+  const customMsg = String(groupData.goodbyeMsg || "").trim();
+  if (customMsg) {
+    const dayName = now.toLocaleDateString("id-ID", { weekday: "long" });
+    const dateStr = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    customText = customMsg
+      .replaceAll("{user}", "@" + username)
+      .replaceAll("{group}", groupName)
+      .replaceAll("{day}", dayName)
+      .replaceAll("{date}", dateStr);
+    if (customText.length > 200) customText = customText.slice(0, 197) + "...";
+  }
+
+  // Sapaan perpisahan acak biar gak monoton
+  const SAPAAN_OUT = [
+    `@${username} telah keluar dari grup...`,
+    `Ada yang pergi duluan nih, @${username}...`,
+    `Kita kehilangan @${username} hari ini...`,
+    `Farewell @${username}, semoga baik-baik saja...`,
+  ];
+  const sapaanOut = SAPAAN_OUT[Math.floor(Math.random() * SAPAAN_OUT.length)];
+
+  // Engine text goodbye (dipakai v1 teks + caption v2/v3 + fallback)
+  const rows = [
+    `│ • 👤 Nama : ${displayName}`,
+    `│ • 📱 Nomor : @${username}`,
+    `│ • 🌏 Negara : ${country}`,
+    `│ • 🏠 Grup : ${groupName}`,
+    `│ • 👥 Sisa Member : ${memberCount}`,
+  ];
+  if (customText) {
+    rows.push("│", `│ • 💌 ${customText}`);
+  }
+  const engineText = novaGameBox({
+    title: "goodbye", icon: "🚪",
+    flavor: `🚪 *${sapaanOut}*`,
+    body: rows.join("\n"),
+    cta: gameCTA("goodbye"),
+  });
+
   // ===== V1: TEKS BAWAAN =====
   if (goodbyeType === 1) {
-    const goodbyeText =
-      `@${username} telah keluar\n` +
-      `Dari grup: *${groupName}*\n` +
-      `Sisa member: *${memberCount}*`;
-
     await sock.sendMessage(groupJid, {
-      text: goodbyeText,
+      text: engineText,
       mentions: [participantJid],
     });
     return;
@@ -74,14 +111,9 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
     try {
       const buffer = await createGoodbyeCard(username, ppUrl, groupName, memberCount);
 
-      const caption =
-        `@${username} telah keluar\n` +
-        `Dari: *${groupName}*\n` +
-        `Sisa: *${memberCount} member*`;
-
       await sock.sendMessage(groupJid, {
         image: buffer,
-        caption,
+        caption: engineText,
         mentions: [participantJid],
       });
       return;
@@ -96,14 +128,9 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
       const apiKey = config.APIkey?.autoresbot || "";
       const buffer = await createGoodbyeCardV3(username, ppUrl, groupName, memberCount, apiKey);
 
-      const caption =
-        `@${username} telah keluar\n` +
-        `Dari: *${groupName}*\n` +
-        `Sisa: *${memberCount} member*`;
-
       await sock.sendMessage(groupJid, {
         image: buffer,
-        caption,
+        caption: engineText,
         mentions: [participantJid],
       });
       return;
@@ -114,7 +141,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
         const buffer = await createGoodbyeCard(username, ppUrl, groupName, memberCount);
         await sock.sendMessage(groupJid, {
           image: buffer,
-          caption: `@${username} telah keluar\nDari: *${groupName}*\nSisa: *${memberCount} member*`,
+          caption: engineText,
           mentions: [participantJid],
         });
         return;
@@ -125,13 +152,8 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   }
 
   // ===== V4+: Fallback ke teks =====
-  const goodbyeText =
-    `@${username} telah keluar\n` +
-    `Dari grup: *${groupName}*\n` +
-    `Sisa member: *${memberCount}*`;
-
   await sock.sendMessage(groupJid, {
-    text: goodbyeText,
+    text: engineText,
     mentions: [participantJid],
   });
 }
