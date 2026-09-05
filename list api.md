@@ -2,7 +2,7 @@
 
 > Dokumentasi semua API endpoint yang digunakan di Nova AI WhatsApp Bot
 > Total: 200+ API endpoint dari 100+ provider
-> Last updated: 31 Agustus 2026
+> Last updated: 5 September 2026
 
 ---
 
@@ -982,7 +982,7 @@
 
 ---
 
-*Updated by Nova AI • 1 September 2026*
+*Updated by Nova AI • 5 September 2026*
 
 ---
 
@@ -1388,6 +1388,54 @@ https://upscayl.org
 
 ---
 
+## 🌐 HaidarApis — All-in-One REST API (336 Endpoint) — BARU 5 September 2026
+
+> Provider: `api.haidarxd.my.id` (HaidarMahiru) • Docs: https://api.haidarxd.my.id/docs
+> Akses: DAFTAR GRATIS → API Key (`?apikey=haidarapis-xxxx`) WAJIB di semua endpoint data
+> Status: ✅ ALIVE (diverifikasi 5 Sep 2026 — 200 OK, latency ~25ms, region sgp/fra/iad)
+> Catatan: meta endpoint TANPA key: `/api/v1/health` (status/uptime), `/api/v1/endpoints` (daftar kategori+count)
+
+### 📦 Kategori & Endpoint (pattern: `/api/v1/<kategori>/<nama>?apikey=...`)
+
+| Kategori | Jumlah | Endpoint Pilihan |
+|----------|--------|------------------|
+| 🤖 AI | 23 | gemini, gemini-vision, claude, claude-sonnet-5, gpt54, gpt55, deepsek, bing, nano-banana, quillbot, suno (musik AI), txt2vid, text2speech |
+| 🖼️ AI-Image | 12 | img2prompt, img2style, imglarger (upscale), remove-bg, remove-bg-v2, upscaler |
+| 📥 Downloader | 26 | tiktok-dl, ytmp3, ytmp4, ytplay, youtubedl, youtube-info, instagram, instagram-v2, facebook, threads, x (twitter), soundcloud, spotify, terabox, mediafire, gdrive, mega, github, capcut, douyin, bilibili, videy, savefrom, applemusic, npmjs |
+| 🎯 Stalker | 14 | tiktok, instagram, youtube, github, npm, roblox, pinterest, lahelu, tiktok-repost, ffchecker, cek-evo-gun-ff, cek-membership-ff, cek-prime-ff, cek-hari-ff |
+| 🎨 TextPro | 22 | blackpink, glitch, marvel, avengers, naruto, dragonball, wolf-galaxy, cartoon-graffiti, comic, devil-wings, bear, mascot, painting, pavement, wetglass, foggy-glass, pixel-glitch, write-graffiti, typography |
+| ✏️ Maker | 22 | brat, bratanime, brathd, bratvid, bratvidhd, qc, iqc, attp, ttp, smeme, nulis, msg, codesnap, fakebank-jago, fakedana, fakelobyff, fakelobyml, fakestory, fakethreads, ustadz, balogo |
+| 🔍 Search | 22 | google, youtube, tiktok, pinterest-photo, pinterest-video, soundcloud, spotify, lirik, kbbi, github, npmjs, pixiv, bilibili, crypto-search, applemusic, jadwalnonton-* (cinema), sekolah, groupsor |
+| 🎵 Spotify | 10 | search, track, album, artist, playlist, lyrics, canvas, home, search-album, search-artist |
+| 🎮 Games | 8 | asahotak, siapakahaku, susunkata, tekateki, tebaktebakan, tebaklirik, tebakkimia, islamic |
+| 📋 Primbon | 10 | artinama, nomerhoki, pasangan, penyakit, ramalanjodoh, ramalanjodohbali, rejekihoki-weton, sifatusaha-bisnis, tafsirmimpi, zodiak |
+| ☪️ Agama | 8 | jadwal-sholat, jadwal-sholat-cities, tafsirweb, bible-*, jadwal sholat (pattern Siputzx) |
+| 🎬 Film | 20 | lk21, hurawatch-* (home/search/movies/detail/stream/top-imdb/tv), seegore-* |
+| 🌸 Anime | 40 | anichin-* (donghua/home/detail/stream/ongoing/completed), animein-* (search/schedule/stream), mobinime-*, komiku, tokusatsu |
+| 🔧 Tools | 11 | ocr, screenshot, bypaslink (bypass shortlink), bypaslink-sites, img-upload, img2img, remove-wm (hapus watermark video), tempmail, web2apk, youtube-transcript, mega, orderkuota |
+| ℹ️ Info | 9 | resepmasak, livescores (skor bola live), cekbansos, bloxfruits-values, bloxfruits-stok |
+| 📱 Aplikasi | 7 | an1-* (APK/Mod: home/search/detail/download/games/mods/programs) |
+| 📄 ilovepdf / iloveimg | 16 | manipulasi PDF & image |
+| 🔞 Adult (18+) | 26 | (18+ — cek kebijakan grup sebelum pakai) |
+| Lainnya | — | alight-motion (4), canvas (1), random: lahelu/pixiv (2), orderkuota (11), wekios (9), berita (1) |
+
+### 💡 Potensi untuk Nova (yang belum ada / bisa jadi fallback)
+
+- **remove-wm** — hapus watermark video (Nova belum punya!)
+- **web2apk** — website → APK (fitur unik)
+- **youtube-transcript** — transkrip video YT (bahan auto-summary)
+- **nano-banana / gemini-vision** — AI image editing gratis-ish (cukup daftar)
+- **jadwalnonton-*** — jadwal bioskop Indonesia per kota
+- **livescores** — skor bola live
+- **bloxfruits-values/stok** — cek value Blox Fruits (tren game WA)
+- **Fallback berlapis** — downloader 26 platform bisa jadi fallback chain alldl; brat/qc/ttp/maker buat backup maker lokal; textpro 22 efek buat cadangan ephoto/textpro lama
+
+### 📝 HaidarCodes — Snippet Repository
+
+> `snippet.haidarxd.my.id/snippets` • Status: ✅ ALIVE (200 OK)
+> Repository snippet kode cloud dari creator yang sama (HaidarMahiru) — kumpulan contoh kode integrasi API (bahan referensi implementasi fitur, bukan API endpoint).
+
+---
 ## 🌏 API Luar Negeri (Jepang, China, US) — Bahan Fitur Bot
 
 ### 🇯🇵 Jepang — Anime, Manga & Light Novel
