@@ -4,7 +4,8 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaBox, novaEmpty, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaEmpty, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,13 +47,14 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    const text = novaBox("Quotes Bucin", [
-      quote,
-      "",
-      "Semoga harimu makin manis!",
-    ]);
-
-    await m.reply(text);
+    await m.reply(novaGameBox({
+      title: "quotes bucin", icon: "💕",
+      flavor: "💕 *QUOTES BUCIN BUAT KAMU!*",
+      body: [
+        `│ • "${quote}"`,
+      ].join("\n"),
+      cta: gameCTA("bucin"),
+    }));
     await m.react("💕");
   } catch (e) {
     console.error("[bucin] Error:", e.message);

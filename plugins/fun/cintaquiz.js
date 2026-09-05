@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
   name: "cintaquiz",
@@ -94,17 +95,20 @@ async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
 
       userState.delete(userId)
 
-      let lines = []
-      lines.push("Kuis Cinta Selesai!")
-      lines.push("")
-      lines.push("Skor: " + total + "/" + (PERTANYAAN.length * 10))
-      lines.push("Persentase: " + percent + "%")
-      lines.push("")
-      lines.push("Hasil: " + hasil.judul)
-      lines.push("")
-      lines.push(hasil.deskripsi)
+      const rows = [
+        `│ • 💯 Skor : ${total}/${PERTANYAAN.length * 10}`,
+        `│ • 📊 Persentase : ${percent}%`,
+        `│ • 💘 Hasil : ${hasil.judul}`,
+        "│",
+        `│ • 💭 ${hasil.deskripsi}`,
+      ]
 
-      return m.reply(claraWrap("Hasil Kuis Cinta", lines.join("\n")))
+      return m.reply(novaGameBox({
+        title: "hasil kuis cinta", icon: "💘",
+        flavor: "💘 *KUIS CINTA SELESAI!*",
+        body: rows.join("\n"),
+        cta: gameCTA("cintaquiz"),
+      }))
     }
 
     // Next question

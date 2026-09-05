@@ -1,4 +1,5 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getRandomItem } from '../../src/lib/nova-game-engine.js'
 const pluginConfig = {
     name: "bucinv2",
@@ -24,7 +25,12 @@ async function handler(m, { sock }) {
         return;
     }
     
-    await m.reply(claraWrap("Bucin", `"${quote}"`));
+    await m.reply(novaGameBox({
+      title: "quotes bucin", icon: "💕",
+      flavor: "💕 *QUOTES BUCIN BUAT KAMU!*",
+      body: `│ • "${quote}"`,
+      cta: gameCTA("bucin"),
+    }));
 }
 
 export { pluginConfig as config, handler }

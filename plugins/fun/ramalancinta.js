@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
   name: "ramalancinta",
@@ -69,30 +70,30 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const name2 = parts[1]
     const seed = hashCode(name1.toLowerCase() + name2.toLowerCase())
 
-    let lines = []
-    lines.push("Nama 1: " + name1)
-    lines.push("Nama 2: " + name2)
-    lines.push("")
-    lines.push("Ramalan Masa Depan Hubungan:")
-    lines.push("")
+    const rows = [
+      `│ • 💘 Nama 1 : ${name1}`,
+      `│ • 💘 Nama 2 : ${name2}`,
+      "│",
+    ]
 
     FASE.forEach((f, i) => {
-      lines.push((i + 1) + ". " + f.fase)
-      lines.push("   " + f.deskripsi)
-      lines.push("")
+      rows.push(`│ • ${i + 1}. ${f.fase}`)
+      rows.push(`│   ${f.deskripsi}`)
     })
 
     // Extra predictions
     const extraIdx = seed % RAMALAN_EXTRA.length
     const extra = RAMALAN_EXTRA[extraIdx]
-    lines.push(extra.judul + ":")
-    lines.push(extra.isi)
-
-    lines.push("")
-    lines.push("Catatan: Ini hanya ramalan untuk hiburan. Masa depan hubungan ada di tangan kalian berdua.")
+    rows.push("│")
+    rows.push(`│ • ${extra.judul} : ${extra.isi}`)
 
     await m.react("🐣");
-    return m.reply(claraWrap("Ramalan Cinta " + name1 + " & " + name2, lines.join("\n")))
+    return m.reply(novaGameBox({
+      title: "ramalan cinta", icon: "💞",
+      flavor: `💞 *RAMALAN CINTA ${name1} & ${name2}!*`,
+      body: rows.join("\n"),
+      cta: gameCTA("ramalancinta"),
+    }))
   } catch (e) {
     await m.react("❌");
     return m.reply(claraWrap("Ramalan Cinta", "Error: " + e.message))

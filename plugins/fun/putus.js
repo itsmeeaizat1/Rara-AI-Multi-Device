@@ -3,6 +3,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "putus",
@@ -97,14 +98,20 @@ async function handler(m, { sock }) {
     db.setUser(partnerJid, partnerData);
     db.save();
 
-    let msg = `💔 *ᴘᴜᴛᴜs*\n\n`;
-    msg += `@${m.sender.split("@")[0]} putus dengan @${partnerJid.split("@")[0]}\n`;
+    const rows = [
+      `│ • 💔 @${m.sender.split("@")[0]} putus dengan @${partnerJid.split("@")[0]}`,
+    ];
     if (durasiHari > 0) {
-      msg += `Durasi pacaran: *${durasiHari} hari*\n`;
+      rows.push(`│ • ⏱️ Durasi Pacaran : ${durasiHari} hari`);
     }
-    msg += `\n  _Semoga kamu lebih bahagia kedepannya_ 🙏\n\n`;
-    
-    await m.reply(msg);
+    rows.push("│ • 🙏 Semoga kamu lebih bahagia kedepannya!");
+
+    await m.reply(novaGameBox({
+      title: "resmi putus", icon: "💔",
+      flavor: "💔 *RESMI PUTUS...*",
+      body: rows.join("\n"),
+      cta: gameCTA("putus"),
+    }));
     await m.react("💔");
   } catch (e) {
     console.error("[putus] Error:", e.message);

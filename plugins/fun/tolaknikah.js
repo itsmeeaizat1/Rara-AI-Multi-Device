@@ -3,6 +3,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "tolaknikah",
@@ -71,12 +72,15 @@ async function handler(m, { sock }) {
     const sessionKey = `${m.chat}_${m.sender}`;
     if (global.nikahSessions?.[sessionKey]) delete global.nikahSessions[sessionKey];
 
-    await m.reply(
-      claraWrap("LAMARAN DITOLAK 💔",
-        `@${m.sender.split("@")[0]} menolak lamaran @${proposerJid.split("@")[0]}\n` +
-        `Sabar ya, jodoh tidak kemana! 🤲`
-      )
-    );
+    await m.reply(novaGameBox({
+      title: "lamaran ditolak", icon: "💔",
+      flavor: "💔 *LAMARAN DITOLAK...*",
+      body: [
+        `│ • 🏹 @${m.sender.split("@")[0]} menolak lamaran @${proposerJid.split("@")[0]}`,
+        "│ • 🤲 Sabar ya, jodoh tidak kemana!",
+      ].join("\n"),
+      cta: gameCTA("tolaknikah"),
+    }));
     await m.react("💔");
   } catch (e) {
     console.error("[tolaknikah] Error:", e.message);

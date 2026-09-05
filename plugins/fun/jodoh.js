@@ -4,6 +4,7 @@ import config from "../../config.js";
 import path from "path";
 import fs from "fs";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "jodoh",
   alias: ["jodoh"],
@@ -74,7 +75,7 @@ async function handler(m, { sock }) {
     groupMeta = m.groupMetadata;
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("jodoh", "❌ *ɢᴀɢᴀʟ*\n\nTidak bisa mengambil data grup!"));
+    return m.reply(claraWrap("jodoh", "Tidak bisa mengambil data grup!", "error"));
   }
 
   const participants = groupMeta.participants || [];
@@ -83,7 +84,7 @@ async function handler(m, { sock }) {
     .filter((jid) => jid && jid !== botNumber);
 
   if (memberJids.length < 2) {
-    return m.reply(claraWrap("Jodoh", "❌ *ɢᴀɢᴀʟ*\n\nMinimal ada 2 member untuk dijodohkan!"));
+    return m.reply(claraWrap("jodoh", "Minimal ada 2 member untuk dijodohkan!", "error"));
   }
 
   const allUsers = db.getAllUsers();
@@ -100,7 +101,7 @@ async function handler(m, { sock }) {
 
   if (registrationRequired && registeredMembers.length < 2) {
     return m.reply(
-      "❌ *ɢᴀɢᴀʟ*\n\nMode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!",
+      claraWrap("jodoh", "Mode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!", "error"),
     );
   }
 
@@ -169,25 +170,28 @@ async function handler(m, { sock }) {
     return "█".repeat(filled) + "░".repeat(empty);
   })();
 
-  let text = `💘 *ᴊᴏᴅᴏʜ ʀᴀɴᴅᴏᴍ*\n\n`;
-    text += `${label1} ${name1}\n`;
-  text += `❤️\n`;
-  text += `${label2} ${name2}\n`;
-  text += `---\n\n`;
-    text += `${progressBar} *${compatibility}%*\n`;
-  text += `${compatibilityEmoji(compatibility)}\n`;
-  text += `Status: *${compatibilityText(compatibility)}*\n`;
-  text += `---\n\n`;
+  const rows = [
+    `│ • ${label1} ${name1}`,
+    "│ • ❤️",
+    `│ • ${label2} ${name2}`,
+    `│ • 💯 Kecocokan : ${progressBar} ${compatibility}%`,
+    `│ • ${compatibilityEmoji(compatibility)} Status : ${compatibilityText(compatibility)}`,
+  ];
   if (usedRegistration) {
-    text += `_Dijodohkan berdasarkan data registrasi_\n`;
+    rows.push("│ • 📋 Dijodohkan berdasarkan data registrasi");
   }
   if (registrationRequired) {
-    text += `🔒 _Mode wajib daftar aktif, hanya member terdaftar yang dipilih_\n`;
+    rows.push("│ • 🔒 Mode wajib daftar, hanya member terdaftar yang dipilih");
   }
-  text += `_"${quote}"_`;
+  rows.push(`│ • 💬 "${quote}"`);
 
   await m.react("🐣");
-  await m.reply(claraWrap("Jodoh Random", text), { mentions: [person1, person2] });
+  await m.reply(novaGameBox({
+    title: "jodoh random", icon: "💘",
+    flavor: "💘 *JODOH RANDOM DIPILIH!*",
+    body: rows.join("\n"),
+    cta: gameCTA("jodoh"),
+  }), { mentions: [person1, person2] });
 }
 
 export { pluginConfig as config, handler };

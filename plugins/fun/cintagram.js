@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
   name: "cintagram",
@@ -56,25 +57,31 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const seed = hashCode(nama + pesan)
     const tmpl = TEMPLATE[seed % TEMPLATE.length]
 
-    let lines = []
-    lines.push(tmpl.judul)
-    lines.push("")
-    lines.push(tmpl.opening)
-    lines.push("")
-    lines.push("Untuk " + nama + ",")
-    lines.push("")
-    lines.push(pesan)
-    lines.push("")
-    lines.push("Mungkin ini terdengar sederhana, tapi setiap kata di sini tulus. Kadang lupa untuk mengatakannya, jadi biar aku tulis saja.")
-    lines.push("")
-    lines.push("Terima kasih sudah hadir di hidupku. Kamu mungkin tidak tahu seberapa besar dampakmu, tapi aku merasakannya setiap hari.")
-    lines.push("")
-    lines.push(tmpl.closing)
-    lines.push("")
-    lines.push("~ Seseorang yang menyayangimu ~")
+    const rows = [
+      `│ • 💘 ${tmpl.judul}`,
+      "│",
+      `│ • ${tmpl.opening}`,
+      "│",
+      `│ • Untuk ${nama},`,
+      "│",
+      `│ • ${pesan}`,
+      "│",
+      "│ • Mungkin ini terdengar sederhana, tapi setiap kata di sini tulus. Kadang lupa untuk mengatakannya, jadi biar aku tulis saja.",
+      "│",
+      "│ • Terima kasih sudah hadir di hidupku. Kamu mungkin tidak tahu seberapa besar dampakmu, tapi aku merasakannya setiap hari.",
+      "│",
+      `│ • ${tmpl.closing}`,
+      "│",
+      "│ • ~ Seseorang yang menyayangimu ~",
+    ]
 
     await m.react("🐣");
-    return m.reply(claraWrap("Cinta Gram untuk " + nama, lines.join("\n")))
+    return m.reply(novaGameBox({
+      title: "cinta gram", icon: "💘",
+      flavor: `💘 *CINTA GRAM UNTUK ${nama}!*`,
+      body: rows.join("\n"),
+      cta: gameCTA("cintagram"),
+    }))
   } catch (e) {
     await m.react("❌");
     return m.reply(claraWrap("Cinta Gram", "Error: " + e.message))

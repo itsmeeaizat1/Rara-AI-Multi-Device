@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 /**
  * Soul Match / Belahan Jiwa - Fun compatibility checker
@@ -77,7 +78,11 @@ async function handler(m, { sock }) {
     const [nama1, nama2] = text.split('|').map(n => n.trim())
     
     if (!nama1 || !nama2) {
-        return m.reply(`❌ Masukkan 2 nama dengan format: \`${m.prefix}soulmatch nama1|nama2\``)
+        return m.reply(claraWrap("soulmate", [
+            `Masukkan 2 nama dengan format yang benar.`,
+            ``,
+            `💡 Contoh: ${m.prefix}soulmatch Raiden|Mei`,
+        ]))
     }
     const seed1 = Date.now() % 100
     const seed2 = (Date.now() + 50) % 100
@@ -86,32 +91,27 @@ async function handler(m, { sock }) {
     const combined = nama1.toLowerCase() + nama2.toLowerCase()
     const baseScore = Array.from(combined).reduce((a, c) => a + c.charCodeAt(0), 0)
     const compatibility = (baseScore % 51) + 50 
-    let txt = ""
-    txt += `
-`
-    txt += `👤 *${nama1}*\n`
-    txt += `├ 🔮 Soul: ${soul1.soulType}\n`
-    txt += `├ 🌟 Element: ${soul1.element}\n`
-    txt += `└ 🎯 Zodiac: ${soul1.zodiac}\n`
-    txt += `
-`
-    txt += `👤 *${nama2}*\n`
-    txt += `├ 🔮 Soul: ${soul2.soulType}\n`
-    txt += `├ 🌟 Element: ${soul2.element}\n`
-    txt += `└ 🎯 Zodiac: ${soul2.zodiac}\n`
-    txt += `
-`
-    txt += `💕 *ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ*\n`
-    txt += `├ 📊 Score: *${compatibility}%*\n`
-    txt += `└ 🎭 Status: ${getMatchDescription(compatibility)}\n`
-    txt += `
-`
-    txt += `🔮 *ʀᴇᴀᴅɪɴɢ:*\n`
-    txt += `${getReading(compatibility)}\n`
-    txt += `
-`
-    txt += ""
-    await m.reply(claraWrap("soulmate", txt))
+    const rows = [
+        `│ • 👤 ${nama1}`,
+        `│   🔮 Soul : ${soul1.soulType}`,
+        `│   🌟 Element : ${soul1.element}`,
+        `│   🎯 Zodiac : ${soul1.zodiac}`,
+        "│",
+        `│ • 👤 ${nama2}`,
+        `│   🔮 Soul : ${soul2.soulType}`,
+        `│   🌟 Element : ${soul2.element}`,
+        `│   🎯 Zodiac : ${soul2.zodiac}`,
+        "│",
+        `│ • 💕 Compatibility : ${compatibility}%`,
+        `│ • 🎭 Status : ${getMatchDescription(compatibility)}`,
+        `│ • 🔮 Reading : ${getReading(compatibility)}`,
+    ]
+    await m.reply(novaGameBox({
+        title: "soulmate", icon: "💞",
+        flavor: `💞 *KECOCOKAN JIWA ${nama1} & ${nama2}!*`,
+        body: rows.join("\n"),
+        cta: gameCTA("soulmate"),
+    }))
 }
 
 export { pluginConfig as config, handler }

@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
   name: "lovecalc",
@@ -100,27 +101,24 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const nIdx = (percent + 3) % NEGATIF.length
     const tIdx = (percent + 5) % TIPS.length
 
-    let lines = []
-    lines.push("Nama 1: " + name1)
-    lines.push("Nama 2: " + name2)
-    lines.push("")
-    lines.push("Persentase Cinta: " + percent + "%")
-    lines.push("Level: " + info.level)
-    lines.push("")
-    lines.push("Hasil:")
-    lines.push(info.msg)
-    lines.push("")
-    lines.push("Kekuatan Hubungan:")
-    lines.push(POSITIF[pIdx])
-    lines.push("")
-    lines.push("Tantangan:")
-    lines.push(NEGATIF[nIdx])
-    lines.push("")
-    lines.push("Tips:")
-    lines.push(TIPS[tIdx])
+    const rows = [
+      `│ • 💘 Nama 1 : ${name1}`,
+      `│ • 💘 Nama 2 : ${name2}`,
+      `│ • 💯 Persentase Cinta : ${percent}%`,
+      `│ • 📊 Level : ${info.level}`,
+      `│ • 💭 Hasil : ${info.msg}`,
+      `│ • ✨ Kekuatan Hubungan : ${POSITIF[pIdx]}`,
+      `│ • ⚠️ Tantangan : ${NEGATIF[nIdx]}`,
+      `│ • 💡 Tips : ${TIPS[tIdx]}`,
+    ]
 
     await m.react("🐣");
-    return m.reply(claraWrap("Love Calculator", lines.join("\n")))
+    return m.reply(novaGameBox({
+      title: "love calculator", icon: "💘",
+      flavor: "💘 *SEBERAPA CINTA KALIAN?*",
+      body: rows.join("\n"),
+      cta: gameCTA("lovecalc"),
+    }))
   } catch (e) {
     await m.react("❌");
     return m.reply(claraWrap("Love Calculator", "Error: " + e.message))
