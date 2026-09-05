@@ -63,16 +63,14 @@ async function handler(m, { sock, config: botConfig }) {
       : "";
 
     const text =
-      claraWrap("Grup Bot", "👥") +
-      "\n\n" +
-      claraWrap("Grup Bot", lines) +
+      claraWrap("Grup Bot", ["👥", "---", ...lines]) +
       "\n\n" +
       joinSection +
       tipText(`Total grup: ${groups.length}`) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("gcbot", text));
+    await m.reply(text, "gcbot");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

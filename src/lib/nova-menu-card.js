@@ -26,7 +26,6 @@ import fs from "fs";
 import path from "path";
 import sharp from "sharp";
 import { generateWAMessageFromContent, proto } from "nova";
-import { getTimeGreeting } from "./nova-formatter.js";
 import { buildCategoryButton } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
 import { logger } from "./nova-logger.js";
@@ -282,9 +281,15 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     const newsletterJid = await resolveNewsletterJid(sock);
     const newsletterName = config.saluran?.name || config.bot?.name || "Nova AI";
 
+    // ── UPDATE (request owner 2026-09-06): baris bawah kiri card =
+    // logo kecil (auto dari thumbnail) + NAMA BOT + VERSI BOT — bukan
+    // greeting waktu. Greeting dipindah ke caller (intro body), card
+    // konsisten menampilkan identitas bot di semua menu.
+    const botName = title || config.bot?.name || "Nova AI";
+    const botVersion = config.bot?.version || "";
     const externalAdReply = {
-      title: adTitle || getTimeGreeting(),
-      body: `Kode: ${title || config.bot?.name || "Nova AI"}`,
+      title: adTitle || botName,
+      body: botVersion ? `v${botVersion}` : botName,
       mediaType: 1,
       renderLargerThumbnail: true,
       showAdAttribution: false,

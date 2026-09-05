@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-      await m.reply(claraWrap("calculator", text));
+      await m.reply(text, "calculator");
       return { handled: true };
     }
 
@@ -72,7 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.react("🐣");
-    await m.reply(claraWrap("calculator", text));
+    await m.reply(text, "calculator");
   } catch (error) {
     await m.react("❌");
     const text =

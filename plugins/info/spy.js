@@ -57,14 +57,11 @@ async function handler(m, { sock, config: botConfig }) {
     ];
 
     const text =
-      claraWrap("Spy", "🕵️") +
+      claraWrap("Spy", ["🕵️", "---", { subHeader: "Intel" }, ...lines]) +
       "\n\n" +
-      claraWrap("Intel", lines) +
-      "\n\n" +
-      
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("spy", text));
+    await m.reply(text, "spy");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

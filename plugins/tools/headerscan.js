@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
           ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `${k}: ${v}`),
         ]);
         m.react("🐣");
-        m.reply(claraWrap("headerscan", text)).then(() => resolve());
+        m.reply(text, "headerscan").then(() => resolve());
       }).on("error", reject).end();
     });
   } catch (e) {

@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("unban2", text));
+    await m.reply(text, "unban2");
   } catch (error) {
     await m.reply(novaError('Unban', `Gagal membuka ban member: ${error.message}`));
   }

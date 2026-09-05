@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("reaction", text));
+    await m.reply(text, "reaction");
   } catch (error) {
     await m.reply(novaError("Reaction", `Gagal beri reaksi: ${error.message}`));
   }
