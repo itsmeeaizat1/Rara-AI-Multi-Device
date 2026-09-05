@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // textpro.js — Text effect maker via ephoto360 scraping (lokal, no API key)
 import axios from "axios";
+import { haidarTextpro } from "../../src/lib/nova-haidar.js";
 import * as cheerio from "cheerio";
 import FormData from "form-data";
 import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
@@ -133,7 +134,24 @@ async function handler(m, { sock }) {
       caption: novaBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
     }, { quoted: m });
   } catch (err) {
-    console.error("[textpro] Error:", err.message);
+    console.error("[textpro] ephoto360 gagal:", err.message);
+    // Fallback: HaidarApis textpro (api.haidarxd.my.id)
+    try {
+      const fallbackUrl = await haidarTextpro(style, content);
+      if (fallbackUrl) {
+        const { data: fbBuf } = await axios.get(fallbackUrl, { responseType: "arraybuffer", timeout: 20000 });
+        const buffer = Buffer.from(fbBuf);
+        if (buffer.length < 100) throw new Error("Gambar kosong");
+        await m.react("🐣");
+        await sock.sendMessage(m.chat, {
+          image: buffer,
+          caption: novaBerhasil() + `\nStyle: ${style}\nTeks: ${content}`,
+        }, { quoted: m });
+        return;
+      }
+    } catch (fbErr) {
+      console.error("[textpro] Haidar fallback gagal:", fbErr.message);
+    }
     await m.react("❌");
     m.reply(claraWrap("textpro", "Gagal generate. Coba lagi.", "error"));
   }

@@ -1518,3 +1518,8 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .autoweatherrealtime test → test kirim cuaca sekarang
 - .autoweatherrealtime status → tampilkan status lengkap
 - Default: Serang, Banten | Info Section: ON | Notification: OFF
+
+### HaidarApis fallback (BARU 5 Sep 2026 — commit ini)
+- `.alldl` — TRY 4 baru: chain jadi ikyy → savenow → aio → **haidar** (api.haidarxd.my.id, 26 platform downloader, auto-detect URL). No-op tanpa apikey.
+- `.textpro` — fallback baru: ephoto360 gagal → **haidar textpro** (map style: blackpink/glitch/typography/cartoon/pixel/comic).
+- Key: daftar gratis `api.haidarxd.my.id/register` → isi di `src/lib/apikey/apikeys.json` field `haidar`. Helper: `src/lib/nova-haidar.js` (haidarFetch/haidarAio/haidarTextpro, normalizer response defensif).

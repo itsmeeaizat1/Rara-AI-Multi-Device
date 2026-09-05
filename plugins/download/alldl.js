@@ -20,6 +20,7 @@ import axios from "axios";
 import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
+import { haidarAio } from "../../src/lib/nova-haidar.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
@@ -270,6 +271,35 @@ async function runSessionDownload(sock, m, session, choice) {
       }
     } catch (aioErr) {
       console.error("[alldl] AIO failed:", aioErr.message);
+    }
+  }
+
+  // TRY 4: HaidarApis (fallback terakhir — api.haidarxd.my.id, 26 platform)
+  if (!result) {
+    try {
+      const haidarResult = await haidarAio(url);
+      if (haidarResult?.medias?.length) {
+        const videoMedia = haidarResult.medias.find((x) => x.type === "video");
+        const audioMedia = haidarResult.medias.find((x) => x.type === "audio");
+        const imageMedia = haidarResult.medias.find((x) => x.type === "image");
+
+        let picked;
+        if (isImage) picked = imageMedia || videoMedia;
+        else if (isAudio) picked = audioMedia || videoMedia;
+        else picked = videoMedia || audioMedia || imageMedia;
+
+        if (picked) {
+          result = {
+            title: haidarResult.title || "Downloaded",
+            download_url: picked.url,
+            type: picked.type,
+            format: picked.quality || format,
+          };
+          usedMethod = "haidar";
+        }
+      }
+    } catch (haidarErr) {
+      console.error("[alldl] Haidar failed:", haidarErr.message);
     }
   }
 
