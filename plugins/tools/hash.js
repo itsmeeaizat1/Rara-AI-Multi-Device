@@ -13,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const args = (m.text || "").trim().split(/\s+/);
     const algo = args[0]?.toLowerCase() || "sha256";
     const text = args.slice(1).join(" ");
@@ -29,10 +30,12 @@ async function handler(m, { sock, config: botConfig }) {
     const valid = ["md5","sha1","sha256","sha512"];
     if (!valid.includes(algo)) throw new Error(`Algoritma tidak didukung. Pilih: ${valid.join(", ")}`);
     const hash = crypto.createHash(algo).update(text, "utf-8").digest("hex");
+    await m.react("🐣");
     await m.reply(claraWrap("Hash", [`Algoritma: *${algo}*`,
       `Input: *${text.substring(0,40)}*`,
       `Hash: \`${hash}\``].join("\n")));
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };

@@ -224,6 +224,7 @@ async function handler(m, { sock }) {
   // Schedule
   reminder.timerId = setTimeout(async () => {
     try {
+    await m.react("🕒");
       reminder.fired = true;
 
       const timeSpent = formatDuration(Date.now() - reminder.createdAt);
@@ -241,6 +242,7 @@ async function handler(m, { sock }) {
         mentions: [sender],
       });
     } catch (e) {
+    await m.react("❌");
       // Silent fail
     }
   }, durationMs);
@@ -254,6 +256,7 @@ async function handler(m, { sock }) {
     );
   }
 
+  await m.react("🐣");
   return m.reply(claraWrap("Reminder Dibuat", [
     `ID: ${id}`,
     `Pesan: ${message}`,

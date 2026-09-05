@@ -119,6 +119,7 @@ function generateList(count) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -193,8 +194,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (result.length > 2000) {
       result = result.substring(0, 2000) + "\n... (dipotong)";
     }
+    await m.react("🐣");
     return m.reply(claraWrap("Lorem Ipsum (" + label + ")", result));
   } catch (e) {
+    await m.react("❌");
     console.error("lorem error:", e);
     return m.reply(claraWrap("Lorem", "Error: " + e.message));
   }

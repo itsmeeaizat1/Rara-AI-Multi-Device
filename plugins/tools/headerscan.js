@@ -14,6 +14,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
       await m.reply( novaCaption({
@@ -32,10 +33,12 @@ async function handler(m, { sock, config: botConfig }) {
           `Status: *${res.statusCode} ${res.statusMessage}*`,
           ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `${k}: ${v}`),
         ]);
+        m.react("🐣");
         m.reply(claraWrap("headerscan", text)).then(() => resolve());
       }).on("error", reject).end();
     });
   } catch (e) {
+    await m.react("❌");
     await m.reply(novaError("Tools", "Gagal nih"));
   }
   return { handled: true };

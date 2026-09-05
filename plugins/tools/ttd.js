@@ -127,13 +127,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  scale=N (ukuran gambar, default: 0.3)`,
       `  size=N (ukuran font, default: 28)`,
       ``,
-      `*ᴄᴏɴᴛᴏʜ:*`,
+      `💡 Contoh:`,
       `  ${prefix}ttd Budi Santoso`,
       `  ${prefix}ttd Budi Santoso page=1 x=100 y=150`,
     ].join("\n"));
-    return m.reply( help, "ttd");
+    return m.reply(help);
   }
   try {
+    await m.react("🕒");
     // Download the PDF from replied message
     const pdfBuffer = await m.quoted.download();
     if (!pdfBuffer || pdfBuffer.length === 0) {
@@ -190,12 +191,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       return m.reply(claraWrap("Ttd", "❌ Gagal menambahkan tanda tangan."));
     }
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       document: resultBuffer,
       mimetype: "application/pdf",
       fileName: `ttd_${Date.now()}.pdf`,
     }, { quoted: m });
   } catch (error) {
+    await m.react("❌");
     console.error("ttd error:", error);
     m.reply(claraWrap("Ttd", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }

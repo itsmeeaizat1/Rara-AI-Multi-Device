@@ -20,6 +20,7 @@ function tempPath(ext) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = m.text?.trim();
 
     if (!text) {
@@ -60,8 +61,10 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
+    await m.react("🐣");
     await m.reply(out);
   } catch (error) {
+    await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");

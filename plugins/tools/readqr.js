@@ -13,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
       { const __navText = (claraWrap("Read QR", [`Reply gambar QR code dengan *${prefix}readqr*`,
@@ -26,8 +27,10 @@ async function handler(m, { sock, config: botConfig }) {
       `filebase64=${base64}`, { headers: {"Content-Type":"application/x-www-form-urlencoded"}, timeout: 15000 });
     const result = Array.isArray(data) ? data[0]?.symbol?.[0]?.data : data;
     if (!result) throw new Error("QR tidak terbaca");
+    await m.react("🐣");
     await m.reply(claraWrap("Read QR", [`Isi QR: *${result}*`].join("\n")));
   } catch (e) {
+    await m.react("❌");
     await m.reply(novaError("Tools", "Gagal nih"));
   }
   return { handled: true };

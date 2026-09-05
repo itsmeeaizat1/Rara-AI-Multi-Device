@@ -33,6 +33,7 @@ const COURIERS = [
 
 async function handler(m, { sock, config: botConfig, db }) {
   try {
+    await m.react("🕒");
     const input = m.args || [];
 
     if (!input.length || input[0] === "list") {
@@ -108,8 +109,10 @@ async function handler(m, { sock, config: botConfig, db }) {
         text += `\n• ${h.date || ""}\n  ${h.desc || ""}\n  ${h.location || ""}`;
       }
     }
+    await m.react("🐣");
     return m.reply(claraWrap("Cek Resi", text));
   } catch (e) {
+    await m.react("❌");
     console.error("[cekresi] error:", e.message);
     return m.reply(te(m.prefix, m.command, m.pushName), "cekresi");
   }

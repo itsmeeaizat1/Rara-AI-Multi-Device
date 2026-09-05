@@ -34,11 +34,13 @@ async function handler(m, { sock }) {
   let text = m.text?.trim();
 
   if (!text) {
-    return m.reply( `📸 *ꜱᴄʀᴇᴇɴꜱʜᴏᴛ ᴡᴇʙ*\n\n` +
-        `Screenshot halaman website\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `${m.prefix}ssweb https://google.com\n` +
-        `${m.prefix}ss https://github.com --mobile`, "ssweb");
+    return m.reply(claraWrap("ssweb", [
+      `Screenshot halaman website.`,
+      ``,
+      `📌 Format: ${m.prefix}ssweb <url> [opsi]`,
+      `💡 Contoh: ${m.prefix}ssweb https://google.com`,
+      `${m.prefix}ss https://github.com --mobile`,
+    ]));
   }
 
   let mode = "desktop";
@@ -51,6 +53,7 @@ async function handler(m, { sock }) {
     text = "https://" + text;
   }
   try {
+    await m.react("🕒");
     const imageBuffer = await ssweb(text, mode);
 
     const saluranId = config.saluran?.id || "@newsletter";
@@ -60,6 +63,7 @@ async function handler(m, { sock }) {
       type: "image",
     });
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("ssweb", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

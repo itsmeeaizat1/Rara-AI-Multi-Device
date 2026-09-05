@@ -24,13 +24,16 @@ async function handler(m, { sock }) {
   let isDocumentMessage = (m.type === "documentMessage" && m.message?.documentMessage?.mimetype?.startsWith("video")) || (m.quoted && m.quoted.type === "documentMessage" && m.quoted.message?.documentMessage?.mimetype?.startsWith("video"));
 
   if (!isVideoMessage && !isDocumentMessage) {
-    return m.reply( `*ᴡɪɴᴋ ᴠɪᴅᴇᴏ ᴇɴʜᴀɴᴄᴇʀ*\n\n` +
-        `Bikin video buram jadi *ᴜʟᴛʀᴀ ʜᴅ* pakai AI Wink!\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `Kirim/reply video lalu caption \`${m.prefix}wink\`\n\n` +
-        `⚠️ _Fitur Premium, proses estimasi 1-5 menit tergantung durasi video_`, "wink");
+    return m.reply(claraWrap("wink", [
+      `Bikin video buram jadi *ᴜʟᴛʀᴀ ʜᴅ* pakai AI Wink!`,
+      ``,
+      `📌 Format:`,
+      `Kirim/reply video lalu caption \`${m.prefix}wink`,
+      `⚠️ _Fitur Premium, proses estimasi 1-5 menit tergantung durasi video_`
+    ]));
   }
   try {
+    await m.react("🕒");
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
 
     if (!videoBuffer || videoBuffer.length === 0) {
@@ -38,6 +41,7 @@ async function handler(m, { sock }) {
     }
 
     if (videoBuffer.length > 50 * 1024 * 1024) {
+      await m.react("🐣");
       return m.reply(claraWrap("Wink", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaksimal ukuran video cuma *50MB* ya!`));
     }
     const result = await winkEnhance(videoBuffer, {
@@ -50,6 +54,7 @@ async function handler(m, { sock }) {
       fileName: `WINK-HD-${Date.now()}.mp4`,
     });
   } catch (err) {
+    await m.react("❌");
     console.log(err);
     await m.reply(claraWrap("wink", `❌ Proses Wink enhance gagal! Coba lagi nanti ya 😭`));
   }

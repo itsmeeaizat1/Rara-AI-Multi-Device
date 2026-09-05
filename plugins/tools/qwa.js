@@ -33,6 +33,7 @@ async function getPp(sock, jid) {
 
 async function handler(m, { sock }) {
     try {
+    await m.react("🕒");
         let mainMsg = m
         let quoteMsg = null
         let textToQuote = m.args.join(' ')
@@ -118,11 +119,13 @@ async function handler(m, { sock }) {
             headers: { 'Content-Type': 'application/json' },
             responseType: 'arraybuffer'
         })
+        await m.react("🐣");
         await sock.sendMessage(m.chat, {
             image: Buffer.from(res.data),
             caption: `✅ Berhasil membuat quote WhatsApp!`
         }, { quoted: m })
     } catch (error) {
+    await m.react("❌");
         console.error("Error QWA:", error)
         m.reply(claraWrap("qwa", `❌ *ɢᴀɢᴀʟ ᴍᴇᴍʙᴜᴀᴛ qᴜᴏᴛᴇ*\n\nTerjadi kesalahan atau API sedang bermasalah.`))
     }

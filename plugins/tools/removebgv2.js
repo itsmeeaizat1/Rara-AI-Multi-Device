@@ -24,6 +24,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const isImage =
       m.isImage || (m.quoted && (m.quoted.isImage || m.quoted?.type === "imageMessage"));
 
@@ -119,6 +120,7 @@ async function handler(m, { sock, config: botConfig }) {
           tipText("Hasil full quality tanpa kompresi"),
       }, { quoted: m });
     } else {
+      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: resultBuffer,
         caption:
@@ -133,6 +135,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return { handled: true };
   } catch (error) {
+    await m.react("❌");
     console.error("[RemoveBG V2 Error]", error);
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");

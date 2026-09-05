@@ -33,6 +33,7 @@ const SUPPORTED_TYPES = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -111,9 +112,11 @@ async function handler(m, { sock, config: botConfig }) {
     ].join("\n")) +
     "\n" + tipText(prefix + "barcode <type> <data> untuk type lain");
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, { text: out });
     return { handled: true };
   } catch (e) {
+    await m.react("❌");
     console.error("barcode error:", e);
     return m.reply(claraWrap("Barcode", "Error: " + e.message));
   }

@@ -13,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const { data } = await axios.get("https://trends.google.com/trending/rss?geo=ID", {
       timeout: 10000, headers: {"User-Agent":"Mozilla/5.0"},
     });
@@ -23,8 +24,10 @@ async function handler(m, { sock, config: botConfig }) {
     let text = claraWrap("Trending Indonesia", "📈") + "\n\n";
     items.forEach((item, i) => { text += `${i+1}. *${item}*\n`; });
     text += "\n" + tipText(`Sumber: Google Trends Indonesia`);
+    await m.react("🐣");
     await m.reply(claraWrap("trending", text));
   } catch (e) {
+    await m.react("❌");
     await m.reply(novaError("Tools", "Gagal nih"));
   }
   return { handled: true };

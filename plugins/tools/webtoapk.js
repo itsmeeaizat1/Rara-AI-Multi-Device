@@ -135,6 +135,7 @@ async function waitUntilDone(requestId, onProgress) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text.trim();
     if (!input) {
       return m.reply(claraWrap("WebToNative", [
@@ -259,8 +260,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("Source: webtonative.com (gratis, no token)");
     lines.push("Build time: ~" + (attempts * 5) + " detik");
 
+    await m.react("🐣");
     return m.reply(claraWrap("WebToNative", lines, "success"));
   } catch (e) {
+    await m.react("❌");
     console.error("[WebToNative]", e);
     m.reply(claraWrap("WebToNative", [
       "Error: " + e.message,

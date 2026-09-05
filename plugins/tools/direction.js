@@ -22,6 +22,7 @@ async function geocode(q) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const input = m.text?.trim();
     if (!input || !input.includes("->")) {
       await m.reply( novaCaption({
@@ -39,11 +40,13 @@ async function handler(m, { sock, config: botConfig }) {
     const url = `https://www.openstreetmap.org/directions?from=${a.lat},${a.lon}&to=${b.lat},${b.lon}`;
     const distKm = (Math.acos(Math.sin(a.lat*Math.PI/180)*Math.sin(b.lat*Math.PI/180) +
       Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.cos(b.lon*Math.PI/180-a.lon*Math.PI/180))*6371).toFixed(0);
+    await m.react("🐣");
     await m.reply(claraWrap("Rute & Arah", [`Dari: *${a.name.substring(0,50)}*`,
       `Ke: *${b.name.substring(0,50)}*`,
       `Jarak: *${distKm} km* (garis lurus)`,
       `Peta: ${url}`].join("\n")) + "\n" + tipText("Klik link peta untuk navigasi"));
   } catch (e) {
+    await m.react("❌");
     await m.reply(novaError("Tools", "Gagal nih"));
   }
   return { handled: true };

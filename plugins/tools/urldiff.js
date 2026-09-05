@@ -60,6 +60,7 @@ function formatSize(bytes) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -153,8 +154,10 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("  Faster: " + (faster === "TIE" ? "TIE" : faster));
       lines.push("  Bigger body: " + (bigger === "TIE" ? "TIE" : bigger));
     }
+    await m.react("🐣");
     return m.reply(claraWrap("URL Diff: " + url1.replace(/^https?:\/\//, "") + " vs " + url2.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("urldiff error:", e);
     return m.reply(claraWrap("URLDiff", "Error: " + e.message));
   }

@@ -27,17 +27,20 @@ async function handler(m, { sock }) {
     if(!jumlah) return m.reply( `*JUMLAH NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
     if(isNaN(jumlah)) { const __navText = `*ᴊᴜᴍʟᴀʜ ɴʏᴀ ʜᴀʀᴜꜱ ᴀɴɢᴋᴀ*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
     try {
+    await m.react("🕒");
         for(let i = 0; i < jumlah; i++) {
             axios.get(`https://api.cuki.biz.id/api/tools/sendngl?apikey=${config.APIkey.cuki}&link=${encodeURIComponent(link)}&text=${encodeURIComponent(kata)}`, {
                 timeout: 30000
             })
             await new Promise(resolve => setTimeout(resolve, 4000))
         }
+        await m.react("🐣");
         await sock.sendMessage(m.chat, {
             text: `✅ *ᴅᴏɴᴇ*\n\nBerhasil mengirim spam NGL Message!\nTarget: ${link}\nPesan: ${kata} (${jumlah}x)`
         }, { quoted: m })
         
     } catch (error) {
+    await m.react("❌");
         m.reply(claraWrap("spamngl", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

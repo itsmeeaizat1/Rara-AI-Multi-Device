@@ -73,6 +73,7 @@ function scanPort(host, port, timeout = 3000) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -162,8 +163,10 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("  " + cp.port + "/tcp (" + cp.service + ")");
       }
     }
+    await m.react("🐣");
     return m.reply(claraWrap("Port Scan: " + host, lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("portscan error:", e);
     return m.reply(claraWrap("PortScan", "Error: " + e.message));
   }

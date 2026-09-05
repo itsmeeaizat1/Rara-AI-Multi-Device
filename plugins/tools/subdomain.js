@@ -51,6 +51,7 @@ async function getSubdomains(domain) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -90,8 +91,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (subdomains.length > 40) {
       lines.push("... +" + (subdomains.length - 40) + " lagi");
     }
+    await m.react("🐣");
     return m.reply(claraWrap("Subdomain: " + domain, lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("subdomain error:", e);
     return m.reply(claraWrap("Subdomain", "Error: " + e.message));
   }

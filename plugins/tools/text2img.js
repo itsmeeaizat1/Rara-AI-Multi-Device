@@ -39,6 +39,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "text2img" });
   }
   try {
+    await m.react("🕒");
     // Parse options from prompt
     let model = "flux";
     let width = 1024;
@@ -105,12 +106,14 @@ async function handler(m, { sock, args }) {
     caption += `Model: ${model}\n`;
     caption += `Size: ${width}x${height}`;
 
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       { image: resultBuffer, caption },
       { quoted: m },
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[TEXT2IMG] Error:", e.message);
     let txt = `Gagal generate gambar!\n\n`;
     txt += `Error: ${e.message}`;

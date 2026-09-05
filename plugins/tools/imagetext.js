@@ -13,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = m.text?.trim();
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!text || !quoted) {
@@ -23,9 +24,11 @@ async function handler(m, { sock, config: botConfig }) {
     const buffer = await m.download();
     if (!buffer) throw new Error("Gagal download gambar");
     // Simple text overlay using canvas if available, else just return info
+    await m.react("🐣");
     await m.reply(claraWrap("Image Text", [`Teks: *${text}*`, "Gambar diterima",
       "Fitur ini butuh package 'canvas' untuk render"].join("\n")) + "\n" + tipText("Install canvas untuk hasil gambar"));
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };

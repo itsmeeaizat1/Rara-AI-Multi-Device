@@ -13,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const word = m.text?.trim();
     if (!word) {
       await m.reply( novaCaption({
@@ -39,8 +40,10 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     const list = [...syns].slice(0, 15).join(", ");
+    await m.react("🐣");
     await m.reply(claraWrap("Synonym", [`Kata: *${word}*`, `Sinonim: ${list}`].join("\n")));
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };

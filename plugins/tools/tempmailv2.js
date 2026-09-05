@@ -119,6 +119,7 @@ function formatSize(bytes) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const db = await getDatabase();
     const sender = m.sender;
     const user = db.data.users?.[sender] || {};
@@ -350,6 +351,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
+    await m.react("🐣");
     return m.reply(claraWrap("Temp Email V2", [
       "CatchMail.io API — Free Disposable Email",
       "Gratis tanpa auth, custom domain support",
@@ -373,6 +375,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "tempmailv2 read abc123 aizat@catchmail.io",
     ]));
   } catch (e) {
+    await m.react("❌");
     console.error("[TempMail V2]", e);
     m.reply(claraWrap("Temp Email V2", "Error: " + e.message));
   }

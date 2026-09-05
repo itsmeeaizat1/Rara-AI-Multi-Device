@@ -87,6 +87,7 @@ function buildCaptionSVG(text, width, height, position, style) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text.trim();
 
     if (!input || input.toLowerCase() === "help" || input.toLowerCase() === "list") {
@@ -178,6 +179,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       .toBuffer();
 
     if (!result || result.length === 0) {
+      await m.react("🐣");
       return m.reply(claraWrap("Photo Caption", "Gagal processing caption.", "warn"));
     }
 
@@ -195,6 +197,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       { quoted: m }
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[PhotoCaption]", e);
     m.reply(claraWrap("Photo Caption", [
       "Error: " + e.message,

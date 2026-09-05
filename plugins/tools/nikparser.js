@@ -65,6 +65,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}nikparser 3517072109020003\``, "nikparser");
   }
   try {
+    await m.react("🕒");
     const r = await fetch(`${API}?nik=${nik}`, {
       headers: {
         Accept: "application/json, image/*, audio/*, video/*",
@@ -91,8 +92,10 @@ async function handler(m, { sock }) {
     const genderEmoji = data.gender === "pria" ? "♂️" : "♀️";
     const provNama = PROVINSI[data.provinceId] || data.province || "-";
 
+    await m.react("🐣");
     m.reply(claraWrap("NIK Parser", [`*ɴɪᴋ* → \`${data.raw}\``, `*ᴠᴀʟɪᴅ* → ✅ Valid`, `*ᴛᴀɴɢɢᴀʟ ʟᴀʜɪʀ* → ${bFormatted}`, `*ᴊᴇɴɪꜱ ᴋᴇʟᴀᴍɪɴ* → ${genderEmoji} ${data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1)}`, `*ᴘʀᴏᴠɪɴꜱɪ* → ${provNama}`, `*Kab/Kota* → Kode \`${data.kabupatenKotaId}\``, `*ᴋᴇᴄᴀᴍᴀᴛᴀɴ* → Kode \`${data.kecamatanId}\``, `*ᴋᴏᴅᴇ ᴜɴɪᴋ* → \`${data.uniqcode}\``].join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.log(e);
     m.reply(claraWrap("nikparser", te(m.prefix, m.command, m.pushName), "error"));
   }

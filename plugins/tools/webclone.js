@@ -76,6 +76,7 @@ async function cloneWebsite(url) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const url = text.trim();
     if (!url) {
       return m.reply(claraWrap("WebsiteCloner", [
@@ -182,8 +183,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("");
     lines.push("Source: smartdom API (gratis, no token)");
 
+    await m.react("🐣");
     return m.reply(claraWrap("WebsiteCloner", lines, "success"));
   } catch (e) {
+    await m.react("❌");
     console.error("[WebsiteCloner]", e);
     m.reply(claraWrap("WebsiteCloner", [
       "Error: " + e.message,

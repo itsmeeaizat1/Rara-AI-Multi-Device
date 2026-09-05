@@ -59,6 +59,7 @@ async function imgToAscii(buffer, targetWidth, detail) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     // Get image from reply
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
@@ -99,6 +100,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       result = "```\n" + ascii.substring(0, 60000) + "\n```";
     }
 
+    await m.react("🐣");
     m.reply(claraWrap("Photo ASCII", [
       "Width: " + width + " chars",
       detail ? "Mode: Detail" : "Mode: Standard",
@@ -107,6 +109,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       result,
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     console.error("[PhotoASCII]", e);
     m.reply(claraWrap("Photo ASCII", [
       "Error: " + e.message,

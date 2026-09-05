@@ -129,6 +129,7 @@ async function unblurImage(imageBuffer, scaleFactor, model, mime) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     // Parse args: [scale] [model]
     let scale = "4";
     let model = "v2";
@@ -201,6 +202,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }, { quoted: m });
     } catch (sendErr) {
       // Fallback: send URL
+      await m.react("🐣");
       return m.reply(claraWrap("UnblurImage AI", [
         "UNBLUR & UPSCALE BERHASIL",
         "",
@@ -211,6 +213,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "success"));
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[UnblurImage AI]", e);
     m.reply(claraWrap("UnblurImage AI", [
       "Error: " + e.message,

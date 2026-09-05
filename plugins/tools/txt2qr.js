@@ -25,17 +25,20 @@ async function handler(m, { sock }) {
         { const __navText = `📱 *ᴛᴇxᴛ ᴛᴏ qʀ*\n\nMasukkan teks/URL\n\n\`Contoh: ${m.prefix}txt2qr https://google.com\``; return await m.reply( __navText, "txt2qr"); }
     }
     try {
+    await m.react("🕒");
         const url = `https://api-faa.my.id/faa/qr-create?text=${encodeURIComponent(text)}`
         const res = await axios.get(url, {
             responseType: 'arraybuffer',
             timeout: 30000
         })
+        await m.react("🐣");
         await sock.sendMessage(m.chat, {
             image: Buffer.from(res.data),
             caption: `📱 *qʀ ᴄᴏᴅᴇ*\n\n${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`
         }, { quoted: m })
         
     } catch (error) {
+    await m.react("❌");
         m.reply(claraWrap("txt2qr", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

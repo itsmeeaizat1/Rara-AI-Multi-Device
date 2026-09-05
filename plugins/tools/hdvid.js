@@ -29,15 +29,17 @@ async function handler(m, { sock }) {
   let isDocumentMessage = (m.type === "documentMessage" && m.message?.documentMessage?.mimetype?.startsWith("video")) || (m.quoted && m.quoted.type === "documentMessage" && m.quoted.message?.documentMessage?.mimetype?.startsWith("video"));
 
   if (!isVideoMessage && !isDocumentMessage) {
-    let txt = `📹 *ʜᴅ ᴠɪᴅᴇᴏ ᴇɴʜᴀɴᴄᴇʀ* 📹\n\n`;
-    txt += `Halo kak! Punya video yang buram? Aku bisa bantu bikin jadi HD lho!\n\n`;
-    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
-    txt += `👉 Kirim video (atau document video) dengan caption \`${m.prefix}hdvid\`\n`;
-    txt += `👉 Atau reply video (atau document video) dengan \`${m.prefix}hdvid\`\n\n`;
-    txt += `⚠️ _Fitur Premium, proses bisa memakan waktu tergantung ukuran ya kak!_`;
-    return await m.reply( txt, "hdvid");
+    return await m.reply(claraWrap("hdvid", [
+      `Punya video yang buram? Aku bisa bantu bikin jadi HD.`,
+      ``,
+      `📌 Format: kirim video (atau document video) dengan caption ${m.prefix}hdvid`,
+      `Atau reply video (atau document video) dengan ${m.prefix}hdvid`,
+      ``,
+      `⚠️ Fitur Premium, proses bisa memakan waktu tergantung ukuran.`,
+    ]));
   }
   try {
+    await m.react("🕒");
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
 
     if (!videoBuffer || videoBuffer.length === 0) {
@@ -45,6 +47,7 @@ async function handler(m, { sock }) {
     }
 
     if (videoBuffer.length > 50 * 1024 * 1024) {
+      await m.react("🐣");
       return m.reply(claraWrap("hdvid", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaaf kak, maksimal ukuran video cuma 50MB ya!`));
     }
     const tempDir = os.tmpdir();
@@ -77,6 +80,7 @@ async function handler(m, { sock }) {
         fs.unlinkSync(outputPath);
     } catch (e) { console.error('[hdvid.js]:', e.message); }
   } catch (err) {
+    await m.react("❌");
     await m.reply(claraWrap("hdvid", `❌ Maaf kak, proses enhance videonya gagal! 😭\n\nDetail: ${err.message}`));
   }
 }

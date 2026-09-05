@@ -23,10 +23,12 @@ async function handler(m, { sock }) {
   let domain = m.args?.[0];
 
   if (!domain) {
-    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}lookup <domain>\`\n\n` +
-        `Contoh:\n` +
-        `\`${m.prefix}lookup google.com\``, "lookup");
+    return m.reply(claraWrap("lookup", [
+      `📌 Format:`,
+      `${m.prefix}lookup <domain>`,
+      `💡 Contoh:`,
+      `${m.prefix}lookup google.com`
+    ]));
   }
 
   domain = domain.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0];
@@ -34,7 +36,7 @@ async function handler(m, { sock }) {
   if (
     !/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?(\.[a-zA-Z]{2,})+$/.test(domain)
   ) {
-    { const __navText = `❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`google.com\``; return await m.reply(__navText); };
+    { const __navText = `❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`google.com`; return await m.reply(__navText); };
   }
   await m.react("🕒");
 

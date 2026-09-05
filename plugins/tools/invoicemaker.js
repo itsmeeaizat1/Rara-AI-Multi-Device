@@ -69,6 +69,7 @@ async function handler(m, { sock }) {
   const total =
     parseInt(totalRaw) || itemsArr.reduce((sum, i) => sum + i.price, 0);
   try {
+    await m.react("🕒");
     const qrImage = "https://i.ibb.co.com/kt5fyrg/qr.jpg";
 
     const url =
@@ -108,6 +109,7 @@ async function handler(m, { sock }) {
 
     caption += `💰 Total: *Rp${data.total.toLocaleString("id-ID")}*`;
 
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -121,6 +123,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (err) {
+    await m.react("❌");
     return m.reply(claraWrap("invoicemaker", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

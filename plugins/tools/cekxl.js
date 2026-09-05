@@ -37,14 +37,19 @@ async function handler(m, { sock }) {
     const input = m.args[0] || m.text?.trim()
 
     if (!input) {
-        return m.reply( `📱 *CEK XL/AXIS*\n\n` +
-            `Fitur ini digunakan untuk mengecek informasi paket dan kuota yang tersedia pada nomor XL atau Axis kamu secara lengkap dan detail\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-            `\`${m.prefix}cekxl <nomor hp>\`\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
-            `\`${m.prefix}cekxl 083150850721\`\n` +
-            `\`${m.prefix}cekxl 6281234567890\`\n\n` +
-            `_Format nomor bisa pakai 08xx, 628xx, atau tanpa awalan_`, "cekxl")
+        return m.reply(claraWrap("cekxl", [
+      `📱 *CEK XL/AXIS*`,
+      `Fitur ini digunakan untuk mengecek informasi paket dan kuota yang tersedia pada nomor XL atau Axis kamu secara lengkap dan detail`,
+      ``,
+      `📌 Format:`,
+      `${m.prefix}cekxl <nomor hp>`,
+      ``,
+      `💡 Contoh:`,
+      `${m.prefix}cekxl 083150850721`,
+      `${m.prefix}cekxl 6281234567890`,
+      ``,
+      `Format nomor bisa pakai 08xx, 628xx, atau tanpa awalan`
+    ]))
     }
 
     const cleanNum = cleanNumber(input)
@@ -53,6 +58,7 @@ async function handler(m, { sock }) {
         { const __navText = `❌ Nomor yang kamu masukkan tidak valid, pastikan nomor tersebut merupakan nomor XL atau Axis yang benar ya`; return await m.reply(__navText); }
     }
     try {
+    await m.react("🕒");
         const { data } = await axios.get(
             `https://xl-ku.my.id/end.php?check=package&number=${cleanNum}&version=2`,
             { timeout: 30000 }
@@ -109,9 +115,11 @@ async function handler(m, { sock }) {
                 }
             }
         }
+        await m.react("🐣");
         await m.reply(txt.trim())
 
     } catch (error) {
+    await m.react("❌");
         m.reply(claraWrap("cekxl", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

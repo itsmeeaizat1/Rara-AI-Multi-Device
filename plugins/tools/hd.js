@@ -56,6 +56,7 @@ async function handler(m, { sock, args }) {
   }
 
   try {
+    await m.react("🕒");
     const argList = (args || []).map((a) => String(a).toLowerCase());
     const wantDoc = argList.includes("doc");
     const scaleArg = argList.find((a) => /^\d+x$/.test(a));
@@ -85,6 +86,7 @@ async function handler(m, { sock, args }) {
         { quoted: m }
       );
     } else {
+      await m.react("🐣");
       await sock.sendMessage(
         m.chat,
         {
@@ -95,6 +97,7 @@ async function handler(m, { sock, args }) {
       );
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[HD] Error:", e.message);
     let txt = "";
     txt += `Gagal enhance gambar!\n`;

@@ -203,6 +203,7 @@ async function handler(m, { sock, args }) {
     lang = "Mix";
   }
   try {
+    await m.react("🕒");
     const speaker = CHARACTERS[speakerKey];
 
     // Step 1: Call the API
@@ -282,6 +283,7 @@ async function handler(m, { sock, args }) {
     caption += `Bahasa: ${lang}\n`;
     caption += `Text: ${text}`;
 
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -292,6 +294,7 @@ async function handler(m, { sock, args }) {
       { quoted: m },
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[ANIMEVOICE] Error:", e.message);
     let txt = `Gagal generate voice!\n\n`;
     txt += `Error: ${e.message}`;

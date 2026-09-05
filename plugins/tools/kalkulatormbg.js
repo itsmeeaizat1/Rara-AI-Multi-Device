@@ -90,15 +90,15 @@ function formatRupiah(angka) {
 
 async function handler(m, { sock,  args }) {
   if (!args[0]) {
-    let txt = `🧮 *KALKULATOR MBG (Makan Bergizi Gratis)* 🧮\n\n`;
-    txt += `Halo kak! Penasaran berapa lama uang kamu bisa nyuplai program Makan Bergizi Gratis se-Indonesia?\n\n`;
-    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
-    txt += `👉 \`${m.prefix}kkmbg <nominal uang>\`\n\n`;
-    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
-    txt += `\`${m.prefix}kkmbg 1000000000\``;
-    return await m.reply(claraWrap("kalkulatormbg", txt));
+    return await m.reply(claraWrap("kalkulatormbg", [
+      `Hitung berapa lama uang kamu bisa nyuplai program Makan Bergizi Gratis se-Indonesia.`,
+      ``,
+      `📌 Format: ${m.prefix}kkmbg <nominal uang>`,
+      `💡 Contoh: ${m.prefix}kkmbg 1000000000`,
+    ]));
   }
   try {
+    await m.react("🕒");
     const uang = Number(args[0].replace(/[^0-9]/g, ''));
     if (isNaN(uang) || uang <= 0) {
       return m.reply(claraWrap("Kalkulatormbg", "❌ Kak, tolong masukin angka uang yang valid ya! (Cuma angka aja, misal 500000)"));
@@ -130,8 +130,10 @@ async function handler(m, { sock,  args }) {
     let txt = `🍽️ *ʜᴀꜱɪʟ ʜɪᴛᴜɴɢ ᴋᴀʟᴋᴜʟᴀᴛᴏʀ ᴍʙɢ* 🍽️\n\n`;
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");
 
+    await m.react("🐣");
     await m.reply(claraWrap("kalkulatormbg", txt));
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("kalkulatormbg", `❌ Maaf kak, terjadi kesalahan saat menghitung! 😭\nError: ${e.message}`));
   }
 }

@@ -1396,6 +1396,7 @@ function cleanAIOutput(text) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     let inputText = text;
@@ -1656,6 +1657,7 @@ async function handler(m, { sock, config: botConfig }) {
             });
           } else {
             // Send as image — WA compresses but inline preview
+            await m.react("🐣");
             await sock.sendMessage(m.chat, {
               image: { url: imgPath },
               caption: claraWrap("HD Preview " + opts.img + "x", [
@@ -1675,6 +1677,7 @@ async function handler(m, { sock, config: botConfig }) {
       setTimeout(() => { try { fs.unlinkSync(filePath); } catch (e) { console.error('[txttopdf.js]:', e.message); } }, 60000);
     }
   } catch (e) {
+    await m.react("❌");
     console.error("txttopdf error:", e);
     return m.reply(claraWrap("TxtToPDF", "Error: " + e.message));
   }

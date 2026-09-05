@@ -283,6 +283,7 @@ async function handler(m, { sock }) {
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("FMPulsa", "Saldo tidak cukup!"), "fmpulsa"); }
     try {
+    await m.react("🕒");
       u.balance -= pending.price;
       u.totalSpent += pending.price;
       const result = await placeOrder(data, pending.serviceCode, pending.dataNo, pending.refId);
@@ -322,6 +323,7 @@ async function handler(m, { sock }) {
       }
       return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
+    await m.react("❌");
       u.balance += pending.price;
       u.totalSpent -= pending.price;
       delete data.pendingPayments[token];
@@ -410,6 +412,7 @@ async function handler(m, { sock }) {
   if (isOwner) {
     body += "\n\n--- Owner ---\n.fm setkey <user_id>:<api_key>\n.fm setmarkup <persen>\n.fm topup <nomor> <jumlah>\n.fm refresh\nAPI: https://fmpedia.id/api/prepaid\nDaftar: https://fmpedia.id";
   }
+  await m.react("🐣");
   return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
 }
 

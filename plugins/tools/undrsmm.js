@@ -260,6 +260,7 @@ async function handler(m, { sock }) {
       return m.reply( claraWrap("UndrCtrl SMM", "Format Beli\n\n.undr beli <service_id> <link> <qty>\n\nContoh:\n.undr beli 1002 https://www.tiktok.com/video/xxx 1000\n.undr beli 1010 https://instagram.com/p/xxx 500\n.undr beli 1018 https://youtube.com/watch?v=xxx 5000\n\nCari service_id:\n.undr cari tiktok\n.undr cari instagram"), "undrsmm");
     }
     try {
+    await m.react("🕒");
       const services = await getServices(data);
       const svc = services.find(s => String(s.service) === String(serviceId));
       if (!svc) {
@@ -297,6 +298,7 @@ async function handler(m, { sock }) {
       body += "\nToken: " + token + "\n\nBayar: .undr bayar " + token + "\nExpired: 5 menit";
       return m.reply( claraWrap("UndrCtrl SMM", body), "undrsmm");
     } catch (err) {
+    await m.react("❌");
       return m.reply( claraWrap("UndrCtrl SMM", "Error: " + err.message), "undrsmm");
     }
   }
@@ -472,6 +474,7 @@ async function handler(m, { sock }) {
   if (isOwner) {
     body += "\n\n--- Owner ---\n.undr setkey <key>\n.undr setmarkup <persen>\n.undr topup <nomor> <jumlah>\n.undr refresh\nAPI: https://undrctrl.id/api/v2";
   }
+  await m.react("🐣");
   return m.reply( claraWrap("UndrCtrl SMM", body), "undrsmm");
 }
 

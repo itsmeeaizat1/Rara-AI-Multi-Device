@@ -121,13 +121,13 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Surat", [
       `Generator Surat Resmi → PDF`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  ${prefix}surat <jenis> <detail>`,
       ``,
       `*ᴊᴇɴɪꜱ ꜱᴜʀᴀᴛ:*`,
       `  dinas, lamaran, keterangan, tugas, izin, undangan`,
       ``,
-      `*ᴄᴏɴᴛᴏʜ:*`,
+      `💡 Contoh:`,
       `  ${prefix}surat dinas dari Bpk Andi kepala sekolah SDN 01 ke Dinas Pendidikan tentang permohonan bantuan dana`,
       `  ${prefix}surat lamaran Budi melamar ke PT Maju Jaya sebagai staff admin, S1 Ekonomi, pengalaman 2 tahun`,
       ``,
@@ -138,6 +138,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   m.reply(claraWrap("Surat", "AI lagi nyusun surat resmi..."));
 
   try {
+    await m.react("🕒");
     const aiResult = await UnlimitedAI(SURAT_PROMPT.replace("__INPUT__", args), "nova-ai");
 
     if (!aiResult || aiResult.trim().length < 20) {
@@ -158,8 +159,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // Also send text preview
     let preview = aiResult.trim();
     if (preview.length > 2000) preview = preview.substring(0, 2000) + "\n\n... (lihat PDF untuk versi lengkap)";
+    await m.react("🐣");
     await m.reply(claraWrap("Surat — Preview", preview));
   } catch (error) {
+    await m.react("❌");
     console.error("surat error:", error);
     m.reply(claraWrap("Surat", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }

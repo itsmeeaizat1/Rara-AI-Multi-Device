@@ -299,6 +299,7 @@ async function handler(m, { sock }) {
             "`" + m.prefix + "uploadsftp delete <name>` - Hapus file remote", "uploadsftp")
     }
     try {
+    await m.react("🕒");
         const downloadFn = m.quoted ? m.quoted.download : m.download
         const buffer = await downloadFn()
 
@@ -342,9 +343,11 @@ async function handler(m, { sock }) {
         body += "Remote: " + remoteFilePath + "\n"
         body += "Verified: " + (remoteSize === buffer.length ? 'YES' : 'CHECK') + " (" + formatBytes(remoteSize) + ")"
 
+        await m.react("🐣");
         return m.reply(claraWrap("Upload SFTP", body))
 
     } catch (error) {
+    await m.react("❌");
         console.error('[UploadSFTP] Error:', error.message)
 
         if (error.message === 'NO_CONFIG') {

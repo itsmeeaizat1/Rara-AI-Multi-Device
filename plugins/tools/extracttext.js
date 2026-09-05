@@ -332,7 +332,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const helpText = claraWrap("Extract Text", [
       `Ekstrak teks dari *ᴘᴅꜰ* atau *ɢᴀᴍʙᴀʀ* dengan format rapi`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  Reply PDF/Gambar lalu ketik:`,
       `  ${prefix}extracttext (mode standar)`,
       `  ${prefix}extracttext ai (mode AI untuk gambar)`,
@@ -349,6 +349,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return { handled: true };
   }
   try {
+    await m.react("🕒");
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
       buffer = await m.quoted.download();
@@ -400,9 +401,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       const footer = i === chunks.length - 1
         ? "\n" + tipText(`Ketik ${prefix}extracttext untuk ekstrak lagi`)
         : "";
+      await m.react("🐣");
       await m.reply(header + footer);
     }
   } catch (error) {
+    await m.react("❌");
     console.error("extracttext error:", error);
     await m.reply(claraWrap("Extract Text", [
       `❌ *ɢᴀɢᴀʟ*`,

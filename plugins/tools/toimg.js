@@ -58,6 +58,7 @@ async function handler(m, { sock }) {
         return
     }
     try {
+    await m.react("🕒");
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
@@ -68,6 +69,7 @@ async function handler(m, { sock }) {
         }
 
         if (buffer.length < 100) {
+            await m.react("🐣");
             await m.reply(claraWrap("toimg", `❌ *ꜰɪʟᴇ ᴋᴏʀᴜᴘ*\n\n` +
                 `File sticker tidak valid atau rusak.\n` +
                 `Coba kirim ulang stickernya.`))
@@ -79,6 +81,7 @@ async function handler(m, { sock }) {
         })
 
     } catch (error) {
+    await m.react("❌");
         await m.reply(
             `❌ *ᴇʀʀᴏʀ*\n\n` +
             `Terjadi kesalahan saat memproses.\n` +

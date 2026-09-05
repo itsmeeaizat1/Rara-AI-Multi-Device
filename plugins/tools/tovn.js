@@ -74,6 +74,7 @@ async function handler(m, { sock }) {
     const inputPath = path.join(tempDir, `input_${timestamp}.${ext}`)
     const outputPath = path.join(tempDir, `vn_${timestamp}.ogg`)
     try {
+    await m.react("🕒");
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
@@ -100,6 +101,7 @@ async function handler(m, { sock }) {
         await queueFFmpeg(ffmpegCmd)
 
         if (!fs.existsSync(outputPath)) {
+            await m.react("🐣");
             await m.reply(claraWrap("KONVERsI GAGAL", 
                 `Gagal mengkonversi ke voice note.\n` +
                 `Pastikan ffmpeg terinstall dengan benar.`))
@@ -113,6 +115,7 @@ async function handler(m, { sock }) {
             ptt: true
         })
     } catch (error) {
+    await m.react("❌");
         await m.reply(claraWrap("ERROR", 
             `Terjadi kesalahan saat memproses.\n` +
             `_${error.message}_`))

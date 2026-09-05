@@ -264,11 +264,14 @@ async function handler(m, { sock }) {
   }
 
   try {
+    await m.react("🕒");
     const shortUrl = await provider.shorten(cleanUrl, m);
 
     const txt = claraWrap("Shortlink", ["SHORTLINK BERHASIL", "Provider: " + provider.name, "URL asli: " + cleanUrl, "URL pendek: " + shortUrl].join("\n"));
+    await m.react("🐣");
     return m.reply( txt, "shortlink");
   } catch (e) {
+    await m.react("❌");
     let txt = "Gagal memperpendek URL\n\n";
     txt += "Provider: " + provider.name + "\n";
     txt += "URL: " + cleanUrl + "\n";

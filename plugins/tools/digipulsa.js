@@ -266,6 +266,7 @@ async function handler(m, { sock }) {
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("DigiPulsa", "Saldo tidak cukup!"), "digipulsa"); }
     try {
+    await m.react("🕒");
       u.balance -= pending.price;
       u.totalSpent += pending.price;
       const result = await topup(data, pending.sku, pending.customerNo, pending.refId);
@@ -302,6 +303,7 @@ async function handler(m, { sock }) {
       }
       return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
+    await m.react("❌");
       u.balance += pending.price;
       u.totalSpent -= pending.price;
       delete data.pendingPayments[token];
@@ -390,6 +392,7 @@ async function handler(m, { sock }) {
   if (isOwner) {
     body += "\n\n--- Owner ---\n.dg setkey <username>:<apiKey>\n.dg setmarkup <persen>\n.dg topup <nomor> <jumlah>\n.dg refresh\nAPI: https://api.digiflazz.com/v1\nDaftar: https://digiflazz.com";
   }
+  await m.react("🐣");
   return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
 }
 

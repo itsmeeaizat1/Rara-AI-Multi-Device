@@ -269,6 +269,7 @@ async function handler(m, { sock }) {
     return m.reply( `*🪄 BEAUTYPLUS ENHANCER*\nReply gambar untuk di-HD-kan\n\n\`\`\`${m.prefix}hd3\`\`\``, "hd3");
   }
   try {
+    await m.react("🕒");
     let buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     
     const uid = randomUid();
@@ -313,6 +314,7 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     } else {
+      await m.react("🐣");
       await sock.sendMessage(
         m.chat,
         { image: resultBuffer, caption, jpegQuality: 100 },
@@ -320,6 +322,7 @@ async function handler(m, { sock }) {
       );
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[HD3]", e.message);
     m.reply(claraWrap("hd3", te(m.prefix, m.command, m.pushName), "error"));
   }

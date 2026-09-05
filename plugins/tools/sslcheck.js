@@ -73,6 +73,7 @@ async function checkSSL(hostname) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -109,6 +110,7 @@ async function handler(m, { sock, config: botConfig }) {
       sanList = result.san.replace(/DNS:/g, "").split(",").map((s) => s.trim()).join(", ");
       if (sanList.length > 100) sanList = sanList.substring(0, 100) + "...";
     }
+    await m.react("🐣");
     return m.reply(claraWrap("SSL Check: " + domain, [
       "Status: " + status,
       "Subject: " + result.subject,
@@ -122,6 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
       "Serial: " + (result.serialNumber || "N/A").substring(0, 40),
     ].join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("sslcheck error:", e);
     return m.reply(claraWrap("SSL", "Error: " + e.message));
   }

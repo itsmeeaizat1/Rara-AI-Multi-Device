@@ -57,9 +57,11 @@ async function handler(m, { sock, args }) {
   const result = text.split("https://whatsapp.com/channel/")[1].trim();
 
   try {
+    await m.react("🕒");
     const res = await sock.newsletterMetadata("invite", result);
 
     if (!res || !res.id) {
+      await m.react("🐣");
       await m.reply(claraWrap("Cek ID Channel", "❌ Channel tidak ditemukan. Pastikan link valid dan channel masih aktif.", "error"));
       return;
     }
@@ -111,6 +113,7 @@ async function handler(m, { sock, args }) {
       footer: config.bot?.name || "Nova-AI",
     });
   } catch (e) {
+    await m.react("❌");
     console.error("[cekidch] Error:", e.message);
     await m.reply(claraWrap("Cek ID Channel", "❌ Terjadi kesalahan saat mengambil info channel. Coba lagi nanti.", "error"));
   }

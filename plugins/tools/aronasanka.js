@@ -37,6 +37,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "aronasanka" });
   }
   try {
+    await m.react("🕒");
     const url = `${API_BASE}/ai/arona?apikey=${API_KEY}&text=${encodeURIComponent(text)}`;
 
     const res = await axios.get(url, {
@@ -58,8 +59,10 @@ async function handler(m, { sock, args }) {
     let txt = `Arona\n\n`;
     txt += `${reply}`;
 
+    await m.react("🐣");
     await m.reply( txt, { commandName: "aronasanka" });
   } catch (e) {
+    await m.react("❌");
     console.error("[ARONASANKA] Error:", e.message);
     let txt = `Gagal chat dengan Arona!\n\n`;
     txt += `Error: ${e.message}`;

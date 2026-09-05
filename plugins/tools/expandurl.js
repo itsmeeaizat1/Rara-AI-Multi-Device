@@ -29,6 +29,7 @@ async function expand(url, maxRedirects = 10) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
       await m.reply( novaCaption({
@@ -41,10 +42,12 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     const result = await expand(url);
+    await m.react("🐣");
     await m.reply(claraWrap("Expand URL", [`Input: ${url.substring(0,50)}`,
       `Final: ${result.final.substring(0,80)}`,
       `Redirect: *${result.redirects}x*`].join("\n")));
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };

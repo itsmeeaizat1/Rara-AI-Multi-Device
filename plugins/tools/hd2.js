@@ -33,6 +33,7 @@ async function handler(m, { sock }) {
     return m.reply( ` *ʜᴅ ᴇɴʜᴀɴᴄᴇ ᴠ2*\n\nKirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\nProses membutuhkan waktu ±1 menit`, "hd2");
   }
   try {
+    await m.react("🕒");
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
       buffer = await m.quoted.download();
@@ -56,6 +57,7 @@ async function handler(m, { sock }) {
     if (!result) {
       return m.reply(claraWrap("hd2tool", `❌ Gagal enhance gambar. Coba lagi nanti.`));
     }
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -77,6 +79,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("hd2tool", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

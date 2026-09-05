@@ -38,6 +38,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "ttsnahidasanka" });
   }
   try {
+    await m.react("🕒");
     const url = `${API_BASE}/anime/ttsnahida?apikey=${API_KEY}&text=${encodeURIComponent(text)}`;
 
     const res = await axios.get(url, {
@@ -64,6 +65,7 @@ async function handler(m, { sock, args }) {
     let caption = `TTS Nahida\n`;
     caption += `Text: ${text}`;
 
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -74,6 +76,7 @@ async function handler(m, { sock, args }) {
       { quoted: m },
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[TTSNAHIDASANKA] Error:", e.message);
     let txt = `Gagal generate voice Nahida!\n\n`;
     txt += `Error: ${e.message}\n\n`;

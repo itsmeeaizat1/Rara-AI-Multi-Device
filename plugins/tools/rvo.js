@@ -31,6 +31,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Rvo", "❌ Reply pesan view once (sekali lihat) untuk membukanya."));
   }
   try {
+    await m.react("🕒");
     let originalCaption = "";
     if (quoted.message?.[quoted.type]?.caption) {
       originalCaption = quoted.message[quoted.type].caption;
@@ -72,6 +73,7 @@ async function handler(m, { sock }) {
       );
     } else {
       const ext = quoted.type?.replace("Message", "") || "bin";
+      await m.react("🐣");
       await sock.sendMessage(
         m.chat,
         {
@@ -86,6 +88,7 @@ async function handler(m, { sock }) {
       );
     }
   } catch (e) {
+    await m.react("❌");
     let msg = e.message;
     if (
       msg.includes("Gagal download") ||

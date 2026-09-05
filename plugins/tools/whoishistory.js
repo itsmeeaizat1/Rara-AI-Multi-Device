@@ -132,6 +132,7 @@ function parseRdap(data) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -220,8 +221,10 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("  " + ev.action + ": " + ev.date);
       }
     }
+    await m.react("🐣");
     return m.reply(claraWrap("WHOIS: " + domain, lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("whoishistory error:", e);
     return m.reply(claraWrap("WhoisHistory", "Error: " + e.message));
   }

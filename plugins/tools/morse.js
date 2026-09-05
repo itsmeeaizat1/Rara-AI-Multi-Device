@@ -71,6 +71,7 @@ function morseToText(morse) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -108,12 +109,14 @@ async function handler(m, { sock, config: botConfig }) {
       if (!result) {
         return m.reply(claraWrap("Morse", "Tidak ada karakter yg bisa di-encode!"));
       }
+      await m.react("🐣");
       return m.reply(claraWrap("Morse Encode", [
         "Input: " + (text.length > 60 ? text.substring(0, 60) + "..." : text),
         "Hasil: " + result,
       ].join("\n")));
     }
   } catch (e) {
+    await m.react("❌");
     console.error("morse error:", e);
     return m.reply(claraWrap("Morse", "Error: " + e.message));
   }

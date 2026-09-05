@@ -85,6 +85,7 @@ async function traceRedirects(url) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -141,8 +142,10 @@ async function handler(m, { sock, config: botConfig }) {
     const totalTime = hops.reduce((s, h) => s + (h.time || 0), 0);
     lines.push("");
     lines.push("Total time: " + totalTime + "ms");
+    await m.react("🐣");
     return m.reply(claraWrap("Redirect Trace: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("redirect error:", e);
     return m.reply(claraWrap("Redirect", "Error: " + e.message));
   }

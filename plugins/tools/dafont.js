@@ -56,18 +56,17 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(
-      `🔤 *ᴅᴀꜰᴏɴᴛ ꜱᴇᴀʀᴄʜ*\n\n` +
-        `Cari font dari DaFont, lalu reply nomor buat download.\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}dafont <nama font>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}dafont arial*\n` +
-        `*${m.prefix}dafont horror*\n\n` +
-        `_Setelah daftar muncul, reply pesan bot dengan nomor font buat download_`
-    );
+    return m.reply(claraWrap("dafont", [
+      `Cari font dari DaFont, lalu reply nomor buat download.`,
+      ``,
+      `📌 Format: ${m.prefix}dafont <nama font>`,
+      `💡 Contoh: ${m.prefix}dafont arial atau ${m.prefix}dafont horror`,
+      ``,
+      `Setelah daftar muncul, reply pesan bot dengan nomor font buat download.`,
+    ]))
   }
   try {
+    await m.react("🕒");
     const result = await DaFont(text);
 
     if (!result.status) {
@@ -91,8 +90,10 @@ async function handler(m, { sock }) {
     const session = setSession(m.sender, items);
     session.chat = m.chat;
 
+    await m.react("🐣");
     await m.reply(claraWrap("dafont", txt));
   } catch (e) {
+    await m.react("❌");
     console.error(e);
     m.reply(claraWrap("dafont", "❌ Gagal mencari font, coba lagi nanti"));
   }

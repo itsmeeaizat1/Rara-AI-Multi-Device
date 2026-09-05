@@ -113,10 +113,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("SPPD", [
       `Generator Surat Perintah Perjalanan Dinas → PDF`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  ${prefix}sppd <detail perjalanan dinas>`,
       ``,
-      `*ᴄᴏɴᴛᴏʜ:*`,
+      `💡 Contoh:`,
       `  ${prefix}sppd Budi Santoso NIP 198701012015041001 staf Dinas Kominfo, ke Jakarta untuk rapat koordinasi, 15-17 Jan 2024, transport pesawat, transport 2jt, hotel 500rb/hari, uang harian 300rb/hari, diperintahkan oleh Kepala Dinas Hadi NIP 196501011990021001`,
       ``,
       `*ʜᴀꜱɪʟ:* PDF SPPD siap print`,

@@ -97,6 +97,7 @@ async function editImage(imageBuffer, prompt, mime) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const sub = (args[0] || "").toLowerCase();
 
     // EXAMPLES
@@ -202,6 +203,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ], "success"));
       }
     } else {
+      await m.react("🐣");
       return m.reply(claraWrap("DeepAI Image Editor V2", [
         "Response tidak dikenali.",
         "Prompt: " + prompt,
@@ -209,6 +211,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "warn"));
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[DeepAI Image Editor V2]", e);
     m.reply(claraWrap("DeepAI Image Editor V2", [
       "Error: " + e.message,

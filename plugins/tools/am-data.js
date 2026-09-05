@@ -43,6 +43,7 @@ async function handler(m, { sock }) {
     );
   }
   try {
+    await m.react("🕒");
     const r = await fetch(API, {
       method: "POST",
       headers: {
@@ -82,9 +83,11 @@ async function handler(m, { sock }) {
         caption: msg,
       });
     } else {
+      await m.react("🐣");
       await m.reply(claraWrap("am-data", msg));
     }
   } catch (e) {
+    await m.react("❌");
     console.log(e);
     m.reply(claraWrap("am-data", te(m.prefix, m.command, m.pushName), "error"));
   }

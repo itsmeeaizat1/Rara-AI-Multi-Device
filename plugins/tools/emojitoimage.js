@@ -34,22 +34,24 @@ async function handler(m, { sock }) {
   const style = args[1]?.toLowerCase() || "apple";
 
   if (!emoji) {
-    return m.reply( `🖼️ *ᴇᴍᴏᴊɪ ᴛᴏ ɪᴍᴀɢᴇ*\n\n` +
-        `Konversi emoji ke gambar HD\n\n` +
-        `*ꜰᴏʀᴍᴀᴛ:*\n` +
-        `\`${m.prefix}emojitoimage <emoji> [style]\`\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `\`${m.prefix}emojitoimage 😳 apple\`\n\n` +
-        `*ꜱᴛʏʟᴇ ᴛᴇʀꜱᴇᴅɪᴀ:*\n` +
-        `${STYLES.join(", ")}`, "emojitoimage");
+    return m.reply(claraWrap("emojitoimage", [
+      `Konversi emoji ke gambar HD.`,
+      ``,
+      `📌 Format: ${m.prefix}emojitoimage <emoji> [style]`,
+      `💡 Contoh: ${m.prefix}emojitoimage 😳 apple`,
+      ``,
+      `Style tersedia: ${STYLES.join(", ")}`,
+    ]));
   }
 
   const validStyle = STYLES.includes(style) ? style : "apple";
   try {
+    await m.react("🕒");
     const apiUrl = `https://api.neoxr.eu/api/emoimg?q=${encodeURIComponent(emoji)}&style=${validStyle}&apikey=${NEOXR_APIKEY}`;
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
 
     if (!data?.status || !data?.data?.url) {
+      await m.react("🐣");
       return m.reply(claraWrap("emojitoimage", "❌ *ɢᴀɢᴀʟ*\n\nEmoji tidak ditemukan atau API error"));
     }
 
@@ -63,6 +65,7 @@ async function handler(m, { sock }) {
       { type: "image", contextInfo: saluranCtx() },
     );
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("emojitoimage", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

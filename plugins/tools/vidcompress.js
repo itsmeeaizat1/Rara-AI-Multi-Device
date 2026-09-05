@@ -200,6 +200,7 @@ async function handler(m, { sock }) {
   const outputPath = getTmpFile("mp4");
 
   try {
+    await m.react("🕒");
     fs.writeFileSync(inputPath, media.buffer);
 
     // === INFO ===
@@ -271,6 +272,7 @@ async function handler(m, { sock }) {
     caption += "Sebelum: " + formatSize(originalSize) + "\n";
     caption += "Sesudah: " + formatSize(compressedSize) + "\n";
     caption += "Pengurangan: " + (ratio > 0 ? ratio + "%" : "0% (sudah optimal)");
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       video: { url: outputPath },
       caption: caption,
@@ -279,6 +281,7 @@ async function handler(m, { sock }) {
     cleanup(inputPath);
     cleanup(outputPath);
   } catch (e) {
+    await m.react("❌");
     cleanup(inputPath);
     cleanup(outputPath);
     return m.reply(claraWrap("Error", "\u274c Gagal kompres video: " + e.message + "\n\nPastikan video valid dan tidak terlalu panjang (max 5 menit)."));

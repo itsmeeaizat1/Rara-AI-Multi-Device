@@ -21,6 +21,7 @@ const TEMPLATES = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const tpl = m.text?.trim()?.toLowerCase();
     if (!tpl) {
       { const __navText = (novaCaption({
@@ -33,8 +34,10 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     if (!TEMPLATES[tpl]) throw new Error(`Template "${tpl}" tidak ada. Pilih: ${Object.keys(TEMPLATES).join(", ")}`);
+    await m.react("🐣");
     await m.reply(claraHeader("CSS: " + tpl, "🎯") + "\n\n```css\n" + TEMPLATES[tpl] + "\n```");
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };
