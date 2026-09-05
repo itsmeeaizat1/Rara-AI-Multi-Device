@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
     if (!id) return m.reply(claraWrap("Toko", "Format: .toko edit <id> nama=... harga=... stok=..."));
 
     const product = getProduct(id);
-    if (!product) return m.reply("Produk tidak ditemukan: " + id);
+    if (!product) return m.reply(claraWrap("toko", "Produk tidak ditemukan: " + id));
 
     const text = args.slice(2).join(" ");
     const updates = {};
@@ -138,8 +138,8 @@ async function handler(m, { sock }) {
   if (action === "del" || action === "hapus" || action === "delete") {
     const id = args[1];
     if (!id) return m.reply(claraWrap("Toko", "Format: .toko del <id>"));
-    if (deleteProduct(id)) return m.reply("Produk dihapus: " + id);
-    return m.reply("Produk tidak ditemukan: " + id);
+    if (deleteProduct(id)) return m.reply(claraWrap("toko", "Produk dihapus: " + id));
+    return m.reply(claraWrap("toko", "Produk tidak ditemukan: " + id));
   }
 
   if (action === "produk" || action === "list") {
@@ -164,7 +164,7 @@ async function handler(m, { sock }) {
     const query = args.slice(1).join(" ").trim();
     if (!query) return m.reply(claraWrap("Toko", "Format: .toko cari <kata kunci>"));
     const results = searchProducts(query);
-    if (results.length === 0) return m.reply("Tidak ditemukan produk untuk: " + query);
+    if (results.length === 0) return m.reply(claraWrap("toko", "Tidak ditemukan produk untuk: " + query));
     let txt = "Hasil pencarian: " + query + "\n\n";
     for (const p of results) {
       txt += p.id + " — " + p.name + " (" + formatRupiah(p.price) + ")\n";
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
     if (!id) return m.reply(claraWrap("Toko", "Format: .toko terima <id> [catatan]"));
     const note = args.slice(2).join(" ").trim();
     const order = updateOrderStatus(id, "confirmed", note);
-    if (!order) return m.reply("Pesanan tidak ditemukan: " + id);
+    if (!order) return m.reply(claraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "confirmed", note);
     return m.reply(
       "Pesanan diterima: " + id + "\n" +
@@ -215,7 +215,7 @@ async function handler(m, { sock }) {
     if (!id) return m.reply(claraWrap("Toko", "Format: .toko tolak <id> [alasan]"));
     const note = args.slice(2).join(" ").trim();
     const order = updateOrderStatus(id, "rejected", note);
-    if (!order) return m.reply("Pesanan tidak ditemukan: " + id);
+    if (!order) return m.reply(claraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "rejected", note);
     return m.reply(claraWrap("Info", "\u2705 Pesanan ditolak: " + id + "\nNotif terkirim ke buyer."));
   }
@@ -225,7 +225,7 @@ async function handler(m, { sock }) {
     if (!id) return m.reply(claraWrap("Toko", "Format: .toko kirim <id> [info pengiriman]"));
     const note = args.slice(2).join(" ").trim();
     const order = updateOrderStatus(id, "shipped", note);
-    if (!order) return m.reply("Pesanan tidak ditemukan: " + id);
+    if (!order) return m.reply(claraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "shipped", note);
     return m.reply(claraWrap("Info", "\u2705 Pesanan dikirim: " + id + "\nNotif terkirim ke buyer."));
   }
@@ -234,16 +234,16 @@ async function handler(m, { sock }) {
     const id = args[1];
     if (!id) return m.reply(claraWrap("Toko", "Format: .toko selesai <id>"));
     const order = updateOrderStatus(id, "done");
-    if (!order) return m.reply("Pesanan tidak ditemukan: " + id);
+    if (!order) return m.reply(claraWrap("toko", "Pesanan tidak ditemukan: " + id));
     await notifyBuyer(order, "done");
-    return m.reply("Pesanan selesai: " + id);
+    return m.reply(claraWrap("toko", "Pesanan selesai: " + id));
   }
 
   if (action === "delpesanan" || action === "delorder") {
     const id = args[1];
     if (!id) return m.reply(claraWrap("Toko", "Format: .toko delpesanan <id>"));
-    if (deleteOrder(id)) return m.reply("Pesanan dihapus: " + id);
-    return m.reply("Pesanan tidak ditemukan: " + id);
+    if (deleteOrder(id)) return m.reply(claraWrap("toko", "Pesanan dihapus: " + id));
+    return m.reply(claraWrap("toko", "Pesanan tidak ditemukan: " + id));
   }
 
   // ── KATEGORI ────────────────────────────────────────────────────────────
@@ -253,14 +253,14 @@ async function handler(m, { sock }) {
     if (sub === "add") {
       const name = args.slice(2).join(" ").trim();
       if (!name) return m.reply(claraWrap("Toko", "Format: .toko kategori add <nama>"));
-      if (addCategory(name)) return m.reply("Kategori ditambah: " + name);
-      return m.reply("Kategori sudah ada: " + name);
+      if (addCategory(name)) return m.reply(claraWrap("toko", "Kategori ditambah: " + name));
+      return m.reply(claraWrap("toko", "Kategori sudah ada: " + name));
     }
     if (sub === "del" || sub === "remove") {
       const name = args.slice(2).join(" ").trim();
       if (!name) return m.reply(claraWrap("Toko", "Format: .toko kategori del <nama>"));
-      if (deleteCategory(name)) return m.reply("Kategori dihapus: " + name);
-      return m.reply("Tidak bisa hapus kategori Umum atau tidak ditemukan: " + name);
+      if (deleteCategory(name)) return m.reply(claraWrap("toko", "Kategori dihapus: " + name));
+      return m.reply(claraWrap("toko", "Tidak bisa hapus kategori Umum atau tidak ditemukan: " + name));
     }
     // list
     const cats = listCategories();
@@ -276,14 +276,14 @@ async function handler(m, { sock }) {
     const name = args.slice(1).join(" ").trim();
     if (!name) return m.reply(claraWrap("Toko", "Format: .toko setnama <nama toko>"));
     updateStoreConfig((c) => ({ ...c, storeName: name }));
-    return m.reply("Nama toko diubah: " + name);
+    return m.reply(claraWrap("toko", "Nama toko diubah: " + name));
   }
 
   if (action === "setdesc") {
     const desc = args.slice(1).join(" ").trim();
     if (!desc) return m.reply(claraWrap("Toko", "Format: .toko setdesc <deskripsi>"));
     updateStoreConfig((c) => ({ ...c, storeDesc: desc }));
-    return m.reply("Deskripsi toko diubah: " + desc);
+    return m.reply(claraWrap("toko", "Deskripsi toko diubah: " + desc));
   }
 
   if (action === "notif") {

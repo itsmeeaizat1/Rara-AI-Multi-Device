@@ -25,7 +25,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, store }) {
     if (!config.isOwner(m.sender)) {
-        return m.rem.reply(claraWrap("Exec", '❌ *Owner Only!*')) }
+        return m.reply(claraWrap("exec", "Owner only!", "error")) }
 
     let code = null
 
@@ -38,13 +38,16 @@ async function handler(m, { sock, store }) {
     }
 
     if (!code) {
-        return m.reply( `⚙️ *Exec*\n\n` +
-            `Reply pesan berisi kode JavaScript!\n\n` +
-            `*Atau:*\n` +
-            `.> <code>\n\n` +
-            `*Contoh:*\n` +
-            `Reply pesan: \`return m.chat\`\n` +
-            `Lalu ketik: .>`, "exec")
+        return m.reply(claraWrap("exec", [
+            "Reply pesan berisi kode JavaScript!",
+            "",
+            "*Atau:*",
+            "`.> <code>`",
+            "",
+            "💡 Contoh:",
+            "Reply pesan: `return m.chat`",
+            "Lalu ketik: .>",
+        ]))
     }
 
     code = code.trim()
@@ -94,9 +97,8 @@ async function handler(m, { sock, store }) {
 
     await m.reply(
         `⚙️ *Exec Result*\n\n` +
-        "" +
         `\`${codePreview}\`\n` +
-        `├┈┈「 📊 *Result* 」\n` +
+        `---\n\n` +
         `${status}\n` +
         `Type: ${type}\n` +
         `---\n\n` +

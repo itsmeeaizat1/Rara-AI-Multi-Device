@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
       return m.reply(novaBox("Broadcast Grup", ["Tidak ada broadcast yang sedang berjalan"]));
     }
     global.stopBcgc = true;
-    return m.reply("🔄 Sedang dihentikan...");
+    return m.reply(claraWrap("bcgc", "Sedang dihentikan..."));
   }
 
   if (
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
 
   if (input.toLowerCase() === "off") {
     db.setting("bcgcEnabled", false);
-    return m.reply("✅ Berhasil dinonaktifkan");
+    return m.reply(claraWrap("bcgc", "Berhasil dinonaktifkan"));
   }
 
   if (!input && !m.quoted) {
@@ -103,12 +103,12 @@ async function handler(m, { sock }) {
   }
 
   if (global.statusBcgc) {
-    return m.reply("🔄 Sedang berjalan\n⏹️ Ketik `" + m.prefix + "stopbcgc` untuk hentikan");
+    return m.reply(claraWrap("bcgc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcgc* untuk hentikan"));
   }
 
   const enabled = db.setting("bcgcEnabled");
   if (!enabled) {
-    return m.reply("❌ Belum aktif\nKetik `" + m.prefix + "bcgc on` untuk mengaktifkan");
+    return m.reply(claraWrap("bcgc", "Belum aktif.\nKetik *" + m.prefix + "bcgc on* untuk mengaktifkan"));
   }
 
   try {
@@ -278,7 +278,7 @@ async function handleSetDelay(m, db, input) {
 
   const ms = parseDelay(input);
   if (!ms || ms < 1000) {
-    return m.reply("❌ Format salah\n💡 Contoh: `5s`, `2m`, `1h`, `1d`");
+    return m.reply(claraWrap("bcgc", "Format salah.\n💡 Contoh: 5s, 2m, 1h, 1d"));
   }
 
   db.setting("jedaBcgc", ms);

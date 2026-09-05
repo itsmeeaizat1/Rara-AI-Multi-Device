@@ -122,7 +122,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply( text, "setkey");
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("setkey", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

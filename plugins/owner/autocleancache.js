@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     console.error("[autocleancache] Error:", e.message);
-    return m.reply("Error: " + e.message);
+    return m.reply(claraWrap("autocleancache", "Gagal proses. Coba lagi.", "error"));
   }
 }
 

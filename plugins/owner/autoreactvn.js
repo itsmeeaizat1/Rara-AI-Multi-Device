@@ -133,7 +133,7 @@ async function handler(m, { sock, args }) {
     try {
       buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     } catch (e) {
-      return m.reply("Gagal download VN: " + e.message);
+      return m.reply(claraWrap("autoreactvn", "Gagal download VN. Coba lagi.", "error"));
     }
 
     if (!buffer || buffer.length === 0) {

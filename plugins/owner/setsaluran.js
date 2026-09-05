@@ -75,14 +75,18 @@ async function handler(m, { sock }) {
         saluranId = metadata.id;
       } else {
         // If can't get ID, save the link and let owner set ID manually
-        return m.reply("Tidak bisa dapat ID dari link tersebut.\n\n" +
-          "Coba cara manual:\n" +
-          "1. Buka saluran di HP\n" +
-          "2. Titik tiga -> Info Saluran\n" +
-          "3. Salin ID (format: 120363xxx@newsletter)\n" +
-          "4. Ketik: .setsaluran <ID>\n\n" +
-          "Atau tetap simpan link dulu? Ketik:\n" +
-          ".setsaluran link " + saluranLink);
+        return m.reply(claraWrap("setsaluran", [
+          "Tidak bisa dapat ID dari link tersebut.",
+          "",
+          "💡 Coba cara manual:",
+          "1. Buka saluran di HP",
+          "2. Titik tiga -> Info Saluran",
+          "3. Salin ID (format: 120363xxx@newsletter)",
+          "4. Ketik: .setsaluran <ID>",
+          "",
+          "Atau tetap simpan link dulu?",
+          "Ketik: .setsaluran link " + saluranLink,
+        ]));
       }
     } catch (e) {
       // If metadata fails, try to use the code as-is
@@ -104,12 +108,15 @@ async function handler(m, { sock }) {
     saluranId = config.saluran?.id || "@newsletter";
     // Don't change ID, just update link
   } else {
-    return m.reply("Format tidak dikenal.\n\n" +
-      "Ketik:\n" +
-      "1. .setsaluran <link saluran> - auto detect ID\n" +
-      "2. .setsaluran 120363xxx@newsletter - set ID manual\n" +
-      "3. .setsaluran link <url> - set link saja\n" +
-      "4. .setsaluran - lihat config saat ini");
+    return m.reply(claraWrap("setsaluran", [
+      "Format tidak dikenal.",
+      "",
+      "💡 Ketik:",
+      "1. .setsaluran <link saluran> - auto detect ID",
+      "2. .setsaluran 120363xxx@newsletter - set ID manual",
+      "3. .setsaluran link <url> - set link saja",
+      "4. .setsaluran - lihat config saat ini",
+    ]));
   }
 
   // Update config.js file

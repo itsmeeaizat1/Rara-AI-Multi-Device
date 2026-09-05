@@ -41,19 +41,20 @@ async function handler(m, { sock, plugins }) {
   let durationTarget = null;
   if (isAdd) {
     if (!target)
-      return m.reply(claraWrap("Akses", `❌ *Target Invalid*\n\nTag user / Reply chat / Tulis nomor target`));
+      return m.reply(claraWrap("akses", `❌ *Target Invalid*\n\nTag user / Reply chat / Tulis nomor target`));
     const cleanArgs = m.args.filter(
       (a) => !a.includes("@") && !/^\d{10,}$/.test(a),
     );
     if (cleanArgs.length < 2) {
-      return m.reply(
-        `⚠️ *Format Salah*\n\n` +
-          `Format: \`${m.prefix}addakses <command> <durasi> <target>\`\n\n` +
-          `*Contoh:*\n` +
-          `\`${m.prefix}addakses addowner 30d @user\` (30 Hari)\n` +
-          `\`${m.prefix}addakses unban permanent @user\` (Selamanya)\n\n` +
-          `*Durasi Support:* 1h, 1d, 30d, 1y`,
-      );
+      return m.reply(claraWrap("akses", [
+        "Format: " + m.prefix + "addakses <command> <durasi> <target>",
+        "",
+        "💡 Contoh:",
+        m.prefix + "addakses addowner 30d @user (30 Hari)",
+        m.prefix + "addakses unban permanent @user (Selamanya)",
+        "",
+        "📌 Durasi support: 1h, 1d, 30d, 1y",
+      ]));
     }
     commandTarget = cleanArgs[0].toLowerCase();
     durationTarget = cleanArgs[1].toLowerCase();
@@ -75,18 +76,14 @@ async function handler(m, { sock, plugins }) {
     }
 
     if (activeAccess.length === 0) {
-      return m.reply(
-        `📊 *User Access*\n\nTarget: @${target.split("@")[0]}\nStatus: *Tidak punya akses khusus*`,
-        {
-          mentions: sock.parseMention(`@${target.split("@")[0]}`),
-        },
-      );
+      return m.reply(claraWrap("akses", `Target: @${target.split("@")[0]}\nStatus: Tidak punya akses khusus`), {
+        mentions: sock.parseMention(`@${target.split("@")[0]}`),
+      });
     }
 
-    let txt = `📊 *User Access*\n\n`;
-    txt += `Target: @${target.split("@")[0]}\n`;
+    let txt = `Target: @${target.split("@")[0]}\n`;
     txt += `Total: *${activeAccess.length}* commands\n`;
-    txt += `━━━━━━━━━━━━━━━\n\n`;
+    txt += `---\n\n`;
 
     activeAccess.forEach((acc, i) => {
       let expiredTxt = "♾️ Permanent";
@@ -103,7 +100,7 @@ async function handler(m, { sock, plugins }) {
       txt += `   └ ${expiredTxt}\n`;
     });
 
-    return m.reply(txt, { mentions: [target] });
+    return m.reply(claraWrap("akses", txt), { mentions: [target] });
   }
   if (isAdd) {
     let expiredTime = null;
@@ -111,10 +108,10 @@ async function handler(m, { sock, plugins }) {
       try {
         const durationMs = ms(durationTarget);
         if (!durationMs)
-          return m.reply(claraWrap("Akses", `❌ Format durasi salah! Gunakan: 1h, 1d, 30d`));
+          return m.reply(claraWrap("akses", `❌ Format durasi salah! Gunakan: 1h, 1d, 30d`));
         expiredTime = Date.now() + durationMs;
       } catch {
-        return m.reply(claraWrap("Akses", `❌ Format durasi tidak dikenali!`));
+        return m.reply(claraWrap("akses", `❌ Format durasi tidak dikenali!`));
       }
     }
 
@@ -122,12 +119,7 @@ async function handler(m, { sock, plugins }) {
     if (existingIdx !== -1) {
       user.access[existingIdx].expired = expiredTime;
       db.setUser(target, user);
-      return m.reply(
-        `✅ *Akses Diperbarui*\n\n` +
-          `Command: \`${commandTarget}\`\n` +
-          `Durasi: *${durationTarget}*\n` +
-          `Target: @${target.split("@")[0]}`,
-      );
+      return m.reply(claraWrap("akses", `Akses diperbarui\nCommand: ${commandTarget}\nDurasi: ${durationTarget}\nTarget: @${target.split("@")[0]}`));
     }
     user.access.push({
       cmd: commandTarget,
@@ -138,16 +130,10 @@ async function handler(m, { sock, plugins }) {
     db.setUser(target, user);
     // console.log('[DEBUG AddAccess] After save:', JSON.stringify(db.getUser(target)?.access))
 
-    await m.reply(
-      `✅ *Akses Diberikan*\n\n` +
-        `🔑 Cmd: \`${commandTarget}\`\n` +
-        `⏱️ Durasi: *${durationTarget}*\n` +
-        `👤 Target: @${target.split("@")[0]}\n`,
-      { mentions: [target] },
-    );
+    await m.reply(claraWrap("akses", `Akses diberikan\nCmd: ${commandTarget}\nDurasi: ${durationTarget}\nTarget: @${target.split("@")[0]}`), { mentions: [target] });
   }
   if (isDel) {
-    if (!target) return m.reply(claraWrap("Akses", `❌ Tag user yang mau dihapus aksesnya!`));
+    if (!target) return m.reply(claraWrap("akses", `❌ Tag user yang mau dihapus aksesnya!`));
     const now = Date.now();
     const activeAccess = user.access.filter(
       (a) => a.expired === null || a.expired > now,
@@ -157,17 +143,15 @@ async function handler(m, { sock, plugins }) {
       specificCmd = specificCmd.toLowerCase();
       const idx = user.access.findIndex((a) => a.cmd === specificCmd);
       if (idx === -1)
-        return m.reply(`❌ User tidak punya akses command \`${specificCmd}\``);
+        return m.reply(claraWrap("akses", `User tidak punya akses command ${specificCmd}`, "error"));
 
       user.access.splice(idx, 1);
       db.setUser(target, user);
-      return m.reply(
-        `✅ Akses \`${specificCmd}\` berhasil dicabut dari @${target.split("@")[0]}`,
-      );
+      return m.reply(claraWrap("akses", `Akses ${specificCmd} berhasil dicabut dari @${target.split("@")[0]}`));
     }
 
     if (activeAccess.length === 0) {
-      { const __navText = `⚠️ User ini tidak memiliki akses command apapun.`; return await m.reply(__navText); };
+      { return await m.reply(claraWrap("akses", "User ini tidak memiliki akses command apapun.", "error")); };
     }
     const rows = activeAccess.map((acc) => {
       const exp = acc.expired ? ms(acc.expired - now) : "Permanent";

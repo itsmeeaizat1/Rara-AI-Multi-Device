@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   }
 
   if (!regData) {
-    return m.reply("Tidak ada pendaftaran pending dari nomor " + phoneNum);
+    return m.reply(claraWrap("rejectsewa", "Tidak ada pendaftaran pending dari nomor " + phoneNum));
   }
 
   // Update registration status

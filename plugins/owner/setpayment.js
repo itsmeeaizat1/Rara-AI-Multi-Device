@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
       data.cash.info = info;
       data.cash.enabled = true;
       savePaymentData(data);
-      return m.reply("Info cash disimpan: " + info);
+      return m.reply(claraWrap("setpayment", "Info cash disimpan: " + info));
     }
 
     return m.reply(
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
         const data = getPaymentData();
         data.qrisUrl = url;
         savePaymentData(data);
-        return m.reply("QRIS diatur via URL: " + url);
+        return m.reply(claraWrap("setpayment", "QRIS diatur via URL: " + url));
       }
       return m.reply(
         "Cara set QRIS:\n\n" +
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
 
       return m.reply(claraWrap("Setpayment", "QRIS berhasil diatur dan disimpan."));
     } catch (err) {
-      return m.reply("Error upload QRIS: " + err.message);
+      return m.reply(claraWrap("setpayment", "Gagal upload QRIS. Coba lagi.", "error"));
     }
   }
 
@@ -174,8 +174,8 @@ async function handler(m, { sock }) {
     data.methods = data.methods.filter((m) => m.name.toLowerCase() !== name.toLowerCase());
     savePaymentData(data);
 
-    if (data.methods.length === before) return m.reply("E-wallet tidak ditemukan: " + name);
-    return m.reply("E-wallet dihapus: " + name);
+    if (data.methods.length === before) return m.reply(claraWrap("setpayment", "E-wallet tidak ditemukan: " + name));
+    return m.reply(claraWrap("setpayment", "E-wallet dihapus: " + name));
   }
 
   // ── BANK / REKENING ──────────────────────────────────────────────────────────
@@ -227,8 +227,8 @@ async function handler(m, { sock }) {
       data.banks = data.banks.filter((b) => b.name.toLowerCase() !== name.toLowerCase());
       savePaymentData(data);
 
-      if (data.banks.length === before) return m.reply("Bank tidak ditemukan: " + name);
-      return m.reply("Rekening bank dihapus: " + name);
+      if (data.banks.length === before) return m.reply(claraWrap("setpayment", "Bank tidak ditemukan: " + name));
+      return m.reply(claraWrap("setpayment", "Rekening bank dihapus: " + name));
     }
 
     return m.reply(claraWrap("Setpayment", "Format: .setpayment bank add <bank>|<rek>|<an> atau .setpayment bank del <nama>"));

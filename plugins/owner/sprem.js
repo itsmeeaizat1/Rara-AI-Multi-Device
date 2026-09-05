@@ -17,9 +17,11 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   if (!m.quoted) {
-    return m.reply("⭐ *sTicker Premium*\n\n" +
-        "Reply sticker yang mau dijadikan premium!\n\n" +
-        `Penggunaan: \`${m.prefix}sprem\``);
+    return m.reply(claraWrap("sprem", [
+        "Reply sticker yang mau dijadikan premium!",
+        "",
+        "💡 Contoh: " + m.prefix + "sprem (reply sticker)",
+      ]));
   }
 
   const q = m.quoted;

@@ -182,7 +182,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "ambientmimic");
     }
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("ambientmimic", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }
