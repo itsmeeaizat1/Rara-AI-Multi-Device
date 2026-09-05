@@ -3,12 +3,12 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "antispammenuv2",
-  alias: ["antispammenuv2", "antispammenu", "aspmenu", "aspmenuv2"],
+  name: "antispammenu",
+  alias: ["antispammenu", "antispammenuv2", "aspmenu", "aspmenuv2"],
   category: "tools",
-  description: "Anti-spam menu & fitur (.menu/.allmenu + command fitur) - V2 standalone",
-  usage: ".antispammenuv2 <command>",
-  example: ".antispammenuv2 on",
+  description: "Anti-spam menu & fitur (.menu/.allmenu + command fitur)",
+  usage: ".antispammenu <command>",
+  example: ".antispammenu on",
   isOwner: true,
   isPremium: false,
   isGroup: false,
