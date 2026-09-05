@@ -6,6 +6,7 @@
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 function trackConfess(senderJid, targetJid, isAnonim) {
@@ -162,17 +163,19 @@ async function handler(m, { sock }) {
       global.confessData.delete(sentMsg.key.id);
     }, 24 * 60 * 60 * 1000);
 
-    let successTxt =
-      `✅ Pesan terkirim!\n` +
-      `📱 Ke: \`${targetNumber}\`\n`;
-    if (isAnonim) {
-      successTxt += `🔒 Mode: *Anonim* (identitas aman)\n`;
-    } else {
-      successTxt += `📝 Mode: *Non-Anonim* (nama: ${senderName})\n`;
-    }
-    successTxt += `\n  _Kalau dia balas, otomatis diterusin ke sini_\n\n`;
-    
-    await m.reply(successTxt);
+    const modeLine = isAnonim
+      ? "│ • 🔒 Mode : Anonim (identitas aman)"
+      : `│ • 📝 Mode : Non-Anonim (${senderName})`;
+    await m.reply(novaGameBox({
+      title: "pesan terkirim", icon: "💘",
+      flavor: "💘 *PESAN TERKIRIM!*",
+      body: [
+        `│ • 📱 Ke : ${targetNumber}`,
+        modeLine,
+        "│ • ✉️ Kalau dia balas, otomatis diterusin ke sini",
+      ].join("\n"),
+      cta: gameCTA("confess"),
+    }));
     await m.react("💌");
   } catch (error) {
     console.error("[confess.js] Send error:", error.message);
