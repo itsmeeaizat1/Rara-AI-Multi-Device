@@ -4,13 +4,13 @@
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-22.0.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1810-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-2191%2B-blueviolet?style=flat-square&logo=terminal">
-  <img src="https://img.shields.io/badge/Kategori-41-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Version-23.0.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Total_Plugin-1835-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-2584%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Kategori-45-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Downloader-52-yellow?style=flat-square&logo=download">
-  <img src="https://img.shields.io/badge/RPG_Game-166-ff69b4?style=flat-square&logo=target">
-  <img src="https://img.shields.io/badge/AI_Plugin-172-9cf?style=flat-square&logo=ai">
+  <img src="https://img.shields.io/badge/RPG_Game-168-ff69b4?style=flat-square&logo=target">
+  <img src="https://img.shields.io/badge/AI_Plugin-170-9cf?style=flat-square&logo=ai">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
 </p>
@@ -46,24 +46,20 @@ Automation:
 
 ---
 
-## ✨ Fitur Unggulan v22.0.0
+## ✨ Fitur Unggulan v23.0.0
 
-### 🆕 Baru di v22.0.0
+### 🆕 Baru di v23.0.0
 
 | Fitur | Deskripsi | Command |
 |-------|-----------|---------|
-| Nova AI Agent | AI jawab lengkap + eksekusi command & kick/promote/demote via nama | `.novaai` |
-| Panel Pterodactyl 100 Slot | Kontrol 100 panel via argumen slot, config pusat src/lib/panel/ | `.cpanel` / `.setpanel` |
-| Panel Login Per-User | User login akun panel sendiri (session 7 hari), kontrol server miliknya | `.panel <user> <pass>,1` |
-| TikTok Keyword Search | Search video TikTok via keyword ala .play | `.tt <keyword>` / `.ttvideo` / `.ttaudio` / `.ttimage` |
-| IG Per-Format DL | Download IG per format dari URL post | `.igvideo` / `.igimage` / `.igaudio` |
-| Upscale AI Lokal | Engine Swin2SR/Real-ESRGAN lokal, tanpa watermark (1080p-5K, >1080p owner) | `.remini` / `.remini real` |
-| Convert Universal | 12 format audio + 13 format video, session chaining 10 menit | `.convert` / `.alldl <url> <format>` |
-| Energi vs Limit | Energi game (RPG/Couple) terpisah dari limit akses fitur | `.heal` / `.topenergi` / `.toplimit` |
-| Animasi RPG Morphing | Morphing message semua game RPG (43 animasi, gaya Alya) | `.adventure` / `.mining` dll |
-| Menu AI Greeting | Pengenalan bot di menu digenerate AI tiap load | `.menu` |
-| Status Universal | Pesan berhasil/gagal/gangguan seragam di semua fitur media | otomatis |
-| Auto Status Page | Halaman ON/OFF 33 fitur automasi sekaligus (owner) | `.autostatus` |
+| Session AI Terpadu | AI satuan inget riwayat chat (TTL 30 mnt), .novaai + .autonovaai satu memori, paham pesan yang di-reply | `.deepseek` / `.novaai` dll |
+| 21 AI Satuan Revival | Rantai fallback 4-tier (brand → Haidar → Ikyy → Xemoz), key kosong tetap dilayani | `.grok` / `.gemini` / `.gpt55` dll |
+| Kado Pasangan | Kasih item inventory ke pasangan, +affection per rarity (common→legendary) | `.kado` |
+| Bulan Madu | Honeymoon khusus married, sekali 30 hari, bonus EXP/Gold/Affection berdua | `.honeymoon` |
+| Meditasi | Pulih HP/Mana/Energi sekaligus dengan animasi istirahat | `.meditation` |
+| Antispam Menu | Command antispam jadi nama utama (v2 jadi alias) | `.antispammenu` |
+| Fix Box Wrap | Separator box gak ke-hardwrap jadi baris acak di layar HP | otomatis |
+| Education di README | 25 fitur kuliah & belajar kini tampil di daftar fitur | `.tugas` / `.ipk` / `.skripsiku` dll |
 
 ### 🤖 AI & Automation
 
@@ -250,6 +246,36 @@ Automation:
 | Translate | Multi bahasa | `.translate` |
 | Nulis | Tulis tangan ke gambar | `.nulis` |
 
+### 🎓 Education & Kuliah
+
+Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sampai tracker tugas.
+
+| Fitur | Deskripsi | Command |
+|-------|-----------|---------|
+| AI Tutor | Tutor per mata kuliah - penjelasan, latihan soal, tanya jawab | `.tutorku` |
+| Asisten Skripsi | Ide judul, outline bab, review struktur skripsi | `.skripsiku` |
+| Latihan Soal PG | Soal ulangan SD/SMP/SMA/SMK pilihan ganda + essay | `.soalujian` |
+| Latihan Essay | Soal essay/uraian per jenjang + kunci jawaban | `.soalessay` |
+| Game Belajar | Daftar siswa, main game belajar, leaderboard | `.daftarsiswa` / `.eduleaderboard` |
+| Kalkulator IPK | Hitung IPK/IPS semester atau kumulatif | `.ipk` / `.kalkulatornilai` |
+| Konversi Nilai | Tabel huruf↔angka, IPK, persentase, predikat | `.konversinilai` |
+| Tracker Tugas | Catat, lihat, kelola deadline tugas kuliah | `.tugas` |
+| Jadwal Kuliah | Jadwal kelas personal harian | `.jadwalku` |
+| Reminder UKT | Pengingat pembayaran UKT/SPP otomatis | `.pengingatukt` |
+| Cari Jurnal | Jurnal/paper akademik via OpenAlex (jutaan paper) | `.carijurnal` |
+| Sitasi | Generator sitasi APA/MLA/IEEE/Harvard | `.sitasi` |
+| Parafrase | Parafrase teks anti-plagiarisme | `.paraphrase` |
+| Ringkasan | Ringkas teks panjang jadi poin utama | `.ringkasan` |
+| Mind Map | Generate mind map dari teks/topik (AI) | `.mindmap` |
+| Flashcard | Kartu belajar + quiz diri sendiri | `.flashcard` |
+| Pomodoro | Timer belajar 25 menit fokus + 5 menit istirahat | `.pomodoro` |
+| Beasiswa | Info beasiswa S1/S2/S3 + deadline | `.beasiswa` |
+| Magang | Lowongan magang/internship mahasiswa | `.magang` |
+| Kamus Kampus | Arti istilah akademik perkuliahan | `.kampuskampus` |
+| Fakta Unik | Fakta menarik lintas bidang | `.faktaunik` |
+| Kata Bijak | Kata bijak & motivasi tokoh dunia | `.katabijak` |
+| Tips Harian | Tips kehidupan sehari-hari | `.tipsharian` |
+
 ### 🌐 Web & Internet Tools
 
 | Fitur | Deskripsi | Command |
@@ -374,17 +400,18 @@ Automation:
 
 ---
 
-## 📊 Statistik Bot v22.0.0
+## 📊 Statistik Bot v23.0.0
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.810 |
-| Total Command | 2.191+ |
-| Kategori | 41 |
-| RPG Module | 166 (159 rpg + 7 couple) |
-| AI Plugin | 172 |
+| Total Plugin | 1.835 |
+| Total Command | 2.584+ |
+| Kategori | 45 |
+| RPG Module | 168 (159 rpg + 9 couple) |
+| AI Plugin | 170 (125 ai + 45 ai image) |
 | AI Model | 34 |
 | Downloader | 52 |
+| Education | 25 |
 | Panel Pterodactyl | 100 slot (28 plugin kontrol) |
 | Convert Plugin | 31 |
 | Tools Plugin | 194 |
