@@ -233,13 +233,36 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
 
     const nativeButtons = buildNativeButtons(buttons);
 
+    // ── FIX thumbnail gak muncul + tag channel (2026-09-05) ──
+    // (1) sourceUrl WAJIB URL https valid — link rusak (mis. domain pakai
+    //     underscore kayak "itsmee_aizat.oneapp.dev" atau "whatsapp.com/channel/"
+    //     tanpa kode) bikin WA gak ngerender card preview sama sekali →
+    //     thumbnail seolah gak muncul. Prioritas: link saluran asli →
+    //     website valid → fallback whatsapp.com.
+    const saluranLink = config.saluran?.link || "";
+    const website = config.info?.website || "";
+    const channelLinkOk = /^https:\/\/whatsapp\.com\/channel\/[A-Za-z0-9_-]+/.test(saluranLink);
+    const urlOk = (u) => {
+      try { const x = new URL(u); return x.protocol.startsWith("http") && !x.hostname.includes("_"); }
+      catch { return false; }
+    };
+    const sourceUrl = (channelLinkOk && saluranLink) || (urlOk(website) && website) || "https://www.whatsapp.com/";
+
+    // (2) Tag channel di bawah pesan (pill "Nova AI Official") berasal dari
+    //     forwardedNewsletterMessageInfo — pola yang sama kayak nova-level.js.
+    //     Pakai config.saluran.id kalau sudah di-set; fallback id channel
+    //     yang sama dengan .ptvch.
+    const saluranId = config.saluran?.id || "";
+    const newsletterJid = /^\d+@newsletter$/.test(saluranId) ? saluranId : "120363404849776664@newsletter";
+    const newsletterName = config.saluran?.name || config.bot?.name || "Nova AI";
+
     const externalAdReply = {
       title: adTitle || getTimeGreeting(),
       body: `Kode: ${title || config.bot?.name || "Nova AI"}`,
       mediaType: 1,
       renderLargerThumbnail: true,
       showAdAttribution: false,
-      sourceUrl: config.info?.website || config.saluran?.link || "",
+      sourceUrl,
       ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
@@ -260,6 +283,12 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
         forwardingScore: 0,
         isForwarded: false,
         externalAdReply,
+        // Tag channel di bawah pesan (newsletter pill) + follow button
+        forwardedNewsletterMessageInfo: {
+          newsletterJid,
+          newsletterName,
+          serverMessageId: 1,
+        },
       },
     };
 
