@@ -152,7 +152,7 @@ const GAME_CTA = {
   welcome: "Yuk ketik .menu kak, biar tahu semua fitur seru di grup ini 🥳",
   goodbye: "Semoga kita bertemu lagi di lain waktu ya kak 🙏",
   // GROUP OPEN/CLOSE (fallback engine grup ditutup/dibuka)
-  groupclosed: "Sabar ya kak, nanti admin buka lagi grupnya kok, sambil nunggu yuk ketik .menu 🙏",
+  groupclosed: "Mohon ditunggu ya, grup akan dibuka kembali oleh admin 🙏",
   groupopened: "Waduh lengket banget kak, yok ramein lagi grupnya 🥳",
   // RPG FEATURES BATCH 2 (hasil aksi RPG → format engine)
   adventure: "Yuk petualangan lagi kak, siapa tau nemu harta karun 🗺️🥳",
