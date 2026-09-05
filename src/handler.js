@@ -863,7 +863,7 @@ try {
 
   // === Anti-Spam Menu V2 (menu + fitur commands) ===
   try {
-    const { checkMenuSpamV2 } = await import("../plugins/tools/antispammenuv2.js");
+    const { checkMenuSpamV2 } = await import("../plugins/tools/antispammenu.js");
     const spamResult = checkMenuSpamV2(m);
     if (spamResult.blocked) {
       const label = spamResult.scopeType === "menu" ? "menu" : "command fitur";
@@ -875,7 +875,7 @@ try {
       return;
     }
   } catch (e) {
-    if (config.dev?.debugLog) logger.error("antispammenuv2", e.message);
+    if (config.dev?.debugLog) logger.error("antispammenu", e.message);
   }
 
   // Check if command is enabled
