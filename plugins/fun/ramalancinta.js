@@ -49,6 +49,7 @@ function hashCode(str) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text.trim()
     if (!input || !input.includes("&")) {
       return m.reply(claraWrap("Ramalan Cinta", [
@@ -90,8 +91,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("")
     lines.push("Catatan: Ini hanya ramalan untuk hiburan. Masa depan hubungan ada di tangan kalian berdua.")
 
+    await m.react("🐣");
     return m.reply(claraWrap("Ramalan Cinta " + name1 + " & " + name2, lines.join("\n")))
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Ramalan Cinta", "Error: " + e.message))
   }
 }

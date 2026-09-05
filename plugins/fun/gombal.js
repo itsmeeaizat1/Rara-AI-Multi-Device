@@ -64,6 +64,7 @@ const CATEGORIES = Object.keys(GOMBAL_DB);
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     let category = null;
     let target = null;
 
@@ -107,8 +108,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("");
     lines.push(usedPrefix + "gombal <kategori> untuk lagi");
 
+    await m.react("🐣");
     return m.reply(claraWrap("Gombal", lines, "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Gombal", "Error: " + e.message, "error"));
   }
 }

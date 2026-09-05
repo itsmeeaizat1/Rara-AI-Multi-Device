@@ -71,17 +71,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("DetektifBohong", [
       `Simulator lie detector dramatis`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  ${prefix}detektifbohong <pernyataan>`,
       `  Atau reply pesan: ${prefix}detektifbohong`,
       ``,
-      `*ᴄᴏɴᴛᴏʜ:*`,
+      `💡 Contoh:`,
       `  ${prefix}detektifbohong aku gak pernah skak animes`,
       ``,
       `Hasil: persentase kebohongan + alasan lucu`,
       `Hasilnya random, jangan dipercaya ya :v`,
     ].join("\n"));
-    return m.reply(help, "detektifbohong");
+    return m.reply(help);
   }
   const percent = randomPercent();
   const verdict = getVerdict(percent);

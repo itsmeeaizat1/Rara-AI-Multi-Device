@@ -70,7 +70,7 @@ function buildMessage(mode, pesan, targetName) {
 if (!global.confessViralData) global.confessViralData = new Map();
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 function trackViral(senderJid, targetJid, mode) {
   try {
@@ -109,28 +109,26 @@ async function handler(m, { sock }) {
     const raw = m.fullArgs?.trim() || m.text?.trim() || "";
 
     if (!raw || !raw.includes("|")) {
-      let txt = ``
-      txt += `Confes anonymous ala viral TikTok\n\n`;
-      txt += `  *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
-      txt += `\`${m.prefix}confessviral nomor|mode|pesan\`\n\n`;
-      txt += `  *ᴍᴏᴅᴇ ᴛᴇʀsᴇᴅɪᴀ:*\n`;
-      Object.entries(MODES).forEach(([k, v]) => {
-        txt += `${v.emoji} \`${k}\` — ${v.label}\n`;
-      });
-      txt += `\n  *ᴄᴏɴᴛᴏʜ:*\n`;
-      txt += `\`${m.prefix}confessviral 6281234567890|nembak|Aku suka kamu\`\n\n`;
-      txt += `  🤫 _Identitas 100% anonim dan aman_\n\n`;
-            await m.reply(txt);
+      const modeLines = Object.entries(MODES).map(([k, v]) => `${v.emoji} ${k} — ${v.label}`);
+      await m.reply(claraWrap("confessviral", [
+        `Confess anonymous ala viral TikTok.`,
+        ``,
+        `📌 Format: ${m.prefix}confessviral <nomor>|<mode>|<pesan>`,
+        ``,
+        `Mode tersedia:`,
+        ...modeLines,
+        ``,
+        `💡 Contoh: ${m.prefix}confessviral 6281234567890|nembak|Aku suka kamu`,
+        ``,
+        `🤫 Identitas 100% anonim dan aman`,
+      ]));
       return;
     }
 
     const parts = raw.split("|").map((s) => s.trim()).filter(Boolean);
     if (parts.length < 3) {
-      await m.reply(
-        `Format salah! Butuh 3 bagian nih\n` +
-        `\`${m.prefix}confessviral nomor|mode|pesan\`\n\n` +
-        ""
-      );
+      await m.reply(claraWrap("confessviral", `Format salah! Butuh 3 bagian.\n\n💡 Format: ${m.prefix}confessviral <nomor>|<mode>|<pesan>`, "error"));
+      return;
       return;
     }
 
@@ -140,38 +138,28 @@ async function handler(m, { sock }) {
     const pesan = rest.join("|").trim();
 
     if (!number) {
-      await m.reply(
-        `Nomor tujuan kosong nih!\n\n` +
-        ""
-      );
+      await m.reply(claraWrap("confessviral", "Nomor tujuan kosong nih!", "error"));
       return;
     }
 
     if (!MODES[mode]) {
-      let txt = ``
-      txt += `Mode gak valid nih: \`${mode}\`\n\n`;
-      txt += `  *ᴍᴏᴅᴇ ᴛᴇʀsᴇᴅɪᴀ:*\n`;
-      Object.entries(MODES).forEach(([k, v]) => {
-        txt += `${v.emoji} \`${k}\`\n`;
-      });
-      txt += ``;
-      await m.reply(txt);
+      const modeLines = Object.entries(MODES).map(([k, v]) => `${v.emoji} ${k}`);
+      await m.reply(claraWrap("confessviral", [
+        `Mode gak valid nih: ${mode}`,
+        ``,
+        `Mode tersedia:`,
+        ...modeLines,
+      ]));
       return;
     }
 
     if (!pesan || pesan.length < 5) {
-      await m.reply(
-        `Pesan kosong atau kependekan nih! Minimal 5 karakter.\n\n` +
-        ""
-      );
+      await m.reply(claraWrap("confessviral", "Pesan kosong atau kependekan nih! Minimal 5 karakter.", "error"));
       return;
     }
 
     if (pesan.length > 1000) {
-      await m.reply(
-        `❌ Pesan kepanjangan! Maksimal 1000 karakter.\n\n` +
-        ""
-      );
+      await m.reply(claraWrap("confessviral", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
       return;
     }
 
@@ -182,20 +170,14 @@ async function handler(m, { sock }) {
     }
 
     if (targetNumber.length < 10 || targetNumber.length > 15) {
-      await m.reply(
-        `❌ Nomor tidak valid!\n\n` +
-        ""
-      );
+      await m.reply(claraWrap("confessviral", "Nomor tidak valid!", "error"));
       return;
     }
 
     const targetJid = targetNumber + "@s.whatsapp.net";
 
     if (targetJid === m.sender) {
-      await m.reply(
-        `😂 Nggak bisa confess ke diri sendiri!\n\n` +
-        ""
-      );
+      await m.reply(claraWrap("confessviral", "Nggak bisa confess ke diri sendiri! 😂", "error"));
       return;
     }
 
@@ -204,10 +186,7 @@ async function handler(m, { sock }) {
     try {
       const [onWa] = await sock.onWhatsApp(targetNumber);
       if (!onWa?.exists) {
-        await m.reply(
-          `❌ Nomor \`${targetNumber}\` nggak terdaftar di WhatsApp!\n\n` +
-          ""
-        );
+        await m.reply(claraWrap("confessviral", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
         return;
       }
       targetName = onWa?.name || onWa?.notify || "";
@@ -253,10 +232,7 @@ async function handler(m, { sock }) {
       await m.react(md.emoji);
     } catch (sendErr) {
       console.error("[confessviral] Send error:", sendErr.message);
-      await m.reply(
-        `❌ Gagal kirim: ${sendErr.message}\n\n` +
-        ""
-      );
+      await m.reply(claraWrap("confessviral", `Gagal kirim: ${sendErr.message}`, "error"));
     }
   } catch (e) {
     console.error("[confessviral] Handler error:", e.message);

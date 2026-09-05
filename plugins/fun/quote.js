@@ -43,6 +43,7 @@ const LOCAL_QUOTES = [
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     let quote = null;
     let author = "";
     let source = "";
@@ -79,8 +80,10 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
+    await m.react("🐣");
     await m.reply(claraWrap("quote", text));
   } catch (error) {
+    await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("Quote", "Gagal nih, coba lagi ya");

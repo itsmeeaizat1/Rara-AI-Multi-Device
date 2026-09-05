@@ -41,12 +41,12 @@ async function handler(m, { sock }) {
     }
 
     if (!shooterJid) {
-      return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `Reply pesan tembakan + \`${m.prefix}terima\`\n` +
-        `Atau \`${m.prefix}terima @tag\`\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("terima", [
+        `Terima tembakan seseorang.`,
+        ``,
+        `📌 Format: reply pesan tembakan + ${m.prefix}terima`,
+        `Atau ${m.prefix}terima @tag`,
+      ]));
     }
 
     if (shooterJid === m.sender) {

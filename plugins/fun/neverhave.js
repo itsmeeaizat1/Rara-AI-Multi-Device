@@ -72,6 +72,7 @@ const THEMES = Object.keys(STATEMENTS);
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const theme = args[0]?.toLowerCase();
 
     if (theme && !STATEMENTS[theme]) {
@@ -82,6 +83,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const pool = STATEMENTS[selectedTheme];
     const statement = pool[Math.floor(Math.random() * pool.length)];
 
+    await m.react("🐣");
     return m.reply(claraWrap("Never Have I Ever", [
       "Tema: " + selectedTheme,
       "",
@@ -91,6 +93,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "neverhave <tema> untuk tema lain",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Never Have I Ever", "Error: " + e.message, "error"));
   }
 }

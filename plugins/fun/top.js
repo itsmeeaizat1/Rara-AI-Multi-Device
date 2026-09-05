@@ -24,6 +24,7 @@ async function handler(m, { sock }) {
         return m.reply(`\`Contoh: ${m.prefix}top orang pintar\``, "top")
     }
     try {
+    await m.react("🕒");
         const groupMeta = m.groupMetadata
         const participants = groupMeta.participants || []
         
@@ -45,8 +46,10 @@ async function handler(m, { sock }) {
             list += `*${index + 1}* ${medals[index]} @${jid.split('@')[0]}\n`
         })
         
+        await m.react("🐣");
         await m.reply(claraWrap("Top", `🏆 *Top 5 ${kategori.toUpperCase()}*\n${list}`))
     } catch (error) {
+    await m.react("❌");
         m.reply(claraWrap("topfun", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

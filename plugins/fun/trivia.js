@@ -103,6 +103,7 @@ async function fetchTriviaAPI(category, difficulty) {
 
 async function handler(m, { sock, config, db }) {
   try {
+    await m.react("🕒");
     const input = m.args || [];
     let category = input[0]?.toLowerCase() || "";
     let difficulty = "";
@@ -204,8 +205,10 @@ async function handler(m, { sock, config, db }) {
       text += `${letters[i]}. ${opt}\n`;
     });
     text += `\nBalas dengan A/B/C/D atau "${m.prefix}trivia skip" untuk lewati`;
+    await m.react("🐣");
     return m.reply(claraWrap("Trivia Quiz", text));
   } catch (e) {
+    await m.react("❌");
     console.error("[trivia] error:", e.message);
     return m.reply(te(m.prefix, m.command, m.pushName), "trivia");
   }

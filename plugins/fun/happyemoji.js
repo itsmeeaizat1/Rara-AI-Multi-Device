@@ -38,6 +38,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
 
     const text =
@@ -48,8 +49,10 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
+    await m.react("🐣");
     await m.reply(claraWrap("happyemoji", text));
   } catch (error) {
+    await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const reply =
       novaError("HappyEmoji", "Gagal nih, coba lagi ya");

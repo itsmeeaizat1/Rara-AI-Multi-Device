@@ -51,19 +51,18 @@ async function handler(m, { sock }) {
   const input = m.fullArgs?.trim() || m.text?.trim();
 
   if (!input || !input.includes("|")) {
-    let txt = ``
-    txt += `Kirim pesan rahasia ke seseorang\n`;
-    txt += `2 mode: *anonim* & *non-anonim*\n\n`;
-    txt += `  *ᴍᴏᴅᴇ ᴀɴᴏɴɪᴍ (ʀᴀʜᴀsɪᴀ):*\n`;
-    txt += `\`${m.prefix}confess nomor|pesan\`\n\n`;
-    txt += `  *ᴍᴏᴅᴇ ɴᴏɴ-ᴀɴᴏɴɪᴍ (ɴᴀᴍᴀ ᴛᴇʀᴜɴɢᴋᴀᴘ):*\n`;
-    txt += `\`${m.prefix}confess nomor|pesan|nama\`\n\n`;
-    txt += `  *ᴄᴏɴᴛᴏʜ:*\n`;
-    txt += `\`${m.prefix}confess 6281234567890|Hai kak, aku suka kamu!\`\n`;
-    txt += `\`${m.prefix}confess 6281234567890|Hai! Aku Budi|Budi\`\n\n`;
-    txt += `  🤫 _Mode anonim: identitas 100% aman_\n`;
-    txt += `  📝 _Mode non-anonim: nama kamu ditampilkan_\n\n`;
-        return await m.reply(txt);
+    return await m.reply(claraWrap("confess", [
+      `Kirim pesan rahasia ke seseorang, 2 mode: anonim & non-anonim.`,
+      ``,
+      `📌 Mode anonim (rahasia): ${m.prefix}confess <nomor>|<pesan>`,
+      `📌 Mode non-anonim (nama terungkap): ${m.prefix}confess <nomor>|<pesan>|<nama>`,
+      ``,
+      `💡 Contoh: ${m.prefix}confess 6281234567890|Hai kak, aku suka kamu!`,
+      `${m.prefix}confess 6281234567890|Hai! Aku Budi|Budi`,
+      ``,
+      `🤫 Mode anonim: identitas 100% aman`,
+      `📝 Mode non-anonim: nama kamu ditampilkan`,
+    ]));
   }
 
   const parts = input.split("|");
@@ -74,14 +73,12 @@ async function handler(m, { sock }) {
   const isAnonim = !senderName;
 
   if (!rawNumber || !message) {
-    return m.reply(
-      `Format salah nih!\n\n` +
-      `  *ᴀɴᴏɴɪᴍ:*
-\`${m.prefix}confess nomor|pesan\`\n` +
-      `  *ɴᴏɴ-ᴀɴᴏɴɪᴍ:*
-\`${m.prefix}confess nomor|pesan|nama\`\n\n` +
-      ""
-    );
+    return m.reply(claraWrap("confess", [
+      `Format salah nih!`,
+      ``,
+      `📌 Anonim: ${m.prefix}confess <nomor>|<pesan>`,
+      `📌 Non-anonim: ${m.prefix}confess <nomor>|<pesan>|<nama>`,
+    ]));
   }
 
   let targetNumber = rawNumber.trim().replace(/[^0-9]/g, "");
@@ -91,46 +88,31 @@ async function handler(m, { sock }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(
-      `Nomor tujuan gak valid nih!\n\n` +
-      ""
-    );
+    return m.reply(claraWrap("confess", "Nomor tujuan gak valid nih!", "error"));
   }
 
   const targetJid = targetNumber + "@s.whatsapp.net";
   const senderNumber = m.sender.split("@")[0];
 
   if (targetNumber === senderNumber) {
-    return m.reply(
-      `😂 Nggak bisa confess ke diri sendiri!\n\n` +
-      ""
-    );
+    return m.reply(claraWrap("confess", "Nggak bisa confess ke diri sendiri! 😂", "error"));
   }
 
   try {
     const [onWa] = await sock.onWhatsApp(targetNumber);
     if (!onWa?.exists) {
-      return m.reply(
-        `❌ Nomor \`${targetNumber}\` nggak terdaftar di WhatsApp!\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("confess", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
     }
   } catch (e) {
     console.error("[confess.js] onWhatsApp check:", e.message);
   }
 
   if (message.length < 5) {
-    return m.reply(
-      `Pesan kependekan nih! Minimal 5 karakter.\n\n` +
-      ""
-    );
+    return m.reply(claraWrap("confess", "Pesan kependekan nih! Minimal 5 karakter.", "error"));
   }
 
   if (message.length > 1000) {
-    return m.reply(
-      `❌ Pesan kepanjangan! Maksimal 1000 karakter.\n\n` +
-      ""
-    );
+    return m.reply(claraWrap("confess", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
   }
 
   // Build message based on mode
@@ -194,11 +176,7 @@ async function handler(m, { sock }) {
     await m.react("💌");
   } catch (error) {
     console.error("[confess.js] Send error:", error.message);
-    await m.reply(
-      `❌ Gagal kirim pesan!
-${error.message}\n\n` +
-      ""
-    );
+    await m.reply(claraWrap("confess", `Gagal kirim pesan! ${error.message}`, "error"));
   }
 }
 

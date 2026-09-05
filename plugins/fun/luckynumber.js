@@ -43,6 +43,7 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const type = args[0]?.toLowerCase();
 
     if (type === "info") {
@@ -93,6 +94,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "info"));
     }
 
+    await m.react("🐣");
     return m.reply(claraWrap("Lucky Number", [
       "ANGKA HOKI HARI INI",
       "",
@@ -112,6 +114,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "luckynumber untuk lagi",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Lucky Number", "Error: " + e.message, "error"));
   }
 }

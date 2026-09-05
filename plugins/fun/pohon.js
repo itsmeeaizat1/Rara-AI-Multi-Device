@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Pohon", [
       `Generator silsilah keluarga lucu`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  ${prefix}pohon <nama>`,
       `  ${prefix}pohon Budi`,
       `  Reply orang: ${prefix}pohon`,
@@ -39,9 +39,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `Hasil: silsilah keluarga absurd + warisan lucu`,
       `Pure fun, jangan dipakai beneran ya :v`,
     ].join("\n"));
-    return m.reply(help, "pohon");
+    return m.reply(help);
   }
   try {
+    await m.react("🕒");
     const prompt = `Kamu adalah generator silsilah keluarga komedi Indonesia. Buat silsilah keluarga absurd dan lucu untuk "${name}".
 
 Format WAJIB (plain text, JANGAN markdown):
@@ -76,8 +77,10 @@ Aturan:
       return { handled: true };
     }
 
+    await m.react("🐣");
     await m.reply(claraWrap(`Pohon Keluarga - ${name}`, result.trim()));
   } catch (error) {
+    await m.react("❌");
     console.error("pohon error:", error);
     m.reply(novaError("Pohon", `Gagal nih: ${error.message || "error"}`));
   }

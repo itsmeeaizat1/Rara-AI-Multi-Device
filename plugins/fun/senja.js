@@ -24,13 +24,16 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     try {
+    await m.react("🕒");
         const res = await f(`https://api.neoxr.eu/api/senja?apikey=${NEOXR_APIKEY}`)
         
         if (!res.status || !res.data?.text) {
             return m.reply(novaError("Senja", "Gagal ambil kata senja nih"))
         }
+        await m.react("🐣");
         await m.reply(res.data.text)
     } catch (err) {
+    await m.react("❌");
         return m.reply(claraWrap("senja", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

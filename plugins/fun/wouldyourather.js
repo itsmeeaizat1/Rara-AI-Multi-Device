@@ -65,11 +65,14 @@ async function fetchWYR() {
 
 async function handler(m, { sock, config, db }) {
   try {
+    await m.react("🕒");
     const wyr = await fetchWYR();
     const text = `Mau pilih yang mana?\n\n🅰️ ${wyr.a}\n\n🅱️ ${wyr.b}\n\nBalas A atau B untuk jawab!`;
 
+    await m.react("🐣");
     return m.reply(claraWrap("Would You Rather", text));
   } catch (e) {
+    await m.react("❌");
     console.error("[wouldyourather] error:", e.message);
     return m.reply(te(m.prefix, m.command, m.pushName), "wouldyourather");
   }

@@ -70,8 +70,10 @@ async function handler(m, { sock }) {
 
   let groupMeta;
   try {
+    await m.react("🕒");
     groupMeta = m.groupMetadata;
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("jodoh", "❌ *ɢᴀɢᴀʟ*\n\nTidak bisa mengambil data grup!"));
   }
 
@@ -184,6 +186,7 @@ async function handler(m, { sock }) {
   }
   text += `_"${quote}"_`;
 
+  await m.react("🐣");
   await m.reply(claraWrap("Jodoh Random", text), { mentions: [person1, person2] });
 }
 

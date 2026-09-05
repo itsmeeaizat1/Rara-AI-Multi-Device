@@ -235,6 +235,7 @@ async function handler(m, { sock }) {
   // === LIST ANNIVERSARIES IN GROUP ===
   if (arg === "list" || arg === "top" || arg === "papan") {
     try {
+    await m.react("🕒");
       const groupMeta = await sock.groupMetadata(m.chat);
       const participants = groupMeta.participants || [];
 
@@ -276,6 +277,7 @@ async function handler(m, { sock }) {
 
       return m.reply(claraWrap("anniversary", txt));
     } catch (e) {
+    await m.react("❌");
       return m.reply(novaError("Anniversary", "Gagal ambil data nih: " + e.message));
     }
   }
@@ -305,6 +307,7 @@ async function handler(m, { sock }) {
   }
 
   // === HELP ===
+  await m.react("🐣");
   return m.reply( [
     "ANNIVERSARY TRACKER",
     "",

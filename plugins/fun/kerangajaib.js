@@ -62,6 +62,7 @@ const RESPONSES = [
 
 async function handler(m, { sock, conn, config: botConfig, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const question = text || args.join(" ");
 
     if (!question) {
@@ -78,12 +79,14 @@ async function handler(m, { sock, conn, config: botConfig, text, args, usedPrefi
     fallbackAnswers: RESPONSES,
   });
 
+    await m.react("🐣");
     return m.reply(claraWrap("Kerang Ajaib", [
       "Pertanyaan: " + question,
       "",
       answer,
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Kerang Ajaib", "Error: " + e.message, "error"));
   }
 }

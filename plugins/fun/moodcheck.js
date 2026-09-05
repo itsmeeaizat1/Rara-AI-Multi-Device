@@ -542,6 +542,7 @@ const pluginConfig = {
 // ─── Handler ───
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
     const groupId = m.key?.remoteJid || "";
     const isOwner = m.isOwner || false;
     const command = m.body?.split(" ")[0]?.replace(".", "") || "";
@@ -913,12 +914,14 @@ async function handler(m, { sock }) {
         }
       }
 
+      await m.react("🐣");
       await m.reply(claraWrap(`Mood Check - ${analysis.moodLabels[analysis.topMood[0]]}`, report));
     } finally {
       // Cleanup
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[moodcheck.js]:', e.message); }
     }
   } catch (error) {
+    await m.react("❌");
     console.error("[MOODCHECK] Error:", error.message);
     try { fs.unlinkSync(path.join(os.tmpdir(), `mood_input_${Date.now()}.ogg`)); } catch (e) { console.error('[moodcheck.js]:', e.message); }
     await m.reply(claraWrap("Mood Check", "Terjadi error saat menganalisis audio. Pastikan kamu reply ke Voice Note yang valid (bukan sticker/video)."));

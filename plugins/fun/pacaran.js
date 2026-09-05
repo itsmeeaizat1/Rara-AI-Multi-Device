@@ -50,12 +50,12 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-      return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}jadian @tag\`\n` +
-        `Reply pesan + \`${m.prefix}jadian\`\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("jadian", [
+        `Nembak user lain biar jadian.`,
+        ``,
+        `📌 Format: ${m.prefix}jadian @tag`,
+        `Atau reply pesan + ${m.prefix}jadian`,
+      ]));
     }
 
     if (targetJid === m.sender) {

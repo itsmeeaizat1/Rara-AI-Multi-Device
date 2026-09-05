@@ -37,6 +37,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const userName = m.pushName || "Kamu";
     const month = new Date().getMonth() + 1;
     const isChristmasSeason = month === 12;
@@ -51,8 +52,10 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
+    await m.react("🐣");
     await m.reply(claraWrap("x-mas", text));
   } catch (error) {
+    await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("XMas", "Gagal nih, coba lagi ya");

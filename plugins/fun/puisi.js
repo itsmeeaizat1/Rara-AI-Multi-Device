@@ -24,6 +24,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     try {
+    await m.react("🕒");
         const res = await f(`https://api.neoxr.eu/api/puisi?apikey=${NEOXR_APIKEY}`)
         
         if (!res.status || !res.data?.text) {
@@ -31,8 +32,10 @@ async function handler(m, { sock }) {
         }
         
         const text = res.data.text
+        await m.react("🐣");
         await m.reply(claraWrap("Puisi", text.split("\n")))
     } catch (err) {
+    await m.react("❌");
         return m.reply(claraWrap("puisi", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

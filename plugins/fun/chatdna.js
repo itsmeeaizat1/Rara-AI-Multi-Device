@@ -444,6 +444,7 @@ const pluginConfig = {
 // ─── Handler ───
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
     const command = m.body?.split(" ")[0]?.replace(".", "") || "";
     const groupId = m.key?.remoteJid || "";
     const isOwner = m.isOwner || false;
@@ -579,9 +580,11 @@ async function handler(m, { sock }) {
         reasonsText,
       ].join("\n");
 
+      await m.react("🐣");
       await m.reply(claraWrap("DNA Match", body));
     }
   } catch (e) {
+    await m.react("❌");
     console.error("Chat DNA error:", e.message);
     await m.reply("Error: " + e.message);
   }
