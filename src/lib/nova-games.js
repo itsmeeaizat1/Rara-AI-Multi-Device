@@ -128,6 +128,13 @@ const GAME_CTA = {
   soulmatematch: "Yuk ukur kecocokan lagi kak, siapa tau dia memang jodohmu 💞🥳",
   couplewar: "Yuk war pasangan lain kak, biar cintamu makin disegani ⚔️🥳",
   putusmatch: "Yuk move on kak, siapa tau jodoh berikutnya lebih baik 💪🥳",
+  // FUN CINTA (jadian & confess — engine khas cinta)
+  jadian: "Yuk tinggalin komentar *terima* atau *tolak* di atas kak 💘",
+  jadianSukses: "Yuk jaga pasangannya baik-baik kak, semoga langgeng sampai tua 💕🥳",
+  jadianTolak: "Yuk sabar kak, masih banyak yang nungguin kamu di luar sana 💪🥳",
+  confess: "Yuk confess lagi kak, siapa tau dia juga nungguin dari dulu 💘🥳",
+  confessviral: "Yuk confess viral lagi kak, biar makin ramai peminatmu 💘🥳",
+  confesswall: "Yuk posting cerita lain kak, siapa tau jadi viral 💌🥳",
   // RPG FEATURES BATCH 2 (hasil aksi RPG → format engine)
   adventure: "Yuk petualangan lagi kak, siapa tau nemu harta karun 🗺️🥳",
   adventurev2: "Yuk jelajah biome lain kak, biar makin jago bertahan 🧭🥳",

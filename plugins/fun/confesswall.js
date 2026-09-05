@@ -3,7 +3,8 @@
 // Disimpan di db.setting("confesswall") per-grup
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "confesswall",
@@ -82,18 +83,15 @@ async function handler(m, { sock }) {
     if (sub === "post" || sub === "tulis" || sub === "curhat") {
       const text = args.slice(1).join(" ").trim();
       if (!text || text.length < 5) {
-        let msg = buildHeader();
-        msg += `Pesan kependekan nih! Minimal 5 karakter.\n`;
-        msg += `\`${m.prefix}confesswall post <confess kamu>\`\n`;
-        msg += buildFooter();
-        await m.reply(msg);
+        await m.reply(claraWrap("confesswall", [
+          `Pesan kependekan nih! Minimal 5 karakter.`,
+          ``,
+          `💡 Contoh: ${m.prefix}confesswall post <confess kamu>`,
+        ]));
         return;
       }
       if (text.length > 500) {
-        let msg = buildHeader();
-        msg += `Pesan kepanjangan nih! Maksimal 500 karakter.\n`;
-        msg += buildFooter();
-        await m.reply(msg);
+        await m.reply(claraWrap("confesswall", "Pesan kepanjangan nih! Maksimal 500 karakter.", "error"));
         return;
       }
 
@@ -111,19 +109,20 @@ async function handler(m, { sock }) {
       wall.posts.push(post);
       saveWall(db, gid, wall);
 
-      let msg = buildHeader();
-      msg += `✅ Confess terposting!\n`;
-      msg += `🆔 Post ID: *#${post.id}*\n`;
-      msg += `🔒 Status: *Anonim*\n\n`;
-      msg += `  📝 *Isi Confess:*\n  \`\`\`${text}\`\`\`\n\n`;
-      msg += `  *ʀᴇᴀᴄᴛ:*
-\`${m.prefix}confesswall react ${post.id} <type>\`\n`;
-      msg += `  *ʀᴇᴘʟʏ:*
-\`${m.prefix}confesswall reply ${post.id} <balasan>\`\n`;
-      msg += `  *ʀᴇᴀᴅ:*
-\`${m.prefix}confesswall read ${post.id}\`\n`;
-      msg += buildFooter();
-      await m.reply(msg);
+      const preview = text.length > 80 ? text.slice(0, 80) + "..." : text;
+      await m.reply(novaGameBox({
+        title: "confess terposting", icon: "💌",
+        flavor: "💌 *CONFESS TERPOSTING!*",
+        body: [
+          `│ • 🆔 Post ID : #${post.id}`,
+          "│ • 🔒 Status : Anonim",
+          `│ • 💭 Isi : ${preview}`,
+          `│ • ❤️ React : ${m.prefix}confesswall react ${post.id} <type>`,
+          `│ • ✉️ Reply : ${m.prefix}confesswall reply ${post.id} <balasan>`,
+          `│ • 📖 Read : ${m.prefix}confesswall read ${post.id}`,
+        ].join("\n"),
+        cta: gameCTA("confesswall"),
+      }));
       await m.react("💌");
       return;
     }
@@ -132,11 +131,11 @@ async function handler(m, { sock }) {
     if (sub === "list" || sub === "daftar" || sub === "wall" || !sub) {
       const recent = (wall.posts || []).slice(-5).reverse();
       if (recent.length === 0) {
-        let msg = buildHeader();
-        msg += `📭 Wall kosong\n`;
-        msg += `\`${m.prefix}confesswall post <confess>\` untuk mulai\n`;
-        msg += buildFooter();
-        await m.reply(msg);
+        await m.reply(claraWrap("confesswall", [
+          `Wall masih kosong nih!`,
+          ``,
+          `💡 Mulai dengan ${m.prefix}confesswall post <confess>`,
+        ]));
         return;
       }
 

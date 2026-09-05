@@ -71,6 +71,7 @@ if (!global.confessViralData) global.confessViralData = new Map();
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 function trackViral(senderJid, targetJid, mode) {
   try {
@@ -220,15 +221,19 @@ async function handler(m, { sock }) {
       }, 24 * 60 * 60 * 1000);
 
       const md = MODES[mode];
-      let receipt = ``
-      receipt += `✅ ${md.emoji} Terkirim!\n`;
-      receipt += `📱 Ke: \`${targetNumber}\`\n`;
-      receipt += `🎯 Mode: *${md.label}*\n`;
-      if (targetName) receipt += `👤 Nama: *${targetName}*\n`;
-      receipt += `🔒 Status: *Anonim*\n\n`;
-      receipt += `  _Kalau dia balas, otomatis diterusin ke sini_\n\n`;
-      
-      await m.reply(receipt);
+      const lines = [
+        `│ • 📱 Ke : ${targetNumber}`,
+        `│ • 🎯 Mode : ${md.label}`,
+        "│ • 🔒 Status : Anonim",
+        "│ • ✉️ Kalau dia balas, otomatis diterusin ke sini",
+      ];
+      if (targetName) lines.splice(2, 0, `│ • 👤 Nama : ${targetName}`);
+      await m.reply(novaGameBox({
+        title: "confess terkirim", icon: md.emoji,
+        flavor: `${md.emoji} *CONFESS TERKIRIM!*`,
+        body: lines.join("\n"),
+        cta: gameCTA("confessviral"),
+      }));
       await m.react(md.emoji);
     } catch (sendErr) {
       console.error("[confessviral] Send error:", sendErr.message);
@@ -267,11 +272,7 @@ async function replyHandler(m, { sock }) {
       contextInfo: { forwardingScore: 0, isForwarded: false },
     });
 
-    await sock.sendMessage(m.chat, {
-      text:
-        `✅ Balasan terkirim ke pengirim!\n\n` +
-        "",
-    });
+    await m.reply(claraWrap("confessviral", "Balasan terkirim ke pengirim!"));
 
     global.confessViralData.delete(quotedId);
     return true;

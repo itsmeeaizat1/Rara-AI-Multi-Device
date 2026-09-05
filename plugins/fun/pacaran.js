@@ -3,6 +3,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "pacaran",
@@ -106,12 +107,15 @@ async function handler(m, { sock }) {
       db.save();
       delete global.jadianSessions[`${m.chat}_${targetJid}`];
       await m.react("💕");
-      return m.reply(
-        claraWrap("CIE CIE 💕",
-          `@${m.sender.split("@")[0]} dan @${targetJid.split("@")[0]} resmi jadian!\n` +
-          `Semoga langgeng yak! 💍`
-        )
-      );
+      return m.reply(novaGameBox({
+        title: "resmi jadian", icon: "💕",
+        flavor: "💕 *CIE CIE, RESMI JADIAN!*",
+        body: [
+          `│ • 💑 @${m.sender.split("@")[0]} & @${targetJid.split("@")[0]}`,
+          "│ • 💍 Semoga langgeng dan bahagia!",
+        ].join("\n"),
+        cta: gameCTA("jadianSukses"),
+      }));
     }
 
     // Simpan tembakan
@@ -129,15 +133,16 @@ async function handler(m, { sock }) {
 
     const quote = romanticQuotes[Math.floor(Math.random() * romanticQuotes.length)];
 
-    await m.reply(
-      `💘 *ᴀᴅᴀ ʏᴀɴɢ ɴᴇᴍʙᴀᴋ ɴɪʜʜ*\n\n` +
-      `🏹 @${m.sender.split("@")[0]} nembak @${targetJid.split("@")[0]}\n` +
-      `💬 "${quote}"\n` +
-      `⏱️ Berlaku *1 jam*\n\n` +
-      `_Balas pesan ini dengan *terima* atau *tolak*_\n` +
-      `Atau gunakan \`${m.prefix}terima\` / \`${m.prefix}tolak\`\n\n` +
-      ""
-    );
+    await m.reply(novaGameBox({
+      title: "tembakan cinta", icon: "💘",
+      flavor: "💘 *ADA YANG NEMBAK NIH!*",
+      body: [
+        `│ • 🏹 @${m.sender.split("@")[0]} nembak @${targetJid.split("@")[0]}`,
+        `│ • 💬 "${quote}"`,
+        "│ • ⏱️ Berlaku : 1 jam",
+      ].join("\n"),
+      cta: gameCTA("jadian"),
+    }));
     await m.react("💘");
   } catch (e) {
     console.error("[pacaran] Error:", e.message);
@@ -178,12 +183,15 @@ async function answerHandler(m, sock) {
       db.save();
       delete global.jadianSessions[sessKey];
       await m.react("💕");
-      await m.reply(
-        claraWrap("CIE CIE 💕",
-          `@${m.sender.split("@")[0]} dan @${shooter.split("@")[0]} resmi jadian!\n` +
-          `Semoga langgeng dan bahagia 💍`
-        )
-      );
+      await m.reply(novaGameBox({
+        title: "resmi jadian", icon: "💕",
+        flavor: "💕 *CIE CIE, RESMI JADIAN!*",
+        body: [
+          `│ • 💑 @${m.sender.split("@")[0]} & @${shooter.split("@")[0]}`,
+          "│ • 💍 Semoga langgeng dan bahagia!",
+        ].join("\n"),
+        cta: gameCTA("jadianSukses"),
+      }));
       return true;
     }
 
@@ -195,12 +203,15 @@ async function answerHandler(m, sock) {
       db.save();
       delete global.jadianSessions[sessKey];
       await m.react("💔");
-      await m.reply(
-        claraWrap("YANG SABAR 💔",
-          `@${m.sender.split("@")[0]} menolak @${shooter.split("@")[0]}\n` +
-          `Sabar ya, masih banyak yang lain! 😢`
-        )
-      );
+      await m.reply(novaGameBox({
+        title: "ditolak", icon: "💔",
+        flavor: "💔 *DITOLAK, SABAR YA...*",
+        body: [
+          `│ • 🏹 @${m.sender.split("@")[0]} menolak @${shooter.split("@")[0]}`,
+          "│ • 💪 Sabar ya, masih banyak yang lain!",
+        ].join("\n"),
+        cta: gameCTA("jadianTolak"),
+      }));
       return true;
     }
     return false;
