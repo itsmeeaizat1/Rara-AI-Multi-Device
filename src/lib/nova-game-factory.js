@@ -10,7 +10,7 @@ import {
   pick, WIN_MSGS, TIMEOUT_MSGS, SURRENDER_MSGS, WRONG_MSGS,
 } from './nova-game-engine.js';
 import { getDatabase } from './nova-database.js';
-import { gameCTA } from './nova-games.js';
+import { gameCTA, pickFlavor } from './nova-games.js';
 import { claraWrap } from './nova-menu-style.js';
 import { haidarGame } from './nova-haidar.js';
 import { addExpWithLevelCheck } from './nova-level.js';
@@ -25,13 +25,13 @@ try {
 function renderEnergiLine(m, cfg) {
   const e = m?.energiInfo;
   if (e) {
-    if (e.unlimited) return `│ ❈ Energi: ∞ (unlimited)\n`;
+    if (e.unlimited) return `│ ⚡ Energi : ∞ (unlimited)\n`;
     if (e.deducted > 0) return e.game
-      ? `│ ❈ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n`   // energi game (rpg.energy/maxEnergy)
-      : `│ ❈ Energi: -${e.deducted} (sisa ${e.sisa})\n`;           // limit akses fitur
-    return `│ ❈ Energi: gratis\n`;
+      ? `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa}/${e.max})\n`   // energi game (rpg.energy/maxEnergy)
+      : `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa})\n`;           // limit akses fitur
+    return `│ ⚡ Energi : gratis\n`;
   }
-  if (cfg.energi > 0) return `│ ❈ Energi: -${cfg.energi}\n`;
+  if (cfg.energi > 0) return `│ ⚡ Energi : -${cfg.energi}\n`;
   return '';
 }
 
@@ -89,10 +89,10 @@ class GameFactory {
               text += `\`\`\`${existing.question[cfg.questionField]}\`\`\`\n\n`;
             }
             if (cfg.hintEnabled !== false) {
-              text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
+              text += `│ 🧩 Hint       : ${getHint(answer, cfg.hintCount)}\n`;
             }
-            text += `│ • Sisa waktu: ${formatTime(remaining)}\n\n`;
-            text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_\n`;
+            text += `│ ⏳ Sisa waktu : ${formatTime(remaining)}\n\n`;
+            text += `_💬 Reply pesan game ini buat jawab, ketik "nyerah" kalau nyerah_\n`;
             text += `╰────  •  ────`;
             await m.reply(text);
             return;
@@ -145,29 +145,33 @@ class GameFactory {
           }
 
           let caption = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          caption += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
           if (cfg.hintEnabled !== false) {
-            caption += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
+            caption += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
-          caption += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
-          caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
+          caption += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
+          caption += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n`;
+          caption += renderEnergiLine(m, cfg);
+          caption += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
           caption += `╰────  •  ────`;
 
           sentMsg = await sock.sendMessage(chatId, { image: imageBuffer, caption }, { quoted: m });
         } else {
           let text = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          text += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
           if (cfg.hintEnabled !== false) {
-            text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
+            text += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
-          text += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
-          text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
+          text += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
+          text += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n`;
+          text += renderEnergiLine(m, cfg);
+          text += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
           text += `╰────  •  ────`;
 
           sentMsg = await sock.sendMessage(chatId, { text }, { quoted: m });
@@ -187,12 +191,14 @@ class GameFactory {
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ • Jawaban: ${answer}\n`;
+            text += `│ ❌ Jawaban: ${answer}\n`;
             if (question.deskripsi) {
-              text += `│ • Info: ${question.deskripsi}\n`;
+              text += `│ 💡 Info: ${question.deskripsi}\n`;
             }
-            text += `\n_Gak ada yang bisa jawab nih~_\n`;
+            text += `\n_Yah, gak ada yang bisa jawab nih~_\n`;
             text += `╰────  •  ────`;
+            const timeoutCta = gameCTA(gameType);
+            if (timeoutCta) text += `\n${timeoutCta}`;
             await sock.sendMessage(chatId, { text });
           } catch (e) {
             console.error(`[${gameType}] Timeout error:`, e.message);
