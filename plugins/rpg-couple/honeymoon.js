@@ -3,7 +3,7 @@
 
 import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
 import { getCintaData, addAffection, saveCintaData } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
@@ -100,7 +100,8 @@ async function handler(m) {
         `│ • 📍 Lokasi : ${spot}`,
         `│ • ✨ EXP : +${expBonus} (berdua)`,
         `│ • 💰 Gold : +${goldBonus} (berdua)`,
-        `│ • 💞 Affection : +${affectionBonus} (Total: ${myCinta.affection || 0})`,
+        `│ • 💞 Affection : +${affectionBonus} berdua`,
+        `│    ${renderStatBar(myCinta.affection || 0, 500)} (Total: ${myCinta.affection || 0})`,
         `│ • 🎀 Total Honeymoon : ${myCinta.honeymoonCount}`,
       ].join("\n"),
       cta: gameCTA("honeymoon"),

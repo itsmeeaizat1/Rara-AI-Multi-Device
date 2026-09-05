@@ -3,7 +3,7 @@
 
 import { ensureRpg, getRpgData, regenEnergy, regenMana, regenHP } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
-import { gameCTA } from "../../src/lib/nova-games.js";
+import { gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "meditation",
@@ -64,9 +64,9 @@ async function handler(m) {
       "✨ Istirahat selesai! Kamu merasa lebih segar.",
       "---",
       { sub: "Pulih" },
-      `❤️ HP : +${hpRec} (${fresh.hp}/${fresh.maxHp})`,
-      `💙 Mana : +${manaRec} (${fresh.mana}/${fresh.maxMana})`,
-      `⚡ Energi : +${energyRec} (${fresh.energy}/${fresh.maxEnergy})`,
+      `❤️ HP    : +${hpRec} → ${renderStatBar(fresh.hp, fresh.maxHp)}`,
+      `💙 Mana  : +${manaRec} → ${renderStatBar(fresh.mana, fresh.maxMana)}`,
+      `⚡ Energi : +${energyRec} → ${renderStatBar(fresh.energy, fresh.maxEnergy)}`,
       "---",
       gameCTA("meditation"),
     ]);
