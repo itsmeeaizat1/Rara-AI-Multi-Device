@@ -789,7 +789,34 @@ function getAllProviders() {
   return { ...DEFAULT_PROVIDERS, ...getCustomProviders() };
 }
 
+/**
+ * callAI — versi ber-SESSION: pass sessionKey di opts biar AI inget obrolan
+ * sebelumnya (nova-ai-session.js, persist + TTL 30 menit).
+ * Tanpa sessionKey → perilaku lama (single-turn), 100% kompatibel.
+ */
 async function callAI(firstArg, secondArg) {
+  const isStr = typeof firstArg === "string";
+  const opts = isStr ? (secondArg || {}) : (firstArg || {});
+  const sessionKey = opts.sessionKey || "";
+  if (!sessionKey) return callAIRaw(firstArg, secondArg);
+
+  const { toMessages, appendTurn } = await import("./nova-ai-session.js");
+  const hist = toMessages(sessionKey).slice(-20);
+
+  // giliran user terakhir (buat dicatat ke sesi)
+  const lastUser = isStr
+    ? firstArg
+    : [...(opts.messages || [])].reverse().find((x) => x.role === "user")?.content || "";
+
+  const reply = isStr
+    ? await callAIRaw(firstArg, { ...secondArg, history: hist })
+    : await callAIRaw({ ...firstArg, messages: [...hist, ...(firstArg.messages || [])] });
+
+  appendTurn(sessionKey, lastUser, typeof reply === "string" ? reply : String(reply?.text || reply || ""));
+  return reply;
+}
+
+async function callAIRaw(firstArg, secondArg) {
   // Support 2 call formats:
   // 1. callAI({ providerKey, messages, systemPrompt, ... }) — object format
   // 2. callAI(promptString, { systemPrompt, ... }) — string format (future plugins)
@@ -798,7 +825,7 @@ async function callAI(firstArg, secondArg) {
   if (typeof firstArg === "string") {
     // String format: callAI(prompt, { options })
     const opts = secondArg || {};
-    messages = [{ role: "user", content: firstArg }];
+    messages = [...(Array.isArray(opts.history) ? opts.history : []), { role: "user", content: firstArg }];
     systemPrompt = opts.systemPrompt || "";
     apiKey = opts.apiKey || "";
     apiEndpoint = opts.apiEndpoint || "";
@@ -1173,7 +1200,7 @@ async function callGeminiVision(prompt, imageBuffer, opts = {}) {
  * @param {object} opts - { model, systemPrompt, senderJid }
  * @returns {Promise<string>} AI response text
  */
-async function callIkyy(prompt, opts = {}) {
+async function callIkyyRaw(prompt, opts = {}) {
   let apiKey = opts.apiKey || "";
   if (!apiKey) {
     try {
@@ -1185,8 +1212,8 @@ async function callIkyy(prompt, opts = {}) {
     }
   }
 
-  // Build messages with system prompt
-  const messages = [{ role: "user", content: prompt }];
+  // Build messages with system prompt (+ riwayat sesi kalau ada)
+  const messages = [...(Array.isArray(opts.history) ? opts.history : []), { role: "user", content: prompt }];
   if (opts.systemPrompt) {
     messages.unshift({ role: "system", content: opts.systemPrompt });
   }
@@ -1230,6 +1257,21 @@ async function callIkyy(prompt, opts = {}) {
 
     throw new Error("Semua model IkyyXD API gagal. Coba lagi nanti.");
   }
+}
+
+/**
+ * callIkyy — versi ber-SESSION: pass opts.sessionKey ("satuan:628xx") biar AI
+ * inget obrolan sebelumnya (nova-ai-session.js, persist + TTL 30 menit).
+ * Tanpa sessionKey → perilaku lama (single-turn).
+ */
+async function callIkyy(prompt, opts = {}) {
+  const sessionKey = opts.sessionKey || "";
+  if (!sessionKey) return callIkyyRaw(prompt, opts);
+  const { toMessages, appendTurn } = await import("./nova-ai-session.js");
+  const hist = toMessages(sessionKey).slice(-20);
+  const reply = await callIkyyRaw(prompt, { ...opts, history: hist });
+  appendTurn(sessionKey, prompt, typeof reply === "string" ? reply : String(reply?.text || reply || ""));
+  return reply;
 }
 
 /**

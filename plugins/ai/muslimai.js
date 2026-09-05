@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     } catch (error) {
         // IkyyXD fallback
         try {
-            const ikyyReply = await callIkyy(text, {});
+            const ikyyReply = await callIkyy(text, { sessionKey: "satuan:" + m.sender });
             if (ikyyReply) return m.reply(ikyyReply);
         } catch (ikyyErr) {
             console.error("[muslimai.js] IkyyXD fallback failed:", ikyyErr.message);

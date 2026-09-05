@@ -110,13 +110,19 @@ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*`;
     );
     const systemPrompt = String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang membantu.");
 
+    // 🔹 SESSION: riwayat obrolan user ini (persist) + quoted context
+    const quotedText = m.quoted?.text?.trim() || "";
+    const messageWithContext = quotedText
+      ? `${userMessage}\n\n[User membalas pesan ini — jadikan konteks]: ${quotedText.slice(0, 500)}`
+      : userMessage;
     const reply = await callAI({
       providerKey: providerArg,
       model,
-      messages: [{ role: "user", content: userMessage }],
+      messages: [{ role: "user", content: messageWithContext }],
       systemPrompt,
       apiKey,
       apiEndpoint,
+      sessionKey: "provider:" + m.sender,
     });
 
     if (!reply || reply.trim() === "") {

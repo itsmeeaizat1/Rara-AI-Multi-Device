@@ -2,6 +2,7 @@
 // lib/autoflow.js — MESIN eksekusi rule automation (ESM)
 // Membaca rule dari database/autoflow.json (file yang sama dengan .autonovaai)
 
+import { foldHistory, appendTurn, clearSession, clearSessionPrefix } from "./nova-ai-session.js";
 import fs from "fs";
 import { askAI } from "./aiagent.js";
 
@@ -64,9 +65,19 @@ function pushMem(key, userText, aiText) {
 }
 // reset memory: (ruleId, chat, sender) — semua opsional, kosong = reset SEMUA
 export function clearAichatMemory(ruleId, chat, sender) {
-  const mem = loadMem();
-  if (!ruleId && !chat && !sender) { _memCache = {}; }
-  else {
+  // 🔹 memori sekarang TERPADU di nova-ai-session.js (key "agent:<sender>")
+  // — key lama rule:chat:sender di file lama ikut dibersihin biar gak nyangkut
+  let n = 0;
+  if (sender) {
+    if (clearSession(`agent:${sender}`)) n++;
+  } else if (chat) {
+    n += clearSessionPrefix(`agent:`);
+  } else {
+    n += clearSessionPrefix(`agent:`);
+  }
+  // bersihin sisa file memory lama (kalo masih ada)
+  try {
+    const mem = loadMem();
     for (const k of Object.keys(mem)) {
       const [r, ch] = k.split(":");
       if (ruleId && r !== ruleId) continue;
@@ -74,8 +85,9 @@ export function clearAichatMemory(ruleId, chat, sender) {
       if (sender && k !== `${ruleId}:${chat}:${sender}`) continue;
       delete mem[k];
     }
-  }
-  saveMem();
+    if (mem && typeof mem === "object") saveMem();
+  } catch {}
+  return n > 0;
 }
 
 export const load = () => {
@@ -166,21 +178,17 @@ async function execute(conn, m, rule, extra = {}) {
         const persona = a.value?.trim() ||
           "Kamu asisten WhatsApp yang ramah dan santai. Balas singkat dan natural seperti chat biasa, jangan kaku, jangan mengaku sebagai AI kalau tidak ditanya.";
 
-        // 🔹 MEMORY PER-USER: tiap orang punya riwayatnya sendiri
-        // (key = rule:chat:sender) — topik si A gak kebawa ke obrolan si B
-        const memKey = `${rule.id}:${chat}:${user || "anon"}`;
+        // 🔹 MEMORY PER-USER TERPADU: key "agent:<sender>" — SAMA dengan .novaai
+        // → obrolan di .novaai diterusin di aichat autoflow & sebaliknya (1 sistem)
         const senderName = m?.pushName || (user ? user.split("@")[0] : "user");
-        const hist = loadMem()[memKey] || [];
-        const ctx = hist.length
-          ? `Riwayat obrolanmu dengan ${senderName} (terbaru di bawah, gunakan sebagai konteks, jangan ulangi jawaban yang sama):\n` +
-            hist.map((h) => (h.r === "u" ? `${senderName}: ` : "Kamu: ") + h.t).join("\n")
-          : "";
+        const memKey = `agent:${user || "anon"}`;
+        const ctx = foldHistory(memKey, { userName: senderName });
 
         try {
           const aiReply = await askAI(persona + (ctx ? "\n\n" + ctx : ""), userText);
           if (aiReply?.trim()) {
             await send({ text: aiReply.trim() });
-            pushMem(memKey, userText, aiReply.trim());
+            appendTurn(memKey, userText, aiReply.trim());
           }
         } catch (e) {
           console.log(`[AutoFlow] aichat gagal: ${e.message}`);

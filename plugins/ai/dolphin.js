@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     } catch (error) {
     // IkyyXD fallback
     try {
-      const ikyyReply = await callIkyy(m.text?.trim() || m.text, {});
+      const ikyyReply = await callIkyy(m.text?.trim() || m.text, { sessionKey: "satuan:" + m.sender });
       if (ikyyReply) return m.reply(ikyyReply);
     } catch (ikyyErr) {
       console.error("[dolphin.js] IkyyXD fallback failed:", ikyyErr.message);
