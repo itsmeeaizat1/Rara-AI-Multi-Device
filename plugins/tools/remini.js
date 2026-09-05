@@ -12,7 +12,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
 // responsif selama render (dulu ngeblok event loop total, command lain mati)
-import { enhanceLocalAsync, hdQueueInfo } from "../../src/lib/nova-hd-pool.js";
+import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/nova-hd-pool.js";
 
 const pluginConfig = {
   name: "remini",
@@ -317,14 +317,23 @@ async function handler(m, { sock, args }) {
         // (render dieksekusi satu-satu biar CPU VPS gak jebol)
         const q = hdQueueInfo();
         if (q.busy) {
-          const pos = q.ahead + 1;
-          m.reply(claraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${pos}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
+          try { await m.react("⏳"); } catch {}
+          m.reply(claraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${q.ahead + 1}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
+        }
+        // model AI lokal belum ada di server → proses pertama = unduh ±59MB.
+        // Kasih tahu user biar gak dikira nge-freeze (dulu: nunggu lama tanpa
+        // kabar, hasil gak pernah muncul kalau internet VPS macet).
+        if (!isModelCached(localMode)) {
+          try { await m.react("🧠"); } catch {}
+          m.reply(claraWrap("remini", "Model AI lokal belum ada di server — sedang diunduh otomatis (±59MB, cukup sekali saja). Proses pertama lebih lama dari biasanya, mohon tunggu ya."));
         }
         // targetOut = sisi terpanjang hasil. input maxSide = target / scale
         // (gambar kecil tetap gak di-upscale paksa — tanpa piksel palsu)
         const opts = targetOut
           ? { maxSide: Math.max(128, Math.round(targetOut / (localMode === "real" ? 4 : 2))), enlarge: true }
           : {};
+        // react tahap render (pola auto media: proses background = react tematik)
+        try { await m.react("🎨"); } catch {}
         const r = await enhanceLocalAsync(mediaBuffer, localMode, opts);
         resultBuffer = r.buffer;
         label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
@@ -361,9 +370,11 @@ async function handler(m, { sock, args }) {
     const msg =
       e.message === "quota_limited"
         ? "Kuota enhance sementara habis, coba lagi beberapa menit."
-        : e.message === "process_failed"
-          ? "AI gagal memproses gambar. Coba gambar lain atau mode .remini face."
-          : te(m.prefix, m.command, m.pushName);
+        : e.message === "timeout_render"
+          ? "Render AI lokal kelamaan / macet — kemungkinan unduhan model pertama kena internet server. Coba lagi sebentar, atau pakai .remini bp buat sementara."
+          : e.message === "process_failed"
+            ? "AI gagal memproses gambar. Coba gambar lain atau mode .remini face."
+            : te(m.prefix, m.command, m.pushName);
     return m.reply(claraWrap("remini", msg, "error"), "remini");
   }
 }
