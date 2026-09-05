@@ -146,6 +146,7 @@ function formatJobDetail(data) {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const input = text.trim();
+    await m.react("🕒");
 
     if (!input) {
       return m.reply(claraWrap("JobStreet", [
@@ -177,6 +178,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       m.reply(claraWrap("JobStreet", "Mengambil detail lowongan...\nID: " + jobId));
 
       const data = await getJobDetail(jobId);
+      await m.react("🐣");
       return m.reply(formatJobDetail(data));
     }
 
@@ -197,9 +199,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     m.reply(claraWrap("JobStreet", "Mencari lowongan...\nKeyword: " + keyword + "\nHalaman: " + page));
 
     const data = await searchJobs(keyword, page);
+    await m.react("🐣");
     return m.reply(formatSearchResults(data, keyword, page));
   } catch (e) {
     console.error("[JobStreet]", e);
+    await m.react("❌");
     let errMsg = e.message;
 
     // Handle 403 specifically

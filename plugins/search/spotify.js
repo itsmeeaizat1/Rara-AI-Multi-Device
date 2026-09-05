@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotify",
@@ -20,11 +21,16 @@ const pluginConfig = {
 
 async function handler(m, { sock, text }) {
   if (!text) {
-    return m.reply(
-      `Cara Pakai: ${m.prefix}spotify <judul/artis>\nContoh: ${m.prefix}spotify bruno mars`
-    );
+    return m.reply(claraWrap("spotify", [
+      "Cari lagu di Spotify berdasarkan judul atau artis.",
+      "",
+      `📌 Format: ${m.prefix}spotify <judul/artis>`,
+      "",
+      `💡 Contoh: ${m.prefix}spotify bruno mars`,
+    ]));
   }
 
+  await m.react("🕒");
   try {
     const res = await axios.get(
       `https://api.cuki.biz.id/api/search/spotify?apikey=${config.APIkey?.cuki || "cuki-x"}&query=${encodeURIComponent(text)}&limit=5`,
@@ -33,7 +39,8 @@ async function handler(m, { sock, text }) {
     const data = res.data;
 
     if (!data?.status || !data?.data?.results || data.data.results.length === 0) {
-      return m.reply("❌ Lagu tidak ditemukan. Coba kata kunci lain.");
+      await m.react("❗");
+      return m.reply(claraWrap("spotify", "Lagu tidak ditemukan kak, coba kata kunci lain ya.", "error"));
     }
 
     const results = data.data.results;
@@ -47,10 +54,12 @@ async function handler(m, { sock, text }) {
 
     reply += `\nDownload: ${m.prefix}spdl <link>`;
 
+    await m.react("🐣");
     return m.reply(reply);
   } catch (err) {
     console.error("[Spotify Search]", err.message);
-    return m.reply("❌ API Spotify lagi bermasalah. Coba lagi nanti.");
+    await m.react("❌");
+    return m.reply(claraWrap("spotify", "API Spotify lagi gangguan kak, coba lain waktu ya 😥", "error"));
   }
 }
 

@@ -61,6 +61,7 @@ async function handler(m, { sock }) {
   }
 
   if (!media) return m.reply(novaError("Gura", "Gagal baca media nih, coba lagi ya"));
+  await m.react("🕒");
   try {
     const imgUrl = await uploadToCatbox(media);
 
@@ -71,8 +72,10 @@ async function handler(m, { sock }) {
     
     const buffer = Buffer.from(await res.arrayBuffer());
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, { image: buffer, caption: "🦈 *RAWWRR! Gura is here!*" }, { quoted: m });
   } catch (err) {
+    await m.react("❌");
     m.reply(claraWrap("gura", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

@@ -32,6 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
+    await m.react("🕒");
     const picture = await sock.profilePictureUrl(m.chat, "image").catch(() => null);
 
     if (!picture) {
@@ -47,6 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
     const res = await fetch(picture);
     const buffer = Buffer.from(await res.arrayBuffer());
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: buffer,
       caption: "Clone foto profil grup berhasil.",
@@ -60,6 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(claraWrap("clone", text));
   } catch (error) {
+    await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("Owner", "Gagal nih, coba lagi ya");

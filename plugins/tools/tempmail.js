@@ -712,7 +712,7 @@ async function handler(m, { sock }) {
         for (let i = 0; i < messages.length; i++) {
           const msg = messages[i];
           const full = await providerGetMessage(session, msg.id);
-          content += `━━━━━━━━━━━━━━\n`;
+          content += `---\n`;
           content += `PESAN ${i + 1}\n`;
           content += `Dari: ${msg.from}\n`;
           content += `Subjek: ${msg.subject}\n`;

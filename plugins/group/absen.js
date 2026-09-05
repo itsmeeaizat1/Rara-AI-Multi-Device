@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
             "" +
             `📅 ${dateStr}\n` +
             `👥 Total: ${absen.peserta.length}\n` +
-            `├┈┈「 📝 *DaғTar Hadir* 」\n` +
+            `📝 *Daftar Hadir*\n` +
             `${list}\n` +
             `---\n\n` +
             `_Ketik *${m.prefix}absen* untuk hadir_\n` +

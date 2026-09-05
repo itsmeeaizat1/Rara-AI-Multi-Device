@@ -115,17 +115,21 @@ async function handler(m, { sock }) {
   const username = m.args[0]?.trim();
 
   if (!username) {
-    return m.reply(
-      `🎮 *ʀᴏʙʟᴏx ꜱᴛᴀʟᴋ*\n\n` +
-        `Masukkan username Roblox\n\n` +
-        `\`Contoh: ${m.prefix}robloxstalk Linkmon99\``,
-    );
+    return m.reply(claraWrap("robloxstalk", [
+      "Stalk profil Roblox lengkap dengan statistik.",
+      "",
+      `📌 Format: ${m.prefix}robloxstalk <username>`,
+      "",
+      `💡 Contoh: ${m.prefix}robloxstalk Linkmon99`,
+    ]));
   }
+  await m.react("🕒");
   try {
     const res = await Roblox(username);
 
     if (res.error) {
-      return m.reply(claraWrap("robloxstalk", `❌ Username *${username}* tidak ditemukan`));
+      await m.react("❌");
+      return m.reply(claraWrap("robloxstalk", `Username *${username}* tidak ditemukan`, "error"));
     }
 
     const topGroups =
@@ -170,28 +174,29 @@ async function handler(m, { sock }) {
       : "tidak tersedia";
 
     const caption =
-      `🎮 *ʀᴏʙʟᴏx ꜱᴛᴀʟᴋ*\n\n` +
-      `*ᴘʀᴏꜰɪʟᴇ*\n` +
-      `🆔 *ID*: ${res.id}\n` +
-      `🎄 *ᴜꜱᴇʀɴᴀᴍᴇ*: ${res.username}\n` +
-      `📛 *ᴅɪꜱᴘʟᴀʏ*: ${res.displayName}\n` +
-      `✅ *ᴠᴇʀɪꜰɪᴇᴅ*: ${res.verified ? "Ya" : "Tidak"}\n` +
-      `📅 *ᴄʀᴇᴀᴛᴇᴅ*: ${res.created ? new Date(res.created).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "-"}\n` +
+      `Roblox Stalk\n\n` +
+      `Profil\n` +
+      `ID: ${res.id}\n` +
+      `Username: ${res.username}\n` +
+      `Display: ${res.displayName}\n` +
+      `Verified: ${res.verified ? "Ya" : "Tidak"}\n` +
+      `Created: ${res.created ? new Date(res.created).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "-"}\n` +
       `\n` +
-      `*ꜱᴏᴄɪᴀʟ*\n` +
-      `👥 *ꜰʀɪᴇɴᴅꜱ*: ${res.social.friends?.toLocaleString()}\n` +
-      `👤 *ꜰᴏʟʟᴏᴡᴇʀꜱ*: ${res.social.followers?.toLocaleString()}\n` +
-      `➕ *ꜰᴏʟʟᴏᴡɪɴɢ*: ${res.social.following?.toLocaleString()}\n` +
+      `Social\n` +
+      `Friends: ${res.social.friends?.toLocaleString()}\n` +
+      `Followers: ${res.social.followers?.toLocaleString()}\n` +
+      `Following: ${res.social.following?.toLocaleString()}\n` +
       `\n` +
-      `*ᴘʀᴇꜱᴇɴᴄᴇ*\n` +
+      `Presence\n` +
       `${presInfo}\n` +
       `\n\n` +
-      `📝 *ʙɪᴏ:*\n${res.description?.substring(0, 300) || "-"}\n` +
-      `👥 *ɢʀᴏᴜᴘꜱ* (${res.groups?.length || 0}):\n${topGroups}\n` +
-      `🎮 *ɢᴀᴍᴇꜱ* (${res.games?.length || 0}):\n${topGames}\n` +
-      `🏆 *ʙᴀᴅɢᴇꜱ* (${res.badges?.length || 0}):\n${topBadges}\n` +
-      `🎒 *ɪɴᴠᴇɴᴛᴏʀʏ*:\n${topInventory}\n` +
-      `🔗 https://roblox.com/users/${res.id}/profile`;
+      `Bio:\n${res.description?.substring(0, 300) || "-"}\n` +
+      `Groups (${res.groups?.length || 0}):\n${topGroups}\n` +
+      `Games (${res.games?.length || 0}):\n${topGames}\n` +
+      `Badges (${res.badges?.length || 0}):\n${topBadges}\n` +
+      `Inventory:\n${topInventory}\n` +
+      `https://roblox.com/users/${res.id}/profile`;
+    await m.react("🐣");
     if (res.avatar) {
       await sock.sendMessage(
         m.chat,
@@ -205,6 +210,7 @@ async function handler(m, { sock }) {
       await m.reply(caption);
     }
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("robloxstalk", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

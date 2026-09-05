@@ -80,10 +80,17 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const [nama,nominal] = m.text?.split(',')
     if (!nama || !nominal) {
-        return m.reply(claraWrap("FAKE BANK", `Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}fakebank Aizat,10000\``), "fakebankjago")
+        return m.reply(claraWrap("fakebankjago", [
+            "Bikin screenshot chat fake bank ala Bank Jago.",
+            "",
+            `📌 Format: ${m.prefix}fakebank <nama>,<nominal>`,
+            "",
+            `💡 Contoh: ${m.prefix}fakebank Aizat,10000`,
+        ]))
     }
-    if(isNaN(nominal)) { const __navText = `*ʜᴀʀᴀᴘ ᴍᴀꜱᴜᴋᴋᴀɴ ᴀɴɢᴋᴀ*`; return await m.reply(__navText); }
+    if(isNaN(nominal)) { return m.reply(claraWrap("fakebankjago", "Nominal harus berupa angka kak.", "error")); }
     try {
+        await m.react("🕒");
         const saldo = Number(nominal.replace(/[^0-9]/g, '')).toLocaleString('id-ID')
         const hour = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta', hour: '2-digit', hour12: false })
         const h = Number(hour)
@@ -92,10 +99,12 @@ async function handler(m, { sock }) {
         else if (h >= 11 && h < 15) waktu = 'Siang'
         else if (h >= 15 && h < 18) waktu = 'Sore'
         const fake = await generateImage(saldo, `Selamat ${waktu}, ${nama}`)
+        await m.react("🐣");
         await sock.sendMedia(m.chat, fake, null, m, {
             type: 'image',
         })
     } catch (error) {
+        await m.react("❌");
         m.reply(claraWrap("fakebankjago", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

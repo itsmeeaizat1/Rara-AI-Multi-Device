@@ -250,7 +250,7 @@ export async function handleAmbientMimic(m, sock) {
 
     // Download audio
     try { await sock.sendPresenceUpdate("typing", m.key.remoteJid); } catch (e) { console.error('[ambientmimic.js]:', e.message); }
-    try { await sock.sendReaction(m.key.remoteJid, "🎧", m.key); } catch (e) { console.error('[ambientmimic.js]:', e.message); }
+    try { await sock.sendReaction(m.key.remoteJid, "🕒", m.key); } catch (e) { console.error('[ambientmimic.js]:', e.message); }
 
     const buffer = await sock.downloadMediaMessage(m);
     if (!buffer || buffer.length < 500) return false;
@@ -288,7 +288,7 @@ export async function handleAmbientMimic(m, sock) {
 
     if (!response.ok) {
       console.error("[AmbientMimic] Gemini API error:", response.status);
-      try { await sock.sendReaction(m.key.remoteJid, "⚠️", m.key); } catch (e) { console.error('[ambientmimic.js]:', e.message); }
+      try { await sock.sendReaction(m.key.remoteJid, "❌", m.key); } catch (e) { console.error('[ambientmimic.js]:', e.message); }
       return false;
     }
 
@@ -337,7 +337,7 @@ export async function handleAmbientMimic(m, sock) {
 
     await sock.sendMessage(m.key.remoteJid, { text: replyText }, { quoted: m });
 
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[ambientmimic.js]:', e.message); }
+    try { await sock.sendReaction(m.key.remoteJid, "🐣", m.key); } catch (e) { console.error('[ambientmimic.js]:', e.message); }
     return true;
   } catch (e) {
     console.error("[AmbientMimic] Handler error:", e.message);

@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
       return p ? p.rupiah : "-";
     };
     for (const [type, list] of Object.entries(byType)) {
-      boxes.push(bracketBox("📦", `ᴛɪᴘᴇ: ${toSC(type)} (${list.length})`, [
+      boxes.push(bracketBox("📦", `Tipe: ${type} (${list.length})`, [
         ...list.map((d) =>
           `${RARITY_ICON[d.rarity] || "▫️"} *${d.id}* — ${priceOf(d)}/pc`,
         ).slice(0, 12),
@@ -153,6 +153,7 @@ async function handler(m, { sock }) {
   }
   const isReplace = pending && pending.status === "pending";
 
+  await m.react("🕒");
   topups.pending[sender] = {
     sender,
     phoneNumber: sender.split("@")[0],
@@ -190,6 +191,7 @@ async function handler(m, { sock }) {
     `Nomor: wa.me/${(config.owner?.number || ["628174887770"])[0]}`,
   ]);
 
+  await m.react("🐣");
   await m.reply(detailBox + "\n\n" + stepsBox + "\n\n" + contactBox + "\n\n" +
     tipText(`${isReplace ? "Pesanan lama diganti • " : ""}Ketik ${prefix}buyrpgitem batal untuk batalkan`));
   await sendQRIS(sock, m);

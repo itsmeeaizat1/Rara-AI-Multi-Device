@@ -33,13 +33,16 @@ async function resizeForPP(buffer) {
 }
 async function handler(m, { sock }) {
   const targetJid = m.quoted?.sender || m.mentions?.[0];
-  console.log(targetJid);
   if (!targetJid) {
-    return m.reply( `🕵️ *Colong Pp*\n\n` +
-        `Reply pesan seseorang untuk mencuri PP-nya\n\n` +
-        `*Cara:*\n` +
-        `Reply pesan target → \`${m.prefix}colongpp\``, "colongpp");
+    return m.reply(claraWrap("colongpp", [
+      "Colong foto profil target dan pasang jadi PP bot.",
+      "",
+      `📌 Format: reply pesan target, lalu ketik ${m.prefix}colongpp`,
+      "",
+      `💡 Contoh: reply pesan kakak, ketik ${m.prefix}colongpp`,
+    ]));
   }
+  await m.react("🕒");
   try {
     let ppBuffer;
     let source = "profil";
@@ -61,12 +64,17 @@ async function handler(m, { sock }) {
     const processed = await resizeForPP(ppBuffer);
     const botJid = sock.user?.id;
     await sock.updateProfilePicture(botJid, processed);
+    await m.react("🐣");
     const targetNumber = targetJid.split("@")[0];
-    return m.reply(claraWrap("colongpp", `✅ *Pp Berhasil Dicolong!*\n\n` +
-        `🎯 Target: @${targetNumber}\n` +
-        `📸 Sumber: ${source}`));
+    return m.reply(claraWrap("colongpp", [
+      "PP berhasil dicolong!",
+      "",
+      `Target: @${targetNumber}`,
+      `Sumber: ${source}`,
+    ]));
   } catch (err) {
     console.error("[ColongPP] Error:", err.message);
+    await m.react("❌");
     return m.reply(claraWrap("colongpp", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

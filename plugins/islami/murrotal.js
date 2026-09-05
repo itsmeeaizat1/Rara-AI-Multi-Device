@@ -24,12 +24,16 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `🎧 *ᴍᴜʀʀᴏᴛᴛᴀʟ*\n\n` +
-        `Masukkan nama surah\n\n` +
-        `\`Contoh: ${m.prefix}murrotal al fatihah\`\n` +
-        `\`Contoh: ${m.prefix}murrotal ar rahman\``, "murrotal");
+    return m.reply(claraWrap("murrotal", [
+      "Murottal Al-Quran audio per surah.",
+      "",
+      `📌 Format: ${m.prefix}murrotal <nama surah>`,
+      "",
+      `💡 Contoh: ${m.prefix}murrotal al fatihah`,
+    ]));
   }
   try {
+    await m.react("🕒");
 
     const res = await fetch("https://islamipedia.id/murottal/");
     const html = await res.text();
@@ -50,12 +54,15 @@ async function handler(m, { sock }) {
     );
 
     if (!find || !find.audio) {
+      await m.react("❌");
       return m.reply(claraWrap("murrotal", `❌ Surah *${query}* tidak ditemukan`));
     }
+    await m.react("🐣");
     await sock.sendMedia(m.chat, find.audio, null, m, {
       type: "audio",
     });
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("murrotal", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

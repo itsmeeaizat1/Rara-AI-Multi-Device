@@ -59,6 +59,10 @@ async function handleSmartReply(m, sock) {
   if (now - lastTime < COOLDOWN_MS) return false;
   lastReplyTime.set(m.chat, now);
 
+  try {
+    await sock.sendMessage(m.chat, { react: { text: "🕒", key: m.key } });
+  } catch {}
+
   const provider = smartReply.provider || "puter";
   const aiConfig = config.aiHelp || {};
 
@@ -138,12 +142,16 @@ ${matchedContext}`;
     }
   } catch (err) {
     if (config.dev?.debugLog) console.error("[SmartReply]", err.message);
+    try {
+      await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+    } catch {}
     return false;
   }
 
   if (!reply || reply.trim().length === 0) return false;
 
   try {
+    await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } });
     await sock.sendMessage(m.chat, { text: reply }, { quoted: m });
   } catch {
     return false;

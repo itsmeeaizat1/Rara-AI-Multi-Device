@@ -21,13 +21,15 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ");
 
   if (!query) {
-    return m.reply(
-      `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}npm <query>\`\n\n` +
-        `Contoh:\n` +
-        `\`${m.prefix}npm axios\``,
-    );
+    return m.reply(claraWrap("npm", [
+      "Cari package di npm registry.",
+      "",
+      `📌 Format: ${m.prefix}npm <query>`,
+      "",
+      `💡 Contoh: ${m.prefix}npm axios`,
+    ]));
   }
+  await m.react("🕒");
   try {
     const res = await fetch(
       `https://registry.npmjs.com/-/v1/search?text=${encodeURIComponent(query)}&size=10`,
@@ -35,12 +37,11 @@ async function handler(m, { sock }) {
     const data = await res.json();
 
     if (!data.objects || data.objects.length === 0) {
-      return m.reply(
-        `❌ *ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nPackage "${query}" tidak ditemukan`,
-      );
+      await m.react("❌");
+      return m.reply(claraWrap("npm", `Package "${query}" tidak ditemukan kak, coba kata kunci lain.`, "error"));
     }
 
-    let text = `📦 *ɴᴘᴍ ꜱᴇᴀʀᴄʜ*\n\n`;
+    let text = `NPM Search\n\n`;
     text += `Query: \`${query}\`\n`;
     text += `Found: ${data.total} packages\n\n`;
 
@@ -59,8 +60,10 @@ async function handler(m, { sock }) {
       }
       text += `⭐ Score: ${score}%`;
     });
+    await m.react("🐣");
     await m.reply(claraWrap("npm", text));
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("npm", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

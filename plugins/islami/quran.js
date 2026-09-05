@@ -67,15 +67,20 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `📖 *qᴜʀᴀɴ*\n\n` +
-        `Masukkan nama surah\n\n` +
-        `\`Contoh: ${m.prefix}quran al fatihah\`\n` +
-        `\`Contoh: ${m.prefix}quran al baqarah\``, "quran");
+    return m.reply(claraWrap("quran", [
+      "Bacaan Al-Quran per surah beserta terjemahan.",
+      "",
+      `📌 Format: ${m.prefix}quran <nama surah>`,
+      "",
+      `💡 Contoh: ${m.prefix}quran al fatihah`,
+    ]));
   }
   try {
+    await m.react("🕒");
     const data = await quran(query);
 
     if (!data.ayat?.length) {
+      await m.react("❌");
       return m.reply(claraWrap("quran", `❌ Surah *${query}* tidak ditemukan`));
     }
 
@@ -97,14 +102,17 @@ async function handler(m, { sock }) {
       }
       if (current.trim()) chunks.push(current.trim());
 
+      await m.react("🐣");
       for (let i = 0; i < chunks.length; i++) {
         const prefix = i === 0 ? `📖 *${data.surah}*\n${data.info}\n\n` : "";
         await m.reply(prefix + chunks[i]);
       }
     } else {
+      await m.react("🐣");
       await m.reply(trimmed);
     }
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("quran", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

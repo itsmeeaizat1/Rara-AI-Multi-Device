@@ -103,6 +103,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
   const search = text || "";
   try {
+    await m.react("🕒");
     const result = await fetchTribunNews(search);
     if (!result) throw new Error("Data berita kosong.");
 
@@ -117,6 +118,7 @@ async function handler(m, { sock }) {
       ? `Tribunnews — ${articles.length} berita untuk "${search}"`
       : `Tribunnews — ${articles.length} headline`;
 
+    await m.react("🐣");
     // Send header text first (no preview)
     await m.reply(claraWrap("Tribunnews", header));
 
@@ -126,6 +128,7 @@ async function handler(m, { sock }) {
       await sendNewsImage(sock, m, toSend[i], i, toSend.length);
     }
   } catch (error) {
+    await m.react("❌");
     return m.reply(claraWrap("Tribunnews Error", error.message || "Gagal ambil nih berita."));
   }
 }

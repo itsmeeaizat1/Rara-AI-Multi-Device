@@ -278,6 +278,7 @@ async function handler(m, { sock }) {
         "",
       ];
 
+      await m.react("🕒");
       if (selected.type === "qris") {
         payLines.push(toSC("Scan QRIS untuk bayar"));
         const qrisUrl = config.payment?.qrisUrl || "";
@@ -291,16 +292,19 @@ async function handler(m, { sock }) {
               qrisBuffer = fs.readFileSync(qrisUrl);
             }
             await m.reply(novaBox("DETAIL PEMBAYARAN", payLines));
+            await m.react("🐣");
             await sock.sendMessage(m.chat, {
               image: qrisBuffer,
               caption: toSC("Scan QRIS di atas"),
             }, { quoted: m });
           } catch {
             payLines.push(toSC("QRIS: hubungi admin"));
+            await m.react("❌");
             await m.reply(novaBox("DETAIL PEMBAYARAN", payLines));
           }
         }
       } else if (selected.type === "ewallet" || selected.type === "bank") {
+        await m.react("🐣");
         payLines.push(toSC(selected.type === "bank" ? "Bank" : "E-Wallet") + ": " + selected.label);
         payLines.push(toSC("Nomor") + ": " + selected.number);
         payLines.push(toSC("Atas Nama") + ": " + selected.holder);
@@ -309,6 +313,7 @@ async function handler(m, { sock }) {
         payLines.push(toSC("Lalu kirim bukti ke admin"));
         await m.reply(novaBox("DETAIL PEMBAYARAN", payLines));
       } else if (selected.type === "cash") {
+        await m.react("🐣");
         payLines.push(toSC("Bayar cash/COD"));
         await m.reply(novaBox("DETAIL PEMBAYARAN", payLines));
       }
@@ -458,6 +463,7 @@ async function handler(m, { sock }) {
       p + "beli2 riwayat — riwayat belanja",
     ]));
   } catch (error) {
+    await m.react("❌");
     return m.reply(claraWrap("Beli2", toSC("Error") + ": " + error.message));
   }
 }

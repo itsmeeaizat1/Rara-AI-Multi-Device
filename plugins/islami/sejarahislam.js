@@ -31,11 +31,13 @@ async function handler(m, { sock }) {
     const args = (m.args || []).map((a) => a.toLowerCase());
     const action = args[0];
 
+    await m.react("🕒");
     if (!action || action === "help" || action === "menu") {
       let txt = "*SEJARAH ISLAM & INFO SURAT*\n\n";
       txt += "• .sejarahislam list - Daftar semua 114 surat\n";
       txt += "• .sejarahislam info <nomor> - Info & sejarah surat\n";
       txt += "• .sejarahislam turun mekah/madinah - Filter tempat turun\n";
+      await m.react("🐣");
       return await m.reply(txt);
     }
 
@@ -53,6 +55,7 @@ async function handler(m, { sock }) {
       txt += "Tempat Turun: " + (s.tempat_turun === "mekah" ? "Mekkah" : "Madinah") + "\n\n";
       txt += "*Sejarah & Keterangan:*\n" + (s.deskripsi ? s.deskripsi.replace(/<[^>]*>/g, "") : "") + "\n\n";
       txt += "Sumber: equran.id API";
+      await m.react("🐣");
       return await m.reply(txt);
     }
 
@@ -60,7 +63,7 @@ async function handler(m, { sock }) {
     if (action === "daftarsurat" || action === "list") {
       const res = await fetchJson(EQURAN_API);
       const allSurah = res.data || res;
-      let txt = "*ᴅᴀꜰᴛᴀʀ ꜱᴜʀᴀᴛ ᴀʟ-Qᴜʀᴀɴ*\n\n";
+      let txt = "Daftar Surat Al-Quran\n\n";
 
       for (let i = 0; i < allSurah.length; i++) {
         const s = allSurah[i];
@@ -68,6 +71,7 @@ async function handler(m, { sock }) {
       }
 
       txt += "\nInfo detail: .sejarahislam info <nomor>";
+      await m.react("🐣");
       return await m.reply(txt);
     }
 
@@ -95,6 +99,7 @@ async function handler(m, { sock }) {
 
     return m.reply(claraWrap("Sejarahislam", "Perintah tidak valid!\n\nKetik .sejarahislam buat lihat semua perintah."));
   } catch (error) {
+    await m.react("❌");
     return m.reply(claraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
   }
 }

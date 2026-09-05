@@ -687,15 +687,18 @@ async function handler(m, { sock }) {
             provider.setupHint
         ));
     try {
+      await m.react("🕒");
       const saldo = await provider.cekSaldo(cred);
-    await m.reply(claraWrap(
+      await m.react("🐣");
+      await m.reply(claraWrap(
           "PPOB",
           "Saldo " + provider.name + "\n\n" +
             "Saldo: " + formatRupiah(saldo) + "\n" +
             "Markup: " + markup + "%"
         ));
     } catch (err) {
-    await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.react("❌");
+      await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
@@ -707,6 +710,7 @@ async function handler(m, { sock }) {
           "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"
         ));
     try {
+      await m.react("🕒");
       const products = await getCachedPriceList(data);
       const cats = {};
       products.forEach((p) => {
@@ -730,9 +734,11 @@ async function handler(m, { sock }) {
       body += "  .ppob cari mobile legend\n";
       body += "  .ppob cari dana\n";
       body += "  .ppob cari wifi";
+      await m.react("🐣");
       return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
-    await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.react("❌");
+      await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
@@ -758,6 +764,7 @@ async function handler(m, { sock }) {
         ));
     }
     try {
+      await m.react("🕒");
       const products = await getCachedPriceList(data);
       const filtered = products
         .filter(
@@ -792,9 +799,11 @@ async function handler(m, { sock }) {
       });
       body += "\nBeli: .ppob beli <sku> <nomor>\n";
       body += "Contoh: .ppob beli " + filtered[0].sku + " 08123456789";
+      await m.react("🐣");
       return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
-    await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.react("❌");
+      await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
@@ -818,6 +827,7 @@ async function handler(m, { sock }) {
         ));
     }
     try {
+      await m.react("🕒");
       const products = await getCachedPriceList(data);
       const prod = products.find((p) => p.sku === sku);
       if (!prod) {
@@ -877,6 +887,7 @@ async function handler(m, { sock }) {
       }
 
       // Mode text atau fallback
+      await m.react("🐣");
       const sent = await sendQrImage(
         sock,
         m.chat,
@@ -889,7 +900,8 @@ async function handler(m, { sock }) {
       }
       return;
     } catch (err) {
-    await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.react("❌");
+      await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
@@ -1214,6 +1226,7 @@ async function handler(m, { sock }) {
       const orderCred = data.credentials[order.provider] || cred;
       if (orderProvider.isSetup(orderCred)) {
         try {
+          await m.react("🕒");
           const result = await orderProvider.checkStatus(orderCred, orderId);
           if (result) {
             const newStatus =
@@ -1306,9 +1319,11 @@ async function handler(m, { sock }) {
     if (!provider.isSetup(cred))
     await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     try {
+      await m.react("🕒");
       data.priceCache[data.activeProvider] = null;
       const products = await getCachedPriceList(data, true);
-    await m.reply(claraWrap(
+      await m.react("🐣");
+      await m.reply(claraWrap(
           "PPOB",
           "Daftar harga di-refresh!\n" +
             "Provider: " + provider.name + "\n" +
@@ -1316,7 +1331,8 @@ async function handler(m, { sock }) {
             "Cari: .ppob cari <keyword>"
         ));
     } catch (err) {
-    await m.reply(claraWrap("PPOB", "Error: " + err.message));
+      await m.react("❌");
+      await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 

@@ -150,10 +150,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     m.reply(claraWrap("Berita Lengkap", "Mengambil berita dari " + SOURCES[input].label + "..."));
 
+    await m.react("🕒");
     const result = await fetchBerita(input);
+    await m.react("🐣");
     return m.reply(formatBerita(result.source, result.articles));
   } catch (e) {
     console.error("[BeritaLengkap]", e);
+    await m.react("❌");
     m.reply(claraWrap("Berita Lengkap", [
       "Error: " + e.message,
       "",

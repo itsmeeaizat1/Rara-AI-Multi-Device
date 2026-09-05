@@ -152,6 +152,7 @@ async function handler(m, { sock, config: botConfig }) {
       query = "";
     }
 
+    await m.react("🕒");
     // Strategy: Wallhaven dulu, kalau kosong coba Konachan
     let results = null;
     let sourceUsed = "";
@@ -190,12 +191,14 @@ async function handler(m, { sock, config: botConfig }) {
     const sizeKB = wp.file_size ? (wp.file_size / 1024).toFixed(0) : "?";
     const caption = `Wallpaper Anime: ${query || "Random"}\nResolusi: ${wp.resolution}\nUkuran: ${sizeKB} KB\nSource: ${wp.source}`;
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
       caption: claraWrap("Wallpaper Anime", caption),
     }, { quoted: m });
   } catch (error) {
     let errMsg = error.message || "Gagal mencari wallpaper anime.";
+    await m.react("❌");
     return m.reply(claraWrap("Wallpaper Anime Error", errMsg));
   }
 }

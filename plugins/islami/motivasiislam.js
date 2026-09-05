@@ -89,6 +89,8 @@ async function fetchJson(url) {
 
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
+
     // Random topik
     const topic = TOPICS[Math.floor(Math.random() * TOPICS.length)];
 
@@ -108,19 +110,21 @@ async function handler(m, { sock }) {
     txt += "";
     txt += "Tema: *" + topic.tag + "*\n";
     txt += "QS. " + surah.englishName + ":" + topic.ayat + "\n\n";
-    txt += "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*\n" + arabText + "\n\n";
-    txt += "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ:*\n" + indoText + "\n\n";
+    txt += "Teks Arab:\n" + arabText + "\n\n";
+    txt += "Terjemahan:\n" + indoText + "\n\n";
 
     if (tafsirText) {
       // Potong tafsir jika terlalu panjang
       const tafsirShort = tafsirText.length > 500 ? tafsirText.substring(0, 500) + "..." : tafsirText;
-      txt += "*ᴛᴀꜰꜱɪʀ:*\n" + tafsirShort + "\n\n";
+      txt += "Tafsir:\n" + tafsirShort + "\n\n";
     }
 
     txt += "Sumber: alquran.cloud API\n";
     txt += "Semoga menguatkan hatimu hari ini.";
+    await m.react("🐣");
     return await m.reply(txt);
   } catch (error) {
+    await m.react("❌");
     return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti."));
   }
 }
