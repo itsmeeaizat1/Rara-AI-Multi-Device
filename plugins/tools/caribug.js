@@ -20,10 +20,16 @@ async function handler(m, { sock,  args }) {
   let code = m.quoted?.text || args.join(" ");
 
   if (!code) {
-    return m.reply( `*🐛 CARI BUG*\n\nKirim kode atau reply pesa{ const __navText = (ug.\n\nContoh:\n\`${m.prefix}caribug function test() {}\``, "caribug");
+    return m.reply(claraWrap("caribug", [
+      "Cari bug di kode program lewat AI.",
+      "",
+      `📌 Format: ${m.prefix}caribug <kode> (atau reply pesan kode)`,
+      `💡 Contoh: ${m.prefix}caribug function test() {}`,
+    ]));
   }
   try {
-    const apiUrl = `); return await m.reply(__navText); }ttps://api.cuki.biz.id/api/aicode/caribug`;
+    await m.react("🕒");
+    const apiUrl = `https://api.cuki.biz.id/api/aicode/caribug`;
     const res = await axios.get(apiUrl, {
       params: {
         apikey: config.APIkey.cuki,
@@ -62,8 +68,10 @@ async function handler(m, { sock,  args }) {
         text += `- ${d.type || d.description}\n`;
       });
     }
-    { const __navText = (text.trim()); await m.reply(__navText); };
+    await m.react("🐣");
+    await m.reply(text.trim());
   } catch (err) {
+    await m.react("❌");
     console.error("[CariBug]", err.message);
     m.reply(claraWrap("caribug", te(m.prefix, m.command, m.pushName), "error"));
   }

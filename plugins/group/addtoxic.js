@@ -23,9 +23,12 @@ async function handler(m, { sock }) {
     const word = m.args.join(' ').trim().toLowerCase()
     
     if (!word) {
-        return m.reply( `📝 *ᴀᴅᴅ ᴛᴏxɪᴄ*\n\n` +
-            `Gunak{ const __navText = ` +
-            `\`Contoh: ${m.prefix}addtoxic katakasar\``, "addtoxic")
+        return m.reply(claraWrap("addtoxic", [
+            "Tambah kata toxic ke daftar filter.",
+            "",
+            `📌 Format: ${m.prefix}addtoxic <kata>`,
+            `💡 Contoh: ${m.prefix}addtoxic katakasar`,
+        ]))
     }
     
     if (word.length < 2) {
