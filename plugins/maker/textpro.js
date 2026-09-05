@@ -137,10 +137,9 @@ async function handler(m, { sock }) {
     console.error("[textpro] ephoto360 gagal:", err.message);
     // Fallback: HaidarApis textpro (api.haidarxd.my.id)
     try {
-      const fallbackUrl = await haidarTextpro(style, content);
-      if (fallbackUrl) {
-        const { data: fbBuf } = await axios.get(fallbackUrl, { responseType: "arraybuffer", timeout: 20000 });
-        const buffer = Buffer.from(fbBuf);
+      const fbBuffer = await haidarTextpro(style, content);
+      if (fbBuffer) {
+        const buffer = fbBuffer;
         if (buffer.length < 100) throw new Error("Gambar kosong");
         await m.react("🐣");
         await sock.sendMessage(m.chat, {
