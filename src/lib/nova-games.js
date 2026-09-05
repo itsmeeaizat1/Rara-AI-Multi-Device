@@ -124,6 +124,9 @@ const GAME_CTA = {
   // RPG CINTA (rpg couple — tema romantis)
   jadianmatch: "Yuk tembak-tembakan lagi kak, siapa tau ketemu jodoh 💘🥳",
   kencanmatch: "Yuk kencan lagi kak, biar hubunganmu makin mesra 💕🥳",
+  kado: "Yuk kasih kado lagi kak, biar pasanganmu makin sayang 🎁🥳",
+  honeymoon: "Tunggu bulan depan kak, sambil ramein hubungan lewat rpgkencan 💞",
+  meditation: "Yuk meditasi lagi kak kalau badannya lelah ✨🥳",
   nikahmatch: "Yuk bahagia terus sama pasanganmu kak, biar awet sampai tua 💍🥳",
   soulmatematch: "Yuk ukur kecocokan lagi kak, siapa tau dia memang jodohmu 💞🥳",
   couplewar: "Yuk war pasangan lain kak, biar cintamu makin disegani ⚔️🥳",
