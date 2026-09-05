@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
 
   } catch (e) {
     console.error("[hapusdata.js]:", e.message);
-    try { await m.reply("❌ Terjadi error: " + (e.message || "unknown")); } catch {}
+    try { await m.reply(claraWrap("hapusdata", "Terjadi error saat hapus data.", "error")); } catch {}
   }
 }
 

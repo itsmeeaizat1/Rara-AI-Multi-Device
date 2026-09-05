@@ -621,7 +621,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "predictivenudge");
     }
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("predictivenudge", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

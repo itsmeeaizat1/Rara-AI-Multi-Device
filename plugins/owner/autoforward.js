@@ -48,19 +48,19 @@ async function handler(m, { sock }) {
     if (subCmd === "del") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
       cfg.keywords = cfg.keywords.filter(k => k !== keyword); save(db);
-      return m.reply("✅ Keyword dihapus: \"" + keyword + "\"\nSisa: " + cfg.keywords.length)
+      return m.reply(claraWrap("autoforward", "Keyword dihapus: " + keyword + "\nSisa: " + cfg.keywords.length))
     }
 
     if (subCmd === "on" || subCmd === "off") {
       cfg.enabled = subCmd === "on"; save(db);
-      return m.reply("✅ Status: " + (cfg.enabled ? "ON" : "OFF") + "\nScope: " + cfg.scope + "\nKeywords: " + cfg.keywords.length)
+      return m.reply(claraWrap("autoforward", "Status: " + (cfg.enabled ? "ON" : "OFF") + "\nScope: " + cfg.scope + "\nKeywords: " + cfg.keywords.length))
     }
 
     if (subCmd === "scope") {
       const scope = args[1]?.toLowerCase()
       if (scope === "all" || scope === "gc" || scope === "pc") {
         cfg.scope = scope; save(db);
-        return m.reply("✅ Scope: " + scope + "\nall=semua, gc=grup, pc=private")
+        return m.reply(claraWrap("autoforward", "Scope: " + scope + "\nall=semua, gc=grup, pc=private"))
       }
     }
 
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     return m.reply(text)
   } catch (e) {
     console.error("[autoforward] error:", e.message)
-    return m.reply("❌ " + (e.message || "Ada error nih"))
+    return m.reply(claraWrap("autoforward", "Gagal proses. Coba lagi.", "error"))
   }
 }
 

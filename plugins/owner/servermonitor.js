@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
       if (ram >= cfg.ramThreshold) alerts.push("⚠️ RAM " + ram + "% >= " + cfg.ramThreshold + "%")
       if (disk >= cfg.diskThreshold) alerts.push("⚠️ Disk " + disk + "% >= " + cfg.diskThreshold + "%")
       if (alerts.length) return m.reply(alerts.join("\n"))
-      return m.reply("Semua normal. Tidak ada alert.\nCPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%")
+      return m.reply(claraWrap("servermonitor", "Semua normal. Tidak ada alert.\nCPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%"))
     }
 
     // Default: status
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     return m.reply(text.trim())
   } catch (e) {
     console.error("[servermonitor] error:", e.message)
-    return m.reply("❌ " + (e.message || "Ada error nih"))
+    return m.reply(claraWrap("servermonitor", "Gagal proses. Coba lagi.", "error"))
   }
 }
 

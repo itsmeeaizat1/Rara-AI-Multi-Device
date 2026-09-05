@@ -444,7 +444,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "moodtheme");
     }
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("moodtheme", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

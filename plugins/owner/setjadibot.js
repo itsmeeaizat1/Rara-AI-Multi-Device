@@ -73,12 +73,16 @@ async function handler(m, { sock }) {
   if (action === "mode" || action === "setmode") {
     const mode = (args[0] || "").toLowerCase();
     if (!["all", "premium", "specific"].includes(mode)) {
-      return m.reply("Mode tidak valid.\n\n" +
-        "Pilih salah satu:\n" +
-        "1. all - semua user bisa jadibot\n" +
-        "2. premium - hanya premium user\n" +
-        "3. specific - hanya user tertentu\n\n" +
-        `Contoh: ${m.prefix}setjadibot mode premium`);
+      return m.reply(claraWrap("setjadibot", [
+        "Mode tidak valid.",
+        "",
+        "💡 Pilih salah satu:",
+        "1. all - semua user bisa jadibot",
+        "2. premium - hanya premium user",
+        "3. specific - hanya user tertentu",
+        "",
+        "📌 Contoh: " + m.prefix + "setjadibot mode premium",
+      ]));
     }
     const access = getJadibotAccess();
     access.mode = mode;
@@ -151,17 +155,24 @@ async function handler(m, { sock }) {
     return sock.sendMessage(m.chat, { text: txt, mentions: access.allowedUsers }, { quoted: m });
   }
 
-  return m.reply("*Pengaturan Akses Jadibot*\n\n" +
-    `1. ${m.prefix}setjadibot mode <all/premium/specific>\n` +
-    "   Atur siapa yang bisa pakai jadibot\n\n" +
-    `2. ${m.prefix}setjadibot add @user\n` +
-    "   Tambah user ke daftar (mode: specific)\n\n" +
-    `3. ${m.prefix}setjadibot remove @user\n` +
-    "   Hapus user dari daftar\n\n" +
-    `4. ${m.prefix}setjadibot list\n` +
-    "   Lihat daftar user yang diizinkan\n\n" +
-    `5. ${m.prefix}setjadibot status\n` +
-    "   Lihat setting aktif");
+  return m.reply(claraWrap("setjadibot", [
+    "Pengaturan akses jadibot:",
+    "",
+    "1. " + m.prefix + "setjadibot mode <all/premium/specific>",
+    "   Atur siapa yang bisa pakai jadibot",
+    "",
+    "2. " + m.prefix + "setjadibot add @user",
+    "   Tambah user ke daftar (mode: specific)",
+    "",
+    "3. " + m.prefix + "setjadibot remove @user",
+    "   Hapus user dari daftar",
+    "",
+    "4. " + m.prefix + "setjadibot list",
+    "   Lihat daftar user yang diizinkan",
+    "",
+    "5. " + m.prefix + "setjadibot status",
+    "   Lihat setting aktif",
+  ]));
 }
 
 export { pluginConfig as config, handler, getJadibotAccess };

@@ -266,7 +266,7 @@ async function handler(m, { sock, args }) {
     try {
       buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     } catch (e) {
-      return m.reply("Gagal download sticker: " + e.message);
+      return m.reply(claraWrap("autoreactsticker", "Gagal download sticker. Coba lagi.", "error"));
     }
 
     if (!buffer || buffer.length === 0) {
@@ -372,7 +372,7 @@ async function handler(m, { sock, args }) {
     try {
       buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     } catch (e) {
-      return m.reply("Gagal download sticker: " + e.message);
+      return m.reply(claraWrap("autoreactsticker", "Gagal download sticker. Coba lagi.", "error"));
     }
 
     if (!buffer || buffer.length === 0) {

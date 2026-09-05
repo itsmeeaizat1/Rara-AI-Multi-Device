@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       "Atau: .menunav group on/off/reset (untuk grup ini saja)"
     );
   } catch (error) {
-    return await m.reply("Error: " + error.message);
+    return await m.reply(claraWrap("tombol", "Gagal proses. Coba lagi.", "error"));
   }
 }
 

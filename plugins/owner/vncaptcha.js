@@ -142,7 +142,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "vncaptcha");
     }
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("vncaptcha", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

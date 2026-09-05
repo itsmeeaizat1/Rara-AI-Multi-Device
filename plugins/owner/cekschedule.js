@@ -88,8 +88,7 @@ async function handler(m, { sock }) {
             }
         }
 
-        text += `\n`;
-        text += `━━━━━━━━━━━━━━━━━━━\n`;
+        text += `---\n`;
         text += `✅ Aktif: ${status.summary.totalActive + (sholatEnabled ? 1 : 0)}\n`;
         text += `❌ Nonaktif: ${status.summary.totalInactive + (!sholatEnabled ? 1 : 0)}\n\n`;
 

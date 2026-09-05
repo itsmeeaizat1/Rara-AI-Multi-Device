@@ -201,7 +201,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "aiautointeractionvn");
     }
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("aiautointeractionvn", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }
