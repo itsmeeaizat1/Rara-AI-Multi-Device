@@ -620,6 +620,20 @@ try {
     }
   }
 
+  // ScanVirus: auto-scan file member di grup via VirusTotal (skip in self mode)
+  // Fire-and-forget + queue internal di lib — scan bisa lama (upload ±3 menit),
+  // jangan pernah ngeblok pipeline pesan yang lain.
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
+    try {
+      const { isScanVirusEnabled, handleScanVirus } = await import("./lib/nova-scanvirus.js");
+      if (typeof isScanVirusEnabled === "function" && (await isScanVirusEnabled(m))) {
+        handleScanVirus(m, sock); // tanpa await — biar handler gak nunggu
+      }
+    } catch (e) {
+      console.error("[ScanVirus] Hook error:", e.message);
+    }
+  }
+
   // AI Auto VN Interaction: real-time VN detection (skip in self mode)
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
