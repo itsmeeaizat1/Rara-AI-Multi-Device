@@ -60,14 +60,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("YesNo", [
       `Decision maker dramatis`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  ${prefix}yesno <pertanyaan>`,
       `  ${prefix}yesno harus aku terima tawaran kerja ini?`,
       ``,
       `Hasil: YES / NO / MAYBE + alasan random`,
       `20+ jawaban variatif, dramatis, kadang absurd`,
     ].join("\n"));
-    return m.reply(help, "yesno");
+    return m.reply(help);
   }
   await new Promise(r => setTimeout(r, 1200));
 

@@ -75,6 +75,7 @@ const TIPS = [
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text.trim()
     if (!input || !input.includes("&")) {
       return m.reply(claraWrap("Love Calculator", [
@@ -118,8 +119,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("Tips:")
     lines.push(TIPS[tIdx])
 
+    await m.react("🐣");
     return m.reply(claraWrap("Love Calculator", lines.join("\n")))
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Love Calculator", "Error: " + e.message))
   }
 }

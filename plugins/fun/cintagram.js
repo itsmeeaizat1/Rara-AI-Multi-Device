@@ -35,6 +35,7 @@ function hashCode(str) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text.trim()
     if (!input || !input.includes("|")) {
       return m.reply(claraWrap("Cinta Gram", [
@@ -72,8 +73,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("")
     lines.push("~ Seseorang yang menyayangimu ~")
 
+    await m.react("🐣");
     return m.reply(claraWrap("Cinta Gram untuk " + nama, lines.join("\n")))
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Cinta Gram", "Error: " + e.message))
   }
 }

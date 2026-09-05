@@ -64,6 +64,7 @@ const KATEGORI = Object.keys(SINDIRAN_DB);
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     let category = null;
     const mentioned = m.mentionedJid?.[0] || m.quoted?.sender;
     const arg = args[0]?.toLowerCase();
@@ -93,8 +94,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("");
     lines.push(usedPrefix + "nyindir <kategori> untuk lagi");
 
+    await m.react("🐣");
     return m.reply(claraWrap("Nyindir", lines, "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Nyindir", "Error: " + e.message, "error"));
   }
 }

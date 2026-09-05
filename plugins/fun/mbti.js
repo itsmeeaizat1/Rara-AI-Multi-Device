@@ -130,6 +130,7 @@ async function handler(m, { sock, args }) {
   // Check if test complete
   if (session.current >= session.questions.length) {
     try {
+    await m.react("🕒");
       const res = await apiPost("/calculate", {
         answers: session.answers,
         locale: "en",
@@ -180,6 +181,7 @@ async function handler(m, { sock, args }) {
 
       await m.reply(claraWrap("MBTI", txt.split("\n")));
     } catch (e) {
+    await m.react("❌");
       console.error("[MBTI] Calculate error:", e.message);
       await m.reply(novaError("MBTI", `Gagal hitung hasil nih: ${e.message}`));
     }
@@ -196,6 +198,7 @@ async function handler(m, { sock, args }) {
   txt += `Balas dengan *A* atau *B*\n`;
   txt += `Ketik *ᴄᴀɴᴄᴇʟ* untuk batal`;
 
+  await m.react("🐣");
   await m.reply(claraWrap("MBTI", txt.split("\n")));
 }
 

@@ -43,6 +43,7 @@ const userState = new Map()
 
 async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
   try {
+    await m.react("🕒");
     const userId = sender || m.sender
     const input = text.trim()
 
@@ -119,8 +120,10 @@ async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
     lines.push("")
     lines.push("Ketik: " + usedPrefix + "cintaquiz <a/b/c/d>")
 
+    await m.react("🐣");
     return m.reply(claraWrap("Kuis Cinta #" + (state.qIndex + 1), lines.join("\n")))
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Kuis Cinta", "Error: " + e.message))
   }
 }

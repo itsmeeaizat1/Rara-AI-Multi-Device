@@ -405,7 +405,7 @@ async function handler(m, { sock }) {
 
     // ─── HELP ───
     let msg = buildHeader();
-    msg += `  *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n\n`;
+    msg += `  📌 Format:\n\n`;
     msg += `\`${m.prefix}confesswall post <teks>\`
 Post anonim ke wall (min 5, max 500 karakter)\n\n`;
     msg += `\`${m.prefix}confesswall list\`

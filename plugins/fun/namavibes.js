@@ -50,6 +50,7 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const nama = text || args.join(" ") || m.pushName || "Kamu";
 
     // Generate consistent-ish random based on name length
@@ -63,6 +64,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const message = pick(VIBES_MESSAGES);
     const matchScore = ((seed * 3) % 40) + 60;
 
+    await m.react("🐣");
     return m.reply(claraWrap("Nama Vibes", [
       "VIBES: " + nama,
       "",
@@ -80,6 +82,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       message,
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Nama Vibes", "Error: " + e.message, "error"));
   }
 }

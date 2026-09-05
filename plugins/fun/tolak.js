@@ -41,12 +41,12 @@ async function handler(m, { sock }) {
     }
 
     if (!shooterJid) {
-      return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `Reply pesan tembakan + \`${m.prefix}tolak\`\n` +
-        `Atau \`${m.prefix}tolak @tag\`\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("tolak", [
+        `Tolak tembakan seseorang dengan halus.`,
+        ``,
+        `📌 Format: reply pesan tembakan + ${m.prefix}tolak`,
+        `Atau ${m.prefix}tolak @tag`,
+      ]));
     }
 
     let shooterData = db.getUser(shooterJid) || {};

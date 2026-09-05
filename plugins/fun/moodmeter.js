@@ -48,6 +48,7 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const target = m.mentionedJid?.[0] || m.quoted?.sender;
     const nama = target ? "@" + target.split("@")[0] : (m.pushName || "Kamu");
 
@@ -56,6 +57,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const factor = pick(MOOD_FACTORS);
     const tip = pick(MOOD_TIPS);
 
+    await m.react("🐣");
     return m.reply(claraWrap("Mood Meter", [
       "MOOD HARI INI",
       "",
@@ -73,6 +75,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "moodmeter untuk cek lagi",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Mood Meter", "Error: " + e.message, "error"));
   }
 }

@@ -38,12 +38,12 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-      return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}nikah @tag\`\n` +
-        `Reply pesan pasangan + \`${m.prefix}nikah\`\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("nikah", [
+        `Nikah sama user lain di grup.`,
+        ``,
+        `📌 Format: ${m.prefix}nikah @tag`,
+        `Atau reply pesan pasangan + ${m.prefix}nikah`,
+      ]));
     }
 
     if (targetJid === m.sender) {

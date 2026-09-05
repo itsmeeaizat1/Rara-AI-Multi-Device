@@ -43,6 +43,7 @@ const TAWA_RESULT = [
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     if (command === "tawasantet") {
       // Check if user has santet
       const activeSantet = global.santetDB?.[m.sender];
@@ -129,6 +130,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     global.santetStats[m.sender].kirim++;
     global.santetStats[target].terima++;
 
+    await m.react("🐣");
     return m.reply(claraWrap("Santet", [
       "SANTEt TERKIRIM!",
       "",
@@ -142,6 +144,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "Lawan santet: " + usedPrefix + "tawasantet",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Santet", "Error: " + e.message, "error"));
   }
 }

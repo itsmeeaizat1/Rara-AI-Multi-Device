@@ -46,6 +46,7 @@ function buildMenu(prefix) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const raw = m.text?.trim() ?? "";
 
     if (!raw) {
@@ -82,8 +83,10 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
+    await m.react("🐣");
     await m.reply(claraWrap("timecapsule", text));
   } catch (error) {
+    await m.react("❌");
     const text =
       novaError("TimeCapsule", "Gagal nih, coba lagi ya");
 

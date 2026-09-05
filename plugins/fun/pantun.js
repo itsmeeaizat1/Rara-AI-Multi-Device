@@ -60,6 +60,7 @@ const THEMES = Object.keys(PANTUN_DB);
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const theme = args[0]?.toLowerCase();
 
     if (theme && !PANTUN_DB[theme]) {
@@ -70,6 +71,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const pool = PANTUN_DB[selectedTheme];
     const pantun = pool[Math.floor(Math.random() * pool.length)];
 
+    await m.react("🐣");
     return m.reply(claraWrap("Pantun", [
       "Tema: " + selectedTheme,
       "",
@@ -78,6 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "pantun <tema> untuk tema lain",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Pantun", "Error: " + e.message, "error"));
   }
 }

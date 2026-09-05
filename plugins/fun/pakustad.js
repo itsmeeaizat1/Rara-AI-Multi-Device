@@ -23,17 +23,22 @@ async function handler(m, { sock }) {
     const text = m.text || m.quoted?.text
     
     if (!text) {
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}pakustad <pertanyaan>\`\n\n` +
-            `Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
+        return m.reply(claraWrap("pakustad", [
+          `Tanya ustadz virtual, dijawab pakai logika lucu.`,
+          ``,
+          `📌 Format: ${m.prefix}pakustad <pertanyaan>`,
+          `💡 Contoh: ${m.prefix}pakustad kenapa aku ganteng`,
+        ]))
     }
     try {
+    await m.react("🕒");
         const apiUrl = `https://api.cuki.biz.id/api/canvas/ustadz?apikey=${config.APIkey.cuki}&text=${encodeURIComponent(text)}`
         const { results } = await f(apiUrl)
         await sock.sendMedia(m.chat, results.url, text, m, {
             type: 'image'
         })
     } catch (err) {
+    await m.react("❌");
         return m.reply(claraWrap("pakustad", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

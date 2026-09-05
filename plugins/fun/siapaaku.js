@@ -56,6 +56,7 @@ function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const nama = text || args.join(" ") || m.pushName || "Kamu";
 
     const analisis = {
@@ -69,6 +70,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       kecocokan: Math.floor(Math.random() * 100),
     };
 
+    await m.react("🐣");
     return m.reply(claraWrap("Siapa Aku", [
       "ANALISIS: " + nama,
       "",
@@ -89,6 +91,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       analisis.nasib,
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Siapa Aku", "Error: " + e.message, "error"));
   }
 }

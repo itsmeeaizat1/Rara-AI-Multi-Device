@@ -27,6 +27,7 @@ const SPIN_ANIMATIONS = [
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     if (args[0]?.toLowerCase() === "info") {
       return m.reply(claraWrap("Spin Wheel", [
         "RODA PUTAR ACAK",
@@ -61,6 +62,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const winner = choices[Math.floor(Math.random() * choices.length)];
     const winIndex = choices.indexOf(winner) + 1;
 
+    await m.react("🐣");
     return m.reply(claraWrap("Spin Wheel", [
       "RODA PUTAR ACAK",
       "",
@@ -75,6 +77,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "spinwheel <pilihan> untuk putar lagi",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Spin Wheel", "Error: " + e.message, "error"));
   }
 }

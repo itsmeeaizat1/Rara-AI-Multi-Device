@@ -65,12 +65,12 @@ async function handler(m, { sock }) {
     
     if (!text || !text.includes('|')) {
         return m.reply(
-            `💫 *ꜱᴏᴜʟ ᴍᴀᴛᴄʜ*\n\n` +
-            `Cek kecocokan jiwa 2 orang!\n\n` +
-            `*ꜰᴏʀᴍᴀᴛ:*\n` +
-            `\`.soulmatch nama1|nama2\`\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
-            `\`.soulmatch Raiden|Mei\``
+            claraWrap("soulmate", [
+              `Cek kecocokan jiwa 2 orang.`,
+              ``,
+              `📌 Format: ${m.prefix}soulmatch <nama1>|<nama2>`,
+              `💡 Contoh: ${m.prefix}soulmatch Raiden|Mei`,
+            ])
         )
     }
     

@@ -38,12 +38,12 @@ async function handler(m, { sock }) {
     }
 
     if (!proposerJid) {
-      return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `Reply pesan lamaran + \`${m.prefix}tolaknikah\`\n` +
-        `Atau \`${m.prefix}tolaknikah @tag\`\n\n` +
-        ""
-      );
+      return m.reply(claraWrap("tolaknikah", [
+        `Tolak lamaran seseorang dengan halus.`,
+        ``,
+        `📌 Format: reply pesan lamaran + ${m.prefix}tolaknikah`,
+        `Atau ${m.prefix}tolaknikah @tag`,
+      ]));
     }
 
     let propData = db.getUser(proposerJid) || {};

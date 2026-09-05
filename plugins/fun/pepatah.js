@@ -65,6 +65,7 @@ const PEPATAH_AKHIR = [
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     if (args[0]?.toLowerCase() === "info") {
       return m.reply(claraWrap("Pepatah", [
         "PEPATAH ABSURD",
@@ -78,6 +79,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const awal = PEPATAH_AWAL[Math.floor(Math.random() * PEPATAH_AWAL.length)];
     const akhir = PEPATAH_AKHIR[Math.floor(Math.random() * PEPATAH_AKHIR.length)];
 
+    await m.react("🐣");
     return m.reply(claraWrap("Pepatah", [
       "PEPATAH ABSURD",
       "",
@@ -86,6 +88,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "pepatah untuk lagi",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Pepatah", "Error: " + e.message, "error"));
   }
 }

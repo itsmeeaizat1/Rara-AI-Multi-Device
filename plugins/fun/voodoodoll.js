@@ -46,6 +46,7 @@ const AKSI_VOODOO = [
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const target = m.mentionedJid?.[0] || m.quoted?.sender;
 
     if (!target) {
@@ -79,6 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const hasil = aksi.hasil[Math.floor(Math.random() * aksi.hasil.length)];
 
+    await m.react("🐣");
     return m.reply(claraWrap("Voodoo Doll", [
       "VOODOO " + aksi.nama.toUpperCase() + "!",
       "",
@@ -91,6 +93,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       usedPrefix + "voodoodoll @" + target.split("@")[0] + " <aksi>",
     ], "info"));
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Voodoo Doll", "Error: " + e.message, "error"));
   }
 }

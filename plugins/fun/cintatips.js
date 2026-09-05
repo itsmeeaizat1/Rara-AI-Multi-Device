@@ -126,6 +126,7 @@ const KATEGORI = [
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = (args[0] || "").toLowerCase().trim()
 
     if (!input) {
@@ -156,8 +157,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push(t)
     })
 
+    await m.react("🐣");
     return m.reply(claraWrap("Tips Cinta - " + kat.nama, lines.join("\n")))
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Tips Cinta", "Error: " + e.message))
   }
 }

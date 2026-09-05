@@ -19,6 +19,7 @@ const pluginConfig = {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text || args.join(" ");
 
     if (!input || !input.includes("|")) {
@@ -68,8 +69,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "╰── 「 NOVA AI 」",
     ].join("\n");
 
+    await m.react("🐣");
     return m.reply("```" + chatText + "```");
   } catch (e) {
+    await m.react("❌");
     return m.reply(claraWrap("Fake Chat", "Error: " + e.message, "error"));
   }
 }
