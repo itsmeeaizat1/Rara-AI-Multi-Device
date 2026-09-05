@@ -29,6 +29,7 @@ import { generateWAMessageFromContent, proto } from "nova";
 import { getTimeGreeting } from "./nova-formatter.js";
 import { buildCategoryButton } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
+import { logger } from "./nova-logger.js";
 import config from "../../config.js";
 
 let _thumbnailBuffer = null;
@@ -199,6 +200,32 @@ function buildNativeButtons(buttons = []) {
  * @param {string} [opts.title] - Nama bot, dipakai di subjudul "Kode: <title>"
  * @param {string} [opts.adTitle] - Override judul banner (default: greeting waktu, mis. "Selamat Pagi 🌅")
  */
+// ── Auto-resolve ID newsletter dari link invite ──
+// config.saluran.id sering placeholder (@newsletter) — owner cukup kasih
+// LINK channel, ID numerik (120363xxx@newsletter) di-resolve sekali via
+// sock.newsletterMetadata("invite", kode) lalu di-cache.
+let _cachedNewsletterJid = null;
+async function resolveNewsletterJid(sock) {
+  const saluranId = config.saluran?.id || "";
+  if (/^\d+@newsletter$/.test(saluranId)) return saluranId;
+  if (_cachedNewsletterJid) return _cachedNewsletterJid;
+  try {
+    const link = config.saluran?.link || "";
+    const m = /^https:\/\/whatsapp\.com\/channel\/([A-Za-z0-9_-]+)/.exec(link);
+    if (m && sock?.newsletterMetadata) {
+      const meta = await sock.newsletterMetadata("invite", m[1]);
+      if (meta?.id && /^\d+@newsletter$/.test(meta.id)) {
+        _cachedNewsletterJid = meta.id;
+        logger.info?.("[nova-menu-card] Saluran auto-resolve:", meta.id);
+        return meta.id;
+      }
+    }
+  } catch (e) {
+    console.error("[nova-menu-card] Auto-resolve saluran gagal:", e.message);
+  }
+  return "120363404849776664@newsletter"; // fallback sama dengan .ptvch
+}
+
 async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "", adTitle = "" }) {
   try {
     // WhatsApp Channel (saluran/newsletter) TIDAK support interactiveMessage/
@@ -252,8 +279,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     //     forwardedNewsletterMessageInfo — pola yang sama kayak nova-level.js.
     //     Pakai config.saluran.id kalau sudah di-set; fallback id channel
     //     yang sama dengan .ptvch.
-    const saluranId = config.saluran?.id || "";
-    const newsletterJid = /^\d+@newsletter$/.test(saluranId) ? saluranId : "120363404849776664@newsletter";
+    const newsletterJid = await resolveNewsletterJid(sock);
     const newsletterName = config.saluran?.name || config.bot?.name || "Nova AI";
 
     const externalAdReply = {
@@ -319,4 +345,4 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
   }
 }
 
-export { sendMenuCard, buildNavButtons };
+export { sendMenuCard, buildNavButtons, resolveNewsletterJid };
