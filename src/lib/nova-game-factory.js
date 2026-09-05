@@ -11,6 +11,8 @@ import {
 } from './nova-game-engine.js';
 import { getDatabase } from './nova-database.js';
 import { gameCTA } from './nova-games.js';
+import { claraWrap } from './nova-menu-style.js';
+import { haidarGame } from './nova-haidar.js';
 import { addExpWithLevelCheck } from './nova-level.js';
 
 let fetchBuffer;
@@ -97,11 +99,31 @@ class GameFactory {
           }
         }
 
-        // Ambil soal random
-        const question = getRandomItem(cfg.dataFile);
-        if (!question) {
-          await m.reply('❌ *Data game tidak tersedia!*');
-          return;
+        // Ambil soal random (JSON lokal, atau live fetch utk game v2 Haidar)
+        let question;
+        if (typeof cfg.fetchQuestion === 'function') {
+          try {
+            question = await cfg.fetchQuestion();
+          } catch (fqErr) {
+            console.error(`[${gameType}] fetchQuestion error:`, fqErr.message);
+            question = null;
+          }
+          if (!question) {
+            await m.reply(claraWrap(cfg.gameType, [
+              'Sumber soal (HaidarApis) belum siap, coba lagi nanti.',
+              '',
+              '📌 Kemungkinan:',
+              '• API key Haidar belum diisi — daftar gratis di api.haidarxd.my.id lalu isi field haidar di src/lib/apikey/apikeys.json, restart bot',
+              '• Endpoint game sedang gangguan',
+            ], 'error'));
+            return;
+          }
+        } else {
+          question = getRandomItem(cfg.dataFile);
+          if (!question) {
+            await m.reply('❌ *Data game tidak tersedia!*');
+            return;
+          }
         }
 
         const answer = question[cfg.answerField];
@@ -427,6 +449,16 @@ games.register('caklontong2', { emoji: '😂', title: 'CAKLONTONG 2', descriptio
 games.register('tebakmusik', { emoji: '🎤', title: 'TEBAK MUSIK', description: 'Tebak penyanyi dan lagu Indonesia', timeout: 60000, alias: ['musik'] });
 games.register('tebaktebakan2', { emoji: '🤔', title: 'TEBAK TEBAKAN 2', description: 'Tebak tebakan seru tambahan', timeout: 60000, alias: ['tebakan2'] });
 games.register('tebakasmaulhusna', { emoji: '📿', title: 'TEBAK ASMAUL HUSNA', description: 'Tebak 99 nama Allah', questionField: 'translation_id', answerField: 'latin', dataFile: 'asmaulhusna.json', timeout: 60000, alias: ['tebakasma'] });
+
+// V2 GAMES — soal live dari HaidarApis (api.haidarxd.my.id, key: apikeys.json 'haidar')
+games.register('asahotakv2', { emoji: '🧠', title: 'ASAH OTAK V2', description: 'Asah otak — soal live HaidarApis', fetchQuestion: () => haidarGame('asahotak'), timeout: 60000, alias: [] });
+games.register('siapakahakuv2', { emoji: '🎭', title: 'SIAPAKAH AKU V2', description: 'Siapakah aku — soal live HaidarApis', fetchQuestion: () => haidarGame('siapakahaku'), timeout: 60000, alias: [] });
+games.register('susunkatav2', { emoji: '🧩', title: 'SUSUN KATA V2', description: 'Susun kata — soal live HaidarApis', fetchQuestion: () => haidarGame('susunkata'), timeout: 60000, alias: [] });
+games.register('tekatekiv2', { emoji: '🧩', title: 'TEKA TEKI V2', description: 'Teka teki — soal live HaidarApis', fetchQuestion: () => haidarGame('tekateki'), timeout: 60000, alias: [] });
+games.register('tebaktebakanv2', { emoji: '❓', title: 'TEBAK TEBAKAN V2', description: 'Tebak tebakan — soal live HaidarApis', fetchQuestion: () => haidarGame('tebaktebakan'), timeout: 60000, alias: [] });
+games.register('tebaklirikv2', { emoji: '🎶', title: 'TEBAK LIRIK V2', description: 'Tebak lirik — soal live HaidarApis', fetchQuestion: () => haidarGame('tebaklirik'), timeout: 60000, alias: [] });
+games.register('tebakkimiav2', { emoji: '⚗️', title: 'TEBAK KIMIA V2', description: 'Tebak kimia — soal live HaidarApis', fetchQuestion: () => haidarGame('tebakkimia'), timeout: 60000, alias: [] });
+games.register('islamicv2', { emoji: '🕌', title: 'TEBAK ISLAMIC V2', description: 'Pengetahuan islami — soal live HaidarApis', fetchQuestion: () => haidarGame('islamic'), timeout: 60000, alias: [] });
 
 // IMAGE GAMES
 games.register('tebakbendera', { emoji: '🚩', title: 'TEBAK BENDERA', description: 'Tebak negara dari bendera', hasImage: true, imageField: 'img', answerField: 'name', questionField: null, hintEnabled: false, timeout: 60000, alias: [] });
