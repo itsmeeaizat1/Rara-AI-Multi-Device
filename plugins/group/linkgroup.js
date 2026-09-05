@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("linkgroup", text));
+    await m.reply(text, "linkgroup");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

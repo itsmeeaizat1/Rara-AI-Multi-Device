@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.react("🐣");
-    await m.reply(claraWrap("kbbi", text));
+    await m.reply(text, "kbbi");
   } catch (error) {
     await m.react("❌");
     const text =

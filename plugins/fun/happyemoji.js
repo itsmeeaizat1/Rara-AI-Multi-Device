@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.react("🐣");
-    await m.reply(claraWrap("happyemoji", text));
+    await m.reply(text, "happyemoji");
   } catch (error) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";

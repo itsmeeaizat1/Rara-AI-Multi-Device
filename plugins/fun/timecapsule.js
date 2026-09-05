@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}timecapsule untuk melihat menu`);
 
-      await m.reply(claraWrap("timecapsule", text));
+      await m.reply(text, "timecapsule");
       return { handled: true };
     }
 
@@ -84,13 +84,13 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await m.react("🐣");
-    await m.reply(claraWrap("timecapsule", text));
+    await m.reply(text, "timecapsule");
   } catch (error) {
     await m.react("❌");
     const text =
       novaError("TimeCapsule", "Gagal nih, coba lagi ya");
 
-    await m.reply(claraWrap("timecapsule", text));
+    await m.reply(text, "timecapsule");
   }
 
   return { handled: true };

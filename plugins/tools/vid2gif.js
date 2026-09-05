@@ -220,7 +220,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");
 
-    await m.reply(claraWrap("vid2gif", text));
+    await m.reply(text, "vid2gif");
     return { handled: true };
   }
 }

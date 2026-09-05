@@ -114,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       novaError("Owner", "Gagal nih, coba lagi ya");
 
-    await m.reply(claraWrap("dashboardpremium", text));
+    await m.reply(text, "dashboardpremium");
   }
 
   return { handled: true };

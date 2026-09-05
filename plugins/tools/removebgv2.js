@@ -140,7 +140,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");
 
-    await m.reply(claraWrap("removebgv2", text));
+    await m.reply(text, "removebgv2");
     return { handled: true };
   }
 }

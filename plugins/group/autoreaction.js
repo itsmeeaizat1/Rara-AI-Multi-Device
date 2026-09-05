@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("autoreaction", text));
+    await m.reply(text, "autoreaction");
   } catch (error) {
     await m.reply(novaError("Auto Reaction", `Terjadi kesalahan: ${error.message || "coba lagi nanti ya"}`));
   }
