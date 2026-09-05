@@ -576,6 +576,7 @@ async function handler(m, { sock }) {
     const service = (arg1 || "wa").toLowerCase();
     const country = arg2 || "6";
     try {
+    await m.react("🕒");
       if (data.provider === "wn1") {
         const sCode = WN_SERVICES_S1[service];
         if (!sCode) return m.reply( claraWrap("Nokos Beli", "Layanan tidak ada di WN Server 1"), "nokosbeli");
@@ -625,6 +626,7 @@ async function handler(m, { sock }) {
         return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
       }
     } catch (err) {
+    await m.react("❌");
       return m.reply( claraWrap("Nokos Beli", "Error: " + err.message + "\n\nCek API key atau coba lagi."), "nokosbeli");
     }
   }
@@ -860,6 +862,7 @@ async function handler(m, { sock }) {
   const t = TIERS[tier];
   const indoBudget = calcPrice(COUNTRIES[6] ? COUNTRIES[6].wa : 5000, "budget");
   body += "Tier " + t.name + ": " + t.note + "\nWA Indo budget: " + formatRupiah(indoBudget) + "\n\nProviders: 5SIM, SMS-Activate, SMS-Hub, WarungNokos (WN1 & WN2), NexusSMM";
+  await m.react("🐣");
   return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
 }
 

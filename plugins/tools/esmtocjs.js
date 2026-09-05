@@ -127,18 +127,23 @@ async function handler(m, { sock }) {
     let code = m.quotedBody || m.text?.trim()
 
     if (!code) {
-        return m.reply( `🔄 *ᴇꜱᴍ ᴛᴏ ᴄᴊꜱ ᴄᴏɴᴠᴇʀᴛᴇʀ*\n\n` +
-            `Convert ES Modules ke CommonJS\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-            `Reply kode ESM dengan ${m.prefix}esmtocjs\n\n` +
-            `*ᴄᴏɴᴛᴏʜ ᴇꜱᴍ:*\n` +
-            `\`import axios from 'axios'\`\n` +
-            `\`export default function() {}\``, "esmtocjs")
+        return m.reply(claraWrap("esmtocjs", [
+      `🔄 *ᴇꜱᴍ ᴛᴏ ᴄᴊꜱ ᴄᴏɴᴠᴇʀᴛᴇʀ*`,
+      `Convert ES Modules ke CommonJS`,
+      ``,
+      `📌 Format:`,
+      `Reply kode ESM dengan ${m.prefix}esmtocjs`,
+      `💡 Contoh kode ESM:`,
+      `import axios from 'axios'`,
+      `export default function() {}`
+    ]))
     }
 
     try {
+    await m.react("🕒");
         await sock.sendCodeBlock(m.chat, convertEsmToCjs(code), m)
     } catch (error) {
+    await m.react("❌");
         m.reply(claraWrap("esmtocjs", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

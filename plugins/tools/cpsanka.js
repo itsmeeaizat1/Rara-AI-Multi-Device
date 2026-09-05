@@ -25,6 +25,7 @@ const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
     const url = `${API_BASE}/anime/cp?apikey=${API_KEY}`;
 
     const res = await axios.get(url, {
@@ -59,11 +60,13 @@ async function handler(m, { sock }) {
     }, { quoted: m });
 
     // Send cwe image
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: cweBuf,
       caption: "Anime Couple (Cewe)",
     });
   } catch (e) {
+    await m.react("❌");
     console.error("[CPSANKA] Error:", e.message);
     let txt = `Gagal mengambil couple image!\n\n`;
     txt += `Error: ${e.message}`;

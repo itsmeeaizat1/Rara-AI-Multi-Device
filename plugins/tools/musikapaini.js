@@ -71,13 +71,17 @@ async function handler(m, { sock }) {
   }
 
   if (!audioBuffer) {
-    return m.reply( `🎵 *MUsIK APA INI?*\n\n` +
-        `Identifikasi lagu dari audio\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `Reply audio dengan \`${m.prefix}musikapaini\`\n` +
-        `Atau kirim audio + caption command`, "musikapaini");
+    return m.reply(claraWrap("musikapaini", [
+      `🎵 *MUsIK APA INI?*`,
+      `Identifikasi lagu dari audio`,
+      ``,
+      `📌 Format:`,
+      `Reply audio dengan \`${m.prefix}musikapaini`,
+      `Atau kirim audio + caption command`
+    ]));
   }
   try {
+    await m.react("🕒");
     const audioUrl = await uploadTo0x0(audioBuffer, filename);
 
     await m.reply(claraWrap("Musikapaini", "🔍 *ᴍᴇɴɢɪᴅᴇɴᴛɪꜰɪᴋᴀꜱɪ...*\n\nMencari info lagu..."));
@@ -148,8 +152,10 @@ async function handler(m, { sock }) {
       msgContent.interactiveButtons = buttons;
     }
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, msgContent, { quoted: m });
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("musikapaini", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

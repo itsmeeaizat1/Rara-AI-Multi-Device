@@ -222,6 +222,7 @@ function buildCron(input) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -276,8 +277,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (result.error) {
       return m.reply(claraWrap("Cron", result.error));
     }
+    await m.react("🐣");
     return m.reply(claraWrap("Cron Explain: " + text, result.lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("cron error:", e);
     return m.reply(claraWrap("Cron", "Error: " + e.message));
   }

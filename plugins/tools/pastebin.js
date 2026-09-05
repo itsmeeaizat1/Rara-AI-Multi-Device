@@ -27,12 +27,15 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return m.reply( `📋 *ᴘᴀꜱᴛᴇʙɪɴ ᴜᴘʟᴏᴀᴅ*\n\n` +
-        `Kirim teks untuk di-upload ke Pastebin.\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `\`${m.prefix}pastebin <text>\`\n` +
-        `Reply teks dengan \`${m.prefix}pastebin\`\n\n` +
-        `Contoh: \`${m.prefix}pastebin console.log("Hello")\``, "pastebin");
+    return m.reply(claraWrap("pastebin", [
+      `📋 *ᴘᴀꜱᴛᴇʙɪɴ ᴜᴘʟᴏᴀᴅ*`,
+      `Kirim teks untuk di-upload ke Pastebin.`,
+      ``,
+      `📌 Format:`,
+      `${m.prefix}pastebin <text>`,
+      `Reply teks dengan \`${m.prefix}pastebin`,
+      `Contoh: \`${m.prefix}pastebin console.log("Hello")`
+    ]));
   }
 
   const api_dev_key = "h9WMT2Mn9QW-qDhvUSc-KObqAYcjI0he";
@@ -48,6 +51,7 @@ async function handler(m, { sock }) {
   });
 
   try {
+    await m.react("🕒");
     const res = await axios.post(
       "https://pastebin.com/api/api_post.php",
       data.toString(),
@@ -60,7 +64,8 @@ async function handler(m, { sock }) {
     const url = res.data;
 
     if (url.startsWith("Bad API request")) {
-      { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n${url}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n${url}`;       await m.react("🐣");
+return await m.reply(__navText); };
     }
 
     const responseText =
@@ -79,6 +84,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("pastebin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

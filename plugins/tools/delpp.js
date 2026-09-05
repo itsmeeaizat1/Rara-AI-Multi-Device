@@ -18,6 +18,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     try {
+    await m.react("🕒");
         const botJid = sock.user?.id
         if (!botJid) {
             { const __navText = claraWrap("delpp", `❌ Bot JID tidak ditemukan.`); await m.reply(__navText); }
@@ -26,11 +27,13 @@ async function handler(m, { sock }) {
         
         await sock.removeProfilePicture(botJid)
         
+        await m.react("🐣");
         await m.reply(
             `✅ *ᴘᴘ ʙᴏᴛ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
             `Foto profil bot berhasil dihapus!`
         )
     } catch (error) {
+    await m.react("❌");
         await m.reply(
             `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat menghapus foto bot.\n` +

@@ -144,6 +144,7 @@ async function applyFilter(buffer, filterKey) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = (args[0] || "").toLowerCase().trim();
 
     if (input === "list" || !input || input === "help") {
@@ -203,6 +204,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const result = await applyFilter(imgBuffer, input);
 
     if (!result || result.length === 0) {
+      await m.react("🐣");
       return m.reply(claraWrap("Photo Filter", "Gagal processing filter. Format gambar tidak didukung.", "warn"));
     }
 
@@ -220,6 +222,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       { quoted: m }
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[PhotoFilter]", e);
     m.reply(claraWrap("Photo Filter", [
       "Error: " + e.message,

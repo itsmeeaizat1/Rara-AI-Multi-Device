@@ -60,6 +60,7 @@ async function checkSSL(hostname) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -145,8 +146,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (!sameKeySize) diffs.push("key size");
     if (!sameSelfSigned) diffs.push("self-signed");
     lines.push(diffs.length === 0 ? "Summary: Identical certificate properties" : "Differences: " + diffs.join(", "));
+    await m.react("🐣");
     return m.reply(claraWrap("CertCompare: " + domain1 + " vs " + domain2, lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("certcompare error:", e);
     return m.reply(claraWrap("CertCompare", "Error: " + e.message));
   }

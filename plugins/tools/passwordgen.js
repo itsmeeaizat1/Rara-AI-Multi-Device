@@ -110,6 +110,7 @@ async function handler(m, { sock }) {
   }
 
   try {
+    await m.react("🕒");
     const result = generatePassword(length, options);
     const strengthBar = "█".repeat(Math.floor(result.strength / 10)) + "░".repeat(10 - Math.floor(result.strength / 10));
 
@@ -127,8 +128,10 @@ async function handler(m, { sock }) {
         : "Password aman! Jangan share ke siapapun.",
     ];
 
+    await m.react("🐣");
     return m.reply(claraWrap("Password Generator", lines, "success"));
   } catch (e) {
+    await m.react("❌");
     console.error("[Password Gen]", e);
     return m.reply(claraWrap("Password Generator", "Error: " + e.message));
   }

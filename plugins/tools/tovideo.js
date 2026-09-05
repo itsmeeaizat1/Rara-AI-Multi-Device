@@ -121,6 +121,7 @@ async function handler(m, { sock }) {
             `2. Reply sticker dengan \`${m.prefix}tovideo\``, "tovideo")
     }
     try {
+    await m.react("🕒");
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
@@ -146,6 +147,7 @@ async function handler(m, { sock }) {
         const mp4Buffer = await gifToMp4(gifBuffer)
 
         if (!mp4Buffer || mp4Buffer.length < 100) {
+            await m.react("🐣");
             return m.reply(claraWrap("Tovideo", `❌ *ɢᴀɢᴀʟ*\n\nVideo output kosong`))
         }
 
@@ -153,6 +155,7 @@ async function handler(m, { sock }) {
             type: 'video'
         })
     } catch (error) {
+    await m.react("❌");
         console.error('[ToVideo] Error:', error.message)
         m.reply(claraWrap("tovideo", te(m.prefix, m.command, m.pushName), "error"))
     }

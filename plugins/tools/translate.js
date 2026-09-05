@@ -21,6 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const args = m.text?.trim().split(/\s+/);
     const lang = args?.[0];
     const text = args?.slice(1).join(" ");
@@ -59,8 +60,10 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
+    await m.react("🐣");
     await m.reply(replyText);
   } catch (error) {
+    await m.react("❌");
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");
 

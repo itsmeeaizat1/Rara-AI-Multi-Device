@@ -269,6 +269,7 @@ async function handler(m, { sock }) {
             "`" + m.prefix + "uploadgdrive delete <id>` - Hapus file", "uploadgdrive")
     }
     try {
+    await m.react("🕒");
         const downloadFn = m.quoted ? m.quoted.download : m.download
         const buffer = await downloadFn()
 
@@ -292,9 +293,11 @@ async function handler(m, { sock }) {
         body += "File ID: `" + result.id + "`\n\n"
         body += "*ʟɪɴᴋ:*\n" + (result.webViewLink || 'N/A')
 
+        await m.react("🐣");
         return m.reply(claraWrap("Upload GDrive", body))
 
     } catch (error) {
+    await m.react("❌");
         console.error('[UploadGDrive] Error:', error.message)
 
         if (error.message === 'NO_CREDENTIALS') {

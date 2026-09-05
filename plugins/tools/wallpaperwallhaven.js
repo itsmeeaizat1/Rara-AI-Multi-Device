@@ -91,6 +91,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Wallhaven", help));
   }
   try {
+    await m.react("🕒");
     let query = text;
     let category = "111"; // Default: semua kategori
     let minRes = "";
@@ -137,11 +138,13 @@ async function handler(m, { sock, config: botConfig }) {
     const catLabel = category === "010" ? "Anime" : category === "100" ? "General" : "Mixed";
     const caption = `Wallhaven: ${query || "Random"}\nKategori: ${catLabel}\nResolusi: ${wp.resolution}\nUkuran: ${(wp.file_size / 1024).toFixed(0)} KB\nTotal hasil: ${total.toLocaleString()}`;
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
       caption: claraWrap("Wallhaven Wallpaper", caption),
     }, { quoted: m });
   } catch (error) {
+    await m.react("❌");
     return m.reply(claraWrap("Wallhaven Error", error.message || "Gagal mencari wallpaper."));
   }
 }

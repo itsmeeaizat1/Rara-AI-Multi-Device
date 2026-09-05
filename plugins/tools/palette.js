@@ -42,6 +42,7 @@ function hslToHex(h,s,l) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     let hex = m.text?.trim() || `#${Math.random().toString(16).slice(2,8)}`;
     if (!hex.startsWith("#")) hex = "#" + hex;
     if (!/^#[0-9a-fA-F]{6}$/.test(hex)) throw new Error("Format: #RRGGBB");
@@ -55,8 +56,10 @@ async function handler(m, { sock, config: botConfig }) {
     ];
     let text = claraWrap("Color Palette", [`Base: *${hex}*`,
       ...shades.map((c,i) => `${i===0?"Dark":i===4?"Light":"Shade"}: ${c}`)].join("\n")) + "\n" + tipText(`Ketik ${prefix}palette #ff6600 untuk warna lain`);
+    await m.react("🐣");
     await m.reply(claraWrap("palette", text));
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };

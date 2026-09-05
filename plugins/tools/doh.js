@@ -61,6 +61,7 @@ function formatAnswer(record) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -136,8 +137,10 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push("Note: " + data.Comment);
     }
+    await m.react("🐣");
     return m.reply(claraWrap("DoH Query: " + domain, lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("doh error:", e);
     return m.reply(claraWrap("DoH", "Error: " + e.message));
   }

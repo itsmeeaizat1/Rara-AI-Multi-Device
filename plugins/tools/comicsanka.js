@@ -79,6 +79,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "comicsanka" });
   }
   try {
+    await m.react("🕒");
     // === SEARCH ===
     if (cmd === "search" || cmd === "cari" || cmd === "s") {
       const query = cmdArgs.join(" ").trim();
@@ -434,9 +435,11 @@ async function handler(m, { sock, args }) {
     }
 
     else {
+      await m.react("🐣");
       await m.reply(`Perintah tidak ditemukan!\n\nKetik \`${m.prefix}comicsanka help\` untuk melihat semua perintah.`);
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[COMICSANKA] Error:", e.message);
     let txt = `Gagal memproses!\n\n`;
     txt += `Error: ${e.message}`;

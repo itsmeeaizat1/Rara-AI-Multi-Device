@@ -21,6 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const args = m.text?.trim().split(/\s+/);
     const count = Math.min(parseInt(args?.[0] || "0", 10) || 0, 5);
     const target = args?.[1] || m.mentionedJid?.[0];
@@ -62,8 +63,10 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
+    await m.react("🐣");
     await m.reply(claraWrap("spamcall", text));
   } catch (error) {
+    await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");

@@ -121,6 +121,7 @@ async function handler(m, { sock }) {
   }
 
   try {
+    await m.react("🕒");
     const meta = await sharp(media.buffer).metadata();
     const originalSize = media.buffer.length;
 
@@ -149,6 +150,7 @@ async function handler(m, { sock }) {
       caption += "Resize: " + meta.width + "x" + meta.height + " -> max 1920px\n";
     }
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: { url: outPath },
       caption: caption,
@@ -156,6 +158,7 @@ async function handler(m, { sock }) {
 
     cleanup(outPath);
   } catch (e) {
+    await m.react("❌");
     return m.reply("Gagal kompres gambar: " + e.message);
   }
 }

@@ -30,6 +30,7 @@ function extractImage(m) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
 
     const media = extractImage(m);
     if (!media) {
@@ -59,11 +60,13 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: fs.readFileSync(filePath),
       caption: text,
     });
   } catch (error) {
+    await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");

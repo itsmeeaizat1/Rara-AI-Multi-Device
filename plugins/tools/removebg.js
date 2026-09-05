@@ -22,6 +22,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     try {
+    await m.react("🕒");
         const isImage = m.isImage || (m.quoted && m.quoted.isImage);
         if (!isImage) {
             return m.reply(claraWrap("Removebg", '❌ *ɢᴀᴍʙᴀʀ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\nReply atau kirim gambar dengan caption .removebg'));
@@ -42,6 +43,7 @@ async function handler(m, { sock }) {
         fs.writeFileSync(pathnya, mediaBuffer);
         const result = await pixa(pathnya);
         
+        await m.react("🐣");
         await sock.sendMessage(m.chat, {
             image: result,
             caption: `✅ *ʙᴀᴄᴋɢʀᴏᴜɴᴅ ᴅɪʜᴀᴘᴜꜱ*\n\nBackground gambar berhasil dihapus`
@@ -50,6 +52,7 @@ async function handler(m, { sock }) {
             fs.unlinkSync(pathnya);
         } catch (e) { console.error('[removebg.js]:', e.message); }
     } catch (error) {
+    await m.react("❌");
         console.error('[RemoveBG Error]', error);
         m.reply(claraWrap("removebg", te(m.prefix, m.command, m.pushName), "error"));
     }

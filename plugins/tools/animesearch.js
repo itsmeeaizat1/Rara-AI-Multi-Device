@@ -213,6 +213,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "animesearch" });
   }
   try {
+    await m.react("🕒");
     if (type === "anime" || type === "a") {
       await searchAnime(m, sock, query);
     } else if (type === "manga" || type === "m") {
@@ -224,6 +225,7 @@ async function handler(m, { sock, args }) {
       await searchAnime(m, sock, [type, query].join(" ").trim());
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[ANIMESEARCH] Error:", e.message);
     let txt = `Gagal mencari!\n\n`;
     txt += `Error: ${e.message}\n\n`;

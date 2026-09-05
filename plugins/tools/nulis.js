@@ -46,10 +46,10 @@ function wrapText(ctx, text, maxWidth) {
 async function handler(m, { sock }) {
   const text = m.args?.join(" ");
   if (!text) {
-    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}nulis <teks>\`\n\n` +
-        `Contoh:\n` +
-        `\`${m.prefix}nulis Aku cinta kamu selamanya\``, "nulis");
+    return m.reply(claraWrap("nulis", [
+      `📌 Format: ${m.prefix}nulis <teks>`,
+      `💡 Contoh: ${m.prefix}nulis Aku cinta kamu selamanya`
+    ]));
   }
   if (text.length > 500) {
     { const __navText = `❌ *ᴛᴇᴋꜱ ᴛᴇʀʟᴀʟᴜ ᴘᴀɴᴊᴀɴɢ*\n\nMaksimal 500 karakter`; return await m.reply(__navText); };

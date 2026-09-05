@@ -34,15 +34,16 @@ async function handler(m, { sock }) {
         }
     }
     if (!buffer) {
-        await m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `Reply gambar + \`${m.prefix}setpp\`\n` +
-            `Kirim gambar + caption \`${m.prefix}setpp\``
-        )
+        await m.reply(claraWrap("setpp", [
+            `Ubah foto profil bot.`,
+            ``,
+            `📌 Format: ${m.prefix}setpp (reply gambar) atau kirim gambar + caption ${m.prefix}setpp`,
+        ]))
         return
     }
     
     try {
+    await m.react("🕒");
         const botJid = sock.user?.id
         if (!botJid) {
             { const __navText = claraWrap("setpp", `❌ Bot JID tidak ditemukan.`); await m.reply(__navText); }
@@ -51,11 +52,13 @@ async function handler(m, { sock }) {
         
         await sock.updateProfilePicture(botJid, buffer)
         
+        await m.react("🐣");
         await m.reply(
             `✅ *ᴘᴘ ʙᴏᴛ ᴅɪᴜʙᴀʜ*\n\n` +
             `Foto profil bot berhasil diperbarui!`
         )
     } catch (error) {
+    await m.react("❌");
         await m.reply(
             `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat mengubah foto bot.\n` +

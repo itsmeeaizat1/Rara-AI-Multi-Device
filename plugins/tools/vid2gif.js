@@ -59,6 +59,7 @@ async function getVideoDuration(filePath) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
 
     const isVideo =
       m.isVideo || m.quoted?.isVideo ||
@@ -199,6 +200,7 @@ async function handler(m, { sock, config: botConfig }) {
       }, { quoted: m });
     } else {
       // Kirim sebagai video/GIF (WhatsApp render sebagai animated)
+      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         video: gifBuffer,
         caption:
@@ -213,6 +215,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return { handled: true };
   } catch (error) {
+    await m.react("❌");
     console.error("[Vid2GIF Error]", error);
     const text =
       novaError("Tools", "Gagal nih, coba lagi ya");

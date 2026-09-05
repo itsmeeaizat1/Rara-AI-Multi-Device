@@ -55,6 +55,7 @@ async function handler(m, { sock, args }) {
     return m.reply(claraWrap("animeimg", txt));
   }
   try {
+    await m.react("🕒");
     const res = await axios.get(`${API_URL}/${category.tag}`, {
       timeout: 15000,
       headers: { "User-Agent": "Mozilla/5.0" },
@@ -95,6 +96,7 @@ async function handler(m, { sock, args }) {
         { quoted: m },
       );
     } else {
+      await m.react("🐣");
       await sock.sendMessage(
         m.chat,
         { image: buffer, caption },
@@ -102,6 +104,7 @@ async function handler(m, { sock, args }) {
       );
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[ANIMEIMG] Error:", e.message);
     let txt = `Gagal mengambil gambar!\n\n`;
     txt += `Error: ${e.message}`;

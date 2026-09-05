@@ -160,6 +160,7 @@ async function upscaleImage(imageBuffer, scale, mime, fileName) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     // Parse scale from args (default 2)
     let scale = "2";
     for (const arg of args) {
@@ -230,6 +231,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }, { quoted: m });
     } catch (sendErr) {
       // Fallback: send URL
+      await m.react("🐣");
       return m.reply(claraWrap("ImgUpscaler", [
         "UPSCALE BERHASIL",
         "",
@@ -240,6 +242,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "success"));
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[ImgUpscaler]", e);
     m.reply(claraWrap("ImgUpscaler", [
       "Error: " + e.message,

@@ -20,9 +20,11 @@ async function handler(m, { sock }) {
     const newBio = m.text?.trim()
     
     if (!newBio && m.args?.length === 0) {
-        await m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}setbio Bio bot baru\`\n` +
-            `\`${m.prefix}setbio clear\` - Hapus bio`, "setbio")
+        await m.reply(claraWrap("setbio", [
+      `📌 Format: ${m.prefix}setbio <bio bot baru>`,
+      `💡 Contoh: ${m.prefix}setbio Nova AI siap membantu`,
+      `Hapus bio: ${m.prefix}setbio clear`
+    ]))
         return
     }
     
@@ -35,6 +37,7 @@ async function handler(m, { sock }) {
     }
     
     try {
+    await m.react("🕒");
         await sock.updateProfileStatus(bioToSet)
         
         if (bioToSet) {
@@ -42,10 +45,12 @@ async function handler(m, { sock }) {
                 `Bio bot sekarang:\n` +
                 `_${bioToSet}_`))
         } else {
+            await m.react("🐣");
             await m.reply(claraWrap("setbio", `✅ *ʙɪᴏ ʙᴏᴛ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
                 `Bio bot berhasil dihapus!`))
         }
     } catch (error) {
+    await m.react("❌");
         await m.reply(
             `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat mengubah bio bot.\n` +

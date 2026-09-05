@@ -219,6 +219,7 @@ async function handler(m, { sock }) {
   // --- SAVE ---
   if (sub === "save") {
     try {
+    await m.react("🕒");
       const count = parseInt(arg1) || 10;
       const prov = arg2?.toLowerCase() || "all";
       const prefixes = PROVIDERS[prov] || PROVIDERS.all || Object.values(PROVIDERS).flat();
@@ -238,6 +239,7 @@ async function handler(m, { sock }) {
         `Hasil Save Nomor Kosong\n\nDicek: ${count} nomor\nDitemukan kosong: ${kosong.length}\nBaru disimpan: ${newNums.length}\nTotal tersimpan: ${data.numbers.length}\n\nGunakan .nokos list untuk melihat semua nomor tersimpan.`
       ), "nokos");
     } catch {
+    await m.react("❌");
       return m.reply(claraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
@@ -343,6 +345,7 @@ async function handler(m, { sock }) {
     }
     return m.reply( claraWrap("Nomor Kosong", body), "nokos");
   } catch {
+    await m.react("🐣");
     return m.reply(claraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

@@ -52,9 +52,12 @@ async function handler(m, { sock }) {
       `Contoh: \`${m.prefix}getpaste https://pastebin.com/Gu8RZaqv\``, "getpaste");
   }
   try {
+    await m.react("🕒");
     const data = await new GetPastebin().fetch(text);
+    await m.react("🐣");
     await m.reply(claraWrap("Get Paste", data.split("\n")));
   } catch (err) {
+    await m.react("❌");
     m.reply(claraWrap("getpaste", te(m.prefix, m.command, m.pushName), "error"))
   }
 }

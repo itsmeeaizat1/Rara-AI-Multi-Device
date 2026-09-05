@@ -34,6 +34,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "reminiv3" });
   }
   try {
+    await m.react("🕒");
     const buffer = m.quoted?.isMedia
       ? await m.quoted.download()
       : await m.download();
@@ -82,12 +83,14 @@ async function handler(m, { sock, args }) {
     caption += `Source: image.pollinations.ai\n`;
     if (enhance) caption += `Mode: enhance + upscale`;
 
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       { image: resultBuffer, caption },
       { quoted: m },
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[HD3] Error:", e.message);
     let txt = `Gagal enhance gambar!\n\n`;
     txt += `Error: ${e.message}\n\n`;

@@ -12,6 +12,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const args = (m.text || "").trim().split(/\s+/);
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
@@ -26,9 +27,11 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (action === "dec" || action === "decode") {
       result = Buffer.from(text, "base64").toString("utf-8");
     } else { throw new Error("Pilih enc atau dec"); }
+    await m.react("🐣");
     await m.reply(claraWrap("Base64", [`Input: *${text.substring(0,50)}*`,
       `Output: \`${result}\``].join("\n")));
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };

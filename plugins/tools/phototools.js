@@ -50,6 +50,7 @@ function resolveColor(input) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const cmd = (args[0] || "").toLowerCase().trim();
 
     if (!cmd || cmd === "list" || cmd === "help") {
@@ -298,6 +299,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!result || result.length === 0) {
+      await m.react("🐣");
       return m.reply(claraWrap("Photo Tools", "Gagal processing. Coba gambar lain.", "warn"));
     }
 
@@ -309,6 +311,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       { quoted: m }
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[PhotoTools]", e);
     m.reply(claraWrap("Photo Tools", [
       "Error: " + e.message,

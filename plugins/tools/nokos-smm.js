@@ -125,6 +125,7 @@ async function handler(m, { sock }) {
     const categoryFilter = arg2 ? arg2.toLowerCase() : "";
     if (!keyword) return m.reply( claraWrap("NexusSMM", "Cari Layanan SMM\n\n.smm cari <keyword> [kategori]\n\nContoh:\n.smm cari instagram follower\n.smm cari telegram views\n.smm cari tiktok likes\n.smm cari youtube\n\nKategori populer: Instagram, Telegram, TikTok, YouTube, Facebook, Twitter"), "smm");
     try {
+    await m.react("🕒");
       const services = await getServices(data);
       let filtered = services.filter(s =>
         (s.name || "").toLowerCase().includes(keyword) ||
@@ -144,6 +145,7 @@ async function handler(m, { sock }) {
       body += "\nBeli: .smm beli <service_id> <target> <qty>\n💡 *Contoh:* .smm beli " + filtered[0].service_id + " @username 100";
       return m.reply( claraWrap("NexusSMM", body), "smm");
     } catch (err) {
+    await m.react("❌");
       return m.reply( claraWrap("NexusSMM", "Error: " + err.message), "smm");
     }
   }
@@ -267,6 +269,7 @@ async function handler(m, { sock }) {
   if (isOwner && data.apiId) {
     body += "\n\n--- Owner ---\nAPI ID: " + data.apiId.slice(0,6) + "...";
   }
+  await m.react("🐣");
   return m.reply( claraWrap("NexusSMM", body), "smm");
 }
 

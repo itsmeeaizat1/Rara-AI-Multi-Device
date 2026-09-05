@@ -22,6 +22,7 @@ const MODES = ["beautify", "minify", "check", "keys", "values", "type"];
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -163,9 +164,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       default:
+        await m.react("🐣");
         return m.reply(claraWrap("JSON", "Mode tidak dikenal!"));
     }
   } catch (e) {
+    await m.react("❌");
     console.error("json error:", e);
     return m.reply(claraWrap("JSON", "Error: " + e.message));
   }

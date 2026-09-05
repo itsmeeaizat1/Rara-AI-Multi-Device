@@ -76,6 +76,7 @@ async function handler(m, { sock }) {
     }
 
     try {
+    await m.react("🕒");
       media = await downloadMediaMessage(
         { key: m.quoted.key, message: m.quoted.message },
         "buffer",
@@ -85,6 +86,7 @@ async function handler(m, { sock }) {
       mimetype = content?.mimetype || "application/octet-stream";
       filename = content?.fileName || `file.${getFileExtension(mimetype)}`;
     } catch {
+    await m.react("❌");
       return m.reply(claraWrap("uploadtmpfilesxemoz", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else if (m.message) {
@@ -116,6 +118,7 @@ async function handler(m, { sock }) {
     const response = `*ᴜᴘʟᴏᴀᴅ ᴛᴍᴘꜰɪʟᴇꜱ*\n\nFile: ${filename}\nSize: ${formatBytes(media.length)}\nURL: ${result.url}`;
     return m.reply(claraWrap("UploadTmpFiles", response));
   } catch (error) {
+    await m.react("🐣");
     return m.reply(claraWrap("UploadTmpFiles Error", error.message || "Gagal upload file."));
   }
 }

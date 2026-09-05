@@ -26,23 +26,21 @@ async function handler(m, { sock }) {
   const targetFormat = m.text?.trim()?.toLowerCase();
 
   if (!m.quoted && !m.isMedia) {
-    return m.reply(
-      `🔄 *ᴄᴏɴᴠᴇʀᴛᴇʀ*\n\n` +
-        `Reply file dengan format tujuan\n\n` +
-        `*ꜰᴏʀᴍᴀᴛ:*\n` +
-        `\`${m.prefix}converter <format>\`\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `\`${m.prefix}converter mp3\`\n` +
-        `\`${m.prefix}converter mp4\`\n` +
-        `\`${m.prefix}converter png\`\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `1. Reply file yang mau diconvert\n` +
-        `2. Ketik \`${m.prefix}converter <format>\``,
-    );
-  }
-
-  if (!targetFormat) {
-    return m.reply( `❌ Masukkan format tujuan!\n\n💡 *Contoh:* \`${m.prefix}converter mp3\``, "converter");
+    return m.reply(claraWrap("converter", [
+      `🔄 *ᴄᴏɴᴠᴇʀᴛᴇʀ*`,
+      `Reply file dengan format tujuan`,
+      `\`${m.prefix}converter <format>\``,
+      ``,
+      `📌 Format:`,
+      `1. Reply file yang mau diconvert`,
+      `2. Ketik \`${m.prefix}converter <format>\`❌ Masukkan format tujuan!`,
+      `💡 *Contoh:* \`${m.prefix}converter mp3`,
+      ``,
+      `💡 Contoh:`,
+      `${m.prefix}converter mp3`,
+      `${m.prefix}converter mp4`,
+      `${m.prefix}converter png`
+    ]));
   }
 
   const quoted = m.quoted;
@@ -63,6 +61,7 @@ async function handler(m, { sock }) {
   await m.reply(claraWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
 
   try {
+    await m.react("🕒");
     const stream = await downloadContentFromMessage(
       mediaMessage.message[mediaMessage.type],
       mediaMessage.type.replace("Message", ""),
@@ -98,6 +97,7 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -112,6 +112,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (err) {
+    await m.react("❌");
     console.error("[Converter] Error:", err.message);
     return m.reply(claraWrap("converter", te(m.prefix, m.command, m.pushName), "error"));
   }

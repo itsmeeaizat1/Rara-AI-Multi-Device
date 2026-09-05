@@ -22,12 +22,15 @@ async function handler(m, { sock }) {
   const emoji = m.text?.trim();
 
   if (!emoji) {
-    return m.reply( `🎭 *ᴇᴍᴏᴊɪ ᴛᴏ ᴀɴɪᴍᴀꜱɪ*\n\n` +
-        `Konversi emoji ke sticker animasi\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `\`${m.prefix}emojitoanimasi 😳\``, "emojitoanimasi");
+    return m.reply(claraWrap("emojitoanimasi", [
+      `Konversi emoji ke sticker animasi.`,
+      ``,
+      `📌 Format: ${m.prefix}emojitoanimasi <emoji>`,
+      `💡 Contoh: ${m.prefix}emojitoanimasi 😳`,
+    ]));
   }
   try {
+    await m.react("🕒");
     const apiUrl = `https://api.neoxr.eu/api/emojito?q=${encodeURIComponent(emoji)}&apikey=${NEOXR_APIKEY}`;
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
 
@@ -43,6 +46,7 @@ async function handler(m, { sock }) {
     });
     const webpBuffer = Buffer.from(webpRes.data);
 
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -52,6 +56,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

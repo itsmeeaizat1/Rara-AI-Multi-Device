@@ -151,6 +151,7 @@ function formatDiff(diffs, mode) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -209,8 +210,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     const output = formatDiff(diffs, mode);
     const modeLabel = mode === "word" ? "Word Level" : "Line Level";
+    await m.react("🐣");
     return m.reply(claraWrap("Diff Result (" + modeLabel + ")", output));
   } catch (e) {
+    await m.react("❌");
     console.error("diff error:", e);
     return m.reply(claraWrap("Diff", "Error: " + e.message));
   }

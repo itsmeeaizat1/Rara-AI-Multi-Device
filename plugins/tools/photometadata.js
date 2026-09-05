@@ -63,6 +63,7 @@ function formatGPS(val) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
 
@@ -174,8 +175,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push("");
     lines.push("Sharp version: " + (sharp.versions?.sharp || "N/A"));
 
+    await m.react("🐣");
     return m.reply(claraWrap("Photo Metadata", lines, "info"));
   } catch (e) {
+    await m.react("❌");
     console.error("[PhotoMetadata]", e);
     m.reply(claraWrap("Photo Metadata", [
       "Error: " + e.message,

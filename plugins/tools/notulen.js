@@ -86,11 +86,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Notulen", [
       `AI Notulen Meeting → Text + PDF`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  Reply catatan meeting, ketik: ${prefix}notulen`,
       `  Atau ketik langsung: ${prefix}notulen <catatan>`,
       ``,
-      `*ᴄᴏɴᴛᴏʜ:*`,
+      `💡 Contoh:`,
       `  ${prefix}notulen rapat evaluasi Q1 2024. Budi: perlu upgrade server. Sari: budget 50jt. Keputusan: beli server minggu depan. Budi beli, deadline Jumat`,
       ``,
       `*ʜᴀꜱɪʟ:*`,
@@ -101,6 +101,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   m.reply(claraWrap("Notulen", "AI lagi nyusun notulen meeting..."));
 
   try {
+    await m.react("🕒");
     const result = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "nova-ai");
 
     if (!result || result.trim().length < 20) {
@@ -117,12 +118,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // Also generate PDF
     m.reply(claraWrap("Notulen", "Render notulen ke PDF..."));
     const pdfBuffer = await renderNotulenPDF(text);
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,
       mimetype: "application/pdf",
       fileName: `notulen_${Date.now()}.pdf`,
     }, { quoted: m });
   } catch (error) {
+    await m.react("❌");
     console.error("notulen error:", error);
     m.reply(claraWrap("Notulen", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }

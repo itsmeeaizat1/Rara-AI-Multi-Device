@@ -23,10 +23,10 @@ async function handler(m, { sock }) {
   const ip = m.args?.[0];
 
   if (!ip) {
-    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}ipwho <ip>\`\n\n` +
-        `Contoh:\n` +
-        `\`${m.prefix}ipwho 8.8.8.8\``, "ipwho");
+    return m.reply(claraWrap("ipwho", [
+      `📌 Format: ${m.prefix}ipwho <ip>`,
+      `💡 Contoh: ${m.prefix}ipwho 8.8.8.8`
+    ]));
   }
 
   const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;

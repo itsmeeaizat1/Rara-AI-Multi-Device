@@ -21,6 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     try {
+    await m.react("🕒");
         const url = (m.text || "").trim()
 
         if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
@@ -67,8 +68,10 @@ async function handler(m, { sock }) {
             if (i < items.length - 1) text += "\n"
         })
 
+        await m.react("🐣");
         return m.reply(text.trim())
     } catch (e) {
+    await m.react("❌");
         console.error("[rss] error:", e.message)
         return m.reply("❌ " + (e.message || "Gagal membaca RSS feed"))
     }

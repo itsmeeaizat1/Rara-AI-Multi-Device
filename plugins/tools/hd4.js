@@ -167,6 +167,7 @@ async function handler(m, { sock, args }) {
     ].join("\n")), "reminiv2");
   }
   try {
+    await m.react("🕒");
     const buffer = m.quoted?.isMedia
       ? await m.quoted.download()
       : await m.download();
@@ -292,6 +293,7 @@ async function handler(m, { sock, args }) {
         { quoted: m },
       );
     } else {
+      await m.react("🐣");
       await sock.sendMessage(
         m.chat,
         { image: processedBuffer, caption, jpegQuality: 100 },
@@ -299,6 +301,7 @@ async function handler(m, { sock, args }) {
       );
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[ReminiV2] Error:", e.message);
     m.reply(claraWrap("Remini V2", [
       "Gagal: " + e.message,

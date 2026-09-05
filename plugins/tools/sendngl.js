@@ -26,6 +26,7 @@ async function handler(m, { sock }) {
   if (!kata)
     return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
   try {
+    await m.react("🕒");
     await novaApi.cuki.sendNgl(
       {
         link,
@@ -35,6 +36,7 @@ async function handler(m, { sock }) {
         timeout: 30000,
       },
     );
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -43,6 +45,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("sendngl", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

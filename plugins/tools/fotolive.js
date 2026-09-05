@@ -80,6 +80,7 @@ async function getVideoInfo(filePath) {
 
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
     const isVideo =
       m.isVideo || m.quoted?.isVideo ||
       m.msg?.videoMessage || m.quoted?.msg?.videoMessage;
@@ -244,6 +245,7 @@ async function handler(m, { sock }) {
 
     // Kirim sebagai video dengan gifPlayback = true
     // WhatsApp render sebagai animated looping image (Live Photo)
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       video: liveBuffer,
       gifPlayback: true,
@@ -261,6 +263,7 @@ async function handler(m, { sock }) {
 
     return { handled: true };
   } catch (error) {
+    await m.react("❌");
     console.error("[FotoLive Error]", error);
 
     let errMsg = error.message || "Unknown error";

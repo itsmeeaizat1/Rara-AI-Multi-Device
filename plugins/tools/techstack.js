@@ -90,6 +90,7 @@ async function detectTech(url) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -142,8 +143,10 @@ async function handler(m, { sock, config: botConfig }) {
         }
       }
     }
+    await m.react("🐣");
     return m.reply(claraWrap("TechStack: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("techstack error:", e);
     return m.reply(claraWrap("TechStack", "Error: " + e.message));
   }

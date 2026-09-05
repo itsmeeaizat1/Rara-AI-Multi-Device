@@ -13,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const word = m.text?.trim();
     if (!word) {
       await m.reply( novaCaption({
@@ -28,9 +29,11 @@ async function handler(m, { sock, config: botConfig }) {
     if (Array.isArray(data) && data.length > 0) {
       await m.reply(claraWrap("Spell Check", [`Kata: *${word}*`, `Ejaan benar!`].join("\n")));
     } else {
+      await m.react("🐣");
       await m.reply(claraWrap("Spell Check", [`Kata: *${word}*`, "Kata tidak ditemukan dalam kamus"].join("\n")));
     }
   } catch (e) {
+    await m.react("❌");
     await m.reply(claraWrap("Spell Check", [`Kata: *${m.text?.trim()}*`, "Tidak ditemukan di kamus"].join("\n")));
   }
   return { handled: true };

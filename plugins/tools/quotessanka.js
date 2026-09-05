@@ -25,6 +25,7 @@ const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
     const url = `${API_BASE}/random/quotes?apikey=${API_KEY}`;
 
     const res = await axios.get(url, {
@@ -50,8 +51,10 @@ async function handler(m, { sock }) {
     txt += `"${quote}"\n\n`;
     txt += `~ ${res.data.by || "Sanka Vollerei"}`;
 
+    await m.react("🐣");
     await m.reply( txt, { commandName: "quotessanka" });
   } catch (e) {
+    await m.react("❌");
     console.error("[QUOTESSANKA] Error:", e.message);
     let txt = `Gagal mengambil quotes!\n\n`;
     txt += `Error: ${e.message}`;

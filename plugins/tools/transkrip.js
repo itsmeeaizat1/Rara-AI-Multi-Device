@@ -67,6 +67,7 @@ async function handler(m, { sock }) {
     const inputFile = path.join(tmpDir, `stt_${Date.now()}.ogg`);
     const wavFile = path.join(tmpDir, `stt_${Date.now()}.wav`);
     try {
+    await m.react("🕒");
         const buffer = await quoted.download();
         if (!buffer || buffer.length < 1000) {
             return m.reply(claraWrap("Transkrip", '❌ Audio terlalu kecil atau gagal diunduh'));
@@ -79,6 +80,7 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("Transkrip", '❌ Tidak dapat mendeteksi suara. Pastikan audio jelas dan tidak terlalu pendek.'));
         }
         const duration = Math.ceil(buffer.length / 4000);
+        await m.react("🐣");
         await m.reply(
             `🎤 *ᴛʀᴀɴꜱᴋʀɪᴘ*\n\n` +
             `
@@ -92,6 +94,7 @@ async function handler(m, { sock }) {
             `📊 Ukuran: ~${(buffer.length / 1024).toFixed(1)} KB`
         );
     } catch (error) {
+    await m.react("❌");
         if (error.response?.status === 401) {
             return m.reply('❌ API Key Groq invalid. Cek config.js → APIkey.groq');
         }

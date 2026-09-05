@@ -107,6 +107,7 @@ async function handler(m, { sock,  args }) {
     );
   }
   try {
+    await m.react("🕒");
     const result = await transcriber(url, lang);
     
     let transcript = result.transcript.substring(0, 2500);
@@ -115,8 +116,10 @@ async function handler(m, { sock,  args }) {
     }
 
     const info = claraWrap("Video Transcribe", [`*ᴛɪᴛʟᴇ:* ${result.title}`, `*ʟᴀɴɢᴜᴀɢᴇ:* ${lang.toUpperCase()}`, `*ꜱᴇɢᴍᴇɴᴛꜱ:* ${result.total}`, ``, `*ᴛʀᴀɴꜱᴄʀɪᴘᴛ:*`, transcript].join("\n"));
+    await m.react("🐣");
     await m.reply(info);
   } catch (err) {
+    await m.react("❌");
     console.error("[VideoTranscribe]", err.message);
     m.reply(claraWrap("videotranscribe", `❌ *ɢᴀɢᴀʟ:* ${err.message || "Gagal proses nih video"}`));
   }

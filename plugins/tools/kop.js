@@ -127,7 +127,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Kop", [
       `Tambah Kop Surat ke PDF`,
       ``,
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `📌 Format:`,
       `  Reply PDF, ketik:`,
       `  ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta telepon=021123456 email=info@ptmaju.com`,
       ``,
@@ -153,6 +153,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   m.reply(claraWrap("Kop", "Tambah kop surat ke PDF..."));
 
   try {
+    await m.react("🕒");
     const pdfBuffer = await m.quoted.download();
     if (!pdfBuffer || pdfBuffer.length === 0) {
       return m.reply(claraWrap("Kop", "❌ Gagal download PDF."));
@@ -160,12 +161,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     const resultBuffer = await addKopToPDF(pdfBuffer, kopData);
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       document: resultBuffer,
       mimetype: "application/pdf",
       fileName: `kop_${Date.now()}.pdf`,
     }, { quoted: m });
   } catch (error) {
+    await m.react("❌");
     console.error("kop error:", error);
     m.reply(claraWrap("Kop", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }

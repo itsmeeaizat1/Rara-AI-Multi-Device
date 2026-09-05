@@ -120,20 +120,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ${prefix}kalkulatur thp <gaji> [k/tk] [tanggungan]`,
       `  ${prefix}kalkulatur takehome <gaji> [k/tk] [tanggungan]`,
       ``,
-      `*ᴋᴇᴛᴇʀᴀɴɢᴀɴ:*`,
+      `Keterangan:`,
       `  k = kawin, tk = belum kawin`,
       `  tanggungan = 0-3 (anak/dependen)`,
       `  thp = take home pay (gaji - PPh21 - BPJS)`,
       ``,
-      `*ᴄᴏɴᴛᴏʜ:*`,
+      `💡 Contoh:`,
       `  ${prefix}kalkulatur pph21 10000000 k 1`,
       `  ${prefix}kalkulatur thr 5000000 6`,
       `  ${prefix}kalkulatur lembur 30000 4 kerja`,
       `  ${prefix}kalkulatur thp 8000000 tk 0`,
     ].join("\n"));
-    return m.reply( help, "kalkulatur");
+    return m.reply(help);
   }
   try {
+    await m.react("🕒");
     let result = "";
 
     if (cmd === "pph21" || cmd === "pph") {
@@ -237,8 +238,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       result = claraWrap("Kalkulatur", `Mode tidak dikenal. Ketik ${prefix}kalkulatur untuk daftar mode.`);
     }
 
+    await m.react("🐣");
     await m.reply(result);
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("Kalkulatur", `❌ Error: ${error.message}`));
   }
 

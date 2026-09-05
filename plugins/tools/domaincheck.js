@@ -80,6 +80,7 @@ function getRegistrar(data) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -163,8 +164,10 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Terdaftar (detail terbatas)");
       }
     }
+    await m.react("🐣");
     return m.reply(claraWrap("Domain Check: " + domain, lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("domaincheck error:", e);
     return m.reply(claraWrap("DomainCheck", "Error: " + e.message));
   }

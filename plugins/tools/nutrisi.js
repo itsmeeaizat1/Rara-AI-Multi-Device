@@ -179,6 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
     return;
   }
   try {
+    await m.react("🕒");
     // Download image
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
@@ -226,8 +227,10 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // Send result
+    await m.react("🐣");
     await m.reply(claraWrap("Nutrisi Scanner", result.trim()));
   } catch (err) {
+    await m.react("❌");
     console.log("[Nutrisi] Error:", err.message);
     await m.reply(claraWrap("Nutrisi Scanner", [
       `Terjadi error saat menganalisis.`,

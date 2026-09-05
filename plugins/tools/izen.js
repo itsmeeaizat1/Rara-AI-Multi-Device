@@ -22,15 +22,15 @@ const pluginConfig = {
 
 async function handler(m, { args, sock }) {
   if (!args[0]) {
-    let txt = `🔗 *ꜱᴋɪᴘʟɪɴᴋ ʙʏᴘᴀꜱꜱ* 🔗\n\n`;
-    txt += `Halo kak! Punya link yang ribet ngelewatin iklan? Sini aku bantu lewatin biar langsung ke tujuan akhir!\n\n`;
-    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
-    txt += `👉 \`${m.prefix}izen <link>\`\n\n`;
-    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
-    txt += `👉 \`${m.prefix}izen https://sfl.gl/xxxxx\``;
-    return await m.reply(claraWrap("izen", txt));
+    return await m.reply(claraWrap("izen", [
+      `Bypass link yang ribet ngelewatin iklan, biar langsung ke tujuan akhir.`,
+      ``,
+      `📌 Format: ${m.prefix}izen <link>`,
+      `💡 Contoh: ${m.prefix}izen https://sfl.gl/xxxxx`,
+    ]));
   }
   try {
+    await m.react("🕒");
     const res = await fetch(`https://anabot.my.id/api/tools/izenLOL?url=${encodeURIComponent(args[0])}&apikey=${config.APIkey.anabot || 'freeApikey'}`);
     const json = await res.json();
     
@@ -45,8 +45,10 @@ async function handler(m, { args, sock }) {
       `🚀 ${json.data.result.result}`,
     ]);
     
+    await m.react("🐣");
     await m.reply(claraWrap("izen", txt));
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("izen", `❌ Maaf kak, terjadi kesalahan sistem! 😭\nError: ${e.message}`));
   }
 }

@@ -205,6 +205,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "animestream" });
   }
   try {
+    await m.react("🕒");
     // Determine source
     let source = "otakudesu";
     let cmdArgs = args.slice(1);
@@ -614,9 +615,11 @@ async function handler(m, { sock, args }) {
     }
 
     else {
+      await m.react("🐣");
       await m.reply(`Perintah tidak ditemukan!\n\nKetik \`${m.prefix}animestream help\` untuk melihat semua perintah.`);
     }
   } catch (e) {
+    await m.react("❌");
     console.error("[ANIMESTREAM] Error:", e.message);
     let txt = `Gagal memproses!\n\n`;
     txt += `Error: ${e.message}`;

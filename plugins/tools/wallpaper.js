@@ -105,6 +105,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Wallpaper", help));
   }
   try {
+    await m.react("🕒");
     // Parse input: cek ada keyword resolusi atau tidak
     let query = text;
     let minRes = "";
@@ -145,11 +146,13 @@ async function handler(m, { sock, config: botConfig }) {
     // Kirim gambar dengan caption
     const caption = `Wallpaper: ${query || "Random"}\nResolusi: ${wp.resolution}\nUkuran: ${(wp.file_size / 1024).toFixed(0)} KB\nTipe: ${wp.file_type}\n\nSumber: wallhaven.cc`;
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
       caption: claraWrap("Wallpaper HD", caption),
     }, { quoted: m });
   } catch (error) {
+    await m.react("❌");
     let errMsg = error.message || "Gagal mencari wallpaper.";
 
     if (errMsg.includes("Tidak ada wallpaper")) {

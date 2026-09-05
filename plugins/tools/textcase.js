@@ -37,6 +37,7 @@ const MODES = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -76,12 +77,14 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const result = MODES[mode].fn(inputText);
+    await m.react("🐣");
     return m.reply(claraWrap("Text Case Convert", [
       "Mode: " + MODES[mode].desc,
       "Input: " + (inputText.length > 60 ? inputText.substring(0, 60) + "..." : inputText),
       "Hasil: " + (result.length > 80 ? result.substring(0, 80) + "..." : result),
     ].join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("textcase error:", e);
     return m.reply(claraWrap("TextCase", "Error: " + e.message));
   }

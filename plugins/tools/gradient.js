@@ -12,6 +12,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const input = m.text?.trim();
     if (!input || !input.includes("#")) {
       const colors = ["#"+Math.random().toString(16).slice(2,8), "#"+Math.random().toString(16).slice(2,8)];
@@ -23,9 +24,11 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = input.split(/\s+/);
     const c1 = parts[0]; const c2 = parts[1] || parts[0];
     const css = `background: linear-gradient(135deg, ${c1}, ${c2});`;
+    await m.react("🐣");
     await m.reply(claraWrap("Gradient CSS", [`Warna 1: *${c1}*`, `Warna 2: *${c2}*`,
       `CSS: \`${css}\``].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
   } catch (e) {
+    await m.react("❌");
     await m.reply("Error: " + e.message);
   }
   return { handled: true };

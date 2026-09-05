@@ -699,6 +699,7 @@ async function handler(m, { sock }) {
       );
     }
     try {
+    await m.react("🕒");
       const messages = await providerGetInbox(session);
 
       if (messages.length === 0) {
@@ -760,6 +761,7 @@ async function handler(m, { sock }) {
       }
       return m.reply( claraWrap("Temp Email - Pesan", content), "tempmail");
     } catch (err) {
+    await m.react("❌");
       if (err.response?.status === 401) {
         sessions.delete(m.sender);
         return m.reply(
@@ -821,6 +823,7 @@ async function handler(m, { sock }) {
   const help = `Email Sementara - 6 Provider\n\nProvider:\n1. mailtm (Mail.tm) - custom name\n2. mailgw (Mail.gw) - custom name\n3. guerrilla (Guerrilla Mail) - custom name\n4. mailporary (Mailporary) - custom name\n5. tempmailio (TempMail.io) - auto-generate
 6. anonymmail (AnonymMail) - custom name\n\nPerintah:\n1. ${m.prefix}tempmail create <nama> [provider]\n   Buat email custom name\n2. ${m.prefix}tempmail inbox\n   Cek kotak masuk\n3. ${m.prefix}tempmail read <nomor>\n   Baca pesan (atau "all")\n4. ${m.prefix}tempmail status\n   Info email aktif\n5. ${m.prefix}tempmail delete\n   Hapus email\n6. ${m.prefix}tempmail list\n   Lihat daftar provider\n\nContoh:\n${m.prefix}tempmail create aizat\n${m.prefix}tempmail create aizat mailporary\n${m.prefix}tempmail inbox\n${m.prefix}tempmail read 1\n\nNote: Email expired otomatis oleh server provider.`;
 
+  await m.react("🐣");
   return m.reply( claraWrap("Temp Email", help), "tempmail");
 }
 

@@ -20,8 +20,12 @@ async function handler(m, { sock }) {
     const newName = m.text?.trim()
     
     if (!newName) {
-        await m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}setname Nama Bot Baru\``, "setname")
+        await m.reply(claraWrap("setname", [
+            `Ubah nama profil bot.`,
+            ``,
+            `📌 Format: ${m.prefix}setname <nama bot baru>`,
+            `💡 Contoh: ${m.prefix}setname Nova AI`,
+        ]))
         return
     }
     
@@ -32,11 +36,14 @@ async function handler(m, { sock }) {
     }
     
     try {
+    await m.react("🕒");
         await sock.updateProfileName(newName)
         
+        await m.react("🐣");
         await m.reply(claraWrap("setname", `✅ *ɴᴀᴍᴀ ʙᴏᴛ ᴅɪᴜʙᴀʜ*\n\n` +
             `Nama bot sekarang: *${newName}*`))
     } catch (error) {
+    await m.react("❌");
         await m.reply(
             `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat mengubah nama bot.\n` +

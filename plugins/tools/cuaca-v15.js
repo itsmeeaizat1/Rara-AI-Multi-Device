@@ -52,6 +52,7 @@ function setWeatherDb(db, data = {}) {
 async function handler(m, { sock, config: botConfig, db }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const raw = (m.text?.trim() ?? "").toLowerCase();
     const parts = raw.replace(/^\.cuaca\s+/i, "").trim().split(/\s+/);
     const sub = (parts[0] || "").toLowerCase();
@@ -187,6 +188,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       return { handled: true };
     }
 
+    await m.react("🐣");
     await m.reply(
       claraWrap("Cuaca Bot", [`Provider: *${prefix}cuaca provider <nama>*`,
           `Lokasi: *${prefix}cuaca lokasi <kota>*`,
@@ -196,6 +198,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         tipText(`Ketik ${prefix}menu untuk kembali`)
     );
   } catch (error) {
+    await m.react("❌");
     await m.reply(
       novaError("Tools", "Gagal nih, coba lagi ya")
     );

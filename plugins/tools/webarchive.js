@@ -64,6 +64,7 @@ function formatDate(timestamp) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -148,8 +149,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     lines.push("");
     lines.push("Full archive: https://web.archive.org/web/*/" + url);
+    await m.react("🐣");
     return m.reply(claraWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("webarchive error:", e);
     return m.reply(claraWrap("WebArchive", "Error: " + e.message));
   }

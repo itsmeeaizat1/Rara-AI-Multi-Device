@@ -253,6 +253,7 @@ async function handler(m, { sock }) {
       return m.reply( claraWrap("ProviderSMM", "Format Beli\n\n.prov beli <service_id> <link> <qty>\n\nContoh:\n.prov beli 87 https://instagram.com/p/xxx 100\n.prov beli 116 https://tiktok.com/@xxx 500\n.prov beli 60 https://facebook.com/xxx 200\n\nCari service_id:\n.prov cari instagram"), "provsmm");
     }
     try {
+    await m.react("🕒");
       const services = await getServices(data);
       const svc = services.find(s => String(s.service) === String(serviceId));
       if (!svc) {
@@ -290,6 +291,7 @@ async function handler(m, { sock }) {
       body += "\nToken: " + token + "\n\nBayar: .prov bayar " + token + "\nExpired: 5 menit";
       return m.reply( claraWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
+    await m.react("❌");
       return m.reply( claraWrap("ProviderSMM", "Error: " + err.message), "provsmm");
     }
   }
@@ -458,6 +460,7 @@ async function handler(m, { sock }) {
   if (isOwner) {
     body += "\n\n--- Owner ---\n.prov setkey <key>\n.prov setmarkup <persen>\n.prov topup <nomor> <jumlah>\n.prov refresh\nAPI: https://providersmm.id/api/v2";
   }
+  await m.react("🐣");
   return m.reply( claraWrap("ProviderSMM", body), "provsmm");
 }
 

@@ -25,13 +25,15 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
-    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `Reply gambar dengan \`${m.prefix}ocr\`\n\n` +
-        `Media yang didukung:\n` +
-        `JPG, PNG, GIF, WEBP`, "ocr");
+    return m.reply(claraWrap("ocr", [
+      `📌 Format: reply gambar dengan ${m.prefix}ocr`,,
+      `Media yang didukung:`,
+      `JPG, PNG, GIF, WEBP`
+    ]));
   }
   { const __navText = `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ...*\n\nMengekstrak teks dari gambar...`; await m.reply(__navText); };
   try {
+    await m.react("🕒");
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
       buffer = await m.quoted.download();
@@ -47,6 +49,7 @@ async function handler(m, { sock }) {
     } = await Tesseract.recognize(buffer, "eng", {});
     const extractedText = text ? text.trim() : "";
     if (!extractedText || extractedText.length === 0) {
+      await m.react("🐣");
       return m.reply(claraWrap("Ocr", `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴛᴇᴋꜱ*\n\nTidak ada teks yang terdeteksi di gambar`));
     }
     const responseText =
@@ -67,6 +70,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (e) {
+    await m.react("❌");
     m.reply(claraWrap("ocr", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

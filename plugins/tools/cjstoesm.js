@@ -116,19 +116,24 @@ async function handler(m, { sock }) {
     let code = m.quotedBody || m.text?.trim()
 
     if (!code) {
-        return m.reply( `🔄 *ᴄᴊꜱ ᴛᴏ ᴇꜱᴍ ᴄᴏɴᴠᴇʀᴛᴇʀ*\n\n` +
-            `Convert CommonJS ke ES Modules\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-            `Reply kode CJS dengan ${m.prefix}cjstoesm\n\n` +
-            `*ᴄᴏɴᴛᴏʜ ᴄᴊꜱ:*\n` +
-            `\`const axios = require('axios')\`\n` +
-            `\`module.exports = handler\``, "cjstoesm")
+        return m.reply(claraWrap("cjstoesm", [
+      `🔄 *ᴄᴊꜱ ᴛᴏ ᴇꜱᴍ ᴄᴏɴᴠᴇʀᴛᴇʀ*`,
+      `Convert CommonJS ke ES Modules`,
+      ``,
+      `📌 Format:`,
+      `Reply kode CJS dengan ${m.prefix}cjstoesm`,
+      `💡 Contoh kode CJS:`,
+      `const axios = require('axios')`,
+      `module.exports = handler`
+    ]))
     }
 
     try {
+    await m.react("🕒");
         const converted = await convertCjsToEsm(code)
         await sock.sendCodeBlock(m.chat, converted, m)
     } catch (error) {
+    await m.react("❌");
         m.reply(claraWrap("cjstoesm", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

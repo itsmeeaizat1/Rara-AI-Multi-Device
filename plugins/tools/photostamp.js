@@ -97,6 +97,7 @@ function buildStampSVG(text, width, height, position, style) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text.trim();
 
     if (input.toLowerCase() === "help" || input.toLowerCase() === "list") {
@@ -192,6 +193,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       .toBuffer();
 
     if (!result || result.length === 0) {
+      await m.react("🐣");
       return m.reply(claraWrap("Photo Stamp", "Gagal processing stamp.", "warn"));
     }
 
@@ -209,6 +211,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       { quoted: m }
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[PhotoStamp]", e);
     m.reply(claraWrap("Photo Stamp", [
       "Error: " + e.message,

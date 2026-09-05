@@ -83,6 +83,7 @@ function rateLabel(ms) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    await m.react("🕒");
     const text = (m.text || "").trim();
 
     if (!text) {
@@ -129,8 +130,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (result.cacheControl !== "N/A") {
       lines.push("Cache-Control: " + (result.cacheControl.length > 40 ? result.cacheControl.substring(0, 40) + "..." : result.cacheControl));
     }
+    await m.react("🐣");
     return m.reply(claraWrap("SpeedURL: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
+    await m.react("❌");
     console.error("speedurl error:", e);
     return m.reply(claraWrap("SpeedURL", "Error: " + e.message));
   }

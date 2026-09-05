@@ -71,6 +71,7 @@ function buildSVG(text, width, height, position) {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    await m.react("🕒");
     const input = text.trim();
 
     if (!input || input.toLowerCase() === "help" || input.toLowerCase() === "list") {
@@ -153,6 +154,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       .toBuffer();
 
     if (!result || result.length === 0) {
+      await m.react("🐣");
       return m.reply(claraWrap("Photo Watermark", "Gagal processing watermark.", "warn"));
     }
 
@@ -169,6 +171,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       { quoted: m }
     );
   } catch (e) {
+    await m.react("❌");
     console.error("[PhotoWatermark]", e);
     m.reply(claraWrap("Photo Watermark", [
       "Error: " + e.message,

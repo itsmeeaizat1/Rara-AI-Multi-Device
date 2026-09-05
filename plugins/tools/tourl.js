@@ -566,12 +566,12 @@ async function handler(m, { sock }) {
   } else if (m.message) {
     const type = getContentType(m.message);
     if (!type || type === "conversation" || type === "extendedTextMessage") {
-      let txt = `📤 *ᴍᴇᴅɪᴀ ᴜᴘʟᴏᴀᴅᴇʀ* 📤\n\n`;
-      txt += `Halo kak! Butuh link untuk media kamu? Aku bisa bantu uploadin ke berbagai server gratisan loh!\n\n`;
-      txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
-      txt += `👉 Kirim media dengan caption \`${m.prefix}tourl\`\n`;
-      txt += `👉 Atau reply media yang udah ada dengan \`${m.prefix}tourl\``;
-      return m.reply( txt, "tourl");
+      return m.reply(claraWrap("tourl", [
+        `Butuh link untuk media kamu? Aku bisa bantu uploadin ke berbagai server gratisan.`,
+        ``,
+        `📌 Format: kirim media dengan caption ${m.prefix}tourl`,
+        `Atau reply media yang udah ada dengan ${m.prefix}tourl`,
+      ]));
     }
 
     try {
@@ -627,6 +627,7 @@ async function handler(m, { sock }) {
   }
 
   try {
+    await m.react("🕒");
     let headerMedia = null;
     if (mimetype.startsWith('image') || mimetype.startsWith('video')) {
       const preMsg = await generateWAMessage(m.chat, { 
@@ -685,6 +686,7 @@ async function handler(m, { sock }) {
 
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
   } catch (err) {
+    await m.react("❌");
     await m.reply(claraWrap("tourl", text));
   }
 }
