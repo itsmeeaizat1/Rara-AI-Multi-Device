@@ -1,9 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// goodbye.js — V1 (teks) + V2 (canvas hexagon) + V3 (autoresbot API bg + vertical)
+// goodbye.js — pesan perpisahan member keluar (single design, engine text)
 import { novaError, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { createGoodbyeCard, createGoodbyeCardV3, createGoodbyeCardV4, detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
+import { detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
@@ -12,7 +12,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      await m.reply(novaGuide('Goodbye', `Pesan perpisahan saat member keluar grup. Pilih tipe dengan ${prefix}setgoodbyetype v1-v5.`, `${prefix}goodbye on`));
+      await m.reply(novaGuide('Goodbye', `Pesan perpisahan saat member keluar grup. Custom pesannya? Ketik ${prefix}setgoodbye <pesan>.`, `${prefix}goodbye on`));
       return { handled: true };
     }
 
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
       `Status : ${args === "on" ? "ON" : "OFF"}`,
       `Grup : ${m.chat}`,
       "",
-      `💡 Ketik ${prefix}setgoodbyetype v1/v2/v3/v4/v5 untuk pilih tipe`,
+      `💡 Custom pesan? Ketik ${prefix}setgoodbye <pesan>`,
     ].join("\n")));
   } catch (error) {
     await m.reply(novaError("Goodbye", `Gagal: ${error.message}`));
@@ -35,18 +35,16 @@ async function handler(m, { sock, config: botConfig }) {
 
 /**
  * sendGoodbyeMessage — dipanggil oleh handler.js saat member keluar
- * v1 = teks, v2 = canvas hexagon, v3 = autoresbot API bg + vertical layout
+ * Single design: engine text + info lengkap + mention
  */
 async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   const db = getDatabase();
-  const goodbyeType = db.setting("goodbyeType") || 1;
   const groupData = db.getGroup(groupJid) || {};
 
   if (!groupData.goodbye) return;
 
   const groupName = metadata?.subject || "Grup";
   const memberCount = metadata?.participants?.length || 0;
-  const ppUrl = await sock.profilePictureUrl(participantJid, "image").catch(() => null);
   const username = participantJid.split("@")[0].split(":")[0];
   const prefix = config.command?.prefix || ".";
 
@@ -86,7 +84,6 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   ];
   const sapaanOut = SAPAAN_OUT[Math.floor(Math.random() * SAPAAN_OUT.length)];
 
-  // Engine text goodbye (dipakai v1 teks + caption v2/v3 + fallback)
   const rows = [
     `│ • 👤 Nama : ${displayName}`,
     `│ • 📱 Nomor : @${username}`,
@@ -104,90 +101,6 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
     cta: gameCTA("goodbye"),
   });
 
-  // ===== V1: TEKS BAWAAN =====
-  if (goodbyeType === 1) {
-    await sock.sendMessage(groupJid, {
-      text: engineText,
-      mentions: [participantJid],
-    });
-    return;
-  }
-
-  // ===== V2: CANVAS HEXAGON =====
-  if (goodbyeType === 2) {
-    try {
-      const buffer = await createGoodbyeCard(username, ppUrl, groupName, memberCount);
-
-      await sock.sendMessage(groupJid, {
-        image: buffer,
-        caption: engineText,
-        mentions: [participantJid],
-      });
-      return;
-    } catch (err) {
-      console.error("goodbye v2 canvas error:", err.message);
-    }
-  }
-
-  // ===== V3: AUTORESBOT API BG + VERTICAL LAYOUT =====
-  if (goodbyeType === 3) {
-    try {
-      const apiKey = config.APIkey?.autoresbot || "";
-      const buffer = await createGoodbyeCardV3(username, ppUrl, groupName, memberCount, apiKey);
-
-      await sock.sendMessage(groupJid, {
-        image: buffer,
-        caption: engineText,
-        mentions: [participantJid],
-      });
-      return;
-    } catch (err) {
-      console.error("goodbye v3 autoresbot error:", err.message);
-      // Fallback ke V2
-      try {
-        const buffer = await createGoodbyeCard(username, ppUrl, groupName, memberCount);
-        await sock.sendMessage(groupJid, {
-          image: buffer,
-          caption: engineText,
-          mentions: [participantJid],
-        });
-        return;
-      } catch (err2) {
-        console.error("goodbye v3 fallback error:", err2.message);
-      }
-    }
-  }
-
-  // ===== V4: GLASSMORPHISM CARD =====
-  if (goodbyeType === 4) {
-    try {
-      const buffer = await createGoodbyeCardV4(username, ppUrl, groupName, memberCount);
-      await sock.sendMessage(groupJid, {
-        image: buffer,
-        caption: engineText,
-        mentions: [participantJid],
-      });
-      return;
-    } catch (err) {
-      console.error("goodbye v4 glassmorphism error:", err.message);
-    }
-  }
-
-  // ===== V5: SIMPLE — teks engine + foto profile =====
-  if (goodbyeType === 5 && ppUrl) {
-    try {
-      await sock.sendMessage(groupJid, {
-        image: { url: ppUrl },
-        caption: engineText,
-        mentions: [participantJid],
-      });
-      return;
-    } catch (err) {
-      console.error("goodbye v5 simple error:", err.message);
-    }
-  }
-
-  // ===== Fallback ke teks =====
   await sock.sendMessage(groupJid, {
     text: engineText,
     mentions: [participantJid],
@@ -199,8 +112,8 @@ export default {
     name: "goodbye2",
     alias: ["goodbye2", "goodbye"],
     category: "group",
-    description: "Pesan goodbye saat member keluar grup (v1 teks / v2 canvas / v3 API / v4 glassmorphism / v5 teks + foto PP)",
-    usage: ".goodbye on/off\n.setgoodbyetype v1 (teks) / v2 (canvas) / v3 (API bg) / v4 (glassmorphism) / v5 (teks + foto PP)",
+    description: "Pesan goodbye saat member keluar grup (teks engine)",
+    usage: ".goodbye on/off\n.setgoodbye <pesan> (custom)\n.resetgoodbye (reset)",
     example: ".goodbye on",
     isOwner: true,
     isPremium: false,
