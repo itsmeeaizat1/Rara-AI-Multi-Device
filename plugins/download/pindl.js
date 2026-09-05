@@ -35,6 +35,7 @@ async function handler(m, { sock }) {
     return m.reply(novaError("Pinterest DL", "URL tidak valid. Pastikan pakai link Pinterest (pin.it atau pinterest.com)!"));
   }
   try {
+        await m.react("🕒");
     // Try IkyyXD pindl first
     const ikyyResult = await ikyyDl("pindl", url);
     if (ikyyResult?.medias?.length) {
@@ -55,7 +56,7 @@ async function handler(m, { sock }) {
         break;
       }
       return;
-      await m.reply(novaBerhasil("Pinterest"));
+      await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Pinterest"));
     }
 
     // Fallback to builtin scraper
@@ -118,7 +119,7 @@ async function handler(m, { sock }) {
         }
       }
     }
-    await m.reply(novaBerhasil("Pinterest"));
+    await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Pinterest"));
   } catch (error) {
     console.error("[PinDL] Error:", error);
     m.reply(novaGangguan("Pinterest DL"));

@@ -22,6 +22,7 @@ function tempPath(ext) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+        await m.react("🕒");
     // Try IkyyXD terabox first
     const ikyyResult = await ikyyDl("terabox", url);
     if (ikyyResult?.medias?.length) {
@@ -59,7 +60,7 @@ const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title
       tipText(`Ketik ${prefix}terabox <link> untuk download file lain`);
 
     await m.reply(text);
-      await m.reply(novaBerhasil("terabox2"));
+      await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("terabox2"));
   } catch (error) {
     return m.reply(novaError("Terabox", `Gagal mengunduh file — ${error.message || 'terjadi kesalahan, coba lagi nanti ya'}`));
   }

@@ -120,6 +120,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
+    await m.react("🕒");
     const url = m.text?.trim()
 
     if (!url) {
@@ -261,6 +262,7 @@ async function handler(m, { sock }) {
 
         throw new Error('Tidak ada media yang dapat diunduh')
 
+        await m.react("🐣");
         await m.reply(novaBerhasil("Tiktokdl2"));
     } catch (err) {
         console.error('[TikTokDL2] Error:', err)

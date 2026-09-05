@@ -28,6 +28,7 @@ async function handler(m, { sock }) {
         return m.reply(novaGuide('CocoFun', 'URL-nya gak valid nih! Pakai link CocoFun ya.', `${m.prefix}cfdl https://www.cocofun.com/share/post/xxx`))
     }
     try {
+        await m.react("🕒");
         const data = await cocofun(url)
         
         if (!data?.status || !data?.result) {
@@ -46,7 +47,7 @@ async function handler(m, { sock }) {
           video: { url: videoUrl }, caption: _cap,
           contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m });
-        await m.reply(novaBerhasil("Cocofundl"));
+        await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Cocofundl"));
     } catch (err) {
         return m.reply(novaError('CocoFun', 'Ada error nih, coba lagi ya'))
     }
