@@ -3,7 +3,7 @@
 import { claraWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { createWideDiscordCard, createWelcomeCardV3, detectCountry } from "../../src/lib/nova-welcome-card.js";
+import { createWideDiscordCard, createWelcomeCardV3, createWelcomeCardV4, detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
@@ -12,7 +12,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      await m.reply(novaGuide('Welcome', `Aktifkan atau matikan pesan sambutan member baru. Pilih tipe dengan ${prefix}setwelcometype v1/v2/v3.`, `${prefix}welcome on`));
+      await m.reply(novaGuide('Welcome', `Aktifkan atau matikan pesan sambutan member baru. Pilih tipe dengan ${prefix}setwelcometype v1-v5.`, `${prefix}welcome on`));
       return { handled: true };
     }
 
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
       `Status : ${args === "on" ? "ON" : "OFF"}`,
       `Grup : ${m.chat}`,
       "",
-      `💡 Ketik ${prefix}setwelcometype v1/v2/v3 untuk pilih tipe`,
+      `💡 Ketik ${prefix}setwelcometype v1/v2/v3/v4/v5 untuk pilih tipe`,
     ].join("\n")));
   } catch (error) {
     await m.reply(novaError('Welcome', `Gagal: ${error.message}`));
@@ -55,18 +55,25 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   const displayName = userData.name || userData.regName || username;
   const country = detectCountry(participantJid);
 
+  // Nama owner grup (buat placeholder {owner})
+  const ownerJid = metadata?.owner || "";
+  const ownerData = ownerJid ? db.getUser(ownerJid) || {} : {};
+  const ownerName = ownerData.name || ownerData.regName || ownerJid.split("@")[0] || "Owner";
+
   // Deskripsi/rules grup: custom welcomeMsg (yang di-set owner) > deskripsi grup
-  const now = new Date();
+  // Semua placeholder didukung: {user} {number} {group} {desc} {count} {owner} {date} {time} {day} {bot} {prefix}
   let rulesText = "";
   const customMsg = String(groupData.welcomeMsg || "").trim();
   if (customMsg) {
-    const dayName = now.toLocaleDateString("id-ID", { weekday: "long" });
-    const dateStr = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-    rulesText = customMsg
-      .replaceAll("{user}", "@" + username)
-      .replaceAll("{group}", groupName)
-      .replaceAll("{day}", dayName)
-      .replaceAll("{date}", dateStr);
+    rulesText = fillWelcomeTemplate(customMsg, {
+      username,
+      groupName,
+      memberCount,
+      desc: metadata?.desc || "",
+      ownerName,
+      botName: config.bot?.name || "Nova AI",
+      prefix,
+    });
   } else if (metadata?.desc) {
     rulesText = metadata.desc;
   }
@@ -154,7 +161,36 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     }
   }
 
-  // ===== V4+: Fallback ke teks =====
+  // ===== V4: GLASSMORPHISM CARD =====
+  if (welcomeType === 4) {
+    try {
+      const buffer = await createWelcomeCardV4(username, ppUrl, groupName, memberCount);
+      await sock.sendMessage(groupJid, {
+        image: buffer,
+        caption: engineText,
+        mentions: [participantJid],
+      });
+      return;
+    } catch (err) {
+      console.error("welcome v4 glassmorphism error:", err.message);
+    }
+  }
+
+  // ===== V5: SIMPLE — teks engine + foto profile =====
+  if (welcomeType === 5 && ppUrl) {
+    try {
+      await sock.sendMessage(groupJid, {
+        image: { url: ppUrl },
+        caption: engineText,
+        mentions: [participantJid],
+      });
+      return;
+    } catch (err) {
+      console.error("welcome v5 simple error:", err.message);
+    }
+  }
+
+  // ===== Fallback ke teks =====
   await sock.sendMessage(groupJid, {
     text: engineText,
     mentions: [participantJid],
@@ -166,8 +202,8 @@ export default {
     name: "welcome2",
     alias: ["welcome2", "welcome"],
     category: "group",
-    description: "Pesan welcome saat member join grup (v1 teks / v2 canvas / v3 autoresbot API)",
-    usage: ".welcome on/off\n.setwelcometype v1 (teks) / v2 (canvas) / v3 (API bg)",
+    description: "Pesan welcome saat member join grup (v1 teks / v2 canvas / v3 API / v4 glassmorphism / v5 teks + foto PP)",
+    usage: ".welcome on/off\n.setwelcometype v1 (teks) / v2 (canvas) / v3 (API bg) / v4 (glassmorphism) / v5 (teks + foto PP)",
     example: ".welcome on",
     isOwner: true,
     isPremium: false,

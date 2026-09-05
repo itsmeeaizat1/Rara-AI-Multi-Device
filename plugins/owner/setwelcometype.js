@@ -23,7 +23,7 @@ const VARIANTS = {
   1: { name: "Text Only", desc: "Pesan teks biasa tanpa gambar", emoji: "📝" },
   2: { name: "Canvas Hexagon", desc: "Gambar canvas lokal dengan hexagon avatar (dark blue)", emoji: "🎨" },
   3: { name: "API Thumbnail", desc: "Background autoresbot API + PP user + total member (vertical layout)", emoji: "🖼️" },
-  4: { name: "Glassmorphism", desc: "Glass card style dengan foto profil bulat", emoji: "" },
+  4: { name: "Glassmorphism", desc: "Glass card style dengan foto profil bulat", emoji: "🪟" },
   5: { name: "Simple", desc: "Pesan teks simple + foto profile", emoji: "📄" },
 };
 
@@ -36,9 +36,12 @@ async function handler(m, { sock, db }) {
     const id = parseInt(variant.replace("v", ""));
     db.setting("welcomeType", id);
     await db.save();
-    await m.reply(claraWrap("WELCOME TYPE", `✅ *WELCOME TYPE DIUBAH*\n\n` +
-        `${VARIANTS[id].emoji} *V${id} — ${VARIANTS[id].name}*\n` +
-        `_${VARIANTS[id].desc}_`));
+    await m.reply(claraWrap("welcome type", [
+      "Tipe welcome berhasil diubah!",
+      "",
+      `📌 Tipe Baru : ${VARIANTS[id].emoji} V${id} — ${VARIANTS[id].name}`,
+      `${VARIANTS[id].desc}`,
+    ], "success"));
     return;
   }
 

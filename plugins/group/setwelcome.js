@@ -23,27 +23,37 @@ async function handler(m, { sock }) {
   const text = m.fullArgs?.trim() || m.args.join(" ");
 
   if (!text) {
-    return m.reply( `📝 *ꜱᴇᴛ ᴡᴇʟᴄᴏᴍᴇ*\n\n` +
-        `\`{user}\` - Nama member\n` +
-        `\`{number}\` - Nomor member\n` +
-        `\`{group}\` - Nama grup\n` +
-        `\`{desc}\` - Deskripsi grup\n` +
-        `\`{count}\` - Jumlah member\n` +
-        `\`{owner}\` - Nama owner grup\n` +
-        `\`{date}\` - Tanggal (DD/MM/YYYY)\n` +
-        `\`{time}\` - Waktu (HH:mm WIB)\n` +
-        `\`{day}\` - Hari (Senin, Selasa, dll)\n` +
-        `\`{bot}\` - Nama bot\n` +
-        `\`{prefix}\` - Prefix bot\n` +
-        `\n` +
-        `\`Contoh:\`\n` +
-        `\`${m.prefix}setwelcome Halo {user}! 👋\`\n` +
-        `\`Selamat datang di {group} pada {day}, {date}\``, "setwelcome");
+    return m.reply(claraWrap("setwelcome", [
+      "Set pesan welcome custom buat grup ini.",
+      "",
+      `📌 Format: ${m.prefix}setwelcome <pesan>`,
+      "",
+      "Placeholder yang bisa dipakai:",
+      "{user} : Nama member yang masuk",
+      "{number} : Nomor member",
+      "{group} : Nama grup",
+      "{desc} : Deskripsi grup",
+      "{count} : Total member",
+      "{owner} : Nama owner grup",
+      "{date} : Tanggal (DD/MM/YYYY)",
+      "{time} : Waktu (HH:mm WIB)",
+      "{day} : Hari (Senin, Selasa, dll)",
+      "{bot} : Nama bot",
+      "{prefix} : Prefix bot",
+      "",
+      `💡 Contoh: ${m.prefix}setwelcome Halo {user}! Selamat datang di {group} pada {day}, {date}`,
+    ]));
   }
 
   db.setGroup(m.chat, { welcomeMsg: text, welcome: true });
   db.save();
-  await m.reply(claraWrap("Setwelcome", `Welcome berhasil di set menjadi ${text}\nMau reset? ketik ${m.prefix}resetwelcome`, "success"));
+  await m.reply(claraWrap("setwelcome", [
+    "Pesan welcome berhasil di set!",
+    "",
+    `📌 Isi : ${text}`,
+    "",
+    `💡 Mau balikin ke default? Ketik ${m.prefix}resetwelcome`,
+  ], "success"));
 }
 
 export { pluginConfig as config, handler };

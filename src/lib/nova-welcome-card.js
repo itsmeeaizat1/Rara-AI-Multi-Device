@@ -779,6 +779,28 @@ function detectCountry(jid) {
   return "Tidak diketahui";
 }
 
+// Isi placeholder custom welcome/goodbye message (dipakai setwelcome/setgoodbye)
+// Placeholder: {user} {number} {group} {desc} {count} {owner} {date} {time} {day} {bot} {prefix}
+function fillWelcomeTemplate(text, ctx) {
+  const now = new Date();
+  const dayName = now.toLocaleDateString("id-ID", { weekday: "long" });
+  const pad = (n) => String(n).padStart(2, "0");
+  const dateStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`;
+  const timeStr = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }) + " WIB";
+  return String(text || "")
+    .replaceAll("{user}", "@" + (ctx.username || ""))
+    .replaceAll("{number}", ctx.username || "")
+    .replaceAll("{group}", ctx.groupName || "")
+    .replaceAll("{desc}", ctx.desc || "")
+    .replaceAll("{count}", String(ctx.memberCount ?? 0))
+    .replaceAll("{owner}", ctx.ownerName || "Owner")
+    .replaceAll("{day}", dayName)
+    .replaceAll("{date}", dateStr)
+    .replaceAll("{time}", timeStr)
+    .replaceAll("{bot}", ctx.botName || "Nova AI")
+    .replaceAll("{prefix}", ctx.prefix || ".");
+}
+
 export {
   createWideDiscordCard,
   createGoodbyeCard,
@@ -788,4 +810,5 @@ export {
   createGoodbyeCardV4,
   fetchAutoresbotBg,
   detectCountry,
+  fillWelcomeTemplate,
 };
