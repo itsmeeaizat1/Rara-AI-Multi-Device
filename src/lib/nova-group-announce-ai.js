@@ -7,6 +7,11 @@
 // AI disuruh nyelipin placeholder literal @{user} di tengah kalimat
 // (diganti jadi @nomor + mentions pas dikirim). Kalau hasil AI gak
 // lolos validasi (placeholder hilang/lebih dari satu), pakai template.
+//
+// FALLBACK ENGINE: kalau AI mati/timeout, pesan GAK kaku sebaris —
+// pakai format engine khas welcome/goodbye (novaGameBox): sapaan acak,
+// info lengkap (grup, admin mention, tanggal, waktu WIB, member, status),
+// CTA tematik per jenis.
 
 const IKY_AI_URL = "https://api.ikyyxd.my.id/ai/gemini";
 const TIMEOUT_MS = 7000; // jangan bikin .close/.open nunggu kelamaan
@@ -78,6 +83,68 @@ async function fetchFromIky(type, ctx) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+import { novaGameBox, gameCTA } from "./nova-games.js";
+
+// ─── FALLBACK ENGINE (format khas welcome/goodbye) ───
+
+// Sapaan acak biar fallback pun gak monoton
+const FLAVOR_CLOSE = [
+  (n) => `🔒 *Waduh, grup dikunci dulu sama @${n}!*`,
+  (n) => `*Gembok kepasang!* @${n} nutup grup bentar ya`,
+  (n) => `*Shhh...* @${n} lagi tidurin grup nih, tetep tenang ya`,
+  (n) => `*Grup resmi di-lock sama @${n}*, tunggu bentar ya`,
+];
+const FLAVOR_OPEN = [
+  (n) => `🔓 *Yeay, pintu grup dibuka lagi sama @${n}!*`,
+  (n) => `*Bebas chat lagi!* @${n} baru aja buka grup nih`,
+  (n) => `*Alhamdulillah, @${n} udah buka grup lagi*`,
+  (n) => `*Grup hidup kembali!* Makasih ya @${n} udah buka`,
+];
+
+function nowDateTimeWib() {
+  const now = new Date();
+  const tanggal = now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
+  const waktu = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }) + " WIB";
+  return { tanggal, waktu };
+}
+
+/**
+ * Fallback engine grup ditutup/dibuka kembali — dipakai kalau AI mati.
+ * Format khas welcome/goodbye: sapaan acak + box info lengkap + CTA.
+ * @param {"close"|"open"} type
+ * @param {{groupName?:string, senderNum?:string, memberCount?:number}} ctx
+ * @returns {string} teks engine (mention @nomor ada di flavor & baris Admin)
+ */
+export function buildFallbackAnnounce(type, ctx = {}) {
+  const { groupName = "Grup", senderNum = "", memberCount = 0 } = ctx;
+  const { tanggal, waktu } = nowDateTimeWib();
+  const flavors = type === "close" ? FLAVOR_CLOSE : FLAVOR_OPEN;
+  const flavor = flavors[Math.floor(Math.random() * flavors.length)](senderNum);
+
+  const rows = [
+    `│ • 🏠 Grup : ${groupName}`,
+    `│ • 👤 Admin : @${senderNum}`,
+    `│ • 📅 Tanggal : ${tanggal}`,
+    `│ • 🕐 Waktu : ${waktu}`,
+  ];
+  if (memberCount > 0) rows.push(`│ • 👥 Total Member : ${memberCount}`);
+  if (type === "close") {
+    rows.push(`│ • 🔒 Status : Hanya admin yang bisa mengirim pesan`);
+    rows.push(`│ • ℹ️ Info : Grup dibuka kembali oleh admin ketika sudah waktunya`);
+  } else {
+    rows.push(`│ • 🔓 Status : Semua member sudah bisa mengirim pesan kembali`);
+    rows.push(`│ • ℹ️ Info : Yuk ramein lagi obrolannya, jangan cuma baca doang`);
+  }
+
+  return novaGameBox({
+    title: type === "close" ? "GROUP CLOSED" : "GROUP OPENED",
+    icon: type === "close" ? "🔒" : "🔓",
+    flavor,
+    body: rows.join("\n"),
+    cta: gameCTA(type === "close" ? "groupclosed" : "groupopened"),
+  });
 }
 
 /**

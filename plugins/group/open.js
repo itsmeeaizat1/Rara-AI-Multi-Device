@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { getAiGroupAnnounce } from "../../src/lib/nova-group-announce-ai.js";
+import { getAiGroupAnnounce, buildFallbackAnnounce } from "../../src/lib/nova-group-announce-ai.js";
 const pluginConfig = {
     name: "open",
     alias: ["open", "opengc"],
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
         await m.react("🕒");
         
         // Pesan digenerate AI — berubah tiap kali grup dibuka kembali.
-        // AI mati/timeout → fallback template lokal.
+        // AI mati/timeout → fallback engine (sapaan acak + info lengkap + CTA).
         let successMsg = null;
         try {
             const aiText = await getAiGroupAnnounce('open', {
@@ -46,7 +46,11 @@ async function handler(m, { sock }) {
             if (aiText) successMsg = aiText.replace("@{user}", `@${senderNum}`);
         } catch {}
         
-        if (!successMsg) successMsg = `✅ @${senderNum} telah membuka grup ini\n_Sekarang kalian bisa mengirim pesan_`;
+        if (!successMsg) successMsg = buildFallbackAnnounce('open', {
+            groupName: m.groupMetadata?.subject || undefined,
+            senderNum,
+            memberCount: m.groupMetadata?.participants?.length || 0,
+        });
         
         await m.react("🐣");
         await m.reply(successMsg, { mentions: [m.sender] });
