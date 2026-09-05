@@ -100,17 +100,14 @@ async function handler(m, { sock }) {
   const content = args.slice(1).join(" ");
 
   if (!style || style === "list") {
-    const list = Object.entries(STYLES)
-      .map(([k, v]) => `${v.emoji} ${k} — ${v.desc}`)
-      .join("\n");
     return m.reply(claraWrap("textpro", [
       "Daftar style tersedia:",
       "",
-      list,
+      ...Object.entries(STYLES).map(([k, v]) => `${v.emoji} ${k} — ${v.desc}`),
       "",
-      `Cara: ${m.prefix}textpro <style> <teks>`,
+      `📌 Format: ${m.prefix}textpro <style> <teks>`,
       `💡 Contoh: ${m.prefix}textpro neon Halo Dunia`,
-    ].join("\n")));
+    ]));
   }
 
   if (!STYLES[style]) {

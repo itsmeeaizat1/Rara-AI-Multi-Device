@@ -224,23 +224,21 @@ async function handler(m, { sock }) {
     qmsg.mimetype?.includes("image");
 
   if (!isImage) {
-    return m.reply( claraWrap("nowm", [
+    return m.reply(claraWrap("nowm", [
       "Hapus watermark, logo, teks, atau object dari gambar.",
       "",
-      "CARA PAKAI:",
-      m.prefix + "nowm (reply gambar) — Auto detect watermark",
-      m.prefix + "nowm center (reply gambar) — Hapus area tengah",
-      m.prefix + "nowm top-right (reply gambar) — Hapus area kanan atas",
+      "📌 Format:",
+      `${m.prefix}nowm (reply gambar) — auto detect watermark`,
+      `${m.prefix}nowm center (reply gambar) — hapus area tengah`,
+      `${m.prefix}nowm top-right (reply gambar) — hapus area kanan atas`,
       "",
-      "POSISI yang didukung:",
-      "top-left, top-right, top, center,",
-      "bottom-left, bottom-right, bottom,",
-      "left, right, all",
+      "Posisi yang didukung: top-left, top-right, top, center,",
+      "bottom-left, bottom-right, bottom, left, right, all",
       "",
-      "INFO:",
-      "Pakai ClipDrop AI API (100 free credits).",
-      "Daftar di clipdrop.co/apis untuk dapat API key.",
-    ].join("\n")), "nowm");
+      `💡 Contoh: ${m.prefix}nowm center`,
+      "",
+      "Pakai ClipDrop AI API (100 free credits), fallback lokal otomatis.",
+    ]));
   }
 
   const input = m.text?.trim().toLowerCase() || "";
@@ -262,11 +260,7 @@ async function handler(m, { sock }) {
         .toBuffer();
     }
 
-    await m.reply(claraWrap("nowm", [
-      "Status: Menganalisis gambar...",
-      "Mode: " + (position ? "Region (" + position + ")" : "Auto detect"),
-      "API: " + (apiKey ? "ClipDrop (AI)" : "Local (fallback)"),
-    ].join("\n")));
+    await m.react("🕒");
 
     // Generate mask
     const maskBuffer = await autoGenerateMask(processedBuffer, position);
@@ -295,6 +289,7 @@ async function handler(m, { sock }) {
     if (!resultBuffer) {
       return m.reply(claraWrap("nowm", "Gagal memproses gambar. Coba gambar lain."));
     }
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -304,7 +299,8 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (e) {
-    m.reply(claraWrap("nowm", "Gagal: " + e.message));
+    await m.react("❌");
+    m.reply(claraWrap("nowm", "Gagal: " + e.message, "error"));
   }
 }
 

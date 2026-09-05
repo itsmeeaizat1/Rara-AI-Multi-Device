@@ -117,14 +117,13 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (command === 'ephoto') {
-        const effectList = Object.keys(EFFECT_URLS).map(e => `${m.prefix}${e}`).join('\n')
         return m.reply(claraWrap("ephoto", [
             "Buat efek text keren!",
             "",
-            "Daftar Efek:",
-            effectList,
+            "Daftar efek:",
+            ...Object.keys(EFFECT_URLS).map(e => `${m.prefix}${e}`),
             "",
-            "💡 Contoh: " + m.prefix + "glitchtext Nova-AI",
+            `💡 Contoh: ${m.prefix}glitchtext Nova-AI`,
         ]))
     }
     
@@ -137,12 +136,15 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("ephoto", "Efek tidak ditemukan"))
     }
     try {
+        await m.react("🕒");
         const imageUrl = await ephoto(effectUrl, text)
     
+        await m.react("🐣");
         await sock.sendMedia(m.chat, imageUrl, null, m, {
             type: 'image'
         })
     } catch (error) {
+        await m.react("❌");
         m.reply(claraWrap("ephoto", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
