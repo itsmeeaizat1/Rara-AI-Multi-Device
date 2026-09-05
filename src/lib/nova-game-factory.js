@@ -457,7 +457,7 @@ games.register('susunkatav2', { emoji: '🧩', title: 'SUSUN KATA V2', descripti
 games.register('tekatekiv2', { emoji: '🧩', title: 'TEKA TEKI V2', description: 'Teka teki — soal live HaidarApis', fetchQuestion: () => haidarGame('tekateki'), timeout: 60000, alias: [] });
 games.register('tebaktebakanv2', { emoji: '❓', title: 'TEBAK TEBAKAN V2', description: 'Tebak tebakan — soal live HaidarApis', fetchQuestion: () => haidarGame('tebaktebakan'), timeout: 60000, alias: [] });
 games.register('tebaklirikv2', { emoji: '🎶', title: 'TEBAK LIRIK V2', description: 'Tebak lirik — soal live HaidarApis', fetchQuestion: () => haidarGame('tebaklirik'), timeout: 60000, alias: [] });
-games.register('tebakkimiav2', { emoji: '⚗️', title: 'TEBAK KIMIA V2', description: 'Tebak kimia — soal live HaidarApis', fetchQuestion: () => haidarGame('tebakkimia'), timeout: 60000, alias: [] });
+games.register('tebakkimiav2', { emoji: '⚗️', title: 'TEBAK KIMIA V2', description: 'Tebak kimia — soal live HaidarApis', questionField: 'unsur', answerField: 'lambang', fetchQuestion: () => haidarGame('tebakkimia'), timeout: 60000, alias: [] });
 games.register('islamicv2', { emoji: '🕌', title: 'TEBAK ISLAMIC V2', description: 'Pengetahuan islami — soal live HaidarApis', fetchQuestion: () => haidarGame('islamic'), timeout: 60000, alias: [] });
 
 // IMAGE GAMES
