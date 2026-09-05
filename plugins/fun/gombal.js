@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "gombal",
@@ -95,21 +96,22 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const pool = GOMBAL_DB[selectedCat];
     const line = pool[Math.floor(Math.random() * pool.length)];
 
-    const lines = [
-      "Kategori: " + selectedCat,
-      "",
-      line,
+    const rows = [
+      `│ • 🎯 Kategori : ${selectedCat}`,
     ];
 
     if (target) {
-      lines.splice(0, 0, "Untuk: @" + target.split("@")[0]);
+      rows.unshift(`│ • 💌 Untuk : @${target.split("@")[0]}`);
     }
-
-    lines.push("");
-    lines.push(usedPrefix + "gombal <kategori> untuk lagi");
+    rows.push("│", `│ • ${line}`);
 
     await m.react("🐣");
-    return m.reply(claraWrap("Gombal", lines, "info"));
+    return m.reply(novaGameBox({
+      title: "gombal", icon: "💘",
+      flavor: "💘 *GOMBALAN BUAT KAMU!*",
+      body: rows.join("\n"),
+      cta: gameCTA("gombal"),
+    }));
   } catch (e) {
     await m.react("❌");
     return m.reply(claraWrap("Gombal", "Error: " + e.message, "error"));

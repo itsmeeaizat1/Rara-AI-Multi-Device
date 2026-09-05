@@ -3,6 +3,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "tolak",
@@ -82,12 +83,15 @@ async function handler(m, { sock }) {
     const sessionKey = `${m.chat}_${m.sender}`;
     if (global.jadianSessions?.[sessionKey]) delete global.jadianSessions[sessionKey];
 
-    await m.reply(
-      claraWrap("YANG SABAR 💔",
-        `@${m.sender.split("@")[0]} menolak @${shooterJid.split("@")[0]}\n` +
-        `Sabar ya, masih banyak yang lain! 😢`
-      )
-    );
+    await m.reply(novaGameBox({
+      title: "ditolak", icon: "💔",
+      flavor: "💔 *DITOLAK, SABAR YA...*",
+      body: [
+        `│ • 🏹 @${m.sender.split("@")[0]} menolak @${shooterJid.split("@")[0]}`,
+        "│ • 💪 Sabar ya, masih banyak yang lain!",
+      ].join("\n"),
+      cta: gameCTA("jadianTolak"),
+    }));
     await m.react("💔");
   } catch (e) {
     console.error("[tolak] Error:", e.message);

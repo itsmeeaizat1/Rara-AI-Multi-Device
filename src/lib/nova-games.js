@@ -135,6 +135,18 @@ const GAME_CTA = {
   confess: "Yuk confess lagi kak, siapa tau dia juga nungguin dari dulu 💘🥳",
   confessviral: "Yuk confess viral lagi kak, biar makin ramai peminatmu 💘🥳",
   confesswall: "Yuk posting cerita lain kak, siapa tau jadi viral 💌🥳",
+  // FUN CINTA ROUND 2 (jodoh, calculator, ramalan, putus, dll)
+  jodoh: "Yuk cari jodoh lain kak, siapa tau lebih cocok 💘🥳",
+  lovecalc: "Yuk ukur cinta lagi kak, siapa tau skornya makin tinggi 💘🥳",
+  ramalancinta: "Yuk ramal lagi kak, siapa tau masa depannya makin jelas 💞🥳",
+  soulmate: "Yuk ukur kecocokan jiwa lagi kak, siapa tau dia memang jodohmu 💞🥳",
+  cintaquiz: "Yuk jawab kuis lagi kak, biar makin paham soal cinta 💘🥳",
+  cintatips: "Yuk baca tips lain kak, biar makin jago merangkul 💘🥳",
+  cintagram: "Yuk bikin cinta gram lagi kak, biar makin romantis 💘🥳",
+  gombal: "Yuk gombal lagi kak, siapa tau dia klepek-klepek 💘🥳",
+  bucin: "Yuk baca quotes lain kak, biar makin melar 💕🥳",
+  putus: "Yuk move on dulu kak, siapa tau jodoh berikutnya lebih baik 💪🥳",
+  tolaknikah: "Yuk sabar kak, siapa tau lamaran berikutnya diterima 💪🥳",
   // RPG FEATURES BATCH 2 (hasil aksi RPG → format engine)
   adventure: "Yuk petualangan lagi kak, siapa tau nemu harta karun 🗺️🥳",
   adventurev2: "Yuk jelajah biome lain kak, biar makin jago bertahan 🧭🥳",

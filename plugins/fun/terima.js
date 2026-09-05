@@ -3,6 +3,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "terima",
@@ -118,12 +119,15 @@ async function handler(m, { sock }) {
     const sessionKey = `${m.chat}_${m.sender}`;
     if (global.jadianSessions?.[sessionKey]) delete global.jadianSessions[sessionKey];
 
-    await m.reply(
-      claraWrap("CIE CIE 💕",
-        `@${m.sender.split("@")[0]} dan @${shooterJid.split("@")[0]} resmi jadian!\n` +
-        `Semoga langgeng dan bahagia 💍`
-      )
-    );
+    await m.reply(novaGameBox({
+      title: "resmi jadian", icon: "💕",
+      flavor: "💕 *CIE CIE, RESMI JADIAN!*",
+      body: [
+        `│ • 💑 @${m.sender.split("@")[0]} & @${shooterJid.split("@")[0]}`,
+        "│ • 💍 Semoga langgeng dan bahagia!",
+      ].join("\n"),
+      cta: gameCTA("jadianSukses"),
+    }));
     await m.react("💕");
   } catch (e) {
     console.error("[terima] Error:", e.message);

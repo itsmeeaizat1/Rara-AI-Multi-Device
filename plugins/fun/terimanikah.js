@@ -3,6 +3,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "terimanikah",
@@ -91,12 +92,15 @@ async function handler(m, { sock }) {
     const sessionKey = `${m.chat}_${m.sender}`;
     if (global.nikahSessions?.[sessionKey]) delete global.nikahSessions[sessionKey];
 
-    await m.reply(
-      claraWrap("SELAMAT MENIKAH 💍",
-        `@${m.sender.split("@")[0]} dan @${proposerJid.split("@")[0]} resmi menikah!\n` +
-        `Semoga sakinah, mawaddah, warahmah 🤲`
-      )
-    );
+    await m.reply(novaGameBox({
+      title: "selamat menikah", icon: "💍",
+      flavor: "💍 *SELAMAT MENIKAH!*",
+      body: [
+        `│ • 💑 @${m.sender.split("@")[0]} & @${proposerJid.split("@")[0]}`,
+        "│ • 🤲 Semoga sakinah, mawaddah, warahmah!",
+      ].join("\n"),
+      cta: gameCTA("nikahmatch"),
+    }));
     await m.react("💍");
   } catch (e) {
     console.error("[terimanikah] Error:", e.message);

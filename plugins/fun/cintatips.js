@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
   name: "cintatips",
@@ -150,15 +151,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       )
     }
 
-    let lines = []
-    lines.push(kat.judul)
-    lines.push("")
+    const rows = [`│ • 💡 ${kat.judul}`, "│"]
     kat.tips.forEach(t => {
-      lines.push(t)
+      rows.push(`│ • ${t}`)
     })
 
     await m.react("🐣");
-    return m.reply(claraWrap("Tips Cinta - " + kat.nama, lines.join("\n")))
+    return m.reply(novaGameBox({
+      title: "tips cinta", icon: "💘",
+      flavor: `💘 *TIPS CINTA - ${kat.nama.toUpperCase()}!*`,
+      body: rows.join("\n"),
+      cta: gameCTA("cintatips"),
+    }))
   } catch (e) {
     await m.react("❌");
     return m.reply(claraWrap("Tips Cinta", "Error: " + e.message))
