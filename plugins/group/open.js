@@ -6,8 +6,8 @@ const pluginConfig = {
     alias: ["open", "opengc"],
     category: 'group',
     description: 'Membuka grup agar semua member bisa chat',
-    usage: '.open',
-    example: '.open',
+    usage: '.open <alasan (opsional)>',
+    example: '.open sudah selesai',
     isOwner: false,
     isPremium: false,
     isGroup: true,
@@ -33,6 +33,7 @@ async function handler(m, { sock }) {
         await sock.groupSettingUpdate(m.chat, 'not_announcement');
         
         const senderNum = m.sender.split('@')[0];
+        const reason = (m.args?.join(" ") || "").trim();
         await m.react("🕒");
         
         // Pesan digenerate AI — berubah tiap kali grup dibuka kembali.
@@ -42,6 +43,7 @@ async function handler(m, { sock }) {
             const aiText = await getAiGroupAnnounce('open', {
                 groupName: m.groupMetadata?.subject || undefined,
                 actorName: m.pushName || undefined,
+                reason: reason || undefined,
             });
             if (aiText) successMsg = aiText.replace("@{user}", `@${senderNum}`);
         } catch {}
@@ -50,6 +52,7 @@ async function handler(m, { sock }) {
             groupName: m.groupMetadata?.subject || undefined,
             senderNum,
             memberCount: m.groupMetadata?.participants?.length || 0,
+            reason: reason || undefined,
         });
         
         await m.react("🐣");

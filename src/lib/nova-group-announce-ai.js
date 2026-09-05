@@ -39,9 +39,7 @@ function buildPrompt(type, ctx) {
       ? `Artinya: sementara ini HANYA admin yang bisa kirim pesan, member lain harus menunggu sampai grup dibuka lagi. `
       : `Artinya: SEMUA member sudah bebas kirim pesan kembali seperti biasa. `) +
     (reason ? `Alasan dari admin: "${reason}" — WAJIB sertakan alasan ini di pengumuman. ` : ``) +
-    (isClose
-      ? `Gaya: pengumuman langsung dan jelas, contoh pembuka "Grup ditutup oleh admin..." — TANPA kiasan (jangan pakai kata "gembok", "kunci", "pintu", atau metafora lain). `
-      : `Sampaikan dengan hangat dan santai, boleh sedikit lucu atau menyapa member. `) +
+    `Gaya: pengumuman langsung dan jelas, contoh pembuka ${isClose ? `"Grup ditutup oleh admin..."` : `"Grup dibuka kembali oleh admin..."`} — TANPA kiasan (jangan pakai kata "gembok", "kunci", "pintu", atau metafora lain). ` +
     `\n\n` +
     `[ATURAN]\n` +
     `- Wajib sertakan teks placeholder @{user} TEPAT SATU KALI di tengah kalimat ` +
@@ -101,11 +99,12 @@ const FLAVOR_CLOSE = [
   (n) => `*Pengumuman: grup ditutup oleh @${n}*`,
   (n) => `*Grup resmi ditutup oleh admin @${n}*`,
 ];
+// Sapaan close & open = pengumuman langsung TANPA kiasan (gak ada "gembok"/"pintu")
 const FLAVOR_OPEN = [
-  (n) => `🔓 *Yeay, pintu grup dibuka lagi sama @${n}!*`,
-  (n) => `*Bebas chat lagi!* @${n} baru aja buka grup nih`,
-  (n) => `*Alhamdulillah, @${n} udah buka grup lagi*`,
-  (n) => `*Grup hidup kembali!* Makasih ya @${n} udah buka`,
+  (n) => `*Grup dibuka kembali oleh admin @${n}*`,
+  (n) => `*Admin @${n} baru saja membuka grup ini*`,
+  (n) => `*Pengumuman: grup dibuka kembali oleh @${n}*`,
+  (n) => `*Grup resmi dibuka kembali oleh admin @${n}*`,
 ];
 
 function nowDateTimeWib() {
