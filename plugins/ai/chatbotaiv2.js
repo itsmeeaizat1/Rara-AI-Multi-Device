@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const res = await fetch(`https://www.abella.icu/onlinechatbot?q=${encodeURIComponent(text)}`);
     const data = await res.json();
-    if (data?.data?.answer?.data) { await m.reply(data.data.answer.data); await m.react("🐣"); }
+    if (data?.data?.answer?.data) { await m.react("🐣"); await m.reply(data.data.answer.data); }
     else { await m.reply(claraWrap("chatbotaiv2", "Tidak menemukan jawaban.", "error")); }
   } catch (e) {
     // IkyyXD fallback

@@ -20,10 +20,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.args.join(" ");
   if (!prompt) {
-    return m.reply( `🍌 *ɴᴏᴠᴀ ʙᴀɴᴀɴᴀ ꜱᴜᴘᴇʀ*\n\n` +
-        `Edit gambar dengan AI\n\n` +
-        `\`Contoh: ${m.prefix}novabanana make it anime style\`\n\n` +
-        `Reply atau kirim gambar dengan caption`, "novabanana");
+    return m.reply(claraWrap("novabanana", [
+      "Edit gambar dengan AI",
+      "",
+      `💡 Contoh: ${m.prefix}novabanana make it anime style`,
+      "Reply atau kirim gambar dengan caption",
+    ]));
   }
 
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
@@ -31,6 +33,7 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("Novabanana", `🍌 *ɴᴀɴᴏ ʙᴀɴᴀɴᴀ*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
   try {
+  await m.react("🕒");
     let mediaBuffer;
     if (m.isImage && m.download) {
       mediaBuffer = await m.download();
@@ -50,6 +53,7 @@ async function handler(m, { sock }) {
     });
   } catch (error) {
     console.log(error);
+    await m.react("🐣");
     m.reply(claraWrap("Novabanana", `🍀 *Waduhh, sepertinya ini ada kendala*
 Silahkan coba lagi nanti, dimohon jangan spam`));
   }

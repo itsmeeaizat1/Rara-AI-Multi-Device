@@ -23,16 +23,22 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🤖 *GPT-4.1 Nano*\n\n` +
-        `Tanya apa aja ke AI, nanti dijawab pakai model GPT-4.1 Nano.\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}gpt5 <pertanyaan>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}gpt5 Apa itu quantum computing?*\n` +
-        `*${m.prefix}gpt5 Buat puisi tentang Indonesia*\n\n` +
-        `_Jawaban bisa agak lama, sabar ya_`, "gpt5");
+    return m.reply(claraWrap("gpt5", [
+      "Tanya apa aja ke AI, nanti dijawab pakai model GPT-4.1 Nano.",
+      "",
+      "📌 Format:",
+      `${m.prefix}gpt5 <pertanyaan>`,
+      "",
+      "💡 Contoh:",
+      `${m.prefix}gpt5 Apa itu quantum computing?`,
+      "",
+      `${m.prefix}gpt5 Buat puisi tentang Indonesia`,
+      "",
+      "Jawaban bisa agak lama, sabar ya",
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await GPT5(text);
 
     if (!result.status) {
@@ -40,6 +46,7 @@ async function handler(m, { sock }) {
     }
     const reply = `${result.answer}`;
 
+    await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);

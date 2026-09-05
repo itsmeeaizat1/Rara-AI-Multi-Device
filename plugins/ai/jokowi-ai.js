@@ -22,20 +22,26 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🏛️ *ᴘᴀᴋ ᴊᴏᴋᴏᴡɪ*\n\n` +
-        `Pria Solo — Mantan Presiden RI\nSederhana, bijak, dan suka blusukan\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}jokowi-ai <pertanyaan>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}jokowi-ai Pak, gimana kabar?*`, "jokowi-ai");
+    return m.reply(claraWrap("jokowi-ai", [
+      "Pria Solo — Mantan Presiden RI",
+      "Sederhana, bijak, dan suka blusukan",
+      "",
+      "📌 Format:",
+      `${m.prefix}jokowi-ai <pertanyaan>`,
+      "",
+      "💡 Contoh:",
+      `${m.prefix}jokowi-ai Pak, gimana kabar?`,
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await UnlimitedAI(text, "jokowi-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *ᴊᴏᴋᴏᴡɪ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal dapet respons nih"}`; return await m.reply(__navText); };
+      { return await m.reply(claraWrap("jokowi-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
     }
     const reply = result.answer;
+    await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);

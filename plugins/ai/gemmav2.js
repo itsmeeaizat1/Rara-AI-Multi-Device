@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const res = await fetch(`https://www.velyn.biz.id/api/ai/gemma-2-9b-it?prompt=${encodeURIComponent(text)}`);
     const data = await res.json();
-    if (data?.status) { await m.reply(data.data); await m.react("🐣"); }
+    if (data?.status) { await m.react("🐣"); await m.reply(data.data); }
     else { await m.reply(claraWrap("gemmav2", "Gagal mendapatkan data.", "error")); }
   } catch (e) {
     // IkyyXD fallback

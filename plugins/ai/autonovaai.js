@@ -5,6 +5,7 @@
 import fs from "fs";
 import { askAI } from "../../src/lib/aiagent.js";
 import { load, save, clearAichatMemory } from "../../src/lib/autoflow.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const DB = "./src/data/autoflow.json";
 
@@ -129,7 +130,7 @@ async function handler(m, { sock, conn }) {
     if (sub === "list") {
       const rules = load();
       if (!rules.length) {
-        return m.reply("Belum ada rule.\nBikin: .autonovaai <kalimat bebas>", "autonovaai");
+        return m.reply(claraWrap("autonovaai", "Belum ada rule.\n\n💡 Bikin: .autonovaai <kalimat bebas>"));
       }
       const text = rules
         .map((r) => `${r.enabled ? "🟢" : "🔴"} ${r.id} [${r.hits || 0}x]\n${describe(r)}`)
@@ -142,50 +143,50 @@ async function handler(m, { sock, conn }) {
       const id = (parts[1] || "").toUpperCase();
       clearAichatMemory(id || null, null, null);
       return m.reply(
-        id
-          ? `✅ Memori obrolan AI rule ${id} dihapus. AI mulai fresh tanpa konteks lama.`
-          : `✅ Semua memori obrolan AI dihapus. Semua rule aichat mulai fresh.`,
-        "autonovaai",
+        claraWrap("autonovaai", id
+          ? `Memori obrolan AI rule ${id} dihapus. AI mulai fresh tanpa konteks lama.`
+          : `Semua memori obrolan AI dihapus. Semua rule aichat mulai fresh.`),
       );
     }
 
     // ---- .autonovaai del AF-1 ----
     if (sub === "del") {
       const id = (parts[1] || "").toUpperCase();
-      if (!id) return m.reply("Contoh: .autonovaai del AF-001", "autonovaai");
+      if (!id) return m.reply(claraWrap("autonovaai", "💡 Contoh: .autonovaai del AF-001"));
       const rules = load();
       const sisa = rules.filter((r) => r.id !== id);
       if (sisa.length === rules.length)
-        return m.reply(`❌ Rule ${id} tidak ketemu. Cek: .autonovaai list`, "autonovaai");
+        return m.reply(claraWrap("autonovaai", `Rule ${id} tidak ketemu. Cek: .autonovaai list`, "error"));
       save(sisa);
-      return m.reply(`✅ Rule ${id} dihapus`, "autonovaai");
+      return m.reply(claraWrap("autonovaai", `Rule ${id} dihapus`));
     }
 
     // ---- .autonovaai on AF-1 / .autonovaai off AF-1 ----
     if (sub === "on" || sub === "off") {
       const id = (parts[1] || "").toUpperCase();
-      if (!id) return m.reply(`Contoh: .autonovaai ${sub} AF-001`, "autonovaai");
+      if (!id) return m.reply(claraWrap("autonovaai", `💡 Contoh: .autonovaai ${sub} AF-001`));
       const rules = load();
       const r = rules.find((x) => x.id === id);
-      if (!r) return m.reply(`❌ Rule ${id} tidak ketemu. Cek: .autonovaai list`, "autonovaai");
+      if (!r) return m.reply(claraWrap("autonovaai", `Rule ${id} tidak ketemu. Cek: .autonovaai list`, "error"));
       r.enabled = sub === "on";
       save(rules);
       return m.reply(
-        `${r.enabled ? "🟢" : "🔴"} Rule ${id} ${r.enabled ? "dinyalakan" : "dimatikan"}`,
-        "autonovaai",
+        claraWrap("autonovaai", `Rule ${id} ${r.enabled ? "dinyalakan" : "dimatikan"}`),
       );
     }
 
     // ---- default: bikin rule dari kalimat bebas ----
     if (!body) {
       return m.reply(
-        `🕒 Contoh:\n` +
-        `.autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam\n` +
-        `.autonovaai setiap jam 05:00 ingatin sholat subuh\n` +
-        `.autonovaai kalau ada yang kirim sticker, react 🔥\n` +
-        `.autonovaai kalau ada yang masuk grup, kasih sambutan hangat\n\n` +
-        `.autonovaai list / del AF-1 / on AF-1 / off AF-1`,
-        "autonovaai",
+        claraWrap("autonovaai", [
+          "💡 Contoh:",
+          ".autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
+          ".autonovaai setiap jam 05:00 ingatin sholat subuh",
+          ".autonovaai kalau ada yang kirim sticker, react 🔥",
+          ".autonovaai kalau ada yang masuk grup, kasih sambutan hangat",
+          "",
+          ".autonovaai list / del AF-1 / on AF-1 / off AF-1",
+        ]),
       );
     }
 
@@ -201,15 +202,15 @@ async function handler(m, { sock, conn }) {
       if (s === -1 || e === -1) throw new Error("AI tidak mengembalikan JSON");
       rule = JSON.parse(clean.slice(s, e + 1));
     } catch (e) {
-      try { await m.react("🐣"); } catch {}
-      return m.reply(`❌ Gagal bikin rule: ${e.message}`, "autonovaai");
+      try { await m.react("❌"); } catch {}
+      return m.reply(claraWrap("autonovaai", `Gagal bikin rule: ${e.message}`, "error"));
     }
 
     // 2) VALIDASI di level kode — AI ngaco = ditolak
     const err = validate(rule);
     if (err) {
-      try { await m.react("🐣"); } catch {}
-      return m.reply(`❌ Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "autonovaai");
+      try { await m.react("❌"); } catch {}
+      return m.reply(claraWrap("autonovaai", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
     }
 
     // 3) simpan → langsung aktif
@@ -231,8 +232,8 @@ async function handler(m, { sock, conn }) {
     );
   } catch (e) {
     console.error("[autonovaai] error:", e.message);
-    try { await m.react("🐣"); } catch {}
-    return m.reply(`❌ Error: ${e.message}`, "autonovaai");
+    try { await m.react("❌"); } catch {}
+    return m.reply(claraWrap("autonovaai", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
 }
 

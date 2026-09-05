@@ -23,6 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = (m.text || "").trim();
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const providerArg = (parts[1] || "").toLowerCase();
@@ -38,10 +39,16 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("AI Model", [...lines.flatMap((line, index) => [line, index < lines.length - 1 ? "" : null].join("\n")).filter(Boolean),
         ]) +
         "\n\n" +
-        claraWrap("Pakai", [`*${prefix}aichat-model list* — lihat daftar model`, `*${prefix}aichat-model <provider> <model>* — ganti model aktif`, `Contoh: *${prefix}aichat-model gemini gemini-1.5-pro*`].join("\n")) +
+        claraWrap("aichat-model", [
+          `${prefix}aichat-model list — lihat daftar model`,
+          `${prefix}aichat-model <provider> <model> — ganti model aktif`,
+          "",
+          `💡 Contoh: ${prefix}aichat-model gemini gemini-1.5-pro`,
+        ]) +
         "\n\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
+      await m.react("🐣");
       await m.reply(text, "aichat-model");
       return { handled: true };
     }
@@ -74,8 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isOwner) {
       const text =
-        claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
-          "Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇʟ ᴀɪ.*"].join("\n")) +
+        claraWrap("aichat-model", "Perintah ini khusus owner — ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇʟ ᴀɪ.", "error") +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

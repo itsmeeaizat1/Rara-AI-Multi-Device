@@ -85,7 +85,9 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Dolphin", `❌ Masukkan pertanyaan!`))
     }
     try {
+    await m.react("🕒");
         const result = await dolphinAI(text, template)
+        await m.react("🐣");
         await m.reply(result)
     } catch (error) {
     // IkyyXD fallback

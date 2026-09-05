@@ -4,7 +4,7 @@
 // .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina
 // .mistral .together .github + IkyyXD & Tio providers
 import { callAI, callImageGen, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
-import { novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaBox, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // Command → providerKey mapping
 const PROVIDER_COMMANDS = {
@@ -100,7 +100,7 @@ async function handler(m, { sock, config, db, args, text }) {
     const providers = getAllProviders();
     const provider = providers[providerKey];
     if (!provider) {
-      await m.reply("Provider \"" + cmdUsed + "\" tidak ditemukan.\nKetik *" + prefix + "multi-ai list* untuk lihat semua provider.");
+      await m.reply(claraWrap(cmdUsed, `Provider tidak ditemukan. Cek daftar provider: ${prefix}multi-ai list`, "error"));
       return { handled: true };
     }
 
@@ -145,7 +145,7 @@ async function handler(m, { sock, config, db, args, text }) {
     }
 
     if (!userMessage) {
-      await m.reply("Tulis pesan kamu setelah command.\nContoh: *" + prefix + cmdUsed + " halo*");
+      await m.reply(claraWrap(cmdUsed, `Tulis pesan kamu setelah command.\n\n💡 Contoh: ${prefix}${cmdUsed} halo`));
       return { handled: true };
     }
 
@@ -318,7 +318,7 @@ async function handler(m, { sock, config, db, args, text }) {
   } catch (error) {
     console.error("[ai-providers.js]:", error.message);
     try { await m.react("❌"); } catch {}
-    await m.reply("Gagal: " + error.message);
+    await m.reply(claraWrap(cmdUsed, error.message || "Gagal proses, coba lagi ya", "error"));
     return { handled: true };
   }
 }

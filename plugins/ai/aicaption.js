@@ -129,6 +129,7 @@ async function tryPuterFallback(imageBase64, prompt) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
 
     const isImage =
       m.isImage || (m.quoted && (m.quoted.isImage || m.quoted?.type === "imageMessage"));
@@ -138,6 +139,7 @@ async function handler(m, { sock, config: botConfig }) {
         novaError("AICaption", "Error nih") + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
+      await m.react("🐣");
       await m.reply(text, "aicaption");
       return { handled: true };
     }

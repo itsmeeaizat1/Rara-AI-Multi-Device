@@ -27,6 +27,7 @@ async function handler(m, { sock }) {
         { const __navText = claraWrap("Chibi sTyle", `Kirim/reply gambar untuk diubah ke style Chibi\n\n\`${m.prefix}tochibi\``); return await m.reply(__navText, "tochibi"); }
     }
     try {
+    await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()

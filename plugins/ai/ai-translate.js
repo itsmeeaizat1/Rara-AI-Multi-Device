@@ -21,6 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = m.text?.trim() || "";
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const lang = parts[0] && !parts[0].startsWith(".") ? parts[0] : "English";
@@ -38,6 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
+      await m.react("🐣");
       await m.reply(out);
       return { handled: true };
     }

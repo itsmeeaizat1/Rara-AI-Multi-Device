@@ -24,16 +24,20 @@ const STYLES = ['photorealistic', 'digital-art', 'impressionist', 'anime', 'fant
 async function handler(m, { sock }) {
     const input = m.args.join(' ')
     if (!input) {
-        return m.reply( `🎨 *ᴛᴇxᴛ ᴛᴏ ɪᴍᴀɢᴇ*\n\n` +
-            `Generate gambar dari teks dengan AI\n\n` +
-            `\`Contoh: ${m.prefix}txt2img beautiful sunset | anime\`\n\n` +
-            `🎭 *ꜱᴛʏʟᴇꜱ*\n` +
-            `\`${STYLES.join(', ')}\``, "text2img3")
+        return m.reply(claraWrap("text2img3", [
+      "Generate gambar dari teks dengan AI",
+      "",
+      `💡 Contoh: ${m.prefix}txt2img beautiful sunset | anime`,
+      "🎭 ꜱᴛʏʟᴇꜱ",
+      "",
+      `${STYLES.join(', ')}`,
+    ]))
     }
 
     const [prompt, styleInput] = input.split('|').map(s => s.trim())
     const style = STYLES.includes(styleInput) ? styleInput : 'anime'
     try {
+    await m.react("🕒");
         const { data } = await f(`https://api.neoxr.eu/api/stablediff?prompt=${encodeURIComponent(prompt)}&model=default&orientation=potrait&apikey=${config.APIkey.neoxr}`)
 
         await sock.sendMedia(m.chat, data.url, null, m, {

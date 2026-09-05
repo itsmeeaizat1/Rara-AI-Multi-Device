@@ -28,6 +28,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Math Gpt", `Masukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
     }
     try {
+    await m.react("🕒");
         const url = `https://api.nexray.eu.cc/ai/mathgpt?text=${encodeURIComponent(text)}`
         
         const { data } = await axios.get(url, {
@@ -48,6 +49,7 @@ async function handler(m, { sock }) {
     // IkyyXD fallback
     try {
       const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      await m.react("🐣");
       if (ikyyReply) return m.reply(ikyyReply);
     } catch (ikyyErr) {
       console.error("[matematika.js] IkyyXD fallback failed:", ikyyErr.message);

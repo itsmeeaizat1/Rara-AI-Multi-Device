@@ -64,7 +64,9 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Muslim AI", `Masukkan pertanyaan tentang Islam.\n\nContoh: ${m.prefix}muslimai Apa itu sholat?`))
     }
     try {
+    await m.react("🕒");
         const data = await new MuslimAI().chat(text)
+        await m.react("🐣");
         await m.reply(data)
     } catch (error) {
         // IkyyXD fallback

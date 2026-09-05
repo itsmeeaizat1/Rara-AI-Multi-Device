@@ -21,11 +21,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.text;
   if (!prompt) {
-    return m.reply( `🍌 *ɴᴏᴠᴀ ʙᴀɴᴀɴᴀ ꜱᴜᴘᴇʀ 2*\n\n` +
-        `Buat gambar dengan AI\n\n` +
-        `\`Contoh: ${m.prefix}novabanana2 make a cat\``, "novabanana2");
+    return m.reply(claraWrap("novabanana2", [
+      "Buat gambar dengan AI",
+      "",
+      `💡 Contoh: ${m.prefix}novabanana2 make a cat`,
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await fluxImage(prompt, "1:1");
     const imageUrl = result.url;
     await sock.sendMedia(m.chat, imageUrl, null, m, {
@@ -38,6 +41,7 @@ async function handler(m, { sock }) {
       error?.response?.data?.error ||
       error.message ||
       "Terjadi kesalahan";
+    await m.react("🐣");
     m.reply(claraWrap("Novabanana2", `🍀 *Waduhh, sepertinya ini ada kendala*
 
 ${msg}

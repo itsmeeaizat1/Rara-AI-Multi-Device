@@ -24,22 +24,29 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🔵 *Qwen3 80B*\n\n` +
-        `Tanya apa aja ke AI Qwen3 — model besar dari Alibaba yang jago bahasa apa aja.\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}qwen3 <pertanyaan>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}qwen3 Apa itu machine learning?*\n` +
-        `*${m.prefix}qwen3 Buat resep masakan Indonesia*\n\n` +
-        `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");
+    return m.reply(claraWrap("qwen3", [
+      "Tanya apa aja ke AI Qwen3 — model besar dari Alibaba yang jago bahasa apa aja.",
+      "",
+      "📌 Format:",
+      `${m.prefix}qwen3 <pertanyaan>`,
+      "",
+      "💡 Contoh:",
+      `${m.prefix}qwen3 Apa itu machine learning?`,
+      "",
+      `${m.prefix}qwen3 Buat resep masakan Indonesia`,
+      "",
+      "Model 80B, jadi agak lama tapi jawabannya mantap",
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await callIkyy(text, {});
 
     if (!result.status) {
       return m.reply(claraWrap("Qwen3 Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
+    await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);

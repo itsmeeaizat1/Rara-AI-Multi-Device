@@ -46,6 +46,7 @@ function setCustomProviders(providers) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = (m.text || "").trim();
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const action = (parts[1] || "").toLowerCase();
@@ -74,6 +75,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Untuk hapus: *${prefix}ai-addprovider delete <nama>*`
       );
 
+      await m.react("🐣");
       await m.reply(text);
       return { handled: true };
     }

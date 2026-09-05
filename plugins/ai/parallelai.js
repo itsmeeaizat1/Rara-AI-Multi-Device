@@ -22,6 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = m.text?.trim() || "";
     const prompt = raw
       .replace(new RegExp(`^\\${prefix}(parallelai|parallel|paai|paraai)\\s+`, "i"), "")
@@ -35,6 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
   usage: `${prefix}parallelai <pertanyaan>`,
   example: `${prefix}parallelai cari kan rest api gratis`,
 });
+      await m.react("🐣");
       return await m.reply(text, "parallelai");
     }
 

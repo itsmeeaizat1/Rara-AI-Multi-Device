@@ -23,6 +23,7 @@ function tempPath(ext) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
 
     const quoted = m.quoted?.text ? m.quoted : m.msg?.text ? m : null;
     if (!quoted) {
@@ -37,6 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
+      await m.react("🐣");
       await m.reply(text, "stt");
       return { handled: true };
     }

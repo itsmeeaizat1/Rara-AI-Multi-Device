@@ -22,20 +22,26 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🌬️ *ᴋᴏʙᴏ ᴋᴀɴᴀᴇʀᴜ*\n\n` +
-        `VTuber Hololive Indonesia Gen 3\nWind Shaman yang cheerfull dan suka prank!\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}kobo-ai <pertanyaan>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
+    return m.reply(claraWrap("kobo-ai", [
+      "VTuber Hololive Indonesia Gen 3",
+      "Wind Shaman yang cheerfull dan suka prank!",
+      "",
+      "📌 Format:",
+      `${m.prefix}kobo-ai <pertanyaan>`,
+      "",
+      "💡 Contoh:",
+      `${m.prefix}kobo-ai Kobo lagi apa?`,
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await UnlimitedAI(text, "kobo-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *ᴋᴏʙᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal dapet respons nih"}`; return await m.reply(__navText); };
+      { return await m.reply(claraWrap("kobo-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
     }
     const reply = result.answer;
+    await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);

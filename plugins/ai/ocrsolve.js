@@ -154,7 +154,7 @@ async function doOcrAnalysis(m, sock, mode) {
     return { handled: true };
   } catch (e) {
     console.error("[OcrSolve] One-shot error:", e.message);
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("ocrsolve", e.message || "Ada yang error nih, coba lagi ya", "error"));
     return { handled: true };
   }
 }
@@ -162,6 +162,7 @@ async function doOcrAnalysis(m, sock, mode) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const db = getDatabase();
     if (!db.db.data.autoOcrSolve) db.db.data.autoOcrSolve = {};
     const cfg = db.db.data.autoOcrSolve;
@@ -182,6 +183,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (isToggleAlias || (isToggleCmd && ["toggleocr", "toggleocrsolve", "toggleautomath", "automath", "autocodefix"].includes(cmdName))) {
       // Owner-only toggle section
       if (!isOwner) {
+        await m.react("🐣");
         await m.reply( claraWrap("OCR Solve", [
           "Toggle persistent hanya untuk owner.",
           "",
@@ -258,7 +260,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return await doOcrAnalysis(m, sock, mode);
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("ocrsolve", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
   return { handled: true };
 }

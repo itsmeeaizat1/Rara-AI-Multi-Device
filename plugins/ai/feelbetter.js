@@ -23,22 +23,29 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `💚 *ꜰᴇᴇʟʙᴇᴛᴛᴇʀʙᴏᴛ*\n\n` +
-        `AI yang siap mendengarkan curhatan kamu — tanpa menghakimi, dengan hangat dan empatik.\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}feelbetter <curhatan>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}feelbetter lagi sedih nih*\n` +
-        `*${m.prefix}feelbetter aku capek banget belakangan*\n\n` +
-        `_Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman_`, "feelbetter");
+    return m.reply(claraWrap("feelbetter", [
+      "AI yang siap mendengarkan curhatan kamu — tanpa menghakimi, dengan hangat dan empatik.",
+      "",
+      "📌 Format:",
+      `${m.prefix}feelbetter <curhatan>`,
+      "",
+      "💡 Contoh:",
+      `${m.prefix}feelbetter lagi sedih nih`,
+      "",
+      `${m.prefix}feelbetter aku capek banget belakangan`,
+      "",
+      "Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman",
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await FeelBetter(text);
 
     if (!result.status) {
       return m.reply(claraWrap("FeelBetter Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
+    await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);

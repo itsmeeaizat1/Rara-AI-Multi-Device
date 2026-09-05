@@ -29,6 +29,7 @@ const AI_COMMANDS = {
 };
 
 async function handler(m, { sock }) {
+  await m.react("🕒");
   const prefix = m.prefix || ".";
   const keyword = (m.args[0] || "").toLowerCase().trim();
 
@@ -43,6 +44,7 @@ async function handler(m, { sock }) {
   }
 
   const cmds = match.cmds.map(c => `${prefix}${c}`).join(" · ");
+  await m.react("🐣");
   return m.reply(claraWrap("AI Help", `${match.desc}\n\nCommand:\n${cmds}`));
 }
 

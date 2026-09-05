@@ -22,20 +22,26 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `👓 *ᴡᴀɢᴜʀɪ-ꜱᴀɴ*\n\n` +
-        `Gadis pemalu dari "The Girl I Like Forgot Her Glasses"\nManis, perhatian, dan sering salah tingkah~\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}waguri-ai <pertanyaan>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}waguri-ai Waguri-san, halo!*`, "waguri-ai");
+    return m.reply(claraWrap("waguri-ai", [
+      "Gadis pemalu dari 'The Girl I Like Forgot Her Glasses'",
+      "Manis, perhatian, dan sering salah tingkah~",
+      "",
+      "📌 Format:",
+      `${m.prefix}waguri-ai <pertanyaan>`,
+      "",
+      "💡 Contoh:",
+      `${m.prefix}waguri-ai Waguri-san, halo!`,
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await UnlimitedAI(text, "waguri-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *ᴡᴀɢᴜʀɪ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal dapet respons nih"}`; return await m.reply(__navText); };
+      { return await m.reply(claraWrap("waguri-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
     }
     const reply = result.answer;
+    await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);

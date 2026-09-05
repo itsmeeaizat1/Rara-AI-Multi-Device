@@ -21,6 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const prompt = m.text?.trim();
 
     if (!prompt) {
@@ -35,6 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
+      await m.react("🐣");
       await m.reply(text, "aibrowse");
       return { handled: true };
     }

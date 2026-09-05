@@ -44,6 +44,7 @@ function buildProviderList(prefix) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = (m.text || "").trim();
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const action = (parts[1] || "").toLowerCase();
@@ -72,6 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
         
         "\n" ;
 
+      await m.react("🐣");
       await m.reply(text);
       return { handled: true };
     }
@@ -112,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!modelArg) {
         const text =
           claraWrap("Model Kosong", [`Model tidak boleh kosong.`,
-            `Contoh: *${prefix}ai-set model gpt-4o-mini*`].join("\n")) +
+            `💡 Contoh: ${prefix}ai-set model gpt-4o-mini`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -146,7 +148,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!apiKey) {
         const text =
           claraWrap("API Key Kosong", [`API key tidak boleh kosong.`,
-            `Contoh: *${prefix}ai-set apiKey sk-xxx*`,
+            `💡 Contoh: ${prefix}ai-set apiKey sk-xxx`,
             `Per format: *${prefix}ai-set apiKey openai sk-xxx*`].join("\n")) +
           "\n" ;
 
@@ -163,8 +165,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       const keyLabel = fmtKey ? fmtKey.charAt(0).toUpperCase() + fmtKey.slice(1) + " API Key" : "API Key";
       const text =
-        claraWrap("AI Settings", [`${keyLabel}: *ᴅɪꜱᴇᴍʙᴜɴʏɪᴋᴀɴ*`,
-          "Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("ai-set", [`${keyLabel}: disembunyikan`,
+          "Perubahan akan berlaku setelah config reload."]) +
         "\n"  +
         "\n" ;
 
@@ -177,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!endpoint) {
         const text =
           claraWrap("Endpoint Kosong", [`Endpoint tidak boleh kosong.`,
-            `Contoh: *${prefix}ai-set endpoint https://api.openai.com/v1/chat/completions*`].join("\n")) +
+            `💡 Contoh: ${prefix}ai-set endpoint https://api.openai.com/v1/chat/completions`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -202,7 +204,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!prompt) {
         const text =
           claraWrap("Prompt Kosong", [`System prompt tidak boleh kosong.`,
-            `Contoh: *${prefix}ai-set prompt Kamu adalah asisten yang membantu.*`].join("\n")) +
+            `💡 Contoh: ${prefix}ai-set prompt Kamu adalah asisten yang membantu.`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -225,8 +227,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "Alasan: *Hanya owner yang bisa menyalakan/mematikan AI.*"].join("\n")) +
+          claraWrap("ai-set", "Perintah ini khusus owner — Hanya owner yang bisa menyalakan/mematikan AI.", "error") +
           "\n" ;
 
         await m.reply(text);
@@ -249,8 +250,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "mode") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ.*"].join("\n")) +
+          claraWrap("ai-set", "Perintah ini khusus owner — ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ.", "error") +
           "\n" ;
 
         await m.reply(text);
@@ -260,8 +260,9 @@ async function handler(m, { sock, config: botConfig }) {
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
         const text =
-          claraWrap("Mode Tidak Valid", ["Mode yang tersedia: *ᴏꜰꜰʟɪɴᴇ* atau *ᴏɴʟɪɴᴇ*.",
-            `Contoh: *${prefix}ai-set mode online*`].join("\n")) +
+          claraWrap("ai-set", ["Mode yang tersedia: offline atau online.",
+            "",
+            `💡 Contoh: ${prefix}ai-set mode online`]) +
           "\n" ;
 
         await m.reply(text);

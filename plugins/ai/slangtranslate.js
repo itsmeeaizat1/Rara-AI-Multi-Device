@@ -100,9 +100,11 @@ export default {
       const wavPath = path.join(tmpDir, `slangtr_${Date.now()}.wav`);
 
       try {
+      await m.react("🕒");
         // Download audio
         const buffer = await quoted.download();
         if (!buffer || buffer.length < 1000) {
+          await m.react("🐣");
           await m.reply(claraWrap("Slang Translator", [
             `Status: *Gagal*`,
             `Audio terlalu kecil atau gagal diunduh.`,

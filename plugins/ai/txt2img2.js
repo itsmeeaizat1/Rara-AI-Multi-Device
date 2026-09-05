@@ -21,20 +21,24 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(`*Text to Image (Flux)*\n\n` +
-      `Buat gambar dari deskripsi teks pakai AI Flux Klein 4B.\n\n` +
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-      `*${m.prefix}txt2img2 <deskripsi>*\n\n` +
-      `*ᴄᴏɴᴛᴏʜ:*\n` +
-      `*${m.prefix}txt2img2 Mobil Lamborghini revuelto*\n` +
-      `*${m.prefix}txt2img2 Kucing lucu pakai topi*\n\n` +
-      `_Proses generate agak lama, sekitar 30-60 detik_`, "text2img4");
+    return m.reply(claraWrap("txt2img2", [
+      "Buat gambar dari deskripsi teks pakai AI Flux Klein 4B.",
+      "",
+      "📌 Format: " + m.prefix + "txt2img2 <deskripsi>",
+      "",
+      "💡 Contoh:",
+      m.prefix + "txt2img2 Mobil Lamborghini revuelto",
+      m.prefix + "txt2img2 Kucing lucu pakai topi",
+      "",
+      "Proses generate agak lama, sekitar 30-60 detik",
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await Txt2Img2(text);
 
     if (!result.status) {
-      { const __navText = `❌ *ɢᴇɴᴇʀᴀᴛᴇ ɢᴀɢᴀʟ*\n\n${result.error}`; return await m.reply(__navText); };
+      { return await m.reply(claraWrap(m.command, result.error || "Generate gagal, coba lagi ya", "error")); };
     }
 
     await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\nPrompt: *${result.prompt}*`, m, {

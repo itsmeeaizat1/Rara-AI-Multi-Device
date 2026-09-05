@@ -22,20 +22,26 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🇮🇩 *ᴘᴀᴋ ᴘʀᴀʙᴏᴡᴏ*\n\n` +
-        `Pria Sawit — Presiden RI\nTegas, patriotik, dan karismatik\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}prabowo-ai <pertanyaan>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}prabowo-ai Saudara, kita harus berdaulat!*`, "prabowo-ai");
+    return m.reply(claraWrap("prabowo-ai", [
+      "Pria Sawit — Presiden RI",
+      "Tegas, patriotik, dan karismatik",
+      "",
+      "📌 Format:",
+      `${m.prefix}prabowo-ai <pertanyaan>`,
+      "",
+      "💡 Contoh:",
+      `${m.prefix}prabowo-ai Saudara, kita harus berdaulat!`,
+    ]));
   }
   try {
+  await m.react("🕒");
     const result = await UnlimitedAI(text, "prabowo-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *ᴘʀᴀʙᴏᴡᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal dapet respons nih"}`; return await m.reply(__navText); };
+      { return await m.reply(claraWrap("prabowo-ai", `${result.error || "Gagal dapet respons nih"}`, "error")); };
     }
     const reply = result.answer;
+    await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
