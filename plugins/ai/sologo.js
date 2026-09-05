@@ -27,6 +27,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Masukkan deskripsi logo yang ingin dibuat.\n\n💡 *Contoh:* `.sologo robot keren warna merah`"; return await m.reply(__navText, "sologo"); };
   }
   try {
+  await m.react("🕒");
     const apiUrl = `https://api.nexray.eu.cc/ai/sologo?prompt=${encodeURIComponent(prompt)}`;
     const res = await axios.get(apiUrl, {
       timeout: 120000,
@@ -48,6 +49,7 @@ async function handler(m, { sock }) {
       `*Deskripsi:* ${logo.desc}\n` +
       `*Tipe:* ${logo.logo_type || "origin"}`;
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: { url: logo.thumbnail },
       caption: caption

@@ -32,6 +32,7 @@ async function handler(m, { sock }) {
 }), "anime-gen");
     }
     try {
+    await m.react("🕒");
         const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
         const apiUrl = `https://api.neoxr.eu/api/ai-anime?q=${encodeURIComponent(prompt)}&apikey=${NEOXR_APIKEY}`
         
@@ -47,6 +48,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
         if (error.code === 'ECONNABORTED') {
+            await m.react("🐣");
             m.reply(claraWrap("Anime-gen", '⏱️ *Timeout*\n\nRequest terlalu lama. Coba lagi!'))
         } else {
             m.reply(claraWrap("anime-gen", te(m.prefix, m.command, m.pushName), "error"))

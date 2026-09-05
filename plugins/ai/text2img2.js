@@ -20,8 +20,9 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-  if (!m.fullArgs) { const __navText = `Silahkan masukkan prompt.\n💡 *Contoh:* ${m.prefix + m.command} car`; return await m.reply(__navText); }
+  if (!m.fullArgs) { return await m.reply(claraWrap(m.command, `Masukkan prompt.\n\n💡 Contoh: ${m.prefix + m.command} car`)); }
   try {
+  await m.react("🕒");
     const url = `https://api-abztech.zone.id/ai/genimg?text=${encodeURIComponent(m.fullArgs)}`
     const response = await axios.get(url, {
       responseType: 'arraybuffer',

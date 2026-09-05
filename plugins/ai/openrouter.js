@@ -235,6 +235,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("OpenRouter", help));
   }
   try {
+  await m.react("🕒");
     // Resolve model ID
     const model = resolveModel(session.model) || FREE_MODELS[DEFAULT_MODEL];
     const modelId = model.id;
@@ -275,6 +276,7 @@ async function handler(m, { sock, config: botConfig }) {
       errMsg += "\n\nAPI key tidak valid. Set ulang: .openrouter setkey <key>";
     }
 
+    await m.react("🐣");
     return m.reply(claraWrap("OpenRouter Error", errMsg));
   }
 }

@@ -43,6 +43,7 @@ const COPILOT_PROMPTS = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = m.text?.trim() || "";
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const mode = (parts[1] || "").toLowerCase();
@@ -62,6 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
+      await m.react("🐣");
       await m.reply(text, "ai-copilot");
       return { handled: true };
     }

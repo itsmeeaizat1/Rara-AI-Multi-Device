@@ -57,7 +57,9 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("GPT-5.5", help));
   }
   try {
+  await m.react("🕒");
     const reply = await callGPT5(text);
+    await m.react("🐣");
     return m.reply(claraWrap("GPT-5.5", reply));
   } catch (error) {
     // IkyyXD fallback

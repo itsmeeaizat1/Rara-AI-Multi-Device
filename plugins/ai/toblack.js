@@ -31,6 +31,7 @@ async function handler(m, { sock }) {
   const PROMPT = `Transform skin tone to a darker complexion, maintain facial features, realistic shadows, high detail, natural skin texture, no distortion`;
 
   try {
+  await m.react("🕒");
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
       buffer = await m.quoted.download();

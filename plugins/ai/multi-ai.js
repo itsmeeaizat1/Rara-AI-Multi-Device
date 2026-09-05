@@ -35,6 +35,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = (m.text || "").trim();
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const providerArg = (parts[1] || "").toLowerCase();
@@ -139,6 +140,7 @@ ${trimmedReply}`;
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
     const text = `❌ Gagal: ${error.message}\nCek API key: isi di apikeys.json atau *${prefix}ai-set apiKey <key>*`;
+    await m.react("🐣");
     await m.reply(text);
   }
 

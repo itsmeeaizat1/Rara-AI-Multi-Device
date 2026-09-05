@@ -204,6 +204,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Puter", help));
   }
   try {
+  await m.react("🕒");
     const modelId = session.model;
 
     // Tambahkan pesan user ke session
@@ -242,6 +243,7 @@ async function handler(m, { sock, config: botConfig }) {
       errMsg += "\n\nRate limit tercapai. Coba lagi sebentar atau ganti model: .puter list";
     }
 
+    await m.react("🐣");
     return m.reply(claraWrap("Puter Error", errMsg));
   }
 }

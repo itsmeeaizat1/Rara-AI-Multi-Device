@@ -27,6 +27,7 @@ async function handler(m, { sock }) {
         { const __navText = claraWrap("Japanese sTyle", `Kirim/reply gambar untuk diubah ke style Japanese\n\n\`${m.prefix}tojapanese\``); return await m.reply(__navText, "tojapanese"); }
     }
     try {
+    await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()

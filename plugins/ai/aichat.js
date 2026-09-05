@@ -59,6 +59,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = m.text?.trim() || "";
     const chatId = m.chat;
 
@@ -140,6 +141,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       novaError("AIChat", "Gagal nih, coba lagi ya");
 
+    await m.react("🐣");
     await m.reply(text, "aichat");
   }
 

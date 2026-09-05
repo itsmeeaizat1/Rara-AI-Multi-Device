@@ -179,7 +179,7 @@ async function doMemeAnalysis(m, sock, style) {
     return { handled: true };
   } catch (e) {
     console.error("[AutoMeme] One-shot error:", e.message);
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("automemegenerator", e.message || "Ada yang error nih, coba lagi ya", "error"));
     return { handled: true };
   }
 }
@@ -187,6 +187,7 @@ async function doMemeAnalysis(m, sock, style) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const db = getDatabase();
     if (!db.db.data.autoMemeGen) db.db.data.autoMemeGen = {};
     const cfg = db.db.data.autoMemeGen;
@@ -203,6 +204,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ════ TOGGLE COMMANDS (OWNER ONLY) ════
     if (isToggleAlias || (isToggleSubCmd && ["toggleautomeme", "automemetoggle"].includes(cmdName))) {
       if (!isOwner) {
+        await m.react("🐣");
         await m.reply( claraWrap("Auto Meme", [
           "Toggle persistent hanya untuk owner.",
           "",
@@ -276,7 +278,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return await doMemeAnalysis(m, sock, style);
   } catch (e) {
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("automemegenerator", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
   return { handled: true };
 }

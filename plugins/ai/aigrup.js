@@ -126,6 +126,7 @@ function getKeyForFormat(aiHelp, fmtKey) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = (m.text || "").replace(/^\.aigrup\s+/i, "").replace(/^\.aigroup\s+/i, "").replace(/^\.aig\s+/i, "").trim();
     const args = raw.split(/[ \t]+/).filter(Boolean);
 
@@ -143,6 +144,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ═══ Block dari grup ═══
     const blockFromGroup = async (action) => {
       if (m.isGroup) {
+        await m.react("🐣");
         await m.reply(
           claraWrap("Ditolak", [`${action} hanya bisa dari *chat pribadi*`,
             `Bukan dari dalam grup`,

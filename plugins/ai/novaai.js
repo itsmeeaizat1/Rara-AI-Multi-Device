@@ -217,18 +217,21 @@ async function handler(m, { sock, conn, config, db }) {
       leavegc: '.novaai keluar grup (owner only)',
       genimage: '.novaai buatkan gambar kucing astronot'
     };
-    let out = '╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n│\n';
-    out += '│ 🧠 AI Agent — ' + Object.keys(TOOLS).length + ' perintah grup\n';
-    out += '│ 💬 Ngobrol & auto-execute command bot\n│';
+    const lines = [];
+    lines.push(`🧠 AI Agent — ${Object.keys(TOOLS).length} perintah grup`);
+    lines.push(`💬 Ngobrol & auto-execute command bot`);
+    lines.push("");
     for (const [cat, tools] of Object.entries(categories)) {
-      out += '\n│ 📌 ' + toSC(cat) + ':\n';
+      lines.push({ subHeader: toSC(cat) });
       for (const tool of tools) {
-        if (TOOLS[tool]) out += '│ • ' + (examples[tool] || tool) + '\n';
+        if (TOOLS[tool]) lines.push(examples[tool] || tool);
       }
     }
-    out += '\n│\n│ 📸 Scan gambar: kirim foto + caption .novaai <tanya>\n';
-    out += '│ 💡 Reset sesi chat: .novaai reset\n│ 💡 Tanya apa saja, atau suruh aku ngapa\n│';
-    return m.reply(out + '\n╰────  •  ────');
+    lines.push("");
+    lines.push(`📸 Scan gambar: kirim foto + caption .novaai <tanya>`);
+    lines.push(`💡 Reset sesi chat: .novaai reset`);
+    lines.push(`💡 Tanya apa saja, atau suruh aku ngapa`);
+    return m.reply(claraWrap("novaai", lines));
   }
 
   // 🔹 CHAT: reset sesi
@@ -255,6 +258,7 @@ async function handler(m, { sock, conn, config, db }) {
     const history = getSession(key);
     const question = text || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
     try {
+    await m.react("🕒");
       appendSession(key, "user", `(mengirim gambar) ${question}`);
       const buffer = await (directImage ? m.download() : m.quoted.download());
       const answer = await callGeminiVision(question, buffer, {
@@ -267,12 +271,13 @@ async function handler(m, { sock, conn, config, db }) {
       if (action) {
         if (db) config.__db = db;
         const result = await executeCommand(action, m, sock, config);
+        await m.react("🐣");
         if (!result.success && result.message) await m.reply(claraWrap("Info", `⚠️ ${result.message}`));
       }
       return;
     } catch (e) {
       console.error("[novaai] vision gagal:", e.message);
-      return m.reply("╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n│\n│ ❌ Gagal menganalisis gambar: " + e.message + "\n│\n╰────  •  ────");
+      return m.reply(claraWrap("novaai", `Gagal menganalisis gambar: ${e.message}`, "error"));
     }
   }
 
@@ -330,7 +335,7 @@ async function handler(m, { sock, conn, config, db }) {
         }
         return;
       } catch (e2) {
-        return m.reply("╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n│\n│ ❌ Gagal ke otak AI: " + e2.message + "\n│\n╰────  •  ────");
+        return m.reply(claraWrap("novaai", `Gagal ke otak AI: ${e2.message}`, "error"));
       }
     }
   }
@@ -352,19 +357,19 @@ async function handler(m, { sock, conn, config, db }) {
       }
       return;
     }
-    return m.reply("❌ Tidak ada respons yang cocok.");
+    return m.reply(claraWrap("novaai", "Tidak ada respons yang cocok", "error"));
   }
 
   const tool = TOOLS[decision.tool];
 
   // GERBANG IZIN — dicek di level KODE
   if (tool.perm === "admin") {
-    if (!m.isGroup) return m.reply("❌ Perintah ini hanya bisa di dalam grup.");
-    if (!m.isAdmin) return m.reply("❌ Kamu bukan admin, tidak bisa menjalankan ini.");
-    if (!m.isBotAdmin) return m.reply("❌ Jadikan aku admin dulu supaya bisa menjalankan ini.");
+    if (!m.isGroup) return m.reply(claraWrap("novaai", "Perintah ini hanya bisa di dalam grup", "error"));
+    if (!m.isAdmin) return m.reply(claraWrap("novaai", "Kamu bukan admin, tidak bisa menjalankan ini", "error"));
+    if (!m.isBotAdmin) return m.reply(claraWrap("novaai", "Jadikan aku admin dulu supaya bisa menjalankan ini", "error"));
   }
   if (tool.perm === "owner") {
-    if (!m.isOwner) return m.reply("❌ Perintah ini khusus owner bot.");
+    if (!m.isOwner) return m.reply(claraWrap("novaai", "Perintah ini khusus owner bot", "error"));
   }
 
   // normalisasi user (dari @mention / reply / NAMA member / nomor)
@@ -381,16 +386,16 @@ async function handler(m, { sock, conn, config, db }) {
         const resolved = await resolveUserByName(sock, m, user);
         if (resolved && resolved.multiple) {
           const list = resolved.multiple.map(c => `• ${c.name} (${c.jid.split("@")[0]})`).join("\n");
-          return m.reply(`❌ Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`);
+          return m.reply(claraWrap("novaai", `Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`, "error"));
         }
         if (!resolved) {
-          return m.reply("❌ Nama \"" + user + "\" tidak ditemukan di grup ini.\nCoba @mention langsung, reply pesannya, atau tulis nomornya (62xxx).");
+          return m.reply(claraWrap("novaai", `Nama "${user}" tidak ditemukan di grup ini.\nCoba @mention langsung, reply pesannya, atau tulis nomornya (62xxx).`, "error"));
         }
         user = resolved;
       }
     }
     user = String(user || "").replace(/[^0-9]/g, "");
-    if (!user) return m.reply("❌ Usernya siapa? Reply pesannya, @mention, atau sebutkan nama membernya.\nContoh: " + m.prefix + m.command + " kick @user");
+    if (!user) return m.reply(claraWrap("novaai", `Usernya siapa? Reply pesannya, @mention, atau sebutkan nama membernya.\n\n💡 Contoh: ${m.prefix}${m.command} kick @user`, "error"));
     finalArgs.user = user + "@s.whatsapp.net";
   }
 
@@ -411,7 +416,7 @@ async function handler(m, { sock, conn, config, db }) {
     m.reply(decision.reply || tool.done);
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-    m.reply("❌ Gagal eksekusi: " + e.message);
+    m.reply(claraWrap("novaai", `Gagal eksekusi: ${e.message}`, "error"));
   }
 }
 
@@ -424,8 +429,8 @@ export function novaaiConfirmHandler(m, sock) {
   if (Date.now() - p.time > 60000) return false;
   if (/^(ya|y|yes|lanjut|gas)\b/i.test(m.text.trim())) {
     try { TOOLS[p.tool].run(sock, m, p.args); m.reply(TOOLS[p.tool].done); }
-    catch (e) { m.reply("❌ Gagal: " + e.message); }
-  } else { m.reply("❌ Dibatalkan."); }
+    catch (e) { m.reply(claraWrap("novaai", `Gagal: ${e.message}`, "error")); }
+  } else { m.reply(claraWrap("novaai", "Dibatalkan")); }
   return true;
 }
 

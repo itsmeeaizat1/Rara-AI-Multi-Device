@@ -27,11 +27,13 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Masukkan teks yang ingin disempurnakan.\n\n💡 *Contoh:* `.quilbot Saya sedang makan nasi di rumah`"; return await m.reply(__navText, "quilbot"); };
   }
   try {
+  await m.react("🕒");
     const apiUrl = `https://api.nexray.eu.cc/ai/quillbot?text=${encodeURIComponent(text)}`;
     const res = { data: { result: await callIkyy(text, {}) } };
 
     const data = res.data;
     if (!data.status || !data.result) {
+      await m.react("🐣");
       return m.reply(claraWrap("quilbot", "⚠️ Quillbot gagal memproses teks."));
     }
 

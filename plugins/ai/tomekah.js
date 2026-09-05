@@ -27,6 +27,7 @@ async function handler(m, { sock }) {
         { const __navText = claraWrap("Mekah sTyle", `Kirim/reply gambar\n\n\`${m.prefix}tomekah\``); return await m.reply(__navText, "tomekah"); }
     }
     try {
+    await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()

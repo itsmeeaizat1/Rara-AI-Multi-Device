@@ -114,6 +114,7 @@ async function handler(m, { sock }) {
     );
   }
   try {
+  await m.react("🕒");
     const key = sessionKey(m);
     const sessionUuid = sessions.get(key) || "";
 
@@ -144,6 +145,7 @@ async function handler(m, { sock }) {
       console.error("[tanyadokter.js] IkyyXD fallback failed:", ikyyErr.message);
     }
 
+    await m.react("🐣");
     return m.reply(
       `\n` +
       `*Error:* ${error.message || "Gagal menghubungi dokter AI"}\n` +

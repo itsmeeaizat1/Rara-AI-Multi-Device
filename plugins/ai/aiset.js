@@ -33,14 +33,15 @@ function buildProviderList(prefix) {
     "",
     ...lines,
     "",
-    `Contoh pakai: *${prefix}multi-ai gemini Jelaskan quantum computing*`,
-    `Provider aktif sekarang diatur lewat config *ᴀɪʜᴇʟᴘ* di config.js.`,
+    `💡 Contoh: ${prefix}multi-ai gemini Jelaskan quantum computing`,
+    `Provider aktif sekarang diatur lewat config aiHelp di config.js.`,
   ];
 }
 
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const raw = (m.text || "").trim();
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const action = (parts[1] || "").toLowerCase();
@@ -62,6 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
         
         "\n" ;
 
+      await m.react("🐣");
       await m.reply(text, "aiset");
       return { handled: true };
     }
@@ -99,8 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "Alasan: *Hanya owner yang bisa menyalakan/mematikan AI Help.*"].join("\n")) +
+          claraWrap("aiset", "Perintah ini khusus owner — Hanya owner yang bisa menyalakan/mematikan AI Help.", "error") +
           "\n" ;
 
         await m.reply(text);
@@ -126,8 +127,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "mode") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ ʜᴇʟᴘ.*"].join("\n")) +
+          claraWrap("aiset", "Perintah ini khusus owner — ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ ʜᴇʟᴘ.", "error") +
           "\n" ;
 
         await m.reply(text);
@@ -137,8 +137,9 @@ async function handler(m, { sock, config: botConfig }) {
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
         const text =
-          claraWrap("Mode Tidak Valid", ["Mode yang tersedia: *ᴏꜰꜰʟɪɴᴇ* atau *ᴏɴʟɪɴᴇ*.",
-            `Contoh: *${prefix}aiset mode online*`].join("\n")) +
+          claraWrap("aiset", ["Mode yang tersedia: offline atau online.",
+            "",
+            `💡 Contoh: ${prefix}aiset mode online`]) +
           "\n" ;
 
         await m.reply(text);

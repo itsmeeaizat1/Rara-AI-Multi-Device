@@ -119,6 +119,7 @@ async function handler(m, { sock }) {
   // Reset session — reset param terima value apa saja
   if (text.toLowerCase() === "reset") {
     try {
+    await m.react("🕒");
       await callDeepSeekV4Flash("reset", sessionId, true);
     } catch (e) { console.error('[deepseekv4flash.js]:', e.message); }
     return m.reply(claraWrap("DeepSeek V4 Flash", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));

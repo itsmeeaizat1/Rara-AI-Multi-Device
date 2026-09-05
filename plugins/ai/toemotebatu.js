@@ -26,6 +26,7 @@ async function handler(m, { sock }) {
         { const __navText = claraWrap("Emote Batu", `Kirim/reply gambar\n\n\`${m.prefix}toemotebatu\``); return await m.reply(__navText, "toemotebatu"); }
     }
     try {
+    await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()

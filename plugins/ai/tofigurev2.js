@@ -27,6 +27,7 @@ async function handler(m, { sock }) {
         { const __navText = claraWrap("Figure sTyle V2", `Kirim/reply gambar untuk diubah ke style Figure\n\n\`${m.prefix}tofigurev2\``); return await m.reply(__navText, "tofigurev2"); }
     }
     try {
+    await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()

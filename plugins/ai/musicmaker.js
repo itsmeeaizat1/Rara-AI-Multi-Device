@@ -26,6 +26,7 @@ async function handler(m, { sock }) {
     return m.reply(novaGuide("MusicMaker", "Masukin deskripsi lagu nih!", ".musicmaker Lagu pop romantis yang ceria"));
   }
   try {
+  await m.react("🕒");
     const apiUrl = `https://api.nexray.eu.cc/ai/suno?prompt=${encodeURIComponent(prompt)}`;
     
     const res = await axios.get(apiUrl, {
@@ -54,6 +55,7 @@ async function handler(m, { sock }) {
       ptt: false,
     }, { quoted: m });
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: { url: r.thumbnail },
       caption: caption

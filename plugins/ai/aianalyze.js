@@ -32,6 +32,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
 
     const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
     if (!media) {
@@ -46,6 +47,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
+      await m.react("🐣");
       await m.reply(out);
       return { handled: true };
     }

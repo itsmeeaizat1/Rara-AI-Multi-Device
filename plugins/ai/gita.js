@@ -26,10 +26,12 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Gita Gpt", `Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}gita What is dharma?\``), "gita")
     }
     try {
+    await m.react("🕒");
         const url = `https://api.cuki.biz.id/api/ai/gita?apikey=${config.APIkey.cuki}&q=${encodeURIComponent(text)}`
         const data = await f(url)
 
         const content = data.results
+        await m.react("🐣");
         { const __navText = `${content?.trim()}`; await m.reply(__navText); }
 
     } catch (error) {

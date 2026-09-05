@@ -414,6 +414,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     // Use UnlimitedAI for one-shot answer
     try {
+    await m.react("🕒");
       const { default: UnlimitedAI } = await import("../../src/scraper/unlimitedai.js");
       const result = await UnlimitedAI(questionPart, "nova-ai");
       if (result) {
@@ -426,6 +427,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         await m.reply(novaError("AITimeWarp", "Gagal dapet respon AI nih, coba lagi ya"));
       }
     } catch (e) {
+      await m.react("🐣");
       await m.reply(claraWrap("Time-Warp", "Error: " + e.message));
     }
     // Clean up one-shot

@@ -180,6 +180,7 @@ async function handler(m, { sock, config: botConfig }) {
   const apiKey = getTioKey();
 
   try {
+  await m.react("🕒");
     const raw = m.text?.trim() || "";
     // Strip command prefix
     const body = raw
@@ -208,6 +209,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Ketik *${prefix}aitio list* untuk lihat semua model`,
         `Ketik *${prefix}aitio list free* untuk model gratis`,
       ];
+      await m.react("🐣");
       return m.reply(claraWrap("Tio AI", lines.join("\n")), "ai-tio");
     }
 

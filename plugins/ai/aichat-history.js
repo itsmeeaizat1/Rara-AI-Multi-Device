@@ -21,6 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+  await m.react("🕒");
     const chatId = m.chat;
     const { getDatabase } = await import("../../src/lib/nova-database.js");
     const db = getDatabase();
@@ -33,6 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
           "Belum ada percakapan AI di chat ini."].join("\n")) +
         "\n" ;
 
+      await m.react("🐣");
       await m.reply(text);
       return { handled: true };
     }

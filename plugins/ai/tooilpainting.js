@@ -27,11 +27,14 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return m.reply( `🖼️ *ᴛᴏ ᴏɪʟ ᴘᴀɪɴᴛɪɴɢ*\n\n` +
-            `Kirim/reply gambar untuk diubah ke gaya lukisan minyak\n\n` +
-            `\`${m.prefix}tooilpainting\``, "tooilpainting")
+        return m.reply(claraWrap("tooilpainting", [
+      "Kirim/reply gambar untuk diubah ke gaya lukisan minyak",
+      "",
+      `${m.prefix}tooilpainting`,
+    ]))
     }
     try {
+    await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()

@@ -27,6 +27,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Mau ngobrol apa sama Simi?\n\n💡 *Contoh:* `.simi Halo Simi!`"; return await m.reply(__navText, "simi"); };
   }
   try {
+  await m.react("🕒");
     const apiUrl = `https://api.nexray.eu.cc/ai/simisimi?text=${encodeURIComponent(text)}`;
     const res = await axios.get(apiUrl, {
       timeout: 15000,
@@ -51,6 +52,7 @@ async function handler(m, { sock }) {
     }
 
     console.error("[SimiSimi]", error.message);
+    await m.react("🐣");
     m.reply(claraWrap("simi", "😔 Simi gagal membalas pesanmu."));
   }
 }
