@@ -211,15 +211,16 @@ async function handler(m, { sock }) {
     // Usage hanya muncul kalau .qc polos tanpa text dan tanpa reply
     if (args.length === 0 && !m.quoted) {
         const colorList = Object.keys(COLORS).join(', ')
-        return m.reply(
-            `💬 *ǫᴜᴏᴛᴇ ꜱᴛɪᴄᴋᴇʀ*\n\n` +
-            `\`${m.prefix}qc <text>\` — background putih (default)\n` +
-            `\`${m.prefix}qc <warna> <text>\` — background sesuai warna\n` +
-            `Reply pesan + \`${m.prefix}qc\` — quote pesan itu (putih)\n` +
-            `\n` +
-            `Contoh: \`${m.prefix}qc pink Hai semuanya!\`\n\n` +
-            `${colorList}\n`
-        )
+        return m.reply(claraWrap("qc", [
+            "📌 Format:",
+            m.prefix + "qc <text> — background putih (default)",
+            m.prefix + "qc <warna> <text> — background sesuai warna",
+            "Reply pesan + " + m.prefix + "qc — quote pesan itu (putih)",
+            "",
+            "💡 Contoh: " + m.prefix + "qc pink Hai semuanya!",
+            "",
+            "Warna tersedia: " + colorList,
+        ]))
     }
 
     // Argumen pertama = warna yang dikenal → pakai warna itu.
@@ -237,11 +238,11 @@ async function handler(m, { sock }) {
     }
 
     if (!message) {
-        return m.reply(`❌ *Error*\n\nMasukkan text untuk quote!`)
+        return m.reply(claraWrap("qc", "Masukkan text untuk quote!", "error"))
     }
 
     if (message.length > 80) {
-        return m.reply(claraWrap("Qc", `❌ *ᴇʀʀᴏʀ*\n\nMaksimal 80 karakter! (Saat ini: ${message.length})`))
+        return m.reply(claraWrap("qc", `Maksimal 80 karakter! (Saat ini: ${message.length})`, "error"))
     }
 
     try {

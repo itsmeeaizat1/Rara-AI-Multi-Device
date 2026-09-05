@@ -35,6 +35,7 @@ async function handler(m, { sock }) {
   }
   const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.png`);
   try {
+  await m.react("🕒");
     const pngBuffer = await bratGen(text, { C_BG: "#5d8aa8", C_TEXT: "#ffffff" });
     await fs.promises.writeFile(tempFile, pngBuffer);
     await sock.sendImageAsSticker(m.chat, tempFile, m, {
@@ -42,6 +43,7 @@ async function handler(m, { sock }) {
       author: config.sticker.author,
     });
     await fs.promises.unlink(tempFile).catch(() => {});
+      await m.react("🐣");
       await m.reply(novaBerhasil("bratsquidward"));
   } catch (error) {
     await fs.promises.unlink(tempFile).catch(() => {});

@@ -29,16 +29,25 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const isVideo = m.isVideo || (m.quoted && m.quoted.isVideo) || (m.quoted && m.quoted.type === 'videoMessage')
     if (!isVideo) {
-        return m.reply(`*Meme Video*\n\nReply atau kirim video dengan caption\n\n\`Contoh: ${m.prefix}smemevid Top|Bottom\``)
+        return m.reply(claraWrap("smemevid", [
+        "Reply atau kirim video dengan caption",
+        "",
+        "💡 Contoh: " + m.prefix + "smemevid Top|Bottom",
+      ]))
     }
 
     const input = m.args.join(' ')
     if (!input || !input.includes('|')) {
-        { const __navText = `🎬 *ᴍᴇᴍᴇ ᴠɪᴅᴇᴏ*\n\nFormat: top|bottom\n\n\`Contoh: ${m.prefix}smemevid WIDTH OR HEIGHT|WHY NOT BOTH?\``; return await m.reply( __navText, "smemevid"); }
+        { return await m.reply(claraWrap("smemevid", [
+            "📌 Format: top|bottom",
+            "",
+            "💡 Contoh: " + m.prefix + "smemevid WIDTH OR HEIGHT|WHY NOT BOTH?",
+        ])); }
     }
 
     const [top, bottom] = input.split('|').map(s => s.trim().toUpperCase())
     try {
+    await m.react("🕒");
         let mediaBuffer
         if (m.quoted) {
             mediaBuffer = await m.quoted.download()
@@ -136,6 +145,7 @@ async function handler(m, { sock }) {
             fs.unlinkSync(overlayImage)
         } catch (e) { console.error('[smemevid.js]:', e.message); }
 
+        await m.react("🐣");
         await m.reply(novaBerhasil("Smemevid"));
     } catch (error) {
         m.reply(novaGangguan("SmemeVid"))

@@ -32,14 +32,23 @@ async function handler(m, { sock }) {
     m.isSticker ||
     (m.quoted && (m.quoted.isSticker || m.quoted.type === "stickerMessage"));
   if (!isImage && !isSticker) {
-    return m.reply(`*Meme Sticker*\n\nReply atau kirim gambar/sticker dengan caption\n\n\`Contoh: ${m.prefix}smeme Top|Bottom\``);
+    return m.reply(claraWrap("smeme", [
+      "Reply atau kirim gambar/sticker dengan caption",
+      "",
+      "💡 Contoh: " + m.prefix + "smeme Top|Bottom",
+    ]));
   }
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {
-    return m.reply( `😂 *ᴍᴇᴍᴇ ꜱᴛɪᴄᴋᴇʀ*\n\nFormat: top|bottom\n\n\`Contoh: ${m.prefix}smeme Ketika|Kamu Lupa\``, "smeme");
+    return m.reply(claraWrap("smeme", [
+      "📌 Format: top|bottom",
+      "",
+      "💡 Contoh: " + m.prefix + "smeme Ketika|Kamu Lupa",
+    ]));
   }
   const [top, bottom] = input.split("|").map((s) => s.trim());
   try {
+  await m.react("🕒");
     let mediaBuffer;
     if (m.quoted) {
       mediaBuffer = await m.quoted.download();
@@ -141,6 +150,7 @@ async function handler(m, { sock }) {
       packname: config.sticker?.packname || "Nova-AI",
       author: config.sticker?.author || "Bot",
     });
+      await m.react("🐣");
       await m.reply(novaBerhasil("smeme"));
   } catch (error) {
     console.log("[SMEME] Error:", error.message);

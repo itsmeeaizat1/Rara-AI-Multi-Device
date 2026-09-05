@@ -31,6 +31,7 @@ async function handler(m, { sock }) {
     }
     const tempFile = path.join(os.tmpdir(), `bratvid2-${Date.now()}.webp`);
     try {
+    await m.react("🕒");
         const buffer = await bratVid(text, {
             outputFormat: "mp4",
         });
@@ -40,6 +41,7 @@ async function handler(m, { sock }) {
             author: config.sticker.author,
         });
         await fs.promises.unlink(tempFile).catch(() => {});
+        await m.react("🐣");
         await m.reply(novaBerhasil("bratvid2"));
     } catch (error) {
         await fs.promises.unlink(tempFile).catch(() => {});

@@ -123,6 +123,7 @@ const pluginConfig = {
 // ─── Handler ───
 async function handler(m, { sock }) {
   try {
+  await m.react("🕒");
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);
     const isSticker =
       m.isSticker ||
@@ -227,6 +228,7 @@ async function handler(m, { sock }) {
       packname: config.sticker?.packname || "Nova-AI",
       author: config.sticker?.author || "Bot",
     });
+      await m.react("🐣");
       await m.reply(novaBerhasil("smemev2"));
   } catch (error) {
     console.error("[SMEMEV2] Error:", error.message);

@@ -132,6 +132,7 @@ async function handler(m, { sock, config: botConfig }) {
     const options = parseOptions(m.args || [])
     
     try {
+    await m.react("🕒");
         let buffer
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download()
@@ -202,6 +203,7 @@ async function handler(m, { sock, config: botConfig }) {
         } else if (isVideo) {
             await sock.sendVideoAsSticker(m.chat, buffer, m, { packname, author })
         }
+        await m.react("🐣");
         await m.reply(novaBerhasil("Sticker"))
     } catch (error) {
         console.error('[sticker.js]', error.message || error)

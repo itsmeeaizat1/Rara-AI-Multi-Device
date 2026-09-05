@@ -24,12 +24,14 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted
     
     if (!quoted) {
-        return m.reply( `🖼️ *ꜱᴛɪᴄᴋᴇʀ ᴡᴀᴛᴇʀᴍᴀʀᴋ*\n\n` +
-            `Reply sticker dengan caption:\n` +
-            `\`${m.prefix}swm packname\`\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
-            `\`${m.prefix}swm Nova-AI\`\n` +
-            `\`${m.prefix}swm Nova-AI|LuckyArchz\` _(packname + author)_`, "swm")
+        return m.reply(claraWrap("swm", [
+            "Reply sticker dengan caption:",
+            m.prefix + "swm packname",
+            "",
+            "💡 Contoh:",
+            m.prefix + "swm Nova-AI",
+            m.prefix + "swm Nova-AI|LuckyArchz (packname + author)",
+        ]))
     }
     
     const isSticker = quoted.type === 'stickerMessage' || quoted.isSticker
@@ -57,6 +59,7 @@ async function handler(m, { sock, config: botConfig }) {
         author = ''
     }
     try {
+    await m.react("🕒");
         const buffer = await quoted.download()
         
         if (!buffer || buffer.length === 0) {
@@ -84,6 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
                 await sock.sendImageAsSticker(m.chat, buffer, m, exifOpts)
             }
         }
+        await m.react("🐣");
         await m.reply(novaBerhasil("Swm"));
     } catch (error) {
         console.error('[SWM] Error:', error.message)
