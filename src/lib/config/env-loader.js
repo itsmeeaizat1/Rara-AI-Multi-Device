@@ -65,6 +65,15 @@ export function getDeepAiKey() {
 /**
  * Ambil SaveNow API key (4kdownload.to)
  */
+/**
+ * API key HaidarApis (api.haidarxd.my.id — 336 endpoint all-in-one)
+ * Daftar gratis: https://api.haidarxd.my.id/register → dashboard/api-keys
+ * Dipakai: nova-haidar.js (fallback downloader alldl + textpro)
+ */
+export function getHaidarKey() {
+  return apikeysData.haidar || "";
+}
+
 export function getSaveNowKey() {
   return miscData.savenow_apikey || "";
 }

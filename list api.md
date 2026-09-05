@@ -1392,6 +1392,7 @@ https://upscayl.org
 
 > Provider: `api.haidarxd.my.id` (HaidarMahiru) • Docs: https://api.haidarxd.my.id/docs
 > Akses: DAFTAR GRATIS → API Key (`?apikey=haidarapis-xxxx`) WAJIB di semua endpoint data
+> TERPAKAI: fallback alldl (TRY 4) + textpro via `src/lib/nova-haidar.js` — key di `src/lib/apikey/apikeys.json` field `haidar`
 > Status: ✅ ALIVE (diverifikasi 5 Sep 2026 — 200 OK, latency ~25ms, region sgp/fra/iad)
 > Catatan: meta endpoint TANPA key: `/api/v1/health` (status/uptime), `/api/v1/endpoints` (daftar kategori+count)
 
