@@ -698,8 +698,9 @@ class Database {
       game: data.game ?? existing.game ?? false,
       rpg: data.rpg ?? existing.rpg ?? false,
       warnings: data.warnings ?? existing.warnings ?? [],
-      welcomeMsg: data.welcomeMsg ?? existing.welcomeMsg,
-      goodbyeMsg: data.goodbyeMsg ?? existing.goodbyeMsg,
+      // null = reset ke default (fix: ?? bikin .resetwelcome/.resetgoodbye gak pernah jalan)
+      welcomeMsg: data.welcomeMsg !== undefined ? data.welcomeMsg : existing.welcomeMsg,
+      goodbyeMsg: data.goodbyeMsg !== undefined ? data.goodbyeMsg : existing.goodbyeMsg,
       intro: data.intro ?? existing.intro,
       chat: existing.chat ?? {},
       // Auto feature defaults (all OFF at pairing)

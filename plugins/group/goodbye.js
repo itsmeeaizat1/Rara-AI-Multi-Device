@@ -3,7 +3,7 @@
 import { novaError, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { createGoodbyeCard, createGoodbyeCardV3, detectCountry } from "../../src/lib/nova-welcome-card.js";
+import { createGoodbyeCard, createGoodbyeCardV3, createGoodbyeCardV4, detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
@@ -12,7 +12,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      await m.reply(novaGuide('Goodbye', `Pesan perpisahan saat member keluar grup. Pilih tipe dengan ${prefix}setgoodbyetype v1/v2/v3.`, `${prefix}goodbye on`));
+      await m.reply(novaGuide('Goodbye', `Pesan perpisahan saat member keluar grup. Pilih tipe dengan ${prefix}setgoodbyetype v1-v5.`, `${prefix}goodbye on`));
       return { handled: true };
     }
 
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
       `Status : ${args === "on" ? "ON" : "OFF"}`,
       `Grup : ${m.chat}`,
       "",
-      `💡 Ketik ${prefix}setgoodbyetype v1/v2/v3 untuk pilih tipe`,
+      `💡 Ketik ${prefix}setgoodbyetype v1/v2/v3/v4/v5 untuk pilih tipe`,
     ].join("\n")));
   } catch (error) {
     await m.reply(novaError("Goodbye", `Gagal: ${error.message}`));
@@ -55,18 +55,25 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   const displayName = userData.name || userData.regName || username;
   const country = detectCountry(participantJid);
 
+  // Nama owner grup (buat placeholder {owner})
+  const ownerJid = metadata?.owner || "";
+  const ownerData = ownerJid ? db.getUser(ownerJid) || {} : {};
+  const ownerName = ownerData.name || ownerData.regName || ownerJid.split("@")[0] || "Owner";
+
   // Pesan custom goodbyeMsg yang di-set owner (kalau ada)
-  const now = new Date();
+  // Semua placeholder didukung: {user} {number} {group} {desc} {count} {owner} {date} {time} {day} {bot} {prefix}
   let customText = "";
   const customMsg = String(groupData.goodbyeMsg || "").trim();
   if (customMsg) {
-    const dayName = now.toLocaleDateString("id-ID", { weekday: "long" });
-    const dateStr = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-    customText = customMsg
-      .replaceAll("{user}", "@" + username)
-      .replaceAll("{group}", groupName)
-      .replaceAll("{day}", dayName)
-      .replaceAll("{date}", dateStr);
+    customText = fillWelcomeTemplate(customMsg, {
+      username,
+      groupName,
+      memberCount,
+      desc: metadata?.desc || "",
+      ownerName,
+      botName: config.bot?.name || "Nova AI",
+      prefix,
+    });
     if (customText.length > 200) customText = customText.slice(0, 197) + "...";
   }
 
@@ -151,7 +158,36 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
     }
   }
 
-  // ===== V4+: Fallback ke teks =====
+  // ===== V4: GLASSMORPHISM CARD =====
+  if (goodbyeType === 4) {
+    try {
+      const buffer = await createGoodbyeCardV4(username, ppUrl, groupName, memberCount);
+      await sock.sendMessage(groupJid, {
+        image: buffer,
+        caption: engineText,
+        mentions: [participantJid],
+      });
+      return;
+    } catch (err) {
+      console.error("goodbye v4 glassmorphism error:", err.message);
+    }
+  }
+
+  // ===== V5: SIMPLE — teks engine + foto profile =====
+  if (goodbyeType === 5 && ppUrl) {
+    try {
+      await sock.sendMessage(groupJid, {
+        image: { url: ppUrl },
+        caption: engineText,
+        mentions: [participantJid],
+      });
+      return;
+    } catch (err) {
+      console.error("goodbye v5 simple error:", err.message);
+    }
+  }
+
+  // ===== Fallback ke teks =====
   await sock.sendMessage(groupJid, {
     text: engineText,
     mentions: [participantJid],
@@ -163,8 +199,8 @@ export default {
     name: "goodbye2",
     alias: ["goodbye2", "goodbye"],
     category: "group",
-    description: "Pesan goodbye saat member keluar grup (v1 teks / v2 canvas / v3 autoresbot API)",
-    usage: ".goodbye on/off\n.setgoodbyetype v1 (teks) / v2 (canvas) / v3 (API bg)",
+    description: "Pesan goodbye saat member keluar grup (v1 teks / v2 canvas / v3 API / v4 glassmorphism / v5 teks + foto PP)",
+    usage: ".goodbye on/off\n.setgoodbyetype v1 (teks) / v2 (canvas) / v3 (API bg) / v4 (glassmorphism) / v5 (teks + foto PP)",
     example: ".goodbye on",
     isOwner: true,
     isPremium: false,
