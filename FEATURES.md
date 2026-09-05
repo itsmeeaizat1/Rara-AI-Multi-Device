@@ -1523,3 +1523,8 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - `.alldl` — TRY 4 baru: chain jadi ikyy → savenow → aio → **haidar** (api.haidarxd.my.id, 26 platform downloader, auto-detect URL). No-op tanpa apikey.
 - `.textpro` — fallback baru: ephoto360 gagal → **haidar textpro** (map style: blackpink/glitch/typography/cartoon/pixel/comic).
 - Key: daftar gratis `api.haidarxd.my.id/register` → isi di `src/lib/apikey/apikeys.json` field `haidar`. Helper: `src/lib/nova-haidar.js` (haidarFetch/haidarAio/haidarTextpro, normalizer response defensif).
+
+### Game V2 HaidarApis (BARU 5 Sep 2026 — branch feat/haidar-games-v2)
+- 8 game v2 soal LIVE dari HaidarApis (api.haidarxd.my.id/api/v1/games): `.asahotakv2` `.siapakahakuv2` `.susunkatav2` `.tekatekiv2` `.tebaktebakanv2` `.tebaklirikv2` `.tebakkimiav2` `.islamicv2`
+- Factory game kini support `fetchQuestion` (soal live API) selain JSON lokal — normalizer defensif (soal/pertanyaan/question, jawaban/answer), tanpa key haidar game v2 menolak dengan petunjuk jelas (claraWrap error).
+- Kategori game (energi RPG, hint, reward, timeout 60s, CTA) — sama persis dengan game v1.

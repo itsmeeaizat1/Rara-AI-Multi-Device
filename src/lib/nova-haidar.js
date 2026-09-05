@@ -154,3 +154,30 @@ export async function haidarTextpro(style, text) {
   const url = data.url || data.image || data.result;
   return typeof url === "string" && /^https?:\/\//.test(url) ? url : null;
 }
+
+// ─── Games ─────────────────────────────────────────────────────────────────
+
+/**
+ * Ambil 1 soal game dari HaidarApis.
+ * Endpoint tersedia: asahotak, islamic, siapakahaku, susunkata,
+ * tebakkimia, tebaklirik, tebaktebakan, tekateki.
+ * @param {string} gameName — nama endpoint (tanpa /api/v1/games/)
+ * @returns {Promise<{soal:string, jawaban:string, deskripsi?:string}|null>}
+ *   Shape kompatibel dgn nova-game-factory (questionField soal, answerField jawaban)
+ */
+export async function haidarGame(gameName) {
+  if (!isHaidarReady()) return null;
+  const data = await haidarFetch(`/api/v1/games/${gameName}`);
+  if (!data) return null;
+
+  // normalisasi defensif — schema gak terdokumentasi, coba field umum
+  const src = data.result || data.data || data;
+  const soal = src.soal || src.pertanyaan || src.question || src.soal1 || "";
+  const jawaban = src.jawaban || src.answer || src.jawabanBenar || "";
+  const deskripsi = src.deskripsi || src.info || src.penjelasan || "";
+
+  if (!soal || !jawaban) return null;
+  const q = { soal: String(soal).trim(), jawaban: String(jawaban).trim() };
+  if (deskripsi) q.deskripsi = String(deskripsi).trim();
+  return q;
+}
