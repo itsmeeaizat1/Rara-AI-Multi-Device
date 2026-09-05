@@ -26,7 +26,35 @@ function loadJson(filename) {
 }
 
 // Cache — baca sekali saat startup
-const apikeysData = loadJson("apikeys.json");
+const apikeysRaw = loadJson("apikeys.json");
+
+// ═══ STRUKTUR BARU apikeys.json (satu file, 3 section AI) ═══
+//   aiSatuan      → key fitur AI satuan & wrapper (haidar, ikyyxd, cuki, dll)
+//   aiMultiprovider → config multi-provider (chain + providers.*.apikey)
+//   novaai        → key engine NovaAI (tioApiKey, google, groqkey, deepseekkey)
+// Key non-AI tetap di root. apikeysData = tampilan FLAT gabungan semuanya
+// supaya semua getter lama (getHaidarKey, keys.ikyyxd, dll) tetap jalan.
+function flattenApikeys(raw) {
+  const flat = {};
+  // key flat legacy / non-AI di root (string langsung)
+  for (const [k, v] of Object.entries(raw || {})) {
+    if (typeof v === "string") flat[k] = v;
+  }
+  // 3 section AI → dibuang _note, disebar flat
+  for (const sec of ["aiSatuan", "novaai"]) {
+    for (const [k, v] of Object.entries(raw?.[sec] || {})) {
+      if (k.startsWith("_")) continue;
+      flat[k] = typeof v === "string" ? v : "";
+    }
+  }
+  // provider key → flat[k] = providers[k].apikey
+  const provs = raw?.aiMultiprovider?.providers || {};
+  for (const [k, v] of Object.entries(provs)) {
+    flat[k] = v?.apikey ?? "";
+  }
+  return flat;
+}
+const apikeysData = flattenApikeys(apikeysRaw);
 const andarazData = loadJson("andaraz.json");
 const sankaData = loadJson("sanka.json");
 const miscData = loadJson("misc.json");
@@ -35,7 +63,33 @@ const miscData = loadJson("misc.json");
  * Ambil semua API key (kompatibel dengan config.APIkey lama)
  */
 export function getApiKeys() {
-  const { _note, ...keys } = apikeysData;
+  const keys = { ...apikeysData };
+  delete keys._note;
+  return keys;
+}
+
+/**
+ * ── SECTION GETTER (struktur baru apikeys.json) ──
+ * Config AI satuan, multi-provider, dan NovaAI dipisah rapi di satu file.
+ */
+export function getAiSatuanKeys() {
+  const raw = loadJson("apikeys.json");
+  const keys = { ...(raw.aiSatuan || {}) };
+  delete keys._note;
+  return keys;
+}
+
+export function getAiMultiprovider() {
+  const raw = loadJson("apikeys.json");
+  if (raw.aiMultiprovider) return raw.aiMultiprovider;
+  // backward compat: file lama ai-providers.json (sudah deprecated)
+  return loadJson("ai-providers.json");
+}
+
+export function getNovaAiKeys() {
+  const raw = loadJson("apikeys.json");
+  const keys = { ...(raw.novaai || {}) };
+  delete keys._note;
   return keys;
 }
 
@@ -143,7 +197,12 @@ export function reloadKeys() {
   const newAndaraz = loadJson("andaraz.json");
   const newSanka = loadJson("sanka.json");
   const newMisc = loadJson("misc.json");
-  Object.assign(apikeysData, newApikeys);
+  // rebuild tampilan flat dari 3 section (biar key baru langsung kedeteksi)
+  const flat = flattenApikeys(newApikeys);
+  for (const k of Object.keys(apikeysData)) delete apikeysData[k];
+  Object.assign(apikeysData, flat);
+  apikeysRaw && Object.keys(apikeysRaw).forEach(k => delete apikeysRaw[k]);
+  Object.assign(apikeysRaw, newApikeys);
   Object.assign(andarazData, newAndaraz);
   Object.assign(sankaData, newSanka);
   Object.assign(miscData, newMisc);

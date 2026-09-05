@@ -1,6 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/lib/apikey/ai-chain.js — KONFIG MULTI-PROVIDER AI (single source of truth)
-// File config: src/lib/apikey/ai-providers.json (list provider kebawah).
+// File config: src/lib/apikey/apikeys.json → section "aiMultiprovider"
+// (struktur baru: aiSatuan / aiMultiprovider / novaai dipisah di SATU file).
+// File lama ai-providers.json masih dibaca sebagai fallback kalau section gak ada.
 //   - "chain"  : urutan prioritas rantai (.novaai/.autonovaai/autoflow aichat)
 //   - "providers": key tiap AI — owner TINGGAL ISI "apikey"-nya doang.
 //     apikey kosong = di-skip otomatis dari rantai (bukan error).
@@ -15,26 +17,46 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CFG_FILE = path.join(__dirname, "ai-providers.json");
-const LEGACY_KEYS_FILE = path.join(__dirname, "apikeys.json");
+const APIKEYS_FILE = path.join(__dirname, "apikeys.json");        // ← SATU file config
+const LEGACY_CFG_FILE = path.join(__dirname, "ai-providers.json"); // fallback lama (deprecated)
 
 let _cache = null;
 let _cacheMtime = 0;
 
 function readConfig() {
   try {
-    const mtime = fs.statSync(CFG_FILE).mtimeMs;
+    const mtime = fs.statSync(APIKEYS_FILE).mtimeMs;
     if (_cache && mtime === _cacheMtime) return _cache;
-    _cache = JSON.parse(fs.readFileSync(CFG_FILE, "utf8"));
+    const raw = JSON.parse(fs.readFileSync(APIKEYS_FILE, "utf8"));
+    // prioritas: section aiMultiprovider di apikeys.json → file lama
+    _cache = raw.aiMultiprovider || loadLegacyCfg();
     _cacheMtime = mtime;
     return _cache;
   } catch {
-    return { chain: [], providers: {} };
+    return loadLegacyCfg();
   }
 }
 
+function loadLegacyCfg() {
+  try { return JSON.parse(fs.readFileSync(LEGACY_CFG_FILE, "utf8")); } catch { return { chain: [], providers: {} }; }
+}
+
 function readLegacyKeys() {
-  try { return JSON.parse(fs.readFileSync(LEGACY_KEYS_FILE, "utf8")); } catch { return {}; }
+  // tampilan flat: root + 3 section (aiSatuan/aiMultiprovider/novaai)
+  // supaya LEGACY_SLOTS (groqkey, deepseekkey, google, ikyyxd, dll) tetap resolve
+  try {
+    const raw = JSON.parse(fs.readFileSync(APIKEYS_FILE, "utf8"));
+    const flat = {};
+    for (const [k, v] of Object.entries(raw)) if (typeof v === "string") flat[k] = v;
+    for (const sec of ["aiSatuan", "novaai"]) {
+      for (const [k, v] of Object.entries(raw[sec] || {})) {
+        if (k.startsWith("_")) continue;
+        flat[k] = typeof v === "string" ? v : "";
+      }
+    }
+    for (const [k, v] of Object.entries(raw.aiMultiprovider?.providers || {})) flat[k] = v?.apikey ?? "";
+    return flat;
+  } catch { return {}; }
 }
 
 // fallback key lama biar key yang UDAH ada di apikeys.json / env tetep kepake

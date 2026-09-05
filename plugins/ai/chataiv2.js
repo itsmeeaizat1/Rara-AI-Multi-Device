@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// chataiv2 — ChatAI v2 (chatai.org)
+// chataiv2 — AI asisten ChatAI
+// API asli (chatai.org) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gpt4o" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "chataiv2", alias: ["chataiv2"], aliases: ["chataiv2", "chataiorgv2"],
@@ -12,26 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("chataiv2", `Mau nanya apa?\nContoh: ${m.prefix}chataiv2 apa itu blockchain`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("chataiv2", `Mau nanya apa?\nContoh: ${m.prefix}chataiv2 apa itu blockchain`, "guide"));
     await m.react("🕒");
-    const res = await fetch("https://chatai.org/api/chat", {
-      method: "POST", headers: { "Content-Type": "application/json", "Origin": "https://chatai.org", "Referer": "https://chatai.org/" },
-      body: JSON.stringify({ messages: [{ role: "user", content: text }] }),
-    });
-    const data = await res.json();
-    await m.reply(data?.content || "Tidak ada jawaban.");
+    const reply = await aiFallbackChat(text, { persona: "AI asisten ChatAI", model: "gpt4o" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[chataiv2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("chataiv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("chataiv2", te(m.prefix, m.command, m.pushName), "error"));

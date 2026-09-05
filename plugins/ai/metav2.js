@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// metav2 — Meta AI v2 (Llama 3.1 8B via hydrooo)
+// metav2 — Meta AI dari Meta (Facebook)
+// API asli (mind.hydrooo.web.id) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "metav2", alias: ["metav2"], aliases: ["metav2", "metaaiv2", "llamav2"],
@@ -12,26 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("metav2", `Mau nanya apa?\nContoh: ${m.prefix}metav2 jelaskan HTTP`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("metav2", `Mau nanya apa?\nContoh: ${m.prefix}metav2 jelaskan HTTP`, "guide"));
     await m.react("🕒");
-    const form = new FormData();
-    form.append("content", `User: ${text}`);
-    form.append("model", "@groq/llama-3.1-8b-instant");
-    const res = await fetch("https://mind.hydrooo.web.id/v1/chat", { method: "POST", body: form });
-    const data = await res.json();
-    await m.reply(data?.result || data?.full_result || "Tidak ada jawaban.");
+    const reply = await aiFallbackChat(text, { persona: "Meta AI dari Meta (Facebook)", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[metav2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("metav2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("metav2", te(m.prefix, m.command, m.pushName), "error"));

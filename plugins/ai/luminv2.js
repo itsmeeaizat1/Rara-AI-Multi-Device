@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// luminv2 — Lumin AI v2 (luminai.my.id)
+// luminv2 — Lumin AI
+// API asli (luminai.my.id) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "luminv2", alias: ["luminv2"], aliases: ["luminv2", "luminaiv2"],
@@ -12,26 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("luminv2", `Ada yang bisa dibantu?\nContoh: ${m.prefix}luminv2 apa itu quantum`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("luminv2", `Ada yang bisa dibantu?\nContoh: ${m.prefix}luminv2 apa itu quantum`, "guide"));
     await m.react("🕒");
-    const res = await fetch("https://luminai.my.id/", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: text }),
-    });
-    const data = await res.json();
-    await m.reply(data?.result || data?.response || "Tidak ada respon.");
+    const reply = await aiFallbackChat(text, { persona: "Lumin AI", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[luminv2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("luminv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("luminv2", te(m.prefix, m.command, m.pushName), "error"));

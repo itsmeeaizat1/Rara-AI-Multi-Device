@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// typliv2 — Typli AI v2 (typli.ai)
+// typliv2 — Typli AI
+// API asli (typli.ai) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "typliv2", alias: ["typliv2"], aliases: ["typliv2", "typliaiv2"],
@@ -12,26 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("typliv2", `Tanya apa?\nContoh: ${m.prefix}typliv2 ceritakan sejarah dunia`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("typliv2", `Tanya apa?\nContoh: ${m.prefix}typliv2 ceritakan sejarah dunia`, "guide"));
     await m.react("🕒");
-    const res = await fetch("https://typli.ai/api/generators/completion", {
-      method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({ prompt: text, temperature: 1.2 }),
-    });
-    const data = await res.json();
-    await m.reply(typeof data === "string" ? data : (data?.result || data?.response || JSON.stringify(data)));
+    const reply = await aiFallbackChat(text, { persona: "Typli AI", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[typliv2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("typliv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("typliv2", te(m.prefix, m.command, m.pushName), "error"));

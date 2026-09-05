@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// chatbotaiv2 — ChatBot AI v2 (abella.icu)
+// chatbotaiv2 — AI chatbot
+// API asli (abella.icu/onlinechatbot) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "chatbotaiv2", alias: ["chatbotaiv2"], aliases: ["chatbotaiv2", "cbotv2"],
@@ -12,23 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("chatbotaiv2", `Mau nanya apa?\nContoh: ${m.prefix}chatbotaiv2 ceritakan tentang Indonesia`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("chatbotaiv2", `Mau nanya apa?\nContoh: ${m.prefix}chatbotaiv2 ceritakan tentang Indonesia`, "guide"));
     await m.react("🕒");
-    const res = await fetch(`https://www.abella.icu/onlinechatbot?q=${encodeURIComponent(text)}`);
-    const data = await res.json();
-    if (data?.data?.answer?.data) { await m.react("🐣"); await m.reply(data.data.answer.data); }
-    else { await m.reply(claraWrap("chatbotaiv2", "Tidak menemukan jawaban.", "error")); }
+    const reply = await aiFallbackChat(text, { persona: "AI chatbot", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
+    await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[chatbotaiv2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("chatbotaiv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("chatbotaiv2", te(m.prefix, m.command, m.pushName), "error"));

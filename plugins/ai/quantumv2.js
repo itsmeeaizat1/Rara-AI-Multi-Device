@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// quantumv2 — Quantum AI v2 (zelapioffciall)
+// quantumv2 — Quantum AI
+// API asli (zelapioffciall.vercel.app) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "quantumv2", alias: ["quantumv2"], aliases: ["quantumv2", "quantumaiv2"],
@@ -12,24 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("quantumv2", `Mau nanya apa?\nContoh: ${m.prefix}quantumv2 what is AI`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("quantumv2", `Mau nanya apa?\nContoh: ${m.prefix}quantumv2 what is AI`, "guide"));
     await m.react("🕒");
-    const res = await fetch(`https://zelapioffciall.vercel.app/ai/quantum?text=${encodeURIComponent(text)}`);
-    const data = await res.json();
-    if (!data?.result) return m.reply(claraWrap("quantumv2", "Gagal mendapatkan respon.", "error"));
-    await m.reply(data.result);
+    const reply = await aiFallbackChat(text, { persona: "Quantum AI", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[quantumv2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("quantumv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("quantumv2", te(m.prefix, m.command, m.pushName), "error"));

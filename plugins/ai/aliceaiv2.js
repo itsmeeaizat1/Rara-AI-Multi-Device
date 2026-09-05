@@ -1,8 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aliceaiv2 — Alice AI v2 (multi-mode: chat, TikTok caption, image gen)
+// API asli (velyn.biz.id) udah mati → chat lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar → Ikyy → Xemoz), image gen via callIkyyImage,
+// link TikTok diarahkan ke downloader .tiktok yang udah hidup.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { callIkyyImage } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "aliceaiv2", alias: ["aliceaiv2"], aliases: ["aliceaiv2", "aliceaiaiv2"],
@@ -12,44 +16,28 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("aliceaiv2", `Chat, atau minta gambar.\nContoh: ${m.prefix}aliceaiv2 hai apa kabar?\n${m.prefix}aliceaiv2 buatkan gambar kucing\n\nLink TikTok? Pakai ${m.prefix}tiktok aja ya — downloadernya siap.`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("aliceaiv2", `Chat, kirim link TikTok, atau minta gambar.\nContoh: ${m.prefix}aliceaiv2 hai apa kabar?\n${m.prefix}aliceaiv2 buatkan gambar kucing`, "guide"));
     await m.react("🕒");
-    const regexTikTok = /(https?:\/\/)?(www\.|vm\.|vt\.)?tiktok\.com\/[^\s]+/gi;
-    const isTikTok = regexTikTok.test(text);
+    const isTikTok = /(https?:\/\/)?(www\.|vm\.|vt\.)?tiktok\.com\/[^\s]+/i.test(text);
     const isImageReq = /(gambar|buatkan.*gambar|bikin.*gambar|buat.*gambar)/i.test(text);
 
     if (isTikTok) {
-      const link = text.match(regexTikTok)[0];
-      const res = await fetch(`https://www.velyn.biz.id/api/downloader/tiktok?url=${encodeURIComponent(link)}`);
-      const json = await res.json();
-      if (!json?.status || !json?.data?.no_watermark) return m.reply(claraWrap("aliceaiv2", "Gagal unduh TikTok.", "error"));
-      const prompt = `Buatkan caption menarik untuk video TikTok: ${json.data.title || "tanpa judul"}`;
-      const aiRes = await fetch(`https://www.velyn.biz.id/api/ai/velyn-1.0-1b?prompt=${encodeURIComponent(prompt)}`);
-      const aiJson = await aiRes.json();
-      await sock.sendMessage(m.chat, { video: { url: json.data.no_watermark }, caption: aiJson?.result || "" });
-    } else if (isImageReq) {
-      const res = await fetch(`https://www.velyn.biz.id/api/ai/text2img?prompt=${encodeURIComponent(text)}`);
-      if (!res.ok) return m.reply(claraWrap("aliceaiv2", "Gagal generate gambar.", "error"));
-      const buffer = Buffer.from(await res.arrayBuffer());
-      await sock.sendMessage(m.chat, { image: buffer, caption: `Gambar: ${text}` });
+      return m.reply(claraWrap("aliceaiv2", `Untuk link TikTok pakai ${m.prefix}tiktok <link> ya — downloadernya lebih lengkap (video/foto/slide).`, "guide"));
+    }
+
+    if (isImageReq) {
+      const imgUrl = await callIkyyImage(text, "1:1");
+      if (!imgUrl) throw new Error("gagal generate gambar");
+      await sock.sendMessage(m.chat, { image: { url: imgUrl }, caption: `Gambar: ${text}` });
     } else {
-      const res = await fetch(`https://www.velyn.biz.id/api/ai/velyn-1.0-1b?prompt=${encodeURIComponent(text)}`);
-      const json = await res.json();
-      if (!json?.status || !json?.result) return m.reply(claraWrap("aliceaiv2", "Gagal merespons.", "error"));
-      await m.reply(json.result);
+      const reply = await aiFallbackChat(text, { persona: "Alice AI — asisten WhatsApp yang ramah dan ceria" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+      if (!reply) throw new Error("balasan AI kosong");
+      await m.reply(reply);
     }
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[aliceaiv2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("aliceaiv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("aliceaiv2", te(m.prefix, m.command, m.pushName), "error"));

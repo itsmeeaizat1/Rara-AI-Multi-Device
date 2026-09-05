@@ -3,7 +3,7 @@ import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 const pluginConfig = {
   name: "gpt4o",
   alias: ["gpt4o"],
@@ -26,19 +26,28 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Gpt-4O", `Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}gpt4o Hai apa kabar?\``), "gpt4o");
   }
   try {
-  await m.react("🕒");
-    const data = `https://api.cuki.biz.id/api/ai/gpt?apikey=${config.APIkey.cuki}&question=${encodeURIComponent(text)}`
-    const res = await fetch(data)
-    const json = await res.json()
-    await m.react("🐣");
-    { const __navText = `${json.results}`; await m.reply(__navText); };
+    await m.react("🕒");
+    // cuki sering 429/berubah bentuk → coba dulu, gagal/kosong → rantai fallback
+    const data = `https://api.cuki.biz.id/api/ai/gpt?apikey=${config.APIkey.cuki}&question=${encodeURIComponent(text)}`;
+    const res = await fetch(data, { signal: AbortSignal.timeout(20000) });
+    const json = await res.json().catch(() => ({}));
+    const reply = typeof json?.results === "string" ? json.results : (json?.data || json?.answer || "");
+    if (reply && reply.trim()) {
+      await m.react("🐣");
+      return m.reply(reply);
+    }
+    throw new Error("cuki balas kosong/429");
   } catch (error) {
-    // IkyyXD fallback
+    // 🔹 FALLBACK: rantai multi-API (sesi obrolan tetap nyambung)
     try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[gpt4o.js] IkyyXD fallback failed:", ikyyErr.message);
+      const fbReply = await aiFallbackChat(text, {
+        persona: "GPT-4o — AI asisten serba bisa dari OpenAI",
+        model: "gpt4o",
+        sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName,
+      });
+      if (fbReply) return m.reply(fbReply);
+    } catch (fbErr) {
+      console.error("[gpt4o.js] fallback chain gagal:", fbErr.message);
     }
 
     console.log(error);

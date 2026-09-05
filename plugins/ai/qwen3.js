@@ -3,7 +3,7 @@
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "qwen3",
@@ -39,13 +39,9 @@ async function handler(m, { sock }) {
     ]));
   }
   try {
-  await m.react("🕒");
-    const result = await callIkyy(text, {});
-
-    if (!result.status) {
-      return m.reply(claraWrap("Qwen3 Gagal", `${result.error || "Gagal dapet respons nih"}`));
-    }
-    const reply = `${result.answer}`;
+    await m.react("🕒");
+    // ikyy qwen endpoint udah mati → rantai fallback multi-API
+    const reply = await aiFallbackChat(text, { persona: "Qwen3 — model AI besar dari Alibaba yang jago bahasa apa aja" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
     await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

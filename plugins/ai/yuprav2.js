@@ -1,7 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// yuprav2 — AI chat v2 (Pollinations API — free, no key)
-import { novaReply } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+// yuprav2 — Yup AI
+// API asli (text.pollinations.ai) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/nova-error.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "yuprav2",
@@ -20,53 +23,18 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("yuprav2", `Tanya apa?\nContoh: ${m.prefix}yuprav2 apa itu AI`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) {
-      const msg = novaReply({
-        title: "AI V2",
-        status: "Masukkan pertanyaan untuk AI",
-        content: "|\n| Contoh: " + m.prefix + "yuprav2 apa itu AI",
-      });
-      return await m.reply(msg);
-    }
-
     await m.react("🕒");
-
-    const res = await fetch(
-      "https://text.pollinations.ai/" + encodeURIComponent(text),
-      { headers: { "User-Agent": "Mozilla/5.0" } },
-    );
-
-    const answer = await res.text();
-
-    if (!answer || answer.startsWith("<")) {
-      const msg = novaReply({
-        title: "AI V2",
-        status: "AI sedang tidak merespons, coba lagi nanti",
-      });
-      return await m.reply(msg);
-    }
-
-    await m.reply(answer.trim());
+    const reply = await aiFallbackChat(text, { persona: "Yup AI", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[yuprav2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("yuprav2 error:", e.message);
     await m.react("❌");
-    const msg = novaReply({
-      title: "AI V2",
-      status: "Error: " + e.message,
-    });
-    await m.reply(msg);
+    return m.reply(claraWrap("yuprav2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
-
 export { pluginConfig as config, handler };
