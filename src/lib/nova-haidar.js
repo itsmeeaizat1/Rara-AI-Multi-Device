@@ -112,7 +112,23 @@ export async function haidarAio(url) {
     data.title || data.name || data.caption || data.description || "Downloaded";
 
   const medias = [];
+
+  // Pre-pass: format utama youtubedl-style ada di data.raw (yt-dlp format
+  // { url, ext, format_note, resolution }) — ini media sebenarnya,
+  // bukan data.url yang cuma URL sumber
+  const raw = data.raw || data.result?.raw;
+  if (raw?.url && raw?.ext && !/mhtml/i.test(String(raw.ext))) {
+    const rext = String(raw.ext).toLowerCase();
+    const rtype = /mp3|m4a|opus|wav/.test(rext) ? "audio" : /mp4|webm/.test(rext) ? "video" : "image";
+    medias.push({ url: raw.url, type: rtype, quality: String(raw.format_note || raw.resolution || rext) });
+  }
+
   for (const m of findMediaUrls(data)) {
+    // skip URL sumber (data.url = link input, bukan media)
+    if (typeof m === "string" && m === url) continue;
+    if (typeof m === "object" && m.url === url) continue;
+    // skip storyboard/thumbnail YouTube & format mhtml (bukan media utama)
+    if (typeof m === "string" && /storyboard|maxresdefault|hqdefault|mqdefault|default\.jpg/i.test(m)) continue;
     if (typeof m === "string") {
       const ext = m.split("?")[0].split(".").pop().toLowerCase();
       const type = /jpg|jpeg|png|webp/.test(ext) ? "image" : /mp3|m4a|opus|wav/.test(ext) ? "audio" : "video";
@@ -143,16 +159,43 @@ const TEXTPRO_MAP = {
 };
 
 /**
- * TextPro via Haidar → URL gambar hasil.
- * @returns {Promise<string|null>} URL gambar, null kalau gagal
+ * TextPro via Haidar → Buffer gambar hasil.
+ * Endpoint /api/v1/textpro/<efek> balikin file gambar LANGSUNG
+ * (image/jpeg), bukan JSON — jadi return Buffer siap kirim.
+ * @returns {Promise<Buffer|null>} Buffer gambar, null kalau gagal
  */
 export async function haidarTextpro(style, text) {
   const ep = TEXTPRO_MAP[style] || TEXTPRO_MAP[style?.toLowerCase?.()];
-  if (!ep) return null;
-  const data = await haidarFetch(`/api/v1/textpro/${ep}`, { text });
-  if (!data) return null;
-  const url = data.url || data.image || data.result;
-  return typeof url === "string" && /^https?:\/\//.test(url) ? url : null;
+  if (!ep || !isHaidarReady()) return null;
+  const key = getHaidarKey();
+  const qs = new URLSearchParams({ text, apikey: key });
+  try {
+    const res = await fetch(`${BASE}/api/v1/textpro/${ep}?${qs}`, {
+      signal: AbortSignal.timeout(30000),
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" },
+    });
+    if (!res.ok) return null;
+    const ct = res.headers.get("content-type") || "";
+    if (ct.startsWith("image/")) {
+      const buf = Buffer.from(await res.arrayBuffer());
+      return buf.length > 100 ? buf : null;
+    }
+    // beberapa endpoint mungkin balikin JSON URL — dukung dua-duanya
+    if (ct.includes("application/json")) {
+      const json = await res.json();
+      const d = json?.data?.result || json?.data || json;
+      const imgUrl = d?.url || d?.image || d?.result;
+      if (typeof imgUrl === "string" && /^https?:\/\//.test(imgUrl)) {
+        const imgRes = await fetch(imgUrl, { signal: AbortSignal.timeout(20000) });
+        if (!imgRes.ok) return null;
+        const buf = Buffer.from(await imgRes.arrayBuffer());
+        return buf.length > 100 ? buf : null;
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 // ─── Games ─────────────────────────────────────────────────────────────────
@@ -176,8 +219,14 @@ export async function haidarGame(gameName) {
   const jawaban = src.jawaban || src.answer || src.jawabanBenar || "";
   const deskripsi = src.deskripsi || src.info || src.penjelasan || "";
 
+  // tebakkimia bentuk beda: { unsur, lambang } — kompatibel dgn format v1
+  if (!soal && src.unsur && src.lambang) {
+    return { unsur: String(src.unsur).trim(), lambang: String(src.lambang).trim() };
+  }
   if (!soal || !jawaban) return null;
   const q = { soal: String(soal).trim(), jawaban: String(jawaban).trim() };
   if (deskripsi) q.deskripsi = String(deskripsi).trim();
+  // susunkata punya kategori soal (tipe) — tampil jadi info hasil
+  if (src.tipe) q.deskripsi = `Tipe: ${String(src.tipe).trim()}`;
   return q;
 }
