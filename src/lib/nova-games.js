@@ -127,6 +127,7 @@ const GAME_CTA = {
   nikahmatch: "Yuk bahagia terus sama pasanganmu kak, biar awet sampai tua 💍🥳",
   soulmatematch: "Yuk ukur kecocokan lagi kak, siapa tau dia memang jodohmu 💞🥳",
   couplewar: "Yuk war pasangan lain kak, biar cintamu makin disegani ⚔️🥳",
+  couple: "Yuk rawat hubunganmu baik-baik kak, biar makin langgeng sampai tua 💕🥳",
   putusmatch: "Yuk move on kak, siapa tau jodoh berikutnya lebih baik 💪🥳",
   // FUN CINTA (jadian & confess — engine khas cinta)
   jadian: "Yuk tinggalin komentar *terima* atau *tolak* di atas kak 💘",

@@ -50,8 +50,8 @@ async function handler(m, { sock }) {
       .join("\n")
       .trim();
 
-    await m.reply(`*Pesan:* ${text}\n\n` +
-        `\`\`\`━━━ ${targetParticipants.length} MEMBER TOTAL ━━━\`\`\`\n` +
+    await m.reply(`Pesan: ${text}\n\n` +
+        `Total: ${targetParticipants.length} member\n\n` +
         memberList);
   } catch (error) {
     m.reply(claraWrap("tagall", te(m.prefix, m.command, m.pushName), "error"));

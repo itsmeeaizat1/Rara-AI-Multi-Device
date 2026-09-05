@@ -54,7 +54,7 @@ function help(m) {
   // Build help text using concatenation to avoid nested template literal issues
   const p = m.prefix || ".";
   const lines = [
-    "*ᴘᴇɴɢᴀᴛᴜʀᴀɴ ɪɴꜰᴏ ʟᴏᴋᴇʀ ᴏᴛᴏᴍᴀᴛɪꜱ*",
+    "Pengaturan Info Loker Otomatis",
     "",
     "`" + p + "loker aktif`",
     "  Aktifkan broadcast loker di grup ini (akan meminta pilihan mode).",
@@ -264,6 +264,7 @@ async function handler(m, { sock }) {
   // ── TEST (kirim preview) ──────────────────────────────────────────────
   if (action === "test") {
     try {
+      await m.react("🕒");
       const settings = getLokerStatus();
       const sentIds = getSentIds(getDatabase());
       const jobs = await fetchNewJobs({
@@ -276,9 +277,11 @@ async function handler(m, { sock }) {
       if (!jobs || !jobs.length) return m.reply(claraWrap("Loker", "Tidak ada loker baru ditemukan saat ini."));
       const msg = formatLokerMessage(jobs, { label: "Preview", keywords: settings.keywords });
       if (!msg) return m.reply(claraWrap("Loker", "Tidak ada loker yang bisa ditampilkan."));
+      await m.react("🐣");
       return await m.reply( msg, "loker");
     } catch (e) {
-      return m.reply(claraWrap("loker", `❌ Gagal kirim preview: ${e.message}`));
+      await m.react("❌");
+      return m.reply(claraWrap("loker", `Gagal kirim preview: ${e.message}`, "error"));
     }
   }
 
@@ -290,7 +293,7 @@ async function handler(m, { sock }) {
     if (!choice) {
       const current = getLokerStatus();
       const active = current?.sources || [];
-      let txt = "*ꜱᴜᴍʙᴇʀ ʟᴏᴋᴇʀ ᴀᴋᴛɪꜰ:*\n\n";
+      let txt = "Sumber Loker Aktif:\n\n";
       for (const src of AVAILABLE) {
         const isActive = active.includes(src);
         txt += `${isActive ? "[x]" : "[ ]"} ${src}\n`;
@@ -337,7 +340,7 @@ Sumber aktif: ${settings.sources.join(", ") || "(kosong)"}`));
     const sources = Array.isArray(status?.sources) && status.sources.length ? status.sources.join(", ") : "(default)";
 
     const out = [
-      "*ꜱᴛᴀᴛᴜꜱ ʟᴏᴋᴇʀ*",
+      "Status Loker",
       "",
       `Enabled: ${enabled}`,
       `Targets: ${targets}`,

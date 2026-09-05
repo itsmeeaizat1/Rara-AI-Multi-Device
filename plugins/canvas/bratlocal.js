@@ -390,6 +390,7 @@ async function handler(m, { sock }) {
   if (!text) {
     { const __navText = `⚠️ Harap masukkan teksnya!\n💡 *Contoh:* \`${m.prefix}${m.command} Halo semuanya\``; return await m.reply(__navText, "bratlocal"); };
   }
+  await m.react("🕒");
   try {
     const cmd = m.command.toLowerCase();
     let template;
@@ -412,6 +413,7 @@ async function handler(m, { sock }) {
     const inputText = normalizeText(text);
 
     if (isVideo) {
+      await m.react("🐣");
       const videoBuffer = await createBratVideo(inputText, template);
       const tempPath = path.join(os.tmpdir(), `bratvid-${Date.now()}.mp4`);
       fs.writeFileSync(tempPath, videoBuffer);
@@ -423,6 +425,7 @@ async function handler(m, { sock }) {
 
       try { fs.unlinkSync(tempPath); } catch (e) { console.error('[bratlocal.js]:', e.message); }
     } else {
+      await m.react("🐣");
       const imageBuffer = await createBratImage(inputText, template);
       await sock.sendImageAsSticker(m.chat, imageBuffer, m, {
         packname: config.sticker.packname,
@@ -430,6 +433,7 @@ async function handler(m, { sock }) {
       });
     }
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("bratlocal", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

@@ -120,7 +120,7 @@ export async function handleAutoVnTranslate(m, sock) {
     const botConfig = (await import("../../config.js")).default;
 
     // React processing
-    try { await sock.sendReaction(m.key.remoteJid, "👂", m.key); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
+    try { await sock.sendReaction(m.key.remoteJid, "🕒", m.key); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
 
     // Download audio
     const buffer = await sock.downloadMediaMessage(m);
@@ -185,7 +185,7 @@ export async function handleAutoVnTranslate(m, sock) {
     }
 
     if (!transcribedText || transcribedText.length < 2) {
-      await sock.sendReaction(m.key.remoteJid, "⚠️", m.key);
+      await sock.sendReaction(m.key.remoteJid, "❌", m.key);
       await sock.sendMessage(m.key.remoteJid, {
         text: claraWrap("Auto VN Translate", [
           "Gagal transcribe voice note",
@@ -293,7 +293,7 @@ export async function handleAutoVnTranslate(m, sock) {
       console.error("[AutoVnTranslate] TTS error:", e.message);
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
+    try { await sock.sendReaction(m.key.remoteJid, "🐣", m.key); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
     return true;
   } catch (e) {
     console.error("[AutoVnTranslate] Handler error:", e.message);

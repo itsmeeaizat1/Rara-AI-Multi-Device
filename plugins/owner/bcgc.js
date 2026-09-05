@@ -4,7 +4,7 @@ import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcgc",
@@ -87,18 +87,21 @@ async function handler(m, { sock }) {
     const groupCount = Object.keys(groups).length;
     const blacklist = db.setting("jpmBlacklist") || [];
     return m.reply(
-      "*Broadcast Grup*\n\n" +
-      "📋 Broadcast pesan + media ke semua grup\n" +
-      "🎯 Target: " + groupCount + " grup" + (blacklist.length ? " (" + blacklist.length + " blacklist)" : "") + "\n" +
-      "⏱️ Jeda: " + formatDelay(jeda) + "\n" +
-      "🔒 Status: " + (enabled ? "ON ✅" : "OFF ❌") + "\n\n" +
-      "📌 *Cara Pakai:*\n" +
-      "Kirim teks/foto/video/audio, lalu reply dengan `" + m.prefix + "bcgc`\n\n" +
-      "💡 *Contoh:*\n" +
-      "`" + m.prefix + "bcgc on` — Aktifkan broadcast\n" +
-      "`" + m.prefix + "bcgc off` — Nonaktifkan\n" +
-      "`" + m.prefix + "jedabcgc 5s` — Atur jeda 5 detik\n" +
-      "`" + m.prefix + "stopbcgc` — Hentikan broadcast"
+      claraWrap("bcgc", [
+        "Broadcast pesan + media ke semua grup",
+        "",
+        "Target: " + groupCount + " grup" + (blacklist.length ? " (" + blacklist.length + " blacklist)" : ""),
+        "Jeda: " + formatDelay(jeda),
+        "Status: " + (enabled ? "ON" : "OFF"),
+        "",
+        `📌 Format: kirim teks/foto/video/audio, lalu reply dengan ${m.prefix}bcgc`,
+        "",
+        "💡 Contoh:",
+        `${m.prefix}bcgc on — aktifkan broadcast`,
+        `${m.prefix}bcgc off — nonaktifkan`,
+        `${m.prefix}jedabcgc 5s — atur jeda 5 detik`,
+        `${m.prefix}stopbcgc — hentikan broadcast`,
+      ])
     );
   }
 
@@ -135,11 +138,13 @@ async function handler(m, { sock }) {
 
     if (!text && !mediaBuffer) {
       return m.reply(
-        "❌ Tidak ada konten terdeteksi\n\n" +
-        "📌 *Cara benar:*\n" +
-        "1. Kirim teks/foto/video/audio/dokumen\n" +
-        "2. Reply pesan tersebut dengan `" + m.prefix + "bcgc`\n" +
-        "3. Bot akan broadcast ke semua grup"
+        claraWrap("bcgc", [
+          "Tidak ada konten terdeteksi",
+          "",
+          `📌 Format: kirim teks/foto/video/audio, lalu reply dengan ${m.prefix}bcgc`,
+          "",
+          "💡 Contoh: kirim pesan promo, reply dengan " + m.prefix + "bcgc",
+        ])
       );
     }
 
@@ -152,7 +157,7 @@ async function handler(m, { sock }) {
 
     if (groupIds.length === 0) {
       return m.reply(
-        "❌ Tidak ada grup yang bisa dituju" + (blCount > 0 ? " (" + blCount + " grup di-blacklist)" : "")
+        claraWrap("bcgc", "Tidak ada grup yang bisa dituju" + (blCount > 0 ? " (" + blCount + " grup di-blacklist)" : ""), "error")
       );
     }
 
@@ -160,15 +165,20 @@ async function handler(m, { sock }) {
     const ctx = saluranCtx();
 
     // Status report ke owner
+    await m.react("🕒");
     await m.reply(
-      "*Broadcast Grup Dimulai*\n\n" +
-      "📝 Pesan: " + text.substring(0, 50) + (text.length > 50 ? "..." : "") + "\n" +
-      "🎬 Media: " + (mediaBuffer ? mediaType : "Tidak ada") + "\n" +
-      "🎯 Target: " + groupIds.length + " grup\n" +
-      "⏱️ Jeda: " + formatDelay(jeda) + "\n" +
-      "📊 Estimasi: " + Math.ceil((groupIds.length * jeda) / 60000) + " menit\n\n" +
-      "🔄 Sedang mengirim ke semua grup...\n" +
-      "⏹️ Hentikan: `" + m.prefix + "stopbcgc`"
+      claraWrap("bcgc", [
+        "Broadcast Grup Dimulai",
+        "",
+        "Pesan: " + text.substring(0, 50) + (text.length > 50 ? "..." : ""),
+        "Media: " + (mediaBuffer ? mediaType : "Tidak ada"),
+        "Target: " + groupIds.length + " grup",
+        "Jeda: " + formatDelay(jeda),
+        "Estimasi: " + Math.ceil((groupIds.length * jeda) / 60000) + " menit",
+        "",
+        "Sedang mengirim ke semua grup...",
+        `Hentikan: ${m.prefix}stopbcgc`,
+      ])
     );
 
     global.statusBcgc = true;
@@ -189,11 +199,15 @@ async function handler(m, { sock }) {
       if (global.stopBcgc) {
         delete global.stopBcgc;
         delete global.statusBcgc;
+        await m.react("❌");
         await m.reply(
-          "*Broadcast Grup Dihentikan*\n\n" +
-          "✅ Berhasil: " + success + "\n" +
-          "❌ Gagal: " + failed + "\n" +
-          "⏭️ Sisa: " + (groupIds.length - success - failed)
+          claraWrap("bcgc", [
+            "Broadcast Grup Dihentikan",
+            "",
+            `Berhasil: ${success}`,
+            `Gagal: ${failed}`,
+            `Sisa: ${groupIds.length - success - failed}`,
+          ])
         );
         return;
       }
@@ -240,18 +254,22 @@ async function handler(m, { sock }) {
     }
 
     delete global.statusBcgc;
+    await m.react("🐣");
     await m.reply(
-      "*Broadcast Grup Selesai*\n\n" +
-      "✅ Berhasil: " + success + "\n" +
-      "❌ Gagal: " + failed + "\n" +
-      "📊 Total: " + groupIds.length + " grup\n" +
-      "📈 Sukses Rate: " + Math.round((success / groupIds.length) * 100) + "%\n\n" +
-      "🏷️ " + (config.bot?.name || "Nova AI")
+      claraWrap("bcgc", [
+        "Broadcast Grup Selesai",
+        "",
+        `Berhasil: ${success}`,
+        `Gagal: ${failed}`,
+        `Total: ${groupIds.length} grup`,
+        `Sukses Rate: ${Math.round((success / groupIds.length) * 100)}%`,
+      ])
     );
   } catch (e) {
     delete global.statusBcgc;
+    await m.react("❌");
     m.reply(
-      "❌ Terjadi kesalahan saat broadcast\n" + te(m.prefix, m.command, m.pushName)
+      claraWrap("bcgc", "Terjadi kesalahan saat broadcast\n" + te(m.prefix, m.command, m.pushName), "error")
     );
   }
 }

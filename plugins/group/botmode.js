@@ -76,10 +76,10 @@ function handler(m, { sock }) {
 
         return m.reply(claraWrap("Bot Mode", [`Mode saat ini: *${currentMode.toUpperCase()}* (${MODES[currentMode]?.name || 'Unknown'})`,
             "",
-            "━━━ Pilihan ━━━",
+            "Pilihan:",
             ...modeList,
             "",
-            `*ꜰʟᴀɢ ꜱᴛᴏʀᴇ:*`,
+            `Flag Store:`,
             `\`${m.prefix}botmode store\` - Manual order`,
             "",
             `_Pengaturan per-grup_`,].join("\n")))
@@ -107,10 +107,10 @@ function handler(m, { sock }) {
     let extraInfo = ''
     if (mode === 'store') {
         const products = newGroupData.storeConfig?.products || []
-        extraInfo = `\n\n📋 *ᴍᴀɴᴜᴀʟ ᴍᴏᴅᴇ*\n` +
+        extraInfo = `\n\n📋 Manual Mode\n` +
             `Admin perlu confirm order manual\n` +
             `Product: \`${products.length}\` item\n\n` +
-            `*ᴘᴀɴᴅᴜᴀɴ:*\n` +
+            `Panduan:\n` +
             `\`${m.prefix}addprod <kode> <harga> <nama>\`\n` +
             `\`${m.prefix}listprod\` - Lihat produk`
     }

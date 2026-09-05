@@ -85,6 +85,7 @@ async function handler(m, { sock, config, db }) {
     if (input === "start" || input === "easy" || input === "medium" || input === "hard" || input === "new") {
       const difficulty = DIFFICULTY[input] ? input : "medium";
 
+      await m.react("🕒");
       let quote = null;
       try {
         quote = await fetchQuote(difficulty);
@@ -107,6 +108,7 @@ async function handler(m, { sock, config, db }) {
           sessions.delete(m.chat);
         }
       }, 120000);
+      await m.react("🐣");
       return m.reply(claraWrap("Typing Race", [
         `Level: ${DIFFICULTY[difficulty].label}`,
         `Penulis: ${quote.author}`,
@@ -172,6 +174,7 @@ async function handler(m, { sock, config, db }) {
     }
   } catch (e) {
     console.error("[typingrace] error:", e.message);
+    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "typingrace");
   }
 }

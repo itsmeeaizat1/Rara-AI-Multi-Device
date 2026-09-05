@@ -41,8 +41,11 @@ async function handler(m, { sock }) {
         db.setGroup(groupId, { notifLabelChange: true });
         count++;
       }
-      return m.reply(claraWrap("notifgantitag", `✅ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ɢʟᴏʙᴀʟ ᴏɴ*\n\n` +
-          `Notifikasi ganti label diaktifkan di *${count}* grup!`));
+      return m.reply(claraWrap("notifgantitag", [
+        "Notif label global ON",
+        "",
+        `Notifikasi ganti label diaktifkan di *${count}* grup!`,
+      ].join("\n")));
     } catch (err) {
       return m.reply(claraWrap("notifgantitag", te(m.prefix, m.command, m.pushName), "error"));
     }
@@ -59,8 +62,11 @@ async function handler(m, { sock }) {
         db.setGroup(groupId, { notifLabelChange: false });
         count++;
       }
-      return m.reply(claraWrap("notifgantitag", `❌ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ɢʟᴏʙᴀʟ ᴏꜰꜰ*\n\n` +
-          `Notifikasi ganti label dinonaktifkan di *${count}* grup!`));
+      return m.reply(claraWrap("notifgantitag", [
+        "Notif label global OFF",
+        "",
+        `Notifikasi ganti label dinonaktifkan di *${count}* grup!`,
+      ].join("\n")));
     } catch (err) {
       return m.reply(claraWrap("notifgantitag", te(m.prefix, m.command, m.pushName), "error"));
     }
@@ -70,35 +76,43 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Notif Gantitag", `Notifikasi ganti label sudah aktif di grup ini.\nGunakan \`${m.prefix}notifgantitag off\` untuk menonaktifkan.`, "warn"));
     }
     db.setGroup(m.chat, { notifLabelChange: true });
-    return m.reply(claraWrap("notifgantitag", `✅ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ᴀᴋᴛɪꜰ*\n\n` +
-        `Notifikasi perubahan label member berhasil diaktifkan!\n` +
-        `Bot akan memberitahu ketika ada member yang labelnya diganti.\n\n` +
-        `_Contoh: Admin menambahkan tag "VIP" ke member_`));
+    return m.reply(claraWrap("notifgantitag", [
+      "Notif label aktif",
+      "",
+      "Notifikasi perubahan label member berhasil diaktifkan!",
+      "Bot akan memberitahu ketika ada member yang labelnya diganti.",
+      "",
+      '_Contoh: Admin menambahkan tag "VIP" ke member_',
+    ].join("\n")));
   }
   if (sub === "off") {
     if (!currentStatus) {
-      return m.reply( `⚠️ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ᴀʟʀᴇᴀᴅʏ ɪɴᴀᴄᴛɪᴠᴇ*\n\n` +
-          `Status: *❌ OFF*\n` +
-          `Notifikasi ganti label sudah nonaktif di grup ini.\n\n` +
-          `_Gunakan \`${m.prefix}notifgantitag on\` untuk mengaktifkan._`, "notifgantitag");
+      return m.reply(claraWrap("notifgantitag", [
+        "Notif label sudah nonaktif di grup ini.",
+        "",
+        `Gunakan \`${m.prefix}notifgantitag on\` untuk mengaktifkan.`,
+      ].join("\n")));
     }
     db.setGroup(m.chat, { notifLabelChange: false });
-    return m.reply(claraWrap("notifgantitag", `❌ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ɴᴏɴᴀᴋᴛɪꜰ*\n\n` +
-        `Notifikasi perubahan label member berhasil dinonaktifkan.`));
+    return m.reply(claraWrap("notifgantitag", [
+      "Notif label nonaktif",
+      "",
+      "Notifikasi perubahan label member berhasil dinonaktifkan.",
+    ].join("\n")));
   }
-  m.reply(
-    `🏷️ *Notif Ganti Tag/Label*\n\n` +
-      `Status: *${currentStatus ? "✅ ON" : "❌ OFF"}*\n\n` +
-      `\`\`\`━━━ Pilihan ━━━\`\`\`\n` +
-      `\`${m.prefix}notifgantitag on\` → Aktifkan\n` +
-      `\`${m.prefix}notifgantitag off\` → Nonaktifkan\n` +
-      `\`${m.prefix}notifgantitag on all\` → Global ON (owner)\n` +
-      `\`${m.prefix}notifgantitag off all\` → Global OFF (owner)\n\n` +
-      `📋 *ꜰɪᴛᴜʀ ɪɴɪ ᴀᴋᴀɴ ᴍᴇᴍʙᴇʀɪᴛᴀʜᴜ ꜱᴀᴀᴛ:*\n` +
-      `Admin menambahkan label ke member\n` +
-      `Admin menghapus label dari member\n` +
-      `Label member berubah`,
-  );
+  m.reply(claraWrap("notifgantitag", [
+    `🏷️ Notifikasi perubahan label member grup.`,
+    "",
+    `Status : ${currentStatus ? "Aktif" : "Nonaktif"}`,
+    "",
+    "Pilihan:",
+    `📌 ${m.prefix}notifgantitag on — Aktifkan`,
+    `📌 ${m.prefix}notifgantitag off — Nonaktifkan`,
+    `📌 ${m.prefix}notifgantitag on all — Global ON (owner)`,
+    `📌 ${m.prefix}notifgantitag off all — Global OFF (owner)`,
+    "",
+    "💡 Fitur ini memberitahu saat admin tambah/hapus label member atau label berubah.",
+  ]));
 }
 async function handleLabelChange(msg, sock) {
   try {

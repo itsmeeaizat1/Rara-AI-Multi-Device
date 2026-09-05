@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
       `📅 ${dateStr}\n` +
       `⏰ Dimulai: ${timeStr}\n` +
       `👑 Dibuat: @${absen.createdBy.split("@")[0]}\n` +
-      `├┈┈「 👥 *PESERTA (${absen.peserta.length})* 」\n` +
+      `👥 *Peserta (${absen.peserta.length})*\n` +
       `${list}\n` +
       `---\n\n` +
       `Ketik *${m.prefix}absen* untuk hadir`));

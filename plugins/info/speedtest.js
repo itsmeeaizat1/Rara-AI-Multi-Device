@@ -132,6 +132,7 @@ async function runSpeedtest() {
 
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
     // Info sistem dasar
     const hostname = os.hostname();
     const platform = os.platform();
@@ -158,8 +159,10 @@ Ping: ${result.ping}
 Download: ${result.download}
 Upload: ${result.upload}
 Metode: ${result.method}`;
+    await m.react("🐣");
     await m.reply(text);
   } catch (err) {
+    await m.react("❌");
     await m.reply(`❌ Speedtest error: ${err.message || "Unknown error"}`);
   }
 }

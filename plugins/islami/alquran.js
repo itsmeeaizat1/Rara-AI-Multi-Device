@@ -40,6 +40,7 @@ async function handler(m, { sock }) {
   try {
     const args = (m.args || []).map((a) => a.toLowerCase());
     const subCmd = args[0];
+    await m.react("🕒");
 
     async function getSurah(num) {
       const data = await fetchJson(API_BASE + "/surah/" + num);
@@ -68,6 +69,7 @@ async function handler(m, { sock }) {
         i++;
       }
       txt += "Qari default: Mishary Alafasy";
+      await m.react("🐣");
       return await m.reply(txt);
     }
 
@@ -121,6 +123,7 @@ async function handler(m, { sock }) {
         txt += "Total Ayat: " + surah.numberOfAyahs + "\n";
         txt += "Qari: " + qari.name + "\n\n";
         txt += "Mengirim " + limit + " ayat pertama...";
+        await m.react("🐣");
         await m.reply(txt);
 
         for (let i = 0; i < limit; i++) {
@@ -181,9 +184,11 @@ async function handler(m, { sock }) {
 
       txt += "\nAudio: .alquran audio " + suratNum + " <ayat>\n";
       txt += "Sumber: alquran.cloud API";
+      await m.react("🐣");
       return await m.reply(txt);
     }
   } catch (error) {
+    await m.react("❌");
     return m.reply(claraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
   }
 }

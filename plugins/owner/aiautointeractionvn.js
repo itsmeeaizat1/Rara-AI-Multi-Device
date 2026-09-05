@@ -427,7 +427,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
 
     // Set "recording" presence — biar kelihatan hidup
     try { await sock.sendPresenceUpdate("recording", m.key.remoteJid); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
-    try { await sock.sendReaction(m.key.remoteJid, "🎙️", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+    try { await sock.sendReaction(m.key.remoteJid, "🕒", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
 
     // Download audio
     const buffer = await sock.downloadMediaMessage(m);
@@ -439,7 +439,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
     let transcribedText = await transcribeVN(buffer, mimeType, botConfig);
 
     if (!transcribedText) {
-      try { await sock.sendReaction(m.key.remoteJid, "⚠️", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+      try { await sock.sendReaction(m.key.remoteJid, "❌", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
       await sock.sendMessage(m.key.remoteJid, {
         text: claraWrap("AI VN Interaction", [
           "Gagal transcribe voice note",
@@ -454,7 +454,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
     let aiReply = await generateAIResponse(transcribedText, botConfig);
 
     if (!aiReply) {
-      try { await sock.sendReaction(m.key.remoteJid, "⚠️", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+      try { await sock.sendReaction(m.key.remoteJid, "❌", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
       return true;
     }
 
@@ -507,10 +507,11 @@ export async function handleAiAutoVnInteraction(m, sock) {
       }, { quoted: m });
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+    try { await sock.sendReaction(m.key.remoteJid, "🐣", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
     return true;
   } catch (e) {
     console.error("[AI AutoVN] Handler error:", e.message);
+    try { await sock.sendReaction(m.key.remoteJid, "❌", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
     return false;
   }
 }

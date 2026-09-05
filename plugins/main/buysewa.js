@@ -230,6 +230,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("buysewa", `Link grup tidak valid / tidak bisa diakses\n\nPastikan link undangan masih aktif\nFormat: https://chat.whatsapp.com/xxx`, "info"));
       }
 
+      await m.react("🕒");
       buySewaSessions.set(sender, { ...pkg, price, groupLink, startedAt: Date.now() });
       setTimeout(() => buySewaSessions.delete(sender), SESSION_TIMEOUT);
 
@@ -275,6 +276,7 @@ async function handler(m, { sock }) {
         contactBox + "\n\n" +
         tipText(`Ketik ${prefix}buysewa batal untuk batalkan`);
 
+      await m.react("🐣");
       await m.reply(fullText, "buysewa");
       await sendQRIS(sock, m);
       await notifyOwner(sock, m, pkg, groupLink);

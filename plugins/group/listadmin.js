@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         const admins = participants.filter(p => p.admin)
 
         if (admins.length === 0) {
-            { const __navText = `❌ *ɢᴀɢᴀʟ*\n\nTidak ada admin di grup ini.`; await m.reply(__navText); }
+            await m.reply(claraWrap("listadmin", "Tidak ada admin di grup ini.", "error"));
             return
         }
 
@@ -36,12 +36,12 @@ async function handler(m, { sock }) {
 
         let lines = []
         if (owner) {
-            lines.push("━━━ Owner ━━━")
+            lines.push("Owner:")
             lines.push(`👑 @${getParticipantJid(owner).split('@')[0]}`)
             lines.push("")
         }
         if (regularAdmins.length > 0) {
-            lines.push("━━━ Admin ━━━")
+            lines.push("Admin:")
             regularAdmins.forEach((admin, i) => {
                 lines.push(`${i + 1}. @${getParticipantJid(admin).split('@')[0]}`)
             })

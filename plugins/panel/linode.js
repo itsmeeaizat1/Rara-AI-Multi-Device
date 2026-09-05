@@ -53,6 +53,7 @@ async function handler(m, { sock, command, args }) {
     const cmd = command.toLowerCase()
     
     try {
+        await m.react("🕒")
         if (LINODE_TYPES[cmd]) {
             const label = args[0]
             if (!label) {
@@ -111,7 +112,8 @@ async function handler(m, { sock, command, args }) {
                 `💾 RAM: ${spec.ram}\n` +
                 `📍 Region: ap-south`
             
-            await m.reply(claraWrap("linode", msg))
+            await m.react("🐣")
+            (claraWrap("linode", msg))
             return
         }
         
@@ -141,7 +143,8 @@ async function handler(m, { sock, command, args }) {
                 msg += `Status: ${l.status}\n\n`
             })
             
-            await m.reply(msg.trim())
+            await m.react("🐣")
+            (msg.trim())
             return
         }
         
@@ -159,7 +162,8 @@ async function handler(m, { sock, command, args }) {
             })
             
             if (res.ok) {
-                await m.reply(`✅ Linode ID \`${linodeId}\` berhasil dihidupkan!`)
+                await m.react("🐣")
+                (`✅ Linode ID \`${linodeId}\` berhasil dihidupkan!`)
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal menghidupkan')
@@ -181,7 +185,8 @@ async function handler(m, { sock, command, args }) {
             })
             
             if (res.ok) {
-                await m.reply(`✅ Linode ID \`${linodeId}\` berhasil dimatikan!`)
+                await m.react("🐣")
+                (`✅ Linode ID \`${linodeId}\` berhasil dimatikan!`)
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal mematikan')
@@ -201,7 +206,8 @@ async function handler(m, { sock, command, args }) {
             })
             
             if (res.ok) {
-                await m.reply(`✅ Linode ID \`${linodeId}\` berhasil di-reboot!`)
+                await m.react("🐣")
+                (`✅ Linode ID \`${linodeId}\` berhasil di-reboot!`)
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal reboot')
@@ -230,7 +236,8 @@ async function handler(m, { sock, command, args }) {
             })
             
             if (res.ok) {
-                await m.reply(`✅ Linode ID \`${linodeId}\` berhasil di-rebuild!\n\n🔑 Password baru: \`${rootPass}\`\n🖼️ Image: ${image}`)
+                await m.react("🐣")
+                (`✅ Linode ID \`${linodeId}\` berhasil di-rebuild!\n\n🔑 Password baru: \`${rootPass}\`\n🖼️ Image: ${image}`)
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal rebuild')
@@ -252,7 +259,8 @@ async function handler(m, { sock, command, args }) {
             })
             
             if (res.ok) {
-                await m.reply(`✅ Linode ID \`${linodeId}\` berhasil dihapus!`)
+                await m.react("🐣")
+                (`✅ Linode ID \`${linodeId}\` berhasil dihapus!`)
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal menghapus')
@@ -277,9 +285,9 @@ async function handler(m, { sock, command, args }) {
             const balance = (data.koin || 0) / 100
             const credit = (data.credit_remaining || 0) / 100
             
-            const msg = `💰 *ꜱᴀʟᴅᴏ ᴀᴋᴜɴ ʟɪɴᴏᴅᴇ*\n\n` +
-                `💵 Balance: $${balance.toFixed(2)}\n` +
-                `🎁 Credit: $${credit.toFixed(2)}`
+            const msg = `Saldo Akun Linode\n\n` +
+                `Balance: $${balance.toFixed(2)}\n` +
+                `Credit: $${credit.toFixed(2)}`
             
             await m.reply(claraWrap("linode", msg))
             return
@@ -299,7 +307,8 @@ async function handler(m, { sock, command, args }) {
             if (!res.ok) throw new Error('Gagal mendapatkan data')
             
             const total = data.data?.length || 0
-            await m.reply(claraWrap("linode", `📊 *Total Linode Aktiғ*\n\n${total} VPS`))
+            await m.react("🐣")
+            (claraWrap("linode", `📊 *Total Linode Aktiғ*\n\n${total} VPS`))
             return
         }
         
@@ -318,18 +327,18 @@ async function handler(m, { sock, command, args }) {
             
             if (!res.ok) throw new Error('Gagal mendapatkan detail')
             
-            const msg = `🔍 *ᴅᴇᴛᴀɪʟ ʟɪɴᴏᴅᴇ*\n\n` +
-                `🆔 ID: \`${l.id}\`\n` +
-                `🏷️ Label: \`${l.label}\`\n` +
-                `📊 Status: ${l.status}\n` +
-                `📍 Region: ${l.region}\n` +
-                `💾 Type: ${l.type}\n` +
-                `🌐 IP: \`${l.ipv4?.join(', ') || '-'}\``
+            const msg = `Detail Linode\n\n` +
+                `ID: \`${l.id}\`\n` +
+                `Label: \`${l.label}\`\n` +
+                `Status: ${l.status}\n` +
+                `Region: ${l.region}\n` +
+                `Type: ${l.type}\n` +
+                `IP: \`${l.ipv4?.join(', ') || '-'}\``
             
             await m.reply(claraWrap("linode", msg))
             return
         }
-        await m.reply(claraWrap("linode", `☁️ *ʟɪɴᴏᴅᴇ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n` +
+        await m.reply(claraWrap("linode", `Linode Commands\n\n` +
             `.linode2gb <label> - Buat VPS 2GB\n` +
             `.linode4gb <label> - Buat VPS 4GB\n` +
             `.linode8gb <label> - Buat VPS 8GB\n` +
@@ -345,6 +354,7 @@ async function handler(m, { sock, command, args }) {
             `.cekvpslinode <id> - Detail VPS`))
         
     } catch (err) {
+        await m.react("❌")
         m.reply(claraWrap("linode", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

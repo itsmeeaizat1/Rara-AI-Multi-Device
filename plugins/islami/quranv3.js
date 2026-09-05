@@ -42,6 +42,7 @@ async function handler(m, { sock }) {
   try {
     const args = (m.args || []).map((a) => a.toLowerCase());
     const subCmd = args[0];
+    await m.react("🕒");
 
     // ===== HELP / MENU =====
     if (!subCmd || subCmd === "help" || subCmd === "menu" || subCmd === "how") {
@@ -105,10 +106,10 @@ async function handler(m, { sock }) {
         "Ayat: " + arabic.numberInSurah + " dari " + surahInfo.numberOfAyahs,
         "Turun: " + (surahInfo.revelationType === "Meccan" ? "Mekkah" : "Madinah"),
         "",
-        "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*",
+        "Teks Arab:",
         arabic.text,
         "",
-        "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ ɪɴᴅᴏɴᴇꜱɪᴀ:*",
+        "Terjemahan Indonesia:",
         indo.text,
         "",
         "Juz: " + arabic.juz + " | Hal: " + arabic.page,
@@ -149,7 +150,7 @@ async function handler(m, { sock }) {
           "Ayat: " + ayatNum + " dari " + surah.numberOfAyahs,
           "Qari: Mishary Rashid Alafasy",
           "",
-          "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ:*",
+          "Terjemahan:",
           indoRes.data.text,
           "",
           "Audio sedang dikirim...",
@@ -255,10 +256,10 @@ async function handler(m, { sock }) {
         "Ayat: " + arabic.numberInSurah + " dari " + surahInfo.numberOfAyahs,
         "Arti: " + surahInfo.englishNameTranslation,
         "",
-        "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*",
+        "Teks Arab:",
         arabic.text,
         "",
-        "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ ɪɴᴅᴏɴᴇꜱɪᴀ:*",
+        "Terjemahan Indonesia:",
         indo.text,
         "",
         "Juz: " + arabic.juz + " | Hal: " + arabic.page,
@@ -303,10 +304,10 @@ async function handler(m, { sock }) {
         "Ayat: " + ayatNum + " dari " + surah.numberOfAyahs,
         "Turun: " + (surah.revelationType === "Meccan" ? "Mekkah" : "Madinah"),
         "",
-        "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*",
+        "Teks Arab:",
         arabAyah.text,
         "",
-        "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ ɪɴᴅᴏɴᴇꜱɪᴀ:*",
+        "Terjemahan Indonesia:",
         indoAyah.text,
         "",
         "Juz: " + arabAyah.juz + " | Hal: " + arabAyah.page,
@@ -355,6 +356,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[Quran V3]", error);
+    await m.react("❌");
     return m.reply(claraWrap("quranv3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

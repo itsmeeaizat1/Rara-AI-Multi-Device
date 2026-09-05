@@ -233,9 +233,12 @@ async function handler(m, { sock, config: botConfig }) {
   // Sub-command: list
   if (text.toLowerCase() === "list" || text.toLowerCase() === "surahlist") {
     try {
+      await m.react("🕒");
       const surahs = await fetchSurahList();
+      await m.react("🐣");
       return m.reply( claraWrap("Daftar Surat", formatSurahList(surahs)));
     } catch (e) {
+      await m.react("❌");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -248,9 +251,12 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("AI Islam", "Nomor surat tidak valid.\nKetik .aiislam list untuk daftar surat."));
     }
     try {
+      await m.react("🕒");
       const surah = await fetchSurahDetail(num);
+      await m.react("🐣");
       return m.reply( claraWrap(`${surah.namaLatin}`, formatSurahContent(surah)));
     } catch (e) {
+      await m.react("❌");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -273,6 +279,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       return m.reply( claraWrap(`${surah.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
+      await m.react("❌");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -288,13 +295,16 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("AI Islam", "Format tidak valid. Contoh: .aiislam tafsir 1:1"));
     }
     try {
+      await m.react("🕒");
       const tafsirData = await fetchTafsir(surahNum);
       const formatted = formatTafsirContent(tafsirData, ayahNum);
       if (!formatted) {
         return m.reply(claraWrap("AI Islam", `Tafsir ayat ${ayahNum} tidak ditemukan di ${tafsirData.namaLatin}.`));
       }
+      await m.react("🐣");
       return m.reply( claraWrap(`Tafsir ${tafsirData.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
+      await m.react("❌");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -328,9 +338,12 @@ async function handler(m, { sock, config: botConfig }) {
       const tafsirText = tafsir ? stripHtml(tafsir.teks).slice(0, 2000) : "(tafsir tidak tersedia)";
       const prompt = `Jelaskan tafsir ayat berikut dengan bahasa sederhana dan mudah dipahami:\n\nSurah ${surah.namaLatin} (QS ${surah.nomor}:${ayahNum})\nTeks Arab: ${ayah.teksArab}\nTransliterasi: ${ayah.teksLatin}\nTerjemahan: ${ayah.teksIndonesia}\n\nTafsir Kemenag: ${tafsirText}\n\nTolong jelaskan dengan bahasa yang lebih sederhana, berikan contoh penerapan dalam kehidupan sehari-hari jika relevan.`;
 
+      await m.react("🕒");
       const reply = await callPuterAI(token, [{ role: "user", content: prompt }]);
+      await m.react("🐣");
       return m.reply(claraWrap(`AI Tafsir ${surah.namaLatin}:${ayahNum}`, reply));
     } catch (e) {
+      await m.react("❌");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -352,6 +365,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       // Kirim audio
       const audioRes = await fetch(audioFull, { signal: AbortSignal.timeout(30000) });
+      await m.react("🕒");
       if (audioRes.ok) {
         const buffer = Buffer.from(await audioRes.arrayBuffer());
         await sock.sendMessage(m.chat, {
@@ -359,6 +373,7 @@ async function handler(m, { sock, config: botConfig }) {
           mimetype: "audio/mpeg",
           ptt: false,
         }, { quoted: m });
+        await m.react("🐣");
         return m.reply(claraWrap(`${surah.namaLatin}`, `Qari: ${qariName}`));
       }
       return m.reply(claraWrap("AI Islam", `Audio: ${audioFull}\nQari: ${qariName}`));
@@ -388,6 +403,7 @@ async function handler(m, { sock, config: botConfig }) {
   // Chat AI
   try {
     session.messages.push({ role: "user", content: text });
+    await m.react("🕒");
 
     if (session.messages.length > 10) {
       session.messages = session.messages.slice(-10);
@@ -396,6 +412,7 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = await callPuterAI(token, session.messages);
 
     session.messages.push({ role: "assistant", content: reply });
+    await m.react("🐣");
     return m.reply(claraWrap("AI Islam", reply));
   } catch (error) {
     session.messages.pop();

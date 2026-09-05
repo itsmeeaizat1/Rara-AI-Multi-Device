@@ -130,6 +130,7 @@ async function handler(m, { sock }) {
     );
 
     if (pkg) {
+      await m.react("🕒");
       buySessions.set(sender, { ...pkg, startedAt: Date.now() });
       setTimeout(() => buySessions.delete(sender), SESSION_TIMEOUT);
 
@@ -198,6 +199,7 @@ async function handler(m, { sock }) {
     paymentBox + "\n\n" +
     tipText(`Ketik ${prefix}buyprem <durasi> untuk mulai beli!`);
 
+  await m.react("🐣");
   await m.reply(fullText, "buyprem");
 }
 

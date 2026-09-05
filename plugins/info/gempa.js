@@ -32,6 +32,8 @@ async function handler(m, { sock }) {
     const args = (m.args || []).map((a) => a.toLowerCase());
     const subCmd = args[0] || "";
 
+    await m.react("🕒");
+
     // GEMPA TERKINI (1 gempa terbaru + shakemap)
     if (!subCmd || subCmd === "terkini" || subCmd === "latest") {
       const data = await fetchJson(API_BASE + "/autogempa.json");
@@ -52,6 +54,7 @@ async function handler(m, { sock }) {
       }
 
       txt += "Sumber: BMKG (data.bmkg.go.id)";
+      await m.react("🐣");
       return await m.reply(claraWrap("gempa", txt));
     }
 
@@ -74,6 +77,7 @@ async function handler(m, { sock }) {
       }
 
       txt += "Sumber: BMKG (data.bmkg.go.id)";
+      await m.react("🐣");
       return await m.reply(claraWrap("gempa", txt));
     }
 
@@ -81,13 +85,14 @@ async function handler(m, { sock }) {
     let txt = "";
     
     txt += "Data gempa langsung dari BMKG Indonesia.\n\n";
-    txt += "*ᴘᴇʀɪɴᴛᴀʜ:*\n";
+    txt += "Perintah:\n";
     txt += "1. .gempa — Gempa terkini (1 terbaru + shakemap)\n";
     txt += "2. .gempa dirasakan — 10 gempa dirasakan terbaru\n";
     txt += "3. .gempa list — 15 gempa M 5.0+ terbaru\n\n";
     txt += "Sumber: data.bmkg.go.id (API resmi BMKG)";
     return m.reply(claraWrap("gempa", txt));
   } catch (error) {
+    await m.react("❌");
     return m.reply(novaError("Gempa", "Ada error nih, coba lagi ya"));
   }
 }

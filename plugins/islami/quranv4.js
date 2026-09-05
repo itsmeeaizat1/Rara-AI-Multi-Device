@@ -17,6 +17,8 @@ const pluginConfig = {
     isEnabled: true
 };
 
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+
 const API_BASE = "https://equran.id/api/v2/surat";
 
 async function fetchJSON(url) {
@@ -28,6 +30,8 @@ async function fetchJSON(url) {
 async function handler(m, { text, args }) {
     try {
         const rawInput = (text || m.text || args?.[0] || m.args?.[0] || "").trim();
+
+        await m.react("🕒");
 
         // Jika input kosong, tampilkan daftar 114 surat dalam Modern Box
         if (!rawInput) {
@@ -51,20 +55,22 @@ async function handler(m, { text, args }) {
             lines.push("");
             lines.push(`... dan ${surahs.length - limit} surat lainnya.`);
             lines.push("");
-            lines.push("Cara pakai:");
-            lines.push("Ketik .quranv4 <nomor_surat> untuk membaca.");
-            lines.push("Contoh: .quranv4 1");
-            lines.push("");
+            lines.push(`📌 Ketik .quranv4 <nomor surat> untuk membaca.`);
+            lines.push(`💡 Contoh: .quranv4 1`);
 
-            return await m.reply(lines.join("\n"));
+            await m.react("🐣");
+            return await m.reply(claraWrap("Al-Quran V4", lines.join("\n")));
         }
 
         const surahNum = parseInt(rawInput, 10);
         if (isNaN(surahNum) || surahNum < 1 || surahNum > 114) {
-            return await m.reply(
-                "Nomor surat tidak valid! Harap masukkan nomor 1 sampai 114.\n" +
-                ""
-            );
+            await m.react("❗");
+            return await m.reply(claraWrap("Al-Quran V4", [
+                "Nomor surat tidak valid kak!",
+                "",
+                "📌 Masukkan nomor 1 sampai 114.",
+                `💡 Contoh: .quranv4 1`,
+            ], "error"));
         }
 
         // Ambil ayat-ayat dari surat tersebut
@@ -100,13 +106,12 @@ async function handler(m, { text, args }) {
 
         lines.push("");
 
+        await m.react("🐣");
         return await m.reply(lines.join("\n"));
     } catch (error) {
-        return await m.reply(
-            "" +
-            `${error.message || "Gagal memproses permintaan Al-Quran."}\n` +
-            ""
-        );
+        console.error("[QuranV4]", error.message);
+        await m.react("❌");
+        return await m.reply(claraWrap("Al-Quran V4", "Gagal memproses permintaan Al-Quran kak, coba lagi nanti ya 😥", "error"));
     }
 }
 

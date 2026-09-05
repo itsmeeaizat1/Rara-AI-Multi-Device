@@ -257,7 +257,7 @@ export async function verifyVnCaptcha(m, sock) {
 
     // Download audio
     try { await sock.sendPresenceUpdate("typing", jid); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
-    try { await sock.sendReaction(jid, "🔍", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
+    try { await sock.sendReaction(jid, "🕒", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
 
     const buffer = await sock.downloadMediaMessage(m);
     if (!buffer || buffer.length < 500) return false;
@@ -334,7 +334,7 @@ export async function verifyVnCaptcha(m, sock) {
       if (isPass) {
         // SUCCESS — clear session, allow registration
         clearVnCaptchaSession(jid);
-        try { await sock.sendReaction(jid, "✅", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
+        try { await sock.sendReaction(jid, "🐣", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
 
         await sock.sendMessage(jid, {
           text: claraWrap("VN Captcha Interrogation", [

@@ -131,6 +131,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply( text, "berita");
     return;
   }
+  await m.react("🕒");
   let headlines = [];
   let aiResult = null;
 
@@ -170,6 +171,7 @@ async function handler(m, { sock, config: botConfig }) {
         });
       }
 
+      await m.react("🐣");
       await m.reply(claraWrap("Berita AI", output));
       return;
     }
@@ -185,14 +187,17 @@ async function handler(m, { sock, config: botConfig }) {
         output += "\n";
       });
       output += "\n(AI summarizer sedang tidak tersedia, menampilkan headline mentah)";
+      await m.react("🐣");
       await m.reply(claraWrap("Berita AI", output));
       return;
     }
 
     // Total gagal
+    await m.react("❌");
     await m.reply(claraWrap("Berita AI", `Tidak ada berita ditemukan untuk "${query}". Coba topik lain.`));
   } catch (err) {
     console.log("[Berita] Error:", err.message);
+    await m.react("❌");
     await m.reply(claraWrap("Berita AI", `Terjadi error: ${err.message?.slice(0, 100) || "Unknown error"}`));
   }
 }

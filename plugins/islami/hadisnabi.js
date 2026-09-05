@@ -39,6 +39,7 @@ async function handler(m, { sock }) {
   try {
     const args = (m.args || []).map((a) => a.toLowerCase());
     const bookKey = args[0];
+    await m.react("🕒");
 
     if (!bookKey) {
       let txt = "";
@@ -65,6 +66,7 @@ async function handler(m, { sock }) {
     const indoData = await fetchJson(CDN_BASE + "/editions/" + book.ind + "/" + sectionNum + ".json");
 
     if (!indoData.hadiths || indoData.hadiths.length === 0) {
+      await m.react("❌");
       return m.reply("Hadis tidak ditemukan untuk section " + sectionNum);
     }
 
@@ -91,18 +93,20 @@ async function handler(m, { sock }) {
     txt += "No. Hadis: " + hadis.hadithnumber + "\n\n";
 
     if (arabicText) {
-      txt += "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*\n" + arabicText + "\n\n";
+      txt += "Teks Arab:\n" + arabicText + "\n\n";
     }
 
-    txt += "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ ɪɴᴅᴏɴᴇꜱɪᴀ:*\n" + hadis.text + "\n\n";
+    txt += "Terjemahan Indonesia:\n" + hadis.text + "\n\n";
 
     if (hadis.grades && hadis.grades.length > 0) {
       txt += "Status: " + (hadis.grades[0].grade || "N/A") + "\n";
     }
 
     txt += "Sumber: fawazahmed0/hadith-api";
+    await m.react("🐣");
     return await m.reply(txt);
   } catch (error) {
+    await m.react("❌");
     return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti atau pilih perawi lain."));
   }
 }

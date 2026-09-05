@@ -49,11 +49,13 @@ async function handler(m, { sock, config: botConfig, db }) {
         `Atau gunakan ${m.prefix}cekcuaca (versi lama)`,
       ]));
     }
+    await m.react("🕒");
     const res = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(query)}&appid=${apiKey}&units=metric&lang=id`
     );
 
     if (res.status === 404) {
+      await m.react("❌");
       return m.reply(claraWrap("Cuaca v2", `Kota "${query}" tidak ditemukan.`));
     }
 
@@ -71,6 +73,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const wind = data.wind?.speed ? `${data.wind.speed} m/s` : "N/A";
 
     const text = `${name}, ${country}\n${desc}\n\n🌡️ Suhu: ${temp}\n🤔 Terasa: ${feels}\n💧 Kelembaban: ${humidity}\n📏 Tekanan: ${pressure}\n💨 Angin: ${wind}`;
+    await m.react("🐣");
     return m.reply(claraWrap("Cuaca v2", text));
   } catch (e) {
     console.error("[cekcuacav2] error:", e.message);

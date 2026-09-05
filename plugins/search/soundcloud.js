@@ -59,42 +59,46 @@ async function scSearch(q) {
 
 async function handler(m, { args, sock }) {
   if (!args[0]) {
-    let txt = `🎵 *ꜱᴏᴜɴᴅᴄʟᴏᴜᴅ ꜱᴇᴀʀᴄʜ* 🎵\n\n`;
-    txt += `Halo kak! Mau cari lagu apa hari ini?\n\n`;
-    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
-    txt += `👉 \`${m.prefix}soundcloud <judul lagu>\`\n\n`;
-    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
-    txt += `\`${m.prefix}soundcloud Only We Know\``;
-    return await m.reply(claraWrap("soundcloud", txt));
+    return await m.reply(claraWrap("soundcloud", [
+      "Cari lagu di SoundCloud.",
+      "",
+      `📌 Format: ${m.prefix}soundcloud <judul lagu>`,
+      "",
+      `💡 Contoh: ${m.prefix}soundcloud Only We Know`,
+    ]));
   }
+  await m.react("🕒");
   try {
     const data = await scSearch(args.join(" "));
     if (!data.length) {
-      return m.reply(claraWrap("Soundcloud", `❌ Aduh kak, lagunya nggak ketemu nih! Coba cari dengan judul yang beda ya. 😭`));
+      await m.react("❌");
+      return m.reply(claraWrap("soundcloud", `Aduh kak, lagunya nggak ketemu nih! Coba cari dengan judul yang beda ya 😭`, "error"));
     }
     let thumb = data.find((v) => v.artwork)?.artwork || null;
-    let txt = `🎧 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ ꜱᴏᴜɴᴅᴄʟᴏᴜᴅ* 🎧\n\n`;
+    let txt = `Hasil Pencarian Soundcloud\n\n`;
     let contentTxt = "";
     const limit = Math.min(data.length, 5);
     for (let i = 0; i < limit; i++) {
-      contentTxt += `🎵 *ᴛɪᴛʟᴇ :* ${data[i].title}\n`;
-      contentTxt += `🔗 *ᴜʀʟ :* ${data[i].url}\n`;
-      contentTxt += `👁️ *ᴠɪᴇᴡꜱ :* ${data[i].plays}\n`;
-      contentTxt += `❤️ *ʟɪᴋᴇꜱ :* ${data[i].likes}\n`;
-      contentTxt += `💬 *ᴄᴏᴍᴍᴇɴᴛꜱ :* ${data[i].comments}\n`;
-      contentTxt += `🔁 *ʀᴇᴘᴏꜱᴛꜱ :* ${data[i].reposts}`;
+      contentTxt += `Title : ${data[i].title}\n`;
+      contentTxt += `URL : ${data[i].url}\n`;
+      contentTxt += `Views : ${data[i].plays}\n`;
+      contentTxt += `Likes : ${data[i].likes}\n`;
+      contentTxt += `Comments : ${data[i].comments}\n`;
+      contentTxt += `Reposts : ${data[i].reposts}`;
       if (i < limit - 1) contentTxt += `\n\n`;
     }
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");
     txt += `\n\n`;
     txt += `Kalo mau download lagunya, pake fitur \`${m.prefix}playsc\` aja kak! 😉`;
+    await m.react("🐣");
     if (thumb) {
       await sock.sendMedia(m.chat, thumb, txt.trim(), m, { type: "image" });
     } else {
       await m.reply(txt.trim());
     }
   } catch (e) {
-    m.reply(claraWrap("soundcloud", `❌ Maaf kak, terjadi kesalahan sistem!\nError: ${e.message}`));
+    await m.react("❌");
+    m.reply(claraWrap("soundcloud", `Maaf kak, terjadi kesalahan sistem! Coba lagi nanti ya 😥`, "error"));
   }
 }
 

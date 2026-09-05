@@ -57,6 +57,7 @@ async function handler(m, { sock, config, db }) {
         `${m.prefix}anilist detail <id> — detail by ID`,
       ]));
     }
+    await m.react("🕒");
     let text = "";
 
     if (sub === "search" && query) {
@@ -117,9 +118,11 @@ async function handler(m, { sock, config, db }) {
         `Lihat: ${m.prefix}anilist help`,
       ]));
     }
+    await m.react("🐣");
     return m.reply(claraWrap("AniList", text));
   } catch (e) {
     console.error("[anilist] error:", e.message);
+    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "anilist");
   }
 }

@@ -114,6 +114,7 @@ async function handler(m, { sock, config, db }) {
     }
 
     if (!VALID_RATINGS.includes(rating)) rating = "pg";
+    await m.react("🕒");
     // Try API first
     let question = await fetchTODAPI(type, rating);
 
@@ -124,6 +125,7 @@ async function handler(m, { sock, config, db }) {
 
     const typeLabel = type === "truth" ? "🤔 Truth" : "😈 Dare";
     const ratingLabel = rating === "pg" ? "Safe" : rating === "pg13" ? "Remaja" : "18+";
+    await m.react("🐣");
     return m.reply(claraWrap("Truth or Dare v2", [
       `${typeLabel} (${ratingLabel})`,
       "",
@@ -131,6 +133,7 @@ async function handler(m, { sock, config, db }) {
     ]));
   } catch (e) {
     console.error("[truthordarev2] error:", e.message);
+    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "truthordarev2");
   }
 }
