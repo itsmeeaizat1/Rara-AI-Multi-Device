@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
     ];
     let reply;
     try {
-      reply = await callIkyy(message, { systemPrompt, senderJid: m.sender, model: "gemini" });
+      reply = await callIkyy(message, { systemPrompt, senderJid: m.sender, model: "gemini", sessionKey: "satuan:" + m.sender });
     } catch (ikyyErr) {
       console.error("[aichat] IkyyXD failed, falling back to OpenAI:", ikyyErr.message);
       reply = await callAI({

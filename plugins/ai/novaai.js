@@ -17,17 +17,20 @@ import te from "../../src/lib/nova-error.js";
 // 🔹 AI AGENT: penyimpanan konfirmasi aksi berbahaya (kick, dll)
 const pending = new Map();
 
-// 🔹 CHAT: session history untuk multi-turn conversation
-const sessions = new Map();
-const SESSION_MAX = 10;
-const sessionKey = (m) => `${m.sender}`;
-function getSession(key) { return sessions.get(key) || []; }
+// 🔹 CHAT: session history multi-turn — pakai modul TERPADU nova-ai-session.js
+// (key "agent:<sender>" → SATU memori bersama sama .autonovaai/aichat autoflow,
+// persist di file → inget obrolan walau bot restart)
+import { getSession as getSharedSession, appendTurn, clearSession } from "../../src/lib/nova-ai-session.js";
+const sessionKey = (m) => `agent:${m.sender}`;
+function getSession(key) {
+  // format modul: [{role, content, ts}] — sama kayak format lama
+  return getSharedSession(key).map((h) => ({ role: h.role, content: h.content }));
+}
 function appendSession(key, role, content) {
-  const hist = getSession(key);
-  hist.push({ role, content });
-  if (hist.length > SESSION_MAX * 2) hist.splice(0, hist.length - SESSION_MAX * 2);
-  sessions.set(key, hist);
-  return hist;
+  // appendTurn(key, user, ai) — sesuaikan role
+  if (role === "user") appendTurn(key, content, null);
+  else appendTurn(key, null, content);
+  return getSession(key);
 }
 
 // 🔹 AUTO-EXECUTE: kategori command yang BOLEH dijalankan otomatis
@@ -237,8 +240,7 @@ async function handler(m, { sock, conn, config, db }) {
   // 🔹 CHAT: reset sesi
   if (text.toLowerCase() === "reset") {
     const key = sessionKey(m);
-    if (sessions.has(key)) {
-      sessions.delete(key);
+    if (clearSession(key)) {
       return m.reply(bracketBox("i", "Nova AI", ["Sesi percakapan direset", "Kirim pertanyaan baru untuk mulai"]));
     }
     return m.reply(bracketBox("i", "Nova AI", ["Tidak ada sesi aktif"]));
@@ -283,8 +285,11 @@ async function handler(m, { sock, conn, config, db }) {
 
   // 🔹 SESSION: histori obrolan dikirim ke AI biar reply NYAMBUNG — fix bug
   // user jawab "iya" / "mau" malah dibalas sapaan generik kayak sesi baru.
+  // 🔹 QUOTED: kalau user reply pesan, teks pesan itu ikut jadi konteks
   const sessionKeyNow = sessionKey(m);
   const histSnapshot = [...getSession(sessionKeyNow)];
+  const quotedText = m.quoted?.text?.trim() || "";
+  const textForAi = quotedText ? `${text}\n\n[User membalas pesan ini — jadikan konteks]: ${quotedText.slice(0, 500)}` : text;
   appendSession(sessionKeyNow, "user", text);
 
   // TAHAP 1: localParse (instan, tanpa API) — cek pola grup
@@ -294,7 +299,7 @@ async function handler(m, { sock, conn, config, db }) {
   if (!decision) {
     try {
       const prefixForThink = config?.command?.prefix || ".";
-      decision = await think(text, {
+      decision = await think(textForAi, {
         botname: config?.bot?.name || "Nova AI",
         mentions: (m.mentionedJid || []).map(j => j.split("@")[0]).join(", "),
         executableCmds: buildExecutableList(),

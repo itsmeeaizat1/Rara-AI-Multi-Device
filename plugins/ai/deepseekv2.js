@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     // IkyyXD fallback
     try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      const ikyyReply = await callIkyy(text?.trim() || m.text, { sessionKey: "satuan:" + m.sender });
       if (ikyyReply) return m.reply(ikyyReply);
     } catch (ikyyErr) {
       console.error("[deepseekv2.js] IkyyXD fallback failed:", ikyyErr.message);

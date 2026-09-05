@@ -49,6 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
       ],
       apiKey: (botConfig.aiHelp || {}).apiKey,
       apiEndpoint: (botConfig.aiHelp || {}).apiEndpoint,
+      sessionKey: "satuan:" + m.sender,
     });
 
     const text =
