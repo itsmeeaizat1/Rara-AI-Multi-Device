@@ -4,6 +4,9 @@
 
 ## Statistik
 
+- **FORMAT DOWNLOAD RAPIH (branch feat/owner-format-rapih, 11 file plugins/download):** (1) Guide/usage dibungkus box standar 📌 Format / 💡 Contoh: downloader.js (list platform+format+contoh), githubdl.js (cara pakai + contoh user/repo/branch & URL). (2) githubdl: 3 raw reply legacy (❌ *bold* header) → claraWrap error/success; judul "Repo Dibutuhkan" → "githubdl". (3) React loading 🕒/🐣 ditambahin ke 10 file yang belum punya: cocofundl, dailymotiondl, githubdl, pindl, pixeldraindl, rednotedl, terabox, threaddl, tiktokdl2, tiktokv2 (🐣 diposisikan sebelum kirim hasil di semua path). (4) import claraWrap ditambah ke downloader.js. Catatan: caption hasil download sudah plain text + novaBerhasil dari PR sebelumnya — gak diubah. Audit akhir: 0 raw reply, 0 simbol legacy, 52/52 syntax OK.
+
+
 - **FORMAT OWNER RAPIH (branch feat/owner-format-rapih, ~27 file plugins/owner):** (1) Semua reply mentah `m.reply("...")` dibungkus claraWrap box standar — toko (17 titik), automod (12), setpayment (7), smartdigest, autoforward, autobmkg, bcgc, bcpc, servermonitor, setjadibot, setsaluran, akses, sprem, rejectsewa, hapusdata, dll; judul box = nama command lowercase. (2) Error catch generik `m.reply("Error: " + e.message)` → box error friendly (9 file auto* + setkey/tombol/vncaptcha/moodtheme/predictivenudge/ambientmimic). (3) Simbol box legacy dihapus total: exec.js `├┈┈「 」` → format plain ala eval.js, cekschedule.js garis `━━━` → separator `---`, akses.js `━━━` → `---` + list akses dibungkus box dgn mentions tetap jalan. (4) FIX BUG exec.js: `m.rem.reply` (typo — crash kalau non-owner panggil `.>`) → `m.reply` + box owner-only. (5) Guide usage/contoh pakai ikon 📌 Format / 💡 Contoh (setsaluran, setjadibot, sprem, akses, exec). (6) captionig hasil plain biar bisa di-copy (dari batch maker). Audit akhir: 0 raw reply, 0 simbol legacy, 212/212 file syntax OK.
 
 

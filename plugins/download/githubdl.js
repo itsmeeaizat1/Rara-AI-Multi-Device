@@ -38,23 +38,24 @@ async function handler(m, { sock }) {
     }
     
     if (!username) {
-        return m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}githubdl <user> <repo> <branch>\`\n\n` +
-            `Contoh:\n` +
-            `\`${m.prefix}githubdl niceplugin NiceBot main\`\n` +
-            `\`${m.prefix}githubdl https://github.com/user/repo\``
-        )
+        return m.reply(claraWrap("githubdl", [
+            "Format: " + m.prefix + "githubdl <user> <repo> <branch>",
+            "",
+            "💡 Contoh:",
+            m.prefix + "githubdl niceplugin NiceBot main",
+            m.prefix + "githubdl https://github.com/user/repo",
+        ]))
     }
     
     if (!repo) {
-        { const __navText = claraWrap("Repo Dibutuhkan", `Masukkan nama repository`); return await m.reply( __navText, "githubdl"); }
+        { const __navText = claraWrap("githubdl", `Masukkan nama repository.\n\n💡 Contoh: .githubdl Nova-AI-Whatsapp-Bot`); return await m.reply( __navText, "githubdl"); }
     }
     try {
+        await m.react("🕒");
         const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)
         
         if (!repoInfo.ok) {
-            return m.reply(`❌ *Repo Tidak Ditemukan*\n\n\`${username}/${repo}\` tidak ada`)
+            return m.reply(claraWrap("githubdl", `Repo ${username}/${repo} tidak ditemukan`, "error"))
         }
         
         const repoData = await repoInfo.json()
@@ -65,7 +66,7 @@ async function handler(m, { sock }) {
         
         const checkRes = await fetch(zipUrl, { method: 'HEAD' })
         if (!checkRes.ok) {
-            return m.reply(`❌ *Branch Tidak Ada*\n\nBranch \`${branch}\` tidak ditemukan\nDefault: \`${defaultBranch}\``)
+            return m.reply(claraWrap("githubdl", `Branch ${branch} tidak ditemukan. Default: ${defaultBranch}`, "error"))
         }
         
         const _cap = mediaCaption({ platformIcon: "🐙", platformName: "GitHub", title: `${repo} (${branch})`, format: "ZIP Archive", method: "github" });
@@ -75,7 +76,7 @@ async function handler(m, { sock }) {
             mimetype: 'application/zip',
             contextInfo: { forwardingScore: 0, isForwarded: false },
         }, { quoted: m })
-        await m.reply(novaBerhasil("Githubdl"));
+        await m.react("🐣"); await m.reply(novaBerhasil("Githubdl"));
     } catch (e) {
         m.reply(novaGangguan("Githubdl"))
     }

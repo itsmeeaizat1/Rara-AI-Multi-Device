@@ -38,6 +38,7 @@ async function handler(m, { sock }) {
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }
   try {
+        await m.react("🕒");
     const result = await DailymotionDL(text);
 
     if (!result.status) {
@@ -92,7 +93,7 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
-      await m.reply(novaBerhasil("Dailymotion"));
+      await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Dailymotion"));
       await offerConvert(sock, m, { buffer, type: "video", platform: "Dailymotion", title: result.title, sourceUrl: text });
     }
   } catch (e) {

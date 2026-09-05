@@ -38,6 +38,7 @@ async function rlGet(url) {
 }
 
 async function handler(m, { sock }) {
+  await m.react("🕒");
   const text = m.text?.trim();
   if (!text) {
     return m.reply(novaNoInput("TikTok V2", "Masukkan link video TikTok yang mau kamu download!", `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`));
@@ -55,6 +56,7 @@ async function handler(m, { sock }) {
         description: ikyyResult.description ? String(ikyyResult.description).slice(0, 120) : null,
         format: "Video (No Watermark)", method: "IkyyXD",
       });
+      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption,
         contextInfo: { forwardingScore: 0, isForwarded: false },
@@ -78,6 +80,7 @@ async function handler(m, { sock }) {
       format: "Video (No Watermark)", method: "Sanka",
     });
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
         video: { url: r.play },
         caption,

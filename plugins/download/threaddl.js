@@ -64,6 +64,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ *Waduh, Link Threads-nya mana nih?*\n\nKamu harus memasukkan tautan (link) dari postingan Threads yang ingin diunduh. Pastikan linknya benar ya! \n\n💡 *Contoh:* `.tdl https://www.threads.net/@zuck/post/xxx`"; return await m.reply( __navText, "threaddl"); };
   }
   try {
+        await m.react("🕒");
     const res = await axios.get(BASE_URL, {
       timeout: 60000,
       validateStatus: () => true,
@@ -127,7 +128,7 @@ async function handler(m, { sock }) {
       media.contextInfo = thCard;
       await sock.sendMessage(m.chat, media, { quoted: m });
     }
-    await m.reply(novaBerhasil("Threads"));
+    await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("Threads"));
   } catch (err) {
     console.error("[ThreadsDL]", err.message);
     m.reply(novaGangguan("Threads"));
