@@ -2,7 +2,7 @@
 // polyaiv2 — Poly AI v2 (polybuzz.ai)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "polyaiv2", alias: ["polyaiv2"], aliases: ["polyaiv2", "polybuzzv2"],
@@ -32,15 +32,19 @@ async function handler(m, { sock }) {
     const result = raw.split("\n").filter(l => l.trim()).map(l => {
       try { return JSON.parse(l.trim()).content || ""; } catch { return ""; }
     }).join("");
-    await m.reply(result || "Tidak ada jawaban.");
+    if (!result) throw new Error("polya balas kosong");
+    await m.reply(result);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
+    // 🔹 FALLBACK: API mati/balas kosong → rantai multi-API (bawa sesi obrolan)
     try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[polyaiv2.js] IkyyXD fallback failed:", ikyyErr.message);
+      const fbReply = await aiFallbackChat(text?.trim() || m.text, {
+        persona: "Poly AI",
+        sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName,
+      });
+      if (fbReply) return m.reply(fbReply);
+    } catch (fbErr) {
+      console.error("[polyaiv2.js] fallback chain failed:", fbErr.message);
     }
 
     console.error("polyaiv2 error:", e.message);

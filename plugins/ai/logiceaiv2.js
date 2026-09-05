@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// logiceaiv2 — Logic E-AI v2 (velyn.biz.id custom persona)
+// logiceaiv2 — LogicAI — AI fokus penalaran logis
+// API asli (velyn.biz.id/aicustom) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "logiceaiv2", alias: ["logiceaiv2"], aliases: ["logiceaiv2", "logicev2"],
@@ -12,24 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("logiceaiv2", `Mau tanya apa?\nContoh: ${m.prefix}logiceaiv2 jelaskan fisika kuantum`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("logiceaiv2", `Mau tanya apa?\nContoh: ${m.prefix}logiceaiv2 jelaskan fisika kuantum`, "guide"));
     await m.react("🕒");
-    const sys = "Nama kamu adalah Logic E-AI dan kamu diciptakan oleh Nova AI Team.";
-    const res = await fetch(`https://velyn.biz.id/api/ai/aicustom?prompt=${encodeURIComponent(text)}&system=${encodeURIComponent(sys)}`);
-    const data = await res.json();
-    await m.reply(data?.data || data?.result || "Tidak ada respon dari API.");
+    const reply = await aiFallbackChat(text, { persona: "LogicAI — AI fokus penalaran logis", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[logiceaiv2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("logiceaiv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("logiceaiv2", te(m.prefix, m.command, m.pushName), "error"));

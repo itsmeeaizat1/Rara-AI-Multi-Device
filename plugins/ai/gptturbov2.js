@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// gptturbov2 — GPT Turbo v2 (restapii.rioooxdzz)
+// gptturbov2 — GPT Turbo dari OpenAI
+// API asli (restapii.rioooxdzz) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gpt4" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "gptturbov2", alias: ["gptturbov2"], aliases: ["gptturbov2", "gpttv2"],
@@ -12,26 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("gptturbov2", `Mau nanya apa?\nContoh: ${m.prefix}gptturbov2 jelaskan blockchain`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("gptturbov2", `Mau nanya apa?\nContoh: ${m.prefix}gptturbov2 jelaskan blockchain`, "guide"));
     await m.react("🕒");
-    const res = await fetch(`https://restapii.rioooxdzz.web.id/api/gptturbo?message=${encodeURIComponent(text)}`, {
-      headers: { "User-Agent": "Mozilla/5.0" },
-    });
-    if (!res.ok) throw new Error("API error");
-    const data = await res.json();
-    await m.reply(data?.result || data?.response || "Tidak ada jawaban.");
+    const reply = await aiFallbackChat(text, { persona: "GPT Turbo dari OpenAI", model: "gpt4" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[gptturbov2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("gptturbov2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("gptturbov2", te(m.prefix, m.command, m.pushName), "error"));

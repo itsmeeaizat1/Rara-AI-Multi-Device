@@ -4,6 +4,19 @@
 // .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina
 // .mistral .together .github + IkyyXD & Tio providers
 import { callAI, callImageGen, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
+import { toMessages as sessionToMessages, appendTurn as sessionAppend } from "../../src/lib/nova-ai-session.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
+
+// brand fallback per provider (API key kosong / provider mati → rantai multi-API)
+const FALLBACK_MODEL = {
+  openai: "gpt5", gemini: "gemini", anthropic: "claude", groq: "gpt4",
+  xai: "gemini", deepseek: "deepseek", meta: "gemini", qwen: "gemini",
+  kimi: "gemini", zhipu: "gemini", openrouter: "gpt5", mistral: "gemini",
+  together: "gpt5", github: "gpt5", huggingface: "gemini", cohere: "gemini",
+  perplexity: "gemini", fireworks: "gpt4", cerebras: "gpt4", voyage: "gemini",
+  cloudflare: "gemini", jina: "gemini", stability: "gemini", ai21: "gemini",
+  reka: "gemini", codestral: "gemini", kimicode: "gemini",
+};
 import { novaBox, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // Command → providerKey mapping
@@ -151,7 +164,7 @@ async function handler(m, { sock, config, db, args, text }) {
 
     // Resolve API key
     const aiConfig = config.aiHelp || {};
-    const apiKey = resolveApiKeyForProvider(providerKey, aiConfig);
+    let apiKey = resolveApiKeyForProvider(providerKey, aiConfig);
 
     if (!apiKey && !FREE_PROVIDERS.has(providerKey)) {
       const globalMap = {
@@ -164,16 +177,11 @@ async function handler(m, { sock, config, db, args, text }) {
       };
       const gKey = globalMap[providerKey] ? (global[globalMap[providerKey]] || "") : "";
       if (!gKey) {
-        const lines = [
-          "Provider : " + provider.name,
-          "Status   : API key belum diisi",
-          "---",
-          "Isi di src/lib/apikey/apikeys.json",
-          "Atau ketik " + prefix + "ai-set apiKey " + providerKey + " <key>",
-        ];
-        const box = novaBox ? novaBox("API Key Diperlukan", lines) : lines.join("\n");
-        await m.reply(box);
-        return { handled: true };
+        // 🔹 key kosong → TETAP dilayani lewat rantai fallback multi-API
+        // (nova-ai-fallback.js) — sesi obrolan tetep kepake biar nyambung.
+        apiKey = "";
+      } else {
+        apiKey = gKey;
       }
     }
 
@@ -286,15 +294,51 @@ async function handler(m, { sock, config, db, args, text }) {
     // Loading react
     try { await m.react("🕒"); } catch {}
 
-    // Call AI
-    const reply = await callAI({
-      providerKey,
-      model,
-      messages: [{ role: "user", content: userMessage }],
-      systemPrompt: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang membantu."),
-      apiKey,
-      apiEndpoint: "",
-    });
+    // 🔹 SESSION: riwayat obrolan user ini (persist nova-ai-session.js)
+    // → AI inget obrolan sebelumnya, lanjut ngobrol nyambung
+    // 🔹 QUOTED: pesan yang di-reply user ikut jadi konteks
+    const sessionKey = `provider:${m.sender}`;
+    const quotedText = m.quoted?.text?.trim() || "";
+    const messageWithContext = quotedText
+      ? `${userMessage}\n\n[User membalas pesan ini — jadikan konteks]: ${quotedText.slice(0, 500)}`
+      : userMessage;
+    const historyMsgs = sessionToMessages(sessionKey).slice(-20);
+
+    // Call AI (dengan histori sesi)
+    let reply = "";
+    let viaFallback = false;
+    try {
+      reply = await callAI({
+        providerKey,
+        model,
+        messages: [...historyMsgs, { role: "user", content: messageWithContext }],
+        systemPrompt: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang membantu."),
+        apiKey,
+        apiEndpoint: "",
+      });
+    } catch (e) {
+      reply = "";
+    }
+
+    // 🔹 FALLBACK: provider mati / key kosong / balas kosong → rantai multi-API
+    if (!reply || !reply.trim()) {
+      try {
+        reply = await aiFallbackChat(messageWithContext, {
+          persona: provider.name,
+          model: FALLBACK_MODEL[providerKey] || "gemini",
+          sessionKey, userName: m.pushName, quoted: quotedText,
+        });
+        viaFallback = true;
+      } catch (fbErr) {
+        reply = "";
+      }
+    }
+
+    // simpan giliran ke sesi (biar obrolan berikutnya inget) —
+    // aiFallbackChat udah nyatet sendiri, jadi cuma jalur provider asli
+    if (!viaFallback && reply && reply.trim()) {
+      sessionAppend(sessionKey, userMessage, reply.trim().slice(0, 800));
+    }
 
     if (!reply || reply.trim() === "") {
       try { await m.react("❌"); } catch {}

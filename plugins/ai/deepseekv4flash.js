@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 /**
  * plugins/ai/deepseekv4flash.js
@@ -127,11 +127,22 @@ async function handler(m, { sock }) {
   try {
     const result = await callWithRetry(text, sessionId, false);
 
-    if (!result.answer || !result.answer.trim()) {
-      return m.reply(claraWrap("DeepSeek V4 Flash", "AI sedang sibuk, coba kirim ulang pertanyaan kamu."));
+    if (result.answer && result.answer.trim()) {
+      return m.reply(claraWrap("DeepSeek V4 Flash", result.answer));
     }
-    return m.reply(claraWrap("DeepSeek V4 Flash", result.answer));
+    throw new Error("AI sedang sibuk, coba kirim ulang pertanyaan kamu.");
   } catch (error) {
+    // 🔹 FALLBACK: xemoz sibuk/matot → rantai multi-API (sesi obrolan tetap jalan)
+    try {
+      const fbReply = await aiFallbackChat(text, {
+        persona: "DeepSeek V4 Flash — model cepat yang jawab singkat dan to the point",
+        model: "deepseek",
+        sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName,
+      });
+      if (fbReply) return m.reply(claraWrap("DeepSeek V4 Flash", fbReply));
+    } catch (fbErr) {
+      console.error("[deepseekv4flash.js] fallback chain gagal:", fbErr.message);
+    }
     return m.reply(claraWrap("DeepSeek V4 Flash Error", error.message || "Gagal hubungin AI nih"));
   }
 }

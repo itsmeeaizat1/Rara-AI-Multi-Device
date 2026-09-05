@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// gemmav2 — Gemma AI v2 (gemma-2-9b-it via velyn.biz.id)
+// gemmav2 — Gemini AI dari Google
+// API asli (velyn.biz.id/gemma) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "gemmav2", alias: ["gemmav2"], aliases: ["gemmav2", "gemmaaiv2"],
@@ -12,23 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("gemmav2", `Mau nanya apa?\nContoh: ${m.prefix}gemmav2 jelaskan teori evolusi`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("gemmav2", `Mau nanya apa?\nContoh: ${m.prefix}gemmav2 jelaskan teori evolusi`, "guide"));
     await m.react("🕒");
-    const res = await fetch(`https://www.velyn.biz.id/api/ai/gemma-2-9b-it?prompt=${encodeURIComponent(text)}`);
-    const data = await res.json();
-    if (data?.status) { await m.react("🐣"); await m.reply(data.data); }
-    else { await m.reply(claraWrap("gemmav2", "Gagal mendapatkan data.", "error")); }
+    const reply = await aiFallbackChat(text, { persona: "Gemini AI dari Google", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
+    await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[gemmav2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("gemmav2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("gemmav2", te(m.prefix, m.command, m.pushName), "error"));

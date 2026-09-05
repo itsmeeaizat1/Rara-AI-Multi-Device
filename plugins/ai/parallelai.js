@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { parallelAI } from "../../src/scraper/parallelai.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "parallelai",
@@ -52,10 +52,14 @@ async function handler(m, { sock, config: botConfig }) {
       await sock.sendPresenceUpdate("composing", m.chat);
     }
 
-    const response = await parallelAI({
-      input: cleanPrompt,
-      effort,
-    });
+    let response;
+    try {
+      response = await parallelAI({ input: cleanPrompt, effort });
+    } catch (primaryErr) {
+      // API key belum di-set / Parallel AI down → rantai fallback multi-API
+      console.error("parallelai primary failed:", primaryErr.message);
+      response = await aiFallbackChat(cleanPrompt, { persona: "Parallel AI — reasoning model" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    }
 
     if (!response || !response.trim()) {
       return await m.reply(claraWrap("Error", ["Parallel AI tidak memberikan respons. Coba lagi nanti."].join("\n")), "parallelai");
@@ -74,13 +78,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     return await m.reply(text, "parallelai");
   } catch (err) {
-    te.error("parallelai", err);
+    console.error("parallelai error:", err?.message);
     const errMsg = err?.message?.includes("API key")
-      ? "API key Parallel AI belum diset. Owner perlu set API key dulu."
+      ? "API key Parallel AI belum diset."
       : err?.message?.includes("401") || err?.message?.includes("403")
         ? "API key tidak valid atau expired."
-        : `Error: ${err?.message || "Terjadi kesalahan"}`;
-    return await m.reply(claraWrap("Error", [errMsg].join("\n")), "parallelai");
+        : `Error: ${err?.message || "Terjadi kesalasan"}`;
+    return await m.reply(claraWrap("Error", errMsg));
   }
 }
 

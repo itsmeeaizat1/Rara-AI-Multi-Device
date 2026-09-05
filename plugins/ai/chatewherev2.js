@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// chatewherev2 — ChatEverywhere AI v2
+// chatewherev2 — ChatGPT
+// API asli (chateverywhere.app) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gpt5" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "chatewherev2", alias: ["chatewherev2"], aliases: ["chatewherev2", "cewherev2"],
@@ -12,30 +14,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("chatewherev2", `Mau nanya apa?\nContoh: ${m.prefix}chatewherev2 jelaskan API`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("chatewherev2", `Mau nanya apa?\nContoh: ${m.prefix}chatewherev2 jelaskan API`, "guide"));
     await m.react("🕒");
-    const res = await fetch("https://chateverywhere.app/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Origin": "https://chateverywhere.app", "Referer": "https://chateverywhere.app/id" },
-      body: JSON.stringify({
-        model: { id: "gpt-3.5-turbo-0613", name: "GPT-3.5", maxLength: 12000, tokenLimit: 4000 },
-        prompt: text, messages: [{ pluginId: null, content: text, role: "user" }],
-      }),
-    });
-    const data = await res.json();
-    await m.reply(typeof data === "string" ? data : (data?.choices?.[0]?.message?.content || data?.reply || JSON.stringify(data)));
+    const reply = await aiFallbackChat(text, { persona: "ChatGPT", model: "gpt5" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[chatewherev2.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
-
     console.error("chatewherev2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("chatewherev2", te(m.prefix, m.command, m.pushName), "error"));

@@ -2,7 +2,7 @@
 // felov2 — Felo AI v2 (search + answer with sources)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "felov2", alias: ["felov2"], aliases: ["felov2", "feloaiv2"],
@@ -29,18 +29,25 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const result = await feloSearch(text);
     let msg = result.answer;
+    // API hidup tapi jawab kosong → lempar ke rantai fallback multi-API
+    if (!msg || /Tidak ada jawaban|Gagal mengambil data/i.test(msg)) {
+      throw new Error("felo balas kosong");
+    }
     if (result.source.length > 0) {
       msg += "\n\nSumber:\n" + result.source.filter(s => s.link).slice(0, 5).map((s, i) => `${i+1}. ${s.link}`).join("\n");
     }
     await m.reply(msg);
     await m.react("🐣");
   } catch (e) {
-    // IkyyXD fallback
+    // 🔹 FALLBACK: API mati/balas kosong → rantai multi-API (bawa sesi obrolan)
     try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[felov2.js] IkyyXD fallback failed:", ikyyErr.message);
+      const fbReply = await aiFallbackChat(text?.trim() || m.text, {
+        persona: "Felo AI — AI penelusuran yang jawab lengkap dengan sumber",
+        sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName,
+      });
+      if (fbReply) return m.reply(fbReply);
+    } catch (fbErr) {
+      console.error("[felov2.js] fallback chain failed:", fbErr.message);
     }
 
     console.error("felov2 error:", e.message);

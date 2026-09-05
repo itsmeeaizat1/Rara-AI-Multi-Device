@@ -1,7 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// aivelynv2 — Aivelyn AI v2 (velyn.biz.id)
+// aivelynv2 — Aivelyn AI
+// API asli (velyn.biz.id) udah mati → sekarang lewat rantai fallback multi-API
+// (nova-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "aivelynv2", alias: ["aivelynv2"], aliases: ["aivelynv2", "velynaiv2"],
@@ -11,13 +14,13 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = m.args.join(" ").trim();
+  if (!text) return m.reply(claraWrap("aivelynv2", `Mau nanya apa?\nContoh: ${m.prefix}aivelynv2 apa itu deep learning`, "guide"));
   try {
-    const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("aivelynv2", `Mau nanya apa?\nContoh: ${m.prefix}aivelynv2 apa itu deep learning`, "guide"));
     await m.react("🕒");
-    const res = await fetch(`https://www.velyn.biz.id/api/ai/velyn-1.0-1b?prompt=${encodeURIComponent(text)}`);
-    const data = await res.json();
-    await m.reply(data?.result || data?.data || "Tidak ada jawaban.");
+    const reply = await aiFallbackChat(text, { persona: "Aivelyn AI", model: "gemini" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+    if (!reply) throw new Error("balasan AI kosong");
+    await m.reply(reply);
     await m.react("🐣");
   } catch (e) {
     console.error("aivelynv2 error:", e.message);
