@@ -68,7 +68,10 @@ function getRpgContextInfo(title, body) {
     base.externalAdReply = {
       title: title || config.bot?.name || "Nova RPG",
       body: body || "",
-      sourceUrl: config.saluran?.link || "",
+      // FIX: sourceUrl wajib valid — link rusak bikin card preview gak dirender
+      sourceUrl: (/^https:\/\/whatsapp\.com\/channel\/[A-Za-z0-9_-]+/.test(config.saluran?.link || "") && config.saluran.link)
+        || (() => { try { const u = new URL(config.info?.website || ""); return u.hostname.includes("_") ? "" : (config.info?.website || ""); } catch { return ""; } })()
+        || "https://www.whatsapp.com/",
       mediaType: 1,
       renderLargerThumbnail: false,
       thumbnail: rpgThumbBuffer,
