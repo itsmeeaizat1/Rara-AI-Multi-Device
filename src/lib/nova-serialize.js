@@ -874,9 +874,13 @@ async function serialize(sock, msg, store = {}) {
         }
       }, { quoted: m, userJid: sock.user.jid });
 
-      return sock.relayMessage(m.chat, msg.message, {
+      // Return key pesan yang terkirim — banyak plugin (alldl delete-progress,
+      // family100/sulap session key, pushkontak reply-target) andalkan ini.
+      // relayMessage balikin void, tapi key.id udah ke-generate sebelum relay.
+      await sock.relayMessage(m.chat, msg.message, {
         messageId: msg.key.id,
       });
+      return { key: msg.key };
     }
 
     // Fallback: plain text (untuk variant yang tidak dikenal)

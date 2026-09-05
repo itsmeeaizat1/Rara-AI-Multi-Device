@@ -212,6 +212,28 @@ async function vtUploadFile(filePath, fileHash) {
   }
 }
 
+function reactFor(verdict) {
+  return verdict === "bahaya" ? "❌" : verdict === "mencurigakan" ? "⚠️" : "🐣";
+}
+
+// ─── React ke pesan hasil (dipisah dari react loading) ───
+// Loading 🕒 nyangkut di file yang di-scan; react verdict/error nyangkut
+// di PESAN HASIL — biar user langsung lihat statusnya di hasil, bukan
+// overwrite 🕒 di file. Fallback ke file kalau key hasil gak tersedia.
+async function reactToResult(m, sock, sentRes, emoji) {
+  try {
+    const key = sentRes?.key;
+    if (key?.id) {
+      await sock.sendMessage(m.chat, {
+        react: { text: emoji, key: { ...key, remoteJid: m.chat } },
+      });
+      return true;
+    }
+  } catch {}
+  try { await m.react(emoji); } catch {}
+  return false;
+}
+
 // ─── Verdict ───
 function buildVerdict(json) {
   const attr = json?.data?.attributes;
@@ -330,8 +352,8 @@ async function _scanJob(m, sock) {
     buffer = await m.download();
     await fs.writeFile(tmp, buffer);
   } catch (e) {
-    await m.react("❌");
-    await m.reply(claraWrap("scan virus", `Gagal mengunduh file untuk di-scan: ${e.message}`, "error"));
+    const sent = await m.reply(claraWrap("scan virus", `Gagal mengunduh file untuk di-scan: ${e.message}`, "error"));
+    await reactToResult(m, sock, sent, "❌");
     return;
   }
 
@@ -342,8 +364,8 @@ async function _scanJob(m, sock) {
     // cache 6 jam
     const cached = _cache.get(fileHash);
     if (cached && Date.now() - cached.at < CACHE_TTL_MS) {
-      await m.react(cached.verdict.verdict === "bahaya" ? "❌" : cached.verdict.verdict === "mencurigakan" ? "⚠️" : "🐣");
-      await m.reply(verdictBox(fileName, fileSize, cached.verdict));
+      const sent = await m.reply(verdictBox(fileName, fileSize, cached.verdict));
+      await reactToResult(m, sock, sent, reactFor(cached.verdict.verdict));
       return;
     }
 
@@ -374,8 +396,7 @@ async function _scanJob(m, sock) {
     }
 
     if (!vtData) {
-      await m.react("❌");
-      await m.reply(
+      const sent = await m.reply(
         claraWrap("scan virus", [
           note || "Scan gagal.",
           "",
@@ -383,23 +404,24 @@ async function _scanJob(m, sock) {
         ].join("\n"), "error") +
         `\n\nSHA-256: ${fileHash}\nLaporan manual: ${VT_GUI}/file/${fileHash}`
       );
+      await reactToResult(m, sock, sent, "❌");
       return;
     }
 
     const verdict = buildVerdict(vtData);
     if (!verdict) {
-      await m.react("❌");
-      await m.reply(claraWrap("scan virus", "Hasil dari VirusTotal tidak bisa dibaca. Coba lagi nanti.", "error"));
+      const sent = await m.reply(claraWrap("scan virus", "Hasil dari VirusTotal tidak bisa dibaca. Coba lagi nanti.", "error"));
+      await reactToResult(m, sock, sent, "❌");
       return;
     }
 
     _cache.set(fileHash, { verdict, at: Date.now() });
 
-    await m.react(verdict.verdict === "bahaya" ? "❌" : verdict.verdict === "mencurigakan" ? "⚠️" : "🐣");
-    await m.reply(verdictBox(fileName, fileSize, verdict));
+    const sent = await m.reply(verdictBox(fileName, fileSize, verdict));
+    await reactToResult(m, sock, sent, reactFor(verdict.verdict));
   } catch (e) {
-    await m.react("❌");
-    await m.reply(claraWrap("scan virus", `Scan gagal: ${e.message}`, "error"));
+    const sent = await m.reply(claraWrap("scan virus", `Scan gagal: ${e.message}`, "error"));
+    await reactToResult(m, sock, sent, "❌");
   } finally {
     await fs.unlink(tmp).catch(() => {});
   }
