@@ -730,6 +730,7 @@ export default {
     // ─── Download image ───
     let imgBuffer;
     try {
+    await m.react("🕒");
       if (hasQuotedImage) {
         imgBuffer = await m.quoted.download();
       } else {
@@ -791,6 +792,7 @@ export default {
         isAvatar: true,
         contextInfo: { isForwarded: false, forwardingScore: 0, premium: 1 },
       }, { quoted: m });
+        await m.react("🐣");
         await m.reply(novaBerhasil("Polaroid"));
     } catch (e) {
       console.log("[StikerFrame] Error:", e.message);

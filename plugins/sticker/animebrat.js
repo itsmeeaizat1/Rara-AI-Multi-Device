@@ -35,6 +35,7 @@ async function handler(m, { sock }) {
     }
     const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.png`);
     try {
+    await m.react("🕒");
         // Anime style: dark bg + pink/red text
         const pngBuffer = await bratGen(text, { C_BG: "#0a0a23", C_TEXT: "#ff6b9d" });
         await fs.promises.writeFile(tempFile, pngBuffer);
@@ -43,6 +44,7 @@ async function handler(m, { sock }) {
             author: config.sticker.author,
         });
         await fs.promises.unlink(tempFile).catch(() => {});
+        await m.react("🐣");
         await m.reply(novaBerhasil("animebrat"));
     } catch (error) {
         await fs.promises.unlink(tempFile).catch(() => {});

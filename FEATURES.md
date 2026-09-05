@@ -4,6 +4,9 @@
 
 ## Statistik
 
+- **FORMAT STICKER RAPIH (branch feat/owner-format-rapih, 19 file plugins/sticker):** (1) Guide/usage legacy (smallcaps manual ᴍᴇᴍᴇ/ꜱᴛɪᴄᴋᴇʀ + bold header + backtick) → claraWrap box standar 📌 Format / 💡 Contoh: qc (list format + warna tersedia), smeme, smemevid, swm (packname|author). (2) Error raw → box error: qc (text kosong & max 80 karakter). (3) React loading 🕒/🐣 ditambahin ke 17 file: 10 varian brat* (animebrat, bratanime, bratbahlil, bratcewek, bratgreen, brathd, bratpatrick, bratsquidward, bratvid2, bratwhite) + smeme, smemev2, smemevid, sticker, stikerframe, stikergrid, swm. (4) stikergrid: block react legacy ✅ diganti standar m.react("🐣"), dedupe react ganda. Audit akhir: 0 raw reply, 0 simbol legacy, 27/27 syntax OK.
+
+
 - **FORMAT DOWNLOAD RAPIH (branch feat/owner-format-rapih, 11 file plugins/download):** (1) Guide/usage dibungkus box standar 📌 Format / 💡 Contoh: downloader.js (list platform+format+contoh), githubdl.js (cara pakai + contoh user/repo/branch & URL). (2) githubdl: 3 raw reply legacy (❌ *bold* header) → claraWrap error/success; judul "Repo Dibutuhkan" → "githubdl". (3) React loading 🕒/🐣 ditambahin ke 10 file yang belum punya: cocofundl, dailymotiondl, githubdl, pindl, pixeldraindl, rednotedl, terabox, threaddl, tiktokdl2, tiktokv2 (🐣 diposisikan sebelum kirim hasil di semua path). (4) import claraWrap ditambah ke downloader.js. Catatan: caption hasil download sudah plain text + novaBerhasil dari PR sebelumnya — gak diubah. Audit akhir: 0 raw reply, 0 simbol legacy, 52/52 syntax OK.
 
 

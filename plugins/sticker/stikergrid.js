@@ -171,6 +171,7 @@ async function handler(m, { sock, db }) {
   // ─── Mode: koleksi foto sedang aktif ───
   if (session && isImage && !m.text?.toLowerCase().includes("stikergrid")) {
     try {
+    await m.react("🕒");
       let buffer;
       if (m.quoted && m.quoted.isMedia) {
         buffer = await m.quoted.download();
@@ -298,12 +299,7 @@ async function processCollage(session, chatJid, sock, m) {
 
     await sock.sendImageAsSticker(chatJid, collageBuffer, m, { packname, author });
 
-    // React ke pesan terakhir
-    try {
-      await sock.sendMessage(chatJid, {
-        react: { text: "✅", key: m.key },
-      });
-    } catch (_) { console.error('[stikergrid.js]:', _?.message || _); }
+    await m.react("🐣");
       await m.reply(novaBerhasil("stikergrid"));
   } catch (err) {
     console.log("[StikerGrid] Error:", err.message);

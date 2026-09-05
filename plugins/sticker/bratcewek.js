@@ -30,11 +30,13 @@ async function handler(m, { sock }) {
     return await m.reply(msg);
   }
   try {
+  await m.react("🕒");
     const url = `https://api.deline.web.id/maker/cewekbrat?text=${encodeURIComponent(text)}`;
     await sock.sendImageAsSticker(m.chat, url, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
+      await m.react("🐣");
       await m.reply(novaBerhasil("bratcewek"));
   } catch (error) {
     console.error("[bratcewek] Error:", error.message);
