@@ -956,34 +956,35 @@ export function novaGangguan(fitur = "Error") {
  * @returns {string} Box text siap dikirim
  */
 export function novaBox(header, lines = [], opts = {}) {
+  // FIX (2026-09-05): dulu width box dihitung dari baris TERPANJANG (maxW),
+  // lalu header & separator "├────...────" di-stretch sepanjang itu. Kalau
+  // ada satu baris agak panjang (mis. "Hadiah : Limit, Koin, EXP (random
+  // per jawaban)"), separatornya jadi 1 baris dash SANGAT panjang tanpa
+  // spasi — WhatsApp hard-wrap itu jadi beberapa baris "────" berantakan
+  // di HP (persis bug yang dilaporkan owner di family100/catur/dll).
+  // Fix: pakai pola SAMA seperti buildBox() yang sudah disetujui owner —
+  // header & separator FIXED (gak ngikut panjang body), body panjang malah
+  // di-word-wrap per baris dengan prefix │ biar tetap rapi.
   const useSC = opts.sc !== false;
   const hdr = useSC ? toSC(header) : header;
   const headerStr = `╭─「 ✦ ${hdr} ✦ 」`;
-  let maxW = headerStr.length;
-  const processed = lines.map(l => {
-    if (l === "---" || l === "─") return { type: "sep" };
-    if (typeof l === "object" && l.sub) {
-      const subStr = `│ 「 ${useSC ? toSC(l.sub) : l.sub} 」`;
-      if (subStr.length > maxW) maxW = subStr.length;
-      return { type: "sub", raw: subStr };
+  let out = headerStr + "\n";
+  for (const l of lines) {
+    if (l === "---" || l === "─") {
+      out += "├────  •  ────\n";
+      continue;
     }
-    if (!l || !String(l).trim()) return { type: "empty" };
-    const text = String(l);
-    const len = `│ ${text}`.length;
-    if (len > maxW) maxW = len;
-    return { type: "line", raw: text };
-  });
-  const W = Math.max(maxW + 4, 24);
-  let out = headerStr + "─".repeat(Math.max(0, W - headerStr.length)) + "\n";
-  for (const item of processed) {
-    if (item.type === "sep") {
-      out += "├" + "─".repeat(Math.max(0, W - 1)) + "\n";
-    } else if (item.type === "sub") {
-      out += item.raw + "\n";
-    } else if (item.type === "empty") {
+    if (typeof l === "object" && l.sub) {
+      out += `│ 「 ${useSC ? toSC(l.sub) : l.sub} 」\n`;
+      continue;
+    }
+    if (!l || !String(l).trim()) {
       out += "│\n";
-    } else {
-      out += `│ ${item.raw}` + "\n";
+      continue;
+    }
+    const text = String(l);
+    for (const row of wrapLine(text)) {
+      out += `│ ${row}\n`;
     }
   }
   out += "╰────  •  ────";
