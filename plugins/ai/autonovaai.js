@@ -4,6 +4,7 @@
 
 import fs from "fs";
 import { askAI } from "../../src/lib/aiagent.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 import { load, save, clearAichatMemory } from "../../src/lib/autoflow.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -291,11 +292,14 @@ async function handler(m, { sock, conn }) {
 
     try { await m.react("🕒"); } catch {}
 
-    // 1) minta AI nerjemahin — 3 LAPIS:
-    //    a. AI utama (deepseek/dll)
-    //    b. kalau balasan gak ada JSON-nya (provider fallback suka jawab
-    //       ngobrol doang) → RETRY sekali dengan perintah jauh lebih tegas
-    //    c. kalau masih gak ada → parser LOKAL tanpa AI (pola kalimat umum)
+    // 1) minta AI nerjemahin — 4 LAPIS (request owner: AI REST API manapun
+    //    yang aktif — punya key apa pun — harus tetep bisa ngerjain ini):
+    //    a. rantai novaai askAI (deepseek/groq/gemini/dll sesuai apikeys.json)
+    //    b. balasan gak ada JSON-nya → RETRY sekali perintah jauh lebih tegas
+    //    c. masih gak ada → RANTAI AI SATUAN aiFallbackChat (haidar per-brand
+    //       → haidar gemini → ikyy → xemoz — semua free, gak butuh key)
+    //    d. masih gagal → parser LOKAL tanpa AI (pola kalimat umum)
+    const SYS_STRICT = SYS + "\n\nSANGAT PENTING: Balasan kamu WAJIB objek JSON MURNI — TANPA kalimat pembuka, TANPA penjelasan, TANPA markdown, TANPA sapaan. Karakter PERTAMA balasan harus { dan TERAKHIR harus }";
     let rule = null;
     let viaLocal = false;
     try {
@@ -303,14 +307,21 @@ async function handler(m, { sock, conn }) {
       rule = extractJson(aiResult);
       if (!rule) {
         console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
-        aiResult = await askAI(
-          SYS + "\n\nSANGAT PENTING: Balasan kamu WAJIB objek JSON MURNI — TANPA kalimat pembuka, TANPA penjelasan, TANPA markdown, TANPA sapaan. Karakter PERTAMA balasan harus { dan TERAKHIR harus }",
-          body,
-        );
+        aiResult = await askAI(SYS_STRICT, body);
         rule = extractJson(aiResult);
       }
     } catch (e) {
-      console.log("[autonovaai] rantai AI gagal total:", e.message);
+      console.log("[autonovaai] rantai novaai gagal:", e.message);
+    }
+    if (!rule) {
+      // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
+      try {
+        console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
+        const satuan = await aiFallbackChat(body, { systemPrompt: SYS_STRICT });
+        rule = extractJson(satuan);
+      } catch (e) {
+        console.log("[autonovaai] rantai satuan juga gagal:", e.message);
+      }
     }
     if (!rule) {
       rule = localParse(body);
@@ -319,7 +330,7 @@ async function handler(m, { sock, conn }) {
     if (!rule) {
       try { await m.react("❌"); } catch {}
       return m.reply(claraWrap("autonovaai", [
-        "Gagal bikin rule: AI gak ngembaliin JSON dan kalimatnya belum dikenali.",
+        "Gagal bikin rule: SEMUA AI (novaai + satuan) gak ngembaliin JSON dan kalimatnya belum dikenali parser lokal.",
         "Coba tulis lebih spesifik, contoh:",
         "• .autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
         "• .autonovaai kalau ada orang chat, ikut ngobrol",
