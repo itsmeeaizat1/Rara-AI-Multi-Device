@@ -3,7 +3,7 @@
 
 import { ensureRpg, getRpgData, addItem, removeItem, addExp, ITEM_DB } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
 import { getCintaData, addAffection } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
@@ -116,7 +116,8 @@ async function handler(m) {
       flavor: `🎁 *${(ITEM_DB[itemId]?.name || itemId).toUpperCase()} UNTUK ${partnerName.toUpperCase()}!*`,
       body: [
         `│ • 🎁 Kado : ${ITEM_DB[itemId]?.name || itemId} (${rarity})`,
-        `│ • 💞 Affection : +${affectionGain} berdua (Total: ${myCinta.affection || 0})`,
+        `│ • 💞 Affection : +${affectionGain} berdua`,
+        `│    ${renderStatBar(myCinta.affection || 0, 500)} (Total: ${myCinta.affection || 0})`,
         `│ • 🎀 Total Kado : ${myCinta.giftCount}`,
         `│ • ✨ EXP : +2`,
       ].join("\n"),

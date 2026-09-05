@@ -7,7 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -258,8 +258,8 @@ async function handler(m, { sock }) {
         ...(goldGain > 0 ? [`│ • 💰 Gold : +${goldGain}`] : []),
         ...dropLines,
         ...(extraText ? [extraText] : []),
-        `│ • ❤️ HP : ${freshRpg.hp}/${freshRpg.maxHp}`,
-        `│ • ⚡ Energy : ${freshRpg.energy}/${freshRpg.maxEnergy}`,
+        `│ • ❤️ HP : ${renderStatBar(freshRpg.hp, freshRpg.maxHp)} (${freshRpg.hp}/${freshRpg.maxHp})`,
+        `│ • ⚡ Energy : ${renderStatBar(freshRpg.energy, freshRpg.maxEnergy)} (${freshRpg.energy}/${freshRpg.maxEnergy})`,
       ].join("\n"),
       cta: gameCTA("adventure"),
     }));

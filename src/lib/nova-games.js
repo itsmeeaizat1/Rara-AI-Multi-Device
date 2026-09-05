@@ -599,6 +599,15 @@ function renderProgressBar(found, total, width = 8) {
   return `${bar} ${f}/${t} (${pct}%)`;
 }
 
+// Bar stat (HP/Mana/Energi/Affection) — buat hasil RPG biar kek game beneran
+function renderStatBar(cur, max, width = 10) {
+  const mx = Math.max(0, max || 0);
+  const c = Math.min(Math.max(0, cur || 0), mx);
+  const filled = mx > 0 ? Math.round((c / mx) * width) : 0;
+  const pct = mx > 0 ? Math.round((c / mx) * 100) : 0;
+  return `${"▰".repeat(filled)}${"▱".repeat(Math.max(0, width - filled))} ${pct}%`;
+}
+
 // Slot board gaya Family Feud — hidden = blok misteri, revealed = jawaban
 function renderSlotBoard(answers, opts = {}) {
   const nameOf = opts.nameOf || (() => "");
@@ -630,4 +639,4 @@ export function novaGameBox(opts) {
   return text;
 }
 
-export { NovaGames, games, gameCTA, GAME_FLAVOR, pickFlavor, renderProgressBar, renderSlotBoard };
+export { NovaGames, games, gameCTA, GAME_FLAVOR, pickFlavor, renderProgressBar, renderSlotBoard, renderStatBar };
