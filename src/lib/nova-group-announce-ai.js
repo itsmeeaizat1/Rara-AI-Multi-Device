@@ -25,6 +25,7 @@ function timeOfDay() {
 }
 
 function buildPrompt(type, ctx) {
+  const reason = String(ctx.reason || "").trim();
   const groupName = ctx.groupName || "grup ini";
   const actorName = ctx.actorName || "admin";
   const isClose = type === "close";
@@ -37,7 +38,11 @@ function buildPrompt(type, ctx) {
     (isClose
       ? `Artinya: sementara ini HANYA admin yang bisa kirim pesan, member lain harus menunggu sampai grup dibuka lagi. `
       : `Artinya: SEMUA member sudah bebas kirim pesan kembali seperti biasa. `) +
-    `Sampaikan dengan hangat dan santai, boleh sedikit lucu atau menyapa member.\n\n` +
+    (reason ? `Alasan dari admin: "${reason}" — WAJIB sertakan alasan ini di pengumuman. ` : ``) +
+    (isClose
+      ? `Gaya: pengumuman langsung dan jelas, contoh pembuka "Grup ditutup oleh admin..." — TANPA kiasan (jangan pakai kata "gembok", "kunci", "pintu", atau metafora lain). `
+      : `Sampaikan dengan hangat dan santai, boleh sedikit lucu atau menyapa member. `) +
+    `\n\n` +
     `[ATURAN]\n` +
     `- Wajib sertakan teks placeholder @{user} TEPAT SATU KALI di tengah kalimat ` +
     `untuk mewakili admin yang melakukan aksi (akan diganti mention otomatis).\n` +
@@ -91,10 +96,10 @@ import { novaGameBox, gameCTA } from "./nova-games.js";
 
 // Sapaan acak biar fallback pun gak monoton
 const FLAVOR_CLOSE = [
-  (n) => `🔒 *Waduh, grup dikunci dulu sama @${n}!*`,
-  (n) => `*Gembok kepasang!* @${n} nutup grup bentar ya`,
-  (n) => `*Shhh...* @${n} lagi tidurin grup nih, tetep tenang ya`,
-  (n) => `*Grup resmi di-lock sama @${n}*, tunggu bentar ya`,
+  (n) => `*Grup ditutup oleh admin @${n}*`,
+  (n) => `*Admin @${n} baru saja menutup grup ini*`,
+  (n) => `*Pengumuman: grup ditutup oleh @${n}*`,
+  (n) => `*Grup resmi ditutup oleh admin @${n}*`,
 ];
 const FLAVOR_OPEN = [
   (n) => `🔓 *Yeay, pintu grup dibuka lagi sama @${n}!*`,
@@ -114,11 +119,11 @@ function nowDateTimeWib() {
  * Fallback engine grup ditutup/dibuka kembali — dipakai kalau AI mati.
  * Format khas welcome/goodbye: sapaan acak + box info lengkap + CTA.
  * @param {"close"|"open"} type
- * @param {{groupName?:string, senderNum?:string, memberCount?:number}} ctx
+ * @param {{groupName?:string, senderNum?:string, memberCount?:number, reason?:string}} ctx
  * @returns {string} teks engine (mention @nomor ada di flavor & baris Admin)
  */
 export function buildFallbackAnnounce(type, ctx = {}) {
-  const { groupName = "Grup", senderNum = "", memberCount = 0 } = ctx;
+  const { groupName = "Grup", senderNum = "", memberCount = 0, reason = "" } = ctx;
   const { tanggal, waktu } = nowDateTimeWib();
   const flavors = type === "close" ? FLAVOR_CLOSE : FLAVOR_OPEN;
   const flavor = flavors[Math.floor(Math.random() * flavors.length)](senderNum);
@@ -130,6 +135,7 @@ export function buildFallbackAnnounce(type, ctx = {}) {
     `│ • 🕐 Waktu : ${waktu}`,
   ];
   if (memberCount > 0) rows.push(`│ • 👥 Total Member : ${memberCount}`);
+  if (reason) rows.push(`│ • 📝 Alasan : ${reason}`);
   if (type === "close") {
     rows.push(`│ • 🔒 Status : Hanya admin yang bisa mengirim pesan`);
     rows.push(`│ • ℹ️ Info : Grup dibuka kembali oleh admin ketika sudah waktunya`);
@@ -150,7 +156,7 @@ export function buildFallbackAnnounce(type, ctx = {}) {
 /**
  * Pesan AI untuk grup ditutup/dibuka kembali.
  * @param {"close"|"open"} type — close = grup ditutup, open = dibuka kembali
- * @param {{groupName?:string, actorName?:string}} ctx — konteks untuk prompt
+ * @param {{groupName?:string, actorName?:string, reason?:string}} ctx — konteks untuk prompt
  * @returns {Promise<string|null>} teks ber-placeholder @{user}, atau null
  *          kalau AI mati/timeout/gagal validasi (pemanggil pakai template).
  */
