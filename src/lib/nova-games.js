@@ -147,6 +147,9 @@ const GAME_CTA = {
   bucin: "Yuk baca quotes lain kak, biar makin melar 💕🥳",
   putus: "Yuk move on dulu kak, siapa tau jodoh berikutnya lebih baik 💪🥳",
   tolaknikah: "Yuk sabar kak, siapa tau lamaran berikutnya diterima 💪🥳",
+  // WELCOME & GOODBYE (member masuk/keluar grup)
+  welcome: "Yuk ketik .menu kak, biar tahu semua fitur seru di grup ini 🥳",
+  goodbye: "Semoga kita bertemu lagi di lain waktu ya kak 🙏",
   // RPG FEATURES BATCH 2 (hasil aksi RPG → format engine)
   adventure: "Yuk petualangan lagi kak, siapa tau nemu harta karun 🗺️🥳",
   adventurev2: "Yuk jelajah biome lain kak, biar makin jago bertahan 🧭🥳",

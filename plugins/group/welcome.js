@@ -1,8 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // welcome.js — V1 (teks) + V2 (canvas hexagon) + V3 (autoresbot API bg + vertical)
-import { tipText, claraWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { createWideDiscordCard, createWelcomeCardV3 } from "../../src/lib/nova-welcome-card.js";
+import { createWideDiscordCard, createWelcomeCardV3, detectCountry } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
@@ -11,21 +12,20 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      await m.reply(novaGuide('Welcome', 'Aktifkan atau matikan pesan sambutan (welcome) untuk member baru.', `${prefix}welcome on`));
+      await m.reply(novaGuide('Welcome', `Aktifkan atau matikan pesan sambutan member baru. Pilih tipe dengan ${prefix}setwelcometype v1/v2/v3.`, `${prefix}welcome on`));
       return { handled: true };
     }
 
     const db = getDatabase();
     db.setGroup(m.chat, { welcome: args === "on" });
 
-    const text =
-      claraWrap("Welcome", ["Fitur: *ᴡᴇʟᴄᴏᴍᴇ ᴍᴇꜱꜱᴀɢᴇ*",
-        `Status: *${args === "on" ? "ON" : "OFF"}*`,
-        `Group: *${m.chat}*`].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}setwelcometype v1/v2/v3 untuk pilih tipe`);
-
-    await m.reply(claraWrap("welcome2", text));
+    await m.reply(claraWrap("welcome", [
+      `Fitur : welcome message`,
+      `Status : ${args === "on" ? "ON" : "OFF"}`,
+      `Grup : ${m.chat}`,
+      "",
+      `💡 Ketik ${prefix}setwelcometype v1/v2/v3 untuk pilih tipe`,
+    ].join("\n")));
   } catch (error) {
     await m.reply(novaError('Welcome', `Gagal: ${error.message}`));
   }
@@ -50,17 +50,60 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   const username = participantJid.split("@")[0].split(":")[0];
   const prefix = config.command?.prefix || ".";
 
+  // Info user dari database + deteksi negara dari nomor
+  const userData = db.getUser(participantJid) || {};
+  const displayName = userData.name || userData.regName || username;
+  const country = detectCountry(participantJid);
+
+  // Deskripsi/rules grup: custom welcomeMsg (yang di-set owner) > deskripsi grup
+  const now = new Date();
+  let rulesText = "";
+  const customMsg = String(groupData.welcomeMsg || "").trim();
+  if (customMsg) {
+    const dayName = now.toLocaleDateString("id-ID", { weekday: "long" });
+    const dateStr = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    rulesText = customMsg
+      .replaceAll("{user}", "@" + username)
+      .replaceAll("{group}", groupName)
+      .replaceAll("{day}", dayName)
+      .replaceAll("{date}", dateStr);
+  } else if (metadata?.desc) {
+    rulesText = metadata.desc;
+  }
+  if (rulesText.length > 200) rulesText = rulesText.slice(0, 197) + "...";
+
+  // Sapaan acak biar gak monoton
+  const SAPAAN = [
+    `Halo kak @${username}, selamat datang!`,
+    `Wew, akhirnya @${username} nyampe juga!`,
+    `Ada member baru nih, welcome ya @${username}!`,
+    `Ketemu lagi di sini, selamat datang @${username}!`,
+    `Tumben @${username} mampir ke sini, haha welcome!`,
+  ];
+  const sapaan = SAPAAN[Math.floor(Math.random() * SAPAAN.length)];
+
+  // Engine text welcome (dipakai v1 teks + caption v2/v3 + fallback)
+  const rows = [
+    `│ • 👤 Nama : ${displayName}`,
+    `│ • 📱 Nomor : @${username}`,
+    `│ • 🌏 Negara : ${country}`,
+    `│ • 🏠 Grup : ${groupName}`,
+    `│ • 👥 Total Member : ${memberCount}`,
+  ];
+  if (rulesText) {
+    rows.push("│", `│ • 📋 ${rulesText}`);
+  }
+  const engineText = novaGameBox({
+    title: "welcome", icon: "👋",
+    flavor: `👋 *${sapaan}*`,
+    body: rows.join("\n"),
+    cta: gameCTA("welcome"),
+  });
+
   // ===== V1: TEKS BAWAAN =====
   if (welcomeType === 1) {
-    const welcomeText =
-      `Halo @${username}!\n` +
-      `Selamat datang di *${groupName}*\n` +
-      `Kamu member ke-*${memberCount}*\n\n` +
-      `Ketik *${prefix}menu* untuk lihat fitur\n` +
-      `Ketik *${prefix}help* untuk bantuan`;
-
     await sock.sendMessage(groupJid, {
-      text: welcomeText,
+      text: engineText,
       mentions: [participantJid],
     });
     return;
@@ -71,15 +114,9 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     try {
       const buffer = await createWideDiscordCard(username, ppUrl, groupName, memberCount);
 
-      const caption =
-        `Halo @${username}!\n` +
-        `Selamat datang di *${groupName}*\n` +
-        `Member ke-*${memberCount}*\n\n` +
-        `Ketik *${prefix}menu* untuk lihat fitur`;
-
       await sock.sendMessage(groupJid, {
         image: buffer,
-        caption,
+        caption: engineText,
         mentions: [participantJid],
       });
       return;
@@ -94,15 +131,9 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
       const apiKey = config.APIkey?.autoresbot || "";
       const buffer = await createWelcomeCardV3(username, ppUrl, groupName, memberCount, apiKey);
 
-      const caption =
-        `Halo @${username}!\n` +
-        `Selamat datang di *${groupName}*\n` +
-        `Member ke-*${memberCount}*\n\n` +
-        `Ketik *${prefix}menu* untuk lihat fitur`;
-
       await sock.sendMessage(groupJid, {
         image: buffer,
-        caption,
+        caption: engineText,
         mentions: [participantJid],
       });
       return;
@@ -113,7 +144,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
         const buffer = await createWideDiscordCard(username, ppUrl, groupName, memberCount);
         await sock.sendMessage(groupJid, {
           image: buffer,
-          caption: `Halo @${username}!\nSelamat datang di *${groupName}*\nMember ke-*${memberCount}*\n\nKetik *${prefix}menu* untuk lihat fitur`,
+          caption: engineText,
           mentions: [participantJid],
         });
         return;
@@ -124,15 +155,8 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   }
 
   // ===== V4+: Fallback ke teks =====
-  const welcomeText =
-    `Halo @${username}!\n` +
-    `Selamat datang di *${groupName}*\n` +
-    `Kamu member ke-*${memberCount}*\n\n` +
-    `Ketik *${prefix}menu* untuk lihat fitur\n` +
-    `Ketik *${prefix}help* untuk bantuan`;
-
   await sock.sendMessage(groupJid, {
-    text: welcomeText,
+    text: engineText,
     mentions: [participantJid],
   });
 }
