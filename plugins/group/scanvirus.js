@@ -26,6 +26,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   try {
+    await m.react("🕒");
     if (!m.isAdmin && !m.isOwner) {
       await m.react("🚫");
       await m.reply(claraWrap("scanvirus", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"));
@@ -38,6 +39,7 @@ async function handler(m, { sock }) {
 
     if (!['on', 'off'].includes(args)) {
       const status = group.scanVirus === true ? '✅ Aktif' : '❌ Nonaktif';
+      await m.react("🐣");
       await m.reply(claraWrap("scanvirus", [
         `Fitur : Auto-scan virus file`,
         `Status : ${status}`,
@@ -52,6 +54,7 @@ async function handler(m, { sock }) {
     db.setGroup(m.chat, group);
 
     if (args === 'on') {
+      await m.react("🐣");
       await m.reply(claraWrap("scanvirus", [
         `Auto-scan virus diaktifkan`,
         "",
@@ -59,10 +62,12 @@ async function handler(m, { sock }) {
         `Owner & admin grup dikecualikan.`,
       ].join("\n"), "success"));
     } else {
+      await m.react("🐣");
       await m.reply(claraWrap("scanvirus", `Auto-scan virus dinonaktifkan`, "error"));
     }
     return { handled: true };
   } catch (error) {
+    await m.react("❌");
     await m.reply(novaError("Scanvirus", `Gagal: ${error.message}`));
     return { handled: true };
   }
