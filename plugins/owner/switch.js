@@ -554,33 +554,24 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
 async function handleFitur(m, { sock, config: cfg }) {
   const db = getDatabase()
   const prefix = cfg?.command?.prefix || '.'
-  const args = m.args || []
-  let action, target
+  const rawArgs = m.args || []
 
-  if (args[0]?.toLowerCase() === 'fitur' || args[0]?.toLowerCase() === 'command' || args[0]?.toLowerCase() === 'cmd') {
-    action = (args[1] || '').toLowerCase()
-    target = (args[2] || '').toLowerCase()
-  } else {
-    action = (args[0] || '').toLowerCase()
-    target = (args[1] || '').toLowerCase()
-  }
+  // BUG FIX: dulu cuma nerima urutan "<verb> <target>" (fitur off rpg).
+  // Owner (dan pattern .switch auto <key> on/off di plugin ini sendiri)
+  // wajarnya ketik "<target> <verb>" (fitur maker on) — verb "on"/"off"
+  // di posisi akhir KEINJEK, "maker" dikira verb, jatuh ke mode=toggle
+  // yang MENGABAIKAN "on" user & malah toggle kategori (kalau lagi aktif
+  // jadi nonaktif, kebalikan dari intent user). Sekarang cari token
+  // on/off/list DI MANA PUN posisinya — support DUA urutan.
+  const args = (rawArgs[0]?.toLowerCase() === 'fitur' || rawArgs[0]?.toLowerCase() === 'command' || rawArgs[0]?.toLowerCase() === 'cmd')
+    ? rawArgs.slice(1)
+    : rawArgs.slice()
+  const lower = args.map((a) => (a || '').toLowerCase())
 
   const disabledCmds = db.setting("disabledCommands") || []
   const disabledCats = db.setting("disabledCategories") || []
 
-  if (!action) {
-    let text = `Panduan:\n`
-    text += `• \`${prefix}switch fitur off rpg\` → matikan kategori\n`
-    text += `• \`${prefix}switch fitur on kencanmatch\` → hidupkan command\n`
-    text += `• \`${prefix}switch fitur list\` → lihat semua status\n\n`
-    text += `Kategori Nonaktif (OFF):\n`
-    text += disabledCats.length > 0 ? `${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `(semua kategori aktif)\n`
-    text += `\nCommand Nonaktif (OFF):\n`
-    text += disabledCmds.length > 0 ? `${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `(semua command aktif)`
-    return m.reply(text)
-  }
-
-  if (action === 'list') {
+  if (lower.includes('list')) {
     const allCats = [...(pluginStore.categories?.keys() || [])].sort()
     let text = `KATEGORI (${allCats.length})\n`
     for (const cat of allCats) {
@@ -594,13 +585,41 @@ async function handleFitur(m, { sock, config: cfg }) {
     return m.reply(text.trim())
   }
 
+  const verbIdx = lower.findIndex((a) => a === 'on' || a === 'off')
+  let action, target
+  if (verbIdx !== -1) {
+    // Verb ketemu di posisi mana pun — sisa token (selain verb) jadi target.
+    // Ambil token pertama yang BUKAN verb (biasanya cuma ada 1 target).
+    action = lower[verbIdx]
+    target = lower.find((a, i) => i !== verbIdx) || ''
+  } else if (lower.length === 1) {
+    // Cuma 1 token tanpa verb (".switch fitur rpg") — legacy toggle
+    action = lower[0]
+    target = ''
+  } else {
+    action = lower[0] || ''
+    target = lower[1] || ''
+  }
+
+  if (!action) {
+    let text = `Panduan:\n`
+    text += `• \`${prefix}switch fitur rpg off\` atau \`off rpg\` → matikan kategori\n`
+    text += `• \`${prefix}switch fitur maker on\` atau \`on maker\` → hidupkan (2 urutan sama-sama jalan)\n`
+    text += `• \`${prefix}switch fitur list\` → lihat semua status\n\n`
+    text += `Kategori Nonaktif (OFF):\n`
+    text += disabledCats.length > 0 ? `${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `(semua kategori aktif)\n`
+    text += `\nCommand Nonaktif (OFF):\n`
+    text += disabledCmds.length > 0 ? `${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `(semua command aktif)`
+    return m.reply(text)
+  }
+
   let mode = '', name = ''
   if (action === 'on') { mode = 'on'; name = target }
   else if (action === 'off') { mode = 'off'; name = target }
   else { mode = 'toggle'; name = action }
 
   if (!name)
-    return m.reply(`Contoh: \`${prefix}switch fitur off rpg\`\nContoh: \`${prefix}switch fitur on kencanmatch\``)
+    return m.reply(`Contoh: \`${prefix}switch fitur off rpg\`\nContoh: \`${prefix}switch fitur maker on\``)
 
   const allCats = [...(pluginStore.categories?.keys() || [])].sort()
   const allCmds = [...(pluginStore.commands?.keys() || [])].sort()
