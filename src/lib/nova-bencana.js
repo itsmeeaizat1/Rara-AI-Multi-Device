@@ -75,7 +75,8 @@ async function fetchJson(url, timeoutMs = 15000) {
 
 function jamWib(ts) {
   const wib = new Date(new Date(ts).getTime() + 7 * 3600e3);
-  return wib.toISOString().slice(0, 16).replace("T", " ") + " WIB";
+  const bulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+  return `${String(wib.getUTCDate()).padStart(2, "0")} ${bulan[wib.getUTCMonth()]} ${wib.getUTCFullYear()}, ${wib.toISOString().slice(11, 16)} WIB`;
 }
 
 function mapsLink(lat, lon) {
@@ -584,7 +585,7 @@ function pendingLine(ev) {
   let head = ev.jenis || "Bencana";
   if (ev.mag) head += ` ${ev.mag} SR`;
   if (ev.level) head += ` — ${String(ev.level).replace(/ \(.*\)$/, "")}`;
-  return `${head}${ev.desc ? `: ${ev.desc}` : ""}`;
+  return `${head}${ev.desc ? `: ${ev.desc}` : ""}${ev.waktu ? ` (${ev.waktu})` : ""}`;
 }
 
 /** Kumpulkan event ke pending (buat mode jadwal). Cap 100. */
@@ -733,6 +734,7 @@ export function buildInfoSection(ev, sub = null, distKm = null, dirLabel = null)
   if (ev.mag) L.push(`Magnitudo  : ${ev.mag} SR${ev.depth && ev.depth !== "-" ? `, kedalaman ${ev.depth}` : ""}`);
   if (ev.level) L.push(`Level      : ${ev.level}`);
   if (ev.waktu) L.push(`Waktu      : ${ev.waktu}`);
+  L.push(`Terdeteksi : ${jamWib(Date.now())}`);
   if (ev.desc) L.push(`Lokasi     : ${ev.desc}${ev.country ? ` — ${ev.country}` : ""}`);
   if (ev.lat != null) L.push(`Koordinat  : ${fmtCoord(ev.lat)}, ${fmtCoord(ev.lon)}`);
   if (ev.potensi) L.push(`Potensi    : ${ev.potensi}`);
