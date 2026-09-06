@@ -222,6 +222,14 @@ Automation:
 | Cuaca V1 | wttr.in, quick & lightweight | `.weather` / `.cekcuaca` |
 | Cuaca V2 | Open-Meteo BMKG-style, detail | `.cuacav2` / `.autocuacav2` |
 
+### 🚨 Bencana & Alert Realtime
+
+| Fitur | Deskripsi | Command |
+|-------|-----------|---------|
+| Dashboard Bencana | Semua bencana aktif dunia (GDACS AWAS/SIAGA/Waspada) + gempa BMKG | `.bencana` |
+| Cek per Jenis | Banjir, badai, gunung api, karhutla, kekeringan, tsunami, gempa global M6+ | `.bencana banjir` dll |
+| Bencana Watch | Auto-alert realtime per chat: gempa BMKG M5+, global M6+, GDACS Siaga/Awas | `.bencanawatch on` |
+
 ### 💼 Productivity & Tools
 
 | Fitur | Deskripsi | Command |
