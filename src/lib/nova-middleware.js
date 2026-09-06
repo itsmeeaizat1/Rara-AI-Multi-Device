@@ -164,8 +164,32 @@ function checkMode(m, getActiveJadibots) {
     };
   }
 
-  if (onlyGc && !m.isGroup && !m.isOwner) return { allowed: false };
-  if (onlyPc && m.isGroup && !m.isOwner) return { allowed: false };
+  // Mode PC/GC Only — blok dengan PESAN penjelasan (dulu silent 🚫 doang,
+  // user nyangka bot error/fitur gak berfungsi). Owner selalu lolos.
+  if (onlyGc && !m.isGroup && !m.isOwner) {
+    return {
+      allowed: false,
+      isModeLimited: true,
+      modeLimitedMessage:
+        `╭─「 ✦ Mᴏᴅᴇ Gʀᴜᴘ Oɴʟʏ ✦ 」\n` +
+        `│ Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ɢʀᴜᴘ sᴀᴊᴀ\n` +
+        `│ Sɪʟᴀᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ʙᴏᴛ ᴅɪ ᴅᴀʟᴀᴍ ɢʀᴜᴘ\n` +
+        `│ Pʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
+        `╰────  •  ────`,
+    };
+  }
+  if (onlyPc && m.isGroup && !m.isOwner) {
+    return {
+      allowed: false,
+      isModeLimited: true,
+      modeLimitedMessage:
+        `╭─「 ✦ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ Oɴʟʏ ✦ 」\n` +
+        `│ Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ sᴀᴊᴀ\n` +
+        `│ Sɪʟᴀᴋᴀɴ ᴄʜᴀᴛ ʙᴏᴛ ʟᴇᴡᴀᴛ ᴘᴇsᴀɴ ᴘʀɪʙᴀᴅɪ\n` +
+        `│ Aᴋsᴇs ᴅɪ ɢʀᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
+        `╰────  •  ────`,
+    };
+  }
 
   const onlyThisGroup = db.setting("onlyThisGroup");
   if (onlyThisGroup && m.isGroup && !m.isOwner) {
