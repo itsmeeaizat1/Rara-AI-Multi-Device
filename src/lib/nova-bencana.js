@@ -253,6 +253,33 @@ export function watcherCount() {
   return Object.keys(getWatchers()).length;
 }
 
+export function globalWatcherKey(ownerJid) {
+  return `global:${ownerJid}`;
+}
+
+/** Langganan GLOBAL: alert dikirim ke DM owner + semua grup yang bot masuk. */
+export function addGlobalWatcher(ownerJid) {
+  const subs = getWatchers();
+  const key = globalWatcherKey(ownerJid);
+  const cur = subs[key] || {};
+  subs[key] = { ...cur, scope: "global", ownerJid, since: cur.since || new Date().toISOString() };
+  saveWatchers(subs);
+  return subs;
+}
+
+export function removeGlobalWatcher(ownerJid) {
+  const subs = getWatchers();
+  delete subs[globalWatcherKey(ownerJid)];
+  saveWatchers(subs);
+  return subs;
+}
+
+/** Return record global milik owner (atau null). */
+export function hasGlobalWatcher(ownerJid) {
+  const rec = getWatchers()[globalWatcherKey(ownerJid)];
+  return rec?.scope === "global" ? rec : null;
+}
+
 /** Versi aman buat handler (gak nge-throw walau db belum siap). */
 export async function getWatchersSafe() {
   return getWatchers();
@@ -414,6 +441,37 @@ export function clearWatcherSchedules(chatId) {
 /** Jenis bencana valid buat filter subscriber. */
 export const BENCANA_JENIS = ["gempa", "banjir", "topan", "gunungapi", "kebakaran", "kering", "tsunami"];
 
+export const BENCANA_SUMBER = ["bmkg", "usgs", "gdacs"];
+
+/** Key sumber canonical dari event (ev.sumber string bebas). */
+export function evSumberKey(ev) {
+  const s = String(ev?.sumber || "");
+  if (/BMKG/i.test(s)) return "bmkg";
+  if (/USGS/i.test(s)) return "usgs";
+  if (/GDACS/i.test(s)) return "gdacs";
+  return null;
+}
+
+/**
+ * Set filter sumber subscriber (bmkg/usgs/gdacs). kosong/null = semua sumber.
+ * Berlaku di realtime & rangkuman, sama seperti filter jenis.
+ */
+export function setWatcherSumber(chatId, sources) {
+  const subs = getWatchers();
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!Array.isArray(sources) || sources.length === 0) {
+    delete subs[chatId].sumber; // reset → semua sumber
+  } else {
+    const bad = sources.filter((k) => !BENCANA_SUMBER.includes(k));
+    if (bad.length) {
+      throw new Error(`Sumber tidak dikenal: ${bad.join(", ")}. Pilihan: ${BENCANA_SUMBER.join(", ")} (atau 'semua')`);
+    }
+    subs[chatId].sumber = [...new Set(sources)];
+  }
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
 /**
  * Set filter jenis bencana subscriber. kinds kosong/null = semua jenis.
  * Filter berlaku di SEMUA mode — jenis yang gak dipilih gak dikirim
@@ -445,7 +503,7 @@ function pendingLine(ev) {
 /** Kumpulkan event ke pending (buat mode jadwal). Cap 100. */
 function pushPending(ev) {
   const st = loadState();
-  st.pending.push({ ts: Date.now(), line: pendingLine(ev), lat: ev.lat, lon: ev.lon });
+  st.pending.push({ ts: Date.now(), line: pendingLine(ev), lat: ev.lat, lon: ev.lon, kind: ev.kind, sumberKey: evSumberKey(ev) });
   if (st.pending.length > 100) st.pending = st.pending.slice(-100);
   saveState(st);
 }
@@ -459,10 +517,15 @@ function nowWib() {
  * Bangun & kirim rangkuman bencana ke satu subscriber mode jadwal.
  * @returns true kalau ada bencana baru & terkirim.
  */
-export async function fireJadwalDigest(_sock, chatId, sub) {
+export async function fireJadwalDigest(_sock, chatId, sub, watcherKey = chatId) {
   const st = loadState();
   const since = sub.lastDigest || 0;
-  const events = (st.pending || []).filter((p) => p.ts > since);
+  // filter per subscriber: jenis & sumber — sama seperti realtime
+  const jf = Array.isArray(sub.jenis) && sub.jenis.length;
+  const sf = Array.isArray(sub.sumber) && sub.sumber.length;
+  const events = (st.pending || []).filter((p) => p.ts > since)
+    .filter((p) => !jf || (p.kind && sub.jenis.includes(p.kind)))
+    .filter((p) => !sf || (p.sumberKey && sub.sumber.includes(p.sumberKey)));
   if (!events.length) return false;
   let out = `RANGKUMAN BENCANA — ${nowWib().hhmm} WIB\n\n`;
   out += `Ada ${events.length} bencana baru sejak rangkuman terakhir:\n\n`;
@@ -483,7 +546,7 @@ export async function fireJadwalDigest(_sock, chatId, sub) {
   await _sock.sendMessage(chatId, { text: out });
   // majuin lastDigest — event berikutnya gak dobel masuk rangkuman berikutnya
   const subs = getWatchers();
-  if (subs[chatId]) { subs[chatId].lastDigest = Date.now(); saveWatchers(subs); }
+  if (subs[watcherKey]) { subs[watcherKey].lastDigest = Date.now(); saveWatchers(subs); }
   return true;
 }
 
@@ -616,16 +679,59 @@ function isRunning() {
  *  • darurat  — hanya yg dekat lokasi (radius) ATAU bencana besar (isSevere)
  * Per-subscriber, jadi tiap chat dapat konten yang relevan.
  */
+// cache daftar grup (buat scope global) — refresh tiap 5 menit
+let groupsCache = { ts: 0, list: [] };
+async function allGroupJids() {
+  const now = Date.now();
+  if (groupsCache.list.length && now - groupsCache.ts < 5 * 60_000) return groupsCache.list;
+  try {
+    const g = await sock?.groupFetchAllParticipating?.();
+    if (g && typeof g === "object") {
+      groupsCache = { ts: now, list: Object.keys(g) };
+    }
+  } catch { /* keep cache lama */ }
+  return groupsCache.list;
+}
+
+/**
+ * Bentangkan watchers → daftar target [watcherKey, chatId, sub].
+ * Record biasa → 1 target. Record scope global → DM owner + semua grup.
+ * Chat yang punya record sendiri gak dobel (record sendiri menang).
+ */
+async function expandTargets() {
+  const subs = getWatchers();
+  const targets = [];
+  const seen = new Set();
+  for (const [chatId, sub] of Object.entries(subs)) {
+    if (sub.scope === "global") continue;
+    targets.push([chatId, chatId, sub]);
+    seen.add(chatId);
+  }
+  const globals = Object.entries(subs).filter(([, s]) => s.scope === "global");
+  for (const [key, sub] of globals) {
+    if (!seen.has(sub.ownerJid)) { targets.push([key, sub.ownerJid, sub]); seen.add(sub.ownerJid); }
+  }
+  for (const [key, sub] of globals) {
+    for (const gid of await allGroupJids()) {
+      if (!seen.has(gid)) { targets.push([key, gid, sub]); seen.add(gid); }
+    }
+  }
+  return targets;
+}
+
 async function dispatch(ev, genericText = null, imageUrl = null) {
   const subs = getWatchers();
   const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
   if (hasJadwal) pushPending(ev); // kumpulin buat rangkuman terjadwal
-  for (const [chatId, sub] of Object.entries(subs)) {
+  for (const [watcherKey, chatId, sub] of await expandTargets()) {
     try {
       const mode = sub.mode || "otomatis";
 
       // filter jenis bencana (kalau di-set) — berlaku di semua mode
       if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes(ev.kind)) continue;
+
+      // filter sumber (kalau di-set) — bmkg / usgs / gdacs
+      if (Array.isArray(sub.sumber) && sub.sumber.length && !sub.sumber.includes(evSumberKey(ev))) continue;
 
       const distKm =
         sub.lat != null && ev?.lat != null
@@ -641,7 +747,7 @@ async function dispatch(ev, genericText = null, imageUrl = null) {
           else if (genericText) await sock.sendMessage(chatId, { text: genericText });
           // tandai sudah diterima biar gak dobel muncul di rangkuman berikutnya
           const subs2 = getWatchers();
-          if (subs2[chatId]) { subs2[chatId].lastDigest = Date.now(); saveWatchers(subs2); }
+          if (subs2[watcherKey]) { subs2[watcherKey].lastDigest = Date.now(); saveWatchers(subs2); }
         }
         continue; // yg biasa nunggu jam rangkuman
       }
@@ -672,9 +778,8 @@ export async function dispatchBencanaEvent(ev, genericText = null, imageUrl = nu
  */
 async function jadwalTick() {
   try {
-    const subs = getWatchers();
     const { hhmm, date } = nowWib();
-    for (const [chatId, sub] of Object.entries(subs)) {
+    for (const [watcherKey, chatId, sub] of await expandTargets()) {
       if ((sub.mode || "otomatis") !== "jadwal") continue;
       const scheds = Array.isArray(sub.schedules) ? sub.schedules : [];
       if (!scheds.includes(hhmm)) continue;
@@ -687,7 +792,7 @@ async function jadwalTick() {
       // fireJadwalDigest update lastDigest sendiri; kalau kosong (false),
       // event nunggu sampai rangkuman berikutnya (gak ada pesan = gak ada kabar)
       try {
-        const sent = await fireJadwalDigest(sock, chatId, sub);
+        const sent = await fireJadwalDigest(sock, chatId, sub, watcherKey);
         if (sent) logger.success?.("bencana", `Rangkuman ${hhmm} terkirim ke ${chatId}`);
       } catch (e) {
         logger.error?.("bencana", `Rangkuman gagal kirim ke ${chatId}: ${e.message}`);
