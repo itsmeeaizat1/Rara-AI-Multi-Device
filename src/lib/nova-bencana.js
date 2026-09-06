@@ -82,6 +82,93 @@ function mapsLink(lat, lon) {
   return `https://maps.google.com/?q=${lat},${lon}`;
 }
 
+// ───────────────────── preview card (link sumber + thumbnail) ─────────────────────
+// Request owner 2026-09-06: link sumber gak mau muncul sebagai link mentah di
+// teks alert — teks cukup metadata lengkap. Link masuk ke preview card
+// (externalAdReply) + thumbnail dari sumbernya (shakemap BMKG dsb).
+
+const cardThumbCache = new Map(); // url → Buffer (biar gak unduh ulang per target)
+
+/** Unduh thumbnail dari sumber (timeout 10 dtk, tolak > 5MB / non-image). */
+async function downloadCardThumb(url) {
+  if (!url || !/^https?:\/\//.test(url)) return null;
+  if (cardThumbCache.has(url)) return cardThumbCache.get(url);
+  try {
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 10_000);
+    const res = await fetch(url, { signal: ctl.signal });
+    clearTimeout(t);
+    if (!res.ok) return null;
+    const ct = res.headers.get("content-type") || "";
+    if (!ct.startsWith("image/")) return null;
+    const ab = await res.arrayBuffer();
+    if (!ab.byteLength || ab.byteLength > 5 * 1024 * 1024) return null;
+    const buf = Buffer.from(ab);
+    if (cardThumbCache.size > 20) cardThumbCache.clear();
+    cardThumbCache.set(url, buf);
+    return buf;
+  } catch { return null; }
+}
+
+/**
+ * Thumbnail lokal fallback — owner bisa taruh banner sendiri di
+ * assets/image/bencana/bencanathumbnail.jpg (placeholder 1x1 diabaikan).
+ */
+function localBencanaThumb() {
+  try {
+    const p = path.join(process.cwd(), "assets", "image", "bencana", "bencanathumbnail.jpg");
+    if (fs.existsSync(p)) {
+      const buf = fs.readFileSync(p);
+      if (buf.length > 1000) return buf;
+    }
+  } catch {}
+  return null;
+}
+
+/** URL valid buat preview card — link rusak bikin card gak dirender WA. */
+function safeSourceUrl(u) {
+  try {
+    const url = new URL(String(u || ""));
+    if (url.protocol === "http:" || url.protocol === "https:") return url.href;
+  } catch {}
+  return null;
+}
+
+/** Bangun info preview card dari event: title, body, sourceUrl, thumbUrl. */
+export function eventCard(ev) {
+  const su = evSumberKey(ev);
+  let sourceUrl = null;
+  if (su === "bmkg") sourceUrl = "https://data.bmkg.go.id";
+  if (su === "usgs") sourceUrl = safeSourceUrl(ev.report) || "https://earthquake.usgs.gov";
+  if (su === "gdacs") sourceUrl = safeSourceUrl(ev.report) || "https://www.gdacs.org";
+  const title = `${ev.jenis || "BENCANA"}${ev.mag ? ` M${ev.mag}` : ""}${ev.level ? ` — ${String(ev.level).replace(/ \(.*\)$/, "")}` : ""}`;
+  return {
+    title: String(title).slice(0, 60),
+    body: String(ev.desc || "").slice(0, 60),
+    sourceUrl: safeSourceUrl(sourceUrl),
+    thumbUrl: ev.thumbUrl || null,
+  };
+}
+
+/** Kirim alert sebagai link-preview card: teks bersih + link sumber di card. */
+export async function sendWithCard(_sock, chatId, text, card) {
+  const msg = { text };
+  if (card?.sourceUrl) {
+    const thumb = (await downloadCardThumb(card.thumbUrl)) || localBencanaThumb();
+    msg.contextInfo = {
+      externalAdReply: {
+        title: card.title || "INFO BENCANA",
+        body: card.body || "",
+        sourceUrl: card.sourceUrl,
+        mediaType: 1,
+        renderLargerThumbnail: true,
+        ...(thumb ? { thumbnail: thumb } : {}),
+      },
+    };
+  }
+  await _sock.sendMessage(chatId, msg);
+}
+
 const stripHtml = (s) => String(s || "").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 
 const ymd = (d) => d.toISOString().slice(0, 10);
@@ -637,11 +724,10 @@ function buildMetaSection(ev, sub, distKm, dirLabel) {
   if (ev.mag) L.push(`Magnitudo : ${ev.mag} SR, kedalaman ${ev.depth || "-"}`);
   if (ev.level) L.push(`Level     : ${ev.level}`);
   if (ev.waktu) L.push(`Waktu     : ${ev.waktu}`);
-  if (ev.lat != null) L.push(`Titik     : ${(+ev.lat).toFixed(2)}, ${(+ev.lon).toFixed(2)} → ${mapsLink(ev.lat, ev.lon)}`);
+  if (ev.lat != null) L.push(`Titik     : ${(+ev.lat).toFixed(2)}, ${(+ev.lon).toFixed(2)}`);
   L.push(`Jarak     : ±${Math.round(distKm)} km arah ${dirLabel} dari ${sub.city}`);
   L.push(`Radius    : monitoring ${sub.radius || DEFAULT_RADIUS_KM} km`);
-  L.push(`Sumber    : ${ev.sumber}`);
-  if (ev.report) L.push(`Laporan   : ${ev.report}`);
+  L.push(`Sumber    : ${ev.sumber}`); // link sumber & laporan ada di preview card
   return L.join("\n");
 }
 
@@ -657,7 +743,10 @@ export async function sendRegionalAlert(_sock, chatId, ev, sub) {
     `PERINGATAN BENCANA — WILAYAH ${String(sub.city).toUpperCase()}\n\n` +
     text +
     `\n\n${buildMetaSection(ev, sub, distKm, dir)}`;
-  await _sock.sendMessage(chatId, { text: out });
+  const card = eventCard(ev);
+  card.title = `PERINGATAN — ${sub.city}`.slice(0, 60);
+  card.body = `${ev.jenis || "Bencana"} ±${Math.round(distKm)} km dari ${sub.city}`.slice(0, 60);
+  await sendWithCard(_sock, chatId, out, card);
   return true;
 }
 
@@ -719,7 +808,7 @@ async function expandTargets() {
   return targets;
 }
 
-async function dispatch(ev, genericText = null, imageUrl = null) {
+async function dispatch(ev, genericText = null, card = null) {
   const subs = getWatchers();
   const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
   if (hasJadwal) pushPending(ev); // kumpulin buat rangkuman terjadwal
@@ -744,7 +833,7 @@ async function dispatch(ev, genericText = null, imageUrl = null) {
         // ATURAN OWNER: bencana DARURAT mesti realtime — gak nunggu rangkuman.
         if (ev.isSevere) {
           if (near) await sendRegionalAlert(sock, chatId, ev, sub);
-          else if (genericText) await sock.sendMessage(chatId, { text: genericText });
+          else if (genericText) await sendWithCard(sock, chatId, genericText, card);
           // tandai sudah diterima biar gak dobel muncul di rangkuman berikutnya
           const subs2 = getWatchers();
           if (subs2[watcherKey]) { subs2[watcherKey].lastDigest = Date.now(); saveWatchers(subs2); }
@@ -757,8 +846,7 @@ async function dispatch(ev, genericText = null, imageUrl = null) {
       if (near) {
         await sendRegionalAlert(sock, chatId, ev, sub);
       } else if (genericText) {
-        await sock.sendMessage(chatId, { text: genericText });
-        if (imageUrl) await sock.sendMessage(chatId, { image: { url: imageUrl } });
+        await sendWithCard(sock, chatId, genericText, card);
       }
     } catch (e) {
       logger.error?.("bencana", `Gagal kirim ke ${chatId}: ${e.message}`);
@@ -768,8 +856,8 @@ async function dispatch(ev, genericText = null, imageUrl = null) {
 }
 
 /** Wrapper testable — pakai sock internal monitor. */
-export async function dispatchBencanaEvent(ev, genericText = null, imageUrl = null) {
-  return dispatch(ev, genericText, imageUrl);
+export async function dispatchBencanaEvent(ev, genericText = null, card = null) {
+  return dispatch(ev, genericText, card);
 }
 
 /**
@@ -824,7 +912,7 @@ async function fastTick() {
         ];
         if (g.Potensi) lines.push(g.Potensi);
         if (g.Dirasakan) lines.push(`Dirasakan: ${g.Dirasakan}`);
-        lines.push(`Lokasi: ${g.Coordinates} → ${mapsLink(lat, lon)}`);
+        lines.push(`Lokasi: ${g.Coordinates}`);
         lines.push("", "Sumber: BMKG (data.bmkg.go.id)");
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi",
@@ -835,7 +923,8 @@ async function fastTick() {
           sumber: "BMKG (data.bmkg.go.id)",
           isSevere: parseFloat(g.Magnitude) >= 6.5, // mode darurat: gempa besar lolos filter global
         };
-        await dispatch(ev, lines.join("\n"), g._shakemapUrl);
+        ev.thumbUrl = g._shakemapUrl; // shakemap → thumbnail preview card (bukan attachment terpisah)
+        await dispatch(ev, lines.join("\n"), eventCard(ev));
       }
     }
   } catch (e) {
@@ -861,9 +950,8 @@ async function slowTick() {
           "",
           `${t.icon} ${t.label}${e.country ? ` di ${shortCountry(e.country)}` : ""}`,
           e.desc || e.name,
-          `Lokasi: ${(+e.lat).toFixed(2)}, ${(+e.lon).toFixed(2)} → ${mapsLink(e.lat, e.lon)}`,
+          `Lokasi: ${(+e.lat).toFixed(2)}, ${(+e.lon).toFixed(2)}`,
         ];
-        if (e.report) lines.push(`Laporan: ${e.report}`);
         lines.push("", "Sumber: GDACS (EU/UN) — gdacs.org");
         const ev = {
           kind: KIND_BY_TYPE[e.type] || "default",
@@ -875,7 +963,7 @@ async function slowTick() {
           report: e.report,
           isSevere: e.alertlevel === "Red", // mode darurat: level AWAS lolos filter global
         };
-        await dispatch(ev, lines.join("\n"));
+        await dispatch(ev, lines.join("\n"), eventCard(ev));
         await new Promise((r) => setTimeout(r, 1000));
       }
     }
@@ -896,10 +984,9 @@ async function slowTick() {
           "",
           `M${q.mag?.toFixed(1)} — ${q.place}`,
           `${jamWib(q.time)}`,
-          `Lokasi: ${(+q.lat).toFixed(2)}, ${(+q.lon).toFixed(2)} → ${mapsLink(q.lat, q.lon)}`,
+          `Lokasi: ${(+q.lat).toFixed(2)}, ${(+q.lon).toFixed(2)}`,
         ];
         if (q.tsunami) lines.push("PERHATIAN: ada flag potensi tsunami di event ini.");
-        if (q.url) lines.push(`Detail: ${q.url}`);
         lines.push("", "Sumber: USGS (earthquake.usgs.gov)");
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi (global)",
@@ -911,7 +998,7 @@ async function slowTick() {
           report: q.url,
           isSevere: q.mag >= 7.0, // mode darurat: gempa besar global lolos filter
         };
-        await dispatch(ev, lines.join("\n"));
+        await dispatch(ev, lines.join("\n"), eventCard(ev));
         await new Promise((r) => setTimeout(r, 1000));
       }
     }
