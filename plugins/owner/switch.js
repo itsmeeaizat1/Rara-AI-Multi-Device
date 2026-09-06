@@ -151,42 +151,68 @@ const AUTO_REGISTRY = {
   autobackup: {
     label: "Auto Backup DB",
     getStatus: () => { try { return getBackupStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { on ? enableAutoBackup() : disableAutoBackup() },
+    // BUG FIX: enableAutoBackup(intervalStr) WAJIB dikasih interval ("30m"/
+    // "6h"/"1d") — dipanggil tanpa argumen bikin parseInterval(undefined)
+    // crash "Cannot read properties of undefined (reading 'match')". Toggle
+    // unified ini gak punya UI buat nanya interval, jadi pakai interval yang
+    // udah kesimpen (getBackupStatus) kalau ada, fallback default "1h".
+    toggle: (on) => { on ? enableAutoBackup(getBackupStatus()?.intervalStr || "1h") : disableAutoBackup() },
   },
   autohealth: {
     label: "Auto API Health Check",
     getStatus: () => { try { return getHealthStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { on ? enableHealthCheck() : disableHealthCheck() },
+    // BUG FIX: enableHealthCheck(intervalMinutes) butuh parameter — dipanggil
+    // tanpa argumen → intervalMinutes undefined, "undefined < 5" = false (gak
+    // crash tapi nyimpen NaN). Pakai nilai tersimpan / default state (30 mnt).
+    toggle: (on) => { on ? enableHealthCheck(getHealthStatus()?.intervalMinutes || 30) : disableHealthCheck() },
   },
   autoreengage: {
     label: "Auto Re-engage Users",
     getStatus: () => { try { return getReengageStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { on ? enableReengage() : disableReengage() },
+    // BUG FIX: enableReengage(hour, minute, thresholdDays) butuh 3 parameter —
+    // dipanggil tanpa argumen bakal nyimpen NaN/undefined. Pakai nilai
+    // tersimpan / default state (10:00, threshold 7 hari).
+    toggle: (on) => { const s = getReengageStatus(); on ? enableReengage(s?.hour ?? 10, s?.minute ?? 0, s?.inactiveThresholdDays ?? 7) : disableReengage() },
   },
   autorefill: {
     label: "Auto Refill Limit/Energi",
     getStatus: () => { try { return getRefillStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { on ? enableRefill() : disableRefill() },
+    // BUG FIX: enableRefill(hour, minute) butuh parameter — pakai nilai
+    // tersimpan / default state (00:00).
+    toggle: (on) => { const s = getRefillStatus(); on ? enableRefill(s?.hour ?? 0, s?.minute ?? 0) : disableRefill() },
   },
   autorenewal: {
     label: "Auto Renewal Reminder",
     getStatus: () => { try { return getRenewalStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { on ? enableRenewalReminder() : disableRenewalReminder() },
+    // BUG FIX: enableRenewalReminder(hour, minute, reminderDays) butuh 3
+    // parameter — pakai nilai tersimpan / default state (09:00, H-3).
+    toggle: (on) => { const s = getRenewalStatus(); on ? enableRenewalReminder(s?.hour ?? 9, s?.minute ?? 0, s?.reminderDays ?? 3) : disableRenewalReminder() },
   },
   autoreport: {
     label: "Auto Report Harian",
     getStatus: () => { try { return getReportStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { on ? enableAutoReport() : disableAutoReport() },
+    // BUG FIX: enableAutoReport(hour, minute) butuh parameter — pakai nilai
+    // tersimpan / default state (23:00).
+    toggle: (on) => { const s = getReportStatus(); on ? enableAutoReport(s?.hour ?? 23, s?.minute ?? 0) : disableAutoReport() },
   },
   autoulah: {
     label: "Auto Ucapan Ulang Tahun",
     getStatus: () => { try { return getBirthdayStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { on ? enableAutoBirthday() : disableAutoBirthday() },
+    // BUG FIX: enableAutoBirthday(hour, minute) butuh parameter — pakai nilai
+    // tersimpan / default state (08:00).
+    toggle: (on) => { const s = getBirthdayStatus(); on ? enableAutoBirthday(s?.hour ?? 8, s?.minute ?? 0) : disableAutoBirthday() },
   },
   autobmkg: {
     label: "Auto Info Gempa BMKG",
     getStatus: () => { try { return getBmkgStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { updateBmkgSettings({ enabled: on }); on ? startBmkgJobs() : stopBmkgJobs() },
+    // BUG FIX 1: updateBmkgSettings butuh UPDATER FUNCTION (cur) => next, bukan
+    // objek literal — sebelumnya dikasih { enabled: on } langsung, yang bikin
+    // updater(current) di dalam nova-bmkg-scheduler.js manggil objek kayak
+    // fungsi → TypeError. Konsisten sama semua pemanggilan lain di autobmkg.js.
+    // BUG FIX 2: startBmkgJobs(settings) WAJIB dikasih objek settings (dipakai
+    // buat baca .enabled/.schedules/.timezone) — sebelumnya dipanggil tanpa
+    // argumen → "Cannot read properties of undefined (reading 'enabled')".
+    toggle: (on) => { const s = updateBmkgSettings((cur) => ({ ...cur, enabled: on })); on ? startBmkgJobs(s) : stopBmkgJobs() },
   },
   autoweatherrealtime: {
     label: "Auto Notifikasi Cuaca Realtime",
@@ -323,7 +349,18 @@ function getMode(cmd, args) {
   if (a === 'auto') {
     const sub = (args[1] || '').toLowerCase()
     const subResolved = AUTO_ALIASES[sub] || (AUTO_KEYS.includes(sub) ? sub : '')
-    return subResolved ? `auto:${subResolved}` : 'auto'
+    if (!subResolved) return 'auto'
+    // BUG FIX: sebelumnya return `auto:${subResolved}` — handleAuto lalu ambil
+    // action dari args[0], yang di jalur INI (".switch auto <key> <action>")
+    // adalah STRING "auto", BUKAN aksinya! Akibatnya action selalu jadi "auto"
+    // → gak pernah cocok "on"/"off" → toggle() TIDAK PERNAH terpanggil, SELALU
+    // jatuh ke branch "tampilkan status" — user ketik "on" berkali-kali, status
+    // gak pernah berubah (persis laporan owner: .switch auto autobmkg on gak
+    // ngefek, tetep OFF). Sekarang action diambil di SINI (args[2], posisi yang
+    // benar) dan di-embed eksplisit ke mode string biar handleAuto gak perlu
+    // nebak lagi dari args.
+    const explicitAction = (args[2] || '').toLowerCase()
+    return `switchauto:${subResolved}:${explicitAction}`
   }
   if (a === 'fitur' || a === 'command' || a === 'cmd') return 'fitur'
   return 'menu'
@@ -455,18 +492,22 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
 // ═══════════════════════════════════════════════════════════
 // AUTO HANDLER
 // ═══════════════════════════════════════════════════════════
-async function handleAuto(m, { sock, config: cfg, autoKey }) {
+async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   const prefix = cfg?.command?.prefix || '.'
   const args = m.args || []
 
-  // Kalau autoKey di-pass (dari alias .autoread dll), ambil action dari args[0]
-  // Kalau dari .switch auto <key> <action>, autoKey sudah resolved
+  // 3 kemungkinan pemanggil, masing2 struktur args beda — JANGAN disamain:
+  //  a. ".switch auto <key> <action>" → action SUDAH di-resolve di getMode()
+  //     dan dikirim eksplisit lewat explicitAction (fix bug: dulu ke-tebak
+  //     dari args[0] yang isinya "auto", bukan aksinya — toggle gak pernah jalan)
+  //  b. alias langsung ".autoread on/off" → args = ["on"/"off"], action = args[0]
+  //  c. ".switch auto" tanpa key → tampilkan semua status, action tak dipakai
   let action
-  if (autoKey) {
-    // Dipanggil dari alias langsung: .autoread on/off
+  if (typeof explicitAction === 'string') {
+    action = explicitAction
+  } else if (autoKey) {
     action = (args[0] || '').toLowerCase()
   } else {
-    // Dipanggil dari .switch auto — show status list
     action = (args[2] || '').toLowerCase()
   }
 
@@ -513,33 +554,24 @@ async function handleAuto(m, { sock, config: cfg, autoKey }) {
 async function handleFitur(m, { sock, config: cfg }) {
   const db = getDatabase()
   const prefix = cfg?.command?.prefix || '.'
-  const args = m.args || []
-  let action, target
+  const rawArgs = m.args || []
 
-  if (args[0]?.toLowerCase() === 'fitur' || args[0]?.toLowerCase() === 'command' || args[0]?.toLowerCase() === 'cmd') {
-    action = (args[1] || '').toLowerCase()
-    target = (args[2] || '').toLowerCase()
-  } else {
-    action = (args[0] || '').toLowerCase()
-    target = (args[1] || '').toLowerCase()
-  }
+  // BUG FIX: dulu cuma nerima urutan "<verb> <target>" (fitur off rpg).
+  // Owner (dan pattern .switch auto <key> on/off di plugin ini sendiri)
+  // wajarnya ketik "<target> <verb>" (fitur maker on) — verb "on"/"off"
+  // di posisi akhir KEINJEK, "maker" dikira verb, jatuh ke mode=toggle
+  // yang MENGABAIKAN "on" user & malah toggle kategori (kalau lagi aktif
+  // jadi nonaktif, kebalikan dari intent user). Sekarang cari token
+  // on/off/list DI MANA PUN posisinya — support DUA urutan.
+  const args = (rawArgs[0]?.toLowerCase() === 'fitur' || rawArgs[0]?.toLowerCase() === 'command' || rawArgs[0]?.toLowerCase() === 'cmd')
+    ? rawArgs.slice(1)
+    : rawArgs.slice()
+  const lower = args.map((a) => (a || '').toLowerCase())
 
   const disabledCmds = db.setting("disabledCommands") || []
   const disabledCats = db.setting("disabledCategories") || []
 
-  if (!action) {
-    let text = `Panduan:\n`
-    text += `• \`${prefix}switch fitur off rpg\` → matikan kategori\n`
-    text += `• \`${prefix}switch fitur on kencanmatch\` → hidupkan command\n`
-    text += `• \`${prefix}switch fitur list\` → lihat semua status\n\n`
-    text += `Kategori Nonaktif (OFF):\n`
-    text += disabledCats.length > 0 ? `${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `(semua kategori aktif)\n`
-    text += `\nCommand Nonaktif (OFF):\n`
-    text += disabledCmds.length > 0 ? `${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `(semua command aktif)`
-    return m.reply(text)
-  }
-
-  if (action === 'list') {
+  if (lower.includes('list')) {
     const allCats = [...(pluginStore.categories?.keys() || [])].sort()
     let text = `KATEGORI (${allCats.length})\n`
     for (const cat of allCats) {
@@ -553,13 +585,41 @@ async function handleFitur(m, { sock, config: cfg }) {
     return m.reply(text.trim())
   }
 
+  const verbIdx = lower.findIndex((a) => a === 'on' || a === 'off')
+  let action, target
+  if (verbIdx !== -1) {
+    // Verb ketemu di posisi mana pun — sisa token (selain verb) jadi target.
+    // Ambil token pertama yang BUKAN verb (biasanya cuma ada 1 target).
+    action = lower[verbIdx]
+    target = lower.find((a, i) => i !== verbIdx) || ''
+  } else if (lower.length === 1) {
+    // Cuma 1 token tanpa verb (".switch fitur rpg") — legacy toggle
+    action = lower[0]
+    target = ''
+  } else {
+    action = lower[0] || ''
+    target = lower[1] || ''
+  }
+
+  if (!action) {
+    let text = `Panduan:\n`
+    text += `• \`${prefix}switch fitur rpg off\` atau \`off rpg\` → matikan kategori\n`
+    text += `• \`${prefix}switch fitur maker on\` atau \`on maker\` → hidupkan (2 urutan sama-sama jalan)\n`
+    text += `• \`${prefix}switch fitur list\` → lihat semua status\n\n`
+    text += `Kategori Nonaktif (OFF):\n`
+    text += disabledCats.length > 0 ? `${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `(semua kategori aktif)\n`
+    text += `\nCommand Nonaktif (OFF):\n`
+    text += disabledCmds.length > 0 ? `${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `(semua command aktif)`
+    return m.reply(text)
+  }
+
   let mode = '', name = ''
   if (action === 'on') { mode = 'on'; name = target }
   else if (action === 'off') { mode = 'off'; name = target }
   else { mode = 'toggle'; name = action }
 
   if (!name)
-    return m.reply(`Contoh: \`${prefix}switch fitur off rpg\`\nContoh: \`${prefix}switch fitur on kencanmatch\``)
+    return m.reply(`Contoh: \`${prefix}switch fitur off rpg\`\nContoh: \`${prefix}switch fitur maker on\``)
 
   const allCats = [...(pluginStore.categories?.keys() || [])].sort()
   const allCmds = [...(pluginStore.commands?.keys() || [])].sort()
@@ -654,6 +714,12 @@ async function handler(m, { sock, config: cfg }) {
     if (mode.startsWith('auto:')) {
       const autoKey = mode.split(':')[1]
       return handleAuto(m, { sock, config: cfg, autoKey })
+    }
+    // ".switch auto <key> <action>" — action SUDAH resolved di getMode(),
+    // JANGAN diturunkan ulang dari args di handleAuto (itu sumber bug-nya)
+    if (mode.startsWith('switchauto:')) {
+      const [, autoKey, explicitAction] = mode.split(':')
+      return handleAuto(m, { sock, config: cfg, autoKey, explicitAction })
     }
 
     return showMenu(m, sock)

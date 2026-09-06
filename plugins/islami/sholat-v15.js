@@ -164,7 +164,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await m.reply(claraWrap("sholat", text));
+      await m.reply(text, "sholat");
       return { handled: true };
     }
 
@@ -226,7 +226,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}jadwalsholat aktif <kota> untuk aktifkan`);
 
-      await m.reply(claraWrap("sholat", text));
+      await m.reply(text, "sholat");
       return { handled: true };
     }
 
@@ -262,7 +262,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}jadwalsholat untuk lihat jadwal`);
 
-      await m.reply(claraWrap("sholat", text));
+      await m.reply(text, "sholat");
       return { handled: true };
     }
 
@@ -296,7 +296,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await m.reply(claraWrap("sholat", text));
+      await m.reply(text, "sholat");
       return { handled: true };
     }
 
@@ -360,7 +360,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("sholat", text));
+    await m.reply(text, "sholat");
   } catch (error) {
     const text =
       novaError("Religi", [`Status: *ɢᴀɢᴀʟ*`,

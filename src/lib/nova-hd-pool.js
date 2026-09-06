@@ -1,25 +1,43 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nova-hd-pool.js — pool worker thread buat nova-hd-local (Swin2SR upscale).
-// SATU worker persisten (model ke-load sekali, cache pipeline tetap panas),
+// SATU worker aktif (model ke-load sekali, cache pipeline tetap panas),
 // job dieksekusi satu-satu (CPU sudah saturate paralelism gak nambah cepat).
 // Fitur: queue dengan posisi antrian, auto-respawn kalau worker mati,
 // fallback inline kalau worker thread gak bisa jalan di environment tsb.
+//
+// WATCHDOG (fix "remini lama banget, hasil gak pernah muncul"):
+// job render/unduhan-model gak boleh nge-hang selamanya. Default 10 menit,
+// override per-job via opts.timeoutMs. Penting: worker YANG LAGI JALAN
+// JANGAN PERNAH di-terminate() pas inference — ONNX runtime native bakal
+// std::terminate dan ABORT proses Node sekaligus (terverifikasi: exit 134).
+// Makanya pas timeout worker di-ORPHAN aja (dianggap basi): antrian lanjut
+// di worker baru, worker basi di-terminate CUMA SETELAH dia idle (job basi
+// selesai dan balas pesan) — 100% aman dari abort.
 import { Worker } from "worker_threads";
 import { enhanceLocal } from "./nova-hd-local.js";
+export { isModelCached } from "./nova-hd-local.js";
 
 const WORKER_URL = new URL("./nova-hd-worker.js", import.meta.url);
+const DEFAULT_JOB_TIMEOUT = 10 * 60 * 1000; // render 4k/5k 3-5 mnt + unduhan model pertama
 
-let worker = null;
+let worker = null; // worker AKTIF — nerima job baru dari queue
+const staleWorkers = new Set(); // worker basi: job-nya udah timeout, masih nyelesein sendirian
 let seq = 0;
-let running = false;
+let running = null; // job yang lagi dieksekusi worker aktif
 const queue = []; // { id, buffer, mode, opts, resolve, reject }
 let workerBroken = false; // env gak support worker → fallback inline
 
 function startWorker() {
-  worker = new Worker(WORKER_URL, { type: "module" });
-  worker.unref();
+  const w = new Worker(WORKER_URL, { type: "module" });
+  w.unref();
 
-  worker.on("message", ({ id, ok, result, error }) => {
+  w.on("message", ({ id, ok, result, error }) => {
+    if (w.__stale) {
+      // job basi akhirnya kelar juga — sekarang worker ini IDLE, aman terminate
+      staleWorkers.delete(w);
+      w.terminate().catch(() => {});
+      return;
+    }
     // FIX BUG: job di-SHIFT keluar queue saat dispatch — kalau dicari di queue
     // lagi (kode lama queue.find()) gak akan pernah ketemu → promise hang
     // selamanya (.remini "selesai" di worker tapi hasil gak pernah dikirim,
@@ -27,33 +45,66 @@ function startWorker() {
     if (!running || running.id !== id) return;
     const job = running;
     running = null;
-    if (ok) job.resolve(result);
-    else job.reject(new Error(error || "hd worker error"));
+    settle(job, ok ? null : new Error(error || "hd worker error"), result);
     pump();
   });
 
-  worker.on("error", (e) => {
+  w.on("error", (e) => {
     console.error("[HD-Pool] worker error:", e.message);
+    if (w !== worker) return; // worker basi error → gak ganggu pool
     failAll(new Error("hd worker crash: " + e.message));
   });
 
-  worker.on("exit", (code) => {
+  w.on("exit", (code) => {
+    staleWorkers.delete(w);
+    if (w !== worker) return; // worker basi mati → no-op, antrian gak kena
     console.error("[HD-Pool] worker exit kode", code);
     worker = null;
     failAll(new Error("hd worker exit (" + code + ")"));
   });
 
-  return worker;
+  return w;
 }
 
-// worker mati di tengah antrian → semua job gagal, user bisa retry
+// selesaikan satu job: matiin timer watchdog-nya, terus settle promise (idempotent)
+function settle(job, err, result) {
+  if (job.__timer) { clearTimeout(job.__timer); job.__timer = null; }
+  if (job.__settled) return;
+  job.__settled = true;
+  if (err) job.reject(err);
+  else job.resolve(result);
+}
+
+// nyalain watchdog buat job yang baru mulai dieksekusi
+function armTimeout(job) {
+  const ms = Math.max(5000, Number(job.opts?.timeoutMs) || DEFAULT_JOB_TIMEOUT);
+  job.__timer = setTimeout(() => {
+    job.__timedOut = true;
+    console.error(`[HD-Pool] job ${job.id} timeout ${(ms / 1000).toFixed(0)}s — worker di-orphan, antrian lanjut di worker baru`);
+    if (running === job) running = null;
+    if (worker) {
+      // ORPHAN worker yang lagi macet — JANGAN terminate (fatal saat inference),
+      // biarkan dia kelar sendirian; nanti pas dia balas pesan (idle) baru aman di-terminate
+      worker.__stale = true;
+      staleWorkers.add(worker);
+      if (staleWorkers.size >= 3) {
+        console.error(`[HD-Pool] WARNING: ${staleWorkers.size} worker basi numpuk — cek internet/RAM VPS`);
+      }
+      worker = null; // pump() spawn worker baru buat antrian berikutnya
+    }
+    settle(job, new Error("timeout_render"));
+    pump();
+  }, ms);
+  if (job.__timer.unref) job.__timer.unref();
+}
+
+// worker aktif mati di tengah antrian → semua job aktif+antrian gagal, user bisa retry
 function failAll(err) {
-  const active = running; // job yang lagi dieksekusi worker juga ikut gagal
+  if (running) settle(running, err);
   running = null;
-  if (active) active.reject(err);
   while (queue.length) {
     const j = queue.shift();
-    j.reject(err);
+    settle(j, err);
   }
   pump();
 }
@@ -64,14 +115,15 @@ function pump() {
     // fallback inline: jalan di main thread (blok, tapi tetap jalan)
     const job = queue.shift();
     running = job;
+    armTimeout(job);
     enhanceLocal(job.buffer, job.mode, job.opts)
-      .then((r) => { job.resolve(r); })
-      .catch((e) => { job.reject(e); })
-      .finally(() => { running = null; pump(); });
+      .then((r) => { if (!job.__timedOut) settle(job, null, r); })
+      .catch((e) => { if (!job.__timedOut) settle(job, e); })
+      .finally(() => { if (running === job) running = null; pump(); });
     return;
   }
   if (!worker) {
-    try { startWorker(); } catch (e) {
+    try { worker = startWorker(); } catch (e) {
       console.error("[HD-Pool] spawn gagal — fallback inline:", e.message);
       workerBroken = true;
       pump();
@@ -80,6 +132,7 @@ function pump() {
   }
   const job = queue.shift();
   running = job; // simpen job-nya, bukan cuma true — biar handler message bisa resolve
+  armTimeout(job);
   worker.__lastId = job.id;
   worker.postMessage(
     { id: job.id, buffer: job.buffer, mode: job.mode, opts: job.opts },

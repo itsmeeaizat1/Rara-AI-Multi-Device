@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
     text +=  tipText(`Ketik ${prefix}menu untuk kembali`);
     await m.react("🐣");
-    await m.reply(claraWrap("geocode", text));
+    await m.reply(text, "geocode");
   } catch (e) {
     await m.react("❌");
     await m.reply(novaError("Tools", "Gagal nih"));

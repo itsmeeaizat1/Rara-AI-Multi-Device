@@ -79,7 +79,7 @@ async function handler(m, { sock, db }) {
                 await m.reply( text, "groupinfo")
             }
         } else {
-            await m.reply(claraWrap("groupinfo", text))
+            await m.reply(text, "groupinfo")
         }
     } catch (error) {
         m.reply(claraWrap("groupinfo", te(m.prefix, m.command, m.pushName), "error"))}

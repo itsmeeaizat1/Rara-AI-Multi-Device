@@ -49,7 +49,8 @@ async function handler(m, { sock, config: botConfig }) {
     // Save to database
     const db = getDatabase();
     const reportId = Date.now();
-    db.push("bugReports", {
+    if (!db.data.bugReports) db.data.bugReports = [];
+    db.data.bugReports.push({
       id: reportId,
       from: m.sender,
       fromName: m.pushName || "Unknown",
@@ -59,13 +60,15 @@ async function handler(m, { sock, config: botConfig }) {
       createdAt: Date.now(),
       status: "pending",
     });
+    await db.save(); // persist koleksi laporan (pola db.data + save)
 
     // Kirim notifikasi ke owner
     const ownerNumbers = botConfig.owner?.number || [];
     let ownerNotified = false;
 
-    if (ownerNumbers.length > 0) {
-      const ownerJid = `${String(ownerNumbers[0]).replace(/[^0-9]/g, "")}@s.whatsapp.net`;
+    for (const ownerNum of ownerNumbers) {
+      const ownerJid = `${String(ownerNum).replace(/[^0-9]/g, "")}@s.whatsapp.net`;
+      if (!/^\d+@s\.whatsapp\.net$/.test(ownerJid)) continue; // skip nomor kosong/invalid
 
       const reporterName = m.pushName || "Unknown";
       const reporterNum = m.sender?.split("@")[0] || "Unknown";
@@ -91,7 +94,8 @@ async function handler(m, { sock, config: botConfig }) {
         await sock.sendMessage(ownerJid, { text: ownerMsg });
         ownerNotified = true;
       } catch (e) {
-        console.error("[bugreport] Gagal kirim ke owner:", e.message);
+        console.error("[bugreport] Gagal kirim ke owner (" + ownerJid + "):", e.message);
+        continue; // coba nomor owner berikutnya
       }
     }
 

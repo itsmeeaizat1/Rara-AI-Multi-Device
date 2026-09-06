@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     items.forEach((item, i) => { text += `${i+1}. *${item}*\n`; });
     text += "\n" + tipText(`Sumber: Google Trends Indonesia`);
     await m.react("🐣");
-    await m.reply(claraWrap("trending", text));
+    await m.reply(text, "trending");
   } catch (e) {
     await m.react("❌");
     await m.reply(novaError("Tools", "Gagal nih"));

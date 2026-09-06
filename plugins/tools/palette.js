@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
     let text = claraWrap("Color Palette", [`Base: *${hex}*`,
       ...shades.map((c,i) => `${i===0?"Dark":i===4?"Light":"Shade"}: ${c}`)].join("\n")) + "\n" + tipText(`Ketik ${prefix}palette #ff6600 untuk warna lain`);
     await m.react("🐣");
-    await m.reply(claraWrap("palette", text));
+    await m.reply(text, "palette");
   } catch (e) {
     await m.react("❌");
     await m.reply("Error: " + e.message);

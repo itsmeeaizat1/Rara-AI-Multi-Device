@@ -55,13 +55,13 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("nhentai", text));
+    await m.reply(text, "nhentai");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("Nhentai", "Gagal nih, coba lagi ya");
 
-    await m.reply(claraWrap("nhentai", text));
+    await m.reply(text, "nhentai");
   }
 
   return { handled: true };

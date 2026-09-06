@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("setgroupicon", text));
+    await m.reply(text, "setgroupicon");
   } catch (error) {
     await m.reply(novaError("SetGroupIcon", `Gagal ganti icon grup: ${error.message}`));
   }

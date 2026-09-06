@@ -46,7 +46,7 @@ async function handler(m, { args, sock }) {
     ]);
     
     await m.react("🐣");
-    await m.reply(claraWrap("izen", txt));
+    await m.reply(txt, "izen");
   } catch (e) {
     await m.react("❌");
     m.reply(claraWrap("izen", `❌ Maaf kak, terjadi kesalahan sistem! 😭\nError: ${e.message}`));

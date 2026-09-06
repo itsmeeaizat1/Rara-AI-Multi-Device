@@ -46,7 +46,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("block2", text));
+    await m.reply(text, "block2");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
