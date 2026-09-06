@@ -718,16 +718,29 @@ export async function composeRegionalText(ev, distKm, city) {
 }
 
 /** Info section meta data lengkap kejadian (plain text natural). */
-function buildMetaSection(ev, sub, distKm, dirLabel) {
+/**
+ * Info section metadata LENGKAP — dipakai SEMUA alert bencana (generic
+ * realtime, darurat, severe-saat-jadwal, peringatan wilayah):
+ * jenis, magnitudo/kedalaman, level, waktu, lokasi, koordinat UTUH,
+ * detail khusus event (potensi/dirasakan/flag tsunami), jarak dari
+ * lokasi subscriber (kalau di-set), radius monitoring, sumber.
+ * Link sumber & laporan ada di preview card (bukan di teks).
+ */
+export function buildInfoSection(ev, sub = null, distKm = null, dirLabel = null) {
+  const fmtCoord = (n) => (typeof n === "number" ? (Number.isInteger(n) ? String(n) : String(+n.toFixed(4))) : String(n));
   const L = ["— Informasi kejadian —"];
-  L.push(`Jenis     : ${ev.jenis}`);
-  if (ev.mag) L.push(`Magnitudo : ${ev.mag} SR, kedalaman ${ev.depth || "-"}`);
-  if (ev.level) L.push(`Level     : ${ev.level}`);
-  if (ev.waktu) L.push(`Waktu     : ${ev.waktu}`);
-  if (ev.lat != null) L.push(`Titik     : ${(+ev.lat).toFixed(2)}, ${(+ev.lon).toFixed(2)}`);
-  L.push(`Jarak     : ±${Math.round(distKm)} km arah ${dirLabel} dari ${sub.city}`);
-  L.push(`Radius    : monitoring ${sub.radius || DEFAULT_RADIUS_KM} km`);
-  L.push(`Sumber    : ${ev.sumber}`); // link sumber & laporan ada di preview card
+  L.push(`Jenis      : ${ev.jenis || ev.kind || "Bencana"}`);
+  if (ev.mag) L.push(`Magnitudo  : ${ev.mag} SR${ev.depth && ev.depth !== "-" ? `, kedalaman ${ev.depth}` : ""}`);
+  if (ev.level) L.push(`Level      : ${ev.level}`);
+  if (ev.waktu) L.push(`Waktu      : ${ev.waktu}`);
+  if (ev.desc) L.push(`Lokasi     : ${ev.desc}${ev.country ? ` — ${ev.country}` : ""}`);
+  if (ev.lat != null) L.push(`Koordinat  : ${fmtCoord(ev.lat)}, ${fmtCoord(ev.lon)}`);
+  if (ev.potensi) L.push(`Potensi    : ${ev.potensi}`);
+  if (ev.dirasakan) L.push(`Dirasakan  : ${ev.dirasakan}`);
+  if (ev.tsunamiFlag) L.push("Tsunami    : ada flag potensi tsunami — waspada pesisir");
+  if (distKm != null && sub?.city) L.push(`Jarak      : ±${Math.round(distKm)} km arah ${dirLabel} dari ${sub.city}`);
+  if (sub?.radius) L.push(`Radius     : monitoring ${sub.radius} km`);
+  L.push(`Sumber     : ${ev.sumber}`); // link sumber & laporan ada di preview card
   return L.join("\n");
 }
 
@@ -742,7 +755,7 @@ export async function sendRegionalAlert(_sock, chatId, ev, sub) {
   const out =
     `PERINGATAN BENCANA — WILAYAH ${String(sub.city).toUpperCase()}\n\n` +
     text +
-    `\n\n${buildMetaSection(ev, sub, distKm, dir)}`;
+    `\n\n${buildInfoSection(ev, sub, distKm, dir)}`;
   const card = eventCard(ev);
   card.title = `PERINGATAN — ${sub.city}`.slice(0, 60);
   card.body = `${ev.jenis || "Bencana"} ±${Math.round(distKm)} km dari ${sub.city}`.slice(0, 60);
@@ -808,6 +821,22 @@ async function expandTargets() {
   return targets;
 }
 
+/**
+ * Tambah baris jarak ke generic alert buat subscriber yang punya lokasi
+ * (biar info lengkap: seberapa jauh kejadian dari kota dia) — tanpa
+ * harus masuk radius peringatan wilayah.
+ */
+function withDistanceLine(text, sub, ev) {
+  if (sub?.lat == null || ev?.lat == null) return text;
+  try {
+    const d = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
+    const dir = bearingCompass(sub.lat, sub.lon, ev.lat, ev.lon);
+    return `${text}\n\nJarak      : ±${Math.round(d)} km arah ${dir} dari ${sub.city}`;
+  } catch {
+    return text;
+  }
+}
+
 async function dispatch(ev, genericText = null, card = null) {
   const subs = getWatchers();
   const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
@@ -833,7 +862,7 @@ async function dispatch(ev, genericText = null, card = null) {
         // ATURAN OWNER: bencana DARURAT mesti realtime — gak nunggu rangkuman.
         if (ev.isSevere) {
           if (near) await sendRegionalAlert(sock, chatId, ev, sub);
-          else if (genericText) await sendWithCard(sock, chatId, genericText, card);
+          else if (genericText) await sendWithCard(sock, chatId, withDistanceLine(genericText, sub, ev), card);
           // tandai sudah diterima biar gak dobel muncul di rangkuman berikutnya
           const subs2 = getWatchers();
           if (subs2[watcherKey]) { subs2[watcherKey].lastDigest = Date.now(); saveWatchers(subs2); }
@@ -846,7 +875,7 @@ async function dispatch(ev, genericText = null, card = null) {
       if (near) {
         await sendRegionalAlert(sock, chatId, ev, sub);
       } else if (genericText) {
-        await sendWithCard(sock, chatId, genericText, card);
+        await sendWithCard(sock, chatId, withDistanceLine(genericText, sub, ev), card);
       }
     } catch (e) {
       logger.error?.("bencana", `Gagal kirim ke ${chatId}: ${e.message}`);
@@ -903,27 +932,24 @@ async function fastTick() {
       saveState(st);
       if (parseFloat(g.Magnitude) >= 5.0) {
         const [lat, lon] = String(g.Coordinates).split(",").map((s) => s.trim());
-        const lines = [
-          "AUTO-ALERT BENCANA — GEMPA INDONESIA (BMKG)",
-          "",
-          `${g.Magnitude} SR, kedalaman ${g.Kedalaman}`,
-          `${g.Tanggal} ${g.Jam}`,
-          `${g.Wilayah}`,
-        ];
-        if (g.Potensi) lines.push(g.Potensi);
-        if (g.Dirasakan) lines.push(`Dirasakan: ${g.Dirasakan}`);
-        lines.push(`Lokasi: ${g.Coordinates}`);
-        lines.push("", "Sumber: BMKG (data.bmkg.go.id)");
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi",
           mag: g.Magnitude, depth: g.Kedalaman,
           level: parseFloat(g.Magnitude) >= 6.0 ? "AWAS" : "SIAGA",
           waktu: `${g.Tanggal} ${g.Jam}`,
           lat: +lat, lon: +lon, desc: g.Wilayah,
+          potensi: g.Potensi || null, dirasakan: g.Dirasakan || null,
           sumber: "BMKG (data.bmkg.go.id)",
           isSevere: parseFloat(g.Magnitude) >= 6.5, // mode darurat: gempa besar lolos filter global
         };
         ev.thumbUrl = g._shakemapUrl; // shakemap → thumbnail preview card (bukan attachment terpisah)
+        const lines = [
+          "AUTO-ALERT BENCANA — GEMPA INDONESIA (BMKG)",
+          "",
+          `Gempa M ${g.Magnitude} SR terdeteksi — ${g.Wilayah}`,
+          "",
+          buildInfoSection(ev),
+        ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
       }
     }
@@ -945,24 +971,25 @@ async function slowTick() {
       for (const e of fresh) {
         const t = GDACS_TYPES[e.type] ?? { label: e.type, icon: "⚠️" };
         const a = ALERT_STYLE[e.alertlevel];
-        const lines = [
-          `AUTO-ALERT BENCANA GLOBAL — LEVEL ${a.label}`,
-          "",
-          `${t.icon} ${t.label}${e.country ? ` di ${shortCountry(e.country)}` : ""}`,
-          e.desc || e.name,
-          `Lokasi: ${(+e.lat).toFixed(2)}, ${(+e.lon).toFixed(2)}`,
-        ];
-        lines.push("", "Sumber: GDACS (EU/UN) — gdacs.org");
         const ev = {
           kind: KIND_BY_TYPE[e.type] || "default",
           jenis: t.label,
           level: `${a.label} (${a.icon})`,
           waktu: e.fromdate ? `mulai ${jamWib(e.fromdate)}` : (e.desc || ""),
           lat: e.lat, lon: e.lon, desc: e.desc || e.name,
+          country: shortCountry(e.country) || null,
           sumber: "GDACS (EU/UN) — gdacs.org",
           report: e.report,
           isSevere: e.alertlevel === "Red", // mode darurat: level AWAS lolos filter global
         };
+        const lines = [
+          `AUTO-ALERT BENCANA GLOBAL — LEVEL ${a.label}`,
+          "",
+          `${t.icon} ${t.label}${ev.country ? ` di ${ev.country}` : ""}`,
+          ev.desc,
+          "",
+          buildInfoSection(ev),
+        ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
         await new Promise((r) => setTimeout(r, 1000));
       }
@@ -979,25 +1006,24 @@ async function slowTick() {
       st.usgs = st.usgs.slice(-200);
       saveState(st);
       for (const q of fresh) {
-        const lines = [
-          "AUTO-ALERT GEMPA GLOBAL — M 6.0+ (USGS)",
-          "",
-          `M${q.mag?.toFixed(1)} — ${q.place}`,
-          `${jamWib(q.time)}`,
-          `Lokasi: ${(+q.lat).toFixed(2)}, ${(+q.lon).toFixed(2)}`,
-        ];
-        if (q.tsunami) lines.push("PERHATIAN: ada flag potensi tsunami di event ini.");
-        lines.push("", "Sumber: USGS (earthquake.usgs.gov)");
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi (global)",
           mag: q.mag?.toFixed(1), depth: "-",
           level: q.tsunami ? "AWAS (flag tsunami)" : "SIAGA",
           waktu: jamWib(q.time),
           lat: q.lat, lon: q.lon, desc: q.place,
+          tsunamiFlag: !!q.tsunami,
           sumber: "USGS (earthquake.usgs.gov)",
           report: q.url,
           isSevere: q.mag >= 7.0, // mode darurat: gempa besar global lolos filter
         };
+        const lines = [
+          "AUTO-ALERT GEMPA GLOBAL — M 6.0+ (USGS)",
+          "",
+          `Gempa global M${ev.mag} terdeteksi — ${q.place}`,
+          "",
+          buildInfoSection(ev),
+        ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
         await new Promise((r) => setTimeout(r, 1000));
       }
