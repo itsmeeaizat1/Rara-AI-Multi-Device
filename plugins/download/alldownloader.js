@@ -4,10 +4,11 @@
  *           (cmd beda: .alldownloader / .alldl2 — .alldl lama TETAP ada)
  * Pembuat Code: Aizat
  * Fitur: Universal downloader — 1 fitur support SEMUA platform downloader.
- *        Resolver utama: Omnify AIO (api-aio.omnifylabs.sbs, 30+ platform,
- *        multi-format + ukuran file). Kalau platform itu mati di Omnify
- *        (TikTok/X/Pinterest per live test 2026-09-06), otomatis fallback
- *        ke rantai internal bot (IkyyXD → builtin AIO → Haidar).
+ *        Rantai resolve: Omnify AIO (30+ platform, multi-format + ukuran)
+ *        → Valore DL (dl.valore.web.id — TikTok multi-kualitas hidup di
+ *        sini, extractor Omnify utk TikTok lagi mati; ditambah 2026-09-06
+ *        request owner "multi downloader masih ada") → rantai internal
+ *        bot (IkyyXD → builtin AIO → Haidar) buat sisanya (X/Pinterest/dll).
  *
  * Flow:
  *   1. User: .alldownloader <url>
@@ -16,13 +17,14 @@
  *   4. Bot: download & kirim media sesuai pilihan
  *   Langsung: .alldownloader <url> <nomor/keyword> → tanpa nanya
  *
- * Support (via Omnify): YouTube, Instagram, Facebook, Spotify, SoundCloud,
- *   CapCut, Threads, Vimeo, Dailymotion, dll + fallback internal: TikTok,
- *   Twitter/X, Pinterest, dan semua platform yang udah ada di scraper bot.
+ * Support: YouTube, TikTok, Instagram, Facebook, Spotify, SoundCloud,
+ *   CapCut, Threads, Vimeo, Dailymotion, dll — TikTok via Valore DL,
+ *   X/Pinterest/dll via rantai internal.
  */
 
 import axios from "axios";
 import { omnifyResolve, omnifyHealth } from "../../src/scraper/omnify-aio.js";
+import { valoreResolve, valoreHealth } from "../../src/scraper/valore-dl.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { haidarAio } from "../../src/lib/nova-haidar.js";
@@ -345,13 +347,14 @@ async function handler(m, { sock }) {
   if (firstArg === "health" || firstArg === "status") {
     try {
       await m.react("🕒");
-      const h = await omnifyHealth();
+      const [omnify, valore] = await Promise.allSettled([omnifyHealth(), valoreHealth()]);
+      const omni = omnify.status === "fulfilled" ? `${omnify.value?.status || "ok"}` : "❌ mati";
+      const val = valore.status === "fulfilled" ? `${valore.value?.status || valore.value?.success || "ok"}` : "❌ mati";
       await m.react("🐣");
       return m.reply(
-        bracketBox("🌐", toSC("Omnify AIO Server"), [
-          `${toSC("Status")}: ${h?.status || "?"}`,
-          `${toSC("Service")}: ${h?.service || "?"}`,
-          `${toSC("Versi")}: ${h?.version || "?"}`,
+        bracketBox("🌐", toSC("All Downloader Server"), [
+          `${toSC("Omnify AIO")}: ${omni}`,
+          `${toSC("Valore DL")}: ${val}`,
         ])
       );
     } catch (err) {
@@ -430,8 +433,15 @@ async function handler(m, { sock }) {
   await m.react("🕒");
   await m.react("🔍");
 
+  // Platform yang extractornya MATI di Omnify (live test 2026-09-06) —
+  // skip langsung ke Valore DL biar gak nunggu Omnify timeout/error
+  const OMNIFY_DEAD = ["tiktok", "pinterest", "x", "twitter"];
+  const urlLower = url.toLowerCase();
+  const omnifySkip = OMNIFY_DEAD.some((p) => urlLower.includes(p));
+
   // TRY 1: Omnify AIO (resolver utama)
   let session = null;
+  if (!omnifySkip) {
   try {
     const res = await omnifyResolve(url);
     const data = res?.data || {};
@@ -462,8 +472,45 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[alldownloader] Omnify failed:", err.message);
   }
+  }
 
-  // TRY 2: Rantai internal (TikTok/X/Pinterest/dll yang mati di Omnify)
+  // TRY 2: Valore DL (TikTok multi-kualitas hidup di sini; ditambah 2026-09-06)
+  if (!session) {
+    try {
+      const res = await valoreResolve(url);
+      const options = res.medias.map((media) => ({
+        type: media.type === "audio" ? "audio" : media.type === "image" ? "image" : "video",
+        label: `${media.quality}${media.size ? ` — ${(
+          media.size / 1048576 >= 1
+            ? (media.size / 1048576).toFixed(1) + " MB"
+            : Math.max(1, Math.round(media.size / 1024)) + " KB"
+        )}` : ""}`,
+        url: media.url,
+        ext: media.format === "mp3" || media.type === "audio" ? "mp3" : (media.format || "mp4").toLowerCase(),
+      }));
+      if (options.length) {
+        session = {
+          url,
+          platform: res.platform || "generic",
+          source: "Valore DL",
+          title: res.title || "",
+          options,
+          meta: {
+            title: res.title || "",
+            cover: res.thumbnail || "",
+            thumbnail: res.thumbnail || "",
+            author: res.creator || null,
+            duration: res.duration || null,
+          },
+          startedAt: Date.now(),
+        };
+      }
+    } catch (err) {
+      console.error("[alldownloader] Valore failed:", err.message);
+    }
+  }
+
+  // TRY 3: Rantai internal (X/Pinterest/dll yang mati di Omnify & Valore)
   if (!session) {
     const internal = await internalResolve(url);
     if (internal?.options?.length) {
