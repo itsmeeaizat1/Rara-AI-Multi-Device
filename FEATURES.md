@@ -270,6 +270,7 @@ Cakupan: 50 plugin download, 26 plugin sticker, 35 plugin convert, play/playvide
 ### V2 / Next Version
 - `.memev2` — random — Random meme dari Reddit via meme-api.com (v2 dari .meme)
 - `.lirikv2` — search — Cari lirik via Genius API + nexray fallback (v2 dari .lirik)
+- `.lirik2` — search — **BARU (2026-09-06)** Cari lirik via Genius SCRAPE langsung TANPA API KEY (src/scraper/genius-lyrics.js, port ESM dari script owner: search endpoint genius.com/api/search/multi + scrape halaman lirik via cheerio, support layout modern & legacy, label section [Verse]/[Chorus] kebaca). Beda dari .lirikv2 yang butuh API key genius (genius-lyrics npm). Live test: Bohemian Rhapsody ✅ 2076 char, Sempurna Andra ✅. `.lirik` lama kini AUTO-FALLBACK ke engine ini pas nexray gagal/kosong (request owner: "klo .lirik g bsa falback ke .lirik2") — jalur fallback diverifikasi live via simulasi nexray down (axios mock, Genius tetap live): lirik + thumbnail Genius tetap terkirim.
 - `.spotifyv2` — search — Info track Spotify dari URL (v2 dari .spotify, parse URL)
 - `.ytv2` — search — Search YouTube via Innertube (v2 dari .yts, no API key)
 - `.rss` — tools — Generic RSS reader (shortcut: detik/kompas/cnn/tribun atau URL)
