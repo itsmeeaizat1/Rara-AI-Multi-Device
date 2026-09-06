@@ -226,7 +226,13 @@ async function handler(m, { sock, db }) {
   let thumbBuffer = null;
   try {
     if (fs.existsSync(BANNER_PATH)) {
-      thumbBuffer = await sharp(fs.readFileSync(BANNER_PATH)).resize(640, 360).jpeg().toBuffer();
+      const bannerRaw = fs.readFileSync(BANNER_PATH);
+      const bannerMeta = await sharp(bannerRaw).metadata();
+      // Placeholder 1x1 (transparan) JANGAN dikirim — JPEG flat jadi kotak putih.
+      // Banner baru auto-muncul begitu owner ganti file dengan gambar asli.
+      if ((bannerMeta.width || 0) > 1 && (bannerMeta.height || 0) > 1) {
+        thumbBuffer = await sharp(bannerRaw).resize(640, 360).jpeg().toBuffer();
+      }
     }
   } catch (e) {
     console.log("[Channel] Banner error:", e.message);
