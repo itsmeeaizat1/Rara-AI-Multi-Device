@@ -24,7 +24,7 @@ const CATEGORY_NAMES = {
   convert: "Convert", maker: "Maker", ephoto: "Ephoto",
   media: "Media", tts: "TTS", quotes: "Quotes",
   education: "Education", food: "Food", primbon: "Primbon",
-  info: "Info", cek: "Cek", berita: "Berita",
+  info: "Info", cek: "Cek", berita: "Berita", bencana: "Bencana",
   islami: "Islami", religi: "Religi",
   main: "Main", user: "User", premium: "Premium",
   store: "Store", market: "Market",
@@ -46,7 +46,7 @@ const CATEGORY_ORDER = [
   // Entertainment
   "media", "tts", "quotes", "primbon",
   // Knowledge
-  "education", "food", "info", "cek", "berita",
+  "education", "food", "info", "cek", "berita", "bencana",
   // Religion
   "islami", "religi",
   // System & User
@@ -68,7 +68,7 @@ const CATEGORY_EMOJI = {
   fun: "🎉", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
   search: "🔍", stalker: "🕵️", anime: "🎌", asupan: "😍", cecan: "💃", nsfw: "🔞",
   media: "🎬", tts: "🔊", quotes: "💬", primbon: "🔮",
-  education: "📚", food: "🍔", info: "ℹ️", cek: "🔎", berita: "📰",
+  education: "📚", food: "🍔", info: "ℹ️", cek: "🔎", berita: "📰", bencana: "🚨",
   islami: "☪️", religi: "🕌",
   main: "🏠", user: "👤", premium: "💎", future: "🌌",
   store: "🏬", market: "🛒",
