@@ -1,8 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// shopeedl.js — Download video Shopee (scrape shopeenowatermark.com)
+// shopeedl.js — Download video Shopee no-watermark
+// Engine: shopeenowatermark.com (src/scraper/shopee-nowm.js — axios+cookie
+// jar → Puppeteer buat tembus Cloudflare) → ishop.id → IkyyXD shopeevid.
+// FIX 2026-09-06: (1) bug TDZ — ikyyDl dipanggil SEBELUM const url
+// dideklarasiin → ReferenceError tiap invoke (fitur gak pernah jalan);
+// (2) validasi URL sekarang terima link share app shp.ee/id.shp.ee;
+// (3) Method 1 lama (fetch polos) kena Cloudflare 403 → scraper baru.
 import axios from "axios";
 import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
+import { shopeeNoWm } from "../../src/scraper/shopee-nowm.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 const pluginConfig = {
   name: "shopeedl",
@@ -18,27 +27,15 @@ const pluginConfig = {
 const BASE_URL = "https://shopeenowatermark.com";
 
 async function extract(url) {
-  // Method 1: shopeenowatermark.com API
+  // Method 1: shopeenowatermark.com via scraper baru
+  // (axios+cookie jar → Puppeteer kalau kena Cloudflare)
   try {
-    const form = new FormData();
-    form.append("url", url);
-
-    const res = await fetch(`${BASE_URL}/api/extract`, {
-      method: "POST",
-      body: form,
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success !== false && data.data?.videos?.length) {
-        return data.data;
-      }
-    }
+    const data = await shopeeNoWm(url);
+    if (data?.videos?.length) return data;
   } catch (e) { console.error('[shopeedl.js] shopeenowatermark:', e.message); }
 
-  // Method 2: Scrape shopee API langsung
+  // Method 2: ishop.id (butuh shop_id.item_id di URL — shortlink gak bisa)
   try {
-    // Extract item_id dan shop_id dari URL
     const match = url.match(/(\d+)\.(\d+)/);
     if (match) {
       const shopId = match[1];
@@ -49,29 +46,29 @@ async function extract(url) {
         timeout: 10000,
       });
       if (data?.data?.video_url) {
-        return { videos: [{ url: data.data.video_url, quality: "HD" }] };
+        return { title: null, cover: null, videos: [{ url: data.data.video_url, quality: "HD" }] };
       }
     }
   } catch (e) { console.error('[shopeedl.js] ishop:', e.message); }
+
+  // Method 3: IkyyXD shopeevid
+  try {
+    const r = await ikyyDl("shopeevid", url);
+    if (r?.medias?.length) {
+      const v = r.medias.find((x) => x.type === "video") || r.medias[0];
+      return { title: r.title || null, cover: null, videos: [{ url: v.url, quality: v.quality || null }] };
+    }
+  } catch (e) { console.error('[shopeedl.js] ikyy shopeevid:', e.message); }
 
   throw new Error("Gagal mengambil video Shopee");
 }
 
 async function handler(m, { sock }) {
   try {
-    // Try IkyyXD shopeevid first
-    const ikyyResult = await ikyyDl("shopeevid", url);
-    if (ikyyResult?.medias?.length) {
-      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      await sock.sendMedia(m.chat, video.url, ikyyResult.title || null, m, {
-        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
-      });
-      return;
-    }
-
     const url = m.text?.trim();
-    if (!url || !url.includes("shopee")) {
-      return m.reply(novaGuide("Shopee DL", "Kirim URL video Shopee yang valid!", ".shopeedl https://shopee.co.id/..."));
+    // FIX: dulu cuma "shopee" → link share app (id.shp.ee/...) keditolak
+    if (!url || !/shopee|shp\.ee/i.test(url)) {
+      return m.reply(novaGuide("Shopee DL", "Kirim URL video Shopee yang valid!", ".shopeedl https://id.shp.ee/xxx"));
     }
 
     await m.react("🕒");
@@ -95,17 +92,24 @@ async function handler(m, { sock }) {
     const caption = mediaCaption({
       platformIcon: "🛒",
       platformName: "Shopee",
-      title: "Shopee Video",
-      format: "📹 Video",
-      method: "Scrape",
+      title: data.title || "Shopee Video",
+      format: `Video No Watermark${video.quality ? ` (${video.quality})` : ""}`,
+      method: "ShopeeNoWatermark",
     });
 
     await sock.sendMessage(m.chat, {
       video: buffer,
       caption,
+      contextInfo: mediaPreviewCard({
+        title: data.title || "Shopee Video",
+        body: "Shopee • No Watermark",
+        sourceUrl: url,
+        thumbnailUrl: data.cover || "",
+        mediaType: 2,
+      }),
     }, { quoted: m });
     await m.react("🐣");
-    await m.reply(novaBerhasil("shopeedl"));
+    await offerConvert(sock, m, { mediaUrl: videoUrl, type: "video", platform: "Shopee", title: data.title || "Shopee Video", sourceUrl: url });
   } catch (err) {
     console.error("[ShopeeDL]", err);
     await m.react("❌");
