@@ -1,17 +1,22 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// douyindl — Download video/audio dari Douyin (TikTok China)
-// Primary: IkyyXD /download/douyin → /download/all-in-one | Fallback: azbry API
+// douyin — Download video/audio/STORY dari Douyin (TikTok China)
+// Primary: SnapTik (snaptik.fi — request owner 2026-09-06, "Support
+// Download Story Juga", port dari script owner) → Fallback: IkyyXD → azbry
+// Command: .douyin (alias: dy, douyindl — muscle memory lama tetap jalan)
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
+import { snaptikDouyin } from "../../src/scraper/snaptik-douyin.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import axios from "axios";
 import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "douyindl",
-  alias: ["douyindl"],
+  name: "douyin",
+  alias: ["douyin", "dy", "douyindl"],
   category: "download",
-  description: "Download video/audio dari Douyin (TikTok China)",
-  usage: ".douyindl <url>",
-  example: ".douyindl https://v.douyin.com/xxx",
+  description: "Download video/audio/STORY dari Douyin (TikTok China) via SnapTik",
+  usage: ".douyin <url>",
+  example: ".douyin https://v.douyin.com/xxx",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 10, energi: 1, isEnabled: true,
 };
@@ -33,11 +38,48 @@ async function azbryFetch(url, retries = 3) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaNoInput("Douyin DL", "Kirim URL Douyin (TikTok China) yang mau didownload!", `${m.prefix}douyindl https://v.douyin.com/xxx`));
+    return m.reply(novaNoInput("Douyin", "Kirim URL video/STORY Douyin (TikTok China) yang mau didownload!", `${m.prefix}douyin https://v.douyin.com/xxx`));
   }
 
   try {
     await m.react("🕒");
+
+    // Step 0: SnapTik (snaptik.fi) — primary, support video + STORY Douyin
+    const snap = await snaptikDouyin(text);
+    if (snap?.status && snap?.video) {
+      const caption = mediaCaption({
+        platformIcon: "🎵", platformName: "Douyin",
+        title: snap.title || "Douyin Video",
+        author: snap.artist || null,
+        duration: snap.durationSec ? `${Math.floor(snap.durationSec / 60)}:${String(snap.durationSec % 60).padStart(2, "0")}` : null,
+        format: "Video (No Watermark)",
+        method: "SnapTik",
+      });
+      await m.react("🐣");
+      await sock.sendMessage(m.chat, {
+        video: { url: snap.video },
+        caption,
+        contextInfo: mediaPreviewCard({
+          title: snap.title || "Douyin Video",
+          body: `Douyin • by ${snap.artist || "Unknown"}`,
+          sourceUrl: text,
+          thumbnailUrl: snap.cover || "",
+          mediaType: 2,
+        }),
+      }, { quoted: m });
+      await offerConvert(sock, m, { mediaUrl: snap.video, type: "video", platform: "Douyin", title: snap.title, sourceUrl: text });
+      return;
+    }
+    if (snap?.status && !snap?.video && snap?.mp3) {
+      // Kasus khusus: cuma audio (story audio dsb)
+      await m.react("🐣");
+      await sock.sendMessage(m.chat, {
+        audio: { url: snap.mp3 },
+        mimetype: "audio/mpeg",
+      }, { quoted: m });
+      return;
+    }
+    console.log("[douyin] SnapTik gagal:", snap?.message, "→ fallback IkyyXD...");
 
     // Step 1: Try IkyyXD (douyin endpoint → all-in-one fallback)
     const result = await ikyyDownload(text, "douyin", { apikey: "kyzz" });
