@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await m.reply(claraWrap("autoreaction", text));
+      await m.reply(text, "autoreaction");
       return { handled: true };
     }
 
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("autoreaction", text));
+    await m.reply(text, "autoreaction");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

@@ -6,7 +6,7 @@ import { getPlugin, pluginStore } from "./lib/nova-plugins.js";
 import { recordPluginExecution, postExecutionCheck } from "./lib/nova-plugin-health-hook.js";
 import { getDatabase } from "./lib/nova-database.js";
 import { ensureRpg, saveRpg } from "./lib/nova-rpg-service.js";
-import { checkPermission, checkMode } from "./lib/nova-middleware.js";
+import { checkPermission, checkMode, checkAccessBlocked } from "./lib/nova-middleware.js";
 import { handleAntiRemoveFromUpsert as _handleAntiRemove , novaWarning } from "./lib/nova-group-protection.js";
 import config from "../config.js";
 import { c, logger, logMessage } from "./lib/nova-logger.js";
@@ -114,11 +114,31 @@ async function messageHandler(msg, sock) {
   // Statistik realtime: tiap pesan masuk dihitung (semua user, termasuk owner)
   try { db.incrementStat("messagesReceived"); } catch {}
 
+  // === Mode PC/GC Only — gate fitur yang bikin bot "ngobrol" (autoflow,
+  // autoAI, autoRole) supaya mode beneran dituruti, BUKAN cuma command.
+  // Tanpa ini, walau .onlypc on, bot masih balas keyword/ngobrol di grup
+  // lewat autoflow & autoAI → owner nyangka fitur gak berfungsi.
+  // Anti-detection (moderasi grup) & logging TIDAK digate — jalan terus.
+  const __novaOnlyGc = db.setting("onlyGc") || false;
+  const __novaOnlyPc = db.setting("onlyPc") || false;
+  const __novaOnlyModeBlocked =
+    ((__novaOnlyGc && !m.isGroup) || (__novaOnlyPc && m.isGroup)) &&
+    !m.isOwner &&
+    !m.fromMe;
+  // Blacklist (bannedUsers) & mode whitelist — nomor ke-ban / gak
+  // ter-whitelist gak bisa chat bot lewat jalur mana pun (autoflow,
+  // autoAI, autoRole), bukan cuma command.
+  let __novaAccessModeBlocked = false;
+  try {
+    __novaAccessModeBlocked = checkAccessBlocked(m).blocked;
+  } catch {}
+  const __novaModeBlocked = __novaOnlyModeBlocked || __novaAccessModeBlocked;
+
   // === AutoFlow: cek rule automation (keyword/media) tiap pesan masuk ===
-  try { _autoflowHandleMessage(sock, m); } catch {}
+  if (!__novaModeBlocked) { try { _autoflowHandleMessage(sock, m); } catch {} }
 
   // === AutoRole: track poin per chat + cek upgrade role ===
-  if (m.isGroup) { _autoRoleAddChat(sock, m.chat, m.sender, m.pushName).catch(() => {}); }
+  if (m.isGroup && !__novaModeBlocked) { _autoRoleAddChat(sock, m.chat, m.sender, m.pushName).catch(() => {}); }
 
   // === Self mode guard for non-command features ===
   // In self mode, only owner/fromMe can trigger non-command auto-features (AI grup, auto-AI, etc.)
@@ -707,7 +727,7 @@ try {
 
 
   // Auto-AI: if not a command, check if auto-AI should respond (skip in self mode)
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip && !__novaModeBlocked) {
     try {
       const { handleAutoAI, isAutoAIEnabled } = await import("./lib/nova-auto-ai.js");
       // FIX: dulu isAutoAIEnabled(m, sock) — lib expect chatId STRING,
@@ -742,7 +762,19 @@ try {
     const modeResult = checkMode(m, getActiveJadibots);
     if (!modeResult.allowed) {
       if (!m.isNewsletter) { try { await m.react("🚫"); } catch {} }
-      if (modeResult.isAfk && modeResult.afkMessage) {
+      if (modeResult.isModeLimited && modeResult.modeLimitedMessage) {
+        // Throttle 10 dtk per chat — mode gak bisa dijadikan alat spam ban notif
+        const __novaNow = Date.now();
+        if (
+          !global.__novaModeNoticeAt ||
+          !global.__novaModeNoticeAt[m.chat] ||
+          __novaNow - global.__novaModeNoticeAt[m.chat] >= 10000
+        ) {
+          global.__novaModeNoticeAt = global.__novaModeNoticeAt || {};
+          global.__novaModeNoticeAt[m.chat] = __novaNow;
+          await m.reply(modeResult.modeLimitedMessage);
+        }
+      } else if (modeResult.isAfk && modeResult.afkMessage) {
         await m.reply(modeResult.afkMessage);
       } else if (modeResult.isOnlyThisGroup && modeResult.onlyThisGroupMessage) {
         await m.reply(modeResult.onlyThisGroupMessage);

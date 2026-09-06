@@ -36,6 +36,15 @@ function ensureRemoteMode(id) {
   return cached;
 }
 
+// Cek model udah ke-cache belum (tanpa network) — buat notice UX di plugin:
+// kalau belum, proses pertama = unduh ±59MB (bisa lama kalau internet VPS lambat)
+export function isModelCached(mode = "hd") {
+  const cfg = MODELS[mode] || MODELS.hd;
+  try {
+    return fs.existsSync(path.join(env.cacheDir, ...cfg.id.split("/"), "onnx", "model.onnx"));
+  } catch { return false; }
+}
+
 const MODELS = {
   hd: {
     id: "Xenova/swin2SR-lightweight-x2-64",

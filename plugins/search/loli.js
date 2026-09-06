@@ -92,7 +92,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-    await m.reply(claraWrap("loli", text));
+    await m.reply(text, "loli");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
       ]) + "\n\n";
     }
     text +=  tipText(`Ketik ${prefix}menu untuk kembali`);
-    await m.reply(claraWrap("hadith", text));
+    await m.reply(text, "hadith");
   } catch (e) {
     await m.reply(novaError("Religi", [`Alasan: *${e.message}*`].join("\n")));
   }

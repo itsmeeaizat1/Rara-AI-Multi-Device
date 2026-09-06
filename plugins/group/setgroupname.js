@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("setgroupname", text));
+    await m.reply(text, "setgroupname");
   } catch (error) {
     await m.reply(novaError("SetGroupName", `Gagal ganti nama grup: ${error.message}`));
   }

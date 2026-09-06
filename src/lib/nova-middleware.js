@@ -136,6 +136,65 @@ function checkPermission(m, pluginConfig) {
   return { allowed: true, reason: "" };
 }
 
+// Normalisasi nomor buat blacklist/whitelist: strip non-digit, 08xxx → 628xxx
+function normalizeAccessNumber(input) {
+  let num = String(input || "").replace(/[^0-9]/g, "");
+  if (num.startsWith("08")) num = "62" + num.slice(1);
+  else if (num.startsWith("0")) num = "62" + num.slice(1);
+  return num;
+}
+
+function matchAccessNumber(senderJid, list) {
+  const sender = String(senderJid || "").replace(/@.+$/, "").replace(/[^0-9]/g, "");
+  if (!sender) return false;
+  return (list || []).some((n) => {
+    const c = normalizeAccessNumber(n);
+    if (!c) return false;
+    return c === sender || c.endsWith(sender) || sender.endsWith(c);
+  });
+}
+
+// Cek akses global: blacklist (banned) & mode whitelist.
+// Dipakai checkMode (command) DAN handler gate (autoflow/autoAI) supaya
+// nomor ke-ban / gak ter-whitelist gak bisa chat bot lewat jalur mana pun.
+// Owner & fromMe SELALU lolos.
+function checkAccessBlocked(m) {
+  if (m.isOwner || m.fromMe || m.isNewsletter) return { blocked: false };
+
+  const db = getDatabase();
+
+  // Blacklist — bannedUsers (dipakai .ban/.unban). Enforce dari DB langsung
+  // biar konsisten walau config in-memory belum ke-update.
+  const banned = db.setting("bannedUsers") || [];
+  if (matchAccessNumber(m.sender, banned)) {
+    return {
+      blocked: true,
+      message:
+        `╭─「 ✦ Aᴋsᴇs Dɪᴛᴏʟᴀᴋ ✦ 」\n` +
+        `│ Nᴏᴍᴏʀ ᴋᴀᴍᴜ ᴅɪʙʟᴏᴋɪʀ ᴅᴀʀɪ ʙᴏᴛ ɪɴɪ\n` +
+        `│ Hᴜʙᴜɴɢɪ ᴏᴡɴᴇʀ ᴜɴᴛᴜᴋ ɪɴꜰᴏ ʟᴇʙɪʜ ʟᴀɴᴊᴜᴛ\n` +
+        `╰────  •  ────`,
+    };
+  }
+
+  // Whitelist — mode bot hanya merespon nomor terdaftar
+  if (db.setting("whitelistMode")) {
+    const wl = db.setting("whitelist") || [];
+    if (!matchAccessNumber(m.sender, wl)) {
+      return {
+        blocked: true,
+        message:
+          `╭─「 ✦ Mᴏᴅᴇ Wʜɪᴛᴇʟɪsᴛ ✦ 」\n` +
+          `│ Bᴏᴛ ʜᴀɴʏᴀ ᴍᴇʀᴇsᴘᴏɴ ɴᴏᴍᴏʀ ᴛᴇʀᴅᴀꜰᴛᴀʀ\n` +
+          `│ Nᴏᴍᴏʀ ᴋᴀᴍᴜ ʙᴇʟᴜᴍ ᴛᴇʀᴅᴀꜰᴛᴀʀ ᴏʟᴇʜ ᴏᴡɴᴇʀ\n` +
+          `╰────  •  ────`,
+      };
+    }
+  }
+
+  return { blocked: false };
+}
+
 function checkMode(m, getActiveJadibots) {
   const db = getDatabase();
   const dbMode = db.setting("botMode");
@@ -146,6 +205,18 @@ function checkMode(m, getActiveJadibots) {
   const selfAdmin = db.setting("selfAdmin");
   const publicAdmin = db.setting("publicAdmin");
   const botAfk = db.setting("botAfk");
+
+  // Blacklist & whitelist — PALING AWAL: nomor ke-ban gak dapat apa pun
+  try {
+    const accessResult = checkAccessBlocked(m);
+    if (accessResult.blocked) {
+      return {
+        allowed: false,
+        isModeLimited: true,
+        modeLimitedMessage: accessResult.message,
+      };
+    }
+  } catch {}
 
   if (botAfk && botAfk.active) {
     if (m.fromMe || m.isOwner) {
@@ -164,8 +235,32 @@ function checkMode(m, getActiveJadibots) {
     };
   }
 
-  if (onlyGc && !m.isGroup && !m.isOwner) return { allowed: false };
-  if (onlyPc && m.isGroup && !m.isOwner) return { allowed: false };
+  // Mode PC/GC Only — blok dengan PESAN penjelasan (dulu silent 🚫 doang,
+  // user nyangka bot error/fitur gak berfungsi). Owner selalu lolos.
+  if (onlyGc && !m.isGroup && !m.isOwner) {
+    return {
+      allowed: false,
+      isModeLimited: true,
+      modeLimitedMessage:
+        `╭─「 ✦ Mᴏᴅᴇ Gʀᴜᴘ Oɴʟʏ ✦ 」\n` +
+        `│ Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ɢʀᴜᴘ sᴀᴊᴀ\n` +
+        `│ Sɪʟᴀᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ʙᴏᴛ ᴅɪ ᴅᴀʟᴀᴍ ɢʀᴜᴘ\n` +
+        `│ Pʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
+        `╰────  •  ────`,
+    };
+  }
+  if (onlyPc && m.isGroup && !m.isOwner) {
+    return {
+      allowed: false,
+      isModeLimited: true,
+      modeLimitedMessage:
+        `╭─「 ✦ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ Oɴʟʏ ✦ 」\n` +
+        `│ Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ sᴀᴊᴀ\n` +
+        `│ Sɪʟᴀᴋᴀɴ ᴄʜᴀᴛ ʙᴏᴛ ʟᴇᴡᴀᴛ ᴘᴇsᴀɴ ᴘʀɪʙᴀᴅɪ\n` +
+        `│ Aᴋsᴇs ᴅɪ ɢʀᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
+        `╰────  •  ────`,
+    };
+  }
 
   const onlyThisGroup = db.setting("onlyThisGroup");
   if (onlyThisGroup && m.isGroup && !m.isOwner) {
@@ -256,4 +351,4 @@ function checkMode(m, getActiveJadibots) {
   return { allowed: true };
 }
 
-export { levenshtein, formatAfkDuration, checkPermission, checkMode };
+export { levenshtein, formatAfkDuration, checkPermission, checkMode, checkAccessBlocked, matchAccessNumber, normalizeAccessNumber };

@@ -52,6 +52,20 @@ function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// ─── Info energi kekuras — info section di soal (sama kayak hasil game) ───
+function renderEnergiLine(m, cfg) {
+  const e = m?.energiInfo;
+  if (e) {
+    if (e.unlimited) return `│ ⚡ Energi : ∞ (unlimited)\n`;
+    if (e.deducted > 0) return e.game
+      ? `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa}/${e.max})\n`
+      : `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa})\n`;
+    return `│ ⚡ Energi : gratis\n`;
+  }
+  if (cfg.energi > 0) return `│ ⚡ Energi : -${cfg.energi}\n`;
+  return '';
+}
+
 
 // ─── CTA tematik per game — kalimat interaktif penutup pesan hasil ───
 // Beda game, beda kalimat, sesuai temanya masing-masing (request owner).
@@ -124,6 +138,9 @@ const GAME_CTA = {
   // RPG CINTA (rpg couple — tema romantis)
   jadianmatch: "Yuk tembak-tembakan lagi kak, siapa tau ketemu jodoh 💘🥳",
   kencanmatch: "Yuk kencan lagi kak, biar hubunganmu makin mesra 💕🥳",
+  kado: "Yuk kasih kado lagi kak, biar pasanganmu makin sayang 🎁🥳",
+  honeymoon: "Tunggu bulan depan kak, sambil ramein hubungan lewat rpgkencan 💞",
+  meditation: "Yuk meditasi lagi kak kalau badannya lelah ✨🥳",
   nikahmatch: "Yuk bahagia terus sama pasanganmu kak, biar awet sampai tua 💍🥳",
   soulmatematch: "Yuk ukur kecocokan lagi kak, siapa tau dia memang jodohmu 💞🥳",
   couplewar: "Yuk war pasangan lain kak, biar cintamu makin disegani ⚔️🥳",
@@ -255,9 +272,9 @@ class NovaGames {
             if (cfg.questionField && session.question[cfg.questionField]) {
               text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
-            text += `│ • Sisa waktu: ${formatRemainingTime(remaining)}\n\n`;
-            text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_`;
+            text += `│ 🧩 Hint       : ${getHint(answer, cfg.hintCount)}\n`;
+            text += `│ ⏳ Sisa waktu : ${formatRemainingTime(remaining)}\n\n`;
+            text += `_💬 Reply pesan game ini buat jawab, ketik "nyerah" kalau nyerah_`;
             text += `\n╰────  •  ────`;
             await m.reply(text);
             return;
@@ -287,16 +304,18 @@ class NovaGames {
             return;
           }
 
+          await m.react("🕒");
           let caption = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          caption += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
           if (cfg.hintEnabled !== false) {
-            caption += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
+            caption += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
-          caption += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
-          caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
+          caption += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
+          caption += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n\n`;
+          caption += `_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
           caption += `╰────  •  ────`;
 
           sentMsg = await sock.sendMessage(
@@ -305,16 +324,19 @@ class NovaGames {
             { quoted: m }
           );
         } else {
+          await m.react("🕒");
           let text = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          text += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
           if (cfg.hintEnabled !== false) {
-            text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
+            text += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
-          text += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
-          text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
+          text += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
+          text += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n`;
+          text += renderEnergiLine(m, cfg);
+          text += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
           text += `╰────  •  ────`;
 
           sentMsg = await m.reply(text);
@@ -331,12 +353,14 @@ class NovaGames {
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ • Jawaban: ${answer}\n`;
+            text += `│ ❌ Jawaban: ${answer}\n`;
             if (question.deskripsi) {
-              text += `│ • Info: ${question.deskripsi}\n`;
+              text += `│ 💡 Info: ${question.deskripsi}\n`;
             }
-            text += `\n_Gak ada yang bisa jawab nih~_\n`;
+            text += `\n_Yah, gak ada yang bisa jawab nih~_\n`;
             text += `╰────  •  ────`;
+            const timeoutCta = gameCTA(gameType);
+            if (timeoutCta) text += `\n${timeoutCta}`;
             await sock.sendMessage(chatId, { text });
           } catch (e) {
             console.error(`[${gameType}] Timeout error:`, e.message);
@@ -548,6 +572,59 @@ games.register("tebakkabupaten", { emoji: "📍", title: "TEBAK KABUPATEN", desc
 games.register("tebaklogo", { emoji: "🏢", title: "TEBAK LOGO", description: "Tebak logo perusahaan", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
 games.register("tebakmakanan", { emoji: "🍜", title: "TEBAK MAKANAN", description: "Tebak makanan Indonesia", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
 
+
+// ─── Helper interaktif (request owner 2026-09-06: game jangan kuno) ───
+
+// Flavor pembuka random — biar tiap round terasa hidup, gak monoton
+const GAME_FLAVOR = [
+  "🎯 *Soal baru masuk! Siapa nih yang paling cepet?*",
+  "⚡ *Gaskeun! Buktikan otakmu encer!*",
+  "🔥 *Round baru! Jangan cuma nonton, ikutan jawab!*",
+  "🧠 *Nyalain otaknya, ini gampang kok... masa iya gak bisa?*",
+  "🏆 *Siap-siap! Pemenang dapet hadiah limit + koin!*",
+  "✨ *Oke gengs, fokus! Soalnya udah nunggu!*",
+];
+
+function pickFlavor() {
+  return GAME_FLAVOR[Math.floor(Math.random() * GAME_FLAVOR.length)];
+}
+
+// Progress bar visual — ▰ ketemu, ▱ belum
+function renderProgressBar(found, total, width = 8) {
+  const t = Math.max(0, total);
+  const f = Math.min(Math.max(0, found), t);
+  const filled = t > 0 ? Math.round((f / t) * width) : 0;
+  const bar = "▰".repeat(filled) + "▱".repeat(Math.max(0, width - filled));
+  const pct = t > 0 ? Math.round((f / t) * 100) : 0;
+  return `${bar} ${f}/${t} (${pct}%)`;
+}
+
+// Bar stat (HP/Mana/Energi/Affection) — buat hasil RPG biar kek game beneran
+function renderStatBar(cur, max, width = 10) {
+  const mx = Math.max(0, max || 0);
+  const c = Math.min(Math.max(0, cur || 0), mx);
+  const filled = mx > 0 ? Math.round((c / mx) * width) : 0;
+  const pct = mx > 0 ? Math.round((c / mx) * 100) : 0;
+  return `${"▰".repeat(filled)}${"▱".repeat(Math.max(0, width - filled))} ${pct}%`;
+}
+
+// Slot board gaya Family Feud — hidden = blok misteri, revealed = jawaban
+function renderSlotBoard(answers, opts = {}) {
+  const nameOf = opts.nameOf || (() => "");
+  const lines = [];
+  answers.forEach((ans, i) => {
+    const num = String(i + 1).padStart(2, "0");
+    if (ans.revealed) {
+      const by = ans.foundBy ? ` · @${nameOf(ans.foundBy)}` : "";
+      lines.push(`✅ ${num} ${String(ans.text).toUpperCase()}${by}`);
+    } else {
+      const len = Math.min(10, Math.max(4, String(ans.text).length));
+      lines.push(`🔒 ${num} ${"▒".repeat(len)}`);
+    }
+  });
+  return lines;
+}
+
 // ─── novaGameBox — format khas game buat game papan/kartu (catur, uno, dll) ───
 // Beda dari claraWrap (menu/reply klasik): game bebas ekspresi —
 // opener flavor bold+emoji, judul CAPS di box, body bebas (papan/giliran/jawaban), CTA tematik.
@@ -562,4 +639,4 @@ export function novaGameBox(opts) {
   return text;
 }
 
-export { NovaGames, games, gameCTA };
+export { NovaGames, games, gameCTA, GAME_FLAVOR, pickFlavor, renderProgressBar, renderSlotBoard, renderStatBar };

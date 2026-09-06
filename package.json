@@ -1,7 +1,7 @@
 {
   "_watermark": "NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA",
   "name": "nova-md",
-  "version": "22.0.0",
+  "version": "23.0.0",
   "description": "WhatsApp Multi-Device Bot dengan sistem plugin modular",
   "main": "index.js",
   "scripts": {

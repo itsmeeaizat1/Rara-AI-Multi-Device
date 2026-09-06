@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await m.reply(claraWrap("clone", text));
+      await m.reply(text, "clone");
       return { handled: true };
     }
 
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("clone", text));
+    await m.reply(text, "clone");
   } catch (error) {
     await m.react("❌");
     const prefix = botConfig.command?.prefix || ".";

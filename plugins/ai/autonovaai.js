@@ -4,6 +4,7 @@
 
 import fs from "fs";
 import { askAI } from "../../src/lib/aiagent.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 import { load, save, clearAichatMemory } from "../../src/lib/autoflow.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -74,6 +75,105 @@ function validate(r) {
   if (typeof r.cooldown !== "number" || r.cooldown < 0 || r.cooldown > 3600) r.cooldown = 10;
   // trigger "any" minimal cooldown 5s — biar gak spam/boros API di chat ramai
   if (r.trigger.type === "any" && r.cooldown < 5) r.cooldown = 5;
+  return null;
+}
+
+// ===== ekstrak JSON dari balasan AI — tahan banting =====
+// Provider fallback (ikyy/haidar/dll) sering jawab ngobrol/kurung markdown/
+// nambahin kalimat pembuka. Fungsi ini:
+// 1. buang fence ```json
+// 2. cari objek {} BERKESEIMBANGAN pertama (bukan sekadar brace pertama-terakhir)
+// 3. benerin trailing comma + kutip pintar (" " ' ') sebelum parse
+export function extractJson(text) {
+  if (!text) return null;
+  const clean = String(text).replace(/```json/gi, "").replace(/```/g, "").trim();
+  const start = clean.indexOf("{");
+  if (start === -1) return null;
+  let depth = 0, inStr = false, esc = false, end = -1;
+  for (let i = start; i < clean.length; i++) {
+    const ch = clean[i];
+    if (esc) { esc = false; continue; }
+    if (inStr && ch === "\\") { esc = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === "{") depth++;
+    else if (ch === "}") { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end === -1) return null;
+  const raw = clean.slice(start, end + 1)
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/,\s*([\]}])/g, "$1");
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+// ===== parser LOKAL (tanpa AI) — jaring pengaman kalau AI ngaco/mati =====
+// Cakup pola kalimat automation paling umum. AI tetap jadi jalur utama buat
+// kalimat kompleks — ini cumal nyelametin fitur pas rantai AI balas ngawur
+// (contoh: key deepseek expired → fallback jawab ngobrol tanpa JSON).
+export function localParse(t) {
+  const s = (t || "").toLowerCase().trim();
+  if (!s) return null;
+  const rule = { trigger: {}, action: {}, scope: "all", cooldown: 10 };
+
+  // scope
+  if (/\b(grup|group|gc)\b/.test(s) && !/pribadi|private|\bpc\b/.test(s)) rule.scope = "group";
+  else if (/pribadi|private|\bpc\b/.test(s)) rule.scope = "private";
+
+  // 1) ikut ngobrol / balas semua chat → trigger.any + aichat
+  const freeChat =
+    /(ada\s+)?(orang|yang|yg|siapapun|siapa\s?saja|user|member).*(chat|ngobrol|bicara|ngetik|mengetik|nimbrung|ajak|sapa)/.test(s) ||
+    /ikut\s+(ngobrol|nimbrung|balas|balesin|jawab|bicara)/.test(s) ||
+    /(balas|jawab|balesin|respon)\s+(semua|semuanya| semua orang|orang)/.test(s) ||
+    /(jadi|pantesan|pokoknya).*(asisten|temen ngobrol)/.test(s);
+  if (freeChat) {
+    rule.trigger = { type: "any" };
+    const gaya = t.match(/gaya\s+([\w\s]+?)(?:[,.]|$)/i);
+    rule.action = { type: "aichat", value: gaya ? gaya[1].trim() : "" };
+    return rule;
+  }
+
+  // 2) jadwal "setiap/tiap jam HH:MM"
+  const jam = s.match(/(\d{1,2})[:.](\d{2})/);
+  if (jam && /(setiap|tiap|pukul|jam)/.test(s)) {
+    const hh = String(Math.min(23, parseInt(jam[1], 10))).padStart(2, "0");
+    rule.trigger = { type: "schedule", value: `${hh}:${jam[2]}` };
+    const balasan = t.match(/(?:ingetin|ingatkan|kirim|bilang|pesan|ngomong)\s+["']?(.+?)(?:["']|$)/i);
+    rule.action = { type: "reply", value: balasan ? balasan[1].trim() : `⏰ ${hh}:${jam[2]} WIB — waktunya!` };
+    return rule;
+  }
+
+  // 3) masuk/keluar grup
+  if (/(masuk|join|member baru|new member)/.test(s)) {
+    rule.trigger = { type: "join" };
+    const sambutan = t.match(/(?:sambutan|bilang|balas|kasih|ucapin|ucapkan)\s+["']?(.+?)(?:["']|$)/i);
+    rule.action = { type: "reply", value: sambutan ? sambutan[1].trim() : "Selamat datang @user di grup! 🎉" };
+    return rule;
+  }
+  if (/(keluar|left|kabur|minggat)/.test(s)) {
+    rule.trigger = { type: "leave" };
+    rule.action = { type: "reply", value: "Dadah @user, hati-hati di jalan ya! 👋" };
+    return rule;
+  }
+
+  // 4) media → react (atau reply)
+  const med = s.match(/\b(gambar|image|foto|video|sticker|stiker|audio|vn|voice note)\b/);
+  if (med) {
+    const mv = { gambar: "image", image: "image", foto: "image", video: "video", sticker: "sticker", stiker: "sticker", audio: "audio", "voice note": "audio", vn: "audio" }[med[1]];
+    rule.trigger = { type: "media", value: mv };
+    const emoji = t.match(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/u);
+    rule.action = { type: "react", value: emoji ? emoji[0] : "🔥" };
+    return rule;
+  }
+
+  // 5) keyword → reply: "kalau ada yang bilang X balas Y"
+  const kw = t.match(/(?:bilang|kata(?:kan)?|ngetik|sebut|tulis|ngomong)\s+["']?([^"',;]+?)["']?\s*(?:,|lalu|terus|maka)?\s*(?:balas|balesin|jawab|dibalas|dibales)\s+["']?(.+)$/i);
+  if (kw) {
+    rule.trigger = { type: "keyword", value: kw[1].trim().toLowerCase(), match: "contains" };
+    rule.action = { type: "reply", value: kw[2].replace(/["']/g, "").trim() };
+    return rule;
+  }
+
   return null;
 }
 
@@ -192,18 +292,49 @@ async function handler(m, { sock, conn }) {
 
     try { await m.react("🕒"); } catch {}
 
-    // 1) minta AI nerjemahin
-    let rule;
+    // 1) minta AI nerjemahin — 4 LAPIS (request owner: AI REST API manapun
+    //    yang aktif — punya key apa pun — harus tetep bisa ngerjain ini):
+    //    a. rantai novaai askAI (deepseek/groq/gemini/dll sesuai apikeys.json)
+    //    b. balasan gak ada JSON-nya → RETRY sekali perintah jauh lebih tegas
+    //    c. masih gak ada → RANTAI AI SATUAN aiFallbackChat (haidar per-brand
+    //       → haidar gemini → ikyy → xemoz — semua free, gak butuh key)
+    //    d. masih gagal → parser LOKAL tanpa AI (pola kalimat umum)
+    const SYS_STRICT = SYS + "\n\nSANGAT PENTING: Balasan kamu WAJIB objek JSON MURNI — TANPA kalimat pembuka, TANPA penjelasan, TANPA markdown, TANPA sapaan. Karakter PERTAMA balasan harus { dan TERAKHIR harus }";
+    let rule = null;
+    let viaLocal = false;
     try {
-      const aiResult = await askAI(SYS, body);
-      const clean = aiResult.replace(/```json|```/g, "").trim();
-      const s = clean.indexOf("{");
-      const e = clean.lastIndexOf("}");
-      if (s === -1 || e === -1) throw new Error("AI tidak mengembalikan JSON");
-      rule = JSON.parse(clean.slice(s, e + 1));
+      let aiResult = await askAI(SYS, body);
+      rule = extractJson(aiResult);
+      if (!rule) {
+        console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
+        aiResult = await askAI(SYS_STRICT, body);
+        rule = extractJson(aiResult);
+      }
     } catch (e) {
+      console.log("[autonovaai] rantai novaai gagal:", e.message);
+    }
+    if (!rule) {
+      // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
+      try {
+        console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
+        const satuan = await aiFallbackChat(body, { systemPrompt: SYS_STRICT });
+        rule = extractJson(satuan);
+      } catch (e) {
+        console.log("[autonovaai] rantai satuan juga gagal:", e.message);
+      }
+    }
+    if (!rule) {
+      rule = localParse(body);
+      if (rule) viaLocal = true;
+    }
+    if (!rule) {
       try { await m.react("❌"); } catch {}
-      return m.reply(claraWrap("autonovaai", `Gagal bikin rule: ${e.message}`, "error"));
+      return m.reply(claraWrap("autonovaai", [
+        "Gagal bikin rule: SEMUA AI (novaai + satuan) gak ngembaliin JSON dan kalimatnya belum dikenali parser lokal.",
+        "Coba tulis lebih spesifik, contoh:",
+        "• .autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
+        "• .autonovaai kalau ada orang chat, ikut ngobrol",
+      ], "error"));
     }
 
     // 2) VALIDASI di level kode — AI ngaco = ditolak
@@ -227,6 +358,7 @@ async function handler(m, { sock, conn }) {
       `✅ Rule ${rule.id} aktif\n\n` +
       `${describe(rule)}\n` +
       `Scope: ${rule.scope} • Cooldown: ${rule.cooldown}s\n\n` +
+      (viaLocal ? "_⚙️ Rule dibikin lokal (AI lagi ngaco) — cek lagi ya hasilnya, kalau kurang pas hapus aja: .autonovaai del " + rule.id + "_\n\n" : "") +
       `Kelola: .autonovaai list | .autonovaai del ${rule.id} | .autonovaai off ${rule.id}`,
       "autonovaai",
     );

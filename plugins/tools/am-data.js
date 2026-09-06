@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
       });
     } else {
       await m.react("🐣");
-      await m.reply(claraWrap("am-data", msg));
+      await m.reply(msg, "am-data");
     }
   } catch (e) {
     await m.react("❌");

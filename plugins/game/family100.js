@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { novaBox, toSC } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, pickFlavor, renderProgressBar, renderSlotBoard } from "../../src/lib/nova-games.js";
 import { normalizeAnswer, getSimilarity, isReplyToGame } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
@@ -62,6 +62,7 @@ function createSession(chatId, questionData, messageKey, timeout = 120000) {
     timeout,
     endTime: Date.now() + timeout,
     timer: null,
+    warnTimer: null,
     scores: {},
     attempts: {},
   };
@@ -77,6 +78,7 @@ function getSession(chatId) {
 function endSession(chatId) {
   const s = sessions.get(chatId);
   if (s && s.timer) clearTimeout(s.timer);
+  if (s && s.warnTimer) clearTimeout(s.warnTimer);
   sessions.delete(chatId);
   return s;
 }
@@ -154,17 +156,9 @@ function checkFamilyAnswer(session, userAnswer) {
 
 // ─── Board Renderer ─── array plain — │ & format dibuang, novaBox yang nyusun
 function renderBoard(session) {
-  const lines = [];
-  for (let i = 0; i < session.answers.length; i++) {
-    const ans = session.answers[i];
-    if (ans.revealed) {
-      const finder = ans.foundBy ? ` (@${ans.foundBy.split("@")[0]})` : "";
-      lines.push(`${i + 1}. ${ans.text.toUpperCase()} ✅${finder}`);
-    } else {
-      lines.push(`${i + 1}. ???????????`);
-    }
-  }
-  return lines;
+  return renderSlotBoard(session.answers, {
+    nameOf: (jid) => jid.split("@")[0],
+  });
 }
 
 // ─── Score Renderer ───
@@ -283,7 +277,9 @@ async function handler(m, { sock }) {
       await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "😵 *SOAL RUSAK!*", body: "Soalnya kepotong nih, coba ulang ya kak!" }));
       return;
     }
+    await m.react("🕒");
     const text = novaBox("Family 100", [
+      pickFlavor(),
       `➥ ${questionData.soal}`,
       "---",
       ...renderBoard({
@@ -295,21 +291,35 @@ async function handler(m, { sock }) {
         totalAnswers: questionData.jawaban.length,
       }),
       "---",
+      `${toSC("Progres")} : ${renderProgressBar(0, questionData.jawaban.length)}`,
       `${toSC("Total Jawaban")} : ${questionData.jawaban.length}`,
       `${toSC("Waktu")} : ${formatTime(120000)}`,
       `${toSC("Hadiah")} : Limit, Koin, EXP (random per jawaban)`,
       "---",
-      "Balas pesan ini atau ketik jawaban langsung",
-      'Ketik "nyerah" untuk menyerah',
+      "💬 Balas pesan ini atau ketik jawaban langsung",
+      '🏳️ Ketik "nyerah" buat buka semua jawaban',
     ]);
 
     const sentMsg = await m.reply(text);
+    await m.react("🐣");
     const session = createSession(
       chatId,
       questionData,
       sentMsg?.key || m.key,
       120000
     );
+
+    // ⏰ Reminder 30 detik terakhir — biar seru kayak TV
+    const warnDelay = Math.max(0, session.endTime - Date.now() - 30000);
+    session.warnTimer = setTimeout(async () => {
+      try {
+        const cur = getSession(chatId);
+        if (!cur || cur.startTime !== session.startTime) return;
+        await sock.sendMessage(chatId, {
+          text: `⏰ *Sisa 30 detik!* Progres: ${renderProgressBar(cur.foundCount, cur.totalAnswers)}\nSemangat, buruan jawab yang belum kebuka! 💪`,
+        });
+      } catch {}
+    }, warnDelay);
 
     setSessionTimer(chatId, async () => {
       try {
@@ -319,14 +329,15 @@ async function handler(m, { sock }) {
         endText += `Jawaban lengkap:\n\n`;
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
-          endText += `${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}\n`;
+          const num = String(i + 1).padStart(2, "0");
+          endText += `${ans.revealed ? "✅" : "❌"} ${num} ${ans.text}${ans.revealed && ans.foundBy ? ` — @${ans.foundBy.split("@")[0]}` : ""}\n`;
         }
-        endText += `\nDitemukan: ${session.foundCount}/${session.totalAnswers}\n\n`;
+        endText += `\n📊 Progres akhir: ${renderProgressBar(session.foundCount, session.totalAnswers)}\n\n`;
         const scores = renderScores(session);
         if (scores.length) {
           endText += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
         }
-        endText += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳`;
+        endText += gameCTA("family100");
         await sock.sendMessage(chatId, { text: endText });
       } catch (e) {
         console.error("[family100] Timeout handler error:", e.message);
@@ -370,14 +381,15 @@ async function answerHandler(m, sock) {
       text += `Jawaban lengkap:\n\n`;
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
-        text += `${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}\n`;
+        const num = String(i + 1).padStart(2, "0");
+        text += `${ans.revealed ? "✅" : "❌"} ${num} ${ans.text}${ans.revealed && ans.foundBy ? ` — @${ans.foundBy.split("@")[0]}` : ""}\n`;
       }
-      text += `\nDitemukan: ${session.foundCount}/${session.totalAnswers}\n\n`;
+      text += `\n📊 Progres akhir: ${renderProgressBar(session.foundCount, session.totalAnswers)}\n\n`;
       const scores = renderScores(session);
       if (scores.length) {
         text += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
       }
-      text += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳`;
+      text += gameCTA("family100");
 
       const mentionJids = Object.keys(session.scores).length > 0
         ? Object.keys(session.scores)
@@ -416,14 +428,14 @@ async function answerHandler(m, sock) {
       const points = session.totalAnswers - result.answer.index;
       session.scores[sender].points += points;
       const replyLines = [
-        `✅ @${sender.split("@")[0]} menebak: ${result.answer.text.toUpperCase()}`,
-        `${toSC("Dapat")} : ${points} poin`,
-        `${toSC("Ditemukan")} : ${session.foundCount}/${session.totalAnswers}`,
+        `🎉 @${sender.split("@")[0]} menebak: ${result.answer.text.toUpperCase()}`,
+        `⚡ ${toSC("Dapat")} : ${points} poin`,
+        `📊 ${toSC("Progres")} : ${renderProgressBar(session.foundCount, session.totalAnswers)}`,
         "---",
         session.question,
         ...renderBoard(session),
         "---",
-        `${toSC("Sisa Waktu")} : ${formatTime(getRemainingTime(chatId))}`,
+        `⏳ ${toSC("Sisa Waktu")} : ${formatTime(getRemainingTime(chatId))}`,
       ];
       const scores = renderScores(session);
       if (scores.length) {
@@ -431,6 +443,9 @@ async function answerHandler(m, sock) {
       }
       const replyText = novaBox("Family 100", replyLines);
 
+      try {
+        await m.react("🎉"); // react di pesan tebakan si penebak
+      } catch {}
       try {
         await sock.sendMessage(chatId, {
           text: replyText,
@@ -469,14 +484,16 @@ async function answerHandler(m, sock) {
           winLines.push(
             "---",
             `🥇 ${toSC("Juara")} : @${topJid.split("@")[0]}`,
-            `${toSC("Jawaban Benar")} : ${topScore.correct}`,
-            `${toSC("Total Poin")} : ${topScore.points}`,
+            `✅ ${toSC("Jawaban Benar")} : ${topScore.correct}`,
+            `💯 ${toSC("Total Poin")} : ${topScore.points}`,
+            `📊 ${toSC("Progres")} : ${renderProgressBar(session.foundCount, session.totalAnswers)}`,
             "---",
             { sub: "Hadiah" },
           );
-          if (reward.limit > 0) winLines.push(`+${reward.limit} Limit`);
-          if (reward.koin > 0) winLines.push(`+${reward.koin} Koin`);
-          if (reward.exp > 0) winLines.push(`+${reward.exp} EXP`);
+          if (reward.limit > 0) winLines.push(`🎫 +${reward.limit} Limit`);
+          if (reward.koin > 0) winLines.push(`🪙 +${reward.koin} Koin`);
+          if (reward.exp > 0) winLines.push(`✨ +${reward.exp} EXP`);
+          winLines.push("---", "🎊 *Board abis semua! Kerja tim yang keren!*");
         }
         const winText = novaBox("Family 100", winLines);
 
@@ -509,9 +526,10 @@ async function answerHandler(m, sock) {
     }
 
     if (result.status === "wrong") {
-      const remaining = getRemainingTime(chatId);
+      // Interaktif ala modern: react ❌ doang di pesan tebakan —
+      // gak spam box salah tiap tebakan, chat tetep bersih
       try {
-        await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *BELUM COCOK!*", body: `Belum ada jawaban yang masuk — sisa ${formatTime(remaining)}` }));
+        await m.react("❌");
       } catch {}
       return true;
     }
