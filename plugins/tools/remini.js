@@ -1,15 +1,16 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
-// ENGINE UTAMA: BeautyPlus img-enhancer (Pixocial) — FACE RESTORE AI ala Remini
-//   .remini            → face restore (default) — restore wajah, bukan sekadar upscale
-//   .remini hd         → enhance HD umum (img_hd)
-//   .remini 16k/product/text/concert → mode khusus BeautyPlus
-// ENGINE LOKAL (opsi/fallback): Swin2SR/Real-ESRGAN via ONNX — 100% lokal, TANPA WATERMARK
-//   .remini real/upscale → 4x upscale murni tanpa face-restore (tanpa watermark)
+// ENGINE UTAMA: CodeFormer (HuggingFace Space sczhou/CodeFormer) — FACE RESTORE
+// tanpa watermark (face-restoration model asli, ±3-10 detik).
+//   .remini / .remini face / .remini hd → face restore + bg enhance (default)
+// FALLBACK: Local AI Swin2SR-realworld 4x (Real-ESRGAN style) — 100% lokal,
+// TANPA WATERMARK — otomatis dipakai kalau CodeFormer error/kuota habis.
+//   .remini real/upscale → 4x restore langsung (local AI)
 //   .remini 1080/2k/4k/5k → pilih ukuran hasil (engine lokal)
-// Catatan engine: endpoint vyro.ai & flow web app.remini.ai (guest) sudah mati —
-// BeautyPlus img-enhancer ini satu-satunya face-restore AI gratis yang masih hidup
-// (terverifikasi live 2026-09-06: img_portrait 11.9s hasil 836KB)
+// BeautyPlus = HANYA mode eksplisit (16k/product/text/concert atau .remini bp <mode>)
+// — hasil bisa ada watermark, JANGAN dipakai sebagai default (request owner 2026-09-06).
+// Opsional: set env HF_TOKEN (akun huggingface.co gratis) di VPS biar kuota ZeroGPU
+// CodeFormer jauh lebih gede — tanpa token kuota anonymous tipis (fallback lokal aman).
 import crypto from "crypto";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
@@ -23,7 +24,7 @@ const pluginConfig = {
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar) — Face Restore ala Remini (default)\n.remini face — restore wajah (sama kayak default)\n.remini hd — enhance HD umum\n.remini 16k / product / text / concert — mode khusus\n.remini real / upscale — upscale 4x murni, local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — Face Restore ala Remini, tanpa watermark (default)\n.remini face — restore wajah (sama kayak default)\n.remini hd — face restore + enhance HD\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -248,13 +249,96 @@ async function reminiEnhance(buffer, mode) {
   return { buffer: Buffer.from(dl.data), label, algo };
 }
 
+// ═══ ENGINE: CodeFormer (HuggingFace Space sczhou/CodeFormer) ═══
+// Face restoration model asli — TANPA WATERMARK. Lewat gradio API (upload → call → SSE).
+// Anonymous: kuota ZeroGPU tipis → otomatis fallback ke local AI di handler.
+// Set env HF_TOKEN (huggingface.co gratis) buat kuota jauh lebih gede.
+
+const CF_SPACE = "https://sczhou-codeformer.hf.space";
+const CF_TIMEOUT = 90000;
+
+function cfHeaders() {
+  const h = { accept: "*/*" };
+  const tok = process.env.HF_TOKEN || process.env.HFTOKEN || "";
+  if (tok) h["Authorization"] = "Bearer " + tok;
+  return h;
+}
+
+async function codeformerEnhance(buffer, { fidelity = 0.5, upscale = 2 } = {}) {
+  const { suffix, mime } = guessMime(buffer);
+
+  // 1. upload ke space
+  const FormData = (await import("form-data")).default;
+  const form = new FormData();
+  form.append("files", buffer, { filename: "image." + suffix, contentType: mime });
+  const up = await axios.post(CF_SPACE + "/gradio_api/upload", form, {
+    headers: { ...form.getHeaders(), ...cfHeaders() },
+    timeout: 60000,
+    maxBodyLength: Infinity,
+  });
+  const cfPath = up.data?.[0];
+  if (!cfPath) throw new Error("upload_failed");
+
+  // 2. submit inference (face_align + bg_enhance + face_upsample ON, upscale 2x)
+  const call = await axios.post(
+    CF_SPACE + "/gradio_api/call/inference",
+    { data: [{ path: cfPath }, true, true, true, upscale, fidelity] },
+    { headers: { ...cfHeaders(), "content-type": "application/json" }, timeout: 30000 }
+  );
+  const eventId = call.data?.event_id;
+  if (!eventId) throw new Error("task_failed");
+
+  // 3. poll SSE sampai complete / error (kuota, proses gagal, timeout)
+  const resultUrl = await new Promise((resolve, reject) => {
+    let raw = "";
+    let done = false;
+    axios
+      .get(CF_SPACE + "/gradio_api/call/inference/" + eventId, {
+        responseType: "stream",
+        timeout: CF_TIMEOUT,
+        headers: cfHeaders(),
+      })
+      .then((res) => {
+        const timer = setTimeout(() => {
+          if (!done) { done = true; try { res.data.destroy(); } catch {} reject(new Error("timeout")); }
+        }, CF_TIMEOUT);
+        const finish = (fn, arg) => { if (!done) { done = true; clearTimeout(timer); try { res.data.destroy(); } catch {} fn(arg); } };
+        res.data.on("data", (chunk) => {
+          raw += chunk.toString();
+          for (const m of raw.matchAll(/^data:\s*(.+)$/gm)) {
+            const line = m[1];
+            if (line === "null") return finish(reject, new Error("process_failed"));
+            let data;
+            try { data = JSON.parse(line); } catch { continue; }
+            if (Array.isArray(data) && data[0]?.url) return finish(resolve, data[0].url);
+            if (typeof data === "string" && /quota|exceeded/i.test(data)) return finish(reject, new Error("quota_limited"));
+            if (data && typeof data === "object" && data.error) return finish(reject, new Error("process_failed"));
+          }
+        });
+        res.data.on("end", () => finish(reject, new Error("empty_result")));
+        res.data.on("error", (e) => finish(reject, e));
+      })
+      .catch(reject);
+  });
+
+  // 4. download hasil (PNG) → convert JPEG biar ringan buat WA
+  const dl = await axios.get(resultUrl, { responseType: "arraybuffer", timeout: 60000, maxContentLength: 30 * 1024 * 1024 });
+  if (dl.status !== 200 || !dl.data) throw new Error("download_failed");
+  let out = Buffer.from(dl.data);
+  try {
+    const sharp = (await import("sharp")).default;
+    out = await sharp(out).jpeg({ quality: 92, mozjpeg: true }).toBuffer();
+  } catch { /* kirim PNG apa adanya kalau sharp gagal */ }
+  return { buffer: out, label: "Face Restore" };
+}
+
 // ═══ Handler ═══
 
 async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && (m.quoted.type === "imageMessage" || m.quoted.isImage));
 
   if (!img) {
-    return m.reply(claraWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini. Mode: face (default), hd, 16k, product, text, concert, real (upscale murni).", "guide"), "remini");
+    return m.reply(claraWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini (tanpa watermark). Mode: face (default), hd, real (restore 4x local), atau bp hd/16k/product/text/concert (BeautyPlus, bisa ada watermark).", "guide"), "remini");
   }
 
   try {
@@ -264,19 +348,19 @@ async function handler(m, { sock, args }) {
     const wantDoc = argList.includes("doc");
 
     // ═══ PILIH ENGINE ═══
-    // DEFAULT = BeautyPlus face restore (request owner 2026-09-06: hasil local AI
-    // "cm main upscale" — face-restore AI beneran cuma ada di BeautyPlus img_portrait).
-    // Local AI (Swin2SR) tetep kepake buat: mode real/upscale eksplisit, pilihan
-    // ukuran 1080p-5K, dan fallback kalau BeautyPlus down/kuotanya abis.
+    // DEFAULT = CodeFormer (HuggingFace) — face restore TANPA WATERMARK (request owner
+    // 2026-09-06: BeautyPlus ada watermark, jangan jadi default).
+    // Fallback CodeFormer = local AI real (4x restore, tanpa watermark).
+    // Local AI langsung dipakai buat mode real/upscale & pilihan ukuran 1080p-5K.
+    // BeautyPlus HANYA eksplisit: .remini bp <mode> atau mode 16k/product/text/concert.
     const SIZES = { "1080": 1920, fhd: 1920, fullhd: 1920, "2k": 2560, qhd: 2560, "4k": 3840, uhd: 3840, "5k": 5120 };
     const sizeArg = argList.find((a) => SIZES[a]);
-    // "real"/"ultra"/"4x" = upscale 4x murni; "local"/"upscale" = paksa engine lokal
     const wantLocal =
       argList.some((a) => ["real", "ultra", "local", "upscale", "4x"].includes(a)) || !!sizeArg;
     const localMode = argList.some((a) => ["real", "ultra", "4x"].includes(a)) ? "real" : "hd";
-    // mode BeautyPlus: ambil dari args (hd/face/16k/product/text/concert), default face
-    // alias lama ".remini bp <mode>" tetep jalan — 'bp' cuma diabaikan di sini
-    const bpMode = wantLocal ? null : argList.find((a) => MODES[a]) || "face";
+    const wantBp =
+      !wantLocal && (argList.includes("bp") || argList.some((a) => ["16k", "product", "text", "concert"].includes(a)));
+    const bpMode = wantBp ? argList.find((a) => MODES[a]) || "hd" : null;
     const targetOut = sizeArg ? SIZES[sizeArg] : 1920;
 
     // Ukuran di atas 1080p = OWNER ONLY (proses berat, bisa 3-5 menit per gambar)
@@ -295,7 +379,7 @@ async function handler(m, { sock, args }) {
       mediaBuffer = await m.download();
     }
 
-    if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
+    if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer) || mediaBuffer.length < 100) {
       await m.react("❌");
       return m.reply(claraWrap("remini", "Gagal mengunduh gambar. Coba reply gambarnya lagi.", "error"), "remini");
     }
@@ -309,61 +393,68 @@ async function handler(m, { sock, args }) {
     let label;
     let outWidth = 0;
     let outHeight = 0;
-    let engineNote = "Engine: BeautyPlus AI (Face Restore)";
+    let engineNote = "Engine: CodeFormer AI (tanpa watermark)";
 
-    // Engine lokal (Swin2SR) — dipakai beramai-ramai: mode real, pilihan ukuran,
-    // dan fallback BeautyPlus. Antrian + notice unduh model + react per tahap.
-    const runLocal = async () => {
+    // Engine lokal (Swin2SR) — dipakai untuk mode real, pilihan ukuran, dan
+    // fallback CodeFormer/BeautyPlus. Antrian + notice unduh model + react per tahap.
+    const runLocal = async (mode = localMode) => {
       const q = hdQueueInfo();
       if (q.busy) {
         try { await m.react("⏳"); } catch {}
         m.reply(claraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${q.ahead + 1}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
       }
-      if (!isModelCached(localMode)) {
+      if (!isModelCached(mode)) {
         try { await m.react("🧠"); } catch {}
         m.reply(claraWrap("remini", "Model AI lokal belum ada di server — sedang diunduh otomatis (±59MB, cukup sekali saja). Proses pertama lebih lama dari biasanya, mohon tunggu ya."));
       }
       const opts = targetOut
-        ? { maxSide: Math.max(128, Math.round(targetOut / (localMode === "real" ? 4 : 2))), enlarge: true }
+        ? { maxSide: Math.max(128, Math.round(targetOut / (mode === "real" ? 4 : 2))), enlarge: true }
         : {};
       try { await m.react("🎨"); } catch {}
-      return enhanceLocalAsync(mediaBuffer, localMode, opts);
+      return enhanceLocalAsync(mediaBuffer, mode, opts);
     };
 
-    if (bpMode) {
-      // ═══ BeautyPlus AI — engine utama (face restore ala Remini) ═══
+    if (wantBp) {
+      // ═══ BeautyPlus — HANYA mode eksplisit (bisa ada watermark) ═══
       try {
         const r = await reminiEnhance(mediaBuffer, bpMode);
         resultBuffer = r.buffer;
         label = r.label;
-        engineNote = "Engine: BeautyPlus AI";
+        engineNote = "Engine: BeautyPlus AI (bisa ada watermark)";
       } catch (e1) {
         console.error("[REMINI] BeautyPlus gagal:", e1.message);
-        // img_portrait butuh wajah di foto — kalau proses gagal (bukan kuota),
-        // coba sekali lagi pakai img_hd (enhance umum) sebelum fallback lokal
-        if (e1.message === "process_failed" && MODES[bpMode]?.algo === "img_portrait") {
-          try {
-            const r = await reminiEnhance(mediaBuffer, "hd");
-            resultBuffer = r.buffer;
-            label = r.label;
-            engineNote = "Engine: BeautyPlus AI (Enhance HD)";
-          } catch (e2) {
-            console.error("[REMINI] BeautyPlus retry hd gagal:", e2.message);
-          }
+        // fallback: local AI tanpa watermark
+        try {
+          const r = await runLocal("real");
+          resultBuffer = r.buffer;
+          label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
+          outWidth = r.width;
+          outHeight = r.height;
+          engineNote = "Engine: Local AI 4x Restore (fallback — tanpa watermark)";
+        } catch (e3) {
+          throw e1.message === "quota_limited" ? e1 : e3;
         }
-        if (!resultBuffer) {
-          // fallback terakhir: local AI tanpa watermark
-          try {
-            const r = await runLocal();
-            resultBuffer = r.buffer;
-            label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
-            outWidth = r.width;
-            outHeight = r.height;
-            engineNote = "Engine: Local AI (fallback — tanpa watermark)";
-          } catch (e3) {
-            throw e1.message === "quota_limited" ? e1 : e3;
-          }
+      }
+    } else if (!wantLocal) {
+      // ═══ CodeFormer (HuggingFace) — DEFAULT, face restore tanpa watermark ═══
+      try {
+        try { await m.react("🎨"); } catch {}
+        const r = await codeformerEnhance(mediaBuffer, { fidelity: 0.5, upscale: 2 });
+        resultBuffer = r.buffer;
+        label = r.label;
+        engineNote = "Engine: CodeFormer AI (tanpa watermark)";
+      } catch (e1) {
+        console.error("[REMINI] CodeFormer gagal:", e1.message);
+        if (e1.message === "quota_limited") {
+          try { await m.react("⏳"); } catch {}
         }
+        // fallback: local Real-ESRGAN style 4x — tanpa watermark (request owner)
+        const r = await runLocal("real");
+        resultBuffer = r.buffer;
+        label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
+        outWidth = r.width;
+        outHeight = r.height;
+        engineNote = "Engine: Local AI 4x Restore (fallback — tanpa watermark)";
       }
     } else {
       // ═══ Local AI (Swin2SR) — mode real/upscale & pilihan ukuran ═══
@@ -398,9 +489,9 @@ async function handler(m, { sock, args }) {
       e.message === "quota_limited"
         ? "Kuota enhance sementara habis, coba lagi beberapa menit."
         : e.message === "timeout_render"
-          ? "Render AI lokal kelamaan / macet — kemungkinan unduhan model pertama kena internet server. Coba lagi sebentar, atau pakai .remini biasa (face restore)."
+          ? "Render AI lokal kelamaan / macet — kemungkinan unduhan model pertama kena internet server. Coba lagi sebentar ya."
           : e.message === "process_failed"
-            ? "AI gagal memproses gambar. Coba gambar lain atau mode .remini face."
+            ? "AI gagal memproses gambar. Coba gambar lain, atau mode .remini real."
             : te(m.prefix, m.command, m.pushName);
     return m.reply(claraWrap("remini", msg, "error"), "remini");
   }
