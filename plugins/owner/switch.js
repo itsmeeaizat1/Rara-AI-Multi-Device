@@ -628,8 +628,16 @@ async function handleFitur(m, { sock, config: cfg }) {
 
   if (!isCategory && !isCommand)
     return m.reply(`❌ Tidak ditemukan: ${name}\nKetik \`${prefix}switch fitur list\``)
-  if (isCommand && name === 'switch')
-    return m.reply(`❌ Tidak bisa menonaktifkan command ini`)
+  // GUARD self-lockout: command switch (+ alias togglefitur/onofffitur/enable/
+  // disable) DAN kategori "owner" (switch sendiri ada di kategori ini) gak
+  // boleh dinonaktifkan mode='off'/'toggle'-ke-off — kalau ke-disable, owner
+  // gak punya jalan lagi buat nyalain balik (chicken-egg, .switch dibutuhkan
+  // buat nyalain .switch). mode='on' tetap diizinkan (buat bersihin sisa
+  // data lama sebelum fix ini).
+  const SWITCH_ALIASES = ["switch", "enable", "disable", "togglefitur", "onofffitur", "onoff"]
+  const isSwitchLockRisk = (isCommand && SWITCH_ALIASES.includes(name)) || (isCategory && name === 'owner')
+  if (isSwitchLockRisk && mode !== 'on')
+    return m.reply(`❌ Tidak bisa menonaktifkan *${name}* — ini akan mengunci owner sendiri dari .switch (self-lockout). Command/kategori ini dikecualikan permanen.`)
 
   const type = isCategory ? "kategori" : "command"
   const list = isCategory ? disabledCats : disabledCmds

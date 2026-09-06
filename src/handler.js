@@ -922,13 +922,23 @@ try {
   }
 
   // === TOGGLE FITUR CHECK (owner-controlled on/off) ===
+  // ESCAPE HATCH: .switch (dan alias togglefitur/onofffitur/enable/disable)
+  // WAJIB selalu bisa dipanggil owner, apapun status disabled-nya. Bug lama:
+  // kategori command switch = "owner" — kalau kategori "owner" ke-disable,
+  // .switch ikut ke-block SEBELUM sampai handler-nya sendiri → owner gak
+  // bisa lagi nyalain apa-apa (self-lockout total, gak ada jalan keluar
+  // selain edit database manual). Report owner: ".switch fitur owner on"
+  // malah kena "Fitur ini sedang dinonaktifkan oleh owner" padahal dia
+  // sendiri ownernya.
+  const SWITCH_ESCAPE_HATCH = ["switch", "enable", "disable", "togglefitur", "onofffitur", "onoff"];
   try {
     const dbInstance = getDatabase();
     const cmdName = plugin.config.name || command;
     const cmdCat = plugin.config.category || "";
     const disabledCmds = dbInstance.setting("disabledCommands") || [];
     const disabledCats = dbInstance.setting("disabledCategories") || [];
-    if (disabledCmds.includes(cmdName) || (cmdCat && disabledCats.includes(cmdCat))) {
+    const isEscapeHatch = SWITCH_ESCAPE_HATCH.includes(cmdName) || SWITCH_ESCAPE_HATCH.includes(command);
+    if (!isEscapeHatch && (disabledCmds.includes(cmdName) || (cmdCat && disabledCats.includes(cmdCat)))) {
       if (!m.isNewsletter) {
         try {
           if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
