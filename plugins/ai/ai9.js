@@ -2,18 +2,22 @@
 // ai9.js — NOVA ROUTER (rancangan 9router): chat AI multi-provider
 // dengan key pooling, circuit breaker, health tracking & routing transparan.
 // Modul: src/lib/nova-ai-router.js — provider registry: ai-chain.js (apikeys.json)
+// + VISION : reply/kirim gambar + caption → analisis gambar (Gemini Vision)
+// + IMAGEGEN: .ai9 gambar <prompt> → generate gambar (callImageGen + fallback free)
 import te from "../../src/lib/nova-error.js";
 import { novaBox } from "../../src/lib/nova-menu-style.js";
 import { routerChat, getRouterStatus, resetProviderHealth } from "../../src/lib/nova-ai-router.js";
 import { getSession, appendTurn, toMessages } from "../../src/lib/nova-ai-session.js";
+import { GeminiVision } from "../../src/scraper/geminiVision.js";
+import { callImageGen } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai9",
   alias: ["ai9", "router9", "novarouter"],
   category: "ai",
-  description: "Nova Router — AI multi-provider rancangan 9router (pooling + circuit breaker)",
-  usage: ".ai9 <pesan> | .ai9 provider <nama> <pesan> | .ai9 status | .ai9 list | .ai9 reset <nama>",
-  example: ".ai9 jelaskan kuantum singkat\n.ai9 provider ikyy_gemma bikin pantun\n.ai9 status",
+  description: "Nova Router — AI multi-provider rancangan 9router (chat + scan gambar + generate gambar)",
+  usage: ".ai9 <pesan> | .ai9 gambar <prompt> | .ai9 provider <nama> <pesan> | .ai9 status | .ai9 list | .ai9 reset <nama>",
+  example: ".ai9 jelaskan kuantum singkat\n.ai9 gambar kucing astronot\n.ai9 bantu tugas ini (reply/attach foto)\n.ai9 status",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -24,10 +28,79 @@ const pluginConfig = {
 };
 
 const SUB = ["status", "list", "provider", "reset"];
+const GEN_WORDS = ["gambar", "image", "img", "buat"];
 
-async function handler(m, { sock, args }) {
+async function handler(m, { sock, args, botConfig }) {
   const argList = (args || []).map(String);
   const sub = argList[0]?.toLowerCase();
+  const aiCfg = botConfig?.aiHelp || {};
+
+  // ── VISION: gambar di-attach (caption = pertanyaan) atau di-reply ──
+  const hasImage = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
+  if (hasImage && sub !== "status" && sub !== "list" && sub !== "reset") {
+    try {
+      await m.react("🕒");
+      const buffer = await sock.downloadMediaMessage(m.quoted || m);
+      if (!buffer?.length) {
+        await m.react("❌");
+        return m.reply(novaBox("AI Router", ["Gagal download gambar — coba kirim ulang."]));
+      }
+      const prompt =
+        m.msg?.imageMessage?.caption?.trim() ||
+        m.text?.trim() ||
+        "Analisis gambar ini dan jelaskan dengan detail dalam bahasa Indonesia.";
+      const result = await GeminiVision({
+        imageBuffer: buffer,
+        prompt,
+        instruction: "Kamu adalah asisten AI vision yang ahli. Analisis gambar dengan detail dan akurat, bantu user menyelesaikan tugasnya. Jawab dalam bahasa Indonesia.",
+      });
+      if (!result?.status) {
+        await m.react("❌");
+        return m.reply(novaBox("AI Router", ["Gagal menganalisis gambar: " + (result?.error || "unknown")]));
+      }
+      const sKey = "satuan:" + m.sender;
+      appendTurn(sKey, "[kirim gambar] " + prompt, result.text);
+      await m.react("🐣");
+      const ans = result.text.length > 3500 ? result.text.slice(0, 3500) + "..." : result.text;
+      return m.reply(ans + "\n\n— via gemini vision");
+    } catch (e) {
+      console.error("[ai9-vision]:", e.message);
+      await m.react("❌");
+      return m.reply(novaBox("AI Router", ["Analisis gambar gagal: " + String(e.message).slice(0, 120)]));
+    }
+  }
+
+  // ── IMAGEGEN: .ai9 gambar <prompt> ──
+  if (GEN_WORDS.includes(sub)) {
+    const prompt = argList.slice(1).join(" ").trim();
+    if (!prompt) {
+      return m.reply(novaBox("AI Router", [
+        "Ketik deskripsi gambar yang mau dibuat",
+        "---",
+        "Contoh: .ai9 gambar kucing astronot realistis",
+      ]));
+    }
+    try {
+      await m.react("🕒");
+      const img = await callImageGen("gemini", prompt, { aiConfig: aiCfg });
+      const buf = img?.buffer
+        ? img.buffer
+        : img?.base64
+          ? Buffer.from(img.base64, "base64")
+          : img;
+      if (!buf?.length) throw new Error("hasil gambar kosong");
+      await m.react("🐣");
+      await sock.sendMessage(m.chat, {
+        image: buf,
+        caption: prompt + "\n\n— via " + (img?.via || "nova router imagegen"),
+      }, { quoted: m });
+      return;
+    } catch (e) {
+      console.error("[ai9-imggen]:", e.message);
+      await m.react("❌");
+      return m.reply(novaBox("AI Router", ["Generate gambar gagal: " + String(e.message).slice(0, 120)]));
+    }
+  }
 
   // ── .ai9 status / .ai9 list — dashboard health (box standar) ──
   if (sub === "status" || sub === "list") {
@@ -81,6 +154,8 @@ async function handler(m, { sock, args }) {
       "Ketik pesannya setelah .ai9",
       "---",
       "Contoh    : .ai9 jelaskan kuantum",
+      "Gambar    : .ai9 gambar kucing astronot",
+      "Scan foto : kirim/reply foto + caption pertanyaan",
       "Paksa     : .ai9 provider ikyy_gemma pantun",
       "Dashboard : .ai9 status",
     ]));
