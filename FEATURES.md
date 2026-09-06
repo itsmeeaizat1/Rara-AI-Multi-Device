@@ -732,7 +732,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - **Plugin Renamed:** 47 plugin diganti nama (goodbye2→goodbye, ai→nova-ai, dll) — FEATURES.md sudah diupdate
 - **Plugin Merged:** 23 Genshin voice convert di-merge ke voicechanger.js
 - **Exception:** `AIRich` class di `nova-builder.js` tetap pakai `interactiveMessage` untuk carousel cards (batasan teknis WhatsApp)
-- .switch - owner - switch on/off semua fitur (channel, group, auto, command)
+- .switch - owner - switch on/off semua fitur (channel, group, auto, command). CATATAN: command switch (+ alias enable/disable/togglefitur/onofffitur/onoff) & kategori 'owner' DIKECUALIKAN PERMANEN dari disable — mencegah self-lockout (fix 2026-09-06, commit 17f26950).
 - Alias: .enable .disable .togglefitur .onoff
   - .switch channel — toggle notifikasi channel
   - .switch group — toggle fitur grup (welcome, antilink, dll)
