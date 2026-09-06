@@ -6,24 +6,192 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
+// ─── 2 MODE DI DM (request owner 2026-09-06) ───
+// .welcome di chat pribadi → muncul 2 pilihan:
+//   1. On Global — welcome aktif di SEMUA grup yang bot masuk
+//   2. On Per Grup — pilih grup target lewat popup single_select
+async function sendWelcomeModeChooser(m, sock, db, prefix) {
+  const globalOn = db.setting("welcomeGlobal") === true;
+  const text = claraWrap("welcome", [
+    `Fitur : welcome message`,
+    `Lokasi : chat pribadi`,
+    ``,
+    `Welcome berlaku per grup — pilih mode aktivasi:`,
+    ``,
+    `1. Global semua grup`,
+    `   Sambutan aktif di semua grup yang bot masuk`,
+    `   Status saat ini : ${globalOn ? "ON" : "OFF"}`,
+    `2. Per grup target`,
+    `   Aktif hanya di grup pilihan kamu`,
+    ``,
+    `💡 Di dalam grup cukup: ${prefix}welcome on`,
+  ].join("\n"));
+  try {
+    await sock.sendButton(m.chat, null, text, m, {
+      buttons: [
+        { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "On Global Semua Grup", id: `${prefix}welcome onglobal` }) },
+        { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Pilih Grup Target", id: `${prefix}welcome pilihgrup` }) },
+      ],
+    });
+  } catch {
+    await m.reply(text + `\n\nKetik ${prefix}welcome onglobal atau ${prefix}welcome pilihgrup`);
+  }
+  return { handled: true };
+}
+
+// Popup single_select daftar semua grup (on & off per grup target)
+async function sendWelcomeGroupPicker(m, sock, prefix) {
+  let groups = {};
+  try { groups = (await sock.groupFetchAllParticipating()) || {}; } catch {}
+  const list = Object.values(groups)
+    .map((g) => ({ jid: g.id, subject: (g.subject || g.id || "").trim(), count: (g.participants || []).length }))
+    .sort((a, b) => a.subject.localeCompare(b.subject));
+
+  if (!list.length) {
+    return m.reply(claraWrap("welcome", [
+      `Fitur : welcome message`,
+      `Mode : per grup target`,
+      ``,
+      `Bot belum berada di grup mana pun,`,
+      `jadi belum ada target yang bisa dipilih.`,
+    ].join("\n")));
+  }
+
+  const rowsOn = list.slice(0, 50).map((g) => ({
+    title: g.subject.slice(0, 25),
+    description: `${g.count} member — ON welcome di grup ini`,
+    id: `${prefix}welcome grup ${g.jid} on`,
+  }));
+  const rowsOff = list.slice(0, 50).map((g) => ({
+    title: g.subject.slice(0, 25),
+    description: `${g.count} member — OFF welcome di grup ini`,
+    id: `${prefix}welcome grup ${g.jid} off`,
+  }));
+
+  const text = claraWrap("welcome", [
+    `Fitur : welcome message`,
+    `Mode : per grup target`,
+    ``,
+    `Total grup terdeteksi : ${list.length}`,
+    ``,
+    `Pilih grup dari daftar popup untuk mengaktifkan`,
+    `atau menonaktifkan sambutan member baru.`,
+  ].join("\n"));
+  try {
+    await sock.sendButton(m.chat, null, text, m, {
+      buttons: [
+        {
+          name: "single_select",
+          buttonParamsJson: JSON.stringify({
+            title: "Pilih Grup",
+            sections: [
+              { title: "Aktifkan (On)", rows: rowsOn },
+              { title: "Matikan (Off)", rows: rowsOff },
+            ],
+          }),
+        },
+      ],
+    });
+  } catch {
+    await m.reply(text + `\n\nKetik ${prefix}welcome grup <id grup> on`);
+  }
+  return { handled: true };
+}
+
+// Set welcome per grup target (dipanggil dari popup / manual)
+async function setWelcomeTargetGroup(m, sock, db, parts, prefix) {
+  const target = String(parts[1] || "");
+  const groupJid = target.endsWith("@g.us") ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`;
+  const action = parts[2] === "off" ? "off" : "on";
+
+  if (!/\d-\d+@g\.us$/.test(groupJid)) {
+    return m.reply(claraWrap("welcome", [
+      `Fitur : welcome message`,
+      `Mode : per grup target`,
+      ``,
+      `ID grup tidak valid.`,
+      `Gunakan popup ${prefix}welcome pilihgrup`,
+    ].join("\n")));
+  }
+
+  db.setGroup(groupJid, { welcome: action === "on" });
+  let subject = groupJid;
+  try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid; } catch {}
+
+  return m.reply(claraWrap("welcome", [
+    `Fitur : welcome message`,
+    `Mode : per grup target`,
+    `Status : ${action.toUpperCase()}`,
+    `Grup : ${subject}`,
+    ``,
+    action === "on"
+      ? `Sambutan member baru aktif di grup tersebut.`
+      : `Sambutan member baru dimatikan di grup tersebut.`,
+  ].join("\n")));
+}
+
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
-    const args = m.text?.trim().toLowerCase();
+    const db = getDatabase();
+    const raw = (m.text || "").trim().toLowerCase();
+    const parts = raw.split(/\s+/).filter(Boolean);
+    const isInGroup = String(m.chat || "").endsWith("@g.us");
 
-    if (!["on", "off"].includes(args)) {
+    // ─── DI DM: subcommand mode ───
+    if (!isInGroup) {
+      // .welcome onglobal | .welcome on global
+      if (parts[0] === "onglobal" || (parts[0] === "on" && parts[1] === "global")) {
+        db.setting("welcomeGlobal", true);
+        await m.reply(claraWrap("welcome", [
+          `Fitur : welcome message`,
+          `Mode : global semua grup`,
+          `Status : ON`,
+          ``,
+          `Sambutan member baru aktif di semua grup yang bot masuk.`,
+          `Grup yang welcome-nya di-off eksplisit tetap senyap.`,
+          `💡 Matikan dengan ${prefix}welcome offglobal`,
+        ].join("\n")));
+        return { handled: true };
+      }
+      // .welcome offglobal | .welcome off global
+      if (parts[0] === "offglobal" || (parts[0] === "off" && parts[1] === "global")) {
+        db.setting("welcomeGlobal", false);
+        await m.reply(claraWrap("welcome", [
+          `Fitur : welcome message`,
+          `Mode : global semua grup`,
+          `Status : OFF`,
+          ``,
+          `Sambutan global dimatikan. Grup yang udah ON`,
+          `per-grup tetap menerima sambutan.`,
+        ].join("\n")));
+        return { handled: true };
+      }
+      // .welcome pilihgrup → popup daftar grup
+      if (parts[0] === "pilihgrup") {
+        return await sendWelcomeGroupPicker(m, sock, prefix);
+      }
+      // .welcome grup <jid> <on|off> (dari popup)
+      if (parts[0] === "grup" && parts[1]) {
+        return await setWelcomeTargetGroup(m, sock, db, parts, prefix);
+      }
+      // .welcome / .welcome on / .welcome off di DM → 2 PILIHAN MODE
+      return await sendWelcomeModeChooser(m, sock, db, prefix);
+    }
+
+    // ─── DI GRUP: perilaku lama (per-grup) ───
+    if (!["on", "off"].includes(raw)) {
       await m.reply(novaGuide('Welcome', `Aktifkan atau matikan pesan sambutan member baru. Custom pesannya? Ketik ${prefix}setwelcome <pesan>.`, `${prefix}welcome on`));
       return { handled: true };
     }
 
-    const db = getDatabase();
-    db.setGroup(m.chat, { welcome: args === "on" });
+    db.setGroup(m.chat, { welcome: raw === "on" });
 
     await m.reply(claraWrap("welcome", [
       `Fitur : welcome message`,
-      `Status : ${args === "on" ? "ON" : "OFF"}`,
+      `Status : ${raw === "on" ? "ON" : "OFF"}`,
       `Grup : ${m.chat}`,
-      "",
+      ``,
       `💡 Custom pesan? Ketik ${prefix}setwelcome <pesan>`,
     ].join("\n")));
   } catch (error) {
@@ -41,7 +209,11 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   const db = getDatabase();
   const groupData = db.getGroup(groupJid) || {};
 
-  if (!groupData.welcome) return;
+  // Mode global (welcomeGlobal) — ON di semua grup,
+  // KECUALI grup yang eksplisit OFF (off per-grup menang).
+  const globalWelcome = db.setting("welcomeGlobal") === true;
+  if (groupData.welcome === false) return;
+  if (!groupData.welcome && !globalWelcome) return;
 
   const groupName = metadata?.subject || "Grup";
   const memberCount = metadata?.participants?.length || 0;
@@ -117,11 +289,11 @@ export default {
     alias: ["welcome2", "welcome"],
     category: "group",
     description: "Pesan welcome saat member join grup (teks engine)",
-    usage: ".welcome on/off\n.setwelcome <pesan> (custom)\n.resetwelcome (reset)",
+    usage: ".welcome on/off\n.welcome (di DM: pilih mode global/per-grup)\n.setwelcome <pesan> (custom)\n.resetwelcome (reset)",
     example: ".welcome on",
     isOwner: true,
     isPremium: false,
-    isGroup: true,
+    isGroup: false,
     isPrivate: false,
     cooldown: 5,
     energi: 0,
@@ -129,4 +301,5 @@ export default {
   },
   handler,
   sendWelcomeMessage,
+  sendWelcomeModeChooser,
 };
