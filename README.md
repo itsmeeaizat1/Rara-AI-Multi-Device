@@ -231,6 +231,7 @@ Automation:
 | Bencana Watch | Auto-alert realtime per chat: gempa BMKG M5+, global M6+, GDACS Siaga/Awas | `.bencanawatch on` |
 | Peringatan Wilayah | Bencana dekat lokasi kamu → peringatan warga sekitar AI + info lengkap | `.bencanawatch lokasi Palu` |
 | 3 Mode Alert | Otomatis (realtime) / Jadwal (rangkuman di jam custom) / Darurat (dekat & besar saja) | `.bencanawatch mode darurat` |
+| Filter Jenis | Hanya alert jenis bencana pilihan (mis. gempa, tsunami) — semua mode | `.bencanawatch jenis gempa, tsunami` |
 
 ### 💼 Productivity & Tools
 

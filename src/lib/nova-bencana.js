@@ -411,6 +411,30 @@ export function clearWatcherSchedules(chatId) {
   return subs[chatId];
 }
 
+/** Jenis bencana valid buat filter subscriber. */
+export const BENCANA_JENIS = ["gempa", "banjir", "topan", "gunungapi", "kebakaran", "kering", "tsunami"];
+
+/**
+ * Set filter jenis bencana subscriber. kinds kosong/null = semua jenis.
+ * Filter berlaku di SEMUA mode — jenis yang gak dipilih gak dikirim
+ * (realtime & rangkuman).
+ */
+export function setWatcherJenis(chatId, kinds) {
+  const subs = getWatchers();
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!Array.isArray(kinds) || kinds.length === 0) {
+    delete subs[chatId].jenis; // reset → semua jenis
+  } else {
+    const bad = kinds.filter((k) => !BENCANA_JENIS.includes(k));
+    if (bad.length) {
+      throw new Error(`Jenis tidak dikenal: ${bad.join(", ")}. Pilihan: ${BENCANA_JENIS.join(", ")} (atau 'semua')`);
+    }
+    subs[chatId].jenis = [...new Set(kinds)];
+  }
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
 function pendingLine(ev) {
   let head = ev.jenis || "Bencana";
   if (ev.mag) head += ` ${ev.mag} SR`;
@@ -599,7 +623,9 @@ async function dispatch(ev, genericText = null, imageUrl = null) {
   for (const [chatId, sub] of Object.entries(subs)) {
     try {
       const mode = sub.mode || "otomatis";
-      if (mode === "jadwal") continue; // nunggu jam rangkuman
+
+      // filter jenis bencana (kalau di-set) — berlaku di semua mode
+      if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes(ev.kind)) continue;
 
       const distKm =
         sub.lat != null && ev?.lat != null
@@ -607,6 +633,18 @@ async function dispatch(ev, genericText = null, imageUrl = null) {
           : Infinity;
       const radius = sub.radius || DEFAULT_RADIUS_KM;
       const near = distKm <= radius;
+
+      if (mode === "jadwal") {
+        // ATURAN OWNER: bencana DARURAT mesti realtime — gak nunggu rangkuman.
+        if (ev.isSevere) {
+          if (near) await sendRegionalAlert(sock, chatId, ev, sub);
+          else if (genericText) await sock.sendMessage(chatId, { text: genericText });
+          // tandai sudah diterima biar gak dobel muncul di rangkuman berikutnya
+          const subs2 = getWatchers();
+          if (subs2[chatId]) { subs2[chatId].lastDigest = Date.now(); saveWatchers(subs2); }
+        }
+        continue; // yg biasa nunggu jam rangkuman
+      }
 
       if (mode === "darurat" && !near && !ev.isSevere) continue; // filter: cuman yg darurat
 
