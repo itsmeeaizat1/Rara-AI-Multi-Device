@@ -4,7 +4,7 @@
 import sharp from "sharp";
 import te from "../../src/lib/nova-error.js";
 import cfg from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hd",
@@ -46,13 +46,14 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    let txt = "";
-    txt += ``;
-    txt += `Kirim/reply gambar dulu ya!\n`;
-    txt += `Contoh: .hd (reply gambar)\n`;
-    txt += `Custom scale: .hd 4x\n`;
-    txt += `Kirim sebagai dokumen: .hd doc\n`;
-        return await m.reply( txt, "hd");
+    return await m.reply(novaBox("HD Enhance", [
+      "Kirim gambar baru atau reply/tag foto yang",
+      "udah diupload sebelumnya, terus ketik .hd",
+      "---",
+      "Contoh    : .hd (reply gambar apa pun)",
+      "Scale     : .hd 4x (2x/4x/8x)",
+      "Dokumen   : .hd doc (hasil dikirim jpg file)",
+    ]));
   }
 
   try {
@@ -62,8 +63,15 @@ async function handler(m, { sock, args }) {
     const scaleArg = argList.find((a) => /^\d+x$/.test(a));
     let scale = scaleArg ? parseInt(scaleArg.replace("x", "")) : 2;
     scale = Math.max(2, Math.min(8, scale || 2));
-    const buffer = await m.download();
-    if (!buffer) {
+    // FIX: reply/tag foto yang udah diupload sebelumnya — unduh dari
+    // pesan yang di-quote, bukan dari pesan command (isinya teks).
+    let buffer;
+    if (m.quoted && (m.quoted.isMedia || m.quoted.type === "imageMessage")) {
+      buffer = await m.quoted.download();
+    } else if (m.isImage || m.isMedia) {
+      buffer = await m.download();
+    }
+    if (!buffer || !buffer.length) {
       return await m.reply(claraWrap("hd", "Gagal download gambar! Coba lagi."));
     }
 
