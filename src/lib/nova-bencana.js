@@ -17,6 +17,16 @@
 //  Pesan alert: plain text natural (aturan bot: notifikasi otomatis
 //  terjadwal tanpa box-drawing & tanpa smallcaps).
 //
+//  3 MODE PENGIRIMAN (request owner 2026-09-06):
+//   • otomatis (default) — semua info bencana baru dikirim realtime;
+//     dekat lokasi → peringatan wilayah, jauh → alert generic.
+//   • jadwal — gak realtime; bencana baru dikumpulkan dulu, dikirim
+//     sebagai RANGKUMAN di jam yang di-set user (berapa pun banyaknya,
+//     .bencanawatch jadwal add 07:00 / 10:00 / ...).
+//   • darurat — realtime tapi cuman yg penting: bencana DEKAT lokasi
+//     user (radius) atau bencana besar (gempa M 6.5+ BMKG / M 7.0+
+//     global / GDACS level AWAS). Info wilayah jauh gak dikirim.
+//
 //  PERINGATAN WILAYAH (regional alert, request owner 2026-09-06):
 //  Subscriber bisa set lokasi (.bencanawatch lokasi <kota>) + radius.
 //  Event baru dalam radius → peringatan khusus warga sekitar wilayah:
@@ -188,9 +198,14 @@ export async function getBmkgLatest() {
 
 function loadState() {
   try {
-    if (fs.existsSync(STATE_FILE)) return JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
+    if (fs.existsSync(STATE_FILE)) {
+      const st = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
+      st.pending ??= [];
+      st.firedJadwal ??= [];
+      return st;
+    }
   } catch { /* korup → mulai ulang */ }
-  return { bmkg: null, gdacs: [], usgs: [] };
+  return { bmkg: null, gdacs: [], usgs: [], pending: [], firedJadwal: [] };
 }
 
 function saveState(st) {
@@ -340,6 +355,114 @@ export function setWatcherRadius(chatId, km) {
   return subs[chatId];
 }
 
+// ───────────────────── mode pengiriman + jadwal ─────────────────────
+
+const MODES = ["otomatis", "jadwal", "darurat"];
+
+/** Set mode pengiriman subscriber (otomatis/jadwal/darurat). */
+export function setWatcherMode(chatId, mode) {
+  if (!MODES.includes(mode)) throw new Error(`Mode harus ${MODES.join(" / ")}.`);
+  const subs = getWatchers();
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  subs[chatId].mode = mode;
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+/** Tambah jam rangkuman (HH:MM). Auto-switch ke mode jadwal. */
+export function addWatcherSchedule(chatId, hhmm) {
+  const m = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(String(hhmm || "").trim());
+  if (!m) throw new Error("Format jam salah. Contoh: 07:00");
+  const norm = `${m[1].padStart(2, "0")}:${m[2]}`;
+  const subs = getWatchers();
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  const cur = subs[chatId];
+  cur.schedules = Array.isArray(cur.schedules) ? cur.schedules : [];
+  if (cur.schedules.includes(norm)) throw new Error(`Jadwal ${norm} sudah ada.`);
+  if (cur.schedules.length >= 12) throw new Error("Maksimal 12 jadwal. Hapus salah satu dulu.");
+  cur.schedules.push(norm);
+  cur.schedules.sort();
+  cur.mode = "jadwal";
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+/** Hapus satu jam rangkuman. */
+export function removeWatcherSchedule(chatId, hhmm) {
+  const subs = getWatchers();
+  const cur = subs[chatId];
+  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on.");
+  cur.schedules = Array.isArray(cur.schedules) ? cur.schedules : [];
+  const m = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(String(hhmm || "").trim());
+  const norm = m ? `${m[1].padStart(2, "0")}:${m[2]}` : null;
+  if (!norm || !cur.schedules.includes(norm)) throw new Error(`Jadwal ${hhmm || "-"} gak ada. Cek daftar: .bencanawatch jadwal`);
+  cur.schedules = cur.schedules.filter((s) => s !== norm);
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+/** Hapus semua jam rangkuman (tanpa ganti mode). */
+export function clearWatcherSchedules(chatId) {
+  const subs = getWatchers();
+  const cur = subs[chatId];
+  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on.");
+  cur.schedules = [];
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+function pendingLine(ev) {
+  let head = ev.jenis || "Bencana";
+  if (ev.mag) head += ` ${ev.mag} SR`;
+  if (ev.level) head += ` — ${String(ev.level).replace(/ \(.*\)$/, "")}`;
+  return `${head}${ev.desc ? `: ${ev.desc}` : ""}`;
+}
+
+/** Kumpulkan event ke pending (buat mode jadwal). Cap 100. */
+function pushPending(ev) {
+  const st = loadState();
+  st.pending.push({ ts: Date.now(), line: pendingLine(ev), lat: ev.lat, lon: ev.lon });
+  if (st.pending.length > 100) st.pending = st.pending.slice(-100);
+  saveState(st);
+}
+
+function nowWib() {
+  const w = new Date(Date.now() + 7 * 3600e3);
+  return { hhmm: w.toISOString().slice(11, 16), date: w.toISOString().slice(0, 10) };
+}
+
+/**
+ * Bangun & kirim rangkuman bencana ke satu subscriber mode jadwal.
+ * @returns true kalau ada bencana baru & terkirim.
+ */
+export async function fireJadwalDigest(_sock, chatId, sub) {
+  const st = loadState();
+  const since = sub.lastDigest || 0;
+  const events = (st.pending || []).filter((p) => p.ts > since);
+  if (!events.length) return false;
+  let out = `RANGKUMAN BENCANA — ${nowWib().hhmm} WIB\n\n`;
+  out += `Ada ${events.length} bencana baru sejak rangkuman terakhir:\n\n`;
+  out += events.slice(0, 15).map((p, i) => `${i + 1}. ${p.line}`).join("\n");
+  if (sub.lat != null) {
+    let best = null;
+    for (const p of events) {
+      if (p.lat == null) continue;
+      const d = haversineKm(sub.lat, sub.lon, p.lat, p.lon);
+      if (!best || d < best.d) best = { d, p };
+    }
+    if (best) {
+      const dir = bearingCompass(sub.lat, sub.lon, best.p.lat, best.p.lon);
+      out += `\n\nTerdekat dari ${sub.city}: ±${Math.round(best.d)} km arah ${dir}\n(${best.p.line})`;
+    }
+  }
+  out += `\n\nCek detail: .bencana\nSumber: BMKG, USGS, GDACS`;
+  await _sock.sendMessage(chatId, { text: out });
+  // majuin lastDigest — event berikutnya gak dobel masuk rangkuman berikutnya
+  const subs = getWatchers();
+  if (subs[chatId]) { subs[chatId].lastDigest = Date.now(); saveWatchers(subs); }
+  return true;
+}
+
 // ───────────────────── composer AI + info section ─────────────────────
 
 const KIND_BY_TYPE = { EQ: "gempa", FL: "banjir", TC: "topan", VO: "gunungapi", DR: "kering", WF: "kebakaran", TS: "tsunami" };
@@ -456,27 +579,38 @@ export async function sendRegionalAlert(_sock, chatId, ev, sub) {
 let sock = null;
 let fastTimer = null;
 let slowTimer = null;
+let jadwalTimer = null;
 
 function isRunning() {
-  return !!(fastTimer || slowTimer);
+  return !!(fastTimer || slowTimer || jadwalTimer);
 }
 
 /**
- * Dispatch event ke semua subscriber:
- *  - punya lokasi & event dalam radius → peringatan wilayah (AI + info section)
- *  - selain itu → alert generic (kalau genericText ada)
+ * Dispatch event ke semua subscriber SESUAI MODE:
+ *  • otomatis — dekat lokasi → peringatan wilayah, jauh → alert generic
+ *  • jadwal   — gak dikirim sekarang; dikumpulkan, dikirim rangkuman di jam set
+ *  • darurat  — hanya yg dekat lokasi (radius) ATAU bencana besar (isSevere)
  * Per-subscriber, jadi tiap chat dapat konten yang relevan.
  */
 async function dispatch(ev, genericText = null, imageUrl = null) {
   const subs = getWatchers();
+  const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
+  if (hasJadwal) pushPending(ev); // kumpulin buat rangkuman terjadwal
   for (const [chatId, sub] of Object.entries(subs)) {
     try {
+      const mode = sub.mode || "otomatis";
+      if (mode === "jadwal") continue; // nunggu jam rangkuman
+
       const distKm =
         sub.lat != null && ev?.lat != null
           ? haversineKm(sub.lat, sub.lon, ev.lat, ev.lon)
           : Infinity;
       const radius = sub.radius || DEFAULT_RADIUS_KM;
-      if (distKm <= radius) {
+      const near = distKm <= radius;
+
+      if (mode === "darurat" && !near && !ev.isSevere) continue; // filter: cuman yg darurat
+
+      if (near) {
         await sendRegionalAlert(sock, chatId, ev, sub);
       } else if (genericText) {
         await sock.sendMessage(chatId, { text: genericText });
@@ -486,6 +620,43 @@ async function dispatch(ev, genericText = null, imageUrl = null) {
       logger.error?.("bencana", `Gagal kirim ke ${chatId}: ${e.message}`);
     }
     await new Promise((r) => setTimeout(r, 600));
+  }
+}
+
+/** Wrapper testable — pakai sock internal monitor. */
+export async function dispatchBencanaEvent(ev, genericText = null, imageUrl = null) {
+  return dispatch(ev, genericText, imageUrl);
+}
+
+/**
+ * Cek jadwal tiap menit — kirim rangkuman buat subscriber mode jadwal
+ * yang jam-nya cocok dengan sekarang (WIB). Anti dobel via state firedJadwal.
+ */
+async function jadwalTick() {
+  try {
+    const subs = getWatchers();
+    const { hhmm, date } = nowWib();
+    for (const [chatId, sub] of Object.entries(subs)) {
+      if ((sub.mode || "otomatis") !== "jadwal") continue;
+      const scheds = Array.isArray(sub.schedules) ? sub.schedules : [];
+      if (!scheds.includes(hhmm)) continue;
+      const st = loadState();
+      const key = `${chatId}|${date}|${hhmm}`;
+      if (st.firedJadwal.includes(key)) continue;
+      st.firedJadwal.push(key);
+      st.firedJadwal = st.firedJadwal.slice(-100);
+      saveState(st);
+      // fireJadwalDigest update lastDigest sendiri; kalau kosong (false),
+      // event nunggu sampai rangkuman berikutnya (gak ada pesan = gak ada kabar)
+      try {
+        const sent = await fireJadwalDigest(sock, chatId, sub);
+        if (sent) logger.success?.("bencana", `Rangkuman ${hhmm} terkirim ke ${chatId}`);
+      } catch (e) {
+        logger.error?.("bencana", `Rangkuman gagal kirim ke ${chatId}: ${e.message}`);
+      }
+    }
+  } catch (e) {
+    logger.error?.("bencana", "Jadwal error: " + e.message);
   }
 }
 
@@ -519,6 +690,7 @@ async function fastTick() {
           waktu: `${g.Tanggal} ${g.Jam}`,
           lat: +lat, lon: +lon, desc: g.Wilayah,
           sumber: "BMKG (data.bmkg.go.id)",
+          isSevere: parseFloat(g.Magnitude) >= 6.5, // mode darurat: gempa besar lolos filter global
         };
         await dispatch(ev, lines.join("\n"), g._shakemapUrl);
       }
@@ -558,6 +730,7 @@ async function slowTick() {
           lat: e.lat, lon: e.lon, desc: e.desc || e.name,
           sumber: "GDACS (EU/UN) — gdacs.org",
           report: e.report,
+          isSevere: e.alertlevel === "Red", // mode darurat: level AWAS lolos filter global
         };
         await dispatch(ev, lines.join("\n"));
         await new Promise((r) => setTimeout(r, 1000));
@@ -593,6 +766,7 @@ async function slowTick() {
           lat: q.lat, lon: q.lon, desc: q.place,
           sumber: "USGS (earthquake.usgs.gov)",
           report: q.url,
+          isSevere: q.mag >= 7.0, // mode darurat: gempa besar global lolos filter
         };
         await dispatch(ev, lines.join("\n"));
         await new Promise((r) => setTimeout(r, 1000));
@@ -611,7 +785,8 @@ export function startBencanaMonitor() {
   slowTick();
   fastTimer = setInterval(fastTick, POLL_FAST_MS);
   slowTimer = setInterval(slowTick, POLL_SLOW_MS);
-  logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG 60s, GDACS+USGS 300s)`);
+  jadwalTimer = setInterval(jadwalTick, 60_000); // cek jadwal tiap menit (mode jadwal)
+  logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG 60s, GDACS+USGS 300s, jadwal 60s)`);
   return true;
 }
 
@@ -619,7 +794,8 @@ export function startBencanaMonitor() {
 export function stopBencanaMonitor() {
   if (fastTimer) clearInterval(fastTimer);
   if (slowTimer) clearInterval(slowTimer);
-  fastTimer = slowTimer = null;
+  if (jadwalTimer) clearInterval(jadwalTimer);
+  fastTimer = slowTimer = jadwalTimer = null;
   return true;
 }
 
