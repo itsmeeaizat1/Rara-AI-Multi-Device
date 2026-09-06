@@ -9,6 +9,7 @@ import {
   addWatcher, removeWatcher, getWatchersSafe, syncBencanaMonitor, watcherCount,
   setWatcherLocation, clearWatcherLocation, setWatcherRadius, haversineKm,
   setWatcherMode, addWatcherSchedule, removeWatcherSchedule, clearWatcherSchedules,
+  setWatcherJenis, BENCANA_JENIS,
 } from "../../src/lib/nova-bencana.js";
 import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 
@@ -17,7 +18,7 @@ const pluginConfig = {
   alias: ["bencanawatch"],
   category: "bencana",
   description: "Langganan auto-alert bencana realtime di chat ini (gempa BMKG M5+, gempa global M6+, GDACS Siaga/Awas)",
-  usage: ".bencanawatch <on/off/status/mode/jadwal/lokasi/radius>",
+  usage: ".bencanawatch <on/off/status/mode/jadwal/jenis/lokasi/radius>",
   example: ".bencanawatch on",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 0, isEnabled: true,
@@ -80,6 +81,56 @@ async function handler(m, { sock }) {
       }
     }
 
+    // ── filter jenis bencana ──
+    if (action === "jenis" || action === "filter") {
+      const rest = (m.args || []).slice(1).join(" ").trim().toLowerCase();
+      if (!rest) {
+        const subs0 = await getWatchersSafe();
+        const cur = subs0[chatId]?.jenis;
+        return m.reply(novaBox("Bencana Watch — Jenis", [
+          `Filter aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ") : "semua jenis"}`,
+          "---",
+          "Pilihan : " + BENCANA_JENIS.join(", "),
+          "Contoh  : .bencanawatch jenis gempa",
+          `Contoh  : .bencanawatch jenis gempa, banjir`,
+          "Reset   : .bencanawatch jenis semua",
+          "---",
+          "Jenis yang gak dipilih gak dikirim, baik",
+          "realtime maupun di rangkuman jadwal.",
+        ]));
+      }
+      try {
+        if (rest === "semua" || rest === "all" || rest === "reset") {
+          const rec = setWatcherJenis(chatId, []);
+          await m.react("🐣");
+          return m.reply(novaBox("Bencana Watch", ["Filter jenis direset — semua jenis bencana dikirim lagi."]));
+        }
+        const alias = {
+          gempa: "gempa", earthquake: "gempa", eq: "gempa",
+          banjir: "banjir", flood: "banjir",
+          topan: "topan", badai: "topan", cyclone: "topan",
+          gunungapi: "gunungapi", gunung: "gunungapi", volcano: "gunungapi",
+          kebakaran: "kebakaran", karhutla: "kebakaran", fire: "kebakaran",
+          kering: "kering", kekeringan: "kering", drought: "kering",
+          tsunami: "tsunami",
+        };
+        const kinds = rest.split(/[\s,]+/).map((k) => alias[k]).filter(Boolean);
+        const invalid = rest.split(/[\s,]+/).filter((k) => !alias[k]);
+        if (invalid.length) throw new Error(`Jenis tidak dikenal: ${invalid.join(", ")}. Pilihan: ${BENCANA_JENIS.join(", ")}`);
+        const rec = setWatcherJenis(chatId, kinds);
+        await m.react("🐣");
+        return m.reply(novaBox("Bencana Watch", [
+          `Filter jenis aktif: ${rec.jenis.join(", ")}`,
+          "---",
+          "Hanya jenis di atas yang dikirim (semua mode).",
+          "Reset: .bencanawatch jenis semua",
+        ]));
+      } catch (e) {
+        await m.react("❌");
+        return m.reply(novaError("Bencana Watch", e.message));
+      }
+    }
+
     // ── mode pengiriman: otomatis / jadwal / darurat ──
     if (action === "mode") {
       const mode = (m.args || [])[1]?.toLowerCase();
@@ -102,7 +153,7 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         const expl = {
           otomatis: "Semua bencana baru dikirim langsung. Dekat lokasi → peringatan wilayah, jauh → alert umum.",
-          jadwal: "Bencana baru dikumpulkan & dikirim sebagai rangkuman di jam yang di-set. Set jam: .bencanawatch jadwal add 07:00",
+          jadwal: "Bencana baru dikumpulkan & dikirim sebagai rangkuman di jam yang di-set. Set jam: .bencanawatch jadwal add 07:00. Bencana DARURAT besar tetap langsung dikirim realtime, gak nunggu rangkuman.",
           darurat: "Hanya bencana paling penting yang dikirim: dekat lokasi kamu (radius) atau bencana besar. Set lokasi dulu biar maksimal: .bencanawatch lokasi <kota>",
         };
         return m.reply(novaBox("Bencana Watch", [
@@ -203,6 +254,9 @@ async function handler(m, { sock }) {
       if ((me?.mode || "otomatis") === "jadwal") {
         lines.push(`Jadwal  : ${(Array.isArray(me.schedules) && me.schedules.length) ? me.schedules.join(", ") : "belum ada — .bencanawatch jadwal add 07:00"}`);
       }
+      if (Array.isArray(me?.jenis) && me.jenis.length) {
+        lines.push(`Jenis   : ${me.jenis.join(", ")} (filter aktif)`);
+      }
       if (me?.city) {
         lines.push("---");
         lines.push(`Lokasi  : ${me.city}${me.detail ? ` (${me.detail})` : ""}`);
@@ -216,7 +270,7 @@ async function handler(m, { sock }) {
       return m.reply(novaBox("Bencana Watch", lines));
     }
 
-    return m.reply(novaGuide("Bencana Watch", "Gunakan on, off, status, mode <otomatis/jadwal/darurat>, jadwal add/remove <jam>, lokasi <kota>, atau radius <km>", ".bencanawatch mode darurat"));
+    return m.reply(novaGuide("Bencana Watch", "Gunakan on, off, status, mode <otomatis/jadwal/darurat>, jadwal add/remove <jam>, jenis <bencana>, lokasi <kota>, atau radius <km>", ".bencanawatch jenis gempa, tsunami"));
   } catch (err) {
     console.error("[bencanawatch]", err);
     await m.react("❌");
