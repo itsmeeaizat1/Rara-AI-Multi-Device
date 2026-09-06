@@ -7,6 +7,7 @@ import {
 } from "nova";
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
+import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttsearch",
@@ -44,11 +45,38 @@ async function handler(m, { sock }) {
     ]));
   }
   try {
-    const videos = await tiktokSearchVideo(query);
+    await m.react("🕒");
+    // Data UP-TO-DATE via GetDL (request owner 2026-09-06: data lama basi,
+    // kadang muncul video 2023). Fallback ke scraper lama kalau GetDL mati.
+    let videos = [];
+    let fromGetdl = false;
+    try {
+      const gd = await getdlTikTokSearch(query, { count: 5 });
+      if (gd?.length) {
+        fromGetdl = true;
+        videos = gd.map((v) => ({
+          title: v.title,
+          duration: v.duration,
+          download: v.playUrl,
+          link: v.playUrl,
+          cover: v.cover,
+          createdAt: v.createdAt,
+          author: null,
+          stats: null,
+        }));
+      }
+    } catch (gdErr) {
+      console.log("[ttsearch] GetDL gagal, fallback scraper lama:", gdErr.message);
+    }
+    if (!videos.length) {
+      videos = await tiktokSearchVideo(query);
+    }
 
     if (!videos || videos.length === 0) {
+      await m.react("❗");
       return m.reply(novaError("TTSearch", `Gak nemu video untuk: ${query} nih`));
     }
+    if (fromGetdl) await m.react("🐣");
 
     const maxShow = Math.min(videos.length, 5);
     const mediaList = videos.slice(0, maxShow).map((video) => ({
@@ -57,10 +85,7 @@ async function handler(m, { sock }) {
       caption: `*TikTok Search*
 
 Judul: ${video.title || "-"}
-Author: ${video.author?.nickname || "-" || "@" + (video.author?.uniqueId || "-")}
-Views: ${formatNum(video.stats?.plays)}
-Likes: ${formatNum(video.stats?.likes)}
-Link: ${video.link || "-"}`,
+${video.author?.nickname ? `Author: ${video.author.nickname}\n` : ""}${video.stats?.plays ? `Views: ${formatNum(video.stats.plays)}\nLikes: ${formatNum(video.stats.likes)}\n` : ""}Link: ${video.link || "-"}`,
       contextInfo: {
         forwardingScore: 0,
         isForwarded: false,
