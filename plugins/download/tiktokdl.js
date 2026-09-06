@@ -6,6 +6,11 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, med
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
+import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
+
+// Sesi hasil pencarian .tt keyword (ala .play): chat:sender → {videos, at}
+const ttSearchSessions = new Map();
+const TT_SESSION_TTL = 3 * 60 * 1000; // 3 menit
 
 async function tiktokDl(url) {
   function formatNumber(integer) {
@@ -53,6 +58,11 @@ async function tiktokDl(url) {
       },
     )
   ).data.data;
+
+  // Pagar: link mati/private → tikwm balasin data kosong, jangan crash
+  if (!res || !res.id) {
+    throw new Error("Video TikTok gak ketemu — link private/udah dihapus?");
+  }
 
   if (res?.duration == 0) {
     res.images.forEach((v) => data.push({ type: "photo", url: v }));
@@ -113,9 +123,9 @@ const pluginConfig = {
   name: ["tiktok", "tt", "ttmp4"],
   alias: ["tiktok", "tt", "ttmp4"],
   category: "download",
-  description: "Download video TikTok (link) atau kirim video random dari keyword (ala .play)",
-  usage: ".tiktok <url/keyword>",
-  example: ".tiktok https://vt.tiktok.com/xxx · .tt viral",
+  description: "Download video TikTok (link) atau search keyword ala .play — list pilih nomor (data up-to-date via GetDL)",
+  usage: ".tiktok <url/keyword> atau .tt <nomor> buat pilih hasil",
+  example: ".tiktok https://vt.tiktok.com/xxx · .tt supra mk4 → .tt 2",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -131,47 +141,108 @@ async function handler(m, { sock }) {
   const command = m?.command;
   if (!text) {
     return m.reply(claraWrap("TikTok", [
-      `📌 Kirim link video TikTok ATAU keyword buat cari video random:`,
+      `📌 Kirim link video TikTok ATAU keyword buat cari video ala .play:`,
       ``,
       `💡 Contoh:`,
       `${prefix + command} https://vt.tiktok.com/xxx`,
       `${prefix + command} viral`,
+      ``,
+      `💡 Abis itu pilih nomornya:`,
+      `${prefix + command} 2`,
     ]), { commandName: "tiktok" });
   }
-  // ─── Jalur keyword search (bukan URL) — ala .play ───
+  // ─── Pilih hasil pencarian sebelumnya (ala .play): .tt 2 ───
   const isUrl = /https?:\/\/|tiktok\.com|vt\.tiktok|douyin/i.test(text);
+  const pickMatch = text.match(/^(\d{1,2})$/);
+  if (!isUrl && pickMatch) {
+    const sesiKey = `${m.chat}:${m.sender}`;
+    const sesi = ttSearchSessions.get(sesiKey);
+    if (sesi && Date.now() - sesi.at < TT_SESSION_TTL) {
+      const idx = parseInt(pickMatch[1], 10);
+      const video = sesi.videos[idx - 1];
+      if (!video) {
+        await m.react("❗");
+        return m.reply(claraWrap("TikTok Search", `Nomor ${idx} gak ada di hasil pencarian (1-${sesi.videos.length}). Ketik ulang keyword-nya ya!`));
+      }
+      try {
+        await m.react("🕒");
+        await m.react("⏬");
+        await sock.sendMessage(m.chat, {
+          video: { url: video.playUrl },
+          caption: mediaCaption({
+            platformIcon: "🎵",
+            platformName: "TikTok",
+            title: video.title || "TikTok Video",
+            duration: video.duration ? `${Math.floor(video.duration / 60)}:${String(video.duration % 60).padStart(2, "0")}` : null,
+            format: "Video (No Watermark)",
+            method: "GetDL Search",
+          }),
+          contextInfo: mediaPreviewCard({
+            title: video.title || "TikTok Video",
+            body: `TikTok • Hasil #${idx} dari pencarian`,
+            sourceUrl: video.playUrl,
+            thumbnailUrl: video.cover || "",
+            mediaType: 2,
+          }),
+        }, { quoted: m });
+        await m.react("🐣");
+        await offerConvert(sock, m, { mediaUrl: video.playUrl, type: "video", platform: "TikTok", title: video.title, sourceUrl: video.playUrl });
+        return;
+      } catch (err) {
+        console.error("[TikTok Search Pick]", err.message || err);
+        await m.react("❌");
+        return m.reply(novaGangguan("TikTok Search"));
+      }
+    }
+    // Gak ada sesi aktif → jatuh ke search biasa dengan keyword angka
+  }
+
+  // ─── Jalur keyword search (bukan URL) — ala .play ───
   if (!isUrl) {
     try {
       await m.react("🕒");
-      const videos = await tiktokSearchVideo(text, { count: 15 });
+      await m.react("🔍");
+      // Data UP-TO-DATE via GetDL (request owner 2026-09-06: search lama
+      // sering munculin video 2023). Fallback ke scraper lama kalau GetDL mati.
+      let videos = [];
+      let source = "GetDL";
+      try {
+        videos = await getdlTikTokSearch(text, { count: 10 });
+      } catch (gdErr) {
+        console.log("[TikTok Search] GetDL gagal, fallback scraper lama:", gdErr.message);
+        videos = await tiktokSearchVideo(text, { count: 15 });
+        source = "scraper lama";
+      }
       if (!videos || videos.length === 0) {
         await m.react("❗");
         return m.reply(claraWrap("TikTok Search", `Gak nemu video untuk keyword: ${text}`));
       }
-      const video = videos[Math.floor(Math.random() * videos.length)];
-      const caption = mediaCaption({
-        platformIcon: "🎵",
-        platformName: "TikTok",
-        title: video.title || "TikTok Video",
-        author: video.author?.nickname || video.author?.uniqueId || null,
-        duration: video.duration ? `${Math.floor(video.duration / 60)}:${String(video.duration % 60).padStart(2, "0")}` : null,
-        format: "Video HD (No Watermark)",
-        method: "TikTok Search",
+
+      // Simpan sesi biar bisa dipilih nomornya
+      const sesiKey = `${m.chat}:${m.sender}`;
+      ttSearchSessions.set(sesiKey, { videos, at: Date.now() });
+      // Bersihin sesi basi biar gak numpuk di memori
+      if (ttSearchSessions.size > 100) {
+        const now = Date.now();
+        for (const [k, v] of ttSearchSessions) {
+          if (now - v.at > TT_SESSION_TTL) ttSearchSessions.delete(k);
+        }
+      }
+
+      // List hasil bernomor (box smallcaps — format reply command)
+      const listLines = videos.slice(0, 10).map((v, i) => {
+        const dur = v.duration ? `${Math.floor(v.duration / 60)}:${String(v.duration % 60).padStart(2, "0")}` : "-";
+        return `│ ${i + 1}. ${String(v.title).slice(0, 45)}${String(v.title).length > 45 ? "..." : ""}\n│    ⏳ ${dur}${v.createdAt ? ` · ${new Date(v.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}` : ""}`;
       });
-      await sock.sendMessage(m.chat, {
-        video: { url: video.download || video.link },
-        caption,
-        contextInfo: mediaPreviewCard({
-          title: video.title || "TikTok Video",
-          body: `TikTok • Search: ${text}`,
-          sourceUrl: video.link || text,
-          thumbnailUrl: video.cover || video.originCover || "",
-          mediaType: 2,
-        }),
-      }, { quoted: m });
       await m.react("🐣");
-      await offerConvert(sock, m, { mediaUrl: video.download || video.link, type: "video", platform: "TikTok", title: video.title, sourceUrl: video.link });
-      return;
+      return m.reply(claraWrap(`TikTok Search — ${source}`, [
+        `📌 Hasil pencarian untuk: ${text}`,
+        ``,
+        ...listLines,
+        ``,
+        `💡 Balas nomornya buat download: ${prefix + command} <nomor>`,
+        `💡 Sesi aktif ${TT_SESSION_TTL / 60000} menit`,
+      ]));
     } catch (err) {
       console.error("[TikTok Search]", err.message || err);
       await m.react("❌");
