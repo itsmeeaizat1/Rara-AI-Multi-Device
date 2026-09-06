@@ -1,17 +1,21 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
-// ENGINE UTAMA: CodeFormer (HuggingFace Space sczhou/CodeFormer) — FACE RESTORE
-// tanpa watermark (face-restoration model asli, ±3-10 detik).
-//   .remini / .remini face / .remini hd → face restore + bg enhance (default)
+// ENGINE UTAMA: REMINI MOBILE API ASLI (unofficial, reverse-engineered dari Android
+// client com.bigwinepot.nwdn build 3.7.1390 — oracle/setup identity token → GCS
+// upload → task → process → poll → download). Face restore asli app Remini,
+// TANPA WATERMARK, hasil s/d ±3480px. Terverifikasi live 2026-09-06:
+// 400x500 → 2783x3480 dalam 3 detik (ref: SSL-ACTX/remini-unofficial-api).
+//   .remini / .remini face / .remini hd → face_enhance model "remini" (default)
 // FALLBACK: Local AI Swin2SR-realworld 4x (Real-ESRGAN style) — 100% lokal,
-// TANPA WATERMARK — otomatis dipakai kalau CodeFormer error/kuota habis.
+// TANPA WATERMARK — otomatis dipakai kalau Remini mobile error/kuota habis.
 //   .remini real/upscale → 4x restore langsung (local AI)
 //   .remini 1080/2k/4k/5k → pilih ukuran hasil (engine lokal)
 // BeautyPlus = HANYA mode eksplisit (16k/product/text/concert atau .remini bp <mode>)
 // — hasil bisa ada watermark, JANGAN dipakai sebagai default (request owner 2026-09-06).
-// Opsional: set env HF_TOKEN (akun huggingface.co gratis) di VPS biar kuota ZeroGPU
-// CodeFormer jauh lebih gede — tanpa token kuota anonymous tipis (fallback lokal aman).
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -24,7 +28,7 @@ const pluginConfig = {
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar) — Face Restore ala Remini, tanpa watermark (default)\n.remini face — restore wajah (sama kayak default)\n.remini hd — face restore + enhance HD\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — Face Restore ala Remini asli, tanpa watermark\n.remini face — restore wajah (sama kayak default)\n.remini hd — face restore + enhance HD\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -249,87 +253,230 @@ async function reminiEnhance(buffer, mode) {
   return { buffer: Buffer.from(dl.data), label, algo };
 }
 
-// ═══ ENGINE: CodeFormer (HuggingFace Space sczhou/CodeFormer) ═══
-// Face restoration model asli — TANPA WATERMARK. Lewat gradio API (upload → call → SSE).
-// Anonymous: kuota ZeroGPU tipis → otomatis fallback ke local AI di handler.
-// Set env HF_TOKEN (huggingface.co gratis) buat kuota jauh lebih gede.
+// ═══ ENGINE: Remini Mobile API (unofficial — Android client protocol) ═══
+// Face restore asli app Remini, TANPA WATERMARK. Port dari SSL-ACTX/remini-unofficial-api.
+// Flow: oracle/setup (identity token) → POST /tasks → PUT GCS → POST /process → poll → download.
+// Token + device identity di-persist ke src/data/remini-mobile-token.json — kalau balance
+// habis / 401-403, otomatis regen device baru + token baru (credit identity baru).
 
-const CF_SPACE = "https://sczhou-codeformer.hf.space";
-const CF_TIMEOUT = 90000;
+const RM_ORACLE = "https://api.remini.ai/v1/mobile/oracle/setup";
+const RM_TASKS = "https://a.android.api.remini.ai/v1/mobile/tasks";
+const RM_USERS_ME = "https://a.android.api.remini.ai/v1/mobile/users/@me";
+const RM_TOKEN_FILE = path.join(path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url)))), "src", "data", "remini-mobile-token.json");
+const RM_POLL_INTERVAL = 3000;
+const RM_POLL_MAX = 40; // ±2 menit
 
-function cfHeaders() {
-  const h = { accept: "*/*" };
-  const tok = process.env.HF_TOKEN || process.env.HFTOKEN || "";
-  if (tok) h["Authorization"] = "Bearer " + tok;
+const RM_DEVICES = [
+  { manufacturer: "INFINIX", model: "Infinix X669", type: "6.6", os: "31" },
+  { manufacturer: "Samsung", model: "SM-G998B", type: "6.8", os: "33" },
+  { manufacturer: "Xiaomi", model: "2201116SG", type: "6.67", os: "32" },
+  { manufacturer: "Google", model: "Pixel 7 Pro", type: "6.7", os: "33" },
+  { manufacturer: "OPPO", model: "CPH2211", type: "6.5", os: "31" },
+];
+
+function rmRandomDevice() {
+  const hex = (n) => crypto.randomBytes(n).toString("hex");
+  const uuid = () => crypto.randomUUID();
+  const androidId = hex(8).slice(0, 16);
+  return {
+    android_id: androidId,
+    aaid: uuid(),
+    backup_persistent_id: `${androidId}_com.bigwinepot.nwdn.international`,
+    non_backup_persistent_id: uuid(),
+    spec: RM_DEVICES[Math.floor(Math.random() * RM_DEVICES.length)],
+  };
+}
+
+function rmLoadState() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(RM_TOKEN_FILE, "utf-8"));
+    if (raw?.identity_token) return raw;
+  } catch {}
+  return null;
+}
+
+function rmSaveState(state) {
+  try {
+    fs.mkdirSync(path.dirname(RM_TOKEN_FILE), { recursive: true });
+    fs.writeFileSync(RM_TOKEN_FILE, JSON.stringify(state, null, 2));
+  } catch {}
+}
+
+function rmBaseHeaders(state) {
+  return {
+    "Bsp-Id": "com.bigwinepot.nwdn.international.android",
+    "Build-Number": "202523423",
+    "Build-Version": "3.7.1390",
+    Country: "US",
+    "Device-Manufacturer": state.device.spec.manufacturer,
+    "Device-Model": state.device.spec.model,
+    "Device-Type": state.device.spec.type,
+    Language: "en",
+    Locale: "en_US",
+    "OS-Version": state.device.spec.os,
+    Platform: "Android",
+    Timezone: "Asia/Manila",
+    "Android-id": state.device.android_id,
+    aaid: state.device.aaid,
+    "accept-encoding": "gzip",
+    "User-Agent": "okhttp/4.12.0",
+  };
+}
+
+function rmHeaders(state, contentType) {
+  const h = { ...rmBaseHeaders(state) };
+  if (state.identity_token) {
+    h["Identity-Token"] = state.identity_token;
+    h["Iris-Access-Token"] = state.identity_token;
+    h["Iris-Nonces-Counter"] = "3";
+  }
+  if (contentType) h["Content-Type"] = contentType;
   return h;
 }
 
-async function codeformerEnhance(buffer, { fidelity = 0.5, upscale = 2 } = {}) {
-  const { suffix, mime } = guessMime(buffer);
+const rmApi = axios.create({ timeout: 60000, validateStatus: () => true, maxBodyLength: Infinity, maxContentLength: Infinity });
 
-  // 1. upload ke space
-  const FormData = (await import("form-data")).default;
-  const form = new FormData();
-  form.append("files", buffer, { filename: "image." + suffix, contentType: mime });
-  const up = await axios.post(CF_SPACE + "/gradio_api/upload", form, {
-    headers: { ...form.getHeaders(), ...cfHeaders() },
-    timeout: 60000,
-    maxBodyLength: Infinity,
-  });
-  const cfPath = up.data?.[0];
-  if (!cfPath) throw new Error("upload_failed");
+async function rmVerify(state) {
+  if (!state.identity_token) return false;
+  const res = await rmApi.get(RM_USERS_ME, { headers: rmHeaders(state) });
+  if (res.status !== 200) return false;
+  const balance = res.data?.balance ?? 0;
+  return balance > 0;
+}
 
-  // 2. submit inference (face_align + bg_enhance + face_upsample ON, upscale 2x)
-  const call = await axios.post(
-    CF_SPACE + "/gradio_api/call/inference",
-    { data: [{ path: cfPath }, true, true, true, upscale, fidelity] },
-    { headers: { ...cfHeaders(), "content-type": "application/json" }, timeout: 30000 }
-  );
-  const eventId = call.data?.event_id;
-  if (!eventId) throw new Error("task_failed");
+// Ambil identity token baru via oracle/setup (device fresh tiap regen —
+// credit balance identity baru otomatis dapat jatah lagi)
+async function rmFetchToken(state) {
+  const ts = String(Math.round(Date.now() / 1000));
+  const headers = {
+    ...rmHeaders(state),
+    "First-Install-Timestamp": ts + "E9",
+    "Backup-Persistent-Id": state.device.backup_persistent_id,
+    "Non-Backup-Persistent-Id": state.device.non_backup_persistent_id,
+    Environment: "Production",
+    "settings-response-version": "v2",
+    "Is-App-Running-In-Background": "false",
+    "Is-Old-User": "true",
+  };
+  const res = await rmApi.get(RM_ORACLE, { headers });
+  if (res.status !== 200) throw new Error("setup_failed");
+  const token = res.data?.settings?.__identity__?.token;
+  if (!token) throw new Error("no_token");
+  state.identity_token = token;
+  rmSaveState(state);
+  return state;
+}
 
-  // 3. poll SSE sampai complete / error (kuota, proses gagal, timeout)
-  const resultUrl = await new Promise((resolve, reject) => {
-    let raw = "";
-    let done = false;
-    axios
-      .get(CF_SPACE + "/gradio_api/call/inference/" + eventId, {
-        responseType: "stream",
-        timeout: CF_TIMEOUT,
-        headers: cfHeaders(),
-      })
-      .then((res) => {
-        const timer = setTimeout(() => {
-          if (!done) { done = true; try { res.data.destroy(); } catch {} reject(new Error("timeout")); }
-        }, CF_TIMEOUT);
-        const finish = (fn, arg) => { if (!done) { done = true; clearTimeout(timer); try { res.data.destroy(); } catch {} fn(arg); } };
-        res.data.on("data", (chunk) => {
-          raw += chunk.toString();
-          for (const m of raw.matchAll(/^data:\s*(.+)$/gm)) {
-            const line = m[1];
-            if (line === "null") return finish(reject, new Error("process_failed"));
-            let data;
-            try { data = JSON.parse(line); } catch { continue; }
-            if (Array.isArray(data) && data[0]?.url) return finish(resolve, data[0].url);
-            if (typeof data === "string" && /quota|exceeded/i.test(data)) return finish(reject, new Error("quota_limited"));
-            if (data && typeof data === "object" && data.error) return finish(reject, new Error("process_failed"));
-          }
-        });
-        res.data.on("end", () => finish(reject, new Error("empty_result")));
-        res.data.on("error", (e) => finish(reject, e));
-      })
-      .catch(reject);
-  });
+async function rmEnsureAuth() {
+  let state = rmLoadState();
+  if (state?.identity_token && state?.device?.spec) {
+    try {
+      if (await rmVerify(state)) return state;
+    } catch {}
+  }
+  // token invalid / balance habis → regen device baru + token baru
+  state = { device: rmRandomDevice(), identity_token: null };
+  await rmFetchToken(state);
+  if (!(await rmVerify(state).catch(() => false))) {
+    state = { device: rmRandomDevice(), identity_token: null };
+    await rmFetchToken(state);
+    if (!(await rmVerify(state).catch(() => false))) throw new Error("auth_failed");
+  }
+  return state;
+}
 
-  // 4. download hasil (PNG) → convert JPEG biar ringan buat WA
-  const dl = await axios.get(resultUrl, { responseType: "arraybuffer", timeout: 60000, maxContentLength: 30 * 1024 * 1024 });
-  if (dl.status !== 200 || !dl.data) throw new Error("download_failed");
-  let out = Buffer.from(dl.data);
+const RM_DEFAULT_PIPELINE = {
+  face_enhance: { model: "remini" },
+  background_enhance: { model: "rhino-tensorrt", remove_color_shift: "true" },
+  jpeg_quality: "90",
+  interpolation: "bicubic",
+  max_output_resolution: "3480",
+};
+
+// ═══ Full pipeline Remini mobile ═══
+async function reminiMobileEnhance(buffer, pipeline = RM_DEFAULT_PIPELINE) {
+  const state = await rmEnsureAuth();
+
+  // metadata gambar (md5 base64 + ukuran + resolusi)
+  let width = 0;
+  let height = 0;
   try {
     const sharp = (await import("sharp")).default;
-    out = await sharp(out).jpeg({ quality: 92, mozjpeg: true }).toBuffer();
-  } catch { /* kirim PNG apa adanya kalau sharp gagal */ }
-  return { buffer: out, label: "Face Restore" };
+    const meta = await sharp(buffer).metadata();
+    width = meta.width || 0;
+    height = meta.height || 0;
+  } catch {}
+  const md5 = crypto.createHash("md5").update(buffer).digest("base64");
+  const { mime } = guessMime(buffer);
+
+  const body = {
+    feature: { type: "multi-tool", pipelines: [pipeline] },
+    image_content_type: mime,
+    image_md5: md5,
+    image_size: buffer.length,
+  };
+  if (width && height) {
+    body.image_resolution_width = width;
+    body.image_resolution_height = height;
+  }
+
+  // 1. buat task (401/403 → sekali regen device+token, lalu ulang)
+  let task = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await rmApi.post(RM_TASKS, body, { headers: rmHeaders(state, "application/json; charset=UTF-8") });
+    if (res.status === 401 || res.status === 403) {
+      const fresh = { device: rmRandomDevice(), identity_token: null };
+      await rmFetchToken(fresh);
+      Object.assign(state, fresh);
+      continue;
+    }
+    if (res.status !== 200 || !res.data?.task_id || !res.data?.upload_url || !res.data?.upload_headers) {
+      throw new Error("task_failed");
+    }
+    task = res.data;
+    break;
+  }
+  if (!task) throw new Error("task_failed");
+
+  // 2. upload ke GCS pakai upload_headers yang dikasih server
+  const up = await rmApi.put(task.upload_url, buffer, {
+    headers: { ...task.upload_headers, "Content-Length": String(buffer.length), "User-Agent": "okhttp/4.12.0" },
+    timeout: 120000,
+  });
+  if (up.status >= 300) throw new Error("upload_failed");
+
+  // 3. trigger proses (Content-Length: 0 — WAJIB, kayak ping app asli)
+  const pr = await rmApi.post(`${RM_TASKS}/${task.task_id}/process`, null, {
+    headers: { ...rmHeaders(state), "Content-Length": "0" },
+  });
+  if (pr.status >= 300) throw new Error("process_failed");
+
+  // 4. poll status (404 = belum siap, lanjut poll)
+  const deadline = Date.now() + RM_POLL_MAX * RM_POLL_INTERVAL;
+  let outputUrl = null;
+  while (Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, RM_POLL_INTERVAL));
+    const st = await rmApi.get(`${RM_TASKS}/${task.task_id}`, { headers: rmHeaders(state) });
+    if (st.status === 404) continue;
+    if (st.status !== 200) throw new Error("poll_failed");
+    const status = st.data?.status;
+    if (status === "completed") {
+      outputUrl = st.data?.result?.outputs?.[0]?.url;
+      if (!outputUrl) throw new Error("no_output");
+      break;
+    }
+    if (status === "failed" || status === "error") throw new Error("process_failed");
+  }
+  if (!outputUrl) throw new Error("timeout");
+
+  // 5. download hasil
+  const dl = await rmApi.get(outputUrl, {
+    responseType: "arraybuffer",
+    headers: { "User-Agent": "okhttp/4.12.0" },
+    timeout: 120000,
+  });
+  if (dl.status !== 200 || !dl.data) throw new Error("download_failed");
+  return { buffer: Buffer.from(dl.data), label: "Face Restore (Remini)" };
 }
 
 // ═══ Handler ═══
@@ -338,7 +485,7 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && (m.quoted.type === "imageMessage" || m.quoted.isImage));
 
   if (!img) {
-    return m.reply(claraWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini (tanpa watermark). Mode: face (default), hd, real (restore 4x local), atau bp hd/16k/product/text/concert (BeautyPlus, bisa ada watermark).", "guide"), "remini");
+    return m.reply(claraWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini asli, tanpa watermark. Mode: face (default), hd, real (restore 4x local), atau bp hd/16k/product/text/concert (BeautyPlus, bisa ada watermark).", "guide"), "remini");
   }
 
   try {
@@ -393,7 +540,7 @@ async function handler(m, { sock, args }) {
     let label;
     let outWidth = 0;
     let outHeight = 0;
-    let engineNote = "Engine: CodeFormer AI (tanpa watermark)";
+    let engineNote = "Engine: Remini AI (tanpa watermark)";
 
     // Engine lokal (Swin2SR) — dipakai untuk mode real, pilihan ukuran, dan
     // fallback CodeFormer/BeautyPlus. Antrian + notice unduh model + react per tahap.
@@ -436,18 +583,15 @@ async function handler(m, { sock, args }) {
         }
       }
     } else if (!wantLocal) {
-      // ═══ CodeFormer (HuggingFace) — DEFAULT, face restore tanpa watermark ═══
+      // ═══ Remini Mobile API — DEFAULT, face restore asli Remini tanpa watermark ═══
       try {
         try { await m.react("🎨"); } catch {}
-        const r = await codeformerEnhance(mediaBuffer, { fidelity: 0.5, upscale: 2 });
+        const r = await reminiMobileEnhance(mediaBuffer);
         resultBuffer = r.buffer;
         label = r.label;
-        engineNote = "Engine: CodeFormer AI (tanpa watermark)";
+        engineNote = "Engine: Remini AI (tanpa watermark)";
       } catch (e1) {
-        console.error("[REMINI] CodeFormer gagal:", e1.message);
-        if (e1.message === "quota_limited") {
-          try { await m.react("⏳"); } catch {}
-        }
+        console.error("[REMINI] Remini mobile gagal:", e1.message);
         // fallback: local Real-ESRGAN style 4x — tanpa watermark (request owner)
         const r = await runLocal("real");
         resultBuffer = r.buffer;
