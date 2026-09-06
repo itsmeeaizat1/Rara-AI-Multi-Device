@@ -16,12 +16,22 @@
 //  Monitor lazy: timer cuma jalan kalau ada >= 1 chat berlangganan.
 //  Pesan alert: plain text natural (aturan bot: notifikasi otomatis
 //  terjadwal tanpa box-drawing & tanpa smallcaps).
+//
+//  PERINGATAN WILAYAH (regional alert, request owner 2026-09-06):
+//  Subscriber bisa set lokasi (.bencanawatch lokasi <kota>) + radius.
+//  Event baru dalam radius → peringatan khusus warga sekitar wilayah:
+//    • kalimat AI (aiFallbackChat) yang berubah sesuai kondisi bencana
+//      (jenis/level/magnitudo/jarak) dengan template fallback lokal
+//    • info section meta data lengkap (jenis, magnitudo, level, waktu,
+//      titik + maps, jarak + arah mata angin, radius, sumber)
+//  Subscriber jauh / tanpa lokasi → alert generic seperti biasa.
 // ============================================================
 
 import fs from "node:fs";
 import path from "node:path";
 import { getDatabase } from "./nova-database.js";
 import { logger } from "./nova-logger.js";
+import { aiFallbackChat } from "./nova-ai-fallback.js";
 
 const GDACS_URL = "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH";
 const EONET_URL = "https://eonet.gsfc.nasa.gov/api/v3/events";
@@ -30,6 +40,9 @@ const BMKG_URL = "https://data.bmkg.go.id/DataMKG/TEWS";
 
 const POLL_FAST_MS = 60_000;   // gempa BMKG
 const POLL_SLOW_MS = 300_000;  // GDACS + USGS global
+
+const DEFAULT_RADIUS_KM = 300; // radius peringatan wilayah (bisa di-set per user)
+const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
 
 const STATE_FILE = path.join(process.cwd(), "src", "data", "bencana-state.json");
 
@@ -114,6 +127,8 @@ export async function getGdacs(days = 7) {
         alertlevel: p.alertlevel || "Green",
         alertscore: p.alertscore ?? 0,
         iscurrent: p.iscurrent === "true" || p.iscurrent === true,
+        fromdate: p.fromdate || null,
+        todate: p.todate || null,
         report: p.url?.report || null,
         lat, lon,
       };
@@ -206,7 +221,8 @@ function saveWatchers(subs) {
 
 export function addWatcher(chatId) {
   const subs = getWatchers();
-  subs[chatId] = { since: new Date().toISOString() };
+  const cur = subs[chatId] || {};
+  subs[chatId] = { ...cur, since: cur.since || new Date().toISOString() }; // preserve lokasi/radius saat re-on
   saveWatchers(subs);
   return subs;
 }
@@ -227,6 +243,214 @@ export async function getWatchersSafe() {
   return getWatchers();
 }
 
+// ───────────────────── geocoding + jarak (peringatan wilayah) ─────────────────────
+
+/**
+ * Geocode nama tempat → { lat, lon, city, detail } via Open-Meteo
+ * (gratis, tanpa key). Cache di db.setting("bencanaGeoCache").
+ */
+export async function geocodeLocation(query) {
+  const q = String(query || "").trim();
+  if (q.length < 2) throw new Error("Nama tempat minimal 2 huruf.");
+  let cache = {};
+  try { cache = getDatabase().setting("bencanaGeoCache") || {}; } catch {}
+  const key = q.toLowerCase();
+  if (cache[key]) return cache[key];
+  const url = `${GEOCODE_URL}?name=${encodeURIComponent(q)}&count=1&language=id&format=json`;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 12000);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) throw new Error(`Geocoding HTTP ${res.status}`);
+    const d = await res.json();
+    const g = d?.results?.[0];
+    if (!g) throw new Error(`Tempat "${q}" tidak ditemukan.`);
+    const loc = {
+      lat: g.latitude,
+      lon: g.longitude,
+      city: g.name,
+      detail: [g.admin1, g.country].filter(Boolean).join(", "),
+    };
+    const keys = Object.keys(cache);
+    if (keys.length > 100) delete cache[keys[0]]; // cache max 100
+    cache[key] = loc;
+    try { getDatabase().setting("bencanaGeoCache", cache); } catch {}
+    return loc;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+/** Jarak dua titik (km) — haversine. */
+export function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/** Arah mata angin dari titik user ke event ("timur laut", dll). */
+export function bearingCompass(lat1, lon1, lat2, lon2) {
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const y = Math.sin(dLon) * Math.cos((lat2 * Math.PI) / 180);
+  const x =
+    Math.cos((lat1 * Math.PI) / 180) * Math.sin((lat2 * Math.PI) / 180) -
+    Math.sin((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.cos(dLon);
+  const deg = ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
+  const dirs = ["utara", "timur laut", "timur", "tenggara", "selatan", "barat daya", "barat", "barat laut"];
+  return dirs[Math.round(deg / 45) % 8];
+}
+
+/**
+ * Set lokasi subscriber (tanpa nge-reset state lain).
+ * @returns record subscriber yang baru.
+ */
+export async function setWatcherLocation(chatId, placeQuery) {
+  const loc = await geocodeLocation(placeQuery);
+  const subs = getWatchers();
+  const cur = subs[chatId] || {};
+  subs[chatId] = { ...cur, since: cur.since || new Date().toISOString(), ...loc };
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+/** Hapus lokasi subscriber (keep subscription). */
+export function clearWatcherLocation(chatId) {
+  const subs = getWatchers();
+  if (subs[chatId]) {
+    const { lat, lon, city, detail, ...rest } = subs[chatId];
+    subs[chatId] = rest;
+    saveWatchers(subs);
+  }
+  return subs[chatId];
+}
+
+/** Set radius monitoring (50-2000 km). */
+export function setWatcherRadius(chatId, km) {
+  const r = Math.round(Number(km));
+  if (!r || r < 50 || r > 2000) throw new Error("Radius harus 50-2000 km.");
+  const subs = getWatchers();
+  const cur = subs[chatId];
+  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum set radius.");
+  subs[chatId] = { ...cur, radius: r };
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+// ───────────────────── composer AI + info section ─────────────────────
+
+const KIND_BY_TYPE = { EQ: "gempa", FL: "banjir", TC: "topan", VO: "gunungapi", DR: "kering", WF: "kebakaran", TS: "tsunami" };
+
+/** Template fallback kalau rantai AI mati — variasi per jenis bencana. */
+const REGIONAL_TPL = {
+  gempa: [
+    "Gempa bumi {mag} SR terdeteksi sekitar {dist} km dari {city}. Mohon warga {city} tetap tenang, waspada gempa susulan, dan hindari bangunan yang terindikasi retak.",
+    "Baru saja terjadi gempa {mag} SR di sekitar {city} (±{dist} km). Untuk warga {city}: hindari kaca dan benda gantung, dan siapkan jalur evakuasi bila diperlukan.",
+    "Ada gempa {mag} SR pada jarak ±{dist} km dari {city}. Bila dirasakan, lindungi kepala, menjauh dari dinding, dan tetap di tempat aman sampai goncangan berhenti.",
+  ],
+  banjir: [
+    "Peringatan banjir untuk warga {city}: terdeteksi kejadian banjir ±{dist} km dari kota Anda. Mohon waspada kenaikan permukaan air dan hindari area rendah.",
+    "Ada kejadian banjir di sekitar {city} (±{dist} km). Warga dimohon menjauhi sungai dan saluran air, siapkan dokumen penting, dan pantau info resmi.",
+  ],
+  topan: [
+    "Badai/topan tropis aktif ±{dist} km dari {city}. Warga {city} mohon waspada angin kencang, hujan deras, dan kemungkinan gangguan listrik.",
+    "Terdeteksi topan dekat wilayah {city} (±{dist} km). Mohon amankan benda ringan di luar rumah dan hindari perjalanan tidak penting.",
+  ],
+  gunungapi: [
+    "Aktivitas gunung api terdeteksi ±{dist} km dari {city}. Warga {city} mohon menghindari radius bahaya dan pantau arah angin untuk abu vulkanik.",
+    "Ada peningkatan aktivitas gunung api di sekitar {city} (±{dist} km). Siapkan masker bila abu jatuh dan ikuti arahan petugas.",
+  ],
+  kering: [
+    "Kondisi kekeringan terdeteksi di wilayah sekitar {city} (±{dist} km). Mohon hemat air bersih dan waspada kebakaran lahan.",
+  ],
+  kebakaran: [
+    "Kebakaran hutan/lahan aktif ±{dist} km dari {city}. Warga {city} mohon waspada asap, pakai masker bila perlu, dan hindari area pembakaran.",
+  ],
+  tsunami: [
+    "PERINGATAN: terdeteksi peristiwa tsunami ±{dist} km dari {city}. Bila berada di pesisir, segera menjauh ke dataran tinggi dan ikuti arahan evakuasi.",
+  ],
+  default: [
+    "Terdeteksi bencana ({jenis}) ±{dist} km dari {city}. Mohon warga {city} tetap waspada dan pantau informasi resmi terbaru.",
+  ],
+};
+
+/** Pilih template + isi placeholder. */
+function regionalTemplate(ev, distKm, city) {
+  const arr = REGIONAL_TPL[ev.kind] || REGIONAL_TPL.default;
+  const tpl = arr[Math.floor(Math.random() * arr.length)];
+  return tpl
+    .replace(/{mag}/g, ev.mag || "?")
+    .replace(/{dist}/g, String(Math.round(distKm)))
+    .replace(/{city}/g, city)
+    .replace(/{jenis}/g, ev.jenis || ev.kind || "bencana");
+}
+
+/**
+ * Kalimat peringatan via AI (berubah tiap kejadian sesuai kondisi).
+ * Fallback template lokal kalau rantai AI mati — fitur gak pernah mati total.
+ */
+export async function composeRegionalText(ev, distKm, city) {
+  const system =
+    "Kamu sistem peringatan dini bencana bot WhatsApp bernama Nova. Tulis pesan peringatan singkat (3-5 kalimat) " +
+    "dalam bahasa Indonesia untuk warga kota yang disebut, gaya pengumuman darurat: tenang, tegas, menghibur tidak perlu. " +
+    "ATURAN: jangan pakai markdown atau format; maksimal satu emoji; jangan mengarang angka/detail yang tidak diberikan; " +
+    "sebutkan jenis bencana, tingkat bahaya, dan saran keselamatan konkret sesuai jenis bencananya; variasikan kalimat pembuka.";
+  const data =
+    `Jenis bencana: ${ev.jenis} (${ev.kind})\n` +
+    `Level bahaya: ${ev.level || "waspada"}\n` +
+    (ev.mag ? `Magnitudo: ${ev.mag} SR, kedalaman ${ev.depth || "-"}\n` : "") +
+    `Jarak dari kota user: ±${Math.round(distKm)} km\n` +
+    `Kota user: ${city}\n` +
+    (ev.desc ? `Deskripsi: ${ev.desc}\n` : "") +
+    "Tulis pesan peringatan untuk warga kota tsb.";
+  try {
+    const out = await aiFallbackChat(data, { systemPrompt: system });
+    let text = String(out || "")
+      .replace(/[*_`#>]+/g, "")
+      .replace(/^\s*(berikut|ini\s+adalah)[^:]{0,20}:?\s*/i, "")
+      .trim();
+    if (text.length > 600) text = text.slice(0, 600).trim() + "…";
+    if (text.length >= 80) return text;
+    throw new Error("AI balas terlalu pendek/kosong");
+  } catch {
+    return regionalTemplate(ev, distKm, city);
+  }
+}
+
+/** Info section meta data lengkap kejadian (plain text natural). */
+function buildMetaSection(ev, sub, distKm, dirLabel) {
+  const L = ["— Informasi kejadian —"];
+  L.push(`Jenis     : ${ev.jenis}`);
+  if (ev.mag) L.push(`Magnitudo : ${ev.mag} SR, kedalaman ${ev.depth || "-"}`);
+  if (ev.level) L.push(`Level     : ${ev.level}`);
+  if (ev.waktu) L.push(`Waktu     : ${ev.waktu}`);
+  if (ev.lat != null) L.push(`Titik     : ${(+ev.lat).toFixed(2)}, ${(+ev.lon).toFixed(2)} → ${mapsLink(ev.lat, ev.lon)}`);
+  L.push(`Jarak     : ±${Math.round(distKm)} km arah ${dirLabel} dari ${sub.city}`);
+  L.push(`Radius    : monitoring ${sub.radius || DEFAULT_RADIUS_KM} km`);
+  L.push(`Sumber    : ${ev.sumber}`);
+  if (ev.report) L.push(`Laporan   : ${ev.report}`);
+  return L.join("\n");
+}
+
+/**
+ * Kirim peringatan wilayah ke satu subscriber.
+ * @returns true kalau terkirim.
+ */
+export async function sendRegionalAlert(_sock, chatId, ev, sub) {
+  const distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
+  const dir = bearingCompass(sub.lat, sub.lon, ev.lat, ev.lon);
+  const text = await composeRegionalText(ev, distKm, sub.city);
+  const out =
+    `PERINGATAN BENCANA — WILAYAH ${String(sub.city).toUpperCase()}\n\n` +
+    text +
+    `\n\n${buildMetaSection(ev, sub, distKm, dir)}`;
+  await _sock.sendMessage(chatId, { text: out });
+  return true;
+}
+
 // ───────────────────────────── monitor auto-alert ─────────────────────────────
 
 let sock = null;
@@ -237,16 +461,31 @@ function isRunning() {
   return !!(fastTimer || slowTimer);
 }
 
-async function broadcast(text, imageUrl = null) {
+/**
+ * Dispatch event ke semua subscriber:
+ *  - punya lokasi & event dalam radius → peringatan wilayah (AI + info section)
+ *  - selain itu → alert generic (kalau genericText ada)
+ * Per-subscriber, jadi tiap chat dapat konten yang relevan.
+ */
+async function dispatch(ev, genericText = null, imageUrl = null) {
   const subs = getWatchers();
-  for (const chatId of Object.keys(subs)) {
+  for (const [chatId, sub] of Object.entries(subs)) {
     try {
-      await sock.sendMessage(chatId, { text });
-      if (imageUrl) await sock.sendMessage(chatId, { image: { url: imageUrl } });
+      const distKm =
+        sub.lat != null && ev?.lat != null
+          ? haversineKm(sub.lat, sub.lon, ev.lat, ev.lon)
+          : Infinity;
+      const radius = sub.radius || DEFAULT_RADIUS_KM;
+      if (distKm <= radius) {
+        await sendRegionalAlert(sock, chatId, ev, sub);
+      } else if (genericText) {
+        await sock.sendMessage(chatId, { text: genericText });
+        if (imageUrl) await sock.sendMessage(chatId, { image: { url: imageUrl } });
+      }
     } catch (e) {
       logger.error?.("bencana", `Gagal kirim ke ${chatId}: ${e.message}`);
     }
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 600));
   }
 }
 
@@ -273,7 +512,15 @@ async function fastTick() {
         if (g.Dirasakan) lines.push(`Dirasakan: ${g.Dirasakan}`);
         lines.push(`Lokasi: ${g.Coordinates} → ${mapsLink(lat, lon)}`);
         lines.push("", "Sumber: BMKG (data.bmkg.go.id)");
-        await broadcast(lines.join("\n"), g._shakemapUrl);
+        const ev = {
+          kind: "gempa", jenis: "Gempa Bumi",
+          mag: g.Magnitude, depth: g.Kedalaman,
+          level: parseFloat(g.Magnitude) >= 6.0 ? "AWAS" : "SIAGA",
+          waktu: `${g.Tanggal} ${g.Jam}`,
+          lat: +lat, lon: +lon, desc: g.Wilayah,
+          sumber: "BMKG (data.bmkg.go.id)",
+        };
+        await dispatch(ev, lines.join("\n"), g._shakemapUrl);
       }
     }
   } catch (e) {
@@ -303,7 +550,16 @@ async function slowTick() {
         ];
         if (e.report) lines.push(`Laporan: ${e.report}`);
         lines.push("", "Sumber: GDACS (EU/UN) — gdacs.org");
-        await broadcast(lines.join("\n"));
+        const ev = {
+          kind: KIND_BY_TYPE[e.type] || "default",
+          jenis: t.label,
+          level: `${a.label} (${a.icon})`,
+          waktu: e.fromdate ? `mulai ${jamWib(e.fromdate)}` : (e.desc || ""),
+          lat: e.lat, lon: e.lon, desc: e.desc || e.name,
+          sumber: "GDACS (EU/UN) — gdacs.org",
+          report: e.report,
+        };
+        await dispatch(ev, lines.join("\n"));
         await new Promise((r) => setTimeout(r, 1000));
       }
     }
@@ -329,7 +585,16 @@ async function slowTick() {
         if (q.tsunami) lines.push("PERHATIAN: ada flag potensi tsunami di event ini.");
         if (q.url) lines.push(`Detail: ${q.url}`);
         lines.push("", "Sumber: USGS (earthquake.usgs.gov)");
-        await broadcast(lines.join("\n"));
+        const ev = {
+          kind: "gempa", jenis: "Gempa Bumi (global)",
+          mag: q.mag?.toFixed(1), depth: "-",
+          level: q.tsunami ? "AWAS (flag tsunami)" : "SIAGA",
+          waktu: jamWib(q.time),
+          lat: q.lat, lon: q.lon, desc: q.place,
+          sumber: "USGS (earthquake.usgs.gov)",
+          report: q.url,
+        };
+        await dispatch(ev, lines.join("\n"));
         await new Promise((r) => setTimeout(r, 1000));
       }
     }

@@ -229,6 +229,7 @@ Automation:
 | Dashboard Bencana | Semua bencana aktif dunia (GDACS AWAS/SIAGA/Waspada) + gempa BMKG | `.bencana` |
 | Cek per Jenis | Banjir, badai, gunung api, karhutla, kekeringan, tsunami, gempa global M6+ | `.bencana banjir` dll |
 | Bencana Watch | Auto-alert realtime per chat: gempa BMKG M5+, global M6+, GDACS Siaga/Awas | `.bencanawatch on` |
+| Peringatan Wilayah | Bencana dekat lokasi kamu → peringatan warga sekitar AI + info lengkap | `.bencanawatch lokasi Palu` |
 
 ### 💼 Productivity & Tools
 
