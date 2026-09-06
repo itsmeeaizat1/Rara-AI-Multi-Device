@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
- * Nama Plugin: AllDownloader (Omnify AIO)
+ * Nama Plugin: AllDownloader (Omnify AIO) — keluarga v2 dari .alldl
+ *           (cmd beda: .alldownloader / .alldl2 — .alldl lama TETAP ada)
  * Pembuat Code: Aizat
  * Fitur: Universal downloader — 1 fitur support SEMUA platform downloader.
  *        Resolver utama: Omnify AIO (api-aio.omnifylabs.sbs, 30+ platform,
@@ -34,7 +35,9 @@ import {
 
 const pluginConfig = {
   name: "alldownloader",
-  alias: ["alldownloader", "adl"],
+  // Alias dibedain biar gak kecampur sama .alldl/.dl/.download yang udah ada
+  // (request owner 2026-09-06: jgn hapus yg lama, cukup bedain nama/alias)
+  alias: ["alldownloader", "alldl2"],
   category: "download",
   description: "Universal downloader semua platform — 1 link, daftar format asli (Omnify AIO) + fallback rantai internal",
   usage: ".alldownloader <url> — lalu pilih nomor format\n.alldownloader <url> <nomor/keyword> — langsung proses\n.alldownloader health — cek server backend",
@@ -366,7 +369,7 @@ async function handler(m, { sock }) {
   const pickToken = (m.args?.[0] || "").toLowerCase();
   const isPickToken = /^\d+$/.test(pickToken) || !!KEYWORD_MAP[pickToken];
 
-  if (!hasUrl && (command === "alldownloader" || command === "adl") && isPickToken) {
+  if (!hasUrl && (command === "alldownloader" || command === "alldl2") && isPickToken) {
     const session = adlSessions.get(m.sender);
     if (!session) {
       await m.react("❗");
@@ -493,7 +496,7 @@ async function handler(m, { sock }) {
   // Pilihan langsung sekalian: ".alldownloader <url> <nomor/keyword>"
   const extraWords = textRaw
     .split(/\s+/)
-    .filter((w) => !w.startsWith("http") && w.toLowerCase() !== "alldownloader" && w.toLowerCase() !== "adl");
+    .filter((w) => !w.startsWith("http") && w.toLowerCase() !== "alldownloader" && w.toLowerCase() !== "alldl2");
   const pick = (extraWords[0] || "").toLowerCase();
   if (pick) {
     const num = parseInt(pick, 10);
