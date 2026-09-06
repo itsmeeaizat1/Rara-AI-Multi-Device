@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ytmp4.js — Download video YouTube
-// Primary: IkyyXD /download/ytmp4 (uses "q" param) → Sanka AIO → ytdl fallback
+// Primary: yt-dlp LOCAL (bestvideo+bestaudio di-merge — audio HQ ala .play 320,
+// hasilnya jauh lebih jernih daripada re-encode API) → IkyyXD → Sanka → ytdl fallback
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
+import { downloadVideo, isYtDlpAvailable } from "../../src/scraper/nova-ytdlp.js";
 import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
@@ -10,9 +12,9 @@ const pluginConfig = {
   name: "ytmp4",
   alias: ["ytmp4"],
   category: "download",
-  description: "Download video YouTube",
-  usage: ".ytmp4 <url>",
-  example: ".ytmp4 https://youtube.com/watch?v=xxx",
+  description: "Download video YouTube (audio HQ via yt-dlp lokal)",
+  usage: ".ytmp4 [360/480/720/1080] <url>",
+  example: ".ytmp4 https://youtube.com/watch?v=xxx\n.ytmp4 1080 https://youtu.be/xxx",
   cooldown: 20, energi: 2, isEnabled: true,
 };
 
@@ -56,7 +58,11 @@ async function getVideoDownloadUrl(url) {
 }
 
 async function handler(m, { sock }) {
-  const url = m.text?.trim();
+  // parse token kualitas (posisi bebas): .ytmp4 1080 <url> / .ytmp4 <url> 720p
+  const tokens = String(m.text || "").trim().split(/\s+/).filter(Boolean);
+  const qi = tokens.findIndex((t) => /^(360|480|720|1080)p?$/i.test(t));
+  const quality = qi >= 0 ? tokens[qi].replace(/p$/i, "") : "720";
+  const url = tokens.filter((_, i) => i !== qi).join(" ").trim();
   if (!url) {
     return m.reply(novaGuide("YTmp4", "Kirim URL video YouTube yang mau kamu download!", `${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`));
   }
@@ -66,6 +72,45 @@ async function handler(m, { sock }) {
 
   try {
     await m.react("🕒");
+
+    // ── PRIMARY: yt-dlp lokal — bestvideo+bestaudio di-merge (audio HQ) ──
+    if (await isYtDlpAvailable()) {
+      try {
+        const vid = await downloadVideo(url, quality);
+        if (vid?.buffer?.length) {
+          let ytMetaV = {};
+          try {
+            const { data: oeV } = await axios.get(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`, { timeout: 8000 });
+            ytMetaV = { author: oeV?.author_name, thumbnail: oeV?.thumbnail_url, title: oeV?.title };
+          } catch {}
+          const capV = mediaCaption({
+            platformIcon: "▶️",
+            platformName: "YouTube",
+            title: vid.title || ytMetaV.title || "YouTube Video",
+            author: ytMetaV.author || null,
+            format: `📹 Video ${quality}p • 🎵 Audio HQ (bestaudio)`,
+            method: "yt-dlp (Lokal)",
+          });
+          await m.react("🐣");
+          // >16MB dikirim jadi dokumen biar pasti nyampe (limit media WA)
+          if (vid.buffer.length > 16 * 1024 * 1024) {
+            await sock.sendMessage(m.chat, {
+              document: vid.buffer,
+              mimetype: "video/mp4",
+              fileName: `${(vid.title || "video").replace(/[^a-zA-Z0-9 _-]/g, "").slice(0, 40)}-${quality}p.mp4`,
+              caption: capV,
+            }, { quoted: m });
+          } else {
+            await sock.sendMessage(m.chat, { video: vid.buffer, caption: capV }, { quoted: m });
+          }
+          return await m.reply(novaBerhasil("ytmp4"));
+        }
+      } catch (eV) {
+        console.error("[YTMP4] yt-dlp lokal gagal, lanjut fallback API:", eV.message);
+      }
+    }
+
+    // ── FALLBACK: API chain lama (Ikyy → Sanka → ytdl) ──
     const result = await getVideoDownloadUrl(url);
 
     let ytMeta = {};
@@ -82,7 +127,7 @@ async function handler(m, { sock }) {
       duration: result.duration || null,
       views: result.views || null,
       description: result.description ? String(result.description).slice(0, 120) : null,
-      format: "📹 Video HD",
+      format: "📹 Video (server API)",
       method: result.method,
     });
 

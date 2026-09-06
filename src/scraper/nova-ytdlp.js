@@ -196,7 +196,9 @@ async function downloadVideoYtDlp(url, quality = "720") {
     const cmd = [
       getYtDlpCmd(),
       ...getYtDlpFfmpegArgs(),
-      "-f", `"bestvideo[height<=${quality}]+bestaudio/best[height<=${quality}]/best"`,
+      // WA-safe: prefer H.264 (avc1) + AAC (m4a) — AV1/Opus di mp4
+      // sering gak bisa diputar di WhatsApp
+      "-f", `"bestvideo[vcodec^=avc1][height<=${quality}]+bestaudio[acodec^=mp4a]/bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/bestvideo[height<=${quality}]+bestaudio/best[height<=${quality}]/best"`,
       "--merge-output-format", "mp4",
       "-o", `"${outputPath.replace(/\.mp4$/, "")}.%(ext)s"`,
       "--no-playlist",
