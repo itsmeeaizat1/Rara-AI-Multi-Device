@@ -467,6 +467,14 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
   if (!feature)
     return m.reply(`❌ Fitur tidak ditemukan: ${featureName}\nKetik \`${prefix}switch group\` untuk melihat daftar`)
 
+  // Welcome = fitur per-grup. Kalau toggle dari DM, jangan tulis setting ke
+  // jid DM (percuma) — arahkan ke chooser 2 mode: global semua grup / per grup.
+  if (feature.dbKey === "welcome" && !String(m.chat || "").endsWith("@g.us")) {
+    const welcomeModule = await import("../group/welcome.js")
+    const chooser = welcomeModule.default?.sendWelcomeModeChooser || welcomeModule.sendWelcomeModeChooser
+    if (chooser) return chooser(m, sock, db, prefix)
+  }
+
   const groupData = db.getGroup(m.chat) || {}
 
   if (forceOff) {
