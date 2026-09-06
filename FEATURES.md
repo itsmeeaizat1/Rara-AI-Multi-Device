@@ -532,7 +532,7 @@ clancreate, claninfo, claninvite, clanjoin, clankick, clanleaderboard, clanleave
 voicechanger, convert, convertoffer, audio.wav, audio8d, audioconvert, audioeq, audiofade, audiofx, audioloop, audiomerge, audionormalize, audiopitch, audiospeed, audiosplit, audiovol, mp4toaudio, videoconvert, toblur, tozombie, tovintage, tomirror, tojepang, totato, topacar, totua, bratvideo, toimage, toptv, togif, vocalremover, tocase, tocode
 
 ### 📥 Download (30 plugin)
-beli2, aio, capcutdl, cocofundl, dailymotiondl, douyindl, facebookdl, githubdl, instagramdl, likeedl, mediafiredl, mp4, pindl, pixeldraindl, rednotedl, sfiledl, shopeedl, snackvideodl, spotifydl, terabox, threaddl, tiktokv2, videy, ytmp3, ytmp4
+beli2, aio, capcutdl, cocofundl, dailymotiondl, douyin, facebookdl, githubdl, instagramdl, likeedl, mediafiredl, mp4, pindl, pixeldraindl, rednotedl, sfiledl, shopeedl, snackvideodl, spotifydl, terabox, threaddl, tiktokv2, videy, ytmp3, ytmp4
 
 ### 📚 Education (25 plugin)
 beasiswa, carijurnal, daftarsiswa, eduleaderboard, faktaunik, flashcard, ipk, jadwalku, kalkulatornilai, kampuskampus, katabijak, konversinilai, magang, mindmap, paraphrase, pengingatukt, pomodoro, ringkasan, sitasi, skripsiku, soalessay, soalujian, tipsharian, tugas, tutorku
@@ -1280,6 +1280,7 @@ Download Upgrades:
 - .playtiktok <keyword> - search - Cari + kirim satu video TikTok dari keyword (hasil pertama); caption mediaCaption (views/likes/comments/shares + link), preview card asli
 - .ptvsearch <keyword> - search - Cari video TikTok → kirim random sebagai PTV (video note)
 - .igvideo/.igimage/.igaudio <url> - download - Download Instagram per format dari link post: .igvideo → video aja (preview card + offerConvert), .igimage → foto aja (carousel max 10, caption di foto pertama), .igaudio → audio MP3 (pakai track audio dari API kalau ada, kalau gak ada diekstrak via ffmpeg libmp3lame 128k); fetch chain IkyyXD instagram → ikyyAio → ig.js lokal (mirror instagramdl); catatan: keyword search IG gak mungkin — Meta blokir semua search tanpa login
+- .douyin/.dy/.douyindl <url> - download - **UPGRADE (2026-09-06)** Download video/audio/STORY Douyin (TikTok China). Engine BARU: SnapTik (snaptik.fi — request owner, script di-port ke src/scraper/snaptik-douyin.js, POST /api/tiktok status "tunnel"; support link STORY Douyin juga) jadi PRIMARY → fallback IkyyXD douyin → azbry. Command di-rename .douyindl → .douyin (alias: dy, douyindl — muscle memory lama tetap jalan). Live test: shortlink v.douyin.com ✅ video no-watermark 2.2MB ter-verify ke-download, cover douyinpic, audio mp3 douyinstatic, statistics lengkap; link invalid → turun rantai fallback tanpa crash. React 🕒→🐣, caption mediaCaption + preview card + offerConvert.
 - .tiktokv3 - download - TikTok v3 (IkyyXD → Sanka → tikwm; support slideshow foto); semua media dikirim dengan preview card (cover asli TikTok — nova-media-card.js)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
