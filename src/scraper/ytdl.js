@@ -71,7 +71,11 @@ async function ytdl(url, format = "mp3") {
       String(format || "mp3").toLowerCase() === "mp4" ? "mp4" : "mp3";
 
     const client = axios.create({
-      timeout: 60000,
+      // ymcdn convert step lagi lambat/sekarat — 60s bikin .play nunggu
+      // nggak banget sebelum fallback ke jalur berikutnya (Ikyy). 25s cukup
+      // buat request convert yang sehat; kalau lewat dari itu mending
+      // cepet pindah jalur daripada user nunggu 1 menit+.
+      timeout: 25000,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Linux; Android 16; NX729J) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7271.123 Mobile Safari/537.36",
