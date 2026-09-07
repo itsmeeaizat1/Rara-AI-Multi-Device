@@ -86,9 +86,9 @@ async function handler(m, { sock }) {
         "Daftar buronan aktif :",
         ...TARGETS.flatMap((target) => [
           `${target.id} — ${target.name}`,
-          `   Kesulitan : ${target.difficulty} (peluang ${target.winChance}%)`,
-          `   Energi : ${target.energiCost}`,
-          `   Imbalan : ${target.minGold} - ${target.maxGold} Gold`,
+          `Kesulitan : ${target.difficulty} (peluang ${target.winChance}%)`,
+          `Energi : ${target.energiCost}`,
+          `Imbalan : ${target.minGold} - ${target.maxGold} Gold`,
           `   ${target.desc}`,
         ]),
         "---",

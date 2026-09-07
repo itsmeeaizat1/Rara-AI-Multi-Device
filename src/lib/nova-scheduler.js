@@ -62,16 +62,16 @@ function startDailyLimitReset(options = {}) {
             const ownerJids = new Set(ownerNumbers.map(n => n + "@s.whatsapp.net"));
 
             const notifText =
-              `╭─「 ✦ Limit Reset ✦ 」\n` +
-              `│\n` +
-              `│ ♻️ Limit harian sudah direset!\n` +
-              `│\n` +
-              `│ • Gratis  : ${defaultLimit} limit\n` +
-              `│ • Premium : ${premiumLimit} limit\n` +
-              `│\n` +
-              `│ ${resetCount} user telah direset\n` +
-              `│\n` +
-              `╰────  •  ────`;
+              `「 ✦ Limit Reset ✦ 」\n` +
+              
+              `♻️ Limit harian sudah direset!\n` +
+              
+              `• Gratis  : ${defaultLimit} limit\n` +
+              `• Premium : ${premiumLimit} limit\n` +
+              
+              `${resetCount} user telah direset\n` +
+              
+              ;
 
             let sent = 0;
             for (const jid of Object.keys(users)) {
@@ -676,7 +676,7 @@ async function resolveGuildWars() {
       war.status = "draw";
       attacker.lastWarEnd = now;
       defender.lastWarEnd = now;
-      const msg = "╭─「 ✦ " + war.attacker + " ✦ 」\n│ • Hasil War\n╰────  •  ────\n\n" +
+      const msg = "「 ✦ " + war.attacker + " ✦ 」\n• Hasil War\n\n" +
         "Pemenang: *" + winnerName + "* 🏆\n" +
         "Kalah: *" + loserName + "*\n\n" +
         "ATK Power: " + war.attackerPower + "\n" +

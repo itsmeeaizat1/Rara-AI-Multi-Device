@@ -60,7 +60,7 @@ function checkPermission(m, pluginConfig) {
   }
 
   if (pluginConfig.isPartner && !m.isPartner && !m.isOwner && !hasAccess) {
-    return { allowed: false, reason: "╭─「 ✦ Partner Only ✦ 」\n│ Fitur ini khusus Partner bot\n╰────  •  ────" };
+    return { allowed: false, reason: "「 ✦ Partner Only ✦ 」\nFitur ini khusus Partner bot" };
   }
 
   if (
@@ -118,7 +118,7 @@ function checkPermission(m, pluginConfig) {
         if (!m.isAdmin && !m.isOwner && !hasAccess) {
           return {
             allowed: false,
-            reason: "╭─「 ✦ Game Disabled ✦ 」\n│ Fitur Game sedang dinonaktifkan\n│ di grup ini oleh Admin\n╰────  •  ────",
+            reason: "「 ✦ Game Disabled ✦ 」\nFitur Game sedang dinonaktifkan\ndi grup ini oleh Admin",
           };
         }
       }
@@ -126,7 +126,7 @@ function checkPermission(m, pluginConfig) {
         if (!m.isAdmin && !m.isOwner && !hasAccess) {
           return {
             allowed: false,
-            reason: "╭─「 ✦ RPG Disabled ✦ 」\n│ Fitur RPG sedang dinonaktifkan\n│ di grup ini oleh Admin\n╰────  •  ────",
+            reason: "「 ✦ RPG Disabled ✦ 」\nFitur RPG sedang dinonaktifkan\ndi grup ini oleh Admin",
           };
         }
       }
@@ -170,10 +170,10 @@ function checkAccessBlocked(m) {
     return {
       blocked: true,
       message:
-        `╭─「 ✦ Aᴋsᴇs Dɪᴛᴏʟᴀᴋ ✦ 」\n` +
-        `│ Nᴏᴍᴏʀ ᴋᴀᴍᴜ ᴅɪʙʟᴏᴋɪʀ ᴅᴀʀɪ ʙᴏᴛ ɪɴɪ\n` +
-        `│ Hᴜʙᴜɴɢɪ ᴏᴡɴᴇʀ ᴜɴᴛᴜᴋ ɪɴꜰᴏ ʟᴇʙɪʜ ʟᴀɴᴊᴜᴛ\n` +
-        `╰────  •  ────`,
+        `「 ✦ Aᴋsᴇs Dɪᴛᴏʟᴀᴋ ✦ 」\n` +
+        `Nᴏᴍᴏʀ ᴋᴀᴍᴜ ᴅɪʙʟᴏᴋɪʀ ᴅᴀʀɪ ʙᴏᴛ ɪɴɪ\n` +
+        `Hᴜʙᴜɴɢɪ ᴏᴡɴᴇʀ ᴜɴᴛᴜᴋ ɪɴꜰᴏ ʟᴇʙɪʜ ʟᴀɴᴊᴜᴛ\n` +
+        ,
     };
   }
 
@@ -184,10 +184,10 @@ function checkAccessBlocked(m) {
       return {
         blocked: true,
         message:
-          `╭─「 ✦ Mᴏᴅᴇ Wʜɪᴛᴇʟɪsᴛ ✦ 」\n` +
-          `│ Bᴏᴛ ʜᴀɴʏᴀ ᴍᴇʀᴇsᴘᴏɴ ɴᴏᴍᴏʀ ᴛᴇʀᴅᴀꜰᴛᴀʀ\n` +
-          `│ Nᴏᴍᴏʀ ᴋᴀᴍᴜ ʙᴇʟᴜᴍ ᴛᴇʀᴅᴀꜰᴛᴀʀ ᴏʟᴇʜ ᴏᴡɴᴇʀ\n` +
-          `╰────  •  ────`,
+          `「 ✦ Mᴏᴅᴇ Wʜɪᴛᴇʟɪsᴛ ✦ 」\n` +
+          `Bᴏᴛ ʜᴀɴʏᴀ ᴍᴇʀᴇsᴘᴏɴ ɴᴏᴍᴏʀ ᴛᴇʀᴅᴀꜰᴛᴀʀ\n` +
+          `Nᴏᴍᴏʀ ᴋᴀᴍᴜ ʙᴇʟᴜᴍ ᴛᴇʀᴅᴀꜰᴛᴀʀ ᴏʟᴇʜ ᴏᴡɴᴇʀ\n` +
+          ,
       };
     }
   }
@@ -227,11 +227,11 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isAfk: true,
       afkMessage:
-        `╭─「 ✦ AFK ✦ 」\n` +
-        `│ Bot sedang AFK\n` +
-        `│ Alasan: ${botAfk.reason || "AFK"}\n` +
-        `│ Sejak: ${duration} yang lalu\n` +
-        `╰────  •  ────`,
+        `「 ✦ AFK ✦ 」\n` +
+        `Bot sedang AFK\n` +
+        `Alasan: ${botAfk.reason || "AFK"}\n` +
+        `Sejak: ${duration} yang lalu\n` +
+        ,
     };
   }
 
@@ -242,11 +242,11 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isModeLimited: true,
       modeLimitedMessage:
-        `╭─「 ✦ Mᴏᴅᴇ Gʀᴜᴘ Oɴʟʏ ✦ 」\n` +
-        `│ Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ɢʀᴜᴘ sᴀᴊᴀ\n` +
-        `│ Sɪʟᴀᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ʙᴏᴛ ᴅɪ ᴅᴀʟᴀᴍ ɢʀᴜᴘ\n` +
-        `│ Pʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
-        `╰────  •  ────`,
+        `「 ✦ Mᴏᴅᴇ Gʀᴜᴘ Oɴʟʏ ✦ 」\n` +
+        `Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ɢʀᴜᴘ sᴀᴊᴀ\n` +
+        `Sɪʟᴀᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ʙᴏᴛ ᴅɪ ᴅᴀʟᴀᴍ ɢʀᴜᴘ\n` +
+        `Pʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
+        ,
     };
   }
   if (onlyPc && m.isGroup && !m.isOwner) {
@@ -254,11 +254,11 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isModeLimited: true,
       modeLimitedMessage:
-        `╭─「 ✦ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ Oɴʟʏ ✦ 」\n` +
-        `│ Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ sᴀᴊᴀ\n` +
-        `│ Sɪʟᴀᴋᴀɴ ᴄʜᴀᴛ ʙᴏᴛ ʟᴇᴡᴀᴛ ᴘᴇsᴀɴ ᴘʀɪʙᴀᴅɪ\n` +
-        `│ Aᴋsᴇs ᴅɪ ɢʀᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
-        `╰────  •  ────`,
+        `「 ✦ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ Oɴʟʏ ✦ 」\n` +
+        `Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ sᴀᴊᴀ\n` +
+        `Sɪʟᴀᴋᴀɴ ᴄʜᴀᴛ ʙᴏᴛ ʟᴇᴡᴀᴛ ᴘᴇsᴀɴ ᴘʀɪʙᴀᴅɪ\n` +
+        `Aᴋsᴇs ᴅɪ ɢʀᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
+        ,
     };
   }
 
@@ -271,14 +271,14 @@ function checkMode(m, getActiveJadibots) {
         allowed: false,
         isOnlyThisGroup: true,
         onlyThisGroupMessage:
-          `╭─「 ✦ Akses Ditolak ✦ 」\n` +
-          `│ Bot hanya bisa diakses di Grup Utama:\n` +
-          `│ *${onlyThisGroup.name}*\n` +
-          `│\n` +
-          `│ 🔗 ${onlyThisGroup.link}\n` +
-          `│\n` +
-          `│ Setelah bergabung, bebas pakai semua fitur\n` +
-          `╰────  •  ────`
+          `「 ✦ Akses Ditolak ✦ 」\n` +
+          `Bot hanya bisa diakses di Grup Utama:\n` +
+          `*${onlyThisGroup.name}*\n` +
+          
+          `🔗 ${onlyThisGroup.link}\n` +
+          
+          `Setelah bergabung, bebas pakai semua fitur\n` +
+          
       };
     }
   }
@@ -303,18 +303,18 @@ function checkMode(m, getActiveJadibots) {
     if (activeJadibots.length > 0) {
       let jadibotList = "";
       activeJadibots.forEach((jb, i) => {
-        jadibotList += `│ ${i + 1}. @${jb.id}\n`;
+        jadibotList += `${i + 1}. @${jb.id}\n`;
       });
       const mentions = activeJadibots.map((jb) => jb.id + "@s.whatsapp.net");
       return {
         allowed: false,
         hasJadibots: true,
         jadibotMessage:
-          `╭─「 ✦ Mode Private ✦ 」\n` +
-          `│ Bot utama dalam mode private\n` +
-          `│ Bot turunan yang tersedia:\n` +
+          `「 ✦ Mode Private ✦ 」\n` +
+          `Bot utama dalam mode private\n` +
+          `Bot turunan yang tersedia:\n` +
           `${jadibotList}` +
-          `╰────  •  ────`,
+          ,
         jadibotMentions: mentions,
       };
     }

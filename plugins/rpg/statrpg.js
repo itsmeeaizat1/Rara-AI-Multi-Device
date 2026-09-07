@@ -20,8 +20,8 @@ async function handler(m) {
       flavor: `📊 *${(m.pushName || "Player").toUpperCase()} SIAP TEMPUR!*`,
       body: [
         psSection("peranan"),
-        `  Nama   : ${m.pushName || "Player"}`,
-        `  Level  : ${rpg.level || 1}`,
+        `Nama : ${m.pushName || "Player"}`,
+        `Level : ${rpg.level || 1}`,
         "",
         psSection("statistik"),
         psStat("❤️", "HP", rpg.hp, rpg.maxHp),

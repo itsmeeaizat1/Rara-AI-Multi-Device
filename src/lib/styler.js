@@ -94,11 +94,12 @@ export function wrapText(text, width = 30) {
  * @returns {string} Kotak siap dikirim (font normal, tanpa code block).
  */
 export function boxLeft(title, content, width = 30) {
-  return [
-    `┌─「 ${title} 」`,
-    ...wrapText(content, width).map((l) => "│ " + l), // ← guard: SEMUA baris wajib lewat sini
-    `└─「 • 」`,
-  ].join("\n");
+  // REWORK 2026-09-07 (owner: "hapus juga di menu usage semua fitur dan
+  // replynya hapus garisnya") — TANPA garis: header 「 title 」, isi polos
+  // tanpa prefix │, tanpa footer └─, tanpa wrap 30-char (gak ada border
+  // yang bisa putus, WhatsApp wrap natural). Semua plugin yang berkotak
+  // via boxLeft/boxMessage otomatis ke format baru tanpa diedit satu-satu.
+  return [`「 ${title} 」`, ...String(content ?? "").split("\n")].join("\n");
 }
 
 /**

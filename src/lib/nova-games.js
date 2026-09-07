@@ -56,13 +56,13 @@ function pick(arr) {
 function renderEnergiLine(m, cfg) {
   const e = m?.energiInfo;
   if (e) {
-    if (e.unlimited) return `│ ⚡ Energi : ∞ (unlimited)\n`;
+    if (e.unlimited) return `⚡ Energi : ∞ (unlimited)\n`;
     if (e.deducted > 0) return e.game
-      ? `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa}/${e.max})\n`
-      : `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa})\n`;
-    return `│ ⚡ Energi : gratis\n`;
+      ? `⚡ Energi : -${e.deducted} (sisa ${e.sisa}/${e.max})\n`
+      : `⚡ Energi : -${e.deducted} (sisa ${e.sisa})\n`;
+    return `⚡ Energi : gratis\n`;
   }
-  if (cfg.energi > 0) return `│ ⚡ Energi : -${cfg.energi}\n`;
+  if (cfg.energi > 0) return `⚡ Energi : -${cfg.energi}\n`;
   return '';
 }
 
@@ -272,10 +272,10 @@ class NovaGames {
             if (cfg.questionField && session.question[cfg.questionField]) {
               text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ 🧩 Hint       : ${getHint(answer, cfg.hintCount)}\n`;
-            text += `│ ⏳ Sisa waktu : ${formatRemainingTime(remaining)}\n\n`;
+            text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
+            text += `⏳ Sisa waktu : ${formatRemainingTime(remaining)}\n\n`;
             text += `_💬 Reply pesan game ini buat jawab, ketik "nyerah" kalau nyerah_`;
-            text += `\n╰────  •  ────`;
+            text += ``;
             await m.reply(text);
             return;
           }
@@ -305,19 +305,17 @@ class NovaGames {
           }
 
           await m.react("🕒");
-          let caption = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          let caption = `「 ✦ ${cfg.title} ✦ 」\n\n`;
           caption += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
           if (cfg.hintEnabled !== false) {
-            caption += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
+            caption += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
-          caption += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n\n`;
+          caption += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          caption += `🎁 Hadiah : Limit, Koin, EXP (random)\n\n`;
           caption += `_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
-          caption += `╰────  •  ────`;
-
           sentMsg = await sock.sendMessage(
             chatId,
             { image: imageBuffer, caption },
@@ -325,20 +323,18 @@ class NovaGames {
           );
         } else {
           await m.react("🕒");
-          let text = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          let text = `「 ✦ ${cfg.title} ✦ 」\n\n`;
           text += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
           if (cfg.hintEnabled !== false) {
-            text += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
+            text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
-          text += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n`;
+          text += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          text += `🎁 Hadiah : Limit, Koin, EXP (random)\n`;
           text += renderEnergiLine(m, cfg);
           text += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
-          text += `╰────  •  ────`;
-
           sentMsg = await m.reply(text);
         }
 
@@ -353,12 +349,11 @@ class NovaGames {
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ ❌ Jawaban: ${answer}\n`;
+            text += `❌ Jawaban: ${answer}\n`;
             if (question.deskripsi) {
-              text += `│ 💡 Info: ${question.deskripsi}\n`;
+              text += `💡 Info: ${question.deskripsi}\n`;
             }
             text += `\n_Yah, gak ada yang bisa jawab nih~_\n`;
-            text += `╰────  •  ────`;
             const timeoutCta = gameCTA(gameType);
             if (timeoutCta) text += `\n${timeoutCta}`;
             await sock.sendMessage(chatId, { text });
@@ -398,12 +393,11 @@ class NovaGames {
           if (cfg.questionField && session.question[cfg.questionField]) {
             text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
           }
-          text += `│ • Jawaban: ${answer}\n`;
+          text += `• Jawaban: ${answer}\n`;
           if (session.question.deskripsi) {
-            text += `│ • Info: ${session.question.deskripsi}\n`;
+            text += `• Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split("@")[0]} menyerah_\n`;
-          text += `╰────  •  ────`;
           try {
             await sock.sendMessage(chatId, {
               text,
@@ -445,9 +439,9 @@ class NovaGames {
 
           let text = `${pick(WIN_MESSAGES)}\n\n`;
           text += `*${cfg.title}*\n\n`;
-          text += `│ • Jawaban: ${answer}\n`;
-          text += `│ • Pemenang: @${m.sender.split("@")[0]}\n`;
-          text += `│ • Percobaan: ${session.attempts}x\n\n`;
+          text += `• Jawaban: ${answer}\n`;
+          text += `• Pemenang: @${m.sender.split("@")[0]}\n`;
+          text += `• Percobaan: ${session.attempts}x\n\n`;
 
           let parts = [];
           if (totalLimit > 0) parts.push(`+${totalLimit} Limit`);
@@ -458,10 +452,10 @@ class NovaGames {
           }
 
           if (session.question.deskripsi) {
-            text += `\n│ • Info: ${session.question.deskripsi}\n`;
+            text += `\n• Info: ${session.question.deskripsi}\n`;
           }
 
-          text += `\n╰────  •  ────`;
+          text += ``;
 
           try {
             await sock.sendMessage(chatId, {
@@ -635,7 +629,7 @@ export function novaGameBox(opts) {
   const { title, icon = "🎮", body, flavor = null, cta = null } = opts;
   const spaced = String(title).toUpperCase().split("").join(" ").replace(/\s{2,}/g, " ").trim();
   const line = "━".repeat(Math.max(18, spaced.length + 4));
-  const cleanBody = String(body).replace(/^│\s?/gm, "  ");
+  const cleanBody = String(body).replace(/^│\s?/gm, "");  // rata kiri (owner 2026-09-07): tanpa indent
   let text = "";
   if (flavor) text += flavor + "\n\n";
   text += `${icon}  ${spaced}\n${line}\n\n`;
@@ -696,7 +690,7 @@ export function novaRpgBox(title, body, type = "info", _opts = {}) {
   }
 
   // render body: subHeader → section ◈ letter-spaced, "---" → paragraf,
-  // teks → indent 2 spasi tanpa prefix bullet/pipe (garis kiri dihapus)
+  // teks → flush kiri TANPA indent (owner 2026-09-07: semua format teks rata kiri)
   const bodyLines = lines.map((l) => {
     if (typeof l === "object" && l?.subHeader) {
       // subHeader RPG umumnya udah smallcaps — render apa adanya dengan
@@ -711,7 +705,7 @@ export function novaRpgBox(title, body, type = "info", _opts = {}) {
       .replace(/^╎\s*$/, "")
       .replace(/^┊\s+➶\s*/, "")
       .replace(/^(?:[•┊╎❏➶╭╰│┃]\s*)+/, "");
-    return `  ${clean}`;
+    return clean;
   });
   while (bodyLines.length && !bodyLines[0].trim()) bodyLines.shift();
   while (bodyLines.length && !bodyLines[bodyLines.length - 1].trim()) bodyLines.pop();
