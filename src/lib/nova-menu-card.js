@@ -25,7 +25,7 @@
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";
-import { generateWAMessageFromContent, proto } from "nova";
+import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import { buildCategoryButton } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
 import { logger } from "./nova-logger.js";
@@ -285,68 +285,74 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
-    // ── REQUEST OWNER 2026-09-07: BANNER SEBAGAI DOCUMENT ──
-    // Report: thumbnail externalAdReply gak pernah muncul di HP owner.
-    // Solusi: banner dikirim duluan sebagai DOCUMENT message — WhatsApp
-    // ngerender preview thumbnail + logo unduh di dokumennya, dan file
-    // model ini GAK PERNAH kesimpen ke galeri penerima (bukan image
-    // attachment biasa). Menu text + tombol tetep menyusul di bawahnya
-    // sebagai satu pesan interaktif.
-    if (rawBuffer) {
-      try {
-        const docName = (title || config.bot?.name || "Nova AI")
-          .replace(/[\\/*?:"<>|]/g, "")
-          .trim() || "Nova";
-        await sock.sendMessage(
-          m.chat,
-          {
-            document: rawBuffer,
-            mimetype: "image/jpeg",
-            fileName: `${docName} — Menu.jpg`,
-            jpegThumbnail: adThumbnail || rawBuffer,
-          },
-          { quoted: m }
-        );
-      } catch (e) {
-        console.error("[nova-menu-card] Gagal kirim banner document:", e.message);
-      }
-    }
-
-    // ── REVERT OWNER 2026-09-07 (final): BALIK KE LINK-PREVIEW CARD, TANPA
-    // TAG SALURAN & TANPA "DITERUSKAN BERKALI-KALI" ──
-    // Report owner: eksperimen header-media/video/vcard-quote ala Elaina V3
-    // gagal semua (jadi media biasa / gak ada tombol / malah muncul badge
-    // "Diteruskan berkali-kali" + pill "Nova AI Official" di atas thumbnail
-    // yang gak diinginkan). Balik ke versi stabil: banner via
-    // contextInfo.externalAdReply (link-preview, gak kesimpen galeri),
-    // forwardingScore 0 + isForwarded false (TIDAK ada badge forward), dan
-    // forwardedNewsletterMessageInfo DIHAPUS (TIDAK ada pill saluran di atas
-    // thumbnail). Tombol nativeFlow (buildNavButtons, 5-6 tombol) tetap ada.
-    const contextInfo = {
-      mentionedJid: m.sender ? [m.sender] : [],
-      forwardingScore: 0,
-      isForwarded: false,
-      externalAdReply,
-    };
-
     if (plain) {
-      await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
+      await sock.sendMessage(m.chat, { text, contextInfo: {
+        mentionedJid: m.sender ? [m.sender] : [],
+        forwardingScore: 0,
+        isForwarded: false,
+        externalAdReply,
+      } }, { quoted: m });
       return true;
     }
 
+    // ── REQUEST OWNER 2026-09-07: THUMBNAIL DI-DALAM CARD — PROTOTYPE
+    // ELAINA V3 (viewOnce + interactiveMessage + paduan metadata list) ──
+    // Banner dikirim sebagai MEDIA ATTACHMENT di header interactiveMessage
+    // (upload ke server WA via prepareWAMessageMedia) — jadi thumbnail
+    // besar muncul DI-DALAM card menu, bukan cuma link-preview.
+    // ContextInfo pakai paduan metadata list Elaina: forwardingScore 999 +
+    // isForwarded + forwardedNewsletterMessageInfo (pill saluran) — sesuai
+    // prototype yang owner kirim.
+    let _mHeader = {
+      title: "",
+      hasMediaAttachment: false,
+    };
+    if (rawBuffer) {
+      try {
+        const media = await prepareWAMessageMedia(
+          { image: adThumbnail || rawBuffer },
+          { upload: sock.waUploadToServer }
+        );
+        if (media?.imageMessage) {
+          _mHeader = {
+            title: "",
+            hasMediaAttachment: true,
+            imageMessage: media.imageMessage,
+          };
+        }
+      } catch (e) {
+        console.error("[nova-menu-card] Upload banner header gagal, fallback link-preview:", e.message);
+      }
+    }
+
+    const newsletterJid = await resolveNewsletterJid(sock);
+    const newsletterName = config.saluran?.name || config.bot?.name || "Nova AI";
+    const botName0 = title || config.bot?.name || "Nova AI";
+
+    const _mContextInfo = {
+      mentionedJid: m.sender ? [m.sender] : [],
+      forwardingScore: 999,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid,
+        newsletterName,
+        serverMessageId: 127,
+      },
+      // fallback banner kalau upload header gagal — tetep ada preview
+      ...(!_mHeader.hasMediaAttachment && adThumbnail ? { externalAdReply } : {}),
+    };
+
     const interactiveObj = {
       body: proto.Message.InteractiveMessage.Body.fromObject({ text }),
-      footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: footer || "" }),
+      footer: proto.Message.InteractiveMessage.Footer.fromObject({
+        text: footer || `\u2726 ${botName0}`,
+      }),
       nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+        messageParamsJson: "",
         buttons: nativeButtons,
       }),
-      // Header TANPA media attachment — banner besar dihandle lewat
-      // contextInfo.externalAdReply di bawah (link-preview, gak kesimpen galeri).
-      header: proto.Message.InteractiveMessage.Header.fromObject({
-        title: "",
-        hasMediaAttachment: false,
-      }),
-      contextInfo,
+      header: proto.Message.InteractiveMessage.Header.fromObject(_mHeader),
+      contextInfo: _mContextInfo,
     };
 
     const msg = generateWAMessageFromContent(
@@ -368,7 +374,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     return true;
   } catch (e) {
-    console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message);
+    console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message, "\nSTACK:", e.stack);
     try {
       await sock.sendMessage(m.chat, { text }, { quoted: m });
     } catch {}
