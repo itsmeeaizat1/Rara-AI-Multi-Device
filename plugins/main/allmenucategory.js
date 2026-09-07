@@ -98,7 +98,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
       const categoryOrder = [
         // Core Bot
-        "ai", "sticker", "group", "download", "tools",
+        "ai", "sticker", "group", "download", "tools", "browser",
         // Media & Kreatif
         "canvas", "convert", "maker", "ephoto", "fun", "game",
         // Game & RPG

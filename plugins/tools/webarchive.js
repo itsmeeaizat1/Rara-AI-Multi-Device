@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "webarchive",
   alias: ["webarchive"],
-  category: "tools",
+  category: "browser",
   description: "Cek snapshot Wayback Machine (lihat tampilan lama website)",
   usage: ".webarchive <url>  atau  .webarchive list <url>",
   example: ".webarchive google.com  atau  .webarchive list example.com",

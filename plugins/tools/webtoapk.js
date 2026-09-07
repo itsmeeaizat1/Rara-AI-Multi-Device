@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "webtoapk",
   alias: ["webtoapk"],
-  category: "tools",
+  category: "browser",
   description: "WebToNative — convert website ke native Android/iOS app gratis tanpa API key",
   usage: ".webtoapk <url> <nama_app>\n.webtoapk <url> <nama_app> <email>",
   example: ".webtoapk https://example.com MyApp\n.webtoapk https://google.com GoogleApp aizat@mail.com",

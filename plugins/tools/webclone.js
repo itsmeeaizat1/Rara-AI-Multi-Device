@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "webclone",
   alias: ["webclone"],
-  category: "tools",
+  category: "browser",
   description: "WebsiteCloner — clone website & dapatkan template via smartdom API, gratis tanpa token",
   usage: ".webclone <url>",
   example: ".webclone https://example.com\n.webclone https://google.com",
