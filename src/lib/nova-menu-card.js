@@ -290,12 +290,6 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
-    // ── REVISI OWNER 2026-09-07: MENU = EXTERNAL AD REPLY ──
-    // Thumbnail katalog (interactive card) gak muncul → menu sekarang PESAN
-    // TEKS BIASA + contextInfo.externalAdReply dengan renderLargerThumbnail
-    // (preview besar kayak link preview) + pill channel. Dijamin ke-render
-    // di semua versi WhatsApp & semua penerima. Param `buttons` diabaikan
-    // sengaja (caller gak perlu diubah); opsi `plain` dikeep untuk compat.
     const contextInfo = {
       mentionedJid: m.sender ? [m.sender] : [],
       forwardingScore: 0,
@@ -308,7 +302,28 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       },
     };
 
-    await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
+    // Opsi plain (card info/owner): teks biasa + chip externalAdReply.
+    if (plain) {
+      await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
+      return true;
+    }
+
+    // ── REVISI OWNER 2026-09-07: CARD KATALOG KAYAK BOT LAIN (Raiden MD dkk) ──
+    // Report owner: "bot lain bisa sampai muncul tombolnya, ini malah gak
+    // muncul, beda tipe thumbnailnya" — thumbnail bot lain itu HEADER IMAGE
+    // (gambar gede nempel DI ATAS pesan), bukan link-preview. Card lama kita
+    // header-nya KOSONG (banner cuma lewat externalAdReply) → client
+    // penerima gak ngerender. Solusi: delegasi ke sock.sendButton — pattern
+    // PROVEN di bot ini (dipakai leaderboard, carifitur) yang ngerakit
+    // interactiveMessage dengan header media (prepareWAMessageMedia,
+    // resize 640x360) + body + tombol nativeFlow + relayMessage.
+    // Hasil: gambar gede di atas → chip judul+versi (externalAdReply, tanpa
+    // sourceUrl biar gak ada baris link) → teks menu → tombol di bawah.
+    await sock.sendButton(m.chat, rawBuffer, text, m, {
+      footer: footer || "",
+      buttons: buildNativeButtons(buttons),
+      contextInfo,
+    });
     return true;
   } catch (e) {
     console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message);
