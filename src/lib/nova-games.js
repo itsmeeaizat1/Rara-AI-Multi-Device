@@ -625,18 +625,38 @@ function renderSlotBoard(answers, opts = {}) {
   return lines;
 }
 
-// ─── novaGameBox — format khas game buat game papan/kartu (catur, uno, dll) ───
-// Beda dari claraWrap (menu/reply klasik): game bebas ekspresi —
-// opener flavor bold+emoji, judul CAPS di box, body bebas (papan/giliran/jawaban), CTA tematik.
+// ─── novaGameBox — format khas game ala dashboard PlayStation ───
+// REDESIGN OWNER 2026-09-07: game TIDAK pakai box-drawing (╭╰│) —
+// bikin tampilan game berantakan. Ganti: frame PS-style — judul
+// letter-spaced + garis tebal ━, body bebas (bar/section/papan), CTA tematik.
+// Pipe-wall "│ " sisa format lama di body caller otomatis di-strip jadi indent.
 export function novaGameBox(opts) {
   const { title, icon = "🎮", body, flavor = null, cta = null } = opts;
+  const spaced = String(title).toUpperCase().split("").join(" ").replace(/\s{2,}/g, " ").trim();
+  const line = "━".repeat(Math.max(18, spaced.length + 4));
+  const cleanBody = String(body).replace(/^│\s?/gm, "  ");
   let text = "";
   if (flavor) text += flavor + "\n\n";
-  text += `╭─「 ✦ ${icon} ${String(title).toUpperCase()} ✦ 」\n\n`;
-  text += body + "\n";
-  text += `╰────  •  ────`;
+  text += `${icon}  ${spaced}\n${line}\n\n`;
+  text += cleanBody + "\n";
+  text += line;
   if (cta) text += `\n\n${cta}`;
   return text;
+}
+
+// ─── PS-STYLE INFO SECTION — building block dashboard game ───
+// psSection("statistik")  →  "◈ S T A T I S T I K"
+export function psSection(name) {
+  return `◈ ${String(name).toUpperCase().split("").join(" ").replace(/\s{2,}/g, " ").trim()}`;
+}
+
+// psStat("❤️", "HP", 54, 100)  →  "❤️ HP  ▰▰▰▰▰▱▱▱▱▱  54/100"
+export function psStat(icon, label, cur, max, width = 10) {
+  const mx = Math.max(0, max || 0);
+  const c = Math.min(Math.max(0, cur || 0), mx);
+  const filled = mx > 0 ? Math.round((c / mx) * width) : 0;
+  const bar = "▰".repeat(filled) + "▱".repeat(Math.max(0, width - filled));
+  return `${icon} ${label}  ${bar}  ${c}/${mx}`;
 }
 
 export { NovaGames, games, gameCTA, GAME_FLAVOR, pickFlavor, renderProgressBar, renderSlotBoard, renderStatBar };

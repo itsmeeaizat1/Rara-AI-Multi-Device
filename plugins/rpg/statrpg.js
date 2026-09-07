@@ -2,7 +2,7 @@
 // RPG Stat — Statistik karakter (tampilan bar interaktif)
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, psSection, psStat } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "statrpg", alias: ["statrpg", "stat"],
@@ -20,14 +20,25 @@ async function handler(m) {
       title: "stat karakter", icon: "📊",
       flavor: `📊 *${(m.pushName || "Player").toUpperCase()} SIAP TEMPUR!*`,
       body: [
-        `│ • 🏅 Level : ${rpg.level || 1}`,
+        psSection("peranan"),
+        `  Nama   : ${m.pushName || "Player"}`,
+        `  Level  : ${rpg.level || 1}`,
         "",
-        `│ ❤️ HP    : ${renderStatBar(rpg.hp, rpg.maxHp)} (${rpg.hp}/${rpg.maxHp})`,
-        `│ 💙 Mana  : ${renderStatBar(rpg.mana, rpg.maxMana)} (${rpg.mana}/${rpg.maxMana})`,
-        `│ ⚡ Energi : ${renderStatBar(rpg.energy, rpg.maxEnergy)} (${rpg.energy}/${rpg.maxEnergy})`,
+        psSection("statistik"),
+        psStat("❤️", "HP", rpg.hp, rpg.maxHp),
+        psStat("💙", "Mana", rpg.mana, rpg.maxMana),
+        psStat("⚡", "Energi", rpg.energy, rpg.maxEnergy),
         "",
-        `│ • ⚔️ ATK : ${rpg.atk}   🛡️ DEF : ${rpg.def}   💨 SPD : ${rpg.spd}`,
-        `│ • 🎯 Crit : ${rpg.critRate || 0}%   💫 Evasion : ${rpg.evasion || 0}%`,
+        psSection("tempur"),
+        `  ⚔️ ATK ${rpg.atk}   🛡️ DEF ${rpg.def}   💨 SPD ${rpg.spd}`,
+        `  🎯 Crit ${rpg.critRate || 0}%   💫 Evasion ${rpg.evasion || 0}%`,
+        "",
+        psSection("pengalaman"),
+        psStat("✨", "EXP", rpg.exp, rpg.expNext || 100),
+        `  🪙 Gold ${rpg.gold ?? 0}   💎 Gems ${rpg.gems ?? 0}   🎟️ Tokens ${rpg.tokens ?? 0}`,
+        "",
+        psSection("tersedia"),
+        "  .adventure  .meditation  .leaderboard",
       ].join("\n"),
       cta: gameCTA("adventure"),
     });
