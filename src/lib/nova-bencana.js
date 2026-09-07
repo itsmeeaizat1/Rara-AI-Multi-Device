@@ -228,6 +228,7 @@ export async function getGdacs(days = 7) {
         fromdate: p.fromdate || null,
         todate: p.todate || null,
         report: p.url?.report || null,
+        detailsUrl: p.url?.details || null,
         lat, lon,
       };
     })
@@ -267,6 +268,7 @@ export async function getUsgs(minMag = 6.0, limit = 15) {
       time: f.properties.time,
       tsunami: f.properties.tsunami === 1,
       url: f.properties.url || null,
+      detail: f.properties.detail || null, // geojson detail API — sumber shakemap thumbnail
       lat, lon,
     };
   });
@@ -290,10 +292,11 @@ function loadState() {
       const st = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
       st.pending ??= [];
       st.firedJadwal ??= [];
+      st.fp ??= [];
       return st;
     }
   } catch { /* korup → mulai ulang */ }
-  return { bmkg: null, gdacs: [], usgs: [], pending: [], firedJadwal: [] };
+  return { bmkg: null, gdacs: [], usgs: [], pending: [], firedJadwal: [], fp: [] };
 }
 
 function saveState(st) {
@@ -839,6 +842,123 @@ function withDistanceLine(text, sub, ev) {
   }
 }
 
+// ─────────── FIX OWNER 2026-09-07: ANTI-SPAM BENCANAWATCH ───────────
+// 1. Fingerprint anti-dobel lintas sumber: gempa yang sama muncul di
+//    BMKG + USGS + GDACS → cukup 1 info (pusat pertama yang duluan kirim).
+//    Kriteria: gempa, ±12 jam, |Δlat| & |Δlon| < 1.5°, |Δmag| < 0.4.
+function fpDupe(st, ev) {
+  if (!Array.isArray(st.fp)) st.fp = [];
+  const now = Date.now();
+  st.fp = st.fp.filter((x) => now - x.ts < 12 * 3600e3);
+  if (!ev || ev.kind !== "gempa" || ev.lat == null) return false;
+  return st.fp.some((x) =>
+    Math.abs(x.lat - ev.lat) < 1.5 &&
+    Math.abs(x.lon - ev.lon) < 1.5 &&
+    (ev.mag == null || x.mag == null || Math.abs(x.mag - parseFloat(ev.mag)) < 0.4)
+  );
+}
+
+function fpMark(st, ev) {
+  if (!Array.isArray(st.fp)) st.fp = [];
+  const mag = parseFloat(ev?.mag);
+  st.fp.push({ lat: ev.lat, lon: ev.lon, mag: Number.isFinite(mag) ? mag : null, ts: Date.now() });
+  st.fp = st.fp.slice(-60);
+}
+
+// 2. Thumbnail USGS — shakemap intensity.jpg dari detail geojson
+//    (live verified 2026-09-07: 200 image/jpeg).
+async function usgsThumbUrl(q) {
+  try {
+    if (!q.detail) return null;
+    const det = await fetchJson(q.detail);
+    const sm = det?.properties?.products?.shakemap?.[0]?.contents?.["download/intensity.jpg"]?.url;
+    return sm || null;
+  } catch { return null; }
+}
+
+// 3. Thumbnail GDACS — peta overview dari endpoint geteventdata
+//    (live verified 2026-09-07: flood_overview_*.png 200 image/png).
+//    downloadCardThumb bakal nolak kalau ternyata bukan image.
+async function gdacsThumbUrl(e) {
+  try {
+    if (!e.detailsUrl) return null;
+    const det = await fetchJson(e.detailsUrl);
+    const urls = [...new Set(
+      [...JSON.stringify(det).matchAll(/https?:\/\/[^"\\ ]*contentdata\/resources\/[^"\\ ]+?\.(?:png|jpg|jpeg)/gi)].map((m) => m[0])
+    )];
+    return urls.find((u) => /overview/i.test(u)) || urls[0] || null;
+  } catch { return null; }
+}
+
+// 4. Pesan gabungan — 1 info per pembaruan pusat (bukan 1 pesan per event)
+function buildCombinedText(header, evs, note) {
+  const lines = [header, ""];
+  for (const ev of evs) {
+    if (ev._summary) lines.push(ev._summary);
+  }
+  if (note) lines.push("", note);
+  return lines.join("\n");
+}
+
+function nearestOf(evs, sub) {
+  if (sub?.lat == null) return null;
+  let best = null, bestD = Infinity;
+  for (const ev of evs) {
+    if (ev?.lat == null) continue;
+    const d = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
+    if (d < bestD) { bestD = d; best = ev; }
+  }
+  return best;
+}
+
+/** Kirim BEBERAPA event baru sebagai SATU pesan per subscriber. */
+async function dispatchCombined(evs, header, card) {
+  const subs = getWatchers();
+  const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
+  if (hasJadwal) for (const ev of evs) pushPending(ev);
+  for (const [watcherKey, chatId, sub] of await expandTargets()) {
+    try {
+      const mode = sub.mode || "otomatis";
+      let list = evs.slice();
+      if (Array.isArray(sub.jenis) && sub.jenis.length) list = list.filter((ev) => sub.jenis.includes(ev.kind));
+      if (Array.isArray(sub.sumber) && sub.sumber.length) list = list.filter((ev) => sub.sumber.includes(evSumberKey(ev)));
+      if (!list.length) continue;
+
+      if (mode === "jadwal") {
+        // ATURAN OWNER: yang darurat tetap realtime, sisanya nunggu rangkuman
+        const severe = list.filter((ev) => ev.isSevere);
+        if (severe.length) {
+          const near = nearestOf(severe, sub);
+          await sendWithCard(sock, chatId, withDistanceLine(buildCombinedText(header, severe, null), sub, near), card);
+          const subs2 = getWatchers();
+          if (subs2[watcherKey]) { subs2[watcherKey].lastDigest = Date.now(); saveWatchers(subs2); }
+        }
+        continue;
+      }
+
+      let send = list;
+      if (mode === "darurat") {
+        const radius = sub.radius || DEFAULT_RADIUS_KM;
+        send = list.filter((ev) =>
+          ev.isSevere ||
+          (sub.lat != null && ev.lat != null && haversineKm(sub.lat, sub.lon, ev.lat, ev.lon) <= radius)
+        );
+        if (!send.length) continue;
+      }
+
+      const nearHit = send.some((ev) =>
+        sub.lat != null && ev.lat != null &&
+        haversineKm(sub.lat, sub.lon, ev.lat, ev.lon) <= (sub.radius || DEFAULT_RADIUS_KM)
+      );
+      const text = buildCombinedText(header, send, nearHit ? "⚠️ Salah satunya DEKAT lokasi kamu — tetap waspada!" : null);
+      await sendWithCard(sock, chatId, withDistanceLine(text, sub, nearestOf(send, sub)), card);
+    } catch (e) {
+      logger.error?.("bencana", `Gagal kirim gabungan ke ${chatId}: ${e.message}`);
+    }
+    await new Promise((r) => setTimeout(r, 600));
+  }
+}
+
 async function dispatch(ev, genericText = null, card = null) {
   const subs = getWatchers();
   const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
@@ -932,6 +1052,9 @@ async function fastTick() {
     if (g.DateTime > st.bmkg) {
       st.bmkg = g.DateTime;
       saveState(st);
+      if (fpDupe(st, { kind: "gempa", lat: (() => { const [la] = String(g.Coordinates).split(",").map((s) => s.trim()); return +la; })(), lon: (() => { const [, lo] = String(g.Coordinates).split(",").map((s) => s.trim()); return +lo; })(), mag: g.Magnitude })) {
+        return; // gempa ini udah pernah dikirim sumber lain (USGS/GDACS) — cukup 1 info
+      }
       if (parseFloat(g.Magnitude) >= 5.0) {
         const [lat, lon] = String(g.Coordinates).split(",").map((s) => s.trim());
         const ev = {
@@ -945,6 +1068,11 @@ async function fastTick() {
           isSevere: parseFloat(g.Magnitude) >= 6.5, // mode darurat: gempa besar lolos filter global
         };
         ev.thumbUrl = g._shakemapUrl; // shakemap → thumbnail preview card (bukan attachment terpisah)
+        {
+          const st2 = loadState();
+          fpMark(st2, ev); // tandai biar USGS/GDACS gak dobelin gempa yang sama
+          saveState(st2);
+        }
         const lines = [
           "AUTO-ALERT BENCANA — GEMPA INDONESIA (BMKG)",
           "",
@@ -965,11 +1093,22 @@ async function slowTick() {
   try {
     const events = (await getGdacs(2)).filter((e) => e.alertlevel === "Orange" || e.alertlevel === "Red");
     const st = loadState();
+    // FIX OWNER 2026-09-07: baseline first-run — pas bencanawatch baru dinyalain,
+    // SEMUA event GDACS lama duluan dianggap "sudah dilihat" (tanpa alert) biar
+    // gak kebanjir pesan spam dari luar negeri. Alert cuma buat event BARU
+    // sejak monitor aktif.
+    if (!st.gdacsInit) {
+      st.gdacsInit = true;
+      st.gdacs = events.map((e) => e.id).slice(-200);
+      saveState(st);
+      return;
+    }
     const fresh = events.filter((e) => !st.gdacs.includes(e.id));
     if (fresh.length) {
       st.gdacs.push(...fresh.map((e) => e.id));
       st.gdacs = st.gdacs.slice(-200);
       saveState(st);
+      const evs = [];
       for (const e of fresh) {
         const t = GDACS_TYPES[e.type] ?? { label: e.type, icon: "⚠️" };
         const a = ALERT_STYLE[e.alertlevel];
@@ -984,17 +1123,32 @@ async function slowTick() {
           report: e.report,
           isSevere: e.alertlevel === "Red", // mode darurat: level AWAS lolos filter global
         };
+        if (fpDupe(st, ev)) continue; // gempa yang sama udah dikirim pusat lain — cukup 1 info
+        ev.thumbUrl = await gdacsThumbUrl(e); // peta overview GDACS → thumbnail card
+        ev._summary = `${t.icon} ${t.label}${ev.country ? ` — ${ev.country}` : ""} — ${a.label}${ev.desc ? ` — ${ev.desc.slice(0, 60)}` : ""}`;
+        evs.push(ev);
+      }
+      if (evs.length === 1) {
+        // 1 event baru → format lama lengkap (info section + AI regional)
+        const ev = evs[0];
         const lines = [
-          `AUTO-ALERT BENCANA GLOBAL — LEVEL ${a.label}`,
+          `AUTO-ALERT BENCANA GLOBAL — LEVEL ${String(ev.level).replace(/ \(.*\)$/, "")}`,
           "",
-          `${t.icon} ${t.label}${ev.country ? ` di ${ev.country}` : ""}`,
+          `${ev.jenis}${ev.country ? ` di ${ev.country}` : ""}`,
           ev.desc,
           "",
           buildInfoSection(ev),
         ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
-        await new Promise((r) => setTimeout(r, 1000));
+      } else if (evs.length > 1) {
+        // FIX OWNER: cukup 1 info tiap pembaruan dari pusat — beberapa event
+        // baru dalam 1 siklus polling digabung jadi SATU pesan.
+        const top = [...evs].sort((a, b) => Number(b.isSevere) - Number(a.isSevere))[0];
+        await dispatchCombined(evs, `AUTO-ALERT BENCANA GLOBAL — ${evs.length} INFO BARU`, eventCard(top));
       }
+      const st2 = loadState();
+      for (const ev of evs) fpMark(st2, ev);
+      saveState(st2);
     }
   } catch (e) {
     logger.error?.("bencana", "GDACS error: " + e.message);
@@ -1002,11 +1156,20 @@ async function slowTick() {
   try {
     const quakes = await getUsgs(6.0, 15);
     const st = loadState();
+    // FIX OWNER 2026-09-07: baseline first-run — sama kayak GDACS, daftar gempa
+    // lama pas monitor baru nyala dianggap "sudah dilihat" (tanpa spam alert).
+    if (!st.usgsInit) {
+      st.usgsInit = true;
+      st.usgs = quakes.map((q) => String(q.id)).slice(-200);
+      saveState(st);
+      return;
+    }
     const fresh = quakes.filter((q) => !st.usgs.includes(String(q.id)));
     if (fresh.length) {
       st.usgs.push(...fresh.map((q) => String(q.id)));
       st.usgs = st.usgs.slice(-200);
       saveState(st);
+      const evs = [];
       for (const q of fresh) {
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi (global)",
@@ -1019,16 +1182,29 @@ async function slowTick() {
           report: q.url,
           isSevere: q.mag >= 7.0, // mode darurat: gempa besar global lolos filter
         };
+        if (fpDupe(st, ev)) continue; // gempa yang sama udah dikirim BMKG/GDACS — cukup 1 info
+        ev.thumbUrl = await usgsThumbUrl(q); // shakemap intensity.jpg → thumbnail card
+        ev._summary = `🌍 Gempa global M${ev.mag} — ${q.place} — ${String(ev.level).replace(/ \(.*\)$/, "")}`;
+        evs.push(ev);
+      }
+      if (evs.length === 1) {
+        const ev = evs[0];
         const lines = [
           "AUTO-ALERT GEMPA GLOBAL — M 6.0+ (USGS)",
           "",
-          `Gempa global M${ev.mag} terdeteksi — ${q.place}`,
+          `Gempa global M${ev.mag} terdeteksi — ${ev.desc}`,
           "",
           buildInfoSection(ev),
         ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
-        await new Promise((r) => setTimeout(r, 1000));
+      } else if (evs.length > 1) {
+        // FIX OWNER: cukup 1 info tiap pembaruan dari pusat — gabung 1 pesan
+        const top = [...evs].sort((a, b) => Number(b.isSevere) - Number(a.isSevere))[0];
+        await dispatchCombined(evs, `AUTO-ALERT GEMPA GLOBAL — ${evs.length} INFO BARU (USGS)`, eventCard(top));
       }
+      const st2 = loadState();
+      for (const ev of evs) fpMark(st2, ev);
+      saveState(st2);
     }
   } catch (e) {
     logger.error?.("bencana", "USGS error: " + e.message);
