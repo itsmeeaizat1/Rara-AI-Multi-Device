@@ -2,9 +2,9 @@
 // RPG Element System — Pilih elemen, cek kelemahan, bonus damage
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "element",
@@ -27,7 +27,7 @@ const ELEMENTS = {
 async function handler(m, { sock, text }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("element", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("element", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = (text || "").trim().split(/\s+/);
     const action = args[0]?.toLowerCase();
@@ -66,13 +66,13 @@ async function handler(m, { sock, text }) {
 
     // Pilih elemen
     if (!ELEMENTS[action]) {
-      return m.reply(claraWrap("element", "Elemen tidak valid. Pilih: api, air, tanah, angin", "guide"));
+      return m.reply(novaRpgBox("element", "Elemen tidak valid. Pilih: api, air, tanah, angin", "guide"));
     }
 
     if (rpg.element) {
       const elem = ELEMENTS[rpg.element];
   await animGeneric(m, sock, "🔮", "Selecting Element");
-      return m.reply(claraWrap("element", "Elemenmu sudah dipilih: *" + elem.name + "*\nTidak bisa diganti.", "info"));
+      return m.reply(novaRpgBox("element", "Elemenmu sudah dipilih: *" + elem.name + "*\nTidak bisa diganti.", "info"));
     }
 
     await m.react("🕒");
@@ -92,7 +92,7 @@ async function handler(m, { sock, text }) {
   } catch (e) {
     console.error("element error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("element", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("element", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

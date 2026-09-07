@@ -1,9 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // selectskill.js — Pilih skill RPG
 import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const SKILLS = ["swordmaster", "necromancer", "witch", "archer", "magicswordmaster", "thief", "shadow"];
 
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("selectskill", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("selectskill", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const skill = m.args?.[0]?.trim().toLowerCase();
     if (!skill || !SKILLS.includes(skill)) {
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
 
     if (rpg.skill && rpg.skill !== "") {
       await m.react("🚫");
-      return m.reply(claraWrap("selectskill", `Kamu sudah punya skill *${rpg.skill}*. Tidak bisa diganti!`, "error"));
+      return m.reply(novaRpgBox("selectskill", `Kamu sudah punya skill *${rpg.skill}*. Tidak bisa diganti!`, "error"));
     }
 
     rpg.skill = skill;
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("selectskill error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("selectskill", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("selectskill", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

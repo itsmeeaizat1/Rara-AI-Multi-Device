@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rangerpost.js — Ranger Post (daily patrol duty, earn salary)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -85,11 +84,11 @@ async function handler(m, { sock }) {
       const taskId = parseInt(m.args[1] || "0");
       const task = TASKS.find(t => t.id === taskId);
       if (!task) {
-        return m.reply(claraWrap("rangerpost", `Tugas tidak ditemukan. Pilih 1-3.`, "guide"));
+        return m.reply(novaRpgBox("rangerpost", `Tugas tidak ditemukan. Pilih 1-3.`, "guide"));
       }
 
       if (data.tasksDone?.includes(taskId)) {
-        return m.reply(claraWrap("rangerpost", `Tugas "${task.name}" sudah diselesaikan hari ini.`, "error"));
+        return m.reply(novaRpgBox("rangerpost", `Tugas "${task.name}" sudah diselesaikan hari ini.`, "error"));
       }
 
       await m.react("🕒");
@@ -138,11 +137,11 @@ async function handler(m, { sock }) {
       msg += `${t.emoji} ${t.name} ${done ? "✅" : "📋"}\n`;
       if (!done) msg += `Reward: ${t.reward}g | ${m.prefix}rangerpost task ${t.id}\n`;
     });
-        return m.reply(claraWrap("rangerpost", msg));
+        return m.reply(novaRpgBox("rangerpost", msg));
   } catch (err) {
     console.error("rangerpost error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("rangerpost", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("rangerpost", err.message || "Error", "error"));
   }
 }
 

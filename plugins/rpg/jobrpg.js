@@ -5,8 +5,7 @@ import {
   ensureRpg, changeJob, unlockSkill, upgradeSkill,
   getAvailableSkills, JOB_DB, SKILL_DB
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -31,7 +30,7 @@ const RARITY_EMOJI = { common: "⬜", uncommon: "🟩", rare: "🟦", epic: "�
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("jobrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("jobrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -69,7 +68,7 @@ async function handler(m, { sock }) {
       msg += `📌 .jobrpg change <job> — ganti job\n`;
       msg += `📌 .jobrpg skill list — lihat skill tersedia\n`;
       
-      return m.reply(claraWrap("jobrpg", msg));
+      return m.reply(novaRpgBox("jobrpg", msg));
     }
 
     // List all jobs
@@ -90,17 +89,17 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .jobrpg change <nama_job> untuk ganti\n`;
       
-      return m.reply(claraWrap("jobrpg", msg));
+      return m.reply(novaRpgBox("jobrpg", msg));
     }
 
     // Change job
     if (action === "change" || action === "ganti") {
       const jobName = args[1]?.toLowerCase();
   await animGeneric(m, sock, "💼", "Job Search");
-      if (!jobName) return m.reply(claraWrap("jobrpg", "Job apa? Ketik .jobrpg list untuk lihat pilihan.", "warn"));
+      if (!jobName) return m.reply(novaRpgBox("jobrpg", "Job apa? Ketik .jobrpg list untuk lihat pilihan.", "warn"));
 
       if (!JOB_DB[jobName]) {
-        return m.reply(claraWrap("jobrpg", `Job *${jobName}* tidak dikenal. Ketik .jobrpg list.`, "warn"));
+        return m.reply(novaRpgBox("jobrpg", `Job *${jobName}* tidak dikenal. Ketik .jobrpg list.`, "warn"));
       }
 
       const result = changeJob(m, jobName);
@@ -124,7 +123,7 @@ async function handler(m, { sock }) {
           cta: gameCTA("jobrpg"),
         }));
       } else {
-        return m.reply(claraWrap("jobrpg", result.reason || "Gagal ganti job.", "warn"));
+        return m.reply(novaRpgBox("jobrpg", result.reason || "Gagal ganti job.", "warn"));
       }
     }
 
@@ -176,13 +175,13 @@ async function handler(m, { sock }) {
         }
 
         
-        return m.reply(claraWrap("jobrpg", msg));
+        return m.reply(novaRpgBox("jobrpg", msg));
       }
 
       // Unlock skill
       if (skillAction === "unlock" || skillAction === "buka") {
         const skillId = args[2]?.toLowerCase();
-        if (!skillId) return m.reply(claraWrap("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
+        if (!skillId) return m.reply(novaRpgBox("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
 
         const result = unlockSkill(m, skillId);
 
@@ -200,14 +199,14 @@ async function handler(m, { sock }) {
             cta: gameCTA("jobrpg"),
           }));
         } else {
-          return m.reply(claraWrap("jobrpg", result.reason || "Gagal unlock skill.", "warn"));
+          return m.reply(novaRpgBox("jobrpg", result.reason || "Gagal unlock skill.", "warn"));
         }
       }
 
       // Upgrade skill
       if (skillAction === "upgrade" || skillAction === "naik") {
         const skillId = args[2]?.toLowerCase();
-        if (!skillId) return m.reply(claraWrap("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
+        if (!skillId) return m.reply(novaRpgBox("jobrpg", "Skill apa? Ketik .jobrpg skill list", "warn"));
 
         const result = upgradeSkill(m, skillId);
 
@@ -225,16 +224,16 @@ async function handler(m, { sock }) {
             cta: gameCTA("jobrpg"),
           }));
         } else {
-          return m.reply(claraWrap("jobrpg", result.reason || "Gagal upgrade skill.", "warn"));
+          return m.reply(novaRpgBox("jobrpg", result.reason || "Gagal upgrade skill.", "warn"));
         }
       }
     }
 
-    return m.reply(claraWrap("jobrpg", "Aksi tidak dikenal. Ketik .jobrpg untuk info, .jobrpg list untuk lihat job.", "warn"));
+    return m.reply(novaRpgBox("jobrpg", "Aksi tidak dikenal. Ketik .jobrpg untuk info, .jobrpg list untuk lihat job.", "warn"));
   } catch (err) {
     console.error("jobrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("jobrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("jobrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

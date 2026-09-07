@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fishing.js — Fishing RPG (pancing ikan, rarity, sell)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "fishing",
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     if (subCmd === "inventory" || subCmd === "koleksi") {
       const data = await getFishData(db, m.sender);
       if (!data.catches || data.catches.length === 0) {
-        return m.reply(claraWrap("fishing", `Belum ada tangkapan. Mulai memancing: ${m.prefix}fishing`, "guide"));
+        return m.reply(novaRpgBox("fishing", `Belum ada tangkapan. Mulai memancing: ${m.prefix}fishing`, "guide"));
       }
       const grouped = {};
       data.catches.forEach(f => { grouped[f.name] = (grouped[f.name] || 0) + 1; });
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     if (subCmd === "sell" || subCmd === "jual") {
       const data = await getFishData(db, m.sender);
       if (!data.catches || data.catches.length === 0) {
-        return m.reply(claraWrap("fishing", "Tidak ada ikan untuk dijual.", "error"));
+        return m.reply(novaRpgBox("fishing", "Tidak ada ikan untuk dijual.", "error"));
       }
       const totalGold = data.catches.reduce((s, f) => {
         const fish = FISH_TYPES.find(ft => ft.name === f.name);
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
       data.catches = [];
       await saveFishData(db, m.sender, data);
       await m.react("🐣");
-      return m.reply(claraWrap("fishing", `💰 Terjual semua ikan!\nTotal: +${totalGold} gold`));
+      return m.reply(novaRpgBox("fishing", `💰 Terjual semua ikan!\nTotal: +${totalGold} gold`));
     }
 
     // FISHING
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fishing error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("fishing", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("fishing", err.message || "Error", "error"));
   }
 }
 

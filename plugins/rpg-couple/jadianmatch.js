@@ -2,8 +2,7 @@
 // RPG Cinta — Mulai berpacaran (dengan RPG stats)
 
 import { ensureRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox, novaRpgGuide } from "../../src/lib/nova-games.js";
 import { getCintaData, startDating, DATING_MIN_LEVEL, formatDurasi } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
@@ -32,7 +31,7 @@ async function handler(m, { sock }) {
     const cinta = getCintaData(m);
 
     if (cinta.spouse) {
-      return m.reply(claraWrap("RPG Cinta", [
+      return m.reply(novaRpgBox("RPG Cinta", [
         `Eh udah punya pacar nih! Sama ${cinta.spouseName}`,
         `Affection: ${cinta.affection || 0}`,
         `Putus? ${m.prefix}putusmatch`,
@@ -40,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if ((rpg.level || 1) < DATING_MIN_LEVEL) {
-      return m.reply(claraWrap("RPG Cinta", [
+      return m.reply(novaRpgBox("RPG Cinta", [
         `Levelmu belum cukup nih!`,
         `Butuh minimal: ${DATING_MIN_LEVEL}`,
         `Level kamu: ${rpg.level || 1}`,
@@ -56,22 +55,22 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-      return m.reply(novaGuide("rpgcouple", "Mau jadian? Tag orangnya atau reply pesannya ya!", `${m.prefix}rpgcouple @tag`, "Atau reply pesannya + .rpgcouple"));
+      return m.reply(novaRpgGuide("rpgcouple", "Mau jadian? Tag orangnya atau reply pesannya ya!", `${m.prefix}rpgcouple @tag`, "Atau reply pesannya + .rpgcouple"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(claraWrap("RPG Cinta", "Tidak bisa pacaran dengan diri sendiri!", "error"));
+      return m.reply(novaRpgBox("RPG Cinta", "Tidak bisa pacaran dengan diri sendiri!", "error"));
     }
 
     ensureRpg({ sender: targetJid, pushName: targetJid.split("@")[0] }, targetJid.split("@")[0]);
     const targetCinta = getCintaData({ sender: targetJid, pushName: targetJid.split("@")[0] });
     if (targetCinta.spouse) {
-      return m.reply(claraWrap("RPG Cinta", `@${targetJid.split("@")[0]} sudah punya pasangan!`, "warn"));
+      return m.reply(novaRpgBox("RPG Cinta", `@${targetJid.split("@")[0]} sudah punya pasangan!`, "warn"));
     }
 
     const targetRpg = getRpgData({ sender: targetJid, pushName: targetJid.split("@")[0] });
     if ((targetRpg.level || 1) < DATING_MIN_LEVEL) {
-      return m.reply(claraWrap("RPG Cinta", [
+      return m.reply(novaRpgBox("RPG Cinta", [
         `Level @${targetJid.split("@")[0]} belum cukup!`,
         `Butuh minimal level ${DATING_MIN_LEVEL}`,
       ], "error"));
@@ -179,7 +178,7 @@ async function answerHandler(m, sock) {
       db.save();
       delete global.rpgCintaSessions[sessKey];
       await m.react("💔");
-      await m.reply(claraWrap("RPG Cinta", [
+      await m.reply(novaRpgBox("RPG Cinta", [
         `💔 @${m.sender.split("@")[0]} menolak @${shooter.split("@")[0]}`,
         "Sabar ya, tingkatkan level dulu!",
       ], "warn"));

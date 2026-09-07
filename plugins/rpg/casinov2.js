@@ -5,8 +5,8 @@ import {
   ensureRpg, removeGold, addGold, addExp,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animCasino } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -89,7 +89,7 @@ function playRoulette(bet, betType) {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("casinov2", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("casinov2", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const game = args[0]?.toLowerCase();
@@ -113,26 +113,26 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `💵 Min: *${MIN_BET}* | Max: *${MAX_BET}*\n`;
-            return m.reply(claraWrap("casinov2", msg));
+            return m.reply(novaRpgBox("casinov2", msg));
     }
 
     if (!bet || bet < MIN_BET) {
-      return m.reply(claraWrap("casinov2", `Minimal bet *${MIN_BET} gold*.`, "warn"));
+      return m.reply(novaRpgBox("casinov2", `Minimal bet *${MIN_BET} gold*.`, "warn"));
     }
 
     if (bet > MAX_BET) {
-      return m.reply(claraWrap("casinov2", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
+      return m.reply(novaRpgBox("casinov2", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
     }
 
     if (rpg.gold < bet) {
       await m.react("🚫");
-      return m.reply(claraWrap("casinov2", `Gold tidak cukup! Kamu punya *${rpg.gold}*.`, "warn"));
+      return m.reply(novaRpgBox("casinov2", `Gold tidak cukup! Kamu punya *${rpg.gold}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastCasinoV2");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("casinov2", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("casinov2", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     await m.react("🕒");
@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
         const guess = parseInt(args[2]);
         if (!guess || guess < 1 || guess > 6) {
           addGold(m, bet); // refund
-          return m.reply(claraWrap("casinov2", "Tebak angka 1-6. Contoh: .casinov2 dice 500 3", "warn"));
+          return m.reply(novaRpgBox("casinov2", "Tebak angka 1-6. Contoh: .casinov2 dice 500 3", "warn"));
         }
         result = playDice(bet, guess);
         if (result.win) { addGold(m, result.payout); addExp(m, 20); }
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
         const guess = args[2]?.toLowerCase();
         if (!guess || !["heads", "tails", "kepala", "ekor"].includes(guess)) {
           addGold(m, bet); // refund
-          return m.reply(claraWrap("casinov2", "Pilih heads/tails. Contoh: .casinov2 coinflip 500 heads", "warn"));
+          return m.reply(novaRpgBox("casinov2", "Pilih heads/tails. Contoh: .casinov2 coinflip 500 heads", "warn"));
         }
         const normalized = ["kepala", "heads"].includes(guess) ? "heads" : "tails";
         result = playCoinflip(bet, normalized);
@@ -206,7 +206,7 @@ async function handler(m, { sock }) {
         const betType = args[2]?.toLowerCase();
         if (!betType) {
           addGold(m, bet); // refund
-          return m.reply(claraWrap("casinov2", "Pilih: red/black/green/even/odd/low/high/0-36. Contoh: .casinov2 roulette 500 red", "warn"));
+          return m.reply(novaRpgBox("casinov2", "Pilih: red/black/green/even/odd/low/high/0-36. Contoh: .casinov2 roulette 500 red", "warn"));
         }
         result = playRoulette(bet, betType);
         if (result.win) { addGold(m, result.payout); addExp(m, Math.floor(result.payout / 30)); }
@@ -226,7 +226,7 @@ async function handler(m, { sock }) {
 
       default:
         addGold(m, bet); // refund
-        return m.reply(claraWrap("casinov2", "Game tidak dikenal. Ketik .casinov2 menu", "warn"));
+        return m.reply(novaRpgBox("casinov2", "Game tidak dikenal. Ketik .casinov2 menu", "warn"));
     }
 
     setCooldown(m, "lastCasinoV2", CASINO_CD);
@@ -244,7 +244,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("casinov2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("casinov2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("casinov2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -77,7 +76,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "list") {
       await m.react('🐣');
-      return m.reply(claraWrap("alchemist", [
+      return m.reply(novaRpgBox("alchemist", [
         "Daftar resep potion :",
         ...Object.entries(RECIPES).flatMap(([key, item]) => [
           `${item.name} (${key})`,
@@ -91,7 +90,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "inventory" || subCmd === "inv") {
       await m.react('🐣');
-      return m.reply(claraWrap("alchemist", [
+      return m.reply(novaRpgBox("alchemist", [
         `Gold : ${data.gold || 0}`,
         "---",
         "Bahan herbal & material :",
@@ -116,7 +115,7 @@ async function handler(m, { sock }) {
       if (!recipe) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "alchemist",
             `Potion tidak ditemukan!\n\nResep tersedia: health_potion, mana_potion, stamina_potion, antidote.\n\nGunakan: ${m.prefix}alchemist list`,
             "error"
@@ -128,7 +127,7 @@ async function handler(m, { sock }) {
       if ((data.gold || 0) < recipe.gold) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "alchemist",
             `Gold kamu tidak cukup untuk meracik ${recipe.name}!\n\nBiaya: ${recipe.gold} Gold | Punya: ${data.gold || 0} Gold`,
             "error"
@@ -141,7 +140,7 @@ async function handler(m, { sock }) {
         if ((data.materials[mat] || 0) < required) {
           await m.react('❌');
           return m.reply(
-            claraWrap(
+            novaRpgBox(
               "alchemist",
               `Bahan tidak cukup untuk meracik ${recipe.name}!\n\nMembutuhkan ${required} ${mat}, tapi kamu hanya punya ${data.materials[mat] || 0}.`,
               "error"
@@ -179,7 +178,7 @@ async function handler(m, { sock }) {
     // Default help guide
     await m.react('❌');
     return m.reply(
-      claraWrap(
+      novaRpgBox(
         "alchemist",
         `Gunakan perintah berikut:\n\n• ${m.prefix}alchemist list — Lihat resep ramuan\n• ${m.prefix}alchemist brew <potion> — Racik ramuan\n• ${m.prefix}alchemist inventory — Cek bahan & potion`,
         "guide"
@@ -188,7 +187,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("alchemist error:", err);
     await m.react('❌');
-    return m.reply(claraWrap("alchemist", err.message || "Terjadi kesalahan pada sistem Alchemist.", "error"));
+    return m.reply(novaRpgBox("alchemist", err.message || "Terjadi kesalahan pada sistem Alchemist.", "error"));
   }
 }
 

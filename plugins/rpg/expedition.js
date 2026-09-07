@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // expedition.js — Expedition System (send party on timed missions)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "expedition",
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
       if (!data.active) {
         await m.react("❌");
         return m.reply(
-          claraWrap("expedition", `Kamu sedang tidak menjalankan ekspedisi apapun.\n\nGunakan *${prefix}expedition* untuk memilih lokasi ekspedisi.`, "error")
+          novaRpgBox("expedition", `Kamu sedang tidak menjalankan ekspedisi apapun.\n\nGunakan *${prefix}expedition* untuk memilih lokasi ekspedisi.`, "error")
         );
       }
 
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
         const remaining = data.active.duration - elapsed;
         await m.react("❌");
         return m.reply(
-          claraWrap("expedition", `Ekspedisi di *${data.active.name}* belum selesai!\n\n⏳ Sisa Waktu (ETA): *${formatTime(remaining)}*`, "error")
+          novaRpgBox("expedition", `Ekspedisi di *${data.active.name}* belum selesai!\n\n⏳ Sisa Waktu (ETA): *${formatTime(remaining)}*`, "error")
         );
       }
 
@@ -102,12 +102,12 @@ async function handler(m, { sock }) {
     if (subCmd === "cancel" || subCmd === "batal") {
       if (!data.active) {
         await m.react("❌");
-        return m.reply(claraWrap("expedition", "Tidak ada ekspedisi aktif yang bisa dibatalkan.", "error"));
+        return m.reply(novaRpgBox("expedition", "Tidak ada ekspedisi aktif yang bisa dibatalkan.", "error"));
       }
       data.active = null;
       await db.setPlayerData?.(sender, "expedition", data);
       await m.react("🐣");
-      return m.reply(claraWrap("expedition", "Ekspedisi berhasil dibatalkan.", "guide"));
+      return m.reply(novaRpgBox("expedition", "Ekspedisi berhasil dibatalkan.", "guide"));
     }
 
     // Subcommand: START
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
         const remaining = Math.max(0, data.active.duration - elapsed);
         await m.react("❌");
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "expedition",
             `Kamu hanya bisa menjalankan 1 ekspedisi dalam satu waktu!\n\n📌 *Ekspedisi Aktif*: ${data.active.name}\n⏳ *Sisa Waktu*: ${formatTime(remaining)}\n\nKlaim hasil dengan *${prefix}expedition claim* jika sudah selesai.`,
             "error"
@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
         });
         errText += `\nContoh: *${prefix}expedition start 1*`;
         await m.react("❌");
-        return m.reply(claraWrap("expedition", errText, "error"));
+        return m.reply(novaRpgBox("expedition", errText, "error"));
       }
 
       data.active = {
@@ -213,7 +213,7 @@ async function handler(m, { sock }) {
     return m.reply(menu);
   } catch (err) {
     await m.react("❌");
-    return m.reply(claraWrap("expedition", `Terjadi kesalahan: ${err.message}`, "error"));
+    return m.reply(novaRpgBox("expedition", `Terjadi kesalahan: ${err.message}`, "error"));
   }
 }
 

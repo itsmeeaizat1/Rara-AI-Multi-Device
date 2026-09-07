@@ -3,8 +3,7 @@
 
 import { ensureRpg, getRpgData, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { getCintaData, breakUp, formatDurasi } from "../../src/lib/nova-rpg-cinta.js";
-import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "putusmatch",
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
     const cinta = getCintaData(m);
 
     if (!cinta.spouse) {
-      return m.reply(claraWrap("Putus", "Kamu tidak punya pasangan!", "warn"));
+      return m.reply(novaRpgBox("Putus", "Kamu tidak punya pasangan!", "warn"));
     }
 
     // Penalty gold

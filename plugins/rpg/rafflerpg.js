@@ -5,8 +5,8 @@ import {
   ensureRpg, addGold, removeGold, addGems, addExp,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -42,7 +42,7 @@ const PRIZES = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("rafflerpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("rafflerpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -67,23 +67,23 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .rafflerpg buy — beli & buka tiket\n`;
       
-      return m.reply(claraWrap("rafflerpg", msg));
+      return m.reply(novaRpgBox("rafflerpg", msg));
     }
 
     if (action !== "buy" && action !== "beli") {
   await animGeneric(m, sock, "🎟️", "Raffle Draw");
-      return m.reply(claraWrap("rafflerpg", "Gunakan .rafflerpg buy atau .rafflerpg cek", "warn"));
+      return m.reply(novaRpgBox("rafflerpg", "Gunakan .rafflerpg buy atau .rafflerpg cek", "warn"));
     }
 
     const cd = checkCooldown(m, "lastRaffle");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("rafflerpg", `Cooldown raffle tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("rafflerpg", `Cooldown raffle tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.gold < TICKET_PRICE) {
       await m.react("🚫");
-      return m.reply(claraWrap("rafflerpg", `Gold tidak cukup! Tiket harga *${TICKET_PRICE}*, kamu punya *${rpg.gold}*.`, "warn"));
+      return m.reply(novaRpgBox("rafflerpg", `Gold tidak cukup! Tiket harga *${TICKET_PRICE}*, kamu punya *${rpg.gold}*.`, "warn"));
     }
 
     await m.react("🕒");
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("rafflerpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("rafflerpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("rafflerpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

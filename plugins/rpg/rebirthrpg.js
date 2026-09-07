@@ -4,9 +4,9 @@
 import {
   ensureRpg, rebirth, getItemCount
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "rebirthrpg",
@@ -27,7 +27,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("rebirthrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("rebirthrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // Cek apakah sudah memenuhi syarat
     const hasStone = getItemCount(m, "rebirthStone") > 0;
@@ -108,12 +108,12 @@ async function handler(m, { sock }) {
       return m.reply(msg);
     } else {
   await animGeneric(m, sock, "🔄", "Rebirth");
-      return m.reply(claraWrap("rebirthrpg", result.reason || "Gagal reinkarnasi.", "warn"));
+      return m.reply(novaRpgBox("rebirthrpg", result.reason || "Gagal reinkarnasi.", "warn"));
     }
   } catch (err) {
     console.error("rebirthrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("rebirthrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("rebirthrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

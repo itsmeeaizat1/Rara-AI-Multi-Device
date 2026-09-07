@@ -2,9 +2,9 @@
 // RPG Skill Tree — Tree progression, talent, learnskill, research, mutate
 
 import { ensureRpg, saveRpg, SKILL_DB } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "skilltree",
@@ -66,7 +66,7 @@ const LEARNABLE = ["fireball", "heal", "iceblast", "iceSpear", "quickShot", "sha
 async function handler(m, { sock, text, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("skilltree", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("skilltree", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // .skilltree — tampilkan tree
     if (command === "skilltree") {
@@ -102,17 +102,17 @@ async function handler(m, { sock, text, command }) {
     // .learnskill <nama> — pelajari skill
     if (command === "learnskill") {
       const skillName = (text || "").trim().toLowerCase();
-      if (!skillName) return m.reply(claraWrap("learnskill", "Skill tersedia: " + LEARNABLE.join(", "), "guide"));
+      if (!skillName) return m.reply(novaRpgBox("learnskill", "Skill tersedia: " + LEARNABLE.join(", "), "guide"));
 
       const skillId = LEARNABLE.find(s => s.toLowerCase() === skillName);
-      if (!skillId) return m.reply(claraWrap("learnskill", "Skill tidak ditemukan. Tersedia: " + LEARNABLE.join(", "), "guide"));
+      if (!skillId) return m.reply(novaRpgBox("learnskill", "Skill tidak ditemukan. Tersedia: " + LEARNABLE.join(", "), "guide"));
 
       const skillDef = SKILL_DB[skillId];
-      if (!skillDef) return m.reply(claraWrap("learnskill", "Skill tidak terdaftar di database.", "error"));
+      if (!skillDef) return m.reply(novaRpgBox("learnskill", "Skill tidak terdaftar di database.", "error"));
 
-      if (rpg.skills?.some(s => s.id === skillId)) return m.reply(claraWrap("learnskill", "Kamu sudah punya skill ini.", "info"));
+      if (rpg.skills?.some(s => s.id === skillId)) return m.reply(novaRpgBox("learnskill", "Kamu sudah punya skill ini.", "info"));
 
-      if ((rpg.skillPoints || 0) < 1) return m.reply(claraWrap("learnskill", "Skill points tidak cukup. Butuh 1 SP.", "info"));
+      if ((rpg.skillPoints || 0) < 1) return m.reply(novaRpgBox("learnskill", "Skill points tidak cukup. Butuh 1 SP.", "info"));
 
       await m.react("🕒");
       rpg.skills = rpg.skills || [];
@@ -126,8 +126,8 @@ async function handler(m, { sock, text, command }) {
 
     // .research — upgrade skill yang sudah ada
     if (command === "research") {
-      if (!rpg.skills || rpg.skills.length === 0) return m.reply(claraWrap("research", "Kamu belum punya skill untuk di-upgrade.", "info"));
-      if ((rpg.skillPoints || 0) < 1) return m.reply(claraWrap("research", "Skill points tidak cukup.", "info"));
+      if (!rpg.skills || rpg.skills.length === 0) return m.reply(novaRpgBox("research", "Kamu belum punya skill untuk di-upgrade.", "info"));
+      if ((rpg.skillPoints || 0) < 1) return m.reply(novaRpgBox("research", "Skill points tidak cukup.", "info"));
 
       await m.react("🕒");
       const firstSkill = rpg.skills[0];
@@ -142,7 +142,7 @@ async function handler(m, { sock, text, command }) {
 
     // .mutate — random skill mutation
     if (command === "mutate") {
-      if (!rpg.skills || rpg.skills.length === 0) return m.reply(claraWrap("mutate", "Kamu belum punya skill untuk dimutasi.", "info"));
+      if (!rpg.skills || rpg.skills.length === 0) return m.reply(novaRpgBox("mutate", "Kamu belum punya skill untuk dimutasi.", "info"));
       await m.react("🕒");
       const allSkills = Object.keys(SKILL_DB);
       const newSkillId = allSkills[Math.floor(Math.random() * allSkills.length)];
@@ -157,7 +157,7 @@ async function handler(m, { sock, text, command }) {
   } catch (e) {
     console.error("skilltree error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap(m.command || "skilltree", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox(m.command || "skilltree", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

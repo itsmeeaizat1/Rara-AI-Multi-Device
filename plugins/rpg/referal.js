@@ -1,10 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // referal.js — Sistem referral RPG
 import { ensureRpg, addExp, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 import crypto from "crypto";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const XP_FIRST_TIME = 2500;
 const XP_LINK_CREATOR = 15000;
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("referal", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("referal", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const code = m.args?.[0]?.trim();
 
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
       // Using someone's referral code
       if (rpg.ref_count !== undefined && rpg.ref_count > 0) {
         await m.react("🚫");
-        return m.reply(claraWrap("referal", "Kamu sudah menggunakan kode referral sebelumnya!", "error"));
+        return m.reply(novaRpgBox("referal", "Kamu sudah menggunakan kode referral sebelumnya!", "error"));
       }
       // Find code creator
       const allUsers = getRpgData ? getRpgData(m) : null;
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       // Since we can't iterate all users easily, just validate format
       if (code.length !== 11) {
         await m.react("🚫");
-        return m.reply(claraWrap("referal", "Kode referral tidak valid!", "error"));
+        return m.reply(novaRpgBox("referal", "Kode referral tidak valid!", "error"));
       }
       rpg.ref_count = 0;
       addExp(m, XP_FIRST_TIME);
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("referal error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("referal", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("referal", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

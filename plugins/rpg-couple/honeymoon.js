@@ -2,8 +2,7 @@
 // RPG Cinta — Honeymoon: bulan madu bareng pasangan (khusus nikah), sekali sebulan (revival dari RPG lama)
 
 import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
 import { getCintaData, addAffection, saveCintaData } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
@@ -44,7 +43,7 @@ async function handler(m) {
     // Harus married
     if (!cinta.spouse || !cinta.married) {
       await m.react("❗");
-      return m.reply(claraWrap("Honeymoon", [
+      return m.reply(novaRpgBox("Honeymoon", [
         "Bulan madu cuma buat yang udah menikah! 💍",
         `Nikah dulu: ${m.prefix}nikahmatch`,
       ], "error"));
@@ -56,7 +55,7 @@ async function handler(m) {
     if (lastHoneymoon > 0 && elapsed < HONEYMOON_COOLDOWN) {
       const daysLeft = Math.ceil((HONEYMOON_COOLDOWN - elapsed) / 86400000);
       await m.react("⏳");
-      return m.reply(claraWrap("Honeymoon", [
+      return m.reply(novaRpgBox("Honeymoon", [
         `Udah bulan madu bulan ini!`,
         `Tunggu: ${daysLeft} hari lagi`,
         `Sambil nunggu, ramein hubungan: ${m.prefix}rpgkencan`,
@@ -112,7 +111,7 @@ async function handler(m) {
   } catch (e) {
     console.error("[honeymoon] Error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Honeymoon", "Yah gagal kak, coba lagi 😩", "error"));
+    return m.reply(novaRpgBox("Honeymoon", "Yah gagal kak, coba lagi 😩", "error"));
   }
 }
 

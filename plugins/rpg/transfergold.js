@@ -4,9 +4,9 @@
 import {
   ensureRpg, removeGold, addGold
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "transfergold",
@@ -30,7 +30,7 @@ const TAX_RATE = 0.05; // 5% tax
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("tfgold", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("tfgold", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // Parse args: amount + @tag
     const text = m.text?.trim() || "";
@@ -42,20 +42,20 @@ async function handler(m, { sock }) {
 
     if (!amount || amount < MIN_TRANSFER) {
   await animGeneric(m, sock, "💰", "Transferring Gold");
-      return m.reply(claraWrap("tfgold", `Jumlah tidak valid. Contoh: .tfgold 100 @user`, "warn"));
+      return m.reply(novaRpgBox("tfgold", `Jumlah tidak valid. Contoh: .tfgold 100 @user`, "warn"));
     }
 
     if (!targetJid) {
-      return m.reply(claraWrap("tfgold", "Tag penerima! Contoh: .tfgold 100 @user", "warn"));
+      return m.reply(novaRpgBox("tfgold", "Tag penerima! Contoh: .tfgold 100 @user", "warn"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(claraWrap("tfgold", "Nggak bisa transfer ke diri sendiri 😅", "warn"));
+      return m.reply(novaRpgBox("tfgold", "Nggak bisa transfer ke diri sendiri 😅", "warn"));
     }
 
     if (rpg.gold < amount) {
       await m.react("🚫");
-      return m.reply(claraWrap("tfgold", `Gold tidak cukup! Kamu punya *${rpg.gold}*, mau transfer *${amount}*.`, "warn"));
+      return m.reply(novaRpgBox("tfgold", `Gold tidak cukup! Kamu punya *${rpg.gold}*, mau transfer *${amount}*.`, "warn"));
     }
 
     // Tax
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
     const targetRpg = ensureRpg({ sender: targetJid }, targetJid.split("@")[0]);
     if (!targetRpg) {
       addGold(m, amount); // refund
-      return m.reply(claraWrap("tfgold", "Penerima belum terdaftar di RPG.", "error"));
+      return m.reply(novaRpgBox("tfgold", "Penerima belum terdaftar di RPG.", "error"));
     }
     addGold({ sender: targetJid }, received);
 
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("tfgold error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("tfgold", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("tfgold", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

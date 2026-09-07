@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Reincarnate — Reinkarnasi (reset level, bonus permanen)
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "reincarnaterpg", alias: ["reincarnaterpg", "reincarnate"],
@@ -14,8 +14,8 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("reincarnaterpg", "RPG belum siap.", "error"));
-    if (rpg.level < 30) return m.reply(claraWrap("reincarnaterpg", "🧘 Hanya yang sudah mencapai level 30 bisa bereinkarnasi.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("reincarnaterpg", "RPG belum siap.", "error"));
+    if (rpg.level < 30) return m.reply(novaRpgBox("reincarnaterpg", "🧘 Hanya yang sudah mencapai level 30 bisa bereinkarnasi.", "error"));
     rpg.level = 1; rpg.exp = 0; rpg.expNext = 100;
     rpg.reincarnation = (rpg.reincarnation || 0) + 1;
     rpg.passiveBonus = (rpg.passiveBonus || 0) + 5;
@@ -23,9 +23,9 @@ async function handler(m, { sock }) {
     saveRpg(m, rpg);
     await m.react("🐣");
   await animGeneric(m, sock, "", "Reincarnation");
-    return m.reply(claraWrap("reincarnaterpg", `🔁 Kamu telah bereinkarnasi!\nReinkarnasi ke-${rpg.reincarnation}\nBonus permanen: +5% power\nATK & DEF +5 permanen`, "success"));
+    return m.reply(novaRpgBox("reincarnaterpg", `🔁 Kamu telah bereinkarnasi!\nReinkarnasi ke-${rpg.reincarnation}\nBonus permanen: +5% power\nATK & DEF +5 permanen`, "success"));
   } catch (e) {
-    return m.reply(claraWrap("reincarnaterpg", "Terjadi error.", "error"));
+    return m.reply(novaRpgBox("reincarnaterpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -6,8 +6,8 @@ import {
   addItem, removeItem, getEquipStats, regenHP, regenMana, regenEnergy,
   ITEM_DB, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -92,17 +92,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("adventurev2", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("adventurev2", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastAdventureV2");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("adventurev2", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("adventurev2", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < ADV2_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("adventurev2", `Energi kurang! Butuh *${ADV2_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(novaRpgBox("adventurev2", `Energi kurang! Butuh *${ADV2_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     useEnergy(m, ADV2_ENERGY, sock);
@@ -283,7 +283,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("adventurev2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("adventurev2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("adventurev2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

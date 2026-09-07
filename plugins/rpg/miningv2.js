@@ -5,8 +5,8 @@ import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, addGems, addItem,
   ITEM_DB, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -50,17 +50,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("miningv2", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("miningv2", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastMiningV2");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("miningv2", `Cooldown mining tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("miningv2", `Cooldown mining tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < MINE_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("miningv2", `Energi kurang! Butuh *${MINE_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(novaRpgBox("miningv2", `Energi kurang! Butuh *${MINE_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     useEnergy(m, MINE_ENERGY, sock);
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("miningv2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("miningv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("miningv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

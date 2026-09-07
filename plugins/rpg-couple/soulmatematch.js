@@ -3,8 +3,7 @@
 
 import { getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { getCintaData } from "../../src/lib/nova-rpg-cinta.js";
-import { claraWrap, novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox, novaRpgGuide } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "soulmatematch",
@@ -64,11 +63,11 @@ async function handler(m, { sock }) {
   try {
     let targetJid = m.mentionedJid?.[0] || (m.quoted ? m.quoted.sender : null);
     if (!targetJid) {
-      return m.reply(novaGuide("soulmatematch", "Cek compatibility kamu sama seseorang berdasarkan RPG stats!", `${m.prefix}soulmatematch @tag`));
+      return m.reply(novaRpgGuide("soulmatematch", "Cek compatibility kamu sama seseorang berdasarkan RPG stats!", `${m.prefix}soulmatematch @tag`));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(claraWrap("Soulmate Match", "Cek compatibility sama diri sendiri? 100% narcisist!", "warn"));
+      return m.reply(novaRpgBox("Soulmate Match", "Cek compatibility sama diri sendiri? 100% narcisist!", "warn"));
     }
 
     const myRpg = getRpgData(m);

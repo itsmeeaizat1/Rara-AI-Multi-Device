@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -84,12 +83,12 @@ async function handler(m, { sock }) {
 
     if (profile.hp <= 0) {
       await m.react("❌");
-      return m.reply(claraWrap("patrol", "HP kamu telah habis! Gunakan item penyembuh atau istirahat terlebih dahulu sebelum berpatroli.", "error"));
+      return m.reply(novaRpgBox("patrol", "HP kamu telah habis! Gunakan item penyembuh atau istirahat terlebih dahulu sebelum berpatroli.", "error"));
     }
 
     if (profile.energi < PATROL_COST && !m.isOwner) {
       await m.react("❌");
-      return m.reply(claraWrap("patrol", `Energi tidak cukup! Patroli membutuhkan *${PATROL_COST} Energi*, kamu saat ini memiliki *${profile.energi} Energi*.`, "error"));
+      return m.reply(novaRpgBox("patrol", `Energi tidak cukup! Patroli membutuhkan *${PATROL_COST} Energi*, kamu saat ini memiliki *${profile.energi} Energi*.`, "error"));
     }
 
     if (!m.isOwner) {
@@ -159,7 +158,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("patrol error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("patrol", err.message || "Terjadi kesalahan saat patroli.", "error"));
+    return m.reply(novaRpgBox("patrol", err.message || "Terjadi kesalahan saat patroli.", "error"));
   }
 }
 

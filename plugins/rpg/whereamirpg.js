@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG WhereAmI — Cek lokasi pemain
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "whereamirpg", alias: ["whereamirpg", "whereami", "lokasi"],
@@ -14,12 +14,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("whereamirpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("whereamirpg", "RPG belum siap.", "error"));
     const loc = rpg.location || "desa";
   await animGeneric(m, sock, "📍", "Locating");
-    return m.reply(claraWrap("whereamirpg", `📍 Kamu berada di: *${loc}*`, "info"));
+    return m.reply(novaRpgBox("whereamirpg", `📍 Kamu berada di: *${loc}*`, "info"));
   } catch (e) {
-    return m.reply(claraWrap("whereamirpg", "Terjadi error.", "error"));
+    return m.reply(novaRpgBox("whereamirpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

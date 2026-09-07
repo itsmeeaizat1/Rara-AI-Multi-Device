@@ -6,8 +6,8 @@ import {
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -43,17 +43,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("sampah", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("sampah", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastSampah");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("sampah", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("sampah", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < SAMPAH_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("sampah", `Energi kurang! Butuh *${SAMPAH_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(novaRpgBox("sampah", `Energi kurang! Butuh *${SAMPAH_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     useEnergy(m, SAMPAH_ENERGY, sock);
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("sampah error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("sampah", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("sampah", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

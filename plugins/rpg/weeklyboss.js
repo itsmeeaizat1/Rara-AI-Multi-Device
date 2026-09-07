@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // weeklyboss.js — Weekly Boss Raid (global boss, everyone contributes)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "weeklyboss",
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     initBoss();
 
     if (bossState.defeated) {
-      return m.reply(claraWrap("weeklyboss", `🏆 Boss minggu ini sudah dikalahkan!\nBoss: ${bossState.boss.emoji} *${bossState.boss.name}*\n\nTunggu minggu depan untuk boss baru!`, "guide"));
+      return m.reply(novaRpgBox("weeklyboss", `🏆 Boss minggu ini sudah dikalahkan!\nBoss: ${bossState.boss.emoji} *${bossState.boss.name}*\n\nTunggu minggu depan untuk boss baru!`, "guide"));
     }
 
     if (subCmd === "attack" || subCmd === "serang" || subCmd === "fight") {
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         const energi = await db.getEnergi?.(m.sender) || 100;
         if (energi < 20) {
           await m.react("❌");
-          return m.reply(claraWrap("weeklyboss", "Energi kurang! Butuh 20 energi untuk serang.", "error"));
+          return m.reply(novaRpgBox("weeklyboss", "Energi kurang! Butuh 20 energi untuk serang.", "error"));
         }
         await db.minEnergi?.(m.sender, 20);
       } catch {}
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("weeklyboss error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("weeklyboss", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("weeklyboss", err.message || "Error", "error"));
   }
 }
 

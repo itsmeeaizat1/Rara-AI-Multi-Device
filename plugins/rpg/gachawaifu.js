@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gachawaifu.js — Gacha Waifu System (rarity + marry + collection)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGacha } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "gachawaifu",
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     if (subCmd === "list" || subCmd === "koleksi") {
       const data = await getWaifuData(db, m.sender);
       if (!data.collection || data.collection.length === 0) {
-        return m.reply(claraWrap("gachawaifu", `Koleksi waifu kamu kosong!\n\nPull dengan: ${m.prefix}gachawaifu`, "guide"));
+        return m.reply(novaRpgBox("gachawaifu", `Koleksi waifu kamu kosong!\n\nPull dengan: ${m.prefix}gachawaifu`, "guide"));
       }
 
       // Group by rarity
@@ -120,18 +120,18 @@ async function handler(m, { sock }) {
     if (subCmd === "marry" || subCmd === "kawin") {
       const targetName = m.args.slice(1).join(" ").trim();
       if (!targetName) {
-        return m.reply(claraWrap("gachawaifu", `Mau kawin dengan siapa?\n\nContoh: ${m.prefix}gachawaifu marry Rem`, "guide"));
+        return m.reply(novaRpgBox("gachawaifu", `Mau kawin dengan siapa?\n\nContoh: ${m.prefix}gachawaifu marry Rem`, "guide"));
       }
 
       const data = await getWaifuData(db, m.sender);
       const waifu = data.collection.find(w => w.name.toLowerCase() === targetName.toLowerCase());
       if (!waifu) {
         await m.react("❌");
-        return m.reply(claraWrap("gachawaifu", `Waifu "${targetName}" tidak ada di koleksi kamu.`, "error"));
+        return m.reply(novaRpgBox("gachawaifu", `Waifu "${targetName}" tidak ada di koleksi kamu.`, "error"));
       }
 
       if (data.married?.some(w => w.name.toLowerCase() === waifu.name.toLowerCase())) {
-        return m.reply(claraWrap("gachawaifu", `Kamu sudah married dengan ${waifu.name}!`, "error"));
+        return m.reply(novaRpgBox("gachawaifu", `Kamu sudah married dengan ${waifu.name}!`, "error"));
       }
 
       if (!data.married) data.married = [];
@@ -157,14 +157,14 @@ async function handler(m, { sock }) {
     if (subCmd === "divorce" || subCmd === "cerai") {
       const targetName = m.args.slice(1).join(" ").trim();
       if (!targetName) {
-        return m.reply(claraWrap("gachawaifu", `Mau cerai dengan siapa?\n\nContoh: ${m.prefix}gachawaifu divorce Rem`, "guide"));
+        return m.reply(novaRpgBox("gachawaifu", `Mau cerai dengan siapa?\n\nContoh: ${m.prefix}gachawaifu divorce Rem`, "guide"));
       }
 
       const data = await getWaifuData(db, m.sender);
       const waifu = data.married?.find(w => w.name.toLowerCase() === targetName.toLowerCase());
       if (!waifu) {
         await m.react("❌");
-        return m.reply(claraWrap("gachawaifu", `Kamu tidak married dengan "${targetName}".`, "error"));
+        return m.reply(novaRpgBox("gachawaifu", `Kamu tidak married dengan "${targetName}".`, "error"));
       }
 
       data.married = data.married.filter(w => w.name !== waifu.name);
@@ -172,14 +172,14 @@ async function handler(m, { sock }) {
       await saveWaifuData(db, m.sender, data);
 
       await m.react("🐣");
-      return m.reply(claraWrap("gachawaifu", `💔 Kamu dan ${waifu.name} sekarang divorced. Waifu dikembalikan ke koleksi.`));
+      return m.reply(novaRpgBox("gachawaifu", `💔 Kamu dan ${waifu.name} sekarang divorced. Waifu dikembalikan ke koleksi.`));
     }
 
     // MARRIED list
     if (subCmd === "married" || subCmd === "istri") {
       const data = await getWaifuData(db, m.sender);
       if (!data.married || data.married.length === 0) {
-        return m.reply(claraWrap("gachawaifu", `Kamu belum married dengan waifu manapun.`, "guide"));
+        return m.reply(novaRpgBox("gachawaifu", `Kamu belum married dengan waifu manapun.`, "guide"));
       }
       let msg = "";
       msg += `Total: *${data.married.length}* waifu\n`;
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
       const energi = await db.getEnergi?.(m.sender);
       if (energi !== undefined && energi < PULL_COST) {
         await m.react("❌");
-        return m.reply(claraWrap("gachawaifu", `Energi tidak cukup! Butuh ${PULL_COST} energi.`, "error"));
+        return m.reply(novaRpgBox("gachawaifu", `Energi tidak cukup! Butuh ${PULL_COST} energi.`, "error"));
       }
       await db.minEnergi?.(m.sender, PULL_COST);
     } catch {}
@@ -239,7 +239,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("gachawaifu error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("gachawaifu", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("gachawaifu", err.message || "Error", "error"));
   }
 }
 

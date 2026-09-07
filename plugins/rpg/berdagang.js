@@ -5,8 +5,8 @@ import {
   ensureRpg, saveRpg, addExp, addGold, removeGold,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { rpgProgress } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -51,17 +51,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("berdagang", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("berdagang", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastDagang");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("berdagang", `Cooldown dagang tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("berdagang", `Cooldown dagang tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < DAGANG_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("berdagang", `Energi kurang! Butuh *${DAGANG_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(novaRpgBox("berdagang", `Energi kurang! Butuh *${DAGANG_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     // Energy cost
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     const investAmount = Math.min(rpg.gold, 50 + rpg.level * 5);
     if (investAmount < buyPrice) {
       // Can't afford even 1 unit
-      return m.reply(claraWrap("berdagang", `Gold kurang untuk dagang. Minimal butuh *${buyPrice} gold* untuk beli ${good.name}.`, "warn"));
+      return m.reply(novaRpgBox("berdagang", `Gold kurang untuk dagang. Minimal butuh *${buyPrice} gold* untuk beli ${good.name}.`, "warn"));
     }
 
     const qty = Math.floor(investAmount / buyPrice);
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("berdagang error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("berdagang", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("berdagang", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

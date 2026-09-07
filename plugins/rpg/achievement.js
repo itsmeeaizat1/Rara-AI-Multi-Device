@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // achievement.js — Achievement System (unlock badges & rewards)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "achievement",
@@ -40,22 +40,22 @@ async function handler(m, { sock }) {
     if (subCmd === "claim") {
       const achId = m.args[1]?.toLowerCase();
       if (!achId) {
-        return m.reply(claraWrap("achievement", `Mau klaim achievement mana?\n\nContoh: ${m.prefix}achievement claim first_blood`, "guide"));
+        return m.reply(novaRpgBox("achievement", `Mau klaim achievement mana?\n\nContoh: ${m.prefix}achievement claim first_blood`, "guide"));
       }
 
       const ach = ACHIEVEMENTS.find(a => a.id === achId);
       if (!ach) {
         await m.react("❌");
-        return m.reply(claraWrap("achievement", "Achievement tidak ditemukan.", "error"));
+        return m.reply(novaRpgBox("achievement", "Achievement tidak ditemukan.", "error"));
       }
 
       if (claimed.includes(achId)) {
-        return m.reply(claraWrap("achievement", `Achievement "${ach.name}" sudah diklaim.`, "error"));
+        return m.reply(novaRpgBox("achievement", `Achievement "${ach.name}" sudah diklaim.`, "error"));
       }
 
       if (!ach.check(allData)) {
         await m.react("❌");
-        return m.reply(claraWrap("achievement", `Belum memenuhi syarat: ${ach.desc}`, "error"));
+        return m.reply(novaRpgBox("achievement", `Belum memenuhi syarat: ${ach.desc}`, "error"));
       }
 
       // Apply reward
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("achievement error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("achievement", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("achievement", err.message || "Error", "error"));
   }
 }
 

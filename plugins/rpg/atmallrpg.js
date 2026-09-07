@@ -1,6 +1,6 @@
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "atmallrpg", alias: ["atmallrpg", "atmall", "atmleaderboard"],
   category: "rpg", description: "Leaderboard bank terkaya",
@@ -10,9 +10,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("atmallrpg", "RPG belum siap.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("atmallrpg", "RPG belum siap.", "error"));
   await animGeneric(m, sock, "🛒", "ATM Transaction");
-    return m.reply(claraWrap("atmallrpg", `🏦 *ATMALL LEADERBOARD*\n\nCek ranking bank terkaya di grup ini.\nGunakan .leaderboardrpg untuk ranking lengkap.`, "info"));
-  } catch (e) { return m.reply(claraWrap("atmallrpg", "Error.", "error")); }
+    return m.reply(novaRpgBox("atmallrpg", `🏦 *ATMALL LEADERBOARD*\n\nCek ranking bank terkaya di grup ini.\nGunakan .leaderboardrpg untuk ranking lengkap.`, "info"));
+  } catch (e) { return m.reply(novaRpgBox("atmallrpg", "Error.", "error")); }
 }
 export { pluginConfig as config, handler };

@@ -1,9 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // levelinfo.js — Lihat info level RPG
 import { ensureRpg, getPlayerInfo } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "levelinfo",
@@ -20,7 +20,7 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("levelinfo", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("levelinfo", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     let msg = "";
     msg += `👤 ${m.pushName || "Player"}\n`;
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("levelinfo error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("levelinfo", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("levelinfo", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

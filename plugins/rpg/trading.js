@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // trading.js — Trading System (jual beli item antar player via market)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "trading",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
       const price = parseInt(m.args[2] || "0");
 
       if (!itemName || !price || price < 1) {
-        return m.reply(claraWrap("trading", `Format: ${m.prefix}trading sell <item> <price>\n\nContoh: ${m.prefix}trading sell Iron Sword 1000`, "guide"));
+        return m.reply(novaRpgBox("trading", `Format: ${m.prefix}trading sell <item> <price>\n\nContoh: ${m.prefix}trading sell Iron Sword 1000`, "guide"));
       }
 
       // Cek inventory
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
       const itemIdx = inv.items?.findIndex(i => i.name?.toLowerCase() === itemName.toLowerCase());
       if (itemIdx === -1 || itemIdx === undefined) {
         await m.react("❌");
-        return m.reply(claraWrap("trading", `Item "${itemName}" tidak ada di inventory.`, "error"));
+        return m.reply(novaRpgBox("trading", `Item "${itemName}" tidak ada di inventory.`, "error"));
       }
 
       // Pindah ke market
@@ -68,17 +68,17 @@ async function handler(m, { sock }) {
     if (subCmd === "buy" || subCmd === "beli") {
       const id = m.args[1];
       if (!id) {
-        return m.reply(claraWrap("trading", `Format: ${m.prefix}trading buy <id>\n\nCek ID: ${m.prefix}trading`, "guide"));
+        return m.reply(novaRpgBox("trading", `Format: ${m.prefix}trading buy <id>\n\nCek ID: ${m.prefix}trading`, "guide"));
       }
 
       const listing = market.get(String(id));
       if (!listing) {
         await m.react("❌");
-        return m.reply(claraWrap("trading", `Item ID "${id}" tidak ditemukan di market.`, "error"));
+        return m.reply(novaRpgBox("trading", `Item ID "${id}" tidak ditemukan di market.`, "error"));
       }
 
       if (listing.seller === m.sender) {
-        return m.reply(claraWrap("trading", "Kamu tidak bisa beli item sendiri.", "error"));
+        return m.reply(novaRpgBox("trading", "Kamu tidak bisa beli item sendiri.", "error"));
       }
 
       // Cek gold
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
         const gold = await db.getGold?.(m.sender) || 0;
         if (gold < listing.price) {
           await m.react("❌");
-          return m.reply(claraWrap("trading", `Gold tidak cukup! Butuh ${listing.price} gold.`, "error"));
+          return m.reply(novaRpgBox("trading", `Gold tidak cukup! Butuh ${listing.price} gold.`, "error"));
         }
         await db.minGold?.(m.sender, listing.price);
         await db.addGold?.(listing.seller, listing.price);
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
     // LIST MARKET (default)
     if (market.size === 0) {
-      return m.reply(claraWrap("trading", `Market kosong.\n\nJual item: ${m.prefix}trading sell <item> <price>`, "guide"));
+      return m.reply(novaRpgBox("trading", `Market kosong.\n\nJual item: ${m.prefix}trading sell <item> <price>`, "guide"));
     }
 
     let msg = "";
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("trading error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("trading", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("trading", err.message || "Error", "error"));
   }
 }
 

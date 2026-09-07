@@ -2,9 +2,9 @@
 // RPG Kingdom — Create kingdom, build base, defend
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "kingdom",
@@ -27,15 +27,15 @@ const BASE_TYPES = {
 async function handler(m, { sock, text, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("kingdom", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("kingdom", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // .kingdom <nama> — dirikan kerajaan
     if (command === "kingdom") {
   await animGeneric(m, sock, "👑", "Loading Kingdom");
-      if (rpg.kingdom) return m.reply(claraWrap("kingdom", "Kerajaanmu: *" + rpg.kingdom + "*", "info"));
+      if (rpg.kingdom) return m.reply(novaRpgBox("kingdom", "Kerajaanmu: *" + rpg.kingdom + "*", "info"));
       const name = (text || "").trim();
-      if (!name) return m.reply(claraWrap("kingdom", "Ketik: .kingdom <nama_kerajaan>", "guide"));
-      if (name.length > 30) return m.reply(claraWrap("kingdom", "Nama kerajaan maksimal 30 karakter.", "info"));
+      if (!name) return m.reply(novaRpgBox("kingdom", "Ketik: .kingdom <nama_kerajaan>", "guide"));
+      if (name.length > 30) return m.reply(novaRpgBox("kingdom", "Nama kerajaan maksimal 30 karakter.", "info"));
 
       await m.react("🕒");
       rpg.kingdom = name;
@@ -64,8 +64,8 @@ async function handler(m, { sock, text, command }) {
       }
 
       const base = BASE_TYPES[baseType];
-      if (!base) return m.reply(claraWrap("build", "Tipe tidak valid. Pilih: " + Object.keys(BASE_TYPES).join(", "), "guide"));
-      if ((rpg.gold || 0) < base.cost) return m.reply(claraWrap("build", "Gold tidak cukup. Butuh " + base.cost + " gold.", "info"));
+      if (!base) return m.reply(novaRpgBox("build", "Tipe tidak valid. Pilih: " + Object.keys(BASE_TYPES).join(", "), "guide"));
+      if ((rpg.gold || 0) < base.cost) return m.reply(novaRpgBox("build", "Gold tidak cukup. Butuh " + base.cost + " gold.", "info"));
 
       await m.react("🕒");
       rpg.gold = (rpg.gold || 0) - base.cost;
@@ -79,7 +79,7 @@ async function handler(m, { sock, text, command }) {
 
     // .defend — perkuat markas
     if (command === "defend") {
-      if (!rpg.base) return m.reply(claraWrap("defend", "Kamu belum punya markas. Ketik .build dulu.", "guide"));
+      if (!rpg.base) return m.reply(novaRpgBox("defend", "Kamu belum punya markas. Ketik .build dulu.", "guide"));
       const bonus = Math.floor(Math.random() * 30) + 20;
       await m.react("🕒");
       rpg.baseDef = (rpg.baseDef || 0) + bonus;
@@ -91,7 +91,7 @@ async function handler(m, { sock, text, command }) {
   } catch (e) {
     console.error("kingdom error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap(m.command || "kingdom", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox(m.command || "kingdom", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

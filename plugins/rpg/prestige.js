@@ -2,9 +2,9 @@
 // RPG Prestige — Reset level for permanent stat boost (different from rebirth)
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "prestige",
@@ -20,11 +20,11 @@ const pluginConfig = {
 async function handler(m, { sock, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("prestige", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("prestige", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "prestige") {
   await animGeneric(m, sock, "⭐", "Prestige");
-      if (rpg.level < 50) return m.reply(claraWrap("prestige", "Minimal level 50 untuk prestige.", "info"));
+      if (rpg.level < 50) return m.reply(novaRpgBox("prestige", "Minimal level 50 untuk prestige.", "info"));
 
       await m.react("🕒");
       rpg.level = 1;
@@ -43,7 +43,7 @@ async function handler(m, { sock, command }) {
     }
 
     if (command === "reincarnate" || command === "reinkarnasi") {
-      if (rpg.level < 30) return m.reply(claraWrap("reincarnate", "Minimal level 30 untuk reinkarnasi.", "info"));
+      if (rpg.level < 30) return m.reply(novaRpgBox("reincarnate", "Minimal level 30 untuk reinkarnasi.", "info"));
 
       await m.react("🕒");
       rpg.level = 1;
@@ -61,7 +61,7 @@ async function handler(m, { sock, command }) {
   } catch (e) {
     console.error("prestige error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap(m.command || "prestige", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox(m.command || "prestige", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

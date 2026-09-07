@@ -5,8 +5,8 @@ import {
   ensureRpg, saveRpg, getEquipStats, addExp, addGold,
   pvpResult, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -37,37 +37,37 @@ async function handler(m, { sock }) {
 
     if (!targetJid) {
       await m.react("🚫");
-      return m.reply(claraWrap("duelrpg", "Tag lawan yang mau kamu duel!\nContoh: .duelrpg @user", "warn"));
+      return m.reply(novaRpgBox("duelrpg", "Tag lawan yang mau kamu duel!\nContoh: .duelrpg @user", "warn"));
     }
 
     if (targetJid === m.sender) {
       await m.react("🚫");
-      return m.reply(claraWrap("duelrpg", "Nggak bisa duel sama diri sendiri 😅", "warn"));
+      return m.reply(novaRpgBox("duelrpg", "Nggak bisa duel sama diri sendiri 😅", "warn"));
     }
 
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("duelrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("duelrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (rpg.level < MIN_LEVEL) {
       await m.react("🚫");
-      return m.reply(claraWrap("duelrpg", `Butuh minimal *Level ${MIN_LEVEL}* untuk duel. Level kamu: *${rpg.level}*.`, "warn"));
+      return m.reply(novaRpgBox("duelrpg", `Butuh minimal *Level ${MIN_LEVEL}* untuk duel. Level kamu: *${rpg.level}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastPvP");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("duelrpg", `Cooldown PvP tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("duelrpg", `Cooldown PvP tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     // Init lawan
     const targetRpg = ensureRpg({ sender: targetJid }, targetJid.split("@")[0]);
-    if (!targetRpg) return m.reply(claraWrap("duelrpg", "Lawan belum terdaftar di RPG.", "warn"));
+    if (!targetRpg) return m.reply(novaRpgBox("duelrpg", "Lawan belum terdaftar di RPG.", "warn"));
 
     if (targetRpg.level < MIN_LEVEL) {
       await m.react("🚫");
-      return m.reply(claraWrap("duelrpg", `Lawan belum *Level ${MIN_LEVEL}*. Level lawan: *${targetRpg.level}*.`, "warn"));
+      return m.reply(novaRpgBox("duelrpg", `Lawan belum *Level ${MIN_LEVEL}*. Level lawan: *${targetRpg.level}*.`, "warn"));
     }
 
     // Combat stats
@@ -218,7 +218,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("duelrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("duelrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("duelrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

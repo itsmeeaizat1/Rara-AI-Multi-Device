@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // witchcauldron.js — Witch's Cauldron (combine materials for special items)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "witchcauldron",
@@ -61,13 +61,13 @@ async function handler(m, { sock }) {
     if (subCmd === "brew" || subCmd === "buat" || subCmd === "masak") {
       const recipeName = m.args.slice(1).join(" ").trim();
       if (!recipeName) {
-        return m.reply(claraWrap("witchcauldron", `Mau brew apa?\n\nList: ${m.prefix}witchcauldron`, "guide"));
+        return m.reply(novaRpgBox("witchcauldron", `Mau brew apa?\n\nList: ${m.prefix}witchcauldron`, "guide"));
       }
 
       const recipe = RECIPES.find(r => r.name.toLowerCase() === recipeName.toLowerCase());
       if (!recipe) {
         await m.react("❌");
-        return m.reply(claraWrap("witchcauldron", `Recipe "${recipeName}" tidak ditemukan.`, "error"));
+        return m.reply(novaRpgBox("witchcauldron", `Recipe "${recipeName}" tidak ditemukan.`, "error"));
       }
 
       // Get materials from crafting data
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 
       if (missing.length > 0) {
         await m.react("❌");
-        return m.reply(claraWrap("witchcauldron", `Bahan kurang!\n\n${missing.join("\n")}`, "error"));
+        return m.reply(novaRpgBox("witchcauldron", `Bahan kurang!\n\n${missing.join("\n")}`, "error"));
       }
 
       // Cek gold
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
         const gold = await db.getGold?.(m.sender) || 0;
         if (gold < recipe.goldCost) {
           await m.react("❌");
-          return m.reply(claraWrap("witchcauldron", `Gold kurang! Butuh ${recipe.goldCost}g.`, "error"));
+          return m.reply(novaRpgBox("witchcauldron", `Gold kurang! Butuh ${recipe.goldCost}g.`, "error"));
         }
         await db.minGold?.(m.sender, recipe.goldCost);
       } catch {}
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("witchcauldron error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("witchcauldron", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("witchcauldron", err.message || "Error", "error"));
   }
 }
 

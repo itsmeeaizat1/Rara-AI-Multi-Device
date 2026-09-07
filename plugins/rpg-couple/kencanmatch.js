@@ -2,8 +2,7 @@
 // RPG Cinta — Kencan (Date Quest) — kasih affection + exp, burn energy + gold
 
 import { getRpgData, useEnergy, addExp, addGold, removeGold, checkCooldown } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import {
   getCintaData, addAffection, getCouplePower,
   KENCAN_ACTIVITIES, KENCAN_COOLDOWN_HOURS, formatDurasi
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
     const cinta = getCintaData(m);
 
     if (!cinta.spouse) {
-      return m.reply(claraWrap("Kencan", [
+      return m.reply(novaRpgBox("Kencan", [
         "Kamu belum punya pasangan!",
         `Gunakan ${m.prefix}jadianmatch @tag dulu`,
       ], "warn"));
@@ -40,7 +39,7 @@ async function handler(m, { sock }) {
     // Cooldown check
     const cd = checkCooldown(m, "rpgkencan");
     if (cd) {
-      return m.reply(claraWrap("Kencan", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
+      return m.reply(novaRpgBox("Kencan", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
     }
 
     const args = m.args || [];
@@ -61,14 +60,14 @@ async function handler(m, { sock }) {
         menuLines.push(`   ${a.cost} gold | ${a.energy} energi | +${a.affection} affection | +${a.exp} exp`);
       });
       menuLines.push("---", `Ketik: ${m.prefix}rpgkencan <nomor>`);
-      return m.reply(novaBox("Kencan", menuLines));
+      return m.reply(novaRpgBox("Kencan", menuLines));
     }
 
     const activity = KENCAN_ACTIVITIES[pick];
 
     // Cek gold
     if ((rpg.gold || 0) < activity.cost) {
-      return m.reply(claraWrap("Kencan", [
+      return m.reply(novaRpgBox("Kencan", [
         "Gold tidak cukup!",
         `Butuh: ${activity.cost} gold`,
         `Punya: ${rpg.gold || 0} gold`,
@@ -77,7 +76,7 @@ async function handler(m, { sock }) {
 
     // Cek energy
     if (!useEnergy(m, activity.energy, sock)) {
-      return m.reply(claraWrap("Kencan", `Energi tidak cukup! Butuh: ${activity.energy} energi`, "error"));
+      return m.reply(novaRpgBox("Kencan", `Energi tidak cukup! Butuh: ${activity.energy} energi`, "error"));
     }
 
     // Eksekusi kencan

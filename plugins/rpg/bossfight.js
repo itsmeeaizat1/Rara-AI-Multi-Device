@@ -2,9 +2,9 @@
 // RPG Boss Fight — Global world boss (semua player serang bareng) + final trial
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animBossFight } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "bossfight",
@@ -28,7 +28,7 @@ const BOSS_LIST = [
 async function handler(m, { sock, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("bossfight", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("bossfight", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "bossfight" || command === "worldboss") {
       // Spawn boss if none exists
@@ -39,7 +39,7 @@ async function handler(m, { sock, command }) {
       }
 
       // Attack boss
-      if ((rpg.energy || 0) < 10) return m.reply(claraWrap("bossfight", "Energi tidak cukup. Butuh 10 energi.", "info"));
+      if ((rpg.energy || 0) < 10) return m.reply(novaRpgBox("bossfight", "Energi tidak cukup. Butuh 10 energi.", "info"));
 
       await m.react("🕒");
     await animBossFight(m, sock);
@@ -74,7 +74,7 @@ async function handler(m, { sock, command }) {
     }
 
     if (command === "finaltrial") {
-      if (rpg.level < 99) return m.reply(claraWrap("finaltrial", "Butuh level 99 untuk ikut ujian akhir.", "info"));
+      if (rpg.level < 99) return m.reply(novaRpgBox("finaltrial", "Butuh level 99 untuk ikut ujian akhir.", "info"));
       await m.react("🕒");
       const trials = 3;
       let totalReward = 0;
@@ -100,7 +100,7 @@ async function handler(m, { sock, command }) {
   } catch (e) {
     console.error("bossfight error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap(m.command || "bossfight", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox(m.command || "bossfight", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

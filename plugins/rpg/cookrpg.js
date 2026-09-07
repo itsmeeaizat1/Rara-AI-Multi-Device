@@ -5,9 +5,9 @@ import {
   ensureRpg, addItem, removeItem, regenHP, regenEnergy, regenMana,
   getItemCount, ITEM_DB
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animCraft } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "cookrpg",
@@ -62,7 +62,7 @@ const COOK_RECIPES = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("cookrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("cookrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     // Find recipe
     const recipe = COOK_RECIPES.find(r => r.id === action);
     if (!recipe) {
-      return m.reply(claraWrap("cookrpg", `Resep *${action}* tidak ada. Ketik .cookrpg list.`, "warn"));
+      return m.reply(novaRpgBox("cookrpg", `Resep *${action}* tidak ada. Ketik .cookrpg list.`, "warn"));
     }
 
     // Check materials
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
 
     if (missing.length > 0) {
       await m.react("🚫");
-      return m.reply(claraWrap("cookrpg", `Bahan tidak cukup!\nKurang: *${missing.join(", ")}*`, "warn"));
+      return m.reply(novaRpgBox("cookrpg", `Bahan tidak cukup!\nKurang: *${missing.join(", ")}*`, "warn"));
     }
 
     // Consume materials
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("cookrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("cookrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("cookrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

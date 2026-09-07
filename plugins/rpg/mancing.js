@@ -7,9 +7,10 @@ import {
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "mancing",
@@ -44,17 +45,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("mancing", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("mancing", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastFish");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("mancing", `Cooldown mancing tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("mancing", `Cooldown mancing tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < FISH_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("mancing", `Energi kurang! Butuh *${FISH_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(novaRpgBox("mancing", `Energi kurang! Butuh *${FISH_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     useEnergy(m, FISH_ENERGY, sock);
@@ -105,7 +106,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("mancing error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("mancing", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("mancing", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

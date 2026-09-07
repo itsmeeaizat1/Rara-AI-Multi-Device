@@ -5,9 +5,9 @@ import {
   ensureRpg, createGuild, joinGuild, leaveGuild, getGuild, JOB_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "guildrpg",
@@ -28,7 +28,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("guildrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("guildrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       if (!guild) {
         saveRpg: rpg.guildId = null; rpg.guildRank = null;
   await animGeneric(m, sock, "🏰", "Loading Guild");
-        return m.reply(claraWrap("guildrpg", "Guild tidak ditemukan (mungkin sudah dihapus).", "warn"));
+        return m.reply(novaRpgBox("guildrpg", "Guild tidak ditemukan (mungkin sudah dihapus).", "warn"));
       }
 
       let msg = "";
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
     // Create guild
     if (action === "create" || action === "buat") {
       const name = args.slice(1).join(" ");
-      if (!name) return m.reply(claraWrap("guildrpg", "Nama guild apa? Contoh: .guildrpg create Nova Hunters", "warn"));
+      if (!name) return m.reply(novaRpgBox("guildrpg", "Nama guild apa? Contoh: .guildrpg create Nova Hunters", "warn"));
 
       const result = createGuild(m, name);
 
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
         msg += `ID: *${result.guildId}*\n`;
                 return m.reply(msg);
       } else {
-        return m.reply(claraWrap("guildrpg", result.reason || "Gagal buat guild.", "warn"));
+        return m.reply(novaRpgBox("guildrpg", result.reason || "Gagal buat guild.", "warn"));
       }
     }
 
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
       }));
 
       if (guildList.length === 0) {
-        return m.reply(claraWrap("guildrpg", "Belum ada guild yang dibuat. Jadilah yang pertama! Ketik .guildrpg create <nama>", "info"));
+        return m.reply(novaRpgBox("guildrpg", "Belum ada guild yang dibuat. Jadilah yang pertama! Ketik .guildrpg create <nama>", "info"));
       }
 
       let msg = "";
@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
     // Join guild
     if (action === "join" || action === "gabung") {
       const guildId = args[1];
-      if (!guildId) return m.reply(claraWrap("guildrpg", "Guild ID apa? Ketik .guildrpg list untuk lihat.", "warn"));
+      if (!guildId) return m.reply(novaRpgBox("guildrpg", "Guild ID apa? Ketik .guildrpg list untuk lihat.", "warn"));
 
       const result = joinGuild(m, guildId);
 
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
         msg += `👥 Members: ${result.guild.members.length}/50\n`;
                 return m.reply(msg);
       } else {
-        return m.reply(claraWrap("guildrpg", result.reason || "Gagal join guild.", "warn"));
+        return m.reply(novaRpgBox("guildrpg", result.reason || "Gagal join guild.", "warn"));
       }
     }
 
@@ -168,15 +168,15 @@ async function handler(m, { sock }) {
         msg += `✅ Kamu keluar dari guild\n`;
                 return m.reply(msg);
       } else {
-        return m.reply(claraWrap("guildrpg", result.reason || "Tidak ada guild untuk ditinggalkan.", "warn"));
+        return m.reply(novaRpgBox("guildrpg", result.reason || "Tidak ada guild untuk ditinggalkan.", "warn"));
       }
     }
 
-    return m.reply(claraWrap("guildrpg", "Aksi tidak dikenal. Gunakan: create, join, leave, list, info", "warn"));
+    return m.reply(novaRpgBox("guildrpg", "Aksi tidak dikenal. Gunakan: create, join, leave, list, info", "warn"));
   } catch (err) {
     console.error("guildrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("guildrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("guildrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

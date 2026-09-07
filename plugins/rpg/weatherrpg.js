@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Weather — Cuaca dunia RPG
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "weatherrpg", alias: ["weatherrpg", "cuacarpg"],
@@ -16,9 +16,9 @@ async function handler(m, { sock }) {
     const efek = ["Drop rate normal", "Fishing +20%", "Hunt berbahaya!", "Visibility rendah", "Mine +10%"];
     const idx = Math.floor(Math.random() * cuaca.length);
   await animGeneric(m, sock, "🌤️", "Checking Weather");
-    return m.reply(claraWrap("weatherrpg", `🌦️ Cuaca hari ini: *${cuaca[idx]}*\nEffect: ${efek[idx]}`, "info"));
+    return m.reply(novaRpgBox("weatherrpg", `🌦️ Cuaca hari ini: *${cuaca[idx]}*\nEffect: ${efek[idx]}`, "info"));
   } catch (e) {
-    return m.reply(claraWrap("weatherrpg", "Terjadi error.", "error"));
+    return m.reply(novaRpgBox("weatherrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

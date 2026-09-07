@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -81,7 +80,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "list" || !subCmd) {
       await m.react('🐣');
-      return m.reply(claraWrap("bounty", [
+      return m.reply(novaRpgBox("bounty", [
         `Energi kamu : ${player.energi}`,
         "---",
         "Daftar buronan aktif :",
@@ -104,7 +103,7 @@ async function handler(m, { sock }) {
       if (!target) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "bounty",
             `Target buronan tidak ditemukan!\n\nLihat daftar buronan dengan: ${m.prefix}bounty list`,
             "error"
@@ -115,7 +114,7 @@ async function handler(m, { sock }) {
       if (player.energi < target.energiCost) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "bounty",
             `Energi kamu tidak cukup untuk memburu *${target.name}*!\n\nMembutuhkan: ${target.energiCost} Energi | Memiliki: ${player.energi} Energi`,
             "error"
@@ -172,7 +171,7 @@ async function handler(m, { sock }) {
 
     await m.react('❌');
     return m.reply(
-      claraWrap(
+      novaRpgBox(
         "bounty",
         `Perintah tidak diketahui!\n\nGunakan:\n• ${m.prefix}bounty list\n• ${m.prefix}bounty hunt <id>`,
         "guide"
@@ -181,7 +180,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("bounty error:", err);
     await m.react('❌');
-    return m.reply(claraWrap("bounty", err.message || "Terjadi kesalahan pada sistem Bounty.", "error"));
+    return m.reply(novaRpgBox("bounty", err.message || "Terjadi kesalahan pada sistem Bounty.", "error"));
   }
 }
 
