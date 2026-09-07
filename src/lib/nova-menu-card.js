@@ -308,22 +308,24 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       return true;
     }
 
-    // ── REVISI OWNER 2026-09-07: CARD KATALOG KAYAK BOT LAIN (Raiden MD dkk) ──
-    // Report owner: "bot lain bisa sampai muncul tombolnya, ini malah gak
-    // muncul, beda tipe thumbnailnya" — thumbnail bot lain itu HEADER IMAGE
-    // (gambar gede nempel DI ATAS pesan), bukan link-preview. Card lama kita
-    // header-nya KOSONG (banner cuma lewat externalAdReply) → client
-    // penerima gak ngerender. Solusi: delegasi ke sock.sendButton — pattern
-    // PROVEN di bot ini (dipakai leaderboard, carifitur) yang ngerakit
-    // interactiveMessage dengan header media (prepareWAMessageMedia,
-    // resize 640x360) + body + tombol nativeFlow + relayMessage.
-    // Hasil: gambar gede di atas → chip judul+versi (externalAdReply, tanpa
-    // sourceUrl biar gak ada baris link) → teks menu → tombol di bawah.
-    await sock.sendButton(m.chat, rawBuffer, text, m, {
-      footer: footer || "",
-      buttons: buildNativeButtons(buttons),
-      contextInfo,
-    });
+    // ── REVISI OWNER 2026-09-07 (3): MEDIA TYPE = GAMBAR ASLI + CAPTION ──
+    // Report owner: "coba ubah ke tipe media lain supaya thumbnail-nya muncul
+    // seperti contoh" — tipe interactive header-image & link-preview sama-sama
+    // dirender/direduksi client. Cara yang PALING DIJAMIN muncul di semua
+    // client (pola klasik menu image-kan bot Indonesia): banner dikirim
+    // sebagai IMAGE ASLI (gambar gede nempel DI ATAS pesan) + caption =
+    // teks menu di bawahnya. Chip externalAdReply tetap nempel di bawah
+    // caption (judul nama bot + versi, tanpa sourceUrl) + pill channel.
+    // Param buttons diabaikan (tombol nativeFlow = sumber render gagal).
+    if (rawBuffer) {
+      await sock.sendMessage(
+        m.chat,
+        { image: rawBuffer, caption: text, contextInfo },
+        { quoted: m },
+      );
+    } else {
+      await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
+    }
     return true;
   } catch (e) {
     console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message);
