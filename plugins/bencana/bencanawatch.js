@@ -18,6 +18,7 @@ import {
   setWatcherJenis, BENCANA_JENIS, setWatcherSumber, BENCANA_SUMBER,
   setWatcherKirim,
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
+  getMonitorHealth,
 } from "../../src/lib/nova-bencana.js";
 import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 
@@ -35,7 +36,18 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const args = (m.args || []).map((a) => String(a).toLowerCase());
-    const action = args[0] || "";
+    // ── FIX OWNER 2026-09-07: toleransi salah ketik command umum ──
+    // Report owner ngetik ".bencanawatch global" (maksudnya onglobal) dan
+    // malah kena guide gak jelas. Alias ini bikin varian natural tetap
+    // kena action yang benar tanpa perlu hafal nama exact.
+    const ACTION_ALIAS = {
+      global: "onglobal", matikanglobal: "offglobal", stopglobal: "offglobal",
+      dm: "onchat", chat: "onchat", pribadi: "onchat",
+      matikan: "off", stop: "off", nonaktif: "off", batal: "off",
+      aktif: "on", aktifkan: "on", nyalakan: "on", cek: "status", check: "status",
+      info: "status", help: "guide", bantuan: "guide",
+    };
+    const action = ACTION_ALIAS[args[0]] || args[0] || "";
     const chatId = m.chat;
     const isDm = !String(m.chat || "").endsWith("@g.us");
 
@@ -564,10 +576,67 @@ async function handler(m, { sock }) {
         lines.push("Set     : .bencanawatch lokasi <nama kota>");
       }
       if (!me && !(isDm && hasGlobalWatcher(m.sender))) lines.push("---", "Aktifkan dengan .bencanawatch on");
+
+      // ── FIX OWNER 2026-09-07: kesehatan monitor — biar kelihatan jelas
+      // kalau bot beneran mantau (bukan mati), report owner "aktifin tapi
+      // gak masuk info bencananya" — cek monitor jalan/gak + kapan terakhir
+      // cek tiap sumber, plus penegasan ini FITUR REALTIME (bencana BARU
+      // sejak aktif), bukan daftar bencana yang lagi terjadi sekarang.
+      const health = getMonitorHealth();
+      lines.push("---");
+      lines.push(`Monitor : ${health.running ? "HIDUP — sedang mantau" : "MATI (belum ada subscriber)"}`);
+      lines.push(`Cek BMKG  : tiap ${health.pollBmkgSec}s${health.bmkgLastCheck ? `, terakhir ${new Date(health.bmkgLastCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}` : ", belum pernah"}`);
+      lines.push(`Cek Global: tiap ${health.pollGlobalSec}s (USGS + GDACS)`);
+      lines.push("---");
+      lines.push("PENTING: ini alert REALTIME — cuma kirim bencana BARU");
+      lines.push("sejak diaktifkan, bukan daftar bencana yang lagi");
+      lines.push("terjadi sekarang. Kalau belum ada kejadian baru yang");
+      lines.push("cocok kriteria (gempa M5+/M6+, GDACS Siaga/Awas), ya");
+      lines.push("emang belum ada pesan masuk — itu normal, bukan error.");
+      lines.push(`Mau lihat kondisi TERKINI sekarang? Pakai: .bencana`);
       return m.reply(novaBox("Bencana Watch", lines));
     }
 
-    return m.reply(novaGuide("Bencana Watch", "Gunakan on (pilih mode: DM/grup/global), onchat, onglobal, offglobal, off, status, mode <otomatis/jadwal/darurat>, jadwal add/remove <jam>, jenis <bencana>, sumber <bmkg/usgs/gdacs>, kirim <utama/semua>, lokasi <kota>, radius <km>, atau pilihgrup", ".bencanawatch sumber bmkg"));
+    // ── FIX OWNER 2026-09-07: guide jelas & terstruktur (bukan 1 paragraf
+    // panjang smallcaps yang susah dibaca) — report owner "settingan ribet,
+    // tolong guide-nya yang jelas cara aktifin opsi tertentu". ──
+    if (action === "guide") {
+      // Semua baris dijaga <=58 karakter biar gak kena wrapLine (>60 char
+      // bikin indentasi kebuang, lihat FEATURES.md fix 2026-09-07).
+      return m.reply(novaBox("Bencana Watch — Guide", [
+        "Semua opsi di bawah diawali .bencanawatch",
+        "---",
+        { sub: "1. Aktifkan" },
+        "• on        → grup: aktif langsung",
+        "              DM: muncul pilihan tombol",
+        "• onchat    → aktif di chat ini (tanpa tombol)",
+        "• onglobal  → aktif di DM + semua grup",
+        "• offglobal → matikan mode global",
+        "• off       → matikan di chat ini",
+        "---",
+        { sub: "2. Filter (opsional)" },
+        "• sumber bmkg   → cuma gempa Indonesia",
+        "• jenis gempa   → cuma jenis tertentu",
+        "• lokasi Palu   → alert dekat lokasi kamu",
+        "• radius 500    → ubah radius wilayah (km)",
+        "---",
+        { sub: "3. Mode Kirim (opsional)" },
+        "• mode otomatis → default, langsung kirim",
+        "• mode jadwal   → dirangkum, kirim di jam set",
+        "• mode darurat  → cuma yang darurat/dekat",
+        "• jadwal add 07:00 → jam rangkuman (mode jadwal)",
+        "---",
+        { sub: "4. Cek & Matikan" },
+        "• status  → langganan + kesehatan monitor",
+        "• off / offglobal → matikan",
+        "---",
+        "Catatan: ini alert REALTIME (bencana BARU sejak",
+        "aktif), bukan daftar bencana yang lagi terjadi.",
+        "Mau kondisi TERKINI sekarang? Pakai: .bencana",
+      ]));
+    }
+
+    return m.reply(novaGuide("Bencana Watch", "Command gak dikenali. Ketik .bencanawatch guide buat lihat cara pakai lengkap step-by-step, atau .bencanawatch status buat cek langganan kamu", ".bencanawatch guide"));
   } catch (err) {
     console.error("[bencanawatch]", err);
     await m.react("❌");

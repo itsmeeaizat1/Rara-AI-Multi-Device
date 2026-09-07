@@ -1341,3 +1341,21 @@ export function initBencanaMonitor(_sock) {
   syncBencanaMonitor();
   return true;
 }
+
+/**
+ * FIX OWNER 2026-09-07: kesehatan monitor buat debugging "kok gak masuk
+ * alertnya" — status polling per sumber + jalan/gak, biar owner bisa
+ * verifikasi monitor beneran hidup tanpa nebak.
+ */
+export function getMonitorHealth() {
+  const st = loadState();
+  return {
+    running: isRunning(),
+    totalWatcher: watcherCount(),
+    bmkgLastCheck: st.bmkg || null, // null = belum sempat poll sekali pun
+    gdacsBaselineReady: !!st.gdacsInit,
+    usgsBaselineReady: !!st.usgsInit,
+    pollBmkgSec: POLL_FAST_MS / 1000,
+    pollGlobalSec: POLL_SLOW_MS / 1000,
+  };
+}
