@@ -10,7 +10,16 @@ import {
   getGdacs, getEonet, getUsgs, getBmkgLatest,
   GDACS_TYPES, ALERT_STYLE, shortCountry,
 } from "../../src/lib/nova-bencana.js";
-import { novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+// GUARD FORMAT: pesan berkotak wajib boxLeft() dari src/lib/styler.js
+// (dilarang kotak manual / │ manual) — dikirim dalam code block.
+import { boxMessage } from "../../src/lib/styler.js";
+
+const novaGuide = (header, intro, example) =>
+  boxMessage(`◆ ${String(header).split("—")[0].trim().toUpperCase()} ◆`, [
+    ...(intro ? [String(intro)] : []),
+    ...(example ? [`Contoh: ${example}`] : []),
+  ].join("\n"));
 
 const pluginConfig = {
   name: "bencana",

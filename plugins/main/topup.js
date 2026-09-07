@@ -6,6 +6,9 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { toSC, claraWrap } from "../../src/lib/nova-menu-style.js";
+// GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
+// dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
+import { boxMessage } from "../../src/lib/styler.js";
 import {
   TOPUP_ITEMS,
   RPG_ITEM_RATE,
@@ -41,36 +44,34 @@ const JALUR_DESC = {
   cinta: "Affection RPG Cinta",
 };
 
+// teks item polos — prefix "│ " & pemotongan baris dijamin boxLeft()
 function itemLine(prefix, item) {
-  return `│ • ${item.icon} ${prefix}${item.command} — ${toSC(item.name)} : Rp ${fmt(item.pricePerPack)} / ${fmt(item.packSize)} ${item.unit}`;
+  return `${item.icon} ${prefix}${item.command} — ${toSC(item.name)} : Rp ${fmt(item.pricePerPack)} / ${fmt(item.packSize)} ${item.unit}`;
 }
 
 function katalog(prefix, jalurFilter) {
   const jalurList = jalurFilter ? [jalurFilter] : ["akun", "rpg", "cinta"];
   const lines = [];
-  lines.push(`╭─「 ✦ ${toSC("Toko Topup")} ✦ 」`);
-  lines.push("│");
 
   for (const jalur of jalurList) {
     const items = Object.values(TOPUP_ITEMS).filter((it) => it.jalur === jalur);
     if (!items.length) continue;
-    lines.push(`│ ${toSC(JALUR_DESC[jalur] || jalur)}`);
+    lines.push(`◆ ${(JALUR_DESC[jalur] || jalur).toUpperCase()} ◆`);
     for (const it of items) lines.push(itemLine(prefix, it));
-    lines.push("│");
+    lines.push("────────────────────");
   }
 
   if (!jalurFilter || jalurFilter === "item") {
-    lines.push(`│ ${toSC(JALUR_DESC.item)}`);
-    lines.push(`│ • 🎒 ${prefix}buyrpgitem — ${toSC("Item Game")} : Rp ${fmt(RPG_ITEM_RATE)} / ${toSC("poin nilai")}`);
-    lines.push(`│   ${toSC("beli 1 s/d")} ${fmt(RPG_ITEM_MAX_QTY)}x, ${toSC("min transaksi")} Rp ${fmt(MIN_TOPUP_PRICE)}`);
-    lines.push("│");
+    lines.push(`◆ ${JALUR_DESC.item.toUpperCase()} ◆`);
+    lines.push(`🎒 ${prefix}buyrpgitem — ${toSC("Item Game")} : Rp ${fmt(RPG_ITEM_RATE)} / ${toSC("poin nilai")}`);
+    lines.push(`   ${toSC("beli 1 s/d")} ${fmt(RPG_ITEM_MAX_QTY)}x, ${toSC("min transaksi")} Rp ${fmt(MIN_TOPUP_PRICE)}`);
+    lines.push("────────────────────");
   }
 
-  lines.push(`│ 💡 ${toSC("Contoh")}: ${prefix}buylimit 200`);
-  lines.push(`│ 📌 ${toSC("Bayar via")} QRIS — ${toSC("otomatis masuk setelah owner approve")}`);
-  lines.push(`│ 📌 ${toSC("Cek pesanan pending")}: ${prefix}topup status`);
-  lines.push(`╰──── • ────`);
-  return lines.join("\n");
+  lines.push(`💡 ${toSC("Contoh")}: ${prefix}buylimit 200`);
+  lines.push(`📌 ${toSC("Bayar via")} QRIS — ${toSC("otomatis masuk setelah owner approve")}`);
+  lines.push(`📌 ${toSC("Cek pesanan pending")}: ${prefix}topup status`);
+  return boxMessage("◆ TOKO TOPUP ◆", lines.join("\n"));
 }
 
 async function handler(m, { sock }) {
