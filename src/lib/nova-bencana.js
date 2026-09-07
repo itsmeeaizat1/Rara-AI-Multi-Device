@@ -1097,6 +1097,82 @@ async function dispatch(ev, genericText = null, card = null) {
 }
 
 /** Wrapper testable — pakai sock internal monitor. */
+/**
+ * CONTOH INFO saat baru aktif (request owner 2026-09-07: "kalau diaktifin
+ * harusnya muncul 1 info sebagai tanda aktif — ini udah di-on malah gak
+ * muncul 1 info apapun dari sumbernya").
+ *
+ * Langsung fetch 1 info TERKINI asli (gempa terbaru BMKG, fallback: event
+ * GDACS terbaru 7 hari) dan kirim ke chat tempat fitur baru diaktifkan —
+ * sebagai BUKTI pipeline fetch→format→kirim beneran jalan, sekaligus
+ * preview seperti apa alert nanti keliatannya.
+ *
+ * Penting: fungsi ini TIDAK menyentuh state seen/fingerprint — jadi gak
+ * ganggu deteksi realtime (event yang sama tetap bisa ke-detect ulang
+ * sebagai "baru" kalau memang baru sejak monitor aktif).
+ */
+export async function sendActivationSample(sock, chatId) {
+  try {
+    let ev = null;
+    let header = "";
+    try {
+      const g = await getBmkgLatest();
+      if (g?.DateTime) {
+        const [lat, lon] = String(g.Coordinates).split(",").map((s) => s.trim());
+        ev = {
+          kind: "gempa", jenis: "Gempa Bumi",
+          mag: g.Magnitude, depth: g.Kedalaman,
+          level: parseFloat(g.Magnitude) >= 6.0 ? "AWAS" : "SIAGA",
+          waktu: `${g.Tanggal} ${g.Jam}`,
+          lat: +lat, lon: +lon, desc: g.Wilayah,
+          potensi: g.Potensi || null, dirasakan: g.Dirasakan || null,
+          sumber: "BMKG (data.bmkg.go.id)",
+        };
+        ev.thumbUrl = g._shakemapUrl;
+        header = "GEMPA TERBARU BMKG";
+      }
+    } catch { /* coba fallback */ }
+    if (!ev) {
+      const evs = await getGdacs(7);
+      const e = evs?.[0];
+      if (!e) return false;
+      const t = GDACS_TYPES[e.type] ?? { label: e.type, icon: "⚠️" };
+      const a = ALERT_STYLE[e.alertlevel] || ALERT_STYLE.Green;
+      ev = {
+        kind: KIND_BY_TYPE?.[e.type] || "default",
+        jenis: t.label,
+        level: `${a.label} (${a.icon})`,
+        waktu: e.fromdate ? `mulai ${jamWib(e.fromdate)}` : "",
+        lat: e.lat, lon: e.lon, desc: e.desc || e.name,
+        country: shortCountry(e.country) || null,
+        sumber: "GDACS (EU/UN) — gdacs.org",
+        report: e.report,
+      };
+      try { ev.thumbUrl = await gdacsThumbUrl(e); } catch { /* thumbnail opsional */ }
+      header = "BENCANA TERBARU GDACS";
+    }
+    const lines = [
+      `BENCANAWATCH AKTIF — ${header}`,
+      "Ini contoh info TERKINI dari sumber aslinya",
+      "sebagai tanda fitur beneran jalan.",
+      "",
+      `${ev.jenis}${ev.country ? ` di ${ev.country}` : ""}${ev.mag ? ` — M${ev.mag}` : ""}`,
+      ev.desc || "",
+      "",
+      buildInfoSection(ev),
+      "",
+      "Mulai sekarang bencana BARU otomatis masuk ke chat ini",
+      "dengan format seperti contoh di atas. Info di atas adalah",
+      "kejadian TERKINI, bukan alert realtime baru.",
+    ];
+    await sendWithCard(sock, chatId, lines.join("\n"), eventCard(ev));
+    return true;
+  } catch (e) {
+    logger.error?.("bencana", "Gagal kirim contoh info aktivasi: " + e.message);
+    return false;
+  }
+}
+
 export async function dispatchBencanaEvent(ev, genericText = null, card = null) {
   return dispatch(ev, genericText, card);
 }
