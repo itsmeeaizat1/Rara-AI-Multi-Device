@@ -183,7 +183,8 @@ async function trackOrder(m, sock, db, trxId) {
   let txt = "LACAK PESANAN\n\n";
   txt += "Nomor TRX: " + trxId + "\n";
   txt += "Status: " + (STATUS_EMOJI[trx.status] || "?") + " " + (STATUS_LABEL[trx.status] || trx.status) + "\n";
-  txt += "Progress: " + progressBar(trx.status) + "\n\n";
+  // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
+  txt += "Progress:\n\n" + progressBar(trx.status) + "\n\n";
   txt += "Detail Pesanan:\n";
   txt += "Produk: " + trx.productName + "\n";
   txt += "Tipe: " + (trx.productType === "fisik" ? "Fisik" : "Digital") + "\n";
