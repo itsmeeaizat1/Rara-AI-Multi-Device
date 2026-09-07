@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
       if (result.breached) {
         await m.react("🚫");
         return m.reply(claraWrap("Breach Check", [
-          "Password: ```" + "*".repeat(Math.min(password.length, 20)) + "```",
+          "Password: " + "*".repeat(Math.min(password.length, 20)),
           "",
           "Status: *TERBOCOR!*",
           "Ditemukan " + result.count.toLocaleString("id-ID") + "x di data breach",
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
         let verdict = strength >= 80 ? "SANGAT KUAT" : strength >= 60 ? "KUAT" : strength >= 40 ? "SEDANG" : "LEM AH";
 
         return m.reply(claraWrap("Breach Check", [
-          "Password: ```" + "*".repeat(Math.min(password.length, 20)) + "```",
+          "Password: " + "*".repeat(Math.min(password.length, 20)),
           "",
           "Status: *ᴀᴍᴀɴ*",
           "Tidak ditemukan di database breach (HIBP)",
