@@ -327,13 +327,9 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       return true;
     }
 
-    // ── PROTOTYPE OWNER 2026-09-07 (final): fakeQuoted vcard + contextInfo
-    // Elaina V3 — "kyknya ini kode thumbnail yg aku mau". Thumbnail dirender
-    // via externalAdReply (renderLargerThumbnail + buffer asli), pesan di-quote
-    // ke vcard kontak bot (status@broadcast) biar muncul header nama bot di
-    // atas pesan, plus metadata list Elaina: forwardingScore 9999 + isForwarded
-    // + pill newsletter + limited_time_offer (field terakhir belum ada di
-    // proto nova — di-drop diam-diam, dipasang tetap buat forward-compat).
+    // fakeQuoted vcard — pesan di-quote ke kontak bot (status@broadcast)
+    // biar muncul header nama bot di atas pesan. TANPA metadata forwarding
+    // (owner 2026-09-07: "aku g mau ada forwadingnya").
     const _mQuoted = {
       key: {
         participant: "0@s.whatsapp.net",
@@ -352,7 +348,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // source asli): thumbnail = MEDIA ATTACHMENT di header (upload ke server
     // WA via prepareWAMessageMedia — image, atau GIF via video+gifPlayback),
     // externalAdReply CUMA jadi fallback kalau upload header gagal. ContextInfo
-    // proto pakai forwardingScore 999 + isForwarded + pill newsletter. ──
+    // proto: pill newsletter saja — TANPA forwarding (owner larang). ──
     const _mIsGif = /\.gif$/i.test(thumbPath || "");
     let _mHeader = { title: "", hasMediaAttachment: false };
     if (rawBuffer) {
@@ -388,10 +384,11 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       },
     });
 
+    // FORWARDING DIHAPUS TOTAL (request owner 2026-09-07: "aku g mau ada
+    // forwadingnya") — tanpa forwardingScore/isForwarded, WA gak nampilin
+    // label "Diteruskan" di menu card.
     const _mCtx = {
       mentionedJid: m.sender ? [m.sender] : [],
-      forwardingScore: 999,
-      isForwarded: true,
       forwardedNewsletterMessageInfo: {
         newsletterJid: await resolveNewsletterJid(sock),
         newsletterName: config.saluran?.name || botName,
