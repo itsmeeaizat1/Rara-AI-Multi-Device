@@ -14,7 +14,7 @@ const TIO_FORMATS = {
     apiKeyField: "openaiApiKey",
     modelField: "openaiModel",
     defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://ai.tioo.eu.org/v1/chat/completions",
+    endpoint: "https://kktoken.cc/v1/chat/completions",
     providerKey: "tio_openai",
   },
   gemini: {
@@ -30,7 +30,7 @@ const TIO_FORMATS = {
     apiKeyField: "anthropicApiKey",
     modelField: "anthropicModel",
     defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://ai.tioo.eu.org/v1/messages",
+    endpoint: "https://kktoken.cc/v1/messages",
     providerKey: "tio_anthropic",
   },
 };
@@ -167,7 +167,7 @@ function getJitteredInterval(baseMin) {
 async function generateProactiveMessage(aiHelp, fmtKey, model, apiKey, groupName, memberNames) {
   const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
   const apiEndpoint = fmtKey === "gemini"
-    ? `https://ai.tioo.eu.org/v1beta/models/${model}:generateContent`
+    ? `https://kktoken.cc/v1beta/models/${model}:generateContent`
     : fmt.endpoint;
 
   // 60% template, 40% AI (lebih banyak template = lebih aman)

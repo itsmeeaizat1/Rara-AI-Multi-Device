@@ -5,6 +5,7 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
   name: "nutrisi",
@@ -30,7 +31,7 @@ function getVisionConfig(botConfig) {
     return {
       type: "openai",
       apiKey: aiHelp.apiKey,
-      endpoint: aiHelp.apiEndpoint || aiHelp.openaiEndpoint || "https://ai.tioo.eu.org/v1/chat/completions",
+      endpoint: aiHelp.apiEndpoint || aiHelp.openaiEndpoint || getTioEndpoint(),
       model: aiHelp.openaiModel || aiHelp.model || "gpt-4o-mini",
     };
   }
@@ -38,7 +39,7 @@ function getVisionConfig(botConfig) {
     return {
       type: "openai",
       apiKey: aiHelp.openaiApiKey,
-      endpoint: aiHelp.openaiEndpoint || "https://ai.tioo.eu.org/v1/chat/completions",
+      endpoint: aiHelp.openaiEndpoint || getTioEndpoint(),
       model: aiHelp.openaiModel || "gpt-4o-mini",
     };
   }

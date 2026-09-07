@@ -143,6 +143,19 @@ export function getTioKey() {
 }
 
 /**
+ * Endpoint Tio AI — sekarang gateway kktoken.cc (pilihan owner terakhir; alternatif gorouter.app — ai.tioo.eu.org sudah mati/404).
+ * Bisa di-override via env TIO_API_URL tanpa edit kode.
+ */
+export function getTioEndpoint() {
+  return process.env.TIO_API_URL || "https://kktoken.cc/v1/chat/completions";
+}
+
+/** Base URL untuk health-check (/v1/models dll) — diambil dari endpoint chat. */
+export function getTioBase() {
+  return getTioEndpoint().replace(/\/v1\/chat\/completions$/, "");
+}
+
+/**
  * Ambil DeepSeek API key dari apikeys.json
  * 🔹 AI AGENT: dipakai oleh aiagent.js sebagai provider utama
  * Isi di src/lib/apikey/apikeys.json: "deepseekkey": "sk-..."

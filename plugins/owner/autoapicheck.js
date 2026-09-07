@@ -24,6 +24,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, novaBox } from "../
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
+import { getTioEndpoint, getTioBase } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
   name: "autoapicheck",
@@ -51,8 +52,8 @@ const DEFAULT_APIS = [
   { name: "api-faa", url: "https://api-faa.my.id/api/health", category: "primary", backup: null },
   { name: "zenzapis", url: "https://zenzapis.cloud", category: "primary", backup: null },
 
-  { name: "tio-ai", url: "https://ai.tioo.eu.org/v1/models", category: "ai", backup: null },
-  { name: "xemoz-deepseek", url: "https://api-xemoz-official.my.id/api/ai/deepseek-v3", category: "ai", backup: "https://ai.tioo.eu.org/v1/chat/completions" },
+  { name: "tio-ai", url: getTioBase() + "/v1/models", category: "ai", backup: null },
+  { name: "xemoz-deepseek", url: "https://api-xemoz-official.my.id/api/ai/deepseek-v3", category: "ai", backup: getTioEndpoint() },
   { name: "xemoz-gpt5", url: "https://api-xemoz-official.my.id/api/ai/gpt-5", category: "ai", backup: null },
 
   { name: "fastdl-yt", url: "https://api-wh.fastdl.app/api/ytdl?url=test", category: "download", backup: null },
