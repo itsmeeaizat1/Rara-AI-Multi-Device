@@ -71,50 +71,80 @@ function getThumbnailBuffer(imagePath) {
  * @returns {Array} buttons siap dipakai di sendMenuCard
  */
 function buildNavButtons(m, db, prefix = ".") {
-  // ── TOMBOL KHAS NOVA (2026-09-07, request owner: struktur menu Elaina V3
-  // yang beneran dipakai, tapi tombolnya khas Nova) — single_select popup
-  // kategori + cta_url saluran + cta_copy credit dev + quick_reply khas ──
-  const botName = config.bot?.name || "Nova AI";
-  const ownerName = config.owner?.name || "Aizat";
-
-  const saluranLink = config.saluran?.link || "";
-  const channelLinkOk = /^https:\/\/whatsapp\.com\/channel\/[A-Za-z0-9_-]+/.test(saluranLink);
-  const urlOk = (u) => {
-    try { const x = new URL(u); return x.protocol.startsWith("http") && !x.hostname.includes("_"); }
-    catch { return false; }
-  };
-  const saluranUrl = (channelLinkOk && saluranLink)
-    || (urlOk(config.info?.website || "") && config.info?.website)
-    || "https://www.whatsapp.com/";
-
-  const catRows = buildCategoryRows(m, db, prefix);
-
-  const buttons = [
+  const sewaRows = [
     {
-      // popup daftar kategori — pola Elaina, isinya kategori Nova
-      type: "single_select",
-      text: toSC("Kategori Menu"),
-      title: `⌗ ${toSC("Daftar Kategori Menu")}`,
-      multiSelect: true,
-      sections: [
-        {
-          title: `𓍢ִ໋ ${toSC("Pilih kategori yang kamu inginkan")}`,
-          highlightLabel: botName,
-          rows: catRows,
-        },
-      ],
+      header: "",
+      title: "Beli Premium",
+      description: "Buka semua fitur premium bot",
+      id: `${prefix}premium`,
     },
-    { type: "cta_url", text: toSC("Saluran Official"), url: saluranUrl },
-    { type: "cta_copy", text: `⎙ ${toSC("Dev: " + ownerName)}`, copyText: `${toSC("Nova AI")} 💫` },
-    { id: `${prefix}allmenu`, text: `</> ${toSC("Semua Command")}` },
-    { id: `${prefix}sewa`, text: `⛁ ${toSC("Info Sewa Bot")}` },
-    { id: `${prefix}ping`, text: `ⓘ ${toSC("Status Bot")}` },
+    {
+      header: "",
+      title: "Sewa Bot",
+      description: "Masukkan bot ke grup kamu",
+      id: `${prefix}sewa`,
+    },
   ];
 
-  if (m?.isOwner) {
-    buttons.push({ id: `${prefix}allmenucategory owner`, text: `♔ ${toSC("Panel Owner")}` });
-  }
-  return buttons;
+  const ownerRows = [
+    {
+      header: "",
+      title: "Laporkan Bug",
+      description: "Laporkan error/bug ke owner",
+      id: `${prefix}bugreport`,
+    },
+    {
+      header: "",
+      title: "Kirim Masukan",
+      description: "Kirim saran/ide fitur ke owner",
+      id: `${prefix}masukan`,
+    },
+  ];
+
+  const supportRows = [
+    {
+      header: "",
+      title: "Join Grup Resmi",
+      description: "Gabung grup resmi bot",
+      id: `${prefix}gcbot`,
+    },
+    {
+      header: "",
+      title: "Ikuti Saluran Resmi",
+      description: "Update info bot langsung",
+      id: `${prefix}channelnovaofficial`,
+    },
+    {
+      header: "",
+      title: "Donasi",
+      description: "Dukung bot dengan donasi",
+      id: `${prefix}donasi`,
+    },
+  ];
+
+  return [
+    { id: `${prefix}menu`, text: toSC("Menu") },
+    { id: `${prefix}allmenu`, text: toSC("Semua Menu") },
+    buildCategoryButton(m, db, prefix, toSC("Semua Kategori")),
+    {
+      type: "single_select",
+      text: toSC("Sewa"),
+      title: toSC("Pilih Layanan"),
+      sections: [{ title: toSC("Layanan Bot"), rows: sewaRows }],
+    },
+    {
+      type: "single_select",
+      text: toSC("Owner"),
+      title: toSC("Owner Bot"),
+      sections: [{ title: toSC("Hubungi Owner"), rows: ownerRows }],
+    },
+    {
+      type: "single_select",
+      text: toSC("Support"),
+      title: toSC("Support Bot"),
+      sections: [{ title: toSC("Dukung Bot"), rows: supportRows }],
+    },
+  ];
 }
 
 /**
