@@ -367,14 +367,18 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       }
     }
 
-    // limited_time_offer + bottom_sheet — chip sambutan & konfigurasi popup
-    // list kategori (messageParamsJson nativeFlowMessage, persis Elaina).
+    // limited_time_offer + bottom_sheet — chip versi bot & konfigurasi popup
+    // list kategori (messageParamsJson nativeFlowMessage, pola Elaina).
+    // REQUEST OWNER 2026-09-07: chip yang dulu nampilin "berakhir 22 Nov"
+    // (expiration_time Date.now()*999 ala Elaina = overflow tanggal) diganti
+    // jadi VERSI BOT — expiration_time dibuang total biar WA gak nampilin
+    // tanggal kadaluarsa apa pun. Versi dibaca dari config.bot.version biar
+    // otomatis ke-update tiap rilis.
     const _mFlowParams = JSON.stringify({
       limited_time_offer: {
-        text: `${toSC("Selamat datang di")} ${toSC(botName)} !`,
+        text: `${toSC(botName)} • ${toSC("Versi")} ${botVersion || "23.0.0"}`,
         url: sourceUrl,
         copy_code: `${toSC("Nova AI")} \u{1F4AB}`,
-        expiration_time: Date.now() * 999,
       },
       bottom_sheet: {
         in_thread_buttons_limit: 2,
