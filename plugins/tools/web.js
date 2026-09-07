@@ -38,7 +38,7 @@ import { fileURLToPath } from "node:url";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import { config } from "../../config.js";
 import { smallcapsText, toSC } from "../../src/lib/styler.js";
-import { novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaNoInput, novaError } from "../../src/lib/nova-menu-style.js";
 import { getNovaWebUrl } from "../../src/lib/nova-web-server.js";
 
 const BOT_REPO = "itsmeeaizat/Nova-AI-Whatsapp-Bot-Multi-Device";
@@ -60,16 +60,25 @@ const pluginConfig = {
 
 // ── PRESET ─────────────────────────────────────────────────────────────
 // Tiap preset: judul tombol + builder URL dari sisa argumen.
+// group: search / sosmed / downloader / game / lain
+
+// Helper preset search sederhana: ada argumen → ?query=, kosong → homepage
+const q = (home, search) => async (args) =>
+  args.length
+    ? search.replace("{q}", encodeURIComponent(args.join(" ")))
+    : home;
+
 const PRESETS = {
   yt: {
     title: "YouTube",
     desc: "Nonton YouTube di dalam WA",
+    group: "sosmed",
     build: async (args) => {
       // Argumen berupa URL → langsung buka video itu
       const direct = args.find((a) => /^https?:\/\//i.test(a));
       if (direct) return direct;
-      const q = args.join(" ").trim();
-      if (!q) return "https://m.youtube.com";
+      const query = args.join(" ").trim();
+      if (!query) return "https://m.youtube.com";
       // Query → resolve video pertama via yt-dlp (timeout 10 dtk)
       // Binary: youtube-dl-exec (npm) kalau ada, sisanya PATH sistem.
       try {
@@ -81,7 +90,7 @@ const PRESETS = {
         const videoUrl = await new Promise((resolve, reject) => {
           execFile(
             ytdlp,
-            ["--no-warnings", "--flat-playlist", "--print", "%(webpage_url)s", `ytsearch1:${q}`],
+            ["--no-warnings", "--flat-playlist", "--print", "%(webpage_url)s", `ytsearch1:${query}`],
             { timeout: 10000 },
             (err, stdout) => (err || !stdout ? reject(err) : resolve(stdout.trim().split("\n")[0]))
           );
@@ -89,20 +98,269 @@ const PRESETS = {
         if (videoUrl) return videoUrl;
       } catch {}
       // Fallback: buka halaman hasil pencarian
-      return `https://m.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+      return `https://m.youtube.com/results?search_query=${encodeURIComponent(query)}`;
     },
   },
+
+  // ── 🔍 SEARCH ENGINE ──
   google: {
     title: "Google",
     desc: "Pencarian Google",
+    group: "search",
+    build: q("https://www.google.com", "https://www.google.com/search?q={q}"),
+  },
+  bing: {
+    title: "Bing",
+    desc: "Microsoft Bing",
+    group: "search",
+    build: q("https://www.bing.com", "https://www.bing.com/search?q={q}"),
+  },
+  baidu: {
+    title: "Baidu",
+    desc: "Search engine China no.1",
+    group: "search",
+    build: q("https://www.baidu.com", "https://www.baidu.com/s?wd={q}"),
+  },
+  duckduckgo: {
+    title: "DuckDuckGo",
+    desc: "Search engine privat tanpa tracking",
+    group: "search",
+    build: q("https://duckduckgo.com", "https://duckduckgo.com/?q={q}"),
+  },
+  yahoo: {
+    title: "Yahoo",
+    desc: "Yahoo Search",
+    group: "search",
+    build: q("https://search.yahoo.com", "https://search.yahoo.com/search?p={q}"),
+  },
+  yandex: {
+    title: "Yandex",
+    desc: "Search engine Rusia",
+    group: "search",
+    build: q("https://yandex.com", "https://yandex.com/search/?text={q}"),
+  },
+  brave: {
+    title: "Brave",
+    desc: "Brave Search independen",
+    group: "search",
+    build: q("https://search.brave.com", "https://search.brave.com/search?q={q}"),
+  },
+  ecosia: {
+    title: "Ecosia",
+    desc: "Search engine tanam pohon",
+    group: "search",
+    build: q("https://www.ecosia.org", "https://www.ecosia.org/search?q={q}"),
+  },
+
+  // ── 💬 SOSMED ──
+  tiktok: {
+    title: "TikTok",
+    desc: "Cari video TikTok",
+    group: "sosmed",
+    build: q("https://www.tiktok.com", "https://www.tiktok.com/search?q={q}"),
+  },
+  facebook: {
+    title: "Facebook",
+    desc: "Facebook / cari orang & post",
+    group: "sosmed",
+    build: q("https://www.facebook.com", "https://www.facebook.com/search/top?q={q}"),
+  },
+  instagram: {
+    title: "Instagram",
+    desc: "Instagram / jelajah hashtag",
+    group: "sosmed",
     build: async (args) =>
       args.length
-        ? `https://www.google.com/search?q=${encodeURIComponent(args.join(" "))}`
-        : "https://www.google.com",
+        ? `https://www.instagram.com/explore/tags/${encodeURIComponent(args.join("").replace(/\s+/g, ""))}/`
+        : "https://www.instagram.com",
   },
+  twitter: {
+    title: "X / Twitter",
+    desc: "Twitter X — cari post realtime",
+    group: "sosmed",
+    build: q("https://x.com", "https://x.com/search?q={q}"),
+  },
+  threads: {
+    title: "Threads",
+    desc: "Threads by Instagram",
+    group: "sosmed",
+    build: q("https://www.threads.net", "https://www.threads.net/search?q={q}"),
+  },
+  reddit: {
+    title: "Reddit",
+    desc: "Forum diskusi dunia",
+    group: "sosmed",
+    build: q("https://www.reddit.com", "https://www.reddit.com/search/?q={q}"),
+  },
+  pinterest: {
+    title: "Pinterest",
+    desc: "Papan ide & gambar",
+    group: "sosmed",
+    build: q("https://id.pinterest.com", "https://id.pinterest.com/search/pins/?q={q}"),
+  },
+  linkedin: {
+    title: "LinkedIn",
+    desc: "Jejaring profesional",
+    group: "sosmed",
+    build: q("https://www.linkedin.com", "https://www.linkedin.com/search/results/all/?keywords={q}"),
+  },
+  telegram: {
+    title: "Telegram",
+    desc: "Web Telegram (perlu login)",
+    group: "sosmed",
+    build: async (args) =>
+      args.length
+        ? `https://t.me/s/${encodeURIComponent(args.join(" ").replace(/^@/, "").replace(/\s+/g, ""))}`
+        : "https://web.telegram.org",
+  },
+
+  // ── 📥 WEB DOWNLOADER ──
+  snaptik: {
+    title: "SnapTik",
+    desc: "Download video TikTok no watermark",
+    group: "downloader",
+    build: async () => "https://snaptik.app",
+  },
+  ssstik: {
+    title: "sssTik",
+    desc: "Download TikTok tanpa watermark",
+    group: "downloader",
+    build: async () => "https://ssstik.io",
+  },
+  sssig: {
+    title: "sssInstagram",
+    desc: "Download video/reel/foto Instagram",
+    group: "downloader",
+    build: async () => "https://sssinstagram.com",
+  },
+  savefrom: {
+    title: "SaveFrom",
+    desc: "Download video dari banyak situs",
+    group: "downloader",
+    build: async () => "https://id.savefrom.net",
+  },
+  y2mate: {
+    title: "Y2Mate",
+    desc: "Download YouTube MP3/MP4",
+    group: "downloader",
+    build: async () => "https://www.y2mate.nu",
+  },
+  ssyoutube: {
+    title: "SSYouTube",
+    desc: "Download video YouTube",
+    group: "downloader",
+    build: async () => "https://ssyoutube.com",
+  },
+  tikwm: {
+    title: "TikWM",
+    desc: "Download TikTok + Douyin",
+    group: "downloader",
+    build: async () => "https://tikwm.com",
+  },
+  sssdouyin: {
+    title: "Douyin DL",
+    desc: "Download video Douyin",
+    group: "downloader",
+    build: async () => "https://www.douyin.com",
+  },
+
+  // ── 🎮 WEB GAME ──
+  game2048: {
+    title: "2048",
+    desc: "Puzzle angka legendaris",
+    group: "game",
+    build: async () => "https://play2048.co",
+  },
+  dino: {
+    title: "Dino Chrome",
+    desc: "Game T-Rex offline Chrome",
+    group: "game",
+    build: async () => "https://chromedino.com",
+  },
+  wordle: {
+    title: "Wordle",
+    desc: "Tebak kata 5 huruf NYT",
+    group: "game",
+    build: async () => "https://www.nytimes.com/games/wordle",
+  },
+  minesweeper: {
+    title: "Minesweeper",
+    desc: "Tandai bom klasik Windows",
+    group: "game",
+    build: async () => "https://minesweeper.online",
+  },
+  qwop: {
+    title: "QWOP",
+    desc: "Lari paling susah sedunia",
+    group: "game",
+    build: async () => "https://www.foddy.net/Athletics.html",
+  },
+  cookieclicker: {
+    title: "Cookie Clicker",
+    desc: "Klik kuki sampai kecanduan",
+    group: "game",
+    build: async () => "https://orteil.dashnet.org/cookieclicker",
+  },
+  sandspiel: {
+    title: "Sandspiel",
+    desc: "Simulasi pasir & elemen unik",
+    group: "game",
+    build: async () => "https://sandspiel.club",
+  },
+  powder: {
+    title: "Powder Game",
+    desc: "Dust/powder physics game",
+    group: "game",
+    build: async () => "https://dan-ball.jp/en/javagame/dust/",
+  },
+  slither: {
+    title: "Slither.io",
+    desc: "Ular multiplayer battle",
+    group: "game",
+    build: async () => "https://slither.io",
+  },
+  agar: {
+    title: "Agar.io",
+    desc: "Makan tumbuh jadi raksasa",
+    group: "game",
+    build: async () => "https://agar.io",
+  },
+  diep: {
+    title: "Diep.io",
+    desc: "Tank battle multiplayer",
+    group: "game",
+    build: async () => "https://diep.io",
+  },
+  paperio: {
+    title: "Paper.io",
+    desc: " rebut wilayah kertas",
+    group: "game",
+    build: async () => "https://paper-io.com",
+  },
+  skribbl: {
+    title: "Skribbl.io",
+    desc: "Tebak gambar bareng temen",
+    group: "game",
+    build: async () => "https://skribbl.io",
+  },
+  krunker: {
+    title: "Krunker.io",
+    desc: "FPS pixel ringan di browser",
+    group: "game",
+    build: async () => "https://krunker.io",
+  },
+  zombsroyale: {
+    title: "ZombsRoyale",
+    desc: "Battle royale 100 pemain",
+    group: "game",
+    build: async () => "https://zombsroyale.io",
+  },
+
+  // ── 🌐 LAIN-LAIN ──
   maps: {
     title: "Maps",
     desc: "Google Maps",
+    group: "lain",
     build: async (args) =>
       args.length
         ? `https://www.google.com/maps/search/${encodeURIComponent(args.join(" "))}`
@@ -111,52 +369,38 @@ const PRESETS = {
   wiki: {
     title: "Wikipedia",
     desc: "Wikipedia Indonesia",
-    build: async (args) =>
-      args.length
-        ? `https://id.wikipedia.org/w/index.php?search=${encodeURIComponent(args.join(" "))}`
-        : "https://id.wikipedia.org",
+    group: "lain",
+    build: q("https://id.wikipedia.org", "https://id.wikipedia.org/w/index.php?search={q}"),
   },
   berita: {
     title: "Berita",
     desc: "Google News",
-    build: async (args) =>
-      args.length
-        ? `https://news.google.com/search?q=${encodeURIComponent(args.join(" "))}`
-        : "https://news.google.com",
+    group: "lain",
+    build: q("https://news.google.com", "https://news.google.com/search?q={q}"),
   },
   tokopedia: {
     title: "Tokopedia",
     desc: "Cari produk Tokopedia",
-    build: async (args) =>
-      args.length
-        ? `https://www.tokopedia.com/search?st=product&q=${encodeURIComponent(args.join(" "))}`
-        : "https://www.tokopedia.com",
+    group: "lain",
+    build: q("https://www.tokopedia.com", "https://www.tokopedia.com/search?st=product&q={q}"),
   },
   shopee: {
     title: "Shopee",
     desc: "Cari produk Shopee",
-    build: async (args) =>
-      args.length
-        ? `https://shopee.co.id/search?keyword=${encodeURIComponent(args.join(" "))}`
-        : "https://shopee.co.id",
-  },
-  tiktok: {
-    title: "TikTok",
-    desc: "Cari video TikTok",
-    build: async (args) =>
-      args.length
-        ? `https://www.tiktok.com/search?q=${encodeURIComponent(args.join(" "))}`
-        : "https://www.tiktok.com",
+    group: "lain",
+    build: q("https://shopee.co.id", "https://shopee.co.id/search?keyword={q}"),
   },
   cuaca: {
     title: "Cuaca",
     desc: "wttr.in — cuaca ringan tanpa JS berat",
+    group: "lain",
     build: async (args) =>
       `https://wttr.in/${encodeURIComponent(args.join("_") || "Jakarta")}`,
   },
   gh: {
     title: "GitHub",
     desc: "Buka repo GitHub (tanpa arg → repo bot)",
+    group: "lain",
     build: async (args) => {
       const target = args.join(" ").trim();
       if (!target || target === "repo") return `https://github.com/${BOT_REPO}`;
@@ -164,13 +408,67 @@ const PRESETS = {
       return `https://github.com/${target.replace(/^@/, "").replace(/^.*github\.com\//i, "")}`;
     },
   },
+  poki: {
+    title: "Poki",
+    desc: "Portal ribuan web game",
+    group: "game",
+    build: q("https://poki.com", "https://poki.com/en/search?q={q}"),
+  },
+  crazygames: {
+    title: "CrazyGames",
+    desc: "Portal game online gratis",
+    group: "game",
+    build: q("https://www.crazygames.com", "https://www.crazygames.com/search?q={q}"),
+  },
+  iogames: {
+    title: "io Games",
+    desc: "Direktori semua game .io",
+    group: "game",
+    build: async () => "https://iogames.space",
+  },
+};
+
+// Alias preset biar gampang diingat
+const PRESET_ALIASES = {
+  x: "twitter",
+  tw: "twitter",
+  fb: "facebook",
+  ig: "instagram",
+  tt: "tiktok",
+  douyin: "tikwm",
+  douyindl: "tikwm",
+  yt5s: "ssyoutube",
+  snapsave: "sssig",
+  snapinsta: "sssig",
+  sssinstagram: "sssig",
+  notube: "ssyoutube",
+  ytmp3: "y2mate",
+  2048: "game2048",
+  trex: "dino",
+  mines: "minesweeper",
+  cookie: "cookieclicker",
+  slitherio: "slither",
+  agario: "agar",
+  papers: "paperio",
 };
 
 function presetListText() {
-  const lines = Object.entries(PRESETS).map(
-    ([key, p]) => `• .web ${key} — ${p.desc}`
-  );
-  return `「 ✦ WEB PRESET ✦ 」\n\n${lines.join("\n")}\n• .web live — Nova Live Dashboard (stat realtime bot)\n• .web <url> [judul] — buka URL apa pun`;
+  const GROUPS = [
+    ["search", "🔍 SEARCH ENGINE"],
+    ["sosmed", "💬 SOSMED"],
+    ["downloader", "📥 WEB DOWNLOADER"],
+    ["game", "🎮 WEB GAME"],
+    ["lain", "🌐 LAIN-LAIN"],
+  ];
+  let out = "「 ✦ WEB PRESET ✦ 」\n";
+  for (const [g, label] of GROUPS) {
+    const items = Object.entries(PRESETS).filter(([, p]) => p.group === g);
+    if (!items.length) continue;
+    out += `\n${label}\n`;
+    out += items.map(([key, p]) => `• .web ${key} — ${p.desc}`).join("\n");
+  }
+  out += "\n\n• .web live — Nova Live Dashboard (stat realtime bot)\n• .web <url> [judul] — buka URL apa pun\n• .web list <kata> — filter preset";
+  return out;
 }
 
 // ── CARD ──────────────────────────────────────────────────────────────
@@ -249,8 +547,23 @@ async function handler(sock, m, { args, text, react, reply }) {
     );
   }
 
-  // Daftar preset
+  // Daftar preset (bisa difilter: .web list game / .web list search)
   if (cmd === "list" || cmd === "preset" || cmd === "presets") {
+    const filterKey = (args[1] || "").toLowerCase();
+    if (filterKey) {
+      const all = Object.entries(PRESETS).filter(
+        ([key, p]) =>
+          key.includes(filterKey) ||
+          (p.title || "").toLowerCase().includes(filterKey) ||
+          (p.group || "").includes(filterKey) ||
+          (p.desc || "").toLowerCase().includes(filterKey)
+      );
+      if (!all.length) return reply(novaError("Web", `Gak ada preset yang cocok dengan kata "${filterKey}". Ketik .web list buat lihat semua.`));
+      return reply(
+        `「 ✦ WEB PRESET ✦ 」\n\n` +
+          all.map(([key, p]) => `• .web ${key} — ${p.desc}`).join("\n")
+      );
+    }
     return reply(presetListText());
   }
 
@@ -275,7 +588,8 @@ async function handler(sock, m, { args, text, react, reply }) {
   }
 
   // Preset situs (yt, google, maps, dll)
-  const preset = PRESETS[cmd];
+  const presetKey = PRESETS[cmd] ? cmd : PRESET_ALIASES[cmd];
+  const preset = presetKey ? PRESETS[presetKey] : null;
   if (preset) {
     await react("🕒");
     try {
@@ -310,4 +624,4 @@ async function handler(sock, m, { args, text, react, reply }) {
   }
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, PRESETS, PRESET_ALIASES, presetListText };
