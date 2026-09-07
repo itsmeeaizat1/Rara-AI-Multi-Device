@@ -407,7 +407,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
         in_thread_buttons_limit: 2,
         divider_indices: [2, 3, 4, 5, 6, 999],
         list_title: toSC("Pilih Kategori Menu"),
-        button_title: toSC("Jelajahi Menu Sekarang"),
+        button_title: toSC("Menu Selengkapnya"),
       },
     });
 
