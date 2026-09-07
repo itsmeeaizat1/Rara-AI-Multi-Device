@@ -388,9 +388,26 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
           },
         },
       };
+      // ── "TAG PRODUK" ala Elaina V3 ──
+      // Bukan dari externalAdReply — itu trik quoted PALSU ke contactMessage
+      // (vcard) dengan remoteJid status@broadcast. WhatsApp merender pesan
+      // sebagai balasan ke vcard itu → muncul kotak kecil "📋 Nama Bot" di
+      // atas card, kayak product tag. Report owner: hasil sebelumnya cuma
+      // media+teks biasa, gak ada tag & gak ada tombol — karena quoted masih
+      // ke pesan command asli (m), bukan vcard palsu ini.
+      const fakeQuoted = {
+        key: { participant: "0@s.whatsapp.net", remoteJid: "status@broadcast" },
+        message: {
+          contactMessage: {
+            displayName: `📋 ${botName}`,
+            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${botName}\nitem1.TEL;waid=0:+0\nEND:VCARD`,
+            sendEphemeral: true,
+          },
+        },
+      };
       const built = generateWAMessageFromContent(m.chat, payload, {
         userJid: sock.user?.id || m.sender,
-        quoted: m,
+        quoted: fakeQuoted,
       });
       await sock.relayMessage(m.chat, built.message, { messageId: built.key.id });
       return true;
