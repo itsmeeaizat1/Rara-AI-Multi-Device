@@ -17,6 +17,7 @@
 // Command: .alldl3 (alias: alldownloader3, allv3, adl3, all3)
 // V1 (.alldl/.dl) & V2 (.alldownloader/.alldl2) gak disentuh.
 
+import { runAllDlFallback } from "../../src/lib/alldl-fallback.js";
 import axios from "axios";
 import { mkdtemp, rm, readFile } from "fs/promises";
 import { tmpdir } from "os";
@@ -485,7 +486,7 @@ function extractUrls(text) {
   return String(text || "").match(/https?:\/\/[^\s]+/gi) || [];
 }
 
-async function handler(m, { sock }) {
+async function handlerCore(m, { sock }) {
   const args = m.args || [];
   const sub = (args[0] || "").toLowerCase();
 
@@ -586,6 +587,12 @@ async function handler(m, { sock }) {
   }
   await m.react("🐣");
   return true;
+}
+
+async function handler(m, ctx = {}) {
+  // dipanggil langsung dari chain fallback — jangan wrap lagi
+  if (ctx.__novaAllDlAttempt) return handlerCore(m, ctx);
+  return runAllDlFallback("v3", m, ctx);
 }
 
 export { pluginConfig, handler };
