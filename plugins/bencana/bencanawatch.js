@@ -18,7 +18,7 @@ import {
   setWatcherJenis, BENCANA_JENIS, setWatcherSumber, BENCANA_SUMBER,
   setWatcherKirim,
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
-  getMonitorHealth,
+  getMonitorHealth, sendActivationSample,
 } from "../../src/lib/nova-bencana.js";
 // ── GUARD FORMAT (request owner 2026-09-07): SEMUA pesan berkotak plugin
 // ini WAJIB lewat boxLeft() dari src/lib/styler.js — kalimat input tetap
@@ -489,18 +489,23 @@ async function handler(m, { sock }) {
       await addWatcher(chatId);
       syncBencanaMonitor(sock);
       await m.react("🐣");
-      return m.reply(novaBox("Bencana Watch", [
+      await m.reply(novaBox("Bencana Watch", [
         "Auto-alert bencana aktif di chat ini.",
         "---",
         "• Gempa Indonesia baru M 5.0+ (BMKG)",
         "• Gempa global baru M 6.0+ (USGS)",
         "• Bencana GDACS level SIAGA / AWAS",
         "---",
+        "Sebentar lagi menyusul 1 contoh info",
+        "TERKINI sebagai tanda fitur aktif.",
+        "---",
         "MAU INDONESIA SAJA? Pilih sumbernya:",
         "• .bencanawatch sumber bmkg",
         "---",
         "Matikan dengan .bencanawatch off",
       ]));
+      await sendActivationSample(sock, chatId); // bukti + preview format alert
+      return { handled: true };
     }
 
     // ── scope global: DM owner + semua grup ──
@@ -508,17 +513,22 @@ async function handler(m, { sock }) {
       await addGlobalWatcher(m.sender);
       syncBencanaMonitor(sock);
       await m.react("🐣");
-      return m.reply(novaBox("Bencana Watch", [
+      await m.reply(novaBox("Bencana Watch", [
         "Mode GLOBAL aktif — DM + semua grup.",
         "---",
         "Alert bencana realtime dikirim ke:",
         "• chat pribadi kamu (DM)",
         "• semua grup yang bot masuk",
         "---",
+        "Sebentar lagi menyusul 1 contoh info",
+        "TERKINI sebagai tanda fitur aktif.",
+        "---",
         "Filter jenis / sumber / mode / lokasi / jadwal yang",
         "di-set dari DM berlaku juga ke langganan global.",
         "Matikan: .bencanawatch offglobal",
       ]));
+      await sendActivationSample(sock, m.chat); // bukti + preview format alert
+      return { handled: true };
     }
 
     if (action === "offglobal") {
@@ -597,13 +607,15 @@ async function handler(m, { sock }) {
       let subject = target;
       try { subject = (await sock.groupMetadata(target))?.subject || target; } catch {}
       await m.react("🐣");
-      return m.reply(novaBox("Bencana Watch", [
+      await m.reply(novaBox("Bencana Watch", [
         `Auto-alert bencana: ${onoff.toUpperCase()} di grup target.`,
         `Grup : ${subject}`,
         onoff === "on"
           ? "Alert bencana otomatis muncul di grup tersebut."
           : "Alert dihentikan di grup tersebut.",
       ]));
+      if (onoff === "on") await sendActivationSample(sock, target); // bukti ke grup target
+      return { handled: true };
     }
 
     if (action === "on") {
@@ -612,12 +624,15 @@ async function handler(m, { sock }) {
         await addWatcher(chatId);
         syncBencanaMonitor(sock);
         await m.react("🐣");
-        return m.reply(novaBox("Bencana Watch", [
+        await m.reply(novaBox("Bencana Watch", [
           "Auto-alert bencana aktif di grup ini.",
           "---",
           "• Gempa Indonesia baru M 5.0+ (BMKG)",
           "• Gempa global baru M 6.0+ (USGS)",
           "• Bencana GDACS level SIAGA / AWAS",
+          "---",
+          "Sebentar lagi menyusul 1 contoh info",
+          "TERKINI sebagai tanda fitur aktif.",
           "---",
           "MAU INDONESIA SAJA? Pilih sumbernya:",
           "• .bencanawatch sumber bmkg",
@@ -627,6 +642,8 @@ async function handler(m, { sock }) {
           "wilayah: .bencanawatch lokasi <nama kota>",
           "Matikan dengan .bencanawatch off",
         ]));
+        await sendActivationSample(sock, chatId); // bukti + preview format alert
+        return { handled: true };
       }
       // di DM: pilih scope — chat ini / per grup / global
       const g = hasGlobalWatcher(m.sender);
