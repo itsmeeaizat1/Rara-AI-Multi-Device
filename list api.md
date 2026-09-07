@@ -2,7 +2,7 @@
 
 > Dokumentasi semua API endpoint yang digunakan di Nova AI WhatsApp Bot
 > Total: 200+ API endpoint dari 100+ provider
-> Last updated: 5 September 2026
+> Last updated: 8 September 2026
 
 ---
 
@@ -1035,7 +1035,43 @@
 
 ---
 
-*Updated by Nova AI • 1 September 2026*
+## ⭐ LIST API FOR DEVELOPER — REST API Komunitas (Request Owner, 8 September 2026)
+
+> 21 REST API provider dari list owner. Status = hasil cek cepat (HTTP GET ke root, 8 Sep 2026):
+> ✅ online • 🟡 online tapi anti-bot/root 404 (403/404/301 — server nyala, cek endpoint spesifiknya) • ❌ down saat dicek (timeout/5xx)
+
+| # | API | URL | Status Cek 8 Sep 2026 |
+|---|-----|-----|------------------------|
+| 1 | KyzzNekoo | `https://kyzznekoo.zone.id` | ✅ Online |
+| 2 | JerexD | `https://api.jerexd.my.id` | ✅ Online |
+| 3 | Nexray *(sudah ada di list utama — gsmarena2, nikparser2, dll)* | `https://api.nexray.web.id` | 🟡 Online (301) |
+| 4 | LexCode | `https://api.lexcode.biz.id` | ❌ Down (timeout) |
+| 5 | Pixxxry | `https://api.pixxxry.eu.cc` | ❌ Down (502) |
+| 6 | Xemoz Official *(sudah ada di list utama — GPT 5.3/5.5, dll)* | `https://api-xemoz-official.my.id` | ✅ Online |
+| 7 | Astralune | `https://myapi.astralune.cv` | ❌ Down (530 Cloudflare) |
+| 8 | Niellku | `https://api.niellku.web.id` | ✅ Online |
+| 9 | AxlyAPI | `https://axlyapi.qzz.io` | ✅ Online |
+| 10 | SilentKana | `https://api.silentkana.xyz/api/` | 🟡 Online (404 di /api/) |
+| 11 | DashX | `https://api.dashx.dpdns.org` | 🟡 Online tapi 403 (anti-bot Cloudflare) |
+| 12 | ZelAPI | `https://api.zelapi.eu.cc` | ❌ Down (timeout) |
+| 13 | AiChiXia | `https://www.aichixia.xyz` | 🟡 Online tapi 403 (anti-bot) |
+| 14 | NeoSoft | `https://api.neosoft.best` | ✅ Online |
+| 15 | Theresav | `https://api.theresav.biz.id` | 🟡 Online (301) |
+| 16 | AlwaysCodex | `https://api.alwayscodex.my.id` | ❌ Down (timeout) |
+| 17 | Nexaku | `https://api-nexaku.my.id` | 🟡 Online (404 di root) |
+| 18 | SynoxCloud | `https://api.synoxcloud.biz.id` | ✅ Online |
+| 19 | SynHS | `https://api-synhs.my.id` | ✅ Online |
+| 20 | XRizal | `https://api.xrizal.my.id` | ✅ Online |
+| 21 | Fruatre | `https://api.fruatre.my.id` | 🟡 Online tapi 403 (anti-bot) |
+
+**Catatan:**
+- Cek cuma GET ke root domain — status ❌/🟡 bisa jadi cuma root-nya gak nge-serve apa-apa; endpoint spesifik (misal `/api/xxx`) tetap mungkin jalan.
+- Kandidat kuat buat ditambahin ke chain AI satuan fallback / scraper cadangan: KyzzNekoo, JerexD, Niellku, AxlyAPI, NeoSoft, SynoxCloud, SynHS, XRizal (semua ✅ online tanpa anti-bot).
+
+---
+
+*Updated by Nova AI • 8 September 2026*
+
 
 ---
 
