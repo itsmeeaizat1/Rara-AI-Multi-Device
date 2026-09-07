@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         "Daftar kuda pertandingan :",
         ...HORSES.flatMap((horse) => [
           `#${horse.id} ${horse.name}`,
-          `   Odds : ${horse.odds}x (${horse.tag})`,
+          `Odds : ${horse.odds}x (${horse.tag})`,
         ]),
         "---",
         `📌 ${m.prefix}horserace bet <nomor_kuda> <jumlah_gold>`,

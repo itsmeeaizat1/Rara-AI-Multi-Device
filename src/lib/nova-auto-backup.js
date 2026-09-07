@@ -262,13 +262,13 @@ async function sendBackupToOwner(backupInfo) {
     const state = loadBackupState();
 
     const caption =
-      `╭─「 ✦ Aᴜᴛᴏ Bᴀᴄᴋᴜᴘ ✦ 」\n│\n` + +
+      `「 ✦ Aᴜᴛᴏ Bᴀᴄᴋᴜᴘ ✦ 」\n` + +
       `  │ • *Waktu:* ${timeHelper.formatDateTime("DD MMMM YYYY HH:mm:ss")} WIB\n` +
       `  │ • *Size:* ${sizeInMB} MB\n` +
       `  │ • *Files:* ${backupInfo.fileCount}\n` +
       `  │ • *Interval:* ${formatInterval(state.intervalMs)}\n` +
       `  │ • *Backup ke:* ${state.backupCount + 1}\n` +
-      `│\n` +
+      
       `${config.bot?.name || "Nova-AI"}`;
 
     await sockInstance.sendMessage(ownerJid, {

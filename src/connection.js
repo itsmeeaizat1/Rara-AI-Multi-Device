@@ -51,11 +51,11 @@ function startWatchdog(reconnectFn, options) {
     const silentMs = Date.now() - lastMessageReceived;
     if (silentMs > WATCHDOG_TIMEOUT && connectionState.isReady) {
       console.log("");
-      console.log("╭─「 ✦ WATCHDOG ✦ 」");
-      console.log("│");
+      console.log("「 ✦ WATCHDOG ✦ 」");
+      console.log("");
       console.log("│ ⚠ Pesan tidak terdeteksi, sistem akan restart");
-      console.log("│");
-      console.log("╰────  •  ────");
+      console.log("");
+      console.log("");
       console.log("");
       connectionState.isReady = false;
       connectionState.isConnected = false;
@@ -324,11 +324,11 @@ async function startConnection(options = {}) {
   const _sysAuthKey = getAuthKey();
   if (_sysAuthKey && !sock.authState.creds.registered) {
     console.log("");
-    console.log("╭─「 ✦ PAIRING ✦ 」");
-    console.log("│");
+    console.log("「 ✦ PAIRING ✦ 」");
+    console.log("");
     console.log("│ 🔒 Sandi diperlukan untuk pairing");
-    console.log("│");
-    console.log("╰────  •  ────");
+    console.log("");
+    console.log("");
     console.log("");
 
     let attempts = 0;
@@ -343,11 +343,11 @@ async function startConnection(options = {}) {
       if (verifyAuth(input)) {
         authorized = true;
         console.log("");
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-        console.log("│");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
         console.log("│ ✅ Sandi benar, melanjutkan pairing...");
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("");
+        console.log("");
         console.log(getOwnerContact());
         console.log("");
         break;
@@ -356,27 +356,27 @@ async function startConnection(options = {}) {
       attempts++;
       const remaining = maxAttempts - attempts;
       if (remaining > 0) {
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-        console.log("│");
-        console.log(`│ ❌ Sandi salah! Sisa percobaan: ${remaining}`);
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
+        console.log(`❌ Sandi salah! Sisa percobaan: ${remaining}`);
+        console.log("");
+        console.log("");
       } else {
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-      console.log("│");
+        console.log("「 ✦ PAIRING ✦ 」");
+      console.log("");
       console.log("│ ❌ Sandi salah 3x! Akses diblokir.");
-      console.log("│");
-      console.log("╰────  •  ────");
+      console.log("");
+      console.log("");
       }
     }
 
     if (!authorized) {
       console.log("");
-      console.log("╭─「 ✦ PAIRING ✦ 」");
-      console.log("│");
+      console.log("「 ✦ PAIRING ✦ 」");
+      console.log("");
       console.log("│ ❌ Sandi salah 3x! Pairing dibatalkan.");
-      console.log("│");
-      console.log("╰────  •  ────");
+      console.log("");
+      console.log("");
       console.log("");
       console.log(getOwnerContact());
       console.log("");
@@ -399,11 +399,11 @@ async function startConnection(options = {}) {
 
     if (isPlaceholder) {
       console.log("");
-      console.log("╭─「 ✦ PAIRING ✦ 」");
-      console.log("│");
+      console.log("「 ✦ PAIRING ✦ 」");
+      console.log("");
       console.log("│ ⚠ Nomor pairing belum diatur (config)");
-      console.log("│");
-      console.log("╰────  •  ────");
+      console.log("");
+      console.log("");
       console.log("");
 
       phoneNumber = await askQuestion(
@@ -413,11 +413,11 @@ async function startConnection(options = {}) {
       );
 
       if (!phoneNumber) {
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-        console.log("│");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
         console.log("│ ❌ Nomor tidak diinput. Pairing dibatalkan.");
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("");
+        console.log("");
         return null;
       }
     }
@@ -426,19 +426,19 @@ async function startConnection(options = {}) {
 
     // Validasi nomor setelah input
     if (!phoneNumber || phoneNumber.length < 8) {
-      console.log("╭─「 ✦ PAIRING ✦ 」");
-      console.log("│");
+      console.log("「 ✦ PAIRING ✦ 」");
+      console.log("");
       console.log("│ ❌ Nomor tidak valid, minimal 8 digit. Pairing dibatalkan.");
-      console.log("│");
-      console.log("╰────  •  ────");
+      console.log("");
+      console.log("");
       return null;
     }
 
-    console.log("╭─「 ✦ PAIRING ✦ 」");
-    console.log("│");
-    console.log(`│ ⏳ Meminta kode untuk ${phoneNumber}...`);
-    console.log("│");
-    console.log("╰────  •  ────");
+    console.log("「 ✦ PAIRING ✦ 」");
+    console.log("");
+    console.log(`⏳ Meminta kode untuk ${phoneNumber}...`);
+    console.log("");
+    console.log("");
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -461,29 +461,29 @@ async function startConnection(options = {}) {
     } catch (error) {
       const msg = error?.message || String(error);
       if (msg.includes("8 chars")) {
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-        console.log("│");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
         console.log("│ ❌ Custom pairing code harus 8 karakter");
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("");
+        console.log("");
       } else if (msg.includes("rate") || msg.includes("428")) {
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-        console.log("│");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
         console.log("│ ❌ Rate limited. Tunggu 5-10 menit");
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("");
+        console.log("");
       } else if (msg.includes("banned") || msg.includes("blocked")) {
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-        console.log("│");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
         console.log("│ ❌ Nomor diblokir WhatsApp. Gunakan nomor lain");
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("");
+        console.log("");
       } else {
-        console.log("╭─「 ✦ PAIRING ✦ 」");
-        console.log("│");
-        console.log(`│ ❌ Gagal: ${msg}`);
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
+        console.log(`❌ Gagal: ${msg}`);
+        console.log("");
+        console.log("");
       }
     }
   }
@@ -539,18 +539,18 @@ async function startConnection(options = {}) {
 
       const statusMsg = STATUS_MESSAGES[sc] || `❔ Unknown (kode: ${sc})`;
       console.log("");
-      console.log("╭─「 ✦ DISCONNECTED ✦ 」");
-      console.log("│");
-      console.log(`│ ❌ ${statusMsg}`);
-      console.log("│");
-      console.log("╰────  •  ────");
+      console.log("「 ✦ DISCONNECTED ✦ 」");
+      console.log("");
+      console.log(`❌ ${statusMsg}`);
+      console.log("");
+      console.log("");
       console.log("");
       if (sc === DisconnectReason.loggedOut || sc === 401) {
-        console.log("╭─「 ✦ SESSION ✦ 」");
-        console.log("│");
+        console.log("「 ✦ SESSION ✦ 」");
+        console.log("");
         console.log("│ ❌ Sesi habis — hapus folder storage lalu restart");
-        console.log("│");
-        console.log("╰────  •  ────");
+        console.log("");
+        console.log("");
         connectionState.reconnectAttempts = 0;
         return;
       }
@@ -558,19 +558,19 @@ async function startConnection(options = {}) {
       if (sc === 440) {
         connectionState.reconnectAttempts++;
         if (connectionState.reconnectAttempts <= 3) {
-          console.log("╭─「 ✦ RECONNECT ✦ 」");
-          console.log("│");
-          console.log(`│ ⏳ Percobaan ${connectionState.reconnectAttempts}/3 dalam 10 detik`);
-          console.log("│");
-          console.log("╰────  •  ────");
+          console.log("「 ✦ RECONNECT ✦ 」");
+          console.log("");
+          console.log(`⏳ Percobaan ${connectionState.reconnectAttempts}/3 dalam 10 detik`);
+          console.log("");
+          console.log("");
           setTimeout(() => startConnection(options), 1e4);
         } else {
-          console.log("╭─「 ✦ RECONNECT ✦ 」");
-          console.log("│");
+          console.log("「 ✦ RECONNECT ✦ 」");
+          console.log("");
           console.log("│ ❌ Konflik sesi — perangkat lain terdeteksi");
           console.log("│    Matikan bot yang lain");
-          console.log("│");
-          console.log("╰────  •  ────");
+          console.log("");
+          console.log("");
           connectionState.reconnectAttempts = 0;
         }
         return;
@@ -580,21 +580,21 @@ async function startConnection(options = {}) {
         connectionState.reconnectAttempts++;
         const m = config.session?.maxReconnectAttempts || 5;
         if (connectionState.reconnectAttempts <= m) {
-          console.log("╭─「 ✦ RECONNECT ✦ 」");
-          console.log("│");
-          console.log(`│ ⏳ Percobaan ${connectionState.reconnectAttempts}/${m}`);
-          console.log("│");
-          console.log("╰────  •  ────");
+          console.log("「 ✦ RECONNECT ✦ 」");
+          console.log("");
+          console.log(`⏳ Percobaan ${connectionState.reconnectAttempts}/${m}`);
+          console.log("");
+          console.log("");
           setTimeout(
             () => startConnection(options),
             config.session?.reconnectInterval || 15e3,
           );
         } else {
-          console.log("╭─「 ✦ RECONNECT ✦ 」");
-          console.log("│");
-          console.log(`│ ❌ Gagal sambung ulang setelah ${m} percobaan`);
-          console.log("│");
-          console.log("╰────  •  ────");
+          console.log("「 ✦ RECONNECT ✦ 」");
+          console.log("");
+          console.log(`❌ Gagal sambung ulang setelah ${m} percobaan`);
+          console.log("");
+          console.log("");
         }
       } else {
         connectionState.reconnectAttempts = 0;
@@ -612,14 +612,14 @@ async function startConnection(options = {}) {
       n && setBotNumber(n);
 
       console.log("");
-      console.log("╭─「 ✦ NOVA AI ✦ 」");
-      console.log("│");
-      console.log(`│ • Bot    : ${config.bot?.name || "Nova-AI"}`);
-      console.log(`│ • Nomor  : ${n || "?"}`);
-      console.log(`│ • Versi  : WA v${version.join(".")}`);
-      console.log("│");
+      console.log("「 ✦ NOVA AI ✦ 」");
+      console.log("");
+      console.log(`• Bot    : ${config.bot?.name || "Nova-AI"}`);
+      console.log(`• Nomor  : ${n || "?"}`);
+      console.log(`• Versi  : WA v${version.join(".")}`);
+      console.log("");
       console.log("│ ✅ Bot siap digunakan");
-      console.log("╰────  •  ────");
+      console.log("");
       console.log("");
 
       setTimeout(async () => {
@@ -687,9 +687,9 @@ async function startConnection(options = {}) {
         }, 8e3);
       }
 
-      console.log("│");
+      console.log("");
       console.log("│ ✅ Siap menerima pesan");
-      console.log("│");
+      console.log("");
 
       // === Owner Notification: Bot Online ===
       // Kirim notifikasi ke owner SETIAP KALI bot connect (bukan cuma first-pair)
@@ -728,13 +728,13 @@ async function startConnection(options = {}) {
           }
 
           const notifText = [
-            "╭─「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
-            "│",
-            "│ • Bot   : " + (config.bot?.name || "Nova-AI"),
-            "│ • Nomor : " + botNum,
-            "│ • Waktu : " + waktu,
-            "│",
-            "╰────  •  ────",
+            "「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
+            "",
+            "• Bot   : " + (config.bot?.name || "Nova-AI"),
+            "• Nomor : " + botNum,
+            "• Waktu : " + waktu,
+            "",
+            "",
             "",
             ...infoSections,
             "",
@@ -979,21 +979,21 @@ async function startConnection(options = {}) {
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
           const welcomeText =
-            `╭─「 ✦ Welcome ✦ 」\n` +
-            `│\n` +
-            `│ Hai, Salam Kenal!\n` +
-            `│ Aku *${config.bot?.name || "Nova-AI"}*\n` +
-            `│ Terima kasih sudah undang aku ke *${groupName}*!\n` +
-            `│ Diundang oleh ${inviterMention}\n` +
-            `│\n` +
-            `│ • Developer : ${config.bot?.developer || "Aizat"}\n` +
-            `│ • Prefix    : ${prefix}\n` +
-            `│ • Support   : ${config.bot?.support || "-"}\n` +
-            `│\n` +
-            `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
-            `│ Ketik *${prefix}help* untuk bantuan\n` +
-            `│\n` +
-            `╰────  •  ────`;
+            `「 ✦ Welcome ✦ 」\n` +
+            
+            `Hai, Salam Kenal!\n` +
+            `Aku *${config.bot?.name || "Nova-AI"}*\n` +
+            `Terima kasih sudah undang aku ke *${groupName}*!\n` +
+            `Diundang oleh ${inviterMention}\n` +
+            
+            `• Developer : ${config.bot?.developer || "Aizat"}\n` +
+            `• Prefix    : ${prefix}\n` +
+            `• Support   : ${config.bot?.support || "-"}\n` +
+            
+            `Ketik *${prefix}menu* untuk lihat fitur\n` +
+            `Ketik *${prefix}help* untuk bantuan\n` +
+            
+            ;
 
           const ctxInfo = {
             mentionedJid: inviter ? [inviter] : [],
@@ -1006,11 +1006,11 @@ async function startConnection(options = {}) {
           });
 
           console.log("");
-          console.log("╭─「 ✦ GROUP JOIN ✦ 」");
-          console.log("│");
-          console.log(`│ ✅ Bot bergabung: ${groupName}`);
-          console.log("│");
-          console.log("╰────  •  ────");
+          console.log("「 ✦ GROUP JOIN ✦ 」");
+          console.log("");
+          console.log(`✅ Bot bergabung: ${groupName}`);
+          console.log("");
+          console.log("");
         } catch (e) {
           colors.logger.error(
             "BotJoin",

@@ -21,13 +21,13 @@ export function verifyAuth(input) {
 
 export function getOwnerContact() {
   return [
-    "╭─「 ✦ NOVA AI ✦ 」",
-    "│",
-    "│ • Owner   : Aizat",
-    "│ • Telp    : 08174887770",
-    "│ • TikTok  : itsmee_aizat",
-    "│ • GitHub  : itsmeeaizat",
-    "│",
-    "╰────  •  ────",
+    "「 ✦ NOVA AI ✦ 」",
+    "",
+    "• Owner   : Aizat",
+    "• Telp    : 08174887770",
+    "• TikTok  : itsmee_aizat",
+    "• GitHub  : itsmeeaizat",
+    "",
+    "",
   ].join("\n");
 }
