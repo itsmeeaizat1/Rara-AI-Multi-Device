@@ -559,16 +559,15 @@ function novaInfoSections(info = [], sc = true) {
     if (typeof item === "string") {
       const s = item.trim();
       if (!s) continue;
-      if (open) out += `╰────  •  ────\n\n`;
-      out += `╭─「 ✦ ${scFn(s)} ✦ 」\n`;
+      if (open) out += `\n`;
+      out += `「 ✦ ${scFn(s)} ✦ 」\n`;
       open = true;
     } else if (item && item.label !== undefined && open) {
       const label = scFn(item.label);
       const value = item.value !== undefined && item.value !== null ? String(item.value) : "";
-      out += `│ • ${label} : ${value}\n`;
+      out += `• ${label} : ${value}\n`;
     }
   }
-  if (open) out += `╰────  •  ────\n`;
   return out;
 }
 
@@ -578,13 +577,16 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
   let out = "";
   
   // ── Intro section (opsional) ──
+  // REWORK 2026-09-07 (owner: hapus garis, pertahankan 「 title 」):
+  // tanpa border │/╭─/╰────, WhatsApp wrap sendiri gak ada garis yang
+  // bisa putus — teks mengalir natural tanpa wrapLine 30-char.
   if (intro) {
-    out += `╭─「 ✦ ${scFn(introTitle)} ✦ 」\n`;
+    out += `「 ✦ ${scFn(introTitle)} ✦ 」\n`;
     // intro bisa string (multi-line) atau array of lines
     const introLines = Array.isArray(intro) ? intro : intro.split("\n");
     for (const line of introLines) {
       if (line === "" || line === " ") {
-        out += `│\n`;
+        out += `\n`;
       } else {
         // FIX 2026-09-07 (owner: hapus garis nyangkut/border keputus di
         // pesan intro) — greeting AI bisa sampai ~300 karakter/45 kata
@@ -593,12 +595,10 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
         // lanjutan → border kelihatan putus/nyangkut (corner ╭ doang di
         // atas, teks lanjutan nempel kiri tanpa border). Guard: wrapLine
         // dulu (≤30 char/baris) baru tiap baris hasil wrap dapet "│ ".
-        for (const wrapped of wrapLine(scFn(line))) {
-          out += `│ ${wrapped}\n`;
-        }
+        out += `${scFn(line)}\n`;
       }
     }
-    out += `╰────  •  ────\n\n`;
+    out += `\n`;
   }
   
   // ── Info section: BOX TERPISAH per kategori (Info User, Info Waktu, dst) ──
@@ -608,11 +608,11 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
 
   // ── Legend symbol akses fitur (request owner) ──
   if (legend && legend.length > 0) {
-    out += `╭─「 ✦ ${scFn("Keterangan Symbol")} ✦ 」\n`;
+    out += `「 ✦ ${scFn("Keterangan Symbol")} ✦ 」\n`;
     for (const l of legend) {
-      if (l && l.sym) out += `│ • ${l.sym} : ${scFn(l.desc || "")}\n`;
+      if (l && l.sym) out += `• ${l.sym} : ${scFn(l.desc || "")}\n`;
     }
-    out += `╰────  •  ────\n\n`;
+    out += `\n`;
   }
 
   // ── Readmore trick: sembunyikan daftar command panjang di balik "Baca Selengkapnya" ──
@@ -628,26 +628,22 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
     const catName = scFn(String(cat.name).toUpperCase());
     
     // Proper close prev + open new section
-    if (i > 0) out += `╰────  •  ────\n\n`;
-    out += `╭─「 ✦ ${catName} ✦ 」\n`;
-    out += `│\n`;
+    if (i > 0) out += `\n`;
+    out += `「 ✦ ${catName} ✦ 」\n`;
     
     // Commands: │ ✦ .command (+ symbol akses di kanan)
     for (const cmd of cat.commands) {
       if (cmd && typeof cmd === "object") {
         const sym = cmd.symbols ? ` ${String(cmd.symbols).trim()}` : "";
-        out += `│ ✦ ${prefix}${cmd.name}${sym}\n`;
+        out += `✦ ${prefix}${cmd.name}${sym}\n`;
       } else {
-        out += `│ ✦ ${prefix}${cmd}\n`;
+        out += `✦ ${prefix}${cmd}\n`;
       }
     }
   }
-  
-  // ── Final close ──
-  out += `╰────  •  ────`;
 
   // ── Footer nama bot (smallcaps) — penutup di akhir list command ──
-  if (footerName) out += `\n\n${scFn(String(footerName))}`;
+  if (footerName) out += `\n${scFn(String(footerName))}`;
 
   return out;
 }
