@@ -35,6 +35,7 @@ import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { haidarAio } from "../../src/lib/nova-haidar.js";
 import { pixivDownload, pixivUgoiraToMp4 } from "../../src/scraper/pixiv.js";
 import { bandcampDownload } from "../../src/scraper/bandcamp.js";
+import { moriScrape } from "../../src/scraper/mori-bridge.js";
 import { claraWrap, mediaCaption, novaGuide, toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -74,11 +75,15 @@ const PLATFORMS = {
   // Bandcamp match: /track/ atau /album/ di domain APAPUN — banyak band
   // pakai custom domain bandcamp-pro (mis. music.monstercat.com). Dicek
   // PALING AKHIR di detectPlatform biar platform lain gak ke-sangkut.
+  bilibili:    { icon: "📺", name: "Bilibili",     match: (u) => /(?:^|\.)(?:bilibili\.com|b23\.tv|bili\.im|bilibili\.tv)/.test(u) },
+  // Bandcamp match: /track/ atau /album/ di domain APAPUN — banyak band
+  // pakai custom domain bandcamp-pro (mis. music.monstercat.com). Dicek
+  // PALING AKHIR di detectPlatform biar platform lain gak ke-sangkut.
   bandcamp:    { icon: "🎸", name: "Bandcamp",     match: (u) => /\/(?:track|album)\//.test(u) },
 };
 
 function detectPlatform(url) {
-  for (const key of ["pixiv", "rednote", "douyin", "tiktok", "instagram", "facebook", "twitter", "threads", "spotify", "applemusic", "soundcloud", "pinterest", "youtube", "bandcamp"]) {
+  for (const key of ["pixiv", "rednote", "douyin", "bilibili", "tiktok", "instagram", "facebook", "twitter", "threads", "spotify", "applemusic", "soundcloud", "pinterest", "youtube", "bandcamp"]) {
     if (PLATFORMS[key].match(url)) return key;
   }
   return "generic";
@@ -89,6 +94,19 @@ function detectPlatform(url) {
 //   { kind, title, author, thumb, medias: [{url, type, quality, ...}] }
 // kind: "video" | "audio" | "image" | "album" | "pixivimages" | "ugoira"
 // ═══════════════════════════════════════════════
+
+// Mori pakai type bebas ("Download Mp3", "HD Video", dll) — normalisasi
+// ke audio/image/video via keyword + ekstensi URL.
+function normType(rawType, url) {
+  const t = String(rawType || "").toLowerCase();
+  if (/mp3|audio|m4a|flac|opus|music|song/.test(t)) return "audio";
+  if (/cover|image|photo|thumb|jpg|jpeg|png|webp/.test(t)) return "image";
+  if (/mp4|video|reel|clip/.test(t)) return "video";
+  const ext = String(url || "").split("?")[0].split(".").pop().toLowerCase();
+  if (/mp3|m4a|opus|wav|flac/.test(ext)) return "audio";
+  if (/jpg|jpeg|png|webp|gif/.test(ext)) return "image";
+  return "video";
+}
 
 const ENGINES = {
   // ── Engine direct baru ala Mori ──
@@ -115,6 +133,50 @@ const ENGINES = {
       };
     },
   },
+
+  // ── Engine cadangan dari library Mori (github.com/coflyn/scrapr)
+  // Semua schema-nya uniform — 1 factory buat semua. Nama selalu
+  // diawali "Mori" biar keliatan di caption mana yang punya Mori.
+  // Bilibili SnapTik... eh, SnapWC = satu-satunya jalur bilibili yang
+  // bisa jalan dari server (direct API kemarin kena anti-bot 412).
+  // Scraper browser Mori (savetik/fdown/snapinsta) gak di-bridge.
+  ...Object.fromEntries(
+    [
+      ["applemusic", "aplmate", "AplMate"],
+      ["bandcamp", "bandcampdownloader", "BandcampDownloader"],
+      ["bilibili", "snapwc", "SnapWC"],
+      ["douyin", "direct", "DouyinDirect"],
+      ["facebook", "snapsave", "SnapSave"],
+      ["instagram", "indown", "InDown"],
+      ["instagram", "downreels", "DownReels"],
+      ["pinterest", "pindown", "PinDown"],
+      ["soundcloud", "klickaud", "KlickAud"],
+      ["spotify", "spotmate", "SpotMate"],
+      ["spotify", "spotidown", "SpotiDown"],
+      ["threads", "threadster", "Threadster"],
+      ["tiktok", "tiktokio", "TikTokIO"],
+      ["tiktok", "snaptik", "SnapTik"],
+      ["tiktok", "ssstik", "SSSTik"],
+      ["twitter", "tweeload", "Tweeload"],
+      ["twitter", "tvd", "TVD"],
+      ["youtube", "ytmp3", "YTmp3"],
+    ].map(([plat, method, label]) => [
+      `mori${label}`,
+      {
+        name: `Mori ${label}`,
+        fn: async (url) => {
+          const r = await moriScrape(plat, method, url);
+          const medias = (r.downloads || []).map((d) => ({
+            url: d.url,
+            type: normType(d.type, d.url),
+            quality: d.quality || String(d.type || "Original").replace(/download\s*/i, "").trim() || "Original",
+          })).filter((m) => m.url);
+          if (!medias.length) throw new Error("mori kosong");
+          return { kind: pickBest(medias).type, title: r.title, author: null, thumb: r.thumbnail, medias };
+        },
+      },
+    ])
+  ),
 
   // ── Scraper spesifik repo ──
   tiktokYuu: {
@@ -274,19 +336,20 @@ function pickBest(medias) {
 // ── Platform → engine chain (Mori: multi-engine fallback) ──
 const CHAINS = {
   pixiv:      ["pixivDirect"],
-  bandcamp:   ["bandcampDirect", "haidar", "ikyy", "omnify", "valore"],
-  tiktok:     ["tiktokYuu", "haidar", "ikyy"],
-  douyin:     ["douyinDirect", "snaptikDy", "haidar"],
-  instagram:  ["igNovav1", "haidar", "ikyy"],
-  facebook:   ["haidar", "ikyy", "omnify"],
-  twitter:    ["x2twitter", "haidar", "ikyy"],
-  threads:    ["haidar", "ikyy", "omnify"],
-  spotify:    ["haidar", "ikyy"],
-  applemusic: ["haidar", "ikyy"],
-  soundcloud: ["soundcloudDl", "haidar", "ikyy"],
-  pinterest:  ["pinDl", "haidar"],
+  bandcamp:   ["bandcampDirect", "moriBandcampDownloader", "haidar", "ikyy", "omnify", "valore"],
+  bilibili:   ["moriSnapWC"],
+  tiktok:     ["tiktokYuu", "moriTikTokIO", "moriSnapTik", "moriSSSTik", "haidar", "ikyy"],
+  douyin:     ["douyinDirect", "snaptikDy", "moriDouyinDirect", "haidar"],
+  instagram:  ["igNovav1", "moriInDown", "moriDownReels", "haidar", "ikyy"],
+  facebook:   ["moriSnapSave", "haidar", "ikyy", "omnify"],
+  twitter:    ["x2twitter", "moriTweeload", "moriTVD", "haidar", "ikyy"],
+  threads:    ["moriThreadster", "haidar", "ikyy", "omnify"],
+  spotify:    ["moriSpotMate", "moriSpotiDown", "haidar", "ikyy"],
+  applemusic: ["moriAplMate", "haidar", "ikyy"],
+  soundcloud: ["soundcloudDl", "moriKlickAud", "haidar", "ikyy"],
+  pinterest:  ["pinDl", "moriPinDown", "haidar"],
   rednote:    ["rednoteDirect", "haidar"],
-  youtube:    ["haidar", "ikyy", "omnify"],
+  youtube:    ["haidar", "ikyy", "moriYTmp3", "omnify"],
   generic:    ["haidar", "ikyy", "omnify", "valore"],
 };
 
@@ -459,6 +522,10 @@ async function handler(m, { sock }) {
       const platformKey = detectPlatform(url);
       const platform = PLATFORMS[platformKey] || { icon: "🌐", name: "Lainnya" };
       const { result: r, engine } = await resolveUrl(url, platformKey);
+      // Bandcamp hasil multi-track (album via Mori/cadangan) → alur album
+      if (platformKey === "bandcamp" && r.kind !== "album" && (r.medias || []).filter((m) => m.type === "audio").length > 1) {
+        r.kind = "album";
+      }
 
       // Pixiv & Bandcamp punya alur khusus
       if (r.kind === "pixivimages" || r.kind === "ugoira") {
