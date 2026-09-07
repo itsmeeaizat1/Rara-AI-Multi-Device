@@ -25,13 +25,13 @@ try {
 function renderEnergiLine(m, cfg) {
   const e = m?.energiInfo;
   if (e) {
-    if (e.unlimited) return `│ ⚡ Energi : ∞ (unlimited)\n`;
+    if (e.unlimited) return `⚡ Energi : ∞ (unlimited)\n`;
     if (e.deducted > 0) return e.game
-      ? `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa}/${e.max})\n`   // energi game (rpg.energy/maxEnergy)
-      : `│ ⚡ Energi : -${e.deducted} (sisa ${e.sisa})\n`;           // limit akses fitur
-    return `│ ⚡ Energi : gratis\n`;
+      ? `⚡ Energi : -${e.deducted} (sisa ${e.sisa}/${e.max})\n`   // energi game (rpg.energy/maxEnergy)
+      : `⚡ Energi : -${e.deducted} (sisa ${e.sisa})\n`;           // limit akses fitur
+    return `⚡ Energi : gratis\n`;
   }
-  if (cfg.energi > 0) return `│ ⚡ Energi : -${cfg.energi}\n`;
+  if (cfg.energi > 0) return `⚡ Energi : -${cfg.energi}\n`;
   return '';
 }
 
@@ -84,16 +84,15 @@ class GameFactory {
           if (existing && existing.gameType === gameType) {
             const remaining = getRemainingTime(chatId);
             const answer = existing.question[cfg.answerField];
-            let text = `╭─「 ✦ ${cfg.title} — GAME BERJALAN ✦ 」\n\n`;
+            let text = `「 ✦ ${cfg.title} — GAME BERJALAN ✦ 」\n\n`;
             if (cfg.questionField && existing.question[cfg.questionField]) {
               text += `\`\`\`${existing.question[cfg.questionField]}\`\`\`\n\n`;
             }
             if (cfg.hintEnabled !== false) {
-              text += `│ 🧩 Hint       : ${getHint(answer, cfg.hintCount)}\n`;
+              text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
             }
-            text += `│ ⏳ Sisa waktu : ${formatTime(remaining)}\n\n`;
+            text += `⏳ Sisa waktu : ${formatTime(remaining)}\n\n`;
             text += `_💬 Reply pesan game ini buat jawab, ketik "nyerah" kalau nyerah_\n`;
-            text += `╰────  •  ────`;
             await m.reply(text);
             return;
           }
@@ -144,36 +143,32 @@ class GameFactory {
             return;
           }
 
-          let caption = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          let caption = `「 ✦ ${cfg.title} ✦ 」\n\n`;
           caption += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
           if (cfg.hintEnabled !== false) {
-            caption += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
+            caption += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
-          caption += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n`;
+          caption += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          caption += `🎁 Hadiah : Limit, Koin, EXP (random)\n`;
           caption += renderEnergiLine(m, cfg);
           caption += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
-          caption += `╰────  •  ────`;
-
           sentMsg = await sock.sendMessage(chatId, { image: imageBuffer, caption }, { quoted: m });
         } else {
-          let text = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          let text = `「 ✦ ${cfg.title} ✦ 」\n\n`;
           text += `${pickFlavor()}\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
           if (cfg.hintEnabled !== false) {
-            text += `│ 🧩 Hint   : ${getHint(answer, cfg.hintCount)}\n`;
+            text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `│ ⏳ Waktu  : ${cfg.timeout / 1000} detik\n`;
-          text += `│ 🎁 Hadiah : Limit, Koin, EXP (random)\n`;
+          text += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          text += `🎁 Hadiah : Limit, Koin, EXP (random)\n`;
           text += renderEnergiLine(m, cfg);
           text += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
-          text += `╰────  •  ────`;
-
           sentMsg = await sock.sendMessage(chatId, { text }, { quoted: m });
         }
 
@@ -187,16 +182,15 @@ class GameFactory {
         setSessionTimer(chatId, async () => {
           try {
             let text = `${pick(TIMEOUT_MSGS)}\n\n`;
-            text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+            text += `「 ✦ ${cfg.title} ✦ 」\n\n`;
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ ❌ Jawaban: ${answer}\n`;
+            text += `❌ Jawaban: ${answer}\n`;
             if (question.deskripsi) {
-              text += `│ 💡 Info: ${question.deskripsi}\n`;
+              text += `💡 Info: ${question.deskripsi}\n`;
             }
             text += `\n_Yah, gak ada yang bisa jawab nih~_\n`;
-            text += `╰────  •  ────`;
             const timeoutCta = gameCTA(gameType);
             if (timeoutCta) text += `\n${timeoutCta}`;
             await sock.sendMessage(chatId, { text });
@@ -239,17 +233,16 @@ class GameFactory {
           endSession(chatId);
 
           let text = `${pick(SURRENDER_MSGS)}\n\n`;
-          text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+          text += `「 ✦ ${cfg.title} ✦ 」\n\n`;
           if (cfg.questionField && session.question[cfg.questionField]) {
             text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
           }
-          text += `│ • Jawaban: ${answer}\n`;
+          text += `• Jawaban: ${answer}\n`;
           text += renderEnergiLine(m, cfg);
           if (session.question.deskripsi) {
-            text += `│ • Info: ${session.question.deskripsi}\n`;
+            text += `• Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split('@')[0]} menyerah_\n`;
-          text += `╰────  •  ────`;
           text += `\n\n${gameCTA(gameType)}`;
 
           try {
@@ -320,29 +313,29 @@ class GameFactory {
 
           // Pesan hasil: bold cuma di pembuka, value plain (request owner)
           let text = `${pick(WIN_MSGS)}\n\n`;
-          text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
-          text += `│ • Jawaban: ${answer}\n`;
-          text += `│ • Pemenang: @${m.sender.split('@')[0]}\n`;
-          text += `│ • Percobaan: ${session.attempts}x\n\n`;
+          text += `「 ✦ ${cfg.title} ✦ 」\n\n`;
+          text += `• Jawaban: ${answer}\n`;
+          text += `• Pemenang: @${m.sender.split('@')[0]}\n`;
+          text += `• Percobaan: ${session.attempts}x\n\n`;
 
           // Info section: yang kekuras (energi) & yang nambah (reward)
           text += renderEnergiLine(m, cfg);
           if (isNewGame) {
-            if (poinReward > 0) text += `│ • 🎯 Skor ${cfg.title}: +${poinReward} (total ${poinTotal})\n`;
+            if (poinReward > 0) text += `• 🎯 Skor ${cfg.title}: +${poinReward} (total ${poinTotal})\n`;
           } else {
-            if (reward.limit > 0) text += `│ • 🎫 Limit: +${reward.limit}\n`;
-            if (reward.koin > 0) text += `│ • 🪙 Koin: +${fmtNum(reward.koin)}\n`;
-            if (reward.exp > 0) text += `│ • ✨ EXP: +${fmtNum(reward.exp)}\n`;
-            if (reward.gold > 0) text += `│ • 🪭 Gold: +${fmtNum(reward.gold)}\n`;
-            if (reward.gems > 0) text += `│ • 💎 Gems: +${reward.gems}\n`;
-            if (reward.diamonds > 0) text += `│ • 💎 Diamonds: +${reward.diamonds}\n`;
+            if (reward.limit > 0) text += `• 🎫 Limit: +${reward.limit}\n`;
+            if (reward.koin > 0) text += `• 🪙 Koin: +${fmtNum(reward.koin)}\n`;
+            if (reward.exp > 0) text += `• ✨ EXP: +${fmtNum(reward.exp)}\n`;
+            if (reward.gold > 0) text += `• 🪭 Gold: +${fmtNum(reward.gold)}\n`;
+            if (reward.gems > 0) text += `• 💎 Gems: +${reward.gems}\n`;
+            if (reward.diamonds > 0) text += `• 💎 Diamonds: +${reward.diamonds}\n`;
           }
 
           if (session.question.deskripsi) {
-            text += `\n│ • Info: ${session.question.deskripsi}\n`;
+            text += `\n• Info: ${session.question.deskripsi}\n`;
           }
 
-          text += `\n╰────  •  ────`;
+          text += ``;
           text += `\n\n${gameCTA(gameType)}`;
 
           try {
@@ -379,16 +372,16 @@ class GameFactory {
         // Max attempts atau waktu habis
         endSession(chatId);
         let text = `${pick(TIMEOUT_MSGS)}\n\n`;
-        text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
+        text += `「 ✦ ${cfg.title} ✦ 」\n\n`;
         if (cfg.questionField && session.question[cfg.questionField]) {
           text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
         }
-        text += `│ • Jawaban: ${answer}\n`;
+        text += `• Jawaban: ${answer}\n`;
         text += renderEnergiLine(m, cfg);
         if (session.question.deskripsi) {
-          text += `│ • Info: ${session.question.deskripsi}\n`;
+          text += `• Info: ${session.question.deskripsi}\n`;
         }
-        text += `\n╰────  •  ────`;
+        text += ``;
         text += `\n\n${gameCTA(gameType)}`;
         try {
           await sock.sendMessage(chatId, { text });

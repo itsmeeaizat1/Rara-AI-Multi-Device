@@ -80,8 +80,8 @@ async function handler(m, { sock }) {
         "Daftar resep potion :",
         ...Object.entries(RECIPES).flatMap(([key, item]) => [
           `${item.name} (${key})`,
-          `   Bahan : ${item.desc}`,
-          `   Efek : ${item.effect}`,
+          `Bahan : ${item.desc}`,
+          `Efek : ${item.effect}`,
         ]),
         "---",
         `📌 ${m.prefix}alchemist brew <nama_potion>`,

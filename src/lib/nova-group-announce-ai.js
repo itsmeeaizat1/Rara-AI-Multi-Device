@@ -128,19 +128,19 @@ export function buildFallbackAnnounce(type, ctx = {}) {
   const flavor = flavors[Math.floor(Math.random() * flavors.length)](senderNum);
 
   const rows = [
-    `│ • 🏠 Grup : ${groupName}`,
-    `│ • 👤 Admin : @${senderNum}`,
-    `│ • 📅 Tanggal : ${tanggal}`,
-    `│ • 🕐 Waktu : ${waktu}`,
+    `• 🏠 Grup : ${groupName}`,
+    `• 👤 Admin : @${senderNum}`,
+    `• 📅 Tanggal : ${tanggal}`,
+    `• 🕐 Waktu : ${waktu}`,
   ];
-  if (memberCount > 0) rows.push(`│ • 👥 Total Member : ${memberCount}`);
-  if (reason) rows.push(`│ • 📝 Alasan : ${reason}`);
+  if (memberCount > 0) rows.push(`• 👥 Total Member : ${memberCount}`);
+  if (reason) rows.push(`• 📝 Alasan : ${reason}`);
   if (type === "close") {
-    rows.push(`│ • 🔒 Status : Hanya admin yang bisa mengirim pesan`);
-    rows.push(`│ • ℹ️ Info : Grup dibuka kembali oleh admin ketika sudah waktunya`);
+    rows.push(`• 🔒 Status : Hanya admin yang bisa mengirim pesan`);
+    rows.push(`• ℹ️ Info : Grup dibuka kembali oleh admin ketika sudah waktunya`);
   } else {
-    rows.push(`│ • 🔓 Status : Semua member sudah bisa mengirim pesan kembali`);
-    rows.push(`│ • ℹ️ Info : Yuk ramein lagi obrolannya, jangan cuma baca doang`);
+    rows.push(`• 🔓 Status : Semua member sudah bisa mengirim pesan kembali`);
+    rows.push(`• ℹ️ Info : Yuk ramein lagi obrolannya, jangan cuma baca doang`);
   }
 
   return novaGameBox({

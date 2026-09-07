@@ -1,10 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// test-plugins.js — VERIFIKASI GUARD FORMAT KOTAK (lib/styler.js)
+// test-plugins.js — VERIFIKASI FORMAT TANPA GARIS (lib/styler.js + nova-menu-style.js)
 //
-// Aturan owner 2026-09-07: pesan berkotak WAJIB lewat boxLeft() —
-// (1) tiap baris ≤ width (default 30) karakter, (2) tiap baris isi
-// diawali "│ ", (3) dikirim dalam code block. Kalimat input boleh
-// sepanjang apa pun — yang memotong adalah wrapText, bukan tangan.
+// Aturan owner 2026-09-07 (rework): pesan berkotak TANPA garis box-drawing —
+// header 「 title 」 doang, isi polos tanpa prefix │, tanpa footer, tanpa
+// wrap 30-char (gak ada border yang bisa putus, WhatsApp wrap natural).
+// wrapText tetap diekspor (dipakai util lain) tapi boxLeft gak pakai lagi.
 //
 // Jalankan: node test-plugins.js
 
@@ -26,18 +26,14 @@ console.log("── 1. wrapText: potong per kata ──");
   }
 }
 
-console.log("── 2. boxLeft: prefix & struktur ──");
+console.log("── 2. boxLeft: format tanpa garis ──");
 {
-  const box = boxLeft("◆ BENCANA WATCH ◆", "Gunakan ON (DM/GRUP/GLOBAL), ONCHAT, ONGLOBAL, OFFGLOBAL, OFF, STATUS, MODE <otomatis/jadwal/darurat> — semua kalimat panjang dipotong otomatis.");
+  const box = boxLeft("Bencana Watch", "Gunakan ON (DM/GRUP/GLOBAL), ONCHAT, ONGLOBAL, OFFGLOBAL, OFF, STATUS, MODE <otomatis/jadwal/darurat> — semua opsi aman.");
   const lines = box.split("\n");
   const [head, ...rest] = lines;
-  const foot = rest.pop();
-  head.startsWith("┌─「") ? ok("header ┌─「 ... 」") : no("header salah", head);
-  foot === "└─「 • 」" ? ok("footer └─「 • 」") : no("footer salah", foot);
-  const bad = rest.filter((l) => !l.startsWith("│ "));
-  bad.length === 0 ? ok("SEMUA baris isi diawali '│ '") : no("ada baris tanpa prefix", JSON.stringify(bad[0]));
-  const wide = rest.filter((l) => l.slice(2).length > WIDTH);
-  wide.length === 0 ? ok(`SEMUA baris isi ≤ ${WIDTH} char`) : no("ada baris kepanjangan", wide[0]);
+  head.startsWith("「 ") && head.endsWith(" 」") ? ok("header 「 ... 」") : no("header salah", head);
+  /[╭╰│├└┌┐┘┃]/.test(box) ? no("masih ada garis box-drawing", box) : ok("BERSIH: gak ada garis ╭╰│├└ di output");
+  rest.some((l) => l.trim()) ? ok("isi tetap ada di bawah header") : no("isi hilang");
 }
 
 console.log("── 3. E2E .bencanawatch — output handler nyata ──");
@@ -57,14 +53,11 @@ console.log("── 3. E2E .bencanawatch — output handler nyata ──");
   let allGuarded = true, detail = "";
   for (const r of replies) {
     if (r.startsWith("```") || r.endsWith("```")) { allGuarded = false; detail = "masih ada code block (harus font normal)"; break; }
-    const lines = r.split("\n");
-    const [head, ...rest] = lines;
-    const foot = rest.pop();
-    if (!head.startsWith("┌─「") || foot !== "└─「 • 」") { allGuarded = false; detail = "struktur kotak salah"; break; }
-    const bad = rest.filter((l) => !l.startsWith("│ ") || l.slice(2).length > WIDTH);
-    if (bad.length) { allGuarded = false; detail = `baris bocor: ${JSON.stringify(bad[0])}`; break; }
+    const head = r.split("\n")[0];
+    if (!(head.startsWith("「 ") || head.startsWith("「✦") || head.startsWith("「 ✦"))) { allGuarded = false; detail = "header 「 title 」 gak ada: " + head; break; }
+    if (/[╭╰│├└┌┐┘┃]/.test(r)) { allGuarded = false; detail = "masih ada garis box-drawing"; break; }
   }
-  allGuarded ? ok("SEMUA output handler: font normal (tanpa code block) + prefix '│ ' + ≤30 char — gak ada yang nembus border") : no("output bocor", detail);
+  allGuarded ? ok("SEMUA output handler: font normal + header 「 title 」 + tanpa garis box-drawing") : no("output bocor", detail);
 }
 
 console.log(`\n${fail === 0 ? "🎉 SEMUA PASS" : "💥 ADA FAILURE"} — ${pass} pass, ${fail} fail`);
