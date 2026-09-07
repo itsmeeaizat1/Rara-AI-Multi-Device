@@ -2,9 +2,9 @@
 // RPG Story Quest — Story-driven quest chain, narrator, NPC interaction
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { rpgSleep, animQuest } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "storyquest",
@@ -45,7 +45,7 @@ const NARRATOR_LINES = [
 async function handler(m, { sock, text, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("storyquest", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("storyquest", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "storyquest") {
       const storyIndex = rpg.storyProgress || 0;
@@ -103,13 +103,13 @@ async function handler(m, { sock, text, command }) {
         return m.reply(msg);
       }
       const npc = NPCS[npcName];
-      if (!npc) return m.reply(claraWrap("npc", "NPC tidak ditemukan. Tersedia: " + Object.keys(NPCS).join(", "), "guide"));
+      if (!npc) return m.reply(novaRpgBox("npc", "NPC tidak ditemukan. Tersedia: " + Object.keys(NPCS).join(", "), "guide"));
       return m.reply("" + npc + "");
     }
   } catch (e) {
     console.error("storyquest error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap(m.command || "storyquest", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox(m.command || "storyquest", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

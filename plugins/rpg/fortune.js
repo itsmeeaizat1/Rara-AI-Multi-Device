@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -63,7 +62,7 @@ async function handler(m, { sock }) {
     if (player.gold < spinCost) {
       await m.react('❌');
       return m.reply(
-        claraWrap(
+        novaRpgBox(
           "fortune",
           `Gold kamu tidak cukup untuk memutar Fortune Wheel!\n\nBiaya Spin: ${spinCost} Gold | Gold Kamu: ${player.gold} Gold`,
           "error"
@@ -109,7 +108,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fortune error:", err);
     await m.react('❌');
-    return m.reply(claraWrap("fortune", err.message || "Terjadi kesalahan pada Fortune Wheel.", "error"));
+    return m.reply(novaRpgBox("fortune", err.message || "Terjadi kesalahan pada Fortune Wheel.", "error"));
   }
 }
 

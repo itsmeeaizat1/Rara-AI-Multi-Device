@@ -5,8 +5,8 @@ import {
   ensureRpg, saveRpg, addGold, removeGold, addExp,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animBegal } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -38,39 +38,39 @@ async function handler(m, { sock }) {
     if (!targetJid && m.quoted) targetJid = m.quoted.sender;
 
     if (!targetJid) {
-      return m.reply(claraWrap("begalrpg", "Tag target! Contoh: .begalrpg @user", "warn"));
+      return m.reply(novaRpgBox("begalrpg", "Tag target! Contoh: .begalrpg @user", "warn"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(claraWrap("begalrpg", "Nggak bisa begal diri sendiri 😅", "warn"));
+      return m.reply(novaRpgBox("begalrpg", "Nggak bisa begal diri sendiri 😅", "warn"));
     }
 
     await m.react("🕒");
     await animBegal(m, sock);
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("begalrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("begalrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastBegal");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("begalrpg", `Cooldown begal tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("begalrpg", `Cooldown begal tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < BEGAL_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("begalrpg", `Energi kurang! Butuh *${BEGAL_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(novaRpgBox("begalrpg", `Energi kurang! Butuh *${BEGAL_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     // Init target
     const targetRpg = ensureRpg({ sender: targetJid }, targetJid.split("@")[0]);
     if (!targetRpg) {
-      return m.reply(claraWrap("begalrpg", "Target belum terdaftar RPG.", "warn"));
+      return m.reply(novaRpgBox("begalrpg", "Target belum terdaftar RPG.", "warn"));
     }
 
     if (targetRpg.gold < 10) {
       await m.react("❌");
-      return m.reply(claraWrap("begalrpg", `Target *${targetJid.split("@")[0]}* terlalu miskin untuk dirampok 😅`, "warn"));
+      return m.reply(novaRpgBox("begalrpg", `Target *${targetJid.split("@")[0]}* terlalu miskin untuk dirampok 😅`, "warn"));
     }
 
     // Success rate: base 50% + level difference bonus
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("begalrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("begalrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("begalrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

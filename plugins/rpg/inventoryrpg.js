@@ -4,9 +4,9 @@
 import {
   ensureRpg, getInventory, ITEM_DB
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "inventoryrpg",
@@ -35,13 +35,13 @@ const RARITY_EMOJI = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("inventory", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("inventory", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const inv = getInventory(m);
     const items = Object.entries(inv).filter(([id, data]) => data.qty > 0);
 
     if (items.length === 0) {
-      return m.reply(claraWrap("inventory", `Tas RPG kamu kosong!\nMulai berburu (.berburu), menambang (.mining), atau memancing (.mancing) untuk mendapatkan item.`, "info"));
+      return m.reply(novaRpgBox("inventory", `Tas RPG kamu kosong!\nMulai berburu (.berburu), menambang (.mining), atau memancing (.mancing) untuk mendapatkan item.`, "info"));
     }
 
     // Sort by rarity
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("inventory rpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("inventory", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("inventory", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

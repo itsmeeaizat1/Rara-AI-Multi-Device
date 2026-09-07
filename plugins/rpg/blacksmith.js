@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animEnchant } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -44,7 +43,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "info" || !subCmd) {
       await m.react('🐣');
-      return m.reply(claraWrap("blacksmith", [
+      return m.reply(novaRpgBox("blacksmith", [
         `Senjata : ${weapon.name}`,
         `Level : ${currentLevel} / ${maxLevel}`,
         `Total ATK : ${currentAtk} (+${currentLevel * 5})`,
@@ -62,7 +61,7 @@ async function handler(m, { sock }) {
       if (currentLevel >= maxLevel) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "blacksmith",
             `Senjata *${weapon.name}* sudah mencapai level maksimal (${maxLevel})!`,
             "error"
@@ -75,7 +74,7 @@ async function handler(m, { sock }) {
       if (currentGold < upgradeCost) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "blacksmith",
             `Gold tidak cukup untuk tempa senjata!\n\nBiaya: ${upgradeCost} Gold | Punya: ${currentGold} Gold`,
             "error"
@@ -134,7 +133,7 @@ async function handler(m, { sock }) {
 
     await m.react('❌');
     return m.reply(
-      claraWrap(
+      novaRpgBox(
         "blacksmith",
         `Gunakan perintah:\n\n• ${m.prefix}blacksmith info — Cek status senjata & biaya\n• ${m.prefix}blacksmith upgrade <nama_senjata> — Upgrade senjata`,
         "guide"
@@ -143,7 +142,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("blacksmith error:", err);
     await m.react('❌');
-    return m.reply(claraWrap("blacksmith", err.message || "Terjadi kesalahan pada sistem Pandai Besi.", "error"));
+    return m.reply(novaRpgBox("blacksmith", err.message || "Terjadi kesalahan pada sistem Pandai Besi.", "error"));
   }
 }
 

@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // redeem.js — Redeem/Gift Code System (owner create, user claim)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
       const customCode = m.args[3];
 
       if (!rewardType || !amount) {
-        return m.reply(claraWrap("redeem", `Buat redeem code:\n\n${m.prefix}redeem create <type> <amount> [custom_code]\n\nType: gold, energi, diamond, exp\nContoh: ${m.prefix}redeem create gold 10000`, "guide"));
+        return m.reply(novaRpgBox("redeem", `Buat redeem code:\n\n${m.prefix}redeem create <type> <amount> [custom_code]\n\nType: gold, energi, diamond, exp\nContoh: ${m.prefix}redeem create gold 10000`, "guide"));
       }
 
       // Generate code
@@ -63,35 +62,35 @@ async function handler(m, { sock }) {
     // OWNER: list all codes
     if (subCmd === "list" && isOwner) {
       if (redeemCodes.size === 0) {
-        return m.reply(claraWrap("redeem", "Belum ada redeem code aktif.", "error"));
+        return m.reply(novaRpgBox("redeem", "Belum ada redeem code aktif.", "error"));
       }
       let msg = "";
       for (const [code, info] of redeemCodes) {
         msg += `${code} - ${info.amount} ${info.type} (${info.claimed.size}/${info.maxClaims} claimed)\n`;
       }
-            return m.reply(claraWrap("redeem", msg));
+            return m.reply(novaRpgBox("redeem", msg));
     }
 
     // USER: claim code
     const code = (m.args[0] || m.text?.trim() || "").toUpperCase();
     if (!code || code === "") {
-      return m.reply(claraWrap("redeem", `Masukkan kode redeem.\n\nContoh: ${m.prefix}redeem NOVA2026`, "guide"));
+      return m.reply(novaRpgBox("redeem", `Masukkan kode redeem.\n\nContoh: ${m.prefix}redeem NOVA2026`, "guide"));
     }
 
     const redeem = redeemCodes.get(code);
     if (!redeem) {
       await m.react("❌");
-      return m.reply(claraWrap("redeem", `Code "${code}" tidak valid atau sudah expired.`, "error"));
+      return m.reply(novaRpgBox("redeem", `Code "${code}" tidak valid atau sudah expired.`, "error"));
     }
 
     if (redeem.claimed.has(m.sender)) {
       await m.react("❌");
-      return m.reply(claraWrap("redeem", `Kamu sudah klaim code "${code}" sebelumnya.`, "error"));
+      return m.reply(novaRpgBox("redeem", `Kamu sudah klaim code "${code}" sebelumnya.`, "error"));
     }
 
     if (redeem.claimed.size >= redeem.maxClaims) {
       await m.react("❌");
-      return m.reply(claraWrap("redeem", `Code "${code}" sudah mencapai batas maksimal klaim.`, "error"));
+      return m.reply(novaRpgBox("redeem", `Code "${code}" sudah mencapai batas maksimal klaim.`, "error"));
     }
 
     // Claim!
@@ -144,7 +143,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("redeem error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("redeem", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("redeem", err.message || "Error", "error"));
   }
 }
 

@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // guildwar.js — Guild War (guild vs guild battle)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGuildWar } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -33,7 +32,7 @@ async function handler(m, { sock }) {
     // Get player guild
     const guildData = await db.getPlayerData?.(m.sender, "guild") || null;
     if (!guildData || !guildData.name) {
-      return m.reply(claraWrap("guildwar", `Kamu belum punya guild. Join guild dulu: ${m.prefix}guildrpg`, "guide"));
+      return m.reply(novaRpgBox("guildwar", `Kamu belum punya guild. Join guild dulu: ${m.prefix}guildrpg`, "guide"));
     }
 
     if (subCmd === "declare" || subCmd === "serang" || subCmd === "war") {
@@ -46,13 +45,13 @@ async function handler(m, { sock }) {
         msg += `
 `;
         msg += `${m.prefix}guildwar declare <nama guild>\n`;
-                return m.reply(claraWrap("guildwar", msg));
+                return m.reply(novaRpgBox("guildwar", msg));
       }
 
       const enemy = ENEMY_GUILDS.find(g => g.name.toLowerCase().includes(enemyName.toLowerCase()));
       if (!enemy) {
         await m.react("❌");
-        return m.reply(claraWrap("guildwar", `Guild "${enemyName}" tidak ditemukan.`, "error"));
+        return m.reply(novaRpgBox("guildwar", `Guild "${enemyName}" tidak ditemukan.`, "error"));
       }
 
       await m.react("🕒");
@@ -110,11 +109,11 @@ async function handler(m, { sock }) {
     msg += `
 `;
     msg += `${m.prefix}guildwar declare <enemy> - serang!\n`;
-        return m.reply(claraWrap("guildwar", msg));
+        return m.reply(novaRpgBox("guildwar", msg));
   } catch (err) {
     console.error("guildwar error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("guildwar", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("guildwar", err.message || "Error", "error"));
   }
 }
 

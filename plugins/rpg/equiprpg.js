@@ -5,9 +5,9 @@ import {
   ensureRpg, equipItem, unequipItem, getEquipStats, getInventory,
   ITEM_DB, getItemCount
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "equiprpg",
@@ -38,7 +38,7 @@ const SLOT_NAMES = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("equiprpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("equiprpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const command = m.command;
     const args = m.text?.trim().split(/\s+/) || [];
@@ -80,16 +80,16 @@ async function handler(m, { sock }) {
     if (command === "equiprpg" || command === "pakai") {
       const itemInfo = ITEM_DB[itemId];
       if (!itemInfo) {
-        return m.reply(claraWrap("equiprpg", `Item *${itemId}* tidak dikenal.`, "warn"));
+        return m.reply(novaRpgBox("equiprpg", `Item *${itemId}* tidak dikenal.`, "warn"));
       }
 
       if (!["weapon", "armor", "helmet", "boots", "accessory", "ring", "shield"].includes(itemInfo.type)) {
-        return m.reply(claraWrap("equiprpg", `${itemInfo.name} bukan equipment yang bisa di-equip.`, "warn"));
+        return m.reply(novaRpgBox("equiprpg", `${itemInfo.name} bukan equipment yang bisa di-equip.`, "warn"));
       }
 
       const owned = getItemCount(m, itemId);
       if (owned <= 0) {
-        return m.reply(claraWrap("equiprpg", `Kamu tidak punya *${itemInfo.name}* di inventory.`, "warn"));
+        return m.reply(novaRpgBox("equiprpg", `Kamu tidak punya *${itemInfo.name}* di inventory.`, "warn"));
       }
 
       const result = equipItem(m, itemId, sock);
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
         await animGeneric(m, sock, '🛡️', 'Equipping item');
         return m.reply(msg);
       } else {
-        return m.reply(claraWrap("equiprpg", result.reason || "Gagal equip item.", "warn"));
+        return m.reply(novaRpgBox("equiprpg", result.reason || "Gagal equip item.", "warn"));
       }
     }
 
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     if (command === "unequiprpg") {
       const slot = itemId.toLowerCase();
       if (!SLOT_NAMES[slot]) {
-        return m.reply(claraWrap("unequiprpg", `Slot tidak valid. Pilih: *${Object.keys(SLOT_NAMES).join(", ")}*`, "warn"));
+        return m.reply(novaRpgBox("unequiprpg", `Slot tidak valid. Pilih: *${Object.keys(SLOT_NAMES).join(", ")}*`, "warn"));
       }
 
       const result = unequipItem(m, slot);
@@ -137,13 +137,13 @@ async function handler(m, { sock }) {
         await animGeneric(m, sock, '🛡️', 'Equipping item');
         return m.reply(msg);
       } else {
-        return m.reply(claraWrap("unequiprpg", result.reason || "Slot kosong atau gagal unequip.", "warn"));
+        return m.reply(novaRpgBox("unequiprpg", result.reason || "Slot kosong atau gagal unequip.", "warn"));
       }
     }
   } catch (err) {
     console.error("equiprpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("equiprpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("equiprpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

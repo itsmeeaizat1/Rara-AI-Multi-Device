@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animLottery } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -46,7 +45,7 @@ async function handler(m, { sock }) {
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
       await m.react('🐣');
-      return m.reply(claraWrap("lottery", [
+      return m.reply(novaRpgBox("lottery", [
         `Harga tiket : ${ticketPrice} Gold`,
         `Tiket terjual : ${totalTickets}`,
         `Total hadiah (70%) : ${prizePool} Gold`,
@@ -61,7 +60,7 @@ async function handler(m, { sock }) {
       if (isNaN(count) || count <= 0) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "lottery",
             `Jumlah tiket tidak valid!\n\nContoh: ${m.prefix}lottery buy 5`,
             "error"
@@ -73,7 +72,7 @@ async function handler(m, { sock }) {
       if (userWallet.gold < totalCost) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "lottery",
             `Gold kamu tidak cukup untuk membeli ${count} tiket!\n\nBiaya: ${totalCost} Gold | Gold Kamu: ${userWallet.gold} Gold`,
             "error"
@@ -112,7 +111,7 @@ async function handler(m, { sock }) {
       if (!m.isOwner) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "lottery",
             "Hanya Owner bot yang dapat melakukan pengundian pemenang lotre!",
             "error"
@@ -123,7 +122,7 @@ async function handler(m, { sock }) {
       if (lottery.tickets.length === 0) {
         await m.react('❌');
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "lottery",
             "Belum ada tiket lotre yang dibeli oleh pemain!",
             "error"
@@ -169,7 +168,7 @@ async function handler(m, { sock }) {
 
     await m.react('❌');
     return m.reply(
-      claraWrap(
+      novaRpgBox(
         "lottery",
         `Perintah tidak dikenal!\n\nGunakan:\n• ${m.prefix}lottery info\n• ${m.prefix}lottery buy <jumlah>\n• ${m.prefix}lottery draw (Owner Only)`,
         "guide"
@@ -178,7 +177,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("lottery error:", err);
     await m.react('❌');
-    return m.reply(claraWrap("lottery", err.message || "Terjadi kesalahan pada Lotre.", "error"));
+    return m.reply(novaRpgBox("lottery", err.message || "Terjadi kesalahan pada Lotre.", "error"));
   }
 }
 

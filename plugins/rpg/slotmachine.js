@@ -1,7 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { animSlot } from "../../src/lib/nova-rpg-anim.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "slotmachine",
@@ -55,18 +54,18 @@ async function handler(m, { sock }) {
     const prefix = m.prefix || ".";
 
     if (!args[0] || isNaN(parseInt(args[0]))) {
-      return m.reply(claraWrap("slotmachine", `Masukkan jumlah taruhan valid! Min *${MIN_BET}*, Max *${MAX_BET}* gold.\nContoh: *${prefix}slotmachine 100*`, "warn"));
+      return m.reply(novaRpgBox("slotmachine", `Masukkan jumlah taruhan valid! Min *${MIN_BET}*, Max *${MAX_BET}* gold.\nContoh: *${prefix}slotmachine 100*`, "warn"));
     }
 
     const bet = parseInt(args[0]);
     if (bet < MIN_BET || bet > MAX_BET) {
-      return m.reply(claraWrap("slotmachine", `Jumlah taruhan harus antara *${MIN_BET}* dan *${MAX_BET}* gold!`, "warn"));
+      return m.reply(novaRpgBox("slotmachine", `Jumlah taruhan harus antara *${MIN_BET}* dan *${MAX_BET}* gold!`, "warn"));
     }
 
     const db = await getDatabase();
     const currentGold = await getPlayerGold(db, sender);
     if (currentGold < bet) {
-      return m.reply(claraWrap("slotmachine", `Gold kamu tidak cukup! Kamu memiliki *${currentGold} gold*, butuh *${bet} gold*.`, "error"));
+      return m.reply(novaRpgBox("slotmachine", `Gold kamu tidak cukup! Kamu memiliki *${currentGold} gold*, butuh *${bet} gold*.`, "error"));
     }
 
     // Spin reels
@@ -122,7 +121,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("slotmachine error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("slotmachine", err.message || "Terjadi kesalahan pada slot machine.", "error"));
+    return m.reply(novaRpgBox("slotmachine", err.message || "Terjadi kesalahan pada slot machine.", "error"));
   }
 }
 

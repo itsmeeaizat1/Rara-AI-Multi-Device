@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // petevolve.js — Pet Evolution System (Evolve pet to higher stages)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "petevolve",
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
     if (!pet || !pet.type) {
       await m.react("❌");
       return m.reply(
-        claraWrap(
+        novaRpgBox(
           "petevolve",
           `Kamu belum memiliki Pet untuk dievolusi!\n\nAdopsi pet terlebih dahulu menggunakan perintah *${prefix}pet adopt <tipe>*`,
           "error"
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
       pet.foodCount = (pet.foodCount || 0) + 1;
       await db.setPlayerData?.(sender, "pet", pet);
       await m.react("🐣");
-      return m.reply(claraWrap("petevolve", `Berhasil membeli 1x Pet Food seharga 500 Gold!\n\nTotal Pet Food kamu: *${pet.foodCount}* Pcs`, "guide"));
+      return m.reply(novaRpgBox("petevolve", `Berhasil membeli 1x Pet Food seharga 500 Gold!\n\nTotal Pet Food kamu: *${pet.foodCount}* Pcs`, "guide"));
     }
 
     // Subcommand: BUYCRYSTAL
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
       pet.crystals = (pet.crystals || 0) + 1;
       await db.setPlayerData?.(sender, "pet", pet);
       await m.react("🐣");
-      return m.reply(claraWrap("petevolve", `Berhasil membeli 1x Evolution Crystal seharga 2000 Gold!\n\nTotal Crystal kamu: *${pet.crystals}* Pcs`, "guide"));
+      return m.reply(novaRpgBox("petevolve", `Berhasil membeli 1x Evolution Crystal seharga 2000 Gold!\n\nTotal Crystal kamu: *${pet.crystals}* Pcs`, "guide"));
     }
 
     // Current stage data
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
       if (errors.length > 0) {
         await m.react("❌");
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "petevolve",
             `Syarat evolusi ke Stage ${pet.stage + 1} (*${nextData.name}*) belum terpenuhi:\n\n❌ ${errors.join("\n❌ ")}\n💰 Membutuhkan ${reqGold.toLocaleString()} Gold`,
             "error"
@@ -212,7 +212,7 @@ async function handler(m, { sock }) {
     return m.reply(statusText);
   } catch (err) {
     await m.react("❌");
-    return m.reply(claraWrap("petevolve", `Terjadi kesalahan: ${err.message}`, "error"));
+    return m.reply(novaRpgBox("petevolve", `Terjadi kesalahan: ${err.message}`, "error"));
   }
 }
 

@@ -660,4 +660,74 @@ export function psStat(icon, label, cur, max, width = 10) {
   return `${icon} ${label}  ${bar}  ${c}/${mx}`;
 }
 
+// ─── novaRpgBox — REDESIGN OWNER 2026-09-07: SEMUA game RPG + RPG cinta ───
+// Request owner: "itu tampilan yang diganti jangan cuma family100 tapi
+// semua game rpg, rpg cinta — garis di kiri dihapus juga".
+// Signature 100% kompatibel dengan claraWrap(title, body, type) /
+// novaBox(header, lines, opts) biar bisa drop-in di 159 plugin RPG —
+// tapi render-nya dashboard PS-style novaGameBox: TANPA box-drawing
+// (╭╰│), TANPA garis kiri. Status icon (❗/✅/❌) tetap sesuai aturan owner.
+export function novaRpgBox(title, body, type = "info", _opts = {}) {
+  const raw = Array.isArray(body) ? body : String(body ?? "").split("\n");
+  let lines = raw.map((l) =>
+    (l === undefined || l === null) ? "" :
+    (typeof l === "object" && l !== null && l.subHeader) ? l : String(l)
+  );
+  const isBlankL = (l) => (typeof l === "string" ? !l.trim() : false);
+  while (lines.length && isBlankL(lines[0])) lines.shift();
+  while (lines.length && isBlankL(lines[lines.length - 1])) lines.pop();
+  const collapsed = [];
+  let prevBlank = false;
+  for (const l of lines) {
+    const isBlank = typeof l === "string" ? !l.trim() : false;
+    if (isBlank && prevBlank) continue;
+    collapsed.push(l);
+    prevBlank = isBlank;
+  }
+  lines = collapsed;
+
+  // status icon di baris pertama — sama kayak claraWrap (aturan owner)
+  if (type === "error" && lines.length) {
+    lines[0] = lines[0].startsWith("❌") ? lines[0] : `❌ ${lines[0]}`;
+  } else if (type === "success" && lines.length) {
+    lines[0] = lines[0].startsWith("✅") ? lines[0] : `✅ ${lines[0]}`;
+  } else if (type === "warn" && lines.length) {
+    lines[0] = lines[0].startsWith("❗") ? lines[0] : `❗ ${lines[0]}`;
+  }
+
+  // render body: subHeader → section ◈ letter-spaced, "---" → paragraf,
+  // teks → indent 2 spasi tanpa prefix bullet/pipe (garis kiri dihapus)
+  const bodyLines = lines.map((l) => {
+    if (typeof l === "object" && l?.subHeader) {
+      // subHeader RPG umumnya udah smallcaps — render apa adanya dengan
+      // marker section ◈ (psSection toUpperCase malah merusak smallcaps)
+      return `◈ ${String(l.subHeader).replace(/\*/g, "").trim()}`;
+    }
+    const s = String(l);
+    if (!s.trim()) return "";
+    if (/^-{3,}$/.test(s.trim())) return "";
+    const clean = s
+      .replace(/^╎❏\s*/, "")
+      .replace(/^╎\s*$/, "")
+      .replace(/^┊\s+➶\s*/, "")
+      .replace(/^(?:[•┊╎❏➶╭╰│┃]\s*)+/, "");
+    return `  ${clean}`;
+  });
+  while (bodyLines.length && !bodyLines[0].trim()) bodyLines.shift();
+  while (bodyLines.length && !bodyLines[bodyLines.length - 1].trim()) bodyLines.pop();
+
+  const icon = type === "error" ? "🚫" : type === "warn" ? "❗" : type === "success" ? "✅" : "🎮";
+  return novaGameBox({ title, icon, body: bodyLines.join("\n") });
+}
+
+// novaRpgGuide — pengganti novaGuide(commandName, intro, example, note)
+// buat plugin RPG: format dashboard, tanpa box-drawing.
+export function novaRpgGuide(commandName, intro, example, note) {
+  const body = [];
+  if (intro) body.push(String(intro));
+  if (example) body.push("", `📌 ${example}`);
+  if (note) body.push("", `💡 ${note}`);
+  return novaRpgBox(commandName, body, "info");
+}
+
 export { NovaGames, games, gameCTA, GAME_FLAVOR, pickFlavor, renderProgressBar, renderSlotBoard, renderStatBar };

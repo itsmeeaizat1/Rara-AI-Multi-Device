@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // cookingv2.js — Cooking System v2 (10 recipes, buffs, ingredients, animation)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animCraft } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "cookingv2",
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
       if (now - (data.lastGather || 0) < cooldownMs) {
         const remaining = Math.ceil((cooldownMs - (now - data.lastGather)) / 1000);
         await m.react("❌");
-        return m.reply(claraWrap("cookingv2", `Kamu masih lelah mencari bahan.\n\nTunggu *${remaining} detik* lagi!`, "error"));
+        return m.reply(novaRpgBox("cookingv2", `Kamu masih lelah mencari bahan.\n\nTunggu *${remaining} detik* lagi!`, "error"));
       }
 
       data.lastGather = now;
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
       if (!recipeInput) {
         await m.react("❌");
         return m.reply(
-          claraWrap("cookingv2", `Sebutkan nama resep yang ingin dimasak!\n\nContoh: *${prefix}cookingv2 cook nasigoreng*\nKetik *${prefix}cookingv2 list* untuk melihat daftar resep.`, "guide")
+          novaRpgBox("cookingv2", `Sebutkan nama resep yang ingin dimasak!\n\nContoh: *${prefix}cookingv2 cook nasigoreng*\nKetik *${prefix}cookingv2 list* untuk melihat daftar resep.`, "guide")
         );
       }
 
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
       if (!recipe) {
         await m.react("❌");
         return m.reply(
-          claraWrap("cookingv2", `Resep *${recipeInput}* tidak ditemukan!\n\nKetik *${prefix}cookingv2 list* untuk daftar 10 resep lengkap.`, "error")
+          novaRpgBox("cookingv2", `Resep *${recipeInput}* tidak ditemukan!\n\nKetik *${prefix}cookingv2 list* untuk daftar 10 resep lengkap.`, "error")
         );
       }
 
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
       if (missing.length > 0) {
         await m.react("❌");
         return m.reply(
-          claraWrap(
+          novaRpgBox(
             "cookingv2",
             `Bahan kamu tidak cukup untuk memasak *${recipe.name}*!\n\n❌ Kurang:\n - ${missing.join("\n - ")}\n\nKumpulkan bahan dengan *${prefix}cookingv2 gather* atau cek *${prefix}cookingv2 inventory*.`,
             "error"
@@ -232,10 +232,10 @@ async function handler(m, { sock }) {
     defaultMsg += `• *${prefix}cookingv2 gather* - Mencari/mengumpulkan bahan\n`;
 
     await m.react("🐣");
-    return m.reply(claraWrap("cookingv2", defaultMsg, "guide"));
+    return m.reply(novaRpgBox("cookingv2", defaultMsg, "guide"));
   } catch (err) {
     await m.react("❌");
-    return m.reply(claraWrap("cookingv2", `Terjadi kesalahan: ${err.message}`, "error"));
+    return m.reply(novaRpgBox("cookingv2", `Terjadi kesalahan: ${err.message}`, "error"));
   }
 }
 

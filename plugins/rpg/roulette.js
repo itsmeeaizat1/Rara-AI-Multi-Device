@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animRoulette } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -63,7 +62,7 @@ async function handler(m, { sock }) {
       guide += `*6.* High / Besar (19-36) (2x)\n`;
       guide += `*7.* Angka Spesifik (0-36) (36x)\n\n`;
       guide += `Contoh: *${prefix}roulette red 100* atau *${prefix}roulette 7 100*`;
-      return m.reply(claraWrap("roulette", guide, "info"));
+      return m.reply(novaRpgBox("roulette", guide, "info"));
     }
 
     let betTypeInput = args[0].toLowerCase();
@@ -77,7 +76,7 @@ async function handler(m, { sock }) {
 
     if (isNaN(betAmountInput) || betAmountInput < MIN_BET) {
       return m.reply(
-        claraWrap(
+        novaRpgBox(
           "roulette",
           `Minimal taruhan adalah *${MIN_BET} gold*! Contoh: *${prefix}roulette red 100*`,
           "warn"
@@ -91,7 +90,7 @@ async function handler(m, { sock }) {
 
     if (currentGold < bet) {
       return m.reply(
-        claraWrap(
+        novaRpgBox(
           "roulette",
           `Gold kamu tidak cukup! Punya *${currentGold} gold*, butuh *${bet} gold*.`,
           "error"
@@ -154,7 +153,7 @@ async function handler(m, { sock }) {
       }
     } else {
       return m.reply(
-        claraWrap(
+        novaRpgBox(
           "roulette",
           `Jenis taruhan *${betTypeInput}* tidak valid!\nPilih: red, black, even, odd, low, high, atau angka 0-36.`,
           "warn"
@@ -215,7 +214,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("roulette error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("roulette", err.message || "Terjadi kesalahan pada roulette.", "error"));
+    return m.reply(novaRpgBox("roulette", err.message || "Terjadi kesalahan pada roulette.", "error"));
   }
 }
 

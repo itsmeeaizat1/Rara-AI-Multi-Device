@@ -6,8 +6,8 @@ import {
   checkCooldown, setCooldown, formatTime, JOB_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { animKerja } from "../../src/lib/nova-rpg-anim.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("kerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("kerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     // Pilih jenis kerjaan dulu — jangan langsung eksekusi random
     const arg = (m.args[0] || "").toLowerCase();
@@ -97,12 +97,12 @@ async function handler(m, { sock }) {
     const cd = checkCooldown(m, "lastWork");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("kerja", `Cooldown kerja tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("kerja", `Cooldown kerja tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < WORK_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("kerja", `Energi kurang! Butuh *${WORK_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(novaRpgBox("kerja", `Energi kurang! Butuh *${WORK_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     useEnergy(m, WORK_ENERGY, sock);
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("kerja error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("kerja", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("kerja", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

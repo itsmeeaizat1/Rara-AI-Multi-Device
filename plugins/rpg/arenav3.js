@@ -6,8 +6,8 @@ import {
   getEquipStats, pvpResult, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -99,7 +99,7 @@ function makeAI(level) {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("arenav3", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("arenav3", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const mode = args[0]?.toLowerCase();
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
 
       if (players.length === 0) {
   await animGeneric(m, sock, "⚔️", "Arena Battle");
-        return m.reply(claraWrap("arenav3", "Belum ada player di arena.", "info"));
+        return m.reply(novaRpgBox("arenav3", "Belum ada player di arena.", "info"));
       }
 
       let msg = "";
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
         msg += `${rank} ${p.name}\n`;
         msg += `Rating: *${p.rating}* | W:${p.wins} L:${p.losses} (${wr}%)\n`;
       }
-            return m.reply(claraWrap("arenav3", msg));
+            return m.reply(novaRpgBox("arenav3", msg));
     }
 
     // Need mode
@@ -149,19 +149,19 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `⚡ Cost: *${ARENA_ENERGY} energy*\n`;
-            return m.reply(claraWrap("arenav3", msg));
+            return m.reply(novaRpgBox("arenav3", msg));
     }
 
     // Check cooldown & energy
     const cd = checkCooldown(m, "lastArenaV3");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("arenav3", `Cooldown arena tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("arenav3", `Cooldown arena tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < ARENA_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("arenav3", `Energi kurang! Butuh *${ARENA_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(novaRpgBox("arenav3", `Energi kurang! Butuh *${ARENA_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     await m.react("🕒");
@@ -272,7 +272,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("arenav3 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("arenav3", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("arenav3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

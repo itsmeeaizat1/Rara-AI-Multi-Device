@@ -6,8 +6,8 @@ import {
   addItem, getEquipStats, getRandomMonster, rollDrop, ITEM_DB,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -36,22 +36,22 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("dungeon", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("dungeon", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (rpg.level < DG_MIN_LEVEL) {
       await m.react("🚫");
-      return m.reply(claraWrap("dungeon", `Butuh minimal *Level ${DG_MIN_LEVEL}* untuk masuk dungeon. Level kamu: *${rpg.level}*.`, "warn"));
+      return m.reply(novaRpgBox("dungeon", `Butuh minimal *Level ${DG_MIN_LEVEL}* untuk masuk dungeon. Level kamu: *${rpg.level}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastDungeon");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("dungeon", `Cooldown dungeon tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("dungeon", `Cooldown dungeon tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < DG_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("dungeon", `Energi kurang! Butuh *${DG_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(novaRpgBox("dungeon", `Energi kurang! Butuh *${DG_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     // Cek kunci dungeon
@@ -185,7 +185,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("dungeon error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("dungeon", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("dungeon", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

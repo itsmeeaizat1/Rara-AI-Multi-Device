@@ -8,8 +8,7 @@ import {
 } from "../../src/lib/nova-rpg-cinta.js";
 import { checkCooldown } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox, novaRpgGuide } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "couplewar",
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
     const myCinta = getCintaData(m);
 
     if (!myCinta.spouse) {
-      return m.reply(claraWrap("Couple War", [
+      return m.reply(novaRpgBox("Couple War", [
         "Kamu belum punya pasangan!",
         "Jomblo mau war sama siapa?",
       ], "warn"));
@@ -42,22 +41,22 @@ async function handler(m, { sock }) {
 
     let targetJid = m.mentionedJid?.[0] || (m.quoted ? m.quoted.sender : null);
     if (!targetJid) {
-      return m.reply(novaGuide("couplewar", "Duel pasangan kamu vs pasangan orang lain!", `${m.prefix}couplewar @target`, "Tag salah satu pasangan lawan"));
+      return m.reply(novaRpgGuide("couplewar", "Duel pasangan kamu vs pasangan orang lain!", `${m.prefix}couplewar @target`, "Tag salah satu pasangan lawan"));
     }
 
     if (targetJid === m.sender) {
-      return m.reply(claraWrap("Couple War", "War sama diri sendiri? Itu skizofrenia", "error"));
+      return m.reply(novaRpgBox("Couple War", "War sama diri sendiri? Itu skizofrenia", "error"));
     }
 
     if (targetJid === myCinta.spouse) {
-      return m.reply(claraWrap("Couple War", "Nggak bisa war sama pasangan sendiri!", "error"));
+      return m.reply(novaRpgBox("Couple War", "Nggak bisa war sama pasangan sendiri!", "error"));
     }
 
     ensureRpg({ sender: targetJid, pushName: targetJid.split("@")[0] }, targetJid.split("@")[0]);
     const targetCinta = getCintaData({ sender: targetJid, pushName: targetJid.split("@")[0] });
 
     if (!targetCinta.spouse) {
-      return m.reply(claraWrap("Couple War", [
+      return m.reply(novaRpgBox("Couple War", [
         `@${targetJid.split("@")[0]} belum punya pasangan!`,
         "Jomblo vs jomblo namanya duel bukan couple war",
       ], "warn"));
@@ -66,7 +65,7 @@ async function handler(m, { sock }) {
     // Cooldown check
     const cd = checkCooldown(m, "couplewar");
     if (cd) {
-      return m.reply(claraWrap("Couple War", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
+      return m.reply(novaRpgBox("Couple War", `Cooldown: ${formatDurasi(cd)} lagi`, "warn"));
     }
 
     // Get couple powers

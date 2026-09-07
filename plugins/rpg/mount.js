@@ -2,9 +2,9 @@
 // RPG Mount — Tunggangan, feed mount, bonus spd
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "mount",
@@ -27,12 +27,12 @@ const MOUNTS = {
 async function handler(m, { sock, text, command }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("mount", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("mount", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "mountfeed" || command === "mount" && (text || "").toLowerCase() === "feed") {
-      if (!rpg.mount) return m.reply(claraWrap("mount", "Kamu belum punya tunggangan. Ketik .mount list.", "guide"));
+      if (!rpg.mount) return m.reply(novaRpgBox("mount", "Kamu belum punya tunggangan. Ketik .mount list.", "guide"));
       const mount = MOUNTS[rpg.mount.id];
-      if (!mount) return m.reply(claraWrap("mount", "Tunggangan tidak valid.", "error"));
+      if (!mount) return m.reply(novaRpgBox("mount", "Tunggangan tidak valid.", "error"));
 
       await m.react("🕒");
       rpg.mount.happiness = Math.min(100, (rpg.mount.happiness || 50) + 30);
@@ -66,12 +66,12 @@ async function handler(m, { sock, text, command }) {
 
     if (action === "pilih" || action === "beli") {
       const mountId = args[1]?.toLowerCase();
-      if (!mountId || !MOUNTS[mountId]) return m.reply(claraWrap("mount", "Tunggangan tidak valid. Ketik .mount list.", "guide"));
+      if (!mountId || !MOUNTS[mountId]) return m.reply(novaRpgBox("mount", "Tunggangan tidak valid. Ketik .mount list.", "guide"));
   await animGeneric(m, sock, "🐴", "Mounting");
-      if (rpg.mount) return m.reply(claraWrap("mount", "Kamu sudah punya tunggangan: " + MOUNTS[rpg.mount.id].name, "info"));
+      if (rpg.mount) return m.reply(novaRpgBox("mount", "Kamu sudah punya tunggangan: " + MOUNTS[rpg.mount.id].name, "info"));
 
       const mount = MOUNTS[mountId];
-      if ((rpg.gold || 0) < mount.cost) return m.reply(claraWrap("mount", "Gold tidak cukup. Butuh " + mount.cost + " gold.", "info"));
+      if ((rpg.gold || 0) < mount.cost) return m.reply(novaRpgBox("mount", "Gold tidak cukup. Butuh " + mount.cost + " gold.", "info"));
 
       await m.react("🕒");
       rpg.gold = (rpg.gold || 0) - mount.cost;
@@ -86,7 +86,7 @@ async function handler(m, { sock, text, command }) {
   } catch (e) {
     console.error("mount error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap(m.command || "mount", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox(m.command || "mount", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

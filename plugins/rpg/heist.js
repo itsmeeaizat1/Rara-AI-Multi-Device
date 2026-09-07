@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // heist.js — Heist system (rob targets, risk vs reward)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric, animHeist } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -53,13 +52,13 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `${m.prefix}heist <target>\n`;
-            return m.reply(claraWrap("heist", msg));
+            return m.reply(novaRpgBox("heist", msg));
     }
 
     const target = TARGETS.find(t => t.name.toLowerCase().includes(targetName));
     if (!target) {
       await m.react("❌");
-      return m.reply(claraWrap("heist", `Target tidak ditemukan. Lihat: ${m.prefix}heist`, "error"));
+      return m.reply(novaRpgBox("heist", `Target tidak ditemukan. Lihat: ${m.prefix}heist`, "error"));
     }
 
     // Cek energi
@@ -67,7 +66,7 @@ async function handler(m, { sock }) {
       const energi = await db.getEnergi?.(m.sender) || 100;
       if (energi < target.energiCost) {
         await m.react("❌");
-        return m.reply(claraWrap("heist", `Energi kurang! Butuh ${target.energiCost} energi.`, "error"));
+        return m.reply(novaRpgBox("heist", `Energi kurang! Butuh ${target.energiCost} energi.`, "error"));
       }
       await db.minEnergi?.(m.sender, target.energiCost);
     } catch {}
@@ -107,7 +106,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("heist error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("heist", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("heist", err.message || "Error", "error"));
   }
 }
 

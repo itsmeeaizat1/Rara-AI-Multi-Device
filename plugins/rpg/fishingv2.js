@@ -2,7 +2,7 @@
 // fishingv2.js — Fishing v2 dengan rods & bait system
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "fishingv2",
@@ -91,31 +91,31 @@ async function handler(m, { sock }) {
 
       if (type === "rod") {
         const rod = RODS.find(r => r.name.toLowerCase() === itemName.toLowerCase());
-        if (!rod) return m.reply(claraWrap("fishingv2", "Rod tidak ditemukan.", "error"));
+        if (!rod) return m.reply(novaRpgBox("fishingv2", "Rod tidak ditemukan.", "error"));
         try {
           const gold = await db.getGold?.(m.sender) || 0;
-          if (gold < rod.price) return m.reply(claraWrap("fishingv2", `Gold kurang! Butuh ${rod.price}g.`, "error"));
+          if (gold < rod.price) return m.reply(novaRpgBox("fishingv2", `Gold kurang! Butuh ${rod.price}g.`, "error"));
           await db.minGold?.(m.sender, rod.price);
         } catch {}
         data.rod = RODS.indexOf(rod);
         await saveData(db, m.sender, data);
         await m.react("🐣");
-        return m.reply(claraWrap("fishingv2", `${rod.emoji} Berhasil beli *${rod.name}*! (+${rod.bonus}% catch rate)`));
+        return m.reply(novaRpgBox("fishingv2", `${rod.emoji} Berhasil beli *${rod.name}*! (+${rod.bonus}% catch rate)`));
       } else if (type === "bait") {
         const bait = BAITS.find(b => b.name.toLowerCase() === itemName.toLowerCase().replace(/\d+$/, "").trim());
-        if (!bait) return m.reply(claraWrap("fishingv2", "Bait tidak ditemukan.", "error"));
+        if (!bait) return m.reply(novaRpgBox("fishingv2", "Bait tidak ditemukan.", "error"));
         const cost = bait.price * qty;
         try {
           const gold = await db.getGold?.(m.sender) || 0;
-          if (gold < cost) return m.reply(claraWrap("fishingv2", `Gold kurang! Butuh ${cost}g.`, "error"));
+          if (gold < cost) return m.reply(novaRpgBox("fishingv2", `Gold kurang! Butuh ${cost}g.`, "error"));
           await db.minGold?.(m.sender, cost);
         } catch {}
         data.baits[bait.name] = (data.baits[bait.name] || 0) + qty;
         await saveData(db, m.sender, data);
         await m.react("🐣");
-        return m.reply(claraWrap("fishingv2", `${bait.emoji} Beli *${bait.name}* x${qty} (${cost}g)!`));
+        return m.reply(novaRpgBox("fishingv2", `${bait.emoji} Beli *${bait.name}* x${qty} (${cost}g)!`));
       }
-      return m.reply(claraWrap("fishingv2", `Format: ${m.prefix}fishingv2 buy rod/bait <nama>`, "guide"));
+      return m.reply(novaRpgBox("fishingv2", `Format: ${m.prefix}fishingv2 buy rod/bait <nama>`, "guide"));
     }
 
     if (subCmd === "inv" || subCmd === "koleksi") {
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fishingv2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("fishingv2", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("fishingv2", err.message || "Error", "error"));
   }
 }
 

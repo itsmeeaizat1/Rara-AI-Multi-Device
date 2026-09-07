@@ -4,9 +4,10 @@
 import {
   ensureRpg, addExp, addGold, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { animGajian } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "gajian",
@@ -32,12 +33,12 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("gajian", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("gajian", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastGajian");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("gajian", `Cooldown gajian tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("gajian", `Cooldown gajian tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     await animGajian(m, sock);
@@ -57,7 +58,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("gajian error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("gajian", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("gajian", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

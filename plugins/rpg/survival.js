@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // survival.js — Survival mode (HP, hunger, thirst management)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animSurvival } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "survival",
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
           const gold = await db.getGold?.(m.sender) || 0;
           if (gold < cost) {
             await m.react("❌");
-            return m.reply(claraWrap("survival", `Kamu mati! Butuh ${cost} gold untuk revive.`, "error"));
+            return m.reply(novaRpgBox("survival", `Kamu mati! Butuh ${cost} gold untuk revive.`, "error"));
           }
           await db.minGold?.(m.sender, cost);
         } catch {}
@@ -72,22 +72,22 @@ async function handler(m, { sock }) {
         data.lastUpdate = Date.now();
         await db.setPlayerData?.(m.sender, "survival", data);
         await m.react("🐣");
-        return m.reply(claraWrap("survival", `💚 Kamu hidup lagi! HP & stats penuh.\nTotal kematian: ${data.deaths}`));
+        return m.reply(novaRpgBox("survival", `💚 Kamu hidup lagi! HP & stats penuh.\nTotal kematian: ${data.deaths}`));
       }
-      return m.reply(claraWrap("survival", `💀 Kamu MATI!\n\nRevive: ${m.prefix}survival revive (1000g)`, "error"));
+      return m.reply(novaRpgBox("survival", `💀 Kamu MATI!\n\nRevive: ${m.prefix}survival revive (1000g)`, "error"));
     }
 
     if (subCmd === "drink" || subCmd === "minum") {
-      if (data.thirst >= MAX_THIRST) return m.reply(claraWrap("survival", "Thirst penuh!", "error"));
+      if (data.thirst >= MAX_THIRST) return m.reply(novaRpgBox("survival", "Thirst penuh!", "error"));
       data.thirst = Math.min(MAX_THIRST, data.thirst + 40);
       data.lastUpdate = Date.now();
       await db.setPlayerData?.(m.sender, "survival", data);
       await m.react("🐣");
-      return m.reply(claraWrap("survival", `💧 Minum berhasil! Thirst: ${data.thirst}/${MAX_THIRST}`));
+      return m.reply(novaRpgBox("survival", `💧 Minum berhasil! Thirst: ${data.thirst}/${MAX_THIRST}`));
     }
 
     if (subCmd === "rest" || subCmd === "istirahat") {
-      if (data.hp >= MAX_HP) return m.reply(claraWrap("survival", "HP penuh!", "error"));
+      if (data.hp >= MAX_HP) return m.reply(novaRpgBox("survival", "HP penuh!", "error"));
       const cost = 20;
       try { await db.minEnergi?.(m.sender, cost); } catch {}
       data.hp = Math.min(MAX_HP, data.hp + 50);
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
       data.lastUpdate = Date.now();
       await db.setPlayerData?.(m.sender, "survival", data);
       await m.react("🐣");
-      return m.reply(claraWrap("survival", `🛌 Istirahat! HP +50 (${data.hp}/${MAX_HP})\nHunger -5 (${data.hunger})`));
+      return m.reply(novaRpgBox("survival", `🛌 Istirahat! HP +50 (${data.hp}/${MAX_HP})\nHunger -5 (${data.hunger})`));
     }
 
     if (subCmd === "hunt" || subCmd === "berburu") {
@@ -108,13 +108,13 @@ async function handler(m, { sock }) {
         data.lastUpdate = Date.now();
         await db.setPlayerData?.(m.sender, "survival", data);
         await m.react("🐣");
-        return m.reply(claraWrap("survival", `🏹 Berburu berhasil! Hunger +30 (+100g)\nHunger: ${data.hunger}/${MAX_HUNGER}`));
+        return m.reply(novaRpgBox("survival", `🏹 Berburu berhasil! Hunger +30 (+100g)\nHunger: ${data.hunger}/${MAX_HUNGER}`));
       } else {
         data.hp = Math.max(0, data.hp - 20);
         data.lastUpdate = Date.now();
         await db.setPlayerData?.(m.sender, "survival", data);
         await m.react("🐣");
-        return m.reply(claraWrap("survival", `🏹 Berburu gagal! Hewan melawan, HP -20 (${data.hp}/${MAX_HP})`));
+        return m.reply(novaRpgBox("survival", `🏹 Berburu gagal! Hewan melawan, HP -20 (${data.hp}/${MAX_HP})`));
       }
     }
 
@@ -137,7 +137,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("survival error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("survival", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("survival", err.message || "Error", "error"));
   }
 }
 

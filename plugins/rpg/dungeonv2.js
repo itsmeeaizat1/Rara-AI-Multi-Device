@@ -7,8 +7,8 @@ import {
   checkCooldown, setCooldown, formatTime,
   getMonstersByLevel, getRandomMonster
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -55,7 +55,7 @@ const BOSS_DROPS = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("dungeonv2", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("dungeonv2", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         msg += `
 `;
         msg += `📌 .dungeonv2 enter — mulai dungeon\n`;
-                return m.reply(claraWrap("dungeonv2", msg));
+                return m.reply(novaRpgBox("dungeonv2", msg));
       }
 
       let msg = "";
@@ -96,24 +96,24 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 .dungeonv2 enter — lanjut floor\n`;
       msg += `📌 .dungeonv2 leave — keluar (kalah)\n`;
-            return m.reply(claraWrap("dungeonv2", msg));
+            return m.reply(novaRpgBox("dungeonv2", msg));
     }
 
     // ── LEAVE ──
     if (action === "leave" || action === "keluar") {
       if (!rpg.dungeonV2.active) {
-        return m.reply(claraWrap("dungeonv2", "Kamu tidak sedang di dungeon.", "warn"));
+        return m.reply(novaRpgBox("dungeonv2", "Kamu tidak sedang di dungeon.", "warn"));
       }
       rpg.dungeonV2 = { active: false, floor: 0, clearLog: [] };
       saveRpg(m, { dungeonV2: rpg.dungeonV2 });
-      return m.reply(claraWrap("dungeonv2", "Kamu kabur dari dungeon. Semua progress hilang.", "warn"));
+      return m.reply(novaRpgBox("dungeonv2", "Kamu kabur dari dungeon. Semua progress hilang.", "warn"));
     }
 
     // ── ENTER / NEXT FLOOR ──
     if (action === "enter" || action === "mulai" || action === "next") {
       if (rpg.level < MIN_LEVEL) {
         await m.react("🚫");
-        return m.reply(claraWrap("dungeonv2", `Butuh minimal *Level ${MIN_LEVEL}*. Level kamu: *${rpg.level}*.`, "warn"));
+        return m.reply(novaRpgBox("dungeonv2", `Butuh minimal *Level ${MIN_LEVEL}*. Level kamu: *${rpg.level}*.`, "warn"));
       }
 
       // Check if dungeon complete (all floors cleared)
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
         rpg.dungeonV2 = { active: false, floor: 0, clearLog: [] };
         saveRpg(m, { dungeonV2: rpg.dungeonV2 });
         setCooldown(m, "lastDungeonV2", DG2_COOLDOWN);
-        return m.reply(claraWrap("dungeonv2", "Dungeon sudah selesai! Tunggu cooldown untuk masuk lagi.", "info"));
+        return m.reply(novaRpgBox("dungeonv2", "Dungeon sudah selesai! Tunggu cooldown untuk masuk lagi.", "info"));
       }
 
       // Start new dungeon
@@ -130,12 +130,12 @@ async function handler(m, { sock }) {
         const cd = checkCooldown(m, "lastDungeonV2");
         if (cd) {
           await reactCooldown(m);
-          return m.reply(claraWrap("dungeonv2", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
+          return m.reply(novaRpgBox("dungeonv2", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
         }
 
         if (rpg.energy < DG2_ENERGY) {
           await m.react("🚫");
-          return m.reply(claraWrap("dungeonv2", `Energi kurang! Butuh *${DG2_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+          return m.reply(novaRpgBox("dungeonv2", `Energi kurang! Butuh *${DG2_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
         }
 
         useEnergy(m, DG2_ENERGY, sock);
@@ -283,11 +283,11 @@ async function handler(m, { sock }) {
       }
     }
 
-    return m.reply(claraWrap("dungeonv2", "Aksi tidak dikenal. Gunakan: enter, status, leave", "warn"));
+    return m.reply(novaRpgBox("dungeonv2", "Aksi tidak dikenal. Gunakan: enter, status, leave", "warn"));
   } catch (err) {
     console.error("dungeonv2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("dungeonv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("dungeonv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

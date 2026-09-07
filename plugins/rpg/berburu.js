@@ -8,8 +8,8 @@ import {
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { animBattle, animHunt, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -36,23 +36,23 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("berburu", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("berburu", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastHunt");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("berburu", `Sabar, cooldown berburu tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("berburu", `Sabar, cooldown berburu tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < HUNT_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("berburu", `Energi kurang! Butuh *${HUNT_ENERGY} energy* untuk berburu. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
+      return m.reply(novaRpgBox("berburu", `Energi kurang! Butuh *${HUNT_ENERGY} energy* untuk berburu. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
     const monster = getRandomMonster(rpg.level);
     if (!monster) {
       await m.react("❌");
-      return m.reply(claraWrap("berburu", "Tidak ada monster yang cocok untuk level kamu saat ini.", "error"));
+      return m.reply(novaRpgBox("berburu", "Tidak ada monster yang cocok untuk level kamu saat ini.", "error"));
     }
 
     useEnergy(m, HUNT_ENERGY, sock);
@@ -164,7 +164,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("berburu error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("berburu", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("berburu", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

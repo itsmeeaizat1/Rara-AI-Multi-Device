@@ -5,8 +5,8 @@ import {
   ensureRpg, addExp, addGold, removeGold,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animSabung } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -50,28 +50,28 @@ function makeRooster(name, level) {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("sabungayam", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("sabungayam", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const bet = parseInt(args[0]);
 
     if (!bet || bet < MIN_BET) {
-      return m.reply(claraWrap("sabungayam", `Minimal bet *${MIN_BET} gold*. Contoh: .sabungayam 500`, "warn"));
+      return m.reply(novaRpgBox("sabungayam", `Minimal bet *${MIN_BET} gold*. Contoh: .sabungayam 500`, "warn"));
     }
 
     if (bet > MAX_BET) {
-      return m.reply(claraWrap("sabungayam", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
+      return m.reply(novaRpgBox("sabungayam", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
     }
 
     if (rpg.gold < bet) {
       await m.react("🚫");
-      return m.reply(claraWrap("sabungayam", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${bet}*.`, "warn"));
+      return m.reply(novaRpgBox("sabungayam", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${bet}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastSabung");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("sabungayam", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("sabungayam", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     await m.react("🕒");
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("sabungayam error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("sabungayam", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("sabungayam", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

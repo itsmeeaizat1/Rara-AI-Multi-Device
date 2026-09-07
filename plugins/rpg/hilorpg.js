@@ -5,8 +5,8 @@ import {
   ensureRpg, addExp, addGold, removeGold,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animHiLo } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -44,33 +44,33 @@ function drawCard() {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("hilorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("hilorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const bet = parseInt(args[0]);
     const guess = args[1]?.toLowerCase();
 
     if (!bet || bet < MIN_BET) {
-      return m.reply(claraWrap("hilorpg", `Minimal bet *${MIN_BET} gold*. Contoh: .hilorpg 100 high`, "warn"));
+      return m.reply(novaRpgBox("hilorpg", `Minimal bet *${MIN_BET} gold*. Contoh: .hilorpg 100 high`, "warn"));
     }
 
     if (bet > MAX_BET) {
-      return m.reply(claraWrap("hilorpg", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
+      return m.reply(novaRpgBox("hilorpg", `Maksimal bet *${MAX_BET} gold*.`, "warn"));
     }
 
     if (!guess || !["high", "low", "tinggi", "rendah", "h", "l"].includes(guess)) {
-      return m.reply(claraWrap("hilorpg", "Pilih *high* (tinggi) atau *low* (rendah). Contoh: .hilorpg 100 high", "warn"));
+      return m.reply(novaRpgBox("hilorpg", "Pilih *high* (tinggi) atau *low* (rendah). Contoh: .hilorpg 100 high", "warn"));
     }
 
     if (rpg.gold < bet) {
       await m.react("🚫");
-      return m.reply(claraWrap("hilorpg", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${bet}*.`, "warn"));
+      return m.reply(novaRpgBox("hilorpg", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${bet}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastHilo");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("hilorpg", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("hilorpg", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     await m.react("🕒");
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("hilorpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("hilorpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("hilorpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

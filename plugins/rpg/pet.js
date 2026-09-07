@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // pet.js — Pet System (adopsi, feed, level up, battle)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -54,12 +53,12 @@ async function handler(m, { sock }) {
       const petTemplate = PET_TYPES.find(p => p.type === petType);
       if (!petTemplate) {
         await m.react("❌");
-        return m.reply(claraWrap("pet", `Pet "${petType}" tidak tersedia.`, "error"));
+        return m.reply(novaRpgBox("pet", `Pet "${petType}" tidak tersedia.`, "error"));
       }
 
       const existing = await getPetData(db, m.sender);
       if (existing && existing.type) {
-        return m.reply(claraWrap("pet", `Kamu sudah punya pet: ${existing.emoji} *${existing.type}* (Lv.${existing.level}). Lepas dulu untuk adopsi baru.`, "error"));
+        return m.reply(novaRpgBox("pet", `Kamu sudah punya pet: ${existing.emoji} *${existing.type}* (Lv.${existing.level}). Lepas dulu untuk adopsi baru.`, "error"));
       }
 
       // Cek gold
@@ -67,7 +66,7 @@ async function handler(m, { sock }) {
         const gold = await db.getGold?.(m.sender) || await db.getBalance?.(m.sender);
         if (gold < petTemplate.cost) {
           await m.react("❌");
-          return m.reply(claraWrap("pet", `Gold tidak cukup! Butuh ${petTemplate.cost} gold.`, "error"));
+          return m.reply(novaRpgBox("pet", `Gold tidak cukup! Butuh ${petTemplate.cost} gold.`, "error"));
         }
         await db.minGold?.(m.sender, petTemplate.cost) || await db.addBalance?.(m.sender, -petTemplate.cost);
       } catch {}
@@ -105,7 +104,7 @@ async function handler(m, { sock }) {
     // CEK PET
     const pet = await getPetData(db, m.sender);
     if (!pet || !pet.type) {
-      return m.reply(claraWrap("pet", `Kamu belum punya pet. Adopsi dengan: ${m.prefix}pet adopt <type>`, "guide"));
+      return m.reply(novaRpgBox("pet", `Kamu belum punya pet. Adopsi dengan: ${m.prefix}pet adopt <type>`, "guide"));
     }
 
     // FEED
@@ -116,7 +115,7 @@ async function handler(m, { sock }) {
 
       if (now - lastFed < cooldown) {
         const remaining = Math.ceil((cooldown - (now - lastFed)) / 60000);
-        return m.reply(claraWrap("pet", `Pet kamu masih kenyang! Tunggu ${remaining} menit lagi.`, "error"));
+        return m.reply(novaRpgBox("pet", `Pet kamu masih kenyang! Tunggu ${remaining} menit lagi.`, "error"));
       }
 
       const feedCost = 50;
@@ -154,7 +153,7 @@ async function handler(m, { sock }) {
     // BATTLE
     if (subCmd === "battle" || subCmd === "fight") {
       if (pet.hunger < 20) {
-        return m.reply(claraWrap("pet", "Pet kamu kelaparan! Feed dulu.", "error"));
+        return m.reply(novaRpgBox("pet", "Pet kamu kelaparan! Feed dulu.", "error"));
       }
 
       await m.react("🕒");
@@ -221,11 +220,11 @@ async function handler(m, { sock }) {
 `;
     msg += `${m.prefix}pet feed - beri makan\n`;
     msg += `${m.prefix}pet battle - fight pet liar\n`;
-        return m.reply(claraWrap("pet", msg));
+        return m.reply(novaRpgBox("pet", msg));
   } catch (err) {
     console.error("pet error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("pet", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("pet", err.message || "Error", "error"));
   }
 }
 

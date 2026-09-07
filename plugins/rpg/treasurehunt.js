@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animTreasure } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -53,13 +52,13 @@ async function handler(m, { sock }) {
       listMsg += `💡 *Penggunaan:* ${m.prefix}treasurehunt <nama_lokasi>\n`;
       listMsg += `📝 *Contoh:* ${m.prefix}treasurehunt pantai\n`;
             await m.react("🐣");
-      return m.reply(claraWrap("treasurehunt", listMsg));
+      return m.reply(novaRpgBox("treasurehunt", listMsg));
     }
 
     const loc = LOCATIONS.find(l => l.id === input || l.aliases.includes(input));
     if (!loc) {
       await m.react("❌");
-      return m.reply(claraWrap("treasurehunt", `Lokasi "*${input}*" tidak ditemukan.\n\nKetik *${m.prefix}treasurehunt list* untuk melihat daftar lokasi.`, "error"));
+      return m.reply(novaRpgBox("treasurehunt", `Lokasi "*${input}*" tidak ditemukan.\n\nKetik *${m.prefix}treasurehunt list* untuk melihat daftar lokasi.`, "error"));
     }
 
     const profile = await db.getPlayerData?.(sender, "profile") || { gold: 1000, energi: 100 };
@@ -67,7 +66,7 @@ async function handler(m, { sock }) {
 
     if (currentEnergi < loc.cost && !m.isOwner) {
       await m.react("❌");
-      return m.reply(claraWrap("treasurehunt", `Energi kamu tidak cukup! Membutuhkan *${loc.cost} Energi*, kamu hanya memiliki *${currentEnergi} Energi*.`, "error"));
+      return m.reply(novaRpgBox("treasurehunt", `Energi kamu tidak cukup! Membutuhkan *${loc.cost} Energi*, kamu hanya memiliki *${currentEnergi} Energi*.`, "error"));
     }
 
     if (!m.isOwner) {
@@ -130,7 +129,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("treasurehunt error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("treasurehunt", err.message || "Terjadi kesalahan sistem.", "error"));
+    return m.reply(novaRpgBox("treasurehunt", err.message || "Terjadi kesalahan sistem.", "error"));
   }
 }
 

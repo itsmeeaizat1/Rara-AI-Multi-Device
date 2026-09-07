@@ -5,8 +5,8 @@ import {
   ensureRpg, addGold, removeGold,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -46,29 +46,29 @@ const PAYOUT = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("casinorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("casinorpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const bet = parseInt(args[0]);
 
     if (!bet || bet < MIN_BET) {
   await animGeneric(m, sock, "🎰", "Casino");
-      return m.reply(claraWrap("casinorpg", `Minimal bet *${MIN_BET} gold*. Contoh: .casinorpg 100`, "warn"));
+      return m.reply(novaRpgBox("casinorpg", `Minimal bet *${MIN_BET} gold*. Contoh: .casinorpg 100`, "warn"));
     }
 
     if (bet > MAX_BET) {
-      return m.reply(claraWrap("casinorpg", `Maksimal bet *${MAX_BET} gold* per putaran.`, "warn"));
+      return m.reply(novaRpgBox("casinorpg", `Maksimal bet *${MAX_BET} gold* per putaran.`, "warn"));
     }
 
     if (rpg.gold < bet) {
       await m.react("🚫");
-      return m.reply(claraWrap("casinorpg", `Gold tidak cukup! Kamu punya *${rpg.gold} gold*, butuh *${bet}*.`, "warn"));
+      return m.reply(novaRpgBox("casinorpg", `Gold tidak cukup! Kamu punya *${rpg.gold} gold*, butuh *${bet}*.`, "warn"));
     }
 
     const cd = checkCooldown(m, "lastGacha");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("casinorpg", `Cooldown casino tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("casinorpg", `Cooldown casino tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     await m.react("🕒");
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("casinorpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("casinorpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("casinorpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

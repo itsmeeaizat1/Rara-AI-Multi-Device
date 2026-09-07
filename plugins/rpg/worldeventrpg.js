@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG WorldEvent — Event dunia acak (owner only)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "worldeventrpg", alias: ["worldeventrpg", "worldevent"],
@@ -22,9 +22,9 @@ async function handler(m, { sock }) {
   try {
     const event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
   await animGeneric(m, sock, "🌍", "World Event");
-    return m.reply(claraWrap("worldeventrpg", `🌍 *WORLD EVENT TERJADI!*\n\n${event.msg}`, "success"));
+    return m.reply(novaRpgBox("worldeventrpg", `🌍 *WORLD EVENT TERJADI!*\n\n${event.msg}`, "success"));
   } catch (e) {
-    return m.reply(claraWrap("worldeventrpg", "Terjadi error.", "error"));
+    return m.reply(novaRpgBox("worldeventrpg", "Terjadi error.", "error"));
   }
 }
 export { pluginConfig as config, handler };

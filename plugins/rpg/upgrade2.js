@@ -1,6 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
@@ -64,19 +63,19 @@ async function handler(m, { sock }) {
       listMsg += `💡 *Penggunaan:* ${m.prefix}upgrade2 <weapon|armor|accessory>\n`;
       listMsg += `📝 *Contoh:* ${m.prefix}upgrade2 weapon\n`;
             await m.react("🐣");
-      return m.reply(claraWrap("upgrade2", listMsg));
+      return m.reply(novaRpgBox("upgrade2", listMsg));
     }
 
     const type = Object.keys(EQUIP_TYPES).find(k => k === input || input.includes(k));
     if (!type) {
       await m.react("❌");
-      return m.reply(claraWrap("upgrade2", `Pilihan equipment "*${input}*" tidak valid.\n\nPilih salah satu: *weapon*, *armor*, atau *accessory*.\nKetik *${m.prefix}upgrade2 list* untuk melihat status.`, "error"));
+      return m.reply(novaRpgBox("upgrade2", `Pilihan equipment "*${input}*" tidak valid.\n\nPilih salah satu: *weapon*, *armor*, atau *accessory*.\nKetik *${m.prefix}upgrade2 list* untuk melihat status.`, "error"));
     }
 
     const currentLvl = equipData[type] || 0;
     if (currentLvl >= 10) {
       await m.react("🐣");
-      return m.reply(claraWrap("upgrade2", `*${EQUIP_TYPES[type].name}* kamu sudah mencapai *Level Maksimal 10 (⚡ LEGENDARY STATUS ⚡)*!`, "guide"));
+      return m.reply(novaRpgBox("upgrade2", `*${EQUIP_TYPES[type].name}* kamu sudah mencapai *Level Maksimal 10 (⚡ LEGENDARY STATUS ⚡)*!`, "guide"));
     }
 
     const targetLvl = currentLvl + 1;
@@ -88,7 +87,7 @@ async function handler(m, { sock }) {
 
     if (profile.gold < cost && !m.isOwner) {
       await m.react("❌");
-      return m.reply(claraWrap("upgrade2", `Gold tidak cukup! Membutuhkan *${cost.toLocaleString()} Gold* untuk tempa ke Level ${targetLvl}, kamu hanya memiliki *${profile.gold.toLocaleString()} Gold*.`, "error"));
+      return m.reply(novaRpgBox("upgrade2", `Gold tidak cukup! Membutuhkan *${cost.toLocaleString()} Gold* untuk tempa ke Level ${targetLvl}, kamu hanya memiliki *${profile.gold.toLocaleString()} Gold*.`, "error"));
     }
 
     if (!m.isOwner) {
@@ -131,7 +130,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("upgrade2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("upgrade2", err.message || "Terjadi kesalahan saat upgrade equipment.", "error"));
+    return m.reply(novaRpgBox("upgrade2", err.message || "Terjadi kesalahan saat upgrade equipment.", "error"));
   }
 }
 

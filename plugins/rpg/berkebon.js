@@ -7,8 +7,7 @@ import {
   addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -41,7 +40,7 @@ const CROPS = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("berkebon", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("berkebon", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -58,7 +57,7 @@ async function handler(m, { sock }) {
           let msg = "";
           msg += `🌱 Tanaman siap dipanen!\n`;
           msg += `📦 ${crop.name} — ketik *.berkebon panen*\n`;
-                    return m.reply(claraWrap("berkebon", msg));
+                    return m.reply(novaRpgBox("berkebon", msg));
         }
       }
     }
@@ -95,7 +94,7 @@ async function handler(m, { sock }) {
         msg += `📌 .berkebon tanam <id> untuk mulai\n`;
       }
 
-            return m.reply(claraWrap("berkebon", msg));
+            return m.reply(novaRpgBox("berkebon", msg));
     }
 
     if (action === "tanam" || action === "plant") {
@@ -103,16 +102,16 @@ async function handler(m, { sock }) {
       const crop = CROPS.find(c => c.id === cropId);
 
       if (!crop) {
-        return m.reply(claraWrap("berkebon", `Tanaman tidak dikenal. Pilih: ${CROPS.map(c => c.id).join(", ")}`, "warn"));
+        return m.reply(novaRpgBox("berkebon", `Tanaman tidak dikenal. Pilih: ${CROPS.map(c => c.id).join(", ")}`, "warn"));
       }
 
       if (rpg.farm.crop) {
-        return m.reply(claraWrap("berkebon", "Masih ada tanaman yang tumbuh. Panen dulu!", "warn"));
+        return m.reply(novaRpgBox("berkebon", "Masih ada tanaman yang tumbuh. Panen dulu!", "warn"));
       }
 
       if (rpg.energy < KEBON_ENERGY) {
         await m.react("🚫");
-        return m.reply(claraWrap("berkebon", `Energi kurang! Butuh *${KEBON_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+        return m.reply(novaRpgBox("berkebon", `Energi kurang! Butuh *${KEBON_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
       }
 
       useEnergy(m, KEBON_ENERGY, sock);
@@ -142,14 +141,14 @@ async function handler(m, { sock }) {
 
     if (action === "panen" || action === "harvest") {
       if (!rpg.farm.crop) {
-        return m.reply(claraWrap("berkebon", "Tidak ada tanaman untuk dipanen.", "warn"));
+        return m.reply(novaRpgBox("berkebon", "Tidak ada tanaman untuk dipanen.", "warn"));
       }
 
       const crop = CROPS.find(c => c.id === rpg.farm.crop);
       if (!crop) {
         rpg.farm = { crop: null, plantedAt: 0 };
         saveRpg(m, { farm: rpg.farm });
-        return m.reply(claraWrap("berkebon", "Tanaman tidak dikenal. Kebon direset.", "warn"));
+        return m.reply(novaRpgBox("berkebon", "Tanaman tidak dikenal. Kebon direset.", "warn"));
       }
 
       const elapsed = Date.now() - rpg.farm.plantedAt;
@@ -157,7 +156,7 @@ async function handler(m, { sock }) {
         const remaining = crop.growTime - elapsed;
         const mins = Math.floor(remaining / 60000);
         const secs = Math.floor((remaining % 60000) / 1000);
-        return m.reply(claraWrap("berkebon", `Belum siap panen! Tunggu *${mins}m ${secs}s* lagi.`, "warn"));
+        return m.reply(novaRpgBox("berkebon", `Belum siap panen! Tunggu *${mins}m ${secs}s* lagi.`, "warn"));
       }
 
       // Harvest!
@@ -188,11 +187,11 @@ async function handler(m, { sock }) {
       }));
     }
 
-    return m.reply(claraWrap("berkebon", "Aksi tidak dikenal. Gunakan: tanam, panen, atau cek", "warn"));
+    return m.reply(novaRpgBox("berkebon", "Aksi tidak dikenal. Gunakan: tanam, panen, atau cek", "warn"));
   } catch (err) {
     console.error("berkebon error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("berkebon", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("berkebon", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

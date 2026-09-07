@@ -2,8 +2,7 @@
 // RPG — Meditation: istirahat pulihkan HP, Mana & Energi (revival dari RPG lama, disesuaikan sistem baru)
 
 import { ensureRpg, getRpgData, regenEnergy, regenMana, regenHP } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
-import { gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
+import { gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "meditation",
@@ -37,7 +36,7 @@ async function handler(m) {
     // Kalau sudah full semua
     if (curHp >= maxHp && curMana >= maxMana && curEnergy >= maxEnergy) {
       await m.react("🐣");
-      return m.reply(novaBox("Meditasi", [
+      return m.reply(novaRpgBox("Meditasi", [
         "Kamu sudah dalam kondisi prima! Tidak ada yang perlu dipulihkan.",
         `❤️ HP : ${curHp}/${maxHp}`,
         `💙 Mana : ${curMana}/${maxMana}`,
@@ -46,7 +45,7 @@ async function handler(m) {
     }
 
     // Animasi istirahat sebentar
-    await m.reply(claraWrap("Meditasi", "💤 Beristirahat sejenak... memulihkan energi..."));
+    await m.reply(novaRpgBox("Meditasi", "💤 Beristirahat sejenak... memulihkan energi..."));
     await new Promise((r) => setTimeout(r, 2500));
 
     // Pulihkan random
@@ -60,7 +59,7 @@ async function handler(m) {
 
     const fresh = getRpgData(m);
     await m.react("🐣");
-    const msg = novaBox("Meditasi", [
+    const msg = novaRpgBox("Meditasi", [
       "✨ Istirahat selesai! Kamu merasa lebih segar.",
       "---",
       { sub: "Pulih" },
@@ -74,7 +73,7 @@ async function handler(m) {
   } catch (e) {
     console.error("[meditation] Error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Meditasi", "Yah gagal kak, coba lagi 😩", "error"));
+    return m.reply(novaRpgBox("Meditasi", "Yah gagal kak, coba lagi 😩", "error"));
   }
 }
 

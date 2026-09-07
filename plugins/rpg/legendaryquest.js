@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // legendaryquest.js — Legendary Quest chain (7-part epic quest)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { rpgSleep, animQuest } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "legendaryquest",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
       if (!stage) {
         await m.react("❌");
-        return m.reply(claraWrap("legendaryquest", "Semua stage sudah selesai!", "error"));
+        return m.reply(novaRpgBox("legendaryquest", "Semua stage sudah selesai!", "error"));
       }
 
       // Stage 7 = Final Boss (auto battle)
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         const win = Math.random() > 0.3; // 70% win chance
         if (!win) {
           await m.react("❌");
-          return m.reply(claraWrap("legendaryquest", "💀 Kamu kalah dari Final Boss! Latih lagi dan coba lagi."));
+          return m.reply(novaRpgBox("legendaryquest", "💀 Kamu kalah dari Final Boss! Latih lagi dan coba lagi."));
         }
 
         // Won - claim
@@ -77,11 +77,11 @@ async function handler(m, { sock }) {
       // Stages 1-6: check requirement
       if (!stage.check || !stage.check(allData)) {
         await m.react("❌");
-        return m.reply(claraWrap("legendaryquest", `Belum memenuhi syarat!\n\n${stage.emoji} ${stage.name}: ${stage.desc}`, "error"));
+        return m.reply(novaRpgBox("legendaryquest", `Belum memenuhi syarat!\n\n${stage.emoji} ${stage.name}: ${stage.desc}`, "error"));
       }
 
       if (progress.claimed?.includes(stageId)) {
-        return m.reply(claraWrap("legendaryquest", `Stage ${stageId} sudah diklaim.`, "error"));
+        return m.reply(novaRpgBox("legendaryquest", `Stage ${stageId} sudah diklaim.`, "error"));
       }
 
       // Claim
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("legendaryquest error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("legendaryquest", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("legendaryquest", err.message || "Error", "error"));
   }
 }
 

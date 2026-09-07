@@ -4,8 +4,7 @@
 import {
   ensureRpg, enchantItem, getItemCount, ITEM_DB
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -40,7 +39,7 @@ const SLOT_LABEL = {
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("enchantrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("enchantrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     let slotInput = args[0]?.toLowerCase();
@@ -85,19 +84,19 @@ async function handler(m, { sock }) {
       msg += `Material default: *Mithril Ore*\n`;
       msg += `⚠️ Semakin tinggi enchant, semakin rendah success rate\n`;
       
-      return m.reply(claraWrap("enchantrpg", msg));
+      return m.reply(novaRpgBox("enchantrpg", msg));
     }
 
     if (!rpg[slot]) {
   await animGeneric(m, sock, "", "Enchanting");
-      return m.reply(claraWrap("enchantrpg", `Slot *${SLOT_LABEL[slot]}* kosong. Equip item dulu dengan .equiprpg.`, "warn"));
+      return m.reply(novaRpgBox("enchantrpg", `Slot *${SLOT_LABEL[slot]}* kosong. Equip item dulu dengan .equiprpg.`, "warn"));
     }
 
     // Cek material
     const matCount = getItemCount(m, materialId);
     if (matCount < 1) {
       const matName = ITEM_DB[materialId]?.name || materialId;
-      return m.reply(claraWrap("enchantrpg", `Material *${matName}* tidak cukup! Kamu butuh minimal 1. Mining di .mining untuk dapat mithril.`, "warn"));
+      return m.reply(novaRpgBox("enchantrpg", `Material *${matName}* tidak cukup! Kamu butuh minimal 1. Mining di .mining untuk dapat mithril.`, "warn"));
     }
 
     await m.react("🕒");
@@ -135,7 +134,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("enchantrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("enchantrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("enchantrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

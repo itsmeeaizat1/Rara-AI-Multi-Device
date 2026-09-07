@@ -2,8 +2,7 @@
 // RPG Cinta — Kado: kasih item dari inventory ke pasangan, dapat affection (revival dari RPG lama, disesuaikan sistem baru)
 
 import { ensureRpg, getRpgData, addItem, removeItem, addExp, ITEM_DB } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, renderStatBar } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
 import { getCintaData, addAffection } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
@@ -51,7 +50,7 @@ async function handler(m) {
     // Harus punya pasangan
     if (!cinta.spouse) {
       await m.react("❗");
-      return m.reply(claraWrap("Kado", [
+      return m.reply(novaRpgBox("Kado", [
         "Kasih kado ke siapa? Ke bot? 😅",
         "Kamu belum punya pasangan!",
       ], "error"));
@@ -81,7 +80,7 @@ async function handler(m) {
       }
       lines.push("---", `Ketik: ${m.prefix}kado <nama item>`);
       await m.react("🐣");
-      return m.reply(novaBox("Kado", lines));
+      return m.reply(novaRpgBox("Kado", lines));
     }
 
     // Cari item di inventory
@@ -90,7 +89,7 @@ async function handler(m) {
 
     if (!itemId || !slot || (slot.qty || 0) <= 0) {
       await m.react("❗");
-      return m.reply(claraWrap("Kado", [
+      return m.reply(novaRpgBox("Kado", [
         `Item *${args}* tidak ada di inventory kamu!`,
         `Cek inventory: ${m.prefix}kado (tanpa argumen)`,
       ], "error"));
@@ -132,7 +131,7 @@ async function handler(m) {
   } catch (e) {
     console.error("[kado] Error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Kado", "Yah gagal kak, coba lagi 😩", "error"));
+    return m.reply(novaRpgBox("Kado", "Yah gagal kak, coba lagi 😩", "error"));
   }
 }
 

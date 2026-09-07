@@ -5,8 +5,7 @@ import {
   ensureRpg, saveRpg, addGold, removeGold,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -34,7 +33,7 @@ const MAX_INVEST = 50000;
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("investrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("investrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -88,7 +87,7 @@ async function handler(m, { sock }) {
 `;
         msg += `Ketik .investrpg lagi saat waktu habis\n`;
         msg += `untuk mengambil hasil investasi\n`;
-                return m.reply(claraWrap("investrpg", msg));
+                return m.reply(novaRpgBox("investrpg", msg));
       }
 
       let msg = "";
@@ -101,27 +100,27 @@ async function handler(m, { sock }) {
 `;
       msg += `⚠️ Risk: 70% profit, 30% rugi\n`;
       msg += `📊 Return: 80-120% dalam 1 jam\n`;
-            return m.reply(claraWrap("investrpg", msg));
+            return m.reply(novaRpgBox("investrpg", msg));
     }
 
     const amount = parseInt(action);
 
     if (!amount || amount < MIN_INVEST) {
   await animGeneric(m, sock, "📈", "Investing");
-      return m.reply(claraWrap("investrpg", `Minimal invest *${MIN_INVEST} gold*.`, "warn"));
+      return m.reply(novaRpgBox("investrpg", `Minimal invest *${MIN_INVEST} gold*.`, "warn"));
     }
 
     if (amount > MAX_INVEST) {
-      return m.reply(claraWrap("investrpg", `Maksimal invest *${MAX_INVEST} gold* per investasi.`, "warn"));
+      return m.reply(novaRpgBox("investrpg", `Maksimal invest *${MAX_INVEST} gold* per investasi.`, "warn"));
     }
 
     if (rpg.invest?.active) {
-      return m.reply(claraWrap("investrpg", "Masih ada investasi berjalan. Ketik .investrpg untuk cek status.", "warn"));
+      return m.reply(novaRpgBox("investrpg", "Masih ada investasi berjalan. Ketik .investrpg untuk cek status.", "warn"));
     }
 
     if (rpg.gold < amount) {
       await m.react("🚫");
-      return m.reply(claraWrap("investrpg", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${amount}*.`, "warn"));
+      return m.reply(novaRpgBox("investrpg", `Gold tidak cukup! Kamu punya *${rpg.gold}*, butuh *${amount}*.`, "warn"));
     }
 
     removeGold(m, amount, sock);
@@ -150,7 +149,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("investrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("investrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("investrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -6,8 +6,8 @@ import {
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { reactCooldown } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -44,17 +44,17 @@ async function handler(m, { sock }) {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("nguli", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("nguli", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const cd = checkCooldown(m, "lastNguli");
     if (cd) {
       await reactCooldown(m);
-      return m.reply(claraWrap("nguli", `Cooldown nguli tersisa *${formatTime(cd)}*`, "warn"));
+      return m.reply(novaRpgBox("nguli", `Cooldown nguli tersisa *${formatTime(cd)}*`, "warn"));
     }
 
     if (rpg.energy < NGULI_ENERGY) {
       await m.react("🚫");
-      return m.reply(claraWrap("nguli", `Energi kurang! Butuh *${NGULI_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
+      return m.reply(novaRpgBox("nguli", `Energi kurang! Butuh *${NGULI_ENERGY}*. Energy: *${rpg.energy}/${rpg.maxEnergy}*`, "warn"));
     }
 
     useEnergy(m, NGULI_ENERGY, sock);
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("nguli error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("nguli", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("nguli", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

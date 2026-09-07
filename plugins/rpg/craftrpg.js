@@ -4,8 +4,7 @@
 import {
   ensureRpg, addItem, removeItem, ITEM_DB, getItemCount
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
+import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animCraft } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -117,7 +116,7 @@ const RECIPES = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("craftrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if (!rpg) return m.reply(novaRpgBox("craftrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
@@ -144,13 +143,13 @@ async function handler(m, { sock }) {
 `;
       msg += `📌 Ketik .craftrpg <id> untuk craft\n`;
       
-      return m.reply(claraWrap("craftrpg", msg));
+      return m.reply(novaRpgBox("craftrpg", msg));
     }
 
     // Find recipe
     const recipe = RECIPES.find(r => r.id === action);
     if (!recipe) {
-      return m.reply(claraWrap("craftrpg", `Resep *${action}* tidak ditemukan. Ketik .craftrpg list untuk lihat semua.`, "warn"));
+      return m.reply(novaRpgBox("craftrpg", `Resep *${action}* tidak ditemukan. Ketik .craftrpg list untuk lihat semua.`, "warn"));
     }
 
     // Check materials
@@ -164,7 +163,7 @@ async function handler(m, { sock }) {
 
     if (missing.length > 0) {
       await m.react("🚫");
-      return m.reply(claraWrap("craftrpg", `Material tidak cukup!\nKurang: *${missing.join(", ")}*\nKumpulkan dengan .berburu, .mining, atau .mancing.`, "warn"));
+      return m.reply(novaRpgBox("craftrpg", `Material tidak cukup!\nKurang: *${missing.join(", ")}*\nKumpulkan dengan .berburu, .mining, atau .mancing.`, "warn"));
     }
 
     // Consume materials
@@ -193,7 +192,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("craftrpg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("craftrpg", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("craftrpg", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

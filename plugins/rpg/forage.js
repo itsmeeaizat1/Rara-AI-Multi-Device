@@ -2,9 +2,9 @@
 // RPG Forage — Cari tanaman/herba di alam
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "forage",
@@ -28,8 +28,8 @@ const FORAGE_ITEMS = [
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
-    if (!rpg) return m.reply(claraWrap("forage", "RPG belum siap. Ketik .daftar dulu.", "error"));
-    if ((rpg.energy || 0) < 5) return m.reply(claraWrap("forage", "Energi tidak cukup. Butuh 5 energi.", "info"));
+    if (!rpg) return m.reply(novaRpgBox("forage", "RPG belum siap. Ketik .daftar dulu.", "error"));
+    if ((rpg.energy || 0) < 5) return m.reply(novaRpgBox("forage", "Energi tidak cukup. Butuh 5 energi.", "info"));
 
     await m.react("🕒");
     const item = FORAGE_ITEMS[Math.floor(Math.random() * FORAGE_ITEMS.length)];
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("forage error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("forage", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaRpgBox("forage", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

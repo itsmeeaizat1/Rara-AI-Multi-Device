@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dicebattle.js — Dice Battle vs AI (2d6, bet gold)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { animDice } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "dicebattle",
@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
   try {
     const bet = parseInt(m.args[0] || "0");
     if (!bet || bet < 50) {
-      return m.reply(claraWrap("dicebattle", `Masukkan bet minimal 50 gold.\n\nContoh: ${m.prefix}dicebattle 500`, "guide"));
+      return m.reply(novaRpgBox("dicebattle", `Masukkan bet minimal 50 gold.\n\nContoh: ${m.prefix}dicebattle 500`, "guide"));
     }
     if (bet > 5000) {
-      return m.reply(claraWrap("dicebattle", "Bet maksimal 5000 gold.", "error"));
+      return m.reply(novaRpgBox("dicebattle", "Bet maksimal 5000 gold.", "error"));
     }
 
     const db = await getDatabase();
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
       const gold = await db.getGold?.(m.sender) || 0;
       if (gold < bet) {
         await m.react("❌");
-        return m.reply(claraWrap("dicebattle", `Gold tidak cukup! Kamu punya ${gold}, butuh ${bet}.`, "error"));
+        return m.reply(novaRpgBox("dicebattle", `Gold tidak cukup! Kamu punya ${gold}, butuh ${bet}.`, "error"));
       }
     } catch {}
 
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("dicebattle error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("dicebattle", err.message || "Error", "error"));
+    return m.reply(novaRpgBox("dicebattle", err.message || "Error", "error"));
   }
 }
 
