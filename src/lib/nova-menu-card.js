@@ -325,19 +325,16 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       }
     }
 
-    const newsletterJid = await resolveNewsletterJid(sock);
-    const newsletterName = config.saluran?.name || config.bot?.name || "Nova AI";
     const botName0 = title || config.bot?.name || "Nova AI";
 
+    // REQUEST OWNER 2026-09-07: TANPA badge forward & tanpa pill saluran —
+    // "gak mau ada forwarding atau tulisan diteruskan berkali-kali di atasnya".
+    // forwardingScore 0 + isForwarded false + forwardedNewsletterMessageInfo
+    // DIHAPUS → card tampil bersih polos, cuma banner + isi + tombol.
     const _mContextInfo = {
       mentionedJid: m.sender ? [m.sender] : [],
-      forwardingScore: 999,
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid,
-        newsletterName,
-        serverMessageId: 127,
-      },
+      forwardingScore: 0,
+      isForwarded: false,
       // fallback banner kalau upload header gagal — tetep ada preview
       ...(!_mHeader.hasMediaAttachment && adThumbnail ? { externalAdReply } : {}),
     };
