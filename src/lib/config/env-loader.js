@@ -143,11 +143,11 @@ export function getTioKey() {
 }
 
 /**
- * Endpoint Tio AI — sekarang gateway kktoken.cc (pilihan owner terakhir; alternatif gorouter.app — ai.tioo.eu.org sudah mati/404).
+ * Endpoint Tio AI — sekarang gateway gorouter.app (token owner VALID di sini; alternatif kktoken.cc — ai.tioo.eu.org sudah mati/404).
  * Bisa di-override via env TIO_API_URL tanpa edit kode.
  */
 export function getTioEndpoint() {
-  return process.env.TIO_API_URL || "https://kktoken.cc/v1/chat/completions";
+  return process.env.TIO_API_URL || "https://gorouter.app/v1/chat/completions";
 }
 
 /** Base URL untuk health-check (/v1/models dll) — diambil dari endpoint chat. */
