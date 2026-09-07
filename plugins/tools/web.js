@@ -40,6 +40,7 @@ import { config } from "../../config.js";
 import { smallcapsText, toSC } from "../../src/lib/styler.js";
 import { novaGuide, novaNoInput, novaError } from "../../src/lib/nova-menu-style.js";
 import { getNovaWebUrl } from "../../src/lib/nova-web-server.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const BOT_REPO = "itsmeeaizat/Nova-AI-Whatsapp-Bot-Multi-Device";
 
@@ -531,6 +532,40 @@ async function sendWebCard(sock, m, { url, title = "", text = "" }) {
   return true;
 }
 
+
+// ── MODE KIRIM LINK ────────────────────────────────────────────────────
+// card  → webview interaktif di dalam WA (default)
+// text  → link dikirim sebagai markdown code block (trik ala TikTok):
+//         dibuka di browser bawaan HP, posisi chat gak kegeser pas balik,
+//         cocok banget buat main game sambil mantengin chat.
+const TEXT_MODE_TOKENS = new Set(["md", "markdown", "text"]);
+
+async function getWebSendMode() {
+  try {
+    const db = await getDatabase();
+    return db.data.settings?.webSendMode === "text" ? "text" : "card";
+  } catch {
+    return "card";
+  }
+}
+
+async function setWebSendMode(mode) {
+  const db = await getDatabase();
+  if (!db.data.settings) db.data.settings = {};
+  db.data.settings.webSendMode = mode;
+  await db.save();
+}
+
+async function sendWebLinkText(reply, url, title, modeNote) {
+  return reply(
+    (title ? `*${title}*\n\n` : "") +
+      (modeNote
+        ? "Ketuk link di bawah — dibuka di browser, chat gak bakal kegeser:\n\n"
+        : "") +
+      "```\n" + url + "\n```"
+  );
+}
+
 // ── HANDLER ───────────────────────────────────────────────────────────
 async function handler(sock, m, { args, text, react, reply }) {
   const cmd = (args[0] || "").toLowerCase();
@@ -541,7 +576,7 @@ async function handler(sock, m, { args, text, react, reply }) {
       novaGuide(
         "web",
         "Buka halaman web/HTML live langsung di dalam WhatsApp — preset lengkap untuk nonton, cari, belanja.",
-        ".web list (lihat semua preset)\n.web live\n.web yt judul lagu",
+        ".web list (lihat semua preset)\n.web mode card/text — atur cara kirim link\n.web yt judul lagu\n.web 2048 md — link text sekali pakai",
         "Webview muncul di WhatsApp versi baru (Android); versi lama/iPhone bisa buka browser biasa."
       )
     );
@@ -587,14 +622,43 @@ async function handler(sock, m, { args, text, react, reply }) {
     return;
   }
 
+  // Mode kirim link: card (webview) / text (markdown, chat gak kegeser)
+  if (cmd === "mode") {
+    const sub = (args[1] || "").toLowerCase();
+    const current = await getWebSendMode();
+    if (sub === "card" || sub === "text") {
+      await setWebSendMode(sub);
+      return reply(
+        sub === "text"
+          ? `Mode kirim link: TEXT (markdown).\nLink dikirim sebagai code block — dibuka di browser bawaan, posisi chat gak kegeser pas balik. Cocok buat main game.\n\nBuat balik ke webview interaktif: .web mode card\nSekali pakai aja: .web <preset> md`
+          : `Mode kirim link: CARD (webview interaktif).\nLink dibuka di dalam WhatsApp.\n\nBuat mode aman chat gak kegeser: .web mode text`
+      );
+    }
+    return reply(
+      novaGuide(
+        "web mode",
+        `Mode kirim link sekarang: ${current === "text" ? "TEXT (markdown)" : "CARD (webview)"}`,
+        ".web mode card — webview interaktif di dalam WA\n.web mode text — link markdown code block, chat gak kegeser"
+      )
+    );
+  }
+
   // Preset situs (yt, google, maps, dll)
   const presetKey = PRESETS[cmd] ? cmd : PRESET_ALIASES[cmd];
   const preset = presetKey ? PRESETS[presetKey] : null;
   if (preset) {
     await react("🕒");
     try {
-      const url = await preset.build(args.slice(1));
-      await sendWebCard(sock, m, { url, title: preset.title });
+      // flag sekali-pakai: .web 2048 md → kirim link text walau mode card
+      const clean = args.slice(1).filter((a) => !TEXT_MODE_TOKENS.has(String(a).toLowerCase()));
+      const oneOffText = clean.length !== args.slice(1).length;
+      const url = await preset.build(clean);
+      const useText = oneOffText || (await getWebSendMode()) === "text";
+      if (useText) {
+        await sendWebLinkText(reply, url, preset.title, oneOffText);
+      } else {
+        await sendWebCard(sock, m, { url, title: preset.title });
+      }
       await react("🐣");
     } catch (e) {
       await react("❌");
@@ -616,7 +680,14 @@ async function handler(sock, m, { args, text, react, reply }) {
   const title = args.slice(urlIdx + 1).join(" ").slice(0, 40);
 
   try {
-    await sendWebCard(sock, m, { url: maybeUrl, title });
+    // flag sekali-pakai md/text di URL custom juga
+    const rawArgs = args.filter((a) => !TEXT_MODE_TOKENS.has(String(a).toLowerCase()));
+    const oneOffText = rawArgs.length !== args.length;
+    if (oneOffText || (await getWebSendMode()) === "text") {
+      await sendWebLinkText(reply, maybeUrl, title, oneOffText);
+    } else {
+      await sendWebCard(sock, m, { url: maybeUrl, title });
+    }
     await react("🐣");
   } catch (e) {
     await react("❌");
