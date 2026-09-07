@@ -550,14 +550,18 @@ async function getWebSendMode() {
 }
 
 async function setWebSendMode(mode) {
-  const db = await getDatabase();
-  if (!db.data.settings) db.data.settings = {};
-  db.data.settings.webSendMode = mode;
-  await db.save();
+  try {
+    const db = await getDatabase();
+    if (!db.data.settings) db.data.settings = {};
+    db.data.settings.webSendMode = mode;
+    await db.save();
+  } catch (e) {
+    console.error("[web.js] gagal simpan webSendMode:", e?.message);
+  }
 }
 
 async function sendWebLinkText(reply, url, title, modeNote) {
-  return reply(
+  return m.reply(
     (title ? `*${title}*\n\n` : "") +
       (modeNote
         ? "Ketuk link di bawah — dibuka di browser, chat gak bakal kegeser:\n\n"
@@ -567,12 +571,12 @@ async function sendWebLinkText(reply, url, title, modeNote) {
 }
 
 // ── HANDLER ───────────────────────────────────────────────────────────
-async function handler(sock, m, { args, text, react, reply }) {
+async function handler(m, { sock, args }) {
   const cmd = (args[0] || "").toLowerCase();
 
   // Guide
   if (!cmd) {
-    return reply(
+    return m.reply(
       novaGuide(
         "web",
         "Buka halaman web/HTML live langsung di dalam WhatsApp — preset lengkap untuk nonton, cari, belanja.",
@@ -593,18 +597,18 @@ async function handler(sock, m, { args, text, react, reply }) {
           (p.group || "").includes(filterKey) ||
           (p.desc || "").toLowerCase().includes(filterKey)
       );
-      if (!all.length) return reply(novaError("Web", `Gak ada preset yang cocok dengan kata "${filterKey}". Ketik .web list buat lihat semua.`));
-      return reply(
+      if (!all.length) return m.reply(novaError("Web", `Gak ada preset yang cocok dengan kata "${filterKey}". Ketik .web list buat lihat semua.`));
+      return m.reply(
         `「 ✦ WEB PRESET ✦ 」\n\n` +
           all.map(([key, p]) => `• .web ${key} — ${p.desc}`).join("\n")
       );
     }
-    return reply(presetListText());
+    return m.reply(presetListText());
   }
 
   // Preset: Nova Live Dashboard
   if (cmd === "live" || cmd === "dashboard") {
-    await react("🕒");
+    await m.react("🕒");
     const url = getNovaWebUrl();
     try {
       await sendWebCard(sock, m, {
@@ -612,10 +616,10 @@ async function handler(sock, m, { args, text, react, reply }) {
         title: "Nova Live Dashboard",
         text: "Nova Live Dashboard - stat server realtime\nJam live - Uptime - RAM - CPU - Demo YouTube",
       });
-      await react("🐣");
+      await m.react("🐣");
     } catch (e) {
-      await react("❌");
-      return reply(
+      await m.react("❌");
+      return m.reply(
         `Card webview gagal dikirim — fallback link biasa:\n${url}\n\nInfo: ${e?.message || "unknown error"}`
       );
     }
@@ -628,13 +632,13 @@ async function handler(sock, m, { args, text, react, reply }) {
     const current = await getWebSendMode();
     if (sub === "card" || sub === "text") {
       await setWebSendMode(sub);
-      return reply(
+      return m.reply(
         sub === "text"
           ? `Mode kirim link: TEXT (markdown).\nLink dikirim sebagai code block — dibuka di browser bawaan, posisi chat gak kegeser pas balik. Cocok buat main game.\n\nBuat balik ke webview interaktif: .web mode card\nSekali pakai aja: .web <preset> md`
           : `Mode kirim link: CARD (webview interaktif).\nLink dibuka di dalam WhatsApp.\n\nBuat mode aman chat gak kegeser: .web mode text`
       );
     }
-    return reply(
+    return m.reply(
       novaGuide(
         "web mode",
         `Mode kirim link sekarang: ${current === "text" ? "TEXT (markdown)" : "CARD (webview)"}`,
@@ -647,7 +651,7 @@ async function handler(sock, m, { args, text, react, reply }) {
   const presetKey = PRESETS[cmd] ? cmd : PRESET_ALIASES[cmd];
   const preset = presetKey ? PRESETS[presetKey] : null;
   if (preset) {
-    await react("🕒");
+    await m.react("🕒");
     try {
       // flag sekali-pakai: .web 2048 md → kirim link text walau mode card
       const clean = args.slice(1).filter((a) => !TEXT_MODE_TOKENS.has(String(a).toLowerCase()));
@@ -655,14 +659,14 @@ async function handler(sock, m, { args, text, react, reply }) {
       const url = await preset.build(clean);
       const useText = oneOffText || (await getWebSendMode()) === "text";
       if (useText) {
-        await sendWebLinkText(reply, url, preset.title, oneOffText);
+        await sendWebLinkText(m.reply, url, preset.title, oneOffText);
       } else {
         await sendWebCard(sock, m, { url, title: preset.title });
       }
-      await react("🐣");
+      await m.react("🐣");
     } catch (e) {
-      await react("❌");
-      return reply(`Preset .web ${cmd} gagal: ${e?.message || "unknown error"}`);
+      await m.react("❌");
+      return m.reply(`Preset .web ${cmd} gagal: ${e?.message || "unknown error"}`);
     }
     return;
   }
@@ -670,11 +674,11 @@ async function handler(sock, m, { args, text, react, reply }) {
   // URL custom
   const maybeUrl = args.find((a) => /^https?:\/\//i.test(a));
   if (!maybeUrl) {
-    await react("❗");
-    return reply(novaNoInput("web", `Format salah. Ketik .web list buat lihat semua preset, atau masukkan URL diawali http:// atau https://`));
+    await m.react("❗");
+    return m.reply(novaNoInput("web", `Format salah. Ketik .web list buat lihat semua preset, atau masukkan URL diawali http:// atau https://`));
   }
 
-  await react("🕒");
+  await m.react("🕒");
   // Judul = semua args SETELAH url
   const urlIdx = args.indexOf(maybeUrl);
   const title = args.slice(urlIdx + 1).join(" ").slice(0, 40);
@@ -684,14 +688,14 @@ async function handler(sock, m, { args, text, react, reply }) {
     const rawArgs = args.filter((a) => !TEXT_MODE_TOKENS.has(String(a).toLowerCase()));
     const oneOffText = rawArgs.length !== args.length;
     if (oneOffText || (await getWebSendMode()) === "text") {
-      await sendWebLinkText(reply, maybeUrl, title, oneOffText);
+      await sendWebLinkText(m.reply, maybeUrl, title, oneOffText);
     } else {
       await sendWebCard(sock, m, { url: maybeUrl, title });
     }
-    await react("🐣");
+    await m.react("🐣");
   } catch (e) {
-    await react("❌");
-    return reply(`Card webview gagal — fallback link: ${maybeUrl}\n\nInfo: ${e?.message || "unknown error"}`);
+    await m.react("❌");
+    return m.reply(`Card webview gagal — fallback link: ${maybeUrl}\n\nInfo: ${e?.message || "unknown error"}`);
   }
 }
 

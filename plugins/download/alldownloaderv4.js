@@ -125,12 +125,12 @@ async function sendMedia(sock, m, { buffer, type, filename, title, caption }) {
   }
 }
 
-async function handler(sock, m, { args, text, react, reply }) {
+async function handler(m, { sock, args }) {
   const first = (args[0] || "").toLowerCase();
 
   // guide
   if (!args.length) {
-    return reply(
+    return m.reply(
       novaGuide(
         "alldl4",
         "Universal downloader v4 — engine NixDL, 22 platform, auto-detect dari link",
@@ -143,17 +143,17 @@ async function handler(sock, m, { args, text, react, reply }) {
   // daftar platform
   if (first === "platforms" || first === "list" || first === "site") {
     const lines = PLATFORMS.map((p) => `${p.icon} ${p.name} — ${p.id}`).join("\n");
-    return reply(claraWrap("All Downloader V4 — NixDL", `22 platform didukung:\n\n${lines}`));
+    return m.reply(claraWrap("All Downloader V4 — NixDL", `22 platform didukung:\n\n${lines}`));
   }
 
   // kumpulin semua URL dari args (batch)
   const urls = args.filter((a) => /^https?:\/\//i.test(a)).slice(0, 5);
   if (!urls.length) {
-    await react("❗");
-    return reply(novaGuide("alldl4", "Link-nya gak kebaca — masukkan URL lengkap diawali http:// atau https://", `${m.command || ".alldl4"} https://vt.tiktok.com/xxx`));
+    await m.react("❗");
+    return m.reply(novaGuide("alldl4", "Link-nya gak kebaca — masukkan URL lengkap diawali http:// atau https://", `${m.command || ".alldl4"} https://vt.tiktok.com/xxx`));
   }
 
-  await react("🕒");
+  await m.react("🕒");
 
   let ok = 0, fail = 0;
   const errors = [];
@@ -214,8 +214,8 @@ async function handler(sock, m, { args, text, react, reply }) {
   }
 
   if (urls.length > 1 && fail) {
-    await react(fail && !ok ? "❌" : "🐣");
-    return reply(
+    await m.react(fail && !ok ? "❌" : "🐣");
+    return m.reply(
       claraWrap(
         "All Downloader V4",
         `Berhasil ${ok}/${urls.length} link.` + (errors.length ? `\n\nGagal:\n${errors.join("\n")}` : "")
@@ -224,11 +224,11 @@ async function handler(sock, m, { args, text, react, reply }) {
   }
 
   if (!ok) {
-    await react("❌");
-    return reply(claraWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .alldl3 sebagai alternatif.`));
+    await m.react("❌");
+    return m.reply(claraWrap("All Downloader V4", `Gagal: ${errors[0] || "link gak bisa diproses"}\n\nCoba ulang beberapa detik lagi (resolver publik kadang cold start), atau pakai .alldl / .alldownloader / .alldl3 sebagai alternatif.`));
   }
 
-  await react("🐣");
+  await m.react("🐣");
 }
 
 export { pluginConfig as config, handler };
