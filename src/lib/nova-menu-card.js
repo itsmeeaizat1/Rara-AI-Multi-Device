@@ -27,6 +27,7 @@ import path from "path";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import { buildCategoryButton, buildCategoryRows } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
+import { smallcapsText } from "./styler.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
 
@@ -169,16 +170,25 @@ function buildNativeButtons(buttons = []) {
       };
     }
     if (btn.type === "single_select") {
-      // rows normalize: `id` (format lama nova) → `rowId` (format WA native)
+      // rows normalize: `id` (format lama nova) → `rowId` (format WA native).
+      // GUARD SMALLCAPS (owner 2026-09-07: "seluruh semua teksnya smallcaps"):
+      // semua teks yang KELIATAN (title popup, section, row title/description,
+      // highlight label) di-smallcaps di titik ini — id/rowId tetap plain
+      // supaya command tetap jalan pas di-tap. toSC idempotent, jadi teks yang
+      // udah smallcaps aman dilewatin lagi.
       const sections = (btn.sections || []).map((sec) => ({
-        ...(sec.highlightLabel ? { highlight_label: sec.highlightLabel } : {}),
         ...sec,
+        ...(sec.highlightLabel ? { highlight_label: toSC(sec.highlightLabel) } : {}),
+        ...(sec.title ? { title: toSC(sec.title) } : {}),
         rows: (sec.rows || []).map((r) => ({
           ...r,
+          ...(r.header ? { header: toSC(r.header) } : {}),
+          ...(r.title ? { title: toSC(r.title) } : {}),
+          ...(r.description ? { description: toSC(r.description) } : {}),
           ...(r.id && !r.rowId ? { rowId: r.id } : {}),
         })),
       }));
-      const params = { title: btn.title || btn.text, sections };
+      const params = { title: toSC(btn.title || btn.text || ""), sections };
       if (btn.multiSelect) params.has_multiple_buttons = true;
       return {
         name: "single_select",
@@ -189,7 +199,7 @@ function buildNativeButtons(buttons = []) {
       return {
         name: "cta_url",
         buttonParamsJson: JSON.stringify({
-          display_text: btn.text,
+          display_text: toSC(btn.text || ""),
           url: btn.url,
           merchant_url: btn.merchantUrl || btn.url,
         }),
@@ -199,7 +209,7 @@ function buildNativeButtons(buttons = []) {
       return {
         name: "cta_copy",
         buttonParamsJson: JSON.stringify({
-          display_text: btn.text,
+          display_text: toSC(btn.text || ""),
           copy_code: btn.copyText || "",
         }),
       };
@@ -207,7 +217,7 @@ function buildNativeButtons(buttons = []) {
     return {
       name: "quick_reply",
       buttonParamsJson: JSON.stringify({
-        display_text: btn.text,
+        display_text: toSC(btn.text || ""),
         id: btn.id,
       }),
     };
@@ -278,10 +288,12 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     if (m.chat && m.chat.endsWith("@newsletter")) {
       const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
       const rawBuffer = getThumbnailBuffer(thumbPath);
+      // guard smallcaps juga di jalur newsletter (bypass m.reply)
+      const _nlText = typeof text === "string" && text ? smallcapsText(text) : text;
       if (rawBuffer) {
-        await sock.sendMessage(m.chat, { image: rawBuffer, caption: text });
+        await sock.sendMessage(m.chat, { image: rawBuffer, caption: _nlText });
       } else {
-        await sock.sendMessage(m.chat, { text });
+        await sock.sendMessage(m.chat, { text: _nlText });
       }
       return true;
     }
@@ -318,7 +330,10 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     };
 
     if (plain) {
-      await sock.sendMessage(m.chat, { text, contextInfo: {
+      // fallback plain ikut guard smallcaps (jalur ini lewat sock.sendMessage,
+      // gak lewat m.reply) — owner: "seluruh semua teksnya smallcaps".
+      const _plainText = typeof text === "string" && text ? smallcapsText(text) : text;
+      await sock.sendMessage(m.chat, { text: _plainText, contextInfo: {
         mentionedJid: m.sender ? [m.sender] : [],
         forwardingScore: 0,
         isForwarded: false,
@@ -410,10 +425,18 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       ...(!_mHeader.hasMediaAttachment && rawBuffer ? { externalAdReply } : {}),
     };
 
+    // GUARD SMALLCAPS BODY + FOOTER (owner 2026-09-07: "seluruh semua
+    // teksnya smallcaps") — card dikirim via relayMessage, JALUR YANG GAK
+    // LEWAT guard m.reply (nova-serialize), jadi teks cmd/menu yang masuk
+    // body card di-smallcaps di sini. URL & isi code fence otomatis
+    // dilindungi oleh smallcapsText (tetap persis).
+    const _mBodyText = typeof text === "string" && text ? smallcapsText(text) : text;
+    const _mFooter = toSC(footer || `\u2726 ${botName}`);
+
     const interactiveObj = {
-      body: proto.Message.InteractiveMessage.Body.fromObject({ text }),
+      body: proto.Message.InteractiveMessage.Body.fromObject({ text: _mBodyText }),
       footer: proto.Message.InteractiveMessage.Footer.fromObject({
-        text: footer || `\u2726 ${botName}`,
+        text: _mFooter,
       }),
       nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         messageParamsJson: _mFlowParams,
@@ -444,7 +467,8 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
   } catch (e) {
     console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message, "\nSTACK:", e.stack);
     try {
-      await sock.sendMessage(m.chat, { text }, { quoted: m });
+      const _errText = typeof text === "string" && text ? smallcapsText(text) : text;
+      await sock.sendMessage(m.chat, { text: _errText }, { quoted: m });
     } catch {}
     return false;
   }
