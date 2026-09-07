@@ -4,14 +4,17 @@
 // Sumber: github.com/coflyn/scrapr (author Mori, MIT) — tersimpan utuh
 // di src/scraper/mori/ sebagai CADDANGAN engine, file upstream NO TOUCH.
 //
-// Bridge ini hanya nyambungin 18 method HTTP murni (axios/cheerio/crypto).
-// 3 scraper browser — tiktok/savetik, facebook/fdown, instagram/snapinsta —
-// sengaja GAK di-bridge: butuh Chrome/Playwright yang gak tersedia di VPS.
+// 18 method HTTP murni di-bridge langsung. 3 scraper browser —
+// tiktok/savetik, facebook/fdown, instagram/snapinsta — di-bridge
+// LAZY: file tetep ada, aktif otomatis begitu dependensinya diinstal
+// (savetik/fdown: Chrome terpasang, puppeteer-core udah di deps bot;
+// snapinsta: npm i playwright-extra puppeteer-extra-plugin-stealth playwright).
 //
 // Schema uniform semua scraper Mori:
 //   { status: true, result: { title, thumbnail, type, downloads: [{url, type, quality}] } }
 //   { status: false, message }
 
+import { createRequire } from "node:module";
 import aplmate from "./mori/applemusic/aplmate/index.js";
 import bandcampdownloader from "./mori/bandcamp/bandcampdownloader/index.js";
 import snapwc from "./mori/bilibili/snapwc/index.js";
@@ -31,18 +34,48 @@ import tvd from "./mori/twitter/tvd/index.js";
 import tweeload from "./mori/twitter/tweeload/index.js";
 import ytmp3 from "./mori/youtube/ytmp3/index.js";
 
+// ── Lazy loader untuk scraper browser Mori ──────────────────────────
+// Module di-require pas PERTAMA KALI dipakai (bukan pas bot start),
+// jadi bridge gak crash walau playwright/chrome belum diinstal.
+// Hasil require di-cache biar scrape berikutnya cepat.
+const requireCjs = createRequire(import.meta.url);
+const browserScrapeCache = {};
+
+function lazyBrowserScrape(platform, method) {
+  const depsHint = {
+    savetik: "Google Chrome terpasang di server (puppeteer-core sudah ada di deps bot)",
+    fdown: "Google Chrome terpasang di server (puppeteer-core sudah ada di deps bot)",
+    snapinsta: "npm install playwright-extra puppeteer-extra-plugin-stealth playwright",
+  }[method];
+  return async (url) => {
+    if (!browserScrapeCache[method]) {
+      let mod;
+      try {
+        mod = requireCjs(`./mori/${platform}/${method}/index.js`);
+      } catch (e) {
+        if (/Cannot find module|MODULE_NOT_FOUND/.test(String(e?.message || e))) {
+          throw new Error(`mori ${method}: dependensi browser belum diinstal — ${depsHint}`);
+        }
+        throw e;
+      }
+      browserScrapeCache[method] = mod.scrape;
+    }
+    return browserScrapeCache[method](url);
+  };
+}
+
 export const MORI = {
   applemusic: { aplmate: aplmate.scrape },
   bandcamp: { bandcampdownloader: bandcampdownloader.scrape },
   bilibili: { snapwc: snapwc.scrape },
   douyin: { direct: douyinDirect.scrape },
-  facebook: { snapsave: snapsave.scrape },
-  instagram: { indown: indown.scrape, downreels: downreels.scrape },
+  facebook: { snapsave: snapsave.scrape, fdown: lazyBrowserScrape("facebook", "fdown") },
+  instagram: { indown: indown.scrape, downreels: downreels.scrape, snapinsta: lazyBrowserScrape("instagram", "snapinsta") },
   pinterest: { pindown: pindown.scrape },
   soundcloud: { klickaud: klickaud.scrape },
   spotify: { spotmate: spotmate.scrape, spotidown: spotidown.scrape },
   threads: { threadster: threadster.scrape },
-  tiktok: { tiktokio: tiktokio.scrape, snaptik: snaptik.scrape, ssstik: ssstik.scrape },
+  tiktok: { tiktokio: tiktokio.scrape, snaptik: snaptik.scrape, ssstik: ssstik.scrape, savetik: lazyBrowserScrape("tiktok", "savetik") },
   twitter: { tweeload: tweeload.scrape, tvd: tvd.scrape },
   youtube: { ytmp3: ytmp3.scrape },
 };
