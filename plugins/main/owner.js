@@ -49,10 +49,11 @@ async function handler(m, { sock, config: botConfig }) {
       `Owner bot ini ramah dan open-minded kok 😊`,
       `Silakan save kontak di atas ya!`,
     ].join("\n");
+    // FIX OWNER 2026-09-07: card owner = plain text + thumbnail externalAdReply
     await sendMenuCard(sock, m, {
       text: claraWrap("👨‍💻 Owner", followUpText),
       footer: "",
-      buttons: buildNavButtons(m, db, "."),
+      plain: true,
       title: botName,
     });
   } else {

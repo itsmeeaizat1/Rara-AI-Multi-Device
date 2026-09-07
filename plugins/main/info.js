@@ -122,16 +122,13 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
 ${toSC("Nova AI WhatsApp Bot")}`;
 
-    const navButtons = [
-      { id: `${prefix}menu`, text: toSC("Menu") },
-      { id: `${prefix}allmenu`, text: toSC("All Menu") },
-      { id: `${prefix}owner`, text: toSC("Owner") },
-    ];
+    // FIX OWNER 2026-09-07: card info = plain text + thumbnail externalAdReply
+    // (payload interactive gak dirender di client penerima — "versi WA lama")
     await sendMenuCard(sock, m, {
       text,
       footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"),
-      buttons: navButtons,
+      plain: true,
       title: `${toSC(botName)} — ${toSC("Info")}`,
     });
 
