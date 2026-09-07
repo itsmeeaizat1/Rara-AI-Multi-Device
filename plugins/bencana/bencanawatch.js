@@ -79,10 +79,24 @@ async function handler(m, { sock }) {
     const chatId = m.chat;
     const isDm = !String(m.chat || "").endsWith("@g.us");
 
-    // Terapkan setter yang sama ke langganan global owner (kalau ada & command dari DM).
-    // Balikin true kalau ke-mirror, buat ditulis di reply.
+    // ── FIX BUG owner 2026-09-07: setter (mode/jenis/sumber/radius/jadwal/
+    // kirim/lokasi) selalu nyari subs[chatId] duluan. Tapi ".bencanawatch
+    // onglobal" nyimpen langganan di key BEDA ("global:<ownerJid>"), BUKAN
+    // di chatId — walau di DM chatId kebetulan == ownerJid. Akibatnya user
+    // yang CUMA punya langganan GLOBAL (belum pernah onchat) selalu kena
+    // "Aktifkan dulu .bencanawatch on." walau onglobal-nya udah aktif.
+    // Fix: kalau di DM dan belum ada langganan per-chat TAPI global-nya
+    // aktif, semua setter di bawah diarahin langsung ke key global itu.
+    const subsSnapshotForKey = await getWatchersSafe();
+    const hasChatSub = !!subsSnapshotForKey[chatId];
+    const globalRecForSender = isDm ? hasGlobalWatcher(m.sender) : null;
+    const targetKey = (!hasChatSub && globalRecForSender) ? globalWatcherKey(m.sender) : chatId;
+
+    // Terapkan setter yang sama ke langganan global owner (kalau ada & command dari DM,
+    // dan targetKey BUKAN udah global itu sendiri — biar gak nulis dobel ke key yang sama).
     const mirrorGlobal = async (fn) => {
-      if (!isDm || !hasGlobalWatcher(m.sender)) return false;
+      if (!isDm || !globalRecForSender) return false;
+      if (targetKey === globalWatcherKey(m.sender)) return false;
       try { await fn(globalWatcherKey(m.sender)); } catch { /* global tetap default */ }
       return true;
     };
@@ -101,7 +115,7 @@ async function handler(m, { sock }) {
         ]));
       }
       if (place.toLowerCase() === "hapus" || place.toLowerCase() === "delete") {
-        clearWatcherLocation(chatId);
+        clearWatcherLocation(targetKey);
         const alsoG = await mirrorGlobal((k) => clearWatcherLocation(k));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -110,7 +124,7 @@ async function handler(m, { sock }) {
         ]));
       }
       try {
-        const rec = await setWatcherLocation(chatId, place);
+        const rec = await setWatcherLocation(targetKey, place);
         const alsoG = await mirrorGlobal((k) => setWatcherLocation(k, place));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -133,7 +147,7 @@ async function handler(m, { sock }) {
     if (action === "radius" || action === "jarak") {
       try {
         const rawKm = (m.args || [])[1];
-        const rec = setWatcherRadius(chatId, rawKm);
+        const rec = setWatcherRadius(targetKey, rawKm);
         const alsoG = await mirrorGlobal((k) => setWatcherRadius(k, rawKm));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -152,7 +166,7 @@ async function handler(m, { sock }) {
       const v = (m.args || [])[1]?.toLowerCase();
       if (!v) {
         const subs0 = await getWatchersSafe();
-        const cur = subs0[chatId]?.kirim || "utama";
+        const cur = subs0[targetKey]?.kirim || "utama";
         return m.reply(novaBox("Bencana Watch — Kirim", [
           `Mode kirim aktif : ${cur.toUpperCase()}`,
           "---",
@@ -168,7 +182,7 @@ async function handler(m, { sock }) {
         ]));
       }
       try {
-        const rec = setWatcherKirim(chatId, v);
+        const rec = setWatcherKirim(targetKey, v);
         const alsoG = await mirrorGlobal((k) => setWatcherKirim(k, v));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -190,7 +204,7 @@ async function handler(m, { sock }) {
       const rest = (m.args || []).slice(1).join(" ").trim().toLowerCase();
       if (!rest) {
         const subs0 = await getWatchersSafe();
-        const cur = subs0[chatId]?.jenis;
+        const cur = subs0[targetKey]?.jenis;
         return m.reply(novaBox("Bencana Watch — Jenis", [
           `Filter aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ") : "semua jenis"}`,
           "---",
@@ -205,7 +219,7 @@ async function handler(m, { sock }) {
       }
       try {
         if (rest === "semua" || rest === "all" || rest === "reset") {
-          setWatcherJenis(chatId, []);
+          setWatcherJenis(targetKey, []);
           const alsoG = await mirrorGlobal((k) => setWatcherJenis(k, []));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -225,7 +239,7 @@ async function handler(m, { sock }) {
         const kinds = rest.split(/[\s,]+/).map((k) => alias[k]).filter(Boolean);
         const invalid = rest.split(/[\s,]+/).filter((k) => !alias[k]);
         if (invalid.length) throw new Error(`Jenis tidak dikenal: ${invalid.join(", ")}. Pilihan: ${BENCANA_JENIS.join(", ")}`);
-        setWatcherJenis(chatId, kinds);
+        setWatcherJenis(targetKey, kinds);
         const alsoG = await mirrorGlobal((k) => setWatcherJenis(k, kinds));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -246,7 +260,7 @@ async function handler(m, { sock }) {
       const rest = (m.args || []).slice(1).join(" ").trim().toLowerCase();
       if (!rest) {
         const subs0 = await getWatchersSafe();
-        const cur = subs0[chatId]?.sumber;
+        const cur = subs0[targetKey]?.sumber;
         return m.reply(novaBox("Bencana Watch — Sumber", [
           `Filter aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ").toUpperCase() : "semua sumber"}`,
           "---",
@@ -265,7 +279,7 @@ async function handler(m, { sock }) {
       }
       try {
         if (rest === "semua" || rest === "all" || rest === "reset") {
-          setWatcherSumber(chatId, []);
+          setWatcherSumber(targetKey, []);
           const alsoG = await mirrorGlobal((k) => setWatcherSumber(k, []));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -276,7 +290,7 @@ async function handler(m, { sock }) {
         const sources = [...new Set(rest.split(/[\s,]+/).filter(Boolean))];
         const bad = sources.filter((k) => !BENCANA_SUMBER.includes(k));
         if (bad.length) throw new Error(`Sumber tidak dikenal: ${bad.join(", ")}. Pilihan: ${BENCANA_SUMBER.join(", ")} (atau 'semua')`);
-        setWatcherSumber(chatId, sources);
+        setWatcherSumber(targetKey, sources);
         const alsoG = await mirrorGlobal((k) => setWatcherSumber(k, sources));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -311,7 +325,7 @@ async function handler(m, { sock }) {
         ]));
       }
       try {
-        const rec = setWatcherMode(chatId, mode);
+        const rec = setWatcherMode(targetKey, mode);
         const alsoG = await mirrorGlobal((k) => setWatcherMode(k, mode));
         await m.react("🐣");
         const expl = {
@@ -337,7 +351,7 @@ async function handler(m, { sock }) {
       try {
         if (sub === "add" || sub === "tambah") {
           const hhmm = (m.args || [])[2];
-          const rec = addWatcherSchedule(chatId, hhmm);
+          const rec = addWatcherSchedule(targetKey, hhmm);
           const alsoG = await mirrorGlobal((k) => addWatcherSchedule(k, hhmm));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -351,7 +365,7 @@ async function handler(m, { sock }) {
         }
         if (sub === "remove" || sub === "hapus" || sub === "del") {
           const hhmm = (m.args || [])[2];
-          const rec = removeWatcherSchedule(chatId, hhmm);
+          const rec = removeWatcherSchedule(targetKey, hhmm);
           const alsoG = await mirrorGlobal((k) => removeWatcherSchedule(k, hhmm));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -360,7 +374,7 @@ async function handler(m, { sock }) {
           ]));
         }
         if (sub === "clear" || sub === "reset") {
-          clearWatcherSchedules(chatId);
+          clearWatcherSchedules(targetKey);
           const alsoG = await mirrorGlobal((k) => clearWatcherSchedules(k));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -370,7 +384,7 @@ async function handler(m, { sock }) {
         }
         // list / default
         const subs = await getWatchersSafe();
-        const me = subs[chatId];
+        const me = subs[targetKey];
         const scheds = Array.isArray(me?.schedules) ? me.schedules : [];
         return m.reply(novaBox("Bencana Watch — Jadwal", [
           `Jadwal rangkuman: ${scheds.length ? scheds.join(", ") : "belum ada"}`,
@@ -574,7 +588,7 @@ async function handler(m, { sock }) {
 
     if (action === "status" || action === "") {
       const subs = await getWatchersSafe();
-      const me = subs[chatId];
+      const me = subs[targetKey];
       const active = me
         ? `AKTIF sejak ${me.since.slice(0, 10)}`
         : "TIDAK AKTIF di chat ini";
