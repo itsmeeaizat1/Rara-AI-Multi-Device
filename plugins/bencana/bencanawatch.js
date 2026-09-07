@@ -319,6 +319,9 @@ async function handler(m, { sock }) {
         "• Gempa global baru M 6.0+ (USGS)",
         "• Bencana GDACS level SIAGA / AWAS",
         "---",
+        "MAU INDONESIA SAJA? Pilih sumbernya:",
+        "• .bencanawatch sumber bmkg",
+        "---",
         "Matikan dengan .bencanawatch off",
       ]));
     }
@@ -438,6 +441,10 @@ async function handler(m, { sock }) {
           "• Gempa Indonesia baru M 5.0+ (BMKG)",
           "• Gempa global baru M 6.0+ (USGS)",
           "• Bencana GDACS level SIAGA / AWAS",
+          "---",
+          "MAU INDONESIA SAJA? Pilih sumbernya:",
+          "• .bencanawatch sumber bmkg",
+          "• .bencanawatch sumber bmkg, gdacs",
           "---",
           "Tips: set lokasi biar dapat peringatan khusus",
           "wilayah: .bencanawatch lokasi <nama kota>",
