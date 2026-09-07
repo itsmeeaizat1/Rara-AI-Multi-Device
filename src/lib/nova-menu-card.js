@@ -25,7 +25,7 @@
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";
-import { generateWAMessageFromContent, proto } from "nova";
+import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import { buildCategoryButton } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
 import { logger } from "./nova-logger.js";
@@ -308,24 +308,96 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       return true;
     }
 
-    // ── REVISI OWNER 2026-09-07 (3): MEDIA TYPE = GAMBAR ASLI + CAPTION ──
-    // Report owner: "coba ubah ke tipe media lain supaya thumbnail-nya muncul
-    // seperti contoh" — tipe interactive header-image & link-preview sama-sama
-    // dirender/direduksi client. Cara yang PALING DIJAMIN muncul di semua
-    // client (pola klasik menu image-kan bot Indonesia): banner dikirim
-    // sebagai IMAGE ASLI (gambar gede nempel DI ATAS pesan) + caption =
-    // teks menu di bawahnya. Chip externalAdReply tetap nempel di bawah
-    // caption (judul nama bot + versi, tanpa sourceUrl) + pill channel.
-    // Param buttons diabaikan (tombol nativeFlow = sumber render gagal).
-    if (rawBuffer) {
-      await sock.sendMessage(
-        m.chat,
-        { image: rawBuffer, caption: text, contextInfo },
-        { quoted: m },
-      );
-    } else {
-      await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
+    // ── REVISI OWNER 2026-09-07 (4): POLA CARD ELAINA V3 (contoh dari owner,
+    // lib/allmenu.js Elaina V3) — "thumbnail tag produk, bisa video juga" ──
+    // Struktur yang TERBUKTI ke-render di client penerima:
+    // (a) header media asli via prepareWAMessageMedia — image ATAU video
+    //     (cari file .mp4 sebelah thumbnail; gifPlayback biar muter);
+    // (b) 2 dummy button pembuka (single_select + call_permission_request,
+    //     has_multiple_buttons:true) + tombol nav asli;
+    // (c) nativeFlowMessage dengan messageParamsJson bottom_sheet —
+    //     ini yang bikin semua tombol ke-render di WA versi baru;
+    // (d) chip externalAdReply (tanpa sourceUrl) + pill channel di
+    //     contextInfo interactiveMessage.
+    // Fallback: banner gak ada → teks biasa + chip (plain path di bawah).
+    let headerMedia = null;
+    let isVideoBanner = false;
+    try {
+      const videoPath = thumbPath.replace(/\.(jpe?g|png)$/i, ".mp4");
+      if (fs.existsSync(videoPath)) {
+        isVideoBanner = true;
+        headerMedia = await prepareWAMessageMedia(
+          { video: fs.readFileSync(videoPath), gifPlayback: true },
+          { upload: sock.waUploadToServer, mediaType: "video" },
+        );
+      } else if (rawBuffer) {
+        headerMedia = await prepareWAMessageMedia(
+          { image: rawBuffer },
+          { upload: sock.waUploadToServer },
+        );
+      }
+    } catch (e) {
+      console.error("[nova-menu-card] Gagal upload header media:", e.message);
     }
+
+    if (headerMedia) {
+      const nativeButtons = [
+        // Dummy pembuka ala Elaina V3 — penanda multi-button untuk WA baru
+        { name: "single_select", buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }) },
+        { name: "call_permission_request", buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }) },
+        ...buildNativeButtons(buttons),
+      ];
+      const flowParams = JSON.stringify({
+        bottom_sheet: {
+          in_thread_buttons_limit: 2,
+          divider_indices: [2, 3, 4, 5, 6, 7, 8, 999],
+          list_title: `☰ ${toSC("Semua Kategori")}`,
+          button_title: `✦ ${toSC("Jelajahi Semua Fitur")}`,
+        },
+      });
+
+      const payload = {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
+            interactiveMessage: {
+              header: {
+                hasMediaAttachment: true,
+                ...(isVideoBanner
+                  ? { videoMessage: headerMedia.videoMessage }
+                  : { imageMessage: headerMedia.imageMessage }),
+              },
+              body: { text },
+              footer: { text: footer || "" },
+              contextInfo: {
+                mentionedJid: m.sender ? [m.sender] : [],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                  newsletterJid,
+                  newsletterName,
+                  serverMessageId: 127,
+                },
+                externalAdReply,
+              },
+              nativeFlowMessage: {
+                messageParamsJson: flowParams,
+                buttons: nativeButtons,
+              },
+            },
+          },
+        },
+      };
+      const built = generateWAMessageFromContent(m.chat, payload, {
+        userJid: sock.user?.id || m.sender,
+        quoted: m,
+      });
+      await sock.relayMessage(m.chat, built.message, { messageId: built.key.id });
+      return true;
+    }
+
+    // Banner gak ada → teks biasa + chip externalAdReply.
+    await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
     return true;
   } catch (e) {
     console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message);
