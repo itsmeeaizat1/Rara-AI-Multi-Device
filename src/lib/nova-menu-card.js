@@ -285,6 +285,33 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
+    // ── REQUEST OWNER 2026-09-07: BANNER SEBAGAI DOCUMENT ──
+    // Report: thumbnail externalAdReply gak pernah muncul di HP owner.
+    // Solusi: banner dikirim duluan sebagai DOCUMENT message — WhatsApp
+    // ngerender preview thumbnail + logo unduh di dokumennya, dan file
+    // model ini GAK PERNAH kesimpen ke galeri penerima (bukan image
+    // attachment biasa). Menu text + tombol tetep menyusul di bawahnya
+    // sebagai satu pesan interaktif.
+    if (rawBuffer) {
+      try {
+        const docName = (title || config.bot?.name || "Nova AI")
+          .replace(/[\\/*?:"<>|]/g, "")
+          .trim() || "Nova";
+        await sock.sendMessage(
+          m.chat,
+          {
+            document: rawBuffer,
+            mimetype: "image/jpeg",
+            fileName: `${docName} — Menu.jpg`,
+            jpegThumbnail: adThumbnail || rawBuffer,
+          },
+          { quoted: m }
+        );
+      } catch (e) {
+        console.error("[nova-menu-card] Gagal kirim banner document:", e.message);
+      }
+    }
+
     // ── REVERT OWNER 2026-09-07 (final): BALIK KE LINK-PREVIEW CARD, TANPA
     // TAG SALURAN & TANPA "DITERUSKAN BERKALI-KALI" ──
     // Report owner: eksperimen header-media/video/vcard-quote ala Elaina V3
