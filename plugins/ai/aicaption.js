@@ -2,6 +2,7 @@
 import { novaError, novaEmpty, novaGuide, novaNoInput, separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 /**
  * plugins/ai/aicaption.js
@@ -9,7 +10,7 @@ import te from "../../src/lib/nova-error.js";
  * Reply foto, AI analisis dan kasih caption suggestion
  * Support: IG style, product, funny, aesthetic, motivational
  *
- * API: Tio AI (ai.tioo.eu.org) — OpenAI format dengan vision
+ * API: Tio AI (gateway kktoken.cc) — OpenAI format dengan vision
  * Fallback: Puter.com (free, no key)
  */
 
@@ -49,7 +50,7 @@ function getStylePrompt(style) {
 
 async function callAIWithImage(imageBase64, prompt, aiConfig) {
   const apiKey = String(aiConfig.openaiApiKey || aiConfig.apiKey || "");
-  const endpoint = "https://ai.tioo.eu.org/v1/chat/completions";
+  const endpoint = getTioEndpoint();
   const model = String(aiConfig.openaiModel || aiConfig.model || "deepseek-v4-flash:free");
 
   if (!apiKey) {

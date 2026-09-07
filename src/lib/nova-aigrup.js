@@ -49,7 +49,7 @@ const TIO_FORMATS = {
     apiKeyField: "openaiApiKey",
     modelField: "openaiModel",
     defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://ai.tioo.eu.org/v1/chat/completions",
+    endpoint: "https://kktoken.cc/v1/chat/completions",
     providerKey: "tio_openai",
   },
   gemini: {
@@ -67,7 +67,7 @@ const TIO_FORMATS = {
     apiKeyField: "anthropicApiKey",
     modelField: "anthropicModel",
     defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://ai.tioo.eu.org/v1/messages",
+    endpoint: "https://kktoken.cc/v1/messages",
     providerKey: "tio_anthropic",
   },
 };
@@ -192,7 +192,7 @@ export async function handleAiGrup(m, sock, botNumber) {
 
     // ═══ Set endpoint (Gemini dynamic per model) ═══
     const apiEndpoint = fmtKey === "gemini"
-      ? `https://ai.tioo.eu.org/v1beta/models/${model}:generateContent`
+      ? `https://kktoken.cc/v1beta/models/${model}:generateContent`
       : fmt.endpoint;
 
     // ═══ System prompt dengan anti-spam instruction ═══
