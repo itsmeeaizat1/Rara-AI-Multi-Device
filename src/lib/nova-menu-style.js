@@ -7,13 +7,13 @@
 import { wrapText as guardWrapText } from "./styler.js";
 
 // Aesthetic khas bot WhatsApp dev Indonesia:
-// ╭─「 ✦  ✦」 box drawing, │ clean body lines, │ sub-section, ╰────  •  ──── footer
+// 「 ✦  ✦」 box drawing, │ clean body lines, │ sub-section, ╰────  •  ──── footer
 // + modern data: ▰▱ progress bars, ● status dots, system info
 // SEMUA text pakai smallcaps font (toSC diterapkan ke header + body)
 // Semua fungsi lama tetap export dengan signature sama.
 //
 // STYLE GUIDE (wajib konsisten di semua plugin):
-// ┌─ Header:   ╭─「 ✦ Title ✦ 」
+// ┌─ Header:   「 ✦ Title ✦ 」
 // │─ Body:     │ content
 // │─ Empty:    │
 // │─ Sub:      │ 「 Sub Title 」
@@ -74,35 +74,30 @@ function buildBox(headerTitle, lines = []) {
   // bikin WhatsApp hard-wrap jadi beberapa baris "──────" berantakan di HP.
   // Header dipakai apa adanya, sama seperti style menu/allmenu yang disetujui owner.
   // toSC di-apply di sini biar SEMUA caller otomatis smallcaps, konsisten.
-  const headerCore = `╭─「 ✦ ${toSC(String(headerTitle))} ✦ 」`;
-  const header = headerCore;
+  // REWORK 2026-09-07 (owner: "hapus juga di menu usage semua fitur dan
+  // replynya hapus garisnya") — buildBox TANPA garis: header 「 ✦ Title ✦ 」,
+  // isi polos tanpa prefix │, tanpa footer ╰────, tanpa wrapLine 30-char
+  // (gak ada border yang bisa putus, WhatsApp wrap natural). buildBox dipakai
+  // claraWrap/novaReply/novaCaption/bracketBox → SEMUA reply plugin kebagian.
+  const header = `「 ✦ ${toSC(String(headerTitle))} ✦ 」`;
   const body = [];
   for (const line of lines) {
     if (line === "---" || line === "─" || line === "---separator---") {
-      body.push("├────  •  ────");
+      body.push("");
     } else if (typeof line === "object" && line.subHeader) {
-      const sub = `│ 「 ${line.subHeader} 」`;
-      body.push(sub);
+      body.push(`「 ${toSC(line.subHeader)} 」`);
     } else if (!line || !String(line).trim()) {
-      body.push("│");
+      body.push("");
     } else {
-      // FIX garis dobel: dulu cuma satu karakter depan yang di-strip, jadi teks
-      // yang sudah bawa prefix │ │ sendiri menghasilkan │ │ │ dobel di output.
       const clean = String(line)
         .replace(/^╎❏\s*/, '')
         .replace(/^╎\s*$/, '')
         .replace(/^┊\s+➶\s*/, '')
         .replace(/^(?:[•┊╎❏➶╭╰│┃]\s*)+/, '');
-      const text = scLine(clean);
-      // FIX word-wrap: pecah baris panjang per kata, tiap lanjutan tetap
-      // dibungkus │ — WhatsApp tidak lagi hard-wrap acak tanpa prefix.
-      for (const row of wrapLine(text)) {
-        body.push(`│ ${row}`);
-      }
+      body.push(scLine(clean));
     }
   }
-  const footer = "╰────  •  ────";
-  return [header, ...body, footer].join("\n");
+  return [header, ...body].join("\n");
 }
 
 // novaCaption: caption panduan pakai fitur (no-input guide) — pakai buildBox modern style
@@ -148,11 +143,11 @@ function novaCaption({ emoji = "", name = "", description = "", usage = "", exam
 // ═══════════════════════════════════════════════
 
 function botHeader(botName) {
-  return `╭─「 ✦ ${toSC(botName)} ✦ 」`;
+  return `「 ✦ ${toSC(botName)} ✦ 」`;
 }
 
 function botSignature(botName) {
-  return `╰────  •  ────`;
+  return ;
 }
 
 function sectionBox(emoji, title, lines = []) {
@@ -178,19 +173,19 @@ function kv(key, value, padTo = 10) {
 }
 
 function categoryBox(emoji, name, commands, prefix, perLine = 3) {
-  const headerCore = `╭─「 ✦ ${toSC(name)} (${commands.length}) ✦ 」`;
+  const headerCore = `「 ✦ ${toSC(name)} (${commands.length}) ✦ 」`;
   const lines = [];
   let maxW = headerCore.length;
   for (let i = 0; i < commands.length; i += perLine) {
     const chunk = commands.slice(i, i + perLine);
-    const line = `│ ${chunk.map(c => `${prefix}${toSC(c)}`).join("  ")}`;
+    const line = `${chunk.map(c => `${prefix}${toSC(c)}`).join("  ")}`;
     if (line.length > maxW) maxW = line.length;
     lines.push(line);
   }
   const W = Math.max(maxW + 3, 24);
   const header = headerCore + "─".repeat(Math.max(0, W - headerCore.length));
   const body = lines;
-  const footer = "╰────  •  ────";
+  const footer = "";
   return [header, ...body, footer].join("\n");
 }
 
@@ -201,20 +196,20 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
 // ═══════════════════════════════════════════════
 
 function sectionHeader(title) {
-  return `╭─「 ✦ ${toSC(title)} ✦ 」`;
+  return `「 ✦ ${toSC(title)} ✦ 」`;
 }
 
 function sectionItem(text) {
   const clean = String(text).replace(/^[•┊╎❏➶╭╰│┃]\s*/g, '').replace(/^\s+/g, '');
-  return `│ ${scLine(clean)}`;
+  return `${scLine(clean)}`;
 }
 
 function sectionClose() {
-  return `╰────  •  ────`;
+  return ;
 }
 
 function sectionSpacer() {
-  return `│`;
+  return ;
 }
 
 function buildSection(title, items = []) {
@@ -225,13 +220,13 @@ function buildSection(title, items = []) {
   const W = Math.max(maxW + 3, 24);
   const closedHeader = header + "─".repeat(Math.max(0, W - header.length));
   const closedBody = bodyLines;
-  const closedFooter = "╰────  •  ────";
+  const closedFooter = "";
   return [closedHeader, ...closedBody, closedFooter].join("\n");
 }
 
 function claraHeader(title, emoji = "") {
-  if (isRealEmoji(emoji)) return `╭─「 ✦ ${emoji} ${toSC(title)} ✦ 」`;
-  return `╭─「 ✦ ${toSC(title)} ✦ 」`;
+  if (isRealEmoji(emoji)) return `「 ✦ ${emoji} ${toSC(title)} ✦ 」`;
+  return `「 ✦ ${toSC(title)} ✦ 」`;
 }
 
 function bracketBox(emoji, label, lines = []) {
@@ -277,7 +272,7 @@ function commandListLine(prefix, cmdName, usage = "", symbols = "") {
   const paramMatches = usage ? String(usage).match(/<[^>]+>/g) : null;
   const paramPart = paramMatches ? " " + toSC(paramMatches.join(" ")) : "";
   const symbolPart = symbols ? " " + String(symbols).trim() : "";
-  return `│ ${prefix}${toSC(String(cmdName))}${paramPart}${symbolPart}`;
+  return `${prefix}${toSC(String(cmdName))}${paramPart}${symbolPart}`;
 }
 
 function separator(char = "─", repeat = 20) {
@@ -285,7 +280,7 @@ function separator(char = "─", repeat = 20) {
 }
 
 function tipText(text) {
-  return `│ 💡 *${toSC("Tip")}:* ${scLine(text)}`;
+  return `💡 *${toSC("Tip")}:* ${scLine(text)}`;
 }
 
 function claraWrap(title, body, type = "info") {
@@ -417,7 +412,7 @@ function closeBoxRight(text) {
       out.push(l.replace(/╯$/, ""));
     } else if (t.endsWith("┤")) {
       out.push(l.replace(/┤$/, ""));
-    } else if (t.endsWith("│") && !t.startsWith("│") && l.trim() !== "│") {
+    } else if (t.endsWith("") && !t.startsWith("") && l.trim() !== "") {
       out.push(l.replace(/│$/, ""));
     } else {
       out.push(l);
@@ -476,54 +471,30 @@ const CATEGORY_EMOJIS = {
  * @returns {string}
  */
 function novaInfoBox(title, items = [], opts = {}) {
+  // REWORK 2026-09-07 (owner): tanpa garis/padding — header 「 ✦ Title ✦ 」,
+  // isi polos, kv pakai "• label : value". Padding kolom padEnd lama bikin
+  // gap kosong, border ╭╰│ bikin wrap WA keliatan putus — semua dicabut.
   const useSC = opts.sc !== false;
   const hdr = useSC ? toSC(title) : title;
-  const headerStr = `╭─「 ✦ ${hdr} ✦ 」`;
-  const lines = [];
-  let maxW = headerStr.length;
-  
+  let out = `「 ✦ ${hdr} ✦ 」\n`;
   for (const item of items) {
-    if (item === "---" || item === "─") {
-      lines.push({ type: "sep", text: "" });
-      continue;
-    }
+    if (item === "---" || item === "─") { out += "\n"; continue; }
     if (typeof item === "string") {
-      const text = useSC ? toSC(item) : item;
-      const line = `│ ${text}`;
-      if (line.length > maxW) maxW = line.length;
-      lines.push({ type: "text", text: line });
+      out += (useSC ? toSC(item) : item) + "\n";
       continue;
     }
     if (item && item.label !== undefined) {
       const label = useSC ? toSC(item.label) : item.label;
       const value = item.value !== undefined ? String(item.value) : "";
-      // Pad label ke width yang konsisten (min 10 char)
-      const labelW = Math.max(10, label.length + 2);
-      const padded = label.padEnd(labelW);
-      const line = `│ ${padded}${value}`;
-      if (line.length > maxW) maxW = line.length;
-      lines.push({ type: "kv", text: line });
-      continue;
+      out += `• ${label} : ${value}\n`;
     }
   }
-  
-  const W = Math.max(maxW + 3, 24);
-  let out = headerStr + "─".repeat(Math.max(0, W - headerStr.length)) + "\n";
-  for (const line of lines) {
-    if (line.type === "sep") {
-      out += "│" + "─".repeat(Math.max(0, W - 1)) + "\n";
-    } else {
-      out += line.text + " ".repeat(Math.max(0, W - line.text.length)) + "\n";
-    }
-  }
-  out += "╰────  •  ────";
-  return out;
+  return out.replace(/\n+$/, "");
 }
-
 
 // ═══════════════════════════════════════════════
 // novaMenuLayout — Menu design baru (continuous flow)
-// ╭─「 ✦ Info ✦ 」     ← open
+// 「 ✦ Info ✦ 」     ← open
 // │ • Label : value     ← info bullet
 // ╰─「 CategoryName 」   ← close + next section
 // │
@@ -591,7 +562,7 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
         // FIX 2026-09-07 (owner: hapus garis nyangkut/border keputus di
         // pesan intro) — greeting AI bisa sampai ~300 karakter/45 kata
         // dalam SATU baris tanpa \n. Kalau ditulis langsung "│ ${line}",
-        // WhatsApp yang wrap sendiri di client TANPA prefix "│" di baris
+        // WhatsApp yang wrap sendiri di client TANPA prefix "" di baris
         // lanjutan → border kelihatan putus/nyangkut (corner ╭ doang di
         // atas, teks lanjutan nempel kiri tanpa border). Guard: wrapLine
         // dulu (≤30 char/baris) baru tiap baris hasil wrap dapet "│ ".
@@ -651,7 +622,7 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
 
 // ═══════════════════════════════════════════════
 // novaReply — Standard reply format for all plugins
-// ╭─「 ✦ Title ✦ 」
+// 「 ✦ Title ✦ 」
 // │
 // │ • Label  : value
 // │ • Label2 : value2
@@ -831,20 +802,16 @@ function pickRandom(arr) {
  * @param {string} commandName - nama command
  * @param {string} [detail] - detail error opsional
  */
-// GUARD RATA KIRI (owner 2026-09-07, "teks masih nabrak border kiri"):
-// isi box helper kilat WAJIB lewat wrapLine — lanjutan baris tetap
-// ber-prefix "│ ", gak ada lagi yang dilipat WhatsApp tanpa prefix.
+// REWORK 2026-09-07 (owner: hapus garis di semua reply) — tanpa border,
+// isi helper kilat polos, WhatsApp wrap natural.
 function boxRows(text) {
-  return wrapLine(String(text || "")).map((r) => `│ ${r}`).join("\n");
+  return String(text || "");
 }
 
 function novaError(commandName, detail) {
   const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("ERROR");
-  let out = `╭─「 ✦ ${title} ✦ 」\n`;
-  out += `│\n`;
-  out += boxRows(`❌ ${scLine(detail || "Gagal, coba lagi ya")}`) + "\n";
-  out += `│\n`;
-  out += `╰────  •  ────`;
+  let out = `「 ✦ ${title} ✦ 」\n`;
+  out += `❌ ${scLine(detail || "Gagal, coba lagi ya")}\n`;
   return out;
 }
 
@@ -855,11 +822,8 @@ function novaError(commandName, detail) {
  */
 function novaEmpty(commandName, detail) {
   const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("KOSONG");
-  let out = `╭─「 ✦ ${title} ✦ 」\n`;
-  out += `│\n`;
-  out += boxRows(`❌ ${scLine(detail || "Kosong, tidak ada data")}`) + "\n";
-  out += `│\n`;
-  out += `╰────  •  ────`;
+  let out = `「 ✦ ${title} ✦ 」\n`;
+  out += `❌ ${scLine(detail || "Kosong, tidak ada data")}\n`;
   return out;
 }
 
@@ -870,14 +834,11 @@ function novaEmpty(commandName, detail) {
  * @param {string} [example] - contoh command
  */
 function novaNoInput(commandName, hint, example) {
-  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  out += `│\n`;
-  out += boxRows(`⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}`) + "\n";
-  if (hint) out += boxRows(scLine(hint)) + "\n";
-  if (example) out += boxRows(`Contoh: ${example}`) + "\n";
-  out += `│\n`;
-  out += `╰────  •  ────`;
-  return out;
+  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
+  if (hint) out += scLine(hint) + "\n";
+  if (example) out += `Contoh: ${example}\n`;
+  return out.replace(/\n+$/, "");
 }
 
 /**
@@ -886,13 +847,10 @@ function novaNoInput(commandName, hint, example) {
  * @param {string} [mediaType] - "image" | "sticker" | "video" | "audio"
  */
 function novaNoQuoted(commandName, mediaType) {
-  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  out += `│\n`;
-  out += boxRows(`⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}`) + "\n";
-  if (mediaType) out += boxRows(scLine(`Butuh: ${mediaType}`)) + "\n";
-  out += `│\n`;
-  out += `╰────  •  ────`;
-  return out;
+  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
+  if (mediaType) out += scLine(`Butuh: ${mediaType}`) + "\n";
+  return out.replace(/\n+$/, "");
 }
 
 /**
@@ -902,12 +860,9 @@ function novaNoQuoted(commandName, mediaType) {
  */
 function novaSuccess(commandName, message) {
   const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("SUKSES");
-  let out = `╭─「 ✦ ${title} ✦ 」\n`;
-  out += `│\n`;
-  out += boxRows(`✅ ${scLine(message || "Berhasil!")}`) + "\n";
-  out += `│\n`;
-  out += `╰────  •  ────`;
-  return out;
+  let out = `「 ✦ ${title} ✦ 」\n`;
+  out += `✅ ${scLine(message || "Berhasil!")}\n`;
+  return out.replace(/\n+$/, "");
 }
 
 /**
@@ -918,14 +873,11 @@ function novaSuccess(commandName, message) {
  * @param {string} [note] - catatan tambahan
  */
 function novaGuide(commandName, intro, example, note) {
-  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  out += `│\n`;
-  if (intro) out += boxRows(scLine(intro)) + "\n";
-  if (example) out += boxRows(`Contoh: ${example}`) + "\n";
-  if (note) out += boxRows(`⚠ ${scLine(note)}`) + "\n";
-  out += `│\n`;
-  out += `╰────  •  ────`;
-  return out;
+  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  if (intro) out += scLine(intro) + "\n";
+  if (example) out += `Contoh: ${example}\n`;
+  if (note) out += `⚠ ${scLine(note)}\n`;
+  return out.replace(/\n+$/, "");
 }
 
 export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide, pickRandom };
@@ -959,45 +911,20 @@ export function novaGangguan(fitur = "Error") {
  * @returns {string} Box text siap dikirim
  */
 export function novaBox(header, lines = [], opts = {}) {
-  // FIX (2026-09-05): dulu width box dihitung dari baris TERPANJANG (maxW),
-  // lalu header & separator "├────...────" di-stretch sepanjang itu. Kalau
-  // ada satu baris agak panjang (mis. "Hadiah : Limit, Koin, EXP (random
-  // per jawaban)"), separatornya jadi 1 baris dash SANGAT panjang tanpa
-  // spasi — WhatsApp hard-wrap itu jadi beberapa baris "────" berantakan
-  // di HP (persis bug yang dilaporkan owner di family100/catur/dll).
-  // Fix: pakai pola SAMA seperti buildBox() yang sudah disetujui owner —
-  // header & separator FIXED (gak ngikut panjang body), body panjang malah
-  // di-word-wrap per baris dengan prefix │ biar tetap rapi.
-  //
-  // FIX (2026-09-07, request owner): opts.border = false — dipakai layar
-  // GAME yang isinya banyak teks panjang (soal, papan jawaban) yang gampang
-  // overflow & bikin border "│" di tiap baris keliatan berantakan pas WA
-  // wrap teksnya. Header wrapper (╭─「✦ TITLE ✦」) & footer (╰──── • ────)
-  // TETAP dipakai (request owner: "simbol box pembungkus di title biarin
-  // aja") — cuma body per-baris yang lepas dari prefix │.
+  // REWORK 2026-09-07 (owner: hapus garis di semua reply) — sama seperti
+  // buildBox: header 「 ✦ Title ✦ 」, isi polos, sub-header 「 sub 」,
+  // tanpa footer, tanpa wrapLine. opts.border jadi moot (semua jalur sama).
   const useSC = opts.sc !== false;
-  const withBorder = opts.border !== false;
   const hdr = useSC ? toSC(header) : header;
-  const headerStr = `╭─「 ✦ ${hdr} ✦ 」`;
-  let out = headerStr + "\n";
+  let out = `「 ✦ ${hdr} ✦ 」\n`;
   for (const l of lines) {
-    if (l === "---" || l === "─") {
-      out += (withBorder ? "├────  •  ────" : "────  •  ────") + "\n";
-      continue;
-    }
+    if (l === "---" || l === "─") { out += "\n"; continue; }
     if (typeof l === "object" && l.sub) {
-      out += (withBorder ? `│ 「 ${useSC ? toSC(l.sub) : l.sub} 」` : `「 ${useSC ? toSC(l.sub) : l.sub} 」`) + "\n";
+      out += `「 ${useSC ? toSC(l.sub) : l.sub} 」\n`;
       continue;
     }
-    if (!l || !String(l).trim()) {
-      out += (withBorder ? "│" : "") + "\n";
-      continue;
-    }
-    const text = String(l);
-    for (const row of wrapLine(text)) {
-      out += (withBorder ? `│ ${row}` : row) + "\n";
-    }
+    if (!l || !String(l).trim()) { out += "\n"; continue; }
+    out += String(l) + "\n";
   }
-  out += "╰────  •  ────";
-  return out;
+  return out.replace(/\n+$/, "");
 }

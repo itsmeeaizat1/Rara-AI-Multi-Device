@@ -349,7 +349,7 @@ try {
         if (verifyResult.verified) {
           // Verified successfully — let them know
           await sock.sendMessage(m.chat, {
-            text: "╭─「 ✦ Verifikasi ✦ 」\n│\n│ ✅ Verifikasi berhasil!\n│ Selamat datang di grup\n│\n╰────  •  ────",
+            text: "「 ✦ Verifikasi ✦ 」\n✅ Verifikasi berhasil!\nSelamat datang di grup",
           }, { quoted: m });
           return; // Don't process further this message
         } else if (verifyResult.kicked) {
@@ -358,7 +358,7 @@ try {
             await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
           } catch {}
           await sock.sendMessage(m.chat, {
-            text: "╭─「 ✦ Verifikasi ✦ 」\n│\n│ ❌ Gagal verifikasi 3x!\n│ Member dikeluarkan\n│\n╰────  •  ────",
+            text: "「 ✦ Verifikasi ✦ 」\n❌ Gagal verifikasi 3x!\nMember dikeluarkan",
           });
           return;
         } else if (verifyResult.timedOut) {
@@ -366,7 +366,7 @@ try {
             await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
           } catch {}
           await sock.sendMessage(m.chat, {
-            text: "╭─「 ✦ Verifikasi ✦ 」\n│\n│ ⏰ Waktu verifikasi habis!\n│ Member dikeluarkan\n│\n╰────  •  ────",
+            text: "「 ✦ Verifikasi ✦ 」\n⏰ Waktu verifikasi habis!\nMember dikeluarkan",
           });
           return;
         } else if (verifyResult.shouldDelete) {
@@ -453,7 +453,7 @@ try {
       const { verifyVnCaptcha, hasVnCaptchaChallenge, isVnCaptchaBlocked } = await import("../plugins/owner/vncaptcha.js");
       const senderJid = m.key?.remoteJid || m.sender;
       if (typeof isVnCaptchaBlocked === "function" && isVnCaptchaBlocked(senderJid)) {
-        await sock.sendMessage(senderJid, { text: "╭─「 ✦ Diblokir 24 Jam ✦ 」\n│\n│ ❌ Gagal verifikasi suara\n│ Coba lagi besok\n│\n╰────  •  ────" });
+        await sock.sendMessage(senderJid, { text: "「 ✦ Diblokir 24 Jam ✦ 」\n❌ Gagal verifikasi suara\nCoba lagi besok" });
         return;
       }
       if (typeof hasVnCaptchaChallenge === "function" && hasVnCaptchaChallenge(senderJid)) {
@@ -903,7 +903,7 @@ try {
         ? "Jangan spam " + label + "! Tunggu " + spamResult.remainSec + " detik lagi"
         : "Tunggu " + spamResult.remainSec + " detik sebelum pakai " + label + " lagi";
       if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-      await m.reply("╭─「 ✦ Anti-Spam ✦ 」\n│\n│ ⚠ " + msg + "\n│\n╰────  •  ────");
+      await m.reply("「 ✦ Anti-Spam ✦ 」\n⚠ " + msg + "");
       return;
     }
   } catch (e) {
@@ -915,7 +915,7 @@ try {
     if (!m.isNewsletter) {
       try {
         if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-        await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│\n│ ⚠ Command ini sedang dinonaktifkan\n│\n╰────  •  ────");
+        await m.reply("「 ✦ Nonaktif ✦ 」\n⚠ Command ini sedang dinonaktifkan");
       } catch {}
     }
     return;
@@ -942,7 +942,7 @@ try {
       if (!m.isNewsletter) {
         try {
           if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-          await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│\n│ ⚠ Fitur ini sedang dinonaktifkan oleh owner\n│ Ketik .togglefitur untuk melihat status\n│\n╰────  •  ────");
+          await m.reply("「 ✦ Nonaktif ✦ 」\n⚠ Fitur ini sedang dinonaktifkan oleh owner\nKetik .togglefitur untuk melihat status");
         } catch {}
       }
       return;
@@ -983,7 +983,7 @@ try {
             try { await m.react("❗"); } catch {}
             try {
               await m.reply(
-                "╭─「 ✦ ᴇɴᴇʀɢɪ ɢᴀᴍᴇ ᴋᴜʀᴀɴɢ ✦ 」\n│\n│ ⚠ Butuh *" + energiCost + "* energi game\n│ ⚡ Energi: *" + energiGame + "/" + maxEnergy + "*\n│ 💡 Isi ulang via *.heal* (energy drink)\n│\n╰────  •  ────"
+                "「 ✦ ᴇɴᴇʀɢɪ ɢᴀᴍᴇ ᴋᴜʀᴀɴɢ ✦ 」\n⚠ Butuh *" + energiCost + "* energi game\n⚡ Energi: *" + energiGame + "/" + maxEnergy + "*\n💡 Isi ulang via *.heal* (energy drink)"
               );
             } catch {}
           }
@@ -1025,7 +1025,7 @@ try {
             if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
           await m.reply(
               (config.messages?.energiExceeded ||
-               "╭─「 ✦ Energi Habis ✦ 」\n│\n│ ⚠ Energi kamu sudah habis!\n│ Tunggu reset besok atau beli Premium\n│\n╰────  •  ────")
+               "「 ✦ Energi Habis ✦ 」\n⚠ Energi kamu sudah habis!\nTunggu reset besok atau beli Premium")
             );
           } catch {}
         }
@@ -1097,11 +1097,11 @@ try {
     if (energiCost > 0 && !m.isNewsletter && !m.isOwner && !gameEnergiUsed) {
       try {
         const usedAmount = isUnlimited ? energiCost : energiDeducted;
-        let notifText = "╭─「 ✦ Limit ✦ 」\n│ " + usedAmount + " limit terpakai";
+        let notifText = "「 ✦ Limit ✦ 」\n" + usedAmount + " limit terpakai";
         if (!isUnlimited) {
-          notifText += "\n│ Sisa limit: " + sisaEnergi;
+          notifText += "\nSisa limit: " + sisaEnergi;
         }
-        notifText += "\n╰────  •  ────";
+        notifText += "";
         await sock.sendMessage(m.chat, { text: notifText });
 
         // === WARNING LIMIT RENDAH (tetap dikirim jika sisa limit menipis) ===
@@ -1112,7 +1112,7 @@ try {
               try {
                 await sock.sendMessage(
                   m.chat,
-                  { text: "╭─「 ✦ Limit Menipis ✦ 」\n│ Sisa limit kamu tinggal " + sisaEnergi + "\n│ Ketik .buyenergi <jumlah> untuk beli\n│ atau upgrade Premium\n╰────  •  ────" }
+                  { text: "「 ✦ Limit Menipis ✦ 」\nSisa limit kamu tinggal " + sisaEnergi + "\nKetik .buyenergi <jumlah> untuk beli\natau upgrade Premium" }
                 );
               } catch {}
               break;
@@ -1127,7 +1127,7 @@ try {
     if (config.dev?.debugLog) console.error(c.gray(error.stack));
     if (!m.isNewsletter) { try { await m.react("❌"); } catch {} }
     try {
-      await m.reply("╭─「 ✦ Error ✦ 」\n│\n│ ❌ " + error.message + "\n│\n╰────  •  ────");
+      await m.reply("「 ✦ Error ✦ 」\n❌ " + error.message + "");
     } catch {}
   }
 }
@@ -1219,7 +1219,7 @@ async function groupHandler(update, sock) {
           const promoteNotify = db.setting("promoteNotify");
           if (promoteNotify && promoteNotify.jid === update.id) {
             await sock.sendMessage(update.id, {
-              text: "╭─「 ✦ Promote ✦ 」\n│ @" + participantJid.replace(/@.+/g, "") + " telah di-promote menjadi admin\n╰────  •  ────",
+              text: "「 ✦ Promote ✦ 」\n@" + participantJid.replace(/@.+/g, "") + " telah di-promote menjadi admin",
               mentions: [participantJid],
             });
           }
@@ -1230,7 +1230,7 @@ async function groupHandler(update, sock) {
           const demoteNotify = db.setting("demoteNotify");
           if (demoteNotify && demoteNotify.jid === update.id) {
             await sock.sendMessage(update.id, {
-              text: "╭─「 ✦ Demote ✦ 」\n│ @" + participantJid.replace(/@.+/g, "") + " telah di-demit dari admin\n╰────  •  ────",
+              text: "「 ✦ Demote ✦ 」\n@" + participantJid.replace(/@.+/g, "") + " telah di-demit dari admin",
               mentions: [participantJid],
             });
           }
@@ -1298,8 +1298,8 @@ async function groupSettingsHandler(update, sock) {
       if (announceNotify && announceNotify.jid === update.id) {
         await sock.sendMessage(update.id, {
           text: update.announce
-            ? "╭─「 ✦ Announcement Only ✦ 」\n│ Grup telah diubah menjadi Announcement Only\n│ Hanya admin yang bisa kirim pesan\n╰────  •  ────"
-            : "╭─「 ✦ All Members ✦ 」\n│ Grup telah diubah menjadi All Members Can Send\n│ Semua member bisa kirim pesan\n╰────  •  ────",
+            ? "「 ✦ Announcement Only ✦ 」\nGrup telah diubah menjadi Announcement Only\nHanya admin yang bisa kirim pesan"
+            : "「 ✦ All Members ✦ 」\nGrup telah diubah menjadi All Members Can Send\nSemua member bisa kirim pesan",
         });
       }
     }
@@ -1310,8 +1310,8 @@ async function groupSettingsHandler(update, sock) {
       if (lockNotify && lockNotify.jid === update.id) {
         await sock.sendMessage(update.id, {
           text: update.locked
-            ? "╭─「 ✦ Grup Dikunci ✦ 」\n│ Settingan grup telah dikunci oleh admin\n╰────  •  ────"
-            : "╭─「 ✦ Grup Dibuka ✦ 」\n│ Settingan grup telah dibuka oleh admin\n╰────  •  ────",
+            ? "「 ✦ Grup Dikunci ✦ 」\nSettingan grup telah dikunci oleh admin"
+            : "「 ✦ Grup Dibuka ✦ 」\nSettingan grup telah dibuka oleh admin",
         });
       }
     }
@@ -1321,7 +1321,7 @@ async function groupSettingsHandler(update, sock) {
       const nameNotify = db.setting("nameNotify");
       if (nameNotify && nameNotify.jid === update.id) {
         await sock.sendMessage(update.id, {
-          text: "╭─「 ✦ Nama Grup ✦ 」\n│ Nama grup diubah menjadi: *" + update.subject + "*\n╰────  •  ────",
+          text: "「 ✦ Nama Grup ✦ 」\nNama grup diubah menjadi: *" + update.subject + "*",
         });
       }
     }

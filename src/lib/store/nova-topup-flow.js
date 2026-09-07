@@ -39,14 +39,14 @@ async function notifyOwner(sock, m, order, priceStr) {
   const ownerNumbers = config.owner?.number || ["628174887770"];
   const buyerNumber = m.sender?.replace(/[^0-9]/g, "") || "";
   const notifText =
-    `\n│ ${toSC("Pembeli")}: *${toSC(m.pushName || "Unknown")}*\n` +
-    `│ ${toSC("Nomor")}: ${buyerNumber}\n` +
-    `│ ${toSC("Item")}: *${toSC(order.name)}*\n` +
-    `│ ${toSC("Jumlah")}: *${order.qty.toLocaleString("id-ID")} ${order.unit}*\n` +
-    `│ ${toSC("Jalur")}: *${toSC(order.jalur)}*\n` +
-    `│ ${toSC("Harga")}: *${priceStr}*\n` +
-    `│ ${toSC("Status")}: *${toSC("MENUNGGU PEMBAYARAN")}*\n` +
-    `│ ${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}\n\n` +
+    `\n${toSC("Pembeli")}: *${toSC(m.pushName || "Unknown")}*\n` +
+    `${toSC("Nomor")}: ${buyerNumber}\n` +
+    `${toSC("Item")}: *${toSC(order.name)}*\n` +
+    `${toSC("Jumlah")}: *${order.qty.toLocaleString("id-ID")} ${order.unit}*\n` +
+    `${toSC("Jalur")}: *${toSC(order.jalur)}*\n` +
+    `${toSC("Harga")}: *${priceStr}*\n` +
+    `${toSC("Status")}: *${toSC("MENUNGGU PEMBAYARAN")}*\n` +
+    `${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}\n\n` +
     `${toSC("Jika sudah bayar, ketik")}: *.approvetopup ${buyerNumber}*`;
   for (const num of ownerNumbers) {
     try {

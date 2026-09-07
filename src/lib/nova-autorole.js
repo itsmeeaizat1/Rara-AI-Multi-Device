@@ -127,10 +127,10 @@ export async function addChat(sock, groupId, userId, pushName) {
     // Kirim notifikasi ke grup
     const r = ROLES[newRole];
     const text =
-      `╭─「 ✦ Role Up ✦ 」\n` +
-      `│ 🎉 Selamat @${userId.split("@")[0]} naik ke\n` +
-      `│ ${r.emoji} ${r.name}!\n` +
-      `╰────  •  ────`;
+      `「 ✦ Role Up ✦ 」\n` +
+      `🎉 Selamat @${userId.split("@")[0]} naik ke\n` +
+      `${r.emoji} ${r.name}!\n` +
+      ;
     try {
       await sock.sendMessage(groupId, {
         text,

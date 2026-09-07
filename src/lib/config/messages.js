@@ -1,37 +1,37 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // messages.js — Template pesan bot (wait, error, ownerOnly, dll) + groupProtection
 
-export const errorTemplate = `╭─「 ✦ ⚠️ Kendala ✦ 」\n│ Perintah \`{prefix}{command}\` lagi bermasalah\n│ Coba lagi nanti ya, {pushName}\n│ Masih error? Hubungi owner bot\n╰────  •  ────`;
+export const errorTemplate = `「 ✦ ⚠️ Kendala ✦ 」\nPerintah \`{prefix}{command}\` lagi bermasalah\nCoba lagi nanti ya, {pushName}\nMasih error? Hubungi owner bot`;
 
 export const messages = {
-  wait: "╭─「 ✦ 🕕 Sedang Diproses ✦ 」\n│ Sabar ya, lagi dikerjakan\n│ Jangan spam ya bestie\n╰────  •  ────",
-  success: "╭─「 ✦ ✅ Berhasil ✦ 」\n│ Permintaan kamu selesai\n│ Ada lagi yang bisa dibantu?\n╰────  •  ────",
-  error: "╭─「 ✦ ⚠️ Error ✦ 」\n│ Ada masalah di sistem\n│ Coba lagi beberapa saat\n│ Masih error? Lapor owner\n╰────  •  ────",
+  wait: "「 ✦ 🕕 Sedang Diproses ✦ 」\nSabar ya, lagi dikerjakan\nJangan spam ya bestie",
+  success: "「 ✦ ✅ Berhasil ✦ 」\nPermintaan kamu selesai\nAda lagi yang bisa dibantu?",
+  error: "「 ✦ ⚠️ Error ✦ 」\nAda masalah di sistem\nCoba lagi beberapa saat\nMasih error? Lapor owner",
 
-  ownerOnly: "╭─「 ✦ 🚫 Akses Ditolak ✦ 」\n│ Fitur ini cuma buat Owner\n│ Jangan maksa ya\n╰────  •  ────",
+  ownerOnly: "「 ✦ 🚫 Akses Ditolak ✦ 」\nFitur ini cuma buat Owner\nJangan maksa ya",
   premiumOnly:
-    "╭─「 ✦ 💎 Premium Only ✦ 」\n│ Fitur ini khusus member Premium\n│ Mau upgrade? Ketik .benefitpremium\n╰────  •  ────",
+    "「 ✦ 💎 Premium Only ✦ 」\nFitur ini khusus member Premium\nMau upgrade? Ketik .benefitpremium",
 
-  groupOnly: "╭─「 ✦ 👥 Group Only ✦ 」\n│ Fitur ini cuma jalan di grup\n│ Pindah ke grup dulu ya\n╰────  •  ────",
+  groupOnly: "「 ✦ 👥 Group Only ✦ 」\nFitur ini cuma jalan di grup\nPindah ke grup dulu ya",
   privateOnly:
-    "╭─「 ✦ 📱 Private Only ✦ 」\n│ Fitur ini cuma jalan di chat pribadi\n│ Chat bot langsung ya\n╰────  •  ────",
+    "「 ✦ 📱 Private Only ✦ 」\nFitur ini cuma jalan di chat pribadi\nChat bot langsung ya",
 
   adminOnly:
-    "╭─「 ✦ 👮 Admin Only ✦ 」\n│ Kamu harus jadi Admin grup\n│ buat pakai fitur ini\n╰────  •  ────",
+    "「 ✦ 👮 Admin Only ✦ 」\nKamu harus jadi Admin grup\nbuat pakai fitur ini",
   botAdminOnly:
-    "╭─「 ✦ 🤖 Bot Bukan Admin ✦ 」\n│ Jadikan bot Admin dulu\n│ biar bisa ngerjain fitur ini\n╰────  •  ────",
+    "「 ✦ 🤖 Bot Bukan Admin ✦ 」\nJadikan bot Admin dulu\nbiar bisa ngerjain fitur ini",
 
   cooldown:
-    "╭─「 ✦ 🕕 Cooldown ✦ 」\n│ Sabar, tunggu %time% detik\n│ sebelum pakai lagi\n╰────  •  ────",
+    "「 ✦ 🕕 Cooldown ✦ 」\nSabar, tunggu %time% detik\nsebelum pakai lagi",
   energiExceeded:
-    "╭─「 ✦ ⚡ Energi Habis ✦ 」\n│ Energi kamu habis hari ini\n│ Reset besok atau\n│ upgrade Premium buat unlimited\n╰────  •  ────",
+    "「 ✦ ⚡ Energi Habis ✦ 」\nEnergi kamu habis hari ini\nReset besok atau\nupgrade Premium buat unlimited",
   limitDeducted:
-    "╭─「 ✦ 🔋 Limit ✦ 」\n│ Limit berkurang {amount}\n│ Sisa limit: {sisa}\n╰────  •  ────",
+    "「 ✦ 🔋 Limit ✦ 」\nLimit berkurang {amount}\nSisa limit: {sisa}",
 
   banned:
-    "╭─「 ✦ 🚫 Diblokir ✦ 」\n│ Kamu lagi gak bisa pakai bot\n│ karena melanggar aturan\n│ Hubungi owner buat appeal\n╰────  •  ────",
+    "「 ✦ 🚫 Diblokir ✦ 」\nKamu lagi gak bisa pakai bot\nkarena melanggar aturan\nHubungi owner buat appeal",
 
-  rejectCall: "╭─「 ✦ 📞 Ditolak ✦ 」\n│ Jangan telepon nomor bot\n│ Chat aja ya\n╰────  •  ────",
+  rejectCall: "「 ✦ 📞 Ditolak ✦ 」\nJangan telepon nomor bot\nChat aja ya",
 };
 
 // Semua pesan groupProtection ini fallback ke GP_DEFAULTS di

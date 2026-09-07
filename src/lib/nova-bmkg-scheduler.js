@@ -86,7 +86,7 @@ async function fetchGempaDirasakan() {
 // ────────────────────────────────────────────────────────────────────────────
 
 function formatGempaMessage(g, label) {
-  let txt = "╭─「 ✦ Info Gempa  │ \n ✦ 」";
+  let txt = "「 ✦ Info Gempa  │ \n ✦ 」";
   txt += "╰────  •  ────\n";
   txt += "Jadwal: " + label + " (6 jamanan)\n\n";
   txt += "M" + g.Magnitude + " — " + g.Wilayah + "\n";
@@ -97,7 +97,7 @@ function formatGempaMessage(g, label) {
 }
 
 function formatGempaListMessage(gempaList, label) {
-  let txt = "╭─「 ✦ Info Gempa  │ \n ✦ 」";
+  let txt = "「 ✦ Info Gempa  │ \n ✦ 」";
   txt += "╰────  •  ────\n";
   txt += "Jadwal: " + label + " (6 jamanan)\n\n";
   txt += "Gempa terkini M 5.0+ (5 terbaru):\n\n";
