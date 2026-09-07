@@ -1,4 +1,11 @@
 // === Nova AI Menu Style (v8 — Unified Box) ===
+//
+// GUARD RATA KIRI (request owner 2026-09-07): body box WAJIB dibungkus
+// wrapText dari lib/styler.js (≤30 char/baris + potong paksa kata/URL
+// panjang). Dulu wrapLine motong di 60 char — lebih lebar dari layar HP,
+// WhatsApp melipat sisanya TANPA prefix "│ " → teks nabrak border kiri.
+import { wrapText as guardWrapText } from "./styler.js";
+
 // Aesthetic khas bot WhatsApp dev Indonesia:
 // ╭─「 ✦  ✦」 box drawing, │ clean body lines, │ sub-section, ╰────  •  ──── footer
 // + modern data: ▰▱ progress bars, ● status dots, system info
@@ -52,20 +59,14 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
  */
 // Wrap konten box per kata supaya WhatsApp gak hard-wrap acak di tengah
 // baris — lanjutan baris tetap pakai prefix │ biar box keliatan rapi.
-const BOX_WRAP_WIDTH = 60;
+const BOX_WRAP_WIDTH = 30; // GUARD: 60 kelebaran — WA fold di ~30-35, sisanya tembus border kiri
 
+// GUARD (owner 2026-09-07): semua body box lewat wrapText styler.js —
+// maks width char/baris, multi-baris dipecah bener, kata/URL super
+// panjang dipotong paksa — gak ada lagi baris yang dilipat WhatsApp
+// sendiri tanpa prefix (biang "teks nabrak border kiri").
 function wrapLine(text, width = BOX_WRAP_WIDTH) {
-  const str = String(text);
-  if (str.length <= width) return [str];
-  const rows = [];
-  let cur = "";
-  for (const w of str.split(" ")) {
-    if (!cur) { cur = w; continue; }
-    if ((cur + " " + w).length <= width) cur += " " + w;
-    else { rows.push(cur); cur = w; }
-  }
-  if (cur) rows.push(cur);
-  return rows;
+  return guardWrapText(text, width);
 }
 
 function buildBox(headerTitle, lines = []) {
@@ -835,11 +836,18 @@ function pickRandom(arr) {
  * @param {string} commandName - nama command
  * @param {string} [detail] - detail error opsional
  */
+// GUARD RATA KIRI (owner 2026-09-07, "teks masih nabrak border kiri"):
+// isi box helper kilat WAJIB lewat wrapLine — lanjutan baris tetap
+// ber-prefix "│ ", gak ada lagi yang dilipat WhatsApp tanpa prefix.
+function boxRows(text) {
+  return wrapLine(String(text || "")).map((r) => `│ ${r}`).join("\n");
+}
+
 function novaError(commandName, detail) {
   const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("ERROR");
   let out = `╭─「 ✦ ${title} ✦ 」\n`;
   out += `│\n`;
-  out += `│ ❌ ${scLine(detail || "Gagal, coba lagi ya")}\n`;
+  out += boxRows(`❌ ${scLine(detail || "Gagal, coba lagi ya")}`) + "\n";
   out += `│\n`;
   out += `╰────  •  ────`;
   return out;
@@ -854,7 +862,7 @@ function novaEmpty(commandName, detail) {
   const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("KOSONG");
   let out = `╭─「 ✦ ${title} ✦ 」\n`;
   out += `│\n`;
-  out += `│ ❌ ${scLine(detail || "Kosong, tidak ada data")}\n`;
+  out += boxRows(`❌ ${scLine(detail || "Kosong, tidak ada data")}`) + "\n";
   out += `│\n`;
   out += `╰────  •  ────`;
   return out;
@@ -869,9 +877,9 @@ function novaEmpty(commandName, detail) {
 function novaNoInput(commandName, hint, example) {
   let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
   out += `│\n`;
-  out += `│ ⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
-  if (hint) out += `│ ${scLine(hint)}\n`;
-  if (example) out += `│ Contoh: ${example}\n`;
+  out += boxRows(`⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}`) + "\n";
+  if (hint) out += boxRows(scLine(hint)) + "\n";
+  if (example) out += boxRows(`Contoh: ${example}`) + "\n";
   out += `│\n`;
   out += `╰────  •  ────`;
   return out;
@@ -885,8 +893,8 @@ function novaNoInput(commandName, hint, example) {
 function novaNoQuoted(commandName, mediaType) {
   let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
   out += `│\n`;
-  out += `│ ⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
-  if (mediaType) out += `│ ${scLine(`Butuh: ${mediaType}`)}\n`;
+  out += boxRows(`⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}`) + "\n";
+  if (mediaType) out += boxRows(scLine(`Butuh: ${mediaType}`)) + "\n";
   out += `│\n`;
   out += `╰────  •  ────`;
   return out;
@@ -901,7 +909,7 @@ function novaSuccess(commandName, message) {
   const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("SUKSES");
   let out = `╭─「 ✦ ${title} ✦ 」\n`;
   out += `│\n`;
-  out += `│ ✅ ${scLine(message || "Berhasil!")}\n`;
+  out += boxRows(`✅ ${scLine(message || "Berhasil!")}`) + "\n";
   out += `│\n`;
   out += `╰────  •  ────`;
   return out;
@@ -917,9 +925,9 @@ function novaSuccess(commandName, message) {
 function novaGuide(commandName, intro, example, note) {
   let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
   out += `│\n`;
-  if (intro) out += `│ ${scLine(intro)}\n`;
-  if (example) out += `│ Contoh: ${example}\n`;
-  if (note) out += `│ ⚠ ${scLine(note)}\n`;
+  if (intro) out += boxRows(scLine(intro)) + "\n";
+  if (example) out += boxRows(`Contoh: ${example}`) + "\n";
+  if (note) out += boxRows(`⚠ ${scLine(note)}`) + "\n";
   out += `│\n`;
   out += `╰────  •  ────`;
   return out;
