@@ -260,7 +260,7 @@ async function handler(m, { sock }) {
           `${toSC("Sisa Waktu")} : ${formatTime(remaining)}`,
           "---",
           'Ketik "nyerah" untuk menyerah dan lihat semua jawaban',
-        ]);
+        ], { border: false });
         await m.reply(text);
         return;
       }
@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const text = novaBox("Family 100", [
       pickFlavor(),
-      `➥ ${questionData.soal}`,
+      questionData.soal,
       "---",
       ...renderBoard({
         answers: questionData.jawaban.map((j, i) => ({
@@ -298,7 +298,7 @@ async function handler(m, { sock }) {
       "---",
       "💬 Balas pesan ini atau ketik jawaban langsung",
       '🏳️ Ketik "nyerah" buat buka semua jawaban',
-    ]);
+    ], { border: false });
 
     const sentMsg = await m.reply(text);
     await m.react("🐣");
@@ -441,7 +441,7 @@ async function answerHandler(m, sock) {
       if (scores.length) {
         replyLines.push({ sub: "Skor" }, ...scores);
       }
-      const replyText = novaBox("Family 100", replyLines);
+      const replyText = novaBox("Family 100", replyLines, { border: false });
 
       try {
         await m.react("🎉"); // react di pesan tebakan si penebak
@@ -495,7 +495,7 @@ async function answerHandler(m, sock) {
           if (reward.exp > 0) winLines.push(`✨ +${reward.exp} EXP`);
           winLines.push("---", "🎊 *Board abis semua! Kerja tim yang keren!*");
         }
-        const winText = novaBox("Family 100", winLines);
+        const winText = novaBox("Family 100", winLines, { border: false });
 
         // End session FIRST, then send
         endSession(chatId);

@@ -965,26 +965,34 @@ export function novaBox(header, lines = [], opts = {}) {
   // Fix: pakai pola SAMA seperti buildBox() yang sudah disetujui owner —
   // header & separator FIXED (gak ngikut panjang body), body panjang malah
   // di-word-wrap per baris dengan prefix │ biar tetap rapi.
+  //
+  // FIX (2026-09-07, request owner): opts.border = false — dipakai layar
+  // GAME yang isinya banyak teks panjang (soal, papan jawaban) yang gampang
+  // overflow & bikin border "│" di tiap baris keliatan berantakan pas WA
+  // wrap teksnya. Header wrapper (╭─「✦ TITLE ✦」) & footer (╰──── • ────)
+  // TETAP dipakai (request owner: "simbol box pembungkus di title biarin
+  // aja") — cuma body per-baris yang lepas dari prefix │.
   const useSC = opts.sc !== false;
+  const withBorder = opts.border !== false;
   const hdr = useSC ? toSC(header) : header;
   const headerStr = `╭─「 ✦ ${hdr} ✦ 」`;
   let out = headerStr + "\n";
   for (const l of lines) {
     if (l === "---" || l === "─") {
-      out += "├────  •  ────\n";
+      out += (withBorder ? "├────  •  ────" : "────  •  ────") + "\n";
       continue;
     }
     if (typeof l === "object" && l.sub) {
-      out += `│ 「 ${useSC ? toSC(l.sub) : l.sub} 」\n`;
+      out += (withBorder ? `│ 「 ${useSC ? toSC(l.sub) : l.sub} 」` : `「 ${useSC ? toSC(l.sub) : l.sub} 」`) + "\n";
       continue;
     }
     if (!l || !String(l).trim()) {
-      out += "│\n";
+      out += (withBorder ? "│" : "") + "\n";
       continue;
     }
     const text = String(l);
     for (const row of wrapLine(text)) {
-      out += `│ ${row}\n`;
+      out += (withBorder ? `│ ${row}` : row) + "\n";
     }
   }
   out += "╰────  •  ────";
