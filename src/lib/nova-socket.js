@@ -24,6 +24,7 @@ import {
 } from "./nova-lid.js";
 
 import fs from "fs";
+import { smallcapsText, toSC } from "./styler.js";
 import path from "path";
 import { downloadMediaMessage, getContentType } from "nova";
 import { addExifToWebp, imageToWebpFFmpeg, DEFAULT_METADATA } from "./nova-exif.js";
@@ -281,6 +282,39 @@ async function extendSocket(sock) {
   // automatically gets checked/transcoded if the codec is WhatsApp-incompatible.
   const _originalSendMessage = sock.sendMessage.bind(sock);
   sock.sendMessage = async (jid, content, options = {}) => {
+    // GUARD SMALLCAPS TOTAL (owner 2026-09-07: "smuanya aja skalian
+    // smalcaps") — titik pusat TERAKHIR: SEMUA teks yang keluar via
+    // sock.sendMessage dari 1800+ plugin (caption media/hasil download,
+    // fallback error, notifikasi, tombol template) otomatis smallcaps,
+    // tanpa perlu edit ratusan call site. Guard m.reply (nova-serialize)
+    // udah ngerangkul reply — ini ngejaring sisanya yang bypass m.reply.
+    // smallcapsText otomatis ngejaga URL & isi code fence (tetap persis).
+    // ESCAPE VERBATIM (OCR/translate/extract text): pass { raw: true }
+    // di options ATAU di content — teks dikirim apa adanya.
+    // toSC idempotent, jadi pesan yang udah ke-smallcaps aman dilewatin lagi.
+    if (content && !(options && options.raw) && !(content && content.raw)) {
+      try {
+        if (typeof content.text === "string" && content.text) {
+          content = { ...content, text: smallcapsText(content.text) };
+        }
+        if (typeof content.caption === "string" && content.caption) {
+          content = { ...content, caption: smallcapsText(content.caption) };
+        }
+        // tombol template (type:1) — displayText yang keliatan user
+        if (Array.isArray(content.buttons)) {
+          content = {
+            ...content,
+            buttons: content.buttons.map((b) =>
+              b && b.buttonText && typeof b.buttonText.displayText === "string"
+                ? { ...b, buttonText: { ...b.buttonText, displayText: toSC(b.buttonText.displayText) } }
+                : b,
+            ),
+          };
+        }
+      } catch (e) {
+        console.error("[SmallcapsGuard] skip:", e.message);
+      }
+    }
     try {
       if (content && content.video) {
         let videoBuf = content.video;
@@ -667,13 +701,28 @@ async function extendSocket(sock) {
       }
     }
 
+    // guard smallcaps jalur interactive sendButton (relayMessage bypass
+    // sock.sendMessage guard) — body/footer/tombol smallcaps, id tetap plain
+    const _scButtons = (options.buttons || []).map((b) => {
+      try {
+        if (!b || typeof b.buttonParamsJson !== "string") return b;
+        const bp = JSON.parse(b.buttonParamsJson);
+        if (typeof bp.display_text === "string") bp.display_text = toSC(bp.display_text);
+        if (typeof bp.title === "string") bp.title = toSC(bp.title);
+        if (typeof bp.copy_text === "string") bp.copy_text = toSC(bp.copy_text);
+        if (typeof bp.description === "string") bp.description = toSC(bp.description);
+        return { ...b, buttonParamsJson: JSON.stringify(bp) };
+      } catch {
+        return b;
+      }
+    });
     const interactiveObj = {
-      body: proto.Message.InteractiveMessage.Body.fromObject({ text: text || "" }),
+      body: proto.Message.InteractiveMessage.Body.fromObject({ text: smallcapsText(text || "") }),
       footer: proto.Message.InteractiveMessage.Footer.fromObject({
-        text: options.footer || config.bot?.name || "Nova-AI",
+        text: toSC(options.footer || config.bot?.name || "Nova-AI"),
       }),
       nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-        buttons: options.buttons || [],
+        buttons: _scButtons,
       }),
       contextInfo: options.contextInfo || {
         mentionedJid: options.mentions || [],
