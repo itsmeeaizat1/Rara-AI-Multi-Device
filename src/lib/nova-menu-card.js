@@ -374,11 +374,19 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // jadi VERSI BOT — expiration_time dibuang total biar WA gak nampilin
     // tanggal kadaluarsa apa pun. Versi dibaca dari config.bot.version biar
     // otomatis ke-update tiap rilis.
+    // REQUEST OWNER 2026-09-07: slot "kode" di chip diganti TANGGAL
+    // (format Indonesia: "Sen, 7 Sep 2026") — dinamis dari waktu kirim,
+    // otomatis ganti tiap hari.
+    const _mHari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+    const _mBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    const _mNow = new Date();
+    const _mTanggal = `${_mHari[_mNow.getDay()]}, ${_mNow.getDate()} ${_mBulan[_mNow.getMonth()]} ${_mNow.getFullYear()}`;
+
     const _mFlowParams = JSON.stringify({
       limited_time_offer: {
         text: `${toSC(botName)} • ${toSC("Versi")} ${botVersion || "23.0.0"}`,
         url: sourceUrl,
-        copy_code: `${toSC("Nova AI")} \u{1F4AB}`,
+        copy_code: _mTanggal,
       },
       bottom_sheet: {
         in_thread_buttons_limit: 2,
