@@ -316,7 +316,11 @@ async function handler(m, { sock }) {
         const cur = getSession(chatId);
         if (!cur || cur.startTime !== session.startTime) return;
         await sock.sendMessage(chatId, {
-          text: `⏰ *Sisa 30 detik!* Progres: ${renderProgressBar(cur.foundCount, cur.totalAnswers)}\nSemangat, buruan jawab yang belum kebuka! 💪`,
+          // FIX OWNER 2026-09-07 (screenshot): label "Progres:" nempel
+          // langsung ke progress bar tanpa baris baru — di WhatsApp
+          // kelihatan dempet/berantakan. Fix: bar pindah ke baris baru
+          // (bukan baris kosong/\n\n — cukup 1 \n biar tetap rapat rapi).
+          text: `⏰ *Sisa 30 detik!*\n📊 Progres:\n${renderProgressBar(cur.foundCount, cur.totalAnswers)}\nSemangat, buruan jawab yang belum kebuka! 💪`,
         });
       } catch {}
     }, warnDelay);
@@ -332,7 +336,7 @@ async function handler(m, { sock }) {
           const num = String(i + 1).padStart(2, "0");
           endText += `${ans.revealed ? "✅" : "❌"} ${num} ${ans.text}${ans.revealed && ans.foundBy ? ` — @${ans.foundBy.split("@")[0]}` : ""}\n`;
         }
-        endText += `\n📊 Progres akhir: ${renderProgressBar(session.foundCount, session.totalAnswers)}\n\n`;
+        endText += `\n📊 Progres akhir:\n${renderProgressBar(session.foundCount, session.totalAnswers)}\n`;
         const scores = renderScores(session);
         if (scores.length) {
           endText += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
