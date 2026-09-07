@@ -402,7 +402,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
         ? "\n" + tipText(`Ketik ${prefix}extracttext untuk ekstrak lagi`)
         : "";
       await m.react("🐣");
-      await m.reply(header + footer);
+      await m.reply(header + footer, { raw: true });
     }
   } catch (error) {
     await m.react("❌");

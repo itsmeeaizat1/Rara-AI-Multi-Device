@@ -11,6 +11,39 @@
 // wrapText(), (2) diawali "│ " oleh boxLeft(). Gak ada jalur lain —
 // plugin yang masih nulis "│ " manual adalah pintu bocornya.
 //
+// GUARD SMALLCAPS TOTAL (owner 2026-09-07: "aku mau semua teksnya jadi
+// smallcaps semuanya — tanpa smallcaps kayak bukan bot, dikira orang"):
+// SEMUA teks keluar bot otomatis smallcaps via satu titik kunci
+// (m.reply di nova-serialize). Yang DILINDUNGI (tetap persis):
+// - URL (https?://...) biar link tetap bisa diklik
+// - isi code block fence (fitur kode/ASCII: tocode, tocase, css, json,
+//   exec, photoascii, sudoku, mindmap, fakechat, webclone)
+const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+
+export const toSC = (s) => String(s).replace(/[a-zA-Z]/g, (c) => SC_MAP[c.toLowerCase()] || c);
+
+function scUrlSafe(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return String(text).split(urlRegex).map((p, i) => (i % 2 === 1 ? p : toSC(p))).join("");
+}
+
+/**
+ * Convert seluruh teks ke smallcaps — kecuali URL & isi code fence.
+ * Idempotent: teks yang sudah smallcaps tidak berubah.
+ * @param {string} text
+ * @returns {string}
+ */
+export function smallcapsText(text) {
+  const str = String(text ?? "");
+  if (!str) return str;
+  if (!/[a-zA-Z]/.test(str)) return str;
+  // pisahkan code fence — isi fence dikirim persis (kode/grid ASCII)
+  const chunks = str.split(/(```[\s\S]*?```)/g);
+  return chunks
+    .map((chunk) => (chunk.startsWith("```") ? chunk : scUrlSafe(chunk)))
+    .join("");
+}
+
 // UPDATE OWNER 2026-09-07: BUNGKUS CODE BLOCK DIHAPUS — pesan berkotak
 // sekarang font NORMAL (bukan monospace). Rata kiri tetap terjaga karena
 // tiap baris udah di-wrap ≤ width karakter + diawali "│ ".
