@@ -25,7 +25,7 @@
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";
-import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
+import { generateWAMessageFromContent, proto } from "nova";
 import { buildCategoryButton } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
 import { logger } from "./nova-logger.js";
@@ -259,162 +259,86 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
 
     const nativeButtons = buildNativeButtons(buttons);
 
-    // ── FIX thumbnail gak muncul + tag channel (2026-09-05) ──
-    // sourceUrl DIHAPUS (2026-09-07) — lihat catatan di bawah, gak dipakai
-    // lagi biar baris link/domain gak muncul di card.
+    // sourceUrl WAJIB URL https valid — link rusak bikin WA gak ngerender
+    // card preview sama sekali. Prioritas: link saluran asli → website
+    // valid → fallback whatsapp.com.
+    const saluranLink = config.saluran?.link || "";
+    const website = config.info?.website || "";
+    const channelLinkOk = /^https:\/\/whatsapp\.com\/channel\/[A-Za-z0-9_-]+/.test(saluranLink);
+    const urlOk = (u) => {
+      try { const x = new URL(u); return x.protocol.startsWith("http") && !x.hostname.includes("_"); }
+      catch { return false; }
+    };
+    const sourceUrl = (channelLinkOk && saluranLink) || (urlOk(website) && website) || "https://www.whatsapp.com/";
 
-    // (2) Tag channel di bawah pesan (pill "Nova AI Official") berasal dari
-    //     forwardedNewsletterMessageInfo — pola yang sama kayak nova-level.js.
-    //     Pakai config.saluran.id kalau sudah di-set; fallback id channel
-    //     yang sama dengan .ptvch.
-    const newsletterJid = await resolveNewsletterJid(sock);
-    const newsletterName = config.saluran?.name || config.bot?.name || "Nova AI";
-
-    // ── UPDATE (request owner 2026-09-06): baris bawah kiri card =
-    // logo kecil (auto dari thumbnail) + NAMA BOT + VERSI BOT — bukan
-    // greeting waktu. Greeting dipindah ke caller (intro body), card
-    // konsisten menampilkan identitas bot di semua menu.
+    // Baris bawah kiri card = logo kecil (auto dari thumbnail) + NAMA BOT +
+    // VERSI BOT.
     const botName = title || config.bot?.name || "Nova AI";
     const botVersion = config.bot?.version || "";
-    // FIX OWNER 2026-09-07: hasil beda dari referensi (bot Raiden MD) —
-    // muncul baris "🔗 whatsapp.com" yang gak ada di card mereka. Baris
-    // link/domain itu otomatis dirender WA kalau sourceUrl keisi → card
-    // referensi cuma gambar + judul + subjudul TANPA baris link sama
-    // sekali, jadi sourceUrl dihapus dari sini.
     const externalAdReply = {
       title: adTitle || botName,
       body: botVersion ? `v${botVersion}` : botName,
       mediaType: 1,
       renderLargerThumbnail: true,
       showAdAttribution: false,
+      sourceUrl,
       ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
+    // ── REVERT OWNER 2026-09-07 (final): BALIK KE LINK-PREVIEW CARD, TANPA
+    // TAG SALURAN & TANPA "DITERUSKAN BERKALI-KALI" ──
+    // Report owner: eksperimen header-media/video/vcard-quote ala Elaina V3
+    // gagal semua (jadi media biasa / gak ada tombol / malah muncul badge
+    // "Diteruskan berkali-kali" + pill "Nova AI Official" di atas thumbnail
+    // yang gak diinginkan). Balik ke versi stabil: banner via
+    // contextInfo.externalAdReply (link-preview, gak kesimpen galeri),
+    // forwardingScore 0 + isForwarded false (TIDAK ada badge forward), dan
+    // forwardedNewsletterMessageInfo DIHAPUS (TIDAK ada pill saluran di atas
+    // thumbnail). Tombol nativeFlow (buildNavButtons, 5-6 tombol) tetap ada.
     const contextInfo = {
       mentionedJid: m.sender ? [m.sender] : [],
       forwardingScore: 0,
       isForwarded: false,
       externalAdReply,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid,
-        newsletterName,
-        serverMessageId: 1,
-      },
     };
 
-    // Opsi plain (card info/owner): teks biasa + chip externalAdReply.
     if (plain) {
       await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
       return true;
     }
 
-    // ── REVISI OWNER 2026-09-07 (4): POLA CARD ELAINA V3 (contoh dari owner,
-    // lib/allmenu.js Elaina V3) — "thumbnail tag produk, bisa video juga" ──
-    // Struktur yang TERBUKTI ke-render di client penerima:
-    // (a) header media asli via prepareWAMessageMedia — image ATAU video
-    //     (cari file .mp4 sebelah thumbnail; gifPlayback biar muter);
-    // (b) 2 dummy button pembuka (single_select + call_permission_request,
-    //     has_multiple_buttons:true) + tombol nav asli;
-    // (c) nativeFlowMessage dengan messageParamsJson bottom_sheet —
-    //     ini yang bikin semua tombol ke-render di WA versi baru;
-    // (d) chip externalAdReply (tanpa sourceUrl) + pill channel di
-    //     contextInfo interactiveMessage.
-    // Fallback: banner gak ada → teks biasa + chip (plain path di bawah).
-    let headerMedia = null;
-    let isVideoBanner = false;
-    try {
-      const videoPath = thumbPath.replace(/\.(jpe?g|png)$/i, ".mp4");
-      if (fs.existsSync(videoPath)) {
-        isVideoBanner = true;
-        headerMedia = await prepareWAMessageMedia(
-          { video: fs.readFileSync(videoPath), gifPlayback: true },
-          { upload: sock.waUploadToServer, mediaType: "video" },
-        );
-      } else if (rawBuffer) {
-        headerMedia = await prepareWAMessageMedia(
-          { image: rawBuffer },
-          { upload: sock.waUploadToServer },
-        );
-      }
-    } catch (e) {
-      console.error("[nova-menu-card] Gagal upload header media:", e.message);
-    }
+    const interactiveObj = {
+      body: proto.Message.InteractiveMessage.Body.fromObject({ text }),
+      footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: footer || "" }),
+      nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+        buttons: nativeButtons,
+      }),
+      // Header TANPA media attachment — banner besar dihandle lewat
+      // contextInfo.externalAdReply di bawah (link-preview, gak kesimpen galeri).
+      header: proto.Message.InteractiveMessage.Header.fromObject({
+        title: "",
+        hasMediaAttachment: false,
+      }),
+      contextInfo,
+    };
 
-    if (headerMedia) {
-      const nativeButtons = [
-        // Dummy pembuka ala Elaina V3 — penanda multi-button untuk WA baru
-        { name: "single_select", buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }) },
-        { name: "call_permission_request", buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }) },
-        ...buildNativeButtons(buttons),
-      ];
-      const flowParams = JSON.stringify({
-        bottom_sheet: {
-          in_thread_buttons_limit: 2,
-          divider_indices: [2, 3, 4, 5, 6, 7, 8, 999],
-          list_title: `☰ ${toSC("Semua Kategori")}`,
-          button_title: `✦ ${toSC("Jelajahi Semua Fitur")}`,
-        },
-      });
-
-      const payload = {
+    const msg = generateWAMessageFromContent(
+      m.chat,
+      {
         viewOnceMessage: {
           message: {
-            messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
-            interactiveMessage: {
-              header: {
-                hasMediaAttachment: true,
-                ...(isVideoBanner
-                  ? { videoMessage: headerMedia.videoMessage }
-                  : { imageMessage: headerMedia.imageMessage }),
-              },
-              body: { text },
-              footer: { text: footer || "" },
-              contextInfo: {
-                mentionedJid: m.sender ? [m.sender] : [],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                  newsletterJid,
-                  newsletterName,
-                  serverMessageId: 127,
-                },
-                externalAdReply,
-              },
-              nativeFlowMessage: {
-                messageParamsJson: flowParams,
-                buttons: nativeButtons,
-              },
+            messageContextInfo: {
+              deviceListMetadata: {},
+              deviceListMetadataVersion: 2,
             },
+            interactiveMessage: proto.Message.InteractiveMessage.fromObject(interactiveObj),
           },
         },
-      };
-      // ── "TAG PRODUK" ala Elaina V3 ──
-      // Bukan dari externalAdReply — itu trik quoted PALSU ke contactMessage
-      // (vcard) dengan remoteJid status@broadcast. WhatsApp merender pesan
-      // sebagai balasan ke vcard itu → muncul kotak kecil "📋 Nama Bot" di
-      // atas card, kayak product tag. Report owner: hasil sebelumnya cuma
-      // media+teks biasa, gak ada tag & gak ada tombol — karena quoted masih
-      // ke pesan command asli (m), bukan vcard palsu ini.
-      const fakeQuoted = {
-        key: { participant: "0@s.whatsapp.net", remoteJid: "status@broadcast" },
-        message: {
-          contactMessage: {
-            displayName: `📋 ${botName}`,
-            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${botName}\nitem1.TEL;waid=0:+0\nEND:VCARD`,
-            sendEphemeral: true,
-          },
-        },
-      };
-      const built = generateWAMessageFromContent(m.chat, payload, {
-        userJid: sock.user?.id || m.sender,
-        quoted: fakeQuoted,
-      });
-      await sock.relayMessage(m.chat, built.message, { messageId: built.key.id });
-      return true;
-    }
+      },
+      { userJid: m.sender, quoted: m },
+    );
 
-    // Banner gak ada → teks biasa + chip externalAdReply.
-    await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
+    await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     return true;
   } catch (e) {
     console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message);
