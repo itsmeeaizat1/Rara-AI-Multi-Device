@@ -1250,8 +1250,18 @@ async function startConnection(options = {}) {
 
       let jid = msg.key.remoteJid || "";
 
+      // FIX OWNER 2026-09-07: pesan yang diketik dari HP (device utama, sama
+      // akun dengan session bot) sering nyampe ke linked device sebagai type
+      // "append" (relay history-sync), bukan "notify" — jadi command dari
+      // owner ("menu di chat orang / grup gak muncul") gak pernah keproses
+      // karena di-skip di sini. Skip fromMe+append sekarang CUMA untuk pesan
+      // LAMA (history sync beneran, > 2 menit); pesan BARU tetap diproses.
       if (msg.key.fromMe && type === "append" && jid !== "status@broadcast") {
-        continue;
+        const __novaTs = Number(msg.messageTimestamp) || 0;
+        const __novaAge = __novaTs > 0 ? Date.now() / 1000 - __novaTs : Infinity;
+        if (__novaAge > 120) {
+          continue;
+        }
       }
 
       if (jid === "status@broadcast") {
