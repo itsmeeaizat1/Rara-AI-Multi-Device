@@ -453,7 +453,7 @@ async function captchaAnswerHandler(m, sock) {
         clearCaptchaSession(m.sender)
         await m.reply(
           "Captcha salah " + MAX_ATTEMPTS + "x!*\n\n" +
-          "│ Sesi dibatalkan.\nCoba lagi: `" + m.prefix + "daftarotomatis`"
+          "Sesi dibatalkan.\nCoba lagi: `" + m.prefix + "daftarotomatis`"
         )
         return true
       }

@@ -12,6 +12,9 @@ import path from "path";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildNavButtons } from "../../src/lib/nova-menu-card.js";
 import { toSC, novaMenuLayout, getAccessSymbols } from "../../src/lib/nova-menu-style.js";
+// GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
+// dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
+import { boxMessage } from "../../src/lib/styler.js";
 import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
@@ -186,7 +189,8 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╭─「 ✦ ${toSC("Kategori")} ✦ 」\n│ ${toSC("Kategori")} \`${categoryArg}\` ${toSC("tidak ditemukan")}\n│ ${toSC("Ketik")} \`${prefix}allmenucategory\` ${toSC("untuk daftar kategori")}\n╰────  •  ────`
+        boxMessage("◆ KATEGORI ◆",
+          `Kategori \`${categoryArg}\` tidak ditemukan. Ketik \`${prefix}allmenucategory\` untuk daftar kategori.`)
       );
       return;
     }
@@ -196,7 +200,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╭─「 ✦ ${toSC("Akses Ditolak")} ✦ 」\n│ ${toSC("Kategori ini hanya untuk owner")}\n╰────  •  ────`
+        boxMessage("◆ AKSES DITOLAK ◆", "Kategori ini hanya untuk owner.")
       );
       return;
     }
@@ -207,7 +211,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╭─「 ✦ ${toSC("Kosong")} ✦ 」\n│ ${toSC("Kategori")} \`${matchedCat}\` ${toSC("tidak ada command")}\n╰────  •  ────`
+        boxMessage("◆ KOSONG ◆", `Kategori \`${matchedCat}\` tidak ada command.`)
       );
       return;
     }
