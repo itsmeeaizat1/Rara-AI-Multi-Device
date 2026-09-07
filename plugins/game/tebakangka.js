@@ -2,6 +2,9 @@
 // tebakangka.js — Tebak angka 1-100 dengan hint lebih besar/kecil (no API)
 
 import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+// GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
+// dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
+import { boxMessage } from "../../src/lib/styler.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 
 const pluginConfig = {
@@ -62,42 +65,42 @@ async function handler(m, { args, prefix }) {
     const expGain = 20 + remaining * 5;
     activeGames.delete(chatId);
     try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
+    // teks polos — prefix & pemotongan dijamin boxLeft(), bukan manual
     const e = m.energiInfo;
     const energiLine = e
       ? (e.unlimited
-          ? `│ • ⚡ Energi: ∞ (unlimited)\n`
+          ? `⚡ Energi: ∞ (unlimited)\n`
           : (e.deducted > 0
-              ? (e.game ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n` : `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`)
-              : `│ • ⚡ Energi: gratis\n`))
+              ? (e.game ? `⚡ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n` : `⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`)
+              : `⚡ Energi: gratis\n`))
       : "";
     return m.reply(
       `🎉 Benar! Angkanya ${game.target}\n\n` +
-      `╭─「 ✦ ᴛᴇʙᴀᴋ ᴀɴɢᴋᴀ ✦ 」\n\n` +
-      `│ • Angka: ${game.target}\n` +
-      `│ • Tebakan ke-${game.attempts} dari ${game.maxAttempts}\n\n` +
-      energiLine +
-      `│ • ✨ EXP: +${expGain}\n` +
-      `\n╰────  •  ────` +
+      boxMessage("◆ TEBAK ANGKA ◆",
+        `Angka: ${game.target}\n` +
+        `Tebakan ke-${game.attempts} dari ${game.maxAttempts}\n` +
+        energiLine +
+        `✨ EXP: +${expGain}`) +
       `\n\nYuk tebak angka lain kak, biar makin jago nebak 🥳`
     );
   }
 
   if (game.attempts >= game.maxAttempts) {
     activeGames.delete(chatId);
+    // teks polos — prefix & pemotongan dijamin boxLeft(), bukan manual
     const e = m.energiInfo;
     const energiLine = e
       ? (e.unlimited
-          ? `│ • ⚡ Energi: ∞ (unlimited)\n`
+          ? `⚡ Energi: ∞ (unlimited)\n`
           : (e.deducted > 0
-              ? (e.game ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n` : `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`)
-              : `│ • ⚡ Energi: gratis\n`))
+              ? (e.game ? `⚡ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n` : `⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`)
+              : `⚡ Energi: gratis\n`))
       : "";
     return m.reply(
       `😭 Kesempatan habis!\n\n` +
-      `╭─「 ✦ ᴛᴇʙᴀᴋ ᴀɴɢᴋᴀ ✦ 」\n\n` +
-      `│ • Angka: ${game.target}\n\n` +
-      energiLine +
-      `\n╰────  •  ────` +
+      boxMessage("◆ TEBAK ANGKA ◆",
+        `Angka: ${game.target}\n` +
+        energiLine) +
       `\n\nYuk coba lagi kak, angkanya gak akan kabur 🥳`
     );
   }

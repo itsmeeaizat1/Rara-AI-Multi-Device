@@ -4,6 +4,7 @@
 import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import te from "../../src/lib/nova-error.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
+import { boxMessage } from "../../src/lib/styler.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -34,13 +35,13 @@ async function handler(m, { sock, text, command }) {
     if (command === "medal") {
       rpg.medals = rpg.medals || [];
       if (rpg.medals.length === 0) return m.reply(novaRpgBox("medal", "Kamu belum punya medali.", "info"));
-      let msg = "";
+      // GUARD FORMAT: kotak wajib boxLeft() — kalimat bebas panjang
+      const msg = [];
       for (const medalId of rpg.medals) {
         const medal = MEDAL_TYPES[medalId];
-        if (medal) msg += "│ 🏅 " + medal.name + " — " + medal.desc + "\n";
+        if (medal) msg.push(`🏅 ${medal.name} — ${medal.desc}`);
       }
-      msg += "";
-      return m.reply(msg);
+      return m.reply(boxMessage("◆ MEDALI ◆", msg.join("\n")));
     }
 
     if (command === "mailbox" || command === "mail") {

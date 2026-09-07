@@ -17,6 +17,9 @@
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
+// GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
+// dilarang nulis "" manual — kalimat bebas panjang, wrapText yang motong.
+import { boxMessage } from "../../src/lib/styler.js";
 import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
@@ -111,23 +114,21 @@ async function handler(m, { sock, config: botConfig, db }) {
     if (!action || action === "status") {
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
-        "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-        "│\n" +
-        "│ • " + toSC("Info Section") + " : " + (settings.realtime ? "ON ✅" : "OFF ❌") + "\n" +
-        "│ • " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
-        "│ • " + toSC("Koordinat") + " : " + (settings.location?.latitude || "-") + ", " + (settings.location?.longitude || "-") + "\n" +
-        "│ • " + toSC("Notifikasi") + " : " + (settings.notification ? "ON ✅" : "OFF ❌") + "\n" +
-        "│ • " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
-        "│ • " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
-        "│\n" +
-        "│ 📌 " + toSC("Perintah") + ":\n" +
-        "│ • " + prefix + "autoweatherrealtime on/off\n" +
-        "│ • " + prefix + "autoweatherrealtime lokasi serang\n" +
-        "│ • " + prefix + "autoweatherrealtime notification on\n" +
-        "│ • " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-        "│ • " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-        "│ • " + prefix + "autoweatherrealtime test\n" +
-        "╰────  •  ────"
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "• " + toSC("Info Section") + " : " + (settings.realtime ? "ON ✅" : "OFF ❌") + "\n" +
+        "• " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
+        "• " + toSC("Koordinat") + " : " + (settings.location?.latitude || "-") + ", " + (settings.location?.longitude || "-") + "\n" +
+        "• " + toSC("Notifikasi") + " : " + (settings.notification ? "ON ✅" : "OFF ❌") + "\n" +
+        "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
+        "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
+        "📌 " + toSC("Perintah") + ":\n" +
+        "• " + prefix + "autoweatherrealtime on/off\n" +
+        "• " + prefix + "autoweatherrealtime lokasi serang\n" +
+        "• " + prefix + "autoweatherrealtime notification on\n" +
+        "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
+        "• " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
+        "• " + prefix + "autoweatherrealtime test\n" 
+        )
       );
     }
 
@@ -138,11 +139,10 @@ async function handler(m, { sock, config: botConfig, db }) {
       clearWeatherCache();
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
-        "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-        "│\n" +
-        "│ ✅ " + toSC("Cuaca realtime AKTIF di info section") + "\n" +
-        "│ • " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
-        "╰────  •  ────"
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "✅ " + toSC("Cuaca realtime AKTIF di info section") + "\n" +
+        "• " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" 
+        )
       );
     }
 
@@ -152,11 +152,10 @@ async function handler(m, { sock, config: botConfig, db }) {
       saveWRSettings(db2, settings);
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
-        "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-        "│\n" +
-        "│ ❌ " + toSC("Cuaca realtime DIMATIKAN") + "\n" +
-        "│ • " + toSC("Cuaca tidak tampil di info section") + "\n" +
-        "╰────  •  ────"
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "❌ " + toSC("Cuaca realtime DIMATIKAN") + "\n" +
+        "• " + toSC("Cuaca tidak tampil di info section") + "\n" 
+        )
       );
     }
 
@@ -166,12 +165,11 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!query) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-          "│\n" +
-          "│ ⚠ " + toSC("Format") + ":\n" +
-          "│ • " + prefix + "autoweatherrealtime lokasi Serang\n" +
-          "│ • " + prefix + "autoweatherrealtime lokasi -6.12,106.14\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Format") + ":\n" +
+          "• " + prefix + "autoweatherrealtime lokasi Serang\n" +
+          "• " + prefix + "autoweatherrealtime lokasi -6.12,106.14\n" 
+          )
         );
       }
 
@@ -188,12 +186,11 @@ async function handler(m, { sock, config: botConfig, db }) {
         clearWeatherCache();
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-          "│\n" +
-          "│ ✅ " + toSC("Lokasi diatur ke koordinat") + "\n" +
-          "│ • Lat : " + lat + "\n" +
-          "│ • Lng : " + lng + "\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Lokasi diatur ke koordinat") + "\n" +
+          "• Lat : " + lat + "\n" +
+          "• Lng : " + lng + "\n" 
+          )
         );
       }
 
@@ -203,10 +200,9 @@ async function handler(m, { sock, config: botConfig, db }) {
         if (!result) {
           try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
           return m.reply(
-            "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-            "│\n" +
-            "│ ❌ " + toSC("Kota") + " \"" + query + "\" " + toSC("tidak ditemukan") + "\n" +
-            "╰────  •  ────"
+            boxMessage("◆ " + "Weather Realtime" + " ◆",
+            "❌ " + toSC("Kota") + " \"" + query + "\" " + toSC("tidak ditemukan") + "\n" 
+            )
           );
         }
         const fullName = [result.name, result.admin1, result.country].filter(Boolean).join(", ");
@@ -217,13 +213,12 @@ async function handler(m, { sock, config: botConfig, db }) {
         clearWeatherCache();
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-          "│\n" +
-          "│ ✅ " + toSC("Lokasi cuaca diatur ke") + "\n" +
-          "│ • " + toSC("Nama") + " : " + fullName + "\n" +
-          "│ • Lat : " + result.latitude + "\n" +
-          "│ • Lng : " + result.longitude + "\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Lokasi cuaca diatur ke") + "\n" +
+          "• " + toSC("Nama") + " : " + fullName + "\n" +
+          "• Lat : " + result.latitude + "\n" +
+          "• Lng : " + result.longitude + "\n" 
+          )
         );
       } catch (e) {
         try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
@@ -243,15 +238,13 @@ async function handler(m, { sock, config: botConfig, db }) {
         saveWRSettings(db2, settings);
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-          "│\n" +
-          "│ ✅ " + toSC("Notifikasi cuaca AKTIF") + "\n" +
-          "│ • " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
-          "│ • " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
-          "│\n" +
-          "│ 📌 " + toSC("Set target") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-          "│ 📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Notifikasi cuaca AKTIF") + "\n" +
+          "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
+          "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
+          "📌 " + toSC("Set target") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
+          "📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" 
+          )
         );
       }
       if (sub === "off") {
@@ -259,20 +252,18 @@ async function handler(m, { sock, config: botConfig, db }) {
         saveWRSettings(db2, settings);
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-          "│\n" +
-          "│ ❌ " + toSC("Notifikasi cuaca DIMATIKAN") + "\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "❌ " + toSC("Notifikasi cuaca DIMATIKAN") + "\n" 
+          )
         );
       }
       try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
       return m.reply(
-        "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-        "│\n" +
-        "│ ⚠ " + toSC("Format") + ":\n" +
-        "│ • " + prefix + "autoweatherrealtime notification on\n" +
-        "│ • " + prefix + "autoweatherrealtime notification off\n" +
-        "╰────  •  ────"
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "⚠ " + toSC("Format") + ":\n" +
+        "• " + prefix + "autoweatherrealtime notification on\n" +
+        "• " + prefix + "autoweatherrealtime notification off\n" 
+        )
       );
     }
 
@@ -282,10 +273,9 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!times.length) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-          "│\n" +
-          "│ ⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00 17:00 20:00\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00 17:00 20:00\n" 
+          )
         );
       }
       const labels = ["Pagi", "Siang", "Sore", "Malam"];
@@ -303,11 +293,10 @@ async function handler(m, { sock, config: botConfig, db }) {
       saveWRSettings(db2, settings);
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
-        "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-        "│\n" +
-        "│ ✅ " + toSC("Jadwal notifikasi diatur") + "\n" +
-        "│ • " + formatSchedules(schedules) + "\n" +
-        "╰────  •  ────"
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "✅ " + toSC("Jadwal notifikasi diatur") + "\n" +
+        "• " + formatSchedules(schedules) + "\n" 
+        )
       );
     }
 
@@ -317,22 +306,20 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (!target) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-          "│\n" +
-          "│ ⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-          "│ " + toSC("Atau jalankan di dalam grup untuk auto-set") + "\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
+          "" + toSC("Atau jalankan di dalam grup untuk auto-set") + "\n" 
+          )
         );
       }
       settings.target = target;
       saveWRSettings(db2, settings);
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
-        "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-        "│\n" +
-        "│ ✅ " + toSC("Target notifikasi diatur") + "\n" +
-        "│ • " + target + "\n" +
-        "╰────  •  ────"
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "✅ " + toSC("Target notifikasi diatur") + "\n" +
+        "• " + target + "\n" 
+        )
       );
     }
 
@@ -346,22 +333,19 @@ async function handler(m, { sock, config: botConfig, db }) {
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
         if (!footer) {
           return m.reply(
-            "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-            "│\n" +
-            "│ ❌ " + toSC("Gagal fetch cuaca") + "\n" +
-            "│ • " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
-            "╰────  •  ────"
+            boxMessage("◆ " + "Weather Realtime" + " ◆",
+            "❌ " + toSC("Gagal fetch cuaca") + "\n" +
+            "• " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" 
+            )
           );
         }
         return m.reply(
-          "╭─「 ✦ " + toSC("Weather Realtime Test") + " ✦ 」\n" +
-          "│\n" +
-          "│ " + toSC("Info Section") + ": " + (settings.realtime ? "ON" : "OFF") + "\n" +
-          "│ " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
-          "│ " + toSC("Address") + " : " + (addr || "-") + "\n" +
-          "│\n" +
-          footer + "\n" +
-          "╰────  •  ────"
+          boxMessage("◆ " + "Weather Realtime Test" + " ◆",
+          "" + toSC("Info Section") + ": " + (settings.realtime ? "ON" : "OFF") + "\n" +
+          "" + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
+          "" + toSC("Address") + " : " + (addr || "-") + "\n" +
+          footer + "\n" 
+          )
         );
       } catch (e) {
         try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
@@ -372,17 +356,16 @@ async function handler(m, { sock, config: botConfig, db }) {
     // ── Unknown command ──
     try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
     return m.reply(
-      "╭─「 ✦ " + toSC("Weather Realtime") + " ✦ 」\n" +
-      "│\n" +
-      "│ ⚠ " + toSC("Perintah tidak dikenal") + "\n" +
-      "│ • " + prefix + "autoweatherrealtime status\n" +
-      "│ • " + prefix + "autoweatherrealtime on/off\n" +
-      "│ • " + prefix + "autoweatherrealtime lokasi serang\n" +
-      "│ • " + prefix + "autoweatherrealtime notification on/off\n" +
-      "│ • " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-      "│ • " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-      "│ • " + prefix + "autoweatherrealtime test\n" +
-      "╰────  •  ────"
+      boxMessage("◆ " + "Weather Realtime" + " ◆",
+      "⚠ " + toSC("Perintah tidak dikenal") + "\n" +
+      "• " + prefix + "autoweatherrealtime status\n" +
+      "• " + prefix + "autoweatherrealtime on/off\n" +
+      "• " + prefix + "autoweatherrealtime lokasi serang\n" +
+      "• " + prefix + "autoweatherrealtime notification on/off\n" +
+      "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
+      "• " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
+      "• " + prefix + "autoweatherrealtime test\n" 
+      )
     );
   } catch (e) {
     console.error("[autoweatherrealtime]", e.message);

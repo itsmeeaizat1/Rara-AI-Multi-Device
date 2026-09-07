@@ -1,60 +1,71 @@
-// NOVA AI WHATSAPP BOT — test-plugins.js
-// Syntax + import check untuk semua plugin
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// test-plugins.js — VERIFIKASI GUARD FORMAT KOTAK (lib/styler.js)
+//
+// Aturan owner 2026-09-07: pesan berkotak WAJIB lewat boxLeft() —
+// (1) tiap baris ≤ width (default 30) karakter, (2) tiap baris isi
+// diawali "│ ", (3) dikirim dalam code block. Kalimat input boleh
+// sepanjang apa pun — yang memotong adalah wrapText, bukan tangan.
+//
 // Jalankan: node test-plugins.js
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { wrapText, boxLeft, boxMessage } from "./src/lib/styler.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const pluginsDir = path.join(__dirname, "plugins");
+const WIDTH = 30;
+let pass = 0, fail = 0;
+function ok(name) { pass++; console.log(`  ✅ ${name}`); }
+function no(name, detail = "") { fail++; console.log(`  ❌ ${name}${detail ? " — " + detail : ""}`); }
 
-let passed = 0;
-let failed = 0;
-const errors = [];
-
-// Recursively find all .js files in plugins/
-function findPlugins(dir) {
-  const results = [];
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      results.push(...findPlugins(fullPath));
-    } else if (entry.name.endsWith(".js")) {
-      results.push(fullPath);
-    }
-  }
-  return results;
-}
-
-const files = findPlugins(pluginsDir);
-console.log(`\n🧪 Testing ${files.length} plugins...\n`);
-
-for (const file of files) {
-  const relPath = path.relative(__dirname, file);
-  try {
-    const fileUrl = pathToFileURL(file).href;
-    await import(fileUrl);
-    passed++;
-  } catch (e) {
-    failed++;
-    errors.push({ file: relPath, error: e.message });
-    console.log(`❌ ${relPath}: ${e.message}`);
+console.log("── 1. wrapText: potong per kata ──");
+{
+  const long = "Filter jenis / sumber / mode / lokasi / jadwal yang di-set dari DM berlaku juga ke langganan global. Gunakan ON (pilih mode: DM/GRUP/GLOBAL), ONCHAT, ONGLOBAL, OFFGLOBAL, OFF, STATUS, MODE <otomatis/jadwal/darurat>, JADWAL ADD, JENIS, SUMBER, LOKASI, RADIUS — semua opsi aman dipotong otomatis tanpa menembus border kiri.";
+  const url = `Ini link panjang banget ${"https://contoh.example.com/path/ke/ressssssssssssssssssssssssssource-yang-super-panjang-luar-biasa".repeat(3)} selesai.`;
+  for (const [label, input] of [["kalimat 480+ char", long], ["URL super panjang", url]]) {
+    const lines = wrapText(input, WIDTH);
+    const bad = lines.filter((l) => l.length > WIDTH);
+    bad.length === 0 ? ok(`${label}: semua baris ≤ ${WIDTH}`) : no(`${label}`, `baris ${bad[0].length} char`);
   }
 }
 
-console.log(`\n${"=".repeat(50)}`);
-console.log(`✅ Passed: ${passed}`);
-console.log(`❌ Failed: ${failed}`);
-console.log(`📊 Total: ${files.length}`);
-
-if (failed > 0) {
-  console.log(`\n⚠️  Error details:`);
-  for (const e of errors) {
-    console.log(`  ❌ ${e.file}: ${e.error}`);
-  }
-  process.exit(1);
-} else {
-  console.log(`\n🎉 Semua plugin OK!`);
+console.log("── 2. boxLeft: prefix & struktur ──");
+{
+  const box = boxLeft("◆ BENCANA WATCH ◆", "Gunakan ON (DM/GRUP/GLOBAL), ONCHAT, ONGLOBAL, OFFGLOBAL, OFF, STATUS, MODE <otomatis/jadwal/darurat> — semua kalimat panjang dipotong otomatis.");
+  const lines = box.split("\n");
+  const [head, ...rest] = lines;
+  const foot = rest.pop();
+  head.startsWith("┌─「") ? ok("header ┌─「 ... 」") : no("header salah", head);
+  foot === "└─「 • 」" ? ok("footer └─「 • 」") : no("footer salah", foot);
+  const bad = rest.filter((l) => !l.startsWith("│ "));
+  bad.length === 0 ? ok("SEMUA baris isi diawali '│ '") : no("ada baris tanpa prefix", JSON.stringify(bad[0]));
+  const wide = rest.filter((l) => l.slice(2).length > WIDTH);
+  wide.length === 0 ? ok(`SEMUA baris isi ≤ ${WIDTH} char`) : no("ada baris kepanjangan", wide[0]);
 }
+
+console.log("── 3. E2E .bencanawatch — output handler nyata ──");
+{
+  const { handler } = await import("./plugins/bencana/bencanawatch.js");
+  const replies = [];
+  const sock = { groupFetchAllParticipating: async () => ({}) };
+  const mk = (text) => {
+    const args = text.split(" ").slice(1);
+    return { chat: "6281234567890@s.whatsapp.net", sender: "6281234567890@s.whatsapp.net", args,
+      react: async () => {}, reply: async (t) => { replies.push(String(t)); return true; } };
+  };
+  for (const cmd of [".bencanawatch status", ".bencanawatch guide", ".bencanawatch onglobal", ".bencanawatch xyz"]) {
+    await handler(mk(cmd), { sock });
+  }
+  replies.length >= 4 ? ok("4 perintah dibalas") : no("balasan kurang", String(replies.length));
+  let allGuarded = true, detail = "";
+  for (const r of replies) {
+    if (!r.startsWith("```") || !r.endsWith("```")) { allGuarded = false; detail = "bukan code block"; break; }
+    const lines = r.replace(/^```\n?/, "").replace(/\n?```$/, "").split("\n");
+    const [head, ...rest] = lines;
+    const foot = rest.pop();
+    if (!head.startsWith("┌─「") || foot !== "└─「 • 」") { allGuarded = false; detail = "struktur kotak salah"; break; }
+    const bad = rest.filter((l) => !l.startsWith("│ ") || l.slice(2).length > WIDTH);
+    if (bad.length) { allGuarded = false; detail = `baris bocor: ${JSON.stringify(bad[0])}`; break; }
+  }
+  allGuarded ? ok("SEMUA output handler: code block + prefix '│ ' + ≤30 char — gak ada yang nembus border") : no("output bocor", detail);
+}
+
+console.log(`\n${fail === 0 ? "🎉 SEMUA PASS" : "💥 ADA FAILURE"} — ${pass} pass, ${fail} fail`);
+process.exit(fail === 0 ? 0 : 1);

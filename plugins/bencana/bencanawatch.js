@@ -20,7 +20,35 @@ import {
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
   getMonitorHealth,
 } from "../../src/lib/nova-bencana.js";
-import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+// ── GUARD FORMAT (request owner 2026-09-07): SEMUA pesan berkotak plugin
+// ini WAJIB lewat boxLeft() dari src/lib/styler.js — kalimat input tetap
+// ditulis utuh panjang di kode (gak usah dipendekkan manual), output
+// dijamin ≤30 char/baris & tiap baris diawali "│ ", dikirim dalam code
+// block supaya border rata. DILARANG nulis "│ " manual di file ini.
+// Adapter di bawah nyanding API lama (novaBox/novaError/novaGuide) ke
+// guard baru, jadi SEMUA call site otomatis lewat boxLeft.
+import { boxMessage } from "../../src/lib/styler.js";
+
+function toGuardedBox(header, lines = []) {
+  const body = [];
+  for (const l of lines) {
+    if (l === "---" || l === "─") { body.push("────────────────"); continue; } // separator pendek ≤ width
+    if (typeof l === "object" && l.sub) { body.push(`◆ ${String(l.sub).toUpperCase()} ◆`); continue; }
+    if (!l || !String(l).trim()) continue; // baris kosong dibuang — guard gak butuh
+    body.push(String(l));
+  }
+  // Judul dinormalkan pendek biar header gak kepanjangan
+  const title = `◆ ${String(header).split("—")[0].trim().toUpperCase()} ◆`;
+  return boxMessage(title, body.join("\n"));
+}
+
+const novaBox = (header, lines = []) => toGuardedBox(header, lines);
+const novaError = (header, msg) => toGuardedBox(header, ["❌ " + (msg || "Terjadi error, coba lagi.")]);
+const novaGuide = (header, intro, example) =>
+  toGuardedBox(header, [
+    ...(intro ? [String(intro)] : []),
+    ...(example ? [`Contoh: ${example}`] : []),
+  ]);
 
 const pluginConfig = {
   name: "bencanawatch",
@@ -389,7 +417,7 @@ async function handler(m, { sock }) {
         "• chat pribadi kamu (DM)",
         "• semua grup yang bot masuk",
         "---",
-        "Filter jenis/sumber/mode/lokasi/jadwal yang",
+        "Filter jenis / sumber / mode / lokasi / jadwal yang",
         "di-set dari DM berlaku juga ke langganan global.",
         "Matikan: .bencanawatch offglobal",
       ]));

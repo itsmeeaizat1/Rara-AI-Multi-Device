@@ -8,6 +8,9 @@ import {
 import { animKerja } from "../../src/lib/nova-rpg-anim.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
+// GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
+// dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
+import { boxMessage } from "../../src/lib/styler.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -58,21 +61,18 @@ function kerjaMenu(prefix, rpg, invalid = false) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const sc = (s) => String(s).replace(/[a-zA-Z]/g, c => scMap[c.toLowerCase()] || c);
 
+  // teks polos — prefix "│ " & pemotongan baris dijamin boxLeft()
   const jobList = Object.keys(JOB_DB)
-    .map((k) => `│ • ${prefix}kerja ${JOB_DB[k].name.toLowerCase()}`)
+    .map((k) => `${prefix}kerja ${JOB_DB[k].name.toLowerCase()}`)
     .join("\n");
 
-  let msg = `╭─「 ✦ ${sc("Menu Kerja")} ✦ 」\n│\n`;
-  if (invalid) {
-    msg += `│ ❗ ${sc("Jenis kerjaan tidak dikenal")}\n│\n`;
-  }
-  msg += `│ ${sc("Mau kerja sebagai apa? Pilih dulu")}:\n│\n`;
-  msg += `${jobList}\n│\n`;
-  msg += `│ 💡 ${sc("Contoh")}: ${prefix}kerja pemula\n`;
-  msg += `│ 📌 ${sc("Job kamu")}: ${JOB_DB[rpg.job]?.name || "Pemula"} (Lv.${rpg.jobLevel || 1})\n`;
-  msg += `│ 📌 ${sc("Reward naik seiring job level")}\n`;
-  msg += `╰──── • ────`;
-  return msg;
+  const lines = [];
+  if (invalid) lines.push(`❗ ${sc("Jenis kerjaan tidak dikenal")}`);
+  lines.push(`${sc("Mau kerja sebagai apa? Pilih dulu")}:`, jobList);
+  lines.push(`💡 ${sc("Contoh")}: ${prefix}kerja pemula`);
+  lines.push(`📌 ${sc("Job kamu")}: ${JOB_DB[rpg.job]?.name || "Pemula"} (Lv.${rpg.jobLevel || 1})`);
+  lines.push(`📌 ${sc("Reward naik seiring job level")}`);
+  return boxMessage("◆ MENU KERJA ◆", lines.join("\n"));
 }
 
 async function handler(m, { sock }) {
@@ -130,14 +130,14 @@ async function handler(m, { sock }) {
       title: "kerja", icon: "💼",
       flavor: "💼 *GAJIAN!*",
       body: [
-        `│ • 👔 Pekerjaan : ${jobName} (Lv.${jobLv})`,
-        `│ • 📋 Aktivitas : ${activity}`,
+        `👔 Pekerjaan : ${jobName} (Lv.${jobLv})`,
+        `📋 Aktivitas : ${activity}`,
         "",
-        `│ • ✨ EXP : +${expGain}`,
-        `│ • 💰 Gold : +${goldGain}`,
-        `│ • 📖 Job EXP : +${jobExpGain}`,
+        `✨ EXP : +${expGain}`,
+        `💰 Gold : +${goldGain}`,
+        `📖 Job EXP : +${jobExpGain}`,
         "",
-        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+        `⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
       ].join("\n"),
       cta: gameCTA("kerja"),
     }));

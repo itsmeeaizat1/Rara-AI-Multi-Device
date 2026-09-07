@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   const dateStr = now.format("D MMMM YYYY");
   const createdDate = moment(absen.createdAt).tz("Asia/Jakarta");
   const timeStr = createdDate.format("HH:mm");
-  let list = "│ _Belum ada yang absen_";
+  let list = "_Belum ada yang absen_";
   if (absen.peserta.length > 0) {
     list = absen.peserta
       .map((jid, i) => `${i + 1}. @${jid.split("@")[0]}`)
