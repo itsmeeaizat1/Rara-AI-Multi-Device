@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "urldiff",
   alias: ["urldiff"],
-  category: "tools",
+  category: "browser",
   description: "Bandingin response 2 URL (status, headers, body size, load time)",
   usage: ".urldiff <url1> <url2>",
   example: ".urldiff https://httpbin.org/get https://httpbin.org/status/200",

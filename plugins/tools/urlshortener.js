@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, nov
 const pluginConfig = {
   name: "urlshortener",
   alias: ["urlshortener"],
-  category: "tools",
+  category: "browser",
   description: "Pendekkan URL panjang",
   usage: ".urlshortener <link>",
   example: ".urlshortener https://example.com/very/long/url",

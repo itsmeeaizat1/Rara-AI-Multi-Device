@@ -12,7 +12,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "tourl",
   alias: ["tourl"],
-  category: "tools",
+  category: "browser",
   description: "Upload media ke multiple host dan dapatkan URL",
   usage: ".tourl (reply/kirim media)",
   example: ".tourl",

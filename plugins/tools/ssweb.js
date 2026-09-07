@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ssweb",
   alias: ["ssweb"],
-  category: "tools",
+  category: "browser",
   description: "Screenshot website",
   usage: ".ssweb <url>",
   example: ".ssweb https://google.com",
