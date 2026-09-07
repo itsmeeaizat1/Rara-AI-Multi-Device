@@ -8,7 +8,7 @@ Checklist WAJIB sebelum nulis plugin baru / ubah fitur lama.
 
 - `wrapText(text, width=30)` motong per kata — TIDAK ada baris melebihi 30 karakter. Kata super panjang (URL dll) dipotong paksa.
 - `boxLeft(title, content)` → `┌─「 title 」` + SEMUA baris isi diawali `│ ` + `└─「 • 」`.
-- Kirim pakai `boxMessage(title, content)` — sudah dibungkus code block (``` ) supaya rata monospace & border gak dilipat WhatsApp.
+- Kirim pakai `boxMessage(title, content)` — TANPA code block (font normal, bukan monospace); rata kiri dijaga wrapText ≤30 char + prefix '│ ' otomatis.
 - Kalimat panjang input TETAP DITULIS UTUH di kode — jangan dipendekkan manual; yang memotong tampilannya adalah wrapText, bukan kamu.
 - Alur: input bebas panjang → output lewat guard. Selama semua pesan kotak lewat boxLeft(), border rata kiri dijaga otomatis.
 - Plugin yang masih nulis `│ ` manual = pintu bocor (border patah saat WhatsApp melipat baris panjang tanpa prefix).

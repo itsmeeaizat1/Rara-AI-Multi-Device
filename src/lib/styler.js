@@ -11,8 +11,9 @@
 // wrapText(), (2) diawali "│ " oleh boxLeft(). Gak ada jalur lain —
 // plugin yang masih nulis "│ " manual adalah pintu bocornya.
 //
-// Pesan berkotak dikirim dalam code block (``` ) supaya rata monospace
-// dan border lurus.
+// UPDATE OWNER 2026-09-07: BUNGKUS CODE BLOCK DIHAPUS — pesan berkotak
+// sekarang font NORMAL (bukan monospace). Rata kiri tetap terjaga karena
+// tiap baris udah di-wrap ≤ width karakter + diawali "│ ".
 
 /**
  * Potong teks per kata, TIDAK ada baris melebihi `width` karakter.
@@ -57,7 +58,7 @@ export function wrapText(text, width = 30) {
  * @param {string} title - Judul kotak.
  * @param {string} content - Isi bebas panjang (multi-baris via \n).
  * @param {number} [width=30] - Maks karakter per baris.
- * @returns {string} Kotak siap dikirim (bungkus dengan ``` di caller).
+ * @returns {string} Kotak siap dikirim (font normal, tanpa code block).
  */
 export function boxLeft(title, content, width = 30) {
   return [
@@ -68,15 +69,16 @@ export function boxLeft(title, content, width = 30) {
 }
 
 /**
- * Pesan berkotak siap kirim — boxLeft + dibungkus code block agar
- * border rata & tidak dilipat WhatsApp. INI SATU-SATUNYA cara resmi
- * ngirim pesan berkotak dari plugin.
+ * Pesan berkotak siap kirim — boxLeft TANPA code block (font normal,
+ * bukan monospace — request owner 2026-09-07). Border tetap aman karena
+ * wrapText udah motong tiap baris ≤ width karakter. INI SATU-SATUNYA
+ * cara resmi ngirim pesan berkotak dari plugin.
  *
  * @param {string} title
  * @param {string} content
  * @param {number} [width=30]
- * @returns {string} "```\n┌─「 ... 」\n│ ...\n└─「 • 」\n```"
+ * @returns {string} "┌─「 ... 」\n│ ...\n└─「 • 」"
  */
 export function boxMessage(title, content, width = 30) {
-  return "```\n" + boxLeft(title, content, width) + "\n```";
+  return boxLeft(title, content, width);
 }

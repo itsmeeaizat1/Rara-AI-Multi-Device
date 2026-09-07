@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
     const strengthBar = "█".repeat(Math.floor(result.strength / 10)) + "░".repeat(10 - Math.floor(result.strength / 10));
 
     let lines = [
-      "Password: " + "```" + result.password + "```",
+      "Password: " + result.password,
       "",
       "Panjang: " + length + " karakter",
       "Karakter: " + result.enabled.join(", "),
