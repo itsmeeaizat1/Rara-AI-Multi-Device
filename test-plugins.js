@@ -56,15 +56,15 @@ console.log("── 3. E2E .bencanawatch — output handler nyata ──");
   replies.length >= 4 ? ok("4 perintah dibalas") : no("balasan kurang", String(replies.length));
   let allGuarded = true, detail = "";
   for (const r of replies) {
-    if (!r.startsWith("```") || !r.endsWith("```")) { allGuarded = false; detail = "bukan code block"; break; }
-    const lines = r.replace(/^```\n?/, "").replace(/\n?```$/, "").split("\n");
+    if (r.startsWith("```") || r.endsWith("```")) { allGuarded = false; detail = "masih ada code block (harus font normal)"; break; }
+    const lines = r.split("\n");
     const [head, ...rest] = lines;
     const foot = rest.pop();
     if (!head.startsWith("┌─「") || foot !== "└─「 • 」") { allGuarded = false; detail = "struktur kotak salah"; break; }
     const bad = rest.filter((l) => !l.startsWith("│ ") || l.slice(2).length > WIDTH);
     if (bad.length) { allGuarded = false; detail = `baris bocor: ${JSON.stringify(bad[0])}`; break; }
   }
-  allGuarded ? ok("SEMUA output handler: code block + prefix '│ ' + ≤30 char — gak ada yang nembus border") : no("output bocor", detail);
+  allGuarded ? ok("SEMUA output handler: font normal (tanpa code block) + prefix '│ ' + ≤30 char — gak ada yang nembus border") : no("output bocor", detail);
 }
 
 console.log(`\n${fail === 0 ? "🎉 SEMUA PASS" : "💥 ADA FAILURE"} — ${pass} pass, ${fail} fail`);
