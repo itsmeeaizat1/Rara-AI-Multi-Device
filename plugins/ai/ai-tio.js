@@ -10,6 +10,7 @@
 
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getTioKey, getTioEndpoint } from "../../src/lib/config/env-loader.js";
+import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "ai-tio",
@@ -125,6 +126,23 @@ function resolveModel(input) {
 // ═══════════════════════════════════════════════
 // API CALL — Tio API via OpenAI format
 // ═══════════════════════════════════════════════
+
+// brand Tio → brand Haidar (rantai fallback nova-ai-fallback.js)
+// haidar menerima: gemini/claude/gpt5/gpt4/gpt4o/deepseek/googleai
+const HAIDAR_BRAND = {
+  DeepSeek: "deepseek",
+  Auto: "gemini",
+  Kimi: "gemini",
+  Qwen: "gemini",
+  NVIDIA: "gemini",
+  StepFun: "gemini",
+  Cohere: "gemini",
+  MiniMax: "gemini",
+  Tencent: "gemini",
+  SenseNova: "gemini",
+  Poolside: "gemini",
+  Kat: "gemini",
+};
 
 async function callTio(model, messages, systemPrompt, apiKey) {
   const url = getTioEndpoint();
@@ -303,16 +321,30 @@ async function handler(m, { sock, config: botConfig }) {
     const systemPrompt = botConfig.aiHelp?.systemPrompt
       || "Kamu adalah Nova AI, asisten yang ramah dan cerdas. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.";
 
-    // Call Tio API
-    const reply = await callTio(model.id, messages, systemPrompt, apiKey);
+    // Call Tio API — gateway down (domain mati / CF block / 0 model / key ditolak)
+    // → otomatis lanjut ke rantai AI backup (Haidar → Ikyy → Xemoz) biar fitur tetap jalan
+    let reply;
+    let engineNote = "";
+    try {
+      reply = await callTio(model.id, messages, systemPrompt, apiKey);
+    } catch (tioErr) {
+      const flatPrompt = messages
+        .map(x => (x.role === "assistant" ? `Pesan sebelumnya:\n${x.content}` : x.content))
+        .join("\n\n");
+      reply = await aiFallbackChat(flatPrompt, {
+        systemPrompt,
+        model: HAIDAR_BRAND[model.brand] || "gemini",
+      });
+      engineNote = `\n\n_[ gateway tio down — ${String(tioErr.message || "error").slice(0, 60)} | jawaban via backup ai ]_`;
+    }
 
     // React done
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
 
     // Format reply
-    const replyText = reply.length > 3800
+    const replyText = (reply.length > 3800
       ? reply.slice(0, 3800) + "\n\n_... respon dipotong_"
-      : reply;
+      : reply) + engineNote;
 
     const freeTag = model.free ? " (Free)" : "";
     const response = claraWrap(
