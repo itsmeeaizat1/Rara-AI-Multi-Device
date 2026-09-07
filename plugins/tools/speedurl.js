@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "speedurl",
   alias: ["speedurl"],
-  category: "tools",
+  category: "browser",
   description: "Ukur load time halaman web (TTFB, total load, ukuran KB)",
   usage: ".speedurl <url>",
   example: ".speedurl https://github.com",

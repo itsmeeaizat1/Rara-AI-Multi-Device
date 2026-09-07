@@ -46,7 +46,7 @@ const BOT_REPO = "itsmeeaizat/Nova-AI-Whatsapp-Bot-Multi-Device";
 const pluginConfig = {
   name: "web",
   alias: ["web", "webview", "livehtml"],
-  category: "tools",
+  category: "browser",
   description: "Buka halaman web/HTML live di dalam WhatsApp (webview card) — preset lengkap",
   usage: ".web\n.web list\n.web live\n.web yt <judul>\n.web <preset> <query>\n.web <url> [judul]",
   example: ".web live\n.web yt crab rave\n.web google cuaca jakarta\n.web https://example.com Judul Bebas",
@@ -55,6 +55,7 @@ const pluginConfig = {
   isGroup: true,
   isPrivate: true,
   cooldown: 8,
+  isEnabled: true,
 };
 
 // ── PRESET ─────────────────────────────────────────────────────────────
@@ -233,7 +234,7 @@ async function sendWebCard(sock, m, { url, title = "", text = "" }) {
 }
 
 // ── HANDLER ───────────────────────────────────────────────────────────
-export async function handler(sock, m, { args, text, react, reply }) {
+async function handler(sock, m, { args, text, react, reply }) {
   const cmd = (args[0] || "").toLowerCase();
 
   // Guide
@@ -309,4 +310,4 @@ export async function handler(sock, m, { args, text, react, reply }) {
   }
 }
 
-export default pluginConfig;
+export { pluginConfig as config, handler };
