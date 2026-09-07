@@ -22,6 +22,7 @@
  *   X/Pinterest/dll via rantai internal.
  */
 
+import { runAllDlFallback } from "../../src/lib/alldl-fallback.js";
 import axios from "axios";
 import { omnifyResolve, omnifyHealth } from "../../src/scraper/omnify-aio.js";
 import { valoreResolve, valoreHealth } from "../../src/scraper/valore-dl.js";
@@ -337,7 +338,7 @@ async function runDownload(sock, m, session, opt) {
 }
 
 // === Main handler ===
-async function handler(m, { sock }) {
+async function handlerCore(m, { sock }) {
   const prefix = m.prefix || ".";
   const body = m.body?.trim() || "";
   const command = m.command?.toLowerCase() || "";
@@ -574,6 +575,12 @@ async function handler(m, { sock }) {
     optionLines,
   ]);
   return m.reply(`${box}\n\n${tipText(`Sesi 3 menit — atau langsung sekalian: ${prefix}alldownloader <url> <nomor>`)}`);
+}
+
+async function handler(m, ctx = {}) {
+  // dipanggil langsung dari chain fallback — jangan wrap lagi
+  if (ctx.__novaAllDlAttempt) return handlerCore(m, ctx);
+  return runAllDlFallback("v2", m, ctx);
 }
 
 export { pluginConfig as config, handler };
