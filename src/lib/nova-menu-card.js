@@ -24,8 +24,8 @@
 
 import fs from "fs";
 import path from "path";
-import { generateWAMessageFromContent, proto } from "nova";
-import { buildCategoryButton } from "./nova-category-list.js";
+import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
+import { buildCategoryButton, buildCategoryRows } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
@@ -71,80 +71,50 @@ function getThumbnailBuffer(imagePath) {
  * @returns {Array} buttons siap dipakai di sendMenuCard
  */
 function buildNavButtons(m, db, prefix = ".") {
-  const sewaRows = [
+  // ── TOMBOL KHAS NOVA (2026-09-07, request owner: struktur menu Elaina V3
+  // yang beneran dipakai, tapi tombolnya khas Nova) — single_select popup
+  // kategori + cta_url saluran + cta_copy credit dev + quick_reply khas ──
+  const botName = config.bot?.name || "Nova AI";
+  const ownerName = config.owner?.name || "Aizat";
+
+  const saluranLink = config.saluran?.link || "";
+  const channelLinkOk = /^https:\/\/whatsapp\.com\/channel\/[A-Za-z0-9_-]+/.test(saluranLink);
+  const urlOk = (u) => {
+    try { const x = new URL(u); return x.protocol.startsWith("http") && !x.hostname.includes("_"); }
+    catch { return false; }
+  };
+  const saluranUrl = (channelLinkOk && saluranLink)
+    || (urlOk(config.info?.website || "") && config.info?.website)
+    || "https://www.whatsapp.com/";
+
+  const catRows = buildCategoryRows(m, db, prefix);
+
+  const buttons = [
     {
-      header: "",
-      title: "Beli Premium",
-      description: "Buka semua fitur premium bot",
-      id: `${prefix}premium`,
+      // popup daftar kategori — pola Elaina, isinya kategori Nova
+      type: "single_select",
+      text: toSC("Kategori Menu"),
+      title: `⌗ ${toSC("Daftar Kategori Menu")}`,
+      multiSelect: true,
+      sections: [
+        {
+          title: `𓍢ִ໋ ${toSC("Pilih kategori yang kamu inginkan")}`,
+          highlightLabel: botName,
+          rows: catRows,
+        },
+      ],
     },
-    {
-      header: "",
-      title: "Sewa Bot",
-      description: "Masukkan bot ke grup kamu",
-      id: `${prefix}sewa`,
-    },
+    { type: "cta_url", text: toSC("Saluran Official"), url: saluranUrl },
+    { type: "cta_copy", text: `⎙ ${toSC("Dev: " + ownerName)}`, copyText: `${toSC("Nova AI")} 💫` },
+    { id: `${prefix}allmenu`, text: `</> ${toSC("Semua Command")}` },
+    { id: `${prefix}sewa`, text: `⛁ ${toSC("Info Sewa Bot")}` },
+    { id: `${prefix}ping`, text: `ⓘ ${toSC("Status Bot")}` },
   ];
 
-  const ownerRows = [
-    {
-      header: "",
-      title: "Laporkan Bug",
-      description: "Laporkan error/bug ke owner",
-      id: `${prefix}bugreport`,
-    },
-    {
-      header: "",
-      title: "Kirim Masukan",
-      description: "Kirim saran/ide fitur ke owner",
-      id: `${prefix}masukan`,
-    },
-  ];
-
-  const supportRows = [
-    {
-      header: "",
-      title: "Join Grup Resmi",
-      description: "Gabung grup resmi bot",
-      id: `${prefix}gcbot`,
-    },
-    {
-      header: "",
-      title: "Ikuti Saluran Resmi",
-      description: "Update info bot langsung",
-      id: `${prefix}channelnovaofficial`,
-    },
-    {
-      header: "",
-      title: "Donasi",
-      description: "Dukung bot dengan donasi",
-      id: `${prefix}donasi`,
-    },
-  ];
-
-  return [
-    { id: `${prefix}menu`, text: toSC("Menu") },
-    { id: `${prefix}allmenu`, text: toSC("Semua Menu") },
-    buildCategoryButton(m, db, prefix, toSC("Semua Kategori")),
-    {
-      type: "single_select",
-      text: toSC("Sewa"),
-      title: toSC("Pilih Layanan"),
-      sections: [{ title: toSC("Layanan Bot"), rows: sewaRows }],
-    },
-    {
-      type: "single_select",
-      text: toSC("Owner"),
-      title: toSC("Owner Bot"),
-      sections: [{ title: toSC("Hubungi Owner"), rows: ownerRows }],
-    },
-    {
-      type: "single_select",
-      text: toSC("Support"),
-      title: toSC("Support Bot"),
-      sections: [{ title: toSC("Dukung Bot"), rows: supportRows }],
-    },
-  ];
+  if (m?.isOwner) {
+    buttons.push({ id: `${prefix}allmenucategory owner`, text: `♔ ${toSC("Panel Owner")}` });
+  }
+  return buttons;
 }
 
 /**
@@ -155,13 +125,43 @@ function buildNavButtons(m, db, prefix = ".") {
  *   - { type: "single_select", text, title, sections } → popup list kategori
  */
 function buildNativeButtons(buttons = []) {
-  return buttons.slice(0, 6).map((btn) => {
-    if (btn.type === "single_select") {
+  const native = buttons.slice(0, 10).map((btn) => {
+    if (btn.type === "placeholder_single") {
       return {
         name: "single_select",
+        buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }),
+      };
+    }
+    if (btn.type === "placeholder_call") {
+      return {
+        name: "call_permission_request",
+        buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }),
+      };
+    }
+    if (btn.type === "single_select") {
+      // rows normalize: `id` (format lama nova) → `rowId` (format WA native)
+      const sections = (btn.sections || []).map((sec) => ({
+        ...(sec.highlightLabel ? { highlight_label: sec.highlightLabel } : {}),
+        ...sec,
+        rows: (sec.rows || []).map((r) => ({
+          ...r,
+          ...(r.id && !r.rowId ? { rowId: r.id } : {}),
+        })),
+      }));
+      const params = { title: btn.title || btn.text, sections };
+      if (btn.multiSelect) params.has_multiple_buttons = true;
+      return {
+        name: "single_select",
+        buttonParamsJson: JSON.stringify(params),
+      };
+    }
+    if (btn.type === "cta_url") {
+      return {
+        name: "cta_url",
         buttonParamsJson: JSON.stringify({
-          title: btn.text,
-          sections: btn.sections || [],
+          display_text: btn.text,
+          url: btn.url,
+          merchant_url: btn.merchantUrl || btn.url,
         }),
       };
     }
@@ -182,6 +182,21 @@ function buildNativeButtons(buttons = []) {
       }),
     };
   });
+
+  // ── TRIK ELAINA V3: 2 placeholder unlock di urutan pertama —
+  // single_select + call_permission_request kosong (has_multiple_buttons)
+  // bikin WhatsApp client mau render 6+ tombol di satu pesan ──
+  return [
+    {
+      name: "single_select",
+      buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }),
+    },
+    {
+      name: "call_permission_request",
+      buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }),
+    },
+    ...native,
+  ];
 }
 
 /**
@@ -303,28 +318,57 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       },
     };
 
+    // ── KODE MENU ELAINA YANG BENERAN DIPAKAI (2026-09-07, owner kirim
+    // source asli): thumbnail = MEDIA ATTACHMENT di header (upload ke server
+    // WA via prepareWAMessageMedia — image, atau GIF via video+gifPlayback),
+    // externalAdReply CUMA jadi fallback kalau upload header gagal. ContextInfo
+    // proto pakai forwardingScore 999 + isForwarded + pill newsletter. ──
+    const _mIsGif = /\.gif$/i.test(thumbPath || "");
+    let _mHeader = { title: "", hasMediaAttachment: false };
+    if (rawBuffer) {
+      try {
+        const _mMediaPrep = await prepareWAMessageMedia(
+          _mIsGif ? { video: rawBuffer, gifPlayback: true } : { image: rawBuffer },
+          { upload: sock.waUploadToServer }
+        );
+        if (_mIsGif && _mMediaPrep?.videoMessage) {
+          _mHeader = { hasMediaAttachment: true, videoMessage: _mMediaPrep.videoMessage };
+        } else if (_mMediaPrep?.imageMessage) {
+          _mHeader = { hasMediaAttachment: true, imageMessage: _mMediaPrep.imageMessage };
+        }
+      } catch (e) {
+        console.error("[nova-menu-card] Upload banner header gagal, fallback link-preview:", e.message);
+      }
+    }
+
+    // limited_time_offer + bottom_sheet — chip sambutan & konfigurasi popup
+    // list kategori (messageParamsJson nativeFlowMessage, persis Elaina).
+    const _mFlowParams = JSON.stringify({
+      limited_time_offer: {
+        text: `${toSC("Selamat datang di")} ${toSC(botName)} !`,
+        url: sourceUrl,
+        copy_code: `${toSC("Nova AI")} \u{1F4AB}`,
+        expiration_time: Date.now() * 999,
+      },
+      bottom_sheet: {
+        in_thread_buttons_limit: 2,
+        divider_indices: [2, 3, 4, 5, 6, 999],
+        list_title: toSC("Pilih Kategori Menu"),
+        button_title: toSC("Jelajahi Menu Sekarang"),
+      },
+    });
+
     const _mCtx = {
       mentionedJid: m.sender ? [m.sender] : [],
-      forwardingScore: 9999,
+      forwardingScore: 999,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
         newsletterJid: await resolveNewsletterJid(sock),
         newsletterName: config.saluran?.name || botName,
         serverMessageId: 127,
       },
-      externalAdReply,
-      limited_time_offer: {
-        text: "Gunakan bot ini dengan bijak yak",
-        url: sourceUrl,
-        copy_code: botName,
-        expiration_time: Date.now() * 999,
-      },
-    };
-
-    // header TANPA media attachment — banner dihandle externalAdReply di atas
-    const _mHeader = {
-      title: "",
-      hasMediaAttachment: false,
+      // banner fallback HANYA kalau media header gagal di-upload
+      ...(!_mHeader.hasMediaAttachment && rawBuffer ? { externalAdReply } : {}),
     };
 
     const interactiveObj = {
@@ -333,7 +377,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
         text: footer || `\u2726 ${botName}`,
       }),
       nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-        messageParamsJson: "",
+        messageParamsJson: _mFlowParams,
         buttons: nativeButtons,
       }),
       header: proto.Message.InteractiveMessage.Header.fromObject(_mHeader),
