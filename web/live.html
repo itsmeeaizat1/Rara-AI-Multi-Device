@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA -->
+<!-- web/live.html — NOVA LIVE DASHBOARD (dibuka dari tombol card .web di dalam WhatsApp).
+     Live update via SSE (/events) — tanpa dependensi, tanpa build. -->
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Nova Live</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background:#0a0a12; color:#e8e8f0; min-height:100vh; padding:16px 14px 40px;
+  }
+  .top { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .logo { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#6c5ce7,#a29bfe); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; }
+  .top h1 { font-size:18px; letter-spacing:3px; font-weight:700; }
+  .top small { display:block; color:#8888a0; font-size:11px; letter-spacing:1px; margin-top:2px; }
+  .dot { width:9px; height:9px; border-radius:50%; background:#2ecc71; margin-left:auto; animation:pulse 1.4s infinite; flex:none; }
+  .dot.off { background:#e74c3c; animation:none; }
+  @keyframes pulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.4; transform:scale(.8)} }
+  .clock { font-size:40px; font-weight:800; letter-spacing:1px; text-align:center; margin:10px 0 2px; font-variant-numeric:tabular-nums; }
+  .date { text-align:center; color:#8888a0; font-size:13px; margin-bottom:16px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .card { background:#14141f; border:1px solid #23233a; border-radius:14px; padding:12px 14px; }
+  .card .label { color:#8888a0; font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+  .card .val { font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .bar { height:6px; background:#23233a; border-radius:3px; margin-top:8px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:linear-gradient(90deg,#6c5ce7,#a29bfe); border-radius:3px; transition:width .6s; }
+  .full { grid-column:1 / -1; }
+  .sec { margin-top:22px; }
+  .sec h2 { font-size:11px; letter-spacing:3px; color:#8888a0; text-transform:uppercase; margin-bottom:10px; }
+  .yt { width:100%; aspect-ratio:16/9; border-radius:14px; border:1px solid #23233a; overflow:hidden; background:#14141f; }
+  .yt iframe { width:100%; height:100%; border:0; }
+  .foot { text-align:center; color:#55556a; font-size:11px; margin-top:26px; letter-spacing:1px; }
+  .toast { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:#1c1c2e; border:1px solid #2c2c4a; color:#a29bfe; padding:8px 16px; border-radius:99px; font-size:12px; opacity:0; transition:opacity .3s; pointer-events:none; }
+  .toast.show { opacity:1; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="logo">✦</div>
+    <div>
+      <h1>N O V A &nbsp;L I V E</h1>
+      <small id="ver">v23.0.0</small>
+    </div>
+    <div class="dot" id="statusDot"></div>
+  </div>
+
+  <div class="clock" id="clock">--:--:--</div>
+  <div class="date" id="date">&nbsp;</div>
+
+  <div class="grid">
+    <div class="card"><div class="label">Uptime</div><div class="val" id="uptime">-</div></div>
+    <div class="card"><div class="label">Platform</div><div class="val" id="platform" style="font-size:14px">-</div></div>
+    <div class="card full">
+      <div class="label">RAM Server</div>
+      <div class="val" id="ram">-</div>
+      <div class="bar"><i id="ramBar" style="width:0%"></i></div>
+    </div>
+    <div class="card full">
+      <div class="label">CPU Load</div>
+      <div class="val" id="cpu">-</div>
+      <div class="bar"><i id="cpuBar" style="width:0%"></i></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>Demo — YouTube di dalam WhatsApp</h2>
+    <div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+  </div>
+
+  <div class="sec">
+    <h2>Interaktif</h2>
+    <div class="card full" style="cursor:pointer" onclick="toast('Halo dari Nova Live! ✦')">
+      <div class="label">Kartu interaktif</div>
+      <div class="val" style="font-size:14px">Tap kartu ini → reaksi live ✦</div>
+    </div>
+  </div>
+
+  <div class="foot">NOVA AI WHATSAPP BOT • LIVE HTML VIA WHATSAPP WEBVIEW</div>
+  <div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var Hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  var Bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+  function tick() {
+    var n = new Date();
+    var p = function (x) { return String(x).padStart(2, "0"); };
+    $("clock").textContent = p(n.getHours()) + ":" + p(n.getMinutes()) + ":" + p(n.getSeconds());
+    $("date").textContent = Hari[n.getDay()] + ", " + n.getDate() + " " + Bulan[n.getMonth()] + " " + n.getFullYear();
+  }
+  tick(); setInterval(tick, 1000);
+
+  function fmtUp(s) {
+    if (!s && s !== 0) return "-";
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+    return h > 0 ? h + "j " + m + "m" : m + "m " + (s % 60) + "s";
+  }
+  function apply(d) {
+    if (d.version) $("ver").textContent = "v" + d.version;
+    if (d.uptime !== undefined) $("uptime").textContent = fmtUp(d.uptime);
+    if (d.platform) $("platform").textContent = d.platform;
+    if (d.ramPct !== undefined) {
+      $("ram").textContent = d.ramUsed + " / " + d.ramTotal + " GB";
+      $("ramBar").style.width = Math.min(100, d.ramPct) + "%";
+    }
+    if (d.loadPct !== undefined) {
+      $("cpu").textContent = d.load1 !== undefined ? d.load1.toFixed(2) + " (1m avg)" : "-";
+      $("cpuBar").style.width = Math.min(100, d.loadPct) + "%";
+    }
+    $("statusDot").classList.remove("off");
+  }
+
+  var es = new EventSource("/events");
+  es.onmessage = function (e) { try { apply(JSON.parse(e.data)); } catch (err) {} };
+  es.onerror = function () { $("statusDot").classList.add("off"); };
+  fetch("/stats").then(function (r) { return r.json(); }).then(apply).catch(function () {});
+
+  var t;
+  function toast(msg) {
+    var el = $("toast"); el.textContent = msg; el.classList.add("show");
+    clearTimeout(t); t = setTimeout(function () { el.classList.remove("show"); }, 1800);
+  }
+})();
+</script>
+</body>
+</html>
