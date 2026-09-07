@@ -20,7 +20,7 @@
 | Blackbox AI | `api.blackbox.ai` | blackbox-api scraper | ✅ Free |
 | Chat Everywhere | `chateverywhere.app` | chateverywhere scraper | ✅ Free |
 | UnlimitedAI | `app.unlimitedai.chat` | unlimitedai scraper (nova-ai, .cegpt) | ✅ Free |
-| Tio API | `ai.tioo.eu.org` | .ai-tio, tanyaai system | ✅ Free |
+| Tio API | `ai.tioo.eu.org` → MATI 404; diganti `gorouter.app` (key valid, 0 model + CF block POST) | .ai-tio (kini auto-fallback Haidar→Ikyy→Xemoz), tanyaai system | ⚠️ Gateway down — pakai fallback |
 | OverChat AI | `api.overchat.ai` | AI chat fallback | ✅ Free |
 | Parallel AI | `api.parallel.ai` | parallelai scraper | ✅ Free |
 | Together AI | `api.together.xyz` | AI chat fallback | ✅ Free |
@@ -28,6 +28,26 @@
 | Cuki API | `api.cuki.biz.id` | cuki-api scraper | ✅ Free |
 | Xemoz Official | `api-xemoz-official.my.id` | GPT 5.3/5.5, DeepSeek v3.2/v4 | ✅ Free |
 | ABzTech | `api-abztech.zone.id` | AI genimg | ✅ Free |
+
+## 🧪 Status Tes Gateway AI — 8 Sep 2026 (live verified dari sandbox)
+
+| Kandidat | Hasil | Catatan |
+|---|---|---|
+| gorouter.app | ⚠️ key VALID (200 /v1/models) | TAPI 0 model aktif + POST /v1/* diblokir CF dari semua IP datacenter |
+| kktoken.cc | ❌ tolak semua key | "Invalid token" meski key dari dashboard sendiri |
+| pollinations.ai | ❌ jadi berbayar | 402 Payment Required — legacy API dideprecated, migrasi ke enter.pollinations.ai (auth) |
+| api.puter.com | ❌ 401 dari server | cuma jalan dari browser context (puter.js), bukan backend |
+| xemoz | ✅ hidup | TAPI format GET sendiri, gak ada endpoint OpenAI POST |
+| blackbox api.blackbox.ai | ❌ 404 | endpoint berubah |
+| key Groq (apikeys.json) | ❌ expired | "Invalid API Key" |
+| key Gemini (apikeys.json) | ❌ expired | "API key not valid" |
+| key DeepSeek | ❌ kosong | pernah dipakai .autonovaai, udah dihapus |
+
+**Kesimpulan:** satu-satunya AI yang hidup & stabil buat bot = rantai fallback (Haidar → Ikyy → Xemoz) — sekarang jadi tulang punggung .aitio via auto-fallback.
+**Jalan keluar provider resmi (gratis, stabil):** owner bikin key baru → taruh di apikeys.json tanpa ubah kode:
+1. **Google AI Studio** (aistudio.google.com/apikey) — gratis, tier generous, tanpa CF block → isi `novaai.google`
+2. **Groq** (console.groq.com) — gratis, llama-3.3-70b cepat, OpenAI-compat → isi `novaai.groqkey`
+3. **OpenRouter** (openrouter.ai) — model `:free` tersedia, perlu akun → bisa dijadikan TIO_API_URL + tioApiKey
 | No-API | `api.no-api.com` | AI chat | ✅ Free |
 | Proactor AI | `api.proactor.ai` | AI fallback | ✅ Free |
 | Termai | `api.termai.cc` | AI chat | ✅ Free |
