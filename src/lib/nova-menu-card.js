@@ -60,10 +60,10 @@ function getThumbnailBuffer(imagePath) {
  * 6 tombol (revisi owner 2026-09-04):
  * 1. Menu          → quick_reply .menu
  * 2. Semua Menu    → quick_reply .allmenu
- * 3. ☰ Semua Kategori → single_select popup list kategori (buildCategoryButton)
- * 4. ☰ Sewa        → single_select popup: Beli Premium / Sewa Bot
+ * 3. Semua Kategori → single_select popup list kategori (buildCategoryButton)
+ * 4. Sewa          → single_select popup: Beli Premium / Sewa Bot
  * 5. Owner         → single_select popup: Laporkan Bug / Kirim Masukan
- * 6. ☰ Support     → single_select popup: Join Grup Resmi / Ikuti Saluran
+ * 6. Support       → single_select popup: Join Grup Resmi / Ikuti Saluran
  *                    Resmi / Donasi
  *
  * @param {object} m
@@ -126,10 +126,10 @@ function buildNavButtons(m, db, prefix = ".") {
   return [
     { id: `${prefix}menu`, text: toSC("Menu") },
     { id: `${prefix}allmenu`, text: toSC("Semua Menu") },
-    buildCategoryButton(m, db, prefix, `☰ ${toSC("Semua Kategori")}`),
+    buildCategoryButton(m, db, prefix, toSC("Semua Kategori")),
     {
       type: "single_select",
-      text: `☰ ${toSC("Sewa")}`,
+      text: toSC("Sewa"),
       title: toSC("Pilih Layanan"),
       sections: [{ title: toSC("Layanan Bot"), rows: sewaRows }],
     },
@@ -141,7 +141,7 @@ function buildNavButtons(m, db, prefix = ".") {
     },
     {
       type: "single_select",
-      text: `☰ ${toSC("Support")}`,
+      text: toSC("Support"),
       title: toSC("Support Bot"),
       sections: [{ title: toSC("Dukung Bot"), rows: supportRows }],
     },
