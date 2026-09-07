@@ -297,17 +297,12 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
-    // ── FIX OWNER 2026-09-07 (klarifikasi): DUA MODE KIRIM ──
-    // • plain:true → fitur info/broadcast dari owner (bukan menu): PESAN
-    //   TEKS BIASA + contextInfo externalAdReply (thumbnail besar) + pill
-    //   channel. Payload interactiveMessage dibungkus viewOnceMessage +
-    //   relayMessage TIDAK dirender client penerima (placeholder "perbarui
-    //   WhatsApp" / gak muncul) — sender sendiri tetap ngeliat card-nya,
-    //   jadi keliatan normal di HP owner doang. Plain text = dijamin
-    //   ke-render di SEMUA versi WhatsApp & semua penerima.
-    // • default (menu/allmenu/allmenucategory) → TETEP interactive card
-    //   dengan tombol nativeFlow, sesuai request owner: menu wajib pakai
-    //   card karena ada tombolnya.
+    // ── REVISI OWNER 2026-09-07: MENU = EXTERNAL AD REPLY ──
+    // Thumbnail katalog (interactive card) gak muncul → menu sekarang PESAN
+    // TEKS BIASA + contextInfo.externalAdReply dengan renderLargerThumbnail
+    // (preview besar kayak link preview) + pill channel. Dijamin ke-render
+    // di semua versi WhatsApp & semua penerima. Param `buttons` diabaikan
+    // sengaja (caller gak perlu diubah); opsi `plain` dikeep untuk compat.
     const contextInfo = {
       mentionedJid: m.sender ? [m.sender] : [],
       forwardingScore: 0,
@@ -320,43 +315,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       },
     };
 
-    if (plain) {
-      await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
-      return true;
-    }
-
-    const interactiveObj = {
-      body: proto.Message.InteractiveMessage.Body.fromObject({ text }),
-      footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: footer || "" }),
-      nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-        buttons: nativeButtons,
-      }),
-      // Header TANPA media attachment — banner besar dihandle lewat
-      // contextInfo.externalAdReply di bawah (link-preview, gak kesimpen galeri).
-      header: proto.Message.InteractiveMessage.Header.fromObject({
-        title: "",
-        hasMediaAttachment: false,
-      }),
-      contextInfo,
-    };
-
-    const msg = generateWAMessageFromContent(
-      m.chat,
-      {
-        viewOnceMessage: {
-          message: {
-            messageContextInfo: {
-              deviceListMetadata: {},
-              deviceListMetadataVersion: 2,
-            },
-            interactiveMessage: proto.Message.InteractiveMessage.fromObject(interactiveObj),
-          },
-        },
-      },
-      { userJid: m.sender, quoted: m },
-    );
-
-    await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+    await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
     return true;
   } catch (e) {
     console.error("[nova-menu-card] sendMenuCard gagal, fallback ke text biasa:", e.message);
