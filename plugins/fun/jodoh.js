@@ -176,7 +176,6 @@ async function handler(m, { sock }) {
     `│ • ${label2} ${name2}`,
     // FIX OWNER 2026-09-07: bar kecocokan dikasih jarak biar gak dempet
     `│ • 💯 Kecocokan :`,
-    `│`,
     `│ ${progressBar} ${compatibility}%`,
     `│`,
     `│ • ${compatibilityEmoji(compatibility)} Status : ${compatibilityText(compatibility)}`,

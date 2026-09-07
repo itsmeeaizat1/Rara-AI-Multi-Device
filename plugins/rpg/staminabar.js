@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "stamina", data);
       await m.react("🐣");
       // FIX OWNER 2026-09-07: bar dikasih jarak dari kalimat
-      return m.reply(novaRpgBox("staminabar", `⚡ Beli ${qty} stamina (${cost}g)\n\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
+      return m.reply(novaRpgBox("staminabar", `⚡ Beli ${qty} stamina (${cost}g)\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
     }
 
     // STATUS (default)

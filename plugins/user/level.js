@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
   txt += "Role: " + role + "\n";
   txt += "Exp: *" + formatNumber(exp) + "*\n";
   // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
-  txt += "Progress:\n\n" + progress + "\n\n";
+  txt += "Progress:\n" + progress + "\n\n";
   txt += "↳ " + formatNumber(expInLevel) + " / " + formatNumber(expNeeded) + " XP\n\n";
   txt += "Next level: *" + formatNumber(expToNextLevel(exp)) + "* exp lagi!";
 

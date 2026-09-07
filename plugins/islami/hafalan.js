@@ -399,7 +399,6 @@ async function handler(m, { sock, config: botConfig }) {
       // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
       lines.push("");
       lines.push("Progress:");
-      lines.push("");
       lines.push(bar + " " + avgMastery + "%");
       lines.push("");
 

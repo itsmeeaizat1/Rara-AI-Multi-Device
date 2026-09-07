@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
   caption += "Role: " + role + "\n";
   caption += "Total EXP: *" + formatNumber(userExp) + "*\n";
   // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
-  caption += "Progress:\n\n" + getLevelBar(expInLevel, expNeeded) + "\n\n";
+  caption += "Progress:\n" + getLevelBar(expInLevel, expNeeded) + "\n\n";
   caption += "↳ " + formatNumber(expInLevel) + " / " + formatNumber(expNeeded) + " XP\n";
   if (user.rpg.title) caption += "Title: " + user.rpg.title + "\n";
   caption += "\n";

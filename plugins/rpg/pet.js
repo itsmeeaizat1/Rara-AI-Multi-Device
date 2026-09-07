@@ -215,7 +215,7 @@ async function handler(m, { sock }) {
     msg += `ATK: *${pet.atk}* | DEF: *${pet.def}*\n`;
     msg += `HP: *${pet.hp}*\n`;
     // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
-    msg += `Hunger:\n\n${hungerBar} ${pet.hunger}%\n\n`;
+    msg += `Hunger:\n${hungerBar} ${pet.hunger}%\n\n`;
     msg += `Battles: *${pet.battles}* (${pet.wins}W/${pet.battles - pet.wins}L)\n`;
     msg += `
 `;

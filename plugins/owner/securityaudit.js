@@ -148,7 +148,6 @@ async function handler(m, { sock }) {
   lines.push("");
   // FIX OWNER 2026-09-07: bar skor dikasih jarak biar gak dempet
   lines.push("SKOR KEAMANAN:");
-  lines.push("");
   lines.push(bar + " " + score + "/100");
   lines.push("");
   lines.push("Verdict: *" + verdict + "*");

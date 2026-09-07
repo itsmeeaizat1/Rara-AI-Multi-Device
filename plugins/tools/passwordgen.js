@@ -122,7 +122,6 @@ async function handler(m, { sock }) {
       "",
       // FIX OWNER 2026-09-07: bar kekuatan dikasih jarak biar gak dempet
       "Kekuatan:",
-      "",
       strengthBar + " " + result.strength + "/100",
       "",
       "Verdict: *" + result.verdict + "*",
