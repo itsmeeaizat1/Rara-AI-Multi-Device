@@ -139,7 +139,8 @@ const ENGINES = {
   // diawali "Mori" biar keliatan di caption mana yang punya Mori.
   // Bilibili SnapTik... eh, SnapWC = satu-satunya jalur bilibili yang
   // bisa jalan dari server (direct API kemarin kena anti-bot 412).
-  // Scraper browser Mori (savetik/fdown/snapinsta) gak di-bridge.
+  // Scraper browser Mori (savetik/fdown/snapinsta) LAZY — aktif
+  // otomatis begitu Chrome/Playwright diinstal di server.
   ...Object.fromEntries(
     [
       ["applemusic", "aplmate", "AplMate"],
@@ -160,6 +161,9 @@ const ENGINES = {
       ["twitter", "tweeload", "Tweeload"],
       ["twitter", "tvd", "TVD"],
       ["youtube", "ytmp3", "YTmp3"],
+      ["tiktok", "savetik", "SaveTik"],
+      ["facebook", "fdown", "FDown"],
+      ["instagram", "snapinsta", "SnapInsta"],
     ].map(([plat, method, label]) => [
       `mori${label}`,
       {
@@ -338,10 +342,10 @@ const CHAINS = {
   pixiv:      ["pixivDirect"],
   bandcamp:   ["bandcampDirect", "moriBandcampDownloader", "haidar", "ikyy", "omnify", "valore"],
   bilibili:   ["moriSnapWC"],
-  tiktok:     ["tiktokYuu", "moriTikTokIO", "moriSnapTik", "moriSSSTik", "haidar", "ikyy"],
+  tiktok:     ["tiktokYuu", "moriTikTokIO", "moriSnapTik", "moriSSSTik", "haidar", "ikyy", "moriSaveTik"],
   douyin:     ["douyinDirect", "snaptikDy", "moriDouyinDirect", "haidar"],
-  instagram:  ["igNovav1", "moriInDown", "moriDownReels", "haidar", "ikyy"],
-  facebook:   ["moriSnapSave", "haidar", "ikyy", "omnify"],
+  instagram:  ["igNovav1", "moriInDown", "moriDownReels", "haidar", "ikyy", "moriSnapInsta"],
+  facebook:   ["moriSnapSave", "haidar", "ikyy", "omnify", "moriFDown"],
   twitter:    ["x2twitter", "moriTweeload", "moriTVD", "haidar", "ikyy"],
   threads:    ["moriThreadster", "haidar", "ikyy", "omnify"],
   spotify:    ["moriSpotMate", "moriSpotiDown", "haidar", "ikyy"],
