@@ -396,8 +396,12 @@ async function handler(m, { sock, config: botConfig }) {
       const barLen = 10;
       const filled = Math.round((avgMastery / 100) * barLen);
       const bar = "█".repeat(filled) + "░".repeat(barLen - filled);
+      // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
       lines.push("");
-      lines.push("Progress: " + bar + " " + avgMastery + "%");
+      lines.push("Progress:");
+      lines.push("");
+      lines.push(bar + " " + avgMastery + "%");
+      lines.push("");
 
       return m.reply(claraWrap("Progress Hafalan", lines.join("\n")));
     }

@@ -57,7 +57,8 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "stamina", data);
       await m.react("🐣");
   await animGeneric(m, sock, "⚡", "Checking Stamina");
-      return m.reply(novaRpgBox("staminabar", `🛌 Istirahat berhasil! +${restored} stamina\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
+      // FIX OWNER 2026-09-07: bar dikasih jarak dari kalimat
+      return m.reply(novaRpgBox("staminabar", `🛌 Istirahat berhasil! +${restored} stamina\n\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
     }
 
     if (subCmd === "buy" || subCmd === "beli") {
@@ -76,7 +77,8 @@ async function handler(m, { sock }) {
       data.totalBought = (data.totalBought || 0) + qty;
       await db.setPlayerData?.(m.sender, "stamina", data);
       await m.react("🐣");
-      return m.reply(novaRpgBox("staminabar", `⚡ Beli ${qty} stamina (${cost}g)\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
+      // FIX OWNER 2026-09-07: bar dikasih jarak dari kalimat
+      return m.reply(novaRpgBox("staminabar", `⚡ Beli ${qty} stamina (${cost}g)\n\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
     }
 
     // STATUS (default)
