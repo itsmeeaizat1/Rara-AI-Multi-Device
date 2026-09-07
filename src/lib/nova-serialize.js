@@ -33,6 +33,7 @@ import {
 import fsc from "fs";
 import axios from "axios";
 import { getDatabase } from "./nova-database.js";
+import { smallcapsText } from "./styler.js";
 import { translateUI, needsTranslation } from "./nova-i18n.js";
 import { getWeatherAddress } from "./nova-weather-footer.js";
 
@@ -792,6 +793,22 @@ async function serialize(sock, msg, store = {}) {
     try {
       if (typeof text === "string" && needsTranslation(m.sender)) {
         text = await translateUI(text, m.sender);
+      }
+    } catch {}
+
+    // GUARD SMALLCAPS TOTAL (owner 2026-09-07: "semua teksnya jadi
+    // smallcaps — tanpa smallcaps kayak bukan bot, dikira orang"):
+    // SEMUA reply bot otomatis smallcaps di titik kunci ini, gak perlu
+    // sentuh 1800+ plugin. URL & isi code fence tetap persis (fitur
+    // kode/ASCII aman). Escape buat fitur yang hasilnya HARUS teks
+    // verbatim (OCR, translate, extract text): m.reply(text, { raw: true }).
+    try {
+      if (
+        typeof text === "string" &&
+        text &&
+        !(options && typeof options === "object" && options.raw)
+      ) {
+        text = smallcapsText(text);
       }
     } catch {}
 

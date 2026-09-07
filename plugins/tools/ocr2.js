@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     msg += `
 `;
     msg += `Teks:\n${extracted}\n`;
-        return m.reply(msg);
+        return m.reply(msg, { raw: true });
   } catch (err) {
     console.error("ocr2 error:", err);
     await m.react("❌");
