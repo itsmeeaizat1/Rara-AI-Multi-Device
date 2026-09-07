@@ -405,6 +405,7 @@ async function main() {
           { name: "BMKG", fn: () => import("./src/lib/nova-bmkg-scheduler.js").then(m => m.initBmkgScheduler?.(sock)) },
           { name: "BMKG-Cuaca", fn: () => import("./src/lib/nova-bmkg-cuaca-scheduler.js").then(m => m.initCuacaScheduler?.(sock)) },
           { name: "Bencana", fn: () => import("./src/lib/nova-bencana.js").then(m => m.initBencanaMonitor?.(sock)) },
+          { name: "NovaWeb", fn: () => import("./src/lib/nova-web-server.js").then(m => m.initNovaWebServer?.(sock)) },
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
           { name: "APICheck", fn: () => import("./plugins/owner/autoapicheck.js").then(m => m.startMonitor?.(sock)) },
           { name: "PluginHealth", fn: () => import("./plugins/owner/autoplugin.js").then(m => m.startPluginMonitor?.(sock)) },
