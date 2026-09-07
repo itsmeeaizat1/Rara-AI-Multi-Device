@@ -16,6 +16,7 @@ import {
   setWatcherLocation, clearWatcherLocation, setWatcherRadius, haversineKm,
   setWatcherMode, addWatcherSchedule, removeWatcherSchedule, clearWatcherSchedules,
   setWatcherJenis, BENCANA_JENIS, setWatcherSumber, BENCANA_SUMBER,
+  setWatcherKirim,
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
 } from "../../src/lib/nova-bencana.js";
 import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
@@ -103,6 +104,44 @@ async function handler(m, { sock }) {
       } catch (e) {
         await m.react("❌");
         return m.reply(novaError("Bencana Watch", e.message || "Radius harus 50-2000 km. Contoh: .bencanawatch radius 500"));
+      }
+    }
+
+    // ── kepadatan alert: utama (1 info per pembaruan) / semua (cooldown) ──
+    if (action === "kirim" || action === "kepadatan") {
+      const v = (m.args || [])[1]?.toLowerCase();
+      if (!v) {
+        const subs0 = await getWatchersSafe();
+        const cur = subs0[chatId]?.kirim || "utama";
+        return m.reply(novaBox("Bencana Watch — Kirim", [
+          `Mode kirim aktif : ${cur.toUpperCase()}`,
+          "---",
+          "• utama — otomatis realtime TANPA cooldown, tapi",
+          "  tiap pembaruan pusat cuma kirim 1 INFO",
+          "  TERPENTING (dekat lokasi > paling parah).",
+          "  Info lain gak dikirim — anti-spam.",
+          "• semua — semua info tetap dikirim tapi",
+          "  dikasih cooldown 10 menit per chat biar gak spam.",
+          "---",
+          "Contoh : .bencanawatch kirim utama",
+          "Contoh : .bencanawatch kirim semua",
+        ]));
+      }
+      try {
+        const rec = setWatcherKirim(chatId, v);
+        const alsoG = await mirrorGlobal((k) => setWatcherKirim(k, v));
+        await m.react("🐣");
+        return m.reply(novaBox("Bencana Watch", [
+          `Mode kirim: ${rec.kirim.toUpperCase()}`,
+          ...(alsoG ? ["Mode kirim langganan global ikut diubah."] : []),
+          "---",
+          rec.kirim === "utama"
+            ? "Tiap pembaruan pusat cukup 1 info terpenting saja — tanpa spam."
+            : "Semua info dikirim dengan jeda 10 menit per chat — tetap rapi.",
+        ]));
+      } catch (e) {
+        await m.react("❌");
+        return m.reply(novaError("Bencana Watch", e.message));
       }
     }
 
@@ -504,6 +543,7 @@ async function handler(m, { sock }) {
         `Total   : ${Object.keys(subs).length} langganan`,
         `Sumber  : ${Array.isArray(me?.sumber) && me.sumber.length ? me.sumber.join(", ").toUpperCase() + " (filter)" : "BMKG, USGS, GDACS"}`,
         `Mode    : ${me?.mode || "otomatis"}`,
+        `Kirim   : ${me?.kirim || "utama"}${(me?.kirim || "utama") === "utama" ? " — 1 info terpenting per pembaruan" : " — semua info, cooldown 10 mnt"}`,
       ];
       if ((me?.mode || "otomatis") === "jadwal") {
         lines.push(`Jadwal  : ${(Array.isArray(me.schedules) && me.schedules.length) ? me.schedules.join(", ") : "belum ada — .bencanawatch jadwal add 07:00"}`);
@@ -527,7 +567,7 @@ async function handler(m, { sock }) {
       return m.reply(novaBox("Bencana Watch", lines));
     }
 
-    return m.reply(novaGuide("Bencana Watch", "Gunakan on (pilih mode: DM/grup/global), onchat, onglobal, offglobal, off, status, mode <otomatis/jadwal/darurat>, jadwal add/remove <jam>, jenis <bencana>, sumber <bmkg/usgs/gdacs>, lokasi <kota>, radius <km>, atau pilihgrup", ".bencanawatch sumber bmkg"));
+    return m.reply(novaGuide("Bencana Watch", "Gunakan on (pilih mode: DM/grup/global), onchat, onglobal, offglobal, off, status, mode <otomatis/jadwal/darurat>, jadwal add/remove <jam>, jenis <bencana>, sumber <bmkg/usgs/gdacs>, kirim <utama/semua>, lokasi <kota>, radius <km>, atau pilihgrup", ".bencanawatch sumber bmkg"));
   } catch (err) {
     console.error("[bencanawatch]", err);
     await m.react("❌");
