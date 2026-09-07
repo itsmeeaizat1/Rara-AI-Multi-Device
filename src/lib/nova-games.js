@@ -618,8 +618,9 @@ function renderSlotBoard(answers, opts = {}) {
       const by = ans.foundBy ? ` · @${nameOf(ans.foundBy)}` : "";
       lines.push(`✅ ${num} ${String(ans.text).toUpperCase()}${by}`);
     } else {
+      // FIX OWNER 2026-09-07: emoji 🔒 disamping slot soal dihapus — tampilan bersih
       const len = Math.min(10, Math.max(4, String(ans.text).length));
-      lines.push(`🔒 ${num} ${"▒".repeat(len)}`);
+      lines.push(`${num} ${"▒".repeat(len)}`);
     }
   });
   return lines;
