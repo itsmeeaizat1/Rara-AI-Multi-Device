@@ -545,22 +545,14 @@ function novaInfoBox(title, items = [], opts = {}) {
 // Alignment label dihitung PER SECTION biar rapi.
 // ═══════════════════════════════════════════════
 function novaInfoSections(info = [], sc = true) {
+  // FIX 2026-09-07 (owner: "kok ada space di info section, harusnya rapat
+  // gak ada spasi kliatan kosong") — versi lama padEnd label ke lebar
+  // label TERPANJANG per section (mis. "Grup Mode" 9 char), jadi label
+  // pendek (Nama, Role) dapat 5-6 spasi kosong sebelum ":". Dihapus total:
+  // label langsung diikuti " : " tanpa padding, rapat konsisten semua baris.
   const scFn = sc ? toSC : (s) => String(s);
   let out = "";
   let open = false;
-  let maxLabel = 6;
-  // Pre-scan: maxLabel per section
-  const sectionMax = new Map();
-  let current = -1;
-  for (let i = 0; i < info.length; i++) {
-    const item = info[i];
-    if (typeof item === "string") {
-      if (item.trim() !== "") { current = i; sectionMax.set(i, 6); }
-    } else if (item && item.label !== undefined && current >= 0) {
-      const len = scFn(item.label).length;
-      if (len > sectionMax.get(current)) sectionMax.set(current, len);
-    }
-  }
 
   for (let i = 0; i < info.length; i++) {
     const item = info[i];
@@ -569,10 +561,9 @@ function novaInfoSections(info = [], sc = true) {
       if (!s) continue;
       if (open) out += `╰────  •  ────\n\n`;
       out += `╭─「 ✦ ${scFn(s)} ✦ 」\n`;
-      maxLabel = sectionMax.get(i) || 6;
       open = true;
     } else if (item && item.label !== undefined && open) {
-      const label = scFn(item.label).padEnd(maxLabel);
+      const label = scFn(item.label);
       const value = item.value !== undefined && item.value !== null ? String(item.value) : "";
       out += `│ • ${label} : ${value}\n`;
     }
@@ -595,8 +586,16 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
       if (line === "" || line === " ") {
         out += `│\n`;
       } else {
-        // Intro smallcaps — konsisten sama standar menu (owner request)
-        out += `│ ${scFn(line)}\n`;
+        // FIX 2026-09-07 (owner: hapus garis nyangkut/border keputus di
+        // pesan intro) — greeting AI bisa sampai ~300 karakter/45 kata
+        // dalam SATU baris tanpa \n. Kalau ditulis langsung "│ ${line}",
+        // WhatsApp yang wrap sendiri di client TANPA prefix "│" di baris
+        // lanjutan → border kelihatan putus/nyangkut (corner ╭ doang di
+        // atas, teks lanjutan nempel kiri tanpa border). Guard: wrapLine
+        // dulu (≤30 char/baris) baru tiap baris hasil wrap dapet "│ ".
+        for (const wrapped of wrapLine(scFn(line))) {
+          out += `│ ${wrapped}\n`;
+        }
       }
     }
     out += `╰────  •  ────\n\n`;
