@@ -266,8 +266,6 @@ export default {
         const bar = progressBar(c.raised, c.target);
         lines.push(
           `${i + 1}. ${c.shortId} - ${c.description}`,
-          ``,
-          // FIX OWNER 2026-09-07: bar progress dikasih jarak biar gak dempet
           `${bar} ${pct}%`,
           ``,
           `Terkumpul: ${formatRupiah(c.raised)} / ${formatRupiah(c.target)}`,
@@ -480,7 +478,6 @@ export default {
         `✅ *${senderName}* berdonasi!`,
         `Kampanye: ${campaign.shortId} - ${campaign.description}`,
         `Nominal: ${formatRupiah(amount)}`,
-        ``,
         `${bar} ${pct}%`,
         ``,
         `Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
@@ -580,7 +577,6 @@ export default {
         `✅ Owner mencatat donasi *${addedCount}* orang:`,
         `${addedNames.join(", ")}`,
         `Nominal per orang: ${formatRupiah(amount)}`,
-        ``,
         `${bar} ${pct}%`,
         ``,
         `Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
