@@ -584,6 +584,26 @@ export function setWatcherJenis(chatId, kinds) {
   return subs[chatId];
 }
 
+/**
+ * Set kepadatan alert subscriber (request owner 2026-09-07):
+ *   • "utama" (default) — realtime tanpa cooldown, tapi tiap pembaruan
+ *     pusat cukup 1 info TERPENTING saja (bukan semua → anti-spam).
+ *   • "semua" — semua info dikirim tapi dikasih cooldown 10 menit
+ *     per chat biar gak spam.
+ */
+export function setWatcherKirim(chatId, mode) {
+  const subs = getWatchers();
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  const m = String(mode || "").toLowerCase();
+  const alias = { utama: "utama", penting: "utama", satu: "utama", semua: "semua", all: "semua", cooldown: "semua", col: "semua" };
+  const val = alias[m];
+  if (!val) throw new Error("Pilihan: utama (1 info terpenting per pembaruan, tanpa cooldown) atau semua (semua info, dikasih cooldown 10 menit).");
+  subs[chatId].kirim = val;
+  if (val === "utama") { subs[chatId].held = []; subs[chatId].lastAlertTs = 0; } // mulai bersih
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
 function pendingLine(ev) {
   let head = ev.jenis || "Bencana";
   if (ev.mag) head += ` ${ev.mag} SR`;
@@ -890,29 +910,64 @@ async function gdacsThumbUrl(e) {
   } catch { return null; }
 }
 
-// 4. Pesan gabungan — 1 info per pembaruan pusat (bukan 1 pesan per event)
-function buildCombinedText(header, evs, note) {
-  const lines = [header, ""];
-  for (const ev of evs) {
-    if (ev._summary) lines.push(ev._summary);
-  }
-  if (note) lines.push("", note);
-  return lines.join("\n");
+// ─────────── FIX OWNER 2026-09-07 (revisi 2): KEPADATAN ALERT ───────────
+// Owner: jangan semua info dikirim jadi spam. 2 mode (sub.kirim):
+//   • "utama" (DEFAULT) — otomatis realtime TANPA cooldown, tapi tiap
+//     pembaruan pusat cuma kirim 1 INFO TERPENTING: paling dekat lokasi
+//     user (dalam radius) > paling parah (severe) > pertama di daftar.
+//     Info lain di periode itu gak dikirim (anti-spam).
+//   • "semua" — semua info tetap dikirim tapi DIKASIH COOLDOWN 10 menit
+//     per chat; yang dateng pas masih cooldown ditahan (brief), nyusul
+//     nempel di pengiriman berikutnya.
+const KIRIM_COOLDOWN_MS = 10 * 60_000;
+
+function briefOf(ev) {
+  return ev?._summary || pendingLine(ev);
 }
 
-function nearestOf(evs, sub) {
-  if (sub?.lat == null) return null;
-  let best = null, bestD = Infinity;
-  for (const ev of evs) {
-    if (ev?.lat == null) continue;
-    const d = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
-    if (d < bestD) { bestD = d; best = ev; }
+/** Event terpenting buat subscriber: dekat lokasi > severe > pertama. */
+function pickBestEvent(evs, sub) {
+  if (sub?.lat != null) {
+    const radius = sub.radius || DEFAULT_RADIUS_KM;
+    const nears = evs
+      .filter((ev) => ev?.lat != null)
+      .map((ev) => ({ ev, d: haversineKm(sub.lat, sub.lon, ev.lat, ev.lon) }))
+      .filter((x) => x.d <= radius)
+      .sort((a, b) => a.d - b.d);
+    if (nears.length) return nears[0].ev;
   }
-  return best;
+  const sev = evs.filter((ev) => ev.isSevere);
+  if (sev.length) return sev[0];
+  return evs[0];
 }
 
-/** Kirim BEBERAPA event baru sebagai SATU pesan per subscriber. */
-async function dispatchCombined(evs, header, card) {
+/** Teks alert penuh 1 event (format single-event: info section lengkap). */
+function fullTextFor(ev, headerPrefix) {
+  const lvl = String(ev.level || "").replace(/ \(.*\)$/, "");
+  const lines = [
+    `${headerPrefix}${lvl ? ` — ${lvl}` : ""}`,
+    "",
+    `${ev.jenis}${ev.country ? ` di ${ev.country}` : ""}`,
+    ev.desc || "",
+    "",
+    buildInfoSection(ev),
+  ];
+  return lines.filter((l, i) => !(l === "" && lines[i - 1] === "")).join("\n");
+}
+
+/** Drain info tertahan (mode "semua" pas cooldown) → prepend ke teks. */
+function drainHeld(sub) {
+  const held = Array.isArray(sub.held) ? sub.held : [];
+  sub.held = [];
+  return held;
+}
+
+/**
+ * Kirim beberapa event baru dari SATU pembaruan pusat sesuai kepadatan
+ * subscriber: utama → 1 info terpenting saja; semua → best full + sisanya
+ * brief, dengan cooldown per chat.
+ */
+export async function dispatchBest(evs, headerPrefix, card) {
   const subs = getWatchers();
   const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
   if (hasJadwal) for (const ev of evs) pushPending(ev);
@@ -928,32 +983,52 @@ async function dispatchCombined(evs, header, card) {
         // ATURAN OWNER: yang darurat tetap realtime, sisanya nunggu rangkuman
         const severe = list.filter((ev) => ev.isSevere);
         if (severe.length) {
-          const near = nearestOf(severe, sub);
-          await sendWithCard(sock, chatId, withDistanceLine(buildCombinedText(header, severe, null), sub, near), card);
+          const best = pickBestEvent(severe, sub);
+          const held = drainHeld(sub);
+          let out = fullTextFor(best, headerPrefix);
+          if (held.length) out = held.map((h) => `• ${h.line}`).join("\n") + "\n\n" + out;
+          await sendWithCard(sock, chatId, withDistanceLine(out, sub, best), card);
+          sub.lastAlertTs = Date.now();
           const subs2 = getWatchers();
           if (subs2[watcherKey]) { subs2[watcherKey].lastDigest = Date.now(); saveWatchers(subs2); }
         }
         continue;
       }
 
-      let send = list;
+      let cand = list;
       if (mode === "darurat") {
         const radius = sub.radius || DEFAULT_RADIUS_KM;
-        send = list.filter((ev) =>
+        cand = list.filter((ev) =>
           ev.isSevere ||
           (sub.lat != null && ev.lat != null && haversineKm(sub.lat, sub.lon, ev.lat, ev.lon) <= radius)
         );
-        if (!send.length) continue;
+        if (!cand.length) continue;
       }
 
-      const nearHit = send.some((ev) =>
-        sub.lat != null && ev.lat != null &&
-        haversineKm(sub.lat, sub.lon, ev.lat, ev.lon) <= (sub.radius || DEFAULT_RADIUS_KM)
-      );
-      const text = buildCombinedText(header, send, nearHit ? "⚠️ Salah satunya DEKAT lokasi kamu — tetap waspada!" : null);
-      await sendWithCard(sock, chatId, withDistanceLine(text, sub, nearestOf(send, sub)), card);
+      const slowMode = (sub.kirim || "utama") !== "utama";
+      const now = Date.now();
+      const held = Array.isArray(sub.held) ? sub.held : [];
+      if (slowMode && sub.lastAlertTs && now - sub.lastAlertTs < KIRIM_COOLDOWN_MS) {
+        // mode "semua": lagi cooldown — semua event periode ini ditahan dulu
+        for (const ev of cand) if (held.length < 10) held.push({ line: briefOf(ev), ts: now });
+        sub.held = held;
+        saveWatchers(subs);
+        continue;
+      }
+
+      const best = pickBestEvent(cand, sub);
+      let out = fullTextFor(best, headerPrefix);
+      const rest = cand.filter((e) => e !== best);
+      if (rest.length && slowMode) {
+        out += "\n\nLainnya periode ini:\n" + rest.map((e) => `• ${briefOf(e)}`).join("\n");
+      }
+      const held2 = drainHeld(sub);
+      if (held2.length) out = held2.map((h) => `• ${h.line}`).join("\n") + "\n\n" + out;
+      await sendWithCard(sock, chatId, withDistanceLine(out, sub, best), card);
+      sub.lastAlertTs = Date.now();
+      saveWatchers(subs);
     } catch (e) {
-      logger.error?.("bencana", `Gagal kirim gabungan ke ${chatId}: ${e.message}`);
+      logger.error?.("bencana", `Gagal kirim (kepadatan) ke ${chatId}: ${e.message}`);
     }
     await new Promise((r) => setTimeout(r, 600));
   }
@@ -997,7 +1072,22 @@ async function dispatch(ev, genericText = null, card = null) {
       if (near) {
         await sendRegionalAlert(sock, chatId, ev, sub);
       } else if (genericText) {
-        await sendWithCard(sock, chatId, withDistanceLine(genericText, sub, ev), card);
+        // FIX OWNER 2026-09-07: kepadatan alert — mode "semua" dikasih
+        // cooldown 10 menit per chat; yang dateng pas cooldown ditahan,
+        // nyusul nempel di pengiriman berikutnya.
+        const slowMode = (sub.kirim || "utama") !== "utama";
+        const now = Date.now();
+        const held = Array.isArray(sub.held) ? sub.held : [];
+        if (slowMode && sub.lastAlertTs && now - sub.lastAlertTs < KIRIM_COOLDOWN_MS) {
+          if (held.length < 10) { held.push({ line: briefOf(ev), ts: now }); sub.held = held; saveWatchers(subs); }
+          continue;
+        }
+        let out = genericText;
+        const held2 = drainHeld(sub);
+        if (held2.length) out = held2.map((h) => `• ${h.line}`).join("\n") + "\n\n" + out;
+        await sendWithCard(sock, chatId, withDistanceLine(out, sub, ev), card);
+        sub.lastAlertTs = Date.now();
+        saveWatchers(subs);
       }
     } catch (e) {
       logger.error?.("bencana", `Gagal kirim ke ${chatId}: ${e.message}`);
@@ -1141,10 +1231,11 @@ async function slowTick() {
         ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
       } else if (evs.length > 1) {
-        // FIX OWNER: cukup 1 info tiap pembaruan dari pusat — beberapa event
-        // baru dalam 1 siklus polling digabung jadi SATU pesan.
+        // FIX OWNER (revisi 2026-09-07): jangan semua info dikirim (spam) —
+        // tiap pembaruan cukup 1 info TERPENTING per subscriber (mode utama),
+        // atau semua + cooldown 10 mnt (mode semua). Atur: .bencanawatch kirim.
         const top = [...evs].sort((a, b) => Number(b.isSevere) - Number(a.isSevere))[0];
-        await dispatchCombined(evs, `AUTO-ALERT BENCANA GLOBAL — ${evs.length} INFO BARU`, eventCard(top));
+        await dispatchBest(evs, "AUTO-ALERT BENCANA GLOBAL", eventCard(top));
       }
       const st2 = loadState();
       for (const ev of evs) fpMark(st2, ev);
@@ -1198,9 +1289,10 @@ async function slowTick() {
         ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
       } else if (evs.length > 1) {
-        // FIX OWNER: cukup 1 info tiap pembaruan dari pusat — gabung 1 pesan
+        // FIX OWNER (revisi 2026-09-07): 1 info terpenting per pembaruan
+        // (mode utama) / semua + cooldown 10 mnt (mode semua).
         const top = [...evs].sort((a, b) => Number(b.isSevere) - Number(a.isSevere))[0];
-        await dispatchCombined(evs, `AUTO-ALERT GEMPA GLOBAL — ${evs.length} INFO BARU (USGS)`, eventCard(top));
+        await dispatchBest(evs, "AUTO-ALERT GEMPA GLOBAL (USGS)", eventCard(top));
       }
       const st2 = loadState();
       for (const ev of evs) fpMark(st2, ev);
