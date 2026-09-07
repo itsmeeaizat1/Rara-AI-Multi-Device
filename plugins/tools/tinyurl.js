@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "tinyurl",
   alias: ["tinyurl", "short"],
-  category: "tools",
+  category: "browser",
   description: "Mempersingkat URL / link menggunakan TinyURL",
   usage: ".tinyurl <url>",
   example: ".tinyurl https://google.com",

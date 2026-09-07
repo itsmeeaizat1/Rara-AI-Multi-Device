@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/Version-23.0.0-orange?style=flat-square&logo=git&logoColor=white">
   <img src="https://img.shields.io/badge/Total_Plugin-1835-blue?style=flat-square&logo=fire">
   <img src="https://img.shields.io/badge/Total_Command-2584%2B-blueviolet?style=flat-square&logo=terminal">
-  <img src="https://img.shields.io/badge/Kategori-45-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Kategori-46-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Downloader-52-yellow?style=flat-square&logo=download">
   <img src="https://img.shields.io/badge/RPG_Game-168-ff69b4?style=flat-square&logo=target">
   <img src="https://img.shields.io/badge/AI_Plugin-170-9cf?style=flat-square&logo=ai">
@@ -417,7 +417,7 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 |--------|-------|
 | Total Plugin | 1.835 |
 | Total Command | 2.584+ |
-| Kategori | 45 |
+| Kategori | 46 |
 | RPG Module | 168 (159 rpg + 9 couple) |
 | AI Plugin | 170 (125 ai + 45 ai image) |
 | AI Model | 34 |
@@ -427,6 +427,7 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 | Convert Plugin | 31 |
 | Tools Plugin | 194 |
 | Tools Plugin | 149+ |
+| Browser Plugin | 11 |
 | Menu Variasi | 6 |
 | Nav Button Plugin | 1.019 |
 | Welcome/Goodbye | 5 variasi |
