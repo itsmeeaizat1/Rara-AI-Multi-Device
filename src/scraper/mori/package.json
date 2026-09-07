@@ -1,0 +1,7 @@
+{
+  "name": "nova-scrape-mori",
+  "version": "1.0.0",
+  "description": "Scrapers dari github.com/coflyn/scrapr (Mori) — cadangan engine, CommonJS. Jangan diubah, upgrade via repo upstream.",
+  "type": "commonjs",
+  "license": "MIT"
+}
