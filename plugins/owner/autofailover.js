@@ -33,6 +33,7 @@ import { CronJob } from "cron";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
+import { getTioEndpoint, getTioBase } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
   name: "autofailover",
@@ -91,7 +92,7 @@ const DEFAULT_ROUTES = {
   },
   ai: {
     apis: [
-      { name: "tio", url: "https://ai.tioo.eu.org/v1/models" },
+      { name: "tio", url: getTioBase() + "/v1/models" },
       { name: "xemoz", url: "https://api-xemoz-official.my.id/api/ai/deepseek-v3" },
       { name: "puter", url: "https://api.puter.com/" },
     ],

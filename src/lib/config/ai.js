@@ -7,7 +7,7 @@ import { apiKeys } from "./apikey.js";
 // ═══════════════════════════════════════════
 // AI Configuration - Tio AI (AIO)
 // Set API key di src/lib/config/apikey.js atau via .ai-set apiKey <key>
-// Endpoint: https://ai.tioo.eu.org/v1/messages
+// Endpoint: gateway kktoken.cc (ai.tioo.eu.org mati 404)
 // ═══════════════════════════════════════════
 export const aiHelp = {
   enabled: true,
@@ -17,9 +17,9 @@ export const aiHelp = {
   geminiApiKey: apiKeys.tioKey,
   anthropicApiKey: apiKeys.tioKey,
   // Endpoint Tio AI (AIO — support OpenAI/Gemini/Anthropic format)
-  apiEndpoint: "https://ai.tioo.eu.org/v1/chat/completions",
-  apiEndpointAnthropic: "https://ai.tioo.eu.org/v1/messages",
-  apiEndpointGemini: "https://ai.tioo.eu.org/v1beta/models",
+  apiEndpoint: "https://kktoken.cc/v1/chat/completions",
+  apiEndpointAnthropic: "https://kktoken.cc/v1/messages",
+  apiEndpointGemini: "https://kktoken.cc/v1beta/models",
   // ClipDrop API key untuk watermark remover (.nowm)
   clipdropApiKey: apiKeys.clipdropApiKey,
   // API Keys untuk fitur baru

@@ -2,6 +2,7 @@
 import { tipText, claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
+import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 /**
  * plugins/group/smartreply.js
@@ -47,7 +48,7 @@ const lastReplyTime = new Map(); // chat -> timestamp
 
 async function callTioAI(systemPrompt, userMessage, aiConfig) {
   const apiKey = String(aiConfig.openaiApiKey || aiConfig.apiKey || "");
-  const endpoint = "https://ai.tioo.eu.org/v1/chat/completions";
+  const endpoint = getTioEndpoint();
   const model = String(aiConfig.openaiModel || aiConfig.model || "deepseek-v4-flash:free");
 
   if (!apiKey) throw new Error("NO_API_KEY");
