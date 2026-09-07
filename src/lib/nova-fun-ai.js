@@ -72,7 +72,7 @@ async function askFunAI({ botConfig, question, persona = "default", fallbackAnsw
     }
 
     const systemPrompt = PERSONAS[persona] || PERSONAS.default;
-    const apiEndpoint = aiConfig.apiEndpoint || "https://ai.tioo.eu.org/v1/chat/completions";
+    const apiEndpoint = aiConfig.apiEndpoint || "https://kktoken.cc/v1/chat/completions";
     const model = aiConfig.openaiModel || "kilo-auto/free";
 
     const reply = await callAI({
@@ -123,7 +123,7 @@ async function cekFunAI({ botConfig, cekType, percent, fallbackDesc = "" }) {
 
     if (!apiKey) throw new Error("No API key");
 
-    const apiEndpoint = aiConfig.apiEndpoint || "https://ai.tioo.eu.org/v1/chat/completions";
+    const apiEndpoint = aiConfig.apiEndpoint || "https://kktoken.cc/v1/chat/completions";
     const model = aiConfig.openaiModel || "kilo-auto/free";
 
     const prompt = `Seseorang baru saja dicek "${cekType}" dan dapet skor ${percent}%. Kasih komentar lucu/santai 1 kalimat (maks 15 kata) tentang skor itu. Pakai emoji secukupnya. Jawab langsung tanpa pembuka.`;

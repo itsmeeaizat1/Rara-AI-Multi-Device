@@ -3,7 +3,7 @@
  * Multi-Provider AI Service
  * Supports: OpenAI, Google Gemini, Anthropic Claude,
  *           Meta Llama, Blackbox AI, GitHub Models, Groq, Together AI,
- *           Tio AI (OpenAI/Gemini/Anthropic formats via ai.tioo.eu.org)
+ *           Tio AI (OpenAI/Gemini/Anthropic formats via kktoken.cc)
  *           IkyyXD (gemini, cici, gpt-5-mini, google-gemma, unliai, publicai, perplexity, zai, zerogpt, ai4chat via api.ikyyxd.my.id)
  */
 
@@ -148,7 +148,7 @@ const DEFAULT_PROVIDERS = {
     name: "Tio AI (OpenAI)",
     models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo", "deepseek-chat", "deepseek-reasoner"],
     defaultModel: "gpt-4o-mini",
-    chatEndpoint: "https://ai.tioo.eu.org/v1/chat/completions",
+    chatEndpoint: "https://kktoken.cc/v1/chat/completions",
     authHeader: (key) => ({ Authorization: `Bearer ${key}`, "Content-Type": "application/json" }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 4096 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
@@ -159,7 +159,7 @@ const DEFAULT_PROVIDERS = {
     name: "Tio AI (Gemini)",
     models: ["gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash"],
     defaultModel: "gemini-2.0-flash",
-    chatEndpoint: (model) => `https://ai.tioo.eu.org/v1beta/models/${model}:generateContent`,
+    chatEndpoint: (model) => `https://kktoken.cc/v1beta/models/${model}:generateContent`,
     authHeader: (key) => ({ "Content-Type": "application/json", "x-goog-api-key": key }),
     buildBody: ({ messages, systemPrompt }) => {
       const contents = messages
@@ -356,7 +356,7 @@ const DEFAULT_PROVIDERS = {
     name: "Tio AI (Anthropic)",
     models: ["claude-sonnet-4-20250514", "claude-3-5-haiku-20241022", "claude-3-haiku-20240307"],
     defaultModel: "claude-sonnet-5",
-    chatEndpoint: "https://ai.tioo.eu.org/v1/messages",
+    chatEndpoint: "https://kktoken.cc/v1/messages",
     authHeader: (key) => ({
       "x-api-key": key,
       "anthropic-version": "2023-06-01",

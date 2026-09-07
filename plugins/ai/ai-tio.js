@@ -9,7 +9,7 @@
 // ═══════════════════════════════════════════════
 
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { getTioKey } from "../../src/lib/config/env-loader.js";
+import { getTioKey, getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
   name: "ai-tio",
@@ -127,7 +127,7 @@ function resolveModel(input) {
 // ═══════════════════════════════════════════════
 
 async function callTio(model, messages, systemPrompt, apiKey) {
-  const url = "https://ai.tioo.eu.org/v1/chat/completions";
+  const url = getTioEndpoint();
 
   const body = {
     model: model,
@@ -146,6 +146,10 @@ async function callTio(model, messages, systemPrompt, apiKey) {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      // gateway (kktoken.cc dst) ada WAF Cloudflare — UA browser biar gak langsung kena block
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      "Accept": "application/json, text/plain, */*",
     },
     body: JSON.stringify(body),
   });

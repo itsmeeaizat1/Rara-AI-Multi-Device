@@ -21,6 +21,7 @@ const pending = new Map();
 // (key "agent:<sender>" → SATU memori bersama sama .autonovaai/aichat autoflow,
 // persist di file → inget obrolan walau bot restart)
 import { getSession as getSharedSession, appendTurn, clearSession } from "../../src/lib/nova-ai-session.js";
+import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
 const sessionKey = (m) => `agent:${m.sender}`;
 function getSession(key) {
   // format modul: [{role, content, ts}] — sama kayak format lama
@@ -326,7 +327,7 @@ async function handler(m, { sock, conn, config, db }) {
             model: aiConfig.openaiModel || "kilo-auto/free",
             messages, systemPrompt,
             apiKey: aiConfig.openaiApiKey || aiConfig.apiKey || "",
-            apiEndpoint: aiConfig.apiEndpoint || "https://ai.tioo.eu.org/v1/chat/completions",
+            apiEndpoint: aiConfig.apiEndpoint || getTioEndpoint(),
             maxTokens: 4096, senderJid: m.sender,
           });
         }
