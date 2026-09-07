@@ -1208,6 +1208,49 @@ async function jadwalTick() {
   }
 }
 
+/** Threshold gempa dekat-lokasi: di bawah mag ini dianggap terlalu
+ *  kecil buat dinotifkin (menghindari spam gempa mikro tiap menit). */
+const NEAR_QUAKE_MIN_MAG = 2.5;
+
+/**
+ * FITUR BARU (request owner 2026-09-07: "tambah alert gempa — kalau gempa
+ * terdeteksi di dekat lokasi aku muncul notifikasi langsung, di lokasi
+ * lain juga kalau radiusnya ditambah").
+ *
+ * Gempa BMKG yang gak lolos filter global M 5.0 TAPI terjadi DEKAT lokasi
+ * subscriber (dalam radius masing-masing — radius gede = kejadian di
+ * lokasi lain yang masuk radius juga kehitung "dekat") tetap dikirim
+ * LANGSUNG sebagai peringatan wilayah. Cuma buat subscriber yang:
+ * - udah set lokasi (.bencanawatch lokasi), dan
+ * - gak nge-filter keluar jenis gempa / sumber bmkg, dan
+ * - bukan mode jadwal (jadwal → dikumpulkan ke rangkuman).
+ * Subscriber TANPA lokasi gak kena sama sekali (alert global tetap M 5.0+).
+ */
+export async function dispatchNearQuake(ev) { /* exported: wrapper testable */
+  const subs = getWatchers();
+  const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
+  if (hasJadwal) pushPending(ev); // subscriber jadwal terima lewat rangkuman
+  let sent = 0;
+  for (const [watcherKey, chatId, sub] of await expandTargets()) {
+    try {
+      if (sub?.lat == null || ev?.lat == null) continue; // wajib punya lokasi
+      const mode = sub.mode || "otomatis";
+      if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes("gempa")) continue;
+      if (Array.isArray(sub.sumber) && sub.sumber.length && !sub.sumber.includes("bmkg")) continue;
+      const distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
+      const radius = sub.radius || DEFAULT_RADIUS_KM;
+      if (distKm > radius) continue; // di luar radius → bukan urusan fitur ini
+      if (mode === "jadwal") continue; // udah dipending ke rangkuman
+      await sendRegionalAlert(sock, chatId, ev, sub);
+      sent++;
+    } catch (e) {
+      logger.error?.("bencana", `Gagal kirim near-quake ke ${chatId}: ${e.message}`);
+    }
+    await new Promise((r) => setTimeout(r, 600));
+  }
+  if (sent) logger.success?.("bencana", `Gempa dekat-lokasi M${ev.mag}: ${sent} subscriber dinotifkin`);
+}
+
 // fast tick: gempa BMKG baru M >= 5.0
 async function fastTick() {
   try {
@@ -1247,6 +1290,28 @@ async function fastTick() {
           buildInfoSection(ev),
         ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
+      } else if (parseFloat(g.Magnitude) >= NEAR_QUAKE_MIN_MAG) {
+        // FITUR BARU owner 2026-09-07: gempa < M 5.0 gak masuk alert global,
+        // tapi kalau DEKAT lokasi subscriber (dalam radius dia) tetap
+        // dikirim langsung sebagai peringatan wilayah.
+        const [lat, lon] = String(g.Coordinates).split(",").map((s) => s.trim());
+        const ev = {
+          kind: "gempa", jenis: "Gempa Bumi",
+          mag: g.Magnitude, depth: g.Kedalaman,
+          level: "WASPADA",
+          waktu: `${g.Tanggal} ${g.Jam}`,
+          lat: +lat, lon: +lon, desc: g.Wilayah,
+          potensi: g.Potensi || null, dirasakan: g.Dirasakan || null,
+          sumber: "BMKG (data.bmkg.go.id)",
+          isSevere: false,
+        };
+        ev.thumbUrl = g._shakemapUrl;
+        {
+          const st2 = loadState();
+          fpMark(st2, ev); // tandai biar gak dobel dari pusat lain
+          saveState(st2);
+        }
+        await dispatchNearQuake(ev);
       }
     }
   } catch (e) {
