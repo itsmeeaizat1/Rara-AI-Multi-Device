@@ -137,6 +137,19 @@ function buildCategoryRows(m, db, prefix = ".") {
     return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
   });
 
+  // ── REQUEST OWNER 2026-09-07: label RECOMMENDED • PALING DICARI wajib
+  // muncul di popup kategori. Kalau belum ada data klik (DB baru), fallback
+  // rekomendasi = 3 kategori dengan fitur terbanyak biar label tetep ada.
+  if (!topCategories.length) {
+    topCategories = [...sortedCats]
+      .sort((a, b) => {
+        const ta = (commandsByCategory[a] || []).length + (casesByCategory[a] || []).length;
+        const tb = (commandsByCategory[b] || []).length + (casesByCategory[b] || []).length;
+        return tb - ta;
+      })
+      .slice(0, 3);
+  }
+
   const rows = [];
   for (const cat of sortedCats) {
     if (cat === "owner" && !m?.isOwner) continue;
@@ -151,8 +164,8 @@ function buildCategoryRows(m, db, prefix = ".") {
     const emoji = CATEGORY_EMOJI[cat] || "📋";
 
     const rankIdx = topCategories.indexOf(cat);
-    const headerLabel = rankIdx === 0 ? "🔥 Paling sering digunakan"
-      : rankIdx === 1 ? "🔥 Sering digunakan"
+    const headerLabel = rankIdx === 0 ? "🔥 Recommended • Paling Dicari"
+      : rankIdx === 1 ? "🔥 Paling Dicari"
       : rankIdx === 2 ? "🔥 Populer"
       : "";
     rows.push({
