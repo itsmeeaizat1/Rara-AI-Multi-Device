@@ -225,7 +225,7 @@ async function resolveNewsletterJid(sock) {
   return "120363404849776664@newsletter"; // fallback sama dengan .ptvch
 }
 
-async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "", adTitle = "" }) {
+async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "", adTitle = "", plain = false }) {
   try {
     // WhatsApp Channel (saluran/newsletter) TIDAK support interactiveMessage/
     // nativeFlowMessage sama sekali — follower akan lihat "Anda menerima info
@@ -297,6 +297,34 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
+    // ── FIX OWNER 2026-09-07 (klarifikasi): DUA MODE KIRIM ──
+    // • plain:true → fitur info/broadcast dari owner (bukan menu): PESAN
+    //   TEKS BIASA + contextInfo externalAdReply (thumbnail besar) + pill
+    //   channel. Payload interactiveMessage dibungkus viewOnceMessage +
+    //   relayMessage TIDAK dirender client penerima (placeholder "perbarui
+    //   WhatsApp" / gak muncul) — sender sendiri tetap ngeliat card-nya,
+    //   jadi keliatan normal di HP owner doang. Plain text = dijamin
+    //   ke-render di SEMUA versi WhatsApp & semua penerima.
+    // • default (menu/allmenu/allmenucategory) → TETEP interactive card
+    //   dengan tombol nativeFlow, sesuai request owner: menu wajib pakai
+    //   card karena ada tombolnya.
+    const contextInfo = {
+      mentionedJid: m.sender ? [m.sender] : [],
+      forwardingScore: 0,
+      isForwarded: false,
+      externalAdReply,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid,
+        newsletterName,
+        serverMessageId: 1,
+      },
+    };
+
+    if (plain) {
+      await sock.sendMessage(m.chat, { text, contextInfo }, { quoted: m });
+      return true;
+    }
+
     const interactiveObj = {
       body: proto.Message.InteractiveMessage.Body.fromObject({ text }),
       footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: footer || "" }),
@@ -309,18 +337,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
         title: "",
         hasMediaAttachment: false,
       }),
-      contextInfo: {
-        mentionedJid: m.sender ? [m.sender] : [],
-        forwardingScore: 0,
-        isForwarded: false,
-        externalAdReply,
-        // Tag channel di bawah pesan (newsletter pill) + follow button
-        forwardedNewsletterMessageInfo: {
-          newsletterJid,
-          newsletterName,
-          serverMessageId: 1,
-        },
-      },
+      contextInfo,
     };
 
     const msg = generateWAMessageFromContent(
