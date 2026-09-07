@@ -16,6 +16,7 @@
  *          Threads, Reddit, CapCut, Dailymotion, SoundCloud, Spotify, dll
  */
 
+import { runAllDlFallback } from "../../src/lib/alldl-fallback.js";
 import axios from "axios";
 import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { aiodl } from "../../src/scraper/aio.js";
@@ -411,7 +412,7 @@ async function runSessionDownload(sock, m, session, choice) {
   return;
 }
 
-async function handler(m, { sock }) {
+async function handlerCore(m, { sock }) {
   const prefix = m.prefix || ".";
   const body = m.body?.trim() || "";
   const command = m.command?.toLowerCase() || "";
@@ -517,6 +518,12 @@ async function handler(m, { sock }) {
   ]);
   await m.react("🐣");
   return m.reply(`${infoText}\n\n${tipText(`Sesi 3 menit — atau langsung sekalian: ${prefix}alldl <url> <format>`)}`);
+}
+
+async function handler(m, ctx = {}) {
+  // dipanggil langsung dari chain fallback — jangan wrap lagi
+  if (ctx.__novaAllDlAttempt) return handlerCore(m, ctx);
+  return runAllDlFallback("v1", m, ctx);
 }
 
 export { pluginConfig as config, handler };
