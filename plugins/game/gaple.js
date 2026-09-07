@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Gaple — Multiplayer Domino Game
 import { claraWrap , novaBox } from "../../src/lib/nova-menu-style.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -69,7 +70,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
         p.hand = [];
         for (let i = 0; i < 7 && game.deck.length; i++) p.hand.push(game.deck.pop());
         const ht = p.hand.map((c, i) => i + ": [" + c[0] + "|" + c[1] + "]").join("\n");
-        await sock.sendMessage(p.id, { text: "🀱 *Kartu Gaple-mu:*\n\n" + ht });
+        await sock.sendMessage(p.id, { text: smallcapsText("🀱 *Kartu Gaple-mu:*\n\n" + ht) });
       }
       if (game.deck.length) game.table = [game.deck.pop()];
       game.currentPlayer = 0;
@@ -92,7 +93,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const p = game.players.find(p => p.id === sender);
       if (!p) return m.reply(claraWrap("gaple", "Belum bergabung.", "info"));
       const ht = p.hand.map((c, i) => i + ": [" + c[0] + "|" + c[1] + "]").join("\n");
-      await sock.sendMessage(sender, { text: "🀱 *Kartu Gaple-mu:*\n\n" + ht });
+      await sock.sendMessage(sender, { text: smallcapsText("🀱 *Kartu Gaple-mu:*\n\n" + ht) });
       return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "📩 *BATAU DIBAGI!*", body: "Cek DM kamu — kartu domino sudah dikirim rahasia." }));
     }
 
