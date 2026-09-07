@@ -122,6 +122,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         "Target: Rp" + fund.target.toLocaleString("id-ID"),
         "Terkumpul: Rp" + fund.collected.toLocaleString("id-ID"),
         "Kontributor: " + Object.keys(fund.contributors).length,
+        "",
         progressBar(fund.collected, fund.target),
         "",
         "Target berhasil dicapai!",
@@ -133,7 +134,9 @@ async function handler(m, { sock, db, config: botConfig }) {
       "Kontribusi: Rp" + amount.toLocaleString("id-ID"),
       "Total terkumpul: Rp" + fund.collected.toLocaleString("id-ID"),
       "Target: Rp" + fund.target.toLocaleString("id-ID"),
+      "",
       progressBar(fund.collected, fund.target),
+      "",
       "Sisa: Rp" + (fund.target - fund.collected).toLocaleString("id-ID"),
     ].join("\n")));
     return { handled: true };
@@ -165,7 +168,9 @@ async function handler(m, { sock, db, config: botConfig }) {
       "Judul: " + fund.title,
       "Target: Rp" + fund.target.toLocaleString("id-ID"),
       "Terkumpul: Rp" + fund.collected.toLocaleString("id-ID"),
+      "",
       progressBar(fund.collected, fund.target),
+      "",
       "Kontributor: " + Object.keys(fund.contributors).length,
       "Sisa waktu: " + (daysLeft > 0 ? daysLeft + " hari" : "habis"),
       "Status: " + fund.status,
