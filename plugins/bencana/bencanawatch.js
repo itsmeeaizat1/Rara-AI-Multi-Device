@@ -74,18 +74,82 @@ async function handler(m, { sock }) {
       matikan: "off", stop: "off", nonaktif: "off", batal: "off",
       aktif: "on", aktifkan: "on", nyalakan: "on", cek: "status", check: "status",
       info: "status", help: "guide", bantuan: "guide",
+      atur: "atur", pengaturan: "atur", setting: "atur", settings: "atur",
     };
     const action = ACTION_ALIAS[args[0]] || args[0] || "";
     const chatId = m.chat;
     const isDm = !String(m.chat || "").endsWith("@g.us");
 
-    // Terapkan setter yang sama ke langganan global owner (kalau ada & command dari DM).
-    // Balikin true kalau ke-mirror, buat ditulis di reply.
+    // ── FIX BUG owner 2026-09-07: setter (mode/jenis/sumber/radius/jadwal/
+    // kirim/lokasi) selalu nyari subs[chatId] duluan. Tapi ".bencanawatch
+    // onglobal" nyimpen langganan di key BEDA ("global:<ownerJid>"), BUKAN
+    // di chatId — walau di DM chatId kebetulan == ownerJid. Akibatnya user
+    // yang CUMA punya langganan GLOBAL (belum pernah onchat) selalu kena
+    // "Aktifkan dulu .bencanawatch on." walau onglobal-nya udah aktif.
+    // Fix: kalau di DM dan belum ada langganan per-chat TAPI global-nya
+    // aktif, semua setter di bawah diarahin langsung ke key global itu.
+    const subsSnapshotForKey = await getWatchersSafe();
+    const hasChatSub = !!subsSnapshotForKey[chatId];
+    const globalRecForSender = isDm ? hasGlobalWatcher(m.sender) : null;
+    const targetKey = (!hasChatSub && globalRecForSender) ? globalWatcherKey(m.sender) : chatId;
+
+    // Terapkan setter yang sama ke langganan global owner (kalau ada & command dari DM,
+    // dan targetKey BUKAN udah global itu sendiri — biar gak nulis dobel ke key yang sama).
     const mirrorGlobal = async (fn) => {
-      if (!isDm || !hasGlobalWatcher(m.sender)) return false;
+      if (!isDm || !globalRecForSender) return false;
+      if (targetKey === globalWatcherKey(m.sender)) return false;
       try { await fn(globalWatcherKey(m.sender)); } catch { /* global tetap default */ }
       return true;
     };
+
+    // ── UX SIMPEL (request owner 2026-09-07: opsi & petunjuk gampang) ──
+    // Semua pengaturan bisa diatur via popup tombol .bencanawatch atur,
+    // dan tiap setting tanpa nilai otomatis kasih tombol pilihan cepat —
+    // user gak perlu hafal command manual.
+    const quick = (display_text, id) =>
+      ({ name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text, id }) });
+    const replyWithButtons = async (text, buttons) => {
+      try {
+        await sock.sendButton(m.chat, null, text, m, { buttons });
+        return { handled: true };
+      } catch { return m.reply(text); }
+    };
+
+    // ── POPUP SEMUA PENGATURAN: 1 tombol buat semua opsi ──
+    if (action === "atur" || action === "pengaturan" || action === "setting") {
+      const subs0 = await getWatchersSafe();
+      const me0 = subs0[targetKey];
+      const fJenis = Array.isArray(me0?.jenis) && me0.jenis.length ? me0.jenis.join(", ") : "semua";
+      const fSumber = Array.isArray(me0?.sumber) && me0.sumber.length ? me0.sumber.join(", ").toUpperCase() : "semua";
+      const fJadwal = Array.isArray(me0?.schedules) && me0.schedules.length ? me0.schedules.join(", ") : "belum ada";
+      const rows = [
+        { title: "Mode Pengiriman", description: `Aktif: ${(me0?.mode || "otomatis").toUpperCase()} — kapan alert dikirim`, id: ".bencanawatch mode" },
+        { title: "Sumber Berita", description: `Aktif: ${fSumber} — BMKG / USGS / GDACS`, id: ".bencanawatch sumber" },
+        { title: "Jenis Bencana", description: `Aktif: ${fJenis} — gempa, banjir, dll`, id: ".bencanawatch jenis" },
+        { title: "Kepadatan Kirim", description: `Aktif: ${(me0?.kirim || "utama").toUpperCase()} — 1 info terpenting / semua`, id: ".bencanawatch kirim" },
+        { title: "Lokasi & Radius", description: me0?.city ? `Aktif: ${me0.city} (${me0.radius || 300} km)` : "Belum di-set — buat peringatan wilayah", id: ".bencanawatch lokasi" },
+        { title: "Jadwal Rangkuman", description: `Aktif: ${fJadwal} — khusus mode jadwal`, id: ".bencanawatch jadwal" },
+        { title: "Status Lengkap", description: "Cek semua pengaturan + kesehatan monitor", id: ".bencanawatch status" },
+      ];
+      const text = novaBox("Bencana Watch — Atur", [
+        "Semua pengaturan ada di satu popup.",
+        "Pilih yang mau diubah — tiap pilihan",
+        "kasih penjelasan + tombol cepat lagi.",
+        "---",
+        "Atau ketik manual, contoh:",
+        ".bencanawatch mode darurat",
+      ]);
+      try {
+        await sock.sendButton(m.chat, null, text, m, {
+          buttons: [
+            { name: "single_select", buttonParamsJson: JSON.stringify({ title: "Pilih Pengaturan", sections: [{ title: "Pengaturan Bencana Watch", rows }] }) },
+          ],
+        });
+      } catch {
+        await m.reply(text + "\n\n" + rows.map((r) => `• ${r.title} → ${r.id}`).join("\n"));
+      }
+      return { handled: true };
+    }
 
     // ── set lokasi (buat peringatan wilayah) ──
     if (action === "lokasi" || action === "setlokasi" || action === "loc") {
@@ -101,7 +165,7 @@ async function handler(m, { sock }) {
         ]));
       }
       if (place.toLowerCase() === "hapus" || place.toLowerCase() === "delete") {
-        clearWatcherLocation(chatId);
+        clearWatcherLocation(targetKey);
         const alsoG = await mirrorGlobal((k) => clearWatcherLocation(k));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -110,7 +174,7 @@ async function handler(m, { sock }) {
         ]));
       }
       try {
-        const rec = await setWatcherLocation(chatId, place);
+        const rec = await setWatcherLocation(targetKey, place);
         const alsoG = await mirrorGlobal((k) => setWatcherLocation(k, place));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -131,9 +195,26 @@ async function handler(m, { sock }) {
 
     // ── set radius monitoring ──
     if (action === "radius" || action === "jarak") {
+      const rawKm0 = (m.args || [])[1];
+      if (!rawKm0) {
+        const subs0 = await getWatchersSafe();
+        const me0 = subs0[targetKey];
+        return m.reply(novaBox("Bencana Watch — Radius", [
+          me0?.city
+            ? `Radius aktif : ${me0.radius || 300} km dari ${me0.city}`
+            : "Lokasi belum di-set.",
+          "---",
+          "Radius = jarak maksimum bencana dari",
+          "lokasi kamu yang dihitung 'dekat' (dikirim",
+          "sebagai peringatan wilayah).",
+          "---",
+          me0?.city ? "Contoh : .bencanawatch radius 500" : "Set lokasi dulu: .bencanawatch lokasi Palu",
+          "Rentang : 50 - 2000 km (default 300)",
+        ]));
+      }
       try {
         const rawKm = (m.args || [])[1];
-        const rec = setWatcherRadius(chatId, rawKm);
+        const rec = setWatcherRadius(targetKey, rawKm);
         const alsoG = await mirrorGlobal((k) => setWatcherRadius(k, rawKm));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -152,23 +233,24 @@ async function handler(m, { sock }) {
       const v = (m.args || [])[1]?.toLowerCase();
       if (!v) {
         const subs0 = await getWatchersSafe();
-        const cur = subs0[chatId]?.kirim || "utama";
-        return m.reply(novaBox("Bencana Watch — Kirim", [
-          `Mode kirim aktif : ${cur.toUpperCase()}`,
+        const cur = subs0[targetKey]?.kirim || "utama";
+        const text = novaBox("Bencana Watch — Kirim", [
+          `Kirim aktif : ${cur.toUpperCase()}`,
           "---",
-          "• utama — otomatis realtime TANPA cooldown, tapi",
-          "  tiap pembaruan pusat cuma kirim 1 INFO",
-          "  TERPENTING (dekat lokasi > paling parah).",
-          "  Info lain gak dikirim — anti-spam.",
-          "• semua — semua info tetap dikirim tapi",
-          "  dikasih cooldown 10 menit per chat biar gak spam.",
+          "• UTAMA — tiap pembaruan cuma 1 info",
+          "  TERPENTING. Anti-spam (default).",
+          "• SEMUA — semua info dikirim, tapi",
+          "  ada jeda 10 menit biar gak banjir.",
           "---",
-          "Contoh : .bencanawatch kirim utama",
-          "Contoh : .bencanawatch kirim semua",
-        ]));
+          "Ketik manual: .bencanawatch kirim utama",
+        ]);
+        return replyWithButtons(text, [
+          quick("Utama — Anti Spam (Default)", ".bencanawatch kirim utama"),
+          quick("Semua — Ada Jeda 10 Mnt", ".bencanawatch kirim semua"),
+        ]);
       }
       try {
-        const rec = setWatcherKirim(chatId, v);
+        const rec = setWatcherKirim(targetKey, v);
         const alsoG = await mirrorGlobal((k) => setWatcherKirim(k, v));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -190,22 +272,23 @@ async function handler(m, { sock }) {
       const rest = (m.args || []).slice(1).join(" ").trim().toLowerCase();
       if (!rest) {
         const subs0 = await getWatchersSafe();
-        const cur = subs0[chatId]?.jenis;
-        return m.reply(novaBox("Bencana Watch — Jenis", [
-          `Filter aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ") : "semua jenis"}`,
+        const cur = subs0[targetKey]?.jenis;
+        const text = novaBox("Bencana Watch — Jenis", [
+          `Jenis aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ") : "semua jenis"}`,
           "---",
           "Pilihan : " + BENCANA_JENIS.join(", "),
-          "Contoh  : .bencanawatch jenis gempa",
-          `Contoh  : .bencanawatch jenis gempa, banjir`,
-          "Reset   : .bencanawatch jenis semua",
           "---",
-          "Jenis yang gak dipilih gak dikirim, baik",
-          "realtime maupun di rangkuman jadwal.",
-        ]));
+          "Ketik manual: .bencanawatch jenis gempa",
+        ]);
+        return replyWithButtons(text, [
+          quick("Semua Jenis — Default", ".bencanawatch jenis semua"),
+          quick("Gempa Saja", ".bencanawatch jenis gempa"),
+          quick("Gempa + Banjir", ".bencanawatch jenis gempa, banjir"),
+        ]);
       }
       try {
         if (rest === "semua" || rest === "all" || rest === "reset") {
-          setWatcherJenis(chatId, []);
+          setWatcherJenis(targetKey, []);
           const alsoG = await mirrorGlobal((k) => setWatcherJenis(k, []));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -225,7 +308,7 @@ async function handler(m, { sock }) {
         const kinds = rest.split(/[\s,]+/).map((k) => alias[k]).filter(Boolean);
         const invalid = rest.split(/[\s,]+/).filter((k) => !alias[k]);
         if (invalid.length) throw new Error(`Jenis tidak dikenal: ${invalid.join(", ")}. Pilihan: ${BENCANA_JENIS.join(", ")}`);
-        setWatcherJenis(chatId, kinds);
+        setWatcherJenis(targetKey, kinds);
         const alsoG = await mirrorGlobal((k) => setWatcherJenis(k, kinds));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -246,26 +329,26 @@ async function handler(m, { sock }) {
       const rest = (m.args || []).slice(1).join(" ").trim().toLowerCase();
       if (!rest) {
         const subs0 = await getWatchersSafe();
-        const cur = subs0[chatId]?.sumber;
-        return m.reply(novaBox("Bencana Watch — Sumber", [
-          `Filter aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ").toUpperCase() : "semua sumber"}`,
+        const cur = subs0[targetKey]?.sumber;
+        const text = novaBox("Bencana Watch — Sumber", [
+          `Sumber aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ").toUpperCase() : "semua"}`,
           "---",
-          "Pilihan : " + BENCANA_SUMBER.join(", ").toUpperCase(),
-          "• BMKG  — gempa Indonesia M 5.0+",
-          "• USGS  — gempa global M 6.0+",
-          "• GDACS  — bencana dunia level SIAGA/AWAS",
+          "• BMKG — gempa Indonesia M 5.0+",
+          "• USGS — gempa global M 6.0+",
+          "• GDACS — bencana dunia SIAGA/AWAS",
           "---",
-          "Contoh  : .bencanawatch sumber bmkg",
-          "Contoh  : .bencanawatch sumber bmkg, gdacs",
-          "Reset   : .bencanawatch sumber semua",
-          "---",
-          "Sumber yang gak dipilih gak dikirim, baik",
-          "realtime maupun di rangkuman jadwal.",
-        ]));
+          "Ketik manual: .bencanawatch sumber bmkg",
+        ]);
+        return replyWithButtons(text, [
+          quick("Semua Sumber — Default", ".bencanawatch sumber semua"),
+          quick("Indonesia Saja — BMKG", ".bencanawatch sumber bmkg"),
+          quick("BMKG + GDACS", ".bencanawatch sumber bmkg, gdacs"),
+          quick("Internasional Saja", ".bencanawatch sumber usgs, gdacs"),
+        ]);
       }
       try {
         if (rest === "semua" || rest === "all" || rest === "reset") {
-          setWatcherSumber(chatId, []);
+          setWatcherSumber(targetKey, []);
           const alsoG = await mirrorGlobal((k) => setWatcherSumber(k, []));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -276,7 +359,7 @@ async function handler(m, { sock }) {
         const sources = [...new Set(rest.split(/[\s,]+/).filter(Boolean))];
         const bad = sources.filter((k) => !BENCANA_SUMBER.includes(k));
         if (bad.length) throw new Error(`Sumber tidak dikenal: ${bad.join(", ")}. Pilihan: ${BENCANA_SUMBER.join(", ")} (atau 'semua')`);
-        setWatcherSumber(chatId, sources);
+        setWatcherSumber(targetKey, sources);
         const alsoG = await mirrorGlobal((k) => setWatcherSumber(k, sources));
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
@@ -297,21 +380,28 @@ async function handler(m, { sock }) {
     if (action === "mode") {
       const mode = (m.args || [])[1]?.toLowerCase();
       if (!mode) {
-        return m.reply(novaBox("Bencana Watch — Mode", [
-          "3 mode pengiriman alert:",
+        const subs0 = await getWatchersSafe();
+        const cur = (subs0[targetKey]?.mode || "otomatis").toUpperCase();
+        const text = novaBox("Bencana Watch — Mode", [
+          `Mode aktif : ${cur}`,
           "---",
-          "• otomatis — semua info bencana baru dikirim",
-          "  langsung (default)",
-          "• jadwal — dikumpulkan, dikirim rangkuman",
-          "  di jam yang di-set (lihat .bencanawatch jadwal)",
-          "• darurat — hanya bencana dekat lokasi kamu",
-          "  atau bencana besar (gempa M 6.5+, AWAS)",
+          "• OTOMATIS — semua bencana baru langsung",
+          "  dikirim (paling gampang, default)",
+          "• JADWAL — dikumpulkan, dikirim rangkuman",
+          "  di jam yang kamu pilih",
+          "• DARURAT — cuma bencana dekat lokasi",
+          "  kamu atau bencana besar",
           "---",
-          "Contoh : .bencanawatch mode darurat",
-        ]));
+          "Ketik manual: .bencanawatch mode jadwal",
+        ]);
+        return replyWithButtons(text, [
+          quick("Otomatis — Default", ".bencanawatch mode otomatis"),
+          quick("Jadwal — Rangkuman", ".bencanawatch mode jadwal"),
+          quick("Darurat — Penting Saja", ".bencanawatch mode darurat"),
+        ]);
       }
       try {
-        const rec = setWatcherMode(chatId, mode);
+        const rec = setWatcherMode(targetKey, mode);
         const alsoG = await mirrorGlobal((k) => setWatcherMode(k, mode));
         await m.react("🐣");
         const expl = {
@@ -337,7 +427,7 @@ async function handler(m, { sock }) {
       try {
         if (sub === "add" || sub === "tambah") {
           const hhmm = (m.args || [])[2];
-          const rec = addWatcherSchedule(chatId, hhmm);
+          const rec = addWatcherSchedule(targetKey, hhmm);
           const alsoG = await mirrorGlobal((k) => addWatcherSchedule(k, hhmm));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -351,7 +441,7 @@ async function handler(m, { sock }) {
         }
         if (sub === "remove" || sub === "hapus" || sub === "del") {
           const hhmm = (m.args || [])[2];
-          const rec = removeWatcherSchedule(chatId, hhmm);
+          const rec = removeWatcherSchedule(targetKey, hhmm);
           const alsoG = await mirrorGlobal((k) => removeWatcherSchedule(k, hhmm));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -360,7 +450,7 @@ async function handler(m, { sock }) {
           ]));
         }
         if (sub === "clear" || sub === "reset") {
-          clearWatcherSchedules(chatId);
+          clearWatcherSchedules(targetKey);
           const alsoG = await mirrorGlobal((k) => clearWatcherSchedules(k));
           await m.react("🐣");
           return m.reply(novaBox("Bencana Watch", [
@@ -370,16 +460,24 @@ async function handler(m, { sock }) {
         }
         // list / default
         const subs = await getWatchersSafe();
-        const me = subs[chatId];
+        const me = subs[targetKey];
         const scheds = Array.isArray(me?.schedules) ? me.schedules : [];
-        return m.reply(novaBox("Bencana Watch — Jadwal", [
-          `Jadwal rangkuman: ${scheds.length ? scheds.join(", ") : "belum ada"}`,
-          `Mode pengiriman: ${me?.mode || "otomatis"}`,
+        const text = novaBox("Bencana Watch — Jadwal", [
+          `Jadwal : ${scheds.length ? scheds.join(", ") : "belum ada"}`,
+          `Mode   : ${me?.mode || "otomatis"}`,
           "---",
-          "Tambah : .bencanawatch jadwal add 07:00",
-          "Hapus  : .bencanawatch jadwal remove 07:00",
-          "Reset  : .bencanawatch jadwal clear",
-        ]));
+          "Rangkuman bencana dikirim di jam-jam ini",
+          "(khusus mode JADWAL). Bencana besar tetap",
+          "langsung dikirim realtime.",
+          "---",
+          "Manual : .bencanawatch jadwal add 07:00",
+        ]);
+        return replyWithButtons(text, [
+          quick("Tambah 07:00 (Pagi)", ".bencanawatch jadwal add 07:00"),
+          quick("Tambah 12:00 (Siang)", ".bencanawatch jadwal add 12:00"),
+          quick("Tambah 18:00 (Sore)", ".bencanawatch jadwal add 18:00"),
+          quick("Hapus Semua Jadwal", ".bencanawatch jadwal clear"),
+        ]);
       } catch (e) {
         await m.react("❌");
         return m.reply(novaError("Bencana Watch", e.message));
@@ -574,7 +672,7 @@ async function handler(m, { sock }) {
 
     if (action === "status" || action === "") {
       const subs = await getWatchersSafe();
-      const me = subs[chatId];
+      const me = subs[targetKey];
       const active = me
         ? `AKTIF sejak ${me.since.slice(0, 10)}`
         : "TIDAK AKTIF di chat ini";
@@ -622,6 +720,9 @@ async function handler(m, { sock }) {
       lines.push("cocok kriteria (gempa M5+/M6+, GDACS Siaga/Awas), ya");
       lines.push("emang belum ada pesan masuk — itu normal, bukan error.");
       lines.push(`Mau lihat kondisi TERKINI sekarang? Pakai: .bencana`);
+      lines.push("---");
+      lines.push("Semua pengaturan bisa diubah gampang");
+      lines.push("lewat popup tombol: .bencanawatch atur");
       return m.reply(novaBox("Bencana Watch", lines));
     }
 
@@ -629,42 +730,51 @@ async function handler(m, { sock }) {
     // panjang smallcaps yang susah dibaca) — report owner "settingan ribet,
     // tolong guide-nya yang jelas cara aktifin opsi tertentu". ──
     if (action === "guide") {
-      // Semua baris dijaga <=58 karakter biar gak kena wrapLine (>60 char
-      // bikin indentasi kebuang, lihat FEATURES.md fix 2026-09-07).
-      return m.reply(novaBox("Bencana Watch — Guide", [
-        "Semua opsi di bawah diawali .bencanawatch",
+      // Semua baris dijaga pendek biar gak kena wrap aneh.
+      return replyWithButtons(novaBox("Bencana Watch — Guide", [
+        "Semua command diawali .bencanawatch",
+        "---",
+        { sub: "Cara paling gampang" },
+        "• atur → popup SEMUA pengaturan",
+        "  (mode, sumber, jenis, lokasi, dll)",
         "---",
         { sub: "1. Aktifkan" },
-        "• on        → grup: aktif langsung",
-        "              DM: muncul pilihan tombol",
-        "• onchat    → aktif di chat ini (tanpa tombol)",
-        "• onglobal  → aktif di DM + semua grup",
-        "• offglobal → matikan mode global",
-        "• off       → matikan di chat ini",
-        "---",
-        { sub: "2. Filter (opsional)" },
-        "• sumber bmkg   → cuma gempa Indonesia",
-        "• jenis gempa   → cuma jenis tertentu",
-        "• lokasi Palu   → alert dekat lokasi kamu",
-        "• radius 500    → ubah radius wilayah (km)",
-        "---",
-        { sub: "3. Mode Kirim (opsional)" },
-        "• mode otomatis → default, langsung kirim",
-        "• mode jadwal   → dirangkum, kirim di jam set",
-        "• mode darurat  → cuma yang darurat/dekat",
-        "• jadwal add 07:00 → jam rangkuman (mode jadwal)",
-        "---",
-        { sub: "4. Cek & Matikan" },
-        "• status  → langganan + kesehatan monitor",
+        "• on → grup: aktif langsung",
+        "        DM: muncul tombol pilihan",
+        "• onglobal → DM + semua grup",
         "• off / offglobal → matikan",
         "---",
-        "Catatan: ini alert REALTIME (bencana BARU sejak",
-        "aktif), bukan daftar bencana yang lagi terjadi.",
-        "Mau kondisi TERKINI sekarang? Pakai: .bencana",
-      ]));
+        { sub: "2. Atur selera (opsional)" },
+        "• mode otomatis / jadwal / darurat",
+        "• sumber bmkg (Indonesia saja)",
+        "• jenis gempa (jenis tertentu)",
+        "• lokasi Palu (peringatan wilayah)",
+        "• radius 500 (jarak dari lokasi)",
+        "• kirim utama (anti-spam)",
+        "---",
+        { sub: "3. Cek" },
+        "• status → langganan + monitor",
+        "---",
+        "Catatan: alert REALTIME — cuma bencana",
+        "BARU sejak aktif, bukan daftar bencana",
+        "yang lagi terjadi (itu: .bencana).",
+      ]), [
+        quick("Buka Pengaturan", ".bencanawatch atur"),
+        quick("Cek Status Saya", ".bencanawatch status"),
+      ]);
     }
 
-    return m.reply(novaGuide("Bencana Watch", "Command gak dikenali. Ketik .bencanawatch guide buat lihat cara pakai lengkap step-by-step, atau .bencanawatch status buat cek langganan kamu", ".bencanawatch guide"));
+    return replyWithButtons(novaBox("Bencana Watch", [
+      "Command gak dikenali.",
+      "---",
+      "• atur   → popup semua pengaturan",
+      "• status → cek langganan kamu",
+      "• guide  → cara pakai lengkap",
+    ]), [
+      quick("Pengaturan", ".bencanawatch atur"),
+      quick("Status Saya", ".bencanawatch status"),
+      quick("Cara Pakai", ".bencanawatch guide"),
+    ]);
   } catch (err) {
     console.error("[bencanawatch]", err);
     await m.react("❌");
