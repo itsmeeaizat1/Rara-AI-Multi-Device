@@ -24,8 +24,7 @@
 
 import fs from "fs";
 import path from "path";
-import sharp from "sharp";
-import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
+import { generateWAMessageFromContent, proto } from "nova";
 import { buildCategoryButton } from "./nova-category-list.js";
 import { toSC } from "./nova-menu-style.js";
 import { logger } from "./nova-logger.js";
@@ -245,18 +244,6 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
     const rawBuffer = getThumbnailBuffer(thumbPath);
 
-    let adThumbnail = null;
-    if (rawBuffer) {
-      try {
-        adThumbnail = await sharp(rawBuffer)
-          .resize(640, 640, { fit: "cover" })
-          .jpeg({ quality: 85 })
-          .toBuffer();
-      } catch (e) {
-        console.error("[nova-menu-card] Gagal proses thumbnail:", e.message);
-      }
-    }
-
     const nativeButtons = buildNativeButtons(buttons);
 
     // sourceUrl WAJIB URL https valid — link rusak bikin WA gak ngerender
@@ -271,18 +258,18 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     };
     const sourceUrl = (channelLinkOk && saluranLink) || (urlOk(website) && website) || "https://www.whatsapp.com/";
 
-    // Baris bawah kiri card = logo kecil (auto dari thumbnail) + NAMA BOT +
-    // VERSI BOT.
+    // Baris bawah kiri card = NAMA BOT + VERSI + MODE (prototype Elaina V3)
     const botName = title || config.bot?.name || "Nova AI";
     const botVersion = config.bot?.version || "";
+    const botMode = (config.mode === "self" ? "SELF" : "PUBLIC");
     const externalAdReply = {
-      title: adTitle || botName,
-      body: botVersion ? `v${botVersion}` : botName,
+      title: botName,
+      body: `v${botVersion || "1.0"} \u2022 ${botMode}`,
       mediaType: 1,
-      renderLargerThumbnail: true,
       showAdAttribution: false,
+      renderLargerThumbnail: true,
+      ...(rawBuffer ? { thumbnail: rawBuffer } : {}),
       sourceUrl,
-      ...(adThumbnail ? { thumbnail: adThumbnail } : {}),
     };
 
     if (plain) {
@@ -295,61 +282,62 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       return true;
     }
 
-    // ── REQUEST OWNER 2026-09-07: THUMBNAIL DI-DALAM CARD — PROTOTYPE
-    // ELAINA V3 (viewOnce + interactiveMessage + paduan metadata list) ──
-    // Banner dikirim sebagai MEDIA ATTACHMENT di header interactiveMessage
-    // (upload ke server WA via prepareWAMessageMedia) — jadi thumbnail
-    // besar muncul DI-DALAM card menu, bukan cuma link-preview.
-    // ContextInfo pakai paduan metadata list Elaina: forwardingScore 999 +
-    // isForwarded + forwardedNewsletterMessageInfo (pill saluran) — sesuai
-    // prototype yang owner kirim.
-    let _mHeader = {
+    // ── PROTOTYPE OWNER 2026-09-07 (final): fakeQuoted vcard + contextInfo
+    // Elaina V3 — "kyknya ini kode thumbnail yg aku mau". Thumbnail dirender
+    // via externalAdReply (renderLargerThumbnail + buffer asli), pesan di-quote
+    // ke vcard kontak bot (status@broadcast) biar muncul header nama bot di
+    // atas pesan, plus metadata list Elaina: forwardingScore 9999 + isForwarded
+    // + pill newsletter + limited_time_offer (field terakhir belum ada di
+    // proto nova — di-drop diam-diam, dipasang tetap buat forward-compat).
+    const _mQuoted = {
+      key: {
+        participant: "0@s.whatsapp.net",
+        remoteJid: "status@broadcast",
+      },
+      message: {
+        contactMessage: {
+          displayName: `\u{1FAB8} ${botName}`,
+          vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${botName}\nitem1.TEL;waid=0:+0\nEND:VCARD`,
+          sendEphemeral: true,
+        },
+      },
+    };
+
+    const _mCtx = {
+      mentionedJid: m.sender ? [m.sender] : [],
+      forwardingScore: 9999,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: await resolveNewsletterJid(sock),
+        newsletterName: config.saluran?.name || botName,
+        serverMessageId: 127,
+      },
+      externalAdReply,
+      limited_time_offer: {
+        text: "Gunakan bot ini dengan bijak yak",
+        url: sourceUrl,
+        copy_code: botName,
+        expiration_time: Date.now() * 999,
+      },
+    };
+
+    // header TANPA media attachment — banner dihandle externalAdReply di atas
+    const _mHeader = {
       title: "",
       hasMediaAttachment: false,
-    };
-    if (rawBuffer) {
-      try {
-        const media = await prepareWAMessageMedia(
-          { image: adThumbnail || rawBuffer },
-          { upload: sock.waUploadToServer }
-        );
-        if (media?.imageMessage) {
-          _mHeader = {
-            title: "",
-            hasMediaAttachment: true,
-            imageMessage: media.imageMessage,
-          };
-        }
-      } catch (e) {
-        console.error("[nova-menu-card] Upload banner header gagal, fallback link-preview:", e.message);
-      }
-    }
-
-    const botName0 = title || config.bot?.name || "Nova AI";
-
-    // REQUEST OWNER 2026-09-07: TANPA badge forward & tanpa pill saluran —
-    // "gak mau ada forwarding atau tulisan diteruskan berkali-kali di atasnya".
-    // forwardingScore 0 + isForwarded false + forwardedNewsletterMessageInfo
-    // DIHAPUS → card tampil bersih polos, cuma banner + isi + tombol.
-    const _mContextInfo = {
-      mentionedJid: m.sender ? [m.sender] : [],
-      forwardingScore: 0,
-      isForwarded: false,
-      // fallback banner kalau upload header gagal — tetep ada preview
-      ...(!_mHeader.hasMediaAttachment && adThumbnail ? { externalAdReply } : {}),
     };
 
     const interactiveObj = {
       body: proto.Message.InteractiveMessage.Body.fromObject({ text }),
       footer: proto.Message.InteractiveMessage.Footer.fromObject({
-        text: footer || `\u2726 ${botName0}`,
+        text: footer || `\u2726 ${botName}`,
       }),
       nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         messageParamsJson: "",
         buttons: nativeButtons,
       }),
       header: proto.Message.InteractiveMessage.Header.fromObject(_mHeader),
-      contextInfo: _mContextInfo,
+      contextInfo: _mCtx,
     };
 
     const msg = generateWAMessageFromContent(
@@ -365,7 +353,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
           },
         },
       },
-      { userJid: m.sender, quoted: m },
+      { userJid: m.sender, quoted: _mQuoted },
     );
 
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
