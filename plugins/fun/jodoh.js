@@ -174,7 +174,11 @@ async function handler(m, { sock }) {
     `│ • ${label1} ${name1}`,
     "│ • ❤️",
     `│ • ${label2} ${name2}`,
-    `│ • 💯 Kecocokan : ${progressBar} ${compatibility}%`,
+    // FIX OWNER 2026-09-07: bar kecocokan dikasih jarak biar gak dempet
+    `│ • 💯 Kecocokan :`,
+    `│`,
+    `│ ${progressBar} ${compatibility}%`,
+    `│`,
     `│ • ${compatibilityEmoji(compatibility)} Status : ${compatibilityText(compatibility)}`,
   ];
   if (usedRegistration) {

@@ -62,7 +62,8 @@ async function handler(m, { sock }) {
 
     await m.reply(`${emblem} *${clan.name}*\n` +
         `${rank} · Level ${clan.level || 1}\n\n` +
-        `EXP  ${bar}\n\n` +
+        // FIX OWNER 2026-09-07: bar EXP dikasih jarak biar gak dempet
+        `EXP\n\n${bar}\n\n` +
         `┌ 👑 Leader · @${clan.leader.split('@')[0]}\n` +
         `├ 👥 Members · ${clan.members.length}/50\n` +
         `├ 🔓 Status · ${clan.isOpen ? 'Open' : 'Closed'}\n` +

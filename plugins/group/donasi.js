@@ -266,7 +266,10 @@ export default {
         const bar = progressBar(c.raised, c.target);
         lines.push(
           `${i + 1}. ${c.shortId} - ${c.description}`,
+          ``,
+          // FIX OWNER 2026-09-07: bar progress dikasih jarak biar gak dempet
           `${bar} ${pct}%`,
+          ``,
           `Terkumpul: ${formatRupiah(c.raised)} / ${formatRupiah(c.target)}`,
           `Donatur: ${c.donations.length} orang`,
           `Ketik: *${prefix}donasi status ${c.shortId}*`,
@@ -479,6 +482,7 @@ export default {
         `Nominal: ${formatRupiah(amount)}`,
         ``,
         `${bar} ${pct}%`,
+        ``,
         `Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
         `Donatur: ${updated.donations.length} orang`,
       ];
@@ -578,6 +582,7 @@ export default {
         `Nominal per orang: ${formatRupiah(amount)}`,
         ``,
         `${bar} ${pct}%`,
+        ``,
         `Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
       ];
 
