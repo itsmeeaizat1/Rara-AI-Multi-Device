@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Werewolf — Social Deduction Game (5-15 players)
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 import {
@@ -80,7 +81,7 @@ async function handler(m, { sock, text, command }) {
       addTimer(chatId, ww);
       startGame(chatId, ww);
       for (const p of ww[chatId].player) {
-        await sock.sendMessage(p.id, { text: "🎭 *WEREWOLF ROLE*\n\nHalo @" + p.id.split("@")[0] + ", role kamu adalah *" + p.role.toUpperCase() + "* " + emoji_role(p.role) + "\n\nJangan kasih tau siapapun!", mentions: [p.id] });
+        await sock.sendMessage(p.id, { text: smallcapsText("🎭 *WEREWOLF ROLE*\n\nHalo @" + p.id.split("@")[0] + ", role kamu adalah *" + p.role.toUpperCase() + "* " + emoji_role(p.role) + "\n\nJangan kasih tau siapapun!"), mentions: [p.id] });
       }
       await m.reply(novaBox("Werewolf", [
         "Game dimulai",

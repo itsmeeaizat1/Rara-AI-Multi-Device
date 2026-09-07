@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // UNO — Multiplayer Card Game
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -88,7 +89,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const p = game.players.find(p => p.id === sender);
       if (!p) return m.reply(claraWrap("uno", "Kamu belum bergabung.", "info"));
       const hand = p.hand.map((c, i) => i + ": " + c.color + " " + c.value).join("\n");
-      await sock.sendMessage(sender, { text: "🎴 *Kartu UNO-mu:*\n\n" + hand });
+      await sock.sendMessage(sender, { text: smallcapsText("🎴 *Kartu UNO-mu:*\n\n" + hand) });
       return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "📩 *KARTU TERKIRIM!*", body: "Cek DM kamu — kartu sudah dikirim rahasia ke pesan pribadi." }));
     }
 

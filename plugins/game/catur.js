@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Catur — Multiplayer Chess System (28 sub-commands)
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import { claraWrap, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
@@ -332,7 +333,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
         sd[kalah] = sd[kalah] || { menang: 0, kalah: 0, seri: 0 };
         sd[menang].menang++; sd[kalah].kalah++;
         delete loadCatur()[chatId]; saveCaturData(loadCatur()); saveSkor(sd);
-        sock.sendMessage(chatId, { text: "⏰ Waktu habis! @" + kalah.split("@")[0] + " kalah. Pemenang: @" + menang.split("@")[0], mentions: [kalah, menang] });
+        sock.sendMessage(chatId, { text: smallcapsText("⏰ Waktu habis! @" + kalah.split("@")[0] + " kalah. Pemenang: @" + menang.split("@")[0]), mentions: [kalah, menang] });
       }, 3 * 60 * 1000);
       return m.reply(novaGameBox({ title: "catur", icon: "♟️", body: "⏱️ Timer dinyalakan — 3 menit per giliran, AFK = batal." }));
     }
@@ -373,7 +374,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
         const g = loadCatur()[chatId];
         if (!g) return;
         const curr = g.turn === "white" ? g.player1 : g.player2;
-        sock.sendMessage(chatId, { text: "⏳ @" + curr.split("@")[0] + ", giliranmu belum dimainkan 3 menit.", mentions: [curr] });
+        sock.sendMessage(chatId, { text: smallcapsText("⏳ @" + curr.split("@")[0] + ", giliranmu belum dimainkan 3 menit."), mentions: [curr] });
       }, 3 * 60 * 1000);
       return m.reply(novaGameBox({ title: "catur", icon: "♟️", body: "🔔 Notif giliran dinyalakan — gak akan ada lagi yang AFK diam-diam." }));
     }

@@ -6,6 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { novaBox, toSC } from "../../src/lib/nova-menu-style.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import { novaGameBox, gameCTA, pickFlavor, renderProgressBar, renderSlotBoard } from "../../src/lib/nova-games.js";
 import { normalizeAnswer, getSimilarity, isReplyToGame } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
@@ -322,7 +323,7 @@ async function handler(m, { sock }) {
           // langsung ke progress bar — kelihatan dempet/berantakan.
           // Fix final (revisi owner): pakai JARAK BARIS KOSONG biar
           // progress bar keliatan jelas terpisah dan rapi.
-          text: `⏰ *Sisa 30 detik!*\n\n📊 Progres:\n${renderProgressBar(cur.foundCount, cur.totalAnswers)}\n\nSemangat, buruan jawab yang belum kebuka! 💪`,
+          text: smallcapsText(`⏰ *Sisa 30 detik!*\n\n📊 Progres:\n${renderProgressBar(cur.foundCount, cur.totalAnswers)}\n\nSemangat, buruan jawab yang belum kebuka! 💪`),
         });
       } catch {}
     }, warnDelay);
@@ -344,7 +345,7 @@ async function handler(m, { sock }) {
           endText += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
         }
         endText += gameCTA("family100");
-        await sock.sendMessage(chatId, { text: endText });
+        await sock.sendMessage(chatId, { text: smallcapsText(endText) });
       } catch (e) {
         console.error("[family100] Timeout handler error:", e.message);
       }
@@ -406,7 +407,7 @@ async function answerHandler(m, sock) {
 
       try {
         await sock.sendMessage(chatId, {
-          text,
+          text: smallcapsText(text),
           mentions: mentionJids,
         });
       } catch (e) {
@@ -456,7 +457,7 @@ async function answerHandler(m, sock) {
       } catch {}
       try {
         await sock.sendMessage(chatId, {
-          text: replyText,
+          text: smallcapsText(replyText),
           mentions: Object.keys(session.scores),
         });
       } catch (e) {
@@ -512,7 +513,7 @@ async function answerHandler(m, sock) {
 
         try {
           await sock.sendMessage(chatId, {
-            text: winText,
+            text: smallcapsText(winText),
             mentions: Object.keys(session.scores).length > 0
               ? [entries[0][0]]
               : undefined,
