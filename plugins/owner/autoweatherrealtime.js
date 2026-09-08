@@ -10,6 +10,9 @@
 // .autoweatherrealtime notification on  → aktifkan notifikasi cuaca ke grup
 // .autoweatherrealtime notification off → matikan notifikasi cuaca
 // .autoweatherrealtime jadwal 06:30 12:00 17:00 20:00 → set jadwal notif
+// .autoweatherrealtime threshold set <key> <nilai> → ubah ambang alert ekstrem
+//   (heat/panas, cold/dingin, rain/hujan, wind/angin, storm/badai, humidityHigh/lembap,
+//    humidityLow/kering — level Waspada/Siaga/Awas diturunkan otomatis; list/reset)
 // .autoweatherrealtime alert on/off/test    → alert CUACA EKSTREM (badai petir, hujan lebat,
 //                                             angin kencang, panas ekstrem, kabut — level Waspada/Siaga/Awas
 //                                             ala EWS, cek tiap 30 mnt, bypass mode jadwal/interval)
@@ -30,14 +33,14 @@ import { boxMessage } from "../../src/lib/styler.js";
 import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/nova-weather-notify.js";
 import { resetIntervalState, resetAlertState, checkWeatherAlert } from "../../src/lib/nova-weather-realtime-scheduler.js";
-import { evaluateWeatherAlert, formatAlertMessage } from "../../src/lib/nova-weather-alert.js";
+import { evaluateWeatherAlert, formatAlertMessage, buildThresholds, THRESHOLD_BASE } from "../../src/lib/nova-weather-alert.js";
 
 const pluginConfig = {
   name: "autoweatherrealtime",
   alias: ["autoweatherrealtime", "autocuacarealtime"],
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target/test>",
+  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target/test>",
   example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
@@ -70,6 +73,7 @@ function getWRSettings(db) {
       provider: "openmeteo",      // "openmeteo" | "bmkg" | "metno" | "weatherapi" | "aggregate"
       adm4: null,                 // kode wilayah BMKG (contoh: 31.71.03.1001)
       alertEnabled: true,         // alert cuaca ekstrem (default ON ala EWS)
+      thresholds: {},             // override basis threshold alert ({ heat: 38, wind: 45, ... })
     };
   }
   if (!s.notificationMode) s.notificationMode = "jadwal";
@@ -77,6 +81,7 @@ function getWRSettings(db) {
   if (!s.provider) s.provider = "openmeteo";
   if (s.adm4 === undefined) s.adm4 = null;
   if (s.alertEnabled === undefined) s.alertEnabled = true;
+  if (!s.thresholds) s.thresholds = {};
   return s;
 }
 
@@ -141,6 +146,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Koordinat") + " : " + (settings.location?.latitude || "-") + ", " + (settings.location?.longitude || "-") + "\n" +
         "• " + toSC("Notifikasi") + " : " + (settings.notification ? "ON ✅" : "OFF ❌") + "\n" +
         "• " + toSC("Alert Ekstrem") + " : " + (settings.alertEnabled !== false ? "ON ✅" : "OFF ❌") + "\n" +
+        "• " + toSC("Threshold") + " : " + (Object.keys(settings.thresholds || {}).length ? toSC("custom ") + "(" + Object.keys(settings.thresholds).join(", ") + ")" : toSC("default")) + "\n" +
         "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
         "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
@@ -151,6 +157,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + prefix + "autoweatherrealtime notification on\n" +
         "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
         "• " + prefix + "autoweatherrealtime alert on|off\n" +
+        "• " + prefix + "autoweatherrealtime threshold list\n" +
         "• " + prefix + "autoweatherrealtime interval 2\n" +
         "• " + prefix + "autoweatherrealtime provider bmkg|openmeteo\n" +
         "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
@@ -317,6 +324,86 @@ async function handler(m, { sock, config: botConfig, db }) {
       );
     }
 
+    // ── THRESHOLD (set/list/reset — basis peringatan ekstrem) ──
+    if (action === "threshold" || action === "th" || action === "ambang") {
+      const sub = (args.shift() || "list").toLowerCase();
+      const KEY_ALIAS = {
+        heat: "heat", panas: "heat",
+        cold: "cold", dingin: "cold",
+        rain: "rain", hujan: "rain",
+        wind: "wind", angin: "wind",
+        storm: "storm", badai: "storm",
+        humidityhigh: "humidityHigh", "lembap-tinggi": "humidityHigh", lembap: "humidityHigh",
+        humiditylow: "humidityLow", kering: "humidityLow",
+      };
+
+      if (sub === "set") {
+        const key = KEY_ALIAS[(args.shift() || "").toLowerCase()];
+        const val = Number(args.shift());
+        const base = key ? THRESHOLD_BASE[key] : null;
+        if (!key || !base || !Number.isFinite(val) || val < base.min || val > base.max) {
+          try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+          let list = "";
+          for (const [k, b] of Object.entries(THRESHOLD_BASE)) {
+            list += "• " + prefix + "autoweatherrealtime threshold set " + k + " <" + b.min + "-" + b.max + " " + b.unit + "> — " + toSC(b.desc.split("(")[0].trim()) + "\n";
+          }
+          return m.reply(
+            boxMessage("◆ " + "Weather Realtime" + " ◆",
+            "⚠ " + toSC("Format threshold — nilai di luar range ditolak") + ":\n" + list +
+            "• " + prefix + "autoweatherrealtime threshold reset\n" 
+            )
+          );
+        }
+        settings.thresholds = { ...(settings.thresholds || {}), [key]: val };
+        saveWRSettings(db2, settings);
+        resetAlertState();
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Threshold disimpan") + ": " + key + " = " + val + " " + base.unit + "\n" +
+          "• " + toSC(base.desc) + "\n" +
+          "• " + toSC("Level diturunkan otomatis Waspada/Siaga/Awas") + "\n" +
+          "• " + toSC("Dedup alert direset — evaluasi ulang pakai threshold baru") + "\n" 
+          )
+        );
+      }
+
+      if (sub === "reset") {
+        settings.thresholds = {};
+        saveWRSettings(db2, settings);
+        resetAlertState();
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Threshold kembali ke default") + "\n" 
+          )
+        );
+      }
+
+      // list (default) — tampilkan nilai sekarang (custom atau default)
+      const th = buildThresholds(settings.thresholds || {});
+      let list = "";
+      for (const [k, b] of Object.entries(THRESHOLD_BASE)) {
+        const cur = (settings.thresholds || {})[k];
+        const mark = cur !== undefined ? " [custom]" : "";
+        if (k === "heat") list += "• heat/panas: " + th.heatWaspada + "/" + th.heatSiaga + "/" + th.heatAwas + " " + b.unit + mark + "\n";
+        else if (k === "cold") list += "• cold/dingin: " + th.coldWaspada + "/" + th.coldSiaga + "/" + th.coldAwas + " " + b.unit + mark + "\n";
+        else if (k === "rain") list += "• rain/hujan: " + th.precipWaspada + "/" + th.precipSiaga + "/" + th.precipAwas + " " + b.unit + mark + "\n";
+        else if (k === "wind") list += "• wind/angin: " + th.windWaspada + "/" + th.windSiaga + "/" + th.windAwas + " " + b.unit + mark + "\n";
+        else if (k === "storm") list += "• storm/badai: " + th.windWaspada + "/" + th.windSiaga + "/" + th.windAwas + " " + b.unit + mark + "\n";
+        else if (k === "humidityHigh") list += "• humidityHigh/lembap: " + th.humidityHigh + b.unit + mark + "\n";
+        else if (k === "humidityLow") list += "• humidityLow/kering: " + th.humidityLow + b.unit + mark + "\n";
+      }
+      try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+      return m.reply(
+        boxMessage("◆ " + "Weather Realtime Threshold" + " ◆",
+        toSC("Threshold alert ekstrem (Waspada/Siaga/Awas)") + ":\n" + list + "\n" +
+        "📌 " + toSC("Ubah") + ": " + prefix + "autoweatherrealtime threshold set heat 38\n" +
+        "📌 " + toSC("Reset") + ": " + prefix + "autoweatherrealtime threshold reset\n" 
+        )
+      );
+    }
+
     // ── ALERT EKSTREM (on/off/test) ──
     if (action === "alert") {
       const sub = (args.shift() || "").toLowerCase();
@@ -338,7 +425,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         // Evaluasi live data sekarang + tampilkan hasil (walau gak ekstrem)
         try {
           const data = await fetchWeatherForSettings(settings);
-          const alert = evaluateWeatherAlert(data);
+          const alert = evaluateWeatherAlert(data, buildThresholds(settings.thresholds));
           try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
           if (!alert) {
             return m.reply(
@@ -582,6 +669,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       "• " + prefix + "autoweatherrealtime notification on/off\n" +
       "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
       "• " + prefix + "autoweatherrealtime alert on|off|test\n" +
+      "• " + prefix + "autoweatherrealtime threshold set heat 38\n" +
       "• " + prefix + "autoweatherrealtime interval 2\n" +
       "• " + prefix + "autoweatherrealtime provider bmkg\n" +
       "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +

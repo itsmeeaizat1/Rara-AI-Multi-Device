@@ -14,7 +14,7 @@ import {
   formatWeatherUpdate,
   conditionKey,
 } from "./nova-weather-notify.js";
-import { evaluateWeatherAlert, formatAlertMessage } from "./nova-weather-alert.js";
+import { evaluateWeatherAlert, formatAlertMessage, buildThresholds } from "./nova-weather-alert.js";
 
 let schedulerInterval = null;
 let lastSent = {}; // mode jadwal: { "pagi": "2026-09-02", ... } per key per day
@@ -107,7 +107,7 @@ export async function checkWeatherAlert(sock, { force = false } = {}) {
 
   try {
     const data = await fetchWeatherForSettings(settings);
-    const alert = evaluateWeatherAlert(data);
+    const alert = evaluateWeatherAlert(data, buildThresholds(settings.thresholds));
     if (!alert) {
       alertState.lastKey = ""; // kondisi mereda → reset dedup biar siap alert lagi
       return { ok: true, alert: null };
