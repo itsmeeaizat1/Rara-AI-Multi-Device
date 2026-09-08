@@ -195,8 +195,16 @@ export function ensureRpg(m, pushName = "Player") {
     const db = getDatabase();
     let user = db.getUser(m.sender || "");
     if (!user) { user = db.setUser(m.sender || "", { name: pushName }); }
-    if (!user.rpg || typeof user.rpg !== "object" || Object.keys(user.rpg).length === 0) {
-      const newRpg = { ...DEFAULT_RPG, createdAt: Date.now(), lastActive: Date.now() };
+    // FIX (8 Sep 2026, nemu pas e2e animasi kerja): setUser() selalu bikin stub
+    // rpg dari whitelist (hp/atk/job/jobLevel...) yang NON-KOSONG tapi TANPA
+    // jobExp/jobExpNext — cek lama "Object.keys(rpg).length === 0" gak pernah
+    // ke-trigger → jobExp jadi NaN → level-up job gak pernah jalan untuk user
+    // auto-create. Sekarang stub rpg juga di-heal: DEFAULT_RPG mengisi field
+    // yang hilang, nilai existing dipertahankan.
+    const stubRpg = user.rpg && typeof user.rpg === "object"
+      && (user.rpg.jobExpNext === undefined || user.rpg.jobExp === undefined);
+    if (!user.rpg || typeof user.rpg !== "object" || Object.keys(user.rpg).length === 0 || stubRpg) {
+      const newRpg = { ...DEFAULT_RPG, ...(user.rpg || {}), createdAt: Date.now(), lastActive: Date.now() };
       db.setUser(m.sender || "", { rpg: newRpg });
       user = db.getUser(m.sender || "");
     }
