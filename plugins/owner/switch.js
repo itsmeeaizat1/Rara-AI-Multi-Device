@@ -19,6 +19,7 @@ import { enableRenewalReminder, disableRenewalReminder, getRenewalStatus } from 
 import { enableAutoReport, disableAutoReport, getReportStatus } from '../../src/lib/nova-auto-report.js'
 import { enableAutoBirthday, disableAutoBirthday, getBirthdayStatus } from '../../src/lib/nova-auto-birthday.js'
 import { getBmkgStatus, updateBmkgSettings, startBmkgJobs, stopBmkgJobs } from '../../src/lib/nova-bmkg-scheduler.js'
+import { getBencanaAutoEnabled, setBencanaAutoEnabled } from '../../src/lib/nova-bencana.js'
 import { getSettings as getCleanSettings, updateSettings as updateCleanSettings, startCleaner, stopCleaner } from '../../src/lib/nova-cache-cleaner.js'
 
 const pluginConfig = {
@@ -214,6 +215,15 @@ const AUTO_REGISTRY = {
     // argumen → "Cannot read properties of undefined (reading 'enabled')".
     toggle: (on) => { const s = updateBmkgSettings((cur) => ({ ...cur, enabled: on })); on ? startBmkgJobs(s) : stopBmkgJobs() },
   },
+  bencanawatch: {
+    label: "Auto Alert Bencana (Bencanawatch)",
+    // Status = flag global auto-alert (bukan jumlah subscriber). Kalau ON tapi
+    // monitor gak jalan, berarti belum ada subscriber — itu bukan error.
+    getStatus: () => { try { return getBencanaAutoEnabled() } catch { return true } },
+    // OFF = polling dipause via stopBencanaMonitor — subscriber, lokasi, radius,
+    // mode & jadwal TETAP tersimpan; ON balik → syncBencanaMonitor nyalain lagi.
+    toggle: (on) => { setBencanaAutoEnabled(on) },
+  },
   autoweatherrealtime: {
     label: "Auto Notifikasi Cuaca Realtime",
     getStatus: () => { try { return getDatabase().setting("weatherRealtime")?.notification ?? false } catch { return false } },
@@ -289,7 +299,7 @@ const AUTO_ALIASES = {
   readsw: "autoreadsw", reactsw: "autoreactsw", backup: "autobackup",
   health: "autohealth", reengage: "autoreengage", refill: "autorefill",
   renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
-  bmkg: "autobmkg", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
+  bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
@@ -308,8 +318,8 @@ const AUTO_CATEGORIES = {
     "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
   ],
   "Info & Utilitas": [
-    "autobmkg", "autoweatherrealtime", "autosholat", "autoforward", "autosambut",
-    "automod", "autobroadcastchannel"
+    "bencanawatch", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
+    "autosambut", "automod", "autobroadcastchannel"
   ]
 }
 
