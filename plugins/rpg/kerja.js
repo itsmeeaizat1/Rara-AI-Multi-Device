@@ -3,9 +3,10 @@
 
 import {
   ensureRpg, addExp, addGold, addJobExp, useEnergy,
-  checkCooldown, setCooldown, formatTime, JOB_DB
+  checkCooldown, setCooldown, formatTime, JOB_DB,
+  addCash, spendCash, formatRp
 } from "../../src/lib/nova-rpg-service.js";
-import { animProfesi, PROFESI_ANIMATIONS } from "../../src/lib/nova-rpg-profesi.js";
+import { animProfesi, PROFESI_ANIMATIONS, gajianCash } from "../../src/lib/nova-rpg-profesi.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
@@ -149,6 +150,10 @@ async function handler(m, { sock }) {
 
     addExp(m, expGain);
     addGold(m, goldGain);
+    // GAJIAN UANG ASLI — Rp dari flavor gajian profesi dibayar jadi cash
+    // (mata uang RPG terpisah: gold = batang emas, EXP = pengalaman)
+    const cashGain = gajianCash(chosenJob);
+    if (cashGain > 0) addCash(m, cashGain);
     const { leveledUp } = addJobExp(m, jobExpGain);
     setCooldown(m, "lastWork", WORK_COOLDOWN);
 
@@ -164,6 +169,7 @@ async function handler(m, { sock }) {
       "",
       `✨ EXP : +${expGain}`,
       `💰 Gold : +${goldGain}`,
+      ...(cashGain > 0 ? [`💵 Uang : ${formatRp(cashGain)}`] : []),
       `📖 Job EXP : +${jobExpGain}`,
       ...(bonusFlavor ? [`📦 Bonus : ${bonusFlavor}`] : []),
       ...(leveledUp ? ["", ...prof.naikLevel] : []),
