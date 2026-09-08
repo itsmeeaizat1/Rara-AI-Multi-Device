@@ -3,15 +3,15 @@
 
 // Konfigurasi Cuaca (untuk info section menu + .cuaca)
 // Provider: open-meteo (gratis, tanpa API key) atau accuweather (butuh key)
-// Lokasi default: Serang, Banten
+// Lokasi default: Jakarta (request owner 8 Sep 2026: zona default jakarta aja pas pairing pertama)
 export const weather = {
   provider: "open-meteo",
   apiKey: "", // Via apikey.js jika berbayar
   timezone: "Asia/Jakarta",
   location: {
-    name: "Serang",
-    latitude: -6.1200,
-    longitude: 106.1443,
+    name: "Jakarta",
+    latitude: -6.2088,
+    longitude: 106.8456,
   },
 };
 
@@ -21,9 +21,9 @@ export const weatherScheduler = {
   enabled: false,
   timezone: "Asia/Jakarta",
   location: {
-    name: "Serang",
-    latitude: -6.1200,
-    longitude: 106.1443,
+    name: "Jakarta",
+    latitude: -6.2088,
+    longitude: 106.8456,
   },
   schedules: [
     { key: "pagi", label: "Pagi", hour: 6, minute: 30 },
