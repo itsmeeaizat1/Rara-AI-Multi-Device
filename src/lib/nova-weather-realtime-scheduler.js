@@ -25,6 +25,8 @@ let alertState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0 };
 const ALERT_CHECK_MS = 30 * 60_000;
 const ALERT_DEDUP_MS = 3 * 3600_000;
 
+import { resolveAutoTargets, getAutoTargetConfig } from "./nova-auto-target.js";
+
 // Normalisasi settings lama → field baru (backward compat)
 function normalizeSettings(settings) {
   const hasSchedules = Array.isArray(settings.schedules) && settings.schedules.length > 0;
@@ -71,7 +73,7 @@ export function stopWeatherRealtimeScheduler() {
 export async function sendWeatherNow(sock, { force = false } = {}) {
   const db = getDatabase();
   const raw = db.setting("weatherRealtime");
-  if (!raw || !raw.notification || !raw.target) return { ok: false, reason: "off" };
+  if (!raw || !raw.notification || (!raw.target && !getAutoTargetConfig("autoweatherrealtime"))) return { ok: false, reason: "off" };
   const settings = normalizeSettings(raw);
 
   try {
@@ -89,10 +91,18 @@ export async function sendWeatherNow(sock, { force = false } = {}) {
       : (settings.location?.name || "Lokasi");
     const message = formatWeatherUpdate(data, name, settings.intervalHours);
 
-    await sock.sendMessage(settings.target, { text: message });
+    // Target terpusat (.switch auto autoweatherrealtime set) — kalau ada
+    // config, override target tunggal lama: dm / grup terpilih / semua grup.
+    let targets = [settings.target].filter(Boolean);
+    if (getAutoTargetConfig("autoweatherrealtime")) {
+      targets = (await resolveAutoTargets(sock, "autoweatherrealtime")).jids;
+    }
+    for (const t of targets) {
+      await sock.sendMessage(t, { text: message });
+    }
     intervalState.lastSentMs = Date.now();
     intervalState.lastKey = key;
-    console.log("[weather-realtime] ✅ Sent to", settings.target);
+    console.log("[weather-realtime] ✅ Sent to", targets.length, "target(s)");
     return { ok: true };
   } catch (e) {
     console.error("[weather-realtime] Send error:", e.message);
@@ -139,7 +149,7 @@ export async function checkWeatherAlert(sock, { force = false } = {}) {
 export async function checkAndSend(sock) {
   const db = getDatabase();
   const raw = db.setting("weatherRealtime");
-  if (!raw || !raw.notification || !raw.target) return;
+  if (!raw || !raw.notification || (!raw.target && !getAutoTargetConfig("autoweatherrealtime"))) return;
   const settings = normalizeSettings(raw);
   const now = new Date();
 

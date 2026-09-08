@@ -20,6 +20,8 @@ let bmkgJobs = [];
 // SETTINGS
 // ────────────────────────────────────────────────────────────────────────────
 
+import { resolveAutoTargets, getAutoTargetConfig } from "./nova-auto-target.js";
+
 function getBmkgSettings(db) {
   const stored = db.setting("bmkgScheduler") || {};
   return {
@@ -124,7 +126,15 @@ async function sendBmkgUpdate(label) {
   const settings = getBmkgSettings(db);
 
   if (!settings.enabled) return;
-  if (!settings.targets || settings.targets.length === 0) return;
+
+  // Target terpusat (.switch auto autobmkg set) — kalau ada config,
+  // override settings.targets lama; mode "semua" = semua grup bot.
+  let targetList = settings.targets || [];
+  if (getAutoTargetConfig("autobmkg")) {
+    const t = await resolveAutoTargets(sock, "autobmkg");
+    targetList = t.jids;
+  }
+  if (!targetList.length) return;
 
   try {
     logger.info("BMKG", "Broadcast gempa [" + label + "] dimulai...");
@@ -160,7 +170,7 @@ async function sendBmkgUpdate(label) {
     }
 
     // Kirim ke semua target
-    for (const target of settings.targets) {
+    for (const target of targetList) {
       try {
         if (shakemapUrl && settings.sendShakemap) {
           // Kirim gambar shakemap + caption
