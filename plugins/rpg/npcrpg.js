@@ -7,7 +7,7 @@ const pluginConfig = {
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 const NPCS = {
-  penjaga: "⚔️ Penjaga: Dunia ini berbahaya... simpan koinmu di bank! Gunakan .bankrpg untuk menyimpan.",
+  penjaga: "⚔️ Penjaga: Dunia ini berbahaya... simpan goldmu di bank! Gunakan .bankrpg untuk menyimpan.",
   penjual: "🛒 Penjual: Aku punya ramuan langka, coba .shoprpg!",
   tetua: "👴 Tetua: Hanya yang berani yang bisa menaklukkan .finaltrialrpg.",
   pandai: "🧙 Pandai Besi: Bawa material ke .blacksmith untuk meningkatkan senjata!",

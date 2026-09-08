@@ -10,7 +10,7 @@ import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "transfergold",
-  alias: ["transfergold", "tfgold", "tfkoinrpg"],
+  alias: ["transfergold", "tfgold", "tfgoldrpg"],
   category: "rpg",
   description: "Transfer gold RPG ke player lain",
   usage: ".tfgold <jumlah> @tag",

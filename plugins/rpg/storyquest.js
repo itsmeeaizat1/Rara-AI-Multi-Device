@@ -28,7 +28,7 @@ const STORY = [
 ];
 
 const NPCS = {
-  penjaga: "⚔️ Penjaga: Dunia ini berbahaya... simpan koinmu di bank! Ketik .bankrpg",
+  penjaga: "⚔️ Penjaga: Dunia ini berbahaya... simpan goldmu di bank! Ketik .bankrpg",
   penjual: "🛒 Penjual: Aku punya ramuan langka, coba .shoprpg!",
   penyihir: "🧙 Penyihir: Pelajari skill baru dengan .learnskill, dan lihat treemu dengan .skilltree",
   tavern: "🍺 Tavern Keeper: Butuh istirahat? Ketik .heal untuk pulihkan HP",
