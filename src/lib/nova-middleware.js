@@ -172,8 +172,7 @@ function checkAccessBlocked(m) {
       message:
         `「 ✦ Aᴋsᴇs Dɪᴛᴏʟᴀᴋ ✦ 」\n` +
         `Nᴏᴍᴏʀ ᴋᴀᴍᴜ ᴅɪʙʟᴏᴋɪʀ ᴅᴀʀɪ ʙᴏᴛ ɪɴɪ\n` +
-        `Hᴜʙᴜɴɢɪ ᴏᴡɴᴇʀ ᴜɴᴛᴜᴋ ɪɴꜰᴏ ʟᴇʙɪʜ ʟᴀɴᴊᴜᴛ\n` +
-        ,
+        `Hᴜʙᴜɴɢɪ ᴏᴡɴᴇʀ ᴜɴᴛᴜᴋ ɪɴꜰᴏ ʟᴇʙɪʜ ʟᴀɴᴊᴜᴛ\n`,
     };
   }
 
@@ -186,8 +185,7 @@ function checkAccessBlocked(m) {
         message:
           `「 ✦ Mᴏᴅᴇ Wʜɪᴛᴇʟɪsᴛ ✦ 」\n` +
           `Bᴏᴛ ʜᴀɴʏᴀ ᴍᴇʀᴇsᴘᴏɴ ɴᴏᴍᴏʀ ᴛᴇʀᴅᴀꜰᴛᴀʀ\n` +
-          `Nᴏᴍᴏʀ ᴋᴀᴍᴜ ʙᴇʟᴜᴍ ᴛᴇʀᴅᴀꜰᴛᴀʀ ᴏʟᴇʜ ᴏᴡɴᴇʀ\n` +
-          ,
+          `Nᴏᴍᴏʀ ᴋᴀᴍᴜ ʙᴇʟᴜᴍ ᴛᴇʀᴅᴀꜰᴛᴀʀ ᴏʟᴇʜ ᴏᴡɴᴇʀ\n`,
       };
     }
   }
@@ -230,8 +228,7 @@ function checkMode(m, getActiveJadibots) {
         `「 ✦ AFK ✦ 」\n` +
         `Bot sedang AFK\n` +
         `Alasan: ${botAfk.reason || "AFK"}\n` +
-        `Sejak: ${duration} yang lalu\n` +
-        ,
+        `Sejak: ${duration} yang lalu\n`,
     };
   }
 
@@ -245,8 +242,7 @@ function checkMode(m, getActiveJadibots) {
         `「 ✦ Mᴏᴅᴇ Gʀᴜᴘ Oɴʟʏ ✦ 」\n` +
         `Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ɢʀᴜᴘ sᴀᴊᴀ\n` +
         `Sɪʟᴀᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ʙᴏᴛ ᴅɪ ᴅᴀʟᴀᴍ ɢʀᴜᴘ\n` +
-        `Pʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
-        ,
+        `Pʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n`,
     };
   }
   if (onlyPc && m.isGroup && !m.isOwner) {
@@ -257,8 +253,7 @@ function checkMode(m, getActiveJadibots) {
         `「 ✦ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ Oɴʟʏ ✦ 」\n` +
         `Bᴏᴛ sᴇᴅᴀɴɢ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ sᴀᴊᴀ\n` +
         `Sɪʟᴀᴋᴀɴ ᴄʜᴀᴛ ʙᴏᴛ ʟᴇᴡᴀᴛ ᴘᴇsᴀɴ ᴘʀɪʙᴀᴅɪ\n` +
-        `Aᴋsᴇs ᴅɪ ɢʀᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n` +
-        ,
+        `Aᴋsᴇs ᴅɪ ɢʀᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ sᴇᴍᴇɴᴛᴀʀᴀ\n`,
     };
   }
 
@@ -277,8 +272,7 @@ function checkMode(m, getActiveJadibots) {
           
           `🔗 ${onlyThisGroup.link}\n` +
           
-          `Setelah bergabung, bebas pakai semua fitur\n` +
-          
+          `Setelah bergabung, bebas pakai semua fitur\n`,
       };
     }
   }
@@ -313,8 +307,7 @@ function checkMode(m, getActiveJadibots) {
           `「 ✦ Mode Private ✦ 」\n` +
           `Bot utama dalam mode private\n` +
           `Bot turunan yang tersedia:\n` +
-          `${jadibotList}` +
-          ,
+          `${jadibotList}`,
         jadibotMentions: mentions,
       };
     }

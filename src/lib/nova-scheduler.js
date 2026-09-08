@@ -69,9 +69,7 @@ function startDailyLimitReset(options = {}) {
               `• Gratis  : ${defaultLimit} limit\n` +
               `• Premium : ${premiumLimit} limit\n` +
               
-              `${resetCount} user telah direset\n` +
-              
-              ;
+              `${resetCount} user telah direset\n`;
 
             let sent = 0;
             for (const jid of Object.keys(users)) {
