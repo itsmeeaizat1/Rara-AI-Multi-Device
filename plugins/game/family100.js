@@ -69,13 +69,18 @@ function matchSurveyAnswer(roundAnswers, userAnswer) {
     }
     if (getSimilarity(normAns, normalized) >= 0.85) return { status: "correct", answer: ans };
   }
-  // track jawaban survei paling mirip — dipakai buat nunjukin jawaban asli
+  // track jawaban survei paling mirip — dipisah yang belum/belum diambil pemain lain
+  // (request owner 8 Sep: jawaban pas = 100 poin, hampir mirip = poin sesuai kemiripan)
   let maxSim = 0, closest = null;
+  let maxSimTaken = 0, closestTaken = null;
   for (const ans of roundAnswers) {
     const sim = getSimilarity(normalizeAnswer(ans.text), normalized);
-    if (sim > maxSim) { maxSim = sim; closest = ans; }
+    if (ans.foundBy) {
+      if (sim > maxSimTaken) { maxSimTaken = sim; closestTaken = ans; }
+    } else if (sim > maxSim) { maxSim = sim; closest = ans; }
   }
   if (maxSim >= 0.6) return { status: "close", similarity: maxSim, closest };
+  if (maxSimTaken >= 0.6) return { status: "close_taken", closest: closestTaken };
   return { status: "wrong" };
 }
 
@@ -158,6 +163,7 @@ function revealRound(sock, session, { reason } = {}) {
   clearTimers(session);
   session.phase = "reveal";
   const corrects = session.attempts.filter((a) => a.status === "benar");
+  const closes = session.attempts.filter((a) => a.status === "close");
   const wrongs = session.attempts.filter((a) => a.status === "salah");
 
   let msg = "";
@@ -170,7 +176,11 @@ function revealRound(sock, session, { reason } = {}) {
     msg += `${medal} *${qa.text}* - ${qa.points} poin\n`;
     if (qa.foundBy) {
       const s = session.scores[qa.foundBy];
-      msg += `   ✅ @${s?.name || qa.foundBy.split("@")[0]} MENJAWAB BENAR! +${qa.points} POIN! 🎉\n`;
+      const nm = s?.name || qa.foundBy.split("@")[0];
+      const awarded = qa.awarded ?? qa.points;
+      msg += qa.hampir
+        ? `   🔥 @${nm} HAMPIR MIRIP! +${awarded} POIN! 🎯\n`
+        : `   ✅ @${nm} MENJAWAB BENAR! +${awarded} POIN! 🎉\n`;
     } else {
       msg += `   ❌ Tidak ada yang menjawab\n`;
     }
@@ -181,7 +191,8 @@ function revealRound(sock, session, { reason } = {}) {
     wrongs.forEach((a) => { msg += `   - @${a.name}: "${a.text}" (TIDAK ADA DI SURVEI)\n`; });
   }
 
-  msg += `\n📊 Total jawaban benar: ${corrects.length}\n`;
+  msg += `\n📊 Total jawaban pas: ${corrects.length}\n`;
+  if (closes.length) msg += `🔥 Total hampir mirip: ${closes.length}\n`;
   msg += `📊 Total jawaban salah: ${wrongs.length}\n\n`;
 
   const board = renderScoreboard(session);
@@ -421,14 +432,36 @@ async function answerHandler(m, sock) {
 
     const result = matchSurveyAnswer(session.survey, text);
 
-    // ─── HAMPIR (grace: gak ngabisin jatah jawaban) ───
+    // ─── MIRIP JAWABAN YANG UDAH DIAMBIL PEMAIN LAIN (jatah aman) ───
+    if (result.status === "close_taken") {
+      await m.react("⚠️");
+      await safeSend(sock, session.chatId,
+        `⚠️ Jawaban mirip "*${result.closest?.text || "?"}*" sudah disebutkan pemain lain! Coba jawaban lain (jatahmu masih ada) 💡`, [sender]);
+      return true;
+    }
+
+    // ─── HAMPIR MIRIP → POIN SESUAI KEMIRIPAN (request owner 8 Sep) ───
     if (result.status === "close" || result.status === "empty") {
       if (result.status === "close") {
+        const qa = result.closest;
+        const awarded = Math.round(result.similarity * 100); // 71% mirip → 71 poin
+        qa.foundBy = sender;
+        qa.awarded = awarded;
+        qa.hampir = true;
+        session.attempts.push({ jid: sender, name: senderName, text, status: "close", points: awarded });
+        session.answeredUsers.add(sender); // jatah hangus — poin udah dibayar
+        if (!session.scores[sender]) session.scores[sender] = { name: senderName, points: 0, correct: 0 };
+        session.scores[sender].points += awarded;
         await m.react("🔥");
         await safeSend(sock, session.chatId,
-          `🔥 *@${senderName}* hampir! Mirip ${Math.round(result.similarity * 100)}%\n` +
-          `💡 Jawaban aslinya: *${result.closest?.text || "?"}* (${result.closest?.points || "?"} poin)\n` +
-          `✍️ Ketik ulang jawaban yang bener — jatah jawabanmu masih ada!`, [sender]);
+          `🔥 *HAMPIR MIRIP!* "@${senderName}" menjawab "${text}"\n` +
+          `💡 Jawaban aslinya: *${qa.text}*\n` +
+          `⭐ Mendapat ${awarded} poin (sesuai kemiripan ${Math.round(result.similarity * 100)}%)!`, [sender]);
+        // papan bisa lengkap lewat jawaban hampir → reveal juga
+        if (session.survey.every((a) => a.foundBy)) {
+          await safeSend(sock, session.chatId, `💯 *WOW! SEMUA JAWABAN SURVEI KETEMU!*\n`, []);
+          revealRound(sock, session, { reason: "allfound" });
+        }
       }
       return true;
     }
@@ -445,16 +478,17 @@ async function answerHandler(m, sock) {
     if (result.status === "correct") {
       const qa = result.answer;
       qa.foundBy = sender;
+      qa.awarded = 100; // request owner 8 Sep: jawaban pas = 100 poin flat
       const rank = session.survey.indexOf(qa) + 1;
-      session.attempts.push({ jid: sender, name: senderName, text, status: "benar", points: qa.points });
+      session.attempts.push({ jid: sender, name: senderName, text, status: "benar", points: 100 });
       session.answeredUsers.add(sender);
       if (!session.scores[sender]) session.scores[sender] = { name: senderName, points: 0, correct: 0 };
-      session.scores[sender].points += qa.points;
+      session.scores[sender].points += 100;
       session.scores[sender].correct += 1;
       await m.react("🎉");
       await safeSend(sock, session.chatId,
         `✅ *BENAR!* "@${senderName}" menjawab "${qa.text}"\n` +
-        `⭐ Mendapat ${qa.points} poin! (Jawaban survei #${rank})`, [sender]);
+        `⭐ Mendapat *100 poin*! (Jawaban survei #${rank})`, [sender]);
 
       // Semua jawaban ketemu → langsung reveal
       if (session.survey.every((a) => a.foundBy)) {
