@@ -154,6 +154,21 @@ async function doReengageCheck() {
     logger.info("ReEngage", `${toContact.length} users to re-engage`);
 
     let sent = 0;
+    // ── target terpusat (.switch auto autoreengage set): pesan re-engage
+    // dikirim ke target pilihan owner (grup/DM) — override daftar user dormant ──
+    let targetList = null;
+    try {
+      const { resolveAutoTargetsOr } = await import("./nova-auto-target.js");
+      targetList = await resolveAutoTargetsOr(sockInstance, "autoreengage", null);
+    } catch { /* target lib gagal → default per-user */ }
+    if (targetList) {
+      for (const jid of targetList) {
+        const user = toContact.find((u) => u.jid === jid) || { jid, name: "Sahabat", daysInactive: "?" };
+        const ok = await sendReengageMessage(sockInstance, user);
+        if (ok) sent++;
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+    } else {
     for (const user of toContact) {
       const ok = await sendReengageMessage(sockInstance, user);
       if (ok) {
@@ -162,6 +177,7 @@ async function doReengageCheck() {
       }
       // Delay 3 detik antar kirim biar gak rate limit
       await new Promise((r) => setTimeout(r, 3000));
+    }
     }
 
     state.lastCheck = new Date().toISOString();

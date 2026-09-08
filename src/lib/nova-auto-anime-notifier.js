@@ -20,6 +20,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import axios from "axios";
+import { mergeAutoTargets } from "./nova-auto-target.js";
 import config from "../../config.js";
 import { logger } from "./nova-logger.js";
 
@@ -718,7 +719,7 @@ export function runCheck(opts = {}) {
 async function doRunCheck({ force = false, chatId = null } = {}) {
   let st = loadState();
   const { list, source } = await getWatchlist();
-  const targetsSnapshot = [...st.targets];
+  const targetsSnapshot = await mergeAutoTargets(sock, "autoanimenotifier", [...st.targets]);
   st = loadState(); // fresh
   st.lastCheck = new Date().toISOString();
   st.lastSource = source;
@@ -757,7 +758,7 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
   saveState(fresh);
   st = fresh;
 
-  const targets = chatId ? [chatId] : st.targets;
+  const targets = chatId ? [chatId] : targetsSnapshot;
   let sent = 0;
 
   if (newAnime.length > 0) {
@@ -784,7 +785,7 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
   // Sumber hidup walau AniList down. Tiap tipe punya interval + dedup hash
   // sendiri — konten sama gak dikirim ulang. force (`.animenotify now`) kirim
   // langsung semua tipe aktif ke chatId.
-  const digestTargets = chatId ? [chatId] : st.targets;
+  const digestTargets = chatId ? [chatId] : await mergeAutoTargets(sock, "autoanimenotifier", st.targets);
   for (const type of DIGEST_TYPES) {
     if (types[type] === false) continue;
     const ivMs = ((st.digestIntervals || {})[type] || DEFAULT_DIGEST_IV[type]) * 3600e3;

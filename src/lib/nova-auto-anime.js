@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
+import { mergeAutoTargets } from './nova-auto-target.js'
 import * as cheerio from 'cheerio'
 import fs from 'fs'
 import path from 'path'
@@ -292,7 +293,10 @@ function isRunning() {
 
 async function runCheck() {
     const state = loadState()
-    const groups = state.groups || []
+    // ── target terpusat (.switch auto autoanime set): subscriber grup TETAP
+    // dapat, target terpusat NAMBAH jangkauan (union dedup) ──
+    let groups = state.groups || []
+    try { groups = await mergeAutoTargets(globalSock, 'autoanime', groups) } catch { /* target lib gagal → grup lama */ }
     if (groups.length === 0) {
         console.log('[AutoAnime-Winbu] ⚠️ No target groups configured')
         return
