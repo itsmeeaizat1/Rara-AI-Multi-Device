@@ -69,12 +69,13 @@ function matchSurveyAnswer(roundAnswers, userAnswer) {
     }
     if (getSimilarity(normAns, normalized) >= 0.85) return { status: "correct", answer: ans };
   }
-  let maxSim = 0;
+  // track jawaban survei paling mirip — dipakai buat nunjukin jawaban asli
+  let maxSim = 0, closest = null;
   for (const ans of roundAnswers) {
     const sim = getSimilarity(normalizeAnswer(ans.text), normalized);
-    if (sim > maxSim) maxSim = sim;
+    if (sim > maxSim) { maxSim = sim; closest = ans; }
   }
-  if (maxSim >= 0.6) return { status: "close", similarity: maxSim };
+  if (maxSim >= 0.6) return { status: "close", similarity: maxSim, closest };
   return { status: "wrong" };
 }
 
@@ -425,7 +426,9 @@ async function answerHandler(m, sock) {
       if (result.status === "close") {
         await m.react("🔥");
         await safeSend(sock, session.chatId,
-          `🔥 *@${senderName}* hampir! Mirip ${Math.round(result.similarity * 100)}% — coba lagi (jatah jawabanmu masih ada) 💡`, [sender]);
+          `🔥 *@${senderName}* hampir! Mirip ${Math.round(result.similarity * 100)}%\n` +
+          `💡 Jawaban aslinya: *${result.closest?.text || "?"}* (${result.closest?.points || "?"} poin)\n` +
+          `✍️ Ketik ulang jawaban yang bener — jatah jawabanmu masih ada!`, [sender]);
       }
       return true;
     }
