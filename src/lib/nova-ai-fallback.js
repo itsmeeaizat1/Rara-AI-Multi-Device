@@ -7,9 +7,12 @@
 //      → BEGITU owner isi key Google AI Studio baru, SEMUA fitur otomatis pindah ke
 //        Gemini (provider resmi, cepat, stabil) tanpa ubah kode. Key kosong/expired →
 //        skip otomatis (key invalid dicache sampai restart biar gak nambah latency).
-//   1. HaidarApis  /api/v1/ai/gemini?message=   (key: apikeys.json aiSatuan.haidar)
-//   2. IkyyXD      callIkyy() — internal chain gemini→cici→gpt5→gemma (key: aiSatuan.ikyyxd)
-//   3. Xemoz       deepseek-v3.2-thinking (free, tanpa key)
+//   1. MERCURY (Inception Labs) api.inceptionlabs.ai — dLLM difusi 5-10× lebih cepat
+//      dari model sekelas (key: apikeys.json novaai.inception, fallback env
+//      INCEPTION_API_KEY). OpenAI-compatible, mercury-2, 128K context, tools+json mode.
+//   2. HaidarApis  /api/v1/ai/gemini?message=   (key: apikeys.json aiSatuan.haidar)
+//   3. IkyyXD      callIkyy() — internal chain gemini→cici→gpt5→gemma (key: aiSatuan.ikyyxd)
+//   4. Xemoz       deepseek-v3.2-thinking (free, tanpa key)
 //
 // Semua sumber gagal → throw (pemanggil tampilkan error standar).
 // Persona: identitas command tetep kepake (mis. .llamav2 → "Kamu adalah Llama AI").
@@ -81,7 +84,46 @@ async function viaGeminiNative(fullPrompt) {
   throw new Error("gemini HTTP gagal semua model");
 }
 
-/** 1. HaidarApis — model sesuai brand command (fallback: gemini) */
+// ── PRIORITAS 1: Mercury (Inception Labs) — diffusion LLM super cepat ──
+// (apikeys.json novaai.inception; override env INCEPTION_API_KEY.
+//  Key invalid → dicache mati sampai restart biar gak nambah latency)
+let __mercuryKeyDead = false;
+const MERCURY_URL = "https://api.inceptionlabs.ai/v1/chat/completions";
+
+export async function viaMercury(fullPrompt) {
+  if (__mercuryKeyDead) throw new Error("key mercury invalid (dicache mati)");
+  let key = process.env.INCEPTION_API_KEY || "";
+  if (!key) {
+    try {
+      const { getApiKeys } = await import("./config/env-loader.js");
+      key = getApiKeys()?.inception || "";
+    } catch {}
+  }
+  if (!key) throw new Error("key inception kosong");
+  const res = await fetch(MERCURY_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+    body: JSON.stringify({
+      model: "mercury-2",
+      messages: [{ role: "user", content: fullPrompt }],
+      max_tokens: 2048,
+      stream: false,
+    }),
+    signal: AbortSignal.timeout(25000),
+  });
+  if (res.status === 401 || res.status === 403) {
+    // key invalid/expired — tandai mati biar request berikutnya gak nyoba lagi
+    __mercuryKeyDead = true;
+    throw new Error(`mercury key invalid (HTTP ${res.status})`);
+  }
+  if (!res.ok) throw new Error(`mercury HTTP ${res.status}`);
+  const data = await res.json().catch(() => ({}));
+  const text = cleanText(data?.choices?.[0]?.message?.content || "");
+  if (text) return text;
+  throw new Error("mercury balas kosong");
+}
+
+/** 2. HaidarApis — model sesuai brand command (fallback: gemini) */
 async function viaHaidar(fullPrompt, model = "gemini") {
   let key = "";
   try {
@@ -172,7 +214,11 @@ export async function aiFallbackChat(prompt, opts = {}) {
   try { return finish(await viaGeminiNative(fullPrompt)); }
   catch (e) { errors.push(`gemini-native: ${e.message}`); }
 
-  // 1. Haidar — brand pilihan, gagal → gemini
+  // 1. Mercury (Inception Labs) — dLLM difusi super cepat (key owner)
+  try { return finish(await viaMercury(fullPrompt)); }
+  catch (e) { errors.push(`mercury: ${e.message}`); }
+
+  // 2. Haidar — brand pilihan, gagal → gemini
   try { return finish(await viaHaidar(fullPrompt, model)); }
   catch (e) { errors.push(`haidar/${model}: ${e.message}`); }
   if (model !== "gemini") {
@@ -180,11 +226,11 @@ export async function aiFallbackChat(prompt, opts = {}) {
     catch (e) { errors.push(`haidar/gemini: ${e.message}`); }
   }
 
-  // 2. Ikyy (callIkyy bawa persona/systemPrompt sendiri)
+  // 3. Ikyy (callIkyy bawa persona/systemPrompt sendiri)
   try { return finish(await viaIkyy(prompt, { ...opts, historyBlock })); }
   catch (e) { errors.push(`ikyy: ${e.message}`); }
 
-  // 3. Xemoz deepseek
+  // 4. Xemoz deepseek
   try { return finish(await viaXemoz(fullPrompt)); }
   catch (e) { errors.push(`xemoz: ${e.message}`); }
 
