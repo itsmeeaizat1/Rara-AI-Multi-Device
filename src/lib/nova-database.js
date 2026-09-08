@@ -430,6 +430,7 @@ class Database {
         expBonus: data.rpg?.expBonus ?? existing.rpg?.expBonus ?? config.rpg?.luckDefaults?.expBonus ?? 0,
         // Currencies
         cash: data.rpg?.cash ?? existing.rpg?.cash ?? 0,
+        jobTools: data.rpg?.jobTools ?? existing.rpg?.jobTools ?? {},
         gold: data.rpg?.gold ?? existing.rpg?.gold ?? config.rpg?.userDefaults?.gold ?? 0,
         gems: data.rpg?.gems ?? existing.rpg?.gems ?? config.rpg?.userDefaults?.gems ?? 0,
         diamonds: data.rpg?.diamonds ?? existing.rpg?.diamonds ?? config.rpg?.userDefaults?.diamonds ?? 0,
