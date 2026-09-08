@@ -619,6 +619,76 @@ export async function animHunt(m, sock, target) {
   await rpgScene(m, sock, scenes, 2500, "berburu");
 }
 
+// ═══════════════════════════════════════════════════
+// ANIMASI BERBURU ALA SCRIPT OWNER (morphing 1 pesan per fase)
+// Melacak jejak → Memanah → Hasil buruan
+// ═══════════════════════════════════════════════════
+
+// Helper morphing: kirim frame 1, sisanya edit-in-place (pola animBattleTurns)
+async function huntMorph(m, sock, frames, delay = 1400) {
+  let key = null;
+  const send = async (text) => {
+    if (key) {
+      try { await sock.sendMessage(m.chat, { text, edit: key }); return; }
+      catch { key = null; }
+    }
+    try {
+      const s = await sock.sendMessage(m.chat, { text });
+      key = s?.key || null;
+      if (key) return;
+    } catch {}
+    await m.reply(text);
+  };
+  for (let i = 0; i < frames.length; i++) {
+    await send(frames[i]);
+    if (i < frames.length - 1) {
+      if (sock?.sendPresenceUpdate) { try { await sock.sendPresenceUpdate("composing", m.chat); } catch {} }
+      await sleep(delay);
+    }
+  }
+}
+
+// FASE 1: MELACAK JEJAK (5 frame)
+export async function animHuntTrack(m, sock, animalName, delay = 1400) {
+  const frames = [
+    `🔍 *MELACAK JEJAK...*`,
+    `🕵️ Menemukan jejak ${animalName}...`,
+    `👣 Jejak mengarah ke barat...`,
+    `🌿 Terlihat gerakan di semak-semak!`,
+    `🎯 *TARGET DITEMUKAN!*`,
+  ];
+  await huntMorph(m, sock, frames, delay);
+}
+
+// FASE 2: MEMANAH (4 frame)
+export async function animHuntShoot(m, sock, animalName, delay = 1400) {
+  const frames = [
+    `🏹 *MEMANAH!*`,
+    `🎯 Membidik ${animalName}...`,
+    `🌬️ Tarik tali busur...`,
+    `💨 Lepas! Anak panah meluncur!`,
+  ];
+  await huntMorph(m, sock, frames, delay);
+}
+
+// FASE 3: HASIL BURUAN — kena / kabur (3-4 frame)
+export async function animHuntResult(m, sock, opts, delay = 1400) {
+  const { animalName, success, loot } = opts || {};
+  const frames = success
+    ? [
+        `🎯 *PANAH MENGENAI!*`,
+        `💥 ${animalName} terjatuh!`,
+        `✅ Berhasil diburu!`,
+        ...(loot ? [`📦 Mendapatkan: ${loot}`] : []),
+      ]
+    : [
+        `😰 ${animalName} menghindar!`,
+        `🏃 Menerjang kabur ke semak-semak!`,
+        `💨 Buruan kabur...`,
+      ];
+  await huntMorph(m, sock, frames, delay);
+}
+
 /**
  * Animasi arena PvP
  */
