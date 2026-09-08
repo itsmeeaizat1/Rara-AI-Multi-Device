@@ -12,6 +12,7 @@ import {
   addTarget, removeTarget, isTarget, getStatus, isEnabled, runCheck,
   getSeasonPreview, formatSeasonMessage, setSock, syncMonitor,
   getGenres, addGenre, removeGenre, previewWatchlist,
+  getContentTypes, setContentType, DIGEST_LABELS,
 } from "../../src/lib/nova-auto-anime-notifier.js";
 import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
@@ -20,7 +21,7 @@ const pluginConfig = {
   alias: ["animenotif", "aninotify"],
   category: "anime",
   description: "Auto notifikasi anime terbaru (AniList → Kitsu) — langganan per-chat",
-  usage: ".animenotify <on/off/status/now/season>",
+  usage: ".animenotify <on/off/info/now/season>",
   example: ".animenotify on\n.animenotify season",
   isOwner: false,
   isPremium: false,
@@ -66,8 +67,36 @@ async function handler(m, { sock, args }) {
       `Interval: tiap ${st.intervalMenit} menit`,
       `Sumber: AniList → Kitsu (fallback)`,
       `Cek terakhir: ${st.lastCheck ? new Date(st.lastCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "belum pernah"} (${st.lastSource || "-"})`,
+      `Tipe konten: ${Object.entries(getContentTypes()).filter(([, on]) => on !== false).map(([k]) => k).join(", ") || "semua off"} (.animenotify info)`,
     ];
     return m.reply(`「 ✦ ${pluginConfig.name.toUpperCase()} ✦ 」\n` + lines.join("\n"));
+  }
+
+  if (sub === "info" || sub === "tipe" || sub === "opsi") {
+    const tipe = String(args?.[1] || "").toLowerCase();
+    const onOff = String(args?.[2] || "").toLowerCase();
+    const types = getContentTypes();
+
+    // tanpa tipe → menu status semua tipe
+    if (!tipe || !["on", "off", "aktif", "mati"].includes(onOff)) {
+      const lines = Object.entries(DIGEST_LABELS).map(([key, label]) => {
+        const on = types[key] !== false;
+        return `${on ? "🟢" : "🔴"} *${key}* — ${label}\n   ${on ? "ON" : "OFF"} · atur: .animenotify info ${key} ${on ? "off" : "on"}`;
+      });
+      return m.reply(
+        `「 ✦ ${pluginConfig.name.toUpperCase()} — TIPE KONTEN ✦ 」\n\n` +
+        lines.join("\n\n") +
+        `\n\n💡 Aktif/mati semua: .animenotify info semua on|off` +
+        `\n💡 Kirim semua tipe aktif sekarang: .animenotify now`
+      );
+    }
+
+    const action = (onOff === "on" || onOff === "aktif");
+    const res = setContentType(tipe, action);
+    if (!res) {
+      return m.reply(novaError(pluginConfig.name, `tipe gak dikenal: ${tipe} — ketik .animenotify info buat daftar tipe`));
+    }
+    return m.reply(novaSuccess(pluginConfig.name, `tipe *${tipe}* sekarang ${action ? "AKTIF" : "MATI"} — notifikasi terkait ${action ? "bakal masuk" : "gak bakal dikirim"}`));
   }
 
   if (sub === "now") {
@@ -78,7 +107,7 @@ async function handler(m, { sock, args }) {
     const res = await runCheck({ force: true, chatId: m.chat }).catch((e) => ({ err: e }));
     if (res?.err) return m.reply(novaError(pluginConfig.name, "gagal ambil data: " + res.err.message));
     await m.react("🐣");
-    return m.reply(novaSuccess(pluginConfig.name, "daftar anime releasing terkini dikirim di atas"));
+    return m.reply(novaSuccess(pluginConfig.name, "semua tipe konten aktif (anime baru/episode/terbaru/hangat/berita/video) dikirim di atas"));
   }
 
   if (sub === "anime") {

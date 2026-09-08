@@ -106,6 +106,16 @@ function defaultState() {
     episodes: {},           // { animeId: lastEpisode } — track episode baru
     genres: [...GENRE_DEFAULT], // genre favorit yang dipantau (ala script)
     initDone: false, lastCheck: null, lastSource: null,
+    // ── TIPE KONTEN (request owner 8 Sep 2026: "banyak opsi yg mau di on") ──
+    // episode: notif episode baru rilis (AniList)
+    // baru   : anime baru masuk watchlist genre favorit (AniList → Kitsu)
+    // terbaru: info anime baru mulai tayang (Kitsu — hidup walau AniList down)
+    // hangat : anime paling diminati musim ini (Kitsu season)
+    // berita : berita anime terbaru (RSS MyAnimeList — independen)
+    // video  : episode/video hangat terbaru siap tonton (winbu.net)
+    contentTypes: { episode: true, baru: true, terbaru: true, hangat: true, berita: true, video: false },
+    digestIntervals: { terbaru: 12, hangat: 12, berita: 6, video: 6 }, // jam
+    lastDigest: {}, // { terbaru: { ts, hash }, ... } — dedup konten digest
   };
 }
 
@@ -120,6 +130,9 @@ function loadState() {
     st.episodes ??= d.episodes;
     st.genres ??= d.genres;
     st.initDone ??= d.initDone;
+    st.contentTypes ??= d.contentTypes;
+    st.digestIntervals ??= d.digestIntervals;
+    st.lastDigest ??= d.lastDigest;
     return st;
   } catch {
     return defaultState();
@@ -410,6 +423,246 @@ export function formatWatchlistMessage(list, { source = "AniList" } = {}) {
   return msg;
 }
 
+// ───────────────────── TIPE KONTEN DIGEST (8 Sep 2026) ─────────────────────
+// AniList down → episode/baru bisu. Digest pakai sumber HIDUP:
+// Kitsu (terbaru/hangat), RSS MyAnimeList (berita), winbu (video).
+
+const DIGEST_TYPES = ["terbaru", "hangat", "berita", "video"];
+
+// Label buat menu .animenotify info
+export const DIGEST_LABELS = {
+  episode: "Notif episode baru rilis (AniList)",
+  baru: "Anime baru masuk watchlist genre favorit (AniList → Kitsu)",
+  terbaru: "Info anime terbaru mulai tayang (Kitsu)",
+  hangat: "Anime paling diminati musim ini (Kitsu)",
+  berita: "Berita anime & manga terbaru (MyAnimeList)",
+  video: "Episode & video hangat terbaru siap tonton (winbu)",
+};
+const DEFAULT_DIGEST_IV = { terbaru: 12, hangat: 12, berita: 6, video: 6 }; // jam
+
+// Musim saat ini (penamaan Kitsu: winter/spring/summer/fall)
+function currentSeasonInfo() {
+  const now = new Date();
+  const m = now.getMonth() + 1;
+  let year = now.getFullYear();
+  let season;
+  if (m === 12 || m <= 2) { season = "winter"; if (m === 12) year += 1; }
+  else if (m <= 5) season = "spring";
+  else if (m <= 8) season = "summer";
+  else season = "fall";
+  return { season, year };
+}
+
+async function kitsuGet(url) {
+  const res = await fetch(url, {
+    headers: { Accept: "application/vnd.api+json" },
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) throw new Error(`Kitsu HTTP ${res.status}`);
+  return res.json();
+}
+
+function mapKitsuAnime(x) {
+  const a = x.attributes || {};
+  return {
+    title: a.canonicalTitle || a.titles?.en_jp || a.titles?.ja_jp || "N/A",
+    startDate: a.startDate || "?",
+    episodeCount: a.episodeCount || null,
+    subtype: (a.subtype || "TV").toUpperCase(),
+    rating: a.averageRating ? (Number(a.averageRating) / 10).toFixed(1) + "/10" : "N/A",
+    userCount: a.userCount || 0,
+    synopsis: a.synopsis || "",
+    poster: a.posterImage?.small || null,
+    url: `https://kitsu.app/anime/${x.id}`,
+  };
+}
+
+// INFO ANIME TERBARU — anime baru mulai tayang (sort -startDate, status current)
+export async function getNewAiringAnime(limit = 10) {
+  const j = await kitsuGet(
+    `https://kitsu.io/api/edge/anime?filter[status]=current&sort=-startDate&page[limit]=${limit}`
+  );
+  return (j.data || []).map(mapKitsuAnime);
+}
+
+// ANIME HANGAT — paling diminati musim berjalan (season sort -userCount)
+export async function getHotSeasonAnime(limit = 10) {
+  const { season, year } = currentSeasonInfo();
+  let j = { data: [] };
+  try {
+    j = await kitsuGet(
+      `https://kitsu.io/api/edge/anime?filter[season]=${season}&filter[seasonYear]=${year}&sort=-userCount&page[limit]=${limit}`
+    );
+  } catch { /* fallback di bawah */ }
+  if (!j.data?.length) {
+    j = await kitsuGet(
+      `https://kitsu.io/api/edge/anime?filter[status]=current&sort=-userCount&page[limit]=${limit}`
+    );
+  }
+  return (j.data || []).map(mapKitsuAnime);
+}
+
+// decode entity XML/HTML (&#039; &amp; dll) — RSS MAL pake banyak entity
+function decodeEntities(s) {
+  return String(s || "")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
+// BERITA ANIME — RSS MyAnimeList (independen dari AniList/Kitsu)
+export async function getAnimeNews(limit = 8) {
+  const res = await fetch("https://myanimelist.net/rss/news.xml", {
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; NovaBot/1.0)" },
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) throw new Error(`RSS HTTP ${res.status}`);
+  const xml = await res.text();
+  const items = [];
+  const re = /<item>([\s\S]*?)<\/item>/g;
+  let m;
+  while ((m = re.exec(xml)) && items.length < limit) {
+    const block = m[1];
+    const pick = (tag) => {
+      const mm = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`));
+      return mm ? mm[1].replace(/<!\[CDATA\[|\]\]>/g, "").replace(/<[^>]+>/g, "").trim() : "";
+    };
+    const title = pick("title");
+    const link = pick("link");
+    const date = pick("pubDate");
+    if (title && link) items.push({ title: decodeEntities(title), link, date: decodeEntities(date) });
+  }
+  return items;
+}
+
+// VIDEO HANGAT — episode terbaru winbu.net (siap tonton/download)
+export async function getLatestEpisodesInfo(limit = 5) {
+  const wa = await import("./nova-auto-anime.js");
+  const list = await wa.getOngoingAnimeList();
+  if (!list?.length) return [];
+  const out = [];
+  for (const anime of list.slice(0, limit)) {
+    try {
+      const ep = await wa.getLatestEpisodeLink(anime.url);
+      if (ep) out.push({ title: anime.title, number: ep.number, text: ep.text, url: ep.url, cover: anime.cover });
+    } catch { /* skip 1 anime gagal */ }
+  }
+  return out;
+}
+
+function digestHash(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return String(h);
+}
+
+export function formatTerbaruMessage(items) {
+  if (!items?.length) return null;
+  let msg = "🆕 *INFO ANIME TERBARU!\n";
+  msg += `Sedang & Baru Mulai Tayang*\n\n`;
+  items.slice(0, 8).forEach((a, i) => {
+    msg += `${i + 1}. *${a.title}*\n`;
+    msg += `   📅 Mulai tayang: ${a.startDate}\n`;
+    msg += `   📺 ${a.subtype}${a.episodeCount ? ` | ${a.episodeCount} eps` : ""} | ⭐ ${a.rating}\n`;
+    if (a.synopsis) msg += `   📖 ${a.synopsis.slice(0, 90).replace(/\n/g, " ")}...\n`;
+    msg += `\n`;
+  });
+  msg += `📱 Sumber: Kitsu (realtime — jalan walau AniList down)`;
+  return msg;
+}
+
+export function formatHangatMessage(items) {
+  if (!items?.length) return null;
+  let msg = "🔥 *ANIME HANGAT MUSIM INI!*\n\n";
+  items.slice(0, 8).forEach((a, i) => {
+    msg += `${i + 1}. *${a.title}*\n`;
+    msg += `   ⭐ ${a.rating} | 👥 ${a.userCount.toLocaleString("id-ID")} peminat\n`;
+    msg += `   📺 ${a.subtype}${a.episodeCount ? ` | ${a.episodeCount} eps` : ""}\n`;
+    msg += `   🔗 ${a.url}\n\n`;
+  });
+  msg += `📱 Sumber: Kitsu (paling diminati musim ini)`;
+  return msg;
+}
+
+export function formatBeritaMessage(items) {
+  if (!items?.length) return null;
+  let msg = "📰 *BERITA ANIME TERBARU!\n";
+  msg += `Update Dunia Anime & Manga*\n\n`;
+  items.slice(0, 8).forEach((n, i) => {
+    msg += `${i + 1}. *${n.title}*\n`;
+    msg += `   🔗 ${n.link}\n`;
+    if (n.date) msg += `   📅 ${n.date}\n`;
+    msg += `\n`;
+  });
+  msg += `📱 Sumber: MyAnimeList News`;
+  return msg;
+}
+
+export function formatVideoMessage(items) {
+  if (!items?.length) return null;
+  let msg = "🎬 *EPISODE & VIDEO HANGAT TERBARU!\n";
+  msg += `Siap Ditonton / Download*\n\n`;
+  items.forEach((v, i) => {
+    msg += `${i + 1}. *${v.title}*\n`;
+    msg += `   📺 ${v.text} (Episode ${v.number})\n`;
+    msg += `   ▶️ ${v.url}\n\n`;
+  });
+  msg += `📱 Sumber: winbu.net — ketik .winbu <judul> untuk cari/download`;
+  return msg;
+}
+
+async function buildDigest(type, limit = 10) {
+  try {
+    if (type === "terbaru") {
+      const items = await getNewAiringAnime(limit);
+      if (!items.length) return null;
+      return { text: formatTerbaruMessage(items), hash: digestHash(items.map((i) => i.title + i.startDate).join("|")), thumb: items[0].poster, sourceUrl: items[0].url, tagline: "Info anime terbaru" };
+    }
+    if (type === "hangat") {
+      const items = await getHotSeasonAnime(limit);
+      if (!items.length) return null;
+      return { text: formatHangatMessage(items), hash: digestHash(items.map((i) => i.title + i.userCount).join("|")), thumb: items[0].poster, sourceUrl: items[0].url, tagline: "Anime hangat musim ini" };
+    }
+    if (type === "berita") {
+      const items = await getAnimeNews(limit);
+      if (!items.length) return null;
+      return { text: formatBeritaMessage(items), hash: digestHash(items.map((i) => i.title).join("|")), thumb: null, sourceUrl: "https://myanimelist.net/news", tagline: "Berita anime terbaru" };
+    }
+    if (type === "video") {
+      const items = await getLatestEpisodesInfo(Math.min(limit, 5));
+      if (!items.length) return null;
+      return { text: formatVideoMessage(items), hash: digestHash(items.map((i) => i.title + i.number + i.url).join("|")), thumb: items[0].cover, sourceUrl: items[0].url, tagline: "Episode & video hangat" };
+    }
+  } catch (e) {
+    logger.error?.("anime-notifier", `Digest ${type} gagal: ${e.message}`);
+    return null;
+  }
+  return null;
+}
+
+// API tipe konten buat command .animenotify info
+export function getContentTypes() {
+  const d = defaultState().contentTypes;
+  return { ...d, ...loadState().contentTypes };
+}
+
+export function setContentType(type, on) {
+  const st = loadState();
+  st.contentTypes ??= { ...defaultState().contentTypes };
+  const all = ["episode", "baru", ...DIGEST_TYPES];
+  if (type === "semua" || type === "all") {
+    for (const t of all) st.contentTypes[t] = !!on;
+  } else if (all.includes(type)) {
+    st.contentTypes[type] = !!on;
+  } else return null;
+  saveState(st);
+  syncMonitor();
+  return st.contentTypes;
+}
+
 // ───────────────────────────── kirim ─────────────────────────────
 
 async function downloadThumb(url) {
@@ -469,11 +722,17 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
       try { await sendAnimeNotification(t, text, { thumbUrl: list[0]?.cover, sourceUrl: list[0]?.pageUrl }); }
       catch (e) { logger.error?.("anime-notifier", `Gagal kirim ke ${t}: ${e.message}`); }
     }
-    return { sent: targets.length, newAnime: 0, newEpisodes: 0, sample: true, source };
+    // JANGAN return — lanjut ke bawah biar digest konten (terbaru/hangat/
+    // berita/video) langsung ikut terkirim saat aktivasi pertama.
+    // Diff bakal kosong karena baseline barusan diset.
   }
 
   // Diff ala script — anime baru + episode baru
-  const { newAnime, newEpisodes } = diffWatchlist(list, st.seenIds, st.episodes);
+  // Tipe konten bisa dimatikan per-fitur (.animenotify info <tipe> off)
+  const types = st.contentTypes || {};
+  const diff = diffWatchlist(list, st.seenIds, st.episodes);
+  const newAnime = types.baru === false ? [] : diff.newAnime;
+  const newEpisodes = types.episode === false ? [] : diff.newEpisodes;
 
   // Merge-write race-safe: seenIds + episodes di-update di state fresh
   const fresh = loadState();
@@ -504,6 +763,44 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
       catch (e) { logger.error?.("anime-notifier", `Gagal kirim ke ${t}: ${e.message}`); }
     }
     logger.success?.("anime-notifier", `${newEpisodes.length} episode baru terkirim ke ${targets.length} chat`);
+  }
+
+  // ── DIGEST KONTEN PERIODIK (terbaru/hangat/berita/video) ──
+  // Sumber hidup walau AniList down. Tiap tipe punya interval + dedup hash
+  // sendiri — konten sama gak dikirim ulang. force (`.animenotify now`) kirim
+  // langsung semua tipe aktif ke chatId.
+  const digestTargets = chatId ? [chatId] : st.targets;
+  for (const type of DIGEST_TYPES) {
+    if (types[type] === false) continue;
+    const ivMs = ((st.digestIntervals || {})[type] || DEFAULT_DIGEST_IV[type]) * 3600e3;
+    const last = (st.lastDigest || {})[type] || {};
+    const due = force || !last.ts || Date.now() - last.ts >= ivMs;
+    if (!due) continue;
+
+    const dig = await buildDigest(type, force ? 6 : 10);
+    if (!dig || !dig.text) continue; // fetch gagal → coba lagi tick berikutnya
+
+    if (dig.hash === last.hash && !force) {
+      // konten sama → geser timestamp biar gak dicek tiap tick
+      const fresh = loadState();
+      (fresh.lastDigest ??= {})[type] = { ts: Date.now(), hash: dig.hash };
+      saveState(fresh);
+      continue;
+    }
+
+    for (const t of digestTargets) {
+      try {
+        await sendAnimeNotification(t, dig.text, { thumbUrl: dig.thumb, sourceUrl: dig.sourceUrl, tagline: dig.tagline });
+        sent++;
+      } catch (e) {
+        logger.error?.("anime-notifier", `Gagal kirim digest ${type} ke ${t}: ${e.message}`);
+      }
+    }
+    logger.success?.("anime-notifier", `Digest ${type} terkirim ke ${digestTargets.length} chat`);
+
+    const fresh = loadState();
+    (fresh.lastDigest ??= {})[type] = { ts: Date.now(), hash: dig.hash };
+    saveState(fresh);
   }
 
   if (sent === 0 && force && chatId) {
