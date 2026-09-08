@@ -129,7 +129,17 @@ async function sendRenewalReminder(sock, user) {
 
   try {
     const ctxInfo = saluranCtx();
-    await sock.sendMessage(user.jid, { text, contextInfo: ctxInfo });
+    // ── target terpusat (.switch auto autorenewal set): reminder dikirim ke
+    // target pilihan owner — default tetap ke user yang premium-nya habis ──
+    let targetJids = [user.jid];
+    try {
+      const { resolveAutoTargetsOr } = await import("./nova-auto-target.js");
+      targetJids = await resolveAutoTargetsOr(sock, "autorenewal", targetJids);
+    } catch { /* target lib gagal → user */ }
+    for (const t of targetJids) {
+      try { await sock.sendMessage(t, { text, contextInfo: ctxInfo }); }
+      catch (e) { logger.error("AutoRenewal", `Send to ${t} failed: ${e.message}`); }
+    }
     return true;
   } catch (e) {
     logger.error("AutoRenewal", `Send to ${user.jid} failed: ${e.message}`);

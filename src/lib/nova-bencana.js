@@ -38,6 +38,7 @@
 // ============================================================
 
 import fs from "node:fs";
+import { mergeAutoTargets } from "./nova-auto-target.js";
 import path from "node:path";
 import { getDatabase } from "./nova-database.js";
 import { logger } from "./nova-logger.js";
@@ -933,6 +934,18 @@ async function expandTargets() {
       if (!seen.has(gid)) { targets.push([key, gid, sub]); seen.add(gid); }
     }
   }
+  // ── target terpusat (.switch auto bencanawatch set): NAMBAH jangkauan —
+  // subscriber tetap dapat, grup/DM pilihan owner juga dapat alert generic
+  // (tanpa lokasi → gak dapat versi "dekat wilayah"). ──
+  try {
+    const extras = await mergeAutoTargets(sock, "bencanawatch", []);
+    for (const jid of extras) {
+      if (!seen.has(jid)) {
+        targets.push([`auto:${jid}`, jid, { mode: "otomatis", kirim: "utama", __autoTarget: true }]);
+        seen.add(jid);
+      }
+    }
+  } catch { /* target lib gagal → subscriber aja */ }
   return targets;
 }
 
@@ -1682,6 +1695,19 @@ async function dispatchEws(ev, subs, sockOverride = null) {
     } catch (e) {
       logger.error?.("bencana", `EWS kirim ke ${chatId} gagal: ${e.message}`);
     }
+  }
+  // ── target terpusat: gempa SEVERE (M6.5+) → target pilihan owner juga dapat
+  // (versi generic tanpa jarak — target gak punya lokasi subscriber) ──
+  if (severe) {
+    try {
+      const extras = await mergeAutoTargets(s, "bencanawatch", []);
+      const text = formatEwsWarning(ev, { jarak: null, eta: null, city: null, near: false });
+      for (const jid of extras) {
+        if (subs && subs[jid]) continue; // subscriber udah dapat versi personal
+        try { await s.sendMessage(jid, { text }); sent++; }
+        catch (e) { logger.error?.("bencana", `EWS kirim ke ${jid} gagal: ${e.message}`); }
+      }
+    } catch { /* target lib gagal → skip extras */ }
   }
   return sent;
 }

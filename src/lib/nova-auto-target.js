@@ -163,3 +163,31 @@ export async function resolveAutoTargets(sock, featureKey) {
   const all = await listBotGroups(sock);
   return { jids: all.map((g) => g.jid), mode: "semua", desc: "Semua grup", isGroup: true, cfg: null };
 }
+
+// ── Helper wiring fitur otomatis (request owner 8 Sep 2026:
+//    "semua fitur yg otomatis ada opsi kirim terpusatnya ini wajib") ──
+
+/**
+ * OVERRIDE — fitur dengan default sendiri (owner/subscriber/grup sendiri):
+ * autoTarget BELUM diset → defaultJids (perilaku lama).
+ * autoTarget diset → target terpusat nggantuin default.
+ */
+export async function resolveAutoTargetsOr(sock, featureKey, defaultJids = []) {
+  const cfg = getAutoTargetConfig(featureKey);
+  if (!cfg || !cfg.mode) return defaultJids;
+  const r = await resolveAutoTargets(sock, featureKey);
+  return (r.jids && r.jids.length) ? r.jids : defaultJids;
+}
+
+/**
+ * UNION — fitur subscriber/langganan (anime, bencana, winbu):
+ * subscriber TETAP dapat notif (opt-in gak dicabut), autoTarget
+ * NAMBAH jangkauan (grup/DM pilihan owner ikut dapat, dedup jid).
+ */
+export async function mergeAutoTargets(sock, featureKey, baseJids = []) {
+  const cfg = getAutoTargetConfig(featureKey);
+  if (!cfg || !cfg.mode) return baseJids || [];
+  const r = await resolveAutoTargets(sock, featureKey);
+  const merged = [...new Set([...(baseJids || []), ...(r.jids || [])])];
+  return merged;
+}

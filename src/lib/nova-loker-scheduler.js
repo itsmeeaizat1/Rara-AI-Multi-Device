@@ -7,6 +7,7 @@
 
 // sharp loaded dynamically in makeThumbnail() — not required for basic text-only loker
 import { CronJob } from "cron";
+import { resolveAutoTargetsOr } from "./nova-auto-target.js";
 import { getDatabase } from "./nova-database.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
@@ -603,7 +604,12 @@ async function sendLokerUpdate(scheduleLabel) {
   }
 
   let sent = 0;
-  for (const jid of settings.targets) {
+  // ── target terpusat (.switch auto autoloker set): override target lama ──
+  let targetJids = settings.targets || [];
+  try {
+    targetJids = await resolveAutoTargetsOr(sock, "autoloker", targetJids);
+  } catch { /* target lib gagal → target settings lama */ }
+  for (const jid of targetJids) {
     try {
       if (thumbnailBuffer) {
         // send image with caption
