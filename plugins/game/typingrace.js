@@ -2,6 +2,8 @@
 // typingrace.js — Ketik cepat / Typing speed test via Quotable API (no API key)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const pluginConfig = {
   name: "typingrace",
@@ -138,8 +140,13 @@ async function handler(m, { sock, config, db }) {
       const chars = session.text.length;
 
       sessions.delete(m.chat);
+      // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+      let trCash = { gain: 0, saldo: 0 };
+      try { trCash = rollBonus(m, "typingrace"); } catch {}
       return m.reply(claraWrap("Typing Race", [
         "🎉 Sempurna!",
+        `💵 Uang: +${formatRp(trCash.gain)} (saldo ${formatRp(trCash.saldo)})`,
+        ...(trCash.jackpot ? ["🎰 JACKPOT! Bonus 3x uang!"] : []),
         `WPM: ${wpm}`,
         `Waktu: ${elapsed.toFixed(1)}s`,
         `Kata: ${words} | Karakter: ${chars}`,

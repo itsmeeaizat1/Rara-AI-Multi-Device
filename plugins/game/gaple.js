@@ -4,6 +4,8 @@ import { claraWrap , novaBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const pluginConfig = {
   name: "gaple",
@@ -106,7 +108,12 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const card = p.hand[idx];
       if (!tryPlace(game.table, card, side)) return m.reply(claraWrap("gaple", "Kartu tidak cocok dengan ujung meja.", "info"));
       p.hand.splice(idx, 1);
-      if (p.hand.length === 0) { games.delete(chatId); return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "🎉 *GAPLE MASTER!*", body: "@" + sender.split("@")[0] + " habiskan semua batanya!", cta: gameCTA("gaple") }), { mentions: [sender] }); }
+      if (p.hand.length === 0) { games.delete(chatId);
+        // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+        let gCash = { gain: 0, saldo: 0 };
+        try { gCash = rollBonus(m, "gaple"); } catch {}
+        const gBody = "@" + sender.split("@")[0] + " habiskan semua batanya!\n💵 Uang: +" + formatRp(gCash.gain) + " (saldo " + formatRp(gCash.saldo) + ")" + (gCash.jackpot ? "\n🎰 JACKPOT! Bonus 3x uang!" : "");
+        return m.reply(novaGameBox({ title: "gaple", icon: "🁣", flavor: "🎉 *GAPLE MASTER!*", body: gBody, cta: gameCTA("gaple") }), { mentions: [sender] }); }
       game.currentPlayer = getNext(game);
       return sendStatus(m, sock, game);
     }

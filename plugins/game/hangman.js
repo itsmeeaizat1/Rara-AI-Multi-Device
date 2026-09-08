@@ -2,6 +2,8 @@
 // hangman.js — Tebak kata (Hangman style, Indonesia + English)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const pluginConfig = {
   name: "hangman",
@@ -149,8 +151,13 @@ async function handler(m, { sock, config, db }) {
         if (!masked.includes("_")) {
           // Won!
           sessions.delete(m.chat);
+          // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+          let hmCash = { gain: 0, saldo: 0 };
+          try { hmCash = rollBonus(m, "hangman"); } catch {}
           return m.reply(claraWrap("Hangman", [
             `🎉 Selamat! Kata: ${session.word}`,
+            `💵 Uang: +${formatRp(hmCash.gain)} (saldo ${formatRp(hmCash.saldo)})`,
+            ...(hmCash.jackpot ? ["🎰 JACKPOT! Bonus 3x uang!"] : []),
             `Salah: ${session.wrong}/${MAX_WRONG}`,
             "",
             HANGMAN_STAGES[session.wrong],
@@ -197,8 +204,13 @@ async function handler(m, { sock, config, db }) {
     if (input.length > 1) {
       if (input === session.word) {
         sessions.delete(m.chat);
+        // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+        let hwCash = { gain: 0, saldo: 0 };
+        try { hwCash = rollBonus(m, "hangman"); } catch {}
         return m.reply(claraWrap("Hangman", [
           `🎉 Benar! Kata: ${session.word}`,
+          `💵 Uang: +${formatRp(hwCash.gain)} (saldo ${formatRp(hwCash.saldo)})`,
+          ...(hwCash.jackpot ? ["🎰 JACKPOT! Bonus 3x uang!"] : []),
           `Salah: ${session.wrong}/${MAX_WRONG}`,
           "",
           "Yuk tebak kata lain kak, biar makin jago 🥳",

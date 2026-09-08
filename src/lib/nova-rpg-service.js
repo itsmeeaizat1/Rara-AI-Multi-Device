@@ -329,6 +329,24 @@ export function spendCash(m, amount) {
   } catch { return false; }
 }
 
+// 💵 PAYOUT UANG GAME TANPA EXP (request owner 8 Sep 2026: "semua game
+// minigame + RPG ada uang") — game yang gak lewat addExp (poin-only,
+// game interaktif standalone, factory minigame) tetap dibayar uang
+// pakai formula PERSIS payout pusat addExp: base × (40 + level×10).
+// baseExp = "EXP setara" game itu (mis. reward.exp game factory,
+// 30-80 buat game poin). Return { gain, saldo }.
+export function addGameCash(m, baseExp) {
+  try {
+    const rpg = ensureRpg(m);
+    if (!rpg) return { gain: 0, saldo: 0 };
+    const base = Math.max(1, Math.floor(Number(baseExp) || 0));
+    const gain = Math.floor(base * (40 + (rpg.level || 1) * 10));
+    rpg.cash = Math.max(0, (rpg.cash || 0) + gain);
+    saveRpg(m, rpg);
+    return { gain, saldo: rpg.cash };
+  } catch { return { gain: 0, saldo: 0 }; }
+}
+
 export function getCash(m) {
   try {
     const rpg = ensureRpg(m);
