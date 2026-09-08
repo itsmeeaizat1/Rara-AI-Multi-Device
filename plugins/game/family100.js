@@ -112,8 +112,10 @@ function startRound(sock, session) {
   session.round++;
   session.phase = "question";
   session.question = q.soal || "???";
+  // Poin survei dari data (src/data/family100.json upgrade: poin per jawaban,
+  // total 100 ala TV) — fallback POINTS_SCALE buat soal lama tanpa poin
   session.survey = (q.jawaban || []).map((text, i) => ({
-    text, points: pointsFor(i), foundBy: null,
+    text, points: (Array.isArray(q.poin) ? (q.poin[i] ?? pointsFor(i)) : pointsFor(i)), foundBy: null,
   }));
   session.attempts = [];          // [{ jid, name, text, status, points }]
   session.answeredUsers = new Set();
@@ -125,6 +127,7 @@ function startRound(sock, session) {
     `📢 *PERTANYAAN KE-${session.round}*\n` +
     `"${q.soal}"\n\n` +
     `⏳ Waktu menjawab: ${Math.round(ROUND_MS / 1000)} detik\n` +
+    `💰 Total ${session.survey.reduce((a, b) => a + b.points, 0)} poin di papan survei\n` +
     `💡 Ketik jawabanmu langsung di chat! (1 jawaban per pemain)\n` +
     `🏳️ Ketik "nyerah" buat loncat ronde • .family100 stop buat berhenti`;
   safeSend(sock, session.chatId, qText, []);
