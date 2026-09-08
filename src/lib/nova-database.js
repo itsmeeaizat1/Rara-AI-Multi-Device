@@ -431,6 +431,9 @@ class Database {
         // Currencies
         cash: data.rpg?.cash ?? existing.rpg?.cash ?? 0,
         jobTools: data.rpg?.jobTools ?? existing.rpg?.jobTools ?? {},
+        huntZone: data.rpg?.huntZone ?? existing.rpg?.huntZone ?? "hutan_pemula",
+        trophies: data.rpg?.trophies ?? existing.rpg?.trophies ?? [],
+        lastZoneNotify: data.rpg?.lastZoneNotify ?? existing.rpg?.lastZoneNotify ?? null,
         gold: data.rpg?.gold ?? existing.rpg?.gold ?? config.rpg?.userDefaults?.gold ?? 0,
         gems: data.rpg?.gems ?? existing.rpg?.gems ?? config.rpg?.userDefaults?.gems ?? 0,
         diamonds: data.rpg?.diamonds ?? existing.rpg?.diamonds ?? config.rpg?.userDefaults?.diamonds ?? 0,
