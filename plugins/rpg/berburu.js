@@ -7,7 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
   getCash} from "../../src/lib/nova-rpg-service.js";
-import { animBattle, animHunt, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { animBattle, rpgSleep, animHuntTrack, animHuntShoot, animHuntResult } from "../../src/lib/nova-rpg-anim.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
@@ -61,12 +61,12 @@ async function handler(m, { sock }) {
     const playerDef = rpg.def + equip.def;
     const playerHp = rpg.hp;
 
-    // Prolog berburu — narasi ala misi klasik sebelum battle
-    await animHunt(m, sock, monster.name);
-
-    // Battle intro
+    // ANIMASI ALA SCRIPT OWNER (morphing 1 pesan per fase):
+    // FASE 1: MELACAK JEJAK → target ditemukan
+    await animHuntTrack(m, sock, monster.name);
     await m.reply(`🎯 Ditemukan *${monster.name}* (Lv.${monster.minLv}-${monster.maxLv})!\n⚔️ Bersiap bertarung...`);
-    await rpgSleep(800);
+    // FASE 2: MEMANAH — bidik, tarik tali, lepas
+    await animHuntShoot(m, sock, monster.name);
 
     // Simulasi pertarungan dengan animasi
     let monsterHp = monster.hp;
@@ -125,6 +125,10 @@ async function handler(m, { sock }) {
 
       const dropLines = drops.map(d => `│ • 📦 ${ITEM_DB[d.item]?.name || d.item} : +${d.qty}x`);
 
+      // FASE 3: HASIL BURUAN — panah mengenai (morphing)
+      const lootText = drops.length ? drops.map(d => `${ITEM_DB[d.item]?.name || d.item} x${d.qty}`).join(", ") : null;
+      await animHuntResult(m, sock, { animalName: monster.name, success: true, loot: lootText });
+
       await m.react("🐣");
       return m.reply(novaGameBox({
         title: "berburu", icon: "🎯",
@@ -147,6 +151,9 @@ async function handler(m, { sock }) {
       const newHp = Math.max(1, rpg.hp - playerDmgTaken);
       saveRpg(m, { hp: newHp });
       setCooldown(m, "lastHunt", HUNT_COOLDOWN);
+
+      // FASE 3: HASIL BURUAN — buruan kabur (morphing)
+      await animHuntResult(m, sock, { animalName: monster.name, success: false });
 
       await m.react("❌");
       return m.reply(novaGameBox({
