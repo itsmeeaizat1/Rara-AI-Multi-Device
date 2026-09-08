@@ -1,6 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Unified Switch: Dispatcher untuk semua toggle on/off (channel, group, auto, fitur)
 import { getDatabase } from '../../src/lib/nova-database.js'
+import {
+  getAutoTargetConfig, setAutoTargetConfig, clearAutoTargetConfig,
+  describeAutoTarget, listBotGroups, parseGroupPicks, toWaJid
+} from '../../src/lib/nova-auto-target.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { pluginStore } from '../../src/lib/nova-plugins.js'
 import {
@@ -36,7 +40,7 @@ const pluginConfig = {
   category: "owner",
   description: 'Switch on/off semua fitur (channel, group, auto, command)',
   usage: '.switch [channel|group|auto|fitur]',
-  example: '.switch channel\n.switch group welcome\n.switch auto autobackup on\n.switch fitur off rpg',
+  example: '.switch channel\n.switch group welcome\n.switch auto autobackup on\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg',
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -582,10 +586,119 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   if (!reg)
     return m.reply(`❌ Fitur tidak ditemukan: ${autoKey}\nKetik \`${prefix}switch auto\` untuk melihat daftar`)
 
+  // ═══ OPSET TARGET (request owner 8 Sep 2026): .switch auto <key> set ═══
+  // Fitur notifikasi bisa dikustomisasi targetnya:
+  //   set              → lihat target sekarang + daftar opsi
+  //   set semua        → kirim ke SEMUA grup yang bot ikuti (default)
+  //   set grup         → daftar grup untuk dipilih
+  //   set grup <n,n>   → pilih grup tertentu (nomor dari daftar, bisa banyak)
+  //   set dm           → opsi DM (nomor tertentu / semua user terdaftar)
+  //   set dm <nomor>   → kirim ke DM nomor itu
+  //   set dm semua     → kirim ke SEMUA DM user yang sudah mendaftar bot
+  //   set reset        → balik ke default (semua grup)
+  if (action === 'set' || action === 'target') {
+    const argsRaw = (m.args || []).map((a) => String(a || ''))
+    const setIdx = argsRaw.findIndex((a) => a.toLowerCase() === 'set' || a.toLowerCase() === 'target')
+    const rest = (setIdx >= 0 ? argsRaw.slice(setIdx + 1) : []).map((a) => a.toLowerCase())
+
+    // Fitur yang punya sistem target/subscriber sendiri — kasih info jujur
+    const OWN_SYSTEM = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on' }
+    // Fitur yang gak broadcast apa-apa (flag perilaku) — gak pakai target
+    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime']
+    if (OWN_SYSTEM[autoKey]) {
+      return m.reply(`*${reg.label}* pakai sistem subscriber sendiri — tiap user/grup daftar sendiri lewat \`${prefix}${OWN_SYSTEM[autoKey].slice(1)}\`. Opsi set target gak berlaku di fitur ini.`)
+    }
+    if (!TARGETABLE.includes(autoKey)) {
+      return m.reply(`*${reg.label}* gak mengirim notifikasi terjadwal — gak ada target yang bisa diset.\nFitur yang bisa diatur targetnya: ${TARGETABLE.map((k) => '\`' + k + '\`').join(', ')}`)
+    }
+
+    const cfg = getAutoTargetConfig(autoKey)
+    const opt = rest[0] || ''
+
+    // ── set reset ──
+    if (opt === 'reset' || opt === 'default') {
+      clearAutoTargetConfig(autoKey)
+      return m.reply(`✅ Target *${reg.label}* direset ke default (semua grup).`)
+    }
+
+    // ── set semua / gabungan (semua grup + semua DM) ──
+    if (opt === 'semua' || opt === 'all' || opt === 'semua-grup') {
+      setAutoTargetConfig(autoKey, { mode: 'semua', groups: [], dm: null })
+      return m.reply(`✅ *${reg.label}* sekarang dikirim ke **SEMUA GRUP** yang bot ikuti.`)
+    }
+    if (opt === 'semua-dm' || opt === 'semuadm' || opt === 'gabungan' || opt === 'kombinasi' || opt === 'semua+dm') {
+      setAutoTargetConfig(autoKey, { mode: 'semua-dm', groups: [], dm: 'all' })
+      return m.reply(`✅ *${reg.label}* dikirim ke **SEMUA GRUP + SEMUA DM user yang sudah mendaftar bot**.`)
+    }
+
+    // ── set grup [nomor,nomor] ──
+    if (opt === 'grup' || opt === 'group') {
+      const groups = await listBotGroups(sock)
+      if (!groups.length) {
+        return m.reply(`⚠ Bot tidak menemukan grup yang diikutinya.`)
+      }
+      const picks = rest[1] ? parseGroupPicks(rest[1], groups) : []
+      if (picks.length) {
+        setAutoTargetConfig(autoKey, { mode: 'grup', groups: picks, dm: null })
+        const nama = picks.map((jid) => { const g = groups.find((x) => x.jid === jid); return g ? g.subject : jid })
+        return m.reply(`✅ *${reg.label}* dikirim ke **${picks.length} grup terpilih**:\n${nama.map((n, i) => `${i + 1}. ${n}`).join('\n')}`)
+      }
+      // tanpa nomor → tampilkan daftar grup
+      let body = `🌐 *PILIH GRUP TUJUAN ${reg.label.toUpperCase()}*\n\n`
+      groups.slice(0, 30).forEach((g, i) => {
+        body += `  ${i + 1}. ${g.subject || g.jid}${g.jid === m.chat ? ' ← (chat ini)' : ''}\n`
+      })
+      body += `\n💡 Ketik: \`${prefix}switch auto ${autoKey} set grup <nomor>\`\n`
+      body += `💡 Bisa pilih banyak: \`${prefix}switch auto ${autoKey} set grup 1,3,5\``
+      return m.reply(body)
+    }
+
+    // ── set dm [nomor|semua] ──
+    if (opt === 'dm' || opt === 'pc') {
+      const sub = rest[1] || ''
+      if (!sub) {
+        return m.reply(
+          `📮 *PILIH TARGET DM UNTUK ${reg.label.toUpperCase()}*\n\n` +
+          `1. DM nomor tertentu:\n   \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\`\n\n` +
+          `2. Semua DM user yang sudah mendaftar bot:\n   \`${prefix}switch auto ${autoKey} set dm semua\``
+        )
+      }
+      if (sub === 'semua' || sub === 'all' || sub === 'user' || sub === 'users') {
+        setAutoTargetConfig(autoKey, { mode: 'dm', groups: [], dm: 'all' })
+        return m.reply(`✅ *${reg.label}* dikirim ke **SEMUA DM user yang sudah mendaftar bot**.`)
+      }
+      const jid = toWaJid(sub)
+      if (!jid || jid.replace(/\D/g, '').length < 8) {
+        return m.reply(`⚠ Nomor tidak valid. Contoh: \`${prefix}switch auto ${autoKey} set dm 628123456789\``)
+      }
+      setAutoTargetConfig(autoKey, { mode: 'dm', groups: [], dm: jid.replace('@s.whatsapp.net', '') })
+      return m.reply(`✅ *${reg.label}* dikirim ke **DM ${jid}**.`)
+    }
+
+    // ── set (tanpa opsi) → status + panduan ──
+    return m.reply(
+      `🎯 *TARGET ${reg.label.toUpperCase()}*\n` +
+      `Sekarang: **${describeAutoTarget(cfg)}**\n\n` +
+      `Opsi:\n` +
+      `• \`${prefix}switch auto ${autoKey} set semua\` — semua grup\n` +
+      `• \`${prefix}switch auto ${autoKey} set grup\` — pilih grup tertentu\n` +
+      `• \`${prefix}switch auto ${autoKey} set dm\` — DM nomor tertentu / semua user\n` +
+      `• \`${prefix}switch auto ${autoKey} set gabungan\` — semua grup + semua DM\n` +
+      `• \`${prefix}switch auto ${autoKey} set reset\` — kembali ke default`
+    )
+  }
+
   // No action — show status + usage
   if (!action || (action !== 'on' && action !== 'off')) {
     const current = reg.getStatus()
-    return m.reply(`${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`)
+    let replyTxt = `${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`
+    // Fitur targetable: tampilkan target sekarang di status
+    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime']
+    if (TARGETABLE.includes(autoKey)) {
+      const cfg = getAutoTargetConfig(autoKey)
+      replyTxt += `\n🎯 Target: ${describeAutoTarget(cfg)} — atur: \`${prefix}switch auto ${autoKey} set\``
+    }
+    return m.reply(replyTxt)
   }
 
   // Toggle
