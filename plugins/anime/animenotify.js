@@ -45,11 +45,19 @@ async function handler(m, { sock, args }) {
         novaSuccess(pluginConfig.name, "chat ini terdaftar — tapi fitur auto masih OFF global, owner bisa nyalain via .switch auto autoanimenotifier on"),
       );
     }
-    // kirim contoh daftar terkini langsung ke chat ini sebagai bukti pipeline jalan
-    const res = await runCheck({ force: true, chatId }).catch((e) => ({ err: e }));
-    if (res?.err) return m.reply(novaError(pluginConfig.name, "gagal ambil data: " + res.err.message));
+    // Anti dobel-kirim: monitor BARU start + first-run belum pernah jalan →
+    // sample + semua digest aktif otomatis nge-flow ke semua target (termasuk
+    // chat ini) — skip force. Kalau monitor udah jalan / first-run udah lewat →
+    // force kirim salinan langsung ke chat ini sebagai sambutan.
+    const stBefore = getStatus();
+    const sr = syncMonitor();
+    const firstRunFlow = sr?.started && !stBefore.initDone;
+    if (!firstRunFlow) {
+      const res = await runCheck({ force: true, chatId }).catch((e) => ({ err: e }));
+      if (res?.err) return m.reply(novaError(pluginConfig.name, "gagal ambil data: " + res.err.message));
+    }
     await m.react("🐣");
-    return m.reply(novaSuccess(pluginConfig.name, "aktif di chat ini — anime baru otomatis masuk tiap jam (cek daftar di atas)"));
+    return m.reply(novaSuccess(pluginConfig.name, "aktif di chat ini — semua tipe konten aktif otomatis masuk (sample + digest lagi dikirim di atas)"));
   }
 
   if (sub === "off") {
