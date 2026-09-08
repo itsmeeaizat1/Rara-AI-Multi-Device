@@ -11,7 +11,8 @@
 //      (Mercury dLLM duluan — super cepat, fallback Haidar/Ikyy/Xemoz)
 //      buat jawab pertanyaan user dalam bahasa Indonesia.
 //
-// Kenapa chain ini: Mercury/Inception TIDAK support input gambar (text-only,
+// Kenapa chain ini: jalur 0.5 SenseNova = vision MULTIMODAL ASLI (baca gambar
+// langsung). Mercury/Inception TIDAK support input gambar (text-only,
 // docs.inceptionlabs.ai — input_modalities: text). Jadi vision digabungin:
 // describe-model baca gambar, Mercury nyusun jawaban. Key Gemini valid →
 // jalur 0 lebih presisi (bisa jawab pertanyaan spesifik langsung).
@@ -80,6 +81,13 @@ export async function visionScan({ imageBuffer, question, instruction = "", sess
       instruction: instruction || "Kamu adalah asisten AI vision yang ahli. Analisis gambar dengan detail dan akurat. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.",
     });
     if (g?.status && g?.text) return { status: true, text: g.text, engine: "gemini-vision", model: g.model };
+  } catch {}
+
+  // ── 0.5 SenseNova vision — MULTIMODAL ASLI (SenseTime, key owner, gratis) ──
+  try {
+    const { sensenovaVision } = await import("../scraper/sensenova.js");
+    const sv = await sensenovaVision({ imageBuffer, question: q, instruction });
+    if (sv?.status && sv?.text) return { status: true, text: sv.text, engine: "sensenova-vision", model: sv.model };
   } catch {}
 
   // ── 1. Describe + LLM (tanpa key) — describe-model baca gambar ──
