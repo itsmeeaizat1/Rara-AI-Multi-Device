@@ -1,227 +1,247 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Family 100 Game — Build from scratch
-// Multi-answer survey game (Family Feud style)
+// Family 100 Game — versi modern ala Family Feud TV (request owner 8 Sep 2026)
+// 1 jawaban per pemain per ronde • poin survei 35/25/20/12/8 • reveal medali
+// ronde otomatis lanjut • scoreboard kumulatif • .family100 stop buat berhenti
 
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaBox, toSC } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { novaGameBox, gameCTA, pickFlavor, renderProgressBar, renderSlotBoard } from "../../src/lib/nova-games.js";
-import { normalizeAnswer, getSimilarity, isReplyToGame } from "../../src/lib/nova-game-engine.js";
+import { novaGameBox, gameCTA, pickFlavor } from "../../src/lib/nova-games.js";
+import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ─── Config knob (env override buat test/ops) ───
+const ROUND_MS = Number(process.env.FAMILY100_ROUND_MS) || 30000;   // 30 dtk per ronde (ala script)
+const NEXT_ROUND_MS = Number(process.env.FAMILY100_NEXT_MS) || 5000; // 5 dtk antar ronde (ala script)
+
 // ─── Data Loader ───
 const DATA_PATH = path.join(__dirname, "..", "..", "src", "data", "family100.json");
 let _cache = null;
-
 function loadData() {
   try {
     if (_cache) return _cache;
-    if (!fs.existsSync(DATA_PATH)) {
-      console.error("[family100] Data file not found:", DATA_PATH);
-      return [];
-    }
-    const raw = fs.readFileSync(DATA_PATH, "utf-8");
-    _cache = JSON.parse(raw);
+    if (!fs.existsSync(DATA_PATH)) { console.error("[family100] Data file not found:", DATA_PATH); return []; }
+    _cache = JSON.parse(fs.readFileSync(DATA_PATH, "utf-8"));
     return _cache;
-  } catch (e) {
-    console.error("[family100] Load error:", e.message);
-    return [];
-  }
+  } catch (e) { console.error("[family100] Load error:", e.message); return []; }
 }
 
-// ─── Session Manager (Global Map) ───
-// Key: chatId
+// ─── Poin survei ala script owner: jawaban #1 paling populer = poin terbesar ───
+const POINTS_SCALE = [35, 25, 20, 12, 8, 6, 5, 4, 3, 2];
+const pointsFor = (index) => POINTS_SCALE[index] ?? 1;
+
+// ─── Session Manager ───
 const sessions = new Map();
 
-function createSession(chatId, questionData, messageKey, timeout = 120000) {
-  if (sessions.has(chatId)) {
-    const old = sessions.get(chatId);
-    if (old.timer) clearTimeout(old.timer);
-  }
+function getSession(chatId) { return sessions.get(chatId) || null; }
 
-  const answers = (questionData.jawaban || []).map((j, i) => ({
-    text: j,
-    index: i,
-    revealed: false,
-    foundBy: null,
-  }));
-
-  const session = {
-    chatId,
-    question: questionData.soal || "???",
-    answers,
-    totalAnswers: answers.length,
-    foundCount: 0,
-    messageKey,
-    startTime: Date.now(),
-    timeout,
-    endTime: Date.now() + timeout,
-    timer: null,
-    warnTimer: null,
-    scores: {},
-    attempts: {},
-  };
-
-  sessions.set(chatId, session);
-  return session;
-}
-
-function getSession(chatId) {
-  return sessions.get(chatId) || null;
+function clearTimers(s) {
+  if (s?.timer) clearTimeout(s.timer);
+  if (s?.warnTimer) clearTimeout(s.warnTimer);
+  if (s?.nextTimer) clearTimeout(s.nextTimer);
 }
 
 function endSession(chatId) {
   const s = sessions.get(chatId);
-  if (s && s.timer) clearTimeout(s.timer);
-  if (s && s.warnTimer) clearTimeout(s.warnTimer);
+  clearTimers(s);
   sessions.delete(chatId);
   return s;
 }
 
-function hasActiveSession(chatId) {
-  return sessions.has(chatId);
-}
-
-function setSessionTimer(chatId, callback) {
-  const s = sessions.get(chatId);
-  if (!s) return;
-  const remaining = s.endTime - Date.now();
-  if (remaining <= 0) {
-    callback();
-    return;
-  }
-  s.timer = setTimeout(() => {
-    const cur = sessions.get(chatId);
-    if (cur && cur.startTime === s.startTime) {
-      callback();
-      sessions.delete(chatId);
-    }
-  }, remaining);
-}
-
-function getRemainingTime(chatId) {
-  const s = sessions.get(chatId);
-  if (!s) return 0;
-  return Math.max(0, s.endTime - Date.now());
-}
-
-function formatTime(ms) {
-  const s = Math.floor(ms / 1000);
-  if (s < 60) return `${s}s`;
-  const m = Math.floor(s / 60);
-  const r = s % 60;
-  return `${m}m ${r}s`;
-}
-
-// ─── Answer Checker ───
-function checkFamilyAnswer(session, userAnswer) {
+// ─── Fuzzy answer checker (toleransi typo — keep engine lama) ───
+function matchSurveyAnswer(roundAnswers, userAnswer) {
   const normalized = normalizeAnswer(userAnswer);
   if (!normalized) return { status: "empty" };
-
-  for (const ans of session.answers) {
-    if (ans.revealed) continue;
+  for (const ans of roundAnswers) {
     const normAns = normalizeAnswer(ans.text);
-    if (normAns === normalized) {
+    if (normAns === normalized) return { status: "correct", answer: ans };
+    if ((normAns.includes(normalized) || normalized.includes(normAns)) && normalized.length >= normAns.length * 0.7) {
       return { status: "correct", answer: ans };
     }
-    if (
-      (normAns.includes(normalized) || normalized.includes(normAns)) &&
-      normalized.length >= normAns.length * 0.7
-    ) {
-      return { status: "correct", answer: ans };
-    }
-    const sim = getSimilarity(normAns, normalized);
-    if (sim >= 0.85) {
-      return { status: "correct", answer: ans };
-    }
+    if (getSimilarity(normAns, normalized) >= 0.85) return { status: "correct", answer: ans };
   }
-
   let maxSim = 0;
-  for (const ans of session.answers) {
-    if (ans.revealed) continue;
+  for (const ans of roundAnswers) {
     const sim = getSimilarity(normalizeAnswer(ans.text), normalized);
     if (sim > maxSim) maxSim = sim;
   }
-  if (maxSim >= 0.6) {
-    return { status: "close", similarity: maxSim };
-  }
-
+  if (maxSim >= 0.6) return { status: "close", similarity: maxSim };
   return { status: "wrong" };
 }
 
-// ─── Board Renderer ─── array plain — │ & format dibuang, novaBox yang nyusun
-function renderBoard(session) {
-  return renderSlotBoard(session.answers, {
-    nameOf: (jid) => jid.split("@")[0],
-  });
-}
-
-// ─── Score Renderer ───
-function renderScores(session) {
+// ─── Scoreboard ───
+function renderScoreboard(session, top = 5) {
   const entries = Object.entries(session.scores);
-  if (entries.length === 0) return [];
+  if (!entries.length) return [];
   entries.sort((a, b) => b[1].points - a[1].points);
-  return entries.slice(0, 5).map(([jid, s], i) => {
+  return entries.slice(0, top).map(([jid, s], i) => {
     const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`;
-    return `${medal} @${jid.split("@")[0]} — ${s.correct} jawaban, ${s.points} pts`;
+    return `${medal} @${s.name || jid.split("@")[0]} - ${s.points} poin`;
   });
 }
 
-// ─── Surrender Words ───
-const SURRENDER_WORDS = [
-  "nyerah", "aku nyerah", "gw nyerah", "gue nyerah", "menyerah",
-  "aku menyerah", "gw menyerah", "skip", "lewat", "ga tau",
-  "gatau", "gak tau", "tidak tau", "nggak tau", "give up",
-  "buka jawaban", "buka", "akhir", "selesai",
-];
+// ─── Surrender / Stop ───
+const SURRENDER_WORDS = ["nyerah", "menyerah", "surrender", "buka jawaban", "buka"];
+const STOP_WORDS = ["stop", "berhenti", "udahan"];
+const isWordIn = (text, words) => words.some((w) => text.toLowerCase().trim() === w);
 
-function isSurrender(text) {
-  if (!text) return false;
-  const norm = text.toLowerCase().trim();
-  return SURRENDER_WORDS.some((w) => norm === w);
-}
-
-// ─── Reward ───
-function randBetween(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
+// ─── Reward (juara game) ───
+const randBetween = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 function getRandomReward() {
-  return {
-    limit: randBetween(3, 8),
-    koin: randBetween(500, 2000),
-    exp: randBetween(1000, 3000),
-  };
+  return { limit: randBetween(3, 8), koin: randBetween(500, 2000), exp: randBetween(1000, 3000) };
 }
 
-// ─── Win Messages ───
-const WIN_MSGS = [
-  "🎉 *ꜱᴇʟᴀᴍᴀᴛ!* Semua jawaban ketemu!",
-  "🔥 *WOW!* Board selesai semua!",
-  " *ᴍᴀɴᴛᴀᴘ!* Kerja sama tim yang mantap!",
-  "🏆 *ɢɢ ᴡᴘ!* Keluarga cerdas nih!",
-];
+// ─── Round Flow ───
+function startRound(sock, session) {
+  const data = loadData();
+  const used = session.usedIds;
+  const available = data.map((q, i) => ({ q, i })).filter(({ i }) => !used.includes(i));
+  if (!available.length || !data.length) {
+    revealChampion(sock, session, { finished: true });
+    return;
+  }
+  const pick = available[Math.floor(Math.random() * available.length)];
+  used.push(pick.i);
+  const q = pick.q;
 
-const TIMEOUT_MSGS = [
-  "⏱️ *Waktu habis! Game berakhir!*",
-  "⏱️ *Time's up! Yah telat nih~*",
-  "⏱️ *ᴡᴀᴋᴛᴜ ʜᴀʙɪꜱ!*",
-];
+  session.round++;
+  session.phase = "question";
+  session.question = q.soal || "???";
+  session.survey = (q.jawaban || []).map((text, i) => ({
+    text, points: pointsFor(i), foundBy: null,
+  }));
+  session.attempts = [];          // [{ jid, name, text, status, points }]
+  session.answeredUsers = new Set();
+  session.endTime = Date.now() + ROUND_MS;
 
-const SURRENDER_MSGS = [
-  "🏳️ *Yah nyerah deh...*",
-  "🏳️ *ᴍᴇɴʏᴇʀᴀʜ!* Oke, ini jawabannya:",
-  "🏳️ *Kasihan nih nyerah...*",
-];
+  const qText =
+    `${pickFlavor()}\n` +
+    `🎤 *FAMILY 100 CHAT*\n` +
+    `📢 *PERTANYAAN KE-${session.round}*\n` +
+    `"${q.soal}"\n\n` +
+    `⏳ Waktu menjawab: ${Math.round(ROUND_MS / 1000)} detik\n` +
+    `💡 Ketik jawabanmu langsung di chat! (1 jawaban per pemain)\n` +
+    `🏳️ Ketik "nyerah" buat loncat ronde • .family100 stop buat berhenti`;
+  safeSend(sock, session.chatId, qText, []);
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+  // ⏰ Warning 10 dtk terakhir
+  const warnIn = Math.max(0, session.endTime - Date.now() - 10000);
+  session.warnTimer = setTimeout(() => {
+    const cur = getSession(session.chatId);
+    if (!cur || cur.phase !== "question") return;
+    safeSend(sock, cur.chatId, `⏰ *Sisa 10 detik!*\n💡 Buruan, 1 jawaban per pemain!`, []);
+  }, warnIn);
+
+  // ⏰ Timeout → reveal
+  session.timer = setTimeout(() => {
+    const cur = getSession(session.chatId);
+    if (!cur || cur.phase !== "question") return;
+    revealRound(sock, cur, { reason: "timeout" });
+  }, Math.max(0, session.endTime - Date.now()));
+}
+
+// ─── Reveal 1 ronde (ala script: medali + siapa yang bener + jawaban salah + skor) ───
+function revealRound(sock, session, { reason } = {}) {
+  clearTimers(session);
+  session.phase = "reveal";
+  const corrects = session.attempts.filter((a) => a.status === "benar");
+  const wrongs = session.attempts.filter((a) => a.status === "salah");
+
+  let msg = "";
+  if (reason === "surrender") msg += `🏳️ *RONDE DILEWATI!*\n\n`;
+  else msg += `⏰ *WAKTU MENJAWAB HABIS!*\n\n`;
+  msg += `📢 *HOST:* "Mari kita lihat jawaban dari survei 100 orang!"\n\n`;
+
+  session.survey.forEach((qa, index) => {
+    const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `${index + 1}.`;
+    msg += `${medal} *${qa.text}* - ${qa.points} poin\n`;
+    if (qa.foundBy) {
+      const s = session.scores[qa.foundBy];
+      msg += `   ✅ @${s?.name || qa.foundBy.split("@")[0]} MENJAWAB BENAR! +${qa.points} POIN! 🎉\n`;
+    } else {
+      msg += `   ❌ Tidak ada yang menjawab\n`;
+    }
+  });
+
+  if (wrongs.length) {
+    msg += `\n❌ *JAWABAN SALAH:*\n`;
+    wrongs.forEach((a) => { msg += `   - @${a.name}: "${a.text}" (TIDAK ADA DI SURVEI)\n`; });
+  }
+
+  msg += `\n📊 Total jawaban benar: ${corrects.length}\n`;
+  msg += `📊 Total jawaban salah: ${wrongs.length}\n\n`;
+
+  const board = renderScoreboard(session);
+  if (board.length) {
+    msg += `🏆 *PEROLEHAN SKOR SEMENTARA*\n`;
+    msg += board.join("\n") + "\n\n";
+  }
+
+  const mentionJids = [
+    ...Object.keys(session.scores),
+    ...wrongs.map((a) => a.jid),
+  ];
+  safeSend(sock, session.chatId, msg, mentionJids);
+
+  // 🔥 Ronde berikutnya otomatis (ala script)
+  session.nextTimer = setTimeout(() => {
+    const cur = getSession(session.chatId);
+    if (!cur) return;
+    safeSend(sock, cur.chatId, `🔥 *RONDE ${cur.round + 1} DIMULAI...*`, []);
+    startRound(sock, cur);
+  }, NEXT_ROUND_MS);
+}
+
+// ─── Game over: juara + reward ───
+function revealChampion(sock, session, { stopped } = {}) {
+  const board = renderScoreboard(session, 5);
+  let msg = stopped
+    ? `🛑 *GAME DIHENTIKAN!*\n\n`
+    : `🎉 *SELESAI! Semua pertanyaan telah dimainkan!*\n\n`;
+  msg += `🏆 *HASIL AKHIR FAMILY 100*\n`;
+  if (board.length) msg += board.join("\n") + "\n\n";
+  else msg += `📉 Gak ada yang mencetak poin 😅\n\n`;
+
+  const entries = Object.entries(session.scores).sort((a, b) => b[1].points - a[1].points);
+  const [topJid, topScore] = entries[0] || [];
+
+  // Reward juara
+  if (topJid) {
+    let reward = { limit: 0, koin: 0, exp: 0 };
+    try {
+      const db = getDatabase();
+      reward = getRandomReward();
+      if (reward.limit > 0) db.updateEnergi(topJid, reward.limit);
+      if (reward.koin > 0) db.updateKoin(topJid, reward.koin);
+      if (reward.exp > 0) {
+        const user = db.getUser(topJid);
+        if (user) {
+          const fakeM = { chat: session.chatId, sender: topJid, pushName: topScore.name || "Juara" };
+          addExpWithLevelCheck(sock, fakeM, db, user, reward.exp);
+        }
+      }
+      db.save();
+    } catch (e) { console.error("[family100] Reward error:", e.message); }
+    msg += `🎊 *JUARA:* @${topScore.name || topJid.split("@")[0]} - ${topScore.points} poin\n`;
+    msg += `🎫 +${reward.limit} Limit | 🪙 +${reward.koin} Koin | ✨ +${reward.exp} EXP\n\n`;
+  }
+  msg += gameCTA("family100");
+  safeSend(sock, session.chatId, msg, Object.keys(session.scores));
+  endSession(session.chatId);
+}
+
+// ─── Safe send ───
+function safeSend(sock, chatId, text, mentions) {
+  try {
+    const content = { text: smallcapsText(text) };
+    if (mentions && mentions.length) content.mentions = [...new Set(mentions)];
+    return sock.sendMessage(chatId, content);
+  } catch (e) { console.error("[family100] send error:", e.message); }
 }
 
 // ─── Plugin Config ───
@@ -229,8 +249,8 @@ const pluginConfig = {
   name: "family100",
   alias: ["family100"],
   category: "game",
-  description: "Game Family 100 — tebak semua jawaban survey!",
-  usage: ".family100",
+  description: "Game Family 100 ala TV — 1 jawaban per pemain, poin survei, reveal medali, ronde otomatis!",
+  usage: ".family100 [stop]",
   example: ".family100",
   isOwner: false,
   isPremium: true,
@@ -243,309 +263,157 @@ const pluginConfig = {
 };
 
 // ─── Main Handler ───
-async function handler(m, { sock }) {
+async function handler(m, { sock, config }) {
   try {
     const chatId = m.chat;
+    const sub = (m.args?.[0] || "").toLowerCase();
 
-    if (hasActiveSession(chatId)) {
+    // ─── STOP GAME ───
+    if (sub === "stop") {
       const session = getSession(chatId);
-      if (session) {
-        const remaining = getRemainingTime(chatId);
-        const text = novaBox("Family 100", [
-          "⚠️ Game masih berjalan",
-          "---",
-          session.question,
-          ...renderBoard(session),
-          "---",
-          `${toSC("Ditemukan")} : ${session.foundCount}/${session.totalAnswers}`,
-          `${toSC("Sisa Waktu")} : ${formatTime(remaining)}`,
-          "---",
-          'Ketik "nyerah" untuk menyerah dan lihat semua jawaban',
-        ], { border: false });
-        await m.reply(text);
-        return;
-      }
+      if (!session) return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🤔 *GAK ADA GAME!*", body: "Belum ada game family100 yang jalan di grup ini kak!" }));
+      revealChampion(sock, session, { stopped: true });
+      return;
     }
 
+    // ─── GAME SEDANG JALAN → tampilin status ───
+    const session = getSession(chatId);
+    if (session) {
+      const remaining = Math.max(0, Math.ceil((session.endTime - Date.now()) / 1000));
+      const board = renderScoreboard(session);
+      let text =
+        `⚠️ *GAME SEDANG BERJALAN — RONDE ${session.round}*\n\n` +
+        `"${session.question}"\n\n`;
+      if (session.phase === "question") text += `⏳ Sisa waktu: ${remaining} detik\n`;
+      text += `💡 Ketik jawabanmu langsung di chat! (1 jawaban per pemain)`;
+      if (board.length) text += `\n\n🏆 *SKOR SEMENTARA*\n` + board.join("\n");
+      text += `\n\n🛑 .family100 stop buat berhenti`;
+      await safeSend(sock, chatId, text, Object.keys(session.scores));
+      return;
+    }
+
+    // ─── MULAI GAME BARU ───
     const data = loadData();
-    if (!data || data.length === 0) {
-      await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🫠 *BANK SOAL KOSONG!*", body: "Soalnya lagi kosong nih kak, coba lagi nanti ya!" }));
-      return;
-    }
-
-    const questionData = data[Math.floor(Math.random() * data.length)];
-    if (!questionData || !questionData.jawaban || questionData.jawaban.length === 0) {
-      await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "😵 *SOAL RUSAK!*", body: "Soalnya kepotong nih, coba ulang ya kak!" }));
-      return;
+    if (!data || !data.length) {
+      return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🫠 *BANK SOAL KOSONG!*", body: "Soalnya lagi kosong nih kak, coba lagi nanti ya!" }));
     }
     await m.react("🕒");
-    const text = novaBox("Family 100", [
-      pickFlavor(),
-      questionData.soal,
-      "---",
-      ...renderBoard({
-        answers: questionData.jawaban.map((j, i) => ({
-          text: j,
-          index: i,
-          revealed: false,
-        })),
-        totalAnswers: questionData.jawaban.length,
-      }),
-      "---",
-      `📊 ${toSC("Progres")} :`,
-      renderProgressBar(0, questionData.jawaban.length),
-      "",
-      `${toSC("Total Jawaban")} : ${questionData.jawaban.length}`,
-      `${toSC("Waktu")} : ${formatTime(120000)}`,
-      `${toSC("Hadiah")} : Limit, Koin, EXP (random per jawaban)`,
-      "---",
-      "💬 Balas pesan ini atau ketik jawaban langsung",
-      '🏳️ Ketik "nyerah" buat buka semua jawaban',
-    ], { border: false });
 
-    const sentMsg = await m.reply(text);
-    await m.react("🐣");
-    const session = createSession(
+    const newSession = {
       chatId,
-      questionData,
-      sentMsg?.key || m.key,
-      120000
-    );
+      hostName: config?.bot?.name || "Nova AI",
+      startTime: Date.now(),
+      round: 0,
+      usedIds: [],
+      scores: {},        // { jid: { name, points, correct } }
+      phase: "idle",
+      question: "",
+      survey: [],
+      attempts: [],
+      answeredUsers: new Set(),
+      timer: null, warnTimer: null, nextTimer: null,
+    };
+    sessions.set(chatId, newSession);
 
-    // ⏰ Reminder 30 detik terakhir — biar seru kayak TV
-    const warnDelay = Math.max(0, session.endTime - Date.now() - 30000);
-    session.warnTimer = setTimeout(async () => {
-      try {
-        const cur = getSession(chatId);
-        if (!cur || cur.startTime !== session.startTime) return;
-        await sock.sendMessage(chatId, {
-          // FIX OWNER 2026-09-07 (screenshot): label "Progres:" nempel
-          // langsung ke progress bar — kelihatan dempet/berantakan.
-          // Fix final (revisi owner): pakai JARAK BARIS KOSONG biar
-          // progress bar keliatan jelas terpisah dan rapi.
-          text: smallcapsText(`⏰ *Sisa 30 detik!*\n\n📊 Progres:\n${renderProgressBar(cur.foundCount, cur.totalAnswers)}\n\nSemangat, buruan jawab yang belum kebuka! 💪`),
-        });
-      } catch {}
-    }, warnDelay);
-
-    setSessionTimer(chatId, async () => {
-      try {
-        // Reveal jawaban = hasil game → plain text tanpa box (aturan hasil plain)
-        let endText = `${pick(TIMEOUT_MSGS)}\n\n`;
-        endText += `${session.question}\n\n`;
-        endText += `Jawaban lengkap:\n\n`;
-        for (let i = 0; i < session.answers.length; i++) {
-          const ans = session.answers[i];
-          const num = String(i + 1).padStart(2, "0");
-          endText += `${ans.revealed ? "✅" : "❌"} ${num} ${ans.text}${ans.revealed && ans.foundBy ? ` — @${ans.foundBy.split("@")[0]}` : ""}\n`;
-        }
-        endText += `\n📊 Progres akhir:\n${renderProgressBar(session.foundCount, session.totalAnswers)}\n\n`;
-        const scores = renderScores(session);
-        if (scores.length) {
-          endText += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
-        }
-        endText += gameCTA("family100");
-        await sock.sendMessage(chatId, { text: smallcapsText(endText) });
-      } catch (e) {
-        console.error("[family100] Timeout handler error:", e.message);
-      }
-    });
+    await safeSend(sock, chatId,
+      `🎬 *FAMILY 100 CHAT DIMULAI!*\n` +
+      `🎤 Host: ${newSession.hostName}\n\n` +
+      `📌 Aturan modern:\n` +
+      `• 1 jawaban per pemain per ronde\n` +
+      `• Jawaban survei terpopuler = poin terbesar\n` +
+      `• Ronde baru otomatis setiap selesai!\n\n` +
+      `🔥 *RONDE 1 DIMULAI...*`, []);
+    startRound(sock, newSession);
+    await m.react("🐣");
   } catch (e) {
     console.error("[family100] Handler error:", e.message);
-    try {
-      await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *ERROR SAAT MULAI!*", body: "Ada gangguan saat memulai game, coba lagi ya kak!" }));
-    } catch {}
+    try { await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *ERROR SAAT MULAI!*", body: "Ada gangguan saat memulai game, coba lagi ya kak!" })); } catch {}
   }
 }
 
-// ─── Answer Handler (untuk pesan non-command) ───
+// ─── Answer Handler (pesan non-command di grup) ───
 async function answerHandler(m, sock) {
   try {
-    const chatId = m.chat;
-    const session = getSession(chatId);
-
+    const session = getSession(m.chat);
     if (!session) return false;
+    if (session.phase !== "question") return false;
 
-    const userAnswer = (m.body || "").trim();
-    if (!userAnswer || userAnswer.startsWith(".")) return false;
-
-    // WAJIB reply pesan game (soal) untuk jawab atau nyerah
-    if (!isReplyToGame(m, session)) return false;
+    const text = (m.body || "").trim();
+    if (!text || text.startsWith(".")) return false;
 
     const sender = m.sender;
+    const senderName = m.pushName || sender.split("@")[0];
 
-    if (!session.attempts[sender]) session.attempts[sender] = 0;
-    session.attempts[sender]++;
+    // ─── NYERAH → reveal ronde, lanjut ronde berikutnya ───
+    if (isWordIn(text, SURRENDER_WORDS)) {
+      revealRound(sock, session, { reason: "surrender" });
+      return true;
+    }
 
-    // ─── SURRENDER ───
-    if (isSurrender(userAnswer)) {
-      // Build reveal text BEFORE ending session
-      // Format hasil (request owner): jawaban plain tanpa bold/uppercase,
-      // bold cuma di header — biar gak berlebihan.
-      // Reveal jawaban = hasil game → plain text tanpa box (aturan hasil plain)
-      let text = `${pick(SURRENDER_MSGS)}\n\n`;
-      text += `${session.question}\n\n`;
-      text += `Jawaban lengkap:\n\n`;
-      for (let i = 0; i < session.answers.length; i++) {
-        const ans = session.answers[i];
-        const num = String(i + 1).padStart(2, "0");
-        text += `${ans.revealed ? "✅" : "❌"} ${num} ${ans.text}${ans.revealed && ans.foundBy ? ` — @${ans.foundBy.split("@")[0]}` : ""}\n`;
-      }
-      text += `\n📊 Progres akhir: ${renderProgressBar(session.foundCount, session.totalAnswers)}\n\n`;
-      const scores = renderScores(session);
-      if (scores.length) {
-        text += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
-      }
-      text += gameCTA("family100");
+    // ─── STOP (plain text) → game over ───
+    if (isWordIn(text, STOP_WORDS)) {
+      revealChampion(sock, session, { stopped: true });
+      return true;
+    }
 
-      const mentionJids = Object.keys(session.scores).length > 0
-        ? Object.keys(session.scores)
-        : undefined;
+    // ─── 1 JAWABAN PER PEMAIN (ala script) ───
+    if (session.answeredUsers.has(sender)) {
+      await m.react("⚠️");
+      await safeSend(sock, session.chatId, `⚠️ *@${senderName}* sudah menjawab! Tunggu hasil reveal.`, [sender]);
+      return true;
+    }
 
-      // End session FIRST, then send message
-      endSession(chatId);
+    const result = matchSurveyAnswer(session.survey, text);
 
-      try {
-        await sock.sendMessage(chatId, {
-          text: smallcapsText(text),
-          mentions: mentionJids,
-        });
-      } catch (e) {
-        console.error("[family100] Surrender send error:", e.message);
+    // ─── HAMPIR (grace: gak ngabisin jatah jawaban) ───
+    if (result.status === "close" || result.status === "empty") {
+      if (result.status === "close") {
+        await m.react("🔥");
+        await safeSend(sock, session.chatId,
+          `🔥 *@${senderName}* hampir! Mirip ${Math.round(result.similarity * 100)}% — coba lagi (jatah jawabanmu masih ada) 💡`, [sender]);
       }
       return true;
     }
 
-    // ─── CHECK ANSWER ───
-    const result = checkFamilyAnswer(session, userAnswer);
+    // ─── JAWABAN UDAH DIAMBIL PEMAIN LAIN ───
+    if (result.status === "correct" && result.answer.foundBy) {
+      await m.react("⚠️");
+      await safeSend(sock, session.chatId,
+        `⚠️ Jawaban "${result.answer.text}" sudah disebutkan oleh pemain lain! Coba jawaban lain (jatahmu masih ada) 💡`, [sender]);
+      return true;
+    }
 
+    // ─── BENAR (ala script) ───
     if (result.status === "correct") {
-      result.answer.revealed = true;
-      result.answer.foundBy = sender;
-      session.foundCount++;
+      const qa = result.answer;
+      qa.foundBy = sender;
+      const rank = session.survey.indexOf(qa) + 1;
+      session.attempts.push({ jid: sender, name: senderName, text, status: "benar", points: qa.points });
+      session.answeredUsers.add(sender);
+      if (!session.scores[sender]) session.scores[sender] = { name: senderName, points: 0, correct: 0 };
+      session.scores[sender].points += qa.points;
+      session.scores[sender].correct += 1;
+      await m.react("🎉");
+      await safeSend(sock, session.chatId,
+        `✅ *BENAR!* "@${senderName}" menjawab "${qa.text}"\n` +
+        `⭐ Mendapat ${qa.points} poin! (Jawaban survei #${rank})`, [sender]);
 
-      if (!session.scores[sender]) {
-        session.scores[sender] = {
-          name: m.pushName || sender.split("@")[0],
-          correct: 0,
-          points: 0,
-        };
+      // Semua jawaban ketemu → langsung reveal
+      if (session.survey.every((a) => a.foundBy)) {
+        await safeSend(sock, session.chatId, `💯 *WOW! SEMUA JAWABAN SURVEI KETEMU!*\n`, []);
+        revealRound(sock, session, { reason: "allfound" });
       }
-      session.scores[sender].correct++;
-      const points = session.totalAnswers - result.answer.index;
-      session.scores[sender].points += points;
-      const replyLines = [
-        `🎉 @${sender.split("@")[0]} menebak: ${result.answer.text.toUpperCase()}`,
-        `⚡ ${toSC("Dapat")} : ${points} poin`,
-        `📊 ${toSC("Progres")} :`,
-        renderProgressBar(session.foundCount, session.totalAnswers),
-        "",
-        "---",
-        session.question,
-        ...renderBoard(session),
-        "---",
-        `⏳ ${toSC("Sisa Waktu")} : ${formatTime(getRemainingTime(chatId))}`,
-      ];
-      const scores = renderScores(session);
-      if (scores.length) {
-        replyLines.push({ sub: "Skor" }, ...scores);
-      }
-      const replyText = novaBox("Family 100", replyLines, { border: false });
-
-      try {
-        await m.react("🎉"); // react di pesan tebakan si penebak
-      } catch {}
-      try {
-        await sock.sendMessage(chatId, {
-          text: smallcapsText(replyText),
-          mentions: Object.keys(session.scores),
-        });
-      } catch (e) {
-        console.error("[family100] Correct send error:", e.message);
-      }
-
-      // ─── CHECK IF ALL ANSWERS FOUND ───
-      if (session.foundCount >= session.totalAnswers) {
-        // Build win text BEFORE ending session
-        const entries = Object.entries(session.scores);
-        const winLines = [pick(WIN_MSGS)];
-
-        if (entries.length > 0) {
-          entries.sort((a, b) => b[1].points - a[1].points);
-          const [topJid, topScore] = entries[0];
-
-          // Give rewards
-          let reward = { limit: 0, koin: 0, exp: 0 };
-          try {
-            const db = getDatabase();
-            reward = getRandomReward();
-            if (reward.limit > 0) db.updateEnergi(topJid, reward.limit);
-            if (reward.koin > 0) db.updateKoin(topJid, reward.koin);
-            if (reward.exp > 0) {
-              const user = db.getUser(topJid);
-              if (user) await addExpWithLevelCheck(sock, m, db, user, reward.exp);
-            }
-            db.save();
-          } catch (e) {
-            console.error("[family100] Reward error:", e.message);
-          }
-
-          winLines.push(
-            "---",
-            `🥇 ${toSC("Juara")} : @${topJid.split("@")[0]}`,
-            `✅ ${toSC("Jawaban Benar")} : ${topScore.correct}`,
-            `💯 ${toSC("Total Poin")} : ${topScore.points}`,
-            `📊 ${toSC("Progres")} :`,
-            renderProgressBar(session.foundCount, session.totalAnswers),
-            "",
-            "---",
-            { sub: "Hadiah" },
-          );
-          if (reward.limit > 0) winLines.push(`🎫 +${reward.limit} Limit`);
-          if (reward.koin > 0) winLines.push(`🪙 +${reward.koin} Koin`);
-          if (reward.exp > 0) winLines.push(`✨ +${reward.exp} EXP`);
-          winLines.push("---", "🎊 *Board abis semua! Kerja tim yang keren!*");
-        }
-        const winText = novaBox("Family 100", winLines, { border: false });
-
-        // End session FIRST, then send
-        endSession(chatId);
-
-        try {
-          await sock.sendMessage(chatId, {
-            text: smallcapsText(winText),
-            mentions: Object.keys(session.scores).length > 0
-              ? [entries[0][0]]
-              : undefined,
-          });
-        } catch (e) {
-          console.error("[family100] Win send error:", e.message);
-        }
-      }
-
       return true;
     }
 
-    if (result.status === "close") {
-      const remaining = getRemainingTime(chatId);
-      const percent = Math.round(result.similarity * 100);
-      await m.react("🔥");
-      try {
-        await m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🔥 *HAMPIR SEMPURNA!*", body: `Jawabanmu ${percent}% mirip — sisa ${formatTime(remaining)}` }));
-      } catch {}
-      return true;
-    }
-
-    if (result.status === "wrong") {
-      // Interaktif ala modern: react ❌ doang di pesan tebakan —
-      // gak spam box salah tiap tebakan, chat tetep bersih
-      try {
-        await m.react("❌");
-      } catch {}
-      return true;
-    }
-
-    return false;
+    // ─── SALAH (ala script: jatah jawaban hangus) ───
+    session.attempts.push({ jid: sender, name: senderName, text, status: "salah", points: 0 });
+    session.answeredUsers.add(sender);
+    await m.react("❌");
+    await safeSend(sock, session.chatId,
+      `❌ *SALAH!* "@${senderName}" menjawab "${text}"\n` +
+      `💡 Jawaban tidak ada di survei 100 orang!`, [sender]);
+    return true;
   } catch (e) {
     console.error("[family100] AnswerHandler error:", e.message);
     return false;
