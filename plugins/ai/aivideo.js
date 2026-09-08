@@ -3,7 +3,7 @@
 // VIDEO AI PERTAMA di bot! Key: apikeys.json kuroneko.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { text2vid } from "../../src/scraper/kuroneko.js";
+import { haidarTxt2vid } from "../../src/scraper/haidar-ai.js";
 
 const pluginConfig = {
   name: "aivideo",
@@ -28,14 +28,22 @@ async function handler(m, { sock }) {
   }
   try {
     await m.react("🕒");
-    const videoUrl = await text2vid(prompt);
+    // Engine utama: Haidar txt2vid (sora) — fallback: KuroNeko
+    let videoUrl = null;
+    try {
+      videoUrl = await haidarTxt2vid(prompt);
+    } catch (eh) {
+      console.error("[aivideo] haidar down:", eh.message);
+      const { text2vid: knVid } = await import("../../src/scraper/kuroneko.js");
+      videoUrl = await knVid(prompt);
+    }
     const axios = (await import("axios")).default;
     const vres = await axios.get(videoUrl, { responseType: "arraybuffer", timeout: 120000 });
     const buf = Buffer.from(vres.data);
     if (!buf || buf.length < 20000) throw new Error("file video kosong");
 
     await m.react("🐣");
-    const caption = claraWrap("aivideo", `🎬 Video AI berhasil dibuat!\n\n📝 Prompt: *${prompt}*\n⚙️ Engine: KuroNeko text2vid (sora)\n📦 Ukuran: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
+    const caption = claraWrap("aivideo", `🎬 Video AI berhasil dibuat!\n\n📝 Prompt: *${prompt}*\n⚙️ Engine: Haidar txt2vid (sora)\n📦 Ukuran: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
     await sock.sendMessage(m.chat, {
       video: buf,
       caption,
