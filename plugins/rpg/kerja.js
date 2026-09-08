@@ -153,7 +153,10 @@ async function handler(m, { sock }) {
     // GAJIAN UANG ASLI — Rp dari flavor gajian profesi dibayar jadi cash
     // (mata uang RPG terpisah: gold = batang emas, EXP = pengalaman)
     const cashGain = gajianCash(chosenJob);
-    if (cashGain > 0) addCash(m, cashGain);
+    // 🔧 ALAT PROFESI (.tokorpg beli <profesi>) → gajian +30% permanen
+    const hasTool = !!(rpg.jobTools && rpg.jobTools[chosenJob]);
+    const toolBonus = hasTool ? Math.floor(cashGain * 0.3) : 0;
+    if (cashGain > 0) addCash(m, cashGain + toolBonus);
     const { leveledUp } = addJobExp(m, jobExpGain);
     setCooldown(m, "lastWork", WORK_COOLDOWN);
 
@@ -169,7 +172,8 @@ async function handler(m, { sock }) {
       "",
       `✨ EXP : +${expGain}`,
       `💰 Gold : +${goldGain}`,
-      ...(cashGain > 0 ? [`💵 Uang : ${formatRp(cashGain)}`] : []),
+      ...(cashGain > 0 ? [`💵 Uang : ${formatRp(cashGain + toolBonus)}`] : []),
+      ...(hasTool ? [`🔧 Alat : +30% gajian (${formatRp(toolBonus)})`] : []),
       `📖 Job EXP : +${jobExpGain}`,
       ...(bonusFlavor ? [`📦 Bonus : ${bonusFlavor}`] : []),
       ...(leveledUp ? ["", ...prof.naikLevel] : []),
