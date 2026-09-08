@@ -2,6 +2,8 @@
 // bomb.js — Game jinakkan bom (potong kabel yang benar)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 class BombGame {
   constructor() {
@@ -94,6 +96,11 @@ async function handler(m, { sock }) {
         msg += `✅ Berhasil jinakkan bom!\n`;
         msg += `Kabel aman: ${game.cutCards.join(", ")}\n`;
         msg += `🎉 Selamat! Kamu menang!\n`;
+        // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+        try {
+          const cash = rollBonus(m, "bomb");
+          if (cash.gain > 0) msg += `💵 Uang: +${formatRp(cash.gain)} (saldo ${formatRp(cash.saldo)})\n`;
+        } catch {}
         msg += `Yuk jinakkan bom lagi kak, biar sarafmu makin baja 🥳\n`;
                 return m.reply(msg);
       }

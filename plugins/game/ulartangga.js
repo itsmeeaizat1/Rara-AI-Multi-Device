@@ -3,6 +3,8 @@
 import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const SNAKES = { 29: 7, 24: 12, 72: 36, 90: 56, 75: 64, 91: 72, 97: 78 };
 const LADDERS = { 15: 37, 23: 41, 49: 86, 74: 95 };
@@ -78,7 +80,11 @@ Total pemain: ${game.players.length}` }));
         msg += `🎲 Dadu: ${dice}\n`;
         msg += `🪜 Tangga! Naik ke ${pos}\n`;
         msg += `📍 @${sender.split("@")[0]} di posisi ${pos}\n`;
-        if (pos >= 100) { msg += `🏆 MENANG!\n`;
+        if (pos >= 100) { let __cash = { gain: 0, saldo: 0 };
+          try { __cash = rollBonus(m, "ulartangga"); } catch {}
+          msg += `💵 Uang: +${formatRp(__cash.gain)} (saldo ${formatRp(__cash.saldo)})\n`;
+          if (__cash.jackpot) msg += `🎰 JACKPOT! Bonus 3x uang!\n`;
+          msg += `🏆 MENANG!\n`;
           msg += `Yuk main ular tangga lagi kak untuk dadi yang lebih baik 🥳\n`; games.delete(from); }
         game.positions[sender] = pos;
         game.turn++;
@@ -93,7 +99,11 @@ Total pemain: ${game.players.length}` }));
         msg += `🎲 Dadu: ${dice}\n`;
         msg += `🐍 Ular! Turun ke ${pos}\n`;
         msg += `📍 @${sender.split("@")[0]} di posisi ${pos}\n`;
-        if (pos >= 100) { msg += `🏆 MENANG!\n`;
+        if (pos >= 100) { let __cash = { gain: 0, saldo: 0 };
+          try { __cash = rollBonus(m, "ulartangga"); } catch {}
+          msg += `💵 Uang: +${formatRp(__cash.gain)} (saldo ${formatRp(__cash.saldo)})\n`;
+          if (__cash.jackpot) msg += `🎰 JACKPOT! Bonus 3x uang!\n`;
+          msg += `🏆 MENANG!\n`;
           msg += `Yuk main ular tangga lagi kak untuk dadi yang lebih baik 🥳\n`; games.delete(from); }
         game.positions[sender] = pos;
         game.turn++;
@@ -108,7 +118,11 @@ Total pemain: ${game.players.length}` }));
       let msg = "";
       msg += `🎲 Dadu: ${dice}\n`;
       msg += `📍 @${sender.split("@")[0]} di posisi ${pos}/100\n`;
-      if (pos >= 100) { msg += `🏆 MENANG!\n`;
+      if (pos >= 100) { let __cash = { gain: 0, saldo: 0 };
+          try { __cash = rollBonus(m, "ulartangga"); } catch {}
+          msg += `💵 Uang: +${formatRp(__cash.gain)} (saldo ${formatRp(__cash.saldo)})\n`;
+          if (__cash.jackpot) msg += `🎰 JACKPOT! Bonus 3x uang!\n`;
+          msg += `🏆 MENANG!\n`;
           msg += `Yuk main ular tangga lagi kak untuk dadi yang lebih baik 🥳\n`; games.delete(from); }
       return m.reply(msg.trim());
     }

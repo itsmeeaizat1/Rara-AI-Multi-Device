@@ -6,6 +6,9 @@ import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "tebakangka",
@@ -64,7 +67,17 @@ async function handler(m, { args, prefix }) {
     const remaining = game.maxAttempts - game.attempts;
     const expGain = 20 + remaining * 5;
     activeGames.delete(chatId);
-    try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
+    // FIX 8 Sep 2026: dulu addExpWithLevelCheck(m.sender, expGain, m) —
+    // urutan argumen SALAH (benernya (sock, m, db, user, exp)) → EXP gak
+    // pernah kebayar. Sekalian bayar 💵 uang (semua game harus ada uang).
+    let cashRes = { gain: 0, saldo: 0 };
+    try {
+      const db = getDatabase();
+      let user = db?.getUser(m.sender);
+      if (db && !user) { db.setUser(m.sender); user = db.getUser(m.sender) || {}; }
+      if (db && user) await addExpWithLevelCheck(m, m, db, user, expGain);
+    } catch {}
+    try { cashRes = rollBonus(m, "tebakangka"); } catch {}
     // teks polos — prefix & pemotongan dijamin boxLeft(), bukan manual
     const e = m.energiInfo;
     const energiLine = e
@@ -80,7 +93,8 @@ async function handler(m, { args, prefix }) {
         `Angka: ${game.target}\n` +
         `Tebakan ke-${game.attempts} dari ${game.maxAttempts}\n` +
         energiLine +
-        `✨ EXP: +${expGain}`) +
+        `✨ EXP: +${expGain}\n` +
+        `💵 Uang: +${formatRp(cashRes.gain)} (saldo ${formatRp(cashRes.saldo)})${cashRes.jackpot ? "\n🎰 JACKPOT! Bonus 3x uang!" : ""}`) +
       `\n\nYuk tebak angka lain kak, biar makin jago nebak 🥳`
     );
   }

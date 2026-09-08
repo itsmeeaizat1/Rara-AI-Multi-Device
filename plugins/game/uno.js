@@ -4,6 +4,8 @@ import { claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const pluginConfig = {
   name: "uno",
@@ -120,7 +122,12 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       else if (card.value === "10") game.currentPlayer = getNextPlayer(game);
       else if (card.value === "11") game.direction *= -1;
       game.currentCard = card; game.discardPile.push(card); p.hand.splice(idx, 1);
-      if (p.hand.length === 0) { games.delete(chatId); return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "🎉 *UNO! MENANG TOTAL!*", body: "@" + sender.split("@")[0] + " habiskan semua kartunya!", cta: gameCTA("uno") }), { mentions: [sender] }); }
+      if (p.hand.length === 0) { games.delete(chatId);
+        // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+        let uCash = { gain: 0, saldo: 0 };
+        try { uCash = rollBonus(m, "uno"); } catch {}
+        const uBody = "@" + sender.split("@")[0] + " habiskan semua kartunya!\n💵 Uang: +" + formatRp(uCash.gain) + " (saldo " + formatRp(uCash.saldo) + ")" + (uCash.jackpot ? "\n🎰 JACKPOT! Bonus 3x uang!" : "");
+        return m.reply(novaGameBox({ title: "uno", icon: "🃏", flavor: "🎉 *UNO! MENANG TOTAL!*", body: uBody, cta: gameCTA("uno") }), { mentions: [sender] }); }
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
     }

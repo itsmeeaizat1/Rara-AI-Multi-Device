@@ -14,6 +14,8 @@ import { gameCTA, pickFlavor } from './nova-games.js';
 import { claraWrap } from './nova-menu-style.js';
 import { haidarGame } from './nova-haidar.js';
 import { addExpWithLevelCheck } from './nova-level.js';
+import { addGameCash, formatRp } from './nova-rpg-service.js';
+import { rollGameReward, rewardLines } from './nova-game-rewards.js';
 
 let fetchBuffer;
 try {
@@ -273,10 +275,15 @@ class GameFactory {
           // → POIN PER GAME (skor sendiri, rpg.gamePoin[gameType]), BUKAN reward lama.
           // Game lama & v2-nya → reward lama (limit/koin/gold/gems/diamonds/EXP).
           const isNewGame = !!cfg.newGame;
-          const reward = isNewGame ? null : getRandomReward();
+          // PROFIL REWARD PER GAME (request owner 8 Sep 2026): tiap game cuma
+          // drop item khasnya sendiri (musik→koin, visual→gems, dst) — BUKAN
+          // semua item seragam. + peluang JACKPOT (semua ×3 + token & diamonds).
+          const rewardRoll = rollGameReward(gameType);
+          const reward = { limit: 0, koin: 0, exp: 0, gold: 0, gems: 0, diamonds: 0, tokens: 0, ...(isNewGame ? {} : rewardRoll.items) };
           let rewardGiven = false;
           let poinReward = 0;
           let poinTotal = 0;
+          let cashRes = { gain: 0, saldo: 0 };
           try {
             const db = getDatabase();
             if (db) {
@@ -288,7 +295,7 @@ class GameFactory {
               if (isNewGame) {
                 if (!user.rpg) user.rpg = {};
                 if (!user.rpg.gamePoin) user.rpg.gamePoin = {};
-                poinReward = [3, 4, 5, 8][Math.floor(Math.random() * 4)];
+                poinReward = [3, 4, 5, 8][Math.floor(Math.random() * 4)] * (rewardRoll.jackpot ? 2 : 1);
                 user.rpg.gamePoin[gameType] = (user.rpg.gamePoin[gameType] || 0) + poinReward;
                 poinTotal = user.rpg.gamePoin[gameType];
               } else {
@@ -297,6 +304,7 @@ class GameFactory {
                 if (reward.gold > 0) db.updateRpgCurrency(m.sender, 'gold', reward.gold);
                 if (reward.gems > 0) db.updateRpgCurrency(m.sender, 'gems', reward.gems);
                 if (reward.diamonds > 0) db.updateRpgCurrency(m.sender, 'diamonds', reward.diamonds);
+                if (reward.tokens > 0) db.updateRpgCurrency(m.sender, 'tokens', reward.tokens);
                 if (reward.exp > 0 && user) {
                   if (!user.rpg) user.rpg = {};
                   try {
@@ -304,6 +312,10 @@ class GameFactory {
                   } catch {}
                 }
               }
+              // 💵 UANG (request owner 8 Sep: "semua game minigame ada uang")
+              // — game factory gak lewat rpg addExp, jadi dibayar manual pakai
+              // formula yang sama: exp × (40 + level×10). Semua minigame kena.
+              cashRes = addGameCash(m, isNewGame ? 30 + Math.floor(Math.random() * 50) : (reward.uang || 25));
               db.save();
               rewardGiven = true;
             }
@@ -321,15 +333,15 @@ class GameFactory {
           // Info section: yang kekuras (energi) & yang nambah (reward)
           text += renderEnergiLine(m, cfg);
           if (isNewGame) {
+            // jackpot game poin: skor dobel + uang tetap ×3
+            if (rewardRoll.jackpot) text += `• 🎰 JACKPOT! Bonus 3x + skor dobel!\n`;
             if (poinReward > 0) text += `• 🎯 Skor ${cfg.title}: +${poinReward} (total ${poinTotal})\n`;
           } else {
-            if (reward.limit > 0) text += `• 🎫 Limit: +${reward.limit}\n`;
-            if (reward.koin > 0) text += `• 🪙 Koin: +${fmtNum(reward.koin)}\n`;
-            if (reward.exp > 0) text += `• ✨ EXP: +${fmtNum(reward.exp)}\n`;
-            if (reward.gold > 0) text += `• 🪭 Gold: +${fmtNum(reward.gold)}\n`;
-            if (reward.gems > 0) text += `• 💎 Gems: +${reward.gems}\n`;
-            if (reward.diamonds > 0) text += `• 💎 Diamonds: +${reward.diamonds}\n`;
+            // item sesuai PROFIL game ini aja (gak semua item tiap game) + jackpot
+            text += rewardLines(rewardRoll, fmtNum).join("");
           }
+          // 💵 uang tampil di SEMUA minigame (saldo ala result box RPG)
+          if (cashRes.gain > 0) text += `• 💵 Uang: +${formatRp(cashRes.gain)} (saldo ${formatRp(cashRes.saldo)})\n`;
 
           if (session.question.deskripsi) {
             text += `\n• Info: ${session.question.deskripsi}\n`;

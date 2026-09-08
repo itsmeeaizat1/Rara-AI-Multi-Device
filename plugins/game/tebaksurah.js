@@ -2,6 +2,8 @@
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const sessions = new Map();
 
@@ -39,6 +41,11 @@ async function handler(m, { sock, db }) {
         msg += `✅ Benar! Jawaban: *${session.surahData.englishName}*\n`;
         msg += `(${session.surahData.englishNameTranslation})\n`;
         msg += `🎉 Bonus: +5 energi\n`;
+        // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+        try {
+          const cash = rollBonus(m, "tebaksurah");
+          if (cash.gain > 0) msg += `💵 Uang: +${formatRp(cash.gain)} (saldo ${formatRp(cash.saldo)})\n`;
+        } catch {}
         
         // Bonus energi
         try {

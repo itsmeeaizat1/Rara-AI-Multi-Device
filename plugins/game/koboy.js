@@ -2,6 +2,8 @@
 // koboy.js — Game tembak koboy (tebak posisi musuh)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const pluginConfig = {
   name: "koboy",
@@ -59,6 +61,11 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `🎯 HEADSHOT! Kamu menang!\n`;
+      // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
+      try {
+        const cash = rollBonus(m, "koboy");
+        if (cash.gain > 0) msg += `💵 Uang: +${formatRp(cash.gain)} (saldo ${formatRp(cash.saldo)})\n`;
+      } catch {}
       msg += `Yuk duel lagi kak, biar refleksmu makin cepat 🤠🥳\n`;
       msg += `Round: ${game.round} | Hits: ${game.hits}\n`;
             games.delete(from);

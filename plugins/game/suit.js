@@ -6,6 +6,9 @@ import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
+import { formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollBonus } from "../../src/lib/nova-game-rewards.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "suit",
@@ -67,8 +70,17 @@ async function handler(m, { args, prefix }) {
   let text = "";
   if (result === "menang") {
     const expGain = 5 + Math.floor(Math.random() * 10);
-    text = `🎉 Kamu menang!\n\n` + boxMessage("◆ SUIT ◆", body + `\n✨ EXP: +${expGain}`) + `\n\nYuk suit lagi kak, biar tanganmu makin sakti ✊🥳`;
-        try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
+    // FIX 8 Sep 2026: dulu addExpWithLevelCheck(m.sender, expGain, m) —
+    // urutan argumen SALAH → EXP gak pernah kebayar. Sekalian 💵 uang.
+    let cashRes = { gain: 0, saldo: 0 };
+    try {
+      const db = getDatabase();
+      let user = db?.getUser(m.sender);
+      if (db && !user) { db.setUser(m.sender); user = db.getUser(m.sender) || {}; }
+      if (db && user) await addExpWithLevelCheck(m, m, db, user, expGain);
+    } catch {}
+    try { cashRes = rollBonus(m, "suit"); } catch {}
+    text = `🎉 Kamu menang!\n\n` + boxMessage("◆ SUIT ◆", body + `\n✨ EXP: +${expGain}\n💵 Uang: +${formatRp(cashRes.gain)} (saldo ${formatRp(cashRes.saldo)})${cashRes.jackpot ? "\n🎰 JACKPOT! Bonus 3x uang!" : ""}`) + `\n\nYuk suit lagi kak, biar tanganmu makin sakti ✊🥳`;
   } else if (result === "kalah") {
     text = `😂 Kamu kalah!\n\n` + boxMessage("◆ SUIT ◆", body) + `\n\nYuk revans kak, pias balik ✊🥳`;
       } else {

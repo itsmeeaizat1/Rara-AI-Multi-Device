@@ -12,6 +12,8 @@ import { novaGameBox, gameCTA, pickFlavor } from "../../src/lib/nova-games.js";
 import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
+import { addGameCash, formatRp } from "../../src/lib/nova-rpg-service.js";
+import { rollGameReward, JACKPOT_MULT } from "../../src/lib/nova-game-rewards.js";
 import { harvestFamily100, getRefreshState, onBankUpdated } from "../../src/lib/nova-family100-harvest.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -107,12 +109,12 @@ function getRandomReward() {
 }
 
 // ─── Round Flow ───
-function startRound(sock, session) {
+async function startRound(sock, session) {
   const data = loadData();
   const used = session.usedIds;
   const available = data.map((q, i) => ({ q, i })).filter(({ i }) => !used.includes(i));
   if (!available.length || !data.length) {
-    revealChampion(sock, session, { finished: true });
+    await revealChampion(sock, session, { finished: true });
     return;
   }
   const pick = available[Math.floor(Math.random() * available.length)];
@@ -212,12 +214,14 @@ function revealRound(sock, session, { reason } = {}) {
     const cur = getSession(session.chatId);
     if (!cur) return;
     safeSend(sock, cur.chatId, `🔥 *RONDE ${cur.round + 1} DIMULAI...*`, []);
-    startRound(sock, cur);
+    startRound(sock, cur).catch(() => {});
   }, NEXT_ROUND_MS);
 }
 
 // ─── Game over: juara + reward ───
-function revealChampion(sock, session, { stopped } = {}) {
+// ASYNC: wajib await addExpWithLevelCheck SEBELUM bayar uang — kalau gak,
+// setUser stale-rpg di dalamnya jalan belakangan (race) & TIMPA balik cash jadi 0.
+async function revealChampion(sock, session, { stopped } = {}) {
   const board = renderScoreboard(session, 5);
   let msg = stopped
     ? `🛑 *GAME DIHENTIKAN!*\n\n`
@@ -229,25 +233,44 @@ function revealChampion(sock, session, { stopped } = {}) {
   const entries = Object.entries(session.scores).sort((a, b) => b[1].points - a[1].points);
   const [topJid, topScore] = entries[0] || [];
 
-  // Reward juara
+  // Reward juara — profil khas family100 (exp+koin+uang+limit, jackpot 10%)
   if (topJid) {
-    let reward = { limit: 0, koin: 0, exp: 0 };
+    let reward = { limit: 0, koin: 0, exp: 0, uang: 0, tokens: 0, diamonds: 0 };
+    let rewardRoll = { items: {}, jackpot: false };
+    let cashRes = { gain: 0, saldo: 0 };
     try {
       const db = getDatabase();
-      reward = getRandomReward();
+      rewardRoll = rollGameReward("family100");
+      reward = { limit: 0, koin: 0, exp: 0, uang: 0, tokens: 0, diamonds: 0, ...rewardRoll.items };
       if (reward.limit > 0) db.updateEnergi(topJid, reward.limit);
       if (reward.koin > 0) db.updateKoin(topJid, reward.koin);
+      if (reward.tokens > 0) db.updateRpgCurrency(topJid, "tokens", reward.tokens);
+      if (reward.diamonds > 0) db.updateRpgCurrency(topJid, "diamonds", reward.diamonds);
       if (reward.exp > 0) {
         const user = db.getUser(topJid);
         if (user) {
           const fakeM = { chat: session.chatId, sender: topJid, pushName: topScore.name || "Juara" };
-          addExpWithLevelCheck(sock, fakeM, db, user, reward.exp);
+          // AWAIT — EXP tetap EXP (naik level), urus sampai persist DULU
+          await addExpWithLevelCheck(sock, fakeM, db, user, reward.exp);
         }
       }
+      // 💵 uang juara (request owner 8 Sep: semua game ada uang) — DIBAYAR
+      // SETELAH exp persist biar gak ketimpa race setUser rpg basi.
+      // EXP & uang dua-duanya kebayar, gak ada yang digantikan.
+      try {
+        const fakeM = { chat: session.chatId, sender: topJid, pushName: topScore.name || "Juara" };
+        cashRes = addGameCash(fakeM, reward.exp || 30);
+      } catch {}
       db.save();
     } catch (e) { console.error("[family100] Reward error:", e.message); }
     msg += `🎊 *JUARA:* @${topScore.name || topJid.split("@")[0]} - ${topScore.points} poin\n`;
-    msg += `🎫 +${reward.limit} Limit | 🪙 +${reward.koin} Koin | ✨ +${reward.exp} EXP\n\n`;
+    if (rewardRoll.jackpot) msg += `🎰 *JACKPOT! Semua bonus ×${JACKPOT_MULT} + token & diamonds!*\n`;
+    msg += `🎫 +${reward.limit} Limit | 🪙 +${reward.koin} Koin | ✨ +${reward.exp} EXP\n`;
+    if (reward.tokens > 0) msg += `🎟️ +${reward.tokens} Token`;
+    if (reward.diamonds > 0) msg += ` | 💎 +${reward.diamonds} Diamonds`;
+    if (reward.tokens > 0 || reward.diamonds > 0) msg += `\n`;
+    if (cashRes.gain > 0) msg += `💵 +${formatRp(cashRes.gain)} Uang (saldo ${formatRp(cashRes.saldo)})\n\n`;
+    else msg += `\n`;
   }
   msg += gameCTA("family100");
   safeSend(sock, session.chatId, msg, Object.keys(session.scores));
@@ -294,7 +317,7 @@ async function handler(m, { sock, config }) {
     if (sub === "stop") {
       const session = getSession(chatId);
       if (!session) return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🤔 *GAK ADA GAME!*", body: "Belum ada game family100 yang jalan di grup ini kak!" }));
-      revealChampion(sock, session, { stopped: true });
+      await revealChampion(sock, session, { stopped: true });
       return;
     }
 
@@ -427,7 +450,7 @@ async function answerHandler(m, sock) {
 
     // ─── STOP (plain text) → game over ───
     if (isWordIn(text, STOP_WORDS)) {
-      revealChampion(sock, session, { stopped: true });
+      await revealChampion(sock, session, { stopped: true });
       return true;
     }
 
