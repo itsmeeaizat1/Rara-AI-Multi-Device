@@ -14,10 +14,16 @@ import {
   formatWeatherUpdate,
   conditionKey,
 } from "./nova-weather-notify.js";
+import { evaluateWeatherAlert, formatAlertMessage } from "./nova-weather-alert.js";
 
 let schedulerInterval = null;
 let lastSent = {}; // mode jadwal: { "pagi": "2026-09-02", ... } per key per day
 let intervalState = { lastSentMs: 0, lastKey: "" }; // mode interval dedup ala script
+// Alert cuaca ekstrem: cek tiap 30 mnt, dedup pemicu sama 3 jam,
+// level naik (WASPADA→SIAGA→AWAS) langsung kirim walau belum 3 jam.
+let alertState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0 };
+const ALERT_CHECK_MS = 30 * 60_000;
+const ALERT_DEDUP_MS = 3 * 3600_000;
 
 // Normalisasi settings lama → field baru (backward compat)
 function normalizeSettings(settings) {
@@ -27,6 +33,7 @@ function normalizeSettings(settings) {
     adm4: settings.adm4 || null,
     notificationMode: settings.notificationMode || "jadwal",
     intervalHours: Number(settings.intervalHours) >= 1 ? Number(settings.intervalHours) : 2,
+    alertEnabled: settings.alertEnabled !== false, // alert ekstrem default ON
   };
 }
 
@@ -85,14 +92,52 @@ export async function sendWeatherNow(sock, { force = false } = {}) {
   }
 }
 
+// Cek alert cuaca ekstrem (tiap 30 mnt saat notifikasi aktif).
+// Exported untuk testing & command `alert test`.
+export async function checkWeatherAlert(sock, { force = false } = {}) {
+  const db = getDatabase();
+  const raw = db.setting("weatherRealtime");
+  if (!raw || !raw.notification || !raw.target) return { ok: false, reason: "off" };
+  const settings = normalizeSettings(raw);
+  if (!settings.alertEnabled && !force) return { ok: false, reason: "alert-off" };
+
+  const now = Date.now();
+  if (!force && now - (alertState.lastCheckMs || 0) < ALERT_CHECK_MS) return { ok: false, reason: "throttled" };
+  alertState.lastCheckMs = now;
+
+  try {
+    const data = await fetchWeatherForSettings(settings);
+    const alert = evaluateWeatherAlert(data);
+    if (!alert) {
+      alertState.lastKey = ""; // kondisi mereda → reset dedup biar siap alert lagi
+      return { ok: true, alert: null };
+    }
+    const isRepeat = alert.key === alertState.lastKey && (now - alertState.lastSentMs) < ALERT_DEDUP_MS;
+    if (!force && isRepeat) return { ok: true, alert, sent: false };
+
+    const name = settings.location?.name || "Lokasi";
+    await sock.sendMessage(settings.target, { text: formatAlertMessage(alert, data, name) });
+    alertState.lastKey = alert.key;
+    alertState.lastSentMs = now;
+    console.log(`[weather-alert] ✅ Alert ${alert.levelText} terkirim (${alert.key})`);
+    return { ok: true, alert, sent: true };
+  } catch (e) {
+    console.error("[weather-alert] Error:", e.message);
+    return { ok: false, reason: e.message };
+  }
+}
+
 // Di-export untuk testing — dipanggil tiap menit oleh interval.
 export async function checkAndSend(sock) {
   const db = getDatabase();
   const raw = db.setting("weatherRealtime");
   if (!raw || !raw.notification || !raw.target) return;
   const settings = normalizeSettings(raw);
-
   const now = new Date();
+
+  // ── ALERT CUACA EKSTREM — jalan di SEMUA mode (jadwal & interval),
+  //    ala EWS gempa: bahaya gak nunggu jam jadwal ──
+  try { await checkWeatherAlert(sock); } catch {}
 
   // ── MODE INTERVAL — ala script: tiap N jam cek, kirim kalau kondisi beda ──
   if (settings.notificationMode === "interval") {
@@ -127,6 +172,7 @@ export function getSchedulerStatus() {
     running: !!schedulerInterval,
     lastSent: { ...lastSent },
     interval: { ...intervalState },
+    alert: { ...alertState },
   };
 }
 
@@ -134,4 +180,14 @@ export function getSchedulerStatus() {
 // boot: kirim cuaca sekarang tanpa nunggu interval habis)
 export function resetIntervalState() {
   intervalState = { lastSentMs: 0, lastKey: "" };
+}
+
+// Reset dedup alert (dipanggil pas notification on / alert test)
+export function resetAlertState() {
+  alertState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0 };
+}
+
+// Hanya untuk testing (e2e) — set state alert langsung
+export function _setAlertStateForTest(patch) {
+  alertState = { ...alertState, ...patch };
 }
