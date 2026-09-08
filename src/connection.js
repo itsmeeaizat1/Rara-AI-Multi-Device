@@ -991,9 +991,7 @@ async function startConnection(options = {}) {
             `• Support   : ${config.bot?.support || "-"}\n` +
             
             `Ketik *${prefix}menu* untuk lihat fitur\n` +
-            `Ketik *${prefix}help* untuk bantuan\n` +
-            
-            ;
+            `Ketik *${prefix}help* untuk bantuan\n`;
 
           const ctxInfo = {
             mentionedJid: inviter ? [inviter] : [],
