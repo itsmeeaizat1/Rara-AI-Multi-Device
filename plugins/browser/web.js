@@ -53,8 +53,8 @@ const pluginConfig = {
   example: ".web live\n.web yt crab rave\n.web google cuaca jakarta\n.web https://example.com Judul Bebas",
   isOwner: false,
   isPremium: false,
-  isGroup: false,
-  isPrivate: false,
+  isGroup: true,
+  isPrivate: true,
   cooldown: 8,
   isEnabled: true,
 };
