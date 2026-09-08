@@ -9,9 +9,9 @@ const pluginConfig = {
     name: "bot",
     alias: ["bot"],
     category: 'owner',
-    description: 'Matikan / nyalakan bot total (kill-switch global) — saat off bot gak merespon apa pun',
-    usage: '.bot <on|off>',
-    example: '.bot off\n.bot on\n.bot',
+    description: 'Matikan/nyalakan bot total (kill-switch) + atur mode respon (gc/pc/all)',
+    usage: '.bot <on|off> | .bot mode <gc|pc|all>',
+    example: '.bot off\n.bot mode gc\n.bot mode pc\n.bot mode all',
     isOwner: true,
     isPremium: false,
     isGroup: false,
@@ -86,11 +86,16 @@ async function handler(m, { sock }) {
     if (!act) {
         await m.react("🐣")
         const isOff = db.setting('botPower') === false
+        const curMode = db.setting('onlyGc') ? 'ɢᴄ (cuma grup)'
+            : db.setting('onlyPc') ? 'ᴘᴄ (cuma chat pribadi)'
+            : 'ᴀʟʟ (semua chat)'
         return m.reply(claraWrap('Status Bot', [
             `Status : ${isOff ? 'ᴏꜰꜰ (mute total)' : 'ᴏɴ (aktif)'}`,
+            `Mode : ${curMode}`,
             '',
             `Ketik *.bot off* buat matiin bot total`,
             `Ketik *.bot on* buat nyalain lagi`,
+            `Ketik *.bot mode gc/pc/all* buat atur tempat respon`,
         ].join('\n')))
     }
 
@@ -151,6 +156,73 @@ async function handler(m, { sock }) {
         ].join('\n')))
     }
 
+    // ── .bot mode <gc|pc|all> — pindahan dari .onlygc / .onlypc ──
+    if (act === 'mode') {
+        const sub = (args[1] || '').toLowerCase()
+
+        // .bot mode → status mode doang
+        if (!sub) {
+            const curMode = db.setting('onlyGc') ? 'ɢᴄ (cuma grup)'
+                : db.setting('onlyPc') ? 'ᴘᴄ (cuma chat pribadi)'
+                : 'ᴀʟʟ (semua chat)'
+            await m.react("🐣")
+            return m.reply(claraWrap('Mode Bot', [
+                `Mode sekarang : ${curMode}`,
+                '',
+                '*.bot mode gc* → bot cuma respon di grup',
+                '*.bot mode pc* → bot cuma respon di chat pribadi',
+                '*.bot mode all* → respon di semua chat',
+                '',
+                'Owner tetap bisa command di mana pun.',
+            ].join('\n')))
+        }
+
+        if (['gc', 'group', 'grup', 'gconly', 'onlygc'].includes(sub)) {
+            db.setting('onlyGc', true)
+            db.setting('onlyPc', false)
+            await m.react("🐣")
+            return m.reply(claraWrap('Mode Bot', [
+                'Mode diubah ke *ɢᴄ* — bot cuma respon di grup.',
+                '',
+                'Chat pribadi (PC) di-diamin.',
+                'Owner tetap bisa command di mana pun.',
+                '',
+                `Balik lagi: *.bot mode all*`,
+            ].join('\n')))
+        }
+
+        if (['pc', 'private', 'dm', 'pconly', 'onlypc'].includes(sub)) {
+            db.setting('onlyPc', true)
+            db.setting('onlyGc', false)
+            await m.react("🐣")
+            return m.reply(claraWrap('Mode Bot', [
+                'Mode diubah ke *ᴘᴄ* — bot cuma respon di chat pribadi.',
+                '',
+                'Grup di-diamin.',
+                'Owner tetap bisa command di mana pun.',
+                '',
+                `Balik lagi: *.bot mode all*`,
+            ].join('\n')))
+        }
+
+        if (['all', 'semua', 'normal', 'off'].includes(sub)) {
+            db.setting('onlyGc', false)
+            db.setting('onlyPc', false)
+            await m.react("🐣")
+            return m.reply(claraWrap('Mode Bot', [
+                'Mode diubah ke *ᴀʟʟ* — bot respon di semua chat.',
+                'Grup + chat pribadi aktif lagi.',
+            ].join('\n')))
+        }
+
+        await m.react("❗")
+        return m.reply(claraWrap('Mode Bot', [
+            `Mode *${sub}* gak dikenal.`,
+            '',
+            'Pilihan: *gc* (cuma grup), *pc* (cuma chat pribadi), *all* (semua)',
+        ].join('\n')))
+    }
+
     // ── argumen gak dikenal ──
     await m.react("❗")
     return m.reply(claraWrap('Status Bot', [
@@ -158,6 +230,7 @@ async function handler(m, { sock }) {
         '',
         '📌 Ketik *.bot off* buat matiin bot',
         '💡 Ketik *.bot on* buat nyalain bot',
+        '🚦 Ketik *.bot mode gc/pc/all* buat atur tempat respon',
     ].join('\n')))
 }
 
