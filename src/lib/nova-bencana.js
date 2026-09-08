@@ -1518,6 +1518,7 @@ async function slowTick() {
 export function startBencanaMonitor() {
   if (isRunning()) return false;
   if (watcherCount() === 0) return false;
+  if (!getBencanaAutoEnabled()) return false; // dipause via .switch auto bencanawatch off
   fastTick();
   slowTick();
   fastTimer = setInterval(fastTick, POLL_FAST_MS);
@@ -1525,6 +1526,32 @@ export function startBencanaMonitor() {
   jadwalTimer = setInterval(jadwalTick, 60_000); // cek jadwal tiap menit (mode jadwal)
   logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG ${POLL_FAST_MS / 1000}s, GDACS+USGS ${POLL_SLOW_MS / 1000}s, jadwal 60s)`);
   return true;
+}
+
+/**
+ * Flag global auto-alert bencanawatch — diintegrasikan ke .switch auto
+ * (request owner 8 Sep 2026). Default ON biar perilaku lama gak berubah.
+ * OFF = polling dipause, subscriber & pengaturan (lokasi/radius/mode/jadwal)
+ * TETAP tersimpan — begitu di-ON balik, monitor nyala lagi sendirinya.
+ */
+export function getBencanaAutoEnabled() {
+  try {
+    return getDatabase().setting("bencanaWatchEnabled") ?? true;
+  } catch { return true; }
+}
+
+export function setBencanaAutoEnabled(on) {
+  const db = getDatabase();
+  db.setting("bencanaWatchEnabled", !!on);
+  db.save?.();
+  if (on) {
+    syncBencanaMonitor(); // nyalain balik kalau ada subscriber
+    logger.success?.("bencana", "Auto-alert bencanawatch: ON via .switch (subscriber tetap)");
+  } else {
+    stopBencanaMonitor();
+    logger.success?.("bencana", "Auto-alert bencanawatch: PAUSED via .switch (subscriber & pengaturan tetap)");
+  }
+  return !!on;
 }
 
 /** Stop timer — dipanggil pas subscriber terakhir off. */
