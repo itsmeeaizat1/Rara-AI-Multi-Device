@@ -10,7 +10,7 @@ const pluginConfig = {
   name: "recycle",
   alias: ["recycle"],
   category: "rpg",
-  description: "Daur ulang item jadi fragmen, tukar item jadi koin, pindah semua ke storage",
+  description: "Daur ulang item jadi fragmen, tukar item jadi gold, pindah semua ke storage",
   usage: ".recycle <item> | .exchange <item> | .stashall",
   example: ".recycle rawMeat",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
@@ -51,7 +51,7 @@ async function handler(m, { sock, text, command }) {
       rpg.gold = (rpg.gold || 0) + coins;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("Kamu tukar *" + itemName + "* jadi " + coins + " koin!\nTotal gold: " + rpg.gold);
+      return m.reply("Kamu tukar *" + itemName + "* jadi " + coins + " gold!\nTotal gold: " + rpg.gold);
     }
 
     if (command === "stashall") {
