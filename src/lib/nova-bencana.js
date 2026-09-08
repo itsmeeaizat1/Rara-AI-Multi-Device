@@ -46,10 +46,11 @@ import { aiFallbackChat } from "./nova-ai-fallback.js";
 const GDACS_URL = "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH";
 const EONET_URL = "https://eonet.gsfc.nasa.gov/api/v3/events";
 const USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
+const USGS_DAY_URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson";
 const BMKG_URL = "https://data.bmkg.go.id/DataMKG/TEWS";
 
-const POLL_FAST_MS = 60_000;   // gempa BMKG
-const POLL_SLOW_MS = 300_000;  // GDACS + USGS global
+const POLL_FAST_MS = 180_000;  // gempa BMKG — 3 menit (ala script owner 8 Sep 2026)
+const POLL_SLOW_MS = 180_000; // GDACS + USGS global — 3 menit
 
 const DEFAULT_RADIUS_KM = 300; // radius peringatan wilayah (bisa di-set per user)
 const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
@@ -272,6 +273,38 @@ export async function getUsgs(minMag = 6.0, limit = 15) {
       lat, lon,
     };
   });
+}
+
+/**
+ * USGS feed harian 4.5_day — auto-alert pakai ini (ala script owner 8 Sep 2026):
+ * signifikan = magnitudo >= 5.0 DAN alert level != green.
+ * Shape sama kayak getUsgs (+ field alert) biar thumb/dedup tetap jalan.
+ */
+export async function getUsgsDay() {
+  const d = await fetchJson(USGS_DAY_URL);
+  return (d?.features ?? [])
+    .filter((f) => {
+      const m = f.properties?.mag || 0;
+      const a = f.properties?.alert || null;
+      // logika script owner: M5+ dengan alert level (yellow/orange/red).
+      // CATATAN: alert USGS bisa null (belum dievaluasi PAGER) — supaya gempa
+      // BESAR gak lolos cuma gara-gara belum dievaluasi, M6+ tetap masuk.
+      return (a && a !== "green" && m >= 5.0) || m >= 6.0;
+    })
+    .map((f) => {
+      const [lon, lat] = f.geometry.coordinates;
+      return {
+        id: f.id,
+        mag: f.properties.mag,
+        place: f.properties.place || "—",
+        time: f.properties.time,
+        tsunami: f.properties.tsunami === 1,
+        alert: f.properties.alert || "green",
+        url: f.properties.url || null,
+        detail: f.properties.detail || null, // dipakai shakemap thumbnail
+        lat, lon,
+      };
+    });
 }
 
 // ───────────────────────────── provider: BMKG ─────────────────────────────
@@ -1282,12 +1315,19 @@ async function fastTick() {
           fpMark(st2, ev); // tandai biar USGS/GDACS gak dobelin gempa yang sama
           saveState(st2);
         }
+        // FORMAT ALA SCRIPT OWNER (8 Sep 2026) — emoji per field
         const lines = [
-          "AUTO-ALERT BENCANA — GEMPA INDONESIA (BMKG)",
+          "⚠️ *GEMPA TERKINI - BMKG*",
           "",
-          `Gempa M ${g.Magnitude} SR terdeteksi — ${g.Wilayah}`,
+          `📅 Tanggal: ${g.Tanggal || "N/A"}`,
+          `🕐 Jam: ${g.Jam || "N/A"}`,
+          `📊 Magnitude: *${g.Magnitude} SR*`,
+          `📏 Kedalaman: ${g.Kedalaman || "N/A"}`,
+          `📍 Wilayah: ${g.Wilayah || "N/A"}`,
+          `🌊 Potensi Tsunami: ${g.Potensi || "Tidak ada"}`,
+          `💥 Dirasakan: ${g.Dirasakan || "Tidak ada info"}`,
           "",
-          buildInfoSection(ev),
+          `Sumber: BMKG`,
         ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
       } else if (parseFloat(g.Magnitude) >= NEAR_QUAKE_MIN_MAG) {
@@ -1319,7 +1359,7 @@ async function fastTick() {
   }
 }
 
-// slow tick: GDACS SIAGA/AWAS baru + USGS global M >= 6.0 baru
+// slow tick: GDACS SIAGA/AWAS baru + USGS signifikan (M5+ alert / M6+) baru
 async function slowTick() {
   try {
     const events = (await getGdacs(2)).filter((e) => e.alertlevel === "Orange" || e.alertlevel === "Red");
@@ -1386,7 +1426,7 @@ async function slowTick() {
     logger.error?.("bencana", "GDACS error: " + e.message);
   }
   try {
-    const quakes = await getUsgs(6.0, 15);
+    const quakes = await getUsgsDay();
     const st = loadState();
     // FIX OWNER 2026-09-07: baseline first-run — sama kayak GDACS, daftar gempa
     // lama pas monitor baru nyala dianggap "sudah dilihat" (tanpa spam alert).
@@ -1406,7 +1446,10 @@ async function slowTick() {
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi (global)",
           mag: q.mag?.toFixed(1), depth: "-",
-          level: q.tsunami ? "AWAS (flag tsunami)" : "SIAGA",
+          level: q.tsunami
+            ? "AWAS (flag tsunami)"
+            : q.mag >= 7.0 ? "AWAS"
+            : ({ yellow: "SIAGA", orange: "AWAS", red: "AWAS" })[q.alert] || "SIAGA",
           waktu: jamWib(q.time),
           lat: q.lat, lon: q.lon, desc: q.place,
           tsunamiFlag: !!q.tsunami,
@@ -1421,12 +1464,18 @@ async function slowTick() {
       }
       if (evs.length === 1) {
         const ev = evs[0];
+        const q = fresh.find((x) => String(x.id) === String(ev.id)) || fresh[0];
+        // FORMAT ALA SCRIPT OWNER (8 Sep 2026) — emoji per field
         const lines = [
-          "AUTO-ALERT GEMPA GLOBAL — M 6.0+ (USGS)",
+          "🌍 *GEMPA GLOBAL - USGS*",
           "",
-          `Gempa global M${ev.mag} terdeteksi — ${ev.desc}`,
+          `📊 Magnitude: *M ${q.mag}*`,
+          `📍 Lokasi: ${q.place || "Unknown"}`,
+          `🕐 Waktu: ${jamWib(q.time)}`,
+          `🌊 Tsunami: ${q.tsunami ? "✅ YA" : "❌ TIDAK"}`,
+          `🚨 Alert: ${String(q.alert || "green").toUpperCase()}`,
           "",
-          buildInfoSection(ev),
+          `Sumber: USGS`,
         ];
         await dispatch(ev, lines.join("\n"), eventCard(ev));
       } else if (evs.length > 1) {
@@ -1453,7 +1502,7 @@ export function startBencanaMonitor() {
   fastTimer = setInterval(fastTick, POLL_FAST_MS);
   slowTimer = setInterval(slowTick, POLL_SLOW_MS);
   jadwalTimer = setInterval(jadwalTick, 60_000); // cek jadwal tiap menit (mode jadwal)
-  logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG 60s, GDACS+USGS 300s, jadwal 60s)`);
+  logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG ${POLL_FAST_MS / 1000}s, GDACS+USGS ${POLL_SLOW_MS / 1000}s, jadwal 60s)`);
   return true;
 }
 
