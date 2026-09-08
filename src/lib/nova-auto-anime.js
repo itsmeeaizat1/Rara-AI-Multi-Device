@@ -278,8 +278,17 @@ async function notifyAndSend(sock, groupIds, linkObj, meta) {
 }
 
 let autoInterval = null
-let isRunning = false
+let autoRunning = false
 let globalSock = null
+
+// BUG FIX (8 Sep 2026): isRunning tadinya `let isRunning = false` yang di-export
+// sebagai LIVE BINDING boolean — tapi plugin autoanimewinbu.js manggil
+// isRunning() kayak fungsi → TypeError di SEMUA subcommand (start/status/stop/
+// cek). Fitur V1 praktis mati. Fix: variabel internal ganti nama autoRunning,
+// isRunning sekarang FUNGSI beneran.
+function isRunning() {
+    return autoRunning
+}
 
 async function runCheck() {
     const state = loadState()
@@ -346,7 +355,7 @@ async function runCheck() {
 function startAutoCheck(sock, intervalMinutes = 5) {
     if (autoInterval) clearInterval(autoInterval)
     globalSock = sock
-    isRunning = true
+    autoRunning = true
 
     const ms = intervalMinutes * 60 * 1000
     runCheck().catch(e => console.error('[AutoAnime-Winbu]', e.message))
@@ -360,7 +369,7 @@ function startAutoCheck(sock, intervalMinutes = 5) {
 function stopAutoCheck() {
     if (autoInterval) clearInterval(autoInterval)
     autoInterval = null
-    isRunning = false
+    autoRunning = false
 }
 
 function initAutoStart(sock) {
