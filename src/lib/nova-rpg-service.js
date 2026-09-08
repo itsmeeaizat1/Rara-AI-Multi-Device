@@ -21,7 +21,7 @@ export const DEFAULT_RPG = {
   equipBoots: null, equipAccessory: null, equipRing: null, equipShield: null,
   job: "novice", jobLevel: 1, jobExp: 0, jobExpNext: 50,
   skills: [], skillPoints: 0,
-  inventory: {},
+  inventory: {}, jobTools: {},
   lastDaily: 0, lastWork: 0, lastHunt: 0, lastMine: 0, lastFish: 0,
   lastCook: 0, lastAdventure: 0, lastDungeon: 0, lastBossRaid: 0,
   lastPvP: 0, lastGacha: 0, lastPray: 0, lastTrain: 0, lastFarm: 0,
