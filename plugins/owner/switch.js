@@ -20,6 +20,8 @@ import { enableAutoReport, disableAutoReport, getReportStatus } from '../../src/
 import { enableAutoBirthday, disableAutoBirthday, getBirthdayStatus } from '../../src/lib/nova-auto-birthday.js'
 import { getBmkgStatus, updateBmkgSettings, startBmkgJobs, stopBmkgJobs } from '../../src/lib/nova-bmkg-scheduler.js'
 import { getBencanaAutoEnabled, setBencanaAutoEnabled } from '../../src/lib/nova-bencana.js'
+import { isEnabled as isAnimeNotifierOn, setEnabled as setAnimeNotifierOn } from '../../src/lib/nova-auto-anime-notifier.js'
+import { loadState as loadWinbuState, saveState as saveWinbuState, startAutoCheck as startWinbuCheck, stopAutoCheck as stopWinbuCheck, isRunning as isWinbuRunning } from '../../src/lib/nova-auto-anime.js'
 import { getSettings as getCleanSettings, updateSettings as updateCleanSettings, startCleaner, stopCleaner } from '../../src/lib/nova-cache-cleaner.js'
 
 const pluginConfig = {
@@ -224,6 +226,34 @@ const AUTO_REGISTRY = {
     // mode & jadwal TETAP tersimpan; ON balik → syncBencanaMonitor nyalain lagi.
     toggle: (on) => { setBencanaAutoEnabled(on) },
   },
+  autoanime: {
+    label: "Auto Anime V1 (Winbu Episode)",
+    // V1 = fitur auto anime winbu.net yang udah ada (episode 720p Pixeldrain ke
+    // grup) — sekarang ke-register di .switch + auto-resume pas boot.
+    getStatus: () => { try { return loadWinbuState().enabled ?? false } catch { return false } },
+    // OFF = timer stop + enabled false (grup TETAP tersimpan); ON = nyalain timer
+    // pakai interval tersimpan (default 5 mnt).
+    toggle: (on, { sock } = {}) => {
+      const st = loadWinbuState()
+      if (on) {
+        if (!sock) throw new Error("sock belum siap — coba lagi sebentar")
+        saveWinbuState({ ...st, enabled: true })
+        startWinbuCheck(sock, st.interval || 5)
+      } else {
+        stopWinbuCheck()
+        saveWinbuState({ ...st, enabled: false })
+      }
+    },
+  },
+  autoanimenotifier: {
+    label: "Auto Anime V2 Notifier (AniList)",
+    // Status = flag global. ON tapi monitor gak jalan = belum ada chat
+    // langganan .animenotify on — bukan error.
+    getStatus: () => { try { return isAnimeNotifierOn() } catch { return false } },
+    // OFF = polling berhenti, subscriber tetap tersimpan; ON dengan target
+    // kosong = auto-add owner (ala TARGET_NUMBER script owner).
+    toggle: (on) => { setAnimeNotifierOn(on) },
+  },
   autoweatherrealtime: {
     label: "Auto Notifikasi Cuaca Realtime",
     getStatus: () => { try { return getDatabase().setting("weatherRealtime")?.notification ?? false } catch { return false } },
@@ -299,7 +329,9 @@ const AUTO_ALIASES = {
   readsw: "autoreadsw", reactsw: "autoreactsw", backup: "autobackup",
   health: "autohealth", reengage: "autoreengage", refill: "autorefill",
   renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
-  bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
+  bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch",
+  animenotifier: "autoanimenotifier", animenotify: "autoanimenotifier", anime: "autoanimenotifier",
+  animev1: "autoanime", winbu: "autoanime", animewinbu: "autoanime", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
@@ -318,7 +350,7 @@ const AUTO_CATEGORIES = {
     "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
   ],
   "Info & Utilitas": [
-    "bencanawatch", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
+    "bencanawatch", "autoanime", "autoanimenotifier", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
     "autosambut", "automod", "autobroadcastchannel"
   ]
 }
@@ -559,7 +591,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   // Toggle
   const enable = action === 'on'
   try {
-    reg.toggle(enable)
+    reg.toggle(enable, { sock }) // sock dikasih buat fitur yang butuh (V1 winbu); entry lain nge-ignore
     return m.reply(`${reg.label}: *${enable ? "ON" : "OFF"}*`)
   } catch (e) {
     return m.reply(`❌ ${e.message || e}`)
