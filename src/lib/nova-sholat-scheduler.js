@@ -108,7 +108,7 @@ async function loadTodaySchedule() {
       cityTz = "Asia/Jayapura";
     }
 
-    cachedSchedule = { schedule, cityTz };
+    cachedSchedule = { schedule, cityTz, daerah };
     cacheDate = todayStr;
     return cachedSchedule;
   } catch (e) {
@@ -120,6 +120,62 @@ async function loadTodaySchedule() {
 function clearSholatCronJobs() {
   for (const [, job] of sholatCronJobs) job.stop();
   sholatCronJobs.clear();
+}
+
+// Label zona waktu dari nama zona
+function tzLabel(cityTz) {
+  if (cityTz === "Asia/Makassar") return "WITA";
+  if (cityTz === "Asia/Jayapura") return "WIT";
+  return "WIB";
+}
+
+// Urutan waktu sholat dalam sehari
+const SHOLAT_ORDER = ["imsak", "subuh", "terbit", "dhuha", "dzuhur", "ashar", "maghrib", "isya"];
+const SHOLAT_EMOJI = {
+  imsak: "🌙", subuh: "🌅", terbit: "☀️", dhuha: "🕊️",
+  dzuhur: "🕐", ashar: "🕒", maghrib: "🌇", isya: "🌃",
+};
+
+// Notif adzan format lengkap ala UPDATE CUACA (request owner 8 Sep 2026):
+// sumber + waktu + tanggal + jadwal hari ini + sholat berikutnya.
+export function formatAdzanMessage(sholat, waktu, { schedule, cityTz, daerah }, kotaNama, extra = "") {
+  const tz = tzLabel(cityTz);
+  const now = new Date();
+  const tanggal = new Intl.DateTimeFormat("id-ID", {
+    weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: cityTz,
+  }).format(now);
+
+  let msg = `${SHOLAT_MESSAGES[sholat] || `🕌 *WAKTU ${String(sholat).toUpperCase()}*`}\n\n`;
+  msg += `🕌 *WAKTU ADZAN ${String(sholat).toUpperCase()} - ${kotaNama}*\n`;
+  msg += `📡 *Sumber: Jadwal Sholat Kemenag (myquran.com)*\n`;
+  msg += `🕐 *Waktu Adzan: ${waktu} ${tz} (${tanggal})*\n\n`;
+
+  msg += `📅 *Jadwal Hari Ini:*\n`;
+  const t = (k) => (schedule && schedule[k] && schedule[k] !== "-") ? schedule[k] : "-";
+  msg += `   ${SHOLAT_EMOJI.imsak} Imsak: ${t("imsak")} | ${SHOLAT_EMOJI.subuh} Subuh: ${t("subuh")}\n`;
+  msg += `   ${SHOLAT_EMOJI.terbit} Terbit: ${t("terbit")} | ${SHOLAT_EMOJI.dhuha} Dhuha: ${t("dhuha")}\n`;
+  msg += `   ${SHOLAT_EMOJI.dzuhur} Dzuhur: ${t("dzuhur")} | ${SHOLAT_EMOJI.ashar} Ashar: ${t("ashar")}\n`;
+  msg += `   ${SHOLAT_EMOJI.maghrib} Maghrib: ${t("maghrib")} | ${SHOLAT_EMOJI.isya} Isya: ${t("isya")}\n`;
+
+  // Sholat berikutnya (waktu > waktu sekarang, urutan sehari)
+  const toMin = (s) => { const [h, m] = String(s).split(":").map(Number); return h * 60 + m; };
+  let next = null;
+  for (const k of SHOLAT_ORDER) {
+    const tw = t(k);
+    if (tw === "-") continue;
+    if (toMin(tw) > toMin(waktu)) { next = { key: k, waktu: tw }; break; }
+  }
+  if (next) {
+    const selisih = toMin(next.waktu) - toMin(waktu);
+    msg += `\n⏳ *Sholat berikutnya: ${String(next.key).toUpperCase()} ${next.waktu}*`;
+    msg += selisih > 0 ? ` (± ${Math.floor(selisih / 60)} jam ${selisih % 60} menit lagi)` : "";
+    msg += `\n`;
+  } else {
+    msg += `\n⏳ *Jadwal hari ini selesai — sampai besok* 🌙\n`;
+  }
+
+  if (extra) msg += `\n${extra}`;
+  return msg;
 }
 
 function addMinutesToTime(timeStr, minutes) {
@@ -323,11 +379,15 @@ async function sendSholatNotifications(sholat, waktu) {
       "isya",
     ].includes(sholat);
 
-    let message = `${SHOLAT_MESSAGES[sholat] || `🕌 *WAKTU ${sholat.toUpperCase()}*`}\n\n⏰ *${waktu} WIB*\n📍 *${kotaSetting.nama}*`;
-
-    if (closeGroup && isSholatTime) {
-      message += `\n\n> 🔒 _Grup ditutup ${duration} menit untuk sholat_`;
-    }
+    // Format lengkap ala UPDATE CUACA (request owner 8 Sep 2026):
+    // sumber + waktu + tanggal + jadwal hari ini + sholat berikutnya
+    const todayData = await loadTodaySchedule();
+    const extra = closeGroup && isSholatTime
+      ? `> 🔒 _Grup ditutup ${duration} menit untuk sholat_`
+      : "";
+    let message = todayData
+      ? formatAdzanMessage(sholat, waktu, todayData, (kotaSetting.nama || "KOTA JAKARTA").toUpperCase(), extra)
+      : `${SHOLAT_MESSAGES[sholat] || `🕌 *WAKTU ${sholat.toUpperCase()}*`}\n\n⏰ *${waktu} ${tzLabel(todayData?.cityTz || "Asia/Jakarta")}*\n📍 *${kotaSetting.nama}*${extra ? "\n\n" + extra : ""}`;
 
     for (const groupId of groupList) {
       const groupData = db.data?.groups?.[groupId] || {};
