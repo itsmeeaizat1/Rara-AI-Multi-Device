@@ -347,7 +347,7 @@ async function handler(m, { sock }) {
           `Sumber aktif : ${Array.isArray(cur) && cur.length ? cur.join(", ").toUpperCase() : "semua"}`,
           "---",
           "• BMKG — gempa Indonesia M 5.0+",
-          "• USGS — gempa global M 6.0+",
+          "• USGS — gempa global signifikan (M 5.0+ alert / M 6.0+)",
           "• GDACS — bencana dunia SIAGA/AWAS",
           "---",
           "Ketik manual: .bencanawatch sumber bmkg",
@@ -506,7 +506,7 @@ async function handler(m, { sock }) {
         "Auto-alert bencana aktif di chat ini.",
         "---",
         "• Gempa Indonesia baru M 5.0+ (BMKG)",
-        "• Gempa global baru M 6.0+ (USGS)",
+        "• Gempa global baru signifikan (USGS)",
         "• Bencana GDACS level SIAGA / AWAS",
         "---",
         "Sebentar lagi menyusul 1 contoh info",
@@ -641,7 +641,7 @@ async function handler(m, { sock }) {
           "Auto-alert bencana aktif di grup ini.",
           "---",
           "• Gempa Indonesia baru M 5.0+ (BMKG)",
-          "• Gempa global baru M 6.0+ (USGS)",
+          "• Gempa global baru signifikan (USGS)",
           "• Bencana GDACS level SIAGA / AWAS",
           "---",
           "Sebentar lagi menyusul 1 contoh info",
@@ -747,7 +747,7 @@ async function handler(m, { sock }) {
       lines.push("PENTING: ini alert REALTIME — cuma kirim bencana BARU");
       lines.push("sejak diaktifkan, bukan daftar bencana yang lagi");
       lines.push("terjadi sekarang. Kalau belum ada kejadian baru yang");
-      lines.push("cocok kriteria (gempa M5+/M6+, GDACS Siaga/Awas), ya");
+      lines.push("cocok kriteria (gempa M5+ alert/M6+, GDACS Siaga/Awas), ya");
       lines.push("emang belum ada pesan masuk — itu normal, bukan error.");
       lines.push(`Mau lihat kondisi TERKINI sekarang? Pakai: .bencana`);
       lines.push("---");
