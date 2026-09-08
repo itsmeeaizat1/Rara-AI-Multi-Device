@@ -10,6 +10,9 @@
 // .autoweatherrealtime notification on  → aktifkan notifikasi cuaca ke grup
 // .autoweatherrealtime notification off → matikan notifikasi cuaca
 // .autoweatherrealtime jadwal 06:30 12:00 17:00 20:00 → set jadwal notif
+// .autoweatherrealtime alert on/off/test    → alert CUACA EKSTREM (badai petir, hujan lebat,
+//                                             angin kencang, panas ekstrem, kabut — level Waspada/Siaga/Awas
+//                                             ala EWS, cek tiap 30 mnt, bypass mode jadwal/interval)
 // .autoweatherrealtime interval 2            → update otomatis tiap 2 jam ala script (off = balik jadwal)
 // .autoweatherrealtime provider <openmeteo|bmkg|metno|weatherapi|aggregate> → pilih sumber cuaca notif
 //   aggregate = gabungan 4 provider (rata-rata + kondisi dominan + konfidensi)
@@ -26,14 +29,15 @@ import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
 import { boxMessage } from "../../src/lib/styler.js";
 import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/nova-weather-notify.js";
-import { resetIntervalState } from "../../src/lib/nova-weather-realtime-scheduler.js";
+import { resetIntervalState, resetAlertState, checkWeatherAlert } from "../../src/lib/nova-weather-realtime-scheduler.js";
+import { evaluateWeatherAlert, formatAlertMessage } from "../../src/lib/nova-weather-alert.js";
 
 const pluginConfig = {
   name: "autoweatherrealtime",
   alias: ["autoweatherrealtime", "autocuacarealtime"],
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target/test>",
+  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target/test>",
   example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
@@ -63,14 +67,16 @@ function getWRSettings(db) {
       // ── upgrade ala script owner 8 Sep 2026 ──
       notificationMode: "jadwal", // "jadwal" | "interval"
       intervalHours: 2,           // interval mode: tiap N jam (script: 2 jam)
-      provider: "openmeteo",      // "openmeteo" | "bmkg"
+      provider: "openmeteo",      // "openmeteo" | "bmkg" | "metno" | "weatherapi" | "aggregate"
       adm4: null,                 // kode wilayah BMKG (contoh: 31.71.03.1001)
+      alertEnabled: true,         // alert cuaca ekstrem (default ON ala EWS)
     };
   }
   if (!s.notificationMode) s.notificationMode = "jadwal";
   if (!s.intervalHours) s.intervalHours = 2;
   if (!s.provider) s.provider = "openmeteo";
   if (s.adm4 === undefined) s.adm4 = null;
+  if (s.alertEnabled === undefined) s.alertEnabled = true;
   return s;
 }
 
@@ -134,6 +140,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
         "• " + toSC("Koordinat") + " : " + (settings.location?.latitude || "-") + ", " + (settings.location?.longitude || "-") + "\n" +
         "• " + toSC("Notifikasi") + " : " + (settings.notification ? "ON ✅" : "OFF ❌") + "\n" +
+        "• " + toSC("Alert Ekstrem") + " : " + (settings.alertEnabled !== false ? "ON ✅" : "OFF ❌") + "\n" +
         "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
         "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
@@ -143,6 +150,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + prefix + "autoweatherrealtime lokasi serang\n" +
         "• " + prefix + "autoweatherrealtime notification on\n" +
         "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
+        "• " + prefix + "autoweatherrealtime alert on|off\n" +
         "• " + prefix + "autoweatherrealtime interval 2\n" +
         "• " + prefix + "autoweatherrealtime provider bmkg|openmeteo\n" +
         "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
@@ -258,6 +266,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         }
         saveWRSettings(db2, settings);
         resetIntervalState(); // ala script boot: kirim cuaca sekarang
+        resetAlertState();    // alert ekstrem siap cek dari nol
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
 
         // ── ala script: SISTEM NOTIFIKASI CUACA AKTIF + cuaca sekarang ──
@@ -304,6 +313,55 @@ async function handler(m, { sock, config: botConfig, db }) {
         "⚠ " + toSC("Format") + ":\n" +
         "• " + prefix + "autoweatherrealtime notification on\n" +
         "• " + prefix + "autoweatherrealtime notification off\n" 
+        )
+      );
+    }
+
+    // ── ALERT EKSTREM (on/off/test) ──
+    if (action === "alert") {
+      const sub = (args.shift() || "").toLowerCase();
+      if (sub === "on" || sub === "off") {
+        settings.alertEnabled = sub === "on";
+        saveWRSettings(db2, settings);
+        if (sub === "on") resetAlertState();
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          (sub === "on" ? "✅ " + toSC("Alert cuaca ekstrem AKTIF") : "❌ " + toSC("Alert cuaca ekstrem DIMATIKAN")) + "\n" +
+          "• " + toSC("Level") + " : " + (sub === "on" ? "🟡 " + toSC("Waspada") + " / 🟠 " + toSC("Siaga") + " / 🔴 " + toSC("Awas") : "-") + "\n" +
+          "• " + toSC("Pemicu") + " : " + toSC("badai petir, hujan lebat, angin kencang, panas ekstrem, kabut") + "\n" +
+          "• " + toSC("Cek tiap 30 menit saat notifikasi aktif") + "\n" 
+          )
+        );
+      }
+      if (sub === "test") {
+        // Evaluasi live data sekarang + tampilkan hasil (walau gak ekstrem)
+        try {
+          const data = await fetchWeatherForSettings(settings);
+          const alert = evaluateWeatherAlert(data);
+          try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+          if (!alert) {
+            return m.reply(
+              boxMessage("◆ " + "Weather Realtime" + " ◆",
+              "✅ " + toSC("Tidak ada cuaca ekstrem saat ini") + "\n" +
+              "• " + toSC("Kondisi sekarang") + " : " + (data?.condition || "-") + ", " + (data?.temperature ?? "-") + "°C\n" +
+              "• " + toSC("Sistem alert jalan normal — akan kirim saat threshold tercapai") + "\n" 
+              )
+            );
+          }
+          return m.reply(formatAlertMessage(alert, data, settings.location?.name || "Lokasi"), { raw: true });
+        } catch (e) {
+          try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
+          return m.reply(novaError("Weather Realtime", "Alert test gagal: " + e.message));
+        }
+      }
+      try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+      return m.reply(
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "⚠ " + toSC("Format") + ":\n" +
+        "• " + prefix + "autoweatherrealtime alert on\n" +
+        "• " + prefix + "autoweatherrealtime alert off\n" +
+        "• " + prefix + "autoweatherrealtime alert test\n" 
         )
       );
     }
@@ -523,6 +581,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       "• " + prefix + "autoweatherrealtime lokasi serang\n" +
       "• " + prefix + "autoweatherrealtime notification on/off\n" +
       "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
+      "• " + prefix + "autoweatherrealtime alert on|off|test\n" +
       "• " + prefix + "autoweatherrealtime interval 2\n" +
       "• " + prefix + "autoweatherrealtime provider bmkg\n" +
       "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
