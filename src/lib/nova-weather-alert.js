@@ -15,12 +15,42 @@ import { conditionEmoji } from "./nova-weather-notify.js";
 
 export const LEVELS = { 1: { emoji: "🟡", text: "WASPADA" }, 2: { emoji: "🟠", text: "SIAGA" }, 3: { emoji: "🔴", text: "AWAS" } };
 
-// Threshold default (bisa di-override di evaluateWeatherAlert utk testing)
+// Threshold default (bisa di-override per subscriber via .autoweatherrealtime
+// threshold set — lihat buildThresholds + THRESHOLD_BASE di bawah)
 export const THRESHOLDS = {
-  windWaspada: 40, windSiaga: 60, windAwas: 80,   // km/jam
-  heatWaspada: 36, heatSiaga: 38, heatAwas: 40,     // °C
-  precipWaspada: 10, precipSiaga: 20, precipAwas: 50, // mm/jam
+  windWaspada: 40, windSiaga: 60, windAwas: 80,      // km/jam
+  heatWaspada: 36, heatSiaga: 38, heatAwas: 40,        // °C
+  coldWaspada: 10, coldSiaga: 5, coldAwas: 0,          // °C
+  precipWaspada: 10, precipSiaga: 20, precipAwas: 50,  // mm/jam
+  humidityHigh: 90, humidityLow: 20,                   // %
 };
+
+// Basis threshold user-facing (1 knob per pemicu, diturunkan otomatis ke
+// 3 level EWS). Ini yang di-set via .autoweatherrealtime threshold set.
+export const THRESHOLD_BASE = {
+  heat: { default: 36, unit: "°C", desc: "Panas ekstrem (Waspada; Siaga +2, Awas +4)", min: 25, max: 50 },
+  cold: { default: 10, unit: "°C", desc: "Dingin ekstrem (Waspada; Siaga -3, Awas -6)", min: -30, max: 25 },
+  rain: { default: 20, unit: "mm/jam", desc: "Hujan lebat (Siaga; Waspada /2, Awas ×2.5)", min: 1, max: 200 },
+  wind: { default: 40, unit: "km/jam", desc: "Angin kencang (Waspada; Siaga +20, Awas +40)", min: 10, max: 150 },
+  storm: { default: 60, unit: "km/jam", desc: "Angin badai (Siaga; Waspada -20, Awas +20)", min: 20, max: 150 },
+  humidityHigh: { default: 90, unit: "%", desc: "Kelembapan sangat tinggi (Waspada)", min: 60, max: 100 },
+  humidityLow: { default: 20, unit: "%", desc: "Udara sangat kering (Waspada)", min: 0, max: 40 },
+};
+
+// Turunkan override basis user → threshold penuh 3-level.
+// overrides = settings.thresholds ({ heat: 38, wind: 45, ... }).
+export function buildThresholds(overrides = {}) {
+  const t = { ...THRESHOLDS };
+  const o = overrides || {};
+  if (o.heat != null) { t.heatWaspada = +o.heat; t.heatSiaga = +o.heat + 2; t.heatAwas = +o.heat + 4; }
+  if (o.cold != null) { t.coldWaspada = +o.cold; t.coldSiaga = +o.cold - 3; t.coldAwas = +o.cold - 6; }
+  if (o.rain != null) { t.precipSiaga = +o.rain; t.precipWaspada = Math.max(1, Math.round(+o.rain / 2)); t.precipAwas = Math.round(+o.rain * 2.5); }
+  if (o.wind != null) { t.windWaspada = +o.wind; t.windSiaga = +o.wind + 20; t.windAwas = +o.wind + 40; }
+  if (o.storm != null) { t.windSiaga = +o.storm; t.windWaspada = Math.max(1, +o.storm - 20); t.windAwas = +o.storm + 20; }
+  if (o.humidityHigh != null) t.humidityHigh = +o.humidityHigh;
+  if (o.humidityLow != null) t.humidityLow = +o.humidityLow;
+  return t;
+}
 
 const OM_THUNDER_AWAS = [96, 99];
 const OM_THUNDER_SIAGA = [95];
@@ -52,6 +82,20 @@ const INSTRUCTIONS = {
   fog: [
     "Pelan saat berkendara, jaga jarak",
     "Nyalakan lampu (bukan lampu besar)",
+  ],
+  cold: [
+    "Pakai baju hangat berlapis",
+    "Batasi aktivitas di luar ruangan",
+    "Pantau anak-anak & lansia terdekat",
+  ],
+  humidityHigh: [
+    "Rasa panas lebih terik — perbanyak minum air",
+    "Waspada kelelahan & heat stroke, banyak istirahat",
+  ],
+  humidityLow: [
+    "Perbanyak minum air putih",
+    "Gunakan pelembap kulit",
+    "Waspada api — udara kering gampang nyala",
   ],
 };
 
@@ -103,6 +147,22 @@ function detectTriggers(data, th) {
     if (temp >= th.heatAwas) triggers.push({ type: "heat", level: 3, label: `🥵 Panas Ekstrem (${temp}°C)` });
     else if (temp >= th.heatSiaga) triggers.push({ type: "heat", level: 2, label: `🥵 Panas Terik (${temp}°C)` });
     else if (temp >= th.heatWaspada) triggers.push({ type: "heat", level: 1, label: `🥵 Panas Tinggi (${temp}°C)` });
+  }
+
+  // 🥶 Dingin ekstrem
+  if (temp !== null) {
+    if (temp <= th.coldAwas) triggers.push({ type: "cold", level: 3, label: `🥶 Dingin Ekstrem (${temp}°C)` });
+    else if (temp <= th.coldSiaga) triggers.push({ type: "cold", level: 2, label: `🥶 Dingin Terukur (${temp}°C)` });
+    else if (temp <= th.coldWaspada) triggers.push({ type: "cold", level: 1, label: `🥶 Dingin Nyata (${temp}°C)` });
+  }
+
+  // 💧 Kelembapan ekstrem (%)
+  const hum = num(data.humidity);
+  if (hum !== null && hum >= th.humidityHigh) {
+    triggers.push({ type: "humidityHigh", level: 1, label: `💧 Kelembapan Sangat Tinggi (${hum}%)` });
+  }
+  if (hum !== null && hum <= th.humidityLow) {
+    triggers.push({ type: "humidityLow", level: 1, label: `🌵 Udara Sangat Kering (${hum}%)` });
   }
 
   // 🌧️ Curah hujan tinggi (mm/jam — tersedia di Open-Meteo)
