@@ -623,18 +623,19 @@ function renderSlotBoard(answers, opts = {}) {
 // ─── novaGameBox — format khas game ala dashboard PlayStation ───
 // REDESIGN OWNER 2026-09-07: game TIDAK pakai box-drawing (╭╰│) —
 // bikin tampilan game berantakan. Ganti: frame PS-style — judul
-// letter-spaced + garis tebal ━, body bebas (bar/section/papan), CTA tematik.
+// letter-spaced, body bebas (bar/section/papan), CTA tematik.
+// UPDATE OWNER 2026-09-08: garis pemisah ━ (bawah judul + penutup)
+// DIHAPUS — "di game jgn ada garis pemisah". Cukup judul + body flush,
+// tanpa garis apa pun. Berlaku otomatis ke semua game via novaRpgBox.
 // Pipe-wall "│ " sisa format lama di body caller otomatis di-strip jadi indent.
 export function novaGameBox(opts) {
   const { title, icon = "🎮", body, flavor = null, cta = null } = opts;
   const spaced = String(title).toUpperCase().split("").join(" ").replace(/\s{2,}/g, " ").trim();
-  const line = "━".repeat(Math.max(18, spaced.length + 4));
   const cleanBody = String(body).replace(/^│\s?/gm, "");  // rata kiri (owner 2026-09-07): tanpa indent
   let text = "";
   if (flavor) text += flavor + "\n\n";
-  text += `${icon}  ${spaced}\n${line}\n\n`;
-  text += cleanBody + "\n";
-  text += line;
+  text += `${icon}  ${spaced}\n\n`;
+  text += cleanBody;
   if (cta) text += `\n\n${cta}`;
   return text;
 }
