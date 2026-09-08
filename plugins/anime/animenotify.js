@@ -11,6 +11,7 @@
 import {
   addTarget, removeTarget, isTarget, getStatus, isEnabled, runCheck,
   getSeasonPreview, formatSeasonMessage, setSock, syncMonitor,
+  getGenres, addGenre, removeGenre, previewWatchlist,
 } from "../../src/lib/nova-auto-anime-notifier.js";
 import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
@@ -80,6 +81,42 @@ async function handler(m, { sock, args }) {
     return m.reply(novaSuccess(pluginConfig.name, "daftar anime releasing terkini dikirim di atas"));
   }
 
+  if (sub === "anime") {
+    await m.react("🕒");
+    try {
+      const res = await previewWatchlist(m.chat);
+      await m.react("🐣");
+      return m.reply(novaSuccess(pluginConfig.name, `daftar ${res.count} anime terbaru dikirim di atas — sumber ${res.source}`));
+    } catch (e) {
+      return m.reply(novaError(pluginConfig.name, "sumber anime lagi sibuk — coba lagi sebentar lagi"));
+    }
+  }
+
+  if (sub === "genre") {
+    const action = String(args?.[1] || "").toLowerCase();
+    if (action === "add") {
+      const g = (args?.slice(2).join(" ") || "").trim();
+      if (!g) return m.reply(novaGuide(pluginConfig.name, "nama genre wajib — contoh genre populer: Action, Adventure, Comedy, Drama, Fantasy, Horror, Mystery, Romance, Sci-Fi, Sports, Supernatural, Isekai", ".animenotify genre add Sports"));
+      const r = addGenre(g);
+      if (!r.ok) return m.reply(novaError(pluginConfig.name, r.dup ? `genre "${g}" udah ada di daftar` : "nama genre kosong"));
+      return m.reply(novaSuccess(pluginConfig.name, `genre "${g}" ditambah — sekarang ${r.genres.length} genre dipantau: ${r.genres.join(", ")}`));
+    }
+    if (action === "del" || action === "remove") {
+      const g = (args?.slice(2).join(" ") || "").trim();
+      const r = removeGenre(g);
+      if (!r.ok) return m.reply(novaError(pluginConfig.name, `genre "${g}" gak ada di daftar`));
+      return m.reply(novaSuccess(pluginConfig.name, `genre "${g}" dihapus — sisa ${r.genres.length} genre: ${r.genres.join(", ")}`));
+    }
+    const genres = getGenres();
+    return m.reply(
+      `「 ✦ GENRE DIPANTAU ✦ 」\n` +
+      `🎭 ${genres.length} genre favorit yang dipantau notifier V2:\n\n` +
+      genres.map((g, i) => `${i + 1}. ${g}`).join("\n") +
+      `\n\nUbah: .animenotify genre add <genre> / genre del <genre>\n` +
+      `Genre baru berlaku di cek AniList berikutnya (Kitsu gak filter genre)`
+    );
+  }
+
   if (sub === "season") {
     await m.react("🕒");
     try {
@@ -95,8 +132,8 @@ async function handler(m, { sock, args }) {
   return m.reply(
     novaGuide(
       pluginConfig.name,
-      "auto notifikasi anime terbaru (AniList → Kitsu) — anime RELEASING baru dikirim tiap jam ke chat langganan",
-      ".animenotify on — langganan chat ini\n.animenotify off — berhenti\n.animenotify status — lihat status\n.animenotify now — paksa kirim daftar terkini\n.animenotify season — preview seasonal MAL",
+      "auto notifikasi ANIME BARU + EPISODE BARU (AniList → Kitsu) — dikirim tiap 30 menit ke chat langganan",
+      ".animenotify on — langganan chat ini\n.animenotify off — berhenti\n.animenotify status — lihat status\n.animenotify now — paksa kirim watchlist terkini\n.animenotify anime — daftar anime terbaru\n.animenotify genre — genre dipantau (add/del)\n.animenotify season — preview seasonal MAL\n.carianime <judul> — cari anime manual",
       "pause/resume global: .switch auto autoanimenotifier on/off (owner)",
     ),
   );
