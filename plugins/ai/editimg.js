@@ -68,32 +68,33 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("editimg", "Gagal download gambar. Coba kirim ulang.", "error"));
     }
 
-    // Coba Img2Img dulu, fallback ke live3d (nano-banana)
+    // Rantai edit gambar — nano-banana DULUAN (live verified 8 Sep 2026),
+    // FGSI img2img cadangan (key fgsi lagi banned → cepat fail-through)
     let result = null;
     let usedApi = "";
 
-    // Method 1: Img2Img (FGSI API)
+    // Method 1: live3d (nano-banana) — paling bagus & hidup
     try {
-      const res = await Img2Img(prompt, buffer, "edit.png");
-      if (res.status && res.result) {
-        // result bisa URL atau base64
-        result = res.result;
-        usedApi = "img2img";
+      const res = await live3d(buffer, prompt);
+      if (res.image) {
+        result = res.image;
+        usedApi = "nano-banana";
       }
     } catch (e) {
-      console.error("editimg img2img:", e.message);
+      console.error("editimg live3d:", e.message);
     }
 
-    // Method 2: live3d (nano-banana) — download result image
+    // Method 2: Img2Img (FGSI API) — cadangan
     if (!result) {
       try {
-        const res = await live3d(buffer, prompt);
-        if (res.image) {
-          result = res.image;
-          usedApi = "nano-banana";
+        const res = await Img2Img(prompt, buffer, "edit.png");
+        if (res.status && res.result) {
+          // result bisa URL atau base64
+          result = res.result;
+          usedApi = "img2img";
         }
       } catch (e) {
-        console.error("editimg live3d:", e.message);
+        console.error("editimg img2img:", e.message);
       }
     }
 
