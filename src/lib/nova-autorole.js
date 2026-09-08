@@ -129,8 +129,7 @@ export async function addChat(sock, groupId, userId, pushName) {
     const text =
       `「 ✦ Role Up ✦ 」\n` +
       `🎉 Selamat @${userId.split("@")[0]} naik ke\n` +
-      `${r.emoji} ${r.name}!\n` +
-      ;
+      `${r.emoji} ${r.name}!\n`;
     try {
       await sock.sendMessage(groupId, {
         text,
