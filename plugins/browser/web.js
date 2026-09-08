@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// plugins/tools/web.js — .web — LIVE HTML DI DALAM WHATSAPP
+// plugins/browser/web.js — .web — LIVE HTML DI DALAM WHATSAPP
 //
 // Request owner 2026-09-07 (inspirasi video bot scene: "html + live, nyambung
 // ke websocket, bisa buka YouTube dll di dalam WA"):
