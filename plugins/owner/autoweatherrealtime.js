@@ -10,6 +10,9 @@
 // .autoweatherrealtime notification on  → aktifkan notifikasi cuaca ke grup
 // .autoweatherrealtime notification off → matikan notifikasi cuaca
 // .autoweatherrealtime jadwal 06:30 12:00 17:00 20:00 → set jadwal notif
+// .autoweatherrealtime interval 2            → update otomatis tiap 2 jam ala script (off = balik jadwal)
+// .autoweatherrealtime provider bmkg|openmeteo → pilih sumber cuaca notif
+// .autoweatherrealtime adm4 31.71.03.1001    → kode wilayah BMKG (verified live saat diset)
 // .autoweatherrealtime target <jid>   → set grup target notif
 // .autoweatherrealtime test            → test kirim cuaca sekarang
 // ============================================================
@@ -21,13 +24,15 @@ import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
 // dilarang nulis "" manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
 import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
+import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/nova-weather-notify.js";
+import { resetIntervalState } from "../../src/lib/nova-weather-realtime-scheduler.js";
 
 const pluginConfig = {
   name: "autoweatherrealtime",
   alias: ["autoweatherrealtime", "autocuacarealtime"],
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/jadwal/target/test>",
+  usage: ".autoweatherrealtime <on/off/lokasi/notification/jadwal/interval/provider/adm4/target/test>",
   example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
@@ -54,8 +59,17 @@ function getWRSettings(db) {
         { key: "malam", label: "Malam", hour: 20, minute: 0 },
       ],
       target: null, // group JID for notifications
+      // ── upgrade ala script owner 8 Sep 2026 ──
+      notificationMode: "jadwal", // "jadwal" | "interval"
+      intervalHours: 2,           // interval mode: tiap N jam (script: 2 jam)
+      provider: "openmeteo",      // "openmeteo" | "bmkg"
+      adm4: null,                 // kode wilayah BMKG (contoh: 31.71.03.1001)
     };
   }
+  if (!s.notificationMode) s.notificationMode = "jadwal";
+  if (!s.intervalHours) s.intervalHours = 2;
+  if (!s.provider) s.provider = "openmeteo";
+  if (s.adm4 === undefined) s.adm4 = null;
   return s;
 }
 
@@ -119,13 +133,18 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
         "• " + toSC("Koordinat") + " : " + (settings.location?.latitude || "-") + ", " + (settings.location?.longitude || "-") + "\n" +
         "• " + toSC("Notifikasi") + " : " + (settings.notification ? "ON ✅" : "OFF ❌") + "\n" +
+        "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
+        "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : "Open-Meteo") + (settings.provider === "bmkg" && settings.adm4 ? " (" + settings.adm4 + ")" : "") + "\n" +
         "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
         "📌 " + toSC("Perintah") + ":\n" +
         "• " + prefix + "autoweatherrealtime on/off\n" +
         "• " + prefix + "autoweatherrealtime lokasi serang\n" +
         "• " + prefix + "autoweatherrealtime notification on\n" +
         "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
+        "• " + prefix + "autoweatherrealtime interval 2\n" +
+        "• " + prefix + "autoweatherrealtime provider bmkg|openmeteo\n" +
+        "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
         "• " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
         "• " + prefix + "autoweatherrealtime test\n" 
         )
@@ -231,19 +250,40 @@ async function handler(m, { sock, config: botConfig, db }) {
       const sub = (args.shift() || "").toLowerCase();
       if (sub === "on") {
         settings.notification = true;
-        // Auto-set target ke grup sekarang kalau di grup dan belum diset
-        if (!settings.target && m.isGroup) {
+        // Auto-set target ke chat sekarang kalau belum diset (grup ATAU DM —
+        // owner yang aktifin di DM berarti mau update masuk ke DM itu)
+        if (!settings.target) {
           settings.target = m.chat;
         }
         saveWRSettings(db2, settings);
+        resetIntervalState(); // ala script boot: kirim cuaca sekarang
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+
+        // ── ala script: SISTEM NOTIFIKASI CUACA AKTIF + cuaca sekarang ──
+        const notifTarget = settings.target || m.chat;
+        try {
+          await sock.sendMessage(notifTarget, { text: formatActivationMessage(settings, settings.intervalHours) });
+          const data = await fetchWeatherForSettings(settings);
+          if (data) {
+            const name = settings.provider === "bmkg"
+              ? (settings.location?.name || "Wilayah BMKG")
+              : (settings.location?.name || "Lokasi");
+            await sock.sendMessage(notifTarget, { text: formatWeatherUpdate(data, name, settings.intervalHours) });
+          }
+        } catch (e) {
+          console.error("[autoweatherrealtime] activation sample:", e.message);
+        }
+
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "✅ " + toSC("Notifikasi cuaca AKTIF") + "\n" +
+          "• " + toSC("Mode") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
           "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
+          "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : "Open-Meteo") + "\n" +
           "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
           "📌 " + toSC("Set target") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-          "📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" 
+          "📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
+          "📌 " + toSC("Mode interval") + ": " + prefix + "autoweatherrealtime interval 2\n" 
           )
         );
       }
@@ -265,6 +305,115 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + prefix + "autoweatherrealtime notification off\n" 
         )
       );
+    }
+
+    // ── INTERVAL (ala script: update tiap N jam) ──
+    if (action === "interval") {
+      const sub = (args.shift() || "").toLowerCase();
+      if (sub === "off") {
+        settings.notificationMode = "jadwal";
+        saveWRSettings(db2, settings);
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Mode kembali ke JADWAL") + "\n" +
+          "• " + formatSchedules(settings.schedules) + "\n" 
+          )
+        );
+      }
+      const h = parseInt(sub, 10);
+      if (!Number.isFinite(h) || h < 1 || h > 12) {
+        try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Format") + ":\n" +
+          "• " + prefix + "autoweatherrealtime interval 2\n" +
+          "• " + prefix + "autoweatherrealtime interval off\n" +
+          "(" + toSC("1-12 jam, ala script default 2 jam") + ")\n" 
+          )
+        );
+      }
+      settings.notificationMode = "interval";
+      settings.intervalHours = h;
+      saveWRSettings(db2, settings);
+      resetIntervalState();
+      try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+      return m.reply(
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "✅ " + toSC("Update otomatis tiap") + " " + h + " " + toSC("jam") + "\n" +
+        "• " + toSC("Kondisi sama dilewati, gak spam") + "\n" +
+        "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" 
+        )
+      );
+    }
+
+    // ── PROVIDER (openmeteo | bmkg) ──
+    if (action === "provider" || action === "sumber") {
+      const sub = (args.shift() || "").toLowerCase();
+      if (sub !== "openmeteo" && sub !== "open-meteo" && sub !== "bmkg") {
+        try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Format") + ":\n" +
+          "• " + prefix + "autoweatherrealtime provider openmeteo\n" +
+          "• " + prefix + "autoweatherrealtime provider bmkg\n" +
+          "(" + toSC("BMKG butuh kode wilayah — set dengan") + " " + prefix + "autoweatherrealtime adm4 <kode>)\n" 
+          )
+        );
+      }
+      const prov = sub === "bmkg" ? "bmkg" : "openmeteo";
+      if (prov === "bmkg" && !settings.adm4) {
+        try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Provider BMKG butuh kode wilayah (adm4)") + "\n" +
+          "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
+          "(" + toSC("contoh: 31.71.03.1001 = Kemayoran, Jakarta Pusat") + ")\n" 
+          )
+        );
+      }
+      settings.provider = prov;
+      saveWRSettings(db2, settings);
+      try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+      return m.reply(
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "✅ " + toSC("Provider cuaca: ") + (prov === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : "Open-Meteo") + "\n" 
+        )
+      );
+    }
+
+    // ── ADM4 (kode wilayah BMKG) ──
+    if (action === "adm4") {
+      const code = (args.shift() || "").trim();
+      if (!/^\d{2}\.\d{2}\.\d{2}\.\d{4}$/.test(code)) {
+        try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Format kode wilayah: XX.XX.XX.XXXX") + "\n" +
+          "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
+          "(" + toSC("contoh: 31.71.03.1001 = Kemayoran, Jakarta Pusat") + ")\n" 
+          )
+        );
+      }
+      // Verifikasi kode live ke BMKG
+      try {
+        const data = await fetchBmkgNow(code);
+        settings.adm4 = code;
+        settings.provider = "bmkg";
+        saveWRSettings(db2, settings);
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Kode BMKG tersimpan & verified live") + "\n" +
+          "• " + toSC("Kode") + " : " + code + "\n" +
+          "• " + toSC("Cuaca sekarang") + " : " + data.condition + ", " + data.temperature + "°C\n" +
+          "• " + toSC("Provider otomatis pindah ke BMKG") + "\n" 
+          )
+        );
+      } catch (e) {
+        try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
+        return m.reply(novaError("Weather Realtime", "Kode wilayah BMKG tidak valid / tidak terdaftar: " + e.message));
+      }
     }
 
     // ── JADWAL ──
@@ -326,12 +475,10 @@ async function handler(m, { sock, config: botConfig, db }) {
     // ── TEST ──
     if (action === "test") {
       try {
-        // Force refresh
-        clearWeatherCache();
-        const footer = await getWeatherFooter(true);
-        const addr = await getWeatherAddress();
+        // ── ala script !cuaca: cek cuaca sekarang pakai setting aktif ──
+        const data = await fetchWeatherForSettings(settings);
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
-        if (!footer) {
+        if (!data) {
           return m.reply(
             boxMessage("◆ " + "Weather Realtime" + " ◆",
             "❌ " + toSC("Gagal fetch cuaca") + "\n" +
@@ -339,14 +486,12 @@ async function handler(m, { sock, config: botConfig, db }) {
             )
           );
         }
-        return m.reply(
-          boxMessage("◆ " + "Weather Realtime Test" + " ◆",
-          "" + toSC("Info Section") + ": " + (settings.realtime ? "ON" : "OFF") + "\n" +
-          "" + toSC("Lokasi") + " : " + (settings.location?.name || "-") + "\n" +
-          "" + toSC("Address") + " : " + (addr || "-") + "\n" +
-          footer + "\n" 
-          )
-        );
+        const name = settings.provider === "bmkg"
+          ? (settings.location?.name || "Wilayah BMKG")
+          : (settings.location?.name || "Lokasi");
+        const msg = formatWeatherUpdate(data, name, settings.intervalHours);
+        // raw: format script punya emoji + bold sendiri, bukan box berkotak
+        return m.reply(msg, { raw: true });
       } catch (e) {
         try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
         return m.reply(novaError("Weather Realtime", "Test gagal: " + e.message));
@@ -363,6 +508,9 @@ async function handler(m, { sock, config: botConfig, db }) {
       "• " + prefix + "autoweatherrealtime lokasi serang\n" +
       "• " + prefix + "autoweatherrealtime notification on/off\n" +
       "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
+      "• " + prefix + "autoweatherrealtime interval 2\n" +
+      "• " + prefix + "autoweatherrealtime provider bmkg\n" +
+      "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
       "• " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
       "• " + prefix + "autoweatherrealtime test\n" 
       )
