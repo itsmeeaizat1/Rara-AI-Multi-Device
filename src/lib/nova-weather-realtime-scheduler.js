@@ -27,11 +27,19 @@ const ALERT_DEDUP_MS = 3 * 3600_000;
 
 // Normalisasi settings lama → field baru (backward compat)
 function normalizeSettings(settings) {
+  const hasSchedules = Array.isArray(settings.schedules) && settings.schedules.length > 0;
   return {
     ...settings,
     provider: settings.provider || "openmeteo",
     adm4: settings.adm4 || null,
-    notificationMode: settings.notificationMode || "jadwal",
+    // FIX 8 Sep 2026 (owner: "knp cuaca otomatis klo di on gak kirim
+    // cuaca apapun di grup pdhal cuaca berganti"): dulu default "jadwal" —
+    // kalau user `notification on` tanpa pernah set jadwal HH:MM, mode
+    // jadwal dengan array kosong gak pernah kirim apa-apa SELAMANYA.
+    // Sekarang: jadwal cuma dipakai kalau memang ada schedules-nya,
+    // sisanya auto-fallback ke mode interval (ala script, tiap N jam
+    // kirim kalau kondisi cuaca berubah).
+    notificationMode: settings.notificationMode === "jadwal" && !hasSchedules ? "interval" : (settings.notificationMode || "interval"),
     intervalHours: Number(settings.intervalHours) >= 1 ? Number(settings.intervalHours) : 2,
     alertEnabled: settings.alertEnabled !== false, // alert ekstrem default ON
   };

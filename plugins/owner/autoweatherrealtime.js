@@ -271,6 +271,15 @@ async function handler(m, { sock, config: botConfig, db }) {
         if (!settings.target) {
           settings.target = m.chat;
         }
+        // FIX 8 Sep 2026: tanpa jadwal HH:MM yang diset, mode jadwal itu
+        // BISU selamanya (array kosong gak pernah match). Kalau belum ada
+        // jadwal → auto pindah ke mode interval (default 2 jam) biar update
+        // cuaca langsung jalan begitu di-on. Owner yang udah set jadwal
+        // sendiri → tetep mode jadwal.
+        if (!(Array.isArray(settings.schedules) && settings.schedules.length > 0)) {
+          settings.notificationMode = "interval";
+          if (!Number(settings.intervalHours) || Number(settings.intervalHours) < 1) settings.intervalHours = 2;
+        }
         saveWRSettings(db2, settings);
         resetIntervalState(); // ala script boot: kirim cuaca sekarang
         resetAlertState();    // alert ekstrem siap cek dari nol
