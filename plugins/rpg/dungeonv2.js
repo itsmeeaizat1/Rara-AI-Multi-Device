@@ -5,8 +5,8 @@ import {
   ensureRpg, saveRpg, addExp, addGold, addGems, useEnergy,
   addItem, getEquipStats, rollDrop, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
-  getMonstersByLevel, getRandomMonster
-} from "../../src/lib/nova-rpg-service.js";
+  getMonstersByLevel, getRandomMonster,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
@@ -251,6 +251,7 @@ async function handler(m, { sock }) {
             "",
             `│ • ✨ EXP : +${expGain}`,
             `│ • 💰 Gold : +${goldGain}`,
+            `│ • 💵 Uang : Rp ${getCash(m)}`,
             ...(floorConfig.isBoss ? [`│ • 💎 Gems : +${3 + Math.floor(rpg.level / 10)}`] : []),
             ...(dropText ? [`│ • 📦 Drops : ${dropText}`] : []),
             `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,

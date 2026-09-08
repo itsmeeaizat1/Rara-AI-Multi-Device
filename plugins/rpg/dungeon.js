@@ -4,8 +4,8 @@
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, useMana,
   addItem, getEquipStats, getRandomMonster, rollDrop, ITEM_DB,
-  checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
+  checkCooldown, setCooldown, formatTime,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
@@ -174,6 +174,7 @@ async function handler(m, { sock }) {
         `│ • ${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}`,
         `│ • ✨ EXP : +${totalExp}`,
         `│ • 💰 Gold : +${totalGold}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
         ...dropLines,
         ...bossBonusLines,
         "",

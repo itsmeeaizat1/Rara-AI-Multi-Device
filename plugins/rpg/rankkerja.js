@@ -31,7 +31,10 @@ async function handler(m, { sock }) {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(novaRpgBox("rankkerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
-    const leaderboard = getLeaderboard("gold", 10);
+    // Board: default gold | "uang"/"cash" → ranking uang (request owner 8 Sep 2026)
+    const mode = (m.args?.[0] || "").toLowerCase();
+    const byCash = ["uang", "cash"].includes(mode);
+    const leaderboard = getLeaderboard(byCash ? "cash" : "gold", 10);
     if (!leaderboard || leaderboard.length === 0) {
       await m.react("🐣");
   await animGeneric(m, sock, "🏹", "Loading");
@@ -40,7 +43,9 @@ async function handler(m, { sock }) {
 
     const medal = ["🥇", "🥈", "🥉"];
     let msg = "";
-    msg += `🏆 *TOP 10 PEMAIN TERKAYA*
+    msg += byCash ? `🏆 *TOP 10 UANG (Rp)*
+
+` : `🏆 *TOP 10 PEMAIN TERKAYA (GOLD)
 
 `;
 
@@ -48,9 +53,12 @@ async function handler(m, { sock }) {
       const rank = medal[i] || `${i + 1}.`;
       const name = player.name || player.number || "Unknown";
       const gold = (player.value || 0).toLocaleString("id-ID");
+      const cash = ((byCash ? player.value : player.rpg?.cash) || 0).toLocaleString("id-ID");
       const level = player.rpg?.level || 1;
       msg += `${rank} *${name}*\n`;
-      msg += `💰 Rp${gold} | ⚔️ Lv.${level}\n`;
+      msg += byCash
+        ? `💵 Rp ${gold} | 💰 Gold ${(player.rpg?.gold || 0).toLocaleString("id-ID")} | ⚔️ Lv.${level}\n`
+        : `💰 Gold ${gold} | 💵 Rp ${cash} | ⚔️ Lv.${level}\n`;
     });
 
 

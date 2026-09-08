@@ -34,7 +34,7 @@ async function handler(m) {
         "",
         psSection("pengalaman"),
         psStat("✨", "EXP", rpg.exp, rpg.expNext || 100),
-        `  🪙 Gold ${rpg.gold ?? 0}   💎 Gems ${rpg.gems ?? 0}   🎟️ Tokens ${rpg.tokens ?? 0}`,
+        `  💵 Uang Rp ${(rpg.cash ?? 0).toLocaleString("id-ID")}   🪙 Gold ${rpg.gold ?? 0}   💎 Gems ${rpg.gems ?? 0}   🎟️ Tokens ${rpg.tokens ?? 0}`,
         "",
         psSection("tersedia"),
         "  .adventure  .meditation  .leaderboard",

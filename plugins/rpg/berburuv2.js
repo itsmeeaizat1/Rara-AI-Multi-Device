@@ -4,8 +4,8 @@
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, addItem,
   getEquipStats, rollDrop, ITEM_DB, getRandomMonster,
-  checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
+  checkCooldown, setCooldown, formatTime,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
@@ -157,6 +157,7 @@ async function handler(m, { sock }) {
           "",
           `│ • ✨ EXP : +${expGain}`,
           `│ • 💰 Gold : +${goldGain}`,
+          `│ • 💵 Uang : Rp ${getCash(m)}`,
           ...(dropText ? [`│ • 📦 Drops : ${dropText}`] : []),
           ...(combo > 1 ? [`│ • 🔥 Combo : ${combo}x (bonus +${Math.floor(comboBonus * 100)}%)`] : []),
           ...(combo >= 5 ? ["🎯 Combo tinggi! Tetap berburu untuk bonus lebih besar!"] : []),
