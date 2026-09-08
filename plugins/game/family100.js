@@ -7,10 +7,12 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { smallcapsText } from "../../src/lib/styler.js";
+import { toSC } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, pickFlavor } from "../../src/lib/nova-games.js";
 import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
+import { harvestFamily100, getRefreshState, onBankUpdated } from "../../src/lib/nova-family100-harvest.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +24,8 @@ const NEXT_ROUND_MS = Number(process.env.FAMILY100_NEXT_MS) || 5000; // 5 dtk an
 // ─── Data Loader ───
 const DATA_PATH = path.join(__dirname, "..", "..", "src", "data", "family100.json");
 let _cache = null;
+export function _invalidateCache() { _cache = null; }
+onBankUpdated(_invalidateCache); // harvest/refresh → cache bank soal otomatis dibersihin
 function loadData() {
   try {
     if (_cache) return _cache;
@@ -253,8 +257,8 @@ const pluginConfig = {
   alias: ["family100"],
   category: "game",
   description: "Game Family 100 ala TV — 1 jawaban per pemain, poin survei, reveal medali, ronde otomatis!",
-  usage: ".family100 [stop]",
-  example: ".family100",
+  usage: ".family100 [stop | stat | refresh]",
+  example: ".family100\n.family100 stop\n.family100 refresh (owner)",
   isOwner: false,
   isPremium: true,
   isRegister: true,
@@ -277,6 +281,54 @@ async function handler(m, { sock, config }) {
       if (!session) return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🤔 *GAK ADA GAME!*", body: "Belum ada game family100 yang jalan di grup ini kak!" }));
       revealChampion(sock, session, { stopped: true });
       return;
+    }
+
+    // ─── REFRESH: harvest soal baru dari internet (owner only) ───
+    if (sub === "refresh" || sub === "update") {
+      if (!m.isOwner) {
+        return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "🔒 *KHUSUS OWNER!*", body: "Command ini cuma buat owner bot!" }));
+      }
+      await m.react("🕒");
+      try {
+        const report = await harvestFamily100();
+        const srcLines = report.sources.map((s) =>
+          s.ok ? `✅ ${s.url.replace("https://raw.githubusercontent.com/", "")} — ${s.count} soal` : `❌ ${s.url} — ${s.error}`
+        ).join("\n");
+        const body = [
+          `🌐 ${toSC("Sumber")} :`,
+          srcLines,
+          "",
+          `📥 ${toSC("Soal baru")} : +${report.newSoal}`,
+          `➕ ${toSC("Jawaban baru")} : +${report.newAnswers}`,
+          `📚 ${toSC("Total bank soal")} : ${report.total}`,
+        ].join("\n");
+        await m.react("🐣");
+        return m.reply(novaGameBox({ title: "family100", icon: "🌐", flavor: "🔄 *BANK SOAL DIREFRESH!*", body }));
+      } catch (e) {
+        console.error("[family100] refresh error:", e.message);
+        return m.reply(novaGameBox({ title: "family100", icon: "💯", flavor: "❌ *REFRESH GAGAL!*", body: "Gagal ambil soal dari internet: " + e.message }));
+      }
+    }
+
+    // ─── STAT: info bank soal ───
+    if (sub === "stat" || sub === "status") {
+      const data = loadData();
+      const st = getRefreshState();
+      const lastRefresh = st.lastAt
+        ? new Date(st.lastAt).toLocaleString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+        : "belum pernah";
+      return m.reply(novaGameBox({
+        title: "family100", icon: "📊",
+        flavor: "📚 *BANK SOAL FAMILY 100*",
+        body: [
+          `📚 ${toSC("Total soal")} : ${data.length}`,
+          `💰 ${toSC("Total poin/soal")} : 100 (papan survei)`,
+          `🔄 ${toSC("Refresh terakhir")} : ${lastRefresh}`,
+          `📥 ${toSC("Soal baru terakhir")} : +${st.lastNew || 0}`,
+          "",
+          `💡 .family100 refresh — isi soal baru dari internet (owner)`,
+        ].join("\n"),
+      }));
     }
 
     // ─── GAME SEDANG JALAN → tampilin status ───
