@@ -3,8 +3,8 @@
 
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, addGems, addItem,
-  ITEM_DB, checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
+  ITEM_DB, checkCooldown, setCooldown, formatTime,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
@@ -137,6 +137,7 @@ async function handler(m, { sock }) {
         "",
         `│ • 🪨 ${ore.name} Ore : +${qty}x`,
         `│ • 💰 Gold : +${goldGain}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
         `│ • ✨ EXP : +${expGain}`,
         ...bonusLines,
         ...(streak > 1 ? [`│ • 🔥 Streak : ${streak}x (+${Math.floor(streakBonus * 100)}%)`] : []),
