@@ -91,9 +91,12 @@ async function handler(m, { sock }) {
     // "Aktifkan dulu .bencanawatch on." walau onglobal-nya udah aktif.
     // Fix: kalau di DM dan belum ada langganan per-chat TAPI global-nya
     // aktif, semua setter di bawah diarahin langsung ke key global itu.
+    // FIX 2026-09-08: langganan global dicek dari DM DAN GRUP — dulu cuma
+    // dari DM, jadi owner global yang atur opsi dari grup selalu kena
+    // "Aktifkan dulu" padahal udah aktif.
     const subsSnapshotForKey = await getWatchersSafe();
     const hasChatSub = !!subsSnapshotForKey[chatId];
-    const globalRecForSender = isDm ? hasGlobalWatcher(m.sender) : null;
+    const globalRecForSender = hasGlobalWatcher(m.sender);
     const targetKey = (!hasChatSub && globalRecForSender) ? globalWatcherKey(m.sender) : chatId;
 
     // Terapkan setter yang sama ke langganan global owner (kalau ada & command dari DM,
@@ -105,53 +108,41 @@ async function handler(m, { sock }) {
       return true;
     };
 
-    // ── UX SIMPEL (request owner 2026-09-07: opsi & petunjuk gampang) ──
-    // Semua pengaturan bisa diatur via popup tombol .bencanawatch atur,
-    // dan tiap setting tanpa nilai otomatis kasih tombol pilihan cepat —
-    // user gak perlu hafal command manual.
-    const quick = (display_text, id) =>
-      ({ name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text, id }) });
-    const replyWithButtons = async (text, buttons) => {
-      try {
-        await sock.sendButton(m.chat, null, text, m, { buttons });
-        return { handled: true };
-      } catch { return m.reply(text); }
-    };
-
-    // ── POPUP SEMUA PENGATURAN: 1 tombol buat semua opsi ──
+    // ── SEMUA PENGATURAN: teks kompak satu layar (request owner
+    // 2026-09-08: jangan serba tombol, bikin bingung) ──
     if (action === "atur" || action === "pengaturan" || action === "setting") {
       const subs0 = await getWatchersSafe();
       const me0 = subs0[targetKey];
+      const onLabel = !me0
+        ? "BELUM AKTIF"
+        : String(targetKey).startsWith("global:")
+        ? "AKTIF (global: DM + semua grup)"
+        : "AKTIF (chat ini)";
       const fJenis = Array.isArray(me0?.jenis) && me0.jenis.length ? me0.jenis.join(", ") : "semua";
       const fSumber = Array.isArray(me0?.sumber) && me0.sumber.length ? me0.sumber.join(", ").toUpperCase() : "semua";
       const fJadwal = Array.isArray(me0?.schedules) && me0.schedules.length ? me0.schedules.join(", ") : "belum ada";
-      const rows = [
-        { title: "Mode Pengiriman", description: `Aktif: ${(me0?.mode || "otomatis").toUpperCase()} — kapan alert dikirim`, id: ".bencanawatch mode" },
-        { title: "Sumber Berita", description: `Aktif: ${fSumber} — BMKG / USGS / GDACS`, id: ".bencanawatch sumber" },
-        { title: "Jenis Bencana", description: `Aktif: ${fJenis} — gempa, banjir, dll`, id: ".bencanawatch jenis" },
-        { title: "Kepadatan Kirim", description: `Aktif: ${(me0?.kirim || "utama").toUpperCase()} — 1 info terpenting / semua`, id: ".bencanawatch kirim" },
-        { title: "Lokasi & Radius", description: me0?.city ? `Aktif: ${me0.city} (${me0.radius || 300} km) — alert gempa dekat` : "Belum di-set — buat alert gempa dekat lokasi", id: ".bencanawatch lokasi" },
-        { title: "Jadwal Rangkuman", description: `Aktif: ${fJadwal} — khusus mode jadwal`, id: ".bencanawatch jadwal" },
-        { title: "Status Lengkap", description: "Cek semua pengaturan + kesehatan monitor", id: ".bencanawatch status" },
-      ];
       const text = novaBox("Bencana Watch — Atur", [
-        "Semua pengaturan ada di satu popup.",
-        "Pilih yang mau diubah — tiap pilihan",
-        "kasih penjelasan + tombol cepat lagi.",
+        `Status : ${onLabel}`,
+        `Mode : ${(me0?.mode || "otomatis").toUpperCase()}`,
+        `→ .bencanawatch mode darurat`,
+        `Kirim : ${(me0?.kirim || "utama").toUpperCase()}`,
+        `→ .bencanawatch kirim semua`,
+        `Sumber : ${fSumber}`,
+        `→ .bencanawatch sumber bmkg`,
+        `Jenis : ${fJenis}`,
+        `→ .bencanawatch jenis gempa`,
+        `Lokasi : ${me0?.city || "belum di-set"}`,
+        `→ .bencanawatch lokasi jakarta`,
+        `Radius : ${me0?.radius || 300} km`,
+        `→ .bencanawatch radius 500`,
+        `Jadwal : ${fJadwal}`,
+        `→ .bencanawatch jadwal add 07:00`,
         "---",
-        "Atau ketik manual, contoh:",
-        ".bencanawatch mode darurat",
+        "Lihat detail opsi: ketik tanpa nilai,",
+        "contoh .bencanawatch kirim",
+        "Status lengkap: .bencanawatch status",
       ]);
-      try {
-        await sock.sendButton(m.chat, null, text, m, {
-          buttons: [
-            { name: "single_select", buttonParamsJson: JSON.stringify({ title: "Pilih Pengaturan", sections: [{ title: "Pengaturan Bencana Watch", rows }] }) },
-          ],
-        });
-      } catch {
-        await m.reply(text + "\n\n" + rows.map((r) => `• ${r.title} → ${r.id}`).join("\n"));
-      }
-      return { handled: true };
+      return m.reply(text);
     }
 
     // ── set lokasi (buat peringatan wilayah) ──
@@ -260,10 +251,7 @@ async function handler(m, { sock }) {
           "---",
           "Ketik manual: .bencanawatch kirim utama",
         ]);
-        return replyWithButtons(text, [
-          quick("Utama — Anti Spam (Default)", ".bencanawatch kirim utama"),
-          quick("Semua — Ada Jeda 10 Mnt", ".bencanawatch kirim semua"),
-        ]);
+        return m.reply(text);
       }
       try {
         const rec = setWatcherKirim(targetKey, v);
@@ -296,11 +284,7 @@ async function handler(m, { sock }) {
           "---",
           "Ketik manual: .bencanawatch jenis gempa",
         ]);
-        return replyWithButtons(text, [
-          quick("Semua Jenis — Default", ".bencanawatch jenis semua"),
-          quick("Gempa Saja", ".bencanawatch jenis gempa"),
-          quick("Gempa + Banjir", ".bencanawatch jenis gempa, banjir"),
-        ]);
+        return m.reply(text);
       }
       try {
         if (rest === "semua" || rest === "all" || rest === "reset") {
@@ -355,12 +339,7 @@ async function handler(m, { sock }) {
           "---",
           "Ketik manual: .bencanawatch sumber bmkg",
         ]);
-        return replyWithButtons(text, [
-          quick("Semua Sumber — Default", ".bencanawatch sumber semua"),
-          quick("Indonesia Saja — BMKG", ".bencanawatch sumber bmkg"),
-          quick("BMKG + GDACS", ".bencanawatch sumber bmkg, gdacs"),
-          quick("Internasional Saja", ".bencanawatch sumber usgs, gdacs"),
-        ]);
+        return m.reply(text);
       }
       try {
         if (rest === "semua" || rest === "all" || rest === "reset") {
@@ -410,11 +389,7 @@ async function handler(m, { sock }) {
           "---",
           "Ketik manual: .bencanawatch mode jadwal",
         ]);
-        return replyWithButtons(text, [
-          quick("Otomatis — Default", ".bencanawatch mode otomatis"),
-          quick("Jadwal — Rangkuman", ".bencanawatch mode jadwal"),
-          quick("Darurat — Penting Saja", ".bencanawatch mode darurat"),
-        ]);
+        return m.reply(text);
       }
       try {
         const rec = setWatcherMode(targetKey, mode);
@@ -488,12 +463,7 @@ async function handler(m, { sock }) {
           "---",
           "Manual : .bencanawatch jadwal add 07:00",
         ]);
-        return replyWithButtons(text, [
-          quick("Tambah 07:00 (Pagi)", ".bencanawatch jadwal add 07:00"),
-          quick("Tambah 12:00 (Siang)", ".bencanawatch jadwal add 12:00"),
-          quick("Tambah 18:00 (Sore)", ".bencanawatch jadwal add 18:00"),
-          quick("Hapus Semua Jadwal", ".bencanawatch jadwal clear"),
-        ]);
+        return m.reply(text);
       } catch (e) {
         await m.react("❌");
         return m.reply(novaError("Bencana Watch", e.message));
@@ -661,34 +631,25 @@ async function handler(m, { sock }) {
         await sendActivationSample(sock, chatId); // bukti + preview format alert
         return { handled: true };
       }
-      // di DM: pilih scope — chat ini / per grup / global
+      // di DM: pilih scope — teks kompak (tanpa tombol)
       const g = hasGlobalWatcher(m.sender);
       const subs = await getWatchersSafe();
       const dmActive = !!subs[chatId];
-      const text = novaBox("Bencana Watch — Pilih Mode", [
-        `Fitur  : auto-alert bencana realtime`,
+      const text = novaBox("Bencana Watch", [
+        `Fitur : auto-alert bencana realtime`,
         `Lokasi : chat pribadi`,
+        `DM ini : ${dmActive ? "AKTIF" : "OFF"}`,
+        `Global : ${g ? "AKTIF (DM + semua grup)" : "OFF"}`,
         "---",
-        "Pilih di mana alert mau dikirim:",
-        "",
-        `1. Chat ini (DM)      : ${dmActive ? "AKTIF" : "OFF"}`,
-        "2. Per grup target      : pilih grup dari popup",
-        `3. Global DM + grup   : ${g ? "AKTIF — DM + semua grup" : "OFF"}`,
+        "Pilih target pengiriman alert:",
+        "1. chat ini → .bencanawatch onchat",
+        "2. grup pilihan → .bencanawatch pilihgrup",
+        "3. DM + semua grup → .bencanawatch onglobal",
         "---",
-        "Filter jenis/sumber/mode/lokasi yang di-set",
-        "dari DM berlaku juga ke langganan global.",
+        "Filter yang di-set dari DM berlaku juga",
+        "ke langganan global.",
       ]);
-      try {
-        await sock.sendButton(m.chat, null, text, m, {
-          buttons: [
-            { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "On Di Chat Ini (DM)", id: ".bencanawatch onchat" }) },
-            { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Pilih Grup Target", id: ".bencanawatch pilihgrup" }) },
-            { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "On Global DM + Semua Grup", id: ".bencanawatch onglobal" }) },
-          ],
-        });
-      } catch {
-        await m.reply(text + "\n\nKetik .bencanawatch onchat / pilihgrup / onglobal");
-      }
+      await m.reply(text);
       return { handled: true };
     }
 
@@ -843,7 +804,7 @@ async function handler(m, { sock }) {
     // tolong guide-nya yang jelas cara aktifin opsi tertentu". ──
     if (action === "guide") {
       // Semua baris dijaga pendek biar gak kena wrap aneh.
-      return replyWithButtons(novaBox("Bencana Watch — Guide", [
+      return m.reply(novaBox("Bencana Watch — Guide", [
         "Semua command diawali .bencanawatch",
         "---",
         { sub: "Cara paling gampang" },
@@ -880,23 +841,16 @@ async function handler(m, { sock }) {
         "Catatan: alert REALTIME — cuma bencana",
         "BARU sejak aktif, bukan daftar bencana",
         "yang lagi terjadi (itu: .bencana).",
-      ]), [
-        quick("Buka Pengaturan", ".bencanawatch atur"),
-        quick("Cek Status Saya", ".bencanawatch status"),
-      ]);
+      ]));
     }
 
-    return replyWithButtons(novaBox("Bencana Watch", [
+    return m.reply(novaBox("Bencana Watch", [
       "Command gak dikenali.",
       "---",
       "• atur   → popup semua pengaturan",
       "• status → cek langganan kamu",
       "• guide  → cara pakai lengkap",
-    ]), [
-      quick("Pengaturan", ".bencanawatch atur"),
-      quick("Status Saya", ".bencanawatch status"),
-      quick("Cara Pakai", ".bencanawatch guide"),
-    ]);
+    ]));
   } catch (err) {
     console.error("[bencanawatch]", err);
     await m.react("❌");
