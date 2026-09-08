@@ -11,7 +11,8 @@
 // .autoweatherrealtime notification off → matikan notifikasi cuaca
 // .autoweatherrealtime jadwal 06:30 12:00 17:00 20:00 → set jadwal notif
 // .autoweatherrealtime interval 2            → update otomatis tiap 2 jam ala script (off = balik jadwal)
-// .autoweatherrealtime provider bmkg|openmeteo → pilih sumber cuaca notif
+// .autoweatherrealtime provider <openmeteo|bmkg|metno|weatherapi|aggregate> → pilih sumber cuaca notif
+//   aggregate = gabungan 4 provider (rata-rata + kondisi dominan + konfidensi)
 // .autoweatherrealtime adm4 31.71.03.1001    → kode wilayah BMKG (verified live saat diset)
 // .autoweatherrealtime target <jid>   → set grup target notif
 // .autoweatherrealtime test            → test kirim cuaca sekarang
@@ -32,7 +33,7 @@ const pluginConfig = {
   alias: ["autoweatherrealtime", "autocuacarealtime"],
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/jadwal/interval/provider/adm4/target/test>",
+  usage: ".autoweatherrealtime <on/off/lokasi/notification/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target/test>",
   example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
@@ -135,7 +136,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Notifikasi") + " : " + (settings.notification ? "ON ✅" : "OFF ❌") + "\n" +
         "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
-        "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : "Open-Meteo") + (settings.provider === "bmkg" && settings.adm4 ? " (" + settings.adm4 + ")" : "") + "\n" +
+        "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
         "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
         "📌 " + toSC("Perintah") + ":\n" +
         "• " + prefix + "autoweatherrealtime on/off\n" +
@@ -279,7 +280,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           "✅ " + toSC("Notifikasi cuaca AKTIF") + "\n" +
           "• " + toSC("Mode") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
           "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
-          "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : "Open-Meteo") + "\n" +
+          "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
           "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
           "📌 " + toSC("Set target") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
           "📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
@@ -347,21 +348,32 @@ async function handler(m, { sock, config: botConfig, db }) {
       );
     }
 
-    // ── PROVIDER (openmeteo | bmkg) ──
+    // ── PROVIDER (openmeteo | bmkg | metno | weatherapi | aggregate) ──
     if (action === "provider" || action === "sumber") {
       const sub = (args.shift() || "").toLowerCase();
-      if (sub !== "openmeteo" && sub !== "open-meteo" && sub !== "bmkg") {
+      const VALID = {
+        openmeteo: "openmeteo", "open-meteo": "openmeteo",
+        bmkg: "bmkg",
+        metno: "metno", met: "metno", norway: "metno",
+        weatherapi: "weatherapi", wa: "weatherapi",
+        aggregate: "aggregate", multi: "aggregate", gabungan: "aggregate",
+      };
+      if (!VALID[sub]) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
-          "⚠ " + toSC("Format") + ":\n" +
+          "⚠ " + toSC("Pilih provider cuaca") + ":\n" +
+          "• " + prefix + "autoweatherrealtime provider aggregate\n" +
+          "  (" + toSC("gabungan 4 provider, otomatis pilih yang akurat") + ")\n" +
           "• " + prefix + "autoweatherrealtime provider openmeteo\n" +
           "• " + prefix + "autoweatherrealtime provider bmkg\n" +
-          "(" + toSC("BMKG butuh kode wilayah — set dengan") + " " + prefix + "autoweatherrealtime adm4 <kode>)\n" 
+          "• " + prefix + "autoweatherrealtime provider metno\n" +
+          "• " + prefix + "autoweatherrealtime provider weatherapi\n" +
+          "(" + toSC("BMKG butuh adm4; WeatherAPI butuh key di config") + ")\n" 
           )
         );
       }
-      const prov = sub === "bmkg" ? "bmkg" : "openmeteo";
+      const prov = VALID[sub];
       if (prov === "bmkg" && !settings.adm4) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
@@ -375,9 +387,14 @@ async function handler(m, { sock, config: botConfig, db }) {
       settings.provider = prov;
       saveWRSettings(db2, settings);
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+      const label = prov === "aggregate" ? toSC("AGGREGATE — gabungan otomatis Open-Meteo, MET Norway, BMKG, WeatherAPI")
+        : prov === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "")
+        : prov === "metno" ? "MET Norway"
+        : prov === "weatherapi" ? "WeatherAPI"
+        : "Open-Meteo";
       return m.reply(
         boxMessage("◆ " + "Weather Realtime" + " ◆",
-        "✅ " + toSC("Provider cuaca: ") + (prov === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : "Open-Meteo") + "\n" 
+        "✅ " + toSC("Provider cuaca: ") + label + "\n" 
         )
       );
     }
@@ -486,9 +503,7 @@ async function handler(m, { sock, config: botConfig, db }) {
             )
           );
         }
-        const name = settings.provider === "bmkg"
-          ? (settings.location?.name || "Wilayah BMKG")
-          : (settings.location?.name || "Lokasi");
+        const name = settings.location?.name || "Lokasi";
         const msg = formatWeatherUpdate(data, name, settings.intervalHours);
         // raw: format script punya emoji + bold sendiri, bukan box berkotak
         return m.reply(msg, { raw: true });
