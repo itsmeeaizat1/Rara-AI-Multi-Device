@@ -76,14 +76,17 @@ function checkPermission(m, pluginConfig) {
     };
   }
 
-  if (pluginConfig.isGroup && !m.isGroup) {
+  // BYPASS: isGroup + isPrivate dua-duanya true = fitur berlaku di
+  // grup DAN DM (bukan kontradiksi) — lolos di mana pun, gak ngeblok.
+  const __bothCtx = !!(pluginConfig.isGroup && pluginConfig.isPrivate);
+  if (!__bothCtx && pluginConfig.isGroup && !m.isGroup) {
     return {
       allowed: false,
       reason: config.messages?.groupOnly || "👥 Group only!",
     };
   }
 
-  if (pluginConfig.isPrivate && m.isGroup) {
+  if (!__bothCtx && pluginConfig.isPrivate && m.isGroup) {
     return {
       allowed: false,
       reason: config.messages?.privateOnly || "📱 Private chat only!",
