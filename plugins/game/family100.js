@@ -258,7 +258,10 @@ function revealChampion(sock, session, { stopped } = {}) {
 function safeSend(sock, chatId, text, mentions) {
   try {
     const content = { text: smallcapsText(text) };
-    if (mentions && mentions.length) content.mentions = [...new Set(mentions)];
+    // Filter falsy (null/undefined) SEBELUM dedup — mentions null bikin
+    // sock.sendMessage baileys crash "string argument ... Received null".
+    const clean = Array.isArray(mentions) ? mentions.filter(Boolean) : [];
+    if (clean.length) content.mentions = [...new Set(clean)];
     return sock.sendMessage(chatId, content);
   } catch (e) { console.error("[family100] send error:", e.message); }
 }
@@ -409,6 +412,11 @@ async function answerHandler(m, sock) {
     if (!text || text.startsWith(".")) return false;
 
     const sender = m.sender;
+    // GUARD 2026-09-08: m.sender bisa null (gagal resolve JID @lid, kasus
+    // tepi nova-serialize/nova-lid). Tanpa identitas jelas gak bisa attribute
+    // jawaban/poin — dan kalau lolos, mentions:[null] bikin sock.sendMessage
+    // crash "string argument ... Received null" (spam di log). Skip aman.
+    if (!sender) return false;
     const senderName = m.pushName || sender.split("@")[0];
 
     // ─── NYERAH → reveal ronde, lanjut ronde berikutnya ───
