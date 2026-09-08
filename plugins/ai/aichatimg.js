@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aichatimg — Chat AI yang bisa terima gambar + kirim gambar balik
 // Gabungan Gemini Vision (baca gambar) + UnlimitedAI (jawab) + Image gen (kirim gambar)
-import { GeminiVision } from "../../src/scraper/geminiVision.js";
+import { visionScan } from "../../src/lib/nova-vision-chain.js";
 // UnlimitedAI replaced with callIkyy (ikyyxd API)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
@@ -76,26 +76,21 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("aichatimg", "Gagal download gambar.", "error"));
       }
 
-      // Step 1: Gemini Vision analisis gambar
-      const visionResult = await GeminiVision({
+      // Rantai vision: Gemini Vision (key valid) → describe+Mercury (tanpa key)
+      const visionResult = await visionScan({
         imageBuffer: buffer,
-        prompt: text,
+        question: text,
         instruction: "Kamu adalah asisten AI vision yang ahli. Analisis gambar dengan detail dan akurat. Jawab dalam bahasa Indonesia. Jika user bertanya tentang soal/PR, kerjakan dengan penjelasan. Jika user minta identifikasi, jelaskan detail yang terlihat.",
-      });
+        sessionKey: "aichatimg:" + m.sender,
+      }).catch((e) => ({ status: false, error: e.message }));
 
       if (visionResult.status) {
         await m.react("🐣");
-        return m.reply(`Status: Gambar dianalisis\n\n${visionResult.text}`);
+        return m.reply(`🖼️ Engine: ${visionResult.engine}\n\n${visionResult.text}`);
       }
 
-      // Fallback: kalau Gemini key belum set, pakai UnlimitedAI tanpa gambar
-      const fallbackPrompt = `User mengirim gambar dengan pertanyaan: "${text}". Karena sistem vision sedang tidak tersedia, jelaskan bahwa untuk analisis gambar, user perlu set Gemini API key dengan .setkey gemini <key>. Tapi tetap coba bantu user dengan pertanyaan teksnya sebisanya.`;
-      const res = await callIkyy(prompt, {});
-      if (res.status) {
-        await m.react("🐣");
-        let msg = `Mode text-only (Gemini Vision belum aktif)\nAktifkan: ${prefix}setkey gemini <key>\nGratis: aistudio.google.com/apikey\n\n${res.answer}`;
-        return m.reply(msg);
-      }
+      await m.react("❌");
+      return m.reply(claraWrap("aichatimg", visionResult.error || "Gagal menganalisis gambar", "error"));
     }
 
     // Mode: chat teks biasa
@@ -114,7 +109,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🕒");
-    const result = await callIkyy(prompt, {});
+    const result = await callIkyy(text, {});
     if (!result.status || !result.answer) {
       await m.react("❌");
       return m.reply(claraWrap("aichatimg", "AI lagi offline nih 🤖", "error"));
