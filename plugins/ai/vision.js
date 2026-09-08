@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // vision — Analisis gambar dengan Gemini Vision (gratis, pakai API key Gemini)
-import { GeminiVision } from "../../src/scraper/geminiVision.js";
+import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { novaCaption, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -49,12 +49,12 @@ async function handler(m, { sock, config: botConfig }) {
     // Get prompt dari text message
     const prompt = m.text?.trim() || m.args?.join(" ").trim() || "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.";
 
-    // Call Gemini Vision
-    const result = await GeminiVision({
+    // Rantai vision: Gemini Vision (key valid) → describe+Mercury (tanpa key)
+    const result = await visionScan({
       imageBuffer: buffer,
-      prompt: prompt,
-      instruction: "Kamu adalah asisten AI vision yang ahli. Analisis gambar dengan detail dan akurat. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.",
-    });
+      question: prompt,
+      sessionKey: "vision:" + m.sender,
+    }).catch((e) => ({ status: false, error: e.message }));
 
     if (!result.status) {
       await m.react("❌");
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.react("🐣");
 
-    let msg = `Model: ${result.model}\n\nPertanyaan:\n"${prompt}"\n\nHasil Analisis:\n${result.text}`;
+    let msg = `Engine: ${result.engine}\n\nPertanyaan:\n"${prompt}"\n\nHasil Analisis:\n${result.text}`;
 
     return m.reply(msg);
   } catch (err) {
