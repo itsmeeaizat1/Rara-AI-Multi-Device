@@ -58,7 +58,7 @@ function getWRSettings(db) {
     // Default: ON, lokasi dari config, notification OFF
     return {
       realtime: true,
-      location: config.weather?.location || { name: "Serang", latitude: -6.12, longitude: 106.1443 },
+      location: config.weather?.location || { name: "Jakarta", latitude: -6.2088, longitude: 106.8456 },
       notification: false,
       schedules: [
         { key: "pagi", label: "Pagi", hour: 6, minute: 30 },
