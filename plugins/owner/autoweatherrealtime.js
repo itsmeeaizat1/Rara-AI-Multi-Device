@@ -40,7 +40,7 @@ const pluginConfig = {
   alias: ["autoweatherrealtime", "autocuacarealtime"],
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target/test>",
+  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
   example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
@@ -83,6 +83,19 @@ function getWRSettings(db) {
   if (s.alertEnabled === undefined) s.alertEnabled = true;
   if (!s.thresholds) s.thresholds = {};
   return s;
+}
+
+// Daftar semua grup yang bot ikuti (buat pilih target grup).
+// Sort by subject biar nomor stabil antara ".target grup" & ".target grup <nomor>".
+async function getBotGroups(sock) {
+  try {
+    const res = await sock.groupFetchAllParticipating();
+    return Object.values(res || {})
+      .map((g) => ({ jid: g.id, subject: g.subject || g.id }))
+      .sort((a, b) => String(a.subject).localeCompare(String(b.subject)));
+  } catch {
+    return [];
+  }
 }
 
 function saveWRSettings(db, data) {
@@ -307,7 +320,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
           "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
           "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
-          "📌 " + toSC("Set target") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
+          "📌 " + toSC("Pilih target") + ": " + prefix + "autoweatherrealtime target dm (ke DM kamu) | target grup (daftar semua grup)\n" +
           "📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
           "📌 " + toSC("Mode interval") + ": " + prefix + "autoweatherrealtime interval 2\n" 
           )
@@ -622,24 +635,81 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     // ── TARGET ──
     if (action === "target") {
-      const target = args.shift();
-      if (!target) {
-        try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+      // ── request owner 8 Sep 2026: pilih target DM / grup (bisa pilih grup mana) ──
+      const tArg = (args.shift() || "").toLowerCase().trim();
+
+      // tanpa arg → jalankan di chat ini (auto-set, default otomatis)
+      if (!tArg) {
+        settings.target = m.chat;
+        saveWRSettings(db2, settings);
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
-          "⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-          "" + toSC("Atau jalankan di dalam grup untuk auto-set") + "\n" 
-          )
+          "✅ " + toSC("Target notifikasi diatur ke chat ini") + "\n" +
+          "• " + toSC("Chat") + " : " + m.chat + "\n" +
+          "💡 " + toSC("Pilih DM/grup lain") + ": " + prefix + "autoweatherrealtime target dm | target grup\n"
+        )
         );
       }
-      settings.target = target;
+
+      // ── target dm → kirim ke DM yang ngetik command ──
+      if (tArg === "dm" || tArg === "pribadi" || tArg === "saya") {
+        settings.target = m.sender;
+        saveWRSettings(db2, settings);
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Update cuaca dikirim ke DM kamu") + "\n" +
+          "• " + toSC("DM") + " : " + m.sender + "\n"
+        )
+        );
+      }
+
+      // ── target grup [nomor] → daftar semua grup yang bot ikuti / pilih ──
+      if (tArg === "grup" || tArg === "group" || tArg === "grupnya") {
+        const list = await getBotGroups(sock);
+        if (!list.length) {
+          return m.reply(
+            boxMessage("◆ " + "Weather Realtime" + " ◆",
+            "⚠ " + toSC("Bot tidak menemukan grup yang diikuti") + "\n" +
+            "• " + toSC("Coba") + ": " + prefix + "autoweatherrealtime target 62123456789-1234@g.us\n"
+          )
+          );
+        }
+        const nomor = parseInt((args.shift() || "").replace(/\D/g, ""), 10);
+        // ada nomor → langsung pilih grup ke-N dari daftar
+        if (nomor >= 1 && nomor <= list.length) {
+          const pilih = list[nomor - 1];
+          settings.target = pilih.jid;
+          saveWRSettings(db2, settings);
+          try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+          return m.reply(
+            boxMessage("◆ " + "Weather Realtime" + " ◆",
+            "✅ " + toSC("Update cuaca dikirim ke grup") + "\n" +
+            "• " + toSC("Grup") + " : " + pilih.subject + "\n" +
+            "• " + pilih.jid + "\n"
+          )
+          );
+        }
+        // tanpa nomor valid → tampilin daftar grup untuk dipilih
+        let body = "🌐 " + toSC("PILIH GRUP TUJUAN UPDATE CUACA") + "\n\n";
+        list.slice(0, 30).forEach((g, i) => {
+          body += "  " + (i + 1) + ". " + (g.subject || g.jid) + (g.jid === m.chat ? toSC("  ← (chat ini)") : "") + "\n";
+        });
+        body += "\n💡 " + toSC("Ketik") + ": " + prefix + "autoweatherrealtime target grup <nomor>\n";
+        try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+        return m.reply(boxMessage("◆ " + "Weather Realtime" + " ◆", body));
+      }
+
+      // ── fallback: JID manual (DM 62...@s.whatsapp.net / grup ...@g.us) ──
+      settings.target = tArg;
       saveWRSettings(db2, settings);
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
         boxMessage("◆ " + "Weather Realtime" + " ◆",
         "✅ " + toSC("Target notifikasi diatur") + "\n" +
-        "• " + target + "\n" 
-        )
+        "• " + tArg + "\n"
+      )
       );
     }
 
