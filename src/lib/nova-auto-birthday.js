@@ -117,6 +117,13 @@ function checkTodayBirthdays(db) {
 // === Send birthday wishes ===
 async function sendBirthdayWish(sock, user) {
   const jid = user.jid.includes("@") ? user.jid : `${user.jid}@s.whatsapp.net`;
+  // ── target terpusat (.switch auto autoulah set): ucapan dikirim ke target
+  // pilihan owner (grup/DM) — default tetap ke yang ulang tahun ──
+  let targetJids = [jid];
+  try {
+    const { resolveAutoTargetsOr } = await import("./nova-auto-target.js");
+    targetJids = await resolveAutoTargetsOr(sock, "autoulah", targetJids);
+  } catch { /* target lib gagal → personal */ }
   const name = user.name || "Friend";
 
   let ageText = "";
@@ -134,7 +141,10 @@ async function sendBirthdayWish(sock, user) {
 
   try {
     const ctxInfo = saluranCtx();
-    await sock.sendMessage(jid, { text: wish, contextInfo: ctxInfo });
+    for (const t of targetJids) {
+      try { await sock.sendMessage(t, { text: wish, contextInfo: ctxInfo }); }
+      catch (e) { logger.error("AutoBirthday", `Send wish to ${t} failed: ${e.message}`); }
+    }
     return true;
   } catch (e) {
     logger.error("AutoBirthday", `Send wish to ${jid} failed: ${e.message}`);
