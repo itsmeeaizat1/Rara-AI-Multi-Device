@@ -5,7 +5,7 @@ import {
   ensureRpg, addExp, addGold, addJobExp, useEnergy,
   checkCooldown, setCooldown, formatTime, JOB_DB
 } from "../../src/lib/nova-rpg-service.js";
-import { animKerja } from "../../src/lib/nova-rpg-anim.js";
+import { animProfesi, PROFESI_ANIMATIONS } from "../../src/lib/nova-rpg-profesi.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
@@ -17,8 +17,8 @@ const pluginConfig = {
   name: "kerja",
   alias: ["kerja", "work"],
   category: "rpg",
-  description: "Bekerja untuk mendapatkan gold dan EXP — pilih jenis kerjaan dulu",
-  usage: ".kerja <jenis>",
+  description: "Bekerja untuk mendapatkan gold dan EXP — animasi unik per profesi (penebang, petani, dokter, pilot, dll)",
+  usage: ".kerja <jenis/profesi>",
   example: ".kerja pemula",
   isOwner: false,
   isPremium: false,
@@ -44,7 +44,9 @@ const JOB_FLAVOR = {
 };
 
 // Pilihan jenis kerjaan yang diterima — key JOB_DB + nama Indonesia-nya
+// + 11 PROFESI BARU (8 Sep 2026, animasi unik per profesi ala owner)
 const JOB_CHOICES = {
+  // Job RPG
   pemula: "novice", novice: "novice",
   petarung: "warrior", warrior: "warrior",
   penyihir: "mage", mage: "mage",
@@ -53,7 +55,25 @@ const JOB_CHOICES = {
   tank: "tank",
   tabib: "healer", healer: "healer",
   berserker: "berserker",
+  // Profesi (animasi per-profesi)
+  penebang: "penebang", nebang: "penebang",
+  petani: "petani", tani: "petani", farmer: "petani",
+  penambang: "penambang", tambang: "penambang", miner: "penambang",
+  nelayan: "nelayan", fisherman: "nelayan",
+  kantor: "kantor", office: "kantor", karyawan: "kantor",
+  dokter: "dokter", doctor: "dokter",
+  guru: "guru", teacher: "guru",
+  polisi: "polisi", police: "polisi",
+  pilot: "pilot",
+  chef: "chef", koki: "chef", kring: "chef",
+  programmer: "programmer", coder: "programmer", dev: "programmer",
 };
+
+// Key profesi (animasi + flavor per-profesi) — sisanya job RPG
+const PROFESI_SET = new Set([
+  "penebang", "petani", "penambang", "nelayan", "kantor",
+  "dokter", "guru", "polisi", "pilot", "chef", "programmer",
+]);
 
 // Menu pilihan kerjaan — muncul kalau .kerja dipanggil tanpa/karena arg salah.
 // Sebelumnya .kerja langsung eksekusi random padahal user belum milih jenis.
@@ -65,11 +85,15 @@ function kerjaMenu(prefix, rpg, invalid = false) {
   const jobList = Object.keys(JOB_DB)
     .map((k) => `${prefix}kerja ${JOB_DB[k].name.toLowerCase()}`)
     .join("\n");
+  const profesiList = [...PROFESI_SET]
+    .map((k) => `${prefix}kerja ${k}`)
+    .join("\n");
 
   const lines = [];
   if (invalid) lines.push(`❗ ${sc("Jenis kerjaan tidak dikenal")}`);
-  lines.push(`${sc("Mau kerja sebagai apa? Pilih dulu")}:`, jobList);
-  lines.push(`💡 ${sc("Contoh")}: ${prefix}kerja pemula`);
+  lines.push(`${sc("Job RPG")}:`, jobList);
+  lines.push(``, `${sc("Profesi — animasi unik per profesi")}:`, profesiList);
+  lines.push(`💡 ${sc("Contoh")}: ${prefix}kerja pemula | ${prefix}kerja dokter`);
   lines.push(`📌 ${sc("Job kamu")}: ${JOB_DB[rpg.job]?.name || "Pemula"} (Lv.${rpg.jobLevel || 1})`);
   lines.push(`📌 ${sc("Reward naik seiring job level")}`);
   return boxMessage("◆ MENU KERJA ◆", lines.join("\n"));
@@ -107,38 +131,49 @@ async function handler(m, { sock }) {
 
     useEnergy(m, WORK_ENERGY, sock);
 
-    const jobName = JOB_DB[chosenJob]?.name || "Pemula";
+    const isProfesi = PROFESI_SET.has(chosenJob);
+    const jobName = isProfesi ? (PROFESI_ANIMATIONS[chosenJob]?.status || chosenJob) : (JOB_DB[chosenJob]?.name || "Pemula");
+    const prof = PROFESI_ANIMATIONS[chosenJob] || PROFESI_ANIMATIONS.novice;
     const jobLv = rpg.jobLevel || 1;
     const baseGold = 30 + (jobLv * 15) + (rpg.level * 5);
     const goldGain = Math.floor(baseGold * (0.8 + Math.random() * 0.4));
     const expGain = Math.floor(40 + (jobLv * 10) + (rpg.level * 3));
     const jobExpGain = Math.floor(20 + jobLv * 5);
 
+    // Aktivitas dinamis hanya untuk job RPG (frame profesi sudah spesifik)
     const flavors = JOB_FLAVOR[chosenJob] || JOB_FLAVOR.novice;
-    const activity = flavors[Math.floor(Math.random() * flavors.length)];
+    const activity = isProfesi ? "" : flavors[Math.floor(Math.random() * flavors.length)];
 
-    // Animation: progressive work steps
-    await animKerja(m, sock, jobName, activity);
+    // Animation: frame unik per profesi/job (morphing message)
+    await animProfesi(m, sock, chosenJob, { activity });
 
     addExp(m, expGain);
     addGold(m, goldGain);
-    addJobExp(m, jobExpGain);
+    const { leveledUp } = addJobExp(m, jobExpGain);
     setCooldown(m, "lastWork", WORK_COOLDOWN);
 
+    // Bonus item flavor ala contoh owner (narasi — reward asli tetap EXP/Gold/JobEXP)
+    const bonusFlavor = (prof.gajian[2] || "").replace(/^📦 Bonus:\s*/i, "");
+
     await m.react("🐣");
+    const body = [
+      `👔 Pekerjaan : ${jobName} (Lv.${jobLv})`,
+      ...(isProfesi ? [] : [`📋 Aktivitas : ${activity}`]),
+      "",
+      ...prof.hasil,
+      "",
+      `✨ EXP : +${expGain}`,
+      `💰 Gold : +${goldGain}`,
+      `📖 Job EXP : +${jobExpGain}`,
+      ...(bonusFlavor ? [`📦 Bonus : ${bonusFlavor}`] : []),
+      ...(leveledUp ? ["", ...prof.naikLevel] : []),
+      "",
+      `⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
+    ].join("\n");
     return m.reply(novaGameBox({
       title: "kerja", icon: "💼",
-      flavor: "💼 *GAJIAN!*",
-      body: [
-        `👔 Pekerjaan : ${jobName} (Lv.${jobLv})`,
-        `📋 Aktivitas : ${activity}`,
-        "",
-        `✨ EXP : +${expGain}`,
-        `💰 Gold : +${goldGain}`,
-        `📖 Job EXP : +${jobExpGain}`,
-        "",
-        `⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
-      ].join("\n"),
+      flavor: prof.gajian[0] || "💼 *GAJIAN!*",
+      body,
       cta: gameCTA("kerja"),
     }));
   } catch (err) {
