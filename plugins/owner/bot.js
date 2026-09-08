@@ -10,8 +10,8 @@ const pluginConfig = {
     alias: ["bot"],
     category: 'owner',
     description: 'Matikan/nyalakan bot total (kill-switch) + atur mode respon (gc/pc/all)',
-    usage: '.bot <on|off> | .bot mode <gc|pc|all>',
-    example: '.bot off\n.bot mode gc\n.bot mode pc\n.bot mode all',
+    usage: '.bot <on|off> | .bot mode <gc|pc|all> [on|off]',
+    example: '.bot off\n.bot mode gc on\n.bot mode pc on\n.bot mode gc off\n.bot mode all',
     isOwner: true,
     isPremium: false,
     isGroup: false,
@@ -159,6 +159,7 @@ async function handler(m, { sock }) {
     // ── .bot mode <gc|pc|all> — pindahan dari .onlygc / .onlypc ──
     if (act === 'mode') {
         const sub = (args[1] || '').toLowerCase()
+        const flag = (args[2] || '').toLowerCase() // dukung ".bot mode gc on/off"
 
         // .bot mode → status mode doang
         if (!sub) {
@@ -169,8 +170,9 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap('Mode Bot', [
                 `Mode sekarang : ${curMode}`,
                 '',
-                '*.bot mode gc* → bot cuma respon di grup',
-                '*.bot mode pc* → bot cuma respon di chat pribadi',
+                '*.bot mode gc on* → bot cuma respon di grup',
+                '*.bot mode pc on* → bot cuma respon di chat pribadi',
+                '*.bot mode gc off* / *pc off* → matiin mode itu',
                 '*.bot mode all* → respon di semua chat',
                 '',
                 'Owner tetap bisa command di mana pun.',
@@ -178,6 +180,16 @@ async function handler(m, { sock }) {
         }
 
         if (['gc', 'group', 'grup', 'gconly', 'onlygc'].includes(sub)) {
+            if (flag === 'off') {
+                db.setting('onlyGc', false)
+                db.setting('onlyPc', false)
+                await m.react("🐣")
+                return m.reply(claraWrap('Mode Bot', [
+                    'Mode *ɢᴄ* dimatikan — bot respon di semua chat lagi.',
+                    '',
+                    `Matikan bot total: *.bot off*`,
+                ].join('\n')))
+            }
             db.setting('onlyGc', true)
             db.setting('onlyPc', false)
             await m.react("🐣")
@@ -187,11 +199,21 @@ async function handler(m, { sock }) {
                 'Chat pribadi (PC) di-diamin.',
                 'Owner tetap bisa command di mana pun.',
                 '',
-                `Balik lagi: *.bot mode all*`,
+                `Balik lagi: *.bot mode gc off* / *.bot mode all*`,
             ].join('\n')))
         }
 
         if (['pc', 'private', 'dm', 'pconly', 'onlypc'].includes(sub)) {
+            if (flag === 'off') {
+                db.setting('onlyPc', false)
+                db.setting('onlyGc', false)
+                await m.react("🐣")
+                return m.reply(claraWrap('Mode Bot', [
+                    'Mode *ᴘᴄ* dimatikan — bot respon di semua chat lagi.',
+                    '',
+                    `Matikan bot total: *.bot off*`,
+                ].join('\n')))
+            }
             db.setting('onlyPc', true)
             db.setting('onlyGc', false)
             await m.react("🐣")
@@ -201,11 +223,11 @@ async function handler(m, { sock }) {
                 'Grup di-diamin.',
                 'Owner tetap bisa command di mana pun.',
                 '',
-                `Balik lagi: *.bot mode all*`,
+                `Balik lagi: *.bot mode pc off* / *.bot mode all*`,
             ].join('\n')))
         }
 
-        if (['all', 'semua', 'normal', 'off'].includes(sub)) {
+        if (['all', 'semua', 'normal'].includes(sub) || (sub === 'off' && !flag)) {
             db.setting('onlyGc', false)
             db.setting('onlyPc', false)
             await m.react("🐣")
