@@ -233,6 +233,12 @@ export function addExp(m, amount) {
     const bonus = Math.floor(amount * (rpg.expBonus / 100));
     const total = amount + bonus;
     rpg.exp += total; rpg.totalExp += total;
+    // 💵 UANG OTOMATIS (8 Sep 2026, request owner: "semua game ada item uang")
+    // EXP = pengalaman (bukan uang), Gold = batang emas (bukan uang) —
+    // tiap game yang kasih EXP juga dibayar UANG (Rp), skala naik ikut level:
+    // Lv.1 ×50 EXP, Lv.10 ×140, Lv.30 ×340 (kerja profesi tetap gajian besar).
+    const cashGain = Math.floor(total * (40 + (rpg.level || 1) * 10));
+    rpg.cash = Math.max(0, (rpg.cash || 0) + cashGain);
     let levels = 0;
     while (rpg.exp >= rpg.expNext) {
       rpg.exp -= rpg.expNext; rpg.level += 1;
@@ -243,8 +249,8 @@ export function addExp(m, amount) {
       rpg.skillPoints += 2;
     }
     saveRpg(m, rpg);
-    return { leveledUp: levels > 0, levels };
-  } catch { return { leveledUp: false, levels: 0 }; }
+    return { leveledUp: levels > 0, levels, cashGain };
+  } catch { return { leveledUp: false, levels: 0, cashGain: 0 }; }
 }
 
 export function addJobExp(m, amount) {
@@ -775,6 +781,7 @@ export function getLeaderboard(type = "level", limit = 10) {
       switch (type) {
         case "level": value = rpg.level || 1; break;
         case "gold": value = rpg.gold || 0; break;
+        case "cash": value = rpg.cash || 0; break;
         case "pvp": value = rpg.pvpRating || 1000; break;
         case "kills": value = rpg.totalKills || 0; break;
         case "boss": value = rpg.bossKills || 0; break;

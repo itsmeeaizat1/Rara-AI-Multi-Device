@@ -1,4 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getCash } from "../../src/lib/nova-rpg-service.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animTreasure } from "../../src/lib/nova-rpg-anim.js";
 
@@ -95,6 +96,7 @@ async function handler(m, { sock }) {
         "Kamu menemukan Peti Emas Kuno Berkilau!",
         `│ • 👑 Temuan : Peti Harta Legendaris x1`,
         `│ • 💰 Gold : +${legGold.toLocaleString()}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
       ];
     } else {
       const goldReward = Math.floor(Math.random() * (loc.maxGold - loc.minGold + 1)) + loc.minGold;
@@ -105,6 +107,7 @@ async function handler(m, { sock }) {
       resultLines = [
         `│ • 📦 Temuan : ${itemReward} x1`,
         `│ • 💰 Gold : +${goldReward.toLocaleString()}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
       ];
     }
 

@@ -5,7 +5,7 @@ import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-} from "../../src/lib/nova-rpg-service.js";
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
@@ -87,6 +87,7 @@ async function handler(m, { sock }) {
         `│ • 👷 Pekerjaan : ${job.name}`,
         "",
         `│ • 💰 Gold : +${goldGain}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
         ...(bonusGold > 0 ? [`│ • 🔥 Streak bonus : +${bonusGold} gold`] : []),
         `│ • ✨ EXP : +${expGain}`,
         ...(streak > 1 ? [`│ • 🔥 Streak : ${streak}x`] : []),

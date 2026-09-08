@@ -3,8 +3,8 @@
 
 import {
   ensureRpg, saveRpg, getEquipStats, addExp, addGold,
-  pvpResult, checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
+  pvpResult, checkCooldown, setCooldown, formatTime,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
@@ -204,6 +204,7 @@ async function handler(m, { sock }) {
           ? [
               `│ • ✨ EXP : +${expGain}`,
               `│ • 💰 Gold : +${goldGain}`,
+              `│ • 💵 Uang : Rp ${getCash(m)}`,
               `│ • 📊 Rating : ${rpg.pvpRating + 15}`,
             ]
           : [

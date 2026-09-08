@@ -4,8 +4,8 @@
 import {
   ensureRpg, saveRpg, addExp, addGold, addGems, useEnergy,
   addItem, removeItem, getEquipStats, regenHP, regenMana, regenEnergy,
-  ITEM_DB, checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
+  ITEM_DB, checkCooldown, setCooldown, formatTime,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
@@ -272,6 +272,7 @@ async function handler(m, { sock }) {
         "",
         ...(expGain > 0 ? [`│ • ✨ EXP : +${expGain}`] : []),
         ...(goldGain > 0 ? [`│ • 💰 Gold : +${goldGain}`] : []),
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
         ...(gemGain > 0 ? [`│ • 💎 Gems : +${gemGain}`] : []),
         ...(drops.length > 0 ? [`│ • 📦 Item : ${dropText}`] : []),
         ...(extraText ? [extraText] : []),
