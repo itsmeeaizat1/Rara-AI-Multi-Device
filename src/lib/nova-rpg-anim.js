@@ -344,6 +344,69 @@ export async function animBattle(m, sock, attacker, defender, rounds, delay = 14
 }
 
 /**
+ * Animasi battle TURN-BY-TURN ala adventure script owner (8 Sep 2026,
+ * request: "ke rpg .adventure tambah animasi ini").
+ * Frame intro PERTEMPURAN DIMULAI → tiap round: serangan player (damage +
+ * HP musuh) + balasan musuh (damage + HP player) → frame final menang/kalah.
+ * Morphing: frame dikirim lalu di-EDIT berjenjang; fallback pesan baru.
+ *
+ * @param {object} opts
+ *   playerName, enemyName, enemyHp, enemyMaxHp, playerHp, playerMaxHp,
+ *   rounds: [{ dmg, enemyHpAfter, monsterDmg, playerHpAfter }],
+ *   victory: boolean
+ */
+export async function animBattleTurns(m, sock, opts, delay = 1600) {
+  const {
+    playerName = "Petualang", enemyName = "Monster",
+    enemyHp = 100, enemyMaxHp = 100, playerHp = 100, playerMaxHp = 100,
+    rounds = [], victory = true,
+  } = opts || {};
+
+  // Susun frame
+  const frames = [];
+  frames.push(
+    `⚔️ *PERTEMPURAN DIMULAI!*\n` +
+    `👹 Musuh: ${enemyName} (HP: ${enemyHp})\n` +
+    `❤️ ${playerName}: ${playerHp}/${playerMaxHp}`
+  );
+  for (let i = 0; i < rounds.length; i++) {
+    const r = rounds[i];
+    let f = `⚔️ *${playerName}* menyerang! Damage: *${r.dmg}*\n` +
+            `👹 ${enemyName} HP: ${r.enemyHpAfter}/${enemyMaxHp}`;
+    if (r.monsterDmg > 0) {
+      f += `\n💢 *${enemyName}* membalas! Damage: *${r.monsterDmg}*\n` +
+           `❤️ ${playerName} HP: ${r.playerHpAfter}/${playerMaxHp}`;
+    }
+    frames.push(f);
+  }
+  frames.push(victory
+    ? `🎉 *${enemyName.toUpperCase()} KALAH!* 🏆`
+    : `💀 *${playerName.toUpperCase()} KALAH!* Semoga beruntung lain kali...`);
+
+  // Morphing message — kirim frame pertama, sisanya edit-in-place
+  let key = null;
+  const send = async (text) => {
+    if (key) {
+      try { await sock.sendMessage(m.chat, { text, edit: key }); return; }
+      catch { key = null; }
+    }
+    try {
+      const s = await sock.sendMessage(m.chat, { text });
+      key = s?.key || null;
+      if (key) return;
+    } catch {}
+    await m.reply(text);
+  };
+  for (let i = 0; i < frames.length; i++) {
+    await send(frames[i]);
+    if (i < frames.length - 1) {
+      if (sock?.sendPresenceUpdate) { try { await sock.sendPresenceUpdate("composing", m.chat); } catch {} }
+      await sleep(delay);
+    }
+  }
+}
+
+/**
  * Animasi slot machine — spinning reels
  */
 export async function animSlot(m, sock, symbols, delay = 1500) {
