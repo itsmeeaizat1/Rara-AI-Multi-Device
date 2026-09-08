@@ -19,6 +19,7 @@ import {
   setWatcherKirim,
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
   getMonitorHealth, sendActivationSample,
+  setWatcherEws, setWatcherProvider, getEwsHistory, EWS_MIN_MAG,
 } from "../../src/lib/nova-bencana.js";
 // ── GUARD FORMAT (request owner 2026-09-07): SEMUA pesan berkotak plugin
 // ini WAJIB lewat boxLeft() dari src/lib/styler.js — kalimat input tetap
@@ -44,6 +45,7 @@ function toGuardedBox(header, lines = []) {
 
 const novaBox = (header, lines = []) => toGuardedBox(header, lines);
 const novaError = (header, msg) => toGuardedBox(header, ["❌ " + (msg || "Terjadi error, coba lagi.")]);
+const novaSuccess = (header, msg) => toGuardedBox(header, ["✅ " + (msg || "Berhasil.")]);
 const novaGuide = (header, intro, example) =>
   toGuardedBox(header, [
     ...(intro ? [String(intro)] : []),
@@ -75,6 +77,7 @@ async function handler(m, { sock }) {
       aktif: "on", aktifkan: "on", nyalakan: "on", cek: "status", check: "status",
       info: "status", help: "guide", bantuan: "guide",
       atur: "atur", pengaturan: "atur", setting: "atur", settings: "atur",
+      history: "riwayat",
     };
     const action = ACTION_ALIAS[args[0]] || args[0] || "";
     const chatId = m.chat;
@@ -700,6 +703,83 @@ async function handler(m, { sock }) {
       return m.reply(novaBox("Bencana Watch", lines));
     }
 
+    // ── EWS: PERINGATAN DINI GEMPA (pengaman darurat — request owner 8 Sep 2026) ──
+    if (action === "ews") {
+      const on = ["on", "aktif", "nyalakan", "true"].includes((m.args || [])[1]?.toLowerCase());
+      const off = ["off", "matikan", "stop", "false"].includes((m.args || [])[1]?.toLowerCase());
+      if (!on && !off) {
+        const subs = await getWatchersSafe();
+        const me = subs[targetKey];
+        const health = getMonitorHealth();
+        return m.reply(novaBox("Ews Peringatan Dini", [
+          `Status  : ${me ? (me.ews === false ? "OFF (gak ikut peringatan dini)" : "ON (pengaman darurat aktif)") : "TIDAK LANGGANAN"}`,
+          `Poll    : tiap ${health.ewsPollSec ?? 10} detik (BMKG+USGS+JEPANG+GLOBAL)`,
+          `Ambang  : M ${health.ewsMinMag ?? 4.5}+ — gempa besar M6.5+ semua chat`,
+          `Monitor : ${health.ewsRunning ? "HIDUP" : "MATI (nyalakan .bencanawatch on)"}`,
+          `Riwayat : ${health.ewsHistoryCount ?? 0} event tercatat`,
+          "---",
+          "EWS bypass mode pengiriman (pengaman darurat):",
+          "walau mode jadwal, gempa dekat/tetangga tetap realtime.",
+          "Jarak & estimasi tiba guncangan dihitung dari lokasi",
+          "yang di-set via .bencanawatch lokasi <kota>",
+          "---",
+          "Perintah: .bencanawatch ews on/off",
+        ]));
+      }
+      try {
+        const sub = setWatcherEws(targetKey, on);
+        return m.reply(novaSuccess("Bencana Watch", `peringatan dini gempa (EWS) ${on ? "AKTIF — kamu bakal diberi tau dalam hitungan detik pas gempa M${EWS_MIN_MAG}+ dekat lokasimu" : "NONAKTIF — gempa dekat gak bakal EWS-nya (alert bencana normal tetap jalan)"}`));
+      } catch (e) {
+        return m.reply(novaError("Bencana Watch", e.message));
+      }
+    }
+
+    // ── Provider EWS per subscriber ──
+    if (action === "provider") {
+      const wanted = (m.args || []).slice(1);
+      if (!wanted.length) {
+        const subs = await getWatchersSafe();
+        const me = subs[targetKey];
+        return m.reply(novaBox("Provider Ews", [
+          `Filter  : ${Array.isArray(me?.provider) && me.provider.length ? me.provider.join(", ").toUpperCase() : "SEMUA (bmkg, usgs, jepang, global)"}`,
+          "---",
+          "Pilihan provider:",
+          "bmkg — Indonesia (autogempa BMKG)",
+          "usgs — global (USGS 4.5+ day)",
+          "jepang — JMA (gempa Jepang)",
+          "global — EMSC (agregasi semua agensi,",
+          "termasuk gempa China)",
+          "---",
+          "Contoh: .bencanawatch provider bmkg jepang",
+          "Reset semua: .bencanawatch provider all",
+        ]));
+      }
+      try {
+        const sub = setWatcherProvider(targetKey, wanted);
+        return m.reply(novaSuccess("Bencana Watch", `filter provider EWS: ${Array.isArray(sub.provider) && sub.provider.length ? sub.provider.join(", ").toUpperCase() : "SEMUA"}`));
+      } catch (e) {
+        return m.reply(novaError("Bencana Watch", e.message));
+      }
+    }
+
+    // ── Riwayat event EWS (ala script !history) ──
+    if (action === "riwayat") {
+      const hist = getEwsHistory(10);
+      if (!hist.length) {
+        return m.reply(novaBox("Riwayat Ews", [
+          "Belum ada event EWS tercatat.",
+          "Riwayat keisi begitu ada gempa M" + EWS_MIN_MAG + "+ baru",
+          "yang lolos filter subscriber.",
+        ]));
+      }
+      const lines = ["Event peringatan dini terakhir:", ""];
+      hist.forEach((h, i) => {
+        lines.push(`${i + 1}. [${h.provider}] M${h.mag} — ${h.wilayah}`);
+        lines.push(`   🕐 ${h.waktu}${h.terkirim ? ` → ${h.terkirim} chat` : ""}`);
+      });
+      return m.reply(novaBox("Riwayat Ews", lines));
+    }
+
     if (action === "status" || action === "") {
       const subs = await getWatchersSafe();
       const me = subs[targetKey];
@@ -739,8 +819,10 @@ async function handler(m, { sock }) {
       // cek tiap sumber, plus penegasan ini FITUR REALTIME (bencana BARU
       // sejak aktif), bukan daftar bencana yang lagi terjadi sekarang.
       const health = getMonitorHealth();
+      lines.push(`Ews     : ${me ? (me.ews === false ? "OFF" : "ON (pengaman darurat)") : "-"}${Array.isArray(me?.provider) && me.provider.length ? " — provider: " + me.provider.join(", ").toUpperCase() : ""}`);
       lines.push("---");
       lines.push(`Monitor : ${health.running ? "HIDUP — sedang mantau" : "MATI (belum ada subscriber)"}`);
+      lines.push(`Cek EWS  : tiap ${health.ewsPollSec ?? 10}s (4 provider: BMKG, USGS, JMA, EMSC)`);
       lines.push(`Cek BMKG  : tiap ${health.pollBmkgSec}s${health.bmkgLastCheck ? `, terakhir ${new Date(health.bmkgLastCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}` : ", belum pernah"}`);
       lines.push(`Cek Global: tiap ${health.pollGlobalSec}s (USGS + GDACS)`);
       lines.push("---");
@@ -774,7 +856,15 @@ async function handler(m, { sock }) {
         "• onglobal → DM + semua grup",
         "• off / offglobal → matikan",
         "---",
-        { sub: "2. Atur selera (opsional)" },
+        { sub: "2. Peringatan dini (EWS)" },
+        "• ews → status pengaman darurat",
+        "• ews on/off → gempa M4.5+ dikirim",
+        "  DETIK itu juga (bypass mode),",
+        "  lengkap jarak + estimasi guncangan",
+        "• provider bmkg/usgs/jepang/global/all",
+        "• riwayat → event EWS terakhir",
+        "---",
+        { sub: "3. Atur selera (opsional)" },
         "• mode otomatis / jadwal / darurat",
         "• sumber bmkg (Indonesia saja)",
         "• jenis gempa (jenis tertentu)",
