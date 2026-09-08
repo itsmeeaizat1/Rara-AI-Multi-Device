@@ -5,8 +5,8 @@ import { animFarm } from "../../src/lib/nova-rpg-anim.js";
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
   addItem, ITEM_DB,
-  checkCooldown, setCooldown, formatTime
-} from "../../src/lib/nova-rpg-service.js";
+  checkCooldown, setCooldown, formatTime,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -178,6 +178,7 @@ async function handler(m, { sock }) {
         body: [
           `│ • 🌾 Tanaman : ${crop.name}`,
           `│ • 💰 Gold : +${goldGain}`,
+          `│ • 💵 Uang : Rp ${getCash(m)}`,
           `│ • ✨ EXP : +${expGain}`,
           `│ • 📦 Item : +${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}`,
           "",

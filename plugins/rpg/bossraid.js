@@ -4,8 +4,8 @@
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, addGems,
   addItem, getEquipStats, rollDrop, ITEM_DB,
-  checkCooldown, setCooldown, formatTime, MONSTER_DB
-} from "../../src/lib/nova-rpg-service.js";
+  checkCooldown, setCooldown, formatTime, MONSTER_DB,
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
@@ -168,6 +168,7 @@ async function handler(m, { sock }) {
           "",
           `│ • ✨ EXP : +${expGain}`,
           `│ • 💰 Gold : +${goldGain}`,
+          `│ • 💵 Uang : Rp ${getCash(m)}`,
           `│ • 💎 Gems : +${gemGain}`,
           ...dropLines,
           ...(Math.random() < 0.1 ? [`│ • 🎁 Bonus : +1x Batu Reinkarnasi`] : []),

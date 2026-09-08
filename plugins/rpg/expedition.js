@@ -2,6 +2,7 @@
 // expedition.js — Expedition System (send party on timed missions)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
+import { getCash } from "../../src/lib/nova-rpg-service.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -91,6 +92,7 @@ async function handler(m, { sock }) {
       text += `
 `;
       text += `💰 Reward Gold : +${rewardGold.toLocaleString()} Gold\n`;
+      text += `💵 Uang : Rp ${getCash(m).toLocaleString("id-ID")}\n`;
       text += `📊 Total Ekspedisi : ${data.totalCompleted}x\n`;
       text += `🏆 Total Pendapatan : ${data.totalEarned.toLocaleString()} Gold\n`;
       

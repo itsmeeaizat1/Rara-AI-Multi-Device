@@ -6,7 +6,7 @@ import {
   addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-} from "../../src/lib/nova-rpg-service.js";
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { animGather, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
@@ -102,6 +102,7 @@ async function handler(m, { sock }) {
         "",
         `│ • ✨ EXP : +${expGain}`,
         `│ • 💰 Gold : +${goldGain}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
         dropText,
         "",
         `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,

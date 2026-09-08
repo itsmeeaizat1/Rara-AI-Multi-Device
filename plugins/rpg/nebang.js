@@ -5,7 +5,7 @@ import {
   ensureRpg, addExp, addGold, useEnergy, addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-} from "../../src/lib/nova-rpg-service.js";
+  getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animGather } from "../../src/lib/nova-rpg-anim.js";
@@ -91,6 +91,7 @@ async function handler(m, { sock }) {
         "Kamu menebang dengan susah payah...",
         "",
         `│ • 💰 Gold : +${goldGain}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
         `│ • ✨ EXP : +${expGain}`,
         ...(dropText ? [dropText] : []),
         "",

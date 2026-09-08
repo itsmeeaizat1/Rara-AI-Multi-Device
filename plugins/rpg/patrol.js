@@ -1,4 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getCash } from "../../src/lib/nova-rpg-service.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
 
@@ -106,6 +107,7 @@ async function handler(m, { sock }) {
       eventDetail = [
         "Kamu berhasil mengalahkan monster!",
         `│ • 💰 Gold : +${goldGain.toLocaleString()}`,
+        `│ • 💵 Uang : Rp ${getCash(m)}`,
         `│ • ✨ EXP : +${expGain}`,
       ].join("\n");
     } else if (event.type === "treasure") {
