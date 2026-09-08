@@ -1,7 +1,7 @@
 # 📡 NOVA AI — Daftar API Website
 
 > Dokumentasi semua API endpoint yang digunakan di Nova AI WhatsApp Bot
-> Total: 200+ API endpoint dari 100+ provider
+> Total: 400+ API endpoint dari 100+ provider (termasuk KuroNeko 221 endpoint)
 > Last updated: 8 September 2026
 
 ---
@@ -10,6 +10,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id/api/ai/*` | 28 endpoint AI: chatgpt, claude, gpt5, qwen3, deepsek, mistral, perplexity, aiseek, kuroneko, nova, feeb, gptanon, bypassai, imagenai, txt2img, nanobanana, animetoreal, img2prompt, toonmix, tts, text2vid, aisong | ✅ Free (key via login) |
 | OpenAI | `api.openai.com` | .gpt4o, .ai-set, nova-ai-service | ⚠️ Key required |
 | Anthropic Claude | `api.anthropic.com` | .cegpt, claudehaiku scraper | ⚠️ Key required |
 | Google Gemini | `generativelanguage.googleapis.com` | Gemini Vision, .nova-ai, .ai-set | ⚠️ Key required |
@@ -63,6 +64,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id/api/stalk/*` | 7 stalker: tiktok, youtube, githubuser, discord, freefire, npm, pinterest | ✅ Free (key via login) |
 | Siputzx | `api.siputzx.my.id` | nikparser, ffstalk, tiktokstalk, ytstalk2, primbon, brat | ✅ Free |
 | Velyn Mom | `velyn.mom` | mlstalk, robloxstalk2, ffstalk2, nikparser2 | ✅ Free |
 | Nexray | `api.nexray.web.id` / `api.nexray.eu.cc` | gsmarena2, nikparser2, nulis2, mlstalk fallback | ✅ Free |
@@ -94,6 +96,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id/api/download/*` | 22 downloader: aio, anydl, ytmp3, ytmp4, tiktok, instagram, facebook, douyin, spotify, spotyloader, soundcloud, mediafire, terabox, pinterest, x, capcut, snackvideo, videy, applemusic, github, xnxx, ytpost | ✅ Free (key via login) |
 | FastDL | `api-wh.fastdl.app` / `fastdl.app` | ytmp3, tiktokv3, instagramdl, alldl | ✅ Free |
 | SnapCDN | `dl.snapcdn.app` | tiktokv2, aiov2 | ✅ Free |
 | Cobalt Tools | `api.cobalt.tools` | aio, alldl | ✅ Free |
@@ -127,6 +130,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id/api/maker/*` | 7 maker: qc, brat, carbon, removebg, emojikitchen, blurface, tonude | ✅ Free (key via login) |
 | Ephoto360 | `en.ephoto360.com` | ephoto, textpro | ✅ Free |
 | API-FAA | `api-faa.my.id` | bratvid, toghibli, tohijab, tojapanese, tomekah, tomoai, tofigura, qr-create, nano-banana | ✅ Free |
 | Pollinations AI | `image.pollinations.ai` | aichatimg, txt2img, aiimggen | ✅ Free |
@@ -162,6 +166,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id/api/search/*` | 24 search: google, bing, pinterest, pixiv, spotify, lyrics, play, yts, dafont, kodepos, resepkoki, wallcraft, subdomain, github, npm, mangatoon, mcpedl, prompt, cuaca, countryinfo, group, danbooru, applemusic, xnxx | ✅ Free (key via login) |
 | Google Search | `google.com` / `translate.googleapis.com` | .google, translate, ssweb | ✅ Free |
 | DuckDuckGo | `api.duckduckgo.com` / `duckduckgo.com` | search, instant answer | ✅ Free |
 | Bing Image | `bing.com` / `api.bing.com` | bingimage | ✅ Free |
@@ -261,6 +266,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id/api/tools/genmail` | GenMail (advanced temp mail: create/inbox/open) + tempmail, tempmail2, tempmail3 | ✅ Free (key via login) |
 | Temp-Mail.io | `api.internal.temp-mail.io` / `temp-mail.io` | tempmail | ✅ Free |
 | Mail.tm | `api.mail.tm` | tempmailv2 | ✅ Free |
 | Mail.gw | `api.mail.gw` | tempmail fallback | ✅ Free |
@@ -367,6 +373,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id/api/game/*` | 20 game: family100, tebakgambar, tebakkata, tekateki, asahotak, caklontong, tebaklagu, tebaklogo, tebaksiapa, tebakbendera, tebakgame, tebakkimia, tebaklirik, tebakwarna, tebak kalimat, susunkata, lengkapikalimat, ccsd, math, tebakan | ✅ Free (key via login) |
 | OpenTDB | `opentdb.com` | trivia, game trivia | ✅ Free |
 | The Trivia API | `the-trivia-api.com` | trivia v2 | ✅ Free |
 | Truth or Dare Bot | `api.truthordarebot.xyz` | truthordarev2 | ✅ Free |
@@ -444,6 +451,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
+| KuroNeko API | `sylvatica.my.id` | bypass (cloudflare, ouo, paywall, akamai-bmp, device-spoof), RE/forensik APK 12 (apk-signer, js-deobfuscator, flutter, unity-il2cpp, ssl-pinning-finder, blutter dll), anime 21 (mangadex 7, nontonanime 8, otakudesu 4, otakotaku), tools 26 (hd-hd4, upscale, ssweb, translate, removevocal, cekresi, nik, pagespeed, ngl, text2qr, findsong, ytsum, saveweb), nsfw 19 (doujin, manhwaland, nekopoi), random 5, pterodactyl 18 panel | ✅ Free (key via login) |
 | GitHub | `api.github.com` / `github.com` | githubdl, raw files | ✅ Free |
 | Pastebin | `pastebin.com` | pastebin, getpaste | ✅ Free |
 | NoEmbed | `noembed.com` | metatag, embed info | ✅ Free |
@@ -472,6 +480,32 @@
 | Meme Pedia | `fmpedia.id` | meme | ✅ Free |
 | OpenJung | `openjung.org` | open graph | ✅ Free |
 | Nova Site | `nova.site` | bot website | ✅ Free |
+
+---
+
+## 🧩 KuroNeko API — sylvatica.my.id (8 Sep 2026, live verified)
+
+REST API all-in-one creator **Dandy** (docs: https://sylvatica.my.id/docs) — dibangun pakai Golang, dirancang buat developer bot WhatsApp/Telegram/Discord. **Total 221 endpoint / 15 kategori**. Semua request wajib param `?apikey=` — tanpa key → 401 "API Key wajib diisi".
+
+**Auth & Tier:**
+- Sign In pakai akun **Google atau GitHub** di halaman /docs → API Key otomatis dibuat di halaman profil
+- Paket default **Common (limit 60 request/hari)** — ada 5 tier total (ada paket berbayar)
+- Rate limit per IP: >10 request/detik → auto-banned 10 detik
+- Cek sisa limit: `GET /api/info/cekapikey?apikey=KEY`
+
+**Discovery endpoint:** `GET https://sylvatica.my.id/api` → JSON daftar SEMUA endpoint per kategori (dipakai untuk auto-sync docs).
+
+**Kategori (8 Sep 2026):** ai 28 · anime 21 · download 22 · search 24 · tools 26 · game 20 · maker 7 · nsfw 19 · pterodactyl 18 · re 12 · stalk 7 · random 5 · bypass 5 · admin 5 · info 2
+
+**Highlight buat Nova:**
+- Downloader all-in-one (aio/anydl + 22 platform — cadangan rantai alldl)
+- Image HD 4 varian + upscale V5 (cadangan .remini)
+- TTS + text2vid + nanobanana (image editor AI)
+- Bypass cloudflare/ouo/paywall (cadangan scraper CF-protected)
+- Temp mail 4 varian + genmail advanced
+- Anime streaming (nontonanime/otakudesu/mangadex) — nyambung sama fitur anime V1/V2
+
+**Status tes (8 Sep 2026):** domain HIDUP (200), discovery /api HIDUP, tanpa key 401 (sesuai desain). Butuh key dari owner (login Google/GitHub) buat ngetes endpoint di level dalam.
 
 ---
 
