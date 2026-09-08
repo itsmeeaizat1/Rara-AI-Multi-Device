@@ -8,7 +8,7 @@ import {
 } from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
+import { animAdventure, animBattleTurns } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -29,6 +29,12 @@ const pluginConfig = {
 
 const ADV_ENERGY = 15;
 const ADV_COOLDOWN = 3 * 60 * 1000; // 3 menit
+
+// Nama monster acak ala script owner (Slime, Serigala, Orc, Yeti, Lich...)
+const MONSTER_NAMES = [
+  "Slime", "Kelinci Liar", "Burung Naga", "Serigala", "Beruang", "Orc",
+  "Yeti", "Naga Es", "Tentara Bayangan", "Lich", "Goblin", "Raja Salju",
+];
 
 const EVENTS = [
   // Treasure (30%)
@@ -129,9 +135,10 @@ async function handler(m, { sock }) {
     }
 
     useEnergy(m, ADV_ENERGY, sock);
+    const levelBefore = rpg.level || 1;
 
     const event = rollEvent();
-    const message = event.messages[Math.floor(Math.random() * event.messages.length)];
+    let message = event.messages[Math.floor(Math.random() * event.messages.length)];
 
     // Animasi petualangan (morphing message)
     await animAdventure(m, sock, event.type);
@@ -166,18 +173,38 @@ async function handler(m, { sock }) {
         const playerDef = rpg.def + equip.def;
         const monsterHp = 100 + rpg.level * 10;
         const monsterAtk = 15 + rpg.level * 2;
+        const monsterName = MONSTER_NAMES[Math.floor(Math.random() * MONSTER_NAMES.length)];
 
-        // Quick combat
-        let rounds = 0;
+        // Simulasi quick combat — tiap round direkam buat animasi turn-by-turn
+        const rounds = [];
         let dmgTaken = 0;
         let mHp = monsterHp;
-        while (mHp > 0 && dmgTaken < rpg.hp && rounds < 10) {
-          rounds++;
+        let playerHpNow = rpg.hp;
+        while (mHp > 0 && dmgTaken < rpg.hp && rounds.length < 10) {
           const dmg = Math.max(1, Math.floor(playerAtk * (1 - 10 / 110)));
           mHp -= dmg;
-          if (mHp <= 0) break;
-          dmgTaken += Math.max(1, Math.floor(monsterAtk * (1 - playerDef / (playerDef + 100))));
+          const round = { dmg, enemyHpAfter: Math.max(0, mHp), monsterDmg: 0, playerHpAfter: playerHpNow };
+          if (mHp > 0) {
+            const md = Math.max(1, Math.floor(monsterAtk * (1 - playerDef / (playerDef + 100))));
+            dmgTaken += md;
+            playerHpNow = Math.max(0, rpg.hp - dmgTaken);
+            round.monsterDmg = md;
+            round.playerHpAfter = playerHpNow;
+          }
+          rounds.push(round);
         }
+
+        // ANIMASI BATTLE TURN-BY-TURN (morphing ala script owner):
+        // PERTEMPURAN DIMULAI → tiap round serangan + balasan + HP → menang/kalah
+        await animBattleTurns(m, sock, {
+          playerName: m.pushName || "Petualang",
+          enemyName: monsterName,
+          enemyHp: monsterHp, enemyMaxHp: monsterHp,
+          playerHp: rpg.hp, playerMaxHp: rpg.maxHp,
+          rounds,
+          victory: mHp <= 0,
+        });
+        message = `Kamu bertemu *${monsterName}* di jalur petualangan!`;
 
         if (mHp <= 0) {
           expGain = Math.floor(Math.random() * (event.maxExp - event.minExp + 1)) + event.minExp;
@@ -244,10 +271,23 @@ async function handler(m, { sock }) {
 
     setCooldown(m, "lastAdventure", ADV_COOLDOWN);
 
+    // Level-up flavor ala script owner (addExp naikin level → tampilkan frame LEVEL UP)
+    const freshRpg = ensureRpg(m, m.pushName);
+    const levelUpLines = [];
+    if (freshRpg && freshRpg.level > levelBefore) {
+      levelUpLines.push(
+        "",
+        "⭐ *━━━ LEVEL UP! ━━━*",
+        `🎊 Selamat ${m.pushName || "Petualang"}!`,
+        `📈 Level ${levelBefore} → ${freshRpg.level}`,
+        "❤️ Max HP +20 | ⚔️ ATK +3 | 🛡️ DEF +2 | 📖 Skill Point +2",
+        "⭐ *━━━━━━━━━━━━━━━━*",
+      );
+    }
+
     const dropLines = drops.map(d => `│ • 📦 ${ITEM_DB[d.item]?.name || d.item} : +${d.qty}x`);
 
     await m.react("🐣");
-    const freshRpg = ensureRpg(m, m.pushName);
     return m.reply(novaGameBox({
       title: "adventure", icon: "🧭",
       flavor,
@@ -258,6 +298,7 @@ async function handler(m, { sock }) {
         ...(goldGain > 0 ? [`│ • 💰 Gold : +${goldGain}`] : []),
         ...dropLines,
         ...(extraText ? [extraText] : []),
+        ...levelUpLines,
         `│ • ❤️ HP : ${renderStatBar(freshRpg.hp, freshRpg.maxHp)} (${freshRpg.hp}/${freshRpg.maxHp})`,
         `│ • ⚡ Energy : ${renderStatBar(freshRpg.energy, freshRpg.maxEnergy)} (${freshRpg.energy}/${freshRpg.maxEnergy})`,
       ].join("\n"),
