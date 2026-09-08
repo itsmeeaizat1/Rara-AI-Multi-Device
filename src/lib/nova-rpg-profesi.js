@@ -304,6 +304,18 @@ export const PROFESI_ANIMATIONS = {
 };
 
 /**
+ * Ambil nominal gajian Rp dari flavor gajian profesi.
+ * "💵 Rp 500.000" → 500000. Dipakai .kerja buat bayar UANG ASLI (cash).
+ */
+export function gajianCash(key) {
+  const prof = PROFESI_ANIMATIONS[key];
+  if (!prof?.gajian?.[1]) return 0;
+  const m = String(prof.gajian[1]).match(/Rp\s*([\d.,]+)/);
+  if (!m) return 0;
+  return Math.floor(Number(m[1].replace(/\./g, "").replace(/,/g, "")) || 0);
+}
+
+/**
  * Animasi kerja per-profesi — tiap pilihan punya frame sendiri.
  * Frame pertama bisa diisi aktivitas dinamis (dipakai job RPG lama
  * biar variasi tiap kali kerja) — kalau activity kosong, frame asli

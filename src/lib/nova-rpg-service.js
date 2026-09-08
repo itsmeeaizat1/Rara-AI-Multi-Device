@@ -11,7 +11,7 @@ import { getDatabase } from "./nova-database.js";
 
 export const DEFAULT_RPG = {
   level: 1, exp: 0, expNext: 100, totalExp: 0,
-  gold: 0, gems: 0, tokens: 0,
+  gold: 0, gems: 0, tokens: 0, cash: 0,
   energy: 100, maxEnergy: 100, mana: 50, maxMana: 50,
   hp: 100, maxHp: 100, atk: 10, def: 5, spd: 10,
   critRate: 5, critDmg: 50, evasion: 3, accuracy: 95,
@@ -281,6 +281,44 @@ export function addGold(m, amount) {
     saveRpg(m, rpg);
     return total;
   } catch { return 0; }
+}
+
+// ── CASH / UANG (Rp) — mata uang RPG terpisah dari Gold ──
+// Gold = batang emas (bukan uang), EXP = pengalaman (bukan uang),
+// Cash = uang gajian profesi (Rp) — buat belanja/marketplace (8 Sep 2026).
+export function addCash(m, amount) {
+  try {
+    const rpg = ensureRpg(m);
+    if (!rpg) return 0;
+    const amt = Math.floor(Number(amount) || 0);
+    if (amt <= 0) return 0;
+    rpg.cash = Math.max(0, (rpg.cash || 0) + amt);
+    saveRpg(m, rpg);
+    return amt;
+  } catch { return 0; }
+}
+
+export function spendCash(m, amount) {
+  try {
+    const rpg = ensureRpg(m);
+    if (!rpg) return false;
+    const amt = Math.floor(Number(amount) || 0);
+    if (amt <= 0 || (rpg.cash || 0) < amt) return false;
+    rpg.cash = Math.max(0, (rpg.cash || 0) - amt);
+    saveRpg(m, rpg);
+    return true;
+  } catch { return false; }
+}
+
+export function getCash(m) {
+  try {
+    const rpg = ensureRpg(m);
+    return rpg?.cash || 0;
+  } catch { return 0; }
+}
+
+export function formatRp(amount) {
+  return "Rp " + (Number(amount) || 0).toLocaleString("id-ID");
 }
 
 export function removeGold(m, amount, sock) {
@@ -963,7 +1001,8 @@ export function getPlayerInfo(m) {
     if (rpg.rebirthCount) text += `Rebirth: *${rpg.rebirthCount}x* (Bonus: *${rpg.permBonus || 0}%*)\n`;
     text += `Title: *${rpg.title || "Tidak ada"}*\n\n`;
     text += `*CURRENCIES*\n`;
-    text += `Gold: *${rpg.gold.toLocaleString()}*\n`;
+    text += `Uang: *${formatRp(rpg.cash || 0)}*\n`;
+    text += `Gold (batang emas): *${rpg.gold.toLocaleString()}*\n`;
     text += `Gems: *${rpg.gems.toLocaleString()}*\n`;
     text += `Tokens: *${rpg.tokens.toLocaleString()}*\n`;
     text += `Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
