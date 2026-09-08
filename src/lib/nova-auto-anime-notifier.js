@@ -57,7 +57,7 @@ const ANILIST_QUERY = `
         nextAiringEpisode { episode timeUntilAiring }
         genres
         studios { nodes { name } }
-        coverImage { medium }
+        coverImage { extraLarge large medium }
         description
       }
     }
@@ -76,7 +76,7 @@ const ANILIST_SEARCH_QUERY = `
         startDate { year month day }
         genres
         studios { nodes { name } }
-        coverImage { medium }
+        coverImage { extraLarge large medium }
         description
       }
     }
@@ -205,7 +205,7 @@ function normAnilist(m) {
     format: m.format || "Unknown",
     genres: m.genres || [],
     studios: m.studios?.nodes?.map((s) => s.name).join(", ") || "Unknown",
-    cover: m.coverImage?.medium || null,
+    cover: m.coverImage?.extraLarge || m.coverImage?.large || m.coverImage?.medium || null,
     description: m.description ? String(m.description).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim() : "",
     source: "AniList",
     pageUrl: m.id ? `https://anilist.co/anime/${m.id}` : null,
@@ -472,7 +472,7 @@ function mapKitsuAnime(x) {
     rating: a.averageRating ? (Number(a.averageRating) / 10).toFixed(1) + "/10" : "N/A",
     userCount: a.userCount || 0,
     synopsis: a.synopsis || "",
-    poster: a.posterImage?.small || null,
+    poster: a.posterImage?.large || a.posterImage?.medium || a.posterImage?.small || null,
     url: `https://kitsu.app/anime/${x.id}`,
   };
 }
@@ -619,12 +619,20 @@ async function buildDigest(type, limit = 10) {
     if (type === "terbaru") {
       const items = await getNewAiringAnime(limit);
       if (!items.length) return null;
-      return { text: formatTerbaruMessage(items), hash: digestHash(items.map((i) => i.title + i.startDate).join("|")), thumb: items[0].poster, sourceUrl: items[0].url, tagline: "Info anime terbaru" };
+      const pic = items.find((i) => i.poster) || {};
+      // sort=-StartDate sering item baru tanpa poster — fallback banner dari
+      // anime hangat musim ini biar card tetep ada gambar anime
+      let thumb = pic.poster || null;
+      if (!thumb) {
+        try { thumb = (await getHotSeasonAnime(1))[0]?.poster || null; } catch { thumb = null; }
+      }
+      return { text: formatTerbaruMessage(items), hash: digestHash(items.map((i) => i.title + i.startDate).join("|")), thumb, sourceUrl: pic.url || items[0].url, tagline: "Info anime terbaru" };
     }
     if (type === "hangat") {
       const items = await getHotSeasonAnime(limit);
       if (!items.length) return null;
-      return { text: formatHangatMessage(items), hash: digestHash(items.map((i) => i.title + i.userCount).join("|")), thumb: items[0].poster, sourceUrl: items[0].url, tagline: "Anime hangat musim ini" };
+      const pic = items.find((i) => i.poster) || {};
+      return { text: formatHangatMessage(items), hash: digestHash(items.map((i) => i.title + i.userCount).join("|")), thumb: pic.poster || null, sourceUrl: pic.url || items[0].url, tagline: "Anime hangat musim ini" };
     }
     if (type === "berita") {
       const items = await getAnimeNews(limit);
@@ -634,7 +642,8 @@ async function buildDigest(type, limit = 10) {
     if (type === "video") {
       const items = await getLatestEpisodesInfo(Math.min(limit, 5));
       if (!items.length) return null;
-      return { text: formatVideoMessage(items), hash: digestHash(items.map((i) => i.title + i.number + i.url).join("|")), thumb: items[0].cover, sourceUrl: items[0].url, tagline: "Episode & video hangat" };
+      const pic = items.find((i) => i.cover) || {};
+      return { text: formatVideoMessage(items), hash: digestHash(items.map((i) => i.title + i.number + i.url).join("|")), thumb: pic.cover || null, sourceUrl: pic.url || items[0].url, tagline: "Episode & video hangat" };
     }
   } catch (e) {
     logger.error?.("anime-notifier", `Digest ${type} gagal: ${e.message}`);
@@ -678,13 +687,17 @@ async function sendAnimeNotification(chatId, text, { thumbUrl = null, sourceUrl 
   if (!sock) return false;
   const msg = { text };
   const thumb = thumbUrl ? await downloadThumb(thumbUrl) : null;
+  // BANNER PREVIEW (request owner 8 Sep 2026): gambar anime yang diinfoin
+  // dirender BESAR di atas card (renderLargerThumbnail), bukan thumbnail
+  // kecil pojok. Thumb = poster/cover anime pertama di daftar.
   msg.contextInfo = {
     externalAdReply: {
-      title: "ANIME NOTIFIER",
-      body: tagline || "Auto notifikasi anime & episode terbaru",
+      title: tagline || "ANIME NOTIFIER",
+      body: "nova anime notifier • info anime & manga realtime",
       sourceUrl: sourceUrl || "https://anilist.co",
       mediaType: 1,
-      renderLargerThumbnail: false,
+      renderLargerThumbnail: true,
+      showAdAttribution: false,
       ...(thumb ? { thumbnail: thumb } : {}),
     },
   };
@@ -749,8 +762,9 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
 
   if (newAnime.length > 0) {
     const text = formatNewAnimeMessage(newAnime);
+    const picA = newAnime.find((a) => a.cover) || {};
     for (const t of targets) {
-      try { await sendAnimeNotification(t, text, { thumbUrl: newAnime[0]?.cover, sourceUrl: newAnime[0]?.pageUrl, tagline: "Anime baru masuk watchlist" }); sent++; }
+      try { await sendAnimeNotification(t, text, { thumbUrl: picA.cover || null, sourceUrl: picA.pageUrl || newAnime[0]?.pageUrl, tagline: "Anime baru masuk watchlist" }); sent++; }
       catch (e) { logger.error?.("anime-notifier", `Gagal kirim ke ${t}: ${e.message}`); }
     }
     logger.success?.("anime-notifier", `${newAnime.length} anime baru terkirim ke ${targets.length} chat`);
@@ -758,8 +772,9 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
 
   if (newEpisodes.length > 0) {
     const text = formatEpisodeMessage(newEpisodes);
+    const picE = newEpisodes.find((e) => e.cover) || {};
     for (const t of targets) {
-      try { await sendAnimeNotification(t, text, { thumbUrl: newEpisodes[0]?.cover, sourceUrl: newEpisodes[0]?.pageUrl, tagline: "Episode baru rilis" }); sent++; }
+      try { await sendAnimeNotification(t, text, { thumbUrl: picE.cover || null, sourceUrl: picE.pageUrl || newEpisodes[0]?.pageUrl, tagline: "Episode baru rilis" }); sent++; }
       catch (e) { logger.error?.("anime-notifier", `Gagal kirim ke ${t}: ${e.message}`); }
     }
     logger.success?.("anime-notifier", `${newEpisodes.length} episode baru terkirim ke ${targets.length} chat`);
@@ -843,8 +858,9 @@ function stopMonitor() {
 
 export function syncMonitor() {
   const st = loadState();
-  if (st.enabled && st.targets.length > 0) startMonitor();
-  else if (isRunning()) stopMonitor();
+  if (st.enabled && st.targets.length > 0) return { started: startMonitor() };
+  if (isRunning()) stopMonitor();
+  return { started: false };
 }
 
 // ───────────────────────────── API switch/command ─────────────────────────────
