@@ -27,6 +27,7 @@ import { getBencanaAutoEnabled, setBencanaAutoEnabled } from '../../src/lib/nova
 import { isEnabled as isAnimeNotifierOn, setEnabled as setAnimeNotifierOn } from '../../src/lib/nova-auto-anime-notifier.js'
 import { loadState as loadWinbuState, saveState as saveWinbuState, startAutoCheck as startWinbuCheck, stopAutoCheck as stopWinbuCheck, isRunning as isWinbuRunning } from '../../src/lib/nova-auto-anime.js'
 import { getSettings as getCleanSettings, updateSettings as updateCleanSettings, startCleaner, stopCleaner } from '../../src/lib/nova-cache-cleaner.js'
+import { getLokerStatus, updateLokerSettings, startLokerJobs, stopLokerJob } from '../../src/lib/nova-loker-scheduler.js'
 
 const pluginConfig = {
   name: "switch",
@@ -154,6 +155,18 @@ const AUTO_REGISTRY = {
     label: "Auto React Story",
     getStatus: () => { try { return (getDatabase().setting("autoReactSW") || {}).enabled ?? false } catch { return false } },
     toggle: (on) => { const db = getDatabase(); const cur = db.setting("autoReactSW") || { emoji: "🔥" }; db.setting("autoReactSW", { ...cur, enabled: on }) },
+  },
+  autoloker: {
+    label: "Auto Loker (Info Lowongan Kerja)",
+    // Broadcast loker ke grup — register di .switch biar on/off terpusat
+    // (toggler asli .loker aktif/nonaktif tetap works). Target broadcast
+    // bisa dioverride via .switch auto autoloker set (target terpusat).
+    getStatus: () => { try { return getLokerStatus()?.enabled ?? false } catch { return false } },
+    toggle: (on) => {
+      const settings = updateLokerSettings((cur) => ({ ...cur, enabled: on }))
+      if (on) startLokerJobs(settings)
+      else stopLokerJob()
+    },
   },
   autobackup: {
     label: "Auto Backup DB",
@@ -339,7 +352,7 @@ const AUTO_ALIASES = {
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
-  backupdrive: "autobackupdrive"
+  backupdrive: "autobackupdrive", loker: "autoloker", job: "autoloker", lowongan: "autoloker"
 }
 
 const AUTO_CATEGORIES = {
@@ -355,7 +368,7 @@ const AUTO_CATEGORIES = {
   ],
   "Info & Utilitas": [
     "bencanawatch", "autoanime", "autoanimenotifier", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
-    "autosambut", "automod", "autobroadcastchannel"
+    "autosambut", "automod", "autobroadcastchannel", "autoloker"
   ]
 }
 
@@ -601,13 +614,15 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const setIdx = argsRaw.findIndex((a) => a.toLowerCase() === 'set' || a.toLowerCase() === 'target')
     const rest = (setIdx >= 0 ? argsRaw.slice(setIdx + 1) : []).map((a) => a.toLowerCase())
 
-    // Fitur yang punya sistem target/subscriber sendiri — kasih info jujur
-    const OWN_SYSTEM = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on' }
-    // Fitur yang gak broadcast apa-apa (flag perilaku) — gak pakai target
-    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime']
-    if (OWN_SYSTEM[autoKey]) {
-      return m.reply(`*${reg.label}* pakai sistem subscriber sendiri — tiap user/grup daftar sendiri lewat \`${prefix}${OWN_SYSTEM[autoKey].slice(1)}\`. Opsi set target gak berlaku di fitur ini.`)
-    }
+    // Fitur subscriber: target terpusat NAMBAH jangkauan (subscriber tetap dapat)
+    const SUBSCRIBER_FEATURES = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on' }
+    // SEMUA fitur otomatis yang ngirim notifikasi sekarang punya target terpusat
+    // (request owner 8 Sep 2026: "semua fitur yg otomatis ada opsi kirim terpusatnya ini wajib")
+    const TARGETABLE = [
+      'autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker',
+      'autoanimenotifier', 'bencanawatch', 'autoanime', 'autoreengage',
+      'autoulah', 'autoreport', 'autorenewal',
+    ]
     if (!TARGETABLE.includes(autoKey)) {
       return m.reply(`*${reg.label}* gak mengirim notifikasi terjadwal — gak ada target yang bisa diset.\nFitur yang bisa diatur targetnya: ${TARGETABLE.map((k) => '\`' + k + '\`').join(', ')}`)
     }
@@ -693,10 +708,11 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const current = reg.getStatus()
     let replyTxt = `${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`
     // Fitur targetable: tampilkan target sekarang di status
-    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime']
+    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal']
+    const SUBSCRIBER_FEATURES = { bencanawatch: 1, autoanime: 1, autoanimenotifier: 1 }
     if (TARGETABLE.includes(autoKey)) {
       const cfg = getAutoTargetConfig(autoKey)
-      replyTxt += `\n🎯 Target: ${describeAutoTarget(cfg)} — atur: \`${prefix}switch auto ${autoKey} set\``
+      replyTxt += `\n🎯 Target: ${describeAutoTarget(cfg)} — atur: \`${prefix}switch auto ${autoKey} set\`` + (SUBSCRIBER_FEATURES[autoKey] ? '\nℹ️ Subscriber tetap dapat notif — target terpusat nambah jangkauan' : '')
     }
     return m.reply(replyTxt)
   }

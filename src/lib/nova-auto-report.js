@@ -155,7 +155,17 @@ async function sendReportToOwner() {
     const db = getDatabase();
     const reportText = generateDailyReport(db);
 
-    await sockInstance.sendMessage(ownerJid, { text: reportText });
+    // ── target terpusat (.switch auto autoreport set): laporan dikirim ke
+    // target pilihan owner — default tetap DM owner ──
+    let targetJids = [ownerJid];
+    try {
+      const { resolveAutoTargetsOr } = await import("./nova-auto-target.js");
+      targetJids = await resolveAutoTargetsOr(sockInstance, "autoreport", targetJids);
+    } catch { /* target lib gagal → owner */ }
+    for (const t of targetJids) {
+      try { await sockInstance.sendMessage(t, { text: reportText }); }
+      catch (e) { logger.error("AutoReport", `Send to ${t} failed: ${e.message}`); }
+    }
 
     const state = loadReportState();
     state.lastReport = new Date().toISOString();
