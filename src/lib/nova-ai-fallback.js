@@ -2,7 +2,11 @@
 // nova-ai-fallback.js — RANTAI FALLBACK AI MULTI-API buat fitur AI satuan
 // Dipakai plugin AI satuan (.llamav2, .bardaiv2, .grok, dll) saat API utamanya mati.
 //
-// Rantai prioritas (yang udah diverifikasi hidup 2026-09-05):
+// Rantai prioritas:
+//   0. Gemini NATIVE generativelanguage.googleapis.com (key: apikeys.json novaai.google)
+//      → BEGITU owner isi key Google AI Studio baru, SEMUA fitur otomatis pindah ke
+//        Gemini (provider resmi, cepat, stabil) tanpa ubah kode. Key kosong/expired →
+//        skip otomatis (key invalid dicache sampai restart biar gak nambah latency).
 //   1. HaidarApis  /api/v1/ai/gemini?message=   (key: apikeys.json aiSatuan.haidar)
 //   2. IkyyXD      callIkyy() — internal chain gemini→cici→gpt5→gemma (key: aiSatuan.ikyyxd)
 //   3. Xemoz       deepseek-v3.2-thinking (free, tanpa key)
@@ -37,6 +41,44 @@ function buildPrompt(prompt, { persona = "", systemPrompt = "", historyBlock = "
 function cleanText(v) {
   const s = typeof v === "string" ? v.trim() : "";
   return s && s.toLowerCase() !== "undefined" && s.toLowerCase() !== "null" ? s : "";
+}
+
+// ── PRIORITAS 0: Gemini native (apikeys.json novaai.google — key Google AI Studio) ──
+// Key invalid → dicache mati sampai restart bot (gak nambah latency tiap request)
+let __geminiKeyDead = false;
+
+async function viaGeminiNative(fullPrompt) {
+  if (__geminiKeyDead) throw new Error("key gemini invalid (dicache mati)");
+  let key = "";
+  try {
+    const { getApiKeys } = await import("./config/env-loader.js");
+    key = getApiKeys()?.google || "";
+  } catch {}
+  if (!key) throw new Error("key google kosong");
+
+  for (const model of ["gemini-2.5-flash", "gemini-2.0-flash"]) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: fullPrompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
+      }),
+      signal: AbortSignal.timeout(25000),
+    });
+    if (res.status === 400 || res.status === 403) {
+      // key invalid/expired — tandai mati biar request berikutnya gak nyoba lagi
+      __geminiKeyDead = true;
+      throw new Error(`gemini key invalid (HTTP ${res.status})`);
+    }
+    if (!res.ok) continue; // 404/429/500 → coba model berikutnya
+    const data = await res.json().catch(() => ({}));
+    const text = cleanText(data?.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("") || "");
+    if (text) return text;
+    throw new Error("gemini balas kosong");
+  }
+  throw new Error("gemini HTTP gagal semua model");
 }
 
 /** 1. HaidarApis — model sesuai brand command (fallback: gemini) */
@@ -125,6 +167,10 @@ export async function aiFallbackChat(prompt, opts = {}) {
     }
     return reply;
   };
+
+  // 0. Gemini native — key Google AI Studio valid = prioritas utama (provider resmi)
+  try { return finish(await viaGeminiNative(fullPrompt)); }
+  catch (e) { errors.push(`gemini-native: ${e.message}`); }
 
   // 1. Haidar — brand pilihan, gagal → gemini
   try { return finish(await viaHaidar(fullPrompt, model)); }
