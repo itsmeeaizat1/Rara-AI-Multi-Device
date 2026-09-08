@@ -6,6 +6,7 @@ import config from "../../config.js";
 import * as timeHelper from "./nova-time.js";
 import { saluranCtx } from "./nova-context.js";
 import { getTodaySchedule, extractPrayerTimes, searchKota } from "./nova-sholat-api.js";
+import { resolveAutoTargets } from "./nova-auto-target.js";
 
 const TZ = "Asia/Jakarta";
 
@@ -261,12 +262,13 @@ async function schedulePrayerTimes() {
 
 async function sendReminderNotification(sholat, reminderTime, kotaNama) {
   try {
+    // Target terpusat (.switch auto autosholat set) — default semua grup
     let groupList = [];
     try {
-      const groupsObj = await sock.groupFetchAllParticipating();
-      groupList = Object.keys(groupsObj);
+      const t = await resolveAutoTargets(sock, "autosholat");
+      groupList = t.jids;
     } catch (e) {
-      logger.error("SholatScheduler", `Failed to fetch groups: ${e.message}`);
+      logger.error("SholatScheduler", `Failed to resolve targets: ${e.message}`);
       return;
     }
     if (groupList.length === 0) return;
@@ -303,12 +305,13 @@ async function sendReminderNotification(sholat, reminderTime, kotaNama) {
 
 async function sendIqamahNotification(sholat, iqamahTime, kotaNama) {
   try {
+    // Target terpusat (.switch auto autosholat set) — default semua grup
     let groupList = [];
     try {
-      const groupsObj = await sock.groupFetchAllParticipating();
-      groupList = Object.keys(groupsObj);
+      const t = await resolveAutoTargets(sock, "autosholat");
+      groupList = t.jids;
     } catch (e) {
-      logger.error("SholatScheduler", `Failed to fetch groups: ${e.message}`);
+      logger.error("SholatScheduler", `Failed to resolve targets: ${e.message}`);
       return;
     }
     if (groupList.length === 0) return;
@@ -358,12 +361,13 @@ async function sendSholatNotifications(sholat, waktu) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
+    // Target terpusat (.switch auto autosholat set) — default semua grup
     let groupList = [];
     try {
-      const groupsObj = await sock.groupFetchAllParticipating();
-      groupList = Object.keys(groupsObj);
+      const t = await resolveAutoTargets(sock, "autosholat");
+      groupList = t.jids;
     } catch (e) {
-      logger.error("SholatScheduler", `Failed to fetch groups: ${e.message}`);
+      logger.error("SholatScheduler", `Failed to resolve targets: ${e.message}`);
       return;
     }
 
@@ -416,7 +420,7 @@ async function sendSholatNotifications(sholat, waktu) {
           },
         });
 
-        if (closeGroup && isSholatTime) {
+        if (closeGroup && isSholatTime && groupId.endsWith("@g.us")) {
           try {
             await sock.groupSettingUpdate(groupId, "announcement");
             closedGroups.push(groupId);
@@ -515,6 +519,7 @@ function stopSholatScheduler() {
 export {
   initSholatScheduler,
   stopSholatScheduler,
+  sendSholatNotifications,
   SHOLAT_MESSAGES,
   REMINDER_MESSAGES,
   IQAMAH_MESSAGES,
