@@ -8,6 +8,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { fromSC } from "../../src/lib/styler.js";
 
 const pluginConfig = {
   name: "menfess",
@@ -95,7 +96,9 @@ function getUserTodayCount(mf, sender) {
 
 // cari menfess berdasarkan id (string pendek) ATAU nomor urut (#N)
 function findPost(mf, key) {
-  const k = String(key || "").trim();
+  // key di-normalisasi dari smallcaps — user sering copy ID langsung dari
+  // pesan bot yang udah ke-smallcaps guard global (ᴍᴛꜱʏ → mtsy)
+  const k = fromSC(String(key || "")).trim();
   if (!k) return null;
   const byId = mf.posts.find((p) => p.id === k);
   if (byId) return byId;
@@ -474,7 +477,7 @@ async function handler(m, { sock }) {
       await m.react("❗");
       return m.reply(claraWrap("menfess", "⛔ Cuma owner yang bisa hapus menfess!", "error"));
     }
-    const key = args[1] || "";
+    const key = fromSC(args[1] || "").trim();
     const idx = mf.posts.findIndex((p) => p.id === key || (key && p.number === parseInt(key, 10)));
     if (idx === -1) {
       await m.react("❗");

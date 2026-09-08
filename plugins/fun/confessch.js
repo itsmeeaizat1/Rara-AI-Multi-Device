@@ -7,6 +7,7 @@
 
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { fromSC } from "../../src/lib/styler.js";
 
 const pluginConfig = {
   name: "confessch",
@@ -68,7 +69,8 @@ function formatTime(ts) {
 
 // cari post berdasarkan id (string pendek) ATAU nomor urut (#N)
 function findPost(ch, key) {
-  const k = String(key || "").trim();
+  // key di-normalisasi dari smallcaps — user sering copy ID dari pesan bot
+  const k = fromSC(String(key || "")).trim();
   if (!k) return null;
   const byId = ch.posts.find((p) => p.id === k);
   if (byId) return byId;
@@ -447,7 +449,7 @@ async function handler(m, { sock }) {
       await m.react("❗");
       return m.reply(claraWrap("confess channel", "⛔ Cuma owner yang bisa hapus confess!", "error"));
     }
-    const key = args[1] || "";
+    const key = fromSC(args[1] || "").trim();
     const idx = ch.posts.findIndex((p) => p.id === key || (key && p.number === parseInt(key, 10)));
     if (idx === -1) {
       await m.react("❗");
