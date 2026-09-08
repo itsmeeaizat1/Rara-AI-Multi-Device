@@ -7,7 +7,8 @@
 //      → BEGITU owner isi key Google AI Studio baru, SEMUA fitur otomatis pindah ke
 //        Gemini (provider resmi, cepat, stabil) tanpa ubah kode. Key kosong/expired →
 //        skip otomatis (key invalid dicache sampai restart biar gak nambah latency).
-//   1. MERCURY (Inception Labs) api.inceptionlabs.ai — dLLM difusi 5-10× lebih cepat
+//   1. MERCURY (Inception Labs) api.inceptionlabs.ai
+//   1.5 SENSENOVA (SenseTime) token.sensenova.ai — multimodal vision, 256K ctx — dLLM difusi 5-10× lebih cepat
 //      dari model sekelas (key: apikeys.json novaai.inception, fallback env
 //      INCEPTION_API_KEY). OpenAI-compatible, mercury-2, 128K context, tools+json mode.
 //   2. HaidarApis  /api/v1/ai/gemini?message=   (key: apikeys.json aiSatuan.haidar)
@@ -217,6 +218,12 @@ export async function aiFallbackChat(prompt, opts = {}) {
   // 1. Mercury (Inception Labs) — dLLM difusi super cepat (key owner)
   try { return finish(await viaMercury(fullPrompt)); }
   catch (e) { errors.push(`mercury: ${e.message}`); }
+
+  // 1.5 SenseNova (SenseTime) — multimodal vision + chat, 256K ctx (key owner)
+  try {
+    const { sensenovaChat } = await import("../scraper/sensenova.js");
+    return finish(await sensenovaChat(fullPrompt));
+  } catch (e) { errors.push(`sensenova: ${e.message}`); }
 
   // 2. Haidar — brand pilihan, gagal → gemini
   try { return finish(await viaHaidar(fullPrompt, model)); }
