@@ -1162,6 +1162,7 @@ export async function sendActivationSample(sock, chatId) {
           sumber: "BMKG (data.bmkg.go.id)",
         };
         ev.thumbUrl = g._shakemapUrl;
+        ev._bmkgRaw = g; // simpan field mentah buat format emoji ala script
         header = "GEMPA TERBARU BMKG";
       }
     } catch { /* coba fallback */ }
@@ -1184,19 +1185,39 @@ export async function sendActivationSample(sock, chatId) {
       try { ev.thumbUrl = await gdacsThumbUrl(e); } catch { /* thumbnail opsional */ }
       header = "BENCANA TERBARU GDACS";
     }
+    let sampleLines;
+    if (ev._bmkgRaw) {
+      // contoh BMKG: FORMAT ALA SCRIPT — persis alert BMKG asli
+      const g = ev._bmkgRaw;
+      sampleLines = [
+        "⚠️ *GEMPA TERKINI - BMKG*",
+        "",
+        `📅 Tanggal: ${g.Tanggal || "N/A"}`,
+        `🕐 Jam: ${g.Jam || "N/A"}`,
+        `📊 Magnitude: *${g.Magnitude} SR*`,
+        `📏 Kedalaman: ${g.Kedalaman || "N/A"}`,
+        `📍 Wilayah: ${g.Wilayah || "N/A"}`,
+        `🌊 Potensi Tsunami: ${g.Potensi || "Tidak ada"}`,
+        `💥 Dirasakan: ${g.Dirasakan || "Tidak ada info"}`,
+        "",
+        "Sumber: BMKG",
+      ];
+    } else {
+      // fallback GDACS: format info section (gak ada padanan di script)
+      sampleLines = [
+        `${ev.jenis}${ev.country ? ` di ${ev.country}` : ""}${ev.mag ? ` — M${ev.mag}` : ""}`,
+        ev.desc || "",
+        "",
+        buildInfoSection(ev),
+      ];
+    }
     const lines = [
-      `BENCANAWATCH AKTIF — ${header}`,
-      "Ini contoh info TERKINI dari sumber aslinya",
-      "sebagai tanda fitur beneran jalan.",
+      `🔔 *BENCANAWATCH AKTIF* — ${header}`,
       "",
-      `${ev.jenis}${ev.country ? ` di ${ev.country}` : ""}${ev.mag ? ` — M${ev.mag}` : ""}`,
-      ev.desc || "",
+      ...sampleLines,
       "",
-      buildInfoSection(ev),
-      "",
-      "Mulai sekarang bencana BARU otomatis masuk ke chat ini",
-      "dengan format seperti contoh di atas. Info di atas adalah",
-      "kejadian TERKINI, bukan alert realtime baru.",
+      "— contoh kejadian TERKINI (bukan alert baru). Mulai sekarang",
+      "bencana BARU otomatis masuk ke chat ini dengan format ini.",
     ];
     await sendWithCard(sock, chatId, lines.join("\n"), eventCard(ev));
     return true;
