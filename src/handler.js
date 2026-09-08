@@ -76,37 +76,46 @@ async function messageHandler(msg, sock) {
 
   const db = getDatabase();
 
-  // === KILL-SWITCH GLOBAL: .bot off → bot TOTAL silent ===
+  // === KILL-SWITCH GLOBAL: .bot off = SUNYI TOTAL, .bot mute = DIJEDA ===
   // Di-cek di titik PALING AWAL — sebelum stat, auto-flow, anti, dan semua fitur.
-  // Satu-satunya command yang lolos: .bot (biar bisa .bot on / cek status).
-  // Kalau ada user nyoba command APA PUN pas bot off → bot bales 1x info
-  // "dimatikan oleh owner" di chat itu (DM/grup/channel), tapi di-throttle
-  // GLOBAL 10 detik — jadi gak bisa di-spam buat bikin nomor keban.
-  // Pesan biasa (bukan command) tetap di-diamin total.
-  // State disimpan di settings.botPower oleh plugins/owner/bot.js (owner only).
+  // Dua tingkat (request owner 9 Sep 2026):
+  //   .bot off  → botPower=false : SUNYI TOTAL — gak ada notif/pesan apa pun,
+  //               kayak bot beneran mati. Cuma .bot yang diproses.
+  //   .bot mute → botMute=true    : bot DIJEDA — semua command diblok, tapi user
+  //               yang nyoba command tetap dikasih notif "bot sedang dijeda
+  //               oleh owner" (throttle GLOBAL 10 dtk biar gak keban).
+  // Pesan biasa (bukan command) di-diamin total di kedua mode.
+  // State disimpan di settings.botPower + settings.botMute oleh plugins/owner/bot.js.
   try {
-    if (db.db?.data?.settings?.botPower === false) {
-      const __novaCmd = String(m.command || "").toLowerCase();
-      if (__novaCmd !== "bot") {
+    const __novaPowerOff = db.db?.data?.settings?.botPower === false;
+    const __novaMuted = db.db?.data?.settings?.botMute === true;
+    const __novaCmd = String(m.command || "").toLowerCase();
+    if (__novaCmd !== "bot") {
+      // .bot off → sunyi total, gak kirim notif apa pun
+      if (__novaPowerOff) {
+        return;
+      }
+      // .bot mute → dijeda, tapi kasih notif ala off lama (throttle 10 dtk)
+      if (__novaMuted) {
         if (__novaCmd) {
           const __novaNow = Date.now();
           if (
-            !global.__novaBotOffNoticeAt ||
-            __novaNow - global.__novaBotOffNoticeAt >= 10000
+            !global.__novaBotMuteNoticeAt ||
+            __novaNow - global.__novaBotMuteNoticeAt >= 10000
           ) {
-            global.__novaBotOffNoticeAt = __novaNow;
+            global.__novaBotMuteNoticeAt = __novaNow;
             sock
               .sendMessage(
                 m.chat,
                 {
-                  text: "Bot sedang dimatikan oleh owner.\nSemua fitur nonaktif sementara — bot tidak merespon command apa pun sampai diaktifkan kembali.\n\nTerima kasih atas pengertiannya.",
+                  text: "Bot sedang dijeda oleh owner.\nSemua fitur sementara tidak bisa diakses — bot tidak merespon command apa pun sampai diaktifkan kembali.\n\nTerima kasih atas pengertiannya.",
                 },
                 { quoted: m }
               )
               .catch(() => {});
           }
         }
-        return; // fitur gak diproses — diem total
+        return; // fitur gak diproses
       }
     }
   } catch {}

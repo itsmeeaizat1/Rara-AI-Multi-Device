@@ -9,9 +9,9 @@ const pluginConfig = {
     name: "bot",
     alias: ["bot"],
     category: 'owner',
-    description: 'Matikan/nyalakan bot total (kill-switch) + atur mode respon (gc/pc/all)',
-    usage: '.bot <on|off> | .bot mode <gc|pc|all> [on|off]',
-    example: '.bot off\n.bot mode gc on\n.bot mode pc on\n.bot mode gc off\n.bot mode all',
+    description: 'Kill-switch bot: off (sunyi total) / mute (dijeda + notif) / on + mode respon (gc/pc/all)',
+    usage: '.bot <on|off|mute> | .bot mode <gc|pc|all> [on|off]',
+    example: '.bot off\n.bot mute\n.bot on\n.bot mode gc on\n.bot mode pc on\n.bot mode all',
     isOwner: true,
     isPremium: false,
     isGroup: false,
@@ -26,12 +26,18 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // Broadcast perubahan status ke semua grup yang di-join + channel utama (kalo bot admin di sana).
 // DM user sengaja GAK dikirimin — broadcast massal DM paling berisiko bikin nomor keban WhatsApp.
 // Fire-and-forget — owner udah dapet konfirmasi duluan, gak perlu nunggu selesai.
-async function broadcastStatusChange(sock, db, isOff) {
-    const text = isOff
-        ? [
+async function broadcastStatusChange(sock, db, state) {
+    const text = state === 'off' ? [
             'Bot dimatikan oleh owner.',
             'Semua fitur nonaktif sementara — bot tidak akan merespon apa pun',
             'sampai diaktifkan kembali.',
+            '',
+            'Terima kasih atas pengertiannya.',
+        ].join('\n')
+        : state === 'mute' ? [
+            'Bot sedang dijeda oleh owner.',
+            'Semua fitur sementara tidak bisa diakses.',
+            'Bot akan kembali normal setelah diaktifkan kembali.',
             '',
             'Terima kasih atas pengertiannya.',
         ].join('\n')
@@ -40,7 +46,7 @@ async function broadcastStatusChange(sock, db, isOff) {
             'Semua fitur sudah bisa dipakai lagi seperti biasa.',
             '',
             'Terima kasih sudah menunggu.',
-        ].join('\n')
+        ].join('\\n')
 
     // kumpulin target: semua grup yang di-join
     const targets = new Set()
@@ -86,26 +92,30 @@ async function handler(m, { sock }) {
     if (!act) {
         await m.react("🐣")
         const isOff = db.setting('botPower') === false
+        const isMute = db.setting('botMute') === true
         const curMode = db.setting('onlyGc') ? 'ɢᴄ (cuma grup)'
             : db.setting('onlyPc') ? 'ᴘᴄ (cuma chat pribadi)'
             : 'ᴀʟʟ (semua chat)'
+        const curStatus = isOff ? 'ᴏꜰꜰ (sunyi total)' : isMute ? 'ᴍᴜᴛᴇ (dijeda)' : 'ᴏɴ (aktif)'
         return m.reply(claraWrap('Status Bot', [
-            `Status : ${isOff ? 'ᴏꜰꜰ (mute total)' : 'ᴏɴ (aktif)'}`,
+            `Status : ${curStatus}`,
             `Mode : ${curMode}`,
             '',
-            `Ketik *.bot off* buat matiin bot total`,
+            `Ketik *.bot off* buat matiin bot total (sunyi, gak ada notif)`,
+            `Ketik *.bot mute* buat jeda bot (cmd diblok + notif)`,
             `Ketik *.bot on* buat nyalain lagi`,
             `Ketik *.bot mode gc/pc/all* buat atur tempat respon`,
         ].join('\n')))
     }
 
-    // ── .bot off ──
-    if (['off', 'mati', 'mute', 'stop'].includes(act)) {
+    // ── .bot off ── SUNYI TOTAL (gak ada notif apa pun)
+    if (['off', 'mati', 'stop'].includes(act)) {
         if (db.setting('botPower') === false) {
             await m.react("🐣")
             return m.reply(claraWrap('Status Bot', 'Bot udah ᴏꜰꜰ dari tadi kak.\nKetik *.bot on* buat nyalain.'))
         }
         db.setting('botPower', false)
+        db.setting('botMute', false) // off menimpa mute — level paling dalam
         await m.react("🐣")
 
         // hitung target broadcast buat info ke owner (kirimnya di background)
@@ -113,19 +123,62 @@ async function handler(m, { sock }) {
         const channelName = config.saluran?.name || null
 
         // fire-and-forget — jangan bikin owner nunggu ratusan pesan keluar
-        broadcastStatusChange(sock, db, true).catch(() => {})
+        broadcastStatusChange(sock, db, 'off').catch(() => {})
 
         return m.reply(claraWrap('Bot Dimatikan', [
-            'Bot sekarang *ᴏꜰꜰ* — total silent.',
+            'Bot sekarang *ᴏꜰꜰ* — sunyi total.',
             '',
             'Bot gak akan merespon fitur apa pun',
-            '(gak ada reaksi, gak ada auto).',
-            'Nyoba command apa pun → bot bales info',
-            '"dimatikan oleh owner" max 1x / 10 detik.',
+            '(gak ada reaksi, gak ada auto, gak ada notif',
+            'apa pun — kayak bot beneran mati).',
+            'Nyoba command apa pun → di-diamin total.',
+            '',
+            `Notifikasi perpisahan dikirim ke *${grupCount}* grup`,
+            `+ channel ${channelName ? '*' + channelName + '*' : '-'} (bot admin),`,
+            'kirimnya cuma sekali ini (saat .bot off).',
+            'DM user gak dikirimin — biar nomor aman dari banned.',
+            '',
+            'Satu-satunya command yang hidup: *.bot on*',
+        ].join('\n')))
+    }
+
+    // ── .bot mute ── DIJEDA (cmd diblok + notif "bot sedang dijeda")
+    if (['mute', 'jeda', 'pause'].includes(act)) {
+        if (db.setting('botPower') === false) {
+            await m.react("❗")
+            return m.reply(claraWrap('Status Bot', [
+                'Bot lagi *ᴏꜰꜰ* (sunyi total) — lebih dalam dari mute.',
+                '',
+                'Mute cuma bisa dipasang pas bot *ᴏɴ*.',
+                'Ketik *.bot on* buat nyalain bot langsung aktif,',
+                'atau nyalain dulu terus *.bot mute* buat dijeda.',
+            ].join('\n')))
+        }
+        if (db.setting('botMute') === true) {
+            await m.react("🐣")
+            return m.reply(claraWrap('Status Bot', 'Bot udah *ᴍᴜᴛᴇ* (dijeda) dari tadi kak.\nKetik *.bot on* buat nyalain.'))
+        }
+        db.setting('botMute', true)
+        await m.react("🐣")
+
+        const grupCount = (() => { try { return Object.keys(db.getAllGroups() || {}).length } catch { return 0 } })()
+        const channelName = config.saluran?.name || null
+
+        broadcastStatusChange(sock, db, 'mute').catch(() => {})
+
+        return m.reply(claraWrap('Bot Dijeda', [
+            'Bot sekarang *ᴍᴜᴛᴇ* — sedang dijeda.',
+            '',
+            'Semua command gak bisa diakses.',
+            'Nyoba command apa pun → bot bales notif',
+            '"bot sedang dijeda oleh owner"',
+            'max 1x / 10 detik per jeda global.',
+            '',
+            'Beda sama *.bot off*: mute tetap ngasih',
+            'info ke user, off di-diamin total.',
             '',
             `Notifikasi dikirim ke *${grupCount}* grup`,
             `+ channel ${channelName ? '*' + channelName + '*' : '-'} (bot admin).`,
-            'DM user gak dikirimin — biar nomor aman dari banned.',
             '',
             'Satu-satunya command yang hidup: *.bot on*',
         ].join('\n')))
@@ -133,18 +186,19 @@ async function handler(m, { sock }) {
 
     // ── .bot on ──
     if (['on', 'nyala', 'start', 'hidup'].includes(act)) {
-        if (db.setting('botPower') !== false) {
+        if (db.setting('botPower') !== false && db.setting('botMute') !== true) {
             await m.react("🐣")
             return m.reply(claraWrap('Status Bot', 'Bot udah *ᴏɴ* kok, jalan normal.'))
         }
         db.setting('botPower', true)
+        db.setting('botMute', false)
         await m.react("🐣")
 
         // hitung target broadcast buat info ke owner
         const grupCount = (() => { try { return Object.keys(db.getAllGroups() || {}).length } catch { return 0 } })()
         const channelName = config.saluran?.name || null
 
-        broadcastStatusChange(sock, db, false).catch(() => {})
+        broadcastStatusChange(sock, db, 'on').catch(() => {})
 
         return m.reply(claraWrap('Bot Dinyalakan', [
             'Bot kembali *ᴏɴ* — semua fitur aktif lagi.',
@@ -250,8 +304,9 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap('Status Bot', [
         `Argumen *${act}* gak dikenal.`,
         '',
-        '📌 Ketik *.bot off* buat matiin bot',
-        '💡 Ketik *.bot on* buat nyalain bot',
+        '📌 Ketik *.bot off* buat matiin bot (sunyi total)',
+        '💡 Ketik *.bot mute* buat jeda bot (+notif)',
+        '🔌 Ketik *.bot on* buat nyalain bot',
         '🚦 Ketik *.bot mode gc/pc/all* buat atur tempat respon',
     ].join('\n')))
 }
