@@ -6,8 +6,9 @@ import {
   addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
-  getCash} from "../../src/lib/nova-rpg-service.js";
-import { animGather, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+  getCash, removeItem, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
+import { shapeMining } from "../../src/lib/nova-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
@@ -41,12 +42,74 @@ const ORE_TABLE = [
 const GOLD_RANGE = [10, 50];
 const EXP_RANGE = [20, 60];
 
+// ─── KHAS MINING: ⛏️ BELIUNG — upgrade pakai Bijih Besi hasil gali sendiri ───
+const TOOL = {
+  name: "⛏️ Beliung", dbKey: "mineTool",
+  matId: "ironOre", matName: "🔩 Bijih Besi",
+  matCost: (lv) => 3 * (lv + 1), rpCost: (lv) => 20000 * (lv + 1),
+  goldBonus: (lv) => 0.15 * lv,
+};
+const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { level: 0, spent: 0 });
+
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(novaRpgBox("mining", "RPG belum siap. Ketik .daftar dulu.", "error"));
+
+    // ── subcommand khas mining: upgrade & status beliung ──
+    const sub = (m.args?.[0] || "").toLowerCase();
+    const tool = getTool(m.sender);
+    if (sub === "upgrade") {
+      const lv = tool.level || 0;
+      const needRp = TOOL.rpCost(lv);
+      const needMat = TOOL.matCost(lv);
+      const haveMat = (ensureRpg(m, m.pushName).inventory || {})[TOOL.matId]?.qty || 0;
+      if (haveMat < needMat) {
+        return m.reply(novaRpgBox("mining",
+          `🔩 Upgrade Beliung ke Lv.${lv + 1} butuh:
+
+• Bijih Besi : ${needMat}x (punya ${haveMat}x)
+• Biaya : ${formatRp(needRp)}
+
+💡 Bijih Besi didapat dari .mining sendiri — gali terus!`, "warn"));
+      }
+      if (!spendCash(m, needRp)) {
+        return m.reply(novaRpgBox("mining", `💵 Upgrade butuh *${formatRp(needRp)}*.
+Uang kamu: ${formatRp(getCash(m))}
+💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+      }
+      if (!removeItem(m, TOOL.matId, needMat, sock)) {
+        return m.reply(novaRpgBox("mining", "🔩 Material gak bisa diambil. Coba lagi.", "error"));
+      }
+      const fresh = getTool(m.sender);
+      fresh.level = (fresh.level || 0) + 1;
+      fresh.spent = (fresh.spent || 0) + needRp;
+      getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
+      await m.react("🐣");
+      return m.reply(novaRpgBox("mining",
+        `⛏️ BELIUNG UPGRADED!
+
+Level : Lv.${lv} → Lv.${lv + 1}
+💰 Bonus gold : +${15 * (lv + 1)}%
+
+🔩 Material : −${needMat} Bijih Besi
+💵 Biaya : ${formatRp(needRp)}`, "success"));
+    }
+    if (sub === "status" || sub === "tool" || sub === "beliung") {
+      const lv = tool.level || 0;
+      const haveMat = (ensureRpg(m, m.pushName).inventory || {})[TOOL.matId]?.qty || 0;
+      return m.reply(novaRpgBox("mining",
+        `⛏️ BELIUNG KAMU
+
+Level : *Lv.${lv}*
+💰 Bonus gold : +${15 * lv}%
+🔩 Bijih Besi : ${haveMat}x
+
+💡 Upgrade ke Lv.${lv + 1}: ${TOOL.matCost(lv)}x Bijih Besi + ${formatRp(TOOL.rpCost(lv))}
+Ketik: .mining upgrade`));
+    }
 
     const cd = checkCooldown(m, "lastMine");
     if (cd) {
@@ -61,8 +124,8 @@ async function handler(m, { sock }) {
 
     useEnergy(m, MINE_ENERGY, sock);
 
-    // Animation: mining progress
-    await animGather(m, sock, "⛏️", "Menambang di gua...");
+    // Animasi khas mining: GALI MAKIN DALAM (penampang tanah per kedalaman)
+    await shapeMining(m, sock);
 
     const luckBonus = rpg.luck || 0;
     const dropBonus = rpg.dropBonus || 0;
@@ -81,34 +144,33 @@ async function handler(m, { sock }) {
     if (totalMined > 0) await bumpPlayerStat(m, "mining", "totalMine", totalMined);
 
     const expGain = Math.floor(Math.random() * (EXP_RANGE[1] - EXP_RANGE[0] + 1)) + EXP_RANGE[0];
-    const goldGain = Math.floor(Math.random() * (GOLD_RANGE[1] - GOLD_RANGE[0] + 1)) + GOLD_RANGE[0];
+    const goldGain = Math.floor((Math.floor(Math.random() * (GOLD_RANGE[1] - GOLD_RANGE[0] + 1)) + GOLD_RANGE[0]) * (1 + TOOL.goldBonus(tool.level || 0)));
     addExp(m, expGain);
     addGold(m, goldGain);
     setCooldown(m, "lastMine", MINE_COOLDOWN);
 
-    let dropText = "";
-    if (drops.length > 0) {
-      dropText = drops.map(d => `│ • 🪨 ${ITEM_DB[d.item]?.name || d.item} : +${d.qty}x`).join("\n");
-    } else {
-      dropText = `Tidak dapet ore kali ini 😅`;
-    }
+    const dropText = drops.length > 0
+      ? drops.map(d => `• ${ITEM_DB[d.item]?.name || d.item} : +${d.qty}x`).join("\n")
+      : "• gak dapet ore kali ini 😅";
+    const lv = tool.level || 0;
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
-      title: "mining", icon: "⛏️",
-      flavor: "⛏️ *TAMBANG BERHASIL!*",
-      body: [
-        `│ • ⛏️ Lokasi : Gua`,
-        "",
-        `│ • ✨ EXP : +${expGain}`,
-        `│ • 💰 Gold : +${goldGain}`,
-        `│ • 💵 Uang : Rp ${getCash(m)}`,
-        dropText,
-        "",
-        `│ • ⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}`,
-      ].join("\n"),
-      cta: gameCTA("mining"),
-    }));
+    return m.reply(novaRpgBox("mining",
+      `⛏️ TAMBANG BERHASIL
+
+` +
+      `🪨 Temuan:
+${dropText}
+
+` +
+      `✨ EXP : +${expGain}
+💰 Gold : +${goldGain}
+💵 Uang : Rp ${getCash(m)}
+
+` +
+      `⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}
+` +
+      (lv ? `⛏️ Beliung : Lv.${lv} (+${15 * lv}% gold)` : `💡 Beliung bisa diupgrade: .mining status`), "success"));
   } catch (err) {
     console.error("mining error:", err);
     await m.react("❌");
