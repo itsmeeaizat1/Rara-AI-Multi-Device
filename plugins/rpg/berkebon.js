@@ -1,13 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Berkebon — Farm crops for gold and materials
 
-import { animFarm } from "../../src/lib/nova-rpg-anim.js";
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
   addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
-  getCash} from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
+  getCash, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { shapeBerkebon } from "../../src/lib/nova-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -37,6 +38,16 @@ const CROPS = [
   { id: "strawberry", name: "Stroberi", growTime: 6 * 60 * 1000, gold: [60, 120], exp: [30, 60], item: "strawberry" },
 ];
 
+// ─── KHAS BERKEBON: 🌻 Bunga Langka & 🚜 Traktor Mini ───
+const TOOL = {
+  name: "🚜 Traktor Mini", dbKey: "berkebonTool",
+  FLOWER_CHANCE: 30,               // % per panen (stroberi dijamin +1)
+  flowerCost: (lv) => 2 * (lv + 1),
+  rpCost: (lv) => 35000 * (lv + 1),
+  growFactor: (lv) => Math.max(0.5, 1 - 0.1 * lv),  // grow time −10% per level (min 50%)
+};
+const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { level: 0, spent: 0, flowers: 0 });
+
 async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
@@ -44,6 +55,36 @@ async function handler(m, { sock }) {
 
     const args = m.text?.trim().split(/\s+/) || [];
     const action = args[0]?.toLowerCase();
+
+    // ── subcommand khas berkebon: traktor status & upgrade ──
+    const sub = (m.args?.[0] || "").toLowerCase();
+    const tool = getTool(m.sender);
+    const lv = tool.level || 0;
+    if (sub === "traktor" || sub === "status") {
+      return m.reply(novaRpgBox("berkebon",
+        `🚜 TRAKTOR MINI KAMU\n\n` +
+        `Level : *Lv.${lv}*\n⏱️ Grow time : −${Math.round((1 - TOOL.growFactor(lv)) * 100)}%\n🌻 Bunga Langka : ${tool.flowers || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
+        `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.flowerCost(lv)}x Bunga Langka + ${formatRp(TOOL.rpCost(lv))}\nKetik: .berkebon upgrade`));
+    }
+    if (sub === "upgrade") {
+      const needFl = TOOL.flowerCost(lv);
+      const needRp = TOOL.rpCost(lv);
+      if ((tool.flowers || 0) < needFl) {
+        return m.reply(novaRpgBox("berkebon",
+          `🌻 Upgrade Traktor ke Lv.${lv + 1} butuh:\n\n• Bunga Langka : ${needFl}x (punya ${tool.flowers || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Bunga didapat dari .berkebon panen sendiri — 30% per panen, stroberi dijamin +1!`, "warn"));
+      }
+      if (!spendCash(m, needRp)) {
+        return m.reply(novaRpgBox("berkebon", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+      }
+      const fresh = getTool(m.sender);
+      fresh.flowers = (fresh.flowers || 0) - needFl;
+      fresh.level = (fresh.level || 0) + 1;
+      fresh.spent = (fresh.spent || 0) + needRp;
+      getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
+      await m.react("🐣");
+      return m.reply(novaRpgBox("berkebon",
+        `🚜 TRAKTOR UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n⏱️ Grow time : −${Math.round((1 - TOOL.growFactor(lv + 1)) * 100)}%\n\n🌻 Material : −${needFl} Bunga Langka\n💵 Biaya : ${formatRp(needRp)}`, "success"));
+    }
 
     // Init farm
     if (!rpg.farm) rpg.farm = { crop: null, plantedAt: 0 };
@@ -69,13 +110,13 @@ async function handler(m, { sock }) {
         const crop = CROPS.find(c => c.id === rpg.farm.crop);
         if (crop) {
           const elapsed = Date.now() - rpg.farm.plantedAt;
-          const remaining = crop.growTime - elapsed;
+          const remaining = (rpg.farm.growTime || crop.growTime) - elapsed;
           if (remaining > 0) {
             const mins = Math.floor(remaining / 60000);
             const secs = Math.floor((remaining % 60000) / 1000);
             msg += `🌱 Tanaman: *${crop.name}*\n`;
             msg += `⏰ Tumbuh: *${mins}m ${secs}s* lagi\n`;
-            msg += `📊 Progress: ${Math.min(100, Math.floor(elapsed / crop.growTime * 100))}%\n`;
+            msg += `📊 Progress: ${Math.min(100, Math.floor(elapsed / (rpg.farm.growTime || crop.growTime) * 100))}%\n`;
           } else {
             msg += `🌾 ${crop.name} siap dipanen!\n`;
             msg += `📌 Ketik *.berkebon panen*\n`;
@@ -116,27 +157,20 @@ async function handler(m, { sock }) {
 
       useEnergy(m, KEBON_ENERGY, sock);
 
+      const effGrow = Math.round(crop.growTime * TOOL.growFactor(lv));
       rpg.farm = {
         crop: crop.id,
-        growTime: crop.growTime,
+        growTime: effGrow,
         plantedAt: Date.now(),
       };
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      await animFarm(m, sock, "Menanam");
-      return m.reply(novaGameBox({
-        title: "berkebon", icon: "🌱",
-        flavor: "🌱 *BERHASIL MENANAM!*",
-        body: [
-          `│ • 🌱 Tanaman : ${crop.name}`,
-          `│ • ⏰ Grow time : ${crop.growTime / 60000} menit`,
-          "",
-          "Ketik .berkebon cek untuk cek progress",
-          "Ketik .berkebon panen saat sudah siap",
-        ].join("\n"),
-        cta: gameCTA("berkebon"),
-      }));
+      await shapeBerkebon(m, sock, "tanam", crop.name);
+      return m.reply(novaRpgBox("berkebon",
+        `🌱 BERHASIL MENANAM!\n\n` +
+        `🌱 Tanaman : ${crop.name}\n⏰ Grow time : ${(effGrow / 60000).toFixed(1)} menit${effGrow < crop.growTime ? ` (traktor! aslinya ${(crop.growTime / 60000).toFixed(0)})` : ""}\n\n` +
+        `Ketik .berkebon cek untuk cek progress\nKetik .berkebon panen saat sudah siap`));
     }
 
     if (action === "panen" || action === "harvest") {
@@ -151,9 +185,10 @@ async function handler(m, { sock }) {
         return m.reply(novaRpgBox("berkebon", "Tanaman tidak dikenal. Kebon direset.", "warn"));
       }
 
+      const effGrow = rpg.farm.growTime || crop.growTime;
       const elapsed = Date.now() - rpg.farm.plantedAt;
-      if (elapsed < crop.growTime) {
-        const remaining = crop.growTime - elapsed;
+      if (elapsed < effGrow) {
+        const remaining = effGrow - elapsed;
         const mins = Math.floor(remaining / 60000);
         const secs = Math.floor((remaining % 60000) / 1000);
         return m.reply(novaRpgBox("berkebon", `Belum siap panen! Tunggu *${mins}m ${secs}s* lagi.`, "warn"));
@@ -168,24 +203,28 @@ async function handler(m, { sock }) {
       addExp(m, expGain);
       addItem(m, crop.item, itemQty);
 
+      // 🌻 Bunga Langka — item khas berkebon (30% per panen, stroberi dijamin +1)
+      let flowerGain = 0;
+      if (crop.id === "strawberry") flowerGain = 1;
+      if (flowerGain === 0 && Math.random() * 100 < TOOL.FLOWER_CHANCE) flowerGain = 1;
+      if (flowerGain > 0) {
+        const freshTool = getTool(m.sender);
+        freshTool.flowers = (freshTool.flowers || 0) + flowerGain;
+        getDatabase().setPlayerData(m.sender, TOOL.dbKey, freshTool);
+      }
+
       rpg.farm = { crop: null, plantedAt: 0 };
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      return m.reply(novaGameBox({
-        title: "berkebon", icon: "🌾",
-        flavor: "🌾 *PANEN BERHASIL!*",
-        body: [
-          `│ • 🌾 Tanaman : ${crop.name}`,
-          `│ • 💰 Gold : +${goldGain}`,
-          `│ • 💵 Uang : Rp ${getCash(m)}`,
-          `│ • ✨ EXP : +${expGain}`,
-          `│ • 📦 Item : +${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}`,
-          "",
-          "Ketik .berkebon tanam <id> untuk tanam lagi",
-        ].join("\n"),
-        cta: gameCTA("berkebon"),
-      }));
+      await shapeBerkebon(m, sock, "panen", crop.name);
+      return m.reply(novaRpgBox("berkebon",
+        `🌾 PANEN BERHASIL!\n\n` +
+        `🌾 Tanaman : ${crop.name}\n\n` +
+        `💰 Gold : +${goldGain}\n💵 Uang : Rp ${getCash(m)}\n✨ EXP : +${expGain}\n📦 Item : +${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}\n` +
+        (flowerGain ? `🌻 Bunga Langka : +${flowerGain}x (total ${getTool(m.sender).flowers}x)\n` : "") +
+        `\nKetik .berkebon tanam <id> untuk tanam lagi` +
+        (lv ? `\n🚜 Traktor : Lv.${lv} (grow time −${Math.round((1 - TOOL.growFactor(lv)) * 100)}%)` : `\n💡 Traktor bisa diupgrade: .berkebon traktor`)));
     }
 
     return m.reply(novaRpgBox("berkebon", "Aksi tidak dikenal. Gunakan: tanam, panen, atau cek", "warn"));
