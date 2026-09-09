@@ -656,7 +656,7 @@ Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
 ## 💰 Donate
 
 <p align="center">
-  <a href="https://base44.app/api/apps/6a8e91613e5310b32d7543f3/files/mp/public/6a8e91613e5310b32d7543f3/56418338f_qris-aizat-store.jpg">
+  <a href="https://files.catbox.moe/zewra8.jpeg">
     <img src="https://img.shields.io/badge/Donate-QRIS-7B68EE?style=flat-square&logo=qrcode&logoColor=white">
   </a>
 </p>
