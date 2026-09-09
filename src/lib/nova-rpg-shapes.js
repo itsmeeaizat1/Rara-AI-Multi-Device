@@ -7,7 +7,7 @@
 // rpgScene (frame tahapan ▰▱), nguli (timeline tumbuh), pet (hati HP):
 //   ⛏️ mining       → GALI MAKIN DALAM  — penampang tanah makin dalam
 //   🪓 nebang       → TIMBER!           — pohon miring pelan sampai tumbang
-//   🎣 fishing      → RIAK & TARIKAN    — riak air melebar + float tenggelem
+//   🎣 mancing      → RIAK & TARIKAN    — riak air melebar + float tenggelem
 //   🚔 patrol       → RUTE PATROLI      — marker 🚔 maju antar checkpoint
 //   🗺️ treasurehunt → PETA MENDEKAT     — 📍 bergerak mendekati ❌ di grid
 //   🏰 dungeon      → KORIDOR KE GELAP — koridor memanjang per lantai
@@ -66,7 +66,7 @@ export async function shapeMining(m, sock, delay = SHAPE_ANIM_MS) {
 // patrol → treasurehunt → dungeon → berdagang.
 
 // ══════════════════════════════════════════════════
-// 🎣 FISHING — RIAK & TARIKAN (khas fishing, batch #2)
+// 🎣 MANCING — RIAK & TARIKAN (khas mancing, batch #2)
 // Bentuk: permukaan air dengan riak melebar + float yang
 // makin dalam + titik tensi bertambah — bukan bar, bukan frame tahapan.
 // ══════════════════════════════════════════════════
