@@ -1,7 +1,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { getCash } from "../../src/lib/nova-rpg-service.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animTreasure } from "../../src/lib/nova-rpg-anim.js";
+import { getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { shapeTreasure } from "../../src/lib/nova-rpg-shapes.js";
 
 const pluginConfig = {
   name: "treasurehunt",
@@ -32,13 +32,74 @@ const LOCATIONS = [
   { id: "sungai", name: "Sungai", aliases: ["sungai", "river"], cost: 10, minGold: 200, maxGold: 700, items: ["Serpihan Emas", "Batu Licin", "Koin Perak"], digText: "Kamu menyaring kerikil dan pasir di aliran sungai yang jernih..." }
 ];
 
+// ─── KHAS TREASUREHUNT: 🗝️ Artefak Kuno & 🧭 Kompas Detektor ───
+const TOOL = {
+  name: "🧭 Kompas Detektor", dbKey: "treasureTool",
+  ARTIFACT_CHANCE: 30,        // % per harta ketemu
+  artifactCost: (lv) => 2 * (lv + 1),
+  rpCost: (lv) => 50000 * (lv + 1),
+  zonkDown: (lv) => 2 * lv,   // peluang zonk −2% per level
+  zonkMax: (lv) => Math.max(6, 20 - 2 * lv),
+};
+const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { level: 0, spent: 0, artifacts: 0 });
+
 async function handler(m, { sock }) {
   await m.react("🕒");
-    await animTreasure(m, sock);
   try {
     const db = await getDatabase();
     const sender = m.sender;
     const input = (m.args.join(" ") || "").toLowerCase().trim();
+    const tool = getTool(sender);
+    const lv = tool.level || 0;
+
+    // ── subcommand khas treasurehunt: kompas status & upgrade ──
+    if (input === "kompas" || input === "status") {
+      return m.reply(novaRpgBox("treasurehunt",
+        `🧭 KOMPAS DETECTOR KAMU
+
+` +
+        `Level : *Lv.${lv}*
+💨 Peluang zonk : −${TOOL.zonkDown(lv)}% (zonk maks ${TOOL.zonkMax(lv)}%)
+🗝️ Artefak Kuno : ${tool.artifacts || 0}x
+💵 Uang : ${formatRp(getCash(m))}
+
+` +
+        `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.artifactCost(lv)}x Artefak + ${formatRp(TOOL.rpCost(lv))}
+Ketik: .treasurehunt upgrade`));
+    }
+
+    if (input === "upgrade") {
+      const needArt = TOOL.artifactCost(lv);
+      const needRp = TOOL.rpCost(lv);
+      if ((tool.artifacts || 0) < needArt) {
+        return m.reply(novaRpgBox("treasurehunt",
+          `🗝️ Upgrade Kompas ke Lv.${lv + 1} butuh:
+
+• Artefak Kuno : ${needArt}x (punya ${tool.artifacts || 0}x)
+• Biaya : ${formatRp(needRp)}
+
+💡 Artefak didapat dari .treasurehunt sendiri — 30% tiap harta ketemu, peti legendaris dijamin +2!`, "warn"));
+      }
+      if (!spendCash(m, needRp)) {
+        return m.reply(novaRpgBox("treasurehunt", `💵 Upgrade butuh *${formatRp(needRp)}*.
+Uang kamu: ${formatRp(getCash(m))}
+💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+      }
+      const fresh = getTool(sender);
+      fresh.artifacts = (fresh.artifacts || 0) - needArt;
+      fresh.level = (fresh.level || 0) + 1;
+      fresh.spent = (fresh.spent || 0) + needRp;
+      getDatabase().setPlayerData(sender, TOOL.dbKey, fresh);
+      await m.react("🐣");
+      return m.reply(novaRpgBox("treasurehunt",
+        `🧭 KOMPAS UPGRADED!
+
+Level : Lv.${lv} → Lv.${lv + 1}
+💨 Peluang zonk : −${TOOL.zonkDown(lv + 1)}% (zonk maks ${TOOL.zonkMax(lv + 1)}%)
+
+🗝️ Material : −${needArt} Artefak Kuno
+💵 Biaya : ${formatRp(needRp)}`, "success"));
+    }
 
     if (!input || input === "list") {
       let listMsg = "";
@@ -74,40 +135,58 @@ async function handler(m, { sock }) {
       profile.energi = currentEnergi - loc.cost;
     }
 
+    // Animasi khas treasurehunt: PETA MENDEKAT (grid, 📍 → ❌)
+    await shapeTreasure(m, sock, loc.name);
+
     const roll = Math.floor(Math.random() * 100) + 1;
+    const zonkMax = TOOL.zonkMax(lv);
 
     const inventory = await db.getPlayerData?.(sender, "inventory") || { items: {} };
     if (!inventory.items) inventory.items = {};
 
     let resultFlavor = "";
     let resultLines = [];
-    if (roll <= 20) {
+    if (roll <= zonkMax) {
       resultFlavor = "💨 *ZONK!*";
       resultLines = [
         "Zonk! Tidak menemukan apa-apa...",
         "Kamu hanya mendapatkan tanah dan batu tak berharga.",
       ];
-    } else if (roll <= 24) {
+    } else if (roll <= zonkMax + 4) {
       const legGold = Math.floor(Math.random() * 15000) + 10000;
       profile.gold = (profile.gold || 0) + legGold;
       inventory.items["Peti Harta Legendaris"] = (inventory.items["Peti Harta Legendaris"] || 0) + 1;
-      resultFlavor = "👑 *HARTA LEGENDARIS!*";
+      // 🗝️ Artefak Kuno — peti legendaris DIJAMIN +2
+      const freshT = getTool(sender);
+      freshT.artifacts = (freshT.artifacts || 0) + 2;
+      getDatabase().setPlayerData(sender, TOOL.dbKey, freshT);
+      resultFlavor = "👑 HARTA LEGENDARIS!";
       resultLines = [
         "Kamu menemukan Peti Emas Kuno Berkilau!",
-        `│ • 👑 Temuan : Peti Harta Legendaris x1`,
-        `│ • 💰 Gold : +${legGold.toLocaleString()}`,
-        `│ • 💵 Uang : Rp ${getCash(m)}`,
+        `👑 Temuan : Peti Harta Legendaris x1`,
+        `💰 Gold : +${legGold.toLocaleString()}`,
+        `💵 Uang : Rp ${getCash(m)}`,
+        `🗝️ Artefak Kuno : +2x (total ${freshT.artifacts}x)`,
       ];
     } else {
       const goldReward = Math.floor(Math.random() * (loc.maxGold - loc.minGold + 1)) + loc.minGold;
       const itemReward = loc.items[Math.floor(Math.random() * loc.items.length)];
       profile.gold = (profile.gold || 0) + goldReward;
       inventory.items[itemReward] = (inventory.items[itemReward] || 0) + 1;
-      resultFlavor = "🎁 *HARTA DITEMUKAN!*";
+      // 🗝️ Artefak Kuno — 30% tiap harta ketemu
+      let artGain = 0;
+      if (Math.random() * 100 < TOOL.ARTIFACT_CHANCE) {
+        artGain = 1;
+        const freshT = getTool(sender);
+        freshT.artifacts = (freshT.artifacts || 0) + 1;
+        getDatabase().setPlayerData(sender, TOOL.dbKey, freshT);
+      }
+      resultFlavor = "🎁 HARTA DITEMUKAN!";
       resultLines = [
-        `│ • 📦 Temuan : ${itemReward} x1`,
-        `│ • 💰 Gold : +${goldReward.toLocaleString()}`,
-        `│ • 💵 Uang : Rp ${getCash(m)}`,
+        `📦 Temuan : ${itemReward} x1`,
+        `💰 Gold : +${goldReward.toLocaleString()}`,
+        `💵 Uang : Rp ${getCash(m)}`,
+        ...(artGain ? [`🗝️ Artefak Kuno : +1x (total ${getTool(sender).artifacts}x)`] : []),
       ];
     }
 
@@ -115,20 +194,12 @@ async function handler(m, { sock }) {
     await db.setPlayerData?.(sender, "inventory", inventory);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
-      title: "treasurehunt", icon: "🗺️",
-      flavor: resultFlavor,
-      body: [
-        `📍 ${loc.name}`,
-        loc.digText,
-        "",
-        ...resultLines,
-        "",
-        `│ • ⚡ Sisa energi : ${profile.energi}`,
-        `│ • 💰 Total gold : ${(profile.gold || 0).toLocaleString()}`,
-      ].join("\n"),
-      cta: gameCTA("treasurehunt"),
-    }));
+    return m.reply(novaRpgBox("treasurehunt",
+      `${resultFlavor}\n\n` +
+      `📍 ${loc.name} — ${loc.digText}\n\n` +
+      `${resultLines.join("\n")}\n\n` +
+      `⚡ Sisa energi : ${profile.energi}\n💰 Total gold : ${(profile.gold || 0).toLocaleString()}\n` +
+      (lv ? `🧭 Kompas : Lv.${lv} (zonk −${TOOL.zonkDown(lv)}%)` : `💡 Kompas bisa diupgrade: .treasurehunt kompas`)));
   } catch (err) {
     console.error("treasurehunt error:", err);
     await m.react("❌");

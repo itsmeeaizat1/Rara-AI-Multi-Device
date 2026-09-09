@@ -124,3 +124,36 @@ export async function shapeNebang(m, sock, treeName = "Pohon", treeEmoji = "🌲
   ];
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🗺️ TREASUREHUNT — PETA MENDEKAT (khas treasurehunt, batch #5)
+// Bentuk: navigasi GRID — 📍 bergerak kotak-per-kotak mendekati ❌
+// (X marks the spot), jarak countdown = progres.
+// ══════════════════════════════════════════════════
+export async function shapeTreasure(m, sock, locName = "Lokasi", delay = SHAPE_ANIM_MS) {
+  const grid = (r, c, hit = false) => {
+    const rows = [];
+    for (let y = 0; y < 5; y++) {
+      let row = "";
+      for (let x = 0; x < 5; x++) {
+        if (y === 2 && x === 2) row += hit ? "📍" : "❌";
+        else if (y === r && x === c) row += "📍";
+        else row += "⬜";
+      }
+      rows.push(row);
+    }
+    return rows.join("\n");
+  };
+  const steps = [
+    { r: 0, c: 0, note: "kompas berputar... sinyal lemah" },
+    { r: 0, c: 1, note: "jarum kompas menunjuk timur laut" },
+    { r: 1, c: 1, note: "deteksi logam makin kuat!" },
+    { r: 1, c: 2, note: "SANGAT DEKAT! jangan pindah tangan!" },
+    { r: 2, c: 2, hit: true, note: "TEPAT SASARAN! GALI DI SINI! ⛏️" },
+  ];
+  const dist = (r, c) => Math.max(Math.abs(r - 2), Math.abs(c - 2));
+  const frames = steps.map((s) =>
+    `${hdr("Peta Mendekat")}\n\n🗺️ ${locName}\n\n${grid(s.r, s.c, s.hit)}\n\n🧭 Jarak ke ❌ : *${s.hit ? 0 : dist(s.r, s.c)} kotak*\n\n${s.note}`
+  );
+  await morphCore(m, sock, frames, delay);
+}
