@@ -22,6 +22,13 @@ const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'
 
 export const toSC = (s) => String(s).replace(/[a-zA-Z]/g, (c) => SC_MAP[c.toLowerCase()] || c);
 
+// REVERSE smallcaps → plain: ID/command yang di-copy user dari pesan bot
+// (yang udah ke-smallcaps guard global) tetap bisa di-match balik.
+// q & x gak punya char smallcaps (tetap plain) → reverse lossless.
+const SC_REV = Object.fromEntries(Object.entries(SC_MAP).map(([k, v]) => [v, k]));
+export const fromSC = (s) =>
+  String(s ?? "").replace(/[^\s]/g, (ch) => SC_REV[ch] || ch);
+
 function scUrlSafe(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return String(text).split(urlRegex).map((p, i) => (i % 2 === 1 ? p : toSC(p))).join("");
