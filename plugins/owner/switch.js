@@ -25,6 +25,7 @@ import { enableAutoBirthday, disableAutoBirthday, getBirthdayStatus } from '../.
 import { getBmkgStatus, updateBmkgSettings, startBmkgJobs, stopBmkgJobs } from '../../src/lib/nova-bmkg-scheduler.js'
 import { getBencanaAutoEnabled, setBencanaAutoEnabled } from '../../src/lib/nova-bencana.js'
 import { isEnabled as isAnimeNotifierOn, setEnabled as setAnimeNotifierOn } from '../../src/lib/nova-auto-anime-notifier.js'
+import { isEnabled as isMovieNotifierOn, setEnabled as setMovieNotifierOn } from '../../src/lib/nova-movie-notifier.js'
 import { loadState as loadWinbuState, saveState as saveWinbuState, startAutoCheck as startWinbuCheck, stopAutoCheck as stopWinbuCheck, isRunning as isWinbuRunning } from '../../src/lib/nova-auto-anime.js'
 import { getSettings as getCleanSettings, updateSettings as updateCleanSettings, startCleaner, stopCleaner } from '../../src/lib/nova-cache-cleaner.js'
 import { getLokerStatus, updateLokerSettings, startLokerJobs, stopLokerJob } from '../../src/lib/nova-loker-scheduler.js'
@@ -271,6 +272,13 @@ const AUTO_REGISTRY = {
     // kosong = auto-add owner (ala TARGET_NUMBER script owner).
     toggle: (on) => { setAnimeNotifierOn(on) },
   },
+  automovienotifier: {
+    label: "Auto Movie Notifier (IMDbOT → Cinemeta, no key)",
+    getStatus: () => { try { return isMovieNotifierOn() } catch { return false } },
+    // OFF = polling berhenti, subscriber tetap tersimpan; ON dengan target
+    // kosong = auto-add owner (ala TARGET_NUMBER script owner).
+    toggle: (on) => { setMovieNotifierOn(on) },
+  },
   autoweatherrealtime: {
     label: "Auto Notifikasi Cuaca Realtime",
     getStatus: () => { try { return getDatabase().setting("weatherRealtime")?.notification ?? false } catch { return false } },
@@ -348,6 +356,7 @@ const AUTO_ALIASES = {
   renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
   bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch",
   animenotifier: "autoanimenotifier", animenotify: "autoanimenotifier", anime: "autoanimenotifier", animev2: "autoanimenotifier",
+  movienotifier: "automovienotifier", movienotify: "automovienotifier", filmnotifier: "automovienotifier", movienotif: "automovienotifier",
   animev1: "autoanime", winbu: "autoanime", animewinbu: "autoanime", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
@@ -615,7 +624,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const rest = (setIdx >= 0 ? argsRaw.slice(setIdx + 1) : []).map((a) => a.toLowerCase())
 
     // Fitur subscriber: target terpusat NAMBAH jangkauan (subscriber tetap dapat)
-    const SUBSCRIBER_FEATURES = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on' }
+    const SUBSCRIBER_FEATURES = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on', automovienotifier: '.movienotify on' }
     // SEMUA fitur otomatis yang ngirim notifikasi sekarang punya target terpusat
     // (request owner 8 Sep 2026: "semua fitur yg otomatis ada opsi kirim terpusatnya ini wajib")
     const TARGETABLE = [
