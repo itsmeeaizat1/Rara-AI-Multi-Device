@@ -312,3 +312,30 @@ export async function shapeForage(m, sock, delay = SHAPE_ANIM_MS) {
   }
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🏹 HUNTWILD — HEWAN DALAM SEMAK
+// (khas huntwild, batch #12)
+// Bentuk: baris 5 pohon 🌲 — bayangan hewan ❓ pindah
+// slot per frame, frame akhir HEWAN KELIATAN (emoji asli
+// hasil roll) → TANGKAPAN! Berbeda dari .berburu 3 fase.
+// ══════════════════════════════════════════════════
+export async function shapeHuntwild(m, sock, animalEmoji = "🦌", delay = SHAPE_ANIM_MS) {
+  const frames = [];
+  const hidePos = [2, 1, 3, 4]; // bayangan gerak antar slot
+  for (let i = 0; i < hidePos.length; i++) {
+    const cells = ["🌲", "🌲", "🌲", "🌲", "🌲"];
+    cells[hidePos[i]] = "❓";
+    const notes = [
+      "mendengar gerakan di balik pohon...",
+      "ada bayangan! tapi geser tempat...",
+      "melihat ekor semburat! nyaris...",
+      "HEWAN KELIATAN!",
+    ];
+    frames.push(`${hdr("Hewan dalam Semak")}\n\n${cells.join(" ")}\n\n${notes[i]}`);
+  }
+  const cells = ["🌲", "🌲", "🌲", "🌲", "🌲"];
+  cells[4] = animalEmoji;
+  frames.push(`${hdr("Hewan dalam Semak")}\n\n${cells.join(" ")}\n\n🎯 ${animalEmoji} tangkapan! hasil buru dibawa pulang 🎉`);
+  await morphCore(m, sock, frames, delay);
+}
