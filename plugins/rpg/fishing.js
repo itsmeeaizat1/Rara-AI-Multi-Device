@@ -11,7 +11,7 @@ import { ensureRpg, spendCash, getCash, formatRp } from "../../src/lib/nova-rpg-
 
 const pluginConfig = {
   name: "fishing",
-  alias: ["fishing", "mancing2", "fishrpg", "memancing"],
+  alias: ["fishing", "mancing", "fish", "mancing2", "fishrpg", "memancing"],
   category: "rpg",
   description: "Fishing RPG v2 — pancing ikan dengan rarity, kumpulkan Mutiara, upgrade Joran",
   usage: ".fishing (pancing)\n.fishing inventory (cek koleksi)\n.fishing sell (jual semua ikan)\n.fishing joran (status joran)\n.fishing upgrade (upgrade joran)",
