@@ -361,3 +361,28 @@ export async function shapeTimetravel(m, sock, era = { emoji: "🦖", name: "Era
   frames.push(`${hdr("Lorong Waktu")}\n\n${era.emoji} ${era.name.toUpperCase()}\n\nmendarat! kamu sampai ${era.year} 🎉`);
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🎖️ RANGERPOST — RADAR PATROLI
+// (khas rangerpost, batch #14)
+// Bentuk: sweep radar nyari sinyal → kontak muncul
+// sesuai tugas (monster/warga/intel) → resolve hasil.
+// ══════════════════════════════════════════════════
+export async function shapeRanger(m, sock, task = { emoji: "⚔️", name: "Defeat Monster", desc: "" }, success = true, delay = SHAPE_ANIM_MS) {
+  const H = () => hdr("Radar Patroli");
+  const CONTACT = {
+    "Defeat Monster": "⚔️ monster liar terlihat di sektor barat!",
+    "Rescue Civilian": "🆘 warga menunggu di sektor timur!",
+    "Gather Intel": "📜 jejak pasukan musuh ditemukan!",
+  };
+  const contact = CONTACT[task.name] || `${task.emoji} titik tugas terkonfirmasi!`;
+  const frames = [
+    `${H()}\n\n📡 · · · · ·\n\nradar menyala... memindai zona patroli`,
+    `${H()}\n\n📡 · · ◉ · ·\n\nsinyal terdeteksi! menuju titik kontak`,
+    `${H()}\n\n📡 · · ◉ · ·\n\n${contact}`,
+    success
+      ? `${H()}\n\n🎯 · · ✅ · ·\n\nTUGAS SELESAI!`
+      : `${H()}\n\n💨 · · ◌ · ·\n\nsinyal hilang...`,
+  ];
+  await morphCore(m, sock, frames, delay);
+}
