@@ -339,3 +339,25 @@ export async function shapeHuntwild(m, sock, animalEmoji = "🦌", delay = SHAPE
   frames.push(`${hdr("Hewan dalam Semak")}\n\n${cells.join(" ")}\n\n🎯 ${animalEmoji} tangkapan! hasil buru dibawa pulang 🎉`);
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// ⏳ TIMETRAVEL — LORONG WAKTU
+// (khas timetravel, batch #13)
+// Bentuk: loncatan tahun per frame menuju era tujuan
+// (2026 → 1900 → tahun era → mendarat!). Era hasil roll
+// tentuin tahun & emoji landing.
+// ══════════════════════════════════════════════════
+export async function shapeTimetravel(m, sock, era = { emoji: "🦖", name: "Era Prasejarah", year: "66.000.000 SM" }, delay = SHAPE_ANIM_MS) {
+  const jumps = [
+    { from: "2026", to: "1900", note: "cahaya mulai memelintir!" },
+    { from: "1900", to: era.year, note: "loncatan besar... hampir sampai!" },
+  ];
+  const frames = [
+    `${hdr("Lorong Waktu")}\n\n🌀 ◈◈◈◈◈◈\n\nmesin waktu menyala... tahun 2026`,
+  ];
+  for (const j of jumps) {
+    frames.push(`${hdr("Lorong Waktu")}\n\n🌀 ${j.from} ⇢ ${j.to}\n\n${j.note}`);
+  }
+  frames.push(`${hdr("Lorong Waktu")}\n\n${era.emoji} ${era.name.toUpperCase()}\n\nmendarat! kamu sampai ${era.year} 🎉`);
+  await morphCore(m, sock, frames, delay);
+}
