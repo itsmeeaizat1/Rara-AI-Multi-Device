@@ -84,3 +84,27 @@ export async function shapeFishing(m, sock, delay = SHAPE_ANIM_MS) {
   ];
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🐪 BERDAGANG — RUTE KARAVAN (khas berdagang, batch #3)
+// Bentuk: karavan 🐪 merangkak di garis jarak desa→pasar,
+// persen perjalanan = progres. Bukan bar, bukan grid, bukan riak.
+// ══════════════════════════════════════════════════
+export async function shapeDagang(m, sock, from = "Desa Asal", to = "Desa Tujuan", good = "Barang", delay = SHAPE_ANIM_MS) {
+  const track = (pct) => {
+    const total = 10;
+    const pos = Math.round((pct / 100) * total);
+    return "🏚️" + "─".repeat(pos) + "🐪" + "─".repeat(Math.max(0, total - pos)) + "🏪";
+  };
+  const stops = [
+    { pct: 0, note: "memuat barang ke karavan..." },
+    { pct: 30, note: "nunggangi jalan berbatu..." },
+    { pct: 55, note: "istirahat sebentar di pos peristirahatan..." },
+    { pct: 80, note: "bedug pasar sudah terdengar!" },
+    { pct: 100, note: "TIBA! mulai berteriak jualan! 💰" },
+  ];
+  const frames = stops.map((s, i) =>
+    `${hdr("Rute Karavan")}\n\n${track(s.pct)}\n\n📦 ${good} • ${from} ➜ ${to}\n🧭 Perjalanan : *${s.pct}%*\n\n🐪 ${s.note}`
+  );
+  await morphCore(m, sock, frames, delay);
+}
