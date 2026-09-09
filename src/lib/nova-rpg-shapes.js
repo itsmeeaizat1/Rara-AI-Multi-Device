@@ -257,3 +257,34 @@ export async function shapeSampah(m, sock, delay = SHAPE_ANIM_MS) {
   }
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🏕️ EKSPEDISI — KAFILAH BERANGKAT & KEMBALI
+// (khas expedition, batch #10)
+// Bentuk: RUTE EKSPEDISI — party 🚶 jalan 5 sel dari
+// titik awal ke tujuan per segmen. Mode "berangkat"
+// (🏕️ markas → 🏁 destinasi) & "kembali" (🏁 → 🏕️ bawa loot 💰).
+// ══════════════════════════════════════════════════
+export async function shapeEkspedisi(m, sock, mode = "berangkat", delay = SHAPE_ANIM_MS) {
+  const L = mode === "berangkat" ? "🏕️" : "🏁";
+  const R = mode === "berangkat" ? "🏁" : "🏕️";
+  const steps = 4;
+  const frames = [];
+  for (let i = 0; i <= steps; i++) {
+    const cells = [L, "·", "·", "·", R];
+    cells[i] = "🚶";
+    const row = cells.join("─");
+    let note;
+    if (mode === "berangkat") {
+      note = i === 0 ? "kafilah siap berangkat dari markas..."
+        : i === steps ? "kafilah sampai destinasi — misi dimulai! 🎒"
+        : `menempuh rute ekspedisi... (${i}/${steps} segmen)`;
+    } else {
+      note = i === 0 ? "misi selesai! bawa pulang hasil ekspedisi..."
+        : i === steps ? "kafilah tiba kembali di markas! 🎉"
+        : `kafilah pulang bawa loot... (${i}/${steps} segmen)`;
+    }
+    frames.push(`${hdr(mode === "berangkat" ? "Kafilah Berangkat" : "Ekspedisi Kembali")}\n\n${row}\n\n${note}`);
+  }
+  await morphCore(m, sock, frames, delay);
+}
