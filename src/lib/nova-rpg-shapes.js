@@ -237,3 +237,23 @@ export async function shapeBerkebon(m, sock, mode = "tanam", cropName = "Tanaman
   const title = mode === "tanam" ? "Menanam Benih" : "Kebon Tumbuh";
   await morphCore(m, sock, frames.map((f) => `${hdr(title)}\n\n${f.viz}\n\n${f.note}`), delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🗑️ SAMPAH — GOT BERSIH (khas sampah, batch #9)
+// Bentuk: CLEANUP SWEEP — 🧹 menyapu baris sampah,
+// tiap frame sampah terkumpul jadi ♻️ sampai bersih.
+// ══════════════════════════════════════════════════
+export async function shapeSampah(m, sock, delay = SHAPE_ANIM_MS) {
+  const junk = ["🗑️", "📦", "🥫", "🔋", "📰"];
+  const cells = Array.from({ length: 5 }, () => junk[Math.floor(Math.random() * junk.length)]);
+  const frames = [];
+  for (let i = 0; i <= 5; i++) {
+    const row = cells.map((c, idx) => (idx < i ? "♻️" : c)).join("");
+    const broom = i < 5 ? "🧹".repeat(1) : "✨";
+    frames.push(
+      `${hdr("Got Bersih")}\n\n${row}\n\n` +
+      `${i < 5 ? `${broom} menyapu area... (${i}/5 zona bersih)` : `🎉 SELESAI! area bersih, siap daur ulang! ✨`}`
+    );
+  }
+  await morphCore(m, sock, frames, delay);
+}
