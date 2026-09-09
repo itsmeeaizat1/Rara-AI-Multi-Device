@@ -194,7 +194,7 @@ const GAME_CTA = {
   mining: "Yuk tambang lagi kak, biar cangkulmu makin kuat ⛏️🥳",
   nebang: "Yuk nebang lagi kak, biar kapakmu makin tajam 🪓🥳",
   nguli: "Yuk nguli lagi kak, biar keringatmu berbuah gold 💪🥳",
-  ojekrpg: "Yuk narik lagi kak, biar penumpangmu makin rame 🛵🥳",
+  ojek: "Yuk narik lagi kak, biar penumpangmu makin rame 🛵🥳",
   patrol: "Yuk patroli lagi kak, biar wilayahmu makin aman 🚔🥳",
   pet: "Yuk main sama petmu lagi kak, biar makin setia 🐾🥳",
   rafflerpg: "Yuk ikut raffle lain kak, siapa tau kamu pemenangnya 🎟️🥳",
