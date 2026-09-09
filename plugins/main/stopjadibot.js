@@ -28,7 +28,7 @@ function formatUptime(ms) {
     return `${seconds}s`
 }
 
-async function handler(m, { sock }) {
+async function handler(m, { sock, isJadibot }) {
     const sender = m.sender
     if (!sender) return m.reply(novaError("StopJadiBot", "Gagal identifikasi nomor kamu nih"))
 
@@ -39,8 +39,11 @@ async function handler(m, { sock }) {
     if (argDigits.length >= 8) {
         const norm = normalizePhone(argDigits)
         if (norm !== sender.replace(/@.+/, "")) {
-            if (!m.isOwner) {
-                return m.reply(novaError("StopJadiBot", "Menghentikan jadibot nomor lain khusus owner"))
+            // fix 9 Sep 2026: pesan dari user jadibot itu fromMe → m.isOwner=true,
+            // tapi itu owner SESSION-nya sendiri — BUKAN owner bot utama.
+            // Cross-session stop hanya untuk owner utama (m.isOwner && !isJadibot).
+            if (!m.isOwner || isJadibot) {
+                return m.reply(novaError("StopJadiBot", "Menghentikan jadibot nomor lain khusus owner utama"))
             }
         }
         target = norm + "@s.whatsapp.net"

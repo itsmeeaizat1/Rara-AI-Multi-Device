@@ -5,10 +5,11 @@ import te from '../../src/lib/nova-error.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delpremall',
-    alias: ["delpremall", "delprem"],
+    alias: ["delpremall"],
     category: 'owner',
     description: 'Menghapus semua member grup dari premium',
-    usage: '.delprem all',
+    usage: '.delpremall — hapus SEMUA member grup ini dari premium',
+    example: '.delpremall',
     example: '.delprem all',
     isOwner: true,
     isPremium: false,
@@ -37,7 +38,9 @@ async function handler(m, { sock }) {
             const number = participant.jid?.replace(/[^0-9]/g, '') || ''
             if (!number) continue
             
-            const index = db.data?.premium.indexOf(number)
+            // FIX: entri premium bisa string (lama) atau objek {id, expired} —
+            // indexOf cuma match string, objek gak pernah kehapus diam-diam.
+            const index = db.data.premium.findIndex(p => typeof p === "string" ? p === number : p.id === number)
             
             if (index === -1) {
                 notPremCount++
