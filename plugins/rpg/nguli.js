@@ -9,7 +9,7 @@ import {
   useEnergy, checkCooldown, setCooldown,
 } from "../../src/lib/nova-rpg-service.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
-import { rpgScene } from "../../src/lib/nova-rpg-anim.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 
@@ -75,15 +75,208 @@ for (const [key, job] of Object.entries(JOBS)) {
   JOB_LOOKUP[job.name.toLowerCase().replace(/\s+/g, "")] = key;
 }
 
+// ─── ANIMASI "SEHARI KERJA" (request owner 9 Sep 2026: bentuk animasi BARU —
+// bukan bar progres / frame tahapan ala game lain. Satu pesan yang TUMBUH
+// per-jam: tiap morph menambah satu kejadian di alur hari kerja, jam kerja
+// itu sendiri jadi indikator progresnya. Tiap pekerjaan punya alur hari
+// sendiri — satpam kerja MALAM, pasar SUBUH, konglomerat main golf.)
+const NGULI_ANIMATIONS = {
+  kuli_pasar: {
+    hari: [
+      "🕓 04.00 — Truck sayur datang, langsung panen jemput!",
+      "🕕 06.00 — Pasang terpal lapak, karung ditumpuk rapi...",
+      "🕘 09.00 — Langganan warung pada ngebut!",
+      "🕛 12.00 — Pasar rame, tawar-menawar everywhere!",
+      "🕒 15.00 — Tutup lapak, cuan dibawa pulang! 💵",
+    ],
+    hasil: "🥬 Semua karung sayur laris habis!",
+  },
+  buruh_bangunan: {
+    hari: [
+      "🕖 07.00 — Absen proyek, ambil sarung tangan & helm...",
+      "🕘 09.00 — Aduk semen, gendong sak naik lantai dua...",
+      "🕛 12.00 — Istirahat makan, nasi bungkus sederhana...",
+      "🕑 14.00 — Pasang bata bata bata... tangga makin tinggi!",
+      "🕔 17.00 — Pulang, badan pegal tapi dompet tebal! 💪",
+    ],
+    hasil: "🏗️ Proyek makin tinggi berkat kamu!",
+  },
+  tukang_sapu: {
+    hari: [
+      "🕕 06.00 — Halaman masih sepi, mulai sapu tepi jalan...",
+      "🕘 09.00 — Taman depan: cabut rumput, rapikan pot...",
+      "🕛 12.00 — Makan dulu, sapu dipajang...",
+      "🕒 15.00 — Kamar mandi & koridor disikat kilat!",
+      "🕔 17.00 — Pulang, tinggalin halaman kinclong! ✨",
+    ],
+    hasil: "✨ Halaman bersih sampai diseksama!",
+  },
+  ojek_pangkalan: {
+    hari: [
+      "🕕 06.00 — Ngumpul di pangkalan, ngopi bareng rekan...",
+      "🕗 08.00 — Orderan pertama! Anter anak sekolah...",
+      "🕛 12.00 — Rame makan siang, meteran jalan terus!",
+      "🕒 15.00 — Hujan! Orderan membludak, modal jas hujan...",
+      "🕕 18.00 — Pulang, bensin tinggal setengah tapi cuan! 🏁",
+    ],
+    hasil: "🏁 Penumpang kasih bintang lima!",
+  },
+  pedagang_kaki_lima: {
+    hari: [
+      "🕔 05.00 — Rebus kuah, tusuk bakso satu-satu...",
+      "🕖 07.00 — Dorong gerobak, cari spot dekat kantor...",
+      "🕙 10.00 — Karyawan turun, antrean mulai numpuk!",
+      "🕐 13.00 — Mie ayam laris, kuah tinggal setengah!",
+      "🕓 16.00 — Gerobak kosong melompong, pulang! 🍲",
+    ],
+    hasil: "🍲 Gerobak habis 3 kali isi ulang!",
+  },
+  tukang_jahit: {
+    hari: [
+      "🕗 08.00 — Buka toko, mesin jahit dipanasin dulu...",
+      "🕘 09.00 — Ukur badan pelanggan, buat pola kemeja...",
+      "🕛 12.00 — Makan sebentar, langsung balik ke mesin...",
+      "🕒 15.00 — Pasang kancing, setrika, lipat rapi...",
+      "🕓 16.00 — Pelanggan ambil, langsung pesan 3 lagi! 👔",
+    ],
+    hasil: "👔 Pelanggan pesan 3 baju lagi!",
+  },
+  montir: {
+    hari: [
+      "🕗 08.00 — Buka bengkel, kunci-kunci ditata...",
+      "🕙 10.00 — Motor pertama masuk: servis rutin...",
+      "🕛 12.00 — Kampas rem habis, ganti baru...",
+      "🕑 14.00 — Mesin ngambek, tuning karburator...",
+      "🕔 17.00 — Motor mengaung kenceng, pelanggan senyum! 🏍️",
+    ],
+    hasil: "🏍️ Motor pelanggan lancar jaya!",
+  },
+  satpam: {
+    hari: [
+      "🕗 20.00 — Shift malam mulai, ambil senter & kunci pos...",
+      "🕙 22.00 — Patroli keliling komplek, cek gembok...",
+      "🕛 00.00 — Mata begitu berat, kopi item menemani...",
+      "🕑 02.00 — Ada suara! Ternyata kucing oren... lanjut patroli...",
+      "🕔 05.00 — Subuh, gantian shift. Malam aman sentosa! 🌙",
+    ],
+    hasil: "🌙 Malam aman, komplek tidur nyenyak!",
+  },
+  guru_ngaji: {
+    hari: [
+      "🕒 15.00 — Siapin kitab, rak Al-Quran dirapikan...",
+      "🕓 16.00 — Santri pada datang, salam semangat!",
+      "🕔 17.00 — Latih tajwid pelan-pelan, sabar...",
+      "🕕 18.00 — Setoran hafalan juz 1, masyaAllah lancar!",
+      "🕗 20.00 — Kultim singkat, pulang dengan hati hangat! 🕌",
+    ],
+    hasil: "🕌 Santri berprestasi di lomba tahfiz!",
+  },
+  sopir: {
+    hari: [
+      "🕔 05.00 — Isi bensin penuh, cek ban & mesin bus...",
+      "🕖 07.00 — Jemput penumpang di pool, karcis siap...",
+      "🕙 10.00 — Tol antar kota, langkah terus maju...",
+      "🕐 13.00 — Turunan penumpang di kota sebelah...",
+      "🕓 16.00 — Balik ke pool, tepat waktu! 🏁",
+    ],
+    hasil: "🏁 Perjalanan lancar, penumpang puas!",
+  },
+  kuli_kantor: {
+    hari: [
+      "🕗 08.00 — Absen, nyalain komputer, buka email...",
+      "🕘 09.00 — Meeting Zoom, kamera mati mode audiens...",
+      "🕛 12.00 — Makan di depan laptop, kerja gak boleh stop...",
+      "🕑 14.00 — Ketik laporan, print, tanda tangan bolak-balik...",
+      "🕔 17.00 — Laporan ACC! Pulang larut, tapi gajian! 📊",
+    ],
+    hasil: "📊 Bos melimpah proyek bonus!",
+  },
+  supervisor: {
+    hari: [
+      "🕖 07.00 — Briefing tim pagi, target hari ini disepakati...",
+      "🕘 09.00 — Inspeksi lantai produksi, semuanya on track...",
+      "🕛 12.00 — Evaluasi tengah hari, satu staf butuh bimbing...",
+      "🕒 15.00 — Review target, angka naik pesat!",
+      "🕔 17.00 — Laporan ke manager: target tercapai! 📈",
+    ],
+    hasil: "📈 Tim kamu jadi terbaik se-kantor!",
+  },
+  manager: {
+    hari: [
+      "🕗 08.00 — Buka email: 47 belum terbaca... tarik napas...",
+      "🕙 10.00 — Rapat direksi, presentasi angka kuartal...",
+      "🕐 13.00 — Makan siang bareng klien sambil negotiasi...",
+      "🕒 15.00 — Kontrak vendor, tanda tangan demi tanda tangan...",
+      "🕕 18.00 — Deal besar ditutup! Martini... eh, teh dulu. 🤝",
+    ],
+    hasil: "🤝 Perusahaan untung, bonus mengalir!",
+  },
+  pengusaha: {
+    hari: [
+      "🕖 07.00 — Cek laporan penjualan cabang semalam...",
+      "🕙 10.00 — Survey lokasi cabang baru, tanah strategis!",
+      "🕐 13.00 — Rapat investor, semuanya setuju ekspansi...",
+      "🕒 15.00 — Negosiasi bahan baku, harga turun 20%!",
+      "🕖 19.00 — Cabang ke-10 resmi dibuka! 📈",
+    ],
+    hasil: "📈 Bisnis makin besar, untung berlipat!",
+  },
+  konglomerat: {
+    hari: [
+      "🕕 06.00 — Golf pagi sambil dengerin laporan saham...",
+      "🕘 09.00 — Teleconference 5 negara, semua direksi angkat topi...",
+      "🕛 12.00 — Makan siang sampingi akuisisi perusahaan...",
+      "🕒 15.00 — Galang dana miliaran, pasar merespons positif...",
+      "🕕 18.00 — Imperium makin megar. Longgar sedikit. 💎",
+    ],
+    hasil: "💎 Majikan disegani, uang tak habis!",
+  },
+};
+
+// fallback generik
+const NGULI_DAY_GENERIC = [
+  "🕗 08.00 — Mulai kerja...",
+  "🕙 10.00 — Sedang konsen...",
+  "🕛 12.00 — Lewat tengah hari...",
+  "🕒 15.00 — Sore, hampir kelar...",
+  "🕔 17.00 — Selesai, pulang bawa cuan! 💵",
+];
+
 const getToolBonus = (tools = []) =>
   tools.reduce((sum, t) => sum + (TOOLS[t]?.incomeBonus || 0), 0);
 
 const getJob = (rpg) => JOBS[rpg?.nguliJob || "pengangguran"] || JOBS.pengangguran;
 
+// ─── ENGINE MORPH "SEHARI KERJA" (bentuk animasi baru) ───
+// Beda dari rpgScene (frame tahapan + bar ▰▱): di sini SATU pesan yang
+// TUMBUH — tiap morph menambah satu kejadian jam kerja berikutnya, jadi
+// alur hari kerja terus memanjang sampai pulang. Edit-in-place, fallback
+// kirim pesan baru berisi alur lengkap sejauh itu.
+const sleepShort = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function animHariKerja(m, sock, header, events, delay = NGULI_ANIM_MS) {
+  const frame = (n) => `${header}\n\n${events.slice(0, n + 1).join("\n")}`;
+  let key = null;
+  try {
+    const s = await sock?.sendMessage?.(m.chat, { text: frame(0) });
+    key = s?.key || null;
+  } catch { key = null; }
+  if (!key) { try { await m.reply(frame(0)); } catch {} }
+  for (let i = 1; i < events.length; i++) {
+    try { await sock?.sendPresenceUpdate?.("composing", m.chat); } catch {}
+    await sleepShort(delay);
+    if (key) {
+      try { await sock.sendMessage(m.chat, { text: frame(i), edit: key }); continue; } catch { key = null; }
+    }
+    try { await m.reply(frame(i)); } catch {}
+  }
+}
+
 // ─── KERJA ───
 async function doWork(m, sock) {
   const rpg = ensureRpg(m, m.pushName);
-  const job = getJob(rpg);
+  const jobKey = rpg?.nguliJob || "pengangguran";
+  const job = JOBS[jobKey] || JOBS.pengangguran;
 
   if (!job || job.income === 0) {
     return m.reply(novaRpgBox("nguli",
@@ -102,19 +295,13 @@ async function doWork(m, sock) {
       `😰 Energi kurang! Butuh *${job.energyCost}* energi\n⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n💡 Ketik .nguli istirahat`, "warn"));
   }
 
-  // ── animasi morphing (frame verbatim script) ──
-  const name = m.pushName || "Kuli";
-  const pct1 = Math.floor(Math.random() * 50) + 20;
-  const pct2 = Math.floor(Math.random() * 30) + 70;
-  await rpgScene(m, sock, [
-    `🔨 ${name} mulai bekerja sebagai ${job.icon} ${job.name}...`,
-    `💪 ${name} bekerja keras!`,
-    `⏳ Proses... ${pct1}%`,
-    `⏳ Proses... ${pct2}%`,
-    `🎉 Selesai!`,
-  ], NGULI_ANIM_MS, "nguli");
+  // ── animasi "sehari kerja" per-pekerjaan — tiap kerja beda alur hari ──
+  const anim = NGULI_ANIMATIONS[jobKey] || null;
+  await animHariKerja(m, sock, `${smallcapsText("「 ✦ Sehari Kerja ✦ 」")}\n\n${job.icon} ${smallcapsText(job.name)}`,
+    anim?.hari || NGULI_DAY_GENERIC);
 
   // ── hitung hasil ──
+  const name = m.pushName || "Kuli";
   const toolBonus = getToolBonus(rpg.nguliTools);
   const income = Math.floor(job.income * (1 + toolBonus / 100));
   const expGain = job.exp + Math.floor(Math.random() * 5);
@@ -133,6 +320,7 @@ async function doWork(m, sock) {
   const fin = ensureRpg(m);
   let body =
     `✅ ${job.icon} HASIL KERJA\n\n` +
+    (anim?.hasil ? `${anim.hasil}\n\n` : "") +
     `👤 ${name}\n` +
     `💼 ${job.name}\n` +
     `💵 Gaji : ${formatRp(income)}\n` +
@@ -156,13 +344,13 @@ async function doRest(m, sock) {
       `⚡ Energi penuh! *${rpg.energy}/${rpg.maxEnergy}*\n💡 Ayo kerja! .nguli kerja`, "warn"));
   }
 
-  const name = m.pushName || "Kuli";
-  await rpgScene(m, sock, [
-    `😴 ${name} istirahat...`,
-    `💤 Zzz... ${Math.floor(Math.random() * 20) + 10}%`,
-    `💤 Zzz... ${Math.floor(Math.random() * 30) + 60}%`,
-    `😊 Segar lagi!`,
-  ], NGULI_ANIM_MS, "nguli");
+  await animHariKerja(m, sock, smallcapsText("「 ✦ Waktu Istirahat ✦ 」"), [
+    "😴 Rebahan sejenak, bantal dijadiin sahabat...",
+    "💤 Zzz... 15 menit berlalu...",
+    "💤 Zzz... 30 menit, mimpi dapat bonus gaji...",
+    "😴 Bales chat doang, terus tidur lagi...",
+    "😊 Alarm bunyi! Bangun segar bugar!",
+  ]);
 
   const fresh = ensureRpg(m);
   fresh.energy = Math.min(fresh.energy + 50, fresh.maxEnergy);
