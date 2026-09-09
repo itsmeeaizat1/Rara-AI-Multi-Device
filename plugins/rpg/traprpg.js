@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "traprpg", alias: ["traprpg", "trap", "jebak"],
+  name: "trap", alias: ["trap", "traprpg", "jebak"],
   category: "rpg", description: "Pasang jebakan di lokasi saat ini",
-  usage: ".traprpg", example: ".traprpg",
+  usage: ".trap", example: ".trap",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 20, energi: 10, isEnabled: true,
 };
 

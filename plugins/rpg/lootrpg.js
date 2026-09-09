@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, getRpgData, addItem } from "../../src/lib/nova-rpg-
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "lootrpg", alias: ["lootrpg", "loot", "ramtas"],
+  name: "loot", alias: ["loot", "lootrpg", "ramtas"],
   category: "rpg", description: "Loot item dari musuh yang mati (reply target)",
-  usage: ".lootrpg (reply target)", example: ".lootrpg (reply pesan target)",
+  usage: ".loot (reply target)", example: ".loot (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 5, isEnabled: true,
 };
 async function handler(m, { sock }) {

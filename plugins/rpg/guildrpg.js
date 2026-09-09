@@ -10,12 +10,12 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "guildrpg",
-  alias: ["guildrpg", "guild", "clanrpg"],
+  name: "guild",
+  alias: ["guild", "guildrpg", "clanrpg"],
   category: "rpg",
   description: "Sistem guild RPG — buat, join, leave, info guild",
-  usage: ".guildrpg <create|join|leave|list|info> [nama/id]",
-  example: ".guildrpg create Nova Hunters",
+  usage: ".guild <create|join|leave|list|info> [nama/id]",
+  example: ".guild create Nova Hunters",
   isOwner: false,
   isPremium: false,
   isGroup: false,

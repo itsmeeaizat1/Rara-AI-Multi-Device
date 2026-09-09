@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "worldeventrpg", alias: ["worldeventrpg", "worldevent"],
+  name: "worldevent", alias: ["worldevent", "worldeventrpg"],
   category: "rpg", description: "Trigger event dunia acak (owner only)",
-  usage: ".worldeventrpg", example: ".worldeventrpg",
+  usage: ".worldevent", example: ".worldevent",
   isOwner: true, isPremium: false, isGroup: false, isPrivate: false, cooldown: 60, energi: 0, isEnabled: true,
 };
 

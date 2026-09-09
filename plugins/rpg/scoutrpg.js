@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "scoutrpg", alias: ["scoutrpg", "scout"],
+  name: "scout", alias: ["scout", "scoutrpg"],
   category: "rpg", description: "Intai lokasi musuh (reply target)",
-  usage: ".scoutrpg (reply target)", example: ".scoutrpg (reply pesan target)",
+  usage: ".scout (reply target)", example: ".scout (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 5, isEnabled: true,
 };
 

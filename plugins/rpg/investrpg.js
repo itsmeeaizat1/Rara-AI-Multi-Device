@@ -10,12 +10,12 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "investrpg",
-  alias: ["investrpg", "invest", "investasi"],
+  name: "invest",
+  alias: ["invest", "investrpg", "investasi"],
   category: "rpg",
   description: "Investasi gold — return 80-120% dalam 1 jam (risk: bisa rugi)",
-  usage: ".investrpg <jumlah>",
-  example: ".investrpg 1000",
+  usage: ".invest <jumlah>",
+  example: ".invest 1000",
   isOwner: false,
   isPremium: false,
   isGroup: false,

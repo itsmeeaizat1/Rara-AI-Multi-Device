@@ -11,12 +11,12 @@ import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "duelrpg",
-  alias: ["duelrpg", "pvp", "duel"],
+  name: "duel",
+  alias: ["duel", "duelrpg", "pvp"],
   category: "rpg",
   description: "Duel PvP melawan player lain untuk EXP dan Gold",
-  usage: ".duelrpg @tag",
-  example: ".duelrpg @user",
+  usage: ".duel @tag",
+  example: ".duel @user",
   isOwner: false,
   isPremium: false,
   isGroup: true,

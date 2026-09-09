@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "reviverpg", alias: ["reviverpg", "revive", "bangkit"],
+  name: "revive", alias: ["revive", "reviverpg", "bangkit"],
   category: "rpg", description: "Bangkit dari kematian (biaya 200 gold)",
-  usage: ".reviverpg", example: ".reviverpg",
+  usage: ".revive", example: ".revive",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 

@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.j
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "partyrpg", alias: ["partyrpg", "party", "tim"],
+  name: "party", alias: ["party", "partyrpg", "tim"],
   category: "rpg", description: "Kelola party RPG (lihat/tambah anggota via reply)",
-  usage: ".partyrpg (atau reply untuk add)", example: ".partyrpg",
+  usage: ".party (atau reply untuk add)", example: ".party",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 5, isEnabled: true,
 };
 async function handler(m, { sock }) {

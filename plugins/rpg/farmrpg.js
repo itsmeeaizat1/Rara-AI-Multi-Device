@@ -5,12 +5,12 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "farmrpg",
-  alias: ["farmrpg", "farm", "kebun"],
+  name: "farm",
+  alias: ["farm", "farmrpg", "kebun"],
   category: "rpg",
   description: "Farming system — tanam, panen, jual hasil tani",
-  usage: ".farmrpg (cek kebun)\n.farmrpg plant <crop> (tanam)\n.farmrpg harvest (panen)\n.farmrpg shop (beli benih)",
-  example: ".farmrpg plant wortel",
+  usage: ".farm (cek kebun)\n.farm plant <crop> (tanam)\n.farm harvest (panen)\n.farm shop (beli benih)",
+  example: ".farm plant wortel",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 1, isEnabled: true,
 };

@@ -9,12 +9,12 @@ import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "bankrpg",
-  alias: ["bankrpg", "bank"],
+  name: "bank",
+  alias: ["bank", "bankrpg"],
   category: "rpg",
   description: "Bank RPG — simpan/tarik gold dengan bunga 5% harian",
-  usage: ".bankrpg <nabung|tarik|cek> [jumlah]",
-  example: ".bankrpg nabung 500",
+  usage: ".bank <nabung|tarik|cek> [jumlah]",
+  example: ".bank nabung 500",
   isOwner: false,
   isPremium: false,
   isGroup: false,

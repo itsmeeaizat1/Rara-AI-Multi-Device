@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "roleplayrpg", alias: ["roleplayrpg", "roleplay", "rp"],
+  name: "roleplay", alias: ["roleplay", "roleplayrpg", "rp"],
   category: "rpg", description: "Ekspresikan aksi roleplay",
-  usage: ".roleplayrpg <aksi>", example: ".roleplayrpg aku memeluk naga yang terluka",
+  usage: ".roleplay <aksi>", example: ".roleplay aku memeluk naga yang terluka",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 

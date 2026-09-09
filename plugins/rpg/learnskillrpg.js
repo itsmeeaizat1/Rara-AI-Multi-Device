@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.j
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "learnskillrpg", alias: ["learnskillrpg", "learnskill", "belajarskill"],
+  name: "learnskill", alias: ["learnskill", "learnskillrpg", "belajarskill"],
   category: "rpg", description: "Pelajari skill baru (biaya 200 gold)",
-  usage: ".learnskillrpg <skill>", example: ".learnskillrpg fireball",
+  usage: ".learnskill <skill>", example: ".learnskill fireball",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 10, isEnabled: true,
 };
 const SKILLS = ["fireball", "heal", "iceblast", "thunderstrike", "shadowveil", "holyshield"];

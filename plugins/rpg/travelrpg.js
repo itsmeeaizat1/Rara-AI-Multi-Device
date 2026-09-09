@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "travelrpg", alias: ["travelrpg", "travel"],
+  name: "travel", alias: ["travel", "travelrpg"],
   category: "rpg", description: "Pindah ke lokasi RPG",
-  usage: ".travelrpg <lokasi>", example: ".travelrpg hutan",
+  usage: ".travel <lokasi>", example: ".travel hutan",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 5, isEnabled: true,
 };
 

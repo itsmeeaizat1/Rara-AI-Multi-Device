@@ -10,12 +10,12 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "jobrpg",
-  alias: ["jobrpg", "setclass"],
+  name: "job",
+  alias: ["job", "jobrpg", "setclass"],
   category: "rpg",
   description: "Lihat/ganti job class dan kelola skill RPG",
-  usage: ".jobrpg <list|change <job|skill <list|unlock|upgrade>>",
-  example: ".jobrpg list",
+  usage: ".job <list|change <job|skill <list|unlock|upgrade>>",
+  example: ".job list",
   isOwner: false,
   isPremium: false,
   isGroup: false,
