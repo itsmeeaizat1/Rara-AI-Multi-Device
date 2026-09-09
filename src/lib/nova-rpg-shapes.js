@@ -115,12 +115,14 @@ export async function shapeDagang(m, sock, from = "Desa Asal", to = "Desa Tujuan
 // sampai tumbang. Bukan bar, bukan jarak, bukan kedalaman.
 // ══════════════════════════════════════════════════
 export async function shapeNebang(m, sock, treeName = "Pohon", treeEmoji = "🌲", delay = SHAPE_ANIM_MS) {
+  const scene = (mid, chips = 0, extra = "") =>
+    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌲🌲${mid}🌲🌲\n${"🪵".repeat(chips)}${extra}`;
   const frames = [
-    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳 berdiri tegak...\n🪓 menandai sisi tebang dulu...`,
-    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳↗ miring 15°\n🪓 AXOKK! serpihan pertama beterbangan!`,
-    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳↘ miring 45°\n🪓 KRAK! inti batang mulai retak!`,
-    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳💥 TIMBERRR!!\n🪓 pohon roboh, burung pada kabur!`,
-    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🪵🪵🪵\n✅ dipotong jadi kayu siap angkut!`,
+    scene("🌳") + "\n\n🪓 berdiri tegak... menandai sisi tebang dulu...",
+    scene("🌳", 2) + "\n\n🪓 AXOKK! serpihan pertama beterbangan!",
+    scene("🌳", 4, " 💥") + "\n\n🪓 KRAK! inti batang mulai retak!",
+    scene("💥", 5, " ⤵") + "\n\n🪓 TIMBERRR!! 🐦💨 burung pada kabur!",
+    scene("🪵🪵🪵", 6, " ✅") + "\n\n🪓 dipotong jadi kayu siap angkut!",
   ];
   await morphCore(m, sock, frames, delay);
 }
@@ -348,17 +350,18 @@ export async function shapeHuntwild(m, sock, animalEmoji = "🦌", delay = SHAPE
 // tentuin tahun & emoji landing.
 // ══════════════════════════════════════════════════
 export async function shapeTimetravel(m, sock, era = { emoji: "🦖", name: "Era Prasejarah", year: "66.000.000 SM" }, delay = SHAPE_ANIM_MS) {
-  const jumps = [
-    { from: "2026", to: "1900", note: "cahaya mulai memelintir!" },
-    { from: "1900", to: era.year, note: "loncatan besar... hampir sampai!" },
-  ];
+  const H = () => hdr("Lorong Waktu");
+  // streak warp kedip: ✦ dan ✧ ketukar posisi tiap frame = kecepatan warp
+  const warp = (flip, n = 10) => {
+    const a = flip ? "✧" : "✦", b = flip ? "✦" : "✧";
+    return Array.from({ length: n }, (_, i) => (i % 2 ? b : a)).join(" ");
+  };
   const frames = [
-    `${hdr("Lorong Waktu")}\n\n🌀 ◈◈◈◈◈◈\n\nmesin waktu menyala... tahun 2026`,
+    `${H()}\n\n${warp(false)}\n\n🌀 ◈◈◈◈◈◈\n🌀 mesin waktu menyala... tahun 2026\n\n${warp(true)}`,
+    `${H()}\n\n${warp(true)}\n\n🌀 2026 ⇢ 1900\n💫 cahaya mulai memelintir!\n\n${warp(false)}`,
+    `${H()}\n\n${warp(false)}\n\n🌀 1900 ⇢ ${era.year}\n💫 loncatan besar... hampir sampai!\n\n${warp(true)}`,
+    `${H()}\n\n${warp(true)}\n\n${era.emoji} ${era.name.toUpperCase()}\n🛬 mendarat! kamu sampai ${era.year} 🎉\n\n${warp(false)}`,
   ];
-  for (const j of jumps) {
-    frames.push(`${hdr("Lorong Waktu")}\n\n🌀 ${j.from} ⇢ ${j.to}\n\n${j.note}`);
-  }
-  frames.push(`${hdr("Lorong Waktu")}\n\n${era.emoji} ${era.name.toUpperCase()}\n\nmendarat! kamu sampai ${era.year} 🎉`);
   await morphCore(m, sock, frames, delay);
 }
 
@@ -376,13 +379,20 @@ export async function shapeRanger(m, sock, task = { emoji: "⚔️", name: "Defe
     "Gather Intel": "📜 jejak pasukan musuh ditemukan!",
   };
   const contact = CONTACT[task.name] || `${task.emoji} titik tugas terkonfirmasi!`;
+  // blip ◉ nyweep slot-per-slot tiap frame (radar muter kiri→kanan)
+  const sweep = (pos) => {
+    const W = 8, slots = new Array(W).fill("·");
+    slots[pos] = "◉";
+    return `📡 ${slots.join(" ")}`;
+  };
   const frames = [
-    `${H()}\n\n📡 · · · · ·\n\nradar menyala... memindai zona patroli`,
-    `${H()}\n\n📡 · · ◉ · ·\n\nsinyal terdeteksi! menuju titik kontak`,
-    `${H()}\n\n📡 · · ◉ · ·\n\n${contact}`,
+    `${H()}\n\n${sweep(0)}\n\nradar menyala... memindai zona patroli`,
+    `${H()}\n\n${sweep(2)}\n\ntitik kecil muncul di layar...`,
+    `${H()}\n\n${sweep(4)}\n\nsinyal terdeteksi! menuju titik kontak`,
+    `${H()}\n\n${sweep(6)}\n\n${contact}`,
     success
-      ? `${H()}\n\n🎯 · · ✅ · ·\n\nTUGAS SELESAI!`
-      : `${H()}\n\n💨 · · ◌ · ·\n\nsinyal hilang...`,
+      ? `${H()}\n\n📡 · · · ✅ · · · ·\n\nTUGAS SELESAI! sinyal berhenti.`
+      : `${H()}\n\n📡 · · ◌ ◌ · · · ·\n\nsinyal hilang...`,
   ];
   await morphCore(m, sock, frames, delay);
 }
