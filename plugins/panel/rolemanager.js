@@ -33,16 +33,17 @@ ROLES.forEach(role => {
     if (role === 'owner') {
         allCommands.push('addownerpanel', 'delownerpanel', 'listownerpanel')
     } else {
+        allCommands.push(`add${role}panel`) // .addceopanel / .addresellerpanel (kata "panel" beda format arg)
         allCommands.push(`add${role}`, `del${role}`, `list${role}`)
     }
 })
 
 const pluginConfig = {
     name: allCommands,
-    alias: legacyAliases,
+    alias: [...legacyAliases, 'addresspanel'],
     category: 'panel',
     description: 'Kelola owner/ceo/reseller per server',
-    usage: '.addownerpanelv1 @user atau .addownerpanel @user atau .listceov2',
+    usage: '.addceopanel 62123456789 1 atau .addresspanel @user 1 (angka terakhir = server)',
     example: '.addownerpanel @user',
     isOwner: false,
     isPremium: false,
@@ -89,8 +90,39 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
+// .addceopanel / .addresspanel — format owner 10 Sep 2026: <nomor|@user|reply> <serverN>
+// Contoh: .addceopanel 62123456789 1  (1 = server pertama v1)
+// Reply/tag @user tanpa nyebutin nomor juga bisa: .addceopanel @user 1
+function parsePanelAdd(m) {
+    const cmd = String(m.command || '').toLowerCase()
+    if (!/^(addceopanel|addresellerpanel|addresspanel)$/.test(cmd)) return null
+    const role = cmd === 'addceopanel' ? 'ceo' : 'reseller'
+
+    let server = 'v1'
+    const args = [...(m.args || [])]
+    const lastArg = String(args[args.length - 1] || '').trim()
+    const sm = lastArg.match(/^v?(\d{1,3})$/i)
+    if (sm) {
+        const num = parseInt(sm[1], 10)
+        if (num >= 1 && num <= 100) {
+            server = 'v' + num
+            args.pop()
+        }
+    }
+
+    let targetUser = null
+    if (m.quoted?.sender) {
+        targetUser = getNumber(m.quoted.sender)
+    } else if (m.mentionedJid?.length > 0) {
+        targetUser = getNumber(m.mentionedJid[0])
+    } else {
+        targetUser = args.map(a => String(a).replace(/[^0-9]/g, '')).find(n => n.length >= 7) || null
+    }
+    return { action: 'add', role, server, targetUser }
+}
+
 function handler(m, { sock }) {
-    const parsed = parseCommand(m.command, m.args)
+    const parsed = parsePanelAdd(m) || parseCommand(m.command, m.args)
     if (!parsed) {
         return m.reply(claraWrap("rolemanager", `❌ Command tidak valid.`))
     }
@@ -122,20 +154,27 @@ function handler(m, { sock }) {
             `Hirarki: Owner > CEO > Reseller`))
     }
     
-    let targetUser = null
-    if (m.quoted?.sender) {
-        targetUser = getNumber(m.quoted.sender)
-    } else if (m.mentionedJid?.length > 0) {
-        targetUser = getNumber(m.mentionedJid[0])
-    } else if (m.text?.trim()) {
-        targetUser = m.text.trim().replace(/[^0-9]/g, '')
+    let targetUser = parsed.targetUser || null
+    if (!targetUser) {
+        if (m.quoted?.sender) {
+            targetUser = getNumber(m.quoted.sender)
+        } else if (m.mentionedJid?.length > 0) {
+            targetUser = getNumber(m.mentionedJid[0])
+        } else if (m.text?.trim()) {
+            targetUser = m.text.trim().replace(/[^0-9]/g, '')
+        }
     }
     
     if (!targetUser) {
+        const isPanelAdd = /panel$/.test(m.command || '')
         return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}${m.command} @user\`\n` +
-            `\`${m.prefix}${m.command} 628xxx\`\n` +
-            `Reply pesan user`, "rolemanager")
+            (isPanelAdd
+                ? `\`${m.prefix}${m.command} 62123456789 1\` (angka terakhir = server)\n` +
+                  `\`${m.prefix}${m.command} @user 1\`\n` +
+                  `Reply pesan user + \`${m.prefix}${m.command} 1\``
+                : `\`${m.prefix}${m.command} @user\`\n` +
+                  `\`${m.prefix}${m.command} 628xxx\`\n` +
+                  `Reply pesan user`), "rolemanager")
     }
     
     if (action === 'add') {
