@@ -13,6 +13,7 @@ import {
   getSeasonPreview, formatSeasonMessage, setSock, syncMonitor,
   getGenres, addGenre, removeGenre, previewWatchlist,
   getContentTypes, setContentType, DIGEST_LABELS,
+  setIntervalMenit,
 } from "../../src/lib/nova-auto-anime-notifier.js";
 import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
@@ -21,7 +22,7 @@ const pluginConfig = {
   alias: ["animenotif", "aninotify"],
   category: "anime",
   description: "Auto notifikasi anime terbaru (AniList → Kitsu) — langganan per-chat",
-  usage: ".animenotify <on/off/info/now/season>",
+  usage: ".animenotify <on/off/info/now/season/interval>",
   example: ".animenotify on\n.animenotify season",
   isOwner: false,
   isPremium: false,
@@ -105,6 +106,26 @@ async function handler(m, { sock, args }) {
       return m.reply(novaError(pluginConfig.name, `tipe gak dikenal: ${tipe} — ketik .animenotify info buat daftar tipe`));
     }
     return m.reply(novaSuccess(pluginConfig.name, `tipe *${tipe}* sekarang ${action ? "AKTIF" : "MATI"} — notifikasi terkait ${action ? "bakal masuk" : "gak bakal dikirim"}`));
+  }
+
+  // Interval cek (menit, 5-720) — request owner 9 Sep: "cek tiap 1 jam bisa diset"
+  if (sub === "interval" || sub === "jadwal") {
+    const val = Number(args?.[1]);
+    const st = getStatus();
+    if (!val) {
+      return m.reply(
+        `「 ✦ ${pluginConfig.name.toUpperCase()} — INTERVAL ✦ 」\n\n` +
+        `Interval cek sekarang: *tiap ${st.intervalMenit} menit*\n` +
+        `Mode otomatis: begitu ada anime/episode baru terdeteksi, langsung dikirim ke subscriber (dedup — gak dobel).\n\n` +
+        `Atur: *.animenotify interval <menit>* (5–720)\n` +
+        `Contoh: *.animenotify interval 60* → cek tiap 1 jam`
+      );
+    }
+    const res = setIntervalMenit(val);
+    if (!res) {
+      return m.reply(novaError(pluginConfig.name, "interval harus 5–720 menit (contoh: .animenotify interval 60)"));
+    }
+    return m.reply(novaSuccess(pluginConfig.name, `interval cek sekarang *tiap ${res} menit* — monitor di-restart, info baru langsung dikirim begitu terdeteksi`));
   }
 
   if (sub === "now") {

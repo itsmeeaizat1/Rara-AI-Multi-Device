@@ -43,23 +43,28 @@ const anime = (id, opts = {}) => ({
   externalLinks: [{ site: "MyAnimeList", url: `https://myanimelist.net/anime/${id}` }, { site: "AniList", url: `https://anilist.co/anime/${id}` }],
 });
 
-// ─── 1. formatNewAnimeCard: caption lengkap + link MAL ───
+// ─── 1. formatNewAnimeCard: persis contoh owner (score mentah + readmore + footer) ───
+const RM = "\u200E".repeat(4001);
 const a1 = N.formatNewAnimeCard({
   id: "al-99", title: "Frieren S2", format: "TV", status: "RELEASING", startDate: "10/9/2026",
-  score: "8.5", genres: ["Action", "Fantasy"], studios: "Madhouse",
-  description: "Deskripsi panjang ".repeat(40),
+  score: 85, genres: ["Action", "Fantasy"], studios: "Madhouse",
+  description: "<b>Deskripsi</b> panjang " + "isi ".repeat(200),
   nextEpisode: { episode: 5, timeUntil: 30 },
   malUrl: "https://myanimelist.net/anime/99", pageUrl: "https://anilist.co/anime/99",
-});
-check("1a. caption anime baru: judul + format|status", a1?.includes("📺 *Frieren S2*") && a1.includes("TV | RELEASING"));
-check("1b. caption: score + studio + countdown episode", a1.includes("⭐ Score: 8.5") && a1.includes("Madhouse") && a1.includes("⏳ Episode 5") && a1.includes(" rilis dalam ~30 jam"));
-check("1c. caption: 🔗 link MAL (dari externalLinks)", a1.includes("🔗 https://myanimelist.net/anime/99"));
+}, { index: 1, total: 3, source: "AniList" });
+check("1a. header ANIME BARU RILIS + nomor 1. *judul*", a1?.startsWith("🎌 ANIME BARU RILIS!") && a1.includes("1. *Frieren S2*"));
+check("1b. 📺 TV | RELEASING + 📅 + ⭐ Score: 85 (mentah, bukan 8.5)", a1.includes("   📺 TV | RELEASING") && a1.includes("   📅 10/9/2026") && a1.includes("   ⭐ Score: 85"));
+check("1c. 🎭 genre + 🏢 studio + 🔗 link MAL", a1.includes("   🎭 Action, Fantasy") && a1.includes("   🏢 Madhouse") && a1.includes("   🔗 https://myanimelist.net/anime/99"));
+check("1d. ℅readmore: teks U+200E×4001 nyambung sebelum deskripsi full", a1.includes(`   📖 Deskripsi:${RM}\n\n`) && a1.includes("Deskripsi panjang isi"));
+check("1e. footer: 📌 3 anime baru ditambahkan (ketersediaan sumber)", a1.trimEnd().endsWith("📌 3 anime baru ditambahkan (ketersediaan sumber AniList: 3)"));
 
-// ─── 2. formatEpisodeCard: countdown jam & hari + link ───
-const eJam = N.formatEpisodeCard({ id: "al-1", title: "One Piece", episode: 1123, timeUntil: 20, score: "9.0", genres: "Action, Adventure", studios: "Toei", pageUrl: "https://anilist.co/anime/1" });
-const eHari = N.formatEpisodeCard({ id: "al-2", title: "Bleach", episode: 30, timeUntil: 72, score: "8.0", genres: "Action", studios: "Pierrot", malUrl: "https://myanimelist.net/anime/2", pageUrl: "x" });
-check("2a. card episode: ~20 jam (bukan hari)", eJam.includes("Episode 1123 rilis dalam ~20 jam"));
-check("2b. card episode: ~3 hari (konversi >24 jam)", eHari.includes("Episode 30 rilis dalam ~3 hari") && eHari.includes("🔗 https://myanimelist.net/anime/2"));
+// ─── 2. formatEpisodeCard: countdown jam/hari + readmore + footer total ───
+const eJam = N.formatEpisodeCard({ id: "al-1", title: "One Piece", episode: 1123, timeUntil: 20, score: 90, genres: "Action, Adventure", studios: "Toei", description: "Deskripsi episode panjang", pageUrl: "https://anilist.co/anime/1" }, { index: 1, total: 2, source: "AniList" });
+const eHari = N.formatEpisodeCard({ id: "al-2", title: "Bleach", episode: 30, timeUntil: 72, score: 80, genres: "Action", studios: "Pierrot", description: "", malUrl: "https://myanimelist.net/anime/2", pageUrl: "x" }, { index: 2, total: 2 });
+check("2a. card episode: ~20 jam (bukan hari) + score mentah", eJam.includes("1. *One Piece*") && eJam.includes("   📺 Episode 1123 rilis dalam ~20 jam") && eJam.includes("   ⭐ 90 | 🎭 Action, Adventure"));
+check("2b. card episode: ~3 hari (konversi >24 jam) + 🔗 MAL", eHari.includes("   📺 Episode 30 rilis dalam ~3 hari") && eHari.includes("   🔗 https://myanimelist.net/anime/2"));
+check("2c. card episode: deskripsi di balik readmore", eJam.includes(`   📖 Deskripsi:${RM}`) && eJam.includes("Deskripsi episode panjang"));
+check("2d. footer episode: 📌 Total 2 episode baru (ketersediaan sumber)", eJam.trimEnd().endsWith("📌 Total 2 episode baru (ketersediaan sumber AniList: 2)"));
 
 // ─── 3. diffWatchlist: episode baru bawa malUrl + trailerThumb ───
 // bentuk item NORMALISASI (output normAnilist) — diffWatchlist makai ini
@@ -94,8 +99,8 @@ check("5a. anime baru + episode baru dikirim per-anime: 3 IMAGE card (bukan batc
 check("5b. card: thumbnail banner = buffer gambar + sourceUrl anilist", cards.length === 3 && cards.every((s) => s.content.contextInfo.externalAdReply.sourceUrl.includes("anilist.co/anime/")));
 const capNew = imgs.find((s) => s.content.caption?.includes("New Anime 3"));
 const capEp = imgs.find((s) => s.content.caption?.includes("ANIME BARU") === false && s.content.caption?.includes("Episode 2"));
-check("5c. caption card anime baru: judul + 🔗 MAL", capNew?.content?.caption?.includes("🔗 https://myanimelist.net/anime/3") && capNew.content.caption.includes("📺 *New Anime 3*"));
-check("5d. card episode: image + caption countdown episode 2", !!capEp && capEp.content.caption.includes("Episode 2 rilis dalam ~20 jam"));
+check("5c. caption card anime baru: nomor + judul + 🔗 MAL + score mentah", capNew?.content?.caption?.includes("1. *New Anime 3*") && capNew.content.caption.includes("🔗 https://myanimelist.net/anime/3") && capNew.content.caption.includes("⭐ Score: 80") && capNew.content.caption.includes("📌 1 anime baru ditambahkan"));
+check("5d. card episode: image + countdown + readmore + footer total 2", !!capEp && capEp.content.caption.includes("   📺 Episode 2 rilis dalam ~20 jam") && capEp.content.caption.includes("📌 Total 2 episode baru"));
 check("5e. hasil runCheck: newAnime 1 + newEpisodes 2", r2.newAnime === 1 && r2.newEpisodes === 2, JSON.stringify(r2));
 
 // ─── 6. cap anti-spam ala script: max 3 anime + 5 episode per check ───
@@ -131,6 +136,12 @@ await N.runCheck();
 const fb = sent.find((s) => s.content?.text?.includes("Anime 40"));
 check("8a. download gambar gagal → fallback text card, fitur gak crash", !!fb && fb.content.text.includes("🔗 https://myanimelist.net/anime/40"));
 globalThis.__IMG_DOWN__ = false;
+
+// ─── 10. knob interval: .animenotify interval <menit> (5–720) ───
+check("10a. interval invalid (2, 800, abc) ditolak", N.setIntervalMenit(2) === null && N.setIntervalMenit(800) === null && N.setIntervalMenit("abc") === null);
+const iv = N.setIntervalMenit(60);
+const st10 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "autoanimenotifier.json"), "utf8"));
+check("10b. interval 60 menit tersimpan & kebaca status", iv === 60 && st10.intervalMenit === 60 && N.getStatus().intervalMenit === 60);
 
 // ─── 9. cache limit: seenIds dibatasi 300 (ala script 500→300) ───
 const st9 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "autoanimenotifier.json"), "utf8"));
