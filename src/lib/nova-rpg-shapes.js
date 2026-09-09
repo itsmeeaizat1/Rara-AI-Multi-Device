@@ -210,3 +210,30 @@ export async function shapeDungeon(m, sock, stages = 3, hasKey = false, delay = 
   }
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🌱 BERKEBON — KEBON TUMBUH (khas berkebon, batch #8)
+// Bentuk: SIKLUS HIDUP TANAMAN — mode "tanam" (cangkul →
+// benih → tunas) & "panen" (tunas → tumbuh → bunga →
+// matang → dipanen). Pertumbuhan tanaman = progres.
+// ══════════════════════════════════════════════════
+export async function shapeBerkebon(m, sock, mode = "tanam", cropName = "Tanaman", delay = SHAPE_ANIM_MS) {
+  const row = (mid) => `⬛⬛${mid}⬛⬛`;
+  const frames =
+    mode === "tanam"
+      ? [
+          { viz: row("🪓"), note: "mencangkul tanah, bikin alur tanaman..." },
+          { viz: row("🕳️"), note: "menanam benih " + cropName + "..." },
+          { viz: row("💧"), note: "menyiram benih dengan penuh kasih..." },
+          { viz: row("🌱"), note: "tunas muncul! selamat tumbuh ya 🌱" },
+        ]
+      : [
+          { viz: row("🌱"), note: "tunas muda merekah..." },
+          { viz: row("🌿"), note: "tanaman makin subur & daun lebat!" },
+          { viz: row("🌸"), note: "berbunga! tinggal menunggu matang..." },
+          { viz: row("🌾"), note: "MATANG SEMPURNA! siap dipanen!" },
+          { viz: row("✂️"), note: "PANEN! hasil kebon ditarik ke keranjang 🧺" },
+        ];
+  const title = mode === "tanam" ? "Menanam Benih" : "Kebon Tumbuh";
+  await morphCore(m, sock, frames.map((f) => `${hdr(title)}\n\n${f.viz}\n\n${f.note}`), delay);
+}
