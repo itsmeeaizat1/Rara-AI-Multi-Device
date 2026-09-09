@@ -5,10 +5,12 @@ import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, useMana,
   addItem, getEquipStats, getRandomMonster, rollDrop, ITEM_DB,
   checkCooldown, setCooldown, formatTime,
-  getCash} from "../../src/lib/nova-rpg-service.js";
+  getCash, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { shapeDungeon } from "../../src/lib/nova-rpg-shapes.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -31,12 +33,54 @@ const DG_ENERGY = 20;
 const DG_COOLDOWN = 10 * 60 * 1000; // 10 menit
 const DG_MIN_LEVEL = 10;
 
+// ─── KHAS DUNGEON: 🗿 Relik Kegelapan & 🕯️ Lentera Abadi ───
+const TOOL = {
+  name: "🕯️ Lentera Abadi", dbKey: "dungeonTool",
+  RELIC_CHANCE: 25,           // % per stage clear (full clear dijamin +2)
+  relicCost: (lv) => 2 * (lv + 1),
+  rpCost: (lv) => 50000 * (lv + 1),
+  rewardBonus: (lv) => 0.1 * lv,  // EXP & gold dungeon +10% per level
+};
+const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { level: 0, spent: 0, relics: 0 });
+
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(novaRpgBox("dungeon", "RPG belum siap. Ketik .daftar dulu.", "error"));
+
+    // ── subcommand khas dungeon: lentera status & upgrade ──
+    const sub = (m.args?.[0] || "").toLowerCase();
+    const tool = getTool(m.sender);
+    const lv = tool.level || 0;
+
+    if (sub === "lentera" || sub === "status") {
+      return m.reply(novaRpgBox("dungeon",
+        `🕯️ LENTERA ABIADI KAMU\n\n` +
+        `Level : *Lv.${lv}*\n✨ Bonus EXP dungeon : +${10 * lv}%\n💰 Bonus gold dungeon : +${10 * lv}%\n🗿 Relik Kegelapan : ${tool.relics || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
+        `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.relicCost(lv)}x Relik + ${formatRp(TOOL.rpCost(lv))}\nKetik: .dungeon upgrade`));
+    }
+
+    if (sub === "upgrade") {
+      const needRelic = TOOL.relicCost(lv);
+      const needRp = TOOL.rpCost(lv);
+      if ((tool.relics || 0) < needRelic) {
+        return m.reply(novaRpgBox("dungeon",
+          `🗿 Upgrade Lentera ke Lv.${lv + 1} butuh:\n\n• Relik Kegelapan : ${needRelic}x (punya ${tool.relics || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Relik didapat dari .dungeon sendiri — 25% per stage clear, full clear dijamin +2!`, "warn"));
+      }
+      if (!spendCash(m, needRp)) {
+        return m.reply(novaRpgBox("dungeon", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+      }
+      const fresh = getTool(m.sender);
+      fresh.relics = (fresh.relics || 0) - needRelic;
+      fresh.level = (fresh.level || 0) + 1;
+      fresh.spent = (fresh.spent || 0) + needRp;
+      getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
+      await m.react("🐣");
+      return m.reply(novaRpgBox("dungeon",
+        `🕯️ LENTERA UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n✨ Bonus EXP dungeon : +${10 * (lv + 1)}%\n💰 Bonus gold dungeon : +${10 * (lv + 1)}%\n\n🗿 Material : −${needRelic} Relik Kegelapan\n💵 Biaya : ${formatRp(needRp)}`, "success"));
+    }
 
     if (rpg.level < DG_MIN_LEVEL) {
       await m.react("🚫");
@@ -64,8 +108,9 @@ async function handler(m, { sock }) {
 
     useEnergy(m, DG_ENERGY, sock);
 
-    // Animation: enter dungeon
-    await animDungeon(m, sock, hasKey ? 5 : 3);
+    // Animasi khas dungeon: TURUN KE KEDALAMAN (descent B1→Bn, lentera makin redup)
+    const stageCount = hasKey ? 5 : 3;
+    await shapeDungeon(m, sock, stageCount, hasKey);
 
     // Dungeon: 3 stage dengan monster makin kuat
     const equip = getEquipStats(m);
@@ -78,7 +123,6 @@ async function handler(m, { sock }) {
     let stagesCleared = 0;
 
     const baseLevel = Math.max(rpg.level, 10);
-    const stageCount = hasKey ? 5 : 3; // Kunci = 5 stage, tanpa kunci = 3
 
     for (let stage = 1; stage <= stageCount; stage++) {
       await m.reply(`🏰 Stage ${stage}/${stageCount} — ${hasKey ? "🔑" : ""} Musuh muncul...`);
@@ -107,8 +151,8 @@ async function handler(m, { sock }) {
 
       if (monsterHp <= 0) {
         stagesCleared++;
-        const sExp = Math.floor(monster.exp * (1 + stage * 0.5) * (1 + (rpg.expBonus || 0) / 100));
-        const sGold = Math.floor(monster.gold * (1 + stage * 0.5) * (1 + (rpg.goldFind || 0) / 100));
+        const sExp = Math.floor(monster.exp * (1 + stage * 0.5) * (1 + (rpg.expBonus || 0) / 100) * (1 + TOOL.rewardBonus(lv)));
+        const sGold = Math.floor(monster.gold * (1 + stage * 0.5) * (1 + (rpg.goldFind || 0) / 100) * (1 + TOOL.rewardBonus(lv)));
         const sDrops = rollDrop(monster.drops || [], rpg.luck || 0, rpg.dropBonus || 0);
 
         totalExp += sExp;
@@ -140,11 +184,22 @@ async function handler(m, { sock }) {
       addGold(m, bonusGold);
       addExp(m, bonusExp);
       bossBonusLines = [
-        "",
         "👑 Boss Bonus — semua stage clear!",
-        `│ • 💰 Bonus gold : +${bonusGold}`,
-        `│ • ✨ Bonus EXP : +${bonusExp}`,
+        `💰 Bonus gold : +${bonusGold}`,
+        `✨ Bonus EXP : +${bonusExp}`,
       ];
+    }
+
+    // 🗿 Relik Kegelapan — item khas dungeon (25% per stage clear, full clear +2)
+    let relicGain = 0;
+    for (let i = 0; i < stagesCleared; i++) {
+      if (Math.random() * 100 < TOOL.RELIC_CHANCE) relicGain++;
+    }
+    if (stagesCleared === stageCount) relicGain += 2;
+    if (relicGain > 0) {
+      const freshTool = getTool(m.sender);
+      freshTool.relics = (freshTool.relics || 0) + relicGain;
+      getDatabase().setPlayerData(m.sender, TOOL.dbKey, freshTool);
     }
 
     // Save HP
@@ -158,31 +213,20 @@ async function handler(m, { sock }) {
       for (const d of totalDrops) {
         grouped[d.item] = (grouped[d.item] || 0) + d.qty;
       }
-      dropLines = Object.entries(grouped).map(([item, qty]) => `│ • 📦 Drop : +${qty}x ${ITEM_DB[item]?.name || item}`);
+      dropLines = Object.entries(grouped).map(([item, qty]) => `📦 Drop : +${qty}x ${ITEM_DB[item]?.name || item}`);
     }
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
-      title: "dungeon", icon: "🏰",
-      flavor: stagesCleared === stageCount
-        ? "🏆 *DUNGEON DIBERSIHKAN!*"
-        : stagesCleared > 0
-        ? "⚔️ *EKSPEDISI SELESAI!*"
-        : "💀 *GAGAL DI DUNGEON!*",
-      body: [
-        `│ • 🏰 Stage clear : ${stagesCleared}/${stageCount}`,
-        `│ • ${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}`,
-        `│ • ✨ EXP : +${totalExp}`,
-        `│ • 💰 Gold : +${totalGold}`,
-        `│ • 💵 Uang : Rp ${getCash(m)}`,
-        ...dropLines,
-        ...bossBonusLines,
-        "",
-        `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
-        `│ • ⚡ Energi : ${rpg.energy}/${rpg.maxEnergy}`,
-      ].join("\n"),
-      cta: gameCTA("dungeon"),
-    }));
+    return m.reply(novaRpgBox("dungeon",
+      `${stagesCleared === stageCount ? "🏆 DUNGEON DIBERSIHKAN!" : stagesCleared > 0 ? "⚔️ EKSPEDISI SELESAI!" : "💀 GAGAL DI DUNGEON!"}\n\n` +
+      `🏰 Stage clear : ${stagesCleared}/${stageCount}\n` +
+      `${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n\n` +
+      `✨ EXP : +${totalExp}\n💰 Gold : +${totalGold}\n💵 Uang : Rp ${getCash(m)}\n` +
+      `${dropLines.join("\n")}\n` +
+      (relicGain ? `🗿 Relik Kegelapan : +${relicGain}x (total ${getTool(m.sender).relics}x)\n` : "") +
+      `${bossBonusLines.length ? "\n" + bossBonusLines.join("\n") + "\n" : ""}\n` +
+      `❤️ HP : ${newHp}/${rpg.maxHp}\n⚡ Energi : ${rpg.energy}/${rpg.maxEnergy}\n` +
+      (lv ? `🕯️ Lentera : Lv.${lv} (+${10 * lv}% EXP & gold dungeon)` : `💡 Lentera bisa diupgrade: .dungeon lentera`)));
   } catch (err) {
     console.error("dungeon error:", err);
     await m.react("❌");
