@@ -24,6 +24,7 @@ import { enableAutoReport, disableAutoReport, getReportStatus } from '../../src/
 import { enableAutoBirthday, disableAutoBirthday, getBirthdayStatus } from '../../src/lib/nova-auto-birthday.js'
 import { getBmkgStatus, updateBmkgSettings, startBmkgJobs, stopBmkgJobs } from '../../src/lib/nova-bmkg-scheduler.js'
 import { getBencanaAutoEnabled, setBencanaAutoEnabled } from '../../src/lib/nova-bencana.js'
+import { getStatus as getStatusWebWatch, setEnabled as setWebWatchEnabled } from '../../src/lib/nova-webwatch.js'
 import { isEnabled as isAnimeNotifierOn, setEnabled as setAnimeNotifierOn } from '../../src/lib/nova-auto-anime-notifier.js'
 import { isEnabled as isMovieNotifierOn, setEnabled as setMovieNotifierOn } from '../../src/lib/nova-movie-notifier.js'
 import { loadState as loadWinbuState, saveState as saveWinbuState, startAutoCheck as startWinbuCheck, stopAutoCheck as stopWinbuCheck, isRunning as isWinbuRunning } from '../../src/lib/nova-auto-anime.js'
@@ -234,6 +235,13 @@ const AUTO_REGISTRY = {
     // buat baca .enabled/.schedules/.timezone) — sebelumnya dipanggil tanpa
     // argumen → "Cannot read properties of undefined (reading 'enabled')".
     toggle: (on) => { const s = updateBmkgSettings((cur) => ({ ...cur, enabled: on })); on ? startBmkgJobs(s) : stopBmkgJobs() },
+  },
+  webwatch: {
+    label: "Web Watcher (Pantau URL Berubah)",
+    // Status = flag global monitor; subscriber/URL TETAP tersimpan pas OFF.
+    getStatus: () => { try { return getStatusWebWatch().enabled } catch { return true } },
+    // OFF = monitor pause (interval clear); ON = syncMonitor nyala lagi kalau ada watch.
+    toggle: (on) => { setWebWatchEnabled(on) },
   },
   bencanawatch: {
     label: "Auto Alert Bencana (Bencanawatch)",

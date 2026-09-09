@@ -411,6 +411,7 @@ async function main() {
           { name: "NovaWeb", fn: () => import("./src/lib/nova-web-server.js").then(m => m.initNovaWebServer?.(sock)) },
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
           { name: "Family100Harvest", fn: () => import("./src/lib/nova-family100-harvest.js").then(m => m.initAutoRefresh?.(sock)) },
+          { name: "WebWatch", fn: () => import("./src/lib/nova-webwatch.js").then(m => m.initWebWatch?.(sock)) },
           { name: "APICheck", fn: () => import("./plugins/owner/autoapicheck.js").then(m => m.startMonitor?.(sock)) },
           { name: "PluginHealth", fn: () => import("./plugins/owner/autoplugin.js").then(m => m.startPluginMonitor?.(sock)) },
           { name: "WeeklyReport", fn: () => import("./plugins/owner/autoweeklyreport.js").then(m => m.startWeeklyReport?.(sock)) },
