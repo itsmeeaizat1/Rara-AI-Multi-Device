@@ -4,11 +4,12 @@
 import {
   ensureRpg, addExp, addGold, useEnergy, addItem,
   checkCooldown, setCooldown, formatTime,
-  bumpPlayerStat,
+  bumpPlayerStat, getCash, spendCash, formatRp,
 } from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animGather } from "../../src/lib/nova-rpg-anim.js";
+import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { shapeSampah } from "../../src/lib/nova-rpg-shapes.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -38,12 +39,52 @@ const SAMPAH_TYPES = [
   { name: "Elektronik Rusak", gold: 15, exp: 20, drop: "eWaste", chance: 10 },
 ];
 
+// ─── KHAS SAMPAH: ♻️ Kepingan Daur Ulang & 🚚 Gerobak Daur Ulang ───
+const TOOL = {
+  name: "🚚 Gerobak Daur Ulang", dbKey: "sampahTool",
+  SCRAP_CHANCE: 30,               // % per kumpul (nemu e-waste dijamin +2)
+  scrapCost: (lv) => 2 * (lv + 1),
+  rpCost: (lv) => 25000 * (lv + 1),
+  rewardBonus: (lv) => 0.1 * lv,  // gold & EXP +10% per level
+};
+const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { level: 0, spent: 0, scraps: 0 });
+
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
 
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(novaRpgBox("sampah", "RPG belum siap. Ketik .daftar dulu.", "error"));
+
+    // ── subcommand khas sampah: gerobak status & upgrade ──
+    const sub = (m.args?.[0] || "").toLowerCase();
+    const tool = getTool(m.sender);
+    const lv = tool.level || 0;
+    if (sub === "gerobak" || sub === "status") {
+      return m.reply(novaRpgBox("sampah",
+        `🚚 GEROBAK DAUR ULANG KAMU\n\n` +
+        `Level : *Lv.${lv}*\n💰 Bonus gold : +${10 * lv}%\n✨ Bonus EXP : +${10 * lv}%\n♻️ Kepingan Daur Ulang : ${tool.scraps || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
+        `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.scrapCost(lv)}x Kepingan + ${formatRp(TOOL.rpCost(lv))}\nKetik: .sampah upgrade`));
+    }
+    if (sub === "upgrade") {
+      const needSc = TOOL.scrapCost(lv);
+      const needRp = TOOL.rpCost(lv);
+      if ((tool.scraps || 0) < needSc) {
+        return m.reply(novaRpgBox("sampah",
+          `♻️ Upgrade Gerobak ke Lv.${lv + 1} butuh:\n\n• Kepingan Daur Ulang : ${needSc}x (punya ${tool.scraps || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Kepingan didapat dari .sampah sendiri — 30% per kumpul, nemu Elektronik Rusak dijamin +2!`, "warn"));
+      }
+      if (!spendCash(m, needRp)) {
+        return m.reply(novaRpgBox("sampah", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+      }
+      const fresh = getTool(m.sender);
+      fresh.scraps = (fresh.scraps || 0) - needSc;
+      fresh.level = (fresh.level || 0) + 1;
+      fresh.spent = (fresh.spent || 0) + needRp;
+      getDatabase().setPlayerData(m.sender, TOOL.dbKey, fresh);
+      await m.react("🐣");
+      return m.reply(novaRpgBox("sampah",
+        `🚚 GEROBAK UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n💰 Bonus gold : +${10 * (lv + 1)}%\n✨ Bonus EXP : +${10 * (lv + 1)}%\n\n♻️ Material : −${needSc} Kepingan Daur Ulang\n💵 Biaya : ${formatRp(needRp)}`, "success"));
+    }
 
     const cd = checkCooldown(m, "lastSampah");
     if (cd) {
@@ -58,29 +99,40 @@ async function handler(m, { sock }) {
 
     useEnergy(m, SAMPAH_ENERGY, sock);
 
-    // Animation
-    await animGather(m, sock, "🗑️", "Mengumpulkan sampah...");
+    // Animasi khas sampah: GOT BERSIH (🧹 menyapu, sampah jadi ♻️)
+    await shapeSampah(m, sock);
 
     // Roll 1-3 items
     const found = [];
     const count = Math.floor(Math.random() * 3) + 1;
     let totalGold = 0;
     let totalExp = 0;
+    let gotEwaste = false;
 
     for (let i = 0; i < count; i++) {
       const trash = SAMPAH_TYPES[Math.floor(Math.random() * SAMPAH_TYPES.length)];
-      const goldGain = Math.floor(trash.gold * (1 + Math.random() * 0.5));
-      const expGain = Math.floor(trash.exp * (1 + Math.random() * 0.5));
+      const goldGain = Math.floor(trash.gold * (1 + Math.random() * 0.5) * (1 + TOOL.rewardBonus(lv)));
+      const expGain = Math.floor(trash.exp * (1 + Math.random() * 0.5) * (1 + TOOL.rewardBonus(lv)));
 
       totalGold += goldGain;
       totalExp += expGain;
 
+      if (trash.drop === "eWaste") gotEwaste = true;
       if (Math.random() * 100 < trash.chance) {
         addItem(m, trash.drop, 1);
         found.push(`${trash.name} (+${goldGain} gold, +${expGain} EXP)`);
       } else {
         found.push(`${trash.name} (+${goldGain} gold, +${expGain} EXP)`);
       }
+    }
+
+    // ♻️ Kepingan Daur Ulang — item khas sampah (30% per kumpul, e-waste dijamin +2)
+    let scrapGain = gotEwaste ? 2 : 0;
+    if (scrapGain === 0 && Math.random() * 100 < TOOL.SCRAP_CHANCE) scrapGain = 1;
+    if (scrapGain > 0) {
+      const freshTool = getTool(m.sender);
+      freshTool.scraps = (freshTool.scraps || 0) + scrapGain;
+      getDatabase().setPlayerData(m.sender, TOOL.dbKey, freshTool);
     }
 
     addGold(m, totalGold);
@@ -90,19 +142,12 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSampah", SAMPAH_COOLDOWN);
 
     await m.react("🐣");
-    return m.reply(novaGameBox({
-      title: "sampah", icon: "🗑️",
-      flavor: "♻️ *SAMPAH BERHASIL DIKUMPULKAN!*",
-      body: [
-        `Hasil kulet sampah (${count} item):`,
-        ...found.map(f => `│ • ${f}`),
-        "",
-        `│ • 💰 Total gold : +${totalGold}`,
-        `│ • ✨ Total EXP : +${totalExp}`,
-        `│ • ⚡ Energi : ${rpg.energy}/${rpg.maxEnergy}`,
-      ].join("\n"),
-      cta: gameCTA("sampah"),
-    }));
+    return m.reply(novaRpgBox("sampah",
+      `♻️ SAMPAH BERHASIL DIKUMPULKAN!\n\n` +
+      `Hasil kulet sampah (${count} item):\n${found.map(f => `• ${f}`).join("\n")}\n\n` +
+      `💰 Total gold : +${totalGold}\n✨ Total EXP : +${totalExp}\n⚡ Energi : ${rpg.energy}/${rpg.maxEnergy}\n` +
+      (scrapGain ? `♻️ Kepingan Daur Ulang : +${scrapGain}x (total ${getTool(m.sender).scraps}x)\n` : "") +
+      (lv ? `🚚 Gerobak : Lv.${lv} (+${10 * lv}% gold & EXP)` : `\n💡 Gerobak bisa diupgrade: .sampah gerobak`)));
   } catch (err) {
     console.error("sampah error:", err);
     await m.react("❌");
