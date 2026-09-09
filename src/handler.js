@@ -501,6 +501,17 @@ try {
       if (config.dev?.debugLog) logger.error("family100", e.message);
     }
 
+    // Asah Otak multiplayer (own session system)
+    try {
+      const { answerHandler: asahHandler } = await import("../plugins/game/asahotak.js");
+      if (typeof asahHandler === "function") {
+        const asahHandled = await asahHandler(m, sock);
+        if (asahHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("asahotak", e.message);
+    }
+
     // All other games (via nova-game-factory — shared session map in nova-game-engine)
     try {
       const { games } = await import("./lib/nova-game-factory.js");
