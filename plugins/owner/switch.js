@@ -25,6 +25,7 @@ import { enableAutoBirthday, disableAutoBirthday, getBirthdayStatus } from '../.
 import { getBmkgStatus, updateBmkgSettings, startBmkgJobs, stopBmkgJobs } from '../../src/lib/nova-bmkg-scheduler.js'
 import { getBencanaAutoEnabled, setBencanaAutoEnabled } from '../../src/lib/nova-bencana.js'
 import { getStatus as getStatusWebWatch, setEnabled as setWebWatchEnabled } from '../../src/lib/nova-webwatch.js'
+import { getStatus as getStatusCryptoAlert, setEnabled as setCryptoAlertEnabled } from '../../src/lib/nova-cryptoalert.js'
 import { isEnabled as isAnimeNotifierOn, setEnabled as setAnimeNotifierOn } from '../../src/lib/nova-auto-anime-notifier.js'
 import { isEnabled as isMovieNotifierOn, setEnabled as setMovieNotifierOn } from '../../src/lib/nova-movie-notifier.js'
 import { loadState as loadWinbuState, saveState as saveWinbuState, startAutoCheck as startWinbuCheck, stopAutoCheck as stopWinbuCheck, isRunning as isWinbuRunning } from '../../src/lib/nova-auto-anime.js'
@@ -242,6 +243,13 @@ const AUTO_REGISTRY = {
     getStatus: () => { try { return getStatusWebWatch().enabled } catch { return true } },
     // OFF = monitor pause (interval clear); ON = syncMonitor nyala lagi kalau ada watch.
     toggle: (on) => { setWebWatchEnabled(on) },
+  },
+  cryptoalert: {
+    label: "Crypto Alarm (Alarm Harga Crypto)",
+    // Status = flag global monitor; alarm TETAP tersimpan pas OFF.
+    getStatus: () => { try { return getStatusCryptoAlert().enabled } catch { return true } },
+    // OFF = monitor pause (interval clear); ON = syncMonitor nyala lagi kalau ada alarm.
+    toggle: (on) => { setCryptoAlertEnabled(on) },
   },
   bencanawatch: {
     label: "Auto Alert Bencana (Bencanawatch)",
