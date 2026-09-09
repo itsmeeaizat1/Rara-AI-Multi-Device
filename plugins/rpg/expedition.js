@@ -1,9 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // expedition.js — Expedition System (send party on timed missions)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
-import { getCash } from "../../src/lib/nova-rpg-service.js";
+import { getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { shapeEkspedisi } from "../../src/lib/nova-rpg-shapes.js";
 
 const pluginConfig = {
   name: "expedition",
@@ -28,6 +28,16 @@ const LOCATIONS = [
   { id: 4, name: "Padang Pasir", durationMs: 60 * 60 * 1000, durationStr: "1 jam", minGold: 2000, maxGold: 5000, emoji: "🏜️" },
   { id: 5, name: "Tanah Es", durationMs: 120 * 60 * 1000, durationStr: "2 jam", minGold: 5000, maxGold: 10000, emoji: "❄️" },
 ];
+
+// ─── KHAS EKSPEDISI: 🎁 Suvenir Langka & 🎒 Ransel Ekspedisi ───
+const TOOL = {
+  name: "🎒 Ransel Ekspedisi", dbKey: "expeditionTool",
+  SOUVENIR_CHANCE: 30,          // % per klaim (lokasi jauh id ≥ 4 dijamin +1)
+  souvenirCost: (lv) => 2 * (lv + 1),
+  rpCost: (lv) => 30000 * (lv + 1),
+  rewardBonus: (lv) => 0.1 * lv, // reward gold ekspedisi +10% per level
+};
+const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { level: 0, spent: 0, souvenirs: 0 });
 
 function formatTime(ms) {
   if (ms <= 0) return "0 detik";
@@ -58,6 +68,40 @@ async function handler(m, { sock }) {
 
     const now = Date.now();
 
+    // ── subcommand khas ekspedisi: ransel status & upgrade ──
+    if (subCmd === "ransel" || subCmd === "status") {
+      const tool = getTool(sender);
+      const lv = tool.level || 0;
+      await m.react("🐣");
+      return m.reply(novaRpgBox("expedition",
+        `🎒 RANSEL EKSPEDISI KAMU\n\n` +
+        `Level : *Lv.${lv}*\n💰 Bonus reward : +${10 * lv}%\n🎁 Suvenir Langka : ${tool.souvenirs || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
+        `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.souvenirCost(lv)}x Suvenir + ${formatRp(TOOL.rpCost(lv))}\nKetik: ${prefix}expedition upgrade`));
+    }
+    if (subCmd === "upgrade") {
+      const tool = getTool(sender);
+      const lv = tool.level || 0;
+      const needSv = TOOL.souvenirCost(lv);
+      const needRp = TOOL.rpCost(lv);
+      if ((tool.souvenirs || 0) < needSv) {
+        await m.react("❌");
+        return m.reply(novaRpgBox("expedition",
+          `🎁 Upgrade Ransel ke Lv.${lv + 1} butuh:\n\n• Suvenir Langka : ${needSv}x (punya ${tool.souvenirs || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Suvenir didapat dari klaim ekspedisi sendiri — 30% per klaim, ekspedisi jauh (Padang Pasir/Tanah Es) dijamin +1!`, "warn"));
+      }
+      if (!spendCash(m, needRp)) {
+        await m.react("❌");
+        return m.reply(novaRpgBox("expedition", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+      }
+      const fresh = getTool(sender);
+      fresh.souvenirs = (fresh.souvenirs || 0) - needSv;
+      fresh.level = (fresh.level || 0) + 1;
+      fresh.spent = (fresh.spent || 0) + needRp;
+      await db.setPlayerData?.(sender, TOOL.dbKey, fresh);
+      await m.react("🐣");
+      return m.reply(novaRpgBox("expedition",
+        `🎒 RANSEL UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n💰 Bonus reward : +${10 * (lv + 1)}%\n\n🎁 Material : −${needSv} Suvenir Langka\n💵 Biaya : ${formatRp(needRp)}`, "success"));
+    }
+
     // Subcommand: CLAIM
     if (subCmd === "claim" || subCmd === "selesai") {
       if (!data.active) {
@@ -76,9 +120,21 @@ async function handler(m, { sock }) {
         );
       }
 
-      // Calculate reward
-      const rewardGold = Math.floor(Math.random() * (data.active.maxGold - data.active.minGold + 1)) + data.active.minGold;
-      
+      // Calculate reward (+ bonus ransel)
+      const tool = getTool(sender);
+      const lv = tool.level || 0;
+      const baseGold = Math.floor(Math.random() * (data.active.maxGold - data.active.minGold + 1)) + data.active.minGold;
+      const rewardGold = Math.floor(baseGold * (1 + TOOL.rewardBonus(lv)));
+
+      // 🎁 Suvenir Langka — item khas ekspedisi (30% per klaim, lokasi jauh id ≥ 4 dijamin +1)
+      let souvenirGain = data.active.id >= 4 ? 1 : 0;
+      if (souvenirGain === 0 && Math.random() * 100 < TOOL.SOUVENIR_CHANCE) souvenirGain = 1;
+      if (souvenirGain > 0) {
+        const freshTool = getTool(sender);
+        freshTool.souvenirs = (freshTool.souvenirs || 0) + souvenirGain;
+        await db.setPlayerData?.(sender, TOOL.dbKey, freshTool);
+      }
+
       data.totalCompleted = (data.totalCompleted || 0) + 1;
       data.totalEarned = (data.totalEarned || 0) + rewardGold;
       const completedLoc = data.active.name;
@@ -87,17 +143,18 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "expedition", data);
       try { await db.addGold?.(sender, rewardGold); } catch {}
 
-      let text = "";
-      text += `🎉 Party kamu telah kembali dari *${completedLoc}*!\n`;
-      text += `
-`;
-      text += `💰 Reward Gold : +${rewardGold.toLocaleString()} Gold\n`;
-      text += `💵 Uang : Rp ${getCash(m).toLocaleString("id-ID")}\n`;
-      text += `📊 Total Ekspedisi : ${data.totalCompleted}x\n`;
-      text += `🏆 Total Pendapatan : ${data.totalEarned.toLocaleString()} Gold\n`;
-      
+      // Animasi khas: kafilah pulang bawa loot
+      await shapeEkspedisi(m, sock, "kembali");
+
       await m.react("🐣");
-      return m.reply(text);
+      return m.reply(novaRpgBox("expedition",
+        `🎉 Party kamu telah kembali dari *${completedLoc}*!\n\n` +
+        `💰 Reward Gold : +${rewardGold.toLocaleString()} Gold${lv ? ` (ransel! aslinya ${baseGold.toLocaleString()})` : ""}\n` +
+        `💵 Uang : Rp ${getCash(m).toLocaleString("id-ID")}\n` +
+        (souvenirGain ? `🎁 Suvenir Langka : +${souvenirGain}x (total ${getTool(sender).souvenirs}x)\n` : "") +
+        `📊 Total Ekspedisi : ${data.totalCompleted}x\n` +
+        `🏆 Total Pendapatan : ${data.totalEarned.toLocaleString()} Gold\n` +
+        (lv ? `\n🎒 Ransel : Lv.${lv} (+${10 * lv}% reward)` : `\n💡 Ransel bisa diupgrade: ${prefix}expedition ransel`)));
     }
 
     // Subcommand: CANCEL
@@ -159,6 +216,10 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "expedition", data);
 
+      // Animasi khas: kafilah berangkat
+      await shapeEkspedisi(m, sock, "berangkat");
+
+      await m.react("🐣");
       let text = "";
       text += `${loc.emoji} Lokasi : *${loc.name}*\n`;
       text += `⏱️ Durasi : ${loc.durationStr}\n`;
@@ -168,8 +229,7 @@ async function handler(m, { sock }) {
 `;
       text += `💡 Ketik *${prefix}expedition* untuk cek status.\n`;
       text += `💡 Ketik *${prefix}expedition claim* setelah waktu habis.\n`;
-      
-      await m.react("🐣");
+
       return m.reply(text);
     }
 
