@@ -1,0 +1,81 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// pdftoimg.js — PDF ke gambar: reply PDF, tiap halaman jadi PNG
+// Fitur baru 9 Sep 2026 (request owner "fitur yg blm prnh ada di bot")
+import axios from "axios";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { pdfToImages, MAX_PAGES, DEFAULT_PAGES } from "../../src/lib/nova-pdftoimg.js";
+
+const pluginConfig = {
+  name: "pdftoimg",
+  alias: ["pdftoimg", "pdfkegambar", "pdfimage", "pdffoto", "pdfpng"],
+  category: "tools",
+  description: "PDF ke gambar — reply dokumen PDF, halaman dirender PNG",
+  usage: ".pdftoimg [jumlah halaman|all] (reply PDF)",
+  example: ".pdftoimg 10 (reply PDF)",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 2,
+  isEnabled: true,
+};
+
+async function downloadFile(url) {
+  const res = await axios.get(url, { responseType: "arraybuffer", timeout: 60000 });
+  return Buffer.from(res.data);
+}
+
+async function handler(m, { sock }) {
+  try {
+    // wajib reply PDF
+    const q = m.quoted;
+    const isPdf = q && (q.mimetype === "application/pdf" || String(q.fileName || q.filename || "").toLowerCase().endsWith(".pdf"));
+    if (!q || !isPdf) {
+      await m.react("❌");
+      return m.reply(claraWrap("pdftoimg", `Reply dokumen PDF-nya dulu, terus ketik:\n\n${m.prefix}pdftoimg [jumlah|all]`, "error"));
+    }
+
+    const pagesArg = m.args[0] || String(DEFAULT_PAGES);
+
+    await m.react("🕒");
+    const buffer = q.buffer || (q.url ? await downloadFile(q.url) : null);
+    if (!buffer) {
+      await m.react("❌");
+      return m.reply(claraWrap("pdftoimg", "Dokumennya gak bisa diunduh — coba kirim ulang PDF-nya.", "error"));
+    }
+
+    const res = await pdfToImages(buffer, { pagesArg });
+    if (!res.ok) {
+      await m.react("❌");
+      const msgs = {
+        empty_buffer: "Dokumennya kosong.",
+        pdf_invalid: "File-nya gak valid / bukan PDF yang bisa dibaca.",
+        render_failed: "Halaman-halamannya gagal dirender — PDF-nya mungkin rusak.",
+      };
+      return m.reply(claraWrap("pdftoimg", msgs[res.error] || "Gagal render PDF.", "error"));
+    }
+
+    await m.react("🐣");
+    const name = String(q.fileName || "dokumen").replace(/\.pdf$/i, "");
+
+    // kirim tiap halaman sebagai image (jeda dikit biar gak ke-rate-limit)
+    for (let i = 0; i < res.images.length; i++) {
+      const img = res.images[i];
+      const cap = [
+        `📄 *${name}* — ʜᴀʟᴀᴍᴀɴ ${img.pageNumber}/${res.totalPages}`,
+        res.truncated && i === res.images.length - 1 ? `\n⚠️ ᴍᴀᴋꜱ ${MAX_PAGES} ʜᴀʟᴀᴍᴀɴ — ꜱɪꜱᴀɴʏᴀ ʙɪᴀʀᴀɴ` : "",
+      ].join("\n").trim();
+      await sock.sendMessage(m.chat, {
+        image: img.png,
+        caption: cap,
+      });
+      if (i < res.images.length - 1) await new Promise((r) => setTimeout(r, 800));
+    }
+  } catch (e) {
+    await m.react("❌");
+    m.reply(claraWrap("pdftoimg", "Gagal: " + (e?.message || e), "error"));
+  }
+}
+
+export { pluginConfig as config, handler };
