@@ -85,7 +85,7 @@ Automation:
 | Saluran WA Broadcast | Auto-broadcast 8 event ke saluran WA | `.setsaluran` / `.buatsaluran` |
 | Member Join Request | Notifikasi & approval member baru | — |
 | Pairing Password | Sandi pairing, 3x gagal = bot exit | — |
-| Jadibot (MD) | Pairing Code & QR, 3-mode access control | `.jadibot` / `.setjadibot` |
+| Jadibot Multi-Session (MD) | Pairing Code & QR, banyak nomor, 3-mode access control | `.jadibot <nomor>` / `.setjadibot` |
 | Limit Tiered | 300/hari (free), 1000/hari (premium), unlimited (owner) | `.mylimit` / `.transferlimit` |
 | Plugin Enable/Disable | Toggle plugin on/off per grup | `.enable` / `.disable` |
 | Auto Sync | Sync otomatis dari GitHub | — |
@@ -505,6 +505,44 @@ node index.js
 - **Toko:** `.toko add/list/del`, `.setpayment add/list`
 - **Auto features:** `.autoweather`, `.autoloker`, `.autosholat`, `.autobmkg`
 
+## 🔗 Multi Session Jadibot (Banyak Nomor)
+
+Satu bot utama bisa dipakai banyak nomor — tiap nomor jadi bot penuh dengan session terisolasi.
+
+### Komponen Inti
+
+| Komponen | Fungsi |
+|----------|--------|
+| `useMultiFileAuthState(folder)` | Membuat auth state terisolasi per session |
+| `printQRInTerminal: false` | WAJIB, agar bot menggunakan Pairing Code |
+| `await sock.requestPairingCode(number)` | Meminta kode 8 digit untuk nomor target |
+| Map aktif | Menyimpan session yang sedang berjalan untuk dikelola |
+
+### Cara Pakai
+
+| Command | Fungsi |
+|---------|--------|
+| `.jadibot` | Jadikan nomor kamu sendiri jadi bot (pairing code) |
+| `.jadibot <nomor>` | Pasang nomor LAIN jadi bot — kode pairing dikirim di chat ini, teruskan ke pemilik nomor |
+| `.jadibot qr` / `.jadibot qr <nomor>` | Mode QR Code |
+| `.stopjadibot` | Hentikan jadibot kamu (session tersimpan) |
+| `.stopjadibot <nomor>` | (Owner) hentikan session nomor lain |
+| `.listjadibotaktif` | Daftar semua session jadibot yang jalan |
+
+Nomor otomatis dinormalisasi: `08xxx` / `8xxx` → `628xxx`. Session tiap nomor tersimpan di `jadibot_auth/<nomor>/` dan auto-restore saat bot restart. Akses diatur via `.setjadibot <all|premium|specific>`.
+
+### Pairing Bot Utama via CMD
+
+Gak perlu edit `bot-identity.js` — langsung dari terminal:
+
+```bash
+node index.js --pairing 6281234567890   # atau:
+node index.js --pairing=6281234567890
+node index.js 6281234567890             # alias singkat
+```
+
+Tanpa flag, bot akan menanyakan nomor langsung di terminal (timeout 3 menit).
+
 ## 📝 Command Penting
 
 | Command | Fungsi |
@@ -520,7 +558,7 @@ node index.js
 | `.autobmkg` | Notifikasi gempa |
 | `.cuacav2` | Cuaca detail |
 | `.alquran` | Quran + murottal |
-| `.jadibot` | Jadikan nomor jadi bot |
+| `.jadibot` | Jadikan nomor jadi bot (bisa `<nomor>` untuk nomor lain) |
 | `.daftarsewa` | Daftar sewa bot |
 | `.aigrup` | AI ikut chat di grup |
 | `.owner` | Kontak owner |
