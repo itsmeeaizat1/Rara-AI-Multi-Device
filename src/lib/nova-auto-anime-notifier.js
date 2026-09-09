@@ -25,7 +25,7 @@ import config from "../../config.js";
 import { logger } from "./nova-logger.js";
 
 const STATE_FILE = path.join(process.cwd(), "src", "data", "autoanimenotifier.json");
-const CHECK_INTERVAL_MS = 1800_000; // 30 menit — ala script owner
+const DEFAULT_INTERVAL_MENIT = 30; // default 30 menit — bisa diset .animenotify interval <menit>
 const MAX_SEEN = 300; // ala script: cache limit 500 → keep 300 terbaru
 const PER_PAGE = 20;
 
@@ -200,7 +200,7 @@ function normAnilist(m) {
     anilistId: m.id,
     title: m.title?.english || m.title?.romaji || m.title?.native || "N/A",
     episodes: m.episodes || "?",
-    score: m.averageScore ? (m.averageScore / 10).toFixed(1) : "N/A",
+    score: m.averageScore ?? "N/A", // mentah 0-100 ala AniList (contoh owner: 85)
     startDate: m.startDate?.year ? `${m.startDate.day}/${m.startDate.month}/${m.startDate.year}` : "TBA",
     nextEpisode: m.nextAiringEpisode
       ? { episode: m.nextAiringEpisode.episode, timeUntil: Math.floor(m.nextAiringEpisode.timeUntilAiring / 3600) }
@@ -239,7 +239,7 @@ async function checkKitsu() {
       anilistId: null,
       title: a.canonicalTitle || a.titles?.en_jp || "N/A",
       episodes: a.episodeCount || "?",
-      score: a.averageRating ? (parseFloat(a.averageRating) / 10).toFixed(1) : "N/A",
+      score: a.averageRating ? Math.round(parseFloat(a.averageRating)) : "N/A", // mentah 0-100 (selaras AniList)
       startDate: a.startDate || "TBA",
       nextEpisode: null, // Kitsu gak kasih next airing — notif episode butuh AniList
       status: "RELEASING",
@@ -288,6 +288,7 @@ export function diffWatchlist(list, seenIds, episodesMap) {
           score: a.score, genres: a.genres?.join(", ") || "N/A",
           studios: a.studios, cover: a.cover, pageUrl: a.pageUrl,
           malUrl: a.malUrl || null, trailerThumb: a.trailerThumb || null,
+          description: a.description || "",
         });
       }
     }
@@ -682,34 +683,43 @@ export function setContentType(type, on) {
   return st.contentTypes;
 }
 
+// ℅readmore WhatsApp: teks setelah tanda ini ke-collapse jadi "Baca selengkapnya"
+const READMORE = "\u200E".repeat(4001);
+
 // ─────────── caption PER-ANIME (preview card ala script owner 9 Sep) ───────────
 
-export function formatNewAnimeCard(a) {
+export function formatNewAnimeCard(a, { index = 1, total = 1, source = "AniList" } = {}) {
   if (!a) return null;
-  let msg = "🎌 *ANIME BARU TERDETEKSI!*\n\n";
-  msg += `📺 *${a.title}*\n`;
-  msg += `${a.format || "Unknown"} | ${a.status || "Unknown"}\n`;
-  msg += `📅 ${a.startDate || "TBA"}\n`;
-  msg += `⭐ Score: ${a.score ?? "N/A"}\n`;
-  msg += `🎭 ${a.genres?.join(", ") || "N/A"}\n`;
-  msg += `🏢 ${a.studios || "Unknown"}\n`;
-  if (a.description) msg += `📖 ${a.description.slice(0, 150)}...\n`;
-  if (a.nextEpisode) msg += `⏳ Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n`;
+  let msg = "🎌 ANIME BARU RILIS!\n\n";
+  msg += `${index}. *${a.title}*\n`;
+  msg += `   📺 ${a.format || "Unknown"} | ${a.status || "Unknown"}\n`;
+  msg += `   📅 ${a.startDate || "TBA"}\n`;
+  msg += `   ⭐ Score: ${a.score ?? "N/A"}\n`;
+  msg += `   🎭 ${a.genres?.join(", ") || "N/A"}\n`;
+  msg += `   🏢 ${a.studios || "Unknown"}\n`;
   const link = a.malUrl || a.pageUrl;
-  if (link) msg += `🔗 ${link}\n`;
+  if (link) msg += `   🔗 ${link}\n`;
+  // deskripsi plain text di balik ℅readmore biar caption gak panjang ke bawah
+  const desc = a.description ? String(a.description).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim() : "";
+  if (desc) msg += `   📖 Deskripsi:${READMORE}\n\n${desc}\n\n`;
+  if (a.nextEpisode) msg += `   ⏳ Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n\n`;
+  msg += `📌 ${total} anime baru ditambahkan (ketersediaan sumber ${source}: ${total})`;
   return msg;
 }
 
-export function formatEpisodeCard(ep) {
+export function formatEpisodeCard(ep, { index = 1, total = 1, source = "AniList" } = {}) {
   if (!ep) return null;
   const time = ep.timeUntil > 24 ? `${Math.floor(ep.timeUntil / 24)} hari` : `${ep.timeUntil} jam`;
-  let msg = "🎬 *EPISODE BARU RILIS!*\n\n";
-  msg += `📺 *${ep.title}*\n`;
-  msg += `Episode ${ep.episode} rilis dalam ~${time}\n`;
-  msg += `⭐ ${ep.score} | 🎭 ${ep.genres}\n`;
-  msg += `🏢 ${ep.studios}\n`;
+  let msg = "🎬 EPISODE BARU RILIS!\n\n";
+  msg += `${index}. *${ep.title}*\n`;
+  msg += `   📺 Episode ${ep.episode} rilis dalam ~${time}\n`;
+  msg += `   ⭐ ${ep.score ?? "N/A"} | 🎭 ${ep.genres}\n`;
+  msg += `   🏢 ${ep.studios}\n`;
   const link = ep.malUrl || ep.pageUrl;
-  if (link) msg += `🔗 ${link}\n`;
+  if (link) msg += `   🔗 ${link}\n`;
+  const desc = ep.description ? String(ep.description).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim() : "";
+  if (desc) msg += `   📖 Deskripsi:${READMORE}\n\n${desc}\n\n`;
+  msg += `📌 Total ${total} episode baru (ketersediaan sumber ${source}: ${total})`;
   return msg;
 }
 
@@ -753,9 +763,11 @@ async function sendAnimeNotification(chatId, text, { thumbUrl = null, sourceUrl 
  * sendiri). Cover gagal di-download → fallback ke trailer thumbnail →
  * fallback text + banner card biasa. Jeda antar-kirim 1 dtk (anti-spam WA).
  */
-async function sendAnimeCard(chatId, a, type = "new") {
+async function sendAnimeCard(chatId, a, type = "new", meta = {}) {
   if (!sock) return false;
-  const caption = type === "episode" ? formatEpisodeCard(a) : formatNewAnimeCard(a);
+  const caption = type === "episode"
+    ? formatEpisodeCard(a, { index: meta.index || 1, total: meta.total || 1, source: meta.source || "AniList" })
+    : formatNewAnimeCard(a, { index: meta.index || 1, total: meta.total || 1, source: meta.source || "AniList" });
   if (!caption) return false;
   const url = a.cover || a.banner || a.trailerThumb || null;
   const buf = url ? await downloadThumb(url) : null;
@@ -851,8 +863,8 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
   if (newAnime.length > 0) {
     const capped = newAnime.slice(0, 3);
     for (const t of targets) {
-      for (const a of capped) {
-        try { await sendAnimeCard(t, a, "new"); sent++; }
+      for (let i = 0; i < capped.length; i++) {
+        try { await sendAnimeCard(t, capped[i], "new", { index: i + 1, total: newAnime.length, source }); sent++; }
         catch (e) { logger.error?.("anime-notifier", `Gagal kirim card anime ke ${t}: ${e.message}`); }
       }
     }
@@ -869,8 +881,8 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
   if (newEpisodes.length > 0) {
     const cappedEps = newEpisodes.slice(0, 5);
     for (const t of targets) {
-      for (const ep of cappedEps) {
-        try { await sendAnimeCard(t, ep, "episode"); sent++; }
+      for (let i = 0; i < cappedEps.length; i++) {
+        try { await sendAnimeCard(t, cappedEps[i], "episode", { index: i + 1, total: newEpisodes.length, source }); sent++; }
         catch (e) { logger.error?.("anime-notifier", `Gagal kirim card episode ke ${t}: ${e.message}`); }
       }
     }
@@ -939,6 +951,12 @@ function isRunning() {
   return autoRunning || timer !== null;
 }
 
+function getIntervalMs() {
+  const st = loadState();
+  const m = Number(st.intervalMenit) || DEFAULT_INTERVAL_MENIT;
+  return Math.min(720, Math.max(5, m)) * 60_000; // 5 menit – 12 jam
+}
+
 function startMonitor() {
   if (isRunning()) return false;
   const st = loadState();
@@ -948,9 +966,24 @@ function startMonitor() {
   runCheck().catch((e) => logger.error?.("anime-notifier", `runCheck gagal: ${e.message}`));
   timer = setInterval(() => {
     runCheck().catch((e) => logger.error?.("anime-notifier", `runCheck gagal: ${e.message}`));
-  }, CHECK_INTERVAL_MS);
-  logger.success?.("anime-notifier", `Monitor aktif (${st.targets.length} chat — cek tiap ${CHECK_INTERVAL_MS / 60000} menit, AniList → Kitsu, notif anime + episode)`);
+  }, getIntervalMs());
+  logger.success?.("anime-notifier", `Monitor aktif (${st.targets.length} chat — cek tiap ${getIntervalMs() / 60000} menit, AniList → Kitsu, notif anime + episode)`);
   return true;
+}
+
+/** Set interval cek (menit, 5–720). Restart monitor biar jalan. */
+export function setIntervalMenit(menit) {
+  const m = Number(menit);
+  if (!m || m < 5 || m > 720) return null;
+  const st = loadState();
+  st.intervalMenit = m;
+  saveState(st);
+  // restart biar timer interval baru langsung kepakai
+  if (isRunning()) {
+    stopMonitor();
+    syncMonitor();
+  }
+  return m;
 }
 
 function stopMonitor() {
@@ -981,7 +1014,7 @@ export function getStatus() {
   return {
     ...st, running: isRunning(), seenCount: st.seenIds.length,
     trackedEpisodes: Object.keys(st.episodes).length,
-    intervalMenit: CHECK_INTERVAL_MS / 60000,
+    intervalMenit: getIntervalMs() / 60000,
   };
 }
 
