@@ -12,12 +12,12 @@ import { animOjek } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "ojekrpg",
-  alias: ["ojekrpg", "ojek", "gojek", "taxirpg"],
+  name: "ojek",
+  alias: ["ojek", "ojekrpg", "gojek", "taxirpg"],
   category: "rpg",
   description: "Jadi driver ojek — antar penumpang untuk gold",
-  usage: ".ojekrpg",
-  example: ".ojekrpg",
+  usage: ".ojek",
+  example: ".ojek",
   isOwner: false,
   isPremium: false,
   isGroup: false,
