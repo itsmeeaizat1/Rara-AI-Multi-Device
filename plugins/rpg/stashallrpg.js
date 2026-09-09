@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, addItem, removeItem, getItemCount } from "../../src
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "stashallrpg", alias: ["stashallrpg", "stashall"],
+  name: "stashall", alias: ["stashall", "stashallrpg"],
   category: "rpg", description: "Pindah semua item ke storage",
-  usage: ".stashallrpg", example: ".stashallrpg",
+  usage: ".stashall", example: ".stashall",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 async function handler(m, { sock }) {

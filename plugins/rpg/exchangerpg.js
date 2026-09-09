@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, removeItem, addGold, getItemCount } from "../../src
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "exchangerpg", alias: ["exchangerpg", "exchange", "tukar"],
+  name: "exchange", alias: ["exchange", "exchangerpg", "tukar"],
   category: "rpg", description: "Tukar item jadi 200 gold",
-  usage: ".exchangerpg <item>", example: ".exchangerpg tulang",
+  usage: ".exchange <item>", example: ".exchange tulang",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 async function handler(m, { sock }) {

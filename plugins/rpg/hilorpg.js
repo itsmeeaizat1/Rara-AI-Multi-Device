@@ -11,12 +11,12 @@ import { animHiLo } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "hilorpg",
-  alias: ["hilorpg", "hilo", "tinggirendah"],
+  name: "hilo",
+  alias: ["hilo", "hilorpg", "tinggirendah"],
   category: "rpg",
   description: "Tebak kartu lebih tinggi atau lebih rendah (mini-game)",
-  usage: ".hilorpg <bet> <high|low>",
-  example: ".hilorpg 100 high",
+  usage: ".hilo <bet> <high|low>",
+  example: ".hilo 100 high",
   isOwner: false,
   isPremium: false,
   isGroup: false,

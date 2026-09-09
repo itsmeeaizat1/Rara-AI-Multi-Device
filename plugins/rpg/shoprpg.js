@@ -10,12 +10,12 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "shoprpg",
-  alias: ["shoprpg", "toko", "shop"],
+  name: "shop",
+  alias: ["shop", "shoprpg", "toko"],
   category: "rpg",
   description: "Beli dan jual item RPG (potion, equipment, material)",
-  usage: ".shoprpg <buy|sell> <item> [qty]",
-  example: ".shoprpg buy hpPotion 5",
+  usage: ".shop <buy|sell> <item> [qty]",
+  example: ".shop buy hpPotion 5",
   isOwner: false,
   isPremium: false,
   isGroup: false,

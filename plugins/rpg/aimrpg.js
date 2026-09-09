@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, getRpgData, useEnergy } from "../../src/lib/nova-rp
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "aimrpg", alias: ["aimrpg", "aim", "bidik"],
+  name: "aim", alias: ["aim", "aimrpg", "bidik"],
   category: "rpg", description: "Bidik & serang target (reply musuh, -50 HP, 10 energy)",
-  usage: ".aimrpg (reply target)", example: ".aimrpg (reply pesan target)",
+  usage: ".aim (reply target)", example: ".aim (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 10, isEnabled: true,
 };
 async function handler(m, { sock }) {

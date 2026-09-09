@@ -2,9 +2,9 @@ import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "passiverpg", alias: ["passiverpg", "passive", "pasif"],
+  name: "passive", alias: ["passive", "passiverpg", "pasif"],
   category: "rpg", description: "Lihat skill pasif",
-  usage: ".passiverpg", example: ".passiverpg",
+  usage: ".passive", example: ".passive",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 async function handler(m, { sock }) {

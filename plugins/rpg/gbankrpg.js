@@ -2,10 +2,10 @@ import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "gbankrpg", alias: ["gbankrpg", "gbank"],
+  name: "gbank", alias: ["gbank", "gbankrpg"],
   category: "rpg", description: "Guild Bank — saldo bersama guild",
-  usage: ".gbankrpg saldo/setor/tarik <jumlah>",
-  example: ".gbankrpg setor 500",
+  usage: ".gbank saldo/setor/tarik <jumlah>",
+  example: ".gbank setor 500",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 global.rpgGuildBank = global.rpgGuildBank || {};

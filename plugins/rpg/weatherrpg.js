@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "weatherrpg", alias: ["weatherrpg", "cuacarpg"],
+  name: "weather", alias: ["weather", "weatherrpg", "cuacarpg"],
   category: "rpg", description: "Cek cuaca dunia RPG",
-  usage: ".weatherrpg", example: ".weatherrpg",
+  usage: ".weather", example: ".weather",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 

@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, removeItem, regenHP, regenMana, getItemCount } from
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "itemuserpg", alias: ["itemuserpg", "itemuse"],
+  name: "itemuse", alias: ["itemuse", "itemuserpg"],
   category: "rpg", description: "Gunakan item dari inventory",
-  usage: ".itemuserpg <item>", example: ".itemuserpg ramuan",
+  usage: ".itemuse <item>", example: ".itemuse ramuan",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 const ITEM_EFFECTS = {

@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "darkmoderpg", alias: ["darkmoderpg", "darkmode"],
+  name: "darkmode", alias: ["darkmode", "darkmoderpg"],
   category: "rpg", description: "Aktifkan dark mode RPG (efek negatif meningkat di malam hari)",
-  usage: ".darkmoderpg", example: ".darkmoderpg",
+  usage: ".darkmode", example: ".darkmode",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,
 };
 

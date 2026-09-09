@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "narratorrpg", alias: ["narratorrpg", "narrator"],
+  name: "narrator", alias: ["narrator", "narratorrpg"],
   category: "rpg", description: "Dengarkan bisikan narator",
-  usage: ".narratorrpg", example: ".narratorrpg",
+  usage: ".narrator", example: ".narrator",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 

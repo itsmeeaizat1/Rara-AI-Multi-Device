@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, useEnergy } from "../../src/lib/nova-rpg-service.js
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "fortifyrpg", alias: ["fortifyrpg", "fortify"],
+  name: "fortify", alias: ["fortify", "fortifyrpg"],
   category: "rpg", description: "Perkuat markas — DEF +10 (butuh markas, 15 energy)",
-  usage: ".fortifyrpg", example: ".fortifyrpg",
+  usage: ".fortify", example: ".fortify",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 20, energi: 15, isEnabled: true,
 };
 async function handler(m, { sock }) {

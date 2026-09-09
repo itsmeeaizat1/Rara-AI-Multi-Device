@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "defendrpg", alias: ["defendrpg", "defend", "pertahanan"],
+  name: "defend", alias: ["defend", "defendrpg", "pertahanan"],
   category: "rpg", description: "Perkuat markas. DEF +50 (butuh markas)",
-  usage: ".defendrpg", example: ".defendrpg",
+  usage: ".defend", example: ".defend",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 20, isEnabled: true,
 };
 

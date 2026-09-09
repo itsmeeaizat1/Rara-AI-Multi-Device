@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "blessnpcrpg", alias: ["blessnpcrpg", "blessnpc"],
+  name: "blessnpc", alias: ["blessnpc", "blessnpcrpg"],
   category: "rpg", description: "Blessing dari NPC (random buff)",
-  usage: ".blessnpcrpg", example: ".blessnpcrpg",
+  usage: ".blessnpc", example: ".blessnpc",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 60, energi: 0, isEnabled: true,
 };
 const BONUSES = ["+10 HP", "+5 DEF", "+100 EXP", "+5 ATK", "+3 SPD", "+5% Crit"];

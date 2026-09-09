@@ -1,9 +1,9 @@
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "npcrpg", alias: ["npcrpg", "npc"],
+  name: "npc", alias: ["npc", "npcrpg"],
   category: "rpg", description: "Bicara dengan NPC",
-  usage: ".npcrpg <nama>", example: ".npcrpg penjaga",
+  usage: ".npc <nama>", example: ".npc penjaga",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 const NPCS = {

@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "panduanrpg", alias: ["panduanrpg", "rpgtutor", "tutorrpg"],
+  name: "panduan", alias: ["panduan", "panduanrpg", "rpgtutor", "tutorrpg"],
   category: "rpg", description: "Panduan lengkap perintah RPG",
-  usage: ".panduanrpg", example: ".panduanrpg",
+  usage: ".panduan", example: ".panduan",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 

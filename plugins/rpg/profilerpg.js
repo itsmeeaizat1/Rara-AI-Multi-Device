@@ -3,9 +3,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "profilerpg", alias: ["profilerpg", "profilrpg"],
+  name: "profil", alias: ["profil", "profilerpg", "profilrpg"],
   category: "rpg", description: "Tampilkan profil RPG lengkap",
-  usage: ".profilerpg", example: ".profilerpg",
+  usage: ".profil", example: ".profil",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 // Skor game baru (rpg.gamePoin) — poin per game, aturan owner 2026-09-05

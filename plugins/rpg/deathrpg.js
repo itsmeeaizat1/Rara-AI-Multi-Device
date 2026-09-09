@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "deathrpg", alias: ["deathrpg", "death", "mati"],
+  name: "death", alias: ["death", "deathrpg", "mati"],
   category: "rpg", description: "Cek status kematian & penalti",
-  usage: ".deathrpg", example: ".deathrpg",
+  usage: ".death", example: ".death",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 

@@ -9,12 +9,12 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "enchantrpg",
-  alias: ["enchantrpg", "enchant", "upgradeitem"],
+  name: "enchant",
+  alias: ["enchant", "enchantrpg", "upgradeitem"],
   category: "rpg",
   description: "Enchant equipment untuk tambah stats (butuh mithril ore)",
-  usage: ".enchantrpg <slot> [material]",
-  example: ".enchantrpg weapon",
+  usage: ".enchant <slot> [material]",
+  example: ".enchant weapon",
   isOwner: false,
   isPremium: false,
   isGroup: false,

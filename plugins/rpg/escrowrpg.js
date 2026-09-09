@@ -2,10 +2,10 @@ import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "escrowrpg", alias: ["escrowrpg", "escrow", "titipan"],
+  name: "escrow", alias: ["escrow", "escrowrpg", "titipan"],
   category: "rpg", description: "Escrow — titipan aman antar pemain",
-  usage: ".escrowrpg buat <jumlah> / cek / konfirmasi / batal",
-  example: ".escrowrpg buat 500 (dengan tag @user)",
+  usage: ".escrow buat <jumlah> / cek / konfirmasi / batal",
+  example: ".escrow buat 500 (dengan tag @user)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 global.rpgEscrow = global.rpgEscrow || [];
