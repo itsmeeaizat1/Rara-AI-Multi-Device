@@ -84,6 +84,23 @@ async function handler(m, { sock }) {
       console.error("editimg live3d:", e.message);
     }
 
+    // Method 1.5: nano-banana via KuroNeko (sylva) — upload uguu dulu
+    if (!result) {
+      try {
+        const { nanoBananaEdit, uploadToUguu } = await import("../../src/scraper/kuroneko.js");
+        const imgUrl = await uploadToUguu(buffer, "img.jpg");
+        const editedUrl = await nanoBananaEdit(imgUrl, prompt);
+        const axios0 = (await import("axios")).default;
+        const dl = await axios0.get(editedUrl, { responseType: "arraybuffer", timeout: 60000 });
+        if (dl.data && dl.data.length > 5000) {
+          result = Buffer.from(dl.data);
+          usedApi = "nano-banana (kuronoko)";
+        }
+      } catch (e) {
+        console.error("editimg kuroneko:", e.message);
+      }
+    }
+
     // Method 2: Img2Img (FGSI API) — cadangan
     if (!result) {
       try {

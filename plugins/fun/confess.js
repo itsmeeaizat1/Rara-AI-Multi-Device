@@ -1,240 +1,549 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Confess — 2 mode: anonim (default) & non-anonim (dengan nama)
-// .confess nomor|pesan          → anonim
-// .confess nomor|pesan|nama     → non-anonim (identitas terungkap)
+// Confess V3 — porting script confess bot standalone (owner, 9 Sep 2026):
+// confess anonim (!confess) / non-anonim (!say) ke CHANNEL TERPUSAT,
+// reply per confess, like dedup, list, detail, mode anon reply, stats, hapus (owner).
+// MENGGANTIKAN confess DM lama (v1) — request owner: kode baru lbh menarik.
+// Command: .confess <pesan> | .confess say <pesan> | reply/like/list/read/del/setchannel/mode/stats/help
+// Data tersimpan di db.setting("confessv3") — persisten via nova-database.
 
-import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
-import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-
-function trackConfess(senderJid, targetJid, isAnonim) {
-  try {
-    const db = getDatabase();
-    // Sender tracking
-    const sender = db.getUser(senderJid) || db.setUser(senderJid);
-    if (!sender.confessStats) sender.confessStats = { sent: 0, received: 0, anonim: 0, nonAnonim: 0 };
-    sender.confessStats.sent = (sender.confessStats.sent || 0) + 1;
-    if (isAnonim) sender.confessStats.anonim = (sender.confessStats.anonim || 0) + 1;
-    else sender.confessStats.nonAnonim = (sender.confessStats.nonAnonim || 0) + 1;
-    db.setUser(senderJid, sender);
-    // Target tracking
-    const target = db.getUser(targetJid) || db.setUser(targetJid);
-    if (!target.confessStats) target.confessStats = { sent: 0, received: 0, anonim: 0, nonAnonim: 0 };
-    target.confessStats.received = (target.confessStats.received || 0) + 1;
-    db.setUser(targetJid, target);
-    db.save();
-  } catch (e) {
-    console.error("[confess] Tracking error:", e.message);
-  }
-}
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { fromSC } from "../../src/lib/styler.js";
 
 const pluginConfig = {
   name: "confess",
-  alias: ["confess"],
+  alias: ["confess", "confessv3", "confessch", "confesschannel"],
   category: "fun",
-  description: "Kirim pesan confess anonim atau non-anonim",
-  usage: ".confess nomor|pesan (anonim)\n.confess nomor|pesan|nama (non-anonim)",
-  example: ".confess 6281234567890|Hai, aku suka kamu!\n.confess 6281234567890|Hai!|Dari Budi",
+  description: "Confess v3 channel terpusat: confess anonim/non-anonim + reply, like, stats",
+  usage: ".confess <pesan>\n.confess say <pesan>\n.confess reply <id> <balasan>\n.confess like <id>\n.confessch list\n.confess read <id/nomor>\n.confessch setchannel (di grup)\n.confessch mode <anon/nonanon>\n.confessch del <id/nomor> (owner)\n.confessch stats",
+  example: ".confess aku suka seseorang\n.confess say aku Budi\n.confessch setchannel",
   isOwner: false,
-  isPremium: true,
+  isPremium: false,
   isGroup: false,
   isPrivate: false,
-  cooldown: 60,
+  cooldown: 8,
   energi: 0,
   isEnabled: true,
 };
 
-if (!global.confessData) global.confessData = new Map();
+const MAX_LEN = 500;
+const MIN_LEN = 3;
+const SUBS = new Set(["confess", "kirim", "say", "ngomong", "reply", "balas", "like", "suka", "list", "daftar",
+  "read", "baca", "detail", "del", "hapus", "delete", "setchannel", "setgrup", "set", "delchannel",
+  "resetchannel", "mode", "stats", "stat", "statistik", "help", "bantuan", "menu"]);
+
+// ── helpers data (pola confesswall: satu key settings global) ──
+function getCh(db) {
+  try {
+    let ch = db.setting("confessv3");
+    if (!ch || typeof ch !== "object") ch = {};
+    if (!Array.isArray(ch.posts)) ch.posts = [];
+    if (typeof ch.counter !== "number") ch.counter = 0;
+    if (typeof ch.anonymousMode !== "boolean") ch.anonymousMode = true; // default: reply anonim
+    if (!ch.channel) ch.channel = null; // jid grup/channel tujuan confess
+    return ch;
+  } catch (e) {
+    console.error("[confess] getCh error:", e.message);
+    return { posts: [], counter: 0, anonymousMode: true, channel: null };
+  }
+}
+
+function saveCh(db, ch) {
+  try {
+    db.setting("confessv3", ch);
+    db.save();
+  } catch (e) {
+    console.error("[confess] saveCh error:", e.message);
+  }
+}
+
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function formatTime(ts) {
+  try {
+    return new Date(ts).toLocaleString("id-ID", {
+      day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+    });
+  } catch {
+    return "unknown";
+  }
+}
+
+// cari post berdasarkan id (string pendek) ATAU nomor urut (#N)
+function findPost(ch, key) {
+  // key di-normalisasi dari smallcaps — user sering copy ID dari pesan bot
+  const k = fromSC(String(key || "")).trim();
+  if (!k) return null;
+  const byId = ch.posts.find((p) => p.id === k);
+  if (byId) return byId;
+  const num = parseInt(k, 10);
+  if (!Number.isNaN(num)) return ch.posts.find((p) => p.number === num) || null;
+  return null;
+}
+
+// ── format pesan ke channel ──
+function buildChannelPost(post) {
+  const head = post.anonymous
+    ? `📨 CONFESS ANONIM #${post.number}`
+    : `📨 CONFESS DARI ${post.senderName}`;
+  return [
+    head,
+    "",
+    `"${post.message}"`,
+    "",
+    `📅 ${formatTime(post.timestamp)}`,
+    `💬 Balas: .confess reply ${post.id} <pesan>`,
+    `❤️ Suka: .confess like ${post.id}`,
+    `📖 Detail: .confess read ${post.number}`,
+  ].join("\n");
+}
+
+function buildChannelReply(post, reply) {
+  return [
+    `💬 REPLY UNTUK CONFESS #${post.number}`,
+    "",
+    `📨 Dari: ${reply.anonymous ? "Anonim" : reply.senderName}`,
+    `💬 "${reply.message}"`,
+    "",
+    `📅 ${formatTime(reply.timestamp)}`,
+  ].join("\n");
+}
 
 async function handler(m, { sock }) {
-  const input = m.fullArgs?.trim() || m.text?.trim();
+  const db = getDatabase();
+  const args = (m.fullArgs || m.text || "").trim().split(/\s+/).filter(Boolean);
+  const sub = (args[0] || "").toLowerCase();
+  const ch = getCh(db);
 
-  if (!input || !input.includes("|")) {
-    return await m.reply(claraWrap("confess", [
-      `Kirim pesan rahasia ke seseorang, 2 mode: anonim & non-anonim.`,
+  // ─── HELP / no-arg ───
+  if (!sub || sub === "help" || sub === "bantuan" || sub === "menu") {
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", [
+      `Confess ke channel terpusat — 2 versi: anonim & non-anonim.`,
       ``,
-      `📌 Mode anonim (rahasia): ${m.prefix}confess <nomor>|<pesan>`,
-      `📌 Mode non-anonim (nama terungkap): ${m.prefix}confess <nomor>|<pesan>|<nama>`,
+      `💌 KIRIM CONFESS`,
+      `🔒 Anonim : ${m.prefix}confess <pesan>`,
+      `👤 Non-anonim : ${m.prefix}confess say <pesan>`,
       ``,
-      `💡 Contoh: ${m.prefix}confess 6281234567890|Hai kak, aku suka kamu!`,
-      `${m.prefix}confess 6281234567890|Hai! Aku Budi|Budi`,
+      `💬 REPLY — ${m.prefix}confess reply <id> <pesan>`,
+      `${ch.anonymousMode ? "🔒 Anonim (sesuai mode)" : "👤 Nama terlihat (sesuai mode)"} — atur via mode owner`,
       ``,
-      `🤫 Mode anonim: identitas 100% aman`,
-      `📝 Mode non-anonim: nama kamu ditampilkan`,
-    ]));
-  }
-
-  const parts = input.split("|");
-  const rawNumber = parts[0] || "";
-  const message = (parts[1] || "").trim();
-  const senderName = (parts[2] || "").trim();
-
-  const isAnonim = !senderName;
-
-  if (!rawNumber || !message) {
-    return m.reply(claraWrap("confess", [
-      `Format salah nih!`,
+      `❤️ LIKE — ${m.prefix}confess like <id>`,
+      `📖 DETAIL — ${m.prefix}confess read <id/nomor>`,
+      `📋 DAFTAR — ${m.prefix}confess list`,
       ``,
-      `📌 Anonim: ${m.prefix}confess <nomor>|<pesan>`,
-      `📌 Non-anonim: ${m.prefix}confess <nomor>|<pesan>|<nama>`,
-    ]));
+      `🔧 OWNER`,
+      `${m.prefix}confess setchannel (di grup target)`,
+      `${m.prefix}confess mode <anon/nonanon> — atur reply`,
+      `${m.prefix}confess del <id/nomor>`,
+      ``,
+      `📊 ${m.prefix}confess stats — statistik confess`,
+      `❓ Channel: ${ch.channel ? "✅ sudah diatur" : "❌ belum diatur"}`,
+    ].join("\n")));
   }
 
-  let targetNumber = rawNumber.trim().replace(/[^0-9]/g, "");
-
-  if (targetNumber.startsWith("0")) {
-    targetNumber = "62" + targetNumber.slice(1);
-  }
-
-  if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(claraWrap("confess", "Nomor tujuan gak valid nih!", "error"));
-  }
-
-  const targetJid = targetNumber + "@s.whatsapp.net";
-  const senderNumber = m.sender.split("@")[0];
-
-  if (targetNumber === senderNumber) {
-    return m.reply(claraWrap("confess", "Nggak bisa confess ke diri sendiri! 😂", "error"));
-  }
-
-  try {
-    const [onWa] = await sock.onWhatsApp(targetNumber);
-    if (!onWa?.exists) {
-      return m.reply(claraWrap("confess", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
+  // ─── CONFESS (anonim) — sub .confess confess <pesan> (kompatibilitas) ───
+  if (sub === "confess" || sub === "kirim") {
+    const message = args.slice(1).join(" ").trim();
+    if (!message || message.length < MIN_LEN) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", [
+        `Pesan kependekan! Minimal ${MIN_LEN} karakter.`,
+        ``,
+        `💡 Contoh: ${m.prefix}confess aku suka sama dia`,
+      ].join("\n"), "error"));
     }
-  } catch (e) {
-    console.error("[confess.js] onWhatsApp check:", e.message);
+    if (message.length > MAX_LEN) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+    }
+
+    await m.react("🕒");
+    ch.counter = (ch.counter || 0) + 1;
+    const post = {
+      id: generateId(),
+      number: ch.counter,
+      message,
+      sender: m.sender,
+      senderName: m.pushName || "User",
+      timestamp: Date.now(),
+      anonymous: true,
+      likes: [],
+      replies: [],
+    };
+    ch.posts.push(post);
+    saveCh(db, ch);
+
+    if (ch.channel) {
+      try {
+        await sock.sendMessage(ch.channel, { text: buildChannelPost(post) });
+      } catch (e) {
+        console.error("[confess] kirim ke channel gagal:", e.message);
+      }
+      await m.react("🐣");
+      return m.reply(claraWrap("confess v3", [
+        `✅ Confess anonim *#${post.number}* berhasil dikirim ke channel!`,
+        ``,
+        `🆔 ID: *${post.id}* (simpan buat di-reply)`,
+      ].join("\n")));
+    }
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", [
+      `✅ Confess anonim *#${post.number}* tersimpan!`,
+      ``,
+      `📌 Belum ada channel confess diatur.`,
+      `Owner bisa set: ${m.prefix}confess setchannel (di grup target)`,
+    ].join("\n")));
   }
 
-  if (message.length < 5) {
-    return m.reply(claraWrap("confess", "Pesan kependekan nih! Minimal 5 karakter.", "error"));
+  // ─── SAY (non-anonim) ───
+  if (sub === "say" || sub === "ngomong") {
+    const message = args.slice(1).join(" ").trim();
+    if (!message || message.length < MIN_LEN) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", [
+        `Pesan kependekan! Minimal ${MIN_LEN} karakter.`,
+        ``,
+        `💡 Contoh: ${m.prefix}confess say aku Budi, hai semua`,
+      ].join("\n"), "error"));
+    }
+    if (message.length > MAX_LEN) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+    }
+
+    await m.react("🕒");
+    ch.counter = (ch.counter || 0) + 1;
+    const post = {
+      id: generateId(),
+      number: ch.counter,
+      message,
+      sender: m.sender,
+      senderName: m.pushName || "User",
+      timestamp: Date.now(),
+      anonymous: false,
+      likes: [],
+      replies: [],
+    };
+    ch.posts.push(post);
+    saveCh(db, ch);
+
+    if (ch.channel) {
+      try {
+        await sock.sendMessage(ch.channel, { text: buildChannelPost(post) });
+      } catch (e) {
+        console.error("[confess] kirim ke channel gagal:", e.message);
+      }
+      await m.react("🐣");
+      return m.reply(claraWrap("confess v3", [
+        `✅ Confess non-anonim dari *${post.senderName}* (*#${post.number}*) terkirim!`,
+        ``,
+        `🆔 ID: *${post.id}* (simpan buat di-reply)`,
+      ].join("\n")));
+    }
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", [
+      `✅ Confess non-anonim *#${post.number}* tersimpan!`,
+      ``,
+      `📌 Belum ada channel confess diatur.`,
+      `Owner bisa set: ${m.prefix}confess setchannel (di grup target)`,
+    ].join("\n")));
   }
 
-  if (message.length > 1000) {
-    return m.reply(claraWrap("confess", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
+  // ─── REPLY ───
+  if (sub === "reply" || sub === "balas") {
+    const key = args[1] || "";
+    const replyMsg = args.slice(2).join(" ").trim();
+    const post = findPost(ch, key);
+
+    if (!key || !replyMsg) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", [
+        `Format: ${m.prefix}confess reply <id/nomor> <pesan>`,
+        ``,
+        `💡 Contoh: ${m.prefix}confess reply ${ch.posts.at(-1)?.id || "abc12"} aku setuju!`,
+      ].join("\n"), "error"));
+    }
+    if (!post) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Confess dengan id/nomor *${key}* gak ditemukan!`, "error"));
+    }
+    if (replyMsg.length > MAX_LEN) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Balasan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+    }
+
+    await m.react("🕒");
+    const reply = {
+      id: generateId(),
+      message: replyMsg,
+      sender: m.sender,
+      senderName: m.pushName || "User",
+      anonymous: ch.anonymousMode, // reply ikut mode global (ala script)
+      timestamp: Date.now(),
+    };
+    post.replies = post.replies || [];
+    post.replies.push(reply);
+    saveCh(db, ch);
+
+    if (ch.channel) {
+      try {
+        await sock.sendMessage(ch.channel, { text: buildChannelReply(post, reply) });
+      } catch (e) {
+        console.error("[confess] kirim reply ke channel gagal:", e.message);
+      }
+    }
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", [
+      `✅ Balasan untuk confess *#${post.number}* terkirim!`,
+      `🔒 Identitas kamu: ${ch.anonymousMode ? "anonim" : "kelihatan (" + reply.senderName + ")"}`,
+    ].join("\n")));
   }
 
-  // Build message based on mode
-  let confessText;
-  if (isAnonim) {
-    confessText =
-      `💌 Ada seseorang yang ngirim pesan buat kamu\n\n` +
-      `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
-      `  \`\`\`${message}\`\`\`\n\n` +
-      `  🔒 _Pesan ini dikirim secara *ᴀɴᴏɴɪᴍ*_\n` +
-      `Identitas pengirim dirahasiakan\n` +
-      `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
-      "";
-  } else {
-    confessText =
-      `💌 *${senderName}* ngirim pesan buat kamu\n\n` +
-      `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
-      `  \`\`\`${message}\`\`\`\n\n` +
-      `  📝 _Pesan ini dikirim secara *ɴᴏɴ-ᴀɴᴏɴɪᴍ*_\n` +
-      `Pengirim: *${senderName}*\n` +
-      `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
-      "";
+  // ─── LIKE ───
+  if (sub === "like" || sub === "suka") {
+    const key = args[1] || "";
+    const post = findPost(ch, key);
+
+    if (!post) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+    }
+
+    post.likes = post.likes || [];
+    if (post.likes.includes(m.sender)) {
+      await m.react("🐣");
+      return m.reply(claraWrap("confess v3", `❤️ Kamu sudah menyukai confess *#${post.number}*!`));
+    }
+    post.likes.push(m.sender);
+    saveCh(db, ch);
+    await m.react("❤️");
+    return m.reply(claraWrap("confess v3", [
+      `❤️ Kamu menyukai confess *#${post.number}*!`,
+      `Total suka: *${post.likes.length}*`,
+    ].join("\n")));
   }
 
-  try {
-    const sentMsg = await sock.sendMessage(targetJid, {
-      text: confessText,
-      contextInfo: {
-        forwardingScore: 0,
-        isForwarded: false,
-      },
+  // ─── LIST ───
+  if (sub === "list" || sub === "daftar") {
+    if (ch.posts.length === 0) {
+      await m.react("🐣");
+      return m.reply(claraWrap("confess v3", [
+        `📭 Belum ada confess.`,
+        ``,
+        `💡 Mulai: ${m.prefix}confess confess <pesan>`,
+      ].join("\n")));
+    }
+
+    const latest = ch.posts.slice(-10).reverse();
+    let msg = `📋 POST TERAKHIR (${latest.length} dari ${ch.posts.length} total)\n\n`;
+    latest.forEach((p) => {
+      const type = p.anonymous ? "🔒 Anonim" : `👤 ${p.senderName}`;
+      const preview = p.message.length > 40 ? p.message.slice(0, 40) + "..." : p.message;
+      msg += `*#${p.number}* ${type}\n`;
+      msg += `📝 ${preview}\n`;
+      msg += `❤️ ${p.likes?.length || 0} | 💬 ${(p.replies || []).length} | 🆔 ${p.id}\n\n`;
     });
-
-    global.confessData.set(sentMsg.key.id, {
-      senderJid: m.sender,
-      senderChat: m.chat,
-      targetJid: targetJid,
-      isAnonim,
-      senderName: isAnonim ? null : senderName,
-      createdAt: Date.now(),
-    });
-
-    // Track stats
-    trackConfess(m.sender, targetJid, isAnonim);
-
-    setTimeout(() => {
-      global.confessData.delete(sentMsg.key.id);
-    }, 24 * 60 * 60 * 1000);
-
-    const modeLine = isAnonim
-      ? "│ • 🔒 Mode : Anonim (identitas aman)"
-      : `│ • 📝 Mode : Non-Anonim (${senderName})`;
-    await m.reply(novaGameBox({
-      title: "pesan terkirim", icon: "💘",
-      flavor: "💘 *PESAN TERKIRIM!*",
-      body: [
-        `│ • 📱 Ke : ${targetNumber}`,
-        modeLine,
-        "│ • ✉️ Kalau dia balas, otomatis diterusin ke sini",
-      ].join("\n"),
-      cta: gameCTA("confess"),
-    }));
-    await m.react("💌");
-  } catch (error) {
-    console.error("[confess.js] Send error:", error.message);
-    await m.reply(claraWrap("confess", `Gagal kirim pesan! ${error.message}`, "error"));
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", msg));
   }
-}
 
-async function replyHandler(m, { sock }) {
-  try {
-    if (!m.quoted) return false;
+  // ─── READ / DETAIL ───
+  if (sub === "read" || sub === "baca" || sub === "detail") {
+    const key = args[1] || "";
+    const post = findPost(ch, key);
 
-    const quotedId = m.quoted?.id || m.quoted?.key?.id;
-    if (!quotedId) return false;
+    if (!post) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+    }
 
-    const confessInfo = global.confessData.get(quotedId);
-    if (!confessInfo) return false;
+    let msg = `📨 CONFESS #${post.number}\n\n`;
+    msg += `📝 "${post.message}"\n\n`;
+    msg += `📅 ${formatTime(post.timestamp)}\n`;
+    msg += `🔒 ${post.anonymous ? "Anonim" : post.senderName}\n`;
+    msg += `❤️ ${post.likes?.length || 0} suka\n`;
+    msg += `💬 ${(post.replies || []).length} balasan\n\n`;
 
-    if (m.sender !== confessInfo.targetJid) return false;
-
-    const replyMessage = m.body?.trim();
-    if (!replyMessage) return false;
-
-    let replyText;
-    if (confessInfo.isAnonim) {
-      replyText =
-        `💕 Orang yang kamu confess balas pesanmu!\n\n` +
-        `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
-        `  \`\`\`${replyMessage}\`\`\`\n\n` +
-        `  🔒 _Identitas kamu tetap aman (anonim)_\n\n` +
-        "";
+    const replies = post.replies || [];
+    if (replies.length > 0) {
+      msg += `📩 BALASAN:\n`;
+      replies.slice(-5).forEach((r) => {
+        msg += `• ${r.anonymous ? "🔒 Anonim" : r.senderName}: "${r.message}"\n`;
+      });
+      if (replies.length > 5) msg += `... dan ${replies.length - 5} balasan lainnya\n`;
     } else {
-      replyText =
-        `💕 *${confessInfo.senderName}* — orang yang kamu confess balas!\n\n` +
-        `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
-        `  \`\`\`${replyMessage}\`\`\`\n\n` +
-        `  📝 _Balasan untuk confess non-anonim kamu_\n\n` +
-        "";
+      msg += `📩 Belum ada balasan.\n`;
+    }
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", msg));
+  }
+
+  // ─── SETCHANNEL (owner, di grup target — ala !setconfesschannel) ───
+  if (sub === "setchannel" || sub === "setgrup" || sub === "set") {
+    if (!m.isOwner) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", "⛔ Cuma owner yang bisa atur channel confess!", "error"));
+    }
+    if (!m.isGroup) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", [
+        `Command ini harus dipakai DI GRUP yang mau dijadiin channel.`,
+        ``,
+        `💡 Join bot ke grupnya → ketik ${m.prefix}confess setchannel di sana.`,
+      ].join("\n"), "error"));
     }
 
-    await sock.sendMessage(confessInfo.senderChat, {
-      text: replyText,
-      contextInfo: {
-        forwardingScore: 0,
-        isForwarded: false,
-      },
-    });
-
-    await sock.sendMessage(m.chat, {
-      text:
-        `✅ Balasan terkirim ke pengirim!\n\n` +
-        "",
-    });
-
-    global.confessData.delete(quotedId);
-    return true;
-  } catch (error) {
-    console.error("[confess.js] Reply handler error:", error.message);
-    return false;
+    await m.react("🕒");
+    ch.channel = m.chat;
+    saveCh(db, ch);
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", [
+      `✅ Channel confess diatur ke grup ini!`,
+      ``,
+      `📌 Semua confess baru bakal dikirim ke sini.`,
+      `🔓 Reset: ${m.prefix}confess delchannel`,
+    ].join("\n")));
   }
+
+  // ─── DELCHANNEL (owner) — reset channel ───
+  if (sub === "delchannel" || sub === "resetchannel") {
+    if (!m.isOwner) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", "⛔ Cuma owner yang bisa reset channel confess!", "error"));
+    }
+    ch.channel = null;
+    saveCh(db, ch);
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", "✅ Channel confess direset. Confess baru cuma tersimpan di database."));
+  }
+
+  // ─── MODE (owner) — reply anon atau non-anon ───
+  if (sub === "mode") {
+    if (!m.isOwner) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", "⛔ Cuma owner yang bisa atur mode confess!", "error"));
+    }
+    const mode = (args[1] || "").toLowerCase();
+    if (mode === "anon" || mode === "anonymous" || mode === "anonim") {
+      ch.anonymousMode = true;
+      saveCh(db, ch);
+      await m.react("🐣");
+      return m.reply(claraWrap("confess v3", "🔒 Mode reply: ANONIM — identitas yang balas gak kelihatan."));
+    }
+    if (mode === "nonanon" || mode === "non-anon" || mode === "non" || mode === "nonanonim") {
+      ch.anonymousMode = false;
+      saveCh(db, ch);
+      await m.react("🐣");
+      return m.reply(claraWrap("confess v3", "👤 Mode reply: NON-ANONIM — nama yang balas kelihatan."));
+    }
+    await m.react("❗");
+    return m.reply(claraWrap("confess v3", [
+      `Mode sekarang: ${ch.anonymousMode ? "🔒 ANONIM" : "👤 NON-ANONIM"} (khusus reply)`,
+      ``,
+      `💡 Pilihan: ${m.prefix}confess mode anon | nonanon`,
+    ].join("\n")));
+  }
+
+  // ─── DEL (owner) — hapus confess ───
+  if (sub === "del" || sub === "hapus" || sub === "delete") {
+    if (!m.isOwner) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", "⛔ Cuma owner yang bisa hapus confess!", "error"));
+    }
+    const key = fromSC(args[1] || "").trim();
+    const idx = ch.posts.findIndex((p) => p.id === key || (key && p.number === parseInt(key, 10)));
+    if (idx === -1) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Confess dengan id/nomor *${key || "?"}* gak ditemukan!`, "error"));
+    }
+    const deleted = ch.posts.splice(idx, 1)[0];
+    saveCh(db, ch);
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", `🗑️ Confess *#${deleted.number}* berhasil dihapus!`));
+  }
+
+  // ─── STATS ───
+  if (sub === "stats" || sub === "stat" || sub === "statistik") {
+    const total = ch.posts.length;
+    const anon = ch.posts.filter((p) => p.anonymous).length;
+    const nonAnon = total - anon;
+    const totalLikes = ch.posts.reduce((s, p) => s + (p.likes?.length || 0), 0);
+    const totalReplies = ch.posts.reduce((s, p) => s + (p.replies?.length || 0), 0);
+
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", [
+      `📊 STATISTIK CONFESS`,
+      ``,
+      `📨 Total confess: *${total}*`,
+      `🔒 Anonim: *${anon}*`,
+      `👤 Non-anonim: *${nonAnon}*`,
+      `❤️ Total like: *${totalLikes}*`,
+      `💬 Total balasan: *${totalReplies}*`,
+      `📡 Channel: ${ch.channel ? "✅ diatur" : "❌ belum"}`,
+      `🔒 Mode reply: ${ch.anonymousMode ? "Anonim" : "Non-Anonim"}`,
+    ].join("\n")));
+  }
+
+  // ─── default: .confess <pesan> — ANONIM langsung (ala !confess <pesan>) ───
+  if (!SUBS.has(sub)) {
+    const message = (m.fullArgs || m.text || "").trim();
+    if (!message || message.length < MIN_LEN) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", [
+        `Pesan kependekan! Minimal ${MIN_LEN} karakter.`,
+        ``,
+        `💡 Contoh: ${m.prefix}confess aku suka sama dia`,
+      ].join("\n"), "error"));
+    }
+    if (message.length > MAX_LEN) {
+      await m.react("❗");
+      return m.reply(claraWrap("confess v3", `Pesan kepanjangan! Maksimal ${MAX_LEN} karakter.`, "error"));
+    }
+
+    await m.react("🕒");
+    ch.counter = (ch.counter || 0) + 1;
+    const post = {
+      id: generateId(),
+      number: ch.counter,
+      message,
+      sender: m.sender,
+      senderName: m.pushName || "User",
+      timestamp: Date.now(),
+      anonymous: true,
+      likes: [],
+      replies: [],
+    };
+    ch.posts.push(post);
+    saveCh(db, ch);
+
+    if (ch.channel) {
+      try {
+        await sock.sendMessage(ch.channel, { text: buildChannelPost(post) });
+      } catch (e) {
+        console.error("[confess] kirim ke channel gagal:", e.message);
+      }
+      await m.react("🐣");
+      return m.reply(claraWrap("confess v3", [
+        `✅ Confess anonim *#${post.number}* berhasil dikirim ke channel!`,
+        ``,
+        `🆔 ID: *${post.id}* (simpan buat di-reply)`,
+      ].join("\n")));
+    }
+    await m.react("🐣");
+    return m.reply(claraWrap("confess v3", [
+      `✅ Confess anonim *#${post.number}* tersimpan!`,
+      ``,
+      `📌 Belum ada channel confess diatur.`,
+      `Owner bisa set: ${m.prefix}confess setchannel (di grup target)`,
+    ].join("\n")));
+  }
+
+  // ─── sub SUBS tapi gak kepakai (safety) ───
+  await m.react("❗");
+  return m.reply(claraWrap("confess v3", `💡 Ketik ${m.prefix}confess help buat lihat semua cara pakai`));
 }
 
-export { pluginConfig as config, handler, replyHandler };
+export { pluginConfig as config, handler };

@@ -10,7 +10,7 @@
 
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
-| KuroNeko API | `sylvatica.my.id/api/ai/*` | 28 endpoint AI: chatgpt, claude, gpt5, qwen3, deepsek, mistral, perplexity, aiseek, kuroneko, nova, feeb, gptanon, bypassai, imagenai, txt2img, nanobanana, animetoreal, img2prompt, toonmix, tts, text2vid, aisong | ✅ Free (key via login) |
+| KuroNeko API | `sylvatica.my.id/api/ai/*` | ⚠️ RATE LIMIT 60 REQUEST (limit ketat — cuma fitur unik/fallback). TERPAKAI: .aivideo fallback (text2vid), .aivoiceceleb (tts 12 voice seleb), .img2style gaya bebas (toonmix), .animetoreal (animetoreal — UNIK), .editimg engine terakhir (nanobanana), rantai AI step 5 (kuroneko). Hidup utk key owner: text2vid, tts, toonmix, animetoreal, nanobanana, kuroneko, gpt5, claude, qwen3, mistral, perplexity, bypassai, aiseek. Mati: chatgpt (debug leak), gptanon (403), imagenai (auth), txt2img (session), aisong (backend), nova, deepsek | ⚠️ Rate limit 60 req |
 | OpenAI | `api.openai.com` | .gpt4o, .ai-set, nova-ai-service | ⚠️ Key required |
 | Anthropic Claude | `api.anthropic.com` | .cegpt, claudehaiku scraper | ⚠️ Key required |
 | Google Gemini | `generativelanguage.googleapis.com` | Gemini Vision, .nova-ai, .ai-set | ⚠️ Key required |
@@ -1490,7 +1490,7 @@ https://upscayl.org
 
 | Kategori | Jumlah | Endpoint Pilihan |
 |----------|--------|------------------|
-| 🤖 AI | 23 | gemini, gemini-vision, claude, claude-sonnet-5, gpt54, gpt55, deepsek, bing, nano-banana, quillbot, suno (musik AI), txt2vid, text2speech |
+| 🤖 AI | 23 | gemini, gemini-vision, claude, claude-sonnet-5, gpt54, gpt55, deepsek, bing, nano-banana, quillbot, suno (musik AI — DOWN upstream 400), txt2vid (TERPAKAI .aivideo), text2speech (TERPAKAI .suaraai 42 voice), img2style (TERPAKAI .img2style 80+ gaya) |
 | 🖼️ AI-Image | 12 | img2prompt, img2style, imglarger (upscale), remove-bg, remove-bg-v2, upscaler |
 | 📥 Downloader | 26 | tiktok-dl, ytmp3, ytmp4, ytplay, youtubedl, youtube-info, instagram, instagram-v2, facebook, threads, x (twitter), soundcloud, spotify, terabox, mediafire, gdrive, mega, github, capcut, douyin, bilibili, videy, savefrom, applemusic, npmjs |
 | 🎯 Stalker | 14 | tiktok, instagram, youtube, github, npm, roblox, pinterest, lahelu, tiktok-repost, ffchecker, cek-evo-gun-ff, cek-membership-ff, cek-prime-ff, cek-hari-ff |

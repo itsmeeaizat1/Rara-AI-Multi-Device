@@ -241,5 +241,11 @@ export async function aiFallbackChat(prompt, opts = {}) {
   try { return finish(await viaXemoz(fullPrompt)); }
   catch (e) { errors.push(`xemoz: ${e.message}`); }
 
+  // 5. KuroNeko (sylvatica.my.id) — flagship AI KuroNeko (key owner)
+  try {
+    const { kuronekoChat } = await import("../scraper/kuroneko.js");
+    return finish(await kuronekoChat(fullPrompt));
+  } catch (e) { errors.push(`kuroneko: ${e.message}`); }
+
   throw new Error(`Semua fallback AI gagal (${errors.join(" | ")})`);
 }
