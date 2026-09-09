@@ -288,3 +288,27 @@ export async function shapeEkspedisi(m, sock, mode = "berangkat", delay = SHAPE_
   }
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🌿 FORAGE — KERANJANG MENGISI
+// (khas forage, batch #11)
+// Bentuk: KERANJANG HASIL — tiap frame 1 hasil forage
+// "masuk keranjang" (slot kosong · jadi item), counter
+// N/4 terkumpul, akhir 🧺 PENUH siap dibawa pulang.
+// ══════════════════════════════════════════════════
+export async function shapeForage(m, sock, delay = SHAPE_ANIM_MS) {
+  const loot = ["🌿", "🍄", "🍀", "🌸"];
+  const slots = 4;
+  const frames = [];
+  for (let i = 0; i <= slots; i++) {
+    const row = [];
+    for (let j = 0; j < slots; j++) row.push(j < i ? loot[j] : "·");
+    const note = i === 0
+      ? "membedah semak mencari tanaman..."
+      : i === slots
+        ? "🧺 keranjang penuh! hasil forage siap dibawa pulang 🎉"
+        : `hasil masuk keranjang... (${i}/${slots} terkumpul)`;
+    frames.push(`${hdr("Keranjang Mengisi")}\n\n🧺 ${row.join(" ")}\n\n${note}`);
+  }
+  await morphCore(m, sock, frames, delay);
+}
