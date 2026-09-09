@@ -611,10 +611,8 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
   <a href="https://www.google.com"><img src="https://img.shields.io/badge/Google-Search%20%7C%20Cloud-4285F4?style=flat-square&logo=google&logoColor=white"></a>
   <a href="https://inceptionlabs.ai"><img src="https://img.shields.io/badge/Inception_Labs-Mercury_2_dLLM-00A884?style=flat-square&logo=ai&logoColor=white"></a>
   <a href="https://aistudio.google.com"><img src="https://img.shields.io/badge/Google_AI_Studio-Gemini%20Native-4285F4?style=flat-square&logo=google&logoColor=white"></a>
-  <a href="https://api.haidarxd.my.id"><img src="https://img.shields.io/badge/Haidar_AI-Gemini%20%7C%20Llama%20%7C%20DeepSeek-F59E0B?style=flat-square&logo=ai&logoColor=white"></a>
+  <img src="https://img.shields.io/badge/Haidar_AI-Gemini%20%7C%20Llama%20%7C%20DeepSeek-F59E0B?style=flat-square&logo=ai&logoColor=white">
   <img src="https://img.shields.io/badge/Kuroneko_AI-Sora%20%7C%20nano--banana%20%7C%20TTS%2042-9333EA?style=flat-square&logo=ai&logoColor=white">
-  <a href="https://api.ikyyxd.my.id"><img src="https://img.shields.io/badge/Ikyy_AI-Free%20Chat%20API-EC4899?style=flat-square&logo=ai&logoColor=white"></a>
-  <a href="https://api-xemoz-official.my.id"><img src="https://img.shields.io/badge/Xemoz_AI-Backup%20Chain-14B8A6?style=flat-square&logo=ai&logoColor=white"></a>
   <a href="https://free.ai"><img src="https://img.shields.io/badge/Free.ai-Qwen3_30B%20%2B%20SDXL%20Image-22C55E?style=flat-square&logo=openai&logoColor=white"></a>
   <a href="https://puter.com"><img src="https://img.shields.io/badge/Puter-SmartReply%20AI-7C3AED?style=flat-square&logo=puter&logoColor=white"></a>
   <a href="https://openrouter.ai"><img src="https://img.shields.io/badge/OpenRouter-Free%20Models-8B5CF6?style=flat-square&logo=openrouter&logoColor=white"></a>
