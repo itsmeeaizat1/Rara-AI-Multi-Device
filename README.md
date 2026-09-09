@@ -650,3 +650,17 @@ Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat)
 All Rights Reserved. Made in Indonesia 🇮🇩
 
 Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
+
+---
+
+## 💰 Donate
+
+<p align="center">
+  <a href="https://base44.app/api/apps/6a8e91613e5310b32d7543f3/files/mp/public/6a8e91613e5310b32d7543f3/56418338f_qris-aizat-store.jpg">
+    <img src="https://img.shields.io/badge/Donate-QRIS-7B68EE?style=flat-square&logo=qrcode&logoColor=white">
+  </a>
+</p>
+
+<div align="center">
+  <p>Jika kamu ingin mendukung pengembangan bot ini, silakan donasi via QRIS. Terima kasih!</p>
+</div>
