@@ -572,7 +572,6 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
   <a href="https://www.tiktok.com/@itsmee_aizat"><img src="https://img.shields.io/badge/TikTok-@itsmee_aizat-black?style=flat-square&logo=tiktok&logoColor=white"></a>
   <a href="https://www.instagram.com"><img src="https://img.shields.io/badge/Instagram-@itsmee_aizat-E4405F?style=flat-square&logo=instagram&logoColor=white"></a>
   <a href="https://github.com/itsmeeaizat"><img src="https://img.shields.io/badge/GitHub-itsmeeaizat-181717?style=flat-square&logo=github&logoColor=white"></a>
-  <a href="https://wa.me/628174887770"><img src="https://img.shields.io/badge/WhatsApp-628174887770-25D366?style=flat-square&logo=whatsapp&logoColor=white"></a>
 </p>
 
 <div align="center">
@@ -651,20 +650,3 @@ Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat)
 All Rights Reserved. Made in Indonesia 🇮🇩
 
 Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
-
----
-
-## 💰 Donate
-
-<p align="center">
-  <a href="https://wa.me/628174887770">
-    <img src="https://img.shields.io/badge/Donate-WhatsApp-25D366?style=flat-square&logo=whatsapp&logoColor=white">
-  </a>
-  <a href="QRIS_URL_HERE">
-    <img src="https://img.shields.io/badge/Donate-QRIS-7B68EE?style=flat-square&logo=qrcode&logoColor=white">
-  </a>
-</p>
-
-<div align="center">
-  <p>Jika kamu ingin mendukung pengembangan bot ini, silakan donasi via WhatsApp atau QRIS. Terima kasih!</p>
-</div>
