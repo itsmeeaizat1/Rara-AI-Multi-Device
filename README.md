@@ -53,7 +53,7 @@ Automation:
 | Fitur | Deskripsi | Command |
 |-------|-----------|---------|
 | Session AI Terpadu | AI satuan inget riwayat chat (TTL 30 mnt), .novaai + .autonovaai satu memori, paham pesan yang di-reply | `.deepseek` / `.novaai` dll |
-| 21 AI Satuan Revival | Rantai fallback 4-tier (brand → Haidar → Ikyy → Xemoz), key kosong tetap dilayani | `.grok` / `.gemini` / `.gpt55` dll |
+| 21 AI Satuan Revival | Rantai fallback 4-tier (brand → brand → brand → brand), key kosong tetap dilayani | `.grok` / `.gemini` / `.gpt55` dll |
 | Kado Pasangan | Kasih item inventory ke pasangan, +affection per rarity (common→legendary) | `.kado` |
 | Bulan Madu | Honeymoon khusus married, sekali 30 hari, bonus EXP/Gold/Affection berdua | `.honeymoon` |
 | Meditasi | Pulih HP/Mana/Energi sekaligus dengan animasi istirahat | `.meditation` |
