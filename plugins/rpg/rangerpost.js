@@ -1,15 +1,21 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rangerpost.js — Ranger Post (daily patrol duty, earn salary)
+// Rombak khas (batch #14): animasi Radar Patroli + item khas
+// Lencana Jasa + tool Radar Ranger (+10% salary & reward per level).
+// FIX: expReward tadinya di-declare tapi GAK PERNAH dibayar →
+// sekarang addExp beneran (bonus: auto payout uang dari addExp).
+
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { ensureRpg, addExp, getCash, spendCash, formatRp } from "../../src/lib/nova-rpg-service.js";
+import { shapeRanger } from "../../src/lib/nova-rpg-shapes.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "rangerpost",
   alias: ["rangerpost", "rangerduty", "patrolduty", "ranger"],
   category: "rpg",
   description: "Ranger Post — daily check-in, patrol duty, salary RPG",
-  usage: ".rangerpost (check-in/info)\n.rangerpost task <1-3> (lakukan tugas)",
+  usage: ".rangerpost (check-in/info)\n.rangerpost task <1-3> (lakukan tugas)\n.rangerpost radar (status tool)\n.rangerpost upgrade (upgrade radar)",
   example: ".rangerpost\n.rangerpost task 1",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 3, isEnabled: true,
@@ -34,9 +40,28 @@ const NARRATIVES = {
   ],
 };
 
+// ─── KHAS RANGERPOST: 🎖️ Lencana Jasa & 📡 Radar Ranger ───
+const TOOL = {
+  name: "📡 Radar Ranger", dbKey: "rangerTool",
+  BADGE_CHANCE: 30,             // % per tugas sukses (hari perfect 3/3 → +2 bonus)
+  badgeCost: (lv) => 2 * (lv + 1),
+  rpCost: (lv) => 25000 * (lv + 1),
+  bonus: (lv) => 0.1 * lv,      // salary & task reward +10% per level
+};
+const getTool = (jid) => (getDatabase().getPlayerData(jid, TOOL.dbKey) || { level: 0, spent: 0, badges: 0 });
+
 function getTodayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function taskListBody(data, prefix) {
+  return TASKS.map((t) => {
+    const done = data.tasksDone?.includes(t.id);
+    return done
+      ? `${t.emoji} ${t.name} ✅`
+      : `${t.emoji} ${t.name} → ${prefix}rangerpost task ${t.id}`;
+  }).join("\n");
 }
 
 async function handler(m, { sock }) {
@@ -44,70 +69,84 @@ async function handler(m, { sock }) {
     const subCmd = (m.args[0] || "").toLowerCase();
     const db = await getDatabase();
     const today = getTodayKey();
-    let data = await db.getPlayerData?.(m.sender, "rangerpost") || { lastCheckIn: null, tasksDone: [], totalGold: 0, level: 1, days: 0 };
+    let data = await db.getPlayerData?.(m.sender, "rangerpost") || { lastCheckIn: null, tasksDone: [], successCount: 0, totalGold: 0, level: 1, days: 0 };
+    const tool = getTool(m.sender);
+    const lv = tool.level || 0;
 
-    // Auto check-in
-    if (data.lastCheckIn !== today) {
-      data.lastCheckIn = today;
-      data.tasksDone = [];
-      data.days = (data.days || 0) + 1;
-      const salary = (data.level || 1) * 100;
-      try { await db.addGold?.(m.sender, salary); } catch {}
-      data.totalGold = (data.totalGold || 0) + salary;
-
-      // Level up every 7 days
-      if (data.days % 7 === 0) {
-        data.level = (data.level || 1) + 1;
-      }
-      await db.setPlayerData?.(m.sender, "rangerpost", data);
-      await m.react("🐣");
-      return m.reply(novaGameBox({
-        title: "rangerpost", icon: "🎖️",
-        flavor: "🎖️ *CHECK-IN BERHASIL!*",
-        body: [
-          `│ • 💰 Salary harian : +${salary} gold`,
-          `│ • 📅 Hari bertugas : ${data.days}`,
-          `│ • 🎖️ Ranger level : ${data.level || 1}`,
-          ...(data.days % 7 === 0 ? ["", `⭐ LEVEL UP! Ranger Lv.${data.level}`] : []),
-          "",
-          "Tugas hari ini:",
-          ...TASKS.map(t => {
-            const done = data.tasksDone?.includes(t.id);
-            return `${t.emoji} ${t.name} ${done ? "✅" : `→ ${m.prefix}rangerpost task ${t.id}`}`;
-          }),
-        ].join("\n"),
-        cta: gameCTA("rangerpost"),
-      }));
+    // ── subcommand khas: radar status ──
+    if (subCmd === "radar" || subCmd === "status") {
+      return m.reply(novaRpgBox("rangerpost",
+        `📡 RADAR RANGER KAMU\n\n` +
+        `Level : *Lv.${lv}*\n⭐ Bonus : +${10 * lv}% salary & reward\n🎖️ Lencana Jasa : ${tool.badges || 0}x\n💵 Uang : ${formatRp(getCash(m))}\n\n` +
+        `💡 Upgrade ke Lv.${lv + 1}: ${TOOL.badgeCost(lv)}x Lencana + ${formatRp(TOOL.rpCost(lv))}\nKetik: ${m.prefix}rangerpost upgrade`));
     }
 
+    // ── subcommand khas: upgrade ──
+    if (subCmd === "upgrade") {
+      const needB = TOOL.badgeCost(lv);
+      const needRp = TOOL.rpCost(lv);
+      if ((tool.badges || 0) < needB) {
+        await m.react("❌");
+        return m.reply(novaRpgBox("rangerpost",
+          `🎖️ Upgrade Radar ke Lv.${lv + 1} butuh:\n\n• Lencana Jasa : ${needB}x (punya ${tool.badges || 0}x)\n• Biaya : ${formatRp(needRp)}\n\n💡 Lencana didapat dari tugas sukses — 30% per tugas, hari perfect (3/3 sukses) bonus +2!`, "warn"));
+      }
+      if (!spendCash(m, needRp)) {
+        await m.react("❌");
+        return m.reply(novaRpgBox("rangerpost", `💵 Upgrade butuh *${formatRp(needRp)}*.\nUang kamu: ${formatRp(getCash(m))}\n💡 Kerja dulu: .nguli kerja / .kerja`, "warn"));
+      }
+      const fresh = getTool(m.sender);
+      fresh.badges = (fresh.badges || 0) - needB;
+      fresh.level = (fresh.level || 0) + 1;
+      fresh.spent = (fresh.spent || 0) + needRp;
+      await db.setPlayerData?.(m.sender, TOOL.dbKey, fresh);
+      await m.react("🐣");
+      return m.reply(novaRpgBox("rangerpost",
+        `📡 RADAR UPGRADED!\n\nLevel : Lv.${lv} → Lv.${lv + 1}\n⭐ Bonus : +${10 * (lv + 1)}% salary & reward\n\n🎖️ Material : −${needB} Lencana Jasa\n💵 Biaya : ${formatRp(needRp)}`, "success"));
+    }
+
+    // ── task ──
     if (subCmd === "task" || subCmd === "tugas") {
       const taskId = parseInt(m.args[1] || "0");
-      const task = TASKS.find(t => t.id === taskId);
+      const task = TASKS.find((t) => t.id === taskId);
       if (!task) {
         return m.reply(novaRpgBox("rangerpost", `Tugas tidak ditemukan. Pilih 1-3.`, "guide"));
       }
-
       if (data.tasksDone?.includes(taskId)) {
         return m.reply(novaRpgBox("rangerpost", `Tugas "${task.name}" sudah diselesaikan hari ini.`, "error"));
       }
 
-      await m.react("🕒");
-
+      await m.react("⏲️");
       const success = Math.random() < task.successRate;
-      const narrative = success
-        ? NARRATIVES.success[Math.floor(Math.random() * NARRATIVES.success.length)]
-        : NARRATIVES.fail[Math.floor(Math.random() * NARRATIVES.fail.length)];
 
+      // Animasi khas: radar patroli
+      await shapeRanger(m, sock, task, success);
+
+      let rewardGain = 0;
       if (success) {
-        try { await db.addGold?.(m.sender, task.reward); } catch {}
-        data.totalGold = (data.totalGold || 0) + task.reward;
+        rewardGain = Math.floor(task.reward * (1 + TOOL.bonus(lv)));
+        await db.addGold?.(m.sender, rewardGain);
+        data.totalGold = (data.totalGold || 0) + rewardGain;
+        // FIX BUG LAMA: expReward tadinya gak pernah dibayar
+        addExp(m, task.expReward);
+        data.successCount = (data.successCount || 0) + 1;
       }
 
       data.tasksDone.push(taskId);
+
+      // 🎖️ Lencana Jasa — 30% per sukses; hari perfect (3/3 sukses) bonus +2
+      let badgeGain = 0;
+      if (success) {
+        if (Math.random() * 100 < TOOL.BADGE_CHANCE) badgeGain = 1;
+        if (data.tasksDone.length === 3 && data.successCount === 3) badgeGain += 2;
+        if (badgeGain > 0) {
+          const fresh = getTool(m.sender);
+          fresh.badges = (fresh.badges || 0) + badgeGain;
+          await db.setPlayerData?.(m.sender, TOOL.dbKey, fresh);
+        }
+      }
       await db.setPlayerData?.(m.sender, "rangerpost", data);
 
       const remaining = 3 - data.tasksDone.length;
-
       await m.react("🐣");
       return m.reply(novaGameBox({
         title: "rangerpost", icon: "🎖️",
@@ -115,29 +154,62 @@ async function handler(m, { sock }) {
         body: [
           `${task.emoji} ${task.name} — ${task.desc}`,
           "",
-          narrative,
+          success ? NARRATIVES.success[Math.floor(Math.random() * NARRATIVES.success.length)]
+                  : NARRATIVES.fail[Math.floor(Math.random() * NARRATIVES.fail.length)],
           "",
-          success ? `│ • 💰 Reward : +${task.reward} gold` : "Tidak ada reward kali ini",
-          `│ • 📋 Sisa tugas : ${remaining}`,
+          success ? `💰 Reward : +${rewardGain} gold` : "Tidak ada reward kali ini",
+          success ? `⭐ EXP : +${task.expReward}` : "",
+          success ? `💵 Uang : Rp ${formatRp(getCash(m))}` : "",
+          badgeGain ? `🎖️ Lencana Jasa : +${badgeGain}x (total ${getTool(m.sender).badges}x)` : "",
+          `📋 Sisa tugas : ${remaining}`,
+          ...(remaining === 0 ? ["", "🎯 Semua tugas hari ini selesai! Kembali besok."] : []),
+        ].filter(Boolean).join("\n"),
+        cta: gameCTA("rangerpost"),
+      }));
+    }
+
+    // ── auto check-in harian ──
+    if (data.lastCheckIn !== today) {
+      data.lastCheckIn = today;
+      data.tasksDone = [];
+      data.successCount = 0;
+      data.days = (data.days || 0) + 1;
+      const salary = Math.floor((data.level || 1) * 100 * (1 + TOOL.bonus(lv)));
+      await db.addGold?.(m.sender, salary);
+      data.totalGold = (data.totalGold || 0) + salary;
+
+      let leveled = false;
+      if (data.days % 7 === 0) {
+        data.level = (data.level || 1) + 1;
+        leveled = true;
+      }
+      await db.setPlayerData?.(m.sender, "rangerpost", data);
+      await m.react("🐣");
+      return m.reply(novaGameBox({
+        title: "rangerpost", icon: "🎖️",
+        flavor: "🎖️ *CHECK-IN BERHASIL!*",
+        body: [
+          `💰 Salary harian : +${salary} gold`,
+          `📅 Hari bertugas : ${data.days}`,
+          `🎖️ Ranger level : ${data.level || 1}`,
+          ...(lv ? [`📡 Radar : Lv.${lv} (+${10 * lv}%)`] : []),
+          ...(leveled ? ["", `⭐ LEVEL UP! Ranger Lv.${data.level}`] : []),
+          "",
+          "Tugas hari ini:",
+          taskListBody(data, m.prefix),
         ].join("\n"),
         cta: gameCTA("rangerpost"),
       }));
     }
 
-    // STATUS (default)
-    let msg = "";
-    msg += `Ranger Level: *${data.level || 1}*\n`;
-    msg += `Total Days: *${data.days || 0}*\n`;
-    msg += `Total Gold: *${data.totalGold || 0}*\n`;
-    msg += `
-`;
-    msg += `Tugas hari ini (${data.tasksDone?.length || 0}/3):\n`;
-    TASKS.forEach(t => {
-      const done = data.tasksDone?.includes(t.id);
-      msg += `${t.emoji} ${t.name} ${done ? "✅" : "📋"}\n`;
-      if (!done) msg += `Reward: ${t.reward}g | ${m.prefix}rangerpost task ${t.id}\n`;
-    });
-        return m.reply(novaRpgBox("rangerpost", msg));
+    // ── STATUS (default) ──
+    return m.reply(novaRpgBox("rangerpost",
+      `🎖️ RANGER POST\n\n` +
+      `Ranger Level : *${data.level || 1}*\n` +
+      `Hari bertugas : *${data.days || 0}*\n` +
+      `Total gaji terkumpul : *${data.totalGold || 0} gold*\n` +
+      `📡 Radar : Lv.${lv}${lv ? ` (+${10 * lv}%)` : ""}\n\n` +
+      `Tugas hari ini (${data.tasksDone?.length || 0}/3):\n${taskListBody(data, m.prefix)}`));
   } catch (err) {
     console.error("rangerpost error:", err);
     await m.react("❌");
