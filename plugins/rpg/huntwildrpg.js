@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg, addItem, useEnergy, addExp } from "../../src/lib/no
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "huntwildrpg", alias: ["huntwildrpg", "huntwild"],
+  name: "huntwild", alias: ["huntwild", "huntwildrpg"],
   category: "rpg", description: "Berburu hewan liar (10 energy)",
-  usage: ".huntwildrpg", example: ".huntwildrpg",
+  usage: ".huntwild", example: ".huntwild",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 15, energi: 10, isEnabled: true,
 };
 const ANIMALS = ["rusa", "kelinci", "beruang", "serigala", "rubah", "babi hutan"];

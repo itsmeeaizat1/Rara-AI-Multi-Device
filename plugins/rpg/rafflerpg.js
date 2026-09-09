@@ -11,12 +11,12 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "rafflerpg",
-  alias: ["rafflerpg", "raffle", "lotere"],
+  name: "raffle",
+  alias: ["raffle", "rafflerpg", "lotere"],
   category: "rpg",
   description: "Beli tiket lotere — jackpot hingga 50.000 gold",
-  usage: ".rafflerpg <buy|cek>",
-  example: ".rafflerpg buy",
+  usage: ".raffle <buy|cek>",
+  example: ".raffle buy",
   isOwner: false,
   isPremium: false,
   isGroup: false,

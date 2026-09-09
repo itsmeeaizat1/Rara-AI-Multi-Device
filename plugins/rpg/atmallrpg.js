@@ -2,9 +2,9 @@ import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "atmallrpg", alias: ["atmallrpg", "atmall", "atmleaderboard"],
+  name: "atmall", alias: ["atmall", "atmallrpg", "atmleaderboard"],
   category: "rpg", description: "Leaderboard bank terkaya",
-  usage: ".atmallrpg", example: ".atmallrpg",
+  usage: ".atmall", example: ".atmall",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 async function handler(m, { sock }) {

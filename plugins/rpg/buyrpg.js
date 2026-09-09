@@ -2,9 +2,9 @@ import { animShop } from "../../src/lib/nova-rpg-anim.js";
 import { ensureRpg, saveRpg, removeGold, addItem } from "../../src/lib/nova-rpg-service.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "buyrpg", alias: ["buyrpg", "buy", "beli"],
+  name: "buy", alias: ["buy", "buyrpg", "beli"],
   category: "rpg", description: "Beli item dari toko RPG",
-  usage: ".buyrpg <item>", example: ".buyrpg scrollclass",
+  usage: ".buy <item>", example: ".buy scrollclass",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 const SHOP = {

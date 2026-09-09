@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "classrpg", alias: ["classrpg", "class", "kelas"],
+  name: "class", alias: ["class", "classrpg", "kelas"],
   category: "rpg", description: "Pilih kelas RPG (knight, mage, archer)",
-  usage: ".classrpg <knight/mage/archer>", example: ".classrpg mage",
+  usage: ".class <knight/mage/archer>", example: ".class mage",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 

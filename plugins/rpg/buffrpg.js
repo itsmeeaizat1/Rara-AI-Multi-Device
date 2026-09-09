@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "buffrpg", alias: ["buffrpg", "buff"],
+  name: "buff", alias: ["buff", "buffrpg"],
   category: "rpg", description: "Buff ATK +10 (biaya 10 mana)",
-  usage: ".buffrpg", example: ".buffrpg",
+  usage: ".buff", example: ".buff",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,
 };
 

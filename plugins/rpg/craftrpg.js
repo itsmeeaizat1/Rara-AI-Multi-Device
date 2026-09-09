@@ -9,12 +9,12 @@ import { animCraft } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "craftrpg",
-  alias: ["craftrpg", "craft", "crafting"],
+  name: "craft",
+  alias: ["craft", "craftrpg", "crafting"],
   category: "rpg",
   description: "Craft item dari material mentah (masak, ramuan, dll)",
-  usage: ".craftrpg <list|item>",
-  example: ".craftrpg hpPotion",
+  usage: ".craft <list|item>",
+  example: ".craft hpPotion",
   isOwner: false,
   isPremium: false,
   isGroup: false,

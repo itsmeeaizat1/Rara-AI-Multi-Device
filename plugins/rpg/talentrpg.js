@@ -2,9 +2,9 @@ import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "talentrpg", alias: ["talentrpg", "talent"],
+  name: "talent", alias: ["talent", "talentrpg"],
   category: "rpg", description: "Lihat talent berdasar kelas",
-  usage: ".talentrpg", example: ".talentrpg",
+  usage: ".talent", example: ".talent",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 const TALENTS = {

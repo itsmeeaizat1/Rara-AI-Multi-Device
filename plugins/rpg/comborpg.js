@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "comborpg", alias: ["comborpg", "combo"],
+  name: "combo", alias: ["combo", "comborpg"],
   category: "rpg", description: "Combo attack (biaya 15 energy, damage berdasar kelas)",
-  usage: ".comborpg", example: ".comborpg",
+  usage: ".combo", example: ".combo",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 15, isEnabled: true,
 };
 

@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "whereamirpg", alias: ["whereamirpg", "whereami", "lokasi"],
+  name: "whereami", alias: ["whereami", "whereamirpg", "lokasi"],
   category: "rpg", description: "Cek lokasi kamu di dunia RPG",
-  usage: ".whereamirpg", example: ".whereamirpg",
+  usage: ".whereami", example: ".whereami",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 

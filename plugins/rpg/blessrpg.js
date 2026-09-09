@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "blessrpg", alias: ["blessrpg", "bless", "berkat"],
+  name: "bless", alias: ["bless", "blessrpg", "berkat"],
   category: "rpg", description: "Terima blessing harian (random buff)",
-  usage: ".blessrpg", example: ".blessrpg",
+  usage: ".bless", example: ".bless",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,
 };
 

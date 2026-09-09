@@ -1,9 +1,9 @@
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "codexitemrpg", alias: ["codexitemrpg", "codexitem"],
+  name: "codexitem", alias: ["codexitem", "codexitemrpg"],
   category: "rpg", description: "Detail item RPG",
-  usage: ".codexitemrpg", example: ".codexitemrpg",
+  usage: ".codexitem", example: ".codexitem",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 async function handler(m, { sock }) {

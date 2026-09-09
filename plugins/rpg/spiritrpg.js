@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "spiritrpg", alias: ["spiritrpg", "spirit", "roh"],
+  name: "spirit", alias: ["spirit", "spiritrpg", "roh"],
   category: "rpg", description: "Panggil roh petarung (DMG +20 selama 1 jam, 25 mana)",
-  usage: ".spiritrpg", example: ".spiritrpg",
+  usage: ".spirit", example: ".spirit",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 60, energi: 10, isEnabled: true,
 };
 

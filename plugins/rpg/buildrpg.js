@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "buildrpg", alias: ["buildrpg", "build", "markas"],
+  name: "build", alias: ["build", "buildrpg", "markas"],
   category: "rpg", description: "Bangun markas (biaya 500 gold, +DEF, +safezone)",
-  usage: ".buildrpg", example: ".buildrpg",
+  usage: ".build", example: ".build",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 

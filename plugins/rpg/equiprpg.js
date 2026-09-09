@@ -10,12 +10,12 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "equiprpg",
-  alias: ["equiprpg", "pakai", "unequiprpg"],
+  name: "equip",
+  alias: ["equip", "equiprpg", "pakai", "unequiprpg"],
   category: "rpg",
   description: "Equip/unequip item RPG dari inventory",
-  usage: ".equiprpg <item> | .unequiprpg <slot>",
-  example: ".equiprpg ironSword",
+  usage: ".equip <item> | .unequip <slot>",
+  example: ".equip ironSword",
   isOwner: false,
   isPremium: false,
   isGroup: false,

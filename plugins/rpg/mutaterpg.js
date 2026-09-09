@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "mutaterpg", alias: ["mutaterpg", "mutate"],
+  name: "mutate", alias: ["mutate", "mutaterpg"],
   category: "rpg", description: "Mutasi skill random (biaya 300 gold)",
-  usage: ".mutaterpg", example: ".mutaterpg",
+  usage: ".mutate", example: ".mutate",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 60, energi: 10, isEnabled: true,
 };
 

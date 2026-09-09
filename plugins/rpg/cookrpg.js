@@ -10,12 +10,12 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "cookrpg",
-  alias: ["cookrpg", "cook", "masak"],
+  name: "cook",
+  alias: ["cook", "cookrpg", "masak"],
   category: "rpg",
   description: "Masak makanan dari bahan mentah — langsung dikonsumsi",
-  usage: ".cookrpg <list|item>",
-  example: ".cookrpg steak",
+  usage: ".cook <list|item>",
+  example: ".cook steak",
   isOwner: false,
   isPremium: false,
   isGroup: false,

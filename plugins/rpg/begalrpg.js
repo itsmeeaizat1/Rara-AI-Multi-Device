@@ -11,12 +11,12 @@ import { animBegal } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "begalrpg",
-  alias: ["begalrpg", "begal", "rampok"],
+  name: "begal",
+  alias: ["begal", "begalrpg", "rampok"],
   category: "rpg",
   description: "Rampok gold player lain — success tergantung level perbedaan",
-  usage: ".begalrpg @tag",
-  example: ".begalrpg @user",
+  usage: ".begal @tag",
+  example: ".begal @user",
   isOwner: false,
   isPremium: false,
   isGroup: true,
