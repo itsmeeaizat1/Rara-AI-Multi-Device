@@ -110,6 +110,48 @@ function parseCommand(cmd, args) {
   return null;
 }
 
+// FORMAT BARU (request owner 10 Sep 2026): .10gb unli, nama | .10gb unli, 200, nama
+// Disk = token pertama (unli/0 = unlimited, else MB). CPU = token kedua (opsional —
+// unli/0 = unlimited, else % mis. 200 = 2 core). Username = token ketiga.
+// Target opsional di token keempat: .10gb unli, 200, nama, 628xxx
+// Return null kalau bukan format baru → jatuh ke parsing lama (.1gb username,628xxx).
+function specsLabel(cmd) {
+  const m = String(cmd || "").toLowerCase().match(/^(\d+gb|unli)/);
+  return m ? m[1].toUpperCase() : "";
+}
+
+function parseDiskCpu(argStr) {
+  if (!argStr) return null;
+  const tokens = String(argStr).split(/[\s,]+/).map((t) => t.trim()).filter(Boolean);
+  if (tokens.length < 2) return null;
+  const LIMIT_RE = /^(unli(mited)?|0|\d{1,7})$/i;
+  if (!LIMIT_RE.test(tokens[0])) return null; // token pertama bukan disk → format lama
+  const toLimit = (tok) => {
+    if (!tok) return null;
+    if (/^(unli(mited)?|0)$/i.test(tok)) return 0; // unlimited
+    return parseInt(String(tok).replace(/[^0-9]/g, ""), 10);
+  };
+  const diskMB = toLimit(tokens[0]);
+  if (diskMB === null || Number.isNaN(diskMB)) return null;
+
+  let cpuTok, username, nomor = null;
+  if (tokens.length === 2) {
+    // .10gb unli, nama → cpu ikut unli
+    username = tokens[1];
+    cpuTok = "unli";
+  } else {
+    // .10gb unli, 200, nama[, 628xxx]
+    cpuTok = tokens[1];
+    username = tokens[2];
+    if (tokens.length >= 4 && /^\d{8,15}$/.test(tokens[3])) nomor = tokens[3];
+  }
+  if (!username) return null;
+  const cpuPct = toLimit(cpuTok);
+  if (cpuPct === null || Number.isNaN(cpuPct)) return null;
+  if (cpuPct > 1000 || diskMB > 10000000) return null; // guard: max 10 core / 10TB
+  return { diskMB, cpuPct, username: username.toLowerCase(), nomor };
+}
+
 function getServerConfig(pteroConfig, serverKey) {
   const num = parseInt(String(serverKey || "").replace("s", ""), 10);
   if (!(num >= 1 && num <= 100)) return null;
@@ -217,13 +259,22 @@ async function handler(m, { sock }) {
 
   let targetUser = null;
   let username = null;
+  let customDisk = null; // MB, 0 = unlimited (format baru)
+  let customCpu = null;  // %,  0 = unlimited (format baru)
   let argStr = m.text?.trim() || "";
   // bentuk generik .1gb v50 username → buang token vN dari argumen
   if (parsed.panelFromArgs) {
     argStr = argStr.replace(/^v\d{1,3}\s*/i, "").trim();
   }
 
-  if (argStr.includes(",")) {
+  // FORMAT BARU: .10gb unli, nama | .10gb unli, 200, nama | .10gb unli, 200, nama, 628xxx
+  const spec = parseDiskCpu(argStr);
+  if (spec) {
+    customDisk = spec.diskMB;
+    customCpu = spec.cpuPct;
+    username = spec.username;
+    if (spec.nomor) targetUser = cleanJid(spec.nomor);
+  } else if (argStr.includes(",")) {
     const parts = argStr.split(",");
     username = parts[0]?.trim().toLowerCase();
     let nomor = parts[1]?.trim().replace(/[^0-9]/g, "");
@@ -236,9 +287,15 @@ async function handler(m, { sock }) {
     const available = getAvailableServers(pteroConfig);
     const userRole = getUserRole(m.sender, serverVersion) || "Guest";
     return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+      `*Custom disk+CPU:*\n` +
+      `\`${m.prefix}${m.command} unli, nama\` (disk & CPU unli)\n` +
+      `\`${m.prefix}${m.command} unli, 200, nama\` (CPU 200%)\n` +
+      `\`${m.prefix}${m.command} 5000, 100, nama, 628xxx\`\n\n` +
+      `*Default:*\n` +
       `\`${m.prefix}${m.command} username\`\n` +
       `\`${m.prefix}${m.command} username,628xxx\`\n` +
       `Reply/tag pesan user\n\n` +
+      `RAM: *${specsLabel(m.command)}* | unli = unlimited\n` +
       `Server: *${serverVersion.toUpperCase()}*\n` +
       `Role kamu: *${capitalize(userRole)}*\n` +
       `Server tersedia: *${available.join(", ") || "none"}*`, "Panel");
@@ -349,9 +406,9 @@ async function handler(m, { sock }) {
           limits: {
             memory: specs.ram,
             swap: 0,
-            disk: specs.disk,
+            disk: customDisk !== null ? customDisk : specs.disk,
             io: 500,
-            cpu: specs.cpu,
+            cpu: customCpu !== null ? customCpu : specs.cpu,
           },
           feature_limits: {
             databases: 5,
@@ -377,6 +434,10 @@ async function handler(m, { sock }) {
     const server = serverRes.data.attributes;
 
     const ramLabel = specs.ram === 0 ? "Unlimited" : `${specs.ram / 1000} GB`;
+    const diskMB = customDisk !== null ? customDisk : specs.disk;
+    const cpuPct = customCpu !== null ? customCpu : specs.cpu;
+    const diskLabel = diskMB === 0 ? "Unlimited" : `${diskMB} MB`;
+    const cpuLabel = cpuPct === 0 ? "Unlimited" : `${cpuPct}%`;
 
     // Baca delivery mode dari database (1=PM, 2=Grup, 3=PM+Grup)
     const db = getDatabase()
@@ -414,6 +475,8 @@ async function handler(m, { sock }) {
     detailTxt += `Username: *${user.username}*\n`;
     detailTxt += `Password: *${password}*\n`;
     detailTxt += `RAM: *${ramLabel}*\n`;
+    detailTxt += `CPU: *${cpuLabel}*\n`;
+    detailTxt += `Storage: *${diskLabel}*\n`;
     detailTxt += `Server ID: *${server.id}*\n`;
     detailTxt += `Panel: ${serverConfig.domain}\n`;
     if (clientApiKey) {
@@ -465,7 +528,7 @@ async function handler(m, { sock }) {
     }
 
     // Konfirmasi singkat tanpa password (untuk grup)
-    const confirmTxt = `Panel *${serverLabel}* berhasil dibuat\n\nUntuk: ${targetUser.split("@")[0]}\nServer: ${serverLabel}\nRAM: ${ramLabel}`;
+    const confirmTxt = `Panel *${serverLabel}* berhasil dibuat\n\nUntuk: ${targetUser.split("@")[0]}\nServer: ${serverLabel}\nRAM: ${ramLabel} | CPU: ${cpuLabel} | Storage: ${diskLabel}`;
 
     // Mode 1: PM Only - kirim ke DM pembuat + target
     if (deliveryMode === 1) {
@@ -492,6 +555,7 @@ async function handler(m, { sock }) {
       }
     }
 
+    await m.react("🐣");
     await setPanelLastUsed();
   } catch (err) {
     const rawMsg = err?.response?.data?.errors?.[0]?.detail || err?.response?.data?.message || err.message;
@@ -506,4 +570,4 @@ async function handler(m, { sock }) {
   }
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler, parseDiskCpu }
