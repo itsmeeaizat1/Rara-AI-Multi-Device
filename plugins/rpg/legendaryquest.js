@@ -21,7 +21,7 @@ const STAGES = [
   { id: 3, name: "Juara Arena", emoji: "🏆", desc: "Menang 25x di Arena", target: 25, check: (d) => (d.arena?.wins || 0) >= 25, reward: { gold: 5000, energi: 50 } },
   { id: 4, name: "Craftsman", emoji: "🔨", desc: "Craft 5 items", target: 5, check: (d) => (d.crafting?.crafted || []).length >= 5, reward: { gold: 4000, energi: 30 } },
   { id: 5, name: "Dungeon Conqueror", emoji: "🏰", desc: "Clear 5 dungeon", target: 5, check: (d) => (d.dungeon?.clears || 0) >= 5, reward: { gold: 6000, energi: 60 } },
-  { id: 6, name: "Master Fisher", emoji: "🎣", desc: "Tangkap 50 ikan", target: 50, check: (d) => (d.fishing?.totalCaught || 0) + (d.fishingv2?.totalCaught || 0) >= 50, reward: { gold: 8000, energi: 80 } },
+  { id: 6, name: "Master Fisher", emoji: "🎣", desc: "Tangkap 50 ikan", target: 50, check: (d) => (d.fishing?.totalCaught || 0) >= 50, reward: { gold: 8000, energi: 80 } },
   { id: 7, name: "Final Boss", emoji: "🐉", desc: "Kalahkan Final Boss (auto battle)", target: 1, check: null, reward: { gold: 50000, energi: 200 } },
 ];
 
