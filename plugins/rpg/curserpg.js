@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "curserpg", alias: ["curserpg", "curse", "kutuk"],
+  name: "curse", alias: ["curse", "curserpg", "kutuk"],
   category: "rpg", description: "Kutuk musuh dengan efek negatif (reply target, 20 mana)",
-  usage: ".curserpg (reply target)", example: ".curserpg (reply pesan target)",
+  usage: ".curse (reply target)", example: ".curse (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 5, isEnabled: true,
 };
 

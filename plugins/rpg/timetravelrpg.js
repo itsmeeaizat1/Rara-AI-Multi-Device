@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "timetravelrpg", alias: ["timetravelrpg", "timetravel"],
+  name: "timetravel", alias: ["timetravel", "timetravelrpg"],
   category: "rpg", description: "Perjalanan waktu — dapat gold dari masa lalu (cooldown 24 jam)",
-  usage: ".timetravelrpg", example: ".timetravelrpg",
+  usage: ".timetravel", example: ".timetravel",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 20, isEnabled: true,
 };
 

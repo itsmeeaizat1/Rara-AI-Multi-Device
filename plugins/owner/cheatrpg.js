@@ -4,12 +4,12 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src
 import config from "../../config.js";
 
 const pluginConfig = {
-  name: "cheatrpg",
-  alias: ["cheatrpg"],
+  name: "cheat",
+  alias: ["cheat", "cheatrpg"],
   category: "owner",
   description: "Cheat RPG stats ke user (tambah exp, koin, gold, gems, diamonds, dll)",
-  usage: ".cheatrpg <type> <jumlah> @user",
-  example: ".cheatrpg exp 999999 @user",
+  usage: ".cheat <type> <jumlah> @user",
+  example: ".cheat exp 999999 @user",
   isOwner: true,
   isPremium: false,
   isGroup: false,

@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "lorerpg", alias: ["lorerpg", "lore"],
+  name: "lore", alias: ["lore", "lorerpg"],
   category: "rpg", description: "Baca lore dunia RPG",
-  usage: ".lorerpg", example: ".lorerpg",
+  usage: ".lore", example: ".lore",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 

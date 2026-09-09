@@ -11,12 +11,12 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "casinorpg",
-  alias: ["casinorpg", "casino", "slotrpg"],
+  name: "casino",
+  alias: ["casino", "casinorpg", "slotrpg"],
   category: "rpg",
   description: "Casino slot machine untuk gambling gold",
-  usage: ".casinorpg <jumlah>",
-  example: ".casinorpg 100",
+  usage: ".casino <jumlah>",
+  example: ".casino 100",
   isOwner: false,
   isPremium: false,
   isGroup: false,

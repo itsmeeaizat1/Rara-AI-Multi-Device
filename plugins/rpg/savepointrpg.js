@@ -2,9 +2,9 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 const pluginConfig = {
-  name: "savepointrpg", alias: ["savepointrpg", "savepoint", "savedata"],
+  name: "savepoint", alias: ["savepoint", "savepointrpg", "savedata"],
   category: "rpg", description: "Simpan progres RPG",
-  usage: ".savepointrpg", example: ".savepointrpg",
+  usage: ".savepoint", example: ".savepoint",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 async function handler(m, { sock }) {

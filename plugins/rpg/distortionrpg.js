@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "distortionrpg", alias: ["distortionrpg", "distortion"],
+  name: "distortion", alias: ["distortion", "distortionrpg"],
   category: "rpg", description: "Masuk zona distorsi — dapat random loot (biaya 20 energy)",
-  usage: ".distortionrpg", example: ".distortionrpg",
+  usage: ".distortion", example: ".distortion",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 20, isEnabled: true,
 };
 

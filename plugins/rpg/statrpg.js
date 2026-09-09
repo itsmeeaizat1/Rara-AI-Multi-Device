@@ -4,9 +4,9 @@ import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { novaGameBox, gameCTA, psSection, psStat, novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "statrpg", alias: ["statrpg", "stat"],
+  name: "stat", alias: ["stat", "statrpg"],
   category: "rpg", description: "Lihat stat karakter RPG",
-  usage: ".statrpg", example: ".statrpg",
+  usage: ".stat", example: ".stat",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 

@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "debuffrpg", alias: ["debuffrpg", "debuff"],
+  name: "debuff", alias: ["debuff", "debuffrpg"],
   category: "rpg", description: "Beri debuff burn ke musuh (reply target, biaya 15 mana)",
-  usage: ".debuffrpg (reply target)", example: ".debuffrpg (reply pesan target)",
+  usage: ".debuff (reply target)", example: ".debuff (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 20, energi: 5, isEnabled: true,
 };
 

@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "maprpg", alias: ["maprpg", "map", "peta"],
+  name: "map", alias: ["map", "maprpg", "peta"],
   category: "rpg", description: "Tampilkan peta dunia RPG",
-  usage: ".maprpg", example: ".maprpg",
+  usage: ".map", example: ".map",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 

@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "medalrpg", alias: ["medalrpg", "medal", "medali"],
+  name: "medal", alias: ["medal", "medalrpg", "medali"],
   category: "rpg", description: "Tampilkan medali yang dimiliki",
-  usage: ".medalrpg", example: ".medalrpg",
+  usage: ".medal", example: ".medal",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 

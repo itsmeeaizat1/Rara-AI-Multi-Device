@@ -5,9 +5,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "wardrpg", alias: ["wardrpg", "ward", "perlindungan"],
+  name: "ward", alias: ["ward", "wardrpg", "perlindungan"],
   category: "rpg", description: "Aktifkan ward proteksi dari trap & curse (10 mana)",
-  usage: ".wardrpg", example: ".wardrpg",
+  usage: ".ward", example: ".ward",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,
 };
 

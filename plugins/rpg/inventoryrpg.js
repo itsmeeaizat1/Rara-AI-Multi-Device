@@ -9,8 +9,8 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "inventoryrpg",
-  alias: ["inventoryrpg", "invrpg", "tasrpg", "backpackrpg"],
+  name: "inventory",
+  alias: ["inventory", "inventoryrpg", "invrpg", "tasrpg", "backpackrpg"],
   category: "rpg",
   description: "Cek inventory RPG kamu (item, material, consumable)",
   usage: ".invrpg",

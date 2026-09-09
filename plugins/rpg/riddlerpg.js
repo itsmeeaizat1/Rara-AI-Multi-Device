@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "riddlerpg", alias: ["riddlerpg", "riddle", "tebak"],
+  name: "riddle", alias: ["riddle", "riddlerpg", "tebak"],
   category: "rpg", description: "Teka-teki RPG harian",
-  usage: ".riddlerpg", example: ".riddlerpg",
+  usage: ".riddle", example: ".riddle",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 
