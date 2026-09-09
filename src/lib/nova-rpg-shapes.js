@@ -108,3 +108,19 @@ export async function shapeDagang(m, sock, from = "Desa Asal", to = "Desa Tujuan
   );
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🪓 NEBANG — TIMBER! (khas nebang, batch #4)
+// Bentuk: ORIENTASI POHON — miring pelan per frame dari tegak
+// sampai tumbang. Bukan bar, bukan jarak, bukan kedalaman.
+// ══════════════════════════════════════════════════
+export async function shapeNebang(m, sock, treeName = "Pohon", treeEmoji = "🌲", delay = SHAPE_ANIM_MS) {
+  const frames = [
+    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳 berdiri tegak...\n🪓 menandai sisi tebang dulu...`,
+    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳↗ miring 15°\n🪓 AXOKK! serpihan pertama beterbangan!`,
+    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳↘ miring 45°\n🪓 KRAK! inti batang mulai retak!`,
+    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🌳💥 TIMBERRR!!\n🪓 pohon roboh, burung pada kabur!`,
+    `${hdr("Timber!")}\n\n${treeEmoji} ${treeName}\n\n🪵🪵🪵\n✅ dipotong jadi kayu siap angkut!`,
+  ];
+  await morphCore(m, sock, frames, delay);
+}
