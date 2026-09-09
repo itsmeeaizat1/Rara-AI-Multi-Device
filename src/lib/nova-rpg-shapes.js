@@ -157,3 +157,31 @@ export async function shapeTreasure(m, sock, locName = "Lokasi", delay = SHAPE_A
   );
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🛡️ PATROL — RONDA PERIMETER (khas patrol, batch #6)
+// Bentuk: pos jaga di perimeter grid 3x3 — 🛡️ jalan
+// Utara → Timur → Selatan → Barat (pos = progres).
+// ══════════════════════════════════════════════════
+export async function shapePatrol(m, sock, delay = SHAPE_ANIM_MS) {
+  const posts = [
+    { r: 0, c: 1, name: "POS UTARA", note: "memeriksa gerbang utara..." },
+    { r: 1, c: 2, name: "POS TIMUR", note: "menyapu kawasan timur dengan senter..." },
+    { r: 2, c: 1, name: "POS SELATAN", note: "mengecek jejak mencurigakan di selatan..." },
+    { r: 1, c: 0, name: "POS BARAT", note: "pos barat aman! hampir selesai..." },
+    { r: 1, c: 1, name: "MARKAS", note: "RONDA SELESAI! lapor ke markas 🫡" },
+  ];
+  const frames = posts.map((p) => {
+    let grid = "";
+    for (let y = 0; y < 3; y++) {
+      for (let x = 0; x < 3; x++) {
+        if (y === p.r && x === p.c) grid += "🛡️";
+        else if (y === 1 && x === 1) grid += "🏰";
+        else grid += "⬜";
+      }
+      grid += "\n";
+    }
+    return `${hdr("Ronda Perimeter")}\n\n${grid}📍 ${p.name}\n\n${p.note}`;
+  });
+  await morphCore(m, sock, frames, delay);
+}
