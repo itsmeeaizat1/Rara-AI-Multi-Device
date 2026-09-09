@@ -11,6 +11,7 @@ import pino from "pino";
 import fs from "fs";
 import path from "path";
 import readline from "readline";
+import { parseCliPairing, normalizePhone } from "./lib/config/session-cli.js";
 import os from "os";
 import NodeCache from "node-cache";
 import config, { isOwner as isOwners, setBotNumber } from "../config.js";
@@ -275,8 +276,14 @@ async function startConnection(options = {}) {
 
   const { version, isLatest } = await fetchLatestBaileysVersion();
 
-  const usePairingCode = config.session?.usePairingCode === true;
-  const pairingNumber = config.session?.pairingNumber || "";
+  // ─── CLI PAIRING (rev 9 Sep 2026, request owner: "di run cmd support
+  // masukin no pairing, gak perlu set manual dr file bot identity") ───
+  // Jalankan: node index.js --pairing 6281234567890  (atau --pairing=62...)
+  // Override nomor pairing tanpa edit src/lib/config/bot-identity.js.
+  const cliPairing = normalizePhone(parseCliPairing(process.argv || []));
+
+  const usePairingCode = config.session?.usePairingCode === true || !!cliPairing;
+  const pairingNumber = cliPairing || config.session?.pairingNumber || "";
 
   const sock = makeWASocket({
     version,
@@ -402,6 +409,7 @@ async function startConnection(options = {}) {
       console.log("「 ✦ PAIRING ✦ 」");
       console.log("");
       console.log("│ ⚠ Nomor pairing belum diatur (config)");
+      console.log("│ 💡 Tips: `node index.js --pairing 628xxx` biar gak nanya lagi");
       console.log("");
       console.log("");
       console.log("");
@@ -409,7 +417,8 @@ async function startConnection(options = {}) {
       phoneNumber = await askQuestion(
         colors.chalk.cyan(
           "📱 Masukkan nomor WhatsApp (contoh: 6281234567890): ",
-        )
+        ),
+        180000
       );
 
       if (!phoneNumber) {

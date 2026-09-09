@@ -3,14 +3,15 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 import { startJadibot, isJadibotActive } from '../../src/lib/nova-jadibot-manager.js'
 import { getJadibotAccess } from '../owner/setjadibot.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
+import { normalizePhone } from '../../src/lib/config/session-cli.js'
 
 const pluginConfig = {
     name: 'jadibot',
     alias: ["jadibot"],
     category: 'main',
-    description: 'Jadikan nomor kamu menjadi bot (Pairing Code / QR)',
-    usage: '.jadibot atau .jadibot qr',
-    example: '.jadibot',
+    description: 'Jadikan nomor jadi bot (Pairing Code / QR) — bisa nomor sendiri atau nomor lain',
+    usage: '.jadibot — nomor kamu\n.jadibot <nomor> — jadibot untuk nomor lain\n.jadibot qr — mode QR',
+    example: '.jadibot\n.jadibot 6281234567890',
     isOwner: false,
     isPremium: false,
     isGroup: false,
@@ -52,6 +53,22 @@ function canUseJadibot(sender) {
     return { allowed: false, reason: 'Akses jadibot tidak dikonfigurasi.' }
 }
 
+// ─── MULTI SESSION (rev 9 Sep 2026, request owner: "support banyak nomor
+// mirip kode !jadibot <nomor>"): .jadibot = nomor sendiri, .jadibot <nomor>
+// = pasang nomor LAIN jadi bot (pairing code dikirim ke chat ini, relayer
+// tinggal terusin ke pemilik nomor). ───
+export function parseJadibotTarget(sender, args = []) {
+    const flat = (Array.isArray(args) ? args : []).join(" ").trim();
+    const useQR = /^qr\b/i.test(flat);
+    const digits = flat.replace(/[^0-9]/g, "");
+    // ada nomor di argumen → target nomor itu; tanpa nomor → nomor sendiri
+    if (digits.length >= 8) {
+        const norm = normalizePhone(digits);
+        return { useQR, targetJid: norm + "@s.whatsapp.net", targetNumber: norm, isSelf: false };
+    }
+    return { useQR, targetJid: String(sender || ""), targetNumber: String(sender || "").replace(/@.+/, ""), isSelf: true };
+}
+
 async function handler(m, { sock }) {
     const sender = m.sender
     if (!sender) { const __navText = novaError("JadiBot", "Gagal identifikasi nomor kamu nih"); return await m.reply(__navText); }
@@ -62,32 +79,34 @@ async function handler(m, { sock }) {
         return m.reply(access.reason)
     }
 
-    if (isJadibotActive(sender)) {
+    const { useQR, targetJid, targetNumber, isSelf } = parseJadibotTarget(sender, m.args || [])
+
+    if (isJadibotActive(targetJid)) {
         return m.reply(
             `*ᴊᴀᴅɪʙᴏᴛ ꜱᴜᴅᴀʜ ᴀᴋᴛɪꜰ*\n\n` +
-            `Nomor kamu sudah menjadi bot\n` +
-            `Ketik \`${m.prefix}stopjadibot\` untuk menghentikan`
+            (isSelf
+                ? `Nomor kamu sudah menjadi bot\nKetik \`${m.prefix}stopjadibot\` untuk menghentikan`
+                : `Nomor *${targetNumber}* sudah menjadi bot`)
         )
     }
 
-    const arg = (m.args?.[0] || '').toLowerCase()
-    const useQR = arg === 'qr'
-
     if (useQR) {
         await m.reply(
-            `*ᴊᴀᴅɪʙᴏᴛ - qʀ ᴍᴏᴅᴇ*\n\n` +
+            `*ᴊᴀᴅɪʙᴏᴛ - qʀ ᴍᴏᴅᴇ*${isSelf ? "" : ` (${targetNumber})`}\n\n` +
             `Menyiapkan koneksi...\n` +
             `Scan QR Code yang akan dikirim`
         )
     } else {
         await m.reply(
-            `*ᴊᴀᴅɪʙᴏᴛ - ᴘᴀɪʀɪɴɢ ᴄᴏᴅᴇ*\n\n` +
-            `Menyiapkan koneksi...`
+            `*ᴊᴀᴅɪʙᴏᴛ - ᴘᴀɪʀɪɴɢ ᴄᴏᴅᴇ*${isSelf ? "" : ` (${targetNumber})`}\n\n` +
+            (isSelf
+                ? `Menyiapkan koneksi...`
+                : `Menyiapkan session untuk nomor *${targetNumber}*...\nKode pairing akan dikirim di sini — teruskan ke pemilik nomor.`)
         )
     }
 
     try {
-        await startJadibot(sock, m, sender, !useQR)
+        await startJadibot(sock, m, targetJid, !useQR)
     } catch (e) {
         await m.reply(
             `*ᴊᴀᴅɪʙᴏᴛ ɢᴀɢᴀʟ*\n\n` +
