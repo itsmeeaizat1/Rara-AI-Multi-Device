@@ -43,7 +43,7 @@ const pluginConfig = {
     alias: [...legacyAliases, 'addresspanel'],
     category: 'panel',
     description: 'Kelola owner/ceo/reseller per server',
-    usage: '.addceopanel 62123456789 1 atau .addresspanel @user 1 (angka terakhir = server)',
+    usage: '.addownerpanel 62123457889 1 / .addceopanel 62123456789 1 / .addresspanel @user 1 (angka terakhir = server)',
     example: '.addownerpanel @user',
     isOwner: false,
     isPremium: false,
@@ -90,13 +90,13 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-// .addceopanel / .addresspanel — format owner 10 Sep 2026: <nomor|@user|reply> <serverN>
+// .addownerpanel / .addceopanel / .addresspanel — format owner 10 Sep 2026: <nomor|@user|reply> <serverN>
 // Contoh: .addceopanel 62123456789 1  (1 = server pertama v1)
 // Reply/tag @user tanpa nyebutin nomor juga bisa: .addceopanel @user 1
 function parsePanelAdd(m) {
     const cmd = String(m.command || '').toLowerCase()
-    if (!/^(addceopanel|addresellerpanel|addresspanel)$/.test(cmd)) return null
-    const role = cmd === 'addceopanel' ? 'ceo' : 'reseller'
+    if (!/^(addownerpanel|addceopanel|addresellerpanel|addresspanel)$/.test(cmd)) return null
+    const role = cmd === 'addceopanel' ? 'ceo' : (cmd === 'addresellerpanel' || cmd === 'addresspanel') ? 'reseller' : 'owner'
 
     let server = 'v1'
     const args = [...(m.args || [])]
