@@ -14,7 +14,17 @@ ROLES.forEach(role => {
         allCommands.push(`list${role}${ver}`)
     })
     // bentuk generik: .addreseller 50 @user / .addreseller v50 @user (v1-v100)
-    allCommands.push(`add${role}`, `del${role}`, `list${role}`)
+    // FIX 9 Sep 2026 (request owner): bentuk generik role owner DIGANTI NAMA jadi
+    // .addownerpanel / .delownerpanel / .listownerpanel — .addowner/.delowner/
+    // .listowner adalah command inti plugins/owner/addowner.js (kelola owner bot).
+    // Kategori panel dimuat SETELAH owner, register terakhir menang → rolemanager
+    // membajak command itu diam-diam (addowner nyasar ke role cpanel 'v1').
+    // Bentuk berversi (.addownerv1 s/d v5) TETAP milik rolemanager.
+    if (role === 'owner') {
+        allCommands.push('addownerpanel', 'delownerpanel', 'listownerpanel')
+    } else {
+        allCommands.push(`add${role}`, `del${role}`, `list${role}`)
+    }
 })
 
 const pluginConfig = {
@@ -22,8 +32,8 @@ const pluginConfig = {
     alias: [],
     category: 'panel',
     description: 'Kelola owner/ceo/reseller per server',
-    usage: '.addownerv1 @user atau .listceov2',
-    example: '.addresellerv1 @user',
+    usage: '.addownerpanel @user atau .addownerv1 @user atau .listceov2',
+    example: '.addownerpanel @user',
     isOwner: false,
     isPremium: false,
     isGroup: false,

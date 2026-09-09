@@ -19,8 +19,9 @@ export class MockSocket extends EventEmitter {
       return { key: { id: "mock-" + this.sent.length, remoteJid: jid } };
     };
     this.sendPresenceUpdate = async () => {};
+    this.readMessages = async () => {};
     this.profilePictureUrl = async () => "https://example.com/pic.jpg";
-    this.relayMessage = async () => ({});
+    this.relayMessage = async (jid, content, opts) => { this.sent.push({ jid, content, opts }); return ({}); };
     this.onWhatsApp = async (jid) => [jid];
     this.getBusinessProfile = async () => undefined;
     this.parseMention = (t) => String(t || "").match(/@\d+/g) || [];

@@ -18,7 +18,7 @@ import { getGroupMode } from "../group/botmode.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "addowner",
-  alias: ["addowner"],
+  alias: ["addowner", "addown", "setowner", "delowner", "delown", "dedown", "ownerlist", "listowner"],
   category: "owner",
   description: "Kelola owner bot (mode-aware)",
   usage: ".addowner <nomor/@tag/reply>",
@@ -219,7 +219,13 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     return m.reply(claraWrap("Addowner", `❌ *Gagal*\n\nFormat nomor tidak valid`));
   }
 
-  if (isJadibot && jadibotId) {
+  // JADIBOT: user jadibot mengelola owner SESSION-nya sendiri — BUKAN owner bot utama.
+  // (fix 9 Sep 2026: ctx isJadibot/jadibotId kini benar-benar diteruskan dispatcher;
+  //  sebelumnya branch ini dead code dan .addowner jadibot nyasar ke owner utama)
+  if (isJadibot) {
+    if (!jadibotId) {
+      return m.reply(novaError("Addowner", "Session jadibot gak teridentifikasi — coba lagi"));
+    }
     if (isAdd) {
       if (addJadibotOwner(jadibotId, targetNumber)) {
         return m.reply(claraWrap("Addowner", `✅ Berhasil menambahkan *${targetNumber}* sebagai owner jadibot`));
