@@ -648,43 +648,91 @@ async function huntMorph(m, sock, frames, delay = 1400) {
   }
 }
 
-// FASE 1: MELACAK JEJAK (5 frame)
+// ─── SCENE ENGINE BERBURU (rev 9 Sep 2026, request owner:
+// "animasinya diedit-edit, banyak emot — hewannya gerak, panahnya
+// nyebrang". Tiap fase = strip adegan 10 slot yang digambar ulang
+// per frame, elemen beneran berpindah. ───
+const HUNT_ANIMAL_EMOJI = (name) => {
+  const n = String(name || "").toLowerCase();
+  if (/phoenix/.test(n)) return "🔥";
+  if (/griffin|elang/.test(n)) return "🦅";
+  if (/naga/.test(n)) return "🐲";
+  if (/harimau/.test(n)) return "🐯";
+  if (/kelelawar/.test(n)) return "🦇";
+  if (/ular/.test(n)) return "🐍";
+  if (/lebah/.test(n)) return "🐝";
+  if (/beruang/.test(n)) return "🐻";
+  if (/putih|serigala/.test(n)) return "🐺";
+  if (/babi/.test(n)) return "🐗";
+  if (/burung/.test(n)) return "🐦";
+  if (/kelinci/.test(n)) return "🐰";
+  if (/rusa/.test(n)) return "🦌";
+  return "🦌";
+};
+
+// strip adegan: 10 slot — slot 0 pemburu 🏹, sisanya hutan 🌲
+const huntStrip = (animalPos, animalEmoji, extra = {}) => {
+  const W = 10;
+  const slots = new Array(W).fill("🌲");
+  slots[0] = "🏹";
+  slots[animalPos] = animalEmoji;
+  if (extra.arrowEnd && extra.arrowStart) {
+    for (let i = extra.arrowStart; i <= extra.arrowEnd; i++) if (slots[i] === "🌲") slots[i] = "➤";
+  }
+  if (extra.impact) slots[animalPos - 1] = "💥";
+  return slots.join("");
+};
+
+// FASE 1: MELACAK JEJAK (5 frame) — hewan berjalan mendekat di jalur hutan,
+// jejak kaki 👣 numpuk di belakangnya tiap frame.
 export async function animHuntTrack(m, sock, animalName, delay = 1400) {
-  const frames = [
-    `🔍 *MELACAK JEJAK...*`,
-    `🕵️ Menemukan jejak ${animalName}...`,
-    `👣 Jejak mengarah ke barat...`,
-    `🌿 Terlihat gerakan di semak-semak!`,
-    `🎯 *TARGET DITEMUKAN!*`,
+  const em = HUNT_ANIMAL_EMOJI(animalName);
+  const pos = [8, 7, 6, 5, 3];
+  const notes = [
+    `🔍 *MELACAK JEJAK...*\n\n🕵️ menemukan jejak ${animalName}...`,
+    `👣 jejak makin jelas — masih hangat!`,
+    `🌿 gerakan terlihat di antara pepohonan!`,
+    `🤫 pelan-pelan... jangan bikin suara!`,
   ];
+  const frames = pos.map((p, i) =>
+    (i === 0 ? notes[0] + "\n\n" : "") +
+    huntStrip(p, em) +
+    `\n${"👣".repeat(i + 1)}\n\n` +
+    (i < pos.length - 1 ? (i === 0 ? "🐾 mulai mengikuti jejak..." : notes[i]) || "" : `🎯 *TARGET DITEMUKAN!*\n\n${em} ${animalName} berhenti — jarak bidik pas!`)
+  );
   await huntMorph(m, sock, frames, delay);
 }
 
-// FASE 2: MEMANAH (4 frame)
+// FASE 2: MEMANAH (4 frame) — panah ➤ meluncur slot-per-slot
+// menembus hutan ke arah hewan.
 export async function animHuntShoot(m, sock, animalName, delay = 1400) {
-  const frames = [
-    `🏹 *MEMANAH!*`,
-    `🎯 Membidik ${animalName}...`,
-    `🌬️ Tarik tali busur...`,
-    `💨 Lepas! Anak panah meluncur!`,
+  const em = HUNT_ANIMAL_EMOJI(animalName);
+  const flight = [
+    { start: 0, end: 0, note: `🏹 *MEMANAH!*\n\n🎯 membidik ${animalName}... 🌬️ tarik tali busur...` },
+    { start: 1, end: 2, note: `💨 LEPAS! anak panah meluncur!` },
+    { start: 3, end: 5, note: `➤➤➤ makin dekat! angin ikut berbisik...` },
+    { start: 6, end: 7, note: `⚡ hampir sampai!` },
   ];
+  const frames = flight.map((f) => `${huntStrip(8, em, { arrowStart: f.start, arrowEnd: f.end })}\n\n${f.note}`);
   await huntMorph(m, sock, frames, delay);
 }
 
-// FASE 3: HASIL BURUAN — kena / kabur (3-4 frame)
+// FASE 3: HASIL BURUAN — kena (panah nembus 💥 + hewan terjatuh,
+// lalu dibawa pulang) / kabur (hewan nyerobot ke kanan hilang di
+// semak sambil ninggalin debu 💨).
 export async function animHuntResult(m, sock, opts, delay = 1400) {
   const { animalName, success, loot } = opts || {};
+  const em = HUNT_ANIMAL_EMOJI(animalName);
   const frames = success
     ? [
-        `🎯 *PANAH MENGENAI!*`,
-        `💥 ${animalName} terjatuh!`,
-        `✅ Berhasil diburu!`,
+        `🎯 *PANAH MENGENAI!*\n\n${huntStrip(8, em, { arrowStart: 5, end: 7, arrowEnd: 7, impact: true })}\n\n💥 ${animalName} terjatuh!`,
+        `🏹🌲🌲🌲🌲🌲🌲🌲🫥🌲\n\n✅ Berhasil diburu! dibaris ke kamp.`,
         ...(loot ? [`📦 Mendapatkan: ${loot}`] : []),
       ]
     : [
-        `😰 ${animalName} menghindar!`,
-        `🏃 Menerjang kabur ke semak-semak!`,
-        `💨 Buruan kabur...`,
+        `😰 ${animalName} menghindar!\n\n${huntStrip(8, em, { impact: true })}\n\n➤➤ nyangkut di batang pohon...`,
+        `💨 menerjang kabur ke semak!\n\n${huntStrip(9, em)}\n\n🏃 makin jauh...`,
+        `💨 *Buruan kabur...*\n\n🏹🌲🌲🌲🌲🌲🌲🌲🌲💨\n\n🌱 mungkin lain kali!`,
       ];
   await huntMorph(m, sock, frames, delay);
 }

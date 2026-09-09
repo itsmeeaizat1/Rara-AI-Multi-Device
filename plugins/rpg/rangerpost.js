@@ -66,7 +66,7 @@ function taskListBody(data, prefix) {
 
 async function handler(m, { sock }) {
   try {
-    const subCmd = (m.args[0] || "").toLowerCase();
+    const subCmd = (m.args?.[0] || "").toLowerCase();
     const db = await getDatabase();
     const today = getTodayKey();
     let data = await db.getPlayerData?.(m.sender, "rangerpost") || { lastCheckIn: null, tasksDone: [], successCount: 0, totalGold: 0, level: 1, days: 0 };
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
 
     // ── task ──
     if (subCmd === "task" || subCmd === "tugas") {
-      const taskId = parseInt(m.args[1] || "0");
+      const taskId = parseInt(m.args?.[1] || "0");
       const task = TASKS.find((t) => t.id === taskId);
       if (!task) {
         return m.reply(novaRpgBox("rangerpost", `Tugas tidak ditemukan. Pilih 1-3.`, "guide"));
