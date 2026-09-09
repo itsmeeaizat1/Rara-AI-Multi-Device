@@ -246,15 +246,23 @@ export async function shapeBerkebon(m, sock, mode = "tanam", cropName = "Tanaman
 // tiap frame sampah terkumpul jadi ♻️ sampai bersih.
 // ══════════════════════════════════════════════════
 export async function shapeSampah(m, sock, delay = SHAPE_ANIM_MS) {
-  const junk = ["🗑️", "📦", "🥫", "🔋", "📰"];
-  const cells = Array.from({ length: 5 }, () => junk[Math.floor(Math.random() * junk.length)]);
+  // rev scene motion: sapu 🧹 MENYUSURI got 8 slot, sampah di
+  // belakangnya berubah jadi ♻️ satu per satu
+  const junk = ["🗑️", "📦", "🥫", "🔋", "📰", "🧴", "🥡"];
+  const W = 8;
+  const cells = Array.from({ length: W }, () => junk[Math.floor(Math.random() * junk.length)]);
   const frames = [];
-  for (let i = 0; i <= 5; i++) {
-    const row = cells.map((c, idx) => (idx < i ? "♻️" : c)).join("");
-    const broom = i < 5 ? "🧹".repeat(1) : "✨";
+  for (let i = 0; i <= W; i++) {
+    const row = cells
+      .map((c, idx) => (idx < i ? "♻️" : c))
+      .map((c, idx) => (idx === i && i < W ? "🧹" : c))
+      .join("");
+    const done = i >= W;
     frames.push(
-      `${hdr("Got Bersih")}\n\n${row}\n\n` +
-      `${i < 5 ? `${broom} menyapu area... (${i}/5 zona bersih)` : `🎉 SELESAI! area bersih, siap daur ulang! ✨`}`
+      `${hdr("Got Bersih")}\n\n🏘️🏘️🏘️🏘️🏘️\n${row}\n\n` +
+      (done
+        ? `🎉 SELESAI! got bersih, ${W} tumpukan jadi daur ulang! ✨`
+        : `🧹 menyapu gotroyok... (${i}/${W} zona bersih)`)
     );
   }
   await morphCore(m, sock, frames, delay);
@@ -268,23 +276,35 @@ export async function shapeSampah(m, sock, delay = SHAPE_ANIM_MS) {
 // (🏕️ markas → 🏁 destinasi) & "kembali" (🏁 → 🏕️ bawa loot 💰).
 // ══════════════════════════════════════════════════
 export async function shapeEkspedisi(m, sock, mode = "berangkat", delay = SHAPE_ANIM_MS) {
+  // rev scene motion: kafilah 🚶🚶🦺 jalan rute 10 slot dengan landmark
+  // (🌲, ⛲ oasis, ⛰️) — party maju tiap frame, mode kembali bawa 💰
   const L = mode === "berangkat" ? "🏕️" : "🏁";
   const R = mode === "berangkat" ? "🏁" : "🏕️";
-  const steps = 4;
+  const W = 10, party = ["🚶", "🚶", "🦺"];
+  const steps = 6;
+  const land = { 2: "🌲", 5: "⛲", 8: "⛰️" };
   const frames = [];
   for (let i = 0; i <= steps; i++) {
-    const cells = [L, "·", "·", "·", R];
-    cells[i] = "🚶";
+    const head = Math.round((i / steps) * (W - 2)) + 1;
+    const cells = new Array(W).fill("·");
+    cells[0] = L; cells[W - 1] = R;
+    for (const [p, em] of Object.entries(land)) if (cells[p] === "·") cells[p] = em;
+    party.forEach((em, k) => {
+      const pos = head - k;
+      if (pos > 0 && pos < W - 1) cells[pos] = mode === "kembali" && k === 2 ? "💰" : em;
+    });
     const row = cells.join("─");
+    const pct = Math.round((i / steps) * 100);
     let note;
     if (mode === "berangkat") {
       note = i === 0 ? "kafilah siap berangkat dari markas..."
         : i === steps ? "kafilah sampai destinasi — misi dimulai! 🎒"
-        : `menempuh rute ekspedisi... (${i}/${steps} segmen)`;
+        : i === 3 ? `☕ rehat sebentar di oasis... (${pct}%)`
+        : `menempuh rute ekspedisi... (${pct}%)`;
     } else {
       note = i === 0 ? "misi selesai! bawa pulang hasil ekspedisi..."
         : i === steps ? "kafilah tiba kembali di markas! 🎉"
-        : `kafilah pulang bawa loot... (${i}/${steps} segmen)`;
+        : `kafilah pulang bawa loot... (${pct}%)`;
     }
     frames.push(`${hdr(mode === "berangkat" ? "Kafilah Berangkat" : "Ekspedisi Kembali")}\n\n${row}\n\n${note}`);
   }
