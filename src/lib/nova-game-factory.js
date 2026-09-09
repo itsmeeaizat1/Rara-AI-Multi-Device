@@ -448,7 +448,6 @@ const games = new GameFactory();
 // ═══════════════════════════════════════════════
 
 // TEXT GAMES
-games.register('asahotak', { emoji: '🧠', title: 'ASAH OTAK', description: 'Tebak tebakan asah otak', timeout: 60000, alias: [] });
 games.register('caklontong', { emoji: '🤔', title: 'CAKLONTONG', description: 'Tebak caklontong lucu', timeout: 60000, alias: [] });
 games.register('kataacak', { emoji: '🔤', title: 'KATA ACAK', description: 'Tebak kata yang diacak', timeout: 60000, alias: [] });
 games.register('kuis', { emoji: '📝', title: 'KUIS', description: 'Kuis pilihan ganda', timeout: 60000, alias: [] });
