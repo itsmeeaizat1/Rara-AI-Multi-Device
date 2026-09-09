@@ -609,6 +609,42 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
   <a href="https://www.base44.com"><img src="https://img.shields.io/badge/Superagent-Base44-FF6B35?style=flat-square&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6bTAgMTBMMiAxN2wxMCA1IDEwLTV6Ii8%2BPC9zdmc%2B&logoColor=white"></a>
   <a href="https://github.com"><img src="https://img.shields.io/badge/GitHub-Copilot%20%7C%20Actions-181717?style=flat-square&logo=github&logoColor=white"></a>
   <a href="https://www.google.com"><img src="https://img.shields.io/badge/Google-Search%20%7C%20Cloud-4285F4?style=flat-square&logo=google&logoColor=white"></a>
+  <a href="https://inceptionlabs.ai"><img src="https://img.shields.io/badge/Inception_Labs-Mercury_2_dLLM-00A884?style=flat-square&logo=ai&logoColor=white"></a>
+  <a href="https://aistudio.google.com"><img src="https://img.shields.io/badge/Google_AI_Studio-Gemini%20Native-4285F4?style=flat-square&logo=google&logoColor=white"></a>
+  <a href="https://api.haidarxd.my.id"><img src="https://img.shields.io/badge/Haidar_AI-Gemini%20%7C%20Llama%20%7C%20DeepSeek-F59E0B?style=flat-square&logo=ai&logoColor=white"></a>
+  <img src="https://img.shields.io/badge/Kuroneko_AI-Sora%20%7C%20nano--banana%20%7C%20TTS%2042-9333EA?style=flat-square&logo=ai&logoColor=white">
+  <a href="https://api.ikyyxd.my.id"><img src="https://img.shields.io/badge/Ikyy_AI-Free%20Chat%20API-EC4899?style=flat-square&logo=ai&logoColor=white"></a>
+  <a href="https://api-xemoz-official.my.id"><img src="https://img.shields.io/badge/Xemoz_AI-Backup%20Chain-14B8A6?style=flat-square&logo=ai&logoColor=white"></a>
+  <a href="https://free.ai"><img src="https://img.shields.io/badge/Free.ai-Qwen3_30B%20%2B%20SDXL%20Image-22C55E?style=flat-square&logo=openai&logoColor=white"></a>
+  <a href="https://puter.com"><img src="https://img.shields.io/badge/Puter-SmartReply%20AI-7C3AED?style=flat-square&logo=puter&logoColor=white"></a>
+  <a href="https://openrouter.ai"><img src="https://img.shields.io/badge/OpenRouter-Free%20Models-8B5CF6?style=flat-square&logo=openrouter&logoColor=white"></a>
+  <a href="https://groq.com"><img src="https://img.shields.io/badge/Groq-Llama%20Ultra%20Fast-F55036?style=flat-square&logo=groq&logoColor=white"></a>
+  <a href="https://www.blackbox.ai"><img src="https://img.shields.io/badge/Blackbox_AI-Chat%20Backup-000000?style=flat-square&logo=openai&logoColor=white"></a>
+  <img src="https://img.shields.io/badge/imageprompt.org-Vision%20Describe%20(Gratis)-6366F1?style=flat-square&logo=ai&logoColor=white">
+</div>
+
+<div align="center">
+  <p><b>Realtime Data & Public API:</b></p>
+  <a href="https://www.bmkg.go.id"><img src="https://img.shields.io/badge/BMKG-Cuaca%20%7C%20Gempa%20Indonesia-DC2626?style=flat-square&logo=weather&logoColor=white"></a>
+  <a href="https://earthquake.usgs.gov"><img src="https://img.shields.io/badge/USGS-Gempa%20Global%20M4.5%2B-1D4ED8?style=flat-square&logo=usgs&logoColor=white"></a>
+  <a href="https://www.jma.go.jp"><img src="https://img.shields.io/badge/JMA-Gempa%20Jepang-BC002D?style=flat-square&logo=japan&logoColor=white"></a>
+  <a href="https://www.seismicportal.eu"><img src="https://img.shields.io/badge/EMSC-SeismicPortal%20Dunia-0891B2?style=flat-square&logo=earthquake&logoColor=white"></a>
+  <a href="https://open-meteo.com"><img src="https://img.shields.io/badge/Open--Meteo-Cuaca%20Global-8E75B2?style=flat-square&logo=weather&logoColor=white"></a>
+  <a href="https://api.met.no"><img src="https://img.shields.io/badge/MET_Norway-Cuaca%20Global-1E3A8A?style=flat-square&logo=weather&logoColor=white"></a>
+  <a href="https://www.weatherapi.com"><img src="https://img.shields.io/badge/WeatherAPI-Cuaca%20Premium-00B4D8?style=flat-square&logo=weather&logoColor=white"></a>
+  <a href="https://www.coingecko.com"><img src="https://img.shields.io/badge/CoinGecko-Harga%20Crypto%20IDR-8DC63F?style=flat-square&logo=coingecko&logoColor=white"></a>
+  <a href="https://anilist.co"><img src="https://img.shields.io/badge/AniList-Anime%20%7C%20Manga-02A9FF?style=flat-square&logo=anilist&logoColor=white"></a>
+  <a href="https://kitsu.io"><img src="https://img.shields.io/badge/Kitsu-Anime%20Fallback-F75239?style=flat-square&logo=kitsu&logoColor=white"></a>
+  <a href="https://jikan.moe"><img src="https://img.shields.io/badge/Jikan-MAL%20Seasonal-2E51A2?style=flat-square&logo=myanimelist&logoColor=white"></a>
+  <a href="https://myanimelist.net"><img src="https://img.shields.io/badge/MyAnimeList-Berita%20RSS-2E51A2?style=flat-square&logo=myanimelist&logoColor=white"></a>
+  <a href="https://www.imdb.com"><img src="https://img.shields.io/badge/IMDb-Info%20Film%20(IMDbOT)-F5C518?style=flat-square&logo=imdb&logoColor=black"></a>
+  <a href="https://www.stremio.com"><img src="https://img.shields.io/badge/Stremio-Cinemeta%20Katalog-7AD0FF?style=flat-square&logo=stremio&logoColor=black"></a>
+  <a href="https://cobalt.tools"><img src="https://img.shields.io/badge/Cobalt-Downloader%20All--in--One-00D4A0?style=flat-square&logo=cobalt&logoColor=white"></a>
+  <a href="https://soundcloud.com"><img src="https://img.shields.io/badge/SoundCloud-Cari%20%26%20Unduh%20Musik-FF5500?style=flat-square&logo=soundcloud&logoColor=white"></a>
+  <a href="https://proxyscrape.com"><img src="https://img.shields.io/badge/ProxyScrape-Proxy%20List-3B82F6?style=flat-square&logo=proxy&logoColor=white"></a>
+  <a href="https://temp-mail.io"><img src="https://img.shields.io/badge/Temp--Mail.io-Mail%20Temporer-6B7280?style=flat-square&logo=gmail&logoColor=white"></a>
+  <img src="https://img.shields.io/badge/Pixelcut%20%2B%20Unwatermark-Remini%20HD%204x-10B981?style=flat-square&logo=ai&logoColor=white">
+  <img src="https://img.shields.io/badge/Winbu-Episode%20Anime%20Auto-FF6B6B?style=flat-square&logo=ai&logoColor=white">
 </div>
 
 **Languages & Tech**
