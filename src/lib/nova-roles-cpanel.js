@@ -155,7 +155,10 @@ function canManageRole(jid, server, targetRole, isOwner = false) {
     if (!userRole) return false
     
     if (userRole === 'owner') return true
-    if (userRole === 'ceo') return true
+    // FIX 10 Sep 2026 (request owner hierarki): CEO = admin panel — hanya kelola
+    // RESELLER, tidak bisa create/delete CEO (admin panel) sesama / owner.
+    // Reseller tidak bisa mengelola role siapa pun.
+    if (userRole === 'ceo') return targetRole === 'reseller'
     
     return false
 }

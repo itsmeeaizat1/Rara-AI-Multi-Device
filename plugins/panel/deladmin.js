@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
-import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
+import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import te from '../../src/lib/nova-error.js'
 const allCommands = VALID_SERVERS.slice(0, 5).map(v => `deladmin${v}`)
 const allAliases = VALID_SERVERS.map(v => `hapusadmin${v}`)
@@ -64,11 +64,13 @@ async function handler(m, { sock }) {
     const { server: serverVersion, serverKey } = parseServerVersion(m.command, m.args)
     const serverLabel = serverVersion.toUpperCase()
     
-    if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
+    // FIX 10 Sep 2026 (request owner hierarki): hapus admin panel hanya
+    // Owner & CEO (admin panel). Reseller tidak boleh menghapus admin panel.
+    if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
         return m.reply(claraWrap("deladmin", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
-            `Kamu tidak punya akses ke *${serverLabel}*\n` +
-            `Role kamu: *${userRole || 'Tidak ada'}*`))
+            `Hapus admin panel hanya untuk *Owner* & *CEO (admin panel)*\n` +
+            `Role kamu: *${userRole || 'Tidak ada'}* | Server: *${serverLabel}*`))
     }
     
     const serverConfig = getServerConfig(pteroConfig, serverKey)

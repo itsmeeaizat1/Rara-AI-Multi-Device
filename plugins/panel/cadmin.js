@@ -5,7 +5,7 @@ import axios from 'axios'
 import crypto from 'crypto'
 import config from '../../config.js'
 import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
-import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
+import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
 import te from '../../src/lib/nova-error.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -83,12 +83,15 @@ async function handler(m, { sock }) {
   const { server: serverVersion, serverKey } = parseServerVersion(m.command, m.args);
   const serverLabel = serverVersion.toUpperCase();
 
-  if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
+  // FIX 10 Sep 2026 (request owner hierarki): create admin panel hanya
+  // Owner & CEO (admin panel). Reseller hanya bisa create panel user biasa.
+  if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
     return m.reply(
       `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
-        `Kamu tidak punya akses ke *${serverLabel}*\n` +
-        `Role kamu: *${userRole || "Tidak ada"}*`,
+        `Create admin panel hanya untuk *Owner* & *CEO (admin panel)*\n` +
+        `Reseller hanya bisa create panel user biasa (.cpanel)\n\n` +
+        `Role kamu: *${userRole || "Tidak ada"}* | Server: *${serverLabel}*`,
     );
   }
 
