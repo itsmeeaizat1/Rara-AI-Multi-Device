@@ -7,11 +7,21 @@ const allCommands = []
 
 // nama command suffix hanya v1-v5 (biar menu gak bengkak); slot 6-100 pakai bentuk bare + arg
 const MENU_SERVERS = VALID_SERVERS.slice(0, 5)
+const legacyAliases = []
 ROLES.forEach(role => {
     MENU_SERVERS.forEach(ver => {
-        allCommands.push(`add${role}${ver}`)
-        allCommands.push(`del${role}${ver}`)
-        allCommands.push(`list${role}${ver}`)
+        if (role === 'owner') {
+            // FIX 10 Sep 2026 (request owner): bentuk berversi owner panel DIGANTI
+            // .addownerpanelv1 s/d .addownerpanelv5 — nama lama .addownervN jadi alias.
+            allCommands.push(`addownerpanel${ver}`)
+            allCommands.push(`delownerpanel${ver}`)
+            allCommands.push(`listownerpanel${ver}`)
+            legacyAliases.push(`addowner${ver}`, `delowner${ver}`, `listowner${ver}`)
+        } else {
+            allCommands.push(`add${role}${ver}`)
+            allCommands.push(`del${role}${ver}`)
+            allCommands.push(`list${role}${ver}`)
+        }
     })
     // bentuk generik: .addreseller 50 @user / .addreseller v50 @user (v1-v100)
     // FIX 9 Sep 2026 (request owner): bentuk generik role owner DIGANTI NAMA jadi
@@ -19,7 +29,7 @@ ROLES.forEach(role => {
     // .listowner adalah command inti plugins/owner/addowner.js (kelola owner bot).
     // Kategori panel dimuat SETELAH owner, register terakhir menang → rolemanager
     // membajak command itu diam-diam (addowner nyasar ke role cpanel 'v1').
-    // Bentuk berversi (.addownerv1 s/d v5) TETAP milik rolemanager.
+    // Bentuk berversi owner (.addownerpanelv1 s/d v5) milik rolemanager.
     if (role === 'owner') {
         allCommands.push('addownerpanel', 'delownerpanel', 'listownerpanel')
     } else {
@@ -29,10 +39,10 @@ ROLES.forEach(role => {
 
 const pluginConfig = {
     name: allCommands,
-    alias: [],
+    alias: legacyAliases,
     category: 'panel',
     description: 'Kelola owner/ceo/reseller per server',
-    usage: '.addownerpanel @user atau .addownerv1 @user atau .listceov2',
+    usage: '.addownerpanelv1 @user atau .addownerpanel @user atau .listceov2',
     example: '.addownerpanel @user',
     isOwner: false,
     isPremium: false,
@@ -55,19 +65,22 @@ function getNumber(jid) {
 }
 
 function parseCommand(cmd, args) {
-    // .addresellerv3 (suffix) / .addreseller 50 (arg) — v1-v100
-    const suffixMatch = cmd.match(/^(add|del|list)(owner|ceo|reseller)(v\d{1,3})$/i)
+    // .addownerpanelv2 / .addresellerv3 (suffix) / .addreseller 50 (arg) — v1-v100
+    // ownerpanelvN = nama baru; ownervN = alias legacy yang tetap diterima
+    const suffixMatch = cmd.match(/^(add|del|list)(ownerpanel|owner|ceo|reseller)(v\d{1,3})$/i)
     if (suffixMatch) {
         const num = parseInt(suffixMatch[3].replace('v', ''), 10)
         if (!(num >= 1 && num <= 100)) return null
-        return { action: suffixMatch[1], role: suffixMatch[2], server: 'v' + num }
+        const role = suffixMatch[2] === 'ownerpanel' ? 'owner' : suffixMatch[2]
+        return { action: suffixMatch[1], role, server: 'v' + num }
     }
-    const bareMatch = cmd.match(/^(add|del|list)(owner|ceo|reseller)$/i)
+    const bareMatch = cmd.match(/^(add|del|list)(ownerpanel|owner|ceo|reseller)$/i)
     if (bareMatch) {
         const am = String(args?.[0] || '').trim().match(/^v?(\d{1,3})$/i)
         const num = am ? parseInt(am[1], 10) : 1
         if (!(num >= 1 && num <= 100)) return null
-        return { action: bareMatch[1], role: bareMatch[2], server: 'v' + num }
+        const role = bareMatch[2] === 'ownerpanel' ? 'owner' : bareMatch[2]
+        return { action: bareMatch[1], role, server: 'v' + num }
     }
     return null
 }
