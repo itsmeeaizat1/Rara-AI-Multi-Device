@@ -64,3 +64,23 @@ export async function shapeMining(m, sock, delay = SHAPE_ANIM_MS) {
 // giliran masing-masing — jangan dibatch sekalian, biar tiap bentuk
 // benar-benar dikarang khas buat game itu. Antrian: nebang → fishing →
 // patrol → treasurehunt → dungeon → berdagang.
+
+// ══════════════════════════════════════════════════
+// 🎣 FISHING — RIAK & TARIKAN (khas fishing, batch #2)
+// Bentuk: permukaan air dengan riak melebar + float yang
+// makin dalam + titik tensi bertambah — bukan bar, bukan frame tahapan.
+// ══════════════════════════════════════════════════
+export async function shapeFishing(m, sock, delay = SHAPE_ANIM_MS) {
+  const frame = (wave, tension, status, note) =>
+    `${hdr("Riak & Tarikan")}\n\n` +
+    `🌊 ${wave}\n\n` +
+    `${"•".repeat(tension)} ${status}\n\n${note}`;
+  const frames = [
+    frame("〰️〰️〰️〰️〰️", 1, "🎣 float dilempar...", "🌤️ air tenang, sabar ya..."),
+    frame("〰️〰️〰️〰️〰️", 2, "🎣 float goyang pelan...", "💧 ada yang nyenggol bawah"),
+    frame("🔱〰️〰️〰️〰️", 3, "🎣 float TENGGELEM!", "💥 SAMBARAN! tali melengkung!"),
+    frame("🌊🌊🌊🌊🌊", 4, "🎣 tarik-menarik!", "💪 TARIK! JANGAN LEPAS!"),
+    frame("🌊🌊🌊🌊🌊", 5, "🐟 KELUAR DARI AIR!", "✨ tangkapan melayang!"),
+  ];
+  await morphCore(m, sock, frames, delay);
+}
