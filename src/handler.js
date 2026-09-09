@@ -56,7 +56,7 @@ function getActiveJadibots() {
 /**
  * Main message handler — serializes raw WA message, runs plugins/commands
  */
-async function messageHandler(msg, sock) {
+async function messageHandler(msg, sock, jadibotCtx = {}) {
   if (!msg || !msg.message) return;
 
   let m;
@@ -1097,7 +1097,7 @@ try {
 
     // Statistik realtime: command valid diproses (+1, semua user termasuk owner)
     try { db.incrementStat("commandsRun"); } catch {}
-    await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000 });
+    await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000, isJadibot: !!jadibotCtx.isJadibot, jadibotId: jadibotCtx.jadibotId || null });
     recordPluginExecution(command, true, null);
     try { await postExecutionCheck(command, sock); } catch {}
     // Reset smart antispam — user berhasil pakai command valid
