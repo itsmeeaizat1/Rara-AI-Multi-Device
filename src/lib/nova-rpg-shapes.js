@@ -185,3 +185,28 @@ export async function shapePatrol(m, sock, delay = SHAPE_ANIM_MS) {
   });
   await morphCore(m, sock, frames, delay);
 }
+
+// ══════════════════════════════════════════════════
+// 🏰 DUNGEON — TURUN KE KEDALAMAN (khas dungeon, batch #7)
+// Bentuk: DESCENT — turun lantai B1→Bn, cahaya lentera
+// makin redup per lantai. Jumlah frame = jumlah stage.
+// ══════════════════════════════════════════════════
+export async function shapeDungeon(m, sock, stages = 3, hasKey = false, delay = SHAPE_ANIM_MS) {
+  const flavorByFloor = [
+    "gerbang tua berderit terbuka...",
+    "lorong lembap, tetesan air terdengar...",
+    "desisan dari kegelapan... ini sarang monster!",
+    "kilaau barang berkilau di kejauhan...",
+    "singgasana raja dungeon... batin berdebar!",
+  ];
+  const frames = [];
+  for (let i = 0; i < stages; i++) {
+    const torch = i < 2 ? "🕯️🕯️🕯️" : i === 2 ? "🕯️🕯️" : i === 3 ? "🕯️" : "✨";
+    const gate = "🚪" + "⬇️".repeat(i + 1);
+    frames.push(
+      `${hdr("Turun ke Kedalaman")}\n\n${torch}\n${gate}\n\n` +
+      `🏯 Lantai : *B${i + 1}/${stages}*${hasKey ? " 🔑" : ""}\n\n${flavorByFloor[Math.min(i, flavorByFloor.length - 1)]}`
+    );
+  }
+  await morphCore(m, sock, frames, delay);
+}
