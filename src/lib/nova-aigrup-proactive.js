@@ -39,7 +39,7 @@ const TIO_FORMATS = {
 // ANTI-BAN SETTINGS
 // ═══════════════════════════════════════════════
 // Default interval (default 45 menit, bukan 5!)
-const DEFAULT_INTERVAL_MIN = 60;
+const DEFAULT_INTERVAL_MIN = 10; // request owner 10 Sep 2026: default 10 menit
 
 // Jam aktif (bot ga proactive di luar jam ini)
 const ACTIVE_HOURS = { start: 8, end: 22 }; // 08:00 - 22:00

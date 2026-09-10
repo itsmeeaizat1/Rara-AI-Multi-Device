@@ -166,7 +166,7 @@ async function handler(m, { sock, config: botConfig }) {
           `Model: *${currentModel}*`,
           `API Key: *${currentKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `Probability: *${aigrup.probability}%*`,
-          `Proactive: *${aigrup.proactiveInterval || 60} menit*`,
+          `Proactive: *${aigrup.proactiveInterval || 10} menit*`,
           `Grup aktif: *${enabledGroups.length}*`].join("\n")) +
         claraWrap("Command", [`*${prefix}aigrup openai <model> on* — set format+model, ON`, `*${prefix}aigrup gemini <model> on* — set format+model, ON`, `*${prefix}aigrup anthropic <model> on* — set format+model, ON`, `*${prefix}aigrup openai on* — pakai format OpenAI, ON`, `*${prefix}aigrup on* — pakai format saat ini, ON`, `*${prefix}aigrup off* — matikan`, `*${prefix}aigrup prob <0-100>* — atur probability respon`, `*${prefix}aigrup spam on/off* — toggle proactive`, `*${prefix}aigrup interval <menit>* — atur jeda ngomong`, `*${prefix}aigrup model* — lihat semua model`, `*${prefix}aigrup list* — lihat grup aktif`].join("\n")) +
         
@@ -242,7 +242,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(
         claraWrap("Grup AI Aktif", [`Global: *${aigrup.enabled ? "ON" : "OFF"}*`,
           `Grup terdaftar: *${groups.length}*`,
-          `Proactive: *${aigrup.proactiveInterval || 60} menit*`,
+          `Proactive: *${aigrup.proactiveInterval || 10} menit*`,
           ...(groups.length ? groups.map(([gid]) => `${gid}`) : ["(kosong)"]),
         ])
       );
@@ -269,7 +269,7 @@ async function handler(m, { sock, config: botConfig }) {
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
           claraWrap("Proactive ON", [`Proactive: *ON*`,
-            `Interval: *${aigrup.proactiveInterval || 60} menit*`,
+            `Interval: *${aigrup.proactiveInterval || 10} menit*`,
             `Bot ngomong sendiri tiap interval`,
             `Jam aktif: 08:00-22:00`,
             `Max 3 grup/cycle, 8 pesan/grup/hari`].join("\n")) + "\n" 
@@ -297,7 +297,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(
         claraWrap("Proactive Status",
         `Proactive: *${aigrup.proactiveEnabled !== false ? "ON ✅" : "OFF ❌"}*\n` +
-        `Interval: *${aigrup.proactiveInterval || 60} menit*\n` +
+        `Interval: *${aigrup.proactiveInterval || 10} menit*\n` +
         `Jam aktif: 08:00-22:00\n` +
         `Max 3 grup/cycle\n` +
         `Max 8 pesan/grup/hari\n\n` +
@@ -317,11 +317,11 @@ async function handler(m, { sock, config: botConfig }) {
         await m.reply(
           claraWrap("Interval Proactive", [`*${prefix}aigrup interval 5* — tiap 5 menit (⚠️ beresiko)`,
             `*${prefix}aigrup interval 15* — tiap 15 menit`,
-            `*${prefix}aigrup interval 45* — tiap 45 menit (default, aman)`,
+            `*${prefix}aigrup interval 10* — tiap 10 menit (default)`,
             `*${prefix}aigrup interval 60* — tiap 1 jam`,
             `*${prefix}aigrup interval 120* — tiap 2 jam`,
             `Range: 1-1440 menit`,
-            `Saat ini: *${aigrup.proactiveInterval || 60} menit*`,
+            `Saat ini: *${aigrup.proactiveInterval || 10} menit*`,
             `Bot aktif: 08:00-22:00`,
             `⚠️ Di bawah 10 menit = beresiko ban WA`].join("\n"))
         );
