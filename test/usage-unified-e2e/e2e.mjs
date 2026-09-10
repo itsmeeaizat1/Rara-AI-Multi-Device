@@ -23,12 +23,12 @@ w("\n— novaGuide —");
   check("📝 ᴄᴀʀᴀ ᴘᴀᴋᴀɪ: + intro smallcaps", lines[1] === `📝 ${toSC("Cara Pakai")}:` && lines[2] === toSC("Download file dari MediaFire! Kasih linknya ya!"), lines[1] + " / " + lines[2]);
   const iC = lines.indexOf(`💡 ${toSC("Contoh")}:`);
   check("💡 ᴄᴏɴᴛᴏʜ: section + example VERBATIM (URL gak ke-smallcaps)", iC > -1 && lines[iC + 1] === ".mfdl https://www.mediafire.com/file/xxx");
-  const iN = lines.indexOf((lines.find(l => l.startsWith("⚠ ")) || ""));
-  check("⚠ note jadi DETAIL di bawah contoh", iN > iC && iN > -1 && lines[iN].includes(toSC("Maksimal 200MB sekali download")), String(iN) + "/" + String(iC));
+  const iN = lines.indexOf((lines.find(l => l.startsWith("📍 ")) || ""));
+  check("📍 note jadi DETAIL di bawah contoh", iN > iC && iN > -1 && lines[iN].includes(toSC("Maksimal 200MB sekali download")), String(iN) + "/" + String(iC));
   check("gak ada lagi format lama 'Contoh: ' inline", !out.includes("Contoh: ."));
 
   const noNote = novaGuide("Tes", "Intro doang", ".tes abc");
-  check("tanpa note → section ⚠ gak muncul", !noNote.includes("⚠"));
+  check("tanpa note → section 📍 gak muncul", !noNote.includes("📍"));
   const bare = novaGuide("Tes");
   check("tanpa param apapun → gak crash, cuma header", bare === `「 ✦ ${toSC("TES")} ✦ 」`);
 }
@@ -52,7 +52,7 @@ w("\n— novaRpgGuide —");
   const out = novaRpgGuide("Berburu", "Keliling hutan buat berburu hewan", ".berburu", "Cooldown 10 menit");
   check("📝 ᴄᴀʀᴀ ᴘᴀᴋᴀɪ: label ada", out.includes("📝 Cara Pakai:"));
   check("💡 ᴄᴏɴᴛᴏʜ: label ada + example", out.includes("💡 Contoh:") && out.includes(".berburu"));
-  check("⚠ note detail di bawah contoh", out.indexOf("⚠") > out.indexOf("💡 Contoh:"));
+  check("📍 note detail di bawah contoh", out.indexOf("📍") > out.indexOf("💡 Contoh:"));
 }
 
 // ─── 4. convert — 📋 daftar format jadi detail di bawah contoh ───
@@ -70,7 +70,7 @@ w("\n— convert format list —");
   check("daftar format: sub ᴀᴜᴅɪᴏ + ᴠɪᴅᴇᴏ + ɢᴀᴍʙᴀʀ + item verbatim", r.includes(`「 ${toSC("Audio")} 」`) && r.includes(`「 ${toSC("Video")} 」`) && r.includes(`「 ${toSC("Gambar")} 」`) && r.includes("mp3 (universal)") && r.includes("mp4 (universal)") && !r.includes("• mp3"));
   check("gak ada bullet • di daftar format", !r.includes("• "));
   check("nama format GAK DOBEL (revisi owner)", !r.includes("mp3 — MP3") && !r.includes("MP3 (universal)") && r.includes("wav (uncompressed)"));
-  check("⚠ note session 10 menit di bawah format list", r.includes("⚠") && r.indexOf("⚠") > r.indexOf(`📋 ${toSC("Format Tersedia")}:`));
+  check("📍 note session 10 menit di bawah format list", r.includes("📍") && r.indexOf("📍") > r.indexOf(`📋 ${toSC("Format Tersedia")}:`));
   check("gak ada lagi step bernomor lama", !r.includes("1. Reply media"));
   check("pluginConfig convert utuh", convConfig.name === "convert");
 }

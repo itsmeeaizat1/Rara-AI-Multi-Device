@@ -881,7 +881,7 @@ function novaGuide(commandName, intro, example, note) {
   let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
   if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scLine(intro)}\n`;
   if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
-  if (note) out += `\n⚠ ${scLine(note)}\n`;
+  if (note) out += `\n📍 ${scLine(note)}\n`;
   return out.replace(/\n+$/, "");
 }
 

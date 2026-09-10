@@ -718,7 +718,7 @@ export function novaRpgGuide(commandName, intro, example, note) {
   const body = [];
   if (intro && String(intro).trim()) body.push("📝 Cara Pakai:", String(intro));
   if (example) body.push("", "💡 Contoh:", String(example));
-  if (note) body.push("", "⚠ " + String(note));
+  if (note) body.push("", "📍 " + String(note));
   return novaRpgBox(commandName, body, "info");
 }
 
