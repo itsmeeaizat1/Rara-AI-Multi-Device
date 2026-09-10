@@ -31,11 +31,26 @@ const idnMarket = [
   { key: "tsdb:i1", date: new Date(Date.now() + 30 * 60000).toISOString(), home: "Garudayaksa", away: "Persik Kediri", state: "pre" }, // H-30 → reminder
 ];
 
+// Liga 2 Indonesia — jalur Apify Flashscore (item mentah ala actor, struktur asli)
+let apifyCalls = 0;
+const fsItem = (id, home, away, offsetMin, status, hs = null, as = null) => ({
+  matchId: id, country: "Indonesia", league: "Liga 2",
+  leagueUrl: "https://www.flashscore.com/football/indonesia/liga-2/",
+  homeTeam: home, awayTeam: away, homeScore: hs, awayScore: as,
+  status, minute: status === "live" ? 23 : undefined,
+  startTime: new Date(Date.now() + offsetMin * 60000).toISOString(),
+});
+let idn2Market = [
+  fsItem("l2a", "PSMS Medan", "Persipura Jayapura", 100, "scheduled"), // H-100 → reminder window Apify 150 mnt
+];
+
 import * as lib from "../../src/lib/nova-auto-bola-notifier.js";
 lib.setFetcher({
   espn: async (slug) => (market[slug] || []).map((m) => norm(m, slug)),
   tsdbLeague: async (slug, tsdbId) => (tsdbId === 4790 ? idnMarket.map((m) => norm(m, slug)) : []),
+  apify: async (country) => { apifyCalls++; return idn2Market; },
 });
+lib.__setApifyWindowOverride(true); // e2e deterministik — gak tergantung jam WIB asli
 
 const sent = [];
 const mockSock = { sendMessage: async (chatId, content) => sent.push({ chatId, text: content?.text || "" }) };
@@ -48,25 +63,29 @@ check("1a. resolve 'liga belanda' → ned.1", lib.resolveLeague("liga belanda") 
 check("1b. resolve 'champions' → uefa.champions", lib.resolveLeague("champions") === "uefa.champions");
 check("1b2. resolve 'liga indonesia' → idn.1", lib.resolveLeague("liga indonesia") === "idn.1");
 check("1b3. resolve 'bri' → idn.1", lib.resolveLeague("bri") === "idn.1");
+check("1b4. resolve 'liga 2' → idn.2", lib.resolveLeague("liga 2") === "idn.2");
+check("1b5. resolve 'championship' → idn.2 (bukan uefa.champions)", lib.resolveLeague("championship") === "idn.2");
+check("1b6. resolve 'pegadaian' → idn.2", lib.resolveLeague("pegadaian") === "idn.2");
 check("1c. resolve slug 'sau.1' langsung", lib.resolveLeague("sau.1") === "sau.1");
 check("1d. resolve ngawur → null", lib.resolveLeague("liga bulu tangkis") === null);
 
 // ═══ 2. baseline first-run: gak kirim apapun ═══
 let r = await lib.runCheck();
 check("2a. baseline: initDone + 0 kirim", r.baseline === true && r.sent === 0);
-check("2b. default 7 liga (termasuk Liga 1 Indonesia)", lib.getLeagues().length === 7);
+check("2b. default 8 liga (termasuk Liga 1 & 2 Indonesia)", lib.getLeagues().length === 8);
 check("2b2. Liga Indonesia di default", lib.getLeagues().some((l) => l.slug === "idn.1" && l.label === "Liga 1 Indonesia"));
+check("2b3. Liga 2 Indonesia di default", lib.getLeagues().some((l) => l.slug === "idn.2" && l.label === "Liga 2 Indonesia"));
 check("2c. default enabled=false", lib.isEnabled() === false);
 
 // ═══ 3. liga add/del/reset ═══
 let lr = lib.addLeague("Liga Belanda");
-check("3a. add Liga Belanda → 8 liga", lr.ok === true && lr.leagues.length === 8);
+check("3a. add Liga Belanda → 9 liga", lr.ok === true && lr.leagues.length === 9);
 lr = lib.addLeague("Liga Belanda");
 check("3b. add dobel ditolak", lr.ok === false && lr.error === "dup");
 lr = lib.addLeague("Liga Bulu Tangkis");
 check("3c. add liga gak dikenal ditolak", lr.ok === false && lr.error === "unknown");
 lr = lib.removeLeague("ned.1");
-check("3d. del Liga Belanda → 7 liga", lr.ok === true && lr.leagues.length === 7);
+check("3d. del Liga Belanda → 8 liga", lr.ok === true && lr.leagues.length === 8);
 lr = lib.removeLeague("Liga Tidak Ada");
 check("3e. del liga gak terdaftar → missing", lr.ok === false && lr.error === "missing");
 
@@ -83,6 +102,7 @@ r = await lib.runCheck({ force: true, chatId: CHAT });
 check("5a. force+chat → digest terkirim", r.sent >= 1 && sent.length >= 1);
 check("5b. digest nunjukin pertandingan", sent[0]?.text?.includes("JADWAL BOLA HARI INI") && sent[0].text.includes("Arsenal"));
 check("5b2. digest termasuk Liga 1 Indonesia (jalur TSDB)", sent[0]?.text?.includes("Garudayaksa"));
+check("5b3. digest termasuk Liga 2 Indonesia (jalur Apify Flashscore)", sent[0]?.text?.includes("PSMS Medan"));
 check("5c. digest ke chat yang aktifin", sent[0]?.chatId === CHAT);
 
 // ═══ 6. monitor check global: reminder (H-20) + hasil (transisi post) dikirim ═══
@@ -92,6 +112,22 @@ r = await lib.runCheck();
 const texts = sent.map((s) => s.text).join("\n");
 check("6a. reminder H-20 mnt terkirim", texts.includes("BENTAR LAGI KICK-OFF") && texts.includes("Arsenal"));
 check("6a2. reminder Liga 1 Indonesia (Garudayaksa H-30) terkirim", texts.includes("Garudayaksa"));
+check("6a3. reminder Liga 2 PSMS Medan (window Apify 150 mnt) terkirim", texts.includes("PSMS Medan"));
+const apifyCallsAfterStep6 = apifyCalls;
+
+// ═══ 6.5 THROTTLE: run lagi dalam interval → Apify GAK dipanggil (credit aman) ═══
+sent.length = 0;
+r = await lib.runCheck();
+check("6.5a. throttle — Apify gak dipanggil ulang dalam interval", apifyCalls === apifyCallsAfterStep6);
+
+// ═══ 6.6 CACHE MERGE: liga Apify gak ke-fetch tapi tetap dievaluasi tiap siklus ═══
+idn2Market = [fsItem("l2a", "PSMS Medan", "Persipura Jayapura", -90, "finished", 2, 1)];
+const stRaw = JSON.parse(fs.readFileSync(STATE, "utf8"));
+stRaw.lastApifyCheck = new Date(Date.now() - 3 * 3600000).toISOString(); // paksa due
+fs.writeFileSync(STATE, JSON.stringify(stRaw));
+sent.length = 0;
+r = await lib.runCheck();
+check("6.6a. hasil Liga 2 FULL-TIME (refresh poll Apify) terkirim", sent.some((s) => s.text.includes("FULL-TIME") && s.text.includes("PSMS Medan") && s.text.includes("2 - 1")));
 check("6b. hasil full-time terkirim", texts.includes("FULL-TIME") && texts.includes("3 - 1"));
 check("6c. digest gak dobel", !texts.includes("JADWAL BOLA HARI INI"));
 
@@ -142,6 +178,15 @@ try {
   check("13a. LIVE ESPN eng.1 reachable", Array.isArray(res.data?.events));
   const r2 = await axios.get("https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id=4790", { timeout: 10000 });
   check("13b. LIVE TSDB Liga 1 Indonesia (4790) reachable", Array.isArray(r2.data?.events));
+  if (process.env.APIFY_TOKEN) {
+    const token = process.env.APIFY_TOKEN;
+    const ra = await axios.post("https://api.apify.com/v2/acts/khadinakbar~flashscore-live-matches/run-sync-get-dataset-items?token=" + token + "&timeout=120",
+      { sport: "football", dayOffsets: [0], maxResults: 5, language: "en" }, { timeout: 130000 });
+    check("13c. LIVE Apify Flashscore reachable", Array.isArray(ra.data));
+    w("  (apify live items: " + (ra.data || []).length + ")");
+  } else {
+    w("  ⚠️ 13c. LIVE Apify skip (token belum diset)");
+  }
 } catch {
   w("  ⚠️ 13. LIVE ESPN skip (jaringan)");
 }
