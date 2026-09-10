@@ -30,8 +30,10 @@ function saveDB(db) {
 }
 
 function isDonasiOn(groupId) {
+  // REQUEST OWNER 10 Sep 2026: "tombol donasi ga off, defaultnya on" —
+  // default AKTIF di semua chat; cuma .donasioff eksplisit yang matiin.
   const db = loadDB();
-  return db.groups[groupId]?.enabled === true;
+  return db.groups[groupId]?.enabled !== false;
 }
 
 function toggleOn(groupId) {
@@ -152,8 +154,8 @@ export default {
   name: "donasi",
   alias: ["donasi"],
   category: "group",
-  desc: "Donasi & Sedekah Grup - Galang dana, tracking donatur, progress goal, siapa belum donasi",
-  usage: ".donasi <target> | <keterangan>\n.donasi list - Kampanye aktif\n.donasi status <id> - Lihat progress & donatur\n.donasi beri <id> <jumlah> - Tandai donasi sendiri\n.donasi terima <id> @tag <jumlah> - (owner) Catat donasi orang\n.donasi close <id> - (owner) Tutup kampanye\n.donasion / .donasioff - Toggle (owner)\n.donasihistory - Riwayat",
+  desc: "Donasi bot (QRIS store) & Sedekah Grup - Galang dana, tracking donatur, progress goal",
+  usage: ".donasi - QR & info donasi bot\n.donasi <target> | <keterangan> - Buat kampanye\n.donasi list - Kampanye aktif\n.donasi status <id> - Lihat progress & donatur\n.donasi beri <id> <jumlah> - Tandai donasi sendiri\n.donasi terima <id> @tag <jumlah> - (owner) Catat donasi orang\n.donasi close <id> - (owner) Tutup kampanye\n.donasion / .donasioff - Toggle (owner)\n.donasihistory - Riwayat",
   example: ".donasi 5000000 | Sedekah untuk korban banjir\n.donasi beri DNR3A2 50000\n.donasi status DNR3A2",
   wait: "🕐",
   error: "❌",
@@ -230,6 +232,63 @@ export default {
       });
 
       await m.reply(claraWrap("Donasi - Riwayat", lines.join("\n")));
+      return { handled: true };
+    }
+
+    // ─── Plain .donasi — target tombol "Donasi" di menu (Support).
+    // Default ON (request owner 10 Sep: "pas diklik tmbolnya mnculin qr
+    // store") — klik = langsung kirim QRIS store + info donasi, tanpa gate.
+    if (new RegExp(`^${prefix}donasi$`, "i").test(raw)) {
+      // QR store: donasi.qris → assets/image/donasi → payment.qrisUrl
+      let qrPath = null;
+      const qrCandidates = [
+        botConfig?.donasi?.qris,
+        getQRImage(),
+        botConfig?.payment?.qrisUrl,
+      ].filter(Boolean);
+      for (const c of qrCandidates) {
+        const p = path.isAbsolute(c) ? c : path.join(process.cwd(), c);
+        if (fs.existsSync(p)) { qrPath = p; break; }
+      }
+
+      const lines = [
+        `Terima kasih mau dukung bot ini 🙏`,
+        ``,
+        `Scan QRIS di atas buat donasi — semua e-wallet & m-banking bisa.`,
+      ];
+      const methods = (botConfig?.donasi?.payment || []).filter((x) => x.number);
+      if (methods.length > 0) {
+        lines.push(``, `*E-Wallet:*`);
+        for (const x of methods) lines.push(`• ${x.name} : ${x.number} a.n ${x.holder || "-"}`);
+      }
+      const benefits = botConfig?.donasi?.benefits || [];
+      if (benefits.length > 0) {
+        lines.push(``, `*Benefit donatur:*`);
+        for (const b of benefits) lines.push(`• ${b}`);
+      }
+      lines.push(
+        ``,
+        `Sudah transfer? Konfirmasi ke owner ya!`,
+        `Owner : wa.me/${String(botConfig?.owner?.[0] || botConfig?.ownerNumber || "").replace(/[^0-9]/g, "")}`,
+      );
+      const active = getActiveCampaigns(groupId);
+      if (active.length > 0) {
+        lines.push(``, `Kampanye grup aktif : *${active.length}* — ketik *${prefix}donasi list*`);
+      }
+
+      const caption = lines.join("\n");
+      if (qrPath) {
+        await sock.sendMessage(
+          m.chat,
+          { image: fs.readFileSync(qrPath), caption },
+          { quoted: m },
+        );
+      } else {
+        lines.push(
+          ``, `QRIS belum tersedia — hubungi owner untuk metode donasi.`
+        );
+        await m.reply(claraWrap("Donasi", lines.join("\n")));
+      }
       return { handled: true };
     }
 
