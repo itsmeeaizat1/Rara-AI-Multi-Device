@@ -115,6 +115,34 @@ setDouyinResolver(async () => ({
 const r4b = await resolvePlayDouyin("https://v.douyin.com/slide/");
 check("resolve foto slide (lib): 2 images", r4b.item?.type === "photo" && r4b.item.images.length === 2);
 
+// 4c. fallback rantai baru: HAIDAR + SYLVATICA (level lib, injected)
+const { haidarDouyin, sylvaticaDouyin, setHaidarDouyin, setSylvaticaDouyin, resetDouyinDlDeps, resolveDouyinShortlink } = await import("../../src/lib/nova-douyin-dl.js");
+setHaidarDouyin(async () => ({ source: "Haidar", title: "Video Haidar", video: "https://dl.example/hd.mp4", audio: "https://dl.example/a.mp3", images: [] }));
+const h4 = await haidarDouyin("https://www.douyin.com/video/1");
+check("fallback haidar: video no-watermark + audio", h4?.video === "https://dl.example/hd.mp4" && h4?.audio === "https://dl.example/a.mp3");
+// sylvatica: pilih quality hd duluan walau urutan array acak
+setSylvaticaDouyin(null); // reset dulu biar default gak kepakai
+setSylvaticaDouyin(async () => ({ source: "Sylvatica", title: "S", video: "https://dl.example/sy-hd.mp4", audio: "", images: [], quality: "hd ⭐" }));
+const s4 = await sylvaticaDouyin("https://www.douyin.com/video/1");
+check("fallback sylvatica: video hd terpilih", s4?.video === "https://dl.example/sy-hd.mp4" && s4?.quality === "hd ⭐");
+// sylvatica foto slide
+setSylvaticaDouyin(async () => ({ source: "Sylvatica", title: "S", video: "", audio: "", images: ["https://img.example/1.webp", "https://img.example/2.webp"], quality: "" }));
+const s4b = await sylvaticaDouyin("https://www.douyin.com/note/2");
+check("fallback sylvatica: foto slide shape", s4b?.images?.length === 2);
+// kedua fallback null → gak crash
+setHaidarDouyin(async () => null);
+setSylvaticaDouyin(async () => null);
+check("fallback haidar null: aman", (await haidarDouyin("x")) === null);
+check("fallback sylvatica null: aman", (await sylvaticaDouyin("x")) === null);
+// shortlink resolver: stub global fetch → redirect follow
+const realFetch = globalThis.fetch;
+globalThis.fetch = async () => ({ ok: true, url: "https://www.iesdouyin.com/share/video/123/" });
+const rs = await resolveDouyinShortlink("https://v.douyin.com/abc/");
+globalThis.fetch = realFetch;
+check("shortlink resolver: v.douyin → kanonik", rs === "https://www.iesdouyin.com/share/video/123/");
+check("shortlink resolver: url biasa gak diutak-atik", (await resolveDouyinShortlink("https://www.douyin.com/video/9")) === "https://www.douyin.com/video/9");
+resetDouyinDlDeps();
+
 // 5. resolve gagal → error jelas
 setDouyinResolver(async () => null);
 const r5 = await resolvePlayDouyin("https://v.douyin.com/broken/");
