@@ -36,9 +36,15 @@ const MAX_OUTPUT_MB = 95; // WhatsApp limit ~100MB
 // daftar list format" — layout usage terpadu): 📝 Cara Pakai + 💡 Contoh +
 // 📋 detail daftar format di bawah contoh (ala section model di usage AI).
 function formatListText() {
-  const audio = Object.entries(AUDIO_FORMATS).map(([k, v]) => `${k} — ${v.desc}`);
-  const video = Object.entries(VIDEO_FORMATS).map(([k, v]) => `${k} — ${v.desc}`);
-  const image = Object.entries(IMAGE_FORMATS).map(([k, v]) => `${k} — ${v.desc}`);
+  // REWORK 10 Sep (owner: "gini aja jgn dobel") — nama format gak dobel:
+  // desc yang ngeulang nama format ("MP3 (universal)") di-strip prefix-nya → "mp3 (universal)".
+  const fmtItem = ([k, v]) => {
+    const stripped = String(v.desc || "").replace(new RegExp(`^${k}\\s*`, "i"), "").trim();
+    return stripped ? `${k} ${stripped}` : k;
+  };
+  const audio = Object.entries(AUDIO_FORMATS).map(fmtItem);
+  const video = Object.entries(VIDEO_FORMATS).map(fmtItem);
+  const image = Object.entries(IMAGE_FORMATS).map(fmtItem);
   return novaBox("Convert", [
     `📝 ${toSC("Cara Pakai")}:`,
     "Unggah atau reply media dengan caption .convert <format>",
