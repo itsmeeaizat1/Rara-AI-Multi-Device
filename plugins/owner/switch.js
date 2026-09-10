@@ -399,6 +399,27 @@ const AUTO_CATEGORIES = {
 
 const AUTO_KEYS = Object.keys(AUTO_REGISTRY)
 
+// ═══ SCOPE TERPUSAT (request owner 10 Sep 2026) ═══
+// Deteksi otomatis KETERSEDIAAN fitur — bisa di-DM juga atau tidak:
+//   📍 Grup    → fitur grup (welcome, antilink, dll) — HANYA berlaku di grup
+//                (gak bisa ON di DM — dari DM wajib pakai target grup)
+//   🌍 Global  → fitur otomatis — berlaku di grup & DM (on/off dari mana aja)
+//   📢 Saluran → event notifikasi saluran — broadcast HANYA dikirim ke saluran WA
+//                (on/off bisa dari grup/DM, tapi efeknya cuma di saluran)
+const FEATURE_SCOPES = {
+  grup: { icon: "📍", label: "Grup", desc: "Hanya berlaku di grup — gak bisa aktif di DM" },
+  global: { icon: "🌍", label: "Global", desc: "Berlaku di grup & DM — on/off dari mana saja" },
+  saluran: { icon: "📢", label: "Saluran", desc: "Broadcast hanya dikirim ke saluran WhatsApp" },
+}
+function featureScopeInfo(name) {
+  const a = String(name || "").toLowerCase()
+  if (GROUP_ALIASES[a] || GROUP_FEATURES[a]) return FEATURE_SCOPES.grup
+  if (AUTO_ALIASES[a] || AUTO_KEYS.includes(a)) return FEATURE_SCOPES.global
+  if (Object.keys(NOTIFY_EVENTS).some((k) => k.toLowerCase() === a)) return FEATURE_SCOPES.saluran
+  return null
+}
+const scopeLine = (scope) => scope ? `${scope.icon} Berlaku: ${scope.label} — ${scope.desc}` : null
+
 // ── Format status baru (request owner 10 Sep 2026): nama fitur smallcaps +
 // status ON/OFF smallcaps di AKHIR baris, contoh "ʙᴇɴᴄᴀɴᴀᴡᴀᴛᴄʜ ᴏɴ" ──
 const scStatus = (on) => toSC(on ? "on" : "off")
@@ -509,9 +530,19 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
     const current = getAllNotifyStatus()[subCmd].enabled
     const newVal = verb === 'on' ? true : verb === 'off' ? false : !current
     if (newVal === current && (verb === 'on' || verb === 'off'))
-      return m.reply(claraWrap("Switch Channel", `Event: *${NOTIFY_EVENTS[subCmd]}*\nSudah *${newVal ? "ON" : "OFF"}* — gak ada perubahan`))
+      return m.reply(claraWrap("Switch Channel", [
+        `Event: *${NOTIFY_EVENTS[subCmd]}*`,
+        `Sudah *${newVal ? "ON" : "OFF"}* — gak ada perubahan`,
+        ``,
+        scopeLine(FEATURE_SCOPES.saluran),
+      ].join("\n")))
     setNotifyEnabled(subCmd, newVal)
-    return m.reply(claraWrap("Switch Channel", `Event: *${NOTIFY_EVENTS[subCmd]}*\nStatus: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
+    return m.reply(claraWrap("Switch Channel", [
+      `Event: *${NOTIFY_EVENTS[subCmd]}*`,
+      `Status: *${newVal ? "ON" : "OFF"}*`,
+      ``,
+      scopeLine(FEATURE_SCOPES.saluran),
+    ].join("\n")) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
   }
 
   let list = ""
@@ -540,6 +571,8 @@ async function sendGroupTargetPicker(m, sock, prefix, feature, featureName, forc
     ``,
     `Aktif semua: \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} all\``,
     `Aktif manual: \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} <jid-grup>\``,
+    ``,
+    `📍 Fitur ini hanya berlaku di grup — pilih grup target di atas`,
   ].join("\n"))
 
   if (!list.length) return m.reply(text)
@@ -700,6 +733,27 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
   if (!feature)
     return m.reply(`❌ Fitur tidak ditemukan: ${featureName}\nKetik \`${prefix}switch group\` untuk melihat daftar`)
 
+  // ═══ DETEKSI KETERSEDIAAN (request owner 10 Sep 2026) ═══
+  // ".switch <fitur>" tanpa on/off → tampilkan scope fitur ini:
+  // bisa di DM juga atau cuma grup, status sekarang, cara on/off.
+  if (direct && !mode && !target) {
+    const inGrpInfo = String(m.chat || "").endsWith("@g.us")
+    const gdInfo = inGrpInfo ? (db.getGroup(m.chat) || {}) : {}
+    const activeInfo = inGrpInfo ? isOn(gdInfo[feature.dbKey], feature.on) : null
+    return m.reply(claraWrap("Info Fitur", [
+      `Fitur : ${feature.label}`,
+      scopeLine(FEATURE_SCOPES.grup),
+      ``,
+      inGrpInfo
+        ? `Status di grup ini : *${activeInfo ? "ON" : "OFF"}*`
+        : `Status : dari DM — fitur ini gak bisa aktif di DM`,
+      ``,
+      `Aktifkan : \`${prefix}switch ${featureName} on\` (di dalam grup)`,
+      `Dari DM : \`${prefix}switch ${featureName} on <jid-grup>|all|list\``,
+      `Matikan : \`${prefix}switch ${featureName} off\``,
+    ].join("\n")))
+  }
+
   // ═══ TARGET TERPUSAT (request owner 10 Sep 2026) ═══
   // ".switch group <fitur> on <target>" — kayak mode on/off terpusat auto:
   //   on <jid-grup>  → aktif di grup itu saja (dari DM/grup manapun)
@@ -735,6 +789,8 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       `Status : *${forceOff ? "OFF" : "ON"}*`,
       ``,
       `Total grup: *${count}*`,
+      ``,
+      scopeLine(FEATURE_SCOPES.grup),
     ].join("\n")))
   }
 
@@ -761,6 +817,8 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       `Fitur : ${feature.label}`,
       `Target : ${subject}`,
       `Status : *${forceOff ? "OFF" : "ON"}*`,
+      ``,
+      scopeLine(FEATURE_SCOPES.grup),
     ].join("\n")))
   }
 
@@ -773,7 +831,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
 
   if (forceOff) {
     db.setGroup(m.chat, { [feature.dbKey]: feature.off })
-    return m.reply(`${feature.label}: *OFF*`)
+    return m.reply(`${feature.label}: *OFF*\n` + (scopeLine(FEATURE_SCOPES.grup) || ""))
   }
 
   let update = { [feature.dbKey]: feature.on }
@@ -788,6 +846,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0])
     txt += `\nMode: ${newMode}`
   }
+  txt += `\n` + (scopeLine(FEATURE_SCOPES.grup) || "")
   return m.reply(txt)
 }
 
@@ -981,7 +1040,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   const enable = action === 'on'
   try {
     reg.toggle(enable, { sock }) // sock dikasih buat fitur yang butuh (V1 winbu); entry lain nge-ignore
-    return m.reply(`${reg.label}: *${enable ? "ON" : "OFF"}*`)
+    return m.reply(`${reg.label}: *${enable ? "ON" : "OFF"}*\n` + (scopeLine(FEATURE_SCOPES.global) || ""))
   } catch (e) {
     return m.reply(`❌ ${e.message || e}`)
   }
@@ -1174,9 +1233,9 @@ async function handleStatusAll(m, { sock, config: cfg }) {
   let on = 0, off = 0, total = 0
   let txt = ""
 
-  // ── AUTO: semua kategori ──
+  // ── AUTO: semua kategori (🌍 global — grup & DM) ──
   for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
-    txt += `*${toSC(cat)}*\n`
+    txt += `🌍 *${toSC(cat)}*\n`
     for (const key of features) {
       const reg = AUTO_REGISTRY[key]
       if (!reg) continue
@@ -1189,7 +1248,7 @@ async function handleStatusAll(m, { sock, config: cfg }) {
 
   // ── SALURAN: semua event channel ──
   const statuses = getAllNotifyStatus()
-  txt += `*${toSC("Saluran")}*\n`
+  txt += `📢 *${toSC("Saluran")}*\n`
   for (const [key, info] of Object.entries(statuses)) {
     total++; info.enabled ? on++ : off++
     txt += `${scLine(info.label, info.enabled)}\n`
@@ -1199,7 +1258,7 @@ async function handleStatusAll(m, { sock, config: cfg }) {
   // ── GROUP: fitur grup chat ini (kalau dari dalam grup) ──
   if (String(m.chat || "").endsWith("@g.us")) {
     const groupData = db.getGroup(m.chat) || {}
-    txt += `*${toSC("Group (Chat Ini)")}*\n`
+    txt += `📍 *${toSC("Group (Chat Ini)")}*\n`
     for (const [cat, features] of Object.entries(GROUP_CATEGORIES)) {
       for (const feat of features) {
         const gf = GROUP_FEATURES[feat]
@@ -1220,6 +1279,7 @@ async function handleStatusAll(m, { sock, config: cfg }) {
   txt += `${toSC("kategori nonaktif")} ${toSC(String(disabledCats.length))}\n`
   if (disabledCats.length) txt += `${toSC(disabledCats.join(", "))}\n`
 
+  txt += "\n" + tipText(`📍 Grup (hanya di grup) | 🌍 Global (grup & DM) | 📢 Saluran (broadcast di saluran WA)`)
   txt += "\n" + tipText(`Aktif: ${on} | Mati: ${off} | Total: ${total}`)
   txt += "\n" + tipText(`Detail: \`${prefix}switch auto\` | \`${prefix}switch channel\` | \`${prefix}switch group\` | \`${prefix}switch fitur\``)
   return m.reply(txt.trim())
