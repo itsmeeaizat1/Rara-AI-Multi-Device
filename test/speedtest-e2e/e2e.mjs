@@ -142,5 +142,28 @@ w("\n— 6. plugin .speedtest simpan hasil tiap run —");
   check("handler simpan serverSpeedtest ke db", !!store.serverSpeedtest && store.serverSpeedtest.down > 0, JSON.stringify(store.serverSpeedtest || {}).slice(0, 60));
 }
 
+w("\n— 7. serverNetworkRows: IP publik/lokal, port, DNS —");
+{
+  const { serverNetworkRows } = await import("../../src/lib/nova-info-section.js");
+  const store = {};
+  const db = { setting: (k, v) => { if (v !== undefined) { store[k] = v; return store[k]; } return store[k]; } };
+
+  const empty = serverNetworkRows(db);
+  check("db kosong → tetap ada IP Lokal + Port (gak ada IP Publik)", empty.some(r => r.label === "IP Lokal" && /^\d+\.\d+\.\d+\.\d+$|^-$/.test(r.value)) && empty.some(r => r.label === "Port"), JSON.stringify(empty));
+
+  db.setting("serverSpeedtest", { ip: "103.22.131.9", down: 87.4, up: 23.1, ping: 23, jitter: 1 });
+  const rows = serverNetworkRows(db);
+  const publik = rows.find(r => r.label === "IP Publik");
+  const lokal = rows.find(r => r.label === "IP Lokal");
+  const port = rows.find(r => r.label === "Port");
+  const dns1 = rows.find(r => r.label === "DNS 1");
+  check("IP Publik dari hasil speedtest tersimpan", publik && publik.value === "103.22.131.9", JSON.stringify(publik));
+  check("IP Lokal IPv4 atau -", lokal && /^\d+\.\d+\.\d+\.\d+$|^-$/.test(lokal.value));
+  check("Port (NOVA_WEB_PORT default 8080)", port && port.value === String(process.env.NOVA_WEB_PORT || "8080"));
+  check("DNS 1 ada kalau resolv.conf punya nameserver (IPv4/IPv6)", !dns1 || /^[0-9a-fA-F.:%]+$/.test(dns1.value), JSON.stringify(dns1));
+  check("max 1 baris DNS 2", rows.filter(r => r.label === "DNS 2").length <= 1);
+  check("db null gak crash", Array.isArray(serverNetworkRows(null)));
+}
+
 w(`\n${pass} PASS / ${fail} FAIL`);
 process.exit(fail ? 1 : 0);
