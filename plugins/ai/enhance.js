@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
   await m.react("🕒");
 
-    const media = m.msg?.imageMessage || m.msg?.videoMessage || m.quoted?.msg?.imageMessage || m.quoted?.msg?.videoMessage;
+    const media = (m.quoted && (m.quoted.isImage || m.quoted.isVideo)) || m.isImage || m.isVideo; // FIX 10 Sep: flags isImage/isVideo
     if (!media) {
       const text =
         novaCaption({
@@ -41,8 +41,9 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    const buffer = await sock.downloadMediaMessage(m.quoted || m);
-    const ext = m.msg?.videoMessage || media?.videoMessage ? ".mp4" : ".png";
+    const src = (m.quoted && (m.quoted.isImage || m.quoted.isVideo)) ? m.quoted : m;
+    const buffer = await src.download(); // FIX 10 Sep: download() framework, bukan sock.downloadMediaMessage
+    const ext = src.isVideo ? ".mp4" : ".png";
     const filePath = tempPath(ext);
     fs.writeFileSync(filePath, Buffer.from(buffer));
 
