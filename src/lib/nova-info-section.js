@@ -72,6 +72,53 @@ function getMessagePingMs(m) {
  *   - info: array untuk novaMenuLayout
  *   - weatherStr: null (weather sudah di dalam info), tetap dikembalikan untuk backward compat
  */
+
+// ─── network info server: IP publik/lokal, port, DNS 1/2 ───
+// (request owner 11 Sep 2026: "tambah info ip, port info dns 1 dns 2 juga
+// ke section info server")
+function getInternalIp() {
+  try {
+    for (const addrs of Object.values(os.networkInterfaces())) {
+      for (const a of addrs || []) {
+        if (a.family === "IPv4" && !a.internal) return a.address;
+      }
+    }
+  } catch {}
+  return "-";
+}
+
+function getDnsServers() {
+  try {
+    const txt = fs.readFileSync("/etc/resolv.conf", "utf8");
+    return txt.split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith("nameserver"))
+      .map((l) => l.split(/\s+/)[1])
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function getWebPort() {
+  return String(process.env.NOVA_WEB_PORT || 8080);
+}
+
+export function serverNetworkRows(db) {
+  const rows = [];
+  // IP publik dari hasil speedtest tersimpan (biar gak fetch tiap buka menu)
+  try {
+    const saved = db?.setting?.("serverSpeedtest");
+    if (saved?.ip) rows.push({ label: "IP Publik", value: saved.ip });
+  } catch {}
+  rows.push({ label: "IP Lokal", value: getInternalIp() });
+  rows.push({ label: "Port", value: getWebPort() });
+  const dns = getDnsServers();
+  if (dns[0]) rows.push({ label: "DNS 1", value: dns[0] });
+  if (dns[1]) rows.push({ label: "DNS 2", value: dns[1] });
+  return rows;
+}
+
 export async function buildMenuInfo(m, ctx = {}) {
   const { db, config: botConfig, uptime } = ctx;
   const now = new Date();
@@ -271,6 +318,8 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Load", value: loadAvg },
     // hasil speedtest pertama (tanda kecepatan server — request owner 11 Sep)
     ...speedtestInfoRows(db),
+    // IP, port, DNS 1/2 (request owner 11 Sep)
+    ...serverNetworkRows(db),
     ...(weatherDetail ? [
       "",
       "Cuaca",
