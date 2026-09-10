@@ -102,6 +102,42 @@ t("9c. master off → group welcome OFF", (db.getGroup(GID) || {}).welcome === f
 await switchHandler(mockM(["semua"]), { sock: mockSock, config })
 t("10a. master tanpa verb → panduan", reSC("master switch terpusat").test(replies.at(-1) || ""))
 
+// ═══ 11. DIRECT: .switch welcome on (tanpa keyword subsistem) ═══
+db.setGroup(GID, { welcome: false }); db.save()
+await switchHandler(mockM(["welcome", "on"]), { sock: mockSock, config })
+t("11a. .switch welcome on → fitur grup aktif", (db.getGroup(GID) || {}).welcome === true, JSON.stringify(db.getGroup(GID)))
+
+// ═══ 12. DIRECT + TARGET: .switch welcome on all ═══
+db.setGroup(GID, { welcome: false }); db.setGroup(OTHER_GID, { welcome: false }); db.save()
+await switchHandler(mockM(["welcome", "on", "all"]), { sock: mockSock, config })
+t("12a. .switch welcome on all → semua grup", (db.getGroup(GID) || {}).welcome === true && (db.getGroup(OTHER_GID) || {}).welcome === true)
+
+// ═══ 13. DIRECT: .switch antilinkgc on <jid> ═══
+db.setGroup(OTHER_GID, { antilinkgc: "off" }); db.save()
+await switchHandler(mockM(["antilinkgc", "on", OTHER_GID]), { sock: mockSock, config })
+t("13a. .switch antilinkgc on <jid> → grup itu ON", (db.getGroup(OTHER_GID) || {}).antilinkgc === "on", JSON.stringify(db.getGroup(OTHER_GID)))
+
+// ═══ 14. DIRECT: .switch autoread on (fitur otomatis) ═══
+db.setting("autoRead", false); db.save()
+await switchHandler(mockM(["autoread", "on"]), { sock: mockSock, config })
+t("14a. .switch autoread on → autoRead ON", db.setting("autoRead") === true, String(db.setting("autoRead")))
+await switchHandler(mockM(["autoread", "off"]), { sock: mockSock, config })
+t("14b. .switch autoread off → autoRead OFF", db.setting("autoRead") === false)
+
+// ═══ 15. DIRECT: .switch sewaRegister off (event saluran) ═══
+const statuses15 = getAllNotifyStatus()
+const evKey = Object.keys(statuses15)[0]
+db.save()
+await switchHandler(mockM([evKey, "off"]), { sock: mockSock, config })
+t("15a. .switch <event> off → event saluran OFF", getAllNotifyStatus()[evKey]?.enabled === false, JSON.stringify(getAllNotifyStatus()[evKey]))
+await switchHandler(mockM([evKey, "on"]), { sock: mockSock, config })
+t("15b. .switch <event> on → event saluran ON", getAllNotifyStatus()[evKey]?.enabled === true)
+
+// ═══ 16. DIRECT dari DM tanpa target → popup daftar grup ═══
+buttons.length = 0
+await switchHandler(mockM(["goodbye", "on"], { chat: "628999@s.whatsapp.net", isGroup: false }), { sock: mockSock, config })
+t("16a. direct DM tanpa target → popup grup", buttons.length === 1 && JSON.stringify(buttons[0].opts).includes(GID))
+
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 await new Promise((r) => setTimeout(r, 400))
 process.exit(fail ? 1 : 0)
