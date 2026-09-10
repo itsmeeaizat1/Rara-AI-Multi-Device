@@ -169,6 +169,103 @@ export async function getYouTubeInfo(queryOrUrl) {
   return null;
 }
 
+/** Suggest pencarian YouTube (ala autocomplete) — string[] | []. */
+export async function pipedSuggestions(query) {
+  const q = String(query || "").trim();
+  if (!q) return [];
+  for (const instance of PIPED_INSTANCES) {
+    try {
+      const data = await pipedHttp(`${instance}/suggestions?query=${encodeURIComponent(q)}`);
+      if (Array.isArray(data)) return data.filter((s) => typeof s === "string").slice(0, 8);
+    } catch {
+      // instance berikutnya
+    }
+  }
+  return [];
+}
+
+/**
+ * Feed hasil pencarian YouTube ala halaman search YouTube asli
+ * (request owner 10 Sep 2026: ".web youtube yg kebuka ai rich youtube —
+ * tampilan asli di YouTube"). Sumber: Piped /search → fallback yt-search.
+ * Return { items, source } | null.
+ * item = { id, url, title, thumbnail, channel, views, durationSec,
+ *          durationText, uploadedDate, live }
+ */
+export async function getYouTubeFeed(query) {
+  const q = String(query || "").trim();
+  if (!q) return null;
+
+  // ── Piped search (data kaya) ──
+  const raw = await pipedSearch(q);
+  if (raw.length) {
+    const items = raw
+      .filter((it) => it.type === "stream" || it.title)
+      .slice(0, 8)
+      .map((it) => {
+        const id = extractVideoId(it.url || it.id);
+        const live = it.duration === -1;
+        return {
+          id,
+          url: id ? `https://youtube.com/watch?v=${id}` : (it.url || ""),
+          title: it.title || "(tanpa judul)",
+          thumbnail: it.thumbnail || null,
+          channel: it.uploaderName || it.uploader || "Unknown",
+          views: it.views || 0,
+          durationSec: live ? null : it.duration,
+          durationText: live ? "🔴 LIVE" : formatDuration(it.duration),
+          uploadedDate: it.uploadedDate || (it.uploaded > 0 ? new Date(it.uploaded).toLocaleDateString("id-ID") : null),
+          live,
+        };
+      });
+    if (items.length) return { items, source: "piped" };
+  }
+
+  // ── fallback yt-search ──
+  try {
+    const search = ytsSearch || (await import("yt-search")).default;
+    const res = await search(q);
+    const vids = (res?.videos || []).slice(0, 8).map((v) => ({
+      id: extractVideoId(v.url),
+      url: v.url,
+      title: v.title,
+      thumbnail: v.image || v.thumbnail || null,
+      channel: v.author?.name || "Unknown",
+      views: v.views || 0,
+      durationSec: null,
+      durationText: v.timestamp || null,
+      uploadedDate: v.ago || null,
+      live: false,
+    }));
+    if (vids.length) return { items: vids, source: "yt-search" };
+  } catch {}
+  return null;
+}
+
+/**
+ * Rich feed hasil YouTube — MIRIP TAMPILAN SEARCH YOUTUBE ASLI:
+ * tiap video = [thumbnail] + [judul + channel • N x ditonton • durasi • tanggal].
+ * owner 10 Sep 2026: "youtube kyk tampilan asli di youtube".
+ */
+export function formatYouTubeFeedRich(items, { query = "", chips = [] } = {}) {
+  const parts = [];
+  const top = (items || []).slice(0, 5);
+  for (const it of top) {
+    if (it.thumbnail) parts.push({ type: "image", url: it.thumbnail });
+    const meta = [
+      `${it.channel} • ${formatNumber(it.views)}x ditonton`,
+      it.durationText,
+      it.uploadedDate,
+    ].filter(Boolean).join(" • ");
+    parts.push({ type: "text", content: `${it.title}\n${meta}` });
+  }
+  if (items?.length > 5) {
+    parts.push({ type: "text", content: `+${items.length - 5} video lagi — ketik .web youtube ${query} judul spesifik buat lihat lainnya` });
+  }
+  if (chips.length) parts.push({ type: "suggest", prompts: chips.slice(0, 4) });
+  return buildRichResponse(parts, `▶️ YouTube — ${query.slice(0, 30)}`, "");
+}
+
 /**
  * Bangun richData video YouTube — verbatim contoh owner:
  * [image thumbnail] [text judul] [table Channel/Views/Duration/Uploaded/Likes]

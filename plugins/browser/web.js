@@ -37,6 +37,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import { config } from "../../config.js";
+import { sendRichMessage } from "../../src/lib/nova-rich-response.js";
+import {
+  getYouTubeInfo, getYouTubeFeed, formatYouTubeRich, formatYouTubeFeedRich,
+  pipedSuggestions, extractVideoId,
+} from "../../src/lib/nova-youtube-info.js";
+import { sendGoogleSerpRich } from "../../src/lib/nova-web-rich.js";
 import { smallcapsText, toSC } from "../../src/lib/styler.js";
 import { novaGuide, novaNoInput, novaError } from "../../src/lib/nova-menu-style.js";
 import { getNovaWebUrl } from "../../src/lib/nova-web-server.js";
@@ -431,6 +437,7 @@ const PRESETS = {
 
 // Alias preset biar gampang diingat
 const PRESET_ALIASES = {
+  youtube: "yt",
   x: "twitter",
   tw: "twitter",
   fb: "facebook",
@@ -650,6 +657,58 @@ async function handler(m, { sock, args }) {
   // Preset situs (yt, google, maps, dll)
   const presetKey = PRESETS[cmd] ? cmd : PRESET_ALIASES[cmd];
   const preset = presetKey ? PRESETS[presetKey] : null;
+
+  // ── AI RICH (owner 10 Sep 2026: "fitur ai rich cm buat cmd .web —
+  // .web youtube yg kebuka ai rich youtube, .web google yg kebuka ai
+  // rich google search") — .web youtube/google <query> dirender AI rich
+  // ala situs aslinya. Rich gagal → jatuh ke flow webview card lama. ──
+  if (preset && (presetKey === "yt" || presetKey === "google")) {
+    const richArgs = args.slice(1).filter((a) => !TEXT_MODE_TOKENS.has(String(a).toLowerCase()));
+    const richQuery = richArgs.join(" ").trim();
+    if (richQuery) {
+      await m.react("🕒");
+      let richOk = false;
+      try {
+        if (presetKey === "yt") {
+          if (extractVideoId(richQuery)) {
+            // .web youtube <link> → detail 1 video (tampilan watch page)
+            const info = await getYouTubeInfo(richQuery);
+            if (info) {
+              const rich = formatYouTubeRich(info.video, {
+                chips: [`${m.prefix}playaudio ${info.video.title}`, `${m.prefix}playvideo ${info.video.title}`],
+              });
+              richOk = await sendRichMessage(sock, m.chat, rich);
+            }
+          } else {
+            // .web youtube <query> → feed hasil search ala YouTube asli
+            const [feed, sugg] = await Promise.all([
+              getYouTubeFeed(richQuery),
+              pipedSuggestions(richQuery),
+            ]);
+            if (feed) {
+              const chips = [
+                `${m.prefix}playaudio ${richQuery}`,
+                `${m.prefix}playvideo ${richQuery}`,
+                ...sugg.filter((s) => s && s !== richQuery).slice(0, 2).map((s) => `${m.prefix}web youtube ${s}`),
+              ];
+              const rich = formatYouTubeFeedRich(feed.items, { query: richQuery, chips });
+              richOk = await sendRichMessage(sock, m.chat, rich);
+            }
+          }
+        } else if (presetKey === "google") {
+          // .web google <query> → SERP ala buka google chrome
+          richOk = await sendGoogleSerpRich(sock, m.chat, richQuery, { prefix: m.prefix });
+        }
+      } catch {}
+      if (richOk) {
+        await m.react("🐣");
+        return;
+      }
+      // rich gagal → lanjut flow webview card lama di bawah (gak return)
+      await m.react("🕒");
+    }
+  }
+
   if (preset) {
     await m.react("🕒");
     try {
