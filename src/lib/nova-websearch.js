@@ -17,12 +17,15 @@ const PREVIEW_TEXT_LIMIT = 1500;
 // ── seam injectable ──
 let webSearchHttp = defaultWebSearchHttp;
 let previewHttp = defaultPreviewHttp;
+let linkResolverHttp = defaultLinkResolverHttp;
 
 export function setWebSearchHttp(fn) { webSearchHttp = fn || defaultWebSearchHttp; }
+export function setLinkResolverHttp(fn) { linkResolverHttp = fn || defaultLinkResolverHttp; }
 export function setPreviewHttp(fn) { previewHttp = fn || defaultPreviewHttp; }
 export function resetWebSearchDeps() {
   webSearchHttp = defaultWebSearchHttp;
   previewHttp = defaultPreviewHttp;
+  linkResolverHttp = defaultLinkResolverHttp;
 }
 
 async function defaultWebSearchHttp(url, opts = {}) {
@@ -54,6 +57,20 @@ async function defaultPreviewHttp(url) {
   const cap = 1.5 * 1024 * 1024;
   const bytes = buf.byteLength > cap ? buf.slice(0, cap) : buf;
   return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+}
+
+async function defaultLinkResolverHttp(url, opts = {}) {
+  const res = await fetch(url, {
+    method: opts.method || "GET",
+    redirect: "manual",
+    signal: AbortSignal.timeout(opts.timeoutMs || 9000),
+    headers: { "User-Agent": UA },
+  });
+  return {
+    status: res.status,
+    location: res.headers.get("location") || "",
+    text: res.status >= 200 && res.status < 300 ? await res.text() : "",
+  };
 }
 
 // ── Bing: decode URL redirect bing.com/ck/a?...&u=a1<base64> ──
@@ -107,10 +124,73 @@ function parseBrave(html) {
   return items;
 }
 
+function parseBaidu(html) {
+  const $ = cheerio.load(html);
+  const items = [];
+  $("h3 a").each((_, el) => {
+    const a = $(el);
+    const title = (a.text() || "").trim();
+    const url = a.attr("href") || "";
+    if (!title || !/^https?:\/\//i.test(url)) return;
+    if (items.some((i) => i.url === url)) return;
+    items.push({ title, url, snippet: "" });
+  });
+  return items;
+}
+
+function parseSogou(html) {
+  const $ = cheerio.load(html);
+  const items = [];
+  $("h3 a").each((_, el) => {
+    const a = $(el);
+    const title = (a.text() || "").trim();
+    const raw = a.attr("href") || "";
+    if (!title) return;
+    // skip link internal sogou (bukan hasil)
+    if (!/^https?:\/\//.test(raw) && !raw.startsWith("/link?")) return;
+    const url = raw.startsWith("/link?") ? "https://www.sogou.com" + raw : raw;
+    if (items.some((i) => i.url === url)) return;
+    const snippet = (a.closest(".vrwrap, .rb").find(".space-txt, .str-text-info").first().text() || "").trim();
+    items.push({ title, url, snippet });
+  });
+  return items;
+}
+
+// resolve redirect asli baidu.com/link (HTTPS HEAD → 302 Location)
+async function resolveBaiduLink(url) {
+  if (!/baidu\.com\/link/i.test(url)) return url;
+  try {
+    const u = url.replace(/^http:\/\//i, "https://");
+    const r = await linkResolverHttp(u, { method: "HEAD" });
+    if (r.status >= 300 && r.status < 400 && r.location) {
+      try { return new URL(r.location, u).href; } catch { return r.location; }
+    }
+  } catch (e) {
+    console.error("[nova-websearch] resolve baidu link gagal:", e.message);
+  }
+  return url;
+}
+
+// resolve redirect sogou.com/link (body: window.location.replace / URL='…')
+async function resolveSogouLink(url) {
+  if (!/sogou\.com\/link/i.test(url)) return url;
+  try {
+    const r = await linkResolverHttp(url, { method: "GET" });
+    const body = r.text || "";
+    const m = body.match(/window\.location\.replace\("([^"]+)"\)/) || body.match(/URL='([^']+)'/) || body.match(/URL=\"([^"]+)\"/);
+    if (m && /^https?:\/\//i.test(m[1])) return m[1];
+  } catch (e) {
+    console.error("[nova-websearch] resolve sogou link gagal:", e.message);
+  }
+  return url;
+}
+
 const ENGINES = {
   bing: { label: "Bing", chain: [parseBing], url: (q, n) => `https://www.bing.com/search?q=${encodeURIComponent(q)}&count=${Math.max(1, Math.min(n, 10))}`, get: false },
   brave: { label: "Brave Search", chain: [parseBrave], url: (q) => `https://search.brave.com/search?q=${encodeURIComponent(q)}`, get: false },
   duckduckgo: { label: "DuckDuckGo", chain: [parseDdgLite], url: () => "https://lite.duckduckgo.com/lite/", get: true, post: (q) => new URLSearchParams({ q }).toString() },
+  baidu: { label: "Baidu 百度", chain: [parseBaidu], url: (q, n) => `https://www.baidu.com/s?wd=${encodeURIComponent(q)}&rn=${Math.max(1, Math.min(n, 10))}`, headers: { "Accept-Language": "zh-CN,zh;q=0.9,id;q=0.8", Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", Referer: "https://www.baidu.com/" }, resolve: resolveBaiduLink },
+  sogou: { label: "Sogou 搜狗", chain: [parseSogou], url: (q) => `https://www.sogou.com/web?query=${encodeURIComponent(q)}`, headers: { "Accept-Language": "zh-CN,zh;q=0.9,id;q=0.8", Accept: "text/html,application/xhtml+xml", Referer: "https://www.sogou.com/" }, resolve: resolveSogouLink },
 };
 // urutan fallback kalau engine utama gagal
 const ENGINE_CHAIN = ["bing", "duckduckgo", "brave"];
@@ -158,10 +238,14 @@ export async function searchWeb(query, { engine = "bing", limit = MAX_RESULTS } 
     try {
       const url = eng.url(q, limit);
       const html = eng.post
-        ? await webSearchHttp(url, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: eng.post(q) })
-        : await webSearchHttp(url);
-      const items = eng.chain[0](html).slice(0, limit);
+        ? await webSearchHttp(url, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", ...(eng.headers || {}) }, body: eng.post(q) })
+        : await webSearchHttp(url, { headers: eng.headers || {} });
+      let items = eng.chain[0](html).slice(0, limit);
       if (items.length) {
+        // engine cina: link redirect → resolve URL asli paralel (fallback: link redirect tetap dipakai)
+        if (eng.resolve) {
+          items = await Promise.all(items.map(async (it) => ({ ...it, url: await eng.resolve(it.url) })));
+        }
         return { source: eng.label, engine: key, engineNote, items };
       }
       errors.push(`${eng.label}: 0 hasil`);
@@ -179,6 +263,8 @@ export function listEngines() {
     { key: "brave", label: "Brave Search", note: "privasi, hasil beragam" },
     { key: "duckduckgo", label: "DuckDuckGo", note: "privasi, tanpa tracking" },
     { key: "google", label: "Google (auto-Bing)", note: "google ngeblok bot — auto dialihkan ke bing" },
+    { key: "baidu", label: "Baidu 百度", note: "mesin search cina no.1" },
+    { key: "sogou", label: "Sogou 搜狗", note: "mesin cina — konten WeChat/Zhihu (kadang ngeblok bot → auto fallback)" },
   ];
 }
 

@@ -28,7 +28,7 @@ const pluginConfig = {
 };
 
 const READMORE = "\u200E".repeat(4001);
-const ENGINE_KEYS = ["bing", "brave", "duckduckgo", "google"];
+const ENGINE_KEYS = ["bing", "brave", "duckduckgo", "google", "baidu", "sogou"];
 
 function domainOf(url) {
   try {

@@ -3,7 +3,7 @@
 // Semua HTTP di-inject (offline). Reaksi 🕒→🐣 wajib.
 import { initDatabase } from "../../src/lib/nova-database.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { setWebSearchHttp, setPreviewHttp, resetWebSearchDeps } from "../../src/lib/nova-websearch.js";
+import { setWebSearchHttp, setPreviewHttp, setLinkResolverHttp, resetWebSearchDeps } from "../../src/lib/nova-websearch.js";
 
 await initDatabase("/tmp/searchweb-e2e-db.json");
 
@@ -45,7 +45,33 @@ setWebSearchHttp(async (url, opts = {}) => {
   }
   // ddg lite
   if (String(url).includes("duckduckgo")) return DDG_HTML;
+  // baidu serp (header Referer baidu wajib — cek anti-bot sandbox)
+  if (String(url).includes("baidu.com/s?wd=")) return BAIDU_HTML;
+  if (String(url).includes("sogou.com/web?query=")) return SOGOU_HTML;
   throw new Error("unknown");
+});
+
+const BAIDU_HTML = `<!DOCTYPE html><html><body>
+<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD1">Hasil Baidu Pertama</a></h3></div>
+<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD2">Hasil Baidu Zhihu</a></h3></div>
+<div class="result c-container"><h3 class="t"><a href="http://www.baidu.com/link?url=BD3">Hasil Baidu WeChat</a></h3></div>
+</body></html>`;
+
+const SOGOU_HTML = `<!DOCTYPE html><html><body>
+<div class="vrwrap"><h3><a href="/link?url=SG1">Hasil Sogou Pertama</a></h3></div>
+<div class="vrwrap"><h3><a href="/link?url=SG2">Hasil Sogou Zhihu</a></h3></div>
+<div class="vrwrap"><h3><a href="https://mp.weixin.qq.com/s?src=11">Artikel WeChat</a></h3></div>
+</body></html>`;
+
+// link resolver mock: baidu HEAD 302, sogou GET body JS
+setLinkResolverHttp(async (url, opts = {}) => {
+  if (String(url).includes("baidu.com/link")) {
+    return { status: 302, location: "https://www.hasil-baidu-asli.com/page", text: "" };
+  }
+  if (String(url).includes("sogou.com/link")) {
+    return { status: 200, location: "", text: `<html><script>window.location.replace("https://www.hasil-sogou-asli.com/page")</script></html>` };
+  }
+  throw new Error("unknown link");
 });
 setPreviewHttp(async (url) => {
   if (url.includes("wikipedia")) return PAGE_HTML;
@@ -90,6 +116,7 @@ check("no-arg: usage sebut engine bing/brave/duckduckgo", replies.length === 1 &
 replies.length = 0; sent.length = 0;
 await handler(mockM(["list"]), { sock: mockSock });
 check("search list: daftar mesin search", replies.length === 1 && replies[0].length > 60);
+check("search list: sebut mesin cina baidu/sogou", replies[0].includes(smallcapsText("baidu")) && replies[0].includes(smallcapsText("sogou")));
 
 // 2. no-arg → usage guide
 replies.length = 0; sent.length = 0;
@@ -170,6 +197,32 @@ check("engine tak dikenal: jadi query default bing", String(sent[0]?.payload?.te
 replies.length = 0; sent.length = 0;
 await handler(mockM(["bing"]), { sock: mockSock });
 check("engine tanpa query: tetep jalan sebagai query", String(sent[0]?.payload?.text || "").includes("1."));
+
+// 6f. engine baidu → hasil baidu + redirect link di-resolve ke URL asli
+setWebSearchHttp(async (url, opts = {}) => {
+  const u = String(url);
+  if (u.includes("baidu.com/s?wd=")) return BAIDU_HTML;
+  if (u.includes("brave.com")) throw new Error("HTTP 429");
+  if (u.includes("duckduckgo")) return DDG_HTML;
+  throw new Error("unknown url");
+});
+replies.length = 0; sent.length = 0;
+await handler(mockM(["baidu", "hp", "terkenal"]), { sock: mockSock });
+const baiduText = String(sent[0]?.payload?.text || "");
+check("engine baidu: hasil baidu ke-list", baiduText.includes(smallcapsText("Hasil Baidu Pertama")));
+check("engine baidu: domain asli (bukan baidu.com/link)", baiduText.includes(smallcapsText("hasil-baidu-asli.com")));
+
+// 6g. engine sogou → hasil sogou + link resolve via body JS
+setWebSearchHttp(async (url) => {
+  if (String(url).includes("sogou.com/web?query=")) return SOGOU_HTML;
+  throw new Error("unknown url");
+});
+replies.length = 0; sent.length = 0;
+await handler(mockM(["sogou", "hp", "terkenal"]), { sock: mockSock });
+const sogouText = String(sent[0]?.payload?.text || "");
+check("engine sogou: hasil sogou ke-list", sogouText.includes(smallcapsText("Hasil Sogou Pertama")));
+check("engine sogou: wechat url langsung (bukan /link)", sogouText.includes(smallcapsText("mp.weixin.qq.com")));
+check("engine sogou: link /link di-resolve asli", sogouText.includes(smallcapsText("hasil-sogou-asli.com")));
 
 // 7. bing mati → fallback DDG lite sukses (restore injector lengkap dulu)
 setWebSearchHttp(async (url, opts = {}) => {
