@@ -21,14 +21,20 @@ let market = {
   ],
 };
 const norm = (m, slug) => ({
-  ...m, slug, leagueLabel: { "eng.1": "Liga Inggris", "esp.1": "Liga Spanyol", "ger.1": "Liga Jerman" }[slug],
+  ...m, slug, leagueLabel: { "eng.1": "Liga Inggris", "esp.1": "Liga Spanyol", "ger.1": "Liga Jerman", "idn.1": "Liga 1 Indonesia" }[slug],
   emoji: "⚽", leagueLogo: null, homeScore: m.homeScore ?? null, awayScore: m.awayScore ?? null,
   statusDetail: "", venue: "Stadion Test",
 });
 
+// Liga 1 Indonesia (tsdbId 4790) — jalur TSDB league endpoint (ESPN idn.1 stale)
+const idnMarket = [
+  { key: "tsdb:i1", date: new Date(Date.now() + 30 * 60000).toISOString(), home: "Garudayaksa", away: "Persik Kediri", state: "pre" }, // H-30 → reminder
+];
+
 import * as lib from "../../src/lib/nova-auto-bola-notifier.js";
 lib.setFetcher({
   espn: async (slug) => (market[slug] || []).map((m) => norm(m, slug)),
+  tsdbLeague: async (slug, tsdbId) => (tsdbId === 4790 ? idnMarket.map((m) => norm(m, slug)) : []),
 });
 
 const sent = [];
@@ -40,24 +46,27 @@ const CHAT = "628123@s.whatsapp.net";
 // ═══ 1. resolveLeague ═══
 check("1a. resolve 'liga belanda' → ned.1", lib.resolveLeague("liga belanda") === "ned.1");
 check("1b. resolve 'champions' → uefa.champions", lib.resolveLeague("champions") === "uefa.champions");
+check("1b2. resolve 'liga indonesia' → idn.1", lib.resolveLeague("liga indonesia") === "idn.1");
+check("1b3. resolve 'bri' → idn.1", lib.resolveLeague("bri") === "idn.1");
 check("1c. resolve slug 'sau.1' langsung", lib.resolveLeague("sau.1") === "sau.1");
 check("1d. resolve ngawur → null", lib.resolveLeague("liga bulu tangkis") === null);
 
 // ═══ 2. baseline first-run: gak kirim apapun ═══
 let r = await lib.runCheck();
 check("2a. baseline: initDone + 0 kirim", r.baseline === true && r.sent === 0);
-check("2b. default 6 liga", lib.getLeagues().length === 6);
+check("2b. default 7 liga (termasuk Liga 1 Indonesia)", lib.getLeagues().length === 7);
+check("2b2. Liga Indonesia di default", lib.getLeagues().some((l) => l.slug === "idn.1" && l.label === "Liga 1 Indonesia"));
 check("2c. default enabled=false", lib.isEnabled() === false);
 
 // ═══ 3. liga add/del/reset ═══
 let lr = lib.addLeague("Liga Belanda");
-check("3a. add Liga Belanda → 7 liga", lr.ok === true && lr.leagues.length === 7);
+check("3a. add Liga Belanda → 8 liga", lr.ok === true && lr.leagues.length === 8);
 lr = lib.addLeague("Liga Belanda");
 check("3b. add dobel ditolak", lr.ok === false && lr.error === "dup");
 lr = lib.addLeague("Liga Bulu Tangkis");
 check("3c. add liga gak dikenal ditolak", lr.ok === false && lr.error === "unknown");
 lr = lib.removeLeague("ned.1");
-check("3d. del Liga Belanda → 6 liga", lr.ok === true && lr.leagues.length === 6);
+check("3d. del Liga Belanda → 7 liga", lr.ok === true && lr.leagues.length === 7);
 lr = lib.removeLeague("Liga Tidak Ada");
 check("3e. del liga gak terdaftar → missing", lr.ok === false && lr.error === "missing");
 
@@ -73,6 +82,7 @@ sent.length = 0;
 r = await lib.runCheck({ force: true, chatId: CHAT });
 check("5a. force+chat → digest terkirim", r.sent >= 1 && sent.length >= 1);
 check("5b. digest nunjukin pertandingan", sent[0]?.text?.includes("JADWAL BOLA HARI INI") && sent[0].text.includes("Arsenal"));
+check("5b2. digest termasuk Liga 1 Indonesia (jalur TSDB)", sent[0]?.text?.includes("Garudayaksa"));
 check("5c. digest ke chat yang aktifin", sent[0]?.chatId === CHAT);
 
 // ═══ 6. monitor check global: reminder (H-20) + hasil (transisi post) dikirim ═══
@@ -81,6 +91,7 @@ sent.length = 0;
 r = await lib.runCheck();
 const texts = sent.map((s) => s.text).join("\n");
 check("6a. reminder H-20 mnt terkirim", texts.includes("BENTAR LAGI KICK-OFF") && texts.includes("Arsenal"));
+check("6a2. reminder Liga 1 Indonesia (Garudayaksa H-30) terkirim", texts.includes("Garudayaksa"));
 check("6b. hasil full-time terkirim", texts.includes("FULL-TIME") && texts.includes("3 - 1"));
 check("6c. digest gak dobel", !texts.includes("JADWAL BOLA HARI INI"));
 
@@ -129,6 +140,8 @@ try {
   const axios = (await import("axios")).default;
   const res = await axios.get("https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard", { timeout: 10000 });
   check("13a. LIVE ESPN eng.1 reachable", Array.isArray(res.data?.events));
+  const r2 = await axios.get("https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id=4790", { timeout: 10000 });
+  check("13b. LIVE TSDB Liga 1 Indonesia (4790) reachable", Array.isArray(r2.data?.events));
 } catch {
   w("  ⚠️ 13. LIVE ESPN skip (jaringan)");
 }

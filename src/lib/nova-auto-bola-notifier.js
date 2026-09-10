@@ -4,8 +4,10 @@
 //
 // RANTAI PROVIDER (ala anime/movie notifier — anti mati total):
 //   1. ESPN   site.api.espn.com/apis/site/v2/sports/soccer/<slug>/scoreboard
-//             (gratis no key — utama, verified live 10 Sep 2026)
-//   2. TheSportsDB thesportsdb.com eventsday (free key "3" — fallback)
+//             (gratis no key — utama liga internasional, verified live)
+//   2. TheSportsDB eventsnextleague/eventspastleague per liga (Liga 1 Indonesia
+//             id 4790 — ESPN idn.1 stale data musim lalu, TSDB yang muter)
+//   3. TheSportsDB eventsday (free key "3" — fallback global semua liga down)
 //
 // 3 TIPE KONTEN (bisa on/off sendiri, ala .animenotify info <tipe>):
 //   • jadwal   📅 digest "Jadwal Bola Hari Ini" (sekali/hari WIB) + fixture
@@ -58,13 +60,13 @@ export const LEAGUE_DB = {
   "por.1": { label: "Liga Portugal", emoji: "🇵🇹", kw: ["portuguese primeira", "portugal"] },
   "sau.1": { label: "Liga Arab Saudi", emoji: "🇸🇦", kw: ["saudi"] },
   "usa.1": { label: "MLS Amerika", emoji: "🇺🇸", kw: ["major league soccer", "mls"] },
-  "idn.1": { label: "BRI Super League", emoji: "🇮🇩", kw: ["indonesian", "liga 1", "super league"] },
+  "idn.1": { label: "Liga 1 Indonesia", emoji: "🇮🇩", kw: ["indonesian", "indonesia", "liga 1", "super league", "bri"], tsdbId: 4790 },
   "bra.1": { label: "Brasileirao", emoji: "🇧🇷", kw: ["brazilian"] },
   "arg.1": { label: "Liga Argentina", emoji: "🇦🇷", kw: ["argentine"] },
   "tur.1": { label: "Liga Turki", emoji: "🇹🇷", kw: ["turkish super lig", "turki"] },
 };
 
-const DEFAULT_LEAGUES = ["eng.1", "esp.1", "ita.1", "ger.1", "fra.1", "uefa.champions"];
+const DEFAULT_LEAGUES = ["eng.1", "esp.1", "ita.1", "ger.1", "fra.1", "uefa.champions", "idn.1"];
 
 export const BOLA_TYPES = {
   jadwal: { label: "Jadwal", emoji: "📅", desc: "Digest jadwal pertandingan hari ini (WIB) + fixture baru" },
@@ -125,9 +127,11 @@ function enqueue(fn) {
 
 let espnFetcher = null;
 let tsdbFetcher = null;
-export function setFetcher({ espn, tsdb } = {}) {
+let tsdbLeagueFetcher = null;
+export function setFetcher({ espn, tsdb, tsdbLeague } = {}) {
   if (espn) espnFetcher = espn;
   if (tsdb) tsdbFetcher = tsdb;
+  if (tsdbLeague) tsdbLeagueFetcher = tsdbLeague;
 }
 
 async function espnScoreboard(slug) {
@@ -157,6 +161,41 @@ async function espnScoreboard(slug) {
       state: c.status?.type?.state || "pre", // pre | in | post
       statusDetail: c.status?.type?.detail || "",
       venue: c.venue?.fullName || ev.venue?.fullName || null,
+    });
+  }
+  return out;
+}
+
+// Liga dengan tsdbId (Liga 1 Indonesia 4790): jadwal berjalan dari TSDB
+// eventsnextleague + hasil dari eventspastleague — ESPN idn.1 stale (musim lalu).
+async function tsdbLeagueMatches(slug, tsdbId) {
+  const meta = LEAGUE_DB[slug] || {};
+  if (tsdbLeagueFetcher) return tsdbLeagueFetcher(slug, tsdbId);
+  const [next, past] = await Promise.allSettled([
+    axios.get(`${TSDB_API}/eventsnextleague.php?id=${tsdbId}`, { headers: HEADERS, timeout: 15000 }),
+    axios.get(`${TSDB_API}/eventspastleague.php?id=${tsdbId}`, { headers: HEADERS, timeout: 15000 }),
+  ]);
+  const evs = [];
+  if (next.status === "fulfilled") evs.push(...(next.value.data?.events || []));
+  if (past.status === "fulfilled") evs.push(...(past.value.data?.events || []));
+  if (!evs.length) throw new Error(`TSDB league ${tsdbId} kosong`);
+  const out = [];
+  for (const ev of evs) {
+    const dateIso = ev.strTime
+      ? new Date(`${ev.dateEvent}T${ev.strTime.length <= 5 ? ev.strTime + ":00" : ev.strTime}${ev.strTime.endsWith("Z") ? "" : "Z"}`).toISOString()
+      : new Date(`${ev.dateEvent}T00:00:00Z`).toISOString();
+    out.push({
+      key: `tsdb:${ev.idEvent}`,
+      slug,
+      leagueLabel: meta.label || slug,
+      emoji: meta.emoji || "⚽",
+      leagueLogo: null,
+      date: dateIso,
+      home: ev.strHomeTeam || "?", away: ev.strAwayTeam || "?",
+      homeScore: ev.intHomeScore ?? null, awayScore: ev.intAwayScore ?? null,
+      state: (ev.intHomeScore != null && ev.intAwayScore != null) || /ft|finished|match finished/i.test(ev.strStatus || "") ? "post" : "pre",
+      statusDetail: ev.strStatus || "",
+      venue: ev.strVenue || null,
     });
   }
   return out;
@@ -193,14 +232,23 @@ async function tsdbDay(dateStr) {
 }
 
 async function fetchAll(leagues, today) {
-  // ESPN per liga paralel; kalau SEMUA gagal → fallback TheSportsDB
-  const results = await Promise.allSettled(leagues.map((s) => espnScoreboard(s)));
+  // Liga tsdbId (Liga 1 Indonesia) → TSDB league endpoint; sisanya ESPN.
+  const results = await Promise.allSettled(leagues.map((s) => {
+    const meta = LEAGUE_DB[s] || {};
+    if (meta.tsdbId) return tsdbLeagueMatches(s, meta.tsdbId);
+    return espnScoreboard(s);
+  }));
   const matches = [];
-  let ok = 0;
+  let ok = 0, usedTsdb = false;
   for (const r of results) {
-    if (r.status === "fulfilled") { ok++; matches.push(...r.value); }
+    if (r.status === "fulfilled") {
+      ok++;
+      matches.push(...r.value);
+      if (r.value.length && r.value[0].key.startsWith("tsdb:")) usedTsdb = true;
+    }
   }
-  if (ok > 0) return { matches, source: "espn" };
+  if (ok > 0) return { matches, source: usedTsdb ? "espn+thesportsdb" : "espn" };
+  // SEMUA provider gagal → fallback global eventsday
   try {
     const tsMatches = await tsdbDay(today);
     return { matches: tsMatches, source: "thesportsdb" };
