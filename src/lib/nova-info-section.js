@@ -315,6 +315,9 @@ export async function buildMenuInfo(m, ctx = {}) {
     "",
     "Info Database",
     { label: "User", value: `${formatNum(totalUsers)} (${formatNum(totalPremium)} Premium)` },
+    // rincian user gratis vs premium — request owner 11 Sep
+    { label: "User Gratis", value: formatNum(Math.max(0, totalUsers - totalPremium)) },
+    { label: "User Premium", value: formatNum(totalPremium) },
     { label: "Grup", value: `${totalActiveGroups} / ${totalGroups}` },
     { label: "Terdaftar", value: `${formatNum(totalRegistered)}` },
     { label: "Diblokir", value: `${formatNum(totalBanned)}` },
