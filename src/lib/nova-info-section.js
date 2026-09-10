@@ -128,15 +128,22 @@ export async function buildMenuInfo(m, ctx = {}) {
   const pingMs = getMessagePingMs(m);
 
   // ── Time & date ──
-  // total hari sebulan (bulan berjalan) + setahun (kabisat 366) — request owner 11 Sep
-  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const isLeapYear = (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 !== 0) || now.getFullYear() % 400 === 0;
-  const daysInYear = isLeapYear ? 366 : 365;
+  // total hari sebulan (bulan berjalan) + sisa hari menuju akhir tahun —
+  // request owner 11 Sep, revisi: "berapa hari lagi untuk setahun".
+  // Fallback pakai jam sistem; versi WIB dihitung ulang di try timeHelper.
+  let daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  let daysLeftYear = Math.max(1, Math.ceil((new Date(now.getFullYear() + 1, 0, 1) - now) / 86_400_000));
   let timeStr = "";
   let dayName = "";
   let dateStr = "";
   try {
     const timeHelper = await import("./nova-time.js");
+    // hitung pakai timezone WIB biar konsisten sama jam yang ditampilin
+    try {
+      const mn = timeHelper.now(); // moment.tz Asia/Jakarta
+      daysInMonth = mn.daysInMonth();
+      daysLeftYear = Math.ceil(mn.clone().startOf("year").add(1, "year").diff(mn) / 86_400_000);
+    } catch {}
     // detik ikut ditampilin (request owner 11 Sep: HH:MM:SS)
     timeStr = timeHelper.formatTime("HH:mm:ss");
     dayName = timeHelper.formatFull("dddd");
@@ -292,7 +299,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Tanggal", value: dateStr },
     { label: "Hijriah", value: islamicDate },
     { label: "Hari Sebulan", value: `${daysInMonth} hari` },
-    { label: "Hari Setahun", value: `${daysInYear} hari` },
+    { label: "Hari Setahun", value: `${daysLeftYear} hari lagi` },
     { label: "Hari Penting", value: importantDay || "Tidak ada" },
     "",
     "Info Bot",
