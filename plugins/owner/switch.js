@@ -43,8 +43,8 @@ const pluginConfig = {
   ],
   category: "owner",
   description: 'Switch on/off semua fitur (channel, group, auto, command)',
-  usage: '.switch [status|channel|group|auto|fitur]',
-  example: '.switch status all\n.switch channel\n.switch group welcome\n.switch group welcome on 12036302xxx@g.us | on all | on list\n.switch auto autobackup on\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg',
+  usage: '.switch [status|channel|group|auto|fitur|semua]',
+  example: '.switch status all\n.switch channel\n.switch group welcome\n.switch group welcome on 12036302xxx@g.us | on all | on list\n.switch group all on <target> (semua fitur grup)\n.switch auto autobackup on\n.switch auto all on|off (semua fitur otomatis)\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg\n.switch semua on|off (MASTER: semuanya)',
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -433,6 +433,8 @@ function getMode(cmd, args) {
   if (c === 'togglefitur' || c === 'onofffitur') return 'fitur'
 
   if (!a) return 'menu'
+  // MASTER: ".switch semua on|off" — SEMUANYA (auto + saluran + group)
+  if (a === 'semua' || a === 'all') return 'master'
   if (a === 'channel' || a === 'saluran') return 'channel'
   if (a === 'group' || a === 'grup' || a === 'gc') return 'group'
   if (a === 'auto') {
@@ -472,10 +474,10 @@ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
 
     for (const [key, info] of Object.entries(statuses)) {
       text += `${scLine(info.label, info.enabled)}\n`
-      text += `\`${prefix}switch channel ${key}\`\n\n`
+      text += `\`${prefix}switch channel ${key} ${info.enabled ? "off" : "on"}\`\n\n`
       if (info.enabled) onCount++; else offCount++
     }
-    text += "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Toggle semua: \`${prefix}switch channel all on/off\``)
+    text += "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Terpusat: \`${prefix}switch channel <event> on|off\` | semua: \`${prefix}switch channel all on/off\``)
     return m.reply(text)
   }
 
@@ -491,12 +493,15 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
   }
 
   if (NOTIFY_EVENTS[subCmd]) {
-    const statuses = getAllNotifyStatus()
-    const current = statuses[subCmd].enabled
-    const newVal = !current
+    // ON/OFF terpusat (request owner 10 Sep 2026): ".switch channel <event> on|off"
+    // eksplisit kayak group/auto — tanpa verb = toggle lama tetap jalan.
+    const verb = (args[2] || '').toLowerCase()
+    const current = getAllNotifyStatus()[subCmd].enabled
+    const newVal = verb === 'on' ? true : verb === 'off' ? false : !current
+    if (newVal === current && (verb === 'on' || verb === 'off'))
+      return m.reply(claraWrap("Switch Channel", `Event: *${NOTIFY_EVENTS[subCmd]}*\nSudah *${newVal ? "ON" : "OFF"}* — gak ada perubahan`))
     setNotifyEnabled(subCmd, newVal)
-    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap("TOGGLE BERHASIL", `Event: *${NOTIFY_EVENTS[subCmd]}*
-Status: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
+    return m.reply(claraWrap("Switch Channel", `Event: *${NOTIFY_EVENTS[subCmd]}*\nStatus: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
   }
 
   let list = ""
@@ -595,8 +600,82 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
       txt += `\n`
     }
     txt += tipText(`ON: \`${prefix}switch group <fitur>\` | OFF: \`${prefix}switch group <fitur> off\``)
-    txt += "\n" + tipText(`Target: \`${prefix}switch group <fitur> on <jid-grup>|all|list\``)
+    txt += "\n" + tipText(`Target: \`${prefix}switch group <fitur> on <jid-grup>|all|list\` | SEMUA fitur: \`${prefix}switch group all on <target>\``)
     return m.reply(txt.trim())
+  }
+
+  // ═══ BULK TERPUSAT (request owner 10 Sep 2026): .switch group all on|off [target] ═══
+  // SEMUA fitur grup sekaligus, dengan target: <jid-grup> | all | list
+  if (featureName === 'all' || featureName === 'semua') {
+    const on = !forceOff
+    const verb = forceOff ? 'off' : 'on'
+    const applyBulk = (groupJid) => {
+      for (const f of Object.values(GROUP_FEATURES))
+        db.setGroup(groupJid, { [f.dbKey]: on ? f.on : f.off })
+    }
+
+    if (target === 'list' || target === 'daftar') {
+      return await sendGroupTargetPicker(m, sock, prefix, { label: "SEMUA FITUR GRUP" }, "all", forceOff)
+    }
+    if (target === 'all' || target === 'semua') {
+      let groups = {}
+      try { groups = (await sock.groupFetchAllParticipating()) || {} } catch {}
+      const list = Object.values(groups)
+      if (!list.length)
+        return m.reply(claraWrap("Switch Group", [
+          `Fitur : SEMUA fitur grup`,
+          `Target : semua grup`,
+          ``,
+          `Bot belum berada di grup mana pun.`,
+        ].join("\n")))
+      for (const g of list) applyBulk(g.id)
+      return m.reply(claraWrap("Switch Group", [
+        `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
+        `Target : semua grup`,
+        `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
+        ``,
+        `Total grup: *${list.length}*`,
+      ].join("\n")))
+    }
+    const isJidLikeBulk = /@g\.us$/.test(target) || /^[0-9-]{8,}$/.test(target.replace(/@.*$/, ""))
+    if (target && isJidLikeBulk) {
+      let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
+      if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
+        return m.reply(`⚠ JID grup tidak valid. Contoh: \`${prefix}switch group all ${verb} 12036302xxxxx@g.us\``)
+      let subject = groupJid
+      try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
+        return m.reply(claraWrap("Switch Group", [
+          `Fitur : SEMUA fitur grup`,
+          `Target : ${groupJid}`,
+          ``,
+          `Bot tidak menemukan grup itu.`,
+          `Lihat daftar: \`${prefix}switch group all ${verb} list\``,
+        ].join("\n")))
+      }
+      applyBulk(groupJid)
+      return m.reply(claraWrap("Switch Group", [
+        `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
+        `Target : ${subject}`,
+        `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
+      ].join("\n")))
+    }
+    if (!String(m.chat || "").endsWith("@g.us")) {
+      return m.reply(claraWrap("Switch Group", [
+        `Fitur : SEMUA fitur grup`,
+        `Lokasi : chat pribadi`,
+        ``,
+        `Dari DM wajib pakai target:`,
+        `\`${prefix}switch group all ${verb} <jid-grup>\``,
+        `\`${prefix}switch group all ${verb} all\``,
+        `\`${prefix}switch group all ${verb} list\``,
+      ].join("\n")))
+    }
+    applyBulk(m.chat)
+    return m.reply(claraWrap("Switch Group", [
+      `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
+      `Grup : grup ini`,
+      `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
+    ].join("\n")))
   }
 
   const resolved = GROUP_ALIASES[featureName] || featureName
@@ -718,8 +797,33 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     action = (args[2] || '').toLowerCase()
   }
 
-  // No specific key — show all auto features status
+  // ═══ BULK TERPUSAT (request owner 10 Sep 2026): .switch auto all on|off ═══
+  // Sekalian ON/OFF SEMUA fitur otomatis sekaligus.
   if (!autoKey) {
+    const sub = (args[1] || '').toLowerCase()
+    if (sub === 'all' || sub === 'semua') {
+      const act = (args[2] || '').toLowerCase()
+      if (act !== 'on' && act !== 'off')
+        return m.reply(claraWrap("Switch Auto", [
+          `Fitur : SEMUA fitur otomatis`,
+          ``,
+          `Gunakan: \`${prefix}switch auto all on\` atau \`${prefix}switch auto all off\``,
+        ].join("\n")))
+      const on = act === 'on'
+      let ok = 0, fail = 0
+      for (const reg of Object.values(AUTO_REGISTRY)) {
+        try { reg.toggle(on); ok++ } catch { fail++ }
+      }
+      return m.reply(claraWrap("Switch Auto", [
+        `Fitur : SEMUA fitur otomatis`,
+        `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
+        ``,
+        `Berhasil : *${ok}* fitur`,
+        fail ? `Gagal : *${fail}* fitur` : ``,
+        ``,
+        `Cek status: \`${prefix}switch auto\``,
+      ].filter(Boolean).join("\n")))
+    }
     let txt = ""
     for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
       txt += `*${toSC(cat)}*\n`
@@ -731,7 +835,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       }
       txt += `\n`
     }
-    txt += tipText(`ON: \`${prefix}switch auto <nama> on\` | OFF: \`${prefix}switch auto <nama> off\``)
+    txt += tipText(`ON: \`${prefix}switch auto <nama> on\` | OFF: \`${prefix}switch auto <nama> off\` | SEMUA: \`${prefix}switch auto all on/off\``)
     return m.reply(txt.trim())
   }
 
@@ -983,6 +1087,67 @@ async function handleFitur(m, { sock, config: cfg }) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// MASTER SWITCH (request owner 10 Sep 2026): ".switch semua on|off"
+// SEMUANYA sekaligus: auto (semua fitur otomatis) + saluran (semua event)
+// + group (semua fitur grup × semua grup yang bot ikuti).
+// ═══════════════════════════════════════════════════════════
+async function handleMaster(m, { sock, config: cfg }) {
+  const prefix = cfg?.command?.prefix || '.'
+  const db = getDatabase()
+  const action = ((m.args || [])[1] || '').toLowerCase()
+  if (action !== 'on' && action !== 'off')
+    return m.reply(claraWrap("Switch Semua", [
+      `Mode : master switch terpusat`,
+      ``,
+      `Mengatur SEMUANYA sekaligus:`,
+      `• Auto — semua fitur otomatis`,
+      `• Saluran — semua event notifikasi`,
+      `• Group — semua fitur grup, semua grup`,
+      ``,
+      `Gunakan: \`${prefix}switch semua on\` atau \`${prefix}switch semua off\``,
+      ``,
+      `Butuh lebih halus? \`${prefix}switch auto all\`, \`${prefix}switch channel all\`, \`${prefix}switch group all\``,
+    ].join("\n")))
+
+  const on = action === 'on'
+
+  // 1. SEMUA fitur otomatis
+  let autoOk = 0, autoFail = 0
+  for (const reg of Object.values(AUTO_REGISTRY)) {
+    try { reg.toggle(on); autoOk++ } catch { autoFail++ }
+  }
+
+  // 2. SEMUA event saluran
+  let channelCount = 0
+  for (const key of Object.keys(NOTIFY_EVENTS)) {
+    try { setNotifyEnabled(key, on); channelCount++ } catch {}
+  }
+
+  // 3. SEMUA fitur grup × semua grup
+  let groupCount = 0
+  const featureCount = Object.keys(GROUP_FEATURES).length
+  let groups = {}
+  try { groups = (await sock.groupFetchAllParticipating()) || {} } catch {}
+  for (const g of Object.values(groups)) {
+    for (const f of Object.values(GROUP_FEATURES)) {
+      try { db.setGroup(g.id, { [f.dbKey]: on ? f.on : f.off }) } catch {}
+    }
+    groupCount++
+  }
+
+  return m.reply(claraWrap("Switch Semua", [
+    `Mode : master switch`,
+    `Status : *${on ? "SEMUA ON" : "SEMUA OFF"}*`,
+    ``,
+    `• Auto : *${autoOk}* fitur${autoFail ? ` (gagal: ${autoFail})` : ""}`,
+    `• Saluran : *${channelCount}* event`,
+    `• Group : *${featureCount}* fitur × *${groupCount}* grup`,
+    ``,
+    `Cek detail: \`${prefix}switch status all\``,
+  ].join("\n")))
+}
+
 // STATUS ALL (request owner 10 Sep 2026): ".switch status all"
 // Tampilkan SEMUA status switch — yang aktif & yang mati:
 // auto (semua kategori) + saluran + group (chat ini) + ringkasan fitur
@@ -1067,6 +1232,10 @@ async function showMenu(m, sock) {
    On/off command atau kategori plugin
    \`${prefix}switch fitur\`
 
+🛑 *ꜱᴇᴍᴜᴀ (ᴍᴀꜱᴛᴇʀ)*
+   SEMUANYA on/off sekaligus (auto + saluran + group)
+   \`${prefix}switch semua on\` | \`${prefix}switch semua off\`
+
 📊 *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴍᴜᴀ*
    Semua status switch yang aktif & mati
    \`${prefix}switch status all\`
@@ -1104,6 +1273,7 @@ async function handler(m, { sock, config: cfg }) {
     if (mode === 'group:on') return handleGroup(m, { sock, config: cfg })
     if (mode === 'group:off') return handleGroup(m, { sock, config: cfg, forceOff: true })
     if (mode === 'fitur') return handleFitur(m, { sock, config: cfg })
+    if (mode === 'master') return handleMaster(m, { sock, config: cfg })
     if (mode === 'status') return handleStatusAll(m, { sock, config: cfg })
     if (mode === 'auto') return handleAuto(m, { sock, config: cfg })
     if (mode.startsWith('auto:')) {
