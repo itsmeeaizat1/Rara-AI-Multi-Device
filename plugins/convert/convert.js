@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import axios from "axios";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaBox, novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan, toSC, scLine } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, novaSalah, claraWrap, novaBerhasil, novaGagal, novaGangguan, toSC, scLine } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import {
   AUDIO_FORMATS,
@@ -110,11 +110,11 @@ async function handler(m, { sock }) {
     // Validasi format vs jenis media
     if (type === "audio" && (isVideo || isImage)) {
       await m.react("❗");
-      return m.reply(novaError("Convert", "Media ini audio, jadi cuma bisa convert ke format audio (mp3, wav, aac, dll)."));
+      return m.reply(novaSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
     }
     if (type === "image" && !isImage && format !== "gif") {
       await m.react("❗");
-      return m.reply(novaError("Convert", "Media ini gambar, jadi cuma bisa convert ke format gambar (jpg, png, webp) atau gif."));
+      return m.reply(novaSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
     }
 
     // Masukin ke session biar chaining .convert <format> laennya tetap bisa
@@ -138,13 +138,13 @@ async function handler(m, { sock }) {
   // Session audio cuma bisa convert ke format audio
   if (session.type === "audio" && (isVideo || isImage)) {
     await m.react("❗");
-    return m.reply(novaError("Convert", "Media ini audio, jadi cuma bisa convert ke format audio (mp3, wav, aac, dll)."));
+    return m.reply(novaSalah("Convert", "media ini audio, cuma bisa convert ke format audio"));
   }
 
   // Session gambar cuma bisa convert ke format gambar / gif
   if (session.type === "image" && !isImage && format !== "gif") {
     await m.react("❗");
-    return m.reply(novaError("Convert", "Media ini gambar, jadi cuma bisa convert ke format gambar (jpg, png, webp) atau gif."));
+    return m.reply(novaSalah("Convert", "media ini gambar, cuma bisa convert ke format gambar atau gif"));
   }
 
   const fmt = isAudio ? AUDIO_FORMATS[format] : isImage ? IMAGE_FORMATS[format] : VIDEO_FORMATS[format];
