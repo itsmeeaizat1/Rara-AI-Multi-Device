@@ -53,7 +53,7 @@ const CATEGORY_ORDER = [
 ];
 
 const CATEGORY_EMOJI = {
-  ai: "🤖",
+  ai: "🧠",
   "ai image": "🎨", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️", browser: "🌐",
   canvas: "🎨", convert: "🔄", maker: "🖌️", ephoto: "📸",
   fun: "🎉", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",

@@ -442,7 +442,7 @@ const CATEGORY_NAMES = {
 };
 
 const CATEGORY_EMOJIS = {
-  ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
+  ai: "🧠", sticker: "🖼️", download: "📥", fun: "🎮",
   canvas: "🎨", tools: "🛠️", rpg: "🎯", "rpg couple": "❤️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
   utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
