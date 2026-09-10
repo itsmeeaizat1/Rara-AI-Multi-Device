@@ -498,7 +498,7 @@ function novaInfoBox(title, items = [], opts = {}) {
 // │ • Label : value     ← info bullet
 // ╰─「 CategoryName 」   ← close + next section
 // │
-// ├ ✦ .command          ← command item
+// ├ .command           ← command item
 // └────  •  ────        ← final close
 // ═══════════════════════════════════════════════
 /**
@@ -602,13 +602,15 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
     if (i > 0) out += `\n`;
     out += `「 ✦ ${catName} ✦ 」\n`;
     
-    // Commands: │ ✦ .command (+ symbol akses di kanan)
+    // Commands: .command polos tanpa symbol ✦ (request owner 10 Sep:
+    // "hapus symbol ✦ yg disamping cmd list bkn di title" — ✦ tetap di
+    // title 「 ✦ Title ✦ 」, list command polos) + symbol akses di kanan
     for (const cmd of cat.commands) {
       if (cmd && typeof cmd === "object") {
         const sym = cmd.symbols ? ` ${String(cmd.symbols).trim()}` : "";
-        out += `✦ ${prefix}${cmd.name}${sym}\n`;
+        out += `${prefix}${cmd.name}${sym}\n`;
       } else {
-        out += `✦ ${prefix}${cmd}\n`;
+        out += `${prefix}${cmd}\n`;
       }
     }
   }
