@@ -133,11 +133,12 @@ export async function buildMenuInfo(m, ctx = {}) {
   let dateStr = "";
   try {
     const timeHelper = await import("./nova-time.js");
-    timeStr = timeHelper.formatTime("HH:mm");
+    // detik ikut ditampilin (request owner 11 Sep: HH:MM:SS)
+    timeStr = timeHelper.formatTime("HH:mm:ss");
     dayName = timeHelper.formatFull("dddd");
     dateStr = timeHelper.formatFull("DD MMMM YYYY");
   } catch {
-    timeStr = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+    timeStr = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     dayName = now.toLocaleDateString("id-ID", { weekday: "long" });
     dateStr = now.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
   }
