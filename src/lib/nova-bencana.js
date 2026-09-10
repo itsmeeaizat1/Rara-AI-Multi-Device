@@ -52,6 +52,7 @@ const BMKG_URL = "https://data.bmkg.go.id/DataMKG/TEWS";
 
 const POLL_FAST_MS = 180_000;  // gempa BMKG — 3 menit (ala script owner 8 Sep 2026)
 const POLL_SLOW_MS = 180_000; // GDACS + USGS global — 3 menit
+const VOLCANO_POLL_MS = 600_000; // status gunung api PVMBG MAGMA — 10 menit
 
 const DEFAULT_RADIUS_KM = 300; // radius peringatan wilayah (bisa di-set per user)
 const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
@@ -60,19 +61,45 @@ const STATE_FILE = path.join(process.cwd(), "src", "data", "bencana-state.json")
 
 // ───────────────────────────── util ─────────────────────────────
 
-async function fetchJson(url, timeoutMs = 15000) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: { "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 Chrome/139.0.0.0 Mobile Safari/537.36" },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status} dari ${new URL(url).hostname}`);
-    return await res.json();
-  } finally {
-    clearTimeout(t);
+const FETCH_UA = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 Chrome/139.0.0.0 Mobile Safari/537.36";
+export const FETCH_RETRY_DELAY_MS = 2000; // jeda antar percobaan (403 BMKG flaky — ketemu 10 Sep 2026)
+
+/**
+ * fetch JSON dengan retry opsional. RETRY cuma buat error yang layak
+ * dicoba lagi: HTTP 403/408/429/5xx atau kegagalan jaringan.
+ * (403 BMKG data.bmkg.go.id lagi FLAKY — kadang Forbidden beberapa
+ * request sebelum balik normal lagi, ketemu live 10 Sep 2026.)
+ */
+export async function fetchJsonWithRetry(url, timeoutMs = 15000, retries = 0, doFetch = null) {
+  const impl = doFetch || ((u, opts) => fetch(u, opts));
+  let lastErr = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await impl(url, { signal: ctrl.signal, headers: { "User-Agent": FETCH_UA } });
+      if (!res.ok) {
+        const retryable = res.status === 403 || res.status === 408 || res.status === 429 || res.status >= 500;
+        if (!retryable) throw new Error(`HTTP ${res.status} dari ${new URL(url).hostname}`);
+        lastErr = new Error(`HTTP ${res.status} dari ${new URL(url).hostname}`);
+        if (attempt < retries) { await new Promise((r) => setTimeout(r, FETCH_RETRY_DELAY_MS)); continue; }
+        throw lastErr;
+      }
+      return await res.json();
+    } catch (e) {
+      if (String(e?.message || "").startsWith("HTTP ")) throw e; // 4xx non-retryable → langsung lempar
+      lastErr = e;
+      if (attempt < retries) { await new Promise((r) => setTimeout(r, FETCH_RETRY_DELAY_MS)); continue; }
+      throw e;
+    } finally {
+      clearTimeout(t);
+    }
   }
+  throw lastErr || new Error("fetch gagal: " + url);
+}
+
+async function fetchJson(url, timeoutMs = 15000, retries = 0) {
+  return fetchJsonWithRetry(url, timeoutMs, retries, null);
 }
 
 function jamWib(ts) {
@@ -144,6 +171,7 @@ export function eventCard(ev) {
   if (su === "bmkg") sourceUrl = "https://data.bmkg.go.id";
   if (su === "usgs") sourceUrl = safeSourceUrl(ev.report) || "https://earthquake.usgs.gov";
   if (su === "gdacs") sourceUrl = safeSourceUrl(ev.report) || "https://www.gdacs.org";
+  if (su === "pvmbg") sourceUrl = safeSourceUrl(ev.laporanUrl) || "https://magma.esdm.go.id";
   const title = `${ev.jenis || "BENCANA"}${ev.mag ? ` M${ev.mag}` : ""}${ev.level ? ` — ${String(ev.level).replace(/ \(.*\)$/, "")}` : ""}`;
   return {
     title: String(title).slice(0, 60),
@@ -311,12 +339,211 @@ export async function getUsgsDay() {
 // ───────────────────────────── provider: BMKG ─────────────────────────────
 
 export async function getBmkgLatest() {
-  const d = await fetchJson(`${BMKG_URL}/autogempa.json`);
+  const d = await fetchJson(`${BMKG_URL}/autogempa.json`, 15000, 2); // BMKG flaky 403 → retry 2x
   const g = d?.Infogempa?.gempa;
   if (!g?.DateTime) return null;
   g._shakemapUrl = g.Shakemap ? `${BMKG_URL}/${g.Shakemap}` : null;
   return g;
 }
+// ───────────────────────────── provider: PVMBG MAGMA (gunung api) ─────────────
+// Sumber LOKAL resmi status gunung api Indonesia (request owner 10 Sep 2026:
+// "gempa dan gunung api info terbaru"). Halaman server-rendered Laravel
+// magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas — SATU tabel besar dengan
+// blok rowspan per level (IV Awas → III Siaga → II Waspada → I Normal).
+// API JSON lama (/api/v1/gunung-api) udah 404 — parsing HTML satu-satunya.
+const MAGMA_URL = "https://magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas";
+export const MAGMA_LEVELS = {
+  4: { romawi: "Level IV", label: "AWAS", icon: "\u{1F534}" },
+  3: { romawi: "Level III", label: "SIAGA", icon: "\u{1F7E0}" },
+  2: { romawi: "Level II", label: "WASPADA", icon: "\u{1F7E1}" },
+  1: { romawi: "Level I", label: "NORMAL", icon: "\u{1F7E2}" },
+};
+const MAGMA_BROWSER_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+  "Accept": "text/html,application/xhtml+xml",
+};
+
+// seam HTTP buat e2e (inject)
+let magmaHttp = null;
+export function setMagmaHttp(fn) { magmaHttp = fn; }
+export function resetMagmaHttp() { magmaHttp = null; }
+
+async function fetchHtml(url, timeoutMs = 20000, retries = 1) {
+  let lastErr = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = magmaHttp
+        ? await magmaHttp(url)
+        : await fetch(url, { signal: AbortSignal.timeout(timeoutMs), headers: MAGMA_BROWSER_HEADERS });
+      if (!res.ok) {
+        const retryable = res.status === 403 || res.status === 408 || res.status === 429 || res.status >= 500;
+        if (!retryable) throw new Error(`HTTP ${res.status} dari ${new URL(url).hostname}`);
+        lastErr = new Error(`HTTP ${res.status} dari ${new URL(url).hostname}`);
+        if (attempt < retries) { await new Promise((r) => setTimeout(r, FETCH_RETRY_DELAY_MS)); continue; }
+        throw lastErr;
+      }
+      return await res.text();
+    } catch (e) {
+      if (String(e?.message || "").startsWith("HTTP ")) throw e;
+      lastErr = e;
+      if (attempt < retries) { await new Promise((r) => setTimeout(r, FETCH_RETRY_DELAY_MS)); continue; }
+      throw e;
+    }
+  }
+  throw lastErr || new Error("fetch html gagal: " + url);
+}
+
+/** Parse halaman tingkat-aktivitas MAGMA → { ringkas, list }. */
+export function parseMagmaPage(html) {
+  const t = String(html || "");
+  // kartu ringkasan: <h1>N</h1> <p>Level X (Label)</p>
+  const ringkas = {};
+  for (const m of t.matchAll(/<h1>(\d+)<\/h1>\s*<p>(Level (?:IV|III|II|I) \([^)]+\))<\/p>/g)) {
+    ringkas[m[2]] = +m[1];
+  }
+  // anchor section: <td rowspan="N"> … <a …>Level III (Siaga)</a>
+  const sections = [];
+  const LEVEL_BY_LABEL = { "Level IV (Awas)": 4, "Level III (Siaga)": 3, "Level II (Waspada)": 2, "Level I (Normal)": 1 };
+  for (const m of t.matchAll(/<td rowspan="\d+"[^>]*>\s*<a[^>]*>(Level (?:IV|III|II|I) \([^)]+\))<\/a>/g)) {
+    sections.push({ label: m[1], idx: m.index });
+  }
+  const list = [];
+  for (const m of t.matchAll(/([A-Za-z\u00C0-\u024F][A-Za-z\u00C0-\u024F'\u2019.\- ]*?)\s+-\s+([A-Za-z][A-Za-z ]*?)\s*<a href="(https:\/\/magma\.esdm\.go\.id\/v1\/gunung-api\/laporan\/(\d+)[^"]*)"/g)) {
+    let levelNum = null;
+    for (const s of sections) if (s.idx < m.index) levelNum = LEVEL_BY_LABEL[s.label] ?? null;
+    list.push({
+      nama: m[1].trim(), prov: m[2].trim(),
+      levelNum, levelLabel: levelNum != null ? MAGMA_LEVELS[levelNum].label : null,
+      laporanUrl: m[3], laporanId: +m[4],
+    });
+  }
+  return { ringkas, list };
+}
+
+/**
+ * Parse koordinat dari halaman laporan gunung (per-gunung).
+ * Format MAGMA: "Latitude -7.542&deg;LU, Longitude 110.442&deg;BT" —
+ * angka udah bertanda (Merapi dicap LU tapi nilainya -7.542 — quirk
+ * label PVMBG) → PERCAYAI TANDA ANGKA; koreksi cuma kalau label
+ * jelas bertentangan DAN angka positif (LS/BB positif → negatif).
+ */
+export function parseMagmaCoords(html) {
+  const t = String(html || "").replace(/&deg;/g, "\u00B0").replace(/&nbsp;/g, " ");
+  const m = t.match(/Latitude\s+(-?\d+(?:\.\d+)?)\s*\u00B0?\s*(LU|LS)?\D{0,40}?Longitude\s+(-?\d+(?:\.\d+)?)\s*\u00B0?\s*(BT|BB)?/i);
+  if (!m) return null;
+  let lat = +m[1];
+  let lon = +m[3];
+  if (/^LS$/i.test(m[2] || "") && lat > 0) lat = -lat; // Lintang Selatan positif → negatif
+  if (/^BB$/i.test(m[4] || "") && lon > 0) lon = -lon; // Bujur Barat positif → negatif
+  if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return null;
+  return { lat, lon };
+}
+
+/** Ambil daftar gunung api + status PVMBG (live). */
+export async function getMagmaVolcanoes() {
+  const html = await fetchHtml(MAGMA_URL, 20000, 2);
+  const page = parseMagmaPage(html);
+  if (!page.list.length) throw new Error("parse MAGMA 0 gunung api — halaman berubah?");
+  return page;
+}
+
+// ───────────────────────────── tick: perubahan status gunung api ─────────────
+
+/**
+ * Diff status gunung api terhadap state tersimpan (PURE — biar testable).
+ * Baseline pertama silent (anti-spam, pola sama kayak gdacsInit).
+ * Gunung BARU masuk list: dicatat; alert cuma kalau masuk di >= SIAGA
+ * (dianggap "naik" dari Normal).
+ */
+export function diffVolcanoState(st, list) {
+  st.volcano ??= { baseline: false, levels: {}, coords: {} };
+  const changes = [];
+  if (!st.volcano.baseline) {
+    for (const v of list) st.volcano.levels[v.nama] = { num: v.levelNum, id: v.laporanId };
+    st.volcano.baseline = true;
+    return { changes, baseline: true };
+  }
+  for (const v of list) {
+    const prev = st.volcano.levels[v.nama];
+    st.volcano.levels[v.nama] = { num: v.levelNum, id: v.laporanId };
+    if (!prev) {
+      if ((v.levelNum ?? 1) >= 3) changes.push({ v, prevNum: 1 }); // pendatang baru langsung Siaga+ → alert
+      continue;
+    }
+    if (v.levelNum !== prev.num) changes.push({ v, prevNum: prev.num });
+  }
+  return { changes };
+}
+
+/** Koordinat gunung (cache permanen — koordinat gunung gak berubah). */
+async function volcanoCoords(v, st) {
+  st.volcano.coords ??= {};
+  if (st.volcano.coords[v.nama] === undefined) {
+    let c = null;
+    try { c = parseMagmaCoords(await fetchHtml(v.laporanUrl, 15000, 1)); } catch { c = null; }
+    st.volcano.coords[v.nama] = c || false; // false = udah nyoba gak dapet — jangan ulangin
+    saveState(st);
+  }
+  return st.volcano.coords[v.nama] || null;
+}
+
+async function handleVolcanoChange({ v, prevNum }, st) {
+  const lv = MAGMA_LEVELS[v.levelNum] || MAGMA_LEVELS[1];
+  const prevL = MAGMA_LEVELS[prevNum] || MAGMA_LEVELS[1];
+  const up = v.levelNum > prevNum;
+  const coords = await volcanoCoords(v, st);
+  const ev = {
+    kind: "gunungapi", jenis: "Gunung Api", mag: null,
+    level: lv.label, nama: v.nama, prov: v.prov,
+    waktu: jamWib(Date.now()),
+    lat: coords?.lat, lon: coords?.lon,
+    desc: `${v.nama} — ${v.prov}`,
+    sumber: "PVMBG MAGMA Indonesia",
+    isSevere: v.levelNum >= 4, // naik AWAS = darurat realtime (menembus mode jadwal)
+    laporanUrl: v.laporanUrl,
+  };
+  const lines = [
+    `\u{1F30B} ${up ? "\u2B06\uFE0F" : "\u2B07\uFE0F"} STATUS GUNUNG API — PVMBG`,
+    "",
+    `Gunung : ${v.nama}`,
+    `Status  : ${lv.icon} ${lv.romawi} (${lv.label})`,
+    `Sebelum : ${prevL.icon} ${prevL.label}`,
+    `Wilayah : ${v.prov}`,
+    coords ? `Posisi   : ${coords.lat}, ${coords.lon}` : null,
+    "",
+    up
+      ? (v.levelNum >= 3 ? "Peningkatan aktivitas signifikan — ikuti arahan PVMBG dan hindari radius bahaya." : "Peningkatan aktivitas terdeteksi — pantau info resmi PVMBG.")
+      : "Aktivitas menurun — tetap pantau perkembangan resmi PVMBG.",
+    "",
+    "Sumber: PVMBG MAGMA Indonesia",
+  ].filter(Boolean);
+  // routing: perubahan yang menyentuh SIAGA/AWAS (naik ke situ ATAU turun
+  // dari situ) = alert GLOBAL (semua subscriber jenis gunungapi).
+  // Perubahan Waspada↔Normal = cuma buat subscriber yang lokasinya DEKAT
+  // gunung (radius, butuh koordinat — tanpa koordinat dilewatin).
+  if ((v.levelNum ?? 1) >= 3 || prevNum >= 3) {
+    await dispatch(ev, lines.join("\n"), eventCard(ev));
+  } else if (coords) {
+    await dispatchNearEvent(ev, "gunungapi", "pvmbg");
+  }
+}
+
+async function volcanoTick() {
+  try {
+    const page = await getMagmaVolcanoes();
+    const st = loadState();
+    const { changes } = diffVolcanoState(st, page.list);
+    saveState(st); // level baru dicatat ASAP biar gak dobel kirim pas error kirim
+    for (const ch of changes) {
+      try { await handleVolcanoChange(ch, st); }
+      catch (e) { logger.error?.("bencana", `Gagal kirim status gunung ${ch.v.nama}: ${e.message}`); }
+      await new Promise((r) => setTimeout(r, 800));
+    }
+  } catch (e) {
+    logger.error?.("bencana", "MAGMA error: " + e.message);
+  }
+}
+
 
 // ─────────── provider EWS: JEPANG (JMA) — live verified 8 Sep 2026 ───────────
 // URL script owner (jma.go.jp/en/quake/earthquake.json) TIDAK ADA → HTML redirect.
@@ -384,10 +611,11 @@ function loadState() {
       st.ews ??= { bootstrapped: false, seen: [], history: [] };
       st.ews.seen ??= [];
       st.ews.history ??= [];
+      st.volcano ??= { baseline: false, levels: {}, coords: {} };
       return st;
     }
   } catch { /* korup → mulai ulang */ }
-  return { bmkg: null, gdacs: [], usgs: [], pending: [], firedJadwal: [], fp: [], ews: { bootstrapped: false, seen: [], history: [] } };
+  return { bmkg: null, gdacs: [], usgs: [], pending: [], firedJadwal: [], fp: [], ews: { bootstrapped: false, seen: [], history: [] }, volcano: { baseline: false, levels: {}, coords: {} } };
 }
 
 function saveState(st) {
@@ -623,7 +851,7 @@ export function clearWatcherSchedules(chatId) {
 /** Jenis bencana valid buat filter subscriber. */
 export const BENCANA_JENIS = ["gempa", "banjir", "topan", "gunungapi", "kebakaran", "kering", "tsunami"];
 
-export const BENCANA_SUMBER = ["bmkg", "usgs", "gdacs"];
+export const BENCANA_SUMBER = ["bmkg", "usgs", "gdacs", "pvmbg"];
 
 /** Key sumber canonical dari event (ev.sumber string bebas). */
 export function evSumberKey(ev) {
@@ -631,6 +859,7 @@ export function evSumberKey(ev) {
   if (/BMKG/i.test(s)) return "bmkg";
   if (/USGS/i.test(s)) return "usgs";
   if (/GDACS/i.test(s)) return "gdacs";
+  if (/PVMBG|MAGMA/i.test(s)) return "pvmbg";
   return null;
 }
 
@@ -864,7 +1093,7 @@ export function buildInfoSection(ev, sub = null, distKm = null, dirLabel = null)
  * Kirim peringatan wilayah ke satu subscriber.
  * @returns true kalau terkirim.
  */
-export async function sendRegionalAlert(_sock, chatId, ev, sub) {
+export async function sendRegionalAlert(_sock, chatId, ev, sub, opts = {}) {
   const distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
   const dir = bearingCompass(sub.lat, sub.lon, ev.lat, ev.lon);
   const text = await composeRegionalText(ev, distKm, sub.city);
@@ -875,7 +1104,7 @@ export async function sendRegionalAlert(_sock, chatId, ev, sub) {
   const card = eventCard(ev);
   card.title = `PERINGATAN — ${sub.city}`.slice(0, 60);
   card.body = `${ev.jenis || "Bencana"} ±${Math.round(distKm)} km dari ${sub.city}`.slice(0, 60);
-  await sendWithCard(_sock, chatId, out, card);
+  await sendWithCard(_sock, chatId, opts.test ? "\u{1F9EA} SIMULASI TEST — bukan bencana nyata\n\n" + out : out, card);
   return true;
 }
 
@@ -884,10 +1113,11 @@ export async function sendRegionalAlert(_sock, chatId, ev, sub) {
 let sock = null;
 let fastTimer = null;
 let slowTimer = null;
+let volcanoTimer = null;
 let jadwalTimer = null;
 
 function isRunning() {
-  return !!(fastTimer || slowTimer || jadwalTimer || ewsTimer);
+  return !!(fastTimer || slowTimer || jadwalTimer || ewsTimer || volcanoTimer);
 }
 
 /**
@@ -1350,7 +1580,8 @@ const NEAR_QUAKE_MIN_MAG = 2.5;
  * - bukan mode jadwal (jadwal → dikumpulkan ke rangkuman).
  * Subscriber TANPA lokasi gak kena sama sekali (alert global tetap M 5.0+).
  */
-export async function dispatchNearQuake(ev) { /* exported: wrapper testable */
+export async function dispatchNearQuake(ev) { return dispatchNearEvent(ev, "gempa", "bmkg"); }
+export async function dispatchNearEvent(ev, kindKey = "gempa", sumberKey = "bmkg") { /* exported: wrapper testable */
   const subs = getWatchers();
   const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
   if (hasJadwal) pushPending(ev); // subscriber jadwal terima lewat rangkuman
@@ -1359,8 +1590,8 @@ export async function dispatchNearQuake(ev) { /* exported: wrapper testable */
     try {
       if (sub?.lat == null || ev?.lat == null) continue; // wajib punya lokasi
       const mode = sub.mode || "otomatis";
-      if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes("gempa")) continue;
-      if (Array.isArray(sub.sumber) && sub.sumber.length && !sub.sumber.includes("bmkg")) continue;
+      if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes(kindKey)) continue;
+      if (Array.isArray(sub.sumber) && sub.sumber.length && !sub.sumber.includes(sumberKey)) continue;
       const distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
       const radius = sub.radius || DEFAULT_RADIUS_KM;
       if (distKm > radius) continue; // di luar radius → bukan urusan fitur ini
@@ -1823,6 +2054,8 @@ export function startBencanaMonitor() {
   slowTimer = setInterval(slowTick, POLL_SLOW_MS);
   jadwalTimer = setInterval(jadwalTick, 60_000); // cek jadwal tiap menit (mode jadwal)
   ewsTimer = setInterval(ewsTick, EWS_POLL_MS); // peringatan dini 4 provider tiap 10 dtk
+  volcanoTick();
+  volcanoTimer = setInterval(volcanoTick, VOLCANO_POLL_MS); // status gunung api PVMBG tiap 10 mnt
   logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG ${POLL_FAST_MS / 1000}s, GDACS+USGS ${POLL_SLOW_MS / 1000}s, jadwal 60s, EWS ${EWS_POLL_MS / 1000}s)`);
   return true;
 }
@@ -1857,6 +2090,7 @@ export function setBencanaAutoEnabled(on) {
 export function stopBencanaMonitor() {
   if (fastTimer) clearInterval(fastTimer);
   if (slowTimer) clearInterval(slowTimer);
+  if (volcanoTimer) clearInterval(volcanoTimer);
   if (ewsTimer) clearInterval(ewsTimer);
   ewsTimer = null;
   if (jadwalTimer) clearInterval(jadwalTimer);

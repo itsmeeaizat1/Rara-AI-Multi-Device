@@ -20,6 +20,7 @@ import {
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
   getMonitorHealth, sendActivationSample,
   setWatcherEws, setWatcherProvider, getEwsHistory, EWS_MIN_MAG,
+  getMagmaVolcanoes, MAGMA_LEVELS, sendRegionalAlert,
 } from "../../src/lib/nova-bencana.js";
 // ── GUARD FORMAT (request owner 2026-09-07): SEMUA pesan berkotak plugin
 // ini WAJIB lewat boxLeft() dari src/lib/styler.js — kalimat input tetap
@@ -57,7 +58,7 @@ const pluginConfig = {
   alias: ["bencanawatch"],
   category: "bencana",
   description: "Langganan auto-alert bencana realtime — per chat, per grup target, atau global DM + semua grup",
-  usage: ".bencanawatch <on/onchat/onglobal/offglobal/off/status/mode/jadwal/jenis/sumber/lokasi/radius/pilihgrup>",
+  usage: ".bencanawatch <on/onchat/onglobal/offglobal/off/status/mode/jadwal/jenis/sumber/lokasi/radius/pilihgrup/gunung/test>",
   example: ".bencanawatch on",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 0, isEnabled: true,
@@ -78,6 +79,8 @@ async function handler(m, { sock }) {
       info: "status", help: "guide", bantuan: "guide",
       atur: "atur", pengaturan: "atur", setting: "atur", settings: "atur",
       history: "riwayat",
+      gunung: "gunung", gunungapi: "gunung", volcano: "gunung", ga: "gunung",
+      tes: "test", test: "test", uji: "test", ujicoba: "test",
     };
     const action = ACTION_ALIAS[args[0]] || args[0] || "";
     const chatId = m.chat;
@@ -336,6 +339,7 @@ async function handler(m, { sock }) {
           "• BMKG — gempa Indonesia M 5.0+",
           "• USGS — gempa global signifikan (M 5.0+ alert / M 6.0+)",
           "• GDACS — bencana dunia SIAGA/AWAS",
+          "• PVMBG — status gunung api Indonesia (level naik/turun)",
           "---",
           "Ketik manual: .bencanawatch sumber bmkg",
         ]);
@@ -368,6 +372,93 @@ async function handler(m, { sock }) {
       } catch (e) {
         await m.react("❌");
         return m.reply(novaError("Bencana Watch", e.message));
+      }
+    }
+
+    // ── status gunung api PVMBG (request owner 10 Sep 2026) ──
+    if (action === "gunung") {
+      const q = (m.args || []).slice(1).join(" ").trim();
+      try {
+        const page = await getMagmaVolcanoes();
+        if (!q) {
+          const awas = page.list.filter((v) => v.levelNum === 4);
+          const siaga = page.list.filter((v) => v.levelNum === 3);
+          const waspada = page.list.filter((v) => v.levelNum === 2);
+          const normalCount = page.ringkas["Level I (Normal)"] ?? page.list.filter((v) => v.levelNum === 1).length;
+          const lines = [];
+          if (awas.length) {
+            lines.push(MAGMA_LEVELS[4].icon + " " + MAGMA_LEVELS[4].romawi + " — AWAS (" + awas.length + "):");
+            for (const v of awas) lines.push("  • " + v.nama + " — " + v.prov);
+            lines.push("---");
+          }
+          if (siaga.length) {
+            lines.push(MAGMA_LEVELS[3].icon + " " + MAGMA_LEVELS[3].romawi + " — SIAGA (" + siaga.length + "):");
+            for (const v of siaga) lines.push("  • " + v.nama + " — " + v.prov);
+            lines.push("---");
+          }
+          lines.push(MAGMA_LEVELS[2].icon + " " + MAGMA_LEVELS[2].romawi + " — Waspada : " + waspada.length + " gunung api");
+          lines.push(MAGMA_LEVELS[1].icon + " " + MAGMA_LEVELS[1].romawi + " — Normal : " + normalCount + " gunung api");
+          lines.push("---");
+          lines.push("Detail per gunung: .bencanawatch gunung merapi");
+          lines.push("Notif otomatis perubahan status: aktifin jenis gunungapi (.bencanawatch jenis gunungapi)");
+          lines.push("Sumber: magma.esdm.go.id (PVMBG)");
+          await m.react("\u{1F42A}");
+          return m.reply(novaBox("Status Gunung Api — PVMBG", lines));
+        }
+        const needle = q.toLowerCase();
+        const v = page.list.find((x) => x.nama.toLowerCase() === needle)
+          || page.list.find((x) => x.nama.toLowerCase().includes(needle));
+        if (!v) {
+          await m.react("\u274C");
+          return m.reply(novaError("Bencana Watch", 'Gunung api "' + q + '" gak ketemu di daftar PVMBG. Ketik .bencanawatch gunung buat lihat daftar.'));
+        }
+        const lv = MAGMA_LEVELS[v.levelNum] || MAGMA_LEVELS[1];
+        await m.react("\u{1F42A}");
+        return m.reply(novaBox("Gunung Api — " + v.nama, [
+          "Status : " + lv.icon + " " + lv.romawi + " (" + lv.label + ")",
+          "Wilayah : " + v.prov,
+          "---",
+          "Laporan resmi PVMBG:",
+          v.laporanUrl,
+          "---",
+          "Notif otomatis kenaikan/penurunan status",
+          "dikirim ke langganan yang aktifin jenis gunungapi.",
+        ]));
+      } catch (e) {
+        await m.react("\u274C");
+        return m.reply(novaError("Bencana Watch", e.message));
+      }
+    }
+
+    // ── tes jalur kirim alert wilayah (request owner 10 Sep 2026) ──
+    if (action === "test") {
+      const subs = await getWatchersSafe();
+      const sub = subs[chatId];
+      if (!sub || sub.lat == null) {
+        await m.react("\u274C");
+        return m.reply(novaError("Bencana Watch", "Set lokasi dulu buat tes jalur kirim: .bencanawatch lokasi jakarta — terus ulangin .bencanawatch test"));
+      }
+      const ev = {
+        kind: "gempa", jenis: "Gempa Bumi", mag: "4.2", depth: "10 km",
+        level: "WASPADA", waktu: "SEKARANG (SIMULASI)",
+        lat: +(sub.lat + 0.35).toFixed(4), lon: +(sub.lon + 0.35).toFixed(4),
+        desc: "UJI COBA JALUR KIRIM — gempa simulasi (bukan kejadian nyata)",
+        potensi: "SIMULASI", dirasakan: "SIMULASI", sumber: "TES INTERNAL — bukan BMKG",
+      };
+      try {
+        await sendRegionalAlert(sock, chatId, ev, sub, { test: true });
+        await m.react("\u{1F42A}");
+        return m.reply(novaBox("Bencana Watch", [
+          "Alert SIMULASI dikirim ke chat ini —",
+          "cek pesan PERINGATAN di atas.",
+          "---",
+          "Kalau gak nyampe, cek: langganan on",
+          "(.bencanawatch on), jenis gempa aktif,",
+          "dan mode bukan jadwal.",
+        ]));
+      } catch (e) {
+        await m.react("\u274C");
+        return m.reply(novaError("Bencana Watch", "Gagal kirim alert simulasi: " + e.message));
       }
     }
 
