@@ -162,7 +162,7 @@ function buildCategoryRows(m, db, prefix = ".") {
     rows.push({
       header: headerLabel,
       title: `${emoji} ${catName}`,
-      description: `${total} command tersedia`,
+      description: `${total} perintah tersedia`,
       id: `${prefix}allmenucategory ${cat}`,
     });
   }
