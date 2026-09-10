@@ -398,7 +398,7 @@ async function handler(m, { sock }) {
   if (sub === "kategori" || sub === "category") {
     const questions = loadQuestions();
     const categories = [...new Set(questions.map((q) => q.category))];
-    let msg = `📂 *KATEGORI SOAL ASAH OTAK*\n\n`;
+    let msg = `🏷️ *KATEGORI SOAL ASAH OTAK*\n\n`;
     categories.forEach((cat) => {
       const count = questions.filter((q) => q.category === cat).length;
       const emoji = CATEGORY_EMOJI[cat] || "❓";
@@ -417,7 +417,7 @@ async function handler(m, { sock }) {
       const questions = loadQuestions();
       const categories = [...new Set(questions.map((q) => q.category))];
       return m.reply(
-        `⚠️ Kategori "*${sub}*" tidak ditemukan!\n\n📂 *Kategori Tersedia:*\n${categories.map((c) => `- ${c}`).join("\n")}`
+        `⚠️ Kategori "*${sub}*" tidak ditemukan!\n\n🏷️ *Kategori Tersedia:*\n${categories.map((c) => `- ${c}`).join("\n")}`
       );
     }
     categoryFilter = cat;

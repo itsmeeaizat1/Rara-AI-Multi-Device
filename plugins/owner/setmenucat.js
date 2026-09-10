@@ -84,14 +84,14 @@ async function handler(m, { sock, db }) {
     {
       name: "single_select",
       buttonParamsJson: JSON.stringify({
-        title: "📂 Pilih Variant Menucat",
+        title: "🧩 Pilih Variant Menucat",
         sections: [{ title: "Daftar Variant Menucat", rows }],
       }),
     },
   ];
 
   const bodyText =
-    `📂🗂️ *ᴍᴇɴᴜᴄᴀᴛ ᴠᴀʀɪᴀɴᴛ*\n\n` +
+    `🧩 *ᴍᴇɴᴜᴄᴀᴛ ᴠᴀʀɪᴀɴᴛ*\n\n` +
     `Atur tampilan menu per kategori ketika user memilih kategori dari menu utama 📋\n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
     `Pilih variant menucat dari tombol di bawah 👇`;

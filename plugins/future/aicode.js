@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     const code = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!code) {
       const text = novaCaption({
-        emoji: "📁",
+        emoji: "💻",
         name: "aicodev2",
         description: "AI review kode kamu",
         usage: `${prefix}aicode <kode> atau reply kode`,

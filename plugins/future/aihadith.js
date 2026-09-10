@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     const query = m.text?.trim();
     if (!query) {
       await m.reply( novaCaption({
-  emoji: "📁",
+  emoji: "📚",
   name: "aihadith",
   description: "Cari hadis dengan bahasa natural",
   usage: `${prefix}aihadith <topik>`,

@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     const topic = m.text?.trim();
     if (!topic) {
       await m.reply(novaCaption({
-  emoji: "📁",
+  emoji: "📊",
   name: "aipoll",
   description: "AI bikin polling dari topik",
   usage: `${prefix}aipoll <topik>`,

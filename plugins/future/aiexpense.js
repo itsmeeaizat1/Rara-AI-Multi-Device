@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     const input = m.text?.trim();
     if (!input) {
       await m.reply(novaCaption({
-  emoji: "📁",
+  emoji: "💰",
   name: "aiexpense",
   description: "Catat pengeluaran dengan bahasa natural",
   usage: `${prefix}aiexpense <deskripsi>`,

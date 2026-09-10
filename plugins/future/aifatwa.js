@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     const q = m.text?.trim();
     if (!q) {
       await m.reply( novaCaption({
-  emoji: "📁",
+  emoji: "🕌",
   name: "aifatwa",
   description: "Tanya hukum Islam, AI cari referensi",
   usage: `${prefix}aifatwa <pertanyaan>`,

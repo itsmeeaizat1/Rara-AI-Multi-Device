@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     reply += `${typeIcon} Tipe: *${typeLabel}*\n`
     reply += `📊 Stok: *${stock === -1 ? 'Unlimited ♾️' : stock}*\n`
     if (description) reply += `📝 Deskripsi: _${description}_\n`
-    reply += `📂 Kategori: *${kategori}*\n`
+    reply += `🏷️ Kategori: *${kategori}*\n`
     if (imageUrl) reply += `🖼️ Thumbnail: ✅ Gambar\n`
     if (videoUrl) reply += `🎬 Thumbnail: ✅ Video\n`
     reply += `\n📌 *ʟᴀɴɢᴋᴀʜ ꜱᴇʟᴀɴᴊᴜᴛɴʏᴀ:*\n`

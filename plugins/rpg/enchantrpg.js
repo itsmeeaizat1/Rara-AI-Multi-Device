@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
         title: "enchantrpg", icon: "✨",
         flavor: "✨ *ENCHANT BERHASIL!*",
         body: [
-          `│ • 📂 Slot : ${SLOT_LABEL[slot]}`,
+          `│ • 🎒 Slot : ${SLOT_LABEL[slot]}`,
           `│ • ⬆️ Enchant level : +${result.enchant}`,
           `│ • 🧱 Material : 1x ${ITEM_DB[materialId]?.name || materialId}`,
           "",
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
         title: "enchantrpg", icon: "💥",
         flavor: "💥 *ENCHANT GAGAL!*",
         body: [
-          `│ • 📂 Slot : ${SLOT_LABEL[slot]}`,
+          `│ • 🎒 Slot : ${SLOT_LABEL[slot]}`,
           `│ • 🧱 Material : 1x ${ITEM_DB[materialId]?.name || materialId} (habis)`,
           "",
           "💡 Success rate makin rendah tiap level",

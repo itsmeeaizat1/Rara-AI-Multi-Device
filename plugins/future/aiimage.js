@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prompt = m.text?.trim();
     if (!prompt) {
       await m.reply( novaCaption({
-  emoji: "📁",
+  emoji: "🖼️",
   name: "aiimagev2",
   description: "Generate gambar dari teks dengan AI",
   usage: `${prefix}aiimage <deskripsi>`,

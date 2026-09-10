@@ -2,7 +2,7 @@
 /**
  * nova-category-list.js
  * Helper untuk generate isi popup "single_select" (list kategori) yang dipakai
- * tombol "📂 Kategori" di menu.js / allmenu.js / allmenucategory.js.
+ * tombol "Kategori" di menu.js / allmenu.js / allmenucategory.js.
  *
  * SATU sumber logic — dipakai bersama biar gak perlu file per kategori.
  * Klik row → kirim command `.allmenucategory <kategori>` yang sudah
@@ -66,7 +66,7 @@ const CATEGORY_EMOJI = {
   misc: "📦", random: "🎲", utility: "🧰", clean: "🧹",
   vps: "🖧", linode: "☁️", panel: "🖥️", jpm: "📡", pushkontak: "📲",
   owner: "👑",
-  kerja: "💼", sekolah: "🎓", umum: "📂", general: "⚙️", date: "📅", primary: "⭐",
+  kerja: "💼", sekolah: "🎓", umum: "🏷️", general: "⚙️", date: "📅", primary: "⭐",
 };
 
 /**

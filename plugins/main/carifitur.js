@@ -213,7 +213,7 @@ async function handler(m, { sock }) {
       if (p.isPremium) badges.push("💎");
       if (p.isOwner) badges.push("👑");
       text += `*${i + 1}. ${m.prefix}${p.name}* ${badges.join("")}\n`;
-      text += `📁 Kategori: \`${p.category}\`\n`;
+      text += `🏷️ Kategori: \`${p.category}\`\n`;
       text += `📝 ${p.description.slice(0, 50)}${p.description.length > 50 ? "..." : ""}\n`;
       if (p.usage) text += `💡 Usage: \`${p.usage}\`\n`;
       if (p.cooldown > 0) text += `⏱️ Cooldown: ${p.cooldown}s\n`;
