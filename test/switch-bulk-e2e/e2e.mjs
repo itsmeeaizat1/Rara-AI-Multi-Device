@@ -138,6 +138,31 @@ buttons.length = 0
 await switchHandler(mockM(["goodbye", "on"], { chat: "628999@s.whatsapp.net", isGroup: false }), { sock: mockSock, config })
 t("16a. direct DM tanpa target → popup grup", buttons.length === 1 && JSON.stringify(buttons[0].opts).includes(GID))
 
+// ═══ 17. DETEKSI KETERSEDIAAN: .switch welcome (tanpa verb) → info scope ═══
+db.setGroup(GID, { welcome: true }); db.save()
+await switchHandler(mockM(["welcome"]), { sock: mockSock, config })
+const infoReply = replies.at(-1) || ""
+t("17a. info scope grup", infoReply.includes("📍") && reSC("Grup").test(infoReply), infoReply.slice(0, 90))
+t("17b. info status grup ini", reSC("Status di grup ini").test(infoReply))
+t("17c. info cara on/off", reSC("Aktifkan").test(infoReply))
+
+// ═══ 18. DETEKSI dari DM: fitur grup gak bisa aktif di DM ═══
+await switchHandler(mockM(["welcome"], { chat: "628999@s.whatsapp.net", isGroup: false }), { sock: mockSock, config })
+t("18a. DM → info gak bisa aktif di DM", reSC("gak bisa aktif di DM").test(replies.at(-1) || ""), String(replies.at(-1)).slice(0, 90))
+
+// ═══ 19. SCOPE di reply toggle: grup 📍 / global 🌍 / saluran 📢 ═══
+await switchHandler(mockM(["welcome", "on"]), { sock: mockSock, config })
+t("19a. toggle grup → baris 📍 Grup", (replies.at(-1) || "").includes("📍"))
+await switchHandler(mockM(["autoread", "on"]), { sock: mockSock, config })
+t("19b. toggle auto → baris 🌍 Global", (replies.at(-1) || "").includes("🌍"))
+await switchHandler(mockM([evKey, "on"]), { sock: mockSock, config })
+t("19c. toggle saluran → baris 📢", (replies.at(-1) || "").includes("📢"))
+
+// ═══ 20. .switch status all → legenda scope ═══
+await switchHandler(mockM(["status", "all"]), { sock: mockSock, config })
+const stReply = replies.at(-1) || ""
+t("20a. status all legenda scope", stReply.includes("📍") && stReply.includes("🌍") && stReply.includes("📢"))
+
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 await new Promise((r) => setTimeout(r, 400))
 process.exit(fail ? 1 : 0)
