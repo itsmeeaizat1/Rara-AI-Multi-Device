@@ -7,7 +7,11 @@
 //             (gratis no key — utama liga internasional, verified live)
 //   2. TheSportsDB eventsnextleague/eventspastleague per liga (Liga 1 Indonesia
 //             id 4790 — ESPN idn.1 stale data musim lalu, TSDB yang muter)
-//   3. TheSportsDB eventsday (free key "3" — fallback global semua liga down)
+//   3. Apify Flashscore (actor khadinakbar/flashscore-live-matches, token di env
+//             APIFY_TOKEN / apikeys.json apifyToken — LIGA 2 INDONESIA: satu-
+//             satunya sumber; PAY_PER_EVENT $0.003/item → interval throttle
+//             terpisah + window jam main WIB biar credit free $5/bln aman)
+//   4. TheSportsDB eventsday (free key "3" — fallback global semua liga down)
 //
 // 3 TIPE KONTEN (bisa on/off sendiri, ala .animenotify info <tipe>):
 //   • jadwal   📅 digest "Jadwal Bola Hari Ini" (sekali/hari WIB) + fixture
@@ -37,6 +41,14 @@ const TSDB_API = "https://www.thesportsdb.com/api/v1/json/3";
 
 const TZ = "Asia/Jakarta";
 const DEFAULT_INTERVAL_MENIT = 30;
+// ── Apify Flashscore (Liga 2 Indonesia & fallback outage) — hemat credit:
+//    $0.00005/run + $0.003/match record, free tier Apify $5/bln.
+//    Interval throttle terpisah + cuma jalan di window jam main WIB. ──
+const APIFY_ACTOR = "khadinakbar~flashscore-live-matches";
+const DEFAULT_APIFY_INTERVAL_MENIT = 120;
+const APIFY_WINDOW_START = 7;  // 07:00 WIB
+const APIFY_WINDOW_END = 24;   // 23:59 WIB
+const APIFY_REMINDER_WINDOW_MS = 150 * 60 * 1000; // jendela reminder liga Apify (match H-150)
 const REMINDER_BEFORE_MS = 45 * 60 * 1000; // H-45 menit
 const REMINDER_GRACE_MS = 5 * 60 * 1000;  // lewat 5 mnt tetap kirim (jitter)
 const CAP_JADWAL_BARU = 10, CAP_REMINDER = 5, CAP_HASIL = 8;
@@ -47,6 +59,9 @@ const HEADERS = {
 };
 
 // ── Liga registry: slug ESPN + keyword TSDB ──
+//   • ESPN slug biasa → ESPN scoreboard (internasional)
+//   • tsdbId → TheSportsDB league endpoint (Liga 1 Indonesia 4790)
+//   • apifyCountry → Apify Flashscore (Liga 2 Indonesia — sumber satu-satunya)
 export const LEAGUE_DB = {
   "eng.1": { label: "Liga Inggris", emoji: "🏴", kw: ["premier league", "english premier", "inggris"] },
   "esp.1": { label: "Liga Spanyol", emoji: "🇪🇸", kw: ["spanish la liga", "la liga", "spanyol"] },
@@ -61,12 +76,13 @@ export const LEAGUE_DB = {
   "sau.1": { label: "Liga Arab Saudi", emoji: "🇸🇦", kw: ["saudi"] },
   "usa.1": { label: "MLS Amerika", emoji: "🇺🇸", kw: ["major league soccer", "mls"] },
   "idn.1": { label: "Liga 1 Indonesia", emoji: "🇮🇩", kw: ["indonesian", "indonesia", "liga 1", "super league", "bri"], tsdbId: 4790 },
+  "idn.2": { label: "Liga 2 Indonesia", emoji: "🇮🇩", kw: ["liga 2", "championship", "pegadaian"], apifyCountry: "Indonesia", apifyLeaguePattern: "liga[\\s-]*2|championship" },
   "bra.1": { label: "Brasileirao", emoji: "🇧🇷", kw: ["brazilian"] },
   "arg.1": { label: "Liga Argentina", emoji: "🇦🇷", kw: ["argentine"] },
   "tur.1": { label: "Liga Turki", emoji: "🇹🇷", kw: ["turkish super lig", "turki"] },
 };
 
-const DEFAULT_LEAGUES = ["eng.1", "esp.1", "ita.1", "ger.1", "fra.1", "uefa.champions", "idn.1"];
+const DEFAULT_LEAGUES = ["eng.1", "esp.1", "ita.1", "ger.1", "fra.1", "uefa.champions", "idn.1", "idn.2"];
 
 export const BOLA_TYPES = {
   jadwal: { label: "Jadwal", emoji: "📅", desc: "Digest jadwal pertandingan hari ini (WIB) + fixture baru" },
@@ -81,6 +97,9 @@ function defaultState() {
     enabled: false,
     targets: [],
     intervalMenit: DEFAULT_INTERVAL_MENIT,
+    apifyIntervalMenit: DEFAULT_APIFY_INTERVAL_MENIT,
+    lastApifyCheck: null,
+    apifyCache: null,
     initDone: false,
     leagues: [...DEFAULT_LEAGUES],
     contentTypes: { jadwal: true, reminder: true, hasil: true },
@@ -128,10 +147,73 @@ function enqueue(fn) {
 let espnFetcher = null;
 let tsdbFetcher = null;
 let tsdbLeagueFetcher = null;
-export function setFetcher({ espn, tsdb, tsdbLeague } = {}) {
+let apifyFetcher = null;
+export function setFetcher({ espn, tsdb, tsdbLeague, apify } = {}) {
   if (espn) espnFetcher = espn;
   if (tsdb) tsdbFetcher = tsdb;
   if (tsdbLeague) tsdbLeagueFetcher = tsdbLeague;
+  if (apify) apifyFetcher = apify;
+}
+
+// ── Apify Flashscore (Liga 2 Indonesia + fallback outage) ──
+let apifyTokenCache;
+export function getApifyToken() {
+  if (process.env.APIFY_TOKEN) return process.env.APIFY_TOKEN;
+  if (apifyTokenCache !== undefined) return apifyTokenCache || null;
+  try {
+    const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), "apikeys.json"), "utf8"));
+    apifyTokenCache = raw.apifyToken || raw?.apify?.token || raw?.flashscore?.apifyToken || null;
+  } catch {
+    apifyTokenCache = null;
+  }
+  return apifyTokenCache;
+}
+
+let apifyWindowOverride;
+export function __setApifyWindowOverride(v) { apifyWindowOverride = v; } // test hook
+function apifyWindowOk() {
+  if (apifyWindowOverride !== undefined) return !!apifyWindowOverride;
+  const hour = Number(new Date().toLocaleString("en-GB", { timeZone: TZ, hour: "2-digit", hour12: false }));
+  return hour >= APIFY_WINDOW_START && hour < APIFY_WINDOW_END;
+}
+
+// Satu run Apify = match HARI INI (actor gak bisa dayOffsets>0, verified live).
+// PAY_PER_EVENT: $0.00005/run + $0.003/item — DIPANGGIL HANYA kalau due throttle.
+async function apifyFlashscore(country, { maxResults = 40 } = {}) {
+  if (apifyFetcher) return apifyFetcher(country);
+  const token = getApifyToken();
+  if (!token) throw new Error("token Apify belum diset (env APIFY_TOKEN / apikeys.json apifyToken)");
+  const res = await axios.post(
+    `https://api.apify.com/v2/acts/${APIFY_ACTOR}/run-sync-get-dataset-items?token=${token}&timeout=120`,
+    { sport: "football", dayOffsets: [0], maxResults, country, language: "en", proxyConfiguration: { useApifyProxy: true } },
+    { timeout: 130000 },
+  );
+  return res.data || [];
+}
+
+// Normalize item Flashscore → struktur match notifier
+function normApify(ev, slug) {
+  const meta = LEAGUE_DB[slug] || {};
+  const status = String(ev.status || "").toLowerCase();
+  const state = status === "live" ? "in" : (/finish|^ft|ended/.test(status) ? "post" : "pre");
+  const pat = meta.apifyLeaguePattern ? new RegExp(meta.apifyLeaguePattern, "i") : null;
+  return {
+    ok: !pat || pat.test(ev.league || "") || pat.test(ev.leagueUrl || ""),
+    match: {
+      key: `fs:${ev.matchId}`,
+      slug,
+      leagueLabel: meta.label || ev.league || slug,
+      emoji: meta.emoji || "⚽",
+      leagueLogo: null,
+      date: new Date(ev.startTime || Date.now()).toISOString(),
+      home: ev.homeTeam || "?", away: ev.awayTeam || "?",
+      homeScore: ev.homeScore ?? null, awayScore: ev.awayScore ?? null,
+      state,
+      statusDetail: ev.status || (ev.minute ? `${ev.minute}'` : ""),
+      venue: null,
+      source: "flashscore",
+    },
+  };
 }
 
 async function espnScoreboard(slug) {
@@ -231,30 +313,62 @@ async function tsdbDay(dateStr) {
   return out;
 }
 
-async function fetchAll(leagues, today) {
-  // Liga tsdbId (Liga 1 Indonesia) → TSDB league endpoint; sisanya ESPN.
-  const results = await Promise.allSettled(leagues.map((s) => {
+async function fetchAll(leagues, today, { apifyDue = false } = {}) {
+  // Routing per-liga: apifyCountry → Flashscore (khusus throttle due),
+  // tsdbId → TSDB league endpoint, sisanya ESPN scoreboard.
+  let apifyRanFlag = false;
+  const results = await Promise.allSettled(leagues.map(async (s) => {
     const meta = LEAGUE_DB[s] || {};
+    if (meta.apifyCountry) {
+      if (!apifyDue || !apifyWindowOk()) return [];
+      const evs = await apifyFlashscore(meta.apifyCountry, { maxResults: 40 });
+      apifyRanFlag = true; // throttle dihitung per RUN — walau laga kosong
+      return evs.map((ev) => normApify(ev, s)).filter((x) => x.ok).map((x) => x.match);
+    }
     if (meta.tsdbId) return tsdbLeagueMatches(s, meta.tsdbId);
     return espnScoreboard(s);
   }));
   const matches = [];
-  let ok = 0, usedTsdb = false;
+  let ok = 0, usedTsdb = false, usedApify = false;
   for (const r of results) {
     if (r.status === "fulfilled") {
       ok++;
       matches.push(...r.value);
       if (r.value.length && r.value[0].key.startsWith("tsdb:")) usedTsdb = true;
+      if (r.value.length && r.value[0].key.startsWith("fs:")) usedApify = true;
     }
   }
-  if (ok > 0) return { matches, source: usedTsdb ? "espn+thesportsdb" : "espn" };
-  // SEMUA provider gagal → fallback global eventsday
+  if (ok > 0) {
+    const src = ["espn"];
+    if (usedTsdb) src.push("thesportsdb");
+    if (usedApify) src.push("flashscore");
+    return { matches, source: src.join("+"), apifyRan: apifyRanFlag };
+  }
+  // SEMUA provider utama gagal → fallback eventsday; masih mati juga →
+  // Apify Flashscore HARI INI (credit guard: cuma kalau throttle due).
   try {
     const tsMatches = await tsdbDay(today);
-    return { matches: tsMatches, source: "thesportsdb" };
-  } catch (e) {
-    throw new Error(`ESPN & TheSportsDB down: ${e.message}`);
+    return { matches: tsMatches, source: "thesportsdb", apifyRan: false };
+  } catch { /* lanjut ke apify */ }
+  if (apifyDue || apifyWindowOk()) {
+    try {
+      const evs = await apifyFlashscore(null, { maxResults: 50 });
+      const out = evs.map((ev) => {
+        const slug = leagues.find((s) => {
+          const meta = LEAGUE_DB[s] || {};
+          if (!meta.apifyCountry) return false;
+          const pat = meta.apifyLeaguePattern ? new RegExp(meta.apifyLeaguePattern, "i") : null;
+          return !pat || pat.test(ev.league || "") || pat.test(ev.leagueUrl || "");
+        });
+        return slug ? normApify(ev, slug).match : null;
+      }).filter(Boolean);
+      if (out.length) return { matches: out, source: "flashscore", apifyRan: true };
+      throw new Error("flashscore kosong");
+    } catch (e) {
+      throw new Error(`semua sumber down: ${e.message}`);
+    }
   }
+  throw new Error("semua sumber down (apify belum due/window)");
 }
 
 // ───────────────────────────── WIB helpers ─────────────────────────────
@@ -330,7 +444,8 @@ async function sendNewFixtures(targets, matches) {
 
 async function sendReminder(targets, m) {
   const mins = Math.max(1, Math.round((new Date(m.date) - Date.now()) / 60000));
-  const txt = `⏰ *BENTAR LAGI KICK-OFF!*\n\n${m.emoji} *${m.leagueLabel}*\n⚔️ ${m.home} vs ${m.away}\n🕐 ~${mins} menit lagi (${fmtWIB(m.date)})${m.venue ? `\n🏟️ ${m.venue}` : ""}`;
+  const title = mins <= 60 ? "BENTAR LAGI KICK-OFF!" : "PENGINGAT KICK-OFF!";
+  const txt = `⏰ *${title}*\n\n${m.emoji} *${m.leagueLabel}*\n⚔️ ${m.home} vs ${m.away}\n🕐 kick-off ${fmtWIB(m.date)} (~${mins} menit lagi)${m.venue ? `\n🏟️ ${m.venue}` : ""}`;
   for (const t of targets) await sendBola(t, txt, { title: "KICK-OFF SEBENTAR LAGI", logo: m.leagueLogo });
 }
 
@@ -355,8 +470,21 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
   const targets = chatId ? [chatId] : targetsSnapshot;
   const types = st.contentTypes || {};
   const today = wibDate();
-  const { matches, source } = await fetchAll(st.leagues, today);
+  const hasApifyLeague = st.leagues.some((s) => (LEAGUE_DB[s] || {}).apifyCountry);
+  const apifyDue = (hasApifyLeague || !chatId) &&
+    (!st.lastApifyCheck || Date.now() - new Date(st.lastApifyCheck).getTime() >= st.apifyIntervalMenit * 60000);
+  const { matches: fetched, source, apifyRan } = await fetchAll(st.leagues, today, { apifyDue });
   st.lastSource = source;
+  if (apifyRan) {
+    st.lastApifyCheck = new Date().toISOString();
+    const fsFresh = fetched.filter((m) => m.key.startsWith("fs:"));
+    if (fsFresh.length) st.apifyCache = { date: today, matches: fsFresh };
+  }
+  // Liga Apify (Liga 2) gak di-fetch tiap siklus (hemat credit) — merge cache
+  // biar reminder/hasilnya tetap dievaluasi tiap 30 mnt.
+  const cached = st.apifyCache?.date === today ? st.apifyCache.matches : [];
+  const freshKeys = new Set(fetched.map((m) => m.key));
+  const matches = [...fetched, ...cached.filter((m) => !freshKeys.has(m.key))];
   const todays = matches.filter((m) => wibDate(m.date) === today);
   let sent = 0;
 
@@ -395,11 +523,11 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
   // 3. REMINDER H-45 menit sebelum kick-off (sekali per laga)
   if (types.reminder !== false && !chatId) {
     const now = Date.now();
-    const due = matches.filter((m) =>
-      m.state === "pre" && !st.sentReminders[m.key] &&
-      (new Date(m.date) - now) <= REMINDER_BEFORE_MS &&
-      (now - new Date(m.date)) <= REMINDER_GRACE_MS,
-    ).slice(0, CAP_REMINDER);
+    const due = matches.filter((m) => {
+      if (m.state !== "pre" || st.sentReminders[m.key]) return false;
+      const win = m.source === "flashscore" ? APIFY_REMINDER_WINDOW_MS : REMINDER_BEFORE_MS;
+      return (new Date(m.date) - now) <= win && (now - new Date(m.date)) <= REMINDER_GRACE_MS;
+    }).slice(0, CAP_REMINDER);
     for (const m of due) {
       await sendReminder(targets, m);
       sent++;
@@ -429,9 +557,16 @@ export function resolveLeague(input) {
   const q = String(input || "").toLowerCase().trim();
   if (!q) return null;
   if (LEAGUE_DB[q]) return q;
-  const found = Object.keys(LEAGUE_DB).find((s) => {
+  // Pass 1: exact (label / keyword) — biar "championship" gak nyasar ke
+  // uefa.champions via fuzzy "champions"
+  const keys = Object.keys(LEAGUE_DB);
+  const exact = keys.find((s) =>
+    LEAGUE_DB[s].label.toLowerCase() === q || (LEAGUE_DB[s].kw || []).some((k) => k === q));
+  if (exact) return exact;
+  // Pass 2: fuzzy
+  const found = keys.find((s) => {
     const l = LEAGUE_DB[s];
-    return l.label.toLowerCase() === q || (l.kw || []).some((k) => k.includes(q) || q.includes(k));
+    return (l.kw || []).some((k) => k.includes(q) || q.includes(k));
   });
   if (found) return found;
   // slug ESPN custom (mis. arg.1) — validasi bentuk biar gak ngawur
@@ -514,12 +649,24 @@ export function setBolaNotifierOn(on) {
   return st.enabled;
 }
 
+export function setApifyIntervalMenit(menit) {
+  const v = Number(menit);
+  if (!v || v < 15 || v > 720) return null;
+  const st = loadState();
+  st.apifyIntervalMenit = v;
+  saveState(st);
+  return v;
+}
+
 export function getStatus() {
   const st = loadState();
   return {
     enabled: st.enabled,
     targets: [...st.targets],
     intervalMenit: st.intervalMenit,
+    apifyIntervalMenit: st.apifyIntervalMenit,
+    apifyToken: !!getApifyToken(),
+    lastApifyCheck: st.lastApifyCheck,
     running: !!timer,
     initDone: st.initDone,
     leagues: st.leagues,

@@ -14,7 +14,7 @@ import {
   addTarget, removeTarget, isTarget, getStatus, isEnabled, runCheck,
   setSock, syncMonitor, getLeagues, addLeague, removeLeague, resetLeagues,
   getContentTypes, setContentType, BOLA_TYPES, LEAGUE_DB,
-  setIntervalMenit,
+  setIntervalMenit, setApifyIntervalMenit,
 } from "../../src/lib/nova-auto-bola-notifier.js";
 import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
@@ -23,7 +23,7 @@ const pluginConfig = {
   alias: ["bolanotify", "jadwalnotify", "footballnotify", "bolaai"],
   category: "info",
   description: "Auto notifikasi jadwal bola (ESPN → TheSportsDB) — langganan per-chat",
-  usage: ".jadwalbolanotify <on/off/status/now/liga/info/interval>",
+  usage: ".jadwalbolanotify <on/off/status/now/liga/info/interval/apify>",
   example: ".jadwalbolanotify on\n.jadwalbolanotify liga list",
   isOwner: false,
   isPremium: false,
@@ -73,8 +73,9 @@ async function handler(m, { sock, args }) {
       `Interval: tiap ${st.intervalMenit} menit`,
       `Liga dipantau: ${leagues.map((l) => l.label).join(", ")}`,
       `Tipe aktif: ${Object.entries(getContentTypes()).filter(([, on]) => on !== false).map(([k]) => k).join(", ")}`,
-      `Sumber: ESPN → TheSportsDB (fallback)`,
+      `Sumber: ESPN → TheSportsDB (+ Flashscore/Apify buat Liga 2 — token: ${st.apifyToken ? "ADA" : "BELUM SET"})`,
       `Cek terakhir: ${st.lastCheck ? new Date(st.lastCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "belum pernah"} (${st.lastSource || "-"})`,
+      `Apify Liga 2: tiap ${st.apifyIntervalMenit} mnt (cek terakhir ${st.lastApifyCheck ? new Date(st.lastApifyCheck).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta" }) : "-"}) — .jadwalbolanotify apify`,
     ];
     return m.reply(`「 ✦ ${pluginConfig.name.toUpperCase()} ✦ 」\n` + lines.join("\n"));
   }
@@ -157,6 +158,25 @@ async function handler(m, { sock, args }) {
     return m.reply(novaSuccess(pluginConfig.name, `interval cek sekarang *tiap ${res} menit* — monitor di-restart`));
   }
 
+  if (sub === "apify" || sub === "flashscore") {
+    const st = getStatus();
+    const val = Number(args?.[1]);
+    if (val) {
+      const res = setApifyIntervalMenit(val);
+      if (!res) return m.reply(novaError(pluginConfig.name, "interval Apify harus 15–720 menit — jaga credit free Apify $5/bln (biaya $0.003/match record)"));
+      return m.reply(novaSuccess(pluginConfig.name, `interval cek Apify (Liga 2 via Flashscore) sekarang *tiap ${res} menit*`));
+    }
+    return m.reply(
+      `「 ✦ ${pluginConfig.name.toUpperCase()} — APIFY FLASHSCORE ✦ 」\n\n` +
+      `Liga 2 Indonesia datanya CUMA ada di Flashscore (via Apify).\n` +
+      `Token: ${st.apifyToken ? "✅ sudah diset" : "❌ BELUM — set env APIFY_TOKEN atau apikeys.json apifyToken"}\n` +
+      `Interval cek: *tiap ${st.apifyIntervalMenit} menit* (window 07:00–24:00 WIB)\n` +
+      `Cek terakhir: ${st.lastApifyCheck ? new Date(st.lastApifyCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "belum pernah"}\n\n` +
+      `💡 Biaya Apify: $0.003/match record + $0.00005/run — interval default 120 mnt biar credit free $5/bulan aman.\n` +
+      `Atur: *.jadwalbolanotify apify <menit>* (15–720)`
+    );
+  }
+
   if (sub === "now") {
     await m.react("🕒");
     if (!isTarget(m.chat)) return m.reply(novaGuide(pluginConfig.name, "chat ini belum langganan — ketik .jadwalbolanotify on dulu", ".jadwalbolanotify now"));
@@ -170,7 +190,7 @@ async function handler(m, { sock, args }) {
     novaGuide(
       pluginConfig.name,
       "auto notifikasi JADWAL BOLA (ESPN → TheSportsDB) — jadwal harian, reminder kick-off & skor full-time ke chat langganan",
-      ".jadwalbolanotify on — langganan chat ini\n.jadwalbolanotify off — berhenti\n.jadwalbolanotify status — lihat status\n.jadwalbolanotify now — kirim jadwal hari ini\n.jadwalbolanotify liga — liga favorit (add/del/list/reset)\n.jadwalbolanotify info — tipe konten (jadwal/reminder/hasil)\n.jadwalbolanotify interval <menit>\n.jadwalbola — jadwal manual (existing)",
+      ".jadwalbolanotify on — langganan chat ini\n.jadwalbolanotify off — berhenti\n.jadwalbolanotify status — lihat status\n.jadwalbolanotify now — kirim jadwal hari ini\n.jadwalbolanotify liga — liga favorit (add/del/list/reset)\n.jadwalbolanotify info — tipe konten (jadwal/reminder/hasil)\n.jadwalbolanotify interval <menit>\n.jadwalbolanotify apify <menit> — Liga 2 via Flashscore\n.jadwalbola — jadwal manual (existing)",
       "pause/resume global: .switch auto autobolanotify on/off (owner)",
     ),
   );
