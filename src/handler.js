@@ -431,8 +431,8 @@ try {
 
       // Cek AI Grup nimbrung
       const { handleAiGrup, isAiGrupEnabled } = await import("./lib/nova-aigrup.js");
-      if (typeof isAiGrupEnabled === "function" && isAiGrupEnabled()) {
-        const handled = await handleAiGrup(m, sock);
+      if (typeof isAiGrupEnabled === "function" && isAiGrupEnabled(jadibotCtx)) {
+        const handled = await handleAiGrup(m, sock, undefined, jadibotCtx);
         if (handled) return;
       }
     } catch (e) {

@@ -7,6 +7,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,
   claraLine,
 } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getJadibotSetting, setJadibotSetting } from "../../src/lib/nova-jadibot-database.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -123,9 +124,86 @@ function getKeyForFormat(aiHelp, fmtKey) {
   return fmtKey2 || fallback;
 }
 
-async function handler(m, { sock, config: botConfig }) {
+// ═══ AI Grup per-session jadibot ═══
+// State disimpan di DB jadibot nomor itu (session/jadibot/<id>/data.json),
+// default OFF — bot utama gak ngaruh dan gak kepengaruh.
+async function handleSessionAigrup(m, ctx, prefix) {
+  await m.react("🕒");
+  const jadibotId = ctx.jadibotId;
+  const raw = (m.text || "").replace(/^\.aigrup\s+/i, "").replace(/^\.aigroup\s+/i, "").replace(/^\.aig\s+/i, "").trim();
+  const args = raw.split(/[ \t]+/).filter(Boolean);
+  const subcmd = (args[0] || "status").toLowerCase();
+
+  const st = getJadibotSetting(jadibotId, "aigrup") || { enabled: false, probability: 10, format: "openai", model: "deepseek-v4-flash:free" };
+
+  const isOn = st.enabled ? "ON \u2705" : "OFF \u274c";
+
+  if (subcmd === "on" || subcmd === "aktif") {
+    if (!m.isOwner) {
+      await m.reply(claraWrap("Ditolak", "Hanya owner session ini yang bisa menyalakan AI Grup."));
+      return { handled: true };
+    }
+    st.enabled = true;
+    setJadibotSetting(jadibotId, "aigrup", st);
+    await m.react("🐣");
+    await m.reply(claraWrap("AI Grup Aktif (Session Ini)", [
+      `Status: *ON*`,
+      `Berlaku: *hanya nomor bot ini*`,
+      `Probability: *${st.probability}%*`,
+      `100% respon kalau di-tag/reply`,
+      `Matikan: *${prefix}aigrup off*`,
+    ].join("\n")));
+    return { handled: true };
+  }
+
+  if (subcmd === "off" || subcmd === "mati") {
+    if (!m.isOwner) {
+      await m.reply(claraWrap("Ditolak", "Hanya owner session ini yang bisa mematikan AI Grup."));
+      return { handled: true };
+    }
+    st.enabled = false;
+    setJadibotSetting(jadibotId, "aigrup", st);
+    await m.react("🐣");
+    await m.reply(claraWrap("AI Grup Nonaktif (Session Ini)", [
+      `Status: *OFF*`,
+      `Bot ini tidak nimbrung lagi`,
+      `Command biasa tetap jalan`,
+    ].join("\n")));
+    return { handled: true };
+  }
+
+  if (subcmd === "prob" || subcmd === "probability") {
+    const prob = parseInt(args[1] || "0", 10);
+    if (isNaN(prob) || prob < 0 || prob > 100) {
+      await m.reply(claraWrap("Probability", [`*${prefix}aigrup prob 30* \u2014 30% chance`, `Saat ini: *${st.probability}%*`].join("\n")));
+      return { handled: true };
+    }
+    st.probability = prob;
+    setJadibotSetting(jadibotId, "aigrup", st);
+    await m.react("🐣");
+    await m.reply(claraWrap("Aigrup", `\u2705 Probability session ini diatur ke *${prob}%*`));
+    return { handled: true };
+  }
+
+  await m.react("🐣");
+  // status / default
+  await m.reply(claraWrap("AI Grup Status (Session Ini)", [
+    `Status: *${isOn}*`,
+    `Probability: *${st.probability}%*`,
+    `Default nomor baru: *OFF* (harus ON manual)`,
+    `Command: *${prefix}aigrup on* / *off* / *prob <0-100>*`,
+    `_State ini terpisah dari bot utama_`,
+  ].join("\n")));
+  return { handled: true };
+}
+
+async function handler(m, ctx) {
+    const { sock, config: botConfig } = ctx;
     const prefix = botConfig.command?.prefix || ".";
   try {
+    // ── Session jadibot: state per-nomor, DEFAULT OFF saat pairing pertama ──
+    // (request owner 10 Sep 2026 — jangan ikut flag global bot utama)
+    if (ctx.isJadibot && ctx.jadibotId) return handleSessionAigrup(m, ctx, prefix);
   await m.react("🕒");
     const raw = (m.text || "").replace(/^\.aigrup\s+/i, "").replace(/^\.aigroup\s+/i, "").replace(/^\.aig\s+/i, "").trim();
     const args = raw.split(/[ \t]+/).filter(Boolean);
