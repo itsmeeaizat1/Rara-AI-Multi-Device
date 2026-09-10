@@ -565,6 +565,22 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
     if (chooser) return chooser(m, sock, db, prefix)
   }
 
+  // FIX BUG (owner 10 Sep 2026): fitur grup LAIN (goodbye dll) yang di-toggle
+  // dari DM tadinya nyimpen status ke jid DM — grup aslinya gak pernah ON,
+  // kelihatan "gak aktif di grupnya" padahal toggle sukses. Sekarang ditolak
+  // jelas: harus dijalankan di dalam grup.
+  if (!String(m.chat || "").endsWith("@g.us")) {
+    return m.reply(claraWrap("Switch Group", [
+      `Fitur : ${feature.label}`,
+      `Lokasi : chat pribadi`,
+      ``,
+      `Toggle fitur grup harus dijalankan *di dalam grup*`,
+      `agar status tersimpan ke grup yang benar.`,
+      ``,
+      `Masuk grup lalu ketik: \`${prefix}switch group ${featureName}${forceOff ? " off" : ""}\``,
+    ].join("\n")))
+  }
+
   const groupData = db.getGroup(m.chat) || {}
 
   if (forceOff) {
