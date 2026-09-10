@@ -408,6 +408,7 @@ async function main() {
           { name: "AnimeNotifier", fn: () => import("./src/lib/nova-auto-anime-notifier.js").then(m => m.initAnimeNotifier?.(sock)) },
           { name: "AutoAnimeWinbu", fn: () => import("./src/lib/nova-auto-anime.js").then(m => m.initAutoStart?.(sock)) },
           { name: "MovieNotifier", fn: () => import("./src/lib/nova-movie-notifier.js").then(m => m.initMovieNotifier?.(sock)) },
+          { name: "BolaNotifier", fn: () => import("./src/lib/nova-auto-bola-notifier.js").then(m => m.initBolaNotifier?.(sock)) },
           { name: "NovaWeb", fn: () => import("./src/lib/nova-web-server.js").then(m => m.initNovaWebServer?.(sock)) },
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
           { name: "Family100Harvest", fn: () => import("./src/lib/nova-family100-harvest.js").then(m => m.initAutoRefresh?.(sock)) },
