@@ -12,7 +12,7 @@ const pluginConfig = {
   name: "kategori",
   alias: ["kategori"],
   category: 'owner',
-  description: "📂 Manage kategori toko — lihat, filter produk per kategori",
+  description: "🏷️ Manage kategori toko — lihat, filter produk per kategori",
   usage: ".kategori — lihat semua kategori\n.kategori <nama> — lihat produk per kategori\n.kategori add <nama> — tambah kategori (owner)\n.kategori del <nama> — hapus kategori (owner)",
   example: ".kategori app",
   isOwner: false,

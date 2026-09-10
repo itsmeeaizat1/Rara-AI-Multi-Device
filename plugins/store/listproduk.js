@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       // Show available categories
       const allCats = [...new Set(products.map((p) => p.kategori || "umum"))];
       return m.reply(
-        `📂 *ᴋᴀᴛᴇɢᴏʀɪ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
+        `🏷️ *ᴋᴀᴛᴇɢᴏʀɪ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
         `Kategori tersedia: ${allCats.join(", ")}\n\n` +
         `Ketik \`${m.prefix}listproduk <kategori>\` untuk filter\n` +
         `Atau \`${m.prefix}listproduk all\` untuk lihat semua`
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
   let catInfo = "";
   if (!filterKat || filterKat === "all" || filterKat === "semua") {
     if (allCats.length > 1) {
-      catInfo = `📂 Kategori: ${allCats.join(", ")}\n`;
+      catInfo = `🏷️ Kategori: ${allCats.join(", ")}\n`;
       catInfo += `Filter: \`${m.prefix}listproduk <kategori>\`\n\n`;
     }
   }
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     txt += `   📊 Stok: ${stockDisplay} ${statusIcon}\n`;
     txt += `   🏷️ Tipe: ${typeLabel}\n`;
     if (p.kategori && p.kategori !== "umum")
-      txt += `   📂 Kategori: ${p.kategori}\n`;
+      txt += `   🏷️ Kategori: ${p.kategori}\n`;
     if (p.image) txt += `   🖼️ Gambar: Tersedia (.lihatproduk ${realIdx + 1})\n`;
     if (p.description)
       txt += `   📝 _${p.description.substring(0, 60)}${p.description.length > 60 ? "..." : ""}_\n`;

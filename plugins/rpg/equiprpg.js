@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
         msg += `✅ Berhasil equip!\n`;
         msg += `\n`;
         msg += `📦 Item: *${itemInfo.name}*\n`;
-        msg += `📂 Slot: *${SLOT_NAMES[itemInfo.type] || itemInfo.type}*\n`;
+        msg += `🎒 Slot: *${SLOT_NAMES[itemInfo.type] || itemInfo.type}*\n`;
         msg += `\n`;
         msg += `📊 *sᴛᴀᴛ ʙᴏɴᴜs*\n`;
         if (itemInfo.atk) msg += `⚔️ ATK: *+${itemInfo.atk}*\n`;
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         let msg = "";
         msg += `✅ Berhasil unequip!\n`;
-        msg += `📂 Slot: *${SLOT_NAMES[slot]}*\n`;
+        msg += `🎒 Slot: *${SLOT_NAMES[slot]}*\n`;
         msg += `📦 Item dikembalikan ke inventory\n`;
         
         await animGeneric(m, sock, '🛡️', 'Equipping item');

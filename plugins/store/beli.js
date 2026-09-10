@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   txt += `📦 *ᴅᴇᴛᴀɪʟ ᴘᴇꜱᴀɴᴀɴ:*\n`;
   txt += `${typeIcon} Produk: *${product.name}*\n`;
   txt += `🏷️ Tipe: *${typeLabel}*\n`;
-  if (product.kategori && product.kategori !== "umum") txt += `📂 Kategori: *${product.kategori}*\n`;
+  if (product.kategori && product.kategori !== "umum") txt += `🏷️ Kategori: *${product.kategori}*\n`;
   txt += `💰 Harga: *${formatPrice(product.price)}*\n`;
   if (product.originalPrice)
     txt += `🏷️ ~~${formatPrice(product.originalPrice)}~~\n`;

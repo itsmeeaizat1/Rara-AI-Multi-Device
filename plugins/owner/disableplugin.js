@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
 
     await m.reply(claraWrap("disableplugin", `✅ *Plugin Disabled*\n\n` +
         `📦 Plugin: *${plugin.config.name}*\n` +
-        `📁 Category: *${category}*\n` +
+        `🏷️ Category: *${category}*\n` +
         `📄 File: *${file}*\n` +
         `• Status: *Disabled*\n` +
         `\n` +

@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
         } catch (e) { console.error('[arsip.js]:', e.message); }
       }
       return m.reply(
-        `📁 *${count} grup diarsipkan*\n\nPrivate chat tidak bisa diarsipkan sekaligus (tidak ada daftar chat)`,
+        `🗄️ *${count} grup diarsipkan*\n\nPrivate chat tidak bisa diarsipkan sekaligus (tidak ada daftar chat)`,
       );
     } catch (err) {
       global.isFetchingGroups = false;
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return m.reply( "📁 *Arsip Chat*\n\n" +
+    return m.reply( "🗄️ *Arsip Chat*\n\n" +
         "`.arsip 628xxx` — Arsipkan chat\n" +
         "`.arsip` (di private chat) — Arsipkan chat ini\n" +
         "`.arsip` (reply pesan) — Arsipkan chat pengirim\n" +
@@ -74,8 +74,8 @@ async function handler(m, { sock }) {
     await sock.chatModify({ archive, lastMessages: [] }, targetJid);
     const target = targetJid.split("@")[0];
     return m.reply(archive
-        ? `📁 *Chat Diarsipkan*\n\nTarget: ${target}\nGunakan \`.arsip buka ${target}\` untuk membuka`
-        : `📂 *Arsip Dibuka*\n\nTarget: ${target}`);
+        ? `🗄️ *Chat Diarsipkan*\n\nTarget: ${target}\nGunakan \`.arsip buka ${target}\` untuk membuka`
+        : `🗄️ *Arsip Dibuka*\n\nTarget: ${target}`);
   } catch (err) {
     return m.reply(claraWrap("arsip", `❌ Gagal: ${err.message}`));
   }

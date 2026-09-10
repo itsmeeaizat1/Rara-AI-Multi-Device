@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
       });
       let body = `🏪 TOKO BAHAN\n\n💵 Gold : ${formatRp(player.gold)}\n`;
       for (const [cat, ings] of Object.entries(categories)) {
-        body += `\n📂 ${cat}\n` + ings.map((ing) => `   ${ing.emoji} ${ing.name} — ${formatRp(ing.price)}`).join("\n");
+        body += `\n🧺 ${cat}\n` + ings.map((ing) => `   ${ing.emoji} ${ing.name} — ${formatRp(ing.price)}`).join("\n");
       }
       body += `\n\n💡 Beli: ${P}cooking beli [nama bahan] [jumlah]`;
       return m.reply(novaRpgBox("cooking", body));

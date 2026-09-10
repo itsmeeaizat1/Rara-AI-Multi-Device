@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = m.text?.trim();
     if (!text) {
       { const __navText = (novaCaption({
-  emoji: "📁",
+  emoji: "🎙️",
   name: "aivoicefuture",
   description: "Text ke suara realistik multi-bahasa",
   usage: `${prefix}aivoice <text>`,

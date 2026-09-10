@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
       `📋 *Info Plugin*\n\n` +
         `📛 Nama: \`${info.name || "-"}\`\n` +
         `🏷️ Alias: \`${aliases}\`\n` +
-        `📁 Category: \`${info.category || "-"}\`\n` +
+        `🏷️ Category: \`${info.category || "-"}\`\n` +
         `📄 Desc: ${info.description || "-"}\n` +
         `📝 Usage: \`${info.usage || "-"}\`\n` +
         `📌 Example: \`${info.example || "-"}\`\n` +

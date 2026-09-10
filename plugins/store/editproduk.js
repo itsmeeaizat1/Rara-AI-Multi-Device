@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
             `*ᴅɪꜱᴋᴏɴ* 🏷️ — Harga asli/coret (angka, 0 untuk hapus)\n` +
             `*ꜱᴛᴏᴋ* 📊 — Jumlah stok atau \`unlimited\`\n` +
             `*ᴛɪᴘᴇ* 🔑📦 — \`digital\` atau \`fisik\`\n` +
-            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* 📝 — Deskripsi produk\n*ᴋᴀᴛᴇɢᴏʀɪ* 📂 — Kategori produk (app, game, sembako, ppob, umum)\n` +
+            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* 📝 — Deskripsi produk\n*ᴋᴀᴛᴇɢᴏʀɪ* 🏷️ — Kategori produk (app, game, sembako, ppob, umum)\n` +
             `*ᴅᴇᴛᴀɪʟ* 🔒 — Info rahasia (dikirim setelah beli)\n` +
             `*ɢᴀᴍʙᴀʀ* 🖼️ — Upload gambar baru (reply gambar)\n` +
             `*ᴠɪᴅᴇᴏ* 🎬 — Upload video baru (reply video)\n\n` +
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
             break
         }
         case 'kategori': {
-            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *ᴋᴀᴛᴇɢᴏʀɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.* Minimal 2 karakter 📂`))
+            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *ᴋᴀᴛᴇɢᴏʀɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.* Minimal 2 karakter 🏷️`))
             product.kategori = value.toLowerCase().trim()
             break
         }
@@ -195,7 +195,7 @@ async function handler(m, { sock }) {
     reply += `\n`
     reply += `${typeIcon} Tipe: *${typeLabel}*\n`
     reply += `📊 Stok: *${product.stock === -1 ? '♾️ Unlimited' : product.stock}*\n`
-    if (product.kategori) reply += `📂 Kategori: *${product.kategori}*\n`
+    if (product.kategori) reply += `🏷️ Kategori: *${product.kategori}*\n`
     if (field === 'gambar') reply += `🖼️ Gambar: ✅\n`
     if (field === 'video') reply += `🎬 Video: ✅\n`
     reply += `\n👀 _Lihat perubahan: \`${m.prefix}listproduk\`_`
