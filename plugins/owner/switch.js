@@ -43,7 +43,7 @@ const pluginConfig = {
   ],
   category: "owner",
   description: 'Switch on/off semua fitur (channel, group, auto, command)',
-  usage: '.switch [status|channel|group|auto|fitur|semua]',
+  usage: '.switch [status|channel|group|auto|fitur|semua] | .switch <fitur> on|off [target]',
   example: '.switch status all\n.switch channel\n.switch group welcome\n.switch group welcome on 12036302xxx@g.us | on all | on list\n.switch group all on <target> (semua fitur grup)\n.switch auto autobackup on\n.switch auto all on|off (semua fitur otomatis)\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg\n.switch semua on|off (MASTER: semuanya)',
   isOwner: true,
   isPremium: false,
@@ -454,17 +454,27 @@ function getMode(cmd, args) {
     return `switchauto:${subResolved}:${explicitAction}`
   }
   if (a === 'fitur' || a === 'command' || a === 'cmd') return 'fitur'
-  if (a === 'status' || a === 'cek' || a === 'semua') return 'status'
+  if (a === 'status' || a === 'cek') return 'status'
+  // ═══ DIRECT FITUR (request owner 10 Sep 2026): ".switch <fitur> on|off [target]" ═══
+  // Fitur apapun bisa di-on/off LANGSUNG tanpa keyword subsistem — terpusat:
+  //   .switch welcome on          .switch welcome on all
+  //   .switch antilinkgc on <jid> .switch autoread on   .switch sewaRegister off
+  if (GROUP_ALIASES[a] || GROUP_FEATURES[a]) return 'direct:group'
+  if (AUTO_ALIASES[a] || AUTO_KEYS.includes(a)) return `direct:auto:${AUTO_ALIASES[a] || a}`
+  if (Object.keys(NOTIFY_EVENTS).some((k) => k.toLowerCase() === a)) return 'direct:channel'
   return 'menu'
 }
 
 // ═══════════════════════════════════════════════════════════
 // SALURAN HANDLER
 // ═══════════════════════════════════════════════════════════
-async function handleChannel(m, { sock, config: cfg }) {
+async function handleChannel(m, { sock, config: cfg, direct }) {
   const prefix = cfg?.command?.prefix || '.'
   const args = m.args || []
-  const subCmd = args[1]?.toLowerCase()
+  const rawSub = direct?.event || args[1]?.toLowerCase()
+  // canonical case-insensitive: "sewaregister" → "sewaRegister" (bug lama: key
+  // camelCase gak pernah match pas user ketik lowercase di jalur manapun)
+  const subCmd = rawSub ? (Object.keys(NOTIFY_EVENTS).find((k) => k.toLowerCase() === rawSub) || rawSub) : rawSub
 
   if (!subCmd || subCmd === 'status' || subCmd === 'cek') {
     const statuses = getAllNotifyStatus()
@@ -495,7 +505,7 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
   if (NOTIFY_EVENTS[subCmd]) {
     // ON/OFF terpusat (request owner 10 Sep 2026): ".switch channel <event> on|off"
     // eksplisit kayak group/auto — tanpa verb = toggle lama tetap jalan.
-    const verb = (args[2] || '').toLowerCase()
+    const verb = direct?.verb || (args[2] || '').toLowerCase()
     const current = getAllNotifyStatus()[subCmd].enabled
     const newVal = verb === 'on' ? true : verb === 'off' ? false : !current
     if (newVal === current && (verb === 'on' || verb === 'off'))
@@ -557,13 +567,19 @@ async function sendGroupTargetPicker(m, sock, prefix, feature, featureName, forc
   return { handled: true }
 }
 
-async function handleGroup(m, { sock, config: cfg, forceOff }) {
+async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
   const db = getDatabase()
   const prefix = cfg?.command?.prefix || '.'
   const args = m.args || []
   let featureName, mode, target
 
-  if (forceOff) {
+  if (direct) {
+    // ".switch <fitur> on|off [target]" — fitur di args[0], parsing terpusat
+    featureName = direct.featureName
+    mode = direct.mode
+    target = direct.target
+    if (mode === 'off' || mode === 'false' || mode === '0') forceOff = true
+  } else if (forceOff) {
     // Dari .switch off <fitur> / .disable <fitur>: args = [<fitur>, <target>]
     featureName = (args[0] || '').toLowerCase()
     target = (args[1] || '').toLowerCase()
@@ -1274,6 +1290,22 @@ async function handler(m, { sock, config: cfg }) {
     if (mode === 'group:off') return handleGroup(m, { sock, config: cfg, forceOff: true })
     if (mode === 'fitur') return handleFitur(m, { sock, config: cfg })
     if (mode === 'master') return handleMaster(m, { sock, config: cfg })
+    // ═══ DIRECT FITUR: ".switch <fitur> on|off [target]" — terpusat ═══
+    if (mode === 'direct:group')
+      return handleGroup(m, { sock, config: cfg, direct: {
+        featureName: (args[0] || '').toLowerCase(),
+        mode: (args[1] || '').toLowerCase(),
+        target: (args[2] || '').toLowerCase(),
+      } })
+    if (mode.startsWith('direct:auto:')) {
+      const autoKey = mode.split(':')[2]
+      return handleAuto(m, { sock, config: cfg, autoKey, explicitAction: (args[1] || '').toLowerCase() })
+    }
+    if (mode === 'direct:channel')
+      return handleChannel(m, { sock, config: cfg, direct: {
+        event: (args[0] || '').toLowerCase(),
+        verb: (args[1] || '').toLowerCase(),
+      } })
     if (mode === 'status') return handleStatusAll(m, { sock, config: cfg })
     if (mode === 'auto') return handleAuto(m, { sock, config: cfg })
     if (mode.startsWith('auto:')) {
