@@ -910,6 +910,29 @@ export function novaGangguan(fitur = "Error") {
  * @param {object} opts - { sc: true (default, smallcaps), padding: 1 }
  * @returns {string} Box text siap dikirim
  */
+// novaAiUsage — DESAIN USAGE AI ala owner (10 Sep 2026):
+// 「 ✦ Gemini ✦ 」 + 📝 Cara Pakai + 💡 Contoh + ✨ Model aktif +
+// 📋 daftar model tersedia (satu model per baris).
+// Label di-smallcaps (aturan owner); command + nama model VERBATIM —
+// identifier yang harus bisa diketik user persis (prinsik "URL tetap persis").
+export function novaAiUsage(brand, { prefix = ".", command, modelAktif = null, models = [], extra = [] } = {}) {
+  const cmd = `${prefix}${command || brand}`;
+  const lines = [
+    `📝 ${toSC("Cara Pakai")}:`,
+    `${cmd} [pertanyaan]`,
+    "",
+    `💡 ${toSC("Contoh")}:`,
+    `${cmd} apa itu AI?`,
+  ];
+  if (modelAktif) lines.push("", `✨ ${toSC("Model")}:`, modelAktif);
+  if (Array.isArray(models) && models.length) {
+    lines.push("", `📋 ${toSC("Model Tersedia")}:`);
+    for (const mdl of models) lines.push(" " + String(mdl));
+  }
+  for (const l of extra) lines.push("", l);
+  return novaBox(brand, lines);
+}
+
 export function novaBox(header, lines = [], opts = {}) {
   // REWORK 2026-09-07 (owner: hapus garis di semua reply) — sama seperti
   // buildBox: header 「 ✦ Title ✦ 」, isi polos, sub-header 「 sub 」,
