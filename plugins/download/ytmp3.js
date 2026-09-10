@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/ytmp3 → Sanka AIO → ytdl fallback
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -58,7 +58,12 @@ async function getAudioDownload(url) {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuide("YTmp3", "Kirim URL YouTube yang ingin kamu konversi ke audio MP3!", `${m.prefix}ytmp3 https://youtube.com/watch?v=xxx`));
+    return m.reply(novaDlUsage("YTmp3", {
+      prefix: m.prefix,
+      command: m.command || "ytmp3",
+      cara: [`${m.prefix}${m.command || "ytmp3"} [link youtube]`],
+      contoh: [`${m.prefix}${m.command || "ytmp3"} https://youtu.be/xxx`],
+    }));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
     return m.reply(novaGuide("YTmp3", "Link-nya harus URL YouTube yang valid ya!", `${m.prefix}ytmp3 https://youtu.be/xxx`));

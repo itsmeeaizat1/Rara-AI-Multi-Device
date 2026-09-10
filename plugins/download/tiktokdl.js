@@ -2,7 +2,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
@@ -140,16 +140,18 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
   const command = m?.command;
   if (!text) {
-    return m.reply(claraWrap("TikTok", [
-      `📌 Kirim link video TikTok ATAU keyword buat cari video ala .play:`,
-      ``,
-      `💡 Contoh:`,
-      `${prefix + command} https://vt.tiktok.com/xxx`,
-      `${prefix + command} viral`,
-      ``,
-      `💡 Abis itu pilih nomornya:`,
-      `${prefix + command} 2`,
-    ]), { commandName: "tiktok" });
+    return m.reply(novaDlUsage("TikTok", {
+      prefix,
+      command,
+      cara: [
+        `${prefix + command} [link]`,
+        `${prefix + command} [keyword]`,
+      ],
+      contoh: [
+        `${prefix + command} https://vt.tiktok.com/xxx`,
+        `${prefix + command} viral`,
+      ],
+    }), { commandName: "tiktok" });
   }
   // ─── Pilih hasil pencarian sebelumnya (ala .play): .tt 2 ───
   const isUrl = /https?:\/\/|tiktok\.com|vt\.tiktok|douyin/i.test(text);
