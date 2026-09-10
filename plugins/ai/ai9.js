@@ -36,17 +36,17 @@ async function handler(m, { sock, args, botConfig }) {
   const aiCfg = botConfig?.aiHelp || {};
 
   // ── VISION: gambar di-attach (caption = pertanyaan) atau di-reply ──
-  const hasImage = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
+  const hasImage = (m.quoted && m.quoted.isImage) || m.isImage; // FIX 10 Sep: flags isImage
   if (hasImage && sub !== "status" && sub !== "list" && sub !== "reset") {
     try {
       await m.react("🕒");
-      const buffer = await sock.downloadMediaMessage(m.quoted || m);
+      const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
       if (!buffer?.length) {
         await m.react("❌");
         return m.reply(novaBox("AI Router", ["Gagal download gambar — coba kirim ulang."]));
       }
       const prompt =
-        m.msg?.imageMessage?.caption?.trim() ||
+        (m.isImage && m.message?.imageMessage?.caption?.trim()) || // FIX 10 Sep: caption dari m.message
         m.text?.trim() ||
         "Analisis gambar ini dan jelaskan dengan detail dalam bahasa Indonesia.";
       const result = await GeminiVision({

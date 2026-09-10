@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
   await m.react("🕒");
 
-    const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
+    const media = (m.quoted && m.quoted.isImage) || m.isImage; // FIX 10 Sep: flags isImage
     if (!media) {
       const text =
         novaCaption({
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    const buffer = await sock.downloadMediaMessage(m.quoted || m);
+    const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
     const base64 = Buffer.from(buffer).toString("base64");
     const dataUrl = `data:image/png;base64,${base64}`;
 

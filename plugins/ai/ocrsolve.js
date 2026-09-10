@@ -39,7 +39,7 @@ async function doOcrAnalysis(m, sock, mode) {
 
     // Get image from reply or from message itself
     const msg = m.message || {};
-    const imageMsg = msg.imageMessage || m.quoted?.msg?.imageMessage;
+    const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) {
       await m.reply(claraWrap("OCR Solve", [
         "Tidak ada foto terdeteksi.",
@@ -55,7 +55,7 @@ async function doOcrAnalysis(m, sock, mode) {
 
     try { await sock.sendReaction(m.key.remoteJid, "🔍", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
 
-    const buffer = await sock.downloadMediaMessage(m.quoted || m);
+    const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download(); // FIX 10 Sep
     if (!buffer || buffer.length < 500) {
       await m.reply(claraWrap("OCR Solve", "Gagal download gambar."));
       return { handled: true };
@@ -275,7 +275,7 @@ export async function handleAutoOcrSolve(m, sock) {
     if (!cfg || !cfg.enabled) return false;
 
     const msg = m.message || {};
-    const imageMsg = msg.imageMessage || m.quoted?.msg?.imageMessage;
+    const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) return false;
 
     if (m.fromMe) return false;
@@ -295,7 +295,7 @@ export async function handleAutoOcrSolve(m, sock) {
 
     try { await sock.sendReaction(m.key.remoteJid, "🔍", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
 
-    const buffer = await sock.downloadMediaMessage(m.quoted || m);
+    const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download(); // FIX 10 Sep
     if (!buffer || buffer.length < 500) return false;
 
     const base64 = Buffer.from(buffer).toString("base64");

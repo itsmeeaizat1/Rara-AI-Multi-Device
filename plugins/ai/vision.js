@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
 
     // Cek apakah ada gambar (attach atau reply)
-    const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
+    const media = (m.quoted && m.quoted.isImage) || m.isImage; // FIX 10 Sep: m.msg gak ada di serializer — pake flags isImage
     if (!media) {
       const guide = novaCaption({
         emoji: "🔍",
@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
 
     // Download gambar
-    const buffer = await sock.downloadMediaMessage(m.quoted || m);
+    const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
     if (!buffer || buffer.length === 0) {
       await m.react("❌");
       return m.reply(claraWrap("vision", "Gagal download gambar. Coba kirim ulang.", "error"));

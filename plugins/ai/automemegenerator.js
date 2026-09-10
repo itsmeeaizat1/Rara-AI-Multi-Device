@@ -38,7 +38,7 @@ async function doMemeAnalysis(m, sock, style) {
     }
 
     const msg = m.message || {};
-    const imageMsg = msg.imageMessage || m.quoted?.msg?.imageMessage;
+    const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) {
       await m.reply(claraWrap("Auto Meme", [
         "Tidak ada foto terdeteksi.",
@@ -55,7 +55,7 @@ async function doMemeAnalysis(m, sock, style) {
 
     try { await sock.sendReaction(m.key.remoteJid, "🎭", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }
 
-    const buffer = await sock.downloadMediaMessage(m.quoted || m);
+    const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download(); // FIX 10 Sep
     if (!buffer || buffer.length < 500) {
       await m.reply(novaError("AutoMeme", "Gagal download gambar nih"));
       return { handled: true };
@@ -294,7 +294,7 @@ export async function handleAutoMemeGen(m, sock) {
     if (!cfg || !cfg.enabled) return false;
 
     const msg = m.message || {};
-    const imageMsg = msg.imageMessage || m.quoted?.msg?.imageMessage;
+    const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) return false;
 
     if (m.fromMe) return false;
@@ -314,7 +314,7 @@ export async function handleAutoMemeGen(m, sock) {
 
     try { await sock.sendReaction(m.key.remoteJid, "🎭", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }
 
-    const buffer = await sock.downloadMediaMessage(m.quoted || m);
+    const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download(); // FIX 10 Sep
     if (!buffer || buffer.length < 500) return false;
 
     const base64 = Buffer.from(buffer).toString("base64");
