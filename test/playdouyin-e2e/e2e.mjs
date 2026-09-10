@@ -1,5 +1,6 @@
-// E2E .playdouyin — DOUYIN MURNI (gak nyampur TikTok), search & resolve
-// di-inject biar offline. Reaksi ⏳→🐣 wajib (standar bot).
+// E2E .douyin MERGED (rename dr .playdouyin — request owner 10 Sep): satu
+// command dua mode — keyword search (injected) + link download (injected).
+// Douyin murni, TikTok DITOLAK. Reaksi ⏳→🐣 wajib.
 import { initDatabase } from "../../src/lib/nova-database.js";
 import {
   setDouyinSearchRunner,
@@ -49,14 +50,14 @@ setDouyinSearchRunner(async (actorId, input) => {
   return [RAW_VIDEO];
 });
 
-const { config, handler } = await import("../../plugins/search/playdouyin.js");
+const { config, handler } = await import("../../plugins/download/douyindl.js");
 
 const replies = [];
 const sent = [];
 const reacts = [];
 function mockM(args) {
   return {
-    args, text: args.join(" "), prefix: ".", command: "playdouyin",
+    args, text: args.join(" "), prefix: ".", command: "douyin",
     pushName: "Tester", chat: "62899@c.us", sender: "62899",
     reply: async (t) => { replies.push(String(t)); },
     react: async (e) => { reacts.push(e); },
@@ -88,7 +89,7 @@ replies.length = 0; sent.length = 0;
 await handler(mockM(["kucing", "foto"]), { sock: mockSock });
 check("search foto slide: kirim semua image", sent.length === 3 && sent.every((s) => s.payload?.image?.url));
 
-// 4. link douyin → resolve via resolver injected
+// 4. resolve link douyin (level LIB — last-mile fallback plugin pakai ini)
 setDouyinResolver(async (url) => ({
   type: "video",
   title: "Video dari link",
@@ -100,15 +101,24 @@ setDouyinResolver(async (url) => ({
   images: [],
   music: { url: "", title: "" },
 }));
-replies.length = 0; sent.length = 0;
-await handler(mockM(["https://v.douyin.com/abc123/"]), { sock: mockSock });
-check("resolve link douyin: video terkirim", sent.length === 1 && sent[0].payload?.video?.url === "https://dl.example/douyin.mp4");
+const { resolvePlayDouyin } = await import("../../src/lib/nova-playdouyin.js");
+const r4 = await resolvePlayDouyin("https://v.douyin.com/abc123/");
+check("resolve link douyin (lib): video no-watermark", r4.item?.video?.noWatermark === "https://dl.example/douyin.mp4");
+// foto slide via lib
+setDouyinResolver(async () => ({
+  type: "photo", title: "Slide", cover: "", link: "x",
+  author: { name: "a", handle: "" }, stats: {},
+  video: { noWatermark: "", hd: "", watermark: "" },
+  images: ["https://img.example/1.webp", "https://img.example/2.webp"],
+  music: { url: "", title: "" },
+}));
+const r4b = await resolvePlayDouyin("https://v.douyin.com/slide/");
+check("resolve foto slide (lib): 2 images", r4b.item?.type === "photo" && r4b.item.images.length === 2);
 
-// 5. link douyin gak valid / resolve gagal → error jelas
+// 5. resolve gagal → error jelas
 setDouyinResolver(async () => null);
-replies.length = 0; sent.length = 0;
-await handler(mockM(["https://v.douyin.com/broken/"]), { sock: mockSock });
-check("resolve gagal: pesan error", replies.length === 1 && replies[0].includes("❌"));
+const r5 = await resolvePlayDouyin("https://v.douyin.com/broken/");
+check("resolve gagal: pesan error", !r5.item && !!r5.error);
 
 // 6. LINK TIKTOK → DITOLAK (gak nyampur)
 setDouyinResolver(async (url) => ({ type: "video", title: "x", video: { noWatermark: url }, images: [] }));
@@ -144,8 +154,8 @@ await searchPlayDouyin("cache-test");
 check("cache keyword: runner cuma dipanggil 1x", calls === 1);
 
 // 11. config plugin
-check("config: nama playdouyin", config.name === "playdouyin");
-check("config: alias ada douyinplay", (config.alias || []).includes("douyinplay"));
+check("config: nama douyin", config.name === "douyin");
+check("config: alias playdouyin tetap jalan (backward compat)", (config.alias || []).includes("playdouyin"));
 check("config: cooldown 15", config.cooldown === 15);
 
 w(`\n${pass}/${pass + fail} PASS`);

@@ -2,23 +2,36 @@
 // douyin — Download video/audio/STORY dari Douyin (TikTok China)
 // Primary: SnapTik (snaptik.fi — request owner 2026-09-06, "Support
 // Download Story Juga", port dari script owner) → Fallback: IkyyXD → azbry
-// Command: .douyin (alias: dy, douyindl — muscle memory lama tetap jalan)
+// Command: .douyin (alias: dy, douyindl, playdouyin — muscle memory tetap jalan)
+//
+// 2026-09-10 (request owner "ubah cmd dr playdouyin jadi douyin"):
+// .douyin sekarang DUA MODE dalam satu command:
+//   • .douyin <url douyin>   → download video/audio/story (ALUR LAMA, gak diubah)
+//   • .douyin <keyword>      → search video/foto slide douyin via Apify
+//     (douyin murni — link/keyword TikTok DITOLAK, arah .playtiktok/.tiktok)
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { snaptikDouyin } from "../../src/scraper/snaptik-douyin.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import {
+  isDouyinLink,
+  isTikTokLink,
+  searchPlayDouyin,
+  pickRandom,
+  pickBestVideoUrl,
+} from "../../src/lib/nova-playdouyin.js";
 import axios from "axios";
 import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyin",
-  alias: ["douyin", "dy", "douyindl"],
+  alias: ["douyin", "dy", "douyindl", "playdouyin", "douyinplay", "playdouy", "douyinsearch", "dyplay", "pldouyin"],
   category: "download",
-  description: "Download video/audio/STORY dari Douyin (TikTok China) via SnapTik",
-  usage: ".douyin <url>",
-  example: ".douyin https://v.douyin.com/xxx",
+  description: "Douyin (TikTok China): download video/story dari link, ATAU search video/foto slide dari keyword",
+  usage: ".douyin <url douyin> | .douyin <keyword>",
+  example: ".douyin https://v.douyin.com/xxx / .douyin kucing lucu",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
-  cooldown: 10, energi: 1, isEnabled: true,
+  cooldown: 15, energi: 1, isEnabled: true,
 };
 
 // Builtin fallback — azbry API
@@ -26,21 +39,128 @@ async function azbryFetch(url, retries = 3) {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await axios.get(`https://api.azbry.com/api/downloader/douyin?url=${encodeURIComponent(url)}`, { timeout: 30000 });
-      if (res.data?.status && res.data?.result) return res.data;
+      return res.data;
     } catch (e) {
       if (i === retries - 1) throw e;
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 2000));
     }
   }
-  throw new Error("Gagal mengambil data dari server");
+}
+
+// ── MODE KEYWORD: search douyin (dari .playdouyin, douyin murni) ──
+async function handleKeywordSearch(m, sock, keyword) {
+  await m.react("🕒");
+  const r = await searchPlayDouyin(keyword);
+  if (r.error || !r.items.length) {
+    await m.react("❌");
+    return m.reply(claraWrap("Douyin", [
+      `❌ ${r.error}`,
+      ``,
+      `💡 Douyin = TikTok China, sering ngeblok pencarian beberapa menit.`,
+      `Coba lagi bentar, atau pakai mode link: ${m.prefix}douyin <link douyin>`,
+    ]));
+  }
+  const item = pickRandom(r.items);
+  if (!item) {
+    await m.react("❌");
+    return m.reply(novaGagal("Douyin"));
+  }
+
+  const title = (item.title || "").slice(0, 120).replace(/\n+/g, " ").trim() || "Douyin";
+  const author = (item.author?.name || item.author?.handle || "").slice(0, 40);
+  const stats = item.stats || {};
+  const fmt = (n) => (n >= 1000 ? (n / 1000).toFixed(1) + "K" : String(n || 0));
+
+  if (item.type === "photo" && item.images?.length) {
+    const cap =
+      `📸 Foto Slide Douyin\n\n` +
+      `📝 ${title}\n` +
+      (author ? `👤 ${author}\n` : "") +
+      `🖼️ ${item.images.length} foto\n` +
+      (item.link ? `\n🔗 ${item.link}\n` : "") +
+      `🔖 Sumber: ${r.source}`;
+    await sock.sendMessage(m.chat, { image: { url: item.images[0] }, caption: cap });
+    for (const img of item.images.slice(1, 10)) {
+      await new Promise((res) => setTimeout(res, 800));
+      await sock.sendMessage(m.chat, { image: { url: img } }).catch(() => {});
+    }
+    await m.react("🐣");
+    return;
+  }
+
+  const videoUrl = pickBestVideoUrl(item);
+  if (!videoUrl) {
+    await m.react("❌");
+    return m.reply(claraWrap("Douyin", [`❌ Link media gak ketemu.`]));
+  }
+  const cap =
+    `🎬 Video Douyin\n\n` +
+    `📝 ${title}\n` +
+    (author ? `👤 ${author}\n` : "") +
+    (stats.plays || stats.likes
+      ? `👀 ${fmt(stats.plays)} | ❤️ ${fmt(stats.likes)} | 💬 ${fmt(stats.comments)} | ↗️ ${fmt(stats.shares)}\n`
+      : "") +
+    `\n🎥 No Watermark\n` +
+    (item.link ? `🔗 ${item.link}\n` : "") +
+    `🔖 Sumber: ${r.source}`;
+  await sock.sendMessage(m.chat, {
+    video: { url: videoUrl }, caption: cap,
+    contextInfo: mediaPreviewCard({
+      title,
+      body: `Douyin • by ${author || "Unknown"}`,
+      sourceUrl: item.link || "https://www.douyin.com",
+      thumbnailUrl: item.cover || "",
+      mediaType: 2,
+    }),
+  }, { quoted: m });
+  await m.react("🐣");
 }
 
 async function handler(m, { sock }) {
-  const text = m.text?.trim();
+  const args = m.args || [];
+  const text = args.join(" ").trim() || (m.text || "").trim();
+
   if (!text) {
-    return m.reply(novaNoInput("Douyin", "Kirim URL video/STORY Douyin (TikTok China) yang mau didownload!", `${m.prefix}douyin https://v.douyin.com/xxx`));
+    return m.reply(claraWrap("Douyin", [
+      `📌 Douyin (TikTok China) — dua mode:`,
+      ``,
+      `${m.prefix}douyin <keyword> — cari video/foto slide douyin`,
+      `${m.prefix}douyin <link douyin> — download video/story no watermark`,
+      ``,
+      `💡 Contoh:`,
+      `${m.prefix}douyin kucing lucu`,
+      `${m.prefix}douyin https://v.douyin.com/xxx`,
+      ``,
+      `❗ Khusus Douyin — TikTok pakai ${m.prefix}playtiktok / ${m.prefix}tiktok`,
+    ]));
   }
 
+  // link TikTok → DITOLAK (douyin murni, gak nyampur tiktok)
+  if (isTikTokLink(text)) {
+    await m.react("❌");
+    return m.reply(claraWrap("Douyin", [
+      `❗ Ini link TikTok — douyin hanya untuk Douyin (TikTok China).`,
+      ``,
+      `TikTok → pakai ${m.prefix}playtiktok atau ${m.prefix}tiktok`,
+    ]));
+  }
+
+  // bukan URL → MODE KEYWORD SEARCH (search douyin via Apify)
+  if (!/https?:\/\//i.test(text)) {
+    if (text.length < 2) {
+      await m.react("❌");
+      return m.reply(claraWrap("Douyin", [`Keyword minimal 2 huruf.`]));
+    }
+    try {
+      return await handleKeywordSearch(m, sock, text);
+    } catch (err) {
+      console.error("[douyin] keyword search error:", err.message || err);
+      await m.react("❌");
+      return m.reply(novaGangguan("Douyin"));
+    }
+  }
+
+  // URL douyin → MODE DOWNLOAD (ALUR LAMA, gak diubah)
   try {
     await m.react("🕒");
 
@@ -137,6 +257,37 @@ async function handler(m, { sock }) {
       return;
     } catch (e) {
       console.error("[douyindl.js] azbry fallback failed:", e.message);
+    }
+
+    // Step 2.5: Last-mile fallback — snapvideotools (video + FOTO SLIDE douyin)
+    try {
+      const { resolvePlayDouyin } = await import("../../src/lib/nova-playdouyin.js");
+      const r = await resolvePlayDouyin(text);
+      if (r?.item) {
+        const item = r.item;
+        if (item.type === "photo" && item.images?.length) {
+          const cap =
+            `📸 Foto Slide Douyin\n\n` +
+            `📝 ${String(item.title || "").slice(0, 120).replace(/\n+/g, " ").trim() || "Douyin"}\n` +
+            `🖼️ ${item.images.length} foto\n` +
+            `🔖 Sumber: ${r.source}`;
+          await sock.sendMessage(m.chat, { image: { url: item.images[0] }, caption: cap });
+          for (const img of item.images.slice(1, 10)) {
+            await new Promise((res) => setTimeout(res, 800));
+            await sock.sendMessage(m.chat, { image: { url: img } }).catch(() => {});
+          }
+          await m.react("🐣");
+          return;
+        }
+        const videoUrl = pickBestVideoUrl(item);
+        if (videoUrl) {
+          await m.react("🐣");
+          await sock.sendMessage(m.chat, { video: { url: videoUrl } }, { quoted: m });
+          return;
+        }
+      }
+    } catch (e) {
+      console.error("[douyindl.js] snapvideotools fallback failed:", e.message);
     }
 
     await m.react("❌");
