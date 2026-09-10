@@ -68,6 +68,18 @@ export function buildRichResponse(parts, headerText = "", footerText = "") {
         },
       };
     }
+    if (part.type === "video") {
+      return {
+        view_model: {
+          primitive: {
+            __typename: "GenAIaeacdsnwVideoPrimitive",
+            video: part.url,
+            duration: part.duration || 0,
+          },
+          __typename: "GenAISingleLayoutViewModel",
+        },
+      };
+    }
     return null;
   }).filter(Boolean);
   return {
