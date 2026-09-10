@@ -1,17 +1,23 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, 
-  separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+// .ai-set (alias .ai) — panel pengaturan AI.
+// REWORK DESAIN 2026-09-11 (owner: "fitur .ai berantakan keliatannya"):
+// - panel = novaInfoSections (「 ✦ section ✦ 」 label smallcaps : value verbatim)
+// - konfirmasi = novaBox 「 ✦ AI Settings ✦ 」 + "Berhasil kak 🥳"
+// - salah pemakaian/value kosong = novaSalah (singkat, tanpa box)
+// - aksi owner ditolak / error = novaError
+import {
+  novaError, novaSalah, novaBerhasil,
+  novaInfoSections, novaBox, toSC,
+} from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-service.js";
-
 
 const pluginConfig = {
   name: "ai-set",
   alias: ["ai-set", "ai"],
   category: "ai",
   description: "Set pengaturan AI lewat chat (apiKey, endpoint, model, provider)",
-  usage: ".ai-set <aksi> <nilai>",
-  example: ".ai-set apiKey sk-xxx\n.ai-set provider gemini\n.ai-set model gpt-4o-mini\n.ai-set on",
+  usage: ".ai-set — panel status & daftar perintah\n.ai-set provider <nama> — ganti provider\n.ai-set model <model> — ganti model\n.ai-set apiKey [openai|gemini|anthropic] <key> — set API key\n.ai-set endpoint <url> — set endpoint\n.ai-set prompt <teks> — set system prompt\n.ai-set on/off — nyalakan/matikan AI\n.ai-set mode offline/online — ganti mode",
+  example: ".ai-set provider gemini\n.ai-set model gpt-4o-mini\n.ai-set apiKey openai sk-xxx",
   isOwner: true,
   isPremium: false,
   isGroup: true,
@@ -21,116 +27,99 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-function getAIHelpConfig(botConfig) {
-  return (botConfig && botConfig.aiHelp) ? botConfig.aiHelp : {};
+// ─── Konfirmasi sukses: 「 ✦ AI Settings ✦ 」 + label : value + Berhasil ───
+function okBox(lines) {
+  return novaBox("AI Settings", [...lines, "", novaBerhasil()]);
 }
 
-function buildProviderList(prefix) {
-  const lines = Object.entries(DEFAULT_PROVIDERS).map(([key, provider]) => {
-    const models = (provider.models || []).slice(0, 3).join(", ");
-    return `${provider.name} (${key})\n  Model: ${models}\n  Default: ${provider.defaultModel}`;
-  });
+// ─── Panel utama: status + key + provider tersedia + daftar perintah ───
+function buildStatusPanel(prefix, aiHelpConfig = {}) {
+  const enabled = aiHelpConfig.enabled !== false;
+  const apiKey = String(aiHelpConfig.apiKey || "");
+  const maskedKey = apiKey ? `${apiKey.slice(0, 6)}...${apiKey.slice(-4)}` : "Belum diisi";
+  const prompt = String(aiHelpConfig.systemPrompt || "-");
+  const promptShort = prompt.length > 80 ? `${prompt.slice(0, 80)}...` : prompt;
+  const keyStatus = (k) => (aiHelpConfig[`${k}ApiKey`] ? "Terpasang ✅" : "Belum ❌");
 
-  return [
-    `Berikut daftar provider bawaan:`,
-    "",
-    ...lines,
-    "",
-    `Kamu juga bisa tambah provider custom dengan *${prefix}ai-addprovider*`,
-    `Untuk pakai: *${prefix}multi-ai <provider> <pesan>*`,
+  const info = [
+    "AI Settings",
+    { label: "Status", value: enabled ? "ON ✅" : "OFF ❌" },
+    { label: "Provider", value: String(aiHelpConfig.provider || "openai") },
+    { label: "Model", value: String(aiHelpConfig.model || "gpt-4o-mini") },
+    { label: "Mode", value: String(aiHelpConfig.mode || "online") },
+    { label: "Endpoint", value: String(aiHelpConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions") },
+    { label: "API Key", value: maskedKey },
+    { label: "System Prompt", value: promptShort },
+    "Key Terpasang",
+    { label: "OpenAI", value: keyStatus("openai") },
+    { label: "Gemini", value: keyStatus("gemini") },
+    { label: "Anthropic", value: keyStatus("anthropic") },
+    "Provider Tersedia",
+    ...Object.entries(DEFAULT_PROVIDERS).map(([key, p]) => ({
+      label: key,
+      value: `${p.name} — ${p.defaultModel}`,
+    })),
   ];
+
+  const cmdLines = [
+    `${prefix}ai-set provider <nama> — ganti provider aktif`,
+    `${prefix}ai-set model <model> — ganti model`,
+    `${prefix}ai-set apiKey <key> — set API key fallback`,
+    `${prefix}ai-set apiKey openai|gemini|anthropic <key> — set key per provider`,
+    `${prefix}ai-set endpoint <url> — set endpoint`,
+    `${prefix}ai-set prompt <teks> — set system prompt`,
+    `${prefix}ai-set on/off — nyalakan/matikan AI`,
+    `${prefix}ai-set mode offline/online — ganti mode`,
+    `${prefix}ai-addprovider — tambah provider custom`,
+  ];
+
+  // novaInfoSections udah diakhiri \n — cukup 1 \n biar cuma 1 baris kosong pemisah
+  return novaInfoSections(info) + "\n" + novaBox("Perintah", cmdLines);
 }
 
 async function handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
+  const prefix = botConfig.command?.prefix || ".";
   try {
-  await m.react("🕒");
+    await m.react("🕒");
     const raw = (m.text || "").trim();
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const action = (parts[1] || "").toLowerCase();
     const value = parts.slice(2).join(" ").trim();
 
-    const aiHelpConfig = getAIHelpConfig(botConfig);
-    const enabled = aiHelpConfig.enabled !== false;
-    const currentProvider = String(aiHelpConfig.provider || "openai");
-    const currentModel = String(aiHelpConfig.model || "gpt-4o-mini");
-    const currentEndpoint = String(aiHelpConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions");
-
     if (!action || action === "list" || action === "daftar" || action === "status") {
-      const maskedKey = aiHelpConfig.apiKey ? `${String(aiHelpConfig.apiKey).slice(0, 6)}...${String(aiHelpConfig.apiKey).slice(-4)}` : "Belum diisi";
-      const text =
-        claraWrap("AI Settings", [`Status AI: *${enabled ? "ON" : "OFF"}*`,
-          `Provider: *${currentProvider}*`,
-          `Model: *${currentModel}*`,
-          `Endpoint: *${currentEndpoint}*`,
-          `API Key: *${maskedKey}*`,
-          `OpenAI Key: *${aiHelpConfig.openaiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `Gemini Key: *${aiHelpConfig.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `Anthropic Key: *${aiHelpConfig.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `System Prompt: *${String(aiHelpConfig.systemPrompt || "").slice(0, 80)}...*`].join("\n")) +
-        claraWrap("Provider", buildProviderList(prefix)) +
-        claraWrap("Perintah", [`*${prefix}ai-set list* — lihat pengaturan AI`, `*${prefix}ai-set provider <nama>* — ganti provider`, `*${prefix}ai-set model <model>* — ganti model`, `*${prefix}ai-set apiKey <key>* — set API key (fallback)`, `*${prefix}ai-set apiKey openai <key>* — set OpenAI key`, `*${prefix}ai-set apiKey gemini <key>* — set Gemini key`, `*${prefix}ai-set apiKey anthropic <key>* — set Anthropic key`, `*${prefix}ai-set endpoint <url>* — set endpoint`, `*${prefix}ai-set prompt <teks>* — set system prompt`, `*${prefix}ai-set on/off* — nyalakan/matikan AI`, `*${prefix}ai-set mode offline/online* — ganti mode`, `*${prefix}ai-addprovider* — tambah provider custom`].join("\n")) +
-        
-        "\n" ;
-
       await m.react("🐣");
-      await m.reply(text);
+      await m.reply(buildStatusPanel(prefix, botConfig.aiHelp || {}));
       return { handled: true };
     }
 
     if (action === "provider") {
       const providerArg = String(value || "").toLowerCase();
       const provider = resolveProvider(providerArg, {});
-      const customProvider = providerArg && !provider ? null : null;
-
       if (!provider) {
-        const text =
-          claraWrap("Provider Tidak Valid", [`Provider *${value || ""}* tidak dikenali.`,
-            `Ketik *${prefix}ai-set list* untuk lihat provider bawaan.`,
-            `Atau tambah provider custom dengan *${prefix}ai-addprovider*.`].join("\n")) +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaSalah("ai-set", "provider gak dikenal — ketik .ai-set list buat lihat daftarnya"));
         return { handled: true };
       }
-
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
       botConfig.aiHelp.provider = providerArg;
       botConfig.aiHelp.model = provider.defaultModel;
-
-      const text =
-        claraWrap("AI Settings", [`Provider: *${providerArg}*`,
-          `Model: *${provider.defaultModel}*`,
-          "Perubahan akan berlaku setelah config reload."].join("\n")) +
-        "\n"  +
-        "\n" ;
-
-      await m.reply(text);
+      await m.react("🐣");
+      await m.reply(okBox([
+        `${toSC("Provider")} : ${providerArg}`,
+        `${toSC("Model")} : ${provider.defaultModel}`,
+      ]));
       return { handled: true };
     }
 
     if (action === "model") {
       const modelArg = String(value || "").trim();
       if (!modelArg) {
-        const text =
-          claraWrap("Model Kosong", [`Model tidak boleh kosong.`,
-            `💡 Contoh: ${prefix}ai-set model gpt-4o-mini`].join("\n")) +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaSalah("ai-set", "modelnya belum ditulis"));
         return { handled: true };
       }
-
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
       botConfig.aiHelp.model = modelArg;
-
-      const text =
-        claraWrap("AI Settings", [`Model: *${modelArg}*`,
-          "Perubahan akan berlaku setelah config reload."].join("\n")) +
-        "\n"  +
-        "\n" ;
-
-      await m.reply(text);
+      await m.react("🐣");
+      await m.reply(okBox([`${toSC("Model")} : ${modelArg}`]));
       return { handled: true };
     }
 
@@ -146,156 +135,80 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       if (!apiKey) {
-        const text =
-          claraWrap("API Key Kosong", [`API key tidak boleh kosong.`,
-            `💡 Contoh: ${prefix}ai-set apiKey sk-xxx`,
-            `Per format: *${prefix}ai-set apiKey openai sk-xxx*`].join("\n")) +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaSalah("ai-set", "api key-nya belum ditulis"));
         return { handled: true };
       }
-
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
       if (fmtKey) {
-        botConfig.aiHelp[fmtKey + "ApiKey"] = apiKey;
+        botConfig.aiHelp[`${fmtKey}ApiKey`] = apiKey;
       } else {
         botConfig.aiHelp.apiKey = apiKey;
       }
-
-      const keyLabel = fmtKey ? fmtKey.charAt(0).toUpperCase() + fmtKey.slice(1) + " API Key" : "API Key";
-      const text =
-        claraWrap("ai-set", [`${keyLabel}: disembunyikan`,
-          "Perubahan akan berlaku setelah config reload."]) +
-        "\n"  +
-        "\n" ;
-
-      await m.reply(text);
+      const keyLabel = fmtKey ? `${fmtKey.charAt(0).toUpperCase() + fmtKey.slice(1)} API Key` : "API Key";
+      await m.react("🐣");
+      await m.reply(okBox([`${toSC(keyLabel)} : disembunyikan 🔒`]));
       return { handled: true };
     }
 
     if (action === "endpoint") {
       const endpoint = String(value || "").trim();
       if (!endpoint) {
-        const text =
-          claraWrap("Endpoint Kosong", [`Endpoint tidak boleh kosong.`,
-            `💡 Contoh: ${prefix}ai-set endpoint https://api.openai.com/v1/chat/completions`].join("\n")) +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaSalah("ai-set", "endpoint-nya belum ditulis"));
         return { handled: true };
       }
-
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
       botConfig.aiHelp.apiEndpoint = endpoint;
-
-      const text =
-        claraWrap("AI Settings", [`Endpoint: *${endpoint}*`,
-          "Perubahan akan berlaku setelah config reload."].join("\n")) +
-        "\n"  +
-        "\n" ;
-
-      await m.reply(text);
+      await m.react("🐣");
+      await m.reply(okBox([`${toSC("Endpoint")} : ${endpoint}`]));
       return { handled: true };
     }
 
     if (action === "prompt") {
       const prompt = String(value || "").trim();
       if (!prompt) {
-        const text =
-          claraWrap("Prompt Kosong", [`System prompt tidak boleh kosong.`,
-            `💡 Contoh: ${prefix}ai-set prompt Kamu adalah asisten yang membantu.`].join("\n")) +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaSalah("ai-set", "prompt-nya belum ditulis"));
         return { handled: true };
       }
-
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
       botConfig.aiHelp.systemPrompt = prompt;
-
-      const text =
-        claraWrap("AI Settings", [`System Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
-          "Perubahan akan berlaku setelah config reload."].join("\n")) +
-        "\n"  +
-        "\n" ;
-
-      await m.reply(text);
+      const shown = prompt.length > 100 ? `${prompt.slice(0, 100)}...` : prompt;
+      await m.react("🐣");
+      await m.reply(okBox([`${toSC("System Prompt")} : ${shown}`]));
       return { handled: true };
     }
 
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
-        const text =
-          claraWrap("ai-set", "Perintah ini khusus owner — Hanya owner yang bisa menyalakan/mematikan AI.", "error") +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaError("ai-set", "khusus owner — hanya owner yang bisa menyalakan/mematikan AI"));
         return { handled: true };
       }
-
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
       botConfig.aiHelp.enabled = action === "on";
-
-      const text =
-        claraWrap("AI Settings", [`Status: *${action === "on" ? "ON" : "OFF"}*`,
-          "Perubahan akan berlaku setelah config reload."].join("\n")) +
-        "\n"  +
-        "\n" ;
-
-      await m.reply(text);
+      await m.react("🐣");
+      await m.reply(okBox([`${toSC("Status")} : ${action.toUpperCase()}`]));
       return { handled: true };
     }
 
     if (action === "mode") {
       if (!m.isOwner) {
-        const text =
-          claraWrap("ai-set", "Perintah ini khusus owner — ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ.", "error") +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaError("ai-set", "khusus owner — hanya owner yang bisa mengganti mode AI"));
         return { handled: true };
       }
-
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
-        const text =
-          claraWrap("ai-set", ["Mode yang tersedia: offline atau online.",
-            "",
-            `💡 Contoh: ${prefix}ai-set mode online`]) +
-          "\n" ;
-
-        await m.reply(text);
+        await m.reply(novaSalah("ai-set", "mode-nya cuma offline atau online"));
         return { handled: true };
       }
-
       if (!botConfig.aiHelp) botConfig.aiHelp = {};
       botConfig.aiHelp.mode = newMode;
-
-      const text =
-        claraWrap("AI Settings", [`Mode: *${newMode.toUpperCase()}*`,
-          "Perubahan akan berlaku setelah config reload."].join("\n")) +
-        "\n"  +
-        "\n" ;
-
-      await m.reply(text);
+      await m.react("🐣");
+      await m.reply(okBox([`${toSC("Mode")} : ${newMode.toUpperCase()}`]));
       return { handled: true };
     }
 
-    const text =
-      claraWrap("Tidak Dikenal", [`Aksi *${action}* tidak dikenali.`,
-        `Ketik *${prefix}ai-set list* untuk lihat opsi.`].join("\n")) +
-      "\n" ;
-
-    await m.reply(text);
+    await m.reply(novaSalah("ai-set", `aksi ${action} gak dikenal`));
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`Status: *ɢᴀɢᴀʟ*`,
-        `Alasan: *${error.message}*`].join("\n")) +
-      "\n" ;
-
-    await m.reply(text);
+    await m.reply(novaError("ai-set", error.message));
   }
 
   return { handled: true };
