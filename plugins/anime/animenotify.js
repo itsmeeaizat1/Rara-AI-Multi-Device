@@ -13,7 +13,7 @@ import {
   getSeasonPreview, formatSeasonMessage, setSock, syncMonitor,
   getGenres, addGenre, removeGenre, previewWatchlist,
   getContentTypes, setContentType, DIGEST_LABELS,
-  setIntervalMenit,
+  setIntervalMenit, getListMode, setListMode,
 } from "../../src/lib/nova-auto-anime-notifier.js";
 import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
@@ -22,7 +22,7 @@ const pluginConfig = {
   alias: ["animenotif", "aninotify"],
   category: "anime",
   description: "Auto notifikasi anime terbaru (AniList → Kitsu) — langganan per-chat",
-  usage: ".animenotify <on/off/info/now/season/interval>",
+  usage: ".animenotify <on/off/info/list/now/season/interval>",
   example: ".animenotify on\n.animenotify season",
   isOwner: false,
   isPremium: false,
@@ -77,6 +77,7 @@ async function handler(m, { sock, args }) {
       `Sumber: AniList → Kitsu (fallback)`,
       `Cek terakhir: ${st.lastCheck ? new Date(st.lastCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "belum pernah"} (${st.lastSource || "-"})`,
       `Tipe konten: ${Object.entries(getContentTypes()).filter(([, on]) => on !== false).map(([k]) => k).join(", ") || "semua off"} (.animenotify info)`,
+      `Mode list: ${getListMode() ? "ON (beberapa info per digest)" : "OFF (cuma 1 info anime terbaru per digest)"} (.animenotify list)`,
     ];
     return m.reply(`「 ✦ ${pluginConfig.name.toUpperCase()} ✦ 」\n` + lines.join("\n"));
   }
@@ -106,6 +107,28 @@ async function handler(m, { sock, args }) {
       return m.reply(novaError(pluginConfig.name, `tipe gak dikenal: ${tipe} — ketik .animenotify info buat daftar tipe`));
     }
     return m.reply(novaSuccess(pluginConfig.name, `tipe *${tipe}* sekarang ${action ? "AKTIF" : "MATI"} — notifikasi terkait ${action ? "bakal masuk" : "gak bakal dikirim"}`));
+  }
+
+  // ── MODE LIST (request owner 10 Sep 2026: "klo anime notifier aktif jd yg
+  // dikirim cm 1 info anime terbaru aja jgn spam smpe 5 info anime, bentuk
+  // list jg off kcuali di on") ──
+  if (sub === "list" || sub === "mode") {
+    const action = String(args?.[1] || "").toLowerCase();
+    if (action === "on" || action === "aktif") {
+      setListMode(true);
+      return m.reply(novaSuccess(pluginConfig.name, "Mode List *ON* — digest anime (terbaru/hangat) kirim beberapa card + rangkuman"));
+    }
+    if (action === "off" || action === "mati") {
+      setListMode(false);
+      return m.reply(novaSuccess(pluginConfig.name, "Mode List *OFF* — digest anime cuma kirim *1 info anime terbaru* per notifikasi (anti-spam)"));
+    }
+    return m.reply(
+      `「 ✦ ${pluginConfig.name.toUpperCase()} — MODE LIST ✦ 」\n\n` +
+      `Mode sekarang: *${getListMode() ? "ON" : "OFF"}*\n` +
+      `${getListMode() ? "ON = digest terbaru/hangat kirim beberapa card anime + rangkuman sisa" : "OFF = digest terbaru/hangat cuma kirim 1 info anime TERBARU (anti-spam, default)"}\n\n` +
+      `Atur: *.animenotify list on|off*\n` +
+      `Contoh: *.animenotify list on* → balik ke bentuk beberapa info`
+    );
   }
 
   // Interval cek (menit, 5-720) — request owner 9 Sep: "cek tiap 1 jam bisa diset"

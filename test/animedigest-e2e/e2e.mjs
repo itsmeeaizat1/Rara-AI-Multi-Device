@@ -5,7 +5,7 @@
 //   node --experimental-loader <repo>/test/anime-card-mock/loader.mjs <repo>/test/animedigest-e2e/e2e.mjs
 import {
   formatDigestCard, dispatchDigest, buildDigest,
-  setKitsuHttp, resetKitsuHttp, setSock,
+  setKitsuHttp, resetKitsuHttp, setSock, getListMode, setListMode,
 } from "../../src/lib/nova-auto-anime-notifier.js";
 
 let pass = 0, fail = 0;
@@ -88,7 +88,18 @@ w("\n— dispatchDigest per-anime —");
   setSock(mockSock);
   const dig = { items: FIXTURE_ITEMS, text: "teks lama", thumb: null, sourceUrl: "https://kitsu.app/anime/9001", tagline: "Info anime terbaru" };
 
+  // ── MODE LIST (request owner 10 Sep): default OFF = cuma 1 card terbaru ──
+  setListMode(false);
+  check("default: listMode OFF", getListMode() === false);
   let n = await dispatchDigest("terbaru", dig, ["chatA@g.us"]);
+  check("mode list OFF: cuma 1 kirim (1 card, gak ada rangkuman)", n === 1 && sent.length === 1 && !!sent[0].msg.image);
+  check("mode list OFF: card = anime TERBARU (item pertama)", sent[0].msg.caption.includes("*Fixture Anime 1*"));
+
+  // ── list ON → perilaku lama (4 card + rangkuman) ──
+  setListMode(true);
+  check("setListMode(true): ON", getListMode() === true);
+  sent.length = 0;
+  n = await dispatchDigest("terbaru", dig, ["chatA@g.us"]);
   // cap 4: 4 card gambar + 1 rangkuman sisa (2 judul)
   check("terbaru: 4 card + 1 rangkusan = 5 kirim", n === 5 && sent.length === 5);
   const imgMsgs = sent.filter((s) => s.msg.image);
