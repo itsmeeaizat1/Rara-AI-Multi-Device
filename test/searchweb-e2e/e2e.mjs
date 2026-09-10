@@ -53,7 +53,7 @@ setPreviewHttp(async (url) => {
   return "<html><head><title>Biasa</title></head><body><p>Isi halaman biasa aja tanpa og.</p></body></html>";
 });
 
-const { config, handler } = await import("../../plugins/browser/googlesearch.js");
+const { config, handler } = await import("../../plugins/browser/search.js");
 
 const replies = [];
 const sent = [];
@@ -76,26 +76,37 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok) => { w((ok ? "  ✅" : "  ❌") + " " + name); ok ? pass++ : fail++; };
 
-// 1. config
-check("config: nama googlesearch", config.name === "googlesearch");
-check("config: alias owner (searchweb + googleserach typo)", (config.alias || []).includes("searchweb") && (config.alias || []).includes("googleserach"));
+// 1. config — RENAME .googlesearch → .search (request owner 10 Sep)
+check("config: nama search", config.name === "search");
+check("config: alias owner (serach typo + searchweb + googlesearch backward-compat)", (config.alias || []).includes("serach") && (config.alias || []).includes("searchweb") && (config.alias || []).includes("googlesearch"));
 check("config: kategori browser", config.category === "browser");
+
+// 1b. no-arg → usage menyebut mesin engine
+replies.length = 0; sent.length = 0;
+await handler(mockM([]), { sock: mockSock });
+check("no-arg: usage sebut engine bing/brave/duckduckgo", replies.length === 1 && replies[0].includes(smallcapsText("bing")) && replies[0].includes(smallcapsText("brave")) && replies[0].includes(smallcapsText("duckduckgo")));
+
+// 1c. .search list → daftar mesin
+replies.length = 0; sent.length = 0;
+await handler(mockM(["list"]), { sock: mockSock });
+check("search list: daftar mesin search", replies.length === 1 && replies[0].length > 60);
 
 // 2. no-arg → usage guide
 replies.length = 0; sent.length = 0;
 await handler(mockM([]), { sock: mockSock });
 check("no-arg: usage guide", replies.length === 1 && replies[0].length > 50);
 
-// 3. search → list 1..N + popup tap + session
+// 3. search ".search bing facebook login" → list 1..N + popup tap + session
 replies.length = 0; sent.length = 0; reacts.length = 0; buttons.length = 0;
-await handler(mockM(["facebook", "login"]), { sock: mockSock });
+await handler(mockM(["bing", "facebook", "login"]), { sock: mockSock });
 const listText = String(sent[0]?.payload?.text || "");
+check("search engine arg: list muncul", listText.includes("1.") && listText.includes("3."));
 check("search: list nomor 1..3", listText.includes("1.") && listText.includes("3."));
 check("search: judul hasil ke-list", listText.includes(smallcapsText("Log into Facebook")));
 check("search: domain hasil ke-list", listText.includes(smallcapsText("facebook.com")));
 check("search: popup tap single_select", buttons.length === 1 && buttons[0]?.buttons?.[0]?.name === "single_select");
 const rows = buttons[0]?.buttons?.[0] ? JSON.parse(buttons[0].buttons[0].buttonParamsJson).sections[0].rows : [];
-check("search: row id = command buka", rows.length === 3 && rows[1]?.id === ".googlesearch buka 2");
+check("search: row id = command buka", rows.length === 3 && rows[1]?.id === ".search buka 2");
 check("search: reaksi 🐣 terakhir", reacts[reacts.length - 1] === "🐣");
 
 // 4. buka halaman 2 → preview thumbnail + readmore + isi plain text
@@ -123,7 +134,56 @@ replies.length = 0; sent.length = 0;
 await handler(mockM(["buka", "3"]), { sock: mockSock });
 check("buka 3: halaman error → pesan + link", replies.length === 1 && replies[0].includes("❌") && replies[0].includes("detik.com"));
 
-// 7. bing mati → fallback DDG lite sukses
+// 6b. engine brave dipilih → hasil brave (mock: url search.brave.com)
+setWebSearchHttp(async (url, opts = {}) => {
+  const u = String(url);
+  if (u.includes("brave.com")) {
+    return `<!DOCTYPE html><html><body>
+    <a href="https://www.bravehasil.com/hp"><div class="title search-snippet-title" title="Hasil Brave HP">Hasil Brave HP</div></a>
+    <a href="https://www.bravehasil.com/hp2"><div class="title search-snippet-title" title="Hasil Brave Kedua">Hasil Brave Kedua</div></a>
+    </body></html>`;
+  }
+  throw new Error("unknown url");
+});
+replies.length = 0; sent.length = 0;
+await handler(mockM(["brave", "hp", "terkenal"]), { sock: mockSock });
+const braveText = String(sent[0]?.payload?.text || "");
+check("engine brave: hasil brave ke-list", braveText.includes(smallcapsText("Hasil Brave HP")));
+
+// 6c. engine google → auto-dialihkan bing + note
+setWebSearchHttp(async (url) => {
+  if (String(url).includes("bing.com")) return BING_HTML;
+  throw new Error("unknown url");
+});
+replies.length = 0; sent.length = 0;
+await handler(mockM(["google", "kucing"]), { sock: mockSock });
+const gText = String(sent[0]?.payload?.text || "");
+check("engine google: dialihkan bing + note", gText.includes(smallcapsText("Log into Facebook")) && gText.includes(smallcapsText("google dialihkan")));
+
+// 6d. engine gak dikenal di args[0] → dianggap query default bing
+replies.length = 0; sent.length = 0;
+await handler(mockM(["facebook", "login"]), { sock: mockSock });
+check("engine tak dikenal: jadi query default bing", String(sent[0]?.payload?.text || "").includes(smallcapsText("Log into Facebook")));
+
+// 6e. engine dikenal TAPI tanpa query (".search bing" doang) → jangan dianggap engine mode
+//     (args.length < 2 → jadi query "bing" → hasil list muncul, gak crash)
+replies.length = 0; sent.length = 0;
+await handler(mockM(["bing"]), { sock: mockSock });
+check("engine tanpa query: tetep jalan sebagai query", String(sent[0]?.payload?.text || "").includes("1."));
+
+// 7. bing mati → fallback DDG lite sukses (restore injector lengkap dulu)
+setWebSearchHttp(async (url, opts = {}) => {
+  const u = String(url);
+  const q = decodeURIComponent((u.match(/[?&]q=([^&]+)/) || [])[1] || (opts.body || "").replace(/.*q=([^&]*).*/, "$1"));
+  if (u.includes("bing.com")) {
+    if (q.includes("mati")) throw new Error("HTTP 503");
+    if (q.includes("kosong")) return "<html><body>tanpa hasil</body></html>";
+    return BING_HTML;
+  }
+  if (u.includes("brave.com")) throw new Error("HTTP 429");
+  if (u.includes("duckduckgo")) return DDG_HTML;
+  throw new Error("unknown");
+});
 replies.length = 0; sent.length = 0; reacts.length = 0;
 await handler(mockM(["mati"]), { sock: mockSock });
 const ddgText = String(sent[0]?.payload?.text || "");
@@ -142,7 +202,7 @@ replies.length = 0; sent.length = 0;
 const m9 = mockM(["2"]);
 m9.chat = "62877@c.us"; // chat lain = gak ada session
 await handler(m9, { sock: mockSock });
-check("session beda chat: suruh cari ulang", replies.length === 1 && replies[0].includes("❌") && replies[0].includes(smallcapsText("googlesearch")));
+check("session beda chat: suruh cari ulang", replies.length === 1 && replies[0].includes("❌") && replies[0].includes(smallcapsText("search")));
 
 w(`\n${pass}/${pass + fail} PASS`);
 process.exit(fail ? 1 : 0);
