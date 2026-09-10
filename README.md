@@ -1,12 +1,12 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.191+ Command, 1.810 Plugin & 41 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.900+ Command, 1.850+ Plugin & 46 Kategori!</b></p>
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-23.0.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1835-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-2584%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Version-24.0.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Total_Plugin-1850%2B-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-2900%2B-blueviolet?style=flat-square&logo=terminal">
   <img src="https://img.shields.io/badge/Kategori-46-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Downloader-52-yellow?style=flat-square&logo=download">
   <img src="https://img.shields.io/badge/RPG_Game-168-ff69b4?style=flat-square&logo=target">
@@ -46,9 +46,32 @@ Automation:
 
 ---
 
-## ✨ Fitur Unggulan v23.0.0
+## ✨ Fitur Unggulan v24.0.0
 
-### 🆕 Baru di v23.0.0
+### 🆕 Baru di v24.0.0
+
+| Fitur | Deskripsi | Command |
+|-------|-----------|---------|
+| Switch Terpusat | On/off SEMUA fitur dari satu tempat: per fitur, bulk per subsistem, MASTER semuanya sekaligus | `.switch <fitur> on/off` / `.switch auto all on` / `.switch group all on` / `.switch semua on` |
+| Deteksi Scope Otomatis | Bot tau sendiri fitur itu 📍 grup-only / 🌍 global (grup+DM) / 📢 saluran-only | `.switch welcome` (tanpa verb = info fitur) |
+| Target Terpusat | Fitur grup & otomatis pakai target: grup spesifik / all / list (popup) / DM / gabungan | `.switch group welcome on <jid\|all\|list>` |
+| 5 Fitur AI Baru | Text-to-video, 87 gaya gambar, TTS 42 voice, 12 suara selebritas, anime→realistis | `.aivideo` / `.img2style` / `.suaraai` / `.aivoiceceleb` / `.animetoreal` |
+| AI Multi-Engine | Rantai fallback: Gemini → Mercury (dLLM difusi) → SenseNova vision → dst; AI gratis tanpa key | `.aimercury` / `.aisensenova` / `.freeai` |
+| Uang (Rp) di RPG | Mata uang ke-4: payout Rp otomatis semua game, gajian profesi asli, toko & leaderboard | `.tokorpg` / `.rankkerja uang` |
+| Zone Berburu + Trophy | 5 zone level-locked (Hutan Pemula → Lembah Para Dewa) + koleksi hewan rare | `.berburu zone` / `.berburu trophy` |
+| Family 100 Modern | Ala Family Feud TV: poin survei, jawaban fuzzy, bank soal 2043 auto-refresh internet | `.family100` |
+| Animasi Scene per Game | Tiap game animasi khas sendiri: kerja 19 profesi, berburu 3 fase, battle turn-by-turn, dll | `.kerja` / `.adventure` / `.mancing` |
+| EWS Peringatan Dini | Gempa 4 provider (BMKG/USGS/JMA/EMSC), poll 10 dtk, estimasi guncangan tiba | `.bencanawatch ews on` |
+| Cuaca 5 Provider | Open-Meteo + BMKG + MET Norway + WeatherAPI + mode aggregate konsensus | `.autoweatherrealtime provider aggregate` |
+| Alert Cuaca Ekstrem | Waspada/Siaga/Awas ala EWS + threshold bisa diset sendiri | `.autoweatherrealtime alert on` |
+| Anime Notifier 6 Tipe | Episode, baru, terbaru, hangat, berita, video — banner poster per-anime | `.animenotify info` |
+| Movie Notifier | Trending / upcoming / nowplaying + pencarian film (IMDbOT + Cinemeta) | `.movienotify` |
+| Tools Baru 6 | Web watcher, crypto alert, TOTP 2FA, PDF→gambar, chart, export Excel | `.webwatch` / `.cryptoalert` / `.totp` / `.pdftoimg` / `.chart` / `.dbexport` |
+| Panel Hierarki | Owner > CEO > Reseller, PLTA/PTLC eksklusif per server, disk+CPU custom | `.addownerpanelvN` / `.server plta` |
+| Jadibot Multi-Session | Pairing banyak nomor via cmd, aigrup per-session default off | `node index.js --pairing 62xxx` |
+| Welcome Thumbnail | Sambutan member baru pakai foto profil sebagai gambar | `.switch group welcome on` |
+
+### Riwayat: Baru di v23.0.0
 
 | Fitur | Deskripsi | Command |
 |-------|-----------|---------|
@@ -66,6 +89,14 @@ Automation:
 | Fitur | Deskripsi | Command |
 |-------|-----------|---------|
 | AI Integration (AIO) | 34 model AI dari 3 format API (OpenAI, Gemini, Claude) | `.ai-set apiKey <key>` |
+| AI Text-to-Video | Video AI dari teks (Haidar sora-style, fallback kuroneko) | `.aivideo` |
+| Image Style AI | 87 gaya: ghibli, disney, pixar, demonslayer, genshin, minecraft, dll | `.img2style` / `.ghibli` |
+| AI TTS Multi-Voice | 42 voice multi-bahasa natural | `.suaraai` |
+| AI Voice Selebritas | 12 suara seleb (taylor swift, goku, miku, eminem, dll) | `.aivoiceceleb` |
+| Anime to Real | Anime jadi versi realistis | `.animetoreal` |
+| Mercury AI (dLLM) | Diffusion LLM pertama, 5-10× lebih cepat, 128K context | `.aimercury` |
+| SenseNova Vision | Vision multimodal baca gambar langsung (256K ctx) | `.aisensenova` |
+| Free AI No-Key | Chat & text-to-image gratis TANPA API key (Qwen & SDXL) | `.freeai` / `.freeaiimage` |
 | AI Grup Participation | Bot ikut chat di grup dengan AI | `.aigrup` |
 | AI News Summarizer | Berita + AI summary dengan Google grounding | `.berita` |
 | AI Nutrition Scanner | Scan kalori & nutrisi via Gemini Vision | `.nutrisi` |
@@ -80,6 +111,11 @@ Automation:
 
 | Fitur | Deskripsi | Command |
 |-------|-----------|---------|
+| Switch Terpusat | On/off semua fitur: direct per fitur, bulk, master + deteksi scope | `.switch <fitur> on/off` / `.switch semua on/off` |
+| Switch Status All | Semua status auto + saluran + grup sekali lihat + legenda scope | `.switch status all` |
+| Panel Hierarki Role | Owner > CEO > Reseller — CEO kelola reseller, reseller cuma panel user | `.addownerpanelvN` / `.addceopanel` / `.addresspanel` |
+| Panel Key Eksklusif | 1 server 1 jenis key: PLTA (apikey) / PTLC (capikey) | `.server plta <key> 1` |
+| Panel Disk+CPU Custom | Resource custom saat create: `unli` atau angka spesifik | `.10gb unli, 200, NamaUser` |
 | Sewa Bot | Pendaftaran sewa step-by-step, auto-join & auto-expired | `.daftarsewa` |
 | Approve/Reject Sewa | Owner approve atau reject sewa | `.approvesewa` / `.rejectsewa` |
 | Saluran WA Broadcast | Auto-broadcast 8 event ke saluran WA | `.setsaluran` / `.buatsaluran` |
@@ -122,11 +158,19 @@ Automation:
 | Weekly Boss Raid | Boss global, kontribusi semua player | `.weeklyboss` |
 | Guild War | Guild vs guild, power battle | `.guildwar` |
 | Co-op Farm | 8 tanaman, 6 cuaca, upgrade plot | `.farmrpg` |
-| Fishing v2 | Rods & bait system, 15+ jenis ikan | `.fishingv2` |
+| Mancing (Fishing v2) | Rods & bait, mutiara, upgrade joran, animasi riak & tarikan | `.mancing` / `.fishing` |
 | Pet Evolution | 5-tier evolution (Normal→Mythic) | `.petevolve` |
 | Gambling | Slot, roulette, dice, horse race, lottery | `.slotmachine` / `.roulette` |
 | Legendary Quest | 7-stage epic quest chain | `.legendaryquest` |
-| Ranger Post | Daily check-in, patrol duty, salary | `.rangerpost` |
+| Ranger Post | Daily check-in, radar patroli, lencana jasa, upgrade radar | `.rangerpost` |
+| Uang (Rp) & Ekonomi | Payout Rp otomatis tiap game, gajian profesi asli, leaderboard uang | `.rankkerja uang` |
+| Toko RPG | Equip premium, consumable, alat profesi (+30% gajian), kotak misteri | `.tokorpg` |
+| Zone Berburu & Trophy | 5 zone level-locked + koleksi hewan rare | `.berburu zone` / `.berburu trophy` |
+| Profesi Kerja | 19 profesi, animasi per-profesi, gajian Rp, alat +30% | `.kerja` |
+| Family 100 | Ala Family Feud TV: poin survei, fuzzy, bank 2043 soal | `.family100` |
+| Time Travel | Lorong waktu animasi, 4 era, artefak khas, jam pasir upgrade | `.timetravel` |
+| Huntwild | Hewan dalam semak, taring liar, anjing pemburu upgrade | `.huntwild` |
+| Animasi Scene Motion | Animasi khas per-game: berburu 3 fase, battle turn-by-turn, got, kafilah, dll | `.adventure` / `.berburu` / `.sampah` / `.ekspedisi` |
 | Stamina System | Manage energy, regen, buy | `.stamina` |
 | Survival Mode | HP, hunger, thirst management | `.survival` |
 | Dark Market (Premium) | 15 rare item, random stock, diskon | `.darkmarket` |
@@ -221,12 +265,17 @@ Automation:
 | Trending Google | Google Trends | `.trending` |
 | Cuaca V1 | wttr.in, quick & lightweight | `.weather` / `.cekcuaca` |
 | Cuaca V2 | Open-Meteo BMKG-style, detail | `.cuacav2` / `.autocuacav2` |
+| Anime Notifier | 6 tipe konten: episode, baru, terbaru, hangat, berita, video — banner poster | `.animenotify` |
+| Movie Notifier | Trending / upcoming / nowplaying + pencarian film | `.movienotify` |
 
 ### 🚨 Bencana & Alert Realtime
 
 | Fitur | Deskripsi | Command |
 |-------|-----------|---------|
 | Dashboard Bencana | Semua bencana aktif dunia (GDACS AWAS/SIAGA/Waspada) + gempa BMKG | `.bencana` |
+| EWS Peringatan Dini | Gempa 4 provider, poll 10 dtk, estimasi guncangan tiba, instruksi darurat | `.bencanawatch ews on` |
+| Cuaca Multi-Provider | 5 provider internasional + mode aggregate konsensus | `.autoweatherrealtime provider aggregate` |
+| Alert Cuaca Ekstrem | Waspada/Siaga/Awas ala EWS, threshold custom per pemicu | `.autoweatherrealtime alert on` |
 | Cek per Jenis | Banjir, badai, gunung api, karhutla, kekeringan, tsunami, gempa global M6+ | `.bencana banjir` dll |
 | Bencana Watch | Auto-alert realtime per chat: gempa BMKG M5+, global M6+, GDACS Siaga/Awas | `.bencanawatch on` |
 | Peringatan Wilayah | Bencana dekat lokasi kamu → peringatan warga sekitar AI + info lengkap | `.bencanawatch lokasi Palu` |
@@ -256,6 +305,12 @@ Automation:
 | OCR | Image to text | `.ocr` / `.extracttext` |
 | Translate | Multi bahasa | `.translate` |
 | Nulis | Tulis tangan ke gambar | `.nulis` |
+| Web Watcher | Pantau URL, notif otomatis pas kontennya berubah | `.webwatch` |
+| Crypto Alert | Target harga crypto IDR → notif otomatis pas kena | `.cryptoalert` |
+| TOTP 2FA | Kode 2FA ala Google Authenticator (RFC 6238) | `.totp` |
+| PDF to Image | Reply PDF → tiap halaman dirender jadi PNG | `.pdftoimg` |
+| Chart Generator | Bar chart RPG / data custom (canvas render) | `.chart` |
+| Database Export | Export DB bot ke Excel multi-sheet (pemain, users, groups) | `.dbexport` |
 
 ### 🎓 Education & Kuliah
 
@@ -372,6 +427,10 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 | Auto Backup Drive | Backup otomatis ke Google Drive | `.autobackupdrive` |
 | Premium Gate VN | VN otomatis untuk non-premium | — |
 | Auto React Sticker | Reaksi stiker otomatis | `.autoreactsticker` |
+| Target Terpusat Auto | Semua fitur otomatis bisa set target: semua / grup / DM / gabungan | `.switch auto <fitur> set` |
+| Auto Anime 6 Tipe | Episode, baru, terbaru, hangat, berita, video — on/off per tipe | `.animenotify info <tipe> on` |
+| Auto Movie | Notif film trending/upcoming/nowplaying ke chat | `.movienotify on` |
+| Auto Web Watch | Pantau perubahan website | `.webwatch <url>` |
 
 ### 🎵 TTS & Voice
 
@@ -411,12 +470,12 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 
 ---
 
-## 📊 Statistik Bot v23.0.0
+## 📊 Statistik Bot v24.0.0
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.835 |
-| Total Command | 2.584+ |
+| Total Plugin | 1.850+ |
+| Total Command | 2.900+ (termasuk alias) |
 | Kategori | 46 |
 | RPG Module | 168 (159 rpg + 9 couple) |
 | AI Plugin | 170 (125 ai + 45 ai image) |
@@ -426,7 +485,7 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 | Panel Pterodactyl | 100 slot (28 plugin kontrol) |
 | Convert Plugin | 31 |
 | Tools Plugin | 194 |
-| Tools Plugin | 149+ |
+| Notifier Otomatis | 8 (cuaca, sholat, bmkg, anime, movie, web, crypto, loker) |
 | Browser Plugin | 11 |
 | Menu Variasi | 6 |
 | Nav Button Plugin | 1.019 |
@@ -560,6 +619,7 @@ Tanpa flag, bot akan menanyakan nomor langsung di terminal (timeout 3 menit).
 | `.alquran` | Quran + murottal |
 | `.jadibot` | Jadikan nomor jadi bot (bisa `<nomor>` untuk nomor lain) |
 | `.daftarsewa` | Daftar sewa bot |
+| `.switch` | On/off SEMUA fitur terpusat (auto / grup / saluran / fitur / semua) |
 | `.aigrup` | AI ikut chat di grup |
 | `.owner` | Kontak owner |
 | `.donasi` | Support developer |
