@@ -43,8 +43,8 @@ const pluginConfig = {
   ],
   category: "owner",
   description: 'Switch on/off semua fitur (channel, group, auto, command)',
-  usage: '.switch [channel|group|auto|fitur]',
-  example: '.switch channel\n.switch group welcome\n.switch auto autobackup on\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg',
+  usage: '.switch [status|channel|group|auto|fitur]',
+  example: '.switch status all\n.switch channel\n.switch group welcome\n.switch auto autobackup on\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg',
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -392,12 +392,17 @@ const AUTO_CATEGORIES = {
     "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
   ],
   "Info & Utilitas": [
-    "bencanawatch", "autoanime", "autoanimenotifier", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
-    "autosambut", "automod", "autobroadcastchannel", "autoloker"
+    "bencanawatch", "autoanime", "autoanimenotifier", "automovienotifier", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
+    "autosambut", "automod", "autobroadcastchannel", "autoloker", "webwatch", "cryptoalert"
   ]
 }
 
 const AUTO_KEYS = Object.keys(AUTO_REGISTRY)
+
+// ── Format status baru (request owner 10 Sep 2026): nama fitur smallcaps +
+// status ON/OFF smallcaps di AKHIR baris, contoh "ʙᴇɴᴄᴀɴᴀᴡᴀᴛᴄʜ ᴏɴ" ──
+const scStatus = (on) => toSC(on ? "on" : "off")
+const scLine = (name, enabled) => `${toSC(name)} ${scStatus(enabled)}`
 
 // ═══════════════════════════════════════════════════════════
 // PARSER INTENT & MODE
@@ -447,6 +452,7 @@ function getMode(cmd, args) {
     return `switchauto:${subResolved}:${explicitAction}`
   }
   if (a === 'fitur' || a === 'command' || a === 'cmd') return 'fitur'
+  if (a === 'status' || a === 'cek' || a === 'semua') return 'status'
   return 'menu'
 }
 
@@ -465,7 +471,7 @@ async function handleChannel(m, { sock, config: cfg }) {
 Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
 
     for (const [key, info] of Object.entries(statuses)) {
-      text += `• ${info.label} — *${info.enabled ? "ON" : "OFF"}*\n`
+      text += `${scLine(info.label, info.enabled)}\n`
       text += `\`${prefix}switch channel ${key}\`\n\n`
       if (info.enabled) onCount++; else offCount++
     }
@@ -531,13 +537,13 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
     const groupData = db.getGroup(m.chat) || {}
     let txt = ""
     for (const [cat, features] of Object.entries(GROUP_CATEGORIES)) {
-      txt += `*${cat}*\n`
+      txt += `*${toSC(cat)}*\n`
       for (const feat of features) {
         const f = GROUP_FEATURES[feat]
         if (!f) continue
         const current = groupData[f.dbKey]
         const active = isOn(current, f.on)
-        txt += `${active ? "ON" : "OFF"}  ${feat}\n`
+        txt += `${scLine(feat, active)}\n`
       }
       txt += `\n`
     }
@@ -607,12 +613,12 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   if (!autoKey) {
     let txt = ""
     for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
-      txt += `*${cat}*\n`
+      txt += `*${toSC(cat)}*\n`
       for (const key of features) {
         const reg = AUTO_REGISTRY[key]
         if (!reg) continue
         const enabled = reg.getStatus()
-        txt += `${enabled ? "ON" : "OFF"}  ${key}\n`
+        txt += `${scLine(key, enabled)}\n`
       }
       txt += `\n`
     }
@@ -868,6 +874,68 @@ async function handleFitur(m, { sock, config: cfg }) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// STATUS ALL (request owner 10 Sep 2026): ".switch status all"
+// Tampilkan SEMUA status switch — yang aktif & yang mati:
+// auto (semua kategori) + saluran + group (chat ini) + ringkasan fitur
+// ═══════════════════════════════════════════════════════════
+async function handleStatusAll(m, { sock, config: cfg }) {
+  const prefix = cfg?.command?.prefix || '.'
+  const db = getDatabase()
+  let on = 0, off = 0, total = 0
+  let txt = ""
+
+  // ── AUTO: semua kategori ──
+  for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
+    txt += `*${toSC(cat)}*\n`
+    for (const key of features) {
+      const reg = AUTO_REGISTRY[key]
+      if (!reg) continue
+      const enabled = reg.getStatus()
+      total++; enabled ? on++ : off++
+      txt += `${scLine(key, enabled)}\n`
+    }
+    txt += `\n`
+  }
+
+  // ── SALURAN: semua event channel ──
+  const statuses = getAllNotifyStatus()
+  txt += `*${toSC("Saluran")}*\n`
+  for (const [key, info] of Object.entries(statuses)) {
+    total++; info.enabled ? on++ : off++
+    txt += `${scLine(info.label, info.enabled)}\n`
+  }
+  txt += `\n`
+
+  // ── GROUP: fitur grup chat ini (kalau dari dalam grup) ──
+  if (String(m.chat || "").endsWith("@g.us")) {
+    const groupData = db.getGroup(m.chat) || {}
+    txt += `*${toSC("Group (Chat Ini)")}*\n`
+    for (const [cat, features] of Object.entries(GROUP_CATEGORIES)) {
+      for (const feat of features) {
+        const gf = GROUP_FEATURES[feat]
+        if (!gf) continue
+        const active = isOn(groupData[gf.dbKey], gf.on)
+        total++; active ? on++ : off++
+        txt += `${scLine(feat, active)}\n`
+      }
+    }
+    txt += `\n`
+  }
+
+  // ── FITUR: ringkasan command/kategori yang di-disable ──
+  const disabledCmds = db.setting("disabledCommands") || []
+  const disabledCats = db.setting("disabledCategories") || []
+  txt += `*${toSC("Fitur & Command")}*\n`
+  txt += `${toSC("command nonaktif")} ${toSC(String(disabledCmds.length))}\n`
+  txt += `${toSC("kategori nonaktif")} ${toSC(String(disabledCats.length))}\n`
+  if (disabledCats.length) txt += `${toSC(disabledCats.join(", "))}\n`
+
+  txt += "\n" + tipText(`Aktif: ${on} | Mati: ${off} | Total: ${total}`)
+  txt += "\n" + tipText(`Detail: \`${prefix}switch auto\` | \`${prefix}switch channel\` | \`${prefix}switch group\` | \`${prefix}switch fitur\``)
+  return m.reply(txt.trim())
+}
+
+// ═══════════════════════════════════════════════════════════
 // MENU DISPATCHER
 // ═══════════════════════════════════════════════════════════
 async function showMenu(m, sock) {
@@ -890,6 +958,10 @@ async function showMenu(m, sock) {
    On/off command atau kategori plugin
    \`${prefix}switch fitur\`
 
+📊 *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴍᴜᴀ*
+   Semua status switch yang aktif & mati
+   \`${prefix}switch status all\`
+
 Alias lama masih works: .enable .disable .togglefitur .autoread .autobackup dll`
 
   try {
@@ -900,6 +972,7 @@ Alias lama masih works: .enable .disable .togglefitur .autoread .autobackup dll`
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🏠 Group', id: `${prefix}switch group` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '⚡ Auto', id: `${prefix}switch auto` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '⚙️ Fitur', id: `${prefix}switch fitur` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '📊 Status Semua', id: `${prefix}switch status all` }) },
       ],
     })
   } catch {
@@ -922,6 +995,7 @@ async function handler(m, { sock, config: cfg }) {
     if (mode === 'group:on') return handleGroup(m, { sock, config: cfg })
     if (mode === 'group:off') return handleGroup(m, { sock, config: cfg, forceOff: true })
     if (mode === 'fitur') return handleFitur(m, { sock, config: cfg })
+    if (mode === 'status') return handleStatusAll(m, { sock, config: cfg })
     if (mode === 'auto') return handleAuto(m, { sock, config: cfg })
     if (mode.startsWith('auto:')) {
       const autoKey = mode.split(':')[1]
