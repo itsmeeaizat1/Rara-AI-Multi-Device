@@ -34,7 +34,7 @@ function getStats() {
   const cores = os.cpus().length || 1;
   return {
     ok: true,
-    version: config.bot?.version || "23.0.0",
+    version: config.bot?.version || "24.0.0",
     botName: config.bot?.name || "Nova AI",
     uptime: Math.floor(process.uptime()),
     platform: `${os.type()} ${os.release()} • ${cores} core`,

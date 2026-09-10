@@ -399,7 +399,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
 
     const _mFlowParams = JSON.stringify({
       limited_time_offer: {
-        text: `${toSC(botName)} • ${toSC("Versi")} ${botVersion || "23.0.0"}`,
+        text: `${toSC(botName)} • ${toSC("Versi")} ${botVersion || "24.0.0"}`,
         url: sourceUrl,
         copy_code: _mTanggal,
       },
