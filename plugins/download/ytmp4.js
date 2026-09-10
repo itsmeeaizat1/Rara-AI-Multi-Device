@@ -5,7 +5,7 @@
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo, isYtDlpAvailable } from "../../src/scraper/nova-ytdlp.js";
-import { novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, novaError, novaGuide, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -64,7 +64,12 @@ async function handler(m, { sock }) {
   const quality = qi >= 0 ? tokens[qi].replace(/p$/i, "") : "720";
   const url = tokens.filter((_, i) => i !== qi).join(" ").trim();
   if (!url) {
-    return m.reply(novaGuide("YTmp4", "Kirim URL video YouTube yang mau kamu download!", `${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`));
+    return m.reply(novaDlUsage("YTmp4", {
+      prefix: m.prefix,
+      command: m.command || "ytmp4",
+      cara: [`${m.prefix}${m.command || "ytmp4"} [link youtube]`],
+      contoh: [`${m.prefix}${m.command || "ytmp4"} https://youtu.be/xxx`],
+    }));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
     return m.reply(novaGuide("YTmp4", "Link-nya harus URL YouTube yang valid ya!", `${m.prefix}ytmp4 https://youtu.be/xxx`));

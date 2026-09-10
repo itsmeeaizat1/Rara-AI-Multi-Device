@@ -4,7 +4,7 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import te from "../../src/lib/nova-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { claraWrap, claraLine, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, claraWrap, claraLine, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -21,7 +21,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuide("MediaFire DL", "Download file dari MediaFire! Kasih linknya ya!", `${m.prefix}mfdl https://www.mediafire.com/file/xxx`));
+    return m.reply(novaDlUsage("MediaFire", {
+      prefix: m.prefix,
+      command: m.command || "mfdl",
+      cara: [`${m.prefix}${m.command || "mfdl"} [link]`],
+      contoh: [`${m.prefix}${m.command || "mfdl"} https://www.mediafire.com/file/xxx`],
+    }));
   }
   if (!url.match(/mediafire\.com/i)) {
     return m.reply(novaGuide("MediaFire DL", "URL-nya gak valid nih! Pakai link MediaFire ya.", `${m.prefix}mfdl https://www.mediafire.com/file/xxx`));

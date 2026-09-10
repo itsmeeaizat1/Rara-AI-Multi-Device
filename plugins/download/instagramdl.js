@@ -4,7 +4,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "instagramdl",
@@ -20,7 +20,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuide("Instagram DL", "Download video/foto Instagram! Kasih linknya ya!", `${m.prefix}instagramdl https://www.instagram.com/reel/xxx`));
+    return m.reply(novaDlUsage("Instagram", {
+      prefix: m.prefix,
+      command: m.command || "instagramdl",
+      cara: [`${m.prefix}${m.command || "instagramdl"} [link]`],
+      contoh: [`${m.prefix}${m.command || "instagramdl"} https://www.instagram.com/reel/xxx`],
+    }));
   }
   if (!url.match(/instagram\.com|instagr\.am/i)) {
     return m.reply(novaGuide("Instagram DL", "URL-nya gak valid nih! Pakai link Instagram ya.", `${m.prefix}instagramdl https://www.instagram.com/reel/xxx`));

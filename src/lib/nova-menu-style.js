@@ -915,6 +915,24 @@ export function novaGangguan(fitur = "Error") {
 // 📋 daftar model tersedia (satu model per baris).
 // Label di-smallcaps (aturan owner); command + nama model VERBATIM —
 // identifier yang harus bisa diketik user persis (prinsik "URL tetap persis").
+// novaDlUsage — DESAIN USAGE DOWNLOADER ala owner (10 Sep 2026, revisi
+// "setiap fitur beda layout jgn smuanya sama"): layout kategori DOWNLOADER
+// beda dari usage AI — 「 ✦ Play ✦ 」 + 📝 Cara Pakai + 💡 Contoh doang,
+// tanpa section model. Label smallcaps; command VERBATIM (bisa diketik persis).
+export function novaDlUsage(brand, { prefix = ".", command, cara = null, contoh = null } = {}) {
+  const cmd = `${prefix}${command || brand}`;
+  const caraLines = (Array.isArray(cara) && cara.length ? cara : [`${cmd} [judul]`]).map(String);
+  const contohLines = (Array.isArray(contoh) && contoh.length ? contoh : [`${cmd} Faded Alan Walker`]).map(String);
+  const lines = [
+    `📝 ${toSC("Cara Pakai")}:`,
+    ...caraLines,
+    "",
+    `💡 ${toSC("Contoh")}:`,
+    ...contohLines,
+  ];
+  return novaBox(brand, lines);
+}
+
 export function novaAiUsage(brand, { prefix = ".", command, modelAktif = null, models = [], extra = [] } = {}) {
   const cmd = `${prefix}${command || brand}`;
   const lines = [

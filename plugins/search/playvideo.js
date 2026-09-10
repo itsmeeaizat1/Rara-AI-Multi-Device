@@ -5,7 +5,7 @@ import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
@@ -229,16 +229,15 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan resolusi (default 480p)
   if (!query) {
-    return m.reply(claraWrap("Playvideo", [
-      `📌 Pilih Resolusi Video:`,
-      ``,
-      `360p · 480p · 720p · ʜᴅ (1080p)`,
-      ``,
-      `💡 Contoh:`,
-      `${m.prefix}playvideo komang → 480p (default)`,
-      `${m.prefix}playvideo 720 komang → 720p`,
-      `${m.prefix}playvideo hd komang → ʜᴅ 1080p`,
-    ]));
+    return m.reply(novaDlUsage("Playvideo", {
+      prefix: m.prefix,
+      command: "playvideo",
+      cara: [`${m.prefix}playvideo [judul]`],
+      contoh: [
+        `${m.prefix}playvideo Faded Alan Walker`,
+        `${m.prefix}playvideo hd Faded Alan Walker`,
+      ],
+    }));
   }
 
   try {

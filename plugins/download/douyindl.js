@@ -22,7 +22,7 @@ import {
 } from "../../src/lib/nova-playdouyin.js";
 import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/nova-douyin-dl.js";
 import axios from "axios";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan, novaDlUsage } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyin",
@@ -122,18 +122,18 @@ async function handler(m, { sock }) {
   const text = args.join(" ").trim() || (m.text || "").trim();
 
   if (!text) {
-    return m.reply(claraWrap("Douyin", [
-      `📌 Douyin (TikTok China) — dua mode:`,
-      ``,
-      `${m.prefix}douyin <keyword> — cari video/foto slide douyin`,
-      `${m.prefix}douyin <link douyin> — download video/story no watermark`,
-      ``,
-      `💡 Contoh:`,
-      `${m.prefix}douyin kucing lucu`,
-      `${m.prefix}douyin https://v.douyin.com/xxx`,
-      ``,
-      `❗ Khusus Douyin — TikTok pakai ${m.prefix}playtiktok / ${m.prefix}tiktok`,
-    ]));
+    return m.reply(novaDlUsage("Douyin", {
+      prefix: m.prefix,
+      command: "douyin",
+      cara: [
+        `${m.prefix}douyin [keyword]`,
+        `${m.prefix}douyin [link]`,
+      ],
+      contoh: [
+        `${m.prefix}douyin kucing lucu`,
+        `${m.prefix}douyin https://v.douyin.com/xxx`,
+      ],
+    }));
   }
 
   // link TikTok → DITOLAK (douyin murni, gak nyampur tiktok)

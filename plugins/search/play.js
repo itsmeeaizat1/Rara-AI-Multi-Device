@@ -4,7 +4,7 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan, novaDlUsage } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 
@@ -214,16 +214,15 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan bitrate (default 256kbps)
   if (!query) {
-    return m.reply(claraWrap("Play", [
-      `📌 Pilih Bitrate Audio:`,
-      ``,
-      `128ᴋʙᴘs · 256ᴋʙᴘs · 320ᴋʙᴘs`,
-      ``,
-      `💡 Contoh:`,
-      `${m.prefix}play komang → 256ᴋʙᴘs (default)`,
-      `${m.prefix}play 320 komang → 320ᴋʙᴘs`,
-      `${m.prefix}play 128 komang → 128ᴋʙᴘs`,
-    ]));
+    return m.reply(novaDlUsage("Play", {
+      prefix: m.prefix,
+      command: "play",
+      cara: [`${m.prefix}play [judul]`],
+      contoh: [
+        `${m.prefix}play Faded Alan Walker`,
+        `${m.prefix}play 320 Faded Alan Walker`,
+      ],
+    }));
   }
 
   try {

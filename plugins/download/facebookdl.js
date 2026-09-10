@@ -4,7 +4,7 @@
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { fbdown } from "btch-downloader";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "facebookdl",
@@ -20,7 +20,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaGuide("Facebook DL", "Download video Facebook! Kasih linknya ya!", `${m.prefix}facebookdl https://www.facebook.com/watch?v=xxx`));
+    return m.reply(novaDlUsage("Facebook", {
+      prefix: m.prefix,
+      command: m.command || "facebookdl",
+      cara: [`${m.prefix}${m.command || "facebookdl"} [link]`],
+      contoh: [`${m.prefix}${m.command || "facebookdl"} https://www.facebook.com/watch?v=xxx`],
+    }));
   }
   if (!url.match(/facebook\.com|fb\.watch|fb\.com/i)) {
     return m.reply(novaGuide("Facebook DL", "URL-nya gak valid nih! Pakai link Facebook ya.", `${m.prefix}facebookdl https://www.facebook.com/watch?v=xxx`));
