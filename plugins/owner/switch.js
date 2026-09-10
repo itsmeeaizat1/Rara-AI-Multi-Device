@@ -29,6 +29,7 @@ import { getStatus as getStatusCryptoAlert, setEnabled as setCryptoAlertEnabled 
 import { isEnabled as isAnimeNotifierOn, setEnabled as setAnimeNotifierOn } from '../../src/lib/nova-auto-anime-notifier.js'
 import { isEnabled as isMovieNotifierOn, setEnabled as setMovieNotifierOn } from '../../src/lib/nova-movie-notifier.js'
 import { isEnabled as isBolaNotifierOn, setBolaNotifierOn } from '../../src/lib/nova-auto-bola-notifier.js'
+import { isLinkedInNotifierOn, setLinkedInNotifierOn } from '../../src/lib/nova-linkedin-notify.js'
 import { loadState as loadWinbuState, saveState as saveWinbuState, startAutoCheck as startWinbuCheck, stopAutoCheck as stopWinbuCheck, isRunning as isWinbuRunning } from '../../src/lib/nova-auto-anime.js'
 import { getSettings as getCleanSettings, updateSettings as updateCleanSettings, startCleaner, stopCleaner } from '../../src/lib/nova-cache-cleaner.js'
 import { getLokerStatus, updateLokerSettings, startLokerJobs, stopLokerJob } from '../../src/lib/nova-loker-scheduler.js'
@@ -298,6 +299,11 @@ const AUTO_REGISTRY = {
   },
   autobolanotify: {
     label: "Auto Jadwal Bola Notifier (ESPN → TheSportsDB)",
+  autolinkedin: {
+    label: "Auto LinkedIn Job Notifier (Apify — credit guard)",
+    getStatus: () => { try { return isLinkedInNotifierOn() } catch { return false } },
+    toggle: (on) => { setLinkedInNotifierOn(on) },
+  },
     getStatus: () => { try { return isBolaNotifierOn() } catch { return false } },
     // OFF = polling berhenti, subscriber tetap tersimpan; ON dengan target
     // kosong = auto-add owner (ala TARGET_NUMBER script owner).
@@ -379,7 +385,7 @@ const AUTO_ALIASES = {
   health: "autohealth", reengage: "autoreengage", refill: "autorefill",
   renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
   bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch",
-  animenotifier: "autoanimenotifier", animenotify: "autoanimenotifier", anime: "autoanimenotifier", animev2: "autoanimenotifier", bolanotify: "autobolanotify", jadwalbolanotify: "autobolanotify", jadwalnotify: "autobolanotify", footballnotify: "autobolanotify",
+  animenotifier: "autoanimenotifier", animenotify: "autoanimenotifier", anime: "autoanimenotifier", animev2: "autoanimenotifier", bolanotify: "autobolanotify", jadwalbolanotify: "autobolanotify", jadwalnotify: "autobolanotify", footballnotify: "autobolanotify", linkedinnotify: "autolinkedin", lnjobs: "autolinkedin", linkedin: "autolinkedin", lokerlinkedin: "autolinkedin",
   movienotifier: "automovienotifier", movienotify: "automovienotifier", filmnotifier: "automovienotifier", movienotif: "automovienotifier",
   animev1: "autoanime", winbu: "autoanime", animewinbu: "autoanime", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
@@ -400,7 +406,7 @@ const AUTO_CATEGORIES = {
     "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
   ],
   "Info & Utilitas": [
-    "bencanawatch", "autoanime", "autoanimenotifier", "automovienotifier", "autobolanotify", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
+    "bencanawatch", "autoanime", "autoanimenotifier", "automovienotifier", "autobolanotify", "autolinkedin", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
     "autosambut", "automod", "autobroadcastchannel", "autoloker", "webwatch", "cryptoalert"
   ]
 }
@@ -942,7 +948,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const rest = (setIdx >= 0 ? argsRaw.slice(setIdx + 1) : []).map((a) => a.toLowerCase())
 
     // Fitur subscriber: target terpusat NAMBAH jangkauan (subscriber tetap dapat)
-    const SUBSCRIBER_FEATURES = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on', automovienotifier: '.movienotify on', autobolanotify: '.jadwalbolanotify on' }
+    const SUBSCRIBER_FEATURES = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on', automovienotifier: '.movienotify on', autobolanotify: '.jadwalbolanotify on', autolinkedin: '.linkedinnotify on' }
     // SEMUA fitur otomatis yang ngirim notifikasi sekarang punya target terpusat
     // (request owner 8 Sep 2026: "semua fitur yg otomatis ada opsi kirim terpusatnya ini wajib")
     const TARGETABLE = [
@@ -1036,7 +1042,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     let replyTxt = `${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`
     // Fitur targetable: tampilkan target sekarang di status
     const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'autobolanotify', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal']
-    const SUBSCRIBER_FEATURES = { bencanawatch: 1, autoanime: 1, autoanimenotifier: 1, autobolanotify: 1 }
+    const SUBSCRIBER_FEATURES = { bencanawatch: 1, autoanime: 1, autoanimenotifier: 1, autobolanotify: 1, autolinkedin: 1 }
     if (TARGETABLE.includes(autoKey)) {
       const cfg = getAutoTargetConfig(autoKey)
       replyTxt += `\n🎯 Target: ${describeAutoTarget(cfg)} — atur: \`${prefix}switch auto ${autoKey} set\`` + (SUBSCRIBER_FEATURES[autoKey] ? '\nℹ️ Subscriber tetap dapat notif — target terpusat nambah jangkauan' : '')

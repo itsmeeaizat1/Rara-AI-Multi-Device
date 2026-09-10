@@ -156,18 +156,8 @@ export function setFetcher({ espn, tsdb, tsdbLeague, apify } = {}) {
 }
 
 // ── Apify Flashscore (Liga 2 Indonesia + fallback outage) ──
-let apifyTokenCache;
-export function getApifyToken() {
-  if (process.env.APIFY_TOKEN) return process.env.APIFY_TOKEN;
-  if (apifyTokenCache !== undefined) return apifyTokenCache || null;
-  try {
-    const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), "apikeys.json"), "utf8"));
-    apifyTokenCache = raw.apifyToken || raw?.apify?.token || raw?.flashscore?.apifyToken || null;
-  } catch {
-    apifyTokenCache = null;
-  }
-  return apifyTokenCache;
-}
+export { getApifyToken } from "./nova-apify.js";
+import { getApifyToken } from "./nova-apify.js";
 
 let apifyWindowOverride;
 export function __setApifyWindowOverride(v) { apifyWindowOverride = v; } // test hook
