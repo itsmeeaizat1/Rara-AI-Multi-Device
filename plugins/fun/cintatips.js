@@ -5,7 +5,7 @@ import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 const pluginConfig = {
   name: "cintatips",
   alias: ["cintatips"],
-  category: 'fun',
+  category: "couple",
   description: 'Tips & saran cinta untuk setiap situasi - jadian, PDKT, masalah, dll',
   usage: '.cintatips | .cintatips <kategori>',
   example: '.cintatips | .cintatips jadian',

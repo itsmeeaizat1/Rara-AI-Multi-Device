@@ -9,7 +9,7 @@ import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "confesswall",
   alias: ["confesswall"],
-  category: "fun",
+  category: "confess menfess",
   description: "Confession wall grup - post anonim dengan thread & react",
   usage: ".confesswall post <teks>\n.confesswall list\n.confesswall read <id>\n.confesswall react <id> <type>\n.confesswall reply <id> <teks>\n.confesswall stats",
   example: ".confesswall post aku suka seseorang di grup ini",

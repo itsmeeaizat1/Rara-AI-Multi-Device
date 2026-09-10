@@ -17,7 +17,8 @@ import { getCasesByCategory } from "../../case/nova.js";
 const CATEGORY_NAMES = {
   ai: "AI",
   "ai image": "AI Image", sticker: "Sticker", group: "Group", download: "Download",
-  tools: "Tools", browser: "Browser", canvas: "Canvas", fun: "Fun", game: "Game",
+  tools: "Tools", browser: "Browser", canvas: "Canvas", fun: "Fun",
+  couple: "Couple", "confess menfess": "Confess & Menfess", game: "Game",
   rpg: "RPG", "rpg couple": "RPG Couple", clan: "Clan",
   search: "Search", stalker: "Stalker", anime: "Anime",
   asupan: "Asupan", cecan: "Cecan", nsfw: "NSFW",
@@ -41,7 +42,7 @@ const CATEGORY_ORDER = [
   // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
   // maker → download → group → tools → sisanya → PALING AKHIR admin section.
   "user", "ai", "ai image", "sticker", "maker", "download", "group", "tools",
-  "browser", "canvas", "convert", "ephoto", "fun", "game",
+  "browser", "canvas", "convert", "ephoto", "fun", "couple", "confess menfess", "game",
   "rpg", "rpg couple", "clan", "turnamen",
   "search", "stalker", "anime", "asupan", "cecan", "nsfw",
   "media", "tts", "quotes", "primbon",
@@ -56,7 +57,7 @@ const CATEGORY_EMOJI = {
   ai: "🧠",
   "ai image": "🎨", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️", browser: "🌐",
   canvas: "🎨", convert: "🔄", maker: "🖌️", ephoto: "📸",
-  fun: "🎉", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
+  fun: "🎉", couple: "💕", "confess menfess": "💌", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
   search: "🔍", stalker: "🕵️", anime: "🎌", asupan: "😍", cecan: "💃", nsfw: "🔞",
   media: "🎬", tts: "🔊", quotes: "💬", primbon: "🔮",
   education: "📚", food: "🍔", info: "ℹ️", cek: "🔎", berita: "📰", bencana: "🚨",

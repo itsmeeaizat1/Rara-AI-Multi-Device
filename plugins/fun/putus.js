@@ -8,7 +8,7 @@ import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "putus",
   alias: ["putus"],
-  category: "fun",
+  category: "couple",
   description: "Memutuskan hubungan dengan pasangan",
   usage: ".putus",
   example: ".putus",

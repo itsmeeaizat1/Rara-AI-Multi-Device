@@ -10,7 +10,7 @@ import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
     name: "soulmate",
     alias: ["soulmate"],
-    category: 'fun',
+    category: "couple",
     description: 'Cek kecocokan jiwa dengan seseorang',
     usage: '.soulmate nama1|nama2',
     example: '.soulmatch Raiden|Mei',

@@ -13,7 +13,7 @@ import { fromSC } from "../../src/lib/styler.js";
 const pluginConfig = {
   name: "confess",
   alias: ["confess", "confessv3", "confessch", "confesschannel"],
-  category: "fun",
+  category: "confess menfess",
   description: "Confess v3 channel terpusat: confess anonim/non-anonim + reply, like, stats",
   usage: ".confess <pesan>\n.confess say <pesan>\n.confess reply <id> <balasan>\n.confess like <id>\n.confessch list\n.confess read <id/nomor>\n.confessch setchannel (di grup)\n.confessch mode <anon/nonanon>\n.confessch del <id/nomor> (owner)\n.confessch stats",
   example: ".confess aku suka seseorang\n.confess say aku Budi\n.confessch setchannel",

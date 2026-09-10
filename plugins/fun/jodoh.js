@@ -8,7 +8,7 @@ import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "jodoh",
   alias: ["jodoh"],
-  category: "fun",
+  category: "couple",
   description: "Jodohkan 2 member random dengan kecocokan",
   usage: ".jodoh",
   example: ".jodoh",

@@ -5,7 +5,7 @@ import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 const pluginConfig = {
   name: "cintagram",
   alias: ["cintagram"],
-  category: 'fun',
+  category: "couple",
   description: 'Buat surat cinta / love gram personal untuk seseorang',
   usage: '.cintagram <nama> | <pesan>',
   example: '.cintagram Sayang | Kamu adalah alasan aku tersenyum hari ini',

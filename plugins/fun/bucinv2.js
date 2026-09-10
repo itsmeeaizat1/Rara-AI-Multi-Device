@@ -4,7 +4,7 @@ import { getRandomItem } from '../../src/lib/nova-game-engine.js'
 const pluginConfig = {
     name: "bucinv2",
     alias: ["bucinv2", "bucin"],
-    category: 'fun',
+    category: "couple",
     description: 'Random kata-kata bucin/romantis',
     usage: '.bucin',
     example: '.bucin',

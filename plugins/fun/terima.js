@@ -8,7 +8,7 @@ import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "terima",
   alias: ["terima"],
-  category: "fun",
+  category: "couple",
   description: "Menerima tembakan dari seseorang",
   usage: ".terima @tag",
   example: ".terima @628xxx",
