@@ -437,6 +437,13 @@ async function main() {
             logger.warn("scheduler", `${name} scheduler skipped: ${e.message}`);
           }
         }
+        // Speedtest otomatis PERTAMA KALI pairing/konek (request owner 11 Sep):
+        // hasil tes disimpan sbg tanda kecepatan server → tampil di Info Server
+        // allmenu. Fire-and-forget biar gak nungguin boot.
+        try {
+          const { initServerSpeedtest } = await import("./src/lib/nova-speedtest.js");
+          initServerSpeedtest(sock).catch(() => {});
+        } catch { }
         try {
           const { initSahurCron } =
             await import("./plugins/religi/autosahur.js");
