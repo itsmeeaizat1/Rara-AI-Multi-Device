@@ -316,10 +316,10 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "RAM", value: `${(usedMem / 1024 / 1024).toFixed(0)}/${(totalMem / 1024 / 1024).toFixed(0)} MB (${memPercent}%)` },
     { label: "CPU", value: `${cpuCores} cores / ${cpuSpeed} MHz` },
     { label: "Load", value: loadAvg },
-    // hasil speedtest pertama (tanda kecepatan server — request owner 11 Sep)
-    ...speedtestInfoRows(db),
     // IP, port, DNS 1/2 (request owner 11 Sep)
     ...serverNetworkRows(db),
+    // hasil speedtest — PALING AKHIR setelah info dns (revisi owner 11 Sep)
+    ...speedtestInfoRows(db),
     ...(weatherDetail ? [
       "",
       "Cuaca",
