@@ -120,6 +120,13 @@ function defaultState() {
     contentTypes: { episode: true, baru: true, terbaru: true, hangat: true, berita: true, video: false },
     digestIntervals: { terbaru: 12, hangat: 12, berita: 6, video: 6 }, // jam
     lastDigest: {}, // { terbaru: { ts, hash }, ... } — dedup konten digest
+    // ── MODE LIST (request owner 10 Sep 2026: "klo anime notifier aktif jd
+    // yg dikirim cm 1 info anime terbaru aja jgn spam smpe 5 info anime,
+    // bentuk list jg off kecuali di on") ──
+    // false (DEFAULT) = digest anime (terbaru/hangat) cuma kirim 1 CARD
+    // anime TERBARU — gak ada spam 4-6 card + rangkuman.
+    // true = mode lama: beberapa card + rangkuman sisa.
+    listMode: false,
   };
 }
 
@@ -137,6 +144,7 @@ function loadState() {
     st.contentTypes ??= d.contentTypes;
     st.digestIntervals ??= d.digestIntervals;
     st.lastDigest ??= d.lastDigest;
+    st.listMode ??= d.listMode;
     return st;
   } catch {
     return defaultState();
@@ -699,6 +707,18 @@ export function getContentTypes() {
   return { ...d, ...loadState().contentTypes };
 }
 
+/** Mode list (request owner 10 Sep): OFF = cuma 1 info anime terbaru per digest. */
+export function getListMode() {
+  return loadState().listMode === true;
+}
+
+export function setListMode(on) {
+  const st = loadState();
+  st.listMode = !!on;
+  saveState(st);
+  return st.listMode;
+}
+
 export function setContentType(type, on) {
   const st = loadState();
   st.contentTypes ??= { ...defaultState().contentTypes };
@@ -850,9 +870,12 @@ export async function dispatchDigest(type, dig, targets, { force = false } = {})
   if (!targets?.length || !dig) return 0;
   let sent = 0;
   if ((type === "terbaru" || type === "hangat") && Array.isArray(dig.items) && dig.items.length) {
-    const cap = force ? 6 : 4;
+    // MODE LIST (request owner 10 Sep): default OFF = cuma 1 card anime
+    // TERBARU — gak spam 4-6 info. ON = beberapa card + rangkuman (mode lama).
+    const listOn = loadState().listMode === true;
+    const cap = listOn ? (force ? 6 : 4) : 1;
     const cards = dig.items.slice(0, cap);
-    const sisa = dig.items.slice(cap);
+    const sisa = listOn ? dig.items.slice(cap) : [];
     for (const t of targets) {
       for (let i = 0; i < cards.length; i++) {
         try { await sendAnimeCard(t, cards[i], type, { index: i + 1, total: dig.items.length }); sent++; }
