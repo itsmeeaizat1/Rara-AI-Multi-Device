@@ -314,7 +314,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Uptime", value: runtimeStr },
     "",
     "Info Database",
-    { label: "User", value: `${formatNum(totalUsers)} (${formatNum(totalPremium)} Premium)` },
+    { label: "User", value: formatNum(totalUsers) },
     // rincian user gratis vs premium — request owner 11 Sep
     { label: "User Gratis", value: formatNum(Math.max(0, totalUsers - totalPremium)) },
     { label: "User Premium", value: formatNum(totalPremium) },
