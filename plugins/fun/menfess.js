@@ -13,7 +13,7 @@ import { fromSC } from "../../src/lib/styler.js";
 const pluginConfig = {
   name: "menfess",
   alias: ["menfess"],
-  category: "fun",
+  category: "confess menfess",
   description: "Menfess ke @target via channel terpusat — anonim/non-anonim + reply, like, limit harian",
   usage: ".menfess @target <pesan> (anonim)\n.menfess say @target <pesan> (non-anonim)\n.menfess reply <id> <balasan>\n.menfess like <id>\n.menfess list\n.menfess read <id/nomor>\n.menfess setchannel (di grup)\n.menfess mode <anon/nonanon>\n.menfess limit <1-20>\n.menfess del <id/nomor> (owner)\n.menfess stats",
   example: ".menfess @Budi aku suka sama kamu\n.menfess say @Sinta terima kasih ya\n.menfess list",

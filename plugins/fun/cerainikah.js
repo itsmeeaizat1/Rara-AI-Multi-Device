@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "cerainikah",
   alias: ["cerainikah"],
-  category: "fun",
+  category: "couple",
   description: "Menceraikan pasangan",
   usage: ".cerainikah",
   example: ".cerainikah",

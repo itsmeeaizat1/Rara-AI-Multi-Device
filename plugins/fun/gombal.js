@@ -5,7 +5,7 @@ import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "gombal",
   alias: ["gombal"],
-  category: "fun",
+  category: "couple",
   description: "Generator gombal/random pickup line buat nembak crush",
   usage: ".gombal — Gombal acak\n.gombal <kategori> — Kategori: halus, gaul, cringe, gokil\n.gombal @target — Kirim gombal ke target",
   example: ".gombal\n.gombal cringe\n.gombal @target",

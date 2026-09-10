@@ -5,7 +5,7 @@ import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 const pluginConfig = {
   name: "ramalancinta",
   alias: ["ramalancinta"],
-  category: 'fun',
+  category: "couple",
   description: 'Ramalan masa depan hubungan cintamu berdasarkan nama pasangan',
   usage: '.ramalancinta <nama1> & <nama2>',
   example: '.ramalancinta Andi & Budi',

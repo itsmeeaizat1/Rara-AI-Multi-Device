@@ -7,7 +7,7 @@ import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "couple",
   alias: ["couple"],
-  category: "fun",
+  category: "couple",
   description: "Dashboard hubungan couple",
   usage: ".couple atau .couple @tag",
   example: ".couple",

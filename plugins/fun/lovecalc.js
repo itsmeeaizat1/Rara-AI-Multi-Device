@@ -5,7 +5,7 @@ import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 const pluginConfig = {
   name: "lovecalc",
   alias: ["lovecalc"],
-  category: 'fun',
+  category: "couple",
   description: 'Kalkulator cinta - hitung persentase kecocokan cinta 2 nama',
   usage: '.lovecalc <nama1> & <nama2>',
   example: '.lovecalc Andi & Budi',

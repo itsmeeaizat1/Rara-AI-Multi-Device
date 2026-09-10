@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "anniversary",
   alias: ["anniversary"],
-  category: "fun",
+  category: "couple",
   description: "Tracker anniversary/hari jadian dengan countdown",
   usage:
     ".anniversary — Cek anniversary kamu\n.anniversary set <tanggal> — Set tanggal jadian (DD/MM/YYYY)\n.anniversary @tag — Cek anniversary orang lain\n.anniversary list — Top anniversary di grup\n.anniversary delete — Hapus data anniversary",

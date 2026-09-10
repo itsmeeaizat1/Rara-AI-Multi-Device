@@ -5,7 +5,7 @@ import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 const pluginConfig = {
   name: "cintaquiz",
   alias: ["cintaquiz"],
-  category: 'fun',
+  category: "couple",
   description: 'Kuis cinta - 10 pertanyaan untuk menguji seberapa dalam kamu mencintai',
   usage: '.cintaquiz',
   example: '.cintaquiz',
