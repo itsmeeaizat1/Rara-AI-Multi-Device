@@ -10,7 +10,7 @@ const THEME = {
     info: "ℹ️",
     download: "📥",
     search: "🔍",
-    ai: "🤖",
+    ai: "🧠",
     user: "👤",
     bot: "🤖",
     music: "🎵",
