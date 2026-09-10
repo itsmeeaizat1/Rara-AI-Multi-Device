@@ -74,7 +74,7 @@ w("\n— handler plugins —");
   check(".instagramdl → contoh link reel", r2.includes(".instagramdl https://www.instagram.com/reel/xxx"));
   const m2b = mkM("instagramdl", "bukanlink");
   await igHandler(m2b, {});
-  check(".instagramdl link invalid → error novaGuide (bukan usage)", !m2b._replies[0].includes("ᴄᴀʀᴀ ᴘᴀᴋᴀɪ"));
+  check(".instagramdl link invalid → error novaGuide (header ᴅʟ, bukan usage)", !m2b._replies[0].startsWith(`「 ✦ ${toSC("instagram")} ✦ 」`) && m2b._replies[0].includes(toSC("URL-nya gak valid")));
 
   const m3 = mkM("ytmp3", "");
   await yt3Handler(m3, {});
