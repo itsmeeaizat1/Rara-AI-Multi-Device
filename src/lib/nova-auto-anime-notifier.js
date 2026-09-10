@@ -464,7 +464,12 @@ function currentSeasonInfo() {
   return { season, year };
 }
 
+let kitsuHttp = null; // seam inject buat e2e (digest card 10 Sep 2026)
+export function setKitsuHttp(fn) { kitsuHttp = fn; }
+export function resetKitsuHttp() { kitsuHttp = null; }
+
 async function kitsuGet(url) {
+  if (kitsuHttp) return kitsuHttp(url);
   const res = await fetch(url, {
     headers: { Accept: "application/vnd.api+json" },
     signal: AbortSignal.timeout(15000),
@@ -625,7 +630,32 @@ export function formatVideoMessage(items) {
   return msg;
 }
 
-async function buildDigest(type, limit = 10) {
+/**
+ * CARD PER-ANIME untuk digest terbaru/hangat (request owner 10 Sep 2026:
+ * "kn p g ada deskripsi ... cm mncul list doang tp 1 info thumbnail dan
+ * info anime berserta deksripsi g muncul"). Sebelumnya kedua tipe ini dikirim
+ * sebagai SATU pesan list — hangat bahkan tanpa sinopsis sama sekali.
+ * Sekarang tiap anime = card sendiri: poster + info + SINOPSIS PENUH
+ * di balik ℅readmore (bukan potongan 90 karakter).
+ */
+export function formatDigestCard(a, type = "terbaru", { index = 1, total = 1 } = {}) {
+  if (!a) return null;
+  const desc = String(a.synopsis || "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  let msg = (type === "hangat" ? "🔥 ANIME HANGAT MUSIM INI!" : "🆕 INFO ANIME TERBARU!") + "\n\n";
+  msg += `${index}. *${a.title}*\n`;
+  msg += `   📅 Mulai tayang: ${a.startDate || "?"}\n`;
+  msg += `   📺 ${a.subtype || "TV"}${a.episodeCount ? ` | ${a.episodeCount} eps` : ""} | ⭐ ${a.rating || "N/A"}\n`;
+  if (type === "hangat") msg += `   👥 ${Number(a.userCount || 0).toLocaleString("id-ID")} peminat\n`;
+  if (a.url) msg += `   🔗 ${a.url}\n`;
+  msg += `📖 Deskripsi:${READMORE}${desc || "Sinopsis belum tersedia di sumber."}\n\n`;
+  msg += `📌 ${type === "hangat" ? "Anime hangat" : "Info anime terbaru"} ${index}/${total} — Kitsu`;
+  return msg;
+}
+
+export async function buildDigest(type, limit = 10) {
   try {
     if (type === "terbaru") {
       const items = await getNewAiringAnime(limit);
@@ -637,13 +667,13 @@ async function buildDigest(type, limit = 10) {
       if (!thumb) {
         try { thumb = (await getHotSeasonAnime(1))[0]?.poster || null; } catch { thumb = null; }
       }
-      return { text: formatTerbaruMessage(items), hash: digestHash(items.map((i) => i.title + i.startDate).join("|")), thumb, sourceUrl: pic.url || items[0].url, tagline: "Info anime terbaru" };
+      return { text: formatTerbaruMessage(items), hash: digestHash(items.map((i) => i.title + i.startDate).join("|")), thumb, sourceUrl: pic.url || items[0].url, tagline: "Info anime terbaru", items };
     }
     if (type === "hangat") {
       const items = await getHotSeasonAnime(limit);
       if (!items.length) return null;
       const pic = items.find((i) => i.poster) || {};
-      return { text: formatHangatMessage(items), hash: digestHash(items.map((i) => i.title + i.userCount).join("|")), thumb: pic.poster || null, sourceUrl: pic.url || items[0].url, tagline: "Anime hangat musim ini" };
+      return { text: formatHangatMessage(items), hash: digestHash(items.map((i) => i.title + i.userCount).join("|")), thumb: pic.poster || null, sourceUrl: pic.url || items[0].url, tagline: "Anime hangat musim ini", items };
     }
     if (type === "berita") {
       const items = await getAnimeNews(limit);
@@ -765,13 +795,21 @@ async function sendAnimeNotification(chatId, text, { thumbUrl = null, sourceUrl 
  */
 async function sendAnimeCard(chatId, a, type = "new", meta = {}) {
   if (!sock) return false;
+  const isDigest = type === "terbaru" || type === "hangat";
   const caption = type === "episode"
     ? formatEpisodeCard(a, { index: meta.index || 1, total: meta.total || 1, source: meta.source || "AniList" })
+    : isDigest
+    ? formatDigestCard(a, type, { index: meta.index || 1, total: meta.total || 1 })
     : formatNewAnimeCard(a, { index: meta.index || 1, total: meta.total || 1, source: meta.source || "AniList" });
   if (!caption) return false;
-  const url = a.cover || a.banner || a.trailerThumb || null;
+  const url = a.cover || a.poster || a.banner || a.trailerThumb || null;
   const buf = url ? await downloadThumb(url) : null;
   const genreLine = Array.isArray(a.genres) ? a.genres.slice(0, 3).join(", ") : String(a.genres || "Anime").split(", ").slice(0, 3).join(", ");
+  const bodyLine = isDigest
+    ? (type === "hangat"
+        ? `👥 ${Number(a.userCount || 0).toLocaleString("id-ID")} peminat musim ini`
+        : `📺 ${a.subtype || "TV"} • mulai ${a.startDate || "tayang"}`)
+    : `🎌 ${genreLine || "Anime"}`;
   try {
     if (buf) {
       await sock.sendMessage(chatId, {
@@ -780,9 +818,9 @@ async function sendAnimeCard(chatId, a, type = "new", meta = {}) {
         contextInfo: {
           externalAdReply: {
             title: a.title || "Anime Update",
-            body: `🎌 ${genreLine || "Anime"}`,
+            body: bodyLine,
             thumbnail: buf,
-            sourceUrl: a.pageUrl || (a.anilistId ? `https://anilist.co/anime/${a.anilistId}` : "https://anilist.co"),
+            sourceUrl: a.pageUrl || a.url || (a.anilistId ? `https://anilist.co/anime/${a.anilistId}` : "https://anilist.co"),
             mediaType: 1,
             renderLargerThumbnail: true,
             showAdAttribution: false,
@@ -791,7 +829,7 @@ async function sendAnimeCard(chatId, a, type = "new", meta = {}) {
       });
     } else {
       // fallback: text + banner card biasa (tanpa gambar asli)
-      await sendAnimeNotification(chatId, caption, { thumbUrl: null, sourceUrl: a.pageUrl || null, tagline: a.title || null });
+      await sendAnimeNotification(chatId, caption, { thumbUrl: null, sourceUrl: a.pageUrl || a.url || null, tagline: a.title || null });
     }
   } catch (e) {
     logger.error?.("anime-notifier", `Gagal kirim card ke ${chatId}: ${e.message}`);
@@ -799,6 +837,48 @@ async function sendAnimeCard(chatId, a, type = "new", meta = {}) {
   }
   await new Promise((r) => setTimeout(r, 1000));
   return true;
+}
+
+/**
+ * Kirim digest konten. TERBARU & HANGAT = card PER-ANIME (request owner
+ * 10 Sep 2026: tiap anime = poster + info + sinopsis penuh, bukan list
+ * doang). BERITA & VIDEO tetap satu pesan text (kumpulan link).
+ * Cap anti-spam: 4 card per digest per chat (6 kalau force/.animenotify now),
+ * sisanya dirangkum 1 pesan judul.
+ */
+export async function dispatchDigest(type, dig, targets, { force = false } = {}) {
+  if (!targets?.length || !dig) return 0;
+  let sent = 0;
+  if ((type === "terbaru" || type === "hangat") && Array.isArray(dig.items) && dig.items.length) {
+    const cap = force ? 6 : 4;
+    const cards = dig.items.slice(0, cap);
+    const sisa = dig.items.slice(cap);
+    for (const t of targets) {
+      for (let i = 0; i < cards.length; i++) {
+        try { await sendAnimeCard(t, cards[i], type, { index: i + 1, total: dig.items.length }); sent++; }
+        catch (e) { logger.error?.("anime-notifier", `Gagal kirim card ${type} ke ${t}: ${e.message}`); }
+      }
+      if (sisa.length) {
+        const lines = sisa.map((a) => `• ${a.title}`).join("\n");
+        try {
+          await sendAnimeNotification(t, `${type === "hangat" ? "🔥" : "🆕"} *+${sisa.length} anime lainya:*\n\n${lines}`, { thumbUrl: null, sourceUrl: sisa[0]?.url || dig.sourceUrl, tagline: dig.tagline });
+          sent++;
+        } catch (e) {
+          logger.error?.("anime-notifier", `Gagal kirim rangkuman ${type} ke ${t}: ${e.message}`);
+        }
+      }
+    }
+    return sent;
+  }
+  for (const t of targets) {
+    try {
+      await sendAnimeNotification(t, dig.text, { thumbUrl: dig.thumb, sourceUrl: dig.sourceUrl, tagline: dig.tagline });
+      sent++;
+    } catch (e) {
+      logger.error?.("anime-notifier", `Gagal kirim digest ${type} ke ${t}: ${e.message}`);
+    }
+  }
+  return sent;
 }
 
 // ───────────────────────────── core check ─────────────────────────────
@@ -919,14 +999,7 @@ async function doRunCheck({ force = false, chatId = null } = {}) {
       continue;
     }
 
-    for (const t of digestTargets) {
-      try {
-        await sendAnimeNotification(t, dig.text, { thumbUrl: dig.thumb, sourceUrl: dig.sourceUrl, tagline: dig.tagline });
-        sent++;
-      } catch (e) {
-        logger.error?.("anime-notifier", `Gagal kirim digest ${type} ke ${t}: ${e.message}`);
-      }
-    }
+    sent += await dispatchDigest(type, dig, digestTargets, { force });
     logger.success?.("anime-notifier", `Digest ${type} terkirim ke ${digestTargets.length} chat`);
 
     const fresh = loadState();
