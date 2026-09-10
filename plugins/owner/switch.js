@@ -44,7 +44,7 @@ const pluginConfig = {
   category: "owner",
   description: 'Switch on/off semua fitur (channel, group, auto, command)',
   usage: '.switch [status|channel|group|auto|fitur]',
-  example: '.switch status all\n.switch channel\n.switch group welcome\n.switch auto autobackup on\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg',
+  example: '.switch status all\n.switch channel\n.switch group welcome\n.switch group welcome on 12036302xxx@g.us | on all | on list\n.switch auto autobackup on\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg',
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -507,25 +507,72 @@ Status: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi aka
 // ═══════════════════════════════════════════════════════════
 // GROUP HANDLER
 // ═══════════════════════════════════════════════════════════
+// Popup daftar grup tersedia — target terpusat fitur grup
+async function sendGroupTargetPicker(m, sock, prefix, feature, featureName, forceOff) {
+  let groups = {}
+  try { groups = (await sock.groupFetchAllParticipating()) || {} } catch {}
+  const list = Object.values(groups)
+    .map((g) => ({ jid: g.id, subject: (g.subject || g.id || "").trim(), count: (g.participants || []).length }))
+    .sort((a, b) => a.subject.localeCompare(b.subject))
+
+  const text = claraWrap("Switch Group", [
+    `Fitur : ${feature.label}`,
+    `Mode : target terpusat`,
+    ``,
+    list.length
+      ? `Total grup terdeteksi : ${list.length}`
+      : `Bot belum berada di grup mana pun.`,
+    ``,
+    `Aktif semua: \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} all\``,
+    `Aktif manual: \`${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} <jid-grup>\``,
+  ].join("\n"))
+
+  if (!list.length) return m.reply(text)
+
+  const rows = list.slice(0, 50).map((g) => ({
+    title: g.subject.slice(0, 25),
+    description: `${g.count} member — ${forceOff ? "OFF" : "ON"} di grup ini`,
+    id: `${prefix}switch group ${featureName} ${forceOff ? "off" : "on"} ${g.jid}`,
+  }))
+  try {
+    await sock.sendButton(m.chat, null, text, m, {
+      buttons: [
+        {
+          name: 'single_select',
+          buttonParamsJson: JSON.stringify({
+            title: "Pilih Grup",
+            sections: [{ title: forceOff ? "Matikan (Off)" : "Aktifkan (On)", rows }],
+          }),
+        },
+      ],
+    })
+  } catch {
+    await m.reply(text + "\n\nDaftar grup:\n" + list.map((g, i) => `${i + 1}. ${g.subject} \`${g.jid}\``).join("\n"))
+  }
+  return { handled: true }
+}
+
 async function handleGroup(m, { sock, config: cfg, forceOff }) {
   const db = getDatabase()
   const prefix = cfg?.command?.prefix || '.'
   const args = m.args || []
-  let featureName, mode
+  let featureName, mode, target
 
   if (forceOff) {
-    // Dari .switch off <fitur> atau .disable <fitur>
+    // Dari .switch off <fitur> / .disable <fitur>: args = [<fitur>, <target>]
     featureName = (args[0] || '').toLowerCase()
+    target = (args[1] || '').toLowerCase()
     mode = null
   } else {
     featureName = (args[1] || '').toLowerCase()
     mode = (args[2] || '').toLowerCase()
-    // Handle ".switch group goodbye off" — off di belakang
+    target = (args[3] || '').toLowerCase()
+    // Handle ".switch group goodbye off <target>" — off di belakang
     if (mode === 'off' || mode === 'false' || mode === '0') {
       forceOff = true
       mode = null
     }
-    // Handle ".switch group off goodbye" — off di depan fitur
+    // Handle ".switch group off goodbye <target>" — off di depan fitur
     if (featureName === 'off' || featureName === 'false') {
       forceOff = true
       featureName = mode
@@ -548,6 +595,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
       txt += `\n`
     }
     txt += tipText(`ON: \`${prefix}switch group <fitur>\` | OFF: \`${prefix}switch group <fitur> off\``)
+    txt += "\n" + tipText(`Target: \`${prefix}switch group <fitur> on <jid-grup>|all|list\``)
     return m.reply(txt.trim())
   }
 
@@ -557,28 +605,73 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
   if (!feature)
     return m.reply(`❌ Fitur tidak ditemukan: ${featureName}\nKetik \`${prefix}switch group\` untuk melihat daftar`)
 
-  // Welcome = fitur per-grup. Kalau toggle dari DM, jangan tulis setting ke
-  // jid DM (percuma) — arahkan ke chooser 2 mode: global semua grup / per grup.
-  if (feature.dbKey === "welcome" && !String(m.chat || "").endsWith("@g.us")) {
-    const welcomeModule = await import("../group/welcome.js")
-    const chooser = welcomeModule.default?.sendWelcomeModeChooser || welcomeModule.sendWelcomeModeChooser
-    if (chooser) return chooser(m, sock, db, prefix)
+  // ═══ TARGET TERPUSAT (request owner 10 Sep 2026) ═══
+  // ".switch group <fitur> on <target>" — kayak mode on/off terpusat auto:
+  //   on <jid-grup>  → aktif di grup itu saja (dari DM/grup manapun)
+  //   on all        → aktif di SEMUA grup yang bot ikuti
+  //   on list       → popup daftar grup yang tersedia buat dipilih
+  // Tanpa target: di dalam grup = grup ini; dari DM = popup daftar grup
+  // (FITLX lama "toggle dari DM nyasar ke jid DM" gak bisa kejadian lagi).
+  const isInGroupChat = String(m.chat || "").endsWith("@g.us")
+
+  if (target === 'list' || target === 'daftar' || (target === 'grup' && !isInGroupChat)) {
+    return await sendGroupTargetPicker(m, sock, prefix, feature, featureName, forceOff)
   }
 
-  // FIX BUG (owner 10 Sep 2026): fitur grup LAIN (goodbye dll) yang di-toggle
-  // dari DM tadinya nyimpen status ke jid DM — grup aslinya gak pernah ON,
-  // kelihatan "gak aktif di grupnya" padahal toggle sukses. Sekarang ditolak
-  // jelas: harus dijalankan di dalam grup.
-  if (!String(m.chat || "").endsWith("@g.us")) {
+  if (target === 'all' || target === 'semua') {
+    let groups = {}
+    try { groups = (await sock.groupFetchAllParticipating()) || {} } catch {}
+    const list = Object.values(groups)
+    if (!list.length)
+      return m.reply(claraWrap("Switch Group", [
+        `Fitur : ${feature.label}`,
+        `Target : semua grup`,
+        ``,
+        `Bot belum berada di grup mana pun.`,
+      ].join("\n")))
+    let count = 0
+    for (const g of list) {
+      db.setGroup(g.id, forceOff ? { [feature.dbKey]: feature.off } : { [feature.dbKey]: feature.on })
+      count++
+    }
     return m.reply(claraWrap("Switch Group", [
       `Fitur : ${feature.label}`,
-      `Lokasi : chat pribadi`,
+      `Target : semua grup`,
+      `Status : *${forceOff ? "OFF" : "ON"}*`,
       ``,
-      `Toggle fitur grup harus dijalankan *di dalam grup*`,
-      `agar status tersimpan ke grup yang benar.`,
-      ``,
-      `Masuk grup lalu ketik: \`${prefix}switch group ${featureName}${forceOff ? " off" : ""}\``,
+      `Total grup: *${count}*`,
     ].join("\n")))
+  }
+
+  // Target = JID grup spesifik (angka / berakhiran @g.us)
+  const isJidLikeTarget = /@g\.us$/.test(target) || /^[0-9-]{8,}$/.test(target.replace(/@.*$/, ""))
+  if (target && isJidLikeTarget) {
+    let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
+    if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
+      return m.reply(`⚠ JID grup tidak valid. Contoh: \`${prefix}switch group ${featureName} on 12036302xxxxx@g.us\``)
+    let subject = groupJid
+    try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
+      return m.reply(claraWrap("Switch Group", [
+        `Fitur : ${feature.label}`,
+        `Target : ${groupJid}`,
+        ``,
+        `Bot tidak menemukan grup itu — pastikan bot`,
+        `masuk di grup tersebut dan JID benar.`,
+        ``,
+        `Lihat daftar: \`${prefix}switch group ${featureName} on list\``,
+      ].join("\n")))
+    }
+    db.setGroup(groupJid, forceOff ? { [feature.dbKey]: feature.off } : { [feature.dbKey]: feature.on })
+    return m.reply(claraWrap("Switch Group", [
+      `Fitur : ${feature.label}`,
+      `Target : ${subject}`,
+      `Status : *${forceOff ? "OFF" : "ON"}*`,
+    ].join("\n")))
+  }
+
+  // Tanpa target dari DM → popup daftar grup (jangan nyimpen ke jid DM)
+  if (!isInGroupChat) {
+    return await sendGroupTargetPicker(m, sock, prefix, feature, featureName, forceOff)
   }
 
   const groupData = db.getGroup(m.chat) || {}

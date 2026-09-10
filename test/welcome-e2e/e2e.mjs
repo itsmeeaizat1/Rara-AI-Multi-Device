@@ -31,16 +31,27 @@ function mockM(args, opts = {}) {
   }
 }
 let ppUrlMock = null // null = pp private/none
+const GROUPS = {
+  "120363021234567890@g.us": { id: "120363021234567890@g.us", subject: "Grup Test", participants: [1, 2, 3] },
+  "120363098765432109@g.us": { id: "120363098765432109@g.us", subject: "Grup Kedua", participants: [1, 2] },
+}
+const buttons = []
 const mockSock = {
   user: { id: "628777000111:5@s.whatsapp.net" },
   profilePictureUrl: async () => ppUrlMock,
+  groupFetchAllParticipating: async () => ({ ...GROUPS }),
+  sendButton: async (to, thumb, text, msgCtx, opts) => { buttons.push({ to, text: String(text), opts }); return {} },
   sendPresenceUpdate: async () => {},
   sendMessage: async (to, msg) => { sent.push({ to, msg }); return { key: { id: "m" + sent.length } } },
-  groupMetadata: async (gid) => ({
-    id: gid, subject: "Grup Test", desc: "Deskripsi grup test",
-    owner: "6289998887777@s.whatsapp.net",
-    participants: [{ id: NEWBIE, admin: null }, { id: "6289998887777@s.whatsapp.net", admin: "superadmin" }],
-  }),
+  groupMetadata: async (gid) => {
+    const g = GROUPS[gid]
+    if (!g) throw new Error("not found")
+    return {
+      id: gid, subject: g.subject, desc: "Deskripsi grup test",
+      owner: "6289998887777@s.whatsapp.net",
+      participants: [{ id: NEWBIE, admin: null }, { id: "6289998887777@s.whatsapp.net", admin: "superadmin" }],
+    }
+  },
   groupParticipantsUpdate: async () => {},
 }
 
@@ -103,12 +114,41 @@ await groupHandler({ id: GID, action: "add", participants: [NEWBIE] }, mockSock)
 await new Promise((r) => setTimeout(r, 300))
 t("6a. pp private → fallback pesan teks", sent.length === 1 && !!sent[0].msg?.text, "sent=" + sent.length)
 
-// ═══ 7. GUARD DM: toggle bye dari DM → ditolak jelas, gak nyimpen ke jid DM ═══
-replies.length = 0
-await switchHandler(mockM(["group", "bye", "on"], { chat: "628999@s.whatsapp.net", isGroup: false }), { sock: mockSock, config })
-const dmReply = replies.at(-1)
-t("7a. toggle dari DM ditolak dengan arahan", /ʜᴀʀᴜꜱ|di dalam grup/i.test(dmReply), String(dmReply).slice(0, 100))
-t("7b. gak ada status nyasar ke jid DM", (db.getGroup("628999@s.whatsapp.net") || {}).goodbye === undefined, JSON.stringify(db.getGroup("628999@s.whatsapp.net")))
+// ═══ 7. TARGET TERPUSAT (request owner 10 Sep 2026) ═══
+const DM = { chat: "628999@s.whatsapp.net", isGroup: false }
+const OTHER_GID = "120363098765432109@g.us"
+
+// 7a. toggle dari DM tanpa target → popup daftar grup (gak nyasar ke jid DM)
+buttons.length = 0
+await switchHandler(mockM(["group", "bye", "on"], DM), { sock: mockSock, config })
+t("7a. DM tanpa target → popup daftar grup", buttons.length === 1 && JSON.stringify(buttons[0].opts).includes("single_select"), "buttons=" + buttons.length)
+t("7b. gak ada status nyasar ke jid DM", (db.getGroup(DM.chat) || {}).goodbye === undefined, JSON.stringify(db.getGroup(DM.chat)))
+
+// 7c. .switch group bye on list → popup daftar grup tersedia
+buttons.length = 0
+await switchHandler(mockM(["group", "bye", "on", "list"], DM), { sock: mockSock, config })
+const listBtn = JSON.stringify(buttons[0]?.opts || {})
+t("7c. 'on list' → popup list grup", listBtn.includes("single_select") && listBtn.includes(OTHER_GID), listBtn.slice(0, 120))
+const before7d = JSON.stringify(db.getGroup(OTHER_GID) || {})
+t("7d. list gak ngeset apa-apa", JSON.stringify(db.getGroup(OTHER_GID) || {}) === before7d)
+
+// 7e. .switch group welcome on all → semua grup ON
+await switchHandler(mockM(["group", "welcome", "on", "all"], DM), { sock: mockSock, config })
+t("7e. 'on all' → kedua grup welcome ON", (db.getGroup(GID) || {}).welcome === true && (db.getGroup(OTHER_GID) || {}).welcome === true, JSON.stringify({ a: db.getGroup(GID)?.welcome, b: db.getGroup(OTHER_GID)?.welcome }))
+t("7f. 'on all' balas total grup", /2/.test(replies.at(-1)))
+
+// 7g. .switch group bye on <jid spesifik> → cuma grup itu
+await switchHandler(mockM(["group", "bye", "on", OTHER_GID], DM), { sock: mockSock, config })
+t("7g. on <jid> → grup itu ON", (db.getGroup(OTHER_GID) || {}).goodbye === true)
+
+// 7i. jid grup yang bot gak masuk → ditolak jelas
+const before = JSON.stringify(db.getGroup("1111222233334444@g.us"))
+await switchHandler(mockM(["group", "bye", "on", "1111222233334444@g.us"], DM), { sock: mockSock, config })
+t("7i. jid gak dikenal ditolak", JSON.stringify(db.getGroup("1111222233334444@g.us")) === before, String(replies.at(-1)).slice(0, 90))
+
+// 7j. .switch group bye off all → semua OFF
+await switchHandler(mockM(["group", "bye", "off", "all"], DM), { sock: mockSock, config })
+t("7j. 'off all' → kedua grup bye OFF", (db.getGroup(GID) || {}).goodbye === false && (db.getGroup(OTHER_GID) || {}).goodbye === false, JSON.stringify({ a: db.getGroup(GID)?.goodbye, b: db.getGroup(OTHER_GID)?.goodbye }))
 
 process.stdout.write("\n===== " + pass + " PASS, " + fail + " FAIL =====\n")
 await new Promise((r) => setTimeout(r, 400))
