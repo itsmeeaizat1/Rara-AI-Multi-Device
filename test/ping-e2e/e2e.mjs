@@ -40,7 +40,7 @@ w("\n— 2. .ping baru — tanpa upload eksternal —");
 }
 
 w("\n— 3. pluginConfig —");
-check("name ping + alias speed", pingConfig.name === "ping" && pingConfig.alias.includes("speed"));
+check("name ping (alias .speed pindah ke speedtest)", pingConfig.name === "ping" && !pingConfig.alias.includes("speed"));
 
 w(`\n${pass} PASS / ${fail} FAIL`);
 process.exit(fail ? 1 : 0);
