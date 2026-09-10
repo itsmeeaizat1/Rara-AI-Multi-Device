@@ -13,6 +13,9 @@ import {
   saveSearchSession,
   getSearchSession,
 } from "../../src/lib/nova-websearch.js";
+import {
+  buildRichResponse, sendRichMessage, getWikiSummary, getGoogleSuggest,
+} from "../../src/lib/nova-rich-response.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 
@@ -20,7 +23,7 @@ const pluginConfig = {
   name: "search",
   alias: ["serach", "googlesearch", "googleserach", "searchweb", "websearch", "gsearch", "gsweb", "caridweb", "gogleserach"],
   category: "browser",
-  description: "Nyari web pake mesin pilihan (bing/brave/duckduckgo) — list 1..N, ketik nomor buat buka preview halaman",
+  description: "Nyari web pake mesin pilihan — hasil dirender DI DALAM CHAT ala rich AI (gambar + ringkasan + chips), ketik nomor buat baca halaman",
   usage: ".search <engine> <query> | .search list | .search <nomor>",
   example: ".search bing daftar hp terkenal",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
@@ -65,6 +68,16 @@ async function handleSearch(m, sock, query, engine) {
   }
   saveSearchSession(m.chat, query, r.items);
 
+  // ── RICH RESPONSE ALA META AI (request owner 10 Sep 2026) ──
+  // Hasil pencarian dirender DI DALAM CHAT kayak rich AI: gambar +
+  // ringkasan Wikipedia + list hasil + suggest chips pencarian terkait.
+  // Gagal/throw (client gak dukung rich) → fallback format list lama.
+  const richOk = await sendSearchRich(m, sock, query, r);
+  if (richOk) {
+    await m.react("🐣");
+    return;
+  }
+
   const srcNote = r.engineNote
     ? `\n📡 *${r.source}* (google dialihkan — google ngeblok bot)`
     : `\n📡 Mesin: *${r.source}* • ${r.items.length} hasil`;
@@ -82,7 +95,7 @@ async function handleSearch(m, sock, query, engine) {
     `(contoh: ${m.prefix}search 2) — hasil nyimpen 15 menit`,
   ]);
 
-  // popup tap-list (tap = auto-run ${prefix}search buka <n>)
+  // popup tap-list (fallback — tap = auto-run ${prefix}search buka <n>)
   try {
     await sock.sendButton(m.chat, null, text, m, {
       buttons: [
@@ -106,6 +119,42 @@ async function handleSearch(m, sock, query, engine) {
     await m.reply(text);
   }
   await m.react("🐣");
+}
+
+/**
+ * Rich response buat hasil pencarian (ala contoh owner — google search rich).
+ * Bagian: [image wiki (kalau ada)] [ringkasan wiki] [judul + list hasil]
+ * [link sumber] [suggest chips pencarian terkait].
+ * Return true kalau rich kekirim, false kalau gagal → caller fallback.
+ */
+async function sendSearchRich(m, sock, query, r) {
+  try {
+    const parts = [];
+    // Wikipedia summary (gratis) — gambar + ringkasan ala contoh owner
+    const wiki = await getWikiSummary(query);
+    if (wiki?.thumbnail) parts.push({ type: "image", url: wiki.thumbnail });
+    parts.push({ type: "text", content: `🔎 Hasil pencarian: "${query}" (${r.source})` });
+    if (wiki?.extract) {
+      let wikiText = `📖 ${wiki.title}\n\n${wiki.extract.slice(0, 400)}${wiki.extract.length > 400 ? "..." : ""}`;
+      if (wiki.url) wikiText += `\n\n🔗 ${wiki.url}`;
+      parts.push({ type: "text", content: wikiText });
+    }
+    const list = r.items.slice(0, 6).map((it, i) =>
+      `${i + 1}. ${it.title.slice(0, 60)}\n   ${domainOf(it.url)}` +
+      (it.snippet ? `\n   ${it.snippet.slice(0, 80)}` : "")
+    ).join("\n\n");
+    parts.push({ type: "text", content: `🌐 ${list}` });
+    parts.push({ type: "text", content: `💡 Ketik ${m.prefix}search <nomor> buat buka halaman lengkap (hasil nyimpen 15 menit).` });
+    // suggest chips: pencarian terkait dari Google Suggest — tap = auto-run .search baru
+    const sug = await getGoogleSuggest(query, 4);
+    if (sug.length) {
+      parts.push({ type: "suggest", prompts: sug.map((s) => `${m.prefix}search ${s}`).slice(0, 4) });
+    }
+    const rich = buildRichResponse(parts, `🔎 ${query}`, "");
+    return await sendRichMessage(sock, m.chat, rich);
+  } catch {
+    return false;
+  }
 }
 
 async function handleOpen(m, sock, num) {
@@ -140,6 +189,15 @@ async function handleOpen(m, sock, num) {
     ]));
   }
 
+  // ── RICH PREVIEW (request owner 10 Sep 2026): isi halaman dirender
+  // di dalam chat ala Meta AI — [image halaman] [judul + link + deskripsi]
+  // [isi halaman] [suggest chips pencarian terkait]. Fallback → teks lama.
+  const richOk = await sendPreviewRich(m, sock, num, sess, p);
+  if (richOk) {
+    await m.react("🐣");
+    return;
+  }
+
   const body =
     `📄 *${p.title}*\n` +
     `🔗 ${p.url}\n` +
@@ -159,6 +217,26 @@ async function handleOpen(m, sock, num) {
     }),
   }, { quoted: m });
   await m.react("🐣");
+}
+
+/** Rich preview halaman — return true kalau kekirim, false → fallback. */
+async function sendPreviewRich(m, sock, num, sess, p) {
+  try {
+    const parts = [];
+    if (p.image) parts.push({ type: "image", url: p.image });
+    parts.push({ type: "text", content: `📄 ${p.title}` });
+    parts.push({ type: "text", content: `🔗 ${p.url}` });
+    if (p.description) parts.push({ type: "text", content: `📝 ${p.description}` });
+    if (p.text) parts.push({ type: "text", content: `📖 ${p.text.slice(0, 2000)}${p.text.length > 2000 ? "..." : ""}` });
+    const sug = await getGoogleSuggest(sess.query, 4);
+    if (sug.length) {
+      parts.push({ type: "suggest", prompts: sug.map((s) => `${m.prefix}search ${s}`).slice(0, 4) });
+    }
+    const rich = buildRichResponse(parts, `📄 Hasil #${num} — ${sess.query}`, "");
+    return await sendRichMessage(sock, m.chat, rich);
+  } catch {
+    return false;
+  }
 }
 
 async function handler(m, { sock }) {
