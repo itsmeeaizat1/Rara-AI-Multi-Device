@@ -1,16 +1,16 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.900+ Command, 1.850+ Plugin & 46 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 4.600+ Command, 1.850+ Plugin & 46 Kategori!</b></p>
 </div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-24.0.0-orange?style=flat-square&logo=git&logoColor=white">
   <img src="https://img.shields.io/badge/Total_Plugin-1850%2B-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-2900%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Total_Command-4600%2B-blueviolet?style=flat-square&logo=terminal">
   <img src="https://img.shields.io/badge/Kategori-46-green?style=flat-square&logo=folder">
-  <img src="https://img.shields.io/badge/Downloader-52-yellow?style=flat-square&logo=download">
-  <img src="https://img.shields.io/badge/RPG_Game-168-ff69b4?style=flat-square&logo=target">
-  <img src="https://img.shields.io/badge/AI_Plugin-170-9cf?style=flat-square&logo=ai">
+  <img src="https://img.shields.io/badge/Downloader-55-yellow?style=flat-square&logo=download">
+  <img src="https://img.shields.io/badge/RPG_Game-161-ff69b4?style=flat-square&logo=target">
+  <img src="https://img.shields.io/badge/AI_Plugin-179-9cf?style=flat-square&logo=ai">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
 </p>
@@ -474,24 +474,24 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.850+ |
-| Total Command | 2.900+ (termasuk alias) |
+| Total Plugin | 1.853 (1.781 dengan command aktif) |
+| Total Command | 4.665 (1.725 utama + 2.940 alias) |
 | Kategori | 46 |
-| RPG Module | 168 (159 rpg + 9 couple) |
-| AI Plugin | 170 (125 ai + 45 ai image) |
+| RPG Module | 161 (152 rpg + 9 couple) |
+| AI Plugin | 179 (134 ai + 45 ai image) |
 | AI Model | 34 |
-| Downloader | 52 |
+| Downloader | 55 |
 | Education | 25 |
 | Panel Pterodactyl | 100 slot (28 plugin kontrol) |
-| Convert Plugin | 31 |
-| Tools Plugin | 194 |
+| Convert Plugin | 32 |
+| Tools Plugin | 188 |
 | Notifier Otomatis | 8 (cuaca, sholat, bmkg, anime, movie, web, crypto, loker) |
 | Browser Plugin | 11 |
 | Menu Variasi | 6 |
 | Nav Button Plugin | 1.019 |
 | Welcome/Goodbye | 5 variasi |
 | Loker Source | 4 |
-| Weather System | 2 (V1 + V2) |
+| Weather System | 5 provider + alert ekstrem EWS |
 | Payment Method | 4 (Cash, QRIS, E-Wallet, Bank) |
 | Adzan Layer | 3 |
 | Saluran Event | 8 |

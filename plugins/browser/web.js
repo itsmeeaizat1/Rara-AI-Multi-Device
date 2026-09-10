@@ -477,7 +477,7 @@ function presetListText() {
 // Pola sama dengan nova-menu-card (viewOnceMessage → interactiveMessage).
 async function sendWebCard(sock, m, { url, title = "", text = "" }) {
   const botName = config.bot?.name || "Nova AI";
-  const botVersion = config.bot?.version || "23.0.0";
+  const botVersion = config.bot?.version || "24.0.0";
 
   // Banner: pakai thumbnail menu bot — kalau gak ada, card tetap jalan tanpa header.
   let header = { title: "", hasMediaAttachment: false };
