@@ -2,6 +2,7 @@
 // Shared info section builder untuk menu, allmenu, allmenucategory
 // Format: Info User, Info Bot, Info Database, Info Server, Waktu & Tanggal, Cuaca
 
+import { speedtestInfoRows } from "./nova-speedtest.js";
 import os from "os";
 import fs from "fs";
 import { formatUptime, getTimeGreeting, getImportantDay } from "./nova-formatter.js";
@@ -268,6 +269,8 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "RAM", value: `${(usedMem / 1024 / 1024).toFixed(0)}/${(totalMem / 1024 / 1024).toFixed(0)} MB (${memPercent}%)` },
     { label: "CPU", value: `${cpuCores} cores / ${cpuSpeed} MHz` },
     { label: "Load", value: loadAvg },
+    // hasil speedtest pertama (tanda kecepatan server — request owner 11 Sep)
+    ...speedtestInfoRows(db),
     ...(weatherDetail ? [
       "",
       "Cuaca",

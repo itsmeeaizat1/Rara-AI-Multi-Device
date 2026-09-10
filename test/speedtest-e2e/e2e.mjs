@@ -102,5 +102,45 @@ w("\n— 4. pluginConfig —");
 check("name speedtest + alias speedtes & speed", stConfig.name === "speedtest" && stConfig.alias.includes("speedtes") && stConfig.alias.includes("speed"));
 check("cooldown lama (hemat bandwidth)", stConfig.cooldown >= 30, String(stConfig.cooldown));
 
+w("\n— 5. hasil tes TERSIMPAN + baris Info Server —");
+{
+  const lib = await import("../../src/lib/nova-speedtest.js");
+
+  // db mock: setting(key) get / setting(key, value) set
+  const mkDb = () => {
+    const store = {};
+    return {
+      setting: (k, v) => { if (v !== undefined) { store[k] = v; return store[k]; } return store[k]; },
+      _store: store,
+    };
+  };
+
+  const restore = stubFetch();
+  const db = mkDb();
+  const r1 = await lib.initServerSpeedtest(null, db, { bootDelayMs: 0 });
+  check("init pertama → jalan & saved", r1?.saved === true && !!r1.result?.down, JSON.stringify(r1).slice(0, 60));
+  const saved = lib.getSavedSpeedtest(db);
+  check("hasil tersimpan di setting serverSpeedtest", !!saved && saved.down > 0 && saved.up > 0 && saved.ping > 0);
+  const r2 = await lib.initServerSpeedtest(null, db, { bootDelayMs: 0 });
+  check("connect lagi → SKIP (cuma sekali)", r2?.skipped === true || (r2.saved === undefined && !r2.result), JSON.stringify(r2));
+
+  const rows = lib.speedtestInfoRows(db);
+  check("speedtestInfoRows → Download/Upload", rows.length === 2 && rows[0].label === "Download" && /Mbps/.test(rows[0].value) && rows[1].label === "Upload", JSON.stringify(rows));
+  check("db kosong → rows []", lib.speedtestInfoRows(mkDb()).length === 0);
+  check("db null → rows [] (gak crash)", lib.speedtestInfoRows(null).length === 0);
+  restore();
+}
+
+w("\n— 6. plugin .speedtest simpan hasil tiap run —");
+{
+  const restore = stubFetch();
+  const store = {};
+  const db = { setting: (k, v) => { if (v !== undefined) { store[k] = v; return store[k]; } return store[k]; } };
+  const { m, sock, sent } = mkMocks();
+  await stHandler(m, { sock, db });
+  restore();
+  check("handler simpan serverSpeedtest ke db", !!store.serverSpeedtest && store.serverSpeedtest.down > 0, JSON.stringify(store.serverSpeedtest || {}).slice(0, 60));
+}
+
 w(`\n${pass} PASS / ${fail} FAIL`);
 process.exit(fail ? 1 : 0);
