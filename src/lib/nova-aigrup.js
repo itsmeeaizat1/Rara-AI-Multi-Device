@@ -5,6 +5,7 @@
 // Anti-spam: cooldown, rate limit, content filter
 // ═══════════════════════════════════════════════
 import { getDatabase } from "./nova-database.js";
+import { getJadibotSetting } from "./nova-jadibot-database.js";
 import { callAI } from "./nova-ai-service.js";
 import config from "../../config.js";
 
@@ -140,11 +141,10 @@ function addHourlyCount(groupId) {
 // ═══════════════════════════════════════════════
 // Main handler
 // ═══════════════════════════════════════════════
-export async function handleAiGrup(m, sock, botNumber) {
+export async function handleAiGrup(m, sock, botNumber, jadibotCtx = {}) {
   try {
-    const db = getDatabase();
-    if (!db?.db?.data?.aigrup) return false;
-    const aigrup = db.db.data.aigrup;
+    const aigrup = resolveAigrupState(jadibotCtx);
+    if (!aigrup) return false;
     if (!aigrup.enabled) return false;
 
     // ── Filter: tipe pesan ──
@@ -255,8 +255,24 @@ export async function handleAiGrup(m, sock, botNumber) {
   }
 }
 
-export function isAiGrupEnabled() {
+// ── Resolve state aigrup sesuai session ──
+// Session jadibot: state per-nomor di DB jadibot (DEFAULT OFF — pasangan baru
+// gak langsung nimbrung, harus .aigrup on di session itu dulu).
+// Bot utama: state global di db.db.data.aigrup (perilaku lama, tidak berubah).
+const SESSION_AIGRUP_DEFAULT = { enabled: false, probability: 10, format: "openai", model: "deepseek-v4-flash:free" };
+
+export function resolveAigrupState(jadibotCtx = {}) {
+  if (jadibotCtx.isJadibot && jadibotCtx.jadibotId) {
+    const st = getJadibotSetting(jadibotCtx.jadibotId, "aigrup");
+    return st && typeof st === "object" ? st : { ...SESSION_AIGRUP_DEFAULT };
+  }
   const db = getDatabase();
-  if (!db?.db?.data?.aigrup) return false;
-  return db.db.data.aigrup.enabled || false;
+  if (!db?.db?.data?.aigrup) return null;
+  return db.db.data.aigrup;
+}
+
+export function isAiGrupEnabled(jadibotCtx = {}) {
+  const st = resolveAigrupState(jadibotCtx);
+  if (!st) return false;
+  return st.enabled || false;
 }
