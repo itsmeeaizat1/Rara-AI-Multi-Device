@@ -20,6 +20,7 @@ import {
   pickRandom,
   pickBestVideoUrl,
 } from "../../src/lib/nova-playdouyin.js";
+import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/nova-douyin-dl.js";
 import axios from "axios";
 import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
@@ -223,8 +224,55 @@ async function handler(m, { sock }) {
       return;
     }
 
+    // Step 1.5: Haidar downloader douyin (request owner 2026-09-10)
+    const hd = await haidarDouyin(text);
+    if (hd?.video) {
+      const captionH = mediaCaption({
+        platformIcon: "🎵", platformName: "Douyin",
+        title: hd.title || "Douyin Video",
+        format: "Video (No Watermark)", method: "Haidar",
+      });
+      await m.react("🐣");
+      await sock.sendMessage(m.chat, { video: { url: hd.video }, caption: captionH }, { quoted: m });
+      return;
+    }
+    if (hd?.images?.length) {
+      await sock.sendMessage(m.chat, { image: { url: hd.images[0] }, caption: `📸 Foto Slide Douyin\n\n📝 ${hd.title}\n🔖 Sumber: Haidar` });
+      for (const img of hd.images.slice(1, 10)) {
+        await new Promise((res) => setTimeout(res, 800));
+        await sock.sendMessage(m.chat, { image: { url: img } }).catch(() => {});
+      }
+      await m.react("🐣");
+      return;
+    }
+    console.log("[douyindl.js] Haidar gagal → Sylvatica...");
+
+    // Step 1.6: Sylvatica downloader douyin (request owner 2026-09-10)
+    const sy = await sylvaticaDouyin(text);
+    if (sy?.video) {
+      const captionS = mediaCaption({
+        platformIcon: "🎵", platformName: "Douyin",
+        title: sy.title || "Douyin Video",
+        format: sy.quality ? `Video (${sy.quality})` : "Video",
+        method: "Sylvatica",
+      });
+      await m.react("🐣");
+      await sock.sendMessage(m.chat, { video: { url: sy.video }, caption: captionS }, { quoted: m });
+      return;
+    }
+    if (sy?.images?.length) {
+      await sock.sendMessage(m.chat, { image: { url: sy.images[0] }, caption: `📸 Foto Slide Douyin\n\n📝 ${sy.title}\n🔖 Sumber: Sylvatica` });
+      for (const img of sy.images.slice(1, 10)) {
+        await new Promise((res) => setTimeout(res, 800));
+        await sock.sendMessage(m.chat, { image: { url: img } }).catch(() => {});
+      }
+      await m.react("🐣");
+      return;
+    }
+    console.log("[douyindl.js] Sylvatica gagal → azbry...");
+
     // Step 2: Fallback to azbry API
-    console.log("[douyindl.js] IkyyXD failed, falling back to azbry...");
+    console.log("[douyindl.js] azbry fallback...");
     try {
       const data = await azbryFetch(text);
       const r = data.result;
