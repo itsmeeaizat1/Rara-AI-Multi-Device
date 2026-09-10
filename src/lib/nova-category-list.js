@@ -35,30 +35,21 @@ const CATEGORY_NAMES = {
 };
 
 const CATEGORY_ORDER = [
-  // Core Bot
-  "ai", "ai image", "sticker", "group", "download", "tools", "browser",
-  // Media & Kreatif
-  "canvas", "convert", "maker", "ephoto", "fun", "game",
-  // Game & RPG
+  // URUTAN BARU (owner 10 Sep 2026) — sama dengan allmenu:
+  // user dulu → ai → ai image → stiker → maker → download → group → tools → sisanya
+  // → PALING AKHIR: panel, vps, main, info, owner
+  // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
+  // maker → download → group → tools → sisanya → PALING AKHIR admin section.
+  "user", "ai", "ai image", "sticker", "maker", "download", "group", "tools",
+  "browser", "canvas", "convert", "ephoto", "fun", "game",
   "rpg", "rpg couple", "clan", "turnamen",
-  // Search & Info
   "search", "stalker", "anime", "asupan", "cecan", "nsfw",
-  // Entertainment
   "media", "tts", "quotes", "primbon",
-  // Knowledge
-  "education", "food", "info", "cek", "berita", "bencana",
-  // Religion
-  "islami", "religi",
-  // System & User
-  "main", "user", "premium", "future",
-  // Store
-  "store", "market",
-  // Misc
-  "misc", "random", "utility", "clean",
-  // Admin
-  "vps", "linode", "panel", "jpm", "pushkontak", "kerja",
-  "sekolah", "umum", "general", "date", "primary",
-  "owner",
+  "education", "food", "cek", "berita", "bencana",
+  "islami", "religi", "premium", "future", "utility", "misc", "random", "clean",
+  "store", "market", "jpm", "pushkontak", "kerja", "sekolah", "umum", "date", "primary",
+  // PALING AKHIR (owner): panel, vps, main, info, owner
+  "panel", "vps", "main", "info", "linode", "general", "owner",
 ];
 
 const CATEGORY_EMOJI = {
