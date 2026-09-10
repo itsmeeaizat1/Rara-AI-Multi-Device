@@ -128,6 +128,10 @@ export async function buildMenuInfo(m, ctx = {}) {
   const pingMs = getMessagePingMs(m);
 
   // ── Time & date ──
+  // total hari sebulan (bulan berjalan) + setahun (kabisat 366) — request owner 11 Sep
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const isLeapYear = (now.getFullYear() % 4 === 0 && now.getFullYear() % 100 !== 0) || now.getFullYear() % 400 === 0;
+  const daysInYear = isLeapYear ? 366 : 365;
   let timeStr = "";
   let dayName = "";
   let dateStr = "";
@@ -287,6 +291,8 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Hari", value: `${dayName} (${weton})` },
     { label: "Tanggal", value: dateStr },
     { label: "Hijriah", value: islamicDate },
+    { label: "Hari Sebulan", value: `${daysInMonth} hari` },
+    { label: "Hari Setahun", value: `${daysInYear} hari` },
     { label: "Hari Penting", value: importantDay || "Tidak ada" },
     "",
     "Info Bot",
