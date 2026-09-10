@@ -66,6 +66,7 @@ Automation:
 | Alert Cuaca Ekstrem | Waspada/Siaga/Awas ala EWS + threshold bisa diset sendiri | `.autoweatherrealtime alert on` |
 | Anime Notifier 6 Tipe | Episode, baru, terbaru, hangat, berita, video — banner poster per-anime | `.animenotify info` |
 | Movie Notifier | Trending / upcoming / nowplaying + pencarian film (IMDbOT + Cinemeta) | `.movienotify` |
+| Jadwal Bola Notifier | Auto notif jadwal, reminder kick-off & skor — mirip anime notifier | `.jadwalbolanotify on` |
 | Tools Baru 6 | Web watcher, crypto alert, TOTP 2FA, PDF→gambar, chart, export Excel | `.webwatch` / `.cryptoalert` / `.totp` / `.pdftoimg` / `.chart` / `.dbexport` |
 | Panel Hierarki | Owner > CEO > Reseller, PLTA/PTLC eksklusif per server, disk+CPU custom | `.addownerpanelvN` / `.server plta` |
 | Jadibot Multi-Session | Pairing banyak nomor via cmd, aigrup per-session default off | `node index.js --pairing 62xxx` |
@@ -267,6 +268,7 @@ Automation:
 | Cuaca V2 | Open-Meteo BMKG-style, detail | `.cuacav2` / `.autocuacav2` |
 | Anime Notifier | 6 tipe konten: episode, baru, terbaru, hangat, berita, video — banner poster | `.animenotify` |
 | Movie Notifier | Trending / upcoming / nowplaying + pencarian film | `.movienotify` |
+| Jadwal Bola Notifier | Jadwal harian, reminder kick-off H-45 mnt, skor full-time (ESPN → TheSportsDB) | `.jadwalbolanotify` |
 
 ### 🚨 Bencana & Alert Realtime
 
@@ -430,6 +432,7 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 | Target Terpusat Auto | Semua fitur otomatis bisa set target: semua / grup / DM / gabungan | `.switch auto <fitur> set` |
 | Auto Anime 6 Tipe | Episode, baru, terbaru, hangat, berita, video — on/off per tipe | `.animenotify info <tipe> on` |
 | Auto Movie | Notif film trending/upcoming/nowplaying ke chat | `.movienotify on` |
+| Auto Jadwal Bola | Jadwal + reminder + skor liga favorit | `.jadwalbolanotify on` |
 | Auto Web Watch | Pantau perubahan website | `.webwatch <url>` |
 
 ### 🎵 TTS & Voice
@@ -485,7 +488,7 @@ Sistem belajar lengkap buat pelajar & mahasiswa — 25 command dari AI tutor sam
 | Panel Pterodactyl | 100 slot (28 plugin kontrol) |
 | Convert Plugin | 32 |
 | Tools Plugin | 188 |
-| Notifier Otomatis | 8 (cuaca, sholat, bmkg, anime, movie, web, crypto, loker) |
+| Notifier Otomatis | 9 (cuaca, sholat, bmkg, anime, movie, jadwalbola, web, crypto, loker) |
 | Browser Plugin | 11 |
 | Menu Variasi | 6 |
 | Nav Button Plugin | 1.019 |
