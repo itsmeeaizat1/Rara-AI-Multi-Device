@@ -691,6 +691,8 @@ export {
   formatNumber, broadcastFormat,
   novaUsage, infoBox, listBox, closeBoxRight,
   CATEGORY_NAMES, CATEGORY_EMOJIS,
+  novaSalah,
+
 };
 
 // ═══════════════════════════════════════════════
@@ -874,6 +876,18 @@ function novaSuccess(commandName, message) {
  * @param {string} [example] - contoh
  * @param {string} [note] - catatan tambahan
  */
+// REWORK 2026-09-10 (owner: "pesan usage sama pesan salah pemakaian beda jgn
+// sama" + "klo pesan salah pemakaian dia cm singkat sprti 1 kalimat"):
+// reply salah pemakaian SINGKAT (1-2 kalimat), TANPA header box & TANPA
+// section 📝/💡 — beda total dari layout usage. Cuma:
+//   ❗ cara pemakaian salah (+pesan singkat opsional) + arahan ketik .<cmd>.
+function novaSalah(commandName, message) {
+  let out = `❗ ${toSC("Cara pemakaian salah")}`;
+  if (message && String(message).trim()) out += ` — ${scLine(message)}`;
+  out += `\n${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}`;
+  return out.replace(/\n+$/, "");
+}
+
 // REWORK 2026-09-10 (owner: "terapin ke semua usage" — layout section kayak
 // AI/DL usage): 📝 Cara Pakai + 💡 Contoh + ⚠ catatan DETAIL di bawah contoh.
 // Example & command VERBATIM; intro/note di-smallcaps (URL aman via scLine).

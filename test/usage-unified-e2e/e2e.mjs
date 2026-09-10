@@ -4,7 +4,7 @@
 // + convert formatListText.
 // Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/usage-e2e && cd /tmp/usage-e2e && node <repo>/test/usage-unified-e2e/e2e.mjs
-import { novaGuide, novaNoInput, novaError, novaEmpty } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaNoInput, novaError, novaEmpty, novaSalah } from "../../src/lib/nova-menu-style.js";
 import { novaRpgGuide } from "../../src/lib/nova-games.js";
 import { config as convConfig, handler as convHandler } from "../../plugins/convert/convert.js";
 
@@ -78,6 +78,19 @@ w("\n— convert format list —");
   check("note session dipecah 2 baris (label: + isi di bawah)", r.includes(toSC("otomatis ke-session 10 menit") + ":") && r.includes(toSC("Tinggal ketik .convert <format>")));
   check("gak ada lagi step bernomor lama", !r.includes("1. Reply media"));
   check("pluginConfig convert utuh", convConfig.name === "convert");
+}
+
+// ─── 4b. novaSalah — reply salah pemakaian SINGKAT, beda dari usage ───
+w("\n— novaSalah (salah pemakaian) —");
+{
+  const s1 = novaSalah("Convert", "media ini audio, cuma bisa convert ke format audio");
+  const sl = s1.split("\n");
+  check("singkat: cuma 2 baris (1 kalimat + arahan)", sl.length === 2, JSON.stringify(sl));
+  check("baris 1: ❗ ᴄᴀʀᴀ ᴘᴇᴍᴀᴋᴀɪᴀɴ ꜱᴀʟᴀʜ + pesan singkat", sl[0] === `❗ ${toSC("Cara pemakaian salah")} — ${toSC("media ini audio, cuma bisa convert ke format audio")}`, sl[0]);
+  check("baris 2: arahan ᴋᴇᴛɪᴋ .ᴄᴏɴᴠᴇʀᴛ", sl[1] === toSC("Ketik .convert buat lihat cara pemakaian"), sl[1]);
+  check("BEDA dari usage: gak ada header box 「 + gak ada 📝/💡", !s1.includes("「") && !s1.includes("📝") && !s1.includes("💡"));
+  const s2 = novaSalah("Convert");
+  check("tanpa pesan → tetap 2 baris (headline + arahan)", s2.split("\n").length === 2 && s2.startsWith(`❗ ${toSC("Cara pemakaian salah")}`));
 }
 
 // ─── 5. novaError / novaEmpty TIDAK berubah (bukan usage) ───
