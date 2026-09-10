@@ -64,10 +64,12 @@ w("\n— convert format list —");
   await convHandler(m, { sock: null });
   const r = replies[0];
   check(".convert no-arg → reply 1 pesan", replies.length === 1 && !!r);
-  check("header ᴄᴏɴᴠᴇʀᴛ + 📝 ᴄᴀʀᴀ ᴘᴀᴋᴀɪ: 3 langkah", r.startsWith(`「 ✦ ${toSC("Convert")} ✦ 」`) && r.includes(`📝 ${toSC("Cara Pakai")}:`) && r.includes("1. Reply media"));
+  check("header ᴄᴏɴᴠᴇʀᴛ + 📝 ᴄᴀʀᴀ ᴘᴀᴋᴀɪ: unggah/reply media", r.startsWith(`「 ✦ ${toSC("Convert")} ✦ 」`) && r.includes(`📝 ${toSC("Cara Pakai")}:`) && r.includes("Unggah atau reply media dengan caption .convert <format>"));
   check("💡 ᴄᴏɴᴛᴏʜ: .convert mp3", r.includes(`💡 ${toSC("Contoh")}:`) && r.includes(".convert mp3 (reply video)"));
   check("📋 ꜰᴏʀᴍᴀᴛ ᴛᴇʀꜱᴇᴅɪᴀ: DETAIL di bawah contoh", r.indexOf(`📋 ${toSC("Format Tersedia")}:`) > r.indexOf(`💡 ${toSC("Contoh")}:`));
   check("daftar format: sub ᴀᴜᴅɪᴏ + ᴠɪᴅᴇᴏ + ɢᴀᴍʙᴀʀ + item verbatim", r.includes(`「 ${toSC("Audio")} 」`) && r.includes(`「 ${toSC("Video")} 」`) && r.includes(`「 ${toSC("Gambar")} 」`) && r.includes("• mp3 — MP3 (universal)") && r.includes("• mp4 — MP4 (universal)"));
+  check("⚠ note session 10 menit di bawah format list", r.includes("⚠") && r.indexOf("⚠") > r.indexOf(`📋 ${toSC("Format Tersedia")}:`));
+  check("gak ada lagi step bernomor lama", !r.includes("1. Reply media"));
   check("pluginConfig convert utuh", convConfig.name === "convert");
 }
 

@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import axios from "axios";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaBox, novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan, toSC, scLine } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import {
   AUDIO_FORMATS,
@@ -41,9 +41,7 @@ function formatListText() {
   const image = Object.entries(IMAGE_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`);
   return novaBox("Convert", [
     `📝 ${toSC("Cara Pakai")}:`,
-    "1. Reply media dengan caption .convert <format>",
-    "2. Kirim media dengan caption .convert <format>",
-    "3. Download media dulu (.tiktok, .play, dll) — session convert aktif 10 menit",
+    "Unggah atau reply media dengan caption .convert <format>",
     "",
     `💡 ${toSC("Contoh")}:`,
     ".convert mp3 (reply video)",
@@ -57,6 +55,8 @@ function formatListText() {
     "",
     { sub: "Gambar" },
     ...image,
+    "",
+    `⚠ ${scLine("Media hasil download bot (.tiktok, .play, dll) otomatis ke-session 10 menit — tinggal ketik .convert <format>")}`,
   ]);
 }
 
@@ -121,8 +121,9 @@ async function handler(m, { sock }) {
     return m.reply(
       novaGuide(
         "Convert",
-        "Belum ada media buat di-convert nih!\n\n📌 Cara pakai:\n1. Reply media (video/audio/gambar) dengan caption .convert <format>\n2. Atau kirim media dengan caption .convert <format>\n3. Atau download media dulu (.tiktok, .play, dll) — session convert aktif 10 menit setelahnya.",
-        `${m.prefix}convert mp3`
+        "Belum ada media buat di-convert nih!\n\nUnggah atau reply media dengan caption .convert <format>",
+        `${m.prefix}convert mp3`,
+        "Media hasil download bot (.tiktok, .play, dll) otomatis ke-session 10 menit — tinggal ketik .convert <format>"
       )
     );
   }
