@@ -268,7 +268,7 @@ Automation:
 | Cuaca V2 | Open-Meteo BMKG-style, detail | `.cuacav2` / `.autocuacav2` |
 | Anime Notifier | 6 tipe konten: episode, baru, terbaru, hangat, berita, video — banner poster | `.animenotify` |
 | Movie Notifier | Trending / upcoming / nowplaying + pencarian film | `.movienotify` |
-| Jadwal Bola Notifier | Jadwal harian, reminder kick-off H-45 mnt, skor full-time (ESPN → TheSportsDB) | `.jadwalbolanotify` |
+| Jadwal Bola Notifier | Jadwal harian, reminder kick-off H-45 mnt, skor full-time — Liga 1 Indonesia + liga top Eropa (ESPN → TheSportsDB) | `.jadwalbolanotify` |
 
 ### 🚨 Bencana & Alert Realtime
 
