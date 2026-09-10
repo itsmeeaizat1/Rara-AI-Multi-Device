@@ -62,7 +62,8 @@ function formatListText() {
     { sub: "Gambar" },
     ...image,
     "",
-    `📍 ${scLine("Media hasil download bot (.tiktok, .play, dll) otomatis ke-session 10 menit — tinggal ketik .convert <format>")}`,
+    `📍 ${scLine("Media hasil download bot (.tiktok, .play, dll) otomatis ke-session 10 menit:")}`,
+    scLine("Tinggal ketik .convert <format>"),
   ]);
 }
 

@@ -29,6 +29,10 @@ w("\n— novaGuide —");
 
   const noNote = novaGuide("Tes", "Intro doang", ".tes abc");
   check("tanpa note → section 📍 gak muncul", !noNote.includes("📍"));
+  const multi = novaGuide("Welcome", "Atur pesan welcome member baru", ".welcome on", "Tipe:\n1. Welcome biasa\n2. Welcome dengan thumbnail foto profil");
+  const ml = multi.split("\n");
+  check("note MULTI-BARIS: 📍 label doang di atas + isi di bawah (gak nyamping)", ml.includes(`📍 ${toSC("Tipe")}:`) && ml.includes(`1. ${toSC("Welcome biasa")}`) && ml.includes(`2. ${toSC("Welcome dengan thumbnail foto profil")}`));
+
   const bare = novaGuide("Tes");
   check("tanpa param apapun → gak crash, cuma header", bare === `「 ✦ ${toSC("TES")} ✦ 」`);
 }
@@ -71,6 +75,7 @@ w("\n— convert format list —");
   check("gak ada bullet • di daftar format", !r.includes("• "));
   check("nama format GAK DOBEL (revisi owner)", !r.includes("mp3 — MP3") && !r.includes("MP3 (universal)") && r.includes("wav (uncompressed)"));
   check("📍 note session 10 menit di bawah format list", r.includes("📍") && r.indexOf("📍") > r.indexOf(`📋 ${toSC("Format Tersedia")}:`));
+  check("note session dipecah 2 baris (label: + isi di bawah)", r.includes(toSC("otomatis ke-session 10 menit") + ":") && r.includes(toSC("Tinggal ketik .convert <format>")));
   check("gak ada lagi step bernomor lama", !r.includes("1. Reply media"));
   check("pluginConfig convert utuh", convConfig.name === "convert");
 }

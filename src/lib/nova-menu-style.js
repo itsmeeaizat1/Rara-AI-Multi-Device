@@ -881,7 +881,13 @@ function novaGuide(commandName, intro, example, note) {
   let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
   if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scLine(intro)}\n`;
   if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
-  if (note) out += `\n📍 ${scLine(note)}\n`;
+  if (note) {
+    // REWORK 10 Sep (owner: "biar rapih jgn nyamping ke kanan") — note multi-
+    // baris: 📍 label sendirian di atas, isi tiap baris di bawahnya.
+    const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
+    out += `\n📍 ${scLine(nl[0])}\n`;
+    if (nl.length > 1) out += nl.slice(1).map((l) => scLine(l)).join("\n") + "\n";
+  }
   return out.replace(/\n+$/, "");
 }
 
