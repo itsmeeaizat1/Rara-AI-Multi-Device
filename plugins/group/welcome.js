@@ -277,6 +277,25 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     cta: gameCTA("welcome"),
   });
 
+  // Thumbnail foto profil member (request owner 10 Sep 2026): welcome muncul
+  // dengan foto profil member baru sebagai gambar + caption. Foto private /
+  // gagal unduh → fallback pesan teks biasa (aman, gak error).
+  try {
+    const ppUrl = await sock.profilePictureUrl(participantJid, "image");
+    if (ppUrl) {
+      const res = await fetch(ppUrl);
+      if (res.ok) {
+        const buffer = Buffer.from(await res.arrayBuffer());
+        await sock.sendMessage(groupJid, {
+          image: buffer,
+          caption: engineText,
+          mentions: [participantJid],
+        });
+        return;
+      }
+    }
+  } catch {}
+
   await sock.sendMessage(groupJid, {
     text: engineText,
     mentions: [participantJid],

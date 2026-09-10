@@ -94,12 +94,31 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   if (customText) {
     rows.push("│", `│ • 💌 ${customText}`);
   }
-  const engineText = novaGameBox({
+const engineText = novaGameBox({
     title: "goodbye", icon: "🚪",
     flavor: `🚪 *${sapaanOut}*`,
     body: rows.join("\n"),
     cta: gameCTA("goodbye"),
   });
+
+  // Thumbnail foto profil member (request owner 10 Sep 2026): goodbye muncul
+  // dengan foto profil member yang keluar. Foto private / gagal unduh →
+  // fallback pesan teks biasa (aman, gak error).
+  try {
+    const ppUrl = await sock.profilePictureUrl(participantJid, "image");
+    if (ppUrl) {
+      const res = await fetch(ppUrl);
+      if (res.ok) {
+        const buffer = Buffer.from(await res.arrayBuffer());
+        await sock.sendMessage(groupJid, {
+          image: buffer,
+          caption: engineText,
+          mentions: [participantJid],
+        });
+        return;
+      }
+    }
+  } catch {}
 
   await sock.sendMessage(groupJid, {
     text: engineText,
