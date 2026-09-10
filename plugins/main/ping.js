@@ -12,7 +12,7 @@ import { performance } from "perf_hooks";
 
 const pluginConfig = {
   name: "ping",
-  alias: ["ping", "speed"],
+  alias: ["ping"], // .speed dipindah ke .speedtest (request owner "tmbah speedtes")
   category: "main",
   description: "Cek performa dan status sistem bot secara real-time",
   usage: ".ping",
