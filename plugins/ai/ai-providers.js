@@ -17,7 +17,7 @@ const FALLBACK_MODEL = {
   cloudflare: "gemini", jina: "gemini", stability: "gemini", ai21: "gemini",
   reka: "gemini", codestral: "gemini", kimicode: "gemini",
 };
-import { novaBox, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaBox, claraWrap, novaAiUsage } from "../../src/lib/nova-menu-style.js";
 
 // Command → providerKey mapping
 const PROVIDER_COMMANDS = {
@@ -126,20 +126,16 @@ async function handler(m, { sock, config, db, args, text }) {
     const quotedImage = m.quoted?.isImage ? m.quoted : null;
     const imageSource = directImage || quotedImage;
 
-    // No text → show info (kecuali ada gambar — langsung scan)
+    // No text → USAGE DESAIN AI BARU ala owner (10 Sep 2026):
+    // 「 ✦ Gemini ✦ 」 + 📝 Cara Pakai + 💡 Contoh + ✨ Model aktif +
+    // 📋 model tersedia per baris. Label smallcaps, command & model VERBATIM.
     if (!fullText && !imageSource) {
-      const models = (provider.models || []).join(", ");
-      const keyStatus = FREE_PROVIDERS.has(providerKey) ? "Gratis" : (resolveApiKeyForProvider(providerKey, {}) ? "Terisi" : "Belum diisi");
-      const lines = [
-        "Provider  : " + provider.name,
-        "Default   : " + provider.defaultModel,
-      ];
-      if (models) lines.push("Models    : " + models);
-      lines.push("Key       : " + keyStatus);
-      lines.push("---");
-      lines.push("Cara pakai: " + prefix + cmdUsed + " [model] <pesan>");
-      lines.push("Contoh    : " + prefix + cmdUsed + " apa itu AI");
-      const box = novaBox ? novaBox("Info Provider", lines) : lines.join("\n");
+      const box = novaAiUsage(cmdUsed, {
+        prefix,
+        command: cmdUsed,
+        modelAktif: provider.defaultModel || provider.model || null,
+        models: Array.isArray(provider.models) ? provider.models : [],
+      });
       await m.reply(box);
       return { handled: true };
     }
