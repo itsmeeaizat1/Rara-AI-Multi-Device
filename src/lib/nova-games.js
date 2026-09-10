@@ -712,11 +712,13 @@ export function novaRpgBox(title, body, type = "info", _opts = {}) {
 
 // novaRpgGuide — pengganti novaGuide(commandName, intro, example, note)
 // buat plugin RPG: format dashboard, tanpa box-drawing.
+// REWORK 2026-09-10 (owner: terapin ke semua usage): label section konsisten
+// dengan novaGuide — 📝 Cara Pakai + 💡 Contoh + ⚠ catatan detail.
 export function novaRpgGuide(commandName, intro, example, note) {
   const body = [];
-  if (intro) body.push(String(intro));
-  if (example) body.push("", `📌 ${example}`);
-  if (note) body.push("", `💡 ${note}`);
+  if (intro && String(intro).trim()) body.push("📝 Cara Pakai:", String(intro));
+  if (example) body.push("", "💡 Contoh:", String(example));
+  if (note) body.push("", "⚠ " + String(note));
   return novaRpgBox(commandName, body, "info");
 }
 

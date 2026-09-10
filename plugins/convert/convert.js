@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import axios from "axios";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaBox, novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, claraWrap, novaBerhasil, novaGagal, novaGangguan, toSC } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import {
   AUDIO_FORMATS,
@@ -32,36 +32,32 @@ const pluginConfig = {
 const MAX_INPUT_MB = 200;
 const MAX_OUTPUT_MB = 95; // WhatsApp limit ~100MB
 
+// REWORK 2026-09-10 (owner: "klo convert dibawahnya berarti ada detail
+// daftar list format" — layout usage terpadu): 📝 Cara Pakai + 💡 Contoh +
+// 📋 detail daftar format di bawah contoh (ala section model di usage AI).
 function formatListText() {
-  const audio = Object.entries(AUDIO_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`).join("\n");
-  const video = Object.entries(VIDEO_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`).join("\n");
-  const image = Object.entries(IMAGE_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`).join("\n");
-  return claraWrap("Convert", [
-    "📌 Tentukan format tujuan!",
+  const audio = Object.entries(AUDIO_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`);
+  const video = Object.entries(VIDEO_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`);
+  const image = Object.entries(IMAGE_FORMATS).map(([k, v]) => `• ${k} — ${v.desc}`);
+  return novaBox("Convert", [
+    `📝 ${toSC("Cara Pakai")}:`,
+    "1. Reply media dengan caption .convert <format>",
+    "2. Kirim media dengan caption .convert <format>",
+    "3. Download media dulu (.tiktok, .play, dll) — session convert aktif 10 menit",
     "",
-    "💡 Format tersedia:",
+    `💡 ${toSC("Contoh")}:`,
+    ".convert mp3 (reply video)",
     "",
-    "— Audio —",
-    audio,
+    `📋 ${toSC("Format Tersedia")}:`,
+    { sub: "Audio" },
+    ...audio,
     "",
-    "— Video —",
-    video,
+    { sub: "Video" },
+    ...video,
     "",
-    "— Gambar —",
-    image,
-    "",
-    "📌 Cara pakai:",
-    "1. Reply media (video/audio/",
-    "gambar/sticker) dengan",
-    "caption .convert <format>",
-    "2. Atau kirim media dengan",
-    "caption .convert <format>",
-    "3. Atau download media dulu",
-    "(.tiktok, .play, dll) lalu ketik",
-    ".convert <format>",
-    "",
-    "Contoh: .convert mp3 (reply video)",
-  ].join("\n"));
+    { sub: "Gambar" },
+    ...image,
+  ]);
 }
 
 async function handler(m, { sock }) {

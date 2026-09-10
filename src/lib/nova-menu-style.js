@@ -833,11 +833,13 @@ function novaEmpty(commandName, detail) {
  * @param {string} [hint] - hint cara pakai
  * @param {string} [example] - contoh command
  */
+// REWORK 2026-09-10 (owner): layout section — ⚠ sapaan natural tetap di atas,
+// 📝 Cara Pakai (hint) + 💡 Contoh (example VERBATIM).
 function novaNoInput(commandName, hint, example) {
   let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
   out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
-  if (hint) out += scLine(hint) + "\n";
-  if (example) out += `Contoh: ${example}\n`;
+  if (hint && String(hint).trim()) out += `\n📝 ${toSC("Cara Pakai")}:\n${scLine(hint)}\n`;
+  if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -872,11 +874,14 @@ function novaSuccess(commandName, message) {
  * @param {string} [example] - contoh
  * @param {string} [note] - catatan tambahan
  */
+// REWORK 2026-09-10 (owner: "terapin ke semua usage" — layout section kayak
+// AI/DL usage): 📝 Cara Pakai + 💡 Contoh + ⚠ catatan DETAIL di bawah contoh.
+// Example & command VERBATIM; intro/note di-smallcaps (URL aman via scLine).
 function novaGuide(commandName, intro, example, note) {
   let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  if (intro) out += scLine(intro) + "\n";
-  if (example) out += `Contoh: ${example}\n`;
-  if (note) out += `⚠ ${scLine(note)}\n`;
+  if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scLine(intro)}\n`;
+  if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
+  if (note) out += `\n⚠ ${scLine(note)}\n`;
   return out.replace(/\n+$/, "");
 }
 
