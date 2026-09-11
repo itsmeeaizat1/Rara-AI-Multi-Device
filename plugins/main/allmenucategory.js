@@ -69,7 +69,10 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
     const prefix = config.command?.prefix || ".";
   try {
     const args = m.args || [];
-    const categoryArg = args[0]?.toLowerCase();
+    // JOIN SEMUA ARGS — fix bug kategori dua kata (request owner 11 Sep:
+    // popup kirim ".allmenucategory confess menfess" tapi args[0] cuma
+    // "confess" → kategori gak ketemu; sama utk "ai image"/"rpg couple")
+    const categoryArg = args.join(" ").trim().toLowerCase() || undefined;
     const categories = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const casesByCategory = getCasesByCategory();
