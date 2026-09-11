@@ -2,7 +2,7 @@
 
 > Dokumentasi semua API endpoint yang digunakan di Nova AI WhatsApp Bot
 > Total: 400+ API endpoint dari 100+ provider (termasuk KuroNeko 221 endpoint)
-> Last updated: 8 September 2026
+> Last updated: 12 September 2026
 
 ---
 
@@ -1222,7 +1222,7 @@ API publik Indonesia dengan playground interaktif.
 
 ---
 
-*Updated by Nova AI • 1 September 2026*
+*Updated by Nova AI • 12 September 2026*
 
 ---
 
@@ -1259,7 +1259,7 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 1 September 2026*
+*Updated by Nova AI • 12 September 2026*
 
 ---
 
@@ -1474,7 +1474,7 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 1 September 2026*
+*Updated by Nova AI • 12 September 2026*
 
 ---
 
@@ -1527,6 +1527,68 @@ https://upscayl.org
 > Repository snippet kode cloud dari creator yang sama (HaidarMahiru) — kumpulan contoh kode integrasi API (bahan referensi implementasi fitur, bukan API endpoint).
 
 ---
+## 🌌 Wilz Evernight API Platform (38 Endpoint) — BARU 12 September 2026
+
+> Provider: `www.wilz.web.id` (WILLzzz / Evernight API Platform) • Docs: https://www.wilz.web.id/docs/
+> Akses: FREE TANPA KEY — semua endpoint GET, respon JSON `{creator: "WILLzzz", status, result|response, message}`
+> Rate limit: ada (respon 429 "Too many requests — temporarily banned"), jangan spam
+> Status: ✅ ALIVE (diverifikasi 12 Sep 2026 — 12 dari 28 endpoint sample probe OK)
+> TERPAKAI: `.kuroai` (ai/evernight — KuroNeko chat + session token) • `.playtiktok` (search/tiktok — ENGINE UTAMA, tikwm jadi fallback)
+
+### 📦 Endpoint per Kategori (pattern: `https://www.wilz.web.id/api/<kategori>/<nama>?<param>=`)
+
+| Kategori | Endpoint | Status Live 12 Sep | Catatan |
+|----------|----------|--------------------|---------|
+| 🤖 AI (1) | `ai/evernight?q=&session=` | ✅ OK | **TERPAKAI .kuroai** — persona KuroNeko; session token milik API (kirim token lama = inget percakapan) |
+| 📥 Download (6) | `download/facebook?url=` | ❌ 500 saat probe | perlu link FB valid |
+| | `download/tiktok?url=` | ⚠️ 400 saat probe | perlu link video TikTok valid |
+| | `download/instagram?url=` | ✅ OK | |
+| | `download/spotify?url=` | ✅ OK | **kandidat fallback .playspotify** |
+| | `download/capcut?url=` | ✅ OK | template link |
+| | `download/youtube?url=` | ❌ 500 saat probe | perlu link YT valid |
+| 🎨 Maker (6) | `maker/brat?text=` | ⚠️ 200 non-JSON | mungkin balas image buffer |
+| | `maker/remove-bg?url=` | ❌ 500 saat probe | perlu URL gambar valid |
+| | `maker/ssweb?url=` | ❌ 500 saat probe | screenshot web |
+| | `maker/upscaler?url=` | ❌ 500 saat probe | upscale gambar |
+| | `maker/imggen23?prompt=` | ❌ 500 saat probe | image gen |
+| | `maker/editimg` | ⚠️ belum diprobe | butuh param cek docs |
+| 🎲 Random (4) | `random/blue_archive` | ⚠️ 200 non-JSON | |
+| | `random/freefire` | ⚠️ 400 saat probe | butuh param cek docs |
+| | `random/temp-mail` | ⚠️ 400 saat probe | butuh param cek docs |
+| | `random/cuaca` | ❌ 404 via query param | path/param berbeda — cek docs detail |
+| 🔍 Search (6) | `search/yts?q=` | ✅ OK | search YouTube (thumbnail+duration+views+videoId) |
+| | `search/pinterest?q=` | ✅ OK | |
+| | `search/tiktok?q=&count=` | ✅ OK | **TERPAKAI .playtiktok** — result.data[] {title, duration "29s", play_url mp4 no-wm, cover_url}; TANPA author/stats/link |
+| | `search/capcut?q=` | ⚠️ belum diprobe | |
+| | `search/tiktokv2?q=` | ⚠️ belum diprobe | alternatif search tiktok |
+| | `search/npm?q=` | ✅ OK | |
+| 🔧 Tools (15) | `tools/lirik?q=` | ⚠️ 400 saat probe | lirik — perlu nama param bener |
+| | `tools/shorturl?url=` | ✅ OK | shortlink |
+| | `tools/netflix?url=` | ⚠️ 400 saat probe | info/dl netflix |
+| | `tools/gmail` | ⚠️ 400 saat probe | |
+| | `tools/fake-swap` | ⚠️ 400 saat probe | fake chat swap |
+| | `tools/remove-watermark` | ⚠️ 400 saat probe | hapus watermark |
+| | `tools/react-ch` | ⚠️ 400 saat probe | reaction video china (TikTok Cina?) |
+| | `tools/react-chv2` | ⚠️ belum diprobe | |
+| | `tools/alightmotion` s/d `alightmotionv7` (7 endpoint) | ⚠️ 400 saat probe | preset/project AM |
+
+### 💡 Potensi untuk Nova (yang belum ada / bisa jadi fallback)
+
+- **download/spotify** — fallback ke-2 `.playspotify` (setelah spotidown, sebelum/atau pengganti jalur mati)
+- **search/yts** — fallback `.play`/yts search tanpa key
+- **search/tiktokv2** — kandidat fallback `.playtiktok` ke-3 (setelah wilz search v1 → tikwm)
+- **search/pinterest** — fallback `.pinterest`/image search
+- **download/instagram + capcut** — tambahan chain `.ig`/alldl downloader
+- **tools/remove-watermark** — hapus watermark video (Nova belum punya fitur khusus)
+- **maker/editimg** — alternatif engine `.editimg` (cek param di docs)
+- **tools/react-ch/v2** — reaction video (tren TikTok Cina), fitur baru unik
+- **random/temp-mail** — email sementara (butuh param — cek docs)
+- **alightmotion v1-v7** — preset AM project (bahan fitur video editor)
+
+> Catatan probe 12 Sep 2026: HTTP 400 = kemungkinan besar nama param salah di probe (bukan endpoint mati) — cek detail param per endpoint di docs. HTTP 500 = endpoint hidup tapi upstream-nya error dengan input probe. Semua endpoint dicek dari sandbox.
+
+---
+
 ## 🌏 API Luar Negeri (Jepang, China, US) — Bahan Fitur Bot
 
 ### 🇯🇵 Jepang — Anime, Manga & Light Novel
@@ -1762,4 +1824,4 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 1 September 2026*
+*Updated by Nova AI • 12 September 2026*
