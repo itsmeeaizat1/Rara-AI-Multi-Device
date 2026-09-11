@@ -310,7 +310,7 @@ w("\n— plugin TOOLS end-to-end: command dispatch + memory store —");
     reply: async (t) => { sent.push(String(t)); },
   };
   const sock = {
-    sendMessage: async () => ({ key: { id: "k1" } }),
+    sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; },
   };
   const deps = {
     command: async (tl) => { dispatched.push(tl); return { ok: true, msg: "Perintah .sticker kucing dijalankan" }; },
@@ -333,7 +333,7 @@ w("\n— plugin TOOLS: create non-owner ditolak —");
     pushName: "SiTes", command: "agent", prefix: ".", isOwner: false,
     react: async () => true, reply: async (t) => { sent.push(String(t)); },
   };
-  await agHandler(m, { sock: { sendMessage: async () => ({ key: { id: "k1" } }) }, db: { setting: () => ({}) }, deps: { create: async (tl) => ({ ok: false, msg: "Buat/pasang fitur cuma bisa owner bot" }) } });
+  await agHandler(m, { sock: { sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; } }, db: { setting: () => ({}) }, deps: { create: async (tl) => ({ ok: false, msg: "Buat/pasang fitur cuma bisa owner bot" }) } });
   const finalMsg = sent.filter(s => !s.includes("ʟᴀɴɢᴋᴀʜ")).pop() || "";
   check("create non-owner ❌", finalMsg.includes("❌") && finalMsg.includes("owner"));
 }
@@ -361,7 +361,7 @@ w("\n— plugin TOOLS: voice reply (vn) —");
   check("teks jawaban tetap ada", sent.some(s => s.includes("Gambar dikirim")));
 }
 
-w("\n— plugin .agent: loading reaksi + jawaban —");
+w("\n— plugin .agent: loading 1 chat edit berulang + reaksi + jawaban —");
 {
   resetAgentDeps();
   mkDeps();
@@ -385,11 +385,14 @@ w("\n— plugin .agent: loading reaksi + jawaban —");
   check("loading = reaksi 🧠 (mikir)", reacts.includes("🧠"));
   check("loading = reaksi 🔍 (nyari)", reacts.includes("🔍"));
   check("reaksi selesai 🐣", reacts[reacts.length - 1] === "🐣");
-  check("gak ada pesan progress edit-in-place", edits.length === 0, String(edits.length));
   check("search/pick/read dedupe 1x 🔍", reacts.filter(r => r === "🔍").length === 1, JSON.stringify(reacts));
   check("urutan reaksi sesuai fase", JSON.stringify(reacts) === JSON.stringify(["🧠","🔍","🧠","🐣"]), JSON.stringify(reacts));
-  check("jawaban final dikirim", replies.some(r => r.text.includes("POCO X7")));
-  check("sumber dilampirkan", replies.some(r => r.text.includes("gadgetrev.com")));
+  check("teks aktivitas teredit ≥ 5 fase (1 chat)", edits.length >= 5, String(edits.length));
+  check("teks aktivitas tanpa sumber domain", !edits.slice(0, -1).some(e => e.text.includes("gadgetrev.com") || e.text.includes("sunlogin")), "domain bocor");
+  check("aktivitas smallcaps (ᴀɢᴇɴᴛ ᴍᴇɴᴄᴀʀɪ...)", edits.some(e => e.text.includes("ᴍᴇɴᴄᴀʀɪ")), edits[1]?.text);
+  check("jawaban final di-EDIT ke chat yang sama", edits[edits.length - 1]?.text.includes("POCO X7"), edits[edits.length - 1]?.text.slice(0, 60));
+  check("sumber dilampirkan di jawaban final", edits[edits.length - 1]?.text.includes("gadgetrev.com"));
+  check("gak ada jawaban dobel di reply terpisah", !replies.some(r => r.text.includes("POCO X7")), String(replies.length));
 }
 
 w("\n— plugin ACT: kick dari nama + tutup grup (sock stub) —");
@@ -425,7 +428,7 @@ w("\n— plugin ACT: kick dari nama + tutup grup (sock stub) —");
     groupSettingUpdate: async (chat, mode) => { settings.push({ chat, mode }); },
   };
   await agHandler(m, { sock });
-  const finalMsg = sent.filter(s => !s.startsWith("[")).pop() || "";
+  const finalMsg = (sent.filter(s => s.startsWith("[edit]")).pop() || "").replace("\[edit\] ", "") || "";
   check("kick resolve nama → jid (exact)", updates.length === 1 && updates[0].ids[0] === "budi@w" && updates[0].mode === "remove", JSON.stringify(updates));
   check("tutup grup → announcement", settings.length === 1 && settings[0].mode === "announcement", JSON.stringify(settings));
   check("laporan 2 hasil ✅", finalMsg.includes("✅") && finalMsg.includes("kick"));
@@ -445,7 +448,7 @@ w("\n— plugin ACT: gate non-admin —");
   };
   const sock = {
     user: { id: "62bot:5" },
-    sendMessage: async () => ({ key: { id: "k1" } }),
+    sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; },
     groupSettingUpdate: async (chat, mode) => { settings.push(mode); },
   };
   await agHandler(m, { sock });
@@ -467,7 +470,7 @@ w("\n— plugin ACT: nama ambigu —");
   };
   const sock = {
     user: { id: "62bot:5" },
-    sendMessage: async () => ({ key: { id: "k1" } }),
+    sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; },
     groupMetadata: async () => ({
       participants: [
         { id: "admin@w", admin: "admin" },
@@ -496,7 +499,7 @@ w("\n— plugin ACT: kick admin grup ditolak —");
   };
   const sock = {
     user: { id: "62bot:5" },
-    sendMessage: async () => ({ key: { id: "k1" } }),
+    sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; },
     groupMetadata: async () => ({ participants: [{ id: "admin@w", admin: "admin" }, { id: "boss@w", admin: "admin" }] }),
     getName: async (jid) => jid === "boss@w" ? "Pak Boss" : jid === "admin@w" ? "Pak Admin" : "",
     groupParticipantsUpdate: async (chat, ids, mode) => { updates.push({ ids, mode }); },

@@ -328,10 +328,20 @@ async function handler(m, { sock, db, deps } = {}) {
     ));
   }
 
-  // LOADING SIMPLE = REAKSI DOANG (revisi owner 11 Sep: "loadingnya simple aja
-  // sih react 🧠 aja klo agent lg nyari react ini 🔍") — TANPA pesan progress
-  // edit-in-place lagi. 🧠 = mikir (plan/compose), 🔍 = nyari (search/pick/read),
-  // 🛠️ = tools, ⚡ = aksi grup. Reaksi diganti cuma pas fase ganti emoji.
+  // LOADING = 1 PESAN EDIT BERULANG (revisi owner 11 Sep: "aku mau dia ada teks
+  // lg melakukan sesuatu kyk di edit berulang cukup 1 chat") — status aktivitas
+  // simple di-EDIT di 1 pesan doang per fase: 🧠 mikir, 🔍 nyari, ✍️ susun jawaban,
+  // 🛠️ tools, ⚡ aksi. Tanpa bar/langkah/daftar sumber — sumber cuma di 📎 footer.
+  // PLUS reaksi di pesan user: 🧠/🔍/🛠️/⚡ sesuai fase (dedupe berurutan).
+  const PHASE_LABEL = {
+    plan: "🧠 " + smallcapsText("agent merencanakan..."),
+    search: "🔍 " + smallcapsText("agent mencari informasi..."),
+    pick: "🎯 " + smallcapsText("agent memilih sumber terbaik..."),
+    read: "📖 " + smallcapsText("agent membaca halaman..."),
+    compose: "✍️ " + smallcapsText("agent menyusun jawaban..."),
+    act: "⚡ " + smallcapsText("agent mengeksekusi aksi..."),
+    tool: "🛠️ " + smallcapsText("agent pakai tools..."),
+  };
   const PHASE_REACT = { plan: "🧠", search: "🔍", pick: "🔍", read: "🔍", compose: "🧠", tool: "🛠️", act: "⚡" };
   let lastReact = "";
   const reactPhase = async (emoji) => {
@@ -339,9 +349,21 @@ async function handler(m, { sock, db, deps } = {}) {
     lastReact = emoji;
     try { await m.react(emoji); } catch {}
   };
+  let statusKey = null;
+  const setStatus = async (text) => {
+    try {
+      if (!statusKey) {
+        const sent = await sock.sendMessage(m.chat, { text });
+        statusKey = sent?.key || null;
+        return;
+      }
+      await sock.sendMessage(m.chat, { text, edit: statusKey });
+    } catch {}
+  };
 
   try {
     await reactPhase("🧠");
+    await setStatus(PHASE_LABEL.plan);
 
     // reply/attach gambar → buffer buat tool vision (scan gambar)
     let mediaBuffer = null;
@@ -365,27 +387,41 @@ async function handler(m, { sock, db, deps } = {}) {
         sender: m.sender,
         mediaAttached: !!mediaBuffer,
       },
-      onPhase: (phase) => { reactPhase(PHASE_REACT[phase] || "🧠"); },
+      onPhase: (phase, info) => {
+        reactPhase(PHASE_REACT[phase] || "🧠");
+        let label = PHASE_LABEL[phase] || PHASE_LABEL.plan;
+        // fase tools/act kasih detail singkat (lagi ngejalanin apa)
+        if ((phase === "tool" || phase === "act") && info) {
+          label = (phase === "tool" ? "🛠️ " : "⚡ ") + smallcapsText("agent menjalankan: " + info.slice(0, 60));
+        }
+        setStatus(label);
+      },
     });
 
     if (res?.error) {
       await m.react("❌");
-      return m.reply(claraWrap("agent", res.error, "error"));
+      const errMsg = claraWrap("agent", res.error, "error");
+      if (statusKey) { try { await sock.sendMessage(m.chat, { text: errMsg, edit: statusKey }); return; } catch {} }
+      return m.reply(errMsg);
     }
 
     // inget jejak percakapan (biar .agent ingat percakapan sebelumnya)
     saveAgentMemory(db, m.chat, task, res.mode, res.answer);
 
-    // status jadi penanda selesai, jawaban dikirim terpisah biar rapi
+    // jawaban final di-EDIT ke pesan status (revisi owner: cukup 1 chat);
+    // VN tetap dikirim pesan baru (audio gak bisa di-edit dari teks)
     if (res.mode === "act" || res.mode === "tools") {
       // nggobrol pakai vn (request owner): jawaban di-voice-note-in
       const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task);
       const doVoice = deps?.voiceReply || sendVoiceReply;
       if (wantVoice && await doVoice(m, sock, res.answer)) {
+        await setStatus("✅ " + smallcapsText("jawaban dikirim via voice note"));
         await m.react("🐣");
         return;
       }
-      await m.reply(res.answer);
+      let ok = false;
+      if (statusKey) { try { await sock.sendMessage(m.chat, { text: res.answer, edit: statusKey }); ok = true; } catch {} }
+      if (!ok) await m.reply(res.answer);
       await m.react("🐣");
       return;
     }
@@ -397,10 +433,13 @@ async function handler(m, { sock, db, deps } = {}) {
     const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task);
     const doVoice2 = deps?.voiceReply || sendVoiceReply;
     if (wantVoice && await doVoice2(m, sock, fullAnswer)) {
+      await setStatus("✅ " + smallcapsText("jawaban dikirim via voice note"));
       await m.react("🐣");
       return;
     }
-    await m.reply(fullAnswer);
+    let ok = false;
+    if (statusKey) { try { await sock.sendMessage(m.chat, { text: fullAnswer, edit: statusKey }); ok = true; } catch {} }
+    if (!ok) await m.reply(fullAnswer);
     await m.react("🐣");
   } catch (e) {
     console.error("agent error:", e.message);
