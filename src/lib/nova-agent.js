@@ -1,9 +1,16 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nova-agent.js — AI AGENT OTONOM MULTI-LANGKAH (request owner 11 Sep 2026:
-// "buatkan no 1" — ide fitur paling canggih: agent yang plan + eksekusi +
-// verifikasi, bukan 1 tanya 1 jawab).
+// "buatkan no 1" — ide fitur paling canggih + revisi "biar ai agentnya bisa
+// browsing dan automation kayak kick org cm dari nama, tutup grup dll").
 //
-// Alur 5 fase:
+// DUA MODE — dipilih AI saat fase PLAN:
+//  • mode "research" — browsing/riset web: plan → search → pick → read → compose
+//  • mode "act"      — otomasi WhatsApp grup (kick dari NAMA, tutup grup, dll):
+//                      plan → act (eksekusi via callback plugin) → laporan.
+//    Executor + gate admin ada di plugin (agent.js) — lib cuma orkestrasi,
+//    biar tetap gampang di-e2e (seam `act`).
+//
+// Alur research 5 fase:
 //   1. PLAN    — AI bikin rencana: pecah tugas jadi query pencarian (max 3)
 //   2. SEARCH  — jalankan tiap query lewat nova-websearch (bing + fallback chain)
 //   3. PICK    — AI milih halaman paling relevan dari pool hasil (max 3)
@@ -56,9 +63,25 @@ function parseJsonLocal(raw) {
   try { return JSON.parse(s.slice(a, b + 1)); } catch { return null; }
 }
 
-const SYS_PLAN = `Kamu adalah perencana riset. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
-Format: {"queries": ["query pencarian 1", "query 2", "query 3"], "angle": "sudut pandang singkat"}
-Aturan: maksimal ${MAX_QUERIES} query, tiap query pendek dan spesifik (kata kunci ala google, bukan kalimat tanya), bahasa mengikuti tugas user, kalau tugas minta perbandingan/daftar pastikan query nangkep item-itemnya.`;
+const MAX_ACTS = 3;
+const ACT_ACTIONS = [
+  "kick", "add", "promote", "demote", "open", "close", "lockedit", "unlockedit",
+  "rename", "desc", "tagall", "link",
+];
+
+const SYS_PLAN = `Kamu adalah perencana aksi AI agent. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
+
+Pilih SALAH SATU mode:
+
+1. Riset/browsing web (tugas butuh mencari/menganalisis informasi: perbandingan, berita, resep, harga, tutorial, dll):
+{"mode": "research", "queries": ["query 1", "query 2", "angle": "sudut pandang singkat"}
+Maksimal ${MAX_QUERIES} query — pendek, spesifik, kata kunci ala google (bukan kalimat tanya), bahasa ikut tugas user.
+
+2. AKSI WhatsApp grup (tugas meminta otomasi grup: kick member, tutup grup, ubah nama grup, dll):
+{"mode": "act", "actions": [{"action": "kick", "target": "nama persis yang ditulis user", "value": null}]}
+Action valid: kick (keluarkan member), add (tambah member), promote (jadikan admin), demote (turunkan admin), open (buka grup — semua member bisa chat), close (tutup grup — cuma admin bisa chat), lockedit (kunci edit info grup), unlockedit (buka edit info grup), rename (ubah nama grup, value = nama baru), desc (ubah deskripsi grup, value = deskripsi baru), tagall (tag semua member), link (ambil link invite grup).
+Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc isi value.
+Kalau ragu ATAU tugasnya nyari informasi → pilih research.`;
 
 const SYS_PICK = `Kamu adalah kurator riset. Balas HANYA objek JSON murni. Karakter PERTAMA harus { dan TERAKHIR }.
 Format: {"picks": [nomor1, nomor2, nomor3]}
@@ -67,28 +90,96 @@ Aturan: pilih ${MAX_PICKS} halaman paling relevan & berbobot buat tugas user (hi
 const SYS_ANSWER = `Kamu adalah analis riset. Jawab tugas user berdasarkan BUKTI dari halaman web yang diberikan (ditandai [S1], [S2], dst).
 Aturan jawaban: bahasa yang sama dengan tugas user (default Indonesia), terstruktur dan padat (poin/heading boleh), sebut sumber dengan [S1]/[S2] di kalimat yang pakai info itu, jangan mengarang data yang gak ada di bukti, jangan pakai markdown table, akhiri tanpa sapaan basa-basi.`;
 
+// deteksi aksi lokal — fallback kalau LLM plan down (biar "tutup grup" dll
+// tetep jalan tanpa AI) — heuristik kata kunci Indonesia
+function detectActLocal(task) {
+  const raw = String(task);
+  const s = raw.toLowerCase();
+  const acts = [];
+  const targetAfter = (re) => {
+    // match di teks ASLI biar kapitalisasi nama kejaga, flag case-insensitive
+    const m = raw.match(new RegExp(re.source, "i"));
+    return m ? m[1].replace(/\b(yang|itu|dong|ya|pls|please|nih|dari grup|keluar)\b/gi, "").trim() : null;
+  };
+  if (/\b(kick|keluarkan|keluarin|buang|usir|tendang|kicking)\b/.test(s))
+    acts.push({ action: "kick", target: targetAfter(/\b(?:kick|keluarkan|keluarin|buang|usir|tendang|kicking)\s+(?:orang\s+)?(?:yang\s+)?(?:bernama\s+)?([a-z0-9 @_]{2,40})/) });
+  if (/\b(promote|promotein|jadikan admin|jadiin admin)\b/.test(s)) acts.push({ action: "promote", target: targetAfter(/(?:promote|jadikan admin|jadiin admin)\s+(?:orang\s+)?(?:yang\s+)?(?:bernama\s+)?([a-z0-9 @_]{2,40})/) });
+  if (/\b(demote|demotein|turunkan admin|lepas admin)\b/.test(s)) acts.push({ action: "demote", target: targetAfter(/(?:demote|turunkan admin|lepas admin)\s+(?:orang\s+)?(?:yang\s+)?(?:bernama\s+)?([a-z0-9 @_]{2,40})/) });
+  if (/\btutup\s+(?:grup|group|gc)\b/.test(s)) acts.push({ action: "close" });
+  if (/\bbuka\s+(?:grup|group|gc)\b/.test(s) && !/link|tautan/.test(s)) acts.push({ action: "open" });
+  if (/\b(kunci|lock)\s+(?:edit|info)\b/.test(s)) acts.push({ action: "lockedit" });
+  if (/\b(buka kunci|unlock)\s+(?:edit|info)\b/.test(s)) acts.push({ action: "unlockedit" });
+  if (/\b(ubah|ganti|rename)\s+nama\s+(?:grup|group)/.test(s))
+    acts.push({ action: "rename", value: (s.match(/(?:jadi|menjadi|:|-)\s*(.+)$/) || [])[1] || null });
+  if (/\b(ubah|ganti)\s+(?:deskripsi|desc)\s+(?:grup|group)/.test(s))
+    acts.push({ action: "desc", value: (s.match(/(?:jadi|menjadi|:|-)\s*(.+)$/) || [])[1] || null });
+  if (/\btag\s?all|tag\s+semua\b/.test(s)) acts.push({ action: "tagall" });
+  if (/\blink\s+(?:grup|group|invite)|\binvite\b/.test(s)) acts.push({ action: "link" });
+  return acts.map(a => ({ action: a.action, target: a.target || null, value: a.value || null })).slice(0, MAX_ACTS);
+}
+
 /**
  * runAgent — jalankan tugas kompleks multi-langkah.
  * @param {string} task tugas user, mis. "cari hp terbaik di bawah 5 juta, bandingkan, kasih rekomendasi"
  * @param {Object} [opts]
  * @param {(phase:string, info:string) => void} [opts.onPhase] progress callback:
- *        "plan" | "search" (info=query) | "pick" | "read" (info=domain) | "compose"
- * @returns {Promise<{answer, queries, sources, steps, viaLocal}|{error}>}
+ *        "plan" | "act" (info=action) | "search" (info=query) | "pick" | "read" (info=domain) | "compose"
+ * @param {(action:{action,target,value}, ctx:any) => Promise<{ok:boolean,msg:string}>} [opts.act]
+ *        executor aksi grup — wajib buat mode act (gate admin + resolve nama ada di plugin)
+ * @param {Object} [opts.context] info grup (isGroup/isAdmin/isOwner/isBotAdmin/chat/sender) — dikirim ke LLM plan + executor
+ * @returns {Promise<{mode,answer,queries,sources,steps,results,viaLocal}|{error}>}
  */
-export async function runAgent(task, { onPhase } = {}) {
+export async function runAgent(task, { onPhase, act, context } = {}) {
   const phase = (p, info) => { try { onPhase?.(p, info); } catch {} };
   const steps = [];
 
-  // ── FASE 1: PLAN — AI pecah tugas jadi query ──
+  // ── FASE 1: PLAN — AI milih mode (research/act) + susun rencana ──
   phase("plan");
   let plan = null;
+  const ctxLine = context
+    ? `\nKonteks: ${context.isGroup === false ? "chat pribadi (BUKAN grup)" : "di grup"}${context.isAdmin ? ", user admin grup" : context.isOwner ? ", user owner bot" : ", user bukan admin"}${context.isBotAdmin ? ", bot admin grup" : ", bot bukan admin grup"}.`
+    : "";
   try {
-    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}`, { systemPrompt: SYS_PLAN }));
+    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}`, { systemPrompt: SYS_PLAN }));
   } catch {}
+
+  // normalisasi rencana act (dari LLM atau deteksi lokal)
+  let actions = null;
+  if (Array.isArray(plan?.actions) && plan.actions.length) {
+    actions = plan.actions
+      .map(a => ({ action: String(a?.action || "").toLowerCase().trim(), target: a?.target ? String(a.target).trim() : null, value: a?.value ? String(a.value).trim() : null }))
+      .filter(a => ACT_ACTIONS.includes(a.action))
+      .slice(0, MAX_ACTS);
+  }
+
+  // fallback: LLM plan gagal → deteksi lokal; LLM jawab act tapi gak ada action valid → deteksi lokal juga
+  if (!actions || !actions.length) {
+    if (plan?.mode !== "research") {
+      const local = detectActLocal(task);
+      if (local.length && typeof act === "function") actions = local;
+    }
+  }
+
+  // ── MODE ACT — otomasi grup (request owner: "kick org cm dari nama, tutup grup dll") ──
+  if (actions && actions.length && typeof act === "function") {
+    steps.push({ phase: "plan", mode: "act", ok: true, actions });
+    const results = [];
+    for (const a of actions) {
+      phase("act", a.action + (a.target ? ": " + a.target : ""));
+      let r = null;
+      try { r = await act(a, context || {}); } catch (e) { r = { ok: false, msg: `Gagal: ${e?.message || "error eksekusi"}` }; }
+      results.push({ action: a.action, target: a.target || null, ok: !!r?.ok, msg: String(r?.msg || (r?.ok ? "Berhasil" : "Gagal")) });
+    }
+    const answer = results.map(r => `${r.ok ? "✅" : "❌"} ${r.msg}`).join("\n");
+    steps.push({ phase: "act", ok: results.some(r => r.ok), aksi: results.length });
+    return { mode: "act", answer, results, steps, queries: [], sources: [] };
+  }
+
+  // ── MODE RESEARCH — browsing/riset web (alur 5 fase) ──
   const queries = (Array.isArray(plan?.queries) && plan.queries.length
     ? plan.queries.map(String).filter(q => q.trim())
     : [task]).slice(0, MAX_QUERIES);
-  steps.push({ phase: "plan", ok: !!plan, queries });
+  steps.push({ phase: "plan", mode: "research", ok: !!plan, queries });
 
   // ── FASE 2: SEARCH — kumpulkan pool hasil ──
   const pool = [];
@@ -166,7 +257,7 @@ export async function runAgent(task, { onPhase } = {}) {
   }
   steps.push({ phase: "compose", ok: !viaLocal, viaLocal });
 
-  return { answer: String(answer).trim(), queries, sources, steps, viaLocal };
+  return { mode: "research", answer: String(answer).trim(), queries, sources, steps, viaLocal };
 }
 
 // digest lokal — dipakai kalau AI compose down: susun ringkasan bukti sendiri

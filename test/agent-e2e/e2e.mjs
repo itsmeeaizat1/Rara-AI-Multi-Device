@@ -98,6 +98,77 @@ w("\n— search gagal total → error —");
   check("error hasil kosong", !!r.error && r.error.includes("pencarian"));
 }
 
+w("\n— MODE ACT: LLM plan → kick —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"kick","target":"Budi"}]}` });
+  const acts = [];
+  const r = await runAgent("kick orang yang bernama Budi", {
+    act: async (a, ctx) => { acts.push({ a, ctx }); return { ok: true, msg: "Berhasil kick @62" }; },
+    context: { isGroup: true, isAdmin: true, isBotAdmin: true },
+  });
+  check("mode act", r.mode === "act" && acts.length === 1);
+  check("payload action+target", acts[0].a.action === "kick" && acts[0].a.target === "Budi");
+  check("context diteruskan", acts[0].ctx?.isAdmin === true);
+  check("laporan hasil aksi", r.answer.includes("✅") && r.answer.includes("Berhasil kick"));
+}
+
+w("\n— MODE ACT: multi aksi (tutup grup + rename) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"close"},{"action":"rename","value":"Nova Squad"}]}` });
+  const acts = [];
+  const r = await runAgent("tutup grup dan ubah nama jadi Nova Squad", {
+    act: async (a) => { acts.push(a); return { ok: true, msg: "ok " + a.action }; },
+    context: { isGroup: true, isAdmin: true, isBotAdmin: true },
+  });
+  check("2 aksi dieksekusi", acts.length === 2 && acts[1].value === "Nova Squad");
+  check("laporan 2 baris", r.answer.split("\n").length === 2);
+}
+
+w("\n— MODE ACT: LLM down → deteksi lokal —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: "maaf gagal" });
+  const acts = [];
+  const r = await runAgent("tutup grup", {
+    act: async (a) => { acts.push(a); return { ok: true, msg: "ok" }; },
+    context: { isGroup: true, isAdmin: true, isBotAdmin: true },
+  });
+  check("deteksi lokal close", r.mode === "act" && acts[0]?.action === "close");
+}
+
+w("\n— MODE ACT: lokal kick dari nama —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: "down" });
+  const acts = [];
+  await runAgent("kick orang yang bernama Budi", {
+    act: async (a) => { acts.push(a); return { ok: true, msg: "ok" }; },
+    context: { isGroup: true, isAdmin: true, isBotAdmin: true },
+  });
+  check("lokal ekstrak target nama", acts[0]?.action === "kick" && String(acts[0]?.target || "").includes("Budi"), JSON.stringify(acts[0]));
+}
+
+w("\n— MODE ACT: aksi gagal → laporan ❌ —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"kick","target":"Siapa"}]}` });
+  const r = await runAgent("kick Siapa", {
+    act: async () => ({ ok: false, msg: "Nama gak ketemu" }),
+    context: { isGroup: true },
+  });
+  check("laporan gagal", r.answer.includes("❌") && r.answer.includes("gak ketemu"));
+}
+
+w("\n— MODE ACT: tanpa executor act → fallback research —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"close"}]}` });
+  const r = await runAgent("tutup grup", {});
+  check("tanpa act → research", r.mode === "research" || !!r.error);
+}
+
 w("\n— plugin .agent: progress + jawaban —");
 {
   resetAgentDeps();
@@ -124,6 +195,120 @@ w("\n— plugin .agent: progress + jawaban —");
   check("jawaban final dikirim", replies.some(r => r.text.includes("POCO X7")));
   check("sumber dilampirkan", replies.some(r => r.text.includes("gadgetrev.com")));
   check("status akhir selesai", edits[edits.length - 1]?.text.includes("ʀɪꜱᴇᴛ ꜱᴇʟᴇꜱᴀɪ"));
+}
+
+w("\n— plugin ACT: kick dari nama + tutup grup (sock stub) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"kick","target":"Budi"},{"action":"close"}]}` });
+  const sent = [];
+  const updates = [];
+  const settings = [];
+  const m = {
+    text: ".agent kick Budi dan tutup grup", args: ["kick", "Budi", "dan", "tutup", "grup"],
+    chat: "x@g.us", sender: "admin@w", pushName: "Admin", command: "agent", prefix: ".",
+    isGroup: true, isAdmin: true, isOwner: false, isBotAdmin: true,
+    react: async () => true,
+    reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = {
+    user: { id: "62bot:5" },
+    sendMessage: async (chat, c) => {
+      if (c?.edit) { sent.push("[edit] " + c.text); return { key: { id: "k1" } }; }
+      sent.push("[send] " + String(c?.text || ""));
+      return { key: { id: "k1" } };
+    },
+    groupMetadata: async () => ({
+      participants: [
+        { id: "admin@w", admin: "admin" },
+        { id: "budi@w", admin: null },
+        { id: "andi@w", admin: null },
+      ],
+    }),
+    getName: async (jid) => ({ "admin@w": "Pak Admin", "budi@w": "Budi Santoso", "andi@w": "Andi Hartono" }[jid] || ""),
+    groupParticipantsUpdate: async (chat, ids, mode) => { updates.push({ chat, ids, mode }); },
+    groupSettingUpdate: async (chat, mode) => { settings.push({ chat, mode }); },
+  };
+  await agHandler(m, { sock });
+  const finalMsg = sent.filter(s => !s.startsWith("[")).pop() || "";
+  check("kick resolve nama → jid (exact)", updates.length === 1 && updates[0].ids[0] === "budi@w" && updates[0].mode === "remove", JSON.stringify(updates));
+  check("tutup grup → announcement", settings.length === 1 && settings[0].mode === "announcement", JSON.stringify(settings));
+  check("laporan 2 hasil ✅", finalMsg.includes("✅") && finalMsg.includes("kick"));
+}
+
+w("\n— plugin ACT: gate non-admin —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"close"}]}` });
+  const sent = [];
+  const settings = [];
+  const m = {
+    text: ".agent tutup grup", args: ["tutup", "grup"], chat: "x@g.us", sender: "biasa@w",
+    pushName: "Member", command: "agent", prefix: ".",
+    isGroup: true, isAdmin: false, isOwner: false, isBotAdmin: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)) },
+  };
+  const sock = {
+    user: { id: "62bot:5" },
+    sendMessage: async () => ({ key: { id: "k1" } }),
+    groupSettingUpdate: async (chat, mode) => { settings.push(mode); },
+  };
+  await agHandler(m, { sock });
+  const finalMsg = sent.filter(s => !s.startsWith("[")).pop() || "";
+  check("non-admin ditolak", settings.length === 0 && finalMsg.includes("❌") && finalMsg.includes("bukan admin"));
+}
+
+w("\n— plugin ACT: nama ambigu —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"kick","target":"Budi"}]}` });
+  const sent = [];
+  const updates = [];
+  const m = {
+    text: ".agent kick Budi", args: ["kick", "Budi"], chat: "x@g.us", sender: "admin@w",
+    pushName: "Admin", command: "agent", prefix: ".",
+    isGroup: true, isAdmin: true, isOwner: false, isBotAdmin: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)) },
+  };
+  const sock = {
+    user: { id: "62bot:5" },
+    sendMessage: async () => ({ key: { id: "k1" } }),
+    groupMetadata: async () => ({
+      participants: [
+        { id: "admin@w", admin: "admin" },
+        { id: "bs1@w" }, { id: "bs2@w" },
+      ],
+    }),
+    getName: async (jid) => ({ bs1: "Budi Santoso", bs2: "Budi Hartono", admin: "Pak Admin" }[jid.split("@")[0]] || ""),
+    groupParticipantsUpdate: async (chat, ids, mode) => { updates.push({ ids, mode }); },
+  };
+  await agHandler(m, { sock });
+  const finalMsg = sent.filter(s => !s.startsWith("[")).pop() || "";
+  check("ambigu → gak ada kick + suruh spesifik", updates.length === 0 && finalMsg.includes("ambigu"));
+}
+
+w("\n— plugin ACT: kick admin grup ditolak —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"kick","target":"Pak Boss"}]}` });
+  const sent = [];
+  const updates = [];
+  const m = {
+    text: ".agent kick Pak Boss", args: ["kick", "Pak", "Boss"], chat: "x@g.us", sender: "admin@w",
+    pushName: "Admin", command: "agent", prefix: ".",
+    isGroup: true, isAdmin: true, isOwner: false, isBotAdmin: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)) },
+  };
+  const sock = {
+    user: { id: "62bot:5" },
+    sendMessage: async () => ({ key: { id: "k1" } }),
+    groupMetadata: async () => ({ participants: [{ id: "admin@w", admin: "admin" }, { id: "boss@w", admin: "admin" }] }),
+    getName: async (jid) => jid === "boss@w" ? "Pak Boss" : jid === "admin@w" ? "Pak Admin" : "",
+    groupParticipantsUpdate: async (chat, ids, mode) => { updates.push({ ids, mode }); },
+  };
+  await agHandler(m, { sock });
+  const finalMsg = sent.filter(s => !s.startsWith("[")).pop() || "";
+  check("kick admin ditolak", updates.length === 0 && finalMsg.includes("admin grup"));
 }
 
 w("\n— plugin: no-arg → usage —");
