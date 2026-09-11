@@ -12,7 +12,8 @@
 //   butuh "AI apa pun yang aktif" (nova-bencana, nova-vision-chain, autonovaai).
 //
 // Rantai prioritas:
-//   0. Gemini NATIVE generativelanguage.googleapis.com (key: apikeys.json novaai.google)
+//   0. Min1AI qwen3-8b FREE api.1min.ai (key: aiSatuan.min1ai) — default owner 11 Sep
+//   0.5 Gemini NATIVE generativelanguage.googleapis.com (key: apikeys.json novaai.google)
 //      → BEGITU owner isi key Google AI Studio baru, SEMUA fitur otomatis pindah ke
 //        Gemini (provider resmi, cepat, stabil) tanpa ubah kode. Key kosong/expired →
 //        skip otomatis (key invalid dicache sampai restart biar gak nambah latency).
@@ -223,7 +224,16 @@ export async function aiChainChat(prompt, opts = {}) {
     return reply;
   };
 
-  // 0. Gemini native — key Google AI Studio valid = prioritas utama (provider resmi)
+  // 0. Min1AI qwen3-8b (FREE) — REQUEST OWNER 11 Sep 2026: "aku mau novaai dan
+  // autonovaai defaultnya bkn grok tp qwen dr min1ai" → qwen 1min.ai jadi
+  // prioritas pertama (key apikeys.json aiSatuan.min1ai), gagal → lanjut rantai.
+  try {
+    const { min1aiChat } = await import("../scraper/min1ai.js");
+    return finish(await min1aiChat(fullPrompt, { model: "qwen3-8b" }));
+  }
+  catch (e) { errors.push(`min1ai: ${e.message}`); }
+
+  // 0.5 Gemini native — key Google AI Studio valid = prioritas berikutnya (provider resmi)
   try { return finish(await viaGeminiNative(fullPrompt)); }
   catch (e) { errors.push(`gemini-native: ${e.message}`); }
 
