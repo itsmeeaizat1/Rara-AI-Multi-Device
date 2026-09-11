@@ -13,7 +13,7 @@ import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
 import { smallcapsText } from "../../src/lib/styler.js";
-import { callImageGen } from "../../src/lib/nova-ai-service.js";
+import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
 
@@ -193,17 +193,20 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}) {
     }
   });
 
-  // 🎨 image — generate gambar (callImageGen, fallback pollinations gratis)
+  // 🎨 image — generate gambar RANTAI PROVIDER (request owner: "gmna supaya
+  // g ngandelin pollinations ai agennya kan ada grok atau gemini"):
+  // gemini → grok/xai → openai → qwen (yang punya key hidup), pollinations
+  // (free) CUMA juru penyelamat terakhir — bukan jalur utama.
   const image = deps.image || (async (t) => {
     const prompt = String(t.prompt || t.args || "").trim();
     if (!prompt) return { ok: false, msg: "Sebutin gambar apa yang mau dibuat" };
     try {
-      const img = await callImageGen("gemini", prompt, {});
+      const img = await callImageGenChain(prompt, {});
       await sock.sendMessage(m.chat, {
         image: Buffer.from(img.base64, "base64"),
-        caption: "🎨 " + prompt.slice(0, 150) + (img.via && img.via !== "gemini" ? "\n_(engine: " + img.via + ")_" : ""),
+        caption: "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : ""),
       }, { quoted: m });
-      return { ok: true, msg: "Gambar dikirim: " + prompt.slice(0, 80) };
+      return { ok: true, msg: "Gambar dikirim (engine: " + (img.via || "-") + "): " + prompt.slice(0, 80) };
     } catch (e) {
       return { ok: false, msg: "Gagal generate gambar: " + (e?.message || "error") };
     }

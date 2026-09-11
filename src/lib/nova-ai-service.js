@@ -702,6 +702,7 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
       }),
     });
     if (!res.ok) {
+      if (opts.noFreeFallback) throw new Error(`[ImageGen] ${providerKey} gagal (${res.status})`);
       console.log(`[ImageGen] ${providerKey} gagal (${res.status}) → fallback Pollinations (free tanpa key)`);
       return await freeFallback();
     }
@@ -726,6 +727,7 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
     body: JSON.stringify({ model: gen.model, prompt: promptText, n: 1, ...(gen.extra || {}) }),
   });
   if (!res.ok) {
+    if (opts.noFreeFallback) throw new Error(`[ImageGen] ${providerKey} gagal (${res.status})`);
     console.log(`[ImageGen] ${providerKey} gagal (${res.status}) → fallback Pollinations (free tanpa key)`);
     return await freeFallback();
   }
@@ -739,6 +741,34 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
     return { base64: buf.toString("base64"), mimeType: imgRes.headers.get("content-type") || "image/png" };
   }
   throw new Error("Respon image gen tidak dikenal");
+}
+
+/**
+ * callImageGenChain — RANTAI provider image (request owner 11 Sep 2026:
+ * "gmna supaya g ngandelin pollinations ai agennya kan ada grok atau
+ * gemini"). Coba provider imageGen yang PUNYA KEY berurutan — gemini →
+ * grok/xai → openai → qwen — baru pollinations (free) juru penyelamat
+ * TERAKHIR. Provider gagal/down → lanjut provider berikutnya, gak langsung
+ * nyemplung ke pollinations.
+ */
+export async function callImageGenChain(prompt, opts = {}) {
+  const IMAGE_CHAIN = ["gemini", "xai", "openai", "qwen"];
+  const errs = [];
+  for (const p of IMAGE_CHAIN) {
+    let key = "";
+    try { key = String(resolveApiKeyForProvider(p, {}) || "").trim(); } catch {}
+    if (!key) continue; // gak ada key → skip (jangan buang waktu)
+    try {
+      const img = await callImageGen(p, prompt, { ...opts, apiKey: key, noFreeFallback: true });
+      if (img?.base64) return { ...img, via: img.via || p };
+    } catch (e) {
+      errs.push(`${p}: ${String(e?.message || e).slice(0, 80)}`);
+      console.log(`[ImageGenChain] ${p} gagal → lanjut provider berikutnya`);
+    }
+  }
+  // semua provider beneran gagal / gak ada key → pollinations free fallback
+  console.log(`[ImageGenChain] semua provider gagal${errs.length ? " (" + errs.join(" | ") + ")" : " (tanpa key imageGen)"} → pollinations (free)`);
+  return await callImageGen("gemini", prompt, opts); // tanpa key → jalur pollinations
 }
 
 /**
