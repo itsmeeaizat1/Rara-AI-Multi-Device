@@ -72,8 +72,10 @@ function resolveMenuThumbnail(thumbPath) {
   if (/\.(jpe?g|png|webp)$/i.test(thumbPath || "")) {
     const sibling = thumbPath.replace(/\.(jpe?g|png|webp)$/i, ".mp4");
     if (fs.existsSync(sibling)) return { path: sibling, isVideo: true };
-    // kandidat canonical: se-folder dengan jpg, lalu folder menu asli bot
-    for (const dir of [path.dirname(thumbPath), path.join(process.cwd(), "assets", "image", "menu")]) {
+    // kandidat canonical: se-folder dengan jpg, lalu folder video menu asli bot
+    // (owner 11 Sep: "klo video hrsnya di folder video jgn image" — file video
+    // menu nenggam di assets/video/menu/, bukan di assets/image/)
+    for (const dir of [path.dirname(thumbPath), path.join(process.cwd(), "assets", "video", "menu")]) {
       const canonical = path.join(dir, "menuthumbnail.mp4");
       if (fs.existsSync(canonical)) return { path: canonical, isVideo: true };
     }
