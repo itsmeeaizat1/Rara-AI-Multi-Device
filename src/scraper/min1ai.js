@@ -10,25 +10,96 @@
 // FAILURE → resultObject {code} (INSUFFICIENT_CREDITS, UNSUPPORTED_MODEL, dll).
 
 const MIN1AI_URL = "https://api.1min.ai/api/chat-with-ai";
-export const MIN1AI_DEFAULT_MODEL = "qwen3-vl-8b-thinking";
+export const MIN1AI_DEFAULT_MODEL = "qwen3-8b"; // owner 11 Sep: default qwen biasa (free)
 
-// Model terverifikasi live (11 Sep 2026) — free = kredit 0, jalan tanpa top-up.
-export const MIN1AI_MODELS = [
-  "qwen3-vl-8b-thinking (free)",
-  "qwen3-8b (free)",
-  "qwen3.7-max",
-  "qwen3.7-plus",
-  "qwen3.7-flash",
-  "qwen3.6-plus",
-  "qwen3.6-max-preview",
-  "gpt-5",
-  "gpt-4o-mini",
-  "gemini-2.5-pro",
-  "gemini-2.5-flash",
-  "deepseek-chat",
-  "grok-3",
-  "mistral-large-latest",
-];
+// ══ SEMUA MODEL MIN1AI — ID VERIFIED LIVE (11 Sep 2026, via API) ══
+// free = kredit 0 jalan; lainnya valid tapi butuh kredit berbayar.
+// (gpt-3.5, gpt-oss, deepseek-v3.2, kimi, claude — ID-nya GAK dikenali
+// API chat-with-ai, jadi sengaja gak dimasukin biar gak nyasar.)
+export const MIN1AI_MODEL_GROUPS = {
+  "Qwen": [
+    "qwen3-8b (free)",
+    "qwen3-vl-8b-thinking (free)",
+    "qwen3.7-max",
+    "qwen3.7-plus",
+    "qwen3.7-flash",
+    "qwen3.6-plus",
+    "qwen3.6-max-preview",
+  ],
+  "OpenAI": [
+    "gpt-6-astra",
+    "gpt-5.6-luna",
+    "gpt-5.6-sol",
+    "gpt-5.6-terra",
+    "gpt-5.5",
+    "gpt-5.5-pro",
+    "gpt-5.4",
+    "gpt-5.4-mini",
+    "gpt-5.4-nano",
+    "gpt-5.4-pro",
+    "gpt-5.2",
+    "gpt-5.2-pro",
+    "gpt-5.1",
+    "gpt-5",
+    "gpt-5-mini",
+    "gpt-5-nano",
+    "gpt-4o",
+    "gpt-4o-mini",
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4.1-nano",
+    "gpt-4-turbo",
+    "gpt-3.5-turbo",
+    "o3",
+    "o3-pro",
+    "o3-mini",
+  ],
+  "DeepSeek": [
+    "deepseek-v4-pro",
+    "deepseek-v4-flash",
+    "deepseek-chat",
+    "deepseek-reasoner",
+  ],
+  "Gemini": [
+    "gemini-3.8-flash",
+    "gemini-3.7-flash",
+    "gemini-3.6-flash",
+    "gemini-3.5-flash",
+    "gemini-3.1-pro-preview",
+    "gemini-3-flash-preview",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+  ],
+  "Grok": [
+    "grok-4.6",
+    "grok-4.5",
+    "grok-4.3",
+    "grok-4-fast-reasoning",
+    "grok-4-fast-non-reasoning",
+    "grok-4-0709",
+    "grok-3",
+    "grok-3-mini",
+  ],
+  "GLM": [
+    "glm-5.3",
+    "glm-5.2",
+    "glm-5.1",
+    "glm-5",
+  ],
+  "Mistral": [
+    "mistral-large-latest",
+    "ministral-14b-latest",
+  ],
+  "Cohere": [
+    "command-r-08-2024",
+  ],
+};
+
+// Flat daftar id valid (tanpa suffix "(free)")
+export const MIN1AI_MODELS = Object.values(MIN1AI_MODEL_GROUPS)
+  .flat()
+  .map((s) => String(s).replace(/\s*\(free\)\s*$/i, "").trim());
+
 
 async function getMin1aiKey() {
   let key = process.env.MIN1AI_API_KEY || "";

@@ -6,7 +6,7 @@
 // Ganti model: .min1ai model <id> (persist per user, db.setting min1aiModel).
 import { novaAiUsage, novaInfoSections, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { min1aiChat, MIN1AI_MODELS, MIN1AI_DEFAULT_MODEL } from "../../src/scraper/min1ai.js";
+import { min1aiChat, MIN1AI_MODEL_GROUPS, MIN1AI_MODELS, MIN1AI_DEFAULT_MODEL } from "../../src/scraper/min1ai.js";
 
 const pluginConfig = {
   name: "min1ai",
@@ -26,18 +26,31 @@ const pluginConfig = {
 
 // alias ramah → id model beneran (verified live 11 Sep 2026)
 const MODEL_ALIAS = {
-  "qwen": "qwen3-vl-8b-thinking",
+  "qwen": "qwen3-8b",
+  "qwen-biasa": "qwen3-8b",
+  "qwen3.8b": "qwen3-8b",
+  "8b": "qwen3-8b",
   "qwen-thinking": "qwen3-vl-8b-thinking",
   "qwen.thinking": "qwen3-vl-8b-thinking",
   "qwen3-thinking": "qwen3-vl-8b-thinking",
   "thinking": "qwen3-vl-8b-thinking",
-  "qwen3-vl-8b-thinking": "qwen3-vl-8b-thinking",
-  "qwen3-8b": "qwen3-8b",
-  "qwen3.8b": "qwen3-8b",
+  "vl": "qwen3-vl-8b-thinking",
 };
 
-// daftar id valid (tanpa suffix "(free)")
-const VALID_MODELS = MIN1AI_MODELS.map((s) => String(s).replace(/\s*\(free\)\s*$/i, "").trim());
+// daftar id valid (MIN1AI_MODELS udah flat tanpa suffix)
+const VALID_MODELS = MIN1AI_MODELS;
+
+// daftar utk usage — digroup per brand biar rapi (60 model)
+function groupedModelLines() {
+  const lines = [];
+  for (const [brand, models] of Object.entries(MIN1AI_MODEL_GROUPS)) {
+    lines.push(`── ${brand} ──`);
+    for (const mdl of models) lines.push(String(mdl));
+  }
+  return lines;
+}
+
+const FREE_MODELS = ["qwen3-8b", "qwen3-vl-8b-thinking"];
 
 function normModel(raw) {
   const q = String(raw || "").trim().toLowerCase();
@@ -65,10 +78,11 @@ async function handler(m, { sock, db } = {}) {
       const cur = getSavedModel(db, m.sender) || MIN1AI_DEFAULT_MODEL;
       return m.reply(novaAiUsage("Min1AI", {
         command: "min1ai",
-        modelAktif: `${cur} ${cur === MIN1AI_DEFAULT_MODEL ? "(default)" : ""}`.trim(),
-        models: MIN1AI_MODELS,
+        modelAktif: `${cur}${cur === MIN1AI_DEFAULT_MODEL ? " (default)" : ""}`,
+        models: groupedModelLines(),
         extra: [
-          `📍 Ganti model: ${m.prefix}min1ai model <nama model> — contoh ${m.prefix}min1ai model qwen3-8b`,
+          `📍 Ganti model: ${m.prefix}min1ai model <nama model> — contoh ${m.prefix}min1ai model qwen-thinking`,
+          "📍 Tanda (free) = gratis, sisanya butuh kredit 1min.ai",
         ],
       }));
     }
@@ -78,7 +92,7 @@ async function handler(m, { sock, db } = {}) {
       db?.setting?.("min1aiModel", all);
       await m.react("🐣");
       // pola .ai: label smallcaps, VALUE VERBATIM (model ID harus bisa diketik persis)
-      const isFree = ["qwen3-vl-8b-thinking", "qwen3-8b"].includes(picked);
+      const isFree = FREE_MODELS.includes(picked);
       return m.reply(novaInfoSections([
         "Min1AI",
         { label: "Model aktif", value: picked },
@@ -97,10 +111,11 @@ async function handler(m, { sock, db } = {}) {
     const cur = getSavedModel(db, m.sender) || MIN1AI_DEFAULT_MODEL;
     return m.reply(novaAiUsage("Min1AI", {
       command: "min1ai",
-      modelAktif: cur === MIN1AI_DEFAULT_MODEL ? `${cur} — Qwen Thinking (default)` : cur,
-      models: MIN1AI_MODELS,
+      modelAktif: `${cur}${cur === MIN1AI_DEFAULT_MODEL ? " (default)" : ""}`,
+      models: groupedModelLines(),
       extra: [
-        `📍 Ganti model: ${m.prefix}min1ai model <nama model> — contoh ${m.prefix}min1ai model gpt-5`,
+        `📍 Ganti model: ${m.prefix}min1ai model <nama model> — contoh ${m.prefix}min1ai model qwen-thinking`,
+        "📍 Tanda (free) = gratis, sisanya butuh kredit 1min.ai",
       ],
     }));
   }
