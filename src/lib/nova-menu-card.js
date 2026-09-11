@@ -30,6 +30,7 @@ import { toSC } from "./nova-menu-style.js";
 import { smallcapsText } from "./styler.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
+import { getDatabase } from "./nova-database.js";
 
 const _thumbnailCache = new Map();
 
@@ -81,6 +82,30 @@ function resolveMenuThumbnail(thumbPath) {
     }
   }
   return { path: thumbPath, isVideo: false };
+}
+
+// ── VARIAN THUMBNAIL MENU (request owner 11 Sep: "menu thumbnail versi video
+// jadi varian 2, varian 1 bawaan thumbnail gambar bawaan"):
+// V1 (default) = header gambar statis bawaan (jpg menu), V2 = header video
+// yang gerak (assets/video/menu/menuthumbnail.mp4, ala script Elaina).
+// Setting db: menuThumbVariant (1|2), diatur via .setallmenu / .setmenu.
+function getMenuThumbVariant() {
+  try {
+    const db = getDatabase();
+    const v = Number(db?.setting?.("menuThumbVariant"));
+    return v === 2 ? 2 : 1;
+  } catch {
+    return 1;
+  }
+}
+
+// Pilih thumbnail sesuai varian aktif — varian 1 pakai jpg diminta apa adanya
+// (jalur video cuma aktif varian 2 ATAU caller eksplisit kasih path video).
+function pickMenuThumb(requestedPath) {
+  if (getMenuThumbVariant() === 2 || VIDEO_EXT_RE.test(requestedPath || "")) {
+    return resolveMenuThumbnail(requestedPath);
+  }
+  return { path: requestedPath, isVideo: false };
 }
 
 /**
@@ -317,7 +342,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // Fallback: kirim thumbnail sebagai image+caption biasa, tanpa tombol.
     if (m.chat && m.chat.endsWith("@newsletter")) {
       const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
-      const _nlThumb = resolveMenuThumbnail(thumbPath);
+      const _nlThumb = pickMenuThumb(thumbPath);
       const rawBuffer = getThumbnailBuffer(_nlThumb.path);
       // guard smallcaps juga di jalur newsletter (bypass m.reply)
       const _nlText = typeof text === "string" && text ? smallcapsText(text) : text;
@@ -334,7 +359,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     }
 
     const _mReqPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
-    const _mThumb = resolveMenuThumbnail(_mReqPath);
+    const _mThumb = pickMenuThumb(_mReqPath);
     const thumbPath = _mThumb.path;
     const _mIsVideo = _mThumb.isVideo;
     const rawBuffer = getThumbnailBuffer(thumbPath);
