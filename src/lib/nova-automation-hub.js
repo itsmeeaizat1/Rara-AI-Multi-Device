@@ -42,6 +42,38 @@ function saveAutomodData() {
   db.db.write?.()
 }
 
+// ==================== TOGGLE RULE — dipakai .novaagent act antilink/dll ====
+// (request owner 12 Sep 2026: "novaagent klo disuruh aktifkan fitur ada yg
+// gak tau" — .novaagent aktifkan antilink digrup ini SEBELUMNYA malah ambil
+// LINK GRUP karena LLM ke-confuse kata "link" di dalam "antilink". Sekarang
+// nova-agent.js punya action native antilink/antibadword/antisticker/
+// antivoice/antispam yang manggil helper ini — pakai grup SAAT INI (m.chat),
+// auto-daftar + auto-enable automod kalau grup belum terdaftar.
+const AUTOMOD_RULE_KEYS = ["antilink", "antispam", "antibadword", "antisticker", "antivoice"]
+
+export function setAutomodRule(gid, rule, on) {
+  if (!AUTOMOD_RULE_KEYS.includes(rule)) throw new Error("Rule automod gak dikenal: " + rule)
+  const data = getAutomodData()
+  if (!data.automod) data.automod = { groups: {}, globalBadwords: ["spam", "scam", " judi", "casino", "porn"] }
+  if (!data.automod.groups[gid]) {
+    data.automod.groups[gid] = {
+      enabled: true,
+      rules: { antilink: false, antispam: false, antibadword: false, antisticker: false, antivoice: false },
+      badwords: [], action: "warn", warnings: {}, violations: 0,
+    }
+  }
+  const g = data.automod.groups[gid]
+  g.enabled = true // aktifkan otomatis (grup ini minta fitur dinyalain — automod-nya wajib hidup)
+  g.rules[rule] = on === true
+  saveAutomodData()
+  return g.rules[rule]
+}
+
+export function getAutomodRules(gid) {
+  const data = getAutomodData()
+  return data.automod?.groups?.[gid]?.rules || null
+}
+
 function formatUptime(seconds) {
   const d = Math.floor(seconds / 86400)
   const h = Math.floor((seconds % 86400) / 3600)

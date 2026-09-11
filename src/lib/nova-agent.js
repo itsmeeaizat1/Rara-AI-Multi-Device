@@ -78,7 +78,12 @@ const MAX_ACTS = 3;
 const ACT_ACTIONS = [
   "kick", "add", "promote", "demote", "open", "close", "lockedit", "unlockedit",
   "rename", "desc", "tagall", "link",
+  "antilink", "antibadword", "antisticker", "antivoice", "antispam", // toggle fitur automod grup
 ];
+// kata kunci fitur automod — dipakai buat DUA hal: (1) local detector fallback,
+// (2) filter keamanan buat action "link" (cegah LLM ke-confuse "antilink"
+// jadi "ambil link grup" — bug nyata dilaporkan owner 12 Sep 2026)
+const FEATURE_TOGGLE_WORDS = /\b(antilink|antibadword|antisticker|antivoice|antispam)\b/i;
 const MAX_TOOLS = 4;
 const TOOL_LIST = [
   "command", // jalanin command bot lain (sticker, quotes, dll)
@@ -101,8 +106,9 @@ Maksimal ${MAX_QUERIES} query — pendek, spesifik, kata kunci ala google (bukan
 
 2. AKSI WhatsApp grup (tugas meminta otomasi grup: kick member, tutup grup, ubah nama grup, dll):
 {"mode": "act", "actions": [{"action": "kick", "target": "nama persis yang ditulis user", "value": null}]}
-Action valid: kick (keluarkan member), add (tambah member), promote (jadikan admin), demote (turunkan admin), open (buka grup — semua member bisa chat), close (tutup grup — cuma admin bisa chat), lockedit (kunci edit info grup), unlockedit (buka edit info grup), rename (ubah nama grup, value = nama baru), desc (ubah deskripsi grup, value = deskripsi baru), tagall (tag semua member), link (ambil link invite grup).
-Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc isi value.
+Action valid: kick (keluarkan member), add (tambah member), promote (jadikan admin), demote (turunkan admin), open (buka grup — semua member bisa chat), close (tutup grup — cuma admin bisa chat), lockedit (kunci edit info grup), unlockedit (buka edit info grup), rename (ubah nama grup, value = nama baru), desc (ubah deskripsi grup, value = deskripsi baru), tagall (tag semua member), link (KHUSUS user MINTA/LIHAT/AMBIL link undangan grup — bukan nama fitur), antilink (nyala/matiin filter anti-link, value "on"/"off"), antibadword (nyala/matiin filter kata kasar, value "on"/"off"), antisticker (nyala/matiin blokir sticker, value "on"/"off"), antivoice (nyala/matiin blokir voice note, value "on"/"off"), antispam (nyala/matiin filter spam, value "on"/"off").
+PENTING: kalau user minta "aktifkan/nyalain/matiin antilink" (atau antibadword/antisticker/antivoice/antispam) itu MENYALAKAN FITUR MODERASI, action-nya "antilink" dst dengan value on/off — BUKAN action "link" (action "link" HANYA kalau user eksplisit minta link undangan grup, kata "link" berdiri sendiri, bukan bagian dari nama fitur "antilink").
+Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc/antilink/antibadword/antisticker/antivoice/antispam isi value.
 
 3. TOOLS serba bisa (tugas minta AI ngerjain pakai kemampuan bot: bikin gambar, scan gambar, jalanin fitur/command bot, cek aktivitas grup, inget percakapan, bikin fitur baru):
 {"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "download", "url": "https://situs.com/app.apk"}, {"tool": "code", "spec": "halaman html toko kue dengan kartu produk", "lang": "html", "name": "tokokue"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
@@ -156,7 +162,20 @@ function detectActLocal(task) {
   if (/\b(ubah|ganti)\s+(?:deskripsi|desc)\s+(?:grup|group)/.test(s))
     acts.push({ action: "desc", value: (s.match(/(?:jadi|menjadi|:|-)\s*(.+)$/) || [])[1] || null });
   if (/\btag\s?all|tag\s+semua\b/.test(s)) acts.push({ action: "tagall" });
-  if (/\blink\s+(?:grup|group|invite)|\binvite\b/.test(s)) acts.push({ action: "link" });
+  // "link" HANYA kalau eksplisit minta link undangan — jangan sampe ketangkep
+  // kata di dalam nama fitur "antilink" (FEATURE_TOGGLE_WORDS cek di bawah)
+  if (/\blink\s+(?:grup|group|invite|undangan)\b|\binvite\b|\btautan\s+(?:grup|undangan)\b/.test(s) && !FEATURE_TOGGLE_WORDS.test(s))
+    acts.push({ action: "link" });
+  // toggle fitur automod: antilink/antibadword/antisticker/antivoice/antispam
+  const FEATURES = ["antilink", "antibadword", "antisticker", "antivoice", "antispam"];
+  for (const feat of FEATURES) {
+    const featRe = new RegExp(`\\b${feat}\\b`, "i");
+    if (!featRe.test(s)) continue;
+    const onRe = /\b(aktifkan|aktifin|nyalain|nyalakan|hidupkan|pasang|setel|set)\b/i;
+    const offRe = /\b(matikan|matiin|nonaktifkan|nonaktifin|hapus|lepas|cabut)\b/i;
+    if (offRe.test(s)) acts.push({ action: feat, value: "off" });
+    else if (onRe.test(s) || /\bon\b/.test(s)) acts.push({ action: feat, value: "on" });
+  }
   return acts.map(a => ({ action: a.action, target: a.target || null, value: a.value || null })).slice(0, MAX_ACTS);
 }
 
@@ -198,6 +217,12 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       .map(a => ({ action: String(a?.action || "").toLowerCase().trim(), target: a?.target ? String(a.target).trim() : null, value: a?.value ? String(a.value).trim() : null }))
       .filter(a => ACT_ACTIONS.includes(a.action))
       .slice(0, MAX_ACTS);
+    // 🛡️ SAFETY FILTER — bug nyata dilaporkan owner 12 Sep 2026: minta
+    // "aktifkan antilink" malah dijawab kirim LINK GRUP (LLM ke-confuse
+    // substring "link" di "antilink" jadi action "link"). Buang action
+    // "link" kalau tugas ngomongin fitur antilink/antibadword/dst — biar
+    // fallback lokal di bawah yang ambil alih dengan action yang benar.
+    actions = actions.filter(a => a.action !== "link" || !FEATURE_TOGGLE_WORDS.test(task));
   }
 
   // fallback: LLM plan gagal → deteksi lokal; LLM jawab act tapi gak ada action valid → deteksi lokal juga

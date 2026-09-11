@@ -285,6 +285,100 @@ export const TOOLS = {
     }
   },
 
+  // ─── TOGGLE FITUR AUTOMOD (request owner 12 Sep 2026: "aktifkan antilink
+  // digrup ini" — sebelumnya malah kesasar ke getlink, sekarang tool asli;
+  // pola on/off TERPISAH ala closegc/opengc & approvalon/approvaloff) ───
+  antilinkon: {
+    perm: 'admin', danger: false,
+    desc: 'menyalakan filter anti-link di grup ini',
+    done: '🛡️ Anti-Link di grup ini: AKTIF ✅',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antilink', true)
+    }
+  },
+  antilinkoff: {
+    perm: 'admin', danger: false,
+    desc: 'mematikan filter anti-link di grup ini',
+    done: '🛡️ Anti-Link di grup ini: MATI ❌',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antilink', false)
+    }
+  },
+  antibadwordon: {
+    perm: 'admin', danger: false,
+    desc: 'menyalakan filter kata kasar di grup ini',
+    done: '🛡️ Anti-Badword di grup ini: AKTIF ✅',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antibadword', true)
+    }
+  },
+  antibadwordoff: {
+    perm: 'admin', danger: false,
+    desc: 'mematikan filter kata kasar di grup ini',
+    done: '🛡️ Anti-Badword di grup ini: MATI ❌',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antibadword', false)
+    }
+  },
+  antistickeron: {
+    perm: 'admin', danger: false,
+    desc: 'menyalakan blokir sticker di grup ini',
+    done: '🛡️ Anti-Sticker di grup ini: AKTIF ✅',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antisticker', true)
+    }
+  },
+  antistickeroff: {
+    perm: 'admin', danger: false,
+    desc: 'mematikan blokir sticker di grup ini',
+    done: '🛡️ Anti-Sticker di grup ini: MATI ❌',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antisticker', false)
+    }
+  },
+  antivoiceon: {
+    perm: 'admin', danger: false,
+    desc: 'menyalakan blokir voice note di grup ini',
+    done: '🛡️ Anti-Voice Note di grup ini: AKTIF ✅',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antivoice', true)
+    }
+  },
+  antivoiceoff: {
+    perm: 'admin', danger: false,
+    desc: 'mematikan blokir voice note di grup ini',
+    done: '🛡️ Anti-Voice Note di grup ini: MATI ❌',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antivoice', false)
+    }
+  },
+  antispamon: {
+    perm: 'admin', danger: false,
+    desc: 'menyalakan filter spam di grup ini',
+    done: '🛡️ Anti-Spam di grup ini: AKTIF ✅',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antispam', true)
+    }
+  },
+  antispamoff: {
+    perm: 'admin', danger: false,
+    desc: 'mematikan filter spam di grup ini',
+    done: '🛡️ Anti-Spam di grup ini: MATI ❌',
+    run: async (conn, m) => {
+      const { setAutomodRule } = await import('./nova-automation-hub.js')
+      setAutomodRule(m.chat, 'antispam', false)
+    }
+  },
+
   // ─── OWNER ONLY: LEAVE GROUP ───
   leavegc: {
     perm: 'owner', danger: false,
@@ -454,8 +548,24 @@ export function localParse(text) {
   if (/(ganti|ubah|update).*(foto|pp|profil|picture|avatar)/.test(t) && /(grup|gc|group)/.test(t))
     return { tool: 'setpp', args: {} }
 
-  // ─── LINK GRUP ───
-  if (/(link|tautan|invite)\b/.test(t) && /(grup|gc|group)/.test(t) && !/reset|revoke/.test(t))
+  // ─── TOGGLE FITUR AUTOMOD (antilink/antibadword/antisticker/antivoice/
+  // antispam) — CEK DULU sebelum LINK GRUP di bawah. Bug nyata dilaporkan
+  // owner 12 Sep 2026: ".novaagent aktifkan antilink digrup ini" malah
+  // ke-detect getlink (regex lama /(link|tautan|invite)\b/ nangkep substring
+  // "link" di dalam "antilink" karena gak ada \b di AWAL match, cuma di akhir
+  // — sekarang fitur toggle di cek LEBIH DULU + return early jadi gak sampe
+  // ke pengecekan getlink sama sekali).
+  const FEATURE_RULE = /\b(antilink|antibadword|antisticker|antivoice|antispam)\b/.exec(t)
+  if (FEATURE_RULE) {
+    const rule = FEATURE_RULE[1]
+    const isOff = /\b(matikan|matiin|nonaktifkan|nonaktifin|hapus|lepas|cabut|off)\b/.test(t)
+    const isOn = /\b(aktifkan|aktifin|nyalain|nyalakan|hidupkan|pasang|setel|set|on)\b/.test(t)
+    if (isOff || isOn) return { tool: rule + (isOff ? 'off' : 'on'), args: {} }
+  }
+
+  // ─── LINK GRUP (HANYA kata "link/tautan/invite" BERDIRI SENDIRI — bukan
+  // bagian dari nama fitur seperti "antilink", dicek FEATURE_RULE di atas) ───
+  if (/\b(link|tautan|invite)\b/.test(t) && /(grup|gc|group)/.test(t) && !/reset|revoke/.test(t) && !FEATURE_RULE)
     return { tool: 'getlink', args: {} }
   if (/(reset|revoke|perbarui).*(link|invite)/.test(t)) return { tool: 'revokelink', args: {} }
 
@@ -597,6 +707,32 @@ export async function askAI(system, user, history = []) {
   throw new Error('Semua provider AI gagal')
 }
 
+// 🔹 SANITIZE REPLY — bug nyata dilaporkan owner 12 Sep 2026: ".novaagent hp
+// terbaik tahun ini" dijawab niru gaya "Google AI Overview" — nulis markdown
+// heading (###), markdown link [label](url), DAN URL PLACEHOLDER PALSU
+// (http://googleusercontent.com/lmdx_content/... — bot GAK ADA browsing di
+// jalur chat biasa novaai, jadi link itu 100% HALUSINASI model, bukan data
+// asli) — hasilnya WhatsApp nampilin teks berantakan+link mati. Sanitizer ini
+// jaring pengaman DEFENSI KEDUA (pertama = instruksi format di system prompt
+// think() di bawah) — dipanggil di parseAIResponse (novaai.js) sebelum teks
+// dikirim ke user.
+export function sanitizeAiReply(text) {
+  if (!text) return text;
+  let s = String(text);
+  // markdown link [label](url) → label doang (buang url, WA gak render link markdown)
+  s = s.replace(/\[([^\]]+)\]\(https?:\/\/[^\s)]+\)/g, "$1");
+  // URL ke domain placeholder/tracking yang sering di-halusinasi model
+  // (gaya "Google AI Overview"/SGE) — buang total, bukan data asli
+  s = s.replace(/https?:\/\/[^\s)]*(?:googleusercontent\.com|gstatic\.com)[^\s)]*/gi, "");
+  // markdown heading (### Judul) → buang tanda pagar, teks judul tetap
+  s = s.replace(/^#{1,6}\s+/gm, "");
+  // baris pembatas markdown murni (---, ***, ___) → buang
+  s = s.replace(/^[-*_]{3,}\s*$/gm, "");
+  // rapikan spasi/baris kosong berlebih akibat pembersihan di atas
+  s = s.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  return s;
+}
+
 // 🔹 AI AGENT: think() — nerjemahin bahasa manusia jadi perintah tool (JSON)
 // 🔹 AI hanya dipanggil kalau localParse tidak match
 export async function think(text, ctx = {}) {
@@ -641,6 +777,7 @@ ${toolsList}
 Aturan WAJIB:
 - Balas HANYA JSON mentah, tanpa \`\`\` dan tanpa teks lain
 - Format: {"tool":"nama_tool"|null,"args":{},"execCommand":"nama_command"|null,"execArgs":"","reply":"..."}
+- FORMAT FIELD "reply" (WAJIB, kamu TIDAK punya akses browsing/internet real-time di jalur ini — jawab dari pengetahuanmu, JANGAN PURA-PURA browsing): JANGAN PERNAH tulis markdown link [teks](url), JANGAN tulis URL/link apa pun (apalagi yang kamu ngaku-ngaku sebagai gambar/sumber produk — itu PASTI halusinasi, bukan link asli), JANGAN pakai markdown heading (### dst) atau baris pembatas (---), JANGAN niru format "Google AI Overview"/hasil mesin pencari. Tulis jawaban natural ala chat WhatsApp — paragraf pendek atau poin bernomor/•, bahasa biasa, boleh **bold** pakai *bintang* WhatsApp kalau perlu.
 - Nomor WA format 62xxx tanpa + dan tanpa strip. Mention yang tersedia: ${ctx.mentions || 'tidak ada'}
 - Untuk setname/setdesc/hidetag/poll isi args.value dengan teksnya
 - Kalau "tool" dan "execCommand" TIDAK NULL (aksi grup/command dijalankan): "reply" cukup konfirmasi SINGKAT 1 kalimat.
