@@ -126,6 +126,36 @@ w("\n— MODE ACT: multi aksi (tutup grup + rename) —");
   check("laporan 2 baris", r.answer.split("\n").length === 2);
 }
 
+w("\n— MODE ACT via handler: desc + rename pakai groupMetadataUpdate (FIX no function) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"act","actions":[{"action":"desc","value":"Grup resmi Nova Squad, jaga kebersihan"},{"action":"rename","value":"Nova Squad Official"}]}` });
+  const sent = [];
+  const metas = [];
+  const m = {
+    text: ".agent buatin deskripsi grup dan ganti nama grup jadi Nova Squad Official", args: ["buatin", "deskripsi", "grup"],
+    chat: "x@g.us", sender: "admin@w", pushName: "Admin", command: "agent", prefix: ".",
+    isGroup: true, isAdmin: true, isOwner: false, isBotAdmin: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = {
+    user: { id: "62bot:5" },
+    sendMessage: async (chat, c) => {
+      if (c?.edit) { sent.push("[edit] " + c.text); return { key: { id: "k1" } }; }
+      if (c?.text) sent.push(String(c.text));
+      return { key: { id: "k1" } };
+    },
+    groupMetadataUpdate: async (chat, fields) => { metas.push({ chat, fields }); },
+    groupMetadata: async () => ({ participants: [{ id: "admin@w", admin: "admin" }] }),
+  };
+  await agHandler(m, { sock, db: { setting: () => ({}) }, deps: {} });
+  const finalMsg = (sent.filter(s => s.startsWith("[edit]")).pop() || "").replace("\[edit\] ", "") || sent.filter(Boolean).pop() || "";
+  check("desc via groupMetadataUpdate", metas.length === 2 && metas[0].fields?.description === "Grup resmi Nova Squad, jaga kebersihan", JSON.stringify(metas));
+  check("rename via groupMetadataUpdate", metas[1]?.fields?.subject === "Nova Squad Official", JSON.stringify(metas[1]));
+  check("gak ada error no function", !finalMsg.includes("is not a function"), finalMsg.slice(0, 80));
+  check("laporan sukses 2 aksi", finalMsg.includes("✅") && finalMsg.includes("Deskripsi grup diperbarui"), finalMsg.slice(0, 100));
+}
+
 w("\n— MODE ACT: LLM down → deteksi lokal —");
 {
   resetAgentDeps();
