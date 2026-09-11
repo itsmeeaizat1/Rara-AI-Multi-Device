@@ -14,14 +14,23 @@ import te from "../../src/lib/nova-error.js";
 import { runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
+import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
+
+// 💻 system prompt coder — request owner 11 Sep: "klo suruh buatkan kode html,
+// javascript dll pintar coding agent membuatkan dgn kepintarannya"
+const SYS_CODER = `Kamu programmer ELITE serba bisa. User minta kode program — balas dengan:
+1. SATU kalimat singkat menjelaskan apa yang kamu bikin.
+2. SATU blok kode lengkap siap jalan (di antara penanda triple backtick) — self-contained SATU FILE, lengkap dari baris pertama sampai akhir, berkomentar bahasa Indonesia, rapi, ikuti best practice.
+3. Setelah blok kode: "CARA PAKAI:" penjelasan 2-4 kalimat cara menjalankannya.
+JANGAN pernah memotong kode / placeholder TODO / kode segitiga-python. Kode HARUS beneran jalan.`;
 
 const pluginConfig = {
   name: "agent",
   alias: ["agent", "aiagent", "agensi", "agentai", "agenta"],
   category: "ai",
-  description: "AI Agent serba bisa — browsing web, otomasi grup, scan/generate gambar, jalanin fitur, buat fitur baru, inget percakapan, ngobrol pakai vn",
+  description: "AI Agent serba bisa — browsing web, otomasi grup, scan/generate gambar, jalanin fitur, buat fitur baru, bikin kode, unduh file, persona (jadi siapa pun), inget percakapan, ngobrol pakai vn",
   usage: ".agent <tugas>",
   example: ".agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
@@ -264,6 +273,41 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     } catch (e) { return { ok: false, msg: "Gagal unduh/kirim: " + (e?.message || "error") }; }
   });
 
+  // 💻 code — bikin kode program (html/js/python/php/dll) + kirim FILE siap
+  // pakai (request owner 11 Sep: "klo suruh buatkan kode html, javascript dll
+  // pintar coding agent membuatkan dgn kepintarannya, klo bantu tugas
+  // dikerjakan dgn kepintaran agent, serba bisa").
+  const code = deps.code || (async (t) => {
+    const spec = String(t.spec || t.prompt || t.args || "").trim();
+    if (!spec) return { ok: false, msg: "Jelasin mau dibikin kode apa (contoh: halaman html toko kue dengan kartu produk)" };
+    const EXT = { html: "html", htm: "html", css: "css", javascript: "js", js: "js", typescript: "ts", ts: "ts", node: "js", nodejs: "js", python: "py", py: "py", php: "php", java: "java", kotlin: "kt", c: "c", cpp: "cpp", cplusplus: "cpp", csharp: "cs", go: "go", golang: "go", rust: "rs", sql: "sql", bash: "sh", shell: "sh", dart: "dart", swift: "swift", lua: "lua", r: "r" };
+    const langKey = String(t.lang || "").toLowerCase().trim();
+    const ext = EXT[langKey] || "txt";
+    let raw = "";
+    try {
+      const chat = deps.aiChat || aiChainChat; // seam deps.aiChat buat e2e
+      raw = await chat(`Permintaan: ${spec}\n\nBahasa: ${langKey || "pilih yang paling cocok untuk permintaan ini"}`, { systemPrompt: SYS_CODER });
+    } catch (e) { return { ok: false, msg: "Gagal susun kode: " + (e?.message || "AI-nya sibuk") }; }
+    if (!raw || !String(raw).trim()) return { ok: false, msg: "AI-nya balas kosong, coba lagi" };
+    // ekstrak blok kode dari jawaban
+    const block = raw.match(/```[a-zA-Z0-9+#]*\n([\s\S]*?)```/);
+    const codeBody = (block ? block[1] : raw).trim();
+    if (!codeBody) return { ok: false, msg: "Kode hasil kosong, coba lagi" };
+    // penjelasan = semua teks di luar blok kode (intro + CARA PAKAI)
+    const explain = (block ? raw.replace(/```[\s\S]*?```/g, "") : raw).trim().slice(0, 600) || `Kode ${ext} untuk: ${spec.slice(0, 80)}`;
+    const base = (String(t.name || "kode").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 24)) || "kode";
+    const fileName = base + "." + ext;
+    try {
+      await sock.sendMessage(m.chat, {
+        document: Buffer.from(codeBody, "utf-8"),
+        fileName,
+        mimetype: "text/plain",
+        caption: "💻 " + fileName + "\n\n" + explain,
+      }, { quoted: m });
+      return { ok: true, msg: "Kode dibikin: " + fileName, evidence: `Kode ${fileName} (.${ext}) udah dikirim sebagai file — siap dipakai. Penjelasan: ${explain.slice(0, 300)}` };
+    } catch (e) { return { ok: false, msg: "Gagal kirim file kode: " + (e?.message || "error") }; }
+  });
+
   // 👁️ vision — scan gambar yang di-reply/attach
   const vision = deps.vision || (async (t) => {
     if (!mediaBuffer) return { ok: false, msg: "Reply/attach gambarnya dulu, baru suruh .agent scan" };
@@ -321,7 +365,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     }
   });
 
-  return { command, image, download, vision, activity, memory, create };
+  return { command, image, download, code, vision, activity, memory, create };
 }
 
 // simpan jejak percakapan agent per chat (db.setting agentMemory) — biar inget
@@ -374,7 +418,10 @@ async function handler(m, { sock, db, deps } = {}) {
       "agent",
       "AI agent otonom — dia sendiri yang nyari ke web, baca halamannya, terus nyusun jawaban lengkap + sumber.",
       `${m.prefix}agent <tugas apa pun>\n${m.prefix}agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi\n${m.prefix}agent kick orang yang bernama Budi\n${m.prefix}agent tutup grup dan ubah nama grup jadi Nova Squad`,
-      [`${smallcapsText("5 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar (reply foto), generate gambar, jalanin fitur bot, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip/dari link langsung")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
+      [`${smallcapsText("7 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar, generate gambar, jalanin fitur, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip dari link")} | 💻 ${smallcapsText("coding — bikin kode html/js/python dikirim jadi file")} | 🎭 ${smallcapsText("persona — jadi anak kecil, pacar, siapa pun")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
+       `${smallcapsText("bermain peran/persona")}: ${m.prefix}agent jadi anak kecil umur 5 tahun yang sok jagoan | ${m.prefix}agent jadi pacarku yang manja`,
+       `${smallcapsText("bikin kode program")}: ${m.prefix}agent buatkan kode html halaman toko kue yang keren`,
+       `${smallcapsText("bantuin tugas")}: ${m.prefix}agent bantuin tugas matematika ini — ...`,
        `${smallcapsText("unduh file/apk/zip")}: ${m.prefix}agent download file ini https://situs.com/app.apk`,
        `${smallcapsText("buat fitur baru")}: ${m.prefix}agent buat fitur namanya kalkulator yang bisa tambah/kali (khusus owner)`,
        `${smallcapsText("butuh 1-3 menit, sabar ya")}`],

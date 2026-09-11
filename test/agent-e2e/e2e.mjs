@@ -406,6 +406,93 @@ w("\n— plugin TOOLS: executor download TOLAK halaman web —");
   check("halaman web ditolak", finalMsg.includes("❌") && finalMsg.includes("halaman web"), finalMsg.slice(0, 80));
 }
 
+w("\n— MODE PERSONA: in-character (jadi anak kecil / pacar) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"persona","persona":"anak laki-laki umur 5 tahun cerewet sok jagoan"}`, composeReply: "Kakk! Aku bisa bantu! Aku pinter banget lho 😤" });
+  const phases = [];
+  const res = await runAgent("jadi anak kecil yang sok jagoan", { onPhase: (p, i) => phases.push(p), history: ["- [persona] tugas: jadi pacar → hasil: manja"] });
+  check("mode persona", res.mode === "persona");
+  check("persona kecatat", res.persona?.includes("anak"));
+  check("jawaban in-character", String(res.answer).includes("Aku"), res.answer);
+  check("fase plan+compose doang", JSON.stringify(phases) === JSON.stringify(["plan", "compose"]), JSON.stringify(phases));
+  check("persona tanpa sumber web", (res.sources || []).length === 0);
+}
+
+w("\n— MODE PERSONA via handler: teks final di 1 chat —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"persona","persona":"pacar cewek manja penyayang"}`, composeReply: "Iyaa sayangg 🥰 kangen akuuu" });
+  const sent = [];
+  const reacts = [];
+  const m = {
+    text: ".agent jadi pacarku yang manja", args: ["jadi", "pacarku", "yang", "manja"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    isGroup: true,
+    react: async (e) => { reacts.push(String(e)); },
+    reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = { sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; } };
+  await agHandler(m, { sock, db: { setting: () => ({}) }, deps: {} });
+  const finalMsg = sent.filter(Boolean).pop() || "";
+  check("jawaban persona terkirim", finalMsg.includes("sayangg"), finalMsg.slice(0, 60));
+  check("persona TANPA footer sumber", !finalMsg.includes("📎"), finalMsg.slice(0, 60));
+  check("reaksi 🐣 selesai", reacts[reacts.length - 1] === "🐣", JSON.stringify(reacts));
+}
+
+w("\n— plugin TOOLS: code via deps stub —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"code","spec":"halaman html toko kue","lang":"html","name":"tokokue"}]}` });
+  const sent = [];
+  const coded = [];
+  const m = {
+    text: ".agent buatkan kode html toko kue", args: ["buatkan", "kode", "html", "toko", "kue"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    isGroup: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = { sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; } };
+  const deps = {
+    code: async (tl) => { coded.push(tl); return { ok: true, msg: "Kode dibikin: tokokue.html" }; },
+  };
+  await agHandler(m, { sock, db: { setting: () => ({}) }, deps });
+  const finalMsg = sent.filter(Boolean).pop() || "";
+  check("tool code ke-dispatch", coded[0]?.spec === "halaman html toko kue" && coded[0]?.lang === "html");
+  check("laporan kode terkirim", finalMsg.includes("Kode dibikin"));
+}
+
+w("\n— plugin TOOLS: executor code ASLI (aiChat stub) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"code","spec":"kalkulator javascript","lang":"javascript","name":"kalkulator"}]}` });
+  const sent = [];
+  const docs = [];
+  const m = {
+    text: ".agent bikin kode javascript kalkulator", args: ["bikin", "kode", "javascript", "kalkulator"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    isGroup: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = {
+    sendMessage: async (chat, c) => {
+      if (c?.document) docs.push({ name: c.fileName, body: c.document.toString("utf-8"), caption: String(c.caption || "") });
+      if (c?.text) sent.push(String(c.text));
+      return { key: { id: "k1" } };
+    },
+  };
+  const deps = {
+    aiChat: async () => "Kalkulator sederhana siap pakai.\n```javascript\nconst tambah = (a, b) => a + b;\nconsole.log(tambah(2, 3));\n```\nCARA PAKAI: jalankan node kalkulator.js",
+  };
+  await agHandler(m, { sock, db: { setting: () => ({}) }, deps });
+  const finalMsg = sent.filter(Boolean).pop() || "";
+  check("dokumen kode terkirim", docs.length === 1, String(docs.length));
+  check("nama file .js dari lang", docs[0]?.name === "kalkulator.js", docs[0]?.name);
+  check("isi kode ter-ekstrak dari blok", docs[0]?.body.includes("const tambah") && !docs[0]?.body.includes("```"), docs[0]?.body.slice(0, 50));
+  check("caption penjelasan", docs[0]?.caption.includes("CARA PAKAI"), docs[0]?.caption.slice(0, 40));
+  check("laporan evidence natural", finalMsg.includes("kalkulator.js"), finalMsg.slice(0, 80));
+}
+
 w("\n— plugin TOOLS: create non-owner ditolak —");
 {
   resetAgentDeps();
