@@ -748,6 +748,20 @@ try {
 
   // Auto-AI: if not a command, check if auto-AI should respond (skip in self mode)
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip && !__novaModeBlocked) {
+    // 🔹 TELPON MODE (voice agent): VN masuk di chat yang mode-nya nyala →
+    // didengerin (STT) terus dijawab pakai suara (TTS VN) — ala telepon
+    try {
+      if (m.isAudio) {
+        const { isTelponOn, handleTelponVn } = await import("./lib/nova-telpon.js");
+        if (typeof isTelponOn === "function" && isTelponOn(db, m.chat)) {
+          await handleTelponVn(m, sock, db, config);
+          return;
+        }
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) console.error("[Telpon] Hook error:", e.message);
+    }
+
     try {
       const { handleAutoAI, isAutoAIEnabled } = await import("./lib/nova-auto-ai.js");
       // FIX: dulu isAutoAIEnabled(m, sock) — lib expect chatId STRING,

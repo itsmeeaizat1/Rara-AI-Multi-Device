@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/lib/nova-stt.js — Speech-to-Text (STT) shared helper
-// Pipeline: Gemini multimodal (kalau ada key) → OpenAI Whisper (fallback) → null
+// Pipeline: Gemini multimodal (kalau ada key) → OpenAI Whisper → Groq Whisper (whisper-large-v3) → null
 // Dipakai oleh: nova-auto-ai.js (fitur .autoai — respon VN), dst.
 
 import config from "../../config.js";
@@ -64,6 +64,33 @@ export async function transcribeAudio(buffer, mimeType) {
       }
     } catch (e) {
       console.error("[STT] Whisper error:", e.message);
+    }
+  }
+
+  // 3) Groq Whisper (whisper-large-v3) — free tier, cepat, format API kompatibel OpenAI
+  let groqKey = "";
+  try {
+    const { getProviderApiKey } = await import("./apikey/ai-chain.js");
+    groqKey = getProviderApiKey("groq") || "";
+  } catch {}
+  if (!groqKey) groqKey = getApiKey("groqkey") || getApiKey("groq");
+  if (groqKey) {
+    try {
+      const formData = new FormData();
+      formData.append("file", new Blob([buffer], { type: mime }), "voice.ogg");
+      formData.append("model", "whisper-large-v3");
+      formData.append("language", "id");
+      const res = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+        method: "POST",
+        headers: { "Authorization": "Bearer " + groqKey },
+        body: formData,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.text && data.text.trim().length > 1) return data.text.trim();
+      }
+    } catch (e) {
+      console.error("[STT] Groq Whisper error:", e.message);
     }
   }
 
