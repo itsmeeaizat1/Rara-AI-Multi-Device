@@ -181,6 +181,23 @@ async function execAction(a, ctx, m, sock) {
       const code = await sock.groupInviteCode(m.chat);
       return { ok: true, msg: `🔗 Link invite grup: https://chat.whatsapp.com/${code}` };
     }
+    // toggle fitur automod grup (antilink/antibadword/antisticker/antivoice/
+    // antispam) — request owner 12 Sep 2026: "novaagent klo disuruh aktifkan
+    // fitur ada yg gak tau" (sebelumnya "aktifkan antilink" malah kesasar ke
+    // action "link"/ambil link grup — sudah dibenerin di nova-agent.js plan
+    // + filter, sekarang action ini beneran ada eksekutornya).
+    case "antilink": case "antibadword": case "antisticker": case "antivoice": case "antispam": {
+      const g = gate(false); if (g) return { ok: false, msg: g }; // bot gak perlu admin, ini cuma setting internal bot
+      const on = String(a.value || "on").toLowerCase() !== "off";
+      const { setAutomodRule } = await import("../../src/lib/nova-automation-hub.js");
+      const label = { antilink: "Anti-Link", antibadword: "Anti-Badword", antisticker: "Anti-Sticker", antivoice: "Anti-Voice Note", antispam: "Anti-Spam" }[a.action];
+      try {
+        setAutomodRule(m.chat, a.action, on);
+        return { ok: true, msg: `🛡️ ${label} di grup ini: ${on ? "AKTIF ✅" : "MATI ❌"}` };
+      } catch (e) {
+        return { ok: false, msg: `Gagal atur ${label}: ${e.message}` };
+      }
+    }
     default:
       return { ok: false, msg: `Aksi "${a.action}" gak dikenal` };
   }

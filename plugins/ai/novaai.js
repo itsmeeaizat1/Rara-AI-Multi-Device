@@ -7,7 +7,7 @@
 // 🔹 Alur: localParse (instan) → think (AI provider) → [ACTION] auto-execute
 // ============================================================
 
-import { TOOLS, localParse, think, resolveUserByName } from "../../src/lib/aiagent.js";
+import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
@@ -149,10 +149,12 @@ Jangan gunakan markdown (** atau ##). Gunakan plain text dengan nomor untuk poin
 function parseAIResponse(response) {
   const actionRegex = /\[ACTION:([a-zA-Z0-9_-]+)\|([^\]]*)\]/;
   const match = response.match(actionRegex);
-  if (!match) return { text: response.trim(), action: null };
+  // sanitizeAiReply — bersihin halusinasi markdown link/heading/URL palsu
+  // ala "Google AI Overview" (bug owner 12 Sep 2026, lihat aiagent.js)
+  if (!match) return { text: sanitizeAiReply(response.trim()), action: null };
   const command = match[1].toLowerCase().trim();
   const args = match[2].trim();
-  const text = response.replace(actionRegex, "").trim();
+  const text = sanitizeAiReply(response.replace(actionRegex, "").trim());
   return { text, action: { command, args } };
 }
 
@@ -477,7 +479,7 @@ async function handler(m, { sock, conn, config, db }) {
     await m.react("⚡");
     await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + decision.tool + "..."));
     await tool.run(sock, m, finalArgs);
-    await editFinal(decision.reply || tool.done);
+    await editFinal(sanitizeAiReply(decision.reply || tool.done || ""));
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}

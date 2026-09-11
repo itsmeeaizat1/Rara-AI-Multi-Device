@@ -722,7 +722,7 @@ w("\n— plugin: no-arg → usage —");
   check("header ✦ agent ✦", u.includes(`「 ✦ ${toSC("AGENT")} ✦ 」`));
   check("cara pakai smallcaps", u.includes(toSC("Cara Pakai")));
   check("contoh verbatim", u.includes(".agent <tugas apa pun>"));
-  check("pluginConfig benar", agConfig.name === "agent" && agConfig.category === "ai" && agConfig.isEnabled);
+  check("pluginConfig benar", agConfig.name === "aisuperagent" && agConfig.category === "ai" && agConfig.isEnabled); // rename 460f28f1
 }
 
 resetAgentDeps();
