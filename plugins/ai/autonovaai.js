@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// plugins/owner/autonovaai.js — .autonovaai: bikin rule automation pakai bahasa manusia
+// plugins/ai/autonovaai.js — .anovaagent (dulu .autonovaai): bikin rule automation pakai bahasa manusia
 // Gabungan ai-agent (askAI) + autoflow engine — user ketik kalimat → AI terjemahin jadi JSON rule → validasi → simpan → langsung aktif
 
 import fs from "fs";
@@ -200,12 +200,12 @@ function describe(r) {
 }
 
 const pluginConfig = {
-  name: "autonovaai",
-  alias: ["autonovaai", "setautonovaai"],
+  name: "anovaagent",
+  alias: ["anovaagent"], // request owner: rename .autonovaai → .anovaagent, cmd utama doang
   category: "ai",
   description: "Bikin rule automation pakai bahasa manusia — AI terjemahin jadi aturan",
-  usage: ".autonovaai <kalimat bebas>",
-  example: ".autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam\n.autonovaai setiap jam 05:00 ingatin sholat subuh\n.autonovaai kalau ada yang kirim sticker, react 🔥\n.autonovaai list / del AF-1 / on AF-1 / off AF-1 / reset [AF-1]",
+  usage: ".anovaagent <kalimat bebas>",
+  example: ".anovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam\n.anovaagent setiap jam 05:00 ingatin sholat subuh\n.anovaagent kalau ada yang kirim sticker, react 🔥\n.anovaagent list / del AF-1 / on AF-1 / off AF-1 / reset [AF-1]",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -220,23 +220,22 @@ async function handler(m, { sock, conn }) {
   try {
     const raw = m.text?.trim() || "";
     const body = raw
-      .replace(/^\.autonovaai\s+/i, "")
-      .replace(/^\.setautonovaai\s+/i, "")
+      .replace(/^\.anovaagent\s+/i, "")
       .trim();
 
     const parts = body.split(/[ \t]+/).filter(Boolean);
     const sub = (parts[0] || "").toLowerCase();
 
-    // ---- .autonovaai list ----
+    // ---- .anovaagent list ----
     if (sub === "list") {
       const rules = load();
       if (!rules.length) {
-        return m.reply(claraWrap("autonovaai", "Belum ada rule.\n\n💡 Bikin: .autonovaai <kalimat bebas>"));
+        return m.reply(claraWrap("anovaagent", "Belum ada rule.\n\n💡 Bikin: .anovaagent <kalimat bebas>"));
       }
       const text = rules
         .map((r) => `${r.enabled ? "🟢" : "🔴"} ${r.id} [${r.hits || 0}x]\n${describe(r)}`)
         .join("\n\n");
-      return m.reply(text, "autonovaai");
+      return m.reply(text, "anovaagent");
     }
 
     // ---- .autonovaai reset [AF-1] — bersihin memori obrolan per-user AI ----
@@ -244,49 +243,49 @@ async function handler(m, { sock, conn }) {
       const id = (parts[1] || "").toUpperCase();
       clearAichatMemory(id || null, null, null);
       return m.reply(
-        claraWrap("autonovaai", id
+        claraWrap("anovaagent", id
           ? `Memori obrolan AI rule ${id} dihapus. AI mulai fresh tanpa konteks lama.`
           : `Semua memori obrolan AI dihapus. Semua rule aichat mulai fresh.`),
       );
     }
 
-    // ---- .autonovaai del AF-1 ----
+    // ---- .anovaagent del AF-1 ----
     if (sub === "del") {
       const id = (parts[1] || "").toUpperCase();
-      if (!id) return m.reply(claraWrap("autonovaai", "💡 Contoh: .autonovaai del AF-001"));
+      if (!id) return m.reply(claraWrap("anovaagent", "💡 Contoh: .anovaagent del AF-001"));
       const rules = load();
       const sisa = rules.filter((r) => r.id !== id);
       if (sisa.length === rules.length)
-        return m.reply(claraWrap("autonovaai", `Rule ${id} tidak ketemu. Cek: .autonovaai list`, "error"));
+        return m.reply(claraWrap("anovaagent", `Rule ${id} tidak ketemu. Cek: .anovaagent list`, "error"));
       save(sisa);
-      return m.reply(claraWrap("autonovaai", `Rule ${id} dihapus`));
+      return m.reply(claraWrap("anovaagent", `Rule ${id} dihapus`));
     }
 
-    // ---- .autonovaai on AF-1 / .autonovaai off AF-1 ----
+    // ---- .anovaagent on AF-1 / .anovaagent off AF-1 ----
     if (sub === "on" || sub === "off") {
       const id = (parts[1] || "").toUpperCase();
-      if (!id) return m.reply(claraWrap("autonovaai", `💡 Contoh: .autonovaai ${sub} AF-001`));
+      if (!id) return m.reply(claraWrap("anovaagent", `💡 Contoh: .anovaagent ${sub} AF-001`));
       const rules = load();
       const r = rules.find((x) => x.id === id);
-      if (!r) return m.reply(claraWrap("autonovaai", `Rule ${id} tidak ketemu. Cek: .autonovaai list`, "error"));
+      if (!r) return m.reply(claraWrap("anovaagent", `Rule ${id} tidak ketemu. Cek: .anovaagent list`, "error"));
       r.enabled = sub === "on";
       save(rules);
       return m.reply(
-        claraWrap("autonovaai", `Rule ${id} ${r.enabled ? "dinyalakan" : "dimatikan"}`),
+        claraWrap("anovaagent", `Rule ${id} ${r.enabled ? "dinyalakan" : "dimatikan"}`),
       );
     }
 
     // ---- default: bikin rule dari kalimat bebas ----
     if (!body) {
       return m.reply(
-        claraWrap("autonovaai", [
+        claraWrap("anovaagent", [
           "💡 Contoh:",
-          ".autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
-          ".autonovaai setiap jam 05:00 ingatin sholat subuh",
-          ".autonovaai kalau ada yang kirim sticker, react 🔥",
-          ".autonovaai kalau ada yang masuk grup, kasih sambutan hangat",
+          ".anovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
+          ".anovaagent setiap jam 05:00 ingatin sholat subuh",
+          ".anovaagent kalau ada yang kirim sticker, react 🔥",
+          ".anovaagent kalau ada yang masuk grup, kasih sambutan hangat",
           "",
-          ".autonovaai list / del AF-1 / on AF-1 / off AF-1",
+          ".anovaagent list / del AF-1 / on AF-1 / off AF-1",
         ]),
       );
     }
@@ -312,7 +311,7 @@ async function handler(m, { sock, conn }) {
       if (!ok) await m.reply(clipped);
     };
     try { await m.react("🧠"); } catch {}
-    await setStatus("🧠 " + smallcapsText("autonovaai menerjemahkan kalimatmu jadi rule..."));
+    await setStatus("🧠 " + smallcapsText("anovaagent menerjemahkan kalimatmu jadi rule..."));
 
     // 1) minta AI nerjemahin — 4 LAPIS (request owner: AI REST API manapun
     //    yang aktif — punya key apa pun — harus tetep bisa ngerjain ini):
@@ -329,7 +328,7 @@ async function handler(m, { sock, conn }) {
       rule = extractJson(aiResult);
       if (!rule) {
         console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
-        await setStatus("🧠 " + smallcapsText("autonovaai mencoba lagi, lebih teliti..."));
+        await setStatus("🧠 " + smallcapsText("anovaagent mencoba lagi, lebih teliti..."));
         aiResult = await askAI(SYS_STRICT, body);
         rule = extractJson(aiResult);
       }
@@ -340,7 +339,7 @@ async function handler(m, { sock, conn }) {
       // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
       try {
         console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
-        await setStatus("🧠 " + smallcapsText("autonovaai nyari otak AI lain..."));
+        await setStatus("🧠 " + smallcapsText("anovaagent nyari otak AI lain..."));
         const satuan = await aiChainChat(body, { systemPrompt: SYS_STRICT });
         rule = extractJson(satuan);
       } catch (e) {
@@ -353,11 +352,11 @@ async function handler(m, { sock, conn }) {
     }
     if (!rule) {
       try { await m.react("❌"); } catch {}
-      return editFinal(claraWrap("autonovaai", [
+      return editFinal(claraWrap("anovaagent", [
         "Gagal bikin rule: SEMUA AI (novaai + satuan) gak ngembaliin JSON dan kalimatnya belum dikenali parser lokal.",
         "Coba tulis lebih spesifik, contoh:",
-        "• .autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
-        "• .autonovaai kalau ada orang chat, ikut ngobrol",
+        "• .anovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
+        "• .anovaagent kalau ada orang chat, ikut ngobrol",
       ], "error"));
     }
 
@@ -365,7 +364,7 @@ async function handler(m, { sock, conn }) {
     const err = validate(rule);
     if (err) {
       try { await m.react("❌"); } catch {}
-      return editFinal(claraWrap("autonovaai", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
+      return editFinal(claraWrap("anovaagent", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
     }
 
     // 3) simpan → langsung aktif
@@ -382,14 +381,14 @@ async function handler(m, { sock, conn }) {
       `✅ Rule ${rule.id} aktif\n\n` +
       `${describe(rule)}\n` +
       `Scope: ${rule.scope} • Cooldown: ${rule.cooldown}s\n\n` +
-      (viaLocal ? "_⚙️ Rule dibikin lokal (AI lagi ngaco) — cek lagi ya hasilnya, kalau kurang pas hapus aja: .autonovaai del " + rule.id + "_\n\n" : "") +
-      `Kelola: .autonovaai list | .autonovaai del ${rule.id} | .autonovaai off ${rule.id}`,
+      (viaLocal ? "_⚙️ Rule dibikin lokal (AI lagi ngaco) — cek lagi ya hasilnya, kalau kurang pas hapus aja: .anovaagent del " + rule.id + "_\n\n" : "") +
+      `Kelola: .anovaagent list | .anovaagent del ${rule.id} | .anovaagent off ${rule.id}`,
       "autonovaai",
     );
   } catch (e) {
     console.error("[autonovaai] error:", e.message);
     try { await m.react("❌"); } catch {}
-    return m.reply(claraWrap("autonovaai", e.message || "Ada yang error nih, coba lagi ya", "error"));
+    return m.reply(claraWrap("anovaagent", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
   // CATATAN: novaStatusKey/editFinal scoped di dalam cabang bikin rule —
   // subcommand instan (list/del/on/off/reset) tetep tanpa status, sesuai desain.
