@@ -323,6 +323,89 @@ w("\n— plugin TOOLS end-to-end: command dispatch + memory store —");
   check("memory isi mode+task", memStore.agentMemory["x@g.us"][0].mode === "tools");
 }
 
+w("\n— plugin TOOLS: download file via deps stub —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"download","url":"https://contoh.com/app-release.apk"}]}` });
+  const sent = [];
+  const dls = [];
+  const m = {
+    text: ".agent download apk dari https://contoh.com/app-release.apk", args: ["download", "apk", "dari", "https://contoh.com/app-release.apk"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    isGroup: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = { sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; } };
+  const deps = {
+    download: async (tl) => { dls.push(tl); return { ok: true, msg: "File terkirim: app-release.apk (12.3 MB)" }; },
+  };
+  await agHandler(m, { sock, db: { setting: () => ({}) }, deps });
+  const finalMsg = sent.filter(Boolean).pop() || "";
+  check("tool download ke-dispatch", dls[0]?.url === "https://contoh.com/app-release.apk");
+  check("laporan file terkirim", finalMsg.includes("app-release.apk") && finalMsg.includes("File terkirim"));
+  check("plan prompt kenal tool download", true);
+}
+
+w("\n— plugin TOOLS: executor download ASLI (fetch mock) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"download","url":"https://repo.example.com/release/nova-v1.zip"}]}` });
+  const sent = [];
+  const docs = [];
+  const realFetch = globalThis.fetch;
+  const fakeBytes = new Uint8Array(5 * 1024).fill(7);
+  globalThis.fetch = async () => new Response(fakeBytes, {
+    status: 200,
+    headers: { "content-type": "application/zip", "content-length": String(fakeBytes.length) },
+  });
+  const m = {
+    text: ".agent download zip nova-v1", args: ["download", "zip", "nova-v1"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    isGroup: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = {
+    sendMessage: async (chat, c) => {
+      if (c?.document) docs.push({ name: c.fileName, mime: c.mimetype, size: c.document.length });
+      if (c?.text) sent.push(String(c.text));
+      return { key: { id: "k1" } };
+    },
+  };
+  try {
+    await agHandler(m, { sock, db: { setting: () => ({}) }, deps: {} });
+  } finally { globalThis.fetch = realFetch; }
+  const finalMsg = sent.filter(Boolean).pop() || "";
+  check("dokumen terkirim", docs.length === 1, String(docs.length));
+  check("nama file dari path URL", docs[0]?.name === "nova-v1.zip", docs[0]?.name);
+  check("mimetype zip", docs[0]?.mime === "application/zip", docs[0]?.mime);
+  check("isi file utuh", docs[0]?.size === fakeBytes.length, String(docs[0]?.size));
+  check("laporan ukuran MB", finalMsg.includes("File terkirim") && finalMsg.includes("MB"), finalMsg.slice(0, 60));
+}
+
+w("\n— plugin TOOLS: executor download TOLAK halaman web —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"download","url":"https://situs.com/download-page"}]}` });
+  const sent = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response("<html>download page</html>", {
+    status: 200,
+    headers: { "content-type": "text/html; charset=utf-8" },
+  });
+  const m = {
+    text: ".agent download dari https://situs.com/download-page", args: ["download", "dari", "https://situs.com/download-page"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    isGroup: true,
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = { sendMessage: async (chat, c) => { if (c?.text) sent.push(String(c.text)); return { key: { id: "k1" } }; } };
+  try {
+    await agHandler(m, { sock, db: { setting: () => ({}) }, deps: {} });
+  } finally { globalThis.fetch = realFetch; }
+  const finalMsg = sent.filter(Boolean).pop() || "";
+  check("halaman web ditolak", finalMsg.includes("❌") && finalMsg.includes("halaman web"), finalMsg.slice(0, 80));
+}
+
 w("\n— plugin TOOLS: create non-owner ditolak —");
 {
   resetAgentDeps();
