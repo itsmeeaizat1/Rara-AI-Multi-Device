@@ -14,6 +14,15 @@ import { smallcapsText } from "../../src/lib/styler.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
 import te from "../../src/lib/nova-error.js";
+// 🔹 MEMORY ENGINE (request owner 12 Sep 2026): bot inget fakta user antar sesi
+import { memoryBlock, relevantMemories, isMemoryOn, extractMemories } from "../../src/lib/nova-memory.js";
+function memoryFactsInline(db, sender, query) {
+  try {
+    if (!isMemoryOn(db, sender)) return "";
+    const rel = relevantMemories(db, sender, query, 5);
+    return rel.map((f) => `- ${f.text}`).join("\n");
+  } catch { return ""; }
+}
 
 // 🔹 AI AGENT: penyimpanan konfirmasi aksi berbahaya (kick, dll)
 const pending = new Map();
@@ -267,7 +276,7 @@ async function handler(m, { sock, conn, config, db }) {
       appendSession(key, "user", `(mengirim gambar) ${question}`);
       const buffer = await (directImage ? m.download() : m.quoted.download());
       const answer = await callGeminiVision(question, buffer, {
-        systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI"),
+        systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI") + memoryBlock(db, m.sender, question),
         senderJid: m.sender,
       });
       appendSession(key, "assistant", answer);
@@ -338,18 +347,20 @@ async function handler(m, { sock, conn, config, db }) {
         executableCmds: buildExecutableList(),
         commandList: buildCommandContext(prefixForThink),
         history: histSnapshot.slice(-12),
+        // 🔹 MEMORY: fakta durabel user ditempel ke system prompt otak AI
+        memory: memoryFactsInline(db, m.sender, textForAi),
       });
     } catch (e) {
       // 🔹 CHAT FALLBACK: coba callIkyy/callAI sebelum menyerah
       try {
         const prefix = config?.command?.prefix || ".";
         const botName = config?.bot?.name || "Nova AI";
-        const systemPrompt = buildSystemPrompt(prefix, botName);
         const key = sessionKey(m);
         // user text sudah di-append di atas (jalur utama) — pakai snapshot-nya
         const history = [...getSession(key)];
         const messages = [...history.slice(-20).map(i => ({ role: i.role, content: i.content }))];
         const aiConfig = config?.aiHelp || {};
+        const systemPrompt = buildSystemPrompt(prefix, botName) + memoryBlock(db, m.sender, text);
         let reply;
         try {
           reply = await callIkyy(text, { systemPrompt, senderJid: m.sender, model: "gemini" });
@@ -364,6 +375,8 @@ async function handler(m, { sock, conn, config, db }) {
           });
         }
         appendSession(key, "assistant", reply);
+        // 🔹 MEMORY: ekstrak fakta durabel — fire-and-forget, gak nge-block jawaban
+        extractMemories(db, m.sender, text, reply).catch(() => {});
         const { text: visibleText, action } = parseAIResponse(reply);
         if (action) {
           await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + action.command));
@@ -386,6 +399,8 @@ async function handler(m, { sock, conn, config, db }) {
     if (decision?.reply) {
       // catat jawaban AI ke sesi — biar turn berikutnya tetap nyambung
       appendSession(sessionKeyNow, "assistant", decision.reply);
+      // 🔹 MEMORY: ekstrak fakta durabel — fire-and-forget, gak nge-block jawaban
+      extractMemories(db, m.sender, textForAi, decision.reply).catch(() => {});
       const { text: visibleText, action } = parseAIResponse(decision.reply);
       // 🔹 AUTO-EXECUTE: dari field execCommand (think() JSON) ATAU tag [ACTION] di teks reply
       const execFromJson = decision.execCommand ? { command: decision.execCommand, args: decision.execArgs || "" } : null;
