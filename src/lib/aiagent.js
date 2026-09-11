@@ -521,7 +521,15 @@ export async function askAI(system, user, history = []) {
     if (!key && !p.free) continue
     try {
       let text
-      if (p.method === 'get') {
+      // 🔹 FORMAT MIN1AI (api.1min.ai) — pakai scraper min1ai.js (key aiSatuan.
+      // min1ai + parsing resultObject + error map). REQUEST OWNER 11 Sep 2026:
+      // "novaai dan autonovaai defaultnya qwen dr min1ai". Chain fold system+
+      // history jadi 1 prompt (1min.ai cuma terima promptObject.prompt).
+      if (p.format === 'min1ai') {
+        const { min1aiChat } = await import('../scraper/min1ai.js')
+        const fullPrompt = `${system}\n\n${histAsText ? histAsText + '\n' : ''}User: ${user}`
+        text = await min1aiChat(fullPrompt, { model: p.model || 'qwen3-8b' })
+      } else if (p.method === 'get') {
         const fullPrompt = `${system}\n\n${histAsText}User: ${user}`
         // tiap endpoint GET beda nama param teks (text/question/prompt)
         const tp = p.textParam || 'text'
