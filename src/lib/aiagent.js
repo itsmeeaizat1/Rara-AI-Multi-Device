@@ -528,7 +528,8 @@ export async function askAI(system, user, history = []) {
       if (p.format === 'min1ai') {
         const { min1aiChat } = await import('../scraper/min1ai.js')
         const fullPrompt = `${system}\n\n${histAsText ? histAsText + '\n' : ''}User: ${user}`
-        text = await min1aiChat(fullPrompt, { model: p.model || 'qwen3-8b' })
+        // timeoutMs 35 dtk — jangan sampe user nunggu provider pertama hang 2 menit
+        text = await min1aiChat(fullPrompt, { model: p.model || 'qwen3-8b', timeoutMs: 35000 })
       } else if (p.method === 'get') {
         const fullPrompt = `${system}\n\n${histAsText}User: ${user}`
         // tiap endpoint GET beda nama param teks (text/question/prompt)
@@ -536,7 +537,7 @@ export async function askAI(system, user, history = []) {
         const url = key
           ? `${p.url}?apikey=${encodeURIComponent(key)}&${tp}=${encodeURIComponent(fullPrompt)}`
           : `${p.url}?${tp}=${encodeURIComponent(fullPrompt)}`
-        const res = await fetch(url, { headers: p.headers(key) })
+        const res = await fetch(url, { headers: p.headers(key), signal: AbortSignal.timeout(30000) })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = await res.json()
         text = data.result || data?.result?.reply || ''
@@ -545,6 +546,7 @@ export async function askAI(system, user, history = []) {
         const res = await fetch(p.url, {
           method: 'POST',
           headers: p.headers(key),
+          signal: AbortSignal.timeout(30000),
           body: JSON.stringify({
             model: p.model,
             system,
@@ -564,6 +566,7 @@ export async function askAI(system, user, history = []) {
         const res = await fetch(p.url, {
           method: 'POST',
           headers: p.headers(key),
+          signal: AbortSignal.timeout(30000),
           body: JSON.stringify({
             model: p.model,
             messages: [

@@ -229,7 +229,8 @@ export async function aiChainChat(prompt, opts = {}) {
   // prioritas pertama (key apikeys.json aiSatuan.min1ai), gagal → lanjut rantai.
   try {
     const { min1aiChat } = await import("../scraper/min1ai.js");
-    return finish(await min1aiChat(fullPrompt, { model: "qwen3-8b" }));
+    // timeoutMs 35 dtk — rantai otak harus fail-over cepat, bukan nunggu 2 menit
+    return finish(await min1aiChat(fullPrompt, { model: "qwen3-8b", timeoutMs: 35000 }));
   }
   catch (e) { errors.push(`min1ai: ${e.message}`); }
 
