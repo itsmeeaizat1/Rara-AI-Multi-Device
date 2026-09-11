@@ -28,12 +28,14 @@ const VARIANTS = {
     name: "THUMBNAIL GAMBAR",
     desc: "Header menu gambar statis bawaan (thumbnail jpg)",
     emoji: "🖼️",
+    asset: "ASSET: /image/menu/*.jpg",
   },
   v2: {
     id: 2,
     name: "THUMBNAIL VIDEO",
     desc: "Header menu video yang gerak (menuthumbnail.mp4 ala script Elaina)",
     emoji: "🎬",
+    asset: "ASSET: /video/menu/menuthumbnail.mp4",
   },
 };
 
@@ -55,8 +57,8 @@ async function applyMenuVariant(m, db, selected, cmdLabel) {
   await db.save();
 
   await m.reply(claraWrap(cmdLabel || "setallmenu", `✅ *ᴠᴀʀɪᴀɴ ᴛʜᴜᴍʙɴᴀɪʟ ᴍᴇɴᴜ ᴅɪᴜʙᴀʜ*\n\n` +
-    `${selected.emoji} *V${selected.id} — ${selected.name}*\n` +
-    `_${selected.desc}_`));
+    `${selected.emoji} *V${selected.id} — ${selected.name}*\n\n` +
+    `${selected.asset}`));
 }
 
 export { VARIANTS, parseVariantKey, applyMenuVariant };
