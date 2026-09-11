@@ -340,27 +340,51 @@ await setStatus("🧠 " + smallcapsText("setanovaagent menerjemahkan kalimatmu j
 //    c. masih gak ada → RANTAI AI SATUAN aiFallbackChat (haidar per-brand
 //       → haidar gemini → ikyy → xemoz — semua free, gak butuh key)
 //    d. masih gagal → parser LOKAL tanpa AI (pola kalimat umum)
+//
+// GLOBAL BUDGET (report owner "kok timeout" 11 Sep): tiap provider udah
+// punya timeout sendiri (min1ai 35s, fetch 25-30s), TAPI alur lama gak
+// ada batas TOTAL — min1ai lagi rate-limit (±1 req/7-14 dtk) → askAI 35s
+// + retry 35s + rantai satuan nyoba min1ai LAGI 35s + provider lain
+// satu-satu = user nunggu 3-5 MENIT sebelum parser lokal.
+// Sekarang: seluruh flow maks ±90 dtk (knob env ANOVA_RULE_BUDGET_MS),
+// tiap call di-race dengan sisa budget — habis → langsung parser lokal.
+const BUDGET_MS = parseInt(process.env.ANOVA_RULE_BUDGET_MS || "90000", 10);
+const flowStart = Date.now();
+const remain = () => BUDGET_MS - (Date.now() - flowStart);
+const withBudget = (promise, budgetMs) =>
+  Promise.race([
+    promise,
+    new Promise((_, rej) =>
+      setTimeout(() => rej(new Error(`waktu tunggu AI habis (${Math.round(budgetMs / 1000)} dtk)`)), Math.max(1000, budgetMs)),
+    ),
+  ]);
+
 const SYS_STRICT = SYS + "\n\nSANGAT PENTING: Balasan kamu WAJIB objek JSON MURNI — TANPA kalimat pembuka, TANPA penjelasan, TANPA markdown, TANPA sapaan. Karakter PERTAMA balasan harus { dan TERAKHIR harus }";
 let rule = null;
 let viaLocal = false;
+let aiTimeouted = false;
 try {
-  let aiResult = await askAI(SYS, body);
+  let aiResult = await withBudget(askAI(SYS, body), Math.min(remain(), 40000));
   rule = extractJson(aiResult);
-  if (!rule) {
+  // RETRY cuma kalau AI ngasih TEKS tapi tanpa JSON — kalau call pertama
+  // TIMEOUT/gagal network, retry provider yang sama = buang 35 dtk lagi.
+  if (!rule && aiResult && !aiTimeouted && remain() > 25000) {
     console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
     await setStatus("🧠 " + smallcapsText("setanovaagent mencoba lagi, lebih teliti..."));
-    aiResult = await askAI(SYS_STRICT, body);
+    aiResult = await withBudget(askAI(SYS_STRICT, body), Math.min(remain() - 5000, 40000));
     rule = extractJson(aiResult);
   }
 } catch (e) {
+  aiTimeouted = /habis|timeout|abort/i.test(e.message || "");
   console.log("[autonovaai] rantai novaai gagal:", e.message);
 }
-if (!rule) {
-  // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
+// rantai satuan — cuma kalau masih ada budget (min1ai lagi lambat = nyasar,
+// langsung parser lokal aja biar user gak nunggu)
+if (!rule && remain() > 15000) {
   try {
     console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
     await setStatus("🧠 " + smallcapsText("setanovaagent nyari otak AI lain..."));
-    const satuan = await aiChainChat(body, { systemPrompt: SYS_STRICT });
+    const satuan = await withBudget(aiChainChat(body, { systemPrompt: SYS_STRICT }), Math.min(remain() - 5000, 45000));
     rule = extractJson(satuan);
   } catch (e) {
     console.log("[autonovaai] rantai satuan juga gagal:", e.message);
