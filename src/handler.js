@@ -743,6 +743,15 @@ try {
     } catch (e) {
       if (config.dev?.debugLog) console.error("[AutomationHub] Hook error:", e.message);
     }
+
+    // 🔹 GROUP GUARDIAN AI (nova-guardian.js): moderator AI kontekstual —
+    // fire-and-forget biar gak nambah latency pesan masuk
+    try {
+      const { guardianJudge } = await import("./lib/nova-guardian.js");
+      guardianJudge(m, sock, db, config).catch(() => {});
+    } catch (e) {
+      if (config.dev?.debugLog) console.error("[Guardian] Hook error:", e.message);
+    }
   }
 
 
