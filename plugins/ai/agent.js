@@ -385,7 +385,10 @@ async function handler(m, { sock, db, deps } = {}) {
         else if (phase !== "plan" && TOTAL === 2) { TOTAL = 5; }
         step++;
         const label = PHASE_LABEL[phase] || phase;
-        const extra = info ? `\n\n${smallcapsText("fokus")}: ${info}` : "";
+        // sumber/domain SEMBUYI pas loading (revisi owner 11 Sep: "ada sumber
+        // sumbernya disembunyikan aja") — fase read gak nampilin domain;
+        // sumber lengkap tetap ada di 📎 footer jawaban akhir.
+        const extra = (info && phase !== "read") ? `\n\n${smallcapsText("fokus")}: ${info}` : "";
         const bar = "🟩".repeat(Math.min(step - 1, TOTAL)) + "⬜".repeat(Math.max(TOTAL - step + 1, 0));
         setStatus(`${label}${extra}\n\n${bar} ${smallcapsText("langkah")} ${step}/${TOTAL}`);
       },
