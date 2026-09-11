@@ -1,6 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// tiktoksearch.js — TikTok keyword search via tikwm hashtag pipeline
-// Sumber lama (api.azbry.com) mati 403 (2026-09) — ganti scrape langsung tikwm:
+// tiktoksearch.js — TikTok keyword search
+// UTAMA (request owner 12 Sep 2026): wilz.web.id/api/search/tiktok?q=&count=
+//   → result.data[] { title, duration "29s", play_url (mp4 no-wm), cover_url }
+// FALLBACK: tikwm hashtag pipeline (sumber lama api.azbry.com mati 403 2026-09):
 //   1) GET /api/challenge/search?keywords=<q>   → challenge_list[0].id (hashtag id)
 //   2) GET /api/challenge/posts?challenge_id=…  → videos[] + link play no-watermark
 // Catatan: endpoint /api/feed/search tikwm kena Cloudflare, tapi challenge/* terbuka.
@@ -119,4 +121,44 @@ async function tiktokSearchVideo(query, opts = {}) {
   return videos.filter((v) => v.download || v.link || v.images.length);
 }
 
-export { tiktokSearchVideo };
+// ═══ UTAMA: wilz.web.id/api/search/tiktok (request owner 12 Sep 2026) ═══
+// Bentuk sama kayak normalizeItem biar caption/calling code gak perlu bedain.
+// wilz gak ngasih author/stats/link canonical — field itu kosong, sisanya ada.
+function parseWilzDuration(raw) {
+  if (typeof raw === "number") return raw;
+  const m = String(raw || "").match(/(\d+)\s*s/i);
+  return m ? Number(m[1]) : 0;
+}
+
+async function tiktokSearchWilz(query, count = 10) {
+  const res = await axios.get("https://www.wilz.web.id/api/search/tiktok", {
+    params: { q: query, count },
+    headers: { "User-Agent": HEADERS["User-Agent"], Accept: "application/json" },
+    timeout: 30000,
+    validateStatus: () => true,
+  });
+  if (res.status !== 200) throw new Error(`wilz tiktok search HTTP ${res.status}`);
+  const data = res.data;
+  if (data?.status !== true) throw new Error(data?.message || "wilz tiktok search gagal");
+
+  const items = data?.result?.data || [];
+  if (!items.length) throw new Error("Hashtag/keyword tidak ditemukan (wilz)");
+
+  return items.map((v) => ({
+    link: "", // wilz gak ngasih link canonical
+    download: v.play_url || "",
+    title: v.title || "",
+    cover: v.cover_url || "",
+    originCover: v.cover_url || "",
+    watermarkLink: "",
+    music: "",
+    musicInfo: { title: "", author: "" },
+    images: [],
+    duration: parseWilzDuration(v.duration),
+    size: 0,
+    author: { uniqueId: "", nickname: "" },
+    stats: { plays: 0, likes: 0, comments: 0, shares: 0 },
+  })).filter((v) => v.download);
+}
+
+export { tiktokSearchVideo, tiktokSearchWilz };

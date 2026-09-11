@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
+import { tiktokSearchVideo, tiktokSearchWilz } from "../../src/scraper/tiktoksearch.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { mediaCaption } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
@@ -41,7 +41,17 @@ async function handler(m, { sock }) {
     ]));
   }
   try {
-    const videos = await tiktokSearchVideo(query);
+    // ENGINE UTAMA (request owner 12 Sep 2026): wilz.web.id/api/search/tiktok
+    // FALLBACK: tikwm hashtag pipeline (engine bawaan sebelumnya)
+    let videos = [];
+    let engine = "Wilz Search";
+    try {
+      videos = await tiktokSearchWilz(query);
+    } catch (e1) {
+      console.error("[PlayTikTok] Wilz gagal:", e1.message);
+      engine = "TikTok Search";
+      videos = await tiktokSearchVideo(query);
+    }
     if (!videos || videos.length === 0) {
       return m.reply(novaError("PlayTikTok", `Gak nemu video untuk: ${query} nih`));
     }
@@ -59,7 +69,7 @@ async function handler(m, { sock }) {
       comments: formatNumber(video.stats?.comments),
       shares: formatNumber(video.stats?.shares),
       format: "Video HD (No Watermark)",
-      method: "TikTok Search",
+      method: engine,
     }) + (video.link ? `\nLink: ${video.link}` : "");
 
     await sock.sendMedia(m.chat, video.download || video.link, caption, m, {
