@@ -658,9 +658,15 @@ Contoh:
 "jam berapa sekarang" → {"tool":null,"execCommand":null,"reply":"Sekarang jam ${jamSekarang}."}
 "siapa presiden indonesia" → {"tool":null,"execCommand":null,"reply":"Presiden Indonesia saat ini adalah Prabowo Subianto, didampingi Wakil Presiden Gibran Rakabuming Raka."}`
 
+  // ctx.memory: blok MEMORI DURABEL tentang user (nova-memory.js) — ditempel
+  // ke system prompt biar jawaban nyambung sama fakta user antar sesi
+  const memorySection = ctx.memory
+    ? `\n\n== MEMORI TENTANG USER ==\n${ctx.memory}`
+    : ''
+
   // ctx.history: percakapan sebelumnya dari session — fix bug "iya" dianggap
   // sesi baru (AI dulu selalu dipanggil single-shot tanpa histori sama sekali)
-  const raw = await askAI(sys, text, ctx.history || [])
+  const raw = await askAI(sys + memorySection, text, ctx.history || [])
   const clean = raw.replace(/```json|```/g, '').trim()
   const start = clean.indexOf('{')
   const end = clean.lastIndexOf('}')
