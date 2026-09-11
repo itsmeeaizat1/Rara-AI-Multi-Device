@@ -4,7 +4,7 @@
 
 import fs from "fs";
 import { askAI } from "../../src/lib/aiagent.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
+import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
 import { load, save, clearAichatMemory } from "../../src/lib/autoflow.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -317,7 +317,7 @@ async function handler(m, { sock, conn }) {
       // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
       try {
         console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
-        const satuan = await aiFallbackChat(body, { systemPrompt: SYS_STRICT });
+        const satuan = await aiChainChat(body, { systemPrompt: SYS_STRICT });
         rule = extractJson(satuan);
       } catch (e) {
         console.log("[autonovaai] rantai satuan juga gagal:", e.message);

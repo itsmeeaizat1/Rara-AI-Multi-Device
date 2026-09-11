@@ -18,7 +18,7 @@
 // jalur 0 lebih presisi (bisa jawab pertanyaan spesifik langsung).
 
 import { GeminiVision } from "../scraper/geminiVision.js";
-import { viaMercury, aiFallbackChat } from "./nova-ai-fallback.js";
+import { viaMercury, aiChainChat } from "./nova-ai-fallback.js";
 
 // ── MIME detection dari buffer (sama pattern geminiVision.js) ──
 function detectMime(buf) {
@@ -103,7 +103,7 @@ export async function visionScan({ imageBuffer, question, instruction = "", sess
     answer = await viaMercury(fullPrompt);
   } catch {
     // fallback rantai multi-API (dengan sesi kalau ada)
-    answer = await aiFallbackChat(fullPrompt, {
+    answer = await aiChainChat(fullPrompt, {
       persona: "asisten AI vision Nova",
       model: "gemini",
       sessionKey,

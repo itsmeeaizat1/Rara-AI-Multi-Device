@@ -2,10 +2,11 @@
 // ai-mercury — Mercury AI (Inception Labs) — dLLM DIFUSI PERTAMA di dunia
 // Mercury-2: 5-10× lebih cepat dari model sekelas (diffusion LLM), 128K context,
 // OpenAI-compatible. Key: apikeys.json novaai.inception (fallback env INCEPTION_API_KEY).
-// Langsung ke viaMercury; key mati → jatuh ke rantai fallback (aiFallbackChat).
+// STRICT SATU RUTE (owner 11 Sep: satuan gak ada fallback) — Mercury doang;
+// key belum diset / Mercury down → error, GAK jatuh ke brand lain.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { viaMercury, aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
+import { viaMercury } from "../../src/lib/nova-ai-fallback.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 
 const pluginConfig = {
@@ -32,26 +33,15 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
 
-    // Langsung ke Mercury (dLLM difusi Inception Labs) — super cepat
-    let reply = "";
-    try {
-      reply = await viaMercury(text);
-      // simpan sesi biar obrolan lanjutan nyambung (sama kayak satuan AI lain)
-      try {
-        const { appendTurn } = await import("../../src/lib/nova-ai-session.js");
-        appendTurn("satuan:" + m.sender, text, reply);
-      } catch {}
-    } catch {
-      // Mercury down / key mati → rantai fallback multi-API
-      reply = await aiFallbackChat(text, {
-        persona: "Mercury AI — diffusion LLM dari Inception Labs",
-        model: "gemini",
-        sessionKey: "satuan:" + m.sender,
-        quoted: m.quoted?.text,
-        userName: m.pushName,
-      });
-    }
+    // Langsung ke Mercury (dLLM difusi Inception Labs) — super cepat.
+    // Strict: gagal → throw ke catch luar → error reply (tanpa fallback).
+    let reply = await viaMercury(text);
     if (!reply) throw new Error("balasan AI kosong");
+    // simpan sesi biar obrolan lanjutan nyambung (sama kayak satuan AI lain)
+    try {
+      const { appendTurn } = await import("../../src/lib/nova-ai-session.js");
+      appendTurn("satuan:" + m.sender, text, reply);
+    } catch {}
 
     await m.reply(reply);
     await m.react("🐣");

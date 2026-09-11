@@ -6,7 +6,6 @@
 // Langsung ke sensenovaChat/sensenovaVision; mati → jatuh ke rantai fallback.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 import { sensenovaChat, sensenovaVision } from "../../src/scraper/sensenova.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 
@@ -58,23 +57,14 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("aisensenova", result?.error || "Gagal menganalisis gambar", "error"));
       }
     } else {
-      // Chat teks — langsung ke SenseNova
+      // Chat teks — langsung ke SenseNova.
+      // STRICT (owner 11 Sep: satuan gak ada fallback) — SenseNova down / key
+      // mati → throw ke catch luar → error reply, GAK jatuh ke brand lain.
+      reply = await sensenovaChat(text);
       try {
-        reply = await sensenovaChat(text);
-        try {
-          const { appendTurn } = await import("../../src/lib/nova-ai-session.js");
-          appendTurn("satuan:" + m.sender, text, reply);
-        } catch {}
-      } catch {
-        // SenseNova down / key mati → rantai fallback multi-API
-        reply = await aiFallbackChat(text, {
-          persona: "SenseNova AI — asisten multimodal dari SenseTime",
-          model: "gemini",
-          sessionKey: "satuan:" + m.sender,
-          quoted: m.quoted?.text,
-          userName: m.pushName,
-        });
-      }
+        const { appendTurn } = await import("../../src/lib/nova-ai-session.js");
+        appendTurn("satuan:" + m.sender, text, reply);
+      } catch {}
     }
 
     if (!reply) throw new Error("balasan AI kosong");
