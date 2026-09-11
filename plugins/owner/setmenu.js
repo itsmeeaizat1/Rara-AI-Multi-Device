@@ -1,16 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import fs from "fs";
+// .setmenu = alias semantik .setallmenu (dua-duanya ngatur varian thumbnail
+// menu yang sama — menuThumbVariant dipakai sendMenuCard SEMUA menu).
 import config from "../../config.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { VARIANTS, parseVariantKey, applyMenuVariant } from "./setallmenu.js";
+
 const pluginConfig = {
   name: "setmenu",
-  alias: ["setmenu"],
+  alias: ["setmenu", "setthumbnailmenu", "setvarianmenu"],
   category: "owner",
-  description: "Mengatur variant tampilan menu",
-  usage: ".setmenu v1",
-  example: ".setmenu v1",
+  description: "Mengatur varian thumbnail menu — v1 gambar bawaan / v2 video",
+  usage: ".setmenu v1\n.setmenu v2\n.setmenu video\n.setmenu gambar",
+  example: ".setmenu v2",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -20,66 +21,25 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const VARIANTS = {
-  v1: {
-    id: 1,
-    name: "NATIVEFLOW CARD",
-    desc: "Thumbnail header + nativeFlow buttons + box-drawing text",
-    emoji: "",
-  },
-};
-
 async function handler(m, { sock, db }) {
   const args = m.args || [];
-  const variant = args[0]?.toLowerCase();
-  if (variant) {
-    const selected = VARIANTS[variant];
-    if (!selected) {
-      m.reply(claraWrap("Setmenu", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
-      return;
-    }
-    db.setting("menuVariant", selected.id);
-    await db.save();
-    await m.reply(claraWrap("setmenu", `✅ *MENU VARIANT DIUBAH*\n\n` +
-      `${selected.emoji} *V${selected.id} — ${selected.name}*\n` +
-      `_${selected.desc}_`));
+  const variant = parseVariantKey(args[0]);
+
+  if (args[0] && !variant) {
+    m.reply(claraWrap("Setmenu", `❗ *ᴠᴀʀɪᴀɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
     return;
   }
 
-  const current = db.setting("menuVariant") || config.ui?.menuVariant || 1;
-
-  const rows = [];
-  for (const [key, val] of Object.entries(VARIANTS)) {
-    const mark = val.id === current ? " ✓" : "";
-    rows.push({
-      title: `${val.emoji} ${key.toUpperCase()}${mark} — ${val.name}`,
-      description: val.desc,
-      id: `${m.prefix}setmenu ${key}`,
-    });
+  if (variant) {
+    await applyMenuVariant(m, db, VARIANTS[variant], "setmenu");
+    return;
   }
-  const buttons = [
-    {
-      name: "single_select",
-      buttonParamsJson: JSON.stringify({
-        title: "🎨 Pilih Variant Menu",
-        sections: [{ title: "Daftar Variant Menu", rows }],
-      }),
-    },
-  ];
 
-  const bodyText =
-    `🎨🖼️ *ᴍᴇɴᴜ ᴠᴀʀɪᴀɴᴛ*\n\n` +
-    `Atur tampilan menu utama bot ketika user mengetik perintah menu 📋\n` +
-    `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
-    `Pilih variant menu dari tombol di bawah 👇`;
-
-  await sock.sendButton(
-    m.chat,
-    getAssetBuffer("settings-thumb"),
-    bodyText,
-    m,
-    { buttons },
-  );
+  const current = db.setting("menuThumbVariant") === 2 ? 2 : 1;
+  const v = VARIANTS[`v${current}`];
+  await m.reply(claraWrap("setmenu", `🖼️🎬 *ᴠᴀʀɪᴀɴ ᴛʜᴜᴍʙɴᴀɪʟ ᴍᴇɴᴜ*\n\n` +
+    `Varian aktif saat ini: *V${current} — ${v?.name}* (${v?.desc})\n\n` +
+    `Ganti: *.setmenu v1* (gambar) / *.setmenu v2* (video)`));
 }
 
 export { pluginConfig as config, handler };

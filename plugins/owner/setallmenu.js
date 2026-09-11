@@ -4,11 +4,11 @@ import config from "../../config.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setallmenu",
-  alias: ["setallmenu"],
+  alias: ["setallmenu", "varianmenu", "variantmenu", "menuthumbvarian"],
   category: "owner",
-  description: "Mengatur variant tampilan allmenu",
-  usage: ".setallmenu v1",
-  example: ".setallmenu v1",
+  description: "Mengatur varian thumbnail menu — v1 gambar bawaan / v2 video",
+  usage: ".setallmenu v1\n.setallmenu v2\n.setallmenu video\n.setallmenu gambar",
+  example: ".setallmenu v2",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -18,36 +18,64 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+// ── VARIAN THUMBNAIL MENU (request owner 11 Sep 2026: "menu thumbnail versi
+// video jadi varian 2, yg varian 1 bawaan kayak thumbnail gambar bawaan"):
+// v1 = header GAMBAR statis bawaan (jpg menu) — default
+// v2 = header VIDEO yang gerak (assets/video/menu/menuthumbnail.mp4, ala script Elaina)
 const VARIANTS = {
   v1: {
     id: 1,
-    name: "ALLMENU NATIVEFLOW",
-    desc: "Thumbnail header + nativeFlow buttons + box-drawing text (single variant)",
-    emoji: "",
+    name: "THUMBNAIL GAMBAR",
+    desc: "Header menu gambar statis bawaan (thumbnail jpg)",
+    emoji: "🖼️",
+  },
+  v2: {
+    id: 2,
+    name: "THUMBNAIL VIDEO",
+    desc: "Header menu video yang gerak (menuthumbnail.mp4 ala script Elaina)",
+    emoji: "🎬",
   },
 };
 
+// parser longgar: v1/v2, 1/2, gambar/video, image/foto, vid/clip
+function parseVariantKey(raw) {
+  const v = (raw || "").toLowerCase().trim();
+  if (["gambar", "image", "foto", "picture"].includes(v)) return "v1";
+  if (["video", "vid", "clip", "mp4"].includes(v)) return "v2";
+  const n = v.replace(/^v/, "");
+  if (n === "1") return "v1";
+  if (n === "2") return "v2";
+  return null;
+}
+
+// inti bersama — dipakai juga plugins/owner/setmenu.js biar dua command
+// ngatur SATU setting yang sama (menuThumbVariant dipakai sendMenuCard semua menu)
+async function applyMenuVariant(m, db, selected, cmdLabel) {
+  db.setting("menuThumbVariant", selected.id);
+  await db.save();
+
+  await m.reply(claraWrap(cmdLabel || "setallmenu", `✅ *ᴠᴀʀɪᴀɴ ᴛʜᴜᴍʙɴᴀɪʟ ᴍᴇɴᴜ ᴅɪᴜʙᴀʜ*\n\n` +
+    `${selected.emoji} *V${selected.id} — ${selected.name}*\n` +
+    `_${selected.desc}_`));
+}
+
+export { VARIANTS, parseVariantKey, applyMenuVariant };
+
 async function handler(m, { sock, db }) {
   const args = m.args || [];
-  const variant = args[0]?.toLowerCase();
+  const variant = parseVariantKey(args[0]);
 
-  if (variant) {
-    const selected = VARIANTS[variant];
-    if (!selected) {
-      m.reply(claraWrap("Setallmenu", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
-      return;
-    }
-
-    db.setting("allmenuVariant", selected.id);
-    await db.save();
-
-    await m.reply(claraWrap("setallmenu", `✅ *ALLMENU VARIANT DIUBAH*\n\n` +
-      `${selected.emoji} *V${selected.id} — ${selected.name}*\n` +
-      `_${selected.desc}_`));
+  if (args[0] && !variant) {
+    m.reply(claraWrap("Setallmenu", `❗ *ᴠᴀʀɪᴀɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
     return;
   }
 
-  const current = db.setting("allmenuVariant") || config.ui?.allmenuVariant || 1;
+  if (variant) {
+    await applyMenuVariant(m, db, VARIANTS[variant], "setallmenu");
+    return;
+  }
+
+  const current = db.setting("menuThumbVariant") === 2 ? 2 : 1;
 
   const rows = [];
   for (const [key, val] of Object.entries(VARIANTS)) {
@@ -62,17 +90,17 @@ async function handler(m, { sock, db }) {
     {
       name: "single_select",
       buttonParamsJson: JSON.stringify({
-        title: "📋 Pilih Variant Allmenu",
-        sections: [{ title: "Daftar Variant Allmenu", rows }],
+        title: "📋 Pilih Varian Thumbnail Menu",
+        sections: [{ title: "Daftar Varian Thumbnail", rows }],
       }),
     },
   ];
 
   const bodyText =
-    `📋📑 *ᴀʟʟᴍᴇɴᴜ ᴠᴀʀɪᴀɴᴛ*\n\n` +
-    `Atur tampilan allmenu yang menampilkan seluruh daftar perintah bot dalam satu halaman 📖\n` +
-    `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
-    `Pilih variant allmenu dari tombol di bawah 👇`;
+    `📋📑 *ᴠᴀʀɪᴀɴ ᴛʜᴜᴍʙɴᴀɪʟ ᴍᴇɴᴜ*\n\n` +
+    `Atur tampilan header/thumbnail SEMUA menu (menu, allmenu, popup kategori, dll) 🖼️🎬\n` +
+    `Varian aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name}* 🎯\n\n` +
+    `Pilih varian dari tombol di bawah 👇`;
 
   await sock.sendButton(
     m.chat,
