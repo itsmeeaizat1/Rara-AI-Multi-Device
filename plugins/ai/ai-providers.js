@@ -5,7 +5,6 @@
 // .mistral .together .github + IkyyXD & Tio providers
 import { callAI, callImageGen, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
 import { toMessages as sessionToMessages, appendTurn as sessionAppend } from "../../src/lib/nova-ai-session.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 // brand fallback per provider (API key kosong / provider mati → rantai multi-API)
 const FALLBACK_MODEL = {
@@ -302,7 +301,6 @@ async function handler(m, { sock, config, db, args, text }) {
 
     // Call AI (dengan histori sesi)
     let reply = "";
-    let viaFallback = false;
     try {
       reply = await callAI({
         providerKey,
@@ -316,23 +314,11 @@ async function handler(m, { sock, config, db, args, text }) {
       reply = "";
     }
 
-    // 🔹 FALLBACK: provider mati / key kosong / balas kosong → rantai multi-API
-    if (!reply || !reply.trim()) {
-      try {
-        reply = await aiFallbackChat(messageWithContext, {
-          persona: provider.name,
-          model: FALLBACK_MODEL[providerKey] || "gemini",
-          sessionKey, userName: m.pushName, quoted: quotedText,
-        });
-        viaFallback = true;
-      } catch (fbErr) {
-        reply = "";
-      }
-    }
+    // STRICT (owner 11 Sep: satuan gak ada fallback) — provider mati / key
+    // kosong / balas kosong → LANGSUNG error, GAK jatuh ke brand lain.
 
-    // simpan giliran ke sesi (biar obrolan berikutnya inget) —
-    // aiFallbackChat udah nyatet sendiri, jadi cuma jalur provider asli
-    if (!viaFallback && reply && reply.trim()) {
+    // simpan giliran ke sesi (biar obrolan berikutnya inget)
+    if (reply && reply.trim()) {
       sessionAppend(sessionKey, userMessage, reply.trim().slice(0, 800));
     }
 

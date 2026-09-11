@@ -42,7 +42,7 @@ import { mergeAutoTargets } from "./nova-auto-target.js";
 import path from "node:path";
 import { getDatabase } from "./nova-database.js";
 import { logger } from "./nova-logger.js";
-import { aiFallbackChat } from "./nova-ai-fallback.js";
+import { aiChainChat } from "./nova-ai-fallback.js";
 
 const GDACS_URL = "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH";
 const EONET_URL = "https://eonet.gsfc.nasa.gov/api/v3/events";
@@ -1048,7 +1048,7 @@ export async function composeRegionalText(ev, distKm, city) {
     (ev.desc ? `Deskripsi: ${ev.desc}\n` : "") +
     "Tulis pesan peringatan untuk warga kota tsb.";
   try {
-    const out = await aiFallbackChat(data, { systemPrompt: system });
+    const out = await aiChainChat(data, { systemPrompt: system });
     let text = String(out || "")
       .replace(/[*_`#>]+/g, "")
       .replace(/^\s*(berikut|ini\s+adalah)[^:]{0,20}:?\s*/i, "")

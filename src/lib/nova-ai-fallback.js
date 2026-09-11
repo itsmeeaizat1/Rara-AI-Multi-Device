@@ -1,6 +1,15 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// nova-ai-fallback.js — RANTAI FALLBACK AI MULTI-API buat fitur AI satuan
-// Dipakai plugin AI satuan (.llamav2, .bardaiv2, .grok, dll) saat API utamanya mati.
+// nova-ai-fallback.js — RUTE AI buat fitur AI satuan + rantai internal
+//
+// REQUEST OWNER 11 Sep 2026: "aku mah ai satuan jgn ada fallback jadi kyk
+// .deepseek tetep jalur deepseek gak ada fallback meskipun itu blm disetkey
+// atau down".
+// → aiFallbackChat() sekarang STRICT SATU RUTE per brand (.deepseek → Haidar
+//   deepseek doang; .gpt4o → Haidar mateai doang; dst). Key belum diset /
+//   provider down → THROW — GAK ada rantai keselain brand.
+// → aiChainChat() = rantai penuh LAMA (gemini→mercury→sensenova→haidar→ikyy→
+//   xemoz→kuroneko), DIPINDAH ke sini dan cuma dipakai fitur INTERNAL yang
+//   butuh "AI apa pun yang aktif" (nova-bencana, nova-vision-chain, autonovaai).
 //
 // Rantai prioritas:
 //   0. Gemini NATIVE generativelanguage.googleapis.com (key: apikeys.json novaai.google)
@@ -173,7 +182,10 @@ async function viaXemoz(fullPrompt) {
 }
 
 /**
- * aiFallbackChat — chat AI lewat rantai fallback multi-API.
+ * aiChainChat — rantai PENUH multi-API (gemini→mercury→sensenova→haidar→ikyy→
+ * xemoz→kuroneko). Cuma buat fitur INTERNAL (bencana, vision chain, autonovaai)
+ * yang butuh "AI apa pun yang aktif". Command AI satuan GAK boleh pakai ini
+ * (owner 11 Sep: satuan strict tanpa fallback — pakai aiFallbackChat).
  * @param {string} prompt  pertanyaan user
  * @param {Object} opts
  * @param {string} [opts.persona]      identitas command, mis. "Llama AI" → system prompt otomatis
@@ -185,7 +197,7 @@ async function viaXemoz(fullPrompt) {
  * @returns {Promise<string>} jawaban AI
  * @throws kalau SEMUA sumber gagal (message gabungan per-sumber)
  */
-export async function aiFallbackChat(prompt, opts = {}) {
+export async function aiChainChat(prompt, opts = {}) {
   const model = opts.model || "gemini"; // brand haidar: gemini/claude/gpt5/gpt4/gpt4o/deepseek/googleai
 
   // ── SESSION: muat riwayat obrolan user ini (nova-ai-session.js) ──
@@ -248,4 +260,64 @@ export async function aiFallbackChat(prompt, opts = {}) {
   } catch (e) { errors.push(`kuroneko: ${e.message}`); }
 
   throw new Error(`Semua fallback AI gagal (${errors.join(" | ")})`);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// aiFallbackChat — STRICT SATU RUTE (request owner 11 Sep 2026: AI satuan
+// jangan ada fallback — .deepseek tetep jalur deepseek, gak ada fallback
+// meskipun key belum diset atau provider down → THROW).
+// Rute ditentukan:
+//   • opts.route "mercury"   → viaMercury (key inception; kosong → error)
+//   • opts.route "sensenova" → sensenovaChat
+//   • opts.route "kuroneko"  → kuronekoChat
+//   • selain itu             → viaHaidar(opts.model, default "gemini") —
+//                              brand endpoint masing-masing:
+//                              deepseek→deepsek, gpt5→gpt55, gpt4→gpt54,
+//                              gpt4o→mateai, claude→claude, googleai/gemini→gemini
+// Persona/systemPrompt/sesi obrolan/quoted tetap kepake seperti biasa.
+// ─────────────────────────────────────────────────────────────────────────────
+export async function aiFallbackChat(prompt, opts = {}) {
+  const route = String(opts.route || "").toLowerCase();
+  const model = opts.model || "gemini";
+
+  // ── SESSION: muat riwayat obrolan user ini (nova-ai-session.js) ──
+  let historyBlock = "";
+  if (opts.sessionKey) {
+    try {
+      const { foldHistory } = await import("./nova-ai-session.js");
+      historyBlock = foldHistory(opts.sessionKey, { userName: opts.userName || "User" });
+    } catch {}
+  }
+
+  const fullPrompt = buildPrompt(prompt, { ...opts, historyBlock });
+  const label = route || `haidar/${model}`;
+
+  let reply = "";
+  try {
+    if (route === "mercury") {
+      reply = await viaMercury(fullPrompt);
+    } else if (route === "sensenova") {
+      const { sensenovaChat } = await import("../scraper/sensenova.js");
+      reply = await sensenovaChat(fullPrompt);
+    } else if (route === "kuroneko") {
+      const { kuronekoChat } = await import("../scraper/kuroneko.js");
+      reply = await kuronekoChat(fullPrompt);
+    } else {
+      reply = await viaHaidar(fullPrompt, model);
+    }
+  } catch (e) {
+    throw new Error(`Jalur ${label} gagal: ${e.message} — tanpa fallback (mode satuan strict)`);
+  }
+  if (!cleanText(reply)) {
+    throw new Error(`Jalur ${label} balas kosong — tanpa fallback (mode satuan strict)`);
+  }
+
+  // simpan giliran ini ke sesi biar obrolan lanjutan nyambung
+  if (opts.sessionKey) {
+    try {
+      const { appendTurn } = await import("./nova-ai-session.js");
+      appendTurn(opts.sessionKey, prompt, reply);
+    } catch {}
+  }
+  return reply;
 }
