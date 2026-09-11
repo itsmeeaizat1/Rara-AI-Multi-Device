@@ -7,6 +7,7 @@ import { askAI } from "../../src/lib/aiagent.js";
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
 import { load, save, clearAichatMemory } from "../../src/lib/autoflow.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 
 const DB = "./src/data/autoflow.json";
 
@@ -290,7 +291,28 @@ async function handler(m, { sock, conn }) {
       );
     }
 
-    try { await m.react("🕒"); } catch {}
+    // LOADING ALA AGENT (lanjutan request owner 11 Sep: 1 PESAN STATUS
+    // EDIT-IN-PLACE — user keliatan AI-nya lagi ngapain, final di-edit ke pesan itu)
+    let novaStatusKey = null;
+    const setStatus = async (text) => {
+      try {
+        if (!novaStatusKey) {
+          const sent = await sockRef.sendMessage(m.chat, { text });
+          novaStatusKey = sent?.key || null;
+          return;
+        }
+        await sockRef.sendMessage(m.chat, { text, edit: novaStatusKey });
+      } catch {}
+    };
+    const editFinal = async (text) => {
+      if (typeof text !== "string" || !text.trim()) return;
+      const clipped = text.length > 4096 ? text.slice(0, 4096) + "..." : text;
+      let ok = false;
+      if (novaStatusKey) { try { await sockRef.sendMessage(m.chat, { text: clipped, edit: novaStatusKey }); ok = true; } catch {} }
+      if (!ok) await m.reply(clipped);
+    };
+    try { await m.react("🧠"); } catch {}
+    await setStatus("🧠 " + smallcapsText("autonovaai menerjemahkan kalimatmu jadi rule..."));
 
     // 1) minta AI nerjemahin — 4 LAPIS (request owner: AI REST API manapun
     //    yang aktif — punya key apa pun — harus tetep bisa ngerjain ini):
@@ -307,6 +329,7 @@ async function handler(m, { sock, conn }) {
       rule = extractJson(aiResult);
       if (!rule) {
         console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
+        await setStatus("🧠 " + smallcapsText("autonovaai mencoba lagi, lebih teliti..."));
         aiResult = await askAI(SYS_STRICT, body);
         rule = extractJson(aiResult);
       }
@@ -317,6 +340,7 @@ async function handler(m, { sock, conn }) {
       // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
       try {
         console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
+        await setStatus("🧠 " + smallcapsText("autonovaai nyari otak AI lain..."));
         const satuan = await aiChainChat(body, { systemPrompt: SYS_STRICT });
         rule = extractJson(satuan);
       } catch (e) {
@@ -329,7 +353,7 @@ async function handler(m, { sock, conn }) {
     }
     if (!rule) {
       try { await m.react("❌"); } catch {}
-      return m.reply(claraWrap("autonovaai", [
+      return editFinal(claraWrap("autonovaai", [
         "Gagal bikin rule: SEMUA AI (novaai + satuan) gak ngembaliin JSON dan kalimatnya belum dikenali parser lokal.",
         "Coba tulis lebih spesifik, contoh:",
         "• .autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
@@ -341,7 +365,7 @@ async function handler(m, { sock, conn }) {
     const err = validate(rule);
     if (err) {
       try { await m.react("❌"); } catch {}
-      return m.reply(claraWrap("autonovaai", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
+      return editFinal(claraWrap("autonovaai", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
     }
 
     // 3) simpan → langsung aktif
@@ -354,7 +378,7 @@ async function handler(m, { sock, conn }) {
     save(rules);
 
     try { await m.react("🐣"); } catch {}
-    return m.reply(
+    return editFinal(
       `✅ Rule ${rule.id} aktif\n\n` +
       `${describe(rule)}\n` +
       `Scope: ${rule.scope} • Cooldown: ${rule.cooldown}s\n\n` +
@@ -367,6 +391,8 @@ async function handler(m, { sock, conn }) {
     try { await m.react("❌"); } catch {}
     return m.reply(claraWrap("autonovaai", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
+  // CATATAN: novaStatusKey/editFinal scoped di dalam cabang bikin rule —
+  // subcommand instan (list/del/on/off/reset) tetep tanpa status, sesuai desain.
 }
 
 export { pluginConfig as config, handler };
