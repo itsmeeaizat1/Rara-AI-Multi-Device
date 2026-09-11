@@ -11,14 +11,17 @@
 //    nova-auto-ai executeAction). Progress live edit-in-place per fase.
 import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { runAgent } from "../../src/lib/nova-agent.js";
+import { runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
 import { smallcapsText } from "../../src/lib/styler.js";
+import { callImageGen } from "../../src/lib/nova-ai-service.js";
+import { visionScan } from "../../src/lib/nova-vision-chain.js";
+import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
 
 const pluginConfig = {
   name: "agent",
   alias: ["agent", "aiagent", "agensi", "agentai", "agenta"],
   category: "ai",
-  description: "AI Agent otonom — mikir sendiri: nyari web, baca halaman, susun jawaban + sumber",
+  description: "AI Agent serba bisa — browsing web, otomasi grup, scan/generate gambar, jalanin fitur, buat fitur baru, inget percakapan, ngobrol pakai vn",
   usage: ".agent <tugas>",
   example: ".agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
@@ -162,6 +165,153 @@ async function execAction(a, ctx, m, sock) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// TOOLS MODE — executor serba bisa (injectable via deps buat e2e)
+// ═══════════════════════════════════════════════════════════════
+
+function buildExecutors(m, sock, db, mediaBuffer, deps = {}) {
+  // ⚡ command — jalanin command bot lain lewat messageHandler penuh
+  //    (gates/cooldown/energi middleware tetap jalan — konsisten)
+  const command = deps.command || (async (t) => {
+    const cmd = String(t.cmd || "").toLowerCase().trim();
+    if (!cmd || cmd === "agent") return { ok: false, msg: "Command gak valid / gak boleh manggil .agent dari dalam agent (loop)" };
+    const text = "." + cmd + (t.args ? " " + t.args : "");
+    try {
+      const { messageHandler } = await import("../../src/handler.js");
+      const raw = {
+        key: { remoteJid: m.chat, fromMe: false, id: "AGENTCMD" + Date.now(), participant: m.sender },
+        message: { conversation: text },
+        messageTimestamp: Math.floor(Date.now() / 1000),
+      };
+      await Promise.race([
+        messageHandler(raw, sock),
+        new Promise((_, rej) => setTimeout(() => rej(new Error("timeout 90 detik")), 90_000)),
+      ]);
+      return { ok: true, msg: `Perintah ${text} dijalankan` };
+    } catch (e) {
+      return { ok: false, msg: `Gagal jalanin ${text}: ${e?.message || "error"}` };
+    }
+  });
+
+  // 🎨 image — generate gambar (callImageGen, fallback pollinations gratis)
+  const image = deps.image || (async (t) => {
+    const prompt = String(t.prompt || t.args || "").trim();
+    if (!prompt) return { ok: false, msg: "Sebutin gambar apa yang mau dibuat" };
+    try {
+      const img = await callImageGen("gemini", prompt, {});
+      await sock.sendMessage(m.chat, {
+        image: Buffer.from(img.base64, "base64"),
+        caption: "🎨 " + prompt.slice(0, 150) + (img.via && img.via !== "gemini" ? "\n_(engine: " + img.via + ")_" : ""),
+      }, { quoted: m });
+      return { ok: true, msg: "Gambar dikirim: " + prompt.slice(0, 80) };
+    } catch (e) {
+      return { ok: false, msg: "Gagal generate gambar: " + (e?.message || "error") };
+    }
+  });
+
+  // 👁️ vision — scan gambar yang di-reply/attach
+  const vision = deps.vision || (async (t) => {
+    if (!mediaBuffer) return { ok: false, msg: "Reply/attach gambarnya dulu, baru suruh .agent scan" };
+    try {
+      const q = String(t.question || t.prompt || t.query || "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.");
+      const v = await visionScan({ imageBuffer: mediaBuffer, question: q });
+      if (v?.status && v?.text) return { ok: true, msg: "Gambar dianalisis", evidence: "Hasil scan gambar (vision AI):\n" + v.text };
+      return { ok: false, msg: "Gagal scan gambar — coba lagi" };
+    } catch (e) {
+      return { ok: false, msg: "Gagal scan gambar: " + (e?.message || "error") };
+    }
+  });
+
+  // 📊 activity — jejak histori aktivitas grup (activity tracker)
+  const activity = deps.activity || (async () => {
+    if (!m.isGroup) return { ok: false, msg: "Statistik aktivitas cuma buat grup" };
+    try {
+      const lb = getLeaderboard(m.chat, 5);
+      if (!lb.length) return { ok: false, msg: "Belum ada jejak aktivitas tercatat di grup ini" };
+      const lines = lb.map(x =>
+        `${x.rank}. ${x.name} — ${x.points} poin | ${x.messageCount} pesan | ${x.commandCount} command | ${x.mediaCount} media | terakhir aktif ${x.lastActive ? new Date(x.lastActive).toLocaleString("id-ID") : "-"}`);
+      return { ok: true, msg: "Jejak aktivitas diambil", evidence: "Statistik aktivitas grup (teratas):\n" + lines.join("\n") };
+    } catch (e) {
+      return { ok: false, msg: "Gagal ambil aktivitas: " + (e?.message || "error") };
+    }
+  });
+
+  // 🧠 memory — ingat percakapan agent sebelumnya di chat ini
+  const memory = deps.memory || (async () => {
+    try {
+      const cur = db?.setting?.("agentMemory") || {};
+      const list = cur[m.chat] || [];
+      if (!list.length) return { ok: false, msg: "Belum ada percakapan agent yang gue inget di chat ini" };
+      const lines = list.slice(-5).reverse().map(e => `- [${e.mode || "?"}] tugas: ${e.task} → hasil: ${e.summary}`);
+      return { ok: true, msg: "Riwayat diingat", evidence: "Riwayat percakapan agent di chat ini (terbaru di atas):\n" + lines.join("\n") };
+    } catch (e) {
+      return { ok: false, msg: "Gagal baca memori: " + (e?.message || "error") };
+    }
+  });
+
+  // 🔧 create — BUAT FITUR BARU + pasang (owner only, codegen + hot-load)
+  const create = deps.create || (async (t) => {
+    if (!m.isOwner) return { ok: false, msg: "Buat/pasang fitur cuma bisa owner bot" };
+    const nm = String(t.name || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20);
+    const sp = String(t.spec || t.prompt || t.query || "").trim();
+    try {
+      const gen = await generatePlugin({ name: nm, spec: sp, ...(deps.pluginDir ? { targetDir: deps.pluginDir } : {}) });
+      // pasang: register ke plugin store — command langsung nyala tanpa restart
+      const { loadPlugin, registerPlugin } = await import("../../src/lib/nova-plugins.js");
+      const plugin = await loadPlugin(gen.path, true);
+      if (!plugin || !registerPlugin(plugin)) throw new Error("plugin ke-tulis tapi gak ke-register");
+      return { ok: true, msg: `Fitur BARU .${nm} berhasil DIBUAT + TERPASANG! Ketik .${nm} buat nyoba` };
+    } catch (e) {
+      return { ok: false, msg: "Gagal bikin fitur: " + (e?.message || "error") };
+    }
+  });
+
+  return { command, image, vision, activity, memory, create };
+}
+
+// simpan jejak percakapan agent per chat (db.setting agentMemory) — biar inget
+function saveAgentMemory(db, chat, task, mode, answer) {
+  try {
+    if (!db?.setting) return;
+    const cur = db.setting("agentMemory") || {};
+    const list = cur[chat] || [];
+    list.push({
+      t: Date.now(),
+      task: String(task || "").slice(0, 200),
+      mode: mode || "-",
+      summary: String(answer || "").replace(/\s+/g, " ").slice(0, 200),
+    });
+    cur[chat] = list.slice(-20); // 20 tugas terakhir per chat
+    db.setting("agentMemory", cur);
+  } catch {}
+}
+
+function getAgentHistory(db, chat) {
+  try {
+    const cur = db?.setting?.("agentMemory") || {};
+    return (cur[chat] || []).slice(-5).map(e => `- [${e.mode || "?"}] tugas: ${e.task} → hasil: ${e.summary}`);
+  } catch { return []; }
+}
+
+// kirim jawaban sebagai voice note (haidarTTS) + teks — request "nggobrol pakai vn"
+async function sendVoiceReply(m, sock, text) {
+  try {
+    const { haidarTTS, HAIDAR_VOICES } = await import("../../src/scraper/haidar-ai.js");
+    const spoken = String(text).replace(/[*_`~]/g, "").slice(0, 500);
+    const voice = HAIDAR_VOICES?.includes("siti") ? "siti" : (HAIDAR_VOICES?.[0] || "siti");
+    const audioUrl = await haidarTTS(spoken, voice);
+    const axios = (await import("axios")).default;
+    const res = await axios.get(audioUrl, { responseType: "arraybuffer", timeout: 60000 });
+    const buf = Buffer.from(res.data);
+    if (!buf || buf.length < 3000) throw new Error("audio kosong");
+    await m.reply(text); // teks tetap dikirim biar link/sumber kebaca
+    await sock.sendMessage(m.chat, { audio: buf, mimetype: "audio/mpeg", ptt: true }, { quoted: m });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const PHASE_LABEL = {
   plan: "🧠 " + smallcapsText("merencanakan langkah riset"),
   search: "🔍 " + smallcapsText("menyusuri web"),
@@ -169,16 +319,18 @@ const PHASE_LABEL = {
   read: "📖 " + smallcapsText("membaca halaman"),
   compose: "✍️ " + smallcapsText("menyusun jawaban"),
   act: "⚡ " + smallcapsText("mengeksekusi aksi"),
+  tool: "🛠️ " + smallcapsText("pakai tools"),
 };
 
-async function handler(m, { sock }) {
+async function handler(m, { sock, db, deps } = {}) {
   const task = (m.args || []).join(" ").trim();
   if (!task) {
     return m.reply(novaGuide(
       "agent",
       "AI agent otonom — dia sendiri yang nyari ke web, baca halamannya, terus nyusun jawaban lengkap + sumber.",
       `${m.prefix}agent <tugas apa pun>\n${m.prefix}agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi\n${m.prefix}agent kick orang yang bernama Budi\n${m.prefix}agent tutup grup dan ubah nama grup jadi Nova Squad`,
-      [`${smallcapsText("2 mode otomatis")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup, promote, rename (wajib admin)")}`,
+      [`${smallcapsText("4 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar (reply foto), generate gambar, jalanin fitur bot, cek aktivitas")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
+       `${smallcapsText("buat fitur baru")}: ${m.prefix}agent buat fitur namanya kalkulator yang bisa tambah/kali (khusus owner)`,
        `${smallcapsText("butuh 1-3 menit, sabar ya")}`],
     ));
   }
@@ -201,10 +353,21 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     await setStatus("🧠 " + smallcapsText("agent berpikir..."));
 
+    // reply/attach gambar → buffer buat tool vision (scan gambar)
+    let mediaBuffer = null;
+    try {
+      const mediaMsg = m.isImage ? m : m.quoted?.isImage ? m.quoted : null;
+      if (mediaMsg && typeof mediaMsg.download === "function") mediaBuffer = await mediaMsg.download();
+    } catch {}
+
+    const executors = buildExecutors(m, sock, db, mediaBuffer, deps || {});
+
     let step = 0;
     let TOTAL = 5; // research: plan, search, pick, read, compose — act: plan + N aksi
     const res = await runAgent(task, {
       act: (a, ctx) => execAction(a, ctx, m, sock),
+      execTools: executors,
+      history: getAgentHistory(db, m.chat),
       context: {
         isGroup: m.isGroup !== false,
         isAdmin: !!m.isAdmin,
@@ -212,9 +375,10 @@ async function handler(m, { sock }) {
         isBotAdmin: !!m.isBotAdmin,
         chat: m.chat,
         sender: m.sender,
+        mediaAttached: !!mediaBuffer,
       },
       onPhase: (phase, info) => {
-        if (phase === "act") { TOTAL = 2; } // plan + total aksi
+        if (phase === "act" || phase === "tool") { TOTAL = 2; } // plan + total aksi/tools
         else if (phase !== "plan" && TOTAL === 2) { TOTAL = 5; }
         step++;
         const label = PHASE_LABEL[phase] || phase;
@@ -229,9 +393,19 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("agent", res.error, "error"));
     }
 
+    // inget jejak percakapan (biar .agent ingat percakapan sebelumnya)
+    saveAgentMemory(db, m.chat, task, res.mode, res.answer);
+
     // status jadi penanda selesai, jawaban dikirim terpisah biar rapi
-    if (res.mode === "act") {
-      await setStatus("⚡ " + smallcapsText("aksi selesai — laporan di bawah"));
+    if (res.mode === "act" || res.mode === "tools") {
+      await setStatus((res.mode === "act" ? "⚡ " : "🛠️ ") + smallcapsText("selesai — hasil di bawah"));
+      // nggobrol pakai vn (request owner): jawaban di-voice-note-in
+      const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task);
+      const doVoice = deps?.voiceReply || sendVoiceReply;
+      if (wantVoice && await doVoice(m, sock, res.answer)) {
+        await m.react("🐣");
+        return;
+      }
       await m.reply(res.answer);
       await m.react("🐣");
       return;
@@ -241,7 +415,15 @@ async function handler(m, { sock }) {
     const src = (res.sources || []).map((s, i) => `${i + 1}. [${s.tag}] ${s.domain} — ${s.url}`).join("\n");
     const footer = src ? `\n\n📎 ${smallcapsText("sumber")}\n${src}` : "";
     const note = res.viaLocal ? `\n\n⚙️ ${smallcapsText("mode digest lokal")}` : "";
-    await m.reply(res.answer + note + footer);
+    const fullAnswer = res.answer + note + footer;
+    // riset pun bisa dijawab pakai vn kalau user minta
+    const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task);
+    const doVoice2 = deps?.voiceReply || sendVoiceReply;
+    if (wantVoice && await doVoice2(m, sock, fullAnswer)) {
+      await m.react("🐣");
+      return;
+    }
+    await m.reply(fullAnswer);
     await m.react("🐣");
   } catch (e) {
     console.error("agent error:", e.message);
