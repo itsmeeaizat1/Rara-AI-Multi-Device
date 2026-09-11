@@ -5,6 +5,7 @@
 // (judul/artis/album/durasi/cover) + file mp3, dikirim pola .play:
 // react 🕒→🐣, info section, file audio, offer convert.
 import { searchSpotiDown, downloadSpotiAudio } from "../../src/scraper/spotidown.js";
+import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
 import { novaGagal, novaGangguan, novaDlUsage, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
@@ -20,6 +21,21 @@ const pluginConfig = {
   energi: 1,
   isEnabled: true,
 };
+
+// Cuplikan lirik LRCLIB (best-effort, gak block kalau gagal/timeout)
+async function fetchLyricsSnippet(title, artist) {
+  try {
+    const r = await getLyrics(title, artist || "");
+    if (r.status && r.plainLyrics) {
+      const plain = r.plainLyrics.trim();
+      const snippet = plain.length > 200 ? plain.slice(0, 200).trim() + "..." : plain;
+      return { snippet, artist: r.artistName || artist };
+    }
+  } catch (e) {
+    console.error("[Playspotify] Lyrics fetch error:", e.message);
+  }
+  return null;
+}
 
 async function handler(m, { sock }) {
   const query = (m.args || []).join(" ").trim();
@@ -49,6 +65,9 @@ async function handler(m, { sock }) {
 
     const title = track.title || query;
 
+    // Cuplikan lirik (best-effort — request owner 12 Sep 2026, pola .play YT)
+    const lyricsData = await fetchLyricsSnippet(title, track.artist);
+
     // Info section — WhatsApp gak support caption di pesan audio (pola .play)
     const infoLines = [
       `*Spotify Play — Audio*`,
@@ -59,6 +78,11 @@ async function handler(m, { sock }) {
       `*Durasi:* ${track.duration || "-"}`,
       `*Sumber:* Spotify (via spotidown)`,
     ];
+    if (lyricsData?.snippet) {
+      infoLines.push(``, `*Lirik:*`, lyricsData.snippet, ``, `Lirik lengkap: ${m.prefix}lirikspotify ${title}`);
+    } else {
+      infoLines.push(``, `Lirik gak ketemu, coba: ${m.prefix}lirikspotify ${title}`);
+    }
     await m.reply(infoLines.join("\n"));
 
     // Step 3: File audionya + preview card meta Spotify
