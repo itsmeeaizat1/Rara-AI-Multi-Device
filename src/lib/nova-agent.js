@@ -88,6 +88,7 @@ const TOOL_LIST = [
   "activity",// statistik aktivitas grup (activity tracker)
   "memory",  // ingat percakapan agent sebelumnya
   "create",  // BUAT FITUR BARU + pasang (owner only — codegen + hot-load)
+  "code",    // BIKIN KODE PROGRAM (html/js/python/dll) + kirim file
 ];
 
 const SYS_PLAN = `Kamu adalah perencana aksi AI agent. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
@@ -104,9 +105,25 @@ Action valid: kick (keluarkan member), add (tambah member), promote (jadikan adm
 Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc isi value.
 
 3. TOOLS serba bisa (tugas minta AI ngerjain pakai kemampuan bot: bikin gambar, scan gambar, jalanin fitur/command bot, cek aktivitas grup, inget percakapan, bikin fitur baru):
-{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "download", "url": "https://situs.com/app.apk"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
-Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), download (UNDUH FILE dari link URL langsung — apk/zip/mp3/pdf/dll — user kasih link .apk/.zip → isi "url"; link wajib LANGSUNG ke file, bukan halaman web), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
+{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "download", "url": "https://situs.com/app.apk"}, {"tool": "code", "spec": "halaman html toko kue dengan kartu produk", "lang": "html", "name": "tokokue"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
+Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), download (UNDUH FILE dari link URL langsung — apk/zip/mp3/pdf/dll — user kasih link .apk/.zip → isi "url"; link wajib LANGSUNG ke file, bukan halaman web), code (BIKIN KODE PROGRAM apa pun — html/css/javascript/python/php/dll — user minta kode/program/aplikasi/script → isi "spec" = detail lengkap permintaan, "lang" = bahasa pemrograman, "name" = nama file singkat tanpa spasi; hasil dikirim jadi FILE siap dipakai), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
+4. PERSONA/ngobrol (user minta BERMAIN PERAN jadi orang lain, atau ngobrol santai, atau bantuin tugas TANPA perlu browsing: "jadi anak kecil", "jadi pacarku", "pura-pura jadi dokter", "temenin ngobrol", "bantuin tugas matematika ini", "cerita dong", konsultasi, motivasi, curhat):
+{"mode": "persona", "persona": "deskripsi persona LENGKAP — siapa, umur, sifat, gaya bahasa (contoh: anak laki-laki umur 5 tahun cerewet sok jagoan) — isi null kalau tanpa peran khusus", "voice": false}
+Kalau riwayat percakapan masih dalam persona yang sama → LANJUT persona yang sama. Bikin kode program → pakai tools mode dengan tool code. Tugas butuh info dari internet → research.
+
 Kalau ragu ATAU tugasnya nyari informasi → pilih research.`;
+
+// persona prompt — request owner 11 Sep: "klo disuruh profesi jd anak kecil
+// atau pacar dia persona berubah sesuai yg diinginkan user" — agent in-character.
+const personaPrompt = (persona) => persona
+  ? `Kamu sedang BERMAIN PERAN sebagai: ${persona}.
+ATURAN PERSONA (WAJIB DIPATUHI):
+- Jawab 100% SESUAI KARAKTER: gaya bahasa, kosakata, sifat, cara mikir, dan emoji ikut persona yang diminta.
+- Contoh rasa: anak kecil = polos, cerewet, sok jagoan, suka nanya; pacar = manja, sayang-sayangan, kadang cemburu; dokter = tenang, edukatif.
+- JANGAN pernah nyebut dirimu AI/bot/program kecuali user beneran nanya.
+- Jawaban singkat natural kayak orang chat WhatsApp (1-6 baris), bahasa Indonesia santai, akhiri dengan ajakan ngobrol balik.
+- Konsisten sama peran selama percakapan, inget konteks percakapan sebelumnya.`
+  : `Kamu asisten pintar yang ngobrol santai di WhatsApp. Jawab tugas/pertanyaan user dengan CERDAS dan to the point — kalau bantuin tugas, kerjakan dengan langkah jelas dan benar. Gaya chat natural (1-8 baris), bahasa Indonesia santai, emoji seperlunya. Jangan tambah sumber/link web.`;
 
 const SYS_PICK = `Kamu adalah kurator riset. Balas HANYA objek JSON murni. Karakter PERTAMA harus { dan TERAKHIR }.
 Format: {"picks": [nomor1, nomor2, nomor3]}
@@ -206,6 +223,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
           name: x?.name ? String(x.name).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20) : null,
           spec: x?.spec != null ? String(x.spec) : null,
           url: x?.url != null ? String(x.url).trim() : null,
+          lang: x?.lang != null ? String(x.lang).toLowerCase().trim() : null,
         };
       })
       .filter(x => TOOL_LIST.includes(x.tool) && execTools[x.tool])
@@ -257,6 +275,26 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
     const answer = results.map(r => `${r.ok ? "✅" : "❌"} ${r.msg}`).join("\n");
     steps.push({ phase: "act", ok: results.some(r => r.ok), aksi: results.length });
     return { mode: "act", answer, results, steps, voice: !!plan?.voice, queries: [], sources: [] };
+  }
+
+  // ── MODE PERSONA — chat/bermain peran (request owner 11 Sep: "klo disuruh
+  // profesi jd anak kecil atau pacar dia persona berubah sesuai yg diinginkan
+  // user") — in-character, inget konteks, tanpa browsing.
+  if (plan?.mode === "persona") {
+    const persona = String(plan.persona || plan.role || "").trim();
+    steps.push({ phase: "plan", mode: "persona", ok: true, persona: persona || null });
+    phase("compose");
+    const histBlock = Array.isArray(history) && history.length
+      ? "\n\nRiwayat percakapan sebelumnya (jaga konsistensi konteks/peran):\n" + history.slice(-5).join("\n")
+      : "";
+    let answer = "";
+    try {
+      answer = await _aiChat(`Tugas/pesan user: ${task}${histBlock}`, { systemPrompt: personaPrompt(persona) });
+    } catch {}
+    if (!answer || !String(answer).trim()) {
+      return { error: "AI-nya lagi sibuk, coba lagi bentar ya 🙏" };
+    }
+    return { mode: "persona", persona: persona || null, answer: String(answer).trim(), sources: [], queries: [], steps, voice: !!plan.voice, viaLocal: false };
   }
 
   // ── MODE RESEARCH — browsing/riset web (alur 5 fase) ──
