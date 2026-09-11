@@ -10,6 +10,7 @@
 import { TOOLS, localParse, think, resolveUserByName } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
 import te from "../../src/lib/nova-error.js";
@@ -262,6 +263,7 @@ async function handler(m, { sock, conn, config, db }) {
     const question = text || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
     try {
     await m.react("🕒");
+      await setStatus("👀 " + smallcapsText("novaai membaca gambar..."));
       appendSession(key, "user", `(mengirim gambar) ${question}`);
       const buffer = await (directImage ? m.download() : m.quoted.download());
       const answer = await callGeminiVision(question, buffer, {
@@ -270,19 +272,47 @@ async function handler(m, { sock, conn, config, db }) {
       });
       appendSession(key, "assistant", answer);
       const { text: visibleText, action } = parseAIResponse(answer);
-      if (visibleText) await m.reply(visibleText.length > 4096 ? visibleText.slice(0, 4096) + "..." : visibleText);
       if (action) {
+        await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + action.command));
         if (db) config.__db = db;
         const result = await executeCommand(action, m, sock, config);
-        await m.react("🐣");
-        if (!result.success && result.message) await m.reply(claraWrap("Info", `⚠️ ${result.message}`));
+        if (!result.success && result.message) {
+          await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
+        }
       }
+      if (visibleText) await editFinal(visibleText);
+      await m.react("🐣");
       return;
     } catch (e) {
       console.error("[novaai] vision gagal:", e.message);
-      return m.reply(claraWrap("novaai", `Gagal menganalisis gambar: ${e.message}`, "error"));
+      await m.react("❌");
+      return editFinal(claraWrap("novaai", `Gagal menganalisis gambar: ${e.message}`, "error"));
     }
   }
+
+  // 🔹 LOADING ALA AGENT (request owner 11 Sep: "aku mau novaai sistemnya kyk
+  // .agent — bsa kesekusi ada pesan dia lg melakukan sesuatu"): 1 PESAN STATUS
+  // EDIT-IN-PLACE — 🧠 mikir / 👀 baca gambar → ⚡ menjalankan <aksi> → jawaban
+  // final di-EDIT ke pesan yang sama (cukup 1 chat di layar). Fallback m.reply
+  // kalau edit gagal. Reaksi di pesan user: 🧠 → ⚡ → 🐣 / ❌.
+  let novaStatusKey = null;
+  const setStatus = async (text) => {
+    try {
+      if (!novaStatusKey) {
+        const sent = await sock.sendMessage(m.chat, { text });
+        novaStatusKey = sent?.key || null;
+        return;
+      }
+      await sock.sendMessage(m.chat, { text, edit: novaStatusKey });
+    } catch {}
+  };
+  const editFinal = async (text) => {
+    if (typeof text !== "string" || !text.trim()) return;
+    const clipped = text.length > 4096 ? text.slice(0, 4096) + "..." : text;
+    let ok = false;
+    if (novaStatusKey) { try { await sock.sendMessage(m.chat, { text: clipped, edit: novaStatusKey }); ok = true; } catch {} }
+    if (!ok) await m.reply(clipped);
+  };
 
   // 🔹 SESSION: histori obrolan dikirim ke AI biar reply NYAMBUNG — fix bug
   // user jawab "iya" / "mau" malah dibalas sapaan generik kayak sesi baru.
@@ -298,6 +328,8 @@ async function handler(m, { sock, conn, config, db }) {
 
   // TAHAP 2: think() — kalimat rumit → AI provider (dengan histori sesi)
   if (!decision) {
+    // react 🧠 global udah ada di atas (line react 🧠) — cukup status text
+    await setStatus("🧠 " + smallcapsText("novaai sedang berpikir..."));
     try {
       const prefixForThink = config?.command?.prefix || ".";
       decision = await think(textForAi, {
@@ -333,15 +365,18 @@ async function handler(m, { sock, conn, config, db }) {
         }
         appendSession(key, "assistant", reply);
         const { text: visibleText, action } = parseAIResponse(reply);
-        if (visibleText) await m.reply(visibleText.length > 4096 ? visibleText.slice(0, 4096) + "..." : visibleText);
         if (action) {
+          await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + action.command));
           if (db) config.__db = db;
           const result = await executeCommand(action, m, sock, config);
-          if (!result.success && result.message) await m.reply(claraWrap("Info", `⚠️ ${result.message}`));
+          if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
         }
+        if (visibleText) await editFinal(visibleText);
+        await m.react("🐣");
         return;
       } catch (e2) {
-        return m.reply(claraWrap("novaai", `Gagal ke otak AI: ${e2.message}`, "error"));
+        await m.react("❌");
+        return editFinal(claraWrap("novaai", `Gagal ke otak AI: ${e2.message}`, "error"));
       }
     }
   }
@@ -352,18 +387,22 @@ async function handler(m, { sock, conn, config, db }) {
       // catat jawaban AI ke sesi — biar turn berikutnya tetap nyambung
       appendSession(sessionKeyNow, "assistant", decision.reply);
       const { text: visibleText, action } = parseAIResponse(decision.reply);
-      if (visibleText) await m.reply(visibleText.length > 4096 ? visibleText.slice(0, 4096) + "..." : visibleText);
       // 🔹 AUTO-EXECUTE: dari field execCommand (think() JSON) ATAU tag [ACTION] di teks reply
       const execFromJson = decision.execCommand ? { command: decision.execCommand, args: decision.execArgs || "" } : null;
       const finalAction = execFromJson || action;
       if (finalAction) {
+        await m.react("⚡");
+        await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + finalAction.command));
         if (db) config.__db = db;
         const result = await executeCommand(finalAction, m, sock, config);
-        if (!result.success && result.message) await m.reply(claraWrap("Info", `⚠️ ${result.message}`));
+        if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
       }
+      if (visibleText) await editFinal(visibleText);
+      await m.react("🐣");
       return;
     }
-    return m.reply(claraWrap("novaai", "Tidak ada respons yang cocok", "error"));
+    await m.react("❌");
+    return editFinal(claraWrap("novaai", "Tidak ada respons yang cocok", "error"));
   }
 
   const tool = TOOLS[decision.tool];
@@ -409,20 +448,25 @@ async function handler(m, { sock, conn, config, db }) {
   if (tool.danger && !m.isOwner) {
     pending.set(m.sender + m.chat, { tool: decision.tool, args: finalArgs, time: Date.now() });
     const target = finalArgs.user ? "@" + finalArgs.user.split("@")[0] : "";
-    return sock.sendMessage(m.chat, {
-      text: "⚠️ Kamu yakin mau " + decision.tool + " " + target + "?\nBalas YA untuk lanjut, balas lain untuk batal. (60 detik)",
+    const confirmText = "⚠️ Kamu yakin mau " + decision.tool + " " + target + "?\nBalas YA untuk lanjut, balas lain untuk batal. (60 detik)";
+    let edited = false;
+    if (novaStatusKey) { try { await sock.sendMessage(m.chat, { text: confirmText, edit: novaStatusKey }); edited = true; } catch {} }
+    if (!edited) return sock.sendMessage(m.chat, {
+      text: confirmText,
       mentions: finalArgs.user ? [finalArgs.user] : []
     }, { quoted: m });
   }
 
-  // EKSEKUSI
+  // EKSEKUSI — status "lagi melakukan sesuatu" ala agent, final di-edit ke pesan itu
   try {
+    await m.react("⚡");
+    await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + decision.tool + "..."));
     await tool.run(sock, m, finalArgs);
-    try { await sock.sendMessage(m.chat, { react: { text: "✅", key: m.key } }); } catch {}
-    m.reply(decision.reply || tool.done);
+    await editFinal(decision.reply || tool.done);
+    try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-    m.reply(claraWrap("novaai", `Gagal eksekusi: ${e.message}`, "error"));
+    await editFinal(claraWrap("novaai", `Gagal eksekusi: ${e.message}`, "error"));
   }
 }
 
