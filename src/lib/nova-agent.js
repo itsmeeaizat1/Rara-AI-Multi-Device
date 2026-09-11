@@ -83,6 +83,7 @@ const MAX_TOOLS = 4;
 const TOOL_LIST = [
   "command", // jalanin command bot lain (sticker, quotes, dll)
   "image",   // generate gambar (callImageGen)
+  "download", // unduh file dari URL (apk/zip/dll) + kirim dokumen
   "vision",  // scan gambar yang di-reply/attach (visionScan)
   "activity",// statistik aktivitas grup (activity tracker)
   "memory",  // ingat percakapan agent sebelumnya
@@ -103,8 +104,8 @@ Action valid: kick (keluarkan member), add (tambah member), promote (jadikan adm
 Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc isi value.
 
 3. TOOLS serba bisa (tugas minta AI ngerjain pakai kemampuan bot: bikin gambar, scan gambar, jalanin fitur/command bot, cek aktivitas grup, inget percakapan, bikin fitur baru):
-{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
-Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
+{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "download", "url": "https://situs.com/app.apk"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
+Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), download (UNDUH FILE dari link URL langsung — apk/zip/mp3/pdf/dll — user kasih link .apk/.zip → isi "url"; link wajib LANGSUNG ke file, bukan halaman web), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
 Kalau ragu ATAU tugasnya nyari informasi → pilih research.`;
 
 const SYS_PICK = `Kamu adalah kurator riset. Balas HANYA objek JSON murni. Karakter PERTAMA harus { dan TERAKHIR }.
@@ -204,6 +205,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
           query: x?.query != null ? String(x.query) : null,
           name: x?.name ? String(x.name).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20) : null,
           spec: x?.spec != null ? String(x.spec) : null,
+          url: x?.url != null ? String(x.url).trim() : null,
         };
       })
       .filter(x => TOOL_LIST.includes(x.tool) && execTools[x.tool])

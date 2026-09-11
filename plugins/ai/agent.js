@@ -169,7 +169,7 @@ async function execAction(a, ctx, m, sock) {
 // TOOLS MODE — executor serba bisa (injectable via deps buat e2e)
 // ═══════════════════════════════════════════════════════════════
 
-function buildExecutors(m, sock, db, mediaBuffer, deps = {}) {
+function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
   // ⚡ command — jalanin command bot lain lewat messageHandler penuh
   //    (gates/cooldown/energi middleware tetap jalan — konsisten)
   const command = deps.command || (async (t) => {
@@ -210,6 +210,58 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}) {
     } catch (e) {
       return { ok: false, msg: "Gagal generate gambar: " + (e?.message || "error") };
     }
+  });
+
+  // ⬇️ download — unduh file dari URL langsung (apk/zip/mp3/pdf/dll) + kirim
+  // dokumen (request owner 11 Sep: "bsa ga agentnya klo aku minta download
+  // apk dichrome atau kyk download file zip direpo serba bisa gtu").
+  // Link wajib LANGSUNG ke file — halaman web (text/html tanpa ekstensi) ditolak.
+  const download = deps.download || (async (t) => {
+    const raw = String(t.url || t.link || t.args || t.prompt || "").trim();
+    if (!/^https?:\/\//i.test(raw)) return { ok: false, msg: "Kasih link langsung ke file-nya (http/https) — contoh: " + m.prefix + "agent download apk dari https://situs.com/app.apk" };
+    const MAX_MB = parseInt(process.env.AGENT_DL_MAX_MB || "100", 10) || 100;
+    let res = null;
+    try {
+      res = await fetch(raw, {
+        redirect: "follow",
+        headers: { "User-Agent": "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36", "Accept": "*/*" },
+      });
+    } catch (e) { return { ok: false, msg: "Gak bisa nyampe link: " + (e?.message || "error") }; }
+    if (!res.ok) return { ok: false, msg: "Server jawab HTTP " + res.status };
+    const len = parseInt(res.headers.get("content-length") || "0", 10);
+    if (len && len > MAX_MB * 1024 * 1024) return { ok: false, msg: "File " + (len / 1048576).toFixed(1) + " MB kegedean (max " + MAX_MB + " MB)" };
+    // nama file: Content-Disposition → path URL → fallback
+    const cd = res.headers.get("content-disposition") || "";
+    const cdM = cd.match(/filename\*?=(?:UTF-8''|")?([^";]+)/i);
+    let name = cdM ? decodeURIComponent(cdM[1]).trim() : "";
+    if (!name) { try { name = decodeURIComponent(new URL(raw).pathname.split("/").pop() || "").trim(); } catch {} }
+    name = (name || "file").replace(/[\u0000-\u001f\\/:*?"<>|]/g, "").slice(0, 80).trim() || "file";
+    const ct = (res.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
+    const ext = (name.match(/\.([a-z0-9]+)$/i) || [])[1]?.toLowerCase();
+    // halaman web nyamar file → tolak biar gak ngirim sampah html
+    if (ct.includes("text/html") && !ext) return { ok: false, msg: "Link itu halaman web, bukan file langsung — kasih link yang ujungnya nama file (contoh release GitHub: .../releases/download/v1.0/app.zip)" };
+    const mime = ext === "apk" ? "application/vnd.android.package-archive"
+      : ext === "zip" ? "application/zip"
+      : ct && !ct.includes("text/html") ? ct : "application/octet-stream";
+    try {
+      const chunks = [];
+      let got = 0;
+      let lastTick = 0;
+      const reader = res.body.getReader();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        got += value.length;
+        if (got > MAX_MB * 1024 * 1024) { try { await reader.cancel(); } catch {} return { ok: false, msg: "File kegedean (lebih dari " + MAX_MB + " MB)" }; }
+        const now = Date.now();
+        if (len && now - lastTick > 1200) { lastTick = now; try { await onStatus?.("📥 " + smallcapsText("mengunduh " + name) + " — " + Math.round(got / len * 100) + "%"); } catch {} }
+      }
+      const buf = Buffer.concat(chunks);
+      if (!buf.length) return { ok: false, msg: "File kosong / gak bisa diunduh" };
+      await sock.sendMessage(m.chat, { document: buf, fileName: name, mimetype: mime }, { quoted: m });
+      return { ok: true, msg: "File terkirim: " + name + " (" + (buf.length / 1048576).toFixed(1) + " MB)" };
+    } catch (e) { return { ok: false, msg: "Gagal unduh/kirim: " + (e?.message || "error") }; }
   });
 
   // 👁️ vision — scan gambar yang di-reply/attach
@@ -269,7 +321,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}) {
     }
   });
 
-  return { command, image, vision, activity, memory, create };
+  return { command, image, download, vision, activity, memory, create };
 }
 
 // simpan jejak percakapan agent per chat (db.setting agentMemory) — biar inget
@@ -322,7 +374,8 @@ async function handler(m, { sock, db, deps } = {}) {
       "agent",
       "AI agent otonom — dia sendiri yang nyari ke web, baca halamannya, terus nyusun jawaban lengkap + sumber.",
       `${m.prefix}agent <tugas apa pun>\n${m.prefix}agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi\n${m.prefix}agent kick orang yang bernama Budi\n${m.prefix}agent tutup grup dan ubah nama grup jadi Nova Squad`,
-      [`${smallcapsText("4 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar (reply foto), generate gambar, jalanin fitur bot, cek aktivitas")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
+      [`${smallcapsText("5 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar (reply foto), generate gambar, jalanin fitur bot, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip/dari link langsung")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
+       `${smallcapsText("unduh file/apk/zip")}: ${m.prefix}agent download file ini https://situs.com/app.apk`,
        `${smallcapsText("buat fitur baru")}: ${m.prefix}agent buat fitur namanya kalkulator yang bisa tambah/kali (khusus owner)`,
        `${smallcapsText("butuh 1-3 menit, sabar ya")}`],
     ));
@@ -372,7 +425,7 @@ async function handler(m, { sock, db, deps } = {}) {
       if (mediaMsg && typeof mediaMsg.download === "function") mediaBuffer = await mediaMsg.download();
     } catch {}
 
-    const executors = buildExecutors(m, sock, db, mediaBuffer, deps || {});
+    const executors = buildExecutors(m, sock, db, mediaBuffer, deps || {}, setStatus);
 
     const res = await runAgent(task, {
       act: (a, ctx) => execAction(a, ctx, m, sock),
