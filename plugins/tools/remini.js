@@ -1,12 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
-// ENGINE UTAMA: REMINI MOBILE API ASLI (unofficial, reverse-engineered dari Android
-// client com.bigwinepot.nwdn build 3.7.1390 — oracle/setup identity token → GCS
-// upload → task → process → poll → download). Face restore asli app Remini,
-// TANPA WATERMARK, hasil s/d ±3480px. Terverifikasi live 2026-09-06:
-// 400x500 → 2783x3480 dalam 3 detik (ref: SSL-ACTX/remini-unofficial-api).
-//   .remini / .remini face / .remini hd → face_enhance model "remini" (default)
-// FALLBACK: Local AI Swin2SR-realworld 4x (Real-ESRGAN style) — 100% lokal,
+// ENGINE UTAMA (request owner 11 Sep 2026): PHOTIU AI (photiu.ai — endpoint
+// internal /api/tools/img_improve, port dari kode owner). Hasil HD tanpa
+// watermark. Chain 3 tingkat:
+//   1. Photiu AI (engine utama)
+//   2. Local AI Swin2SR-realworld 4x (HF) — 100% lokal,
+// TANPA WATERMARK — otomatis dipakai kalau Photiu error/timeout.
+//   3. Upscale lokal sharp (instan tanpa AI) — jika 1 & 2 sama-sama gagal.
 // TANPA WATERMARK — otomatis dipakai kalau Remini mobile error/kuota habis.
 //   .remini real/upscale → 4x restore langsung (local AI)
 //   .remini 1080/2k/4k/5k → pilih ukuran hasil (engine lokal)
@@ -22,6 +22,9 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
 // responsif selama render (dulu ngeblok event loop total, command lain mati)
 import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/nova-hd-pool.js";
+// Engine utama baru (request owner 11 Sep 2026): Photiu AI — endpoint internal
+// photiu.ai/api/tools/img_improve, hasil HD tanpa watermark
+import { photiuUpscale } from "../../src/scraper/photiu.js";
 
 const pluginConfig = {
   name: "remini",
@@ -253,230 +256,35 @@ async function reminiEnhance(buffer, mode) {
   return { buffer: Buffer.from(dl.data), label, algo };
 }
 
-// ═══ ENGINE: Remini Mobile API (unofficial — Android client protocol) ═══
-// Face restore asli app Remini, TANPA WATERMARK. Port dari SSL-ACTX/remini-unofficial-api.
-// Flow: oracle/setup (identity token) → POST /tasks → PUT GCS → POST /process → poll → download.
-// Token + device identity di-persist ke src/data/remini-mobile-token.json — kalau balance
-// habis / 401-403, otomatis regen device baru + token baru (credit identity baru).
 
-const RM_ORACLE = "https://api.remini.ai/v1/mobile/oracle/setup";
-const RM_TASKS = "https://a.android.api.remini.ai/v1/mobile/tasks";
-const RM_USERS_ME = "https://a.android.api.remini.ai/v1/mobile/users/@me";
-const RM_TOKEN_FILE = path.join(path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url)))), "src", "data", "remini-mobile-token.json");
-const RM_POLL_INTERVAL = 3000;
-const RM_POLL_MAX = 40; // ±2 menit
+// ═══ FALLBACK 3: Upscale lokal sharp — instan tanpa AI (pola hdLocalSharp .toimage) ═══
+// Terakhir dipakai kalau Photiu (engine utama) DAN Swin2SR lokal (fallback 2)
+// sama-sama gagal — biar user tetep dapet hasil (HD polish, bukan AI restore).
+async function hdLocalSharpUpscale(inputBuffer) {
+  const mod = await import("sharp");
+  const sharp = mod.default || mod;
+  const meta = await sharp(inputBuffer, { failOn: "none" }).rotate().metadata();
+  const longest = Math.max(meta.width || 0, meta.height || 0);
 
-const RM_DEVICES = [
-  { manufacturer: "INFINIX", model: "Infinix X669", type: "6.6", os: "31" },
-  { manufacturer: "Samsung", model: "SM-G998B", type: "6.8", os: "33" },
-  { manufacturer: "Xiaomi", model: "2201116SG", type: "6.67", os: "32" },
-  { manufacturer: "Google", model: "Pixel 7 Pro", type: "6.7", os: "33" },
-  { manufacturer: "OPPO", model: "CPH2211", type: "6.5", os: "31" },
-];
+  let target = longest < 1024 ? 1024 : Math.min(longest * 2, 2048);
+  if (longest >= 2048) target = longest;
 
-function rmRandomDevice() {
-  const hex = (n) => crypto.randomBytes(n).toString("hex");
-  const uuid = () => crypto.randomUUID();
-  const androidId = hex(8).slice(0, 16);
+  const t0 = Date.now();
+  const out = await sharp(inputBuffer, { failOn: "none" })
+    .rotate()
+    .resize({ width: target, height: target, fit: "inside", kernel: "lanczos3" })
+    .sharpen({ sigma: 1.0, m1: 0.6, m2: 0.4 })
+    .modulate({ saturation: 1.04, brightness: 1.01 })
+    .png()
+    .toBuffer({ resolveWithObject: true });
+
   return {
-    android_id: androidId,
-    aaid: uuid(),
-    backup_persistent_id: `${androidId}_com.bigwinepot.nwdn.international`,
-    non_backup_persistent_id: uuid(),
-    spec: RM_DEVICES[Math.floor(Math.random() * RM_DEVICES.length)],
+    buffer: out.data,
+    label: `Upscale Lokal - ${out.info.width}x${out.info.height}`,
+    width: out.info.width,
+    height: out.info.height,
+    ms: Date.now() - t0,
   };
-}
-
-function rmLoadState() {
-  try {
-    const raw = JSON.parse(fs.readFileSync(RM_TOKEN_FILE, "utf-8"));
-    if (raw?.identity_token) return raw;
-  } catch {}
-  return null;
-}
-
-function rmSaveState(state) {
-  try {
-    fs.mkdirSync(path.dirname(RM_TOKEN_FILE), { recursive: true });
-    fs.writeFileSync(RM_TOKEN_FILE, JSON.stringify(state, null, 2));
-  } catch {}
-}
-
-function rmBaseHeaders(state) {
-  return {
-    "Bsp-Id": "com.bigwinepot.nwdn.international.android",
-    "Build-Number": "202523423",
-    "Build-Version": "3.7.1390",
-    Country: "US",
-    "Device-Manufacturer": state.device.spec.manufacturer,
-    "Device-Model": state.device.spec.model,
-    "Device-Type": state.device.spec.type,
-    Language: "en",
-    Locale: "en_US",
-    "OS-Version": state.device.spec.os,
-    Platform: "Android",
-    Timezone: "Asia/Manila",
-    "Android-id": state.device.android_id,
-    aaid: state.device.aaid,
-    "accept-encoding": "gzip",
-    "User-Agent": "okhttp/4.12.0",
-  };
-}
-
-function rmHeaders(state, contentType) {
-  const h = { ...rmBaseHeaders(state) };
-  if (state.identity_token) {
-    h["Identity-Token"] = state.identity_token;
-    h["Iris-Access-Token"] = state.identity_token;
-    h["Iris-Nonces-Counter"] = "3";
-  }
-  if (contentType) h["Content-Type"] = contentType;
-  return h;
-}
-
-const rmApi = axios.create({ timeout: 60000, validateStatus: () => true, maxBodyLength: Infinity, maxContentLength: Infinity });
-
-async function rmVerify(state) {
-  if (!state.identity_token) return false;
-  const res = await rmApi.get(RM_USERS_ME, { headers: rmHeaders(state) });
-  if (res.status !== 200) return false;
-  const balance = res.data?.balance ?? 0;
-  return balance > 0;
-}
-
-// Ambil identity token baru via oracle/setup (device fresh tiap regen —
-// credit balance identity baru otomatis dapat jatah lagi)
-async function rmFetchToken(state) {
-  const ts = String(Math.round(Date.now() / 1000));
-  const headers = {
-    ...rmHeaders(state),
-    "First-Install-Timestamp": ts + "E9",
-    "Backup-Persistent-Id": state.device.backup_persistent_id,
-    "Non-Backup-Persistent-Id": state.device.non_backup_persistent_id,
-    Environment: "Production",
-    "settings-response-version": "v2",
-    "Is-App-Running-In-Background": "false",
-    "Is-Old-User": "true",
-  };
-  const res = await rmApi.get(RM_ORACLE, { headers });
-  if (res.status !== 200) throw new Error("setup_failed");
-  const token = res.data?.settings?.__identity__?.token;
-  if (!token) throw new Error("no_token");
-  state.identity_token = token;
-  rmSaveState(state);
-  return state;
-}
-
-async function rmEnsureAuth() {
-  let state = rmLoadState();
-  if (state?.identity_token && state?.device?.spec) {
-    try {
-      if (await rmVerify(state)) return state;
-    } catch {}
-  }
-  // token invalid / balance habis → regen device baru + token baru
-  state = { device: rmRandomDevice(), identity_token: null };
-  await rmFetchToken(state);
-  if (!(await rmVerify(state).catch(() => false))) {
-    state = { device: rmRandomDevice(), identity_token: null };
-    await rmFetchToken(state);
-    if (!(await rmVerify(state).catch(() => false))) throw new Error("auth_failed");
-  }
-  return state;
-}
-
-const RM_DEFAULT_PIPELINE = {
-  face_enhance: { model: "remini" },
-  background_enhance: { model: "rhino-tensorrt", remove_color_shift: "true" },
-  jpeg_quality: "90",
-  interpolation: "bicubic",
-  max_output_resolution: "3480",
-};
-
-// ═══ Full pipeline Remini mobile ═══
-async function reminiMobileEnhance(buffer, pipeline = RM_DEFAULT_PIPELINE) {
-  const state = await rmEnsureAuth();
-
-  // metadata gambar (md5 base64 + ukuran + resolusi)
-  let width = 0;
-  let height = 0;
-  try {
-    const sharp = (await import("sharp")).default;
-    const meta = await sharp(buffer).metadata();
-    width = meta.width || 0;
-    height = meta.height || 0;
-  } catch {}
-  const md5 = crypto.createHash("md5").update(buffer).digest("base64");
-  const { mime } = guessMime(buffer);
-
-  const body = {
-    feature: { type: "multi-tool", pipelines: [pipeline] },
-    image_content_type: mime,
-    image_md5: md5,
-    image_size: buffer.length,
-  };
-  if (width && height) {
-    body.image_resolution_width = width;
-    body.image_resolution_height = height;
-  }
-
-  // 1. buat task (401/403 → sekali regen device+token, lalu ulang)
-  let task = null;
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const res = await rmApi.post(RM_TASKS, body, { headers: rmHeaders(state, "application/json; charset=UTF-8") });
-    if (res.status === 401 || res.status === 403) {
-      const fresh = { device: rmRandomDevice(), identity_token: null };
-      await rmFetchToken(fresh);
-      Object.assign(state, fresh);
-      continue;
-    }
-    if (res.status !== 200 || !res.data?.task_id || !res.data?.upload_url || !res.data?.upload_headers) {
-      throw new Error("task_failed");
-    }
-    task = res.data;
-    break;
-  }
-  if (!task) throw new Error("task_failed");
-
-  // 2. upload ke GCS pakai upload_headers yang dikasih server
-  const up = await rmApi.put(task.upload_url, buffer, {
-    headers: { ...task.upload_headers, "Content-Length": String(buffer.length), "User-Agent": "okhttp/4.12.0" },
-    timeout: 120000,
-  });
-  if (up.status >= 300) throw new Error("upload_failed");
-
-  // 3. trigger proses (Content-Length: 0 — WAJIB, kayak ping app asli)
-  const pr = await rmApi.post(`${RM_TASKS}/${task.task_id}/process`, null, {
-    headers: { ...rmHeaders(state), "Content-Length": "0" },
-  });
-  if (pr.status >= 300) throw new Error("process_failed");
-
-  // 4. poll status (404 = belum siap, lanjut poll)
-  const deadline = Date.now() + RM_POLL_MAX * RM_POLL_INTERVAL;
-  let outputUrl = null;
-  while (Date.now() < deadline) {
-    await new Promise((r) => setTimeout(r, RM_POLL_INTERVAL));
-    const st = await rmApi.get(`${RM_TASKS}/${task.task_id}`, { headers: rmHeaders(state) });
-    if (st.status === 404) continue;
-    if (st.status !== 200) throw new Error("poll_failed");
-    const status = st.data?.status;
-    if (status === "completed") {
-      outputUrl = st.data?.result?.outputs?.[0]?.url;
-      if (!outputUrl) throw new Error("no_output");
-      break;
-    }
-    if (status === "failed" || status === "error") throw new Error("process_failed");
-  }
-  if (!outputUrl) throw new Error("timeout");
-
-  // 5. download hasil
-  const dl = await rmApi.get(outputUrl, {
-    responseType: "arraybuffer",
-    headers: { "User-Agent": "okhttp/4.12.0" },
-    timeout: 120000,
-  });
-  if (dl.status !== 200 || !dl.data) throw new Error("download_failed");
-  return { buffer: Buffer.from(dl.data), label: "Face Restore (Remini)" };
 }
 
 // ═══ Handler ═══
@@ -583,22 +391,35 @@ async function handler(m, { sock, args }) {
         }
       }
     } else if (!wantLocal) {
-      // ═══ Remini Mobile API — DEFAULT, face restore asli Remini tanpa watermark ═══
+      // ═══ PHOTIU AI — ENGINE UTAMA BARU (request owner 11 Sep 2026) ═══
+      // Chain: 1. Photiu AI (photiu.ai/img_improve) → 2. Swin2SR lokal 4x (HF)
+      //        → 3. Upscale lokal sharp (instan tanpa AI)
       try {
         try { await m.react("🎨"); } catch {}
-        const r = await reminiMobileEnhance(mediaBuffer);
-        resultBuffer = r.buffer;
-        label = r.label;
-        engineNote = "Engine: Remini AI (tanpa watermark)";
+        const r = await photiuUpscale(mediaBuffer, { timeout: 90000 });
+        resultBuffer = r.data.buffer;
+        label = `Photiu AI (${r.data.format.toUpperCase()})`;
+        engineNote = "Engine: Photiu AI (tanpa watermark)";
       } catch (e1) {
-        console.error("[REMINI] Remini mobile gagal:", e1.message);
-        // fallback: local Real-ESRGAN style 4x — tanpa watermark (request owner)
-        const r = await runLocal("real");
-        resultBuffer = r.buffer;
-        label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
-        outWidth = r.width;
-        outHeight = r.height;
-        engineNote = "Engine: Local AI 4x Restore (fallback — tanpa watermark)";
+        console.error("[REMINI] Photiu gagal:", e1.message);
+        // fallback 2: local Swin2SR-realworld 4x (HF) — tanpa watermark
+        try {
+          const r = await runLocal("real");
+          resultBuffer = r.buffer;
+          label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
+          outWidth = r.width;
+          outHeight = r.height;
+          engineNote = "Engine: Local AI 4x Restore (fallback 2 — tanpa watermark)";
+        } catch (e2) {
+          console.error("[REMINI] Local AI gagal:", e2.message);
+          // fallback 3: upscale lokal sharp — instan, tetep ada hasil buat user
+          const r = await hdLocalSharpUpscale(mediaBuffer);
+          resultBuffer = r.buffer;
+          label = `${r.label} (${(r.ms / 1000).toFixed(1)}s)`;
+          outWidth = r.width;
+          outHeight = r.height;
+          engineNote = "Engine: Upscale Lokal Sharp (fallback 3)";
+        }
       }
     } else {
       // ═══ Local AI (Swin2SR) — mode real/upscale & pilihan ukuran ═══
