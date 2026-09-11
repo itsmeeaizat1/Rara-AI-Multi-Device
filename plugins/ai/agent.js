@@ -28,7 +28,7 @@ JANGAN pernah memotong kode / placeholder TODO / kode segitiga-python. Kode HARU
 
 const pluginConfig = {
   name: "aisuperagent",
-  alias: ["aisuperagent", "agent", "aiagent", "agensi", "agentai", "agenta"],
+  alias: ["aisuperagent", "aiagent", "agensi", "agentai", "agenta"],
   category: "ai",
   description: "AI Agent serba bisa — browsing web, otomasi grup, scan/generate gambar, jalanin fitur, buat fitur baru, bikin kode, unduh file, persona (jadi siapa pun), inget percakapan, ngobrol pakai vn",
   usage: ".aisuperagent <tugas>",
