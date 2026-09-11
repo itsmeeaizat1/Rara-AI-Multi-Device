@@ -61,6 +61,7 @@ Tidak bisa di-generate dari kode. WAJIB upload manual ke Pterodactyl.
 |------|--------|--------------|--------|
 | nova-mp4.mp4 | 2.1MB | video default | ✅ |
 | nova-preview.gif | 67KB | preview gif | ✅ |
+| menu/menuthumbnail.mp4 | 962KB | header video semua menu card (.menu/.allmenu dll, gifPlayback) | ✅ |
 | nova.mp4 | 0B | tidak dipakai langsung | ⚠️ GANTI |
 
 ## VOICE NOTES (assets/vn/)
