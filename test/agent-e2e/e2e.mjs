@@ -361,32 +361,35 @@ w("\n— plugin TOOLS: voice reply (vn) —");
   check("teks jawaban tetap ada", sent.some(s => s.includes("Gambar dikirim")));
 }
 
-w("\n— plugin .agent: progress + jawaban —");
+w("\n— plugin .agent: loading reaksi + jawaban —");
 {
   resetAgentDeps();
   mkDeps();
   const sent = [];
+  const reacts = [];
   const m = {
     text: ".agent cari hp terbaik 5 juta", args: ["cari", "hp", "terbaik", "5", "juta"],
     chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
-    react: async () => true,
+    react: async (e) => { reacts.push(String(e)); },
     reply: async (t) => { sent.push({ type: "reply", text: String(t) }); },
   };
   const sock = {
     sendMessage: async (chat, content) => {
-      if (content?.edit) { sent.push({ type: "edit", text: String(content.text) }); return { key: { id: "k1" } }; }
-      sent.push({ type: "send", text: String(content?.text || "") });
+      sent.push({ type: content?.edit ? "edit" : "send", text: String(content?.text || "") });
       return { key: { id: "k1" } };
     },
   };
   await agHandler(m, { sock });
   const edits = sent.filter(s => s.type === "edit");
   const replies = sent.filter(s => s.type === "reply");
-  check("status progress teredit ≥ 5 fase", edits.length >= 5, String(edits.length));
-  check("progress bar langkah", edits.some(e => e.text.includes("ʟᴀɴɢᴋᴀʜ")));
+  check("loading = reaksi 🧠 (mikir)", reacts.includes("🧠"));
+  check("loading = reaksi 🔍 (nyari)", reacts.includes("🔍"));
+  check("reaksi selesai 🐣", reacts[reacts.length - 1] === "🐣");
+  check("gak ada pesan progress edit-in-place", edits.length === 0, String(edits.length));
+  check("search/pick/read dedupe 1x 🔍", reacts.filter(r => r === "🔍").length === 1, JSON.stringify(reacts));
+  check("urutan reaksi sesuai fase", JSON.stringify(reacts) === JSON.stringify(["🧠","🔍","🧠","🐣"]), JSON.stringify(reacts));
   check("jawaban final dikirim", replies.some(r => r.text.includes("POCO X7")));
   check("sumber dilampirkan", replies.some(r => r.text.includes("gadgetrev.com")));
-  check("status akhir selesai", edits[edits.length - 1]?.text.includes("ʀɪꜱᴇᴛ ꜱᴇʟᴇꜱᴀɪ"));
 }
 
 w("\n— plugin ACT: kick dari nama + tutup grup (sock stub) —");

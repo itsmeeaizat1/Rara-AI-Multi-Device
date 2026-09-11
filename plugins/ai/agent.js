@@ -315,16 +315,6 @@ async function sendVoiceReply(m, sock, text) {
   }
 }
 
-const PHASE_LABEL = {
-  plan: "🧠 " + smallcapsText("merencanakan langkah riset"),
-  search: "🔍 " + smallcapsText("menyusuri web"),
-  pick: "🎯 " + smallcapsText("memilih halaman terbaik"),
-  read: "📖 " + smallcapsText("membaca halaman"),
-  compose: "✍️ " + smallcapsText("menyusun jawaban"),
-  act: "⚡ " + smallcapsText("mengeksekusi aksi"),
-  tool: "🛠️ " + smallcapsText("pakai tools"),
-};
-
 async function handler(m, { sock, db, deps } = {}) {
   const task = (m.args || []).join(" ").trim();
   if (!task) {
@@ -338,23 +328,20 @@ async function handler(m, { sock, db, deps } = {}) {
     ));
   }
 
-  let statusKey = null;
-  const setStatus = async (text) => {
-    try {
-      if (!statusKey) {
-        const sent = await sock.sendMessage(m.chat, { text });
-        statusKey = sent?.key || null;
-        return;
-      }
-      await sock.sendMessage(m.chat, { text, edit: statusKey });
-    } catch {
-      try { await m.reply(text); } catch {}
-    }
+  // LOADING SIMPLE = REAKSI DOANG (revisi owner 11 Sep: "loadingnya simple aja
+  // sih react 🧠 aja klo agent lg nyari react ini 🔍") — TANPA pesan progress
+  // edit-in-place lagi. 🧠 = mikir (plan/compose), 🔍 = nyari (search/pick/read),
+  // 🛠️ = tools, ⚡ = aksi grup. Reaksi diganti cuma pas fase ganti emoji.
+  const PHASE_REACT = { plan: "🧠", search: "🔍", pick: "🔍", read: "🔍", compose: "🧠", tool: "🛠️", act: "⚡" };
+  let lastReact = "";
+  const reactPhase = async (emoji) => {
+    if (!emoji || emoji === lastReact) return; // fase berikutnya emoji sama → gak spam react
+    lastReact = emoji;
+    try { await m.react(emoji); } catch {}
   };
 
   try {
-    await m.react("🕒");
-    await setStatus("🧠 " + smallcapsText("agent berpikir..."));
+    await reactPhase("🧠");
 
     // reply/attach gambar → buffer buat tool vision (scan gambar)
     let mediaBuffer = null;
@@ -365,8 +352,6 @@ async function handler(m, { sock, db, deps } = {}) {
 
     const executors = buildExecutors(m, sock, db, mediaBuffer, deps || {});
 
-    let step = 0;
-    let TOTAL = 5; // research: plan, search, pick, read, compose — act: plan + N aksi
     const res = await runAgent(task, {
       act: (a, ctx) => execAction(a, ctx, m, sock),
       execTools: executors,
@@ -380,19 +365,7 @@ async function handler(m, { sock, db, deps } = {}) {
         sender: m.sender,
         mediaAttached: !!mediaBuffer,
       },
-      onPhase: (phase, info) => {
-        if (phase === "act" || phase === "tool") { TOTAL = 2; } // plan + total aksi/tools
-        else if (phase !== "plan" && TOTAL === 2) { TOTAL = 5; }
-        step++;
-        const label = PHASE_LABEL[phase] || phase;
-        // LOADING BERSIH (revisi owner 11 Sep: "jgn diliatin sumber kyk
-        // sunlogin.oray.com cukup loadingnya aja") — progress CUMA label
-        // fase + bar langkah, TANPA baris fokus/query/domain apa pun;
-        // sumber lengkap tetap ada di 📎 footer jawaban akhir.
-        const extra = "";
-        const bar = "🟩".repeat(Math.min(step - 1, TOTAL)) + "⬜".repeat(Math.max(TOTAL - step + 1, 0));
-        setStatus(`${label}${extra}\n\n${bar} ${smallcapsText("langkah")} ${step}/${TOTAL}`);
-      },
+      onPhase: (phase) => { reactPhase(PHASE_REACT[phase] || "🧠"); },
     });
 
     if (res?.error) {
@@ -405,7 +378,6 @@ async function handler(m, { sock, db, deps } = {}) {
 
     // status jadi penanda selesai, jawaban dikirim terpisah biar rapi
     if (res.mode === "act" || res.mode === "tools") {
-      await setStatus((res.mode === "act" ? "⚡ " : "🛠️ ") + smallcapsText("selesai — hasil di bawah"));
       // nggobrol pakai vn (request owner): jawaban di-voice-note-in
       const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task);
       const doVoice = deps?.voiceReply || sendVoiceReply;
@@ -417,8 +389,6 @@ async function handler(m, { sock, db, deps } = {}) {
       await m.react("🐣");
       return;
     }
-    await setStatus("✅ " + smallcapsText("riset selesai — jawaban di bawah"));
-
     const src = (res.sources || []).map((s, i) => `${i + 1}. [${s.tag}] ${s.domain} — ${s.url}`).join("\n");
     const footer = src ? `\n\n📎 ${smallcapsText("sumber")}\n${src}` : "";
     const note = res.viaLocal ? `\n\n⚙️ ${smallcapsText("mode digest lokal")}` : "";
