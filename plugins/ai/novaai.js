@@ -175,7 +175,7 @@ async function executeCommand(action, m, sock, botConfig) {
 
 const pluginConfig = {
   name: "novaagent",
-  alias: ["novaagent", "tanyaai", "nova-ai", "nova", "tanya"],
+  alias: ["novaagent"], // request owner: cmd utama aja, tanpa alias lain
   category: "ai",
   description: "Nova Agent — ngatur grup, ngobrol multi-turn nyambung, scan gambar, & jalanin command bot via bahasa natural",
   usage: ".novaagent <perintah/pertanyaan>\n.novaagent (reply/kirim gambar) — scan gambar: selesaikan tugas, baca foto, dll\n.novaagent reset — hapus sesi chat",
@@ -192,7 +192,7 @@ const pluginConfig = {
 // 🔹 HANDLER UTAMA
 async function handler(m, { sock, conn, config, db }) {
   const text = m.args.join(" ").trim() ||
-    m.text?.replace(/^\.novaagent\s+/i, "").replace(/^\.tanyaai\s+/i, "").replace(/^\.nova-ai\s+/i, "").trim();
+    m.text?.replace(/^\.novaagent\s+/i, "").trim();
 
   // ada gambar (langsung/reply) → teks boleh kosong, langsung scan (jangan print help)
   const hasImageForVision = m.isImage || m.quoted?.isImage;
