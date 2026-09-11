@@ -3,7 +3,11 @@
 // "buatkan no 1" — ide fitur paling canggih + revisi "biar ai agentnya bisa
 // browsing dan automation kayak kick org cm dari nama, tutup grup dll").
 //
-// DUA MODE — dipilih AI saat fase PLAN:
+// TIGA MODE — dipilih AI saat fase PLAN (serba bisa):
+// TIGA MODE — dipilih AI saat fase PLAN (request owner 11 Sep 2026: "hrs serba
+// bisa agar berbeda dr bot lain bsa apa aja perintahkan fitur, cmd, buat fitur,
+// pasang fitur, scan gambar, generate gambar, nggobrol pakai vn, inget jejak
+// histori aktivitas, ingat percakapan sblmnya"):
 //  • mode "research" — browsing/riset web: plan → search → pick → read → compose
 //  • mode "act"      — otomasi WhatsApp grup (kick dari NAMA, tutup grup, dll):
 //                      plan → act (eksekusi via callback plugin) → laporan.
@@ -25,8 +29,15 @@
 //
 // Seams buat e2e: setAgentDeps({ aiChat, search, preview }).
 
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { execFileSync } from "child_process";
 import { aiChainChat } from "./nova-ai-fallback.js";
 import { searchWeb, fetchPagePreview } from "./nova-websearch.js";
+
+const __libFilename = fileURLToPath(import.meta.url);
+const REPO_ROOT = path.resolve(path.dirname(__libFilename), "..", "..");
 
 const MAX_QUERIES = 3;
 const MAX_PICKS = 3;
@@ -68,6 +79,15 @@ const ACT_ACTIONS = [
   "kick", "add", "promote", "demote", "open", "close", "lockedit", "unlockedit",
   "rename", "desc", "tagall", "link",
 ];
+const MAX_TOOLS = 4;
+const TOOL_LIST = [
+  "command", // jalanin command bot lain (sticker, quotes, dll)
+  "image",   // generate gambar (callImageGen)
+  "vision",  // scan gambar yang di-reply/attach (visionScan)
+  "activity",// statistik aktivitas grup (activity tracker)
+  "memory",  // ingat percakapan agent sebelumnya
+  "create",  // BUAT FITUR BARU + pasang (owner only — codegen + hot-load)
+];
 
 const SYS_PLAN = `Kamu adalah perencana aksi AI agent. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
 
@@ -81,6 +101,10 @@ Maksimal ${MAX_QUERIES} query — pendek, spesifik, kata kunci ala google (bukan
 {"mode": "act", "actions": [{"action": "kick", "target": "nama persis yang ditulis user", "value": null}]}
 Action valid: kick (keluarkan member), add (tambah member), promote (jadikan admin), demote (turunkan admin), open (buka grup — semua member bisa chat), close (tutup grup — cuma admin bisa chat), lockedit (kunci edit info grup), unlockedit (buka edit info grup), rename (ubah nama grup, value = nama baru), desc (ubah deskripsi grup, value = deskripsi baru), tagall (tag semua member), link (ambil link invite grup).
 Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc isi value.
+
+3. TOOLS serba bisa (tugas minta AI ngerjain pakai kemampuan bot: bikin gambar, scan gambar, jalanin fitur/command bot, cek aktivitas grup, inget percakapan, bikin fitur baru):
+{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
+Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
 Kalau ragu ATAU tugasnya nyari informasi → pilih research.`;
 
 const SYS_PICK = `Kamu adalah kurator riset. Balas HANYA objek JSON murni. Karakter PERTAMA harus { dan TERAKHIR }.
@@ -126,10 +150,13 @@ function detectActLocal(task) {
  *        "plan" | "act" (info=action) | "search" (info=query) | "pick" | "read" (info=domain) | "compose"
  * @param {(action:{action,target,value}, ctx:any) => Promise<{ok:boolean,msg:string}>} [opts.act]
  *        executor aksi grup — wajib buat mode act (gate admin + resolve nama ada di plugin)
+ * @param {Object.<string, Function>} [opts.execTools] executor per-tool mode tools
+ *        ({tool, ...payload}, ctx) => {ok, msg, evidence?} — implementasi di plugin
+ * @param {string[]} [opts.history] riwayat percakapan agent di chat ini (biar ingat konteks)
  * @param {Object} [opts.context] info grup (isGroup/isAdmin/isOwner/isBotAdmin/chat/sender) — dikirim ke LLM plan + executor
- * @returns {Promise<{mode,answer,queries,sources,steps,results,viaLocal}|{error}>}
+ * @returns {Promise<{mode,answer,queries,sources,steps,results,viaLocal,voice}|{error}>}
  */
-export async function runAgent(task, { onPhase, act, context } = {}) {
+export async function runAgent(task, { onPhase, act, execTools, history, context } = {}) {
   const phase = (p, info) => { try { onPhase?.(p, info); } catch {} };
   const steps = [];
 
@@ -137,10 +164,13 @@ export async function runAgent(task, { onPhase, act, context } = {}) {
   phase("plan");
   let plan = null;
   const ctxLine = context
-    ? `\nKonteks: ${context.isGroup === false ? "chat pribadi (BUKAN grup)" : "di grup"}${context.isAdmin ? ", user admin grup" : context.isOwner ? ", user owner bot" : ", user bukan admin"}${context.isBotAdmin ? ", bot admin grup" : ", bot bukan admin grup"}.`
+    ? `\nKonteks: ${context.isGroup === false ? "chat pribadi (BUKAN grup)" : "di grup"}${context.isAdmin ? ", user admin grup" : context.isOwner ? ", user owner bot" : ", user bukan admin"}${context.isBotAdmin ? ", bot admin grup" : ", bot bukan admin grup"}${context.mediaAttached ? ", user reply/attach gambar (bisa dipakai tool vision)" : ""}.`
+    : "";
+  const histLine = Array.isArray(history) && history.length
+    ? `\nRiwayat percakapan agent di chat ini (ingat konteks ini):\n${history.slice(-5).join("\n")}`
     : "";
   try {
-    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}`, { systemPrompt: SYS_PLAN }));
+    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}${histLine}`, { systemPrompt: SYS_PLAN }));
   } catch {}
 
   // normalisasi rencana act (dari LLM atau deteksi lokal)
@@ -160,6 +190,58 @@ export async function runAgent(task, { onPhase, act, context } = {}) {
     }
   }
 
+  // ── MODE TOOLS — serba bisa: command bot, gambar, vision, aktivitas, memory, buat fitur ──
+  if (Array.isArray(plan?.tools) && plan.tools.length && execTools && Object.keys(execTools).length) {
+    const tools = plan.tools
+      .map(x => {
+        const tool = String(x?.tool || "").toLowerCase().trim();
+        return {
+          tool,
+          cmd: x?.cmd ? String(x.cmd).replace(/^[.\/#!]/, "").toLowerCase() : null,
+          args: x?.args != null ? String(x.args) : null,
+          prompt: x?.prompt != null ? String(x.prompt) : null,
+          question: x?.question != null ? String(x.question) : null,
+          query: x?.query != null ? String(x.query) : null,
+          name: x?.name ? String(x.name).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20) : null,
+          spec: x?.spec != null ? String(x.spec) : null,
+        };
+      })
+      .filter(x => TOOL_LIST.includes(x.tool) && execTools[x.tool])
+      .slice(0, MAX_TOOLS);
+    if (tools.length) {
+      steps.push({ phase: "plan", mode: "tools", ok: true, tools: tools.map(x => x.tool) });
+      const results = [];
+      const evidences = [];
+      for (const tl of tools) {
+        phase("tool", tl.tool + (tl.prompt ? ": " + tl.prompt.slice(0, 40) : tl.cmd ? ": ." + tl.cmd : ""));
+        let r = null;
+        try { r = await execTools[tl.tool](tl, context || {}); } catch (e) { r = { ok: false, msg: `Gagal: ${e?.message || "error eksekusi"}` }; }
+        const row = { tool: tl.tool, ok: !!r?.ok, msg: String(r?.msg || (r?.ok ? "Berhasil" : "Gagal")) };
+        results.push(row);
+        if (r?.evidence) evidences.push(String(r.evidence));
+      }
+      steps.push({ phase: "tools", ok: results.some(r => r.ok), jumlah: results.length });
+
+      // evidence (vision/activity/memory) → compose jawaban natural; selebihnya laporan per tool
+      let answer = "";
+      let viaLocal = false;
+      if (evidences.length) {
+        phase("compose");
+        try {
+          answer = await _aiChat(`Tugas user: ${task}\n\nBUKTI/HASIL TOOLS:\n${evidences.join("\n\n").slice(0, 12000)}`, { systemPrompt: SYS_ANSWER });
+        } catch {}
+        if (!answer || !String(answer).trim()) {
+          viaLocal = true;
+          answer = evidences.join("\n\n");
+        }
+      }
+      const report = results.map(r => `${r.ok ? "✅" : "❌"} ${r.msg}`).join("\n");
+      answer = (evidences.length ? String(answer).trim() : "") || report;
+      if (evidences.length && report) answer += `\n\n${report}`;
+      return { mode: "tools", answer, results, evidences: evidences.length, steps, voice: !!plan.voice, viaLocal, queries: [], sources: [] };
+    }
+  }
+
   // ── MODE ACT — otomasi grup (request owner: "kick org cm dari nama, tutup grup dll") ──
   if (actions && actions.length && typeof act === "function") {
     steps.push({ phase: "plan", mode: "act", ok: true, actions });
@@ -172,7 +254,7 @@ export async function runAgent(task, { onPhase, act, context } = {}) {
     }
     const answer = results.map(r => `${r.ok ? "✅" : "❌"} ${r.msg}`).join("\n");
     steps.push({ phase: "act", ok: results.some(r => r.ok), aksi: results.length });
-    return { mode: "act", answer, results, steps, queries: [], sources: [] };
+    return { mode: "act", answer, results, steps, voice: !!plan?.voice, queries: [], sources: [] };
   }
 
   // ── MODE RESEARCH — browsing/riset web (alur 5 fase) ──
@@ -257,7 +339,113 @@ export async function runAgent(task, { onPhase, act, context } = {}) {
   }
   steps.push({ phase: "compose", ok: !viaLocal, viaLocal });
 
-  return { mode: "research", answer: String(answer).trim(), queries, sources, steps, viaLocal };
+  return { mode: "research", answer: String(answer).trim(), queries, sources, steps, voice: !!plan?.voice, viaLocal };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BUAT FITUR BARU — codegen plugin + pasang (request owner:
+// "buat fitur, pasang fitur"). Dipanggil tool `create` (owner only).
+// LLM nulis isi handler → dibungkus template plugin → node --check →
+// disimpan ke plugins/custom/<name>.js (auto ke-scan loader sebagai
+// kategori custom). Retry 1x kalau kode ditolak/syntax error.
+// ═══════════════════════════════════════════════════════════════
+
+const SYS_CODEGEN = `Kamu generator plugin bot WhatsApp (Node ESM). User mau fitur baru bernama command .{{NAME}}.
+Balas HANYA isi fungsi handler (JavaScript murni, TANPA import/export/pluginConfig/markdown fence/komentar pembuka):
+- isi body fungsi: async function handler(m, { sock }) { ... } — TULIS CUMA ISI DALAM KURUNG KURAWAL, tanpa "async function handler" dan tanpa kurung kurawal luar.
+- m = pesan user: m.args (array kata setelah command), m.reply(teks), m.react("emoji"), m.prefix, m.pushName (nama user), m.chat (jid), m.sender (jid), m.isGroup, m.text.
+- sock = koneksi WhatsApp: sock.sendMessage(jid, { text / image: {url} / audio: buffer ... }, { quoted: m }).
+- DILARANG: fs, child_process, require, process.exit, eval, fetch ke API eksternal, operasi file/jaringan. Fitur harus self-contained (logika lokal: generator acak, kalkulasi, format pesan, interaksi user, menyimpan ke m.reply saja).
+- Bahasa Indonesia untuk semua teks ke user. Pakai template literal/emoji sesuai tema.
+- Awali dengan validasi input: if (!m.args.length) return m.reply("cara pakai ...").
+Spesifikasi fitur user: "{{SPEC}}"`;
+
+const CODE_BLOCKLIST = /child_process|require\(|process\.exit|eval\(|fs\.(write|unlink|rm|read)|\.writeFile|node-fetch|axios|import\s|export\s|__dirname/gi;
+
+function wrapPluginCode(name, desc, body) {
+  const d = new Date().toISOString().slice(0, 10);
+  return `// NOVA AI WHATSAPP BOT — plugin dibuat otomatis oleh AI Agent (.agent create)
+// Fitur: ${desc} | dibuat ${d}
+// Template agent — self-contained, murni logika lokal, tanpa akses sistem.
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+
+const pluginConfig = {
+  name: "${name}",
+  alias: ["${name}"],
+  category: "custom",
+  description: ${JSON.stringify(desc.slice(0, 120))},
+  usage: ".${name} <input>",
+  example: ".${name}",
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 5, energi: 1, isEnabled: true,
+};
+
+async function handler(m, { sock }) {
+${body}
+}
+
+export { pluginConfig as config, handler };
+`;
+}
+
+/**
+ * generatePlugin — bikin file plugin baru hasil codegen AI.
+ * @param {{name:string, spec:string, targetDir?:string}} param
+ * @returns {Promise<{path:string, code:string, attempts:number}>} throw kalau gagal 2x
+ */
+export async function generatePlugin({ name, spec, targetDir } = {}) {
+  const nm = String(name || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 20);
+  if (nm.length < 3) throw new Error("nama fitur minimal 3 huruf/angka");
+  const sp = String(spec || "").trim();
+  if (!sp) throw new Error("spesifikasi fitur kosong");
+  const dir = targetDir || path.join(REPO_ROOT, "plugins", "custom");
+  fs.mkdirSync(dir, { recursive: true });
+  const filePath = path.join(dir, `${nm}.js`);
+  if (fs.existsSync(filePath)) throw new Error(`fitur .${nm} udah ada — hapus dulu atau pilih nama lain`);
+
+  let lastErr = "";
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    let body = "";
+    try {
+      const raw = await _aiChat(
+        SYS_CODEGEN.replace(/\{\{NAME\}\}/g, nm).replace(/\{\{SPEC\}\}/g, sp.slice(0, 1000)),
+        { systemPrompt: "Kamu code generator. Balas HANYA kode, tanpa penjelasan." },
+      );
+      body = String(raw || "")
+        .replace(/```[a-z]*|```/gi, "")
+        .replace(/^[\s\S]*?(?=\n|\S)/, (s) => s) // keep as-is
+        .trim();
+      // buang pembuka/penutup function kalau LLM tetap nulis
+      body = body
+        .replace(/^\s*(async\s+)?function\s+handler\s*\([^)]*\)\s*\{?/i, "")
+        .replace(/\}\s*$/, "")
+        .trim();
+    } catch (e) {
+      lastErr = `AI codegen gagal: ${e?.message || e}`;
+      continue;
+    }
+    // blocklist keamanan — fitur hasil codegen gak boleh sentuh sistem
+    if (CODE_BLOCKLIST.test(body)) {
+      lastErr = "kode ngandung operasi terlarang (fs/jaringan/child_process)";
+      continue;
+    }
+    const code = wrapPluginCode(nm, sp, body);
+    try {
+      // syntax check dulu SEBELUM nulis — file sementara di dir target
+      const tmp = path.join(dir, `._chk_${nm}_${Date.now()}.js`);
+      fs.writeFileSync(tmp, code);
+      try {
+        execFileSync("node", ["--check", tmp], { timeout: 15000 });
+      } finally {
+        try { fs.unlinkSync(tmp); } catch {}
+      }
+      fs.writeFileSync(filePath, code);
+      return { path: filePath, code, attempts: attempt };
+    } catch (e) {
+      lastErr = `syntax error: ${String(e?.stderr || e?.message || e).slice(0, 200)}`;
+    }
+  }
+  throw new Error(`gagal bikin fitur .${nm} — ${lastErr}`);
 }
 
 // digest lokal — dipakai kalau AI compose down: susun ringkasan bukti sendiri

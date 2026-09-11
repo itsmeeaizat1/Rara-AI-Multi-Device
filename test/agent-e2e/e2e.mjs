@@ -1,7 +1,7 @@
 // E2E AI AGENT (11 Sep 2026) — stub aiChat/search/preview via setAgentDeps.
 // Deterministik tanpa network. Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/agent-e2e && cd /tmp/agent-e2e && node <repo>/test/agent-e2e/e2e.mjs
-import { setAgentDeps, resetAgentDeps, runAgent } from "../../src/lib/nova-agent.js";
+import { setAgentDeps, resetAgentDeps, runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
 import { config as agConfig, handler as agHandler } from "../../plugins/ai/agent.js";
 
 let pass = 0, fail = 0;
@@ -167,6 +167,198 @@ w("\n— MODE ACT: tanpa executor act → fallback research —");
   mkDeps({ planReply: `{"mode":"act","actions":[{"action":"close"}]}` });
   const r = await runAgent("tutup grup", {});
   check("tanpa act → research", r.mode === "research" || !!r.error);
+}
+
+w("\n— MODE TOOLS: command + image (lib, execTools stub) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"command","cmd":"sticker","args":"kucing"},{"tool":"image","prompt":"kucing astronot"}]}` });
+  const calls = [];
+  const r = await runAgent("bikin sticker kucing terus gambar kucing astronot", {
+    execTools: {
+      command: async (tl) => { calls.push(tl); return { ok: true, msg: "Perintah .sticker kucing dijalankan" }; },
+      image: async (tl) => { calls.push(tl); return { ok: true, msg: "Gambar dikirim: kucing astronot" }; },
+    },
+    context: { isGroup: false },
+  });
+  check("mode tools", r.mode === "tools" && calls.length === 2);
+  check("urutan sesuai plan", calls[0].cmd === "sticker" && calls[0].args === "kucing" && calls[1].prompt === "kucing astronot");
+  check("laporan 2 tool", r.answer.includes("sticker") && r.answer.includes("Gambar dikirim"));
+  check("tanpa evidence → gak compose", !r.viaLocal);
+}
+
+w("\n— MODE TOOLS: vision evidence → compose —");
+{
+  resetAgentDeps();
+  const mkDeps = setAgentDeps; // shadow ok
+  let composePrompt = "";
+  const calls = [];
+  setAgentDeps({
+    aiChat: async (p, o) => {
+      const sys = o?.systemPrompt || "";
+      if (sys.includes("perencana")) return `{"mode":"tools","tools":[{"tool":"vision","question":"apa di gambar?"}],"voice":true}`;
+      if (sys.includes("analis")) { composePrompt = String(p); return "Di gambar itu ada kucing oranye tidur di sofa [S1]."; }
+      return "plan";
+    },
+    search: async () => ({ items: [] }),
+    preview: async () => ({ text: "" }),
+  });
+  const r = await runAgent("apa yang ada di foto ini", {
+    execTools: { vision: async (tl) => { calls.push(tl); return { ok: true, msg: "Gambar dianalisis", evidence: "Hasil scan: kucing oranye di sofa" }; } },
+  });
+  check("vision tool jalan", calls[0]?.tool === "vision" && calls[0].question === "apa di gambar?");
+  check("answer hasil compose", r.answer.includes("kucing oranye"));
+  check("evidence masuk prompt compose", composePrompt.includes("kucing oranye di sofa"));
+  check("voice flag passthrough", r.voice === true);
+  check("laporan tool nempel di jawaban", r.answer.includes("Gambar dianalisis"));
+}
+
+w("\n— MODE TOOLS: cap 4 + tool gak dikenal difilter —");
+{
+  resetAgentDeps();
+  mkDeps();
+  const calls = [];
+  const execAll = { command: async (tl) => { calls.push(tl); return { ok: true, msg: "ok" }; } };
+  const r = await runAgent("tes", {
+    execTools: execAll,
+  });
+  // plan dari mkDeps default = research; kirim plan tools 6x manual lewat planReply
+  check("fallback: plan research default (bukan tools)", r.mode === "research" || !!r.error);
+  resetAgentDeps();
+  setAgentDeps({
+    aiChat: async (p, o) => (o?.systemPrompt || "").includes("perencana")
+      ? `{"mode":"tools","tools":[${["a","b","c","d","e","f"].map(x => `{"tool":"command","cmd":"cmd${x}"}`).join(",")}]}`
+      : "ok",
+    search: async () => ({ items: [] }),
+    preview: async () => ({ text: "" }),
+  });
+  const calls2 = [];
+  const r2 = await runAgent("tes", { execTools: { command: async (tl) => { calls2.push(tl); return { ok: true, msg: "ok" }; } } });
+  check("cap 4 tools", calls2.length === 4, String(calls2.length));
+}
+
+w("\n— history inject: plan prompt ngandung riwayat —");
+{
+  resetAgentDeps();
+  const prompts = [];
+  setAgentDeps({
+    aiChat: async (p, o) => { prompts.push(String(p)); return `{"mode":"research","queries":["q"]}`; },
+    search: async () => ({ error: "skip" }),
+    preview: async () => ({ text: "" }),
+  });
+  await runAgent("lanjut tadi", { history: ["- [research] tugas: cari hp → hasil: POCO X7"], execTools: {} });
+  check("history masuk plan prompt", prompts[0].includes("POCO X7"));
+}
+
+w("\n— generatePlugin: codegen + syntax check —");
+{
+  resetAgentDeps();
+  let n = 0;
+  setAgentDeps({
+    aiChat: async () => {
+      n++;
+      return '  const x = (m.args || []).join(" ").trim();\n  if (!x) return m.reply("Ketik: .kalkulator 2 + 2");\n  return m.reply("Hasil: " + x);';
+    },
+    search: async () => ({ items: [] }),
+    preview: async () => ({ text: "" }),
+  });
+  const dir = "/tmp/agent-e2e-plugins-" + Date.now();
+  const g = await generatePlugin({ name: "kalkulator", spec: "kalkulator tambah kali", targetDir: dir });
+  check("file kebuat", g.path.endsWith("kalkulator.js"));
+  check("attempt 1 sukses", g.attempts === 1);
+  const code = g.code;
+  check("template config benar", code.includes('name: "kalkulator"') && code.includes("category: \"custom\"") && code.includes("export { pluginConfig as config, handler }"));
+  check("tanpa direktori terlarang", !/child_process|require\(/.test(code));
+}
+
+w("\n— generatePlugin: blocklist → retry → sukses —");
+{
+  resetAgentDeps();
+  let n = 0;
+  setAgentDeps({
+    aiChat: async () => { n++; return n === 1 ? "  const fs = require(\"fs\"); return m.reply(fs);\";" : "  return m.reply(\"aman\");"; },
+    search: async () => ({ items: [] }),
+    preview: async () => ({ text: "" }),
+  });
+  const dir = "/tmp/agent-e2e-plugins2-" + Date.now();
+  const g = await generatePlugin({ name: "amanfitur", spec: "tes", targetDir: dir });
+  check("retry attempt 2 sukses", g.attempts === 2);
+}
+
+w("\n— generatePlugin: nama invalid → throw —");
+{
+  resetAgentDeps();
+  mkDeps();
+  let threw = false;
+  try { await generatePlugin({ name: "ab", spec: "tes", targetDir: "/tmp/x" }); } catch { threw = true; }
+  check("nama pendek ditolak", threw);
+}
+
+w("\n— plugin TOOLS end-to-end: command dispatch + memory store —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"command","cmd":"sticker","args":"kucing"}]}` });
+  const sent = [];
+  const dispatched = [];
+  const memStore = {};
+  const dbFake = { setting: (k, v) => { if (v !== undefined) memStore[k] = v; return memStore[k]; } };
+  const m = {
+    text: ".agent jalanin sticker kucing", args: ["jalanin", "sticker", "kucing"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    isGroup: true,
+    react: async () => true,
+    reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = {
+    sendMessage: async () => ({ key: { id: "k1" } }),
+  };
+  const deps = {
+    command: async (tl) => { dispatched.push(tl); return { ok: true, msg: "Perintah .sticker kucing dijalankan" }; },
+  };
+  await agHandler(m, { sock, db: dbFake, deps });
+  const finalMsg = sent.filter(s => !s.includes("ʟᴀɴɢᴋᴀʜ")).pop() || "";
+  check("command tool jalan via deps", dispatched[0]?.cmd === "sticker");
+  check("laporan ke user", finalMsg.includes("sticker"));
+  check("memory tersimpan", Array.isArray(memStore.agentMemory?.["x@g.us"]) && memStore.agentMemory["x@g.us"].length === 1);
+  check("memory isi mode+task", memStore.agentMemory["x@g.us"][0].mode === "tools");
+}
+
+w("\n— plugin TOOLS: create non-owner ditolak —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"create","name":"fiturku","spec":"tes fitur"}]}` });
+  const sent = [];
+  const m = {
+    text: ".agent buat fitur fiturku", args: ["buat", "fitur", "fiturku"], chat: "x@g.us", sender: "s@w",
+    pushName: "SiTes", command: "agent", prefix: ".", isOwner: false,
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  await agHandler(m, { sock: { sendMessage: async () => ({ key: { id: "k1" } }) }, db: { setting: () => ({}) }, deps: { create: async (tl) => ({ ok: false, msg: "Buat/pasang fitur cuma bisa owner bot" }) } });
+  const finalMsg = sent.filter(s => !s.includes("ʟᴀɴɢᴋᴀʜ")).pop() || "";
+  check("create non-owner ❌", finalMsg.includes("❌") && finalMsg.includes("owner"));
+}
+
+w("\n— plugin TOOLS: voice reply (vn) —");
+{
+  resetAgentDeps();
+  mkDeps({ planReply: `{"mode":"tools","tools":[{"tool":"image","prompt":"kucing"}],"voice":true}` });
+  const sent = [];
+  const vn = [];
+  const m = {
+    text: ".agent bikin gambar kucing jawab pakai vn", args: ["bikin", "gambar", "kucing", "jawab", "pakai", "vn"],
+    chat: "x@g.us", sender: "s@w", pushName: "SiTes", command: "agent", prefix: ".",
+    react: async () => true, reply: async (t) => { sent.push(String(t)); },
+  };
+  const sock = {
+    sendMessage: async (chat, c) => { if (c?.audio) vn.push(c); return { key: { id: "k1" } }; },
+  };
+  const deps = {
+    image: async () => ({ ok: true, msg: "Gambar dikirim: kucing" }),
+    voiceReply: async (mm, ss, text) => { sent.push(String(text)); vn.push({ audio: "stub", ptt: true }); return true; },
+  };
+  await agHandler(m, { sock, db: { setting: () => ({}) }, deps });
+  check("VN dikirim (ptt)", vn.length > 0 && vn[vn.length - 1].ptt === true);
+  check("teks jawaban tetap ada", sent.some(s => s.includes("Gambar dikirim")));
 }
 
 w("\n— plugin .agent: progress + jawaban —");
