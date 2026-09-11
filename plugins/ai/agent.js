@@ -27,12 +27,12 @@ const SYS_CODER = `Kamu programmer ELITE serba bisa. User minta kode program —
 JANGAN pernah memotong kode / placeholder TODO / kode segitiga-python. Kode HARUS beneran jalan.`;
 
 const pluginConfig = {
-  name: "agent",
-  alias: ["agent", "aiagent", "agensi", "agentai", "agenta"],
+  name: "aisuperagent",
+  alias: ["aisuperagent", "agent", "aiagent", "agensi", "agentai", "agenta"],
   category: "ai",
   description: "AI Agent serba bisa — browsing web, otomasi grup, scan/generate gambar, jalanin fitur, buat fitur baru, bikin kode, unduh file, persona (jadi siapa pun), inget percakapan, ngobrol pakai vn",
-  usage: ".agent <tugas>",
-  example: ".agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi",
+  usage: ".aisuperagent <tugas>",
+  example: ".aisuperagent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 20, energi: 3, isEnabled: true,
 };
@@ -446,13 +446,13 @@ async function handler(m, { sock, db, deps } = {}) {
   // 🛠️ tools, ⚡ aksi. Tanpa bar/langkah/daftar sumber — sumber cuma di 📎 footer.
   // PLUS reaksi di pesan user: 🧠/🔍/🛠️/⚡ sesuai fase (dedupe berurutan).
   const PHASE_LABEL = {
-    plan: "🧠 " + smallcapsText("agent merencanakan..."),
-    search: "🔍 " + smallcapsText("agent mencari informasi..."),
-    pick: "🎯 " + smallcapsText("agent memilih sumber terbaik..."),
-    read: "📖 " + smallcapsText("agent membaca halaman..."),
-    compose: "✍️ " + smallcapsText("agent menyusun jawaban..."),
-    act: "⚡ " + smallcapsText("agent mengeksekusi aksi..."),
-    tool: "🛠️ " + smallcapsText("agent pakai tools..."),
+    plan: "🧠 " + smallcapsText("superagent merencanakan..."),
+    search: "🔍 " + smallcapsText("superagent mencari informasi..."),
+    pick: "🎯 " + smallcapsText("superagent memilih sumber terbaik..."),
+    read: "📖 " + smallcapsText("superagent membaca halaman..."),
+    compose: "✍️ " + smallcapsText("superagent menyusun jawaban..."),
+    act: "⚡ " + smallcapsText("superagent mengeksekusi aksi..."),
+    tool: "🛠️ " + smallcapsText("superagent pakai tools..."),
   };
   const PHASE_REACT = { plan: "🧠", search: "🔍", pick: "🔍", read: "🔍", compose: "🧠", tool: "🛠️", act: "⚡" };
   let lastReact = "";
@@ -504,7 +504,7 @@ async function handler(m, { sock, db, deps } = {}) {
         let label = PHASE_LABEL[phase] || PHASE_LABEL.plan;
         // fase tools/act kasih detail singkat (lagi ngejalanin apa)
         if ((phase === "tool" || phase === "act") && info) {
-          label = (phase === "tool" ? "🛠️ " : "⚡ ") + smallcapsText("agent menjalankan: " + info.slice(0, 60));
+          label = (phase === "tool" ? "🛠️ " : "⚡ ") + smallcapsText("superagent menjalankan: " + info.slice(0, 60));
         }
         setStatus(label);
       },
@@ -512,7 +512,7 @@ async function handler(m, { sock, db, deps } = {}) {
 
     if (res?.error) {
       await m.react("❌");
-      const errMsg = claraWrap("agent", res.error, "error");
+      const errMsg = claraWrap("superagent", res.error, "error");
       if (statusKey) { try { await sock.sendMessage(m.chat, { text: errMsg, edit: statusKey }); return; } catch {} }
       return m.reply(errMsg);
     }
@@ -556,7 +556,7 @@ async function handler(m, { sock, db, deps } = {}) {
   } catch (e) {
     console.error("agent error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("agent", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(claraWrap("superagent", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

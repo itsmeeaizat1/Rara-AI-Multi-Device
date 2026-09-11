@@ -104,7 +104,7 @@ async function handler(m, {}) {
     const serverDown = /server salaam bermasalah|balasan kosong|start_session/i.test(err?.message || "");
     return m.reply(claraWrap("salaamai", serverDown
       ? `😔 Server Salaam World lagi bermasalah (backend AI-nya down, bukan di sisi kita).\n\n` +
-        `Coba lagi nanti ya — atau pake AI biasa: ${prefix}ai / ${prefix}novaai buat pertanyaan agama.`
+        `Coba lagi nanti ya — atau pake AI biasa: ${prefix}ai / ${prefix}novaagent buat pertanyaan agama.`
       : te(prefix, m.command, m.pushName), "error"));
   }
 }

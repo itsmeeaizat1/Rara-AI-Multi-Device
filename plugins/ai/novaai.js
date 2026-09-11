@@ -174,12 +174,12 @@ async function executeCommand(action, m, sock, botConfig) {
 }
 
 const pluginConfig = {
-  name: "novaai",
-  alias: ["novaai", "tanyaai", "nova-ai", "nova", "tanya"],
+  name: "novaagent",
+  alias: ["novaagent", "novaai", "tanyaai", "nova-ai", "nova", "tanya"],
   category: "ai",
-  description: "AI Agent — ngatur grup, ngobrol multi-turn nyambung, scan gambar, & jalanin command bot via bahasa natural",
-  usage: ".novaai <perintah/pertanyaan>\n.novaai (reply/kirim gambar) — scan gambar: selesaikan tugas, baca foto, dll\n.novaai reset — hapus sesi chat",
-  example: ".novaai tutup grup\n.novaai apa itu nodejs\n.novaai carikan musik faded\n.novaai kick @user\n.novaai (reply foto soal) selesaikan soal ini",
+  description: "Nova Agent — ngatur grup, ngobrol multi-turn nyambung, scan gambar, & jalanin command bot via bahasa natural",
+  usage: ".novaagent <perintah/pertanyaan>\n.novaagent (reply/kirim gambar) — scan gambar: selesaikan tugas, baca foto, dll\n.novaagent reset — hapus sesi chat",
+  example: ".novaagent tutup grup\n.novaagent apa itu nodejs\n.novaagent carikan musik faded\n.novaagent kick @user\n.novaagent (reply foto soal) selesaikan soal ini",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -192,7 +192,7 @@ const pluginConfig = {
 // 🔹 HANDLER UTAMA
 async function handler(m, { sock, conn, config, db }) {
   const text = m.args.join(" ").trim() ||
-    m.text?.replace(/^\.novaai\s+/i, "").replace(/^\.tanyaai\s+/i, "").replace(/^\.nova-ai\s+/i, "").trim();
+    m.text?.replace(/^\.novaagent\s+/i, "").replace(/^\.novaai\s+/i, "").replace(/^\.tanyaai\s+/i, "").replace(/^\.nova-ai\s+/i, "").trim();
 
   // ada gambar (langsung/reply) → teks boleh kosong, langsung scan (jangan print help)
   const hasImageForVision = m.isImage || m.quoted?.isImage;
@@ -208,19 +208,19 @@ async function handler(m, { sock, conn, config, db }) {
       'Lainnya': ['poll', 'delmsg', 'leavegc']
     };
     const examples = {
-      closegc: '.novaai tutup grup', opengc: '.novaai buka grup',
-      lockedit: '.novaai kunci edit info grup', unlockedit: '.novaai buka edit info grup',
-      setname: '.novaai ganti nama jadi [nama]', setdesc: '.novaai ganti deskripsi jadi [desc]',
-      setpp: '.novaai ganti foto profil grup (reply gambar)', groupinfo: '.novaai info grup',
-      kick: '.novaai kick @user', add: '.novaai tambah @user ke grup',
-      promote: '.novaai jadikan @user admin', demote: '.novaai turunkan @user jadi member',
-      block: '.novaai blokir @user', unblock: '.novaai unblokir @user',
-      getlink: '.novaai link grup', revokelink: '.novaai reset link grup',
-      approvalon: '.novaai aktifkan approval', approvaloff: '.novaai matikan approval',
-      hidetag: '.novaai tag semua [pesan]', tagadmin: '.novaai tag admin [pesan]',
-      poll: '.novaai poll [pertanyaan | opsi1, opsi2]', delmsg: '.novaai hapus pesan (reply)',
-      leavegc: '.novaai keluar grup (owner only)',
-      genimage: '.novaai buatkan gambar kucing astronot'
+      closegc: '.novaagent tutup grup', opengc: '.novaagent buka grup',
+      lockedit: '.novaagent kunci edit info grup', unlockedit: '.novaagent buka edit info grup',
+      setname: '.novaagent ganti nama jadi [nama]', setdesc: '.novaagent ganti deskripsi jadi [desc]',
+      setpp: '.novaagent ganti foto profil grup (reply gambar)', groupinfo: '.novaagent info grup',
+      kick: '.novaagent kick @user', add: '.novaagent tambah @user ke grup',
+      promote: '.novaagent jadikan @user admin', demote: '.novaagent turunkan @user jadi member',
+      block: '.novaagent blokir @user', unblock: '.novaagent unblokir @user',
+      getlink: '.novaagent link grup', revokelink: '.novaagent reset link grup',
+      approvalon: '.novaagent aktifkan approval', approvaloff: '.novaagent matikan approval',
+      hidetag: '.novaagent tag semua [pesan]', tagadmin: '.novaagent tag admin [pesan]',
+      poll: '.novaagent poll [pertanyaan | opsi1, opsi2]', delmsg: '.novaagent hapus pesan (reply)',
+      leavegc: '.novaagent keluar grup (owner only)',
+      genimage: '.novaagent buatkan gambar kucing astronot'
     };
     const lines = [];
     lines.push(`🧠 AI Agent — ${Object.keys(TOOLS).length} perintah grup`);
@@ -233,19 +233,19 @@ async function handler(m, { sock, conn, config, db }) {
       }
     }
     lines.push("");
-    lines.push(`📸 Scan gambar: kirim foto + caption .novaai <tanya>`);
-    lines.push(`💡 Reset sesi chat: .novaai reset`);
+    lines.push(`📸 Scan gambar: kirim foto + caption .novaagent <tanya>`);
+    lines.push(`💡 Reset sesi chat: .novaagent reset`);
     lines.push(`💡 Tanya apa saja, atau suruh aku ngapa`);
-    return m.reply(claraWrap("novaai", lines));
+    return m.reply(claraWrap("novaagent", lines));
   }
 
   // 🔹 CHAT: reset sesi
   if (text.toLowerCase() === "reset") {
     const key = sessionKey(m);
     if (clearSession(key)) {
-      return m.reply(bracketBox("i", "Nova AI", ["Sesi percakapan direset", "Kirim pertanyaan baru untuk mulai"]));
+      return m.reply(bracketBox("i", "Nova Agent", ["Sesi percakapan direset", "Kirim pertanyaan baru untuk mulai"]));
     }
-    return m.reply(bracketBox("i", "Nova AI", ["Tidak ada sesi aktif"]));
+    return m.reply(bracketBox("i", "Nova Agent", ["Tidak ada sesi aktif"]));
   }
 
   // React 🧠
@@ -263,7 +263,7 @@ async function handler(m, { sock, conn, config, db }) {
     const question = text || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
     try {
     await m.react("🕒");
-      await setStatus("👀 " + smallcapsText("novaai membaca gambar..."));
+      await setStatus("👀 " + smallcapsText("novaagent membaca gambar..."));
       appendSession(key, "user", `(mengirim gambar) ${question}`);
       const buffer = await (directImage ? m.download() : m.quoted.download());
       const answer = await callGeminiVision(question, buffer, {
@@ -273,7 +273,7 @@ async function handler(m, { sock, conn, config, db }) {
       appendSession(key, "assistant", answer);
       const { text: visibleText, action } = parseAIResponse(answer);
       if (action) {
-        await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + action.command));
+        await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + action.command));
         if (db) config.__db = db;
         const result = await executeCommand(action, m, sock, config);
         if (!result.success && result.message) {
@@ -286,7 +286,7 @@ async function handler(m, { sock, conn, config, db }) {
     } catch (e) {
       console.error("[novaai] vision gagal:", e.message);
       await m.react("❌");
-      return editFinal(claraWrap("novaai", `Gagal menganalisis gambar: ${e.message}`, "error"));
+      return editFinal(claraWrap("novaagent", `Gagal menganalisis gambar: ${e.message}`, "error"));
     }
   }
 
@@ -329,7 +329,7 @@ async function handler(m, { sock, conn, config, db }) {
   // TAHAP 2: think() — kalimat rumit → AI provider (dengan histori sesi)
   if (!decision) {
     // react 🧠 global udah ada di atas (line react 🧠) — cukup status text
-    await setStatus("🧠 " + smallcapsText("novaai sedang berpikir..."));
+    await setStatus("🧠 " + smallcapsText("novaagent sedang berpikir..."));
     try {
       const prefixForThink = config?.command?.prefix || ".";
       decision = await think(textForAi, {
@@ -366,7 +366,7 @@ async function handler(m, { sock, conn, config, db }) {
         appendSession(key, "assistant", reply);
         const { text: visibleText, action } = parseAIResponse(reply);
         if (action) {
-          await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + action.command));
+          await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + action.command));
           if (db) config.__db = db;
           const result = await executeCommand(action, m, sock, config);
           if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
@@ -376,7 +376,7 @@ async function handler(m, { sock, conn, config, db }) {
         return;
       } catch (e2) {
         await m.react("❌");
-        return editFinal(claraWrap("novaai", `Gagal ke otak AI: ${e2.message}`, "error"));
+        return editFinal(claraWrap("novaagent", `Gagal ke otak AI: ${e2.message}`, "error"));
       }
     }
   }
@@ -392,7 +392,7 @@ async function handler(m, { sock, conn, config, db }) {
       const finalAction = execFromJson || action;
       if (finalAction) {
         await m.react("⚡");
-        await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + finalAction.command));
+        await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + finalAction.command));
         if (db) config.__db = db;
         const result = await executeCommand(finalAction, m, sock, config);
         if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
@@ -402,19 +402,19 @@ async function handler(m, { sock, conn, config, db }) {
       return;
     }
     await m.react("❌");
-    return editFinal(claraWrap("novaai", "Tidak ada respons yang cocok", "error"));
+    return editFinal(claraWrap("novaagent", "Tidak ada respons yang cocok", "error"));
   }
 
   const tool = TOOLS[decision.tool];
 
   // GERBANG IZIN — dicek di level KODE
   if (tool.perm === "admin") {
-    if (!m.isGroup) return m.reply(claraWrap("novaai", "Perintah ini hanya bisa di dalam grup", "error"));
-    if (!m.isAdmin) return m.reply(claraWrap("novaai", "Kamu bukan admin, tidak bisa menjalankan ini", "error"));
-    if (!m.isBotAdmin) return m.reply(claraWrap("novaai", "Jadikan aku admin dulu supaya bisa menjalankan ini", "error"));
+    if (!m.isGroup) return m.reply(claraWrap("novaagent", "Perintah ini hanya bisa di dalam grup", "error"));
+    if (!m.isAdmin) return m.reply(claraWrap("novaagent", "Kamu bukan admin, tidak bisa menjalankan ini", "error"));
+    if (!m.isBotAdmin) return m.reply(claraWrap("novaagent", "Jadikan aku admin dulu supaya bisa menjalankan ini", "error"));
   }
   if (tool.perm === "owner") {
-    if (!m.isOwner) return m.reply(claraWrap("novaai", "Perintah ini khusus owner bot", "error"));
+    if (!m.isOwner) return m.reply(claraWrap("novaagent", "Perintah ini khusus owner bot", "error"));
   }
 
   // normalisasi user (dari @mention / reply / NAMA member / nomor)
@@ -431,16 +431,16 @@ async function handler(m, { sock, conn, config, db }) {
         const resolved = await resolveUserByName(sock, m, user);
         if (resolved && resolved.multiple) {
           const list = resolved.multiple.map(c => `• ${c.name} (${c.jid.split("@")[0]})`).join("\n");
-          return m.reply(claraWrap("novaai", `Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`, "error"));
+          return m.reply(claraWrap("novaagent", `Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`, "error"));
         }
         if (!resolved) {
-          return m.reply(claraWrap("novaai", `Nama "${user}" tidak ditemukan di grup ini.\nCoba @mention langsung, reply pesannya, atau tulis nomornya (62xxx).`, "error"));
+          return m.reply(claraWrap("novaagent", `Nama "${user}" tidak ditemukan di grup ini.\nCoba @mention langsung, reply pesannya, atau tulis nomornya (62xxx).`, "error"));
         }
         user = resolved;
       }
     }
     user = String(user || "").replace(/[^0-9]/g, "");
-    if (!user) return m.reply(claraWrap("novaai", `Usernya siapa? Reply pesannya, @mention, atau sebutkan nama membernya.\n\n💡 Contoh: ${m.prefix}${m.command} kick @user`, "error"));
+    if (!user) return m.reply(claraWrap("novaagent", `Usernya siapa? Reply pesannya, @mention, atau sebutkan nama membernya.\n\n💡 Contoh: ${m.prefix}${m.command} kick @user`, "error"));
     finalArgs.user = user + "@s.whatsapp.net";
   }
 
@@ -460,13 +460,13 @@ async function handler(m, { sock, conn, config, db }) {
   // EKSEKUSI — status "lagi melakukan sesuatu" ala agent, final di-edit ke pesan itu
   try {
     await m.react("⚡");
-    await setStatus("⚡ " + smallcapsText("novaai menjalankan: " + decision.tool + "..."));
+    await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + decision.tool + "..."));
     await tool.run(sock, m, finalArgs);
     await editFinal(decision.reply || tool.done);
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-    await editFinal(claraWrap("novaai", `Gagal eksekusi: ${e.message}`, "error"));
+    await editFinal(claraWrap("novaagent", `Gagal eksekusi: ${e.message}`, "error"));
   }
 }
 
@@ -479,8 +479,8 @@ export function novaaiConfirmHandler(m, sock) {
   if (Date.now() - p.time > 60000) return false;
   if (/^(ya|y|yes|lanjut|gas)\b/i.test(m.text.trim())) {
     try { TOOLS[p.tool].run(sock, m, p.args); m.reply(TOOLS[p.tool].done); }
-    catch (e) { m.reply(claraWrap("novaai", `Gagal: ${e.message}`, "error")); }
-  } else { m.reply(claraWrap("novaai", "Dibatalkan")); }
+    catch (e) { m.reply(claraWrap("novaagent", `Gagal: ${e.message}`, "error")); }
+  } else { m.reply(claraWrap("novaagent", "Dibatalkan")); }
   return true;
 }
 
