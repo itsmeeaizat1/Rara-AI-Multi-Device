@@ -31,13 +31,15 @@ import { smallcapsText } from "./styler.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
 
-let _thumbnailBuffer = null;
+const _thumbnailCache = new Map();
 
 /**
  * Baca thumbnail dari file, cache buffer-nya (raw, belum di-resize).
  */
 function getThumbnailBuffer(imagePath) {
-  if (_thumbnailBuffer) return _thumbnailBuffer;
+  // cache PER-PATH (request owner 11 Sep "versi video" — jpg & mp4 beda buffer,
+  // cache global lama bikin menu lain kebagian buffer file pertama)
+  if (_thumbnailCache.has(imagePath)) return _thumbnailCache.get(imagePath);
 
   if (!fs.existsSync(imagePath)) {
     console.error("[nova-menu-card] Thumbnail tidak ditemukan:", imagePath);
@@ -45,12 +47,38 @@ function getThumbnailBuffer(imagePath) {
   }
 
   try {
-    _thumbnailBuffer = fs.readFileSync(imagePath);
-    return _thumbnailBuffer;
+    const buf = fs.readFileSync(imagePath);
+    _thumbnailCache.set(imagePath, buf);
+    return buf;
   } catch (e) {
     console.error("[nova-menu-card] Gagal baca thumbnail:", e.message);
     return null;
   }
+}
+
+// ── THUMBNAIL MENU VERSI VIDEO (request owner 11 Sep 2026: "kyk gaya
+// thumbnail gambar saat ini cn versi video kyk sc elaina" + script Elaina V3
+// _mIsGif/menuGif): kalau ada file .mp4 saudara dari thumbnail jpg yang
+// diminta (atau menuthumbnail.mp4 kanonik), header card jadi VIDEO
+// (video+gifPlayback, upload prepareWAMessageMedia — persis menu Elaina),
+// bukan gambar statis. Gagal upload → fallback gambar → fallback link-preview.
+const VIDEO_EXT_RE = /\.(mp4|gif|webm)$/i;
+function resolveMenuThumbnail(thumbPath) {
+  // .gif/.mp4 eksplisit dipakai langsung (jalur lama tetap jalan)
+  if (VIDEO_EXT_RE.test(thumbPath || "") && fs.existsSync(thumbPath)) {
+    return { path: thumbPath, isVideo: true };
+  }
+  // jpg/png/webp → cari .mp4 saudara, lalu menuthumbnail.mp4 kanonik
+  if (/\.(jpe?g|png|webp)$/i.test(thumbPath || "")) {
+    const sibling = thumbPath.replace(/\.(jpe?g|png|webp)$/i, ".mp4");
+    if (fs.existsSync(sibling)) return { path: sibling, isVideo: true };
+    // kandidat canonical: se-folder dengan jpg, lalu folder menu asli bot
+    for (const dir of [path.dirname(thumbPath), path.join(process.cwd(), "assets", "image", "menu")]) {
+      const canonical = path.join(dir, "menuthumbnail.mp4");
+      if (fs.existsSync(canonical)) return { path: canonical, isVideo: true };
+    }
+  }
+  return { path: thumbPath, isVideo: false };
 }
 
 /**
@@ -287,19 +315,32 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // Fallback: kirim thumbnail sebagai image+caption biasa, tanpa tombol.
     if (m.chat && m.chat.endsWith("@newsletter")) {
       const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
-      const rawBuffer = getThumbnailBuffer(thumbPath);
+      const _nlThumb = resolveMenuThumbnail(thumbPath);
+      const rawBuffer = getThumbnailBuffer(_nlThumb.path);
       // guard smallcaps juga di jalur newsletter (bypass m.reply)
       const _nlText = typeof text === "string" && text ? smallcapsText(text) : text;
       if (rawBuffer) {
-        await sock.sendMessage(m.chat, { image: rawBuffer, caption: _nlText });
+        // video → kirim sebagai video (gifPlayback) — newsletter gak support
+        // interactiveMessage, tapi video biasa aman
+        await sock.sendMessage(m.chat, _nlThumb.isVideo
+          ? { video: rawBuffer, gifPlayback: true, caption: _nlText }
+          : { image: rawBuffer, caption: _nlText });
       } else {
         await sock.sendMessage(m.chat, { text: _nlText });
       }
       return true;
     }
 
-    const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
+    const _mReqPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
+    const _mThumb = resolveMenuThumbnail(_mReqPath);
+    const thumbPath = _mThumb.path;
+    const _mIsVideo = _mThumb.isVideo;
     const rawBuffer = getThumbnailBuffer(thumbPath);
+    // buffer GAMBAR untuk externalAdReply fallback (kalau mode video,
+    // banner link-preview gak boleh dikasih bytes video — WA rendernya hangus)
+    const _mImageBuf = _mIsVideo
+      ? (getThumbnailBuffer(_mReqPath) || null)
+      : rawBuffer;
 
     const nativeButtons = buildNativeButtons(buttons);
 
@@ -325,7 +366,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       mediaType: 1,
       showAdAttribution: false,
       renderLargerThumbnail: true,
-      ...(rawBuffer ? { thumbnail: rawBuffer } : {}),
+      ...(_mImageBuf ? { thumbnail: _mImageBuf } : {}),
       sourceUrl,
     };
 
@@ -364,15 +405,14 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // WA via prepareWAMessageMedia — image, atau GIF via video+gifPlayback),
     // externalAdReply CUMA jadi fallback kalau upload header gagal. ContextInfo
     // proto: pill newsletter saja — TANPA forwarding (owner larang). ──
-    const _mIsGif = /\.gif$/i.test(thumbPath || "");
     let _mHeader = { title: "", hasMediaAttachment: false };
     if (rawBuffer) {
       try {
         const _mMediaPrep = await prepareWAMessageMedia(
-          _mIsGif ? { video: rawBuffer, gifPlayback: true } : { image: rawBuffer },
+          _mIsVideo ? { video: rawBuffer, gifPlayback: true } : { image: rawBuffer },
           { upload: sock.waUploadToServer }
         );
-        if (_mIsGif && _mMediaPrep?.videoMessage) {
+        if (_mIsVideo && _mMediaPrep?.videoMessage) {
           _mHeader = { hasMediaAttachment: true, videoMessage: _mMediaPrep.videoMessage };
         } else if (_mMediaPrep?.imageMessage) {
           _mHeader = { hasMediaAttachment: true, imageMessage: _mMediaPrep.imageMessage };
@@ -422,7 +462,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
         serverMessageId: 127,
       },
       // banner fallback HANYA kalau media header gagal di-upload
-      ...(!_mHeader.hasMediaAttachment && rawBuffer ? { externalAdReply } : {}),
+      ...(!_mHeader.hasMediaAttachment && _mImageBuf ? { externalAdReply } : {}),
     };
 
     // GUARD SMALLCAPS BODY + FOOTER (owner 2026-09-07: "seluruh semua
