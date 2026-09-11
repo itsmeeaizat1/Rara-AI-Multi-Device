@@ -119,6 +119,18 @@ async function execAction(a, ctx, m, sock) {
     }
   }
 
+  // ubah nama/deskripsi grup — Baileys versi bot ini methodnya
+  // groupMetadataUpdate(jid, {subject/description}) (pola setgroupdesc/setgroupname);
+  // FIX BUG owner 11 Sep: "ganti deskripsi grup malah eror katanya no function"
+  // — executor lama manggil sock.groupUpdateDesc yang GAK ADA di Baileys ini.
+  // Fallback legacy groupUpdateSubject/groupUpdateDesc buat versi Baileys lain.
+  const setGroupMeta = async (fields) => {
+    if (typeof sock.groupMetadataUpdate === "function") return sock.groupMetadataUpdate(m.chat, fields);
+    if (fields.subject != null && typeof sock.groupUpdateSubject === "function") return sock.groupUpdateSubject(m.chat, fields.subject);
+    if (fields.description != null && typeof sock.groupUpdateDesc === "function") return sock.groupUpdateDesc(m.chat, fields.description);
+    throw new Error("bot gak punya akses ubah info grup");
+  };
+
   switch (a.action) {
     case "open": {
       const g = gate(); if (g) return { ok: false, msg: g };
@@ -143,14 +155,14 @@ async function execAction(a, ctx, m, sock) {
     case "rename": {
       const g = gate(); if (g) return { ok: false, msg: g };
       if (!a.value) return { ok: false, msg: "Sebutin nama grup barunya (contoh: ubah nama grup jadi Nova Squad)" };
-      await sock.groupUpdateSubject(m.chat, a.value.slice(0, 100));
+      await setGroupMeta({ subject: a.value.slice(0, 100) });
       return { ok: true, msg: `Nama grup diubah jadi: ${a.value.slice(0, 100)}` };
     }
     case "desc": {
       const g = gate(); if (g) return { ok: false, msg: g };
-      if (!a.value) return { ok: false, msg: "Sebutin deskripsi grup barunya" };
-      await sock.groupUpdateDesc(m.chat, a.value.slice(0, 500));
-      return { ok: true, msg: "Deskripsi grup diperbarui" };
+      if (!a.value) return { ok: false, msg: "Sebutin deskripsi grup barunya (contoh: ganti deskripsi grup jadi grup resmi Nova Squad)" };
+      await setGroupMeta({ description: a.value.slice(0, 500) });
+      return { ok: true, msg: "Deskripsi grup diperbarui: " + a.value.slice(0, 80) };
     }
     case "tagall": {
       const g = gate(false); if (g) return { ok: false, msg: g };
