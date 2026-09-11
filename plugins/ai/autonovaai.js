@@ -203,9 +203,9 @@ const pluginConfig = {
   name: "anovaagent",
   alias: ["anovaagent"], // request owner: rename .autonovaai → .anovaagent, cmd utama doang
   category: "ai",
-  description: "Bikin rule automation pakai bahasa manusia — AI terjemahin jadi aturan",
-  usage: ".anovaagent <kalimat bebas>",
-  example: ".anovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam\n.anovaagent setiap jam 05:00 ingatin sholat subuh\n.anovaagent kalau ada yang kirim sticker, react 🔥\n.anovaagent list / del AF-1 / on AF-1 / off AF-1 / reset [AF-1]",
+  description: "Kelola rule automation — list / del / on / off / reset (bikin rule: .setanovaagent)",
+  usage: ".anovaagent list / del AF-1 / on AF-1 / off AF-1 / reset [AF-1]\nBikin rule baru: .setanovaagent <kalimat bebas>",
+  example: ".anovaagent list\n.anovaagent del AF-1\n.anovaagent on AF-1",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -230,7 +230,7 @@ async function handler(m, { sock, conn }) {
     if (sub === "list") {
       const rules = load();
       if (!rules.length) {
-        return m.reply(claraWrap("anovaagent", "Belum ada rule.\n\n💡 Bikin: .anovaagent <kalimat bebas>"));
+        return m.reply(claraWrap("anovaagent", "Belum ada rule.\n\n💡 Bikin: .setanovaagent <kalimat bebas>"));
       }
       const text = rules
         .map((r) => `${r.enabled ? "🟢" : "🔴"} ${r.id} [${r.hits || 0}x]\n${describe(r)}`)
@@ -275,115 +275,24 @@ async function handler(m, { sock, conn }) {
       );
     }
 
-    // ---- default: bikin rule dari kalimat bebas ----
+    // ---- default: .anovaagent = kelola rule. SET rule lewat .setanovaagent ----
     if (!body) {
       return m.reply(
         claraWrap("anovaagent", [
-          "💡 Contoh:",
-          ".anovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
-          ".anovaagent setiap jam 05:00 ingatin sholat subuh",
-          ".anovaagent kalau ada yang kirim sticker, react 🔥",
-          ".anovaagent kalau ada yang masuk grup, kasih sambutan hangat",
+          "💡 Buat/set rule: .setanovaagent <kalimat bebas>",
           "",
-          ".anovaagent list / del AF-1 / on AF-1 / off AF-1",
+          ".setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
+          ".setanovaagent setiap jam 05:00 ingatin sholat subuh",
+          ".setanovaagent kalau ada yang kirim sticker, react 🔥",
+          "",
+          ".anovaagent list / del AF-1 / on AF-1 / off AF-1 / reset [AF-1]",
         ]),
       );
     }
-
-    // LOADING ALA AGENT (lanjutan request owner 11 Sep: 1 PESAN STATUS
-    // EDIT-IN-PLACE — user keliatan AI-nya lagi ngapain, final di-edit ke pesan itu)
-    let novaStatusKey = null;
-    const setStatus = async (text) => {
-      try {
-        if (!novaStatusKey) {
-          const sent = await sockRef.sendMessage(m.chat, { text });
-          novaStatusKey = sent?.key || null;
-          return;
-        }
-        await sockRef.sendMessage(m.chat, { text, edit: novaStatusKey });
-      } catch {}
-    };
-    const editFinal = async (text) => {
-      if (typeof text !== "string" || !text.trim()) return;
-      const clipped = text.length > 4096 ? text.slice(0, 4096) + "..." : text;
-      let ok = false;
-      if (novaStatusKey) { try { await sockRef.sendMessage(m.chat, { text: clipped, edit: novaStatusKey }); ok = true; } catch {} }
-      if (!ok) await m.reply(clipped);
-    };
-    try { await m.react("🧠"); } catch {}
-    await setStatus("🧠 " + smallcapsText("anovaagent menerjemahkan kalimatmu jadi rule..."));
-
-    // 1) minta AI nerjemahin — 4 LAPIS (request owner: AI REST API manapun
-    //    yang aktif — punya key apa pun — harus tetep bisa ngerjain ini):
-    //    a. rantai novaai askAI (deepseek/groq/gemini/dll sesuai apikeys.json)
-    //    b. balasan gak ada JSON-nya → RETRY sekali perintah jauh lebih tegas
-    //    c. masih gak ada → RANTAI AI SATUAN aiFallbackChat (haidar per-brand
-    //       → haidar gemini → ikyy → xemoz — semua free, gak butuh key)
-    //    d. masih gagal → parser LOKAL tanpa AI (pola kalimat umum)
-    const SYS_STRICT = SYS + "\n\nSANGAT PENTING: Balasan kamu WAJIB objek JSON MURNI — TANPA kalimat pembuka, TANPA penjelasan, TANPA markdown, TANPA sapaan. Karakter PERTAMA balasan harus { dan TERAKHIR harus }";
-    let rule = null;
-    let viaLocal = false;
-    try {
-      let aiResult = await askAI(SYS, body);
-      rule = extractJson(aiResult);
-      if (!rule) {
-        console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
-        await setStatus("🧠 " + smallcapsText("anovaagent mencoba lagi, lebih teliti..."));
-        aiResult = await askAI(SYS_STRICT, body);
-        rule = extractJson(aiResult);
-      }
-    } catch (e) {
-      console.log("[autonovaai] rantai novaai gagal:", e.message);
-    }
-    if (!rule) {
-      // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
-      try {
-        console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
-        await setStatus("🧠 " + smallcapsText("anovaagent nyari otak AI lain..."));
-        const satuan = await aiChainChat(body, { systemPrompt: SYS_STRICT });
-        rule = extractJson(satuan);
-      } catch (e) {
-        console.log("[autonovaai] rantai satuan juga gagal:", e.message);
-      }
-    }
-    if (!rule) {
-      rule = localParse(body);
-      if (rule) viaLocal = true;
-    }
-    if (!rule) {
-      try { await m.react("❌"); } catch {}
-      return editFinal(claraWrap("anovaagent", [
-        "Gagal bikin rule: SEMUA AI (novaai + satuan) gak ngembaliin JSON dan kalimatnya belum dikenali parser lokal.",
-        "Coba tulis lebih spesifik, contoh:",
-        "• .anovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
-        "• .anovaagent kalau ada orang chat, ikut ngobrol",
-      ], "error"));
-    }
-
-    // 2) VALIDASI di level kode — AI ngaco = ditolak
-    const err = validate(rule);
-    if (err) {
-      try { await m.react("❌"); } catch {}
-      return editFinal(claraWrap("anovaagent", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
-    }
-
-    // 3) simpan → langsung aktif
-    const rules = load();
-    rule.id = nextId(rules);
-    rule.enabled = true;
-    rule.hits = 0;
-    rule.targetChat = m.chat; // tujuan kirim untuk trigger jadwal
-    rules.push(rule);
-    save(rules);
-
-    try { await m.react("🐣"); } catch {}
-    return editFinal(
-      `✅ Rule ${rule.id} aktif\n\n` +
-      `${describe(rule)}\n` +
-      `Scope: ${rule.scope} • Cooldown: ${rule.cooldown}s\n\n` +
-      (viaLocal ? "_⚙️ Rule dibikin lokal (AI lagi ngaco) — cek lagi ya hasilnya, kalau kurang pas hapus aja: .anovaagent del " + rule.id + "_\n\n" : "") +
-      `Kelola: .anovaagent list | .anovaagent del ${rule.id} | .anovaagent off ${rule.id}`,
-      "autonovaai",
+    // teks bebas di .anovaagent → arahin ke .setanovaagent (request owner:
+    // bikin/set rule pakai .setanovaagent; .anovaagent khusus kelola)
+    return m.reply(
+      claraWrap("anovaagent", "💡 Buat/set rule pakai .setanovaagent <kalimat bebas>\n\nContoh: .setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam\nKelola rule: .anovaagent list / del / on / off", "error"),
     );
   } catch (e) {
     console.error("[autonovaai] error:", e.message);
@@ -394,4 +303,109 @@ async function handler(m, { sock, conn }) {
   // subcommand instan (list/del/on/off/reset) tetep tanpa status, sesuai desain.
 }
 
+
+// ═══════════════════════════════════════════════════════════════
+// CREATE RULE — dipanggil command .setanovaagent (request owner:
+// set rule pakai .setanovaagent; .anovaagent khusus kelola rule)
+// Status loading 1 pesan edit-in-place ala agent tetap jalan di sini.
+// ═══════════════════════════════════════════════════════════════
+export async function createRule(m, sockRef, body) {
+// LOADING ALA AGENT (lanjutan request owner 11 Sep: 1 PESAN STATUS
+// EDIT-IN-PLACE — user keliatan AI-nya lagi ngapain, final di-edit ke pesan itu)
+let novaStatusKey = null;
+const setStatus = async (text) => {
+  try {
+    if (!novaStatusKey) {
+      const sent = await sockRef.sendMessage(m.chat, { text });
+      novaStatusKey = sent?.key || null;
+      return;
+    }
+    await sockRef.sendMessage(m.chat, { text, edit: novaStatusKey });
+  } catch {}
+};
+const editFinal = async (text) => {
+  if (typeof text !== "string" || !text.trim()) return;
+  const clipped = text.length > 4096 ? text.slice(0, 4096) + "..." : text;
+  let ok = false;
+  if (novaStatusKey) { try { await sockRef.sendMessage(m.chat, { text: clipped, edit: novaStatusKey }); ok = true; } catch {} }
+  if (!ok) await m.reply(clipped);
+};
+try { await m.react("🧠"); } catch {}
+await setStatus("🧠 " + smallcapsText("setanovaagent menerjemahkan kalimatmu jadi rule..."));
+
+// 1) minta AI nerjemahin — 4 LAPIS (request owner: AI REST API manapun
+//    yang aktif — punya key apa pun — harus tetep bisa ngerjain ini):
+//    a. rantai novaai askAI (deepseek/groq/gemini/dll sesuai apikeys.json)
+//    b. balasan gak ada JSON-nya → RETRY sekali perintah jauh lebih tegas
+//    c. masih gak ada → RANTAI AI SATUAN aiFallbackChat (haidar per-brand
+//       → haidar gemini → ikyy → xemoz — semua free, gak butuh key)
+//    d. masih gagal → parser LOKAL tanpa AI (pola kalimat umum)
+const SYS_STRICT = SYS + "\n\nSANGAT PENTING: Balasan kamu WAJIB objek JSON MURNI — TANPA kalimat pembuka, TANPA penjelasan, TANPA markdown, TANPA sapaan. Karakter PERTAMA balasan harus { dan TERAKHIR harus }";
+let rule = null;
+let viaLocal = false;
+try {
+  let aiResult = await askAI(SYS, body);
+  rule = extractJson(aiResult);
+  if (!rule) {
+    console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
+    await setStatus("🧠 " + smallcapsText("setanovaagent mencoba lagi, lebih teliti..."));
+    aiResult = await askAI(SYS_STRICT, body);
+    rule = extractJson(aiResult);
+  }
+} catch (e) {
+  console.log("[autonovaai] rantai novaai gagal:", e.message);
+}
+if (!rule) {
+  // rantai satuan — AI manapun yang aktif (haidar/ikyy/xemoz) boleh ngerjain
+  try {
+    console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
+    await setStatus("🧠 " + smallcapsText("setanovaagent nyari otak AI lain..."));
+    const satuan = await aiChainChat(body, { systemPrompt: SYS_STRICT });
+    rule = extractJson(satuan);
+  } catch (e) {
+    console.log("[autonovaai] rantai satuan juga gagal:", e.message);
+  }
+}
+if (!rule) {
+  rule = localParse(body);
+  if (rule) viaLocal = true;
+}
+if (!rule) {
+  try { await m.react("❌"); } catch {}
+  return editFinal(claraWrap("anovaagent", [
+    "Gagal bikin rule: SEMUA AI (novaai + satuan) gak ngembaliin JSON dan kalimatnya belum dikenali parser lokal.",
+    "Coba tulis lebih spesifik, contoh:",
+    "• .setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
+    "• .setanovaagent kalau ada orang chat, ikut ngobrol",
+  ], "error"));
+}
+
+// 2) VALIDASI di level kode — AI ngaco = ditolak
+const err = validate(rule);
+if (err) {
+  try { await m.react("❌"); } catch {}
+  return editFinal(claraWrap("setanovaagent", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
+}
+
+// 3) simpan → langsung aktif
+const rules = load();
+rule.id = nextId(rules);
+rule.enabled = true;
+rule.hits = 0;
+rule.targetChat = m.chat; // tujuan kirim untuk trigger jadwal
+rules.push(rule);
+save(rules);
+
+try { await m.react("🐣"); } catch {}
+return editFinal(
+  `✅ Rule ${rule.id} aktif\n\n` +
+  `${describe(rule)}\n` +
+  `Scope: ${rule.scope} • Cooldown: ${rule.cooldown}s\n\n` +
+  (viaLocal ? "_⚙️ Rule dibikin lokal (AI lagi ngaco) — cek lagi ya hasilnya, kalau kurang pas hapus aja: .anovaagent del " + rule.id + "_\n\n" : "") +
+  `Kelola: .anovaagent list | .anovaagent del ${rule.id} | .anovaagent off ${rule.id}`,
+  "autonovaai",
+);
+}
+
 export { pluginConfig as config, handler };
+
