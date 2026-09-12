@@ -77,6 +77,7 @@ function checkAutoResetGroup(groupData) {
   const currentWeekStart = getCurrentWeekStartWIB();
   if (!groupData.weekStart || new Date(groupData.weekStart) < new Date(currentWeekStart)) {
     groupData.members = {};
+    groupData.hourly = new Array(24).fill(0);
     groupData.weekStart = currentWeekStart;
     return true;
   }
@@ -197,6 +198,23 @@ export function trackActivity(m, options = {}) {
     if (isCommand) member.commandCount = (member.commandCount || 0) + 1;
     member.points = (member.points || 0) + pointsAwarded;
     member.lastActive = Date.now();
+
+    // Jam aktivitas (WIB) — buat "jam paling rame" di laporan/dashboard
+    const wibHour = new Date(Date.now() + 7 * 60 * 60 * 1000).getUTCHours();
+    if (!Array.isArray(db[groupId].hourly) || db[groupId].hourly.length !== 24) {
+      db[groupId].hourly = new Array(24).fill(0);
+    }
+    db[groupId].hourly[wibHour] = (db[groupId].hourly[wibHour] || 0) + 1;
+
+    // Rolling chat buffer — bahan analisis topik/sentimen AI (rolling cap, TIDAK di-reset mingguan)
+    if (!isCommand && !isMedia && textContent && textContent.trim().length >= 2) {
+      const snippet = textContent.trim().slice(0, 200);
+      if (!Array.isArray(db[groupId].chatBuffer)) db[groupId].chatBuffer = [];
+      db[groupId].chatBuffer.push({ ts: Date.now(), name, text: snippet });
+      if (db[groupId].chatBuffer.length > 200) {
+        db[groupId].chatBuffer = db[groupId].chatBuffer.slice(-200);
+      }
+    }
 
     saveDB(db);
     return member;
@@ -410,6 +428,33 @@ export function getActivityStatus(groupId) {
  * @param {boolean} enabled
  * @returns {boolean} New tracking state
  */
+/**
+ * Get rolling chat buffer for a group (bahan analisis topik/sentimen AI)
+ * @param {string} groupId
+ * @param {number} [limit=40]
+ * @returns {Array<{ts:number,name:string,text:string}>}
+ */
+export function getChatBuffer(groupId, limit = 40) {
+  const db = loadDB();
+  const buf = db[groupId]?.chatBuffer;
+  if (!Array.isArray(buf)) return [];
+  return buf.slice(-limit);
+}
+
+/**
+ * Get hourly activity counts for a group (WIB hours, current week)
+ * @param {string} groupId
+ * @returns {number[]} 24 slots
+ */
+export function getHourly(groupId) {
+  const db = loadDB();
+  const g = db[groupId];
+  if (!g) return new Array(24).fill(0);
+  const modified = checkAutoResetGroup(g);
+  if (modified) saveDB(db);
+  return Array.isArray(g.hourly) && g.hourly.length === 24 ? g.hourly : new Array(24).fill(0);
+}
+
 export function setActivityTracking(groupId, enabled) {
   const db = loadDB();
   if (!db[groupId]) {
