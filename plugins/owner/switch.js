@@ -982,34 +982,85 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     // ── set grup [nomor,nomor] ──
     if (opt === 'grup' || opt === 'group') {
       const groups = await listBotGroups(sock)
-      if (!groups.length) {
+      // 🔹 Tombol nav kirim JID langsung; ketik manual pakai nomor list — dua-duanya jalan.
+      // JID mentah (dari klik tombol) tetap valid WALAU groupFetchAllParticipating kosong.
+      // JID pakai args CASE ASLI (rest di-lowercase — jangan ngerusak jid dari tombol).
+      const restRaw = (setIdx >= 0 ? argsRaw.slice(setIdx + 1) : [])
+      const pickArg = restRaw[1] || ''
+      const rawJids = /@g\.us/.test(pickArg)
+        ? pickArg.split(/[,;\s]+/).map((s) => s.trim()).filter((s) => s.endsWith('@g.us'))
+        : []
+      if (!groups.length && !rawJids.length) {
         return m.reply(`⚠ Bot tidak menemukan grup yang diikutinya.`)
       }
-      const picks = rest[1] ? parseGroupPicks(rest[1], groups) : []
+      const picks = rawJids.length
+        ? rawJids
+        : (pickArg ? parseGroupPicks(pickArg, groups) : [])
       if (picks.length) {
         setAutoTargetConfig(autoKey, { mode: 'grup', groups: picks, dm: null })
         const nama = picks.map((jid) => { const g = groups.find((x) => x.jid === jid); return g ? g.subject : jid })
         return m.reply(`✅ *${reg.label}* dikirim ke **${picks.length} grup terpilih**:\n${nama.map((n, i) => `${i + 1}. ${n}`).join('\n')}`)
       }
-      // tanpa nomor → tampilkan daftar grup
-      let body = `🌐 *PILIH GRUP TUJUAN ${reg.label.toUpperCase()}*\n\n`
-      groups.slice(0, 30).forEach((g, i) => {
-        body += `  ${i + 1}. ${g.subject || g.jid}${g.jid === m.chat ? ' ← (chat ini)' : ''}\n`
-      })
-      body += `\n💡 Ketik: \`${prefix}switch auto ${autoKey} set grup <nomor>\`\n`
-      body += `💡 Bisa pilih banyak: \`${prefix}switch auto ${autoKey} set grup 1,3,5\``
-      return m.reply(body)
+      // tanpa nomor → TOMBOT NAV (request owner 12 Sep: tombol biar gampang):
+      // single_select daftar grup (kirim JID langsung) + quick_reply nav
+      const body = claraWrap("Switch Auto Target", [
+        `Fitur : ${reg.label}`,
+        `Mode : pilih grup tujuan`,
+        ``,
+        `Total grup terdeteksi : ${groups.length}`,
+        ``,
+        `📍 Tekan tombol *Pilih Grup* di bawah, atau ketik \`${prefix}switch auto ${autoKey} set grup <nomor>\` (bisa banyak: 1,3,5)`,
+      ].join("\n"))
+      const rows = groups.slice(0, 50).map((g) => ({
+        title: (g.subject || g.jid).slice(0, 25),
+        description: `${g.count} member${g.jid === m.chat ? " — chat ini" : ""}`,
+        id: `${prefix}switch auto ${autoKey} set grup ${g.jid}`,
+      }))
+      try {
+        await sock.sendButton(m.chat, null, body, m, {
+          buttons: [
+            { name: 'single_select', buttonParamsJson: JSON.stringify({ title: "Pilih Grup", sections: [{ title: reg.label, rows }] }) },
+            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "🌐 Semua Grup", id: `${prefix}switch auto ${autoKey} set semua` }) },
+            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "◀️ Menu Target", id: `${prefix}switch auto ${autoKey} set` }) },
+          ],
+        })
+      } catch {
+        // fallback: teks polos
+        let txt = `🌐 *PILIH GRUP TUJUAN ${reg.label.toUpperCase()}*\n\n`
+        groups.slice(0, 30).forEach((g, i) => { txt += `  ${i + 1}. ${g.subject || g.jid}${g.jid === m.chat ? ' ← (chat ini)' : ''}\n` })
+        txt += `\n💡 Ketik: \`${prefix}switch auto ${autoKey} set grup <nomor>\`\n💡 Bisa pilih banyak: \`${prefix}switch auto ${autoKey} set grup 1,3,5\``
+        await m.reply(txt)
+      }
+      return
     }
 
     // ── set dm [nomor|semua] ──
     if (opt === 'dm' || opt === 'pc') {
       const sub = rest[1] || ''
       if (!sub) {
-        return m.reply(
-          `📮 *PILIH TARGET DM UNTUK ${reg.label.toUpperCase()}*\n\n` +
-          `1. DM nomor tertentu:\n   \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\`\n\n` +
-          `2. Semua DM user yang sudah mendaftar bot:\n   \`${prefix}switch auto ${autoKey} set dm semua\``
-        )
+        // 🔹 TOMBOL NAV (request owner 12 Sep) — pilih via tombol atau ketik manual
+        const body = claraWrap("Switch Auto Target", [
+          `Fitur : ${reg.label}`,
+          `Mode : pilih target DM`,
+          ``,
+          `1. DM nomor tertentu — ketik \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\``,
+          `2. Semua DM user yang sudah mendaftar bot — tekan tombol di bawah`,
+        ].join("\n"))
+        try {
+          await sock.sendButton(m.chat, null, body, m, {
+            buttons: [
+              { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "👥 Semua User DM", id: `${prefix}switch auto ${autoKey} set dm semua` }) },
+              { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "◀️ Menu Target", id: `${prefix}switch auto ${autoKey} set` }) },
+            ],
+          })
+        } catch {
+          await m.reply(
+            `📮 *PILIH TARGET DM UNTUK ${reg.label.toUpperCase()}*\n\n` +
+            `1. DM nomor tertentu:\n   \`${prefix}switch auto ${autoKey} set dm 62812xxxxxxx\`\n\n` +
+            `2. Semua DM user yang sudah mendaftar bot:\n   \`${prefix}switch auto ${autoKey} set dm semua\``
+          )
+        }
+        return
       }
       if (sub === 'semua' || sub === 'all' || sub === 'user' || sub === 'users') {
         setAutoTargetConfig(autoKey, { mode: 'dm', groups: [], dm: 'all' })
@@ -1023,17 +1074,44 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       return m.reply(`✅ *${reg.label}* dikirim ke **DM ${jid}**.`)
     }
 
-    // ── set (tanpa opsi) → status + panduan ──
-    return m.reply(
-      `🎯 *TARGET ${reg.label.toUpperCase()}*\n` +
-      `Sekarang: **${describeAutoTarget(cfg)}**\n\n` +
-      `Opsi:\n` +
-      `• \`${prefix}switch auto ${autoKey} set semua\` — semua grup\n` +
-      `• \`${prefix}switch auto ${autoKey} set grup\` — pilih grup tertentu\n` +
-      `• \`${prefix}switch auto ${autoKey} set dm\` — DM nomor tertentu / semua user\n` +
-      `• \`${prefix}switch auto ${autoKey} set gabungan\` — semua grup + semua DM\n` +
-      `• \`${prefix}switch auto ${autoKey} set reset\` — kembali ke default`
-    )
+    // ── set (tanpa opsi) → status + TOMBOL NAV (request owner 12 Sep: "tambah
+    // tombol nav agar mempermudah") — pilih DM/grup/global via tombol, fallback teks
+    const setCmd = (sub) => `${prefix}switch auto ${autoKey} set ${sub}`
+    const body = claraWrap("Switch Auto Target", [
+      `Fitur : ${reg.label}`,
+      `Target sekarang : ${describeAutoTarget(cfg)}`,
+      ``,
+      `🎯 Pilih mode pengiriman lewat tombol di bawah:`,
+      ``,
+      `🌐 Semua Grup — kirim ke semua grup yang bot ikuti`,
+      `📍 Grup Tertentu — pilih grup satu per satu`,
+      `📮 DM — nomor tertentu / semua user terdaftar`,
+      `🔀 Gabungan — semua grup + semua DM`,
+      `♻️ Reset — kembali ke default (semua grup)`,
+    ].join("\n"))
+    try {
+      await sock.sendButton(m.chat, null, body, m, {
+        buttons: [
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "🌐 Semua Grup", id: setCmd('semua') }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "📍 Grup Tertentu", id: setCmd('grup') }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "📮 DM", id: setCmd('dm') }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "🔀 Gabungan", id: setCmd('gabungan') }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "♻️ Reset", id: setCmd('reset') }) },
+        ],
+      })
+    } catch {
+      await m.reply(
+        `🎯 *TARGET ${reg.label.toUpperCase()}*\n` +
+        `Sekarang: **${describeAutoTarget(cfg)}**\n\n` +
+        `Opsi:\n` +
+        `• \`${prefix}switch auto ${autoKey} set semua\` — semua grup\n` +
+        `• \`${prefix}switch auto ${autoKey} set grup\` — pilih grup tertentu\n` +
+        `• \`${prefix}switch auto ${autoKey} set dm\` — DM nomor tertentu / semua user\n` +
+        `• \`${prefix}switch auto ${autoKey} set gabungan\` — semua grup + semua DM\n` +
+        `• \`${prefix}switch auto ${autoKey} set reset\` — kembali ke default`
+      )
+    }
+    return
   }
 
   // No action — show status + usage
