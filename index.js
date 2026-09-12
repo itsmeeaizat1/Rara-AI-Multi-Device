@@ -419,6 +419,7 @@ async function main() {
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
           { name: "Family100Harvest", fn: () => import("./src/lib/nova-family100-harvest.js").then(m => m.initAutoRefresh?.(sock)) },
           { name: "WebWatch", fn: () => import("./src/lib/nova-webwatch.js").then(m => m.initWebWatch?.(sock)) },
+          { name: "BeritaNotifier", fn: () => import("./src/lib/nova-berita-notifier.js").then(m => m.initBeritaNotifier?.(sock)) },
           { name: "CryptoAlert", fn: () => import("./src/lib/nova-cryptoalert.js").then(m => m.initCryptoAlert?.(sock)) },
           { name: "APICheck", fn: () => import("./plugins/owner/autoapicheck.js").then(m => m.startMonitor?.(sock)) },
           { name: "PluginHealth", fn: () => import("./plugins/owner/autoplugin.js").then(m => m.startPluginMonitor?.(sock)) },
