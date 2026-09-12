@@ -23,33 +23,51 @@ export function resetMcpRpc() { mcpRpc = defaultMcpRpc }
 
 // ═══════════ TRANSPORT ═══════════
 
-// HTTP transport — streamable HTTP MCP: POST JSON-RPC, balasan JSON atau
-// SSE (text/event-stream, ambil event data pertama).
+// HTTP transport — streamable HTTP MCP protokol penuh: handshake
+// initialize → notifications/initialized → call. Session id
+// (header Mcp-Session-Id) di-propagate ke tiap request — server stateful
+// kayak GitMCP nolak (HTTP 400) tanpa handshake, server stateless
+// (context7 dll) cuek aja session id kosong.
 async function httpRpc(server, method, params, notif = false) {
-  const body = notif ? { jsonrpc: "2.0", method } : { jsonrpc: "2.0", id: nextId(), method, params }
-  const res = await fetch(server.url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json, text/event-stream",
-      ...(server.headers || {}),
-    },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(20000),
-  })
-  if (!res.ok) throw new Error("HTTP " + res.status)
-  const ct = res.headers.get("content-type") || ""
-  if (ct.includes("text/event-stream")) {
-    const text = await res.text()
-    const m = text.match(/^data:\s*(\{.*\})/m)
-    if (!m) throw new Error("SSE tanpa data JSON")
-    return notif ? null : JSON.parse(m[1])
+  const post = async (body, sid) => {
+    const res = await fetch(server.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json, text/event-stream",
+        ...(sid ? { "Mcp-Session-Id": sid } : {}),
+        ...(server.headers || {}),
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(20000),
+    })
+    const sidOut = res.headers.get("mcp-session-id") || sid
+    if (!res.ok) throw new Error("HTTP " + res.status)
+    if (res.status === 202 || res.headers.get("content-length") === "0") return { data: null, sid: sidOut }
+    const ct = res.headers.get("content-type") || ""
+    if (ct.includes("text/event-stream")) {
+      const text = await res.text()
+      const m = text.match(/^data:\s*(\{.*\})/m)
+      if (!m) return { data: null, sid: sidOut }
+      return { data: JSON.parse(m[1]), sid: sidOut }
+    }
+    const data = await res.json().catch(() => null)
+    return { data, sid: sidOut }
   }
-  const data = await res.json().catch(() => null)
+  // ── handshake ──
+  const init = await post(
+    { jsonrpc: "2.0", id: nextId(), method: "initialize", params: { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "nova-agent", version: "1.0.0" } } }
+  )
+  if (init.data?.error) throw new Error(init.data.error.message || "init MCP error")
+  const sid = init.sid
+  await post({ jsonrpc: "2.0", method: "notifications/initialized" }, sid).catch(() => {})
+  // ── call asli ──
+  const body = notif ? { jsonrpc: "2.0", method } : { jsonrpc: "2.0", id: nextId(), method, params }
+  const r = await post(body, sid)
   if (notif) return null
-  if (!data) throw new Error("balasan bukan JSON")
-  if (data.error) throw new Error(data.error.message || "RPC error")
-  return data
+  if (!r.data) throw new Error("balasan kosong dari server MCP")
+  if (r.data.error) throw new Error(r.data.error.message || "RPC error")
+  return r.data
 }
 
 // STDIO transport — spawn proses, kirim RPC lewat stdin (1 baris JSON),
