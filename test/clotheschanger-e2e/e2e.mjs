@@ -14,12 +14,12 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase("/tmp/clothes-e2e-db/nova.json");
 const db = getDatabase();
 
-const { config, handler, buildEditPrompt, parseClothesDesc, expandPreset, parseHdFlag, PRESET_STYLES, _setClothesDepsForTest } = await import(R + "/plugins/ai/clotheschanger.js");
+const { config, handler, buildEditPrompt, parseClothesDesc, expandPreset, parseHdFlag, PRESET_STYLES, HAIR_PRESETS, buildAgePrompt, buildHairPrompt, buildGenderPrompt, buildBgPrompt, buildRemovePrompt, buildFaceSwapPrompt, parseFaceDesc, _setClothesDepsForTest } = await import(R + "/plugins/ai/clotheschanger.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s || ""));
 
 t("1a. plugin name aiclotheschanger + kategori ai image", config.name === "aiclotheschanger" && config.category === "ai image");
-t("1b. alias cmd utama doang (pola owner)", JSON.stringify(config.alias) === JSON.stringify(["aiclotheschanger"]));
+t("1b. alias keluarga fitur (revisi owner: tambah kata di akhir)", JSON.stringify(config.alias) === JSON.stringify(["aiclotheschanger", "aiclotheschangerfaceswap", "aiclotheschangerage", "aiclotheschangerhair", "aiclotheschangergender", "aiclotheschangerbg", "aiclotheschangerhapus"]));
 
 // ═══ 2. buildEditPrompt ═══
 out("\n— buildEditPrompt —");
@@ -49,7 +49,7 @@ const reactions = [];
 const IMG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, ...Buffer.alloc(1500, 7)]);
 function mockM(opts = {}) {
   return {
-    command: "aiclotheschanger", args: opts.args || [], text: opts.text || "",
+    command: opts.command || "aiclotheschanger", args: opts.args || [], text: opts.text || "",
     prefix: ".", chat: "62812@s.whatsapp.net", sender: "62812@s.whatsapp.net", pushName: "T",
     isGroup: false, isOwner: false,
     isImage: !!opts.isImage, isMedia: !!opts.isImage,
@@ -279,6 +279,83 @@ await handler(mockM({ args: ["list", "preset"], text: "list preset" }), { sock: 
 const gl3 = replies.at(-1) || "";
 t("8j. list kasih grup baru", gl3.includes("seragam") && gl3.includes("era") && gl3.includes("sekolah") && gl3.includes("kimono"));
 t("8k. alias baris ter-update", gl3.includes("militer") && gl3.includes("wedding"));
+
+
+
+// ═══ 9. fitur keluarga .aiclotheschanger<fitur> ═══
+out("\n— fitur keluarga (suffix command) —");
+
+t("9a. buildAgePrompt tua/muda/angka", buildAgePrompt("tua").includes("70-year-old") && buildAgePrompt("muda").includes("20-year-old") && buildAgePrompt("60").includes("60-year-old"));
+t("9b. buildAgePrompt anak/bayi/invalid", buildAgePrompt("anak").includes("8-year-old") && buildAgePrompt("bayi").includes("baby") && buildAgePrompt("") === null && buildAgePrompt("xyz") === null && buildAgePrompt("200") === null);
+t("9c. buildHairPrompt preset pakis", buildHairPrompt("pakis").includes("two-block mullet"));
+t("9d. buildHairPrompt bebas + detail nempel", buildHairPrompt("rambut merah miring").includes("rambut merah miring") && buildHairPrompt("botak ala artis").includes("bald head") && buildHairPrompt("botak ala artis").includes("ala artis"));
+t("9e. buildGenderPrompt cewek/cowok/invalid", buildGenderPrompt("cewek").includes("a woman") && buildGenderPrompt("cowok").includes("a man") && buildGenderPrompt("kursi") === null);
+t("9f. buildBgPrompt + buildRemovePrompt", buildBgPrompt("pantai bali").includes("pantai bali") && buildBgPrompt("") === null && buildRemovePrompt("kursi").includes("Remove the following") && buildRemovePrompt("") === null);
+t("9g. buildFaceSwapPrompt + detail user", buildFaceSwapPrompt("young man, oval face, sharp eyes").includes("Replace the person's face") && buildFaceSwapPrompt("oval face", "jaga kacamata").includes("jaga kacamata"));
+t("9h. parseFaceDesc BUKAN_WAJAH → null", parseFaceDesc("BUKAN_WAJAH") === null && parseFaceDesc("Young man, oval face shape, sharp brown eyes") !== null && parseFaceDesc("") === null);
+t("9i. HAIR_PRESETS 10 preset rambut", Object.keys(HAIR_PRESETS).length === 10);
+
+// handler dispatch — age
+let ageCalls = [];
+_setClothesDepsForTest({ vision: async () => ({ status: false }), live3d: async (buf, prompt) => { ageCalls.push({ prompt }); return { image: Buffer.alloc(2000, 5) }; } });
+await handler(mockM({ command: "aiclotheschangerage", isImage: true, text: "tua" }), { sock: sockMock });
+t("9j. .aiclotheschangerage tua → prompt umur 70", ageCalls.length === 1 && /70-year-old/.test(ageCalls[0].prompt));
+
+// age invalid → guide
+replies.length = 0;
+await handler(mockM({ command: "aiclotheschangerage", isImage: true, text: "xyz" }), { sock: sockMock });
+t("9k. age invalid → guide pilihan umur", (replies.at(-1) || "").includes("tua") && /1-100/.test(replies.at(-1) || ""));
+
+// age tanpa foto → guide
+replies.length = 0;
+await handler(mockM({ command: "aiclotheschangerage", text: "tua" }), { sock: sockMock });
+t("9l. age tanpa foto → guide kirim foto", (replies.at(-1) || "").toLowerCase().includes("foto"));
+
+// hair preset via command
+let hairCalls = [];
+_setClothesDepsForTest({ vision: async () => ({ status: false }), live3d: async (buf, prompt) => { hairCalls.push({ prompt }); return { image: Buffer.alloc(2000, 5) }; } });
+await handler(mockM({ command: "aiclotheschangerhair", isImage: true, text: "hd pakis" }), { sock: sockMock });
+t("9m. .ai...changerhair hd pakis → prompt rambut + hd flag", hairCalls.length === 1 && /two-block mullet/.test(hairCalls[0].prompt));
+
+// gender
+let genCalls = [];
+_setClothesDepsForTest({ vision: async () => ({ status: false }), live3d: async (buf, prompt) => { genCalls.push({ prompt }); return { image: Buffer.alloc(2000, 5) }; } });
+await handler(mockM({ command: "aiclotheschangergender", isImage: true, text: "cewek" }), { sock: sockMock });
+t("9n. .aiclotheschangergender cewek → prompt woman", genCalls.length === 1 && /a woman/.test(genCalls[0].prompt));
+
+// bg + hapus
+let bgCalls = [];
+_setClothesDepsForTest({ vision: async () => ({ status: false }), live3d: async (buf, prompt) => { bgCalls.push({ prompt }); return { image: Buffer.alloc(2000, 5) }; } });
+await handler(mockM({ command: "aiclotheschangerbg", isImage: true, text: "pantai bali" }), { sock: sockMock });
+await handler(mockM({ command: "aiclotheschangerhapus", isImage: true, text: "kursi di belakang" }), { sock: sockMock });
+t("9o. bg + hapus → prompt background & remove", bgCalls.length === 2 && /Replace the background/.test(bgCalls[0].prompt) && /Remove the following/.test(bgCalls[1].prompt));
+
+// faceswap flow: reply target + kirim foto wajah → vision → edit target
+let fsVision = [], fsEdit = [];
+_setClothesDepsForTest({
+  vision: async (a) => { fsVision.push(a.question); return { status: true, text: "Young man, 25, oval face, sharp brown eyes, thick eyebrows, tan skin" }; },
+  live3d: async (buf, prompt) => { fsEdit.push({ buf, prompt }); return { image: Buffer.alloc(2000, 5) }; },
+});
+await handler(mockM({ command: "aiclotheschangerfaceswap", isImage: true, text: "", quoted: quotedMock(), downloadBuf: Buffer.alloc(600, 3) }), { sock: sockMock });
+t("9p. faceswap → vision wajah (FACE_Q) + edit foto target", fsVision.length === 1 && /human face/i.test(fsVision[0]) && fsEdit.length === 1 && /Young man, 25/.test(fsEdit[0].prompt));
+t("9q. faceswap caption + hasil terkirim", norm(sent.at(-1)?.opts?.caption || "").includes("face swap"));
+
+// faceswap 1 foto doang → guide 2 foto
+replies.length = 0;
+await handler(mockM({ command: "aiclotheschangerfaceswap", isImage: true, text: "" }), { sock: sockMock });
+t("9r. faceswap 1 foto → guide butuh 2 foto", (replies.at(-1) || "").includes("2") && (replies.at(-1) || "").toLowerCase().includes("foto"));
+
+// faceswap foto bukan wajah → error sopan
+replies.length = 0;
+_setClothesDepsForTest({ vision: async () => ({ status: true, text: "BUKAN_WAJAH" }), live3d: async () => ({ image: Buffer.alloc(2000, 5) }) });
+await handler(mockM({ command: "aiclotheschangerfaceswap", isImage: true, text: "", quoted: quotedMock(), downloadBuf: Buffer.alloc(600, 3) }), { sock: sockMock });
+t("9s. faceswap BUKAN_WAJAH → tolak sopan", (replies.at(-1) || "").length > 10 && fsEdit.length === 1);
+
+// engine down → pesan sopan semua fitur
+replies.length = 0;
+_setClothesDepsForTest({ vision: async () => ({ status: false }), live3d: async () => { throw new Error("down"); }, uguu: async () => { throw new Error("down"); }, img2img: async () => { throw new Error("down"); } });
+await handler(mockM({ command: "aiclotheschangerage", isImage: true, text: "tua" }), { sock: sockMock });
+t("9t. engine down semua → pesan engine down", (replies.at(-1) || "").toLowerCase().includes("down"));
 
 
 // ═══ 5. referensi path import bebas memory leak ═══
