@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kontan.js — Berita Kontan Finance
-import axios from "axios";
+import { fetchNewsList } from "../../src/lib/nova-rss-news.js";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
@@ -18,8 +18,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await m.react("🕠");
-    const res = await axios.get("https://api.siputzx.my.id/api/berita/kontan", { timeout: 15000 });
-    const data = res.data?.data || res.data || [];
+    const data = await fetchNewsList("https://news.google.com/rss/search?q=site%3Akontan.co.id&hl=id&gl=ID&ceid=ID:id", 8);
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
       return m.reply(claraWrap("kontan", "Gagal mengambil berita!", "error"));
