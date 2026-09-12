@@ -78,6 +78,70 @@ const sample = all.split("\n").find((l) => l.startsWith(toSC("bencanawatch")))
 out("   ↳ contoh baris: " + sample)
 t("6a. baris persis pola '<fitur>ᴏɴ/ᴏꜰꜰ' tanpa bullet", sample && (sample.endsWith(scOn) || sample.endsWith(scOff)))
 
+out("\n— TOMBOL NAV target terpusat (set menu interaktif) —")
+{
+  // mock sock dengan sendButton — tangkap tombol yang dikirim
+  const sentButtons = []
+  const sockBtn = {
+    sendButton: async (jid, src, text, quoted, opts) => { sentButtons.push({ text, buttons: opts.buttons || [] }); return { key: { id: "btn" } }; },
+    // grup dummy — biar picker grup dapet rows & konfirmasi nama grup
+    groupFetchAllParticipating: async () => ({
+      "12036302TEST@g.us": { id: "12036302TEST@g.us", subject: "Grup Test Satu", participants: [1, 2, 3] },
+      "12036303TEST@g.us": { id: "12036303TEST@g.us", subject: "Grup Test Dua", participants: [1, 2] },
+    }),
+  }
+  const ids = (btns) => btns.filter((b) => b.name === "quick_reply").map((b) => JSON.parse(b.buttonParamsJson).id).join(" ")
+
+  // 1. set tanpa opsi → menu utama 5 tombol quick_reply
+  sentButtons.length = 0
+  await handler(mockM(["auto", "autosholat", "set"]), { sock: sockBtn, config })
+  const main = sentButtons.at(-1)
+  t("n1. menu utama kirim via 5 tombol", main && main.buttons.length === 5, `buttons=${main?.buttons?.length}`)
+  const mainIds = ids(main.buttons)
+  t("n2. tombol semua/grup/dm/gabungan/reset lengkap",
+    mainIds.includes("set semua") && mainIds.includes("set grup") && mainIds.includes("set dm") && mainIds.includes("set gabungan") && mainIds.includes("set reset"), mainIds)
+  t("n3. menu utama tampilkan target sekarang", main.text.includes(toSC("Target sekarang")), main.text.slice(0, 80))
+
+  // 2. set grup (tanpa nomor) → single_select rows + nav
+  sentButtons.length = 0
+  await handler(mockM(["auto", "autosholat", "set", "grup"]), { sock: sockBtn, config })
+  const grp = sentButtons.at(-1)
+  const sel = grp.buttons.find((b) => b.name === "single_select")
+  t("n4. set grup: ada single_select", !!sel)
+  const rows = sel ? JSON.parse(sel.buttonParamsJson).sections[0].rows : []
+  t("n5. set grup: rows kirim JID langsung (bisa diklik)", rows.length > 0 && rows.every((r) => r.id.includes("set grup ") && r.id.includes("@g.us")), JSON.stringify(rows.slice(0, 1)))
+  t("n6. set grup: ada nav Semua Grup + Menu Target",
+    ids(grp.buttons).includes("set semua") && grp.buttons.some((b) => b.name === "quick_reply" && JSON.parse(b.buttonParamsJson).display_text.includes("Menu Target")))
+
+  // 3. set dm (tanpa sub) → tombol Semua User DM + nav
+  sentButtons.length = 0
+  await handler(mockM(["auto", "autosholat", "set", "dm"]), { sock: sockBtn, config })
+  const dm = sentButtons.at(-1)
+  t("n7. set dm: tombol via sendButton", dm && dm.buttons.length >= 2, `buttons=${dm?.buttons?.length}`)
+  const dmTxts = dm.buttons.map((b) => (JSON.parse(b.buttonParamsJson || "{}").display_text || ""))
+  t("n8. set dm: tombol Semua User DM + Menu Target", dmTxts.includes("👥 Semua User DM") && dmTxts.some((x) => x.includes("Menu Target")))
+  t("n9. set dm: instruksi nomor manual tetep ada", dm.text.includes("62812"), dm.text.slice(0, 120))
+
+  // 4. set grup <jid> dari tombol → config keisi JID itu
+  await handler(mockM(["auto", "autosholat", "set", "grup", "12036302TEST@g.us"]), { sock: {}, config })
+  t("n10. set grup <jid> mentah diterima dari klik tombol", replies.some((r) => r.includes("grup terpilih") && r.includes("12036302TEST@g.us")), replies.at(-1)?.slice(0, 100))
+
+  // 5. fallback teks: sock tanpa sendButton → m.reply tetep jalan
+  const before = replies.length
+  await handler(mockM(["auto", "autosholat", "set"]), { sock: {}, config })
+  t("n11. fallback teks menu utama (sendButton gak ada)", replies.length === before + 1 && /TARGET|Target/i.test(replies.at(-1)))
+
+  // 6. set dm semua via id tombol (simulasi klik) → config dm all
+  await handler(mockM(["auto", "autosholat", "set", "dm", "semua"]), { sock: {}, config })
+  t("n12. klik tombol Semua User DM → set dm semua jalan", replies.some((r) => /SEMUA DM/i.test(r)))
+
+  // 7. klik tombol gabungan + reset
+  await handler(mockM(["auto", "autosholat", "set", "gabungan"]), { sock: {}, config })
+  t("n13. klik tombol Gabungan jalan", replies.some((r) => /SEMUA GRUP \+ SEMUA DM|GRUP \+ SEMUA DM/i.test(r)))
+  await handler(mockM(["auto", "autosholat", "set", "reset"]), { sock: {}, config })
+  t("n14. klik tombol Reset jalan", replies.some((r) => /direset ke default/i.test(r)))
+}
+
 process.stdout.write("\n===== " + pass + " PASS, " + fail + " FAIL =====\n")
 await new Promise((r) => setTimeout(r, 400))
 process.exit(fail ? 1 : 0)
