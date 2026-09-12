@@ -16,8 +16,9 @@
 | Google Gemini | `generativelanguage.googleapis.com` | Gemini Vision, .nova-ai, .ai-set | ⚠️ Key required |
 | Google AI Studio | `aistudio.google.com/apikey` | Gemini API key (gratis) | ✅ Free key |
 | DeepSeek | `api.deepseek.com` | .dolphin, deepseek scraper | ⚠️ Key required |
-| Groq | `api.groq.com` | AI helper, mixtral | ⚠️ Key required |
+| Groq | `api.groq.com` | AI helper, mixtral, STT whisper fallback | ❌ Key invalid 401 (12 Sep) — dikosongin biar auto-skip |
 | Mistral | `api.mistral.ai` | AI fallback | ⚠️ Key required |
+| HaidarApis | `api.haidarxd.my.id` | backbone AI satuan (gemini/claude/deepsek/mateai/chatgpt/googleai), TTS, txt2vid, img2style, nano-banana | ⚠️ ROMBAK 12 Sep: gpt-4o/gpt-5-mini/claude-sonnet-4/gpt55/gpt54 DIHAPUS (404); endpoint AI baru: chatgpt ✅, claude-sonnet-5 ✅, aimodel, aiseek, bing, felo, deepai, overchat, quillbot, mimo-models. Hidup: gemini ✅ claude ✅ chatgpt ✅ googleai ✅ mateai (flaky "busy") — deepsek 502 upstream | ⚠️ Endpoint bergeser |
 | Blackbox AI | `api.blackbox.ai` | blackbox-api scraper | ✅ Free |
 | Chat Everywhere | `chateverywhere.app` | chateverywhere scraper | ✅ Free |
 | UnlimitedAI | `app.unlimitedai.chat` | unlimitedai scraper (nova-ai, .cegpt) | ✅ Free |
@@ -45,6 +46,42 @@
 | key DeepSeek | ❌ kosong | pernah dipakai .autonovaai, udah dihapus |
 
 **Kesimpulan:** satu-satunya AI yang hidup & stabil buat bot = rantai fallback (Haidar → Ikyy → Xemoz) — sekarang jadi tulang punggung .aitio via auto-fallback.
+## 🧪 SWEEP API 12 SEPTEMBER 2026 (live verified — 56 endpoint)
+
+| API | Hasil | Catatan |
+|---|---|---|
+| Haidar gemini/claude/chatgpt/googleai | ✅ 200 | backbone AI satuan HIDUP (param `message`, googleai `text`) |
+| Haidar gpt55 / gpt54 | ❌ 404 | DIHAPUS upstream — rute .gpt5/.gpt4 sudah di-REMAP ke `chatgpt` (fix nova-ai-fallback.js, verified live) |
+| Haidar deepsek | ❌ 502 | upstream_error — rute .deepseek mati sementara (satuan strict, gak nyamber) |
+| Haidar mateai | ⚠️ flaky | kadang 200 (gpt-4o) kadang "service busy" — rute .gpt4o |
+| min1ai (qwen3-8b free) | ✅ 200 | backbone rantai 1 — format `UNIFY_CHAT_WITH_AI` + `API-KEY` header |
+| Groq key apikeys.json | ❌ 401 | Invalid API Key — key DIBUANG (kosong = auto-skip di rantai; owner isi key baru kalau mau aktif lagi) |
+| ikyyxd gemini + gpt5mini | ✅ 200 | rantai free tetap hidup |
+| Xemoz deepseek-v3.2-thinking | ✅ 200 | fallback rantai hidup |
+| siputzx.my.id | ❌ 404 TOTAL | "Route not found on upstream nodes" SEMUA route (ffstalk/tiktokstalk/berita/morning/quran) — 61 plugin kena (semua free-API, error bersih; antara/cnbc/beritabola & tools nik-checker & s/pinterest dll) |
+| velyn.mom | ❌ DNS dead | fetch failed |
+| zenzxz.my.id | ❌ DNS dead | fetch failed |
+| nyxs.my.id | ❌ DNS dead | fetch failed |
+| nexray.web.id | ✅ 200 | tetap hidup |
+| fastdl.app | ❌ 403 CF | "Just a moment" JS challenge dari IP sandbox — mungkin beda di VPS |
+| tikwm.com | ❌ 403 CF | sama — cek dari VPS |
+| jikan / MyAnimeList | ❌ 504 | MAL down global — anime notifier fallback Kitsu ✅ |
+| MAL RSS news | ❌ dead | fetch failed — anime notifier tipe "berita" bakal kosong selama MAL down |
+| kitsu.io | ✅ 200 | anime notifier sumber utama tetap jalan |
+| lrclib.net | ⚠️ 503 busy | transient — .lirikspotify sekarang RETRY 1x (fix spotify-lyrics.js) |
+| met.no | ✅ 200 | HARUS UA dengan kontak asli (github.com/...) — UA example.com = 403; kode bot sudah bener |
+| open-meteo / bmkg / usgs | ✅ 200 | cuaca + EWS hidup |
+| equran.id | ✅ 200 | islamic hidup |
+| mangadex | ✅ 200 | hidup |
+| spotidown.app | ✅ 200 | .playspotify tetap hidup |
+| Wilz dl/spotify | ❌ 500 | "Terjadi kesalahan saat memproses data" — JANGAN jadikan fallback playspotify dulu |
+| Wilz dl/yt + dl/fb + search/tiktokv2 | ❌ 500 | upstream error |
+| Wilz tools/lirik | ✅ 200 | param `query=` (bukan q) |
+| Wilz search/capcut | ✅ 200 | param `keyword=` |
+| Wilz random/temp-mail | ✅ 200 | param `action=create` / `action=check&token=` |
+| Wilz maker/brat + remove-bg + ssweb + upscaler | ✅ 200 | hidup |
+| Wilz maker/imggen23 + tools/remove-watermark | ⚠️ TIMEOUT 12dtk | lambat/bisa mati — hindari jadi primary |
+
 **Jalan keluar provider resmi (gratis, stabil):** owner bikin key baru → taruh di apikeys.json tanpa ubah kode:
 1. **Google AI Studio** (aistudio.google.com/apikey) — gratis, tier generous, tanpa CF block → isi `novaai.google`
 2. **Groq** (console.groq.com) — gratis, llama-3.3-70b cepat, OpenAI-compat → isi `novaai.groqkey`
@@ -65,16 +102,16 @@
 | API | Endpoint | Fitur yang Pakai | Status |
 |-----|----------|-------------------|--------|
 | KuroNeko API | `sylvatica.my.id/api/stalk/*` | 7 stalker: tiktok, youtube, githubuser, discord, freefire, npm, pinterest | ✅ Free (key via login) |
-| Siputzx | `api.siputzx.my.id` | nikparser, ffstalk, tiktokstalk, ytstalk2, primbon, brat | ✅ Free |
-| Velyn Mom | `velyn.mom` | mlstalk, robloxstalk2, ffstalk2, nikparser2 | ✅ Free |
+| Siputzx | `api.siputzx.my.id` | nikparser, ffstalk, tiktokstalk, ytstalk2, primbon, brat | ❌ DEAD 12 Sep (404 semua route — 61 plugin) |
+| Velyn Mom | `velyn.mom` | mlstalk, robloxstalk2, ffstalk2, nikparser2 | ❌ DEAD 12 Sep (DNS) |
 | Nexray | `api.nexray.web.id` / `api.nexray.eu.cc` | gsmarena2, nikparser2, nulis2, mlstalk fallback | ✅ Free |
 | LolHuman | `api.lolhuman.xyz` | ffstalk, tiktokstalk, wallpaper, lirik | ❌ Key not found |
 | NeoXR | `api.neoxr.eu` | stalker, search | ⚠️ Key rate-limited |
 | Deline | `api.deline.web.id` | stalker, search | ✅ Free |
-| Nyxs | `api.nyxs.my.id` | stalker, tools | ✅ Free |
+| Nyxs | `api.nyxs.my.id` | stalker, tools | ❌ DEAD 12 Sep (DNS) |
 | Covenant | `api.covenant.sbs` | stalker, search | ❌ DEAD (DNS 1033) |
 | ObscuraWorks | `api.obscuraworks.org` | stalker, search | ❌ DEAD (404) |
-| ZenzXZ | `api.zenzxz.my.id` | stalker, search | ✅ Free |
+| ZenzXZ | `api.zenzxz.my.id` | stalker, search | ❌ DEAD 12 Sep (DNS) |
 | Yupra | `api.yupra.my.id` | stalker, search | ✅ Free |
 | DenayRestAPI | `api.denayrestapi.xyz` | stalker, search | ✅ Free |
 | RifkyShre | `api.rifkyshre.biz.id` | stalker, search | ✅ Free |
@@ -1532,7 +1569,7 @@ https://upscayl.org
 > Provider: `www.wilz.web.id` (WILLzzz / Evernight API Platform) • Docs: https://www.wilz.web.id/docs/
 > Akses: FREE TANPA KEY — semua endpoint GET, respon JSON `{creator: "WILLzzz", status, result|response, message}`
 > Rate limit: ada (respon 429 "Too many requests — temporarily banned"), jangan spam
-> Status: ✅ ALIVE (diverifikasi 12 Sep 2026 — 12 dari 28 endpoint sample probe OK)
+> Status: ✅ ALIVE (re-sweep 12 Sep 2026 — param bener: lirik/capcut/temp-mail ✅; mati upstream: dl/spotify, dl/yt, dl/fb, tiktokv2, random/cuaca; timeout: imggen23, remove-watermark)
 > TERPAKAI: `.kuroai` (ai/evernight — KuroNeko chat + session token) • `.playtiktok` (search/tiktok — ENGINE UTAMA, tikwm jadi fallback)
 
 ### 📦 Endpoint per Kategori (pattern: `https://www.wilz.web.id/api/<kategori>/<nama>?<param>=`)
@@ -1540,37 +1577,37 @@ https://upscayl.org
 | Kategori | Endpoint | Status Live 12 Sep | Catatan |
 |----------|----------|--------------------|---------|
 | 🤖 AI (1) | `ai/evernight?q=&session=` | ✅ OK | **TERPAKAI .kuroai** — persona KuroNeko; session token milik API (kirim token lama = inget percakapan) |
-| 📥 Download (6) | `download/facebook?url=` | ❌ 500 saat probe | perlu link FB valid |
-| | `download/tiktok?url=` | ⚠️ 400 saat probe | perlu link video TikTok valid |
+| 📥 Download (6) | `download/facebook?url=` | ❌ 500 (12 Sep) | "private or URL invalid" — upstream |
+| | `download/tiktok?url=` | ✅ OK (12 Sep) | link valid → 200 |
 | | `download/instagram?url=` | ✅ OK | |
-| | `download/spotify?url=` | ✅ OK | **kandidat fallback .playspotify** |
+| | `download/spotify?url=` | ❌ 500 (12 Sep) | upstream error — JANGAN jadikan fallback playspotify dulu |
 | | `download/capcut?url=` | ✅ OK | template link |
-| | `download/youtube?url=` | ❌ 500 saat probe | perlu link YT valid |
+| | `download/youtube?url=` | ❌ 500 (12 Sep) | upstream error |
 | 🎨 Maker (6) | `maker/brat?text=` | ⚠️ 200 non-JSON | mungkin balas image buffer |
 | | `maker/remove-bg?url=` | ❌ 500 saat probe | perlu URL gambar valid |
 | | `maker/ssweb?url=` | ❌ 500 saat probe | screenshot web |
 | | `maker/upscaler?url=` | ❌ 500 saat probe | upscale gambar |
-| | `maker/imggen23?prompt=` | ❌ 500 saat probe | image gen |
+| | `maker/imggen23?prompt=` | ⚠️ TIMEOUT 12dtk (12 Sep) | lambat/mati |
 | | `maker/editimg` | ⚠️ belum diprobe | butuh param cek docs |
 | 🎲 Random (4) | `random/blue_archive` | ⚠️ 200 non-JSON | |
 | | `random/freefire` | ⚠️ 400 saat probe | butuh param cek docs |
 | | `random/temp-mail` | ⚠️ 400 saat probe | butuh param cek docs |
-| | `random/cuaca` | ❌ 404 via query param | path/param berbeda — cek docs detail |
+| | `random/cuaca` | ❌ 404 (12 Sep) | route gak ada |
 | 🔍 Search (6) | `search/yts?q=` | ✅ OK | search YouTube (thumbnail+duration+views+videoId) |
 | | `search/pinterest?q=` | ✅ OK | |
 | | `search/tiktok?q=&count=` | ✅ OK | **TERPAKAI .playtiktok** — result.data[] {title, duration "29s", play_url mp4 no-wm, cover_url}; TANPA author/stats/link |
-| | `search/capcut?q=` | ⚠️ belum diprobe | |
-| | `search/tiktokv2?q=` | ⚠️ belum diprobe | alternatif search tiktok |
+| | `search/capcut?keyword=` | ✅ OK (12 Sep) | param `keyword=` |
+| | `search/tiktokv2?q=` | ❌ 500 (12 Sep) | upstream error |
 | | `search/npm?q=` | ✅ OK | |
-| 🔧 Tools (15) | `tools/lirik?q=` | ⚠️ 400 saat probe | lirik — perlu nama param bener |
+| 🔧 Tools (15) | `tools/lirik?query=` | ✅ OK (12 Sep) | param `query=` (bukan q) |
 | | `tools/shorturl?url=` | ✅ OK | shortlink |
 | | `tools/netflix?url=` | ⚠️ 400 saat probe | info/dl netflix |
 | | `tools/gmail` | ⚠️ 400 saat probe | |
 | | `tools/fake-swap` | ⚠️ 400 saat probe | fake chat swap |
-| | `tools/remove-watermark` | ⚠️ 400 saat probe | hapus watermark |
+| | `tools/remove-watermark` | ⚠️ TIMEOUT 12dtk (12 Sep) | lambat/mati |
 | | `tools/react-ch` | ⚠️ 400 saat probe | reaction video china (TikTok Cina?) |
-| | `tools/react-chv2` | ⚠️ belum diprobe | |
-| | `tools/alightmotion` s/d `alightmotionv7` (7 endpoint) | ⚠️ 400 saat probe | preset/project AM |
+| | `tools/react-chv2` | ⚠️ param `action=qr/parse` | |
+| | `tools/alightmotion` s/d `alightmotionv7` (7 endpoint) | ⚠️ param `action=send/...` | preset/project AM |
 
 ### 💡 Potensi untuk Nova (yang belum ada / bisa jadi fallback)
 
