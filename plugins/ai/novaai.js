@@ -262,45 +262,6 @@ async function handler(m, { sock, conn, config, db }) {
   // React 🧠
   try { await sock.sendMessage(m.chat, { react: { text: "🧠", key: m.key } }); } catch {}
 
-  // 🔹 VISION: upload gambar + caption .novaai <pertanyaan> (tanpa pertanyaan
-  // = analisis umum) ATAU reply gambar dengan .novaai <pertanyaan> — AI scan
-  // gambar: selesaikan soal tugas, baca struk, jelasin foto, dll (Gemini native)
-  const directImage = m.isImage ? m : null;
-  const quotedImage = m.quoted?.isImage ? m.quoted : null;
-  const imageSource = directImage || quotedImage;
-  if (imageSource) {
-    const key = sessionKey(m);
-    const history = getSession(key);
-    const question = text || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
-    try {
-    await m.react("🕒");
-      await setStatus("👀 " + smallcapsText("novaagent membaca gambar..."));
-      appendSession(key, "user", `(mengirim gambar) ${question}`);
-      const buffer = await (directImage ? m.download() : m.quoted.download());
-      const answer = await callGeminiVision(question, buffer, {
-        systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI") + memoryBlock(db, m.sender, question),
-        senderJid: m.sender,
-      });
-      appendSession(key, "assistant", answer);
-      const { text: visibleText, action } = parseAIResponse(answer);
-      if (action) {
-        await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + action.command));
-        if (db) config.__db = db;
-        const result = await executeCommand(action, m, sock, config);
-        if (!result.success && result.message) {
-          await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
-        }
-      }
-      if (visibleText) await editFinal(visibleText);
-      await m.react("🐣");
-      return;
-    } catch (e) {
-      console.error("[novaai] vision gagal:", e.message);
-      await m.react("❌");
-      return editFinal(claraWrap("novaagent", `Gagal menganalisis gambar: ${e.message}`, "error"));
-    }
-  }
-
   // 🔹 LOADING ALA AGENT (request owner 11 Sep: "aku mau novaai sistemnya kyk
   // .agent — bsa kesekusi ada pesan dia lg melakukan sesuatu"): 1 PESAN STATUS
   // EDIT-IN-PLACE — 🧠 mikir / 👀 baca gambar → ⚡ menjalankan <aksi> → jawaban
@@ -324,6 +285,45 @@ async function handler(m, { sock, conn, config, db }) {
     if (novaStatusKey) { try { await sock.sendMessage(m.chat, { text: clipped, edit: novaStatusKey }); ok = true; } catch {} }
     if (!ok) await m.reply(clipped);
   };
+
+  // 🔹 VISION: upload gambar + caption .novaai <pertanyaan> (tanpa pertanyaan
+  // = analisis umum) ATAU reply gambar dengan .novaai <pertanyaan> — AI scan
+  // gambar: selesaikan soal tugas, baca struk, jelasin foto, dll (Gemini native)
+  const directImage = m.isImage ? m : null;
+  const quotedImage = m.quoted?.isImage ? m.quoted : null;
+  const imageSource = directImage || quotedImage;
+  if (imageSource) {
+    const key = sessionKey(m);
+    const history = getSession(key);
+    const question = text || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
+    try {
+    await m.react("🕒");
+      await setStatus("👀 " + smallcapsText("novaagent membaca gambar..."));
+      appendSession(key, "user", `(mengirim gambar) ${question}`);
+      const buffer = await (directImage ? m.download() : m.quoted.download());
+      const answer = await callGeminiVision(question, buffer, {
+        systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI") + memoryBlock(db, m.sender, question),
+        senderJid: m.sender,
+      });
+      appendSession(key, "assistant", answer);
+      const { text: visibleText, action } = parseAIResponse(answer);
+      if (action) {
+        await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + action.command));
+        if (db) config.__db = db;
+        const result = await executeCommand(action, m, sock, config);
+        if (!result.success && result.message) {
+          await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
+        }
+      }
+      if (visibleText) await editFinal(visibleText);
+      await m.react("🐣");
+      return;
+    } catch (e) {
+      console.error("[novaai] vision gagal:", e.message);
+      await m.react("❌");
+      return editFinal(claraWrap("novaagent", `Gagal menganalisis gambar: ${e.message}`, "error"));
+    }
+  }
 
   // 🔹 SESSION: histori obrolan dikirim ke AI biar reply NYAMBUNG — fix bug
   // user jawab "iya" / "mau" malah dibalas sapaan generik kayak sesi baru.
@@ -381,7 +381,7 @@ async function handler(m, { sock, conn, config, db }) {
         extractMemories(db, m.sender, text, reply).catch(() => {});
         const { text: visibleText, action } = parseAIResponse(reply);
         if (action) {
-          await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + action.command));
+          await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + action.command));
           if (db) config.__db = db;
           const result = await executeCommand(action, m, sock, config);
           if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
@@ -409,7 +409,7 @@ async function handler(m, { sock, conn, config, db }) {
       const finalAction = execFromJson || action;
       if (finalAction) {
         await m.react("⚡");
-        await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + finalAction.command));
+        await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + finalAction.command));
         if (db) config.__db = db;
         const result = await executeCommand(finalAction, m, sock, config);
         if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
@@ -477,7 +477,7 @@ async function handler(m, { sock, conn, config, db }) {
   // EKSEKUSI — status "lagi melakukan sesuatu" ala agent, final di-edit ke pesan itu
   try {
     await m.react("⚡");
-    await setStatus("⚡ " + smallcapsText("novaagent menjalankan: " + decision.tool + "..."));
+    await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + decision.tool + "..."));
     await tool.run(sock, m, finalArgs);
     await editFinal(sanitizeAiReply(decision.reply || tool.done || ""));
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
