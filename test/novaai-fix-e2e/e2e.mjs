@@ -160,5 +160,46 @@ w("\n— BUG 2: sanitizeAiReply —");
   check("kombinasi: label tetap ada", out.includes("review lengkap"));
 }
 
+w("\n— rotasi status loading novaagent (fase berputar) —");
+{
+  const { startStatusRotation } = await import("../../src/lib/nova-status-rotate.js");
+
+  // fase berputar tiap 30ms — urutan harus: fase 2, 3, lalu BERHENTI di terakhir (fase 1 = initial manual)
+  const seen = [];
+  const setStatus = async (txt) => { seen.push(txt); };
+  const stop = startStatusRotation(setStatus, ["🧠 berpikir", "🔍 mencari", "🛠️ mengerjakan", "✍️ menyusun"], 30);
+  await new Promise((r) => setTimeout(r, 150)); // 5 tick
+  stop();
+  check("rotasi: fase 2-4 muncul berurutan",
+    seen[0] === "🔍 mencari" && seen[1] === "🛠️ mengerjakan" && seen[2] === "✍️ menyusun", JSON.stringify(seen));
+  const countAtStop = seen.length;
+  await new Promise((r) => setTimeout(r, 100));
+  check("stopper: rotasi berhenti total", seen.length === countAtStop, `+${seen.length - countAtStop} edits`);
+
+  // berhenti otomatis di fase terakhir (gak loop balik)
+  const seen2 = [];
+  const stop2 = startStatusRotation(async (x) => { seen2.push(x); }, ["a", "b", "c"], 20);
+  await new Promise((r) => setTimeout(r, 200)); // jauh lewat fase terakhir
+  check("auto-stop di fase terakhir (gak loop balik)", seen2.length === 2 && seen2[1] === "c", JSON.stringify(seen2));
+  stop2();
+
+  // stopper dipanggil sebelum tick pertama → 0 edit
+  const seen3 = [];
+  const stop3 = startStatusRotation(async (x) => { seen3.push(x); }, ["a", "b"], 10);
+  stop3();
+  await new Promise((r) => setTimeout(r, 50));
+  check("stop instan: 0 edit", seen3.length === 0, JSON.stringify(seen3));
+
+  // setStatus throw gak nge-kill rotator (error ditelen, interval lanjut)
+  let calls4 = 0;
+  const stop4 = startStatusRotation(async () => { calls4 += 1; if (calls4 === 1) throw new Error("boom"); }, ["a", "b", "c"], 20);
+  await new Promise((r) => setTimeout(r, 120));
+  check("setStatus throw → rotator tetap hidup", calls4 >= 2, `calls=${calls4}`);
+  stop4();
+
+  // guard input
+  check("phases kosong → stopper noop", (() => { const s = startStatusRotation(() => {}, [], 10); s(); return true; })());
+}
+
 w("\nTOTAL: " + pass + "/" + (pass + fail));
 process.exit(fail ? 1 : 0);
