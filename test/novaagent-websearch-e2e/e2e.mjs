@@ -5,7 +5,7 @@
 // dititip ke prompt think() SEBELUM AI jawab — hasil browsing asli + boleh
 // cite link sumber. Semua HTTP di-inject (offline).
 import { initDatabase } from "../../src/lib/nova-database.js";
-import { setWebSearchHttp, setPreviewHttp, resetWebSearchDeps } from "../../src/lib/nova-websearch.js";
+import { setWebSearchHttp, setPreviewHttp, resetWebSearchDeps, searchWeb } from "../../src/lib/nova-websearch.js";
 import { needsWebSearch, quickWebSearch, buildThinkSystemPrompt, sanitizeAiReply } from "../../src/lib/aiagent.js";
 
 await initDatabase("/tmp/novaagent-websearch-e2e-db.json");
@@ -105,5 +105,40 @@ t("3e. tanpa webSearch → blok isi TIDAK di-injek (marker cuma 1x dari teks atu
 // ctx.memory tetap jalan bareng webSearch (regresi fitur memory 12 Sep 2026)
 const promptBoth = buildThinkSystemPrompt({ botname: "Nova AI", memory: "- suka kucing", webSearch: found.block });
 t("3f. memory + webSearch bisa nempel bareng tanpa saling ganggu", promptBoth.includes("MEMORI TENTANG USER") && promptBoth.includes("suka kucing") && promptBoth.includes("HASIL PENCARIAN WEB TERKINI"));
+// ═══ 4. RELEVANSI GUARD searchWeb (bug owner 12 Sep: ".agent disuruh siapa
+// prabowo malah tdk ditemukan" — Bing nyariin kata tandanya doang → SERP
+// sampah → agent baca halaman nyasar) — via seam setWebSearchHttp ═══
+w("\n— relevansi guard searchWeb —");
+{
+  const _rs2 = resetWebSearchDeps;
+  const mkBing = (items) => "<html><body>" + items.map((it) =>
+    `<li class="b_algo"><h2><a href="https://id.wikipedia.org/wiki/${encodeURIComponent(it.u)}">${it.t}</a></h2><div class="b_caption"><p>${it.s || ""}</p></div></li>`).join("") + "</body></html>";
+  const JUNK = [{ t: "Siapa Gdl | Guadalajara - Facebook", u: "fb-gdl", s: "Acércate al SIAPA esquema de descuentos" }, { t: "Bienvenido - SIAPA", u: "siapa", s: "Muse ¿Olvido su contraseña?" }];
+  const GOOD = [{ t: "Prabowo Subianto - Wikipedia bahasa Indonesia", u: "Prabowo_Subianto", s: "Prabowo Subianto adalah presiden Indonesia ke-8" }];
+
+  // 4a. semua engine sampah → hasil mentah terakhir + flag lowRelevance
+  setWebSearchHttp(async () => mkBing(JUNK));
+  let r = await searchWeb("siapa prabowo", { limit: 5 });
+  t("4a. SERP sampah semua engine → lowRelevance: true (jangan dibaca agent)", r?.lowRelevance === true && r?.items?.length > 0, JSON.stringify(r || {}).slice(0, 100));
+
+  // 4b. query penuh sampah → auto-retry tanpa kata tanya ("prabowo") → nemu
+  let calls = [];
+  setWebSearchHttp(async (url) => {
+    calls.push(String(url));
+    // panggilan utk query penuh ("siapa" ada di query) → sampah; core "prabowo" → bagus
+    return decodeURIComponent(url).includes("siapa") ? mkBing(JUNK) : mkBing(GOOD);
+  });
+  r = await searchWeb("siapa prabowo", { limit: 5 });
+  t("4b. retry core-query (siapa prabowo → prabowo) nemu hasil bener", r?.lowRelevance !== true && /prabowo/i.test(r?.items?.[0]?.title || "") && r?.usedCoreQuery === true, JSON.stringify(r || {}).slice(0, 120));
+  t("4c. retry core-query beneran nembak query tanpa kata tanya", calls.some((u) => /prabowo(?!.*siapa)/i.test(decodeURIComponent(u))), calls[0]?.slice(0, 60));
+
+  // 4d. SERP bagus langsung → gak ada flag, hasil utuh
+  setWebSearchHttp(async () => mkBing(GOOD));
+  r = await searchWeb("prabowo presiden", { limit: 5 });
+  t("4d. SERP relevan → hasil normal tanpa flag", r?.lowRelevance !== true && r?.items?.length > 0 && !r?.usedCoreQuery);
+
+  _rs2();
+}
+
 w(`\n===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);
