@@ -43,7 +43,7 @@ w("\n— filter chain builder (port verbatim kode owner) —");
   const chain2 = buildFilterChain(2);
   check("preset 2: hqdn3d=1:1:3:3", chain2.startsWith("hqdn3d=1:1:3:3"), chain2.slice(0, 40));
   check("preset 2: denoise low dipakai", chain2.startsWith("hqdn3d=1:1:3:3"), chain2.slice(0, 30));
-  check("preset 2: unsharp balanced la=0.65", chain2.includes("unsharp=lx=5:ly=5:la=0.65"), chain2.slice(0, 120));
+  check("preset 2: unsharp balanced la=0.9", chain2.includes("unsharp=lx=5:ly=5:la=0.9"), chain2.slice(0, 120));
   check("preset 2: eq natural sat=1.02", chain2.includes("saturation=1.02"), "");
   check("urutan chain: denoise,scale,unsharp,eq",
     chain2.indexOf("hqdn3d=") === 0 && chain2.indexOf("scale=") > 0 && chain2.indexOf("unsharp=") > chain2.indexOf("scale=") && chain2.indexOf("eq=") > chain2.indexOf("unsharp="), chain2.slice(0, 60));
@@ -51,7 +51,7 @@ w("\n— filter chain builder (port verbatim kode owner) —");
   const chain4 = buildFilterChain(4);
   check("preset 4: hqdn3d=1.25:1.25:4:4", chain4.startsWith("hqdn3d=1.25:1.25:4:4"), chain4.slice(0, 30));
   check("preset 4: scale faktor 4 + clamp 16000", chain4.includes("w=min(iw*4") && chain4.includes(`min(ih*4\\,${MAX_OUTPUT_PX})`), "");
-  check("preset 4: unsharp sharp la=0.9", chain4.includes("la=0.9"), "");
+  check("preset 4: unsharp sharp la=1.2", chain4.includes("la=1.2"), "");
   check("preset 4: eq vivid sat=1.05", chain4.includes("saturation=1.05"), "");
 
   const chain6 = buildFilterChain(6);
@@ -60,6 +60,7 @@ w("\n— filter chain builder (port verbatim kode owner) —");
 
   const chain8 = buildFilterChain(8);
   check("preset 8: eq cinematic sat=1.1", chain8.includes("saturation=1.1"), "");
+  check("preset 8: unsharp ultra la=1.35 radius 7", chain8.includes("unsharp=lx=7:ly=7:la=1.35"), chain8.slice(0, 160));
   check("preset 8: scale clamp 16000", chain8.includes(`min(iw*8\\,${MAX_OUTPUT_PX})`), "");
   check("scale lanczos+accurate_rnd", buildScaleFilter(4).includes("flags=lanczos+accurate_rnd+full_chroma_int"), "");
 }

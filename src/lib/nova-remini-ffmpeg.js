@@ -20,7 +20,7 @@ export const HD_PRESETS = Object.freeze({
   2: { label: "2x HD", emoji: "🔵", description: "Cepat dan aman", denoise: "low", sharpness: "balanced", color: "natural" },
   4: { label: "4x HD", emoji: "🔶", description: "Tajam dan seimbang", denoise: "medium", sharpness: "sharp", color: "vivid" },
   6: { label: "6x HD", emoji: "🟣", description: "Kualitas tinggi", denoise: "high", sharpness: "sharp", color: "enhanced" },
-  8: { label: "8x Ultra HD", emoji: "🟢", description: "Maksimal untuk FFmpeg", denoise: "high", sharpness: "sharp", color: "cinematic" },
+  8: { label: "8x Ultra HD", emoji: "🟢", description: "Maksimal untuk FFmpeg", denoise: "high", sharpness: "ultra", color: "cinematic" },
 });
 
 const DENOISE_PROFILES = Object.freeze({
@@ -29,9 +29,13 @@ const DENOISE_PROFILES = Object.freeze({
   high: { spatial: 1.5, temporal: 1.5, spatialChroma: 5, temporalChroma: 5 },
 });
 
+// 🔥 DOSE SHARPNESS DINAIKIN (request owner 12 Sep 2026: "pixelnya ditajemin
+// biar makin jernih") — balanced 0.65→0.90, sharp 0.90→1.20, BARU ultra 1.35
+// (radius lebih gede 7x7) buat 8x Ultra HD.
 const SHARPNESS_PROFILES = Object.freeze({
-  balanced: { lumaX: 5, lumaY: 5, lumaAmount: 0.65, chromaX: 3, chromaY: 3, chromaAmount: 0.15 },
-  sharp: { lumaX: 5, lumaY: 5, lumaAmount: 0.90, chromaX: 3, chromaY: 3, chromaAmount: 0.20 },
+  balanced: { lumaX: 5, lumaY: 5, lumaAmount: 0.90, chromaX: 3, chromaY: 3, chromaAmount: 0.20 },
+  sharp: { lumaX: 5, lumaY: 5, lumaAmount: 1.20, chromaX: 3, chromaY: 3, chromaAmount: 0.25 },
+  ultra: { lumaX: 7, lumaY: 7, lumaAmount: 1.35, chromaX: 5, chromaY: 5, chromaAmount: 0.30 },
 });
 
 const COLOR_PROFILES = Object.freeze({
