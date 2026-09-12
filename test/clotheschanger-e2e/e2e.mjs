@@ -14,7 +14,7 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase("/tmp/clothes-e2e-db/nova.json");
 const db = getDatabase();
 
-const { config, handler, buildEditPrompt, parseClothesDesc, _setClothesDepsForTest } = await import(R + "/plugins/ai/clotheschanger.js");
+const { config, handler, buildEditPrompt, parseClothesDesc, expandPreset, parseHdFlag, PRESET_STYLES, _setClothesDepsForTest } = await import(R + "/plugins/ai/clotheschanger.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s || ""));
 
@@ -152,6 +152,80 @@ t("4h. foto tanpa prompt/tanpa gambar baju → guide dua mode", gh.includes("pro
 
 // ── 4i. react loading 🧠 (start) ──
 t("4i. react loading 🧠 pernah muncul", reactions.includes("🧠"));
+
+
+// ═══ 6. preset gaya + flag HD ═══
+out("\n— preset gaya —");
+const e1 = expandPreset("formal");
+t("6a. preset formal → outfit lengkap + tag suit", e1.preset === "formal" && e1.expanded.includes("tailored dark suit"));
+const e2 = expandPreset("formal warna biru");
+t("6b. preset + detail tambahan nempel", e2.expanded.includes("tailored dark suit") && e2.expanded.includes("warna biru"));
+const e3 = expandPreset("resmi");
+t("6c. alias indonesia resmi → formal", e3.preset === "resmi" && e3.expanded.includes("suit"));
+const e4 = expandPreset("change the shirt to red");
+t("6d. bukan preset → teks utuh", e4.preset === "" && e4.expanded === "change the shirt to red");
+t("6e. 20+ preset terdaftar (ID+EN)", Object.keys(PRESET_STYLES).length >= 20);
+t("6f. preset kosong aman", expandPreset("").expanded === "");
+
+out("\n— flag hd —");
+t("6g. hd → polish + prompt bersih", parseHdFlag("hd change shirt to red").hd === "polish" && parseHdFlag("hd change shirt to red").prompt === "change shirt to red");
+t("6h. hd2 → 2x", parseHdFlag("hd2 formal").hd === "2x" && parseHdFlag("hd2 formal").prompt === "formal");
+t("6k. 2k → 2x, 4k → 2x", parseHdFlag("formal 2k").hd === "2x" && parseHdFlag("4k formal").hd === "2x");
+t("6i. tanpa flag → hd kosong", parseHdFlag("formal").hd === "");
+t("6j. flag case-insensitive", parseHdFlag("HD Formal").hd === "polish");
+
+out("\n— handler preset + hd —");
+// preset formal tanpa hd → engine prompt pakai outfit formal
+let engineCalls2 = [];
+_setClothesDepsForTest({
+  vision: async () => ({ status: false }),
+  live3d: async (buf, prompt) => { engineCalls2.push({ prompt }); return { image: Buffer.alloc(2000, 5) }; },
+});
+await handler(mockM({ isImage: true, text: "formal" }), { sock: sockMock });
+t("6k. preset formal → engine prompt outfit suit", engineCalls2.length === 1 && /tailored dark suit/.test(engineCalls2[0].prompt));
+
+// hd flag → polish dipanggil, caption ada HD
+let hdCalls = [];
+_setClothesDepsForTest({
+  vision: async () => ({ status: false }),
+  live3d: async (buf, prompt) => { engineCalls2.push({ prompt }); return { image: Buffer.alloc(2000, 5) }; },
+  polish: async (buf) => { hdCalls.push("polish"); return Buffer.alloc(3000, 6); },
+  upscale: async (buf, f) => { hdCalls.push("upscale" + f); return Buffer.alloc(4000, 7); },
+});
+await handler(mockM({ isImage: true, text: "hd casual" }), { sock: sockMock });
+t("6l. hd → polish kepanggil + caption HD", hdCalls.includes("polish") && norm(sent.at(-1)?.opts?.caption || "").includes("hd"));
+t("6m. hd + preset → prompt casual + polish", engineCalls2.at(-1) && /casual everyday outfit/.test(engineCalls2.at(-1).prompt));
+
+// hd2 → upscale 2x
+hdCalls = [];
+await handler(mockM({ isImage: true, text: "hd2 formal" }), { sock: sockMock });
+t("6n. hd2 → upscale 2x kepanggil", hdCalls.includes("upscale2"));
+
+// hd gagal → fail-safe kirim hasil asli
+hdCalls = [];
+_setClothesDepsForTest({
+  vision: async () => ({ status: false }),
+  live3d: async () => ({ image: Buffer.alloc(2000, 5) }),
+  polish: async () => { throw new Error("ffmpeg hilang"); },
+});
+await handler(mockM({ isImage: true, text: "hd formal" }), { sock: sockMock });
+t("6o. hd gagal → hasil asli tetap terkirim", sent.length > 0 && !!sent.at(-1)?.buf);
+
+// mode gambar: preset diabaikan (desc yang ngatur)
+engineCalls2 = [];
+_setClothesDepsForTest({
+  vision: async () => ({ status: true, text: "Red summer dress, cotton, midi length." }),
+  live3d: async (buf, prompt) => { engineCalls2.push({ prompt }); return { image: Buffer.alloc(2000, 5) }; },
+});
+await handler(mockM({ isImage: true, text: "formal", quoted: quotedMock(), downloadBuf: Buffer.alloc(600, 3) }), { sock: sockMock });
+t("6p. mode gambar: desc menang, preset gak di-expand", engineCalls2.length === 1 && /match this reference: Red summer dress/.test(engineCalls2[0].prompt) && !/tailored dark suit/.test(engineCalls2[0].prompt));
+
+// usage guide kasih daftar preset + hd
+_setClothesDepsForTest({ vision: async () => ({ status: false }) });
+await handler(mockM({ args: ["formal"], text: "formal" }), { sock: sockMock });
+const gU = replies.at(-1) || "";
+t("6q. usage tampilin preset + opsi hd", gU.includes("formal") && gU.includes("hd"));
+
 
 // ═══ 5. referensi path import bebas memory leak ═══
 out("\n— summary —");
