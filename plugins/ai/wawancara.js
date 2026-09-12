@@ -1,11 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// wawancara — Interview Simulator AI (ide fitur no 5, 12 Sep 2026):
+// aiagentwawancara (dulu .wawancara, rename 12 Sep 2026) — Interview Simulator AI (ide fitur no 5):
 // AI jadi HRD buat latihan wawancara kerja.
-//   * .wawancara mulai <posisi> → sesi mulai, HRD nanya via VN
-//   * jawab pake VN (reply VN + .wawancara) atau ketik jawabannya
+//   * .aiagentwawancara mulai <posisi> → sesi mulai, HRD nanya via VN
+//   * jawab pake VN (reply VN + .aiagentwawancara) atau ketik jawabannya
 //   * tiap jawaban dinilai (skor + feedback + kuat/lemah)
 //   * 5 pertanyaan → laporan akhir: skor + chart + verdict + tips AI
-//   * .wawancara ulang | skip | skor | stop
+//   * .aiagentwawancara ulang | skip | skor | stop
 // Sesi per user, expired 30 menit idle.
 
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
@@ -22,12 +22,12 @@ import {
 } from "../../src/lib/nova-wawancara.js";
 
 const pluginConfig = {
-  name: "wawancara",
-  alias: ["wawancara", "interview", "interviewai"],
+  name: "aiagentwawancara",
+  alias: ["aiagentwawancara"],
   category: "ai",
   description: "Latihan wawancara kerja bareng AI HRD — tanya via VN, dinilai per jawaban",
-  usage: ".wawancara mulai <posisi>\n.wawancara (reply VN jawabanmu)\n.wawancara ulang | skip | skor | stop",
-  example: ".wawancara mulai frontend developer\n.wawancara mulai admin keuangan",
+  usage: ".aiagentwawancara mulai <posisi>\n.aiagentwawancara (reply VN jawabanmu)\n.aiagentwawancara ulang | skip | skor | stop",
+  example: ".aiagentwawancara mulai frontend developer\n.aiagentwawancara mulai admin keuangan",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -65,7 +65,7 @@ async function sendHrdVoice(m, sock, text) {
     await sock.sendMessage(m.chat, { audio: buf, mimetype: "audio/mpeg", ptt: true }, { quoted: m });
     return true;
   } catch (e) {
-    console.error("[wawancara] TTS gagal, fallback teks:", e.message);
+    console.error("[aiagentwawancara] TTS gagal, fallback teks:", e.message);
     return false;
   }
 }
@@ -73,7 +73,7 @@ async function sendHrdVoice(m, sock, text) {
 function questionCard(session, prefix) {
   const qNo = session.qIdx + 1;
   return `🎤 *PERTANYAAN ${qNo}/${session.questions.length}*\n_posisi: ${session.posisi}_\n\n"${session.questions[session.qIdx]}"\n\n` +
-    tipText(`Jawab via VN (reply VN-mu + ${prefix}wawancara) atau ketik langsung`);
+    tipText(`Jawab via VN (reply VN-mu + ${prefix}aiagentwawancara) atau ketik langsung`);
 }
 
 async function handler(m, { sock, config: botConfig }) {
@@ -88,22 +88,22 @@ async function handler(m, { sock, config: botConfig }) {
     if (!sub && !m.quoted?.isAudio) {
       const guide = novaCaption({
         emoji: "💼",
-        name: "wawancara",
+        name: "aiagentwawancara",
         description: "Latihan wawancara kerja bareng AI HRD via voice note",
-        usage: `${prefix}wawancara mulai <posisi>\n${prefix}wawancara (reply VN jawabanmu)\n${prefix}wawancara ulang | skip | skor | stop`,
-        example: `${prefix}wawancara mulai frontend developer`,
+        usage: `${prefix}aiagentwawancara mulai <posisi>\n${prefix}aiagentwawancara (reply VN jawabanmu)\n${prefix}aiagentwawancara ulang | skip | skor | stop`,
+        example: `${prefix}aiagentwawancara mulai frontend developer`,
       }) + "\n" + tipText(`5 pertanyaan, dinilai per jawaban, skor akhir + tips`);
-      return m.reply(guide, "wawancara");
+      return m.reply(guide, "aiagentwawancara");
     }
 
     // ═══ mulai ═══
     if (sub === "mulai" || sub === "start") {
       const posisi = args.slice(1).join(" ").trim();
       if (!posisi) {
-        return m.reply(claraWrap("wawancara", `Mau latihan untuk posisi apa?\n\nFormat: ${prefix}wawancara mulai frontend developer`, "info"));
+        return m.reply(claraWrap("aiagentwawancara", `Mau latihan untuk posisi apa?\n\nFormat: ${prefix}aiagentwawancara mulai frontend developer`, "info"));
       }
       if (session) {
-        return m.reply(claraWrap("wawancara", `Masih ada sesi aktif (posisi *${session.posisi}*, pertanyaan ${session.qIdx + 1}/${session.questions.length}).\nLanjutin jawab, atau ${prefix}wawancara stop buat batalin.`, "info"));
+        return m.reply(claraWrap("aiagentwawancara", `Masih ada sesi aktif (posisi *${session.posisi}*, pertanyaan ${session.qIdx + 1}/${session.questions.length}).\nLanjutin jawab, atau ${prefix}aiagentwawancara stop buat batalin.`, "info"));
       }
       await m.react("🧠");
       let questions = null;
@@ -120,15 +120,15 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ═══ subcommand lain (tanpa sesi = info) ═══
     if (SUBS.has(sub) && !session && sub !== "stop" && sub !== "batal") {
-      return m.reply(claraWrap("wawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}wawancara mulai <posisi>`, "info"));
+      return m.reply(claraWrap("aiagentwawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}aiagentwawancara mulai <posisi>`, "info"));
     }
 
     if (sub === "stop" || sub === "selesai" || sub === "batal") {
-      if (!session) return m.reply(claraWrap("wawancara", "Gak ada sesi yang jalan.", "info"));
+      if (!session) return m.reply(claraWrap("aiagentwawancara", "Gak ada sesi yang jalan.", "info"));
       clearSession(db, m.sender);
       const done = session.answers.length;
-      return m.reply(claraWrap("wawancara", done
-        ? `🛑 Sesi dibatalkan. Terjawab ${done}/${session.questions.length} pertanyaan — ${prefix}wawancara mulai ${session.posisi} buat coba lagi.`
+      return m.reply(claraWrap("aiagentwawancara", done
+        ? `🛑 Sesi dibatalkan. Terjawab ${done}/${session.questions.length} pertanyaan — ${prefix}aiagentwawancara mulai ${session.posisi} buat coba lagi.`
         : "🛑 Sesi dibatalkan. Kapan-kapan latihan lagi ya!"));
     }
     if (sub === "ulang" || sub === "repeat") {
@@ -145,15 +145,15 @@ async function handler(m, { sock, config: botConfig }) {
     }
     if (sub === "skor") {
       const answered = session.answers.filter((a) => !a.skipped);
-      if (!answered.length) return m.reply(claraWrap("wawancara", `Progress: pertanyaan ${session.qIdx + 1}/${session.questions.length} — belum ada jawaban yang dinilai.`, "info"));
+      if (!answered.length) return m.reply(claraWrap("aiagentwawancara", `Progress: pertanyaan ${session.qIdx + 1}/${session.questions.length} — belum ada jawaban yang dinilai.`, "info"));
       const avg = answered.reduce((s, a) => s + a.skor, 0) / answered.length;
       const lines = answered.map((a, i) => `${i + 1}. ${a.q.slice(0, 40)}… — *${a.skor}/10*`).join("\n");
-      return m.reply(claraWrap("wawancara", `📊 *SKOR SEMENTARA: ${avg.toFixed(1)}/10*\n\n${lines}\n\nProgress: ${session.qIdx + 1}/${session.questions.length}`));
+      return m.reply(claraWrap("aiagentwawancara", `📊 *SKOR SEMENTARA: ${avg.toFixed(1)}/10*\n\n${lines}\n\nProgress: ${session.qIdx + 1}/${session.questions.length}`));
     }
 
     // ═══ jalur jawaban — sesi WAJIB aktif ═══
     if (!session) {
-      return m.reply(claraWrap("wawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}wawancara mulai <posisi>`, "info"));
+      return m.reply(claraWrap("aiagentwawancara", `Belum ada sesi latihan. Mulai dulu: ${prefix}aiagentwawancara mulai <posisi>`, "info"));
     }
 
     // jawaban via reply VN
@@ -165,12 +165,12 @@ async function handler(m, { sock, config: botConfig }) {
       const buffer = await quotedVn.download();
       if (!buffer || !buffer.length) {
         await m.react("❌");
-        return m.reply(claraWrap("wawancara", "Gagal download VN-mu. Coba kirim ulang.", "error"));
+        return m.reply(claraWrap("aiagentwawancara", "Gagal download VN-mu. Coba kirim ulang.", "error"));
       }
       const transcript = await parserStt(buffer, quotedVn.mimetype || "audio/ogg; codecs=opus").catch(() => "");
       if (!transcript || transcript.trim().length < 2) {
         await m.react("❌");
-        return m.reply(claraWrap("wawancara", "Gak kedengeran jelas nih — rekam ulang lagi ya, atau ketik jawabanmu."));
+        return m.reply(claraWrap("aiagentwawancara", "Gak kedengeran jelas nih — rekam ulang lagi ya, atau ketik jawabanmu."));
       }
       answerText = transcript.trim().slice(0, 900);
     } else {
@@ -187,7 +187,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch {}
     if (!evalRes) {
       await m.react("❌");
-      return m.reply(claraWrap("wawancara", "AI penilai lagi bermasalah — coba kirim ulang jawabanmu ya.", "error"));
+      return m.reply(claraWrap("aiagentwawancara", "AI penilai lagi bermasalah — coba kirim ulang jawabanmu ya.", "error"));
     }
     session.answers.push({ q: question, a: answerText, skor: evalRes.skor, feedback: evalRes.feedback, kuat: evalRes.kuat, lemah: evalRes.lemah });
 
@@ -203,11 +203,11 @@ async function handler(m, { sock, config: botConfig }) {
       `📝 *PENILAIAN JAWABAN ${session.qIdx}/${session.questions.length}*\n` +
       `⭐ Skor: *${evalRes.skor}/10*\n💬 ${evalRes.feedback}\n💪 Kuat: ${evalRes.kuat}\n🎯 Perlu dipoles: ${evalRes.lemah}`;
     const voiceSent = await sendHrdVoice(m, sock, session.questions[session.qIdx]);
-    return m.reply(claraWrap("wawancara", fbCard + "\n\n" + questionCard(session, prefix)) + (voiceSent ? "" : ""));
+    return m.reply(claraWrap("aiagentwawancara", fbCard + "\n\n" + questionCard(session, prefix)) + (voiceSent ? "" : ""));
   } catch (err) {
-    console.error("wawancara error:", err);
+    console.error("aiagentwawancara error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("wawancara", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(claraWrap("aiagentwawancara", te.novaError(err) || "Gagal memproses", "error"));
   }
 }
 
@@ -246,9 +246,9 @@ async function finishInterview(m, sock, db, session, prefix) {
   if (lines) txt += `\n📝 *RINCIAN:*\n${lines}`;
   if (session.answers.some((a) => a.skipped)) txt += `\n⏭ ${session.answers.filter((a) => a.skipped).length} pertanyaan di-skip (gak dinilai)`;
   if (tips) txt += `\n\n💡 *TIPS:*\n${tips}`;
-  txt += `\n\n♻ ${toSC("latihan lagi?")} ${prefix}${toSC("wawancara mulai")} ${session.posisi}`;
+  txt += `\n\n♻ ${toSC("latihan lagi?")} ${prefix}${toSC("aiagentwawancara mulai")} ${session.posisi}`;
   await m.react("🐣");
-  return m.reply(claraWrap("wawancara", txt));
+  return m.reply(claraWrap("aiagentwawancara", txt));
 }
 
 export { pluginConfig as config, handler };
