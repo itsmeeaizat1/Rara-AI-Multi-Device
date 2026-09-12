@@ -55,7 +55,14 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const premium = dbInstance?.db?.data?.premium || [];
 
     const totalUsers = Object.keys(users).length;
-    const totalGroups = Object.keys(groups).length;
+    // live count (request owner 13 Sep): jumlah grup beneran yang bot ikuti,
+    // gak cuma grup yang fiturnya pernah diset manual — cache 5 mnt + fallback db
+    let totalGroups = Object.keys(groups).length;
+    try {
+      const { countGroupsLive } = await import("../../src/lib/nova-group-registry.js");
+      const live = await countGroupsLive(sock, dbInstance);
+      if (live > 0) totalGroups = live;
+    } catch {}
     const totalPremium = Array.isArray(premium) ? premium.length : 0;
     const totalRegistered = Object.values(users).filter((u) => u?.name || u?.registered).length;
 

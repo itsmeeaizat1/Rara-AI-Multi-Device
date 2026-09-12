@@ -142,7 +142,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
       });
 
       // ── Info section lengkap dari shared builder (sama kayak .menu/.allmenu) ──
-      const { greeting: aiIntro, info: menuInfo } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
+      const { greeting: aiIntro, info: menuInfo } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000, sock });
 
       // Index kategori — layout standar: baris • tanpa emoji, smallcaps
       let totalAllCmds = 0;
@@ -222,7 +222,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat.charAt(0).toUpperCase() + matchedCat.slice(1);
 
     // ── Info section lengkap (sama kayak menu/allmenu) ──
-    const { greeting: aiIntro, info: menuInfo } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
+    const { greeting: aiIntro, info: menuInfo } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000, sock });
 
     // Layout standar — sama persis kayak .allmenu: intro AI + box info terpisah
     // + legend symbol + section kategori (│ ✦ .cmd symbol) + readmore

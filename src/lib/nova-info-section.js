@@ -120,7 +120,7 @@ export function serverNetworkRows(db) {
 }
 
 export async function buildMenuInfo(m, ctx = {}) {
-  const { db, config: botConfig, uptime } = ctx;
+  const { db, config: botConfig, uptime, sock } = ctx;
   const now = new Date();
 
   // Ping dihitung SEKALI di awal (sebelum network call cuaca/greeting) — kalau
@@ -189,6 +189,13 @@ export async function buildMenuInfo(m, ctx = {}) {
       const allGroups = db.getAllGroups();
       totalGroups = Object.keys(allGroups).length;
       totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
+      // live count (request owner 13 Sep): grup beneran yang bot ikuti —
+      // registry db bisa kosong kalau fitur grup belum pernah diset manual
+      try {
+        const { countGroupsLive } = await import("./nova-group-registry.js");
+        const live = await countGroupsLive(sock, db);
+        if (live > 0) { totalGroups = live; totalActiveGroups = live; }
+      } catch {}
       const dbStats = db.getStats();
       totalCommandsRun = dbStats.commandsRun || 0;
       totalMessagesIn = dbStats.messagesReceived || 0;
