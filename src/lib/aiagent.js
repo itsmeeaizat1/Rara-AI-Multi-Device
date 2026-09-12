@@ -2,6 +2,11 @@
 import fs from "fs";
 import { searchWeb, fetchPagePreview } from "./nova-websearch.js";
 import { getAllSkills, awaitSkillPacks } from "./nova-skills.js";
+// 🔧 RE-EXPORT — plugin (novaai.js dll) ambil getAllSkills dari sini.
+// BUGFIX 12 Sep: re-export gak ada → novaai.js import error
+// "does not provide an export named 'getAllSkills'" → plugin gagal load
+// senyap → .novaagent unknown command di bot.
+export { getAllSkills };
 import { getMcpToolEntries } from "./nova-mcp.js";
 // ============================================================
 // 🔹 AI AGENT — Otak AI yang bisa ngatur fitur bot via bahasa natural
