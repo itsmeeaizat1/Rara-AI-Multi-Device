@@ -237,9 +237,14 @@ export async function searchWeb(query, { engine = "bing", limit = MAX_RESULTS } 
     const eng = ENGINES[key];
     try {
       const url = eng.url(q, limit);
+      // FIX 12 Sep 2026 (ketemu pas smoke .novaagent browsing): engine tanpa
+      // headers (bing/brave/ddg) tadinya kirim request TANPA User-Agent →
+      // bing jawab SERP sampah gak nyambung (Ubisoft/aparthotel utk query
+      // berita). UA default WAJIB selalu terkirim.
+      const baseHeaders = { "User-Agent": UA, "Accept-Language": "id,en;q=0.8", Accept: "text/html,application/xhtml+xml", ...(eng.headers || {}) };
       const html = eng.post
-        ? await webSearchHttp(url, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", ...(eng.headers || {}) }, body: eng.post(q) })
-        : await webSearchHttp(url, { headers: eng.headers || {} });
+        ? await webSearchHttp(url, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", ...baseHeaders }, body: eng.post(q) })
+        : await webSearchHttp(url, { headers: baseHeaders });
       let items = eng.chain[0](html).slice(0, limit);
       if (items.length) {
         // engine cina: link redirect → resolve URL asli paralel (fallback: link redirect tetap dipakai)

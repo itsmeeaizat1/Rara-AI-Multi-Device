@@ -1,0 +1,20 @@
+[
+  {
+    "trigger": {
+      "type": "keyword",
+      "value": "assalamualaikum",
+      "match": "exact"
+    },
+    "action": {
+      "type": "reply",
+      "value": "waalaikumsalam",
+      "caption": ""
+    },
+    "scope": "all",
+    "cooldown": 10,
+    "id": "AF-001",
+    "enabled": true,
+    "hits": 0,
+    "targetChat": "test@g.us"
+  }
+]

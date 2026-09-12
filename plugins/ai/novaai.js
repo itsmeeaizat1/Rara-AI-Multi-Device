@@ -7,7 +7,7 @@
 // 🔹 Alur: localParse (instan) → think (AI provider) → [ACTION] auto-execute
 // ============================================================
 
-import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply } from "../../src/lib/aiagent.js";
+import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, quickWebSearch, getAgentTools, getAllSkills } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
@@ -235,7 +235,8 @@ async function handler(m, { sock, conn, config, db }) {
       genimage: '.novaagent buatkan gambar kucing astronot'
     };
     const lines = [];
-    lines.push(`🧠 AI Agent — ${Object.keys(TOOLS).length} perintah grup`);
+    const toolCount = Object.keys(TOOLS).length + Object.keys(getAllSkills()).length;
+    lines.push(`🧠 AI Agent — ${toolCount} perintah grup`);
     lines.push(`💬 Ngobrol & auto-execute command bot`);
     lines.push("");
     for (const [cat, tools] of Object.entries(categories)) {
@@ -366,6 +367,16 @@ async function handler(m, { sock, conn, config, db }) {
     ]);
     try {
       const prefixForThink = config?.command?.prefix || ".";
+      // 🔹 FIX 12 Sep 2026 (owner report ".novaagent" gak bisa cari info
+      // terkini — jawab dari halusinasi training data lama padahal by-design
+      // .novaagent gak browsing sama sekali, beda dari .aisuperagent): query
+      // berita/viral/terkini → quick web search 1x dulu, hasil dititip ke
+      // prompt think() biar jawaban akurat + boleh cite link sumber asli.
+      let webSearchCtx = null;
+      if (needsWebSearch(textForAi)) {
+        const found = await quickWebSearch(textForAi).catch(() => null);
+        if (found) webSearchCtx = found.block;
+      }
       decision = await think(textForAi, {
         botname: config?.bot?.name || "Nova AI",
         mentions: (m.mentionedJid || []).map(j => j.split("@")[0]).join(", "),
@@ -374,6 +385,8 @@ async function handler(m, { sock, conn, config, db }) {
         history: histSnapshot.slice(-12),
         // 🔹 MEMORY: fakta durabel user ditempel ke system prompt otak AI
         memory: memoryFactsInline(db, m.sender, textForAi),
+        // 🔹 WEB SEARCH: hasil browsing ringan (kalau query butuh info terkini)
+        webSearch: webSearchCtx,
       });
     } catch (e) {
       // 🔹 CHAT FALLBACK: coba callIkyy/callAI sebelum menyerah
@@ -422,7 +435,10 @@ async function handler(m, { sock, conn, config, db }) {
   }
 
   // 🔹 CHAT: tool null = user ngobrol atau minta execCommand (dari think() JSON langsung)
-  if (!decision?.tool || !TOOLS[decision.tool]) {
+  // 🔹 Registry gabungan TOOLS + SKILLS + MCP (request owner 12 Sep 2026 —
+  // 🔹 agent serba bisa: tool inti + skills + server MCP eksternal)
+  const AGENT_TOOLS = await getAgentTools();
+  if (!decision?.tool || !AGENT_TOOLS[decision.tool]) {
     if (decision?.reply) {
       // catat jawaban AI ke sesi — biar turn berikutnya tetap nyambung
       appendSession(sessionKeyNow, "assistant", decision.reply);
@@ -447,7 +463,7 @@ async function handler(m, { sock, conn, config, db }) {
     return editFinal(claraWrap("novaagent", "Tidak ada respons yang cocok", "error"));
   }
 
-  const tool = TOOLS[decision.tool];
+  const tool = AGENT_TOOLS[decision.tool];
 
   // GERBANG IZIN — dicek di level KODE
   if (tool.perm === "admin") {
@@ -520,8 +536,13 @@ export function novaaiConfirmHandler(m, sock) {
   pending.delete(key);
   if (Date.now() - p.time > 60000) return false;
   if (/^(ya|y|yes|lanjut|gas)\b/i.test(m.text.trim())) {
-    try { TOOLS[p.tool].run(sock, m, p.args); m.reply(TOOLS[p.tool].done); }
-    catch (e) { m.reply(claraWrap("novaagent", `Gagal: ${e.message}`, "error")); }
+    (async () => {
+      const reg = await getAgentTools();
+      const tool = reg[p.tool];
+      if (!tool) return m.reply(claraWrap("novaagent", "Tool-nya gak ketemu lagi (dicabut?)", "error"));
+      try { await tool.run(sock, m, p.args); m.reply(tool.done || ""); }
+      catch (e) { m.reply(claraWrap("novaagent", `Gagal: ${e.message}`, "error")); }
+    })();
   } else { m.reply(claraWrap("novaagent", "Dibatalkan")); }
   return true;
 }

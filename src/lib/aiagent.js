@@ -1,5 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
+import { searchWeb, fetchPagePreview } from "./nova-websearch.js";
+import { getAllSkills } from "./nova-skills.js";
+import { getMcpToolEntries } from "./nova-mcp.js";
 // ============================================================
 // 🔹 AI AGENT — Otak AI yang bisa ngatur fitur bot via bahasa natural
 // 🔹 Berbeda dari AI biasa (aichat/deepseek), AI Agent bisa EKSEKUSI aksi:
@@ -386,6 +389,118 @@ export const TOOLS = {
     done: '✅ Bot keluar dari grup.',
     run: (conn, m) => conn.groupLeave(m.chat)
   },
+
+  // ─── DOWNLOAD FILE DARI WEB (request owner 12 Sep 2026: "aku maunya dia
+  // bisa browsing, bsa download file dr web ... serba bisa layaknya
+  // superagent sungguhan" — porting pola tool download .aisuperagent) ───
+  download: {
+    perm: 'user', args: ['url'], danger: false,
+    desc: 'UNDUH FILE dari link URL langsung (apk/zip/mp3/pdf/exe/dll apa saja) — pakai kalau user minta download/unduh file dari link. Link WAJIB langsung ke file, bukan halaman web',
+    done: '✅ Filenya udah aku unduh dan kirim di atas ya.',
+    run: async (conn, m, a) => {
+      const raw = String(a?.url || a?.link || a?.value || '').trim()
+      if (!/^https?:\/\//i.test(raw)) throw new Error('Kasih link langsung ke file-nya (http/https) — contoh: https://situs.com/app.apk')
+      const MAX_MB = parseInt(process.env.AGENT_DL_MAX_MB || '100', 10) || 100
+      const res = await fetch(raw, {
+        redirect: 'follow',
+        headers: { 'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36', Accept: '*/*' },
+        signal: AbortSignal.timeout(120000),
+      }).catch(() => null)
+      if (!res) throw new Error('gak bisa nyampe link-nya (koneksi/timeout)')
+      if (!res.ok) throw new Error('server jawab HTTP ' + res.status)
+      const len = parseInt(res.headers.get('content-length') || '0', 10)
+      if (len && len > MAX_MB * 1024 * 1024) throw new Error('file ' + (len / 1048576).toFixed(1) + ' MB kegedean (max ' + MAX_MB + ' MB)')
+      // nama file: Content-Disposition → path URL → fallback
+      const cd = res.headers.get('content-disposition') || ''
+      const cdM = cd.match(/filename\*?=(?:UTF-8''|")?([^";]+)/i)
+      let name = cdM ? decodeURIComponent(cdM[1]).trim() : ''
+      if (!name) { try { name = decodeURIComponent(new URL(raw).pathname.split('/').pop() || '').trim() } catch {} }
+      name = (name || 'file').replace(/[\u0000-\u001f\\\/:*?"<>|]/g, '').slice(0, 80).trim() || 'file'
+      const ct = (res.headers.get('content-type') || '').split(';')[0].trim().toLowerCase()
+      const ext = (name.match(/\.([a-z0-9]+)$/i) || [])[1]?.toLowerCase()
+      if (ct.includes('text/html') && !ext) throw new Error('link itu halaman web, bukan file langsung — kasih link yang ujungnya nama file')
+      const mime = ext === 'apk' ? 'application/vnd.android.package-archive'
+        : ext === 'zip' ? 'application/zip'
+        : ct && !ct.includes('text/html') ? ct : 'application/octet-stream'
+      const buf = Buffer.from(await res.arrayBuffer())
+      if (!buf.length) throw new Error('file kosong / gak bisa diunduh')
+      if (buf.length > MAX_MB * 1024 * 1024) throw new Error('file kegedean (lebih dari ' + MAX_MB + ' MB)')
+      await conn.sendMessage(m.chat, { document: buf, fileName: name, mimetype: mime }, { quoted: m })
+    }
+  },
+
+  // ─── CREATE FILE (request owner 12 Sep 2026: "bisa buatkan file kyk txt,
+  // doc, xls, ja, html dll" — .novaagent serba bisa layaknya superagent) ───
+  // AI isi args: name (nama file tanpa ekstensi), ext (txt/doc/xls/xlsx/js/
+  // html/py/php/json/md/css), content (ISI file lengkap — untuk xls/xlsx isi
+  // tabel CSV: baris = record, kolom dipisah koma; koma dalam teks pakai "...").
+  createfile: {
+    perm: 'user', args: ['name', 'ext', 'content'], danger: false,
+    desc: 'MEMBUAT FILE (txt/doc/xls/xlsx/js/html/css/py/php/json/md) — pakai kalau user minta dibuatkan file/dokumen/daftar/kode program. Isi: name = nama file singkat tanpa spasi/ekstensi, ext = jenis file (txt/doc/xls/js/html/py/dll), content = ISI FILE LENGKAP (untuk xls/xlsx tulis tabel CSV per baris). Kode program juga pakai tool ini (ext sesuai bahasa)',
+    done: '✅ Filenya udah aku buatin dan kirim di atas ya.',
+    run: async (conn, m, a) => {
+      const EXT_WHITELIST = ['txt','md','js','ts','html','css','json','py','php','java','sh','csv','sql','xml','doc','docx','xls','xlsx']
+      let ext = String(a?.ext || a?.type || a?.format || '').toLowerCase().replace(/[^a-z0-9]/g, '').trim()
+      if (ext === 'javascript') ext = 'js'
+      if (ext === 'word') ext = 'doc'
+      if (ext === 'excel' || ext === 'spreadsheet') ext = 'xlsx'
+      if (ext === 'text') ext = 'txt'
+      let content = String(a?.content ?? a?.isi ?? a?.text ?? '')
+      if (!content.trim()) throw new Error('isi file-nya (content) kosong — kasih konten lengkapnya')
+      if (!EXT_WHITELIST.includes(ext)) {
+        // fallback: tebakin dari nama file kalau AI kasih name ber-ext
+        const nm = String(a?.name || '')
+        const nmExt = (nm.match(/\.([a-z0-9]+)$/i) || [])[1]?.toLowerCase()
+        if (nmExt && EXT_WHITELIST.includes(nmExt)) ext = nmExt
+        else if (/(kode|code|program|script|aplikasi|website|html)/i.test(content)) ext = 'js'
+        else ext = 'txt'
+      }
+      let base = String(a?.name || a?.filename || 'file').replace(/\.[a-z0-9]+$/i, '').toLowerCase().replace(/[^a-z0-9-_]/g, '').slice(0, 40).trim()
+      if (!base) base = 'file'
+
+      let buf
+      let fileName
+      let mimetype
+      if (ext === 'xls' || ext === 'xlsx') {
+        // CSV content → workbook Excel ASLI (exceljs) — AI dikasih format CSV
+        const { parseCsvContent } = await import('./nova-createfile.js')
+        const rows = parseCsvContent(content)
+        if (!rows.length) throw new Error('tabelnya kosong — isi content dengan baris CSV (kolom dipisah koma)')
+        const { buildWorkbook } = await import('./nova-createfile.js')
+        buf = await buildWorkbook(rows, base)
+        fileName = base + '.' + ext
+        mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      } else if (ext === 'doc' || ext === 'docx') {
+        // dokumen Word: HTML word-compatible bertipe .doc (Word lancar buka)
+        const { buildWordHtml } = await import('./nova-createfile.js')
+        buf = Buffer.from(buildWordHtml(content), 'utf-8')
+        fileName = base + '.doc'
+        mimetype = 'application/msword'
+      } else {
+        buf = Buffer.from(content, 'utf-8')
+        fileName = base + '.' + ext
+        mimetype = ext === 'html' ? 'text/html'
+          : ext === 'js' || ext === 'ts' || ext === 'css' || ext === 'json' || ext === 'xml' || ext === 'sql' ? 'text/plain'
+          : ext === 'csv' ? 'text/csv'
+          : ext === 'txt' ? 'text/plain'
+          : ext === 'md' ? 'text/markdown'
+          : 'application/octet-stream'
+      }
+      await conn.sendMessage(m.chat, { document: buf, fileName, mimetype }, { quoted: m })
+    }
+  },
+}
+
+// ================= REGISTRY GABUNGAN (TOOLS + SKILLS + MCP) =================
+// Request owner 12 Sep 2026: "jadi tool, skills dan mcp banyak yg dipasang
+// lengkap agent sebagai tool tambahan atau kebutuhan yang dibutuhkan agent".
+// TOOLS = tool inti; SKILLS = tool kecil serba bisa (nova-skills.js);
+// MCP = tool dari server MCP eksternal (nova-mcp.js). Semua bentuknya sama
+// (perm/args/danger/desc/run) → gerbang + executor novaai.js jalan generik.
+export async function getAgentTools() {
+  let mcp = {};
+  try { mcp = await getMcpToolEntries(); } catch { /* MCP down gak boleh matiin agent */ }
+  return { ...TOOLS, ...getAllSkills(), ...mcp };
 }
 
 // ================= RESOLVE NAMA MEMBER KE JID =================
@@ -604,6 +719,21 @@ export function localParse(text) {
   // ─── LEAVE GROUP (owner) ───
   if (/(keluar|leave|out).*(grup|gc|group)/.test(t)) return { tool: 'leavegc', args: {} }
 
+  // ─── KALKULATOR INSTAN (skills 12 Sep 2026) ───
+  // "berapa 25*4+10" / "5+5" → calc tanpa AI call. Nomor telepon gak boleh
+  // ketangkap: "+62 812..." angka doang → di-skip.
+  if (/^[\d\s+\-*/().^%x×÷]+$/i.test(t) && /\d[\d\s.]*[+\-*/^%]\s*\d/.test(t)) {
+    const flat = t.replace(/[\s()\-]/g, "")
+    if (!/^(\+?62|0)\d{7,}$/.test(flat)) return { tool: "calc", args: { expr: t } }
+  }
+
+  // ─── DOWNLOAD FILE DARI WEB (request owner 12 Sep 2026) ───
+  // instan tanpa AI: "download file ini https://situs.com/app.apk"
+  if (/\b(download|unduh|unduhin|donlot)\b/.test(t)) {
+    const u = (t.match(/https?:\/\/\S+/) || [])[0]
+    if (u) return { tool: 'download', args: { url: u } }
+  }
+
   return null // tidak match → lanjut ke AI provider
 }
 
@@ -733,12 +863,75 @@ export function sanitizeAiReply(text) {
   return s;
 }
 
+// 🔹 DETEKSI QUERY BUTUH INFO TERKINI (fix 12 Sep 2026: owner report ".novaagent
+// sebutkan berita X yang viral" cuma dijawab dari training data lama/halusinasi,
+// padahal .novaagent gak punya browsing sama sekali — beda dari .aisuperagent).
+// Heuristik kata kunci "berita terkini/viral/dll" → trigger quick web search
+// SEBELUM think(), hasil dititip ke prompt biar jawaban akurat + boleh sertakan
+// link sumber ASLI (bukan halusinasi).
+const CURRENT_INFO_PATTERN = /\b(berita|viral|trending|terkini|terbaru|kabar(nya)?|heboh|kejadian|kasus|rame|ramai|hari ini|minggu ini|baru[\s-]?baru ini|browsing|cari di (web|google|internet|internet)|cek di (web|internet)|search di (web|google)|harga (hp|laptop|barang|produk))\b/i;
+export function needsWebSearch(text) {
+  return CURRENT_INFO_PATTERN.test(String(text || ""));
+}
+
+// Search ringan 1x (bukan multi-fase kayak .aisuperagent) — max 2 halaman
+// dibaca, timeout ketat biar gak nyandera timeout budget think(). Gagal =
+// null (fallback diam-diam ke jawaban dari pengetahuan model, gak crash).
+export async function quickWebSearch(query, { limit = 5, readTop = 2 } = {}) {
+  try {
+    const res = await Promise.race([
+      searchWeb(query, { limit }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("search timeout")), 12000)),
+    ]);
+    if (!res || res.error || !res.items?.length) return null;
+    const top = res.items.slice(0, readTop);
+    const pages = await Promise.all(top.map((it) =>
+      Promise.race([
+        fetchPagePreview(it.url),
+        new Promise((resolve) => setTimeout(() => resolve(null), 8000)),
+      ]).catch(() => null)
+    ));
+    let sources = top.map((it, i) => {
+      const p = pages[i];
+      const body = (p && !p.error) ? (p.text || p.description || "").slice(0, 900) : (it.snippet || "");
+      return { title: (p && p.title) || it.title, url: it.url, body };
+    }).filter((s) => s.body);
+    // FILTER RELEVANSI (ketemu pas smoke live 12 Sep: query berita MBG balik
+    // profil LinkedIn gak nyambung — konteks sampah bikin AI jawab ngawur).
+    // Token query (len>=3, bukan stopwords) wajib overlap dengan title/body.
+    const STOP = new Set(["yang","dengan","dan","untuk","dari","ini","itu","apa","kabar","berita","viral","terbaru","terkini","sebutkan","tolong","dong","lagi","banget","dikit","hari","minggu","ada","kasus","kabar"]);
+    const tokens = String(query).toLowerCase().match(/[a-z0-9]+/g) || [];
+    const qt = [...new Set(tokens.filter((x) => x.length >= 3 && !STOP.has(x)))];
+    sources = sources.filter((s) => {
+      if (!qt.length) return true; // query gak bisa ditoken → jangan buang semua
+      const hay = (s.title + " " + s.body).toLowerCase();
+      return qt.some((x) => hay.includes(x));
+    });
+    if (!sources.length) return null;
+    const block = sources.map((s, i) => `[S${i + 1}] ${s.title}
+Sumber: ${s.url}
+${s.body}`).join("\n\n");
+    return { block, sources };
+  } catch {
+    return null;
+  }
+}
+
 // 🔹 AI AGENT: think() — nerjemahin bahasa manusia jadi perintah tool (JSON)
 // 🔹 AI hanya dipanggil kalau localParse tidak match
-export async function think(text, ctx = {}) {
-  const toolsList = Object.entries(TOOLS)
+// Ekstrak dari think() (fix 12 Sep 2026) — testable tanpa nge-hit AI live,
+// dipake e2e buat verifikasi blok webSearch/memory kecantol bener ke prompt.
+export function buildThinkSystemPrompt(ctx = {}) {
+  // Tools gabungan: TOOLS inti + SKILLS registry (request owner 12 Sep 2026)
+  const allTools = { ...TOOLS, ...getAllSkills() }
+  let toolsList = Object.entries(allTools)
     .map(([k, v]) => `- ${k}: ${v.desc}${v.args ? ' (butuh args: ' + v.args.join(', ') + ')' : ''}`)
     .join('\n')
+  // + tool dari server MCP eksternal (kalau ada yang terpasang)
+  const mcpTools = (ctx.mcpTools || []).slice(0, 30)
+  if (mcpTools.length) {
+    toolsList += '\n' + mcpTools.map((t) => `- ${t.name}: ${t.desc}`).join('\n')
+  }
 
   const now = new Date()
   const tanggalSekarang = now.toLocaleDateString('id-ID', {
@@ -778,6 +971,7 @@ Aturan WAJIB:
 - Balas HANYA JSON mentah, tanpa \`\`\` dan tanpa teks lain
 - Format: {"tool":"nama_tool"|null,"args":{},"execCommand":"nama_command"|null,"execArgs":"","reply":"..."}
 - FORMAT FIELD "reply" (WAJIB, kamu TIDAK punya akses browsing/internet real-time di jalur ini — jawab dari pengetahuanmu, JANGAN PURA-PURA browsing): JANGAN PERNAH tulis markdown link [teks](url), JANGAN tulis URL/link apa pun (apalagi yang kamu ngaku-ngaku sebagai gambar/sumber produk — itu PASTI halusinasi, bukan link asli), JANGAN pakai markdown heading (### dst) atau baris pembatas (---), JANGAN niru format "Google AI Overview"/hasil mesin pencari. Tulis jawaban natural ala chat WhatsApp — paragraf pendek atau poin bernomor/•, bahasa biasa, boleh **bold** pakai *bintang* WhatsApp kalau perlu.
+- KHUSUS kalau ada blok "== HASIL PENCARIAN WEB TERKINI ==" di bawah: itu hasil browsing ASLI baru saja, WAJIB dipakai sebagai dasar jawaban (jangan tebak dari training data lama untuk topik itu) dan BOLEH cantumkan link sumber [S1]/[S2] yang tercantum PERSIS di blok itu karena itu URL ASLI (bukan halusinasi), format "📎 Sumber: <url>" di akhir reply. Kalau blok itu TIDAK ADA, tetap berlaku aturan JANGAN tulis URL apa pun.
 - Nomor WA format 62xxx tanpa + dan tanpa strip. Mention yang tersedia: ${ctx.mentions || 'tidak ada'}
 - Untuk setname/setdesc/hidetag/poll isi args.value dengan teksnya
 - Kalau "tool" dan "execCommand" TIDAK NULL (aksi grup/command dijalankan): "reply" cukup konfirmasi SINGKAT 1 kalimat.
@@ -791,6 +985,10 @@ Contoh:
 "blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"Oke, user diblokir."}
 "ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Oke."}
 "jadikan stiker gambar ini" → {"tool":null,"args":{},"execCommand":"s","execArgs":"","reply":"Oke, aku jadikan stiker ya!"}
+"download apk dari https://situs.com/app.apk" → {"tool":"download","args":{"url":"https://situs.com/app.apk"},"execCommand":null,"reply":"Oke, aku unduh filenya ya."}
+"buatkan file txt daftar belanja: beras 5kg, minyak 2 liter, gula 1kg" → {"tool":"createfile","args":{"name":"daftarbelanja","ext":"txt","content":"DAFTAR BELANJA\n1. Beras 5kg\n2. Minyak 2 liter\n3. Gula 1kg"},"execCommand":null,"reply":"Oke, aku buatin file txt daftar belanjanya."}
+"buatkan file excel data siswa: nama, kelas. Andi 7A, Budi 7B" → {"tool":"createfile","args":{"name":"datasiswa","ext":"xlsx","content":"Nama,Kelas\nAndi,7A\nBudi,7B"},"execCommand":null,"reply":"Oke, aku buatin file Excel-nya."}
+"buatkan kode html toko kue" → {"tool":"createfile","args":{"name":"tokokue","ext":"html","content":"<!DOCTYPE html> ... KODE LENGKAP ..."},"execCommand":null,"reply":"Oke, aku buatin file html toko kue."}
 "apa itu nodejs" → {"tool":null,"execCommand":null,"reply":"Node.js adalah runtime JavaScript yang dibangun di atas engine V8 Chrome, dipakai untuk menjalankan JavaScript di luar browser (server-side). Cocok buat backend API, real-time app, dan tooling."}
 "jam berapa sekarang" → {"tool":null,"execCommand":null,"reply":"Sekarang jam ${jamSekarang}."}
 "siapa presiden indonesia" → {"tool":null,"execCommand":null,"reply":"Presiden Indonesia saat ini adalah Prabowo Subianto, didampingi Wakil Presiden Gibran Rakabuming Raka."}`
@@ -801,9 +999,30 @@ Contoh:
     ? `\n\n== MEMORI TENTANG USER ==\n${ctx.memory}`
     : ''
 
+  // ctx.webSearch: hasil quickWebSearch() (fix 12 Sep 2026, lihat needsWebSearch
+  // di atas) — dititip ke prompt biar jawaban berita/topik viral akurat +
+  // boleh cite link sumber ASLI, bukan halusinasi dari training data lama
+  const webSearchSection = ctx.webSearch
+    ? `\n\n== HASIL PENCARIAN WEB TERKINI ==\n${ctx.webSearch}`
+    : ''
+
+  return sys + memorySection + webSearchSection
+}
+
+// 🔹 AI AGENT: think() — nerjemahin bahasa manusia jadi perintah tool (JSON)
+// 🔹 AI hanya dipanggil kalau localParse tidak match
+export async function think(text, ctx = {}) {
+  // MCP: daftar tool server eksternal ke-merge ke prompt (best-effort,
+  // server down = skip — agent gak boleh mati gara2 satu server ngambek)
+  if (!ctx.mcpTools) {
+    try {
+      const entries = await getMcpToolEntries()
+      ctx.mcpTools = Object.entries(entries).map(([name, v]) => ({ name, desc: v.desc }))
+    } catch { ctx.mcpTools = [] }
+  }
   // ctx.history: percakapan sebelumnya dari session — fix bug "iya" dianggap
   // sesi baru (AI dulu selalu dipanggil single-shot tanpa histori sama sekali)
-  const raw = await askAI(sys + memorySection, text, ctx.history || [])
+  const raw = await askAI(buildThinkSystemPrompt(ctx), text, ctx.history || [])
   const clean = raw.replace(/```json|```/g, '').trim()
   const start = clean.indexOf('{')
   const end = clean.lastIndexOf('}')
