@@ -36,8 +36,8 @@ const XEMOZ_DS = "https://api-xemoz-official.my.id/api/ai/deepseek-v3.2-thinking
 const HAIDAR_MODELS = {
   gemini:   { ep: "gemini",  param: "message", pick: d => d?.text },
   claude:   { ep: "claude",  param: "message", pick: d => d?.content },
-  gpt5:     { ep: "gpt55",   param: "message", pick: d => d?.reply },
-  gpt4:     { ep: "gpt54",   param: "message", pick: d => d?.reply },
+  gpt5:     { ep: "chatgpt", param: "message", pick: d => d?.reply },
+  gpt4:     { ep: "chatgpt", param: "message", pick: d => d?.reply },
   gpt4o:    { ep: "mateai",  param: "message", pick: d => d?.reply },
   deepseek: { ep: "deepsek", param: "message", pick: d => d?.answer },
   googleai: { ep: "googleai", param: "text",  pick: d => d?.answer || d?.text || d?.reply },
@@ -283,7 +283,7 @@ export async function aiChainChat(prompt, opts = {}) {
 //   • opts.route "kuroneko"  → kuronekoChat
 //   • selain itu             → viaHaidar(opts.model, default "gemini") —
 //                              brand endpoint masing-masing:
-//                              deepseek→deepsek, gpt5→gpt55, gpt4→gpt54,
+//                              deepseek→deepsek, gpt5/gpt4→chatgpt,
 //                              gpt4o→mateai, claude→claude, googleai/gemini→gemini
 // Persona/systemPrompt/sesi obrolan/quoted tetap kepake seperti biasa.
 // ─────────────────────────────────────────────────────────────────────────────

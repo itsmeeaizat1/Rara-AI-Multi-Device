@@ -15,6 +15,19 @@ const HEADERS = {
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
 };
 
+
+// LRCLIB kadang 503 "server busy" (transient) — retry 1x dengan jeda 1.5 dtk
+async function lrclibGet(url, config) {
+  try {
+    return await axios.get(url, config);
+  } catch (e) {
+    const retryable = e?.response?.status === 503 || e?.response?.status === 429;
+    if (!retryable) throw e;
+    await new Promise((r) => setTimeout(r, 1500));
+    return axios.get(url, config);
+  }
+}
+
 /**
  * Ambil lirik lagu dari LRCLIB.
  * @param {string} queryOrTrack — judul lagu atau link track spotify
@@ -49,7 +62,7 @@ export async function getLyrics(queryOrTrack, artist = "") {
 
   // 1. Exact search via LRCLIB
   try {
-    const res = await axios.get("https://lrclib.net/api/get", {
+    const res = await lrclibGet("https://lrclib.net/api/get", {
       params: { track_name: trackName, artist_name: artistName },
       timeout: 10000,
       headers: HEADERS,
@@ -78,7 +91,7 @@ export async function getLyrics(queryOrTrack, artist = "") {
   try {
     for (const q of queries) {
       if (!q) continue;
-      const searchRes = await axios.get("https://lrclib.net/api/search", {
+      const searchRes = await lrclibGet("https://lrclib.net/api/search", {
         params: { q },
         timeout: 10000,
         headers: HEADERS,
