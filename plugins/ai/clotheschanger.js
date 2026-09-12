@@ -1,8 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// clotheschanger — Ganti baju via AI (prompt ATAU gambar baju referensi)
-// + preset gaya 1 kata (formal/casual/street/dll) + opsi HD (hd/hd2).
-// Engine: nano-banana chain (live3d → kuroneko → FGSI) — pola .editimg,
-// dengan prompt engineering khusus ganti baju + jaga wajah/pose/background.
+// clotheschanger — Keluarga fitur edit foto AI 1 command:
+// .aiclotheschanger (ganti baju — prompt/preset/gambar baju)
+// .aiclotheschangerfaceswap (tukar wajah 2 foto)
+// .aiclotheschangerage (ubah umur) | .aiclotheschangerhair (ubah rambut)
+// .aiclotheschangergender (ganti gender) | .aiclotheschangerbg (ganti background)
+// .aiclotheschangerhapus (hapus objek)
+// Engine: nano-banana chain (live3d → kuroneko → FGSI) + flag hd.
 import { Img2Img } from "../../src/scraper/img2img.js";
 import { live3d } from "../../src/scraper/seaart.js";
 import { nanoBananaEdit, uploadToUguu } from "../../src/scraper/kuroneko.js";
@@ -13,11 +16,34 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "aiclotheschanger",
-  alias: ["aiclotheschanger"],
-  category: 'ai image',
-  description: "Ganti baju di foto pakai AI — prompt, preset gaya, atau gambar baju",
-  usage: ".aiclotheschanger <prompt/preset> (reply foto orang)\n.aiclotheschanger hd <preset/prompt> (hasil jernih)\n.aiclotheschanger hd2 <preset/prompt> (hasil 2x lebih besar)\n.aiclotheschanger (reply foto orang + kirim gambar baju)",
-  example: ".aiclotheschanger change the shirt to red (reply foto)\n.aiclotheschanger formal (reply foto)\n.aiclotheschanger hd street (reply foto)\n.aiclotheschanger (reply foto orang, sambil kirim gambar baju)",
+  alias: [
+    "aiclotheschanger",
+    "aiclotheschangerfaceswap",
+    "aiclotheschangerage",
+    "aiclotheschangerhair",
+    "aiclotheschangergender",
+    "aiclotheschangerbg",
+    "aiclotheschangerhapus",
+  ],
+  category: "ai image",
+  description: "Keluarga edit foto AI: ganti baju, face swap, umur, rambut, gender, background, hapus objek",
+  usage:
+    ".aiclotheschanger <prompt/preset> (reply foto) — ganti baju\n" +
+    ".aiclotheschangerfaceswap (reply foto target + kirim foto wajah)\n" +
+    ".aiclotheschangerage <tua|muda|anak|bayi|1-100> (reply foto)\n" +
+    ".aiclotheschangerhair <prompt/preset rambut> (reply foto)\n" +
+    ".aiclotheschangergender <cewek|cowok> (reply foto)\n" +
+    ".aiclotheschangerbg <prompt background> (reply foto)\n" +
+    ".aiclotheschangerhapus <objek> (reply foto)\n" +
+    "tambah hd (jernih) / hd2 (2x) di semua fitur",
+  example:
+    ".aiclotheschanger hd formal (reply foto)\n" +
+    ".aiclotheschangerfaceswap (reply foto + kirim foto wajah)\n" +
+    ".aiclotheschangerage tua\n" +
+    ".aiclotheschangerhair pakis\n" +
+    ".aiclotheschangergender cewek\n" +
+    ".aiclotheschangerbg pantai bali\n" +
+    ".aiclotheschangerhapus kursi",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -26,6 +52,8 @@ const pluginConfig = {
   energi: 3,
   isEnabled: true,
 };
+
+// ══════════════════════ GANTI BAJU (base) ══════════════════════
 
 // ── Preset gaya 1 kata → prompt outfit lengkap (ID + EN) ──
 export const PRESET_STYLES = {
@@ -97,7 +125,7 @@ export function parseHdFlag(prompt) {
   if (!m) return { hd: "", prompt: prompt.trim() };
   const flag = m[1].toLowerCase();
   const clean = prompt.replace(m[0], " ").replace(/\s+/g, " ").trim();
-  if (flag === "4k") return { hd: "2x", prompt: clean }; // 2x dari hasil AI (aman, gak lempar 16000px)
+  if (flag === "4k") return { hd: "2x", prompt: clean };
   if (flag === "2k" || flag === "hd2") return { hd: "2x", prompt: clean };
   return { hd: "polish", prompt: clean };
 }
@@ -114,12 +142,91 @@ export function buildEditPrompt(userPrompt, clothesDesc) {
   return `${target}. Keep the same person — face, identity, skin tone, hairstyle, body shape, pose, and the background must stay EXACTLY the same. Only the clothing changes. The new outfit must fit naturally with realistic fabric, folds and shadows. Photorealistic, high quality photo.`;
 }
 
+// ══════════════════════ PROMPT BUILDER FITUR KELUARGA ══════════════════════
+
+/** .aiclotheschangerage — ubah umur */
+export function buildAgePrompt(arg) {
+  const a = (arg || "").toLowerCase().trim();
+  let target;
+  if (/^tua|^lansia|^old/.test(a)) target = "a 70-year-old elderly version";
+  else if (/^muda|^young|^remaja/.test(a)) target = "a 20-year-old young adult version";
+  else if (/^anak|^child|^kid/.test(a)) target = "an 8-year-old child version";
+  else if (/^bayi|^baby/.test(a)) target = "a 1-year-old baby version";
+  else {
+    const n = parseInt(a, 10);
+    if (!n || n < 1 || n > 100) return null;
+    target = `a ${n}-year-old version`;
+  }
+  return `Transform the person in the photo into ${target} of themselves. It must clearly be the SAME PERSON — keep their recognizable facial features, identity and skin tone, just aged appropriately. Keep the clothing, pose, lighting and background exactly the same. Only the age changes. Photorealistic, high quality photo.`;
+}
+
+/** .aiclotheschangerhair — ubah rambut (preset cepat + bebas) */
+export const HAIR_PRESETS = {
+  botak: "a completely bald head, smooth and natural",
+  cepak: "a short buzz cut hairstyle, neat and clean",
+  panjang: "long flowing hair down to the shoulders",
+  ikal: "curly hair, natural voluminous curls",
+  pakis: "the iconic Korean-style two-block mullet haircut (pakis), trendy and fluffy with flowing middle-parted bangs",
+  undercut: "a sharp undercut with slicked-back top hair",
+  dread: "dreadlocks, long natural locs",
+  mohawk: "a bold mohawk with shaved sides",
+  pirang: "blonde hair, natural color",
+  hitam: "natural jet black hair",
+};
+
+export function buildHairPrompt(arg) {
+  if (!arg) return null;
+  const words = arg.trim().split(/\s+/);
+  const key = words[0].toLowerCase();
+  const rest = words.slice(1).join(" ").trim();
+  const style = HAIR_PRESETS[key] ? HAIR_PRESETS[key] + (rest ? `, ${rest}` : "") : arg;
+  return `Change the person's hairstyle to: ${style}. Keep the same person — face, identity, skin tone and body shape must stay exactly the same, along with the clothing, pose and background. Only the hair changes. The new hairstyle must blend naturally with realistic hair texture. Photorealistic, high quality photo.`;
+}
+
+/** .aiclotheschangergender — ganti tampilan gender */
+export function buildGenderPrompt(arg) {
+  const a = (arg || "").toLowerCase().trim();
+  let target;
+  if (/^cewek|^wanita|^perempuan|^cewe|^girl|^woman|^female/.test(a)) target = "a woman";
+  else if (/^cowok|^cowo|^pria|^laki|^guy|^man|^male|^boy/.test(a)) target = "a man";
+  else return null;
+  return `Transform the person in the photo to look like ${target} — the opposite gender version of themselves. Keep it clearly the SAME PERSON: same facial identity vibe, same skin tone, same pose and background. Adjust the facial features, hairstyle and body shape naturally to the new gender, and adapt the outfit accordingly so it looks natural. Photorealistic, high quality photo.`;
+}
+
+/** .aiclotheschangerbg — ganti background */
+export function buildBgPrompt(arg) {
+  if (!arg || !arg.trim()) return null;
+  return `Replace the background of the photo with: ${arg.trim()}. The person (or main subject) must stay EXACTLY the same — face, identity, clothing, pose, body shape, all untouched. Blend the subject naturally into the new background with matching lighting, shadows and perspective. Photorealistic, high quality photo.`;
+}
+
+/** .aiclotheschangerhapus — hapus objek */
+export function buildRemovePrompt(arg) {
+  if (!arg || !arg.trim()) return null;
+  return `Remove the following from the photo completely: ${arg.trim()}. Fill in the area where it was with natural, realistic surroundings that match the rest of the scene. Everything else must stay exactly the same — do not change any other part of the photo. Photorealistic, seamless result.`;
+}
+
+/** .aiclotheschangerfaceswap — tukar wajah dari deskripsi wajah sumber */
+export function buildFaceSwapPrompt(faceDesc, userPrompt) {
+  let p = `Replace the person's face in the photo with this face: ${faceDesc}. Keep everything else exactly the same — hairstyle, clothing, pose, body shape and background. The new face must blend naturally with matching skin tone, lighting and perspective.`;
+  if (userPrompt) p += ` Additional detail from user: ${userPrompt}.`;
+  return p + " Photorealistic, high quality photo.";
+}
+
+// ══════════════════════ VISION ══════════════════════
+
 // ── Deteksi baju dari gambar referensi (vision chain) ──
 const CLOTHES_Q =
   "Describe ONLY the clothing/outfit shown in this image, for use in an AI photo editor. " +
   "Include: garment type (shirt/dress/jacket/etc), colors, material, pattern, style, and fit. " +
   "Answer in English, maximum 80 words, plain text only. " +
   "If there is absolutely no clothing visible in the image, reply with only the word: BUKAN_BAJU";
+
+// ── Deteksi wajah dari foto sumber (face swap) ──
+const FACE_Q =
+  "Describe ONLY the face of the person shown in this image, for use in an AI face swap. " +
+  "Include: gender, approximate age, face shape, eyes, eyebrows, nose, mouth, skin tone, and any distinctive features. " +
+  "Answer in English, maximum 80 words, plain text only. " +
+  "If there is no human face visible in the image, reply with only the word: BUKAN_WAJAH";
 
 export function parseClothesDesc(text) {
   if (!text || typeof text !== "string") return null;
@@ -128,6 +235,16 @@ export function parseClothesDesc(text) {
   const clean = t.replace(/```(json|text)?/gi, "").trim().replace(/^["']|["']$/g, "").trim();
   return clean.length >= 8 ? clean.slice(0, 600) : null;
 }
+
+export function parseFaceDesc(text) {
+  if (!text || typeof text !== "string") return null;
+  const t = text.trim();
+  if (/BUKAN_WAJAH/i.test(t)) return null;
+  const clean = t.replace(/```(json|text)?/gi, "").trim().replace(/^["']|["']$/g, "").trim();
+  return clean.length >= 8 ? clean.slice(0, 600) : null;
+}
+
+// ══════════════════════ ENGINE + SEAM ══════════════════════
 
 // ── Seam e2e: dependency bisa di-inject biar tes gak nyamber API live ──
 let depVision = visionScan;
@@ -165,6 +282,42 @@ async function toBuffer(result) {
   return Buffer.from(res.data);
 }
 
+/** Rantai edit: live3d nano-banana → kuroneko → Img2Img. Throw kalau semua down. */
+async function runEditChain(personBuf, editPrompt) {
+  let result = null;
+  let usedApi = "";
+  try {
+    const res = await depLive3d(personBuf, editPrompt);
+    if (res.image) {
+      result = res.image;
+      usedApi = "nano-banana";
+    }
+  } catch (e) {
+    console.error("clotheschanger live3d:", e.message);
+  }
+  if (!result) {
+    try {
+      result = await kuronekoEdit(personBuf, editPrompt);
+      usedApi = "nano-banana (kuronoko)";
+    } catch (e) {
+      console.error("clotheschanger kuroneko:", e.message);
+    }
+  }
+  if (!result) {
+    try {
+      const res = await depImg2Img(editPrompt, personBuf, "edit.png");
+      if (res.status && res.result) {
+        result = res.result;
+        usedApi = "img2img";
+      }
+    } catch (e) {
+      console.error("clotheschanger img2img:", e.message);
+    }
+  }
+  if (!result) throw new Error("semua engine down");
+  return { result, usedApi };
+}
+
 // ── Poles/upscale hasil sesuai flag hd ──
 async function applyHd(buffer, hdMode) {
   if (hdMode === "polish") return depPolish(buffer);
@@ -191,29 +344,172 @@ async function downloadQuoted(m) {
   }
 }
 
+// ── Kirim hasil + caption (fail-safe URL → teks) ──
+async function sendResult(sock, m, result, caption) {
+  if (Buffer.isBuffer(result)) {
+    await sock.sendMedia(m.chat, result, null, m, { type: "image", caption });
+    return;
+  }
+  try {
+    const imgBuf = await toBuffer(result);
+    await sock.sendMedia(m.chat, imgBuf, null, m, { type: "image", caption });
+  } catch {
+    await m.reply(caption + "\n\n" + result);
+  }
+}
+
+/** Alur inti bersama: react → chain → hd → caption → kirim. */
+async function runFeature(m, sock, personBuf, editPrompt, meta, hdMode, cmd) {
+  await m.react("🛠️");
+  const { result, usedApi } = await runEditChain(personBuf, editPrompt);
+
+  let finalResult = result;
+  let hdNote = "";
+  if (hdMode) {
+    try {
+      const buf = await toBuffer(result);
+      const hd = await applyHd(buf, hdMode);
+      if (Buffer.isBuffer(hd) && hd.length > 1000) {
+        finalResult = hd;
+        hdNote = hdMode === "2x" ? "2x HD" : "HD";
+      }
+    } catch (e) {
+      console.error("clotheschanger hd:", e.message);
+    }
+  }
+
+  await m.react("🐣");
+  let caption = `${meta.emoji} *${toSC(meta.title)}*\n`;
+  for (const line of meta.lines) {
+    if (line) caption += line + "\n";
+  }
+  caption += `⚙️ ${toSC("engine")}: *${usedApi}*`;
+  if (hdNote) caption += ` | ✨ *${toSC(hdNote)}*`;
+  await sendResult(sock, m, finalResult, caption);
+}
+
+// ══════════════════════ HANDLER + DISPATCHER ══════════════════════
+
 async function handler(m, { sock }) {
   try {
     const prefix = m.prefix || ".";
-    const cmd = "aiclotheschanger";
+    const typed = (m.command || pluginConfig.name).toLowerCase();
+    const suffix = typed.replace(/^aiclotheschanger/, "").toLowerCase();
 
-    // ── Deteksi foto: reply = foto orang, attachment di pesan command = gambar baju ──
+    // ── Deteksi foto: reply = foto utama, attachment di pesan command = foto kedua ──
     const quotedIsImage = !!(m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage" || m.quoted.isMedia));
     const msgIsImage = !!(m.isImage || m.isMedia);
     const rawPrompt = (m.text || m.args?.join(" ") || "").trim();
     const { hd: hdMode, prompt: prompt0 } = parseHdFlag(rawPrompt);
     let prompt = prompt0;
 
-    let personBuf = null;
-    let clothesBuf = null;
+    // ═══ .aiclotheschangerfaceswap — reply foto target + kirim foto wajah sumber ═══
+    if (suffix === "faceswap") {
+      let targetBuf = null;
+      let faceBuf = null;
+      if (quotedIsImage) {
+        targetBuf = await downloadQuoted(m);
+        if (msgIsImage) faceBuf = await downloadImage(m);
+      } else if (msgIsImage) {
+        faceBuf = await downloadImage(m);
+      }
+      if (!targetBuf || !faceBuf) {
+        await m.react("❌");
+        return m.reply(claraWrap(typed,
+          `Butuh 2 foto!\n\n` +
+          `1. ${toSC("reply")} foto *${toSC("target")}* (orang yang mau diganti wajahnya)\n` +
+          `2. ${toSC("kirim")} foto *${toSC("sumber wajah")}* sambil ketik ${prefix}${typed}\n\n` +
+          `Contoh: ${prefix}${typed} (reply foto target, kirim foto wajah baru)`, "guide"));
+      }
 
-    if (quotedIsImage) {
-      personBuf = await downloadQuoted(m);
-      if (msgIsImage) clothesBuf = await downloadImage(m);
-    } else if (msgIsImage) {
-      // tanpa reply → satu gambar = foto orang
-      personBuf = await downloadImage(m);
+      await m.react("🧠");
+      const res = await depVision({ imageBuffer: faceBuf, question: FACE_Q, sessionKey: null })
+        .catch((e) => ({ status: false, error: e.message }));
+      const faceDesc = res?.status ? parseFaceDesc(res.text) : null;
+      if (!faceDesc) {
+        await m.react("❌");
+        return m.reply(claraWrap(typed,
+          res?.status
+            ? `${toSC("gambarnya gak kedeteksi ada wajah")} — ${toSC("kirim foto yang wajahnya jelas")}.`
+            : `${toSC("gagal baca foto wajah, coba lagi")}.`, "error"));
+      }
+
+      const editPrompt = buildFaceSwapPrompt(faceDesc, prompt);
+      return await runFeature(m, sock, targetBuf, editPrompt, {
+        emoji: "🎭",
+        title: "face swap ai",
+        lines: [`🎯 ${toSC("sumber wajah")}: *${toSC("foto kedua")}*`],
+      }, hdMode, typed);
     }
 
+    // ═══ .aiclotheschangerage / hair / gender / bg / hapus ═══
+    if (["age", "hair", "gender", "bg", "hapus"].includes(suffix)) {
+      const { buf } = await (async () => {
+        try {
+          if (m.quoted && (m.quoted.isMedia || m.quoted.isImage || m.quoted.type === "imageMessage")) {
+            const b = await m.quoted.download();
+            if (b && b.length > 500) return { buf: b };
+          }
+        } catch { /* lanjut */ }
+        try {
+          if (m.isImage || m.isMedia) {
+            const b = await m.download();
+            if (b && b.length > 500) return { buf: b };
+          }
+        } catch { /* lanjut */ }
+        return { buf: null };
+      })();
+
+      let editPrompt = null;
+      let meta = null;
+      if (suffix === "age") {
+        editPrompt = buildAgePrompt(prompt);
+        meta = {
+          emoji: "⏳", title: "ubah umur ai",
+          lines: [`🎯 ${toSC("umur")}: *${toSC(prompt)}*`],
+          guide: `Kasih umur yang bener!\n\nPilihan: tua | muda | anak | bayi | angka 1-100\nContoh: ${prefix}${typed} tua — reply foto orang`,
+        };
+      } else if (suffix === "hair") {
+        editPrompt = buildHairPrompt(prompt);
+        meta = {
+          emoji: "💇", title: "ubah rambut ai",
+          lines: [`✨ ${toSC("model")}: *${toSC((prompt || "").slice(0, 90))}*`],
+          guide: `Kasih model rambutnya!\n\nPreset cepat: botak, cepak, panjang, ikal, pakis, undercut, dread, mohawk, pirang, hitam\nContoh: ${prefix}${typed} pakis — reply foto orang`,
+        };
+      } else if (suffix === "gender") {
+        editPrompt = buildGenderPrompt(prompt);
+        meta = {
+          emoji: "🔄", title: "ganti gender ai",
+          lines: [`🎯 ${toSC("jadi")}: *${toSC(prompt)}*`],
+          guide: `Pilih dulu: *cewek* atau *cowok*!\n\nContoh: ${prefix}${typed} cewek — reply foto orang`,
+        };
+      } else if (suffix === "bg") {
+        editPrompt = buildBgPrompt(prompt);
+        meta = {
+          emoji: "🏞️", title: "ganti background ai",
+          lines: [`✨ ${toSC("background")}: *${toSC((prompt || "").slice(0, 90))}*`],
+          guide: `Kasih background barunya!\n\nContoh: ${prefix}${typed} pantai bali — reply foto\nIde: kota tokyo malam, studio putih, taman bunga, pegunungan bersalju`,
+        };
+      } else {
+        editPrompt = buildRemovePrompt(prompt);
+        meta = {
+          emoji: "🧹", title: "hapus objek ai",
+          lines: [`🗑️ ${toSC("dihapus")}: *${toSC((prompt || "").slice(0, 90))}*`],
+          guide: `Kasih objek yang mau dihapus!\n\nContoh: ${prefix}${typed} kursi — reply foto\nContoh lain: ${prefix}${typed} orang di belakang | ${prefix}${typed} tulisan di dinding`,
+        };
+      }
+
+      if (!editPrompt) {
+        await m.react("❌");
+        return m.reply(claraWrap(typed, meta.guide, "guide"));
+      }
+      if (!buf) {
+        return m.reply(claraWrap(typed, `Kirim/reply foto orangnya dulu!\n\n${meta.guide.split("\n").filter(l => l.startsWith("Contoh"))[0] || ""}`, "guide"));
+      }
+
+      await m.react("🧠");
+      return await runFeature(m, sock, buf, editPrompt, meta, hdMode, typed);
+    }
 
     // ── Subcommand: .aiclotheschanger list preset — daftar semua preset gaya ──
     if (/^(list|daftar)\s*(preset|gaya|style)?$|^preset\s+list$/i.test(rawPrompt)) {
@@ -245,10 +541,27 @@ async function handler(m, { sock }) {
       msg += `${toSC("alias")}: ${["resmi","kantoran","santai","pesta","glam","streetwear","olahraga","gym","liburan","pantai","dingin","kpop","muslim","muslimah","hijab","wedding","militer"].join(", ")}
 
 `;
-      msg += `${toSC("cara pakai")}: ${prefix}${cmd} <${toSC("preset")}> ${toSC("reply foto orang")}
+      msg += `${toSC("fitur keluarga")}: ${prefix}${typed}faceswap | ${prefix}${typed}age | ${prefix}${typed}hair | ${prefix}${typed}gender | ${prefix}${typed}bg | ${prefix}${typed}hapus
+
 `;
-      msg += `${toSC("contoh")}: ${prefix}${cmd} hd batik — ${toSC("hasil jernih + outfit batik")}`;
+      msg += `${toSC("cara pakai")}: ${prefix}${typed} <${toSC("preset")}> ${toSC("reply foto orang")}
+`;
+      msg += `${toSC("contoh")}: ${prefix}${typed} hd batik — ${toSC("hasil jernih + outfit batik")}`;
       return m.reply(msg);
+    }
+
+    // ═══ BASE: .aiclotheschanger — ganti baju ═══
+    const cmd = "aiclotheschanger";
+
+    let personBuf = null;
+    let clothesBuf = null;
+
+    if (quotedIsImage) {
+      personBuf = await downloadQuoted(m);
+      if (msgIsImage) clothesBuf = await downloadImage(m);
+    } else if (msgIsImage) {
+      // tanpa reply → satu gambar = foto orang
+      personBuf = await downloadImage(m);
     }
 
     if (!personBuf) {
@@ -259,7 +572,8 @@ async function handler(m, { sock }) {
         `1. ${prefix}${cmd} <${toSC("prompt baju")}> — ${toSC("reply foto orang")}\n` +
         `2. ${prefix}${cmd} <${toSC("preset")}> — ${toSC("reply foto orang")}\n   ${toSC("preset")}: ${styleList}\n` +
         `3. ${prefix}${cmd} — ${toSC("reply foto orang, sambil kirim gambar bajunya")}\n\n` +
-        `✨ hd = ${toSC("hasil jernih")} | hd2/2k = ${toSC("hasil 2x lebih besar")}\n\n` +
+        `✨ hd = ${toSC("hasil jernih")} | hd2/2k = ${toSC("hasil 2x lebih besar")}\n` +
+        `🎭 ${toSC("fitur keluarga")}: ${prefix}${cmd}faceswap | ${prefix}${cmd}age | ${prefix}${cmd}hair | ${prefix}${cmd}gender | ${prefix}${cmd}bg | ${prefix}${cmd}hapus\n\n` +
         `${toSC("contoh")}: ${prefix}${cmd} change the shirt to red | ${prefix}${cmd} hd formal`
       );
       return;
@@ -308,94 +622,30 @@ async function handler(m, { sock }) {
     }
 
     const editPrompt = buildEditPrompt(prompt, clothesDesc);
-    await m.react("🛠️");
-
-    // ── Rantai engine edit (pola .editimg): nano-banana duluan ──
-    let result = null;
-    let usedApi = "";
-
-    // 1. live3d (nano-banana) — paling bagus
-    try {
-      const res = await depLive3d(personBuf, editPrompt);
-      if (res.image) {
-        result = res.image;
-        usedApi = "nano-banana";
-      }
-    } catch (e) {
-      console.error("clotheschanger live3d:", e.message);
-    }
-
-    // 2. nano-banana via KuroNeko (upload uguu dulu)
-    if (!result) {
-      try {
-        result = await kuronekoEdit(personBuf, editPrompt);
-        usedApi = "nano-banana (kuronoko)";
-      } catch (e) {
-        console.error("clotheschanger kuroneko:", e.message);
-      }
-    }
-
-    // 3. Img2Img (FGSI) — cadangan
-    if (!result) {
-      try {
-        const res = await depImg2Img(editPrompt, personBuf, "edit.png");
-        if (res.status && res.result) {
-          result = res.result;
-          usedApi = "img2img";
-        }
-      } catch (e) {
-        console.error("clotheschanger img2img:", e.message);
-      }
-    }
-
-    if (!result) {
-      await m.react("❌");
-      return m.reply(claraWrap(cmd, "Semua engine edit gambar lagi down. Coba lagi beberapa menit.", "error"));
-    }
-
-    // ── Opsi HD: poles/upscale hasil (fail-safe — gagal → kirim asli) ──
-    let hdNote = "";
-    if (hdMode) {
-      try {
-        const buf = await toBuffer(result);
-        const hd = await applyHd(buf, hdMode);
-        if (Buffer.isBuffer(hd) && hd.length > 1000) {
-          result = hd;
-          hdNote = hdMode === "2x" ? "2x HD" : "HD";
-        }
-      } catch (e) {
-        console.error("clotheschanger hd:", e.message);
-      }
-    }
-
-    await m.react("🐣");
-
-    // ── Caption hasil ──
-    const short = clothesDesc
-      ? clothesDesc.replace(/\s+/g, " ").slice(0, 90)
-      : prompt.slice(0, 90);
-    let caption = "";
-    caption += `👕 *${toSC("ganti baju ai")}*\n`;
-    caption += `🎯 ${toSC("sumber")}: *${toSC(clothesDesc ? "gambar baju" : presetUsed ? `preset ${presetUsed}` : "prompt")}*\n`;
-    if (short) caption += `✨ ${toSC("model baju")}: *${short}*\n`;
-    caption += `⚙️ ${toSC("engine")}: *${usedApi}*`;
-    if (hdNote) caption += ` | ✨ *${hdNote}${toSC("hd")}*`;
-
-    if (Buffer.isBuffer(result)) {
-      await sock.sendMedia(m.chat, result, null, m, { type: "image", caption });
-    } else {
-      try {
-        const imgBuf = await toBuffer(result);
-        await sock.sendMedia(m.chat, imgBuf, null, m, { type: "image", caption });
-      } catch {
-        await m.reply(caption + "\n\n" + result);
-      }
-    }
+    return await runFeature(m, sock, personBuf, editPrompt, {
+      emoji: "👕",
+      title: "ganti baju ai",
+      lines: [
+        `🎯 ${toSC("sumber")}: *${toSC(clothesDesc ? "gambar baju" : presetUsed ? `preset ${presetUsed}` : "prompt")}*`,
+        shortLine(prompt, clothesDesc),
+      ],
+    }, hdMode, cmd);
   } catch (err) {
+    if (err && err.message === "semua engine down") {
+      await m.react("❌");
+      return m.reply(claraWrap((m.command || "aiclotheschanger").toLowerCase(), "Semua engine edit gambar lagi down. Coba lagi beberapa menit.", "error"));
+    }
     console.error("clotheschanger error:", err);
     await m.react("❌");
     return m.reply(claraWrap("aiclotheschanger", (te.novaError && te.novaError(err)) || "Gagal memproses, coba lagi.", "error"));
   }
+}
+
+function shortLine(prompt, clothesDesc) {
+  const short = clothesDesc
+    ? clothesDesc.replace(/\s+/g, " ").slice(0, 90)
+    : (prompt || "").slice(0, 90);
+  return short ? `✨ ${toSC("model baju")}: *${short}*` : "";
 }
 
 export { pluginConfig as config, handler };
