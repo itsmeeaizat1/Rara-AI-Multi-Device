@@ -346,9 +346,10 @@ await setStatus("🧠 " + smallcapsText("setanovaagent menerjemahkan kalimatmu j
 // ada batas TOTAL — min1ai lagi rate-limit (±1 req/7-14 dtk) → askAI 35s
 // + retry 35s + rantai satuan nyoba min1ai LAGI 35s + provider lain
 // satu-satu = user nunggu 3-5 MENIT sebelum parser lokal.
-// Sekarang: seluruh flow maks ±90 dtk (knob env ANOVA_RULE_BUDGET_MS),
+// Sekarang: seluruh flow maks ±35 dtk (knob env ANOVA_RULE_BUDGET_MS,
+// request owner 12 Sep "pendekin jadi 35 detik soalnya lama respon"),
 // tiap call di-race dengan sisa budget — habis → langsung parser lokal.
-const BUDGET_MS = parseInt(process.env.ANOVA_RULE_BUDGET_MS || "90000", 10);
+const BUDGET_MS = parseInt(process.env.ANOVA_RULE_BUDGET_MS || "35000", 10);
 const flowStart = Date.now();
 const remain = () => BUDGET_MS - (Date.now() - flowStart);
 const withBudget = (promise, budgetMs) =>
@@ -364,14 +365,14 @@ let rule = null;
 let viaLocal = false;
 let aiTimeouted = false;
 try {
-  let aiResult = await withBudget(askAI(SYS, body), Math.min(remain(), 40000));
+  let aiResult = await withBudget(askAI(SYS, body), Math.min(remain(), 35000));
   rule = extractJson(aiResult);
   // RETRY cuma kalau AI ngasih TEKS tapi tanpa JSON — kalau call pertama
   // TIMEOUT/gagal network, retry provider yang sama = buang 35 dtk lagi.
   if (!rule && aiResult && !aiTimeouted && remain() > 25000) {
     console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
     await setStatus("🧠 " + smallcapsText("setanovaagent mencoba lagi, lebih teliti..."));
-    aiResult = await withBudget(askAI(SYS_STRICT, body), Math.min(remain() - 5000, 40000));
+    aiResult = await withBudget(askAI(SYS_STRICT, body), Math.min(remain() - 5000, 35000));
     rule = extractJson(aiResult);
   }
 } catch (e) {
@@ -384,7 +385,7 @@ if (!rule && remain() > 15000) {
   try {
     console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
     await setStatus("🧠 " + smallcapsText("setanovaagent nyari otak AI lain..."));
-    const satuan = await withBudget(aiChainChat(body, { systemPrompt: SYS_STRICT }), Math.min(remain() - 5000, 45000));
+    const satuan = await withBudget(aiChainChat(body, { systemPrompt: SYS_STRICT }), Math.min(remain() - 5000, 35000));
     rule = extractJson(satuan);
   } catch (e) {
     console.log("[autonovaai] rantai satuan juga gagal:", e.message);
