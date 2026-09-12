@@ -262,6 +262,25 @@ await handler(mockM({ args: ["list"], text: "list", isImage: true }), { sock: so
 t("7k. list gak manggil engine walau ada foto", (replies.at(-1) || "").includes("batik") && listEngine === 0);
 
 
+
+// ═══ 8. preset batch 3: seragam, kostum, era, budaya ═══
+out("\n— preset batch 3 —");
+t("8a. sekolah → seragam putih + dasi merah", expandPreset("sekolah").expanded.includes("white short-sleeve shirt"));
+t("8b. pramuka → seragam coklat + scarf", expandPreset("pramuka").expanded.includes("Pramuka"));
+t("8c. pengantin → wedding + veil", expandPreset("pengantin").expanded.includes("wedding outfit"));
+t("8d. wedding = alias pengantin", PRESET_STYLES.wedding === PRESET_STYLES.pengantin);
+t("8e. kimono/hanbok beda outfit", expandPreset("kimono").expanded.includes("kimono") && expandPreset("hanbok").expanded.includes("hanbok"));
+t("8f. ninja → shinobi", expandPreset("ninja").expanded.includes("shinobi"));
+t("8g. preset 90s & y2k ke-expand", expandPreset("90s").preset === "90s" && expandPreset("y2k").expanded.includes("Y2K"));
+t("8h. militer = alias army", PRESET_STYLES.militer === PRESET_STYLES.army);
+t("8i. 45+ preset terdaftar", Object.keys(PRESET_STYLES).length >= 45);
+replies.length = 0;
+await handler(mockM({ args: ["list", "preset"], text: "list preset" }), { sock: sockMock });
+const gl3 = replies.at(-1) || "";
+t("8j. list kasih grup baru", gl3.includes("seragam") && gl3.includes("era") && gl3.includes("sekolah") && gl3.includes("kimono"));
+t("8k. alias baris ter-update", gl3.includes("militer") && gl3.includes("wedding"));
+
+
 // ═══ 5. referensi path import bebas memory leak ═══
 out("\n— summary —");
 out(`PASS ${pass} / FAIL ${fail}`);
