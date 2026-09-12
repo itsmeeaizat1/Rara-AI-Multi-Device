@@ -233,32 +233,85 @@ export async function searchWeb(query, { engine = "bing", limit = MAX_RESULTS } 
   // engine dipilih duluan, sisanya fallback
   const order = [engKey, ...ENGINE_CHAIN.filter((k) => k !== engKey)];
   const errors = [];
-  for (const key of order) {
-    const eng = ENGINES[key];
-    try {
-      const url = eng.url(q, limit);
-      // FIX 12 Sep 2026 (ketemu pas smoke .novaagent browsing): engine tanpa
-      // headers (bing/brave/ddg) tadinya kirim request TANPA User-Agent →
-      // bing jawab SERP sampah gak nyambung (Ubisoft/aparthotel utk query
-      // berita). UA default WAJIB selalu terkirim.
-      const baseHeaders = { "User-Agent": UA, "Accept-Language": "id,en;q=0.8", Accept: "text/html,application/xhtml+xml", ...(eng.headers || {}) };
-      const html = eng.post
-        ? await webSearchHttp(url, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", ...baseHeaders }, body: eng.post(q) })
-        : await webSearchHttp(url, { headers: baseHeaders });
-      let items = eng.chain[0](html).slice(0, limit);
-      if (items.length) {
-        // engine cina: link redirect → resolve URL asli paralel (fallback: link redirect tetap dipakai)
-        if (eng.resolve) {
-          items = await Promise.all(items.map(async (it) => ({ ...it, url: await eng.resolve(it.url) })));
+  // 🎯 RELEVANSI GUARD (bug owner 12 Sep: ".agent disuruh siapa prabowo malah
+  // tdk ditemukan" — Bing balikin SERP SAMPAH utk pertanyaan natural Indonesia:
+  // query "siapa prabowo" → hasil "Siapa Gdl | Guadalajara - Facebook" →
+  // agent baca halaman nyasar → nyimpulin gak ketemu). Item yang GAK
+  // ngandung satu pun kata query dibuang; kalau SEMUA item satu engine gak
+  // nyambung → engine dianggap gagal → lanjut engine berikut. Kalau
+  // pada akhirnya SEMUA engine cuma punya hasil nyasar, hasil mentah
+  // terakhir tetap dikasih (lebih baik nyasar daripada "tdk ditemukan").
+  // kata tanya/filler Indonesia + angka murni GAK dihitung buat relevansi —
+  // "siapa" di SERP sampah ("Siapa Gdl | Guadalajara") bikin guard versi 1 lolos
+  const STOP_ID = new Set(["siapa","apa","yang","dan","atau","dari","adalah","itu","ini","untuk","dengan","pada","bagaimana","gimana","kapan","dimana","kemana","kenapa","mengapa","berapa","tolong","mohon","cari","carikan","kasih","beri","dong","ya","saya","aku","kamu","dia","mereka","kita","ada","gak","nggak","tidak","bisa","boleh","akan","sudah","belum","lagi","juga","hanya","biar","supaya","agar","klo","kalau","karena","sampe","sampai","tentang","mengenai"]);
+  const mkTerms = (qs) => (qs.toLowerCase().match(/[\p{L}\p{N}]{3,}/gu) || []).filter((w) => !STOP_ID.has(w) && !/^\d+$/.test(w));
+  // qCore = query minus kata tanya — "siapa prabowo" → "prabowo" (BING SERING
+  // drop kata inti & nyariin kata tandanya doang → SERP sampah "SIAPA Guadalajara")
+  const mkCore = (qs) => qs.split(/\s+/).filter((w) => !STOP_ID.has(w.toLowerCase().replace(/[^\p{L}\p{N}]/gu, ""))).join(" ").trim();
+
+  // satu putaran penuh (semua engine di `order`) buat satu query
+  const attempt = async (qs) => {
+    const terms = mkTerms(qs);
+    let lastResort = null;
+    const errs = [];
+    for (const key of order) {
+      const eng = ENGINES[key];
+      try {
+        const url = eng.url(qs, limit);
+        // FIX 12 Sep 2026 (ketemu pas smoke .novaagent browsing): engine tanpa
+        // headers (bing/brave/ddg) tadinya kirim request TANPA User-Agent →
+        // bing jawab SERP sampah gak nyambung (Ubisoft/aparthotel utk query
+        // berita). UA default WAJIB selalu terkirim.
+        const baseHeaders = { "User-Agent": UA, "Accept-Language": "id,en;q=0.8", Accept: "text/html,application/xhtml+xml", ...(eng.headers || {}) };
+        const html = eng.post
+          ? await webSearchHttp(url, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", ...baseHeaders }, body: eng.post(qs) })
+          : await webSearchHttp(url, { headers: baseHeaders });
+        let items = eng.chain[0](html).slice(0, limit);
+        if (items.length) {
+          // engine cina: link redirect → resolve URL asli paralel (fallback: link redirect tetap dipakai)
+          if (eng.resolve) {
+            items = await Promise.all(items.map(async (it) => ({ ...it, url: await eng.resolve(it.url) })));
+          }
+          if (terms.length) {
+            // skor = berapa kata query yang ke-match di judul+snippet. 1 kata
+            // doang (mis. cuma "cara" di SERP sampah) = nyasar — minimal 2 kata
+            // buat query multi-kata, 1 buat query 1 kata.
+            const need = terms.length >= 2 ? 2 : 1;
+            const relevant = items.filter((it) => {
+              const hay = ((it.title || "") + " " + (it.snippet || "")).toLowerCase();
+              return terms.reduce((n, w) => n + (hay.includes(w) ? 1 : 0), 0) >= need;
+            });
+            if (!relevant.length) {
+              errs.push(eng.label + ": hasil gak nyambung sama query");
+              lastResort = { source: eng.label, engine: key, engineNote, items };
+              continue;
+            }
+            items = relevant;
+          }
+          return { result: { source: eng.label, engine: key, engineNote, items } };
         }
-        return { source: eng.label, engine: key, engineNote, items };
+        errs.push(`${eng.label}: 0 hasil`);
+      } catch (e) {
+        errs.push(`${eng.label}: ${e.message}`);
       }
-      errors.push(`${eng.label}: 0 hasil`);
-    } catch (e) {
-      errors.push(`${eng.label}: ${e.message}`);
     }
+    return { lastResort, errs };
+  };
+
+  const qCore = mkCore(q);
+  const a1 = await attempt(q);
+  if (a1.result) return a1.result;
+  // semua engine nyasar buat query penuh → retry tanpa kata tanya
+  // ("siapa prabowo" → "prabowo") sebelum nyerah
+  if (qCore && qCore !== q) {
+    const a2 = await attempt(qCore);
+    if (a2.result) return { ...a2.result, engineNote: engineNote || "", usedCoreQuery: true };
+    if (a2.lastResort) return { ...a2.lastResort, lowRelevance: true };
   }
-  console.error("[nova-websearch] semua engine gagal:", errors.join(" | "));
+  // hasil mentah terakhir tetap dikasih (ditandain lowRelevance biar agent
+  // gak baca halaman sampah & jawab jujur "gak nemu di web")
+  if (a1.lastResort) return { ...a1.lastResort, lowRelevance: true };
+  console.error("[nova-websearch] semua engine gagal:", (a1.errs || []).join(" | "));
   return { error: "semua mesin search sibuk, coba lagi bentar" };
 }
 

@@ -889,7 +889,11 @@ export async function quickWebSearch(query, { limit = 5, readTop = 2 } = {}) {
       searchWeb(query, { limit }),
       new Promise((_, rej) => setTimeout(() => rej(new Error("search timeout")), 12000)),
     ]);
-    if (!res || res.error || !res.items?.length) return null;
+    // hasil ditandain lowRelevance (SERP sampah — semua engine gak nyambung
+    // walau udah di-retry tanpa kata tanya) → jangan dipakai, balik null biar
+    // AI jawab dari pengetahuannya sendiri / jujur gak nemu, BUKA baca halaman
+    // sampah lalu nyimpulin "prabowo gak ada di internet" (bug owner 12 Sep)
+    if (!res || res.error || res.lowRelevance || !res.items?.length) return null;
     const top = res.items.slice(0, readTop);
     const pages = await Promise.all(top.map((it) =>
       Promise.race([

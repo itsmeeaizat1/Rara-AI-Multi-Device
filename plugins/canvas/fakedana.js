@@ -2,7 +2,11 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
 import te from '../../src/lib/nova-error.js'
-FontLibrary.use('CartoonVibes', process.cwd() + '/assets/fonts/Epep.ttf')
+import { fileURLToPath } from "url";
+// FIX 12 Sep: path font gak boleh nempel ke process.cwd() — import crash kalau
+// bot dijalanin dari direktori lain (ketahuan plugins-import-e2e)
+const _epfFont = fileURLToPath(new URL("../../assets/fonts/Epep.ttf", import.meta.url));
+FontLibrary.use('CartoonVibes', _epfFont)
 
 async function generate(angka) {
   const bg = await loadImage('https://raw.githubusercontent.com/uploader762/dat3/main/uploads/9c18e0-1772932032348.jpg')

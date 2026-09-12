@@ -353,7 +353,10 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
     phase("search", q);
     let r = null;
     try { r = await _search(q, { engine: "bing", limit: 8 }); } catch {}
-    if (r?.items?.length) {
+    // lowRelevance = SERP sampah semua engine (guard relevansi websearch) →
+    // jangan masukin ke pool — agent mending jawab dari pengetahuan model
+    // + jujur "gak nemu di web" daripada baca halaman nyasar (bug 12 Sep)
+    if (r?.items?.length && !r.lowRelevance) {
       for (const it of r.items) {
         const url = String(it?.url || "");
         if (!url || seen.has(url)) continue;
