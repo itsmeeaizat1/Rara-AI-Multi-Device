@@ -8,7 +8,32 @@
 //   buat .web. Sekarang: pure stats + novaInfoSections, TANPA upload.
 import { novaError, novaInfoSections } from "../../src/lib/nova-menu-style.js";
 import os from "os";
+import fs from "fs";
 import { performance } from "perf_hooks";
+import { fetchTrace } from "../../src/lib/nova-speedtest.js";
+
+// IP lokal pertama (non-internal IPv4) — fail-safe
+function getLocalIp() {
+  try {
+    const nets = os.networkInterfaces();
+    for (const list of Object.values(nets)) {
+      const found = (list || []).find((n) => n.family === "IPv4" && !n.internal);
+      if (found) return found.address;
+    }
+  } catch {}
+  return "-";
+}
+
+// DNS resolver server (dari /etc/resolv.conf) — fail-safe
+function getDnsServers() {
+  try {
+    const txt = fs.readFileSync("/etc/resolv.conf", "utf-8");
+    const ns = txt.split("\n").map((l) => l.trim()).filter((l) => l.startsWith("nameserver")).map((l) => l.split(/\s+/)[1]);
+    return ns.length ? ns.join(", ") : "-";
+  } catch {
+    return "-";
+  }
+}
 
 const pluginConfig = {
   name: "ping",
@@ -77,6 +102,20 @@ async function handler(m, { sock }) {
     ];
 
     const execTime = (performance.now() - tStart).toFixed(2);
+
+    // panel Jaringan — IP publik + lokasi (Cloudflare trace) + IP lokal + DNS resolver
+    const trace = await Promise.race([
+      fetchTrace(),
+      new Promise((r) => setTimeout(() => r({ ip: "-", colo: "-", loc: "-" }), 4000)),
+    ]);
+    info.push(
+      "Jaringan",
+      { label: "IP Publik", value: trace.ip },
+      { label: "IP Lokal", value: getLocalIp() },
+      { label: "Lokasi", value: `${trace.colo}${trace.loc && trace.loc !== "-" ? ` (${trace.loc})` : ""}` },
+      { label: "DNS", value: getDnsServers() }
+    );
+
     await m.reply(`🏓 ᴘᴏɴɢ! (${execTime}ms)\n\n` + novaInfoSections(info));
   } catch (error) {
     await m.reply(novaError("ping", error.message));
