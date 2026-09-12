@@ -1,13 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
-// ENGINE UTAMA (request owner 12 Sep 2026): FFMPEG UPSCALE PIPELINE (port
-// verbatim kode owner — hasil Photiu jelek). hqdn3d + lanczos + unsharp +
-// eq color, preset 2/4/6/8x, mjpeg q2, 100% lokal tanpa watermark.
-// Chain 3 tingkat:
-//   1. FFmpeg pipeline (engine utama, default 4x)
-//   2. Local AI Swin2SR-realworld 4x (HF) — 100% lokal,
-// otomatis dipakai kalau FFmpeg error/timeout/gak terpasang.
-//   3. Upscale lokal sharp (instan tanpa AI) — jika 1 & 2 sama-sama gagal.
+// ENGINE UTAMA (request owner 12 Sep 2026 revisi "balik lagi pakai Photiu,
+// cm poles dikit agar jernih"): PHOTIU AI → pass poles FFmpeg (denoise tipis
+// + unsharp + eq natural, tanpa upscale — hasilnya lebih jernih).
+// Chain 4 tingkat:
+//   1. Photiu AI + FFmpeg polish pass (engine utama, default)
+//   2. FFmpeg upscale pipeline 4x — kalau Photiu error/timeout (preset kode owner)
+//   3. Local AI Swin2SR-realworld 4x (HF) — 100% lokal
+//   4. Upscale lokal sharp (instan tanpa AI) — jika 1-3 sama-sama gagal.
+// .remini 2/4/6/8 → FFmpeg upscale pipeline penuh (preset kode owner).
 // TANPA WATERMARK — otomatis dipakai kalau Remini mobile error/kuota habis.
 //   .remini real/upscale → 4x restore langsung (local AI)
 //   .remini 1080/2k/4k/5k → pilih ukuran hasil (engine lokal)
@@ -23,16 +24,19 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
 // responsif selama render (dulu ngeblok event loop total, command lain mati)
 import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/nova-hd-pool.js";
-// Engine utama (request owner 12 Sep 2026): FFmpeg Upscale Pipeline port kode
-// owner — hqdn3d denoise → lanczos scale → unsharp → eq color, preset 2/4/6/8x
-import { upscaleImage as ffmpegUpscale, HD_PRESETS as FFMPEG_PRESETS } from "../../src/lib/nova-remini-ffmpeg.js";
+// Engine utama (request owner 12 Sep 2026 revisi: "balik lagi pakai Photiu, cm
+// poles dikit agar jernih"): PHOTIU AI + pass poles FFmpeg. Pipeline FFmpeg
+// upscale penuh tetep ada buat .remini 2/4/6/8 + fallback.
+import { upscaleImage as ffmpegUpscale, polishImage, HD_PRESETS as FFMPEG_PRESETS } from "../../src/lib/nova-remini-ffmpeg.js";
+// Photiu AI — engine utama (request owner 11 Sep, dibalikin 12 Sep)
+import { photiuUpscale } from "../../src/scraper/photiu.js";
 
 const pluginConfig = {
   name: "remini",
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar) — enhance FFmpeg 4x, tanpa watermark\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — Photiu AI + poles FFmpeg, tanpa watermark\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -392,38 +396,78 @@ async function handler(m, { sock, args }) {
         }
       }
     } else if (!wantLocal) {
-      // ═══ FFMPEG PIPELINE — ENGINE UTAMA (request owner 12 Sep 2026) ═══
-      // Port kode owner: hqdn3d → lanczos scale → unsharp → eq color.
-      // Chain: 1. FFmpeg pipeline (default 4x, bisa 2/4/6/8) → 2. Swin2SR
-      //        lokal 4x (HF) → 3. Upscale lokal sharp (instan tanpa AI)
+      // ═══ ENGINE UTAMA: PHOTIU AI + POLES FFMPEG (request owner 12 Sep revisi) ═══
+      // Photiu enhance → polish pass FFmpeg (denoise tipis + unsharp + eq natural)
+      // biar pixel lebih jernih. Kalau arg faktor 2/4/6/8 ada → skip Photiu,
+      // langsung FFmpeg upscale pipeline penuh (preset kode owner).
+      // Chain: 1. Photiu + polish → 2. FFmpeg pipeline (faktor/default 4x)
+      //        → 3. Swin2SR lokal 4x → 4. Upscale lokal sharp
       const factorArg = argList.find((a) => ["2", "4", "6", "8"].includes(a));
       const factor = factorArg ? parseInt(factorArg, 10) : 4;
-      try {
-        try { await m.react("🎨"); } catch {}
+
+      // ── helper fallback berantai (dipake kedua jalur) ──
+      const ffmpegPipeline = async (f) => {
         const t0 = Date.now();
-        resultBuffer = await ffmpegUpscale(mediaBuffer, factor);
-        const preset = FFMPEG_PRESETS[factor];
-        label = `${preset.label} (${factor}x)`;
+        resultBuffer = await ffmpegUpscale(mediaBuffer, f);
+        const preset = FFMPEG_PRESETS[f];
+        label = `${preset.label} (${f}x)`;
         engineNote = `Engine: FFmpeg ${preset.label} — ${preset.description} (${((Date.now() - t0) / 1000).toFixed(1)}s, tanpa watermark)`;
-      } catch (e1) {
-        console.error("[REMINI] FFmpeg pipeline gagal:", e1.message);
-        // fallback 2: local Swin2SR-realworld 4x (HF) — tanpa watermark (ffmpeg hilang/timeout)
+      };
+      const swinFallback = async () => {
+        const r = await runLocal("real");
+        resultBuffer = r.buffer;
+        label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
+        outWidth = r.width;
+        outHeight = r.height;
+        engineNote = "Engine: Local AI 4x Restore (fallback — tanpa watermark)";
+      };
+      const sharpLastResort = async () => {
+        const r = await hdLocalSharpUpscale(mediaBuffer);
+        resultBuffer = r.buffer;
+        label = `${r.label} (${(r.ms / 1000).toFixed(1)}s)`;
+        outWidth = r.width;
+        outHeight = r.height;
+        engineNote = "Engine: Upscale Lokal Sharp (fallback terakhir)";
+      };
+
+      if (!factorArg) {
+        // ── jalur default: Photiu AI + poles FFmpeg (engine utama) ──
         try {
-          const r = await runLocal("real");
-          resultBuffer = r.buffer;
-          label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
-          outWidth = r.width;
-          outHeight = r.height;
-          engineNote = "Engine: Local AI 4x Restore (fallback 2 — tanpa watermark)";
-        } catch (e2) {
-          console.error("[REMINI] Local AI gagal:", e2.message);
-          // fallback 3: upscale lokal sharp — instan, tetep ada hasil buat user
-          const r = await hdLocalSharpUpscale(mediaBuffer);
-          resultBuffer = r.buffer;
-          label = `${r.label} (${(r.ms / 1000).toFixed(1)}s)`;
-          outWidth = r.width;
-          outHeight = r.height;
-          engineNote = "Engine: Upscale Lokal Sharp (fallback 3)";
+          try { await m.react("🎨"); } catch {}
+          const r = await photiuUpscale(mediaBuffer, { timeout: 90000 });
+          resultBuffer = await polishImage(r.data.buffer);
+          label = `Photiu AI + Poles (${r.data.format.toUpperCase()})`;
+          engineNote = "Engine: Photiu AI + FFmpeg Polish (tanpa watermark)";
+        } catch (e0) {
+          console.error("[REMINI] Photiu gagal:", e0.message);
+          // fallback 1: FFmpeg pipeline 4x (preset kode owner)
+          try {
+            await ffmpegPipeline(factor);
+          } catch (e1) {
+            console.error("[REMINI] FFmpeg pipeline gagal:", e1.message);
+            // fallback 2: local Swin2SR-realworld 4x (HF)
+            try {
+              await swinFallback();
+            } catch (e2) {
+              console.error("[REMINI] Local AI gagal:", e2.message);
+              // fallback terakhir: upscale lokal sharp — instan
+              await sharpLastResort();
+            }
+          }
+        }
+      } else {
+        // ── jalur faktor eksplisit: FFmpeg pipeline penuh (kode owner) ──
+        try {
+          try { await m.react("🎨"); } catch {}
+          await ffmpegPipeline(factor);
+        } catch (e1) {
+          console.error("[REMINI] FFmpeg pipeline gagal:", e1.message);
+          try {
+            await swinFallback();
+          } catch (e2) {
+            console.error("[REMINI] Local AI gagal:", e2.message);
+            await sharpLastResort();
+          }
         }
       }
     } else {

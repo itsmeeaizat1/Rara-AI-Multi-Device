@@ -1,7 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 REMINI ENGINE — FFmpeg Upscale Pipeline (request owner 12 Sep 2026:
-//   "hasil remini pertama (Photiu) jelek bgt — pakai kode ini aja")
+//   "hasil remini pertama (Photiu) jelek bgt — pakai kode ini aja" → revisi
+//   "balik lagi pakai Photiu, cm poles dikit settingannya agar jernih":
+//   Photiu JADI ENGINE UTAMA LAGI, hasilnya dipoles pass FFmpeg polishImage)
 // 🔹 Port verbatim kode owner (CJS → ESM): hqdn3d denoise → lanczos scale
 //   → unsharp → eq color, output mjpeg q2. Preset 2/4/6/8x, input 25MB,
 //   output maks 16000px, timeout FFmpeg 3 menit.
@@ -171,6 +173,52 @@ export async function upscaleImage(inputBuffer, factor = 4) {
   const selectedFactor = normalizeFactor(factor);
   const paths = createTempPaths();
   const filterChain = buildFilterChain(selectedFactor);
+
+  try {
+    await fsp.writeFile(paths.input, inputBuffer);
+
+    await runFfmpeg([
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      paths.input,
+      "-vf",
+      filterChain,
+      "-frames:v",
+      "1",
+      "-an",
+      "-c:v",
+      "mjpeg",
+      "-q:v",
+      "2",
+      "-pix_fmt",
+      "yuvj420p",
+      paths.output,
+    ]);
+
+    const outputBuffer = await fsp.readFile(paths.output);
+    if (!outputBuffer.length) throw new Error("Hasil gambar kosong.");
+    return outputBuffer;
+  } finally {
+    await removeFile(paths.input);
+    await removeFile(paths.output);
+  }
+}
+
+// ═══ POLISH PASS (request owner 12 Sep 2026: "balik pakai Photiu, cm poles
+// dikit agar jernih") — dipake SETELAH Photiu AI: hqdn3d tipis buang noise
+// kompresi → unsharp tajamin pixel → eq natural warna tetap. TANPA upscale
+// (Photiu udah ngasih resolusi) — cuma poles biar jernih.
+export async function polishImage(inputBuffer) {
+  validateInput(inputBuffer);
+  const paths = createTempPaths();
+  const filterChain = [
+    buildDenoiseFilter("low"),
+    buildSharpnessFilter("balanced"),
+    buildColorFilter("natural"),
+  ].join(",");
 
   try {
     await fsp.writeFile(paths.input, inputBuffer);

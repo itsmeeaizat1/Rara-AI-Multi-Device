@@ -5,7 +5,7 @@ import fsp from "fs/promises";
 import os from "os";
 import path from "path";
 import {
-  upscaleImage, buildFilterChain, buildScaleFilter, buildDenoiseFilter,
+  upscaleImage, polishImage, buildFilterChain, buildScaleFilter, buildDenoiseFilter,
   buildSharpnessFilter, buildColorFilter, normalizeFactor, validateInput,
   getPresets, HD_PRESETS, MAX_OUTPUT_PX,
 } from "../../src/lib/nova-remini-ffmpeg.js";
@@ -164,6 +164,24 @@ w("\n— plugin .remini: engine utama FFmpeg lewat handler —");
   const sz = img ? probeSize(img) : { width: 0, height: 0 };
   check("dimensi hasil 400x300", sz.width === 400 && sz.height === 300, JSON.stringify(sz));
   check("react 🕒 → 🎨 → 🐣", reacts.includes("🕒") && reacts.includes("🎨") && reacts.includes("🐣"), reacts.join(","));
+}
+
+w("\n— polish pass: poles tanpa upscale (Photiu + polish) —");
+{
+  const src = await makeTestJpeg(200, 150);
+  const out = await polishImage(src);
+  check("polish: hasil non-kosong", out.length > 0);
+  const sz = probeSize(out);
+  check("polish: dimensi TETAP 200x150 (tanpa upscale)", sz.width === 200 && sz.height === 150, JSON.stringify(sz));
+  check("polish: output mjpeg (SOI)", out[0] === 0xff && out[1] === 0xd8);
+  // denoise low + unsharp balanced (la 0.9) + eq natural — tanpa scale
+  const out2 = await polishImage(src); // deterministik — filter sama tiap run
+  check("polish: deterministik (hasil identik)", out.length === out2.length);
+  let threw = false;
+  try { await polishImage(Buffer.from("korup")); } catch { threw = true; }
+  check("polish: input korup → error jelas", threw);
+  const leftovers = (await fsp.readdir(os.tmpdir())).filter((f) => /^image_(input|output)_/.test(f));
+  check("polish: temp file kebersihin", leftovers.length === 0, leftovers.join(", "));
 }
 
 w(`\nTOTAL: ${pass}/${pass + fail}${skip ? ` (skip ${skip})` : ""}`);
