@@ -237,12 +237,17 @@ function setupAntiCrash() {
     logErrorBox("uncaught exception", error.message);
     console.error(c.gray(error.stack));
     logger.system("system", "Engine is still running");
+    // 🔹 DOCTOR: error kecatat ke ring buffer (self-healing, default off)
+    import("./src/lib/nova-doctor.js").then((md) => md.recordDoctorErrorAuto("uncaughtException", error)).catch(() => {});
   });
 
   process.on("unhandledRejection", (reason, promise) => {
     logErrorBox("unhandled rejection", String(reason));
     console.error(c.gray("Promise:"), promise);
     logger.system("system", "Engine is still running");
+    // 🔹 DOCTOR: rejection juga kecatat (self-healing, default off)
+    const __docReason = reason instanceof Error ? reason : new Error(String(reason));
+    import("./src/lib/nova-doctor.js").then((md) => md.recordDoctorErrorAuto("unhandledRejection", __docReason)).catch(() => {});
   });
 
   process.on("warning", (warning) => {
@@ -428,6 +433,7 @@ async function main() {
           { name: "AutoConflict", fn: () => import("./plugins/owner/autoconflict.js").then(m => m.processConflictMessage?.(null, sock)) },
           { name: "AutoSummary", fn: () => import("./plugins/owner/autosummary.js").then(m => m.startAutoSummary?.(sock)) },
           { name: "AutoResource", fn: () => import("./plugins/owner/autoresource.js").then(m => m.startAutoResource?.(sock)) },
+          { name: "Doctor", fn: () => import("./src/lib/nova-doctor.js").then(m => m.initDoctorMonitor?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
