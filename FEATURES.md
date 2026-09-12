@@ -1502,6 +1502,8 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Engagement trend (Naik/Turun/Stabil) dari daily snapshot
 - Kirim ke grup atau PM owner (configurable)
 - Daily snapshot tiap 23:59 WIB untuk trend analysis
+- **UPGRADE AI (12 Sep 2026)**: laporan kini ada section **Topik Minggu Ini** (maks 3 topik paling sering dibahas, abstraksi AI via rantai fallback qwen min1ai) + **Sentimen Grup** (bar positif/netral/negatif + catatan AI) — dirender dari chat buffer asli (min 8 pesan), AI down → degrade silent tanpa section
+- Chat buffer + hourly activity otomatis direkam via nova-activity-tracker (cap rolling 200 pesan, command ke-skip); topchat/groupanalytics/statscard/grupdashboard di-rewired ke data tracker live
 - `.autoweeklyreport now` — Generate report untuk grup saat ini
 - `.autoweeklyreport addgc <groupId>` — Tambah grup ke auto-report
 - `.autoweeklyreport settime 09:00` — Set jam kirim Senin

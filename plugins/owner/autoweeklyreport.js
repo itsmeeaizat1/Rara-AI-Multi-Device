@@ -31,9 +31,73 @@ import { novaError, novaNoInput, novaGuide, toSC, novaBox } from "../../src/lib/
 import {
   getWeeklyStats,
   getLeaderboard,
+  getChatBuffer,
   getCurrentWeekStartWIB,
   initActivityTracker,
 } from "../../src/lib/nova-activity-tracker.js";
+
+// Seam e2e: AI analyzer bisa di-inject biar tes gak nyamber AI live
+let analyzeChatFn = null;
+export function _setWeeklyReportAiForTest(fn) {
+  analyzeChatFn = fn || null;
+}
+
+/**
+ * Analisis topik + sentimen via AI (aiChainChat rantai otak).
+ * Return null kalau AI down / jawaban gak bisa diparse — fitur degrade SILENT, gak pernah bikin laporan error.
+ */
+async function analyzeChatWithAi(buffer) {
+  try {
+    const sample = buffer
+      .map((b) => `${(b.name || "Anon").slice(0, 15)}: ${b.text}`)
+      .join("\n")
+      .slice(0, 6000);
+
+    const prompt = `Analisis cuplikan obrolan grup WhatsApp berikut (per minggu):
+
+${sample}
+
+Balas HANYA JSON valid (tanpa markdown) format:
+{"topik":[{"judul":"topik singkat","frekuensi":"tinggi/sedang/rendah"}],"sentimen":{"positif":angka,"netral":angka,"negatif":angka,"catatan":"1 kalimat bahasa Indonesia"}}
+
+Aturan: maksimal 3 topik paling sering dibahas (abstraksi, bukan kutipan). Angka sentimen = persen (total 100). catatan = ringkasan suasana grup.`;
+
+    const reply = analyzeChatFn
+      ? await analyzeChatFn(prompt)
+      : (await import("../../src/lib/nova-ai-fallback.js")).aiChainChat(prompt);
+
+    if (!reply || typeof reply !== "string") return null;
+    let raw = reply.replace(/```(json)?/gi, "").trim();
+    const s = raw.indexOf("{");
+    const e = raw.lastIndexOf("}");
+    if (s === -1 || e <= s) return null;
+    const obj = JSON.parse(raw.slice(s, e + 1));
+
+    const topik = Array.isArray(obj.topik)
+      ? obj.topik
+          .filter((x) => x && x.judul)
+          .slice(0, 3)
+          .map((x) => ({ judul: String(x.judul).slice(0, 60), frekuensi: String(x.frekuensi || "sedang") }))
+      : [];
+    const sent = obj.sentimen && typeof obj.sentimen === "object" ? obj.sentimen : null;
+    if (!topik.length && !sent) return null;
+
+    const clampPct = (n) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+    return {
+      topik,
+      sentimen: sent
+        ? {
+            positif: clampPct(sent.positif),
+            netral: clampPct(sent.netral),
+            negatif: clampPct(sent.negatif),
+            catatan: String(sent.catatan || "").slice(0, 200),
+          }
+        : null,
+    };
+  } catch {
+    return null; // AI down / JSON ngaco → degrade, laporan tetap jalan
+  }
+}
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -263,6 +327,29 @@ async function generateReport(sock, groupId) {
       lines.push(`  ${toSC("Last Active")}: ${timeAgoShort(lastActive.lastActive)}`);
     }
     lines.push(``);
+  }
+
+  // Analisis topik + sentimen AI (degrade silent kalau AI down / buffer kosong)
+  const buffer = getChatBuffer(groupId, 40);
+  if (buffer.length >= 8) {
+    const ai = await analyzeChatWithAi(buffer);
+    if (ai && ai.topik.length) {
+      lines.push({ sub: toSC("Topik Minggu Ini") });
+      for (const tp of ai.topik) {
+        lines.push(`  • ${tp.judul} (${tp.frekuensi})`);
+      }
+      lines.push(``);
+    }
+    if (ai && ai.sentimen) {
+      lines.push({ sub: toSC("Sentimen Grup") });
+      const sm = ai.sentimen;
+      const bar = (pct) => "█".repeat(Math.round(pct / 10)).padEnd(1);
+      lines.push(`  ${bar(sm.positif)} Positif: ${sm.positif}%`);
+      lines.push(`  ${bar(sm.netral)} Netral : ${sm.netral}%`);
+      lines.push(`  ${bar(sm.negatif)} Negatif: ${sm.negatif}%`);
+      if (sm.catatan) lines.push(`  ${toSC("Catatan AI")}: ${sm.catatan}`);
+      lines.push(``);
+    }
   }
 
   // Footer
