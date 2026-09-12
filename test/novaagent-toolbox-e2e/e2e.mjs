@@ -207,5 +207,25 @@ await mcpRemoveServer("echo"); await mcpRemoveServer("jamku"); await mcpRemoveSe
 t("8a. semua server ke-remove, config bersih", Object.keys(await getMcpServers()).length === 0)
 resetMcpRpc()
 
+// ═══ 9. PRESET — server MCP publik curated ═══
+w("\n— preset server mcp —")
+const { fromSC } = await import("../../src/lib/styler.js")
+const norm = (s) => fromSC(String(s)).toLowerCase()
+const { pluginConfig, handler } = await import("../../plugins/ai/mcp.js")
+const mp = { chat: "pc@t", prefix: ".", reply: (x) => { sent2.push(String(x)); return sent2.length }, argsRaw: "" }
+const sent2 = []
+await handler(mp, { args: ["preset"] })
+let plist = sent2.at(-1) || ""
+t("9a. .mcp preset nampilin 4 preset + status", ["context7","deepwiki","mslearn","gitmcp"].every((x) => norm(plist).includes(x)), norm(plist).slice(0, 90));
+t("9b. status kepasang ⬜/✅ ke-format", plist.includes("⬜") || plist.includes("✅"));
+await handler(mp, { args: ["preset", "add", "ngaco"] })
+t("9c. preset gak ada → pesan error sopan", norm(sent2.at(-1) || "").includes("gak ada di preset"), norm(sent2.at(-1) || "").slice(0, 80));
+await handler(mp, { args: ["preset", "add", "context7"] })
+const afterPreset = await getMcpServers()
+t("9d. preset add context7 → kepasang di config (url bener)", afterPreset.context7?.url === "https://mcp.context7.com/mcp", JSON.stringify(afterPreset.context7 || {}));
+await mcpRemoveServer("context7")
+const afterRemove = await getMcpServers()
+t("9e. remove bersih lagi", !afterRemove.context7);
+
 w(`\n===== ${pass} PASS, ${fail} FAIL =====`)
 process.exit(fail ? 1 : 0)

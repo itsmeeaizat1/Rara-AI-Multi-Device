@@ -13,12 +13,33 @@ import {
 } from "../../src/lib/nova-mcp.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
+// ═══ PRESET — server MCP publik gratis no-key, udah diverifikasi live ═══
+// (12 Sep 2026, request owner "ya mau bikin lengkap mcpnya")
+const MCP_PRESETS = {
+  context7: {
+    url: "https://mcp.context7.com/mcp",
+    desc: "Dokumentasi library/package programming — react, baileys, dll",
+  },
+  deepwiki: {
+    url: "https://mcp.deepwiki.com/mcp",
+    desc: "Tanya jawab repo GitHub (apa itu X, gimana kerjanya) — facebook/react dll",
+  },
+  mslearn: {
+    url: "https://learn.microsoft.com/api/mcp",
+    desc: "Dokumentasi Microsoft — Azure, Windows, C#, Office dev",
+  },
+  gitmcp: {
+    url: "https://gitmcp.io/whiskeysockets/Baileys",
+    desc: "Dokumentasi & kode repo GitHub — template: ganti whiskeysockets/Baileys jadi owner/repo lain",
+  },
+}
+
 const pluginConfig = {
   name: "mcp",
   alias: ["mcp", "mcptools"],
   category: "ai",
   description: "Kelola server MCP — tool eksternal buat agent novaagent",
-  usage: ".mcp [list / add <nama> <url> / adds <nama> <command...> / remove <nama> / tools <nama> / test <nama> / call <nama> <tool> <json>]",
+  usage: ".mcp [list / preset / preset add <nama|all> / add <nama> <url> / adds <nama> <command...> / remove <nama> / tools <nama> / test <nama> / call <nama> <tool> <json>]",
   example: ".mcp add waktu https://mcp.example.com/mcp",
   isOwner: true,
   isPremium: false,
@@ -55,11 +76,54 @@ async function handler(m, { args, sock }) {
         "Pasang server lokal (VPS):",
         `${m.prefix}mcp adds <nama> <command...>`,
         "",
+        "Atau pasang preset publik langsung:",
+        `${m.prefix}mcp preset add all`,
         "Tool MCP ke-merge otomatis ke .novaagent —",
         "AI bisa pake mcp.<nama>.<tool> pas dibutuhkan.",
       ]));
     }
     return m.reply(srvBox(m, servers, "server mcp terpasang"));
+  }
+
+  // ── preset: server MCP publik siap pasang ──
+  if (sub === "preset" || sub === "presets") {
+    const act = String(args[1] || "").toLowerCase()
+    const servers = await getMcpServers()
+    if (!act || act === "list") {
+      const lines = Object.entries(MCP_PRESETS).map(([n, p]) => {
+        const terpasang = servers[n] ? "✅" : "⬜"
+        return `${terpasang} ${n} — ${p.desc}`
+      })
+      return m.reply(claraWrap("preset server mcp publik", [
+        ...lines,
+        "",
+        `Pasang semua: ${m.prefix}mcp preset add all`,
+        `Pasang satu: ${m.prefix}mcp preset add <nama>`,
+      ]))
+    }
+    if (act === "add" || act === "pasang") {
+      const targets = String(args[2] || "").toLowerCase() === "all"
+        ? Object.keys(MCP_PRESETS)
+        : args.slice(2).map((x) => String(x).toLowerCase()).filter(Boolean)
+      if (!targets.length) return m.reply(claraWrap("mcp", [
+        `Format: ${m.prefix}mcp preset add <nama> | all`,
+        "",
+        `Lihat daftar: ${m.prefix}mcp preset`,
+      ]))
+      const hasil = []
+      for (const nama of targets) {
+        const p = MCP_PRESETS[nama]
+        if (!p) { hasil.push(`❌ ${nama} — gak ada di preset (lihat: ${m.prefix}mcp preset)`); continue }
+        try {
+          await mcpAddServer(nama, { type: "http", url: p.url })
+          const tools = await mcpTestServer(nama).catch(() => [])
+          hasil.push(`✅ ${nama} terpasang${tools.length ? ` — ${tools.length} tool` : " — tool belum kebaca (server mungkin lagi down)"}`)
+        } catch (e) {
+          hasil.push(`❌ ${nama} — ${String(e.message).slice(0, 60)}`)
+        }
+      }
+      return m.reply(claraWrap("pasang preset mcp", hasil))
+    }
   }
 
   // ── add server HTTP ──
