@@ -223,7 +223,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
       };
       await Promise.race([
         messageHandler(raw, sock),
-        new Promise((_, rej) => setTimeout(() => rej(new Error("timeout 90 detik")), 90_000)),
+        new Promise((_, rej) => setTimeout(() => rej(new Error("timeout 35 detik")), 35_000)),
       ]);
       return { ok: true, msg: `Perintah ${text} dijalankan` };
     } catch (e) {
