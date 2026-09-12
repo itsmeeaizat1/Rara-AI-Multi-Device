@@ -13,12 +13,19 @@ import {
   fetchWeatherForSettings,
   formatWeatherUpdate,
   conditionKey,
+  realtimeKey,
 } from "./nova-weather-notify.js";
 import { evaluateWeatherAlert, formatAlertMessage, buildThresholds } from "./nova-weather-alert.js";
 
 let schedulerInterval = null;
 let lastSent = {}; // mode jadwal: { "pagi": "2026-09-02", ... } per key per day
 let intervalState = { lastSentMs: 0, lastKey: "" }; // mode interval dedup ala script
+// 🔹 MODE OTOMATIS (request owner 12 Sep 2026): cek tiap N menit, kirim
+// notifikasi PAS cuaca berubah (realtimeKey beda). Anti-spam: jeda minimal
+// antar kirim (minGapMinutes) biar kondisi bolak-balik gak banjir.
+let autoState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0, recentKeys: [] };
+// Seam e2e: fetch bisa di-inject biar tes mode otomatis deterministik
+let weatherFetcher = fetchWeatherForSettings;
 // Alert cuaca ekstrem: cek tiap 30 mnt, dedup pemicu sama 3 jam,
 // level naik (WASPADA→SIAGA→AWAS) langsung kirim walau belum 3 jam.
 let alertState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0 };
@@ -43,6 +50,9 @@ function normalizeSettings(settings) {
     // kirim kalau kondisi cuaca berubah).
     notificationMode: settings.notificationMode === "jadwal" && !hasSchedules ? "interval" : (settings.notificationMode || "interval"),
     intervalHours: Number(settings.intervalHours) >= 1 ? Number(settings.intervalHours) : 2,
+    // mode otomatis: cek tiap N menit (1-60, default 5) + jeda min antar kirim (default 10)
+    autoCheckMinutes: Number(settings.autoCheckMinutes) >= 1 ? Math.min(60, Math.round(Number(settings.autoCheckMinutes))) : 5,
+    minGapMinutes: Number(settings.minGapMinutes) >= 1 ? Math.min(120, Math.round(Number(settings.minGapMinutes))) : 10,
     alertEnabled: settings.alertEnabled !== false, // alert ekstrem default ON
   };
 }
@@ -157,6 +167,48 @@ export async function checkAndSend(sock) {
   //    ala EWS gempa: bahaya gak nunggu jam jadwal ──
   try { await checkWeatherAlert(sock); } catch {}
 
+  // ── MODE OTOMATIS (request owner 12 Sep: "tiap cuaca berubah dia kirim
+  //    notifikasi") — cek tiap N menit, kirim SEGERA kalau realtimeKey
+  //    (kondisi + suhu) berubah. Jeda min minGapMinutes antar kirim. ──
+  if (settings.notificationMode === "otomatis") {
+    const checkMs = (settings.autoCheckMinutes || 5) * 60_000;
+    const gapMs = (settings.minGapMinutes || 10) * 60_000;
+    const now = Date.now();
+    if (now - (autoState.lastCheckMs || 0) < checkMs) return;
+    autoState.lastCheckMs = now;
+
+    try {
+      const data = await weatherFetcher(settings);
+      if (!data) return;
+      const key = realtimeKey(data);
+      // cuaca belum berubah → diam
+      if (key === autoState.lastKey) return;
+      // ANTI FLIP-FLOP: kondisi yang BARUSAN dikirim (< gap) ditahan — biar
+      // Cerah→Hujan→Cerah→Hujan bolak-balik gak banjir. Kondisi BARU beda
+      // tetep langsung kirim (maks 1 per siklus cek, makanya gak bisa spam).
+      autoState.recentKeys = (autoState.recentKeys || []).filter((r) => now - r.ms < gapMs);
+      if (autoState.recentKeys.some((r) => r.key === key)) return;
+
+      const name = settings.provider === "bmkg"
+        ? (settings.location?.name || "Wilayah BMKG")
+        : (settings.location?.name || "Lokasi");
+      const message = formatWeatherUpdate(data, name, settings.intervalHours, { autoMinutes: settings.autoCheckMinutes || 5 });
+
+      let targets = [settings.target].filter(Boolean);
+      if (getAutoTargetConfig("autoweatherrealtime")) {
+        targets = (await resolveAutoTargets(sock, "autoweatherrealtime")).jids;
+      }
+      for (const tgt of targets) await sock.sendMessage(tgt, { text: message });
+      autoState.lastKey = key;
+      autoState.lastSentMs = now;
+      autoState.recentKeys = [...(autoState.recentKeys || []), { key, ms: now }];
+      console.log("[weather-realtime] ✅ Mode otomatis: cuaca berubah, kirim ke", targets.length, "target");
+    } catch (e) {
+      console.error("[weather-realtime] Mode otomatis error:", e.message);
+    }
+    return;
+  }
+
   // ── MODE INTERVAL — ala script: tiap N jam cek, kirim kalau kondisi beda ──
   if (settings.notificationMode === "interval") {
     const intervalMs = settings.intervalHours * 3600_000;
@@ -190,6 +242,7 @@ export function getSchedulerStatus() {
     running: !!schedulerInterval,
     lastSent: { ...lastSent },
     interval: { ...intervalState },
+    auto: { ...autoState },
     alert: { ...alertState },
   };
 }
@@ -203,6 +256,21 @@ export function resetIntervalState() {
 // Reset dedup alert (dipanggil pas notification on / alert test)
 export function resetAlertState() {
   alertState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0 };
+}
+
+// Reset state mode otomatis (dipanggil pas notification on / ganti mode)
+export function resetAutoState() {
+  autoState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0, recentKeys: [] };
+}
+
+// Hanya untuk testing (e2e) — set state otomatis langsung
+export function _setAutoStateForTest(patch) {
+  autoState = { ...autoState, ...patch };
+}
+
+// Hanya untuk testing (e2e) — inject fetch cuaca fake
+export function _setWeatherFetcherForTest(fn) {
+  weatherFetcher = fn || fetchWeatherForSettings;
 }
 
 // Hanya untuk testing (e2e) — set state alert langsung
