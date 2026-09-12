@@ -752,6 +752,17 @@ try {
     } catch (e) {
       if (config.dev?.debugLog) console.error("[Guardian] Hook error:", e.message);
     }
+
+    // 🔹 AFK HOOKS (nova-afk.js): user AFK balakang → kartu "selamat
+    // datang kembali" (jam mulai + durasi); ada yang mention user AFK di
+    // grup → kartu info (request owner 13 Sep: .afk gak interaktif) —
+    // fire-and-forget biar gak nambah latency
+    try {
+      const { handleAfkHooks } = await import("./lib/nova-afk.js");
+      handleAfkHooks(m, sock, db).catch(() => {});
+    } catch (e) {
+      if (config.dev?.debugLog) console.error("[AfkHook] Hook error:", e.message);
+    }
   }
 
 
