@@ -726,5 +726,62 @@ w("\n— plugin: no-arg → usage —");
 }
 
 resetAgentDeps();
+w("\n— TOOLBOX BARU: skill + mcp + createfile + browse —");
+{
+  resetAgentDeps();
+  // plan pilih 4 tool baru — data objek HARUS lewat utuh (bukan String())
+  setAgentDeps({
+    aiChat: async (p, o) => (o?.systemPrompt || "").includes("perencana")
+      ? `{"mode":"tools","tools":[{"tool":"skill","skill":"kbbi","args":"makan"},{"tool":"mcp","server":"deepwiki","mcpTool":"ask_question","data":{"repoName":"facebook/react","question":"apa itu react"}},{"tool":"createfile","name":"catatan","content":"isi catatan persis"},{"tool":"browse","url":"https://contoh.com/artikel"}]}`
+      : "Jawaban komposisi dari evidence tool.",
+    search: async () => ({ items: [] }),
+    preview: async () => ({ text: "" }),
+  });
+  const got = {};
+  const exec = {
+    skill: async (tl) => { got.skill = tl; return { ok: true, msg: "skill jalan", evidence: "KBBI: makan = memasukkan makanan ke mulut" }; },
+    mcp: async (tl) => { got.mcp = tl; return { ok: true, msg: "mcp jalan", evidence: "React adalah library UI dari Facebook" }; },
+    createfile: async (tl) => { got.createfile = tl; return { ok: true, msg: "file dikirim", evidence: "File catatan.txt dikirim" }; },
+    browse: async (tl) => { got.browse = tl; return { ok: true, msg: "halaman kebaca", evidence: "Isi artikel contoh" }; },
+  };
+  const r = await runAgent("cek kbbi + tanya deepwiki + bikin file catatan + buka link", { execTools: exec });
+  check("mode tools jalan 4 tool baru", r.mode === "tools" && r.results.length === 4, JSON.stringify(r.results || []));
+  check("skill: nama + args string nyampe", got.skill?.skill === "kbbi" && got.skill?.args === "makan", JSON.stringify(got.skill || {}));
+  check("mcp: data objek utuh (BUKAN [object Object])", got.mcp?.server === "deepwiki" && got.mcp?.mcpTool === "ask_question" && got.mcp?.data?.repoName === "facebook/react", JSON.stringify(got.mcp || {}));
+  check("createfile: name + content nyampe", got.createfile?.name === "catatan" && got.createfile?.content === "isi catatan persis", JSON.stringify(got.createfile || {}));
+  check("browse: url nyampe", got.browse?.url === "https://contoh.com/artikel", JSON.stringify(got.browse || {}));
+  check("evidence ke-compose ke jawaban", String(r.answer).includes("Jawaban komposisi dari evidence tool."));
+}
+
+w("\n— TOOLBOX INJECTION: daftar skill+mcp masuk plan prompt —");
+{
+  resetAgentDeps();
+  const sysSeen = [];
+  setAgentDeps({
+    aiChat: async (p, o) => { sysSeen.push(String(o?.systemPrompt || "")); return `{"mode":"research","queries":["q"]}`; },
+    search: async () => ({ items: [] }),
+    preview: async () => ({ text: "" }),
+  });
+  await runAgent("tes", { execTools: {}, toolbox: "- skill kbbi: arti kata\n- mcp deepwiki: ask_question, read_wiki_contents" });
+  check("toolbox ke-injek ke SYS_PLAN", sysSeen[0].includes("- skill kbbi") && sysSeen[0].includes("mcp deepwiki"));
+  // tanpa toolbox → placeholder note, gak crash
+  const sys2 = [];
+  setAgentDeps({
+    aiChat: async (p, o) => { sys2.push(String(o?.systemPrompt || "")); return `{"mode":"research","queries":["q"]}`; },
+    search: async () => ({ items: [] }),
+    preview: async () => ({ text: "" }),
+  });
+  await runAgent("tes", { execTools: {} });
+  check("tanpa toolbox gak crash + placeholder note", sys2[0].includes("gak terpasang"));
+}
+
+w("\n— buildToolbox: daftar skill pack live dari plugin —");
+{
+  const { buildToolbox } = await import("../../plugins/ai/agent.js");
+  const tb = await buildToolbox();
+  check("skill pack ke-list (kbbi/gempa/hoki/lirik)", tb.includes("skill kbbi") && tb.includes("skill gempa") && tb.includes("skill hoki") && tb.includes("skill lirik"), tb.slice(0, 120));
+  check("skill built-in ke-list (calc/translate)", tb.includes("skill calc") && tb.includes("skill translate"));
+}
+
 w("\nTOTAL: " + pass + "/" + (pass + fail));
 process.exit(fail ? 1 : 0);

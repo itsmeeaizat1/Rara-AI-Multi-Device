@@ -17,6 +17,8 @@ import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
+import { getAllSkills, awaitSkillPacks } from "../../src/lib/nova-skills.js";
+import { getMcpTools } from "../../src/lib/nova-mcp.js";
 
 // 💻 system prompt coder — request owner 11 Sep: "klo suruh buatkan kode html,
 // javascript dll pintar coding agent membuatkan dgn kepintarannya"
@@ -30,9 +32,9 @@ const pluginConfig = {
   name: "aisuperagent",
   alias: ["aisuperagent"], // request owner: cmd utama aja, tanpa alias lain
   category: "ai",
-  description: "AI Agent serba bisa — browsing web, otomasi grup, scan/generate gambar, jalanin fitur, buat fitur baru, bikin kode, unduh file, persona (jadi siapa pun), inget percakapan, ngobrol pakai vn",
+  description: "AI Agent serba bisa — browsing web, otomasi grup, scan/generate gambar, jalanin fitur, buat fitur baru, bikin kode, unduh file, bikin file, baca halaman, skill (kbbi/gempa/hoki/lirik/dll), tool MCP, persona, inget percakapan, ngobrol pakai vn",
   usage: ".aisuperagent <tugas>",
-  example: ".aisuperagent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi",
+  example: ".aisuperagent cek arti kata makan pakai skill kbbi, terus tanya deepwiki apa itu react",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 20, energi: 3, isEnabled: true,
 };
@@ -394,7 +396,80 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     }
   });
 
-  return { command, image, download, code, vision, activity, memory, create };
+  // 🎯 skill — pakai skill built-in + skill pack (kbbi/gempa/hoki/lirik/
+  // calc/translate/kurs/qr/wiki/cuaca/dll) — request owner 12 Sep: ".aisuperagent
+  // upgrade ... dilengkapi mcp, skills dan tool tambahan kyk novaagent"
+  const skill = deps.skill || (async (t) => {
+    const name = String(t.skill || t.name || "").toLowerCase().trim();
+    if (!name) return { ok: false, msg: "Sebutin skill-nya yang mau dipakai (lihat daftar: " + m.prefix + "novaagent)" };
+    try {
+      const { getAllSkills, awaitSkillPacks } = await import("../../src/lib/nova-skills.js");
+      await awaitSkillPacks(); // skill pack siap (kbbi/gempa/hoki/lirik)
+      const reg = getAllSkills();
+      const s = reg[name] || Object.values(reg).find((x) => x && x.name === name);
+      if (!s || typeof s.run !== "function") return { ok: false, msg: "Skill \"" + name + "\" gak ada di daftar" };
+      // capturing conn — output skill ditangkap jadi evidence buat compose
+      const out = [];
+      const capConn = { sendMessage: async (chat, msg) => { if (msg?.text) out.push(String(msg.text)); return { key: {} }; } };
+      await s.run(capConn, m, t.data !== undefined && t.data !== null ? t.data : (t.args != null ? t.args : {}));
+      if (!out.length) return { ok: true, msg: "Skill " + name + " dijalankan" };
+      return { ok: true, msg: "Skill " + name + " dijalankan", evidence: "Hasil skill " + name + ":\n" + out.join("\n\n").slice(0, 4000) };
+    } catch (e) {
+      return { ok: false, msg: "Gagal jalanin skill " + name + ": " + (e?.message || "error") };
+    }
+  });
+
+  // 🔌 mcp — panggil tool server MCP terpasang (context7/deepwiki/mslearn/gitmcp/dll)
+  const mcp = deps.mcp || (async (t) => {
+    const server = String(t.server || "").toLowerCase().trim();
+    const tool = String(t.mcpTool || "").trim();
+    if (!server || !tool) return { ok: false, msg: "Sebutin server + tool MCP-nya (contoh: server deepwiki, mcpTool ask_question)" };
+    try {
+      const { mcpCallTool } = await import("../../src/lib/nova-mcp.js");
+      const args = (t.data && typeof t.data === "object" && !Array.isArray(t.data)) ? t.data : {};
+      const text = await mcpCallTool(server, tool, args);
+      return { ok: true, msg: "MCP " + server + "." + tool + " dijalankan", evidence: "Hasil MCP " + server + "." + tool + ":\n" + String(text).slice(0, 6000) };
+    } catch (e) {
+      return { ok: false, msg: "Gagal manggil MCP " + server + "." + tool + ": " + (e?.message || "error") };
+    }
+  });
+
+  // 📄 createfile — bikin file teks dari konten yang diminta + kirim dokumen
+  const createfile = deps.createfile || (async (t) => {
+    const content = String(t.content || t.text || t.spec || "").trim();
+    if (!content) return { ok: false, msg: "Jelasin isi file yang mau dibikin (konten lengkap)" };
+    const base = (String(t.name || "file").trim() || "file").replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 40) || "file";
+    const fileName = /\.[a-z0-9]{1,6}$/i.test(base) ? base : base + ".txt";
+    try {
+      await sock.sendMessage(m.chat, {
+        document: Buffer.from(content, "utf-8"),
+        fileName,
+        mimetype: "text/plain",
+        caption: "📄 " + fileName + "\n_(dibikin aisuperagent)_",
+      }, { quoted: m });
+      return { ok: true, msg: "File dibikin: " + fileName, evidence: "File " + fileName + " udah dikirim sebagai dokumen berisi: " + content.slice(0, 300) };
+    } catch (e) {
+      return { ok: false, msg: "Gagal kirim file: " + (e?.message || "error") };
+    }
+  });
+
+  // 🌐 browse — buka link & baca isi halaman (quick read tanpa fase riset)
+  const browse = deps.browse || (async (t) => {
+    const url = String(t.url || t.link || t.args || "").trim();
+    if (!/^https?:\/\//i.test(url)) return { ok: false, msg: "Kasih link URL-nya (http/https)" };
+    try {
+      const { fetchPagePreview } = await import("../../src/lib/nova-websearch.js");
+      const page = await fetchPagePreview(url);
+      const body = String(page?.text || "").trim();
+      if (!body) return { ok: false, msg: "Halaman gak kebaca: " + (page?.error || "kosong / butuh javascript") };
+      const head = page?.title ? "Judul: " + page.title + (page.description ? "\n" + page.description : "") + "\n\n" : "";
+      return { ok: true, msg: "Halaman " + url + " kebaca", evidence: "Isi halaman " + url + ":\n" + (head + body).slice(0, 5000) };
+    } catch (e) {
+      return { ok: false, msg: "Gagal buka " + url + ": " + (e?.message || "error") };
+    }
+  });
+
+  return { command, image, download, code, vision, activity, memory, create, skill, mcp, createfile, browse };
 }
 
 // simpan jejak percakapan agent per chat (db.setting agentMemory) — biar inget
@@ -438,6 +513,32 @@ async function sendVoiceReply(m, sock, text) {
   } catch {
     return false;
   }
+}
+
+// 🧰 TOOLBOX BUILDER — daftar skill + tool MCP terpasang buat planner
+// (request owner 12 Sep: aisuperagent "dilengkapi mcp, skills dan tool
+// tambahan kyk novaagent") — planner cuma boleh milih yang ke-list di sini.
+export async function buildToolbox() {
+  try { await awaitSkillPacks(); } catch {}
+  let skillLines = [];
+  try {
+    const reg = getAllSkills();
+    skillLines = Object.values(reg)
+      .filter((s) => s && s.name)
+      .map((s) => "- skill " + s.name + ": " + String(s.desc || "").slice(0, 90));
+  } catch {}
+  let mcpLines = [];
+  try {
+    const flat = await getMcpTools();
+    const bySrv = {};
+    for (const x of flat) {
+      if (!x?.server || !x?.tool) continue;
+      (bySrv[x.server] = bySrv[x.server] || []).push(x.tool);
+    }
+    mcpLines = Object.entries(bySrv).map(([srv, tools]) => "- mcp " + srv + ": " + tools.slice(0, 5).join(", "));
+  } catch {}
+  if (!skillLines.length && !mcpLines.length) return "";
+  return [...skillLines, ...mcpLines].join("\n").slice(0, 2500);
 }
 
 async function handler(m, { sock, db, deps } = {}) {
@@ -503,9 +604,11 @@ async function handler(m, { sock, db, deps } = {}) {
 
     const executors = buildExecutors(m, sock, db, mediaBuffer, deps || {}, setStatus);
 
+    const toolbox = await buildToolbox();
     const res = await runAgent(task, {
       act: (a, ctx) => execAction(a, ctx, m, sock),
       execTools: executors,
+      toolbox,
       history: getAgentHistory(db, m.chat),
       context: {
         isGroup: m.isGroup !== false,

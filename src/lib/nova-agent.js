@@ -94,6 +94,10 @@ const TOOL_LIST = [
   "memory",  // ingat percakapan agent sebelumnya
   "create",  // BUAT FITUR BARU + pasang (owner only — codegen + hot-load)
   "code",    // BIKIN KODE PROGRAM (html/js/python/dll) + kirim file
+  "skill",   // SKILL BUILT-IN + PACK (kbbi/gempa/hoki/lirik/calc/translate/kurs/qr/wiki/cuaca/dll)
+  "mcp",     // TOOL SERVER MCP (context7/deepwiki/mslearn/gitmcp — sesuai server terpasang)
+  "createfile", // bikin file teks dari konten (txt/md/json/dll) + kirim dokumen
+  "browse",  // buka link & baca isi halaman web (quick read)
 ];
 
 const SYS_PLAN = `Kamu adalah perencana aksi AI agent. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
@@ -111,8 +115,10 @@ PENTING: kalau user minta "aktifkan/nyalain/matiin antilink" (atau antibadword/a
 Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc/antilink/antibadword/antisticker/antivoice/antispam isi value.
 
 3. TOOLS serba bisa (tugas minta AI ngerjain pakai kemampuan bot: bikin gambar, scan gambar, jalanin fitur/command bot, cek aktivitas grup, inget percakapan, bikin fitur baru):
-{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "download", "url": "https://situs.com/app.apk"}, {"tool": "code", "spec": "halaman html toko kue dengan kartu produk", "lang": "html", "name": "tokokue"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
-Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), download (UNDUH FILE dari link URL langsung — apk/zip/mp3/pdf/dll — user kasih link .apk/.zip → isi "url"; link wajib LANGSUNG ke file, bukan halaman web), code (BIKIN KODE PROGRAM apa pun — html/css/javascript/python/php/dll — user minta kode/program/aplikasi/script → isi "spec" = detail lengkap permintaan, "lang" = bahasa pemrograman, "name" = nama file singkat tanpa spasi; hasil dikirim jadi FILE siap dipakai), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
+{"mode": "tools", "tools": [{"tool": "command", "cmd": "sticker", "args": "kucing"}, {"tool": "image", "prompt": "kucing astronot di bulan"}, {"tool": "vision", "question": "apa yang ada di gambar ini?"}, {"tool": "activity", "query": "siapa paling aktif"}, {"tool": "memory", "query": "tadi nanya apa"}, {"tool": "download", "url": "https://situs.com/app.apk"}, {"tool": "code", "spec": "halaman html toko kue dengan kartu produk", "lang": "html", "name": "tokokue"}, {"tool": "skill", "skill": "kbbi", "args": "makan"}, {"tool": "mcp", "server": "deepwiki", "mcpTool": "ask_question", "data": {"repoName": "facebook/react", "question": "apa itu React"}}, {"tool": "createfile", "name": "catatan", "content": "isi file persis yang diminta user", "data": null}, {"tool": "browse", "url": "https://situs.com/artikel"}, {"tool": "create", "name": "namafitur", "spec": "deskripsi lengkap fitur baru yang diminta user"}], "voice": false}
+Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), download (UNDUH FILE dari link URL langsung — apk/zip/mp3/pdf/dll — user kasih link .apk/.zip → isi "url"; link wajib LANGSUNG ke file, bukan halaman web), code (BIKIN KODE PROGRAM apa pun — html/css/javascript/python/php/dll — user minta kode/program/aplikasi/script → isi "spec" = detail lengkap permintaan, "lang" = bahasa pemrograman, "name" = nama file singkat tanpa spasi; hasil dikirim jadi FILE siap dipakai), skill (PAKAI SKILL BUILT-IN — arti kata, cek gempa, nomor hoki, lirik lagu, kalkulator, translate, kurs, qr code, wikipedia, cuaca, dll — isi "skill" = nama skill persis dari daftar TOOLBOX yang tersedia, "args" = string/objek argumen skill), mcp (PANGGIL TOOL SERVER MCP — dokumentasi library/repo GitHub/docs Microsoft — isi "server" + "mcpTool" persis dari daftar TOOLBOX yang tersedia, "data" = args objek), createfile (BIKIN FILE TEKS dari konten yang diminta user — txt/md/json/csv/dll → isi "name" = nama file, "content" = isi file PERSIS yang diminta user; user minta "bikin file txt berisi X" → konten X disusun lengkap), browse (BUKA LINK & BACA ISI halaman web → isi "url"; user suruh "buka link ini/baca halaman ini" → isi url, hasil dibaca langsung), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
+TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):
+{{TOOLBOX}}
 4. PERSONA/ngobrol (user minta BERMAIN PERAN jadi orang lain, atau ngobrol santai, atau bantuin tugas TANPA perlu browsing: "jadi anak kecil", "jadi pacarku", "pura-pura jadi dokter", "temenin ngobrol", "bantuin tugas matematika ini", "cerita dong", konsultasi, motivasi, curhat):
 {"mode": "persona", "persona": "deskripsi persona LENGKAP — siapa, umur, sifat, gaya bahasa (contoh: anak laki-laki umur 5 tahun cerewet sok jagoan) — isi null kalau tanpa peran khusus", "voice": false}
 Kalau riwayat percakapan masih dalam persona yang sama → LANJUT persona yang sama. Bikin kode program → pakai tools mode dengan tool code. Tugas butuh info dari internet → research.
@@ -193,7 +199,7 @@ function detectActLocal(task) {
  * @param {Object} [opts.context] info grup (isGroup/isAdmin/isOwner/isBotAdmin/chat/sender) — dikirim ke LLM plan + executor
  * @returns {Promise<{mode,answer,queries,sources,steps,results,viaLocal,voice}|{error}>}
  */
-export async function runAgent(task, { onPhase, act, execTools, history, context } = {}) {
+export async function runAgent(task, { onPhase, act, execTools, history, context, toolbox } = {}) {
   const phase = (p, info) => { try { onPhase?.(p, info); } catch {} };
   const steps = [];
 
@@ -206,8 +212,13 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   const histLine = Array.isArray(history) && history.length
     ? `\nRiwayat percakapan agent di chat ini (ingat konteks ini):\n${history.slice(-5).join("\n")}`
     : "";
+  // toolbox dinamis — daftar skill + tool MCP yang ke-install di bot ini
+  // (request owner 12 Sep: ".aisuperagent upgrade ... dilengkapi mcp, skills
+  // dan tool tambahan kyk novaagent") — planner cuma boleh milih yang ada
+  const toolboxStr = String(toolbox || "").trim();
+  const sysPlan = toolboxStr ? SYS_PLAN.replace("{{TOOLBOX}}", toolboxStr) : SYS_PLAN.replace("TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\n{{TOOLBOX}}", "(tool skill/mcp gak terpasang di bot ini)");
   try {
-    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}${histLine}`, { systemPrompt: SYS_PLAN }));
+    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}${histLine}`, { systemPrompt: sysPlan }));
   } catch {}
 
   // normalisasi rencana act (dari LLM atau deteksi lokal)
@@ -249,6 +260,13 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
           spec: x?.spec != null ? String(x.spec) : null,
           url: x?.url != null ? String(x.url).trim() : null,
           lang: x?.lang != null ? String(x.lang).toLowerCase().trim() : null,
+          skill: x?.skill != null ? String(x.skill).toLowerCase().trim() : null,
+          server: x?.server != null ? String(x.server).toLowerCase().trim() : null,
+          mcpTool: x?.mcpTool ? String(x.mcpTool).trim() : (x?.mcp_tool ? String(x.mcp_tool).trim() : null),
+          content: x?.content != null ? String(x.content) : null,
+          // data = args RAW (objek/apa pun) — JANGAN di-String() (skill/mcp
+          // butuh objek args utuh; String({}) = "[object Object]")
+          data: x?.data !== undefined ? x.data : (x?.args !== undefined && typeof x.args === "object" ? x.args : null),
         };
       })
       .filter(x => TOOL_LIST.includes(x.tool) && execTools[x.tool])
