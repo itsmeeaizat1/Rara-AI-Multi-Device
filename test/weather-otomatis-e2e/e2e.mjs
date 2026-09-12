@@ -56,6 +56,7 @@ db.setting("weatherRealtime", {
   location: { name: "Serang", latitude: -6.12, longitude: 106.15 },
   target: "6281234567890@s.whatsapp.net",
   notificationMode: "otomatis", autoCheckMinutes: 5, minGapMinutes: 10,
+  alertEnabled: false, // e2e hermetic: alert ekstrem fetch LIVE (kelembaban real bisa nyebrang threshold → pesan dobel)
 });
 
 // 3a. tick pertama: cuaca "berubah" dari kosong → kirim sekarang
