@@ -743,13 +743,60 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
   throw new Error("Respon image gen tidak dikenal");
 }
 
+
 /**
- * callImageGenChain — RANTAI provider image (request owner 11 Sep 2026:
- * "gmna supaya g ngandelin pollinations ai agennya kan ada grok atau
- * gemini"). Coba provider imageGen yang PUNYA KEY berurutan — gemini →
- * grok/xai → openai → qwen — baru pollinations (free) juru penyelamat
- * TERAKHIR. Provider gagal/down → lanjut provider berikutnya, gak langsung
- * nyemplung ke pollinations.
+ * nanoBananaText2Img — TEXT→IMAGE nano-banana TANPA key Google (request
+ * owner 12 Sep 2026: "klo agent aku suruh generate gambar jgn pakai ai
+ * polition bsa ga pakai nano banana dr aiclotheschanger gt kan ada nano
+ * banana nya"). Trik: nano-banana kan engine EDIT (butuh gambar input) —
+ * kasih CANVAS KOSONG abu-abu 512x512 + prompt "generate gambar baru di
+ * canvas ini" → nano-banana nggambar dari nol. Live verified 12 Sep:
+ * api-faa 52 dtk 2.2MB ✅ + kuroneko 24 dtk ✅.
+ * Rantai: live3d (api-faa) → kuroneko nanoBananaEdit → throw.
+ */
+const NANO_CANVAS_B64 = "iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAHG0lEQVR4nO3VMQEAAAiAMPunNYIxPNgS8DELQNJ8BwDwwwAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDABgmw4jkKjBz3+yuAAAAABJRU5ErkJggg=="; // PNG 512x512 abu-abu
+
+// seam e2e — inject nano-banana fake biar tes rantai gak nyamber API live
+let _nbT2IFake = null;
+export function _setNanoBananaT2IForTest(fn) { _nbT2IFake = fn; }
+
+export async function nanoBananaText2Img(prompt) {
+  const promptText = String(prompt || "").trim() || "sesuatu yang menarik dan indah";
+  const fullPrompt = "This is a blank gray canvas. Generate and draw a completely new image covering the whole canvas: " + promptText + ". High quality, detailed.";
+  const canvas = Buffer.from(NANO_CANVAS_B64, "base64");
+
+  // 1. live3d (api-faa) — nano-banana
+  try {
+    const { live3d } = await import("../scraper/seaart.js");
+    const out = await live3d(canvas, fullPrompt);
+    if (out?.image && Buffer.isBuffer(out.image) && out.image.length > 5000) {
+      return { base64: out.image.toString("base64"), mimeType: "image/png", via: "nano-banana" };
+    }
+  } catch (e) { console.log("[NanoBananaT2I] api-faa gagal:", String(e?.message || e).slice(0, 80)); }
+
+  // 2. kuroneko nano-banana edit
+  try {
+    const { uploadToUguu, nanoBananaEdit } = await import("../scraper/kuroneko.js");
+    const url = await uploadToUguu(canvas, "canvas.png");
+    const editedUrl = await nanoBananaEdit(url, fullPrompt);
+    const res = await fetch(editedUrl, { signal: AbortSignal.timeout(60000) });
+    if (!res.ok) throw new Error("download hasil " + res.status);
+    const buf = Buffer.from(await res.arrayBuffer());
+    if (buf.length > 5000) {
+      return { base64: buf.toString("base64"), mimeType: res.headers.get("content-type")?.split(";")[0] || "image/png", via: "nano-banana (kuronoko)" };
+    }
+    throw new Error("hasil kosong " + buf.length + "B");
+  } catch (e) { console.log("[NanoBananaT2I] kuroneko gagal:", String(e?.message || e).slice(0, 80)); }
+
+  throw new Error("nano-banana text2img down");
+}
+
+/**
+ * callImageGenChain — RANTAI provider image (request owner 12 Sep:
+ * "jgn pakai ai polition, pakai nano banana dr aiclotheschanger").
+ * gemini/nano-banana → xai → openai → qwen (yang punya key hidup) →
+ * NANO-BANANA CANVAS (free tanpa key Google) → pollinations juru
+ * penyelamat terakhir.
  */
 export async function callImageGenChain(prompt, opts = {}) {
   const IMAGE_CHAIN = ["gemini", "xai", "openai", "qwen"];
@@ -766,8 +813,17 @@ export async function callImageGenChain(prompt, opts = {}) {
       console.log(`[ImageGenChain] ${p} gagal → lanjut provider berikutnya`);
     }
   }
-  // semua provider beneran gagal / gak ada key → pollinations free fallback
-  console.log(`[ImageGenChain] semua provider gagal${errs.length ? " (" + errs.join(" | ") + ")" : " (tanpa key imageGen)"} → pollinations (free)`);
+  // provider key mati/missing → NANO-BANANA canvas (request owner 12 Sep:
+  // "jgn pakai ai polition, pakai nano banana") — sebelum pollinations
+  try {
+    const nbFn = _nbT2IFake || nanoBananaText2Img;
+    const img = await nbFn(prompt);
+    if (img?.base64) return img;
+  } catch (e) {
+    errs.push("nano-banana: " + String(e?.message || e).slice(0, 80));
+  }
+  // semua beneran gagal → pollinations juru penyelamat TERAKHIR
+  console.log(`[ImageGenChain] semua provider gagal${errs.length ? " (" + errs.join(" | ") + ")" : ""} → pollinations (free)`);
   return await callImageGen("gemini", prompt, opts); // tanpa key → jalur pollinations
 }
 
