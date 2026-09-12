@@ -74,8 +74,23 @@ async function handler(m, { sock }) {
                 }
 
                 await m.react("🕒");
-                let response = await fetchJson(`https://api.siputzx.my.id/api/s/surah?no=${text}`)
-                let data = response.data
+                const no = parseInt(String(text).replace(/[^0-9]/g, ""), 10);
+                if (!no || no < 1 || no > 114) {
+                    await m.react("❌");
+                    return m.reply('❌ Nomor surah harus 1-114!')
+                }
+                // alquran.cloud (free, tanpa key) — 3 edisi paralel: uthmani + transliterasi + terjemahan
+                const eq = await fetchJson(`https://api.alquran.cloud/v1/surah/${no}/editions/quran-uthmani,en.transliteration,id.indonesian`)
+                const eds = (eq.data || [])
+                const ar = eds[0]?.ayahs || []
+                const lat = eds[1]?.ayahs || []
+                const idn = eds[2]?.ayahs || []
+                let data = ar.map((a, i) => ({
+                    no: a.numberInSurah,
+                    arab: a.text,
+                    latin: lat[i]?.text || '',
+                    indo: idn[i]?.text || ''
+                }))
                 if (data && data.length > 0) {
                     let surahText = data.map((ayat, index) =>
                         `۝ Ayat ${ayat.no}:\n` +
@@ -85,9 +100,11 @@ async function handler(m, { sock }) {
                     ).join('\n\n')
 
                     if (surahText.length > 60000) {
+                         await m.react("❌")
                          m.reply('❌ Surah terlalu panjang untuk dikirim via teks. Silakan cari ayat spesifik atau surah yang lebih pendek.')
                     } else {
-                        m.reply(surahText)
+                         await m.react("🐣")
+                         m.reply(surahText)
                     }
                 } else {
                     m.reply('❌ Gak ketemu, cek lagi nomor surahnya!')

@@ -656,6 +656,7 @@ Cakupan: 50 plugin download, 26 plugin sticker, 35 plugin convert, play/playvide
 - `.gameprice` — tools — Cari diskon & harga game Steam (CheapShark)
 - `.quranv4` — islamic — Al-Quran via equran.id (surat, ayat, audio murottal)
 - `.sholatv2` — religi — Jadwal sholat per kota Indonesia (myquran.com)
+- **REWIRE ENGINE MATI 12 SEP (batch 2)**: (1) `.surah` (islami.js) — route siputzx s/surah mati 404 → sekarang via api.alquran.cloud (free tanpa key, 3 edisi paralel: quran-uthmani + transliterasi + terjemahan Indonesia, format output sama) + validasi nomor 1-114 + react 🐣/❌. (2) `.voicemaker` — route siputzx s/tts mati 404 → engine baru Haidar AI voice natural (Ardi/Gadis/Ethan/Bella/Keita/Nanami — pola .suaraai) + fallback Google Translate TTS sesuai bahasa voice. E2E 12/12 live. Masih backlog: route primbon ±18, twitterstalk, nik-checker, manga (nsfw), gsmarena (semua sumber kosong).
 - `.beritav2` — info — Berita terkini via RSS Indonesia (Detik, Kompas, CNN, Tribun)
 
 ### Fitur Baru (Butuh API Key)
