@@ -51,6 +51,18 @@ export const PRESET_STYLES = {
   dingin: "a winter outfit: a warm knit sweater with a padded parka jacket and dark jeans",
   korea: "trendy Korean K-fashion: a layered oversized jacket over a turtleneck with wide-leg trousers",
   kpop: "trendy Korean K-fashion: a layered oversized jacket over a turtleneck with wide-leg trousers",
+  batik: "an elegant Indonesian batik outfit: a long-sleeved batik shirt with traditional parang pattern paired with neat dark trousers",
+  kebaya: "a traditional Indonesian kebaya outfit: an ornate lace kebaya blouse with a batik wrap skirt (kain), elegant and graceful",
+  beskap: "a traditional Javanese beskap outfit: a fitted traditional beskap jacket with batik motif, worn with a blangkon headdress and a keris",
+  koko: "a neat Muslim men's outfit: a white koko shirt (baju koko) with dark trousers and a peci cap",
+  muslim: "a neat Muslim men's outfit: a white koko shirt (baju koko) with dark trousers and a peci cap",
+  gamis: "a graceful Muslim women's outfit: a flowing modest gamis dress in soft pastel color with a matching hijab",
+  hijab: "a graceful Muslim women's outfit: a flowing modest gamis dress in soft pastel color with a matching hijab",
+  muslimah: "a graceful Muslim women's outfit: a flowing modest gamis dress in soft pastel color with a matching hijab",
+  preppy: "a preppy outfit: a collared polo shirt with a light knit sweater vest, tailored shorts and loafers",
+  vintage: "a vintage retro outfit: a 70s-style brown corduroy jacket with flared jeans and a patterned shirt",
+  dandy: "a dandy outfit: a three-piece tweed suit with a pocket watch chain, brogues and a flat cap",
+  punk: "an edgy punk outfit: a black leather biker jacket with ripped jeans, band tee and combat boots",
 };
 
 /** Expand preset di awal prompt → outfit lengkap + detail sisa tetap nempel. */
@@ -189,8 +201,43 @@ async function handler(m, { sock }) {
       personBuf = await downloadImage(m);
     }
 
+
+    // ── Subcommand: .aiclotheschanger list preset — daftar semua preset gaya ──
+    if (/^(list|daftar)\s*(preset|gaya|style)?$|^preset\s+list$/i.test(rawPrompt)) {
+      const seen = new Set();
+      const groups = {
+        "Formal & Kerja": ["formal", "business", "preppy", "dandy"],
+        "Kasual & Jalan": ["casual", "street", "vintage", "punk"],
+        "Acara & Pesta": ["party", "korea"],
+        "Olahraga & Outdoor": ["sport", "vacation", "winter"],
+        "Tradisional & Muslim": ["batik", "kebaya", "beskap", "koko", "gamis"],
+      };
+      let msg = `👗 *${toSC("daftar preset gaya")}*
+
+`;
+      for (const [gaya, items] of Object.entries(groups)) {
+        msg += `「 ${toSC(gaya.toLowerCase())} 」
+`;
+        for (const k of items) {
+          if (seen.has(k)) continue;
+          seen.add(k);
+          const desc = PRESET_STYLES[k].split(":")[0];
+          msg += `• *${k}* — ${toSC(desc)}
+`;
+        }
+        msg += "\n";
+      }
+      msg += `${toSC("alias")}: ${["resmi","kantoran","santai","pesta","glam","streetwear","olahraga","gym","liburan","pantai","dingin","kpop","muslim","muslimah","hijab"].join(", ")}
+
+`;
+      msg += `${toSC("cara pakai")}: ${prefix}${cmd} <${toSC("preset")}> ${toSC("reply foto orang")}
+`;
+      msg += `${toSC("contoh")}: ${prefix}${cmd} hd batik — ${toSC("hasil jernih + outfit batik")}`;
+      return m.reply(msg);
+    }
+
     if (!personBuf) {
-      const styleList = Object.keys(PRESET_STYLES).filter((k, i, a) => a.indexOf(k) === i && !["resmi", "kantoran", "kerja", "santai", "pesta", "glam", "streetwear", "olahraga", "gym", "liburan", "pantai", "dingin", "kpop"].includes(k)).join(", ");
+      const styleList = Object.keys(PRESET_STYLES).filter((k, i, a) => a.indexOf(k) === i && !["resmi", "kantoran", "kerja", "santai", "pesta", "glam", "streetwear", "olahraga", "gym", "liburan", "pantai", "dingin", "kpop", "muslim", "hijab", "muslimah"].includes(k)).join(", ");
       await m.reply(
         `👕 *${toSC("ganti baju ai")}*\n\n` +
         `${toSC("kirim/reply foto orangnya dulu")}!\n\n` +
@@ -208,7 +255,7 @@ async function handler(m, { sock }) {
       return m.reply(
         claraWrap(cmd,
           `Kasih *${toSC("prompt baju")}*, *${toSC("preset")}*, ATAU *${toSC("kirim gambar bajunya")}*!\n\n` +
-          `${toSC("preset")}: formal, casual, party, street, sport, vacation, winter, korea\n` +
+          `${toSC("preset")}: formal, casual, party, street, sport, vacation, winter, korea, batik, kebaya\n` +
           `${toSC("contoh prompt")}: ${prefix}${cmd} change the shirt to red\n` +
           `${toSC("contoh gambar")}: ${prefix}${cmd} — ${toSC("reply foto orang + kirim gambar baju, tanpa prompt")}`, "guide")
       );
