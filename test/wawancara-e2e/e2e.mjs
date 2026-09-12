@@ -21,7 +21,7 @@ const { config, handler, _setWawancaraDepsForTest } = await import(R + "/plugins
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(low(s));
 
-t("1a. plugin wawancara kategori ai", config.name === "wawancara" && config.category === "ai" && config.alias.includes("interview"));
+t("1a. plugin aiagentwawancara kategori ai + alias utama doang", config.name === "aiagentwawancara" && config.category === "ai" && config.alias.length === 1);
 
 // ═══ mocks ═══
 const replies = [];
@@ -29,7 +29,7 @@ const sent = [];
 const mediaSent = [];
 function mockM(args, opts = {}) {
   return {
-    command: "wawancara", args, text: args.join(" "), prefix: ".",
+    command: "aiagentwawancara", args, text: args.join(" "), prefix: ".",
     chat: "6289999@s.whatsapp.net", sender: "6289999@s.whatsapp.net", pushName: "Kandidat",
     isGroup: false, isOwner: false, isAudio: !!opts.isAudio,
     quoted: opts.quoted || null,
