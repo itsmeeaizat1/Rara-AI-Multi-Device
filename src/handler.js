@@ -753,6 +753,19 @@ try {
       if (config.dev?.debugLog) console.error("[Guardian] Hook error:", e.message);
     }
 
+    // 🔹 GROUP REGISTRY: grup yang baru dijenguk bot kecatat otomatis ke db
+    // (biar Total Grup di menu gak suka 0 walau bot baru join grup)
+    if (m.isGroup && m.chat && m.chat.endsWith("@g.us")) {
+      try {
+        if (!db.getGroup(m.chat)) {
+          let gname = "";
+          try { const md = await sock.groupMetadata(m.chat); gname = md?.subject || ""; } catch {}
+          const { ensureGroupRegistered } = await import("./lib/nova-group-registry.js");
+          ensureGroupRegistered(m.chat, { name: gname, db });
+        }
+      } catch {}
+    }
+
     // 🔹 AFK HOOKS (nova-afk.js): user AFK balakang → kartu "selamat
     // datang kembali" (jam mulai + durasi); ada yang mention user AFK di
     // grup → kartu info (request owner 13 Sep: .afk gak interaktif) —

@@ -143,8 +143,15 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const totalBanned = Object.values(allUsers).filter(u => u.isBanned).length;
     const totalUnregistered = Object.values(allUsers).filter(u => u.unregisteredAt).length;
     const allGroups = db.getAllGroups();
-    const totalGroups = Object.keys(allGroups).length;
-    const totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
+    let totalGroups = Object.keys(allGroups).length;
+    let totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
+    // live count grup (request owner 13 Sep) — registry bisa kosong
+    try {
+      const { countGroupsLive } = await import("../../src/lib/nova-group-registry.js");
+      const live = await countGroupsLive(sock, db);
+      if (live > 0) { totalGroups = live; totalActiveGroups = live; }
+    } catch {}
+
     const totalWarned = Object.values(allUsers).filter(u => {
       const w = u.warnings;
       return Array.isArray(w) ? w.length > 0 : (w && typeof w === 'object' ? Object.keys(w).length > 0 : false);
@@ -187,7 +194,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
     // ── Info section lengkap (user, bot, database, server, weather) ──
-    const { greeting: aiIntro, info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime });
+    const { greeting: aiIntro, info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime, sock });
     const info = menuInfo;
 
     // ── Category sections ──

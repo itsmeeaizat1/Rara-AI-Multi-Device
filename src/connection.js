@@ -657,6 +657,18 @@ async function startConnection(options = {}) {
         console.error("[automation] Failed to start automation hub:", e.message);
       }
 
+      // 🔹 GROUP REGISTRY (nova-group-registry.js): catat semua grup yang bot
+      // ikuti ke db pas startup — biar Total Grup di Info Database gak suka 0
+      // / ke-reset tiap restart (request owner 13 Sep 2026)
+      try {
+        const { syncGroupRegistry } = await import("./lib/nova-group-registry.js");
+        syncGroupRegistry(sock).then((r) => {
+          if (r?.added) console.log(`[GroupRegistry] +${r.added} grup kecatat (total ${r.total})`);
+        }).catch(() => {});
+      } catch (e) {
+        console.error("[GroupRegistry] sync gagal:", e.message);
+      }
+
       const autoActionFlag = path.join(
         process.cwd(),
         "storage",
