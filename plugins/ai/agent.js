@@ -314,18 +314,24 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     const EXT = { html: "html", htm: "html", css: "css", javascript: "js", js: "js", typescript: "ts", ts: "ts", node: "js", nodejs: "js", python: "py", py: "py", php: "php", java: "java", kotlin: "kt", c: "c", cpp: "cpp", cplusplus: "cpp", csharp: "cs", go: "go", golang: "go", rust: "rs", sql: "sql", bash: "sh", shell: "sh", dart: "dart", swift: "swift", lua: "lua", r: "r" };
     const langKey = String(t.lang || "").toLowerCase().trim();
     const ext = EXT[langKey] || "txt";
-    let raw = "";
+    // FIX OWNER 12 Sep 2026 ("knp agent suruh buat kode login web topup
+    // isi kodenya gak lengkap cm singkat"): dulu satu-shot tanpa cek — sekarang
+    // generator khusus nova-codegen: prompt quality bar + LOOP AUTO-LANJUT
+    // sampai kode komplet (placeholder/tag gak ketutup/bracket gak balance
+    // dideteksi, lalu AI disuruh lanjutin PERSIS dari baris terakhir).
+    let codeBody = "", explain = "", rounds = 0, complete = true;
     try {
       const chat = deps.aiChat || aiChainChat; // seam deps.aiChat buat e2e
-      raw = await chat(`Permintaan: ${spec}\n\nBahasa: ${langKey || "pilih yang paling cocok untuk permintaan ini"}`, { systemPrompt: SYS_CODER });
+      const { generateCompleteCode } = await import("../../src/lib/nova-codegen.js");
+      const gen = await generateCompleteCode({
+        spec, ext, lang: langKey,
+        aiChat: (p, o) => chat(p, { ...o, timeoutMs: 60000 }),
+        onStatus: onStatus || null,
+        maxRounds: 3,
+      });
+      codeBody = gen.code; explain = gen.explain; rounds = gen.rounds; complete = gen.complete;
     } catch (e) { return { ok: false, msg: "Gagal susun kode: " + (e?.message || "AI-nya sibuk") }; }
-    if (!raw || !String(raw).trim()) return { ok: false, msg: "AI-nya balas kosong, coba lagi" };
-    // ekstrak blok kode dari jawaban
-    const block = raw.match(/```[a-zA-Z0-9+#]*\n([\s\S]*?)```/);
-    const codeBody = (block ? block[1] : raw).trim();
-    if (!codeBody) return { ok: false, msg: "Kode hasil kosong, coba lagi" };
-    // penjelasan = semua teks di luar blok kode (intro + CARA PAKAI)
-    const explain = (block ? raw.replace(/```[\s\S]*?```/g, "") : raw).trim().slice(0, 600) || `Kode ${ext} untuk: ${spec.slice(0, 80)}`;
+    if (!codeBody || !String(codeBody).trim()) return { ok: false, msg: "Kode hasil kosong, coba lagi" };
     const base = (String(t.name || "kode").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 24)) || "kode";
     const fileName = base + "." + ext;
     try {
@@ -333,9 +339,9 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
         document: Buffer.from(codeBody, "utf-8"),
         fileName,
         mimetype: "text/plain",
-        caption: "💻 " + fileName + "\n\n" + explain,
+        caption: "💻 " + fileName + (rounds > 0 ? `\n✅ kode dilengkapi otomatis (${rounds} ronde)` : "") + "\n\n" + explain,
       }, { quoted: m });
-      return { ok: true, msg: "Kode dibikin: " + fileName, evidence: `Kode ${fileName} (.${ext}) udah dikirim sebagai file — siap dipakai. Penjelasan: ${explain.slice(0, 300)}` };
+      return { ok: true, msg: "Kode dibikin: " + fileName + (rounds > 0 ? ` (dilengkapi ${rounds}x)` : ""), evidence: `Kode ${fileName} (.${ext}) udah dikirim sebagai file — siap dipakai. Penjelasan: ${explain.slice(0, 300)}` };
     } catch (e) { return { ok: false, msg: "Gagal kirim file kode: " + (e?.message || "error") }; }
   });
 
@@ -436,10 +442,27 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
 
   // 📄 createfile — bikin file teks dari konten yang diminta + kirim dokumen
   const createfile = deps.createfile || (async (t) => {
-    const content = String(t.content || t.text || t.spec || "").trim();
+    let content = String(t.content || t.text || t.spec || "").trim();
     if (!content) return { ok: false, msg: "Jelasin isi file yang mau dibikin (konten lengkap)" };
     const base = (String(t.name || "file").trim() || "file").replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 40) || "file";
     const fileName = /\.[a-z0-9]{1,6}$/i.test(base) ? base : base + ".txt";
+    // FIX OWNER 12 Sep: createfile kode (html/js/dll) yang kepotong →
+    // dilengkapi otomatis via nova-codegen loop biar file-nya beneran jadi
+    try {
+      const extGuess = (fileName.match(/\.([a-z0-9]{1,6})$/i) || [])[1]?.toLowerCase() || "";
+      const { CODE_EXTS, looksIncomplete, generateCompleteCode } = await import("../../src/lib/nova-codegen.js");
+      if (CODE_EXTS.has(extGuess) && looksIncomplete(content, extGuess)) {
+        onStatus?.("melengkapi kode yang kepotong");
+        const chat = deps.aiChat || aiChainChat;
+        const gen = await generateCompleteCode({
+          spec: "Lengkapi file " + fileName + " sesuai draft berikut jadi versi final lengkap siap jalan:\n\n" + content,
+          ext: extGuess, lang: extGuess,
+          aiChat: (p, o) => chat(p, { ...o, timeoutMs: 60000 }),
+          maxRounds: 3,
+        });
+        if (gen.code && gen.code.length > content.length) content = gen.code;
+      }
+    } catch { /* gagal melengkapi → kirim apa adanya, gak boleh mati */ }
     try {
       await sock.sendMessage(m.chat, {
         document: Buffer.from(content, "utf-8"),

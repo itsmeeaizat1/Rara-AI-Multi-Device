@@ -441,7 +441,7 @@ export const TOOLS = {
   // tabel CSV: baris = record, kolom dipisah koma; koma dalam teks pakai "...").
   createfile: {
     perm: 'user', args: ['name', 'ext', 'content'], danger: false,
-    desc: 'MEMBUAT FILE (txt/doc/xls/xlsx/js/html/css/py/php/json/md) — pakai kalau user minta dibuatkan file/dokumen/daftar/kode program. Isi: name = nama file singkat tanpa spasi/ekstensi, ext = jenis file (txt/doc/xls/js/html/py/dll), content = ISI FILE LENGKAP (untuk xls/xlsx tulis tabel CSV per baris). Kode program juga pakai tool ini (ext sesuai bahasa)',
+    desc: 'MEMBUAT FILE (txt/doc/xls/xlsx/js/html/css/py/php/json/md) — pakai kalau user minta dibuatkan file/dokumen/daftar/kode program. Isi: name = nama file singkat tanpa spasi/ekstensi, ext = jenis file (txt/doc/xls/js/html/py/dll), content = ISI FILE LENGKAP seakan-akan file SUDAH JADI FINAL (untuk xls/xlsx tulis tabel CSV per baris). KHUSUS KODE PROGRAM (html/js/py/dll): tulis KODE PENUH siap jalan — kalau html TULIS SEMUA dari <!DOCTYPE html> sampai </html> beserta style/script lengkap; HARAM elipsis 3 titik / placeholder / TODO / "KODE LENGKAP" sebagai singkatan — sistem otomatis ngecek dan MELANJUTKAN kode yang kepotong',
     done: '✅ Filenya udah aku buatin dan kirim di atas ya.',
     run: async (conn, m, a) => {
       const EXT_WHITELIST = ['txt','md','js','ts','html','css','json','py','php','java','sh','csv','sql','xml','doc','docx','xls','xlsx']
@@ -462,6 +462,24 @@ export const TOOLS = {
       }
       let base = String(a?.name || a?.filename || 'file').replace(/\.[a-z0-9]+$/i, '').toLowerCase().replace(/[^a-z0-9-_]/g, '').slice(0, 40).trim()
       if (!base) base = 'file'
+
+      // FIX OWNER 12 Sep 2026 ("buatkan login web topup, kode-nya gak
+      // lengkap cm singkat"): kode yang kepotong (placeholder/tag gak
+      // ketutup/bracket gak balance) DILENGKAPIN OTOMATIS via nova-codegen
+      // loop — prompt quality bar + AI lanjutin PERSIS dari baris terakhir.
+      try {
+        const { CODE_EXTS, looksIncomplete, generateCompleteCode } = await import('./nova-codegen.js')
+        if (CODE_EXTS.has(ext) && looksIncomplete(content, ext)) {
+          const { aiChainChat } = await import('./nova-ai-fallback.js')
+          const gen = await generateCompleteCode({
+            spec: 'Lengkapi file ' + base + '.' + ext + ' sesuai draft berikut jadi versi final lengkap siap jalan:\n\n' + content,
+            ext, lang: ext,
+            aiChat: (p, o) => aiChainChat(p, { ...o, timeoutMs: 60000 }),
+            maxRounds: 3,
+          })
+          if (gen.code && gen.code.length > content.length) content = gen.code
+        }
+      } catch { /* gagal melengkapi → kirim apa adanya, tool gak boleh mati */ }
 
       let buf
       let fileName
@@ -999,7 +1017,8 @@ Contoh:
 "download apk dari https://situs.com/app.apk" → {"tool":"download","args":{"url":"https://situs.com/app.apk"},"execCommand":null,"reply":"Oke, aku unduh filenya ya."}
 "buatkan file txt daftar belanja: beras 5kg, minyak 2 liter, gula 1kg" → {"tool":"createfile","args":{"name":"daftarbelanja","ext":"txt","content":"DAFTAR BELANJA\n1. Beras 5kg\n2. Minyak 2 liter\n3. Gula 1kg"},"execCommand":null,"reply":"Oke, aku buatin file txt daftar belanjanya."}
 "buatkan file excel data siswa: nama, kelas. Andi 7A, Budi 7B" → {"tool":"createfile","args":{"name":"datasiswa","ext":"xlsx","content":"Nama,Kelas\nAndi,7A\nBudi,7B"},"execCommand":null,"reply":"Oke, aku buatin file Excel-nya."}
-"buatkan kode html toko kue" → {"tool":"createfile","args":{"name":"tokokue","ext":"html","content":"<!DOCTYPE html> ... KODE LENGKAP ..."},"execCommand":null,"reply":"Oke, aku buatin file html toko kue."}
+"buatkan kode html toko kue" → {"tool":"createfile","args":{"name":"tokokue","ext":"html","content":"<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"><title>Toko Kue</title><style>body{font-family:sans-serif;background:#fdf6ec;margin:0}.kartu{background:#fff;border-radius:12px;padding:16px;width:240px;box-shadow:0 2px 8px rgba(0,0,0,.08)}button{background:#e6739f;color:#fff;border:0;padding:8px 16px;border-radius:8px;cursor:pointer}</style></head>\n<body><h1>Toko Kue</h1><div class=\"kartu\"><h3>Black Forest</h3><p>Rp95.000</p><button>Pesan</button></div><script>document.querySelectorAll(\"button\").forEach(b=>b.onclick=()=>alert(\"Pesanan dicatat!\"))</script></body></html>"},"execCommand":null,"reply":"Oke, aku buatin file html toko kuenya."}
+RULE kode di content: kode HARUS utuh jadi seperti contoh di atas (boleh & bagus kalau lebih panjang sesuai permintaan) — JANGAN pernah pakai "..." / elipsis / "KODE LENGKAP ..." sebagai placeholder singkatan.
 "apa itu nodejs" → {"tool":null,"execCommand":null,"reply":"Node.js adalah runtime JavaScript yang dibangun di atas engine V8 Chrome, dipakai untuk menjalankan JavaScript di luar browser (server-side). Cocok buat backend API, real-time app, dan tooling."}
 "jam berapa sekarang" → {"tool":null,"execCommand":null,"reply":"Sekarang jam ${jamSekarang}."}
 "siapa presiden indonesia" → {"tool":null,"execCommand":null,"reply":"Presiden Indonesia saat ini adalah Prabowo Subianto, didampingi Wakil Presiden Gibran Rakabuming Raka."}`
