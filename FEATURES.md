@@ -656,6 +656,7 @@ Cakupan: 50 plugin download, 26 plugin sticker, 35 plugin convert, play/playvide
 - `.gameprice` — tools — Cari diskon & harga game Steam (CheapShark)
 - `.quranv4` — islamic — Al-Quran via equran.id (surat, ayat, audio murottal)
 - `.sholatv2` — religi — Jadwal sholat per kota Indonesia (myquran.com)
+- **PANEL JARINGAN .PING (12 Sep 2026, request owner "itu ping kok gak ada ip sama dnsnya gak lengkap kayak di infosection"):** .ping sekarang ada section 「 Jaringan 」: IP Publik + Lokasi (Cloudflare trace /cdn-cgi/trace — reuse fetchTrace nova-speedtest.js, race timeout 4 dtk fail-safe "-"), IP Lokal (os.networkInterfaces non-internal IPv4), DNS (nameserver dari /etc/resolv.conf). Pong (ms) tetap dihitung dari stat lokal SEBELUM fetch jaringan biar tetap instan. E2E live 6/6.
 - **REWIRE ENGINE MATI 12 SEP (batch 2)**: (1) `.surah` (islami.js) — route siputzx s/surah mati 404 → sekarang via api.alquran.cloud (free tanpa key, 3 edisi paralel: quran-uthmani + transliterasi + terjemahan Indonesia, format output sama) + validasi nomor 1-114 + react 🐣/❌. (2) `.voicemaker` — route siputzx s/tts mati 404 → engine baru Haidar AI voice natural (Ardi/Gadis/Ethan/Bella/Keita/Nanami — pola .suaraai) + fallback Google Translate TTS sesuai bahasa voice. E2E 12/12 live. Masih backlog: route primbon ±18, twitterstalk, nik-checker, manga (nsfw), gsmarena (semua sumber kosong).
 - `.beritav2` — info — Berita terkini via RSS Indonesia (Detik, Kompas, CNN, Tribun)
 
