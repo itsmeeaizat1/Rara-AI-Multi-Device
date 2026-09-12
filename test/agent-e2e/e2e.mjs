@@ -783,5 +783,31 @@ w("\n— buildToolbox: daftar skill pack live dari plugin —");
   check("skill built-in ke-list (calc/translate)", tb.includes("skill calc") && tb.includes("skill translate"));
 }
 
+// ═══ PRIORITAS INFO + NORMALISASI FLAT PLAN (request owner 12 Sep: "disuruh
+// cari informasi jgn langsung ke mcp/skill — kecerdasan AI dulu, browsing kalau
+// perlu, skill/mcp cuma kalau bingung") ═══
+w("\n— prioritas info + flat plan —");
+{
+  const { SYS_PLAN } = await import("../../src/lib/nova-agent.js");
+  check("SYS_PLAN ada aturan prioritas: jawab sendiri dulu (persona)", /JAWAB SENDIRI DULU/.test(SYS_PLAN) && /mode persona/i.test(SYS_PLAN));
+  check("SYS_PLAN: skill/mcp senjata terakhir", /SENJATA TERAKHIR/.test(SYS_PLAN) && /JANGAN pernah pilih skill\/mcp buat pertanyaan pengetahuan umum/.test(SYS_PLAN));
+  check("SYS_PLAN: persona = jalur utama pertanyaan info", /JALUR UTAMA buat pertanyaan informasi/.test(SYS_PLAN));
+
+  // flat plan {"mode":"skill","skill":"kbbi"} → HARUS jalanin tool skill, BUKAN jatuh ke research
+  resetAgentDeps();
+  mkDeps({ planReply: '{"mode":"skill","skill":"kbbi","args":"makan"}' });
+  const rFlat = await runAgent("cek arti kata makan", { execTools: { skill: async (x) => ({ ok: true, msg: "Skill " + (x.skill || "kbbi") + " dijalankan", evidence: "arti kata makan" }) } });
+  const skillRan = (rFlat.results || []).some((x) => String(x?.tool || "").includes("skill") || String(x?.msg || "").includes("kbbi"));
+  check("flat plan skill dijalankan sebagai tools (bukan research)", rFlat.mode === "tools" && skillRan, JSON.stringify(rFlat).slice(0, 100));
+
+  // flat plan mcp juga ke-wrap
+  resetAgentDeps();
+  mkDeps({ planReply: '{"mode":"mcp","server":"deepwiki","mcpTool":"ask_question","data":{"repoName":"facebook/react"}}' });
+  const rMcp = await runAgent("tanya deepwiki apa itu react", { execTools: { mcp: async (x) => ({ ok: true, msg: "MCP deepwiki." + (x.mcpTool || "ask_question") + " dijalankan", evidence: "react adalah library ui" }) } });
+  check("flat plan mcp dijalankan sebagai tools", rMcp.mode === "tools" && (rMcp.results || []).some((x) => String(x?.msg || "").includes("deepwiki")), JSON.stringify(rMcp).slice(0, 100));
+
+  resetAgentDeps();
+}
+
 w("\nTOTAL: " + pass + "/" + (pass + fail));
 process.exit(fail ? 1 : 0);

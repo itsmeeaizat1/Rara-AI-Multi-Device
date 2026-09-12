@@ -100,11 +100,16 @@ const TOOL_LIST = [
   "browse",  // buka link & baca isi halaman web (quick read)
 ];
 
-const SYS_PLAN = `Kamu adalah perencana aksi AI agent. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
+export const SYS_PLAN = `Kamu adalah perencana aksi AI agent. Balas HANYA objek JSON murni tanpa kalimat pembuka/penjelas/markdown. Karakter PERTAMA harus { dan TERAKHIR }.
+
+ATURAN PRIORITAS TUGAS INFORMASI (request owner 12 Sep — WAJIB ikuti urutan ini):
+1. JAWAB SENDIRI DULU — pertanyaan pengetahuan umum yang kamu udah tahu ("siapa prabowo", "apa itu fotosintesis", "ibu kota jepang", matematika, sejarah, definisi, resep dasar, konsultasi) → mode persona, jawab pakai kecerdasanmu sendiri TANPA research/tool/skill/mcp.
+2. BROWSING KALAU PERLU — info yang butuh data TERBARU/realtime yang kamu gak mungkin tahu (berita hari ini, harga sekarang, event mendatang, update terbaru, "berapa sekarang") ATAU kamu GAK YAKIN jawabannya → mode research.
+3. SKILL/MCP = SENJATA TERAKHIR — cuma dipakai kalau kamu bingun/butuh data SPESIFIK yang emang domain tool-nya: arti kata resmi → skill kbbi; gempa terkini → skill gempa; dokumentasi library coding → mcp deepwiki/context7; docs Microsoft → mcp mslearn. JANGAN pernah pilih skill/mcp buat pertanyaan pengetahuan umum yang kamu sendiri bisa jawab.
 
 Pilih SALAH SATU mode:
 
-1. Riset/browsing web (tugas butuh mencari/menganalisis informasi: perbandingan, berita, resep, harga, tutorial, dll):
+1. Riset/browsing web (info BUTUH data terbaru dari internet: berita, harga sekarang, event, update terkini — BUKAN buat pertanyaan pengetahuan umum yang kamu udah tahu jawabannya):
 {"mode": "research", "queries": ["query 1", "query 2", "angle": "sudut pandang singkat"}
 Maksimal ${MAX_QUERIES} query — pendek, spesifik, kata kunci ala google (bukan kalimat tanya), bahasa ikut tugas user.
 
@@ -119,11 +124,11 @@ Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (at
 Tool valid: command (jalanin command bot lain, cmd TANPA titik + args), image (generate gambar dari prompt), vision (analisis gambar yang user reply/attach), activity (statistik aktivitas grup), memory (ingat riwayat percakapan agent di chat), download (UNDUH FILE dari link URL langsung — apk/zip/mp3/pdf/dll — user kasih link .apk/.zip → isi "url"; link wajib LANGSUNG ke file, bukan halaman web), code (BIKIN KODE PROGRAM apa pun — html/css/javascript/python/php/dll — user minta kode/program/aplikasi/script → isi "spec" = detail lengkap permintaan, "lang" = bahasa pemrograman, "name" = nama file singkat tanpa spasi; hasil dikirim jadi FILE siap dipakai), skill (PAKAI SKILL BUILT-IN — arti kata, cek gempa, nomor hoki, lirik lagu, kalkulator, translate, kurs, qr code, wikipedia, cuaca, dll — isi "skill" = nama skill persis dari daftar TOOLBOX yang tersedia, "args" = string/objek argumen skill), mcp (PANGGIL TOOL SERVER MCP — dokumentasi library/repo GitHub/docs Microsoft — isi "server" + "mcpTool" persis dari daftar TOOLBOX yang tersedia, "data" = args objek), createfile (BIKIN FILE TEKS dari konten yang diminta user — txt/md/json/csv/dll → isi "name" = nama file, "content" = isi file PERSIS yang diminta user; user minta "bikin file txt berisi X" → konten X disusun lengkap), browse (BUKA LINK & BACA ISI halaman web → isi "url"; user suruh "buka link ini/baca halaman ini" → isi url, hasil dibaca langsung), create (BUAT FITUR BARU + pasang otomatis — hanya owner). Maksimal ${MAX_TOOLS} tool. "voice": true kalau user minta dijawab pakai voice note (vn/suara).
 TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):
 {{TOOLBOX}}
-4. PERSONA/ngobrol (user minta BERMAIN PERAN jadi orang lain, atau ngobrol santai, atau bantuin tugas TANPA perlu browsing: "jadi anak kecil", "jadi pacarku", "pura-pura jadi dokter", "temenin ngobrol", "bantuin tugas matematika ini", "cerita dong", konsultasi, motivasi, curhat):
+4. PERSONA/ngobrol (JALUR UTAMA buat pertanyaan informasi yang kamu udah tahu — user minta BERMAIN PERAN jadi orang lain, ngobrol santai, bantuin tugas, atau TANYA APA PUN yang bisa kamu jawab dari pengetahuanmu sendiri TANPA browsing: "jadi anak kecil", "jadi pacarku", "pura-pura jadi dokter", "temenin ngobrol", "bantuin tugas matematika ini", "cerita dong", konsultasi, motivasi, curhat):
 {"mode": "persona", "persona": "deskripsi persona LENGKAP — siapa, umur, sifat, gaya bahasa (contoh: anak laki-laki umur 5 tahun cerewet sok jagoan) — isi null kalau tanpa peran khusus", "voice": false}
 Kalau riwayat percakapan masih dalam persona yang sama → LANJUT persona yang sama. Bikin kode program → pakai tools mode dengan tool code. Tugas butuh info dari internet → research.
 
-Kalau ragu ATAU tugasnya nyari informasi → pilih research.`;
+Kalau kamu TAHU jawabannya → persona (jawab sendiri). Kalau butuh data TERBARU atau gak yakin → research. Kalau ragu → research. skill/mcp cuma kalau data emang domain tool-nya (lihat ATURAN PRIORITAS).`;
 
 // persona prompt — request owner 11 Sep: "klo disuruh profesi jd anak kecil
 // atau pacar dia persona berubah sesuai yg diinginkan user" — agent in-character.
@@ -220,6 +225,14 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   try {
     plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}${histLine}`, { systemPrompt: sysPlan }));
   } catch {}
+  // NORMALISASI FORMAT FLAT (ketahuan live 12 Sep): model kadang jawab
+  // {"mode":"skill","skill":"kbbi","args":"makan"} LANGSUNG di level atas
+  // (tanpa array "tools") — tanpa normalisasi ini jatuh nyasar ke research.
+  // Wrap jadi {"mode":"tools","tools":[{tool:"skill",...}]} biar jalan bener.
+  if (plan && !Array.isArray(plan.tools) && plan.mode && TOOL_LIST.includes(String(plan.mode).toLowerCase().trim())) {
+    const flatTool = String(plan.mode).toLowerCase().trim();
+    plan = { ...plan, mode: "tools", voice: !!plan.voice, tools: [{ ...plan, tool: flatTool }] };
+  }
 
   // normalisasi rencana act (dari LLM atau deteksi lokal)
   let actions = null;
