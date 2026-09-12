@@ -11,6 +11,7 @@ import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply } from "..
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
+import { startStatusRotation as startStatusRotationLib } from "../../src/lib/nova-status-rotate.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
 import te from "../../src/lib/nova-error.js";
@@ -286,6 +287,10 @@ async function handler(m, { sock, conn, config, db }) {
     if (!ok) await m.reply(clipped);
   };
 
+  // 🔹 ROTASI STATUS — fase loading berputar per 8 dtk (lib nova-status-rotate):
+  // berpikir → mencari → mengerjakan → menyusun (request owner 12 Sep).
+  const startStatusRotation = (phases, intervalMs = 8000) => startStatusRotationLib(setStatus, phases, intervalMs);
+
   // 🔹 VISION: upload gambar + caption .novaai <pertanyaan> (tanpa pertanyaan
   // = analisis umum) ATAU reply gambar dengan .novaai <pertanyaan> — AI scan
   // gambar: selesaikan soal tugas, baca struk, jelasin foto, dll (Gemini native)
@@ -300,11 +305,23 @@ async function handler(m, { sock, conn, config, db }) {
     await m.react("🕒");
       await setStatus("👀 " + smallcapsText("novaagent membaca gambar..."));
       appendSession(key, "user", `(mengirim gambar) ${question}`);
-      const buffer = await (directImage ? m.download() : m.quoted.download());
-      const answer = await callGeminiVision(question, buffer, {
-        systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI") + memoryBlock(db, m.sender, question),
-        senderJid: m.sender,
-      });
+      const stopRotateV = startStatusRotation([
+        "👀 " + smallcapsText("novaagent membaca gambar..."),
+        "🔍 " + smallcapsText("novaagent sedang mencari detail gambar..."),
+        "🛠️ " + smallcapsText("novaagent sedang mengerjakan analisis..."),
+        "✍️ " + smallcapsText("novaagent sedang menyusun jawaban..."),
+      ]);
+      let buffer = null;
+      let answer = null;
+      try {
+        buffer = await (directImage ? m.download() : m.quoted.download());
+        answer = await callGeminiVision(question, buffer, {
+          systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI") + memoryBlock(db, m.sender, question),
+          senderJid: m.sender,
+        });
+      } finally {
+        stopRotateV();
+      }
       appendSession(key, "assistant", answer);
       const { text: visibleText, action } = parseAIResponse(answer);
       if (action) {
@@ -341,6 +358,12 @@ async function handler(m, { sock, conn, config, db }) {
   if (!decision) {
     // react 🧠 global udah ada di atas (line react 🧠) — cukup status text
     await setStatus("🧠 " + smallcapsText("novaagent sedang berpikir..."));
+    const stopRotate = startStatusRotation([
+      "🧠 " + smallcapsText("novaagent sedang berpikir..."),
+      "🔍 " + smallcapsText("novaagent sedang mencari jawaban..."),
+      "🛠️ " + smallcapsText("novaagent sedang mengerjakan..."),
+      "✍️ " + smallcapsText("novaagent sedang menyusun jawaban..."),
+    ]);
     try {
       const prefixForThink = config?.command?.prefix || ".";
       decision = await think(textForAi, {
@@ -393,6 +416,8 @@ async function handler(m, { sock, conn, config, db }) {
         await m.react("❌");
         return editFinal(claraWrap("novaagent", `Gagal ke otak AI: ${e2.message}`, "error"));
       }
+    } finally {
+      stopRotate(); // wajib: think SUKSES pun rotator harus berhenti
     }
   }
 
