@@ -460,7 +460,7 @@ export function formatWeatherUpdate(data, locationName, intervalHours = 2, opts 
 
   // Mode otomatis: footer beda — kirim pas cuaca berubah, bukan tiap N jam
   if (opts.autoMinutes) {
-    msg += `\n🤖 Mode Otomatis — cek tiap ${opts.autoMinutes} menit, notifikasi terkirim saat cuaca berubah`;
+    msg += `\n⚡ Mode Otomatis — cek tiap ${opts.autoMinutes} menit, notifikasi terkirim saat cuaca berubah`;
     return msg;
   }
   const h = Number(intervalHours) || 2;
@@ -480,7 +480,7 @@ export function formatActivationMessage(settings, intervalHours = 2) {
     : "Open-Meteo";
   const locName = settings?.location?.name || "Lokasi terdaftar";
   const mode = settings?.notificationMode === "otomatis"
-    ? `🤖 Mode otomatis: cek tiap ${settings?.autoCheckMinutes || 5} menit — kirim pas cuaca berubah`
+    ? `⚡ Mode otomatis: cek tiap ${settings?.autoCheckMinutes || 5} menit — kirim pas cuaca berubah`
     : settings?.notificationMode === "interval"
     ? `⏱️ Update otomatis setiap: ${h} jam`
     : `⏱️ Jadwal: ${(settings?.schedules || []).map((s) => String(s.hour).padStart(2, "0") + ":" + String(s.minute || 0).padStart(2, "0")).join(", ") || "-"}`;
