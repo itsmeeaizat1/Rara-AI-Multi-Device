@@ -1,47 +1,47 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// statscard — Image card statistik grup
+// 12 Sep 2026 fix: dulu baca db.data.groupActivity yang GAK PERNAH ditulis (mati total)
+// + signature legacy (isGroupOnly gak dikenal handler, m.key.remoteJid, usedPrefix)
+// → sekarang live dari nova-activity-tracker + signature standar.
+import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { getWeeklyStats, getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
 
 const pluginConfig = {
   name: "statscard",
-  alias: ["statscard"],
-  aliases: ["statscard", "groupcard", "grupcard"],
+  alias: ["statscard", "groupcard", "grupcard"],
   category: "group",
-  description: "Generate image card statistik grup",
+  description: "Generate image card statistik grup (live tracker)",
   usage: ".statscard | .statscard text (versi teks)",
-  isGroupOnly: true,
+  example: ".statscard",
+  isOwner: false,
+  isPremium: false,
+  isGroup: true,
+  isPrivate: false,
+  cooldown: 15,
+  energi: 0,
+  isEnabled: true,
 };
 
-async function handler(m, { conn, text, args, usedPrefix, command }) {
+async function handler(m, { sock, config: botConfig, args }) {
   try {
-    const db = await getDatabase();
-    const groupId = m.key.remoteJid;
-    const mode = (args[0] || "").toLowerCase();
+    const groupId = m.chat;
+    const prefix = m.prefix || botConfig?.command?.prefix || ".";
+    const mode = (args?.[0] || "").toLowerCase();
 
-    const groupMeta = await conn.groupMetadata(groupId).catch(() => null);
+    const groupMeta = await sock.groupMetadata(groupId).catch(() => null);
     if (!groupMeta) return m.reply(novaError("Stats Card", "Gagal mengambil info/metadata grup nih."));
 
     const totalMembers = groupMeta.participants.length;
-    const admins = groupMeta.participants.filter(p => p.admin).length;
+    const admins = groupMeta.participants.filter((p) => p.admin).length;
     const groupName = groupMeta.subject || "Unknown Group";
-    const groupDesc = groupMeta.desc || "";
     const createdDate = new Date(groupMeta.creation * 1000).toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" });
 
-    let totalMessages = 0;
-    let topMember = null;
-    let topCount = 0;
-    let activeMembers = 0;
-
-    if (db.data.groupActivity?.[groupId]?.members) {
-      const members = db.data.groupActivity[groupId].members;
-      totalMessages = db.data.groupActivity[groupId].totalMessages || 0;
-      const sorted = Object.entries(members).sort((a, b) => (b[1].count || 0) - (a[1].count || 0));
-      if (sorted.length > 0) {
-        topMember = sorted[0][0];
-        topCount = sorted[0][1].count || 0;
-      }
-      activeMembers = sorted.filter(([_, d]) => (d.count || 0) > 0).length;
-    }
+    // Data LIVE dari activity tracker (minggu ini)
+    const stats = getWeeklyStats(groupId);
+    const board = getLeaderboard(groupId, 1);
+    const top = board[0] || null;
+    const totalMessages = stats.totalMessages;
+    const activeMembers = stats.activeMembers;
 
     if (mode === "text" || mode === "txt") {
       return m.reply(claraWrap("Group Stats Card", [
@@ -49,16 +49,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         `Member: ${totalMembers}`,
         `Admin: ${admins}`,
         `Dibuat: ${createdDate}`,
-        `Total Pesan: ${totalMessages}`,
+        `Total Pesan (minggu ini): ${totalMessages}`,
         `Member Aktif: ${activeMembers}`,
-        topMember ? `Top Member: @${topMember.split("@")[0]} (${topCount} pesan)` : "Top Member: -",
+        top ? `Top Member: ${top.name || top.jid.split("@")[0]} (${top.messageCount} pesan)` : "Top Member: -",
         "",
-        `Untuk versi image: ${usedPrefix}statscard (tanpa argumen)`,
+        `Untuk versi image: ${prefix}statscard (tanpa argumen)`,
       ].join("\n")));
     }
 
     try {
-      const { createCanvas, registerFont } = await import("canvas");
+      const { createCanvas } = await import("canvas");
       const W = 800, H = 500;
       const canvas = createCanvas(W, H);
       const ctx = canvas.getContext("2d");
@@ -79,21 +79,19 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ctx.textAlign = "center";
       ctx.fillText("GROUP STATS", W / 2, 70);
 
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 22px Arial";
       ctx.textAlign = "left";
-      const stats = [
+      const rows = [
         { label: "Nama Grup", value: groupName.length > 30 ? groupName.slice(0, 30) + "..." : groupName },
         { label: "Total Member", value: `${totalMembers}` },
         { label: "Admin", value: `${admins}` },
         { label: "Dibuat", value: createdDate },
-        { label: "Total Pesan", value: `${totalMessages}` },
+        { label: "Total Pesan (minggu ini)", value: `${totalMessages}` },
         { label: "Member Aktif", value: `${activeMembers}` },
-        { label: "Top Member", value: topMember ? `@${topMember.split("@")[0]}` : "-" },
+        { label: "Top Member", value: top ? (top.name || top.jid.split("@")[0]).slice(0, 25) : "-" },
       ];
 
       let y = 120;
-      for (const stat of stats) {
+      for (const stat of rows) {
         ctx.fillStyle = "#a0a0b0";
         ctx.font = "16px Arial";
         ctx.fillText(stat.label, 60, y);
@@ -109,7 +107,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ctx.fillText("Nova AI Bot | Generated " + new Date().toLocaleDateString("id-ID"), W / 2, H - 30);
 
       const buffer = canvas.toBuffer("image/png");
-      await conn.sendMessage(groupId, { image: buffer, caption: claraWrap("Group Stats Card", `Statistik ${groupName}`, "info") });
+      await sock.sendMessage(groupId, { image: buffer, caption: claraWrap("Group Stats Card", `Statistik ${groupName}`, "info") });
     } catch (canvasErr) {
       console.error("Canvas error:", canvasErr.message);
       return m.reply(claraWrap("Group Stats Card", [
@@ -117,12 +115,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         `Member: ${totalMembers}`,
         `Admin: ${admins}`,
         `Dibuat: ${createdDate}`,
-        `Total Pesan: ${totalMessages}`,
+        `Total Pesan (minggu ini): ${totalMessages}`,
         `Member Aktif: ${activeMembers}`,
-        topMember ? `Top Member: @${topMember.split("@")[0]} (${topCount} pesan)` : "Top Member: -",
+        top ? `Top Member: ${top.name || top.jid.split("@")[0]} (${top.messageCount} pesan)` : "Top Member: -",
         "",
         "Image card butuh canvas module. Install: npm install canvas",
-        `Atau pakai versi teks: ${usedPrefix}statscard text`,
+        `Atau pakai versi teks: ${prefix}statscard text`,
       ].join("\n")));
     }
   } catch (e) {

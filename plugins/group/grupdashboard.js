@@ -1,97 +1,65 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+// grupdashboard — Ringkasan aktivitas grup
+// 12 Sep 2026 fix: rewrite total — dulu baca db.data.groupActivity yang GAK
+// PERNAH ditulis (mati) + signature legacy (isGroupOnly, conn/usedPrefix, db.save())
+// + subcommand "auto" yang gak ada schedulernya (fake feature) → dihapus.
+// Sekarang live dari nova-activity-tracker: stats mingguan + top member + jam rame.
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { getWeeklyStats, getLeaderboard, getHourly } from "../../src/lib/nova-activity-tracker.js";
 
 const pluginConfig = {
   name: "grupdashboard",
-  alias: ["grupdashboard"],
-  aliases: ["grupdashboard", "gdashboard", "gdash"],
+  alias: ["grupdashboard", "gdashboard", "gdash"],
   category: "group",
-  description: "Ringkasan aktivitas grup harian/mingguan",
-  usage: ".grupdashboard [daily|weekly] | .grupdashboard auto <on|off>",
-  isGroupOnly: true,
+  description: "Ringkasan aktivitas grup minggu ini (live tracker)",
+  usage: ".grupdashboard",
+  example: ".grupdashboard",
+  isOwner: false,
+  isPremium: false,
+  isGroup: true,
+  isPrivate: false,
+  cooldown: 15,
+  energi: 0,
+  isEnabled: true,
 };
 
-async function handler(m, { conn, text, args, usedPrefix, command }) {
+async function handler(m, { sock, config: botConfig }) {
   try {
-    const db = await getDatabase();
-    const groupId = m.key.remoteJid;
-    const sub = (args[0] || "daily").toLowerCase();
+    const groupId = m.chat;
+    const stats = getWeeklyStats(groupId);
+    const board = getLeaderboard(groupId, 5);
+    const hourly = getHourly(groupId);
 
-    if (!db.data.groupActivity) db.data.groupActivity = {};
-    if (!db.data.groupActivity[groupId]) {
-      db.data.groupActivity[groupId] = {
-        totalMessages: 0,
-        members: {},
-        hourly: new Array(24).fill(0),
-        topSticker: 0,
-        topVN: 0,
-        lastReset: Date.now(),
-        weekStart: Date.now(),
-        autoPost: false,
-      };
-      await db.save();
+    if (stats.totalMessages === 0) {
+      return m.reply(claraWrap("Group Dashboard", [
+        "Belum ada aktivitas yang tercatat di grup ini.",
+        "Data tercatat otomatis setiap member chat — coba lagi nanti.",
+      ].join("\n")));
     }
 
-    const stats = db.data.groupActivity[groupId];
+    const peakIdx = hourly.indexOf(Math.max(...hourly));
+    const peakVal = hourly[peakIdx] || 0;
 
-    if (sub === "auto") {
-      const toggle = (args[1] || "").toLowerCase();
-      if (!["on", "off"].includes(toggle)) {
-        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupdashboard auto on|off`, "info"));
-      }
-      stats.autoPost = toggle === "on";
-      await db.save();
-      return m.reply(claraWrap("Group Dashboard", `Auto-post ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan post summary harian otomatis.`, "info"));
-    }
-
-    if (sub === "reset") {
-      stats.totalMessages = 0;
-      stats.members = {};
-      stats.hourly = new Array(24).fill(0);
-      stats.topSticker = 0;
-      stats.topVN = 0;
-      stats.lastReset = Date.now();
-      await db.save();
-      return m.reply(claraWrap("Group Dashboard", "Statistik berhasil direset."));
-    }
-
-    const isWeekly = sub === "weekly";
-    const period = isWeekly ? "Mingguan" : "Harian";
-    const periodMs = isWeekly ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
-    const sinceTs = Date.now() - periodMs;
-
-    const memberEntries = Object.entries(stats.members || {})
-      .filter(([_, d]) => (d.lastActive || 0) > sinceTs)
-      .sort((a, b) => (b[1].count || 0) - (a[1].count || 0));
-
-    const topMembers = memberEntries.slice(0, 5)
-      .map(([jid, d], i) => `${i + 1}. @${jid.split("@")[0]} - ${d.count || 0} pesan`)
-      .join("\n") || "Belum ada aktivitas.";
-
-    const peakHour = stats.hourly.indexOf(Math.max(...stats.hourly));
-    const peakHourStr = peakHour >= 0 && stats.hourly[peakHour] > 0
-      ? `${peakHour.toString().padStart(2, "0")}:00 - ${stats.hourly[peakHour]} pesan`
-      : "Belum ada data.";
+    const topMembers = board.length
+      ? board.map((u, i) => `${i + 1}. ${u.name || u.jid.split("@")[0]} — ${u.messageCount} pesan (${u.points}pts)`).join("\n")
+      : "Belum ada.";
 
     const lines = [
-      `Periode: ${period}`,
-      `Total Pesan: ${stats.totalMessages || 0}`,
-      `Peak Hour: ${peakHourStr}`,
-      `Top Sticker: ${stats.topSticker || 0}`,
-      `Top VN: ${stats.topVN || 0}`,
+      `Total Pesan: ${stats.totalMessages.toLocaleString("id-ID")}`,
+      `Total Command: ${stats.totalCommands.toLocaleString("id-ID")}`,
+      `Total Media: ${stats.totalMedia.toLocaleString("id-ID")}`,
+      `Member Aktif: ${stats.activeMembers}`,
+      `Jam Paling Rame: ${peakVal > 0 ? peakIdx.toString().padStart(2, "0") + ":00 WIB (" + peakVal + " pesan)" : "-"}`,
       "",
-      `Top Member Aktif:`,
+      "Top Member Aktif:",
       topMembers,
-      "",
-      `Command:`,
-      `${usedPrefix}grupdashboard daily|weekly|auto|reset`,
     ].join("\n");
 
-    return m.reply(claraWrap("Group Dashboard", lines));
+    const since = new Date(stats.weekStart).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+    return m.reply(claraWrap("Group Dashboard", lines + `\n\nPeriode: ${since} - hari ini`));
   } catch (e) {
     console.error("grupdashboard error:", e);
-    return m.reply(novaError("Grupdashboard", e.message));
+    return m.reply(claraWrap("Group Dashboard", "Gagal membaca statistik: " + e.message, "error"));
   }
 }
 
