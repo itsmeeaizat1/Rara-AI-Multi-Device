@@ -248,6 +248,14 @@ export async function aiChainChat(prompt, opts = {}) {
     return finish(await sensenovaChat(fullPrompt));
   } catch (e) { errors.push(`sensenova: ${e.message}`); }
 
+  // 1.6 NexAI (apinex.bond) — multi-provider OpenAI-compat, free/glm-5.3-flash
+  // zero-cost (request owner 12 Sep 2026: "tmbah ai multi provider baru nexai").
+  // Key gak diset → nexaiChat throw → di-skip senyap lanjut rantai.
+  try {
+    const { nexaiChat } = await import("../scraper/nexai.js");
+    return finish(await nexaiChat(fullPrompt, { timeoutMs: 35000 }));
+  } catch (e) { errors.push(`nexai: ${e.message}`); }
+
   // 2. Haidar — brand pilihan, gagal → gemini
   try { return finish(await viaHaidar(fullPrompt, model)); }
   catch (e) { errors.push(`haidar/${model}: ${e.message}`); }
@@ -310,6 +318,9 @@ export async function aiFallbackChat(prompt, opts = {}) {
     } else if (route === "sensenova") {
       const { sensenovaChat } = await import("../scraper/sensenova.js");
       reply = await sensenovaChat(fullPrompt);
+    } else if (route === "nexai") {
+      const { nexaiChat } = await import("../scraper/nexai.js");
+      reply = await nexaiChat(fullPrompt, { model: opts.nexaiModel });
     } else if (route === "kuroneko") {
       const { kuronekoChat } = await import("../scraper/kuroneko.js");
       reply = await kuronekoChat(fullPrompt);
