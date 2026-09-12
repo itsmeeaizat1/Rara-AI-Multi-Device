@@ -227,6 +227,41 @@ const gU = replies.at(-1) || "";
 t("6q. usage tampilin preset + opsi hd", gU.includes("formal") && gU.includes("hd"));
 
 
+
+// ═══ 7. preset baru + subcommand list preset ═══
+out("\n— preset baru + list —");
+const b1 = expandPreset("batik");
+t("7a. preset batik → outfit batik parang", b1.preset === "batik" && /batik shirt/.test(b1.expanded) && /parang/.test(b1.expanded));
+const b2 = expandPreset("kebaya");
+t("7b. preset kebaya → kebaya + kain", b2.preset === "kebaya" && /kebaya/.test(b2.expanded) && /kain/.test(b2.expanded));
+const b3 = expandPreset("beskap");
+t("7c. preset beskap → beskap + blangkon", b3.preset === "beskap" && /blangkon/.test(b3.expanded));
+const b4 = expandPreset("hd gamis");
+t("7d. hd gamis → flag kepisah, gamis expandable", parseHdFlag("hd gamis").prompt === "gamis" && expandPreset("gamis").preset === "gamis");
+t("7e. alias muslim = koko, muslimah = gamis", PRESET_STYLES.muslim === PRESET_STYLES.koko && PRESET_STYLES.muslimah === PRESET_STYLES.gamis);
+t("7f. 30+ preset terdaftar", Object.keys(PRESET_STYLES).length >= 30);
+
+// list preset: tanpa foto pun jalan
+replies.length = 0;
+await handler(mockM({ args: ["list", "preset"], text: "list preset" }), { sock: sockMock });
+const gl = replies.at(-1) || "";
+t("7g. .aiclotheschanger list preset → daftar muncul (tanpa foto)", gl.includes("batik") && gl.includes("formal") && gl.includes("kebaya"));
+t("7h. list ada grup + contoh hd", gl.includes("tradisional") && gl.includes("hd batik"));
+// alias list
+replies.length = 0;
+await handler(mockM({ args: ["daftar"], text: "daftar" }), { sock: sockMock });
+t("7i. .aiclotheschanger daftar → list juga", (replies.at(-1) || "").includes("batik"));
+replies.length = 0;
+await handler(mockM({ args: ["preset", "list"], text: "preset list" }), { sock: sockMock });
+t("7j. .aiclotheschanger preset list → list juga", (replies.at(-1) || "").includes("batik"));
+// list gak manggil engine
+let listEngine = 0;
+_setClothesDepsForTest({ vision: async () => { listEngine++; return { status: false }; }, live3d: async () => { listEngine += 10; return {}; } });
+replies.length = 0;
+await handler(mockM({ args: ["list"], text: "list", isImage: true }), { sock: sockMock });
+t("7k. list gak manggil engine walau ada foto", (replies.at(-1) || "").includes("batik") && listEngine === 0);
+
+
 // ═══ 5. referensi path import bebas memory leak ═══
 out("\n— summary —");
 out(`PASS ${pass} / FAIL ${fail}`);
