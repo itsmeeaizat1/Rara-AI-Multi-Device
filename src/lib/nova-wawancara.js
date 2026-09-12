@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// nova-wawancara — Interview Simulator AI (ide fitur no 5, 12 Sep 2026):
+// nova-wawancara — Interview Simulator AI (cmd .aiagentwawancara, ide fitur no 5, 12 Sep 2026):
 // AI jadi HRD buat latihan wawancara kerja — nanya via VN, jawab via VN/teks,
 // tiap jawaban dinilai + feedback, akhir sesi skor akhir + chart + tips.
 // Sesi per user persist db.setting("wawancaraSessions"), expired 30 menit.
