@@ -397,7 +397,7 @@ export async function fetchWeatherForSettings(settings) {
 // ─────────────────────────────────────────────────────────────
 // FORMAT PESAN — persis ala script standalone owner
 // ─────────────────────────────────────────────────────────────
-export function formatWeatherUpdate(data, locationName, intervalHours = 2) {
+export function formatWeatherUpdate(data, locationName, intervalHours = 2, opts = {}) {
   if (!data) return "⚠️ Data cuaca tidak tersedia saat ini.";
 
   const emoji = conditionEmoji(data.condition);
@@ -458,6 +458,11 @@ export function formatWeatherUpdate(data, locationName, intervalHours = 2) {
     msg += `   ❄️ Min: ${fmtNum(data.min_temp, "°C")}\n`;
   }
 
+  // Mode otomatis: footer beda — kirim pas cuaca berubah, bukan tiap N jam
+  if (opts.autoMinutes) {
+    msg += `\n🤖 Mode Otomatis — cek tiap ${opts.autoMinutes} menit, notifikasi terkirim saat cuaca berubah`;
+    return msg;
+  }
   const h = Number(intervalHours) || 2;
   msg += `\n📌 Update otomatis setiap ${h} jam\n`;
   msg += `🔄 Next update: ${new Date(Date.now() + h * 3600000).toLocaleTimeString("id-ID")}`;
@@ -474,7 +479,9 @@ export function formatActivationMessage(settings, intervalHours = 2) {
     : pv === "weatherapi" || pv === "wa" ? "WeatherAPI"
     : "Open-Meteo";
   const locName = settings?.location?.name || "Lokasi terdaftar";
-  const mode = settings?.notificationMode === "interval"
+  const mode = settings?.notificationMode === "otomatis"
+    ? `🤖 Mode otomatis: cek tiap ${settings?.autoCheckMinutes || 5} menit — kirim pas cuaca berubah`
+    : settings?.notificationMode === "interval"
     ? `⏱️ Update otomatis setiap: ${h} jam`
     : `⏱️ Jadwal: ${(settings?.schedules || []).map((s) => String(s.hour).padStart(2, "0") + ":" + String(s.minute || 0).padStart(2, "0")).join(", ") || "-"}`;
   return `🌤️ *SISTEM NOTIFIKASI CUACA AKTIF*\n\n` +
@@ -488,4 +495,16 @@ export function formatActivationMessage(settings, intervalHours = 2) {
 export function conditionKey(data) {
   if (!data) return "";
   return `${data.temperature}_${data.condition}_${data.time}`;
+}
+
+// 🔹 MODE OTOMATIS (request owner 12 Sep 2026: "klo mode otomatis aktif tiap
+// cuaca berubah dia kirim notifikasi — adanya mode jadwal, gak ada mode
+// otomatisnya"): key perubahan TANPA time — cuma kondisi + suhu dibulatkan.
+// Beda dengan conditionKey (yang ikut keganti tiap slot jam), realtimeKey
+// cuma berubah kalau cuacanya BENERAN berubah → mode otomatis kirim
+// notifikasi pas kondisi ganti, gak nunggu interval jam.
+export function realtimeKey(data) {
+  if (!data) return "";
+  const temp = Math.round(Number(data.temperature) || 0);
+  return `${temp}_${data.condition || ""}`;
 }

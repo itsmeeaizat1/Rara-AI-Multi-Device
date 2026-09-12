@@ -17,6 +17,8 @@
 //                                             angin kencang, panas ekstrem, kabut — level Waspada/Siaga/Awas
 //                                             ala EWS, cek tiap 30 mnt, bypass mode jadwal/interval)
 // .autoweatherrealtime interval 2            → update otomatis tiap 2 jam ala script (off = balik jadwal)
+// .autoweatherrealtime otomatis [menit]      → MODE OTOMATIS: cek tiap N menit (default 5),
+//                                               kirim notifikasi PAS cuaca berubah (off = balik interval)
 // .autoweatherrealtime provider <openmeteo|bmkg|metno|weatherapi|aggregate> → pilih sumber cuaca notif
 //   aggregate = gabungan 4 provider (rata-rata + kondisi dominan + konfidensi)
 // .autoweatherrealtime adm4 31.71.03.1001    → kode wilayah BMKG (verified live saat diset)
@@ -32,7 +34,7 @@ import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
 import { boxMessage } from "../../src/lib/styler.js";
 import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/nova-weather-notify.js";
-import { resetIntervalState, resetAlertState, checkWeatherAlert } from "../../src/lib/nova-weather-realtime-scheduler.js";
+import { resetIntervalState, resetAlertState, resetAutoState, checkWeatherAlert } from "../../src/lib/nova-weather-realtime-scheduler.js";
 import { evaluateWeatherAlert, formatAlertMessage, buildThresholds, THRESHOLD_BASE } from "../../src/lib/nova-weather-alert.js";
 
 const pluginConfig = {
@@ -40,7 +42,7 @@ const pluginConfig = {
   alias: ["autoweatherrealtime", "autocuacarealtime"],
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
+  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/otomatis/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
   example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
@@ -68,7 +70,7 @@ function getWRSettings(db) {
       ],
       target: null, // group JID for notifications
       // ── upgrade ala script owner 8 Sep 2026 ──
-      notificationMode: "jadwal", // "jadwal" | "interval"
+      notificationMode: "jadwal", // "jadwal" | "interval" | "otomatis"
       intervalHours: 2,           // interval mode: tiap N jam (script: 2 jam)
       provider: "openmeteo",      // "openmeteo" | "bmkg" | "metno" | "weatherapi" | "aggregate"
       adm4: null,                 // kode wilayah BMKG (contoh: 31.71.03.1001)
@@ -78,6 +80,8 @@ function getWRSettings(db) {
   }
   if (!s.notificationMode) s.notificationMode = "jadwal";
   if (!s.intervalHours) s.intervalHours = 2;
+  if (!s.autoCheckMinutes) s.autoCheckMinutes = 5;
+  if (!s.minGapMinutes) s.minGapMinutes = 10;
   if (!s.provider) s.provider = "openmeteo";
   if (s.adm4 === undefined) s.adm4 = null;
   if (s.alertEnabled === undefined) s.alertEnabled = true;
@@ -160,7 +164,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Notifikasi") + " : " + (settings.notification ? "ON ✅" : "OFF ❌") + "\n" +
         "• " + toSC("Alert Ekstrem") + " : " + (settings.alertEnabled !== false ? "ON ✅" : "OFF ❌") + "\n" +
         "• " + toSC("Threshold") + " : " + (Object.keys(settings.thresholds || {}).length ? toSC("custom ") + "(" + Object.keys(settings.thresholds).join(", ") + ")" : toSC("default")) + "\n" +
-        "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
+        "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "otomatis" ? toSC("Otomatis — cek tiap ") + settings.autoCheckMinutes + toSC(" menit, kirim saat cuaca berubah") : settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
         "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
         "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
@@ -296,6 +300,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         saveWRSettings(db2, settings);
         resetIntervalState(); // ala script boot: kirim cuaca sekarang
         resetAlertState();    // alert ekstrem siap cek dari nol
+        resetAutoState();     // mode otomatis siap deteksi perubahan dari nol
         try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
 
         // ── ala script: SISTEM NOTIFIKASI CUACA AKTIF + cuaca sekarang ──
@@ -316,7 +321,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "✅ " + toSC("Notifikasi cuaca AKTIF") + "\n" +
-          "• " + toSC("Mode") + " : " + (settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
+          "• " + toSC("Mode") + " : " + (settings.notificationMode === "otomatis" ? toSC("Otomatis — cek tiap ") + settings.autoCheckMinutes + toSC(" menit, kirim saat cuaca berubah") : settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
           "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
           "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
           "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
@@ -476,6 +481,53 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     // ── INTERVAL (ala script: update tiap N jam) ──
+    // ── OTOMATIS (request owner 12 Sep 2026: "klo mode otomatis aktif tiap
+    //    cuaca berubah dia kirim notifikasi — adanya mode jadwal semua") ──
+    if (action === "otomatis" || action === "auto" || action === "realtime") {
+      const sub = (args.shift() || "").toLowerCase();
+      if (sub === "off") {
+        // balik ke mode interval (ala script) — jadwal cuma kalau ada schedules
+        const hasSchedules = Array.isArray(settings.schedules) && settings.schedules.length > 0;
+        settings.notificationMode = hasSchedules ? "jadwal" : "interval";
+        saveWRSettings(db2, settings);
+        try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "✅ " + toSC("Mode otomatis dimatikan") + "\n" +
+          "• " + toSC("Sekarang") + " : " + (settings.notificationMode === "jadwal" ? toSC("Jadwal") : toSC("Interval ") + settings.intervalHours + toSC(" jam")) + "\n"
+          )
+        );
+      }
+      // `otomatis [menit]` — menit opsional (1-60, default 5)
+      const mnt = sub ? parseInt(sub, 10) : 5;
+      if (!Number.isFinite(mnt) || mnt < 1 || mnt > 60) {
+        try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
+        return m.reply(
+          boxMessage("◆ " + "Weather Realtime" + " ◆",
+          "⚠ " + toSC("Format") + ":\n" +
+          "• " + prefix + "autoweatherrealtime otomatis\n" +
+          "• " + prefix + "autoweatherrealtime otomatis 5\n" +
+          "• " + prefix + "autoweatherrealtime otomatis off\n" +
+          "(" + toSC("cek tiap 1-60 menit, default 5 — kirim notif pas cuaca berubah") + ")\n"
+          )
+        );
+      }
+      settings.notificationMode = "otomatis";
+      settings.autoCheckMinutes = mnt;
+      saveWRSettings(db2, settings);
+      resetAutoState();
+      try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
+      return m.reply(
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "✅ " + toSC("Mode Otomatis aktif") + "\n" +
+        "• " + toSC("Cek cuaca tiap") + " " + mnt + " " + toSC("menit") + "\n" +
+        "• " + toSC("Notifikasi terkirim PAS cuaca berubah") + "\n" +
+        "• " + toSC("Anti bolak-balik") + " : " + toSC("kondisi barusan dikirim ditahan") + " " + settings.minGapMinutes + " " + toSC("menit") + "\n" +
+        "• " + toSC("Cuaca sama") + " : " + toSC("diam, gak kirim ulang") + "\n"
+        )
+      );
+    }
+
     if (action === "interval") {
       const sub = (args.shift() || "").toLowerCase();
       if (sub === "off") {
