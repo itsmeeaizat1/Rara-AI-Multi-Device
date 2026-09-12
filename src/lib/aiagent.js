@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import { searchWeb, fetchPagePreview } from "./nova-websearch.js";
-import { getAllSkills } from "./nova-skills.js";
+import { getAllSkills, awaitSkillPacks } from "./nova-skills.js";
 import { getMcpToolEntries } from "./nova-mcp.js";
 // ============================================================
 // 🔹 AI AGENT — Otak AI yang bisa ngatur fitur bot via bahasa natural
@@ -498,6 +498,7 @@ export const TOOLS = {
 // MCP = tool dari server MCP eksternal (nova-mcp.js). Semua bentuknya sama
 // (perm/args/danger/desc/run) → gerbang + executor novaai.js jalan generik.
 export async function getAgentTools() {
+  await awaitSkillPacks() // skill pack src/skills/ siap sebelum registry dibangun
   let mcp = {};
   try { mcp = await getMcpToolEntries(); } catch { /* MCP down gak boleh matiin agent */ }
   return { ...TOOLS, ...getAllSkills(), ...mcp };
@@ -1014,6 +1015,7 @@ Contoh:
 export async function think(text, ctx = {}) {
   // MCP: daftar tool server eksternal ke-merge ke prompt (best-effort,
   // server down = skip — agent gak boleh mati gara2 satu server ngambek)
+  await awaitSkillPacks() // skill pack siap sebelum prompt kebangun
   if (!ctx.mcpTools) {
     try {
       const entries = await getMcpToolEntries()

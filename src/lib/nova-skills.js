@@ -304,6 +304,12 @@ registerSkill({
 })
 
 // ── loader skill pack eksternal (src/skills/*.js) — best-effort ──
+// auto-load skill pack src/skills/ saat modul ke-import —
+// think()/getAgentTools() nunggu packsReady jadi prompt & registry
+// selalu ke-list skill pack (request owner 12 Sep 2026).
+const packsReady = registerSkillPacks().catch(() => 0)
+export function awaitSkillPacks() { return packsReady }
+
 export async function registerSkillPacks() {
   const { readdir } = await import("node:fs/promises")
   let loaded = 0
