@@ -63,6 +63,19 @@ export const PRESET_STYLES = {
   vintage: "a vintage retro outfit: a 70s-style brown corduroy jacket with flared jeans and a patterned shirt",
   dandy: "a dandy outfit: a three-piece tweed suit with a pocket watch chain, brogues and a flat cap",
   punk: "an edgy punk outfit: a black leather biker jacket with ripped jeans, band tee and combat boots",
+  sekolah: "an Indonesian school uniform: a crisp white short-sleeve shirt with a red tie, grey shorts or a navy skirt and black shoes",
+  pramuka: "an Indonesian scout (Pramuka) uniform: a brown short-sleeve shirt with scout badges, a brown scarf with a woggle, and dark shorts",
+  pengantin: "elegant Indonesian wedding attire: a luxurious white wedding outfit with intricate embroidery and a veil, formal and radiant",
+  wedding: "elegant Indonesian wedding attire: a luxurious white wedding outfit with intricate embroidery and a veil, formal and radiant",
+  halloween: "a spooky Halloween outfit: a dark witch robe with a pointed hat, or a vampire cape with Victorian gothic clothing",
+  kimono: "a traditional Japanese kimono: an elegant silk kimono with a floral pattern and a wide obi belt",
+  hanbok: "a traditional Korean hanbok: a vibrant jeogori jacket with a high-waisted chima skirt, elegant and colorful",
+  ninja: "a ninja outfit: an all-black shinobi suit with a face mask and a utility belt, stealthy and sleek",
+  cowboy: "a cowboy western outfit: a denim shirt with a leather vest, blue jeans, cowboy boots and a wide-brim hat",
+  "90s": "a 90s retro outfit: a baggy flannel plaid shirt over a graphic band tee with wide-leg jeans and chunky sneakers",
+  "y2k": "a Y2K early-2000s outfit: a baby tee with low-rise flared jeans, a mini shoulder bag and tinted sunglasses",
+  army: "a military outfit: camouflaged combat fatigues with a utility vest and lace-up combat boots",
+  militer: "a military outfit: camouflaged combat fatigues with a utility vest and lace-up combat boots",
 };
 
 /** Expand preset di awal prompt → outfit lengkap + detail sisa tetap nempel. */
@@ -208,9 +221,11 @@ async function handler(m, { sock }) {
       const groups = {
         "Formal & Kerja": ["formal", "business", "preppy", "dandy"],
         "Kasual & Jalan": ["casual", "street", "vintage", "punk"],
-        "Acara & Pesta": ["party", "korea"],
+        "Acara & Pesta": ["party", "korea", "pengantin"],
         "Olahraga & Outdoor": ["sport", "vacation", "winter"],
         "Tradisional & Muslim": ["batik", "kebaya", "beskap", "koko", "gamis"],
+        "Seragam & Kostum": ["sekolah", "pramuka", "army", "cowboy", "ninja", "halloween"],
+        "Era & Budaya": ["90s", "y2k", "kimono", "hanbok"],
       };
       let msg = `👗 *${toSC("daftar preset gaya")}*
 
@@ -227,7 +242,7 @@ async function handler(m, { sock }) {
         }
         msg += "\n";
       }
-      msg += `${toSC("alias")}: ${["resmi","kantoran","santai","pesta","glam","streetwear","olahraga","gym","liburan","pantai","dingin","kpop","muslim","muslimah","hijab"].join(", ")}
+      msg += `${toSC("alias")}: ${["resmi","kantoran","santai","pesta","glam","streetwear","olahraga","gym","liburan","pantai","dingin","kpop","muslim","muslimah","hijab","wedding","militer"].join(", ")}
 
 `;
       msg += `${toSC("cara pakai")}: ${prefix}${cmd} <${toSC("preset")}> ${toSC("reply foto orang")}
@@ -237,7 +252,7 @@ async function handler(m, { sock }) {
     }
 
     if (!personBuf) {
-      const styleList = Object.keys(PRESET_STYLES).filter((k, i, a) => a.indexOf(k) === i && !["resmi", "kantoran", "kerja", "santai", "pesta", "glam", "streetwear", "olahraga", "gym", "liburan", "pantai", "dingin", "kpop", "muslim", "hijab", "muslimah"].includes(k)).join(", ");
+      const styleList = Object.keys(PRESET_STYLES).filter((k, i, a) => a.indexOf(k) === i && !["resmi", "kantoran", "kerja", "santai", "pesta", "glam", "streetwear", "olahraga", "gym", "liburan", "pantai", "dingin", "kpop", "muslim", "hijab", "muslimah", "wedding", "militer"].includes(k)).join(", ");
       await m.reply(
         `👕 *${toSC("ganti baju ai")}*\n\n` +
         `${toSC("kirim/reply foto orangnya dulu")}!\n\n` +
