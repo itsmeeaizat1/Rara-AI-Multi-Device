@@ -2,6 +2,7 @@
 import { getDatabase } from '../../src/lib/nova-database.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 const pluginConfig = {
     name: 'checksewa',
     alias: ["checksewa"],
@@ -32,7 +33,7 @@ function formatCountdown(expiredAt) {
     return { text: text.trim(), expired: false }
 }
 
-function handler(m, { sock }) {
+async function handler(m, { sock }) {
     const db = getDatabase()
     if (!db.db.data.sewa) {
         db.db.data.sewa = { enabled: false, groups: {} }
@@ -73,17 +74,66 @@ function handler(m, { sock }) {
     const diff = sewaData.expiredAt - Date.now()
     const isAlmostExpired = diff <= 259200000
 
+    // 📊 (13 Sep): bar progress masa sewa — keliatan berapa persen ke-terpakai
+    const totalSewa = sewaData.expiredAt - (sewaData.addedAt || sewaData.expiredAt)
+    let barLine = ''
+    if (totalSewa > 0) {
+        const used = Math.min(1, Math.max(0, (Date.now() - (sewaData.addedAt || sewaData.expiredAt)) / totalSewa))
+        const n = Math.round(used * 10)
+        const pct = Math.round(used * 100)
+        barLine = `\n📊 ${'▰'.repeat(n)}${'▱'.repeat(10 - n)} ${pct}% terpakai`
+    }
+
     let text = `⏱️ *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴡᴀ*\n\n`
     text += `Grup: *${groupName}*\n`
-    text += `Sisa waktu: *${countdown.text}*\n`
-    text += `Berakhir: *${expiredStr}*\n`
+    text += `Sisa waktu: *${countdown.text}*`
+    text += barLine
+    text += `\nBerakhir: *${expiredStr}*\n`
     text += `Terdaftar sejak: *${addedDate}*`
 
     if (isAlmostExpired) {
         text += `\n\n⚠️ Sewa hampir habis! Hubungi owner bot untuk perpanjang.`
     }
 
-    return m.reply(claraWrap("checksewa", text))
+    await m.reply(claraWrap("checksewa", text))
+
+    // 🔹 LIVE COUNTDOWN (13 Sep, pola premium): sisa ≤24 jam → ticker nge-tick
+    // ⏳ H:MM:SS sampai expired → "SEWA EXPIRED" + ajakan perpanjang.
+    if (diff <= 86400000 && diff > 0) {
+        const sewaCard = (remMs) => {
+            const h = Math.floor(remMs / 3600000)
+            const mm = Math.floor((remMs % 3600000) / 60000)
+            const ss = Math.floor((remMs % 60000) / 1000)
+            if (remMs <= 0) {
+                return [
+                    `❌ *ꜱᴇᴡᴀ ᴇxᴘɪʀᴇᴅ*`,
+                    ``,
+                    `Grup: *${groupName}*`,
+                    ``,
+                    `Sewa bot di grup ini udah habis.`,
+                    `Hubungi owner bot untuk perpanjang.`,
+                ].join('\n')
+            }
+            return [
+                `⏳ *ꜱᴇᴡᴀ ʜᴀᴍᴘɪʀ ʜᴀʙɪꜱ*`,
+                ``,
+                `Grup: *${groupName}*`,
+                `Sisa: *${h} jam ${String(mm).padStart(2, '0')} mnt ${String(ss).padStart(2, '0')} dtk*`,
+                `Berakhir: ${expiredStr}`,
+                ``,
+                `⚠️ Segera hubungi owner bot untuk perpanjang.`,
+            ].join('\n')
+        }
+        runLiveTicker({
+            sock, chat: m.chat, m,
+            mode: "down",
+            targetTs: sewaData.expiredAt,
+            initialCard: sewaCard(diff),
+            tickCard: (st) => sewaCard(st.remainingMs),
+            maxEdits: 600,
+        }).catch(() => {})
+    }
+    return
 }
 
 export { pluginConfig as config, handler }
