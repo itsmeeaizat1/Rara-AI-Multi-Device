@@ -1,5 +1,16 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+/**
+ * Nama Plugin: Pomodoro Timer
+ * Fitur: Timer belajar Pomodoro — sekarang PERSIST (tahan restart),
+ *        live ticker 🕒 edit-in-place tiap fase + scheduler otomatis
+ *        ganti fokus⇄istirahat (engine: src/lib/nova-pomodoro.js)
+ */
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import {
+  getSession, createSession, endSession,
+  buildPhaseCard, firePhaseTicker, ensurePomodoroScheduler,
+  phaseEndTs, phaseMs, recomputeIfMissed,
+} from "../../src/lib/nova-pomodoro.js";
 
 const pluginConfig = {
   name: "pomodoro",
@@ -17,15 +28,8 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// In-memory store: sender -> session
-const sessions = new Map();
-
 const DEFAULT_FOCUS = 25; // menit
 const DEFAULT_BREAK = 5;  // menit
-
-function getSession(sender) {
-  return sessions.get(sender) || null;
-}
 
 function formatTime(ms) {
   const total = Math.ceil(ms / 1000);
@@ -54,78 +58,44 @@ async function handler(m, { sock, args, config: botConfig }) {
     if (focusMin < 1 || focusMin > 120) focusMin = DEFAULT_FOCUS;
     if (breakMin < 1 || breakMin > 60) breakMin = DEFAULT_BREAK;
 
-    const session = {
+    const session = createSession({
       sender,
-      startTime: Date.now(),
+      chat: m.chat,
       focusMs: focusMin * 60 * 1000,
       breakMs: breakMin * 60 * 1000,
-      phase: "focus",
-      cycles: 0,
-      totalFocusMs: 0,
-    };
-    sessions.set(sender, session);
+    });
 
-    // Schedule focus end
-    setTimeout(async () => {
-      const s = getSession(sender);
-      if (!s || s.phase !== "focus") return;
-      s.phase = "break";
-      s.totalFocusMs += s.focusMs;
-      s.cycles++;
-      await sock.sendMessage(m.key?.remoteJid || sender, {
-        text: claraWrap("Pomodoro - Istirahat", [
-          `Sesi fokus selesai! (${formatTime(s.focusMs)})`,
-          `Cycle: ${s.cycles}x`,
-          `Sekarang istirahat ${formatTime(s.breakMs)}`,
-          `Total fokus hari ini: ${formatTime(s.totalFocusMs)}`,
-        ].join("\n")),
-      }).catch((e) => { console.error('[pomodoro.js]:', e.message); });
+    // scheduler pusat nyala (sumber kebenaran ganti fase)
+    ensurePomodoroScheduler(sock);
 
-      // Schedule break end
-      setTimeout(async () => {
-        const s2 = getSession(sender);
-        if (!s2 || s2.phase !== "break") return;
-        s2.phase = "focus";
-        s2.startTime = Date.now();
-        await sock.sendMessage(m.key?.remoteJid || sender, {
-          text: claraWrap("Pomodoro - Fokus", [
-            `Istirahat selesai!`,
-            `Mulai sesi fokus lagi (${formatTime(s2.focusMs)})`,
-            `Cycle: ${s2.cycles}x selesai`,
-            `Ketik ${prefix}pomodoro stop untuk berhenti`,
-          ].join("\n")),
-        }).catch((e) => { console.error('[pomodoro.js]:', e.message); });
-      }, breakMin * 60 * 1000);
-    }, focusMin * 60 * 1000);
-
-    return m.reply( claraWrap("Pomodoro - Fokus", [
-      `Sesi dimulai!`,
-      `Fokus: ${focusMin} menit`,
-      `Istirahat: ${breakMin} menit`,
-      `Phase: Fokus`,
-      ``,
-      `Bot akan kirim pengingat saat waktu habis.`,
+    // kartu mulai + live ticker 🕒 sampai fokus selesai
+    await m.reply( claraWrap("Pomodoro — Mulai", [
+      "🍅 *SESI FOKUS DIMULAI!*",
+      "",
+      `⏱ Fokus: *${focusMin} menit*`,
+      `☕ Istirahat: *${breakMin} menit* (otomatis setelah fokus)`,
+      "",
+      "_Waktu berjalan di kartu di bawah ini_ 👇",
     ].join("\n")) + "\n" + tipText(`Ketik ${prefix}pomodoro stop untuk berhenti`), { commandName: "pomodoro" });
+    firePhaseTicker(sock, session, prefix);
+    return;
   }
 
   // .pomodoro status
   if (sub === "status" || sub === "cek") {
-    const s = getSession(sender);
+    let s = getSession(sender);
     if (!s) {
       return m.reply( claraWrap("Pomodoro", [
-        `Belum ada sesi aktif.`,
+        "Belum ada sesi aktif.",
         `Ketik ${prefix}pomodoro start untuk mulai`,
       ].join("\n")), { commandName: "pomodoro" });
     }
-    const elapsed = Date.now() - s.startTime;
-    const total = s.phase === "focus" ? s.focusMs : s.breakMs;
-    const remaining = Math.max(0, total - elapsed);
-    return m.reply( claraWrap("Pomodoro - Status", [
-      `Phase: ${s.phase === "focus" ? "Fokus" : "Istirahat"}`,
-      `Sisa waktu: ${formatTime(remaining)}`,
-      `Cycle selesai: ${s.cycles}x`,
-      `Total fokus: ${formatTime(s.totalFocusMs)}`,
-    ].join("\n")), { commandName: "pomodoro" });
+    // fase kelewat pas bot sibuk/idle → fast-forward dulu biar akurat
+    recomputeIfMissed(s);
+    await m.reply(buildPhaseCard(s, prefix), { commandName: "pomodoro" });
+    // ticker live cuma kalau fase ini belum punya ticker aktif
+    if (!s.tickerFired) firePhaseTicker(sock, s, prefix);
+    return;
   }
 
   // .pomodoro stop
@@ -133,32 +103,31 @@ async function handler(m, { sock, args, config: botConfig }) {
     const s = getSession(sender);
     if (!s) {
       return m.reply( claraWrap("Pomodoro", [
-        `Tidak ada sesi aktif.`,
+        "Tidak ada sesi aktif.",
       ].join("\n")), { commandName: "pomodoro" });
     }
-    const totalFocus = s.totalFocusMs;
-    if (s.phase === "focus") {
-      const elapsed = Date.now() - s.startTime;
-      totalFocus += elapsed;
-    }
-    sessions.delete(sender);
-    return m.reply( claraWrap("Pomodoro - Selesai", [
-      `Sesi dihentikan.`,
-      `Cycle: ${s.cycles}x`,
-      `Total fokus: ${formatTime(totalFocus)}`,
-      `Kerja bagus!`,
+    const res = endSession(sender); // ticker fase lama otomatis kebatalin (isCancelled)
+    return m.reply( claraWrap("Pomodoro — Selesai", [
+      "⏹ *Sesi dihentikan.*",
+      "",
+      `🔁 Cycle: ${res.cycles}x`,
+      `⏱ Total fokus: ${formatTime(res.totalFocusMs)}`,
+      "",
+      "Kerja bagus! 🎉",
     ].join("\n")), { commandName: "pomodoro" });
   }
 
   // Default: help
   const txt = claraWrap("Pomodoro Timer", [
     `Timer belajar Pomodoro: fokus ${DEFAULT_FOCUS} menit + istirahat ${DEFAULT_BREAK} menit`,
-    ``,
+    "",
     `Perintah:`,
     `1. ${prefix}pomodoro start - Mulai sesi (default 25/5)`,
     `2. ${prefix}pomodoro start 30 10 - Custom (30 fokus, 10 istirahat)`,
-    `3. ${prefix}pomodoro status - Cek sisa waktu`,
+    `3. ${prefix}pomodoro status - Cek sisa waktu (live 🕒)`,
     `4. ${prefix}pomodoro stop - Berhenti`,
+    "",
+    "_Tahan restart: sesi tersimpan di database_ ✨",
   ].join("\n")) + "\n" + tipText(`Ketik ${prefix}pomodoro start untuk mulai`);
   return m.reply( txt, { commandName: "pomodoro" });
 }

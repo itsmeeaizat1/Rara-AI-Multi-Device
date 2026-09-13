@@ -661,6 +661,14 @@ async function startConnection(options = {}) {
       // dipasang ulang timer-nya (yang kelewat dikirim notif "terlewat"),
       // alarm HH:MM harian dicek tiap 30 dtk — dua-duanya sekarang
       // selamat restart (request owner 13 Sep 2026)
+      // 🔹 POMODORO RESTORE: sesi timer belajar persist — fase kelewat
+      // di-fast-forward + ticker nyala lagi, scheduler pusat re-arm
+      try {
+        const { restorePomodoro } = await import("./lib/nova-pomodoro.js");
+        restorePomodoro(sock);
+      } catch (e) {
+        console.error("[Pomodoro] restore gagal:", e.message);
+      }
       try {
         const { restoreReminders } = await import("./lib/nova-reminder-engine.js");
         const r = restoreReminders(sock);
