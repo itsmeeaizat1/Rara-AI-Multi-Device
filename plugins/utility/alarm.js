@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput,  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { loadAlarms, saveAlarms } from "../../src/lib/nova-alarm.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
   name: "alarm", alias: ["alarm"], category: "utility",
@@ -53,8 +54,32 @@ async function handler(m, { sock, config: botConfig }) {
     if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
     global.alarms[m.sender].push({ time, message, active: true, chat: m.chat, lastFiredYmd: null });
     saveAlarms();
-    await m.reply(novaError("Alarm", [`Waktu: *${time}*`, `Pesan: *${message}*`,
-      `Total alarm: *${global.alarms[m.sender].length}*`].join("\n")) + "\n" + tipText("Alarm bunyi otomatis tiap hari — tersimpan walau bot restart"));
+    // 🔹 LIVE COUNTDOWN (13 Sep): hitung countdown ke bunyi BERIKUTNYA (HH:MM
+    // WIB) — kalau udah lewat jamnya hari ini, target besok. Sisa ≤ 30 dtk
+    // tick tiap detik; sisanya adaptif (biar gak junk ribuan edit).
+    const nowWib = new Date(Date.now() + 7 * 3600 * 1000);
+    const secNow = nowWib.getUTCHours() * 3600 + nowWib.getUTCMinutes() * 60 + nowWib.getUTCSeconds();
+    const secTarget = h * 3600 + min * 60;
+    let diffSec = secTarget - secNow;
+    if (diffSec <= 59) diffSec += 86400; // udah lewat / mepet banget → besok
+    const targetTs = Date.now() + diffSec * 1000;
+    const total = global.alarms[m.sender].length;
+    const card = (remainingMs, live = true) => claraWrap("Alarm Disetel", [
+      `⏰ Waktu : *${time}* WIB`,
+      `📝 Pesan : ${message}`,
+      live
+        ? `⏳ Bunyi dalam : *${formatRemaining(remainingMs)}* ⏳`
+        : `🕒 Bunyi pukul : *${time}* WIB`,
+      `📌 Total alarm kamu: ${total}`,
+    ].join("\n"), "success");
+    await runLiveTicker({
+      sock, chat: m.chat, m,
+      mode: "down", targetTs, maxEdits: Number(process.env.NOVA_TICK_MAXEDITS) || 16,
+      initialCard: card(targetTs - Date.now()),
+      tickCard: (st) => card(st.remainingMs, st.remainingMs > 0),
+      finalCard: (st) => card(st.remainingMs, false),
+    });
+    return { handled: true };
   } catch (e) {
     await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
   }

@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { persistReminders, armReminder } from "../../src/lib/nova-reminder-engine.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
   name: "reminder",
@@ -238,15 +239,30 @@ async function handler(m, { sock }) {
   persistReminders();
 
   await m.react("🐣");
-  return m.reply(claraWrap("Reminder Dibuat", [
+  // 🔹 LIVE COUNTDOWN (13 Sep, request owner "fitur lain yg masih biasa aja
+  // kyk .afk g ada countdown"): kartu reminder sekarang LIVE — sisa waktu
+  // nge-tick tiap detik di detik-detik akhir, adaptif kalau lama, sampai
+  // waktunya berbunyi. Reminder ≤ 30 dtk full countdown tiap detik.
+  const fireWib = new Date(Number(fireAt) + 7 * 3600 * 1000);
+  const fp = (n) => String(n).padStart(2, "0");
+  const fireStr = `${fp(fireWib.getUTCHours())}:${fp(fireWib.getUTCMinutes())} WIB`;
+  const card = (remainingMs, live = true) => claraWrap("Reminder Dibuat", [
     `ID: ${id}`,
     `Pesan: ${message}`,
-    `Berbunyi dalam: ${timeStr}`,
+    `Berbunyi dalam: ${formatRemaining(remainingMs)}${live ? " ⏳" : ""}`,
+    `Pukul: ${fireStr}`,
     `Tag: @${sender.split("@")[0]}`,
     "",
     `.remind list untuk lihat daftar`,
     `.remind cancel ${id} untuk batalkan`,
-  ], "success"));
+  ], "success");
+  return runLiveTicker({
+    sock, chat: chatId, m,
+    mode: "down", targetTs: Number(fireAt), maxEdits: Number(process.env.NOVA_TICK_MAXEDITS) || 24,
+    initialCard: card(fireAt - Date.now()),
+    tickCard: (st) => card(st.remainingMs, st.remainingMs > 0),
+    finalCard: (st) => card(st.remainingMs, false),
+  }).then(() => { try { sock.sendMessage(chatId, { mentions: [sender] }); } catch {} });
 }
 
 export { pluginConfig as config, handler };
