@@ -108,14 +108,14 @@ export async function renderQuoteCard({ quote, author = "", category = "chat" })
   ctx.strokeRect(M, M, W - M * 2, H - M * 2);
 
   // tanda kutip raksasa
-  ctx.font = "300px Anton";
+  ctx.font = "220px Anton";
   ctx.fillStyle = _hexA(pal.accent, 0.28);
   ctx.textBaseline = "top";
   ctx.fillText("\u201C", M + 28, M + 24);
 
   // teks quote (auto-wrap + auto-shrink)
   const maxW = W - M * 2 - 100;
-  const { lines, size } = _wrap(ctx, quote, maxW, 9, [56, 48, 42, 36], "Roboto_Medium");
+  const { lines, size } = _wrap(ctx, quote, maxW, 11, [42, 38, 34, 30], "Roboto_Medium");
   const lineH = Math.round(size * 1.42);
   const blockH = lines.length * lineH;
   let y = (H - blockH) / 2 - 40;
@@ -128,7 +128,7 @@ export async function renderQuoteCard({ quote, author = "", category = "chat" })
 
   // author (kalau ada) + garis aksen
   if (author) {
-    ctx.font = "38px Roboto_Medium";
+    ctx.font = "32px Roboto_Medium";
     const a = "— " + author;
     ctx.fillStyle = _hexA(pal.accent, 0.95);
     ctx.fillText(a, W / 2 - ctx.measureText(a).width / 2, y + 34);
