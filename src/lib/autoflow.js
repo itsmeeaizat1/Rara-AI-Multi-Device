@@ -149,12 +149,16 @@ async function execute(conn, m, rule, extra = {}) {
         // (gemini nano banana dst) → fallback free pollinations.
         try {
           const senderName = m?.pushName || (user ? user.split("@")[0] : "user");
-          const { callImageGen } = await import("./nova-ai-service.js");
+          // 🔹 FIX 13 Sep 2026: dulu callImageGen("gemini") provider tunggal
+          // → key mati = pollinations. Sekarang rantai nano-banana (commit
+          // 72ce717a) biar engine utamanya nano banana, pollinations cuma
+          // penyelamat terakhir.
+          const { callImageGenChain } = await import("./nova-ai-service.js");
           const prompt = String(a.value || "").replace(/@user/g, senderName).trim() || "sesuatu yang menarik";
-          const img = await callImageGen("gemini", prompt);
+          const img = await callImageGenChain(prompt);
           await send({
             image: Buffer.from(img.base64, "base64"),
-            caption: "🎨 " + prompt.slice(0, 150),
+            caption: "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : ""),
           });
         } catch (e) {
           console.log(`[AutoFlow] aiimage gagal: ${e.message}`);

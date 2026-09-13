@@ -50,11 +50,18 @@ export const TOOLS = {
     run: async (conn, m, a) => {
       const prompt = String(a?.prompt || a?.text || '').trim();
       if (!prompt) throw new Error('deskripsi gambarnya apa?');
-      const { callImageGen } = await import('./nova-ai-service.js');
-      const img = await callImageGen('gemini', prompt);
+      // 🔹 FIX 13 Sep 2026 (owner report: minta gambar masih keluar
+      // pollinations padahal harusnya nano banana): dulu callImageGen
+      // ('gemini') provider TUNGGAL — key Gemini mati → freeFallback
+      // internal = pollinations, nano-banana gak pernah kesentuh. Sekarang
+      // pakai RANTAI callImageGenChain: key hidup duluan → NANO-BANANA
+      // canvas (free) → pollinations cuma juru penyelamat terakhir.
+      // Engine ikut ditulis di caption biar keliatan beneran pakai apa.
+      const { callImageGenChain } = await import('./nova-ai-service.js');
+      const img = await callImageGenChain(prompt);
       await conn.sendMessage(m.chat, {
         image: Buffer.from(img.base64, 'base64'),
-        caption: '🎨 ' + prompt.slice(0, 150),
+        caption: '🎨 ' + prompt.slice(0, 150) + (img.via ? '\n_(engine: ' + img.via + ')_' : ''),
       }, { quoted: m });
     }
   },
