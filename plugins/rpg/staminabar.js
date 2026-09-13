@@ -22,7 +22,7 @@ const BUY_COST = 100; // per 10 stamina
 
 function bar(val, max) {
   const pct = Math.floor((val / max) * 10);
-  return "█".repeat(pct) + "░".repeat(10 - pct);
+  return "▰".repeat(pct) + "▱".repeat(10 - pct);
 }
 
 async function getData(db, sender) {

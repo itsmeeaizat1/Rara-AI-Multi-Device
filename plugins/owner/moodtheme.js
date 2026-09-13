@@ -414,7 +414,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("");
         lines.push("Skor mood:");
         Object.entries(detection.scores).forEach(([mood, score]) => {
-          const bar = "█".repeat(Math.round(score / 10)) + "░".repeat(10 - Math.round(score / 10));
+          const bar = "▰".repeat(Math.round(score / 10)) + "▱".repeat(10 - Math.round(score / 10));
           lines.push("  " + mood.padEnd(8) + " " + bar + " " + score);
         });
       } else {

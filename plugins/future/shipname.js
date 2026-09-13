@@ -117,7 +117,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   cfg.history.push({ jid1, jid2, shipName, compat, ts: Date.now() });
   saveConfig(db, gid, cfg);
 
-  const bar = "█".repeat(Math.floor(compat / 10)) + "░".repeat(10 - Math.floor(compat / 10));
+  const bar = "▰".repeat(Math.floor(compat / 10)) + "▱".repeat(10 - Math.floor(compat / 10));
 
   await m.reply(claraWrap("Ship Name", [
     "Ship: " + shipName,

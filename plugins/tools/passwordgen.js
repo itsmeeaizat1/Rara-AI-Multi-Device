@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
     const result = generatePassword(length, options);
-    const strengthBar = "█".repeat(Math.floor(result.strength / 10)) + "░".repeat(10 - Math.floor(result.strength / 10));
+    const strengthBar = "▰".repeat(Math.floor(result.strength / 10)) + "▱".repeat(10 - Math.floor(result.strength / 10));
 
     let lines = [
       "Password: " + result.password,

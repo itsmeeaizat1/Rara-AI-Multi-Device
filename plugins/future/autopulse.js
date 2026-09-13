@@ -184,7 +184,7 @@ async function generateAndPostReport(db, groupId, sock) {
     const maxDaily = Math.max(...dailyEntries.map(([, c]) => c), 1);
     dailyEntries.forEach(([day, count]) => {
       const barLen = Math.max(1, Math.round((count / maxDaily) * 10));
-      const bar = "█".repeat(barLen) + "░".repeat(10 - barLen);
+      const bar = "▰".repeat(barLen) + "▱".repeat(10 - barLen);
       report += `  ${day} ${bar} ${count}\n`;
     });
   }
@@ -323,7 +323,7 @@ function generateManualReport(db, groupId) {
     const maxDaily = Math.max(...dailyEntries.map(([, c]) => c), 1);
     dailyEntries.forEach(([day, count]) => {
       const barLen = Math.max(1, Math.round((count / maxDaily) * 10));
-      const bar = "█".repeat(barLen) + "░".repeat(10 - barLen);
+      const bar = "▰".repeat(barLen) + "▱".repeat(10 - barLen);
       report += `  ${day} ${bar} ${count}\n`;
     });
   }
