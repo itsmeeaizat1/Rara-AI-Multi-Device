@@ -1,5 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { runLiveTicker, formatRemaining } from '../../src/lib/nova-countdown.js'
+import { computeRamadhanPhase, ramadhanHeaderLine, buildRamadhanCard } from '../../src/lib/nova-ramadhan.js'
 
 const pluginConfig = {
   name: "ramadhan",
@@ -130,12 +132,26 @@ const RAMADHAN = [
   },
 ]
 
-async function handler(m, { conn, text, args, usedPrefix, command }) {
+async function handler(m, { sock, conn, text, args, usedPrefix, command }) {
   try {
     const input = parseInt(args[0])
 
     if (!input || isNaN(input) || input < 1 || input > RAMADHAN.length) {
+      // ⏳ PENGHITUNG (13 Sep 2026): header hari menuju Ramadhan / hari ke-N
+      const phase = computeRamadhanPhase()
       let lines = []
+      const header = ramadhanHeaderLine(phase)
+      if (header) {
+        lines.push(header)
+        // sisa < 24 jam → tampilin jam-menit-detik biar makin greget
+        if (phase && phase.phase === 'countdown') {
+          const sisa = phase.startTs - Date.now()
+          if (sisa > 0 && sisa < 24 * 3600000) {
+            lines.push('⏳ Tinggal *' + formatRemaining(sisa) + '* lagi!')
+          }
+        }
+        lines.push("")
+      }
       lines.push("Panduan Ramadhan - " + RAMADHAN.length + " Topik")
       lines.push("")
       RAMADHAN.forEach(r => {
@@ -144,7 +160,27 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "ramadhan <nomor>")
       lines.push("Contoh: " + usedPrefix + "ramadhan 3 (Doa buka puasa)")
-      return m.reply(claraWrap("Panduan Ramadhan", lines.join("\n")))
+      lines.push("")
+      lines.push("_Catatan: tanggal Ramadhan = estimasi kalender, penetapan final menyusul via rukyatul hilal_")
+      m.reply(claraWrap("Panduan Ramadhan", lines.join("\n")))
+
+      // < 24 jam menuju 1 Ramadhan → ticker live sampai D-day (fire-and-forget)
+      if (phase && phase.phase === 'countdown') {
+        const sisa = phase.startTs - Date.now()
+        if (sisa > 0 && sisa < 24 * 3600000) {
+          const sock2 = conn || sock
+          runLiveTicker({
+            sock: sock2,
+            chat: m.chat,
+            m,
+            initialCard: buildRamadhanCard(phase, sisa),
+            tickCard: (st) => buildRamadhanCard(phase, st.remainingMs),
+            mode: 'down',
+            targetTs: phase.startTs,
+          }).catch(() => {})
+        }
+      }
+      return
     }
 
     const r = RAMADHAN[input - 1]
