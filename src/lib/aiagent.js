@@ -687,6 +687,26 @@ export function localParse(text) {
   if (/(ganti|ubah|update).*(foto|pp|profil|picture|avatar)/.test(t) && /(grup|gc|group)/.test(t))
     return { tool: 'setpp', args: {} }
 
+  // ─── GENERATE GAMBAR (AI IMAGE) — CEK LOKAL DULU, JANGAN LEWAT think() ───
+  // Bug nyata dilaporkan owner 13 Sep 2026: ".novaagent buatkan gambar
+  // kucing" (giliran kedua setelah sesi ngobrol ubah deskripsi grup) malah
+  // think() balikin tool "setdesc" LAGI (AI provider bingung sama histori
+  // sesi, ke-anchor ke aksi sebelumnya) + reply ngarang "gambar kucing
+  // sedang dibuat" padahal genimage GAK PERNAH kepanggil. FIX: request
+  // generate gambar dari teks langsung dideteksi LOKAL (instan, gak lewat
+  // AI classification sama sekali) — imun dari kebingungan histori sesi.
+  // Exclude foto profil/grup biar gak rebutan sama SETPP di atas.
+  if ((/\bgambarkan\b/.test(t) || /\b(buatkan|buat|bikin|generate|create|hasilkan)\b.*\b(gambar|foto|lukisan|ilustrasi|poster|wallpaper)\b/.test(t))
+      && !/(profil|\bpp\b|avatar|grup|gc\b|group)/.test(t)) {
+    const prompt = original
+      .replace(/\b(tolong|please|dong|ya|yah|deh|sih|min|coba|kak|bang)\b/gi, ' ')
+      .replace(/\b(buatkan|buat|bikin|gambarkan|generate|create|hasilkan)\b/gi, ' ')
+      .replace(/\b(gambar|foto|lukisan|ilustrasi|poster|wallpaper)(?:nya)?\b/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+    return { tool: 'genimage', args: { prompt: prompt || 'sesuatu yang menarik dan kreatif' } }
+  }
+
   // ─── TOGGLE FITUR AUTOMOD (antilink/antibadword/antisticker/antivoice/
   // antispam) — CEK DULU sebelum LINK GRUP di bawah. Bug nyata dilaporkan
   // owner 12 Sep 2026: ".novaagent aktifkan antilink digrup ini" malah
