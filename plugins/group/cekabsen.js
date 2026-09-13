@@ -3,6 +3,7 @@ import moment from "moment-timezone";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
+import { buildAbsenMeter, countGroupMembers } from "../../src/lib/nova-absen-meter.js";
 const pluginConfig = {
   name: "cekabsen",
   alias: ["cekabsen"],
@@ -39,8 +40,9 @@ async function handler(m, { sock }) {
       .map((jid, i) => `${i + 1}. @${jid.split("@")[0]}`)
       .join("\n");
   }
-  const saluranId = config.saluran?.id || "@newsletter";
-  const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
+  // 📊 METER KEHADIRAN (13 Sep 2026): progress bar peserta/anggota grup
+  const totalMembers = await countGroupMembers(sock, chatId);
+  const meter = totalMembers ? buildAbsenMeter(absen.peserta.length, totalMembers) : null;
   await m.reply(claraWrap("DAFTAR YANG UDAH ABSEN", `` +
       "" +
       `📝 ${absen.keterangan}\n` +
@@ -48,6 +50,7 @@ async function handler(m, { sock }) {
       `⏰ Dimulai: ${timeStr}\n` +
       `👑 Dibuat: @${absen.createdBy.split("@")[0]}\n` +
       `👥 *Peserta (${absen.peserta.length})*\n` +
+      (meter ? meter.lines.join("\n") + "\n" : "") +
       `${list}\n` +
       `---\n\n` +
       `Ketik *${m.prefix}absen* untuk hadir`));
