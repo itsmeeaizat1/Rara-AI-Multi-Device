@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { runCekAnim } from "../../src/lib/nova-cek-anim.js";
 import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
 const pluginConfig = {
     name: 'cekwibu',
@@ -54,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
          `Tingkat kewibuan dia: ${percent}%`,
          `"${desc}"`].join("\n")
     
-    await m.reply(claraWrap("cekwibu", txt), { mentions: [mentioned] });
+    await runCekAnim(m, sock, claraWrap("cekwibu", txt), { mentions: [mentioned] }, { subject: m.command });
 }
 
 export { pluginConfig as config, handler }
