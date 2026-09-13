@@ -5,6 +5,7 @@ import { serialize } from "./lib/nova-serialize.js";
 import { getPlugin, pluginStore } from "./lib/nova-plugins.js";
 import { recordPluginExecution, postExecutionCheck } from "./lib/nova-plugin-health-hook.js";
 import { getDatabase } from "./lib/nova-database.js";
+import { grantActivityExp } from "./lib/nova-activity-progress.js";
 import { ensureRpg, saveRpg } from "./lib/nova-rpg-service.js";
 import { checkPermission, checkMode, checkAccessBlocked } from "./lib/nova-middleware.js";
 import { handleAntiRemoveFromUpsert as _handleAntiRemove , novaWarning } from "./lib/nova-group-protection.js";
@@ -1146,6 +1147,14 @@ try {
     try { db.incrementStat("commandsRun"); } catch {}
     await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000, isJadibot: !!jadibotCtx.isJadibot, jadibotId: jadibotCtx.jadibotId || null });
     recordPluginExecution(command, true, null);
+
+    // 🎯 PROGRES LEVEL AKTIVITAS (13 Sep 2026, request owner: "setiap user
+    // ada aktivitas ketik cmd / bermain game, level naik dikasih pesan
+    // selamat + penghargaan"): tiap command sukses = +EXP level global
+    // (biasa +15 / game-rpg +40); nyebrang batas level → kartu SELAMAT +
+    // penghargaan koin otomatis. Fire-and-forget biar gak ngeremat.
+    try { grantActivityExp(sock, m, { category: plugin.category }).catch(() => {}); } catch {}
+
     try { await postExecutionCheck(command, sock); } catch {}
     // Reset smart antispam — user berhasil pakai command valid
     try { resetNotFoundTracker(m.sender); } catch {}

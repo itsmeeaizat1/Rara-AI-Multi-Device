@@ -3,6 +3,10 @@ import config from "../../config.js";
 
 const EXP_PER_LEVEL = 10000;
 
+// seam e2e — inject loadImage fake biar kartu level-up gak nyamber jaringan
+let _loadImageForTest = null;
+function _setLevelCardLoadImageForTest(fn) { _loadImageForTest = fn; }
+
 function calculateLevel(exp) {
   return Math.floor(exp / EXP_PER_LEVEL) + 1;
 }
@@ -22,8 +26,9 @@ function getRole(level) {
 }
 
 async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
-  const { createCanvas, loadImage, GlobalFonts } =
+  const { createCanvas, loadImage: _loadImage, GlobalFonts } =
     await import("@napi-rs/canvas");
+  const loadImage = _loadImageForTest || _loadImage;
   /**
    * Fungsi untuk membuat gambar Level Up bertema Anime
    * @param {Object} data - Data user
@@ -134,6 +139,11 @@ async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
   const newLevel = calculateLevel(newExp);
 
   if (newLevel > oldLevel) {
+    // 🎁 PENGHARGAAN NAIK LEVEL (13 Sep 2026, request owner: "klo level naik
+    // dikasih pesan selamat atau pemberitahuan penghargaan") — tiap naik
+    // level dapat bonus koin (level baru × 500), masuk dompet koin global.
+    const awardKoin = newLevel * 500;
+    try { db.updateKoin(m.sender, awardKoin); } catch {}
     user.rpg.level = newLevel;
     user.rpg.maxHealth = 100 + (newLevel - 1) * 10;
     user.rpg.maxMana = 100 + (newLevel - 1) * 5;
@@ -164,6 +174,9 @@ Level kamu bertambah ${newLevel - oldLevel}
 🥗 Level kamu sekarang *${newLevel}*
 
 Sekarang kamu berada di rank *${role}*
+
+🎁 *PENGHARGAAN NAIK LEVEL!*
++${awardKoin} Koin langsung masuk ke dompet kamu 💰
 
 Mau cek detail level? ketik _${m.prefix}level_
 
@@ -209,10 +222,10 @@ Sering seringlah berinteraksi dengan bot agar level kamu bertambah!`;
       },
     );
 
-    return { leveledUp: true, notified: true, oldLevel, newLevel };
+    return { leveledUp: true, notified: true, oldLevel, newLevel, awardKoin };
   }
 
-  return { leveledUp: false, notified: false, oldLevel, newLevel: oldLevel };
+  return { leveledUp: false, notified: false, oldLevel, newLevel: oldLevel, awardKoin: 0 };
 }
 
 async function addExpWithLevelCheck(sock, m, db, user, expAmount) {
@@ -237,4 +250,5 @@ export {
   getRole,
   checkAndNotifyLevelUp,
   addExpWithLevelCheck,
+  _setLevelCardLoadImageForTest,
 };
