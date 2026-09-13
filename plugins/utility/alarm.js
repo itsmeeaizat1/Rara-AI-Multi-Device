@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput,  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { loadAlarms, saveAlarms } from "../../src/lib/nova-alarm.js";
 
 const pluginConfig = {
   name: "alarm", alias: ["alarm"], category: "utility",
@@ -12,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    global.alarms = loadAlarms(); // store persist db — alarm gak ilang pas restart
     const input = (m.text || "").trim();
     if (!input) {
       await m.reply(novaCaption({
@@ -25,7 +27,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const args = input.split(/\s+/);
     if (args[0] === "list") {
-      if (!global.alarms) global.alarms = {};
       const myAlarms = global.alarms[m.sender] || [];
       if (!myAlarms.length) {
         await m.reply(novaError("Alarm", ["Tidak ada alarm aktif"].join("\n")));
@@ -33,15 +34,15 @@ async function handler(m, { sock, config: botConfig }) {
       }
       let text = claraHeader("Alarm Aktif", "⏰") + "\n\n";
       myAlarms.forEach((a, i) => { text += `${i+1}. *${a.time}* - ${a.message}\n`; });
-      text += "\n";
+      text += "\n" + tipText("Alarm bunyi tiap hari di jam WIB — tersimpan walau bot restart");
       await m.reply(text);
       return { handled: true };
     }
     if (args[0] === "del") {
       const idx = parseInt(args[1]) - 1;
-      if (!global.alarms) global.alarms = {};
       if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
       global.alarms[m.sender].splice(idx, 1);
+      saveAlarms();
       await m.reply(novaError("Alarm", [`Alarm #${idx+1} dihapus`].join("\n")));
       return { handled: true };
     }
@@ -49,11 +50,11 @@ async function handler(m, { sock, config: botConfig }) {
     const message = args.slice(1).join(" ") || "Alarm!";
     if (!/^\d{1,2}:\d{2}$/.test(time)) throw new Error("Format waktu: HH:MM");
     const [h, min] = time.split(":").map(Number);
-    if (!global.alarms) global.alarms = {};
     if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
-    global.alarms[m.sender].push({ time, message, active: true });
+    global.alarms[m.sender].push({ time, message, active: true, chat: m.chat, lastFiredYmd: null });
+    saveAlarms();
     await m.reply(novaError("Alarm", [`Waktu: *${time}*`, `Pesan: *${message}*`,
-      `Total alarm: *${global.alarms[m.sender].length}*`].join("\n")) + "\n" + tipText("Alarm berjalan selama bot online"));
+      `Total alarm: *${global.alarms[m.sender].length}*`].join("\n")) + "\n" + tipText("Alarm bunyi otomatis tiap hari — tersimpan walau bot restart"));
   } catch (e) {
     await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
   }

@@ -1,6 +1,7 @@
 import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 const pluginConfig = {
   name: "gbank", alias: ["gbank", "gbankrpg"],
   category: "rpg", description: "Guild Bank — saldo bersama guild",
@@ -11,6 +12,7 @@ const pluginConfig = {
 global.rpgGuildBank = global.rpgGuildBank || {};
 async function handler(m, { sock }) {
   try {
+    persistLoad("rpgGuildBank"); // restore saldo guild dari db (anti hilang pas restart)
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(novaRpgBox("gbankrpg", "RPG belum siap.", "error"));
     if (!rpg.guildId) return m.reply(novaRpgBox("gbankrpg", "⚠️ Kamu belum tergabung guild.", "error"));
@@ -27,6 +29,7 @@ async function handler(m, { sock }) {
       if (rpg.gold < jumlah) return m.reply(novaRpgBox("gbankrpg", `💰 Tidak cukup. Kamu punya ${rpg.gold}.`, "error"));
       removeGold(m, jumlah, sock);
       gb.balance += jumlah;
+      persistSave("rpgGuildBank");
       saveRpg(m, rpg);
       await m.react("🐣");
       return m.reply(novaRpgBox("gbankrpg", `✅ Setor ${jumlah} gold ke guild bank. Saldo: ${gb.balance}.`, "success"));
@@ -34,6 +37,7 @@ async function handler(m, { sock }) {
     if (aksi === "tarik") {
       if (jumlah <= 0 || jumlah > gb.balance) return m.reply(novaRpgBox("gbankrpg", "Jumlah tidak valid atau saldo tidak cukup.", "error"));
       gb.balance -= jumlah;
+      persistSave("rpgGuildBank");
       addGold(m, jumlah);
       saveRpg(m, rpg);
       await m.react("🐣");

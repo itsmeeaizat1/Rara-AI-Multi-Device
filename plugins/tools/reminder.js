@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { persistReminders, armReminder } from "../../src/lib/nova-reminder-engine.js";
 
 const pluginConfig = {
   name: "reminder",
@@ -138,6 +139,7 @@ async function handler(m, { sock }) {
         if (r.timerId) clearTimeout(r.timerId);
         r.fired = true;
       });
+      persistReminders(); // simpen ke db — anti hilang pas restart
       const cancelled = myReminders.length;
       if (cancelled === 0) {
         return m.reply(claraWrap("Reminder", "Gak ada reminder aktif untuk dibatalkan!", "warn"));
@@ -157,6 +159,7 @@ async function handler(m, { sock }) {
     if (reminder.timerId) clearTimeout(reminder.timerId);
     reminder.fired = true;
 
+    persistReminders(); // simpen ke db — anti hilang pas restart
     return m.reply(claraWrap("Reminder", [
       `Reminder ${target} dibatalkan!`,
       `Pesan: ${reminder.message}`,
@@ -221,33 +224,10 @@ async function handler(m, { sock }) {
     timerId: null,
   };
 
-  // Schedule
-  reminder.timerId = setTimeout(async () => {
-    try {
-    await m.react("🕒");
-      reminder.fired = true;
-
-      const timeSpent = formatDuration(Date.now() - reminder.createdAt);
-
-      const alertText = claraWrap("Reminder Berbunyi", [
-        `@${sender.split("@")[0]}`,
-        "",
-        `Pesan: ${reminder.message}`,
-        `Dibuat: ${timeStr} yang lalu`,
-        "",
-        "Sudah waktunya!",
-      ]);
-      await sock.sendMessage(chatId, {
-        text: alertText,
-        mentions: [sender],
-      });
-    } catch (e) {
-    await m.react("❌");
-      // Silent fail
-    }
-  }, durationMs);
-
+  // Schedule via engine — persist ke db biar tetep jalan walau bot restart
   global.novaReminders.push(reminder);
+  armReminder(sock, reminder);
+  persistReminders();
 
   // Clean up old fired reminders (keep last 50)
   if (global.novaReminders.length > 50) {
@@ -255,6 +235,7 @@ async function handler(m, { sock }) {
       global.novaReminders.filter((r) => !r.fired).slice(0, 20)
     );
   }
+  persistReminders();
 
   await m.react("🐣");
   return m.reply(claraWrap("Reminder Dibuat", [

@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 const pluginConfig = {
   name: "mulaiabsen",
   alias: ["mulaiabsen"],
@@ -21,6 +22,7 @@ const pluginConfig = {
 if (!global.absensi) global.absensi = {};
 
 async function handler(m, { sock }) {
+  persistLoad("absensi"); // restore sesi absen dari db (anti hilang pas restart)
   const chatId = m.chat;
 
   if (global.absensi[chatId]) {
@@ -38,6 +40,7 @@ async function handler(m, { sock }) {
     createdAt: new Date().toISOString(),
     peserta: [],
   };
+  persistSave("absensi");
 
   const saluranId = config.saluran?.id || "@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
