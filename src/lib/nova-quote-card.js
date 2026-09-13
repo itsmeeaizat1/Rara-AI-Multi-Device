@@ -84,10 +84,9 @@ function _wrap(ctx, text, maxW, maxLines, fontSizes, fontFamily) {
  * @param {object} opts { quote, author?, category?, brand? }
  * @returns {Promise<Buffer>} PNG buffer
  */
-export async function renderQuoteCard({ quote, author = "", category = "chat", brand = "nova ai" }) {
+export async function renderQuoteCard({ quote, author = "", category = "chat" }) {
   await _ensureFonts();
   const { createCanvas } = await import("@napi-rs/canvas");
-  const { smallcapsText } = await import("./styler.js");
 
   const W = 1080, H = 1350;
   const pal = PALETTES[category] || PALETTES.chat;
@@ -135,11 +134,9 @@ export async function renderQuoteCard({ quote, author = "", category = "chat", b
     ctx.fillText(a, W / 2 - ctx.measureText(a).width / 2, y + 34);
   }
 
-  // footer brand smallcaps (aturan smallcaps teks tampilan bot)
-  ctx.font = "30px Roboto_Medium";
-  const foot = smallcapsText(brand) + "  •  " + smallcapsText(pal.label);
-  ctx.fillStyle = "rgba(255,255,255,0.55)";
-  ctx.fillText(foot, W / 2 - ctx.measureText(foot).width / 2, H - M - 54);
+  // footer DIHAPUS (13 Sep, revisi owner "di bawahnya ada -q bisa dihapus"):
+  // smallcaps Unicode (ɴᴏᴠᴀ/ꜱ/ʙ) gak punya glyph di Roboto_Medium → canvas
+  // ngerender tofu yang keliatan kayak "-q". Kartu biar bersih tanpa footer.
 
   return canvas.toBuffer("image/png");
 }
