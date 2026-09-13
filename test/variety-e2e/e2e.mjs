@@ -42,7 +42,7 @@ function mkM(over = {}) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-w("\n— .rate: animasi meter morphing → reveal —");
+w("\n— .rate: langsung hasil (animasi ▓░ dihapus 14 Sep, loading react emoji cukup) —");
 {
   const { config, handler } = await import(R + "/plugins/fun/rate.js");
   const sock = mockSock();
@@ -50,15 +50,13 @@ w("\n— .rate: animasi meter morphing → reveal —");
   const t0 = Date.now();
   await handler(m, { sock });
   const dur = Date.now() - t0;
-  check("animasi jalan ~4-8 dtk (bukan dadakan)", dur >= 3500 && dur < 12000, dur + "ms");
-  check("frame pertama pesan baru (tanpa edit)", !sock.sent[0].payload.edit, JSON.stringify(sock.sent[0].payload).slice(0, 60));
-  const edits = sock.sent.filter((s) => !!s.payload.edit);
-  check("meter nge-tick via edit-in-place", edits.length >= 5, edits.length + " edit");
-  const hasMeter = sock.sent.some((s) => /▓/.test(String(s.payload.text || "")));
-  check("ada bar meter ▓▓▓░░░", hasMeter, sock.sent.map((s) => String(s.payload.text).slice(0, 30)).join(" | "));
-  const last = norm(sock.sent[sock.sent.length - 1].payload.text);
-  check("kartu final = hasil rating (bukan frame loading)", last.includes("/10") || last.includes("∞") || last.includes("100"), last.slice(0, 80));
-  check("kartu final ada komentar rating", last.split("\n").length >= 4, last.slice(0, 120));
+  check("langsung jalan (gak nunggu animasi)", dur < 800, dur + "ms");
+  check("gak ada pesan animasi (sock kosong)", sock.sent.length === 0, sock.sent.length + " pesan");
+  check("kartu hasil via reply", m.__sent.length === 1, m.__sent.length + " reply");
+  const txt = norm(m.__sent[0].payload.text);
+  check("hasil rating muncul (skor)", /\/10|∞/.test(txt), txt.slice(0, 60));
+  check("meter standar ▰▱ + persen", /▰+▱*/.test(txt) && txt.includes("%"), txt.slice(0, 100));
+  check("kartu ada komentar rating", txt.split("\n").length >= 4, txt.slice(0, 120));
 }
 {
   // gak ada subjek → tetep guide (gak nyamber animasi)
