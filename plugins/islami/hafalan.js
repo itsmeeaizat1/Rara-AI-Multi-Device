@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
   name: "hafalan",
@@ -148,6 +149,100 @@ function updateStreak(data) {
   data.streak.lastDate = todayTs;
 }
 
+// 🔹 VARIASI (13 Sep): data waktu/mastery udah ada tapi gak dimunculin.
+// list → ETA review per item; progress → meter status; streak → bar ke milestone;
+// review terdekat ≤24 jam → kartu live countdown 🕒 → "📖 WAKTU REVIEW".
+function buildMeter(pct, len = 10) {
+  const filled = Math.max(0, Math.min(len, Math.round((pct / 100) * len)));
+  return "▰".repeat(filled) + "▱".repeat(len - filled);
+}
+
+function fmtReviewEta(item, now) {
+  const ms = item.nextReview - now;
+  if (ms <= 0) return "🔴 Waktunya review!";
+  const h = Math.floor(ms / 3600000);
+  if (h < 1) {
+    const mm = Math.floor(ms / 60000);
+    return "🕒 " + mm + " mnt lagi";
+  }
+  if (h < 24) {
+    const mm = Math.floor((ms % 3600000) / 60000);
+    return "🕒 " + h + " jam " + mm + " mnt lagi";
+  }
+  const d = Math.round(h / 24);
+  return "🕒 " + d + " hari lagi (" + formatDate(item.nextReview) + ")";
+}
+
+// 🔥 meter streak: bar persen menuju milestone berikutnya + api sesuai skala
+function buildStreakBar(streakCount) {
+  const milestones = [7, 30, 100, 365];
+  const nextMilestone = milestones.find((ms) => ms > streakCount) || streakCount + 7;
+  const prevMilestone = [...milestones].reverse().find((ms) => ms < streakCount) || 0;
+  const span = nextMilestone - prevMilestone;
+  const pct = span > 0 ? Math.min(100, Math.round(((streakCount - prevMilestone) / span) * 100)) : 100;
+  const fire = streakCount >= 100 ? "🔥" : streakCount >= 30 ? "🔥🔥" : streakCount >= 7 ? "🔥" : "✨";
+  return fire + " " + buildMeter(pct) + " " + pct + "% → milestone " + nextMilestone + " hari";
+}
+
+// kartu live countdown ke review terdekat (≤24 jam ke depan, belum due)
+function fireHafalanTicker(db, sender, item, sock, m, prefix) {
+  try {
+    if (!item || !item.nextReview) return null;
+    const now = Date.now();
+    const rem = item.nextReview - now;
+    if (rem <= 0 || rem > 24 * 3600000) return null; // sudah due / masih jauh
+    const card = (remMs) => {
+      if (remMs <= 0) {
+        return [
+          "📖 *ᴡᴀᴋᴛᴜ ʀᴇᴠɪᴇᴡ!*",
+          "",
+          "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd,
+          "ID: `" + item.id + "`",
+          "",
+          "Ketik " + prefix + "hafalan review " + item.id + " setelah murajaah.",
+        ].join("\n");
+      }
+      const h = Math.floor(remMs / 3600000);
+      const mm = Math.floor((remMs % 3600000) / 60000);
+      const ss = Math.floor((remMs % 60000) / 1000);
+      return [
+        "🕒 *ʀᴇᴠɪᴇᴡ ꜱᴇᴅᴀɴɢ ᴅᴇᴋᴀᴛ*",
+        "",
+        "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd,
+        "Status: " + getStatus(item),
+        "🕒 Sisa: *" + h + " jam " + String(mm).padStart(2, "0") + " mnt " + String(ss).padStart(2, "0") + " dtk*",
+        "",
+        "Siapin murajaah-nya ya 🤲",
+      ].join("\n");
+    };
+    return runLiveTicker({
+      sock, chat: m.chat, m,
+      mode: "down",
+      targetTs: item.nextReview,
+      initialCard: card(rem),
+      tickCard: (st) => card(st.remainingMs),
+      finalCard: () => [
+        "✅ *Countdown review dibatalkan*",
+        "",
+        "Itemnya dihapus / udah direview — cek " + prefix + "hafalan list.",
+      ].join("\n"),
+      maxEdits: 600,
+      isCancelled: () => {
+        const cur = getHafalan(db, sender).items.find((it) => it.id === item.id);
+        return !cur || cur.nextReview !== item.nextReview;
+      },
+    }).catch(() => {});
+  } catch {
+    return null;
+  }
+}
+
+// cari review TERDEKAT yg belum due
+function findNextUpcomingReview(data, now) {
+  const upcoming = data.items.filter((it) => it.nextReview > now);
+  return upcoming.sort((a, b) => a.nextReview - b.nextReview)[0] || null;
+}
+
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
@@ -229,15 +324,17 @@ async function handler(m, { sock, config: botConfig }) {
       data.items.push(item);
       updateStreak(data);
       saveHafalan(db, sender, data);
-      return m.reply(claraWrap("Hafalan",
+      await m.reply(claraWrap("Hafalan",
         "Hafalan ditambahkan!\n" +
         "Surah: *" + surah.name + "* (" + surah.num + ")\n" +
         "Ayat: " + ayatStart + "-" + ayatEnd + " (" + totalAyat + " ayat)\n" +
         "ID: `" + item.id + "`\n" +
         "Status: Baru\n" +
-        "Review pertama: besok\n\n" +
+        "Review pertama: " + fmtReviewEta(item, Date.now()) + "\n\n" +
         tipText("Ketik " + prefix + "hafalan review " + item.id + " setelah menghafal")
       ));
+      fireHafalanTicker(db, sender, item, sock, m, prefix); // 🔹 24 jam → live countdown
+      return;
     }
 
     // --- LIST ---
@@ -254,13 +351,17 @@ async function handler(m, { sock, config: botConfig }) {
       // Sort by next review (most urgent first)
       const sorted = [...data.items].sort((a, b) => a.nextReview - b.nextReview);
 
+      // 🔹 meter: rata2 mastery + review due
+      const avgMastery = Math.round(data.items.reduce((s, it) => s + (it.mastery || 0), 0) / data.items.length);
+      lines.push("📊 Mastery: " + buildMeter(avgMastery) + " " + avgMastery + "%");
+      lines.push("");
+
       sorted.forEach((item) => {
         const due = item.nextReview <= now;
         if (due) dueCount++;
-        const tag = due ? " REVIEW!" : "";
         lines.push(
           item.id + " | " + item.surahName + " " + item.ayatStart + "-" + item.ayatEnd +
-          " | " + getStatus(item) + tag
+          " | " + getStatus(item) + " | " + fmtReviewEta(item, now)
         );
       });
 
@@ -272,7 +373,9 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(tipText("Ketik " + prefix + "hafalan review untuk mulai review"));
       }
 
-      return m.reply(claraWrap("Daftar Hafalan", lines.join("\n")));
+      const res = await m.reply(claraWrap("Daftar Hafalan", lines.join("\n")));
+      fireHafalanTicker(db, sender, findNextUpcomingReview(data, now), sock, m, prefix); // 🔹 ≤24 jam → live countdown
+      return res;
     }
 
     // --- REVIEW ---
@@ -317,15 +420,17 @@ async function handler(m, { sock, config: botConfig }) {
 
         updateStreak(data);
         saveHafalan(db, sender, data);
-        return m.reply(claraWrap("Review Selesai",
+        await m.reply(claraWrap("Review Selesai",
           "MasyaAllah! Review tercatat.\n" +
           "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd + "\n" +
           "Review ke: " + item.reviewCount + "\n" +
           "Status: " + getStatus(item) + "\n" +
-          "Mastery: " + item.mastery + "%\n" +
-          "Review berikutnya: " + formatDate(item.nextReview) + "\n\n" +
+          "Mastery: " + item.mastery + "% " + buildMeter(item.mastery) + "\n" +
+          "Review berikutnya: " + fmtReviewEta(item, Date.now()) + "\n\n" +
           "Streak hafalan: " + data.streak.count + " hari"
         ));
+        fireHafalanTicker(db, sender, item, sock, m, prefix); // 🔹 review berikutnya ≤24 jam → countdown
+        return;
       } else if (result === "ulang" || result === "lagi" || result === "fail") {
         // Failed review - reset to beginning
         item.reviewCount = 0;
@@ -392,17 +497,17 @@ async function handler(m, { sock, config: botConfig }) {
         "Perlu review: " + dueCount + " item",
       ];
 
-      // Progress bar
-      const barLen = 10;
-      const filled = Math.round((avgMastery / 100) * barLen);
-      const bar = "█".repeat(filled) + "░".repeat(barLen - filled);
-      // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
+      // 🔹 meter breakdown status + streak bar (13 Sep)
       lines.push("");
-      lines.push("Progress:");
-      lines.push(bar + " " + avgMastery + "%");
+      lines.push("📊 Mastery: " + buildMeter(avgMastery) + " " + avgMastery + "%");
+      lines.push("✅ Mastery: " + buildMeter(Math.round((masteredCount / data.items.length) * 100)) + " " + masteredCount + "/" + data.items.length + " item");
+      lines.push("");
+      lines.push(buildStreakBar(data.streak.count));
       lines.push("");
 
-      return m.reply(claraWrap("Progress Hafalan", lines.join("\n")));
+      const res = await m.reply(claraWrap("Progress Hafalan", lines.join("\n")));
+      fireHafalanTicker(db, sender, findNextUpcomingReview(data, now), sock, m, prefix); // 🔹 ≤24 jam → live countdown
+      return res;
     }
 
     // --- REMOVE ---
@@ -441,20 +546,18 @@ async function handler(m, { sock, config: botConfig }) {
         "Status hari ini: " + (isToday ? "Sudah menghafal/review" : "Belum menghafal hari ini"),
       ];
 
-      // Milestone info
-      const milestones = [7, 30, 100, 365];
-      const nextMilestone = milestones.find((m) => m > streakCount);
-      if (nextMilestone) {
-        lines.push("");
-        lines.push("Milestone berikutnya: " + nextMilestone + " hari (" + (nextMilestone - streakCount) + " hari lagi)");
-      }
+      // 🔹 bar ke milestone + api skala (13 Sep)
+      lines.push("");
+      lines.push(buildStreakBar(streakCount));
 
       if (!isToday) {
         lines.push("");
         lines.push(tipText("Ketik " + prefix + "hafalan add atau " + prefix + "hafalan review untuk lanjut streak!"));
       }
 
-      return m.reply(claraWrap("Streak Hafalan", lines.join("\n")));
+      const res = await m.reply(claraWrap("Streak Hafalan", lines.join("\n")));
+      fireHafalanTicker(db, sender, findNextUpcomingReview(data, Date.now()), sock, m, prefix); // 🔹 ≤24 jam → live countdown
+      return res;
     }
 
     // --- HELP / default ---
