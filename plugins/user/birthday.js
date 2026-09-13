@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 const pluginConfig = {
@@ -50,27 +51,47 @@ async function handler(m, { sock }) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     
     const isToday = now.getDate() === day && now.getMonth() === month - 1
-    
-    let text = `🎂 *Birthday InғO*\n\n`
-    text += ""
-    text += `🏷️ @${cleanJid}\n`
-    text += `📅 ${day} ${months[month - 1]}\n`
-    
+
+    // Hari ini ultah → kartu ucapan statis (gak ada yang dihitung)
     if (isToday) {
-        text += `🎉 *ʜᴀʀɪ ɪɴɪ ᴜʟᴛᴀʜ!*\n`
-    } else {
-        text += `🕕 ${diffDays} hari lagi\n`
+        let today = `🎂 *Birthday InғO*\n\n`
+        today += `🏷️ @${cleanJid}\n`
+        today += `📅 ${day} ${months[month - 1]}\n`
+        today += `🎉 *ʜᴀʀɪ ɪɴɪ ᴜʟᴛᴀʜ!*\n`
+        today += `---`
+        today += `\n\n🎊 *ʜᴀᴘᴘʏ ʙɪʀᴛʜᴅᴀʏ!* 🎊\n`
+        today += `Semoga panjang umur dan\n`
+        today += `sukses selalu! 🎉🎂`
+        await m.reply(claraWrap("Birthday", today), { mentions: [target] })
+        return
     }
-    
-    text += `---`
-    
-    if (isToday) {
-        text += `\n\n🎊 *ʜᴀᴘᴘʏ ʙɪʀᴛʜᴅᴀʏ!* 🎊\n`
-        text += `Semoga panjang umur dan\n`
-        text += `sukses selalu! 🎉🎂`
+
+    // 🔹 LIVE COUNTDOWN (13 Sep, request owner "fitur polos di-variasi biar
+    // menarik"): "X hari lagi" gak lagi angka beku — kartu nge-tick HIDUP
+    // (hari + jam:menit:detik) pakai nova-countdown, lalu settle statis.
+    const bdayCard = (remainingMs, live = true) => {
+        const days = Math.floor(Math.max(0, remainingMs) / 86400000)
+        const hms = formatRemaining(Math.max(0, remainingMs) % 86400000)
+        return claraWrap("Birthday", [
+            `🎂 *Birthday InғO*`,
+            ``,
+            `🏷️ @${cleanJid}`,
+            `📅 ${day} ${months[month - 1]}`,
+            live
+                ? `🕕 *${days} hari* ${hms} lagi ⏳`
+                : `🕕 ${days} hari lagi (${diffDays} hari menuju ultah)`,
+            ``,
+            `_countdown ke ${day} ${months[month - 1]}_`,
+        ].join("\n"))
     }
-    
-    await m.reply(claraWrap("Birthday", text), { mentions: [target] })
+    await runLiveTicker({
+        sock, chat: m.chat, m,
+        mode: "down", targetTs: nextBday.getTime(), maxEdits: Number(process.env.NOVA_TICK_MAXEDITS) || 16,
+        initialCard: bdayCard(diffTime),
+        tickCard: (st) => bdayCard(st.remainingMs, st.remainingMs > 0),
+        finalCard: (st) => bdayCard(st.remainingMs, false),
+    })
+    try { await sock.sendMessage(m.chat, { mentions: [target] }); } catch {}
 }
 
 export { pluginConfig as config, handler }

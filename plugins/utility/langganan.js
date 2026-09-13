@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
   name: "langganan",
@@ -213,24 +214,54 @@ async function handler(m, { sock, config: botConfig }) {
       const daysLeft = daysUntil(next);
       const status = sub.paid ? "Lunas" : daysLeft <= 0 ? "JATUH TEMPO" : daysLeft + " hari lagi";
 
-      let lines = [
-        "Nama: *" + sub.name + "*",
-        "ID: `" + sub.id + "`",
-        "Harga: " + formatRupiah(sub.price) + " / " + cycleLabel(sub.cycle).toLowerCase(),
-        "Jatuh Tempo: " + formatDate(next),
-        "Status: " + status,
-        "Dibuat: " + formatDate(sub.createdAt),
-      ];
-
-      if (sub.history.length > 0) {
-        lines.push("");
-        lines.push("Riwayat Pembayaran:");
-        sub.history.slice(-5).forEach((h) => {
-          lines.push(formatDate(h.date) + " - " + formatRupiah(h.amount) + " - " + (h.status || "paid"));
-        });
+      // 🔹 LIVE COUNTDOWN (13 Sep, request owner "fitur polos di-variasi biar
+      // menarik"): info langganan nge-tick HIDUP menuju jatuh tempo (hari +
+      // jam:menit:detik). Kalau udah jatuh tempo / lunas → kartu statis.
+      const dueLive = sub.paid || daysLeft <= 0;
+      const dueCard = (remainingMs, live = true) => {
+        const days = Math.floor(Math.max(0, remainingMs) / 86400000)
+        const hms = formatRemaining(Math.max(0, remainingMs) % 86400000)
+        const lines = [
+          "Nama: *" + sub.name + "*",
+          "ID: `" + sub.id + "`",
+          "Harga: " + formatRupiah(sub.price) + " / " + cycleLabel(sub.cycle).toLowerCase(),
+          "Jatuh Tempo: " + formatDate(next),
+          live
+            ? "⏳ *" + days + " hari " + hms + "* menuju jatuh tempo ⏳"
+            : "Status: " + status,
+          "Dibuat: " + formatDate(sub.createdAt),
+        ]
+        if (sub.history.length > 0) {
+          lines.push("")
+          lines.push("Riwayat Pembayaran:")
+          sub.history.slice(-5).forEach((h) => {
+            lines.push(formatDate(h.date) + " - " + formatRupiah(h.amount) + " - " + (h.status || "paid"))
+          })
+        }
+        return claraWrap("Info Langganan", lines.join("\n"))
       }
 
-      return m.reply(claraWrap("Info Langganan", lines.join("\n")));
+      if (dueLive) {
+        return m.reply(claraWrap("Info Langganan", [
+          "Nama: *" + sub.name + "*",
+          "ID: `" + sub.id + "`",
+          "Harga: " + formatRupiah(sub.price) + " / " + cycleLabel(sub.cycle).toLowerCase(),
+          "Jatuh Tempo: " + formatDate(next),
+          "Status: " + status,
+          "Dibuat: " + formatDate(sub.createdAt),
+        ].concat(sub.history.length > 0 ? ["", "Riwayat Pembayaran:"].concat(
+          sub.history.slice(-5).map((h) => formatDate(h.date) + " - " + formatRupiah(h.amount) + " - " + (h.status || "paid"))
+        ) : []).join("\n")))
+      }
+
+      await runLiveTicker({
+        sock, chat: m.chat, m,
+        mode: "down", targetTs: next, maxEdits: Number(process.env.NOVA_TICK_MAXEDITS) || 16,
+        initialCard: dueCard(next - Date.now()),
+        tickCard: (st) => dueCard(st.remainingMs, st.remainingMs > 0),
+        finalCard: (st) => dueCard(st.remainingMs, false),
+      })
+      return { handled: true }
     }
 
     // --- EDIT ---
