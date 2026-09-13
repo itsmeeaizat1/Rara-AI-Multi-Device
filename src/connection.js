@@ -679,6 +679,12 @@ async function startConnection(options = {}) {
         console.error("[Pomodoro] restore gagal:", e.message);
       }
       try {
+        const { loadScheduledMessages } = await import("./lib/nova-scheduler.js");
+        loadScheduledMessages(sock);
+      } catch (e) {
+        console.error("[Schedule] restore jadwal gagal:", e.message);
+      }
+      try {
         const { restoreReminders } = await import("./lib/nova-reminder-engine.js");
         const r = restoreReminders(sock);
         if (r?.rearmed || r?.missed) console.log(`[Reminder] ${r.rearmed} dipasang ulang, ${r.missed} terlewat dikabarin`);
