@@ -16,6 +16,7 @@ import {
   formatTimeRemaining,
   getMsUntilTime,
 } from "../../src/lib/nova-scheduler.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 /**
  * Konfigurasi plugin
  */
@@ -630,6 +631,63 @@ function buildListText(tasks, header = null) {
   return text.trim();
 }
 
+// 🔹 LIVE COUNTDOWN (13 Sep): jadwal time-critical tapi kartunya statis doang.
+// detail + konfirmasi add/preset → sisa ≤24 jam → ticker 🕒 nge-tick ke jam
+// penembakan → "⏰ JAM TIBA"; jadwal dihapus/diubah → closing adaptif.
+function fireScheduleTicker(task, sock, m) {
+  try {
+    const initialMs = getMsUntilTime(task.hour, task.minute);
+    if (initialMs > 24 * 3600000) return null; // masih jauh → kartu statis cukup
+    const fireAt = Date.now() + initialMs;
+    const clock = formatClock(task.hour, task.minute);
+    const title = getTaskTitle(task) || task.id;
+    const card = (remMs) => {
+      if (remMs <= 0) {
+        return [
+          "⏰ *ᴊᴀᴅᴡᴀʟ ᴊᴀᴍ ᴛɪʙᴀ!*",
+          "",
+          "📝 " + title,
+          "🕒 " + clock + " WIB",
+          "",
+          "Pesan lagi dikirim ke target otomatis.",
+        ].join("\n");
+      }
+      const h = Math.floor(remMs / 3600000);
+      const mm = Math.floor((remMs % 3600000) / 60000);
+      const ss = Math.floor((remMs % 60000) / 1000);
+      return [
+        "🕒 *ᴊᴀᴅᴡᴀʟ ᴍᴇɴᴇᴍʙᴀᴋ ꜱᴇᴅᴀɴɢ ᴅᴇᴋᴀᴛ*",
+        "",
+        "📝 " + title,
+        "⏰ " + clock + " WIB",
+        "📍 " + getTaskTargetLabel(task),
+        "🕒 Sisa: *" + h + " jam " + String(mm).padStart(2, "0") + " mnt " + String(ss).padStart(2, "0") + " dtk*",
+        "",
+        "Pesan bakal dikirim otomatis — gak usah ngapa-ngapain.",
+      ].join("\n");
+    };
+    return runLiveTicker({
+      sock, chat: m.chat, m,
+      mode: "down",
+      targetTs: fireAt,
+      initialCard: card(initialMs),
+      tickCard: (st) => card(st.remainingMs),
+      finalCard: () => [
+        "✅ *Countdown jadwal dibatalkan*",
+        "",
+        "Jadwalnya dihapus/diubah — cek `.schedule list`.",
+      ].join("\n"),
+      maxEdits: 600,
+      isCancelled: () => {
+        const cur = findTaskById(task.id);
+        return !cur || cur.hour !== task.hour || cur.minute !== task.minute;
+      },
+    }).catch(() => {});
+  } catch {
+    return null;
+  }
+}
+
 function buildDetailText(task) {
   const msUntil = getMsUntilTime(task.hour, task.minute);
   return `📌 *ᴅᴇᴛᴀɪʟ ᴊᴀᴅᴡᴀʟ*
@@ -680,6 +738,7 @@ async function handler(m, { sock, args }) {
 
 Text custom:
 ${truncateText(parsed.customText, 180)}`);
+        fireScheduleTicker({ ...buildTaskPayload(id, parsed), id }, sock, m); // 🔹 ≤24 jam → live countdown
       } catch (error) {
         await m.reply(
           error.message?.startsWith("❌")
@@ -722,6 +781,8 @@ ${truncateText(parsed.customText, 180)}`);
 
 Text custom:
 ${truncateText(parsed.customText, 180)}`);
+        fireScheduleTicker({ ...buildTaskPayload(id, parsed), id }, sock, m); // 🔹 ≤24 jam → live countdown
+        fireScheduleTicker({ ...buildTaskPayload(id, parsed), id }, sock, m); // 🔹 ≤24 jam → live countdown
       } catch (error) {
         await m.reply(
           error.message?.startsWith("❌")
@@ -772,6 +833,7 @@ ${truncateText(parsed.customText, 180)}`);
 
 Text custom:
 ${truncateText(parsed.customText, 180)}`);
+        fireScheduleTicker({ ...buildTaskPayload(id, parsed), id }, sock, m); // 🔹 ≤24 jam → live countdown
       } catch (error) {
         await m.reply(
           error.message?.startsWith("❌")
@@ -852,6 +914,7 @@ ${truncateText(parsed.customText, 180)}`);
       }
 
       await m.reply(buildDetailText(task));
+      fireScheduleTicker(task, sock, m); // 🔹 ≤24 jam → live countdown
       break;
     }
 

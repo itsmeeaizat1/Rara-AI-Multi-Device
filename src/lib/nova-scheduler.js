@@ -165,6 +165,7 @@ async function scheduleMessage(options, sock) {
           job.stop();
           scheduledTasks.delete(id);
           activeCronJobs.delete(id);
+          saveScheduledMessages(); // 🔹 one-shot kelar → bersihin dari persist
         } else {
           task.nextRun = job.nextDate().toISO();
         }
@@ -188,6 +189,7 @@ async function scheduleMessage(options, sock) {
     "Scheduler",
     `Message scheduled: ${id} at ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
   );
+  saveScheduledMessages(); // 🔹 persist tiap nambah jadwal (restart-safe)
   return task;
 }
 
@@ -198,6 +200,7 @@ function cancelScheduledMessage(id) {
   }
   if (scheduledTasks.has(id)) {
     scheduledTasks.delete(id);
+    saveScheduledMessages(); // 🔹 persist tiap hapus/edit jadwal
     logger.info("Scheduler", `Cancelled scheduled message: ${id}`);
     return true;
   }
