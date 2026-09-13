@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
   const progressBar = (() => {
     const filled = Math.floor(compatibility / 10);
     const empty = 10 - filled;
-    return "█".repeat(filled) + "░".repeat(empty);
+    return "▰".repeat(filled) + "▱".repeat(empty);
   })();
 
   const rows = [

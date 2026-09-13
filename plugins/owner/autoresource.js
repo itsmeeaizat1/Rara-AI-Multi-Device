@@ -632,8 +632,8 @@ async function handler(m, { sock, config: botConfig }) {
       const uptimeStr = `${Math.floor(uptime / 3600)}h ${Math.floor((uptime % 3600) / 60)}m`;
 
       const t = settings.thresholds;
-      const ramBar = "█".repeat(Math.floor(ramUsage / 10)) + "░".repeat(10 - Math.floor(ramUsage / 10));
-      const cpuBar = "█".repeat(Math.floor(cpuUsage / 10)) + "░".repeat(10 - Math.floor(cpuUsage / 10));
+      const ramBar = "▰".repeat(Math.floor(ramUsage / 10)) + "▱".repeat(10 - Math.floor(ramUsage / 10));
+      const cpuBar = "▰".repeat(Math.floor(cpuUsage / 10)) + "▱".repeat(10 - Math.floor(cpuUsage / 10));
 
       const ramStatus = ramUsage >= t.ram ? "⚠️ CRITICAL" : "✓ OK";
       const cpuStatus = cpuUsage >= t.cpu ? "⚠️ CRITICAL" : "✓ OK";

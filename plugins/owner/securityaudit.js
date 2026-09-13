@@ -137,7 +137,7 @@ async function handler(m, { sock }) {
   if (bannedCount >= 0) score += 5; // sistem berfungsi
   if (blockedCount >= 0) score += 5;
 
-  const bar = "█".repeat(Math.floor(score / 10)) + "░".repeat(10 - Math.floor(score / 10));
+  const bar = "▰".repeat(Math.floor(score / 10)) + "▱".repeat(10 - Math.floor(score / 10));
 
   let verdict;
   if (score >= 80) verdict = "SANGAT AMAN";

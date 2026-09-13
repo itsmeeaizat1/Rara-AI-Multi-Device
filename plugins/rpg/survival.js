@@ -44,7 +44,7 @@ async function getData(db, sender) {
 
 function bar(val, max) {
   const pct = Math.floor((val / max) * 10);
-  return "█".repeat(pct) + "░".repeat(10 - pct);
+  return "▰".repeat(pct) + "▱".repeat(10 - pct);
 }
 
 async function handler(m, { sock }) {

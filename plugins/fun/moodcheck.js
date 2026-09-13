@@ -486,7 +486,7 @@ function generateReport(analysis, pushName) {
   const bars = top4.map(([key, score]) => {
     const pct = Math.min(100, score);
     const filled = Math.round(pct / 10);
-    const bar = "█".repeat(filled) + "░".repeat(10 - filled);
+    const bar = "▰".repeat(filled) + "▱".repeat(10 - filled);
     return `${moodEmojis[key]} ${moodLabels[key]}: ${bar} ${pct}%`;
   }).join("\n");
 

@@ -147,7 +147,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   saveConfig(db, gid, cfg);
 
   const stars = "★".repeat(Math.min(5, Math.ceil(level / 20)));
-  const bar = (stat, max) => "█".repeat(Math.min(10, Math.floor(stat / max * 10))) + "░".repeat(10 - Math.min(10, Math.floor(stat / max * 10)));
+  const bar = (stat, max) => "▰".repeat(Math.min(10, Math.floor(stat / max * 10))) + "▱".repeat(10 - Math.min(10, Math.floor(stat / max * 10)));
 
   await m.reply(claraWrap("Persona Card", [
     (target === m.sender ? "" : "@" + target.split("@")[0] + " - "),
