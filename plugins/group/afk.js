@@ -8,6 +8,7 @@ import {
   getAfkUser, setAfkUser, removeAfkUser, isUserAfk, loadAfkMap,
   formatWib, formatDuration,
 } from "../../src/lib/nova-afk.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
   name: 'afk',
@@ -49,12 +50,28 @@ async function handler(m, { sock }) {
       ].join("\n")), { mentions: [target] });
     }
     const tnum = target.split("@")[0];
-    return m.reply(claraWrap("Cek AFK", [
+    // 🔹 LIVE TICKER (13 Sep): durasi AFK nge-tick hidup di kartu — bukan
+    // angka beku. Kartu di-edit tiap detik ±12 dtk lalu settle final.
+    const card = (durasiMs) => claraWrap("Cek AFK", [
       `👤 Nama : ${info.name || "@" + tnum}`,
       `⏰ Mulai : ${formatWib(info.since)}`,
-      `⏱️ Durasi : ${formatDuration(Date.now() - info.since)}`,
+      `⏱️ Durasi : ${formatDuration(durasiMs)}`,
       `📝 Alasan : ${info.reason || "-"}`,
-    ].join("\n")), { mentions: [target] });
+      ``,
+      `⏳ _durasi ke-update tiap detik selagi timer jalan_`,
+    ].join("\n"));
+    return runLiveTicker({
+      sock, chat: m.chat, m,
+      mode: "up", sinceTs: Number(info.since), upRunMs: Number(process.env.NOVAFK_TICKER_MS) || 12000,
+      initialCard: card(Date.now() - info.since),
+      tickCard: (st) => card(st.elapsedMs),
+      finalCard: (st) => claraWrap("Cek AFK", [
+        `👤 Nama : ${info.name || "@" + tnum}`,
+        `⏰ Mulai : ${formatWib(info.since)}`,
+        `⏱️ Durasi : ${formatDuration(st.elapsedMs)} (dan terus berjalan)`,
+        `📝 Alasan : ${info.reason || "-"}`,
+      ].join("\n")),
+    }).then(() => { try { sock.sendMessage(m.chat, { mentions: [target] }); } catch {} });
   }
 
   // ── .afk list — siapa aja yang lagi AFK ──
@@ -103,13 +120,22 @@ async function handler(m, { sock }) {
     ].join("\n")), { mentions: [m.sender] });
   }
 
-  return m.reply(claraWrap("AFK Aktif", [
+  // 🔹 LIVE TICKER (13 Sep): kartu AFK aktif nunjukin durasi yang nge-tick
+  // hidup ±12 dtk — keliatan timer-nya jalan beneran, bukan kartu beku.
+  const setCard = (durasiMs) => claraWrap("AFK Aktif", [
     `👤 Nama : ${label}`,
     `📝 Alasan : ${reason}`,
     `⏰ Mulai : ${formatWib(entry.since)}`,
+    `⏱️ Durasi : ${formatDuration(durasiMs)}`,
     ``,
     `_Aku otomatis jawab siapa pun yang ngingetin kamu, dan ucapin selamat datang kembali pas kamu balakang._`,
-  ].join("\n"), "success"), { mentions: [m.sender] });
+  ].join("\n"), "success");
+  return runLiveTicker({
+    sock, chat: m.chat, m,
+    mode: "up", sinceTs: Number(entry.since), upRunMs: Number(process.env.NOVAFK_TICKER_MS) || 12000,
+    initialCard: setCard(0),
+    tickCard: (st) => setCard(st.elapsedMs),
+  }).then(() => { try { sock.sendMessage(m.chat, { mentions: [m.sender] }); } catch {} });
 }
 
 export { pluginConfig as config, handler, getAfkUser, setAfkUser, removeAfkUser, isUserAfk }
