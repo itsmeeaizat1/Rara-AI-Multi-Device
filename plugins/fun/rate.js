@@ -1,5 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/** Bar meter ala pengukuran: ▓▓▓░░░░░░░ XX% */
+function meterBar(pct) {
+  const filled = Math.max(0, Math.min(10, Math.round(pct / 10)));
+  return "▓".repeat(filled) + "░".repeat(10 - filled) + " " + pct + "%";
+}
 const pluginConfig = {
     name: "rate",
     alias: ["rate"],
@@ -52,8 +59,51 @@ async function handler(m, { sock }) {
     }
     
     const rating = ratings[Math.floor(Math.random() * ratings.length)];
-    
-    { const __navText = claraWrap("Rate", [`Rating dari aku: *${rating.score}*`, rating.comment].join("\n")); await m.reply(__navText); };
+
+    // 🔹 ANIMASI METER (13 Sep, request owner "fitur polos di-variasi biar
+    // menarik"): rating gak lagi muncul dadakan — kartu morphing ala
+    // pengukuran: 🔍 mencari → 🛠️ menganalisis → meter naik-turun bikin
+    // penasaran → ⚡ finalisasi → reveal skor + komentar. 1 pesan
+    // edit-in-place, edit gagal → langsung jatuh ke hasil akhir.
+    const subject = text.length > 40 ? text.slice(0, 37) + "..." : text;
+    const frames = [
+      { label: "🔍 mencari data *" + subject + "*...", pct: null },
+      { label: "🛠️ menganalisis...", pct: 12 },
+      { label: "🛠️ menganalisis...", pct: 34 },
+      { label: "🛠️ menganalisis...", pct: 58 },
+      { label: "🛠️ menganalisis...", pct: 41 },
+      { label: "🛠️ menganalisis...", pct: 76 },
+      { label: "🛠️ menganalisis...", pct: 93 },
+      { label: "⚡ finalisasi penilaian...", pct: 88 },
+    ];
+    const finalCard = claraWrap("Rate", [
+      `📊 *${rating.score}*`,
+      meterBar(rating.meterPct ?? Math.floor(Math.random() * 41) + 55),
+      ``,
+      rating.comment,
+    ].join("\n"));
+
+    let key = null;
+    try {
+      const sent = await sock.sendMessage(m.chat, { text: frames[0].label });
+      key = sent?.key || null;
+    } catch {}
+    if (key) {
+      for (let i = 1; i < frames.length; i++) {
+        await sleep(i < 3 ? 900 : 700);
+        try {
+          await sock.sendMessage(m.chat, { text: frames[i].label + "\n" + meterBar(frames[i].pct), edit: key });
+        } catch { key = null; break; }
+      }
+      await sleep(800);
+      try { await sock.sendMessage(m.chat, { text: finalCard, edit: key }); } catch {}
+    }
+    if (!key) {
+      // edit gak available → langsung kartu hasil (jangan bikin user nunggu)
+      await m.reply(finalCard);
+      return { handled: true };
+    }
+    return { handled: true };
 }
 
 export { pluginConfig as config, handler }
