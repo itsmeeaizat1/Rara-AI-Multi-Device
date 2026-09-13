@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 
 const pluginConfig = {
   name: "santet",
@@ -43,6 +44,7 @@ const TAWA_RESULT = [
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
+    persistLoad("santetDB"); persistLoad("santetStats"); // anti hilang pas restart
     await m.react("🕒");
     if (command === "tawasantet") {
       // Check if user has santet
@@ -56,6 +58,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (result.success) {
         // Reflect back to sender
         delete global.santetDB[m.sender];
+        persistSave("santetDB");
         const lines = [
           "TAWA SANTET!",
           result.text,
@@ -72,6 +75,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             from: m.sender,
             time: Date.now(),
           };
+          persistSave("santetDB");
         }
 
         return m.reply(claraWrap("Tawa Santet", lines, "info"));
@@ -127,7 +131,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (!global.santetStats[target]) global.santetStats[target] = { kirim: 0, terima: 0 };
 
     global.santetDB[target] = { efek, from: m.sender, time: Date.now() };
+    persistSave("santetDB");
     global.santetStats[m.sender].kirim++;
+    persistSave("santetStats");
     global.santetStats[target].terima++;
 
     await m.react("🐣");

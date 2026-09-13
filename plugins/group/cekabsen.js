@@ -2,6 +2,7 @@
 import moment from "moment-timezone";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 const pluginConfig = {
   name: "cekabsen",
   alias: ["cekabsen"],
@@ -19,6 +20,7 @@ const pluginConfig = {
 };
 if (!global.absensi) global.absensi = {};
 async function handler(m, { sock }) {
+  persistLoad("absensi"); // restore sesi absen dari db (anti hilang pas restart)
   const chatId = m.chat;
   if (!global.absensi[chatId]) {
     return m.reply(claraWrap("Tidak Ada Absen", ["Belum ada sesi absen di grup ini!",

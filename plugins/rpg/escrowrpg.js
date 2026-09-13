@@ -1,6 +1,7 @@
 import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 const pluginConfig = {
   name: "escrow", alias: ["escrow", "escrowrpg", "titipan"],
   category: "rpg", description: "Escrow — titipan aman antar pemain",
@@ -11,6 +12,7 @@ const pluginConfig = {
 global.rpgEscrow = global.rpgEscrow || [];
 async function handler(m, { sock }) {
   try {
+    persistLoad("rpgEscrow"); // restore dari db kalau baru nyala (anti hilang pas restart)
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(novaRpgBox("escrowrpg", "RPG belum siap.", "error"));
     const args = m.args;
@@ -24,6 +26,7 @@ async function handler(m, { sock }) {
       if (rpg.gold < jumlah) return m.reply(novaRpgBox("escrowrpg", `💰 Tidak cukup. Kamu punya ${rpg.gold}.`, "error"));
       removeGold(m, jumlah, sock);
       global.rpgEscrow.push({ id: Date.now(), sender: m.sender, receiver: target, amount: jumlah, status: "pending" });
+      persistSave("rpgEscrow");
       saveRpg(m, rpg);
       await m.react("🐣");
   await animGeneric(m, sock, "🔒", "Escrow Transaction");
@@ -40,6 +43,7 @@ async function handler(m, { sock }) {
       const receiverRpg = ensureRpg({ sender: esc.receiver, key: { remoteJid: esc.receiver }, pushName: "Player", reply: () => {} });
       addGold({ sender: esc.receiver, key: { remoteJid: esc.receiver }, reply: () => {} }, esc.amount);
       esc.status = "done";
+      persistSave("rpgEscrow");
       saveRpg(m, rpg);
       await m.react("🐣");
       return m.reply(novaRpgBox("escrowrpg", `✅ Escrow ${esc.amount} gold cair ke @${esc.receiver.split("@")[0]}.`, "success"));
@@ -49,6 +53,7 @@ async function handler(m, { sock }) {
       if (!esc) return m.reply(novaRpgBox("escrowrpg", "Tidak ada escrow yang bisa dibatalkan.", "error"));
       addGold(m, esc.amount);
       esc.status = "cancelled";
+      persistSave("rpgEscrow");
       saveRpg(m, rpg);
       await m.react("🐣");
       return m.reply(novaRpgBox("escrowrpg", `❌ Escrow dibatalkan. ${esc.amount} gold kembali ke kamu.`, "success"));

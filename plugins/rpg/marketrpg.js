@@ -1,6 +1,7 @@
 import { ensureRpg, saveRpg, removeItem, addGold, removeGold, addItem, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 
 const pluginConfig = {
   name: "marketrpg", alias: ["marketrpg", "market"],
@@ -12,6 +13,7 @@ const pluginConfig = {
 global.rpgMarket = global.rpgMarket || [];
 async function handler(m, { sock }) {
   try {
+    persistLoad("rpgMarket"); // restore listing dari db (anti hilang pas restart)
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(novaRpgBox("marketrpg", "RPG belum siap.", "error"));
     const args = m.args;
@@ -31,6 +33,7 @@ async function handler(m, { sock }) {
       if (getItemCount(m, item) <= 0) return m.reply(novaRpgBox("marketrpg", `Kamu tidak punya *${item}*.`, "error"));
       removeItem(m, item, 1, sock);
       global.rpgMarket.push({ seller: m.sender, item, harga });
+      persistSave("rpgMarket");
       saveRpg(m, rpg);
       await m.react("🐣");
       await animGeneric(m, sock, '🏪', 'Opening market');
@@ -44,6 +47,7 @@ async function handler(m, { sock }) {
       removeGold(m, found.harga, sock);
       addItem(m, found.item, 1);
       global.rpgMarket = global.rpgMarket.filter(it => it !== found);
+      persistSave("rpgMarket");
       saveRpg(m, rpg);
       await m.react("🐣");
       await animGeneric(m, sock, '🏪', 'Opening market');

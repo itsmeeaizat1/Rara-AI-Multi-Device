@@ -2,6 +2,7 @@
 import moment from 'moment-timezone'
 import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 const pluginConfig = {
     name: 'absen',
     alias: ["absen"],
@@ -19,6 +20,7 @@ const pluginConfig = {
 }
 if (!global.absensi) global.absensi = {}
 async function handler(m, { sock }) {
+  persistLoad("absensi"); // restore sesi absen dari db (anti hilang pas restart)
     const chatId = m.chat
     if (!global.absensi[chatId]) {
         return m.reply(claraWrap("Tidak Ada Absen", 
@@ -31,6 +33,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Absen", `Kamu sudah absen!`, "error"))
     }
     absen.peserta.push(m.sender)
+    persistSave("absensi")
     const now = moment().tz('Asia/Jakarta')
     const dateStr = now.format('D MMMM YYYY')
     const list = absen.peserta

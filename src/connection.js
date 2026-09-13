@@ -657,6 +657,24 @@ async function startConnection(options = {}) {
         console.error("[automation] Failed to start automation hub:", e.message);
       }
 
+      // 🔹 REMINDER RESTORE + ALARM SCHEDULER: reminder aktif dari db
+      // dipasang ulang timer-nya (yang kelewat dikirim notif "terlewat"),
+      // alarm HH:MM harian dicek tiap 30 dtk — dua-duanya sekarang
+      // selamat restart (request owner 13 Sep 2026)
+      try {
+        const { restoreReminders } = await import("./lib/nova-reminder-engine.js");
+        const r = restoreReminders(sock);
+        if (r?.rearmed || r?.missed) console.log(`[Reminder] ${r.rearmed} dipasang ulang, ${r.missed} terlewat dikabarin`);
+      } catch (e) {
+        console.error("[Reminder] restore gagal:", e.message);
+      }
+      try {
+        const { initAlarmScheduler } = await import("./lib/nova-alarm.js");
+        initAlarmScheduler(sock);
+      } catch (e) {
+        console.error("[Alarm] scheduler gagal:", e.message);
+      }
+
       // 🔹 GROUP REGISTRY (nova-group-registry.js): catat semua grup yang bot
       // ikuti ke db pas startup — biar Total Grup di Info Database gak suka 0
       // / ke-reset tiap restart (request owner 13 Sep 2026)

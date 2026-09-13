@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 const pluginConfig = {
     name: 'hapusabsen',
     alias: ["hapusabsen"],
@@ -20,6 +21,7 @@ const pluginConfig = {
 if (!global.absensi) global.absensi = {}
 
 async function handler(m, { sock }) {
+  persistLoad("absensi"); // restore sesi absen dari db (anti hilang pas restart)
     const chatId = m.chat
     
     if (!global.absensi[chatId]) {
@@ -30,6 +32,7 @@ async function handler(m, { sock }) {
     const totalPeserta = absen.peserta.length
     
     delete global.absensi[chatId]
+  persistSave("absensi")
     
     await m.reply(claraWrap("ABSEN DITUTUP!", 
         `Penyebab?\n` +
