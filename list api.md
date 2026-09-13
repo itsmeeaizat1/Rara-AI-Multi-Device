@@ -2,7 +2,7 @@
 
 > Dokumentasi semua API endpoint yang digunakan di Nova AI WhatsApp Bot
 > Total: 400+ API endpoint dari 100+ provider (termasuk KuroNeko 221 endpoint)
-> Last updated: 12 September 2026
+> Last updated: 14 September 2026
 
 ---
 
@@ -30,6 +30,7 @@
 | Cuki API | `api.cuki.biz.id` | cuki-api scraper | ✅ Free |
 | Xemoz Official | `api-xemoz-official.my.id` | GPT 5.3/5.5, DeepSeek v3.2/v4 | ✅ Free |
 | ABzTech | `api-abztech.zone.id` | AI genimg | ✅ Free |
+| FazzCode | `api.fazzcode.eu.cc/api/ai/chatbot-role` | .airoleplaychat — roleplay AI 17 karakter (Sakura, Gojo Satoru, Anya, Luffy, Doraemon, Momo Ayase, dll) + persona custom bebas. Action: `list` (daftar karakter, cache 1 jam) / `create` (mulai sesi, param character+query+name+prompt) / `chat` (lanjut obrolan). API STATELESS → riwayat 6 giliran disimpan lokal per-user & di-inject ringkas ke query biar karakter "inget". LIVE verified 14 Sep (Gojo bales). Key `re_live_...` di apikeys.json aiSatuan → fazzcode (getter getFazzcodeKey) | ✅ Key required (free /register) |
 
 ## 🧪 Status Tes Gateway AI — 8 Sep 2026 (live verified dari sandbox)
 
