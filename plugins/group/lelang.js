@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
   name: "lelang",
@@ -61,6 +62,71 @@ function formatTime(ts) {
 }
 
 // Format countdown from remaining ms
+// 🔹 LIVE COUNTDOWN (13 Sep): sisa waktu lelang nge-tick — fresh dari db
+// tiap tick biar anti-snipe (+30 dtk pas bid terakhir) ikut kebaca.
+function getAuction(db, id) {
+  const all = db.setting("auctions") || {};
+  return all[String(id).toUpperCase()] || null;
+}
+function lelangBar(elapsed, total) {
+  if (!total || total <= 0) return "";
+  const n = Math.max(0, Math.min(10, Math.round((elapsed / total) * 10)));
+  return "▰".repeat(n) + "▱".repeat(10 - n);
+}
+function fireLelangTicker(db, sock, m, auctionId, extraLines = []) {
+  const auction0 = getAuction(db, auctionId);
+  if (!auction0 || auction0.ended || auction0.cancelled) return Promise.resolve(null);
+  const totalDur = auction0.endTime - Date.now();
+  const card = (remMs) => {
+    if (remMs <= 0) {
+      return [
+        "🔨 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ!*",
+        "",
+        "Item: *" + auction0.title + "*",
+        "ID: `" + auctionId + "`",
+        "",
+        "Hasil lelang lagi diumumkan ke grup...",
+      ].join("\n");
+    }
+    const elapsed = Math.max(0, totalDur - remMs);
+    const total = Math.max(totalDur, 1);
+    return [
+      "🔨 *ʟᴇʟᴀɴɢ ᴀᴋᴛɪꜰ*",
+      "",
+      "Item: *" + auction0.title + "*",
+      "ID: `" + auctionId + "`",
+      "Harga Awal: " + formatRupiah(auction0.startPrice),
+      "Min Increment: " + formatRupiah(auction0.minIncrement),
+      ...extraLines,
+      "⏳ Sisa waktu: " + formatCountdown(remMs),
+      "📊 " + lelangBar(elapsed, total),
+      "",
+      "Ketik: .lelang bid " + auctionId + " <harga>",
+    ].join("\n");
+  };
+  return runLiveTicker({
+    sock, chat: m.chat, m,
+    mode: "down",
+    remainingFn: (now) => {
+      const a = getAuction(db, auctionId);
+      if (!a || a.ended || a.cancelled) return 0;
+      return Math.max(0, a.endTime - now);
+    },
+    initialCard: card(getAuction(db, auctionId).endTime - Date.now()),
+    tickCard: (st) => card(st.remainingMs),
+    finalCard: () => [
+      "✅ *Lelang ditutup/dibatalkan sebelum waktu habis*",
+      "",
+      "Cek hasil: .lelang info " + auctionId,
+    ].join("\n"),
+    maxEdits: 600,
+    isCancelled: () => {
+      const a = getAuction(db, auctionId);
+      return !a || a.ended || a.cancelled;
+    },
+  });
+}
+
 function formatCountdown(ms) {
   if (ms <= 0) return "Berakhir";
   const h = Math.floor(ms / 3600000);
@@ -199,17 +265,13 @@ async function handler(m, { sock, config: botConfig }) {
       db.setting("auctions", all);
       db.save();
 
-      const countdown = formatCountdown(duration);
-      const text =
-        "Item: *" + title + "*\n" +
-        "Harga Awal: *" + formatRupiah(startPrice) + "*\n" +
-        "Min Increment: *" + formatRupiah(auction.minIncrement) + "*\n" +
-        "Durasi: " + formatDuration(duration) + "\n" +
-        "Berakhir: " + formatTime(auction.endTime) + "\n" +
-        "ID: `" + auctionId + "`\n" +
-        "Dibuat oleh: @" + m.sender.split("@")[0] + "\n\n" +
-        "Ketik: " + prefix + "lelang bid " + auctionId + " <harga>";
-      return m.reply(claraWrap("Lelang", text));
+      // 🔹 LIVE COUNTDOWN (13 Sep): kartu lelang nge-tick ke endTime —
+      // bidders langsung liat waktu nyisa beneran + bar ▰▱. Anti-snipe
+      // (+30 dtk) kebaca karena remainingFn baca fresh dari db.
+      return fireLelangTicker(db, sock, m, auctionId, [
+        "Durasi: " + formatDuration(duration),
+        "Dibuat oleh: @" + m.sender.split("@")[0],
+      ]).catch(() => {});
     }
 
     // --- BID ---
@@ -327,6 +389,10 @@ async function handler(m, { sock, config: botConfig }) {
 
       const remaining = formatCountdown(auction.endTime - Date.now());
       const status = auction.cancelled ? "Dibatalkan" : auction.ended ? "Berakhir" : "Aktif";
+      const isActive = !auction.ended && !auction.cancelled;
+      const bar = (isActive && auction.createdAt)
+        ? "\n📊 " + lelangBar(Date.now() - auction.createdAt, Math.max(1, auction.endTime - auction.createdAt)) + " terpakai"
+        : "";
       const highest = auction.bids.length > 0
         ? formatRupiah(auction.bids[auction.bids.length - 1].amount)
         : formatRupiah(auction.startPrice);
@@ -342,7 +408,12 @@ async function handler(m, { sock, config: botConfig }) {
         "Sisa Waktu: " + remaining,
         "Berakhir: " + formatTime(auction.endTime),
         "Dibuat oleh: @" + auction.createdBy.split("@")[0],
-      ];
+      ].concat(bar ? [bar.trim()] : []);
+
+      // aktif & sisa ≤24 jam → LIVE COUNTDOWN nge-tick sampai lelang berakhir
+      if (isActive && auction.endTime - Date.now() <= 86400000) {
+        fireLelangTicker(db, sock, m, auctionId).catch(() => {});
+      }
 
       if (auction.ended && auction.winner) {
         lines.push("Pemenang: @" + auction.winner.bidder.split("@")[0]);
