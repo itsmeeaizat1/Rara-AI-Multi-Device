@@ -14,6 +14,13 @@ import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import { boxMessage } from "../../src/lib/styler.js";
 import te from "../../src/lib/nova-error.js";
 
+/** Bar progress Job EXP standar ▰▱ (14 Sep — bar untuk semua progress level) */
+function jobBar(cur, next) {
+  const c = Math.max(0, cur || 0), mx = Math.max(0, next || 0);
+  const filled = mx > 0 ? Math.min(10, Math.round((c / mx) * 10)) : 0;
+  return "▰".repeat(filled) + "▱".repeat(10 - filled) + ` ${c}/${mx}`;
+}
+
 const pluginConfig = {
   name: "kerja",
   alias: ["kerja", "work"],
@@ -175,6 +182,7 @@ async function handler(m, { sock }) {
       ...(cashGain > 0 ? [`💵 Uang : ${formatRp(cashGain + toolBonus)}`] : []),
       ...(hasTool ? [`🔧 Alat : +30% gajian (${formatRp(toolBonus)})`] : []),
       `📖 Job EXP : +${jobExpGain}`,
+      `   ${jobBar(rpg.jobExp || 0, rpg.jobExpNext || 50)}`,
       ...(bonusFlavor ? [`📦 Bonus : ${bonusFlavor}`] : []),
       ...(leveledUp ? ["", ...prof.naikLevel] : []),
       "",

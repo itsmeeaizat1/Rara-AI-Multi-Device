@@ -6,6 +6,13 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
+/** Bar progress level ke syarat standar ▰▱ (14 Sep — bar untuk semua progress level) */
+function reqBar(cur, target) {
+  const c = Math.max(0, cur || 0), mx = Math.max(0, target || 0);
+  const filled = mx > 0 ? Math.min(10, Math.round((c / mx) * 10)) : 0;
+  return "▰".repeat(filled) + "▱".repeat(10 - filled) + ` ${c}/${mx}`;
+}
+
 const pluginConfig = {
   name: "prestige",
   alias: ["prestige"],
@@ -24,7 +31,8 @@ async function handler(m, { sock, command }) {
 
     if (command === "prestige") {
   await animGeneric(m, sock, "⭐", "Prestige");
-      if (rpg.level < 50) return m.reply(novaRpgBox("prestige", "Minimal level 50 untuk prestige.", "info"));
+      if (rpg.level < 50) return m.reply(novaRpgBox("prestige",
+        `Minimal level 50 untuk prestige.\n\n📊 Progress kamu:\n${reqBar(rpg.level || 1, 50)}\n\nTerus berpetualang naik level!`, "info"));
 
       await m.react("🕒");
       rpg.level = 1;
@@ -43,7 +51,8 @@ async function handler(m, { sock, command }) {
     }
 
     if (command === "reincarnate" || command === "reinkarnasi") {
-      if (rpg.level < 30) return m.reply(novaRpgBox("reincarnate", "Minimal level 30 untuk reinkarnasi.", "info"));
+      if (rpg.level < 30) return m.reply(novaRpgBox("reincarnate",
+        `Minimal level 30 untuk reinkarnasi.\n\n📊 Progress kamu:\n${reqBar(rpg.level || 1, 30)}\n\nTerus berpetualang naik level!`, "info"));
 
       await m.react("🕒");
       rpg.level = 1;

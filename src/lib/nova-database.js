@@ -885,7 +885,14 @@ class Database {
   // These delegate to existing methods (getUser/setUser/updateRpgCurrency/etc).
 
   getPlayerAllData(jid) {
-    return this.getUser(jid) || {};
+    const user = this.getUser(jid) || {};
+    // FIX (14 Sep 2026, ketemu pas e2e progress bar achievement):
+    // setPlayerData nyimpen data aktivitas di user.rpg[key], tapi checker
+    // achievement baca d.<key> top-level → progress mining/daily/arena/
+    // dungeon/fishing/crafting SELALU kebaca 0 → achievement gak pernah
+    // bisa unlock. Merge rpg ke top-level biar nyambung.
+    const rpg = (user.rpg && typeof user.rpg === "object") ? user.rpg : {};
+    return { ...user, ...rpg };
   }
 
   getPlayerData(jid, key) {
