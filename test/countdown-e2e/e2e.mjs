@@ -58,7 +58,7 @@ w("\n— runLiveTicker mode down: countdown tiap detik sampai abis —");
   const res = await runLiveTicker({
     sock, chat: "t@g.us",
     mode: "down", targetTs: Date.now() + 2500,
-    initialCard: "AWAL", tickCard: (st) => "⏳ " + formatRemaining(st.remainingMs),
+    initialCard: "AWAL", tickCard: (st) => "🕒 " + formatRemaining(st.remainingMs),
   });
   const dt = Date.now() - t0;
   check("berhenti pas waktunya (finished)", res.finished === true, JSON.stringify(res));
@@ -76,7 +76,7 @@ w("\n— runLiveTicker mode down: countdown tiap detik sampai abis —");
     sock, chat: "t@g.us",
     mode: "down", targetTs: Date.now() + 10 * 60 * 1000, maxEdits: 2,
     initialCard: "AWAL",
-    tickCard: (st) => "⏳ " + formatRemaining(st.remainingMs),
+    tickCard: (st) => "🕒 " + formatRemaining(st.remainingMs),
     finalCard: () => "FINAL-STATIS",
   });
   check("berhenti sebelum waktunya (finished=false)", res.finished === false, JSON.stringify(res));
@@ -95,7 +95,7 @@ w("\n— runLiveTicker mode down: countdown tiap detik sampai abis —");
   const res = await runLiveTicker({
     sock, chat: "t@g.us",
     mode: "down", targetTs: Date.now() + 2500,
-    initialCard: "AWAL", tickCard: (st) => "⏳ " + formatRemaining(st.remainingMs),
+    initialCard: "AWAL", tickCard: (st) => "🕒 " + formatRemaining(st.remainingMs),
   });
   check("gak crash pas edit gagal", typeof res.edits === "number");
   check("kartu awal tetep tampil", sock.sent.length >= 1 && String(sock.sent[0].payload.text) === "AWAL", JSON.stringify(sock.sent.map(s => s.payload)));

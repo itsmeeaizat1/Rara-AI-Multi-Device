@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
       `⏱️ Durasi : ${formatDuration(durasiMs)}`,
       `📝 Alasan : ${info.reason || "-"}`,
       ``,
-      `⏳ _durasi ke-update tiap detik selagi timer jalan_`,
+      `🕒 _durasi ke-update tiap detik selagi timer jalan_`,
     ].join("\n"));
     return runLiveTicker({
       sock, chat: m.chat, m,

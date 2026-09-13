@@ -206,7 +206,7 @@ function logConnection(status, info = "") {
   } else if (status === "connecting") {
     console.log(`${cGray("╭─「")} ${cWhite("✦ CONNECTING ✦")} ${cGray("」")}`);
     console.log(`${cGray("│")}`);
-    console.log(`${cGray("│")} ${cGray("⏳")} ${cGray(info || "Establishing connection...")}`);
+    console.log(`${cGray("│")} ${cGray("🕒")} ${cGray(info || "Establishing connection...")}`);
     console.log(`${cGray("╰────  •  ────")}`);
   } else {
     console.log(`${cGray("╭─「")} ${cWhite("✦ DISCONNECTED ✦")} ${cGray("」")}`);

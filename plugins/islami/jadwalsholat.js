@@ -43,11 +43,11 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    // ⏳ PENGHITUNG (13 Sep 2026): sholat berikutnya ditandai 🔜 + ticker live
+    // 🕒 PENGHITUNG (13 Sep 2026): sholat berikutnya ditandai 🔜 + ticker live
     const next = computeNextPrayer(times);
     const mark = (k) => (next && next.key === k ? "🔜 " : "");
     const berikutnya = next
-      ? `\n⏳ *Berikutnya: ${next.name} pukul ${next.timeStr}${next.isTomorrow ? " (besok)" : ""}* — countdown jalan di bawah!\n`
+      ? `\n🕒 *Berikutnya: ${next.name} pukul ${next.timeStr}${next.isTomorrow ? " (besok)" : ""}* — countdown jalan di bawah!\n`
       : "";
     const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*
 📍 Lokasi: ${lokasi}
@@ -96,7 +96,7 @@ _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
         { quoted: m },
       );
     }
-    // ⏳ LIVE COUNTDOWN ke sholat berikutnya — kartu sendiri, edit-in-place
+    // 🕒 LIVE COUNTDOWN ke sholat berikutnya — kartu sendiri, edit-in-place
     // tiap menit (makin dekat makin cepet), sampai waktunya → kartu
     // "SUDAH WAKTU". Fire-and-forget: gak nahan command.
     if (next) {

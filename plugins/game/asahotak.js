@@ -124,7 +124,7 @@ function pickQuestion(usedIds, categoryFilter) {
 async function startGame(m, sock, { categoryFilter = null } = {}) {
   const chatId = m.chat;
   if (sessions.has(chatId)) {
-    return safeSend(sock, chatId, "⏳ Game asah otak lagi jalan! Tunggu ronde selesai atau ketik .asahotak stop");
+    return safeSend(sock, chatId, "🕒 Game asah otak lagi jalan! Tunggu ronde selesai atau ketik .asahotak stop");
   }
   const session = {
     chatId,
@@ -162,7 +162,7 @@ async function sendRound(m, sock, session) {
     `❓ *Pertanyaan:*\n"${q.question}"\n\n` +
     `💡 *Petunjuk:* ${q.hint}\n` +
     `⭐ *Poin:* ${q.points}\n\n` +
-    `⏳ *Waktu menjawab: 25 detik*\n` +
+    `🕒 *Waktu menjawab: 25 detik*\n` +
     `📌 Ketik jawabanmu langsung di chat! (1 jawaban per pemain)\n` +
     `🔥 *Semoga beruntung!*`;
   safeSend(sock, session.chatId, msg);

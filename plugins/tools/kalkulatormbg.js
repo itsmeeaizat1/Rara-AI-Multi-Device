@@ -107,7 +107,7 @@ async function handler(m, { sock,  args }) {
     const data = hitungMBG(uang);
 
     let contentTxt = `💰 *ᴅᴀɴᴀ :* ${formatRupiah(uang)}\n\n`;
-    contentTxt += `⏳ *ᴅᴜʀᴀꜱɪ ᴍʙɢ:*\n`;
+    contentTxt += `🕒 *ᴅᴜʀᴀꜱɪ ᴍʙɢ:*\n`;
     contentTxt += `${data.durasi.tahun} TAHUN, ${data.durasi.bulan} BULAN, ${data.durasi.hari} HARI\n`;
     contentTxt += `${data.durasi.jam} JAM, ${data.durasi.menit} MENIT, ${data.durasi.detik} DETIK\n`;
     contentTxt += `_(Berdasarkan pengeluaran ~Rp ${(data.pengeluaran / 1000000000).toFixed(1)} Miliar/hari)_\n\n`;

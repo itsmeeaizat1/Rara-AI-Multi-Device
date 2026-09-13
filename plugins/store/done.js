@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
     if (pending.length > 0) {
       let txt = `❌ *Transaksi \`${trxId}\` tidak ditemukan.*\n\n`;
-      txt += `⏳ *ᴛʀᴀɴꜱᴀᴋꜱɪ ᴘᴇɴᴅɪɴɢ ꜱᴀᴀᴛ ɪɴɪ:*\n\n`;
+      txt += `🕒 *ᴛʀᴀɴꜱᴀᴋꜱɪ ᴘᴇɴᴅɪɴɢ ꜱᴀᴀᴛ ɪɴɪ:*\n\n`;
       for (const t of pending) {
         const typeIcon = t.productType === "fisik" ? "📦" : "🔑";
         const time = new Date(t.createdAt).toLocaleString("id-ID", {

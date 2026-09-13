@@ -115,7 +115,7 @@ async function sendRenewalReminder(sock, user) {
     "",
     `${toSC("Detail Premium")}:`,
     `📅 ${toSC("Berakhir")}: ${user.expiryDate}`,
-    `⏳ ${toSC("Sisa")}: ${daysLeft} ${toSC("hari")}`,
+    `🕒 ${toSC("Sisa")}: ${daysLeft} ${toSC("hari")}`,
     "",
     `${toSC("Keuntungan Premium")}:`,
     `⚡ ${toSC("Limit energi tidak terbatas")}`,

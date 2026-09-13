@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
       `⏰ Waktu : *${time}* WIB`,
       `📝 Pesan : ${message}`,
       live
-        ? `⏳ Bunyi dalam : *${formatRemaining(remainingMs)}* ⏳`
+        ? `🕒 Bunyi dalam : *${formatRemaining(remainingMs)}* 🕒`
         : `🕒 Bunyi pukul : *${time}* WIB`,
       `📌 Total alarm kamu: ${total}`,
     ].join("\n"), "success");

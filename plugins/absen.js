@@ -112,7 +112,7 @@ async function sendRekap(chatId) {
     const totalBelum = belumList.length;
     const persen = totalMembers > 0 ? Math.round((totalHadir / totalMembers) * 100) : 0;
 
-    let teks = `⏳ REKAP ABSEN: ${s.title || "Absen Grup"}\n\n`;
+    let teks = `🕒 REKAP ABSEN: ${s.title || "Absen Grup"}\n\n`;
     teks += `✅ Hadir: ${totalHadir}/${totalMembers} (${persen}%)\n`;
     if (totalMembers > 0) {
       teks += buildAbsenMeter(totalHadir, totalMembers).lines.join("\n") + "\n";
@@ -222,9 +222,9 @@ function hookUpsert() {
             existing.ts = now;
             setSession(chatId, s);
           }
-          // React ⏳ (sudah absen, tidak dobel catat)
+          // React 🕒 (sudah absen, tidak dobel catat)
           try {
-            await _sock.sendMessage(chatId, { react: { text: "⏳", key: msg.key } });
+            await _sock.sendMessage(chatId, { react: { text: "🕒", key: msg.key } });
           } catch {}
           continue;
         }
@@ -287,7 +287,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (!sub) {
     try { await m.react("🐣"); } catch {}
     return m.reply(
-      `⏳ ABSEN GRUP\n\n` +
+      `🕒 ABSEN GRUP\n\n` +
       `Cara pakai:\n` +
       `.absen buka <durasi> [judul]\n` +
       `.absen tutup\n` +
@@ -366,7 +366,7 @@ async function handler(m, { sock, config: botConfig }) {
         `⏱ Durasi: ${formatDuration(durMs)}`,
         `🎯 Tenggat: ${new Date(tenggatTs).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit" })} WIB`,
         ``,
-        `⏳ Sisa waktu: ${mnt} menit ${String(dtk).padStart(2, "0")} detik`,
+        `🕒 Sisa waktu: ${mnt} menit ${String(dtk).padStart(2, "0")} detik`,
         `📊 ${bar}`,
         ``,
         `Ketik "hadir" untuk absen`,
@@ -414,7 +414,7 @@ async function handler(m, { sock, config: botConfig }) {
     const remaining = s.expiresAt - Date.now();
     if (remaining <= 0) {
       try { await m.react("🐣"); } catch {}
-      return m.reply(`⏳ Sesi sudah berakhir, rekap sedang diproses...`);
+      return m.reply(`🕒 Sesi sudah berakhir, rekap sedang diproses...`);
     }
 
     try { await m.react("🐣"); } catch {}
@@ -429,7 +429,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     } catch {}
     return m.reply(
-      `⏳ STATUS ABSEN: ${s.title || "Absen Grup"}\n\n` +
+      `🕒 STATUS ABSEN: ${s.title || "Absen Grup"}\n\n` +
       `Sisa waktu: ${formatDuration(remaining)}\n` +
       `Sudah hadir: ${s.hadir.length}` +
       meterLine +

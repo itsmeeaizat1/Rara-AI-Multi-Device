@@ -56,7 +56,7 @@ export function buildLimitCard(d) {
       lines.push("♻️ *RESET HARIAN TIBA* — limit kamu kembali penuh!");
     } else {
       lines.push("");
-      lines.push(`⏳ Limit direset dalam *${formatRemaining(remainingMs)}*`);
+      lines.push(`🕒 Limit direset dalam *${formatRemaining(remainingMs)}*`);
     }
     lines.push(`🕘 Reset pukul ${resetTime} WIB tiap hari`);
   }

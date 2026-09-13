@@ -138,7 +138,7 @@ async function startRound(sock, session) {
     `🎤 *FAMILY 100 CHAT*\n` +
     `📢 *PERTANYAAN KE-${session.round}*\n` +
     `"${q.soal}"\n\n` +
-    `⏳ Waktu menjawab: ${Math.round(ROUND_MS / 1000)} detik\n` +
+    `🕒 Waktu menjawab: ${Math.round(ROUND_MS / 1000)} detik\n` +
     `💰 Total ${session.survey.reduce((a, b) => a + b.points, 0)} poin di papan survei\n` +
     `💡 Ketik jawabanmu langsung di chat! (1 jawaban per pemain)\n` +
     `🏳️ Ketik "nyerah" buat loncat ronde • .family100 stop buat berhenti`;
@@ -377,7 +377,7 @@ async function handler(m, { sock, config }) {
       let text =
         `⚠️ *GAME SEDANG BERJALAN — RONDE ${session.round}*\n\n` +
         `"${session.question}"\n\n`;
-      if (session.phase === "question") text += `⏳ Sisa waktu: ${remaining} detik\n`;
+      if (session.phase === "question") text += `🕒 Sisa waktu: ${remaining} detik\n`;
       text += `💡 Ketik jawabanmu langsung di chat! (1 jawaban per pemain)`;
       if (board.length) text += `\n\n🏆 *SKOR SEMENTARA*\n` + board.join("\n");
       text += `\n\n🛑 .family100 stop buat berhenti`;

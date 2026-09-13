@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     const pending = topups.pending[sender];
     let pendingBox = "";
     if (pending && pending.status === "pending") {
-      pendingBox = bracketBox("⏳", "Pesanan Pending", [
+      pendingBox = bracketBox("🕒", "Pesanan Pending", [
         `Item: *${pending.itemName || pending.name}*`,
         `Harga: *${pending.price}*`,
         `Ketik *.${topupCancelHint(pending.type)} batal* untuk batalkan`,

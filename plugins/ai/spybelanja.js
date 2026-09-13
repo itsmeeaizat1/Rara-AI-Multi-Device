@@ -110,7 +110,7 @@ function parseVerdict(raw) {
 }
 
 const rp = (n) => `Rp${Math.round(Number(n) || 0).toLocaleString("id-ID")}`;
-const verdictEmoji = { "WORTH IT": "✅", MURAH: "🎉", WAJAR: "⚖", MAHAL: "⚠", "TUNGGU DISKON": "⏳" };
+const verdictEmoji = { "WORTH IT": "✅", MURAH: "🎉", WAJAR: "⚖", MAHAL: "⚠", "TUNGGU DISKON": "🕒" };
 
 // ── Seam e2e ──
 let depVision = visionScan;

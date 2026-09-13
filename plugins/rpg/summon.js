@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         const secs = Math.floor((remainingMs % 60000) / 1000);
         msg += `🌟 Spirit Aktif: *${summonData.activeSpirit.name}* ${summonData.activeSpirit.emoji}\n`;
         msg += `Efek Buff: *${summonData.activeSpirit.effect}*\n`;
-        msg += `⏳ Sisa Durasi: *${mins}m ${secs}d*\n`;
+        msg += `🕒 Sisa Durasi: *${mins}m ${secs}d*\n`;
       } else {
         msg += `❌ Tidak ada spirit buff yang aktif saat ini.\n`;
         msg += `💡 Ketik *${m.prefix}summon list* untuk memanggil spirit.\n`;
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
         "",
         `│ • Spirit : ${spirit.name} ${spirit.emoji}`,
         `│ • Efek buff : ${spirit.effect}`,
-        `│ • ⏳ Durasi : 30 menit`,
+        `│ • 🕒 Durasi : 30 menit`,
         `│ • ⚡ Sisa energi : ${profile.energi}`,
         `│ • 💰 Sisa gold : ${profile.gold.toLocaleString()}`,
       ].join("\n"),

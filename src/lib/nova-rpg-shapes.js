@@ -363,7 +363,7 @@ export async function shapeHuntwild(m, sock, animalEmoji = "🦌", delay = SHAPE
 }
 
 // ══════════════════════════════════════════════════
-// ⏳ TIMETRAVEL — LORONG WAKTU
+// 🕒 TIMETRAVEL — LORONG WAKTU
 // (khas timetravel, batch #13)
 // Bentuk: loncatan tahun per frame menuju era tujuan
 // (2026 → 1900 → tahun era → mendarat!). Era hasil roll
