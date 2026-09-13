@@ -63,6 +63,7 @@ export async function runLiveTicker(o) {
     initialCard, tickCard, finalCard = null,
     mode = "down",
     targetTs = 0, sinceTs = 0,
+    remainingFn = null, // (opsional) (now) => sisa ms LIVE (mis. endTime lelang ke-extend anti-snipe)
     upRunMs = 12000,
     maxEdits = 24,
     isCancelled = null, // (opsional) () => boolean — batasin ticker kapan aja (mis. sesi di-stop)
@@ -82,7 +83,9 @@ export async function runLiveTicker(o) {
 
   const state = (now = Date.now()) => ({
     now,
-    remainingMs: mode === "down" ? Math.max(0, Number(targetTs) - now) : 0,
+    remainingMs: mode === "down"
+      ? (typeof remainingFn === "function" ? Math.max(0, Number(remainingFn(now)) || 0) : Math.max(0, Number(targetTs) - now))
+      : 0,
     elapsedMs: mode === "up" ? Math.max(0, now - Number(sinceTs)) : 0,
   });
 
