@@ -34,10 +34,11 @@ w("\n— computeNextResetTs (WIB, tahan beda timezone VPS) —");
   check("target tepat jam 00:00 WIB", moment.tz(ts, "Asia/Jakarta").format("HH:mm") === "00:00");
 }
 {
-  const jam = moment.tz("Asia/Jakarta").hour();
-  const target = (jam + 1) % 24; // 1 jam ke depan → pasti hari ini
-  const ts = computeNextResetTs(target, 30);
-  check("reset 1 jam ke depan → diff ~1 jam (±2 mnt)", Math.abs(ts - Date.now() - 3600000) < 120000, `${((ts - Date.now()) / 60000).toFixed(1)} mnt`);
+  // target TEPAT now+1h (jam+1 rounded ke jam berikutnya itu flaky: 1-60 mnt tergantung menit)
+  const satuJam = moment.tz("Asia/Jakarta").add(1, "hours");
+  const ts = computeNextResetTs(satuJam.hour(), satuJam.minute());
+  const diff = ts - Date.now();
+  check("reset now+1h → diff ~1 jam (±2 mnt), hari ini gak dibesokkan", Math.abs(diff - 3600000) < 120000, `${(diff / 60000).toFixed(1)} mnt`);
 }
 {
   // reset yang udah lewat hari ini → besok
