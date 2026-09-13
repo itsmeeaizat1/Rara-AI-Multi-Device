@@ -41,6 +41,14 @@ function getLevelBar(current, target) {
   return "▰".repeat(filledBars) + "▱".repeat(emptyBars);
 }
 
+// VARIASI POLOS BATCH 4 (13 Sep 2026): bar + persen buat stat apapun (HP/Mana/dll)
+function statBar(cur, max) {
+  const c = Number(cur) || 0;
+  const mx = Number(max) || 1;
+  const pct = Math.max(0, Math.min(100, Math.round((c / mx) * 100)));
+  return getLevelBar(c, mx) + " " + pct + "%";
+}
+
 async function handler(m, { sock }) {
   const db = getDatabase();
   const target = m.mentionedJid?.[0] || m.quoted?.sender || m.sender;
@@ -106,8 +114,14 @@ async function handler(m, { sock }) {
   caption += "Role: " + role + "\n";
   caption += "Total EXP: *" + formatNumber(userExp) + "*\n";
   // FIX OWNER 2026-09-07: progress bar dikasih jarak baris kosong biar rapi
-  caption += "Progress:\n" + getLevelBar(expInLevel, expNeeded) + "\n\n";
+  const expPct = Math.min(100, Math.round((expInLevel / expNeeded) * 100));
+  caption += "Progress:\n" + getLevelBar(expInLevel, expNeeded) + " " + expPct + "%\n\n";
   caption += "↳ " + formatNumber(expInLevel) + " / " + formatNumber(expNeeded) + " XP\n";
+  // pelengkap (13 Sep 2026): nyambung fitur progres level aktivitas
+  // — tiap command biasa +15 EXP, game/RPG +40 EXP
+  const expLeft = Math.max(0, expNeeded - expInLevel);
+  caption += "↳ Butuh *" + formatNumber(expLeft) + " XP* lagi ke Level " + (userLevel + 1) + "\n";
+  caption += "↳ ≈ *" + Math.ceil(expLeft / 15) + "* command biasa / *" + Math.ceil(expLeft / 40) + "* game lagi 🎯\n";
   if (user.rpg.title) caption += "Title: " + user.rpg.title + "\n";
   caption += "\n";
 
@@ -122,12 +136,20 @@ async function handler(m, { sock }) {
   caption += "Energi Bot: " + (isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)) + "\n";
   caption += "\n";
 
-  // Vital Stats
+  // Vital Stats — masing-masing dikasih bar ▰▱ + persen (batch 4)
+  const vHp = user.rpg.hp || user.rpg.health || 0, vMaxHp = user.rpg.maxHp || 100;
+  const vMana = user.rpg.mana || 0, vMaxMana = user.rpg.maxMana || 50;
+  const vEn = user.rpg.energy || 0, vMaxEn = user.rpg.maxEnergy || 100;
+  const vSta = user.rpg.stamina || 0, vMaxSta = user.rpg.maxStamina || 100;
   caption += "「 Vital Stats 」\n";
-  caption += "HP: " + formatNumber(user.rpg.hp || user.rpg.health || 0) + " / " + formatNumber(user.rpg.maxHp || 100) + "\n";
-  caption += "Mana: " + formatNumber(user.rpg.mana || 0) + " / " + formatNumber(user.rpg.maxMana || 50) + "\n";
-  caption += "Energy: " + formatNumber(user.rpg.energy || 0) + " / " + formatNumber(user.rpg.maxEnergy || 100) + "\n";
-  caption += "Stamina: " + formatNumber(user.rpg.stamina || 0) + " / " + formatNumber(user.rpg.maxStamina || 100) + "\n";
+  caption += "❤️ HP: " + formatNumber(vHp) + " / " + formatNumber(vMaxHp) + "\n";
+  caption += "   " + statBar(vHp, vMaxHp) + "\n";
+  caption += "🔮 Mana: " + formatNumber(vMana) + " / " + formatNumber(vMaxMana) + "\n";
+  caption += "   " + statBar(vMana, vMaxMana) + "\n";
+  caption += "⚡ Energy: " + formatNumber(vEn) + " / " + formatNumber(vMaxEn) + "\n";
+  caption += "   " + statBar(vEn, vMaxEn) + "\n";
+  caption += "🌀 Stamina: " + formatNumber(vSta) + " / " + formatNumber(vMaxSta) + "\n";
+  caption += "   " + statBar(vSta, vMaxSta) + "\n";
   caption += "\n";
 
   // Combat Stats
