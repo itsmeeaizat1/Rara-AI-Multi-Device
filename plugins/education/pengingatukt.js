@@ -1,12 +1,21 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Pengingat UKT/SPP — set deadline + reminder otomatis ke user
-// Fix: pakai database (bukan Map), ada setInterval untuk cek deadline
+/**
+ * Nama Plugin: Pengingat UKT/SPP
+ * Fitur: Set deadline pembayaran + reminder otomatis H-7/3/1/0 +
+ *        countdown live 🕒 pas ≤48 jam (engine: nova-ukt-reminder.js —
+ *        checker nyala dari startup, persist, tahan restart)
+ */
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import {
+  getRecord, setRecord, deleteRecord,
+  remainingMs, daysUntil, formatDate, formatRupiah,
+  fireUktTicker, startUktChecker,
+} from "../../src/lib/nova-ukt-reminder.js";
 
 const pluginConfig = {
   name: "pengingatukt",
-  alias: ["pengingatukt"],
+  alias: ["pengingatukt", "ukt", "uktreminder"],
   category: "education",
   description: "Pengingat pembayaran UKT/SPP - set deadline & reminder otomatis",
   usage: ".pengingatukt <command>",
@@ -20,7 +29,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Helper: parse tanggal DD/MM/YYYY atau DD-MM-YYYY
+// Helper: parse tanggal DD/MM/YYYY atau DD-MM-YYYY (juga DD/MM → tahun ini)
 function parseDate(str) {
   const today = new Date();
   let d, m, y;
@@ -30,101 +39,16 @@ function parseDate(str) {
     else if (parts.length === 3) { d = parseInt(parts[0]); m = parseInt(parts[1]); y = parseInt(parts[2]); }
   } else if (str.includes("-")) {
     const parts = str.split("-");
-    if (parts.length === 3) {
+    if (parts.length === 2) { d = parseInt(parts[0]); m = parseInt(parts[1]); y = today.getFullYear(); }
+    else if (parts.length === 3) {
       if (parts[0].length === 4) { y = parseInt(parts[0]); m = parseInt(parts[1]); d = parseInt(parts[2]); }
       else { d = parseInt(parts[0]); m = parseInt(parts[1]); y = parseInt(parts[2]); }
     }
   }
   if (!d || !m || !y) return null;
-  return new Date(y, m - 1, d);
-}
-
-function formatDate(date) {
-  return date.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
-}
-
-function formatRupiah(n) {
-  if (!n) return "Tidak diset";
-  return "Rp " + n.toLocaleString("id-ID");
-}
-
-function daysUntil(date) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const target = new Date(date);
-  target.setHours(0, 0, 0, 0);
-  return Math.round((target - today) / (24 * 60 * 60 * 1000));
-}
-
-// Ambil simpan data UKT dari database
-function getUktStore(db) {
-  if (!db.setting("uktReminders")) db.setSetting("uktReminders", {});
-  return db.setting("uktReminders");
-}
-
-function saveUktStore(db, store) {
-  db.setSetting("uktReminders", store);
-  db.save();
-}
-
-// Background checker — jalankan tiap 1 jam
-let checkerStarted = false;
-function startChecker(sock) {
-  if (checkerStarted) return;
-  checkerStarted = true;
-  
-  setInterval(async () => {
-    try {
-      const db = getDatabase();
-      const store = getUktStore(db);
-      const now = Date.now();
-      let changed = false;
-      
-      for (const [sender, record] of Object.entries(store)) {
-        if (!record || !record.deadline) continue;
-        const daysLeft = daysUntil(new Date(record.deadline));
-        
-        // Kirim reminder di H-7, H-3, H-1, H-0
-        const reminderDays = [7, 3, 1, 0];
-        if (reminderDays.includes(daysLeft) && !record.reminded?.includes(daysLeft)) {
-          let urgency = "";
-          if (daysLeft === 0) urgency = "HARI INI - BAYAR SEKARANG!";
-          else if (daysLeft === 1) urgency = "BESOK - siapkan pembayaran!";
-          else if (daysLeft === 3) urgency = `${daysLeft} hari lagi`;
-          else urgency = `${daysLeft} hari lagi`;
-          
-          const msg = claraWrap("Pengingat UKT/SPP", [
-            `Deadline: ${formatDate(new Date(record.deadline))}`,
-            `Jumlah: ${formatRupiah(record.amount)}`,
-            `Status: ${urgency}`,
-            ``,
-            `Jangan lupa bayar tepat waktu ya!`,
-          ].join("\n"));
-          
-          try {
-            await sock.sendMessage(sender, { text: msg });
-          } catch (e) {
-            console.error("[pengingatukt] send reminder:", e.message);
-          }
-          
-          // Tandai sudah direminder
-          if (!record.reminded) record.reminded = [];
-          record.reminded.push(daysLeft);
-          changed = true;
-        }
-        
-        // Hapus yang udah lewat 30 hari
-        if (daysLeft < -30) {
-          delete store[sender];
-          changed = true;
-        }
-      }
-      
-      if (changed) saveUktStore(db, store);
-    } catch (e) {
-      console.error("[pengingatukt] checker:", e.message);
-    }
-  }, 60 * 60 * 1000); // tiap 1 jam
+  const dt = new Date(y, m - 1, d);
+  if (dt.getMonth() !== m - 1 || dt.getDate() !== d) return null; // 32/13 ditolak
+  return dt;
 }
 
 async function handler(m, { sock, args, config: botConfig }) {
@@ -132,11 +56,10 @@ async function handler(m, { sock, args, config: botConfig }) {
   const sub = (args[0] || "").toLowerCase();
   const sender = m.sender || m.key?.participant || m.key?.remoteJid;
 
-  // Start background checker
-  startChecker(sock);
+  // checker nyala juga dari startup (restoreUkt) — di sini buat jaga2
+  startUktChecker(sock);
 
   const db = getDatabase();
-  const store = getUktStore(db);
 
   // .pengingatukt set <tanggal> [jumlah]
   if (sub === "set" || sub === "atur") {
@@ -148,14 +71,14 @@ async function handler(m, { sock, args, config: botConfig }) {
         `Format: ${prefix}pengingatukt set <DD/MM/YYYY> [jumlah]`,
         ``,
         `Contoh:`,
-        `${prefix}pengingatukt set 25/08/2026 5000000`,
-        `${prefix}pengingatukt set 25/08/2026`,
+        `${prefix}pengingatukt set 25/12/2026 5000000`,
+        `${prefix}pengingatukt set 25/12/2026`,
       ].join("\n")), { commandName: "pengingatukt" });
     }
 
     const deadline = parseDate(dateStr);
     if (!deadline) {
-      return m.reply( claraWrap("Error", "Format tanggal salah. Gunakan DD/MM/YYYY"), { commandName: "pengingatukt" });
+      return m.reply( claraWrap("Pengingat UKT", "Format tanggal salah. Gunakan DD/MM/YYYY"), { commandName: "pengingatukt" });
     }
 
     const record = {
@@ -166,27 +89,35 @@ async function handler(m, { sock, args, config: botConfig }) {
       setAt: Date.now(),
       reminded: [],
     };
-    store[sender] = record;
-    saveUktStore(db, store);
+    setRecord(db, sender, record);
 
     const days = daysUntil(deadline);
+    const sisa = remainingMs(record);
     let status = "";
-    if (days < 0) status = "SUDAH LEWAT";
-    else if (days === 0) status = "HARI INI";
+    if (days < 0) status = "🔴 SUDAH LEWAT";
+    else if (days === 0) status = "🔴 HARI INI";
     else status = `${days} hari lagi`;
 
-    return m.reply( claraWrap("Pengingat UKT - Terpasang", [
-      `Deadline: ${formatDate(deadline)}`,
-      `Jumlah: ${formatRupiah(amount)}`,
+    const lines = [
+      "✅ *Pengingat terpasang!*",
+      "",
+      `📅 Deadline: ${formatDate(deadline)}`,
+      `💵 Jumlah: ${formatRupiah(amount)}`,
+      `📚 ${record.semester}`,
       `Status: ${status}`,
-      ``,
-      `Bot akan kasih pengingat di H-7, H-3, H-1, dan H-0.`,
-    ].join("\n")) + "\n" + tipText(`Ketik ${prefix}pengingatukt cek untuk lihat`), { commandName: "pengingatukt" });
+      "",
+      "Bot akan kasih pengingat di H-7, H-3, H-1, dan H-0.",
+    ];
+    if (days >= 0 && sisa <= 48 * 3600000) lines.push("", "🕒 *Countdown live menyusul di bawah* 👇");
+    return m.reply( claraWrap("Pengingat UKT", lines.join("\n")) + "\n" + tipText(`Ketik ${prefix}pengingatukt cek untuk lihat`), { commandName: "pengingatukt" })
+      .then(() => {
+        if (days >= 0 && sisa > 0 && sisa <= 48 * 3600000) fireUktTicker(sock, sender, record);
+      });
   }
 
   // .pengingatukt cek
   if (sub === "cek" || sub === "status" || sub === "lihat") {
-    const record = store[sender];
+    const record = getRecord(sender, db);
     if (!record) {
       return m.reply( claraWrap("Pengingat UKT", [
         `Belum ada pengingat UKT terpasang.`,
@@ -197,28 +128,29 @@ async function handler(m, { sock, args, config: botConfig }) {
     const deadline = new Date(record.deadline);
     const days = daysUntil(deadline);
     let status = "";
-    if (days < 0) status = "SUDAH LEWAT (segera bayar!)";
-    else if (days === 0) status = "HARI INI - BAYAR SEKARANG!";
-    else if (days <= 7) status = `${days} hari lagi - SEGERA BAYAR`;
-    else status = `${days} hari lagi`;
+    if (days < 0) status = "🔴 SUDAH LEWAT (segera bayar!)";
+    else if (days === 0) status = "🔴 HARI INI - BAYAR SEKARANG!";
+    else if (days <= 7) status = `🟠 ${days} hari lagi - SEGERA BAYAR`;
+    else status = `🟢 ${days} hari lagi`;
 
     return m.reply( claraWrap("Pengingat UKT - Status", [
-      `Deadline: ${formatDate(deadline)}`,
-      `Jumlah: ${formatRupiah(record.amount)}`,
+      `📅 Deadline: ${formatDate(deadline)}`,
+      `💵 Jumlah: ${formatRupiah(record.amount)}`,
+      `📚 ${record.semester || "Semester ini"}`,
       `Status: ${status}`,
       `Dipasang: ${formatDate(new Date(record.setAt))}`,
       `Reminder dikirim: ${record.reminded?.length || 0}x`,
-    ].join("\n")), { commandName: "pengingatukt" });
+    ].join("\n")), { commandName: "pengingatukt" })
+      .then(() => {
+        const rem = remainingMs(record);
+        if (rem > 0 && rem <= 48 * 3600000) fireUktTicker(sock, sender, record);
+      });
   }
 
   // .pengingatukt hapus
   if (sub === "hapus" || sub === "stop" || sub === "cancel") {
-    if (!store[sender]) {
-      return m.reply( claraWrap("Pengingat UKT", "Tidak ada pengingat aktif."), { commandName: "pengingatukt" });
-    }
-    delete store[sender];
-    saveUktStore(db, store);
-    return m.reply( claraWrap("Pengingat UKT", "Pengingat dihapus."), { commandName: "pengingatukt" });
+    const ok = deleteRecord(db, sender); // ticker aktif otomatis batal (isCancelled)
+    return m.reply( claraWrap("Pengingat UKT", ok ? "✅ Pengingat dihapus — countdown ikut mati." : "Tidak ada pengingat aktif."), { commandName: "pengingatukt" });
   }
 
   // Default: help
@@ -227,11 +159,12 @@ async function handler(m, { sock, args, config: botConfig }) {
     ``,
     `Perintah:`,
     `1. ${prefix}pengingatukt set <DD/MM/YYYY> [jumlah] - Set deadline`,
-    `2. ${prefix}pengingatukt cek - Cek status deadline`,
+    `2. ${prefix}pengingatukt cek - Cek status (+ countdown live 🕒 ≤48 jam)`,
     `3. ${prefix}pengingatukt hapus - Hapus pengingat`,
     ``,
     `Bot otomatis kirim pengingat di H-7, H-3, H-1, dan H-0.`,
-  ].join("\n")) + "\n" + tipText(`Contoh: ${prefix}pengingatukt set 25/08/2026 5000000`);
+    `H-1 & H-0: countdown live sampai deadline.`,
+  ].join("\n")) + "\n" + tipText(`Contoh: ${prefix}pengingatukt set 25/12/2026 5000000`);
   return m.reply( txt, { commandName: "pengingatukt" });
 }
 
