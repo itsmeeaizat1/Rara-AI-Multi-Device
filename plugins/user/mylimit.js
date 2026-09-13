@@ -1,6 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+import { computeNextResetTs, buildLimitCard } from "../../src/lib/nova-limit-card.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -57,21 +59,43 @@ async function handler(m, { sock }) {
     status = "Free";
   }
 
-  let msg = "";
-  msg += `Status: *${status}*\n`;
-  msg += `Sisa limit: *${formatNumber(currentEnergi)}*\n`;
-  if (!isOwner && currentEnergi !== -1) {
-    msg += `Terpakai: *${formatNumber(terpakai)}*\n`;
-    msg += `Total harian: *${formatNumber(totalLimit)}*\n`;
-  }
-  msg += `Reset: *${resetTime} WIB* tiap hari\n`;
-  if (isWeekend && !isPremium && !isOwner) {
-    msg += `Bonus weekend: *+${formatNumber(weekendBonus)} limit*\n`;
-  }
-  msg += `\n`;
-  msg += `Beli limit? Ketik \`.buyenergi <jumlah>\``;
+  // ⏳ PENGHITUNG (13 Sep 2026): meter terpakai + countdown live ke reset
+  const isUnlimited = isOwner || currentEnergi === -1;
+  const cardCtx = {
+    title: "My Limit",
+    name: m.pushName || "",
+    status,
+    sisa: formatNumber(currentEnergi),
+    terpakai: !isUnlimited ? formatNumber(terpakai) : null,
+    total: !isUnlimited ? totalLimit : null,
+    resetTime,
+    extra: [
+      isWeekend && !isPremium && !isOwner
+        ? `🎁 Bonus weekend: *+${formatNumber(weekendBonus)} limit*`
+        : "",
+    ],
+    footer: "Beli limit? Ketik `.buyenergi <jumlah>`",
+    isUnlimited,
+  };
 
-  return m.reply( msg, "mylimit");
+  if (isUnlimited) {
+    // owner/unlimited → gak ada yang dihitung, kartu statis cukup
+    return m.reply(buildLimitCard({ ...cardCtx, remainingMs: -1 }));
+  }
+
+  const targetTs = computeNextResetTs(resetHour, resetMinute);
+  // fire-and-forget: gak nahan command/react 🐣
+  runLiveTicker({
+    sock,
+    chat: m.chat,
+    m,
+    initialCard: buildLimitCard({ ...cardCtx, remainingMs: targetTs - Date.now() }),
+    tickCard: (st) => buildLimitCard({ ...cardCtx, remainingMs: st.remainingMs }),
+    finalCard: (st) => buildLimitCard({ ...cardCtx, remainingMs: st.remainingMs }),
+    mode: "down",
+    targetTs,
+  }).catch(() => {});
+  return;
 }
 
 export { pluginConfig as config, handler };
