@@ -287,7 +287,7 @@ async function doWork(m, sock) {
   if (cd) {
     await reactCooldown(m);
     return m.reply(novaRpgBox("nguli",
-      `⏳ Sabar kuli! Tunggu *${cd} detik* lagi.\n💡 ${job.name} butuh istirahat sebentar.`, "warn"));
+      `🕒 Sabar kuli! Tunggu *${cd} detik* lagi.\n💡 ${job.name} butuh istirahat sebentar.`, "warn"));
   }
 
   if (rpg.energy < job.energyCost) {

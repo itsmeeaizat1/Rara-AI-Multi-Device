@@ -137,7 +137,7 @@ async function handler(m, { sock, conn, text, args, usedPrefix, command }) {
     const input = parseInt(args[0])
 
     if (!input || isNaN(input) || input < 1 || input > RAMADHAN.length) {
-      // ⏳ PENGHITUNG (13 Sep 2026): header hari menuju Ramadhan / hari ke-N
+      // 🕒 PENGHITUNG (13 Sep 2026): header hari menuju Ramadhan / hari ke-N
       const phase = computeRamadhanPhase()
       let lines = []
       const header = ramadhanHeaderLine(phase)
@@ -147,7 +147,7 @@ async function handler(m, { sock, conn, text, args, usedPrefix, command }) {
         if (phase && phase.phase === 'countdown') {
           const sisa = phase.startTs - Date.now()
           if (sisa > 0 && sisa < 24 * 3600000) {
-            lines.push('⏳ Tinggal *' + formatRemaining(sisa) + '* lagi!')
+            lines.push('🕒 Tinggal *' + formatRemaining(sisa) + '* lagi!')
           }
         }
         lines.push("")

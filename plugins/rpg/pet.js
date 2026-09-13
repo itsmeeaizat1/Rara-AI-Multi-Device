@@ -206,7 +206,7 @@ async function handler(m, { sock }) {
       }
       if (now - (pet.lastFed || 0) < FEED_COOLDOWN) {
         const remaining = Math.ceil((FEED_COOLDOWN - (now - (pet.lastFed || 0))) / 60000);
-        return m.reply(novaRpgBox("pet", `⏳ ${pet.emoji} masih kenyang! Tunggu *${remaining} menit* lagi.`, "warn"));
+        return m.reply(novaRpgBox("pet", `🕒 ${pet.emoji} masih kenyang! Tunggu *${remaining} menit* lagi.`, "warn"));
       }
       if (!spendCash(m, FEED_COST)) {
         return m.reply(novaRpgBox("pet", `💵 Butuh *${formatRp(FEED_COST)}* buat makanan.\nUang kamu: ${formatRp(getCash(m))}`, "warn"));

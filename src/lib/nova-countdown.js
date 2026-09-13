@@ -3,7 +3,7 @@
 // countdown" — kartu fitur jangan polos statis doang, durasi/sisa waktu
 // harus HIDUP nge-tick kayak timer beneran).
 // Mode:
-//   "down" — countdown menuju targetTs (reminder/alarm): "⏳ tersisa 04:59"
+//   "down" — countdown menuju targetTs (reminder/alarm): "🕒 tersisa 04:59"
 //   "up"   — count-up sejak sinceTs (AFK): "⏱️ durasi 2 menit 3 detik"
 // Strategi edit (jaga kuota edit WhatsApp, gak spam):
 //   - sisa waktu ≤ 31 dtk → tick TIAP DETIK sampai waktunya habis

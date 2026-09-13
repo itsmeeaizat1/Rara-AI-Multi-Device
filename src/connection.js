@@ -445,7 +445,7 @@ async function startConnection(options = {}) {
 
     console.log("「 ✦ PAIRING ✦ 」");
     console.log("");
-    console.log(`⏳ Meminta kode untuk ${phoneNumber}...`);
+    console.log(`🕒 Meminta kode untuk ${phoneNumber}...`);
     console.log("");
     console.log("");
 
@@ -569,7 +569,7 @@ async function startConnection(options = {}) {
         if (connectionState.reconnectAttempts <= 3) {
           console.log("「 ✦ RECONNECT ✦ 」");
           console.log("");
-          console.log(`⏳ Percobaan ${connectionState.reconnectAttempts}/3 dalam 10 detik`);
+          console.log(`🕒 Percobaan ${connectionState.reconnectAttempts}/3 dalam 10 detik`);
           console.log("");
           console.log("");
           setTimeout(() => startConnection(options), 1e4);
@@ -591,7 +591,7 @@ async function startConnection(options = {}) {
         if (connectionState.reconnectAttempts <= m) {
           console.log("「 ✦ RECONNECT ✦ 」");
           console.log("");
-          console.log(`⏳ Percobaan ${connectionState.reconnectAttempts}/${m}`);
+          console.log(`🕒 Percobaan ${connectionState.reconnectAttempts}/${m}`);
           console.log("");
           console.log("");
           setTimeout(

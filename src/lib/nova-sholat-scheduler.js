@@ -168,11 +168,11 @@ export function formatAdzanMessage(sholat, waktu, { schedule, cityTz, daerah }, 
   }
   if (next) {
     const selisih = toMin(next.waktu) - toMin(waktu);
-    msg += `\n⏳ *Sholat berikutnya: ${String(next.key).toUpperCase()} ${next.waktu}*`;
+    msg += `\n🕒 *Sholat berikutnya: ${String(next.key).toUpperCase()} ${next.waktu}*`;
     msg += selisih > 0 ? ` (± ${Math.floor(selisih / 60)} jam ${selisih % 60} menit lagi)` : "";
     msg += `\n`;
   } else {
-    msg += `\n⏳ *Jadwal hari ini selesai — sampai besok* 🌙\n`;
+    msg += `\n🕒 *Jadwal hari ini selesai — sampai besok* 🌙\n`;
   }
 
   if (extra) msg += `\n${extra}`;

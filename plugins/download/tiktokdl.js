@@ -234,7 +234,7 @@ async function handler(m, { sock }) {
       // List hasil bernomor (box smallcaps — format reply command)
       const listLines = videos.slice(0, 10).map((v, i) => {
         const dur = v.duration ? `${Math.floor(v.duration / 60)}:${String(v.duration % 60).padStart(2, "0")}` : "-";
-        return `│ ${i + 1}. ${String(v.title).slice(0, 45)}${String(v.title).length > 45 ? "..." : ""}\n│    ⏳ ${dur}${v.createdAt ? ` · ${new Date(v.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}` : ""}`;
+        return `│ ${i + 1}. ${String(v.title).slice(0, 45)}${String(v.title).length > 45 ? "..." : ""}\n│    🕒 ${dur}${v.createdAt ? ` · ${new Date(v.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}` : ""}`;
       });
       await m.react("🐣");
       return m.reply(claraWrap(`TikTok Search — ${source}`, [

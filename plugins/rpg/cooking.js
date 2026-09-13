@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     const player = getCookingPlayer(m.sender, m.pushName || "Chef");
     const P = m.prefix || ".";
     const WORK_SUBS = ["masak", "cook", "beli", "belialat", "istirahat", "rest"];
-    if (WORK_SUBS.includes(sub)) await m.react("⏳");
+    if (WORK_SUBS.includes(sub)) await m.react("🕒");
 
     // ══════ STATUS / MENU ══════
     if (!sub || sub === "status" || sub === "menu") {

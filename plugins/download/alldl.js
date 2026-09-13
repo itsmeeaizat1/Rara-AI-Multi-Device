@@ -190,7 +190,7 @@ async function runSessionDownload(sock, m, session, choice) {
   let progressMsg = await m.reply(
     bracketBox(platform.icon, `${toSC("Downloading")} — ${toSC(platform.name)}`, [
       `${toSC("Format")}: ${isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${format}p`}`,
-      `⏳ ${toSC("Sedang diproses...")}`,
+      `🕒 ${toSC("Sedang diproses...")}`,
     ])
   );
 

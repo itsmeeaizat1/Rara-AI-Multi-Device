@@ -23,7 +23,7 @@ const pluginConfig = {
 const VALID_STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "completed", "cancelled"];
 
 const STATUS_EMOJI = {
-  pending: "⏳",
+  pending: "🕒",
   paid: "💰",
   processing: "🔄",
   shipped: "🚚",
@@ -438,7 +438,7 @@ async function showOrderStats(m, db) {
   txt += "Selesai: " + stats.completed + "\n";
   txt += "Dibatalkan: " + stats.cancelled + "\n\n";
   txt += "Rincian Status:\n";
-  txt += "⏳ Pending: " + stats.pending + "\n";
+  txt += "🕒 Pending: " + stats.pending + "\n";
   txt += "💰 Paid: " + stats.paid + "\n";
   txt += "🔄 Processing: " + stats.processing + "\n";
   txt += "🚚 Shipped: " + stats.shipped + "\n";

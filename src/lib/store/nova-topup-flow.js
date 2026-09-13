@@ -105,7 +105,7 @@ export function buildTopupPlugin(opts) {
       const pending = topups.pending[sender];
       let pendingBox = "";
       if (pending && pending.status === "pending") {
-        pendingBox = bracketBox("⏳", "Pesanan Pending", [
+        pendingBox = bracketBox("🕒", "Pesanan Pending", [
           `Item: *${pending.name}*`,
           `Jumlah: *${pending.qty.toLocaleString("id-ID")} ${pending.unit}*`,
           `Harga: *${pending.price}*`,

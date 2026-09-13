@@ -120,7 +120,7 @@ function buildSholatCountdownCard(next, remainingMs, lokasi) {
             `\n_yuk sholat dulu, jangan ditunda! 🤲_`)
     }
     return claraWrap(`Menuju ${next.name}`,
-        `⏳ *${formatRemaining(remainingMs)}* lagi\n` +
+        `🕒 *${formatRemaining(remainingMs)}* lagi\n` +
         `🕘 pukul ${next.timeStr} WIB${besok}\n` +
         lok +
         `\n_jangan lupa sholat ya! 🤲_`)
