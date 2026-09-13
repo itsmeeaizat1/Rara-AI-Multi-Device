@@ -9,6 +9,8 @@
 import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+import { buildPremTickerCard } from "../../src/lib/nova-prem-card.js";
 import { getAllPlugins, getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
@@ -182,6 +184,7 @@ async function handler(m, { sock, config: botConfig, db }) {
   try {
 
     // ── Ambil data user ──
+    let premTicker = null; // diisi kalau premium sisa < 24 jam (ticker live)
     const database = db || getDatabase();
     const senderJid = m.sender;
     const senderNumber = senderJid?.replace(/[^0-9]/g, "") || "";
@@ -216,6 +219,11 @@ async function handler(m, { sock, config: botConfig, db }) {
         const countdown = formatCountdown(premData.expired);
         const expiredStr = formatDate(premData.expired);
         const isExpired = premData.expired <= Date.now();
+        // ⏳ TICKER LIVE (13 Sep 2026): sisa premium < 24 jam → countdown hidup
+        const sisaMs = premData.expired - Date.now();
+        if (!isExpired && sisaMs > 0 && sisaMs < 24 * 3600000) {
+          premTicker = { expired: premData.expired, name: premData.name || m.pushName || nm };
+        }
         premStatus = bracketBox(isExpired ? "❌" : "✅", "Status Premium Kamu", [
           "Nama: *" + (premData.name || m.pushName || "Unknown") + "*",
           "Status: *" + (isExpired ? "EXPIRED" : "AKTIF") + "*",
@@ -235,7 +243,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     // ── BAGIAN 2: INFO BOT ──
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const botVersion = botConfig.bot?.version || "21.2.0";
-    const infoBox = bracketBox("🤖", "Info Bot", [
+    const infoBox = bracketBox("⚡", "Info Bot", [
       "Nama: *" + botName + "*",
       "Versi: *v" + botVersion + "*",
       "Developer: *" + (botConfig.bot?.developer || "Aizat") + "*",
@@ -304,6 +312,19 @@ async function handler(m, { sock, config: botConfig, db }) {
       tipText("Ketik " + prefix + "menu untuk kembali ke menu");
 
     await m.reply(fullText, "premium");
+
+    // ⏳ sisa premium < 24 jam → ticker live sampai habis (fire-and-forget)
+    if (premTicker) {
+      runLiveTicker({
+        sock,
+        chat: m.chat,
+        m,
+        initialCard: buildPremTickerCard(premTicker.name, premTicker.expired - Date.now(), prefix),
+        tickCard: (st) => buildPremTickerCard(premTicker.name, st.remainingMs, prefix),
+        mode: "down",
+        targetTs: premTicker.expired,
+      }).catch(() => {});
+    }
 
     // Auto-kirim QRIS image kalau tersedia
     const qrisUrl = config.payment?.qrisUrl || "";
