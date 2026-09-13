@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
       return claraWrap("Countdown", [
         `Target: *${target.toLocaleDateString("id-ID")}*`,
         live
-          ? `⏳ *${days} hari ${hms}* lagi ⏳`
+          ? `🕒 *${days} hari ${hms}* lagi 🕒`
           : `Sisa: *${days} hari, ${formatRemaining(Math.max(0, remainingMs))}*`,
       ].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
     };

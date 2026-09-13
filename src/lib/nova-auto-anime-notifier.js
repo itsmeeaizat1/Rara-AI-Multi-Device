@@ -401,7 +401,7 @@ export function formatNewAnimeMessage(animeList) {
     msg += `   🎭 ${a.genres?.join(", ") || "N/A"}\n`;
     msg += `   🏢 ${a.studios}\n`;
     if (a.description) msg += `   📖 ${a.description.slice(0, 150)}...\n`;
-    if (a.nextEpisode) msg += `   ⏳ Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n`;
+    if (a.nextEpisode) msg += `   🕒 Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n`;
     const link = a.malUrl || a.pageUrl;
     if (link) msg += `   🔗 ${link}\n`;
     msg += `\n`;
@@ -430,11 +430,11 @@ export function formatWatchlistMessage(list, { source = "AniList" } = {}) {
   if (!list?.length) return "Tidak ada anime ditemukan.";
   let msg = "🎌 *ANIME TERBARU / RELEASING*\n\n";
   list.slice(0, 10).forEach((a, i) => {
-    const st = a.status === "RELEASING" ? "🟢" : "⏳";
+    const st = a.status === "RELEASING" ? "🟢" : "🕒";
     msg += `${i + 1}. ${st} *${a.title}*\n`;
     msg += `   ⭐ ${a.score} | 📺 ${a.episodes} eps\n`;
     msg += `   🎭 ${a.genres?.slice(0, 3).join(", ") || "N/A"}\n`;
-    if (a.nextEpisode) msg += `   ⏳ Episode ${a.nextEpisode.episode} ~${a.nextEpisode.timeUntil} jam\n`;
+    if (a.nextEpisode) msg += `   🕒 Episode ${a.nextEpisode.episode} ~${a.nextEpisode.timeUntil} jam\n`;
     msg += `\n`;
   });
   msg += `📌 *${list.length} anime dipantau* — genre favorit\n`;
@@ -752,7 +752,7 @@ export function formatNewAnimeCard(a, { index = 1, total = 1, source = "AniList"
   // deskripsi plain text di balik ℅readmore biar caption gak panjang ke bawah
   const desc = a.description ? String(a.description).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim() : "";
   if (desc) msg += `   📖 Deskripsi:${READMORE}\n\n${desc}\n\n`;
-  if (a.nextEpisode) msg += `   ⏳ Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n\n`;
+  if (a.nextEpisode) msg += `   🕒 Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n\n`;
   msg += `📌 ${total} anime baru ditambahkan (ketersediaan sumber ${source}: ${total})`;
   return msg;
 }

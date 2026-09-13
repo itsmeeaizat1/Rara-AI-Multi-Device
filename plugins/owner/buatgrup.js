@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         successTxt += `👤 *ᴘᴇꜱᴇʀᴛᴀ:* ${participants.length} orang\n`
         
         if (durationMs > 0) {
-            successTxt += `⏳ *ᴍᴀꜱᴀ ᴀᴋᴛɪꜰ:* ${durationMins} Menit\n`
+            successTxt += `🕒 *ᴍᴀꜱᴀ ᴀᴋᴛɪꜰ:* ${durationMins} Menit\n`
             successTxt += `\n⚠️ _Grup ini akan otomatis dihapus dan semua member akan dikeluarkan saat masa aktif habis!_\n`
         }
 
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
                         .filter(id => id !== botJid)
 
                     if (membersToKick.length > 0) {
-                        await sock.sendMessage(group.id, { text: `⏳ *ᴍᴀꜱᴀ ᴀᴋᴛɪꜰ ɢʀᴜᴘ ʜᴀʙɪꜱ* ⏳\n\nSesuai perintah Owner, waktu grup ini telah habis. Sayonara semuanya! 👋` })
+                        await sock.sendMessage(group.id, { text: `🕒 *ᴍᴀꜱᴀ ᴀᴋᴛɪꜰ ɢʀᴜᴘ ʜᴀʙɪꜱ* 🕒\n\nSesuai perintah Owner, waktu grup ini telah habis. Sayonara semuanya! 👋` })
                         await sock.groupParticipantsUpdate(group.id, membersToKick, 'remove')
                     }
                     

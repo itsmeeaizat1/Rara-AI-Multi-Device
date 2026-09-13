@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       return "Sabar ya, cooldown nih!\n" +
         "Udah klaim hari ini 👀\n" +
         (live
-          ? "⏳ *" + h + " jam " + ms + "* lagi ⏳"
+          ? "🕒 *" + h + " jam " + ms + "* lagi 🕒"
           : "Tunggu *" + h + " jam " + ms + "* lagi ya");
     };
     return runLiveTicker({

@@ -98,7 +98,7 @@ function fireLelangTicker(db, sock, m, auctionId, extraLines = []) {
       "Harga Awal: " + formatRupiah(auction0.startPrice),
       "Min Increment: " + formatRupiah(auction0.minIncrement),
       ...extraLines,
-      "⏳ Sisa waktu: " + formatCountdown(remMs),
+      "🕒 Sisa waktu: " + formatCountdown(remMs),
       "📊 " + lelangBar(elapsed, total),
       "",
       "Ketik: .lelang bid " + auctionId + " <harga>",

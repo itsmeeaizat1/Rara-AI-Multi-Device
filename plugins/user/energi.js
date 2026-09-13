@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     else if (user.isPremium) userStatus = 'Premium'
     if (!energiEnabled) userStatus += ' (Energi OFF)'
     
-    // ⏳ PENGHITUNG (13 Sep 2026): meter terpakai + countdown live ke reset
+    // 🕒 PENGHITUNG (13 Sep 2026): meter terpakai + countdown live ke reset
     // (limit akses fitur di-reset scheduler dailyLimitReset jam resetHour WIB)
     const resetHour = config.scheduler?.resetHour ?? 0
     const resetMinute = config.scheduler?.resetMinute ?? 0

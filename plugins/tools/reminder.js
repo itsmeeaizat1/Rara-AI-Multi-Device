@@ -249,7 +249,7 @@ async function handler(m, { sock }) {
   const card = (remainingMs, live = true) => claraWrap("Reminder Dibuat", [
     `ID: ${id}`,
     `Pesan: ${message}`,
-    `Berbunyi dalam: ${formatRemaining(remainingMs)}${live ? " ⏳" : ""}`,
+    `Berbunyi dalam: ${formatRemaining(remainingMs)}${live ? " 🕒" : ""}`,
     `Pukul: ${fireStr}`,
     `Tag: @${sender.split("@")[0]}`,
     "",

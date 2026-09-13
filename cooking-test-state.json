@@ -1,0 +1,64 @@
+{
+  "players": {
+    "u1": {
+      "name": "Aizat",
+      "level": 3,
+      "exp": 7,
+      "maxExp": 169,
+      "energy": 80,
+      "maxEnergy": 110,
+      "gold": 36000,
+      "inventory": {},
+      "tools": [
+        "Oven",
+        "Cetakan Sushi",
+        "Grill Pan"
+      ],
+      "recipes": [
+        "nasi_goreng",
+        "mie_goreng",
+        "telur_dadar",
+        "sayur_kangkung",
+        "sate_ayam",
+        "bakso_sapi",
+        "soto_ayam",
+        "ikan_bakar"
+      ],
+      "totalCook": 3,
+      "bestDish": {
+        "name": "Telur Dadar",
+        "price": 12000
+      },
+      "lastRest": 1789315311258,
+      "joinedAt": "2026-09-13T16:01:51.233Z"
+    },
+    "6281111@s.whatsapp.net": {
+      "name": "Aizat",
+      "level": 1,
+      "exp": 8,
+      "maxExp": 100,
+      "energy": 90,
+      "maxEnergy": 100,
+      "gold": 31000,
+      "inventory": {
+        "Telur": 3
+      },
+      "tools": [
+        "Panci"
+      ],
+      "recipes": [
+        "nasi_goreng",
+        "mie_goreng",
+        "telur_dadar",
+        "sayur_kangkung"
+      ],
+      "totalCook": 1,
+      "bestDish": {
+        "name": "Telur Dadar",
+        "price": 10000
+      },
+      "lastRest": 1789315311311,
+      "joinedAt": "2026-09-13T16:01:51.259Z"
+    }
+  }
+}

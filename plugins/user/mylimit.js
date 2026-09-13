@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     status = "Free";
   }
 
-  // ⏳ PENGHITUNG (13 Sep 2026): meter terpakai + countdown live ke reset
+  // 🕒 PENGHITUNG (13 Sep 2026): meter terpakai + countdown live ke reset
   const isUnlimited = isOwner || currentEnergi === -1;
   const cardCtx = {
     title: "My Limit",

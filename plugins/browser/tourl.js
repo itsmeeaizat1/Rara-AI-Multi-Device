@@ -614,7 +614,7 @@ async function handler(m, { sock }) {
   results.forEach((r, i) => {
     const status = r.expires === "Permanent" ? "∞ Permanen" : r.expires;
     contentTxt += `☁️ *ꜱᴇʀᴠᴇʀ :* ${r.host}\n`;
-    contentTxt += `⏳ *ᴇxᴘɪʀᴇᴅ :* ${status}\n`;
+    contentTxt += `🕒 *ᴇxᴘɪʀᴇᴅ :* ${status}\n`;
     contentTxt += `🔗 *ʟɪɴᴋ :*\n`;
     contentTxt += `${r.url}`;
     if (i < results.length - 1) contentTxt += `\n\n`;

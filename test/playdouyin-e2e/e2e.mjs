@@ -1,6 +1,6 @@
 // E2E .douyin MERGED (rename dr .playdouyin — request owner 10 Sep): satu
 // command dua mode — keyword search (injected) + link download (injected).
-// Douyin murni, TikTok DITOLAK. Reaksi ⏳→🐣 wajib.
+// Douyin murni, TikTok DITOLAK. Reaksi 🕒→🐣 wajib.
 import { initDatabase } from "../../src/lib/nova-database.js";
 import {
   setDouyinSearchRunner,

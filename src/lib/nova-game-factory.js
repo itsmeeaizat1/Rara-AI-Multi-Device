@@ -93,7 +93,7 @@ class GameFactory {
             if (cfg.hintEnabled !== false) {
               text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
             }
-            text += `⏳ Sisa waktu : ${formatTime(remaining)}\n\n`;
+            text += `🕒 Sisa waktu : ${formatTime(remaining)}\n\n`;
             text += `_💬 Reply pesan game ini buat jawab, ketik "nyerah" kalau nyerah_\n`;
             await m.reply(text);
             return;
@@ -153,7 +153,7 @@ class GameFactory {
           if (cfg.hintEnabled !== false) {
             caption += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          caption += `🕒 Waktu : ${cfg.timeout / 1000} detik\n`;
           caption += `🎁 Hadiah : Limit, Koin, EXP (random)\n`;
           caption += renderEnergiLine(m, cfg);
           caption += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
@@ -167,7 +167,7 @@ class GameFactory {
           if (cfg.hintEnabled !== false) {
             text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          text += `🕒 Waktu : ${cfg.timeout / 1000} detik\n`;
           text += `🎁 Hadiah : Limit, Koin, EXP (random)\n`;
           text += renderEnergiLine(m, cfg);
           text += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;

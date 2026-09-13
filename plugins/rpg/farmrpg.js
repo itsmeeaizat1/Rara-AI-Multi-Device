@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
         const elapsed = now - p.planted;
         const isReady = elapsed >= p.growTime;
         const remaining = Math.max(0, Math.ceil((p.growTime - elapsed) / 60000));
-        msg += `${i + 1}. ${p.emoji} ${p.crop} ${isReady ? "✅ SIAP!" : `⏳ ${remaining}m`}\n`;
+        msg += `${i + 1}. ${p.emoji} ${p.crop} ${isReady ? "✅ SIAP!" : `🕒 ${remaining}m`}\n`;
       });
     } else {
       msg += `(Kebun kosong)\n`;

@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
             `🏷️ @${cleanJid}`,
             `📅 ${day} ${months[month - 1]}`,
             live
-                ? `🕕 *${days} hari* ${hms} lagi ⏳`
+                ? `🕕 *${days} hari* ${hms} lagi 🕒`
                 : `🕕 ${days} hari lagi (${diffDays} hari menuju ultah)`,
             ``,
             `_countdown ke ${day} ${months[month - 1]}_`,

@@ -268,7 +268,7 @@ class NovaGames {
               text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
             }
             text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
-            text += `⏳ Sisa waktu : ${formatRemainingTime(remaining)}\n\n`;
+            text += `🕒 Sisa waktu : ${formatRemainingTime(remaining)}\n\n`;
             text += `_💬 Reply pesan game ini buat jawab, ketik "nyerah" kalau nyerah_`;
             text += ``;
             await m.reply(text);
@@ -308,7 +308,7 @@ class NovaGames {
           if (cfg.hintEnabled !== false) {
             caption += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          caption += `🕒 Waktu : ${cfg.timeout / 1000} detik\n`;
           caption += `🎁 Hadiah : Limit, Koin, EXP (random)\n\n`;
           caption += `_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;
           sentMsg = await sock.sendMessage(
@@ -326,7 +326,7 @@ class NovaGames {
           if (cfg.hintEnabled !== false) {
             text += `🧩 Hint : ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `⏳ Waktu : ${cfg.timeout / 1000} detik\n`;
+          text += `🕒 Waktu : ${cfg.timeout / 1000} detik\n`;
           text += `🎁 Hadiah : Limit, Koin, EXP (random)\n`;
           text += renderEnergiLine(m, cfg);
           text += `\n_💬 Reply pesan ini buat jawab, ketik "nyerah" kalau menyerah_\n`;

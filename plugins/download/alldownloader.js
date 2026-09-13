@@ -297,7 +297,7 @@ async function runDownload(sock, m, session, opt) {
   const progressMsg = await m.reply(
     bracketBox(style.icon, `${toSC("Downloading")} — ${toSC(style.name)}`, [
       `${toSC("Format")}: ${opt.label}`,
-      `⏳ ${toSC("Sedang diproses...")}`,
+      `🕒 ${toSC("Sedang diproses...")}`,
     ])
   );
 

@@ -172,7 +172,7 @@ behavior = {
 replies.length = 0; reactions = [];
 await handler(mockM("apa itu wudhu?"), {});
 check("plugin: ask → reply berisi jawaban", replies.length === 1 && replies[0].includes(toSC("Wudhu adalah cara bersuci")));
-check("plugin: react ⏳ lalu 🐣", reactions.includes("⏳") && reactions.includes("🐣"));
+check("plugin: react 🕒 lalu 🐣", reactions.includes("🕒") && reactions.includes("🐣"));
 check("plugin: footer ai.salaam.world", replies[0].includes(toSC("ai.salaam.world")));
 
 // ask + asisten di token pertama

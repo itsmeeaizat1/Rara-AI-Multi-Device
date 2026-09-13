@@ -81,7 +81,7 @@ export function buildRamadhanCard(phase, remainingMs) {
   return claraWrap(`Menuju Ramadhan ${phase.hijri}H`, [
     "🌙 *RAMADHAN SEBENTAR LAGI*",
     "",
-    `⏳ *${formatRemaining(remainingMs)}* lagi`,
+    `🕒 *${formatRemaining(remainingMs)}* lagi`,
     `📅 Estimasi 1 Ramadhan: ${moment.tz(phase.startTs, "Asia/Jakarta").format("DD MMMM YYYY")}`,
     "",
     "_persiapkan hatimu, jangan lupa niat puasanya_ 🤲",

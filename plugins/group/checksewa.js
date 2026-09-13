@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
     await m.reply(claraWrap("checksewa", text))
 
     // 🔹 LIVE COUNTDOWN (13 Sep, pola premium): sisa ≤24 jam → ticker nge-tick
-    // ⏳ H:MM:SS sampai expired → "SEWA EXPIRED" + ajakan perpanjang.
+    // 🕒 H:MM:SS sampai expired → "SEWA EXPIRED" + ajakan perpanjang.
     if (diff <= 86400000 && diff > 0) {
         const sewaCard = (remMs) => {
             const h = Math.floor(remMs / 3600000)
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
                 ].join('\n')
             }
             return [
-                `⏳ *ꜱᴇᴡᴀ ʜᴀᴍᴘɪʀ ʜᴀʙɪꜱ*`,
+                `🕒 *ꜱᴇᴡᴀ ʜᴀᴍᴘɪʀ ʜᴀʙɪꜱ*`,
                 ``,
                 `Grup: *${groupName}*`,
                 `Sisa: *${h} jam ${String(mm).padStart(2, '0')} mnt ${String(ss).padStart(2, '0')} dtk*`,

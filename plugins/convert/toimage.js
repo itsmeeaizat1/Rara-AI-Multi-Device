@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
       // model AI belum ke-download di mesin ini → kasih notice sekali (unduh ±59MB, setelah itu permanen offline)
       try {
         await m.reply(claraWrap("toimage", [
-          "⏳ Remini AI: unduh model pertama kali (±59MB)...",
+          "🕒 Remini AI: unduh model pertama kali (±59MB)...",
           "",
           "Setelah ini model ke-cache permanen — pemakaian berikutnya jauh lebih cepat.",
           "Mau instan? Ketik .toimage cepat (HD lokal tanpa AI)",

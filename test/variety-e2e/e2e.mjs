@@ -91,8 +91,8 @@ w("\n— .birthday: countdown hidup ke ultah —");
   check("kartu nunjukin hari + jam:menit:detik", hasDays, norm(all[0]?.payload.text).slice(0, 100));
   const edits = sock.sent.filter((s) => !!s.payload.edit);
   check("countdown nge-tick via edit-in-place", edits.length >= 1, edits.length + " edit");
-  const hasLive = all.some((s) => norm(s.payload.text).includes("⏳"));
-  check("baris live ⏳ ada", hasLive, norm(all[0]?.payload.text).slice(0, 120));
+  const hasLive = all.some((s) => norm(s.payload.text).includes("🕒"));
+  check("baris live 🕒 ada", hasLive, norm(all[0]?.payload.text).slice(0, 120));
 }
 {
   // ultah HARI INI → kartu ucapan statis, gak ticker

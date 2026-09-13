@@ -244,7 +244,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!game || game.status !== "ongoing") return m.reply(claraWrap("caturgiliran", "Tidak ada game berjalan.", "info"));
       const isWhite = game.turn === "white";
       const giliran = isWhite ? game.player1 : game.player2;
-      return m.reply(novaGameBox({ title: "catur", icon: "♟️", flavor: "⏳ *SETELAH INI GILIRANMU!*", body: "Giliran: @" + giliran.split("@")[0] + " (" + (isWhite ? "Putih" : "Hitam") + ")" }), { mentions: [giliran] });
+      return m.reply(novaGameBox({ title: "catur", icon: "♟️", flavor: "🕒 *SETELAH INI GILIRANMU!*", body: "Giliran: @" + giliran.split("@")[0] + " (" + (isWhite ? "Putih" : "Hitam") + ")" }), { mentions: [giliran] });
     }
 
     // ═══ CATURREMATCH ═══
@@ -374,7 +374,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
         const g = loadCatur()[chatId];
         if (!g) return;
         const curr = g.turn === "white" ? g.player1 : g.player2;
-        sock.sendMessage(chatId, { text: smallcapsText("⏳ @" + curr.split("@")[0] + ", giliranmu belum dimainkan 3 menit."), mentions: [curr] });
+        sock.sendMessage(chatId, { text: smallcapsText("🕒 @" + curr.split("@")[0] + ", giliranmu belum dimainkan 3 menit."), mentions: [curr] });
       }, 3 * 60 * 1000);
       return m.reply(novaGameBox({ title: "catur", icon: "♟️", body: "🔔 Notif giliran dinyalakan — gak akan ada lagi yang AFK diam-diam." }));
     }

@@ -48,7 +48,7 @@ function formatResult(results, query, winbuHit) {
     msg += `   🎭 ${a.genres?.slice(0, 4).join(", ") || "N/A"}\n`;
     msg += `   🏢 ${a.studios}\n`;
     if (a.description) msg += `   📖 ${a.description.slice(0, 120)}...\n`;
-    if (a.nextEpisode) msg += `   ⏳ Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n`;
+    if (a.nextEpisode) msg += `   🕒 Episode ${a.nextEpisode.episode} rilis dalam ~${a.nextEpisode.timeUntil} jam\n`;
     msg += `\n`;
   });
   msg += `📱 Sumber: ${results[0]?.source || "AniList"}`;

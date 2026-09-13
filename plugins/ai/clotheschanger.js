@@ -465,7 +465,7 @@ async function handler(m, { sock }) {
       if (suffix === "age") {
         editPrompt = buildAgePrompt(prompt);
         meta = {
-          emoji: "⏳", title: "ubah umur ai",
+          emoji: "🕒", title: "ubah umur ai",
           lines: [`🎯 ${toSC("umur")}: *${toSC(prompt)}*`],
           guide: `Kasih umur yang bener!\n\nPilihan: tua | muda | anak | bayi | angka 1-100\nContoh: ${prefix}${typed} tua — reply foto orang`,
         };

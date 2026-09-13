@@ -219,7 +219,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         const countdown = formatCountdown(premData.expired);
         const expiredStr = formatDate(premData.expired);
         const isExpired = premData.expired <= Date.now();
-        // ⏳ TICKER LIVE (13 Sep 2026): sisa premium < 24 jam → countdown hidup
+        // 🕒 TICKER LIVE (13 Sep 2026): sisa premium < 24 jam → countdown hidup
         const sisaMs = premData.expired - Date.now();
         if (!isExpired && sisaMs > 0 && sisaMs < 24 * 3600000) {
           premTicker = { expired: premData.expired, name: premData.name || m.pushName || nm };
@@ -313,7 +313,7 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     await m.reply(fullText, "premium");
 
-    // ⏳ sisa premium < 24 jam → ticker live sampai habis (fire-and-forget)
+    // 🕒 sisa premium < 24 jam → ticker live sampai habis (fire-and-forget)
     if (premTicker) {
       runLiveTicker({
         sock,
