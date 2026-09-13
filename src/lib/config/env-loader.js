@@ -128,6 +128,13 @@ export function getHaidarKey() {
   return apikeysData.haidar || "";
 }
 
+/**
+ * API key fazzcode.eu.cc — chatbot-role (.airoleplaychat)
+ */
+export function getFazzcodeKey() {
+  return apikeysData.fazzcode || "";
+}
+
 export function getSaveNowKey() {
   return miscData.savenow_apikey || "";
 }
