@@ -661,6 +661,15 @@ async function startConnection(options = {}) {
       // dipasang ulang timer-nya (yang kelewat dikirim notif "terlewat"),
       // alarm HH:MM harian dicek tiap 30 dtk — dua-duanya sekarang
       // selamat restart (request owner 13 Sep 2026)
+      // 🔹 PENGINGAT UKT RESTORE: checker reminder nyala dari startup
+      // (dulu cuma nyala pas ada yang ngetik .pengingatukt — restart =
+      // reminder gak jalan) + countdown live record ≤48 jam re-arm
+      try {
+        const { restoreUkt } = await import("./lib/nova-ukt-reminder.js");
+        restoreUkt(sock);
+      } catch (e) {
+        console.error("[PengingatUKT] restore gagal:", e.message);
+      }
       // 🔹 POMODORO RESTORE: sesi timer belajar persist — fase kelewat
       // di-fast-forward + ticker nyala lagi, scheduler pusat re-arm
       try {
