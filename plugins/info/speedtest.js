@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { execSync } from "child_process";
+import { exec } from "child_process";
 import os from "os";
-import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { startStatusRotation } from "../../src/lib/nova-status-rotate.js";
 
 const pluginConfig = {
   name: "speedtest",
@@ -20,6 +20,15 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+// knob: kecepatan rotasi status (ms) — default 4 dtk
+const ROTATE_MS = parseInt(process.env.NOVA_SPEEDTEST_ROTATE_MS) || 4000;
+
+function execAsync(cmd, opts = {}) {
+  return new Promise((resolve) => {
+    exec(cmd, opts, (err, stdout) => resolve({ err, stdout: stdout || "" }));
+  });
+}
+
 function formatSpeed(bytesPerSec) {
   if (bytesPerSec >= 1000000000) return (bytesPerSec / 1000000000).toFixed(2) + " Gbps";
   if (bytesPerSec >= 1000000) return (bytesPerSec / 1000000).toFixed(2) + " Mbps";
@@ -36,37 +45,64 @@ function formatUptime(seconds) {
   return `${m}m`;
 }
 
+// ═════════════════════════════════════════════════════════════════
+// KARTU STATUS BERPUTAR (13 Sep 2026) — sebelumnya tes 5-60 dtk
+// cuma react 🕒 terus diam; sekarang 1 pesan di-edit berputar
+// 🔍 ping → ⬇️ unduh → ⬆️ unggah → ✅ susun hasil.
+// ═════════════════════════════════════════════════════════════════
+const STATUS_PHASES = [
+  () => claraWrap("Speedtest Berjalan", [
+    "⚡ *TES KECEPATAN DIMULAI*",
+    "",
+    "🔍 Mengukur ping ke server...",
+    "",
+    "_biasanya 5-30 detik, sabar ya_ ✨",
+  ].join("\n")),
+  () => claraWrap("Speedtest Berjalan", [
+    "⚡ *TES KECEPATAN JALAN*",
+    "",
+    "⬇️ Mengunduh file tes...",
+    "",
+    "_ngukur kecepatan download_ ✨",
+  ].join("\n")),
+  () => claraWrap("Speedtest Berjalan", [
+    "⚡ *TES KECEPATAN JALAN*",
+    "",
+    "⬆️ Mengunggah file tes...",
+    "",
+    "_ngukur kecepatan upload_ ✨",
+  ].join("\n")),
+  () => claraWrap("Speedtest Berjalan", [
+    "⚡ *TES KECEPATAN JALAN*",
+    "",
+    "✅ Menyusun hasil...",
+    "",
+    "_bentar lagi keluar_ ✨",
+  ].join("\n")),
+];
+
 async function runSpeedtest() {
-  // Cek apakah speedtest-cli tersedia
+  // Cek apakah speedtest-cli tersedia (ASYNC — event loop tetap hidup
+  // biar rotasi status bisa jalan; execSync dulu blokin semuanya)
   let hasSpeedtestCli = false;
   try {
-    execSync("which speedtest-cli || which speedtest", { stdio: "ignore", timeout: 5000 });
-    hasSpeedtestCli = true;
-  } catch {
-    // Coba npx
-    try {
-      execSync("npx --yes speedtest-net --version", { stdio: "ignore", timeout: 15000 });
-      hasSpeedtestCli = true;
-    } catch {
-      hasSpeedtestCli = false;
+    let r = await execAsync("which speedtest-cli || which speedtest", { stdio: "ignore", timeout: 5000 });
+    if (!r.err) hasSpeedtestCli = true;
+    if (!hasSpeedtestCli) {
+      r = await execAsync("npx --yes speedtest-net --version", { stdio: "ignore", timeout: 15000 });
+      hasSpeedtestCli = !r.err;
     }
+  } catch {
+    hasSpeedtestCli = false;
   }
 
   if (hasSpeedtestCli) {
-    // Pakai speedtest-cli
-    let output;
-    try {
-      output = execSync("speedtest-cli --simple 2>/dev/null || npx --yes speedtest-cli --simple 2>/dev/null", {
-        encoding: "utf8",
-        timeout: 60000,
-        maxBuffer: 1024 * 1024 * 10,
-      });
-    } catch {
-      output = "";
-    }
-
-    if (output) {
-      const lines = output.trim().split("\n");
+    const { stdout } = await execAsync(
+      "speedtest-cli --simple 2>/dev/null || npx --yes speedtest-cli --simple 2>/dev/null",
+      { encoding: "utf8", timeout: 60000, maxBuffer: 1024 * 1024 * 10 },
+    );
+    if (stdout) {
+      const lines = stdout.trim().split("\n");
       const ping = lines.find((l) => l.toLowerCase().startsWith("ping:"))?.split(":")[1]?.trim() || "N/A";
       const download = lines.find((l) => l.toLowerCase().startsWith("download:"))?.split(":")[1]?.trim() || "N/A";
       const upload = lines.find((l) => l.toLowerCase().startsWith("upload:"))?.split(":")[1]?.trim() || "N/A";
@@ -75,7 +111,7 @@ async function runSpeedtest() {
   }
 
   // Fallback: tes manual dengan curl download + upload
-  // 1. Ping test (HTTP latency ke multiple servers)
+  // 1. Ping test (HTTP latency)
   let pingMs = "N/A";
   try {
     const pingStart = Date.now();
@@ -91,7 +127,7 @@ async function runSpeedtest() {
     }
   }
 
-  // 2. Download speed test (download 10MB dari Cloudflare)
+  // 2. Download speed test (10MB dari Cloudflare)
   let downloadSpeed = "N/A";
   try {
     const dlStart = Date.now();
@@ -101,14 +137,13 @@ async function runSpeedtest() {
     const buf = await res.arrayBuffer();
     const elapsed = (Date.now() - dlStart) / 1000;
     if (elapsed > 0) {
-      const bytesPerSec = buf.byteLength / elapsed;
-      downloadSpeed = formatSpeed(bytesPerSec);
+      downloadSpeed = formatSpeed(buf.byteLength / elapsed);
     }
   } catch {
     downloadSpeed = "Failed";
   }
 
-  // 3. Upload speed test (upload 2MB ke Cloudflare)
+  // 3. Upload speed test (2MB ke Cloudflare)
   let uploadSpeed = "N/A";
   try {
     const payload = new Uint8Array(2000000);
@@ -120,8 +155,7 @@ async function runSpeedtest() {
     });
     const elapsed = (Date.now() - ulStart) / 1000;
     if (elapsed > 0) {
-      const bytesPerSec = 2000000 / elapsed;
-      uploadSpeed = formatSpeed(bytesPerSec);
+      uploadSpeed = formatSpeed(2000000 / elapsed);
     }
   } catch {
     uploadSpeed = "Failed";
@@ -130,38 +164,68 @@ async function runSpeedtest() {
   return { ping: pingMs, download: downloadSpeed, upload: uploadSpeed, method: "cloudflare-fallback" };
 }
 
+// seam test: inject pengganti runSpeedtest biar e2e gak perlu jaringan beneran
+let _speedtestFn = runSpeedtest;
+export function _setSpeedtestFnForTest(fn) { _speedtestFn = fn; }
+export function _resetSpeedtestFnForTest() { _speedtestFn = runSpeedtest; }
+
+function buildResultCard(sys, result) {
+  return claraWrap("Hasil Speedtest", [
+    "⚡ *HASIL TES KECEPATAN*",
+    "",
+    `🖥 Host: ${sys.hostname}`,
+    `📦 Platform: ${sys.platform} (${sys.arch})`,
+    `⏱ Uptime: ${sys.uptime}`,
+    `🧠 CPU: ${sys.cpuModel}`,
+    `🔩 Cores: ${sys.cpuCores}`,
+    `💾 RAM: ${sys.ram}`,
+    "",
+    `📶 Ping: *${result.ping}*`,
+    `⬇️ Download: *${result.download}*`,
+    `⬆️ Upload: *${result.upload}*`,
+    `📡 Metode: ${result.method}`,
+  ].join("\n")) + "\n" + tipText("Tes lagi kapan aja: .speedtest");
+}
+
 async function handler(m, { sock }) {
+  let stopper = null;
   try {
-    await m.react("🕒");
+    await m.react("⚡");
+
+    // kartu status berputar — 1 pesan di-edit selama tes jalan
+    const statusMsg = await sock.sendMessage(m.chat, { text: STATUS_PHASES[0]() });
+    // fase 1-3 di-cycle 5x (±60 dtk) — tes panjang tetap ada animasi,
+    // tes kilat berhenti di stopper() duluan
+    const rotPhases = [STATUS_PHASES[1], STATUS_PHASES[2], STATUS_PHASES[3], STATUS_PHASES[1], STATUS_PHASES[2], STATUS_PHASES[3], STATUS_PHASES[1], STATUS_PHASES[2], STATUS_PHASES[3], STATUS_PHASES[1], STATUS_PHASES[2], STATUS_PHASES[3], STATUS_PHASES[1], STATUS_PHASES[2], STATUS_PHASES[3]];
+    stopper = startStatusRotation(async (txt) => {
+      try { await sock.sendMessage(m.chat, { text: txt, edit: statusMsg?.key }); } catch {}
+    }, rotPhases.map((f) => f()), ROTATE_MS);
+
     // Info sistem dasar
-    const hostname = os.hostname();
-    const platform = os.platform();
-    const arch = os.arch();
     const cpus = os.cpus();
-    const cpuModel = cpus.length > 0 ? cpus[0].model : "Unknown";
-    const cpuCores = cpus.length;
     const totalMem = os.totalmem();
     const freeMem = os.freemem();
-    const usedMem = totalMem - freeMem;
-    const memUsage = ((usedMem / totalMem) * 100).toFixed(1);
-    const uptime = formatUptime(os.uptime());
+    const sys = {
+      hostname: os.hostname(),
+      platform: os.platform(),
+      arch: os.arch(),
+      uptime: formatUptime(os.uptime()),
+      cpuModel: cpus.length > 0 ? cpus[0].model : "Unknown",
+      cpuCores: cpus.length,
+      ram: `${((totalMem - freeMem) / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${(((totalMem - freeMem) / totalMem) * 100).toFixed(1)}%)`,
+    };
 
-    // Jalankan speedtest
-    const result = await runSpeedtest();
+    // Jalankan speedtest (async — rotasi tetap jalan di belakang)
+    const result = await _speedtestFn();
 
-    let text = `Host: ${hostname}
-Platform: ${platform} (${arch})
-Uptime: ${uptime}
-CPU: ${cpuModel}
-Cores: ${cpuCores}
-RAM: ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
-Ping: ${result.ping}
-Download: ${result.download}
-Upload: ${result.upload}
-Metode: ${result.method}`;
+    stopper(); stopper = null;
+    // status card → hasil card (edit pesan yang sama)
+    try {
+      await sock.sendMessage(m.chat, { text: buildResultCard(sys, result), edit: statusMsg?.key });
+    } catch {}
     await m.react("🐣");
-    await m.reply(text);
   } catch (err) {
+    if (stopper) stopper();
     await m.react("❌");
     await m.reply(`❌ Speedtest error: ${err.message || "Unknown error"}`);
   }
