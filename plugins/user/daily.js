@@ -1,6 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const pluginConfig = {
   name: "dailyuser",
@@ -38,14 +41,25 @@ async function handler(m, { sock }) {
   const now = Date.now();
 
   if (now - lastDaily < DAILY_COOLDOWN) {
-    const remaining = lastDaily + DAILY_COOLDOWN - now;
-    const hours = Math.floor(remaining / (1000 * 60 * 60));
-    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    return m.reply(
-      "Sabar ya, cooldown nih!\n" +
-      "Udah klaim hari ini 👀\n" +
-      "Tunggu *" + hours + " jam " + minutes + " menit* lagi ya"
-    );
+    // 🔹 LIVE COUNTDOWN (13 Sep, request owner "fitur polos di-variasi biar
+    // menarik"): cooldown gak lagi angka beku — nge-tick ke reset klaim.
+    const resetTs = lastDaily + DAILY_COOLDOWN;
+    const cdCard = (remainingMs, live = true) => {
+      const h = Math.floor(Math.max(0, remainingMs) / 3600000);
+      const ms = formatRemaining(Math.max(0, remainingMs) % 3600000);
+      return "Sabar ya, cooldown nih!\n" +
+        "Udah klaim hari ini 👀\n" +
+        (live
+          ? "⏳ *" + h + " jam " + ms + "* lagi ⏳"
+          : "Tunggu *" + h + " jam " + ms + "* lagi ya");
+    };
+    return runLiveTicker({
+      sock, chat: m.chat, m,
+      mode: "down", targetTs: resetTs, maxEdits: Number(process.env.NOVA_TICK_MAXEDITS) || 16,
+      initialCard: cdCard(resetTs - Date.now()),
+      tickCard: (st) => cdCard(st.remainingMs, st.remainingMs > 0),
+      finalCard: (st) => cdCard(st.remainingMs, false),
+    });
   }
 
   // Calculate streak
@@ -108,7 +122,38 @@ async function handler(m, { sock }) {
   if (diamondsReward > 0) txt += "Diamonds: *+" + diamondsReward + "*\n";
   txt += "Potion: *+" + potionReward + "*\n\n";
   txt += "Besok klaim lagi ya, jangan sampai putus streak-nya!";
-  await sock.sendMessage(m.chat, { text: txt, mentions: [m.sender] }, { quoted: m });
+    // 🔹 ANIMASI REVEAL ALA GACHA (13 Sep, request owner "fitur polos
+  // di-variasi biar menarik"): hadiah gak dibuka dadakan — kartu morphing
+  // membuka bagian per bagian lalu kartu lengkap. Edit gagal → kartu langsung.
+  try {
+    const parts = txt.split("\n");
+    // grup baris biar reveal-nya bermakna: greeting → streak → hadiah → penutup
+    const groups = [
+      parts.slice(0, 3).join("\n"),           // sapaan + streak
+      parts.slice(3, 5).join("\n"),            // header Hadiah + Exp
+      parts.slice(5, 8).join("\n"),            // Koin + Gold
+      parts.slice(8).join("\n"),               // sisa reward + penutup
+    ];
+    const opener = "🎁 membuka hadiah harian...";
+    const sent = await sock.sendMessage(m.chat, { text: opener }, { quoted: m });
+    const key = sent?.key || null;
+    if (key) {
+      let shown = "";
+      for (let i = 0; i < groups.length; i++) {
+        await sleep(800);
+        shown = groups.slice(0, i + 1).join("\n");
+        const isLast = i === groups.length - 1;
+        try {
+          await sock.sendMessage(m.chat,
+            { text: isLast ? txt : shown + "\n…", mentions: [m.sender], edit: key });
+        } catch { break; }
+      }
+    } else {
+      await sock.sendMessage(m.chat, { text: txt, mentions: [m.sender] }, { quoted: m });
+    }
+  } catch {
+    try { await sock.sendMessage(m.chat, { text: txt, mentions: [m.sender] }, { quoted: m }); } catch {}
+  }
 }
 
 export { pluginConfig as config, handler };
