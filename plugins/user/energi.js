@@ -1,5 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
+import { computeNextResetTs, buildLimitCard } from "../../src/lib/nova-limit-card.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
@@ -63,22 +65,56 @@ async function handler(m, { sock }) {
     else if (user.isPremium) userStatus = 'Premium'
     if (!energiEnabled) userStatus += ' (Energi OFF)'
     
-    let text = `*〔 ⚡ ENERGI INFO 〕*\n\n`
+    // ⏳ PENGHITUNG (13 Sep 2026): meter terpakai + countdown live ke reset
+    // (limit akses fitur di-reset scheduler dailyLimitReset jam resetHour WIB)
+    const resetHour = config.scheduler?.resetHour ?? 0
+    const resetMinute = config.scheduler?.resetMinute ?? 0
+    const resetTime = `${String(resetHour).padStart(2, '0')}:${String(resetMinute).padStart(2, '0')}`
 
-text += `*〔 👤 User 〕* ${targetName}\n`
-text += `*〔 ⚡ Energi 〕* ${energiDisplay}\n`
-text += `*〔 💎 Status 〕* ${userStatus}\n\n`
-    
-    if (!energiEnabled) {
-        text += `🔌 Sistem energi dinonaktifkan — semua command gratis`
-    } else if (isSelf && !isUnlimited && finalEnergi < 10) {
-        text += `⚠️ Energi hampir habis!\n`
-        text += `Gunakan \`.buyenergi\` untuk beli`
-    } else if (isUnlimited) {
-        text += `Energi unlimited aktif!`
+    // total harian pakai konvensi yang sama kayak .mylimit biar gak beda cerita
+    const hariIni = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Jakarta', weekday: 'long' })
+    const isWeekend = hariIni === 'Saturday' || hariIni === 'Sunday'
+    const baseLimit = user.isPremium ? (config.energi?.premium ?? 1000) : (config.energi?.default ?? 300)
+    const weekendBonus = isWeekend && !user.isPremium && !isOwner && energiEnabled ? baseLimit : 0
+    const totalLimit = baseLimit + weekendBonus
+    const terpakai = finalEnergi === -1 ? null : Math.max(0, totalLimit - finalEnergi)
+
+    const cardCtx = {
+        title: 'Energi',
+        name: targetName,
+        status: userStatus,
+        sisa: energiDisplay,
+        terpakai,
+        total: terpakai !== null ? totalLimit : null,
+        resetTime,
+        extra: [
+            !energiEnabled ? '🔌 Sistem energi dinonaktifkan — semua command gratis' : '',
+            weekendBonus > 0 ? `🎁 Bonus weekend: *+${formatNumber(weekendBonus)} limit*` : '',
+        ],
+        footer: isSelf && !isUnlimited && finalEnergi < 10
+            ? '⚠️ Energi hampir habis! Gunakan `.buyenergi` untuk beli'
+            : 'Detail lengkap limit: `.mylimit`',
+        isUnlimited: isUnlimited || !energiEnabled,
     }
-    
-    await m.reply(claraWrap("energi", text))
+
+    if (cardCtx.isUnlimited) {
+        // unlimited / energi OFF → gak ada reset yang dihitung, kartu statis
+        return m.reply(buildLimitCard({ ...cardCtx, remainingMs: -1 }))
+    }
+
+    const targetTs = computeNextResetTs(resetHour, resetMinute)
+    // fire-and-forget: gak nahan command/react 🐣
+    runLiveTicker({
+        sock,
+        chat: m.chat,
+        m,
+        initialCard: buildLimitCard({ ...cardCtx, remainingMs: targetTs - Date.now() }),
+        tickCard: (st) => buildLimitCard({ ...cardCtx, remainingMs: st.remainingMs }),
+        finalCard: (st) => buildLimitCard({ ...cardCtx, remainingMs: st.remainingMs }),
+        mode: 'down',
+        targetTs,
+    }).catch(() => {})
+    return
 }
 
 export { pluginConfig as config, handler }
