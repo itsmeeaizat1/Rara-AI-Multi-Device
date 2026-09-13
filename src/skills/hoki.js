@@ -47,7 +47,7 @@ const skill = {
     const nomor = (typeof a === "string" ? a : String(a?.nomor || "")).trim()
     if (!nomor || !/\d/.test(nomor)) throw new Error("nomor-nya mana? contoh: hoki 081234567890")
     const { hasil, total, verdict } = hitungHoki(nomor)
-    const bar = (n) => "█".repeat(Math.round(n / 10)) + "░".repeat(10 - Math.round(n / 10))
+    const bar = (n) => "▰".repeat(Math.round(n / 10)) + "▱".repeat(10 - Math.round(n / 10))
     const lines = [
       `🔮 Ramalan Nomor Hoki — ${nomor}`,
       "",

@@ -108,7 +108,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const score = Math.min(100, Math.max(0, rngScore + activityBonus + timeBonus - 5));
 
   const tier = RIZZ_TIERS.find(t => score >= t.min && score <= t.max) || RIZZ_TIERS[0];
-  const bar = "█".repeat(Math.floor(score / 10)) + "░".repeat(10 - Math.floor(score / 10));
+  const bar = "▰".repeat(Math.floor(score / 10)) + "▱".repeat(10 - Math.floor(score / 10));
 
   // Pick response line based on score
   let pickUpLine = "";

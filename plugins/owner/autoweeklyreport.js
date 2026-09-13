@@ -343,7 +343,7 @@ async function generateReport(sock, groupId) {
     if (ai && ai.sentimen) {
       lines.push({ sub: toSC("Sentimen Grup") });
       const sm = ai.sentimen;
-      const bar = (pct) => "█".repeat(Math.round(pct / 10)).padEnd(1);
+      const bar = (pct) => "▰".repeat(Math.round(pct / 10)) + "▱".repeat(Math.max(0, 10 - Math.round(pct / 10)));
       lines.push(`  ${bar(sm.positif)} Positif: ${sm.positif}%`);
       lines.push(`  ${bar(sm.netral)} Netral : ${sm.netral}%`);
       lines.push(`  ${bar(sm.negatif)} Negatif: ${sm.negatif}%`);

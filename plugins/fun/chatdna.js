@@ -228,19 +228,19 @@ function generateDNA(jid) {
   const activeGroups = Object.keys(user.groups).length;
   let battery, batteryDesc;
   if (user.totalMessages > 5000) {
-    battery = "██████████";
+    battery = "▰▰▰▰▰▰▰▰▰▰";
     batteryDesc = "100% - Keracunan chat. Harus istirahat. Rumah sakit chat";
   } else if (user.totalMessages > 2000) {
-    battery = "████████░░";
+    battery = "▰▰▰▰▰▰▰▰▱▱";
     batteryDesc = "80% - Cukup aktif. Masih punya kehidupan nyata... mungkin";
   } else if (user.totalMessages > 500) {
-    battery = "█████░░░░░";
+    battery = "▰▰▰▰▰▱▱▱▱▱";
     batteryDesc = "50% - Sehat. Balance antara chat dan real life";
   } else if (user.totalMessages > 100) {
-    battery = "███░░░░░░░";
+    battery = "▰▰▰▱▱▱▱▱▱▱";
     batteryDesc = "30% - Lumayan. Masih malu-malu atau sibuk";
   } else {
-    battery = "█░░░░░░░░░";
+    battery = "▰▱▱▱▱▱▱▱▱▱";
     batteryDesc = "10% - Ghost mode. Muncul, baca, hilang. Ninja chat";
   }
 

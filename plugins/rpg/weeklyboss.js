@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
       await m.react("🐣");
 
       const hpPct = Math.floor((bossState.hp / bossState.maxHp) * 100);
-      const hpBar = "█".repeat(Math.floor(hpPct/10)) + "░".repeat(10 - Math.floor(hpPct/10));
+      const hpBar = "▰".repeat(Math.floor(hpPct/10)) + "▱".repeat(10 - Math.floor(hpPct/10));
 
       let msg = "";
       msg += `Boss: ${bossState.boss.emoji} *${bossState.boss.name}*\n`;
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
 
     // INFO (default)
     const hpPct = Math.floor((bossState.hp / bossState.maxHp) * 100);
-    const hpBar = "█".repeat(Math.floor(hpPct/10)) + "░".repeat(10 - Math.floor(hpPct/10));
+    const hpBar = "▰".repeat(Math.floor(hpPct/10)) + "▱".repeat(10 - Math.floor(hpPct/10));
 
     let msg = "";
     msg += `Boss: ${bossState.boss.emoji} *${bossState.boss.name}*\n`;

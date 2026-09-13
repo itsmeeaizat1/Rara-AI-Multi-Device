@@ -21,7 +21,7 @@ function expBar(exp, nextLevel) {
     const target = nextLevel * 10000
     const progress = Math.min(exp / target, 1)
     const filled = Math.round(progress * 10)
-    return '█'.repeat(filled) + '░'.repeat(10 - filled) + ` ${(progress * 100).toFixed(0)}%`
+    return '▰'.repeat(filled) + '▱'.repeat(10 - filled) + ` ${(progress * 100).toFixed(0)}%`
 }
 
 function getRankTitle(level) {
