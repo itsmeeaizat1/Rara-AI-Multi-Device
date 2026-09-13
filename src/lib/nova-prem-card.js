@@ -31,10 +31,10 @@ export function buildPremTickerCard(name, remainingMs, prefix = ".") {
     ].join("\n"));
   }
   return claraWrap("Premium Hampir Habis", [
-    "⏳ *PREMIUM HAMPIR HABIS*",
+    "🕒 *PREMIUM HAMPIR HABIS*",
     "",
     `👑 ${nm}, sisa premiummu:`,
-    `⏳ *${formatRemaining(remainingMs)}*`,
+    `🕒 *${formatRemaining(remainingMs)}*`,
     "",
     `🔄 Perpanjang SEKARANG: *${p}buyprem <durasi>*`,
     "",
