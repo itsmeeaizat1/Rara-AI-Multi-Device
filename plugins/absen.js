@@ -1,8 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/absen.js — Absen otomatis grup (1 file, ESM)
-// Command: .absen buka <durasi> [judul] | .absen tutup | .absen status | .absen
+// Command: .absenjam buka <durasi> [judul] | .absen tutup | .absen status | .absen
 
 import fs from "fs";
+import { runLiveTicker } from "../src/lib/nova-countdown.js";
+import { buildAbsenMeter } from "../src/lib/nova-absen-meter.js";
 import path from "path";
 
 // ── Module state (restart-safe: data di JSON, bukan RAM) ──
@@ -112,6 +114,9 @@ async function sendRekap(chatId) {
 
     let teks = `⏳ REKAP ABSEN: ${s.title || "Absen Grup"}\n\n`;
     teks += `✅ Hadir: ${totalHadir}/${totalMembers} (${persen}%)\n`;
+    if (totalMembers > 0) {
+      teks += buildAbsenMeter(totalHadir, totalMembers).lines.join("\n") + "\n";
+    }
     teks += `❌ Belum: ${totalBelum}\n`;
 
     if (totalHadir > 0) {
@@ -250,12 +255,12 @@ function init(sock) {
 
 // ── Plugin config ──
 const pluginConfig = {
-  name: "absen",
-  alias: ["absen"],
+  name: "absenjam",
+  alias: ["absenjam"],
   category: "group",
   description: "Absen otomatis grup",
-  usage: ".absen buka <durasi> [judul] | .absen tutup | .absen status",
-  example: ".absen buka 10 menit absen malam",
+  usage: ".absenjam buka <durasi> [judul] | .absenjam tutup | .absenjam status",
+  example: ".absenjam buka 10 menit absen malam",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -294,14 +299,21 @@ async function handler(m, { sock, config: botConfig }) {
 
   // ── BUKA ──
   if (sub === "buka") {
-    const durText = args[1];
-    if (!durText) {
+    // FIX (13 Sep): durText cuma ambil args[1] — unit di args[2] keabaikan
+    // (".absenjam buka 2 jam" dibaca "2" = 2 MENIT!). Sekarang unit ditempel
+    // ke durasi; judul mulai setelah unit.
+    const UNITS = ["detik", "dtk", "sec", "menit", "mnt", "min", "jam", "jm", "hour", "h", "m", "s"];
+    const durText = args[2] && UNITS.includes(String(args[2]).toLowerCase())
+      ? `${args[1]} ${args[2]}`
+      : args[1];
+    if (!durText || !args[1]) {
       try { await m.react("❌"); } catch {}
       return m.reply(
         `❌ Durasi wajib diisi.\n\nContoh:\n.absen buka 10 menit absen malam\n.absen buka 2 jam\n.absen buka 30 detik`,
       );
     }
 
+    const unitOffset = durText.includes(" ") ? 3 : 2;
     const durMs = parseDuration(durText);
     if (!durMs) {
       try { await m.react("❌"); } catch {}
@@ -315,10 +327,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (isSessionActive(m.chat)) {
       try { await m.react("❌"); } catch {}
-      return m.reply(`❌ Masih ada sesi aktif, tutup dulu dengan ${prefix}absen tutup`);
+      return m.reply(`❌ Masih ada sesi aktif, tutup dulu dengan ${prefix}absenjam tutup`);
     }
 
-    const title = args.slice(2).join(" ").trim() || "Absen Grup";
+    const title = args.slice(unitOffset).join(" ").trim() || "Absen Grup";
     const now = Date.now();
 
     setSession(m.chat, {
@@ -331,12 +343,52 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     try { await m.react("🐣"); } catch {}
-    return m.reply(
-      `✅ Sesi absen dibuka: ${title}\n` +
-      `Durasi: ${formatDuration(durMs)}\n` +
-      `Tenggat: ${new Date(now + durMs).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit" })} WIB\n\n` +
-      `Ketik "hadir" untuk absen.`,
-    );
+    // 🔹 LIVE COUNTDOWN (13 Sep): kartu sesi nge-tick ke tenggat — bukan
+    // kartu beku. Pas habis → "WAKTU ABSEN HABIS" + rekap otomatis dikirim
+    // watcher. Dibatalkan senyap kalau sesi ditutup manual duluan.
+    const tenggatTs = now + durMs;
+    const bukaCard = (remMs) => {
+      if (remMs <= 0) {
+        // pas waktunya habis (closing tickCard(0)) → kartu habis
+        return [
+          `⏰ *WAKTU ABSEN HABIS!*`,
+          ``,
+          `Sesi "${title}" udah ditutup otomatis.`,
+          `Rekap absen lagi dikirim ke grup...`,
+        ].join("\n");
+      }
+      const mnt = Math.floor(remMs / 60000);
+      const dtk = Math.floor((remMs % 60000) / 1000);
+      const bar = "▰".repeat(Math.max(0, Math.min(10, Math.round((1 - remMs / durMs) * 10)))) + "▱".repeat(10 - Math.max(0, Math.min(10, Math.round((1 - remMs / durMs) * 10))));
+      return [
+        `✅ *Sesi absen dibuka: ${title}*`,
+        ``,
+        `⏱ Durasi: ${formatDuration(durMs)}`,
+        `🎯 Tenggat: ${new Date(tenggatTs).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit" })} WIB`,
+        ``,
+        `⏳ Sisa waktu: ${mnt} menit ${String(dtk).padStart(2, "0")} detik`,
+        `📊 ${bar}`,
+        ``,
+        `Ketik "hadir" untuk absen`,
+      ].join("\n");
+    };
+    return runLiveTicker({
+      sock, chat: m.chat, m,
+      mode: "down",
+      targetTs: tenggatTs,
+      initialCard: bukaCard(durMs),
+      tickCard: (st) => bukaCard(st.remainingMs),
+      finalCard: () => [
+        `✅ *Sesi absen ditutup sebelum waktu habis*`,
+        ``,
+        `Rekap absen lagi dikirim ke grup...`,
+      ].join("\n"),
+      maxEdits: 600,
+      isCancelled: () => {
+        const cur = getSession(m.chat);
+        return !cur || !cur.active || cur.closedAt;
+      },
+    });
   }
 
   // ── TUTUP ──
@@ -366,11 +418,22 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     try { await m.react("🐣"); } catch {}
+    // 📊 METER KEHADIRAN: bar ▰▱ peserta vs anggota grup
+    let meterLine = "";
+    try {
+      const meta = await sock.groupMetadata(m.chat);
+      const botId = getBotJid() || sock?.user?.id || "";
+      const totalMembers = (meta.participants || []).filter((p) => p.id !== botId).length;
+      if (totalMembers > 0) {
+        meterLine = "\n" + buildAbsenMeter(s.hadir.length, totalMembers).lines.join("\n");
+      }
+    } catch {}
     return m.reply(
       `⏳ STATUS ABSEN: ${s.title || "Absen Grup"}\n\n` +
       `Sisa waktu: ${formatDuration(remaining)}\n` +
-      `Sudah hadir: ${s.hadir.length}\n` +
-      `Dibuka oleh: ${s.openedBy.split("@")[0]}`,
+      `Sudah hadir: ${s.hadir.length}` +
+      meterLine +
+      `\nDibuka oleh: ${s.openedBy.split("@")[0]}`,
     );
   }
 
