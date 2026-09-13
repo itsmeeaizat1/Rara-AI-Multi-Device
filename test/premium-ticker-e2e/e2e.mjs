@@ -71,7 +71,7 @@ const makeMock = (replies, sends) => ({
   check("sisa 23 jam tampil di kartu (X jam Y menit)", /jam \d+ menit|menit/.test(card));
   await new Promise((r) => setTimeout(r, 100));
   const tickSends = sends.filter((s) => s.payload?.text && norm(s.payload.text).includes("premium hampir habis"));
-  check("ticker kefire (kartu ⏳ kekirim)", tickSends.length >= 1, "sends=" + sends.length);
+  check("ticker kefire (kartu 🕒 kekirim)", tickSends.length >= 1, "sends=" + sends.length);
 }
 {
   // skenario 2: premium sisa 5 hari → GAK ada ticker
