@@ -520,7 +520,14 @@ async function handler(m, { sock, conn, config, db }) {
     await m.react("⚡");
     await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + decision.tool + "..."));
     await tool.run(sock, m, finalArgs);
-    await editFinal(sanitizeAiReply(decision.reply || tool.done || ""));
+    // 🔹 FIX 13 Sep 2026 (owner report: ".novaagent buatkan gambar kucing"
+    // dibalas teks yang NGARANG soal deskripsi grup — tool.run beneran
+    // ngubah state X, tapi teks konfirmasi malah pakai decision.reply dari
+    // AI yang BISA halusinasi ngomongin hal lain/gak sesuai tool yang
+    // beneran jalan). FIX: konfirmasi WAJIB pakai tool.done (akurat, sesuai
+    // tool yang beneran dieksekusi) — decision.reply cuma fallback kalau
+    // tool ini gak punya tool.done sama sekali.
+    await editFinal(sanitizeAiReply(tool.done || decision.reply || "Selesai."));
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
