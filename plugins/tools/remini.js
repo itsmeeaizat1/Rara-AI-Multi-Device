@@ -360,7 +360,7 @@ async function handler(m, { sock, args }) {
     const runLocal = async (mode = localMode) => {
       const q = hdQueueInfo();
       if (q.busy) {
-        try { await m.react("⏳"); } catch {}
+        try { await m.react("🕒"); } catch {}
         m.reply(claraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${q.ahead + 1}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
       }
       if (!isModelCached(mode)) {

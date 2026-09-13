@@ -83,7 +83,7 @@ async function handler(m, {}) {
       `💬 Mau nanya apa? Contoh:\n\n${prefix}salaamai apa itu wudhu?\n${prefix}salaamai list — pilih asisten lain`, "guide"));
   }
 
-  await m.react("⏳");
+  await m.react("🕒");
   const sess = getSession(m.chat);
 
   try {

@@ -227,7 +227,7 @@ async function handler(m, { sock, config: botConfig }) {
           "Harga: " + formatRupiah(sub.price) + " / " + cycleLabel(sub.cycle).toLowerCase(),
           "Jatuh Tempo: " + formatDate(next),
           live
-            ? "⏳ *" + days + " hari " + hms + "* menuju jatuh tempo ⏳"
+            ? "🕒 *" + days + " hari " + hms + "* menuju jatuh tempo 🕒"
             : "Status: " + status,
           "Dibuat: " + formatDate(sub.createdAt),
         ]

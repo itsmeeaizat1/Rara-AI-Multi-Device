@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     const r = data.result;
 
-    // ⏳ PENGHITUNG (13 Sep 2026): header libur terdekat / hari ini + ticker live
+    // 🕒 PENGHITUNG (13 Sep 2026): header libur terdekat / hari ini + ticker live
     const hariIni = r.hari_ini || {};
     const liburTerdekat = (r.mendatang?.hari_libur || [])[0] || null;
     const nasionalTerdekat = (r.mendatang?.event_nasional || [])[0] || null;

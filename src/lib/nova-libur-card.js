@@ -28,9 +28,9 @@ export function buildLiburHeader(hariIni, terdekat) {
   if (terdekat && terdekat.event) {
     const n = Number(terdekat.daysUntil);
     const tgl = terdekat.date || "";
-    if (n === 0) return `⏳ *LIBUR HARI INI: ${terdekat.event}* (${tgl})`;
-    if (n === 1) return `⏳ *Libur TERDEKAT: ${terdekat.event}* — BESOK! (${tgl})`;
-    return `⏳ *Libur terdekat: ${terdekat.event}* — ${n} hari lagi (${tgl})`;
+    if (n === 0) return `🕒 *LIBUR HARI INI: ${terdekat.event}* (${tgl})`;
+    if (n === 1) return `🕒 *Libur TERDEKAT: ${terdekat.event}* — BESOK! (${tgl})`;
+    return `🕒 *Libur terdekat: ${terdekat.event}* — ${n} hari lagi (${tgl})`;
   }
   return "";
 }
@@ -51,7 +51,7 @@ export function buildLiburCard(event, remainingMs) {
     ].join("\n"));
   }
   return claraWrap("Menuju Libur", [
-    `⏳ *${formatRemaining(remainingMs)}* lagi menuju libur`,
+    `🕒 *${formatRemaining(remainingMs)}* lagi menuju libur`,
     "",
     `✨ ${event}`,
     "",

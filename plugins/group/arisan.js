@@ -125,10 +125,10 @@ async function handler(m, { sock, config: botConfig }) {
       "",
       `💰 Setoran: ${rp(arisan.setoran)}/orang per giliran`,
       `👥 Peserta: ${arisan.peserta.length} orang`,
-      `🏆 Sudah dapat: ${sudah.length} | ⏳ Belum: ${belum.length}`,
+      `🏆 Sudah dapat: ${sudah.length} | 🕒 Belum: ${belum.length}`,
       `🎁 Total per giliran: ${rp(arisan.setoran * arisan.peserta.length)}`,
       "",
-      "⏳ *Belum dapat giliran:*",
+      "🕒 *Belum dapat giliran:*",
       ...(belum.length ? belum.map((p) => `• ${p.name}`) : ["— semua udah dapat! 🎉"]),
     ];
     if (sudah.length) {
@@ -160,7 +160,7 @@ async function handler(m, { sock, config: botConfig }) {
       `💰 Diterima: *${rp(arisan.setoran * arisan.peserta.length)}* (${arisan.peserta.length} peserta × ${rp(arisan.setoran)})`,
       "",
       sisa > 0
-        ? `⏳ Sisa ${sisa} orang belum dapat — undian berikutnya: ${prefix}arisan undi`
+        ? `🕒 Sisa ${sisa} orang belum dapat — undian berikutnya: ${prefix}arisan undi`
         : "🏆 Semua peserta udah dapat — arisan kelar! 🎉",
     ].join("\n")));
   }

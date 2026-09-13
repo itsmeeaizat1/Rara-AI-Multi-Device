@@ -456,7 +456,7 @@ export function cookPhases(player, recipe) {
   const bars = ["⬛⬛⬛⬛⬛", "🟩⬛⬛⬛⬛", "🟩🟩⬛⬛⬛", "🟩🟩🟩⬛⬛", "🟩🟩🟩🟩⬛", "🟩🟩🟩🟩🟩"];
   phases.push({
     title: "memasak",
-    frames: bars.map((b, i) => `⏳ Memasak... ${Math.round((i / (bars.length - 1)) * 100)}%\n${b}`),
+    frames: bars.map((b, i) => `🕒 Memasak... ${Math.round((i / (bars.length - 1)) * 100)}%\n${b}`),
   });
 
   // ── FASE 6: UAP NAIK (💨 turun-baris verbatim script) ──

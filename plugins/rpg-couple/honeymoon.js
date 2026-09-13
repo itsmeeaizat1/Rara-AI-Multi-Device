@@ -54,7 +54,7 @@ async function handler(m) {
     const elapsed = Date.now() - lastHoneymoon;
     if (lastHoneymoon > 0 && elapsed < HONEYMOON_COOLDOWN) {
       const daysLeft = Math.ceil((HONEYMOON_COOLDOWN - elapsed) / 86400000);
-      await m.react("⏳");
+      await m.react("🕒");
       return m.reply(novaRpgBox("Honeymoon", [
         `Udah bulan madu bulan ini!`,
         `Tunggu: ${daysLeft} hari lagi`,

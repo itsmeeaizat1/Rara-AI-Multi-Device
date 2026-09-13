@@ -665,13 +665,13 @@ function novaReply({ title = "", info = [], status = "", content = "", sc = true
 }
 
 
-// React khusus cooldown game: ⏳ — BUKAN 🚫 (🚫 khusus akses ditolak).
+// React khusus cooldown game: 🕒 — BUKAN 🚫 (🚫 khusus akses ditolak).
 // Owner request 2026-09-03: semua pesan cooldown fitur game (minigame/RPG/RPG cinta)
-// pakai react ⏳ biar beda jelas dari penolakan akses.
+// pakai react 🕒 biar beda jelas dari penolakan akses.
 // Gagal react → diem aja (gak pernah fatal).
 export async function reactCooldown(m) {
   try {
-    if (m && typeof m.react === "function") await m.react("⏳");
+    if (m && typeof m.react === "function") await m.react("🕒");
   } catch {}
 }
 

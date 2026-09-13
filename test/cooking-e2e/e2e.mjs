@@ -232,7 +232,7 @@ w("\n— handler .cooking —");
   // beli via handler + react
   const sock7 = makeSock();
   const m7 = await run("beli telur 3", sock7);
-  check(".cooking beli telur 3 → sukses + react ⏳→🐣", m7._replies[0].includes("BELI BERHASIL") && m7._reacts[0] === "⏳" && m7._reacts.at(-1) === "🐣");
+  check(".cooking beli telur 3 → sukses + react 🕒→🐣", m7._replies[0].includes("BELI BERHASIL") && m7._reacts[0] === "🕒" && m7._reacts.at(-1) === "🐣");
   check(".cooking beli → animasi morphing 3 frame (🛒→💰→✅)", sock7.frames.length >= 3 && sock7.frames[0].text.includes("🛒"));
   check("qty 3 kecatat di inventory", getCookingPlayer(U).inventory["Telur"] >= 3);
 
@@ -255,7 +255,7 @@ w("\n— handler .cooking —");
   check(".cooking masak → animasi 7 fase morphing (≥40 frame)", sock9.frames.length >= 40, `frames=${sock9.frames.length}`);
   check(".cooking masak → progress bar 100% kekirim", sock9.frames.some((f) => f.text.includes("100%") && f.text.includes("🟩🟩🟩🟩🟩")));
   check(".cooking masak → plating SIAP DISAJIKAN kekirim", sock9.frames.some((f) => f.text.includes("SIAP DISAJIKAN")));
-  check("hasil masakan box + react ⏳→🐣", m9._replies.at(-1).includes("HASIL MASAKAN") && m9._reacts[0] === "⏳" && m9._reacts.at(-1) === "🐣");
+  check("hasil masakan box + react 🕒→🐣", m9._replies.at(-1).includes("HASIL MASAKAN") && m9._reacts[0] === "🕒" && m9._reacts.at(-1) === "🐣");
 
   // masak tanpa nama resep
   const m10 = await run("masak", makeSock());

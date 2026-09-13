@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
         const remaining = data.active.duration - elapsed;
         await m.react("❌");
         return m.reply(
-          novaRpgBox("expedition", `Ekspedisi di *${data.active.name}* belum selesai!\n\n⏳ Sisa Waktu (ETA): *${formatTime(remaining)}*`, "error")
+          novaRpgBox("expedition", `Ekspedisi di *${data.active.name}* belum selesai!\n\n🕒 Sisa Waktu (ETA): *${formatTime(remaining)}*`, "error")
         );
       }
 
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
         return m.reply(
           novaRpgBox(
             "expedition",
-            `Kamu hanya bisa menjalankan 1 ekspedisi dalam satu waktu!\n\n📌 *Ekspedisi Aktif*: ${data.active.name}\n⏳ *Sisa Waktu*: ${formatTime(remaining)}\n\nKlaim hasil dengan *${prefix}expedition claim* jika sudah selesai.`,
+            `Kamu hanya bisa menjalankan 1 ekspedisi dalam satu waktu!\n\n📌 *Ekspedisi Aktif*: ${data.active.name}\n🕒 *Sisa Waktu*: ${formatTime(remaining)}\n\nKlaim hasil dengan *${prefix}expedition claim* jika sudah selesai.`,
             "error"
           )
         );
@@ -242,7 +242,7 @@ async function handler(m, { sock }) {
       let text = "";
       text += `${data.active.emoji} Lokasi : *${data.active.name}*\n`;
       text += `💰 Est. Reward : ${data.active.minGold.toLocaleString()} - ${data.active.maxGold.toLocaleString()} Gold\n`;
-      text += `⏳ Sisa Waktu : *${isDone ? "SIAP DIKLAIM! 🎉" : formatTime(remaining)}*\n`;
+      text += `🕒 Sisa Waktu : *${isDone ? "SIAP DIKLAIM! 🎉" : formatTime(remaining)}*\n`;
       text += `
 `;
       if (isDone) {
