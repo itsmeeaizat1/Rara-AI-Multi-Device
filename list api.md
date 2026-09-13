@@ -31,7 +31,7 @@
 | Xemoz Official | `api-xemoz-official.my.id` | GPT 5.3/5.5, DeepSeek v3.2/v4 | ✅ Free |
 | ABzTech | `api-abztech.zone.id` | AI genimg | ✅ Free |
 | FazzCode | `api.fazzcode.eu.cc/api/ai/chatbot-role` | .airoleplaychat — roleplay AI 17 karakter (Sakura, Gojo Satoru, Anya, Luffy, Doraemon, Momo Ayase, dll) + persona custom bebas. Action: `list` (daftar karakter, cache 1 jam) / `create` (mulai sesi, param character+query+name+prompt) / `chat` (lanjut obrolan). API STATELESS → riwayat 6 giliran disimpan lokal per-user & di-inject ringkas ke query biar karakter "inget". LIVE verified 14 Sep (Gojo bales). Key `re_live_...` di apikeys.json aiSatuan → fazzcode (getter getFazzcodeKey) | ✅ Key required (free /register) |
-
+| FazzCode (AI lain) | `api.fazzcode.eu.cc` — /turboseek, /notrack, /router/agnes-2.5-flash | SWEEP LIVE 14 SEP (225 endpoint docs dicek, kategori AI doang): ✅ HIDUP — /turboseek (search AI ala Perplexity: jawaban + sources → .turboseek), /notrack (chat AI model C, stateless → .notrack + rantai fallback 1.7, FLAKY auto-lock transient), /router/agnes-2.5-flash (BansosAI — satu-satunya router hidup dari 19, dipakai fallback ke-2 di rantai). ❌ MATI — claude-sonnet-5 (upstream session invalid), unlimitedai (404), t2v/generate (EROFS internal), remusic + melody (hang/400), qwenimagedit (sukses tapi result kosong — gak ada gambar balik), magicstudio (404), router lain (ENDPOINT_LOCKED auto). CATATAN: fazzcode AUTO-LOCK agresif — endpoint kekunci sementara pas kena error, tunggu beberapa menit jalan lagi | ⚠️ Auto-lock flaky |
 ## 🧪 Status Tes Gateway AI — 8 Sep 2026 (live verified dari sandbox)
 
 | Kandidat | Hasil | Catatan |

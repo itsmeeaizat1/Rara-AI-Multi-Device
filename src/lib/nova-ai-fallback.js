@@ -256,6 +256,15 @@ export async function aiChainChat(prompt, opts = {}) {
     return finish(await nexaiChat(fullPrompt, { timeoutMs: 35000 }));
   } catch (e) { errors.push(`nexai: ${e.message}`); }
 
+  // 1.7 FazzCode (api.fazzcode.eu.cc) — NoTrack AI → Agnes 2.5 Flash
+  // (request owner 14 Sep 2026: "cba cek ai lain di fazzcode tmbah ke bot".
+  //  Key gak diset → fazzcodeAiChat throw → di-skip senyap lanjut rantai.
+  //  fazzcode sering auto-lock endpoint sementara — transient, skip wajar.)
+  try {
+    const { fazzcodeAiChat } = await import("../scraper/fazzcode-ai.js");
+    return finish(await fazzcodeAiChat(fullPrompt));
+  } catch (e) { errors.push(`fazzcode: ${e.message}`); }
+
   // 2. Haidar — brand pilihan, gagal → gemini
   try { return finish(await viaHaidar(fullPrompt, model)); }
   catch (e) { errors.push(`haidar/${model}: ${e.message}`); }
