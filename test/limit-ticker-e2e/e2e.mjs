@@ -58,7 +58,7 @@ w("\n— buildLimitCard —");
   });
   const cn = norm(c);
   check("kartu: nama + status + sisa + terpakai", cn.includes("budi") && cn.includes("free") && cn.includes("280") && cn.includes("20/300"));
-  check("meter bar ▓░ + persen", /▓+░*/.test(c) && c.includes("%"));
+  check("meter bar ▰▱ + persen", /▰+▱*/.test(c) && c.includes("%"));
   check("baris countdown 1:30:00", cn.includes("1:30:00"), cn.slice(0, 200));
   check("reset pukul 00:00 WIB", cn.includes("00:00 wib"));
   const d = buildLimitCard({ title: "My Limit", status: "Free", sisa: "0", terpakai: 300, total: 300, resetTime: "00:00", remainingMs: 0 });
@@ -127,7 +127,7 @@ w("\n— handler .mylimit (db beneran, isolated) —");
   // HARI INI MINGGU → weekend bonus x2 aktif (totalLimit 600, terpakai 320)
   const isSunday = moment.tz("Asia/Jakarta").day() === 0;
   const expectPair = isSunday ? "320/600" : "20/300";
-  check(`kartu handler: meter ${expectPair} (weekend aware) + countdown`, norm(sends[0].payload.text).includes(expectPair) && /▓/.test(sends[0].payload.text), norm(sends[0].payload.text).slice(0, 200));
+  check(`kartu handler: meter ${expectPair} (weekend aware) + countdown`, norm(sends[0].payload.text).includes(expectPair) && /▰/.test(sends[0].payload.text), norm(sends[0].payload.text).slice(0, 200));
 }
 
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);

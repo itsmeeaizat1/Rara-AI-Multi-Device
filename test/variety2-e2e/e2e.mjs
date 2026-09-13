@@ -36,14 +36,14 @@ function mkM(over = {}) {
   const m = {
     sender: "62866@row", chat: "t@g.us", text: "", command: "cekganteng", prefix: ".",
     mentionedJid: [], quoted: null,
-    reply: async (text) => { m.__sent.push(String(text)); return { key: { id: "r" } }; },
+    reply: async (text, opts) => { m.__sent.push({ payload: { text, ...(opts || {}) } }); return { key: { id: "r" } }; },
     __sent: [],
   };
   return Object.assign(m, over);
 }
 
 // ═══════════════════════════════════════════════════════════════
-w("\n— keluarga .cek*: animasi mengukur (sample 3 fitur) —");
+w("\n— keluarga .cek*: langsung hasil (animasi ▓░ dihapus 14 Sep) —");
 for (const cmd of ["cekganteng", "cekbucin", "cekgabut"]) {
   const { config, handler } = await import(R + "/plugins/cek/" + cmd + ".js");
   const sock = mockSock();
@@ -51,14 +51,12 @@ for (const cmd of ["cekganteng", "cekbucin", "cekgabut"]) {
   const t0 = Date.now();
   await handler(m, { sock });
   const dur = Date.now() - t0;
-  check(cmd + ": animasi jalan (bukan dadakan)", sock.sent.length >= 3, sock.sent.length + " pesan");
-  check(cmd + ": frame pertama pesan baru (tanpa edit)", !sock.sent[0].payload.edit);
-  const hasMeter = sock.sent.some((s) => /▓/.test(String(s.payload.text || "")));
-  check(cmd + ": ada bar meter ▓▓▓░░░", hasMeter);
-  const last = sock.sent[sock.sent.length - 1];
-  const lastTxt = norm(last.payload.text);
-  check(cmd + ": kartu final = hasil (persen + mentions)", /\d+%/.test(lastTxt) && last.payload.edit && Array.isArray(last.payload.mentions), lastTxt.slice(0, 70));
-  check(cmd + ": animasi ngebut (frame 120ms)", dur < 8000, dur + "ms");
+  check(cmd + ": langsung jalan (gak nunggu animasi)", dur < 800, dur + "ms");
+  check(cmd + ": gak ada pesan animasi (sock kosong)", sock.sent.length === 0, sock.sent.length + " pesan");
+  check(cmd + ": kartu hasil via reply", m.__sent.length === 1, m.__sent.length + " reply");
+  const txt = norm(m.__sent[0].payload.text);
+  check(cmd + ": hasil persen + mentions aman", /\d+%/.test(txt) && Array.isArray(m.__sent[0].payload.mentions), txt.slice(0, 70));
+  check(cmd + ": gak ada bar animasi ▓", !/▓/.test(txt), txt.slice(0, 50));
 }
 {
   // edit gagal → fallback m.reply kartu hasil
@@ -67,7 +65,7 @@ for (const cmd of ["cekganteng", "cekbucin", "cekgabut"]) {
   sock.sendMessage = async () => { throw new Error("gak bisa kirim"); };
   const m = mkM({ command: "cekgila", mentionedJid: [] });
   await handler(m, { sock });
-  check("cekgila: edit gagal → kartu hasil via reply", m.__sent.length === 1 && /\d+%/.test(norm(m.__sent[0])), norm(m.__sent[0]).slice(0, 70));
+  check("cekgila: kartu hasil via reply (tanpa animasi)", m.__sent.length === 1 && /\d+%/.test(norm(m.__sent[0].payload.text)), norm(m.__sent[0].payload.text).slice(0, 70));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -92,7 +90,7 @@ w("\n— .countdown: live (ironis fix) —");
   const sock = mockSock();
   const m = mkM({ text: "01-01-2020", command: "countdown" });
   await handler(m, { sock, config: { command: { prefix: "." } } });
-  check("tanggal lewat → pesan error", m.__sent.length === 1 && norm(m.__sent[0]).includes("lewat"), norm(m.__sent[0]).slice(0, 60));
+  check("tanggal lewat → pesan error", m.__sent.length === 1 && norm(m.__sent[0].payload.text).includes("lewat"), norm(m.__sent[0].payload.text).slice(0, 60));
 }
 
 // ═══════════════════════════════════════════════════════════════
