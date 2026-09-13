@@ -65,6 +65,7 @@ export async function runLiveTicker(o) {
     targetTs = 0, sinceTs = 0,
     upRunMs = 12000,
     maxEdits = 24,
+    isCancelled = null, // (opsional) () => boolean — batasin ticker kapan aja (mis. sesi di-stop)
   } = o || {};
 
   // kirim kartu awal sebagai pesan baru + simpan key buat edit
@@ -77,6 +78,7 @@ export async function runLiveTicker(o) {
 
   let edits = 0;
   let finished = false;
+  let cancelled = false; // dibatalkan dari luar (isCancelled)
 
   const state = (now = Date.now()) => ({
     now,
@@ -91,10 +93,13 @@ export async function runLiveTicker(o) {
       const done = mode === "down" ? st.remainingMs <= 0 : st.elapsedMs >= upRunMs;
       if (done) { finished = true; break; }
 
+      if (isCancelled && isCancelled()) { cancelled = true; break; }
+
       const delay = mode === "down"
         ? nextDelay({ remainingMs: st.remainingMs, editsDone: edits })
         : Math.min(1000, Math.max(200, upRunMs - st.elapsedMs));
       await sleep(delay);
+      if (isCancelled && isCancelled()) { cancelled = true; break; } // dibatalin pas mid-sleep
 
       edits++;
       if (!key) break; // edit gak available → gak usah junk pesan baru
@@ -109,9 +114,11 @@ export async function runLiveTicker(o) {
     // kehabisan kuota edit → finalCard statis biar info tetep lengkap
     if (key) {
       const st = state();
-      const closing = finished || !finalCard
-        ? tickCard({ ...st, remainingMs: 0 })
-        : finalCard(st);
+      const closing = cancelled
+        ? (finalCard ? finalCard(st) : tickCard(st))
+        : finished || !finalCard
+          ? tickCard({ ...st, remainingMs: 0 })
+          : finalCard(st);
       try { await sock.sendMessage(chat, { text: closing, edit: key }); } catch {}
     }
   } catch {}
