@@ -774,15 +774,15 @@ export async function animLearnSkill(m, sock, skillName, delay = 2000) {
 }
 
 /**
- * Animasi generic — untuk plugin yang butuh animasi simple
+ * Animasi generic — SEAM NO-OP sejak 14 Sep 2026 (owner: "animasi loading
+ * gak perlu, udah ada loading react emoji — hapus aja"). Dulu morphing
+ * "Label... → Sedang diproses → Selesai" di 92 plugin RPG. Signature
+ * dipertahanin biar 92 call site gak perlu diubah — sekarang langsung
+ * lolos, loading cukup react emoji (🕒→🐣) dari handler. Anim konten
+ * nyata (hunt/battle/profesi) tetap via rpgScene langsung.
  */
 export async function animGeneric(m, sock, emoji, label, steps, delay = 2000) {
-  const fullSteps = steps || [
-    `${emoji} ${label}...`,
-    `➕ Sedang diproses...`,
-    `✔️ Selesai!`,
-  ];
-  await rpgScene(m, sock, fullSteps, delay, label || "");
+  return;
 }
 
 /* ============ ANIMASI EVENT & GAME POPULER (morphing) ============ */
