@@ -608,7 +608,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       const lines = groups.map(([jid, gt]) => {
-        const bar = "█".repeat(Math.floor(gt.level / 10)) + "░".repeat(10 - Math.floor(gt.level / 10));
+        const bar = "▰".repeat(Math.floor(gt.level / 10)) + "▱".repeat(10 - Math.floor(gt.level / 10));
         const status = gt.level >= 75 ? "CRITICAL" : gt.level >= 50 ? "WARN" : gt.level >= 20 ? "MILD" : "SAFE";
         return `| ${jid.slice(0, 15)}... ${bar} ${gt.level}/100 [${status}]`;
       });

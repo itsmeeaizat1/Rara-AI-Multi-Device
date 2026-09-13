@@ -90,7 +90,7 @@ function formatBar(count, total) {
   if (total === 0) return "";
   const pct = Math.round((count / total) * 100);
   const filled = Math.round(pct / 5);
-  return "█".repeat(filled) + "░".repeat(20 - filled);
+  return "▰".repeat(filled) + "▱".repeat(20 - filled);
 }
 
 // ==================== Safe Helpers ====================

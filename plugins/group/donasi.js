@@ -131,10 +131,10 @@ function parseMentions(text) {
 
 // Progress bar text
 function progressBar(current, target, width = 10) {
-  if (target <= 0) return "░".repeat(width);
+  if (target <= 0) return "▱".repeat(width);
   const pct = Math.min(current / target, 1);
   const filled = Math.round(pct * width);
-  return "█".repeat(filled) + "░".repeat(width - filled);
+  return "▰".repeat(filled) + "▱".repeat(width - filled);
 }
 
 async function getGroupMembers(sock, groupId) {

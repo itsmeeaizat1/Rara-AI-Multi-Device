@@ -120,7 +120,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   cfg[m.sender].checkedToday = true;
   saveConfig(db, gid, cfg);
 
-  const bar = "█".repeat(Math.floor(score / 10)) + "░".repeat(10 - Math.floor(score / 10));
+  const bar = "▰".repeat(Math.floor(score / 10)) + "▱".repeat(10 - Math.floor(score / 10));
 
   await m.reply(claraWrap("Aura Reading", [
     "@" + m.sender.split("@")[0],
