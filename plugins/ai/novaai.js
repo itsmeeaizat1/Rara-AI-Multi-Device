@@ -232,7 +232,7 @@ async function handler(m, { sock, conn, config, db }) {
       hidetag: '.novaagent tag semua [pesan]', tagadmin: '.novaagent tag admin [pesan]',
       poll: '.novaagent poll [pertanyaan | opsi1, opsi2]', delmsg: '.novaagent hapus pesan (reply)',
       leavegc: '.novaagent keluar grup (owner only)',
-      genimage: '.novaagent buatkan gambar kucing astronot'
+      genimage: '.novaagent buatkan gambar kucing astronot (rasio: 9:16 / 16:9 / 1:1 dst)'
     };
     const lines = [];
     const toolCount = Object.keys(TOOLS).length + Object.keys(getAllSkills()).length;

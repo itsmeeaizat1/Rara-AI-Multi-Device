@@ -58,10 +58,10 @@ export const TOOLS = {
       // canvas (free) → pollinations cuma juru penyelamat terakhir.
       // Engine ikut ditulis di caption biar keliatan beneran pakai apa.
       const { callImageGenChain } = await import('./nova-ai-service.js');
-      const img = await callImageGenChain(prompt);
+      const img = await callImageGenChain(prompt, { ratio: a?.ratio || undefined });
       await conn.sendMessage(m.chat, {
         image: Buffer.from(img.base64, 'base64'),
-        caption: '🎨 ' + prompt.slice(0, 150) + (img.via ? '\n_(engine: ' + img.via + ')_' : ''),
+        caption: '🎨 ' + prompt.slice(0, 150) + (img.via ? '\n_(engine: ' + img.via + ')_' : '') + (img.ratio && img.ratio !== '1:1' ? ' _(rasio: ' + img.ratio + ')_' : ''),
       }, { quoted: m });
     }
   },
@@ -1037,6 +1037,7 @@ Aturan WAJIB:
 Contoh:
 "tutup grup" → {"tool":"closegc","args":{},"execCommand":null,"reply":"Baik, menutup grup."}
 "buatkan gambar kucing astronot" → {"tool":"genimage","args":{"prompt":"seekor kucing astronot di bulan, kartun lucu"},"execCommand":null,"reply":"Oke, gambarnya aku buatkan ya."}
+"buatkan gambar kucing 9:16" → {"tool":"genimage","args":{"prompt":"kucing","ratio":"9:16"},"execCommand":null,"reply":"Oke, gambarnya aku buatkan rasio 9:16 ya."}
 "kick aizat 2" → {"tool":"kick","args":{"user":"aizat 2"},"execCommand":null,"reply":"Oke, coba kick aizat 2."}
 "blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"Oke, user diblokir."}
 "ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Oke."}

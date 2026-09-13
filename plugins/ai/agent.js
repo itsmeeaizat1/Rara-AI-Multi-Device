@@ -244,7 +244,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
       const img = await callImageGenChain(prompt, {});
       await sock.sendMessage(m.chat, {
         image: Buffer.from(img.base64, "base64"),
-        caption: "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : ""),
+        caption: "🎨 " + prompt.slice(0, 150) + (img.via ? "\n_(engine: " + img.via + ")_" : "") + (img.ratio && img.ratio !== "1:1" ? " _(rasio: " + img.ratio + ")_" : ""),
       }, { quoted: m });
       return { ok: true, msg: "Gambar dikirim (engine: " + (img.via || "-") + "): " + prompt.slice(0, 80) };
     } catch (e) {

@@ -7,6 +7,7 @@
  *           IkyyXD (gemini, cici, gpt-5-mini, google-gemma, unliai, publicai, perplexity, zai, zerogpt, ai4chat via api.ikyyxd.my.id)
  */
 
+import zlib from "node:zlib";
 import { getDatabase } from "./nova-database.js";
 import { getProviderApiKey } from "./apikey/ai-chain.js";
 
@@ -668,7 +669,7 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
     // langsung ("1:1" → 1x1 pixel, hasilnya gambar 1px!)
     const RATIO_PX = {
       "1:1": [1024, 1024], "16:9": [1280, 720], "9:16": [720, 1280],
-      "4:3": [1024, 768], "3:4": [768, 1024], "3:2": [1200, 800], "2:3": [800, 1200],
+      "4:3": [1024, 768], "3:4": [768, 1024], "3:2": [1200, 800], "2:3": [800, 1200], "21:9": [1280, 548],
     };
     const [w, h] = RATIO_PX[String(opts.ratio || "1:1")] || [1024, 1024];
     // pollinations kadang balikin placeholder kecil pas antri — retry 3x
@@ -754,16 +755,103 @@ export async function callImageGen(providerKey, prompt, opts = {}) {
  * api-faa 52 dtk 2.2MB ✅ + kuroneko 24 dtk ✅.
  * Rantai: live3d (api-faa) → kuroneko nanoBananaEdit → throw.
  */
+// 🔹 RASIO GAMBAR (request owner 13 Sep 2026: "buat gambar sesuai ukuran
+// rasio yg diinginkan misal kucing 9:16"): user nulis rasio di prompt →
+// dideteksi otomatis → canvas nano-banana dibikin SESUAI RASIO (bukan
+// 512x512 persegi mulu) + hint rasio buat provider key + pollinations
+// fallback ikut dims rasio.
+const IMAGE_RATIOS = ["21:9", "9:16", "16:9", "1:1", "4:3", "3:4", "3:2", "2:3"];
+// dimensi canvas nano-banana per rasio (sisi panjang 1024, genap)
+const NANO_RATIO_PX = {
+  "1:1": [512, 512],
+  "9:16": [576, 1024],
+  "16:9": [1024, 576],
+  "4:3": [1024, 768],
+  "3:4": [768, 1024],
+  "3:2": [1024, 684],
+  "2:3": [684, 1024],
+  "21:9": [1024, 440],
+};
+
+/**
+ * extractImageRatio — deteksi rasio di teks prompt user.
+ * Support format "9:16" / "9.16" + kata kunci (portrait/vertikal → 9:16,
+ * landscape/horizontal → 16:9, persegi/square → 1:1).
+ * @returns {{ratio:string|null, prompt:string}} prompt sudah dibersihin dari token rasio
+ */
+export function extractImageRatio(text) {
+  const t = String(text || "").trim();
+  if (!t) return { ratio: null, prompt: "" };
+  const re = new RegExp("\\b(" + IMAGE_RATIOS.map(r => r.replace(":", "[.:]")).join("|") + ")\\b");
+  const m = t.match(re);
+  if (m) {
+    const ratio = m[1].replace(".", ":");
+    return { ratio, prompt: t.replace(m[0], " ").replace(/\s+/g, " ").trim() };
+  }
+  const s = t.toLowerCase();
+  let ratio = null, kw = null;
+  if (/\b(portrait|vertikal|vertical)\b/.test(s)) { ratio = "9:16"; kw = /\b(portrait|vertikal|vertical)\b/gi; }
+  else if (/\b(landscape|horizontal)\b/.test(s)) { ratio = "16:9"; kw = /\b(landscape|horizontal)\b/gi; }
+  else if (/\b(persegi|square)\b/.test(s)) { ratio = "1:1"; kw = /\b(persegi|square)\b/gi; }
+  if (ratio) {
+    return { ratio, prompt: t.replace(kw, " ").replace(/\s+/g, " ").trim() };
+  }
+  return { ratio: null, prompt: t };
+}
+
+// ── builder PNG abu-abu canvas (untuk trik nano-banana, dimensi bebas) ──
+function _crc32(buf) {
+  let c, crc = 0xffffffff;
+  for (let n = 0; n < buf.length; n++) {
+    c = (crc ^ buf[n]) & 0xff;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+    crc = (crc >>> 8) ^ c;
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+function _pngChunk(type, data) {
+  const len = Buffer.alloc(4);
+  len.writeUInt32BE(data.length);
+  const td = Buffer.concat([Buffer.from(type, "ascii"), data]);
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(_crc32(td));
+  return Buffer.concat([len, td, crc]);
+}
+/**
+ * makeGrayCanvas — PNG solid abu-abu (RGB 128) ukuran bebas, dipakai
+ * nano-banana sebagai kanvas kosong yang digambar ulang. Rasio canvas =
+ * rasio output nano-banana.
+ */
+export function makeGrayCanvas(w, h) {
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(w, 0);
+  ihdr.writeUInt32BE(h, 4);
+  ihdr[8] = 8;   // bit depth 8
+  ihdr[9] = 2;   // color type 2 (RGB)
+  const row = Buffer.concat([Buffer.from([0]), Buffer.alloc(w * 3, 128)]); // filter 0 + abu-abu
+  const raw = Buffer.concat(Array(h).fill(row));
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), // PNG signature
+    _pngChunk("IHDR", ihdr),
+    _pngChunk("IDAT", zlib.deflateSync(raw)),
+    _pngChunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+
 const NANO_CANVAS_B64 = "iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAHG0lEQVR4nO3VMQEAAAiAMPunNYIxPNgS8DELQNJ8BwDwwwAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDAAgygAAogwAIMoAAKIMACDKAACiDABgmw4jkKjBz3+yuAAAAABJRU5ErkJggg=="; // PNG 512x512 abu-abu
 
 // seam e2e — inject nano-banana fake biar tes rantai gak nyamber API live
 let _nbT2IFake = null;
 export function _setNanoBananaT2IForTest(fn) { _nbT2IFake = fn; }
 
-export async function nanoBananaText2Img(prompt) {
+export async function nanoBananaText2Img(prompt, opts = {}) {
   const promptText = String(prompt || "").trim() || "sesuatu yang menarik dan indah";
   const fullPrompt = "This is a blank gray canvas. Generate and draw a completely new image covering the whole canvas: " + promptText + ". High quality, detailed.";
-  const canvas = Buffer.from(NANO_CANVAS_B64, "base64");
+  // 🔹 RASIO (13 Sep): canvas dibikin SESUAI RASIO yang diminta user —
+  // rasio canvas = rasio output nano-banana. Tanpa rasio → 512x512 (default lama).
+  const ratio = String(opts?.ratio || "").trim();
+  const dims = ratio && NANO_RATIO_PX[ratio] ? NANO_RATIO_PX[ratio] : null;
+  const canvas = dims ? makeGrayCanvas(dims[0], dims[1]) : Buffer.from(NANO_CANVAS_B64, "base64");
 
   // 1. live3d (api-faa) — nano-banana
   try {
@@ -799,6 +887,16 @@ export async function nanoBananaText2Img(prompt) {
  * penyelamat terakhir.
  */
 export async function callImageGenChain(prompt, opts = {}) {
+  // 🔹 RASIO (13 Sep): "kucing 9:16" → prompt "kucing" + ratio "9:16" —
+  // rasio dideteksi SEKALI di sini biar SEMUA pemanggil (.agent, .novaagent,
+  // autoflow) otomatis support tanpa parse sendiri-sendiri.
+  const ex = extractImageRatio(prompt);
+  const ratio = String(opts.ratio || ex.ratio || "").trim() || null;
+  const promptClean = ex.prompt || String(prompt || "");
+  // hint rasio natural-language buat provider key (gemini/xai/openai/qwen)
+  // — prompt teksnya udah gak ada "9:16"-nya, hint ini jaga maksud user.
+  const promptWithHint = ratio && ratio !== "1:1" ? `${promptClean} (aspect ratio ${ratio}, ${ratio === "9:16" || ratio === "2:3" || ratio === "3:4" ? "portrait" : "landscape"})` : promptClean;
+
   const IMAGE_CHAIN = ["gemini", "xai", "openai", "qwen"];
   const errs = [];
   for (const p of IMAGE_CHAIN) {
@@ -806,8 +904,8 @@ export async function callImageGenChain(prompt, opts = {}) {
     try { key = String(resolveApiKeyForProvider(p, {}) || "").trim(); } catch {}
     if (!key) continue; // gak ada key → skip (jangan buang waktu)
     try {
-      const img = await callImageGen(p, prompt, { ...opts, apiKey: key, noFreeFallback: true });
-      if (img?.base64) return { ...img, via: img.via || p };
+      const img = await callImageGen(p, promptWithHint, { ...opts, apiKey: key, noFreeFallback: true });
+      if (img?.base64) return { ...img, via: img.via || p, ratio };
     } catch (e) {
       errs.push(`${p}: ${String(e?.message || e).slice(0, 80)}`);
       console.log(`[ImageGenChain] ${p} gagal → lanjut provider berikutnya`);
@@ -817,14 +915,15 @@ export async function callImageGenChain(prompt, opts = {}) {
   // "jgn pakai ai polition, pakai nano banana") — sebelum pollinations
   try {
     const nbFn = _nbT2IFake || nanoBananaText2Img;
-    const img = await nbFn(prompt);
-    if (img?.base64) return img;
+    const img = await nbFn(promptClean, { ratio });
+    if (img?.base64) return { ...img, ratio };
   } catch (e) {
     errs.push("nano-banana: " + String(e?.message || e).slice(0, 80));
   }
   // semua beneran gagal → pollinations juru penyelamat TERAKHIR
   console.log(`[ImageGenChain] semua provider gagal${errs.length ? " (" + errs.join(" | ") + ")" : ""} → pollinations (free)`);
-  return await callImageGen("gemini", prompt, opts); // tanpa key → jalur pollinations
+  const img = await callImageGen("gemini", promptWithHint, { ...opts, ratio }); // tanpa key → jalur pollinations
+  return { ...img, ratio };
 }
 
 /**

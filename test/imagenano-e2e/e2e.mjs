@@ -17,7 +17,7 @@ t("1c. canvas kosong 512x512 ke-embed", /NANO_CANVAS_B64 = "iVBOR/.test(src) && 
 const chainStart = src.indexOf("export async function callImageGenChain");
 const chainEnd = src.indexOf("/**", chainStart);
 const chainSrc = src.slice(chainStart, chainEnd > 0 ? chainEnd : undefined);
-t("1d. chain nyebut nano-banana sebelum pollinations", chainSrc.indexOf("nbFn(prompt)") >= 0 && chainSrc.indexOf("nbFn(prompt)") < chainSrc.indexOf("pollinations juru penyelamat"));
+t("1d. chain nyebut nano-banana sebelum pollinations", chainSrc.indexOf("nbFn(promptClean") >= 0 && chainSrc.indexOf("nbFn(promptClean") < chainSrc.indexOf("pollinations juru penyelamat"));
 
 // 2. seam inject sukses → chain return via nano-banana (tanpa network nano)
 _setNanoBananaT2IForTest(async () => ({ base64: Buffer.alloc(10000, 7).toString("base64"), mimeType: "image/png", via: "nano-banana" }));
