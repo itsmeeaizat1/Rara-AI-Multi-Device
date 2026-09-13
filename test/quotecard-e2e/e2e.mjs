@@ -53,9 +53,11 @@ for (const cmd of ["quotesbijak", "quotesbucin", "quotesgombal", "quotechat"]) {
     reply: async () => ({}),
   };
   await handler(m, { sock });
+  const textMsgs = sock.sent.filter((s) => s.payload?.text && !s.payload?.react);
   const img = sock.sent.find((s) => s.payload?.image);
+  check(cmd + ": plain teks DI ATAS (sebelum gambar)", !!img && textMsgs.length >= 1 && sock.sent.indexOf(textMsgs[0]) < sock.sent.indexOf(img), textMsgs.length + " teks");
   check(cmd + ": kirim kartu PNG", !!img && isPng(img.payload.image), img ? img.payload.image.length + "b" : "gak ada image");
-  check(cmd + ": caption = quote lama", !!img && String(img.payload.caption || "").trim().length > 0, img ? String(img.payload.caption).slice(0, 40) : "-");
+  check(cmd + ": kartu caption kecil (bukan dobel quote)", !!img && !String(img.payload.caption || "").includes('"'), img ? String(img.payload.caption).slice(0, 40) : "-");
   check(cmd + ": react 🕒 lalu 🐣", sock.sent.filter((s) => s.payload?.react?.text === "🕒").length === 1 && sock.sent.filter((s) => s.payload?.react?.text === "🐣").length === 1);
 }
 {
@@ -65,7 +67,7 @@ for (const cmd of ["quotesbijak", "quotesbucin", "quotesgombal", "quotechat"]) {
   const m = { key: { remoteJid: "t@g.us" }, reply: async () => ({}) };
   await handler(m, { sock });
   const txt = sock.sent.find((s) => s.payload?.text && !s.payload?.react);
-  check("quotesgalau: image gagal → fallback teks", !!txt && String(txt.payload.text).includes(`"`), txt ? String(txt.payload.text).slice(0, 40) : "-");
+  check("quotesgalau: image gagal → teks tetep terkirim, gak dobel", !!txt && String(txt.payload.text).includes(`"`) && sock.sent.filter((s) => s.payload?.text && !s.payload?.react).length === 1, txt ? String(txt.payload.text).slice(0, 40) : "-");
 }
 
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);
