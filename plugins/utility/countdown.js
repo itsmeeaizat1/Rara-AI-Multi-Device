@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
   name: "countdown", alias: ["countdown"], category: "utility",
@@ -33,12 +34,26 @@ async function handler(m, { sock, config: botConfig }) {
         "Tanggal sudah lewat!"].join("\n")));
       return { handled: true };
     }
-    const days = Math.floor(diff / 86400000);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    const mins = Math.floor((diff % 3600000) / 60000);
-    const secs = Math.floor((diff % 60000) / 1000);
-    await m.reply(novaError("Countdown", [`Target: *${target.toLocaleDateString("id-ID")}*`,
-      `Sisa: *${days} hari, ${hours} jam, ${mins} menit, ${secs} detik*`].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
+    // 🔹 LIVE COUNTDOWN (13 Sep, request owner "fitur polos di-variasi biar
+    // menarik"): ironis kalau fitur bernama countdown gak nge-tick — kartu
+    // sekarang hidup pakai nova-countdown, settle statis saat kuota edit abis.
+    const cdCard = (remainingMs, live = true) => {
+      const days = Math.floor(Math.max(0, remainingMs) / 86400000);
+      const hms = formatRemaining(Math.max(0, remainingMs) % 86400000);
+      return claraWrap("Countdown", [
+        `Target: *${target.toLocaleDateString("id-ID")}*`,
+        live
+          ? `⏳ *${days} hari ${hms}* lagi ⏳`
+          : `Sisa: *${days} hari, ${formatRemaining(Math.max(0, remainingMs))}*`,
+      ].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
+    };
+    await runLiveTicker({
+      sock, chat: m.chat, m,
+      mode: "down", targetTs: target.getTime(), maxEdits: Number(process.env.NOVA_TICK_MAXEDITS) || 16,
+      initialCard: cdCard(diff),
+      tickCard: (st) => cdCard(st.remainingMs, st.remainingMs > 0),
+      finalCard: (st) => cdCard(st.remainingMs, false),
+    });
   } catch (e) {
     await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
