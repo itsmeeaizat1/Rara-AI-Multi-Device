@@ -27,18 +27,84 @@ async function resolveParticipantId(conn, m, jid) {
   } catch { return jid }
 }
 
+// 🔹 TOOL_TOPIC — kata kunci topik khas tiap tool (request owner 13 Sep
+// 2026: "bisa gak setelah aksi berhasil dia ngomong natural kyk AI, jangan
+// teks template kaku terus"). Konfirmasi sekarang BOLEH pakai decision.reply
+// (bahasa natural AI, variatif) — TAPI kalau reply-nya nyebut topik tool
+// LAIN yang bukan tool yang beneran dieksekusi (bug nyata: reply nyebut
+// "gambar" padahal tool yang jalan "setdesc"), dianggap suspicious/halusinasi
+// → fallback ke tool.done (akurat, statis). Cuma tool yang topiknya rawan
+// ketukar (info grup: nama/deskripsi/foto profil/gambar/tutup-buka) yang
+// dicek — tool lain (kick/block/dll) tetap bebas natural.
+export const TOOL_TOPIC = {
+  closegc: 'tutup',
+  opengc: 'dibuka',
+  setname: 'nama grup',
+  setdesc: 'deskripsi',
+  setpp: 'foto profil',
+  genimage: 'gambar',
+  lockedit: 'kunci',
+  unlockedit: 'unlock',
+}
+
+// 🔹 TOOL_NATURAL_DOING — frasa natural fase "SEDANG ngerjain" (request
+// owner 13 Sep 2026: "kliatan agent itu hidup bgt kyk asisten sungguhan, klo
+// mau melakukan atau sdh dilakukan dia ngomong gt" — bukan cuma konfirmasi
+// SETELAH aksi yang natural, status SEBELUM aksi jalan juga harus kerasa
+// kayak asisten asli lagi ngomong "oke bentar ya", bukan status teknis
+// "sedang mengeksekusi: closegc..."). Dipakai novaai.js pas status loading
+// sebelum tool.run() — fallback generik kalau tool gak ada di map.
+export const TOOL_NATURAL_DOING = {
+  closegc: 'nutup grupnya',
+  opengc: 'buka grupnya',
+  genimage: 'bikin gambarnya',
+  kick: 'ngeluarin dia dari grup',
+  add: 'nambahin ke grup',
+  promote: 'jadiin dia admin',
+  demote: 'turunin dia dari admin',
+  block: 'blokir & keluarin dia',
+  unblock: 'bebasin dia dari blokir',
+  setname: 'ganti nama grupnya',
+  setdesc: 'ganti deskripsi grupnya',
+  setpp: 'ganti foto profil grupnya',
+  lockedit: 'kunci info grupnya',
+  unlockedit: 'buka kunci info grupnya',
+  getlink: 'ambilin link grupnya',
+  revokelink: 'reset link grupnya',
+  approvalon: 'aktifin approval member',
+  approvaloff: 'matiin approval member',
+  hidetag: 'tag semua member',
+  tagadmin: 'tag semua admin',
+  poll: 'bikin pollingnya',
+  groupinfo: 'cek info grupnya',
+  delmsg: 'hapus pesannya',
+  antilinkon: 'aktifin antilink',
+  antilinkoff: 'matiin antilink',
+  antibadwordon: 'aktifin antibadword',
+  antibadwordoff: 'matiin antibadword',
+  antistickeron: 'aktifin antisticker',
+  antistickeroff: 'matiin antisticker',
+  antivoiceon: 'aktifin antivoice',
+  antivoiceoff: 'matiin antivoice',
+  antispamon: 'aktifin antispam',
+  antispamoff: 'matiin antispam',
+  leavegc: 'keluar dari grup',
+  download: 'download filenya',
+  createfile: 'buatin filenya',
+}
+
 export const TOOLS = {
   // ─── BUKA/TUTUP GRUP ───
   closegc: {
     perm: 'admin', danger: false,
     desc: 'menutup grup agar hanya admin yang bisa chat',
-    done: '✅ Grup ditutup. Sekarang hanya admin yang bisa chat.',
+    done: '✅ Oke, udah aku tutup grupnya — sekarang cuma admin yang bisa kirim pesan.',
     run: (conn, m) => conn.groupSettingUpdate(m.chat, 'announcement')
   },
   opengc: {
     perm: 'admin', danger: false,
     desc: 'membuka grup agar semua member bisa chat',
-    done: '✅ Grup dibuka. Semua member bisa chat.',
+    done: '✅ Sip, grup udah aku buka lagi — semua member bisa chat kayak biasa.',
     run: (conn, m) => conn.groupSettingUpdate(m.chat, 'not_announcement')
   },
 
@@ -70,7 +136,7 @@ export const TOOLS = {
   kick: {
     perm: 'admin', args: ['user'], danger: true,
     desc: 'mengeluarkan member dari grup',
-    done: '✅ User dikeluarkan dari grup.',
+    done: '✅ Oke, udah aku keluarkan dari grup.',
     run: async (conn, m, a) => {
       const pid = await resolveParticipantId(conn, m, a.user)
       return conn.groupParticipantsUpdate(m.chat, [pid], 'remove')
@@ -79,7 +145,7 @@ export const TOOLS = {
   add: {
     perm: 'admin', args: ['user'], danger: false,
     desc: 'menambahkan nomor ke grup',
-    done: '✅ User ditambahkan ke grup.',
+    done: '✅ Sip, udah aku tambahin ke grup.',
     run: async (conn, m, a) => {
       const pid = await resolveParticipantId(conn, m, a.user)
       return conn.groupParticipantsUpdate(m.chat, [pid], 'add')
@@ -88,7 +154,7 @@ export const TOOLS = {
   promote: {
     perm: 'admin', args: ['user'], danger: false,
     desc: 'menjadikan member sebagai admin',
-    done: '✅ User sekarang menjadi admin.',
+    done: '✅ Udah aku jadiin admin sekarang.',
     run: async (conn, m, a) => {
       const pid = await resolveParticipantId(conn, m, a.user)
       return conn.groupParticipantsUpdate(m.chat, [pid], 'promote')
@@ -97,7 +163,7 @@ export const TOOLS = {
   demote: {
     perm: 'admin', args: ['user'], danger: false,
     desc: 'menurunkan admin menjadi member biasa',
-    done: '✅ User diturunkan menjadi member biasa.',
+    done: '✅ Udah aku turunin jadi member biasa.',
     run: async (conn, m, a) => {
       const pid = await resolveParticipantId(conn, m, a.user)
       return conn.groupParticipantsUpdate(m.chat, [pid], 'demote')
@@ -108,7 +174,7 @@ export const TOOLS = {
   block: {
     perm: 'admin', args: ['user'], danger: true,
     desc: 'mengeluarkan dan memblokir user dari grup (tidak bisa masuk lagi)',
-    done: '✅ User diblokir dan dikeluarkan dari grup.',
+    done: '✅ Udah aku blokir & keluarkan dari grup.',
     run: async (conn, m, a) => {
       const pid = await resolveParticipantId(conn, m, a.user)
       await conn.groupParticipantsUpdate(m.chat, [pid], 'remove')
@@ -128,7 +194,7 @@ export const TOOLS = {
   unblock: {
     perm: 'admin', args: ['user'], danger: false,
     desc: 'membuka blokir user di grup (bisa masuk lagi)',
-    done: '✅ User dibebaskan dari blokir grup.',
+    done: '✅ Udah aku bebasin dari blokir grup.',
     run: async (conn, m, a) => {
       try {
         const { getDatabase } = await import('./nova-database.js')
@@ -146,19 +212,19 @@ export const TOOLS = {
   setname: {
     perm: 'admin', args: ['value'], danger: false,
     desc: 'mengganti nama grup',
-    done: '✅ Nama grup diganti.',
+    done: '✅ Oke, nama grupnya udah aku ganti.',
     run: (conn, m, a) => conn.groupUpdateSubject(m.chat, a.value)
   },
   setdesc: {
     perm: 'admin', args: ['value'], danger: false,
     desc: 'mengganti deskripsi grup',
-    done: '✅ Deskripsi grup diganti.',
+    done: '✅ Oke, deskripsi grupnya udah aku ganti.',
     run: (conn, m, a) => conn.groupUpdateDescription(m.chat, a.value)
   },
   setpp: {
     perm: 'admin', args: ['value'], danger: false,
     desc: 'mengganti foto profil grup (reply gambar atau kirim gambar dengan caption)',
-    done: '✅ Foto profil grup diganti.',
+    done: '✅ Sip, foto profil grupnya udah aku ganti.',
     run: async (conn, m, a) => {
       let imgBuffer
       if (m.quoted?.message?.imageMessage || m.quoted?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage) {
@@ -177,13 +243,13 @@ export const TOOLS = {
   lockedit: {
     perm: 'admin', danger: false,
     desc: 'mengunci pengaturan grup agar hanya admin yang bisa edit info grup',
-    done: '✅ Info grup dikunci. Hanya admin yang bisa mengedit.',
+    done: '✅ Oke, info grup udah aku kunci — cuma admin yang bisa edit sekarang.',
     run: (conn, m) => conn.groupSettingUpdate(m.chat, 'locked')
   },
   unlockedit: {
     perm: 'admin', danger: false,
     desc: 'membuka kunci pengaturan grup agar semua member bisa edit info grup',
-    done: '✅ Info grup dibuka. Semua member bisa mengedit.',
+    done: '✅ Sip, kunci info grup udah aku buka — semua member bisa edit lagi.',
     run: (conn, m) => conn.groupSettingUpdate(m.chat, 'unlocked')
   },
 
@@ -191,7 +257,7 @@ export const TOOLS = {
   getlink: {
     perm: 'admin', danger: false,
     desc: 'mendapatkan link invite grup',
-    done: '✅ Link grup diambil.',
+    done: '✅ Nih, link grupnya udah aku ambil.',
     run: async (conn, m) => {
       const code = await conn.groupInviteCode(m.chat)
       await conn.sendMessage(m.chat, {
@@ -202,7 +268,7 @@ export const TOOLS = {
   revokelink: {
     perm: 'admin', danger: false,
     desc: 'mereset/merevoke link invite grup (link lama tidak berlaku)',
-    done: '✅ Link grup direset. Link lama tidak berlaku lagi.',
+    done: '✅ Udah aku reset link grupnya — link lama gak berlaku lagi ya.',
     run: (conn, m) => conn.groupRevokeInvite(m.chat)
   },
 
@@ -210,7 +276,7 @@ export const TOOLS = {
   approvalon: {
     perm: 'admin', danger: false,
     desc: 'mengaktifkan mode persetujuan member (member baru harus di-approve admin)',
-    done: '✅ Mode persetujuan member aktif. Member baru harus di-approve admin dulu.',
+    done: '✅ Oke, mode approval member udah aku aktifin — member baru wajib di-approve admin dulu.',
     run: async (conn, m) => {
       const patch = { memberApprovalMode: { isMemberApprovalRequired: true } }
       await conn.groupSettingUpdate(m.chat, patch)
@@ -219,7 +285,7 @@ export const TOOLS = {
   approvaloff: {
     perm: 'admin', danger: false,
     desc: 'mematikan mode persetujuan member (member bisa langsung gabung)',
-    done: '✅ Mode persetujuan member dimatikan. Member bisa langsung gabung.',
+    done: '✅ Sip, mode approval udah aku matiin — member baru bisa langsung gabung.',
     run: async (conn, m) => {
       const patch = { memberApprovalMode: { isMemberApprovalRequired: false } }
       await conn.groupSettingUpdate(m.chat, patch)
@@ -230,7 +296,7 @@ export const TOOLS = {
   hidetag: {
     perm: 'admin', args: ['value'], danger: false,
     desc: 'memberi tag kepada semua member dengan pesan',
-    done: '✅ Tag terkirim ke semua member.',
+    done: '✅ Udah aku tag semua member.',
     run: async (conn, m, a) => {
       const gc = await conn.groupMetadata(m.chat)
       await conn.sendMessage(m.chat, {
@@ -242,7 +308,7 @@ export const TOOLS = {
   tagadmin: {
     perm: 'admin', args: ['value'], danger: false,
     desc: 'memberi tag kepada semua admin grup dengan pesan',
-    done: '✅ Tag admin terkirim.',
+    done: '✅ Udah aku tag semua admin.',
     run: async (conn, m, a) => {
       const gc = await conn.groupMetadata(m.chat)
       const admins = gc.participants.filter(p => p.admin).map(p => p.id)
@@ -257,7 +323,7 @@ export const TOOLS = {
   poll: {
     perm: 'admin', args: ['value'], danger: false,
     desc: 'membuat polling di grup (format: pertanyaan | opsi1, opsi2, opsi3)',
-    done: '✅ Polling dibuat.',
+    done: '✅ Sip, pollingnya udah aku buatin.',
     run: async (conn, m, a) => {
       const parts = (a.value || '').split('|')
       const question = parts[0]?.trim()
@@ -273,7 +339,7 @@ export const TOOLS = {
   groupinfo: {
     perm: 'admin', danger: false,
     desc: 'menampilkan info lengkap grup (nama, member, admin, deskripsi)',
-    done: '✅ Info grup ditampilkan.',
+    done: '✅ Nih, info grupnya.',
     run: async (conn, m) => {
       const gc = await conn.groupMetadata(m.chat)
       const admins = gc.participants.filter(p => p.admin).map(p => p.id.split('@')[0]).join(', ')
@@ -293,7 +359,7 @@ export const TOOLS = {
   delmsg: {
     perm: 'admin', danger: false,
     desc: 'menghapus pesan yang di-reply (admin only)',
-    done: '✅ Pesan dihapus.',
+    done: '✅ Oke, pesannya udah aku hapus.',
     run: async (conn, m) => {
       if (!m.quoted) throw new Error('Reply pesan yang mau dihapus.')
       await conn.sendMessage(m.chat, { delete: m.quoted.key })
@@ -398,7 +464,7 @@ export const TOOLS = {
   leavegc: {
     perm: 'owner', danger: false,
     desc: 'bot keluar dari grup (owner only)',
-    done: '✅ Bot keluar dari grup.',
+    done: '✅ Oke, aku keluar dari grup ya.',
     run: (conn, m) => conn.groupLeave(m.chat)
   },
 
@@ -1029,18 +1095,18 @@ Aturan WAJIB:
 - KHUSUS kalau ada blok "== HASIL PENCARIAN WEB TERKINI ==" di bawah: itu hasil browsing ASLI baru saja, WAJIB dipakai sebagai dasar jawaban (jangan tebak dari training data lama untuk topik itu) dan BOLEH cantumkan link sumber [S1]/[S2] yang tercantum PERSIS di blok itu karena itu URL ASLI (bukan halusinasi), format "📎 Sumber: <url>" di akhir reply. Kalau blok itu TIDAK ADA, tetap berlaku aturan JANGAN tulis URL apa pun.
 - Nomor WA format 62xxx tanpa + dan tanpa strip. Mention yang tersedia: ${ctx.mentions || 'tidak ada'}
 - Untuk setname/setdesc/hidetag/poll isi args.value dengan teksnya
-- Kalau "tool" dan "execCommand" TIDAK NULL (aksi grup/command dijalankan): "reply" cukup konfirmasi SINGKAT 1 kalimat.
+- Kalau "tool" dan "execCommand" TIDAK NULL (aksi grup/command dijalankan): "reply" konfirmasi SINGKAT 1 kalimat TAPI WAJIB natural & hidup kayak asisten sungguhan lagi ngomong ke temen sendiri (request owner 13 Sep: "kliatan agent itu hidup bgt kyk asisten sungguhan") — JANGAN template kaku "Baik, menutup grup."/"Oke, user diblokir." doang, VARIASIKAN gaya bahasa tiap kali (contoh nada: "sip, udah aku tutup ya", "oke beres, langsung aku kick", "noted, aku ganti sekarang"). Cukup nyambung sama aksi yang BENERAN dijalankan, JANGAN nyebut aksi/topik lain yang gak relevan (misal jangan nyebut "gambar" kalau tool yang jalan cuma ganti deskripsi).
 - Kalau "tool" dan "execCommand" NULL (user cuma nanya/ngobrol/minta info seperti resep, penjelasan, list, dll): "reply" WAJIB LENGKAP DAN DETAIL, JANGAN dipotong/disingkat, JANGAN bilang "silakan beri tahu lebih lanjut" kalau informasinya sudah bisa kamu jawab langsung dari konteks yang ada. Jawab selengkap yang dibutuhkan, boleh panjang, boleh pakai poin bernomor.
 - Jika perintah user BUKAN aksi bot (hanya bertanya/ngobrol), balas: {"tool":null,"execCommand":null,"reply":"jawaban lengkap kamu"}
 - PRIORITAS TUGAS INFORMASI (request owner 12 Sep): pertanyaan informasi → JAWAB DARI PENGETAHUANMU SENDIRI DULU (tool:null, reply langsung) — "siapa prabowo", "apa itu fotosintesis", "ibu kota jepang" GAK perlu tool/skill/mcp. Tool (skill wiki/mcp/dll) itu SENJATA TERAKHIR: cuma kalau pertanyaannya emang domain spesifik tool itu DAN kamu bingun jawab sendiri (arti kata resmi → skill kbbi; gempa terkini → skill gempa; dokumentasi library → mcp). JANGAN manggil skill wiki/mcp buat pengetahuan umum yang kamu udah tahu.
 
 Contoh:
-"tutup grup" → {"tool":"closegc","args":{},"execCommand":null,"reply":"Baik, menutup grup."}
+"tutup grup" → {"tool":"closegc","args":{},"execCommand":null,"reply":"Sip, grup udah aku tutup ya, sekarang cuma admin yang bisa chat."}
 "buatkan gambar kucing astronot" → {"tool":"genimage","args":{"prompt":"seekor kucing astronot di bulan, kartun lucu"},"execCommand":null,"reply":"Oke, gambarnya aku buatkan ya."}
 "buatkan gambar kucing 9:16" → {"tool":"genimage","args":{"prompt":"kucing","ratio":"9:16"},"execCommand":null,"reply":"Oke, gambarnya aku buatkan rasio 9:16 ya."}
-"kick aizat 2" → {"tool":"kick","args":{"user":"aizat 2"},"execCommand":null,"reply":"Oke, coba kick aizat 2."}
-"blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"Oke, user diblokir."}
-"ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Oke."}
+"kick aizat 2" → {"tool":"kick","args":{"user":"aizat 2"},"execCommand":null,"reply":"Oke beres, aizat 2 langsung aku keluarkan dari grup."}
+"blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"Noted, langsung aku blokir & keluarkan dari grup."}
+"ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Sip, deskripsi grupnya udah aku ganti jadi grup belajar."}
 "jadikan stiker gambar ini" → {"tool":null,"args":{},"execCommand":"s","execArgs":"","reply":"Oke, aku jadikan stiker ya!"}
 "download apk dari https://situs.com/app.apk" → {"tool":"download","args":{"url":"https://situs.com/app.apk"},"execCommand":null,"reply":"Oke, aku unduh filenya ya."}
 "buatkan file txt daftar belanja: beras 5kg, minyak 2 liter, gula 1kg" → {"tool":"createfile","args":{"name":"daftarbelanja","ext":"txt","content":"DAFTAR BELANJA\n1. Beras 5kg\n2. Minyak 2 liter\n3. Gula 1kg"},"execCommand":null,"reply":"Oke, aku buatin file txt daftar belanjanya."}

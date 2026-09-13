@@ -7,7 +7,7 @@
 // 🔹 Alur: localParse (instan) → think (AI provider) → [ACTION] auto-execute
 // ============================================================
 
-import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, quickWebSearch, getAgentTools, getAllSkills } from "../../src/lib/aiagent.js";
+import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, quickWebSearch, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
@@ -518,16 +518,28 @@ async function handler(m, { sock, conn, config, db }) {
   // EKSEKUSI — status "lagi melakukan sesuatu" ala agent, final di-edit ke pesan itu
   try {
     await m.react("⚡");
-    await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + decision.tool + "..."));
+    // 🔹 FASE "SEDANG NGERJAIN" NATURAL (request owner 13 Sep 2026: "kliatan
+    // agent itu hidup bgt kyk asisten sungguhan, klo mau melakukan atau sdh
+    // dilakukan dia ngomong gt") — ganti status teknis "sedang mengeksekusi:
+    // closegc..." jadi obrolan natural ala asisten asli sebelum aksi jalan.
+    const doingPhrase = TOOL_NATURAL_DOING[decision.tool] || ("ngerjain " + decision.tool + "-nya");
+    await setStatus("⚡ " + smallcapsText("oke, bentar ya, lagi " + doingPhrase + "..."));
     await tool.run(sock, m, finalArgs);
-    // 🔹 FIX 13 Sep 2026 (owner report: ".novaagent buatkan gambar kucing"
-    // dibalas teks yang NGARANG soal deskripsi grup — tool.run beneran
-    // ngubah state X, tapi teks konfirmasi malah pakai decision.reply dari
-    // AI yang BISA halusinasi ngomongin hal lain/gak sesuai tool yang
-    // beneran jalan). FIX: konfirmasi WAJIB pakai tool.done (akurat, sesuai
-    // tool yang beneran dieksekusi) — decision.reply cuma fallback kalau
-    // tool ini gak punya tool.done sama sekali.
-    await editFinal(sanitizeAiReply(tool.done || decision.reply || "Selesai."));
+    // 🔹 FASE "SUDAH DILAKUKAN" NATURAL + ANTI HALUSINASI (lanjutan fix 13
+    // Sep 2026: ".novaagent buatkan gambar kucing" dibalas teks yang NGARANG
+    // soal deskripsi grup — dulu di-fix paksa selalu pakai tool.done statis,
+    // TAPI itu bikin konfirmasi kaku/robotik lagi, request owner mau tetep
+    // natural). Sekarang decision.reply (bahasa natural AI, variatif) TETAP
+    // dipakai sebagai default — CUMA di-tolak & fallback ke tool.done kalau
+    // reply-nya nyebut topik tool LAIN yang bukan tool yang beneran
+    // dieksekusi (TOOL_TOPIC guard, contoh: reply nyebut "gambar" padahal
+    // yang jalan "setdesc" → suspicious/halusinasi → pakai tool.done).
+    const naturalReply = decision.reply ? sanitizeAiReply(decision.reply) : "";
+    const conflictTopic = Object.entries(TOOL_TOPIC).find(
+      ([toolKey, topicWord]) => toolKey !== decision.tool && naturalReply.toLowerCase().includes(topicWord.toLowerCase())
+    );
+    const confirmText = (naturalReply && !conflictTopic) ? naturalReply : (tool.done || naturalReply || "Selesai.");
+    await editFinal(confirmText);
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
