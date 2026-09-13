@@ -2,6 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { renderQuoteCard } from "../../src/lib/nova-quote-card.js";
 
 const pluginConfig = {
   name: "quotesanime",
@@ -26,7 +27,13 @@ async function handler(m, { sock }) {
     result += `— ${character} (${anime})\n`;
     result += `
 `;
-        await sock.sendMessage(from, { text: result }, { quoted: m });
+        // 🔹 KARTU QUOTE ESTETIK (13 Sep, request owner "fitur polos di-variasi biar menarik"): quotes sekarang gambar canvas ala quote-post; render gagal → teks lama.
+    try {
+      const _card = await renderQuoteCard({ quote: quote, author: character + " (" + anime + ")", category: "anime" });
+      await sock.sendMessage(from, { image: _card, caption: result }, { quoted: m });
+    } catch {
+      await sock.sendMessage(from, { text: result }, { quoted: m });
+    }
     await sock.sendMessage(from, { react: { text: "🐣", key: m.key } });
   } catch (err) {
     const from = m.key.remoteJid;
