@@ -47,13 +47,14 @@ async function handler(m, { sock }) {
     result += `"${q}"\n`;
     result += `
 `;
-        // 🔹 KARTU QUOTE ESTETIK (13 Sep, request owner "fitur polos di-variasi biar menarik"): quotes sekarang gambar canvas ala quote-post; render gagal → teks lama.
+        // 🔹 TEKS DULU + KARTU DI BAWAHNYA (13 Sep, revisi owner "versi plain teks
+    // tetep ada jadi di atas versi gambarnya"): plain text dikirim dulu,
+    // kartu estetik menyusul; render gagal → teks doang (gak pernah rusak).
+    await sock.sendMessage(from, { text: result }, { quoted: m });
     try {
       const _card = await renderQuoteCard({ quote: q, author: "", category: "bucin" });
-      await sock.sendMessage(from, { image: _card, caption: result }, { quoted: m });
-    } catch {
-      await sock.sendMessage(from, { text: result }, { quoted: m });
-    }
+      await sock.sendMessage(from, { image: _card, caption: "ᴠᴇʀꜱɪ ᴋᴀʀᴛᴜ" });
+    } catch {}
     await sock.sendMessage(from, { react: { text: "🐣", key: m.key } });
   } catch (err) {
     const from = m.key.remoteJid;
