@@ -1,6 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import NodeCache from 'node-cache'
+import moment from 'moment-timezone'
+import { claraWrap } from './nova-menu-style.js'
+import { formatRemaining } from './nova-countdown.js'
 const BASE_URL = 'https://api.myquran.com/v2/sholat';
 const cache = new NodeCache({ stdTTL: 86400 });
 
@@ -66,4 +69,61 @@ function clearCache() {
     cache.flushAll();
 }
 
-export { searchKota, fetchAllKota, getTodaySchedule, extractPrayerTimes, clearCache }
+
+// ═══════════════════════════════════════════════════════════════════
+// SHOLAT BERIKUTNYA + LIVE COUNTDOWN (13 Sep 2026, variasi fitur polos
+// batch 4: ".jadwalsholat gak ada pelengkap kyk penghitung" ala .afk)
+// ═══════════════════════════════════════════════════════════════════
+
+// cuma 5 waktu sholat — imsak/terbit/dhuha bukan sholat
+const PRAYER_SEQUENCE = ['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya']
+const PRAYER_LABELS = { subuh: 'Subuh', dzuhur: 'Dzuhur', ashar: 'Ashar', maghrib: 'Maghrib', isya: 'Isya' }
+
+function prayerEpoch(timeStr, addDays = 0) {
+    return moment.tz(timeStr, 'HH:mm', 'Asia/Jakarta').add(addDays, 'days').valueOf()
+}
+
+/**
+ * Hitung sholat berikutnya dari jadwal hari ini (WIB).
+ * Semua udah lewat hari ini → Subuh BESOK (isTomorrow).
+ * @returns {{key,name,timeStr,targetTs,isTomorrow}|null}
+ */
+function computeNextPrayer(times) {
+    const now = Date.now()
+    const valid = (s) => typeof s === 'string' && /^\d{1,2}:\d{2}$/.test(s.trim())
+    for (const p of PRAYER_SEQUENCE) {
+        const t = times?.[p]
+        if (!valid(t)) continue
+        const ts = prayerEpoch(t.trim())
+        if (ts > now) return { key: p, name: PRAYER_LABELS[p], timeStr: t.trim(), targetTs: ts, isTomorrow: false }
+    }
+    const s = times?.subuh
+    if (valid(s)) {
+        return { key: 'subuh', name: PRAYER_LABELS.subuh, timeStr: s.trim(), targetTs: prayerEpoch(s.trim(), 1), isTomorrow: true }
+    }
+    return null
+}
+
+/**
+ * Kartu countdown sholat (dipakai initialCard/tickCard runLiveTicker).
+ * remainingMs <= 0 → kartu "SUDAH WAKTU".
+ */
+function buildSholatCountdownCard(next, remainingMs, lokasi) {
+    const done = Number(remainingMs) <= 0
+    const besok = next.isTomorrow ? ' (besok)' : ''
+    const lok = lokasi ? `📍 ${lokasi}\n` : ''
+    if (done) {
+        return claraWrap(`Waktunya ${next.name}`,
+            `🕌 *SUDAH WAKTU ${next.name.toUpperCase()}*\n` +
+            `🕘 pukul ${next.timeStr} WIB${besok}\n` +
+            lok +
+            `\n_yuk sholat dulu, jangan ditunda! 🤲_`)
+    }
+    return claraWrap(`Menuju ${next.name}`,
+        `⏳ *${formatRemaining(remainingMs)}* lagi\n` +
+        `🕘 pukul ${next.timeStr} WIB${besok}\n` +
+        lok +
+        `\n_jangan lupa sholat ya! 🤲_`)
+}
+
+export { searchKota, fetchAllKota, getTodaySchedule, extractPrayerTimes, clearCache, computeNextPrayer, buildSholatCountdownCard, PRAYER_SEQUENCE, PRAYER_LABELS }

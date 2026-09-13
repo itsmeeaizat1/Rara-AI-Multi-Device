@@ -6,7 +6,10 @@ import {
   searchKota,
   getTodaySchedule,
   extractPrayerTimes,
+  computeNextPrayer,
+  buildSholatCountdownCard,
 } from "../../src/lib/nova-sholat-api.js";
+import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -40,20 +43,26 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
+    // ⏳ PENGHITUNG (13 Sep 2026): sholat berikutnya ditandai 🔜 + ticker live
+    const next = computeNextPrayer(times);
+    const mark = (k) => (next && next.key === k ? "🔜 " : "");
+    const berikutnya = next
+      ? `\n⏳ *Berikutnya: ${next.name} pukul ${next.timeStr}${next.isTomorrow ? " (besok)" : ""}* — countdown jalan di bawah!\n`
+      : "";
     const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*
 📍 Lokasi: ${lokasi}
 📅 ${today}
 🗺️ ${daerah}
-
+${berikutnya}
 Waktu Sholat:
 🌙 Imsak: \`${times.imsak}\`
-🌅 sUbuh: \`${times.subuh}\`
+${mark("subuh")}🌅 Subuh: \`${times.subuh}\`
 ☀️ Terbit: \`${times.terbit}\`
 🌤️ Dhuha: \`${times.dhuha}\`
-🌞 Dzuhur: \`${times.dzuhur}\`
-🌇 Ashar: \`${times.ashar}\`
-🌆 Maghrib: \`${times.maghrib}\`
-🌃 Isya: \`${times.isya}\`
+${mark("dzuhur")}🌞 Dzuhur: \`${times.dzuhur}\`
+${mark("ashar")}🌇 Ashar: \`${times.ashar}\`
+${mark("maghrib")}🌆 Maghrib: \`${times.maghrib}\`
+${mark("isya")}🌃 Isya: \`${times.isya}\`
 
 _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
     const adzanUrl = "https://media.vocaroo.com/mp3/1ofLT2YUJAjQ";
@@ -86,6 +95,23 @@ _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
         { text: caption, contextInfo },
         { quoted: m },
       );
+    }
+    // ⏳ LIVE COUNTDOWN ke sholat berikutnya — kartu sendiri, edit-in-place
+    // tiap menit (makin dekat makin cepet), sampai waktunya → kartu
+    // "SUDAH WAKTU". Fire-and-forget: gak nahan command.
+    if (next) {
+      try {
+        const lokasiLine = daerah ? `${lokasi} — ${daerah}` : lokasi;
+        runLiveTicker({
+          sock,
+          chat: m.chat,
+          m,
+          initialCard: buildSholatCountdownCard(next, next.targetTs - Date.now(), lokasiLine),
+          tickCard: (st) => buildSholatCountdownCard(next, st.remainingMs, lokasiLine),
+          mode: "down",
+          targetTs: next.targetTs,
+        }).catch(() => {});
+      } catch {}
     }
   } catch (error) {
     m.reply(claraWrap("jadwalsholat2", te(m.prefix, m.command, m.pushName), "error"));
