@@ -183,3 +183,71 @@ export async function googleAiModeSearch(query, opts = {}) {
     took: meta.total_time_taken,
   };
 }
+
+// ═════════════════════════════════════════════
+// 🔹 GENERIC ENGINE — semua API searchapi.io
+// 🔹 searchApiEngine(engine, params) → data mentah buat dirender lib.
+// 🔹 STRICT SATUAN: key kosong/401/429 → error asli, no fallback.
+// ═════════════════════════════════════════════
+
+/**
+ * Panggil engine searchapi.io apa pun.
+ * @param {string} engine nama engine (google_maps, google_flights, dll)
+ * @param {object} params parameter engine (q, from, to, departure_id, dll)
+ * @returns {Promise<{ok:boolean, data?:object, error?:string, httpStatus?:number, took?:number}>}
+ */
+export async function searchApiEngine(engine, params = {}) {
+  const key = getKey();
+  if (!key) {
+    return { ok: false, error: "API_KEY" };
+  }
+  if (!engine || typeof engine !== "string") {
+    return { ok: false, error: "ENGINE_KOSONG" };
+  }
+
+  const p = new URLSearchParams({ engine, api_key: key });
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null && v !== "") p.set(k, String(v));
+  }
+  // default Indonesia kecuali engine gak pakai hl/gl (aman: param asing diabaikan server)
+  if (!p.get("hl")) p.set("hl", "id");
+  if (!p.get("gl")) p.set("gl", "id");
+
+  const url = `${API_URL}?${p.toString()}`;
+  const doFetch = _http || (async (u) => {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    try {
+      return await fetch(u, { signal: ctrl.signal, headers: { Accept: "application/json" } });
+    } finally { clearTimeout(t); }
+  });
+
+  let res;
+  try {
+    res = await doFetch(url);
+  } catch (e) {
+    return { ok: false, error: e?.name === "AbortError" ? "TIMEOUT (60 dtk) — server lambat" : (e?.message || "gagal koneksi") };
+  }
+
+  const status = res?.status || 0;
+  if (status === 401 || status === 403) return { ok: false, error: `API_KEY_INVALID (${status})`, httpStatus: status };
+  if (status === 429) return { ok: false, error: "QUOTA_HABIS (429) — kuota searchapi.io habis", httpStatus: status };
+  if (status !== 200) {
+    let body = "";
+    try { body = (await res.text()).slice(0, 120); } catch {}
+    return { ok: false, error: `HTTP ${status} ${body}`.trim(), httpStatus: status };
+  }
+
+  let data;
+  try {
+    data = await res.json();
+  } catch (e) {
+    return { ok: false, error: "respon bukan JSON: " + (e?.message || ""), httpStatus: status };
+  }
+
+  const meta = data?.search_metadata || {};
+  if (String(meta.status || "").toLowerCase() === "failed" || data?.error) {
+    return { ok: false, error: data?.error || "searchapi status failed", httpStatus: status };
+  }
+  return { ok: true, data, took: meta.total_time_taken };
+}
