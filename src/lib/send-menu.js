@@ -226,6 +226,27 @@ async function ensureMenuAudioLoaded() {
  * @param {boolean} isAllMenu - Jika true, gunakan allmenuAudioStyle (varian 1-4)
  */
 export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
+  // ── SALURAN (newsletter): VN PTT WAJIB polos — quoted/fake-quote (poll/troli)
+  // bikin follower lihat "Pesan WhatsApp tidak didukung" (report owner 14 Sep).
+  // Kirim PTT polos; kalau salurannya nolak VN → skip senyap (menu tetap jalan).
+  if (m.chat && m.chat.endsWith("@newsletter")) {
+    try {
+      await ensureMenuAudioLoaded();
+      if (!_menuAudioPtt) return;
+      const { sanitizeAudioForSaluran } = await import("./nova-saluran-safe.js");
+      const audioEnabledNl = db?.setting ? (db.setting("audioMenu") !== false) : true;
+      if (!audioEnabledNl) return;
+      await sock.sendMessage(m.chat, sanitizeAudioForSaluran({
+        audio: _menuAudioPtt,
+        ptt: true,
+        mimetype: "audio/ogg; codecs=opus",
+      }));
+    } catch (nlErr) {
+      console.error("[send-menu] ⚠️ VN musik menu di-skip buat saluran:", nlErr.message);
+    }
+    return;
+  }
+
   try {
     // Cek setting audioMenu (default: true jika belum diset)
     const audioEnabled = db?.setting ? (db.setting('audioMenu') !== false) : true;
