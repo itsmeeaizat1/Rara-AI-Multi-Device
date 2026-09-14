@@ -22,12 +22,31 @@ export function _setSearchApiKeyForTest(k) { _keyOverride = k; }
 function getKey() { return _keyOverride !== null ? _keyOverride : getSearchApiKey(); }
 
 /**
+ * Bersihin markdown AI Mode biar rapi di kartu WA:
+ * - sitasi numerik inline [0](url) → dibuang (sumber udah ada di daftar bawah)
+ * - [teks](url) → teks doang
+ * - **bold** → *bold* (format WhatsApp)
+ * - header md (## ) → dibuang
+ */
+function cleanMarkdown(md) {
+  return String(md)
+    .replace(/<video_wrapper>[\s\S]*?<\/video_wrapper>/gi, "") // blok saran video AI Mode
+    .replace(/<\/?[a-z_]+>/gi, "") // tag wrapper lain
+    .replace(/\[(\d+)\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\((?:https?:\/\/[^)]+)\)/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "*$1*")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+/**
  * Ambil jawaban AI dari text_blocks / generated_markdown (toleran bentuk respon).
  */
 function extractAnswer(data) {
   // 1. generated_markdown (bentuk utama per docs)
   const md = data?.generated_markdown || data?.markdown || "";
-  if (typeof md === "string" && md.trim()) return md.trim();
+  if (typeof md === "string" && md.trim()) return cleanMarkdown(md);
 
   // 2. text_blocks: [{type:"text", snippet:"..."}]
   const blocks = data?.text_blocks || [];
@@ -46,7 +65,7 @@ function extractAnswer(data) {
 
   // 3. fallback longsoran bentuk lain
   const alt = data?.ai_mode_text || data?.answer || data?.response || "";
-  return typeof alt === "string" ? alt.trim() : "";
+  return typeof alt === "string" ? cleanMarkdown(alt) : "";
 }
 
 /**
@@ -58,6 +77,9 @@ function extractSources(data) {
   const seen = new Set();
   const push = (link, title) => {
     if (!link || seen.has(link)) return;
+    // buang redirect google yang gak ke-resolve (bukan sumber asli)
+    if (/translate\.google\.com\/translate/i.test(link)) return;
+    if (/www\.google\.com\/goto\?/i.test(link)) return;
     seen.add(link);
     out.push({ title: title || "", link });
   };
