@@ -169,7 +169,11 @@ async function createFakeStory(
   ctx.restore();
   return await canvas.encode("png");
 }
-const DEFAULT_PP_PATH = getAssetBuffer("pp-kosong");
+// FIX 14 Sep 2026 (audit canvas): getAssetBuffer() balikin Buffer langsung
+// (bukan path file) — fs.existsSync(Buffer 7KB) SELALU false → fallback avatar
+// default gak pernah kepakai, malah throw error. DEFAULT_PP_BUFFER dipakai
+// langsung sebagai Buffer di getAvatarBuffer().
+const DEFAULT_PP_BUFFER = getAssetBuffer("pp-kosong");
 async function getProfilePicture(sock, jid) {
   try {
     const pp = await sock.profilePictureUrl(jid, "image");
@@ -192,15 +196,14 @@ async function getAvatarBuffer(sock, jid) {
       return await downloadImage(ppUrl);
     }
   } catch (e) { console.error('[fakestory4.js]:', e.message); }
-  if (fs.existsSync(DEFAULT_PP_PATH)) {
-    return fs.readFileSync(DEFAULT_PP_PATH);
+  if (DEFAULT_PP_BUFFER) {
+    return DEFAULT_PP_BUFFER;
   }
   throw new Error("Tidak dapat mengambil foto profil");
 }
 async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
   try {
-    const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     let imageTopBuffer = null;
     let imageBottomBuffer = null;
     if (m.isImage && m.download) {
@@ -221,12 +224,15 @@ async function handler(m, { sock }) {
           `Contoh: \`${m.prefix}fakestory4 Misaki\`\n\n` +
           `Tips: Kirim gambar + reply gambar lain untuk 2 gambar berbeda`, "fakestory4");
     }
+    await m.react("🕒");
+    const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const resultBuffer = await createFakeStory(
       username,
       avatarBuffer,
       imageTopBuffer,
       imageBottomBuffer,
     );
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -236,6 +242,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("fakestory4", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

@@ -175,7 +175,11 @@ async function createFakeStory(
   ctx.restore();
   return await canvas.encode("png");
 }
-const DEFAULT_PP_PATH = getAssetBuffer("pp-kosong");
+// FIX 14 Sep 2026 (audit canvas): getAssetBuffer() balikin Buffer langsung
+// (bukan path file) — fs.existsSync(Buffer 7KB) SELALU false → fallback avatar
+// default gak pernah kepakai, malah throw error. DEFAULT_PP_BUFFER dipakai
+// langsung sebagai Buffer di getAvatarBuffer().
+const DEFAULT_PP_BUFFER = getAssetBuffer("pp-kosong");
 async function getProfilePicture(sock, jid) {
   try {
     const pp = await sock.profilePictureUrl(jid, "image");
@@ -198,33 +202,42 @@ async function getAvatarBuffer(sock, jid) {
       return await downloadImage(ppUrl);
     }
   } catch (e) { console.error('[fakestory.js]:', e.message); }
-  if (fs.existsSync(DEFAULT_PP_PATH)) {
-    return fs.readFileSync(DEFAULT_PP_PATH);
+  if (DEFAULT_PP_BUFFER) {
+    return DEFAULT_PP_BUFFER;
   }
   throw new Error("Tidak dapat mengambil foto profil");
 }
 async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
+  const isImage = m.isImage || (m.quoted && m.quoted.isImage);
+  if (!isImage) {
+    return m.reply( `📷 *ꜰᴀᴋᴇ ꜱᴛᴏʀʏ*\n\n` +
+        `Kirim gambar + reply gambar lain untuk 2 gambar berbeda, atau 1 gambar aja!\n\n` +
+        `Format: \`${m.prefix}fakestory <nama>\`\n` +
+        `Contoh: \`${m.prefix}fakestory Misaki\``, "fakestory");
+  }
   try {
-    let avatarBuffer;
+    await m.react("🕒");
+    const avatarBuffer = await getAvatarBuffer(sock, m.sender);
+    // FIX 14 Sep 2026 (audit canvas): dulu imageBottomBuffer SELALU = imageTopBuffer
+    // (gambar didobelin), padahal deskripsi plugin ini "2 gambar". Sekarang kalau
+    // user kirim gambar SEKALIGUS reply ke gambar lain (bisa di WA client), 2 gambar
+    // beda kepakai — pola sama seperti fakestory4.js.
     let imageTopBuffer;
     let imageBottomBuffer;
-    avatarBuffer = await getAvatarBuffer(sock, m.sender);
-    const isImage = m.isImage || (m.quoted && m.quoted.isImage);
-    if (!isImage) {
-      return m.reply( `📷 *ꜰᴀᴋᴇ ꜱᴛᴏʀʏ*\n\n` +
-          `Reply 1 atau 2 gambar!\n\n` +
-          `Format: \`${m.prefix}fakestory <nama>\`\n` +
-          `Contoh: \`${m.prefix}fakestory Misaki\``, "fakestory");
-    }
     if (m.isImage && m.download) {
       imageTopBuffer = await m.download();
-      imageBottomBuffer = imageTopBuffer;
+      if (m.quoted && m.quoted.isImage && m.quoted.download) {
+        imageBottomBuffer = await m.quoted.download();
+      } else {
+        imageBottomBuffer = imageTopBuffer;
+      }
     } else if (m.quoted && m.quoted.isImage && m.quoted.download) {
       imageTopBuffer = await m.quoted.download();
       imageBottomBuffer = imageTopBuffer;
     }
     if (!imageTopBuffer) {
+      await m.react("❌");
       return m.reply(novaError("FakeStory", "Gagal download gambar nih"));
     }
     const resultBuffer = await createFakeStory(
@@ -233,10 +246,12 @@ async function handler(m, { sock }) {
       imageTopBuffer,
       imageBottomBuffer,
     );
+    await m.react("🐣");
     await sock.sendMedia(m.chat, resultBuffer, null, m, {
       type: "image",
     });
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("fakestory", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

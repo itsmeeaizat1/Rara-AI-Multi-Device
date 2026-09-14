@@ -216,7 +216,11 @@ async function createFakeStory(
   ctx.restore();
   return await canvas.encode("png");
 }
-const DEFAULT_PP_PATH = getAssetBuffer("pp-kosong");
+// FIX 14 Sep 2026 (audit canvas): getAssetBuffer() balikin Buffer langsung
+// (bukan path file) — fs.existsSync(Buffer 7KB) SELALU false → fallback avatar
+// default gak pernah kepakai, malah throw error. DEFAULT_PP_BUFFER dipakai
+// langsung sebagai Buffer di getAvatarBuffer().
+const DEFAULT_PP_BUFFER = getAssetBuffer("pp-kosong");
 async function getProfilePicture(sock, jid) {
   try {
     const pp = await sock.profilePictureUrl(jid, "image");
@@ -239,8 +243,8 @@ async function getAvatarBuffer(sock, jid) {
       return await downloadImage(ppUrl);
     }
   } catch (e) { console.error('[fakestory3.js]:', e.message); }
-  if (fs.existsSync(DEFAULT_PP_PATH)) {
-    return fs.readFileSync(DEFAULT_PP_PATH);
+  if (DEFAULT_PP_BUFFER) {
+    return DEFAULT_PP_BUFFER;
   }
   throw new Error("Tidak dapat mengambil foto profil");
 }
@@ -257,12 +261,13 @@ async function handler(m, { sock }) {
   const username = parts[0] || m.pushName || "User";
   const text1 = parts[1] || "";
   const text2 = parts[2] || "";
+  const isImage = m.isImage || (m.quoted && m.quoted.isImage);
+  if (!isImage) {
+    return m.reply(novaError("FakeStory3", "Reply gambar dulu nih!"));
+  }
   try {
+    await m.react("🕒");
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
-    const isImage = m.isImage || (m.quoted && m.quoted.isImage);
-    if (!isImage) {
-      return m.reply(novaError("FakeStory3", "Reply gambar dulu nih!"));
-    }
     let imageBuffer;
     if (m.isImage && m.download) {
       imageBuffer = await m.download();
@@ -270,6 +275,7 @@ async function handler(m, { sock }) {
       imageBuffer = await m.quoted.download();
     }
     if (!imageBuffer) {
+      await m.react("❌");
       return m.reply(novaError("FakeStory3", "Gagal download gambar nih"));
     }
     const resultBuffer = await createFakeStory(
@@ -280,6 +286,7 @@ async function handler(m, { sock }) {
       text1,
       text2,
     );
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
@@ -289,6 +296,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("fakestory3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
