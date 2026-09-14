@@ -118,7 +118,8 @@ async function handler(m, { sock }) {
           const mp4Path = path.join(tempPath, `pin-${id}.mp4`);
           try {
             const raw = await f(media.url, "buffer");
-            if (!raw) throw new Error("Gagal download GIF");
+            // GUARD 14 Sep 2026: !raw doang gak nangkep Buffer 0 byte (redirect diam-diam)
+            if (!raw || raw.length === 0) throw new Error("Gagal download GIF");
             fs.writeFileSync(gifPath, raw);
             await queueFFmpeg(
               `ffmpeg -y -ignore_loop 0 -i "${gifPath}" -t 30 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -pix_fmt yuv420p -movflags faststart -preset ultrafast -an "${mp4Path}"`,

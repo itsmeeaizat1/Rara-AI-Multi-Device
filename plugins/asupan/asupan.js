@@ -81,6 +81,12 @@ async function handler(m, { sock }) {
         const url = urls[Math.floor(Math.random() * urls.length)]
         
         const res = await f(url, 'arrayBuffer')
+        // GUARD 14 Sep 2026: f() bisa null (status>=400) atau ArrayBuffer 0 byte
+        // (redirect diam-diam dari host CDN) — cek dulu biar gak kirim video kosong.
+        if (!res || res.byteLength === 0) {
+            throw new Error('Video asupan kosong/gagal diambil')
+        }
+        const videoBuffer = Buffer.from(res)
         const caption = mediaCaption({
             platformIcon: '',
             platformName: 'Asupan',
@@ -90,7 +96,7 @@ async function handler(m, { sock }) {
         })
         
         await sock.sendMessage(m.chat, {
-            video: Buffer.from(res),
+            video: videoBuffer,
             caption,
         }, { quoted: m })
         
