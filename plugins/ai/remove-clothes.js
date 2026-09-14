@@ -12,7 +12,8 @@ const pluginConfig = {
   usage: ".remove-clothes (reply/kirim foto)",
   example: ".remove-clothes (reply foto)",
   isOwner: false, isPremium: true, isGroup: false, isPrivate: true,
-  cooldown: 60, energi: 10, isEnabled: true,
+  cooldown: 60, energi: 10,
+  isEnabled: false, // NSFW NCII risk: strip foto orang asli tanpa persetujuan — dinonaktifkan permanen 14 Sep 2026, jangan diaktifkan lagi
 };
 
 const IKYY_BASE = "https://api.ikyyxd.my.id";
