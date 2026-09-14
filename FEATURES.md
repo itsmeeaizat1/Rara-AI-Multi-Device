@@ -2082,3 +2082,16 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - **STRICT ERROR**: semua engine down / vision gak kedeteksi item fashion → error asli via `te()`, session dihapus, gak ada fallback diam-diam.
 - E2E `test/omnioutfitchanger-e2e/` (lihat file buat jumlah pass) + regresi `zelapi-e2e` + `clotheschanger-e2e` + import guard tetap hijau.
 - VPS: `git pull && pm2 restart` → reply foto orang → `.omnioutfitchanger` → kirim foto topi → kirim foto baju → `.omnioutfitchanger pakai`.
+
+## Nonton Anime Hub (BARU 14 Sep 2026 — branch feat/nonton-anime)
+- **`.nonton`** (alias `.anime2 .streamanime .nontonanime`) — hub info/streaming anime dari [zelapi.eu.cc/docs/anime](https://zelapi.eu.cc/docs/anime) (24 endpoint, 5 situs sumber). **FASE 1**: cuma sumber yang jalan reliable dipasang dulu (request owner "yg work dulu, yg 403 akhiran [ditunda]").
+- **ANIBIPLAY** (reliable, dipasang penuh): `.nonton anibiplay home` (update terbaru), `cari <judul>` (search), `detail <slug>` (sinopsis+studio+genre), `episode <slug> <nomor>` (streams+downloads), `explore [genre] [halaman]` (browse katalog 1801+ anime by genre).
+- **OTAKUDESU** (subset reliable): `.nonton otakudesu` → daftar ongoing+complete (action lain kayak search/detail/genre/jadwal/movie di endpoint ini KE-403/ENOTFOUND pas dites, cuma `action=complete` yang stabil return data).
+- **DITUNDA sementara** (upstream sering 403 anti-bot pas dites live, bukan salah param): `animelovers` (8 endpoint, sukses rate ~30-40% — ongoing/baru/jadwal/movie/rekomendasi/search/detail/stream) & `wotanim` (4 endpoint, 403 konsisten pas dites — search/detail/watch/comments). `.nonton animelovers` / `.nonton wotanim` kasih pesan jelas "ditunda", bukan error teknis.
+- **DIKELUARKAN PERMANEN**: `animekompi` (6 endpoint) — server mati total, `getaddrinfo ENOTFOUND v6.animekompi.fun` konsisten di semua percobaan, bukan transient.
+- **Arsitektur**: scraper generik `src/scraper/zelanime.js` (`zelAnimeGet(path, params)` — reuse `getZelKey()` yang sama dengan suite ZelAPI AI/image, 1 API key buat semua), renderer defensif `src/lib/nova-anime-render.js`, plugin `plugins/anime/nonton.js`.
+- **GOTCHA field `status` overload**: `anibiplay/detail/:slug` balikin `status` sebagai STATUS ANIME (string "completed"/"ongoing"), bukan boolean envelope sukses/gagal — STRICT error check WAJIB `data.status === false` (perbandingan ketat), jangan `!data.status` (string truthy tapi bisa juga "false"-ish di masa depan — tetep pakai `===`).
+- **STRICT**: upstream error/HTTP gagal → pesan asli ditampilin, no fallback ngasal.
+- E2E `test/nonton-e2e/` 29/29 + import guard 8/8. Live verified: anibiplay home/cari/detail/episode/explore + otakudesu semua return data asli (query "naruto" → Boruto, One Piece dll).
+- VPS: `git pull && pm2 restart` → `.nonton anibiplay cari one piece` → `.nonton anibiplay detail one-piece` → `.nonton anibiplay episode one-piece 1` → `.nonton otakudesu`.
+- **Lanjutan (belum dikerjakan)**: susul animelovers + wotanim kalau upstream udah stabil (retry di kemudian hari), atau tambah retry-with-backoff kalau owner mau dipasang sekarang meski flaky.
