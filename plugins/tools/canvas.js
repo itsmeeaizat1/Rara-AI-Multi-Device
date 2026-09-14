@@ -1,85 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const TMP_DIR = path.join(process.cwd(), "tmp");
-
-function ensureTmp() {
-  if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
-}
-
-function tempPath(ext) {
-  ensureTmp();
-  return path.join(TMP_DIR, `canvas_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`);
-}
-
-async function handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
-  try {
-    await m.react("🕒");
-    const text = m.text?.trim();
-
-    if (!text) {
-      const out =
-        novaCaption({
-  emoji: "🛠️",
-  name: "canvas",
-  description: "Buat desain/grafis",
-  usage: `${prefix}canvas <teks>`,
-  example: `${prefix}canvas Hello World`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply(out);
-      return { handled: true };
-    }
-
-    const apiUrl = `https://api.miaou.xyz/api/canvas?text=${encodeURIComponent(text)}`;
-    const res = await fetch(apiUrl);
-    if (!res.ok) throw new Error("Gagal generate canvas");
-
-    const buffer = Buffer.from(await res.arrayBuffer());
-    const filePath = tempPath(".png");
-    fs.writeFileSync(filePath, buffer);
-
-    await sock.sendMessage(m.chat, {
-      image: fs.readFileSync(filePath),
-      caption: `Canvas: ${text.slice(0, 200)}`,
-    });
-
-    const out =
-      claraWrap("Canvas", [`Teks: *${text.slice(0, 50)}${text.length > 50 ? "..." : ""}*`,
-        "Ukuran: *1080x1080*",
-        "Format: *ᴘɴɢ*"].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}canvas <teks> untuk desain lain`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
-
-    await m.react("🐣");
-    await m.reply(out);
-  } catch (error) {
-    await m.react("❌");
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      novaError("Tools", "Gagal nih, coba lagi ya");
-
-    await m.reply(claraWrap("canvas", text));
-  }
-
-  return { handled: true };
-}
+// FIX 14 Sep 2026 (audit fitur canvas): api.miaou.xyz DOWN — TLS handshake
+// ditolak (SNI "unrecognized name"), bukan cuma DNS mati tapi subdomain-nya
+// udah dilepas dari routing servernya sama sekali. Graceful error mengikuti
+// pola fakedev/fakedev2/fakedev3 (API down beneran, no fallback palsu).
+// .canvas juga redundant — 22 command spesifik lain (.balogo/.wanted/.iqc/
+// .musiccard/dst) di kategori canvas udah nutupin kebutuhan yang sama.
+import { novaReply, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "canvas",
   alias: ["canvas"],
   category: "tools",
-  description: "Buat desain/grafis",
+  description: "Buat desain/grafis (API maintenance)",
   usage: ".canvas <teks>",
   example: ".canvas Hello World",
   isOwner: false,
@@ -91,4 +23,18 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-export { pluginConfig as config, handler }
+async function handler(m, { sock, config: botConfig }) {
+  const prefix = botConfig?.command?.prefix || m.prefix || ".";
+  const msg = novaReply({
+    title: "Canvas",
+    info: [{ label: "Status", value: "API miaou.xyz OFFLINE" }],
+    status: "API sedang down, fitur ini sementara tidak tersedia",
+    content:
+      "|\n| API miaou.xyz nolak koneksi (server dilepas)\n| Fitur akan kembali saat API aktif\n" +
+      `| Sementara coba fitur canvas lain: ${prefix}balogo, ${prefix}wanted, ${prefix}iqc, ${prefix}musiccard`,
+  });
+  await m.reply(msg);
+  return { handled: true };
+}
+
+export { pluginConfig as config, handler };
