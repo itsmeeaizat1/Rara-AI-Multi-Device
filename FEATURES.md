@@ -2053,3 +2053,15 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Kategori game (energi RPG, hint, reward, timeout 60s, CTA) — sama persis dengan game v1.
 - .menu/.allmenu banner: tag channel pill (forwardedNewsletterMessageInfo) + sourceUrl wajib valid (link saluran asli → website valid → fallback whatsapp.com) — fix thumbnail banner gak ngerender karena URL rusak.
 - SISTEM POIN PER GAME (aturan owner 5 Sep 2026): game baru murni (flag `newGame`) → skor sendiri di `rpg.gamePoin[gameType]` (+3/4/5/8 per menang), BUKAN reward lama; `.islamicv2` game pertama yang pakai ini. Game lama & v2-nya tetap reward lama. Skor tampil di hasil menang + `.profilerpg` (🎯 Skor Game).
+
+## ZelAPI Suite (BARU 14 Sep 2026 — branch feat/zelapi-suite)
+- **86+ endpoint AI zelapi.eu.cc jadi fitur** (key owner terpasang di apikeys.json `zelapi`): prefix **z** di semua command.
+- **Chat AI (86 command, 3 plugin)**: `.zchatgpt .zdeepseek .zcici .zallen .zduckai .zgemini .zllama .zmistral .zqwen .zvenice .zclaude .zkimi .zcandy .zzen .zshoppingassistant .zyourecommerceassistant .zlearnweb .zweathergpt .zwebsearch .zimage .z-jina-ai .zremovebg .zxlteam` dll — full list `.zelai list` (`.zlh`).
+- **Struktur**: `plugins/ai/zelaichat1.js` (23 cmd) + `zelaichat2.js` (41 cmd) + `zelaichat3.js` (20 cmd) + hub `zelhub.js` (`.zelai/.zlh/.zelaiinfo`); registry `src/lib/nova-zel-registry.js` (ZEL_AI_REGISTRY: slug/path/type/desc); scraper `src/scraper/zelapi.js` (zelAiChat + zelAiImage + zelImageEndpoint + findImageUrls).
+- **Image suite (22 generator, `.zimg list`)**: text2img `.zaiart .zanifun .zanimeimg .zbingimage .zdeepaiimage .zdezgo .zdola .zdreamina .zfreegen .zjoyfun .zmagicstudio .zpiclumen .zquillbotimage .zqwenimage .zsdxl .zwritecream .zimagev2 .znanobanana` (flex: generate, reply foto = edit) + imgedit WAJIB reply foto `.zcarton .zdeepaiedit .zdreaminaedit .znanobananedit`.
+- **AI chat yang balikin gambar** (zcici dll): teks keluar dulu, gambar nyusul (max 2).
+- **STRICT SATUAN**: endpoint mati/limit → error ASLI keluar (mis. "HTTP 500 — Cookie tidak valid atau sudah kedaluwarsa"), gak ada fallback. te() param error + readZelError baca body walau HTTP != 200.
+- **Skipped by design**: 5 konten dewasa/2-foto/credensial (betterwaifu, deepfake, undress, firefly, omnivton) + 1 chat policy (claude-auto).
+- **textParam/imageParam per endpoint** persis docs (bingimage prompt+text, dola text, nanobananedit image_url, carton template+url) — jangan kirim param nyasar.
+- **GOTCHA**: `nova-message.js` gak nge-export `fetchBuffer` (punya nova-utils.js) — import salah = SyntaxError → process exit 0 senyap mid-e2e. Seam `_setFetchBufferForTest` di zelimg + zelaichat1-3 buat mock unduhan.
+- E2E `test/zelapi-e2e/` 52/52 + import 8/8. Live: chatgpt/zallen/zimage/zcici verified; beberapa image endpoint upstream mati/kadang-kadang (cookie zelapi) — error asli keluar semua.
