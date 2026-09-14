@@ -45,7 +45,9 @@ t("  proofs v1 NOXZA_EXE + signature + certificateChain",
     return p.version === 1 && p.useCase === "NOXZA_EXE" && p.signature === "TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==" && p.certificateChain === CERT; })());
 t("  botForwardedMessage.richResponseMessage type STANDARD + submessage 'Space Rush 🚀'",
   r.botForwardedMessage?.message?.richResponseMessage?.messageType === "AI_RICH_RESPONSE_TYPE_STANDARD"
-  && /^Space Rush 🚀\n\*Tap kiri\/kanan\*/.test(r.botForwardedMessage.message.richResponseMessage.submessages?.[0]?.messageText));
+  && r.botForwardedMessage.message.richResponseMessage.submessages?.[0]?.messageText === "Space Rush 🚀");
+t("  opts.title custom (hint markdown dari handler) nge-override submessage",
+  buildRichResponse(HTML, CERT, { title: "Space Rush 🚀\n*Tap kiri/kanan* buat manuver" }).botForwardedMessage.message.richResponseMessage.submessages[0].messageText.includes("Tap kiri/kanan"));
 t("  contextInfo: stanzaId + forwardOrigin META_AI + botJid",
   (() => { const ci = r.botForwardedMessage.message.richResponseMessage.contextInfo;
     return ci.stanzaId === "A5FBA758891A16FD260767C2569F87E4" && ci.forwardOrigin === "META_AI" && ci.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"; })());
@@ -106,15 +108,8 @@ await plugin.handler(mkM(), { sock });
 t("  payload gagal → relay gak jalan + reply error asli",
   relays.length === 0 && mkM.replyed.length === 1 && /404 not found/.test(plain(mkM.replyed[0])));
 
-// certificate kosong → error
-_setPlaneHttpForTest({
-  getJson: async () => [],
-  getText: async () => HTML,
-});
-mkM.replyed.length = 0; relays.length = 0;
-await plugin.handler(mkM(), { sock });
-t("  certificate kosong → error ramah certificate chain",
-  relays.length === 0 && /certificate chain kosong/.test(plain(mkM.replyed[0])));
+// NOTE: fetch certificate sekarang di ENGINE (nova-airich.js, cache 10 mnt) —
+// kasus certificate kosong diuji di suite engine (airich-engine-e2e).
 
 // payload bukan HTML → error
 _setPlaneHttpForTest({
