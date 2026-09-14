@@ -4,7 +4,38 @@
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { fbdown } from "btch-downloader";
 import te from "../../src/lib/nova-error.js";
-import { novaDlUsage, claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaDlUsage, claraWrap, claraLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+
+// Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
+function mediaCaption({
+  platformIcon = "📥",
+  platformName = "Download",
+  title, author, authorHandle, duration, uploadDate,
+  views, likes, comments, shares, downloads, subscribers,
+  description, format, method,
+} = {}) {
+  const lines = [];
+  if (title) lines.push(`Title: ${String(title).slice(0, 80)}`);
+  let authorStr = "";
+  if (author && authorHandle) authorStr = `${author} (@${authorHandle})`;
+  else if (author) authorStr = String(author);
+  else if (authorHandle) authorStr = `@${authorHandle}`;
+  if (authorStr) lines.push(`Author: ${authorStr}`);
+  if (duration) lines.push(`Duration: ${String(duration)}`);
+  if (uploadDate) lines.push(`Upload: ${String(uploadDate)}`);
+  if (views) lines.push(`Views: ${String(views)}`);
+  if (likes) lines.push(`Likes: ${String(likes)}`);
+  if (comments) lines.push(`Comments: ${String(comments)}`);
+  if (shares) lines.push(`Shares: ${String(shares)}`);
+  if (downloads) lines.push(`Downloads: ${String(downloads)}`);
+  if (subscribers) lines.push(`Subs: ${String(subscribers)}`);
+  if (description && String(description).trim()) {
+    lines.push(`Desc: ${String(description).trim().slice(0, 120)}`);
+  }
+  if (format) lines.push(`Format: ${format}`);
+  if (method) lines.push(`Source: ${method}`);
+  return lines.join("\n");
+}
 
 const pluginConfig = {
   name: "facebookdl",

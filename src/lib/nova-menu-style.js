@@ -698,63 +698,6 @@ export {
 
 };
 
-// ═══════════════════════════════════════════════
-// MEDIA CAPTION — Rich info untuk media yang dikirim
-// Hanya tampilkan field yang ada (truthy)
-// ═══════════════════════════════════════════════
-
-/**
- * Build rich caption untuk media download.
- * @param {object} opts
- * @param {string} opts.platformIcon - emoji platform (▶️ 🎵 📸 dll)
- * @param {string} opts.platformName - nama platform (YouTube, TikTok, dll)
- * @param {string} opts.title - judul media
- * @param {string} opts.author - nama author/creator
- * @param {string} opts.authorHandle - @handle author
- * @param {string} opts.duration - durasi (e.g. "3:45")
- * @param {string} opts.uploadDate - tanggal upload
- * @param {string|number} opts.views - jumlah views
- * @param {string|number} opts.likes - jumlah likes
- * @param {string|number} opts.comments - jumlah comments
- * @param {string|number} opts.shares - jumlah shares
- * @param {string|number} opts.subscribers - subscriber count
- * @param {string} opts.description - deskripsi/caption media
- * @param {string} opts.format - format download (MP3, 720p, dll)
- * @param {string} opts.method - metode download (SaveNow, AIO, dll)
- * @param {string} opts.thumbnail - thumbnail URL (untuk contextInfo)
- * @returns {string} Caption box text
- */
-function mediaCaption({
-  platformIcon = "📥",
-  platformName = "Download",
-  title, author, authorHandle, duration, uploadDate,
-  views, likes, comments, shares, downloads, subscribers,
-  description, format, method,
-} = {}) {
-  const lines = [];
-  if (title) lines.push(`Title: ${String(title).slice(0, 80)}`);
-  let authorStr = "";
-  if (author && authorHandle) authorStr = `${author} (@${authorHandle})`;
-  else if (author) authorStr = String(author);
-  else if (authorHandle) authorStr = `@${authorHandle}`;
-  if (authorStr) lines.push(`Author: ${authorStr}`);
-  if (duration) lines.push(`Duration: ${String(duration)}`);
-  if (uploadDate) lines.push(`Upload: ${String(uploadDate)}`);
-  if (views) lines.push(`Views: ${String(views)}`);
-  if (likes) lines.push(`Likes: ${String(likes)}`);
-  if (comments) lines.push(`Comments: ${String(comments)}`);
-  if (shares) lines.push(`Shares: ${String(shares)}`);
-  if (downloads) lines.push(`Downloads: ${String(downloads)}`);
-  if (subscribers) lines.push(`Subs: ${String(subscribers)}`);
-  if (description && String(description).trim()) {
-    lines.push(`Desc: ${String(description).trim().slice(0, 120)}`);
-  }
-  if (format) lines.push(`Format: ${format}`);
-  if (method) lines.push(`Source: ${method}`);
-  return lines.join("\n");
-}
-
-export { mediaCaption };
 
 // ═══════════════════════════════════════════════
 // NOVA REPLY — Pesan reply natural & menarik
