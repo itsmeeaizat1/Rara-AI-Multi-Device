@@ -19,6 +19,7 @@ import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
 import { getAllSkills, awaitSkillPacks } from "../../src/lib/nova-skills.js";
 import { getMcpTools } from "../../src/lib/nova-mcp.js";
+import { searchYoutubeAndSend, detectYtSearchIntent } from "../../src/lib/nova-yt-search.js";
 
 // 💻 system prompt coder — request owner 11 Sep: "klo suruh buatkan kode html,
 // javascript dll pintar coding agent membuatkan dgn kepintarannya"
@@ -402,6 +403,26 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     }
   });
 
+  // 🔎 ytsearch — CARI VIDEO YOUTUBE (request owner 14 Sep: ".aisuperagent
+  // juga di-upgrade — dua agent bermasalah ngbug"): browser beneran
+  // (chromium) + thumbnail preview + deskripsi plain text; video cuma
+  // diunduh kalau eksplisit (download:true dari planner).
+  const ytsearch = deps.ytsearch || (async (t) => {
+    const query = String(t.query || t.q || t.prompt || t.args || "").trim();
+    if (!query) return { ok: false, msg: "Sebutin judul/topik video yang mau dicari" };
+    const wantDownload = !!(t.download || t.dl);
+    try {
+      const r = await searchYoutubeAndSend(sock, m, { query, wantDownload });
+      return {
+        ok: true,
+        msg: "Video YouTube ditemukan & dikirim (" + (wantDownload ? "diunduh" : "thumbnail preview + deskripsi") + ", via: " + (r?.via || "-") + "): " + query,
+        evidence: "Hasil pencarian YouTube untuk \"" + query + "\" udah dikirim langsung ke chat (thumbnail preview + judul/channel/durasi/views/deskripsi/link + video lain yang mirip).",
+      };
+    } catch (e) {
+      return { ok: false, msg: "Gagal cari video YouTube: " + (e?.message || "error") };
+    }
+  });
+
   // 🎯 skill — pakai skill built-in + skill pack (kbbi/gempa/hoki/lirik/
   // calc/translate/kurs/qr/wiki/cuaca/dll) — request owner 12 Sep: ".aisuperagent
   // upgrade ... dilengkapi mcp, skills dan tool tambahan kyk novaagent"
@@ -492,7 +513,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     }
   });
 
-  return { command, image, download, code, vision, activity, memory, create, skill, mcp, createfile, browse };
+  return { command, image, download, code, vision, activity, memory, create, skill, mcp, createfile, browse, ytsearch };
 }
 
 // simpan jejak percakapan agent per chat (db.setting agentMemory) — biar inget
@@ -571,7 +592,7 @@ async function handler(m, { sock, db, deps } = {}) {
       "agent",
       "AI agent otonom — dia sendiri yang nyari ke web, baca halamannya, terus nyusun jawaban lengkap + sumber.",
       `${m.prefix}agent <tugas apa pun>\n${m.prefix}agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi\n${m.prefix}agent kick orang yang bernama Budi\n${m.prefix}agent tutup grup dan ubah nama grup jadi Nova Squad`,
-      [`${smallcapsText("7 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar, generate gambar, jalanin fitur, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip dari link")} | 💻 ${smallcapsText("coding — bikin kode html/js/python dikirim jadi file")} | 🎭 ${smallcapsText("persona — jadi anak kecil, pacar, siapa pun")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
+      [`${smallcapsText("8 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | 🔎 ${smallcapsText("cari video youtube — thumbnail preview + deskripsi")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar, generate gambar, jalanin fitur, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip dari link")} | 💻 ${smallcapsText("coding — bikin kode html/js/python dikirim jadi file")} | 🎭 ${smallcapsText("persona — jadi anak kecil, pacar, siapa pun")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
        `${smallcapsText("bermain peran/persona")}: ${m.prefix}agent jadi anak kecil umur 5 tahun yang sok jagoan | ${m.prefix}agent jadi pacarku yang manja`,
        `${smallcapsText("bikin kode program")}: ${m.prefix}agent buatkan kode html halaman toko kue yang keren`,
        `${smallcapsText("bantuin tugas")}: ${m.prefix}agent bantuin tugas matematika ini — ...`,
@@ -617,6 +638,30 @@ async function handler(m, { sock, db, deps } = {}) {
   try {
     await reactPhase("🧠");
     await setStatus(PHASE_LABEL.plan);
+
+    // ── DETEKSI LOKAL: cari video YouTube → INSTAN (request owner 14 Sep:
+    // ".aisuperagent juga di-upgrade — dua agent bermasalah ngbug" — akar
+    // yang sama kaya .novaagent: request 'cairkan/carikan X di youtube' gak
+    // pernah ke-detect, planner AI milih tool salah / jawab halusinasi.
+    // Sekarang dideteksi lokal via LIB BERSAMA nova-yt-search.js → langsung
+    // browser beneran + thumbnail preview, TANPA lewat planner AI).
+    const ytIntent = detectYtSearchIntent(norm(task), task);
+    if (ytIntent) {
+      await reactPhase("🔍");
+      await setStatus("🔍 " + smallcapsText("superagent cari video di youtube..."));
+      const ytSend = deps.ytsearchSend || searchYoutubeAndSend;
+      try {
+        await ytSend(sock, m, { query: ytIntent.query, wantDownload: ytIntent.download });
+        if (statusKey) { try { await sock.sendMessage(m.chat, { text: "✅ " + smallcapsText(ytIntent.download ? "videonya udah aku unduh & kirim di atas ya" : "thumbnail preview + info videonya udah aku kirim di atas ya"), edit: statusKey }); } catch {} }
+        await m.react("🐣");
+      } catch (e) {
+        await m.react("❌");
+        const em = claraWrap("superagent", "gagal cari video youtube: " + (e?.message || "error"), "error");
+        if (statusKey) { try { await sock.sendMessage(m.chat, { text: em, edit: statusKey }); return; } catch {} }
+        await m.reply(em);
+      }
+      return;
+    }
 
     // reply/attach gambar → buffer buat tool vision (scan gambar)
     let mediaBuffer = null;
