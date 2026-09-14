@@ -143,7 +143,16 @@ export function buildRichResponse(htmlPayload, certChain, opts = {}) {
 // ── satu pintu: polish → rakit → relay. Plugin baru tinggal panggil ini ──
 export async function sendRichResponse(sock, chat, html, opts = {}) {
   const certChain = await fetchCertificate();
-  const msg = buildRichResponse(polishPayload(html), certChain, opts);
-  await sock.relayMessage(chat, msg, {});
+  if (!Array.isArray(certChain) || !certChain.length) console.error("[airich] ⚠️ certChain KOSONG — WA bakal nolak render");
+  const payload = polishPayload(html);
+  console.log(`[airich] kirim rich response: payload ${Buffer.byteLength(payload)} B, cert ${certChain?.length || 0} entri, ke ${chat}`);
+  const msg = buildRichResponse(payload, certChain, opts);
+  try {
+    await sock.relayMessage(chat, msg, {});
+    console.log(`[airich] ✅ relay diterima server (response_id=${msg.messageContextInfo.botMetadata.botResponseId.slice(0, 12)}...)`);
+  } catch (err) {
+    console.error(`[airich] ❌ relay DITOLAK: ${err?.message || err}`);
+    throw err;
+  }
   return msg;
 }
