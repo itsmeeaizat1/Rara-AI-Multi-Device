@@ -40,9 +40,9 @@ w("\n— buildRichResponse —");
 const r = buildRichResponse(HTML, CERT);
 t("  messageContextInfo.botMetadata.verificationMetadata ada",
   !!r.messageContextInfo?.botMetadata?.verificationMetadata);
-t("  proofs v1 NOXZA_EXE + signature + certificateChain",
+t("  proofs v1 WA_BOT_MSG + signature Buffer + certificateChain",
   (() => { const p = r.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
-    return p.version === 1 && p.useCase === "NOXZA_EXE" && p.signature === "TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==" && p.certificateChain === CERT; })());
+    return p.version === 1 && p.useCase === "WA_BOT_MSG" && Buffer.isBuffer(p.signature) && p.signature.equals(Buffer.from("TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==", "base64")) && p.certificateChain === CERT; })());
 t("  botForwardedMessage.richResponseMessage type STANDARD + submessage 'Space Rush 🚀'",
   r.botForwardedMessage?.message?.richResponseMessage?.messageType === "AI_RICH_RESPONSE_TYPE_STANDARD"
   && r.botForwardedMessage.message.richResponseMessage.submessages?.[0]?.messageText === "Space Rush 🚀");
