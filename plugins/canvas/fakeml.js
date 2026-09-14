@@ -66,6 +66,7 @@ async function handler(m, { sock }) {
     return m.reply(novaError("FakeML", "Kirim/reply gambar dulu nih!"));
   }
   try {
+    await m.react("🕒");
     const gmbr = await uploadTo0x0(buffer, {
       filename: "image.jpg",
       contentType: "image/jpeg",
@@ -79,8 +80,10 @@ async function handler(m, { sock }) {
         type: "image",
       },
     );
+    await m.react("🐣");
   } catch (error) {
-    m.reply(claraWrap("fakeml", `Coba lagi`));
+    await m.react("❌");
+    m.reply(claraWrap("fakeml", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

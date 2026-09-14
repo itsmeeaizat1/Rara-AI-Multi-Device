@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -30,13 +29,25 @@ async function handler(m, { sock }) {
     const textL = parts[0]
     const textR = parts[1]
     try {
+        await m.react("🕒")
         const apiUrl = `https://api.nexray.web.id/maker/balogo?text=${encodeURIComponent(textL)} ${encodeURIComponent(textR)}`
-        const response = await f(apiUrl, 'arrayBuffer')
-        
-        await sock.sendMedia(m.chat, Buffer.from(response), null, m, {
+        // FIX 14 Sep 2026 (audit canvas): helper bersama f() (nova-http.js, undici
+        // request()) TIDAK follow HTTP redirect — endpoint ini 301 redirect ke
+        // domain gambar asli, jadinya f() balikin ArrayBuffer 0 byte (gambar blank
+        // gagal kirim, tapi try/catch gak nangkep karena gak throw). axios follow
+        // redirect default (maxRedirects: 5) → dipakai sebagai gantinya di sini.
+        const res = await axios.get(apiUrl, { responseType: 'arraybuffer', timeout: 30000 })
+        const response = Buffer.from(res.data)
+        if (!response || response.length === 0) {
+            throw new Error('Response gambar kosong')
+        }
+
+        await m.react("🐣")
+        await sock.sendMedia(m.chat, response, null, m, {
             type: 'image',
         })
     } catch (error) {
+        await m.react("❌")
         m.reply(claraWrap("balogo", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

@@ -26,6 +26,7 @@ async function handler(m, { sock }) {
     { const __navText = claraWrap("FAKE FF", `💡 *Contoh:* ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff"); };
   }
   try {
+    await m.react("🕒");
     await sock.sendMedia(
       m.chat,
       `https://api.nexray.web.id/maker/fakelobyff?nickname=${encodeURIComponent(nama)}`,
@@ -35,7 +36,9 @@ async function handler(m, { sock }) {
         type: "image",
       },
     );
+    await m.react("🐣");
   } catch (error) {
+    await m.react("❌");
     m.reply(claraWrap("fakeff", te(m.prefix, m.command, m.pushName), "error"));
   }
 }

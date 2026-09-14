@@ -113,7 +113,7 @@ async function generateFakeCall(nama, durasi, avatarUrl) {
   ctx.fillStyle = "#00a884";
   ctx.fill();
 
-  return await canvas.png;
+  return canvas.toBuffer("image/png");
 }
 
 async function handler(m, { sock }) {
