@@ -142,12 +142,18 @@ export const TOOLS = {
   // 480p biar cepat & hemat, konversi H.264+AAC biar keputar di WA).
   // Gagal unduh → kartu info + link tetap keluar, tool gak mati.
   searchyt: {
-    perm: 'user', args: ['query'], danger: false,
-    desc: 'MENCARI VIDEO di YouTube lalu kirim KARTU INFO (judul/channel/durasi/views/deskripsi) + VIDEO SAMPEL hasil unduhan (contoh: "carikan video tutorial dpixel di youtube", "cairkan bot alya md ini di youtube", "putar video cat lucu")',
-    done: '✅ Video hasil pencarian YouTube udah aku kirim di atas ya.',
+    perm: 'user', args: ['query', 'download'], danger: false,
+    desc: 'MENCARI VIDEO di YouTube lalu kirim THUMBNAIL PREVIEW + deskripsi plain text (judul/channel/durasi/views/deskripsi/link). Default TIDAK ngunduh video. Kasih download=true HANYA kalau user eksplisit minta UNDUH/PUTAR/NONTON videonya (contoh: "carikan video tutorial dpixel di youtube" → preview, "unduh video bot alya md" → download:true)',
+    done: '✅ Hasil pencarian YouTube udah aku kirim di atas ya.',
     run: async (conn, m, a) => {
       const query = String(a?.query || a?.q || a?.text || a?.value || '').trim();
       if (!query) throw new Error('mau cari video apa? kasih judul/topiknya — contoh: carikan video bot alya md di youtube');
+      // request owner 14 Sep 2026: "klo disuruh cari, bukan video yang diunduh
+      // tapi bentuk thumbnail cuplikan preview video di youtube + buffer url +
+      // deskripsi ke plain text — KECUALI aku minta unduh video". Jadi:
+      // default = preview card (thumbnail + deskripsi), unduh HANYA kalau
+      // eksplisit (unduh/download/dl/putar/nonton).
+      const wantDownload = !!(a?.download || a?.dl || a?.unduh);
 
       // ── CARI: BROWSER BENERAN duluan (request owner 14 Sep 2026: "klo
       // disuruh cari jgn pakai kecerdasan ai tp agent mencari pakai browser
@@ -173,9 +179,24 @@ export const TOOLS = {
       if (!videos.length) throw new Error('gak nemu video di YouTube buat: ' + query);
       const v = videos[0];
       const fmtViews = (n) => !n ? '0' : n >= 1e6 ? (n / 1e6).toFixed(1) + ' jt' : n >= 1e3 ? (n / 1e3).toFixed(1) + ' rb' : String(n);
-      const desc = (v.description || '').replace(/\s+/g, ' ').trim().slice(0, 280);
 
-      // kartu info teks: hasil utama + isi/deskripsi video + daftar video lain
+      // deskripsi: jalur browser hasil list-page gak bawa deskripsi → ambil
+      // shortDescription dari watch page (data ASLI YouTube, tetap bukan AI)
+      let desc = (v.description || '').replace(/\s+/g, ' ').trim();
+      if (!desc) {
+        try {
+          const getText = __searchytDeps.httpGetText || (async (u) => {
+            const axios = (await import('axios')).default;
+            return (await axios.get(u, { timeout: 15000 })).data;
+          });
+          const html = String(await getText(v.url)) || '';
+          const dm = html.match(/"shortDescription":"((?:[^"\\]|\\.)*)"/);
+          if (dm) desc = (JSON.parse('"' + dm[1] + '"') || '').replace(/\s+/g, ' ').trim();
+        } catch (e) { console.error('[searchyt] desc fetch error:', e.message); }
+      }
+      desc = desc.slice(0, 400);
+
+      // kartu info: hasil utama + deskripsi plain text + daftar video lain
       const lines = [
         '🎬 *YouTube — ' + query + '*', '',
         '🔍 _dicari via: ' + (via === 'browser' ? 'browser beneran (chromium)' : 'youtube engine') + '_', '',
@@ -190,8 +211,43 @@ export const TOOLS = {
       for (const x of videos.slice(1, 4)) {
         lines.push('• ' + x.title + ' (' + (x.duration?.timestamp || '-') + ') → ' + x.url);
       }
+      const cardText = lines.filter(Boolean).join('\n');
+
+      // ── MODE PENCARIAN (default, request owner 14 Sep): THUMBNAIL
+      // cuplikan preview + deskripsi plain text — TANPA unduh video ──
+      if (!wantDownload) {
+        lines.push('', '💡 Mau ditonton? ketik: *.novaagent unduh video ' + query + '* — atau *.playvideo* ' + v.url);
+        const previewText = lines.filter(Boolean).join('\n');
+        // thumbnail resmi YouTube dari video id (i.ytimg.com) — cuplikan
+        // preview beneran dari videonya, bukan hasil AI
+        const videoId = (String(v.url).match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/) || [])[1];
+        let thumb = null;
+        if (videoId) {
+          const getBuf = __searchytDeps.thumbGet || (async (u) => {
+            const axios = (await import('axios')).default;
+            const { data } = await axios.get(u, { responseType: 'arraybuffer', timeout: 15000 });
+            return data;
+          });
+          // maxresdefault (HD) duluan; kalau 404/placeholder kecil → hqdefault
+          for (const q of ['maxresdefault', 'hqdefault']) {
+            try {
+              const buf = Buffer.from((await getBuf('https://i.ytimg.com/vi/' + videoId + '/' + q + '.jpg')) || Buffer.alloc(0));
+              if (buf.length > 3000) { thumb = buf; break; }
+            } catch { /* coba kualitas berikutnya */ }
+          }
+        }
+        if (thumb) {
+          await conn.sendMessage(m.chat, { image: thumb, caption: previewText }, { quoted: m });
+        } else {
+          // thumbnail gagal diambil → kartu teks polos tetap lengkap
+          await conn.sendMessage(m.chat, { text: previewText }, { quoted: m });
+        }
+        return;
+      }
+
+      // ── MODE UNDUH (eksplisit): kartu info + VIDEO hasil unduhan ──
       try {
-        await conn.sendMessage(m.chat, { text: lines.filter(Boolean).join('\n') }, { quoted: m });
+        await conn.sendMessage(m.chat, { text: cardText }, { quoted: m });
       } catch { /* kartu gagal kirim → lanjut video, jangan mati */ }
 
       // ── unduh video sampel (480p biar cepat & ringan) ──
@@ -239,7 +295,7 @@ export const TOOLS = {
       if (!buffer || buffer.length < 10000) {
         // unduh kandas → kartu info udah terkirim di atas, kasih info jujur + link
         await conn.sendMessage(m.chat, {
-          text: '⚠️ Video sampel gagal diunduh (server YouTube sedang rewel) — tapi link video-nya udah aku kirim di atas, bisa langsung ditonton / dipakai *.playvideo* ' + v.url,
+          text: '⚠️ Videonya gagal diunduh (server YouTube sedang rewel) — tapi link video-nya udah aku kirim di atas, bisa langsung ditonton / dipakai *.playvideo* ' + v.url,
         }, { quoted: m });
         return;
       }
@@ -251,7 +307,7 @@ export const TOOLS = {
       } catch { /* konversi gagal → kirim buffer apa adanya, WA biasanya tetap keputar */ }
       await conn.sendMessage(m.chat, {
         video: buffer,
-        caption: '🎬 *' + v.title + '*\n👤 ' + (v.author?.name || '-') + ' • ⏱️ ' + (v.duration?.timestamp || '-') + '\n🔗 ' + v.url + '\n\n_(contoh video hasil pencarian: ' + query + ')_',
+        caption: '🎬 *' + v.title + '*\n👤 ' + (v.author?.name || '-') + ' • ⏱️ ' + (v.duration?.timestamp || '-') + '\n🔗 ' + v.url + '\n\n_(video hasil pencarian: ' + query + ')_',
       }, { quoted: m });
     }
   },
@@ -900,15 +956,18 @@ export function localParse(text) {
   // halusinasi. Sekarang request 'carikan/cairkan/putar X di youtube/yt'
   // dideteksi LOKAL (instan, imun dari kebingungan histori sesi) → tool
   // searchyt: kartu info + video sampel hasil unduhan.
-  if (/\b(carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyari(kan)?|putar(kan|in)?|mainkan|tonton(kan|in)?|nonton(kan|in)?|nton(in)?|play|playin|lihat(kan|in)?)\b/.test(t) && /\b(youtube|yt|video)\b/.test(t)) {
+  if (/\b(carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyari(kan)?|putar(kan|in)?|mainkan|tonton(kan|in)?|nonton(kan|in)?|nton(in)?|play|playin|lihat(kan|in)?|unduh(kan|in)?|download|donlot|donlod|dl)\b/.test(t) && /\b(youtube|yt|video)\b/.test(t)) {
+    // request owner 14 Sep: hasil cari = THUMBNAIL PREVIEW + deskripsi plain
+    // text; video cuma DIUNDUH kalau eksplisit minta unduh/putar/nonton.
+    const wantDownload = /\b(unduhkan|unduhin|unduh|download|downlod|donlot|donlod|dl|putarkan|putarin|putar|mainkan|tontonkan|tontonin|tonton|nontonkan|nontonin|nonton|ntonin|nton|playin|play)\b/.test(t);
     const q = original
-      .replace(/\b(tolong|please|dong|ya|yah|deh|sih|min|coba|kak|bang|bantu|bantu cari)\b/gi, ' ')
-      .replace(/\b(carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyarikan|nyari|putarkan|putarin|putar|mainkan|tontonkan|tontonin|tonton|nontonkan|nontonin|nonton|ntonin|nton|playin|play|lihatkan|lihatin|lihat|kan)\b/gi, ' ')
+      .replace(/\b(tolong|please|dong|ya|yah|deh|sih|min|coba|kak|bang|bantu|bantu cari|bantu unduh)\b/gi, ' ')
+      .replace(/\b(unduhkan|unduhin|unduh|download|downlod|donlot|donlod|dl|carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyarikan|nyari|putarkan|putarin|putar|mainkan|tontonkan|tontonin|tonton|nontonkan|nontonin|nonton|ntonin|nton|playin|play|lihatkan|lihatin|lihat|kan)\b/gi, ' ')
       .replace(/\b(di|ke|dari|ini|itu)\b/gi, ' ')
       .replace(/\b(youtube|yt|videonya|video)\b/gi, ' ')
       .replace(/\s+/g, ' ')
       .trim()
-    return { tool: 'searchyt', args: { query: q || 'tutorial menarik' } }
+    return { tool: 'searchyt', args: { query: q || 'tutorial menarik', download: wantDownload } }
   }
 
   // ─── GENERATE GAMBAR (AI IMAGE) — CEK LOKAL DULU, JANGAN LEWAT think() ───
