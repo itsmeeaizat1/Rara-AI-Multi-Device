@@ -692,6 +692,15 @@ async function startConnection(options = {}) {
         console.error("[Reminder] restore gagal:", e.message);
       }
       try {
+        // 🔹 POLL RESTORE: poll aktif + votes dari db dipasang ulang
+        // timer auto-close-nya; yang kelewat ditutup + hasil dikirim
+        const { restorePolls } = await import("./lib/nova-poll-engine.js");
+        const rp = restorePolls(sock);
+        if (rp?.rearmed || rp?.missed) console.log(`[Poll] ${rp.rearmed} timer dipasang ulang, ${rp.missed} kelewat ditutup`);
+      } catch (e) {
+        console.error("[Poll] restore gagal:", e.message);
+      }
+      try {
         const { initAlarmScheduler } = await import("./lib/nova-alarm.js");
         initAlarmScheduler(sock);
       } catch (e) {
