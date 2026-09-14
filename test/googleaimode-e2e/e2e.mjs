@@ -44,8 +44,14 @@ check("kartu usage keluar", sends.length === 1 && /google ai mode/.test(norm(sen
 check("berisi contoh command", /\.googleaimode/.test(norm(sends[0])));
 
 w("\n— key belum di-set → error jelas, TANPA fallback —");
-sends = []; reacts = [];
-await handler(mk(["siapa", "presiden", "indonesia"]), { sock });
+// simulasikan key kosong via seam (key asli di apikeys.json udah keisi)
+{
+  const scr0 = await import("../../src/scraper/searchapi.js");
+  scr0._setSearchApiKeyForTest("");
+  sends = []; reacts = [];
+  await handler(mk(["siapa", "presiden", "indonesia"]), { sock });
+  scr0._setSearchApiKeyForTest(null);
+}
 check("error key keluar", sends.length === 1 && /api key searchapi\.io belum di-set/.test(norm(sends[0])));
 check("react ❌", reacts.includes("❌"));
 check("gak ada jawaban AI lain (strict)", !/jawaban/i.test(norm(sends[0]).replace(/jawaban ai google/g, "")));

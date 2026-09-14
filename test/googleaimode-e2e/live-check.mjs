@@ -1,0 +1,10 @@
+process.env.NOVA_DB_DIR = "/tmp/live-bot-db";
+import fs from "fs";
+fs.mkdirSync(process.env.NOVA_DB_DIR, { recursive: true });
+const { initDatabase } = await import("../../src/lib/nova-database.js");
+await initDatabase(process.env.NOVA_DB_DIR + "/db.json");
+const { googleAiModeSearch } = await import("../../src/scraper/searchapi.js");
+const r = await googleAiModeSearch("apa itu fotosintesis");
+console.log("ok:", r.ok);
+console.log("answer:\n" + (r.answer || r.error || "").slice(0, 400));
+console.log("sources:", (r.sources || []).map(s => s.link?.slice(0, 40)).join("\n  "));
