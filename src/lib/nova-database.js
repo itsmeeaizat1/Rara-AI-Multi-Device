@@ -7,7 +7,12 @@ const FLUSH_INTERVAL_MS = 5000;
 
 const defaultUsers = {};
 const defaultGroups = {};
-const defaultSettings = { selfMode: true, autoreactvnEnabled: false, disabledCommands: [], disabledCategories: [] };
+// menuThumbVariant: 2 (VIDEO) — request owner 14 Sep: bot baru pairing/fresh
+// install harus LANGSUNG pakai header menu video (bukan gambar statis v1),
+// tanpa perlu owner ngetik .setallmenu v2 manual dulu. Owner yang udah pernah
+// pilih varian sendiri (v1 eksplisit) gak ketimpa — merge defaults ke store
+// data existing di init() cuma ngisi key yang BELUM ada di settings.json.
+const defaultSettings = { selfMode: true, autoreactvnEnabled: false, disabledCommands: [], disabledCategories: [], menuThumbVariant: 2 };
 const defaultStats = {};
 const defaultSewa = { enabled: false, groups: {} };
 
