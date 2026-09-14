@@ -2131,3 +2131,14 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Efek: card sekarang **adaptif** — kalau API/enrichment cuma dapet sedikit data, card tetap ringkas & rapi (gak ada baris kosong "-"), tapi kalau datanya lengkap ya semua field tetap tampil normal.
 - E2E `test/play-e2e/` 17/17 (+3 baru: omit album/genre, salah satu doang, minimal) + `test/playspotify-e2e/` 12/12 (+3 baru) + `test/spotify-play-card-e2e/` 15/15 (+4 baru: omit lintas engine + card minimal) + import guard 8/8.
 - VPS: `git pull && pm2 restart` → `.play` / `.playspotify` dengan lagu yang metadatanya minim → card gak ada baris "-" kosong lagi.
+
+## Card Spotify Play — Dipisah Total Per-Fitur, Gak Pakai Lib Bersama (REVISI 14 Sep 2026)
+- Owner koreksi lagi: **"gak mau dipakein formatter/card builder bareng yg dipaksa 2-2nya sama, tiap fitur field-nya beda-beda, takut ada field yg gak ada di salah satu — pisah aja tiap fitur format cardnya, gitu juga fitur lain nanti-nanti"**.
+- **DIHAPUS**: `src/lib/nova-spotify-play-card.js` (lib bersama, dipakai 3 plugin — bikin fieldnya "dipaksa" seragam padahal data mentahnya beda per-engine).
+- Sekarang **masing-masing dari 3 plugin punya builder & enrichment SENDIRI, ditulis LOKAL di file plugin masing-masing** (kode boleh mirip/duplikat, tapi independen — bisa diubah salah satu tanpa nyenggol yang lain):
+  - **`.playspotify`** (`buildPlaySpotifyInfoCard`, spotidown.app): Judul/Album/Genre*/Durasi/Artis/Format("Audio MP3")/Link. Album+Durasi ASLI dari Spotify (spotidown), Genre* di-enrich iTunes (diomit kalau gak ketemu).
+  - **`.spotifyplay2`** (`buildSpotifyPlay2Card`, api.spotifydown.org): Judul/Album*/Genre*/Durasi*/Artis/Format("MP3 320kbps" — fixed valid buat servis ini)/Link. Album & Durasi dari field API ini kalau ada (diomit kalau kosong), Genre di-enrich iTunes.
+  - **`.spotplay`** (`buildSpotplayCard`, azbry): Judul/Artis/Format("Audio MP3")/Link — **field PALING MINIM**, karena API ini cuma dikonfirmasi ngasih title/artist/link (live-check 14 Sep 2026: 403 konsisten, field lain gak diketahui). Album/Genre/Durasi cuma tampil KALAU KEBETULAN API ngasih, gak ada enrichment tambahan.
+- Prinsip ke depan (owner minta diterapin ke fitur lain juga nanti): **jangan bikin 1 formatter dipaksa dipakai 2+ fitur beda-engine** — tiap fitur nulis card builder-nya sendiri sesuai data yang beneran tersedia dari API-nya.
+- E2E: `test/playspotify-e2e/` 12/12, `test/spotifyplay2-e2e/` (BARU) 9/9, `test/spotplay-e2e/` (BARU) 7/7 — semua include assert "gak import lib bersama, builder didefinisikan lokal". + import guard 8/8 + `test/play-e2e/` 17/17 (gak disentuh, tetep lokal dari awal).
+- VPS: `git pull && pm2 restart` → `.playspotify faded` / `.spotifyplay2 faded` / `.spotplay faded` — card masing-masing independen.
