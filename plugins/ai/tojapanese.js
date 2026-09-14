@@ -74,8 +74,14 @@ async function handler(m, { sock }) {
         const imageUrl = await uploadImage(buffer, 'image.jpg')
         
         const url = `https://api-faa.my.id/faa/tojapanese?url=${encodeURIComponent(imageUrl)}`
-        const res = await f(url, 'arrayBuffer')
-        await sock.sendMedia(m.chat, Buffer.from(res), null, m, {
+        // GUARD 14 Sep 2026: f() bisa balikin null (status>=400 ketangkep)
+        // ATAU ArrayBuffer 0 byte kalau API sempet redirect (server ganti tanpa
+        // kabar) — cek dulu biar gak diam-diam kirim gambar rusak/kosong.
+        if (!res || res.byteLength === 0) {
+            throw new Error('Response gambar dari API kosong/gagal')
+        }
+        const resultBuffer = Buffer.from(res)
+        await sock.sendMedia(m.chat, resultBuffer, null, m, {
             type: 'image',
         })
         
