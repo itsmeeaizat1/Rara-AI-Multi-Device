@@ -2097,3 +2097,11 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - E2E `test/nonton-e2e/` 44/44 + import guard 8/8. Live verified: anibiplay home/cari/detail/episode/explore + otakudesu + animelovers (retry beneran sukses di percobaan ke-2 saat live test) semua return data asli.
 - VPS: `git pull && pm2 restart` → `.nonton anibiplay cari one piece` → `.nonton animelovers ongoing` → `.nonton otakudesu`.
 - **Lanjutan (belum dikerjakan)**: susul wotanim kalau upstream-nya pulih dari blokir total.
+
+## Play — Card Info Dibawah Media (BARU 14 Sep 2026)
+- **`.play`** (YouTube audio search+download) — request owner "variasi menu chat card": card info dipindah dari SEBELUM audio → **DIBAWAH/SETELAH audio** dikirim (WhatsApp emang gak bisa caption di pesan audio, jadi tetap teks terpisah, cuma urutan kirimnya dibalik).
+- **Field baru, urutan persis request owner**: `Judul` → `Album` → `Genre` → `Durasi` → `Artis` → `Format` (tambahan susulan: "Audio MP3 `<kbps>`Kbps") → baris kosong → `Link`. Lirik (kalau ketemu) nyusul di bawah Link sebagai bonus, gak ganggu urutan wajib di atas.
+- **Album & Genre BARU** — YouTube gak punya metadata ini secara native, di-enrich best-effort dari **iTunes Search API** (gratis, no key, `collectionName`→Album, `primaryGenreName`→Genre; sama seperti dipakai `plugins/download/songs.js`). Gak ketemu → fallback `-`, gak pernah block proses.
+- **Arsitektur**: pembuatan card diekstrak jadi fungsi murni `buildPlayInfoCard()` (exported) biar testable tanpa mock seluruh chain search+download.
+- E2E `test/play-e2e/` 14/14 (urutan field, fallback iTunes kosong, Format ikut bitrate 128/192/256/320) + import guard 8/8. Live verified iTunes enrichment: "Faded Alan Walker" → Album "Faded - EP", Genre "Dance".
+- VPS: `git pull && pm2 restart` → `.play faded alan walker` → cek card muncul DIBAWAH audio dengan urutan Judul/Album/Genre/Durasi/Artis/Format/Link.

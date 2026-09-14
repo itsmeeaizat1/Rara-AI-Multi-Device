@@ -1,6 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // play.js — Search YouTube → download audio → kirim langsung
 // Bitrate: 128 / 256 (default) / 320 kbps
+// REVISI 14 Sep 2026 (owner: "variasi menu chat card — bagian
+// Judul/Album/Genre/Durasi/Artis/Link DIBAWAH setelah media dikirim"):
+// card info dipindah dari SEBELUM audio → SETELAH audio, field diseragamin
+// jadi 5 (Judul/Album/Genre/Durasi/Artis) + baris kosong + Link. Album &
+// Genre gak ada di data YouTube — di-enrich best-effort dari iTunes Search
+// API (gratis, no key, sama seperti yang dipakai plugins/download/songs.js).
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
@@ -9,6 +15,47 @@ import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
+
+let _itunesForTest = null;
+function _setItunesFnForTest(fn) { _itunesForTest = fn; }
+
+// Card info — field PERSIS request owner (14 Sep 2026): Judul/Album/Genre/
+// Durasi/Artis/Format, baris kosong, Link — dikirim DIBAWAH media (bukan
+// sebelum, WhatsApp gak support caption di pesan audio). Diekstrak jadi
+// fungsi murni biar testable tanpa mock seluruh chain download/search.
+export function buildPlayInfoCard({ title, album, genre, duration, artist, kbps, url, lyricsSnippet, lyricsCommand }) {
+  const lines = [
+    `*Judul:* ${title || "-"}`,
+    `*Album:* ${album || "-"}`,
+    `*Genre:* ${genre || "-"}`,
+    `*Durasi:* ${duration || "-"}`,
+    `*Artis:* ${artist || "-"}`,
+    `*Format:* Audio MP3 ${kbps}Kbps`,
+    ``,
+    `*Link:* ${url || "-"}`,
+  ];
+  if (lyricsSnippet) {
+    lines.push(``, `*Lirik:*`, lyricsSnippet, ``, `Lirik lengkap: ${lyricsCommand}`);
+  }
+  return lines.join("\n");
+}
+
+// Enrich Album + Genre dari iTunes Search (best-effort, gak block kalau gagal).
+async function fetchItunesMeta(title, artist) {
+  try {
+    if (_itunesForTest) return await _itunesForTest(title, artist);
+    const term = artist ? `${title} ${artist}` : title;
+    const { data } = await axios.get("https://itunes.apple.com/search", {
+      params: { term, limit: 1, media: "music" },
+      timeout: 8000,
+    });
+    const track = data?.results?.[0];
+    if (track) return { album: track.collectionName || null, genre: track.primaryGenreName || null };
+  } catch (e) {
+    console.error("[Play] iTunes meta error:", e.message);
+  }
+  return { album: null, genre: null };
+}
 
 async function fetchLyricsSnippet(title) {
   try {
@@ -159,33 +206,19 @@ async function sendPlayAudio(sock, m, video, kbps) {
   }
   console.log(`[Play] Audio OK: ${audio.buffer.length} bytes (${kbps}kbps)`);
 
-  // Ambil lirik (best-effort, gak block kalau gagal/timeout)
   const titleForLyrics = audio.title || video.title;
-  const lyricsData = await fetchLyricsSnippet(titleForLyrics);
 
-  const infoLines = [
-    `*YouTube Play — Audio ${kbps}kbps*`,
-    ``,
-    `*Judul:* ${titleForLyrics}`,
-    `*Artis/Channel:* ${lyricsData?.artist || video.author}`,
-    `*Durasi:* ${video.duration}`,
-    `*Views:* ${video.views ? video.views.toLocaleString("id-ID") : "-"}`,
-    `*Link:* ${video.url}`,
-  ];
-  if (lyricsData?.snippet) {
-    infoLines.push(``, `*Lirik:*`, lyricsData.snippet, ``, `Lirik lengkap: .lirik ${titleForLyrics}`);
-  } else {
-    infoLines.push(``, `Lirik gak ketemu, coba: .lirik ${titleForLyrics}`);
-  }
+  // Enrich Album + Genre (iTunes, best-effort) + lirik — paralel, gak saling block
+  const [itunesMeta, lyricsData] = await Promise.all([
+    fetchItunesMeta(titleForLyrics, video.author),
+    fetchLyricsSnippet(titleForLyrics),
+  ]);
+  const artist = lyricsData?.artist || video.author || "-";
 
-  // 1. Notifikasi sukses dulu (sesuai request owner)
+  // 1. Notifikasi sukses dulu
   await m.react("🐣");
 
-  // 2. Info section lengkap — dikirim sebagai teks karena WhatsApp
-  // TIDAK support caption pada pesan audio (caption gak akan pernah muncul)
-  await m.reply(infoLines.join("\n"));
-
-  // 3. Baru file audionya
+  // 2. File audionya DULU (sesuai request owner: card info dibawah media)
   await sock.sendMessage(
     m.chat,
     {
@@ -202,6 +235,21 @@ async function sendPlayAudio(sock, m, video, kbps) {
     },
     { quoted: m },
   );
+
+  // 3. Card info DIBAWAH media — field persis request owner:
+  //    Judul / Album / Genre / Durasi / Artis / Format, baris kosong, Link.
+  const cardText = buildPlayInfoCard({
+    title: titleForLyrics,
+    album: itunesMeta.album,
+    genre: itunesMeta.genre,
+    duration: video.duration,
+    artist,
+    kbps,
+    url: video.url,
+    lyricsSnippet: lyricsData?.snippet,
+    lyricsCommand: `${m.prefix}lirik ${titleForLyrics}`,
+  });
+  await m.reply(cardText);
 
   // 4. Tawaran convert di bawahnya
   await offerConvert(sock, m, { buffer: audio.buffer, type: "audio", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
@@ -245,4 +293,4 @@ async function handler(m, { sock }) {
   }
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, _setItunesFnForTest };
