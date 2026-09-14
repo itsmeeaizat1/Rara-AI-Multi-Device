@@ -25,8 +25,9 @@ const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (
 // ── mock HTTP: record calls + respond per action
 const calls = [];
 const fakeHttp = {
-  get: async (url, { params } = {}) => {
-    calls.push({ url, params });
+  post: async (url, data = {}, config = {}) => {
+    const params = data; // kompat: field action/character/query/name/prompt pindah dari query param ke body JSON (14 Sep: fazzcode ganti GET→POST + Bearer)
+    calls.push({ url, params, headers: config.headers || {} });
     if (params?.action === "list") {
       return { data: { status: true, characters: [
         { name: "Sakura", preview: "cheerful playful tone" },
@@ -79,7 +80,7 @@ w("\n— list karakter —");
   await handler(mk.m, { sock: mk.sock });
   const o = out(mk);
   check("daftar karakter tampil + jumlah", o.includes("sakura") && o.includes("gojo satoru"));
-  check("action=list kepanggil dengan api_key", calls.at(-1)?.params?.action === "list" && calls.at(-1)?.params?.api_key === getFazzcodeKey());
+  check("action=list dikirim POST body + Bearer header (format baru fazzcode)", calls.at(-1)?.params?.action === "list" && calls.at(-1)?.headers?.Authorization === "Bearer " + getFazzcodeKey());
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -151,7 +152,7 @@ w("\n— chat tanpa sesi ditolak sopan —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— error API ditangani —");
 {
-  _setFazzRoleHttpForTest({ get: async () => { throw Object.assign(new Error("req fail"), { response: { data: { message: "server sibuk" } } }); } });
+  _setFazzRoleHttpForTest({ post: async () => { throw Object.assign(new Error("req fail"), { response: { data: { message: "server sibuk" } } }); } });
   const mk = mkMock(["start", "sakura"]);
   await handler(mk.m, { sock: mk.sock });
   const o = out(mk);

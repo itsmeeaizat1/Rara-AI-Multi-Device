@@ -32,7 +32,7 @@ const norm = (s) => fromSC(String(s)).toLowerCase();
 w("\n— scraper: turboseek —");
 {
   _setFazzAiHttpForTest({
-    get: async (url, { params } = {}) => {
+    post: async () => { throw Object.assign(new Error("no post"), { response: { status: 404, data: { message: "Not found: POST x", code: "NOT_FOUND" } } }); }, get: async (url, { params } = {}) => {
       if (url.endsWith("/turboseek")) {
         if (params.question === "gagal") {
           return { data: { status: "error", message: "TurboSeek sedang down" } };
@@ -66,7 +66,7 @@ w("\n— scraper: notrack + agnes + fazzcodeAiChat —");
 {
   let mode = "notrack-ok";
   _setFazzAiHttpForTest({
-    get: async (url, { params } = {}) => {
+    post: async () => { throw Object.assign(new Error("no post"), { response: { status: 404, data: { message: "Not found: POST x", code: "NOT_FOUND" } } }); }, get: async (url, { params } = {}) => {
       if (url.endsWith("/notrack")) {
         if (mode === "notrack-ok") return { data: { status: "success", result: { response: "Halo! Ada yang bisa dibantu?", chat_id: "x" } } };
         return { data: { status: "error", message: "endpoint dikunci otomatis (ENDPOINT_LOCKED)" } };
@@ -100,7 +100,7 @@ w("\n— scraper: notrack + agnes + fazzcodeAiChat —");
 w("\n— plugin .turboseek —");
 {
   _setFazzAiHttpForTest({
-    get: async (url) => {
+    post: async () => { throw Object.assign(new Error("no post"), { response: { status: 404, data: { message: "Not found: POST x", code: "NOT_FOUND" } } }); }, get: async (url) => {
       if (url.endsWith("/turboseek")) {
         return { data: { status: "success", result: {
           answer: "Fotosintesis adalah proses tanaman mengubah cahaya jadi energi.",
@@ -127,7 +127,7 @@ w("\n— plugin .turboseek —");
   check("sumber domain singkat tampil", o2.includes("id.wikipedia.org"), o2.slice(0, 200));
 
   // error API → pesan ramah
-  _setFazzAiHttpForTest({ get: async () => { throw Object.assign(new Error("x"), { response: { data: { message: "ENDPOINT_LOCKED" } } }); } });
+  _setFazzAiHttpForTest({ post: async () => { throw Object.assign(new Error("no post"), { response: { status: 404, data: { message: "Not found: POST x", code: "NOT_FOUND" } } }); }, get: async () => { throw Object.assign(new Error("x"), { response: { data: { message: "ENDPOINT_LOCKED" } } }); } });
   const s3 = [];
   const m3 = { sender: "s", args: ["tes"], text: "", react: async () => {}, reply: async (t) => s3.push(t) };
   await tsHandler(m3, {});
@@ -139,7 +139,7 @@ w("\n— plugin .turboseek —");
 w("\n— plugin .notrack —");
 {
   _setFazzAiHttpForTest({
-    get: async (url) => {
+    post: async () => { throw Object.assign(new Error("no post"), { response: { status: 404, data: { message: "Not found: POST x", code: "NOT_FOUND" } } }); }, get: async (url) => {
       if (url.endsWith("/notrack")) return { data: { status: "success", result: { response: "Ini leluconnya!" } } };
       throw new Error("wrong url");
     },
@@ -169,5 +169,42 @@ w("\n— rantai fallback: step 1.7 terpasang —");
 }
 
 _resetFazzAiHttpForTest();
+
+// ═══════════════════════════════════════════════════════════════
+w(`\n— dual-mode POST/Bearer (format baru fazzcode 14 Sep) —`);
+{
+  _setFazzAiHttpForTest({
+    post: async (url, data, config) => {
+      if (url.endsWith("/turboseek")) {
+        return { data: { status: "success", result: { answer: "Jawaban via POST + Bearer.", sources: ["https://example.com"] } } };
+      }
+      if (url.endsWith("/notrack")) {
+        return { data: { status: "success", result: { response: "Halo via POST!" } } };
+      }
+      throw new Error("wrong url " + url);
+    },
+  });
+  const r1 = await turboseekSearch("tes");
+  check("turboseek sukses via POST format baru", r1.ok && r1.answer.includes("POST"), JSON.stringify(r1).slice(0, 60));
+  const r2 = await notrackChat("tes");
+  check("notrack sukses via POST format baru", r2.ok && r2.reply.includes("POST"), JSON.stringify(r2).slice(0, 60));
+
+  // POST nolak 404 → otomatis fallback GET lama
+  _setFazzAiHttpForTest({
+    post: async () => { throw Object.assign(new Error("no post"), { response: { status: 404, data: { message: "Not found: POST /turboseek", code: "NOT_FOUND" } } }); },
+    get: async (url, { params } = {}) => ({ data: { status: "success", result: { answer: "Lewat GET fallback.", sources: [] } } }),
+  });
+  const r3 = await turboseekSearch("tes");
+  check("POST 404 → fallback GET lama otomatis", r3.ok && r3.answer.includes("GET"), JSON.stringify(r3).slice(0, 60));
+
+  // POST timeout/hang → friendly error, TANPA fallback GET boros waktu
+  _setFazzAiHttpForTest({
+    post: async () => { throw Object.assign(new Error("timeout of 1ms exceeded"), { code: "ECONNABORTED" }); },
+    get: async () => { throw new Error("GET gak boleh kepanggil setelah POST non-404"); },
+  });
+  const r4 = await turboseekSearch("tes");
+  check("POST hang → friendly, GET gak diborosin", !r4.ok && !String(r4.error).includes("GET gak boleh"), r4.error);
+}
+
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);
 process.exit(fail ? 1 : 0);

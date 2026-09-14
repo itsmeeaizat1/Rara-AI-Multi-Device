@@ -23,6 +23,36 @@ let _http = axios;
 export function _setFazzAiHttpForTest(fake) { _http = fake; }
 export function _resetFazzAiHttpForTest() { _http = axios; }
 
+/**
+ * UPDATE 14 Sep 2026 (sore): fazzcode rombak auth — GET + ?api_key= udah gak
+ * berlaku (401 "MISSING_API_KEY" padahal key terkirim), format baru = POST
+ * + header "Authorization: Bearer <key>" + body JSON. Backend sebagian
+ * endpoint masih goyang (turboseek/notrack hang 524) tapi format POST udah
+ * kebukti di chatbot-role (LIVE). Dual-mode: POST baru duluan, kalau POST
+ * ditolak mentah (404/405 = route cuma terima GET) → fallback GET lama
+ * biar tahan kalau fazzcode balikin format lama.
+ */
+async function fazzRequest(path, body, query, timeoutMs) {
+  const key = getFazzcodeKey();
+  const post = async () => _http.post(`${HOST}${path}`, body, {
+    headers: { Authorization: `Bearer ${key}` }, timeout: timeoutMs,
+  });
+  const get = async () => _http.get(`${HOST}${path}`, {
+    params: { ...query, api_key: key }, timeout: timeoutMs,
+  });
+  try {
+    return await post();
+  } catch (e) {
+    const code = e?.response?.status;
+    const msg = String(e?.response?.data?.message || e?.message || "");
+    // POST ditolak mentah (route gak nerima POST) → coba format lama
+    if (code === 404 || code === 405 || msg.includes("Not found: POST") || msg.includes("NOT_FOUND")) {
+      return await get();
+    }
+    throw e;
+  }
+}
+
 function friendly(err) {
   const msg = String(err?.response?.data?.message || err?.message || err || "");
   if (msg.includes("ENDPOINT_LOCKED") || msg.includes("dikunci"))
@@ -42,10 +72,7 @@ export async function turboseekSearch(question) {
   const key = getFazzcodeKey();
   if (!key) return { ok: false, error: "API_KEY" };
   try {
-    const res = await _http.get(`${HOST}/turboseek`, {
-      params: { question, api_key: key },
-      timeout: 45000,
-    });
+    const res = await fazzRequest("/turboseek", { question }, { question }, 45000);
     const d = res.data;
     if (d?.status !== "success" || !d?.result?.answer) {
       return { ok: false, error: friendly(d?.message || "respon sukses tapi kosong") };
@@ -70,10 +97,7 @@ export async function notrackChat(prompt) {
   const key = getFazzcodeKey();
   if (!key) return { ok: false, error: "API_KEY" };
   try {
-    const res = await _http.get(`${HOST}/notrack`, {
-      params: { prompt, model: "C", mode: "usual", api_key: key },
-      timeout: 40000,
-    });
+    const res = await fazzRequest("/notrack", { prompt, model: "C", mode: "usual" }, { prompt, model: "C", mode: "usual" }, 40000);
     const d = res.data;
     const reply = d?.result?.response;
     if (d?.status !== "success" || !reply) {
@@ -94,10 +118,7 @@ export async function agnesChat(prompt) {
   const key = getFazzcodeKey();
   if (!key) return { ok: false, error: "API_KEY" };
   try {
-    const res = await _http.get(`${HOST}/router/agnes-2.5-flash`, {
-      params: { prompt, api_key: key },
-      timeout: 40000,
-    });
+    const res = await fazzRequest("/router/agnes-2.5-flash", { prompt }, { prompt }, 40000);
     const d = res.data;
     // result bentuknya { "<teks>": "<teks>" } atau string — fleksibel
     let reply = d?.result?.response || d?.result?.reply || "";
