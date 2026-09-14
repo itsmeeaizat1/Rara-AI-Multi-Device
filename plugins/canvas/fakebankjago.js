@@ -1,32 +1,24 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// FIX 14 Sep 2026 (audit fitur canvas): ensureFile() nulis font ke path
+// relatif "../assets/fonts/..." — relatif ke process.cwd(), BUKAN ke lokasi
+// file plugin. Kalau bot dijalanin dari root repo, path itu nyasar SATU
+// LEVEL DI LUAR repo (folder assets/fonts yang bener ada di root repo, bukan
+// di atasnya) — sama kelas bug yang udah pernah difix di fakedana.js.
+// Font-nya SUDAH ADA di assets/fonts/ bawaan repo, jadi gak perlu download
+// ulang dari GitHub tiap kali file gak ketemu di path yang salah — langsung
+// register dari path absolut via import.meta.url (immune ke cwd).
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
-import fs from 'fs'
-import path from 'path'
 import te from '../../src/lib/nova-error.js'
-async function ensureFile(url, file) {
-  const dir = path.dirname(file)
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
-  if (!fs.existsSync(file)) {
-    const res = await fetch(url)
-    const buf = Buffer.from(await res.arrayBuffer())
-    fs.writeFileSync(file, buf)
-  }
-}
+import { fileURLToPath } from "url";
+
+const _font1Path = fileURLToPath(new URL("../../assets/fonts/Fontspring-DEMO-ceraroundpro-medium.otf", import.meta.url));
+const _font2Path = fileURLToPath(new URL("../../assets/fonts/Roboto_Medium.ttf", import.meta.url));
+FontLibrary.use("CustomFont", _font1Path);
+FontLibrary.use("GreetingFont", _font2Path);
 
 async function generateImage(saldo, greet) {
   const bgUrl = "https://raw.githubusercontent.com/uploader762/dat2/main/uploads/52e39f-1773064858080.jpg"
-  const fontUrl = "https://raw.githubusercontent.com/uploader762/dat2/main/uploads/49bbd8-1773045557233.otf"
-  const font2Url = "https://raw.githubusercontent.com/uploader762/dat1/main/uploads/203827-1773063086445.ttf"
-
-  const font1 = "../assets/fonts/Fontspring-DEMO-ceraroundpro-medium.otf"
-  const font2 = "../assets/fonts/Roboto_Medium.ttf"
-
-  await ensureFile(fontUrl, font1)
-  await ensureFile(font2Url, font2)
-
-  FontLibrary.use("CustomFont", font1)
-  FontLibrary.use("GreetingFont", font2)
 
   const bgRes = await fetch(bgUrl)
   const bg = await loadImage(Buffer.from(await bgRes.arrayBuffer()))

@@ -75,11 +75,13 @@ async function handler(m, { sock }) {
     nama = parts[1].trim() || m.pushName;
   }
   try {
+    await m.react("🕒");
 
     const service = new ImageUploadService("pixhost.to");
     const uploadResult = await service.uploadFromBinary(mediaBuffer, "img.jpg");
 
     if (!uploadResult || !uploadResult.directLink) {
+      await m.react("❌");
       return m.reply(claraWrap("Musiccard", "⚠️ *Gagal mengunggah gambar!* Pastikan ukuran gambarnya tidak terlalu besar dan coba lagi ya."));
     }
 
@@ -91,17 +93,20 @@ async function handler(m, { sock }) {
     });
 
     if (res.headers["content-type"] && !res.headers["content-type"].includes("image")) {
+      await m.react("❌");
       return m.reply(claraWrap("Gagal membuat Music Card.", "⚠️ *ɢᴀɢᴀʟ ᴍᴇᴍʙᴜᴀᴛ ᴍᴜꜱɪᴄ ᴄᴀʀᴅ.* Server merespon dengan format yang salah."));
     }
 
     const cardBuffer = Buffer.from(res.data);
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: cardBuffer,
       caption: `*MUSIC CARD BERHASIL DIBUAT!* \n\n🎧 *ᴊᴜᴅᴜʟ*: ${judul}\n🎤 *ᴀʀᴛɪꜱ*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
     }, { quoted: m });
   } catch (err) {
     console.error("[Music Card]", err.message);
+    await m.react("❌");
     m.reply(claraWrap("Terjadi masalah di sistem kami.", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menghubungi server pembuat kartu. Silakan coba beberapa saat lagi ya."));
   }
 }
