@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(novaError("Qwen3", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("Qwen3", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 

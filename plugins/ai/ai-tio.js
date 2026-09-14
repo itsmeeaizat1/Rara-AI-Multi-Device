@@ -10,7 +10,6 @@
 
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getTioKey, getTioEndpoint } from "../../src/lib/config/env-loader.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "ai-tio",
@@ -321,22 +320,11 @@ async function handler(m, { sock, config: botConfig }) {
     const systemPrompt = botConfig.aiHelp?.systemPrompt
       || "Kamu adalah Nova AI, asisten yang ramah dan cerdas. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.";
 
-    // Call Tio API — gateway down (domain mati / CF block / 0 model / key ditolak)
-    // → otomatis lanjut ke rantai AI backup (Haidar → Ikyy → Xemoz) biar fitur tetap jalan
-    let reply;
-    let engineNote = "";
-    try {
-      reply = await callTio(model.id, messages, systemPrompt, apiKey);
-    } catch (tioErr) {
-      const flatPrompt = messages
-        .map(x => (x.role === "assistant" ? `Pesan sebelumnya:\n${x.content}` : x.content))
-        .join("\n\n");
-      reply = await aiFallbackChat(flatPrompt, {
-        systemPrompt,
-        model: HAIDAR_BRAND[model.brand] || "gemini",
-      });
-      engineNote = `\n\n_[ gateway tio down — ${String(tioErr.message || "error").slice(0, 60)} | jawaban via backup ai ]_`;
-    }
+    // Call Tio API — AI satuan STRICT (owner 14 Sep): gateway down / key ditolak
+    // → tampilkan pesan error aslinya, JANGAN fallback ke AI lain (dulu lewat
+    // rantai backup, sekarang nggak — biar jelas Tio-nya kenapa).
+    const reply = await callTio(model.id, messages, systemPrompt, apiKey);
+    const engineNote = "";
 
     // React done
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
