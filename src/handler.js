@@ -161,6 +161,21 @@ async function messageHandler(msg, sock, jadibotCtx = {}) {
     }
   }
 
+  // 🔹 OMNIOUTFITCHANGER PHOTO HOOK — kalau sender punya session
+  // .omnioutfitchanger aktif (nunggu foto item topi/baju/celana/sepatu)
+  // dan pesan ini foto POLOS (bukan command, bukan reply), tangkep jadi
+  // item outfit & STOP pipeline di sini (foto gak lanjut diproses fitur
+  // lain). Kalau gak ada session aktif, lanjut normal (return false).
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaModeBlocked && (m.isImage || m.isMedia)) {
+    try {
+      const { handleOutfitPhotoHook } = await import("../plugins/ai/omnioutfitchanger.js");
+      const handled = await handleOutfitPhotoHook(m);
+      if (handled) return;
+    } catch (e) {
+      try { console.error("[OmniOutfitHook] error:", e?.message || e); } catch {}
+    }
+  }
+
   // === AutoFlow: cek rule automation (keyword/media) tiap pesan masuk ===
   if (!__novaModeBlocked) { try { _autoflowHandleMessage(sock, m); } catch {} }
 
