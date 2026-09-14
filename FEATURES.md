@@ -2054,6 +2054,13 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .menu/.allmenu banner: tag channel pill (forwardedNewsletterMessageInfo) + sourceUrl wajib valid (link saluran asli → website valid → fallback whatsapp.com) — fix thumbnail banner gak ngerender karena URL rusak.
 - SISTEM POIN PER GAME (aturan owner 5 Sep 2026): game baru murni (flag `newGame`) → skor sendiri di `rpg.gamePoin[gameType]` (+3/4/5/8 per menang), BUKAN reward lama; `.islamicv2` game pertama yang pakai ini. Game lama & v2-nya tetap reward lama. Skor tampil di hasil menang + `.profilerpg` (🎯 Skor Game).
 
+### ZelBetterWaifu NSFW (BARU 14 Sep 2026)
+- `.zbetterwaifu` (alias `.zbwaifu`) — BetterWaifu Image generator via ZelAPI `ai-image/betterwaifu` (model sdxl-v2, batch 1, max 2 gambar dikirim, caption engine).
+- **Kategori nsfw + `isEnabled: false`** — default NONAKTIF; handler jawab "Command ini sedang dinonaktifkan" sampai owner aktifin lewat kode (plugin `plugins/nsfw/zelbetterwaifu.js`).
+- STRICT: error asli dari body zelapi walau status aneh (data.error diprioritaskan kalau gak ada gambar).
+- SKIP by design (gak dibikin): `undress` & `deepfake` (Clothes Remover) — dua-duanya proses foto ORANG ASLI jadi intim tanpa persetujuan (NCII), bukan konten sintetis — gak masuk bot.
+- E2E 59/59 (7 check baru: nonaktif default, kategori, cooldown, usage, error asli, gambar + caption).
+
 ## ZelAPI Suite (BARU 14 Sep 2026 — branch feat/zelapi-suite)
 - **86+ endpoint AI zelapi.eu.cc jadi fitur** (key owner terpasang di apikeys.json `zelapi`): prefix **z** di semua command.
 - **Chat AI (86 command, 3 plugin)**: `.zchatgpt .zdeepseek .zcici .zallen .zduckai .zgemini .zllama .zmistral .zqwen .zvenice .zclaude .zkimi .zcandy .zzen .zshoppingassistant .zyourecommerceassistant .zlearnweb .zweathergpt .zwebsearch .zimage .z-jina-ai .zremovebg .zxlteam` dll — full list `.zelai list` (`.zlh`).
