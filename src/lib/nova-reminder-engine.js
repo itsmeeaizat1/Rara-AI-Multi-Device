@@ -29,6 +29,7 @@ export async function fireReminder(sock, reminder, missed = false) {
   const { jid, sender, message, createdAt } = reminder;
   const num = String(sender || "").split("@")[0];
   const timeSpent = formatDuration(Date.now() - (createdAt || Date.now()));
+  const isSched = reminder.kind === "pesanjadwal";
   const lines = [
     `@${num}`,
     ``,
@@ -36,11 +37,36 @@ export async function fireReminder(sock, reminder, missed = false) {
     `Dibuat: ${timeSpent} yang lalu`,
     ``,
     missed
-      ? "⏰ Waktunya udah lewat pas bot lagi mati — tapi tetep aku ingetin!"
-      : "Sudah waktunya!",
+      ? (isSched
+          ? "⏰ Jadwalnya udah lewat pas bot lagi mati — tapi tetep aku kirim pesannya!"
+          : "⏰ Waktunya udah lewat pas bot lagi mati — tapi tetep aku ingetin!")
+      : (isSched ? "📋 Pesan terjadwal kamu — tepat waktu!" : "Sudah waktunya!"),
   ];
-  const text = claraWrap(missed ? "Reminder Terlewat" : "Reminder Berbunyi", lines);
+  const text = claraWrap(
+    isSched ? (missed ? "Pesan Terjadwal Terlewat" : "Pesan Terjadwal Tiba") : (missed ? "Reminder Terlewat" : "Reminder Berbunyi"),
+    lines
+  );
   await sock.sendMessage(jid, { text, mentions: [sender] });
+}
+
+/** Batalkan satu reminder milik sender — clearTimeout + persist. Balikin reminder/null. */
+export function cancelReminder(id, sender) {
+  const r = global.novaReminders.find(
+    (x) => x && x.id === id && x.sender === sender && !x.fired
+  );
+  if (!r) return null;
+  if (r.timerId) clearTimeout(r.timerId);
+  r.fired = true;
+  r.cancelled = true; // marker buat live ticker → closing "DIBATALKAN" (bukan "tiba")
+  persistReminders();
+  return r;
+}
+
+/** Daftar reminder aktif milik sender (belum fired). */
+export function listActiveReminders(sender) {
+  return global.novaReminders.filter(
+    (r) => r && r.sender === sender && !r.fired
+  );
 }
 
 /** Pasang timer reminder (dipakai plugin pas buat baru & restore pas startup) */
