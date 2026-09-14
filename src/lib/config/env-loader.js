@@ -135,6 +135,14 @@ export function getFazzcodeKey() {
   return apikeysData.fazzcode || "";
 }
 
+/**
+ * API key searchapi.io — Google AI Mode (.googleaimode)
+ * engine=google_ai_mode. daftar di searchapi.io, free trial ±100 req/bulan.
+ */
+export function getSearchApiKey() {
+  return apikeysData.searchapi || apikeysData.searchApiKey || "";
+}
+
 export function getSaveNowKey() {
   return miscData.savenow_apikey || "";
 }
