@@ -4,7 +4,7 @@
 // Halaman HTML nampil LANGSUNG di chat WA (bukan webview).
 import fs from "node:fs";
 import { initDatabase } from "../../src/lib/nova-database.js";
-import plugin, { buildRichResponse, _setPlaneHttpForTest, _resetPlaneHttpForTest } from "../../plugins/airich/plane.js";
+import plugin, { buildRichResponse, polishPayload, _setPlaneHttpForTest, _resetPlaneHttpForTest } from "../../plugins/airich/plane.js";
 import { fromSC } from "../../src/lib/styler.js";
 
 const DB = "/tmp/plane-e2e-db.json";
@@ -45,7 +45,7 @@ t("  proofs v1 NOXZA_EXE + signature + certificateChain",
     return p.version === 1 && p.useCase === "NOXZA_EXE" && p.signature === "TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==" && p.certificateChain === CERT; })());
 t("  botForwardedMessage.richResponseMessage type STANDARD + submessage 'Space Rush 🚀'",
   r.botForwardedMessage?.message?.richResponseMessage?.messageType === "AI_RICH_RESPONSE_TYPE_STANDARD"
-  && r.botForwardedMessage.message.richResponseMessage.submessages?.[0]?.messageText === "Space Rush 🚀");
+  && /^Space Rush 🚀\n\*Tap kiri\/kanan\*/.test(r.botForwardedMessage.message.richResponseMessage.submessages?.[0]?.messageText));
 t("  contextInfo: stanzaId + forwardOrigin META_AI + botJid",
   (() => { const ci = r.botForwardedMessage.message.richResponseMessage.contextInfo;
     return ci.stanzaId === "A5FBA758891A16FD260767C2569F87E4" && ci.forwardOrigin === "META_AI" && ci.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"; })());
@@ -54,9 +54,27 @@ const decoded = JSON.parse(Buffer.from(r.botForwardedMessage.message.richRespons
 t("  base64 ke-decode → GenAIaeacdsnwHtmlPrimitive payload = HTML",
   decoded.sections?.[0]?.view_model?.primitive?.__typename === "GenAIaeacdsnwHtmlPrimitive"
   && decoded.sections[0].view_model.primitive.payload === HTML);
+
 t("  trusted_sources noxXza + response_id tetap",
   decoded.sections[0].view_model.primitive.trusted_sources.join() === "noxXza.js,noxXza.dev"
   && decoded.response_id === "4db57b2c-8393-484d-8b9a-8e6d1a14b349");
+
+// ═══ 1.5 POLISH BOTTOM SHEET — anti-gegeser + sheet look ═══
+w("\n— polishPayload bottom sheet —");
+const polished = polishPayload(HTML);
+t("  style sheet ke-inject sebelum <body>",
+  polished.includes("data-nova-bottomsheet") && /<style data-nova-bottomsheet>[\s\S]*<body[^>]*>/.test(polished));
+t("  meta viewport mobile ke-inject (anti-scale aneh di webview WA)",
+  polished.includes('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">'));
+t("  anti-geser: position fixed + overscroll contain + touch-action none",
+  /position: fixed !important/.test(polished) && /overscroll-behavior: contain !important/.test(polished) && /touch-action: none !important/.test(polished));
+t("  bottom sheet: card nempel bawah + radius atas doang + grabber",
+  /align-items: flex-end !important/.test(polished) && /border-radius: 22px 22px 0 0 !important/.test(polished) && /.card::before/.test(polished));
+t("  game auto-fit: height min(350px, calc(100vh - 240px))",
+  /#game-container \{ height: min\(350px, calc\(100vh - 240px\)\) !important; \}/.test(polished));
+t("  idempoten — polish 2x gak dobel", polishPayload(polished) === polished);
+t("  game JS gak tersentuh", polished.includes("spawnEnemy") === HTML.includes("spawnEnemy") || polished.includes(HTML.replace(/\s/g, "").slice(-200)));
+t("  game asli tetep utuh di dalam polished", polished.includes("GenAI") === false && polished.includes("<canvas") || polished.includes("canvas"));
 
 // ═══ 2. handler — relay dipanggil + structure valid ═══
 w("\n— handler happy path (mock http) —");
@@ -69,6 +87,12 @@ await plugin.handler(mkM(), { sock });
 t("  relayMessage ke-panggil ke chat yang sama", relays.length === 1 && relays[0].chat === "g@test");
 t("  pesan relay = struktur rich response valid",
   relays[0]?.msg?.botForwardedMessage?.message?.richResponseMessage?.unifiedResponse?.data?.length > 100);
+{
+  const d = JSON.parse(Buffer.from(relays[0].msg.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8"));
+  t("  payload relay ke-polish bottom sheet",
+    d.sections[0].view_model.primitive.payload.includes("data-nova-bottomsheet"));
+  t("  game asli masih utuh dalam payload", d.sections[0].view_model.primitive.payload.includes("Space Rush payload fixture"));
+}
 t("  gak ada reply error", mkM.replyed.length === 0, JSON.stringify(mkM.replyed));
 
 // ═══ 3. handler — error STRICT (payload gagal) ═══
@@ -118,6 +142,9 @@ try {
   const liveDecoded = JSON.parse(Buffer.from(liveMsg.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8"));
   t("  live: certificate chain 2 + html 15KB → struktur rich response valid",
     liveOk && liveDecoded.sections[0].view_model.primitive.payload === html.data, liveInfo);
+  const livePolished = polishPayload(html.data);
+  t("  live: polish bottom sheet di payload game asli (script tetep utuh)",
+    livePolished.includes("data-nova-bottomsheet") && livePolished.includes("spawnEnemy") && livePolished.includes("<canvas") && livePolished.length > html.data.length, livePolished.length + "B");
 } catch (e) {
   t("  live fetch (skip kalau sandbox offline)", false, e.message);
 }

@@ -7,7 +7,8 @@
 // 🔹 Sumber (karya noxXza — request owner 14 Sep 2026, eksperimen):
 //   certificate: raw noxXza/data certificate.json (chain 2 — WAVERIFIED)
 //   payload:     raw noxXza/data plane.html (game HTML 15.5KB)
-// 🔹 Struktur pesan VERBATIM dari kode owner — jangan diutak-atik:
+// 🔹 Struktur pesan VERBATIM dari kode owner (payload di-polish bottom
+//   sheet sebelum dirakit — struktur relay gak berubah):
 //   messageContextInfo.botMetadata.verificationMetadata (proofs v1
 //   NOXZA_EXE + signature + certificateChain) + botForwardedMessage
 //   richResponseMessage AI_RICH_RESPONSE_TYPE_STANDARD +
@@ -52,6 +53,40 @@ async function fetchPayload() {
   const html = await get(PAYLOAD_URL);
   if (!html || html.length < 500 || !/<[a-z]/i.test(html)) throw new Error("payload HTML kosong/gak valid");
   return html;
+}
+
+// 🔹 POLISH BOTTOM SHEET (request owner: "tambah bottom sheet / markdown
+// agar gelembung yang muat HTML gak mudah kegeser"). Post-process payload:
+// (1) kartu jadi BOTTOM SHEET — nempel bawah + grabber + radius atas,
+// (2) ANTI-GESER total: html/body position fixed + overscroll-behavior
+//     contain + touch-action none → swipe di game GAK ngegeser gelembung,
+// (3) game auto-fit: container menyesuaikan tinggi viewport (gak kepotong),
+//     + META VIEWPORT (payload asli gak punya → webview mobile render 980px
+//     lebar → game kecil & gampang kegeser — sekarang pas lebar device),
+// (4) idempoten — polish 2x aman, game JS gak tersentuh.
+export function polishPayload(html) {
+  if (html.includes("data-nova-bottomsheet")) return html;
+  const meta = '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">';
+  const css = [
+    meta,
+    "<style data-nova-bottomsheet>",
+    // anti-geser: gak ada scroll di dalam gelembung sama sekali
+    "html, body { position: fixed !important; inset: 0 !important; width: 100% !important; height: 100% !important; overflow: hidden !important; overscroll-behavior: contain !important; touch-action: none !important; }",
+    // layout bottom sheet: konten nempel bawah, sisa ruang di atas
+    "body { display: flex !important; align-items: flex-end !important; }",
+    // kartu = sheet: radius atas doang, tanpa garis samping/bawah, full lebar
+    ".card { width: 100% !important; margin: 0 !important; border-radius: 22px 22px 0 0 !important; border-left: none !important; border-right: none !important; border-bottom: none !important; padding-bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important; }",
+    // grab handle klasik bottom sheet di atas kartu
+    ".card::before { content: '' !important; display: block !important; width: 38px !important; height: 4px !important; border-radius: 2px !important; background: #64748b !important; margin: 0 auto 10px auto !important; box-shadow: none !important; }",
+    // game auto-fit biar kartu selalu muat viewport (canvas nge-scale, tap tetep akurat)
+    "#game-container { height: min(350px, calc(100vh - 240px)) !important; }",
+    "#game-container, canvas, .btn { touch-action: none !important; }",
+    ".wrapper { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }",
+    "</style>",
+  ].join(" ");
+  // inject tepat sebelum <body> — kalau gak ada, tempel di depan
+  if (/<body[^>]*>/i.test(html)) return html.replace(/(<body[^>]*>)/i, css + "$1");
+  return css + html;
 }
 
 // 🔹 Rakit richResponseMessage — VERBATIM struktur owner (base64 JSON:
@@ -99,7 +134,7 @@ export function buildRichResponse(htmlPayload, certChain) {
           submessages: [
             {
               messageType: "AI_RICH_RESPONSE_TEXT",
-              messageText: "Space Rush 🚀",
+              messageText: "Space Rush 🚀\n*Tap kiri/kanan* buat manuver — hindari meteor!",
             },
           ],
           unifiedResponse: {
@@ -136,7 +171,7 @@ async function handler(m, { sock }) {
     ]);
     await m.react("🛠️");
 
-    const richMsg = buildRichResponse(htmlPayload, certChain);
+    const richMsg = buildRichResponse(polishPayload(htmlPayload), certChain);
     await sock.relayMessage(m.chat, richMsg, {});
 
     await m.react("🐣");
