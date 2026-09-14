@@ -1,4 +1,6 @@
-// E2E — .playspotify CARD (Judul/Album/Genre/Durasi/Artis/Format + Link, dibawah media)
+// E2E — .playspotify CARD LOKAL (Judul/Album/Genre/Durasi/Artis/Format + Link, dibawah media)
+// Builder ditulis lokal di plugin (bukan lib bersama) — field disesuaikan
+// data ASLI yang tersedia dari spotidown.app.
 import { strict as assert } from "assert";
 
 let pass = 0, fail = 0;
@@ -8,13 +10,12 @@ function check(name, cond, extra = "") {
   else { fail++; w(`  ❌ ${name}${extra ? " — " + extra : ""}`); }
 }
 
-const { buildSpotifyPlayCard: buildPlaySpotifyInfoCard } = await import("../../src/lib/nova-spotify-play-card.js");
+const { buildPlaySpotifyInfoCard } = await import("../../plugins/search/playspotify.js");
 
 // ── 1. Card lengkap (semua field ada) ──
 w("\n— card lengkap —");
 {
   const text = buildPlaySpotifyInfoCard({
-    format: "Audio MP3",
     title: "Faded",
     album: "Faded - EP",
     genre: "Dance",
@@ -45,12 +46,9 @@ w("\n— card lengkap —");
 }
 
 // ── 2. Card tanpa Genre (iTunes gak nemu) → baris DIOMIT, bukan "-" ──
-// Owner 14 Sep 2026: "gak harus lengkap, ketersediaan API segitu ya
-// gapapa segitu, biar card gak polos" — field opsional kosong = diomit.
 w("\n— card tanpa genre (baris diomit) —");
 {
   const text = buildPlaySpotifyInfoCard({
-    format: "Audio MP3",
     title: "Lagu Random Banget",
     album: "Album Random",
     genre: null,
@@ -60,16 +58,17 @@ w("\n— card tanpa genre (baris diomit) —");
   });
   check("2a. baris Genre DIOMIT (bukan '*Genre:* -')", !text.includes("*Genre:*"));
   check("2b. Album asli tetep keluar (bukan iTunes)", text.includes("*Album:* Album Random"));
-  check("2c. gak ada blok lirik kalau snippet kosong", !text.includes("Lirik:"));
+  check("2c. Durasi tetep tampil (walau kosong pun '-', field ini gak diomit di playspotify)", text.includes("*Durasi:* 2:10"));
+  check("2d. gak ada blok lirik kalau snippet kosong", !text.includes("Lirik:"));
 }
 
-// ── 3. Card minimal — cuma Judul/Artis/Format/Link (semua opsional kosong) ──
-w("\n— card minimal, cuma field wajib —");
+// ── 3. Gak import lib bersama — builder ditulis lokal di file plugin ──
+w("\n— builder lokal, gak pakai lib bersama —");
 {
-  const text = buildPlaySpotifyInfoCard({ format: "Audio MP3", title: "X", artist: "Y", url: "u" });
-  check("3a. Judul/Artis/Format/Link tetap ada", text.includes("*Judul:*") && text.includes("*Artis:*") && text.includes("*Format:*") && text.includes("*Link:*"));
-  check("3b. Album/Genre/Durasi gak nongol sama sekali", !text.includes("*Album:*") && !text.includes("*Genre:*") && !text.includes("*Durasi:*"));
-  check("3c. card tetep gak polos (ada >=4 baris berisi info)", text.split("\n").filter((l) => l.startsWith("*")).length >= 4);
+  const fs = await import("fs");
+  const src = fs.readFileSync(new URL("../../plugins/search/playspotify.js", import.meta.url), "utf-8");
+  check("3a. gak ada import nova-spotify-play-card.js (lib bersama udah dihapus)", !src.includes("nova-spotify-play-card"));
+  check("3b. buildPlaySpotifyInfoCard didefinisikan lokal di file ini", src.includes("export function buildPlaySpotifyInfoCard"));
 }
 
 // ── summary ──

@@ -1,17 +1,19 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotplay.js — Putar musik dari Spotify (engine azbry)
+//
 // REVISI 14 Sep 2026 (owner: "disamain krna beda endpoint tp untuk dichat
-// sama") — dulu cuma kirim file audio doang, gak ada info card sama sekali.
-// Sekarang pakai buildSpotifyPlayCard bareng .playspotify/.spotifyplay2
-// (src/lib/nova-spotify-play-card.js), dikirim DIBAWAH media. Album/Genre/
-// Durasi gak dijamin ada dari azbry → di-enrich best-effort dari iTunes.
-// GOTCHA: endpoint azbry LIVE-CHECKED 14 Sep 2026 → 403 konsisten (source
-// spotify.com kena blok), jadi belum bisa live-verified end-to-end — tapi
-// kode + card format tetap dipasang biar otomatis jalan begitu upstream pulih.
+// sama" → dikoreksi "gak mau dipakein formatter/card builder bareng yg
+// dipaksa 2-2nya sama, tiap fitur field-nya beda-beda, takut ada yg field
+// gak ada — pisah aja tiap fitur format cardnya"): dulu cuma kirim file
+// audio doang tanpa card sama sekali. Sekarang dapet card, TAPI builder-nya
+// LOKAL di file ini sendiri (gak import lib bersama) dengan field PALING
+// MINIM dari 3 fitur spotify — karena API azbry cuma dikonfirmasi ngasih
+// title/artist/downloadLink doang (live-checked 14 Sep 2026: 403 konsisten,
+// gak bisa diverifikasi field lengkapnya). Album/Genre/Durasi DIOMIT kalau
+// emang gak ada, gak dipaksa sama kayak .playspotify/.spotifyplay2.
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
 import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
-import { buildSpotifyPlayCard, enrichSpotifyMeta } from "../../src/lib/nova-spotify-play-card.js";
 
 const pluginConfig = {
   name: "spotplay",
@@ -24,6 +26,21 @@ const pluginConfig = {
   energi: 1,
   isEnabled: true,
 };
+
+// Card LOKAL punya .spotplay sendiri — field paling minim, cuma yang
+// DIKONFIRMASI ada dari API azbry (title/artist/link). Album/Genre/Durasi
+// dipasang OPSIONAL kalau kebetulan API ngasih (defensif, belum
+// terverifikasi live karena endpoint lagi 403) — DIOMIT kalau kosong.
+export function buildSpotplayCard({ title, album, genre, duration, artist, url }) {
+  const lines = [`*Judul:* ${title || "-"}`];
+  if (album) lines.push(`*Album:* ${album}`);
+  if (genre) lines.push(`*Genre:* ${genre}`);
+  if (duration) lines.push(`*Durasi:* ${duration}`);
+  lines.push(`*Artis:* ${artist || "-"}`);
+  lines.push(`*Format:* Audio MP3`);
+  lines.push(``, `*Link:* ${url || "-"}`);
+  return lines.join("\n");
+}
 
 async function handler(m, { sock }) {
   const query = m.text?.trim();
@@ -55,21 +72,15 @@ async function handler(m, { sock }) {
       fileName: `${artist || "Spotify"} - ${title}.mp3`,
     });
 
-    // 2. Enrich Album/Genre/Durasi yang kosong dari engine (best-effort)
-    const meta = await enrichSpotifyMeta(title, artist, {
-      needAlbum: !result.album,
-      needGenre: true,
-      needDuration: !result.duration,
-    });
-
-    // 3. Card info DIBAWAH media — field sama persis .playspotify/.spotifyplay2
-    const cardText = buildSpotifyPlayCard({
+    // 2. Card info DIBAWAH media — builder & field LOKAL punya fitur ini,
+    // cuma pakai apa yang beneran dikasih API (gak ada enrichment tambahan
+    // biar sesuai data mentah azbry apa adanya)
+    const cardText = buildSpotplayCard({
       title,
-      album: result.album || meta.album,
-      genre: meta.genre,
-      duration: result.duration || meta.duration,
+      album: result.album || null,
+      genre: result.genre || null,
+      duration: result.duration || null,
       artist,
-      format: "Audio MP3",
       url: result.url || result.sourceUrl || "https://open.spotify.com/",
     });
     await m.reply(cardText);
