@@ -2142,3 +2142,11 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Prinsip ke depan (owner minta diterapin ke fitur lain juga nanti): **jangan bikin 1 formatter dipaksa dipakai 2+ fitur beda-engine** — tiap fitur nulis card builder-nya sendiri sesuai data yang beneran tersedia dari API-nya.
 - E2E: `test/playspotify-e2e/` 12/12, `test/spotifyplay2-e2e/` (BARU) 9/9, `test/spotplay-e2e/` (BARU) 7/7 — semua include assert "gak import lib bersama, builder didefinisikan lokal". + import guard 8/8 + `test/play-e2e/` 17/17 (gak disentuh, tetep lokal dari awal).
 - VPS: `git pull && pm2 restart` → `.playspotify faded` / `.spotifyplay2 faded` / `.spotplay faded` — card masing-masing independen.
+
+## mediaCaption() Dipisah Total — 73 Plugin Punya Caption Builder Lokal Sendiri (REVISI 14 Sep 2026)
+- Owner lanjutan dari prinsip Spotify: **"masih di fitur downloader"** — audit ketemu `mediaCaption()` di `src/lib/nova-menu-style.js` dipakai bareng **73 plugin sekaligus** (semua `.to*` AI image generator, semua downloader TikTok/IG/FB/Twitter/YouTube/Spotify/dll, `.asupan*`).
+- **DIHAPUS**: fungsi shared `mediaCaption()` dari `src/lib/nova-menu-style.js` (dan `export`-nya).
+- **Sekarang tiap 1 dari 73 plugin punya fungsi `mediaCaption()` LOKAL sendiri**, ditulis langsung di file plugin masing-masing (persis logic yang sama — cuma field yang ada/truthy yang ditampilin — tapi independen, bisa diubah salah satu tanpa nyenggol yang lain 72 file sisanya).
+- Kode di 73 file itu emang jadi mirip/duplikat satu sama lain untuk sekarang — itu memang tujuannya (gak ada 1 titik dependency bareng), bukan bug. Kalau ke depan salah satu platform butuh field caption yang beda, tinggal ubah versi lokalnya doang.
+- Import guard `test/plugins-import-e2e/` tetap 8/8 PASS (semua 73 plugin + sisanya berhasil resolve tanpa error module).
+- VPS: `git pull && pm2 restart` — gak ada perubahan behavior yang kelihatan user, ini murni refactor arsitektur internal.
