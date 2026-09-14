@@ -2105,3 +2105,12 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - **Arsitektur**: pembuatan card diekstrak jadi fungsi murni `buildPlayInfoCard()` (exported) biar testable tanpa mock seluruh chain search+download.
 - E2E `test/play-e2e/` 14/14 (urutan field, fallback iTunes kosong, Format ikut bitrate 128/192/256/320) + import guard 8/8. Live verified iTunes enrichment: "Faded Alan Walker" → Album "Faded - EP", Genre "Dance".
 - VPS: `git pull && pm2 restart` → `.play faded alan walker` → cek card muncul DIBAWAH audio dengan urutan Judul/Album/Genre/Durasi/Artis/Format/Link.
+
+## Playspotify — Card Info Dibawah Media (BARU 14 Sep 2026)
+- **`.playspotify`** disamain persis pola `.play` (owner: "fitur spotify diginiin juga"): card info dipindah dari SEBELUM audio → **DIBAWAH/SETELAH audio** dikirim.
+- **Field**: `Judul` → `Album` → `Genre` → `Durasi` → `Artis` → `Format` → baris kosong → `Link`. Album/Durasi/Artis tetap dari data ASLI Spotify (spotidown.app). **Genre BARU** — Spotify/spotidown gak expose genre, di-enrich best-effort dari **iTunes Search API** sama seperti `.play`. Fallback `-` kalau gak ketemu.
+- **Format sengaja `"Audio MP3"` tanpa angka kbps** — spotidown.app gak expose info bitrate, STRICT gak boleh ngarang angka (beda dari `.play` yang emang punya pilihan bitrate eksplisit 128/192/256/320).
+- Arsitektur: `buildPlaySpotifyInfoCard()` diekstrak jadi fungsi murni exported, konsisten sama pola `buildPlayInfoCard()` di `.play`.
+- E2E `test/playspotify-e2e/` 9/9 (urutan field, Format gak ada kbps ngarang, fallback genre kosong) + import guard 8/8.
+- VPS: `git pull && pm2 restart` → `.playspotify faded alan walker` → cek card muncul DIBAWAH audio.
+- **Belum disentuh**: `.spotifyplay2` (engine beda — spotifydown.org, punya sendiri klaim "MP3 320kbps" yang valid buat servis itu) & `.spotplay` (engine beda — novaApi.azbry, gak ada info card sama sekali). Bisa disamain juga kalau owner mau.
