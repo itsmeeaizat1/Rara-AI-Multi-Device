@@ -5,12 +5,16 @@
 // + chat (lanjut obrolan). API STATELESS (gak inget konteks antar request)
 // → konteks disimpan lokal per-user di plugin & di-inject ringkas ke query.
 // Live verified 14 Sep 2026: 17 karakter (Sakura, Gojo Satoru, Anya, dll).
+// UPDATE 14 Sep 2026 (sore): fazzcode ganti format auth — GET + ?api_key= udah
+// GAK BERLAKU (401 misleading "MISSING_API_KEY" padahal key terkirim), sekarang
+// WAJIB POST + header "Authorization: Bearer <key>" + body JSON + path tanpa
+// prefix /api (/ai/chatbot-role). Key lama TETEP VALID (bukan expired).
 // ═════════════════════════════════════════════
 
 import axios from "axios";
 import { getFazzcodeKey } from "../lib/config/env-loader.js";
 
-const BASE = "https://api.fazzcode.eu.cc/api/ai/chatbot-role";
+const BASE = "https://api.fazzcode.eu.cc/ai/chatbot-role";
 
 // ── seam untuk e2e (injek http mock tanpa nembak API live)
 let _http = axios;
@@ -32,8 +36,8 @@ export async function listRoleplayCharacters() {
   const key = getFazzcodeKey();
   if (!key) return { ok: false, error: "API_KEY" };
   try {
-    const res = await _http.get(BASE, {
-      params: { action: "list", api_key: key },
+    const res = await _http.post(BASE, { action: "list" }, {
+      headers: { Authorization: `Bearer ${key}` },
       timeout: 20000,
     });
     const d = res.data;
@@ -57,9 +61,9 @@ export async function callRoleplay(action, params) {
   const key = getFazzcodeKey();
   if (!key) return { ok: false, error: "API_KEY" };
   try {
-    const res = await _http.get(BASE, {
-      params: { action, ...params, api_key: key },
-      timeout: 30000,
+    const res = await _http.post(BASE, { action, ...params }, {
+      headers: { Authorization: `Bearer ${key}` },
+      timeout: 60000,
     });
     const d = res.data;
     if (d?.status !== true || typeof d.reply !== "string") {
