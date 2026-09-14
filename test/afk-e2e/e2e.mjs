@@ -4,6 +4,7 @@ import { mkdtempSync } from "fs";
 import { tmpdir } from "os";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 process.chdir(R);
 
@@ -132,6 +133,22 @@ check("6j. .afk off → dibatalkan + gak AFK lagi", mo.__sent.length === 1 && mo
 const mo2 = mkM({ sender: mp.sender, args: ["off"] });
 await plugin.handler(mo2, { sock: null });
 check("6k. .afk off pas gak AFK → info santai", mo2.__sent.length === 1 && mo2.__sent[0].text.includes("gak lagi afk"));
+
+// ═══════════════════════════════════════════════════════════════
+w("\n— guard: posisi hook di handler.js (fix 14 Sep) —");
+{
+  const h = fs.readFileSync(R + "/src/handler.js", "utf8");
+  const afk = h.indexOf("handleAfkHooks");
+  const nimbrung = h.indexOf("handleAiGrup");
+  const translate = h.indexOf("handleAutoTranslateMessage");
+  const cmdGate = h.indexOf("if (!m.isCommand) return");
+  check("hook AFK duluan sebelum AI-grup nimbrung (yang bisa return duluan)", afk > -1 && nimbrung > -1 && afk < nimbrung, `afk@${afk} vs aigrup@${nimbrung}`);
+  check("hook AFK duluan sebelum autotranslate", afk > -1 && (translate === -1 || afk < translate), `afk@${afk} vs translate@${translate}`);
+  check("hook AFK duluan sebelum gate command-return", afk > -1 && cmdGate > -1 && afk < cmdGate, `afk@${afk} vs gate@${cmdGate}`);
+  // hanya SEKALI kepasang (gak dobel)
+  const count = (h.match(/handleAfkHooks\(m/g) || []).length; // panggilan doang, bukan destructure
+  check("cuma 1 panggilan handleAfkHooks di handler", count === 1, "found " + count);
+}
 
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);
 process.exit(fail ? 1 : 0);

@@ -144,6 +144,23 @@ async function messageHandler(msg, sock, jadibotCtx = {}) {
   } catch {}
   const __novaModeBlocked = __novaOnlyModeBlocked || __novaAccessModeBlocked;
 
+  // 🔹 AFK HOOKS (nova-afk.js) — WAJIB PALING AWAL: user AFK balakang →
+  // kartu "AFK Berakhir" (jam mulai + total durasi); ada yang mention
+  // user AFK di grup → kartu info. Dulu kepasang di bawah (automation
+  // hub) → di grup yang AI-nimbrung/game-hook nyala, pesan ke-consume
+  // `return` duluan → kartu AFK selesai GAK PERNAH keluar (request owner
+  // 14 Sep 2026). Fire-and-forget, gak ngeblok pipeline.
+  if (!m.fromMe && !m.isNewsletter && !__novaModeBlocked) {
+    try {
+      const { handleAfkHooks } = await import("./lib/nova-afk.js");
+      handleAfkHooks(m, sock, db).catch((e) => {
+        try { console.error("[AfkHook] error:", e?.message || e); } catch {}
+      });
+    } catch (e) {
+      try { console.error("[AfkHook] import gagal:", e?.message || e); } catch {}
+    }
+  }
+
   // === AutoFlow: cek rule automation (keyword/media) tiap pesan masuk ===
   if (!__novaModeBlocked) { try { _autoflowHandleMessage(sock, m); } catch {} }
 
@@ -767,16 +784,6 @@ try {
       } catch {}
     }
 
-    // 🔹 AFK HOOKS (nova-afk.js): user AFK balakang → kartu "selamat
-    // datang kembali" (jam mulai + durasi); ada yang mention user AFK di
-    // grup → kartu info (request owner 13 Sep: .afk gak interaktif) —
-    // fire-and-forget biar gak nambah latency
-    try {
-      const { handleAfkHooks } = await import("./lib/nova-afk.js");
-      handleAfkHooks(m, sock, db).catch(() => {});
-    } catch (e) {
-      if (config.dev?.debugLog) console.error("[AfkHook] Hook error:", e.message);
-    }
   }
 
 
