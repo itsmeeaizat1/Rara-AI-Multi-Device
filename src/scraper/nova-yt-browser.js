@@ -41,7 +41,7 @@ function getChromiumPath() {
   return null; // full puppeteer handle sendiri via cache ~/.cache/puppeteer
 }
 
-async function getBrowser() {
+export async function getBrowser() {
   const { puppeteer, isCore } = await loadPuppeteer();
   // reuse browser yang masih hidup biar gak launch tiap pencarian (berat)
   if (browserInstance && Date.now() - lastUse < SESSION_TIMEOUT) {
