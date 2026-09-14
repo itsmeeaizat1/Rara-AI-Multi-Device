@@ -23,6 +23,13 @@ export function _setZelAnimeKeyForTest(k) { _keyForTest = k; }
 let _http = null;
 export function _setZelAnimeHttpForTest(fn) { _http = fn; }
 
+let _sleepForTest = null;
+export function _setZelAnimeSleepForTest(fn) { _sleepForTest = fn; }
+function sleep(ms) {
+  if (_sleepForTest) return _sleepForTest(ms);
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 async function doFetch(url) {
   if (_http) return _http(url);
   const controller = new AbortController();
@@ -34,12 +41,41 @@ async function doFetch(url) {
   }
 }
 
+async function once(url) {
+  let res;
+  try {
+    res = await doFetch(url);
+  } catch (e) {
+    return { ok: false, error: e?.name === "AbortError" ? "timeout — server terlalu lama merespons" : (e?.message || String(e)), transient: true };
+  }
+
+  let json = null;
+  try { json = await res.json(); } catch {}
+  if (!json) return { ok: false, error: `HTTP ${res.status}`, transient: res.status >= 400 };
+
+  // STRICT: cek error dulu (bukan cuma !json.status — beberapa endpoint
+  // overload field "status" jadi status anime string, bukan boolean).
+  if (json.status === false) {
+    const msg = String(json.error || json.message || "unknown error").slice(0, 300);
+    // Upstream proxy/anti-bot block (axios "Request failed with status code
+    // 403/407/429/502" dll — kode HTTP-nya macem-macem tergantung proxy)
+    // itu TRANSIENT, layak diretry. Validasi param ("Parameter X wajib
+    // diisi") atau DNS mati permanen (ENOTFOUND, mis. animekompi) BUKAN.
+    const transient = /request failed with status code/i.test(msg) && !/ENOTFOUND/i.test(msg);
+    return { ok: false, error: msg, transient };
+  }
+  return { ok: true, data: json };
+}
+
 /**
  * Panggil /anime/<path> zelapi. `path` sudah termasuk path segment
  * (contoh: "anibiplay/detail/some-slug") — apikey + params lain jadi query.
+ * @param {object} opts.retries — jumlah retry TAMBAHAN kalau error transient
+ *   (403/429/5xx — anti-bot upstream, bukan salah param). Default 0 (gak
+ *   retry). Dipakai khusus sumber flaky (animelovers ~20-40% sukses rate).
  * @returns {Promise<{ok:boolean, data?:object, error?:string}>}
  */
-export async function zelAnimeGet(path, params = {}) {
+export async function zelAnimeGet(path, params = {}, opts = {}) {
   const key = getKey();
   if (!key) return { ok: false, error: "API_KEY" };
   const usp = new URLSearchParams();
@@ -49,23 +85,14 @@ export async function zelAnimeGet(path, params = {}) {
   usp.set("apikey", key);
   const url = `${BASE}/${path}?${usp.toString()}`;
 
-  let res;
-  try {
-    res = await doFetch(url);
-  } catch (e) {
-    return { ok: false, error: e?.name === "AbortError" ? "timeout — server terlalu lama merespons" : (e?.message || String(e)) };
+  const retries = Math.max(0, opts.retries || 0);
+  let last;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    last = await once(url);
+    if (last.ok || !last.transient || attempt === retries) break;
+    await sleep(2500 * (attempt + 1));
   }
-
-  let json = null;
-  try { json = await res.json(); } catch {}
-  if (!json) return { ok: false, error: `HTTP ${res.status}` };
-
-  // STRICT: cek error dulu (bukan cuma !json.status — beberapa endpoint
-  // overload field "status" jadi status anime string, bukan boolean).
-  if (json.status === false) {
-    return { ok: false, error: String(json.error || json.message || "unknown error").slice(0, 300) };
-  }
-  return { ok: true, data: json };
+  return { ok: last.ok, data: last.data, error: last.error };
 }
 
 export { BASE as ZELANIME_BASE };
