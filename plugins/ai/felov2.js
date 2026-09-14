@@ -2,7 +2,6 @@
 // felov2 — Felo AI v2 (search + answer with sources)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "felov2", alias: ["felov2"], aliases: ["felov2", "feloaiv2"],
@@ -39,20 +38,10 @@ async function handler(m, { sock }) {
     await m.reply(msg);
     await m.react("🐣");
   } catch (e) {
-    // 🔹 FALLBACK: API mati/balas kosong → rantai multi-API (bawa sesi obrolan)
-    try {
-      const fbReply = await aiFallbackChat(text?.trim() || m.text, {
-        persona: "Felo AI — AI penelusuran yang jawab lengkap dengan sumber",
-        sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName,
-      });
-      if (fbReply) return m.reply(fbReply);
-    } catch (fbErr) {
-      console.error("[felov2.js] fallback chain failed:", fbErr.message);
-    }
 
     console.error("felov2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("felov2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(claraWrap("felov2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

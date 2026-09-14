@@ -3,7 +3,6 @@ import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 const pluginConfig = {
   name: "gpt4o",
   alias: ["gpt4o"],
@@ -38,20 +37,9 @@ async function handler(m, { sock }) {
     }
     throw new Error("cuki balas kosong/429");
   } catch (error) {
-    // 🔹 FALLBACK: rantai multi-API (sesi obrolan tetap nyambung)
-    try {
-      const fbReply = await aiFallbackChat(text, {
-        persona: "GPT-4o — AI asisten serba bisa dari OpenAI",
-        model: "gpt4o",
-        sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName,
-      });
-      if (fbReply) return m.reply(fbReply);
-    } catch (fbErr) {
-      console.error("[gpt4o.js] fallback chain gagal:", fbErr.message);
-    }
 
     console.log(error);
-    m.reply(claraWrap("gpt4o", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(claraWrap("gpt4o", te(m.prefix, m.command, m.pushName, error), "error"));
   }
 }
 

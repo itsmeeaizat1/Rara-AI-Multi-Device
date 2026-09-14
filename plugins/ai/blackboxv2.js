@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("blackboxv2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("blackboxv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(claraWrap("blackboxv2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

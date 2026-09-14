@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { parallelAI } from "../../src/scraper/parallelai.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
   name: "parallelai",
@@ -56,9 +55,8 @@ async function handler(m, { sock, config: botConfig }) {
     try {
       response = await parallelAI({ input: cleanPrompt, effort });
     } catch (primaryErr) {
-      // API key belum di-set / Parallel AI down → rantai fallback multi-API
-      console.error("parallelai primary failed:", primaryErr.message);
-      response = await aiFallbackChat(cleanPrompt, { persona: "Parallel AI — reasoning model" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
+      // AI satuan strict (owner 14 Sep): gak ada fallback lintas-AI — error asli kelihatan
+      throw primaryErr;
     }
 
     if (!response || !response.trim()) {

@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("chatewherev2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("chatewherev2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(claraWrap("chatewherev2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

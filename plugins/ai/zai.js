@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("zai error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("zai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(claraWrap("zai", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };
