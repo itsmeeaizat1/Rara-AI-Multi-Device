@@ -2,8 +2,14 @@
 // playspotify.js — Play versi Spotify: cari lagu Spotify → download mp3 → kirim
 // Request owner 11 Sep 2026: "buat fitur play tp versi spotify .playspotify"
 // Engine: spotidown.app (src/scraper/spotidown.js) — meta lengkap dari Spotify
-// (judul/artis/album/durasi/cover) + file mp3, dikirim pola .play:
-// react 🕒→🐣, info section, file audio, offer convert.
+// (judul/artis/album/durasi/cover) + file mp3, dikirim pola .play.
+// REVISI 14 Sep 2026 (owner: "fitur spotify diginiin juga" — samain sama
+// .play): card info dipindah dari SEBELUM audio → SETELAH audio, field
+// diseragamin jadi Judul/Album/Genre/Durasi/Artis/Format + baris kosong +
+// Link. Genre gak ada di data Spotify/spotidown — di-enrich best-effort
+// dari iTunes Search API (sama seperti .play). Format TIDAK diklaim kbps
+// spesifik (spotidown.app gak expose bitrate — STRICT, gak boleh ngarang).
+import axios from "axios";
 import { searchSpotiDown, downloadSpotiAudio } from "../../src/scraper/spotidown.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
 import { novaGagal, novaGangguan, novaDlUsage, novaBerhasil } from "../../src/lib/nova-menu-style.js";
@@ -22,6 +28,27 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+let _itunesForTest = null;
+function _setItunesFnForTest(fn) { _itunesForTest = fn; }
+
+// Enrich Genre dari iTunes Search (best-effort, gak block kalau gagal).
+// Album/Durasi/Artis udah dapet asli dari Spotify (spotidown) — cuma Genre
+// yang gak ada di sana.
+async function fetchItunesGenre(title, artist) {
+  try {
+    if (_itunesForTest) return await _itunesForTest(title, artist);
+    const term = artist ? `${title} ${artist}` : title;
+    const { data } = await axios.get("https://itunes.apple.com/search", {
+      params: { term, limit: 1, media: "music" },
+      timeout: 8000,
+    });
+    return data?.results?.[0]?.primaryGenreName || null;
+  } catch (e) {
+    console.error("[Playspotify] iTunes genre error:", e.message);
+    return null;
+  }
+}
+
 // Cuplikan lirik LRCLIB (best-effort, gak block kalau gagal/timeout)
 async function fetchLyricsSnippet(title, artist) {
   try {
@@ -35,6 +62,26 @@ async function fetchLyricsSnippet(title, artist) {
     console.error("[Playspotify] Lyrics fetch error:", e.message);
   }
   return null;
+}
+
+// Card info — field PERSIS pola .play (14 Sep 2026): Judul/Album/Genre/
+// Durasi/Artis/Format, baris kosong, Link — dikirim DIBAWAH media. Diekstrak
+// jadi fungsi murni biar testable tanpa mock seluruh chain search+download.
+export function buildPlaySpotifyInfoCard({ title, album, genre, duration, artist, url, lyricsSnippet, lyricsCommand }) {
+  const lines = [
+    `*Judul:* ${title || "-"}`,
+    `*Album:* ${album || "-"}`,
+    `*Genre:* ${genre || "-"}`,
+    `*Durasi:* ${duration || "-"}`,
+    `*Artis:* ${artist || "-"}`,
+    `*Format:* Audio MP3`,
+    ``,
+    `*Link:* ${url || "-"}`,
+  ];
+  if (lyricsSnippet) {
+    lines.push(``, `*Lirik:*`, lyricsSnippet, ``, `Lirik lengkap: ${lyricsCommand}`);
+  }
+  return lines.join("\n");
 }
 
 async function handler(m, { sock }) {
@@ -65,27 +112,14 @@ async function handler(m, { sock }) {
 
     const title = track.title || query;
 
-    // Cuplikan lirik (best-effort — request owner 12 Sep 2026, pola .play YT)
-    const lyricsData = await fetchLyricsSnippet(title, track.artist);
+    // Enrich Genre (iTunes, best-effort) + lirik — paralel, gak saling block
+    const [genre, lyricsData] = await Promise.all([
+      fetchItunesGenre(title, track.artist),
+      fetchLyricsSnippet(title, track.artist),
+    ]);
+    const artist = lyricsData?.artist || track.artist || "-";
 
-    // Info section — WhatsApp gak support caption di pesan audio (pola .play)
-    const infoLines = [
-      `*Spotify Play — Audio*`,
-      ``,
-      `*Judul:* ${title}`,
-      `*Artis:* ${track.artist || "-"}`,
-      `*Album:* ${track.album || "-"}`,
-      `*Durasi:* ${track.duration || "-"}`,
-      `*Sumber:* Spotify (via spotidown)`,
-    ];
-    if (lyricsData?.snippet) {
-      infoLines.push(``, `*Lirik:*`, lyricsData.snippet, ``, `Lirik lengkap: ${m.prefix}lirikspotify ${title}`);
-    } else {
-      infoLines.push(``, `Lirik gak ketemu, coba: ${m.prefix}lirikspotify ${title}`);
-    }
-    await m.reply(infoLines.join("\n"));
-
-    // Step 3: File audionya + preview card meta Spotify
+    // Step 3: File audionya DULU (card info dibawah — pola .play)
     await sock.sendMessage(
       m.chat,
       {
@@ -103,7 +137,20 @@ async function handler(m, { sock }) {
       { quoted: m }
     );
 
-    // Step 4: Tawaran convert di bawahnya
+    // Step 4: Card info DIBAWAH media
+    const cardText = buildPlaySpotifyInfoCard({
+      title,
+      album: track.album,
+      genre,
+      duration: track.duration,
+      artist,
+      url: "https://open.spotify.com/",
+      lyricsSnippet: lyricsData?.snippet,
+      lyricsCommand: `${m.prefix}lirikspotify ${title}`,
+    });
+    await m.reply(cardText);
+
+    // Step 5: Tawaran convert di bawahnya
     await offerConvert(sock, m, { buffer, type: "audio", platform: "Spotify", title, sourceUrl: "https://spotidown.app/" });
     await m.react("🐣");
     await m.reply(novaBerhasil("Playspotify"));
@@ -124,4 +171,4 @@ async function handler(m, { sock }) {
   }
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, _setItunesFnForTest };
