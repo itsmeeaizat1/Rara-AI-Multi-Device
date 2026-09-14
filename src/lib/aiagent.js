@@ -132,6 +132,130 @@ export const TOOLS = {
     }
   },
 
+  // ─── SEARCH YOUTUBE + KIRIM VIDEO SAMPEL (fix owner 14 Sep 2026: ".novaagent
+  // carikan/cairkan bot alya md di youtube" hasilnya beda/nyasar — request
+  // YouTube gak pernah ke-detect, jatuh ke think() AI yang milih tool salah
+  // atau jawab dari halusinasi. Sekarang: cari video di YouTube (yt-search,
+  // engine sama kaya .yts/.playvideo — akurat tanpa browser), kirim KARTU
+  // INFO (judul/channel/durasi/views/deskripsi/link video lain) + VIDEO
+  // SAMPEL hasil unduhan (rantai nova-ytdlp → IkyyXD ytmp4 → ytdl.js,
+  // 480p biar cepat & hemat, konversi H.264+AAC biar keputar di WA).
+  // Gagal unduh → kartu info + link tetap keluar, tool gak mati.
+  searchyt: {
+    perm: 'user', args: ['query'], danger: false,
+    desc: 'MENCARI VIDEO di YouTube lalu kirim KARTU INFO (judul/channel/durasi/views/deskripsi) + VIDEO SAMPEL hasil unduhan (contoh: "carikan video tutorial dpixel di youtube", "cairkan bot alya md ini di youtube", "putar video cat lucu")',
+    done: '✅ Video hasil pencarian YouTube udah aku kirim di atas ya.',
+    run: async (conn, m, a) => {
+      const query = String(a?.query || a?.q || a?.text || a?.value || '').trim();
+      if (!query) throw new Error('mau cari video apa? kasih judul/topiknya — contoh: carikan video bot alya md di youtube');
+
+      // ── CARI: BROWSER BENERAN duluan (request owner 14 Sep 2026: "klo
+      // disuruh cari jgn pakai kecerdasan ai tp agent mencari pakai browser
+      // beneran seperti umumnya di ai superagent") — chromium headless buka
+      // halaman hasil YouTube, ekstrak dari DOM. Kalau chromium gak ada /
+      // crash / timeout → fallback yt-search (tetap hasil ASLI YouTube,
+      // bukan AI). Keduanya GAK pakai kecerdasan AI sama sekali.
+      let videos = [];
+      let via = '';
+      const browserSearch = __searchytDeps.browserSearch
+        || (await import('../scraper/nova-yt-browser.js')).browserSearchYoutube;
+      try {
+        const raw = await browserSearch(query, { limit: 5 });
+        videos = (raw || []).filter(v => v?.url && v?.title).slice(0, 5);
+        if (videos.length) via = 'browser';
+      } catch (e) { console.error('[searchyt] browser error:', e.message); }
+      if (!videos.length) {
+        const yts = __searchytDeps.yts || (await import('yt-search')).default;
+        const search = await yts(query);
+        videos = (search?.videos || []).filter(v => v?.url).slice(0, 5);
+        if (videos.length) via = 'yt-search';
+      }
+      if (!videos.length) throw new Error('gak nemu video di YouTube buat: ' + query);
+      const v = videos[0];
+      const fmtViews = (n) => !n ? '0' : n >= 1e6 ? (n / 1e6).toFixed(1) + ' jt' : n >= 1e3 ? (n / 1e3).toFixed(1) + ' rb' : String(n);
+      const desc = (v.description || '').replace(/\s+/g, ' ').trim().slice(0, 280);
+
+      // kartu info teks: hasil utama + isi/deskripsi video + daftar video lain
+      const lines = [
+        '🎬 *YouTube — ' + query + '*', '',
+        '🔍 _dicari via: ' + (via === 'browser' ? 'browser beneran (chromium)' : 'youtube engine') + '_', '',
+        '📺 *' + v.title + '*',
+        '👤 ' + (v.author?.name || '-'),
+        '⏱️ ' + (v.duration?.timestamp || '-') + ' • 👁️ ' + fmtViews(v.views) + ' penonton',
+        '📅 ' + (v.ago || '-'),
+      ];
+      if (desc) lines.push('', '📝 ' + desc);
+      lines.push('', '🔗 ' + v.url, '',
+        videos.length > 1 ? '👀 Video lain yang mirip:' : '');
+      for (const x of videos.slice(1, 4)) {
+        lines.push('• ' + x.title + ' (' + (x.duration?.timestamp || '-') + ') → ' + x.url);
+      }
+      try {
+        await conn.sendMessage(m.chat, { text: lines.filter(Boolean).join('\n') }, { quoted: m });
+      } catch { /* kartu gagal kirim → lanjut video, jangan mati */ }
+
+      // ── unduh video sampel (480p biar cepat & ringan) ──
+      let buffer = null;
+      // Try 1: yt-dlp / cobalt (nova-ytdlp) — dukung pilihan resolusi persis
+      try {
+        const downloadVideoYtDlp = __searchytDeps.downloadVideoYtDlp
+          || (await import('../scraper/nova-ytdlp.js')).downloadVideo;
+        const result = await downloadVideoYtDlp(v.url, '480');
+        if (result?.buffer?.length > 10000) buffer = result.buffer;
+      } catch (e) { console.error('[searchyt] nova-ytdlp error:', e.message); }
+      // Try 2: IkyyXD ytmp4
+      if (!buffer) {
+        try {
+          const get = __searchytDeps.ikyyGet || (async (url, opts) => {
+            const axios = (await import('axios')).default;
+            return axios.get(url, opts);
+          });
+          const { data } = await get('https://api.ikyyxd.my.id/download/ytmp4', {
+            params: { q: v.url, apikey: 'kyzz' },
+            timeout: 60000,
+          });
+          const dl = data?.result?.VideoUrl?.url || data?.result?.download_url || data?.result?.url;
+          if (data?.status && dl) {
+            const { data: buf } = await get(dl, { responseType: 'arraybuffer', timeout: 120000 });
+            if (buf && buf.length > 10000) buffer = Buffer.from(buf);
+          }
+        } catch (e) { console.error('[searchyt] IkyyXD ytmp4 error:', e.message); }
+      }
+      // Try 3: ytdl.js mp4
+      if (!buffer) {
+        try {
+          const ytdlFn = __searchytDeps.ytdlFn || (await import('../scraper/ytdl.js')).ytdl;
+          const result = await ytdlFn(v.url, 'mp4');
+          if (result?.status && result?.dl) {
+            const get = __searchytDeps.httpGet || (async (url, opts) => {
+              const axios = (await import('axios')).default;
+              return axios.get(url, opts);
+            });
+            const { data: buf } = await get(result.dl, { responseType: 'arraybuffer', timeout: 120000 });
+            if (buf && buf.length > 10000) buffer = Buffer.from(buf);
+          }
+        } catch (e) { console.error('[searchyt] ytdl.js error:', e.message); }
+      }
+      if (!buffer || buffer.length < 10000) {
+        // unduh kandas → kartu info udah terkirim di atas, kasih info jujur + link
+        await conn.sendMessage(m.chat, {
+          text: '⚠️ Video sampel gagal diunduh (server YouTube sedang rewel) — tapi link video-nya udah aku kirim di atas, bisa langsung ditonton / dipakai *.playvideo* ' + v.url,
+        }, { quoted: m });
+        return;
+      }
+      // pastikan H.264+AAC (sumber kadang kasih AV1/VP9 yang gagal diputar di WA)
+      try {
+        const toWhatsAppVideo = __searchytDeps.toWhatsAppVideo
+          || (await import('./nova-ffmpeg.js')).toWhatsAppVideo;
+        buffer = await toWhatsAppVideo(buffer, { maxHeight: 480 });
+      } catch { /* konversi gagal → kirim buffer apa adanya, WA biasanya tetap keputar */ }
+      await conn.sendMessage(m.chat, {
+        video: buffer,
+        caption: '🎬 *' + v.title + '*\n👤 ' + (v.author?.name || '-') + ' • ⏱️ ' + (v.duration?.timestamp || '-') + '\n🔗 ' + v.url + '\n\n_(contoh video hasil pencarian: ' + query + ')_',
+      }, { quoted: m });
+    }
+  },
+
   // ─── MANAJEMEN MEMBER ───
   kick: {
     perm: 'admin', args: ['user'], danger: true,
@@ -700,6 +824,14 @@ export async function resolveUserByName(sock, m, nameQuery) {
   }
 }
 
+// ================= SEAM TEST searchyt (e2e offline) =================
+// __searchytDeps di-inject dari test (yts / downloadVideoYtDlp / ikyyHttp /
+// ytdlFn / toWhatsAppVideo) — kalau kosong, tool pakai modul asli via
+// dynamic import (jalur produksi).
+const __searchytDeps = {};
+export function _setSearchytDepsForTest(d) { Object.assign(__searchytDeps, d); }
+export function _resetSearchytDepsForTest() { for (const k of Object.keys(__searchytDeps)) delete __searchytDeps[k]; }
+
 // ================= PARSER LOKAL (tanpa API, instan) =================
 // 🔹 AI AGENT: parser lokal untuk perintah sederhana — instan, tanpa panggil API
 // 🔹 Mendukung 25+ perintah tanpa perlu AI online
@@ -759,6 +891,25 @@ export function localParse(text) {
   // ─── SETPP (foto profil grup) ───
   if (/(ganti|ubah|update).*(foto|pp|profil|picture|avatar)/.test(t) && /(grup|gc|group)/.test(t))
     return { tool: 'setpp', args: {} }
+
+  // ─── SEARCH YOUTUBE + VIDEO SAMPEL — CEK LOKAL DULU (fix owner 14 Sep
+  // 2026: ".novaagent cairkan bot alya md ini di youtube" hasilnya beda/
+  // nyasar — request YouTube gak pernah ke-detect di mana pun: localParse
+  // gak punya pola 'cari video', needsWebSearch cuma nangkep kata berita/
+  // viral/terbaru → jatuh ke think() AI yang milih tool salah / jawab dari
+  // halusinasi. Sekarang request 'carikan/cairkan/putar X di youtube/yt'
+  // dideteksi LOKAL (instan, imun dari kebingungan histori sesi) → tool
+  // searchyt: kartu info + video sampel hasil unduhan.
+  if (/\b(carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyari(kan)?|putar(kan|in)?|mainkan|tonton(kan|in)?|nonton(kan|in)?|nton(in)?|play|playin|lihat(kan|in)?)\b/.test(t) && /\b(youtube|yt|video)\b/.test(t)) {
+    const q = original
+      .replace(/\b(tolong|please|dong|ya|yah|deh|sih|min|coba|kak|bang|bantu|bantu cari)\b/gi, ' ')
+      .replace(/\b(carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyarikan|nyari|putarkan|putarin|putar|mainkan|tontonkan|tontonin|tonton|nontonkan|nontonin|nonton|ntonin|nton|playin|play|lihatkan|lihatin|lihat|kan)\b/gi, ' ')
+      .replace(/\b(di|ke|dari|ini|itu)\b/gi, ' ')
+      .replace(/\b(youtube|yt|videonya|video)\b/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+    return { tool: 'searchyt', args: { query: q || 'tutorial menarik' } }
+  }
 
   // ─── GENERATE GAMBAR (AI IMAGE) — CEK LOKAL DULU, JANGAN LEWAT think() ───
   // Bug nyata dilaporkan owner 13 Sep 2026: ".novaagent buatkan gambar
