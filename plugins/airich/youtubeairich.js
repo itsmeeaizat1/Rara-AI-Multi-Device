@@ -6,11 +6,11 @@
 //   search bar dengan animasi ngetik, hasil ASLI YouTube (chromium
 //   browserSearchYoutube — judul, channel, views, durasi), thumbnail
 //   i.ytimg.com (fallback gradient kalau webview ngeblok jaringan).
-// 🔹 PLAYER: tap kartu video → halaman watch ala YouTube (player
-//   besar + tombol play + progress bar jalan real-time + pause,
-//   judul/channel/views, tombol kembali). Playback = simulasi
-//   interaktif (webview WA belum tentu bisa streaming video asli —
-//   data & thumbnail-nya asli YouTube, player interaktif).
+// 🔹 PLAYER BENERAN (v2): video PERTAMA dapet src CDN asli (IkyyXD
+//   savetube — gak IP-locked, HP user bisa stream langsung) → tap play
+//   = VIDEO ASLI MUTER di dalam gelembung. Webview gak dikasih
+//   jaringan / error / timeout → otomatis fallback simulasi (progress
+//   timer). Video lain (data-i != 0) → simulasi interaktif.
 // 🔹 Tanpa JS: daftar video tetep keliatan (progressive enhancement).
 // ============================================================
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -66,11 +66,26 @@ export async function ytRichSearch(query) {
   }));
 }
 
+// ── URL video asli (best-effort, JANGAN pernah throw): IkyyXD savetube
+//   CDN gak IP-locked → bisa dipakai <video src> langsung di webview HP ──
+export async function ytRichVideoUrl(url) {
+  try {
+    if (__ytHttp.video) return await __ytHttp.video(url); // seam e2e
+    const axios = (await import("axios")).default;
+    const { data } = await axios.get("https://api.ikyyxd.my.id/download/ytmp4", {
+      params: { q: url, apikey: "kyzz" }, timeout: 60000,
+    });
+    const dl = data?.result?.VideoUrl?.url || data?.result?.download_url || data?.result?.url;
+    if (data?.status && dl && /^https?:\/\//.test(dl)) return dl;
+    return null;
+  } catch { return null; }
+}
+
 // ── rakit HTML ala YouTube app (dark theme) ──
-export function buildYtHtml({ query, results }) {
+export function buildYtHtml({ query, results, videoUrl }) {
   const hasQuery = !!query;
   const cards = (results || []).map((r, i) => `
-    <div class="vid" data-i="${i}">
+    <div class="vid" data-i="${i}">${videoUrl && i === 0 ? '<span style="position:absolute;margin:8px;background:rgba(255,0,0,.92);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;z-index:2">VIDEO ASLI</span>' : ""}
       <div class="thumb">
         ${r.thumb ? `<img src="${esc(r.thumb)}" alt="">` : ""}
         <div class="fallback"><div class="fb-icon"></div></div>
@@ -156,6 +171,7 @@ body { display: flex; align-items: flex-end; }
     <div class="wnav"><div class="back" id="back"></div><div class="t" id="wnt"></div></div>
     <div class="player" id="player">
       <img id="wimg" alt="">
+      <video id="wvid" playsinline webkit-playsinline preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;background:#000"></video>
       <div class="bigplay" id="bp"><div class="bp"></div></div>
       <div class="pbar"><div class="fill" id="pfill"></div></div>
       <div class="ptime" id="ptime">0:00 / 0:00</div>
@@ -169,6 +185,8 @@ body { display: flex; align-items: flex-end; }
 <script>
 // data video (query & hasil internet udah di-escape \\u003c)
 var VIDS = ${dataJs};
+var REAL = ${videoUrl ? "1" : "0"};
+var REALSRC = ${JSON.stringify(videoUrl || "").replace(/</g, "\\u003c")};
 function $(s){ return document.querySelector(s); }
 // animasi ngetik query
 (function(){
@@ -182,6 +200,19 @@ function $(s){ return document.querySelector(s); }
     if (i >= full.length) { clearInterval(t); setTimeout(function(){ cursor.remove(); }, 2200); }
   }, 60);
 })();
+// progress video asli real-time
+(function(){
+  var ve = vidEl();
+  ve.addEventListener("timeupdate", function(){
+    if (!realMode) return;
+    if (ve.duration && isFinite(ve.duration)) {
+      dur = ve.duration;
+      $("#pfill").style.width = Math.min(100, (ve.currentTime / ve.duration) * 100) + "%";
+      $("#ptime").textContent = fmt(ve.currentTime) + " / " + fmt(ve.duration);
+    }
+  });
+  ve.addEventListener("ended", function(){ if (realMode) { $("#bp").classList.remove("playing"); $("#pfill").style.width = "100%"; } });
+})();
 // buang img rusak (webview tanpa jaringan) → gradient fallback kepakai
 window.addEventListener("load", function(){
   document.querySelectorAll("#list img").forEach(function(img){
@@ -190,19 +221,45 @@ window.addEventListener("load", function(){
     if (img.complete && !img.naturalWidth) img.remove();
   });
 });
-// player
-var playing = false, cur = 0, timer = null, dur = 0, sec = 0;
+// player — dua mode: VIDEO ASLI (REAL=1, src CDN) & SIMULASI
+var playing = false, cur = 0, timer = null, dur = 0, sec = 0, realMode = false, realTimer = null;
 function parseDur(s){ var p = String(s||"").split(":").map(Number); if (p.some(isNaN) || !p.length) return 0;
   var t = 0; for (var i = 0; i < p.length; i++) t = t * 60 + p[i]; return t; }
 function fmt(t){ t = Math.floor(t); var m = Math.floor(t/60), s = t % 60; return m + ":" + (s<10?"0":"") + s; }
 function stopPlay(){ playing = false; clearInterval(timer); timer = null; }
+function stopReal(){ clearTimeout(realTimer); realTimer = null; }
+function vidEl(){ return document.getElementById("wvid"); }
+// fallback: video asli gak bisa (gak ada jaringan/error/timeout) → simulasi jalan
+function toSim(){
+  if (!realMode) return;
+  realMode = false; stopReal();
+  var v = vidEl(); try { v.pause(); v.removeAttribute("src"); v.load(); } catch (e) {}
+  v.style.display = "none";
+  dur = parseDur(VIDS[cur] && VIDS[cur].dur); sec = 0;
+}
 function openWatch(i){
   var v = VIDS[i]; if (!v) return; cur = i;
   $("#wnt").textContent = v.title || ""; $("#wimg").src = v.thumb || "";
   $("#wtitle").textContent = v.title || "";
   $("#wmeta").textContent = (v.channel || "") + (v.viewsTxt ? " · " + v.viewsTxt : "") + (v.ago ? " · " + v.ago : "");
   $("#pfill").style.width = "0%"; $("#ptime").classList.remove("on"); $("#bp").classList.remove("playing");
-  stopPlay(); sec = 0; dur = parseDur(v.dur);
+  stopPlay(); stopReal(); sec = 0;
+  var ve = vidEl();
+  try { ve.pause(); ve.removeAttribute("src"); ve.load(); } catch (e) {}
+  ve.style.display = "none";
+  // video pertama + ada src asli → mode VIDEO ASLI
+  realMode = !!(REAL === 1 && i === 0 && REALSRC);
+  if (realMode) {
+    ve.src = REALSRC; ve.style.display = "block";
+    ve.onerror = function(){ toSim(); };
+    // timeout: 12 dtk gak ada metadata (webview gak dikasih jaringan) → sim
+    stopReal();
+    realTimer = setTimeout(function(){ if (ve.readyState === 0) toSim(); }, 12000);
+    ve.addEventListener("loadedmetadata", function(){
+      stopReal();
+      if (ve.duration && isFinite(ve.duration)) dur = ve.duration;
+    });
+  } else dur = parseDur(v.dur);
   $("#watch").classList.add("on");
 }
 function tick(){
@@ -217,7 +274,13 @@ document.addEventListener("click", function(ev){
   if (vid && !$("#watch").classList.contains("on")) { openWatch(parseInt(vid.getAttribute("data-i"), 10) || 0); return; }
   if (ev.target.closest && ev.target.closest("#back")) { stopPlay(); $("#watch").classList.remove("on"); return; }
   if (ev.target.closest && ev.target.closest("#player")) {
-    if (!playing) {
+    if (realMode) {
+      var ve = vidEl();
+      if (ve.paused) {
+        ve.play().then(function(){ $("#bp").classList.add("playing"); $("#ptime").classList.add("on"); })
+          .catch(function(){ toSim(); playing = true; $("#bp").classList.add("playing"); $("#ptime").classList.add("on"); timer = setInterval(tick, 1000); tick(); });
+      } else { ve.pause(); $("#bp").classList.remove("playing"); }
+    } else if (!playing) {
       playing = true; $("#bp").classList.add("playing"); $("#ptime").classList.add("on");
       timer = setInterval(tick, 1000); tick();
     } else stopPlay(), $("#bp").classList.remove("playing");
@@ -234,19 +297,34 @@ async function handler(m, { sock }) {
     const query = (m.text || "").trim() || null;
 
     let html;
+    let videoUrl = null;
     if (query) {
       const results = await ytRichSearch(query);
       await m.react("🛠️");
-      html = buildYtHtml({ query, results });
+      // video asli buat kartu pertama — best-effort (gagal → player simulasi)
+      videoUrl = await ytRichVideoUrl(results[0].url);
+      html = buildYtHtml({ query, results, videoUrl });
     } else {
       html = buildYtHtml({ query: null, results: [] });
     }
 
-    await sendRichResponse(sock, m.chat, html, {
-      title: query ? "YouTube ▶️ " + query : "YouTube ▶️",
-      responseId: "8d4a0e62-" + Date.now().toString(16) + "-48d3-9e1a-b7f2c8d94e03",
-      botResponseId: "b2e40280-433c-45d8-9c1a-270bec55" + Date.now().toString(16).slice(0, 4),
-    });
+    try {
+      await sendRichResponse(sock, m.chat, html, {
+        title: query ? "YouTube ▶️ " + query : "YouTube ▶️",
+        responseId: "8d4a0e62-" + Date.now().toString(16) + "-48d3-9e1a-b7f2c8d94e03",
+        botResponseId: "b2e40280-433c-45d8-9c1a-270bec55" + Date.now().toString(16).slice(0, 4),
+      });
+    } catch (relayErr) {
+      // payload + video kegedean ditolak → sekali lagi polos (player simulasi)
+      if (videoUrl) {
+        const results = await ytRichSearch(query).catch(() => null);
+        if (results) await sendRichResponse(sock, m.chat, buildYtHtml({ query, results }), {
+          title: query ? "YouTube ▶️ " + query : "YouTube ▶️",
+          responseId: "8d4a0e62-" + Date.now().toString(16) + "-48d3-9e1a-b7f2c8d94e03",
+          botResponseId: "b2e40280-433c-45d8-9c1a-270bec55" + Date.now().toString(16).slice(0, 4),
+        }).catch(() => { throw relayErr; });
+      } else throw relayErr;
+    }
     await m.react("🐣");
   } catch (err) {
     console.error("youtubeairich error:", err);

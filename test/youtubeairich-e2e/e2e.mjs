@@ -75,11 +75,17 @@ t("  player: halaman watch + progress bar + back + chips",
 t("  VIDS data di-escape \\u003c biar gak bisa break </script>",
   withQ.includes("\\u003cEnak\\u003e") || !/<Enak>/.test(withQ));
 
+// ═══ 4b. buildYtHtml tanpa videoUrl → mode simulasi ═══
+w("\n— buildYtHtml tanpa video —");
+const noVid = buildYtHtml({ query: "resep rendang", results: res });
+t("  tanpa videoUrl → REAL=0, gak ada badge VIDEO ASLI",
+  /var REAL = 0;/.test(noVid) && !noVid.includes('">VIDEO ASLI</span>'));
+
 // ═══ 5. handler — relay + polish ═══
 w("\n— handler —");
 _setYtRichHttpForTest({ search: async () => [
   { title: "Rendang Padang Asli", author: { name: "Dapur Minang" }, views: 1500000, ago: "2 minggu lalu", duration: { timestamp: "3:45" }, url: "https://www.youtube.com/watch?v=abc123XYZ" },
-] });
+], video: async () => "https://cdn.savetube.test/v/abc123XYZ.mp4" });
 mkM.replyed.length = 0; relays.length = 0;
 await plugin.handler(mkM("resep rendang"), { sock });
 t("  relay 1x ke chat, payload ke-polish bottom sheet",
@@ -89,6 +95,13 @@ t("  hasil asli dalam payload + viewport meta",
 t("  title submessage = YouTube ▶️ <query>",
   relays[0].msg.botForwardedMessage.message.richResponseMessage.submessages[0].messageText === "YouTube ▶️ resep rendang");
 t("  gak ada reply error", mkM.replyed.length === 0, JSON.stringify(mkM.replyed));
+
+// ═══ 5b. video asli di payload ═══
+w("\n— video asli —");
+const pl = decodePayload(relays[0]);
+t("  video asli: elemen <video> + REALSRC cdn + badge VIDEO ASLI",
+  pl.includes('id="wvid"') && pl.includes("REALSRC") && pl.includes("cdn.savetube.test") && pl.includes('">VIDEO ASLI</span>'));
+t("  video asli: REAL=1 (mode play beneran aktif)", /var REAL = 1;/.test(pl));
 
 mkM.replyed.length = 0; relays.length = 0;
 await plugin.handler(mkM(""), { sock });
