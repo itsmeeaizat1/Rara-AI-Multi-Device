@@ -30,8 +30,10 @@ let __certTs = 0;
 export async function fetchCertificate(force = false) {
   if (!force && __certCache && Date.now() - __certTs < 10 * 60 * 1000) return __certCache;
   const get = __airichHttp.getJson || ((url) => axios.get(url, { timeout: 15000 }).then((r) => r.data));
-  const cert = await get(CERT_URL);
-  if (!Array.isArray(cert) || !cert.length) throw new Error("certificate chain kosong/gak valid");
+  const raw = await get(CERT_URL);
+  // cert.json dari noxXza/data = array karakter per entri → JOIN jadi string base64
+  const cert = (Array.isArray(raw) ? raw : []).map((e) => (Array.isArray(e) ? e.join("") : String(e))).filter(Boolean);
+  if (!cert.length) throw new Error("certificate chain kosong/gak valid");
   __certCache = cert;
   __certTs = Date.now();
   return cert;
@@ -72,7 +74,7 @@ export function polishPayload(html) {
 // nilai dari eksperimen .plane (id unik per pesan biar gak nyangkut cache).
 export function buildRichResponse(htmlPayload, certChain, opts = {}) {
   const responseData = {
-    response_id: opts.responseId || "4db57b2c-8393-484d-8b9a-8e6d1a14b349",
+    response_id: "4db57b2c-8393-484d-8b9a-8e6d1a14b349",
     sections: [
       {
         view_model: {
@@ -93,13 +95,13 @@ export function buildRichResponse(htmlPayload, certChain, opts = {}) {
       deviceListMetadataVersion: 2,
       botMetadata: {
         messageDisclaimerText: "",
-        botResponseId: opts.botResponseId || "b2e40280-433c-45d8-9c1a-270bec558860",
+        botResponseId: "b2e40280-433c-45d8-9c1a-270bec558860",
         verificationMetadata: {
           proofs: [
             {
               version: 1,
-              useCase: "NOXZA_EXE",
-              signature: "TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==",
+              useCase: "WA_BOT_MSG",
+              signature: Buffer.from("TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==", "base64"),
               certificateChain: certChain,
             },
           ],
@@ -121,6 +123,7 @@ export function buildRichResponse(htmlPayload, certChain, opts = {}) {
           },
           contextInfo: {
             stanzaId: "A5FBA758891A16FD260767C2569F87E4",
+            participant: "262955698532521@lid",
             quotedMessage: {
               extendedTextMessage: {
                 previewType: "NONE",

@@ -20,7 +20,8 @@ const t = (name, ok, extra) => {
   ok ? pass++ : fail++;
 };
 
-const CERT = [{ kid: "a" }, { kid: "b" }];
+const CERT_RAW = [Array.from("Y2VydDAx"), Array.from("Y2VydDAy")]; // char-array persis format noxXza/data
+const CERT = ["Y2VydDAx", "Y2VydDAy"]; // hasil join
 const HTML = "<!DOCTYPE html><html><body><div class=\"card\"><canvas id=\"c\"></canvas>" + "<p>engine fixture </p>".repeat(40) + "</div></body></html>";
 
 // ═══ 1. buildRichResponse ═══
@@ -28,16 +29,19 @@ w("\n— buildRichResponse —");
 const r = buildRichResponse(HTML, CERT);
 t("  struktur verbatim: proofs v1 + certificateChain + STANDARD + bot JID",
   (() => { const p = r.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
-    return p.version === 1 && p.useCase === "NOXZA_EXE" && p.certificateChain === CERT
+    return p.version === 1 && p.useCase === "WA_BOT_MSG" && p.certificateChain === CERT
+      && Buffer.isBuffer(p.signature) && p.signature.equals(Buffer.from("TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==", "base64"))
       && r.botForwardedMessage.message.richResponseMessage.messageType === "AI_RICH_RESPONSE_TYPE_STANDARD"
-      && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"; })());
+      && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"
+      && r.botForwardedMessage.message.richResponseMessage.contextInfo.participant === "262955698532521@lid"
+      && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardOrigin === "META_AI"; })());
 t("  payload base64 ke-decode = HTML asli",
   JSON.parse(Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).sections[0].view_model.primitive.payload === HTML);
-t("  opts: title + responseId + botResponseId custom",
+t("  opts: title custom; response_id/botResponseId FIXED verbatim noxXza",
   (() => { const r2 = buildRichResponse(HTML, CERT, { title: "T", responseId: "rid", botResponseId: "bid" });
     return r2.botForwardedMessage.message.richResponseMessage.submessages[0].messageText === "T"
-      && JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id === "rid"
-      && r2.messageContextInfo.botMetadata.botResponseId === "bid"; })());
+      && JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id === "4db57b2c-8393-484d-8b9a-8e6d1a14b349"
+      && r2.messageContextInfo.botMetadata.botResponseId === "b2e40280-433c-45d8-9c1a-270bec558860"; })());
 
 // ═══ 2. polishPayload ═══
 w("\n— polishPayload —");
@@ -48,9 +52,10 @@ t("  idempoten", polishPayload(p) === p);
 
 // ═══ 3. fetchCertificate — cache 10 mnt + error kosong ═══
 w("\n— fetchCertificate —");
-_setAirichHttpForTest({ getJson: async () => CERT });
+_setAirichHttpForTest({ getJson: async () => CERT_RAW });
 const c1 = await fetchCertificate(true);
-t("  fetch ok + cache hit (call ke-2 gak nyentuh http)", c1 === CERT && (await fetchCertificate()) === CERT);
+t("  fetch ok (char-array di-join jadi string) + cache hit (call ke-2 gak nyentuh http)",
+  JSON.stringify(c1) === JSON.stringify(CERT) && JSON.stringify(await fetchCertificate()) === JSON.stringify(CERT));
 _setAirichHttpForTest({ getJson: async () => [] });
 let certErr = "";
 try { await fetchCertificate(true); } catch (e) { certErr = e.message; }
