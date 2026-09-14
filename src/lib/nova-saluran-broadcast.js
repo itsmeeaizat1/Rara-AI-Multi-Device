@@ -65,8 +65,13 @@ async function broadcastToSaluran(sock, message, options = {}) {
     return { sent: false, reason: "Saluran ID belum dikonfigurasi" };
   }
   try {
+    // REQUEST OWNER 14 Sep 2026: pesan ke saluran AUTO-CONVERT tanpa tombol —
+    // semua payload lewat nova-saluran-safe (tombol/interaktif/quoted dibuang,
+    // gagal → retry versi polos) biar follower gak pernah lihat
+    // "Pesan WhatsApp tidak didukung".
+    const { sendSaluranSafe } = await import("./nova-saluran-safe.js");
     const msgPayload = { text: message, ...options };
-    await sock.sendMessage(saluranId, msgPayload);
+    await sendSaluranSafe(sock, saluranId, msgPayload);
     return { sent: true, saluranId };
   } catch (e) {
     return { sent: false, reason: e.message };
