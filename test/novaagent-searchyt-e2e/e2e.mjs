@@ -93,16 +93,38 @@ _setSearchytDepsForTest({
   downloadVideoYtDlp: async (url) => ({ buffer: Buffer.alloc(20000, 7), title: "x" }),
   toWhatsAppVideo: async (b) => b,
   thumbGet: async () => Buffer.alloc(30000, 9),
+  // 🔹 enrichment watch page — browser buka halaman video, sedot info lengkap
+  browseWatch: async (url) => ({
+    title: "Browser Watch: Cairkan Alya MD FULL TUTORIAL",
+    author: { name: "Alya MD Official" },
+    views: 9876543, ago: "3 minggu lalu", likes: 45600,
+    description: "Deskripsi FULL hasil ekstraksi watch page chromium: tutorial deploy step by step dari nol sampai jalan, termasuk cara pasang di VPS.",
+    related: [
+      { title: "Related Watch 1", url: "https://youtube.com/watch?v=related11111" },
+      { title: "Related Watch 2", url: "https://youtube.com/watch?v=related22222" },
+    ],
+  }),
+  // 🔹 narasi alive — AI ngjelasin hasil pencariannya kayak ngomong
+  aiChat: async (prompt) => {
+    if (!prompt.includes("DATA HASIL PENCARIAN ASLI")) throw new Error("prompt narasi gak valid");
+    return "Nah ini dia yang kamu cari — aku nemu video Alya MD FULL TUTORIAL dari channel resminya, udah hampir 10 juta penonton dan 45 rb like. Videonya ngebahas deploy step by step dari nol. Mau aku unduh videonya?";
+  },
 });
 await TOOLS.searchyt.run(conn, mockM, { query: "bot alya md" });
 const brImg = sent.find(x => x.image);
 const brCap = brImg?.caption || "";
-t("1ba. hasil BROWSER dipakai (judul browser ada)", brCap.includes("Browser Result: Cairkan Alya MD"), brCap.slice(0, 120));
+t("1ba. hasil BROWSER dipakai + enrichment watch page (judul FULL)", brCap.includes("Browser Watch: Cairkan Alya MD FULL TUTORIAL"), brCap.slice(0, 160));
 t("1bb. kartu nunjukin 'via: browser beneran'", brCap.includes("browser beneran (chromium)"), brCap.slice(0, 160));
 t("1bc. PREVIEW MODE: thumbnail image kekirim (bukan video)", !!brImg && !sent.find(x => x.video));
-t("1bd. views 1.2 jt ke-format dari hasil browser", brCap.includes("1.2 jt penonton"), brCap.slice(0, 250));
+t("1bd. views hasil WATCH PAGE dipakai (9.9 jt)", brCap.includes("9.9 jt penonton"), brCap.slice(0, 250));
 t("1be. mode cari default GAK ngunduh (tanpa download flag)", !sent.find(x => x.video));
 t("1bf. hint cara unduh ada di kartu", brCap.includes("unduh video") && brCap.includes(".playvideo"), brCap.slice(-160));
+t("1bg. likes dari watch page muncul (45.6 rb)", brCap.includes("👍 45.6 rb"), brCap.slice(0, 300));
+t("1bh. deskripsi FULL dari watch page (bukan shortDescription)", brCap.includes("Deskripsi FULL hasil ekstraksi watch page chromium"), brCap.slice(0, 400));
+t("1bi. related dari watch page kepakai (bukan hasil list)", brCap.includes("Related Watch 1") && !brCap.includes("Browser Result 2"), brCap.slice(-300));
+const brNarasi = sent.filter(x => x.text && !x.image && !x.video).map(x => String(x.text)).join(" | ");
+t("1bj. NARASI ALIVE kekirim — AI ngjelasin hasil pencariannya", brNarasi.includes("Nah ini dia yang kamu cari"), brNarasi.slice(0, 160));
+t("1bk. narasi nyebut data hasil watch page (10 juta/45 rb)", brNarasi.includes("10 juta") && brNarasi.includes("45 rb"), brNarasi.slice(0, 200));
 
 // ═══ 2. MODE PENCARIAN default: thumbnail + deskripsi plain text ═══
 w("\n— tool searchyt: preview mode (default) —");
@@ -111,6 +133,8 @@ _setSearchytDepsForTest({
   browserSearch: async () => { throw new Error("chromium missing libnss3"); },
   yts: async () => ({ videos: [...VIDEOS] }),
   thumbGet: async (u) => (String(u).includes("maxresdefault") ? Buffer.alloc(45000, 9) : Buffer.alloc(20000, 9)),
+  browseWatch: async () => null, // enrichment OFF (uji jalur yt-search polos)
+  aiChat: async () => null,      // narasi OFF (uji kartu polos)
 });
 await TOOLS.searchyt.run(conn, mockM, { query: "bot alya md" });
 const imgMsg = sent.find(x => x.image);
