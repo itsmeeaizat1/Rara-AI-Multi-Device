@@ -245,3 +245,144 @@ export async function zelImageEndpoint(path, prompt, opts = {}) {
   // respon aneh (status bukan true, gak ada gambar) → kasih error asli kalau ada
   return { ok: false, error: data?.error || "gak ada gambar di respon — endpoint mungkin mati" };
 }
+
+// ═════════════════════════════════════════════
+// 🔹 STALK SUITE — kategori /stalk zelapi (cek profil sosial media/game/dev)
+// 🔹 Owner 14 Sep: nambah fitur baru dari zelapi v3.0.0 (448 endpoint).
+// 🔹 DIVERIFIKASI LIVE hidup: discord, github, githubrepo, roblox, telegram,
+//    youtube, pinterest (param wajib "q" bukan "username" — beda dari docs!),
+//    ttrepost, genshin, mlbb. DIKELUARKAN (mati/gak reliable pas dites live):
+//    npm (403 Forbidden), facebook (selalu "not found" akun publik sekalipun),
+//    tiktok (selalu "not found" akun publik sekalipun), xiaomi ("invalid params"
+//    konsisten walau format id macem-macem udah dicoba).
+// ═════════════════════════════════════════════
+
+/** Spesifikasi tiap platform stalk: path, param query asli ke API, dan param yg diterima user. */
+export const ZEL_STALK_REGISTRY = {
+  discord: { path: "stalk/discord", queryParam: "id", label: "Discord", hint: "Discord user ID (angka, bukan username)" },
+  github: { path: "stalk/github", queryParam: "username", label: "GitHub", hint: "username GitHub" },
+  githubrepo: { path: "stalk/githubrepo", queryParam: null, label: "GitHub Repo", hint: "user/repo (contoh: torvalds/linux)", multiParam: { user: 0, repo: 1 }, splitBy: "/" },
+  roblox: { path: "stalk/roblox", queryParam: "user", label: "Roblox", hint: "username Roblox" },
+  telegram: { path: "stalk/telegram", queryParam: "username", label: "Telegram", hint: "username Telegram (tanpa @)" },
+  youtube: { path: "stalk/youtube", queryParam: "query", label: "YouTube", hint: "nama channel YouTube" },
+  pinterest: { path: "stalk/pinterest", queryParam: "q", label: "Pinterest", hint: "username Pinterest" },
+  ttrepost: { path: "stalk/ttrepost", queryParam: "username", label: "TikTok Repost", hint: "username TikTok (tanpa @)", extra: { limit: 6 } },
+  genshin: { path: "stalk/genshin", queryParam: "uid", label: "Genshin Impact", hint: "UID pemain Genshin Impact", extra: { lang: "id" } },
+  mlbb: { path: "stalk/mlbb", queryParam: null, label: "Mobile Legends", hint: "userID zoneID (contoh: 123456789 1234)", multiParam: { user_id: 0, zone_id: 1 } },
+};
+
+/**
+ * Cek profil/akun via kategori /stalk zelapi.
+ * @param {string} platform key di ZEL_STALK_REGISTRY (discord/github/dst)
+ * @param {string} query teks yang diketik user (bisa multi-token buat githubrepo/mlbb)
+ * @returns {Promise<{ok:boolean, data?:object, error?:string, spec?:object}>}
+ */
+export async function zelStalk(platform, query) {
+  const spec = ZEL_STALK_REGISTRY[platform];
+  if (!spec) return { ok: false, error: `Platform "${platform}" gak ada — ketik .stalk list` };
+  const key = getKey();
+  if (!key) return { ok: false, error: "API_KEY" };
+  const text = (query || "").trim();
+  if (!text) return { ok: false, error: "QUERY_KOSONG", spec };
+
+  const p = new URLSearchParams({ apikey: key });
+  if (spec.multiParam) {
+    const tokens = spec.splitBy ? text.split(spec.splitBy).map((t) => t.trim()) : text.split(/\s+/);
+    for (const [param, idx] of Object.entries(spec.multiParam)) {
+      if (!tokens[idx]) return { ok: false, error: "PARAM_KURANG", spec };
+      p.set(param, tokens[idx]);
+    }
+  } else {
+    p.set(spec.queryParam, text);
+  }
+  for (const [k, v] of Object.entries(spec.extra || {})) p.set(k, String(v));
+
+  const url = `${BASE}/${spec.path}?${p.toString()}`;
+  const doFetch = _http || (async (u) => {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    try { return await fetch(u, { signal: ctrl.signal, headers: { Accept: "application/json" } }); } finally { clearTimeout(t); }
+  });
+
+  let res;
+  try { res = await doFetch(url); }
+  catch (e) {
+    return { ok: false, error: e?.name === "AbortError" ? "TIMEOUT (60 dtk)" : (e?.message || "gagal koneksi"), spec };
+  }
+  const status = res?.status || 0;
+  if (status === 401 || status === 403) return { ok: false, error: `API_KEY_INVALID (${status})`, spec };
+  if (status === 429) return { ok: false, error: "RATE_LIMIT (429) — coba bentar lagi", spec };
+  if (status !== 200) return { ok: false, error: `HTTP ${status} — ${await readZelError(res, "endpoint gagal")}`, spec };
+
+  let data;
+  try { data = await res.json(); }
+  catch (e) { return { ok: false, error: "respon bukan JSON: " + (e?.message || ""), spec }; }
+
+  if (data?.status === false) {
+    return { ok: false, error: data?.message || data?.error || "akun tidak ditemukan / private", spec };
+  }
+  return { ok: true, data, spec };
+}
+
+// ═════════════════════════════════════════════
+// 🔹 AI LYRICS GENERATOR — kategori /ai-generate zelapi
+// 🔹 Owner 14 Sep: dites live — suno/sunora/melody/remusic (music generator
+//    ASLI, keluar audio) SEMUA MATI (Not found / 400 / 400 / timeout).
+//    Yang hidup cuma generator LIRIK TEKS: lyricsai & ailyrics.
+// ═════════════════════════════════════════════
+
+export async function zelLyrics(engine, opts = {}) {
+  const key = getKey();
+  if (!key) return { ok: false, error: "API_KEY" };
+  const p = new URLSearchParams({ apikey: key });
+  let path;
+  if (engine === "lyricsai") {
+    if (!opts.topic || !opts.topic.trim()) return { ok: false, error: "TOPIC_KOSONG" };
+    path = "ai-generate/lyricsai";
+    p.set("topic", opts.topic.trim());
+    if (opts.style) p.set("style", opts.style);
+  } else if (engine === "ailyrics") {
+    if (!opts.theme || !opts.theme.trim()) return { ok: false, error: "TOPIC_KOSONG" };
+    path = "ai-generate/ailyrics";
+    p.set("theme", opts.theme.trim());
+    if (opts.genre) p.set("genre", opts.genre);
+    if (opts.emotion) p.set("emotion", opts.emotion);
+    if (opts.language) p.set("language", opts.language);
+  } else {
+    return { ok: false, error: `Engine "${engine}" gak dikenal` };
+  }
+
+  const url = `${BASE}/${path}?${p.toString()}`;
+  const doFetch = _http || (async (u) => {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 40000);
+    try { return await fetch(u, { signal: ctrl.signal, headers: { Accept: "application/json" } }); } finally { clearTimeout(t); }
+  });
+
+  let res;
+  try { res = await doFetch(url); }
+  catch (e) {
+    return { ok: false, error: e?.name === "AbortError" ? "TIMEOUT (40 dtk) — server lama, coba lagi" : (e?.message || "gagal koneksi") };
+  }
+  const status = res?.status || 0;
+  if (status === 401 || status === 403) return { ok: false, error: `API_KEY_INVALID (${status})` };
+  if (status === 429) return { ok: false, error: "RATE_LIMIT (429) — coba bentar lagi" };
+  if (status !== 200) return { ok: false, error: `HTTP ${status} — ${await readZelError(res, "endpoint gagal")}` };
+
+  let data;
+  try { data = await res.json(); }
+  catch (e) { return { ok: false, error: "respon bukan JSON: " + (e?.message || "") }; }
+
+  if (data?.status === false) return { ok: false, error: data?.error || "endpoint mati" };
+
+  const lyrics = data?.lyrics?.full || data?.lyrics || data?.song?.lyrics?.full || data?.song?.lyrics;
+  if (!lyrics || typeof lyrics !== "string" || !lyrics.trim()) {
+    return { ok: false, error: "lirik kosong dari server" };
+  }
+  return {
+    ok: true,
+    lyrics: lyrics.trim(),
+    title: data?.title || data?.song?.title || "-",
+    genre: data?.genre || data?.song?.genre || opts.style || opts.genre || "-",
+  };
+}
