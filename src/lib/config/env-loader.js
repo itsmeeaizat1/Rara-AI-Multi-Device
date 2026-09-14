@@ -136,6 +136,13 @@ export function getFazzcodeKey() {
 }
 
 /**
+ * API key zelapi.eu.cc — suite .z AI (86+ endpoint .zchatgpt .zdeepseek dll)
+ */
+export function getZelKey() {
+  return apikeysData.zelapi || apikeysData.zelApiKey || "";
+}
+
+/**
  * API key searchapi.io — Google AI Mode (.googleaimode)
  * engine=google_ai_mode. daftar di searchapi.io, free trial ±100 req/bulan.
  */
