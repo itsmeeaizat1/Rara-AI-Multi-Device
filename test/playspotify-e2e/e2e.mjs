@@ -44,8 +44,10 @@ w("\n— card lengkap —");
   check("1f. lirik nyusul di bawah Link", text.indexOf("Lirik:") > text.indexOf("Link:"));
 }
 
-// ── 2. Card tanpa Genre (iTunes gak nemu) → fallback "-" ──
-w("\n— card tanpa genre (fallback -) —");
+// ── 2. Card tanpa Genre (iTunes gak nemu) → baris DIOMIT, bukan "-" ──
+// Owner 14 Sep 2026: "gak harus lengkap, ketersediaan API segitu ya
+// gapapa segitu, biar card gak polos" — field opsional kosong = diomit.
+w("\n— card tanpa genre (baris diomit) —");
 {
   const text = buildPlaySpotifyInfoCard({
     format: "Audio MP3",
@@ -56,9 +58,18 @@ w("\n— card tanpa genre (fallback -) —");
     artist: "Unknown Artist",
     url: "https://open.spotify.com/",
   });
-  check("2a. Genre fallback -", text.includes("*Genre:* -"));
+  check("2a. baris Genre DIOMIT (bukan '*Genre:* -')", !text.includes("*Genre:*"));
   check("2b. Album asli tetep keluar (bukan iTunes)", text.includes("*Album:* Album Random"));
   check("2c. gak ada blok lirik kalau snippet kosong", !text.includes("Lirik:"));
+}
+
+// ── 3. Card minimal — cuma Judul/Artis/Format/Link (semua opsional kosong) ──
+w("\n— card minimal, cuma field wajib —");
+{
+  const text = buildPlaySpotifyInfoCard({ format: "Audio MP3", title: "X", artist: "Y", url: "u" });
+  check("3a. Judul/Artis/Format/Link tetap ada", text.includes("*Judul:*") && text.includes("*Artis:*") && text.includes("*Format:*") && text.includes("*Link:*"));
+  check("3b. Album/Genre/Durasi gak nongol sama sekali", !text.includes("*Album:*") && !text.includes("*Genre:*") && !text.includes("*Durasi:*"));
+  check("3c. card tetep gak polos (ada >=4 baris berisi info)", text.split("\n").filter((l) => l.startsWith("*")).length >= 4);
 }
 
 // ── summary ──

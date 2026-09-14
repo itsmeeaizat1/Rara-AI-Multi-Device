@@ -45,8 +45,11 @@ w("\n— card lengkap —");
   check("1g. lirik nyusul di bawah Link", text.indexOf("Lirik:") > text.indexOf("Link:"));
 }
 
-// ── 2. Card tanpa Album/Genre (iTunes gak nemu) → fallback "-" ──
-w("\n— card tanpa album/genre (fallback -) —");
+// ── 2. Card tanpa Album/Genre (iTunes gak nemu) → baris DIOMIT, bukan "-" ──
+// Owner 14 Sep 2026: "gak harus lengkap, kalau di API ketersediaannya
+// segitu ya gapapa segitu, biar card gak keliatan polos aja" — jadi field
+// opsional yang kosong gak dipaksa nongol sebagai "-".
+w("\n— card tanpa album/genre (baris diomit) —");
 {
   const text = buildPlayInfoCard({
     title: "Lagu Random Banget",
@@ -57,18 +60,29 @@ w("\n— card tanpa album/genre (fallback -) —");
     kbps: "320",
     url: "https://youtube.com/watch?v=xyz",
   });
-  check("2a. Album fallback -", text.includes("*Album:* -"));
-  check("2b. Genre fallback -", text.includes("*Genre:* -"));
-  check("2c. Format ikut kbps 320", text.includes("*Format:* Audio MP3 320Kbps"));
-  check("2d. gak ada blok lirik kalau snippet kosong", !text.includes("Lirik:"));
+  check("2a. baris Album DIOMIT (bukan '*Album:* -')", !text.includes("*Album:*"));
+  check("2b. baris Genre DIOMIT (bukan '*Genre:* -')", !text.includes("*Genre:*"));
+  check("2c. Judul/Durasi/Artis/Format/Link tetap selalu ada", text.includes("*Judul:*") && text.includes("*Durasi:* 2:10") && text.includes("*Artis:* Unknown Channel") && text.includes("*Link:*"));
+  check("2d. Format ikut kbps 320", text.includes("*Format:* Audio MP3 320Kbps"));
+  check("2e. gak ada blok lirik kalau snippet kosong", !text.includes("Lirik:"));
 }
 
-// ── 3. Bitrate lain (128, 320) ke Format bener ──
+// ── 3. Card cuma dapet Genre doang (Album masih kosong) ──
+w("\n— card cuma dapet salah satu (Genre doang) —");
+{
+  const text = buildPlayInfoCard({
+    title: "X", album: null, genre: "Pop", duration: "1:00", artist: "Y", kbps: "128", url: "u",
+  });
+  check("3a. Genre nongol", text.includes("*Genre:* Pop"));
+  check("3b. Album tetep diomit", !text.includes("*Album:*"));
+}
+
+// ── 4. Bitrate lain (128, 320) ke Format bener ──
 w("\n— Format ikut bitrate yang dipilih —");
 {
   for (const kbps of ["128", "192", "320"]) {
     const text = buildPlayInfoCard({ title: "X", artist: "Y", kbps, url: "u" });
-    check(`3.${kbps} Format = Audio MP3 ${kbps}Kbps`, text.includes(`*Format:* Audio MP3 ${kbps}Kbps`));
+    check(`4.${kbps} Format = Audio MP3 ${kbps}Kbps`, text.includes(`*Format:* Audio MP3 ${kbps}Kbps`));
   }
 }
 

@@ -7,6 +7,13 @@
 //
 // Field & urutan PERSIS pola .play (YouTube): Judul/Album/Genre/Durasi/
 // Artis/Format, baris kosong, Link (+ lirik bonus di bawah kalau ada).
+//
+// REVISI 14 Sep 2026 (owner: "hrsnya g hrs lngkap, klo di api
+// ketersediaannya sgtu ya gpp sgtu, biar kliatan card g polos aja"):
+// field OPSIONAL (Album/Genre/Durasi) TIDAK dipaksa tampil sebagai "-" kalau
+// emang gak ada dari API/enrichment — baris itu langsung DIHILANGKAN dari
+// card, bukan dipaksa lengkap. Field WAJIB (Judul/Artis/Format/Link) tetap
+// selalu tampil (fallback "-" cuma buat kasus super jarang datanya kosong).
 import axios from "axios";
 
 let _itunesForTest = null;
@@ -15,18 +22,17 @@ export function _setItunesFnForTest(fn) { _itunesForTest = fn; }
 /**
  * Card info Spotify play — dikirim DIBAWAH media (WhatsApp gak bisa caption
  * di pesan audio). Fungsi murni, testable tanpa mock network.
+ * Field opsional (album/genre/duration) DIOMIT kalau gak ada data — gak
+ * dipaksa nongol sebagai "-" biar card gak keliatan bolong-bolong.
  */
 export function buildSpotifyPlayCard({ title, album, genre, duration, artist, format, url, lyricsSnippet, lyricsCommand }) {
-  const lines = [
-    `*Judul:* ${title || "-"}`,
-    `*Album:* ${album || "-"}`,
-    `*Genre:* ${genre || "-"}`,
-    `*Durasi:* ${duration || "-"}`,
-    `*Artis:* ${artist || "-"}`,
-    `*Format:* ${format || "Audio MP3"}`,
-    ``,
-    `*Link:* ${url || "-"}`,
-  ];
+  const lines = [`*Judul:* ${title || "-"}`];
+  if (album) lines.push(`*Album:* ${album}`);
+  if (genre) lines.push(`*Genre:* ${genre}`);
+  if (duration) lines.push(`*Durasi:* ${duration}`);
+  lines.push(`*Artis:* ${artist || "-"}`);
+  lines.push(`*Format:* ${format || "Audio MP3"}`);
+  lines.push(``, `*Link:* ${url || "-"}`);
   if (lyricsSnippet) {
     lines.push(``, `*Lirik:*`, lyricsSnippet, ``, `Lirik lengkap: ${lyricsCommand}`);
   }
