@@ -232,6 +232,39 @@ w("\n— chat AI balikin gambar (zcici images[]) —");
   check("gambar ikut dikirim", sentImages.length === 1);
 }
 
+
+w("\n— zbetterwaifu (NSFW, default nonaktif) —");
+{
+  const pw = await import("../../plugins/nsfw/zelbetterwaifu.js");
+  check("default nonaktif", pw.config.isEnabled === false);
+  check("kategori nsfw", pw.config.category === "nsfw");
+  check("cooldown & energi", pw.config.cooldown === 20 && pw.config.energi === 3);
+
+  // usage tanpa prompt
+  sends = []; reacts = [];
+  const sockw = { sendMessage: async () => ({}) };
+  await pw.handler(mk("zbetterwaifu", []), { sock: sockw });
+  check("usage keluar", norm(sends[0] || "").includes("waifu catgirl"));
+
+  // strict error: 500 + error body
+  setHttp({ status: 500, error: "Cookie tidak valid" });
+  sends = [];
+  await pw.handler(mk("zbetterwaifu", ["tes"]), { sock: sockw });
+  check("error asli keluar", norm(sends[0] || "").includes("cookie tidak valid"));
+
+  // sukses: images + seam buffer
+  pw._setFetchBufferForTest(async (u) => Buffer.concat([Buffer.from("IMG"), Buffer.alloc(1500, 7)]));
+  setHttp({ status: true, data: { images: ["https://w.example.com/a.png"] } });
+  let sentImgs = [];
+  const sock2 = { sendMessage: async (jid, c) => { sentImgs.push(c); return {}; } };
+  sends = []; reacts = [];
+  await pw.handler(mk("zbetterwaifu", ["waifu", "catgirl"]), { sock: sock2 });
+  check("gambar terkirim", sentImgs.length === 1);
+  check("caption engine", (sentImgs[0]?.caption || "").includes("zelapi betterwaifu"));
+}
+
+w("\n— selesai —");
+
 w("\n— registry image —");
 {
   const { getZelImageSpec, ZEL_IMAGE_REGISTRY } = await import("../../src/lib/nova-zel-registry.js");

@@ -200,6 +200,8 @@ export async function zelImageEndpoint(path, prompt, opts = {}) {
     const ip = opts.imageParam || "image";
     p.set(ip, opts.imageUrl);
   }
+  // param tambahan per endpoint (model, batch, template, dll)
+  for (const [k, v] of Object.entries(opts.extra || {})) p.set(k, String(v));
   const url = `${BASE}/${path}?${p.toString()}`;
   const doFetch = _http || (async (u) => {
     const ctrl = new AbortController();
@@ -230,5 +232,6 @@ export async function zelImageEndpoint(path, prompt, opts = {}) {
   if (data?.status === false) return { ok: false, error: data?.error || "endpoint gagal generate" };
   const images = findImageUrls(data);
   if (images.length) return { ok: true, images };
-  return { ok: false, error: "gak ada gambar di respon — endpoint mungkin mati" };
+  // respon aneh (status bukan true, gak ada gambar) → kasih error asli kalau ada
+  return { ok: false, error: data?.error || "gak ada gambar di respon — endpoint mungkin mati" };
 }
