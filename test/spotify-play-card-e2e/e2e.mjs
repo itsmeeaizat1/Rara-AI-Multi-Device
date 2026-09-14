@@ -76,6 +76,23 @@ w("\n— ketiga plugin import lib bersama (bukan duplikat builder) —");
   }
 }
 
+// ── 5. Field opsional kosong DIOMIT (bukan dipaksa "-") ──
+// Owner 14 Sep 2026: "hrsnya g hrs lngkap, klo di api ketersediaannya sgtu
+// ya gpp sgtu, biar kliatan card g polos aja" — jangan paksa lengkap.
+w("\n— field opsional kosong diomit, bukan dipaksa '-' —");
+{
+  const textNoAlbumGenre = buildSpotifyPlayCard({ title: "X", artist: "Y", duration: "2:00", format: "Audio MP3", url: "u" });
+  check("5a. Album diomit total (bukan '*Album:* -')", !textNoAlbumGenre.includes("*Album:*"));
+  check("5b. Genre diomit total (bukan '*Genre:* -')", !textNoAlbumGenre.includes("*Genre:*"));
+  check("5c. Durasi yang ADA tetep muncul", textNoAlbumGenre.includes("*Durasi:* 2:00"));
+
+  const textMinimal = buildSpotifyPlayCard({ title: "X", artist: "Y", format: "Audio MP3", url: "u" });
+  check("5d. minimal — cuma Judul/Artis/Format/Link, tanpa Album/Genre/Durasi", (() => {
+    const labels = textMinimal.split("\n").filter((l) => l.startsWith("*")).map((l) => l.match(/^\*(\w+):\*/)?.[1]);
+    return JSON.stringify(labels) === JSON.stringify(["Judul", "Artis", "Format", "Link"]);
+  })());
+}
+
 // ── summary ──
 w("\n— summary —");
 w(`PASS ${pass} / FAIL ${fail}`);

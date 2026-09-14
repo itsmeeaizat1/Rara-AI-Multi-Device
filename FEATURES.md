@@ -2123,3 +2123,11 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - **GOTCHA live-check 14 Sep 2026**: `.spotplay` (azbry `/api/download/spoplay`) → **403 KONSISTEN** (source spotify.com kena blok, 3/3 percobaan) — kode & card format tetap dipasang, otomatis jalan begitu upstream pulih, STRICT error asli kalau masih mati. `.spotifyplay2` (spotifydown.org) → search endpoint balikin **JS challenge redirect** (anti-bot, bukan JSON) — juga kemungkinan mati saat ini, sama treatment.
 - E2E `test/spotify-play-card-e2e/` 11/11 (struktur field identik lintas engine + format beda + enrich short-circuit + ketiga plugin pakai lib bersama, bukan duplikat) + `test/playspotify-e2e/` 9/9 (updated) + import guard 8/8.
 - VPS: `git pull && pm2 restart` → `.playspotify faded` / `.spotifyplay2 faded` / `.spotplay faded` (dua yang terakhir mungkin masih error upstream — itu bukan bug bot, upstream-nya lagi diblokir).
+
+## Card Play/Spotify — Field Opsional Diomit, Bukan Dipaksa "-" (REVISI 14 Sep 2026)
+- Owner: **"hrsnya g hrs lngkap, klo di api ketersediaan sgtu gpp sgtu, biar kliatan card g polos aja"** — koreksi atas revisi sebelumnya yang selalu maksa tampil `*Album:* -` / `*Genre:* -` pas iTunes/engine gak nemu datanya.
+- **`buildPlayInfoCard()` (`.play`) & `buildSpotifyPlayCard()` (`.playspotify`/`.spotifyplay2`/`.spotplay`)** dirombak: field **opsional** (Album/Genre, + Durasi khusus Spotify) sekarang **DIOMIT total** dari card kalau gak ada datanya — bukan dipaksa nongol jadi baris `- ` yang bikin card keliatan bolong/polos.
+- Field **wajib** tetap selalu tampil apa adanya: Judul, Durasi (khusus `.play`, YouTube emang selalu ngasih), Artis, Format, Link.
+- Efek: card sekarang **adaptif** — kalau API/enrichment cuma dapet sedikit data, card tetap ringkas & rapi (gak ada baris kosong "-"), tapi kalau datanya lengkap ya semua field tetap tampil normal.
+- E2E `test/play-e2e/` 17/17 (+3 baru: omit album/genre, salah satu doang, minimal) + `test/playspotify-e2e/` 12/12 (+3 baru) + `test/spotify-play-card-e2e/` 15/15 (+4 baru: omit lintas engine + card minimal) + import guard 8/8.
+- VPS: `git pull && pm2 restart` → `.play` / `.playspotify` dengan lagu yang metadatanya minim → card gak ada baris "-" kosong lagi.

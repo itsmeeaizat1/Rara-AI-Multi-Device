@@ -23,17 +23,19 @@ function _setItunesFnForTest(fn) { _itunesForTest = fn; }
 // Durasi/Artis/Format, baris kosong, Link — dikirim DIBAWAH media (bukan
 // sebelum, WhatsApp gak support caption di pesan audio). Diekstrak jadi
 // fungsi murni biar testable tanpa mock seluruh chain download/search.
+// REVISI 14 Sep 2026 (owner: "hrsnya g hrs lngkap, klo di api
+// ketersediaannya sgtu ya gpp sgtu, biar kliatan card g polos aja"):
+// Album/Genre (hasil enrichment iTunes, kadang gak nemu) DIOMIT kalau gak
+// ada data — gak dipaksa tampil "-". Judul/Durasi/Artis/Format/Link tetap
+// selalu ada (YouTube emang selalu ngasih ini).
 export function buildPlayInfoCard({ title, album, genre, duration, artist, kbps, url, lyricsSnippet, lyricsCommand }) {
-  const lines = [
-    `*Judul:* ${title || "-"}`,
-    `*Album:* ${album || "-"}`,
-    `*Genre:* ${genre || "-"}`,
-    `*Durasi:* ${duration || "-"}`,
-    `*Artis:* ${artist || "-"}`,
-    `*Format:* Audio MP3 ${kbps}Kbps`,
-    ``,
-    `*Link:* ${url || "-"}`,
-  ];
+  const lines = [`*Judul:* ${title || "-"}`];
+  if (album) lines.push(`*Album:* ${album}`);
+  if (genre) lines.push(`*Genre:* ${genre}`);
+  lines.push(`*Durasi:* ${duration || "-"}`);
+  lines.push(`*Artis:* ${artist || "-"}`);
+  lines.push(`*Format:* Audio MP3 ${kbps}Kbps`);
+  lines.push(``, `*Link:* ${url || "-"}`);
   if (lyricsSnippet) {
     lines.push(``, `*Lirik:*`, lyricsSnippet, ``, `Lirik lengkap: ${lyricsCommand}`);
   }
