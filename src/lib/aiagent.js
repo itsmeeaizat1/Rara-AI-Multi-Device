@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import { searchWeb, fetchPagePreview } from "./nova-websearch.js";
+import { detectYtSearchIntent } from "./nova-yt-search.js";
 import { getAllSkills, awaitSkillPacks } from "./nova-skills.js";
 // 🔧 RE-EXPORT — plugin (novaai.js dll) ambil getAllSkills dari sini.
 // BUGFIX 12 Sep: re-export gak ada → novaai.js import error
@@ -145,170 +146,18 @@ export const TOOLS = {
     perm: 'user', args: ['query', 'download'], danger: false,
     desc: 'MENCARI VIDEO di YouTube lalu kirim THUMBNAIL PREVIEW + deskripsi plain text (judul/channel/durasi/views/deskripsi/link). Default TIDAK ngunduh video. Kasih download=true HANYA kalau user eksplisit minta UNDUH/PUTAR/NONTON videonya (contoh: "carikan video tutorial dpixel di youtube" → preview, "unduh video bot alya md" → download:true)',
     done: '✅ Hasil pencarian YouTube udah aku kirim di atas ya.',
+    // request owner 14 Sep: ".aisuperagent juga di-upgrade — dua agent
+    // bermasalah ngbug" → logic cari YouTube dipindah ke LIB BERSAMA
+    // src/lib/nova-yt-search.js supaya .novaagent DAN .aisuperagent
+    // (tool ytsearch + deteksi lokal) manggil engine yang sama persis —
+    // gak ada dua implementasi yang bisa beda perilaku.
     run: async (conn, m, a) => {
-      const query = String(a?.query || a?.q || a?.text || a?.value || '').trim();
-      if (!query) throw new Error('mau cari video apa? kasih judul/topiknya — contoh: carikan video bot alya md di youtube');
-      // request owner 14 Sep 2026: "klo disuruh cari, bukan video yang diunduh
-      // tapi bentuk thumbnail cuplikan preview video di youtube + buffer url +
-      // deskripsi ke plain text — KECUALI aku minta unduh video". Jadi:
-      // default = preview card (thumbnail + deskripsi), unduh HANYA kalau
-      // eksplisit (unduh/download/dl/putar/nonton).
-      const wantDownload = !!(a?.download || a?.dl || a?.unduh);
-
-      // ── CARI: BROWSER BENERAN duluan (request owner 14 Sep 2026: "klo
-      // disuruh cari jgn pakai kecerdasan ai tp agent mencari pakai browser
-      // beneran seperti umumnya di ai superagent") — chromium headless buka
-      // halaman hasil YouTube, ekstrak dari DOM. Kalau chromium gak ada /
-      // crash / timeout → fallback yt-search (tetap hasil ASLI YouTube,
-      // bukan AI). Keduanya GAK pakai kecerdasan AI sama sekali.
-      let videos = [];
-      let via = '';
-      const browserSearch = __searchytDeps.browserSearch
-        || (await import('../scraper/nova-yt-browser.js')).browserSearchYoutube;
-      try {
-        const raw = await browserSearch(query, { limit: 5 });
-        videos = (raw || []).filter(v => v?.url && v?.title).slice(0, 5);
-        if (videos.length) via = 'browser';
-      } catch (e) { console.error('[searchyt] browser error:', e.message); }
-      if (!videos.length) {
-        const yts = __searchytDeps.yts || (await import('yt-search')).default;
-        const search = await yts(query);
-        videos = (search?.videos || []).filter(v => v?.url).slice(0, 5);
-        if (videos.length) via = 'yt-search';
-      }
-      if (!videos.length) throw new Error('gak nemu video di YouTube buat: ' + query);
-      const v = videos[0];
-      const fmtViews = (n) => !n ? '0' : n >= 1e6 ? (n / 1e6).toFixed(1) + ' jt' : n >= 1e3 ? (n / 1e3).toFixed(1) + ' rb' : String(n);
-
-      // deskripsi: jalur browser hasil list-page gak bawa deskripsi → ambil
-      // shortDescription dari watch page (data ASLI YouTube, tetap bukan AI)
-      let desc = (v.description || '').replace(/\s+/g, ' ').trim();
-      if (!desc) {
-        try {
-          const getText = __searchytDeps.httpGetText || (async (u) => {
-            const axios = (await import('axios')).default;
-            return (await axios.get(u, { timeout: 15000 })).data;
-          });
-          const html = String(await getText(v.url)) || '';
-          const dm = html.match(/"shortDescription":"((?:[^"\\]|\\.)*)"/);
-          if (dm) desc = (JSON.parse('"' + dm[1] + '"') || '').replace(/\s+/g, ' ').trim();
-        } catch (e) { console.error('[searchyt] desc fetch error:', e.message); }
-      }
-      desc = desc.slice(0, 400);
-
-      // kartu info: hasil utama + deskripsi plain text + daftar video lain
-      const lines = [
-        '🎬 *YouTube — ' + query + '*', '',
-        '🔍 _dicari via: ' + (via === 'browser' ? 'browser beneran (chromium)' : 'youtube engine') + '_', '',
-        '📺 *' + v.title + '*',
-        '👤 ' + (v.author?.name || '-'),
-        '⏱️ ' + (v.duration?.timestamp || '-') + ' • 👁️ ' + fmtViews(v.views) + ' penonton',
-        '📅 ' + (v.ago || '-'),
-      ];
-      if (desc) lines.push('', '📝 ' + desc);
-      lines.push('', '🔗 ' + v.url, '',
-        videos.length > 1 ? '👀 Video lain yang mirip:' : '');
-      for (const x of videos.slice(1, 4)) {
-        lines.push('• ' + x.title + ' (' + (x.duration?.timestamp || '-') + ') → ' + x.url);
-      }
-      const cardText = lines.filter(Boolean).join('\n');
-
-      // ── MODE PENCARIAN (default, request owner 14 Sep): THUMBNAIL
-      // cuplikan preview + deskripsi plain text — TANPA unduh video ──
-      if (!wantDownload) {
-        lines.push('', '💡 Mau ditonton? ketik: *.novaagent unduh video ' + query + '* — atau *.playvideo* ' + v.url);
-        const previewText = lines.filter(Boolean).join('\n');
-        // thumbnail resmi YouTube dari video id (i.ytimg.com) — cuplikan
-        // preview beneran dari videonya, bukan hasil AI
-        const videoId = (String(v.url).match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/) || [])[1];
-        let thumb = null;
-        if (videoId) {
-          const getBuf = __searchytDeps.thumbGet || (async (u) => {
-            const axios = (await import('axios')).default;
-            const { data } = await axios.get(u, { responseType: 'arraybuffer', timeout: 15000 });
-            return data;
-          });
-          // maxresdefault (HD) duluan; kalau 404/placeholder kecil → hqdefault
-          for (const q of ['maxresdefault', 'hqdefault']) {
-            try {
-              const buf = Buffer.from((await getBuf('https://i.ytimg.com/vi/' + videoId + '/' + q + '.jpg')) || Buffer.alloc(0));
-              if (buf.length > 3000) { thumb = buf; break; }
-            } catch { /* coba kualitas berikutnya */ }
-          }
-        }
-        if (thumb) {
-          await conn.sendMessage(m.chat, { image: thumb, caption: previewText }, { quoted: m });
-        } else {
-          // thumbnail gagal diambil → kartu teks polos tetap lengkap
-          await conn.sendMessage(m.chat, { text: previewText }, { quoted: m });
-        }
-        return;
-      }
-
-      // ── MODE UNDUH (eksplisit): kartu info + VIDEO hasil unduhan ──
-      try {
-        await conn.sendMessage(m.chat, { text: cardText }, { quoted: m });
-      } catch { /* kartu gagal kirim → lanjut video, jangan mati */ }
-
-      // ── unduh video sampel (480p biar cepat & ringan) ──
-      let buffer = null;
-      // Try 1: yt-dlp / cobalt (nova-ytdlp) — dukung pilihan resolusi persis
-      try {
-        const downloadVideoYtDlp = __searchytDeps.downloadVideoYtDlp
-          || (await import('../scraper/nova-ytdlp.js')).downloadVideo;
-        const result = await downloadVideoYtDlp(v.url, '480');
-        if (result?.buffer?.length > 10000) buffer = result.buffer;
-      } catch (e) { console.error('[searchyt] nova-ytdlp error:', e.message); }
-      // Try 2: IkyyXD ytmp4
-      if (!buffer) {
-        try {
-          const get = __searchytDeps.ikyyGet || (async (url, opts) => {
-            const axios = (await import('axios')).default;
-            return axios.get(url, opts);
-          });
-          const { data } = await get('https://api.ikyyxd.my.id/download/ytmp4', {
-            params: { q: v.url, apikey: 'kyzz' },
-            timeout: 60000,
-          });
-          const dl = data?.result?.VideoUrl?.url || data?.result?.download_url || data?.result?.url;
-          if (data?.status && dl) {
-            const { data: buf } = await get(dl, { responseType: 'arraybuffer', timeout: 120000 });
-            if (buf && buf.length > 10000) buffer = Buffer.from(buf);
-          }
-        } catch (e) { console.error('[searchyt] IkyyXD ytmp4 error:', e.message); }
-      }
-      // Try 3: ytdl.js mp4
-      if (!buffer) {
-        try {
-          const ytdlFn = __searchytDeps.ytdlFn || (await import('../scraper/ytdl.js')).ytdl;
-          const result = await ytdlFn(v.url, 'mp4');
-          if (result?.status && result?.dl) {
-            const get = __searchytDeps.httpGet || (async (url, opts) => {
-              const axios = (await import('axios')).default;
-              return axios.get(url, opts);
-            });
-            const { data: buf } = await get(result.dl, { responseType: 'arraybuffer', timeout: 120000 });
-            if (buf && buf.length > 10000) buffer = Buffer.from(buf);
-          }
-        } catch (e) { console.error('[searchyt] ytdl.js error:', e.message); }
-      }
-      if (!buffer || buffer.length < 10000) {
-        // unduh kandas → kartu info udah terkirim di atas, kasih info jujur + link
-        await conn.sendMessage(m.chat, {
-          text: '⚠️ Videonya gagal diunduh (server YouTube sedang rewel) — tapi link video-nya udah aku kirim di atas, bisa langsung ditonton / dipakai *.playvideo* ' + v.url,
-        }, { quoted: m });
-        return;
-      }
-      // pastikan H.264+AAC (sumber kadang kasih AV1/VP9 yang gagal diputar di WA)
-      try {
-        const toWhatsAppVideo = __searchytDeps.toWhatsAppVideo
-          || (await import('./nova-ffmpeg.js')).toWhatsAppVideo;
-        buffer = await toWhatsAppVideo(buffer, { maxHeight: 480 });
-      } catch { /* konversi gagal → kirim buffer apa adanya, WA biasanya tetap keputar */ }
-      await conn.sendMessage(m.chat, {
-        video: buffer,
-        caption: '🎬 *' + v.title + '*\n👤 ' + (v.author?.name || '-') + ' • ⏱️ ' + (v.duration?.timestamp || '-') + '\n🔗 ' + v.url + '\n\n_(video hasil pencarian: ' + query + ')_',
-      }, { quoted: m });
+      const { searchYoutubeAndSend } = await import('./nova-yt-search.js');
+      return searchYoutubeAndSend(conn, m, {
+        query: a?.query || a?.q || a?.text || a?.value,
+        wantDownload: !!(a?.download || a?.dl || a?.unduh),
+        deps: __searchytDeps,
+      });
     }
   },
 
@@ -948,27 +797,14 @@ export function localParse(text) {
   if (/(ganti|ubah|update).*(foto|pp|profil|picture|avatar)/.test(t) && /(grup|gc|group)/.test(t))
     return { tool: 'setpp', args: {} }
 
-  // ─── SEARCH YOUTUBE + VIDEO SAMPEL — CEK LOKAL DULU (fix owner 14 Sep
-  // 2026: ".novaagent cairkan bot alya md ini di youtube" hasilnya beda/
-  // nyasar — request YouTube gak pernah ke-detect di mana pun: localParse
-  // gak punya pola 'cari video', needsWebSearch cuma nangkep kata berita/
-  // viral/terbaru → jatuh ke think() AI yang milih tool salah / jawab dari
-  // halusinasi. Sekarang request 'carikan/cairkan/putar X di youtube/yt'
-  // dideteksi LOKAL (instan, imun dari kebingungan histori sesi) → tool
-  // searchyt: kartu info + video sampel hasil unduhan.
-  if (/\b(carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyari(kan)?|putar(kan|in)?|mainkan|tonton(kan|in)?|nonton(kan|in)?|nton(in)?|play|playin|lihat(kan|in)?|unduh(kan|in)?|download|donlot|donlod|dl)\b/.test(t) && /\b(youtube|yt|video)\b/.test(t)) {
-    // request owner 14 Sep: hasil cari = THUMBNAIL PREVIEW + deskripsi plain
-    // text; video cuma DIUNDUH kalau eksplisit minta unduh/putar/nonton.
-    const wantDownload = /\b(unduhkan|unduhin|unduh|download|downlod|donlot|donlod|dl|putarkan|putarin|putar|mainkan|tontonkan|tontonin|tonton|nontonkan|nontonin|nonton|ntonin|nton|playin|play)\b/.test(t);
-    const q = original
-      .replace(/\b(tolong|please|dong|ya|yah|deh|sih|min|coba|kak|bang|bantu|bantu cari|bantu unduh)\b/gi, ' ')
-      .replace(/\b(unduhkan|unduhin|unduh|download|downlod|donlot|donlod|dl|carikan|cairkan|carikn|cariin|cari|crikin|cruisinkan|search|nyarikan|nyari|putarkan|putarin|putar|mainkan|tontonkan|tontonin|tonton|nontonkan|nontonin|nonton|ntonin|nton|playin|play|lihatkan|lihatin|lihat|kan)\b/gi, ' ')
-      .replace(/\b(di|ke|dari|ini|itu)\b/gi, ' ')
-      .replace(/\b(youtube|yt|videonya|video)\b/gi, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-    return { tool: 'searchyt', args: { query: q || 'tutorial menarik', download: wantDownload } }
-  }
+  // ─── SEARCH YOUTUBE — CEK LOKAL DULU (fix owner 14 Sep 2026: request
+  // YouTube gak pernah ke-detect → jatuh ke think() AI → tool salah /
+  // halusinasi). Deteksi intent di LIB BERSAMA nova-yt-search.js
+  // (dipakai juga .aisuperagent — request owner ".aisuperagent juga
+  // upgrade, dua agent bermasalah ngbug"). Hasil cari = THUMBNAIL
+  // preview + deskripsi plain text; video cuma diunduh kalau eksplisit.
+  const __ytIntent = detectYtSearchIntent(t, original);
+  if (__ytIntent) return { tool: 'searchyt', args: { query: __ytIntent.query, download: __ytIntent.download } };
 
   // ─── GENERATE GAMBAR (AI IMAGE) — CEK LOKAL DULU, JANGAN LEWAT think() ───
   // Bug nyata dilaporkan owner 13 Sep 2026: ".novaagent buatkan gambar
