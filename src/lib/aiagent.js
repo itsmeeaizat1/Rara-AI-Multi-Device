@@ -2,6 +2,7 @@
 import fs from "fs";
 import { searchWeb, fetchPagePreview } from "./nova-websearch.js";
 import { detectYtSearchIntent } from "./nova-yt-search.js";
+import { detectSiteSearchIntent } from './nova-site-search.js';
 import { getAllSkills, awaitSkillPacks } from "./nova-skills.js";
 // 🔧 RE-EXPORT — plugin (novaai.js dll) ambil getAllSkills dari sini.
 // BUGFIX 12 Sep: re-export gak ada → novaai.js import error
@@ -38,6 +39,7 @@ async function resolveParticipantId(conn, m, jid) {
 // ketukar (info grup: nama/deskripsi/foto profil/gambar/tutup-buka) yang
 // dicek — tool lain (kick/block/dll) tetap bebas natural.
 export const TOOL_TOPIC = {
+  searchsite: 'situs web',
   closegc: 'tutup',
   opengc: 'dibuka',
   setname: 'nama grup',
@@ -56,6 +58,7 @@ export const TOOL_TOPIC = {
 // "sedang mengeksekusi: closegc..."). Dipakai novaai.js pas status loading
 // sebelum tool.run() — fallback generik kalau tool gak ada di map.
 export const TOOL_NATURAL_DOING = {
+  searchsite: 'nyariin di situs web-nya...',
   closegc: 'nutup grupnya',
   opengc: 'buka grupnya',
   genimage: 'bikin gambarnya',
@@ -157,6 +160,27 @@ export const TOOLS = {
         query: a?.query || a?.q || a?.text || a?.value,
         wantDownload: !!(a?.download || a?.dl || a?.unduh),
         deps: __searchytDeps,
+      });
+    }
+  },
+
+  // ─── SITE SEARCH (BROWSER BUKA SITUS SEMBARANG) ───
+  // request owner 14 Sep: "cba tes klo disuruh cari kayak carikan
+  // aplikasi whatsapp di apkmiror" — tes live: planner milih tool
+  // download (403) karena gak ada tool buka situs. Sekarang chromium
+  // beneran buka web-nya (DuckDuckGo site: search + halaman utama),
+  // kartu plain text + narasi alive — LIB BERSAMA nova-site-search.js
+  // (dipakai juga .aisuperagent — deteksi lokal).
+  searchsite: {
+    perm: 'user', args: ['site', 'query'], danger: false,
+    desc: 'MENCARI SESUATU di SITUS WEB tertentu (apkmirror/apkpure/playstore/shopee/dll — domain apa pun) pakai browser beneran lalu kirim hasilnya plain text (judul/link/deskripsi/isi halaman + AI jelasin hasilnya). Pakai kalau user minta cari sesuatu DI SEBUAH SITUS (contoh: "carikan aplikasi whatsapp di apkmirror"). JANGAN pakai buat link file langsung (itu download) atau YouTube (itu searchyt)',
+    done: '✅ Hasil pencariannya udah aku kirim di atas ya.',
+    run: async (conn, m, a) => {
+      const { searchSiteAndSend } = await import('./nova-site-search.js');
+      return searchSiteAndSend(conn, m, {
+        site: a?.site || a?.website || a?.situs || a?.domain,
+        query: a?.query || a?.q || a?.text || a?.value,
+        deps: __siteSearchDeps,
       });
     }
   },
@@ -737,6 +761,10 @@ const __searchytDeps = {};
 export function _setSearchytDepsForTest(d) { Object.assign(__searchytDeps, d); }
 export function _resetSearchytDepsForTest() { for (const k of Object.keys(__searchytDeps)) delete __searchytDeps[k]; }
 
+const __siteSearchDeps = {};
+export function _setSiteSearchDepsForTest(d) { Object.assign(__siteSearchDeps, d); }
+export function _resetSiteSearchDepsForTest() { for (const k of Object.keys(__siteSearchDeps)) delete __siteSearchDeps[k]; }
+
 // ================= PARSER LOKAL (tanpa API, instan) =================
 // 🔹 AI AGENT: parser lokal untuk perintah sederhana — instan, tanpa panggil API
 // 🔹 Mendukung 25+ perintah tanpa perlu AI online
@@ -805,6 +833,13 @@ export function localParse(text) {
   // preview + deskripsi plain text; video cuma diunduh kalau eksplisit.
   const __ytIntent = detectYtSearchIntent(t, original);
   if (__ytIntent) return { tool: 'searchyt', args: { query: __ytIntent.query, download: __ytIntent.download } };
+
+  // ─── SITE SEARCH — CEK LOKAL setelah YouTube (request owner 14 Sep:
+  // "carikan aplikasi whatsapp di apkmirror" tadinya milih tool
+  // download → 403. Deteksi di LIB BERSAMA nova-site-search.js —
+  // dipakai juga .aisuperagent). "di <situs>" + kata cari → searchsite.
+  const __siteIntent = detectSiteSearchIntent(t, original);
+  if (__siteIntent) return { tool: 'searchsite', args: { site: __siteIntent.site, query: __siteIntent.query } };
 
   // ─── GENERATE GAMBAR (AI IMAGE) — CEK LOKAL DULU, JANGAN LEWAT think() ───
   // Bug nyata dilaporkan owner 13 Sep 2026: ".novaagent buatkan gambar
