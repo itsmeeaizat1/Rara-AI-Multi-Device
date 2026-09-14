@@ -2114,3 +2114,12 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - E2E `test/playspotify-e2e/` 9/9 (urutan field, Format gak ada kbps ngarang, fallback genre kosong) + import guard 8/8.
 - VPS: `git pull && pm2 restart` → `.playspotify faded alan walker` → cek card muncul DIBAWAH audio.
 - **Belum disentuh**: `.spotifyplay2` (engine beda — spotifydown.org, punya sendiri klaim "MP3 320kbps" yang valid buat servis itu) & `.spotplay` (engine beda — novaApi.azbry, gak ada info card sama sekali). Bisa disamain juga kalau owner mau.
+
+## Spotify Play — Card Disamain Lintas Engine (BARU 14 Sep 2026)
+- Request owner: **"disamain krna beda endpoint tp untuk dichat sama"** — `.playspotify` (spotidown.app), `.spotifyplay2` (spotifydown.org), `.spotplay` (azbry) beda mesin pencari/download total, tapi sekarang output di chat **identik strukturnya**.
+- **BARU `src/lib/nova-spotify-play-card.js`** — satu builder card dipakai bareng ketiga plugin: `buildSpotifyPlayCard()` (field Judul/Album/Genre/Durasi/Artis/Format, baris kosong, Link — dikirim DIBAWAH media) + `enrichSpotifyMeta()` (isi Album/Genre/Durasi yang kosong dari engine asli via iTunes Search, best-effort, short-circuit kalau gak ada yang perlu di-enrich).
+- **Format per-engine TETAP beda** (STRICT, gak ngarang angka): `.playspotify` & `.spotplay` → `"Audio MP3"` (bitrate gak diketahui); `.spotifyplay2` → `"MP3 320kbps"` (spotifydown.org emang fixed rip 320kbps, klaim lama valid).
+- **`.spotplay` (azbry) DULU GAK PUNYA CARD SAMA SEKALI** (cuma kirim file audio doang) — sekarang dapet card lengkap juga.
+- **GOTCHA live-check 14 Sep 2026**: `.spotplay` (azbry `/api/download/spoplay`) → **403 KONSISTEN** (source spotify.com kena blok, 3/3 percobaan) — kode & card format tetap dipasang, otomatis jalan begitu upstream pulih, STRICT error asli kalau masih mati. `.spotifyplay2` (spotifydown.org) → search endpoint balikin **JS challenge redirect** (anti-bot, bukan JSON) — juga kemungkinan mati saat ini, sama treatment.
+- E2E `test/spotify-play-card-e2e/` 11/11 (struktur field identik lintas engine + format beda + enrich short-circuit + ketiga plugin pakai lib bersama, bukan duplikat) + `test/playspotify-e2e/` 9/9 (updated) + import guard 8/8.
+- VPS: `git pull && pm2 restart` → `.playspotify faded` / `.spotifyplay2 faded` / `.spotplay faded` (dua yang terakhir mungkin masih error upstream — itu bukan bug bot, upstream-nya lagi diblokir).

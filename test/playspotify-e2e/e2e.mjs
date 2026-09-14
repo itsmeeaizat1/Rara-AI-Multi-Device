@@ -8,12 +8,13 @@ function check(name, cond, extra = "") {
   else { fail++; w(`  ❌ ${name}${extra ? " — " + extra : ""}`); }
 }
 
-const { buildPlaySpotifyInfoCard } = await import("../../plugins/search/playspotify.js");
+const { buildSpotifyPlayCard: buildPlaySpotifyInfoCard } = await import("../../src/lib/nova-spotify-play-card.js");
 
 // ── 1. Card lengkap (semua field ada) ──
 w("\n— card lengkap —");
 {
   const text = buildPlaySpotifyInfoCard({
+    format: "Audio MP3",
     title: "Faded",
     album: "Faded - EP",
     genre: "Dance",
@@ -47,6 +48,7 @@ w("\n— card lengkap —");
 w("\n— card tanpa genre (fallback -) —");
 {
   const text = buildPlaySpotifyInfoCard({
+    format: "Audio MP3",
     title: "Lagu Random Banget",
     album: "Album Random",
     genre: null,
