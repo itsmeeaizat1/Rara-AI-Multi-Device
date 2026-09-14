@@ -183,22 +183,32 @@ function findImageUrls(d) {
  * Endpoint image zelapi (kategori /ai-image).
  * @param {string} path path lengkap tanpa base (ai-image/bingimage)
  * @param {string} prompt teks/prompt
- * @param {{imageUrl?: string, needImage?: boolean}} opts
+ * @param {{imageUrl?: string, imageUrl2?: string, imageParam?: string, imageParam2?: string, needImage?: boolean, noText?: boolean, extra?: object}} opts
  * @returns {Promise<{ok:boolean, images?:string[], buffer?:Buffer, error?:string}>}
  */
 export async function zelImageEndpoint(path, prompt, opts = {}) {
   const key = getKey();
   if (!key) return { ok: false, error: "API_KEY" };
-  if (!prompt || !prompt.trim()) return { ok: false, error: "TEXT_KOSONG" };
+  if (!opts.noText) {
+    if (!prompt || !prompt.trim()) return { ok: false, error: "TEXT_KOSONG" };
+  }
   if (opts.needImage && !opts.imageUrl) return { ok: false, error: "NEED_IMAGE" };
 
   // param teks sesuai docs endpoint (textParam), jangan kirim param nyasar
   const textParam = opts.textParam || "prompt";
-  const p = new URLSearchParams({ apikey: key, [textParam]: prompt.trim() });
+  const p = new URLSearchParams({ apikey: key });
+  if (!opts.noText || (prompt && prompt.trim())) {
+    p.set(textParam, (prompt || "").trim());
+  }
   if (opts.imageUrl) {
     // image param beda-beda per endpoint — kirim varian yang cocok aja via imageParam
     const ip = opts.imageParam || "image";
     p.set(ip, opts.imageUrl);
+  }
+  if (opts.imageUrl2) {
+    // image param kedua (e.g. outfit)
+    const ip2 = opts.imageParam2 || "image2";
+    p.set(ip2, opts.imageUrl2);
   }
   // param tambahan per endpoint (model, batch, template, dll)
   for (const [k, v] of Object.entries(opts.extra || {})) p.set(k, String(v));
