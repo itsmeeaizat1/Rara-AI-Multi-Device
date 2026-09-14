@@ -1,7 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotifyplay2.js — Spotify Play v2 (spotifydown scrape + tikwm fallback)
+// REVISI 14 Sep 2026 (owner: "disamain krna beda endpoint tp untuk dichat
+// sama") — card info sekarang pakai buildSpotifyPlayCard bareng
+// .playspotify/.spotplay (src/lib/nova-spotify-play-card.js), dikirim
+// DIBAWAH media. Album/Genre gak ada dari spotifydown.org → di-enrich
+// best-effort dari iTunes. Format TETAP "MP3 320kbps" (bukan ngarang —
+// spotifydown.org emang fixed rip 320kbps, klaim lama di kode ini valid).
 import axios from "axios";
-import { claraWrap, mediaCaption, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { buildSpotifyPlayCard, enrichSpotifyMeta } from "../../src/lib/nova-spotify-play-card.js";
 
 const pluginConfig = {
   name: "spotifyplay2",
@@ -55,21 +62,15 @@ async function handler(m, { sock }) {
     const trackId = track.id || track.trackId;
     const title = track.title || track.name;
     const artist = track.artists || track.artist;
+    const album = track.album?.name || track.album || null;
     const thumbnail = track.cover || track.image || track.album?.[0]?.url;
+    const trackUrl = `https://open.spotify.com/track/${trackId}`;
 
     const dlUrl = await downloadTrack(trackId);
     const audioRes = await axios.get(dlUrl, { responseType: "arraybuffer", timeout: 60000, headers: { "User-Agent": ua } });
     const buffer = Buffer.from(audioRes.data);
 
-    const _cap = mediaCaption({
-      platformIcon: "🎧", platformName: "Spotify",
-      title: title,
-      author: artist || null,
-      format: "MP3 320kbps",
-      method: "spotifydown",
-    });
-    await m.reply(_cap);
-
+    // 1. Media dulu (audio gak bisa caption di WhatsApp)
     await sock.sendMessage(m.chat, {
       audio: buffer,
       mimetype: "audio/mpeg",
@@ -78,10 +79,30 @@ async function handler(m, { sock }) {
       contextInfo: {
         externalAdReply: {
           title, body: artist || "Spotify Downloader",
-          thumbnailUrl: thumbnail, sourceUrl: `https://open.spotify.com/track/${trackId}`,
+          thumbnailUrl: thumbnail, sourceUrl: trackUrl,
         }
       },
     }, { quoted: m });
+
+    // 2. Enrich Album/Genre/Durasi yang kosong dari engine (best-effort, gak nimpa yang udah ada)
+    const meta = await enrichSpotifyMeta(title, artist, {
+      needAlbum: !album,
+      needGenre: true,
+      needDuration: !track.duration,
+    });
+
+    // 3. Card info DIBAWAH media — field sama persis .playspotify/.spotplay
+    const cardText = buildSpotifyPlayCard({
+      title,
+      album: album || meta.album,
+      genre: meta.genre,
+      duration: track.duration || meta.duration,
+      artist,
+      format: "MP3 320kbps",
+      url: trackUrl,
+    });
+    await m.reply(cardText);
+
     await m.react("🐣");
     await m.reply(novaBerhasil("spotifyplay2"));
   } catch (err) {

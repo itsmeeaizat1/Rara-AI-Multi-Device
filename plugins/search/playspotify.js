@@ -9,12 +9,12 @@
 // Link. Genre gak ada di data Spotify/spotidown — di-enrich best-effort
 // dari iTunes Search API (sama seperti .play). Format TIDAK diklaim kbps
 // spesifik (spotidown.app gak expose bitrate — STRICT, gak boleh ngarang).
-import axios from "axios";
 import { searchSpotiDown, downloadSpotiAudio } from "../../src/scraper/spotidown.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
 import { novaGagal, novaGangguan, novaDlUsage, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
+import { buildSpotifyPlayCard, enrichSpotifyMeta } from "../../src/lib/nova-spotify-play-card.js";
 
 const pluginConfig = {
   name: "playspotify",
@@ -27,27 +27,6 @@ const pluginConfig = {
   energi: 1,
   isEnabled: true,
 };
-
-let _itunesForTest = null;
-function _setItunesFnForTest(fn) { _itunesForTest = fn; }
-
-// Enrich Genre dari iTunes Search (best-effort, gak block kalau gagal).
-// Album/Durasi/Artis udah dapet asli dari Spotify (spotidown) — cuma Genre
-// yang gak ada di sana.
-async function fetchItunesGenre(title, artist) {
-  try {
-    if (_itunesForTest) return await _itunesForTest(title, artist);
-    const term = artist ? `${title} ${artist}` : title;
-    const { data } = await axios.get("https://itunes.apple.com/search", {
-      params: { term, limit: 1, media: "music" },
-      timeout: 8000,
-    });
-    return data?.results?.[0]?.primaryGenreName || null;
-  } catch (e) {
-    console.error("[Playspotify] iTunes genre error:", e.message);
-    return null;
-  }
-}
 
 // Cuplikan lirik LRCLIB (best-effort, gak block kalau gagal/timeout)
 async function fetchLyricsSnippet(title, artist) {
@@ -64,25 +43,8 @@ async function fetchLyricsSnippet(title, artist) {
   return null;
 }
 
-// Card info — field PERSIS pola .play (14 Sep 2026): Judul/Album/Genre/
-// Durasi/Artis/Format, baris kosong, Link — dikirim DIBAWAH media. Diekstrak
-// jadi fungsi murni biar testable tanpa mock seluruh chain search+download.
-export function buildPlaySpotifyInfoCard({ title, album, genre, duration, artist, url, lyricsSnippet, lyricsCommand }) {
-  const lines = [
-    `*Judul:* ${title || "-"}`,
-    `*Album:* ${album || "-"}`,
-    `*Genre:* ${genre || "-"}`,
-    `*Durasi:* ${duration || "-"}`,
-    `*Artis:* ${artist || "-"}`,
-    `*Format:* Audio MP3`,
-    ``,
-    `*Link:* ${url || "-"}`,
-  ];
-  if (lyricsSnippet) {
-    lines.push(``, `*Lirik:*`, lyricsSnippet, ``, `Lirik lengkap: ${lyricsCommand}`);
-  }
-  return lines.join("\n");
-}
+// Wrapper back-compat — builder asli sekarang di lib bersama (nova-spotify-play-card.js)
+export const buildPlaySpotifyInfoCard = (args) => buildSpotifyPlayCard({ ...args, format: "Audio MP3" });
 
 async function handler(m, { sock }) {
   const query = (m.args || []).join(" ").trim();
@@ -113,10 +75,11 @@ async function handler(m, { sock }) {
     const title = track.title || query;
 
     // Enrich Genre (iTunes, best-effort) + lirik — paralel, gak saling block
-    const [genre, lyricsData] = await Promise.all([
-      fetchItunesGenre(title, track.artist),
+    const [meta, lyricsData] = await Promise.all([
+      enrichSpotifyMeta(title, track.artist, { needGenre: true }),
       fetchLyricsSnippet(title, track.artist),
     ]);
+    const genre = meta.genre;
     const artist = lyricsData?.artist || track.artist || "-";
 
     // Step 3: File audionya DULU (card info dibawah — pola .play)
@@ -138,12 +101,13 @@ async function handler(m, { sock }) {
     );
 
     // Step 4: Card info DIBAWAH media
-    const cardText = buildPlaySpotifyInfoCard({
+    const cardText = buildSpotifyPlayCard({
       title,
       album: track.album,
       genre,
       duration: track.duration,
       artist,
+      format: "Audio MP3",
       url: "https://open.spotify.com/",
       lyricsSnippet: lyricsData?.snippet,
       lyricsCommand: `${m.prefix}lirikspotify ${title}`,
@@ -171,4 +135,4 @@ async function handler(m, { sock }) {
   }
 }
 
-export { pluginConfig as config, handler, _setItunesFnForTest };
+export { pluginConfig as config, handler };
