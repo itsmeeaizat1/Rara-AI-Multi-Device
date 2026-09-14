@@ -20,6 +20,7 @@ import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
 import { getAllSkills, awaitSkillPacks } from "../../src/lib/nova-skills.js";
 import { getMcpTools } from "../../src/lib/nova-mcp.js";
 import { searchYoutubeAndSend, detectYtSearchIntent } from "../../src/lib/nova-yt-search.js";
+import { searchSiteAndSend, detectSiteSearchIntent } from "../../src/lib/nova-site-search.js";
 
 // 💻 system prompt coder — request owner 11 Sep: "klo suruh buatkan kode html,
 // javascript dll pintar coding agent membuatkan dgn kepintarannya"
@@ -657,6 +658,29 @@ async function handler(m, { sock, db, deps } = {}) {
       } catch (e) {
         await m.react("❌");
         const em = claraWrap("superagent", "gagal cari video youtube: " + (e?.message || "error"), "error");
+        if (statusKey) { try { await sock.sendMessage(m.chat, { text: em, edit: statusKey }); return; } catch {} }
+        await m.reply(em);
+      }
+      return;
+    }
+
+    // ── DETEKSI LOKAL: cari di SITUS SEMBARANG (apkmirror/apkpure/dll)
+    // — INSTAN (request owner 14 Sep: "cba tes klo disuruh cari kayak
+    // carikan aplikasi whatsapp di apkmiror" — tes live planner milih
+    // tool download → 403, salah total). Chromium beneran buka web-nya
+    // via LIB BERSAMA nova-site-search.js, TANPA lewat planner AI).
+    const siteIntent = detectSiteSearchIntent(norm(task), task);
+    if (siteIntent) {
+      await reactPhase("🔍");
+      await setStatus("🔍 " + smallcapsText("superagent nyari di " + siteIntent.site + "..."));
+      const siteSend = deps.sitesearchSend || searchSiteAndSend;
+      try {
+        await siteSend(sock, m, { site: siteIntent.site, query: siteIntent.query });
+        if (statusKey) { try { await sock.sendMessage(m.chat, { text: "✅ " + smallcapsText("hasil cari di " + siteIntent.site + " udah aku kirim di atas ya"), edit: statusKey }); } catch {} }
+        await m.react("🐣");
+      } catch (e) {
+        await m.react("❌");
+        const em = claraWrap("superagent", "gagal cari di " + siteIntent.site + ": " + (e?.message || "error"), "error");
         if (statusKey) { try { await sock.sendMessage(m.chat, { text: em, edit: statusKey }); return; } catch {} }
         await m.reply(em);
       }
