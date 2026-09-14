@@ -208,3 +208,182 @@ export async function browserSearchYoutube(query, { limit = 5, timeoutMs = 30000
     lastUse = Date.now();
   }
 }
+
+// 🔹 BROWSER WATCH PAGE — buka halaman video (watch?v=...) di chromium dan
+// sedot info LENGKAP dari DOM: judul, channel, views persis, tanggal
+// upload, jumlah like, DESKRIPSI FULL (klik expand "...lagi"), plus daftar
+// video terkait. Request owner 14 Sep: "klo bsa sih jgn ngandelin yg lokal
+// tp pakai puppeteer chromium dia buka web youtube biar bsa cri info
+// lngkapnya sebebas agentnya gt" — hasil list page itu cuma ringkasan;
+// watch page punya semuanya. Semua ekstraksi best-effort (gak ada → "").
+export async function browserYtWatchInfo(url, { timeoutMs = 35000 } = {}) {
+  const u = String(url || "").trim();
+  if (!/youtube\.com\/watch\?v=/i.test(u)) throw new Error("bukan link watch page youtube");
+  const browser = await getBrowser();
+  const page = await browser.newPage();
+  try {
+    await page.setUserAgent(DESKTOP_UA);
+    await page.setViewport({ width: 1280, height: 900 });
+    await page.setExtraHTTPHeaders({ "Accept-Language": "id-ID,id;q=0.9,en;q=0.8" });
+    await page.goto(u, { waitUntil: "domcontentloaded", timeout: 25000 });
+    // tunggu judul render
+    await page
+      .waitForSelector("h1.ytd-watch-metadata, h1.ytWatchMetadataFragmentHostWatchMetadata, #above-the-fold #title", { timeout: 15000 })
+      .catch(() => {});
+
+    const info = await Promise.race([
+      page.evaluate(async () => {
+        const pick = (sel) => {
+          for (const s of (Array.isArray(sel) ? sel : [sel])) {
+            const el = document.querySelector(s);
+            if (el) {
+              const t = (el.textContent || el.getAttribute?.("title") || el.getAttribute?.("aria-label") || "").trim();
+              if (t) return t;
+            }
+          }
+          return "";
+        };
+
+        // durasi: meta itemprop="duration" content="PT4M50S" — selalu ada
+        // di watch page (list page DOM baru sering gak punya badge durasi)
+        let durIso = "";
+        try {
+          durIso = document.querySelector('meta[itemprop="duration"]')?.getAttribute("content") || "";
+        } catch {}
+
+        // judul video (DOM lama + baru)
+        const title =
+          pick("h1.ytd-watch-metadata yt-formatted-string") ||
+          pick("h1.ytd-watch-metadata") ||
+          pick("#above-the-fold #title") ||
+          pick("h1");
+
+        // channel
+        const channel =
+          pick("ytd-channel-name#channel-name a") ||
+          pick("ytd-channel-name a") ||
+          pick("#owner-channel-name a") ||
+          pick("yt-formatted-string#owner-channel-name a");
+
+        // info text: "1.234.567 x ditonton 3 minggu lalu" (DOM baru:
+        // ytd-watch-info-text; lama: #info #info-text). Format tampilan
+        // baru kadang "123 rb x ditonton" + tanggal terpisah.
+        const infoText =
+          pick("ytd-watch-info-text") ||
+          pick("#info-container #info-text") ||
+          pick("#count #info-text") ||
+          pick("#info");
+        const dateText =
+          pick("ytd-watch-info-text yt-formatted-string.bold") ||
+          "";
+
+        // like: aria-label tombol like — pola YouTube:
+        // "like this video along with 15 other people" (EN)
+        // "suka video ini bersama 15 pengguna lain" (ID)
+        // "suka ini" (belum ada like) → gak ada angka → 0.
+        // GOTCHA (ketemu live 14 Sep): JANGAN test /m/i longgar di teks
+        // label — kata "bersama"/"comment" aja udah ngandung 'm' → 15
+        // kebaca 15 jt. Wajib pola "along with/bersama N" + suffix TERIKAT.
+        let likes = 0;
+        try {
+          const btn = document.querySelector("#like-button button, like-button-view-model button");
+          const raw = (btn?.getAttribute("aria-label") || btn?.getAttribute("title") || "");
+          const m =
+            raw.match(/(?:along with|bersama)\s+([\d.,]+)\s*(rb|ribu|k|jt|juta|million|thousand)?/i) ||
+            raw.match(/^([\d.,]+)\s*(rb|ribu|k|jt|juta|million|thousand)?\s*(orang|people|pengguna|suka|like|penonton)/i);
+          if (m) {
+            let t = String(m[1]).trim();
+            if (/^\d+,\d{1,2}$/.test(t)) t = t.replace(",", ".");
+            else t = t.replace(/,/g, "");
+            t = t.replace(/\.(?=\d{3}($|\D))/g, "");
+            const num = parseFloat(t);
+            if (!isNaN(num)) {
+              const suf = String(m[2] || "").toLowerCase();
+              if (["jt", "juta", "million"].includes(suf)) likes = Math.round(num * 1e6);
+              else if (["rb", "ribu", "k", "thousand"].includes(suf)) likes = Math.round(num * 1e3);
+              else likes = Math.round(num);
+            }
+          }
+        } catch {}
+
+        // DESKRIPSI FULL — klik "...lagi"/expand dulu biar teks gak kepotong
+        let description = "";
+        try {
+          for (const sel of ["tp-yt-paper-button#expand", "#expand", "#description-inline-expander #expand"]) {
+            const btn = document.querySelector(sel);
+            if (btn) { btn.click(); break; }
+          }
+          await new Promise((r) => setTimeout(r, 600));
+          description =
+            (document.querySelector("#description-inline-expander")?.textContent ||
+              document.querySelector("ytd-text-inline-expander#expander #content")?.textContent ||
+              document.querySelector("ytd-text-inline-expander #attributed-snippet-text-content")?.textContent ||
+              "").trim();
+        } catch {}
+
+        // video terkait dari kolom samping (related)
+        const related = [];
+        try {
+          const nodes = [
+            ...document.querySelectorAll("ytd-compact-video-renderer"),
+            ...document.querySelectorAll("ytd-watch-next-secondary-results-renderer yt-lockup-view-model"),
+          ];
+          for (const el of nodes) {
+            if (related.length >= 4) break;
+            const a = el.querySelector('a[href*="/watch?v="], a[href^="/watch"]');
+            if (!a) continue;
+            let href = a.getAttribute("href") || "";
+            if (!href.includes("/watch?v=")) continue;
+            if (href.startsWith("/")) href = "https://www.youtube.com" + href;
+            href = href.split("&")[0];
+            const t =
+              (el.querySelector("#video-title, h3, .yt-lockup-metadata-view-model__title a")?.getAttribute("title") ||
+                el.querySelector("#video-title, h3, .yt-lockup-metadata-view-model__title a")?.textContent ||
+                a.getAttribute("aria-label") ||
+                "").trim();
+            if (t && !related.some((x) => x.url === href)) related.push({ title: t.slice(0, 120), url: href });
+          }
+        } catch {}
+
+        return { title, channel, infoText, dateText, durIso, likes, description, related };
+      }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("ekstraksi watch page timeout")), timeoutMs)),
+    ]);
+
+    // pecah infoText → views + tanggal ("1.234.567 x ditonton" / "3 minggu lalu")
+    let views = 0;
+    let ago = info.dateText || "";
+    try {
+      const parts = String(info.infoText || "").split(/\s{2,}|\u2022|\|/).map((x) => x.trim()).filter(Boolean);
+      for (const p of parts) {
+        if (/ditonton|views/i.test(p)) views = parseViews(p);
+        else if (!ago && /lalu|ago|streaming|premiere|jam|menit|hari|minggu|bulan|tahun/i.test(p)) ago = p;
+      }
+    } catch {}
+
+    // PT4M50S → "4:50"
+    let durationTs = "";
+    try {
+      const dm = String(info.durIso || "").match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+      if (dm) {
+        const H = parseInt(dm[1] || "0", 10), M = parseInt(dm[2] || "0", 10), S = parseInt(dm[3] || "0", 10);
+        const mm = H * 60 + M;
+        durationTs = mm + ":" + String(S).padStart(2, "0");
+      }
+    } catch {}
+
+    return {
+      title: info.title || "",
+      author: { name: info.channel || "" },
+      duration: durationTs ? { timestamp: durationTs } : null,
+      views,
+      ago,
+      likes: info.likes || 0,
+      description: (info.description || "").trim(),
+      related: info.related || [],
+    };
+  } finally {
+    await page.close().catch(() => {});
+    lastUse = Date.now();
+  }
+}

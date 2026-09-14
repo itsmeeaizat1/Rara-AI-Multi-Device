@@ -70,15 +70,45 @@ _setYtSearchDepsForTest({
   thumbGet: async () => Buffer.alloc(40000, 9),
   downloadVideoYtDlp: async (url, q) => ({ buffer: Buffer.alloc(45000, 1) }),
   toWhatsAppVideo: async (b) => b,
+  // 🔹 enrichment watch page (browser buka halaman video — info lengkap)
+  browseWatch: async (url) => ({
+    title: "Cara Cairkan Bot Alya MD — Deploy WhatsApp Bot (WATCH FULL)",
+    author: { name: "Alya MD Official" },
+    views: 9876543, ago: "3 minggu lalu", likes: 45600,
+    description: "Deskripsi FULL dari watch page: tutorial deploy step by step dari nol sampai jalan di VPS.",
+    related: [{ title: "Related Ala Watch", url: "https://youtube.com/watch?v=watchrel111" }],
+  }),
+  // 🔹 narasi alive — AI ngjelasin hasil pencariannya kayak ngomong
+  aiChat: async (prompt) => {
+    if (!prompt.includes("DATA HASIL PENCARIAN ASLI")) throw new Error("prompt narasi gak valid");
+    if (!prompt.includes("Deploy WhatsApp Bot (WATCH FULL)")) throw new Error("narasi gak dikasih data hasil enrich browser");
+    return "Nah ini dia — aku nemu video deploy Alya MD versi lengkap dari channel resminya, udah hampir 10 juta penonton dan 45 rb like. Videonya bahas dari nol sampe jalan. Mau aku unduh?";
+  },
 });
 const r1 = await searchYoutubeAndSend(sock, mMock, { query: "bot alya md" });
 t("2a. mode preview return via=yt-search", r1?.via === "yt-search" && r1?.mode === "preview");
-t("2b. preview kirim image + caption (gak ada video)", !!sent[0]?.image && sent[0].caption.includes("Cara Cairkan Bot Alya MD") && !sent.some(x => x.video));
+t("2b. preview kirim image + caption (gak ada video)", !!sent[0]?.image && sent[0].caption.includes("WATCH FULL") && !sent.some(x => x.video), sent[0]?.caption?.slice(0, 120));
 t("2c. hint unduh ada di caption preview", sent[0].caption.includes("unduh video") && sent[0].caption.includes(".playvideo"));
+t("2c1. enrichment: likes watch page muncul di kartu", sent[0].caption.includes("👍 45.6 rb"), sent[0].caption.slice(0, 250));
+t("2c2. enrichment: deskripsi FULL watch page (bukan versi list)", sent[0].caption.includes("Deskripsi FULL dari watch page"), sent[0].caption.slice(0, 400));
+const narr1 = sent.filter(x => x.text && !x.image && !x.video).map(x => String(x.text)).join(" | ");
+t("2c3. NARASI ALIVE kekirim setelah preview", narr1.includes("Nah ini dia — aku nemu video deploy Alya MD"), narr1.slice(0, 160));
 sent.length = 0;
 const r2 = await searchYoutubeAndSend(sock, mMock, { query: "bot alya md", wantDownload: true });
 t("2d. mode unduh return mode=unduh", r2?.mode === "unduh");
 t("2e. unduh kirim kartu teks + video (gak ada thumbnail)", !!sent.find(x => x.text) && !!sent.find(x => x.video) && !sent.find(x => x.image));
+const narr2 = sent.filter(x => x.text && !x.video).map(x => String(x.text)).join(" | ");
+t("2e1. NARASI ALIVE kekirim juga di mode unduh", narr2.includes("Nah ini dia — aku nemu video deploy Alya MD"), narr2.slice(0, 200));
+// narasi AI mati → skip senyap, kartu tetap lengkap
+_setYtSearchDepsForTest({ aiChat: async () => { throw new Error("AI down"); } });
+sent.length = 0;
+const r3 = await searchYoutubeAndSend(sock, mMock, { query: "bot alya md" });
+t("2f. narasi AI down → skip senyap (kartu tetap kekirim)", !!sent.find(x => x.image) && r3?.mode === "preview", JSON.stringify(sent.map(x => Object.keys(x))));
+// enrichment watch page mati → data list-page tetap dipakai
+_setYtSearchDepsForTest({ browseWatch: async () => { throw new Error("watch page down"); } });
+sent.length = 0;
+const r4 = await searchYoutubeAndSend(sock, mMock, { query: "bot alya md" });
+t("2g. enrichment gagal → data list-page tetap jalan (gak mati)", !!sent.find(x => x.image) && sent[0].caption.includes("Cara Cairkan Bot Alya MD — Deploy WhatsApp Bot"), sent[0]?.caption?.slice(0, 160));
 
 // ═══ 3. HANDLER .aisuperagent — DETEKSI LOKAL INSTAN ═══
 w("\n— handler .aisuperagent: deteksi lokal —");
