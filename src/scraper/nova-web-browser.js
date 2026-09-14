@@ -85,6 +85,48 @@ export async function browserSiteSearch(site, query, { limit = 5, timeoutMs = 30
   }
 }
 
+// 🔹 WEB SEARCH UMUM (tanpa site:) — buat .googleairich: query bebas,
+// hasil DDG polos {title, url, snippet} — pola sama kayak browserSiteSearch
+// (chromium beneran, DDG blok request axios polos dari IP datacenter).
+export async function browserWebSearch(query, { limit = 5, timeoutMs = 30000 } = {}) {
+  const q = String(query || "").trim();
+  if (!q) throw new Error("yang mau dicari kosong");
+  const browser = await getBrowser();
+  const page = await browser.newPage();
+  try {
+    await page.setUserAgent(DESKTOP_UA);
+    await page.setViewport({ width: 1280, height: 900 });
+    await page.setExtraHTTPHeaders({ "Accept-Language": "en-US,en;q=0.9,id;q=0.8" });
+    await page.goto("https://html.duckduckgo.com/html/?q=" + encodeURIComponent(q), { waitUntil: "domcontentloaded", timeout: 25000 });
+    await new Promise((r) => setTimeout(r, 900));
+    const items = await Promise.race([
+      page.evaluate((max) => {
+        const out = [];
+        const seen = new Set();
+        for (const el of document.querySelectorAll(".result__a, a.result__a")) {
+          if (out.length >= max) break;
+          let href = el.getAttribute("href") || "";
+          const uddg = (href.match(/[?&]uddg=([^&]+)/) || [])[1];
+          if (uddg) href = decodeURIComponent(uddg);
+          if (!/^https?:\/\//i.test(href)) continue;
+          const title = (el.textContent || "").trim();
+          if (!title || seen.has(href)) continue;
+          seen.add(href);
+          const wrap = el.closest(".result, .web-result");
+          const snippet = (wrap?.querySelector(".result__snippet")?.textContent || "").trim();
+          out.push({ title, url: href, snippet });
+        }
+        return out;
+      }, limit),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("ekstraksi DOM timeout")), timeoutMs)),
+    ]);
+    if (!items.length) throw new Error("gak nemu hasil buat query itu (coba query lain)");
+    return items;
+  } finally {
+    await page.close().catch(() => {});
+  }
+}
+
 // 🔹 BUKA HALAMAN → FAKTA — chromium buka halaman hasil teratas dan
 // sedot: judul, meta description, potongan isi teks utama (bukan
 // boilerplate nav/footer — ambil dari main/article/#content kalau ada).
