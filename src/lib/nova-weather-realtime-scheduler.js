@@ -14,6 +14,8 @@ import {
   formatWeatherUpdate,
   conditionKey,
   realtimeKey,
+  weatherGroupOf,
+  formatWeatherChange,
 } from "./nova-weather-notify.js";
 import { evaluateWeatherAlert, formatAlertMessage, buildThresholds } from "./nova-weather-alert.js";
 
@@ -21,9 +23,55 @@ let schedulerInterval = null;
 let lastSent = {}; // mode jadwal: { "pagi": "2026-09-02", ... } per key per day
 let intervalState = { lastSentMs: 0, lastKey: "" }; // mode interval dedup ala script
 // 🔹 MODE OTOMATIS (request owner 12 Sep 2026): cek tiap N menit, kirim
-// notifikasi PAS cuaca berubah (realtimeKey beda). Anti-spam: jeda minimal
-// antar kirim (minGapMinutes) biar kondisi bolak-balik gak banjir.
-let autoState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0, recentKeys: [] };
+// notifikasi PAS cuaca berubah. UPGRADE 15 Sep 2026 (diagnosis owner:
+// "notif gak kekirim tiap cuaca berganti"):
+//   * DETEKSI PER GRUP CUACA (cerah/mendung/hujan/petir) — bukan per
+//     suhu/kondisi mentah. Cerah→Cerah Berawan = satu grup, gak usah
+//     notif. Cerah→Hujan = beda grup → kirim. (kunci dokumen diagnosis)
+//   * PERSIST ke db.setting("weatherRealtimeAuto") — state grup terakhir
+//     tersimpan di database, TAHAN RESTART (dulu variabel RAM, hilang
+//     tiap restart — penyebab #1 dokumen diagnosis). Cuaca berganti
+//     pas bot mati → langsung kekirim begitu bot nyala.
+let autoState = { lastCheckMs: 0, lastGroup: "", lastCondition: "", lastSentMs: 0, recentKeys: [], loaded: false };
+const AUTO_DB_KEY = "weatherRealtimeAuto";
+
+// Muat state grup terakhir dari database (sekali, lazy — dipanggil di
+// awal branch otomatis biar import-time gak butuh db siap).
+function loadAutoStateFromDb() {
+  if (autoState.loaded) return;
+  autoState.loaded = true;
+  try {
+    const db = getDatabase();
+    const saved = db.setting(AUTO_DB_KEY);
+    if (saved && typeof saved === "object") {
+      autoState.lastGroup = saved.lastGroup || "";
+      autoState.lastCondition = saved.lastCondition || "";
+      autoState.lastSentMs = Number(saved.lastSentMs) || 0;
+      // recentKeys expired dibuang (clock restart beda jauh)
+      const now = Date.now();
+      autoState.recentKeys = (Array.isArray(saved.recentKeys) ? saved.recentKeys : []).filter((r) => r && now - (r.ms || 0) < 24 * 3600_000);
+      if (saved.lastGroup) console.log("[weather-realtime] State grup dipulihkan dari db:", saved.lastGroup);
+    }
+  } catch (e) {
+    console.error("[weather-realtime] Gagal pulihkan state otomatis:", e.message);
+  }
+}
+
+// Simpan state grup ke database — dipanggil tiap kali state berubah
+// (kirim notif / deteksi grup baru) biar restart gak kehilangan jejak.
+function saveAutoStateToDb() {
+  try {
+    getDatabase().setting(AUTO_DB_KEY, {
+      lastGroup: autoState.lastGroup,
+      lastCondition: autoState.lastCondition,
+      lastSentMs: autoState.lastSentMs,
+      recentKeys: autoState.recentKeys,
+      savedAt: Date.now(),
+    });
+  } catch (e) {
+    console.error("[weather-realtime] Gagal simpan state otomatis:", e.message);
+  }
+}
 // Seam e2e: fetch bisa di-inject biar tes mode otomatis deterministik
 let weatherFetcher = fetchWeatherForSettings;
 // Alert cuaca ekstrem: cek tiap 30 mnt, dedup pemicu sama 3 jam,
@@ -48,7 +96,9 @@ function normalizeSettings(settings) {
     // Sekarang: jadwal cuma dipakai kalau memang ada schedules-nya,
     // sisanya auto-fallback ke mode interval (ala script, tiap N jam
     // kirim kalau kondisi cuaca berubah).
-    notificationMode: settings.notificationMode === "jadwal" && !hasSchedules ? "interval" : (settings.notificationMode || "interval"),
+    // UPGRADE 15 Sep: fallback otomatis (notif pas cuaca berganti) —
+    // sesuai harapan owner, bukan interval 2 jam lagi
+    notificationMode: settings.notificationMode === "jadwal" && !hasSchedules ? "otomatis" : (settings.notificationMode || "otomatis"),
     intervalHours: Number(settings.intervalHours) >= 1 ? Number(settings.intervalHours) : 2,
     // mode otomatis: cek tiap N menit (1-60, default 5) + jeda min antar kirim (default 10)
     autoCheckMinutes: Number(settings.autoCheckMinutes) >= 1 ? Math.min(60, Math.round(Number(settings.autoCheckMinutes))) : 5,
@@ -171,6 +221,7 @@ export async function checkAndSend(sock) {
   //    notifikasi") — cek tiap N menit, kirim SEGERA kalau realtimeKey
   //    (kondisi + suhu) berubah. Jeda min minGapMinutes antar kirim. ──
   if (settings.notificationMode === "otomatis") {
+    loadAutoStateFromDb(); // pulihkan state grup dari db (tahan restart)
     const checkMs = (settings.autoCheckMinutes || 5) * 60_000;
     const gapMs = (settings.minGapMinutes || 10) * 60_000;
     const now = Date.now();
@@ -180,29 +231,37 @@ export async function checkAndSend(sock) {
     try {
       const data = await weatherFetcher(settings);
       if (!data) return;
-      const key = realtimeKey(data);
-      // cuaca belum berubah → diam
-      if (key === autoState.lastKey) return;
-      // ANTI FLIP-FLOP: kondisi yang BARUSAN dikirim (< gap) ditahan — biar
-      // Cerah→Hujan→Cerah→Hujan bolak-balik gak banjir. Kondisi BARU beda
+      // DETEKSI PER GRUP (upgrade 15 Sep 2026): grup = cerah/mendung/
+      // hujan/hujan_petir. Suhu naik-turun 1°C atau kode 61→63 gak
+      // memicu apa-apa — cuma GRUP yang berubah yang dikirim.
+      const grp = weatherGroupOf(data);
+      const cond = data.condition || grp;
+      console.log(`[weather-realtime] Cek otomatis: grup=${grp} kondisi=${cond} | sebelumnya=${autoState.lastGroup || "(belum ada)"}`);
+      // grup belum berubah → diam (cuma refresh kondisi terakhir)
+      if (grp === autoState.lastGroup) return;
+      // ANTI FLIP-FLOP: grup yang BARUSAN dikirim (< gap) ditahan — biar
+      // Cerah→Hujan→Cerah→Hujan bolak-balik gak banjir. Grup BARU beda
       // tetep langsung kirim (maks 1 per siklus cek, makanya gak bisa spam).
       autoState.recentKeys = (autoState.recentKeys || []).filter((r) => now - r.ms < gapMs);
-      if (autoState.recentKeys.some((r) => r.key === key)) return;
+      if (autoState.recentKeys.some((r) => r.key === grp)) return;
 
       const name = settings.provider === "bmkg"
         ? (settings.location?.name || "Wilayah BMKG")
         : (settings.location?.name || "Lokasi");
-      const message = formatWeatherUpdate(data, name, settings.intervalHours, { autoMinutes: settings.autoCheckMinutes || 5 });
+      // Pesan format dokumen diagnosis: CUACA BERUBAH + Dari/Ke + suhu
+      const message = formatWeatherChange(data, name, autoState.lastGroup, autoState.lastCondition);
 
       let targets = [settings.target].filter(Boolean);
       if (getAutoTargetConfig("autoweatherrealtime")) {
         targets = (await resolveAutoTargets(sock, "autoweatherrealtime")).jids;
       }
       for (const tgt of targets) await sock.sendMessage(tgt, { text: message });
-      autoState.lastKey = key;
+      console.log("[weather-realtime] ✅ Mode otomatis: grup cuaca berubah", autoState.lastGroup || "-", "→", grp, "— kirim ke", targets.length, "target");
+      autoState.lastGroup = grp;
+      autoState.lastCondition = cond;
       autoState.lastSentMs = now;
-      autoState.recentKeys = [...(autoState.recentKeys || []), { key, ms: now }];
-      console.log("[weather-realtime] ✅ Mode otomatis: cuaca berubah, kirim ke", targets.length, "target");
+      autoState.recentKeys = [...(autoState.recentKeys || []), { key: grp, ms: now }];
+      saveAutoStateToDb();
     } catch (e) {
       console.error("[weather-realtime] Mode otomatis error:", e.message);
     }
@@ -260,7 +319,20 @@ export function resetAlertState() {
 
 // Reset state mode otomatis (dipanggil pas notification on / ganti mode)
 export function resetAutoState() {
-  autoState = { lastCheckMs: 0, lastKey: "", lastSentMs: 0, recentKeys: [] };
+  autoState = { lastCheckMs: 0, lastGroup: "", lastCondition: "", lastSentMs: 0, recentKeys: [], loaded: true };
+  try { getDatabase().setting(AUTO_DB_KEY, null); } catch { /* diam */ }
+}
+
+// Set state grup manual (command .autoweatherrealtime tesubah — tes paksa
+// dari dokumen diagnosis: pura-pura grup terakhir cerah, cek berikutnya
+// kalau realita beda grup → notif ASLI kekirim).
+export function setAutoGroupForTest(group, condition) {
+  loadAutoStateFromDb();
+  autoState.lastGroup = String(group || "cerah");
+  autoState.lastCondition = condition || autoState.lastGroup;
+  autoState.lastCheckMs = 0; // biar cek berikutnya langsung jalan
+  autoState.recentKeys = [];
+  saveAutoStateToDb();
 }
 
 // Hanya untuk testing (e2e) — set state otomatis langsung
