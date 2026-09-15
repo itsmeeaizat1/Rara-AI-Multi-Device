@@ -12,12 +12,19 @@
 //   • LIBUR PANJANG: rangkaian libur nasional + weekend berurutan min 3 hari
 //     (weekend polos gak dianggap — WAJIB ada libur nasional di dalamnya)
 //
-// Kalender TETAP (Gregorian): hari besar nasional + tanggal merah libur
-// TETAP (1 Jan, 1 Mei, 17 Agu, 10 Nov, 25 Des). Libur bergerak (Idulfitri,
-// Nyepi, dll — kalender Hijriah/Candra) TIDAK di-hardcode biar gak pernah
-// salah tanggal: owner tinggal `.haribesar tambah DD-MM-YYYY | Nama` untuk
-// hari itu, atau `.haribesar tambah DD-MM | Nama` untuk tahunan tetap.
+// UPGRADE KEDUA (owner 16 Sep 2026 — "jgn pakai api tp pakai dependencies
+// aja"): GAK PAKAI API EKSTERNAL — data libur nasional dari PACKAGE
+// date-holidays (dependencies package.json, tahan lama, satu titik kegagalan
+// lebih sedikit). Libur bergerak (Idulfitri, Nyepi, Imlek, Waisak, dll)
+// otomatis dari package per tahun; custom owner tetap jadi
+// override/pelengkap (cuti bersama SKB, koreksi tanggal).
+//
+// SANITASI DATA: date-holidays 'ID' punya entri MAULID dobel per tahun
+// (varian kalender salah — mis. 16 Jan 2026 valid + 25 Agu 2026 ngawur):
+// entri nama sama yang muncul < 300 hari setelah kemunculan sebelumnya
+// DIBUANG otomatis.
 
+import Holidays from "date-holidays";
 import { getDatabase } from "./nova-database.js";
 import { claraWrap } from "./nova-menu-style.js";
 
@@ -58,7 +65,7 @@ const HARI_TAHUNAN = {
   "24-10": { nama: "Hari Dokter Nasional", emoji: "👨‍⚕️", merah: false },
   "27-10": { nama: "Hari Pustakawan Nasional", emoji: "🏛️", merah: false },
   "28-10": { nama: "Hari Sumpah Pemuda", emoji: "💪", merah: false },
-  "10-11": { nama: "Hari Pahlawan", emoji: "🎖️", merah: true },
+  "10-11": { nama: "Hari Pahlawan", emoji: "🎖️", merah: false }, // peringatan, BUKAN libur nasional
   "12-11": { nama: "Hari Ayah Nasional", emoji: "👨", merah: false },
   "20-11": { nama: "Hari Anak Sedunia", emoji: "🎈", merah: false },
   "25-11": { nama: "Hari Guru Nasional", emoji: "🎓", merah: false },
@@ -69,6 +76,59 @@ const HARI_TAHUNAN = {
   "22-12": { nama: "Hari Ibu", emoji: "🌷", merah: false },
   "25-12": { nama: "Hari Raya Natal", emoji: "🎄", merah: true },
 };
+
+// ─── DATE-HOLIDAYS (package — TANPA API eksternal) ───
+// map per tahun { "YYYY-MM-DD": "Nama Libur" } — public holiday Indonesia,
+// termasuk libur bergerak (Idulfitri, Nyepi, Imlek, Waisak, dll).
+let __hd = null;
+const __hdCache = {};
+function _hd() {
+  if (__hd === null) {
+    try { __hd = new Holidays("ID"); } catch (e) { console.error("haribesar date-holidays init error:", e.message); __hd = false; }
+  }
+  return __hd || null;
+}
+function _hdPublicMap(tahun) {
+  const y = Number(tahun);
+  if (__hdCache[y]) return __hdCache[y];
+  const map = {};
+  const hd = _hd();
+  if (hd) {
+    try {
+      const list = (hd.getHolidays(y) || []).filter((h) => h.type === "public");
+      const lastSeen = {}; // anti data-rusak: nama dobel < 300 hari dibuang
+      for (const h of list) {
+        const ymd = String(h.date || "").slice(0, 10);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) continue;
+        const nm = String(h.name || "Libur Nasional").trim();
+        const ts = Date.parse(ymd);
+        const prev = lastSeen[nm];
+        if (prev !== undefined && ts - prev < 300 * 86400000) continue;
+        lastSeen[nm] = ts;
+        if (map[ymd]) map[ymd] += " & " + nm; // 2 libur tanggal sama (mis. Maulid+Natal 25-12-2027)
+        else map[ymd] = nm;
+      }
+    } catch (e) { console.error("haribesar getHolidays error:", e.message); }
+  }
+  __hdCache[y] = map;
+  return map;
+}
+
+/** emoji khas per jenis libur package (fallback 🎉) */
+function _emojiForNama(nama) {
+  const s = String(nama || "").toLowerCase();
+  if (/fitri/.test(s)) return "🌙";
+  if (/adha|qurban|maulid|islam|mikraj|isra/.test(s)) return "🕌";
+  if (/natal|christmas/.test(s)) return "🎄";
+  if (/yesus|kristus/.test(s)) return "✝️";
+  if (/nyepi/.test(s)) return "🕯️";
+  if (/imlek/.test(s)) return "🧧";
+  if (/waisak/.test(s)) return "☸️";
+  if (/pancasila|kemerdekaan/.test(s)) return "🇮🇩";
+  if (/buruh/.test(s)) return "👷";
+  if (/tahun baru/.test(s)) return "🎆";
+  return "🎉";
+}
 
 // template fallback kalau AI inspirasi lambat/down
 const INSPIRASI_TEMPLATE = [
@@ -108,6 +168,7 @@ function parseYmd(ymd) {
   if (!y || !m || !dd) return null;
   const dt = new Date(Date.UTC(y, m - 1, dd));
   return {
+    y, mm: m, dd,
     ddmm: `${pad(dd)}-${pad(m)}`, // DD-MM — konvensi Indonesia, konsisten dgn HARI_TAHUNAN
     hari: NAMA_HARI[dt.getUTCDay()],
     tanggalIndo: `${NAMA_HARI[dt.getUTCDay()]}, ${dd} ${HARI_BULAN[m - 1]} ${y}`,
@@ -134,7 +195,7 @@ function isWeekend(ymd) {
   return p2?.hari === "Sabtu" || p2?.hari === "Minggu";
 }
 
-/** libur nasional = hari besar DENGAN flag merah (bukan sekadar peringatan) */
+/** libur nasional = custom merah → built-in merah → public holiday package */
 export function getLiburOn(ymd) {
   const e = getHariBesar(ymd);
   return e && e.merah ? e : null;
@@ -193,6 +254,20 @@ export function listLiburMendatang(fromYmd = null, days = 90) {
   return out;
 }
 
+/** daftar hari PENTING (peringatan — bukan libur nasional) mendatang,
+ * sumber: built-in + custom owner (package date-holidays = libur, gak masuk).
+ * Dipakai command .haripenting */
+export function listHariPentingMendatang(fromYmd = null, days = 90) {
+  const base = fromYmd || wibNow().ymd;
+  const out = [];
+  for (let i = 0; i <= days; i++) {
+    const y = ymdAdd(base, i);
+    const e = getHariBesar(y);
+    if (e && !e.merah) out.push({ ymd: y, nama: e.nama, emoji: e.emoji || "✨", h: i });
+  }
+  return out;
+}
+
 /**
  * getHariBesar(ymd) → entry hari ini atau null.
  * Urutan: custom exact (YYYY-MM-DD, sekali pakai tahun itu) → custom tahunan
@@ -208,6 +283,9 @@ export function getHariBesar(ymd) {
   if (yearly) return { nama: yearly.nama, emoji: yearly.emoji || "🎉", merah: !!yearly.merah, custom: true };
   const builtin = HARI_TAHUNAN[p.ddmm];
   if (builtin) return { ...builtin, custom: false };
+  // package date-holidays: libur nasional (bergerak) → hari besar merah
+  const hdNama = _hdPublicMap(p.y)[ymd];
+  if (hdNama) return { nama: hdNama, emoji: _emojiForNama(hdNama), merah: true, custom: false, paket: true };
   return null;
 }
 

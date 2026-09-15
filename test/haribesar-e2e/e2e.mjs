@@ -38,7 +38,17 @@ t("1e. hari biasa → null", getHariBesar("2026-09-16") === null)
 const natal = getHariBesar("2026-12-25")
 t("1f. 25 Desember = Natal + merah", /Natal/i.test(natal?.nama || "") && natal?.merah === true)
 const pahlawan = getHariBesar("2026-11-10")
-t("1g. 10 November = Hari Pahlawan + merah", /Pahlawan/i.test(pahlawan?.nama || "") && pahlawan?.merah === true)
+t("1g. 10 November = Hari Pahlawan (peringatan, BUKAN libur)", /Pahlawan/i.test(pahlawan?.nama || "") && pahlawan?.merah === false && getLiburOn("2026-11-10") === null)
+
+// ═══ 1h-1j. PACKAGE date-holidays (tanpa API eksternal) ═══
+const fitri = getLiburOn("2026-03-20")
+t("1h. libur BERGERAK dari package: Idulfitri 20-03-2026", /idul ?fitri/i.test(fitri?.nama || "") && fitri?.merah === true && fitri?.paket === true, JSON.stringify(fitri))
+t("1i. Nyepi 19-03-2026 dari package", /nyepi/i.test(getHariBesar("2026-03-19")?.nama || ""))
+t("1j. SANITASI: data Maulid rusak (25-08-2026, 14-08-2027) dibuang", getLiburOn("2026-08-25") === null && getLiburOn("2027-08-14") === null, JSON.stringify([getLiburOn("2026-08-25"), getLiburOn("2027-08-14")]))
+t("1k. Maulid valid Jan 2027 tetap kebaca", /maulid/i.test(getLiburOn("2027-01-05")?.nama || ""))
+const natalDobel = getLiburOn("2027-12-25")
+t("1l. 2 libur tanggal sama (25-12-2027 Natal+Maulid) tetap libur", /natal/i.test(natalDobel?.nama || "") && natalDobel?.merah === true)
+t("1m. chain libur panjang NYEPI+IDULFITRI 2026 (19-22 Mar)", (cariLiburPanjang("2026-03-19", 0)?.totalHari || 0) >= 4, JSON.stringify(cariLiburPanjang("2026-03-19", 0)))
 
 // ═══ 2. Custom day (libur bergerak pakai tanggal lengkap) ═══
 const add = addCustomDay("20-03-2026", "Idulfitri 1447 H", true)
@@ -113,8 +123,8 @@ t("3p. greeting Natal ada info 3 hari beruntun", sent.some((s) => s.to === DM &&
 addCustomDay("04-01-2027", "Libur Uji Coba", true)
 sent.length = 0
 const rLong = await _haribesarRunTickForTest(mockSock, "2026-12-30")
-t("3q. notif LIBUR PANJANG terpisah (chain 4 hari mulai 01-01)", rLong.sent === 3 && rLong.events.includes("panjang"), JSON.stringify(rLong))
-t("3r. isi libur panjang: 4 hari + sampai", sent.some((s) => /4 ʜᴀʀɪ|4 hari/.test(String(s.msg.text || ""))))
+t("3q. notif LIBUR PANJANG terpisah (chain 5 hari mulai 01-01)", rLong.sent === 3 && rLong.events.includes("panjang"), JSON.stringify(rLong))
+t("3r. isi libur panjang: 5 hari (Tahun Baru+Uji Coba+Maulid paket)", sent.some((s) => /5 ʜᴀʀɪ|5 hari/.test(String(s.msg.text || ""))))
 
 // — dispatch 2027-01-01: greeting Tahun Baru + chain 4-hari merge + H-3 (04-01) —
 sent.length = 0
@@ -168,7 +178,7 @@ t("5g. owner .haribesar all on ok", getAllGroups() === true)
 await handler(mockM(["list"], { isOwner: true }), { sock: mockSock, args: ["list"], prefix: "." })
 t("5h. list custom + upcoming muncul", /2027-06-15|20\d\d-\d\d-\d\d/.test(replies.at(-1) || ""), (replies.at(-1) || "").slice(0, 120))
 
-// ═══ 5i. subcommand .haribesar libur — daftar libur 90 hari + label H-X ═══
+// ═══ 5i-5o. subcommand libur/penting + plugin .harilibur (tanpa API) ═══
 {
   const now = new Date(Date.now() + 7 * 3600 * 1000)
   const d20 = new Date(now.getTime() + 20 * 86400000)
@@ -181,6 +191,25 @@ t("5h. list custom + upcoming muncul", /2027-06-15|20\d\d-\d\d-\d\d/.test(replie
   await handler(mockM(["libur"]), { sock: mockSock, args: ["libur"], prefix: "." })
   const rlibur = replies.at(-1) || ""
   t("5k. .haribesar libur nampilin tanggal + label H-20", rlibur.includes(customDate) && /ʜ-20|H-20/.test(rlibur), rlibur.slice(0, 200))
+  t("5l. .haribesar libur baca libur BERGERAK package (25-12-2026)", rlibur.includes("25-12-2026"), rlibur.slice(0, 300))
+
+  // .haripenting (alias tanpa sub) + .haribesar penting
+  const mockMPenting = (args) => ({ ...mockM(args), command: "haripenting" })
+  await handler(mockMPenting([]), { sock: mockSock, args: [], prefix: "." })
+  const rp = replies.at(-1) || ""
+  t("5m. .haripenting (alias) → daftar hari penting (28-10 Sumpah Pemuda)", rp.includes("28-10"), rp.slice(0, 160))
+  await handler(mockM(["penting"]), { sock: mockSock, args: ["penting"], prefix: "." })
+  t("5n. .haribesar penting → hari penting (bukan libur)", /28-10|21-04|25-11/.test(replies.at(-1) || ""))
+
+  // plugin .harilibur ROMBAK — data lokal package, tanpa API eksternal
+  const { handler: liburHandler } = await import(R + "/plugins/info/harilibur.js")
+  const lReplies = []
+  const mLibur = { chat: GID, isGroup: true, isOwner: true, reply: async (txt) => lReplies.push(String(txt)) }
+  await liburHandler(mLibur, { sock: mockSock })
+  const rl = (lReplies.at(-1) || "")
+  t("5o. .harilibur tanpa API — daftar libur package (25-12-2026) + tanpa error", rl.includes("25-12-2026") && rl.length > 50, rl.slice(0, 200))
+  const src = await import("node:fs").then(fs => fs.readFileSync(path.resolve("plugins/info/harilibur.js"), "utf8"))
+  t("5p. .harilibur gak pakai axios/API eksternal lagi", !/axios|nexray|api\./.test(src))
 }
 
 // ═══ 6. Import guard senyap: modul + plugin ke-import tanpa error ═══
