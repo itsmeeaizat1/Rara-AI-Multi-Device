@@ -39,6 +39,43 @@ async function _levelCardKit() {
   return { createCanvas, loadImage: _loadImageForTest || loadImage };
 }
 
+// _drawValueChip — chip nilai kanan-atas (owner 16 Sep 2026: angka besar
+// 88-90px kegedean di kartu, diminta dikecilin/disesuaikan posisinya)
+function _drawValueChip(ctx, rightX, label, value) {
+  const labelTxt = String(label || "");
+  const valueTxt = String(value ?? "");
+  ctx.font = "bold 16px sans-serif";
+  const lw = ctx.measureText(labelTxt).width;
+  ctx.font = "bold 34px sans-serif";
+  const vw = ctx.measureText(valueTxt).width;
+  const pad = 14;
+  const panelW = Math.max(lw, vw) + pad * 2;
+  const panelH = labelTxt ? 84 : 60;
+  const px = rightX - panelW;
+  const py = 26;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+  ctx.strokeStyle = "rgba(0, 242, 255, 0.35)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(px, py, panelW, panelH, 12);
+  ctx.fill();
+  ctx.stroke();
+  ctx.textAlign = "center";
+  if (labelTxt) {
+    ctx.fillStyle = "#00f2ff";
+    ctx.font = "bold 16px sans-serif";
+    ctx.fillText(labelTxt, px + panelW / 2, py + 26);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 34px sans-serif";
+    ctx.fillText(valueTxt, px + panelW / 2, py + 62);
+  } else {
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 34px sans-serif";
+    ctx.fillText(valueTxt, px + panelW / 2, py + panelH / 2 + 12);
+  }
+  ctx.textAlign = "left";
+}
+
 // generateRpgCard — kartu canvas GENERIC tema level-up (owner 15 Sep 2026:
 // dipakai .levelinfo/.prestige/.reincarnate/.achievement — hasilnya ditanam
 // di PREVIEW pesan, bukan media → gak bisa disimpan ke galeri)
@@ -90,16 +127,8 @@ async function generateRpgCard({
   }
 
   if (bigValue != null) {
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "italic bold 88px sans-serif";
-    ctx.fillText(String(bigValue), width - 50, 105);
-    if (bigLabel) {
-      ctx.font = "bold 20px sans-serif";
-      ctx.fillStyle = "#00f2ff";
-      ctx.fillText(String(bigLabel), width - 55, 42);
-    }
-    ctx.textAlign = "left";
+    // angka dikecilin jadi chip panel kanan-atas (request owner 16 Sep 2026)
+    _drawValueChip(ctx, width - 30, bigLabel, bigValue);
   }
 
   let by = 138;
@@ -269,13 +298,8 @@ async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
     ctx.fillStyle = "#00f2ff";
     ctx.font = "italic 25px sans-serif";
     ctx.fillText(`Congratulations, ${data.name}!`, 230, 125);
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "italic bold 90px sans-serif";
-    ctx.fillText(`${data.level}`, width - 50, 120);
-    ctx.font = "bold 20px sans-serif";
-    ctx.fillText("LEVEL", width - 55, 45);
-    ctx.textAlign = "left";
+    // angka dikecilin jadi chip panel kanan-atas (request owner 16 Sep 2026)
+    _drawValueChip(ctx, width - 30, "LEVEL", data.level);
     const barX = 230;
     const barY = 185;
     const barWidth = 520;
