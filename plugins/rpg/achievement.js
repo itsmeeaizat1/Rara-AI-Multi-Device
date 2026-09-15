@@ -3,6 +3,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
+import { replyWithCardPreview } from "../../src/lib/nova-level.js";
 
 const pluginConfig = {
   name: "achievement",
@@ -63,7 +64,20 @@ async function handler(m, { sock }) {
       if (!ach.check(allData)) {
         await m.react("❌");
         const prog = ach.progress ? `\n\n📊 Progress:\n${progBar(...ach.progress(allData))}` : "";
-        return m.reply(novaRpgBox("achievement", `Belum memenuhi syarat: ${ach.desc}${prog}`, "error"));
+        const txt = novaRpgBox("achievement", `Belum memenuhi syarat: ${ach.desc}${prog}`, "error");
+        let sent = false;
+        if (ach.progress) {
+          const [cur, target] = ach.progress(allData);
+          sent = await replyWithCardPreview(m, txt, {
+            title: "ACHIEVEMENT",
+            name: m.pushName || "Player",
+            infoLine: ach.desc,
+            bigValue: String(cur || 0),
+            bigLabel: "PROGRESS",
+            bars: [{ label: ach.name, cur: cur || 0, max: target || 1, c1: "#ff00cc", c2: "#3333ff" }],
+          }, { body: `${ach.name} — belum memenuhi syarat` });
+        }
+        return sent || m.reply(txt);
       }
 
       // Apply reward
@@ -95,6 +109,7 @@ async function handler(m, { sock }) {
     let unlocked = 0;
     let canClaim = 0;
 
+    const progressRows = [];
     ACHIEVEMENTS.forEach(a => {
       const isClaimed = claimed.includes(a.id);
       const isUnlocked = a.check(allData);
@@ -107,6 +122,8 @@ async function handler(m, { sock }) {
       if (!isClaimed && !isUnlocked && a.progress) {
         const [cur, target] = a.progress(allData);
         msg += `   ${progBar(cur, target)}\n`;
+        progressRows.push({ label: a.name, cur: cur || 0, max: target || 1,
+          ratio: Math.min((cur || 0) / (target || 1), 1) });
       }
     });
 
@@ -117,7 +134,18 @@ async function handler(m, { sock }) {
     if (canClaim > 0) msg += `${m.prefix}achievement claim <id>\n`;
 
     await animGeneric(m, sock, '🏆', 'Loading achievements');
-    return m.reply(msg);
+    // 🖼️ kartu canvas ditanam di PREVIEW (bukan media → gak bisa disimpan galeri)
+    const topBars = progressRows.sort((a, b) => b.ratio - a.ratio).slice(0, 4)
+      .map(r => ({ label: r.label, cur: r.cur, max: r.max, c1: "#ff00cc", c2: "#3333ff" }));
+    const sent = await replyWithCardPreview(m, msg, {
+      title: "ACHIEVEMENTS",
+      name: m.pushName || "Player",
+      infoLine: `Unlocked: ${unlocked}/${ACHIEVEMENTS.length}  •  Can claim: ${canClaim}`,
+      bigValue: String(unlocked),
+      bigLabel: "UNLOCKED",
+      bars: topBars,
+    }, { body: `Achievements ${unlocked}/${ACHIEVEMENTS.length}` });
+    return sent || m.reply(msg);
   } catch (err) {
     console.error("achievement error:", err);
     await m.react("❌");
