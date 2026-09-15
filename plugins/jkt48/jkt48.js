@@ -5,6 +5,7 @@
 // 🔹 .jkt48 <kind> <roomId> [| cookies]
 // 🔹 roomId = room_id SHOWROOM (angka). cookies opsional (data
 //   tertentu butuh session Showroom lo sendiri).
+// 🔹 Kategori khusus JKT48 (folder plugins/jkt48/) — request owner 15 Sep 2026.
 // 🔹 STRICT SATUAN: endpoint mati → error asli, no fallback.
 // ═════════════════════════════════════════════
 
@@ -14,7 +15,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "jkt48",
   alias: ["showroomjkt", "jktshowroom", "showroom"],
-  category: "stalker",
+  category: "jkt48",
   description: "Data SHOWROOM JKT48 — info/komentar/gift/rank/stream live",
   usage: ".jkt48 <info|comments|gift|rank|stream> <roomId> [| cookies]",
   example: ".jkt48 info 123456",
