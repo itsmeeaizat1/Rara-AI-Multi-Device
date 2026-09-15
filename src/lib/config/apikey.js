@@ -35,7 +35,8 @@ export const apiKeys = {
   rawgApiKey: "",
 
   // OpenWeather — https://openweathermap.org (free 1000 req/day)
-  openWeatherKey: "",
+  // Key ini juga buat One Call 3.0 (nowcast hujan per-menit .hujannotif)
+  openWeatherKey: "a4c5d5ca39730767177299ee25c55a61",
 
   // Binderbyte — https://binderbyte.com (cek resi)
   binderbyteKey: "",
