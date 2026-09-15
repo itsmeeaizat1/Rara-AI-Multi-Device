@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .jktai — chat AI persona member JKT48 (18 member) dari zelapi.eu.cc
+// 🔹 Kategori khusus JKT48 (folder plugins/jkt48/) — request owner 15 Sep 2026.
 // 🔹 .jktai (list) | .jktai <member> <pesan>
 // 🔹 STRICT SATUAN: endpoint mati → error asli, gak nyolong fallback.
 // ═════════════════════════════════════════════
@@ -11,7 +12,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "jktai",
   alias: ["jkt48ai", "aijkt48", "aijkt"],
-  category: "ai",
+  category: "jkt48",
   description: "Chat AI persona member JKT48 (18 member) — zelapi",
   usage: ".jktai — daftar member\n.jktai <member> <pesan>",
   example: ".jktai marsha halo marsha apa kabar?",

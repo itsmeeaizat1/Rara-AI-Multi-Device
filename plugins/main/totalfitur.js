@@ -28,6 +28,7 @@ const ICONS = {
     stalker: '🔎', random: '🎲', religi: '🕌', islamic: '☪️', cek: '✅',
     store: '🛒', panel: '🖥️', convert: '🔄', primbon: '🔮', tts: '🗣️',
     otp: '🔑', vps: '☁️', pushkontak: '📱', jpm: '🎰', ephoto: '📸',
+    jkt48: '🌸',
     other: '📦'
 }
 

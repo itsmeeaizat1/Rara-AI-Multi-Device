@@ -3,8 +3,8 @@
 // STRICT SATUAN: key kosong/401/429/status false → error asli (gak fallback).
 import fs from "node:fs";
 import { initDatabase } from "../../src/lib/nova-database.js";
-import jktai, { _setZelJktHttpForTest as setHttp1, _setZelJktKeyForTest as setKey1 } from "../../plugins/ai/jktai.js";
-import jkt48, { _setZelJktHttpForTest as setHttp2, _setZelJktKeyForTest as setKey2 } from "../../plugins/stalker/jkt48.js";
+import jktai, { _setZelJktHttpForTest as setHttp1, _setZelJktKeyForTest as setKey1 } from "../../plugins/jkt48/jktai.js";
+import jkt48, { _setZelJktHttpForTest as setHttp2, _setZelJktKeyForTest as setKey2 } from "../../plugins/jkt48/jkt48.js";
 import { findJktaiMember, ZEL_JKTAI_MEMBERS, ZEL_JKT48_KINDS } from "../../src/scraper/zeljkt.js";
 import { fromSC } from "../../src/lib/styler.js";
 
@@ -167,8 +167,8 @@ t("  .jkt48 rank <id> | <cookies> → cookies ikut kekirim",
 w("\n— config —");
 const cfg1 = jktai.pluginConfig || jktai.config;
 const cfg2 = jkt48.pluginConfig || jkt48.config;
-t("  jktai: kategori ai, cd 15, energi 1, enabled", cfg1.category === "ai" && cfg1.cooldown === 15 && cfg1.energi === 1 && cfg1.isEnabled === true);
-t("  jkt48: kategori stalker, cd 10, enabled", cfg2.category === "stalker" && cfg2.cooldown === 10 && cfg2.isEnabled === true);
+t("  jktai: kategori jkt48 (folder khusus), cd 15, energi 1, enabled", cfg1.category === "jkt48" && cfg1.cooldown === 15 && cfg1.energi === 1 && cfg1.isEnabled === true);
+t("  jkt48: kategori jkt48 (folder khusus), cd 10, enabled", cfg2.category === "jkt48" && cfg2.cooldown === 10 && cfg2.isEnabled === true);
 t("  alias gak bentrok tebakjkt48", !cfg1.alias.includes("tebakjkt48") && !cfg2.alias.includes("tebakjkt48"));
 t("  18 slug di registry == 18 endpoint /jktai/<slug> (beda slugs)", new Set(ZEL_JKTAI_MEMBERS.map((x) => x.slug)).size === 18);
 
