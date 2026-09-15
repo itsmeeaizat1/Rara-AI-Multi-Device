@@ -9,6 +9,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { shapeFishing } from "../../src/lib/nova-rpg-shapes.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 import { ensureRpg, spendCash, getCash, formatRp } from "../../src/lib/nova-rpg-service.js";
+import { getRpgWeather, applyWeatherToFishWeights, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
 
 const pluginConfig = {
   name: "mancing",
@@ -43,18 +44,19 @@ const ROD_PRICE_UP = 0.1;        // tiap level: harga jual ikan +10%
 const ROD_RP_COST = (lv) => 30000 * lv;   // upgrade ke lv+1
 const ROD_PEARL_COST = (lv) => lv;        // upgrade ke lv+1
 
-function weightedFish(rodLv = 1) {
+function weightedFish(rodLv = 1, weather = getRpgWeather()) {
   const mult = Math.max(0, rodLv - 1);
-  const adjusted = FISH_TYPES.map((f) => {
+  // 🌦️ CUACA: multiplier bobot ikan langka/sampah (hujan/badai = langka naik)
+  const weatherWeights = applyWeatherToFishWeights(FISH_TYPES.map((f) => {
     let w = f.weight;
     if (f.rarity === "Trash") w = Math.max(0, w * (1 - ROD_TRASH_DOWN * mult));
     if (["S", "SS", "SSS"].includes(f.rarity)) w = w * (1 + ROD_RARE_UP * mult);
     return { ...f, w };
-  });
-  const total = adjusted.reduce((s, f) => s + f.w, 0);
+  }), weather.fish).map((f) => ({ ...f, weight: f.w ?? f.weight }));
+  const total = weatherWeights.reduce((s, f) => s + f.weight, 0);
   let roll = Math.random() * total;
-  for (const f of adjusted) {
-    roll -= f.w;
+  for (const f of weatherWeights) {
+    roll -= f.weight;
     if (roll <= 0) return FISH_TYPES.find(x => x.name === f.name);
   }
   return FISH_TYPES[0];
@@ -148,7 +150,8 @@ async function handler(m, { sock }) {
     // Animasi khas fishing: RIAK & TARIKAN
     await shapeFishing(m, sock);
 
-    const fish = weightedFish(rodLv);
+    const weather = getRpgWeather();
+    const fish = weightedFish(rodLv, weather);
     const fresh = await getFishData(db, m.sender);
     fresh.catches.push({ name: fish.name, time: Date.now() });
     fresh.totalCaught++;
@@ -162,7 +165,7 @@ async function handler(m, { sock }) {
     let pearlGain = 0;
     if (["S", "SS", "SSS"].includes(fish.rarity)) {
       pearlGain = 1 + PEARL_RARE_BONUS; // langka = dijamin + bonus
-    } else if (Math.random() * 100 < PEARL_CHANCE) {
+    } else if (Math.random() * 100 < PEARL_CHANCE * weather.fish) {
       pearlGain = 1;
     }
     if (pearlGain > 0) fresh.pearls += pearlGain;
@@ -177,7 +180,7 @@ async function handler(m, { sock }) {
       `Rarity : *${fish.rarity}* | Harga : *${fishPrice(fish, rodLv).toLocaleString()} gold*\n\n` +
       `🐟 Total tangkapan : ${fresh.totalCaught}\n🏆 Best catch : ${fresh.bestCatch || "-"}\n` +
       (pearlGain ? `🐚 Mutiara : +${pearlGain}x (total ${fresh.pearls}x)\n` : `🐚 Mutiara : ${fresh.pearls}x\n`) +
-      `\n🎣 Joran : Lv.${rodLv}\n💡 .fishing sell — jual semua ikan | .fishing joran — upgrade`, isRare ? "success" : "success"));
+      `\n${rpgWeatherTag(weather)}\n🎣 Joran : Lv.${rodLv}\n💡 .weathersystemrpg — cek cuaca | .fishing sell — jual semua ikan`, isRare ? "success" : "success"));
   } catch (err) {
     console.error("fishing error:", err);
     await m.react("❌");

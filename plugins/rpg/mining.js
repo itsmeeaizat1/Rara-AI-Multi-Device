@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
   getCash, removeItem, spendCash, formatRp} from "../../src/lib/nova-rpg-service.js";
+import { getRpgWeather, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
 import { shapeMining } from "../../src/lib/nova-rpg-shapes.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
@@ -132,7 +133,8 @@ Ketik: .mining upgrade`));
     const drops = [];
 
     for (const ore of ORE_TABLE) {
-      const chance = Math.min(100, ore.chance + luckBonus + dropBonus);
+      // 🌦️ CUACA: multiplier peluang ore (salju +20%, badai −30%)
+      const chance = Math.min(100, (ore.chance + luckBonus + dropBonus) * getRpgWeather().mine);
       if (Math.random() * 100 <= chance) {
         const qty = Math.floor(Math.random() * (ore.maxQty - ore.minQty + 1)) + ore.minQty;
         drops.push({ item: ore.item, qty });
@@ -144,7 +146,8 @@ Ketik: .mining upgrade`));
     if (totalMined > 0) await bumpPlayerStat(m, "mining", "totalMine", totalMined);
 
     const expGain = Math.floor(Math.random() * (EXP_RANGE[1] - EXP_RANGE[0] + 1)) + EXP_RANGE[0];
-    const goldGain = Math.floor((Math.floor(Math.random() * (GOLD_RANGE[1] - GOLD_RANGE[0] + 1)) + GOLD_RANGE[0]) * (1 + TOOL.goldBonus(tool.level || 0)));
+    const weather = getRpgWeather();
+    const goldGain = Math.floor((Math.floor(Math.random() * (GOLD_RANGE[1] - GOLD_RANGE[0] + 1)) + GOLD_RANGE[0]) * (1 + TOOL.goldBonus(tool.level || 0)) * weather.mine);
     addExp(m, expGain);
     addGold(m, goldGain);
     setCooldown(m, "lastMine", MINE_COOLDOWN);
@@ -170,6 +173,7 @@ ${dropText}
 ` +
       `⚡ Energy : ${rpg.energy}/${rpg.maxEnergy}
 ` +
+      `${rpgWeatherTag(weather)}\n` +
       (lv ? `⛏️ Beliung : Lv.${lv} (+${15 * lv}% gold)` : `💡 Beliung bisa diupgrade: .mining status`), "success"));
   } catch (err) {
     console.error("mining error:", err);
