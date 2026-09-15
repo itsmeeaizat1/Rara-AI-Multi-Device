@@ -6,7 +6,9 @@
 //   • .jadwalbolanotify status   — status langganan + global
 //   • .jadwalbolanotify now     — paksa kirim jadwal hari ini ke chat ini
 //   • .jadwalbolanotify liga    — liga favorit add/del/list/reset
-//   • .jadwalbolanotify info    — tipe konten (jadwal/reminder/hasil) on/off
+//   • .jadwalbolanotify info    — tipe konten (jadwal/reminder/hasil/live) on/off
+//   • .jadwalbolanotify skor    — skor laga yang LAGI BERJALAN sekarang
+//   • .jadwalbolanotify liveinterval <menit> — kecepatan polling gol (1-30)
 //   • .jadwalbolanotify interval <menit>
 // Toggle GLOBAL (pause/resume polling): .switch auto autobolanotify on/off
 
@@ -14,7 +16,7 @@ import {
   addTarget, removeTarget, isTarget, getStatus, isEnabled, runCheck,
   setSock, syncMonitor, getLeagues, addLeague, removeLeague, resetLeagues,
   getContentTypes, setContentType, BOLA_TYPES, LEAGUE_DB,
-  setIntervalMenit, setApifyIntervalMenit,
+  setIntervalMenit, setApifyIntervalMenit, setLiveIntervalMenit, getLiveNow,
 } from "../../src/lib/nova-auto-bola-notifier.js";
 import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
@@ -23,7 +25,7 @@ const pluginConfig = {
   alias: ["bolanotify", "jadwalnotify", "footballnotify", "bolaai"],
   category: "info",
   description: "Auto notifikasi jadwal bola (ESPN → TheSportsDB) — langganan per-chat",
-  usage: ".jadwalbolanotify <on/off/status/now/liga/info/interval/apify>",
+  usage: ".jadwalbolanotify <on/off/status/now/skor/liga/info/interval/liveinterval/apify>",
   example: ".jadwalbolanotify on\n.jadwalbolanotify liga list",
   isOwner: false,
   isPremium: false,
@@ -71,6 +73,7 @@ async function handler(m, { sock, args }) {
       `Monitor: ${st.running ? "JALAN" : "STOP"}`,
       `Total subscriber: ${st.targets.length} chat`,
       `Interval: tiap ${st.intervalMenit} menit`,
+      `Live ticker (gol): ${st.liveTipe ? "AKTIF" : "MATI"} — cek tiap ${st.liveIntervalMenit} mnt, ${st.liveTracked} laga terlacak`,
       `Liga dipantau: ${leagues.map((l) => l.label).join(", ")}`,
       `Tipe aktif: ${Object.entries(getContentTypes()).filter(([, on]) => on !== false).map(([k]) => k).join(", ")}`,
       `Sumber: ESPN → TheSportsDB (+ Flashscore/Apify buat Liga 2 — token: ${st.apifyToken ? "ADA" : "BELUM SET"})`,
@@ -177,6 +180,60 @@ async function handler(m, { sock, args }) {
     );
   }
 
+  // SKOR BERJALAN — cek live manual, gak perlu langganan (ala .jadwalbola)
+  if (sub === "skor" || sub === "live" || sub === "livescore") {
+    await m.react("🔍");
+    const live = await getLiveNow().catch(() => null);
+    if (!live) return m.reply(novaError(pluginConfig.name, "gagal ambil data ESPN — coba lagi bentar"));
+    if (!live.length) {
+      await m.react("🐣");
+      return m.reply(novaSuccess(pluginConfig.name, "gak ada laga yang lagi berjalan sekarang di liga yang dipantau — cek .jadwalbola buat jadwal"));
+    }
+    const by = {};
+    for (const m2 of live) (by[m2.leagueLabel] = by[m2.leagueLabel] || []).push(m2);
+    let txt = "🔴 *SKOR BERJALAN SEKARANG*\n";
+    for (const [label, list] of Object.entries(by)) {
+      txt += `\n${list[0].emoji} *${label.toUpperCase()}*\n`;
+      for (const m2 of list) {
+        txt += `• ${m2.home} *${m2.homeScore ?? 0} - ${m2.awayScore ?? 0}* ${m2.away} — ${m2.statusDetail || "berjalan"}\n`;
+      }
+    }
+    txt += "\n💡 aktifkan tipe live (kick-off + gol real-time): .jadwalbolanotify info live on";
+    await sock.sendMessage(m.chat, {
+      text: txt,
+      contextInfo: {
+        externalAdReply: {
+          title: "LIVE SCORE",
+          body: "nova bola notifier • skor realtime ESPN",
+          sourceUrl: "https://www.espn.com/soccer/",
+          mediaType: 1,
+          renderLargerThumbnail: true,
+          showAdAttribution: false,
+        },
+      },
+    });
+    await m.react("🐣");
+    return;
+  }
+
+  // interval live ticker (gol real-time)
+  if (sub === "liveinterval" || sub === "golinterval") {
+    const val = Number(args?.[1]);
+    const st = getStatus();
+    if (!val) {
+      return m.reply(
+        `「 ✦ ${pluginConfig.name.toUpperCase()} — LIVE TICKER ✦ 」\n\n` +
+        `Ticker gol cek skor *tiap ${st.liveIntervalMenit} menit* (tipe live: ${st.liveTipe ? "AKTIF" : "MATI"})\n` +
+        `Laga terlacak live: ${st.liveTracked}\n\n` +
+        `Atur: *.jadwalbolanotify liveinterval <menit>* (1–30)\n` +
+        `Contoh: *.jadwalbolanotify liveinterval 2* → deteksi gol lebih cepat`
+      );
+    }
+    const res = setLiveIntervalMenit(val);
+    if (!res) return m.reply(novaError(pluginConfig.name, "interval live harus 1–30 menit (contoh: .jadwalbolanotify liveinterval 2)"));
+    return m.reply(novaSuccess(pluginConfig.name, `ticker gol sekarang cek *tiap ${res} menit* — makin kecil makin cepat gol kekirim`));
+  }
+
   if (sub === "now") {
     await m.react("🕒");
     if (!isTarget(m.chat)) return m.reply(novaGuide(pluginConfig.name, "chat ini belum langganan — ketik .jadwalbolanotify on dulu", ".jadwalbolanotify now"));
@@ -190,7 +247,7 @@ async function handler(m, { sock, args }) {
     novaGuide(
       pluginConfig.name,
       "auto notifikasi JADWAL BOLA (ESPN → TheSportsDB) — jadwal harian, reminder kick-off & skor full-time ke chat langganan",
-      ".jadwalbolanotify on — langganan chat ini\n.jadwalbolanotify off — berhenti\n.jadwalbolanotify status — lihat status\n.jadwalbolanotify now — kirim jadwal hari ini\n.jadwalbolanotify liga — liga favorit (add/del/list/reset)\n.jadwalbolanotify info — tipe konten (jadwal/reminder/hasil)\n.jadwalbolanotify interval <menit>\n.jadwalbolanotify apify <menit> — Liga 2 via Flashscore\n.jadwalbola — jadwal manual (existing)",
+      ".jadwalbolanotify on — langganan chat ini\n.jadwalbolanotify off — berhenti\n.jadwalbolanotify status — lihat status\n.jadwalbolanotify now — kirim jadwal hari ini\n.jadwalbolanotify skor — skor laga yang lagi berjalan (live)\n.jadwalbolanotify liga — liga favorit (add/del/list/reset)\n.jadwalbolanotify info — tipe konten (jadwal/reminder/hasil/live)\n.jadwalbolanotify interval <menit>\n.jadwalbolanotify liveinterval <menit> — kecepatan deteksi gol\n.jadwalbolanotify apify <menit> — Liga 2 via Flashscore\n.jadwalbola — jadwal manual (existing)",
       "pause/resume global: .switch auto autobolanotify on/off (owner)",
     ),
   );

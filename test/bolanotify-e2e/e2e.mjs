@@ -137,7 +137,8 @@ r = await lib.runCheck();
 check("7a. dedup — 0 kirim", r.sent === 0 && sent.length === 0);
 
 // ═══ 8. fixture baru muncul → notif jadwal baru ═══
-market["eng.1"].push({ key: "espn:m9", date: new Date(Date.now() + 5 * 3600000).toISOString(), home: "Liverpool", away: "Man City", state: "pre" });
+// date +30 mnt (bukan +5 jam) — jamin tetap "hari ini" WIB, gak flaky malam hari
+market["eng.1"].push({ key: "espn:m9", date: new Date(Date.now() + 30 * 60000).toISOString(), home: "Liverpool", away: "Man City", state: "pre" });
 sent.length = 0;
 r = await lib.runCheck();
 check("8a. fixture baru → notif JADWAL BARU", sent.some((s) => s.text.includes("JADWAL BARU") && s.text.includes("Liverpool")));
