@@ -4,6 +4,8 @@ import { ensureRpg, getPlayerInfo } from "../../src/lib/nova-rpg-service.js";
 import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 import { novaRpgBox, psStat } from "../../src/lib/nova-games.js";
+import { generateLevelInfoCard, levelPreviewThumb } from "../../src/lib/nova-level.js";
+import config from "../../config.js";
 
 const pluginConfig = {
   name: "levelinfo",
@@ -40,6 +42,35 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     await animGeneric(m, sock, '📊', 'Loading level info');
+
+    // 🖼️ KARTU DALAM PREVIEW (owner 15 Sep 2026): canvas stats ditanam di
+    // externalAdReply thumbnail (renderLargerThumbnail) — cuma PREVIEW di
+    // dalam bubble pesan, BUKAN media langsung → gak bisa disimpan ke galeri.
+    let thumb = null;
+    try {
+      const card = await generateLevelInfoCard({ name: m.pushName || "Player", rpg });
+      thumb = await levelPreviewThumb(card);
+    } catch (e) {
+      console.error("levelinfo card error:", e);
+    }
+    if (thumb) {
+      try {
+        return await m.reply(msg, {
+          contextInfo: {
+            externalAdReply: {
+              title: config.bot?.name || "Nova AI Whatsapp Bot",
+              body: `Level ${rpg.level || 1} • ${rpg.job || "novice"}`,
+              thumbnail: thumb,
+              previewType: "PHOTO",
+              showAdAttribution: false,
+              renderLargerThumbnail: true,
+            },
+          },
+        });
+      } catch (e) {
+        console.error("levelinfo preview error:", e);
+      }
+    }
     return m.reply(msg);
   } catch (err) {
     console.error("levelinfo error:", err);

@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
+import sharp from "sharp";
 
 const EXP_PER_LEVEL = 10000;
 
@@ -23,6 +24,123 @@ function getRole(level) {
   if (level >= 20) return "🎖️ Master";
   if (level >= 10) return "⭐ Elite";
   return "🛡️ Warrior";
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// KARTU DALAM PREVIEW (owner 15 Sep 2026): canvas ditanam di
+// externalAdReply thumbnail (renderLargerThumbnail) — jadi cuma PREVIEW
+// di dalam bubble pesan, BUKAN media langsung → gak bisa disimpan ke galeri.
+// ══════════════════════════════════════════════════════════════════
+
+// kit canvas module-level: seam loadImage (e2e gak nyamber jaringan)
+async function _levelCardKit() {
+  const { createCanvas, loadImage } = await import("@napi-rs/canvas");
+  return { createCanvas, loadImage: _loadImageForTest || loadImage };
+}
+
+// generateLevelInfoCard — kartu stats RPG (.levelinfo), tema sama level-up
+async function generateLevelInfoCard({ name, rpg }) {
+  const { createCanvas, loadImage } = await _levelCardKit();
+  const width = 800;
+  const height = 280;
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext("2d");
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(10, 10, width - 20, height - 20, 30);
+  ctx.clip();
+  try {
+    const background = await loadImage(
+      "https://images.wallpapersden.com/image/download/anime-night-sky-scenery_bWlsZ26UmZqaraWkpJRmbmdlrWZnZWU.jpg",
+    );
+    const ratio = Math.max(width / background.width, height / background.height);
+    const x = (width - background.width * ratio) / 2;
+    const y = (height - background.height * ratio) / 2;
+    ctx.drawImage(background, x, y, background.width * ratio, background.height * ratio);
+  } catch {
+    ctx.fillStyle = "#1e1e2f";
+    ctx.fillRect(0, 0, width, height);
+  }
+  ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+  ctx.fillRect(0, 0, width, height);
+  ctx.restore();
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(10, 10, width - 20, height - 20);
+
+  ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+  ctx.shadowBlur = 5;
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 38px sans-serif";
+  ctx.fillText("LEVEL INFO", 30, 62);
+  ctx.fillStyle = "#00f2ff";
+  ctx.font = "italic 25px sans-serif";
+  ctx.fillText(String(name || "Player"), 30, 100);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+  ctx.font = "15px sans-serif";
+  ctx.fillText(
+    `${rpg.job || "novice"} (Lv.${rpg.jobLevel || 1})  •  Gold ${(rpg.gold || 0).toLocaleString("id-ID")}  •  Gems ${rpg.gems || 0}`,
+    30, 122,
+  );
+
+  ctx.textAlign = "right";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "italic bold 88px sans-serif";
+  ctx.fillText(String(rpg.level || 1), width - 50, 105);
+  ctx.font = "bold 20px sans-serif";
+  ctx.fillStyle = "#00f2ff";
+  ctx.fillText("LEVEL", width - 55, 42);
+  ctx.textAlign = "left";
+
+  const bars = [
+    { label: "EXP", cur: rpg.exp || 0, max: rpg.expNext || 100, c1: "#ff00cc", c2: "#3333ff" },
+    { label: "HP", cur: rpg.hp || 0, max: rpg.maxHp || 100, c1: "#ff4d4d", c2: "#ff9a8b" },
+    { label: "Mana", cur: rpg.mana || 0, max: rpg.maxMana || 50, c1: "#4834d4", c2: "#686de0" },
+    { label: "Energy", cur: rpg.energy || 0, max: rpg.maxEnergy || 100, c1: "#feca57", c2: "#ff9f43" },
+  ];
+  let by = 138;
+  const bx = 30, bw = 520, bh = 18;
+  for (const b of bars) {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, 9);
+    ctx.fill();
+    const prog = Math.min((b.cur || 0) / (b.max || 1), 1);
+    if (prog > 0) {
+      const g = ctx.createLinearGradient(bx, 0, bx + bw, 0);
+      g.addColorStop(0, b.c1);
+      g.addColorStop(1, b.c2);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.roundRect(bx, by, Math.max(bw * prog, bh), bh, 9);
+      ctx.fill();
+    }
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 12px sans-serif";
+    ctx.fillText(
+      `${b.label}  ${(b.cur || 0).toLocaleString("id-ID")} / ${(b.max || 0).toLocaleString("id-ID")}`,
+      bx + 12, by + 13,
+    );
+    by += 32;
+  }
+  ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+  ctx.font = "12px sans-serif";
+  ctx.fillText(config.bot?.name || "Nova AI", 30, height - 18);
+  return canvas.toBuffer("image/png");
+}
+
+// levelPreviewThumb — encode canvas → thumbnail externalAdReply.
+// fit "contain" biar kartu 800x280 utuh kebaca (letterbox gelap).
+async function levelPreviewThumb(buffer) {
+  try {
+    return await sharp(buffer)
+      .resize(640, 360, { fit: "contain", background: "#0b0b14" })
+      .png()
+      .toBuffer();
+  } catch {
+    return buffer;
+  }
 }
 
 async function checkAndNotifyLevelUp(sock, m, db, user, oldExp, newExp) {
@@ -201,9 +319,10 @@ Sering seringlah berinteraksi dengan bot agar level kamu bertambah!`;
         },
       },
     };
-    await sock.sendMedia(
-      m.chat,
-      await generateLevelUpCard({
+    // 🖼️ kartu digambar SEKALI, lalu ditanam di PREVIEW pesan (bukan media)
+    let cardBuffer = null;
+    try {
+      cardBuffer = await generateLevelUpCard({
         name: m.pushName || "User",
         level: newLevel,
         currentXp: newExp,
@@ -213,14 +332,41 @@ Sering seringlah berinteraksi dengan bot agar level kamu bertambah!`;
           "https://ui-avatars.com/api/?name=K&background=00f2ff&color=fff&size=256",
         backgroundUrl:
           "https://images.wallpapersden.com/image/download/anime-night-sky-scenery_bWlsZ26UmZqaraWkpJRmbmdlrWZnZWU.jpg",
-      }),
-      txt,
-      m,
-      {
-        type: "image",
-        contextInfo,
-      },
-    );
+      });
+    } catch (e) {
+      console.error("levelup card error:", e);
+    }
+
+    try {
+      if (cardBuffer && typeof m.reply === "function") {
+        await m.reply(txt, {
+          mentions: [m.sender],
+          contextInfo: {
+            externalAdReply: {
+              title: botName,
+              body: `Level Up → ${newLevel}`,
+              thumbnail: await levelPreviewThumb(cardBuffer),
+              previewType: "PHOTO",
+              showAdAttribution: false,
+              renderLargerThumbnail: true,
+            },
+          },
+        });
+      } else if (cardBuffer) {
+        // fallback: m.reply gak tersedia (pemanggil non-handler) → media
+        await sock.sendMedia(m.chat, cardBuffer, txt, m, { type: "image", contextInfo });
+      } else {
+        await m.reply(txt, { mentions: [m.sender] });
+      }
+    } catch (e) {
+      console.error("levelup preview error:", e);
+      // jalur preview gagal → jangan hilangin notif: kirim media langsung
+      try {
+        await sock.sendMedia(m.chat, cardBuffer, txt, m, { type: "image", contextInfo });
+      } catch (e2) {
+        console.error("levelup send fallback error:", e2);
+      }
+    }
 
     return { leveledUp: true, notified: true, oldLevel, newLevel, awardKoin };
   }
@@ -248,6 +394,8 @@ export {
   calculateLevel,
   expForLevel,
   getRole,
+  generateLevelInfoCard,
+  levelPreviewThumb,
   checkAndNotifyLevelUp,
   addExpWithLevelCheck,
   _setLevelCardLoadImageForTest,

@@ -26,11 +26,20 @@ const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (
 
 function mockSock() {
   const media = [];
+  const replies = [];
   return {
-    media,
+    media, replies,
     profilePictureUrl: async () => { throw new Error("no pp"); },
     sendMedia: async (chat, buf, txt, m, opts) => { media.push({ chat, buf, txt, m, opts }); return { key: { id: "m1" } }; },
   };
+}
+// m.reply mock — tangkap kartu preview (externalAdReply) biar bisa dites
+function mockReply(sock, m) {
+  m.reply = async (txt, options = {}) => {
+    sock.replies.push({ txt, ext: options?.contextInfo?.externalAdReply });
+    return { key: { id: "r" + sock.replies.length } };
+  };
+  return m;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -40,23 +49,25 @@ w("\n— award penghargaan koin saat level-up (1 → 2) —");
   const u = db.setUser(jid);
   u.exp = 9985; // 15 EXP lagi → nyebrang level 2
   const sock = mockSock();
-  const m = { sender: jid, chat: "c@g.us", pushName: "Budi", prefix: "." };
+  const m = mockReply(sock, { sender: jid, chat: "c@g.us", pushName: "Budi", prefix: "." });
   const res = await checkAndNotifyLevelUp(sock, m, db, u, 9985, 10000);
   check("level-up ke-2 terdeteksi", res.leveledUp && res.newLevel === 2, JSON.stringify(res));
   check("penghargaan koin = level 2 × 500 = 1000", res.awardKoin === 1000, "award=" + res.awardKoin);
   check("koin masuk dompet", (db.getUser(jid).koin ?? 0) >= 1000, "koin=" + db.getUser(jid).koin);
-  check("kartu SELAMAT dikirim", sock.media.length === 1, sock.media.length + " media");
-  check("pesan ada penghargaan", sock.media.length === 1 && /PENGHARGAAN/i.test(sock.media[0].txt) && sock.media[0].txt.includes("1000"), sock.media[0]?.txt?.slice(0, 60));
-  check("pesan ada SELAMAT + level baru", sock.media.length === 1 && /SELAMAT/i.test(sock.media[0].txt) && sock.media[0].txt.includes("*2*"));
+  check("kartu SELAMAT dikirim via PREVIEW (reply)", sock.replies.length === 1 && sock.media.length === 0, `reply=${sock.replies.length} media=${sock.media.length}`);
+  check("canvas ditanam di preview (externalAdReply thumbnail)", sock.replies.length === 1 && !!sock.replies[0].ext?.thumbnail, "thumbnail kosong");
+  check("gak kirim media langsung (gak bisa disimpan ke galeri)", sock.media.length === 0, sock.media.length + " media");
+  check("pesan ada penghargaan", sock.replies.length === 1 && /PENGHARGAAN/i.test(sock.replies[0].txt) && sock.replies[0].txt.includes("1000"), sock.replies[0]?.txt?.slice(0, 60));
+  check("pesan ada SELAMAT + level baru", sock.replies.length === 1 && /SELAMAT/i.test(sock.replies[0].txt) && sock.replies[0].txt.includes("*2*"));
 }
 {
   const jid = "u2@s.whatsapp.net";
   const u = db.setUser(jid);
   u.exp = 5000;
   const sock = mockSock();
-  const m = { sender: jid, chat: "c@g.us", pushName: "B", prefix: "." };
+  const m = mockReply(sock, { sender: jid, chat: "c@g.us", pushName: "B", prefix: "." });
   const res = await checkAndNotifyLevelUp(sock, m, db, u, 5000, 5015);
-  check("belum nyambang batas → gak ada notif/award", !res.leveledUp && res.awardKoin === 0 && sock.media.length === 0);
+  check("belum nyambang batas → gak ada notif/award", !res.leveledUp && res.awardKoin === 0 && sock.media.length === 0 && sock.replies.length === 0);
 }
 {
   // user matiin notif (levelupNotif false) → award koin TETAP masuk
@@ -66,10 +77,10 @@ w("\n— award penghargaan koin saat level-up (1 → 2) —");
   if (!u.settings) u.settings = {}; // ala plugins/user/levelup.js — setUser gak nyimpen settings
   u.settings.levelupNotif = false;
   const sock = mockSock();
-  const m = { sender: jid, chat: "c@g.us", pushName: "C", prefix: "." };
+  const m = mockReply(sock, { sender: jid, chat: "c@g.us", pushName: "C", prefix: "." });
   const res = await checkAndNotifyLevelUp(sock, m, db, u, 9990, 10005);
   const koin = db.getUser(jid).koin ?? 0;
-  check("notif off → award tetap masuk, kartu gak dikirim", res.leveledUp && !res.notified && koin >= 1000 && sock.media.length === 0, `koin=${koin} media=${sock.media.length}`);
+  check("notif off → award tetap masuk, kartu gak dikirim", res.leveledUp && !res.notified && koin >= 1000 && sock.media.length === 0 && sock.replies.length === 0, `koin=${koin} media=${sock.media.length}`);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -104,12 +115,12 @@ w("\n— grantActivityExp: EXP per aktivitas (db beneran, isolated) —");
   db.updateExp(jid, 10000 - BASE_CMD_EXP);
   const koinBefore = db.getUser(jid).koin ?? 0;
   const sock = mockSock();
-  const m = { sender: jid, chat: "c@g.us", pushName: "E", prefix: "." };
+  const m = mockReply(sock, { sender: jid, chat: "c@g.us", pushName: "E", prefix: "." });
   const res = await grantActivityExp(sock, m, { category: "fun" });
   const koinAfter = db.getUser(jid).koin ?? 0;
   check("1 aktivitas nyebrang ke level 2 → leveledUp", res?.leveledUp === true && res?.newLevel === 2, JSON.stringify(res));
   check("award koin masuk (+1000)", koinAfter - koinBefore >= 1000, `${koinBefore}→${koinAfter}`);
-  check("kartu selamat terkirim via sendMedia", sock.media.length === 1 && /SELAMAT/i.test(sock.media[0].txt));
+  check("kartu selamat terkirim via PREVIEW (bukan media)", sock.replies.length === 1 && /SELAMAT/i.test(sock.replies[0].txt) && sock.media.length === 0, `reply=${sock.replies.length} media=${sock.media.length}`);
 }
 
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);
