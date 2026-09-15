@@ -10,7 +10,7 @@
 //   • .hujannotif set <tempat | lat,lon | reply lokasi WA> — set lokasi
 //   • .hujannotif cek — nowcast sekarang (bypass cooldown, tampil aman juga)
 //   • .hujannotif status / interval <5-60> / cooldown <30-720>
-// Lokasi default mewarisi .autoweatherrealtime (weatherScheduler).
+// Lokasi default mewarisi .weathersystemwatch (weatherScheduler).
 
 import {
   setEnabled, getStatus, isTarget, addTarget, removeTarget,

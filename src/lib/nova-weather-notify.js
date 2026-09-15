@@ -12,7 +12,7 @@
 //                 (data[0].t padahal nested data[0].cuaca[hari][jam]) — dibenerin di sini.
 //
 // Dipakai scheduler notifikasi cuaca (interval 2 jam ala script + dedup kondisi)
-// dan command .autoweatherrealtime test/notification on.
+// dan command .weathersystemwatch test/notification on.
 
 import config from "../../config.js";
 
@@ -383,14 +383,14 @@ export async function fetchWeatherForSettings(settings) {
     return fetchBmkgNow(settings.adm4);
   }
   if (provider === "metno" || provider === "met" || provider === "norway") {
-    if (!hasCoords) throw new Error("Koordinat lokasi cuaca belum diatur (.autoweatherrealtime lokasi <kota>)");
+    if (!hasCoords) throw new Error("Koordinat lokasi cuaca belum diatur (.weathersystemwatch lokasi <kota>)");
     return fetchMetNorway(lat, lon);
   }
   if (provider === "weatherapi" || provider === "wa") {
-    if (!hasCoords) throw new Error("Koordinat lokasi cuaca belum diatur (.autoweatherrealtime lokasi <kota>)");
+    if (!hasCoords) throw new Error("Koordinat lokasi cuaca belum diatur (.weathersystemwatch lokasi <kota>)");
     return fetchWeatherApiNow(lat, lon);
   }
-  if (!hasCoords) throw new Error("Koordinat lokasi cuaca belum diatur (.autoweatherrealtime lokasi <kota>)");
+  if (!hasCoords) throw new Error("Koordinat lokasi cuaca belum diatur (.weathersystemwatch lokasi <kota>)");
   return fetchOpenMeteoNow(lat, lon);
 }
 

@@ -1,29 +1,29 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
-// .autoweatherrealtime — Unified Weather Control (owner only)
+// .weathersystemwatch — Unified Weather Control (owner only) (rename file owner 15 Sep 2026, wasal .autoweatherrealtime)
 //
-// .autoweatherrealtime                → status
-// .autoweatherrealtime on             → tampilkan cuaca di info section
-// .autoweatherrealtime off            → sembunyikan cuaca dari info section
-// .autoweatherrealtime lokasi serang  → set lokasi (nama kota)
-// .autoweatherrealtime lokasi -6.12,106.14 → set lokasi (koordinat)
-// .autoweatherrealtime notification on  → aktifkan notifikasi cuaca ke grup
-// .autoweatherrealtime notification off → matikan notifikasi cuaca
-// .autoweatherrealtime jadwal 06:30 12:00 17:00 20:00 → set jadwal notif
-// .autoweatherrealtime threshold set <key> <nilai> → ubah ambang alert ekstrem
+// .weathersystemwatch                → status
+// .weathersystemwatch on             → tampilkan cuaca di info section
+// .weathersystemwatch off            → sembunyikan cuaca dari info section
+// .weathersystemwatch lokasi serang  → set lokasi (nama kota)
+// .weathersystemwatch lokasi -6.12,106.14 → set lokasi (koordinat)
+// .weathersystemwatch notification on  → aktifkan notifikasi cuaca ke grup
+// .weathersystemwatch notification off → matikan notifikasi cuaca
+// .weathersystemwatch jadwal 06:30 12:00 17:00 20:00 → set jadwal notif
+// .weathersystemwatch threshold set <key> <nilai> → ubah ambang alert ekstrem
 //   (heat/panas, cold/dingin, rain/hujan, wind/angin, storm/badai, humidityHigh/lembap,
 //    humidityLow/kering — level Waspada/Siaga/Awas diturunkan otomatis; list/reset)
-// .autoweatherrealtime alert on/off/test    → alert CUACA EKSTREM (badai petir, hujan lebat,
+// .weathersystemwatch alert on/off/test    → alert CUACA EKSTREM (badai petir, hujan lebat,
 //                                             angin kencang, panas ekstrem, kabut — level Waspada/Siaga/Awas
 //                                             ala EWS, cek tiap 30 mnt, bypass mode jadwal/interval)
-// .autoweatherrealtime interval 2            → update otomatis tiap 2 jam ala script (off = balik jadwal)
-// .autoweatherrealtime otomatis [menit]      → MODE OTOMATIS: cek tiap N menit (default 5),
+// .weathersystemwatch interval 2            → update otomatis tiap 2 jam ala script (off = balik jadwal)
+// .weathersystemwatch otomatis [menit]      → MODE OTOMATIS: cek tiap N menit (default 5),
 //                                               kirim notifikasi PAS cuaca berubah (off = balik interval)
-// .autoweatherrealtime provider <openmeteo|bmkg|metno|weatherapi|aggregate> → pilih sumber cuaca notif
+// .weathersystemwatch provider <openmeteo|bmkg|metno|weatherapi|aggregate> → pilih sumber cuaca notif
 //   aggregate = gabungan 4 provider (rata-rata + kondisi dominan + konfidensi)
-// .autoweatherrealtime adm4 31.71.03.1001    → kode wilayah BMKG (verified live saat diset)
-// .autoweatherrealtime target <jid>   → set grup target notif
-// .autoweatherrealtime test            → test kirim cuaca sekarang
+// .weathersystemwatch adm4 31.71.03.1001    → kode wilayah BMKG (verified live saat diset)
+// .weathersystemwatch target <jid>   → set grup target notif
+// .weathersystemwatch test            → test kirim cuaca sekarang
 // ============================================================
 
 import config from "../../config.js";
@@ -39,12 +39,12 @@ import { evaluateWeatherAlert, formatAlertMessage, buildThresholds, THRESHOLD_BA
 import { weatherGroupOf } from "../../src/lib/nova-weather-notify.js";
 
 const pluginConfig = {
-  name: "autoweatherrealtime",
-  alias: ["autoweatherrealtime", "autocuacarealtime"],
+  name: "weathersystemwatch",
+  alias: ["weathersystemwatch"], // rename owner 15 Sep 2026: alias lama (weathersystemwatch/autocuacarealtime) dihapus
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/otomatis/tesubah [cerah|mendung|hujan|petir]/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
-  example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
+  usage: ".weathersystemwatch <on/off/lokasi/notification/alert/threshold/jadwal/interval/otomatis/tesubah [cerah|mendung|hujan|petir]/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
+  example: ".weathersystemwatch on\n.weathersystemwatch lokasi serang\n.weathersystemwatch target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -173,17 +173,17 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
         "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
         "📌 " + toSC("Perintah") + ":\n" +
-        "• " + prefix + "autoweatherrealtime on/off\n" +
-        "• " + prefix + "autoweatherrealtime lokasi serang\n" +
-        "• " + prefix + "autoweatherrealtime notification on\n" +
-        "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-        "• " + prefix + "autoweatherrealtime alert on|off\n" +
-        "• " + prefix + "autoweatherrealtime threshold list\n" +
-        "• " + prefix + "autoweatherrealtime interval 2\n" +
-        "• " + prefix + "autoweatherrealtime provider bmkg|openmeteo\n" +
-        "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
-        "• " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-        "• " + prefix + "autoweatherrealtime test\n" 
+        "• " + prefix + "weathersystemwatch on/off\n" +
+        "• " + prefix + "weathersystemwatch lokasi serang\n" +
+        "• " + prefix + "weathersystemwatch notification on\n" +
+        "• " + prefix + "weathersystemwatch jadwal 06:30 12:00\n" +
+        "• " + prefix + "weathersystemwatch alert on|off\n" +
+        "• " + prefix + "weathersystemwatch threshold list\n" +
+        "• " + prefix + "weathersystemwatch interval 2\n" +
+        "• " + prefix + "weathersystemwatch provider bmkg|openmeteo\n" +
+        "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
+        "• " + prefix + "weathersystemwatch target 62123456789@s.whatsapp.net\n" +
+        "• " + prefix + "weathersystemwatch test\n" 
         )
       );
     }
@@ -223,8 +223,8 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format") + ":\n" +
-          "• " + prefix + "autoweatherrealtime lokasi Serang\n" +
-          "• " + prefix + "autoweatherrealtime lokasi -6.12,106.14\n" 
+          "• " + prefix + "weathersystemwatch lokasi Serang\n" +
+          "• " + prefix + "weathersystemwatch lokasi -6.12,106.14\n" 
           )
         );
       }
@@ -298,7 +298,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         // berganti. Sekarang notification on default MODE OTOMATIS:
         // cek tiap autoCheckMinutes menit, kirim pas GRUP cuaca berubah
         // (cerah→hujan dll). Mau mode jam tetap? Set eksplisit:
-        // .autoweatherrealtime jadwal 06:30 12:00
+        // .weathersystemwatch jadwal 06:30 12:00
         if (settings.notificationMode === "jadwal") {
           settings.notificationMode = "otomatis";
         }
@@ -322,7 +322,7 @@ async function handler(m, { sock, config: botConfig, db }) {
             await sock.sendMessage(notifTarget, { text: formatWeatherUpdate(data, name, settings.intervalHours) });
           }
         } catch (e) {
-          console.error("[autoweatherrealtime] activation sample:", e.message);
+          console.error("[weathersystemwatch] activation sample:", e.message);
         }
 
         return m.reply(
@@ -332,9 +332,9 @@ async function handler(m, { sock, config: botConfig, db }) {
           "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
           "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
           "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
-          "📌 " + toSC("Pilih target") + ": " + prefix + "autoweatherrealtime target dm (ke DM kamu) | target grup (daftar semua grup)\n" +
-          "📌 " + toSC("Set jadwal") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-          "📌 " + toSC("Mode interval") + ": " + prefix + "autoweatherrealtime interval 2\n" 
+          "📌 " + toSC("Pilih target") + ": " + prefix + "weathersystemwatch target dm (ke DM kamu) | target grup (daftar semua grup)\n" +
+          "📌 " + toSC("Set jadwal") + ": " + prefix + "weathersystemwatch jadwal 06:30 12:00\n" +
+          "📌 " + toSC("Mode interval") + ": " + prefix + "weathersystemwatch interval 2\n" 
           )
         );
       }
@@ -352,8 +352,8 @@ async function handler(m, { sock, config: botConfig, db }) {
       return m.reply(
         boxMessage("◆ " + "Weather Realtime" + " ◆",
         "⚠ " + toSC("Format") + ":\n" +
-        "• " + prefix + "autoweatherrealtime notification on\n" +
-        "• " + prefix + "autoweatherrealtime notification off\n" 
+        "• " + prefix + "weathersystemwatch notification on\n" +
+        "• " + prefix + "weathersystemwatch notification off\n" 
         )
       );
     }
@@ -379,12 +379,12 @@ async function handler(m, { sock, config: botConfig, db }) {
           try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
           let list = "";
           for (const [k, b] of Object.entries(THRESHOLD_BASE)) {
-            list += "• " + prefix + "autoweatherrealtime threshold set " + k + " <" + b.min + "-" + b.max + " " + b.unit + "> — " + toSC(b.desc.split("(")[0].trim()) + "\n";
+            list += "• " + prefix + "weathersystemwatch threshold set " + k + " <" + b.min + "-" + b.max + " " + b.unit + "> — " + toSC(b.desc.split("(")[0].trim()) + "\n";
           }
           return m.reply(
             boxMessage("◆ " + "Weather Realtime" + " ◆",
             "⚠ " + toSC("Format threshold — nilai di luar range ditolak") + ":\n" + list +
-            "• " + prefix + "autoweatherrealtime threshold reset\n" 
+            "• " + prefix + "weathersystemwatch threshold reset\n" 
             )
           );
         }
@@ -432,8 +432,8 @@ async function handler(m, { sock, config: botConfig, db }) {
       return m.reply(
         boxMessage("◆ " + "Weather Realtime Threshold" + " ◆",
         toSC("Threshold alert ekstrem (Waspada/Siaga/Awas)") + ":\n" + list + "\n" +
-        "📌 " + toSC("Ubah") + ": " + prefix + "autoweatherrealtime threshold set heat 38\n" +
-        "📌 " + toSC("Reset") + ": " + prefix + "autoweatherrealtime threshold reset\n" 
+        "📌 " + toSC("Ubah") + ": " + prefix + "weathersystemwatch threshold set heat 38\n" +
+        "📌 " + toSC("Reset") + ": " + prefix + "weathersystemwatch threshold reset\n" 
         )
       );
     }
@@ -480,9 +480,9 @@ async function handler(m, { sock, config: botConfig, db }) {
       return m.reply(
         boxMessage("◆ " + "Weather Realtime" + " ◆",
         "⚠ " + toSC("Format") + ":\n" +
-        "• " + prefix + "autoweatherrealtime alert on\n" +
-        "• " + prefix + "autoweatherrealtime alert off\n" +
-        "• " + prefix + "autoweatherrealtime alert test\n" 
+        "• " + prefix + "weathersystemwatch alert on\n" +
+        "• " + prefix + "weathersystemwatch alert off\n" +
+        "• " + prefix + "weathersystemwatch alert test\n" 
         )
       );
     }
@@ -512,9 +512,9 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format") + ":\n" +
-          "• " + prefix + "autoweatherrealtime otomatis\n" +
-          "• " + prefix + "autoweatherrealtime otomatis 5\n" +
-          "• " + prefix + "autoweatherrealtime otomatis off\n" +
+          "• " + prefix + "weathersystemwatch otomatis\n" +
+          "• " + prefix + "weathersystemwatch otomatis 5\n" +
+          "• " + prefix + "weathersystemwatch otomatis off\n" +
           "(" + toSC("cek tiap 1-60 menit, default 5 — kirim notif pas cuaca berubah") + ")\n"
           )
         );
@@ -554,8 +554,8 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format") + ":\n" +
-          "• " + prefix + "autoweatherrealtime interval 2\n" +
-          "• " + prefix + "autoweatherrealtime interval off\n" +
+          "• " + prefix + "weathersystemwatch interval 2\n" +
+          "• " + prefix + "weathersystemwatch interval off\n" +
           "(" + toSC("1-12 jam, ala script default 2 jam") + ")\n" 
           )
         );
@@ -589,12 +589,12 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Pilih provider cuaca") + ":\n" +
-          "• " + prefix + "autoweatherrealtime provider aggregate\n" +
+          "• " + prefix + "weathersystemwatch provider aggregate\n" +
           "  (" + toSC("gabungan 4 provider, otomatis pilih yang akurat") + ")\n" +
-          "• " + prefix + "autoweatherrealtime provider openmeteo\n" +
-          "• " + prefix + "autoweatherrealtime provider bmkg\n" +
-          "• " + prefix + "autoweatherrealtime provider metno\n" +
-          "• " + prefix + "autoweatherrealtime provider weatherapi\n" +
+          "• " + prefix + "weathersystemwatch provider openmeteo\n" +
+          "• " + prefix + "weathersystemwatch provider bmkg\n" +
+          "• " + prefix + "weathersystemwatch provider metno\n" +
+          "• " + prefix + "weathersystemwatch provider weatherapi\n" +
           "(" + toSC("BMKG butuh adm4; WeatherAPI butuh key di config") + ")\n" 
           )
         );
@@ -605,7 +605,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Provider BMKG butuh kode wilayah (adm4)") + "\n" +
-          "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
+          "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
           "(" + toSC("contoh: 31.71.03.1001 = Kemayoran, Jakarta Pusat") + ")\n" 
           )
         );
@@ -633,7 +633,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "⚠ " + toSC("Format kode wilayah: XX.XX.XX.XXXX") + "\n" +
-          "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
+          "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
           "(" + toSC("contoh: 31.71.03.1001 = Kemayoran, Jakarta Pusat") + ")\n" 
           )
         );
@@ -666,7 +666,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
-          "⚠ " + toSC("Format") + ": " + prefix + "autoweatherrealtime jadwal 06:30 12:00 17:00 20:00\n" 
+          "⚠ " + toSC("Format") + ": " + prefix + "weathersystemwatch jadwal 06:30 12:00 17:00 20:00\n" 
           )
         );
       }
@@ -691,7 +691,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         boxMessage("◆ " + "Weather Realtime" + " ◆",
         "✅ " + toSC("Jadwal notifikasi diatur") + "\n" +
         "• " + formatSchedules(schedules) + "\n" +
-        "📌 " + toSC("Mode aktif") + ": " + toSC("Jadwal — balik ke kirim-saat-berganti") + ": " + prefix + "autoweatherrealtime otomatis\n"
+        "📌 " + toSC("Mode aktif") + ": " + toSC("Jadwal — balik ke kirim-saat-berganti") + ": " + prefix + "weathersystemwatch otomatis\n"
         )
       );
     }
@@ -710,7 +710,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "✅ " + toSC("Target notifikasi diatur ke chat ini") + "\n" +
           "• " + toSC("Chat") + " : " + m.chat + "\n" +
-          "💡 " + toSC("Pilih DM/grup lain") + ": " + prefix + "autoweatherrealtime target dm | target grup\n"
+          "💡 " + toSC("Pilih DM/grup lain") + ": " + prefix + "weathersystemwatch target dm | target grup\n"
         )
         );
       }
@@ -735,7 +735,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           return m.reply(
             boxMessage("◆ " + "Weather Realtime" + " ◆",
             "⚠ " + toSC("Bot tidak menemukan grup yang diikuti") + "\n" +
-            "• " + toSC("Coba") + ": " + prefix + "autoweatherrealtime target 62123456789-1234@g.us\n"
+            "• " + toSC("Coba") + ": " + prefix + "weathersystemwatch target 62123456789-1234@g.us\n"
           )
           );
         }
@@ -759,7 +759,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         list.slice(0, 30).forEach((g, i) => {
           body += "  " + (i + 1) + ". " + (g.subject || g.jid) + (g.jid === m.chat ? toSC("  ← (chat ini)") : "") + "\n";
         });
-        body += "\n💡 " + toSC("Ketik") + ": " + prefix + "autoweatherrealtime target grup <nomor>\n";
+        body += "\n💡 " + toSC("Ketik") + ": " + prefix + "weathersystemwatch target grup <nomor>\n";
         try { await sock.sendMessage(m.chat, { react: { text: "❗", key: m.key } }); } catch {}
         return m.reply(boxMessage("◆ " + "Weather Realtime" + " ◆", body));
       }
@@ -823,7 +823,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Grup terakhir dipaksa") + " : " + toSC(grp) + "\n" +
         "• " + toSC("Cek berikutnya") + " : " + toSC(" maksimal " + (Number(settings.autoCheckMinutes) || 5) + " menit lagi") + "\n" +
         "• " + toSC("Grup realita beda") + " → " + toSC("notif CUACA BERUBAH kekirim") + "\n" +
-        "📌 " + toSC("Pastikan mode otomatis aktif") + ": " + prefix + "autoweatherrealtime otomatis"
+        "📌 " + toSC("Pastikan mode otomatis aktif") + ": " + prefix + "weathersystemwatch otomatis"
         )
       );
     }
@@ -833,22 +833,22 @@ async function handler(m, { sock, config: botConfig, db }) {
     return m.reply(
       boxMessage("◆ " + "Weather Realtime" + " ◆",
       "⚠ " + toSC("Perintah tidak dikenal") + "\n" +
-      "• " + prefix + "autoweatherrealtime status\n" +
-      "• " + prefix + "autoweatherrealtime on/off\n" +
-      "• " + prefix + "autoweatherrealtime lokasi serang\n" +
-      "• " + prefix + "autoweatherrealtime notification on/off\n" +
-      "• " + prefix + "autoweatherrealtime jadwal 06:30 12:00\n" +
-      "• " + prefix + "autoweatherrealtime alert on|off|test\n" +
-      "• " + prefix + "autoweatherrealtime threshold set heat 38\n" +
-      "• " + prefix + "autoweatherrealtime interval 2\n" +
-      "• " + prefix + "autoweatherrealtime provider bmkg\n" +
-      "• " + prefix + "autoweatherrealtime adm4 31.71.03.1001\n" +
-      "• " + prefix + "autoweatherrealtime target 62123456789@s.whatsapp.net\n" +
-      "• " + prefix + "autoweatherrealtime test\n" 
+      "• " + prefix + "weathersystemwatch status\n" +
+      "• " + prefix + "weathersystemwatch on/off\n" +
+      "• " + prefix + "weathersystemwatch lokasi serang\n" +
+      "• " + prefix + "weathersystemwatch notification on/off\n" +
+      "• " + prefix + "weathersystemwatch jadwal 06:30 12:00\n" +
+      "• " + prefix + "weathersystemwatch alert on|off|test\n" +
+      "• " + prefix + "weathersystemwatch threshold set heat 38\n" +
+      "• " + prefix + "weathersystemwatch interval 2\n" +
+      "• " + prefix + "weathersystemwatch provider bmkg\n" +
+      "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
+      "• " + prefix + "weathersystemwatch target 62123456789@s.whatsapp.net\n" +
+      "• " + prefix + "weathersystemwatch test\n" 
       )
     );
   } catch (e) {
-    console.error("[autoweatherrealtime]", e.message);
+    console.error("[weathersystemwatch]", e.message);
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
     return m.reply(novaError("Weather Realtime", e.message));
   }

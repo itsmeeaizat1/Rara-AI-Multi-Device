@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // schedulers.js — Konfigurasi cuaca, scheduler notifikasi cuaca & loker
 
-// Konfigurasi Cuaca (untuk info section menu + .cuaca)
+// Konfigurasi Cuaca (untuk info section menu + .weather)
 // Provider: open-meteo (gratis, tanpa API key) atau accuweather (butuh key)
 // Lokasi default: Jakarta (request owner 8 Sep 2026: zona default jakarta aja pas pairing pertama)
 export const weather = {
@@ -16,7 +16,7 @@ export const weather = {
 };
 
 // Laporan cuaca otomatis memakai Open-Meteo (gratis, tanpa API key).
-// Aktifkan dan tentukan grup tujuan melalui command .cuaca.
+// Aktifkan dan tentukan grup tujuan melalui command .weather.
 export const weatherScheduler = {
   enabled: false,
   timezone: "Asia/Jakarta",
