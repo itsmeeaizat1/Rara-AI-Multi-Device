@@ -17,6 +17,10 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase(DB_DIR + "/db.json");
 const db = getDatabase();
 
+// seam kartu canvas — biar .levelinfo gak nyamber jaringan saat gambar kartu
+const { _setLevelCardLoadImageForTest } = await import(R + "/src/lib/nova-level.js");
+_setLevelCardLoadImageForTest(async () => ({ width: 4, height: 4 }));
+
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
@@ -30,7 +34,7 @@ function mkMock() {
     sender: SENDER, chat: "c@g.us", pushName: "Budi", isOwner: true, isGroup: false,
     args: [], text: "", command: "", prefix: ".", mentionedJid: [], quoted: null,
     react: async () => {},
-    reply: async (txt) => { sends.push({ txt }); return { key: { id: "r" + sends.length } }; },
+    reply: async (txt, options = {}) => { sends.push({ txt, ext: options?.contextInfo?.externalAdReply }); return { key: { id: "r" + sends.length } }; },
   };
   const sock = {
     user: { id: "6280000000000@s.whatsapp.net" },
@@ -70,6 +74,7 @@ w("\n— .levelinfo: bar ▰▱ semua stat + EXP + Job EXP —");
   check("Job + Lv digabung", out.includes("Job: penebang (Lv.2)"));
   check("GAK ada morphing loading (animGeneric no-op)", mk.sends.filter((s) => s.edit).length === 0, mk.sends.length + " pesan, " + mk.sends.filter((s) => s.edit).length + " edit");
   check("hasil langsung (1 pesan)", mk.sends.length === 1, mk.sends.length + " pesan");
+  check("canvas level info ditanam di PREVIEW (bukan media)", mk.sends.length === 1 && !!mk.sends[0].ext?.thumbnail, "thumbnail preview kosong");
 }
 
 // ═══════════════════════════════════════════════════════════════
