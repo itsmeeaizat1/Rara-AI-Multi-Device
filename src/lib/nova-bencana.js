@@ -836,6 +836,121 @@ export function setWatcherRadius(chatId, km) {
   return subs[chatId];
 }
 
+// ═══════════ PARAMETER ALERT PER JENIS BENCANA (request owner 15 Sep
+// 2026: "dibencana lain jg bsa ada opsi set manual parameter alert
+// cntoh bencana banjir, atau yg lain trgantung kesediaan dibencana
+// masing") — tiap jenis bencana punya parameter yang tersedia sesuai
+// DATAnya. Disimpan di sub.params = { banjir: { minLevel, radiusKm }, ... }
+export const LEVEL_ORDER = { HIJAU: 1, KUNING: 2, MERAH: 3 }; // GLOBAL = severe, selalu lolos
+
+export const ALERT_PARAM_JENIS = [
+  { key: "gempa", label: "Gempa Bumi", params: ["minmag", "minlevel"] },
+  { key: "tsunami", label: "Tsunami", params: ["minlevel", "jarak"] },
+  { key: "topan", label: "Topan/Siklon", params: ["minlevel", "jarak"] },
+  { key: "banjir", label: "Banjir", params: ["minlevel", "jarak"] },
+  { key: "gunungapi", label: "Gunung Api", params: ["minlevel", "jarak"] },
+  { key: "kering", label: "Kekeringan", params: ["minlevel", "jarak"] },
+  { key: "kebakaran", label: "Kebakaran", params: ["minlevel", "jarak"] },
+];
+
+const PARAM_KEY_ALIASES = {
+  minmag: "minmag", magnitudo: "minmag", mag: "minmag",
+  minlevel: "minlevel", level: "minlevel",
+  jarak: "jarak", radius: "jarak", radiuskm: "jarak",
+};
+
+function normalizeParamJenis(raw) {
+  const s = String(raw || "").toLowerCase().replace(/\s+/g, "").replace("-", "");
+  const map = { gempa: "gempa", gempabumi: "gempa", tsunami: "tsunami", topan: "topan", siklon: "topan", siklontropis: "topan", banjir: "banjir", gunungapi: "gunungapi", kekeringan: "kering", kering: "kering", kebakaran: "kebakaran", karhutla: "kebakaran" };
+  return map[s] || null;
+}
+
+/**
+ * Setter parameter alert per jenis per subscriber.
+ * .bencanawatch param <jenis> <param> <nilai> — contoh:
+ *   param banjir minlevel kuning   → banjir mulai level KUNING aja
+ *   param topan jarak 800          → topan cuma ≤800 km dari lokasi
+ *   param gempa minmag 3.0         → (alias .bencanawatch minmag 3.0)
+ *   param banjir minlevel reset    → satu param balik default
+ *   param banjir reset             → semua param jenis itu dibersihin
+ */
+export function setWatcherParam(chatId, jenisRaw, keyRaw, valueRaw) {
+  const subs = getWatchers();
+  const cur = subs[chatId];
+  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum atur parameter.");
+  const jenis = normalizeParamJenis(jenisRaw);
+  if (!jenis) throw new Error(`Jenis bencana gak dikenal. Pilihan: ${ALERT_PARAM_JENIS.map((j) => j.label).join(", ")}.`);
+  const schema = ALERT_PARAM_JENIS.find((j) => j.key === jenis);
+
+  // reset SEMUA param jenis ini: param banjir reset — "reset" boleh di
+  // posisi key (param banjir reset) ATAU posisi nilai (param banjir minlevel reset)
+  const keyIsReset = /^(reset|default|bawaan)$/i.test(String(keyRaw ?? ""));
+  const valIsReset = /^(reset|default|bawaan)$/i.test(String(valueRaw ?? ""));
+  if ((keyRaw == null && valIsReset) || keyIsReset) {
+    const { params: _old, ...rest } = cur;
+    const params = { ...(_old || {}) };
+    delete params[jenis];
+    subs[chatId] = { ...rest, params };
+    if (jenis === "gempa") delete subs[chatId].minMag; // backward-compat minmag
+    saveWatchers(subs);
+    return subs[chatId];
+  }
+
+  const key = PARAM_KEY_ALIASES[String(keyRaw || "").toLowerCase()];
+  if (!key || !schema.params.includes(key)) {
+    throw new Error(`Parameter untuk ${schema.label}: ${schema.params.join(" / ")}. Contoh: .bencanawatch param ${jenis} ${schema.params[0]} ${key === "minmag" ? "3.5" : schema.params[0] === "minlevel" ? "kuning" : "500"}`);
+  }
+  const val = String(valueRaw ?? "").toLowerCase();
+  const params = { ...(cur.params || {}) };
+  params[jenis] ??= {};
+
+  if (key === "minmag") {
+    if (/^(reset|default|bawaan)$/.test(val)) { delete params.gempa.minmag; const { minMag: _m, ...rest } = subs[chatId]; subs[chatId] = rest; }
+    else {
+      const m = parseFloat(val);
+      if (!Number.isFinite(m) || m < MIN_MAG_FLOOR || m > MIN_MAG_CEIL) throw new Error(`Magnitudo minimum harus ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL} SR (default ${DEFAULT_MIN_MAG}).`);
+      const sub2 = setWatcherMinMag(chatId, String(m));
+      const p2 = { ...(sub2.params || {}) }; p2.gempa ??= {}; p2.gempa.minmag = m;
+      const subs2 = getWatchers();
+      subs2[chatId] = { ...subs2[chatId], params: p2 };
+      saveWatchers(subs2);
+      return subs2[chatId];
+    }
+  } else if (key === "minlevel") {
+    if (/^(reset|default|bawaan)$/.test(val)) delete params[jenis].minlevel;
+    else {
+      const lvl = String(val).toUpperCase();
+      if (!(lvl in LEVEL_ORDER)) throw new Error("Level harus HIJAU / KUNING / MERAH (default HIJAU = semua alert). Contoh: .bencanawatch param banjir minlevel kuning");
+      params[jenis].minlevel = lvl;
+    }
+  } else if (key === "jarak") {
+    if (/^(reset|default|bawaan)$/.test(val)) delete params[jenis].radiusKm;
+    else if (/^dunia$/.test(val)) params[jenis].radiusKm = RADIUS_MAX_KM;
+    else {
+      const km = parseInt(val, 10);
+      if (!Number.isFinite(km) || km < 50 || km > RADIUS_MAX_KM) throw new Error(`Jarak harus 50-${RADIUS_MAX_KM} km (dunia = ${RADIUS_MAX_KM}). Contoh: .bencanawatch param banjir jarak 300`);
+      params[jenis].radiusKm = km;
+    }
+  }
+  if (!Object.keys(params[jenis]).length) delete params[jenis];
+  subs[chatId] = { ...cur, params };
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+/** Gate parameter per jenis untuk level hasil — return false = skip. */
+export function paramAllowsKind(sub, kind, level, jarakKm, severe = false) {
+  if (severe) return true; // GLOBAL M6.5+ / darurat — selalu lolos
+  const pr = sub?.params?.[kind] || {};
+  if (pr.minlevel && level) {
+    const need = LEVEL_ORDER[pr.minlevel] ?? 1;
+    const have = LEVEL_ORDER[level] ?? 1;
+    if (have < need) return false;
+  }
+  if (pr.radiusKm && jarakKm != null && jarakKm > pr.radiusKm) return false;
+  return true;
+}
+
 /**
  * Ambang magnitudo minimum alert gempa per subscriber (default 3.5 —
  * request owner 15 Sep 2026). Mempengaruhi: near-quake (gempa dekat) DAN
@@ -2210,6 +2325,8 @@ async function dispatchEws(sendSock, ev, subs) {
       }
       // gempa di bawah ambang subscriber gak dikirim EWS, KECUALI gempa besar global
       if (!severe && Number.isFinite(parseFloat(ev.mag)) && parseFloat(ev.mag) < minMagSub) continue;
+      // parameter alert per jenis — gempa juga bisa diatur minlevel
+      if (!paramAllowsKind(sub, "gempa", level, jarak, severe)) continue;
 
       const text = formatEwsWarning(ev, { jarak, eta, city: sub.city, level });
       await s.sendMessage(chatId, { text });
@@ -2377,7 +2494,7 @@ export const MD_EWS_INSTRUCTIONS = {
     "3️⃣ Waspada lahar hujan di jalur sungai saat hujan",
     "4️⃣ Siapkan tas evakuasi, ikuti arahan petugas",
   ],
-  kekeringan: [
+  kering: [
     "1️⃣ Hemat air — prioritas minum & masak",
     "2️⃣ Simpan cadangan air bersih di wadah tertutup",
     "3️⃣ Cek jadwal/pengumuman PDAM setempat",
@@ -2471,6 +2588,8 @@ async function dispatchMdEws(s, ev) {
       }
       const level = tentukanLevelMdEws(ev.type, ev.alertlevel, jarak, sub.radius || 0);
       if (!level) continue;
+      // parameter alert per jenis (owner 15 Sep 2026): minlevel + jarak
+      if (!paramAllowsKind(sub, ev.kind, level, jarak, ev.alertlevel === "Red" && jarak == null)) continue;
       const text = formatMdEwsWarning(ev, { level, jarak, city: sub.city });
       await s.sendMessage(chatId, { text });
       sent++;
