@@ -13,6 +13,9 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase("/tmp/welcome-e2e-db/nova.json")
 const db = getDatabase()
 
+const { _setWelcomeCardAiForTest } = await import(R + "/src/lib/nova-welcome-canvas.js")
+_setWelcomeCardAiForTest(async () => "Terima kasih atas setiap momennya di sini.")
+
 const { handler: switchHandler } = await import(R + "/plugins/owner/switch.js")
 const { groupHandler } = await import(R + "/src/handler.js")
 const config = (await import(R + "/config.js")).default
@@ -89,30 +92,44 @@ await groupHandler({ id: GID, action: "add", participants: [NEWBIE] }, mockSock)
 await new Promise((r) => setTimeout(r, 300))
 t("4a. welcome OFF → gak ada pesan", sent.length === 0, "sent=" + sent.length)
 
-// ═══ 5. THUMBNAIL: pp tersedia → welcome/goodbye kirim IMAGE + caption ═══
+// ═══ 5. KARTU CANVAS DALAM PREVIEW (owner 16 Sep 2026): welcome/goodbye kirim
+// TEXT + externalAdReply.thumbnail (canvas card), BUKAN image media ═══
 await switchHandler(mockM(["group", "welcome", "on"]), { sock: mockSock, config })
 await switchHandler(mockM(["group", "bye", "on"]), { sock: mockSock, config })
 ppUrlMock = "https://cdn.test/pp.jpg"
 const realFetch = globalThis.fetch
-globalThis.fetch = async () => ({ ok: true, arrayBuffer: async () => new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]).buffer })
+// PNG ASLI 1x1 pixel — buffer magic-doang bikin loadImage native segfault
+const REAL_PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64")
+globalThis.fetch = async () => ({ ok: true, arrayBuffer: async () => REAL_PNG.buffer.slice(REAL_PNG.byteOffset, REAL_PNG.byteOffset + REAL_PNG.byteLength) })
 sent.length = 0
 await groupHandler({ id: GID, action: "add", participants: [NEWBIE] }, mockSock)
 await new Promise((r) => setTimeout(r, 300))
-const imgWelcome = sent.find((s) => s.msg?.image)
-t("5a. welcome kirim IMAGE (pp member)", !!imgWelcome && !!imgWelcome.msg.caption, "sent=" + sent.length)
-if (imgWelcome) out("   ↳ welcome image caption: " + String(imgWelcome.msg.caption).split("\n")[0].slice(0, 60))
+// NOTE: engineText ke-smallcaps ("W E L C O M E") — match via thumbnail + emoji 👋
+const pvWelcome = sent.find((s) => s.msg?.contextInfo?.externalAdReply?.thumbnail && String(s.msg.text || "").includes("👋"))
+t("5a. welcome kartu canvas ditanam di PREVIEW (thumbnail)", !!pvWelcome, "sent=" + sent.length)
+t("5b. welcome BUKAN media image (gak bisa disimpan galeri)", !!pvWelcome && !pvWelcome.msg.image, "masih ada image")
+if (pvWelcome) out("   ↳ welcome preview: " + String(pvWelcome.msg.text).split("\n")[0].slice(0, 60) + " | thumb=" + pvWelcome.msg.contextInfo.externalAdReply.thumbnail.length + "B")
+t("5c. welcome mention tetap ada", !!pvWelcome && JSON.stringify(pvWelcome.msg.mentions || []).includes(NEWBIE))
 await groupHandler({ id: GID, action: "remove", participants: [NEWBIE] }, mockSock)
 await new Promise((r) => setTimeout(r, 300))
-const imgBye = sent.find((s) => s.msg?.image && String(s.msg.caption || "").includes("🚪"))
-t("5b. goodbye kirim IMAGE (pp member)", !!imgBye, "sent=" + sent.length)
+const pvBye = sent.find((s) => s.msg?.contextInfo?.externalAdReply?.thumbnail && String(s.msg.text || "").includes("🚪"))
+t("5d. goodbye kartu canvas ditanam di PREVIEW (thumbnail)", !!pvBye, "sent=" + sent.length)
+t("5e. goodbye BUKAN media image", !!pvBye && !pvBye.msg.image, "masih ada image")
 globalThis.fetch = realFetch
 
-// ═══ 6. pp private → fallback teks (aman) ═══
+// ═══ 6. pp private → kartu tetap jalan (avatar inisial) + preview ═══
 ppUrlMock = null
 sent.length = 0
 await groupHandler({ id: GID, action: "add", participants: [NEWBIE] }, mockSock)
 await new Promise((r) => setTimeout(r, 300))
-t("6a. pp private → fallback pesan teks", sent.length === 1 && !!sent[0].msg?.text, "sent=" + sent.length)
+t("6a. pp private → kartu avatar inisial + preview", sent.length === 1 && !!sent[0].msg?.text && !!sent[0].msg?.contextInfo?.externalAdReply?.thumbnail, "sent=" + sent.length)
+
+// ═══ 6b. UNIT: kartu canvas welcome/goodbye render bener (PNG valid) ═══
+const { generateWelcomeCard, generateGoodbyeCard } = await import(R + "/src/lib/nova-welcome-canvas.js")
+const cardW = await generateWelcomeCard({ groupName: "Grup Test", ppBuffer: null, name: "Budi", memberKe: 5, totalMember: 5 })
+const cardB = await generateGoodbyeCard({ groupName: "Grup Test", ppBuffer: null, name: "Budi", apresiasi: "Terima kasih atas setiap momennya di sini." })
+t("6b. kartu welcome render (PNG > 10KB)", cardW.length > 10000, cardW.length + "B")
+t("6c. kartu goodbye render (PNG > 10KB)", cardB.length > 10000, cardB.length + "B")
 
 // ═══ 7. TARGET TERPUSAT (request owner 10 Sep 2026) ═══
 const DM = { chat: "628999@s.whatsapp.net", isGroup: false }
