@@ -4,9 +4,9 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "weather", alias: ["weather", "weatherrpg", "cuacarpg"],
+  name: "weatherrpg", alias: ["weatherrpg", "cuacarpg"], // "weather" dilepas 15 Sep 2026 — nama .weather dipindah ke fitur cuaca (cuaca-v15)
   category: "rpg", description: "Cek cuaca dunia RPG",
-  usage: ".weather", example: ".weather",
+  usage: ".weatherrpg", example: ".weatherrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 

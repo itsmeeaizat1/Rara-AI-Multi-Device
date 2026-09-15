@@ -154,12 +154,12 @@ _setWeatherFetcherForTest(null); // balikin fetch asli
 
 // ═══ 5. command plugin ═══
 out("\n— command plugin —");
-const { handler } = await import(R + "/plugins/owner/autoweatherrealtime.js");
+const { handler } = await import(R + "/plugins/owner/weathersystemwatch.js");
 const config = { command: { prefix: "." }, weather: { location: { name: "Jakarta", latitude: -6.2, longitude: 106.8 } } };
 const replies = [];
 function mockM(args) {
   return {
-    command: "autoweatherrealtime", args, prefix: ".",
+    command: "weathersystemwatch", args, prefix: ".",
     chat: "628999@s.whatsapp.net", isGroup: false, isOwner: true,
     react: async () => {},
     reply: async (txt) => replies.push(String(txt)),

@@ -15,7 +15,7 @@ import { conditionEmoji } from "./nova-weather-notify.js";
 
 export const LEVELS = { 1: { emoji: "🟡", text: "WASPADA" }, 2: { emoji: "🟠", text: "SIAGA" }, 3: { emoji: "🔴", text: "AWAS" } };
 
-// Threshold default (bisa di-override per subscriber via .autoweatherrealtime
+// Threshold default (bisa di-override per subscriber via .weathersystemwatch
 // threshold set — lihat buildThresholds + THRESHOLD_BASE di bawah)
 export const THRESHOLDS = {
   windWaspada: 40, windSiaga: 60, windAwas: 80,      // km/jam
@@ -26,7 +26,7 @@ export const THRESHOLDS = {
 };
 
 // Basis threshold user-facing (1 knob per pemicu, diturunkan otomatis ke
-// 3 level EWS). Ini yang di-set via .autoweatherrealtime threshold set.
+// 3 level EWS). Ini yang di-set via .weathersystemwatch threshold set.
 export const THRESHOLD_BASE = {
   heat: { default: 36, unit: "°C", desc: "Panas ekstrem (Waspada; Siaga +2, Awas +4)", min: 25, max: 50 },
   cold: { default: 10, unit: "°C", desc: "Dingin ekstrem (Waspada; Siaga -3, Awas -6)", min: -30, max: 25 },

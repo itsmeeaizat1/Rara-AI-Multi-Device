@@ -392,7 +392,7 @@ const AUTO_ALIASES = {
   bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch", disastersystemwatch: "bencanawatch",
   animenotifier: "autoanimenotifier", animenotify: "autoanimenotifier", anime: "autoanimenotifier", animev2: "autoanimenotifier", bolanotify: "autobolanotify", jadwalbolanotify: "autobolanotify", jadwalnotify: "autobolanotify", footballnotify: "autobolanotify", linkedinnotify: "autolinkedin", lnjobs: "autolinkedin", linkedin: "autolinkedin", lokerlinkedin: "autolinkedin",
   movienotifier: "automovienotifier", movienotify: "automovienotifier", filmnotifier: "automovienotifier", movienotif: "automovienotifier", beritanotify: "autoberitanotify", beritabarak: "autoberitanotify", newsnotify: "autoberitanotify", autonews: "autoberitanotify",
-  animev1: "autoanime", winbu: "autoanime", animewinbu: "autoanime", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
+  animev1: "autoanime", winbu: "autoanime", animewinbu: "autoanime", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", weathersystemwatch: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
