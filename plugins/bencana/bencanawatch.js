@@ -20,6 +20,7 @@ import {
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
   getMonitorHealth, sendActivationSample, getEwsProviderHealth, EWS_LEVELS,
   setWatcherEws, setWatcherProvider, getEwsHistory, EWS_MIN_MAG, setWatcherMinMag, DEFAULT_MIN_MAG, MIN_MAG_FLOOR, MIN_MAG_CEIL,
+  setWatcherParam, ALERT_PARAM_JENIS, LEVEL_ORDER,
   getMagmaVolcanoes, MAGMA_LEVELS, sendRegionalAlert,
 } from "../../src/lib/nova-bencana.js";
 // ── GUARD FORMAT (request owner 2026-09-07): SEMUA pesan berkotak plugin
@@ -78,6 +79,7 @@ async function handler(m, { sock }) {
       aktif: "on", aktifkan: "on", nyalakan: "on", cek: "status", check: "status",
       info: "status", help: "guide", bantuan: "guide",
       atur: "atur", pengaturan: "atur", setting: "atur", settings: "atur",
+      param: "param", parameter: "param", minlevel: "minlevel", levelmin: "minlevel",
       history: "riwayat",
       gunung: "gunung", gunungapi: "gunung", volcano: "gunung", ga: "gunung",
       tes: "test", test: "test", uji: "test", ujicoba: "test",
@@ -282,6 +284,117 @@ async function handler(m, { sock }) {
         await m.react("❌");
         return m.reply(novaError("Bencana Watch", e.message || `Magnitudo minimum M ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL}. Contoh: .bencanawatch minmag 3.5`));
       }
+
+    // ── PARAMETER ALERT PER JENIS BENCANA (owner 15 Sep 2026: "dibencana
+    // lain jg bsa ada opsi set manual parameter alert cntoh bencana banjir,
+    // atau yg lain trgantung kesediaan dibencana masing") ──
+    if (action === "param" || action === "parameter") {
+      const [, jenisRaw, keyRaw, ...valRest] = m.args || [];
+      const valRaw = valRest.join(" ") || undefined;
+      const subsP = await getWatchersSafe();
+      const meP = subsP[targetKey];
+      const curParams = meP?.params || {};
+
+      const fmtJenis = (j) => {
+        const pr = curParams[j.key] || {};
+        const bits = [];
+        if (j.key === "gempa") bits.push(`minmag M ${(meP?.minMag ?? DEFAULT_MIN_MAG)}+`);
+        if (pr.minlevel) bits.push(`minlevel ${pr.minlevel}`); else bits.push("minlevel HIJAU");
+        if (pr.radiusKm) bits.push(`jarak ${pr.radiusKm} km`);
+        return `${j.label}: ${bits.join(" | ")}`;
+      };
+
+      if (!jenisRaw) {
+        return m.reply(novaBox("Bencana Watch — Param", [
+          "Set parameter alert per jenis bencana.",
+          "---",
+          ...ALERT_PARAM_JENIS.map(fmtJenis),
+          "---",
+          "Set : .bencanawatch param <jenis> <param> <nilai>",
+          "Contoh: .bencanawatch param banjir minlevel kuning",
+          "       .bencanawatch param topan jarak 800",
+          "       .bencanawatch param gempa minmag 3.0",
+          "Detail per jenis: .bencanawatch param banjir",
+          "Reset: .bencanawatch param banjir reset",
+        ]));
+      }
+      if (jenisRaw && !keyRaw) {
+        const j = ALERT_PARAM_JENIS.find((x) => x.key === String(jenisRaw).toLowerCase().replace(/\s+/g, "").replace("-", "") || x.label.toLowerCase().startsWith(String(jenisRaw).toLowerCase()));
+        if (!j) return m.reply(novaError("Bencana Watch", `Jenis gak dikenal. Pilihan: ${ALERT_PARAM_JENIS.map((x) => x.label).join(", ")}`));
+        const pr = curParams[j.key] || {};
+        return m.reply(novaBox(`Bencana Watch — ${j.label}`, [
+          "Parameter yang tersedia untuk jenis ini:",
+          ...(j.params.includes("minmag") ? [
+            `minmag : M ${(j.key === "gempa" ? (meP?.minMag ?? DEFAULT_MIN_MAG) : "-")}+ (default ${DEFAULT_MIN_MAG})`,
+            "  set: .bencanawatch param gempa minmag 3.0",
+          ] : []),
+          ...(j.params.includes("minlevel") ? [
+            `minlevel : ${pr.minlevel || "HIJAU (semua alert)"}`,
+            `  set: .bencanawatch param ${j.key} minlevel kuning`,
+            "  pilihan: HIJAU (semua) / KUNING (skip info) / MERAH (darurat saja)",
+          ] : []),
+          ...(j.params.includes("jarak") ? [
+            `jarak : ${pr.radiusKm ? pr.radiusKm + " km" : "ikut radius utama (" + (meP?.radius || 300) + " km)"}`,
+            `  set: .bencanawatch param ${j.key} jarak 500`,
+            "  rentang 50-20000 km, dunia = semua",
+          ] : []),
+          "---",
+          "Gempa besar global M6.5+ & alert darurat tetap",
+          "dikirim apa pun pengaturannya.",
+          "Reset: .bencanawatch param " + j.key + " reset",
+        ]));
+      }
+      try {
+        const rec = setWatcherParam(targetKey, jenisRaw, keyRaw, valRaw);
+        const alsoG = await mirrorGlobal((k) => setWatcherParam(k, jenisRaw, keyRaw, valRaw));
+        await m.react("🐣");
+        const prNow = (rec?.params || {})[String(jenisRaw).toLowerCase()] || {};
+        const shown = Object.keys(prNow).length ? Object.entries(prNow).map(([k2, v2]) => `${k2}=${v2}`).join(" | ") : "default";
+        return m.reply(novaBox("Bencana Watch", [
+          `Parameter ${jenisRaw} diperbarui: ${shown}.`,
+          ...(alsoG ? ["Pengaturan langganan global ikut diubah."] : []),
+          "---",
+          "Detail: .bencanawatch param " + jenisRaw,
+        ]));
+      } catch (e) {
+        await m.react("❌");
+        return m.reply(novaError("Bencana Watch", e.message));
+      }
+    }
+
+    // ── shortcut minlevel ──
+    if (action === "minlevel") {
+      const [, jenisRaw, lvlRaw] = m.args || [];
+      if (!jenisRaw || !lvlRaw) {
+        return m.reply(novaBox("Bencana Watch — Min Level", [
+          "Atur level minimum alert per jenis bencana.",
+          "---",
+          "HIJAU  : semua alert (default)",
+          "KUNING : skip info hijau",
+          "MERAH  : darurat saja",
+          "---",
+          "Contoh: .bencanawatch minlevel banjir kuning",
+          "       .bencanawatch minlevel topan merah",
+          "Reset : .bencanawatch minlevel banjir reset",
+          "Semua jenis: .bencanawatch param",
+        ]));
+      }
+      try {
+        const rec = setWatcherParam(targetKey, jenisRaw, "minlevel", lvlRaw);
+        const alsoG = await mirrorGlobal((k) => setWatcherParam(k, jenisRaw, "minlevel", lvlRaw));
+        await m.react("🐣");
+        const isReset = /^(reset|default|bawaan)$/i.test(String(lvlRaw ?? ""));
+        return m.reply(novaBox("Bencana Watch", [
+          isReset ? `Level minimum ${jenisRaw} kembali default (HIJAU).` : `Level minimum alert ${jenisRaw}: ${rec?.params?.[String(jenisRaw).toLowerCase()]?.minlevel || lvlRaw.toUpperCase()}.`,
+          "Alert di bawah level itu gak dikirim.",
+          ...(alsoG ? ["Langganan global ikut diubah."] : []),
+        ]));
+      } catch (e) {
+        await m.react("❌");
+        return m.reply(novaError("Bencana Watch", e.message));
+      }
+    }
+
     }
 
     }
@@ -933,6 +1046,10 @@ async function handler(m, { sock }) {
         lines.push(`Lokasi  : ${me.city}${me.detail ? ` (${me.detail})` : ""}`);
         lines.push(`Radius  : ${me.radius || 300} km — peringatan wilayah aktif`);
         lines.push(`MinMag  : M ${me.minMag ?? DEFAULT_MIN_MAG}+ — gempa di bawah ini dilewati`);
+        const prEntries = Object.entries(me.params || {}).filter(([, v]) => Object.keys(v || {}).length);
+        if (prEntries.length) {
+          lines.push(`Param   : ${prEntries.map(([k2, v2]) => `${k2} (${Object.entries(v2).map(([a, b]) => `${a}=${b}`).join(", ")})`).join(" · ")}`);
+        }
       } else if (me) {
         lines.push("---");
         lines.push("Lokasi  : belum di-set (alert umum saja)");

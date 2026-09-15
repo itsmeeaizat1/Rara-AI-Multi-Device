@@ -285,6 +285,60 @@ L.setWatcherMinMag(CHAT, "reset");
 const resNq2 = await L.dispatchNearEvent(okLo2.sock, { kind: "gempa", jenis: "Gempa Bumi", mag: 3.1, depth: "10 km", lat: -6.5, lon: 106.9, desc: "tes near", level: "WASPADA", waktu: "x", sumber: "bmkg" }, "gempa", "bmkg");
 check("near-quake: reset ke 3.5 → M3.1 dilewati", resNq2.sent === 0);
 
+w("\n— param alert per jenis bencana (owner 15 Sep 2026) —");
+check("param: setter banjir minlevel KUNING tersimpan", L.setWatcherParam(CHAT, "banjir", "minlevel", "kuning").params.banjir.minlevel === "KUNING");
+check("param: setter topan jarak 800 tersimpan", L.setWatcherParam(CHAT, "topan", "jarak", "800").params.topan.radiusKm === 800);
+check("param: alias 'gunung api' → gunungapi", L.setWatcherParam(CHAT, "gunung api", "minlevel", "merah").params.gunungapi.minlevel === "MERAH");
+check("param: alias kekeringan → kering", L.setWatcherParam(CHAT, "kekeringan", "jarak", "500").params.kering.radiusKm === 500);
+let threwP = false;
+try { L.setWatcherParam(CHAT, "meteor", "minlevel", "kuning"); } catch { threwP = true; }
+check("param: jenis gak dikenal → ditolak", threwP === true);
+let threwL = false;
+try { L.setWatcherParam(CHAT, "banjir", "minlevel", "ungu"); } catch { threwL = true; }
+check("param: level gak valid → ditolak (HIJAU/KUNING/MERAH)", threwL === true);
+let threwJ = false;
+try { L.setWatcherParam(CHAT, "banjir", "jarak", "10"); } catch { threwJ = true; }
+check("param: jarak < 50 km → ditolak", threwJ === true);
+// gate minlevel di mdEws: banjir Orange 300 km → level KUNING; minlevel MERAH → skip
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 300, ews: true, params: { banjir: { minlevel: "MERAH" } } } });
+check("gate mdEws: minlevel MERAH → banjir Orange (KUNING) DILEWATI", L.paramAllowsKind({ params: { banjir: { minlevel: "MERAH" } } }, "banjir", "KUNING", 300) === false);
+check("gate mdEws: minlevel MERAH → banjir Red (MERAH) LOLOS", L.paramAllowsKind({ params: { banjir: { minlevel: "MERAH" } } }, "banjir", "MERAH", 300) === true);
+check("gate mdEws: jarak 800 → topan di 900 km DILEWATI", L.paramAllowsKind({ params: { topan: { radiusKm: 800 } } }, "topan", "KUNING", 900) === false);
+check("gate mdEws: jarak 800 → topan di 80 km LOLOS", L.paramAllowsKind({ params: { topan: { radiusKm: 800 } } }, "topan", "MERAH", 80) === true);
+check("gate mdEws: severe darurat selalu lolos walau minlevel MERAH", L.paramAllowsKind({ params: { tsunami: { minlevel: "MERAH" } } }, "tsunami", "KUNING", 300, true) === true);
+check("gate gempa: minlevel KUNING → HIJAU dilewati", L.paramAllowsKind({ params: { gempa: { minlevel: "KUNING" } } }, "gempa", "HIJAU", 1500) === false);
+// dispatch mdEws end-to-end dengan param aktif
+{ const st = stateFile(); delete st.mdEws; fs.writeFileSync(dbPath, JSON.stringify(st)); }
+let flSrc = [{ type: "FL", id: "fl-1", name: "Banjir tes jauh", country: "Indonesia", desc: "Banjir tes Orange jauh", alertlevel: "Orange", alertscore: 1, iscurrent: true, fromdate: new Date().toISOString(), todate: null, report: null, detailsUrl: null, lat: -8.5, lon: 110.4 }];
+L._setBencanaSourcesForTest({ gdacs: async () => flSrc });
+const okFl = makeSock();
+await L._bencanaRunTickForTest("mdews", okFl.sock); // baseline
+const okFl2 = makeSock();
+await L._bencanaRunTickForTest("mdews", okFl2.sock); // tick: jarak ±550 km > minlevel MERAH → skip
+check("dispatch mdEws: banjir KUNING + param minlevel MERAH → TIDAK terkirim", okFl2.sent.length === 0);
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 300, ews: true, params: { banjir: {} } } });
+flSrc = [{ ...flSrc[0], id: "fl-2" }]; // event BARU — fl-1 udah keburu dicatat baseline pertama
+{ const st = stateFile(); delete st.mdEws; fs.writeFileSync(dbPath, JSON.stringify(st)); }
+await L._bencanaRunTickForTest("mdews", okFl.sock); // baseline ulang (fl-2 dicatat)
+const okFl3 = makeSock();
+flSrc = [{ ...flSrc[0], id: "fl-3" }]; // event BARU lagi biar gak kena dedup baseline
+await L._bencanaRunTickForTest("mdews", okFl3.sock); // tick: tanpa param → KUNING terkirim
+check("dispatch mdEws: tanpa param → banjir KUNING TERKIRIM", okFl3.sent.length === 1 && /PERINGATAN DINI — BANJIR/.test(okFl3.sent[0].text));
+// EWS gempa minlevel: sub param gempa minlevel MERAH → M4.6 KUNING skip, M6.8 severe tetap
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 300, ews: true, params: { gempa: { minlevel: "MERAH" } } } });
+const okGm = makeSock();
+const resGmK = await dispatchEwsEvent(ewsEv("emsc_gmk", 4.6, -6.4, 107.0, "tes KUNING skip"), null, okGm.sock);
+check("EWS gempa: minlevel MERAH → M4.6 (KUNING) dilewati", resGmK.sent === 0);
+const resGmR = await dispatchEwsEvent(ewsEv("emsc_gmr", 5.8, -6.7, 105.9, "tes MERAH lolos"), null, okGm.sock);
+check("EWS gempa: minlevel MERAH → M5.8 (MERAH) tetap terkirim", resGmR.sent === 1);
+const resGmS = await dispatchEwsEvent(ewsEv("emsc_gms", 6.8, 35.0, 139.0, "severe bypass"), null, okGm.sock);
+check("EWS gempa: severe M6.8 GLOBAL bypass minlevel", resGmS.sent === 1);
+// reset param
+const recR = L.setWatcherParam(CHAT, "banjir", "reset");
+check("param: reset jenis → params bersih", (recR.params || {}).banjir === undefined);
+const tplKering = L.formatMdEwsWarning({ kind: "kering", jenis: "Kekeringan", icon: "☀️", level: "SIAGA", lat: -8.0, lon: 120.0, desc: "tes", country: "Indonesia", waktu: "baru terdeteksi", report: null }, { level: "KUNING", jarak: 100, city: "Jakarta" });
+check("fix instruksi: kind 'kering' → instruksi hemat air (bukan default)", /Hemat air/i.test(tplKering));
+
 w("\n— sock null: error keras —");
 _setBencanaSockForTest(null); // simulasi koneksi belum tersedia
 const resNull = await dispatchNearEvent(null, { kind: "gempa", mag: "4.0", lat: -6, lon: 106 }, "gempa", "bmkg");
