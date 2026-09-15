@@ -862,6 +862,7 @@ async function startConnection(options = {}) {
         try { const { initActivityTracker } = await import("./lib/nova-activity-tracker.js"); initActivityTracker(); } catch (e) { colors.logger.error("init", "ActivityTracker init failed: " + e.message); }
         try { const { initAutoTranslate } = await import("./lib/nova-autotranslate.js"); initAutoTranslate(); } catch (e) { colors.logger.error("init", "AutoTranslate init failed: " + e.message); }
         try { startWeatherRealtimeScheduler(sock); } catch (e) { colors.logger.error("init", "WeatherRealtime scheduler failed: " + e.message); }
+        try { const { initHariBesarScheduler } = await import("./lib/nova-haribesar.js"); initHariBesarScheduler(sock); } catch (e) { colors.logger.error("init", "HariBesar scheduler failed: " + e.message); }
       } catch (e) {
         colors.logger.debug("renewal", "skipped: " + e.message);
       }
