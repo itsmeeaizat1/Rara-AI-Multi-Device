@@ -905,19 +905,12 @@ try {
       const spamResult = trackNotFound(m.sender, command);
       if (!spamResult.shouldReply) return;
 
-      // Cari closest match (levenstein)
+      // Cari closest match — levenshtein (jarak edit) + didyoumean (skor
+      // kemiripan relatif, nangkep typo jauh yang strukturnya masih mirip)
+      // (16 Sep 2026, upgrade request owner: dep didyoumean)
       const { getAllCommandNames } = await import("./lib/nova-plugins.js");
-      const allCommands = getAllCommandNames();
-      const { levenshtein } = await import("./lib/nova-middleware.js");
-      let closest = null;
-      let minDist = Infinity;
-      for (const cmd of allCommands) {
-        const dist = levenshtein(command, cmd);
-        if (dist < minDist && dist <= 3) {
-          minDist = dist;
-          closest = cmd;
-        }
-      }
+      const { suggestCommand } = await import("./lib/nova-command-suggest.js");
+      const closest = suggestCommand(command, getAllCommandNames());
 
       if (!m.isNewsletter) {
         try {
