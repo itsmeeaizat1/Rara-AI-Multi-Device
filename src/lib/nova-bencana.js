@@ -57,7 +57,10 @@ const VOLCANO_POLL_MS = 600_000; // status gunung api PVMBG MAGMA — 10 menit
 const DEFAULT_RADIUS_KM = 300; // radius peringatan wilayah (bisa di-set per user)
 const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "bencana-state.json");
+// PENTING (15 Sep 2026): let + seam — e2e test bisa arahin state file ke
+// /tmp biar gak nyetag state produksi.
+let STATE_FILE = path.join(process.cwd(), "src", "data", "bencana-state.json");
+export function _setBencanaStateFileForTest(f) { STATE_FILE = f || STATE_FILE; }
 
 // ───────────────────────────── util ─────────────────────────────
 
@@ -137,7 +140,7 @@ async function downloadCardThumb(url) {
     if (cardThumbCache.size > 20) cardThumbCache.clear();
     cardThumbCache.set(url, buf);
     return buf;
-  } catch { return null; }
+  } catch (e) { console.error("[bencana] ❌ Gagal unduh thumbnail card:", e?.message || e); return null; }
 }
 
 /**
@@ -151,7 +154,7 @@ function localBencanaThumb() {
       const buf = fs.readFileSync(p);
       if (buf.length > 1000) return buf;
     }
-  } catch {}
+  } catch (e) { console.error("[bencana] ❌ Gagal baca thumbnail lokal:", e?.message || e); }
   return null;
 }
 
@@ -160,7 +163,7 @@ function safeSourceUrl(u) {
   try {
     const url = new URL(String(u || ""));
     if (url.protocol === "http:" || url.protocol === "https:") return url.href;
-  } catch {}
+  } catch (e) { console.error("[bencana] ❌ sourceUrl card gak valid:", e?.message || e); }
   return null;
 }
 
@@ -480,14 +483,14 @@ async function volcanoCoords(v, st) {
   st.volcano.coords ??= {};
   if (st.volcano.coords[v.nama] === undefined) {
     let c = null;
-    try { c = parseMagmaCoords(await fetchHtml(v.laporanUrl, 15000, 1)); } catch { c = null; }
+    try { c = parseMagmaCoords(await fetchHtml(v.laporanUrl, 15000, 1)); } catch (e) { console.error("[bencana] ❌ Gagal parse koordinat gunung:", e?.message || e); c = null; }
     st.volcano.coords[v.nama] = c || false; // false = udah nyoba gak dapet — jangan ulangin
     saveState(st);
   }
   return st.volcano.coords[v.nama] || null;
 }
 
-async function handleVolcanoChange({ v, prevNum }, st) {
+async function handleVolcanoChange(sendSock, { v, prevNum }, st) {
   const lv = MAGMA_LEVELS[v.levelNum] || MAGMA_LEVELS[1];
   const prevL = MAGMA_LEVELS[prevNum] || MAGMA_LEVELS[1];
   const up = v.levelNum > prevNum;
@@ -522,24 +525,45 @@ async function handleVolcanoChange({ v, prevNum }, st) {
   // Perubahan Waspada↔Normal = cuma buat subscriber yang lokasinya DEKAT
   // gunung (radius, butuh koordinat — tanpa koordinat dilewatin).
   if ((v.levelNum ?? 1) >= 3 || prevNum >= 3) {
-    await dispatch(ev, lines.join("\n"), eventCard(ev));
+    await dispatch(sendSock, ev, lines.join("\n"), eventCard(ev));
   } else if (coords) {
-    await dispatchNearEvent(ev, "gunungapi", "pvmbg");
+    await dispatchNearEvent(sendSock, ev, "gunungapi", "pvmbg");
   }
 }
 
-async function volcanoTick() {
+// UPGRADE 15 Sep 2026 (syarat owner): sock PARAMETER + log siklus + level
+// gunung dipersist SETELAH alert terkirim (dulu dicatat ASAP → kirim gagal
+// = perubahan status hilang, gak pernah dinotifkin).
+async function volcanoTick(sendSock) {
+  const s = sendSock || sock;
+  if (!s) { console.error("[bencana] ❌ [volcanoTick] koneksi WhatsApp TIDAK ADA — siklus dilewati"); return; }
   try {
+    console.log(`[bencana] 🔄 [volcanoTick] cek status gunung api PVMBG jalan (${VOLCANO_POLL_MS / 1000}s sekali)…`);
     const page = await getMagmaVolcanoes();
     const st = loadState();
-    const { changes } = diffVolcanoState(st, page.list);
-    saveState(st); // level baru dicatat ASAP biar gak dobel kirim pas error kirim
+    const { changes, baseline } = diffVolcanoState(st, page.list);
+    if (baseline || !changes.length) {
+      saveState(st); // baseline/tanpa perubahan → gak ada notifikasi → aman langsung simpan
+      if (baseline) console.log(`[bencana] 🔄 [volcanoTick] baseline gunung api dicatat (${page.list?.length ?? 0} gunung)`);
+      else console.log("[bencana] 🔄 [volcanoTick] tidak ada perubahan status gunung api");
+      return;
+    }
+    console.log(`[bencana] 🔄 [volcanoTick] ${changes.length} perubahan status gunung api terdeteksi`);
+    let errors = 0;
     for (const ch of changes) {
-      try { await handleVolcanoChange(ch, st); }
-      catch (e) { logger.error?.("bencana", `Gagal kirim status gunung ${ch.v.nama}: ${e.message}`); }
+      try { await handleVolcanoChange(s, ch, st); }
+      catch (e) { errors++; console.error(`[bencana] ❌ [volcanoTick] Gagal kirim status gunung ${ch.v.nama}:`, e?.message || e); logger.error?.("bencana", `Gagal kirim status gunung ${ch.v.nama}: ${e.message}`); }
       await new Promise((r) => setTimeout(r, 800));
     }
+    if (errors > 0) {
+      // ada yang gagal → state level BELUM disimpan → perubahan di-tick ulang nanti
+      console.error(`[bencana] ❌ [volcanoTick] ${errors} alert gagal terkirim — perubahan level BELUM dipersist, dicoba lagi ${VOLCANO_POLL_MS / 1000}s lagi`);
+    } else {
+      saveState(st); // SYARAT OWNER #4: persist SETELAH semua alert terkirim
+      console.log("[bencana] ✅ [volcanoTick] perubahan status terkirim, level dipersist (tahan restart)");
+    }
   } catch (e) {
+    console.error("[bencana] ❌ [volcanoTick] MAGMA error:", e?.message || e, e?.stack || "");
     logger.error?.("bencana", "MAGMA error: " + e.message);
   }
 }
@@ -614,7 +638,7 @@ function loadState() {
       st.volcano ??= { baseline: false, levels: {}, coords: {} };
       return st;
     }
-  } catch { /* korup → mulai ulang */ }
+  } catch (e) { console.error("[bencana] ❌ state file korup/tak terbaca, mulai ulang state baru:", e?.message || e); }
   return { bmkg: null, gdacs: [], usgs: [], pending: [], firedJadwal: [], fp: [], ews: { bootstrapped: false, seen: [], history: [] }, volcano: { baseline: false, levels: {}, coords: {} } };
 }
 
@@ -632,7 +656,7 @@ function getWatchers() {
   try {
     const db = getDatabase();
     return db.setting("bencanaWatch") || {};
-  } catch { return {}; }
+  } catch (e) { console.error("[bencana] ❌ Gagal baca subscriber dari db:", e?.message || e); return {}; }
 }
 
 function saveWatchers(subs) {
@@ -705,7 +729,7 @@ export async function geocodeLocation(query) {
   const q = String(query || "").trim();
   if (q.length < 2) throw new Error("Nama tempat minimal 2 huruf.");
   let cache = {};
-  try { cache = getDatabase().setting("bencanaGeoCache") || {}; } catch {}
+  try { cache = getDatabase().setting("bencanaGeoCache") || {}; } catch (e) { console.error("[bencana] ❌ Gagal baca cache geocode:", e?.message || e); }
   const key = q.toLowerCase();
   if (cache[key]) return cache[key];
   const url = `${GEOCODE_URL}?name=${encodeURIComponent(q)}&count=1&language=id&format=json`;
@@ -726,7 +750,7 @@ export async function geocodeLocation(query) {
     const keys = Object.keys(cache);
     if (keys.length > 100) delete cache[keys[0]]; // cache max 100
     cache[key] = loc;
-    try { getDatabase().setting("bencanaGeoCache", cache); } catch {}
+    try { getDatabase().setting("bencanaGeoCache", cache); } catch (e) { console.error("[bencana] ❌ Gagal simpan cache geocode:", e?.message || e); }
     return loc;
   } finally {
     clearTimeout(t);
@@ -780,10 +804,23 @@ export function clearWatcherLocation(chatId) {
   return subs[chatId];
 }
 
-/** Set radius monitoring (50-2000 km). */
+/**
+ * UPGRADE 15 Sep 2026 (request owner: "radius bsa diset bebas lbh dr 2000
+ * smpai ke luar negeri"): batas lama 2000 km DIBUKA jadi 50-20000 km.
+ * 20000 km > setengah keliling bumi (±20015 km) = jarak maksimum haversine
+ * antara 2 titik manapun di bumi → "dunia" mencakup SEMUA benua. Keyword
+ * dunia/global/semua/dunia21 → 20000 (seluruh dunia).
+ */
+export const RADIUS_MAX_KM = 20000; // > jarak maksimum 2 titik di bumi (±20015 km)
+export function parseRadiusKm(km) {
+  const raw = String(km ?? "").toLowerCase().trim();
+  if (["dunia", "global", "semua", "world", "worldwide", "internasional", "luarnegeri", "luar-negeri"].includes(raw)) return RADIUS_MAX_KM;
+  const r = Math.round(Number(raw));
+  return r;
+}
 export function setWatcherRadius(chatId, km) {
-  const r = Math.round(Number(km));
-  if (!r || r < 50 || r > 2000) throw new Error("Radius harus 50-2000 km.");
+  const r = parseRadiusKm(km);
+  if (!r || r < 50 || r > RADIUS_MAX_KM) throw new Error(`Radius harus 50-${RADIUS_MAX_KM} km (20000 = seluruh dunia). Contoh: .bencanawatch radius 500 | .bencanawatch radius dunia`);
   const subs = getWatchers();
   const cur = subs[chatId];
   if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum set radius.");
@@ -1137,7 +1174,7 @@ async function allGroupJids() {
     if (g && typeof g === "object") {
       groupsCache = { ts: now, list: Object.keys(g) };
     }
-  } catch { /* keep cache lama */ }
+  } catch (e) { console.error("[bencana] ❌ Gagal ambil daftar grup (pakai cache lama):", e?.message || e); }
   return groupsCache.list;
 }
 
@@ -1146,7 +1183,8 @@ async function allGroupJids() {
  * Record biasa → 1 target. Record scope global → DM owner + semua grup.
  * Chat yang punya record sendiri gak dobel (record sendiri menang).
  */
-async function expandTargets() {
+async function expandTargets(sendSock = null) {
+  const s = sendSock || sock;
   const subs = getWatchers();
   const targets = [];
   const seen = new Set();
@@ -1168,14 +1206,14 @@ async function expandTargets() {
   // subscriber tetap dapat, grup/DM pilihan owner juga dapat alert generic
   // (tanpa lokasi → gak dapat versi "dekat wilayah"). ──
   try {
-    const extras = await mergeAutoTargets(sock, "bencanawatch", []);
+    const extras = await mergeAutoTargets(s, "bencanawatch", []);
     for (const jid of extras) {
       if (!seen.has(jid)) {
         targets.push([`auto:${jid}`, jid, { mode: "otomatis", kirim: "utama", __autoTarget: true }]);
         seen.add(jid);
       }
     }
-  } catch { /* target lib gagal → subscriber aja */ }
+  } catch (e) { console.error("[bencana] ❌ Target terpusat gagal dibaca (pakai subscriber aja):", e?.message || e); }
   return targets;
 }
 
@@ -1300,11 +1338,14 @@ function drainHeld(sub) {
  * subscriber: utama → 1 info terpenting saja; semua → best full + sisanya
  * brief, dengan cooldown per chat.
  */
-export async function dispatchBest(evs, headerPrefix, card) {
+export async function dispatchBest(sendSock, evs, headerPrefix, card) {
+  const s = sendSock || sock;
   const subs = getWatchers();
-  const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
+  let sent = 0, errors = 0;
+  if (!s) { console.error("[bencana] ❌ dispatchBest: koneksi WhatsApp TIDAK ADA — pesan gak bisa dikirim"); return { sent: 0, errors: 1 }; }
+  const hasJadwal = Object.values(subs).some((x) => (x.mode || "otomatis") === "jadwal");
   if (hasJadwal) for (const ev of evs) pushPending(ev);
-  for (const [watcherKey, chatId, sub] of await expandTargets()) {
+  for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
     try {
       const mode = sub.mode || "otomatis";
       let list = evs.slice();
@@ -1320,7 +1361,8 @@ export async function dispatchBest(evs, headerPrefix, card) {
           const held = drainHeld(sub);
           let out = fullTextFor(best, headerPrefix);
           if (held.length) out = held.map((h) => `• ${h.line}`).join("\n") + "\n\n" + out;
-          await sendWithCard(sock, chatId, withDistanceLine(out, sub, best), card);
+          await sendWithCard(s, chatId, withDistanceLine(out, sub, best), card);
+          sent++;
           sub.lastAlertTs = Date.now();
           const subs2 = getWatchers();
           if (subs2[watcherKey]) { subs2[watcherKey].lastDigest = Date.now(); saveWatchers(subs2); }
@@ -1357,21 +1399,28 @@ export async function dispatchBest(evs, headerPrefix, card) {
       }
       const held2 = drainHeld(sub);
       if (held2.length) out = held2.map((h) => `• ${h.line}`).join("\n") + "\n\n" + out;
-      await sendWithCard(sock, chatId, withDistanceLine(out, sub, best), card);
+      await sendWithCard(s, chatId, withDistanceLine(out, sub, best), card);
+      sent++;
       sub.lastAlertTs = Date.now();
       saveWatchers(subs);
     } catch (e) {
+      errors++;
+      console.error(`[bencana] ❌ Gagal kirim (kepadatan) ke ${chatId}:`, e?.message || e);
       logger.error?.("bencana", `Gagal kirim (kepadatan) ke ${chatId}: ${e.message}`);
     }
     await new Promise((r) => setTimeout(r, 600));
   }
+  return { sent, errors };
 }
 
-async function dispatch(ev, genericText = null, card = null) {
+async function dispatch(sendSock, ev, genericText = null, card = null) {
+  const s = sendSock || sock;
   const subs = getWatchers();
-  const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
+  let sent = 0, errors = 0;
+  if (!s) { console.error("[bencana] ❌ dispatch: koneksi WhatsApp TIDAK ADA — alert", ev?.jenis || "", "gak bisa dikirim"); return { sent: 0, errors: 1 }; }
+  const hasJadwal = Object.values(subs).some((x) => (x.mode || "otomatis") === "jadwal");
   if (hasJadwal) pushPending(ev); // kumpulin buat rangkuman terjadwal
-  for (const [watcherKey, chatId, sub] of await expandTargets()) {
+  for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
     try {
       const mode = sub.mode || "otomatis";
 
@@ -1391,8 +1440,8 @@ async function dispatch(ev, genericText = null, card = null) {
       if (mode === "jadwal") {
         // ATURAN OWNER: bencana DARURAT mesti realtime — gak nunggu rangkuman.
         if (ev.isSevere) {
-          if (near) await sendRegionalAlert(sock, chatId, ev, sub);
-          else if (genericText) await sendWithCard(sock, chatId, withDistanceLine(genericText, sub, ev), card);
+          if (near) { await sendRegionalAlert(s, chatId, ev, sub); sent++; }
+          else if (genericText) { await sendWithCard(s, chatId, withDistanceLine(genericText, sub, ev), card); sent++; }
           // tandai sudah diterima biar gak dobel muncul di rangkuman berikutnya
           const subs2 = getWatchers();
           if (subs2[watcherKey]) { subs2[watcherKey].lastDigest = Date.now(); saveWatchers(subs2); }
@@ -1403,7 +1452,8 @@ async function dispatch(ev, genericText = null, card = null) {
       if (mode === "darurat" && !near && !ev.isSevere) continue; // filter: cuman yg darurat
 
       if (near) {
-        await sendRegionalAlert(sock, chatId, ev, sub);
+        await sendRegionalAlert(s, chatId, ev, sub);
+        sent++;
       } else if (genericText) {
         // FIX OWNER 2026-09-07: kepadatan alert — mode "semua" dikasih
         // cooldown 10 menit per chat; yang dateng pas cooldown ditahan,
@@ -1418,15 +1468,19 @@ async function dispatch(ev, genericText = null, card = null) {
         let out = genericText;
         const held2 = drainHeld(sub);
         if (held2.length) out = held2.map((h) => `• ${h.line}`).join("\n") + "\n\n" + out;
-        await sendWithCard(sock, chatId, withDistanceLine(out, sub, ev), card);
+        await sendWithCard(s, chatId, withDistanceLine(out, sub, ev), card);
+        sent++;
         sub.lastAlertTs = Date.now();
         saveWatchers(subs);
       }
     } catch (e) {
+      errors++;
+      console.error(`[bencana] ❌ Gagal kirim alert ke ${chatId}:`, e?.message || e);
       logger.error?.("bencana", `Gagal kirim ke ${chatId}: ${e.message}`);
     }
     await new Promise((r) => setTimeout(r, 600));
   }
+  return { sent, errors };
 }
 
 /** Wrapper testable — pakai sock internal monitor. */
@@ -1528,36 +1582,47 @@ export async function sendActivationSample(sock, chatId) {
 }
 
 export async function dispatchBencanaEvent(ev, genericText = null, card = null) {
-  return dispatch(ev, genericText, card);
+  return dispatch(sock, ev, genericText, card);
 }
 
 /**
  * Cek jadwal tiap menit — kirim rangkuman buat subscriber mode jadwal
  * yang jam-nya cocok dengan sekarang (WIB). Anti dobel via state firedJadwal.
  */
-async function jadwalTick() {
+// UPGRADE 15 Sep 2026 (syarat owner): sock PARAMETER + log siklus + slot
+// jadwal ditandai "fired" SETELAH rangkuman sukses terkirim (dulu ditandai
+// duluan → kirim gagal = slot hilang, rangkuman gak pernah nyampe).
+async function jadwalTick(sendSock) {
+  const s = sendSock || sock;
+  if (!s) { console.error("[bencana] ❌ [jadwalTick] koneksi WhatsApp TIDAK ADA — siklus dilewati"); return; }
   try {
     const { hhmm, date } = nowWib();
-    for (const [watcherKey, chatId, sub] of await expandTargets()) {
+    for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
       if ((sub.mode || "otomatis") !== "jadwal") continue;
       const scheds = Array.isArray(sub.schedules) ? sub.schedules : [];
       if (!scheds.includes(hhmm)) continue;
       const st = loadState();
       const key = `${chatId}|${date}|${hhmm}`;
       if (st.firedJadwal.includes(key)) continue;
-      st.firedJadwal.push(key);
-      st.firedJadwal = st.firedJadwal.slice(-100);
-      saveState(st);
+      console.log(`[bencana] 🔄 [jadwalTick] slot rangkuman ${hhmm} tiba untuk ${chatId}`);
       // fireJadwalDigest update lastDigest sendiri; kalau kosong (false),
       // event nunggu sampai rangkuman berikutnya (gak ada pesan = gak ada kabar)
       try {
-        const sent = await fireJadwalDigest(sock, chatId, sub, watcherKey);
-        if (sent) logger.success?.("bencana", `Rangkuman ${hhmm} terkirim ke ${chatId}`);
+        const sent = await fireJadwalDigest(s, chatId, sub, watcherKey);
+        // SYARAT OWNER #4: slot ditandai SETELAH digest selesai (sukses/kosong)
+        const st2 = loadState();
+        st2.firedJadwal.push(key);
+        st2.firedJadwal = st2.firedJadwal.slice(-100);
+        saveState(st2);
+        if (sent) { console.log(`[bencana] ✅ [jadwalTick] rangkuman ${hhmm} terkirim ke ${chatId}`); logger.success?.("bencana", `Rangkuman ${hhmm} terkirim ke ${chatId}`); }
+        else console.log(`[bencana] 🔄 [jadwalTick] rangkuman ${hhmm} kosong untuk ${chatId} — slot ditandai`);
       } catch (e) {
+        console.error(`[bencana] ❌ [jadwalTick] Rangkuman gagal kirim ke ${chatId} — slot BELUM ditandai, dicoba lagi 60s lagi:`, e?.message || e);
         logger.error?.("bencana", `Rangkuman gagal kirim ke ${chatId}: ${e.message}`);
       }
     }
   } catch (e) {
+    console.error("[bencana] ❌ [jadwalTick] error:", e?.message || e, e?.stack || "");
     logger.error?.("bencana", "Jadwal error: " + e.message);
   }
 }
@@ -1580,13 +1645,15 @@ const NEAR_QUAKE_MIN_MAG = 2.5;
  * - bukan mode jadwal (jadwal → dikumpulkan ke rangkuman).
  * Subscriber TANPA lokasi gak kena sama sekali (alert global tetap M 5.0+).
  */
-export async function dispatchNearQuake(ev) { return dispatchNearEvent(ev, "gempa", "bmkg"); }
-export async function dispatchNearEvent(ev, kindKey = "gempa", sumberKey = "bmkg") { /* exported: wrapper testable */
+export async function dispatchNearQuake(ev) { return dispatchNearEvent(sock, ev, "gempa", "bmkg"); } // backward-compat fastTick
+export async function dispatchNearEvent(sendSock, ev, kindKey = "gempa", sumberKey = "bmkg") { /* exported: wrapper testable */
+  const s = sendSock || sock;
   const subs = getWatchers();
-  const hasJadwal = Object.values(subs).some((s) => (s.mode || "otomatis") === "jadwal");
+  let sent = 0, errors = 0;
+  if (!s) { console.error("[bencana] ❌ dispatchNearEvent: koneksi WhatsApp TIDAK ADA — pesan gak bisa dikirim"); return { sent: 0, errors: 1 }; }
+  const hasJadwal = Object.values(subs).some((x) => (x.mode || "otomatis") === "jadwal");
   if (hasJadwal) pushPending(ev); // subscriber jadwal terima lewat rangkuman
-  let sent = 0;
-  for (const [watcherKey, chatId, sub] of await expandTargets()) {
+  for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
     try {
       if (sub?.lat == null || ev?.lat == null) continue; // wajib punya lokasi
       const mode = sub.mode || "otomatis";
@@ -1596,47 +1663,69 @@ export async function dispatchNearEvent(ev, kindKey = "gempa", sumberKey = "bmkg
       const radius = sub.radius || DEFAULT_RADIUS_KM;
       if (distKm > radius) continue; // di luar radius → bukan urusan fitur ini
       if (mode === "jadwal") continue; // udah dipending ke rangkuman
-      await sendRegionalAlert(sock, chatId, ev, sub);
+      await sendRegionalAlert(s, chatId, ev, sub);
       sent++;
     } catch (e) {
+      errors++;
+      console.error(`[bencana] ❌ Gagal kirim near-quake ke ${chatId}:`, e?.message || e);
       logger.error?.("bencana", `Gagal kirim near-quake ke ${chatId}: ${e.message}`);
     }
     await new Promise((r) => setTimeout(r, 600));
   }
   if (sent) logger.success?.("bencana", `Gempa dekat-lokasi M${ev.mag}: ${sent} subscriber dinotifkin`);
+  return { sent, errors };
+}
+
+// Seams e2e — inject sumber data biar tes dedup/persist deterministik
+let _bmkgLatestFn = getBmkgLatest;
+let _usgsEwsFn = getUsgsDayEws;
+let _jmaFn = getJmaLatest;
+let _emscFn = getEmscLatest;
+let _usgsDayFn = getUsgsDay;
+let _gdacsFn = getGdacs;
+export function _setBencanaSourcesForTest({ bmkg, usgsEws, jma, emsc, usgsDay, gdacs } = {}) {
+  if (bmkg) _bmkgLatestFn = bmkg;
+  if (usgsEws) _usgsEwsFn = usgsEws;
+  if (jma) _jmaFn = jma;
+  if (emsc) _emscFn = emsc;
+  if (usgsDay) _usgsDayFn = usgsDay;
+  if (gdacs) _gdacsFn = gdacs;
 }
 
 // fast tick: gempa BMKG baru M >= 5.0
-async function fastTick() {
+// UPGRADE 15 Sep 2026 (syarat owner): sock diterima sebagai PARAMETER,
+// console.log tiap siklus, dan DEDUP HANYA dipersist SETELAH kirim sukses.
+async function fastTick(sendSock) {
+  const s = sendSock || sock;
+  const t0 = Date.now();
+  if (!s) { console.error("[bencana] ❌ fastTick: koneksi WhatsApp TIDAK ADA — siklus dilewati (monitor harus di-start via initBencanaMonitor(sock))"); return; }
   try {
-    const g = await getBmkgLatest();
-    if (!g) return;
+    console.log(`[bencana] 🔄 [fastTick] cek BMKG jalan (${POLL_FAST_MS / 1000}s sekali)…`);
+    const g = await _bmkgLatestFn();
+    if (!g) { console.log(`[bencana] 🔄 [fastTick] BMKG: tidak ada data (skip) — ${Date.now() - t0}ms`); return; }
     const st = loadState();
-    if (st.bmkg === null) { st.bmkg = g.DateTime; saveState(st); return; } // baseline, tanpa spam
+    if (st.bmkg === null) { st.bmkg = g.DateTime; saveState(st); console.log(`[bencana] 🔄 [fastTick] BMKG baseline pertama dicatat (tanpa spam): ${g.DateTime}`); return; } // baseline, tanpa spam
     if (g.DateTime > st.bmkg) {
-      st.bmkg = g.DateTime;
-      saveState(st);
-      if (fpDupe(st, { kind: "gempa", lat: (() => { const [la] = String(g.Coordinates).split(",").map((s) => s.trim()); return +la; })(), lon: (() => { const [, lo] = String(g.Coordinates).split(",").map((s) => s.trim()); return +lo; })(), mag: g.Magnitude })) {
-        return; // gempa ini udah pernah dikirim sumber lain (USGS/GDACS) — cukup 1 info
+      const mag = parseFloat(g.Magnitude);
+      const [lat, lon] = String(g.Coordinates).split(",").map((x) => x.trim());
+      if (fpDupe(st, { kind: "gempa", lat: +lat, lon: +lon, mag: g.Magnitude })) {
+        // event udah dikirim jalur lain (USGS/GDACS/EWS) → cukup majuin baseline
+        st.bmkg = g.DateTime; saveState(st);
+        console.log(`[bencana] 🔄 [fastTick] BMKG M${g.Magnitude} duplikat lintas-jalur (sudah dikirim jalur lain) — baseline dimajukan`);
+        return;
       }
-      if (parseFloat(g.Magnitude) >= 5.0) {
-        const [lat, lon] = String(g.Coordinates).split(",").map((s) => s.trim());
+      if (mag >= 5.0) {
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi",
           mag: g.Magnitude, depth: g.Kedalaman,
-          level: parseFloat(g.Magnitude) >= 6.0 ? "AWAS" : "SIAGA",
+          level: mag >= 6.0 ? "AWAS" : "SIAGA",
           waktu: `${g.Tanggal} ${g.Jam}`,
           lat: +lat, lon: +lon, desc: g.Wilayah,
           potensi: g.Potensi || null, dirasakan: g.Dirasakan || null,
           sumber: "BMKG (data.bmkg.go.id)",
-          isSevere: parseFloat(g.Magnitude) >= 6.5, // mode darurat: gempa besar lolos filter global
+          isSevere: mag >= 6.5, // mode darurat: gempa besar lolos filter global
         };
         ev.thumbUrl = g._shakemapUrl; // shakemap → thumbnail preview card (bukan attachment terpisah)
-        {
-          const st2 = loadState();
-          fpMark(st2, ev); // tandai biar USGS/GDACS gak dobelin gempa yang sama
-          saveState(st2);
-        }
         // FORMAT ALA SCRIPT OWNER (8 Sep 2026) — emoji per field
         const lines = [
           "⚠️ *GEMPA TERKINI - BMKG*",
@@ -1651,12 +1740,21 @@ async function fastTick() {
           "",
           `Sumber: BMKG`,
         ];
-        await dispatch(ev, lines.join("\n"), eventCard(ev));
-      } else if (parseFloat(g.Magnitude) >= NEAR_QUAKE_MIN_MAG) {
-        // FITUR BARU owner 2026-09-07: gempa < M 5.0 gak masuk alert global,
-        // tapi kalau DEKAT lokasi subscriber (dalam radius dia) tetap
-        // dikirim langsung sebagai peringatan wilayah.
-        const [lat, lon] = String(g.Coordinates).split(",").map((s) => s.trim());
+        const res = await dispatch(s, ev, lines.join("\n"), eventCard(ev));
+        // ── SYARAT OWNER #4: DEDUP DIPERSIST SETELAH PESAN BERHASIL TERKIRIM.
+        // Kalau kirim gagal → state TIDAK disimpan → tick berikutnya NYOBA LAGI.
+        if (res.errors > 0) {
+          console.error(`[bencana] ❌ [fastTick] BMKG M${g.Magnitude} GAGAL dikirim (${res.errors} error, ${res.sent} sukses) — event ${g.DateTime} BELUM ditandai, dicoba lagi ${POLL_FAST_MS / 1000}s lagi`);
+          return;
+        }
+        const st2 = loadState();
+        st2.bmkg = g.DateTime;
+        fpMark(st2, ev); // tandai biar USGS/GDACS gak dobelin gempa yang sama
+        saveState(st2);
+        console.log(`[bencana] ✅ [fastTick] BMKG M${g.Magnitude} ${g.Wilayah || ""} → terkirim ${res.sent} chat, dedup dipersist (tahan restart)`);
+      } else if (mag >= NEAR_QUAKE_MIN_MAG) {
+        // FITUR owner 2026-09-07: gempa < M 5.0 gak masuk alert global,
+        // tapi kalau DEKAT lokasi subscriber tetap dikirim langsung.
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi",
           mag: g.Magnitude, depth: g.Kedalaman,
@@ -1668,23 +1766,39 @@ async function fastTick() {
           isSevere: false,
         };
         ev.thumbUrl = g._shakemapUrl;
-        {
-          const st2 = loadState();
-          fpMark(st2, ev); // tandai biar gak dobel dari pusat lain
-          saveState(st2);
+        const res = await dispatchNearEvent(s, ev, "gempa", "bmkg");
+        if (res.errors > 0) {
+          console.error(`[bencana] ❌ [fastTick] near-quake M${g.Magnitude} GAGAL dikirim — event ${g.DateTime} dicoba lagi ${POLL_FAST_MS / 1000}s lagi`);
+          return;
         }
-        await dispatchNearQuake(ev);
+        const st2 = loadState();
+        st2.bmkg = g.DateTime;
+        fpMark(st2, ev); // tandai biar gak dobel dari pusat lain
+        saveState(st2);
+        console.log(`[bencana] ✅ [fastTick] near-quake M${g.Magnitude} → ${res.sent} subscriber dekat lokasi, dedup dipersist`);
+      } else {
+        // gempa kecil < threshold → gak dinotif, cukup majuin baseline
+        st.bmkg = g.DateTime; saveState(st);
+        console.log(`[bencana] 🔄 [fastTick] BMKG M${g.Magnitude} di bawah threshold notif — baseline dimajukan`);
       }
+    } else {
+      console.log(`[bencana] 🔄 [fastTick] BMKG: tidak ada gempa baru — ${Date.now() - t0}ms`);
     }
   } catch (e) {
+    console.error("[bencana] ❌ [fastTick] BMKG error:", e?.message || e, e?.stack || "");
     logger.error?.("bencana", "BMKG error: " + e.message);
   }
 }
 
 // slow tick: GDACS SIAGA/AWAS baru + USGS signifikan (M5+ alert / M6+) baru
-async function slowTick() {
+// UPGRADE 15 Sep 2026 (syarat owner): sock PARAMETER + log siklus + dedup
+// dipersist SETELAH kirim sukses (gagal kirim → dicoba lagi tick berikutnya).
+async function slowTick(sendSock) {
+  const s = sendSock || sock;
+  if (!s) { console.error("[bencana] ❌ slowTick: koneksi WhatsApp TIDAK ADA — siklus dilewati"); return; }
+  console.log(`[bencana] 🔄 [slowTick] cek GDACS + USGS jalan (${POLL_SLOW_MS / 1000}s sekali)…`);
   try {
-    const events = (await getGdacs(2)).filter((e) => e.alertlevel === "Orange" || e.alertlevel === "Red");
+    const events = (await _gdacsFn(2)).filter((e) => e.alertlevel === "Orange" || e.alertlevel === "Red");
     const st = loadState();
     // FIX OWNER 2026-09-07: baseline first-run — pas bencanawatch baru dinyalain,
     // SEMUA event GDACS lama duluan dianggap "sudah dilihat" (tanpa alert) biar
@@ -1698,10 +1812,11 @@ async function slowTick() {
     }
     const fresh = events.filter((e) => !st.gdacs.includes(e.id));
     if (fresh.length) {
-      st.gdacs.push(...fresh.map((e) => e.id));
-      st.gdacs = st.gdacs.slice(-200);
-      saveState(st);
+      // SYARAT OWNER #4: id event HANYA dipersist SETELAH pesan berhasil
+      // terkirim. Duplikat lintas-jalur (sudah dikirim pusat lain) aman
+      // dicatat sekarang; event baru ditahan sampai dispatch sukses.
       const evs = [];
+      const dupSkipped = [];
       for (const e of fresh) {
         const t = GDACS_TYPES[e.type] ?? { label: e.type, icon: "⚠️" };
         const a = ALERT_STYLE[e.alertlevel];
@@ -1716,11 +1831,18 @@ async function slowTick() {
           report: e.report,
           isSevere: e.alertlevel === "Red", // mode darurat: level AWAS lolos filter global
         };
-        if (fpDupe(st, ev)) continue; // gempa yang sama udah dikirim pusat lain — cukup 1 info
+        if (fpDupe(st, ev)) { dupSkipped.push(e.id); continue; } // gempa yang sama udah dikirim pusat lain — cukup 1 info
         ev.thumbUrl = await gdacsThumbUrl(e); // peta overview GDACS → thumbnail card
         ev._summary = `${t.icon} ${t.label}${ev.country ? ` — ${ev.country}` : ""} — ${a.label}${ev.desc ? ` — ${ev.desc.slice(0, 60)}` : ""}`;
         evs.push(ev);
       }
+      if (dupSkipped.length) {
+        const stD = loadState();
+        stD.gdacs.push(...dupSkipped);
+        stD.gdacs = stD.gdacs.slice(-200);
+        saveState(stD);
+      }
+      let res = { sent: 0, errors: 0 };
       if (evs.length === 1) {
         // 1 event baru → format lama lengkap (info section + AI regional)
         const ev = evs[0];
@@ -1732,23 +1854,31 @@ async function slowTick() {
           "",
           buildInfoSection(ev),
         ];
-        await dispatch(ev, lines.join("\n"), eventCard(ev));
+        res = await dispatch(s, ev, lines.join("\n"), eventCard(ev));
       } else if (evs.length > 1) {
         // FIX OWNER (revisi 2026-09-07): jangan semua info dikirim (spam) —
         // tiap pembaruan cukup 1 info TERPENTING per subscriber (mode utama),
         // atau semua + cooldown 10 mnt (mode semua). Atur: .bencanawatch kirim.
         const top = [...evs].sort((a, b) => Number(b.isSevere) - Number(a.isSevere))[0];
-        await dispatchBest(evs, "AUTO-ALERT BENCANA GLOBAL", eventCard(top));
+        res = await dispatchBest(s, evs, "AUTO-ALERT BENCANA GLOBAL", eventCard(top));
       }
-      const st2 = loadState();
-      for (const ev of evs) fpMark(st2, ev);
-      saveState(st2);
+      if (evs.length && res.errors > 0) {
+        console.error(`[bencana] ❌ [slowTick] GDACS gagal kirim (${res.errors} error, ${res.sent} sukses) — ${evs.length} event BELUM ditandai, dicoba lagi ${POLL_SLOW_MS / 1000}s lagi`);
+      } else if (evs.length) {
+        const st2 = loadState();
+        st2.gdacs.push(...fresh.map((e) => e.id));
+        st2.gdacs = st2.gdacs.slice(-200);
+        for (const ev of evs) fpMark(st2, ev);
+        saveState(st2);
+        console.log(`[bencana] ✅ [slowTick] GDACS: ${evs.length} event baru → ${res.sent} chat, dedup dipersist`);
+      }
     }
   } catch (e) {
+    console.error("[bencana] ❌ [slowTick] GDACS error:", e?.message || e, e?.stack || "");
     logger.error?.("bencana", "GDACS error: " + e.message);
   }
   try {
-    const quakes = await getUsgsDay();
+    const quakes = await _usgsDayFn();
     const st = loadState();
     // FIX OWNER 2026-09-07: baseline first-run — sama kayak GDACS, daftar gempa
     // lama pas monitor baru nyala dianggap "sudah dilihat" (tanpa spam alert).
@@ -1760,10 +1890,9 @@ async function slowTick() {
     }
     const fresh = quakes.filter((q) => !st.usgs.includes(String(q.id)));
     if (fresh.length) {
-      st.usgs.push(...fresh.map((q) => String(q.id)));
-      st.usgs = st.usgs.slice(-200);
-      saveState(st);
+      // SYARAT OWNER #4: id USGS hanya dipersist SETELAH kirim sukses
       const evs = [];
+      const dupSkipped = [];
       for (const q of fresh) {
         const ev = {
           kind: "gempa", jenis: "Gempa Bumi (global)",
@@ -1779,11 +1908,18 @@ async function slowTick() {
           report: q.url,
           isSevere: q.mag >= 7.0, // mode darurat: gempa besar global lolos filter
         };
-        if (fpDupe(st, ev)) continue; // gempa yang sama udah dikirim BMKG/GDACS — cukup 1 info
+        if (fpDupe(st, ev)) { dupSkipped.push(String(q.id)); continue; } // gempa yang sama udah dikirim BMKG/GDACS — cukup 1 info
         ev.thumbUrl = await usgsThumbUrl(q); // shakemap intensity.jpg → thumbnail card
         ev._summary = `🌍 Gempa global M${ev.mag} — ${q.place} — ${String(ev.level).replace(/ \(.*\)$/, "")}`;
         evs.push(ev);
       }
+      if (dupSkipped.length) {
+        const stD = loadState();
+        stD.usgs.push(...dupSkipped);
+        stD.usgs = stD.usgs.slice(-200);
+        saveState(stD);
+      }
+      let res = { sent: 0, errors: 0 };
       if (evs.length === 1) {
         const ev = evs[0];
         const q = fresh.find((x) => String(x.id) === String(ev.id)) || fresh[0];
@@ -1799,18 +1935,26 @@ async function slowTick() {
           "",
           `Sumber: USGS`,
         ];
-        await dispatch(ev, lines.join("\n"), eventCard(ev));
+        res = await dispatch(s, ev, lines.join("\n"), eventCard(ev));
       } else if (evs.length > 1) {
         // FIX OWNER (revisi 2026-09-07): 1 info terpenting per pembaruan
         // (mode utama) / semua + cooldown 10 mnt (mode semua).
         const top = [...evs].sort((a, b) => Number(b.isSevere) - Number(a.isSevere))[0];
-        await dispatchBest(evs, "AUTO-ALERT GEMPA GLOBAL (USGS)", eventCard(top));
+        res = await dispatchBest(s, evs, "AUTO-ALERT GEMPA GLOBAL (USGS)", eventCard(top));
       }
-      const st2 = loadState();
-      for (const ev of evs) fpMark(st2, ev);
-      saveState(st2);
+      if (evs.length && res.errors > 0) {
+        console.error(`[bencana] ❌ [slowTick] USGS gagal kirim (${res.errors} error, ${res.sent} sukses) — ${evs.length} event dicoba lagi ${POLL_SLOW_MS / 1000}s lagi`);
+      } else if (evs.length) {
+        const st2 = loadState();
+        st2.usgs.push(...fresh.map((q) => String(q.id)));
+        st2.usgs = st2.usgs.slice(-200);
+        for (const ev of evs) fpMark(st2, ev);
+        saveState(st2);
+        console.log(`[bencana] ✅ [slowTick] USGS: ${evs.length} gempa global baru → ${res.sent} chat, dedup dipersist`);
+      }
     }
   } catch (e) {
+    console.error("[bencana] ❌ [slowTick] USGS error:", e?.message || e, e?.stack || "");
     logger.error?.("bencana", "USGS error: " + e.message);
   }
 }
@@ -1897,15 +2041,28 @@ export function formatEwsWarning(ev, { jarak = null, eta = null, city = null, ne
   return msg;
 }
 
-/** Kirim satu event EWS ke semua subscriber yang relevan. */
-async function dispatchEws(ev, subs, sockOverride = null) {
-  const s = sockOverride || sock;
-  if (!s) return 0;
+/**
+ * Kirim satu event EWS ke semua subscriber yang relevan.
+ * UPGRADE 15 Sep 2026 (syarat owner #2 + fix bug JID global): koneksi
+ * WhatsApp kini diterima SEBAGAI PARAMETER, dan target dibentangkan via
+ * expandTargets() — BUG LAMA: subscriber global disimpan di key
+ * "global:<ownerJid>" dan dispatchEws mengirim ke KEY itu mentah-mentah
+ * (JID invalid → sendMessage SELALU gagal) → subscriber global TIDAK
+ * PERNAH menerima peringatan dini. Sekarang: key global dibentangkan ke
+ * DM owner + semua grup, target terpusat ikut, dan tiap gagal kirim
+ * dihitung sebagai error (pemanggil gak menandainya "sudah dinotif").
+ */
+async function dispatchEws(sendSock, ev, subs) {
+  const s = sendSock || sock;
+  if (!s) {
+    console.error("[bencana] ❌ dispatchEws: koneksi WhatsApp TIDAK ADA — peringatan dini GAGAL dikirim, akan dicoba lagi tick berikutnya");
+    return { sent: 0, errors: 1 };
+  }
   const severe = ev.mag >= EWS_SEVERE_MAG;
   const provKey = ev.provider === "BMKG" ? "bmkg" : ev.provider === "USGS" ? "usgs"
     : ev.provider === "JEPANG" ? "jepang" : "global";
-  let sent = 0;
-  for (const [chatId, sub] of Object.entries(subs || {})) {
+  let sent = 0, errors = 0;
+  for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
     try {
       if (sub.ews === false) continue; // opt-out EWS per subscriber (.bencanawatch ews off)
       if (Array.isArray(sub.provider) && sub.provider.length && !sub.provider.includes(provKey)) continue; // .bencanawatch provider <daftar>
@@ -1917,30 +2074,22 @@ async function dispatchEws(ev, subs, sockOverride = null) {
         jarak = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
         eta = Math.round((jarak / EWS_S_WAVE_KMS) * 10) / 10; // detik
       }
-      const near = jarak != null && jarak <= EWS_URGENT_RANGE_KM;
+      // radius subscriber gede (upgrade 15 Sep 2026) memperluas jangkauan
+      // peringatan dini — minimum tetap EWS_URGENT_RANGE_KM (800 km)
+      const nearRange = Math.max(EWS_URGENT_RANGE_KM, sub.radius || 0);
+      const near = jarak != null && jarak <= nearRange;
       if (!severe && !near) continue; // gempa kecil & jauh dari subscriber → skip
 
       const text = formatEwsWarning(ev, { jarak, eta, city: sub.city, near });
       await s.sendMessage(chatId, { text });
       sent++;
     } catch (e) {
+      errors++;
+      console.error(`[bencana] ❌ EWS kirim ke ${chatId} gagal:`, e?.message || e);
       logger.error?.("bencana", `EWS kirim ke ${chatId} gagal: ${e.message}`);
     }
   }
-  // ── target terpusat: gempa SEVERE (M6.5+) → target pilihan owner juga dapat
-  // (versi generic tanpa jarak — target gak punya lokasi subscriber) ──
-  if (severe) {
-    try {
-      const extras = await mergeAutoTargets(s, "bencanawatch", []);
-      const text = formatEwsWarning(ev, { jarak: null, eta: null, city: null, near: false });
-      for (const jid of extras) {
-        if (subs && subs[jid]) continue; // subscriber udah dapat versi personal
-        try { await s.sendMessage(jid, { text }); sent++; }
-        catch (e) { logger.error?.("bencana", `EWS kirim ke ${jid} gagal: ${e.message}`); }
-      }
-    } catch { /* target lib gagal → skip extras */ }
-  }
-  return sent;
+  return { sent, errors };
 }
 
 /**
@@ -1950,10 +2099,17 @@ async function dispatchEws(ev, subs, sockOverride = null) {
  *    gempa yang udah dikirim EWS, dan sebaliknya)
  * Baseline pertama: tandain semua seen TANPA kirim (anti spam pas boot).
  */
-async function ewsTick() {
+// UPGRADE 15 Sep 2026 (syarat owner): sock PARAMETER + log siklus + dedup
+// seen/fpMark HANYA dipersist SETELAH kirim sukses. Dulu: event ditandai
+// seen → saveState → baru dispatch → kalau kirim gagal (sock null / JID
+// global invalid) event BLACK HOLE selamanya, gak pernah dicoba lagi.
+async function ewsTick(sendSock) {
+  const s = sendSock || sock;
+  if (!s) { console.error("[bencana] ❌ [ewsTick] koneksi WhatsApp TIDAK ADA — siklus dilewati"); return; }
   try {
+    console.log(`[bencana] 🔄 [ewsTick] cek peringatan dini 4 provider jalan (${EWS_POLL_MS / 1000}s sekali)…`);
     const [bmkg, usgs, jma, emsc] = await Promise.allSettled([
-      getBmkgLatest(), getUsgsDayEws(), getJmaLatest(), getEmscLatest(),
+      _bmkgLatestFn(), _usgsEwsFn(), _jmaFn(), _emscFn(),
     ]);
     const events = [];
     if (bmkg.status === "fulfilled" && bmkg.value) {
@@ -1962,6 +2118,9 @@ async function ewsTick() {
     }
     for (const r of [usgs, jma, emsc]) {
       if (r.status === "fulfilled" && Array.isArray(r.value)) events.push(...r.value);
+    }
+    for (const r of [bmkg, usgs, jma, emsc]) {
+      if (r.status === "rejected") console.error("[bencana] ❌ [ewsTick] sumber EWS gagal di-poll:", r.reason?.message || r.reason);
     }
 
     const st = loadState();
@@ -1974,41 +2133,61 @@ async function ewsTick() {
       st.ews.bootstrapped = true;
       st.ews.seen = events.filter((e) => e.mag >= EWS_MIN_MAG).map((e) => e.key).slice(-300);
       saveState(st);
+      console.log(`[bencana] 🔄 [ewsTick] baseline boot: ${st.ews.seen.length} event tercatat tanpa kirim (anti spam)`);
       return;
     }
 
+    // kandidat BARU — TANPA mutasi state dulu (syarat owner #4)
     const fresh = [];
+    const crossJalur = []; // sudah dikirim jalur lain (fastTick/slowTick)
     for (const ev of events) {
       if (ev.mag < EWS_MIN_MAG) continue;
       if (st.ews.seen.includes(ev.key)) continue;
-      st.ews.seen.push(ev.key);
-      if (fpDupe(st, { kind: "gempa", lat: ev.lat, lon: ev.lon, mag: ev.mag })) continue; // udah dikirim jalur lain
-      fpMark(st, ev); // tandai biar fastTick/slowTick gak ngedobel
+      if (fpDupe(st, { kind: "gempa", lat: ev.lat, lon: ev.lon, mag: ev.mag })) { crossJalur.push(ev.key); continue; } // udah dikirim jalur lain
       fresh.push(ev);
     }
-    st.ews.seen = st.ews.seen.slice(-300);
-    saveState(st);
-    if (!fresh.length) return;
 
     const subs = await getWatchersSafe();
     for (const ev of fresh) {
-      const sent = await dispatchEws(ev, subs);
-      st.ews.history.unshift({
+      const res = await dispatchEws(s, ev, subs);
+      const sentOk = res.sent > 0;
+      if (res.errors > 0 && !sentOk) {
+        // KIRIM GAGAL SEMUA → jangan tandai seen → dicoba lagi tick berikutnya
+        console.error(`[bencana] ❌ [ewsTick] ${ev.provider} M${ev.mag} GAGAL terkirim (${res.errors} error) — event ${ev.key} BELUM ditandai seen, dicoba lagi ${EWS_POLL_MS / 1000}s lagi`);
+        continue;
+      }
+      // PERSIST SETELAH kirim sukses (atau gak ada subscriber relevan → cukup sekali proses)
+      const st2 = loadState();
+      st2.ews.seen.push(ev.key);
+      st2.ews.seen = st2.ews.seen.slice(-300);
+      fpMark(st2, ev); // tandai biar fastTick/slowTick gak ngedobel
+      st2.ews.history.unshift({
         provider: ev.provider, mag: ev.mag, wilayah: ev.wilayah,
-        waktu: ev.waktu, terkirim: sent, ts: Date.now(),
+        waktu: ev.waktu, terkirim: res.sent, ts: Date.now(),
       });
-      if (sent > 0) logger.success?.("bencana", `[EWS] ${ev.provider} M${ev.mag} — ${ev.wilayah} → ${sent} chat`);
+      st2.ews.history = st2.ews.history.slice(-50);
+      saveState(st2);
+      if (sentOk) {
+        console.log(`[bencana] ✅ [ewsTick] ${ev.provider} M${ev.mag} — ${ev.wilayah} → ${res.sent} chat, dedup dipersist (tahan restart)`);
+        logger.success?.("bencana", `[EWS] ${ev.provider} M${ev.mag} — ${ev.wilayah} → ${res.sent} chat`);
+      }
     }
-    st.ews.history = st.ews.history.slice(-50);
-    saveState(st);
+    // event lintas-jalur aman dicatat seen (sudah dikirim jalur lain)
+    if (crossJalur.length) {
+      const st3 = loadState();
+      st3.ews.seen.push(...crossJalur);
+      st3.ews.seen = st3.ews.seen.slice(-300);
+      saveState(st3);
+    }
   } catch (e) {
+    console.error("[bencana] ❌ [ewsTick] error:", e?.message || e, e?.stack || "");
     logger.error?.("bencana", "EWS tick error: " + e.message);
   }
 }
 
 /** Exported: wrapper testable — kirim event EWS ke snapshot subscriber. */
 export async function dispatchEwsEvent(ev, subs, sockOverride = null) {
-  return dispatchEws(ev, subs, sockOverride);
+  return dispatchEws(sockOverride || sock, ev, subs);
 }
 
 /** Riwayat event EWS (buat .bencanawatch riwayat). */
@@ -2043,19 +2222,41 @@ export function setWatcherProvider(chatId, list) {
   return subs[chatId];
 }
 
-export function startBencanaMonitor() {
-  if (isRunning()) return false;
-  if (watcherCount() === 0) return false;
-  if (!getBencanaAutoEnabled()) return false; // dipause via .switch auto bencanawatch off
-  fastTick();
-  slowTick();
-  ewsTick();
-  fastTimer = setInterval(fastTick, POLL_FAST_MS);
-  slowTimer = setInterval(slowTick, POLL_SLOW_MS);
-  jadwalTimer = setInterval(jadwalTick, 60_000); // cek jadwal tiap menit (mode jadwal)
-  ewsTimer = setInterval(ewsTick, EWS_POLL_MS); // peringatan dini 4 provider tiap 10 dtk
-  volcanoTick();
-  volcanoTimer = setInterval(volcanoTick, VOLCANO_POLL_MS); // status gunung api PVMBG tiap 10 mnt
+/**
+ * SYARAT OWNER #1 (15 Sep 2026) — VERIFIKASI PENJADWALAN:
+ * Fungsi ini adalah SATU-SATUNYA titik registrasi scheduler bencana.
+ * Dipanggil dari index.js saat koneksi WhatsApp terbuka:
+ *   index.js → initBencanaMonitor(sock) → syncBencanaMonitor(sock)
+ *   → startBencanaMonitor(sock) → setInterval(...) TIAP sumber.
+ * Interval closure membaca binding `sock` modul pada TIAP siklus, jadi
+ * koneksi yang di-update lewat syncBencanaMonitor(sock) otomatis kepakai.
+ * Tiap siklus cek menulis console.log — bukti scheduler hidup di log PM2.
+ */
+export function startBencanaMonitor(sockParam = null) {
+  if (sockParam) sock = sockParam; // SYARAT OWNER #2: injeksi koneksi WA eksplisit
+  if (isRunning()) {
+    console.log("[bencana] ⚙️ monitor sudah jalan — start ulang di-skip");
+    return false;
+  }
+  if (watcherCount() === 0) {
+    console.log("[bencana] ⚙️ monitor belum bisa nyala — belum ada subscriber (.bencanawatch on)");
+    return false;
+  }
+  if (!getBencanaAutoEnabled()) {
+    console.log("[bencana] ⚙️ monitor dipause via .switch auto bencanawatch off");
+    return false;
+  }
+  if (!sock) console.error("[bencana] ⚠️ monitor nyala TANPA koneksi WhatsApp — notifikasi GAGAL dikirim sampai initBencanaMonitor(sock)/syncBencanaMonitor(sock) dipanggil");
+  fastTick(sock);
+  slowTick(sock);
+  ewsTick(sock);
+  fastTimer = setInterval(() => fastTick(sock), POLL_FAST_MS);
+  slowTimer = setInterval(() => slowTick(sock), POLL_SLOW_MS);
+  jadwalTimer = setInterval(() => jadwalTick(sock), 60_000); // cek jadwal tiap menit (mode jadwal)
+  ewsTimer = setInterval(() => ewsTick(sock), EWS_POLL_MS); // peringatan dini 4 provider tiap 10 dtk
+  volcanoTick(sock);
+  volcanoTimer = setInterval(() => volcanoTick(sock), VOLCANO_POLL_MS); // status gunung api PVMBG tiap 10 mnt
+  console.log(`[bencana] ✅ [SCHEDULER TERDAFTAR] ${watcherCount()} subscriber — BMKG tiap ${POLL_FAST_MS / 1000}s, GDACS+USGS tiap ${POLL_SLOW_MS / 1000}s, EWS tiap ${EWS_POLL_MS / 1000}s, jadwal tiap 60s, gunung api tiap ${VOLCANO_POLL_MS / 1000}s — koneksi WhatsApp: ${sock ? "TERSAMBUNG ✅" : "NULL ❌"}`);
   logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG ${POLL_FAST_MS / 1000}s, GDACS+USGS ${POLL_SLOW_MS / 1000}s, jadwal 60s, EWS ${EWS_POLL_MS / 1000}s)`);
   return true;
 }
@@ -2069,7 +2270,7 @@ export function startBencanaMonitor() {
 export function getBencanaAutoEnabled() {
   try {
     return getDatabase().setting("bencanaWatchEnabled") ?? true;
-  } catch { return true; }
+  } catch (e) { console.error("[bencana] ❌ Gagal baca flag bencanaWatchEnabled (default ON):", e?.message || e); return true; }
 }
 
 export function setBencanaAutoEnabled(on) {
@@ -2092,16 +2293,20 @@ export function stopBencanaMonitor() {
   if (slowTimer) clearInterval(slowTimer);
   if (volcanoTimer) clearInterval(volcanoTimer);
   if (ewsTimer) clearInterval(ewsTimer);
-  ewsTimer = null;
   if (jadwalTimer) clearInterval(jadwalTimer);
-  fastTimer = slowTimer = jadwalTimer = null;
+  // FIX BUG 15 Sep 2026: dulu volcanoTimer TIDAK di-null → isRunning()
+  // selalu true → startBencanaMonitor selalu skip → monitor GAK PERNAH
+  // bisa nyala lagi setelah stop (.bencanawatch off → on = mati permanen).
+  fastTimer = slowTimer = volcanoTimer = ewsTimer = jadwalTimer = null;
+  console.log("[bencana] ⚙️ monitor dihentikan — SEMUA timer dibersihkan (bisa restart)");
   return true;
 }
 
 /** Sinkron state monitor dengan jumlah subscriber. */
 export function syncBencanaMonitor(_sock) {
   if (_sock) sock = _sock;
-  if (watcherCount() > 0) startBencanaMonitor();
+  console.log(`[bencana] ⚙️ syncBencanaMonitor dipanggil — koneksi WA ${_sock ? "diterima ✅" : "(pakai sock lama)"}, subscriber: ${watcherCount()}`);
+  if (watcherCount() > 0) startBencanaMonitor(_sock);
   else if (isRunning()) stopBencanaMonitor();
 }
 
@@ -2110,8 +2315,9 @@ export function syncBencanaMonitor(_sock) {
  * monitor hanya kalau sudah ada subscriber dari sesi sebelumnya.
  */
 export function initBencanaMonitor(_sock) {
+  console.log(`[bencana] ⚙️ initBencanaMonitor: koneksi WhatsApp ${_sock ? "diterima dari index.js ✅" : "NULL ❌ (notifikasi gak bisa dikirim)"} — subscriber tersimpan: ${watcherCount()}`);
   sock = _sock;
-  syncBencanaMonitor();
+  syncBencanaMonitor(_sock);
   return true;
 }
 
@@ -2120,6 +2326,19 @@ export function initBencanaMonitor(_sock) {
  * alertnya" — status polling per sumber + jalan/gak, biar owner bisa
  * verifikasi monitor beneran hidup tanpa nebak.
  */
+/** Seam e2e — atur/hapus sock internal modul (uji jalur tanpa koneksi). */
+export function _setBencanaSockForTest(s) { sock = s || null; }
+
+/** Seam e2e — jalankan satu tick spesifik secara deterministik. */
+export async function _bencanaRunTickForTest(which, sendSock) {
+  if (which === "fast") return fastTick(sendSock);
+  if (which === "slow") return slowTick(sendSock);
+  if (which === "ews") return ewsTick(sendSock);
+  if (which === "volcano") return volcanoTick(sendSock);
+  if (which === "jadwal") return jadwalTick(sendSock);
+  throw new Error("tick tidak dikenal: " + which);
+}
+
 export function getMonitorHealth() {
   const st = loadState();
   return {

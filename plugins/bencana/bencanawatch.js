@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     const mirrorGlobal = async (fn) => {
       if (!isDm || !globalRecForSender) return false;
       if (targetKey === globalWatcherKey(m.sender)) return false;
-      try { await fn(globalWatcherKey(m.sender)); } catch { /* global tetap default */ }
+      try { await fn(globalWatcherKey(m.sender)); } catch (e) { console.error("[bencana] ❌ mirror pengaturan ke langganan global gagal:", e?.message || e); }
       return true;
     };
 
@@ -216,7 +216,8 @@ async function handler(m, { sock }) {
           "radius juga kehitung dekat.",
           "---",
           me0?.city ? "Contoh : .bencanawatch radius 500" : "Set lokasi dulu: .bencanawatch lokasi Palu",
-          "Rentang : 50 - 2000 km (default 300)",
+          "Rentang : 50 - 20000 km (default 300)",
+          "Radius dunia : .bencanawatch radius dunia",
         ]));
       }
       try {
@@ -224,8 +225,9 @@ async function handler(m, { sock }) {
         const rec = setWatcherRadius(targetKey, rawKm);
         const alsoG = await mirrorGlobal((k) => setWatcherRadius(k, rawKm));
         await m.react("🐣");
+        const radiusLabel = rec.radius >= 20000 ? "SELURUH DUNIA (radius maksimum)" : `${rec.radius} km`;
         return m.reply(novaBox("Bencana Watch", [
-          `Radius monitoring: ${rec.radius} km dari ${rec.city || "lokasi kamu"}.`,
+          `Radius monitoring: ${radiusLabel} dari ${rec.city || "lokasi kamu"}.`,
           "Gempa dekat lokasi (termasuk < M 5.0) dalam",
           `radius ini langsung dinotifkin. ${rec.radius} km =`,
           "kejadian sejauh itu dari kota kamu tetap kehitung dekat.",
@@ -234,7 +236,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message || "Radius harus 50-2000 km. Contoh: .bencanawatch radius 500"));
+        return m.reply(novaError("Bencana Watch", e.message || "Radius harus 50-20000 km. Contoh: .bencanawatch radius 500 / radius dunia"));
       }
     }
 
@@ -430,13 +432,17 @@ async function handler(m, { sock }) {
       }
     }
 
-    // ── tes jalur kirim alert wilayah (request owner 10 Sep 2026) ──
+    // ── TOMBOL TES (syarat owner 15 Sep 2026 #5): paksa kirim 1 notifikasi
+    // tes ke chat ini — TANPA syarat langganan/lokasi/scheduler. Ini bukti
+    // jalur pengiriman WhatsApp hidup, terlepas dari monitor jalan/gak.
     if (action === "test") {
       const subs = await getWatchersSafe();
-      const sub = subs[chatId];
+      let sub = subs[chatId];
+      let pakaiLokasiTes = false;
       if (!sub || sub.lat == null) {
-        await m.react("\u274C");
-        return m.reply(novaError("Bencana Watch", "Set lokasi dulu buat tes jalur kirim: .bencanawatch lokasi jakarta — terus ulangin .bencanawatch test"));
+        // belum langganan / belum set lokasi → pakai lokasi tes Jakarta
+        sub = { city: "Jakarta (lokasi tes)", lat: -6.2088, lon: 106.8456, mode: "otomatis", radius: 300 };
+        pakaiLokasiTes = true;
       }
       const ev = {
         kind: "gempa", jenis: "Gempa Bumi", mag: "4.2", depth: "10 km",
@@ -452,12 +458,17 @@ async function handler(m, { sock }) {
           "Alert SIMULASI dikirim ke chat ini —",
           "cek pesan PERINGATAN di atas.",
           "---",
-          "Kalau gak nyampe, cek: langganan on",
-          "(.bencanawatch on), jenis gempa aktif,",
-          "dan mode bukan jadwal.",
+          "Ini bukti jalur pengiriman hidup,",
+          "terlepas dari scheduler. Alert bencana",
+          "asli otomatis masuk kalau langganan",
+          "aktif (.bencanawatch on).",
+          ...(pakaiLokasiTes
+            ? ["---", "Tes ini pakai lokasi tes Jakarta —", "set lokasi asli: .bencanawatch lokasi <kota>"]
+            : []),
         ]));
       } catch (e) {
         await m.react("\u274C");
+        console.error("[bencana] ❌ .bencanawatch test gagal kirim:", e?.message || e);
         return m.reply(novaError("Bencana Watch", "Gagal kirim alert simulasi: " + e.message));
       }
     }
@@ -621,7 +632,7 @@ async function handler(m, { sock }) {
     // ── popup pilih grup target (dari DM) ──
     if (action === "pilihgrup" || action === "pilihgroup") {
       let groups = {};
-      try { groups = (await sock.groupFetchAllParticipating()) || {}; } catch {}
+      try { groups = (await sock.groupFetchAllParticipating()) || {}; } catch (e) { console.error("[bencana] ❌ Gagal ambil daftar grup (pilihgrup):", e?.message || e); }
       const list = Object.values(groups)
         .map((g) => ({ jid: g.id, subject: (g.subject || g.id || "").trim(), count: (g.participants || []).length }))
         .sort((a, b) => a.subject.localeCompare(b.subject));
