@@ -40,15 +40,17 @@ t("1f. 25 Desember = Natal + merah", /Natal/i.test(natal?.nama || "") && natal?.
 const pahlawan = getHariBesar("2026-11-10")
 t("1g. 10 November = Hari Pahlawan (peringatan, BUKAN libur)", /Pahlawan/i.test(pahlawan?.nama || "") && pahlawan?.merah === false && getLiburOn("2026-11-10") === null)
 
-// ═══ 1h-1j. PACKAGE date-holidays (tanpa API eksternal) ═══
-const fitri = getLiburOn("2026-03-20")
-t("1h. libur BERGERAK dari package: Idulfitri 20-03-2026", /idul ?fitri/i.test(fitri?.nama || "") && fitri?.merah === true && fitri?.paket === true, JSON.stringify(fitri))
-t("1i. Nyepi 19-03-2026 dari package", /nyepi/i.test(getHariBesar("2026-03-19")?.nama || ""))
-t("1j. SANITASI: data Maulid rusak (25-08-2026, 14-08-2027) dibuang", getLiburOn("2026-08-25") === null && getLiburOn("2027-08-14") === null, JSON.stringify([getLiburOn("2026-08-25"), getLiburOn("2027-08-14")]))
-t("1k. Maulid valid Jan 2027 tetap kebaca", /maulid/i.test(getLiburOn("2027-01-05")?.nama || ""))
-const natalDobel = getLiburOn("2027-12-25")
-t("1l. 2 libur tanggal sama (25-12-2027 Natal+Maulid) tetap libur", /natal/i.test(natalDobel?.nama || "") && natalDobel?.merah === true)
-t("1m. chain libur panjang NYEPI+IDULFITRI 2026 (19-22 Mar)", (cariLiburPanjang("2026-03-19", 0)?.totalHari || 0) >= 4, JSON.stringify(cariLiburPanjang("2026-03-19", 0)))
+// ═══ 1h-1n. SKB 3 MENTERI RESMI + package fallback ═══
+const fitri = getLiburOn("2026-03-21")
+t("1h. SKB 2026: Idulfitri 21-03-2026 (BUKAN 20-21 versi package)", /idul ?fitri/i.test(fitri?.nama || "") && fitri?.merah === true && fitri?.skb === true, JSON.stringify(fitri))
+const cuti20 = getLiburOn("2026-03-20")
+t("1i. CUTI BERSAMA SKB 20-03-2026 = libur (cuti flag), gak digreet", /cuti/i.test(cuti20?.nama || "") && cuti20?.cuti === true && cuti20?.merah === true && getHariBesar("2026-03-20") === null, JSON.stringify(cuti20))
+t("1j. SKB 2026: Isra Mikraj 16-01 (package salah label 'Maulid')", /isra ?mikraj/i.test(getLiburOn("2026-01-16")?.nama || ""), JSON.stringify(getLiburOn("2026-01-16")))
+t("1k. SKB 2026: Maulid asli 25-08-2026 (ternyata libur resmi SKB)", /maulid/i.test(getLiburOn("2026-08-25")?.nama || ""))
+t("1l. SKB 2027: Idulfitri 10-11 Mar (package bilang 9-10)", /idul ?fitri/i.test(getLiburOn("2027-03-11")?.nama || ""))
+t("1m. SKB 2027: Isra Mikraj 05-01-2027", /isra ?mikraj/i.test(getLiburOn("2027-01-05")?.nama || ""), JSON.stringify(getLiburOn("2027-01-05")))
+t("1n. package cuma fallback non-SKB: sampah 2028-12-14 dibuang, asli 2028-08-03 kebaca", getLiburOn("2028-12-14") === null && /maulid/i.test(getLiburOn("2028-08-03")?.nama || ""), JSON.stringify([getLiburOn("2028-12-14"), getLiburOn("2028-08-03")]))
+t("1o. MEGA chain Nyepi+Idulfitri 2026: cuti 18 Mar s/d cuti 24 Mar = 7 hari", cariLiburPanjang("2026-03-18", 0)?.totalHari === 7, JSON.stringify(cariLiburPanjang("2026-03-18", 0)))
 
 // ═══ 2. Custom day (libur bergerak pakai tanggal lengkap) ═══
 const add = addCustomDay("20-03-2026", "Idulfitri 1447 H", true)
@@ -88,25 +90,36 @@ t("3d. weekend polos gak dianggap libur panjang", cariLiburPanjang("2026-09-19",
 t("3e. getLiburOn cuma hari MERAH (Kartini bukan libur)", getLiburOn("2026-04-21") === null && !!getLiburOn("2026-08-17"))
 t("3f. nextLibur dari 2026-12-26 → Tahun Baru", nextLibur("2026-12-26", 30)?.ymd === "2027-01-01")
 
-// — dispatch H-7 (18 Desember 2026, Sabtu 25 Des = 7 hari lagi) —
-const r7 = await _haribesarRunTickForTest(mockSock, "2026-12-18")
-t("3g. H-7: countdown minggu lagi terkirim 3 chat", r7.sent === 3 && r7.events.includes("H-7"), JSON.stringify(r7))
-t("3h. isi H-7 ada nama libur + H-7", sent.some((s) => String(s.msg.text || "").includes("Natal") || /ɴᴀᴛᴀʟ/.test(String(s.msg.text || ""))))
+// — dispatch H-7 (17 Des 2026 → cuti bersama 24 Des = 7 hari lagi) —
+const r7 = await _haribesarRunTickForTest(mockSock, "2026-12-17")
+t("3g. H-7: countdown minggu lagi (target cuti bersama 24-12) terkirim 3 chat", r7.sent === 3 && r7.events.includes("H-7"), JSON.stringify(r7))
+t("3h. isi H-7 ada nama libur (Cuti Bersama Menjelang Natal)", sent.some((s) => /ɴᴀᴛᴀʟ|Natal/.test(String(s.msg.text || ""))), (sent[0]?.msg.text || "").slice(0, 150))
 
-// — dispatch 22 Desember 2026: greeting Hari Ibu + H-3 Natal —
+// — dispatch 22 Desember 2026: greeting Hari Ibu + info libur panjang (chain mulai cuti 24-12) —
 sent.length = 0
 const r1 = await _haribesarRunTickForTest(mockSock, "2026-12-22")
-t("3i. 22 Des: greeting Hari Ibu + H-3 (2 event × 3 chat)", r1.sent === 6 && r1.events.includes("hariH") && r1.events.includes("H-3"), JSON.stringify(r1))
+t("3i. 22 Des: greeting Hari Ibu + libur panjang 4 hari (cuti 24 + Natal 25 + weekend)", r1.sent === 6 && r1.events.includes("hariH") && r1.events.includes("panjang") && !r1.events.includes("H-3"), JSON.stringify(r1))
 const msgIbu = sent.find((s) => s.to === DM && String(s.msg.text || "").includes("🌷"))
 t("3j. isi greeting: emoji hari + AI inspirasi", !!msgIbu && String(msgIbu.msg.text).includes("12112"), (msgIbu ? String(msgIbu.msg.text).slice(0, 120) : "missing"))
 t("3k. dedup — tick kedua hari sama → 0 kirim", (await _haribesarRunTickForTest(mockSock, "2026-12-22")).sent === 0)
 
-// — dispatch 24 Desember 2026: H-1 + merge info libur panjang —
+// — dispatch 24 Desember 2026 (HARI CUTI BERSAMA): greeting cuti + H-1 Natal + chain merge —
 sent.length = 0
 const rH1 = await _haribesarRunTickForTest(mockSock, "2026-12-24")
-t("3l. H-1 besok libur terkirim (1 event, libur panjang MERGE)", rH1.sent === 3 && rH1.events.includes("H-1") && !rH1.events.includes("panjang"), JSON.stringify(rH1))
-const msgH1 = sent.find((s) => s.to === DM)
-t("3m. H-1 isi: besok libur + 3 hari beruntun", !!msgH1 && String(msgH1.msg.text).includes("12112") === false && /3 ʜᴀʀɪ|beruntun|ʙᴇʀᴜɴᴛᴜɴ/.test(String(msgH1?.msg.text || "")), String(msgH1?.msg.text || "").slice(0, 200))
+t("3l. 24 Des cuti: greeting cuti (chain merge) + H-1 Natal, tanpa panjang terpisah", rH1.sent === 6 && rH1.events.includes("cuti") && rH1.events.includes("H-1") && !rH1.events.includes("panjang"), JSON.stringify(rH1))
+const dmMsgs = sent.filter((s) => s.to === DM).map((s) => String(s.msg.text || ""))
+t("3m. H-1 isi: besok libur + 4 hari beruntun (merge chain)", dmMsgs.some((x) => /ʙᴇꜱᴏᴋ/.test(x) && /4 ʜᴀʀɪ|ʙᴇʀᴜɴᴛᴜɴ/.test(x)), dmMsgs.join(" ||| ").slice(0, 250))
+
+// — dispatch 20-03-2026: CUSTOM exact Idulfitri owner menimpa SKB cuti → greeting hariH —
+sent.length = 0
+const rCuti = await _haribesarRunTickForTest(mockSock, "2026-03-20")
+t("3m2. 20-03: custom owner (Idulfitri 1447 H) menimpa SKB cuti → hariH + H-1 fitri", rCuti.sent === 6 && rCuti.events.includes("hariH") && rCuti.events.includes("H-1") && rCuti.day === "Idulfitri 1447 H", JSON.stringify(rCuti))
+
+// — dispatch HARI CUTI BERSAMA POLOS 23-03-2026 (Senin, tanpa custom) —
+sent.length = 0
+const rCuti2 = await _haribesarRunTickForTest(mockSock, "2026-03-23")
+t("3m3. hari cuti bersama polos: greeting cuti + H-1 (cuti 24-03)", rCuti2.sent === 6 && rCuti2.events.includes("cuti") && rCuti2.events.includes("H-1") && !rCuti2.events.includes("panjang"), JSON.stringify(rCuti2))
+t("3m4. isi pesan cuti: nama cuti bersama", sent.some((s) => /ᴄᴜᴛɪ ʙᴇʀꜱᴀᴍᴀ|cuti bersama/i.test(String(s.msg.text || ""))))
 
 // — dispatch 19 September 2026 (Sabtu biasa, libur 6 hari lagi = bukan checkpoint) —
 sent.length = 0
