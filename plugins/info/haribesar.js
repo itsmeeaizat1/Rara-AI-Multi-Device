@@ -6,15 +6,15 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import {
   getHariBesar, addCustomDay, removeCustomDay, listCustomDays,
   upcomingHariBesar, setSubscribed, isSubscribed, setAllGroups, getAllGroups,
-  getSubs, buildHariBesarText, listLiburMendatang,
+  getSubs, buildHariBesarText, listLiburMendatang, listHariPentingMendatang,
 } from "../../src/lib/nova-haribesar.js";
 
 const pluginConfig = {
   name: "haribesar",
   alias: ["tanggalmerah", "haribesarindonesia", "haripenting", "harinasional"],
   category: "info",
-  description: "Notif otomatis hari besar & tanggal merah Indonesia — kirim jam 08:00 WIB + pesan inspirasi AI",
-  usage: ".haribesar <on/off/all on/all off/status/test/libur>\n.haribesar tambah <DD-MM[-YYYY]> | <Nama> [| merah]\n.haribesar hapus <DD-MM[-YYYY]>\n.haribesar list",
+  description: "Notif otomatis hari besar & tanggal merah Indonesia — jam 08:00 WIB + inspirasi AI. Data libur dari package date-holidays (tanpa API eksternal)",
+  usage: ".haribesar <on/off/all on/all off/status/test/libur/penting>\n.haribesar tambah <DD-MM[-YYYY]> | <Nama> [| merah]\n.haribesar hapus <DD-MM[-YYYY]>\n.haribesar list",
   example: ".haribesar on\n.haribesar all on\n.haribesar libur\n.haribesar tambah 20-03-2026 | Idulfitri | merah",
   isOwner: false,
   isPremium: false,
@@ -26,9 +26,11 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, args, prefix }) {
-  const sub = String(args?.[0] || "").toLowerCase();
   const pf = prefix || ".";
   const chat = m.chat;
+  // dipanggil sebagai .haripenting tanpa argumen → langsung daftar hari penting
+  const invoked = String(m.command || "").toLowerCase();
+  const sub = String(args?.[0] || "").toLowerCase() || (invoked === "haripenting" ? "penting" : "");
 
   // ─── langganan on/off per chat ───
   if (sub === "on" || sub === "off") {
@@ -110,16 +112,33 @@ async function handler(m, { sock, args, prefix }) {
     ].join("\n")));
   }
 
+  // ─── daftar HARI PENTING (peringatan, bukan libur) 90 hari ke depan ───
+  if (sub === "penting" || sub === "hari") {
+    const items = listHariPentingMendatang(null, 90);
+    if (!items.length) {
+      return m.reply(claraWrap("hari besar", [
+        `Tidak ada hari penting dalam 90 hari ke depan.`,
+      ].join("\n")));
+    }
+    const lines = [`Hari Penting — 90 hari ke depan`, ``];
+    items.slice(0, 12).forEach((it, i) => {
+      const d = it.ymd.split("-");
+      const label = it.h === 0 ? `⭐ HARI INI` : `🕒 H-${it.h}`;
+      lines.push(`${i + 1}. ${it.emoji} ${it.nama}`, `   ${d[2]}-${d[1]}-${d[0]} _(${label})_`);
+    });
+    return m.reply(claraWrap("hari besar", lines.join("\n")));
+  }
+
   // ─── daftar LIBUR NASIONAL 90 hari ke depan + label H-X ───
   if (sub === "libur" || sub === "jadwal") {
-    const items = listLiburMendatang(null, 90);
+    const items = listLiburMendatang(null, 120); // 120 hari — 90 bakal kosong pas gap Sep-Des
     if (!items.length) {
       return m.reply(claraWrap("hari besar", [
         `Tidak ada hari libur nasional dalam 90 hari ke depan.`,
         `Tambah manual: ${pf}haribesar tambah DD-MM-YYYY | Nama | merah`,
       ].join("\n")));
     }
-    const lines = [`Hari Libur Nasional — 90 hari ke depan`, ``];
+    const lines = [`Hari Libur Nasional — 120 hari ke depan`, ``];
     items.slice(0, 12).forEach((it, i) => {
       const d = it.ymd.split("-");
       const label = it.h === 0 ? `⭐ HARI INI` : `🕒 H-${it.h}`;
