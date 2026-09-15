@@ -389,7 +389,7 @@ const AUTO_ALIASES = {
   readsw: "autoreadsw", reactsw: "autoreactsw", backup: "autobackup",
   health: "autohealth", reengage: "autoreengage", refill: "autorefill",
   renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
-  bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch",
+  bmkg: "autobmkg", bencana: "bencanawatch", disaster: "bencanawatch", disastersystemwatch: "bencanawatch",
   animenotifier: "autoanimenotifier", animenotify: "autoanimenotifier", anime: "autoanimenotifier", animev2: "autoanimenotifier", bolanotify: "autobolanotify", jadwalbolanotify: "autobolanotify", jadwalnotify: "autobolanotify", footballnotify: "autobolanotify", linkedinnotify: "autolinkedin", lnjobs: "autolinkedin", linkedin: "autolinkedin", lokerlinkedin: "autolinkedin",
   movienotifier: "automovienotifier", movienotify: "automovienotifier", filmnotifier: "automovienotifier", movienotif: "automovienotifier", beritanotify: "autoberitanotify", beritabarak: "autoberitanotify", newsnotify: "autoberitanotify", autonews: "autoberitanotify",
   animev1: "autoanime", winbu: "autoanime", animewinbu: "autoanime", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
@@ -953,7 +953,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const rest = (setIdx >= 0 ? argsRaw.slice(setIdx + 1) : []).map((a) => a.toLowerCase())
 
     // Fitur subscriber: target terpusat NAMBAH jangkauan (subscriber tetap dapat)
-    const SUBSCRIBER_FEATURES = { bencanawatch: '.bencanawatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on', automovienotifier: '.movienotify on', autobolanotify: '.jadwalbolanotify on', autolinkedin: '.linkedinnotify on', autoberitanotify: '.beritanotify on' }
+    const SUBSCRIBER_FEATURES = { bencanawatch: '.disastersystemwatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on', automovienotifier: '.movienotify on', autobolanotify: '.jadwalbolanotify on', autolinkedin: '.linkedinnotify on', autoberitanotify: '.beritanotify on' }
     // SEMUA fitur otomatis yang ngirim notifikasi sekarang punya target terpusat
     // (request owner 8 Sep 2026: "semua fitur yg otomatis ada opsi kirim terpusatnya ini wajib")
     const TARGETABLE = [

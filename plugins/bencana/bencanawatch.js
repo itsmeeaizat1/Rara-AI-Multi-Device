@@ -6,8 +6,8 @@
 // Monitor lazy: timer cuma jalan kalau ada >= 1 subscriber.
 //
 // Scope langganan (request owner 2026-09-06):
-//   • .bencanawatch on di DM → pilihan: chat ini / per grup target / GLOBAL (DM + semua grup)
-//   • .bencanawatch on di dalam grup → aktif di grup itu (perilaku lama)
+//   • .disastersystemwatch on di DM → pilihan: chat ini / per grup target / GLOBAL (DM + semua grup)
+//   • .disastersystemwatch on di dalam grup → aktif di grup itu (perilaku lama)
 //   • Filter jenis/sumber/mode/lokasi/radius/jadwal yang di-set dari DM
 //     otomatis diterapkan juga ke langganan global owner.
 
@@ -55,12 +55,12 @@ const novaGuide = (header, intro, example) =>
   ]);
 
 const pluginConfig = {
-  name: "bencanawatch",
-  alias: ["bencanawatch"],
+  name: "disastersystemwatch",
+  alias: ["disastersystemwatch", "bencanawatch"], // rename owner 15 Sep 2026 — lama tetap jalan biar gak patah
   category: "bencana",
   description: "Langganan auto-alert bencana realtime — per chat, per grup target, atau global DM + semua grup",
-  usage: ".bencanawatch <on/onchat/onglobal/offglobal/off/status/mode/jadwal/jenis/sumber/lokasi/radius/pilihgrup/gunung/test>",
-  example: ".bencanawatch on",
+  usage: ".disastersystemwatch <on/onchat/onglobal/offglobal/off/status/mode/jadwal/jenis/sumber/lokasi/radius/pilihgrup/gunung/test>",
+  example: ".disastersystemwatch on",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 0, isEnabled: true,
 };
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
   try {
     const args = (m.args || []).map((a) => String(a).toLowerCase());
     // ── FIX OWNER 2026-09-07: toleransi salah ketik command umum ──
-    // Report owner ngetik ".bencanawatch global" (maksudnya onglobal) dan
+    // Report owner ngetik ".disastersystemwatch global" (maksudnya onglobal) dan
     // malah kena guide gak jelas. Alias ini bikin varian natural tetap
     // kena action yang benar tanpa perlu hafal nama exact.
     const ACTION_ALIAS = {
@@ -89,11 +89,11 @@ async function handler(m, { sock }) {
     const isDm = !String(m.chat || "").endsWith("@g.us");
 
     // ── FIX BUG owner 2026-09-07: setter (mode/jenis/sumber/radius/jadwal/
-    // kirim/lokasi) selalu nyari subs[chatId] duluan. Tapi ".bencanawatch
+    // kirim/lokasi) selalu nyari subs[chatId] duluan. Tapi ".disastersystemwatch
     // onglobal" nyimpen langganan di key BEDA ("global:<ownerJid>"), BUKAN
     // di chatId — walau di DM chatId kebetulan == ownerJid. Akibatnya user
     // yang CUMA punya langganan GLOBAL (belum pernah onchat) selalu kena
-    // "Aktifkan dulu .bencanawatch on." walau onglobal-nya udah aktif.
+    // "Aktifkan dulu .disastersystemwatch on." walau onglobal-nya udah aktif.
     // Fix: kalau di DM dan belum ada langganan per-chat TAPI global-nya
     // aktif, semua setter di bawah diarahin langsung ke key global itu.
     // FIX 2026-09-08: langganan global dicek dari DM DAN GRUP — dulu cuma
@@ -129,25 +129,25 @@ async function handler(m, { sock }) {
       const text = novaBox("Bencana Watch — Atur", [
         `Status : ${onLabel}`,
         `Mode : ${(me0?.mode || "otomatis").toUpperCase()}`,
-        `→ .bencanawatch mode darurat`,
+        `→ .disastersystemwatch mode darurat`,
         `Kirim : ${(me0?.kirim || "utama").toUpperCase()}`,
-        `→ .bencanawatch kirim semua`,
+        `→ .disastersystemwatch kirim semua`,
         `Sumber : ${fSumber}`,
-        `→ .bencanawatch sumber bmkg`,
+        `→ .disastersystemwatch sumber bmkg`,
         `Jenis : ${fJenis}`,
-        `→ .bencanawatch jenis gempa`,
+        `→ .disastersystemwatch jenis gempa`,
         `Lokasi : ${me0?.city || "belum di-set"}`,
-        `→ .bencanawatch lokasi jakarta`,
+        `→ .disastersystemwatch lokasi jakarta`,
         `Radius : ${me0?.radius || 300} km`,
-        `→ .bencanawatch radius 500`,
+        `→ .disastersystemwatch radius 500`,
         `MinMag : M ${me0?.minMag ?? DEFAULT_MIN_MAG}+`,
-        `→ .bencanawatch minmag 3.5`,
+        `→ .disastersystemwatch minmag 3.5`,
         `Jadwal : ${fJadwal}`,
-        `→ .bencanawatch jadwal add 07:00`,
+        `→ .disastersystemwatch jadwal add 07:00`,
         "---",
         "Lihat detail opsi: ketik tanpa nilai,",
-        "contoh .bencanawatch kirim",
-        "Status lengkap: .bencanawatch status",
+        "contoh .disastersystemwatch kirim",
+        "Status lengkap: .disastersystemwatch status",
       ]);
       return m.reply(text);
     }
@@ -160,9 +160,9 @@ async function handler(m, { sock }) {
           "Set lokasi buat peringatan khusus wilayah.",
           "Bot kasih tahu kalau ada bencana baru DEKAT lokasi kamu.",
           "---",
-          `Contoh : .bencanawatch lokasi Palu`,
-          `Contoh : .bencanawatch lokasi Kota Malang, Jawa Timur`,
-          `Hapus   : .bencanawatch lokasi hapus`,
+          `Contoh : .disastersystemwatch lokasi Palu`,
+          `Contoh : .disastersystemwatch lokasi Kota Malang, Jawa Timur`,
+          `Hapus   : .disastersystemwatch lokasi hapus`,
         ]));
       }
       if (place.toLowerCase() === "hapus" || place.toLowerCase() === "delete") {
@@ -192,7 +192,7 @@ async function handler(m, { sock }) {
           "---",
           `Radius sekarang ${rec.radius || 300} km — makin gede radius,`,
           "makin luas wilayah yang dianggap dekat.",
-          `Atur: .bencanawatch radius 500`,
+          `Atur: .disastersystemwatch radius 500`,
           ...(alsoG ? ["Lokasi diterapkan juga ke langganan global."] : []),
         ]));
       } catch (e) {
@@ -219,9 +219,9 @@ async function handler(m, { sock }) {
           "kejadian di lokasi lain yang masuk",
           "radius juga kehitung dekat.",
           "---",
-          me0?.city ? "Contoh : .bencanawatch radius 500" : "Set lokasi dulu: .bencanawatch lokasi Palu",
+          me0?.city ? "Contoh : .disastersystemwatch radius 500" : "Set lokasi dulu: .disastersystemwatch lokasi Palu",
           "Rentang : 50 - 20000 km (default 300)",
-          "Radius dunia : .bencanawatch radius dunia",
+          "Radius dunia : .disastersystemwatch radius dunia",
         ]));
       }
       try {
@@ -240,7 +240,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message || "Radius harus 50-20000 km. Contoh: .bencanawatch radius 500 / radius dunia"));
+        return m.reply(novaError("Bencana Watch", e.message || "Radius harus 50-20000 km. Contoh: .disastersystemwatch radius 500 / radius dunia"));
       }
 
     // ── set ambang magnitudo minimum alert gempa (owner 15 Sep 2026:
@@ -253,7 +253,7 @@ async function handler(m, { sock }) {
         const meM = subsM[targetKey];
         return m.reply(novaBox("Bencana Watch — Min Mag", [
           `Ambang aktif : M ${meM?.minMag ?? DEFAULT_MIN_MAG}+`,
-          meM?.minMag != null ? "(custom — reset: .bencanawatch minmag reset)" : "(default bawaan)",
+          meM?.minMag != null ? "(custom — reset: .disastersystemwatch minmag reset)" : "(default bawaan)",
           "---",
           "Gempa DI BAWAH ambang ini gak",
           "dikirim (near-quake & EWS).",
@@ -262,8 +262,8 @@ async function handler(m, { sock }) {
           "---",
           `Default : M ${DEFAULT_MIN_MAG}+`,
           `Rentang : M ${MIN_MAG_FLOOR} - M ${MIN_MAG_CEIL}`,
-          "Contoh : .bencanawatch minmag 3.0",
-          "Reset  : .bencanawatch minmag reset",
+          "Contoh : .disastersystemwatch minmag 3.0",
+          "Reset  : .disastersystemwatch minmag reset",
         ]));
       }
       try {
@@ -282,7 +282,7 @@ async function handler(m, { sock }) {
         ]));
       } catch (e) {
         await m.react("❌");
-        return m.reply(novaError("Bencana Watch", e.message || `Magnitudo minimum M ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL}. Contoh: .bencanawatch minmag 3.5`));
+        return m.reply(novaError("Bencana Watch", e.message || `Magnitudo minimum M ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL}. Contoh: .disastersystemwatch minmag 3.5`));
       }
 
     // ── PARAMETER ALERT PER JENIS BENCANA (owner 15 Sep 2026: "dibencana
@@ -310,12 +310,12 @@ async function handler(m, { sock }) {
           "---",
           ...ALERT_PARAM_JENIS.map(fmtJenis),
           "---",
-          "Set : .bencanawatch param <jenis> <param> <nilai>",
-          "Contoh: .bencanawatch param banjir minlevel kuning",
-          "       .bencanawatch param topan jarak 800",
-          "       .bencanawatch param gempa minmag 3.0",
-          "Detail per jenis: .bencanawatch param banjir",
-          "Reset: .bencanawatch param banjir reset",
+          "Set : .disastersystemwatch param <jenis> <param> <nilai>",
+          "Contoh: .disastersystemwatch param banjir minlevel kuning",
+          "       .disastersystemwatch param topan jarak 800",
+          "       .disastersystemwatch param gempa minmag 3.0",
+          "Detail per jenis: .disastersystemwatch param banjir",
+          "Reset: .disastersystemwatch param banjir reset",
         ]));
       }
       if (jenisRaw && !keyRaw) {
@@ -326,22 +326,22 @@ async function handler(m, { sock }) {
           "Parameter yang tersedia untuk jenis ini:",
           ...(j.params.includes("minmag") ? [
             `minmag : M ${(j.key === "gempa" ? (meP?.minMag ?? DEFAULT_MIN_MAG) : "-")}+ (default ${DEFAULT_MIN_MAG})`,
-            "  set: .bencanawatch param gempa minmag 3.0",
+            "  set: .disastersystemwatch param gempa minmag 3.0",
           ] : []),
           ...(j.params.includes("minlevel") ? [
             `minlevel : ${pr.minlevel || "HIJAU (semua alert)"}`,
-            `  set: .bencanawatch param ${j.key} minlevel kuning`,
+            `  set: .disastersystemwatch param ${j.key} minlevel kuning`,
             "  pilihan: HIJAU (semua) / KUNING (skip info) / MERAH (darurat saja)",
           ] : []),
           ...(j.params.includes("jarak") ? [
             `jarak : ${pr.radiusKm ? pr.radiusKm + " km" : "ikut radius utama (" + (meP?.radius || 300) + " km)"}`,
-            `  set: .bencanawatch param ${j.key} jarak 500`,
+            `  set: .disastersystemwatch param ${j.key} jarak 500`,
             "  rentang 50-20000 km, dunia = semua",
           ] : []),
           "---",
           "Gempa besar global M6.5+ & alert darurat tetap",
           "dikirim apa pun pengaturannya.",
-          "Reset: .bencanawatch param " + j.key + " reset",
+          "Reset: .disastersystemwatch param " + j.key + " reset",
         ]));
       }
       try {
@@ -354,7 +354,7 @@ async function handler(m, { sock }) {
           `Parameter ${jenisRaw} diperbarui: ${shown}.`,
           ...(alsoG ? ["Pengaturan langganan global ikut diubah."] : []),
           "---",
-          "Detail: .bencanawatch param " + jenisRaw,
+          "Detail: .disastersystemwatch param " + jenisRaw,
         ]));
       } catch (e) {
         await m.react("❌");
@@ -373,10 +373,10 @@ async function handler(m, { sock }) {
           "KUNING : skip info hijau",
           "MERAH  : darurat saja",
           "---",
-          "Contoh: .bencanawatch minlevel banjir kuning",
-          "       .bencanawatch minlevel topan merah",
-          "Reset : .bencanawatch minlevel banjir reset",
-          "Semua jenis: .bencanawatch param",
+          "Contoh: .disastersystemwatch minlevel banjir kuning",
+          "       .disastersystemwatch minlevel topan merah",
+          "Reset : .disastersystemwatch minlevel banjir reset",
+          "Semua jenis: .disastersystemwatch param",
         ]));
       }
       try {
@@ -413,7 +413,7 @@ async function handler(m, { sock }) {
           "• SEMUA — semua info dikirim, tapi",
           "  ada jeda 10 menit biar gak banjir.",
           "---",
-          "Ketik manual: .bencanawatch kirim utama",
+          "Ketik manual: .disastersystemwatch kirim utama",
         ]);
         return m.reply(text);
       }
@@ -446,7 +446,7 @@ async function handler(m, { sock }) {
           "---",
           "Pilihan : " + BENCANA_JENIS.join(", "),
           "---",
-          "Ketik manual: .bencanawatch jenis gempa",
+          "Ketik manual: .disastersystemwatch jenis gempa",
         ]);
         return m.reply(text);
       }
@@ -479,7 +479,7 @@ async function handler(m, { sock }) {
           `Filter jenis aktif: ${kinds.join(", ")}`,
           "---",
           "Hanya jenis di atas yang dikirim (semua mode).",
-          "Reset: .bencanawatch jenis semua",
+          "Reset: .disastersystemwatch jenis semua",
           ...(alsoG ? ["Filter diterapkan juga ke langganan global."] : []),
         ]));
       } catch (e) {
@@ -502,7 +502,7 @@ async function handler(m, { sock }) {
           "• GDACS — bencana dunia SIAGA/AWAS",
           "• PVMBG — status gunung api Indonesia (level naik/turun)",
           "---",
-          "Ketik manual: .bencanawatch sumber bmkg",
+          "Ketik manual: .disastersystemwatch sumber bmkg",
         ]);
         return m.reply(text);
       }
@@ -527,7 +527,7 @@ async function handler(m, { sock }) {
           "---",
           "Hanya alert dari sumber di atas yang dikirim",
           "(semua mode, realtime & rangkuman).",
-          "Reset: .bencanawatch sumber semua",
+          "Reset: .disastersystemwatch sumber semua",
           ...(alsoG ? ["Filter diterapkan juga ke langganan global."] : []),
         ]));
       } catch (e) {
@@ -560,8 +560,8 @@ async function handler(m, { sock }) {
           lines.push(MAGMA_LEVELS[2].icon + " " + MAGMA_LEVELS[2].romawi + " — Waspada : " + waspada.length + " gunung api");
           lines.push(MAGMA_LEVELS[1].icon + " " + MAGMA_LEVELS[1].romawi + " — Normal : " + normalCount + " gunung api");
           lines.push("---");
-          lines.push("Detail per gunung: .bencanawatch gunung merapi");
-          lines.push("Notif otomatis perubahan status: aktifin jenis gunungapi (.bencanawatch jenis gunungapi)");
+          lines.push("Detail per gunung: .disastersystemwatch gunung merapi");
+          lines.push("Notif otomatis perubahan status: aktifin jenis gunungapi (.disastersystemwatch jenis gunungapi)");
           lines.push("Sumber: magma.esdm.go.id (PVMBG)");
           await m.react("\u{1F42A}");
           return m.reply(novaBox("Status Gunung Api — PVMBG", lines));
@@ -571,7 +571,7 @@ async function handler(m, { sock }) {
           || page.list.find((x) => x.nama.toLowerCase().includes(needle));
         if (!v) {
           await m.react("\u274C");
-          return m.reply(novaError("Bencana Watch", 'Gunung api "' + q + '" gak ketemu di daftar PVMBG. Ketik .bencanawatch gunung buat lihat daftar.'));
+          return m.reply(novaError("Bencana Watch", 'Gunung api "' + q + '" gak ketemu di daftar PVMBG. Ketik .disastersystemwatch gunung buat lihat daftar.'));
         }
         const lv = MAGMA_LEVELS[v.levelNum] || MAGMA_LEVELS[1];
         await m.react("\u{1F42A}");
@@ -620,14 +620,14 @@ async function handler(m, { sock }) {
           "Ini bukti jalur pengiriman hidup,",
           "terlepas dari scheduler. Alert bencana",
           "asli otomatis masuk kalau langganan",
-          "aktif (.bencanawatch on).",
+          "aktif (.disastersystemwatch on).",
           ...(pakaiLokasiTes
-            ? ["---", "Tes ini pakai lokasi tes Jakarta —", "set lokasi asli: .bencanawatch lokasi <kota>"]
+            ? ["---", "Tes ini pakai lokasi tes Jakarta —", "set lokasi asli: .disastersystemwatch lokasi <kota>"]
             : []),
         ]));
       } catch (e) {
         await m.react("\u274C");
-        console.error("[bencana] ❌ .bencanawatch test gagal kirim:", e?.message || e);
+        console.error("[bencana] ❌ .disastersystemwatch test gagal kirim:", e?.message || e);
         return m.reply(novaError("Bencana Watch", "Gagal kirim alert simulasi: " + e.message));
       }
     }
@@ -648,7 +648,7 @@ async function handler(m, { sock }) {
           "• DARURAT — cuma bencana dekat lokasi",
           "  kamu atau bencana besar",
           "---",
-          "Ketik manual: .bencanawatch mode jadwal",
+          "Ketik manual: .disastersystemwatch mode jadwal",
         ]);
         return m.reply(text);
       }
@@ -658,8 +658,8 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         const expl = {
           otomatis: "Semua bencana baru dikirim langsung. Dekat lokasi → peringatan wilayah, jauh → alert umum.",
-          jadwal: "Bencana baru dikumpulkan & dikirim sebagai rangkuman di jam yang di-set. Set jam: .bencanawatch jadwal add 07:00. Bencana DARURAT besar tetap langsung dikirim realtime, gak nunggu rangkuman.",
-          darurat: "Hanya bencana paling penting yang dikirim: dekat lokasi kamu (radius) atau bencana besar. Set lokasi dulu biar maksimal: .bencanawatch lokasi <kota>",
+          jadwal: "Bencana baru dikumpulkan & dikirim sebagai rangkuman di jam yang di-set. Set jam: .disastersystemwatch jadwal add 07:00. Bencana DARURAT besar tetap langsung dikirim realtime, gak nunggu rangkuman.",
+          darurat: "Hanya bencana paling penting yang dikirim: dekat lokasi kamu (radius) atau bencana besar. Set lokasi dulu biar maksimal: .disastersystemwatch lokasi <kota>",
         };
         return m.reply(novaBox("Bencana Watch", [
           `Mode: ${rec.mode}`,
@@ -687,7 +687,7 @@ async function handler(m, { sock }) {
             `Total ${rec.schedules.length} jadwal: ${rec.schedules.join(", ")}`,
             "---",
             "Rangkuman bencana dikirim di jam-jam tersebut.",
-            "Bisa tambah bebas: .bencanawatch jadwal add 13:00",
+            "Bisa tambah bebas: .disastersystemwatch jadwal add 13:00",
             ...(alsoG ? ["Jadwal langganan global ikut ditambah."] : []),
           ]));
         }
@@ -722,7 +722,7 @@ async function handler(m, { sock }) {
           "(khusus mode JADWAL). Bencana besar tetap",
           "langsung dikirim realtime.",
           "---",
-          "Manual : .bencanawatch jadwal add 07:00",
+          "Manual : .disastersystemwatch jadwal add 07:00",
         ]);
         return m.reply(text);
       } catch (e) {
@@ -747,9 +747,9 @@ async function handler(m, { sock }) {
         "TERKINI sebagai tanda fitur aktif.",
         "---",
         "MAU INDONESIA SAJA? Pilih sumbernya:",
-        "• .bencanawatch sumber bmkg",
+        "• .disastersystemwatch sumber bmkg",
         "---",
-        "Matikan dengan .bencanawatch off",
+        "Matikan dengan .disastersystemwatch off",
       ]));
       await sendActivationSample(sock, chatId); // bukti + preview format alert
       return { handled: true };
@@ -772,7 +772,7 @@ async function handler(m, { sock }) {
         "---",
         "Filter jenis / sumber / mode / lokasi / jadwal yang",
         "di-set dari DM berlaku juga ke langganan global.",
-        "Matikan: .bencanawatch offglobal",
+        "Matikan: .disastersystemwatch offglobal",
       ]));
       await sendActivationSample(sock, m.chat); // bukti + preview format alert
       return { handled: true };
@@ -804,12 +804,12 @@ async function handler(m, { sock }) {
       const rowsOn = list.slice(0, 50).map((g) => ({
         title: g.subject.slice(0, 25),
         description: `${g.count} member — ON alert bencana di grup ini`,
-        id: `.bencanawatch grup ${g.jid} on`,
+        id: `.disastersystemwatch grup ${g.jid} on`,
       }));
       const rowsOff = list.slice(0, 50).map((g) => ({
         title: g.subject.slice(0, 25),
         description: `${g.count} member — OFF alert bencana di grup ini`,
-        id: `.bencanawatch grup ${g.jid} off`,
+        id: `.disastersystemwatch grup ${g.jid} off`,
       }));
       const text = novaBox("Bencana Watch", [
         `Fitur  : auto-alert bencana`,
@@ -836,7 +836,7 @@ async function handler(m, { sock }) {
           ],
         });
       } catch {
-        await m.reply(text + `\n\nKetik .bencanawatch grup <id grup> on`);
+        await m.reply(text + `\n\nKetik .disastersystemwatch grup <id grup> on`);
       }
       return { handled: true };
     }
@@ -845,7 +845,7 @@ async function handler(m, { sock }) {
     if (action === "grup" || action === "group") {
       const target = String(args[1] || "");
       if (!target.endsWith("@g.us")) {
-        return m.reply(novaError("Bencana Watch", `ID grup tidak valid. Gunakan .bencanawatch pilihgrup`));
+        return m.reply(novaError("Bencana Watch", `ID grup tidak valid. Gunakan .disastersystemwatch pilihgrup`));
       }
       const onoff = args[2] === "off" ? "off" : "on";
       if (onoff === "on") await addWatcher(target);
@@ -882,12 +882,12 @@ async function handler(m, { sock }) {
           "TERKINI sebagai tanda fitur aktif.",
           "---",
           "MAU INDONESIA SAJA? Pilih sumbernya:",
-          "• .bencanawatch sumber bmkg",
-          "• .bencanawatch sumber bmkg, gdacs",
+          "• .disastersystemwatch sumber bmkg",
+          "• .disastersystemwatch sumber bmkg, gdacs",
           "---",
           "Tips: set lokasi biar dapat peringatan khusus",
-          "wilayah: .bencanawatch lokasi <nama kota>",
-          "Matikan dengan .bencanawatch off",
+          "wilayah: .disastersystemwatch lokasi <nama kota>",
+          "Matikan dengan .disastersystemwatch off",
         ]));
         await sendActivationSample(sock, chatId); // bukti + preview format alert
         return { handled: true };
@@ -903,9 +903,9 @@ async function handler(m, { sock }) {
         `Global : ${g ? "AKTIF (DM + semua grup)" : "OFF"}`,
         "---",
         "Pilih target pengiriman alert:",
-        "1. chat ini → .bencanawatch onchat",
-        "2. grup pilihan → .bencanawatch pilihgrup",
-        "3. DM + semua grup → .bencanawatch onglobal",
+        "1. chat ini → .disastersystemwatch onchat",
+        "2. grup pilihan → .disastersystemwatch pilihgrup",
+        "3. DM + semua grup → .disastersystemwatch onglobal",
         "---",
         "Filter yang di-set dari DM berlaku juga",
         "ke langganan global.",
@@ -920,7 +920,7 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       const lines = ["Auto-alert bencana dimatikan di chat ini."];
       if (isDm && hasGlobalWatcher(m.sender)) {
-        lines.push("---", "Langganan GLOBAL masih aktif (DM + semua grup).", "Matikan dengan .bencanawatch offglobal");
+        lines.push("---", "Langganan GLOBAL masih aktif (DM + semua grup).", "Matikan dengan .disastersystemwatch offglobal");
       }
       return m.reply(novaBox("Bencana Watch", lines));
     }
@@ -937,7 +937,7 @@ async function handler(m, { sock }) {
         const provLine = ["BMKG", "USGS", "JMA", "EMSC"].map((k) => `${k} ${ph[k]?.down ? "X" : "OK"}`).join(" | ");
         return m.reply(novaBox("Ews Peringatan Dini v2", [
           `Status  : ${me ? (me.ews === false ? "OFF (gak ikut peringatan dini)" : "ON (pengaman darurat aktif)") : "TIDAK LANGGANAN"}`,
-          `Monitor : ${health.ewsRunning ? "HIDUP" : "MATI (nyalakan .bencanawatch on)"}`,
+          `Monitor : ${health.ewsRunning ? "HIDUP" : "MATI (nyalakan .disastersystemwatch on)"}`,
           `Riwayat : ${health.ewsHistoryCount ?? 0} event tercatat`,
           "---",
           { sub: "Sistem gempa (4 provider, 10 dtk)" },
@@ -959,10 +959,10 @@ async function handler(m, { sock }) {
           "---",
           "EWS bypass mode (pengaman darurat):",
           "walau mode jadwal, gempa dekat tetap realtime.",
-          "Jarak & ETA dari .bencanawatch lokasi <kota>",
+          "Jarak & ETA dari .disastersystemwatch lokasi <kota>",
           "---",
-          "Perintah: .bencanawatch ews on/off",
-          "Tes paksa: .bencanawatch test",
+          "Perintah: .disastersystemwatch ews on/off",
+          "Tes paksa: .disastersystemwatch test",
         ]));
       }
       try {
@@ -989,8 +989,8 @@ async function handler(m, { sock }) {
           "global — EMSC (agregasi semua agensi,",
           "termasuk gempa China)",
           "---",
-          "Contoh: .bencanawatch provider bmkg jepang",
-          "Reset semua: .bencanawatch provider all",
+          "Contoh: .disastersystemwatch provider bmkg jepang",
+          "Reset semua: .disastersystemwatch provider all",
         ]));
       }
       try {
@@ -1033,13 +1033,13 @@ async function handler(m, { sock }) {
         `Kirim   : ${me?.kirim || "utama"}${(me?.kirim || "utama") === "utama" ? " — 1 info terpenting per pembaruan" : " — semua info, cooldown 10 mnt"}`,
       ];
       if ((me?.mode || "otomatis") === "jadwal") {
-        lines.push(`Jadwal  : ${(Array.isArray(me.schedules) && me.schedules.length) ? me.schedules.join(", ") : "belum ada — .bencanawatch jadwal add 07:00"}`);
+        lines.push(`Jadwal  : ${(Array.isArray(me.schedules) && me.schedules.length) ? me.schedules.join(", ") : "belum ada — .disastersystemwatch jadwal add 07:00"}`);
       }
       if (Array.isArray(me?.jenis) && me.jenis.length) {
         lines.push(`Jenis   : ${me.jenis.join(", ")} (filter aktif)`);
       }
       if (isDm && hasGlobalWatcher(m.sender)) {
-        lines.push(`Global  : AKTIF — DM + semua grup (off: .bencanawatch offglobal)`);
+        lines.push(`Global  : AKTIF — DM + semua grup (off: .disastersystemwatch offglobal)`);
       }
       if (me?.city) {
         lines.push("---");
@@ -1053,9 +1053,9 @@ async function handler(m, { sock }) {
       } else if (me) {
         lines.push("---");
         lines.push("Lokasi  : belum di-set (alert umum saja)");
-        lines.push("Set     : .bencanawatch lokasi <nama kota>");
+        lines.push("Set     : .disastersystemwatch lokasi <nama kota>");
       }
-      if (!me && !(isDm && hasGlobalWatcher(m.sender))) lines.push("---", "Aktifkan dengan .bencanawatch on");
+      if (!me && !(isDm && hasGlobalWatcher(m.sender))) lines.push("---", "Aktifkan dengan .disastersystemwatch on");
 
       // ── FIX OWNER 2026-09-07: kesehatan monitor — biar kelihatan jelas
       // kalau bot beneran mantau (bukan mati), report owner "aktifin tapi
@@ -1075,10 +1075,10 @@ async function handler(m, { sock }) {
       lines.push("terjadi sekarang. Kalau belum ada kejadian baru yang");
       lines.push("cocok kriteria (gempa M5+ alert/M6+, GDACS Siaga/Awas), ya");
       lines.push("emang belum ada pesan masuk — itu normal, bukan error.");
-      lines.push(`Mau lihat kondisi TERKINI sekarang? Pakai: .bencana`);
+      lines.push(`Mau lihat kondisi TERKINI sekarang? Pakai: .disaster`);
       lines.push("---");
       lines.push("Semua pengaturan bisa diubah gampang");
-      lines.push("lewat popup tombol: .bencanawatch atur");
+      lines.push("lewat popup tombol: .disastersystemwatch atur");
       return m.reply(novaBox("Bencana Watch", lines));
     }
 
@@ -1088,7 +1088,7 @@ async function handler(m, { sock }) {
     if (action === "guide") {
       // Semua baris dijaga pendek biar gak kena wrap aneh.
       return m.reply(novaBox("Bencana Watch — Guide", [
-        "Semua command diawali .bencanawatch",
+        "Semua command diawali .disastersystemwatch",
         "---",
         { sub: "Cara paling gampang" },
         "• atur → popup SEMUA pengaturan",
@@ -1123,7 +1123,7 @@ async function handler(m, { sock }) {
         "---",
         "Catatan: alert REALTIME — cuma bencana",
         "BARU sejak aktif, bukan daftar bencana",
-        "yang lagi terjadi (itu: .bencana).",
+        "yang lagi terjadi (itu: .disaster).",
       ]));
     }
 
