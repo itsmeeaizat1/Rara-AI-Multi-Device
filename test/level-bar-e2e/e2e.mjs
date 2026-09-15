@@ -105,6 +105,7 @@ w("\n— .prestige/.reincarnate: reject kasih bar progress ke syarat —");
   const out = texts(mk);
   check("prestige reject (syarat level 50)", out.includes("Minimal level 50"));
   check("prestige bar progress 12/50", /▰▱+ 12\/50/.test(out) || /▰▱* 12\/50/.test(out), (out.match(/Progress[^\n]*\n[^\n]*/) || ["-"])[0]);
+  check("prestige reject kartu ditanam di PREVIEW", mk.sends.length === 1 && !!mk.sends[0].ext?.thumbnail, "thumbnail preview kosong");
 
   seedRpg({ level: 8 });
   const mk2 = mkMock();
@@ -113,6 +114,7 @@ w("\n— .prestige/.reincarnate: reject kasih bar progress ke syarat —");
   const out2 = texts(mk2);
   check("reincarnate reject (syarat level 30)", out2.includes("Minimal level 30"));
   check("reincarnate bar progress 8/30", /▰▱+ 8\/30/.test(out2), (out2.match(/Progress[^\n]*\n[^\n]*/) || ["-"])[0]);
+  check("reincarnate reject kartu ditanam di PREVIEW", mk2.sends.length === 1 && !!mk2.sends[0].ext?.thumbnail, "thumbnail preview kosong");
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -138,6 +140,7 @@ w("\n— .achievement: bar progress per achievement —");
   check("dedicated bar 3/7", /▰▱+ 3\/7/.test(out), (out.match(/Dedicated[^\n]*\n[^\n]*\n[^\n]*/) || ["-"])[0]);
   check("miner bar 34/100", /▰▱+ 34\/100/.test(out), (out.match(/Deep Miner[^\n]*\n[^\n]*\n[^\n]*/) || ["-"])[0]);
   check("rich_man bar 3.400/100.000 (gold sekarang)", /3400\/100000/.test(out) || /3.400\/100.000/.test(out), (out.match(/Rich Man[^\n]*\n[^\n]*\n[^\n]*/) || ["-"])[0]);
+  check("achievement list kartu ditanam di PREVIEW", mk.sends.length === 1 && !!mk.sends[0].ext?.thumbnail, "thumbnail preview kosong");
   check("gak ada morphing loading", mk.sends.filter((s) => s.edit).length === 0);
 }
 
@@ -151,6 +154,7 @@ w("\n— claim reject juga dapet bar —");
   const out = texts(mk);
   check("claim reject muncul", out.includes("Belum memenuhi syarat"));
   check("claim reject ada bar progress 34/100", /▰▱+ 34\/100/.test(out), (out.match(/Progress[^\n]*\n[^\n]*/) || ["-"])[0]);
+  check("claim reject kartu ditanam di PREVIEW", mk.sends.length === 1 && !!mk.sends[0].ext?.thumbnail, "thumbnail preview kosong");
 }
 
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);

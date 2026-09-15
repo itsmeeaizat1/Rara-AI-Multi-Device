@@ -39,8 +39,12 @@ async function _levelCardKit() {
   return { createCanvas, loadImage: _loadImageForTest || loadImage };
 }
 
-// generateLevelInfoCard — kartu stats RPG (.levelinfo), tema sama level-up
-async function generateLevelInfoCard({ name, rpg }) {
+// generateRpgCard — kartu canvas GENERIC tema level-up (owner 15 Sep 2026:
+// dipakai .levelinfo/.prestige/.reincarnate/.achievement — hasilnya ditanam
+// di PREVIEW pesan, bukan media → gak bisa disimpan ke galeri)
+async function generateRpgCard({
+  title, name, infoLine, bigValue, bigLabel, bars = [],
+}) {
   const { createCanvas, loadImage } = await _levelCardKit();
   const width = 800;
   const height = 280;
@@ -73,35 +77,34 @@ async function generateLevelInfoCard({ name, rpg }) {
   ctx.shadowBlur = 5;
   ctx.fillStyle = "#ffffff";
   ctx.font = "bold 38px sans-serif";
-  ctx.fillText("LEVEL INFO", 30, 62);
-  ctx.fillStyle = "#00f2ff";
-  ctx.font = "italic 25px sans-serif";
-  ctx.fillText(String(name || "Player"), 30, 100);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-  ctx.font = "15px sans-serif";
-  ctx.fillText(
-    `${rpg.job || "novice"} (Lv.${rpg.jobLevel || 1})  •  Gold ${(rpg.gold || 0).toLocaleString("id-ID")}  •  Gems ${rpg.gems || 0}`,
-    30, 122,
-  );
+  ctx.fillText(String(title || "NOVA RPG"), 30, 62);
+  if (name) {
+    ctx.fillStyle = "#00f2ff";
+    ctx.font = "italic 25px sans-serif";
+    ctx.fillText(String(name), 30, 100);
+  }
+  if (infoLine) {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+    ctx.font = "15px sans-serif";
+    ctx.fillText(String(infoLine), 30, 122);
+  }
 
-  ctx.textAlign = "right";
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "italic bold 88px sans-serif";
-  ctx.fillText(String(rpg.level || 1), width - 50, 105);
-  ctx.font = "bold 20px sans-serif";
-  ctx.fillStyle = "#00f2ff";
-  ctx.fillText("LEVEL", width - 55, 42);
-  ctx.textAlign = "left";
+  if (bigValue != null) {
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "italic bold 88px sans-serif";
+    ctx.fillText(String(bigValue), width - 50, 105);
+    if (bigLabel) {
+      ctx.font = "bold 20px sans-serif";
+      ctx.fillStyle = "#00f2ff";
+      ctx.fillText(String(bigLabel), width - 55, 42);
+    }
+    ctx.textAlign = "left";
+  }
 
-  const bars = [
-    { label: "EXP", cur: rpg.exp || 0, max: rpg.expNext || 100, c1: "#ff00cc", c2: "#3333ff" },
-    { label: "HP", cur: rpg.hp || 0, max: rpg.maxHp || 100, c1: "#ff4d4d", c2: "#ff9a8b" },
-    { label: "Mana", cur: rpg.mana || 0, max: rpg.maxMana || 50, c1: "#4834d4", c2: "#686de0" },
-    { label: "Energy", cur: rpg.energy || 0, max: rpg.maxEnergy || 100, c1: "#feca57", c2: "#ff9f43" },
-  ];
   let by = 138;
   const bx = 30, bw = 520, bh = 18;
-  for (const b of bars) {
+  for (const b of bars.slice(0, 4)) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
     ctx.beginPath();
     ctx.roundRect(bx, by, bw, bh, 9);
@@ -109,8 +112,8 @@ async function generateLevelInfoCard({ name, rpg }) {
     const prog = Math.min((b.cur || 0) / (b.max || 1), 1);
     if (prog > 0) {
       const g = ctx.createLinearGradient(bx, 0, bx + bw, 0);
-      g.addColorStop(0, b.c1);
-      g.addColorStop(1, b.c2);
+      g.addColorStop(0, b.c1 || "#ff00cc");
+      g.addColorStop(1, b.c2 || "#3333ff");
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.roundRect(bx, by, Math.max(bw * prog, bh), bh, 9);
@@ -119,7 +122,7 @@ async function generateLevelInfoCard({ name, rpg }) {
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 12px sans-serif";
     ctx.fillText(
-      `${b.label}  ${(b.cur || 0).toLocaleString("id-ID")} / ${(b.max || 0).toLocaleString("id-ID")}`,
+      `${b.label || "Progress"}  ${(b.cur || 0).toLocaleString("id-ID")} / ${(b.max || 0).toLocaleString("id-ID")}`,
       bx + 12, by + 13,
     );
     by += 32;
@@ -128,6 +131,23 @@ async function generateLevelInfoCard({ name, rpg }) {
   ctx.font = "12px sans-serif";
   ctx.fillText(config.bot?.name || "Nova AI", 30, height - 18);
   return canvas.toBuffer("image/png");
+}
+
+// generateLevelInfoCard — kartu stats RPG (.levelinfo) = wrapper generateRpgCard
+async function generateLevelInfoCard({ name, rpg }) {
+  return generateRpgCard({
+    title: "LEVEL INFO",
+    name,
+    infoLine: `${rpg.job || "novice"} (Lv.${rpg.jobLevel || 1})  •  Gold ${(rpg.gold || 0).toLocaleString("id-ID")}  •  Gems ${rpg.gems || 0}`,
+    bigValue: String(rpg.level || 1),
+    bigLabel: "LEVEL",
+    bars: [
+      { label: "EXP", cur: rpg.exp || 0, max: rpg.expNext || 100, c1: "#ff00cc", c2: "#3333ff" },
+      { label: "HP", cur: rpg.hp || 0, max: rpg.maxHp || 100, c1: "#ff4d4d", c2: "#ff9a8b" },
+      { label: "Mana", cur: rpg.mana || 0, max: rpg.maxMana || 50, c1: "#4834d4", c2: "#686de0" },
+      { label: "Energy", cur: rpg.energy || 0, max: rpg.maxEnergy || 100, c1: "#feca57", c2: "#ff9f43" },
+    ],
+  });
 }
 
 // levelPreviewThumb — encode canvas → thumbnail externalAdReply.
@@ -140,6 +160,34 @@ async function levelPreviewThumb(buffer) {
       .toBuffer();
   } catch {
     return buffer;
+  }
+}
+
+
+// replyWithCardPreview — SATU PINTU (owner 15 Sep 2026): gambar kartu →
+// thumbnail → ditanam di PREVIEW pesan (externalAdReply renderLargerThumbnail),
+// bukan media langsung → gak bisa disimpan ke galeri. Return true kalau
+// preview terkirim; false → pemanggil fallback m.reply(txt) polos.
+async function replyWithCardPreview(m, txt, cardData, opts = {}) {
+  try {
+    const card = await generateRpgCard(cardData);
+    const thumb = await levelPreviewThumb(card);
+    await m.reply(txt, {
+      contextInfo: {
+        externalAdReply: {
+          title: opts.title || config.bot?.name || "Nova AI Whatsapp Bot",
+          body: opts.body || "",
+          thumbnail: thumb,
+          previewType: "PHOTO",
+          showAdAttribution: false,
+          renderLargerThumbnail: true,
+        },
+      },
+    });
+    return true;
+  } catch (e) {
+    console.error("card preview error:", e);
+    return false;
   }
 }
 
@@ -394,8 +442,10 @@ export {
   calculateLevel,
   expForLevel,
   getRole,
+  generateRpgCard,
   generateLevelInfoCard,
   levelPreviewThumb,
+  replyWithCardPreview,
   checkAndNotifyLevelUp,
   addExpWithLevelCheck,
   _setLevelCardLoadImageForTest,
