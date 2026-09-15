@@ -101,24 +101,70 @@ const engineText = novaGameBox({
     cta: gameCTA("goodbye"),
   });
 
-  // Thumbnail foto profil member (request owner 10 Sep 2026): goodbye muncul
-  // dengan foto profil member yang keluar. Foto private / gagal unduh →
-  // fallback pesan teks biasa (aman, gak error).
+  // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026): kartu goodbye
+  // ("Selamat tinggal" + foto profil circle + nama + pesan apresiasi random
+  // buatan AI) digambar canvas → ditanam di PREVIEW (externalAdReply), bukan
+  // media langsung → gak bisa disimpan ke galeri.
+  let ppBuffer = null;
   try {
     const ppUrl = await sock.profilePictureUrl(participantJid, "image");
     if (ppUrl) {
       const res = await fetch(ppUrl);
-      if (res.ok) {
-        const buffer = Buffer.from(await res.arrayBuffer());
-        await sock.sendMessage(groupJid, {
-          image: buffer,
-          caption: engineText,
-          mentions: [participantJid],
-        });
-        return;
-      }
+      if (res.ok) ppBuffer = Buffer.from(await res.arrayBuffer());
     }
   } catch {}
+
+  // Pesan apresiasi: AI (rantai nova, maks 20 dtk) → fallback template random
+  let apresiasi = null;
+  try {
+    const { apresiasiOrTemplate } = await import("../../src/lib/nova-welcome-canvas.js");
+    apresiasi = await apresiasiOrTemplate(displayName, groupName);
+  } catch (e) {
+    console.error("goodbye apresiasi error:", e);
+  }
+
+  try {
+    const { generateGoodbyeCard } = await import("../../src/lib/nova-welcome-canvas.js");
+    const { levelPreviewThumb } = await import("../../src/lib/nova-level.js");
+    const card = await generateGoodbyeCard({
+      groupName, ppBuffer, name: displayName, apresiasi: apresiasi || "Sampai jumpa lagi suatu hari nanti.",
+    });
+    const thumb = await levelPreviewThumb(card);
+    await sock.sendMessage(groupJid, {
+      text: engineText,
+      mentions: [participantJid],
+      contextInfo: {
+        mentionedJid: [participantJid],
+        forwardingScore: 0, isForwarded: false,
+        externalAdReply: {
+          title: "SELAMAT TINGGAL",
+          body: groupName,
+          thumbnail: thumb,
+          previewType: "PHOTO",
+          showAdAttribution: false,
+          renderLargerThumbnail: true,
+        },
+      },
+    });
+    return;
+  } catch (e) {
+    console.error("goodbye card error:", e);
+  }
+
+  // Fallback berjenjang: canvas/preview gagal → foto profil + caption (perilaku
+  // lama) → teks polos. Pesan tidak pernah hilang.
+  if (ppBuffer) {
+    try {
+      await sock.sendMessage(groupJid, {
+        image: ppBuffer,
+        caption: engineText,
+        mentions: [participantJid],
+      });
+      return;
+    } catch (e) {
+      console.error("goodbye image fallback error:", e);
+    }
+  }
 
   await sock.sendMessage(groupJid, {
     text: engineText,

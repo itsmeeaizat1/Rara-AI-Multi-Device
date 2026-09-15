@@ -277,24 +277,62 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     cta: gameCTA("welcome"),
   });
 
-  // Thumbnail foto profil member (request owner 10 Sep 2026): welcome muncul
-  // dengan foto profil member baru sebagai gambar + caption. Foto private /
-  // gagal unduh → fallback pesan teks biasa (aman, gak error).
+  // KARTU CANVAS DALAM PREVIEW (request owner 16 Sep 2026): kartu welcome
+  // ("Selamat datang" + nama grup + foto circle + nama + member ke-X + total
+  // member) digambar canvas → ditanam di PREVIEW (externalAdReply), bukan
+  // media langsung → gak bisa disimpan ke galeri.
+  let ppBuffer = null;
   try {
     const ppUrl = await sock.profilePictureUrl(participantJid, "image");
     if (ppUrl) {
       const res = await fetch(ppUrl);
-      if (res.ok) {
-        const buffer = Buffer.from(await res.arrayBuffer());
-        await sock.sendMessage(groupJid, {
-          image: buffer,
-          caption: engineText,
-          mentions: [participantJid],
-        });
-        return;
-      }
+      if (res.ok) ppBuffer = Buffer.from(await res.arrayBuffer());
     }
   } catch {}
+  try {
+    const { generateWelcomeCard } = await import("../../src/lib/nova-welcome-canvas.js");
+    const { levelPreviewThumb } = await import("../../src/lib/nova-level.js");
+    const card = await generateWelcomeCard({
+      groupName, ppBuffer, name: displayName,
+      memberKe: memberCount || 1,
+      totalMember: memberCount || 1,
+    });
+    const thumb = await levelPreviewThumb(card);
+    await sock.sendMessage(groupJid, {
+      text: engineText,
+      mentions: [participantJid],
+      contextInfo: {
+        mentionedJid: [participantJid],
+        forwardingScore: 0, isForwarded: false,
+        externalAdReply: {
+          title: "SELAMAT DATANG",
+          body: groupName,
+          thumbnail: thumb,
+          previewType: "PHOTO",
+          showAdAttribution: false,
+          renderLargerThumbnail: true,
+        },
+      },
+    });
+    return;
+  } catch (e) {
+    console.error("welcome card error:", e);
+  }
+
+  // Fallback berjenjang: canvas/preview gagal → foto profil + caption (perilaku
+  // lama, request owner 10 Sep 2026) → teks polos. Pesan tidak pernah hilang.
+  if (ppBuffer) {
+    try {
+      await sock.sendMessage(groupJid, {
+        image: ppBuffer,
+        caption: engineText,
+        mentions: [participantJid],
+      });
+      return;
+    } catch (e) {
+      console.error("welcome image fallback error:", e);
+    }
+  }
 
   await sock.sendMessage(groupJid, {
     text: engineText,
