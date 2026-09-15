@@ -34,15 +34,16 @@ import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
 import { boxMessage } from "../../src/lib/styler.js";
 import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/nova-weather-notify.js";
-import { resetIntervalState, resetAlertState, resetAutoState, checkWeatherAlert } from "../../src/lib/nova-weather-realtime-scheduler.js";
+import { resetIntervalState, resetAlertState, resetAutoState, checkWeatherAlert, setAutoGroupForTest } from "../../src/lib/nova-weather-realtime-scheduler.js";
 import { evaluateWeatherAlert, formatAlertMessage, buildThresholds, THRESHOLD_BASE } from "../../src/lib/nova-weather-alert.js";
+import { weatherGroupOf } from "../../src/lib/nova-weather-notify.js";
 
 const pluginConfig = {
   name: "autoweatherrealtime",
   alias: ["autoweatherrealtime", "autocuacarealtime"],
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/otomatis/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
+  usage: ".autoweatherrealtime <on/off/lokasi/notification/alert/threshold/jadwal/interval/otomatis/tesubah [cerah|mendung|hujan|petir]/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
   example: ".autoweatherrealtime on\n.autoweatherrealtime lokasi serang\n.autoweatherrealtime target 62123456789@s.whatsapp.net",
   isOwner: true,
   isPremium: false,
@@ -70,7 +71,7 @@ function getWRSettings(db) {
       ],
       target: null, // group JID for notifications
       // ── upgrade ala script owner 8 Sep 2026 ──
-      notificationMode: "jadwal", // "jadwal" | "interval" | "otomatis"
+      notificationMode: "otomatis", // UPGRADE 15 Sep: default kirim PAS cuaca berganti ("jadwal" | "interval" | "otomatis")
       intervalHours: 2,           // interval mode: tiap N jam (script: 2 jam)
       provider: "openmeteo",      // "openmeteo" | "bmkg" | "metno" | "weatherapi" | "aggregate"
       adm4: null,                 // kode wilayah BMKG (contoh: 31.71.03.1001)
@@ -78,7 +79,7 @@ function getWRSettings(db) {
       thresholds: {},             // override basis threshold alert ({ heat: 38, wind: 45, ... })
     };
   }
-  if (!s.notificationMode) s.notificationMode = "jadwal";
+  if (!s.notificationMode) s.notificationMode = "otomatis"; // UPGRADE 15 Sep: sesuai harapan owner
   if (!s.intervalHours) s.intervalHours = 2;
   if (!s.autoCheckMinutes) s.autoCheckMinutes = 5;
   if (!s.minGapMinutes) s.minGapMinutes = 10;
@@ -126,7 +127,9 @@ async function searchCity(query) {
 
 // ── Parse time HH:MM ──
 function parseTime(value) {
-  const match = String(value || "").match(/^([01]?\d|2[0-3])[:.]([0-5]\d])$/);
+  // FIX 15 Sep 2026: regex lama punya "]" nyasar ([0-5]\d]) — jadwal
+  // "06:30" GAK PERNAH valid dari dulu (command jadwal senyap gagal).
+  const match = String(value || "").match(/^([01]?\d|2[0-3])[:.]([0-5]\d)$/);
   if (!match) return null;
   return { hour: Number(match[1]), minute: Number(match[2]) };
 }
@@ -165,6 +168,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Alert Ekstrem") + " : " + (settings.alertEnabled !== false ? "ON ✅" : "OFF ❌") + "\n" +
         "• " + toSC("Threshold") + " : " + (Object.keys(settings.thresholds || {}).length ? toSC("custom ") + "(" + Object.keys(settings.thresholds).join(", ") + ")" : toSC("default")) + "\n" +
         "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "otomatis" ? toSC("Otomatis — cek tiap ") + settings.autoCheckMinutes + toSC(" menit, kirim saat cuaca berubah") : settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
+        "• " + toSC("Grup Terakhir") + " : " + (() => { const st = db2.setting("weatherRealtimeAuto"); return st?.lastGroup ? toSC(st.lastCondition || st.lastGroup) : toSC("belum ada (cek pertama bakal kirim cuaca sekarang)"); })() + "\n" +
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
         "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
         "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
@@ -288,15 +292,18 @@ async function handler(m, { sock, config: botConfig, db }) {
         if (!settings.target) {
           settings.target = m.chat;
         }
-        // FIX 8 Sep 2026: tanpa jadwal HH:MM yang diset, mode jadwal itu
-        // BISU selamanya (array kosong gak pernah match). Kalau belum ada
-        // jadwal → auto pindah ke mode interval (default 2 jam) biar update
-        // cuaca langsung jalan begitu di-on. Owner yang udah set jadwal
-        // sendiri → tetep mode jadwal.
-        if (!(Array.isArray(settings.schedules) && settings.schedules.length > 0)) {
-          settings.notificationMode = "interval";
-          if (!Number(settings.intervalHours) || Number(settings.intervalHours) < 1) settings.intervalHours = 2;
+        // UPGRADE 15 Sep 2026 (owner: "notif tiap cuaca berganti gak
+        // kekirim"): penyebabnya mode default "jadwal" — notif cuma masuk
+        // di jam jadwal (06:30/12:00/17:00/20:00), BUKAN saat cuaca
+        // berganti. Sekarang notification on default MODE OTOMATIS:
+        // cek tiap autoCheckMinutes menit, kirim pas GRUP cuaca berubah
+        // (cerah→hujan dll). Mau mode jam tetap? Set eksplisit:
+        // .autoweatherrealtime jadwal 06:30 12:00
+        if (settings.notificationMode === "jadwal") {
+          settings.notificationMode = "otomatis";
         }
+        if (!Number(settings.autoCheckMinutes) || Number(settings.autoCheckMinutes) < 1) settings.autoCheckMinutes = 5;
+        if (!Number(settings.minGapMinutes) || Number(settings.minGapMinutes) < 1) settings.minGapMinutes = 10;
         saveWRSettings(db2, settings);
         resetIntervalState(); // ala script boot: kirim cuaca sekarang
         resetAlertState();    // alert ekstrem siap cek dari nol
@@ -675,12 +682,16 @@ async function handler(m, { sock, config: botConfig, db }) {
         schedules.push({ ...t, key: keys[i] || "t" + i, label: labels[i] || "Waktu " + (i + 1) });
       }
       settings.schedules = schedules;
+      // UPGRADE 15 Sep: set jadwal eksplisit = user minta mode jadwal
+      // (default sekarang otomatis — tanpa ini mode gak pindah sendiri)
+      settings.notificationMode = "jadwal";
       saveWRSettings(db2, settings);
       try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
       return m.reply(
         boxMessage("◆ " + "Weather Realtime" + " ◆",
         "✅ " + toSC("Jadwal notifikasi diatur") + "\n" +
-        "• " + formatSchedules(schedules) + "\n" 
+        "• " + formatSchedules(schedules) + "\n" +
+        "📌 " + toSC("Mode aktif") + ": " + toSC("Jadwal — balik ke kirim-saat-berganti") + ": " + prefix + "autoweatherrealtime otomatis\n"
         )
       );
     }
@@ -787,6 +798,34 @@ async function handler(m, { sock, config: botConfig, db }) {
         try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
         return m.reply(novaError("Weather Realtime", "Test gagal: " + e.message));
       }
+    }
+
+    // ── TESUBAH (UPGRADE 15 Sep 2026 — "tes paksa" dokumen diagnosis):
+    //    pura-pura grup terakhir = X (default: beda dari realita) → cek
+    //    scheduler berikutnya lihat grup real beda → notif ASLI kekirim.
+    //    Bukti jalur kirim jalan tanpa nunggu cuaca beneran berganti.
+    if (action === "tesubah" || action === "simulasi") {
+      const GRUP_VALID = { cerah: "cerah", mendung: "mendung", hujan: "hujan", petir: "hujan_petir", badai: "hujan_petir" };
+      let grp = GRUP_VALID[String(args[0] || "").toLowerCase()] || null;
+      if (!grp) {
+        // default: paksa grup kebalikan realita sekarang biar pasti beda
+        try {
+          const data = await fetchWeatherForSettings(settings);
+          const real = weatherGroupOf(data);
+          grp = real === "cerah" ? "hujan" : "cerah";
+        } catch { grp = "cerah"; }
+      }
+      setAutoGroupForTest(grp, grp === "cerah" ? "Cerah" : grp === "mendung" ? "Berawan/Mendung" : grp === "hujan" ? "Hujan" : "Hujan Petir");
+      try { await sock.sendMessage(m.chat, { react: { text: "🛠️", key: m.key } }); } catch {}
+      return m.reply(
+        boxMessage("◆ " + "Weather Realtime" + " ◆",
+        "🧪 " + toSC("Tes paksa deteksi perubahan") + "\n" +
+        "• " + toSC("Grup terakhir dipaksa") + " : " + toSC(grp) + "\n" +
+        "• " + toSC("Cek berikutnya") + " : " + toSC(" maksimal " + (Number(settings.autoCheckMinutes) || 5) + " menit lagi") + "\n" +
+        "• " + toSC("Grup realita beda") + " → " + toSC("notif CUACA BERUBAH kekirim") + "\n" +
+        "📌 " + toSC("Pastikan mode otomatis aktif") + ": " + prefix + "autoweatherrealtime otomatis"
+        )
+      );
     }
 
     // ── Unknown command ──

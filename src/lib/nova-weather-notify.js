@@ -508,3 +508,61 @@ export function realtimeKey(data) {
   const temp = Math.round(Number(data.temperature) || 0);
   return `${temp}_${data.condition || ""}`;
 }
+
+// 🔹 DETEKSI PER GRUP CUACA (upgrade 15 Sep 2026 — diagnosis owner: notif
+// "tiap cuaca berganti" gak pernah kekirim). Kunci dari dokumen diagnosis:
+// bandingkan per GRUP (cerah/mendung/hujan/petir), BUKAN per kode/suhu —
+// cerah→cerah berawan gak usah notif (spam), hujan ringan→hujan sedang
+// masih satu grup (diam), baru cerah→hujan itu notifnya.
+export const WEATHER_GROUPS = {
+  cerah: { label: "Cerah", emoji: "☀️" },
+  mendung: { label: "Berawan/Mendung", emoji: "☁️" },
+  hujan: { label: "Hujan", emoji: "🌧️" },
+  hujan_petir: { label: "Hujan Petir", emoji: "⛈️" },
+  lainnya: { label: "Lainnya", emoji: "🌡️" },
+};
+
+// WMO weathercode → grup (persis grupCuaca dokumen diagnosis owner).
+// Fallback teks kondisi buat provider tanpa weather_code (BMKG/weatherapi).
+export function weatherGroupOf(data) {
+  if (!data) return "lainnya";
+  const code = Number(data.weather_code ?? data.weathercode);
+  if (Number.isFinite(code) && data.weather_code !== undefined) {
+    if (code === 0 || code === 1) return "cerah";
+    if (code === 2 || code === 3 || code === 45 || code === 48) return "mendung";
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "hujan";
+    if (code >= 95) return "hujan_petir";
+    return "lainnya";
+  }
+  const c = String(data.condition || "").toLowerCase();
+  if (/petir|badai|thunder|storm/.test(c)) return "hujan_petir";
+  if (/hujan|gerimis|rain|drizzle|salju|snow/.test(c)) return "hujan";
+  if (/kabut|awan|mendung|cloud|fog/.test(c)) return "mendung";
+  if (/cerah|clear/.test(c)) return "cerah";
+  return "lainnya";
+}
+
+// Pesan notifikasi saat GRUP cuaca berubah — format dokumen diagnosis:
+// "Cuaca Berubah — <lokasi>" + Dari/Ke + suhu + curah hujan + hati-hati.
+export function formatWeatherChange(data, name, prevGroup, prevCondition) {
+  const cur = weatherGroupOf(data);
+  const grp = WEATHER_GROUPS[cur] || WEATHER_GROUPS.lainnya;
+  const prev = WEATHER_GROUPS[prevGroup] || WEATHER_GROUPS.lainnya;
+  const dari = prevGroup ? (prevCondition || prev.label) : "-";
+  const precip = Number(data.precipitation);
+  const hati = cur === "hujan_petir"
+    ? "⚡ Hati-hati petir, hindari area terbuka ya!"
+    : cur === "hujan"
+    ? "☔ Jangan lupa bawa payung, hati-hati di jalan ya!"
+    : "Semoga harimu menyenangkan ya! 😊";
+  return `${grp.emoji} *CUACA BERUBAH — ${name || "Lokasi"}*
+
+_Dari:_ ${dari}
+_Ke:_ *${data.condition || grp.label}* (${grp.label})
+
+🌡️ Suhu: ${data.temperature ?? "N/A"}°C
+💧 Curah hujan: ${Number.isFinite(precip) ? precip : 0} mm
+💨 Angin: ${data.wind_speed ?? "N/A"} km/j ${data.wind_direction_text || ""}
+
+_${hati}_`;
+}
