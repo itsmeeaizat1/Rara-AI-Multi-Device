@@ -18,6 +18,9 @@
 //              baru yang muncul belakangan
 //   • reminder ⏰ H-45 menit sebelum kick-off (dedup sekali per match)
 //   • hasil    🏁 skor full-time begitu pertandingan selesai (dedup)
+//   • live     🔴 kick-off + GOL real-time selama laga berjalan (polling ESPN
+//              cepat tiap N menit; nama pencetak gol diambil dari endpoint
+//              summary per-event — hanya liga ESPN, TSDB/Apify gak ada skor live)
 //
 // Liga favorit configurable: .jadwalbolanotify liga add|del|list|reset
 // (default: Inggris, Spanyol, Italia, Jerman, Prancis, Champions).
@@ -41,6 +44,7 @@ const TSDB_API = "https://www.thesportsdb.com/api/v1/json/3";
 
 const TZ = "Asia/Jakarta";
 const DEFAULT_INTERVAL_MENIT = 30;
+const DEFAULT_LIVE_INTERVAL_MENIT = 3; // polling gol — 1-30 mnt
 // ── Apify Flashscore (Liga 2 Indonesia & fallback outage) — hemat credit:
 //    $0.00005/run + $0.003/match record, free tier Apify $5/bln.
 //    Interval throttle terpisah + cuma jalan di window jam main WIB. ──
@@ -88,6 +92,7 @@ export const BOLA_TYPES = {
   jadwal: { label: "Jadwal", emoji: "📅", desc: "Digest jadwal pertandingan hari ini (WIB) + fixture baru" },
   reminder: { label: "Reminder", emoji: "⏰", desc: "Pengingat H-45 menit sebelum kick-off" },
   hasil: { label: "Hasil", emoji: "🏁", desc: "Skor full-time begitu laga selesai" },
+  live: { label: "Live", emoji: "🔴", desc: "Kick-off + GOL real-time selama laga berjalan (opt-in — liga ESPN saja)" },
 };
 
 // ───────────────────────────── state ─────────────────────────────
@@ -97,16 +102,18 @@ function defaultState() {
     enabled: false,
     targets: [],
     intervalMenit: DEFAULT_INTERVAL_MENIT,
+    liveIntervalMenit: DEFAULT_LIVE_INTERVAL_MENIT,
     apifyIntervalMenit: DEFAULT_APIFY_INTERVAL_MENIT,
     lastApifyCheck: null,
     apifyCache: null,
     initDone: false,
     leagues: [...DEFAULT_LEAGUES],
-    contentTypes: { jadwal: true, reminder: true, hasil: true },
+    contentTypes: { jadwal: true, reminder: true, hasil: true, live: false },
     dailyDigest: null,
     seenJadwal: [],
     sentReminders: {},
     sentResults: {},
+    liveMatches: {},
     lastCheck: null,
     lastSource: null,
   };
@@ -135,6 +142,7 @@ function saveState(st) {
 
 let sock = null;
 let timer = null;
+let liveTimer = null;
 let chain = Promise.resolve();
 
 function enqueue(fn) {
@@ -148,11 +156,13 @@ let espnFetcher = null;
 let tsdbFetcher = null;
 let tsdbLeagueFetcher = null;
 let apifyFetcher = null;
-export function setFetcher({ espn, tsdb, tsdbLeague, apify } = {}) {
+let summaryFetcher = null;
+export function setFetcher({ espn, tsdb, tsdbLeague, apify, summary } = {}) {
   if (espn) espnFetcher = espn;
   if (tsdb) tsdbFetcher = tsdb;
   if (tsdbLeague) tsdbLeagueFetcher = tsdbLeague;
   if (apify) apifyFetcher = apify;
+  if (summary) summaryFetcher = summary;
 }
 
 // ── Apify Flashscore (Liga 2 Indonesia + fallback outage) ──
@@ -221,8 +231,15 @@ async function espnScoreboard(slug) {
       if (t.homeAway === "home") home = side; else if (t.homeAway === "away") away = side;
     }
     if (!home || !away) continue;
+    const state = c.status?.type?.state || "pre"; // pre | in | post
+    // detail gol (buat tipe live): scoringPlay → tim + menit + jenis (pen/og)
+    const goalDetails = state === "in" ? (c.details || [])
+      .filter((d) => d.scoringPlay)
+      .map((d) => ({ teamId: d.team?.id ?? null, clock: d.clock?.displayValue || "", type: d.type?.text || "Goal", og: !!d.ownGoal, pen: !!d.penaltyKick }))
+      : [];
     out.push({
       key: `espn:${ev.id}`,
+      espnId: ev.id,
       slug,
       leagueLabel: LEAGUE_DB[slug]?.label || name || slug,
       emoji: LEAGUE_DB[slug]?.emoji || "⚽",
@@ -230,9 +247,11 @@ async function espnScoreboard(slug) {
       date: new Date(ev.date).toISOString(),
       home: home.name, away: away.name,
       homeScore: home.score, awayScore: away.score,
-      state: c.status?.type?.state || "pre", // pre | in | post
+      state,
       statusDetail: c.status?.type?.detail || "",
       venue: c.venue?.fullName || ev.venue?.fullName || null,
+      teamIds: { home: (c.competitors || []).find((t) => t.homeAway === "home")?.team?.id ?? null, away: (c.competitors || []).find((t) => t.homeAway === "away")?.team?.id ?? null },
+      goalDetails,
     });
   }
   return out;
@@ -444,6 +463,113 @@ async function sendResult(targets, m) {
   for (const t of targets) await sendBola(t, txt, { title: "HASIL PERTANDINGAN", logo: m.leagueLogo });
 }
 
+async function sendKickoff(targets, m) {
+  const skor = Number(m.homeScore) > 0 || Number(m.awayScore) > 0 ? ` (skor sementara ${m.homeScore}-${m.awayScore})` : "";
+  const txt = `🔴 *KICK-OFF! LAGA DIMULAI*\n\n${m.emoji} *${m.leagueLabel}*\n⚔️ ${m.home} vs ${m.away}${skor}\n🕐 ${fmtWIB(m.date)}${m.venue ? `\n🏟️ ${m.venue}` : ""}\n\n💡 Gol bakal otomatis masuk — pantau terus ya`;
+  for (const t of targets) await sendBola(t, txt, { title: "KICK-OFF!", logo: m.leagueLogo });
+}
+
+// Nama pencetak gol dari endpoint summary (best-effort, 1 fetch per gol).
+// Shape live-verified: keyEvents[].shortText "Kevin Schade Goal - Header".
+async function enrichGoal(m) {
+  try {
+    let data;
+    if (summaryFetcher) data = await summaryFetcher(m.slug, m.espnId);
+    else {
+      const res = await axios.get(`${ESPN_API}/${m.slug}/summary?event=${m.espnId}`, { headers: HEADERS, timeout: 12000 });
+      data = res.data;
+    }
+    const goals = (data?.keyEvents || []).filter((x) => x.scoringPlay);
+    const last = goals[goals.length - 1];
+    if (!last) return null;
+    return {
+      short: last.shortText || "", // "Kevin Schade Goal - Header"
+      minute: last.clock?.displayValue || "",
+      teamId: last.team?.id ?? null,
+      teamName: last.team?.displayName || (String(last.team?.id) === String(m.teamIds?.home) ? m.home : m.away),
+    };
+  } catch { return null; }
+}
+
+async function sendGoal(targets, m, scorerTeam, goal) {
+  const kicker = goal?.short ? `\n👤 ${goal.short}${goal.minute ? ` (${goal.minute})` : ""}` : "";
+  const txt = `⚽ *GOL! ${scorerTeam} MENCETAK GOL!*\n\n${m.emoji} *${m.leagueLabel}*\n⚔️ ${m.home} *${m.homeScore ?? 0} - ${m.awayScore ?? 0}* ${m.away}${kicker}${m.statusDetail && /^\d+/.test(m.statusDetail) ? `\n🕒 menit ${m.statusDetail}` : ""}`;
+  for (const t of targets) await sendBola(t, txt, { title: "GOL!!!", logo: m.leagueLogo });
+}
+
+async function sendHT(targets, m) {
+  const txt = `⏸️ *HALF-TIME*\n\n${m.emoji} *${m.leagueLabel}*\n⚔️ ${m.home} *${m.homeScore ?? 0} - ${m.awayScore ?? 0}* ${m.away}\nhasil sementara babak pertama`;
+  for (const t of targets) await sendBola(t, txt, { title: "HALF-TIME", logo: m.leagueLogo });
+}
+
+// ── live tracker: polling ESPN cepat, deteksi kick-off/gol/HT ──
+// Fecth hanya liga ESPN (skip tsdbId/apifyCountry — gak ada skor live).
+export function runLiveCheck(opts = {}) {
+  return enqueue(() => doRunLiveCheck(opts));
+}
+
+async function doRunLiveCheck({ force = false } = {}) {
+  const st = loadState();
+  if (!st.enabled && !force) return { skipped: true };
+  if ((st.contentTypes || {}).live === false && !force) return { skipped: true, tipeOff: true };
+  const espnSlugs = st.leagues.filter((s) => {
+    const meta = LEAGUE_DB[s] || {};
+    return !meta.tsdbId && !meta.apifyCountry;
+  });
+  if (!espnSlugs.length) return { skipped: true, noEspn: true };
+  const targetsSnapshot = await mergeAutoTargets(sock, "autobolanotify", [...st.targets]);
+  const results = await Promise.allSettled(espnSlugs.map((s) => espnScoreboard(s)));
+  const live = [];
+  for (const r of results) if (r.status === "fulfilled") live.push(...r.value.filter((m) => m.state === "in"));
+  let sent = 0;
+  const stNow = loadState(); // fresh (mergeAutoTargets bisa nulis state)
+  const prevLive = { ...(stNow.liveMatches || {}) };
+  const seen = {};
+  for (const m of live) {
+    seen[m.key] = true;
+    const prev = prevLive[m.key];
+    const scoreNow = `${m.homeScore ?? 0}-${m.awayScore ?? 0}`;
+    if (!prev) {
+      // baru terdeteksi live → kick-off (dedup via kehadiran state)
+      await sendKickoff(targetsSnapshot, m);
+      sent++;
+      seen[m.key] = { kickoffNotified: true, score: scoreNow, detail: m.statusDetail };
+    } else if (prev.score !== scoreNow) {
+      // GOL — tim mana yang nambah?
+      const nowH = Number(m.homeScore) || 0, nowA = Number(m.awayScore) || 0;
+      const prevH = Number(String(prev.score).split("-")[0]) || 0, prevA = Number(String(prev.score).split("-")[1]) || 0;
+      const scorerTeam = nowH > prevH ? m.home : nowA > prevA ? m.away : m.home;
+      const goal = await enrichGoal(m);
+      await sendGoal(targetsSnapshot, m, scorerTeam, goal);
+      sent++;
+      seen[m.key] = { ...prev, score: scoreNow, detail: m.statusDetail };
+    } else if (prev.detail !== m.statusDetail && /half|interval/i.test(m.statusDetail)) {
+      await sendHT(targetsSnapshot, m);
+      sent++;
+      seen[m.key] = { ...prev, detail: m.statusDetail };
+    } else {
+      seen[m.key] = { ...prev, score: scoreNow, detail: m.statusDetail };
+    }
+  }
+  stNow.liveMatches = seen; // key yang udah gak live otomatis kebuang
+  stNow.lastLiveCheck = new Date().toISOString();
+  saveState(stNow);
+  return { sent, live: live.length };
+}
+
+// Cek skor berjalan manual (.jadwalbolanotify skor) — pure, tanpa side effect
+export async function getLiveNow() {
+  const st = loadState();
+  const espnSlugs = st.leagues.filter((s) => {
+    const meta = LEAGUE_DB[s] || {};
+    return !meta.tsdbId && !meta.apifyCountry;
+  });
+  const results = await Promise.allSettled(espnSlugs.map((s) => espnScoreboard(s)));
+  const live = [];
+  for (const r of results) if (r.status === "fulfilled") live.push(...r.value.filter((m) => m.state === "in"));
+  return live;
+}
+
 // ───────────────────────────── run check ─────────────────────────────
 
 export function runCheck(opts = {}) {
@@ -608,6 +734,7 @@ export function setContentType(type, on) {
   const st = loadState();
   st.contentTypes[type] = !!on;
   saveState(st);
+  syncMonitor(); // tipe live toggle → live ticker ikut nyala/mati
   return true;
 }
 
@@ -648,12 +775,26 @@ export function setApifyIntervalMenit(menit) {
   return v;
 }
 
+export function setLiveIntervalMenit(menit) {
+  const v = Number(menit);
+  if (!v || v < 1 || v > 30) return null;
+  const st = loadState();
+  st.liveIntervalMenit = v;
+  saveState(st);
+  syncMonitor();
+  return v;
+}
+
 export function getStatus() {
   const st = loadState();
   return {
     enabled: st.enabled,
     targets: [...st.targets],
     intervalMenit: st.intervalMenit,
+    liveIntervalMenit: st.liveIntervalMenit || DEFAULT_LIVE_INTERVAL_MENIT,
+    liveTipe: { ...(st.contentTypes || {}) }.live !== false,
+    liveTracked: Object.keys(st.liveMatches || {}).length,
+    lastLiveCheck: st.lastLiveCheck || null,
     apifyIntervalMenit: st.apifyIntervalMenit,
     apifyToken: !!getApifyToken(),
     lastApifyCheck: st.lastApifyCheck,
@@ -683,7 +824,10 @@ export function syncMonitor() {
   const st = loadState();
   if (st.enabled && st.targets.length && !timer) startTimer();
   if ((!st.enabled || !st.targets.length) && timer) stopMonitor();
-  return { started: !!timer };
+  // live ticker jalan kalau notifier nyala & tipe live aktif (atau force interval)
+  if (st.enabled && (st.contentTypes || {}).live !== false && !liveTimer) startLiveTimer();
+  if (((!st.enabled || !st.targets.length) || (st.contentTypes || {}).live === false) && liveTimer) stopLiveTimer();
+  return { started: !!timer, live: !!liveTimer };
 }
 
 function startTimer() {
@@ -694,16 +838,31 @@ function startTimer() {
   if (typeof timer.unref === "function") timer.unref();
 }
 
+function startLiveTimer() {
+  const st = loadState();
+  liveTimer = setInterval(() => {
+    runLiveCheck().catch((e) => logger.error?.("bola-notifier", `runLiveCheck: ${e.message}`));
+  }, (st.liveIntervalMenit || DEFAULT_LIVE_INTERVAL_MENIT) * 60000);
+  if (typeof liveTimer.unref === "function") liveTimer.unref();
+  logger.info?.("bola-notifier", `live ticker JALAN — interval ${st.liveIntervalMenit || DEFAULT_LIVE_INTERVAL_MENIT} mnt`);
+}
+
+function stopLiveTimer() {
+  if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+}
+
 export function stopMonitor() {
   if (timer) { clearInterval(timer); timer = null; }
+  stopLiveTimer();
 }
 
 export async function initBolaNotifier(_sock) {
   setSock(_sock);
   const st = loadState();
   if (st.enabled && st.targets.length) startTimer();
+  if (st.enabled && (st.contentTypes || {}).live !== false) startLiveTimer();
   // baseline pas boot biar gak spam notifikasi lama
   runCheck().catch((e) => logger.error?.("bola-notifier", `init: ${e.message}`));
-  logger.info?.("bola-notifier", `monitor ${timer ? "JALAN" : "idle"} — interval ${st.intervalMenit} mnt, ${st.targets.length} subscriber, ${st.leagues.length} liga`);
+  logger.info?.("bola-notifier", `monitor ${timer ? "JALAN" : "idle"} — interval ${st.intervalMenit} mnt, ${st.targets.length} subscriber, ${st.leagues.length} liga${liveTimer ? ` + live ticker` : ""}`);
   return true;
 }
