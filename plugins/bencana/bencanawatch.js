@@ -56,7 +56,7 @@ const novaGuide = (header, intro, example) =>
 
 const pluginConfig = {
   name: "disastersystemwatch",
-  alias: ["disastersystemwatch", "bencanawatch"], // rename owner 15 Sep 2026 — lama tetap jalan biar gak patah
+  alias: ["disastersystemwatch"], // rename owner 15 Sep 2026 — alias lama dihapus (request "hapus aja nama lamanya")
   category: "bencana",
   description: "Langganan auto-alert bencana realtime — per chat, per grup target, atau global DM + semua grup",
   usage: ".disastersystemwatch <on/onchat/onglobal/offglobal/off/status/mode/jadwal/jenis/sumber/lokasi/radius/pilihgrup/gunung/test>",
