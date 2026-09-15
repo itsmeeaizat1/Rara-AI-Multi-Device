@@ -13,6 +13,7 @@ import { getDatabase } from './nova-database.js';
 import { gameCTA, pickFlavor } from './nova-games.js';
 import { claraWrap } from './nova-menu-style.js';
 import { haidarGame } from './nova-haidar.js';
+import { zelMaths, zelPresiden } from '../scraper/zelgames.js';
 import { addExpWithLevelCheck } from './nova-level.js';
 import { addGameCash, formatRp } from './nova-rpg-service.js';
 import { rollGameReward, rewardLines } from './nova-game-rewards.js';
@@ -481,6 +482,10 @@ games.register('tebakasmaulhusna', { emoji: '📿', title: 'TEBAK ASMAUL HUSNA',
 
 // V2 GAMES — soal live dari HaidarApis (api.haidarxd.my.id, key: apikeys.json 'haidar')
 games.register('asahotakv2', { emoji: '🧠', title: 'ASAH OTAK V2', description: 'Asah otak — soal live HaidarApis', fetchQuestion: () => haidarGame('asahotak'), timeout: 60000, alias: [] });
+
+// V3 GAMES — soal live dari ZelAPI (zelapi.eu.cc/games)
+games.register('zmaths', { emoji: '🧮', title: 'MATEMATIKA EXTREME', description: 'Matematika extreme — soal live ZelAPI', fetchQuestion: () => zelMaths(), timeout: 90000, alias: ['mathsextreme'] });
+games.register('zpresiden', { emoji: '🇮🇩', title: 'TEBAK PRESIDEN', description: 'Tebak presiden Indonesia — soal live ZelAPI', fetchQuestion: () => zelPresiden(), timeout: 60000, alias: ['presiden'] });
 games.register('siapakahakuv2', { emoji: '🎭', title: 'SIAPAKAH AKU V2', description: 'Siapakah aku — soal live HaidarApis', fetchQuestion: () => haidarGame('siapakahaku'), timeout: 60000, alias: [] });
 games.register('susunkatav2', { emoji: '🧩', title: 'SUSUN KATA V2', description: 'Susun kata — soal live HaidarApis', fetchQuestion: () => haidarGame('susunkata'), timeout: 60000, alias: [] });
 games.register('tekatekiv2', { emoji: '🧩', title: 'TEKA TEKI V2', description: 'Teka teki — soal live HaidarApis', fetchQuestion: () => haidarGame('tekateki'), timeout: 60000, alias: [] });
