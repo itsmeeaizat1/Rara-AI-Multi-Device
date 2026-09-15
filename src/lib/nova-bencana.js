@@ -1152,9 +1152,10 @@ let fastTimer = null;
 let slowTimer = null;
 let volcanoTimer = null;
 let jadwalTimer = null;
+let mdEwsTimer = null; // EWS multi-bencana GDACS (tsunami/topan/banjir/dll)
 
 function isRunning() {
-  return !!(fastTimer || slowTimer || jadwalTimer || ewsTimer || volcanoTimer);
+  return !!(fastTimer || slowTimer || jadwalTimer || ewsTimer || volcanoTimer || mdEwsTimer);
 }
 
 /**
@@ -1966,13 +1967,44 @@ async function slowTick(sendSock) {
 // Poll 4 sumber TIAP 10 DETIK (BMKG + USGS + JEPANG/JMA + GLOBAL/EMSC),
 // M 4.5+ (ala script), dan PENTING: pesan EWS BYPASS mode pengiriman
 // (otomatis/jadwal/darurat) — ini pengaman darurat, selalu realtime.
-const EWS_POLL_MS = 10_000;
-export const EWS_MIN_MAG = 4.5;
-const EWS_S_WAVE_KMS = 3.5; // kecepatan guncangan (S-wave) km/s — ala script owner
+const EWS_POLL_MS = 10_000; // poll EWS gempa 4 provider — 10 dtk (spec owner 20 dtk, kita lebih cepat)
+export const EWS_MIN_MAG = 4.0; // ambang bawah polling EWS (level HIJAU/KUNING yang menentukan relevansi)
+const EWS_S_WAVE_KMS = 3.6; // kecepatan guncangan (gelombang S perusak) km/detik — spec owner 15 Sep 2026
 const EWS_URGENT_RANGE_KM = 800; // dalam range ini → ETA guncangan + instruksi darurat
 const EWS_SEVERE_MAG = 6.5; // di atas ini → semua subscriber dikabarin (tanpa lokasi pun)
 
+/**
+ * LEVEL SIAGA EWS v2 (spec owner 15 Sep 2026 — "ala BMKG di TV"):
+ *   MERAH  = 🚨 M≥5.5 dalam 300 km  → PERINGATAN DARURAT + DROP/COVER/HOLD ON
+ *   KUNING = ⚠️ M≥4.5 dalam 500 km  → PERINGATAN DINI + bersiap
+ *   HIJAU  = ℹ️ M≥5.0 dalam 2000 km → info saja, kemungkinan tak terasa
+ * Radius subscriber gede (mis. "radius dunia") memperluas HIJAU jadi info
+ * jarak jauh. Fisika: gelombang S merambat ±3,6 km/dtk → pusat gempa
+ * 200 km = getaran terasa ±56 detik — alert bisa nyampe SEBELUM lantai
+ * bergoyang (konsep EWS Jepang).
+ */
+export const EWS_LEVELS = {
+  MERAH:  { minMag: 5.5, radiusKm: 300,  icon: "🚨", label: "PERINGATAN DARURAT" },
+  KUNING: { minMag: 4.5, radiusKm: 500,  icon: "⚠️", label: "PERINGATAN DINI" },
+  HIJAU:  { minMag: 5.0, radiusKm: 2000, icon: "ℹ️", label: "INFO GEMPA" },
+};
+export function tentukanLevelEws(mag, jarakKm) {
+  const m = parseFloat(mag);
+  if (Number.isFinite(m) && jarakKm != null) {
+    if (m >= EWS_LEVELS.MERAH.minMag && jarakKm <= EWS_LEVELS.MERAH.radiusKm) return "MERAH";
+    if (m >= EWS_LEVELS.KUNING.minMag && jarakKm <= EWS_LEVELS.KUNING.radiusKm) return "KUNING";
+    if (m >= EWS_LEVELS.HIJAU.minMag && jarakKm <= EWS_LEVELS.HIJAU.radiusKm) return "HIJAU";
+  }
+  return null;
+}
+/** ETA gelombang S sampai lokasi subscriber (detik, dibulatkan). */
+export function etaGetaranDetik(jarakKm) {
+  return Math.round(jarakKm / EWS_S_WAVE_KMS);
+}
+
 let ewsTimer = null;
+const ewsProviderHealth = { BMKG: { fails: 0, down: false }, USGS: { fails: 0, down: false }, JMA: { fails: 0, down: false }, EMSC: { fails: 0, down: false } };
+export function getEwsProviderHealth() { return { ...ewsProviderHealth }; }
 
 /** USGS day feed versi EWS — M4.5+ semua (getUsgsDay cuma M5+/M6+). */
 async function getUsgsDayEws() {
@@ -2010,34 +2042,77 @@ function bmkgToEws(g) {
 }
 
 /** Format peringatan dini ala script owner (formatEarlyWarning). */
-export function formatEwsWarning(ev, { jarak = null, eta = null, city = null, near = false } = {}) {
-  const level = ev.mag >= EWS_SEVERE_MAG ? "🔴 *BAHAYA TINGGI*"
-    : ev.mag >= 5.5 ? "🟠 *WASPADA*"
-    : "🟡 *PERHATIAN*";
-  let msg = "🚨 *PERINGATAN DINI GEMPA* 🚨\n";
-  msg += `📡 *Sumber: ${ev.provider}*\n\n`;
-  msg += `${level}\n\n`;
-  msg += `📊 *Magnitude: ${ev.mag} SR*\n`;
-  msg += `📍 *Wilayah: ${ev.wilayah}*\n`;
-  msg += `📏 Kedalaman: ${ev.depth}\n`;
-  msg += `🌊 Tsunami: ${ev.tsunami}\n\n`;
-  if (jarak != null) {
-    msg += `📍 *Jarak dari ${city || "lokasimu"}: ${jarak.toFixed(1)} km*\n`;
-    if (near) {
-      msg += `⏱️ *Guncangan tiba dalam: ~${eta} DETIK!*\n\n`;
-      if (eta <= 10) {
-        msg += "⚠️ *SEGERA CARI PERLINDUNGAN!*\n🔹 Berlindung di bawah meja\n🔹 Jauhi jendela\n";
-      } else if (eta <= 30) {
-        msg += "⚠️ *SIAPKAN DIRI!*\n🔹 Matikan kompor\n🔹 Buka pintu evakuasi\n";
-      } else {
-        msg += `ℹ️ Masih ada waktu ~${eta} detik untuk bersiap\n`;
-      }
-    } else {
-      msg += "ℹ️ Di luar jangkauan guncangan signifikan — sekadar pantauan\n";
-    }
+/**
+ * Template pesan EWS v2 (spec owner 15 Sep 2026 — 3 level ala BMKG di TV).
+ * ev = { provider, mag, depth, wilayah, tsunami, lat, lon, waktu }.
+ * opts = { jarak, eta (detik), city, level: MERAH|KUNING|HIJAU|GLOBAL }.
+ * MERAH membawa instruksi darurat DROP-COVER-HOLD ON; ETA ≤90 dtk
+ * ditulis dalam DETIK (urgensi terasa), di atasnya menit.
+ */
+export function formatEwsWarning(ev, { jarak = null, eta = null, city = null, level = "HIJAU", near = false } = {}) {
+  const mag = parseFloat(ev.mag) || ev.mag;
+  const etaText = eta == null ? null
+    : eta <= 90 ? `*${eta} DETIK*`
+    : `± ${Math.max(1, Math.round(eta / 60))} menit`;
+
+  if (level === "MERAH") {
+    let msg = "🚨 *PERINGATAN DARURAT — GEMPA KUAT TERDETEKSI!* 🚨\n\n";
+    msg += `💥 Magnitudo : *M ${mag}*\n`;
+    msg += `📍 Lokasi : ${ev.wilayah}\n`;
+    if (jarak != null) msg += `📏 Jarak dari ${city || "lokasimu"}: *±${Math.round(jarak)} km*\n`;
+    msg += `🌊 Potensi : ${ev.tsunami || "sedang dicek"}\n`;
+    msg += `🕐 Waktu : ${ev.waktu}\n\n`;
+    if (etaText != null) msg += `⏱️ *Perkiraan getaran sampai di lokasimu: ${etaText}*\n\n`;
+    msg += "‼️ *LAKUKAN SEKARANG:*\n";
+    msg += "1️⃣ DROP — Merunduk\n";
+    msg += "2️⃣ COVER — Lindungi kepala, berlindung di bawah meja\n";
+    msg += "3️⃣ HOLD ON — Bertahan sampai guncangan berhenti\n\n";
+    msg += "🚪 Jauhi kaca, lemari tinggi, dan benda mudah jatuh\n";
+    msg += "🏢 Di gedung: JANGAN pakai lift!\n";
+    msg += "🏖️ Di pesisir: Waspadai potensi tsunami!\n\n";
+    msg += "_Tetap tenang. Segera ke tempat terbuka jika guncangan kuat._ 🙏\n";
+    if (ev.lat != null && ev.lon != null) msg += `\n🗺️ ${mapsLink(ev.lat, ev.lon)}\n`;
+    msg += `\n📡 _Sumber: ${ev.provider}_`;
+    return msg;
   }
+
+  if (level === "KUNING") {
+    let msg = "⚠️ *PERINGATAN DINI GEMPA* ⚠️\n\n";
+    msg += `💥 Magnitudo : *M ${mag}*\n`;
+    msg += `📍 Lokasi : ${ev.wilayah}\n`;
+    if (jarak != null) msg += `📏 Jarak dari ${city || "lokasimu"}: *±${Math.round(jarak)} km*\n`;
+    msg += `🕐 Waktu : ${ev.waktu}\n`;
+    msg += `🌊 Potensi : ${ev.tsunami || "-"}\n\n`;
+    if (etaText != null) msg += `⏱️ Perkiraan getaran terasa: *${etaText}*\n\n`;
+    msg += "_Bersiaplah, jauhi benda mudah jatuh. Pantau info lanjutan ya 🙏_\n";
+    if (ev.lat != null && ev.lon != null) msg += `\n🗺️ ${mapsLink(ev.lat, ev.lon)}\n`;
+    msg += `\n📡 _Sumber: ${ev.provider}_`;
+    return msg;
+  }
+
+  if (level === "GLOBAL") {
+    // gempa BESAR (M6.5+) di luar jangkauan subscriber — info global
+    let msg = "🌐 *INFO GEMPA BESAR DUNIA*\n\n";
+    msg += `💥 Magnitudo : *M ${mag}*\n`;
+    msg += `📍 Lokasi : ${ev.wilayah}\n`;
+    if (jarak != null) msg += `📏 Jarak dari ${city || "lokasimu"}: ±${Math.round(jarak)} km\n`;
+    msg += `🕐 Waktu : ${ev.waktu}\n`;
+    msg += `🌊 Potensi : ${ev.tsunami || "-"}\n\n`;
+    msg += "_Gempa besar global — pantau berita resmi jika wilayahmu dekat pesisir. Tidak perlu panik 😊_\n";
+    if (ev.lat != null && ev.lon != null) msg += `\n🗺️ ${mapsLink(ev.lat, ev.lon)}\n`;
+    msg += `\n📡 _Sumber: ${ev.provider}_`;
+    return msg;
+  }
+
+  // HIJAU — info saja
+  let msg = "ℹ️ *INFO GEMPA*\n\n";
+  msg += `💥 M ${mag} | 📍 ${ev.wilayah}\n`;
+  if (jarak != null) msg += `📏 ±${Math.round(jarak)} km dari ${city || "lokasimu"}\n`;
+  msg += `🕐 ${ev.waktu}\n`;
+  msg += `📏 Kedalaman: ${ev.depth}\n\n`;
+  msg += "_Kemungkinan tidak terasa di lokasimu. Tidak perlu panik 😊_\n";
   if (ev.lat != null && ev.lon != null) msg += `\n🗺️ ${mapsLink(ev.lat, ev.lon)}\n`;
-  msg += `\n🕐 ${ev.waktu}`;
+  msg += `\n📡 _Sumber: ${ev.provider}_`;
   return msg;
 }
 
@@ -2069,18 +2144,28 @@ async function dispatchEws(sendSock, ev, subs) {
       if (Array.isArray(sub.sumber) && sub.sumber.length && !sub.sumber.includes(provKey)) continue;
       if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes("gempa")) continue;
 
-      let jarak = null, eta = null;
+      let jarak = null, eta = null, level = null;
       if (sub.lat != null && sub.lon != null && ev.lat != null && ev.lon != null) {
         jarak = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
-        eta = Math.round((jarak / EWS_S_WAVE_KMS) * 10) / 10; // detik
+        eta = etaGetaranDetik(jarak); // detik (gelombang S 3,6 km/dtk)
+        // EWS v2 (spec owner 15 Sep): level ditentukan kombinasi magnitudo + jarak
+        level = tentukanLevelEws(ev.mag, jarak);
+        // radius subscriber gede (mis. "radius dunia" 20000 km) → gempa M5+ di
+        // luar 2000 km tetap dibawa sebagai HIJAU (info), radius jangkauan ikut
+        const reach = Math.max(EWS_LEVELS.HIJAU.radiusKm, sub.radius || 0);
+        if (!level && jarak <= reach && parseFloat(ev.mag) >= EWS_LEVELS.HIJAU.minMag) level = "HIJAU";
+        const nearRange = Math.max(EWS_URGENT_RANGE_KM, sub.radius || 0);
+        const near = jarak <= nearRange;
+        if (!level) level = null; // di luar semua level → cek severe global di bawah
+        else if (!near && level === "HIJAU" && !severe) { /* tetap kirim — info sesuai spec */ }
       }
-      // radius subscriber gede (upgrade 15 Sep 2026) memperluas jangkauan
-      // peringatan dini — minimum tetap EWS_URGENT_RANGE_KM (800 km)
-      const nearRange = Math.max(EWS_URGENT_RANGE_KM, sub.radius || 0);
-      const near = jarak != null && jarak <= nearRange;
-      if (!severe && !near) continue; // gempa kecil & jauh dari subscriber → skip
+      if (!level) {
+        // subscriber tanpa lokasi / gempa di luar jangkauan → hanya gempa BESAR global
+        if (!severe) continue;
+        level = "GLOBAL";
+      }
 
-      const text = formatEwsWarning(ev, { jarak, eta, city: sub.city, near });
+      const text = formatEwsWarning(ev, { jarak, eta, city: sub.city, level });
       await s.sendMessage(chatId, { text });
       sent++;
     } catch (e) {
@@ -2119,9 +2204,33 @@ async function ewsTick(sendSock) {
     for (const r of [usgs, jma, emsc]) {
       if (r.status === "fulfilled" && Array.isArray(r.value)) events.push(...r.value);
     }
-    for (const r of [bmkg, usgs, jma, emsc]) {
-      if (r.status === "rejected") console.error("[bencana] ❌ [ewsTick] sumber EWS gagal di-poll:", r.reason?.message || r.reason);
+
+    // ── RANTAI FALLBACK PROVIDER (spec owner 15 Sep 2026: "tambah sistem
+    // polling ganda antara BMKG dan USGS — jika BMKG down otomatis ke USGS
+    // atau provider lain"). Semua provider di-poll PARALEL; BMKG jadi
+    // sumber utama Indonesia, USGS/JMA/EMSC jadi jalur cadangan global.
+    // Health tracker: 2x gagal beruntun → status DOWN (log transisi),
+    // 1x sukses → kembali ONLINE. Event lintas-provider didedupe via
+    // fingerprint koordinat+mag — gempa yang sama gak dobel kirim.
+    const results = { BMKG: bmkg, USGS: usgs, JMA: jma, EMSC: emsc };
+    const statusLine = [];
+    for (const [prov, r] of Object.entries(results)) {
+      const ok = r.status === "fulfilled";
+      if (r.status === "rejected") console.error(`[bencana] ❌ [ewsTick] provider ${prov} gagal di-poll:`, r.reason?.message || r.reason);
+      const h = (ewsProviderHealth[prov] ??= { fails: 0, down: false });
+      if (ok) {
+        h.fails = 0;
+        if (h.down) { h.down = false; console.log(`[bencana] ✅ [ewsTick] provider ${prov} KEMBALI ONLINE`); }
+      } else {
+        h.fails++;
+        if (h.fails >= 2 && !h.down) {
+          h.down = true;
+          console.error(`[bencana] ❌ [ewsTick] provider ${prov} DOWN (${h.fails}x gagal beruntun) — ${prov === "BMKG" ? "fallback USGS/JMA/EMSC otomatis aktif" : "sisa provider tetap jalan"}`);
+        }
+      }
+      statusLine.push(`${prov} ${h.down ? "❌" : "✅"}`);
     }
+    console.log(`[bencana] 🔄 [ewsTick] status provider: ${statusLine.join(" | ")}${ewsProviderHealth.BMKG?.down ? " → FALLBACK AKTIF" : ""}`);
 
     const st = loadState();
     st.ews ??= { bootstrapped: false, seen: [], history: [] };
@@ -2186,6 +2295,218 @@ async function ewsTick(sendSock) {
 }
 
 /** Exported: wrapper testable — kirim event EWS ke snapshot subscriber. */
+// ═══════════ EWS v2 — MULTI-BENCANA (spec owner 15 Sep 2026:
+// "jd tdk hnya bencana gempa sj ada ewsnya jga") ═══════════
+// Tsunami/topan/banjir/gunung api/kekeringan/kebakaran dari GDACS
+// (EU/UN) di-poll tiap 60 dtk — level MERAH/KUNING/HIJAU + instruksi
+// evakuasi KHUSUS PER JENIS BENCANA. Gempa (EQ) sengaja DILEWATI di
+// sini — udah punya jalur EWS 4-provider 10 dtk sendiri; dedup lintas
+// jalur via fingerprint tetap jalan biar slowTick gak dobel kirim.
+const MD_EWS_POLL_MS = 60_000;
+const MD_EWS_SKIP_TYPES = ["EQ"]; // gempa punya EWS sendiri (10 dtk)
+
+/** Instruksi evakuasi khusus per jenis bencana. */
+export const MD_EWS_INSTRUCTIONS = {
+  tsunami: [
+    "1️⃣ SEGERA MENJAUHI PANTAI sekarang",
+    "2️⃣ Naik ke tempat tinggi (≥20 m atau ≥3 lantai)",
+    "3️⃣ JANGAN menunggu ombak kelihatan — ombak tsunami bisa datang menit pertama",
+    "4️⃣ Hindari sungai & pesisir sampai all-clear resmi",
+  ],
+  topan: [
+    "1️⃣ Siapkan bahan pokok 3 hari + air bersih",
+    "2️⃣ Senter + baterai, isi HP penuh",
+    "3️⃣ Tetap di dalam ruangan, jauhi pohon/tiang/billboard",
+    "4️⃣ Amankan atap & jendela, waspada banjir/kabel listrik",
+  ],
+  banjir: [
+    "1️⃣ Matikan listrik dari MCB sebelum air masuk",
+    "2️⃣ Siapkan tas evakuasi: dokumen penting + obat + uang tunai",
+    "3️⃣ Pindahkan barang & colokan ke tempat tinggi",
+    "4️⃣ JANGAN berjalan/berkendara di arus 15 cm+ — bawaan arus kuat",
+  ],
+  gunungapi: [
+    "1️⃣ Jauhi radius rawan (P3K/PKam zona bahaya PVMBG)",
+    "2️⃣ Pakai masker N95 + kacamata, tutup tandon air",
+    "3️⃣ Waspada lahar hujan di jalur sungai saat hujan",
+    "4️⃣ Siapkan tas evakuasi, ikuti arahan petugas",
+  ],
+  kekeringan: [
+    "1️⃣ Hemat air — prioritas minum & masak",
+    "2️⃣ Simpan cadangan air bersih di wadah tertutup",
+    "3️⃣ Cek jadwal/pengumuman PDAM setempat",
+    "4️⃣ Waspada kebakaran — area kering mudah terbakar",
+  ],
+  kebakaran: [
+    "1️⃣ Waspada asap — pakai masker N95 di luar ruangan",
+    "2️⃣ Tutup jendela, hindari aktivitas luar berlebih",
+    "3️⃣ Jauhi area kebakaran & jalur evakuasi darurat",
+    "4️⃣ Awasi ISPA — khususnya anak-anak & lansia",
+  ],
+  default: [
+    "1️⃣ Pantau info resmi (BNPB/BPBD setempat)",
+    "2️⃣ Siapkan tas evakuasi: dokumen + obat + uang tunai",
+    "3️⃣ Ikuti arahan petugas darurat",
+  ],
+};
+
+/**
+ * Level EWS multi-bencana per subscriber.
+ * alertlevel GDACS: Red=Merah / Orange=Siaga / Green=Waspada.
+ * TSUNAMI SELALU MINIMAL MERAH dalam 1000 km (bencana paling mematikan),
+ * KUNING sampai 3000 km. Lainnya: alertlevel + jarak (radius subscriber
+ * ikut diperhitungkan — radius dunia = jangkauan global).
+ */
+export function tentukanLevelMdEws(type, alertlevel, jarakKm, subRadius = 0) {
+  const r = subRadius || 0;
+  if (type === "TS") {
+    if (jarakKm != null && jarakKm <= Math.max(1000, r)) return "MERAH";
+    if (jarakKm != null && jarakKm <= Math.max(3000, r)) return "KUNING";
+    return alertlevel === "Red" ? "KUNING" : null;
+  }
+  if (alertlevel === "Red") {
+    if (jarakKm == null) return "MERAH"; // subscriber global (tanpa lokasi) — event darurat dunia
+    if (jarakKm <= Math.max(500, r)) return "MERAH";
+    if (jarakKm <= Math.max(3000, r)) return "KUNING";
+    return "HIJAU";
+  }
+  if (alertlevel === "Orange") {
+    if (jarakKm == null) return null;
+    if (jarakKm <= Math.max(500, r)) return "KUNING";
+    if (jarakKm <= Math.max(2000, r)) return "HIJAU";
+    return null;
+  }
+  // Green — info saja, dekat saja
+  if (jarakKm == null) return null;
+  if (jarakKm <= Math.max(500, r)) return "HIJAU";
+  return null;
+}
+
+/** Template pesan EWS multi-bencana — instruksi sesuai jenis. */
+export function formatMdEwsWarning(ev, { level = "HIJAU", jarak = null, city = null } = {}) {
+  const jenisKey = ev.kind || "default";
+  const ins = MD_EWS_INSTRUCTIONS[jenisKey] || MD_EWS_INSTRUCTIONS.default;
+  const icon = ev.icon || "⚠️";
+  let msg = level === "MERAH"
+    ? `🚨 *PERINGATAN DARURAT — ${String(ev.jenis || "BENCANA").toUpperCase()}!* 🚨\n\n`
+    : level === "KUNING"
+      ? `⚠️ *PERINGATAN DINI — ${String(ev.jenis || "BENCANA").toUpperCase()}* ⚠️\n\n`
+      : `ℹ️ *INFO ${String(ev.jenis || "BENCANA").toUpperCase()}*\n\n`;
+  msg += `${icon} Jenis : *${ev.jenis}*\n`;
+  if (ev.level) msg += `📊 Status : ${ev.level}\n`;
+  if (jarak != null) msg += `📏 Jarak dari ${city || "lokasimu"}: *±${Math.round(jarak)} km*\n`;
+  if (ev.country) msg += `🌍 Lokasi : ${ev.country}${ev.desc ? ` — ${ev.desc.slice(0, 80)}` : ""}\n`;
+  else if (ev.desc) msg += `🌍 ${ev.desc.slice(0, 100)}\n`;
+  if (ev.waktu) msg += `🕐 ${ev.waktu}\n\n`;
+  if (level === "MERAH" || level === "KUNING") {
+    msg += "‼️ *LANGKAH PENYELAMATAN:*\n";
+    msg += ins.join("\n") + "\n\n";
+    msg += "_Tetap tenang & pantau info resmi. 🙏_\n";
+  } else {
+    msg += ins.slice(0, 2).join("\n") + "\n\n";
+    msg += "_Belum perlu panik — cukup siaga dan pantau perkembangan. 😊_\n";
+  }
+  if (ev.lat != null && ev.lon != null) msg += `\n🗺️ ${mapsLink(ev.lat, ev.lon)}\n`;
+  if (ev.report) msg += `📄 Laporan GDACS: ${ev.report}\n`;
+  msg += `\n📡 _Sumber: GDACS (EU/UN) — gdacs.org_`;
+  return msg;
+}
+
+/** Kirim satu event multi-bencana ke subscriber relevan. Sock = PARAMETER. */
+async function dispatchMdEws(s, ev) {
+  let sent = 0, errors = 0;
+  for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
+    try {
+      if (sub.ews === false) continue;
+      if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes(ev.kind)) continue;
+      let jarak = null;
+      if (sub.lat != null && sub.lon != null && ev.lat != null && ev.lon != null) {
+        jarak = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
+      }
+      const level = tentukanLevelMdEws(ev.type, ev.alertlevel, jarak, sub.radius || 0);
+      if (!level) continue;
+      const text = formatMdEwsWarning(ev, { level, jarak, city: sub.city });
+      await s.sendMessage(chatId, { text });
+      sent++;
+    } catch (e) {
+      errors++;
+      console.error(`[bencana] ❌ [mdEws] kirim ke ${chatId} gagal:`, e?.message || e);
+      logger.error?.("bencana", `[mdEws] kirim ke ${chatId} gagal: ${e.message}`);
+    }
+    await new Promise((r) => setTimeout(r, 400));
+  }
+  return { sent, errors };
+}
+
+/**
+ * Multi-disaster EWS tick — GDACS non-gempa tiap 60 dtk.
+ * Dedup: st.mdEws.seen = id GDACS; dipersist SETELAH kirim sukses
+ * (aturan owner #4 — kirim gagal → dicoba lagi tick berikutnya).
+ * Baseline boot: event yang udah ada dicatat tanpa kirim (anti spam).
+ */
+async function mdEwsTick(sendSock) {
+  const s = sendSock || sock;
+  if (!s) { console.error("[bencana] ❌ [mdEwsTick] koneksi WhatsApp TIDAK ADA — siklus dilewati"); return; }
+  try {
+    console.log(`[bencana] 🔄 [mdEwsTick] cek EWS multi-bencana GDACS (tsunami/topan/banjir/gunung api/kekeringan/kebakaran) tiap ${MD_EWS_POLL_MS / 1000}s…`);
+    const events = (await _gdacsFn(2)).filter((e) => !MD_EWS_SKIP_TYPES.includes(e.type));
+    const st = loadState();
+    st.mdEws ??= { bootstrapped: false, seen: [] };
+    st.mdEws.seen ??= [];
+
+    if (!st.mdEws.bootstrapped) {
+      st.mdEws.bootstrapped = true;
+      st.mdEws.seen = events.map((e) => e.id).slice(-300);
+      saveState(st);
+      console.log(`[bencana] 🔄 [mdEwsTick] baseline boot: ${st.mdEws.seen.length} event GDACS non-gempa tercatat tanpa kirim (anti spam)`);
+      return;
+    }
+
+    // dedup GANDA: mdEws.seen (milik tick ini) + st.gdacs (share dengan
+    // slowTick) → event yang udah dikirim jalur mana pun gak dobel
+    st.gdacs ??= [];
+    const fresh = events.filter((e) => !st.mdEws.seen.includes(e.id) && !st.gdacs.includes(e.id));
+    if (!fresh.length) return;
+
+    for (const e of fresh) {
+      const t = GDACS_TYPES[e.type] ?? { label: e.type, icon: "⚠️" };
+      const a = ALERT_STYLE[e.alertlevel] ?? ALERT_STYLE.Green;
+      const ev = {
+        type: e.type,
+        kind: KIND_BY_TYPE[e.type] || "default",
+        jenis: t.label,
+        icon: t.icon,
+        level: `${a.label} (${a.icon})`,
+        waktu: e.fromdate ? `mulai ${jamWib(e.fromdate)} WIB` : "baru terdeteksi",
+        lat: e.lat, lon: e.lon,
+        desc: e.desc || e.name || "",
+        country: shortCountry(e.country) || null,
+        alertlevel: e.alertlevel,
+        report: e.report,
+      };
+      const res = await dispatchMdEws(s, ev);
+      if (res.errors > 0 && res.sent === 0) {
+        console.error(`[bencana] ❌ [mdEwsTick] ${ev.jenis} GAGAL terkirim (${res.errors} error) — id ${e.id} BELUM ditandai seen, dicoba lagi ${MD_EWS_POLL_MS / 1000}s lagi`);
+        continue; // jangan tandai seen → retry
+      }
+      const st2 = loadState();
+      st2.mdEws.seen.push(e.id);
+      st2.mdEws.seen = st2.mdEws.seen.slice(-300);
+      // tandai JUGA di st.gdacs → slowTick (3 mnt) gak kirim ulang event yang
+      // udah dikirim EWS multi-bencana ini (dedup lintas-jalur)
+      st2.gdacs ??= [];
+      st2.gdacs.push(e.id);
+      st2.gdacs = st2.gdacs.slice(-200);
+      saveState(st2);
+      if (res.sent > 0) console.log(`[bencana] ✅ [mdEwsTick] ${ev.jenis} (${e.alertlevel}) → ${res.sent} chat, dedup dipersist`);
+      else console.log(`[bencana] 🔄 [mdEwsTick] ${ev.jenis} (${e.alertlevel}) — tidak ada subscriber relevan, dicatat seen`);
+    }
+  } catch (e) {
+    console.error("[bencana] ❌ [mdEwsTick] error:", e?.message || e, e?.stack || "");
+    logger.error?.("bencana", "mdEws tick error: " + e.message);
+  }
+}
+
 export async function dispatchEwsEvent(ev, subs, sockOverride = null) {
   return dispatchEws(sockOverride || sock, ev, subs);
 }
@@ -2250,13 +2571,15 @@ export function startBencanaMonitor(sockParam = null) {
   fastTick(sock);
   slowTick(sock);
   ewsTick(sock);
+  mdEwsTick(sock);
+  mdEwsTimer = setInterval(() => mdEwsTick(sock), MD_EWS_POLL_MS); // EWS multi-bencana GDACS tiap 60 dtk
   fastTimer = setInterval(() => fastTick(sock), POLL_FAST_MS);
   slowTimer = setInterval(() => slowTick(sock), POLL_SLOW_MS);
   jadwalTimer = setInterval(() => jadwalTick(sock), 60_000); // cek jadwal tiap menit (mode jadwal)
   ewsTimer = setInterval(() => ewsTick(sock), EWS_POLL_MS); // peringatan dini 4 provider tiap 10 dtk
   volcanoTick(sock);
   volcanoTimer = setInterval(() => volcanoTick(sock), VOLCANO_POLL_MS); // status gunung api PVMBG tiap 10 mnt
-  console.log(`[bencana] ✅ [SCHEDULER TERDAFTAR] ${watcherCount()} subscriber — BMKG tiap ${POLL_FAST_MS / 1000}s, GDACS+USGS tiap ${POLL_SLOW_MS / 1000}s, EWS tiap ${EWS_POLL_MS / 1000}s, jadwal tiap 60s, gunung api tiap ${VOLCANO_POLL_MS / 1000}s — koneksi WhatsApp: ${sock ? "TERSAMBUNG ✅" : "NULL ❌"}`);
+  console.log(`[bencana] ✅ [SCHEDULER TERDAFTAR] ${watcherCount()} subscriber — BMKG tiap ${POLL_FAST_MS / 1000}s, GDACS+USGS tiap ${POLL_SLOW_MS / 1000}s, EWS gempa 4-provider tiap ${EWS_POLL_MS / 1000}s (level MERAH/KUNING/HIJAU), EWS multi-bencana GDACS tiap ${MD_EWS_POLL_MS / 1000}s (tsunami/topan/banjir/gunung api), jadwal tiap 60s, gunung api PVMBG tiap ${VOLCANO_POLL_MS / 1000}s — koneksi WhatsApp: ${sock ? "TERSAMBUNG ✅" : "NULL ❌"}`);
   logger.success?.("bencana", `Monitor aktif (${watcherCount()} chat — BMKG ${POLL_FAST_MS / 1000}s, GDACS+USGS ${POLL_SLOW_MS / 1000}s, jadwal 60s, EWS ${EWS_POLL_MS / 1000}s)`);
   return true;
 }
@@ -2294,10 +2617,11 @@ export function stopBencanaMonitor() {
   if (volcanoTimer) clearInterval(volcanoTimer);
   if (ewsTimer) clearInterval(ewsTimer);
   if (jadwalTimer) clearInterval(jadwalTimer);
+  if (mdEwsTimer) clearInterval(mdEwsTimer);
   // FIX BUG 15 Sep 2026: dulu volcanoTimer TIDAK di-null → isRunning()
   // selalu true → startBencanaMonitor selalu skip → monitor GAK PERNAH
   // bisa nyala lagi setelah stop (.bencanawatch off → on = mati permanen).
-  fastTimer = slowTimer = volcanoTimer = ewsTimer = jadwalTimer = null;
+  fastTimer = slowTimer = volcanoTimer = ewsTimer = jadwalTimer = mdEwsTimer = null;
   console.log("[bencana] ⚙️ monitor dihentikan — SEMUA timer dibersihkan (bisa restart)");
   return true;
 }
@@ -2336,6 +2660,7 @@ export async function _bencanaRunTickForTest(which, sendSock) {
   if (which === "ews") return ewsTick(sendSock);
   if (which === "volcano") return volcanoTick(sendSock);
   if (which === "jadwal") return jadwalTick(sendSock);
+  if (which === "mdews") return mdEwsTick(sendSock);
   throw new Error("tick tidak dikenal: " + which);
 }
 
@@ -2354,5 +2679,8 @@ export function getMonitorHealth() {
     ewsProviders: ["BMKG", "USGS", "JEPANG (JMA)", "GLOBAL (EMSC)"],
     ewsMinMag: EWS_MIN_MAG,
     ewsHistoryCount: (st.ews?.history ?? []).length,
+    mdEwsRunning: !!mdEwsTimer,
+    mdEwsPollSec: MD_EWS_POLL_MS / 1000,
+    ewsProviderHealth: getEwsProviderHealth(),
   };
 }

@@ -18,7 +18,7 @@ import {
   setWatcherJenis, BENCANA_JENIS, setWatcherSumber, BENCANA_SUMBER,
   setWatcherKirim,
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
-  getMonitorHealth, sendActivationSample,
+  getMonitorHealth, sendActivationSample, getEwsProviderHealth, EWS_LEVELS,
   setWatcherEws, setWatcherProvider, getEwsHistory, EWS_MIN_MAG,
   getMagmaVolcanoes, MAGMA_LEVELS, sendRegionalAlert,
 } from "../../src/lib/nova-bencana.js";
@@ -774,19 +774,35 @@ async function handler(m, { sock }) {
         const subs = await getWatchersSafe();
         const me = subs[targetKey];
         const health = getMonitorHealth();
-        return m.reply(novaBox("Ews Peringatan Dini", [
+        const ph = health.ewsProviderHealth || {};
+        const provLine = ["BMKG", "USGS", "JMA", "EMSC"].map((k) => `${k} ${ph[k]?.down ? "X" : "OK"}`).join(" | ");
+        return m.reply(novaBox("Ews Peringatan Dini v2", [
           `Status  : ${me ? (me.ews === false ? "OFF (gak ikut peringatan dini)" : "ON (pengaman darurat aktif)") : "TIDAK LANGGANAN"}`,
-          `Poll    : tiap ${health.ewsPollSec ?? 10} detik (BMKG+USGS+JEPANG+GLOBAL)`,
-          `Ambang  : M ${health.ewsMinMag ?? 4.5}+ — gempa besar M6.5+ semua chat`,
           `Monitor : ${health.ewsRunning ? "HIDUP" : "MATI (nyalakan .bencanawatch on)"}`,
           `Riwayat : ${health.ewsHistoryCount ?? 0} event tercatat`,
           "---",
-          "EWS bypass mode pengiriman (pengaman darurat):",
-          "walau mode jadwal, gempa dekat/tetangga tetap realtime.",
-          "Jarak & estimasi tiba guncangan dihitung dari lokasi",
-          "yang di-set via .bencanawatch lokasi <kota>",
+          { sub: "Sistem gempa (4 provider, 10 dtk)" },
+          `Poll    : tiap ${health.ewsPollSec ?? 10} detik (BMKG+USGS+JMA+EMSC)`,
+          `Provider: ${provLine}`,
+          "BMKG down → otomatis fallback USGS/JMA/EMSC",
+          `MERAH   : M${EWS_LEVELS.MERAH.minMag}+ di bawah ${EWS_LEVELS.MERAH.radiusKm} km — DARURAT`,
+          `KUNING  : M${EWS_LEVELS.KUNING.minMag}+ di bawah ${EWS_LEVELS.KUNING.radiusKm} km — siaga`,
+          `HIJAU   : M${EWS_LEVELS.HIJAU.minMag}+ di bawah ${EWS_LEVELS.HIJAU.radiusKm} km — info`,
+          "ETA guncangan: gelombang S 3,6 km/detik",
+          "---",
+          { sub: "Sistem multi-bencana (GDACS, 60 dtk)" },
+          `Status  : ${health.mdEwsRunning ? "HIDUP" : "MATI"} — cek tiap ${health.mdEwsPollSec ?? 60} dtk`,
+          "Jenis   : tsunami, topan, banjir, gunung api,",
+          "          kekeringan, kebakaran",
+          "Level MERAH/KUNING/HIJAU + instruksi",
+          "penyelamatan khusus per jenis bencana",
+          "---",
+          "EWS bypass mode (pengaman darurat):",
+          "walau mode jadwal, gempa dekat tetap realtime.",
+          "Jarak & ETA dari .bencanawatch lokasi <kota>",
           "---",
           "Perintah: .bencanawatch ews on/off",
+          "Tes paksa: .bencanawatch test",
         ]));
       }
       try {
