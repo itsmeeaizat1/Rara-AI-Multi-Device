@@ -22,12 +22,12 @@ const novaGuide = (header, intro, example) =>
   ].join("\n"));
 
 const pluginConfig = {
-  name: "bencana",
-  alias: ["bencana"],
+  name: "disaster",
+  alias: ["disaster", "bencana"], // rename owner 15 Sep 2026 — lama tetap jalan
   category: "bencana",
   description: "Cek bencana alam aktif dunia (banjir, topan, gunung api, karhutla, gempa, tsunami, kekeringan)",
-  usage: ".bencana [gempa/banjir/badai/gunungapi/kebakaran/kering/tsunami]",
-  example: ".bencana\n.bencana banjir",
+  usage: ".disaster [gempa/banjir/badai/gunungapi/kebakaran/kering/tsunami]",
+  example: ".disaster\n.disaster banjir",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 10, energi: 1, isEnabled: true,
 };
@@ -99,8 +99,8 @@ async function handler(m, { sock }) {
         ? `${gempa.Magnitude} SR, ${gempa.Kedalaman} — ${gempa.Wilayah}\n${gempa.Tanggal} ${gempa.Jam}`
         : "Data tidak tersedia";
 
-      out += `\n\nDetail per jenis: .bencana gempa / banjir / badai / gunungapi / kebakaran / kering / tsunami`;
-      out += `\nLangganan alert otomatis: .bencanawatch on`;
+      out += `\n\nDetail per jenis: .disaster gempa / banjir / badai / gunungapi / kebakaran / kering / tsunami`;
+      out += `\nLangganan alert otomatis: .disastersystemwatch on`;
       out += `\nSumber: GDACS (EU/UN) + BMKG + NASA EONET + USGS`;
       await m.reply(out);
       await m.react("🐣");
@@ -199,15 +199,15 @@ async function handler(m, { sock }) {
         await m.reply(novaGuide(
           "Bencana",
           "Jenis bencana tidak dikenal. Pilihan: gempa, banjir, badai, gunungapi, kebakaran, kering, tsunami, global",
-          ".bencana banjir"
+          ".disaster banjir"
         ));
         await m.react("🐣");
         return;
     }
   } catch (err) {
-    console.error("[bencana]", err);
+    console.error("[disaster]", err);
     await m.react("❌");
-    await m.reply(novaGagal("bencana"));
+    await m.reply(novaGagal("disaster"));
   }
 }
 

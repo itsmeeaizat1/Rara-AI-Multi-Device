@@ -9,7 +9,7 @@
 //    🌎 USGS           — earthquake.usgs.gov (gempa global M >= 6.0)
 //  Semua endpoint VERIFIED HIDUP 2026-09-06 dari sandbox.
 //
-//  Auto-alert (.bencanawatch on, per-chat opt-in, default OFF):
+//  Auto-alert (.disastersystemwatch on, per-chat opt-in, default OFF):
 //    • Gempa Indonesia baru M >= 5.0 (BMKG)   — poll 60 dtk
 //    • Gempa global baru M >= 6.0 (USGS)      — poll 5 mnt
 //    • GDACS baru level SIAGA/AWAS            — poll 5 mnt
@@ -22,13 +22,13 @@
 //     dekat lokasi → peringatan wilayah, jauh → alert generic.
 //   • jadwal — gak realtime; bencana baru dikumpulkan dulu, dikirim
 //     sebagai RANGKUMAN di jam yang di-set user (berapa pun banyaknya,
-//     .bencanawatch jadwal add 07:00 / 10:00 / ...).
+//     .disastersystemwatch jadwal add 07:00 / 10:00 / ...).
 //   • darurat — realtime tapi cuman yg penting: bencana DEKAT lokasi
 //     user (radius) atau bencana besar (gempa M 6.5+ BMKG / M 7.0+
 //     global / GDACS level AWAS). Info wilayah jauh gak dikirim.
 //
 //  PERINGATAN WILAYAH (regional alert, request owner 2026-09-06):
-//  Subscriber bisa set lokasi (.bencanawatch lokasi <kota>) + radius.
+//  Subscriber bisa set lokasi (.disastersystemwatch lokasi <kota>) + radius.
 //  Event baru dalam radius → peringatan khusus warga sekitar wilayah:
 //    • kalimat AI (aiFallbackChat) yang berubah sesuai kondisi bencana
 //      (jenis/level/magnitudo/jarak) dengan template fallback lokal
@@ -58,7 +58,7 @@ const DEFAULT_RADIUS_KM = 300; // radius peringatan wilayah (bisa di-set per use
 // UPGRADE 15 Sep 2026 (request owner "default minimal alertnya di sekitar
 // minimal 3.5mg klo 5.0mg jarang soalnya digempa"): ambang magnitudo
 // minimum alert gempa per subscriber — DEFAULT 3.5 SR (M5.0 jarang di
-// wilayah yang sering digempa). Bisa diatur: .bencanawatch minmag <M>.
+// wilayah yang sering digempa). Bisa diatur: .disastersystemwatch minmag <M>.
 export const DEFAULT_MIN_MAG = 3.5;
 export const MIN_MAG_FLOOR = 2.0; // batas bawah yang boleh di-set
 export const MIN_MAG_CEIL = 9.0; // batas atas
@@ -827,10 +827,10 @@ export function parseRadiusKm(km) {
 }
 export function setWatcherRadius(chatId, km) {
   const r = parseRadiusKm(km);
-  if (!r || r < 50 || r > RADIUS_MAX_KM) throw new Error(`Radius harus 50-${RADIUS_MAX_KM} km (20000 = seluruh dunia). Contoh: .bencanawatch radius 500 | .bencanawatch radius dunia`);
+  if (!r || r < 50 || r > RADIUS_MAX_KM) throw new Error(`Radius harus 50-${RADIUS_MAX_KM} km (20000 = seluruh dunia). Contoh: .disastersystemwatch radius 500 | .disastersystemwatch radius dunia`);
   const subs = getWatchers();
   const cur = subs[chatId];
-  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum set radius.");
+  if (!cur) throw new Error("Aktifkan dulu .disastersystemwatch on sebelum set radius.");
   subs[chatId] = { ...cur, radius: r };
   saveWatchers(subs);
   return subs[chatId];
@@ -867,17 +867,17 @@ function normalizeParamJenis(raw) {
 
 /**
  * Setter parameter alert per jenis per subscriber.
- * .bencanawatch param <jenis> <param> <nilai> — contoh:
+ * .disastersystemwatch param <jenis> <param> <nilai> — contoh:
  *   param banjir minlevel kuning   → banjir mulai level KUNING aja
  *   param topan jarak 800          → topan cuma ≤800 km dari lokasi
- *   param gempa minmag 3.0         → (alias .bencanawatch minmag 3.0)
+ *   param gempa minmag 3.0         → (alias .disastersystemwatch minmag 3.0)
  *   param banjir minlevel reset    → satu param balik default
  *   param banjir reset             → semua param jenis itu dibersihin
  */
 export function setWatcherParam(chatId, jenisRaw, keyRaw, valueRaw) {
   const subs = getWatchers();
   const cur = subs[chatId];
-  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum atur parameter.");
+  if (!cur) throw new Error("Aktifkan dulu .disastersystemwatch on sebelum atur parameter.");
   const jenis = normalizeParamJenis(jenisRaw);
   if (!jenis) throw new Error(`Jenis bencana gak dikenal. Pilihan: ${ALERT_PARAM_JENIS.map((j) => j.label).join(", ")}.`);
   const schema = ALERT_PARAM_JENIS.find((j) => j.key === jenis);
@@ -898,7 +898,7 @@ export function setWatcherParam(chatId, jenisRaw, keyRaw, valueRaw) {
 
   const key = PARAM_KEY_ALIASES[String(keyRaw || "").toLowerCase()];
   if (!key || !schema.params.includes(key)) {
-    throw new Error(`Parameter untuk ${schema.label}: ${schema.params.join(" / ")}. Contoh: .bencanawatch param ${jenis} ${schema.params[0]} ${key === "minmag" ? "3.5" : schema.params[0] === "minlevel" ? "kuning" : "500"}`);
+    throw new Error(`Parameter untuk ${schema.label}: ${schema.params.join(" / ")}. Contoh: .disastersystemwatch param ${jenis} ${schema.params[0]} ${key === "minmag" ? "3.5" : schema.params[0] === "minlevel" ? "kuning" : "500"}`);
   }
   const val = String(valueRaw ?? "").toLowerCase();
   const params = { ...(cur.params || {}) };
@@ -920,7 +920,7 @@ export function setWatcherParam(chatId, jenisRaw, keyRaw, valueRaw) {
     if (/^(reset|default|bawaan)$/.test(val)) delete params[jenis].minlevel;
     else {
       const lvl = String(val).toUpperCase();
-      if (!(lvl in LEVEL_ORDER)) throw new Error("Level harus HIJAU / KUNING / MERAH (default HIJAU = semua alert). Contoh: .bencanawatch param banjir minlevel kuning");
+      if (!(lvl in LEVEL_ORDER)) throw new Error("Level harus HIJAU / KUNING / MERAH (default HIJAU = semua alert). Contoh: .disastersystemwatch param banjir minlevel kuning");
       params[jenis].minlevel = lvl;
     }
   } else if (key === "jarak") {
@@ -928,7 +928,7 @@ export function setWatcherParam(chatId, jenisRaw, keyRaw, valueRaw) {
     else if (/^dunia$/.test(val)) params[jenis].radiusKm = RADIUS_MAX_KM;
     else {
       const km = parseInt(val, 10);
-      if (!Number.isFinite(km) || km < 50 || km > RADIUS_MAX_KM) throw new Error(`Jarak harus 50-${RADIUS_MAX_KM} km (dunia = ${RADIUS_MAX_KM}). Contoh: .bencanawatch param banjir jarak 300`);
+      if (!Number.isFinite(km) || km < 50 || km > RADIUS_MAX_KM) throw new Error(`Jarak harus 50-${RADIUS_MAX_KM} km (dunia = ${RADIUS_MAX_KM}). Contoh: .disastersystemwatch param banjir jarak 300`);
       params[jenis].radiusKm = km;
     }
   }
@@ -955,12 +955,12 @@ export function paramAllowsKind(sub, kind, level, jarakKm, severe = false) {
  * Ambang magnitudo minimum alert gempa per subscriber (default 3.5 —
  * request owner 15 Sep 2026). Mempengaruhi: near-quake (gempa dekat) DAN
  * EWS gempa. Gempa besar global M6.5+ TETAP dikirim (pengaman darurat).
- * Contoh: .bencanawatch minmag 3.0 | .bencanawatch minmag reset
+ * Contoh: .disastersystemwatch minmag 3.0 | .disastersystemwatch minmag reset
  */
 export function setWatcherMinMag(chatId, mag) {
   const subs = getWatchers();
   const cur = subs[chatId];
-  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum set minmag.");
+  if (!cur) throw new Error("Aktifkan dulu .disastersystemwatch on sebelum set minmag.");
   if (/^(reset|default|bawaan)$/i.test(String(mag ?? ""))) {
     const { minMag: _drop, ...rest } = cur;
     subs[chatId] = rest;
@@ -969,7 +969,7 @@ export function setWatcherMinMag(chatId, mag) {
   }
   const m = parseFloat(mag);
   if (!Number.isFinite(m) || m < MIN_MAG_FLOOR || m > MIN_MAG_CEIL) {
-    throw new Error(`Magnitudo minimum harus ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL} SR (default ${DEFAULT_MIN_MAG}). Contoh: .bencanawatch minmag 3.5 | .bencanawatch minmag reset`);
+    throw new Error(`Magnitudo minimum harus ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL} SR (default ${DEFAULT_MIN_MAG}). Contoh: .disastersystemwatch minmag 3.5 | .disastersystemwatch minmag reset`);
   }
   subs[chatId] = { ...cur, minMag: Math.round(m * 10) / 10 };
   saveWatchers(subs);
@@ -984,7 +984,7 @@ const MODES = ["otomatis", "jadwal", "darurat"];
 export function setWatcherMode(chatId, mode) {
   if (!MODES.includes(mode)) throw new Error(`Mode harus ${MODES.join(" / ")}.`);
   const subs = getWatchers();
-  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   subs[chatId].mode = mode;
   saveWatchers(subs);
   return subs[chatId];
@@ -996,7 +996,7 @@ export function addWatcherSchedule(chatId, hhmm) {
   if (!m) throw new Error("Format jam salah. Contoh: 07:00");
   const norm = `${m[1].padStart(2, "0")}:${m[2]}`;
   const subs = getWatchers();
-  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   const cur = subs[chatId];
   cur.schedules = Array.isArray(cur.schedules) ? cur.schedules : [];
   if (cur.schedules.includes(norm)) throw new Error(`Jadwal ${norm} sudah ada.`);
@@ -1012,11 +1012,11 @@ export function addWatcherSchedule(chatId, hhmm) {
 export function removeWatcherSchedule(chatId, hhmm) {
   const subs = getWatchers();
   const cur = subs[chatId];
-  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!cur) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   cur.schedules = Array.isArray(cur.schedules) ? cur.schedules : [];
   const m = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(String(hhmm || "").trim());
   const norm = m ? `${m[1].padStart(2, "0")}:${m[2]}` : null;
-  if (!norm || !cur.schedules.includes(norm)) throw new Error(`Jadwal ${hhmm || "-"} gak ada. Cek daftar: .bencanawatch jadwal`);
+  if (!norm || !cur.schedules.includes(norm)) throw new Error(`Jadwal ${hhmm || "-"} gak ada. Cek daftar: .disastersystemwatch jadwal`);
   cur.schedules = cur.schedules.filter((s) => s !== norm);
   saveWatchers(subs);
   return subs[chatId];
@@ -1026,7 +1026,7 @@ export function removeWatcherSchedule(chatId, hhmm) {
 export function clearWatcherSchedules(chatId) {
   const subs = getWatchers();
   const cur = subs[chatId];
-  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!cur) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   cur.schedules = [];
   saveWatchers(subs);
   return subs[chatId];
@@ -1053,7 +1053,7 @@ export function evSumberKey(ev) {
  */
 export function setWatcherSumber(chatId, sources) {
   const subs = getWatchers();
-  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   if (!Array.isArray(sources) || sources.length === 0) {
     delete subs[chatId].sumber; // reset → semua sumber
   } else {
@@ -1074,7 +1074,7 @@ export function setWatcherSumber(chatId, sources) {
  */
 export function setWatcherJenis(chatId, kinds) {
   const subs = getWatchers();
-  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   if (!Array.isArray(kinds) || kinds.length === 0) {
     delete subs[chatId].jenis; // reset → semua jenis
   } else {
@@ -1097,7 +1097,7 @@ export function setWatcherJenis(chatId, kinds) {
  */
 export function setWatcherKirim(chatId, mode) {
   const subs = getWatchers();
-  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   const m = String(mode || "").toLowerCase();
   const alias = { utama: "utama", penting: "utama", satu: "utama", semua: "semua", all: "semua", cooldown: "semua", col: "semua" };
   const val = alias[m];
@@ -1157,7 +1157,7 @@ export async function fireJadwalDigest(_sock, chatId, sub, watcherKey = chatId) 
       out += `\n\nTerdekat dari ${sub.city}: ±${Math.round(best.d)} km arah ${dir}\n(${best.p.line})`;
     }
   }
-  out += `\n\nCek detail: .bencana\nSumber: BMKG, USGS, GDACS`;
+  out += `\n\nCek detail: .disaster\nSumber: BMKG, USGS, GDACS`;
   await _sock.sendMessage(chatId, { text: out });
   // majuin lastDigest — event berikutnya gak dobel masuk rangkuman berikutnya
   const subs = getWatchers();
@@ -1788,7 +1788,7 @@ const NEAR_QUAKE_MIN_MAG = 2.5;
  * subscriber (dalam radius masing-masing — radius gede = kejadian di
  * lokasi lain yang masuk radius juga kehitung "dekat") tetap dikirim
  * LANGSUNG sebagai peringatan wilayah. Cuma buat subscriber yang:
- * - udah set lokasi (.bencanawatch lokasi), dan
+ * - udah set lokasi (.disastersystemwatch lokasi), dan
  * - gak nge-filter keluar jenis gempa / sumber bmkg, dan
  * - bukan mode jadwal (jadwal → dikumpulkan ke rangkuman).
  * Subscriber TANPA lokasi gak kena sama sekali (alert global tetap M 5.0+).
@@ -2010,7 +2010,7 @@ async function slowTick(sendSock) {
       } else if (evs.length > 1) {
         // FIX OWNER (revisi 2026-09-07): jangan semua info dikirim (spam) —
         // tiap pembaruan cukup 1 info TERPENTING per subscriber (mode utama),
-        // atau semua + cooldown 10 mnt (mode semua). Atur: .bencanawatch kirim.
+        // atau semua + cooldown 10 mnt (mode semua). Atur: .disastersystemwatch kirim.
         const top = [...evs].sort((a, b) => Number(b.isSevere) - Number(a.isSevere))[0];
         res = await dispatchBest(s, evs, "AUTO-ALERT BENCANA GLOBAL", eventCard(top));
       }
@@ -2290,8 +2290,8 @@ async function dispatchEws(sendSock, ev, subs) {
   let sent = 0, errors = 0;
   for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
     try {
-      if (sub.ews === false) continue; // opt-out EWS per subscriber (.bencanawatch ews off)
-      if (Array.isArray(sub.provider) && sub.provider.length && !sub.provider.includes(provKey)) continue; // .bencanawatch provider <daftar>
+      if (sub.ews === false) continue; // opt-out EWS per subscriber (.disastersystemwatch ews off)
+      if (Array.isArray(sub.provider) && sub.provider.length && !sub.provider.includes(provKey)) continue; // .disastersystemwatch provider <daftar>
       if (Array.isArray(sub.sumber) && sub.sumber.length && !sub.sumber.includes(provKey)) continue;
       if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes("gempa")) continue;
 
@@ -2676,7 +2676,7 @@ export async function dispatchEwsEvent(ev, subs, sockOverride = null) {
   return dispatchEws(sockOverride || sock, ev, subs);
 }
 
-/** Riwayat event EWS (buat .bencanawatch riwayat). */
+/** Riwayat event EWS (buat .disastersystemwatch riwayat). */
 export function getEwsHistory(limit = 10) {
   return (loadState().ews?.history ?? []).slice(0, limit);
 }
@@ -2684,7 +2684,7 @@ export function getEwsHistory(limit = 10) {
 /** Toggle EWS per subscriber (default ON — pengaman darurat). */
 export function setWatcherEws(chatId, on) {
   const subs = getWatchers();
-  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   subs[chatId].ews = !!on;
   saveWatchers(subs);
   return subs[chatId];
@@ -2693,7 +2693,7 @@ export function setWatcherEws(chatId, on) {
 /** Filter provider EWS per subscriber: bmkg/usgs/jepang/global ("all" = reset). */
 export function setWatcherProvider(chatId, list) {
   const subs = getWatchers();
-  if (!subs[chatId]) throw new Error("Aktifkan dulu .bencanawatch on.");
+  if (!subs[chatId]) throw new Error("Aktifkan dulu .disastersystemwatch on.");
   const valid = ["bmkg", "usgs", "jepang", "jma", "global", "china", "all"];
   const wanted = (Array.isArray(list) ? list : [list]).map((x) => String(x).toLowerCase().trim());
   for (const w of wanted) if (!valid.includes(w)) throw new Error(`Provider "${w}" gak dikenal. Pilihan: bmkg / usgs / jepang / global / all`);
@@ -2725,7 +2725,7 @@ export function startBencanaMonitor(sockParam = null) {
     return false;
   }
   if (watcherCount() === 0) {
-    console.log("[bencana] ⚙️ monitor belum bisa nyala — belum ada subscriber (.bencanawatch on)");
+    console.log("[bencana] ⚙️ monitor belum bisa nyala — belum ada subscriber (.disastersystemwatch on)");
     return false;
   }
   if (!getBencanaAutoEnabled()) {
@@ -2785,7 +2785,7 @@ export function stopBencanaMonitor() {
   if (mdEwsTimer) clearInterval(mdEwsTimer);
   // FIX BUG 15 Sep 2026: dulu volcanoTimer TIDAK di-null → isRunning()
   // selalu true → startBencanaMonitor selalu skip → monitor GAK PERNAH
-  // bisa nyala lagi setelah stop (.bencanawatch off → on = mati permanen).
+  // bisa nyala lagi setelah stop (.disastersystemwatch off → on = mati permanen).
   fastTimer = slowTimer = volcanoTimer = ewsTimer = jadwalTimer = mdEwsTimer = null;
   console.log("[bencana] ⚙️ monitor dihentikan — SEMUA timer dibersihkan (bisa restart)");
   return true;
