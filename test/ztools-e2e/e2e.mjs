@@ -29,8 +29,10 @@ function mkM(command, args, quoted) {
 
 // ═══ 1. REGISTRY ═══
 w("\n— registry —");
-t("  6 kind: code/obfuscate/convert/domain/source/webtest",
-  Object.keys(ZEL_TOOLS_KINDS).length === 6 && ["code","obfuscate","convert","domain","source","webtest"].every(k => ZEL_TOOLS_KINDS[k]));
+const NEW_KINDS = ["qr","readqr","morse","kurs","shortlink","tinyurl","ephoto","whatanime","img2prompt","gist","pastebin"];
+t("  17 kind: 6 tools + 11 backup z-variant",
+  Object.keys(ZEL_TOOLS_KINDS).length === 17 && ["code","obfuscate","convert","domain","source","webtest"].every(k => ZEL_TOOLS_KINDS[k]) && NEW_KINDS.every(k => ZEL_TOOLS_KINDS[k]));
+t("  kind qr binary flag", ZEL_TOOLS_KINDS.qr.binary === true);
 t("  convert cuma toesm/tocjs", ZEL_CONVERT_TYPES.join(",") === "toesm,tocjs");
 t("  config: kategori tools, cd 15, energi 2, 8 alias, enabled",
   plugin.pluginConfig.category === "tools" && plugin.pluginConfig.cooldown === 15 && plugin.pluginConfig.energi === 2

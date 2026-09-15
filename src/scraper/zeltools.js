@@ -37,7 +37,29 @@ export const ZEL_TOOLS_KINDS = {
   domain:    { path: "domain",     label: "Domain Checker",          args: ["q"] },
   source:    { path: "getsource",   label: "Get Source",              args: ["url"] },
   webtest:   { path: "debugbear",  label: "Website Speed Test",      args: ["url", "device"] },
+  // ── backup z-variant (owner 15 Sep: "z di depan = cadangan meski bot udah punya") ──
+  qr:        { path: "text2qr",    label: "Text → QR Code",          args: ["text"], binary: true },
+  readqr:    { path: "qr2text",    label: "QR → Text (decode)",      args: ["url"] },
+  morse:     { path: "morse",      label: "Morse Encoder",           args: ["text"] },
+  kurs:      { path: "currency",   label: "Kurs USD → IDR",          args: ["amount"] },
+  shortlink: { path: "shortlink",  label: "CDN Shortlink",           args: ["url"] },
+  tinyurl:   { path: "tinyurl",    label: "TinyURL",                 args: ["url"] },
+  ephoto:    { path: "ephoto",     label: "Ephoto360 Text Effect",  args: ["effect", "text"] },
+  whatanime: { path: "whatanime",  label: "WhatAnime (anime match)", args: ["url"] },
+  img2prompt:{ path: "img2prompt", label: "Image → AI Prompt",      args: ["url"] },
+  gist:      { path: "gist",       label: "Gist Extractor",          args: ["url"] },
+  pastebin:  { path: "pastebin",   label: "Pastebin Extractor",     args: ["url"] },
 };
+
+// efek ephoto360 zelapi (respons error zelapi 15 Sep 2026)
+export const ZEL_EPHOTO_EFFECTS = [
+  "glitch", "write", "advancedglow", "typography", "pixelglitch", "neonglitch",
+  "flag", "flag3d", "deleting", "blackpinkstyle", "glowing", "underwater",
+  "logomaker", "cartoonstyle", "papercutstyle", "watercolor", "effectclouds",
+  "blackpinklogo", "gradient", "summerbeach", "luxurygold", "multicoloredneon",
+  "sandsummer", "galaxywallpaper", "1917style", "makingneon", "royal",
+  "freecreate", "galaxystyle", "lighteffects",
+];
 
 export const ZEL_CONVERT_TYPES = ["toesm", "tocjs"];
 
@@ -57,7 +79,18 @@ async function zelGet(url) {
   }
   const status = res?.status || 0;
   let data = null;
-  try { data = await res.json(); } catch { /* body bukan json */ }
+  let buffer = null;
+  const ctype = (res?.headers?.get?.("content-type") || res?.headers?.["content-type"] || "");
+  if (ctype.includes("image") || ctype.includes("octet-stream")) {
+    try { buffer = Buffer.from(await res.arrayBuffer()); } catch { /* fallback json */ }
+  }
+  if (!buffer) {
+    try { data = await res.json(); } catch { /* body bukan json */ }
+    if (!data && status === 200 && typeof res?.arrayBuffer === "function") {
+      try { buffer = Buffer.from(await res.arrayBuffer()); } catch { /* biarkan */ }
+    }
+  }
+  if (buffer && status === 200) return { ok: true, data: null, buffer };
   if (status === 401 || status === 403) return { ok: false, error: `API_KEY_INVALID (${status}) — key zelapi kosong/expired, isi apikeys.json` };
   if (status === 429) return { ok: false, error: "RATE_LIMIT (429) — coba bentar lagi" };
   if (status !== 200) {
@@ -82,6 +115,8 @@ export async function zelToolCall(kind, params = {}) {
   for (const a of spec.args) {
     const v = String(params[a] ?? "").trim();
     if (a === "code" && !v) return { ok: false, error: "CODE_EMPTY — kirim kode-nya (teks atau reply pesan kode)" };
+    if (a === "text" && !v) return { ok: false, error: "TEXT_EMPTY — kirim teksnya" };
+    if (a === "effect" && kind === "ephoto" && !ZEL_EPHOTO_EFFECTS.includes(v.toLowerCase())) return { ok: false, error: "EFFECT_INVALID — ketik .zepho list buat daftar efek" };
     if (a === "url" && v && !/^https?:\/\//.test(v)) return { ok: false, error: "URL_INVALID — kirim link lengkap (https://...)" };
     if (a === "q" && !v) return { ok: false, error: "QUERY_EMPTY — kirim domain-nya (contoh: google.com)" };
     if (a === "type" && kind === "convert") {
@@ -91,5 +126,5 @@ export async function zelToolCall(kind, params = {}) {
   }
   const r = await zelGet(`${BASE}/tools/${spec.path}?${p.toString()}`);
   if (!r.ok) return r;
-  return { ok: true, kind, data: r.data };
+  return r.buffer ? { ok: true, kind, data: null, buffer: r.buffer } : { ok: true, kind, data: r.data };
 }
