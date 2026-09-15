@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// bencanawatch.js — Langganan auto-alert bencana (opt-in, default OFF)
+// disastersystemwatch.js — Langganan auto-alert bencana (opt-in, default OFF) (rename file owner 15 Sep 2026)
 //   • Gempa Indonesia baru M >= 5.0 (BMKG)   — poll 60 dtk
 //   • Gempa global baru M >= 6.0 (USGS)      — poll 5 mnt
 //   • Bencana GDACS baru level SIAGA/AWAS    — poll 5 mnt
