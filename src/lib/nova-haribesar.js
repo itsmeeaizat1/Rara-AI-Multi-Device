@@ -4,6 +4,14 @@
 // jam 08:00 WIB ke semua chat yang langganan — "Selamat Hari X" + tanggal
 // + badge tanggal merah + pesan inspirasi buatan AI (fallback template).
 //
+// UPGRADE H-X (request owner 16 Sep 2026 — "tanda besok libur atau xx hari
+// lagi libur... deteksi libur panjang"): bukan cuma hari-H —
+//   • H-1  : "Besok Tanggal Merah!" (libur nasional besok)
+//   • H-3  : "3 Hari Lagi Tanggal Merah"
+//   • H-7  : "Minggu Lagi Tanggal Merah"
+//   • LIBUR PANJANG: rangkaian libur nasional + weekend berurutan min 3 hari
+//     (weekend polos gak dianggap — WAJIB ada libur nasional di dalamnya)
+//
 // Kalender TETAP (Gregorian): hari besar nasional + tanggal merah libur
 // TETAP (1 Jan, 1 Mei, 17 Agu, 10 Nov, 25 Des). Libur bergerak (Idulfitri,
 // Nyepi, dll — kalender Hijriah/Candra) TIDAK di-hardcode biar gak pernah
@@ -104,6 +112,85 @@ function parseYmd(ymd) {
     hari: NAMA_HARI[dt.getUTCDay()],
     tanggalIndo: `${NAMA_HARI[dt.getUTCDay()]}, ${dd} ${HARI_BULAN[m - 1]} ${y}`,
   };
+}
+
+/** ymd + n hari → ISO YYYY-MM-DD */
+function ymdAdd(ymd, n) {
+  const [y, m, dd] = String(ymd).split("-").map((x) => parseInt(x, 10));
+  const d = new Date(Date.UTC(y, m - 1, dd + n));
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+}
+
+/** selisih hari a → b (b - a) */
+function diffHari(aYmd, bYmd) {
+  const [ay, am, ad] = String(aYmd).split("-").map((x) => parseInt(x, 10));
+  const [by, bm, bd] = String(bYmd).split("-").map((x) => parseInt(x, 10));
+  return Math.round((Date.UTC(by, bm - 1, bd) - Date.UTC(ay, am - 1, ad)) / 86400000);
+}
+
+/** weekend = Sabtu / Minggu */
+function isWeekend(ymd) {
+  const p2 = parseYmd(ymd);
+  return p2?.hari === "Sabtu" || p2?.hari === "Minggu";
+}
+
+/** libur nasional = hari besar DENGAN flag merah (bukan sekadar peringatan) */
+export function getLiburOn(ymd) {
+  const e = getHariBesar(ymd);
+  return e && e.merah ? e : null;
+}
+
+/** hitung rantai hari "tidak kerja" berurutan mulai startYmd (libur + weekend) */
+function hitungRantai(startYmd) {
+  let total = 0;
+  const namaLibur = [];
+  for (let i = 0; i < 60; i++) {
+    const y = ymdAdd(startYmd, i);
+    const libur = getLiburOn(y);
+    if (libur || isWeekend(y)) {
+      total++;
+      if (libur) namaLibur.push(libur.nama);
+    } else break;
+  }
+  return { total, namaLibur };
+}
+
+/**
+ * cariLiburPanjang — rangkaian libur nasional + weekend berurutan min 3 hari,
+ * mulai dari fromYmd..+horizon. Weekend polos (min 2 hari) gak dianggap:
+ * WAJIB ada libur nasional di dalam rantai (pola reference owner).
+ */
+export function cariLiburPanjang(fromYmd, horizon = 3) {
+  for (let i = 0; i <= horizon; i++) {
+    const start = ymdAdd(fromYmd, i);
+    const r = hitungRantai(start);
+    if (r.total >= 3 && r.namaLibur.length > 0) {
+      return { mulaiYmd: start, totalHari: r.total, nama: r.namaLibur.join(" & ") };
+    }
+  }
+  return null;
+}
+
+/** libur nasional terdekat mulai fromYmd → { ymd, nama } | null */
+export function nextLibur(fromYmd, maxDays = 90) {
+  for (let i = 0; i <= maxDays; i++) {
+    const y = ymdAdd(fromYmd, i);
+    const e = getLiburOn(y);
+    if (e) return { ymd: y, nama: e.nama };
+  }
+  return null;
+}
+
+/** daftar libur nasional ke depan + label H-X (buat .haribesar libur) */
+export function listLiburMendatang(fromYmd = null, days = 90) {
+  const base = fromYmd || wibNow().ymd;
+  const out = [];
+  for (let i = 0; i <= days; i++) {
+    const y = ymdAdd(base, i);
+    const e = getLiburOn(y);
+    if (e) out.push({ ymd: y, nama: e.nama, emoji: e.emoji || "🔴", h: i });
+  }
+  return out;
 }
 
 /**
@@ -225,7 +312,7 @@ async function aiInspirasi(entry, tanggalIndo) {
 }
 
 /** bangun teks pesan hari besar (sekali per dispatch, dipakai semua chat) */
-export async function buildHariBesarText(entry, ymd) {
+export async function buildHariBesarText(entry, ymd, extra = null) {
   const p = parseYmd(ymd);
   const inspirasi = await aiInspirasi(entry, p.tanggalIndo);
   const lines = [
@@ -233,6 +320,7 @@ export async function buildHariBesarText(entry, ymd) {
     `📅 ${p.tanggalIndo}`,
   ];
   if (entry.merah) lines.push(`🔴 *Tanggal Merah — Libur Nasional*`);
+  if (extra) lines.push(extra);
   lines.push("", `✨ _${inspirasi}_`);
   return claraWrap("Hari Besar", lines);
 }
@@ -252,28 +340,116 @@ async function _targetChats(sock) {
   return [...targets];
 }
 
-export async function dispatchHariBesar(sock, ymd) {
-  const entry = getHariBesar(ymd);
-  if (!entry) return { sent: 0, day: null };
-  const text = await buildHariBesarText(entry, ymd);
-  const st = _load();
-  let sent = 0;
-  for (const chat of await _targetChats(sock)) {
-    if ((st.sentYmd || {})[chat] === ymd) continue;
-    try {
-      await sock.sendMessage(chat, { text });
-      st.sentYmd = st.sentYmd || {};
-      st.sentYmd[chat] = ymd; // tandai HANYA setelah kirim sukses (persist setelah kirim)
-      sent++;
-      _save(st);
-    } catch (e) {
-      console.error("haribesar send error " + chat + ":", e.message);
+// checkpoint countdown ke libur terdekat (anti spam: gak tiap hari)
+const CHECKPOINTS = [7, 3, 1];
+
+/** susun daftar event hari ini → [{ key, text }] (AI dipanggil maks 1x) */
+async function _eventsForDay(ymd) {
+  const events = [];
+  // chain start yang sudah ke-announce via pesan lain → jangan dobel
+  const covered = new Set();
+
+  // 1. HARI-H — sapaan hari besar (greeting + inspirasi AI)
+  const today = getHariBesar(ymd);
+  if (today) {
+    let extra = null;
+    // chain libur panjang yang MULAI hari ini → info digabung ke greeting
+    const chainToday = cariLiburPanjang(ymd, 0);
+    if (chainToday && chainToday.totalHari >= 3) {
+      extra = `🏖️ Bagian dari libur panjang: *${chainToday.totalHari} hari* beruntun`;
+      covered.add(chainToday.mulaiYmd);
+    }
+    events.push({ key: `h__${ymd}`, kind: "hariH", text: await buildHariBesarText(today, ymd, extra) });
+  }
+
+  // 2. COUNTDOWN — libur nasional terdekat: H-7 / H-3 / H-1
+  const besokYmd = ymdAdd(ymd, 1);
+  const nxt = nextLibur(besokYmd, 90);
+  if (nxt) {
+    const diff = diffHari(ymd, nxt.ymd);
+    if (CHECKPOINTS.includes(diff)) {
+      // libur panjang yang mulai pas hari libur tsb → digabung ke pesan countdown
+      const chainAtLibur = cariLiburPanjang(nxt.ymd, 0);
+      const chainStartsThere = chainAtLibur && chainAtLibur.mulaiYmd === nxt.ymd && chainAtLibur.totalHari >= 3;
+      const np = parseYmd(nxt.ymd);
+      const judul = diff === 1 ? "Besok Tanggal Merah!" : diff === 3 ? "3 Hari Lagi Tanggal Merah" : "Minggu Lagi Tanggal Merah";
+      const lines = [
+        `${diff === 1 ? "🔔" : "⏳"} *${judul}*`,
+        `📅 ${np.tanggalIndo}`,
+        `🏷️ ${nxt.nama}`,
+        "",
+        diff === 1 ? `Selesaikan urusan hari ini — besok libur! 😊` : `Catat jadwalnya, libur sebentar lagi! 😊`,
+      ];
+      if (chainStartsThere) {
+        lines.push("", `🏖️ Sekaligus awal libur panjang: *${chainAtLibur.totalHari} hari* beruntun`);
+        covered.add(chainAtLibur.mulaiYmd);
+      }
+      // dedup PER CHECKPOINT (H-7/H-3/H-1 libur sama = 3 pesan beda, tiap satu sekali)
+      events.push({ key: `hX_${diff}__${nxt.ymd}`, kind: "H-" + diff, text: claraWrap("Hari Besar", lines.join("\n")) });
     }
   }
-  return { sent, day: entry.nama };
+
+  // 3. LIBUR PANJANG mulai hari ini..H-3 yang belum ke-cover pesan lain
+  const chain = cariLiburPanjang(ymd, 3);
+  if (chain && !covered.has(chain.mulaiYmd)) {
+    const cp = parseYmd(chain.mulaiYmd);
+    const cs = parseYmd(ymdAdd(chain.mulaiYmd, chain.totalHari - 1));
+    events.push({
+      key: `long__${chain.mulaiYmd}`,
+      kind: "panjang",
+      text: claraWrap("Hari Besar", [
+        `🏖️ *Ada Libur Panjang!*`,
+        `Mulai : ${cp.tanggalIndo}`,
+        `Durasi : *${chain.totalHari} hari* beruntun (sampai ${cs.tanggalIndo})`,
+        `🏷️ ${chain.nama}`,
+        "",
+        `Cocok buat mudik, staycation, atau sekadar rehat 😊`,
+      ].join("\n")),
+    });
+  }
+
+  return events;
 }
 
-/** scheduler: cek tiap 30 dtk, jam 08:00 WIB → dispatch sekali per hari */
+export async function dispatchHariBesar(sock, ymd) {
+  const st = _load();
+  const events = await _eventsForDay(ymd);
+  if (!events.length) return { sent: 0, day: null, events: [] };
+  const day = getHariBesar(ymd)?.nama || null;
+  let sent = 0;
+  const kinds = [];
+  for (const chat of await _targetChats(sock)) {
+    st.notified = st.notified || {};
+    for (const ev of events) {
+      const k = `${ev.key}__${chat}`;
+      if (st.notified[k]) continue;
+      // kompat data lama (sentYmd) biar gak dobel setelah upgrade
+      if (ev.kind === "hariH" && (st.sentYmd || {})[chat] === ymd) continue;
+      try {
+        await sock.sendMessage(chat, { text: ev.text });
+        st.notified[k] = Date.now(); // tandai HANYA setelah kirim sukses
+        sent++;
+        if (!kinds.includes(ev.kind)) kinds.push(ev.kind);
+        _save(st);
+      } catch (e) {
+        console.error("haribesar send error " + chat + " (" + ev.kind + "):", e.message);
+      }
+    }
+  }
+  // bersihkan dedup tua (>120 hari) biar state gak bengkak
+  try {
+    const batas = Date.now() - 120 * 86400000;
+    let n = 0;
+    for (const k of Object.keys(st.notified)) {
+      if (st.notified[k] < batas) { delete st.notified[k]; n++; }
+    }
+    if (n) _save(st);
+  } catch {}
+  return { sent, day, events: kinds };
+}
+
+/** scheduler: cek tiap 30 detik, jam 08:00 WIB → dispatch sekali per hari
+ * (semua jenis event: hari-H, H-1/H-3/H-7, libur panjang) */
 export function initHariBesarScheduler(sock) {
   if (global.__novaHariBesarTimer) return false;
   global.__novaHariBesarTimer = setInterval(async () => {
@@ -281,7 +457,7 @@ export function initHariBesarScheduler(sock) {
       const { hm, ymd } = wibNow();
       if (hm !== JAM_KIRIM) return;
       const r = await dispatchHariBesar(sock, ymd);
-      if (r.day) console.log(`[HARIBESAR] ${r.day} → terkirim ke ${r.sent} chat`);
+      if (r.events.length) console.log(`[HARIBESAR] ${ymd} event ${r.events.join(",")} → terkirim ${r.sent} pesan`);
     } catch (e) {
       console.error("haribesar tick error:", e.message);
     }

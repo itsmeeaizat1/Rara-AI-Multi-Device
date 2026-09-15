@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import {
   getHariBesar, addCustomDay, removeCustomDay, listCustomDays,
   upcomingHariBesar, setSubscribed, isSubscribed, setAllGroups, getAllGroups,
-  getSubs, buildHariBesarText,
+  getSubs, buildHariBesarText, listLiburMendatang,
 } from "../../src/lib/nova-haribesar.js";
 
 const pluginConfig = {
@@ -14,8 +14,8 @@ const pluginConfig = {
   alias: ["tanggalmerah", "haribesarindonesia", "haripenting", "harinasional"],
   category: "info",
   description: "Notif otomatis hari besar & tanggal merah Indonesia — kirim jam 08:00 WIB + pesan inspirasi AI",
-  usage: ".haribesar <on/off/all on/all off/status/test>\n.haribesar tambah <DD-MM[-YYYY]> | <Nama> [| merah]\n.haribesar hapus <DD-MM[-YYYY]>\n.haribesar list",
-  example: ".haribesar on\n.haribesar all on\n.haribesar tambah 20-03-2026 | Idulfitri | merah\n.haribesar tambah 22-12 | Hari Ibu",
+  usage: ".haribesar <on/off/all on/all off/status/test/libur>\n.haribesar tambah <DD-MM[-YYYY]> | <Nama> [| merah]\n.haribesar hapus <DD-MM[-YYYY]>\n.haribesar list",
+  example: ".haribesar on\n.haribesar all on\n.haribesar libur\n.haribesar tambah 20-03-2026 | Idulfitri | merah",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -110,6 +110,24 @@ async function handler(m, { sock, args, prefix }) {
     ].join("\n")));
   }
 
+  // ─── daftar LIBUR NASIONAL 90 hari ke depan + label H-X ───
+  if (sub === "libur" || sub === "jadwal") {
+    const items = listLiburMendatang(null, 90);
+    if (!items.length) {
+      return m.reply(claraWrap("hari besar", [
+        `Tidak ada hari libur nasional dalam 90 hari ke depan.`,
+        `Tambah manual: ${pf}haribesar tambah DD-MM-YYYY | Nama | merah`,
+      ].join("\n")));
+    }
+    const lines = [`Hari Libur Nasional — 90 hari ke depan`, ``];
+    items.slice(0, 12).forEach((it, i) => {
+      const d = it.ymd.split("-");
+      const label = it.h === 0 ? `⭐ HARI INI` : `🕒 H-${it.h}`;
+      lines.push(`${i + 1}. ${it.emoji} ${it.nama}`, `   ${d[2]}-${d[1]}-${d[0]} _(${label})_`);
+    });
+    return m.reply(claraWrap("hari besar", lines.join("\n")));
+  }
+
   // ─── daftar custom + yang akan datang ───
   if (sub === "list" || sub === "daftar") {
     const custom = listCustomDays();
@@ -157,6 +175,7 @@ async function handler(m, { sock, args, prefix }) {
     `Terdekat : ${up.length ? up[0].ymd + " — " + up[0].nama : "-"}`,
     ``,
     `Kontrol : ${pf}haribesar on | off | all on | test`,
+    `Jadwal libur : ${pf}haribesar libur`,
     `Custom : ${pf}haribesar tambah 20-03-2026 | Idulfitri | merah`,
   ];
   return m.reply(claraWrap("hari besar", lines.join("\n")));
