@@ -187,7 +187,9 @@ check("level: M5.8 @178 km → MERAH", L.tentukanLevelEws(5.8, 178) === "MERAH")
 check("level: M5.5 @250 km → MERAH (batas minMag/radius)", L.tentukanLevelEws(5.5, 250) === "MERAH");
 check("level: M4.6 @400 km → KUNING", L.tentukanLevelEws(4.6, 400) === "KUNING");
 check("level: M5.2 @1500 km → HIJAU", L.tentukanLevelEws(5.2, 1500) === "HIJAU");
-check("level: M4.0 @100 km → null (di bawah ambang)", L.tentukanLevelEws(4.0, 100) === null);
+check("level: M4.0 @100 km → KUNING (15 Sep: KUNING turun ke 3.5)", L.tentukanLevelEws(4.0, 100) === "KUNING");
+check("level: M3.6 @400 km → KUNING (spec baru 3.5)", L.tentukanLevelEws(3.6, 400) === "KUNING");
+check("level: M3.4 @100 km → null (di bawah ambang 3.5)", L.tentukanLevelEws(3.4, 100) === null);
 check("level: M5.5 @350 km → KUNING (turun satu level)", L.tentukanLevelEws(5.5, 350) === "KUNING");
 check("ETA: 178 km → 49 detik (gelombang S 3,6 km/dtk)", L.etaGetaranDetik(178) === 49 && L.etaGetaranDetik(200) === 56);
 const tplMerah = L.formatEwsWarning({ provider: "BMKG", mag: 5.8, depth: "10 km", wilayah: "laut 91 km barat daya Sukabumi", tsunami: "Berpotensi dirasakan", lat: -7.0, lon: 106.4, waktu: "15 Sep 2026, 21.00.00 WIB" }, { jarak: 178, eta: 49, city: "Serang, Banten", level: "MERAH" });
@@ -260,6 +262,28 @@ check("mdEws level: FL Orange 3000 km radius 300 → null (skip)", L.tentukanLev
 check("mdEws level: Red tanpa lokasi (jarak null) → MERAH global", L.tentukanLevelMdEws("WF", "Red", null, 0) === "MERAH");
 const tplTsunami = L.formatMdEwsWarning({ kind: "tsunami", jenis: "Tsunami", icon: "🌊", level: "AWAS", lat: -6.9, lon: 105.9, desc: "tes", country: "Indonesia", waktu: "baru terdeteksi", report: null }, { level: "MERAH", jarak: 200, city: "Serang" });
 check("template tsunami MERAH: instruksi menjauhi pantai + tempat tinggi", /MENJAUHI PANTAI/.test(tplTsunami) && /tempat tinggi/.test(tplTsunami));
+
+w("\n— minMag per subscriber (default 3.5 — owner 15 Sep 2026) —");
+check("setter minmag custom 4.5 → tersimpan", L.setWatcherMinMag(CHAT, "4.5").minMag === 4.5);
+check("setter minmag reset → balik default", L.setWatcherMinMag(CHAT, "reset").minMag === undefined);
+let threwM = false;
+try { L.setWatcherMinMag(CHAT, "9.5"); } catch { threwM = true; }
+check("setter minmag 9.5 → ditolak (ceil 9.0)", threwM === true);
+// dispatch: M3.2 dekat, default 3.5 → skip; minmag 3.0 → kirim
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 300, ews: true } });
+const okLo = makeSock();
+const resLo = await dispatchEwsEvent(ewsEv("emsc_lo1", 3.2, -6.5, 106.9, "gempa kecil dekat tes"), null, okLo.sock);
+check("EWS: M3.2 di bawah ambang default 3.5 → TIDAK dikirim", resLo.sent === 0);
+L.setWatcherMinMag(CHAT, "3.0");
+const okLo2 = makeSock();
+const resLo2 = await dispatchEwsEvent(ewsEv("emsc_lo2", 3.2, -6.5, 106.9, "gempa kecil dekat tes"), null, okLo2.sock);
+check("EWS: minmag 3.0 → M3.2 dekat TERKIRIM (KUNING)", resLo2.sent === 1 && /PERINGATAN DINI/.test(okLo2.sent[0].text));
+// near-quake ikut aturan yang sama
+const resNq = await L.dispatchNearEvent(okLo2.sock, { kind: "gempa", jenis: "Gempa Bumi", mag: 3.1, depth: "10 km", lat: -6.5, lon: 106.9, desc: "tes near", level: "WASPADA", waktu: "x", sumber: "bmkg" }, "gempa", "bmkg");
+check("near-quake: M3.1 >= minmag 3.0 → terkirim", resNq.sent === 1);
+L.setWatcherMinMag(CHAT, "reset");
+const resNq2 = await L.dispatchNearEvent(okLo2.sock, { kind: "gempa", jenis: "Gempa Bumi", mag: 3.1, depth: "10 km", lat: -6.5, lon: 106.9, desc: "tes near", level: "WASPADA", waktu: "x", sumber: "bmkg" }, "gempa", "bmkg");
+check("near-quake: reset ke 3.5 → M3.1 dilewati", resNq2.sent === 0);
 
 w("\n— sock null: error keras —");
 _setBencanaSockForTest(null); // simulasi koneksi belum tersedia

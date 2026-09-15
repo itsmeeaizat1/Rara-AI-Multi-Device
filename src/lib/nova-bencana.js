@@ -55,6 +55,13 @@ const POLL_SLOW_MS = 180_000; // GDACS + USGS global — 3 menit
 const VOLCANO_POLL_MS = 600_000; // status gunung api PVMBG MAGMA — 10 menit
 
 const DEFAULT_RADIUS_KM = 300; // radius peringatan wilayah (bisa di-set per user)
+// UPGRADE 15 Sep 2026 (request owner "default minimal alertnya di sekitar
+// minimal 3.5mg klo 5.0mg jarang soalnya digempa"): ambang magnitudo
+// minimum alert gempa per subscriber — DEFAULT 3.5 SR (M5.0 jarang di
+// wilayah yang sering digempa). Bisa diatur: .bencanawatch minmag <M>.
+export const DEFAULT_MIN_MAG = 3.5;
+export const MIN_MAG_FLOOR = 2.0; // batas bawah yang boleh di-set
+export const MIN_MAG_CEIL = 9.0; // batas atas
 const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
 
 // PENTING (15 Sep 2026): let + seam — e2e test bisa arahin state file ke
@@ -825,6 +832,31 @@ export function setWatcherRadius(chatId, km) {
   const cur = subs[chatId];
   if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum set radius.");
   subs[chatId] = { ...cur, radius: r };
+  saveWatchers(subs);
+  return subs[chatId];
+}
+
+/**
+ * Ambang magnitudo minimum alert gempa per subscriber (default 3.5 —
+ * request owner 15 Sep 2026). Mempengaruhi: near-quake (gempa dekat) DAN
+ * EWS gempa. Gempa besar global M6.5+ TETAP dikirim (pengaman darurat).
+ * Contoh: .bencanawatch minmag 3.0 | .bencanawatch minmag reset
+ */
+export function setWatcherMinMag(chatId, mag) {
+  const subs = getWatchers();
+  const cur = subs[chatId];
+  if (!cur) throw new Error("Aktifkan dulu .bencanawatch on sebelum set minmag.");
+  if (/^(reset|default|bawaan)$/i.test(String(mag ?? ""))) {
+    const { minMag: _drop, ...rest } = cur;
+    subs[chatId] = rest;
+    saveWatchers(subs);
+    return subs[chatId];
+  }
+  const m = parseFloat(mag);
+  if (!Number.isFinite(m) || m < MIN_MAG_FLOOR || m > MIN_MAG_CEIL) {
+    throw new Error(`Magnitudo minimum harus ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL} SR (default ${DEFAULT_MIN_MAG}). Contoh: .bencanawatch minmag 3.5 | .bencanawatch minmag reset`);
+  }
+  subs[chatId] = { ...cur, minMag: Math.round(m * 10) / 10 };
   saveWatchers(subs);
   return subs[chatId];
 }
@@ -1663,6 +1695,10 @@ export async function dispatchNearEvent(sendSock, ev, kindKey = "gempa", sumberK
       const distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
       const radius = sub.radius || DEFAULT_RADIUS_KM;
       if (distKm > radius) continue; // di luar radius → bukan urusan fitur ini
+      // ambang magnitudo per subscriber (default 3.5 — owner 15 Sep 2026)
+      const minMagSub = parseFloat(sub.minMag ?? DEFAULT_MIN_MAG);
+      const magEv = parseFloat(ev.mag);
+      if (Number.isFinite(magEv) && magEv < minMagSub) continue;
       if (mode === "jadwal") continue; // udah dipending ke rangkuman
       await sendRegionalAlert(s, chatId, ev, sub);
       sent++;
@@ -1968,7 +2004,7 @@ async function slowTick(sendSock) {
 // M 4.5+ (ala script), dan PENTING: pesan EWS BYPASS mode pengiriman
 // (otomatis/jadwal/darurat) — ini pengaman darurat, selalu realtime.
 const EWS_POLL_MS = 10_000; // poll EWS gempa 4 provider — 10 dtk (spec owner 20 dtk, kita lebih cepat)
-export const EWS_MIN_MAG = 4.0; // ambang bawah polling EWS (level HIJAU/KUNING yang menentukan relevansi)
+export const EWS_MIN_MAG = 3.5; // ambang bawah polling EWS (15 Sep: 4.0 → 3.5 — level + minMag subscriber yang menentukan relevansi)
 const EWS_S_WAVE_KMS = 3.6; // kecepatan guncangan (gelombang S perusak) km/detik — spec owner 15 Sep 2026
 const EWS_URGENT_RANGE_KM = 800; // dalam range ini → ETA guncangan + instruksi darurat
 const EWS_SEVERE_MAG = 6.5; // di atas ini → semua subscriber dikabarin (tanpa lokasi pun)
@@ -1985,7 +2021,7 @@ const EWS_SEVERE_MAG = 6.5; // di atas ini → semua subscriber dikabarin (tanpa
  */
 export const EWS_LEVELS = {
   MERAH:  { minMag: 5.5, radiusKm: 300,  icon: "🚨", label: "PERINGATAN DARURAT" },
-  KUNING: { minMag: 4.5, radiusKm: 500,  icon: "⚠️", label: "PERINGATAN DINI" },
+  KUNING: { minMag: 3.5, radiusKm: 500,  icon: "⚠️", label: "PERINGATAN DINI" }, // 15 Sep: 4.5 → 3.5 (digempa sering tapi kecil)
   HIJAU:  { minMag: 5.0, radiusKm: 2000, icon: "ℹ️", label: "INFO GEMPA" },
 };
 export function tentukanLevelEws(mag, jarakKm) {
@@ -2159,11 +2195,21 @@ async function dispatchEws(sendSock, ev, subs) {
         if (!level) level = null; // di luar semua level → cek severe global di bawah
         else if (!near && level === "HIJAU" && !severe) { /* tetap kirim — info sesuai spec */ }
       }
+      // ambang magnitudo per subscriber (default 3.5 — owner 15 Sep 2026):
+      // bisa NAIK (filter gempa kecil) atau TURUN di bawah KUNING 3.5 —
+      // gempa >= ambang & <= 500 km tetap dapat KUNING walau di bawah spec
+      const minMagSub = parseFloat(sub.minMag ?? DEFAULT_MIN_MAG);
+      if (!level && Number.isFinite(parseFloat(ev.mag))) {
+        const inKuningRange = jarak != null && jarak <= EWS_LEVELS.KUNING.radiusKm;
+        if (parseFloat(ev.mag) >= minMagSub && inKuningRange) level = "KUNING"; // minmag turunkan lantai KUNING
+      }
       if (!level) {
         // subscriber tanpa lokasi / gempa di luar jangkauan → hanya gempa BESAR global
         if (!severe) continue;
         level = "GLOBAL";
       }
+      // gempa di bawah ambang subscriber gak dikirim EWS, KECUALI gempa besar global
+      if (!severe && Number.isFinite(parseFloat(ev.mag)) && parseFloat(ev.mag) < minMagSub) continue;
 
       const text = formatEwsWarning(ev, { jarak, eta, city: sub.city, level });
       await s.sendMessage(chatId, { text });
