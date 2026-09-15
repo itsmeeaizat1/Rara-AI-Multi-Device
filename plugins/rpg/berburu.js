@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime,
   bumpPlayerStat,
   getCash} from "../../src/lib/nova-rpg-service.js";
+import { getRpgWeather, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
 import { animBattle, rpgSleep, animHuntTrack, animHuntShoot, animHuntResult } from "../../src/lib/nova-rpg-anim.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
@@ -195,8 +196,10 @@ ${list}
     const won = monsterHp <= 0;
 
     if (won) {
-      const expGain = Math.floor(monster.exp * (1 + (rpg.expBonus || 0) / 100));
-      const goldGain = Math.floor(monster.gold * (1 + (rpg.goldFind || 0) / 100));
+      // 🌦️ CUACA: multiplier EXP/Gold buruan (badai +30%, kabut −15%)
+      const weather = getRpgWeather();
+      const expGain = Math.floor(monster.exp * (1 + (rpg.expBonus || 0) / 100) * weather.hunt);
+      const goldGain = Math.floor(monster.gold * (1 + (rpg.goldFind || 0) / 100) * weather.hunt);
       const drops = rollDrop(monster.drops || [], rpg.luck || 0, rpg.dropBonus || 0);
 
       addExp(m, expGain);
@@ -245,6 +248,7 @@ ${list}
           "",
           `│ • ✨ EXP : +${expGain}`,
           `│ • 💰 Gold : +${goldGain}`,
+          `│ • 🌦️ Cuaca : ${weather.label} (${weather.hunt > 1 ? "+" : ""}${Math.round((weather.hunt - 1) * 100)}%)`,
           `│ • 💵 Uang : Rp ${getCash(m)}`,
           ...dropLines,
           `│ • ❤️ HP : ${newHp}/${rpg.maxHp}`,
