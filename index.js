@@ -414,6 +414,7 @@ async function main() {
           { name: "AutoAnimeWinbu", fn: () => import("./src/lib/nova-auto-anime.js").then(m => m.initAutoStart?.(sock)) },
           { name: "MovieNotifier", fn: () => import("./src/lib/nova-movie-notifier.js").then(m => m.initMovieNotifier?.(sock)) },
           { name: "BolaNotifier", fn: () => import("./src/lib/nova-auto-bola-notifier.js").then(m => m.initBolaNotifier?.(sock)) },
+          { name: "RainNotifier", fn: () => import("./src/lib/nova-rain-notify.js").then(m => m.initRainNotifier?.(sock)) },
           { name: "LinkedInNotifier", fn: () => import("./src/lib/nova-linkedin-notify.js").then(m => m.initLinkedInNotifier?.(sock)) },
           { name: "NovaWeb", fn: () => import("./src/lib/nova-web-server.js").then(m => m.initNovaWebServer?.(sock)) },
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
