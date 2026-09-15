@@ -19,7 +19,7 @@ import {
   setWatcherKirim,
   addGlobalWatcher, removeGlobalWatcher, hasGlobalWatcher, globalWatcherKey,
   getMonitorHealth, sendActivationSample, getEwsProviderHealth, EWS_LEVELS,
-  setWatcherEws, setWatcherProvider, getEwsHistory, EWS_MIN_MAG,
+  setWatcherEws, setWatcherProvider, getEwsHistory, EWS_MIN_MAG, setWatcherMinMag, DEFAULT_MIN_MAG, MIN_MAG_FLOOR, MIN_MAG_CEIL,
   getMagmaVolcanoes, MAGMA_LEVELS, sendRegionalAlert,
 } from "../../src/lib/nova-bencana.js";
 // ── GUARD FORMAT (request owner 2026-09-07): SEMUA pesan berkotak plugin
@@ -138,6 +138,8 @@ async function handler(m, { sock }) {
         `→ .bencanawatch lokasi jakarta`,
         `Radius : ${me0?.radius || 300} km`,
         `→ .bencanawatch radius 500`,
+        `MinMag : M ${me0?.minMag ?? DEFAULT_MIN_MAG}+`,
+        `→ .bencanawatch minmag 3.5`,
         `Jadwal : ${fJadwal}`,
         `→ .bencanawatch jadwal add 07:00`,
         "---",
@@ -238,6 +240,50 @@ async function handler(m, { sock }) {
         await m.react("❌");
         return m.reply(novaError("Bencana Watch", e.message || "Radius harus 50-20000 km. Contoh: .bencanawatch radius 500 / radius dunia"));
       }
+
+    // ── set ambang magnitudo minimum alert gempa (owner 15 Sep 2026:
+    // "default minimal alertnya di sekitar minimal 3.5mg klo 5.0mg
+    // jarang soalnya digempa") — default 3.5 SR ──
+    if (action === "minmag" || action === "minmagtitude" || action === "ambang") {
+      const rawM = (m.args || [])[1];
+      if (!rawM) {
+        const subsM = await getWatchersSafe();
+        const meM = subsM[targetKey];
+        return m.reply(novaBox("Bencana Watch — Min Mag", [
+          `Ambang aktif : M ${meM?.minMag ?? DEFAULT_MIN_MAG}+`,
+          meM?.minMag != null ? "(custom — reset: .bencanawatch minmag reset)" : "(default bawaan)",
+          "---",
+          "Gempa DI BAWAH ambang ini gak",
+          "dikirim (near-quake & EWS).",
+          "Gempa besar global M6.5+ tetap",
+          "dikirim — pengaman darurat.",
+          "---",
+          `Default : M ${DEFAULT_MIN_MAG}+`,
+          `Rentang : M ${MIN_MAG_FLOOR} - M ${MIN_MAG_CEIL}`,
+          "Contoh : .bencanawatch minmag 3.0",
+          "Reset  : .bencanawatch minmag reset",
+        ]));
+      }
+      try {
+        const rec = setWatcherMinMag(targetKey, rawM);
+        const alsoG = await mirrorGlobal((k) => setWatcherMinMag(k, rawM));
+        await m.react("🐣");
+        const isReset = /^(reset|default|bawaan)$/i.test(String(rawM));
+        return m.reply(novaBox("Bencana Watch", [
+          isReset
+            ? `Ambang dikembalikan ke default M ${DEFAULT_MIN_MAG}+.`
+            : `Ambang minimum alert gempa: M ${rec.minMag ?? DEFAULT_MIN_MAG}+.`,
+          `Gempa M ${rec.minMag ?? DEFAULT_MIN_MAG} ke bawah gak dikirim.`,
+          "Gempa dekat & EWS dua-duanya ikut aturan ini.",
+          "Gempa besar global M6.5+ tetap dikirim.",
+          ...(alsoG ? ["Ambang langganan global ikut diubah."] : []),
+        ]));
+      } catch (e) {
+        await m.react("❌");
+        return m.reply(novaError("Bencana Watch", e.message || `Magnitudo minimum M ${MIN_MAG_FLOOR}-${MIN_MAG_CEIL}. Contoh: .bencanawatch minmag 3.5`));
+      }
+    }
+
     }
 
     // ── kepadatan alert: utama (1 info per pembaruan) / semua (cooldown) ──
@@ -789,6 +835,7 @@ async function handler(m, { sock }) {
           `KUNING  : M${EWS_LEVELS.KUNING.minMag}+ di bawah ${EWS_LEVELS.KUNING.radiusKm} km — siaga`,
           `HIJAU   : M${EWS_LEVELS.HIJAU.minMag}+ di bawah ${EWS_LEVELS.HIJAU.radiusKm} km — info`,
           "ETA guncangan: gelombang S 3,6 km/detik",
+          `Ambang  : M ${(me?.minMag) ?? DEFAULT_MIN_MAG}+ (atur: minmag <M>)`,
           "---",
           { sub: "Sistem multi-bencana (GDACS, 60 dtk)" },
           `Status  : ${health.mdEwsRunning ? "HIDUP" : "MATI"} — cek tiap ${health.mdEwsPollSec ?? 60} dtk`,
@@ -885,6 +932,7 @@ async function handler(m, { sock }) {
         lines.push("---");
         lines.push(`Lokasi  : ${me.city}${me.detail ? ` (${me.detail})` : ""}`);
         lines.push(`Radius  : ${me.radius || 300} km — peringatan wilayah aktif`);
+        lines.push(`MinMag  : M ${me.minMag ?? DEFAULT_MIN_MAG}+ — gempa di bawah ini dilewati`);
       } else if (me) {
         lines.push("---");
         lines.push("Lokasi  : belum di-set (alert umum saja)");
