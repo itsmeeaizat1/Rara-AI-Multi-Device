@@ -178,6 +178,22 @@ await handler(mockM(["notification", "on"]), { sock: sockMock, config });
 const sOn = db.setting("weatherRealtime");
 t("5a. notification on: mode jadwal → OTOMATIS otomatis", sOn.notification === true && sOn.notificationMode === "otomatis", JSON.stringify({ mode: sOn.notificationMode }));
 
+// 5a2. FIX 16 Sep 2026 (owner: "kok g kirim pas cuaca berubah"): db era 8-15
+//      Sep menyimpan mode "interval" (default lama) — notif cuma jalan tiap
+//      2 jam. notification on sekarang HARUS narik interval → OTOMATIS juga.
+db.setting("weatherRealtime", {
+  realtime: true, notification: false,
+  location: { name: "Serang", latitude: -6.12, longitude: 106.15 },
+  schedules: [], target: "628999@s.whatsapp.net",
+  notificationMode: "interval", // <-- mode lama era 8-15 Sep, akar owner gak terkirim
+  intervalHours: 2,
+});
+await handler(mockM(["notification", "on"]), { sock: sockMock, config });
+const sOn2 = db.setting("weatherRealtime");
+t("5a2. notification on: mode INTERVAL lama → OTOMATIS (fix owner 16 Sep)", sOn2.notification === true && sOn2.notificationMode === "otomatis", JSON.stringify({ mode: sOn2.notificationMode }));
+t("5a3. box konfirmasi: baris Perilaku KIRIM OTOMATIS", (replies.at(-1) || "").includes(toSC("KIRIM OTOMATIS")), (replies.at(-1) || "").slice(0, 90));
+t("5a4. box konfirmasi: hint tesubah buat bukti", (replies.at(-1) || "").includes("tesubah"), (replies.at(-1) || "").slice(0, 90));
+
 // 5b. otomatis (tanpa menit) → mode aktif default 5 menit
 await handler(mockM(["otomatis"]), { sock: sockMock, config });
 const s1 = db.setting("weatherRealtime");
@@ -204,6 +220,7 @@ t("5h. reply tesubah: petunjuk cek berikutnya", (replies.at(-1) || "").includes(
 await handler(mockM(["status"]), { sock: sockMock, config });
 const stTxt = replies.at(-1) || "";
 t("5i. status: mode otomatis + grup terakhir", stTxt.includes(toSC("Otomatis")) && stTxt.includes(toSC("Cerah")), stTxt.slice(0, 120));
+t("5i2. status: baris Cek Terakhir (bukti scheduler hidup)", stTxt.includes(toSC("Cek Terakhir")) && (stTxt.includes(toSC("hidup")) || stTxt.includes(toSC("menit")) || stTxt.includes(toSC("scheduler"))), stTxt.slice(0, 150));
 
 // 5g. jadwal eksplisit tetap dihormati (user yang mau mode jam)
 await handler(mockM(["jadwal", "06:30", "12:00"]), { sock: sockMock, config });

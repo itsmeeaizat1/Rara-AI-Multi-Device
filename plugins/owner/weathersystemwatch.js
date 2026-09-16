@@ -34,7 +34,7 @@ import { toSC, novaError } from "../../src/lib/nova-menu-style.js";
 import { boxMessage } from "../../src/lib/styler.js";
 import { clearWeatherCache, getWeatherFooter, getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import { fetchWeatherForSettings, fetchBmkgNow, formatWeatherUpdate, formatActivationMessage } from "../../src/lib/nova-weather-notify.js";
-import { resetIntervalState, resetAlertState, resetAutoState, checkWeatherAlert, setAutoGroupForTest } from "../../src/lib/nova-weather-realtime-scheduler.js";
+import { resetIntervalState, resetAlertState, resetAutoState, checkWeatherAlert, setAutoGroupForTest, getSchedulerStatus } from "../../src/lib/nova-weather-realtime-scheduler.js";
 import { evaluateWeatherAlert, formatAlertMessage, buildThresholds, THRESHOLD_BASE } from "../../src/lib/nova-weather-alert.js";
 import { weatherGroupOf } from "../../src/lib/nova-weather-notify.js";
 
@@ -185,6 +185,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Threshold") + " : " + (Object.keys(settings.thresholds || {}).length ? toSC("custom ") + "(" + Object.keys(settings.thresholds).join(", ") + ")" : toSC("default")) + "\n" +
         "• " + toSC("Mode Notif") + " : " + (settings.notificationMode === "otomatis" ? toSC("Otomatis — cek tiap ") + settings.autoCheckMinutes + toSC(" menit, kirim saat cuaca berubah") : settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
         "• " + toSC("Grup Terakhir") + " : " + (() => { const st = db2.setting("weatherRealtimeAuto"); return st?.lastGroup ? toSC(st.lastCondition || st.lastGroup) : toSC("belum ada (cek pertama bakal kirim cuaca sekarang)"); })() + "\n" +
+        "• " + toSC("Cek Terakhir") + " : " + (() => { const sch = getSchedulerStatus(); if (!sch.running) return toSC("scheduler MATI — restart bot!"); const ms = sch.auto?.lastCheckMs || 0; if (!ms) return toSC("baru nyala, cek pertama < ") + settings.autoCheckMinutes + toSC(" menit"); const menit = Math.floor((Date.now() - ms) / 60000); return toSC("hidup, ") + (menit < 1 ? toSC("baru saja") : menit + toSC(" menit lalu")) + " (" + settings.autoCheckMinutes + toSC(" mnt siklus)") + " ✓"; })() + "\n" +
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
         "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
         "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
@@ -333,7 +334,16 @@ async function handler(m, { sock, config: botConfig, db }) {
         // cek tiap autoCheckMinutes menit, kirim pas GRUP cuaca berubah
         // (cerah→hujan dll). Mau mode jam tetap? Set eksplisit:
         // .weathersystemwatch jadwal 06:30 12:00
-        if (settings.notificationMode === "jadwal") {
+        // FIX 16 Sep 2026 (owner: "kok g kirim pesan pas cuacanya berubah,
+        // hrsnya ada mode otomatis bkn hnya mode jadwal"): konversi dulu
+        // cuma "jadwal" — padahal db owner era 8-15 Sep menyimpan mode
+        // "interval" (default lama), jadi mode otomatis GAK PERNAH aktif
+        // & notif cuma jalan tiap 2 jam. Sekarang SEMUA mode lama
+        // (jadwal + interval) ditarik ke OTOMATIS pas notif on —
+        // sesuai ekspektasi: notif nyala = kirim PAS cuaca berganti.
+        // Mau mode lain? Set eksplisit SETELAH notif on:
+        // .wsw interval 2 / .wsw jadwal 06:30
+        if (settings.notificationMode === "jadwal" || settings.notificationMode === "interval") {
           settings.notificationMode = "otomatis";
         }
         if (!Number(settings.autoCheckMinutes) || Number(settings.autoCheckMinutes) < 1) settings.autoCheckMinutes = 5;
@@ -362,13 +372,15 @@ async function handler(m, { sock, config: botConfig, db }) {
         return m.reply(
           boxMessage("◆ " + "Weather Realtime" + " ◆",
           "✅ " + toSC("Notifikasi cuaca AKTIF") + "\n" +
+          "• " + toSC("Perilaku") + " : " + (settings.notificationMode === "otomatis" ? toSC("bot KIRIM OTOMATIS tiap cuaca berganti (cerah→hujan dll)") : toSC("ikuti mode di bawah")) + "\n" +
           "• " + toSC("Mode") + " : " + (settings.notificationMode === "otomatis" ? toSC("Otomatis — cek tiap ") + settings.autoCheckMinutes + toSC(" menit, kirim saat cuaca berubah") : settings.notificationMode === "interval" ? toSC("Interval ") + settings.intervalHours + toSC(" jam") : toSC("Jadwal")) + "\n" +
           "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
           "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
           "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
           "📌 " + toSC("Pilih target") + ": " + prefix + "weathersystemwatch target dm (ke DM kamu) | target grup (daftar semua grup)\n" +
           "📌 " + toSC("Set jadwal") + ": " + prefix + "weathersystemwatch jadwal 06:30 12:00\n" +
-          "📌 " + toSC("Mode interval") + ": " + prefix + "weathersystemwatch interval 2\n" 
+          "📌 " + toSC("Mode interval") + ": " + prefix + "weathersystemwatch interval 2\n" +
+          "📌 " + toSC("Tes bukti") + ": " + prefix + "wsw tesubah cerah — " + toSC("notif cuaca asli masuk dalam ") + settings.autoCheckMinutes + toSC(" menit") + "\n"
           )
         );
       }
