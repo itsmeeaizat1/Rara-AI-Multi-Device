@@ -82,6 +82,20 @@ const ALERT_DEDUP_MS = 3 * 3600_000;
 
 import { resolveAutoTargets, getAutoTargetConfig } from "./nova-auto-target.js";
 
+// FIX 16 Sep 2026 (owner: "fitur cuaca otomatis tambah sistem pesan
+// terpusat — dm/grup/global"): scheduler dulu baca config target
+// terpusat pakai key "weathersystemwatch", padahal .switch auto nyimpen
+// di key "autoweatherrealtime" (key registry + alias map) → target
+// terpusat GAK PERNAH aktif buat cuaca. Sekarang: canonical =
+// "autoweatherrealtime"; key lama tetap dibaca (kalau ada yang sempat
+// nyetel langsung lewat db).
+function weatherTargetCfg() {
+  return getAutoTargetConfig("autoweatherrealtime") || getAutoTargetConfig("weathersystemwatch");
+}
+function weatherTargetKey() {
+  return getAutoTargetConfig("autoweatherrealtime") ? "autoweatherrealtime" : "weathersystemwatch";
+}
+
 // Normalisasi settings lama → field baru (backward compat)
 function normalizeSettings(settings) {
   const hasSchedules = Array.isArray(settings.schedules) && settings.schedules.length > 0;
@@ -133,7 +147,7 @@ export function stopWeatherRealtimeScheduler() {
 export async function sendWeatherNow(sock, { force = false } = {}) {
   const db = getDatabase();
   const raw = db.setting("weatherRealtime");
-  if (!raw || !raw.notification || (!raw.target && !getAutoTargetConfig("weathersystemwatch"))) return { ok: false, reason: "off" };
+  if (!raw || !raw.notification || (!raw.target && !weatherTargetCfg())) return { ok: false, reason: "off" };
   const settings = normalizeSettings(raw);
 
   try {
@@ -154,8 +168,8 @@ export async function sendWeatherNow(sock, { force = false } = {}) {
     // Target terpusat (.switch auto weathersystemwatch set) — kalau ada
     // config, override target tunggal lama: dm / grup terpilih / semua grup.
     let targets = [settings.target].filter(Boolean);
-    if (getAutoTargetConfig("weathersystemwatch")) {
-      targets = (await resolveAutoTargets(sock, "weathersystemwatch")).jids;
+    if (weatherTargetCfg()) {
+      targets = (await resolveAutoTargets(sock, weatherTargetKey())).jids;
     }
     for (const t of targets) {
       await sock.sendMessage(t, { text: message });
@@ -209,7 +223,7 @@ export async function checkWeatherAlert(sock, { force = false } = {}) {
 export async function checkAndSend(sock) {
   const db = getDatabase();
   const raw = db.setting("weatherRealtime");
-  if (!raw || !raw.notification || (!raw.target && !getAutoTargetConfig("weathersystemwatch"))) return;
+  if (!raw || !raw.notification || (!raw.target && !weatherTargetCfg())) return;
   const settings = normalizeSettings(raw);
   const now = new Date();
 
@@ -252,8 +266,8 @@ export async function checkAndSend(sock) {
       const message = formatWeatherChange(data, name, autoState.lastGroup, autoState.lastCondition);
 
       let targets = [settings.target].filter(Boolean);
-      if (getAutoTargetConfig("weathersystemwatch")) {
-        targets = (await resolveAutoTargets(sock, "weathersystemwatch")).jids;
+      if (weatherTargetCfg()) {
+        targets = (await resolveAutoTargets(sock, weatherTargetKey())).jids;
       }
       for (const tgt of targets) await sock.sendMessage(tgt, { text: message });
       console.log("[weather-realtime] ✅ Mode otomatis: grup cuaca berubah", autoState.lastGroup || "-", "→", grp, "— kirim ke", targets.length, "target");

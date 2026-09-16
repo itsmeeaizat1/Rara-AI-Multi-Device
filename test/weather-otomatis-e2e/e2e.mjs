@@ -276,6 +276,70 @@ t("6i. 'matikan' polos → realtime false", db.setting("weatherRealtime").realti
 await handler(mockM(["foter"]), { sock: sockMock, config });
 t("6j. unknown → hint .wsw + MULAI CEPAT", (replies.at(-1) || "").includes(toSC("Perintah tidak dikenal")) && /\.wsw/.test(replies.at(-1) || ""), (replies.at(-1) || "").slice(0, 90));
 
+// ═══ 7. TARGET TERPUSAT (16 Sep 2026, owner: "fitur cuaca otomatis tambah
+//     sistem pesan terpusat — dm/grup/global via .switch auto") ═══
+// FIX MISMATCH: scheduler dulu baca key "weathersystemwatch" padahal
+// .switch auto nyimpen di "autoweatherrealtime" → target gak pernah aktif.
+out("\n— target terpusat (.switch auto autoweatherrealtime set) —");
+const { setAutoTargetConfig, clearAutoTargetConfig, resolveAutoTargets } = await import(R + "/src/lib/nova-auto-target.js");
+// section tengah e2e nyetel _setWeatherFetcherForTest(null) → fetch asli.
+// section 7 wajib re-seed seam fakeData (GOTCHA: tanpa ini 7b/7d fetch
+// cuaca LIVE dan hasilnya gak deterministik).
+_setWeatherFetcherForTest(async () => fakeData);
+
+// state bersih: notification on, TANPA target lama (pure terpusat)
+db.setting("weatherRealtime", {
+  realtime: true, notification: true,
+  location: { name: "Serang", latitude: -6.12, longitude: 106.15 },
+  target: null,
+  notificationMode: "otomatis", autoCheckMinutes: 5, minGapMinutes: 10,
+  alertEnabled: false,
+});
+
+// 7a. key CANONICAL "autoweatherrealtime" mode grup → notif cuaca berganti ke grup itu
+setAutoTargetConfig("autoweatherrealtime", { mode: "grup", groups: ["1203630abc@g.us"], dm: null });
+fakeData = { ...fakeData, weather_code: 0, condition: "Cerah", temperature: 30 };
+setAutoGroupForTest("hujan", "Hujan Ringan");
+sent.length = 0;
+await checkAndSend(sockMock);
+t("7a. key autoweatherrealtime mode grup → kirim ke grup terpusat", sent.length === 1 && sent[0]?.jid === "1203630abc@g.us", JSON.stringify(sent.map((x) => x.jid)));
+
+// 7b. legacy key "weathersystemwatch" tetap dihormati (config db lama)
+clearAutoTargetConfig("autoweatherrealtime");
+setAutoTargetConfig("weathersystemwatch", { mode: "grup", groups: ["1203630legacy@g.us"], dm: null });
+setAutoGroupForTest("cerah", "Cerah");
+fakeData = { ...fakeData, weather_code: 61, condition: "Hujan Ringan", temperature: 28 };
+sent.length = 0;
+await checkAndSend(sockMock);
+t("7b. legacy key weathersystemwatch tetap jalan", sent.length === 1 && sent[0]?.jid === "1203630legacy@g.us", JSON.stringify(sent.map((x) => x.jid)));
+
+// 7c. canonical menang kalau DUA-DUANYA diset
+setAutoTargetConfig("autoweatherrealtime", { mode: "grup", groups: ["1203630new@g.us"], dm: null });
+setAutoGroupForTest("hujan", "Hujan");
+fakeData = { ...fakeData, weather_code: 0, condition: "Cerah", temperature: 31 };
+sent.length = 0;
+await checkAndSend(sockMock);
+t("7c. canonical autoweatherrealtime diprioritaskan", sent.length === 1 && sent[0]?.jid === "1203630new@g.us", JSON.stringify(sent.map((x) => x.jid)));
+
+// 7d. reset → balik ke target lama (settings.target)
+clearAutoTargetConfig("autoweatherrealtime");
+clearAutoTargetConfig("weathersystemwatch");
+db.setting("weatherRealtime", { ...db.setting("weatherRealtime"), target: "6281234567890@s.whatsapp.net" });
+setAutoGroupForTest("cerah", "Cerah");
+fakeData = { ...fakeData, weather_code: 65, condition: "Hujan Lebat", temperature: 26 };
+sent.length = 0;
+await checkAndSend(sockMock);
+t("7d. reset target terpusat → balik ke .wsw target lama", sent.length === 1 && sent[0]?.jid === "6281234567890@s.whatsapp.net", JSON.stringify(sent.map((x) => x.jid)));
+
+// 7e. gate "off": tanpa target & tanpa config → gak jalan (gak crash)
+db.setting("weatherRealtime", { ...db.setting("weatherRealtime"), target: null, notification: true });
+setAutoGroupForTest("hujan", "Hujan");
+fakeData = { ...fakeData, weather_code: 0, condition: "Cerah", temperature: 30 };
+sent.length = 0;
+await checkAndSend(sockMock);
+t("7e. tanpa target & tanpa config terpusat → dilewati (gak crash)", sent.length === 0);
+
+_setWeatherFetcherForTest(null); // balikin fetch asli
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====");
 await new Promise((r) => setTimeout(r, 400));
 process.exit(fail ? 1 : 0);

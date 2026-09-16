@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Unified Switch: Dispatcher untuk semua toggle on/off (channel, group, auto, fitur)
 import { getDatabase } from '../../src/lib/nova-database.js'
+import { setEnabled as setRainEnabled, isEnabled as isRainEnabled } from '../../src/lib/nova-rain-notify.js'
 import {
   getAutoTargetConfig, setAutoTargetConfig, clearAutoTargetConfig,
   describeAutoTarget, listBotGroups, parseGroupPicks, toWaJid
@@ -327,6 +328,15 @@ const AUTO_REGISTRY = {
       } catch (e) { console.error("[switch] weatherRealtime:", e.message); }
     },
   },
+  autorainnotify: {
+    label: "Auto Notif Hujan Nowcast",
+    // .hujannotif — kirim "akan hujan dalam X menit" (OWM One Call 3.0 /
+    // fallback Open-Meteo 15-menit). Register di .switch (request owner
+    // 16 Sep 2026: sistem pesan terpusat berlaku di SEMUA fitur otomatis)
+    // — toggle asli .hujannotif on/off tetap works.
+    getStatus: () => { try { return isRainEnabled() } catch { return false } },
+    toggle: (on) => { setRainEnabled(on) }, // setEnabled self-sync monitor
+  },
   autocleancache: {
     label: "Auto Clean Cache & Temp",
     getStatus: () => { try { return getCleanSettings()?.enabled ?? false } catch { return false } },
@@ -396,7 +406,8 @@ const AUTO_ALIASES = {
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
-  backupdrive: "autobackupdrive", loker: "autoloker", job: "autoloker", lowongan: "autoloker"
+  backupdrive: "autobackupdrive", loker: "autoloker", job: "autoloker", lowongan: "autoloker",
+  hujannotif: "autorainnotify", rainnotify: "autorainnotify", nowcasthujan: "autorainnotify"
 }
 
 const AUTO_CATEGORIES = {
@@ -411,7 +422,7 @@ const AUTO_CATEGORIES = {
     "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
   ],
   "Info & Utilitas": [
-    "bencanawatch", "autoanime", "autoanimenotifier", "automovienotifier", "autobolanotify", "autolinkedin", "autobmkg", "autoweatherrealtime", "autosholat", "autoforward",
+    "bencanawatch", "autoanime", "autoanimenotifier", "automovienotifier", "autobolanotify", "autolinkedin", "autobmkg", "autoweatherrealtime", "autorainnotify", "autosholat", "autoforward",
     "autosambut", "automod", "autobroadcastchannel", "autoloker", "webwatch", "cryptoalert"
   ]
 }
@@ -953,13 +964,16 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const rest = (setIdx >= 0 ? argsRaw.slice(setIdx + 1) : []).map((a) => a.toLowerCase())
 
     // Fitur subscriber: target terpusat NAMBAH jangkauan (subscriber tetap dapat)
-    const SUBSCRIBER_FEATURES = { bencanawatch: '.disastersystemwatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on', automovienotifier: '.movienotify on', autobolanotify: '.jadwalbolanotify on', autolinkedin: '.linkedinnotify on', autoberitanotify: '.beritanotify on' }
+    const SUBSCRIBER_FEATURES = { bencanawatch: '.disastersystemwatch on', autoanime: '.autoanime on', autoanimenotifier: '.animenotify on', automovienotifier: '.movienotify on', autobolanotify: '.jadwalbolanotify on', autolinkedin: '.linkedinnotify on', autoberitanotify: '.beritanotify on', autorainnotify: '.hujannotif on' }
     // SEMUA fitur otomatis yang ngirim notifikasi sekarang punya target terpusat
-    // (request owner 8 Sep 2026: "semua fitur yg otomatis ada opsi kirim terpusatnya ini wajib")
+    // (request owner 8 Sep 2026: "semua fitur yg otomatis ada opsi kirim terpusatnya ini wajib"
+    //  + 16 Sep 2026: "pstikna ini jga berlaku di semua fitur otomatis yg ada di switch"
+    //  — lengkapi: autobolanotify, automovienotifier, autolinkedin, autorainnotify)
     const TARGETABLE = [
       'autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker',
       'autoanimenotifier', 'bencanawatch', 'autoanime', 'autoreengage',
       'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify',
+      'autobolanotify', 'automovienotifier', 'autolinkedin', 'autorainnotify',
     ]
     if (!TARGETABLE.includes(autoKey)) {
       return m.reply(`*${reg.label}* gak mengirim notifikasi terjadwal — gak ada target yang bisa diset.\nFitur yang bisa diatur targetnya: ${TARGETABLE.map((k) => '\`' + k + '\`').join(', ')}`)
@@ -1124,8 +1138,8 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const current = reg.getStatus()
     let replyTxt = `${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`
     // Fitur targetable: tampilkan target sekarang di status
-    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'autobolanotify', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify']
-    const SUBSCRIBER_FEATURES = { bencanawatch: 1, autoanime: 1, autoanimenotifier: 1, autobolanotify: 1, autolinkedin: 1, autoberitanotify: 1 }
+    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'autobolanotify', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify', 'automovienotifier', 'autolinkedin', 'autorainnotify']
+    const SUBSCRIBER_FEATURES = { bencanawatch: 1, autoanime: 1, autoanimenotifier: 1, autobolanotify: 1, autolinkedin: 1, autoberitanotify: 1, automovienotifier: 1, autorainnotify: 1 }
     if (TARGETABLE.includes(autoKey)) {
       const cfg = getAutoTargetConfig(autoKey)
       replyTxt += `\n🎯 Target: ${describeAutoTarget(cfg)} — atur: \`${prefix}switch auto ${autoKey} set\`` + (SUBSCRIBER_FEATURES[autoKey] ? '\nℹ️ Subscriber tetap dapat notif — target terpusat nambah jangkauan' : '')
