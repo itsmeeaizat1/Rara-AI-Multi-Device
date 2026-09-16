@@ -939,6 +939,19 @@ export function setWatcherParam(chatId, jenisRaw, keyRaw, valueRaw) {
 }
 
 /** Gate parameter per jenis untuk level hasil — return false = skip. */
+// FIX AUDIT 16 Sep 2026 (owner: "pastikan setiap ada bencana ada notif
+// SESUAI OPSI yg diatur"): jalur global (dispatch) & jalur dekat
+// (dispatchNearEvent) memakai label BMKG/GDACS/PVMBG (SIAGA/AWAS/WASPADA/
+// Normal) — padahal gerbang param minlevel pakai skala EWS. Helper ini
+// memetakan label apapun ke skala EWS biar gerbang param bisa dipakai
+// konsisten di SEMUA jalur kirim.
+function ewsLevelOf(label) {
+  const s = String(label || "").toUpperCase();
+  if (/AWAS|MERAH|RED/.test(s)) return "MERAH";
+  if (/SIAGA|KUNING|ORANGE/.test(s)) return "KUNING";
+  return "HIJAU";
+}
+
 export function paramAllowsKind(sub, kind, level, jarakKm, severe = false) {
   if (severe) return true; // GLOBAL M6.5+ / darurat — selalu lolos
   const pr = sub?.params?.[kind] || {};
@@ -1582,6 +1595,14 @@ async function dispatch(sendSock, ev, genericText = null, card = null) {
         sub.lat != null && ev?.lat != null
           ? haversineKm(sub.lat, sub.lon, ev.lat, ev.lon)
           : Infinity;
+      // FIX AUDIT 16 Sep 2026: gerbang param per jenis (minlevel + jarak)
+      // — dulu cuma di jalur EWS, jadi .dsw param banjir minlevel merah
+      // bisa DILEWATI sama banjir SIAGA dari jalur global GDACS. Level
+      // SIAGA/AWAS dipetakan ke KUNING/MERAH; severe (GDACS Red / gempa
+      // M6.5+) tetap lolos sesuai aturan darurat. Subscriber tanpa
+      // lokasi (jarak tak terhingga) gak diblokir jarak per jenis —
+      // cuma minlevel yang bisa nyaring.
+      if (!paramAllowsKind(sub, ev.kind, ewsLevelOf(ev.level), Number.isFinite(distKm) ? distKm : null, ev.isSevere)) continue;
       const radius = sub.radius || DEFAULT_RADIUS_KM;
       const near = distKm <= radius;
 
@@ -1814,6 +1835,12 @@ export async function dispatchNearEvent(sendSock, ev, kindKey = "gempa", sumberK
       const minMagSub = parseFloat(sub.minMag ?? DEFAULT_MIN_MAG);
       const magEv = parseFloat(ev.mag);
       if (Number.isFinite(magEv) && magEv < minMagSub) continue;
+      // FIX AUDIT 16 Sep 2026: gerbang param per jenis (minlevel + jarak)
+      // di jalur dekat juga — .dsw param gempa minlevel kuning = gempa
+      // dekat WASPADA (level HIJAU) ditahan, .dsw param gunungapi jarak
+      // 300 = perubahan gunung di luar 300 km ditahan. Near-event gak
+      // pernah severe (M<5 / Waspada↔Normal) → severe=false.
+      if (!paramAllowsKind(sub, kindKey, ewsLevelOf(ev.level), distKm, false)) continue;
       if (mode === "jadwal") continue; // udah dipending ke rangkuman
       await sendRegionalAlert(s, chatId, ev, sub);
       sent++;

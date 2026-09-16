@@ -339,6 +339,50 @@ check("param: reset jenis → params bersih", (recR.params || {}).banjir === und
 const tplKering = L.formatMdEwsWarning({ kind: "kering", jenis: "Kekeringan", icon: "☀️", level: "SIAGA", lat: -8.0, lon: 120.0, desc: "tes", country: "Indonesia", waktu: "baru terdeteksi", report: null }, { level: "KUNING", jarak: 100, city: "Jakarta" });
 check("fix instruksi: kind 'kering' → instruksi hemat air (bukan default)", /Hemat air/i.test(tplKering));
 
+w("\n— FIX AUDIT 16 Sep: gerbang param di SEMUA jalur (owner: notif SESUAI OPSI) —");
+// Jalur GLOBAL (dispatch → dispatchBencanaEvent): .dsw param banjir minlevel merah
+// harus nahan banjir SIAGA (KUNING) dari GDACS global — dulu gerbang cuma di EWS.
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 2000, params: { banjir: { minlevel: "MERAH" } } } });
+const okGl = makeSock();
+_setBencanaSockForTest(okGl.sock);
+const floodKuning = { kind: "banjir", jenis: "Banjir", level: "SIAGA (🟠)", lat: -6.0, lon: 106.5, desc: "banjir tes", waktu: "baru", sumber: "GDACS (EU/UN) — gdacs.org", isSevere: false };
+await L.dispatchBencanaEvent(floodKuning, "AUTO-ALERT BANJIR SIAGA", null);
+check("jalur global: minlevel MERAH → banjir SIAGA (KUNING) DITAHAN", okGl.sent.length === 0, "sent=" + okGl.sent.length);
+const floodAwas = { ...floodKuning, level: "AWAS (🔴)", isSevere: true };
+await L.dispatchBencanaEvent(floodAwas, "AUTO-ALERT BANJIR AWAS", null);
+check("jalur global: banjir AWAS (severe) tetap terkirim walau minlevel MERAH", okGl.sent.length === 1);
+// tanpa param → banjir SIAGA tetap masuk (gak ada regresi)
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 2000 } });
+const okGl2 = makeSock();
+_setBencanaSockForTest(okGl2.sock);
+await L.dispatchBencanaEvent(floodKuning, "AUTO-ALERT BANJIR SIAGA", null);
+check("jalur global: tanpa param → banjir SIAGA tetap terkirim (no regresi)", okGl2.sent.length === 1);
+// param jarak per jenis di jalur global: topan 500 km ditahan saat jarak 300
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 2000, params: { topan: { radiusKm: 300 } } } });
+const okGl3 = makeSock();
+_setBencanaSockForTest(okGl3.sock);
+const cyclone = { kind: "topan", jenis: "Topan", level: "SIAGA (🟠)", lat: -10.0, lon: 111.0, desc: "topan jauh", waktu: "baru", sumber: "GDACS (EU/UN) — gdacs.org", isSevere: false };
+await L.dispatchBencanaEvent(cyclone, "AUTO-ALERT TOPAN SIAGA", null);
+check("jalur global: param topan jarak 300 → topan ±500 km DITAHAN", okGl3.sent.length === 0, "sent=" + okGl3.sent.length);
+
+// Jalur DEKAT (dispatchNearEvent): near-quake WASPADA + param gempa minlevel KUNING → ditahan
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 300, params: { gempa: { minlevel: "KUNING" } } } });
+const okN = makeSock();
+const nq = { kind: "gempa", jenis: "Gempa Bumi", mag: "4.2", depth: "10 km", lat: -6.35, lon: 106.85, desc: "tes near", level: "WASPADA", waktu: "x", sumber: "bmkg" };
+const rn = await dispatchNearEvent(okN.sock, nq, "gempa", "bmkg");
+check("jalur dekat: param gempa minlevel KUNING → near-quake WASPADA DITAHAN", rn.sent === 0 && okN.sent.length === 0);
+// reset param → near-quake masuk lagi
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 300 } });
+const okN2 = makeSock();
+const rn2 = await dispatchNearEvent(okN2.sock, nq, "gempa", "bmkg");
+check("jalur dekat: tanpa param → near-quake WASPADA tetap terkirim (no regresi)", rn2.sent === 1 && okN2.sent.length === 1);
+// param gunungapi jarak 100 → perubahan gunung di ±150 km ditahan
+db.setting("bencanaWatch", { [CHAT]: { since: new Date().toISOString(), mode: "otomatis", lat: -6.2, lon: 106.8, city: "Jakarta", radius: 300, params: { gunungapi: { radiusKm: 100 } } } });
+const okV = makeSock();
+const vol = { kind: "gunungapi", jenis: "Gunung Api", mag: null, level: "Waspada", nama: "Gunung Tes", waktu: "x", lat: -7.4, lon: 107.4, desc: "gunung tes", sumber: "pvmbg" };
+const rv = await dispatchNearEvent(okV.sock, vol, "gunungapi", "pvmbg");
+check("jalur dekat: param gunungapi jarak 100 → gunung ±150 km DITAHAN", rv.sent === 0 && okV.sent.length === 0);
+
 w("\n— sock null: error keras —");
 _setBencanaSockForTest(null); // simulasi koneksi belum tersedia
 const resNull = await dispatchNearEvent(null, { kind: "gempa", mag: "4.0", lat: -6, lon: 106 }, "gempa", "bmkg");
