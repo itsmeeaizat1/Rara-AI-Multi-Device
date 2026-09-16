@@ -214,6 +214,51 @@ await handler(mockM(["otomatis", "off"]), { sock: sockMock, config });
 const s3 = db.setting("weatherRealtime");
 t("5k. otomatis off: balik mode interval/jadwal", s3.notificationMode === "interval" || s3.notificationMode === "jadwal", s3.notificationMode);
 
+// ═══ 6. UX NATURAL + PANDUAN (16 Sep 2026, owner: "kok ribet... aktifkan segala
+//     dll gak ada petunjuk") — kata santai dikenali + status jadi panduan bertingkat ═══
+out("\n— UX natural + panduan —");
+const modWsw = await import(R + "/plugins/owner/weathersystemwatch.js");
+t("6a. alias pendek .wsw terdaftar", (modWsw.config.alias || []).includes("wsw"), JSON.stringify(modWsw.config.alias));
+
+// state bersih buat tes natural
+db.setting("weatherRealtime", {
+  realtime: false, notification: false, alertEnabled: false,
+  location: { name: "Serang", latitude: -6.12, longitude: 106.15 },
+  schedules: [{ key: "pagi", label: "Pagi", hour: 6, minute: 30 }],
+  target: "628999@s.whatsapp.net",
+});
+
+// 6b. bantuan → panduan status dengan MULAI CEPAT
+await handler(mockM(["bantuan"]), { sock: sockMock, config });
+t("6b. 'bantuan' → panduan: MULAI CEPAT 3 langkah kebaca", (replies.at(-1) || "").includes(toSC("MULAI CEPAT")), (replies.at(-1) || "").slice(0, 80));
+t("6c. panduan nunjukin singkatan .wsw", (replies.at(-1) || "").includes(toSC("Singkatan")) && /\.wsw/.test(replies.at(-1) || ""));
+
+// 6d. aktifkan → on
+await handler(mockM(["aktifkan"]), { sock: sockMock, config });
+t("6d. 'aktifkan' → realtime true + reply AKTIF", db.setting("weatherRealtime").realtime === true && (replies.at(-1) || "").includes(toSC("AKTIF")), (replies.at(-1) || "").slice(0, 60));
+
+// 6e. aktifkan notif → notification on
+await handler(mockM(["aktifkan", "notif"]), { sock: sockMock, config });
+t("6e. 'aktifkan notif' → notification true", db.setting("weatherRealtime").notification === true, JSON.stringify(db.setting("weatherRealtime").notification));
+
+// 6f. matikan notif → notification off
+await handler(mockM(["matikan", "notif"]), { sock: sockMock, config });
+t("6f. 'matikan notif' → notification false", db.setting("weatherRealtime").notification === false);
+
+// 6g. nyalakan alert / matikan alert
+await handler(mockM(["nyalakan", "alert"]), { sock: sockMock, config });
+t("6g. 'nyalakan alert' → alertEnabled true", db.setting("weatherRealtime").alertEnabled === true, JSON.stringify(db.setting("weatherRealtime").alertEnabled));
+await handler(mockM(["matikan", "alert"]), { sock: sockMock, config });
+t("6h. 'matikan alert' → alertEnabled false", db.setting("weatherRealtime").alertEnabled === false);
+
+// 6i. 'matikan' polos → off
+await handler(mockM(["matikan"]), { sock: sockMock, config });
+t("6i. 'matikan' polos → realtime false", db.setting("weatherRealtime").realtime === false);
+
+// 6j. perintah ngawur ('foter') → pesan gak dikenal + arahan .wsw
+await handler(mockM(["foter"]), { sock: sockMock, config });
+t("6j. unknown → hint .wsw + MULAI CEPAT", (replies.at(-1) || "").includes(toSC("Perintah tidak dikenal")) && /\.wsw/.test(replies.at(-1) || ""), (replies.at(-1) || "").slice(0, 90));
+
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====");
 await new Promise((r) => setTimeout(r, 400));
 process.exit(fail ? 1 : 0);

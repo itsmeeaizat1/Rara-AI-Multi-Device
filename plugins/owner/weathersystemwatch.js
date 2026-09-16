@@ -40,11 +40,11 @@ import { weatherGroupOf } from "../../src/lib/nova-weather-notify.js";
 
 const pluginConfig = {
   name: "weathersystemwatch",
-  alias: ["weathersystemwatch"], // rename owner 15 Sep 2026: alias lama (weathersystemwatch/autocuacarealtime) dihapus
+  alias: ["weathersystemwatch", "wsw"], // wsw = singkatan (16 Sep 2026, owner: command kepanjangan/ribet); rename 15 Sep: alias lama dihapus total
   category: "owner",
   description: "Atur cuaca realtime di info section + notifikasi scheduler",
-  usage: ".weathersystemwatch <on/off/lokasi/notification/alert/threshold/jadwal/interval/otomatis/tesubah [cerah|mendung|hujan|petir]/provider aggregate|bmkg|metno|weatherapi|openmeteo/adm4/target dm|grup|grup <nomor>|JID/test>",
-  example: ".weathersystemwatch on\n.weathersystemwatch lokasi serang\n.weathersystemwatch target 62123456789@s.whatsapp.net",
+  usage: ".wsw <perintah> — ketik .wsw atau .wsw status untuk panduan lengkap",
+  example: ".wsw on\n.wsw lokasi serang\n.wsw notif on",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -148,8 +148,24 @@ async function handler(m, { sock, config: botConfig, db }) {
   try {
     const db2 = getDatabase();
     const args = (m.args || []).map(a => String(a).trim());
-    const action = (args.shift() || "").toLowerCase();
+    let action = (args.shift() || "").toLowerCase();
     const prefix = botConfig.command?.prefix || ".";
+
+    // ── (16 Sep 2026, owner: "kok ribet... aktifkan segala dll gak ada
+    //    petunjuk") — KATA NATURAL dikenali: aktifkan/matikan/notif/alert/
+    //    bantuan → langsung dipetakan ke subcommand bener ──
+    const AKTIF_WORDS = new Set(["aktifkan", "aktif", "nyalakan", "hidupkan", "hidupin", "onkan"]);
+    const MATI_WORDS = new Set(["matikan", "mati", "offkan", "stop", "nonaktifkan", "nonaktif"]);
+    const BANTUAN_WORDS = new Set(["bantuan", "help", "menu", "petunjuk", "panduan", "cara", "tutorial", "mulai"]);
+    if (BANTUAN_WORDS.has(action)) action = "status";
+    if (action === "tes") action = "test";
+    if (AKTIF_WORDS.has(action) || MATI_WORDS.has(action)) {
+      const on = AKTIF_WORDS.has(action);
+      const next = String(args[0] || "").toLowerCase();
+      if (/notif|notification|notifikasi|pemberitahuan/.test(next)) { action = "notification"; args[0] = on ? "on" : "off"; }
+      else if (/alert|ekstrem|awas|peringatan/.test(next)) { action = "alert"; args[0] = on ? "on" : "off"; }
+      else action = on ? "on" : "off";
+    }
 
     // React loading
     try { await sock.sendMessage(m.chat, { react: { text: "🕒", key: m.key } }); } catch {}
@@ -172,18 +188,36 @@ async function handler(m, { sock, config: botConfig, db }) {
         "• " + toSC("Jadwal") + " : " + formatSchedules(settings.schedules) + "\n" +
         "• " + toSC("Provider") + " : " + (settings.provider === "bmkg" ? "BMKG" + (settings.adm4 ? " (" + settings.adm4 + ")" : "") : settings.provider === "aggregate" ? toSC("AGGREGATE (4 provider)") : settings.provider === "metno" ? "MET Norway" : settings.provider === "weatherapi" ? "WeatherAPI" : "Open-Meteo") + "\n" +
         "• " + toSC("Target") + " : " + (settings.target || toSC("belum diset")) + "\n" +
-        "📌 " + toSC("Perintah") + ":\n" +
-        "• " + prefix + "weathersystemwatch on/off\n" +
-        "• " + prefix + "weathersystemwatch lokasi serang\n" +
-        "• " + prefix + "weathersystemwatch notification on\n" +
-        "• " + prefix + "weathersystemwatch jadwal 06:30 12:00\n" +
-        "• " + prefix + "weathersystemwatch alert on|off\n" +
-        "• " + prefix + "weathersystemwatch threshold list\n" +
-        "• " + prefix + "weathersystemwatch interval 2\n" +
-        "• " + prefix + "weathersystemwatch provider bmkg|openmeteo\n" +
-        "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
-        "• " + prefix + "weathersystemwatch target 62123456789@s.whatsapp.net\n" +
-        "• " + prefix + "weathersystemwatch test\n" 
+        "\n" +
+        "🚀 " + toSC("MULAI CEPAT — 3 LANGKAH") + ":\n" +
+        "1. " + prefix + "wsw on — " + toSC("nyalakan fitur") + "\n" +
+        "2. " + prefix + "wsw lokasi serang — " + toSC("atur kota kamu") + "\n" +
+        "3. " + prefix + "wsw notif on — " + toSC("notifikasi masuk ke chat ini") + "\n" +
+        "→ " + toSC("selesai, notif bakal masuk tiap cuaca berganti") + "\n" +
+        "\n" +
+        "🔌 " + toSC("Utama") + " (" + toSC("bisa pakai kata: aktifkan / matikan") + "):\n" +
+        "• " + prefix + "wsw on | off — " + toSC("nyalakan / matikan") + "\n" +
+        "• " + prefix + "wsw status — " + toSC("lihat setelan (pesan ini)") + "\n" +
+        "• " + prefix + "wsw test — " + toSC("tes kirim cuaca sekarang") + "\n" +
+        "\n" +
+        "📍 " + toSC("Lokasi & Target") + ":\n" +
+        "• " + prefix + "wsw lokasi <kota> — " + toSC("contoh: lokasi serang") + "\n" +
+        "• " + prefix + "wsw target dm | grup — " + toSC("tujuan notif") + "\n" +
+        "\n" +
+        "🔔 " + toSC("Notifikasi") + " (" + toSC("bisa: aktifkan notif / matikan notif") + "):\n" +
+        "• " + prefix + "wsw notif on | off\n" +
+        "• " + prefix + "wsw otomatis [menit] — " + toSC("kirim pas cuaca berganti") + "\n" +
+        "• " + prefix + "wsw jadwal 06:30 12:00 — " + toSC("kirim jam tertentu") + "\n" +
+        "• " + prefix + "wsw interval 2 — " + toSC("tiap 2 jam") + "\n" +
+        "• " + prefix + "wsw tesubah [cerah|mendung|hujan|petir] — " + toSC("tes paksa") + "\n" +
+        "\n" +
+        "🌪️ " + toSC("Alert Ekstrem") + " (" + toSC("bisa: aktifkan alert / matikan alert") + "):\n" +
+        "• " + prefix + "wsw alert on | off — " + toSC("peringatan cuaca bahaya") + "\n" +
+        "• " + prefix + "wsw threshold list | set heat 38\n" +
+        "• " + prefix + "wsw provider bmkg | openmeteo | metno | weatherapi | aggregate\n" +
+        "• " + prefix + "wsw adm4 31.71.03.1001 — " + toSC("kode wilayah BMKG") + "\n" +
+        "\n" +
+        "💡 " + toSC("Singkatan") + ": " + prefix + "wsw = " + prefix + "weathersystemwatch"
         )
       );
     }
@@ -833,18 +867,14 @@ async function handler(m, { sock, config: botConfig, db }) {
     return m.reply(
       boxMessage("◆ " + "Weather Realtime" + " ◆",
       "⚠ " + toSC("Perintah tidak dikenal") + "\n" +
-      "• " + prefix + "weathersystemwatch status\n" +
-      "• " + prefix + "weathersystemwatch on/off\n" +
-      "• " + prefix + "weathersystemwatch lokasi serang\n" +
-      "• " + prefix + "weathersystemwatch notification on/off\n" +
-      "• " + prefix + "weathersystemwatch jadwal 06:30 12:00\n" +
-      "• " + prefix + "weathersystemwatch alert on|off|test\n" +
-      "• " + prefix + "weathersystemwatch threshold set heat 38\n" +
-      "• " + prefix + "weathersystemwatch interval 2\n" +
-      "• " + prefix + "weathersystemwatch provider bmkg\n" +
-      "• " + prefix + "weathersystemwatch adm4 31.71.03.1001\n" +
-      "• " + prefix + "weathersystemwatch target 62123456789@s.whatsapp.net\n" +
-      "• " + prefix + "weathersystemwatch test\n" 
+      "💡 " + toSC("Ketik") + " " + prefix + "wsw " + toSC("untuk panduan lengkap + status") + "\n" +
+      "\n" +
+      "🚀 " + toSC("MULAI CEPAT") + ":\n" +
+      "1. " + prefix + "wsw on\n" +
+      "2. " + prefix + "wsw lokasi serang\n" +
+      "3. " + prefix + "wsw notif on\n" +
+      "\n" +
+      "• " + toSC("Kata santai juga jalan") + ": " + prefix + "wsw aktifkan | matikan | aktifkan notif | matikan notif | bantuan"
       )
     );
   } catch (e) {
