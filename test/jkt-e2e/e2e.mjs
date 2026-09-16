@@ -71,6 +71,19 @@ t("  data string langsung kebaca", r.ok && r.reply === "jawaban versi datar");
 setHttp(async () => ({ status: 200, json: async () => ({ status: false, error: "Failed to create session" }) }));
 r = await import("../../src/scraper/zeljkt.js").then((z) => z.jktAiChat(findJktaiMember("lily"), "tes"));
 t("  status:false → error asli keluar (strict)", !r.ok && /Failed to create session/.test(r.error));
+t("  500 session persist → pesan jelas (server zelapi gangguan, bukan salah key/bot)",
+  !r.ok && /server JKT48 AI zelapi sedang gangguan|semua member/i.test(r.error), r.error?.slice(0, 90));
+
+// (16 Sep 2026, report owner "failed 500 failed create session") — retry 3x:
+// gagal 2x karena sesaat, sukses di percobaan ke-3 → tetap dapat jawaban
+let ncalls = 0;
+setHttp(async () => {
+  ncalls++;
+  if (ncalls <= 2) return { status: 500, json: async () => ({ status: false, error: "Failed to create session" }) };
+  return { status: 200, json: async () => ({ status: true, data: "akhirnya kejawab setelah retry" }) };
+});
+r = await import("../../src/scraper/zeljkt.js").then((z) => z.jktAiChat(findJktaiMember("ribka"), "tes"));
+t("  retry 3x: gagal 2x sesaat → sukses di ke-3", r.ok && r.reply === "akhirnya kejawab setelah retry" && ncalls === 3, `ncalls=${ncalls} ok=${r.ok}`);
 
 setHttp(async () => ({ status: 401, json: async () => ({ status: false }) }));
 r = await import("../../src/scraper/zeljkt.js").then((z) => z.jktAiChat(findJktaiMember("trisha"), "tes"));

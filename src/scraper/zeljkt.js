@@ -82,8 +82,25 @@ export async function jktAiChat(member, text) {
   if (!key) return { ok: false, error: "API_KEY" };
   if (!text || !text.trim()) return { ok: false, error: "TEXT_KOSONG" };
   const p = new URLSearchParams({ apikey: key, text: text.trim() });
-  const r = await zelGet(`${BASE}/jktai/${member.slug}?${p.toString()}`);
-  if (!r.ok) return r;
+  // (16 Sep 2026, report owner "jkt48ai failed 500 failed create session") —
+  // upstream zelapi jktai FLAKY: sempat 500 "Failed to create session" di
+  // SEMUA member (key valid, endpoint lain 200 OK). RETRY 3x buat error
+  // sesaat; kalau tetap gagal → error asli + penjelasan biar user gak
+  // ngira salah key/bot (tetap strict satuan, gak ada fallback AI lain).
+  let r = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    r = await zelGet(`${BASE}/jktai/${member.slug}?${p.toString()}`);
+    if (r.ok) break;
+    const sesaat = /Failed to create session|HTTP 5\d\d|TIMEOUT/i.test(r.error || "");
+    if (!sesaat || attempt === 3) break;
+    await new Promise((ok2) => setTimeout(ok2, 2500));
+  }
+  if (!r.ok) {
+    if (/Failed to create session/i.test(r.error || "")) {
+      return { ok: false, error: "Failed to create session — server JKT48 AI zelapi sedang gangguan (kejadian di semua member, bukan salah key/bot/kamu). Coba lagi beberapa saat ya" };
+    }
+    return r;
+  }
   // bentuk respon defensif: data bisa string/objek, field macem-macem
   const d = r.data;
   let reply = "";
