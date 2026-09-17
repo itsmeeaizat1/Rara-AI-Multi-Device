@@ -80,12 +80,28 @@ export const API_KEYS = {
 
   // ── THIRD-PARTY API ───────────────────────────
   groq: {
-    label: "Groq (Fast STT)",
-    description: "Untuk transkripsi voice note cepat",
+    label: "Groq (Fast STT + Chat)",
+    description: "Untuk transkripsi voice note cepat + otak chat AI Call (gpt-oss-20b)",
     getConfig: () => config.APIkey?.groq || "",
     getEnv: () => process.env.GROQ_API_KEY || "",
     getLink: () => "https://console.groq.com/keys",
-    usedBy: ["stt", "aiautointeractionvn"],
+    usedBy: ["stt", "aiautointeractionvn", "aicall", "groq"],
+  },
+  xai: {
+    label: "xAI Grok (AI Call Otak Utama)",
+    description: "Untuk otak percakapan AI Call (grok-3-mini) + fitur .grok satuan",
+    getConfig: () => config.APIkey?.xai || "",
+    getEnv: () => process.env.XAI_API_KEY || "",
+    getLink: () => "https://console.x.ai",
+    usedBy: ["aicall", "grok"],
+  },
+  grok: {
+    label: "Grok (alias xAI)",
+    description: "Alias xAI Grok — sama dengan key xai (pusat apikeys.json providers.grok)",
+    getConfig: () => config.APIkey?.xai || config.APIkey?.grok || "",
+    getEnv: () => process.env.XAI_API_KEY || process.env.GROK_API || "",
+    getLink: () => "https://console.x.ai",
+    usedBy: ["aicall", "grok"],
   },
   google: {
     label: "Google (Search/CSE)",
