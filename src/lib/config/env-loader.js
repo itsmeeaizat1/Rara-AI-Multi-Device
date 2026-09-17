@@ -20,7 +20,9 @@ function loadJson(filename) {
   try {
     return JSON.parse(fs.readFileSync(filepath, "utf8"));
   } catch (e) {
-    console.error(`[env-loader] Gagal baca ${filename}:`, e.message);
+    // File opsional (andaraz/sanka/misc lama) boleh gak ada — senyap.
+    // apikeys.json (PUSAT SEMUA KEY) gak boleh rusak — tetap kerasah.
+    if (e.code !== "ENOENT") console.error(`[env-loader] Gagal baca ${filename}:`, e.message);
     return {};
   }
 }
@@ -40,11 +42,12 @@ function flattenApikeys(raw) {
   for (const [k, v] of Object.entries(raw || {})) {
     if (typeof v === "string") flat[k] = v;
   }
-  // 3 section AI → dibuang _note, disebar flat
-  for (const sec of ["aiSatuan", "novaai"]) {
+  // semua section → dibuang _note, disebar flat (key string saja;
+  // object seperti andaraz/sanka dibaca getter khusus, bukan flat)
+  for (const sec of ["aiSatuan", "novaai", "scraper", "fitur"]) {
     for (const [k, v] of Object.entries(raw?.[sec] || {})) {
       if (k.startsWith("_")) continue;
-      flat[k] = typeof v === "string" ? v : "";
+      if (typeof v === "string") flat[k] = v;
     }
   }
   // provider key → flat[k] = providers[k].apikey
@@ -97,6 +100,13 @@ export function getNovaAiKeys() {
  * Ambil config Andaraz
  */
 export function getAndarazConfig() {
+  // PUSAT BARU: apikeys.json → section "scraper" (request owner 17 Sep 2026)
+  const fromCenter = apikeysRaw.scraper?.andaraz;
+  if (fromCenter) {
+    const { _note, ...cfg } = fromCenter;
+    return cfg;
+  }
+  // fallback file lama andaraz.json (kalau masih ada di VPS)
   const { _note, ...cfg } = andarazData;
   return cfg;
 }
@@ -105,6 +115,13 @@ export function getAndarazConfig() {
  * Ambil config Sankavollerei
  */
 export function getSankaConfig() {
+  // PUSAT BARU: apikeys.json → section "scraper" (request owner 17 Sep 2026)
+  const fromCenter = apikeysRaw.scraper?.sanka;
+  if (fromCenter) {
+    const { _note, ...cfg } = fromCenter;
+    return cfg;
+  }
+  // fallback file lama sanka.json (kalau masih ada di VPS)
   const { _note, ...cfg } = sankaData;
   return cfg;
 }
@@ -113,7 +130,9 @@ export function getSankaConfig() {
  * Ambil DeepAI API key
  */
 export function getDeepAiKey() {
-  return miscData.deepai || "";
+  // PUSAT BARU: apikeys.json → section "fitur" (deepai kosong = key expired,
+  // hd.js pakai sharp local)
+  return apikeysData.deepai || miscData.deepai || "";
 }
 
 /**
@@ -151,7 +170,8 @@ export function getSearchApiKey() {
 }
 
 export function getSaveNowKey() {
-  return miscData.savenow_apikey || "";
+  // PUSAT BARU: apikeys.json → section "fitur" key "savenow" (fitur .alldl)
+  return apikeysData.savenow || miscData.savenow_apikey || "";
 }
 
 /**
@@ -213,12 +233,14 @@ export function getStabilityKey() { return apikeysData.stability || ""; }
 export function getJinaKey() { return apikeysData.jina || ""; }
 
 export function getPteroConfig() {
+  // PUSAT BARU: apikeys.json → section "fitur" ptero_serverN_* (fitur .createpanel)
+  // fallback file lama misc.json kalau section fitur gak ada.
   const slots = {};
   for (let i = 1; i <= 100; i++) {
     slots[`server${i}`] = {
-      domain: miscData[`ptero_server${i}_domain`] || "",
-      apikey: miscData[`ptero_server${i}_apikey`] || "",
-      capikey: miscData[`ptero_server${i}_capikey`] || "",
+      domain: apikeysData[`ptero_server${i}_domain`] || miscData[`ptero_server${i}_domain`] || "",
+      apikey: apikeysData[`ptero_server${i}_apikey`] || miscData[`ptero_server${i}_apikey`] || "",
+      capikey: apikeysData[`ptero_server${i}_capikey`] || miscData[`ptero_server${i}_capikey`] || "",
     };
   }
   return slots;
