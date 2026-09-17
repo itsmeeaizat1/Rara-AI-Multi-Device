@@ -29,6 +29,7 @@ const ICONS = {
     store: '🛒', panel: '🖥️', convert: '🔄', primbon: '🔮', tts: '🗣️',
     otp: '🔑', vps: '☁️', pushkontak: '📱', jpm: '🎰', ephoto: '📸',
     jkt48: '🌸',
+    airich: '✨',
     other: '📦'
 }
 
