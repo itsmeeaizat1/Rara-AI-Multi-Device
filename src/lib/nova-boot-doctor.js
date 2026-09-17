@@ -1,0 +1,446 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// nova-boot-doctor.js — Cek kesehatan fitur otomatis saat bot NYALA/RESTART
+// (request owner 17 Sep 2026: "fitur system yg bsa deteksi fitur ini apikey
+// expired, endpoint down, fitur eror yg otomatis kirim ke dm owner pas botnya
+// prtama kali run atau restart").
+//
+// Cara kerja:
+// 1. initBootDoctor(sock) dipanggil dari connection.js pas koneksi "open".
+// 2. Delay 15 dtk (nunggu plugin/db siap) → jalankan SEMUA probe paralel.
+// 3. Tiap key/apikeys.json diuji ke endpoint ASLI yang dipakai fiturnya
+//    (registry di bawah) → klasifikasi:
+//      ok            → sehat
+//      key_invalid   → APIKEY EXPIRED / SALAH (401/403 atau body invalid key)
+//      quota         → KUOTA ABIS / perlu top-up (402 / body quota)
+//      ratelimit     → RATE-LIMIT (429)
+//      endpoint_err  → HTTP 4xx lain (endpoint pindah / param berubah)
+//      down          → 5xx / timeout / DNS mati
+//      nokey         → key kosong (fitur auto-skip/fallback — bukan error)
+// 4. Laporan dikelompokin → DM owner (throttle 30 mnt biar crash-guard restart
+//    loop gak spam DM; laporan BERUBAH selalu dikirim).
+// 5. `.bootdoctor` (plugins/owner/bootdoctor.js) — cek manual + status.
+//
+// GOTCHA: probe AI chat (min1ai/searchapi/sensenova/inception) makan 1 request
+// kecil per boot — wajar buat validasi key, throttled biar gak boros.
+
+import fs from "fs";
+import path from "path";
+import config from "../../config.js";
+import { getApiKey } from "./nova-api-keys.js";
+import { getApiKeys } from "./config/env-loader.js";
+import { getDatabase } from "./nova-database.js";
+import { claraWrap } from "./nova-menu-style.js";
+
+const STATE_FILE = path.join(process.cwd(), "src", "data", "bootdoctor.json");
+const THROTTLE_MS = 30 * 60 * 1000; // anti-spam DM pas restart loop
+const PROBE_TIMEOUT_MS = 12000;
+const BOOT_DELAY_MS = 15000;
+const CONCURRENCY = 6;
+
+let sockInstance = null;
+let doctorHttp = null; // seam e2e
+let stateFileForTest = null;
+let sentHook = null; // seam e2e: capture laporan terkirim
+
+// ═══════════════════════════════════════════════════════════════
+// REGISTRY — APIKEY probes (URL & param VERBATIM dari pemakaian fitur)
+// features: daftar singkat fitur yang kena dampak (dari _note_ apikeys.json)
+// ═══════════════════════════════════════════════════════════════
+const KEY_PROBES = [
+  {
+    key: "min1ai", label: "1Min.ai",
+    features: "otak AI #1 rantai .novaai, aiagent, fallback AI",
+    method: "POST",
+    url: () => "https://api.1min.ai/api/chat-with-ai",
+    headers: k => ({ "Content-Type": "application/json", "API-KEY": k }),
+    body: () => JSON.stringify({ type: "UNIFY_CHAT_WITH_AI", model: "qwen3-8b", promptObject: { prompt: "ping" } }),
+  },
+  {
+    key: "ikyyxd", label: "IkyyXD",
+    features: "rantai AI cadangan, .ikyydl, .snaptikdouyin",
+    url: k => `https://api.ikyyxd.my.id/ai/gemini?text=ping&apikey=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "zelapi", label: "ZelAPI",
+    features: "semua suite z, .jktai/.jkt48, fallback .sdxl",
+    url: k => `https://zelapi.eu.cc/search/dns?domain=zelapi.eu.cc&apikey=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "haidar", label: "HaidarAPIs",
+    features: ".alldl .txt2vid .tts .img2style .nano-banana + game factory",
+    timeoutMs: 30000, // TTS beneran generate audio — sabar dikit
+    url: k => `https://api.haidarxd.my.id/api/v1/ai/text2speech?text=ping&voice=Gadis&apikey=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "cuki", label: "Cuki API",
+    features: ".gita .gpt4o .nayaai .pakustad .lahelu",
+    url: k => `https://api.cuki.biz.id/api/ai/gita?apikey=${encodeURIComponent(k)}&q=ping`,
+  },
+  {
+    key: "termai", label: "Termai",
+    features: ".logicbell .tourl .animeapaini .qrcustom",
+    url: k => `https://api.termai.cc/api/chat/logic-bell?text=ping&key=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "fazzcode", label: "Fazzcode",
+    features: ".airoleplaychat .fazzroleplay",
+    method: "POST",
+    url: () => "https://api.fazzcode.eu.cc/ai/chatbot-role",
+    headers: k => ({ "Content-Type": "application/json", Authorization: `Bearer ${k}` }),
+    body: () => JSON.stringify({ message: "ping" }),
+  },
+  {
+    key: "searchapi", label: "SearchAPI.io",
+    features: ".googleaimode",
+    method: "POST",
+    url: () => "https://www.searchapi.io/api/v1/search?engine=google_ai_mode&q=ping",
+    headers: k => ({ "Content-Type": "application/json", Authorization: `Bearer ${k}` }),
+    body: () => JSON.stringify({ q: "ping" }),
+  },
+  {
+    key: "groqkey", label: "Groq",
+    features: "rantai AI NovaAI + fitur AI satuan",
+    url: k => "https://api.groq.com/openai/v1/models",
+    headers: k => ({ Authorization: `Bearer ${k}` }),
+  },
+  {
+    key: "google", label: "Google AI Studio",
+    features: "gemini standalone + fitur AI otomatis",
+    url: k => `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "tioApiKey", label: "Tio AI (kktoken)",
+    features: "otak AI .novaai rantai",
+    url: k => "https://kktoken.cc/v1/models",
+    headers: k => ({ Authorization: `Bearer ${k}` }),
+  },
+  {
+    key: "sensenova", label: "SenseNova",
+    features: "AI multiprovider",
+    method: "POST",
+    url: () => "https://token.sensenova.ai/v1/chat/completions",
+    headers: k => ({ "Content-Type": "application/json", Authorization: `Bearer ${k}` }),
+    body: () => JSON.stringify({ model: "SenseChat-5", messages: [{ role: "user", content: "ping" }] }),
+  },
+  {
+    key: "inception", label: "Inception Labs",
+    features: "AI multiprovider",
+    method: "POST",
+    url: () => "https://api.inceptionlabs.ai/v1/chat/completions",
+    headers: k => ({ "Content-Type": "application/json", Authorization: `Bearer ${k}` }),
+    body: () => JSON.stringify({ model: "mercury", messages: [{ role: "user", content: "ping" }] }),
+  },
+  {
+    key: "openWeatherKey", label: "OpenWeatherMap",
+    features: ".hujannotif nowcast + cuaca",
+    url: k => `https://api.openweathermap.org/data/2.5/weather?q=Jakarta&appid=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "betabotz", label: "Betabotz",
+    features: ".togif .vocalremover",
+    url: k => `https://api.betabotz.eu.org/api/tools/webp2mp4?url=https://example.com/a.webp&apikey=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "anabot", label: "Anabot",
+    features: ".izen",
+    url: k => `https://anabot.my.id/api/tools/izenLOL?url=https://wa.me&apikey=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "neoxr", label: "NeoXR",
+    features: "maker/asupan/AI anime",
+    url: k => `https://api.neoxr.eu/api/asupan?username=ping&apikey=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "fgsi", label: "FGSI API",
+    features: ".img2img .enchantvideo",
+    url: k => `https://fgsi.dpdns.org/api/ai/image/img2img?apikey=${encodeURIComponent(k)}`,
+  },
+  {
+    key: "obscura", label: "ObscuraWorks",
+    features: ".amdata .nik scraper",
+    url: k => `https://api.obscuraworks.org/api/tools/amdata?apikey=${encodeURIComponent(k)}&url=https://wa.me`,
+  },
+  {
+    key: "firefly", label: "Firefly",
+    features: "tts .crikk .deepai pinterest",
+    url: k => `https://firefly.maiku.my.id/api/crikk?apikey=${encodeURIComponent(k)}&text=ping&voice=id-ID-ArdiNeural`,
+  },
+  {
+    key: "kuroneko", label: "KuroNeko",
+    features: "scraper utama downloader/upload",
+    url: k => `https://sylvatica.my.id/api/ai/tts?apikey=${encodeURIComponent(k)}&text=ping&voice=ardi`,
+  },
+  {
+    key: "savenow", label: "SaveNow",
+    features: "fallback .alldl (audio/video)",
+    url: k => `https://p.savenow.to/api/v2/download?format=mp3&url=ping&apikey=${encodeURIComponent(k)}`,
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// REGISTRY — ENDPOINT GRATIS (tanpa key) yang fitur otomatis andalkin
+// ═══════════════════════════════════════════════════════════════
+const FREE_PROBES = [
+  { label: "BMKG Gempa", features: "notifikasi gempa .disaster", url: "https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json" },
+  { label: "USGS", features: "gempa global fallback", url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson" },
+  { label: "GDACS", features: "EWS multi-bencana .dsw", url: "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH" },
+  { label: "MAGMA Indonesia", features: "gunung api .disaster", url: "https://magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas" },
+  { label: "JMA (Jepang)", features: "gempa fallback EWS", url: "https://www.jma.go.jp/bosai/quake/data/list.json" },
+  { label: "EMSC", features: "gempa fallback EWS", url: "https://www.seismicportal.eu/fdsnws/event/1/query?limit=5&format=json&orderby=time" },
+  { label: "Open-Meteo", features: "cuaca .weather .wsw .hujannotif", url: "https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.816&current=temperature_2m" },
+  { label: "MET Norway", features: "cuaca fallback", url: "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=-6.2&lon=106.816" },
+  { label: "Google Translate", features: ".translate autotranslate", url: "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=ping" },
+  { label: "Pollinations", features: ".sdxl image gen gratis", url: "https://image.pollinations.ai/prompt/ping?width=64&height=64&nologo=true" },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// KLASIFIKASI
+// ═══════════════════════════════════════════════════════════════
+const RE_KEY_INVALID = /(invalid api|invalid key|api[_ ]?key.*(salah|invalid|expired|tidak ditemukan|not found)|unauthorized|banned apikey|apikey kadaluarsa|silakan daftar|akses ditolak)/i;
+const RE_QUOTA = /(quota|kuota|limit exceeded|rate limit habis|kehabis)/i;
+
+function classifyHttp(status, bodyText) {
+  if (status === 401 || status === 403) return "key_invalid";
+  if (status === 402) return "quota";
+  if (status === 429) return "ratelimit";
+  if (status === 422) return "ok"; // validasi param dummy ditolak — key lolos auth
+  if (status >= 500) return "down";
+  const t = String(bodyText || "").slice(0, 600);
+  if (RE_KEY_INVALID.test(t)) return "key_invalid";
+  if (RE_QUOTA.test(t)) return "quota";
+  if (status >= 400) return "endpoint_err";
+  return "ok";
+}
+
+
+// Resolver key: db runtime (.setkey) > PUSAT apikeys.json flat > registry lama.
+// (registry getApiKey cuma kenal 20 nama — haidar/zelapi/termai/dll gak ada
+// di situ, jadi WAJIB baca pusat langsung biar SEMUA key ke-probe.)
+function resolveKey(name) {
+  try {
+    const db = getDatabase();
+    if (db?.db?.data?.apiKeys?.[name]) return String(db.db.data.apiKeys[name]);
+  } catch {}
+  try {
+    const flat = getApiKeys();
+    if (flat?.[name] && String(flat[name]).trim()) return String(flat[name]).trim();
+  } catch {}
+  try {
+    return getApiKey(name) || "";
+  } catch {
+    return "";
+  }
+}
+
+async function probeOne(probe, isKeyProbe) {
+  const result = { label: probe.label, features: probe.features || "", kind: isKeyProbe ? "key" : "endpoint" };
+  try {
+    const key = isKeyProbe ? resolveKey(probe.key) : "";
+    if (isKeyProbe && !key) {
+      result.status = "nokey";
+      return result;
+    }
+    const url = typeof probe.url === "function" ? probe.url(key) : (probe.url || undefined);
+    const headers = probe.headers ? probe.headers(key) : {};
+    const http = doctorHttp || fetch;
+    const res = await http(url, {
+      method: probe.method || "GET",
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) NovaBootDoctor/1.0", ...headers },
+      body: probe.body ? probe.body(key) : undefined,
+      signal: AbortSignal.timeout(probe.timeoutMs || PROBE_TIMEOUT_MS),
+      redirect: "manual",
+    });
+    let bodyText = "";
+    try { bodyText = await res.text(); } catch {}
+    result.status = classifyHttp(res.status, bodyText);
+    result.httpStatus = res.status;
+  } catch (e) {
+    result.status = "down";
+    result.error = (e?.name === "TimeoutError" || e?.name === "AbortError") ? "timeout" : (e?.cause?.code || e?.message || "network error").slice(0, 60);
+  }
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RUNNER
+// ═══════════════════════════════════════════════════════════════
+export async function runBootDoctor() {
+  const results = [];
+  const queue = [
+    ...KEY_PROBES.map(p => [p, true]),
+    ...FREE_PROBES.map(p => [p, false]),
+  ];
+  let idx = 0;
+  async function worker() {
+    while (idx < queue.length) {
+      const [probe, isKey] = queue[idx++];
+      results.push(await probeOne(probe, isKey));
+    }
+  }
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  return results;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LAPORAN (line-free — aturan owner, tanpa garis │/╭/╰)
+// ═══════════════════════════════════════════════════════════════
+const CATEGORY_META = {
+  key_invalid: { title: "APIKEY EXPIRED / SALAH — butuh ganti key", icon: "❌", order: 1 },
+  quota: { title: "KUOTA ABIS / perlu top-up", icon: "⚠", order: 2 },
+  ratelimit: { title: "RATE-LIMIT (key valid, kena limit)", icon: "⚠", order: 3 },
+  down: { title: "ENDPOINT DOWN", icon: "🔴", order: 4 },
+  endpoint_err: { title: "ERROR LAIN (endpoint bermasalah)", icon: "🟡", order: 5 },
+};
+
+export function buildBootReport(results) {
+  const byStatus = {};
+  for (const r of results) (byStatus[r.status] ||= []).push(r);
+
+  const lines = [];
+  const now = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" });
+  lines.push("🕒 " + now + " WIB — cek kesehatan fitur pas bot nyala/restart");
+  lines.push("");
+  lines.push("Total diperiksa: " + results.length + " (apikey + endpoint gratis)");
+
+  const problems = Object.entries(CATEGORY_META).sort((a, b) => a[1].order - b[1].order);
+  let problemCount = 0;
+  for (const [status, meta] of problems) {
+    const items = byStatus[status] || [];
+    if (!items.length) continue;
+    problemCount += items.length;
+    lines.push("");
+    lines.push(meta.icon + " " + meta.title + " (" + items.length + ")");
+    for (const it of items) {
+      let detail = "• " + it.label;
+      if (it.features) detail += " — " + it.features;
+      if (it.error) detail += " — " + it.error;
+      else if (it.httpStatus) detail += " — HTTP " + it.httpStatus;
+      lines.push(detail);
+    }
+    if (status === "key_invalid" || status === "quota") {
+      lines.push("");
+      lines.push("💡 Ganti key di src/lib/apikey/apikeys.json lalu ketik .reloadkey (tanpa restart)");
+    }
+  }
+
+  const okKeys = (byStatus.ok || []).filter(r => r.kind === "key").length;
+  const okEps = (byStatus.ok || []).filter(r => r.kind === "endpoint").length;
+  const nokey = (byStatus.nokey || []).length;
+  lines.push("");
+  lines.push("✅ Sehat: " + okKeys + " apikey OK · " + okEps + " endpoint OK");
+  if (nokey) lines.push("ℹ Key kosong (fitur auto-skip/fallback): " + nokey);
+  lines.push("");
+  if (!problemCount) lines.push("Semua fitur sehat, gak ada yang perlu diganti 🎉");
+  else lines.push("Ketik .bootdoctor buat cek ulang manual · .reloadkey setelah ganti key");
+
+  return claraWrap("Boot Doctor", lines);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATE (throttle + dedupe biar restart loop gak spam DM)
+// ═══════════════════════════════════════════════════════════════
+function stateFile() { return stateFileForTest || STATE_FILE; }
+
+function loadState() {
+  try {
+    if (fs.existsSync(stateFile())) return JSON.parse(fs.readFileSync(stateFile(), "utf8"));
+  } catch {}
+  return { enabled: true, lastSent: 0, lastHash: "", lastRun: 0, lastSummary: "" };
+}
+
+function saveState(state) {
+  try {
+    const dir = path.dirname(stateFile());
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(stateFile(), JSON.stringify(state, null, 2), "utf8");
+  } catch (e) {
+    console.error("[bootdoctor] save state:", e.message);
+  }
+}
+
+function simpleHash(text) {
+  let h = 0;
+  for (let i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) | 0;
+  return String(h);
+}
+
+export function shouldSendReport(reportText) {
+  const st = loadState();
+  if (st.enabled === false) return false;
+  const hash = simpleHash(reportText);
+  const changed = hash !== st.lastHash;
+  const fresh = Date.now() - (st.lastSent || 0) < THROTTLE_MS;
+  return changed || !fresh;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT — dipanggil connection.js pas "open"
+// ═══════════════════════════════════════════════════════════════
+function getOwnerJid() {
+  const num = config.owner?.number?.[0] || config.owner?.[0] || "";
+  const clean = String(num).replace(/[^0-9]/g, "");
+  return clean ? clean + "@s.whatsapp.net" : "";
+}
+
+export async function runAndReport({ send = true } = {}) {
+  const results = await runBootDoctor();
+  const report = buildBootReport(results);
+  const st = loadState();
+  st.lastRun = Date.now();
+  st.lastSummary = results.filter(r => r.status !== "ok" && r.status !== "nokey").map(r => r.label + "=" + r.status).join(", ") || "semua sehat";
+  const hash = simpleHash(report);
+  const willSend = send && shouldSendReport(report);
+  if (willSend) {
+    const jid = getOwnerJid();
+    if (sockInstance && jid) {
+      try {
+        await sockInstance.sendMessage(jid, { text: report });
+      } catch (e) {
+        console.error("[bootdoctor] kirim DM gagal:", e.message);
+      }
+    }
+    if (sentHook) { try { sentHook(report); } catch {} }
+    st.lastSent = Date.now();
+    st.lastHash = hash;
+  }
+  saveState(st);
+  return { results, report, sent: willSend };
+}
+
+export function initBootDoctor(sock) {
+  sockInstance = sock;
+  setTimeout(async () => {
+    try {
+      await runAndReport();
+      console.log("[bootdoctor] cek kesehatan fitur selesai (laporan ke DM owner kalau ada perubahan)");
+    } catch (e) {
+      console.error("[bootdoctor] gagal:", e.message);
+    }
+  }, BOOT_DELAY_MS);
+}
+
+export function getBootDoctorStatus() {
+  const st = loadState();
+  return {
+    enabled: st.enabled !== false,
+    lastRun: st.lastRun,
+    lastSent: st.lastSent,
+    lastSummary: st.lastSummary,
+  };
+}
+
+export function setBootDoctorEnabled(v) {
+  const st = loadState();
+  st.enabled = !!v;
+  saveState(st);
+  return st.enabled;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SEAM E2E
+// ═══════════════════════════════════════════════════════════════
+export function _setDoctorHttpForTest(fn) { doctorHttp = fn; }
+export function _resolveKeyForTest(name) { return resolveKey(name); }
+export function _setBootDoctorStateFileForTest(p) { stateFileForTest = p; }
+export function _setBootDoctorSockForTest(s) { sockInstance = s; }
+export function _setBootDoctorSentHookForTest(fn) { sentHook = fn; }

@@ -51,9 +51,15 @@ function flattenApikeys(raw) {
     }
   }
   // provider key → flat[k] = providers[k].apikey
+  // BUGFIX 17 Sep 2026: provider TANPA field apikey (mis. min1ai yang
+  // key-nya disimpan di aiSatuan) DULU nimpa flat jadi "" — key asli
+  // kehapus → getApiKeys().min1ai kosong. Sekarang: provider tanpa apikey
+  // TIDAK nge-overwrite nilai section yang udah ada.
   const provs = raw?.aiMultiprovider?.providers || {};
   for (const [k, v] of Object.entries(provs)) {
-    flat[k] = v?.apikey ?? "";
+    const provKey = v?.apikey ?? "";
+    if (!provKey && flat[k]) continue;
+    flat[k] = provKey;
   }
   return flat;
 }
