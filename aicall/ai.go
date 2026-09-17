@@ -51,35 +51,63 @@ func NewConversation() *Conversation {
 }
 
 // Chat sends prompt to AI model (provider aktif) and returns response text.
-// Provider: "grok" (xAI, request owner 17 Sep 2026 "pakai apikey grok dlu")
-// atau "gemini". Grok gagal → otomatis fallback Gemini kalau key-nya ada.
+// Provider: "grok" (xAI), "groq" (Groq — key pemilik 17 Sep 2026, model
+// gpt-oss-20b), atau "gemini". Provider aktif gagal → otomatis geser ke
+// provider lain yang punya key (pola rantai bot utama: grok → groq → gemini).
 func (c *Conversation) Chat(userPrompt string) (string, error) {
 	c.History = append(c.History, GeminiContent{
 		Role:  "user",
 		Parts: []GeminiPart{{Text: userPrompt}},
 	})
 
+	// urutan coba: provider aktif duluan, sisanya sebagai fallback
+	order := []string{}
 	provider := strings.ToLower(strings.TrimSpace(AppConfig.AIProvider))
-	if provider == "grok" && AppConfig.GrokAPI != "" {
-		reply, err := c.chatGrok()
+	if provider == "" {
+		provider = "groq"
+	}
+	order = append(order, provider)
+	for _, p := range []string{"grok", "groq", "gemini"} {
+		if p != provider {
+			order = append(order, p)
+		}
+	}
+
+	var lastErr error
+	for _, p := range order {
+		var reply string
+		var err error
+		switch p {
+		case "grok":
+			if AppConfig.GrokAPI == "" {
+				continue
+			}
+			reply, err = c.chatGrok()
+		case "groq":
+			if AppConfig.GroqAPI == "" {
+				continue
+			}
+			reply, err = c.chatGroq()
+		default: // gemini
+			if AppConfig.GeminiAPI == "" {
+				continue
+			}
+			reply, err = c.chatGemini()
+		}
 		if err == nil {
+			if p != provider {
+				fmt.Printf("[AI] provider %s gagal (%v) — sukses via %s\n", provider, lastErr, p)
+			}
 			c.appendAssistant(reply)
 			return reply, nil
 		}
-		// fallback ke Gemini kalau key-nya ada (pola rantai bot utama)
-		if AppConfig.GeminiAPI != "" {
-			fmt.Printf("[AI] Grok gagal (%v) — fallback ke Gemini\n", err)
-			reply2, err2 := c.chatGemini()
-			if err2 == nil {
-				c.appendAssistant(reply2)
-				return reply2, nil
-			}
-			return "", err2
-		}
-		return "", err
+		lastErr = err
+		fmt.Printf("[AI] provider %s gagal: %v\n", p, err)
 	}
-
-	return c.chatGemini()
+	if lastErr != nil {
+		return "", lastErr
+	}
+	return "", fmt.Errorf("tidak ada provider AI yang punya key")
 }
 
 // appendAssistant catat jawaban AI ke histori percakapan
@@ -117,11 +145,40 @@ type OpenAIChatResponse struct {
 
 // chatGrok — percakapan via api.x.ai (format OpenAI chat completions)
 func (c *Conversation) chatGrok() (string, error) {
-	apiKey := AppConfig.GrokAPI
-	if apiKey == "" {
+	if AppConfig.GrokAPI == "" {
 		return "", fmt.Errorf("XAI_API (Grok) key is not configured")
 	}
+	primaryModel := AppConfig.GrokModel
+	if primaryModel == "" {
+		primaryModel = "grok-3-mini"
+	}
+	models := []string{primaryModel}
+	if primaryModel != "grok-3-mini" {
+		models = append(models, "grok-3-mini")
+	}
+	return c.chatOpenAICompat("https://api.x.ai/v1/chat/completions", AppConfig.GrokAPI, models, "grok")
+}
 
+// chatGroq — percakapan via api.groq.com (format OpenAI; key SAMA dengan STT
+// whisper — Groq gpt-oss-20b super cepat buat panggilan suara)
+func (c *Conversation) chatGroq() (string, error) {
+	if AppConfig.GroqAPI == "" {
+		return "", fmt.Errorf("GROQ_API key is not configured")
+	}
+	primaryModel := AppConfig.GroqChatModel
+	if primaryModel == "" {
+		primaryModel = "openai/gpt-oss-20b"
+	}
+	models := []string{primaryModel}
+	if primaryModel != "openai/gpt-oss-20b" {
+		models = append(models, "openai/gpt-oss-20b")
+	}
+	models = append(models, "qwen/qwen3.8-27b")
+	return c.chatOpenAICompat("https://api.groq.com/openai/v1/chat/completions", AppConfig.GroqAPI, models, "groq")
+}
+
+// chatOpenAICompat — generic OpenAI chat completions (dipakai grok & groq)
+func (c *Conversation) chatOpenAICompat(url, apiKey string, models []string, label string) (string, error) {
 	sysPrompt := AppConfig.SystemPrompt
 	if sysPrompt == "" {
 		sysPrompt = DefaultSystemPrompt
@@ -137,23 +194,14 @@ func (c *Conversation) chatGrok() (string, error) {
 			msgs = append(msgs, OpenAIMessage{Role: role, Content: h.Parts[0].Text})
 		}
 	}
-	// buang duplikat system prompt bila histori panget (jaga token)
+	// buang histori lama bila kepanjangan (jaga token + latensi)
 	if len(msgs) > 24 {
 		msgs = append(msgs[:1], msgs[len(msgs)-20:]...)
 	}
 
-	primaryModel := AppConfig.GrokModel
-	if primaryModel == "" {
-		primaryModel = "grok-3-mini"
-	}
-	modelsToTry := []string{primaryModel}
-	if primaryModel != "grok-3-mini" {
-		modelsToTry = append(modelsToTry, "grok-3-mini")
-	}
-
 	client := &http.Client{Timeout: 30 * time.Second}
 	var lastErr error
-	for _, modelName := range modelsToTry {
+	for _, modelName := range models {
 		reqBody := OpenAIChatRequest{
 			Model:       modelName,
 			Messages:    msgs,
@@ -162,9 +210,9 @@ func (c *Conversation) chatGrok() (string, error) {
 		}
 		jsonBytes, err := json.Marshal(reqBody)
 		if err != nil {
-			return "", fmt.Errorf("failed to marshal grok request: %w", err)
+			return "", fmt.Errorf("failed to marshal %s request: %w", label, err)
 		}
-		req, err := http.NewRequest("POST", "https://api.x.ai/v1/chat/completions", bytes.NewBuffer(jsonBytes))
+		req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
 		if err != nil {
 			lastErr = err
 			continue
@@ -184,25 +232,25 @@ func (c *Conversation) chatGrok() (string, error) {
 			continue
 		}
 		if resp.StatusCode != http.StatusOK {
-			lastErr = fmt.Errorf("grok API (%s) returned status %d: %s", modelName, resp.StatusCode, string(b))
+			lastErr = fmt.Errorf("%s API (%s) returned status %d: %s", label, modelName, resp.StatusCode, string(b))
 			continue
 		}
 		var chatResp OpenAIChatResponse
 		if err := json.Unmarshal(b, &chatResp); err != nil {
-			return "", fmt.Errorf("failed to unmarshal grok response: %w", err)
+			return "", fmt.Errorf("failed to unmarshal %s response: %w", label, err)
 		}
 		if chatResp.Error != nil && chatResp.Error.Message != "" {
-			return "", fmt.Errorf("grok API error: %s", chatResp.Error.Message)
+			return "", fmt.Errorf("%s API error: %s", label, chatResp.Error.Message)
 		}
 		if len(chatResp.Choices) == 0 {
-			return "", fmt.Errorf("empty response from Grok")
+			return "", fmt.Errorf("empty response from %s", label)
 		}
 		return chatResp.Choices[0].Message.Content, nil
 	}
 	if lastErr != nil {
 		return "", lastErr
 	}
-	return "", fmt.Errorf("grok API unknown failure")
+	return "", fmt.Errorf("%s API unknown failure", label)
 }
 
 // ─────────── GEMINI (jalur asli) ───────────
