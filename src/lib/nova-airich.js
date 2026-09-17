@@ -26,6 +26,7 @@
 //   clean     = nofwd + noverify sekaligus
 // ============================================================
 import axios from "axios";
+import crypto from "crypto";
 
 const CERT_URL = "https://raw.githubusercontent.com/noxXza/data/refs/heads/main/certificate.json";
 
@@ -107,9 +108,32 @@ export function applyAirichVariant(msg, mode) {
   return msg;
 }
 
-export function buildRichResponse(htmlPayload, certChain, opts = {}) {
+// ── VERIFICATION METADATA LOKAL (pola NIXCODE MessageBuilderV4.7 — dipakai
+// bot-bot lain yang AI Rich-nya TETAP muncul): signature + cert chain cukup
+// material string + random bytes, GAK perlu fetch cert dari GitHub. Sumber
+// noxXza lama dilepas: fetch bisa gagal + isinya bisa dicabut kapan saja.
+export function generateVerificationMetadata() {
+  const sigMat = Buffer.from("NIXEL.MessageBuilderV4.7-VerificationSignature.Metadata");
+  const certMat = Buffer.from("NIXEL.MessageBuilderV4.7-CertificateChain.Metadata");
+  const signature = Buffer.concat([sigMat, crypto.randomBytes(Math.max(0, 64 - sigMat.length))]).toString("base64");
+  const certificateChain = [
+    Buffer.concat([certMat, crypto.randomBytes(Math.max(0, 684 - certMat.length))]).toString("base64"),
+    Buffer.concat([certMat, crypto.randomBytes(Math.max(0, 892 - certMat.length))]).toString("base64"),
+  ];
+  return {
+    proofs: [
+      { version: 1, useCase: 1, signature, certificateChain },
+    ],
+  };
+}
+
+export function buildRichResponse(htmlPayload, opts = {}) {
+  // response_id & botResponseId SEGAR TIAP PESAN (crypto.randomUUID) kecuali
+  // caller nyuplain eksplisit — AKAR "AI rich g mncul": versi lama hardcode
+  // response_id + botResponseId SAMA buat SEMUA pesan, server WA dedupe →
+  // pesan kedua dst. ditelan senyap. NIXCODE refresh id tiap build.
   const responseData = {
-    response_id: "4db57b2c-8393-484d-8b9a-8e6d1a14b349",
+    response_id: opts.responseId || crypto.randomUUID(),
     sections: [
       {
         view_model: {
@@ -123,30 +147,24 @@ export function buildRichResponse(htmlPayload, certChain, opts = {}) {
       },
     ],
   };
-  const dataBase64 = Buffer.from(JSON.stringify(responseData, null, 2)).toString("base64");
+  // payload COMPACT (indent 2 spasi dibuang — hemat ~30% ukuran base64)
+  const dataBase64 = Buffer.from(JSON.stringify(responseData)).toString("base64");
   return {
     messageContextInfo: {
       deviceListMetadata: {},
       deviceListMetadataVersion: 2,
       botMetadata: {
         messageDisclaimerText: "",
-        botResponseId: "b2e40280-433c-45d8-9c1a-270bec558860",
-        verificationMetadata: {
-          proofs: [
-            {
-              version: 1,
-              useCase: "WA_BOT_MSG",
-              signature: Buffer.from("TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==", "base64"),
-              certificateChain: certChain,
-            },
-          ],
-        },
+        botResponseId: opts.botResponseId || crypto.randomUUID(),
+        verificationMetadata: generateVerificationMetadata(),
       },
     },
     botForwardedMessage: {
       message: {
         richResponseMessage: {
-          messageType: "AI_RICH_RESPONSE_TYPE_STANDARD",
+          // messageType enum ANGKA (NIXCODE: 1) — string enum name versi lama
+          // lolos di beberapa build protobuf tapi rawan; angka pasti valid
+          messageType: 1,
           submessages: [
             {
               messageType: "AI_RICH_RESPONSE_TEXT",
@@ -170,7 +188,7 @@ export function buildRichResponse(htmlPayload, certChain, opts = {}) {
             forwardedAiBotMessageInfo: {
               botJid: "867051314767696@bot",
             },
-            forwardOrigin: "META_AI",
+            forwardOrigin: 4,
           },
         },
       },
@@ -180,11 +198,13 @@ export function buildRichResponse(htmlPayload, certChain, opts = {}) {
 
 // ── satu pintu: polish → rakit → relay. Plugin baru tinggal panggil ini ──
 export async function sendRichResponse(sock, chat, html, opts = {}) {
-  const certChain = await fetchCertificate();
-  if (!Array.isArray(certChain) || !certChain.length) console.error("[airich] ⚠️ certChain KOSONG — WA bakal nolak render");
+  // cert fetch dari GitHub DIBUANG (17 Sep 2026, report "ai rich g muncul"):
+  // verifikasi sekarang digenerate LOKAL ala NIXCODE V4.7 — gak ada lagi titik
+  // gagal jaringan sebelum relay.
+
   const payload = polishPayload(html);
-  console.log(`[airich] kirim rich response: payload ${Buffer.byteLength(payload)} B, cert ${certChain?.length || 0} entri, ke ${chat}`);
-  const msg = applyAirichVariant(buildRichResponse(payload, certChain, opts));
+  console.log(`[airich] kirim rich response: payload ${Buffer.byteLength(payload)} B, verifikasi lokal, ke ${chat}`);
+  const msg = applyAirichVariant(buildRichResponse(payload, opts));
   try {
     await sock.relayMessage(chat, msg, {});
     console.log(`[airich] ✅ relay diterima server (response_id=${msg.messageContextInfo.botMetadata.botResponseId.slice(0, 12)}...)`);

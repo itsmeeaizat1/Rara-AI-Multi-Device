@@ -35,31 +35,36 @@ const sock = {
   sendMessage: async () => ({}),
 };
 
-// ═══ 1. buildRichResponse — struktur VERBATIM ═══
+// ═══ 1. buildRichResponse — v2 NIXCODE-align (verifikasi lokal, ID segar) ═══
 w("\n— buildRichResponse —");
-const r = buildRichResponse(HTML, CERT);
+const r = buildRichResponse(HTML);
 t("  messageContextInfo.botMetadata.verificationMetadata ada",
   !!r.messageContextInfo?.botMetadata?.verificationMetadata);
-t("  proofs v1 WA_BOT_MSG + signature Buffer + certificateChain",
+t("  proofs v1 enum + cert lokal (684/892) + signature NIXCODE 64B",
   (() => { const p = r.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
-    return p.version === 1 && p.useCase === "WA_BOT_MSG" && Buffer.isBuffer(p.signature) && p.signature.equals(Buffer.from("TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==", "base64")) && p.certificateChain === CERT; })());
-t("  botForwardedMessage.richResponseMessage type STANDARD + submessage 'Space Rush 🚀'",
-  r.botForwardedMessage?.message?.richResponseMessage?.messageType === "AI_RICH_RESPONSE_TYPE_STANDARD"
+    return p.version === 1 && p.useCase === 1 && typeof p.signature === "string"
+      && Buffer.from(p.signature, "base64").length === 64
+      && Array.isArray(p.certificateChain) && p.certificateChain.length === 2
+      && Buffer.from(p.certificateChain[0], "base64").length === 684
+      && Buffer.from(p.certificateChain[1], "base64").length === 892; })());
+t("  botForwardedMessage.richResponseMessage type 1 + submessage 'Space Rush 🚀'",
+  r.botForwardedMessage?.message?.richResponseMessage?.messageType === 1
   && r.botForwardedMessage.message.richResponseMessage.submessages?.[0]?.messageText === "Space Rush 🚀");
 t("  opts.title custom (hint markdown dari handler) nge-override submessage",
-  buildRichResponse(HTML, CERT, { title: "Space Rush 🚀\n*Tap kiri/kanan* buat manuver" }).botForwardedMessage.message.richResponseMessage.submessages[0].messageText.includes("Tap kiri/kanan"));
-t("  contextInfo: stanzaId + forwardOrigin META_AI + botJid",
+  buildRichResponse(HTML, { title: "Space Rush 🚀\n*Tap kiri/kanan* buat manuver" }).botForwardedMessage.message.richResponseMessage.submessages[0].messageText.includes("Tap kiri/kanan"));
+t("  contextInfo: stanzaId + forwardOrigin 4 + botJid",
   (() => { const ci = r.botForwardedMessage.message.richResponseMessage.contextInfo;
-    return ci.stanzaId === "A5FBA758891A16FD260767C2569F87E4" && ci.forwardOrigin === "META_AI" && ci.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"; })());
+    return ci.stanzaId === "A5FBA758891A16FD260767C2569F87E4" && ci.forwardOrigin === 4 && ci.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"; })());
 // base64 ke-decode → responseData HTML primitive
 const decoded = JSON.parse(Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8"));
 t("  base64 ke-decode → GenAIaeacdsnwHtmlPrimitive payload = HTML",
   decoded.sections?.[0]?.view_model?.primitive?.__typename === "GenAIaeacdsnwHtmlPrimitive"
   && decoded.sections[0].view_model.primitive.payload === HTML);
 
-t("  trusted_sources noxXza + response_id tetap",
+t("  trusted_sources noxXza + response_id UUID segar (bukan hardcode lama)",
   decoded.sections[0].view_model.primitive.trusted_sources.join() === "noxXza.js,noxXza.dev"
-  && decoded.response_id === "4db57b2c-8393-484d-8b9a-8e6d1a14b349");
+  && /^[0-9a-f-]{36}$/.test(decoded.response_id)
+  && decoded.response_id !== "4db57b2c-8393-484d-8b9a-8e6d1a14b349");
 
 // ═══ 1.5 POLISH BOTTOM SHEET — anti-gegeser + sheet look ═══
 w("\n— polishPayload bottom sheet —");
