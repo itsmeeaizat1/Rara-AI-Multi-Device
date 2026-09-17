@@ -277,5 +277,85 @@ out("\n— session expired —");
   t("15c. hook return false buat session expired", handled === false);
 }
 
+// ═══ 16. FIX 17 Sep 2026: one-shot — reply foto orang + caption "pakai" + lampir foto pakaian ═══
+out("\n— one-shot: reply foto orang + lampir foto pakaian + pakai —");
+{
+  reset();
+  let gotOpts = null;
+  _setOmniOutfitDepsForTest({
+    uguu: async (buf, name) => `https://uguu.se/${name}`,
+    zelImage: async (path_, prompt, opts) => {
+      gotOpts = { path: path_, prompt, opts };
+      return { ok: true, buffer: Buffer.from([1, 2, 3, 4, 5]) };
+    },
+  });
+  // satu pesan: reply foto ORANG + caption ".omnioutfitchanger pakai" + LAMPIR foto pakaian
+  await handler(mockM({ args: ["pakai"], quoted: quotedMock(), isImage: true }), { sock: sockMock });
+  t("16a. TIDAK nyembur usage (langsung proses)", !replies[0] || !replies[0].includes("belum ada session"));
+  t("16b. panggil endpoint omnivton one-shot", gotOpts?.path === "ai-image/omnivton");
+  t("16c. hasil dikirim langsung", sent.length === 1 && Buffer.isBuffer(sent[0].payload.image));
+  t("16d. session kehapus setelah proses", !getSession(SENDER));
+}
+
+// ═══ 17. FIX: session aktif + "pakai" + lampir foto pakaian → item terakhir, langsung proses ═══
+out("\n— session aktif + lampir foto bareng pakai —");
+{
+  reset();
+  _setOmniOutfitDepsForTest({
+    uguu: async (buf, name) => `https://uguu.se/${name}`,
+    zelImage: async () => ({ ok: true, buffer: Buffer.from([7, 7, 7]) }),
+  });
+  await handler(mockM({ args: [], quoted: quotedMock() }), { sock: sockMock }); // mulai session
+  sent = [];
+  // caption "pakai" + lampir foto pakaian → harus jadi item lalu langsung proses
+  await handler(mockM({ args: ["pakai"], isImage: true }), { sock: sockMock });
+  t("17a. langsung proses (bukan hint belum ada item)", !replies.some((r) => r.includes("belum ada session/item")));
+  t("17b. hasil dikirim", sent.length === 1 && Buffer.isBuffer(sent[0].payload.image));
+}
+
+// ═══ 18. FIX: "pakai" + reply foto orang, belum ada session → mulai session + minta item ═══
+out("\n— pakai + reply foto orang (tanpa session) —");
+{
+  reset();
+  await handler(mockM({ args: ["pakai"], quoted: quotedMock() }), { sock: sockMock });
+  t("18a. mulai session dari foto reply", !!getSession(SENDER));
+  t("18b. balasan minta foto item", replies[0]?.includes("foto orang disimpan") && replies[0]?.includes("kirim foto item"));
+}
+
+// ═══ 19. FIX hook: foto item dikirim sambil REPLY ke pesan teks (konfirmasi bot) ═══
+out("\n— hook: foto item sambil reply ke pesan teks —");
+{
+  reset();
+  await handler(mockM({ args: [], quoted: quotedMock() }), { sock: sockMock }); // mulai session
+  replies = [];
+  // reply ke pesan TEKS (konfirmasi bot) sambil kirim foto item
+  const m1 = mockM({ isImage: true, isCommand: false, quoted: { isMedia: false, isImage: false, type: "conversation" } });
+  const handled = await handleOutfitPhotoHook(m1);
+  t("19a. ke-handle (return true)", handled === true);
+  t("19b. item nyimpen ke session", getSession(SENDER)?.items.length === 1);
+  t("19c. reply info item", replies[0]?.includes("item ke-1/4"));
+  // reply ke pesan GAMBAR tetap gak dianggap item (jalur foto orang)
+  const m2 = mockM({ isImage: true, isCommand: false, quoted: quotedMock() });
+  const handled2 = await handleOutfitPhotoHook(m2);
+  t("19d. reply ke pesan gambar gak dianggap item", handled2 === false && getSession(SENDER)?.items.length === 1);
+}
+
+// ═══ 20. FIX: "pakai" + lampir foto pakaian, TANPA session & TANPA reply → hint butuh foto orang ═══
+out("\n— pakai + lampir foto, tanpa foto orang —");
+{
+  reset();
+  await handler(mockM({ args: ["pakai"], isImage: true }), { sock: sockMock });
+  t("20a. hint butuh foto orang", replies[0]?.includes("belum ada foto orang"));
+  t("20b. gak ada session nyasar", !getSession(SENDER));
+}
+
+// ═══ 21. usage: ada cara cepet one-shot ═══
+out("\n— usage: cara cepet —");
+{
+  reset();
+  await handler(mockM({ args: [] }), { sock: sockMock });
+  t("21a. usage nunjuk cara cepet one-shot", replies[0]?.includes("cara cepet"));
+}
+
 out(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);
 process.exit(fail > 0 ? 1 : 0);
