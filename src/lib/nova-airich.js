@@ -14,6 +14,16 @@
 // 🔹 Struktur relay VERBATIM dari kode owner (.plane) — kalau Meta
 //   ubah format, cukup update buildRichResponse() di sini, SEMUA
 //   plugin airich ikut kebagian perbaikan.
+// 🔹 VARIAN EKSPERIMEN (WA menandai "Diteruskan / tidak bisa memverifikasi"
+//   di device owner 17 Sep 2026): set env AIRICH_MODE di service bot utama
+//   lalu restart PM2, gak perlu ubah kode —
+//   full      = struktur verbatim asli (DEFAULT, perilaku semula)
+//   nofwd     = buang tanda forward (forwardingScore/isForwarded/
+//               forwardedAiBotMessageInfo/forwardOrigin) — dugaan sumber
+//               label "Diteruskan"
+//   noverify  = buang verificationMetadata (signature+cert) — dugaan sumber
+//               peringatan "tidak bisa memverifikasi keamanan media ini"
+//   clean     = nofwd + noverify sekaligus
 // ============================================================
 import axios from "axios";
 
@@ -72,6 +82,31 @@ export function polishPayload(html) {
 // ── perakit pesan — struktur VERBATIM kode owner (jangan diutak-atik) ──
 // opts: { responseId, botResponseId, title } — semuanya opsional, default
 // nilai dari eksperimen .plane (id unik per pesan biar gak nyangkut cache).
+// ── varian eksperimen (AIRICH_MODE) — baca env tiap kirim, urusannya murah ──
+export function airichMode() {
+  const m = String(process.env.AIRICH_MODE || "").trim().toLowerCase();
+  return (m === "nofwd" || m === "noverify" || m === "clean") ? m : "full";
+}
+
+// strip field dugaan sumber label "Diteruskan" + peringatan verifikasi.
+// msg dimutasi DLM PLACE (struktur verbatim buildRichResponse gak disentuh).
+export function applyAirichVariant(msg, mode) {
+  mode = mode || airichMode();
+  const ci = msg?.botForwardedMessage?.message?.richResponseMessage?.contextInfo;
+  if (mode === "nofwd" || mode === "clean") {
+    if (ci) {
+      delete ci.forwardingScore;
+      delete ci.isForwarded;
+      delete ci.forwardedAiBotMessageInfo;
+      delete ci.forwardOrigin;
+    }
+  }
+  if (mode === "noverify" || mode === "clean") {
+    delete msg?.messageContextInfo?.botMetadata?.verificationMetadata;
+  }
+  return msg;
+}
+
 export function buildRichResponse(htmlPayload, certChain, opts = {}) {
   const responseData = {
     response_id: "4db57b2c-8393-484d-8b9a-8e6d1a14b349",
@@ -149,7 +184,7 @@ export async function sendRichResponse(sock, chat, html, opts = {}) {
   if (!Array.isArray(certChain) || !certChain.length) console.error("[airich] ⚠️ certChain KOSONG — WA bakal nolak render");
   const payload = polishPayload(html);
   console.log(`[airich] kirim rich response: payload ${Buffer.byteLength(payload)} B, cert ${certChain?.length || 0} entri, ke ${chat}`);
-  const msg = buildRichResponse(payload, certChain, opts);
+  const msg = applyAirichVariant(buildRichResponse(payload, certChain, opts));
   try {
     await sock.relayMessage(chat, msg, {});
     console.log(`[airich] ✅ relay diterima server (response_id=${msg.messageContextInfo.botMetadata.botResponseId.slice(0, 12)}...)`);
