@@ -26,7 +26,8 @@ Owner: ".aicall 628xxx" (chat WA)
         └─ POST http://127.0.0.1:8788/call  (key pusat ikut dikirim)
              └─ Service Go ini (whatsmeow + meowcaller, device ke-2 WA)
                   └─ VOIP call: rekam 6 dtk → Groq Whisper STT
-                     → Gemini jawab → TTS (Edge/Gemini/11labs) → codec MLow
+                     → otak AI jawab (GROK xAI / GROQ / Gemini — rantai
+                       fallback otomatis) → TTS (Edge/Gemini/11labs) → MLow
 ```
 
 Panggilan MASUK ke nomor bot juga dijawab AI otomatis (hanya nomor di OWNER).
@@ -45,10 +46,16 @@ go version   # harus >= 1.25
 # 2. Config service:
 cd <repo>/aicall
 cp .env.example .env
-nano .env   # GEMINI_API (key baru, yang lama expired) + GROQ_API (key baru)
+nano .env   # GROQ_API (key owner 17 Sep — gsk_..., SAMA buat STT whisper +
+            #   otak chat groq, SUDAH ada di pusat apikeys.json bot utama)
             # TTS_ENGINE=edgetts (GRATIS) + TTS_VOICE=id-ID-GadisNeural
             # OWNER=62<nomor owner> + PAIR_PHONE=62<nomor owner>
             # AICALL_HTTP_KEY=<token random>
+            # (GEMINI_API opsional — cuma fallback terakhir; key lama expired)
+            # (XAI_API opsional — kalau nanti punya key Grok xAI, awalan xai-)
+
+# Tes otak AI live tanpa panggilan beneran:
+AI_CHAT_TEST=1 ./ai-call   # keluar [AI_CHAT_TEST] OK — provider 'groq' jawab: siap
 
 # 3. Dependensi edge-tts + build:
 npm install
@@ -76,7 +83,11 @@ pm2 restart <nama bot>
 1. **Risiko akun**: panggilan otomatis via client tidak resmi = kategori risiko
    ban LEBIH TINGGI daripada bot pesan. Saran: sadari risikonya, atau jalankan
    di nomor khusus. Keputusan di tangan owner.
-2. **Key butuh baru**: GEMINI_API (yang sekarang expired) + GROQ_API (yang
-   sekarang invalid) — keduanya gratis (aistudio.google.com / console.groq.com).
+2. **Key**: GROQ_API valid baru 17 Sep (gsk_... — otak chat groq + STT
+   whisper sekalian, gratis console.groq.com). Otak percakapan urutan
+   otomatis: GROK (xAI, kalau key XAI_API ada) → GROQ → Gemini (opsional).
+   Ganti live dari bot: `.aicall ai grok|groq|gemini`.
+   CATATAN: key xAI Grok diawali `xai-` — JANGAN tertukar dengan key Groq
+   (`gsk_...`, itu provider berbeda sama sekali).
 3. TTS `edgetts` 100% gratis tanpa key; kuota Gemini untuk otak percakapan.
 4. Resource: binary ±29MB, RAM runtime kecil (±50-80MB) — aman di VPS.
