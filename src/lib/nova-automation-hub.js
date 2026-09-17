@@ -147,13 +147,11 @@ async function checkVPSHealth() {
 
     const uptime = formatUptime(os.uptime())
     let text = "「 ✦ VPS Alert ✦ 」\n"
-    text += "│ " + new Date().toLocaleString("id-ID") + "\n"
-    text += "│ Uptime: " + uptime + "\n"
-    text += "│\n"
-    alerts.forEach(a => text += "│ " + a + "\n")
-    text += "│\n"
-    text += "│ Cek detail: .servermonitor status\n"
-    text += ""
+    text += new Date().toLocaleString("id-ID") + "\n"
+    text += "Uptime: " + uptime + "\n\n"
+    alerts.forEach(a => text += "• " + a + "\n")
+    text += "\n"
+    text += "Cek detail: .servermonitor status\n"
 
     await sendToOwner(text)
     console.log("[automation-hub] VPS alert sent")
@@ -186,12 +184,12 @@ async function checkCrashGuard() {
           saveAutomodData()
           await sendToOwner(
             "「 ✦ Crash Guard Alert ✦ 」\n" +
-            "│ " + new Date().toLocaleString("id-ID") + "\n" +
-            "│ PM2 \"" + p.name + "\" DOWN\n" +
-            "│ Max restarts (" + maxRestarts + ") tercapai.\n" +
-            "│ Restart manual diperlukan.\n" +
-            "│\n" +
-            "│ .crashguard restart " + p.name + "\n" +
+            "" + new Date().toLocaleString("id-ID") + "\n" +
+            "PM2 \"" + p.name + "\" DOWN\n" +
+            "Max restarts (" + maxRestarts + ") tercapai.\n" +
+            "Restart manual diperlukan.\n" +
+            "\n" +
+            ".crashguard restart " + p.name + "\n" +
             ""
           )
         }
@@ -209,9 +207,9 @@ async function checkCrashGuard() {
 
         await sendToOwner(
           "「 ✦ Crash Guard Auto-Restart ✦ 」\n" +
-          "│ " + new Date().toLocaleString("id-ID") + "\n" +
-          "│ PM2 \"" + p.name + "\" was DOWN — auto-restarted\n" +
-          "│ Restarts in window: " + (recentRestarts.length + 1) + "/" + maxRestarts + "\n" +
+          "" + new Date().toLocaleString("id-ID") + "\n" +
+          "PM2 \"" + p.name + "\" was DOWN — auto-restarted\n" +
+          "Restarts in window: " + (recentRestarts.length + 1) + "/" + maxRestarts + "\n" +
           ""
         )
         console.log("[automation-hub] Auto-restarted PM2:", p.name)
@@ -219,8 +217,8 @@ async function checkCrashGuard() {
         console.error("[automation-hub] Restart failed:", e.message)
         await sendToOwner(
           "「 ✦ Crash Guard Failed ✦ 」\n" +
-          "│ Gagal auto-restart PM2 \"" + p.name + "\"\n" +
-          "│ " + e.message.slice(0, 100) + "\n" +
+          "Gagal auto-restart PM2 \"" + p.name + "\"\n" +
+          "" + e.message.slice(0, 100) + "\n" +
           ""
         )
       }
@@ -265,31 +263,31 @@ async function checkSmartDigest() {
   const elapsedStr = formatUptime(elapsed / 1000)
 
   let text = "「 ✦ Daily Digest ✦ 」\n"
-  text += "│ " + now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" }) + "\n"
-  text += "│ Periode: " + elapsedStr + "\n"
-  text += "│ Total pesan: " + (stats.messages || 0) + "\n"
-  text += "│ Total command: " + Object.values(stats.commands || {}).reduce((a, b) => a + b, 0) + "\n"
-  text += "│ Errors: " + (stats.errors || 0) + "\n"
-  text += "│\n"
+  text += "" + now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" }) + "\n"
+  text += "Periode: " + elapsedStr + "\n"
+  text += "Total pesan: " + (stats.messages || 0) + "\n"
+  text += "Total command: " + Object.values(stats.commands || {}).reduce((a, b) => a + b, 0) + "\n"
+  text += "Errors: " + (stats.errors || 0) + "\n"
+  text += "\n"
 
   if (commands.length) {
-    text += "│ Top Commands:\n"
+    text += "Top Commands:\n"
     commands.forEach(([cmd, count], i) => {
-      text += "│ " + (i + 1) + ". ." + cmd + " (" + count + "x)\n"
+      text += "" + (i + 1) + ". ." + cmd + " (" + count + "x)\n"
     })
-    text += "│\n"
+    text += "\n"
   }
   if (groups.length) {
-    text += "│ Grup Aktif:\n"
+    text += "Grup Aktif:\n"
     groups.forEach(([gid, count], i) => {
-      text += "│ " + (i + 1) + ". " + gid.slice(0, 15) + "... (" + count + ")\n"
+      text += "" + (i + 1) + ". " + gid.slice(0, 15) + "... (" + count + ")\n"
     })
-    text += "│\n"
+    text += "\n"
   }
   if (users.length) {
-    text += "│ User Aktif:\n"
+    text += "User Aktif:\n"
     users.forEach(([uid, count], i) => {
-      text += "│ " + (i + 1) + ". " + uid.split("@")[0] + " (" + count + ")\n"
+      text += "" + (i + 1) + ". " + uid.split("@")[0] + " (" + count + ")\n"
     })
   }
   text += ""
@@ -335,14 +333,14 @@ export async function checkAutoForward(m, sock) {
     const originalText = m.text || m.message?.conversation || ""
 
     let forwardText = "「 ✦ Auto Forward ✦ 」\n"
-    forwardText += "│\n"
+    forwardText += "\n"
     forwardText += "• Dari   : " + chatName + "\n"
     forwardText += "• Sender : " + sender.split("@")[0] + "\n"
     forwardText += "• Chat   : " + chat.slice(0, 25) + "\n"
-    forwardText += "│\n"
-    forwardText += "│ Pesan:\n"
-    forwardText += "│ " + originalText.slice(0, 500) + "\n"
-    forwardText += "│\n"
+    forwardText += "\n"
+    forwardText += "Pesan:\n"
+    forwardText += "" + originalText.slice(0, 500) + "\n"
+    forwardText += "\n"
     forwardText += ""
 
     await sock.sendMessage(ownerJid, { text: forwardText })

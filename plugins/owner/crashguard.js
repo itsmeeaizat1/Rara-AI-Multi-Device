@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
         const icon = h.success ? "✅" : "❌"
         text += "" + (i + 1) + ". " + icon + " " + h.action + " — " + (h.process || "?") + "\n"
         text += "" + new Date(h.time).toLocaleString("id-ID") + "\n"
-        if (i < 9) text += "│\n"
+        if (i < 9) text += "\n"
       })
       text += ""
       return m.reply(text)
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
     text += "Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n"
     text += "Last restart: " + lastRestart + "\n"
     text += "Events: " + (cfg.restartHistory?.length || 0) + "\n"
-    text += "│\n"
+    text += "\n"
     if (pm2.length) {
       text += "PM2 Processes:\n"
       pm2.forEach(p => {

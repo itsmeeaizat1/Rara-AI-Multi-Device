@@ -24,10 +24,10 @@ async function handler(m, { sock }) {
         
         await sock.sendMessage(m.chat, {
             image: { url: data.url },
-            caption: '│ ' + data.title + '\n│ r/' + data.subreddit + ' — u/' + data.author + ''
+            caption: data.title + '\nr/' + data.subreddit + ' — u/' + data.author
         }, { quoted: m })
     } catch (e) {
-        await m.reply('│ Gagal mengambil meme: ' + (e.message || e) + '')
+        await m.reply('Gagal mengambil meme: ' + (e.message || e))
     }
 }
 

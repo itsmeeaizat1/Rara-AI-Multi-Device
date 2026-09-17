@@ -37,14 +37,14 @@ async function handler(m, { sock, text }) {
       const elem = rpg.element ? ELEMENTS[rpg.element] : null;
       let msg = "";
       msg += "👤 " + (m.pushName || "Player") + " | Lv." + rpg.level + "\n";
-      msg += "│\n";
+      msg += "\n";
       if (elem) {
         msg += "🔮 Elemen: *" + elem.name + "*\n";
         msg += "💪 Kuat vs: " + elem.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
         msg += "🛡️ Lemah vs: " + elem.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
       } else {
         msg += "🔮 Elemen: *Belum dipilih*\n";
-        msg += "│\n";
+        msg += "\n";
         msg += "📌 Pilih: .element <api|air|tanah|angin>\n";
       }
       msg += "";
@@ -54,7 +54,7 @@ async function handler(m, { sock, text }) {
     // .element weak — chart kelemahan
     if (action === "weak" || action === "kelemahan") {
       let msg = "";
-      msg += "│\n";
+      msg += "\n";
       for (const [id, el] of Object.entries(ELEMENTS)) {
         msg += el.name + "\n";
         msg += "  💪 Kuat vs: " + el.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
