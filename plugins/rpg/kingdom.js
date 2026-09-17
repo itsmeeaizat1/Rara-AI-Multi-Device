@@ -54,7 +54,7 @@ async function handler(m, { sock, text, command }) {
       const baseType = (text || "").trim().toLowerCase();
       if (!baseType) {
         let msg = "";
-        msg += "Pilih tipe markas:\n│\n";
+        msg += "Pilih tipe markas:\n\n";
         for (const [type, info] of Object.entries(BASE_TYPES)) {
           msg += "🏠 " + type + " — " + info.cost + " gold\n";
           msg += "   " + info.desc + " (DEF +" + info.def + ")\n";

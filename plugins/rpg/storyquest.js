@@ -52,9 +52,9 @@ async function handler(m, { sock, text, command }) {
       const current = STORY[storyIndex % STORY.length];
       let msg = "";
       msg += "📜 Chapter " + (storyIndex + 1) + "/" + STORY.length + "\n";
-      msg += "│\n";
+      msg += "\n";
       msg += "" + current + "\n";
-      msg += "│\n";
+      msg += "\n";
       if (storyIndex < STORY.length - 1) {
         msg += "📌 Ketik .nextquest untuk lanjut cerita\n";
       } else {
@@ -78,9 +78,9 @@ async function handler(m, { sock, text, command }) {
       await m.react("🐣");
       let msg = "";
       msg += "📜 Chapter " + (nextIndex + 1) + "/" + STORY.length + "\n";
-      msg += "│\n";
+      msg += "\n";
       msg += "" + STORY[nextIndex] + "\n";
-      msg += "│\n";
+      msg += "\n";
       msg += "⭐ +" + reward + " EXP | 💰 +" + reward + " Gold\n";
       msg += "";
       return m.reply(msg);

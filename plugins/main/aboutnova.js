@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     let cmdLines = "";
     for (let i = 0; i < mainCmds.length; i++) {
-      cmdLines += `│ ${prefix}${mainCmds[i]}\n`;
+      cmdLines += `${prefix}${mainCmds[i]}\n`;
     }
 
     const text = `*Nama:* ${toSC(botName)}

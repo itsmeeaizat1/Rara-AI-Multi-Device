@@ -157,7 +157,7 @@ Format output (gunakan bahasa Indonesia, santai tapi informatif):
 Aturan:
 - Jangan pakai markdown bold/italic
 - Jangan pakai emoji berlebihan (max 3-4 di seluruh pesan)
-- Gunakan box-drawing style (╭╮╰╯│) untuk format
+- Format polos tanpa garis/border (JANGAN pakai box-drawing ╭╮╰╯│)
 - Pastikan nama member ditulis natural, bukan nomor`;
 
   const userPrompt = `Rangkum obrolan grup "${groupName}" hari ini (${messages.length} pesan):\n\n${conversationLog.slice(0, 8000)}`;
