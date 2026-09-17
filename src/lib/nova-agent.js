@@ -42,21 +42,41 @@ const REPO_ROOT = path.resolve(path.dirname(__libFilename), "..", "..");
 const MAX_QUERIES = 3;
 const MAX_PICKS = 3;
 const POOL_OFFER = 12;
-const PAGE_TEXT_CAP = 3500;
+// 🔹 FIX OWNER 17 Sep 2026 ("informasinya pendek kyk singkat gak lengkap"):
+// halaman dibaca lebih DALAM (3500 → 10000 char) + bukti ke compose
+// dilipatgandakan — jawaban riset harus Lengkap, bukan ringkasan tipis.
+const PAGE_TEXT_CAP = 10000;
 
 let _aiChat = aiChainChat;
 let _search = searchWeb;
 let _preview = fetchPagePreview;
+let _browserSearch; // undefined = pakai chromium asli; null = DISABLED (e2e)
 
-export function setAgentDeps({ aiChat, search, preview } = {}) {
+export function setAgentDeps({ aiChat, search, preview, browserSearch } = {}) {
   if (aiChat) _aiChat = aiChat;
   if (search) _search = search;
   if (preview) _preview = preview;
+  if (browserSearch !== undefined) _browserSearch = browserSearch;
 }
 export function resetAgentDeps() {
   _aiChat = aiChainChat;
   _search = searchWeb;
   _preview = fetchPagePreview;
+  _browserSearch = undefined; // undefined = pakai chromium asli
+}
+
+// 🔹 FALLBACK CHROMIUM (owner report 17 Sep: berita "saya tidak tahu" —
+// semua engine scrape balikin SERP sampah dari IP datacenter → pool kosong
+// → error "mesin search sibuk". Chromium html.duckduckgo.com lolos blokir).
+async function _browserSearchRun(query, limit) {
+  // 🔹 semantik seam: function = mock; null = DISABLED (e2e biar gak
+  // launch browser asli); undefined = chromium asli
+  if (typeof _browserSearch === "function") return _browserSearch(query, { limit });
+  if (_browserSearch === null) return null;
+  try {
+    const { browserWebSearch } = await import("../scraper/nova-web-browser.js");
+    return await browserWebSearch(query, { limit });
+  } catch { return null; }
 }
 
 // ── util ──
@@ -148,7 +168,7 @@ Format: {"picks": [nomor1, nomor2, nomor3]}
 Aturan: pilih ${MAX_PICKS} halaman paling relevan & berbobot buat tugas user (hindari halaman login/agregator kosong), nomor sesuai daftar kandidat.`;
 
 const SYS_ANSWER = `Kamu adalah analis riset. Jawab tugas user berdasarkan BUKTI dari halaman web yang diberikan (ditandai [S1], [S2], dst).
-Aturan jawaban: bahasa yang sama dengan tugas user (default Indonesia), terstruktur dan padat (poin/heading boleh), sebut sumber dengan [S1]/[S2] di kalimat yang pakai info itu, jangan mengarang data yang gak ada di bukti, jangan pakai markdown table, akhiri tanpa sapaan basa-basi.`;
+Aturan jawaban: bahasa yang sama dengan tugas user (default Indonesia). Jawab LENGKAP dan BERBOBOT — keluarkan SEMUA informasi penting dari bukti (fakta, angka, kronologi, nama, kutipan relevan), JANGAN diringkas jadi 2-3 baris tipis; kalau buktinya banyak, jawaban boleh panjang (poin/heading boleh). Sebut sumber dengan [S1]/[S2] di kalimat yang pakai info itu, jangan mengarang data yang gak ada di bukti, jangan pakai markdown table, akhiri tanpa sapaan basa-basi.`;
 
 // deteksi aksi lokal — fallback kalau LLM plan down (biar "tutup grup" dll
 // tetep jalan tanpa AI) — heuristik kata kunci Indonesia
@@ -305,7 +325,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       if (evidences.length) {
         phase("compose");
         try {
-          answer = await _aiChat(`Tugas user: ${task}\n\nBUKTI/HASIL TOOLS:\n${evidences.join("\n\n").slice(0, 12000)}`, { systemPrompt: SYS_ANSWER });
+          answer = await _aiChat(`Tugas user: ${task}\n\nBUKTI/HASIL TOOLS:\n${evidences.join("\n\n").slice(0, 24000)}`, { systemPrompt: SYS_ANSWER });
         } catch {}
         if (!answer || !String(answer).trim()) {
           viaLocal = true;
@@ -384,6 +404,33 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       }
     }
   }
+  // 🔹 FALLBACK: pool kosong (engine scrape sampah/down semua) → CHROMIUM
+  // nyoba query pertama & kedua sebelum nyerah (owner 17 Sep report
+  // "carikan berita makanan mbg beracun" dijawab gak tahu sama sekali).
+  if (!pool.length) {
+    for (const q of queries.slice(0, 2)) {
+      phase("search", q + " (browser)");
+      let items = null;
+      try {
+        items = await Promise.race([
+          _browserSearchRun(q, 8),
+          new Promise((resolve) => setTimeout(() => resolve(null), 30000)),
+        ]);
+      } catch {}
+      for (const it of items || []) {
+        const url = String(it?.url || "");
+        if (!url || seen.has(url)) continue;
+        seen.add(url);
+        pool.push({
+          title: String(it?.title || "").slice(0, 120),
+          url,
+          snippet: String(it?.snippet || "").slice(0, 200),
+          domain: domainOf(url),
+        });
+      }
+      if (pool.length >= 6) break;
+    }
+  }
   steps.push({ phase: "search", ok: pool.length > 0, hasil: pool.length });
   if (!pool.length) {
     return { error: "hasil pencarian kosong — semua mesin search sibuk, coba lagi bentar" };
@@ -422,7 +469,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   // bukti: isi halaman yang kebaca; gak ada → snippet pool (bukti tipis tapi tetep dipakai)
   const evidence = (reads.length
     ? reads.map((p, n) => `[S${n + 1} | ${p.domain} | ${p.title}]\n${p.text}`).join("\n\n")
-    : offer.map((p, n) => `[S${n + 1} | ${p.domain} | ${p.title}]\n${p.snippet}`).join("\n\n")).slice(0, 12000);
+    : offer.map((p, n) => `[S${n + 1} | ${p.domain} | ${p.title}]\n${p.snippet}`).join("\n\n")).slice(0, 24000);
   const sources = (reads.length ? reads : offer.slice(0, MAX_PICKS)).map((p, n) => ({
     tag: `S${n + 1}`, domain: p.domain, url: p.url, title: p.title,
   }));

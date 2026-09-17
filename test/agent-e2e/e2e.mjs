@@ -16,9 +16,13 @@ const ITEMS = [
   { title: "HP Gaming Murah", url: "https://tekno.id/hp-gaming", snippet: "hp gaming di bawah 5 juta" },
 ];
 
-function mkDeps({ planReply, pickReply, composeReply, searchOk = true, previewOk = true } = {}) {
+function mkDeps({ planReply, pickReply, composeReply, searchOk = true, previewOk = true, browserSearch = null } = {}) {
   const calls = { ai: [], search: [], preview: [] };
   setAgentDeps({
+    // 🔹 FIX 17 Sep: fallback chromium WAJIB di-mock — kalau null-asli,
+    // e2e bakal launch browser beneran & hasilnya gak deterministik
+    browserSearch,
+
     aiChat: async (p, o) => {
       calls.ai.push({ p, o });
       const sys = o?.systemPrompt || "";
@@ -93,9 +97,22 @@ w("\n— degradasi: compose gagal → digest lokal —");
 w("\n— search gagal total → error —");
 {
   resetAgentDeps();
-  mkDeps({ searchOk: false });
+  mkDeps({ searchOk: false, browserSearch: null });
   const r = await runAgent("tes", {});
   check("error hasil kosong", !!r.error && r.error.includes("pencarian"));
+}
+
+// 🔹 NEW 17 Sep: search engine gagal → FALLBACK CHROMIUM nyelametin riset
+// (owner report: "carikan berita makanan mbg beracun" dijawab gak tahu)
+{
+  resetAgentDeps();
+  const d = mkDeps({ searchOk: false, browserSearch: async () => [
+    { title: "Kasus Keracunan MBG Terus Berulang", url: "https://kompas.com/mbg", snippet: "Kasus keracunan MBG di berbagai daerah" },
+    { title: "Siasat Pemerintah Soal MBG", url: "https://detik.com/mbg", snippet: "pemerintah merespons keracunan MBG" },
+  ] });
+  const r = await runAgent("berita makanan mbg beracun", {});
+  check("fallback chromium → riset jalan", !r.error && !!r.answer);
+  check("fallback chromium → sumber kebaca", (r.sources || []).some((s) => /kompas|detik/.test(s.domain || s.url)));
 }
 
 w("\n— MODE ACT: LLM plan → kick —");
