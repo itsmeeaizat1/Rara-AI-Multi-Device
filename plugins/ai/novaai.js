@@ -7,7 +7,7 @@
 // 🔹 Alur: localParse (instan) → think (AI provider) → [ACTION] auto-execute
 // ============================================================
 
-import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, buildSearchQuery, quickWebSearch, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
+import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, buildSearchQuery, quickWebSearch, splitChatChunks, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
@@ -281,12 +281,24 @@ async function handler(m, { sock, conn, config, db }) {
       await sock.sendMessage(m.chat, { text, edit: novaStatusKey });
     } catch {}
   };
+  // 🔹 FIX OWNER 17 Sep 2026 ("hasilnya singkat/kepotong... kalau plain
+  // textnya emang panjang, langsung kirim walau panjang di chatnya daripada
+  // dipotong/disingkat"): dulu semua jawaban final di-clip 4096 char + "..."
+  // (kode HTML kepotong di ekor, info riset cuma sepotong). Sekarang: kirim
+  // CHAT TERUSAN — pesan pertama di-edit ke status, sisanya dikirim berantai
+  // sebagai chat terusan sampai ISINYA UTUH abis.
   const editFinal = async (text) => {
     if (typeof text !== "string" || !text.trim()) return;
-    const clipped = text.length > 4096 ? text.slice(0, 4096) + "..." : text;
+    const parts = splitChatChunks(text);
+    if (!parts.length) return;
     let ok = false;
-    if (novaStatusKey) { try { await sock.sendMessage(m.chat, { text: clipped, edit: novaStatusKey }); ok = true; } catch {} }
-    if (!ok) await m.reply(clipped);
+    if (novaStatusKey) { try { await sock.sendMessage(m.chat, { text: parts[0], edit: novaStatusKey }); ok = true; } catch {} }
+    if (!ok) { try { await m.reply(parts[0]); ok = true; } catch {} }
+    if (!ok) { try { await sock.sendMessage(m.chat, { text: parts[0] }, { quoted: m }); ok = true; } catch {} }
+    // sisa → chat terusan berantai (biar teks panjang tetep UTUH)
+    for (let i = 1; ok && i < parts.length; i++) {
+      try { await sock.sendMessage(m.chat, { text: parts[i] }, { quoted: m }); } catch { break; }
+    }
   };
 
   // 🔹 ROTASI STATUS — fase loading berputar per 8 dtk (lib nova-status-rotate):

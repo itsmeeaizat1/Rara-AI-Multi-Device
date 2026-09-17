@@ -988,7 +988,7 @@ export async function askAI(system, user, history = []) {
           body: JSON.stringify({
             model: p.model,
             system,
-            max_tokens: 2048,
+            max_tokens: 8192,
             temperature: 0.1,
             messages: [
               ...histTrimmed.map(h => ({ role: h.role === 'assistant' ? 'assistant' : 'user', content: h.content })),
@@ -1013,7 +1013,7 @@ export async function askAI(system, user, history = []) {
               { role: 'user', content: user }
             ],
             temperature: 0.1,
-            max_tokens: 2048
+            max_tokens: 8192
           })
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -1089,48 +1089,109 @@ export function buildSearchQuery(text) {
     .trim() || String(text || '').trim();
 }
 
+// 🔹 CHAT TERUSAN (owner 17 Sep 2026: "kalau hasil jawabannya banyak banget
+// sampai kena batas karakter di chat WA, kirim 2x chat sebagai chat terusan"):
+// pecah teks panjang jadi beberapa pesan berantai — split di batas paragraf
+// biar gak motong kalimat/kode di tengah baris. Hasil UTUH sampe abis.
+export function splitChatChunks(text, { chunkChars = 6000, hardCap = 60000 } = {}) {
+  let full = String(text || "");
+  if (!full.trim()) return [];
+  if (full.length > hardCap) full = full.slice(0, hardCap) + "\n…(teks melebihi batas maksimal WA — sisanya kepotong)";
+  const parts = [];
+  let rest = full;
+  while (rest.length > chunkChars) {
+    let cut = rest.lastIndexOf("\n\n", chunkChars);
+    if (cut < chunkChars * 0.4) cut = rest.lastIndexOf("\n", chunkChars);
+    if (cut < chunkChars * 0.4) cut = chunkChars;
+    parts.push(rest.slice(0, cut));
+    rest = rest.slice(cut).replace(/^\s*\n+/, "");
+  }
+  if (rest.trim()) parts.push(rest);
+  return parts;
+}
+
+// 🔹 seam fallback chromium — semantik: function = mock; null = DISABLED
+// (e2e gak boleh launch browser asli); undefined = chromium asli
+let _browserSearchForTest;
+export function _setBrowserSearchForTest(fn) { _browserSearchForTest = fn; }
+export function _clearBrowserSearchForTest() { _browserSearchForTest = undefined; }
+
+// 🔹 FALLBACK CHROMIUM (owner report 17 Sep 2026: "carikan berita makanan
+// mbg beracun" dijawab "saya tidak tahu" — engine scrape Bing/DDG/Brave
+// balikin SERP SAMPAH dari IP datacenter (tailor/ads page) → lowRelevance
+// → null → AI jawab gak tahu. Chromium beneran (html.duckduckgo.com) LEWAT
+// blok itu (pola sama kayak googleairich — jalan normal di VPS).
+async function browserSearchFallback(query, limit) {
+  if (typeof _browserSearchForTest === "function") return _browserSearchForTest(query, { limit });
+  if (_browserSearchForTest === null) return null; // e2e disabled
+  try {
+    const { browserWebSearch } = await import("../scraper/nova-web-browser.js");
+    return await browserWebSearch(query, { limit });
+  } catch { return null; } // puppeteer gak ada → diem, lanjut jawab dari pengetahuan
+}
+
+// 🔹 pipeline internal: items SERP → sources (baca top halaman + filter
+// relevansi) — dipakai hasil engine scrape MAUPUN chromium biar gak dobel kode
+async function _sourcesFromItems(res, query, readTop) {
+  const top = (res.items || []).slice(0, readTop);
+  const pages = await Promise.all(top.map((it) =>
+    Promise.race([
+      fetchPagePreview(it.url),
+      new Promise((resolve) => setTimeout(() => resolve(null), 8000)),
+    ]).catch(() => null)
+  ));
+  let sources = top.map((it, i) => {
+    const p = pages[i];
+    const body = (p && !p.error && p.text && String(p.text).trim()) ? String(p.text).slice(0, 900) : (it.snippet || "");
+    return { title: (p && p.title) || it.title, url: it.url, body };
+  }).filter((s) => s.body);
+  // FILTER RELEVANSI (ketemu pas smoke live 12 Sep: query berita MBG balikin
+  // profil LinkedIn gak nyambung — konteks sampah bikin AI jawab ngawur).
+  // Token query (len>=3, bukan stopwords) wajib overlap dengan title/body.
+  const STOP = new Set(["yang","dengan","dan","untuk","dari","ini","itu","apa","kabar","berita","viral","terbaru","terkini","sebutkan","tolong","dong","lagi","banget","dikit","hari","minggu","ada","kasus","kabar"]);
+  const tokens = String(query).toLowerCase().match(/[a-z0-9]+/g) || [];
+  // stem ringan prefix Indonesia (beracun vs keracunan → core "racun" match)
+  const stem = (w) => w.replace(/^(ber|ter|peng|pem|pen|per|ke|pe|me|di|se)/, "");
+  const qt = [...new Set(tokens.filter((x) => x.length >= 3 && !STOP.has(x)).map(stem).filter((x) => x.length >= 3))];
+  sources = sources.filter((s) => {
+    if (!qt.length) return true; // query gak bisa ditoken → jangan buang semua
+    const hay = (s.title + " " + s.body).toLowerCase();
+    return qt.some((x) => hay.includes(x));
+  });
+  if (!sources.length) return null;
+  const block = sources.map((s, i) => `[S${i + 1}] ${s.title}
+Sumber: ${s.url}
+${s.body}`).join("\n\n");
+  return { block, sources };
+}
+
 // Search ringan 1x (bukan multi-fase kayak .aisuperagent) — max 2 halaman
 // dibaca, timeout ketat biar gak nyandera timeout budget think(). Gagal =
 // null (fallback diam-diam ke jawaban dari pengetahuan model, gak crash).
+// 🔹 FIX OWNER 17 Sep 2026: "carikan berita makanan mbg beracun" dijawab
+// "saya tidak tahu". Dua lubang: (1) engine scrape balikin SERP sampah
+// (lowRelevance) → null; (2) engine "sukses" tapi halaman berita gak kebaca
+// (blokir axios → snippet tersisa → filter relevansi buang semua) → null.
+// Keduanya sekarang jatuh ke FALLBACK CHROMIUM (browser beneran lolos
+// blokir datacenter — pola googleairich).
 export async function quickWebSearch(query, { limit = 5, readTop = 2 } = {}) {
   try {
+    // ── jalur 1: engine scrape (Bing/DDG/Brave) ──
     const res = await Promise.race([
       searchWeb(query, { limit }),
       new Promise((_, rej) => setTimeout(() => rej(new Error("search timeout")), 12000)),
-    ]);
-    // hasil ditandain lowRelevance (SERP sampah — semua engine gak nyambung
-    // walau udah di-retry tanpa kata tanya) → jangan dipakai, balik null biar
-    // AI jawab dari pengetahuannya sendiri / jujur gak nemu, BUKA baca halaman
-    // sampah lalu nyimpulin "prabowo gak ada di internet" (bug owner 12 Sep)
-    if (!res || res.error || res.lowRelevance || !res.items?.length) return null;
-    const top = res.items.slice(0, readTop);
-    const pages = await Promise.all(top.map((it) =>
-      Promise.race([
-        fetchPagePreview(it.url),
-        new Promise((resolve) => setTimeout(() => resolve(null), 8000)),
-      ]).catch(() => null)
-    ));
-    let sources = top.map((it, i) => {
-      const p = pages[i];
-      const body = (p && !p.error) ? (p.text || p.description || "").slice(0, 900) : (it.snippet || "");
-      return { title: (p && p.title) || it.title, url: it.url, body };
-    }).filter((s) => s.body);
-    // FILTER RELEVANSI (ketemu pas smoke live 12 Sep: query berita MBG balik
-    // profil LinkedIn gak nyambung — konteks sampah bikin AI jawab ngawur).
-    // Token query (len>=3, bukan stopwords) wajib overlap dengan title/body.
-    const STOP = new Set(["yang","dengan","dan","untuk","dari","ini","itu","apa","kabar","berita","viral","terbaru","terkini","sebutkan","tolong","dong","lagi","banget","dikit","hari","minggu","ada","kasus","kabar"]);
-    const tokens = String(query).toLowerCase().match(/[a-z0-9]+/g) || [];
-    const qt = [...new Set(tokens.filter((x) => x.length >= 3 && !STOP.has(x)))];
-    sources = sources.filter((s) => {
-      if (!qt.length) return true; // query gak bisa ditoken → jangan buang semua
-      const hay = (s.title + " " + s.body).toLowerCase();
-      return qt.some((x) => hay.includes(x));
-    });
-    if (!sources.length) return null;
-    const block = sources.map((s, i) => `[S${i + 1}] ${s.title}
-Sumber: ${s.url}
-${s.body}`).join("\n\n");
-    return { block, sources };
+    ]).catch(() => null);
+    if (res && !res.error && !res.lowRelevance && res.items?.length) {
+      const out = await _sourcesFromItems(res, query, readTop);
+      if (out) return out;
+    }
+    // ── jalur 2: CHROMIUM (scrape gagal / hasilnya mati semua) ──
+    const items = await Promise.race([
+      browserSearchFallback(query, limit),
+      new Promise((resolve) => setTimeout(() => resolve(null), 28000)),
+    ]).catch(() => null);
+    if (!items?.length) return null;
+    return await _sourcesFromItems({ items, engine: "chromium-ddg" }, query, readTop);
   } catch {
     return null;
   }

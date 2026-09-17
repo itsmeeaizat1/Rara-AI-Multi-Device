@@ -6,7 +6,12 @@
 // cite link sumber. Semua HTTP di-inject (offline).
 import { initDatabase } from "../../src/lib/nova-database.js";
 import { setWebSearchHttp, setPreviewHttp, resetWebSearchDeps, searchWeb } from "../../src/lib/nova-websearch.js";
-import { needsWebSearch, quickWebSearch, buildThinkSystemPrompt, sanitizeAiReply } from "../../src/lib/aiagent.js";
+import { needsWebSearch, quickWebSearch, buildThinkSystemPrompt, sanitizeAiReply, _setBrowserSearchForTest } from "../../src/lib/aiagent.js";
+
+// FIX 17 Sep: fallback chromium WAJIB di-disable default di e2e — kalau
+// gak, quickWebSearch bakal launch browser beneran (flaky + lambat).
+_setBrowserSearchForTest(null);
+
 
 await initDatabase("/tmp/novaagent-websearch-e2e-db.json");
 
@@ -84,6 +89,22 @@ setWebSearchHttp(async () => {
 setPreviewHttp(async () => "<html><body>random halaman</body></html>");
 const allGarbage = await quickWebSearch("berita mbg makan bergizi gratis keracunan terbaru");
 t("2f. SEMUA hasil sampah → null (gak ada konteks menyesatkan)", allGarbage === null);
+resetWebSearchDeps();
+
+// NEW 17 Sep (owner report "carikan berita makanan mbg beracun" dijawab
+// "saya tidak tahu"): engine scrape gagal/sampah → FALLBACK CHROMIUM nyelametin
+setWebSearchHttp(async () => { throw new Error("network down"); });
+setPreviewHttp(async (url) => String(url).includes("kompas.com")
+  ? "<html><head><title>Kasus Keracunan MBG di Berbagai Daerah Terus Berulang</title></head><body><p>Keracunan MBG berulang di berbagai daerah, pemerintah cari siasat.</p></body></html>"
+  : "<html><body></body></html>");
+_setBrowserSearchForTest(async (q, { limit }) => [
+  { title: "Kasus Keracunan MBG di Berbagai Daerah Terus Berulang", url: "https://www.kompas.com/mbg-keracunan", snippet: "Keracunan MBG berulang" },
+  { title: "Siasat Pemerintah Terkait MBG", url: "https://health.detik.com/mbg-siasat", snippet: "Siasat pemerintah soal keracunan MBG" },
+].slice(0, limit));
+const chromeSaved = await quickWebSearch("berita makanan mbg beracun");
+t("2g. engine scrape mati → FALLBACK CHROMIUM balikin hasil asli (bukan null)", !!chromeSaved && chromeSaved.sources.length >= 1, JSON.stringify(chromeSaved?.sources?.map((s) => s.url)));
+t("2h. blok fallback isi konten berita nyata", !!chromeSaved && /keracunan mbg/i.test(chromeSaved.block));
+_setBrowserSearchForTest(null); // balik ke disabled
 resetWebSearchDeps();
 
 // ═══ 3. buildThinkSystemPrompt() — webSearch context nyambung ke prompt ═══

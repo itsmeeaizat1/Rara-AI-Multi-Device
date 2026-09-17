@@ -20,6 +20,7 @@ import { getLeaderboard } from "../../src/lib/nova-activity-tracker.js";
 import { getAllSkills, awaitSkillPacks } from "../../src/lib/nova-skills.js";
 import { getMcpTools } from "../../src/lib/nova-mcp.js";
 import { searchYoutubeAndSend, detectYtSearchIntent } from "../../src/lib/nova-yt-search.js";
+import { splitChatChunks } from "../../src/lib/aiagent.js";
 import { searchSiteAndSend, detectSiteSearchIntent } from "../../src/lib/nova-site-search.js";
 
 // 💻 system prompt coder — request owner 11 Sep: "klo suruh buatkan kode html,
@@ -743,9 +744,16 @@ async function handler(m, { sock, db, deps } = {}) {
         await m.react("🐣");
         return;
       }
+      // 🔹 FIX OWNER 17 Sep: jawaban panjang → CHAT TERUSAN (gak dipotong)
       let ok = false;
-      if (statusKey) { try { await sock.sendMessage(m.chat, { text: res.answer, edit: statusKey }); ok = true; } catch {} }
-      if (!ok) await m.reply(res.answer);
+      const partsA = splitChatChunks(res.answer);
+      if (partsA.length) {
+        if (statusKey) { try { await sock.sendMessage(m.chat, { text: partsA[0], edit: statusKey }); ok = true; } catch {} }
+        if (!ok) { try { await m.reply(partsA[0]); ok = true; } catch {} }
+        for (let i = 1; ok && i < partsA.length; i++) {
+          try { await sock.sendMessage(m.chat, { text: partsA[i] }, { quoted: m }); } catch { break; }
+        }
+      }
       await m.react("🐣");
       return;
     }
@@ -761,9 +769,16 @@ async function handler(m, { sock, db, deps } = {}) {
       await m.react("🐣");
       return;
     }
+    // 🔹 FIX OWNER 17 Sep: jawaban riset panjang → CHAT TERUSAN (gak dipotong)
     let ok = false;
-    if (statusKey) { try { await sock.sendMessage(m.chat, { text: fullAnswer, edit: statusKey }); ok = true; } catch {} }
-    if (!ok) await m.reply(fullAnswer);
+    const partsR = splitChatChunks(fullAnswer);
+    if (partsR.length) {
+      if (statusKey) { try { await sock.sendMessage(m.chat, { text: partsR[0], edit: statusKey }); ok = true; } catch {} }
+      if (!ok) { try { await m.reply(partsR[0]); ok = true; } catch {} }
+      for (let i = 1; ok && i < partsR.length; i++) {
+        try { await sock.sendMessage(m.chat, { text: partsR[i] }, { quoted: m }); } catch { break; }
+      }
+    }
     await m.react("🐣");
   } catch (e) {
     console.error("agent error:", e.message);
