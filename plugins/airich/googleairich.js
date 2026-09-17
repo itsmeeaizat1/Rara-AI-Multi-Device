@@ -158,3 +158,8 @@ async function handler(m, { sock }) {
 }
 
 export default { pluginConfig, handler, command: "googleairich" };
+// FIX 17 Sep 2026 (owner: "fitur ai rich knp cmd g bsa diakses"): loader
+// nyari named export config + handler — default export doang bikin
+// plugin DIAM-DIAM gak diregistrasi sejak awal. Default dipertahankan
+// buat e2e (import default).
+export { pluginConfig as config, handler };

@@ -438,12 +438,12 @@ const CATEGORY_NAMES = {
   downloader: "Downloader", education: "Education", food: "Food",
   future: "Future", islami: "Islami", islamic: "Islamic", menu: "Menu",
   maker: "Maker", news: "News", nsfw: "NSFW", linode: "Linode",
-  primbon: "Primbon", cecan: "Cecan", stalker: "Stalker", jkt48: "JKT48", tts: "TTS",
+  primbon: "Primbon", cecan: "Cecan", stalker: "Stalker", jkt48: "JKT48", airich: "AI Rich", tts: "TTS",
   vps: "VPS",
 };
 
 const CATEGORY_EMOJIS = {
-  ai: "🧠", sticker: "🖼️", download: "📥", fun: "🎮", jkt48: "🌸", couple: "💕", "confess menfess": "💌",
+  ai: "🧠", sticker: "🖼️", download: "📥", fun: "🎮", jkt48: "🌸", airich: "✨", couple: "💕", "confess menfess": "💌",
   canvas: "🎨", tools: "🛠️", rpg: "🎯", "rpg couple": "❤️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
   utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
