@@ -5,6 +5,7 @@ import os from "os";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
+import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -45,7 +46,7 @@ async function handler(m, { sock }) {
     } catch (err) {
       // Fallback: upload ke catbox lalu convert webp → mp4
       const link = await uploadToCatbox(mediaBuffer, "media.webp");
-      const convertRes = await axios.get(`https://api.betabotz.eu.org/api/tools/webp2mp4?url=${link}&apikey=beta-gilang`, { timeout: 60000 });
+      const convertRes = await axios.get(`https://api.betabotz.eu.org/api/tools/webp2mp4?url=${link}&apikey=${getApiKeys().betabotz || "beta-gilang"}`, { timeout: 60000 });
       const convertUrl = convertRes.data?.result?.url || convertRes.data?.url;
       if (!convertUrl) throw new Error("Gagal convert ke GIF");
 
