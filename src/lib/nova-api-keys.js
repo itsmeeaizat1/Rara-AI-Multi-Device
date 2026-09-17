@@ -87,6 +87,14 @@ export const API_KEYS = {
     getLink: () => "https://console.groq.com/keys",
     usedBy: ["stt", "aiautointeractionvn", "aicall", "groq"],
   },
+  router9v2: {
+    label: "9Router V2 Cloud (hosted)",
+    description: "Gateway OpenAI-compatible 9router.cloudku.us.kg — chat multi-model (.ai9v2)",
+    getConfig: () => config.APIkey?.router9v2 || "",
+    getEnv: () => process.env.ROUTER_API_KEY || "",
+    getLink: () => "https://9router.cloudku.us.kg",
+    usedBy: ["ai9v2", "9routerv2"],
+  },
   xai: {
     label: "xAI Grok (AI Call Otak Utama)",
     description: "Untuk otak percakapan AI Call (grok-3-mini) + fitur .grok satuan",
