@@ -10,6 +10,7 @@ import plug from "../../plugins/ai/ai9v2.js";
 
 const {
   router9v2Models, router9v2Chat, router9v2Key,
+  router9v2ChatSmart, router9v2Ping, ROUTER9V2_FAST_MODEL,
   getRouter9v2Pref, setRouter9v2Pref,
   _setRouter9v2HttpForTest, _setRouter9v2KeyForTest, _resetRouter9v2ForTest,
   _setRouter9v2StateFileForTest, ROUTER9V2_DEFAULT_MODEL,
@@ -117,6 +118,72 @@ try { await router9v2Chat({ messages: [{ role: "user", content: "x" }] }); t("  
   t("  key kosong → error arah pusat", /apikeys\.json/.test(e.message), e.message);
 }
 _setRouter9v2KeyForTest("sk-e2e-9router");
+
+// ═══ 2b. SMART CHAT — retry + fallback tier cepat ═══
+w("\n— smart chat: retry + fallback —");
+{
+  // attempt-1 gagal, retry sukses → hasil model diminta, ada totalLatencyMs
+  let calls = 0;
+  _setRouter9v2HttpForTest(async (cfg) => {
+    if (String(cfg.url).endsWith("/v1/models")) return { status: 200, data: MODELS_JSON };
+    calls++;
+    if (calls === 1) return { status: 503, data: "spike" };
+    return { status: 200, data: CHAT_JSON };
+  });
+  const r = await router9v2ChatSmart({ messages: [{ role: "user", content: "x" }], model: "ag/gemini-3.8-flash-high" });
+  t("  spike 503 → retry 1x sukses (model diminta tetap)",
+    calls === 2 && r.text === "Siap." && !r.fallbackFrom, "calls=" + calls);
+  t("  totalLatencyMs tercatat", Number.isFinite(r.totalLatencyMs) && r.totalLatencyMs >= 0);
+}
+{
+  // 2x gagal → fallback tier cepat sukses
+  let calls = 0; let seenModels = [];
+  _setRouter9v2HttpForTest(async (cfg) => {
+    if (String(cfg.url).endsWith("/v1/models")) return { status: 200, data: MODELS_JSON };
+    calls++; seenModels.push(cfg.data.model);
+    if (calls <= 2) return { status: 503, data: "down" };
+    return { status: 200, data: CHAT_JSON };
+  });
+  const r = await router9v2ChatSmart({ messages: [{ role: "user", content: "x" }], model: "ag/gemini-3.8-flash-high" });
+  t("  2x gagal → otomatis fallback tier cepat",
+    calls === 3 && r.fallbackFrom === "ag/gemini-3.8-flash-high" && seenModels[2] === ROUTER9V2_FAST_MODEL,
+    "calls=" + calls + " models=" + seenModels.join(","));
+}
+{
+  // model fast sendiri gagal → error asli (tanpa fallback ke diri sendiri)
+  _setRouter9v2HttpForTest(async (cfg) => ({ status: 503, data: "down" }));
+  try { await router9v2ChatSmart({ messages: [{ role: "user", content: "x" }], model: ROUTER9V2_FAST_MODEL }); t("  fast gagal → error asli keluar", false); } catch (e) {
+    t("  fast gagal → error asli keluar", /HTTP 503/.test(e.message), e.message);
+  }
+}
+{
+  // semua jalur gagal → error asli (strict, bukan null senyap)
+  _setRouter9v2HttpForTest(async (cfg) => {
+    if (String(cfg.url).endsWith("/v1/models")) return { status: 200, data: MODELS_JSON };
+    return { status: 500, data: "mati total" };
+  });
+  try { await router9v2ChatSmart({ messages: [{ role: "user", content: "x" }], model: "ag/gemini-3.8-flash-high" }); t("  total gagal → error asli", false); } catch (e) {
+    t("  total gagal → error asli", /HTTP 500/.test(e.message), e.message);
+  }
+}
+
+// ═══ 2c. PING — diagnosa latency ═══
+w("\n— ping —");
+{
+  let n = 0;
+  _setRouter9v2HttpForTest(async (cfg) => { n++; return { status: 200, data: n === 1 ? MODELS_JSON : CHAT_JSON }; });
+  const p = await router9v2Ping();
+  t("  ping: 3 jalur diukur (models + 2 chat), 0 error",
+    p.chats.length === 3 && p.errors === 0, JSON.stringify(p.chats));
+  t("  ping: baris ✅ + total ms",
+    p.lines.length >= 3 && p.lines[0].startsWith("✅") && p.totalMs >= 0, p.lines[0]);
+}
+{
+  _setRouter9v2HttpForTest(async () => { throw new Error("timeout"); });
+  const p = await router9v2Ping();
+  t("  ping: semua down → error kehitung, gak crash",
+    p.errors === 3 && p.lines.every((l) => l.startsWith("❌")), "errors=" + p.errors);
+}
 
 // ═══ 3. PREF MODEL PER CHAT ═══
 w("\n— pref model per chat —");
