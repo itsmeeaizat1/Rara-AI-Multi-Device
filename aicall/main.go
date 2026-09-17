@@ -51,9 +51,24 @@ func main() {
 
 	// Load configuration from .env
 	cfg := LoadConfig()
+
+	// ── AI_CHAT_TEST=1 → tes otak AI (provider aktif + fallback) sekali lalu keluar.
+	// Verifikasi key/model live tanpa harus panggilan beneran.
+	if os.Getenv("AI_CHAT_TEST") == "1" {
+		conv := NewConversation()
+		reply, err := conv.Chat("Jawab dengan satu kata: siap")
+		if err != nil {
+			fmt.Println("[AI_CHAT_TEST] GAGAL — provider '" + cfg.AIProvider + "':", err)
+			os.Exit(1)
+		}
+		fmt.Printf("[AI_CHAT_TEST] OK — provider '%s' jawab: %s\n", cfg.AIProvider, reply)
+		os.Exit(0)
+	}
+
 	log.Printf("[Config] GROQ_API status: %t", cfg.GroqAPI != "")
 	log.Printf("[Config] GEMINI_API status: %t", cfg.GeminiAPI != "")
 	log.Printf("[Config] GEMINI_MODEL: %s", cfg.GeminiModel)
+	log.Printf("[Config] AI PROVIDER: %s (grok model: %s | groq chat: %s)", cfg.AIProvider, cfg.GrokModel, cfg.GroqChatModel)
 	log.Printf("[Config] TTS Character: %s", cfg.TTSCharacter)
 	log.Printf("[Config] TTS Speed: %.1f", cfg.TTSSpeed)
 	if len(cfg.Owners) > 0 {
@@ -489,8 +504,9 @@ func startHTTPAPI() {
 			"ok":         true,
 			"connected":  connected,
 			"uptime":     time.Since(botStartTime).Truncate(time.Second).String(),
-			"provider":   AppConfig.AIProvider,
-			"grok_model": AppConfig.GrokModel,
+			"provider":       AppConfig.AIProvider,
+			"grok_model":     AppConfig.GrokModel,
+			"groq_chat_model": AppConfig.GroqChatModel,
 			"model":      AppConfig.GeminiModel,
 			"engine":     AppConfig.TTSEngine,
 			"voice":      AppConfig.TTSVoice,
@@ -533,7 +549,7 @@ func startHTTPAPI() {
 		}
 		if strings.TrimSpace(req.AIProvider) != "" {
 			p := strings.ToLower(strings.TrimSpace(req.AIProvider))
-			if p == "grok" || p == "gemini" {
+			if p == "grok" || p == "groq" || p == "gemini" {
 				AppConfig.AIProvider = p
 			}
 		}
@@ -599,11 +615,11 @@ func startHTTPAPI() {
 		}
 		if strings.TrimSpace(req.AIProvider) != "" {
 			p := strings.ToLower(strings.TrimSpace(req.AIProvider))
-			if p == "grok" || p == "gemini" {
+			if p == "grok" || p == "groq" || p == "gemini" {
 				AppConfig.AIProvider = p
 			} else {
 				aicallMu.Unlock()
-				writeErr(w, 400, "provider tidak valid (grok/gemini)")
+				writeErr(w, 400, "provider tidak valid (grok/groq/gemini)")
 				return
 			}
 		}

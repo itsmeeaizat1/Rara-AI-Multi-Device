@@ -85,11 +85,28 @@ w("\n— grok key dari pusat → provider grok dikirim —");
   _clearAicallFetchForTest();
 }
 
-// ═══ 3c. .aicall ai <grok|gemini> — ganti otak live ═══
-w("\n— .aicall ai grok/gemini —");
+// ═══ 3b2. key groq pusat (tanpa xai) → provider groq ═══
+w("\n— key groq pusat → ai_provider=groq —");
 {
   let captured = null;
-  _setAicallPusatKeyForTest((name) => (name === "grok" || name === "xai" ? "xai-test-key-123" : ""));
+  _setAicallPusatKeyForTest((name) => (name === "groq" ? "gsk-test-key-456" : (name === "gemini" ? "" : "")));
+  _setAicallFetchForTest(async (url, opts) => {
+    captured = { url, body: JSON.parse(opts.body) };
+    return { status: 200, json: async () => ({ ok: true, number: "628123456789" }) };
+  });
+  const e = await mkM("628123456789");
+  await aicallHandler(e.m);
+  check("key groq tanpa xai → ai_provider=groq + groq_api STT", captured?.body?.ai_provider === "groq" && captured?.body?.groq_api === "gsk-test-key-456", JSON.stringify(captured?.body));
+  check("gak ada key xai → grok_api gak dikirim", !("grok_api" in (captured?.body || {})), JSON.stringify(captured?.body));
+  _clearAicallPusatKeyForTest();
+  _clearAicallFetchForTest();
+}
+
+// ═══ 3c. .aicall ai <grok|groq|gemini> — ganti otak live ═══
+w("\n— .aicall ai grok/groq/gemini —");
+{
+  let captured = null;
+  _setAicallPusatKeyForTest((name) => (name === "grok" || name === "xai" ? "xai-test-key-123" : name === "groq" ? "gsk-test-key-456" : ""));
   _setAicallFetchForTest(async (url, opts) => {
     captured = { url, body: JSON.parse(opts.body) };
     return { status: 200, json: async () => ({ ok: true, engine: "edgetts", voice: "Puck" }) };
@@ -101,13 +118,16 @@ w("\n— .aicall ai grok/gemini —");
   const e2 = await mkM("ai gemini");
   await aicallHandler(e2.m);
   check(".aicall ai gemini → POST /config {ai_provider:gemini} tanpa grok_api", captured?.body?.ai_provider === "gemini" && !("grok_api" in captured.body), JSON.stringify(captured?.body));
+  const e3 = await mkM("ai groq");
+  await aicallHandler(e3.m);
+  check(".aicall ai groq → POST /config {ai_provider:groq, groq_api}", captured?.body?.ai_provider === "groq" && captured?.body?.groq_api === "gsk-test-key-456", JSON.stringify(captured?.body));
   _clearAicallPusatKeyForTest();
   _clearAicallFetchForTest();
 }
 {
   const e = await mkM("ai abc");
   await aicallHandler(e.m);
-  check(".aicall ai ngawur → hint grok/gemini", box(e).toLowerCase().includes("grok") && box(e).toLowerCase().includes("gemini"));
+  check(".aicall ai ngawur → hint grok/groq/gemini", box(e).toLowerCase().includes("grok") && box(e).toLowerCase().includes("groq") && box(e).toLowerCase().includes("gemini"));
 }
 {
   // key grok belum ada di pusat → tetap konfirmasi tapi kasih warning key
@@ -136,11 +156,12 @@ w("\n— .aicall status —");
 {
   _setAicallFetchForTest(async () => ({
     status: 200,
-    json: async () => ({ ok: true, connected: true, uptime: "1h2m3s", model: "gemini-3.1-flash-lite", engine: "edgetts", voice: "id-ID-GadisNeural", owners: 1, commands: false }),
+    json: async () => ({ ok: true, connected: true, uptime: "1h2m3s", provider: "groq", groq_chat_model: "openai/gpt-oss-20b", model: "gemini-3.1-flash-lite", engine: "edgetts", voice: "id-ID-GadisNeural", owners: 1, commands: false }),
   }));
   const e = await mkM("status");
   await aicallHandler(e.m);
   check("status render: terhubung + engine + suara", box(e).toLowerCase().includes("terhubung") && box(e).toLowerCase().includes("edgetts") && box(e).toLowerCase().includes("id-id-gadisneural"), box(e).slice(0, 120));
+  check("status render: otak AI provider", box(e).toLowerCase().includes("otak ai") && box(e).toLowerCase().includes("groq"), box(e).slice(0, 160));
   check("status react 🛠️ → 🐣", e.reacts.includes("🛠️") && e.reacts.includes("🐣"), e.reacts.join(","));
   _clearAicallFetchForTest();
 }

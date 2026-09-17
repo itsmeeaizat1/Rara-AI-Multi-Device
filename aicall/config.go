@@ -14,9 +14,10 @@ type Config struct {
 	GroqAPI       string
 	GeminiAPI     string
 	GeminiModel   string
-	AIProvider    string // "grok" (default, request owner 17 Sep "pakai grok dlu") atau "gemini"
+	AIProvider    string // "grok" (xAI) | "groq" (default — key owner 17 Sep) | "gemini"
 	GrokAPI       string // xAI Grok key (env XAI_API / GROK_API)
 	GrokModel     string // default "grok-3-mini"
+	GroqChatModel string // model chat Groq, default "openai/gpt-oss-20b"
 	OpenAIAPI     string
 	ElevenAPI     string
 	SystemPrompt  string
@@ -86,9 +87,16 @@ func LoadConfig() *Config {
 	if grokModel == "" {
 		grokModel = "grok-3-mini"
 	}
+	groqChatModel := os.Getenv("GROQ_CHAT_MODEL")
+	if groqChatModel == "" {
+		groqChatModel = "openai/gpt-oss-20b"
+	}
 	if aiProvider == "" {
+		// urutan otomatis: grok (xAI) → groq → gemini, sesuai key yang ada
 		if grokAPI != "" {
-			aiProvider = "grok" // ada key grok → grok duluan; set "gemini" di .env untuk balik
+			aiProvider = "grok"
+		} else if groqAPI != "" {
+			aiProvider = "groq" // key owner 17 Sep 2026 (gsk_) — Groq super cepat
 		} else {
 			aiProvider = "gemini"
 		}
@@ -176,6 +184,7 @@ func LoadConfig() *Config {
 		AIProvider:    aiProvider,
 		GrokAPI:       grokAPI,
 		GrokModel:     grokModel,
+		GroqChatModel: groqChatModel,
 		OpenAIAPI:     openAIAPI,
 		ElevenAPI:     elevenAPI,
 		SystemPrompt:  sysPrompt,
@@ -197,7 +206,7 @@ func LoadConfig() *Config {
 		log.Println("[WARNING] GEMINI_API key is missing in .env! AI chat functionality might fail.")
 	}
 	if AppConfig.AIProvider == "grok" && AppConfig.GrokAPI == "" {
-		log.Println("[WARNING] AI_PROVIDER=grok tapi XAI_API key kosong! AI chat akan fallback ke Gemini.")
+		log.Println("[WARNING] AI_PROVIDER=grok tapi XAI_API key kosong! AI chat akan fallback ke Groq/Gemini.")
 	}
 
 	tempDir := filepath.Join(".", "temp")
