@@ -127,6 +127,7 @@ function usageMsg(prefix, cmd) {
   return claraWrap(
     "omnioutfitchanger",
     `👗 *${toSC("virtual try-on multi-item")}*\n\n` +
+      `${toSC("cara cepet")}: ${toSC("reply foto orang + lampir foto pakaian + caption")} *${prefix}${cmd} pakai*\n\n` +
       `${toSC("reply foto orang")} → *${prefix}${cmd}* (${toSC("mulai session")})\n` +
       `${toSC("lalu kirim foto item satu-satu")} (${toSC("max")} ${MAX_ITEMS}: ${toSC("topi/baju/celana/sepatu")})\n` +
       `*${prefix}${cmd} pakai* — ${toSC("proses semua item jadi 1 hasil")}\n` +
@@ -154,8 +155,59 @@ async function handler(m, { sock }) {
 
     // ── .omnioutfitchanger pakai ──
     if (sub === "pakai" || sub === "proses" || sub === "go") {
-      const sess = getSession(jid);
+      let sess = getSession(jid);
+
+      // ── FIX OWNER 17 Sep 2026: foto nyambung di pesan "pakai" gak pernah
+      // dibaca sebagai item/orang → nyembur usage padahal foto udah dikirim.
+      // Semua kombinasi di bawah sekarang LANGSUNG JALAN:
+      //   (a) reply foto ORANG + caption "pakai" + LAMPIR foto PAKAIAN → one-shot
+      //   (b) session aktif + caption "pakai" + LAMPIR foto pakaian → item terakhir, langsung proses
+      //   (c) "pakai" + reply foto orang (belum ada session) → mulai session, minta item
+      // HANYA baca foto kalau pesannya emang gambar (caption "pakai" di foto)
+      // / yang di-reply emang foto — jangan sambar pesan teks polos.
+      const msgIsImageNow = !!(m.isImage || m.isMedia);
+      const quotedIsImageNow = !!(
+        m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage" || m.quoted.isMedia)
+      );
+      const attachedBuf = msgIsImageNow ? await downloadImage(m) : null;  // foto bawaan pesan ini
+      const quotedBuf = quotedIsImageNow ? await downloadQuoted(m) : null; // foto yang di-reply
+
+      if (quotedBuf && attachedBuf) {
+        // (a) one-shot: foto reply = ORANG, foto lampiran = ITEM
+        startSession(jid, quotedBuf);
+        addItem(jid, attachedBuf);
+        await m.react("🧠");
+      } else if (attachedBuf && sess) {
+        // (b) item ekstra/terakhir yang dilampir bareng "pakai"
+        addItem(jid, attachedBuf);
+        await m.react("🧠");
+      } else if (quotedBuf && !sess) {
+        // (c) "pakai" tapi baru foto orang doang → mulai session dulu
+        startSession(jid, quotedBuf);
+        await m.react("✅");
+        return m.reply(
+          claraWrap(
+            "omnioutfitchanger",
+            `✅ ${toSC("foto orang disimpan")}. ${toSC("sekarang kirim foto item-nya")} (${toSC("max")} ${MAX_ITEMS}), ` +
+              `${toSC("atau langsung lampir foto pakaian bareng command")} *${prefix}${cmd} pakai*.`,
+            "success"
+          )
+        );
+      }
+      sess = getSession(jid);
+
       if (!sess || sess.items.length < 1) {
+        await m.react("❌");
+        if (attachedBuf && !sess) {
+          // ada foto item tapi belum ada foto ORANG
+          return m.reply(
+            claraWrap(
+              "omnioutfitchanger",
+              `⚠️ ${toSC("foto pakaian kebaca, tapi belum ada foto ORANG")} — ${toSC("reply foto orang dengan")} *${prefix}${cmd}* ${toSC("dulu")}.`,
+              "guide"
+            )
+          );
+        }
         return m.reply(
           claraWrap("omnioutfitchanger", `⚠️ ${toSC("belum ada session/item")}.\n\n${usageMsg(prefix, cmd).split("\n").slice(1).join("\n")}`, "guide")
         );
@@ -288,7 +340,11 @@ export async function handleOutfitPhotoHook(m) {
     const jid = m.sender;
     const sess = getSession(jid);
     if (!sess) return false;
-    const isPlainImage = !!(m.isImage || m.isMedia) && !m.quoted;
+    // FIX 17 Sep 2026: foto item yang dikirim sambil REPLY ke pesan TEKS
+    // (misal konfirmasi bot) juga harus ke-tangkep — dulu cuma foto polos.
+    // Yang dikecualikan cuma reply ke pesan GAMBAR (itu jalur foto orang).
+    const quotedIsImageMsg = !!(m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
+    const isPlainImage = !!(m.isImage || m.isMedia) && !quotedIsImageMsg;
     if (!isPlainImage) return false;
 
     const buf = await downloadImage(m);
