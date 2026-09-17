@@ -166,6 +166,73 @@ w("\n— plugin .remini: engine utama FFmpeg lewat handler —");
   check("react 🕒 → 🎨 → 🐣", reacts.includes("🕒") && reacts.includes("🎨") && reacts.includes("🐣"), reacts.join(","));
 }
 
+w("\n— ihancer scraper (engine utama baru 17 Sep — seam mock) —");
+{
+  const { ihancerEnhance, _setIhancerHttpForTest, _clearIhancerHttpForTest } = await import("../../src/scraper/ihancer.js");
+  const srcBuf = await makeTestJpeg(200, 150);
+
+  // 200 + JPEG asli → OK
+  _setIhancerHttpForTest(async () => ({ status: 200, data: await makeTestJpeg(400, 300) }));
+  let out = null;
+  try { out = await ihancerEnhance(srcBuf); } catch (e) { out = null; }
+  check("ihancer: 200 JPEG → buffer hasil", !!out && Buffer.isBuffer(out) && out.length > 100);
+  check("ihancer: hasil valid JPEG (SOI)", !!out && out[0] === 0xff && out[1] === 0xd8);
+
+  // 200 tapi HTML error page → harus DITOLAK (pelajaran sdxl — jangan lolos cuma
+  // karena length gede)
+  _setIhancerHttpForTest(async () => ({ status: 200, data: Buffer.from("<html><body>quota exceeded</body></html>") }));
+  let threwHtml = false;
+  try { await ihancerEnhance(srcBuf); } catch { threwHtml = true; }
+  check("ihancer: 200 tapi HTML → error non-gambar", threwHtml);
+
+  // HTTP 500 → error informatif
+  _setIhancerHttpForTest(async () => ({ status: 500, data: Buffer.from("server error") }));
+  let threw500 = false;
+  try { await ihancerEnhance(srcBuf); } catch (e) { threw500 = /HTTP 500/.test(e.message); }
+  check("ihancer: HTTP 500 → error nyebut status", threw500);
+
+  // input bukan buffer → error jelas
+  let threwInput = false;
+  try { await ihancerEnhance(Buffer.from("")); } catch { threwInput = true; }
+  check("ihancer: input kosong → error", threwInput);
+
+  _clearIhancerHttpForTest();
+}
+
+w("\n— plugin .remini: engine utama IHANCER lewat handler (seam) —");
+{
+  const { _setIhancerHttpForTest, _clearIhancerHttpForTest } = await import("../../src/scraper/ihancer.js");
+  const { handler: rHandler } = await import("../../plugins/tools/remini.js");
+
+  _setIhancerHttpForTest(async () => ({ status: 200, data: await makeTestJpeg(400, 300) }));
+  const src = await makeTestJpeg(200, 150);
+  const sent = [];
+  const reacts = [];
+  const m = {
+    isImage: true,
+    quoted: null,
+    args: [],
+    chat: "test@g.us",
+    prefix: ".",
+    command: "remini",
+    pushName: "tester",
+    isOwner: false,
+    isPremium: false,
+    react: async (r) => reacts.push(r),
+    reply: async (txt) => sent.push({ type: "reply", txt }),
+    download: async () => src,
+  };
+  const sock = {
+    sendMessage: async (to, msg) => { sent.push({ type: "msg", to, msg }); return { key: { id: "x" } }; },
+  };
+  await rHandler(m, { sock, args: [] });
+  check("hasil dikirim via sendMessage", sent.some((s) => s.type === "msg" && s.msg.image), JSON.stringify(sent.map((s) => s.type)));
+  const cap = sent.find((s) => s.msg?.image)?.msg.caption || "";
+  check("caption Engine: Ihancer AI + FFmpeg Polish", cap.includes("Engine: Ihancer AI + FFmpeg Polish"), cap.slice(0, 140));
+  check("react 🎨 → 🐣", reacts.includes("🎨") && reacts.includes("🐣"), reacts.join(","));
+  _clearIhancerHttpForTest();
+}
+
 w("\n— polish pass: poles tanpa upscale (Photiu + polish) —");
 {
   const src = await makeTestJpeg(200, 150);
