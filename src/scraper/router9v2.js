@@ -98,7 +98,7 @@ export async function router9v2Chat({ messages, model, maxTokens = 4096, tempera
         ...(temperature != null ? { temperature } : {}),
         stream: false,
       },
-      timeout: 90000,
+      timeout: 60000,
       validateStatus: null,
     });
   } catch (e) {
@@ -123,6 +123,68 @@ export async function router9v2Chat({ messages, model, maxTokens = 4096, tempera
   }
   if (!text.trim()) throw new Error("9router v2 balas kosong — coba lagi / model lain (.ai9v2 list)");
   return { text: text.trim(), model: usedModel, latencyMs: Date.now() - t0, usage };
+}
+
+// ── SMART CHAT: retry + fallback tier cepat (17 Sep 2026, report owner
+// "router9v2 g bsa jawab + ping tinggi 5000ms" — upstream gateway naik-turun
+// 2.5s..43s buat request sama; koneksi TLS cuma 33ms, jadi murni antrian
+// server). Rantai: model diminta (60s) → retry 1x (60s) → fallback
+// ROUTER9V2_FAST_MODEL (kecuali model diminta = fast sendiri) → error asli.
+export const ROUTER9V2_FAST_MODEL = "ag/gemini-3-flash";
+
+export async function router9v2ChatSmart({ messages, model, maxTokens = 4096 }) {
+  const wanted = model || ROUTER9V2_DEFAULT_MODEL;
+  const t0 = Date.now();
+  let firstErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const r = await router9v2Chat({ messages, model: wanted, maxTokens });
+      r.totalLatencyMs = Date.now() - t0;
+      return r;
+    } catch (e) {
+      if (attempt === 0) firstErr = e;
+      else {
+        // 2x gagal → coba tier cepat (model sama → lempar error asli)
+        if (wanted === ROUTER9V2_FAST_MODEL) throw firstErr;
+        try {
+          const r = await router9v2Chat({ messages, model: ROUTER9V2_FAST_MODEL, maxTokens });
+          r.totalLatencyMs = Date.now() - t0;
+          r.fallbackFrom = wanted;
+          return r;
+        } catch {
+          throw firstErr;
+        }
+      }
+    }
+  }
+  throw firstErr;
+}
+
+// ── ping: ukur latency live tiap jalur (bukti di mana lambatnya) ──
+export async function router9v2Ping() {
+  const out = { lines: [], modelsMs: null, chats: [], totalMs: 0, errors: 0 };
+  const t0 = Date.now();
+  async function timed(label, model) {
+    const s = Date.now();
+    try {
+      if (model) await router9v2Chat({ messages: [{ role: "user", content: "jawab satu kata: siap" }], model, maxTokens: 30 });
+      else await router9v2Models();
+      const ms = Date.now() - s;
+      out.chats.push({ label, ms, ok: true });
+      out.lines.push((ms <= 5000 ? "✅ " : "🐢 ") + label + ": " + ms + "ms");
+      return ms;
+    } catch (e) {
+      out.errors++;
+      out.chats.push({ label, ms: Date.now() - s, ok: false });
+      out.lines.push("❌ " + label + ": " + String(e.message).slice(0, 90));
+      return null;
+    }
+  }
+  out.modelsMs = await timed("GET /v1/models", null);
+  await timed("chat default (" + ROUTER9V2_DEFAULT_MODEL + ")", ROUTER9V2_DEFAULT_MODEL);
+  await timed("chat tier cepat (" + ROUTER9V2_FAST_MODEL + ")", ROUTER9V2_FAST_MODEL);
+  out.totalMs = Date.now() - t0;
+  return out;
 }
 
 // ── preferensi model per chat (persist ke file state kecil) ──
