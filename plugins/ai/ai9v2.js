@@ -8,9 +8,9 @@ import { novaBox } from "../../src/lib/nova-menu-style.js";
 import { splitChatChunks } from "../../src/lib/aiagent.js";
 import { appendTurn, toMessages } from "../../src/lib/nova-ai-session.js";
 import {
-  router9v2Chat, router9v2Models, router9v2Key,
+  router9v2ChatSmart, router9v2Models, router9v2Key, router9v2Ping,
   getRouter9v2Pref, setRouter9v2Pref,
-  ROUTER9V2_DEFAULT_MODEL,
+  ROUTER9V2_DEFAULT_MODEL, ROUTER9V2_FAST_MODEL,
 } from "../../src/scraper/router9v2.js";
 
 const pluginConfig = {
@@ -18,8 +18,8 @@ const pluginConfig = {
   alias: ["9routerv2", "routerv2"],
   category: "ai",
   description: "9Router V2 Cloud — chat AI multi-model via gateway 9router.cloudku.us.kg (21 model)",
-  usage: ".ai9v2 <pesan> | .ai9v2 list | .ai9v2 model | .ai9v2 model <id> | .ai9v2 model <id> <pesan>",
-  example: ".ai9v2 jelaskan kuantum singkat\n.ai9v2 list\n.ai9v2 model ag/claude-sonnet-4-6\n.ai9v2 model ag/gpt-oss-120b-medium buat pantun",
+  usage: ".ai9v2 <pesan> | .ai9v2 list | .ai9v2 ping | .ai9v2 model | .ai9v2 model <id> | .ai9v2 model <id> <pesan>",
+  example: ".ai9v2 jelaskan kuantum singkat\n.ai9v2 list\n.ai9v2 ping\n.ai9v2 model ag/claude-sonnet-4-6\n.ai9v2 model ag/gpt-oss-120b-medium buat pantun",
   isOwner: false, isPremium: false, isGroup: true, isPrivate: true,
   cooldown: 5, energi: 0, isEnabled: true,
 };
@@ -29,6 +29,7 @@ const HELP = [
   "---",
   "Contoh    : .ai9v2 jelaskan kuantum",
   "Daftar AI : .ai9v2 list",
+  "Ping      : .ai9v2 ping",
   "Model     : .ai9v2 model <id> <pesan>",
   "Default   : .ai9v2 model <id>",
 ];
@@ -38,6 +39,19 @@ async function handler(m, { sock, args }) {
   const sub = argList[0]?.toLowerCase();
   if (!router9v2Key()) {
     return m.reply(novaBox("9Router V2", ["Key belum di-set — isi di apikeys.json (router9v2) atau env ROUTER_API_KEY."]));
+  }
+
+  // ── .ai9v2 ping — diagnosa latency live (bukti di mana lambatnya) ──
+  if (sub === "ping") {
+    await m.react("🧠");
+    const p = await router9v2Ping();
+    await m.react(p.errors ? "❌" : "🐣");
+    return m.reply(novaBox("9Router V2 — Ping", [
+      ...p.lines,
+      "---",
+      "Total: " + p.totalMs + "ms",
+      "Normal: 2-5 dtk | Lambat = antrian server gateway (bukan koneksi)",
+    ]));
   }
 
   // ── .ai9v2 list — daftar model live ──
@@ -113,14 +127,18 @@ async function chatReply(m, sock, userMsg, model) {
     await m.react("🧠");
     const sKey = "satuan:" + m.sender;
     const history = toMessages(sKey);
-    const r = await router9v2Chat({
+    const r = await router9v2ChatSmart({
       model,
       messages: [...history, { role: "user", content: userMsg }],
     });
     appendTurn(sKey, userMsg, r.text);
     await m.react("🐣");
     // jawaban panjang dikirim berantai (aturan chat terusan, tanpa clip 4096)
-    const footer = "\n\n— via 9router v2 • " + r.model + " • " + r.latencyMs + "ms";
+    const ms = r.totalLatencyMs || r.latencyMs;
+    const tier = r.fallbackFrom
+      ? `fallback dari ${r.fallbackFrom} (lambat/gagal) → tier cepat ${r.model}`
+      : r.model;
+    const footer = "\n\n— via 9router v2 • " + tier + " • " + ms + "ms";
     const chunks = splitChatChunks(r.text, { chunkChars: 6000 });
     for (let i = 0; i < chunks.length; i++) {
       const last = i === chunks.length - 1;
