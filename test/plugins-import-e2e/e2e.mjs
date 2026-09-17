@@ -53,7 +53,7 @@ for (const cmd of ["plane", "googleairich", "youtubeairich"]) {
   const p = getPlugin(cmd);
   t(`.${cmd} ke-resolve lewat LOADER (regresi airich)`, !!p, "plugin gak diregistrasi — cek export { pluginConfig as config, handler }");
 }
-for (const cmd of ["novaagent", "aisuperagent", "mcp", "memory", "telpon", "doctor"]) {
+for (const cmd of ["novaagent", "aisuperagent", "mcp", "memory", "telpon", "doctor", "ai9v2", "9routerv2"]) {
   const p = getPlugin(cmd);
   t(`.${cmd} ke-resolve`, !!p, "unknown command");
 }
