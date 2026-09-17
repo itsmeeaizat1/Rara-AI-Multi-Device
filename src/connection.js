@@ -657,6 +657,14 @@ async function startConnection(options = {}) {
         console.error("[automation] Failed to start automation hub:", e.message);
       }
 
+      // 🔹 BOOT DOCTOR: cek apikey expired + endpoint down semua fitur → DM owner
+      try {
+        const { initBootDoctor } = await import("./lib/nova-boot-doctor.js");
+        initBootDoctor(sock);
+      } catch (e) {
+        console.error("[bootdoctor] Failed to start boot doctor:", e.message);
+      }
+
       // 🔹 REMINDER RESTORE + ALARM SCHEDULER: reminder aktif dari db
       // dipasang ulang timer-nya (yang kelewat dikirim notif "terlewat"),
       // alarm HH:MM harian dicek tiap 30 dtk — dua-duanya sekarang
