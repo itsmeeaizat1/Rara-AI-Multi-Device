@@ -8,7 +8,7 @@ const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
 await initDatabase("/tmp/aicall-e2e-db.json");
-const { config: aicallConfig, handler: aicallHandler, _setAicallFetchForTest, _clearAicallFetchForTest } = await import("../../plugins/owner/aicall.js");
+const { config: aicallConfig, handler: aicallHandler, _setAicallFetchForTest, _clearAicallFetchForTest, _setAicallPusatKeyForTest, _clearAicallPusatKeyForTest } = await import("../../plugins/owner/aicall.js");
 
 // ── helper ──
 async function mkM(text, { isOwner = true } = {}) {
@@ -65,6 +65,58 @@ w("\n— .aicall <nomor> → POST /call —");
   check("key pusat gemini/groq dikirim kalau ada", captured?.body && ("gemini_api" in captured.body) && ("groq_api" in captured.body), JSON.stringify(Object.keys(captured?.body || {})));
   check("reply konfirmasi menelepon", box(e).includes("628123456789") && box(e).toLowerCase().includes("menelepon"), box(e).slice(0, 80));
   check("react 🛠️ → 🐣", e.reacts.includes("🛠️") && e.reacts.includes("🐣"), e.reacts.join(","));
+  _clearAicallFetchForTest();
+}
+
+// ═══ 3b. grok (xAI) — otak percakapan default (owner 17 Sep "pakai grok dlu") ═══
+w("\n— grok key dari pusat → provider grok dikirim —");
+{
+  let captured = null;
+  _setAicallPusatKeyForTest((name) => (name === "grok" || name === "xai" ? "xai-test-key-123" : (name === "gemini" ? "" : "")));
+  _setAicallFetchForTest(async (url, opts) => {
+    captured = { url, body: JSON.parse(opts.body) };
+    return { status: 200, json: async () => ({ ok: true, number: "628123456789" }) };
+  });
+  const e = await mkM("628123456789");
+  await aicallHandler(e.m);
+  check("key grok pusat dikirim + ai_provider=grok", captured?.body?.grok_api === "xai-test-key-123" && captured?.body?.ai_provider === "grok", JSON.stringify(captured?.body));
+  check("key gemini kosong → gak dikirim", !("gemini_api" in (captured?.body || {})), JSON.stringify(captured?.body));
+  _clearAicallPusatKeyForTest();
+  _clearAicallFetchForTest();
+}
+
+// ═══ 3c. .aicall ai <grok|gemini> — ganti otak live ═══
+w("\n— .aicall ai grok/gemini —");
+{
+  let captured = null;
+  _setAicallPusatKeyForTest((name) => (name === "grok" || name === "xai" ? "xai-test-key-123" : ""));
+  _setAicallFetchForTest(async (url, opts) => {
+    captured = { url, body: JSON.parse(opts.body) };
+    return { status: 200, json: async () => ({ ok: true, engine: "edgetts", voice: "Puck" }) };
+  });
+  const e = await mkM("ai grok");
+  await aicallHandler(e.m);
+  check(".aicall ai grok → POST /config {ai_provider:grok, grok_api}", captured?.body?.ai_provider === "grok" && captured?.body?.grok_api === "xai-test-key-123", JSON.stringify(captured?.body));
+  check("konfirmasi otak grok", box(e).toLowerCase().includes("grok"), box(e).slice(0, 80));
+  const e2 = await mkM("ai gemini");
+  await aicallHandler(e2.m);
+  check(".aicall ai gemini → POST /config {ai_provider:gemini} tanpa grok_api", captured?.body?.ai_provider === "gemini" && !("grok_api" in captured.body), JSON.stringify(captured?.body));
+  _clearAicallPusatKeyForTest();
+  _clearAicallFetchForTest();
+}
+{
+  const e = await mkM("ai abc");
+  await aicallHandler(e.m);
+  check(".aicall ai ngawur → hint grok/gemini", box(e).toLowerCase().includes("grok") && box(e).toLowerCase().includes("gemini"));
+}
+{
+  // key grok belum ada di pusat → tetap konfirmasi tapi kasih warning key
+  _setAicallPusatKeyForTest(() => "");
+  _setAicallFetchForTest(async () => ({ status: 200, json: async () => ({ ok: true, engine: "edgetts", voice: "Puck" }) }));
+  const e = await mkM("ai grok");
+  await aicallHandler(e.m);
+  check("key grok kosong → warning taruh key di pusat", box(e).toLowerCase().includes("apikeys.json"), box(e).slice(0, 120));
+  _clearAicallPusatKeyForTest();
   _clearAicallFetchForTest();
 }
 
