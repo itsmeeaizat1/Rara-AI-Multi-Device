@@ -1,13 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Remini — AI Photo Enhancer ala app Remini asli
-// ENGINE UTAMA (request owner 12 Sep 2026 revisi "balik lagi pakai Photiu,
-// cm poles dikit agar jernih"): PHOTIU AI → pass poles FFmpeg (denoise tipis
-// + unsharp + eq natural, tanpa upscale — hasilnya lebih jernih).
-// Chain 4 tingkat:
-//   1. Photiu AI + FFmpeg polish pass (engine utama, default)
-//   2. FFmpeg upscale pipeline 4x — kalau Photiu error/timeout (preset kode owner)
-//   3. Local AI Swin2SR-realworld 4x (HF) — 100% lokal
-//   4. Upscale lokal sharp (instan tanpa AI) — jika 1-3 sama-sama gagal.
+// ENGINE UTAMA (request owner 17 Sep 2026 "cba fitur remini ganti pakai api
+// ini" — ihancer.com): IHANCER AI → pass poles FFmpeg (denoise tipis + unsharp
+// + eq natural, tanpa upscale — hasilnya lebih jernih).
+// Chain 5 tingkat:
+//   1. Ihancer AI + FFmpeg polish pass (engine utama, default)
+//   2. Photiu AI + polish (engine lama) — kalau Ihancer error/timeout
+//   3. FFmpeg upscale pipeline 4x — preset kode owner
+//   4. Local AI Swin2SR-realworld 4x (HF) — 100% lokal
+//   5. Upscale lokal sharp (instan tanpa AI) — jika 1-4 sama-sama gagal.
 // .remini 2/4/6/8 → FFmpeg upscale pipeline penuh (preset kode owner).
 // TANPA WATERMARK — otomatis dipakai kalau Remini mobile error/kuota habis.
 //   .remini real/upscale → 4x restore langsung (local AI)
@@ -30,13 +31,17 @@ import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/nov
 import { upscaleImage as ffmpegUpscale, polishImage, HD_PRESETS as FFMPEG_PRESETS } from "../../src/lib/nova-remini-ffmpeg.js";
 // Photiu AI — engine utama (request owner 11 Sep, dibalikin 12 Sep)
 import { photiuUpscale } from "../../src/scraper/photiu.js";
+// Ihancer AI — ENGINE UTAMA BARU (request owner 17 Sep 2026: "cba fitur remini
+// ganti pakai api ini" — ihancer.com/api/enhance, port verbatim kode owner ke
+// src/scraper/ihancer.js, live 1 dtk tanpa API key)
+import { ihancerEnhance } from "../../src/scraper/ihancer.js";
 
 const pluginConfig = {
   name: "remini",
   alias: ["remini", "enhance"],
   category: "tools",
-  description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar) — Photiu AI + poles FFmpeg, tanpa watermark\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  description: "AI Photo Enhancer ala Remini — Ihancer AI + poles FFmpeg (unblur, face enhance)",
+  usage: ".remini (reply gambar) — Ihancer AI + poles FFmpeg, tanpa watermark\n.remini 2 / 4 / 6 / 8 — pilih faktor upscale FFmpeg (2x HD s/d 8x Ultra HD)\n.remini real / upscale — restore 4x local AI tanpa watermark\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (local AI, di atas 1080 khusus Owner)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -431,27 +436,48 @@ async function handler(m, { sock, args }) {
       };
 
       if (!factorArg) {
-        // ── jalur default: Photiu AI + poles FFmpeg (engine utama) ──
+        // ── jalur default: IHANCER AI + poles FFmpeg (engine utama, owner 17 Sep) ──
+        let ih = null;
         try {
           try { await m.react("🎨"); } catch {}
-          const r = await photiuUpscale(mediaBuffer, { timeout: 90000 });
-          resultBuffer = await polishImage(r.data.buffer);
-          label = `Photiu AI + Poles (${r.data.format.toUpperCase()})`;
-          engineNote = "Engine: Photiu AI + FFmpeg Polish (tanpa watermark)";
+          ih = await ihancerEnhance(mediaBuffer, { timeoutMs: 120000 });
         } catch (e0) {
-          console.error("[REMINI] Photiu gagal:", e0.message);
-          // fallback 1: FFmpeg pipeline 4x (preset kode owner)
+          console.error("[REMINI] Ihancer gagal:", e0.message);
+        }
+        if (ih) {
+          // poles FFmpeg biar pixel makin jernih (pola owner 12 Sep) — kalau
+          // polish error, hasil ihancer MENTAH tetep dikirim (jangan buang)
           try {
-            await ffmpegPipeline(factor);
+            resultBuffer = await polishImage(ih);
+            label = "Ihancer AI + Poles (JPEG)";
+          } catch {
+            resultBuffer = ih;
+            label = "Ihancer AI (JPEG)";
+          }
+          engineNote = "Engine: Ihancer AI + FFmpeg Polish (tanpa watermark)";
+        } else {
+          // fallback 1: Photiu AI + polish (engine lama)
+          try {
+            try { await m.react("🎨"); } catch {}
+            const r = await photiuUpscale(mediaBuffer, { timeout: 90000 });
+            resultBuffer = await polishImage(r.data.buffer);
+            label = `Photiu AI + Poles (${r.data.format.toUpperCase()})`;
+            engineNote = "Engine: Photiu AI + FFmpeg Polish (fallback — tanpa watermark)";
           } catch (e1) {
-            console.error("[REMINI] FFmpeg pipeline gagal:", e1.message);
-            // fallback 2: local Swin2SR-realworld 4x (HF)
+            console.error("[REMINI] Photiu gagal:", e1.message);
+            // fallback 2: FFmpeg pipeline 4x (preset kode owner)
             try {
-              await swinFallback();
+              await ffmpegPipeline(factor);
             } catch (e2) {
-              console.error("[REMINI] Local AI gagal:", e2.message);
-              // fallback terakhir: upscale lokal sharp — instan
-              await sharpLastResort();
+              console.error("[REMINI] FFmpeg pipeline gagal:", e2.message);
+              // fallback 3: local Swin2SR-realworld 4x (HF)
+              try {
+                await swinFallback();
+              } catch (e3) {
+                console.error("[REMINI] Local AI gagal:", e3.message);
+                // fallback terakhir: upscale lokal sharp — instan
+                await sharpLastResort();
+              }
             }
           }
         }
