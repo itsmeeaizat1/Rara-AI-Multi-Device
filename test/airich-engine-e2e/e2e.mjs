@@ -6,6 +6,7 @@ import fs from "node:fs";
 import { initDatabase } from "../../src/lib/nova-database.js";
 import {
   fetchCertificate, polishPayload, buildRichResponse, sendRichResponse,
+  applyAirichVariant, airichMode,
   _setAirichHttpForTest, _resetAirichHttpForTest,
 } from "../../src/lib/nova-airich.js";
 
@@ -71,6 +72,52 @@ t("  polish→rakit→relay: 1x relay ke chat, payload ke-polish",
   relays.length === 1 && relays[0].chat === "g@test"
   && JSON.parse(Buffer.from(relays[0].msg.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).sections[0].view_model.primitive.payload.includes("data-nova-bottomsheet"));
 t("  opts.title nyampe ke submessage", relays[0].msg.botForwardedMessage.message.richResponseMessage.submessages[0].messageText === "Google 🔍");
+
+// ═══ 4b. varian eksperimen AIRICH_MODE ═══
+w("\n— varian AIRICH_MODE —");
+const baseMsg = () => buildRichResponse(HTML, ["cHViMQ==", "cHViMQ=="]);
+{
+  const m = applyAirichVariant(baseMsg(), "nofwd");
+  const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
+  t("  nofwd: tanda forward kehapus (forwardingScore/isForwarded/botInfo/origin)",
+    !("forwardingScore" in ci) && !("isForwarded" in ci) && !("forwardedAiBotMessageInfo" in ci) && !("forwardOrigin" in ci));
+  t("  nofwd: verificationMetadata TETAP ADA", !!m.messageContextInfo.botMetadata.verificationMetadata);
+  t("  nofwd: stanzaId/participant tetap utuh", ci.stanzaId === "A5FBA758891A16FD260767C2569F87E4" && ci.participant === "262955698532521@lid");
+}
+{
+  const m = applyAirichVariant(baseMsg(), "noverify");
+  const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
+  t("  noverify: verificationMetadata kehapus", !m.messageContextInfo.botMetadata.verificationMetadata);
+  t("  noverify: tanda forward TETAP ADA", ci.forwardingScore === 1 && ci.isForwarded === true && ci.forwardOrigin === "META_AI");
+}
+{
+  const m = applyAirichVariant(baseMsg(), "clean");
+  const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
+  t("  clean: dua-duanya kehapus",
+    !m.messageContextInfo.botMetadata.verificationMetadata && !("forwardingScore" in ci) && !("forwardOrigin" in ci));
+}
+{
+  const m = applyAirichVariant(baseMsg(), "full");
+  const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
+  t("  full/unknown: struktur verbatim gak tersentuh",
+    ci.forwardingScore === 1 && ci.isForwarded === true && !!m.messageContextInfo.botMetadata.verificationMetadata);
+}
+{
+  process.env.AIRICH_MODE = "clean";
+  const m = applyAirichVariant(baseMsg());
+  t("  tanpa argumen → baca env AIRICH_MODE", !m.messageContextInfo.botMetadata.verificationMetadata);
+  delete process.env.AIRICH_MODE;
+  t("  env dibalikin → mode full", airichMode() === "full");
+}
+{
+  const relays2 = [];
+  const sock2 = { relayMessage: async (chat, msg, o) => { relays2.push({ chat, msg }); return {}; } };
+  process.env.AIRICH_MODE = "nofwd";
+  await sendRichResponse(sock2, "g@test", HTML, { title: "tes" });
+  delete process.env.AIRICH_MODE;
+  const ci = relays2[0].msg.botForwardedMessage.message.richResponseMessage.contextInfo;
+  t("  sendRichResponse mengikuti AIRICH_MODE env (nofwd)", !("forwardOrigin" in ci) && !!relays2[0].msg.messageContextInfo.botMetadata.verificationMetadata);
+}
 
 // ═══ 5. live certificate ═══
 w("\n— live certificate (noxXza) —");
