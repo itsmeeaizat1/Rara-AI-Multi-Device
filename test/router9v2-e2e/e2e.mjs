@@ -51,7 +51,7 @@ function mkM(text, args) {
 }
 
 const MODELS_JSON = { data: [
-  { id: "ag/gemini-3.8-flash-high" }, { id: "ag/claude-sonnet-4-6" },
+  { id: "ag/gemini-pro-agent" }, { id: "ag/gemini-3.8-flash-high" }, { id: "ag/claude-sonnet-4-6" },
   { id: "ag/gpt-oss-120b-medium" }, { id: "ag/gemini-3-flash-agent" },
 ] };
 const CHAT_JSON = { choices: [{ message: { role: "assistant", content: "Siap." } }], model: "gemini-3.8-flash", usage: { total_tokens: 5 } };
@@ -72,7 +72,7 @@ t("  key kebaca dari seam", router9v2Key() === "sk-e2e-9router");
 let lastCfg = null;
 _setRouter9v2HttpForTest(async (cfg) => { lastCfg = cfg; return { status: 200, data: MODELS_JSON }; });
 let r = await router9v2Models();
-t("  models: 4 id ke-ekstrak", r.total === 4 && r.models[0] === "ag/gemini-3.8-flash-high", "→ " + r.total);
+t("  models: 5 id ke-ekstrak", r.total === 5 && r.models[0] === "ag/gemini-pro-agent", "→ " + r.total);
 t("  URL models bener: /v1/models + Bearer key",
   lastCfg.url.endsWith("/v1/models") && lastCfg.headers.Authorization === "Bearer sk-e2e-9router");
 
@@ -212,7 +212,7 @@ _setRouter9v2HttpForTest(async () => ({ status: 200, data: MODELS_JSON }));
 m = mkM(".ai9v2 list", ["list"]);
 await plug.handler(m, { sock: {}, args: ["list"] });
 t("  list → total model + default + panah default",
-  m.replyed.length === 1 && sc(m.replyed[0]).includes("4") && m.replyed[0].includes("→"), sc(m.replyed[0]).slice(0, 60));
+  m.replyed.length === 1 && sc(m.replyed[0]).includes("5") && m.replyed[0].includes("→"), sc(m.replyed[0]).slice(0, 60));
 
 // model gak ada
 m = mkM(".ai9v2 model sukijan", ["model", "sukijan"]);
