@@ -1,0 +1,149 @@
+// E2E AICALL (17 Sep 2026) — plugin .aicall + service Go aicall/ (HTTP mock).
+// Jalankan: node test/aicall-e2e/e2e.mjs
+import { initDatabase } from "../../src/lib/nova-database.js";
+import { fromSC } from "../../src/lib/styler.js";
+
+let pass = 0, fail = 0;
+const w = (s) => process.stdout.write(s + "\n");
+const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
+
+await initDatabase("/tmp/aicall-e2e-db.json");
+const { config: aicallConfig, handler: aicallHandler, _setAicallFetchForTest, _clearAicallFetchForTest } = await import("../../plugins/owner/aicall.js");
+
+// ── helper ──
+async function mkM(text, { isOwner = true } = {}) {
+  const sent = [];
+  const reacts = [];
+  return {
+    m: {
+      text,
+      isOwner,
+      reply: async (txt) => sent.push({ type: "reply", txt }),
+      react: async (r) => reacts.push(r),
+    },
+    sent,
+    reacts,
+  };
+}
+// claraWrap bikin semua teks jadi smallcaps — asersi WAJIB dinormalkan balik
+const box = (e) => fromSC((e.sent.find((s) => s.type === "reply") || { txt: "" }).txt);
+
+// ═══ 1. config ═══
+w("\n— config plugin .aicall —");
+check("config ke-load (name aicall, owner-only, enabled)", aicallConfig?.name === "aicall" && aicallConfig?.isOwner === true && aicallConfig?.isEnabled === true);
+
+// ═══ 2. usage + owner gate ═══
+w("\n— usage & owner gate —");
+{
+  const e = await mkM("");
+  await aicallHandler(e.m);
+  check("tanpa arg → panduan cara pakai", box(e).includes("aicall"));
+}
+{
+  const e = await mkM("12345");
+  await aicallHandler(e.m);
+  check("nomor kependekan → panduan (bukan telepon)", box(e).toLowerCase().includes("cara pakai") || box(e).includes("628"));
+}
+{
+  const e = await mkM("628123456789", { isOwner: false });
+  await aicallHandler(e.m);
+  check("non-owner → ditolak 🚫", box(e).toLowerCase().includes("owner") && e.reacts.includes("🚫"));
+}
+
+// ═══ 3. pasang panggilan (mock sukses) ═══
+w("\n— .aicall <nomor> → POST /call —");
+{
+  let captured = null;
+  _setAicallFetchForTest(async (url, opts) => {
+    captured = { url, method: opts.method, body: JSON.parse(opts.body) };
+    return { status: 200, json: async () => ({ ok: true, number: "628123456789" }) };
+  });
+  const e = await mkM("+62 812-3456-789");
+  await aicallHandler(e.m);
+  check("nomor dinormalisasi (+62 812-3456-789 → 628123456789)", captured?.body?.number === "628123456789", JSON.stringify(captured?.body));
+  check("POST ke /call", captured?.url?.endsWith("/call") && captured?.method === "POST", String(captured?.url));
+  check("key pusat gemini/groq dikirim kalau ada", captured?.body && ("gemini_api" in captured.body) && ("groq_api" in captured.body), JSON.stringify(Object.keys(captured?.body || {})));
+  check("reply konfirmasi menelepon", box(e).includes("628123456789") && box(e).toLowerCase().includes("menelepon"), box(e).slice(0, 80));
+  check("react 🛠️ → 🐣", e.reacts.includes("🛠️") && e.reacts.includes("🐣"), e.reacts.join(","));
+  _clearAicallFetchForTest();
+}
+
+// ═══ 4. service down ═══
+w("\n— service Go down —");
+{
+  _setAicallFetchForTest(null);
+  const e = await mkM("628123456789");
+  await aicallHandler(e.m);
+  check("service down → pesan jelas arahkan VPS/INTEGRATION.md", box(e).toLowerCase().includes("tidak bisa dihubungi") && box(e).toLowerCase().includes("integration"), box(e).slice(0, 90));
+  check("service down → react ❌", e.reacts.includes("❌"), e.reacts.join(","));
+  _clearAicallFetchForTest();
+}
+
+// ═══ 5. status ═══
+w("\n— .aicall status —");
+{
+  _setAicallFetchForTest(async () => ({
+    status: 200,
+    json: async () => ({ ok: true, connected: true, uptime: "1h2m3s", model: "gemini-3.1-flash-lite", engine: "edgetts", voice: "id-ID-GadisNeural", owners: 1, commands: false }),
+  }));
+  const e = await mkM("status");
+  await aicallHandler(e.m);
+  check("status render: terhubung + engine + suara", box(e).toLowerCase().includes("terhubung") && box(e).toLowerCase().includes("edgetts") && box(e).toLowerCase().includes("id-id-gadisneural"), box(e).slice(0, 120));
+  check("status react 🛠️ → 🐣", e.reacts.includes("🛠️") && e.reacts.includes("🐣"), e.reacts.join(","));
+  _clearAicallFetchForTest();
+}
+{
+  // service hidup tapi sesi WA belum tertaut
+  _setAicallFetchForTest(async () => ({
+    status: 200,
+    json: async () => ({ ok: true, connected: false, uptime: "10s", model: "-", engine: "edgetts", voice: "id-ID-GadisNeural", owners: 1 }),
+  }));
+  const e = await mkM("status");
+  await aicallHandler(e.m);
+  check("sesi belum tertaut → arahkan pairing code", box(e).toLowerCase().includes("belum tertaut") && box(e).toLowerCase().includes("pairing"), box(e).slice(0, 120));
+  _clearAicallFetchForTest();
+}
+
+// ═══ 6. engine / voice live ═══
+w("\n— .aicall engine / .aicall voice —");
+{
+  let captured = null;
+  _setAicallFetchForTest(async (url, opts) => {
+    captured = { url, body: JSON.parse(opts.body) };
+    return { status: 200, json: async () => ({ ok: true, engine: "geminitts", voice: "Puck" }) };
+  });
+  const e = await mkM("engine geminitts");
+  await aicallHandler(e.m);
+  check("engine valid → POST /config", captured?.url?.endsWith("/config") && captured?.body?.engine === "geminitts", JSON.stringify(captured));
+  check("konfirmasi engine baru", box(e).toLowerCase().includes("geminitts"), box(e).slice(0, 80));
+  const e2 = await mkM("voice id-ID-GadisNeural");
+  await aicallHandler(e2.m);
+  check("voice → POST /config {voice}", captured?.body?.voice === "id-ID-GadisNeural", JSON.stringify(captured));
+  _clearAicallFetchForTest();
+}
+{
+  const e = await mkM("engine abc");
+  await aicallHandler(e.m);
+  check("engine ngawur → daftar opsi (tanpa fetch)", box(e).toLowerCase().includes("edgetts"));
+}
+{
+  const e = await mkM("voice");
+  await aicallHandler(e.m);
+  check("voice tanpa nama → hint daftar suara", box(e).toLowerCase().includes("gadisneural") || box(e).toLowerCase().includes("suara"), box(e).slice(0, 80));
+}
+
+// ═══ 7. /call balikin error dari service (misal sesi WA mati) ═══
+w("\n— service hidup, panggilan gagal —");
+{
+  _setAicallFetchForTest(async () => ({
+    status: 500,
+    json: async () => ({ ok: false, error: "sesi WhatsApp AI Call belum terhubung" }),
+  }));
+  const e = await mkM("628123456789");
+  await aicallHandler(e.m);
+  check("error service diteruskan ke owner + react ❌", box(e).toLowerCase().includes("gagal") && box(e).toLowerCase().includes("sesi whatsapp") && e.reacts.includes("❌"), box(e).slice(0, 100));
+  _clearAicallFetchForTest();
+}
+
+w(`\nTOTAL: ${pass}/${pass + fail}`);
+process.exit(fail ? 1 : 0);
