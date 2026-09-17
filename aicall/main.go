@@ -396,6 +396,8 @@ type callRequest struct {
 	Number       string `json:"number"`
 	GeminiAPI    string `json:"gemini_api,omitempty"`
 	GroqAPI      string `json:"groq_api,omitempty"`
+	GrokAPI      string `json:"grok_api,omitempty"` // xAI Grok — otak percakapan (owner 17 Sep)
+	AIProvider   string `json:"ai_provider,omitempty"`
 	SystemPrompt string `json:"system_prompt,omitempty"`
 }
 
@@ -407,6 +409,8 @@ type configRequest struct {
 	SystemPrompt string  `json:"system_prompt,omitempty"`
 	GeminiAPI    string  `json:"gemini_api,omitempty"`
 	GroqAPI      string  `json:"groq_api,omitempty"`
+	GrokAPI      string  `json:"grok_api,omitempty"`
+	AIProvider   string  `json:"ai_provider,omitempty"`
 }
 
 func checkAuth(r *http.Request) bool {
@@ -485,6 +489,8 @@ func startHTTPAPI() {
 			"ok":         true,
 			"connected":  connected,
 			"uptime":     time.Since(botStartTime).Truncate(time.Second).String(),
+			"provider":   AppConfig.AIProvider,
+			"grok_model": AppConfig.GrokModel,
 			"model":      AppConfig.GeminiModel,
 			"engine":     AppConfig.TTSEngine,
 			"voice":      AppConfig.TTSVoice,
@@ -521,6 +527,15 @@ func startHTTPAPI() {
 		}
 		if strings.TrimSpace(req.GroqAPI) != "" {
 			AppConfig.GroqAPI = strings.TrimSpace(req.GroqAPI)
+		}
+		if strings.TrimSpace(req.GrokAPI) != "" {
+			AppConfig.GrokAPI = strings.TrimSpace(req.GrokAPI)
+		}
+		if strings.TrimSpace(req.AIProvider) != "" {
+			p := strings.ToLower(strings.TrimSpace(req.AIProvider))
+			if p == "grok" || p == "gemini" {
+				AppConfig.AIProvider = p
+			}
 		}
 		if strings.TrimSpace(req.SystemPrompt) != "" {
 			AppConfig.SystemPrompt = strings.TrimSpace(req.SystemPrompt)
@@ -578,6 +593,19 @@ func startHTTPAPI() {
 		}
 		if strings.TrimSpace(req.GroqAPI) != "" {
 			AppConfig.GroqAPI = strings.TrimSpace(req.GroqAPI)
+		}
+		if strings.TrimSpace(req.GrokAPI) != "" {
+			AppConfig.GrokAPI = strings.TrimSpace(req.GrokAPI)
+		}
+		if strings.TrimSpace(req.AIProvider) != "" {
+			p := strings.ToLower(strings.TrimSpace(req.AIProvider))
+			if p == "grok" || p == "gemini" {
+				AppConfig.AIProvider = p
+			} else {
+				aicallMu.Unlock()
+				writeErr(w, 400, "provider tidak valid (grok/gemini)")
+				return
+			}
 		}
 		engine := AppConfig.TTSEngine
 		voice := AppConfig.TTSVoice
