@@ -7,7 +7,7 @@
 // 🔹 Alur: localParse (instan) → think (AI provider) → [ACTION] auto-execute
 // ============================================================
 
-import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, quickWebSearch, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
+import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, buildSearchQuery, quickWebSearch, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
@@ -394,8 +394,12 @@ async function handler(m, { sock, conn, config, db }) {
       // berita/viral/terkini → quick web search 1x dulu, hasil dititip ke
       // prompt think() biar jawaban akurat + boleh cite link sumber asli.
       let webSearchCtx = null;
-      if (needsWebSearch(textForAi)) {
-        const found = await quickWebSearch(textForAi).catch(() => null);
+      const searchIntent = needsWebSearch(textForAi);
+      if (searchIntent) {
+        // 🔹 FIX 17 Sep 2026: query DIBERSIHKIN dulu (teks mentah "tolong
+        // carikan script md 5k fitur" bikin engine lowRelevance → null).
+        const q = buildSearchQuery(textForAi) || textForAi;
+        const found = await quickWebSearch(q).catch(() => null);
         if (found) webSearchCtx = found.block;
       }
       decision = await think(textForAi, {
@@ -408,6 +412,14 @@ async function handler(m, { sock, conn, config, db }) {
         memory: memoryFactsInline(db, m.sender, textForAi),
         // 🔹 WEB SEARCH: hasil browsing ringan (kalau query butuh info terkini)
         webSearch: webSearchCtx,
+        // 🔹 FIX 17 Sep 2026: request yang udah ke-trigger quickWebSearch
+        // = minta MENCARI dari internet → tool dikunci null, jawab dari
+        // hasil pencarian (anti nyamber createfile/genimage — owner report
+        // "carikan script md 5k fitur" malah generate gambar lagi).
+        // 🔹 kunci dari INTENT (bukan cuma hasil): pencarian gagal pun,
+        // jawaban dari pengetahuan + tool null tetap lebih benar daripada
+        // nyamber createfile/genimage (owner report 17 Sep).
+        forceNoTools: !!webSearchCtx || searchIntent,
       });
     } catch (e) {
       // 🔹 CHAT FALLBACK: coba callIkyy/callAI sebelum menyerah
@@ -561,6 +573,16 @@ async function handler(m, { sock, conn, config, db }) {
     );
     const confirmText = (naturalReply && !conflictTopic) ? naturalReply : (tool.done || naturalReply || "Selesai.");
     await editFinal(confirmText);
+    // 🔹 FIX 17 Sep 2026 (owner report: "buatkan gambar kucing" → gambar
+    // terkirim → "carikan script md 5k fitur" → MALAH generate gambar LAGI).
+    // AKAR: jalur tool-exec gak pernah nyatet hasil ke sesi → histori = 2 user
+    // turn berturut-turut tanpa assistant → otak AI ngira request gambar lama
+    // "belum dijawab" → diulang. FIX: catat [SUDAH DIEKSEKUSI] + nama tool +
+    // ringkasan args biar giliran berikutnya model tahu aksi itu UDAH selesai
+    // dan fokus ke pesan user TERBARU.
+    const argSummary = Object.entries(finalArgs || {}).map(([k, v]) => `${k}=${String(v).slice(0, 80)}`).join(", ");
+    appendSession(sessionKeyNow, "assistant",
+      `[SUDAH DIEKSEKUSI] tool "${decision.tool}"${argSummary ? ` (${argSummary})` : ""} — ${confirmText}`);
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
@@ -580,7 +602,11 @@ export function novaaiConfirmHandler(m, sock) {
       const reg = await getAgentTools();
       const tool = reg[p.tool];
       if (!tool) return m.reply(claraWrap("novaagent", "Tool-nya gak ketemu lagi (dicabut?)", "error"));
-      try { await tool.run(sock, m, p.args); m.reply(tool.done || ""); }
+      try {
+        await tool.run(sock, m, p.args);
+        appendSession(`agent:${m.sender}`, "assistant", `[SUDAH DIEKSEKUSI] tool "${p.tool}" — ${tool.done || ""}`);
+        m.reply(tool.done || "");
+      }
       catch (e) { m.reply(claraWrap("novaagent", `Gagal: ${e.message}`, "error")); }
     })();
   } else { m.reply(claraWrap("novaagent", "Dibatalkan")); }

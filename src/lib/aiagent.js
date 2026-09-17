@@ -1067,9 +1067,26 @@ export function sanitizeAiReply(text) {
 // Heuristik kata kunci "berita terkini/viral/dll" → trigger quick web search
 // SEBELUM think(), hasil dititip ke prompt biar jawaban akurat + boleh sertakan
 // link sumber ASLI (bukan halusinasi).
+// 🔹 FIX 17 Sep 2026 (owner report "carikan script md 5k fitur" gak nyari
+// dari internet): pattern lama cuma nangkep kata "berita/terbaru/cari di web"
+// — permintaan CARI BENDA DIGITAL dari internet (script/aplikasi/link/
+// template/dll) lolos semua. Pattern tambahan: kata cari + objek digital.
+const WEB_SEARCH_OBJECT_PATTERN = /\b(cari(kan|in)?|nyari(n|kan)?|carikan|bantu cari|coba cari)\b[^.?!]{0,60}\b(script|aplikasi|apk|link|website|situs|file|software|program|template|kode|game|produk|tutorial|contoh|rekomendasi|nama)\b/i;
 const CURRENT_INFO_PATTERN = /\b(berita|viral|trending|terkini|terbaru|kabar(nya)?|heboh|kejadian|kasus|rame|ramai|hari ini|minggu ini|baru[\s-]?baru ini|browsing|cari di (web|google|internet|internet)|cek di (web|internet)|search di (web|google)|harga (hp|laptop|barang|produk))\b/i;
 export function needsWebSearch(text) {
-  return CURRENT_INFO_PATTERN.test(String(text || ""));
+  const t = String(text || "");
+  return CURRENT_INFO_PATTERN.test(t) || WEB_SEARCH_OBJECT_PATTERN.test(t);
+}
+
+// 🔹 FIX 17 Sep 2026: teks mentah user ("tolong carikan script md 5k fitur")
+// bikin search engine ngambek (lowRelevance → null). Bersihin dulu: buang
+// kata sopan/pengisi + kata kerja intent cari → sisa objek yang dicari.
+export function buildSearchQuery(text) {
+  return String(text || "")
+    .replace(/\b(tolong|please|dong|ya|yah|deh|sih|min|kak|bang|coba|bantu|bantu aku|bantuin|cukup|kan)\b/gi, ' ')
+    .replace(/\b(bantu|coba|tolong)?\s*(cari(kan|in)?|nyari(n|kan)?|search| searching|googling)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim() || String(text || '').trim();
 }
 
 // Search ringan 1x (bukan multi-fase kayak .aisuperagent) — max 2 halaman
@@ -1129,6 +1146,15 @@ export function buildThinkSystemPrompt(ctx = {}) {
   let toolsList = Object.entries(allTools)
     .map(([k, v]) => `- ${k}: ${v.desc}${v.args ? ' (butuh args: ' + v.args.join(', ') + ')' : ''}`)
     .join('\n')
+  // 🔹 FIX 17 Sep 2026 (owner report "carikan script md 5k fitur" malah
+  // dijawab createfile padahal harusnya jawab dari hasil pencarian web):
+  // request yang udah ke-trigger quickWebSearch = user minta MENCARI dari
+  // internet → tools DIKUNCI (tool & execCommand WAJIB null) biar model gak
+  // bisa nyamber createfile/genimage/dll. Deterministik, gak andalkin niat
+  // model.
+  if (ctx.forceNoTools) {
+    toolsList = '(KALI INI TIDAK ADA tool yang boleh dipakai — user minta MENCARI dari internet dan hasil pencarian nyata sudah disediakan di bawah. WAJIB isi "tool": null dan "execCommand": null, jawab lewat field "reply" dari hasil pencarian itu.)'
+  }
   // + tool dari server MCP eksternal (kalau ada yang terpasang)
   const mcpTools = (ctx.mcpTools || []).slice(0, 30)
   if (mcpTools.length) {
@@ -1152,7 +1178,8 @@ export function buildThinkSystemPrompt(ctx = {}) {
   // JANGAN pernah kasih sapaan generik ("Halo! Ada yang bisa dibantu?") kalau
   // histori sudah ada, karena artinya user sedang MELANJUTKAN topik.
   const historyNote = (ctx.history && ctx.history.length)
-    ? `\n\nPENTING — SESI PERCAKAPAN AKTIF: kamu sudah ngobrol sama user ini sebelumnya (lihat pesan-pesan sebelum pesan terbaru). WAJIB nyambungin jawaban ke topik/konteks obrolan sebelumnya. Kalau user cuma jawab singkat ("iya", "mau", "boleh", "lanjut", dll), itu artinya user MENYETUJUI/MERESPON pertanyaan/tawaran kamu di pesan sebelumnya — TERUSKAN topik itu (misal kalau sebelumnya nawarin resep, langsung kasih resepnya), JANGAN balas sapaan generik seolah obrolan baru dimulai.`
+    ? `\n\nPENTING — SESI PERCAKAPAN AKTIF: kamu sudah ngobrol sama user ini sebelumnya (lihat pesan-pesan sebelum pesan terbaru). WAJIB nyambungin jawaban ke topik/konteks obrolan sebelumnya. Kalau user cuma jawab singkat ("iya", "mau", "boleh", "lanjut", dll), itu artinya user MENYETUJUI/MERESPON pertanyaan/tawaran kamu di pesan sebelumnya — TERUSKAN topik itu (misal kalau sebelumnya nawarin resep, langsung kasih resepnya), JANGAN balas sapaan generik seolah obrolan baru dimulai.
+PENTING — ANTI REPEAT: pesan user TERBARU adalah perintah yang HARUS dikerjakan SEKARANG. Kalau di histori ada catatan [SUDAH DIEKSEKUSI], permintaan lama itu SUDAH SELESAI dan hasilnya sudah terkirim — JANGAN PERNAH mengulang tool yang sama untuk pesan baru. Minta gambar lalu minta cari sesuatu = dua perintah BERBEDA, kerjakan yang TERBARU.`
     : ''
 
   const sys = `Kamu adalah otak dari bot WhatsApp bernama "${ctx.botname || 'Bot'}".${historyNote}
@@ -1207,8 +1234,16 @@ RULE kode di content: kode HARUS utuh jadi seperti contoh di atas (boleh & bagus
   // ctx.webSearch: hasil quickWebSearch() (fix 12 Sep 2026, lihat needsWebSearch
   // di atas) — dititip ke prompt biar jawaban berita/topik viral akurat +
   // boleh cite link sumber ASLI, bukan halusinasi dari training data lama
+  // 🔹 FIX 17 Sep 2026 (owner report "carikan script md 5k fitur" malah
+  // dijawab createfile): kalau user minta CARI SESUATU dari internet dan
+  // hasil pencariannya ada, WAJIB jawab dari hasil pencarian (tool null) —
+  // JANGAN bikin file/gambar. Kata "cari/carikan" = nyari barang/informasi
+  // yang SUDAH ADA, bukan minta dibuatkan.
   const webSearchSection = ctx.webSearch
-    ? `\n\n== HASIL PENCARIAN WEB TERKINI ==\n${ctx.webSearch}`
+    ? `\n\n== HASIL PENCARIAN WEB TERKINI (HASIL NYATA DARI INTERNET) ==
+${ctx.webSearch}
+
+WAJIB: user minta MENCARI/menemukan sesuatu dari internet dan hasil pencarian nyata ada di atas — jawab dari hasil pencarian itu. Set "tool" ke null dan "execCommand" ke null, JANGAN pakai createfile/genimage (itu buat MEMBUAT barang baru, user minta MENCARI yang sudah ada). Sebutin sumber yang relevan secara natural.`
     : ''
 
   return sys + memorySection + webSearchSection
