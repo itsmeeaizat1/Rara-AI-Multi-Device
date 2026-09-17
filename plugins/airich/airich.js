@@ -19,31 +19,37 @@ const pluginConfig = {
   name: "airich",
   alias: ["airich", "richai", "ai-rich", "rich"],
   category: "airich",
-  description: "AI Rich — kategori plugin baru (kode menyusul dari owner)",
+  description: "AI Rich ✨ — HTML hidup di dalam gelembung chat",
   usage: ".airich",
   example: ".airich",
   isOwner: false, isPremium: false, isGroup: true, isPrivate: true,
   cooldown: 5, energi: 1,
-  // ✅ true kalau udah dipasang; false = auto-jawab "belum dipasang"
-  isEnabled: false,
+  isEnabled: true,
 };
 
+// ── HUB fitur airich (17 Sep 2026: request owner "airich cmd disable" —
+//   dulu stub "belum dipasang"; sekarang kategori udah punya 3 fitur asli,
+//   .airich jadi daftar fitur + cara pakai) ──
 async function handler(m, { sock }) {
-  // ── SEMENTARA: slot kosong — kode owner dipasang di sini ──
   return m.reply(claraWrap("airich", [
-    "🏠 *AI Rich — kategori plugin baru*",
+    "✨ *AI Rich — HTML hidup di dalam chat*",
     "",
-    "Folder plugins/airich/ udah siap.",
-    "Kode inti masih menunggu dari owner.",
+    "Kartu interaktif beneran (bukan gambar): HTML dirender",
+    "langsung di dalam gelembung pesan.",
     "",
-    "Begitu kode dipasang, fitur di kategori ini langsung jalan",
-    "tanpa perlu registrasi apa pun (loader auto-detect folder).",
+    "🔍 .googleairich <query>",
+    "   Google + hasil asli DuckDuckGo di dalam chat",
+    "",
+    "▶️ .youtubeairich <query>",
+    "   Pencarian YouTube + player di dalam chat",
+    "",
+    "🚀 .plane",
+    "   Game Space Rush (tap kiri/kanan, hindari meteor)",
+    "",
+    "_Tips: kalau kartu gak muncul, pastikan WhatsApp_",
+    "_kamu versi terbaru — AI Rich butuh client 2.25.xx+_",
   ].join("\n"), "guide"));
 }
 
 export default { pluginConfig, handler, command: "airich" };
-// FIX 17 Sep 2026 (owner: "fitur ai rich knp cmd g bsa diakses"): loader
-// nyari named export config + handler — default export doang bikin
-// plugin DIAM-DIAM gak diregistrasi sejak awal. Default dipertahankan
-// buat e2e (import default).
 export { pluginConfig as config, handler };

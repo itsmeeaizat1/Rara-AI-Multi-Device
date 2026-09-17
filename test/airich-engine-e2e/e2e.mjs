@@ -25,24 +25,40 @@ const CERT_RAW = [Array.from("Y2VydDAx"), Array.from("Y2VydDAy")]; // char-array
 const CERT = ["Y2VydDAx", "Y2VydDAy"]; // hasil join
 const HTML = "<!DOCTYPE html><html><body><div class=\"card\"><canvas id=\"c\"></canvas>" + "<p>engine fixture </p>".repeat(40) + "</div></body></html>";
 
-// ═══ 1. buildRichResponse ═══
+// ═══ 1. buildRichResponse — v2 NIXCODE-align (17 Sep 2026 fix "g mncul") ═══
 w("\n— buildRichResponse —");
-const r = buildRichResponse(HTML, CERT);
-t("  struktur verbatim: proofs v1 + certificateChain + STANDARD + bot JID",
+const r = buildRichResponse(HTML);
+t("  struktur: proofs v1 + useCase enum 1 + cert LOKAL + messageType 1 + botJid",
   (() => { const p = r.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
-    return p.version === 1 && p.useCase === "WA_BOT_MSG" && p.certificateChain === CERT
-      && Buffer.isBuffer(p.signature) && p.signature.equals(Buffer.from("TklYRUwuTWVzc2FnZUJ1aWxkZXJWNC43LVZlcmlmaWNhdGlvblNpZ25hdHVyZS5NZXRhZGF0YeN55YRyad2+ZA==", "base64"))
-      && r.botForwardedMessage.message.richResponseMessage.messageType === "AI_RICH_RESPONSE_TYPE_STANDARD"
+    return p.version === 1 && p.useCase === 1 && Array.isArray(p.certificateChain) && p.certificateChain.length === 2
+      && typeof p.signature === "string"
+      && r.botForwardedMessage.message.richResponseMessage.messageType === 1
       && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardedAiBotMessageInfo.botJid === "867051314767696@bot"
       && r.botForwardedMessage.message.richResponseMessage.contextInfo.participant === "262955698532521@lid"
-      && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardOrigin === "META_AI"; })());
+      && r.botForwardedMessage.message.richResponseMessage.contextInfo.forwardOrigin === 4; })());
+t("  cert lokal: signature 64 byte + chain 684/892 byte (material NIXCODE)",
+  (() => { const p = r.messageContextInfo.botMetadata.verificationMetadata.proofs[0];
+    const sig = Buffer.from(p.signature, "base64");
+    const c1 = Buffer.from(p.certificateChain[0], "base64");
+    const c2 = Buffer.from(p.certificateChain[1], "base64");
+    return sig.length === 64 && sig.toString("utf-8").startsWith("NIXEL.MessageBuilderV4.7-VerificationSignature.Metadata")
+      && c1.length === 684 && c1.toString("utf-8").startsWith("NIXEL.MessageBuilderV4.7-CertificateChain.Metadata")
+      && c2.length === 892 && c2.toString("utf-8").startsWith("NIXEL.MessageBuilderV4.7-CertificateChain.Metadata"); })());
+t("  ID SEGAR tiap build (response_id + botResponseId beda antar pesan — akar dedupe)",
+  (() => { const r2 = buildRichResponse(HTML);
+    const id1 = JSON.parse(Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id;
+    const id2 = JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id;
+    return id1 !== id2 && r.messageContextInfo.botMetadata.botResponseId !== r2.messageContextInfo.botMetadata.botResponseId
+      && /^[0-9a-f-]{36}$/.test(id1) && /^[0-9a-f-]{36}$/.test(id2); })());
 t("  payload base64 ke-decode = HTML asli",
   JSON.parse(Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).sections[0].view_model.primitive.payload === HTML);
-t("  opts: title custom; response_id/botResponseId FIXED verbatim noxXza",
-  (() => { const r2 = buildRichResponse(HTML, CERT, { title: "T", responseId: "rid", botResponseId: "bid" });
+t("  payload COMPACT (gak ada indent 2 spasi versi lama)",
+  !Buffer.from(r.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8").includes("\n  "));
+t("  opts: title custom + responseId/botResponseId eksplisit dihormati",
+  (() => { const r2 = buildRichResponse(HTML, { title: "T", responseId: "rid-fix", botResponseId: "bid-fix" });
     return r2.botForwardedMessage.message.richResponseMessage.submessages[0].messageText === "T"
-      && JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id === "4db57b2c-8393-484d-8b9a-8e6d1a14b349"
-      && r2.messageContextInfo.botMetadata.botResponseId === "b2e40280-433c-45d8-9c1a-270bec558860"; })());
+      && JSON.parse(Buffer.from(r2.botForwardedMessage.message.richResponseMessage.unifiedResponse.data, "base64").toString("utf-8")).response_id === "rid-fix"
+      && r2.messageContextInfo.botMetadata.botResponseId === "bid-fix"; })());
 
 // ═══ 2. polishPayload ═══
 w("\n— polishPayload —");
@@ -75,7 +91,7 @@ t("  opts.title nyampe ke submessage", relays[0].msg.botForwardedMessage.message
 
 // ═══ 4b. varian eksperimen AIRICH_MODE ═══
 w("\n— varian AIRICH_MODE —");
-const baseMsg = () => buildRichResponse(HTML, ["cHViMQ==", "cHViMQ=="]);
+const baseMsg = () => buildRichResponse(HTML);
 {
   const m = applyAirichVariant(baseMsg(), "nofwd");
   const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
@@ -88,7 +104,7 @@ const baseMsg = () => buildRichResponse(HTML, ["cHViMQ==", "cHViMQ=="]);
   const m = applyAirichVariant(baseMsg(), "noverify");
   const ci = m.botForwardedMessage.message.richResponseMessage.contextInfo;
   t("  noverify: verificationMetadata kehapus", !m.messageContextInfo.botMetadata.verificationMetadata);
-  t("  noverify: tanda forward TETAP ADA", ci.forwardingScore === 1 && ci.isForwarded === true && ci.forwardOrigin === "META_AI");
+  t("  noverify: tanda forward TETAP ADA", ci.forwardingScore === 1 && ci.isForwarded === true && ci.forwardOrigin === 4);
 }
 {
   const m = applyAirichVariant(baseMsg(), "clean");
@@ -119,13 +135,16 @@ const baseMsg = () => buildRichResponse(HTML, ["cHViMQ==", "cHViMQ=="]);
   t("  sendRichResponse mengikuti AIRICH_MODE env (nofwd)", !("forwardOrigin" in ci) && !!relays2[0].msg.messageContextInfo.botMetadata.verificationMetadata);
 }
 
-// ═══ 5. live certificate ═══
-w("\n— live certificate (noxXza) —");
-try {
-  const live = await fetchCertificate(true);
-  t("  live fetch: chain 2", Array.isArray(live) && live.length === 2, "chain=" + (live && live.length));
-} catch (e) {
-  t("  live fetch (skip kalau offline)", false, e.message);
+// ═══ 5. TANPA cert fetch — sendRichResponse murni offline (akar "g mncul": titik gagal jaringan ke GitHub dibuang) ═══
+w("\n— tanpa cert fetch (offline murni) —");
+{
+  let httpCalled = 0;
+  _setAirichHttpForTest({ getJson: async () => { httpCalled++; return ["x"]; } });
+  const relays3 = [];
+  const sock3 = { relayMessage: async (chat, msg, o) => { relays3.push({ chat, msg }); return {}; } };
+  await sendRichResponse(sock3, "g@test", HTML, { title: "offline" });
+  t("  relay sukses TANPA nyentuh http (cert lokal)", httpCalled === 0 && relays3.length === 1, "http=" + httpCalled);
+  _resetAirichHttpForTest();
 }
 
 w("\n===== " + pass + " PASS, " + fail + " FAIL =====");
