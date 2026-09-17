@@ -1291,6 +1291,15 @@ async function callGemini(prompt, opts = {}) {
   // Resolve API key: opts.apiKey > apikeys.json (google = Google key asli) > config.geminiApiKey > config.aiHelp.geminiApiKey
   // Note: config.aiHelp.geminiApiKey = getTioKey() = Tio key, BUKAN Google key
   let apiKey = opts.apiKey || "";
+  // FIX 17 Sep 2026: db-first via getApiKey (.setkey gemini langsung
+  // kepake tanpa restart) - dulunya cuma baca flat apikeys.json, jadi key
+  // baru yang di-set owner lewat .setkey GAK PERNAH kepakai di jalur ini.
+  if (!apiKey) {
+    try {
+      const { getApiKey } = await import("./nova-api-keys.js");
+      apiKey = getApiKey("gemini") || "";
+    } catch {}
+  }
   if (!apiKey) {
     try {
       const { getApiKeys } = await import("./config/env-loader.js");
@@ -1341,6 +1350,15 @@ async function callGeminiVision(prompt, imageBuffer, opts = {}) {
   if (!Buffer.isBuffer(imageBuffer) || !imageBuffer.length) throw new Error("Gambar tidak valid.");
 
   let apiKey = opts.apiKey || "";
+  // FIX 17 Sep 2026: db-first via getApiKey (.setkey gemini langsung
+  // kepake tanpa restart) - dulunya cuma baca flat apikeys.json, jadi key
+  // baru yang di-set owner lewat .setkey GAK PERNAH kepakai di jalur ini.
+  if (!apiKey) {
+    try {
+      const { getApiKey } = await import("./nova-api-keys.js");
+      apiKey = getApiKey("gemini") || "";
+    } catch {}
+  }
   if (!apiKey) {
     try {
       const { getApiKeys } = await import("./config/env-loader.js");
@@ -1356,8 +1374,15 @@ async function callGeminiVision(prompt, imageBuffer, opts = {}) {
   }
   if (!apiKey) throw new Error("Google Gemini API key belum diset (owner: .setkey google <key>).");
 
+  // FIX 17 Sep 2026: mime dari magic byte - WA kadang kirim PNG/WebP,
+  // dulunya dihardcode image/jpeg (key valid pun bisa ditolak server).
+  const b64Head = imageBuffer.subarray(0, 8).toString("base64");
+  const detected = b64Head.startsWith("/9j/") ? "image/jpeg"
+    : b64Head.startsWith("iVBOR") ? "image/png"
+    : b64Head.startsWith("UklGR") ? "image/webp"
+    : b64Head.startsWith("R0lGO") ? "image/gif" : "image/jpeg";
   const base64 = imageBuffer.toString("base64");
-  const mimeType = opts.mimeType || "image/jpeg";
+  const mimeType = opts.mimeType || detected;
   const model = opts.model || (await resolveLatestGeminiModel(apiKey).catch(() => FALLBACK_LATEST));
 
   return await callAI({
