@@ -142,6 +142,99 @@ function extractContent(data) {
  * @param {Object} [opts] - { model (default qwen3-vl-8b-thinking), timeoutMs (default 120s) }
  * @returns {String} balasan AI
  */
+// ═══════════════════════════════════════════════════════════
+// VISION — qwen3-vl-8b-thinking (QWEN VISION, FREE) via 1min.ai
+// (verified live 17 Sep 2026: baca foto anjing beneran)
+// Format (resmi, ngikutin client 1min.ai): upload buffer ke
+// /api/assets (multipart "asset") → key "images/..." → chat-with-ai
+// ?isStreaming=true + promptObject.attachments.images → SSE event
+// "content" diparse → jawaban.
+// ═══════════════════════════════════════════════════════════
+const MIN1AI_VISION_MODEL = "qwen3-vl-8b-thinking";
+
+/**
+ * Upload buffer gambar ke Asset API 1min.ai → return asset key ("images/...").
+ */
+async function min1aiUploadAsset(imageBuffer, apiKey, ext = "jpg") {
+  const mime = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : ext === "gif" ? "image/gif" : "image/jpeg";
+  const form = new FormData();
+  form.append("asset", new Blob([imageBuffer], { type: mime }), `foto.${ext || "jpg"}`);
+  const res = await fetch("https://api.1min.ai/api/assets", {
+    method: "POST",
+    headers: { "API-KEY": apiKey },
+    body: form,
+    signal: AbortSignal.timeout(60000),
+  });
+  if (!res.ok) throw new Error(`1min.ai upload asset HTTP ${res.status}`);
+  const j = await res.json().catch(() => ({}));
+  const key = j?.asset?.key;
+  if (!key) throw new Error("1min.ai upload asset: key kosong");
+  return key;
+}
+
+/**
+ * Scan gambar pakai Qwen vision (qwen3-vl-8b-thinking, free) via 1min.ai.
+ * @param {Buffer} imageBuffer - buffer gambar (jpg/png/webp)
+ * @param {string} prompt - pertanyaan/instruksi tentang gambar
+ * @returns {Promise<{status, text, model}>}
+ */
+export async function min1aiVision(imageBuffer, prompt, opts = {}) {
+  if (!Buffer.isBuffer(imageBuffer) || !imageBuffer.length) throw new Error("buffer gambar kosong");
+  const key = await getMin1aiKey();
+  if (!key) throw new Error("key 1min.ai kosong — set apikeys.json aiSatuan.min1ai");
+
+  // magic byte → ext biar mime bener (png/webp/gif/jpeg)
+  const b64Head = imageBuffer.subarray(0, 8).toString("base64");
+  const ext = b64Head.startsWith("iVBOR") ? "png"
+    : b64Head.startsWith("UklGR") ? "webp"
+    : b64Head.startsWith("R0lGO") ? "gif" : "jpg";
+
+  const assetKey = await min1aiUploadAsset(imageBuffer, key, ext);
+
+  const model = (opts.model || MIN1AI_VISION_MODEL).trim();
+  const body = {
+    type: "UNIFY_CHAT_WITH_AI",
+    model,
+    promptObject: {
+      prompt: String(prompt || "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.").trim(),
+      attachments: { images: [assetKey] },
+    },
+  };
+
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), opts.timeoutMs || 120000);
+  let res;
+  try {
+    res = await fetch(MIN1AI_URL + "?isStreaming=true", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "API-KEY": key },
+      body: JSON.stringify(body),
+      signal: ctl.signal,
+    });
+  } catch (e) {
+    throw new Error(e?.name === "AbortError" ? "1min.ai vision timeout" : `gagal hubungi 1min.ai: ${e.message}`);
+  } finally { clearTimeout(timer); }
+
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const j = await res.json(); msg += ` — ${j?.message || j?.error || ""}`; } catch {}
+    throw new Error(`1min.ai vision gagal: ${msg}`);
+  }
+
+  // parse SSE: event "content" = potongan jawaban; "reasoning" = proses pikir (skip)
+  const raw = await res.text();
+  const parts = [];
+  for (const chunk of raw.split(/\r?\n\r?\n/)) {
+    const em = chunk.match(/event: (\w+)/);
+    const dm = chunk.match(/data: (.*)/s);
+    if (!em || !dm || em[1] !== "content") continue;
+    try { parts.push(JSON.parse(dm[1].trim()).content || ""); } catch {}
+  }
+  const text = parts.join("").trim();
+  if (!text) throw new Error("1min.ai vision: jawaban kosong (model gak baca gambar / stream gagal)");
+  return { status: true, text, model };
+}
+
 export async function min1aiChat(prompt, opts = {}) {
   const key = await getMin1aiKey();
   if (!key) throw new Error("key 1min.ai kosong — set apikeys.json aiSatuan.min1ai");

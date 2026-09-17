@@ -9,6 +9,7 @@
 
 import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, quickWebSearch, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
+import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { startStatusRotation as startStatusRotationLib } from "../../src/lib/nova-status-rotate.js";
@@ -314,12 +315,32 @@ async function handler(m, { sock, conn, config, db }) {
       ]);
       let buffer = null;
       let answer = null;
+      let visionEngine = "gemini";
       try {
         buffer = await (directImage ? m.download() : m.quoted.download());
-        answer = await callGeminiVision(question, buffer, {
-          systemPrompt: buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI") + memoryBlock(db, m.sender, question),
-          senderJid: m.sender,
-        });
+        const sysPrompt = buildSystemPrompt(config?.command?.prefix || ".", config?.bot?.name || "Nova AI") + memoryBlock(db, m.sender, question);
+        // 🔹 FIX 17 Sep 2026 (owner report "scan gambar gagal di .novaagent"):
+        // dulunya CUMA callGeminiVision — key google pusat expired → scan
+        // GAGAL TOTAL tanpa fallback. Sekarang: Gemini dulu (key valid = paling
+        // presisi), gagal → RANTAI visionScan (Gemini → SenseNova vision →
+        // describe+LLM) biar scan tetap jalan walau key Google mati.
+        try {
+          answer = await callGeminiVision(question, buffer, {
+            systemPrompt: sysPrompt,
+            senderJid: m.sender,
+          });
+        } catch (gemErr) {
+          console.error("[novaai] gemini vision gagal, fallback chain:", gemErr.message);
+          const v = await visionScan({
+            imageBuffer: buffer,
+            question,
+            instruction: sysPrompt,
+            sessionKey: key,
+          });
+          if (!v?.status || !v?.text) throw new Error("rantai vision gagal jawab");
+          answer = v.text;
+          visionEngine = v.engine || "vision-chain";
+        }
       } finally {
         stopRotateV();
       }

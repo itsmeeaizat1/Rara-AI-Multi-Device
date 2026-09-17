@@ -3,8 +3,10 @@
 // Dipakai .vision + .aichatimg + fitur vision lain.
 //
 // Rantai:
-//   0. Gemini Vision (key .setkey gemini / apikeys.json) — jawab langsung
-//      pake model vision asli. Key kosong/expired → skip otomatis.
+//   0. Qwen Vision (1min.ai qwen3-vl-8b-thinking, FREE, key owner valid) —
+//      UTAMA (aturan owner 17 Sep: vision qwen dipakai duluan, ASLI Qwen).
+//   0.4 Gemini (Google) Vision (key .setkey gemini / apikeys.json) —
+//      FALLBACK otomatis kalau Qwen down. Key kosong/expired → skip.
 //   1. DESCRIBE + LLM (TANPA KEY, live verified 8 Sep 2026):
 //      imageprompt.org deskripsi detail gambar (gratis, akurat — baca teks,
 //      warna, posisi, gaya) → deskripsi dijadiin konteks buat LLM
@@ -18,6 +20,7 @@
 // jalur 0 lebih presisi (bisa jawab pertanyaan spesifik langsung).
 
 import { GeminiVision } from "../scraper/geminiVision.js";
+import { min1aiVision } from "../scraper/min1ai.js";
 import { viaMercury, aiChainChat } from "./nova-ai-fallback.js";
 
 // ── MIME detection dari buffer (sama pattern geminiVision.js) ──
@@ -72,8 +75,26 @@ export async function describeImage(imageBuffer) {
  */
 export async function visionScan({ imageBuffer, question, instruction = "", sessionKey }) {
   const q = (question || "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.").trim();
+  // 🔹 FIX 17 Sep 2026: catat error TIAP engine — kalau semuanya gagal, error
+  // yang muncul nyebut engine + penyebab persis (bukan "coba lagi" buta),
+  // jadi keluhan owner langsung kelihatan akarnya dari pesan error bot.
+  const fails = [];
+  const note = (engine, e) => fails.push(`${engine}: ${e?.message || e || "gagal"}`);
 
-  // ── 0. Gemini Vision — jalur paling presisi (butuh key valid) ──
+  // ── 0. QWEN VISION (1min.ai qwen3-vl-8b-thinking, FREE) — UTAMA.
+  // Request owner 17 Sep: "utama klo qwen pakai qwen vision aja, klo qwen
+  // down otomatis ke google vision" — Qwen vision JADI JALUR PERTAMA,
+  // Gemini/Google vision cuma fallback kalau Qwen down. Provider sama
+  // dengan otak agent (min1ai, key owner valid, live verified baca foto).
+  try {
+    // (nama variabel beda dari q — jangan shadow const q di atas)
+    const qv = await min1aiVision(imageBuffer, (instruction ? instruction + "\n\n" : "") + q);
+    if (qv?.status && qv?.text) return { status: true, text: qv.text, engine: "qwen-vision", model: qv.model };
+    note("qwen-vision", "jawaban kosong");
+  } catch (e) { note("qwen-vision", e); }
+
+  // ── 0.4 Gemini (Google) Vision — FALLBACK kalau Qwen down (aturan owner
+  // 17 Sep: qwen down → otomatis ke google vision).
   try {
     const g = await GeminiVision({
       imageBuffer,
@@ -81,17 +102,25 @@ export async function visionScan({ imageBuffer, question, instruction = "", sess
       instruction: instruction || "Kamu adalah asisten AI vision yang ahli. Analisis gambar dengan detail dan akurat. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.",
     });
     if (g?.status && g?.text) return { status: true, text: g.text, engine: "gemini-vision", model: g.model };
-  } catch {}
+    note("gemini-vision", "jawaban kosong");
+  } catch (e) { note("gemini-vision", e); }
 
   // ── 0.5 SenseNova vision — MULTIMODAL ASLI (SenseTime, key owner, gratis) ──
   try {
     const { sensenovaVision } = await import("../scraper/sensenova.js");
     const sv = await sensenovaVision({ imageBuffer, question: q, instruction });
     if (sv?.status && sv?.text) return { status: true, text: sv.text, engine: "sensenova-vision", model: sv.model };
-  } catch {}
+    note("sensenova-vision", "jawaban kosong");
+  } catch (e) { note("sensenova-vision", e); }
 
   // ── 1. Describe + LLM (tanpa key) — describe-model baca gambar ──
-  const desc = await describeImage(imageBuffer);
+  // retry 1x — imageprompt.org kadang ngambek sekali-sekali
+  let desc = "";
+  for (let i = 0; i < 2 && !desc; i++) {
+    try { desc = await describeImage(imageBuffer); }
+    catch (e) { note("describe" + (i ? "-retry" : ""), e); }
+  }
+  if (!desc) throw new Error("semua jalur scan gagal — " + fails.join(" | "));
   const sys = (instruction ? instruction + "\n\n" : "") +
     "Kamu adalah asisten AI vision. Kamu belum melihat gambarnya langsung, tapi dapet hasil analisis detail dari model vision khusus deskripsi gambar di bawah. Jawab pertanyaan user berdasarkan deskripsi itu, dalam bahasa Indonesia, singkat dan natural. Kalau deskripsi gak cukup buat jawab pertanyaan spesifik, jawab apa yang bisa dijawab dan jujur soal keterbatasannya. JANGAN bilang kamu gak lihat gambar — langsung jawab dari analisis yang ada.";
 
@@ -110,6 +139,9 @@ export async function visionScan({ imageBuffer, question, instruction = "", sess
     });
   }
   answer = (answer || "").trim();
-  if (!answer) throw new Error("jawaban LLM kosong");
+  if (!answer) {
+    note("describe+llm", "jawaban LLM kosong");
+    throw new Error("semua jalur scan gagal — " + fails.join(" | "));
+  }
   return { status: true, text: answer, engine: "describe+mercury", model: "imageprompt.org + mercury-2" };
 }
