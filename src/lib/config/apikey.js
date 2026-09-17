@@ -8,52 +8,59 @@
 
 import { getApiKeys, getTioKey, getPteroConfig } from "./env-loader.js";
 
+// PUSATISASI 17 Sep 2026 (request owner): SEMUA key sekarang ada di
+// src/lib/apikey/apikeys.json (section aiSatuan/aiMultiprovider/novaai/
+// scraper/fitur). File ini CUMA mapping — gak ada key hardcoded di sini
+// lagi. Ganti key = edit apikeys.json → .reloadkey / restart.
+
 // ═══════════════════════════════════════════
 // API KEYS — dipakai oleh berbagai config domain
 // ═══════════════════════════════════════════
+const keys = getApiKeys(); // flat dari apikeys.json — SATU SUMBER KEY
+
 export const apiKeys = {
   // Tio AI (AIO — support OpenAI/Gemini/Anthropic format)
   tioKey: getTioKey(),
 
-  // Gemini API Key (standalone — untuk .autoai)
-  // Ambil di: https://aistudio.google.com/apikey
-  geminiStandalone: "Ab8RN6I9akckrF9inEsfCm-I1KyihGlYDNSoZ_b8nNgAIB-aDg",
+  // Gemini API Key (standalone — untuk .autoai) → apikeys.json fitur.geminiStandalone
+  geminiStandalone: keys.geminiStandalone || "",
 
   // Vercel — https://vercel.com/account/tokens
-  vercelToken: "",
+  vercelToken: keys.vercelToken || "",  // isi di apikeys.json section "fitur"
 
   // ClipDrop — https://clipdrop.co/apis (gratis 100 credits)
-  clipdropApiKey: "",
+  clipdropApiKey: keys.clipdropApiKey || "",  // isi di apikeys.json section "fitur"
 
   // NewsAPI.org — https://newsapi.org (free 100 req/day)
-  newsApiKey: "",
+  newsApiKey: keys.newsApiKey || "",  // isi di apikeys.json section "fitur"
 
   // NewsData.io — https://newsdata.io (free 200 req/day)
-  newsDataKey: "",
+  newsDataKey: keys.newsDataKey || "",  // isi di apikeys.json section "fitur"
 
   // RAWG.io — https://rawg.io (free game database)
-  rawgApiKey: "",
+  rawgApiKey: keys.rawgApiKey || "",  // isi di apikeys.json section "fitur"
 
   // OpenWeather — https://openweathermap.org (free 1000 req/day)
   // Key ini juga buat One Call 3.0 (nowcast hujan per-menit .hujannotif)
-  openWeatherKey: "__REDACTED__",
+  // → apikeys.json fitur.openWeatherKey
+  openWeatherKey: keys.openWeatherKey || "",
 
   // Binderbyte — https://binderbyte.com (cek resi)
-  binderbyteKey: "",
+  binderbyteKey: keys.binderbyteKey || "",  // isi di apikeys.json section "fitur"
 
   // Fallback key (kalau per-format kosong, pakai ini)
-  fallbackApiKey: "",
+  fallbackApiKey: keys.fallbackApiKey || "",  // isi di apikeys.json section "fitur"
 
   // DigitalOcean — https://cloud.digitalocean.com
-  digitalOceanToken: "",
+  digitalOceanToken: keys.digitalOceanToken || "",  // isi di apikeys.json section "fitur"
 
   // Alight Motion Premium — https://api.znn.my.id
   // Dapatkan token dari admin x-znn: wa.me/6285348284121
   // IP server Pterodactyl kamu harus di-whitelist oleh admin
-  alightMotionToken: "",
+  alightMotionToken: keys.alightMotionToken || "",  // isi di apikeys.json section "fitur"
 
   // Weather API key (untuk provider berbayar)
-  weatherApiKey: "",
+  weatherApiKey: keys.weatherApiKey || "",  // isi di apikeys.json section "fitur"
 
   // Email OTP (disarankan via env vars)
   emailOtpUser: process.env.EMAILOTP_USER || "",

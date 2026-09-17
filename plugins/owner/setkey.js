@@ -67,6 +67,8 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(Object.keys(API_KEYS).map(k => "  " + k).join("\n"));
       lines.push("");
       lines.push(tipText(prefix + "setkey <nama> <value> untuk set key"));
+      lines.push("");
+      lines.push("PUSAT FILE: src/lib/apikey/apikeys.json — semua key (AI, scraper, fitur) satu file, tiap key ada komentar fiturnya. .setkey simpan di db & menimpa file itu.");;
 
       const text = claraWrap("API Keys", lines.join("\n"));
       await m.reply( text, "setkey");

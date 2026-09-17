@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 // Cara pakai di plugin:
 //   import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
+//   URUTAN: .setkey (db) > src/lib/apikey/apikeys.json (PUSAT) > config lama > env
 //   const key = getApiKey("gemini");
 //   if (!key) { console.log("Gemini key belum di-set"); return; }
 //
@@ -17,6 +18,7 @@
 
 import config from "../../config.js";
 import { getDatabase } from "./nova-database.js";
+import { getApiKeys } from "./config/env-loader.js";
 
 // ═══════════════════════════════════════════════════════════════
 // DEFINISI SEMUA API KEY
@@ -211,13 +213,34 @@ export function getApiKey(name) {
     const keyDef = API_KEYS[name];
     if (!keyDef) return "";
 
-    // Priority 1: Runtime DB (set via .setkey command)
-    const db = getDatabase();
-    if (db.db.data?.apiKeys?.[name]) {
-      return String(db.db.data.apiKeys[name]);
-    }
+    // Priority 1: Runtime DB (set via .setkey command) — jangan sampai
+    // db error (misal di test/import) ngeblok prioritas di bawahnya.
+    try {
+      const db = getDatabase();
+      if (db.db.data?.apiKeys?.[name]) {
+        return String(db.db.data.apiKeys[name]);
+      }
+    } catch {}
 
-    // Priority 2: Config file
+    // Priority 2: PUSAT apikeys.json (request owner 17 Sep 2026 — semua key
+    // dipusatkan di src/lib/apikey/apikeys.json). Alias untuk nama registry
+    // yang beda dengan nama field apikeys.json.
+    const CENTER_ALIAS = {
+      gemini: "google",          // novaai.google (aistudio)
+      clipdrop: "clipdropApiKey",
+      groq: "groqkey",
+      aiFallback: "fallbackApiKey",
+      alightmotion: "alightMotionToken",
+      openai: "openai",
+      anthropic: "claude",
+    };
+    try {
+      const flat = getApiKeys();
+      const flatName = CENTER_ALIAS[name] || name;
+      if (flat[flatName] && String(flat[flatName]).trim()) return String(flat[flatName]).trim();
+    } catch {}
+
+    // Priority 3: Config file
     const configKey = keyDef.getConfig();
     if (configKey && configKey.trim()) return configKey.trim();
 

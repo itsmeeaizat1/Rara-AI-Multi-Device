@@ -2,6 +2,7 @@
 import axios from "axios";
 import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
 import te from "../../src/lib/nova-error.js";
+import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -32,7 +33,7 @@ async function handler(m, { sock, command }) {
     if (mediaBuffer.length > 5 * 1024 * 1024) { await m.react("❌"); return m.reply(claraWrap("vocalremover", "Ukuran audio terlalu besar, maksimal 5MB.")); }
 
     const link = await uploadToCatbox(mediaBuffer, "audio.mp3");
-    const apiUrl = `https://api.betabotz.eu.org/api/tools/voiceremover?url=${link}&apikey=beta-gilang`;
+    const apiUrl = `https://api.betabotz.eu.org/api/tools/voiceremover?url=${link}&apikey=${getApiKeys().betabotz || "beta-gilang"}`;
     const res = await axios.get(apiUrl, { timeout: 120000 });
 
     if (!res.data?.status) { await m.react("❌"); return m.reply(claraWrap("vocalremover", "Gagal memproses audio dari API.")); }
