@@ -14,6 +14,9 @@ type Config struct {
 	GroqAPI       string
 	GeminiAPI     string
 	GeminiModel   string
+	AIProvider    string // "grok" (default, request owner 17 Sep "pakai grok dlu") atau "gemini"
+	GrokAPI       string // xAI Grok key (env XAI_API / GROK_API)
+	GrokModel     string // default "grok-3-mini"
 	OpenAIAPI     string
 	ElevenAPI     string
 	SystemPrompt  string
@@ -67,6 +70,28 @@ func LoadConfig() *Config {
 	geminiModel := os.Getenv("GEMINI_MODEL")
 	if geminiModel == "" {
 		geminiModel = "gemini-3.1-flash-lite"
+	}
+
+	// ── AI Provider percakapan (request owner 17 Sep 2026: "cba pakai apikey
+	// grok ai callnya dlu" — default GROK selama key Gemini belum dibenerin) ──
+	aiProvider := strings.ToLower(strings.TrimSpace(os.Getenv("AI_PROVIDER")))
+	grokAPI := os.Getenv("XAI_API")
+	if grokAPI == "" {
+		grokAPI = os.Getenv("GROK_API") // alias — HATI-HATI beda sama GROQ_API (Groq STT)
+	}
+	if grokAPI == "" {
+		grokAPI = os.Getenv("XAI_API_KEY")
+	}
+	grokModel := os.Getenv("GROK_MODEL")
+	if grokModel == "" {
+		grokModel = "grok-3-mini"
+	}
+	if aiProvider == "" {
+		if grokAPI != "" {
+			aiProvider = "grok" // ada key grok → grok duluan; set "gemini" di .env untuk balik
+		} else {
+			aiProvider = "gemini"
+		}
 	}
 
 	sysPrompt := os.Getenv("SYSTEM_PROMPT")
@@ -148,6 +173,9 @@ func LoadConfig() *Config {
 		GroqAPI:       groqAPI,
 		GeminiAPI:     geminiAPI,
 		GeminiModel:   geminiModel,
+		AIProvider:    aiProvider,
+		GrokAPI:       grokAPI,
+		GrokModel:     grokModel,
 		OpenAIAPI:     openAIAPI,
 		ElevenAPI:     elevenAPI,
 		SystemPrompt:  sysPrompt,
@@ -167,6 +195,9 @@ func LoadConfig() *Config {
 	}
 	if AppConfig.GeminiAPI == "" {
 		log.Println("[WARNING] GEMINI_API key is missing in .env! AI chat functionality might fail.")
+	}
+	if AppConfig.AIProvider == "grok" && AppConfig.GrokAPI == "" {
+		log.Println("[WARNING] AI_PROVIDER=grok tapi XAI_API key kosong! AI chat akan fallback ke Gemini.")
 	}
 
 	tempDir := filepath.Join(".", "temp")
