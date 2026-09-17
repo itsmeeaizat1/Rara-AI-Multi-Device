@@ -17,7 +17,8 @@ import { dirname } from "node:path";
 import { getApiKey } from "../lib/nova-api-keys.js";
 
 export const ROUTER9V2_BASE = process.env.ROUTER9V2_URL || "https://9router.cloudku.us.kg";
-export const ROUTER9V2_DEFAULT_MODEL = "ag/gemini-3.8-flash-high";
+// default ditetapkan owner 17 Sep 2026: "bsa ga default modelnya gemini pro agent"
+export const ROUTER9V2_DEFAULT_MODEL = "ag/gemini-pro-agent";
 
 // ── seams buat e2e offline ──
 const __r9 = {};
