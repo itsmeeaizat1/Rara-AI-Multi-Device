@@ -75,8 +75,13 @@ export async function getBrowser() {
       // kalau gak ada → kasih error jelas (jangan crash TypeError aneh).
       try {
         const full = await import("puppeteer");
-        const p = full.default?.executablePath?.() || full.executablePath?.();
-        if (p) chromePath = p;
+        // 🔹 FIX 18 Sep 2026: puppeteer v24+ executablePath() balikin PROMISE —
+        // dulu string. Gak di-await = "[object Promise]" → launch gagal.
+        const pfn = full.default?.executablePath || full.executablePath;
+        if (pfn) {
+          const p = await pfn();
+          if (p) chromePath = p;
+        }
       } catch { /* full puppeteer gak keinstall */ }
     }
     if (!chromePath) {
