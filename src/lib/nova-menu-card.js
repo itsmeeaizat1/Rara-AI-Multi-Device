@@ -30,6 +30,9 @@ import { toSC } from "./nova-menu-style.js";
 import { smallcapsText } from "./styler.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
+// Multi-language (fix 18 Sep 2026): menu card ikut ke-translate ke bahasa
+// user — teks body, footer, title/description tombol, sebelum di-smallcaps.
+import { translateUI, needsTranslation } from "./nova-i18n.js";
 import { getDatabase } from "./nova-database.js";
 
 const _thumbnailCache = new Map();
@@ -368,6 +371,44 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     const _mImageBuf = _mIsVideo
       ? (getThumbnailBuffer(_mReqPath) || null)
       : rawBuffer;
+
+    // ── Multi-language: translate teks menu SEBELUM smallcaps ──
+    // (fix 18 Sep 2026 — menu card gak lewat m.reply, jadi wajib hook sendiri.
+    //  Google gak kenali glyph smallcaps → translate HARUS duluan.)
+    const _mlSender = m.sender || m.key?.participant || m.key?.remoteJid || "";
+    if (needsTranslation(_mlSender)) {
+      try {
+        if (typeof text === "string" && text) text = await translateUI(text, _mlSender);
+        if (typeof footer === "string" && footer) footer = await translateUI(footer, _mlSender);
+        if (Array.isArray(buttons) && buttons.length) {
+          buttons = await Promise.all(buttons.map(async (b) => {
+            if (!b || typeof b !== "object") return b;
+            const nb = { ...b };
+            if (typeof nb.text === "string" && nb.text) nb.text = await translateUI(nb.text, _mlSender);
+            if (typeof nb.title === "string" && nb.title) nb.title = await translateUI(nb.title, _mlSender);
+            if (typeof nb.description === "string" && nb.description) nb.description = await translateUI(nb.description, _mlSender);
+            if (Array.isArray(nb.sections) && nb.sections.length) {
+              nb.sections = await Promise.all(nb.sections.map(async (sec) => {
+                if (!sec || typeof sec !== "object") return sec;
+                const ns = { ...sec };
+                if (typeof ns.title === "string" && ns.title) ns.title = await translateUI(ns.title, _mlSender);
+                if (Array.isArray(ns.rows) && ns.rows.length) {
+                  ns.rows = await Promise.all(sec.rows.map(async (r) => {
+                    if (!r || typeof r !== "object") return r;
+                    const nr = { ...r };
+                    if (typeof nr.title === "string" && nr.title) nr.title = await translateUI(nr.title, _mlSender);
+                    if (typeof nr.description === "string" && nr.description) nr.description = await translateUI(nr.description, _mlSender);
+                    return nr;
+                  }));
+                }
+                return ns;
+              }));
+            }
+            return nb;
+          }));
+        }
+      } catch {}
+    }
 
     const nativeButtons = buildNativeButtons(buttons);
 
