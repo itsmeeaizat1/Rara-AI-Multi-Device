@@ -33,7 +33,11 @@ async function prepareThumbnail(sock, preferredPath) {
   if (!imagePath || !fs.existsSync(imagePath)) return null;
 
   try {
-    const { prepareWAMessageMedia } = await import("ourin");
+    // 🔹 FIX 18 Sep 2026: dulu import("ourin") — package "ourin" GAK ADA di npm
+    // (404) → selalu gagal senyap di semua install. Fork baileys bot ini
+    // terpasang sebagai alias "nova" (npm:itsmeeaizat-bailey) dan SAMA-SAMA
+    // nge-export prepareWAMessageMedia.
+    const { prepareWAMessageMedia } = await import("nova");
     const buffer = fs.readFileSync(imagePath);
     const media = await prepareWAMessageMedia(
       { image: buffer },
