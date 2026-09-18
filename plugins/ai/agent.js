@@ -542,20 +542,15 @@ function getAgentHistory(db, chat) {
   } catch { return []; }
 }
 
-// kirim jawaban sebagai voice note (haidarTTS) + teks — request "nggobrol pakai vn"
-async function sendVoiceReply(m, sock, text) {
+// 🔹 UPGRADE 18 Sep 2026 (request owner: "fitur suaraa ini jg bsa di
+// aisuperagent dan autonovaagent"): kirim jawaban sebagai VOICE NOTE NEURAL
+// (msedge-tts — rantai TTS baru yang beneran nyambung, bukan haidarTTS
+// yang lama). Teks jawaban TETAP dikirim pemanggil (superagent sering bawa
+// sumber/link yang gak bisa diucap) — fungsi ini cuma ngirim VN-nya.
+async function sendVoiceReply(m, sock, text, voiceId) {
   try {
-    const { haidarTTS, HAIDAR_VOICES } = await import("../../src/scraper/haidar-ai.js");
-    const spoken = String(text).replace(/[*_`~]/g, "").slice(0, 500);
-    const voice = HAIDAR_VOICES?.includes("siti") ? "siti" : (HAIDAR_VOICES?.[0] || "siti");
-    const audioUrl = await haidarTTS(spoken, voice);
-    const axios = (await import("axios")).default;
-    const res = await axios.get(audioUrl, { responseType: "arraybuffer", timeout: 60000 });
-    const buf = Buffer.from(res.data);
-    if (!buf || buf.length < 3000) throw new Error("audio kosong");
-    await m.reply(text); // teks tetap dikirim biar link/sumber kebaca
-    await sock.sendMessage(m.chat, { audio: buf, mimetype: "audio/mpeg", ptt: true }, { quoted: m });
-    return true;
+    const { speakVoiceNote } = await import("../../src/lib/nova-voice-reply.js");
+    return await speakVoiceNote(sock, m.chat, text, voiceId, { quoted: m });
   } catch {
     return false;
   }
@@ -589,12 +584,23 @@ export async function buildToolbox() {
 
 async function handler(m, { sock, db, deps } = {}) {
   const task = (m.args || []).join(" ").trim();
+
+  // 🔹 MODE SUARA (upgrade owner 18 Sep: ".aisuperagent pakai suara") —
+  // subcommand exact-match, pertanyaan biasa yang mengandung kata "suara"
+  // TIDAK ditelan (lanjut ke agent flow).
+  try {
+    const { voiceSubReply, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+    const subReply = voiceSubReply(db, m.chat, task.toLowerCase(), VOICE_KEYS.aisuperagent);
+    if (subReply) return m.reply(claraWrap("superagent", subReply));
+  } catch {}
+
   if (!task) {
     return m.reply(novaGuide(
       "agent",
       "AI agent otonom — dia sendiri yang nyari ke web, baca halamannya, terus nyusun jawaban lengkap + sumber.",
       `${m.prefix}agent <tugas apa pun>\n${m.prefix}agent cari hp terbaik di bawah 5 juta, bandingkan dan kasih rekomendasi\n${m.prefix}agent kick orang yang bernama Budi\n${m.prefix}agent tutup grup dan ubah nama grup jadi Nova Squad`,
-      [`${smallcapsText("8 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | 🔎 ${smallcapsText("cari video youtube — thumbnail preview + deskripsi")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar, generate gambar, jalanin fitur, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip dari link")} | 💻 ${smallcapsText("coding — bikin kode html/js/python dikirim jadi file")} | 🎭 ${smallcapsText("persona — jadi anak kecil, pacar, siapa pun")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
+      [`${smallcapsText("mode suara")}: ${m.prefix}aisuperagent pakai suara → jawabanku dibacakan jadi voice note • ${m.prefix}aisuperagent suara ardi → ganti suara • ${m.prefix}aisuperagent suara off`,
+       `${smallcapsText("8 kemampuan serba bisa")}: 🔍 ${smallcapsText("browsing riset web + sumber")} | 🔎 ${smallcapsText("cari video youtube — thumbnail preview + deskripsi")} | ⚡ ${smallcapsText("otomasi grup — kick dari nama, tutup grup (wajib admin)")} | 🛠️ ${smallcapsText("tools — scan gambar, generate gambar, jalanin fitur, cek aktivitas")} | ⬇️ ${smallcapsText("unduh file — apk/zip dari link")} | 💻 ${smallcapsText("coding — bikin kode html/js/python dikirim jadi file")} | 🎭 ${smallcapsText("persona — jadi anak kecil, pacar, siapa pun")} | 🧠 ${smallcapsText("inget percakapan + jawab pakai vn")}`,
        `${smallcapsText("bermain peran/persona")}: ${m.prefix}agent jadi anak kecil umur 5 tahun yang sok jagoan | ${m.prefix}agent jadi pacarku yang manja`,
        `${smallcapsText("bikin kode program")}: ${m.prefix}agent buatkan kode html halaman toko kue yang keren`,
        `${smallcapsText("bantuin tugas")}: ${m.prefix}agent bantuin tugas matematika ini — ...`,
@@ -736,15 +742,9 @@ async function handler(m, { sock, db, deps } = {}) {
     // jawaban final di-EDIT ke pesan status (revisi owner: cukup 1 chat);
     // VN tetap dikirim pesan baru (audio gak bisa di-edit dari teks)
     if (res.mode === "act" || res.mode === "tools") {
-      // nggobrol pakai vn (request owner): jawaban di-voice-note-in
-      const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task);
-      const doVoice = deps?.voiceReply || sendVoiceReply;
-      if (wantVoice && await doVoice(m, sock, res.answer)) {
-        await setStatus("✅ " + smallcapsText("jawaban dikirim via voice note"));
-        await m.react("🐣");
-        return;
-      }
-      // 🔹 FIX OWNER 17 Sep: jawaban panjang → CHAT TERUSAN (gak dipotong)
+      // 🔹 FIX OWNER 17 Sep: jawaban panjang → CHAT TERUSAN (gak dipotong).
+      // Teks TETAP dikirim dulu (superagent sering bawa sumber/link),
+      // terus kalau mode suara aktif → VN neural nambah dibacakan.
       let ok = false;
       const partsA = splitChatChunks(res.answer);
       if (partsA.length) {
@@ -754,6 +754,19 @@ async function handler(m, { sock, db, deps } = {}) {
           try { await sock.sendMessage(m.chat, { text: partsA[i] }, { quoted: m }); } catch { break; }
         }
       }
+      // VN: keyword request, flag planner AI, ATAU mode suara per chat
+      try {
+        const { wantsVoice, getVoiceCfg, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+        const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task)
+          || wantsVoice(db, m.chat, task, VOICE_KEYS.aisuperagent);
+        if (wantVoice) {
+          const cfg = getVoiceCfg(db, m.chat, VOICE_KEYS.aisuperagent);
+          const doVoice = deps?.voiceReply || sendVoiceReply;
+          if (await doVoice(m, sock, res.answer, cfg.voice)) {
+            await setStatus("🎙️ " + smallcapsText("jawabannya juga kuputarakan di voice note ya"));
+          }
+        }
+      } catch {}
       await m.react("🐣");
       return;
     }
@@ -761,15 +774,8 @@ async function handler(m, { sock, db, deps } = {}) {
     const footer = src ? `\n\n📎 ${smallcapsText("sumber")}\n${src}` : "";
     const note = res.viaLocal ? `\n\n⚙️ ${smallcapsText("mode digest lokal")}` : "";
     const fullAnswer = res.answer + note + footer;
-    // riset pun bisa dijawab pakai vn kalau user minta
-    const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task);
-    const doVoice2 = deps?.voiceReply || sendVoiceReply;
-    if (wantVoice && await doVoice2(m, sock, fullAnswer)) {
-      await setStatus("✅ " + smallcapsText("jawaban dikirim via voice note"));
-      await m.react("🐣");
-      return;
-    }
-    // 🔹 FIX OWNER 17 Sep: jawaban riset panjang → CHAT TERUSAN (gak dipotong)
+    // 🔹 FIX OWNER 17 Sep: jawaban riset panjang → CHAT TERUSAN (gak dipotong).
+    // Sumber penting → teks TETAP dikirim; kalau mode suara aktif → VN nambah.
     let ok = false;
     const partsR = splitChatChunks(fullAnswer);
     if (partsR.length) {
@@ -779,6 +785,19 @@ async function handler(m, { sock, db, deps } = {}) {
         try { await sock.sendMessage(m.chat, { text: partsR[i] }, { quoted: m }); } catch { break; }
       }
     }
+    // VN: keyword request, flag planner AI, ATAU mode suara per chat
+    try {
+      const { wantsVoice, getVoiceCfg, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+      const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(task)
+        || wantsVoice(db, m.chat, task, VOICE_KEYS.aisuperagent);
+      if (wantVoice) {
+        const cfg = getVoiceCfg(db, m.chat, VOICE_KEYS.aisuperagent);
+        const doVoice2 = deps?.voiceReply || sendVoiceReply;
+        if (await doVoice2(m, sock, res.answer, cfg.voice)) {
+          await setStatus("🎙️ " + smallcapsText("jawabannya juga kuputarakan di voice note ya"));
+        }
+      }
+    } catch {}
     await m.react("🐣");
   } catch (e) {
     console.error("agent error:", e.message);

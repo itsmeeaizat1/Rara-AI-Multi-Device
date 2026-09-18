@@ -23,6 +23,11 @@ const nextId = (rules) => {
 };
 
 // ===== prompt buat AI: terjemahin kalimat → JSON rule =====
+// ═══ SEAM E2E: mock askAI (function = mock; undefined = asli — gak nyamber
+// provider live dari test; null = DISABLED biar turun ke parser lokal).
+let _ruleAiForTest;
+export function _setAutonovaRuleAiForTest(fn) { _ruleAiForTest = fn; }
+
 const SYS = `Kamu menerjemahkan kalimat bahasa manusia menjadi SATU objek JSON rule automation bot WhatsApp.
 
 Format WAJIB:
@@ -215,7 +220,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-async function handler(m, { sock, conn }) {
+async function handler(m, { sock, conn, db }) {
   const sockRef = conn || sock;
   try {
     const raw = m.text?.trim() || "";
@@ -225,6 +230,15 @@ async function handler(m, { sock, conn }) {
 
     const parts = body.split(/[ \t]+/).filter(Boolean);
     const sub = (parts[0] || "").toLowerCase();
+
+    // ---- 🔹 MODE SUARA (upgrade owner 18 Sep: "fitur suaraa ini jg bsa di
+    // aisuperagent dan autonovaagent") — konfirmasi rule dibacakan jadi VN.
+    // Subcommand exact-match; gak nyelonong rule id (AF-1 dst tetep jalan).
+    try {
+      const { voiceSubReply, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+      const subReply = voiceSubReply(db, m.chat, body.toLowerCase(), VOICE_KEYS.anovaagent);
+      if (subReply) return m.reply(claraWrap("anovaagent", subReply));
+    } catch {}
 
     // ---- .anovaagent list ----
     if (sub === "list") {
@@ -286,6 +300,8 @@ async function handler(m, { sock, conn }) {
           ".setanovaagent kalau ada yang kirim sticker, react 🔥",
           "",
           ".anovaagent list / del AF-1 / on AF-1 / off AF-1 / reset [AF-1]",
+          "",
+          "🎙️ Mode suara: .anovaagent pakai suara — konfirmasi rule dibacakan jadi voice note",
         ]),
       );
     }
@@ -309,7 +325,7 @@ async function handler(m, { sock, conn }) {
 // set rule pakai .setanovaagent; .anovaagent khusus kelola rule)
 // Status loading 1 pesan edit-in-place ala agent tetap jalan di sini.
 // ═══════════════════════════════════════════════════════════════
-export async function createRule(m, sockRef, body) {
+export async function createRule(m, sockRef, body, db) {
 // LOADING ALA AGENT (lanjutan request owner 11 Sep: 1 PESAN STATUS
 // EDIT-IN-PLACE — user keliatan AI-nya lagi ngapain, final di-edit ke pesan itu)
 let novaStatusKey = null;
@@ -365,14 +381,15 @@ let rule = null;
 let viaLocal = false;
 let aiTimeouted = false;
 try {
-  let aiResult = await withBudget(askAI(SYS, body), Math.min(remain(), 35000));
+  const askAiNow = _ruleAiForTest || askAI;
+let aiResult = await withBudget(askAiNow(SYS, body), Math.min(remain(), 35000));
   rule = extractJson(aiResult);
   // RETRY cuma kalau AI ngasih TEKS tapi tanpa JSON — kalau call pertama
   // TIMEOUT/gagal network, retry provider yang sama = buang 35 dtk lagi.
   if (!rule && aiResult && !aiTimeouted && remain() > 25000) {
     console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
     await setStatus("🧠 " + smallcapsText("setanovaagent mencoba lagi, lebih teliti..."));
-    aiResult = await withBudget(askAI(SYS_STRICT, body), Math.min(remain() - 5000, 35000));
+    aiResult = await withBudget(askAiNow(SYS_STRICT, body), Math.min(remain() - 5000, 35000));
     rule = extractJson(aiResult);
   }
 } catch (e) {
@@ -422,12 +439,24 @@ rules.push(rule);
 save(rules);
 
 try { await m.react("🐣"); } catch {}
-return editFinal(
+const confirmText =
   `✅ Rule ${rule.id} aktif\n\n` +
   `${describe(rule)}\n` +
   `Scope: ${rule.scope} • Cooldown: ${rule.cooldown}s\n\n` +
   (viaLocal ? "_⚙️ Rule dibikin lokal (AI lagi ngaco) — cek lagi ya hasilnya, kalau kurang pas hapus aja: .anovaagent del " + rule.id + "_\n\n" : "") +
-  `Kelola: .anovaagent list | .anovaagent del ${rule.id} | .anovaagent off ${rule.id}`,
+  `Kelola: .anovaagent list | .anovaagent del ${rule.id} | .anovaagent off ${rule.id}`;
+// 🔹 MODE SUARA (upgrade owner 18 Sep): konfirmasi rule DIBACAKAN jadi
+// voice note neural kalau mode aktif / user minta "pakai suara" — teks
+// konfirmasi TETAP dikirim (rule id + perintah kelola penting kebaca).
+try {
+  const { wantsVoice, getVoiceCfg, speakVoiceNote, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
+  if (wantsVoice(db, m.chat, body, VOICE_KEYS.anovaagent)) {
+    const cfg = getVoiceCfg(db, m.chat, VOICE_KEYS.anovaagent);
+    await speakVoiceNote(sockRef, m.chat, confirmText, cfg.voice, { quoted: m });
+  }
+} catch {}
+return editFinal(
+  confirmText,
   "autonovaai",
 );
 }
