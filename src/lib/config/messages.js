@@ -32,6 +32,7 @@ export const messages = {
     "「 ✦ 🚫 Diblokir ✦ 」\nKamu lagi gak bisa pakai bot\nkarena melanggar aturan\nHubungi owner buat appeal",
 
   rejectCall: "「 ✦ 📞 Ditolak ✦ 」\nJangan telepon nomor bot\nChat aja ya",
+  callInfo: "「 ✦ 📞 Panggilan Diterima ✦ 」\nMaaf, saya bot dan belum bisa mengangkat telepon.\nTapi kita bisa ngobrol! Kirim pesan suara (voice note), nanti saya jawab pakai suara juga.",
 };
 
 // Semua pesan groupProtection ini fallback ke GP_DEFAULTS di
