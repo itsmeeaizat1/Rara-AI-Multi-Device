@@ -33,7 +33,7 @@ import {
 import fsc from "fs";
 import axios from "axios";
 import { getDatabase } from "./nova-database.js";
-import { smallcapsText } from "./styler.js";
+import { smallcapsText, formatGuard } from "./styler.js";
 import { translateUI, needsTranslation } from "./nova-i18n.js";
 import { getWeatherAddress } from "./nova-weather-footer.js";
 
@@ -788,6 +788,16 @@ async function serialize(sock, msg, store = {}) {
 
     // Statistik realtime: pesan keluar bot dihitung
     try { getDatabase().incrementStat("messagesSent"); } catch {}
+
+    // SANITIZER FORMAT PERMANEN (fix 18 Sep 2026 — bug "\n" muncul literal
+    // sebagai teks di pesan .bot on): dipasang di titik paling awal m.reply,
+    // SEBELUM translate/smallcaps, biar SEMUA plugin (siapa pun nulisnya)
+    // otomatis bersih dari escape whitespace literal + rapi spasinya.
+    try {
+      if (typeof text === "string" && !(options && options.raw)) {
+        text = formatGuard(text);
+      }
+    } catch {}
 
     // Multi-language: auto-translate UI text ke bahasa user (Google Translate)
     try {

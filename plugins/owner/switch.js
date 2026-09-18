@@ -577,7 +577,14 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
 
   let list = ""
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) list += `\`${key}\` — ${label}\n`
-  return m.reply(claraWrap("Switch Channel", `Event: *${subCmd}*\nTidak ada dalam daftar toggle`) + "\nEVENT TERSEDIA:\n\n" + list + "\n" + tipText(`Contoh: \`${prefix}switch channel sewaRegister\``))
+  return m.reply(claraWrap("Switch Channel", [
+    `Event *${subCmd}* tidak ada dalam daftar toggle.`,
+    ``,
+    { subHeader: "Event Tersedia" },
+    list.trim(),
+    ``,
+    tipText(`Contoh: \`${prefix}switch channel sewaRegister\``),
+  ].join("\n"), "error"))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -720,7 +727,11 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     if (target && isJidLikeBulk) {
       let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
       if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
-        return m.reply(`⚠ JID grup tidak valid. Contoh: \`${prefix}switch group all ${verb} 12036302xxxxx@g.us\``)
+        return m.reply(claraWrap("Switch Group", [
+          `JID grup tidak valid: *${groupJid}*`,
+          ``,
+          `Contoh benar: \`${prefix}switch group all ${verb} 12036302xxxxx@g.us\``,
+        ].join("\n"), "warn"))
       let subject = groupJid
       try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
         return m.reply(claraWrap("Switch Group", [
@@ -761,7 +772,11 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
   const feature = GROUP_FEATURES[resolved]
 
   if (!feature)
-    return m.reply(`❌ Fitur tidak ditemukan: ${featureName}\nKetik \`${prefix}switch group\` untuk melihat daftar`)
+    return m.reply(claraWrap("Switch Group", [
+      `Fitur tidak ditemukan: *${featureName}*`,
+      ``,
+      `Ketik \`${prefix}switch group\` untuk melihat daftar`,
+    ].join("\n"), "error"))
 
   // ═══ DETEKSI KETERSEDIAAN (request owner 10 Sep 2026) ═══
   // ".switch <fitur>" tanpa on/off → tampilkan scope fitur ini:
@@ -829,7 +844,11 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
   if (target && isJidLikeTarget) {
     let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
     if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
-      return m.reply(`⚠ JID grup tidak valid. Contoh: \`${prefix}switch group ${featureName} on 12036302xxxxx@g.us\``)
+      return m.reply(claraWrap("Switch Group", [
+          `JID grup tidak valid: *${groupJid}*`,
+          ``,
+          `Contoh benar: \`${prefix}switch group ${featureName} on 12036302xxxxx@g.us\``,
+        ].join("\n"), "warn"))
     let subject = groupJid
     try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
       return m.reply(claraWrap("Switch Group", [
@@ -931,7 +950,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     }
     let txt = ""
     for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
-      txt += `*${toSC(cat)}*\n`
+      txt += `「 ${toSC(cat)} 」\n`
       for (const key of features) {
         const reg = AUTO_REGISTRY[key]
         if (!reg) continue
@@ -941,12 +960,16 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       txt += `\n`
     }
     txt += tipText(`ON: \`${prefix}switch auto <nama> on\` | OFF: \`${prefix}switch auto <nama> off\` | SEMUA: \`${prefix}switch auto all on/off\``)
-    return m.reply(txt.trim())
+    return m.reply(claraWrap("Switch Auto", txt.trim()))
   }
 
   const reg = AUTO_REGISTRY[autoKey]
   if (!reg)
-    return m.reply(`❌ Fitur tidak ditemukan: ${autoKey}\nKetik \`${prefix}switch auto\` untuk melihat daftar`)
+    return m.reply(claraWrap("Switch Auto", [
+      `Fitur tidak ditemukan: *${autoKey}*`,
+      ``,
+      `Ketik \`${prefix}switch auto\` untuk melihat daftar`,
+    ].join("\n"), "error"))
 
   // ═══ OPSET TARGET (request owner 8 Sep 2026): .switch auto <key> set ═══
   // Fitur notifikasi bisa dikustomisasi targetnya:
@@ -1393,7 +1416,7 @@ async function handleStatusAll(m, { sock, config: cfg }) {
   txt += "\n" + tipText(`📍 Grup (hanya di grup) | 🌍 Global (grup & DM) | 📢 Saluran (broadcast di saluran WA)`)
   txt += "\n" + tipText(`Aktif: ${on} | Mati: ${off} | Total: ${total}`)
   txt += "\n" + tipText(`Detail: \`${prefix}switch auto\` | \`${prefix}switch channel\` | \`${prefix}switch group\` | \`${prefix}switch fitur\``)
-  return m.reply(txt.trim())
+  return m.reply(claraWrap("Switch Status", txt.trim()))
 }
 
 // ═══════════════════════════════════════════════════════════
