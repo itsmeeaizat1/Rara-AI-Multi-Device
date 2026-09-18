@@ -25,6 +25,7 @@
 // Deploy/aturan lengkap: aicall/INTEGRATION.md
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
+import { getAicallAutostartStatus } from "../../src/lib/nova-aicall-autostart.js";
 
 const AICALL_BASE = process.env.AICALL_HTTP_BASE || "http://127.0.0.1:8788";
 
@@ -108,7 +109,9 @@ async function handler(m) {
       const j = r.json || {};
       if (r.status !== 200 || j.ok !== true) {
         try { await m.react("❌"); } catch {}
-        return m.reply(claraWrap("aicall", `Service AI Call tidak merespons${j.error ? " — " + j.error : ""}. Jalankan dulu di VPS: pm2 start ./ai-call --name nova-aicall (lihat aicall/INTEGRATION.md).`));
+        // hasil auto-run boot terakhir — nunjukin KENAPA service gak jalan
+        const auto = getAicallAutostartStatus();
+        return m.reply(claraWrap("aicall", `Service AI Call tidak merespons${j.error ? " — " + j.error : ""}. Auto-run saat boot: ${auto ? auto.reason : "belum ada catatan (bot baru start?)"}${auto && auto.reason.includes("belum merespon") ? " — cek pm2 logs nova-aicall (sesi mungkin belum pairing)" : ""}`));
       }
       try { await m.react("🐣"); } catch {}
       return m.reply(claraWrap("aicall", [
@@ -121,6 +124,7 @@ async function handler(m) {
         "TTS Engine: " + (j.engine || "-"),
         "Suara: " + (j.voice || "-"),
         "Owner terdaftar: " + (j.owners ?? "-"),
+        "Auto-run: aktif — bot otomatis menyalakan service ini saat boot",
         "",
         "Ganti suara: .aicall voice id-ID-GadisNeural",
       ].join("\n")));
