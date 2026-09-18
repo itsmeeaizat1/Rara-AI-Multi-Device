@@ -71,9 +71,21 @@ async function edgeTTSBuffer(text, voiceLang) {
     return _ttsImpl(text, voiceLang);
   }
   try {
-    const { tts } = await import("edge-tts");
+    // 🔹 FIX 18 Sep 2026: paket npm "edge-tts" GAK JALAN — Microsoft
+    // wajibin header Sec-MS-GEC (anti-abuse token) sejak medio 2024,
+    // paket lama balikin 403 tanpa itu. "msedge-tts" v2.0.7+ udah
+    // implementasi generateSecMsGec() — INI YANG BENERAN NYAMBUNG.
+    const { MsEdgeTTS, OUTPUT_FORMAT } = await import("msedge-tts");
     const clean = String(text).replace(/["`']/g, "").replace(/\n/g, " ").slice(0, 500);
-    const buf = await tts(clean, { voice: voiceLang });
+    const tts = new MsEdgeTTS({});
+    await tts.setMetadata(voiceLang, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    const { audioStream } = tts.toStream(clean);
+    const buf = await new Promise((resolve, reject) => {
+      const chunks = [];
+      audioStream.on("data", (c) => chunks.push(c));
+      audioStream.on("end", () => resolve(Buffer.concat(chunks)));
+      audioStream.on("error", reject);
+    });
     return buf && buf.length > 500 ? buf : null;
   } catch (e) {
     console.error("[VoiceReply] Edge TTS error:", e?.message || e);
