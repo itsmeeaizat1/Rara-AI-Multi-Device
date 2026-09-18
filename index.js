@@ -327,6 +327,15 @@ async function main() {
 
   initScheduler(config);
 
+  // 🔹 AI CALL AUTO-RUN (18 Sep 2026, request owner: "aicall lngsung ke run
+  // saat bot dirun") — service Go aicall/ai-call dinyalain otomatis kalau
+  // mati: pm2 restart/start nova-aicall (fallback spawn langsung), lalu
+  // tunggu /health OK. Fire-and-forget — gak nunda WhatsApp connect, dan
+  // semua gagal-senyap-proof (bot tetap boot normal).
+  import("./src/lib/nova-aicall-autostart.js")
+    .then((m) => m.ensureAicallRunning())
+    .catch((e) => console.error("[aicall-autostart] gagal:", e?.message || e));
+
   const bootTime = Date.now() - startTime;
   logger.success("boot", `System initialized in ${bootTime}ms`);
   divider();

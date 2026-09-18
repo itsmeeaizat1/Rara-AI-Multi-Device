@@ -71,6 +71,15 @@ pm2 save
 pm2 restart <nama bot>
 ```
 
+## Auto-run (18 Sep 2026)
+
+Bot utama sekarang **otomatis menyalakan service ini saat boot** (src/lib/nova-aicall-autostart.js):
+kalau `127.0.0.1:8788/health` tidak merespons dan binary `aicall/ai-call` + `aicall/.env` ada:
+- proses pm2 lama ada → `pm2 restart nova-aicall`
+- belum teregistrasi → `pm2 start <aicall>/ai-call --name nova-aicall --cwd <aicall>` + `pm2 save`
+- pm2 tidak terpasang → spawn langsung detached
+Matikan auto-run: `touch aicall/.noautostart`. Hasil auto-run terakhir kelihatan di `.aicall status`.
+
 ## Tes
 
 - `.aicall status` → connected: true, engine + voice aktif
