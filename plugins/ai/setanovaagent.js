@@ -23,7 +23,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-async function handler(m, { sock, conn }) {
+async function handler(m, { sock, conn, db }) {
   const sockRef = conn || sock;
   try {
     const raw = m.text?.trim() || "";
@@ -55,7 +55,8 @@ async function handler(m, { sock, conn }) {
     }
 
     // bikin rule via flow AI (status 1 pesan edit-in-place + validasi + save)
-    return await createRule(m, sockRef, body);
+    // db ikut dikirim → mode suara .anovaagent pakai suara kepakai di sini
+    return await createRule(m, sockRef, body, db);
   } catch (e) {
     console.error("[setanovaagent] error:", e.message);
     try { await m.react("❌"); } catch {}

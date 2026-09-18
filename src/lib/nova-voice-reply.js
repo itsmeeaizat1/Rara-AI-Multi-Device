@@ -1,10 +1,13 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// nova-voice-reply.js — SATU PINTU balasan suara (TTS edge-tts npm → ogg → PTT)
-// Dipakai: .novaagent pakai suara / .novaagent suara <id> (request owner
-// 18 Sep 2026: "apa g bsa gini aja .novaagent pakai suara (mode n aktif)" +
-// ".novaagent suara ardi" + "jd cmd ttep nova agent gt") — jawaban nova
-// agent DIBACAKAN jadi voice note, command tetap .novaagent.
-// Storage: db.setting("novaAgentVoice") = { [chatJid]: { on, voice } }
+// nova-voice-reply.js — SATU PINTU balasan suara (TTS msedge-tts → ogg → PTT)
+// Dipakai BANYAK FITUR (mode suara per chat, per fitur):
+//   • .novaagent pakai suara / .novaagent suara <id> (request owner 18 Sep)
+//   • .aisuperagent pakai suara (upgrade owner 18 Sep: "fitur suaraa ini jg
+//     bsa di aisuperagent dan autonovaagent")
+//   • .anovaagent / .setanovaagent pakai suara (idem)
+// Storage PER FITUR: db.setting(KEY) = { [chatJid]: { on, voice } }
+//   KEY = "novaAgentVoice" | "aisuperagentVoice" | "anovaagentVoice"
+// Satu chat bisa beda mode per fitur — cfg gak nyampur.
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -38,30 +41,86 @@ export function defaultVoice() { return VOICE_OPTIONS[0].id; }
 let _ttsImpl;
 export function _setVoiceTtsForTest(fn) { _ttsImpl = fn; }
 
-// ═══════════ CFG per chat (db.setting("novaAgentVoice")) ═══════════
-export function getVoiceCfg(db, chat) {
+// ═══════════ CFG per chat per fitur (db.setting(KEY)) ═══════════
+export const VOICE_KEYS = {
+  novaagent: "novaAgentVoice",
+  aisuperagent: "aisuperagentVoice",
+  anovaagent: "anovaagentVoice",
+};
+export function getVoiceCfg(db, chat, key = VOICE_KEYS.novaagent) {
   try {
-    const cur = db?.setting?.("novaAgentVoice") || {};
+    const cur = db?.setting?.(key) || {};
     const c = cur[chat] || {};
     return { on: c.on === true, voice: c.voice || defaultVoice() };
   } catch { return { on: false, voice: defaultVoice() }; }
 }
-export function setVoiceCfg(db, chat, patch) {
+export function setVoiceCfg(db, chat, patch, key = VOICE_KEYS.novaagent) {
   try {
     if (!db?.setting) return;
-    const cur = db.setting("novaAgentVoice") || {};
+    const cur = db.setting(key) || {};
     const c = cur[chat] || {};
     cur[chat] = { ...c, ...patch };
-    db.setting("novaAgentVoice", cur);
+    db.setting(key, cur);
   } catch {}
 }
 
 // mode ON per chat ATAU user minta "pakai suara" di teks request ini
 const VOICE_REQ = /\b(pakai suara|pake suara|pakai vn|pake vn|jawab pakai suara|jawab pake suara|suara aja|vn aja|via suara|via vn|voice note|dengan suara|dgn suara)\b/i;
-export function wantsVoice(db, chat, userText) {
-  const cfg = getVoiceCfg(db, chat);
+export function wantsVoice(db, chat, userText, key = VOICE_KEYS.novaagent) {
+  const cfg = getVoiceCfg(db, chat, key);
   if (cfg.on) return true;
   try { return VOICE_REQ.test(String(userText || "")); } catch { return false; }
+}
+
+// ═══════════ SUBCOMMAND SUARA BERSAMA ═══════════
+// `low` = teks perintah user (sudah lowercase, tanpa nama command).
+// return: array baris reply kalau `low` adalah subcommand suara
+// (pemanggil bungkus claraWrap sendiri); null kalau BUKAN → lanjut flow biasa.
+// Daftar exact-match (sama kaya .novaagent) — pertanyaan biasa yang
+// kebetulan mengandung kata "suara" TIDAK ditelan subcommand.
+const VOICE_ON = ["pakai suara", "pake suara", "suara on", "suara aktif", "suara aktifkan", "suara nyala", "mode suara", "mode suara on", "mode suara aktif"];
+const VOICE_OFF = ["suara off", "suara mati", "suara matikan", "suara nonaktif", "jangan pakai suara", "jangan pake suara", "tanpa suara", "mode suara off"];
+const VOICE_STATUS = ["suara", "suara status", "suara info", "suara list"];
+export function voiceSubReply(db, chat, low, key = VOICE_KEYS.novaagent) {
+  low = String(low || "").toLowerCase().trim();
+  const vm = low.match(/^suara\s+([a-z]+)$/);
+  const isVoiceId = vm && VOICE_OPTIONS.some(v => v.id === vm[1]);
+  const isOn = VOICE_ON.includes(low);
+  const isOff = VOICE_OFF.includes(low);
+  const isStatus = VOICE_STATUS.includes(low);
+  if (!isOn && !isOff && !isStatus && !isVoiceId) return null;
+  if (isOn) {
+    setVoiceCfg(db, chat, { on: true }, key);
+    const cfg = getVoiceCfg(db, chat, key);
+    return [
+      "🎙️ Mode suara AKTIF",
+      "Semua jawabanku akan dibacakan jadi voice note",
+      "Suara saat ini: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
+    ];
+  }
+  if (isOff) {
+    setVoiceCfg(db, chat, { on: false }, key);
+    return [
+      "🔇 Mode suara NONAKTIF",
+      "Jawabanku balik ke teks biasa",
+    ];
+  }
+  if (isVoiceId) {
+    const v = VOICE_OPTIONS.find(x => x.id === vm[1]);
+    setVoiceCfg(db, chat, { voice: v.id, on: true }, key);
+    return [
+      "🎙️ Suara diganti: " + v.name,
+      "Mode suara ikut AKTIF",
+    ];
+  }
+  // status
+  const cfg = getVoiceCfg(db, chat, key);
+  return [
+    "🎙️ Status mode suara: " + (cfg.on ? "AKTIF — jawabanku dibacakan jadi voice note" : "NONAKTIF — jawaban teks biasa"),
+    "Suara saat ini: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
+    "",
+    "Ganti suara: " + VOICE_OPTIONS.map(v => v.id).join(", "),
+  ];
 }
 
 // ═══════════ TTS — edge-tts npm (GRATIS, tanpa python) ═══════════
