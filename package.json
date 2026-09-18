@@ -88,6 +88,7 @@
     "mime-types": "^3.0.2",
     "moment-timezone": "^0.6.0",
     "ms": "^2.1.3",
+    "msedge-tts": "^2.0.7",
     "nathcf": "^1.0.1",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.3.2",

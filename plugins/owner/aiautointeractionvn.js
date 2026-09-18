@@ -247,7 +247,7 @@ async function handler(m, { sock, config: botConfig }) {
   return { handled: true };
 }
 
-// ═══════════ TTS — Edge Neural via npm edge-tts (GRATIS, tanpa python) ═══════════
+// ═══════════ TTS — Edge Neural via npm msedge-tts (GRATIS, tanpa python) ═══════════
 async function edgeTTSBuffer(text, voiceLang) {
   // seam: function = mock; null = gagal; undefined = asli
   if (_ttsImpl !== undefined) {
@@ -255,9 +255,21 @@ async function edgeTTSBuffer(text, voiceLang) {
     return _ttsImpl(text, voiceLang);
   }
   try {
-    const { tts } = await import("edge-tts");
+    // 🔹 FIX 18 Sep 2026: paket "edge-tts" GAK JALAN — Microsoft wajibin
+    // header Sec-MS-GEC (anti-abuse token) sejak medio 2024, tanpa itu
+    // balikin 403. "msedge-tts" v2.0.7+ udah implementasi
+    // generateSecMsGec() — INI YANG BENERAN NYAMBUNG (verified live).
+    const { MsEdgeTTS, OUTPUT_FORMAT } = await import("msedge-tts");
     const clean = text.replace(/["`']/g, "").replace(/\n/g, " ").slice(0, 500);
-    const buf = await tts(clean, { voice: voiceLang });
+    const tts = new MsEdgeTTS({});
+    await tts.setMetadata(voiceLang, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    const { audioStream } = tts.toStream(clean);
+    const buf = await new Promise((resolve, reject) => {
+      const chunks = [];
+      audioStream.on("data", (c) => chunks.push(c));
+      audioStream.on("end", () => resolve(Buffer.concat(chunks)));
+      audioStream.on("error", reject);
+    });
     return buf && buf.length > 500 ? buf : null;
   } catch (e) {
     console.error("[AIV] Edge TTS error:", e?.message || e);
