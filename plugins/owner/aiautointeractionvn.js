@@ -1,11 +1,35 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// AI Auto Interaction VN — Gemini Live style, real-time VN detection + neural TTS response
-// Toggle: .aiautointeractionvn on/off  (owner only, default OFF saat pairing pertama)
-// TTS: Microsoft Edge Neural TTS (GRATIS, suara natural seperti manusia)
+// AI Auto Interaction VN — bicara dengan AI via voice note ATAU teks,
+// AI bisa balas pakai suara (VN) atau teks — sesuai mode (18 Sep 2026).
+// Toggle: .aiautointeractionvn on/off  (owner only, default OFF)
+// Alias pendek: .aiv
+//
+// UPGRADE 18 Sep 2026 (request owner: "buat fitur bicara dgn ai bsa pakai
+// teks ataupun vn jika disuruh jawab pakai vn" + "ai jawab pakai teks + vn
+// on off"):
+//   1. STT → shared nova-stt.js (pipeline Gemini → OpenAI → GROQ Whisper —
+//      key Groq valid di pusat apikeys.json, gak lagi pipeline lokal yang
+//      cuma andalkan Gemini expired).
+//   2. OTAK AI → NOVA AGENT (runAgent nova-agent.js — request owner 18 Sep:
+//      "jd ai pakai ai agent kyk nova agent aja jd sekilas sprti ngbrol
+//      langsung ke nova agent cm ini ai novaagent jawab pakai suara vn").
+//      Bicara via VN/teks = ngobrol sama nova agent, tapi jawabannya
+//      DIBACAKAN pakai suara. Memori obrolan SHARING dengan .agent
+//      (db agentMemory) — konteks nyambung antara chat teks & VN.
+//      Reaksi fase ikut sistem loading: 🧠 plan → 🔍 search → 🛠️ tool → ⚡.
+//   3. TTS → npm edge-tts (tts(text,{voice}) → Buffer, TANPA python/
+//      edge-tts CLI — dep udah ada di package.json).
+//   4. MODE BALAS: .aiv balas vn|teks — AI jawab pakai voice note atau teks.
+//   5. LANJUT OBROLAN VIA TEKS: reply pesan AI bot → obrolan lanjut tanpa
+//      harus rekam VN lagi (balasan tetap ikut mode vn/teks).
+//   6. GUARD: VN > 120 detik ditolak sopan; VN gak jelas → minta rekam ulang.
+//
+// Anti-telepon (deteksi & tolak telepon + auto balas) ada di .anticall —
+// mode info/tolak/off (lihat plugins/owner/anticall.js).
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { runAgent } from "../../src/lib/nova-agent.js";
+import { transcribeAudio } from "../../src/lib/nova-stt.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -23,13 +47,15 @@ function tempPath(prefix, ext) {
   return path.join(TMP_DIR, `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`);
 }
 
+const MAX_DURASI_VN_DETIK = 120; // VN lebih panjang ditolak sopan
+
 const pluginConfig = {
   name: "aiautointeractionvn",
-  alias: ["aiautointeractionvn"],
+  alias: ["aiautointeractionvn", "aiv"],
   category: "owner",
-  description: "Toggle AI auto VN interaction (Gemini Live style) — VN masuk, AI balas suara neural natural",
-  usage: ".aiautointeractionvn on/off — Toggle\n.aiautointeractionvn status — Cek status\n.aiautointeractionvn voice <id> — Pilih voice neural\n.aiautointeractionvn lang <kode> — Set bahasa\n.aiautointeractionvn mode api/free — API=Gemini, Free=Edge Neural TTS",
-  example: ".aiautointeractionvn on\n.aiautointeractionvn voice gadis",
+  description: "Bicara dengan AI via voice note atau teks — AI balas pakai suara (VN) atau teks",
+  usage: ".aiv on/off — Nyalakan/matikan di chat ini\n.aiv balas vn|teks — Mode balasan AI\n.aiv voice <id> — Pilih suara neural\n.aiv lang <kode> — Set bahasa\n.aiv status — Cek pengaturan",
+  example: ".aiv on\n.aiv balas vn\n.aiv balas teks",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -42,31 +68,42 @@ const pluginConfig = {
 
 // === NEURAL VOICES (Microsoft Edge TTS — GRATIS, natural) ===
 const VOICE_OPTIONS = [
-  { id: "ardi",     name: "Ardi (Pria ID, natural hangat)",      lang: "id-ID-ArdiNeural",     type: "edge", gender: "Male" },
-  { id: "gadis",    name: "Gadis (Wanita ID, natural ceria)",    lang: "id-ID-GadisNeural",    type: "edge", gender: "Female" },
-  { id: "ava",      name: "Ava (Wanita EN, natural modern)",      lang: "en-US-AvaNeural",      type: "edge", gender: "Female" },
-  { id: "andrew",   name: "Andrew (Pria EN, natural hangat)",     lang: "en-US-AndrewNeural",   type: "edge", gender: "Male" },
-  { id: "emma",     name: "Emma (Wanita EN, natural lembut)",     lang: "en-US-EmmaNeural",     type: "edge", gender: "Female" },
-  { id: "brian",    name: "Brian (Pria EN, natural BBC style)",   lang: "en-US-BrianNeural",    type: "edge", gender: "Male" },
-  { id: "ana",      name: "Ana (Wanita EN, natural muda)",        lang: "en-US-AnaNeural",      type: "edge", gender: "Female" },
-  { id: "jenny",    name: "Jenny (Wanita EN, natural friendly)",   lang: "en-US-JennyNeural",    type: "edge", gender: "Female" },
-  { id: "topmedia-happy", name: "TopMedia Happy (Emosional)",     lang: "id", type: "topmedia", emotion: "Happy" },
-  { id: "topmedia-sad", name: "TopMedia Sad (Emosional sedih)",   lang: "id", type: "topmedia", emotion: "Sad" },
-  { id: "topmedia-angry", name: "TopMedia Angry (Emosional marah)", lang: "id", type: "topmedia", emotion: "Angry" },
+  { id: "gadis",  name: "Gadis (Wanita ID, natural ceria)",  lang: "id-ID-GadisNeural",  type: "edge", gender: "Female" },
+  { id: "ardi",   name: "Ardi (Pria ID, natural hangat)",    lang: "id-ID-ArdiNeural",   type: "edge", gender: "Male" },
+  { id: "ava",    name: "Ava (Wanita EN, natural modern)",   lang: "en-US-AvaNeural",    type: "edge", gender: "Female" },
+  { id: "andrew", name: "Andrew (Pria EN, natural hangat)", lang: "en-US-AndrewNeural", type: "edge", gender: "Male" },
+  { id: "emma",   name: "Emma (Wanita EN, natural lembut)",  lang: "en-US-EmmaNeural",   type: "edge", gender: "Female" },
+  { id: "brian",  name: "Brian (Pria EN, gaya BBC)",         lang: "en-US-BrianNeural",  type: "edge", gender: "Male" },
+  { id: "jenny",  name: "Jenny (Wanita EN, friendly)",      lang: "en-US-JennyNeural",  type: "edge", gender: "Female" },
 ];
 
-const SYSTEM_INSTRUCTION = `Kamu adalah teman ngobrol via voice note yang sangat natural, hangat, dan ekspresif — seperti Gemini Live.
+// ═══════════ SEAMS E2E — function = mock; null = error path; undefined = asli ═══════════
+let _sttImpl; // (buffer, mime) => teks
+export function _setAivSttForTest(fn) { _sttImpl = fn; }
+let _brainImpl; // (prompt, opts) => jawaban
+export function _setAivBrainForTest(fn) { _brainImpl = fn; }
+let _ttsImpl; // (teks, voiceLang) => Buffer mp3
+export function _setAivTtsForTest(fn) { _ttsImpl = fn; }
+export function _resetAivSeamsForTest() { _sttImpl = undefined; _brainImpl = undefined; _ttsImpl = undefined; }
 
-Aturan jawaban:
-1. Jawab dengan gaya bicara LISAN yang natural, kasual, mengalir. Seperti lagi telepon sama teman dekat.
-2. JANGAN gunakan format formal, poin-poin, markdown (#, *, -), atau emoji robot. Teks akan diubah jadi suara langsung.
-3. Sesuaikan emosi & intonasi dengan emosi VN user. User ceria? Jawab ceria. User sedih? Jawab empatik & lembut. User marah? Jawab tenang tapi tegas.
-4. Jawab SINGKAT (1-5 kalimat). Jangan monolog. Ini obrolan dua arah, bukan ceramah.
-5. Boleh pakai bahasa gaul/sehari-hari. Natural banget.
-6. JANGAN mengaku sebagai AI/bot. Kamu teman biasa namanya Nova.`;
+// ═══════════ TRACKER pesan AI terakhir per chat (buat lanjut obrolan via teks) ═══════════
+// Map<gid, Set<msgId>> — id pesan AI yang kita kirim lewat fitur ini.
+const _sentByChat = new Map();
+function trackSent(gid, msgId) {
+  if (!gid || !msgId) return;
+  let set = _sentByChat.get(gid);
+  if (!set) { set = new Set(); _sentByChat.set(gid, set); }
+  set.add(msgId);
+  if (set.size > 20) {
+    // buang yang paling lama (Set jaga urutan insert)
+    const first = set.values().next().value;
+    set.delete(first);
+  }
+}
+export function _aivSentIdsForTest(gid) { return _sentByChat.get(gid); }
 
 async function handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
+  const prefix = botConfig.command?.prefix || ".";
   try {
     const db = getDatabase();
     if (!db.db.data.aiAutoVnInteraction) db.db.data.aiAutoVnInteraction = {};
@@ -79,333 +116,253 @@ async function handler(m, { sock, config: botConfig }) {
     if (args[0] === "on") {
       cfg[gid] = {
         enabled: true,
-        mode: cfg[gid]?.mode || "free",
+        replyMode: cfg[gid]?.replyMode || "vn",
         voice: cfg[gid]?.voice || "gadis",
         lang: cfg[gid]?.lang || "id",
       };
       db.db.write();
-      const voiceInfo = VOICE_OPTIONS.find(v => v.id === cfg[gid].voice);
-      const text = claraWrap("AI Auto VN Interaction", [
-        "Status: ON",
-        "Mode: " + cfg[gid].mode + (cfg[gid].mode === "free" ? " (Edge Neural TTS gratis)" : " (Gemini API)"),
-        "Voice: " + (voiceInfo ? voiceInfo.name : cfg[gid].voice),
-        "Bahasa: " + cfg[gid].lang,
+      const text = claraWrap("AIV — Bicara dengan AI", [
+        "Status: ON di chat ini",
+        "Balasan: " + (cfg[gid].replyMode === "vn" ? "Voice Note (suara AI)" : "Teks"),
+        "Voice: " + (cfg[gid].voice === "ardi" ? "Ardi (Pria ID)" : "Gadis (Wanita ID)"),
         "",
-        "Cara kerja:",
-        "1. VN masuk -> bot deteksi real-time",
-        "2. Transcribe VN (speech-to-text)",
-        "3. AI generate jawaban natural",
-        "4. Convert ke suara neural (Edge TTS)",
-        "5. Balas dengan VN suara natural",
+        "Cara pakai:",
+        "1. Kirim voice note ke bot — AI jawab pakai suara/teks",
+        "2. Atau reply pesan AI dengan teks — obrolan lanjut",
         "",
-        "Default OFF. Fitur ini tidak aktif otomatis saat pairing.",
-      ].join("\n")) + "\n" + tipText("Ketik " + prefix + "aiautointeractionvn off untuk matikan");
-      await m.reply( text, "aiautointeractionvn");
+        "Kirim VN pertamamu sekarang, atau reply pesan ini dengan teks.",
+      ]) + "\n" + tipText("Matikan: " + prefix + "aiv off — Ganti mode balasan: " + prefix + "aiv balas vn|teks");
+      const sentOn = await m.reply(text);
+      // pesan konfirmasi ini ikut di-track — reply pesan ini = mulai ngobrol
+      trackSent(gid, sentOn?.key?.id);
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = claraWrap("AI Auto VN Interaction", [
+      const text = claraWrap("AIV — Bicara dengan AI", [
         "Status: OFF",
-        "AI VN interaction dimatikan di chat ini",
-      ].join("\n"));
-      await m.reply( text, "aiautointeractionvn");
-    } else if (args[0] === "mode") {
-      const mode = args[1] || "free";
-      if (!["free", "api"].includes(mode)) {
-        const text = claraWrap("AI Auto VN Interaction", [
-          "Mode tidak valid!",
-          "free = Edge Neural TTS (GRATIS, suara natural, tanpa API key)",
-          "api = Gemini multimodal (butuh geminiApiKey di config)",
-        ].join("\n"));
-        await m.reply( text, "aiautointeractionvn");
+        "Fitur bicara AI dimatikan di chat ini",
+      ]);
+      await m.reply(text);
+    } else if (args[0] === "balas" || args[0] === "jawab" || args[0] === "reply") {
+      const mode = args[1] || "";
+      if (mode !== "vn" && mode !== "teks" && mode !== "voice" && mode !== "text") {
+        const text = claraWrap("AIV — Bicara dengan AI", [
+          "Mode balasan tidak valid!",
+          "vn — AI jawab pakai voice note (suara)",
+          "teks — AI jawab pakai teks biasa",
+          "",
+          "Contoh: " + prefix + "aiv balas vn",
+        ]);
+        await m.reply(text);
         return { handled: true };
       }
+      const replyMode = (mode === "vn" || mode === "voice") ? "vn" : "teks";
       if (!cfg[gid]) cfg[gid] = {};
-      cfg[gid].mode = mode;
+      cfg[gid].replyMode = replyMode;
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      const modeDesc = {
-        free: "Edge Neural TTS (GRATIS, Microsoft neural voice, tanpa API key, suara natural)",
-        api: "Gemini multimodal + TTS (butuh geminiApiKey di config, paling natural)",
-      };
-      const text = claraWrap("AI Auto VN Interaction", [
-        "Mode diubah: " + mode,
-        modeDesc[mode],
+      const text = claraWrap("AIV — Bicara dengan AI", [
+        "Balasan AI diubah: " + (replyMode === "vn" ? "VOICE NOTE (suara AI)" : "TEKS"),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
-      ].join("\n"));
-      await m.reply( text, "aiautointeractionvn");
+      ]);
+      await m.reply(text);
     } else if (args[0] === "voice") {
       if (!args[1]) {
-        let list = "Neural voices tersedia:\n\n";
+        const lines = ["Neural voices tersedia:", ""];
         VOICE_OPTIONS.forEach((v, i) => {
-          list += (i + 1) + ". " + v.id + " — " + v.name + "\n";
+          lines.push((i + 1) + ". " + v.id + " — " + v.name);
         });
-        list += "\nKetik: " + prefix + "aiautointeractionvn voice <id>";
-        const text = claraWrap("AI Auto VN Interaction", list);
-        await m.reply( text, "aiautointeractionvn");
+        lines.push("");
+        lines.push("Ketik: " + prefix + "aiv voice <id>");
+        await m.reply(claraWrap("AIV — Bicara dengan AI", lines));
         return { handled: true };
       }
-      const voiceId = args[1];
-      const voice = VOICE_OPTIONS.find(v => v.id === voiceId);
+      const voice = VOICE_OPTIONS.find(v => v.id === args[1]);
       if (!voice) {
-        const text = claraWrap("AI Auto VN Interaction", "Voice tidak ditemukan! Ketik " + prefix + "aiautointeractionvn voice untuk list");
-        await m.reply( text, "aiautointeractionvn");
+        await m.reply(claraWrap("AIV — Bicara dengan AI", [
+          "Voice tidak ditemukan!",
+          "Ketik " + prefix + "aiv voice untuk lihat daftar",
+        ], "error"));
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
       cfg[gid].voice = voice.id;
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      const text = claraWrap("AI Auto VN Interaction", [
+      await m.reply(claraWrap("AIV — Bicara dengan AI", [
         "Voice diubah: " + voice.id,
         "Nama: " + voice.name,
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
-      ].join("\n"));
-      await m.reply( text, "aiautointeractionvn");
+      ]));
     } else if (args[0] === "lang") {
       const lang = args[1] || "id";
       const supported = ["id", "en", "su", "jv", "ar", "ja", "ko", "zh"];
       if (!supported.includes(lang)) {
-        const text = claraWrap("AI Auto VN Interaction", "Bahasa tidak didukung! Tersedia: " + supported.join(", "));
-        await m.reply( text, "aiautointeractionvn");
+        await m.reply(claraWrap("AIV — Bicara dengan AI", [
+          "Bahasa tidak didukung!",
+          "Tersedia: " + supported.join(", "),
+        ], "error"));
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
       cfg[gid].lang = lang;
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      const text = claraWrap("AI Auto VN Interaction", [
+      await m.reply(claraWrap("AIV — Bicara dengan AI", [
         "Bahasa diubah: " + lang,
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
-      ].join("\n"));
-      await m.reply( text, "aiautointeractionvn");
+      ]));
     } else {
-      const status = cfg[gid]?.enabled ? "ON" : "OFF";
-      const mode = cfg[gid]?.mode || "free";
+      // status / panduan
+      const enabled = cfg[gid]?.enabled ? "ON" : "OFF";
+      const replyMode = cfg[gid]?.replyMode || "vn";
       const voiceId = cfg[gid]?.voice || "gadis";
       const voiceInfo = VOICE_OPTIONS.find(v => v.id === voiceId);
       const lang = cfg[gid]?.lang || "id";
-      const text = claraWrap("AI Auto VN Interaction", [
-        "Status: " + status,
-        "Mode: " + mode + (mode === "free" ? " (Edge Neural TTS)" : " (Gemini API)"),
+      const text = claraWrap("AIV — Bicara dengan AI", [
+        "Status: " + enabled,
+        "Balasan AI: " + (replyMode === "vn" ? "Voice Note (suara neural, gratis)" : "Teks"),
         "Voice: " + (voiceInfo ? voiceInfo.name : voiceId),
         "Bahasa: " + lang,
         "Default: OFF (tidak aktif saat pairing)",
         "",
         "Perintah:",
-        prefix + "aiautointeractionvn on/off — Toggle",
-        prefix + "aiautointeractionvn mode <free/api> — Set mode",
-        prefix + "aiautointeractionvn voice <id> — Pilih neural voice",
-        prefix + "aiautointeractionvn lang <kode> — Set bahasa",
-      ].join("\n"));
-      await m.reply( text, "aiautointeractionvn");
+        prefix + "aiv on/off — Nyalakan/matikan di chat ini",
+        prefix + "aiv balas vn|teks — Mode balasan AI",
+        prefix + "aiv voice <id> — Pilih suara neural",
+        prefix + "aiv lang <kode> — Set bahasa",
+        "",
+        "Cara bicara dengan AI:",
+        "1. Kirim voice note — AI transkripsi lalu jawab",
+        "2. Reply pesan AI dengan teks — obrolan lanjut",
+        "",
+        "Telepon masuk? Atur di " + prefix + "anticall (tolak/info/off)",
+      ]);
+      await m.reply(text);
     }
   } catch (e) {
-    await m.reply(claraWrap("aiautointeractionvn", "Gagal proses. Coba lagi.", "error"));
+    console.error("[AIV] handler error:", e?.message || e);
+    await m.reply(claraWrap("AIV — Bicara dengan AI", "Gagal proses perintah. Coba lagi.", "error"));
   }
   return { handled: true };
 }
 
-// === EDGE NEURAL TTS (Microsoft — GRATIS, suara natural) ===
-async function edgeTTS(text, voiceLang) {
+// ═══════════ TTS — Edge Neural via npm edge-tts (GRATIS, tanpa python) ═══════════
+async function edgeTTSBuffer(text, voiceLang) {
+  // seam: function = mock; null = gagal; undefined = asli
+  if (_ttsImpl !== undefined) {
+    if (_ttsImpl === null) return null;
+    return _ttsImpl(text, voiceLang);
+  }
   try {
-    const outFile = tempPath("edgetts", ".mp3");
-    const cleanText = text.replace(/["`']/g, "").replace(/\n/g, " ").slice(0, 500);
-
-    // Python edge-tts command
-    const cmd = `python3 -c "
-import edge_tts, asyncio
-import config from "../../config.js";
-async def gen():
-    comm = edge_tts.Communicate('${cleanText.replace(/'/g, "\\'")}', '${voiceLang}')
-    await comm.save('${outFile}')
-asyncio.run(gen())
-" 2>/dev/null`;
-
-    await execAsync(cmd, { timeout: 30000 });
-
-    if (fs.existsSync(outFile) && fs.statSync(outFile).size > 500) {
-      return fs.readFileSync(outFile);
-    }
-    return null;
+    const { tts } = await import("edge-tts");
+    const clean = text.replace(/["`']/g, "").replace(/\n/g, " ").slice(0, 500);
+    const buf = await tts(clean, { voice: voiceLang });
+    return buf && buf.length > 500 ? buf : null;
   } catch (e) {
-    console.error("[AI AutoVN] Edge TTS error:", e.message);
+    console.error("[AIV] Edge TTS error:", e?.message || e);
     return null;
   }
 }
 
-// === TOPMEDIA TTS (emotion-aware, has API key) ===
-async function topMediaTTS(text, emotion = "Happy") {
-  try {
-    const response = await fetch("https://api.topmediai.com/v1/text2speech", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": config.APIkey.voiceai,
-      },
-      body: JSON.stringify({
-        text: text.slice(0, 500),
-        speaker: "001526de-3826-11ee-a861-00163e2ac61b",
-        emotion: emotion,
-      }),
-    });
-
-    const data = await response.json();
-    const audioUrl = data?.data?.oss_url;
-    if (!audioUrl) return null;
-
-    const { default: axios } = await import("axios");
-    const audioRes = await axios.get(audioUrl, { responseType: "arraybuffer", timeout: 30000 });
-    if (audioRes.status === 200 && audioRes.data.length > 1000) {
-      return Buffer.from(audioRes.data);
-    }
-  } catch (e) {
-    console.error("[AI AutoVN] TopMedia TTS error:", e.message);
-  }
-  return null;
-}
-
-// Convert to OGG Opus for WhatsApp VN
-async function convertToOgg(inputBuffer, inputExt = ".mp3") {
-  const inFile = tempPath("vnin", inputExt);
+// Convert mp3 → OGG Opus untuk WhatsApp VN
+async function convertToOgg(inputBuffer) {
+  const inFile = tempPath("vnin", ".mp3");
   const outFile = tempPath("vnout", ".ogg");
-
   try {
     fs.writeFileSync(inFile, inputBuffer);
-    await execAsync("ffmpeg -y -i " + inFile + " -codec:a libopus -b:a 32k -ar 48000 " + outFile + " 2>/dev/null");
-
+    await execAsync("ffmpeg -y -i " + inFile + " -codec:a libopus -b:a 32k -ar 48000 " + outFile + " 2>/dev/null", { timeout: 30000 });
     if (fs.existsSync(outFile) && fs.statSync(outFile).size > 500) {
       return fs.readFileSync(outFile);
     }
     return null;
   } catch (e) {
-    console.error("[AI AutoVN] Convert error:", e.message);
+    console.error("[AIV] Convert ogg error:", e?.message || e);
     return null;
   } finally {
-    try { fs.unlinkSync(inFile); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
-    try { fs.unlinkSync(outFile); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+    try { fs.unlinkSync(inFile); } catch {}
+    try { fs.unlinkSync(outFile); } catch {}
   }
 }
 
-// === STT: Transcribe VN ===
-async function transcribeVN(buffer, mimeType, botConfig) {
-  const aiConfig = botConfig.aiHelp || {};
-  const apiKey = getApiKey("aiFallback") || getApiKey("openai");
-  const geminiKey = String(aiConfig.geminiApiKey || "");
-
-  // Try Gemini multimodal (if key available)
-  if (geminiKey) {
-    try {
-      const base64 = buffer.toString("base64");
-      const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + geminiKey,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                { inlineData: { data: base64, mimeType: mimeType || "audio/ogg" } },
-                { text: "Transkripsi audio ini ke teks. Berikan HANYA teks hasil transkripsi, tanpa penjelasan." },
-              ],
-            }],
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text && text.trim().length > 1) return text.trim();
-      }
-    } catch (e) {
-      console.error("[AI AutoVN] Gemini STT error:", e.message);
-    }
-  }
-
-  // Try OpenAI Whisper API
-  if (apiKey) {
-    try {
-      const formData = new FormData();
-      const audioBlob = new Blob([buffer], { type: mimeType || "audio/ogg" });
-      formData.append("file", audioBlob, "voice.ogg");
-      formData.append("model", "whisper-1");
-
-      const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
-        method: "POST",
-        headers: { "Authorization": "Bearer " + apiKey },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.text && data.text.trim().length > 1) return data.text.trim();
-      }
-    } catch (e) {
-      console.error("[AI AutoVN] Whisper STT error:", e.message);
-    }
-  }
-
-  return null;
-}
-
-// === AI Response Generation ===
-async function generateAIResponse(transcribedText, botConfig) {
-  const aiConfig = botConfig.aiHelp || {};
-  const apiKey = getApiKey("aiFallback") || getApiKey("openai");
-  const apiEndpoint = String(aiConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions");
-  const model = String(aiConfig.model || aiConfig.openaiModel || "gpt-4o-mini");
-  const geminiKey = String(aiConfig.geminiApiKey || "");
-
-  // Try Gemini API (if key available)
-  if (geminiKey) {
-    try {
-      const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + geminiKey,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: transcribedText }] }],
-            systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-            generationConfig: { temperature: 0.9, maxOutputTokens: 300 },
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text && text.trim().length > 1) return text.trim();
-      }
-    } catch (e) {
-      console.error("[AI AutoVN] Gemini response error:", e.message);
-    }
-  }
-
-  // Fallback: callAI (existing bot AI service)
+// ═══════════ MEMORI SHARING dengan .agent (format identik agent.js) ═══════════
+function readAgentHistory(db, chat) {
   try {
-    const reply = await callAI({
-      providerKey: "openai",
-      model: model,
-      messages: [
-        { role: "system", content: SYSTEM_INSTRUCTION },
-        { role: "user", content: transcribedText },
-      ],
-      apiKey: apiKey,
-      apiEndpoint: apiEndpoint,
-      temperature: 0.9,
-      maxTokens: 300,
+    const cur = db?.setting?.("agentMemory") || {};
+    return (cur[chat] || []).slice(-5).map(e => `- [${e.mode || "?"}] tugas: ${e.task} → hasil: ${e.summary}`);
+  } catch { return []; }
+}
+function writeAgentMemory(db, chat, task, mode, answer) {
+  try {
+    if (!db?.setting) return;
+    const cur = db.setting("agentMemory") || {};
+    const list = cur[chat] || [];
+    list.push({
+      t: Date.now(),
+      task: String(task || "").slice(0, 200),
+      mode: mode || "-",
+      summary: String(answer || "").replace(/\s+/g, " ").slice(0, 200),
     });
-    if (reply && reply.trim().length > 1) return reply.trim();
-  } catch (e) {
-    console.error("[AI AutoVN] callAI error:", e.message);
-  }
-
-  return null;
+    cur[chat] = list.slice(-20);
+    db.setting("agentMemory", cur);
+  } catch {}
 }
 
-// === REAL-TIME DETECTION FUNCTION (called from handler.js) ===
+// ═══════════ OTAK AI — NOVA AGENT (bicara lewat VN = ngobrol sama agent) ═══════════
+// Reaksi fase: 🧠 plan, 🔍 search, 🛠️ tool, ⚡ compose (aturan sistem loading)
+const PHASE_REACT = { plan: "🧠", search: "🔍", tool: "🛠️", act: "⚡", compose: "⚡" };
+async function aivBrain(userText, gid, sock, userKey) {
+  if (_brainImpl !== undefined) {
+    if (_brainImpl === null) throw new Error("brain down");
+    return _brainImpl(userText, { gid });
+  }
+  const db = getDatabase();
+  const history = readAgentHistory(db, gid);
+  const res = await runAgent(userText, {
+    history,
+    context: { isGroup: gid.endsWith("@g.us"), chat: gid, mediaAttached: false },
+    onPhase: (phase) => {
+      const react = PHASE_REACT[phase] || "🧠";
+      try { sock.sendReaction(gid, react, userKey); } catch {}
+    },
+  });
+  if (res?.error) throw new Error(res.error);
+  const answer = String(res?.answer || "").trim();
+  if (!answer) throw new Error("agent tidak menjawab");
+  writeAgentMemory(db, gid, userText, res.mode || "persona", answer);
+  return { answer, sources: res.sources || [], mode: res.mode || "persona" };
+}
+
+// ═══════════ KIRIM BALASAN (ikuti mode vn/teks) + catat id pesan AI ═══════════
+async function sendAivReply(sock, gid, cfg, aiReply, quotedMsg) {
+  const replyMode = cfg.replyMode || "vn";
+  const opts = quotedMsg ? { quoted: quotedMsg } : {};
+
+  if (replyMode === "teks") {
+    const sent = await sock.sendMessage(gid, { text: aiReply }, opts);
+    trackSent(gid, sent?.key?.id);
+    return "teks";
+  }
+
+  // mode VN — TTS → ogg → ptt
+  const voice = VOICE_OPTIONS.find(v => v.id === (cfg.voice || "gadis")) || VOICE_OPTIONS[0];
+  let mp3 = await edgeTTSBuffer(aiReply, voice.lang);
+  if (!mp3) mp3 = await edgeTTSBuffer(aiReply, "id-ID-ArdiNeural"); // fallback voice
+  if (!mp3) {
+    // TTS total gagal → balas teks biar user gak ditinggal
+    const sent = await sock.sendMessage(gid, { text: aiReply }, opts);
+    trackSent(gid, sent?.key?.id);
+    return "teks-fallback";
+  }
+  const ogg = await convertToOgg(mp3);
+  const sent = ogg
+    ? await sock.sendMessage(gid, { audio: ogg, mimetype: "audio/ogg; codecs=opus", ptt: true }, opts)
+    : await sock.sendMessage(gid, { audio: mp3, mimetype: "audio/mpeg" }, opts);
+  trackSent(gid, sent?.key?.id);
+  return "vn";
+}
+
+// ═══════════ REAL-TIME DETECTION (dipanggil dari handler.js) ═══════════
 export async function handleAiAutoVnInteraction(m, sock) {
   try {
     const db = getDatabase();
@@ -414,104 +371,107 @@ export async function handleAiAutoVnInteraction(m, sock) {
     const cfg = db.db.data.aiAutoVnInteraction[gid];
     if (!cfg || !cfg.enabled) return false;
 
-    // Check if message is voice note / audio
     const msg = m.message || {};
     const audioMsg = msg.audioMessage || msg.voiceMessage || msg.pttMessage;
-    if (!audioMsg) return false;
+    if (!audioMsg && !msg.extendedTextMessage) return false;
+    if (m.fromMe || m.isCommand) return false;
 
-    if (m.fromMe) return false;
-    if (m.isCommand) return false;
+    let userText = null;
 
-    const voiceId = cfg.voice || "gadis";
-    const botConfig = (await import("../../config.js")).default;
+    if (audioMsg) {
+      // ── jalur VN ──
+      const durasi = Math.round(audioMsg.seconds || 0);
+      if (durasi > MAX_DURASI_VN_DETIK) {
+        await sock.sendMessage(gid, {
+          text: claraWrap("AIV — Bicara dengan AI", [
+            "Pesan suaranya " + durasi + " detik — terlalu panjang.",
+            "Maksimal " + MAX_DURASI_VN_DETIK + " detik ya, atau ketik pertanyaannya saja.",
+          ]),
+        }, { quoted: m });
+        return true;
+      }
 
-    // Set "recording" presence — biar kelihatan hidup
-    try { await sock.sendPresenceUpdate("recording", m.key.remoteJid); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
-    try { await sock.sendReaction(m.key.remoteJid, "🕒", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+      try { await sock.sendPresenceUpdate("recording", gid); } catch {}
+      try { await sock.sendReaction(gid, "🕒", m.key); } catch {}
 
-    // Download audio
-    const buffer = await sock.downloadMediaMessage(m);
-    if (!buffer || buffer.length < 500) return false;
+      const buffer = await sock.downloadMediaMessage(m);
+      if (!buffer || buffer.length < 500) return false;
+      const mimeType = audioMsg.mimetype || "audio/ogg; codecs=opus";
 
-    const mimeType = audioMsg.mimetype || "audio/ogg; codecs=opus";
+      // STT — seam: function = mock; null = gagal; undefined = pipeline asli
+      let transcribed = null;
+      if (_sttImpl !== undefined) {
+        transcribed = _sttImpl === null ? null : await _sttImpl(buffer, mimeType);
+      } else {
+        transcribed = await transcribeAudio(buffer, mimeType);
+      }
 
-    // Step 1: Transcribe VN
-    let transcribedText = await transcribeVN(buffer, mimeType, botConfig);
+      if (!transcribed || !transcribed.trim()) {
+        try { await sock.sendReaction(gid, "❌", m.key); } catch {}
+        await sock.sendMessage(gid, {
+          text: claraWrap("AIV — Bicara dengan AI", [
+            "Suaranya belum jelas terdengar.",
+            "Coba rekam ulang lebih dekat ke mikrofon, atau ketik saja pertanyaannya.",
+          ]),
+        }, { quoted: m });
+        return true;
+      }
+      userText = transcribed;
+    } else {
+      // ── jalur TEKS — lanjut obrolan: reply ke pesan AI terakhir ──
+      const ctx = msg.extendedTextMessage?.contextInfo || {};
+      const tracked = _sentByChat.get(gid);
+      if (!tracked || !ctx.stanzaId || !tracked.has(ctx.stanzaId)) return false;
+      userText = (m.text || "").trim();
+      if (!userText) return false;
+      try { await sock.sendReaction(gid, "🕒", m.key); } catch {}
+    }
 
-    if (!transcribedText) {
-      try { await sock.sendReaction(m.key.remoteJid, "❌", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
-      await sock.sendMessage(m.key.remoteJid, {
-        text: claraWrap("AI VN Interaction", [
-          "Gagal transcribe voice note",
-          "Butuh API key untuk STT (speech-to-text)",
-          "Set di config: aiHelp.apiKey atau aiHelp.geminiApiKey",
-        ].join("\n")),
+    // ── AI berpikir (otak nova agent — reaksi fase 🧠🔍🛠️⚡) ──
+    let brainRes;
+    try {
+      brainRes = await aivBrain(userText, gid, sock, m.key);
+    } catch (e) {
+      console.error("[AIV] brain error:", e?.message || e);
+      try { await sock.sendReaction(gid, "❌", m.key); } catch {}
+      await sock.sendMessage(gid, {
+        text: claraWrap("AIV — Bicara dengan AI", "Maaf, saya gagal memproses pesannya. Coba kirim ulang ya."),
       }, { quoted: m });
       return true;
     }
-
-    // Step 2: Generate AI response (natural conversation)
-    let aiReply = await generateAIResponse(transcribedText, botConfig);
-
+    let aiReply = brainRes?.answer || "";
     if (!aiReply) {
-      try { await sock.sendReaction(m.key.remoteJid, "❌", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+      try { await sock.sendReaction(gid, "❌", m.key); } catch {}
       return true;
     }
 
-    // Clean up AI reply for TTS
-    aiReply = aiReply
+    // bersihkan buat suara: buang markdown/emoji berlebih/simbol box
+    const spoken = aiReply
       .replace(/[*#_~`]/g, "")
-      .replace(/\n{2,}/g, "\n")
       .replace(/\[.*?\]/g, "")
+      .replace(/[╭╰│├└─「」✦]/g, "")
+      .replace(/\n{2,}/g, "\n")
       .trim()
       .slice(0, 500);
 
-    // Step 3: Generate VN with neural TTS
-    const voice = VOICE_OPTIONS.find(v => v.id === voiceId) || VOICE_OPTIONS[0];
-    let vnBuffer = null;
+    const jalur = await sendAivReply(sock, gid, cfg, spoken, m);
 
-    if (voice.type === "topmedia") {
-      vnBuffer = await topMediaTTS(aiReply, voice.emotion || "Happy");
-    } else {
-      // Edge Neural TTS (primary — GRATIS, natural)
-      vnBuffer = await edgeTTS(aiReply, voice.lang);
+    // sumber web (mode research) → kirim ringkas sebagai TEKS setelah balasan
+    // biar link tetap kebaca (suara gak bisa ngucap URL enak)
+    const sources = (brainRes?.sources || []).slice(0, 3);
+    if (sources.length) {
+      try {
+        const srcTxt = claraWrap("AIV — Sumber", sources.map((s, i) => `${i + 1}. [${s.tag}] ${s.domain} — ${s.url}`));
+        await sock.sendMessage(gid, { text: srcTxt }, { quoted: m });
+      } catch {}
     }
 
-    // Fallback: try Edge TTS with default Indonesian voice
-    if (!vnBuffer) {
-      vnBuffer = await edgeTTS(aiReply, "id-ID-ArdiNeural");
-    }
-
-    if (!vnBuffer) {
-      // If all TTS fail, send text reply
-      try { await sock.sendReaction(m.key.remoteJid, "💬", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
-      await sock.sendMessage(m.key.remoteJid, {
-        text: claraWrap("AI VN Interaction", aiReply),
-      }, { quoted: m });
-      return true;
-    }
-
-    // Step 4: Convert to OGG Opus for WhatsApp VN
-    const oggBuffer = await convertToOgg(vnBuffer, ".mp3");
-
-    if (oggBuffer) {
-      await sock.sendMessage(m.key.remoteJid, {
-        audio: oggBuffer,
-        mimetype: "audio/ogg; codecs=opus",
-        ptt: true,
-      }, { quoted: m });
-    } else {
-      await sock.sendMessage(m.key.remoteJid, {
-        audio: vnBuffer,
-        mimetype: "audio/mpeg",
-      }, { quoted: m });
-    }
-
-    try { await sock.sendReaction(m.key.remoteJid, "🐣", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+    try { await sock.sendReaction(gid, "🐣", m.key); } catch {}
+    console.log("[AIV] balasan terkirim (" + jalur + "): " + spoken.slice(0, 60));
     return true;
   } catch (e) {
-    console.error("[AI AutoVN] Handler error:", e.message);
-    try { await sock.sendReaction(m.key.remoteJid, "❌", m.key); } catch (e) { console.error('[aiautointeractionvn.js]:', e.message); }
+    console.error("[AIV] Hook error:", e?.message || e);
+    try { await sock.sendReaction(m.key?.remoteJid, "❌", m.key); } catch {}
     return false;
   }
 }
@@ -529,3 +489,4 @@ export function isAiAutoVnEnabled(m, sock) {
 }
 
 export { pluginConfig as config, handler };
+export default { pluginConfig, handler };

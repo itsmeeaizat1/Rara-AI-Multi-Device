@@ -2,7 +2,10 @@
 // features.js — Toggle fitur, energi, registrasi, welcome/goodbye
 
 export const features = {
-  antiCall: true,
+  // 🔹 DEFAULT false (request owner 18 Sep: "tkutnya keluarga saya yg
+  // nlpon jd mngkin hrs ada opsi tolak telepon on off") — panggilan masuk
+  // TIDAK ditolak secara default. Atur per bot: .anticall on|info|off
+  antiCall: false,
   blockIfCall: false,
   autoTyping: false,
   autoRead: true,

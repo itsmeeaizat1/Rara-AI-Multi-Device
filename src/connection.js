@@ -1912,10 +1912,33 @@ async function startConnection(options = {}) {
   {
     const { getDatabase: _getDb } = await import("./lib/nova-database.js");
     const _db = _getDb();
-    if (_db.setting("antiCall") ?? config.features?.antiCall) {
+    // 🔹 ANTI-CALL 3 MODE (request owner 18 Sep: "lbh baik klo ada org yg
+    // nlpon tnpa ditolak mksdnya tkutnya keluarga saya yg nlpon jd mngkin
+    // hrs ada opsi tolak telepon on off"):
+    //   true  = TOLAK panggilan + kirim pesan (perilaku lama)
+    //   "info" = GAK ditolak (tetap bunyi), bot cuma kirim pesan info
+    //   false = gak melakukan apa-apa (DEFAULT — keluarga bisa nelpon biasa)
+    const __antiCallMode = _db.setting("antiCall") ?? config.features?.antiCall;
+    if (__antiCallMode === true || __antiCallMode === "info") {
       sock.ev.on("call", async (calls) => {
         for (const call of calls) {
           if (call.status === "offer") {
+            if (__antiCallMode === "info") {
+              // mode info: telepon DIBIARKAN (bunyi normal), cuma kasih
+              // tahu penelepon lewat chat bahwa bot gak bisa angkat
+              try {
+                const __callBotMode = getDatabase().setting("botMode") || config.mode || "public";
+                if (__callBotMode !== "self") {
+                  await sock.sendMessage(call.from, {
+                    text: config.messages?.callInfo || config.messages?.rejectCall,
+                  });
+                }
+              } catch (e) {
+                colors.logger.warn("Call", `Gagal kirim info panggilan: ${e.message}`);
+              }
+              colors.logger.info("Call", `Mode info — panggilan dari ${call.from} dibiarkan (tidak ditolak), pesan info terkirim`);
+              continue;
+            }
             colors.logger.warn("Call", `Menolak panggilan dari ${call.from}`);
             await sock.rejectCall(call.id, call.from);
 
