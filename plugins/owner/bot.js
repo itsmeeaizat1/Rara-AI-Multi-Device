@@ -46,7 +46,7 @@ async function broadcastStatusChange(sock, db, state) {
             'Semua fitur sudah bisa dipakai lagi seperti biasa.',
             '',
             'Terima kasih sudah menunggu.',
-        ].join('\\n')
+        ].join('\n')
 
     // kumpulin target: semua grup yang di-join
     const targets = new Set()

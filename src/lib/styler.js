@@ -123,3 +123,51 @@ export function boxLeft(title, content, width = 30) {
 export function boxMessage(title, content, width = 30) {
   return boxLeft(title, content, width);
 }
+
+/**
+ * SANITIZER FORMAT PERMANEN (fix 18 Sep 2026 — report owner: pesan
+ * ".bot on" muncul literal "\n" sebagai TEKS, bukan baris baru — akar:
+ * salah satu plugin nge-join pakai dua-backslash-n). Ini kelas bug yang
+ * gampang kejadian lagi di plugin lain (typo backslash, JSON round-trip,
+ * dsb) — dipasang SEKALI di titik terakhir sebelum kirim (m.reply +
+ * sock.sendMessage terpusat) biar SEMUA pesan bot, siapa pun yang nulis
+ * kodenya, otomatis bersih:
+ * - kombinasi backslash+r+backslash+n / backslash+n / backslash+t LITERAL
+ *   (karakter backslash+huruf, bukan whitespace sungguhan) → dikembalikan
+ *   jadi baris baru / spasi asli
+ * - spasi nyangkut di ujung baris → dibuang
+ * - 3+ baris kosong berurutan → dirapatkan jadi maks 1 baris kosong
+ * - trim di awal/akhir
+ * - ISI CODE FENCE (```...```) DIKIRIM PERSIS — fitur kode (tocode, json,
+ *   exec, dll) yang memang menampilkan literal backslash-n sebagai materi
+ *   belajar tidak rusak. Konsisten dengan proteksi smallcapsText.
+ * Aman dipanggil berulang (idempotent) — teks yang udah bersih gak kena
+ * efek apa pun.
+ * @param {*} text
+ * @returns {*} teks sudah bersih (non-string dibalikin apa adanya)
+ */
+export function formatGuard(text) {
+  if (typeof text !== "string" || !text) return text;
+  const BS = String.fromCharCode(92); // backslash literal
+  // pola regex untuk TEKS literal "backslash+r backslash+n" dst —
+  // BUKAN CR/LF asli: di sumber regex, backslash ganda = backslash literal
+  const reCRLF = new RegExp(BS + BS + "r" + BS + BS + "n", "g");
+  const reNL = new RegExp(BS + BS + "n", "g");
+  const reTab = new RegExp(BS + BS + "t", "g");
+
+  const NL = String.fromCharCode(10); // newline sungguhan sebagai hasil replace
+  const cleanChunk = (chunk) =>
+    chunk
+      .replace(reCRLF, NL)
+      .replace(reNL, NL)
+      .replace(reTab, "  ")
+      .replace(/[ \t]+\n/g, NL)
+      .replace(/\n{3,}/g, NL + NL);
+
+  // isi code fence dikirim persis — sama kayak proteksi smallcapsText
+  const chunks = text.split(/(```[\s\S]*?```)/g);
+  return chunks
+    .map((chunk) => (chunk.startsWith("```") ? chunk : cleanChunk(chunk)))
+    .join("")
+    .trim();
+}

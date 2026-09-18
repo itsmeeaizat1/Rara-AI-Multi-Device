@@ -100,8 +100,9 @@ t("cache hit: teks sama gak manggil Google lagi",
   try { await db.save(); } catch {}
 }
 
-w("\n— makeLangAwareSock: jalur sock.sendMessage LANGSUNG ikut ke-translate —");
+w("\n— makeLangAwareSock: jalur sock.sendMessage LANGSUNG ikut ke-translate + sanitizer permanen —");
 {
+  const bs = String.fromCharCode(92);
   const sent = [];
   const sock = {
     sendMessage: async (jid, params, options) => { sent.push({ jid, params, options }); return { key: { id: "m1" } }; },
@@ -117,14 +118,27 @@ w("\n— makeLangAwareSock: jalur sock.sendMessage LANGSUNG ikut ke-translate �
   t("field media gak disentuh", !!sent[1].params.image);
   t("method lain tetap ada (relayMessage dll)", typeof wrapped.relayMessage === "function");
 
-  // user tanpa bahasa → sock ASLI (zero overhead)
-  const plain = makeLangAwareSock(sock, "6289990000@s.whatsapp.net");
-  t("user tanpa preferensi → sock ASLI (zero overhead)", plain === sock);
-  // toggle OFF → sock asli juga
+  // GOTCHA sanitizer permanen (bug .bot on): sock.sendMessage LANGSUNG
+  // (broadcastStatusChange-style, bukan m.reply) tetap kena formatGuard —
+  // literal backslash-n jadi baris baru sungguhan, walau user gak punya
+  // preferensi bahasa aktif sama sekali.
+  const noLang = "6289990000@s.whatsapp.net";
+  const plain = makeLangAwareSock(sock, noLang);
+  t("user tanpa bahasa → sock TETAP dibungkus (demi sanitizer)", plain !== sock);
+  const literalNL = "Bot kembali aktif!" + bs + "nSemua fitur normal." + bs + "n" + bs + "nTerima kasih.";
+  await plain.sendMessage("g@x", { text: literalNL });
+  const expectedClean = "Bot kembali aktif!" + String.fromCharCode(10) + "Semua fitur normal." + String.fromCharCode(10) + String.fromCharCode(10) + "Terima kasih.";
+  t("literal backslash-n disanitasi jadi baris baru sungguhan (tanpa translate)",
+    sent[2].params.text === expectedClean,
+    JSON.stringify(sent[2].params.text));
+
+  // toggle OFF → translate mati, sanitizer TETAP hidup
   db.setting("multiLangEnabled", false);
   try { await db.save(); } catch {}
   const offSock = makeLangAwareSock(sock, SENDER);
-  t("toggle OFF → sock asli", offSock === sock);
+  await offSock.sendMessage("g@x", { text: literalNL });
+  t("toggle multi-lang OFF → sanitizer tetap jalan, translate mati",
+    sent[3].params.text === expectedClean);
   db.setting("multiLangEnabled", true);
   try { await db.save(); } catch {}
 }
