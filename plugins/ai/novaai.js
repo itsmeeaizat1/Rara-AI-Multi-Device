@@ -191,7 +191,7 @@ const pluginConfig = {
   alias: ["novaagent"], // request owner: cmd utama aja, tanpa alias lain
   category: "ai",
   description: "Nova Agent — ngatur grup, ngobrol multi-turn nyambung, scan gambar, & jalanin command bot via bahasa natural",
-  usage: ".novaagent <perintah/pertanyaan>\n.novaagent (reply/kirim gambar) — scan gambar: selesaikan tugas, baca foto, dll\n.novaagent reset — hapus sesi chat",
+  usage: ".novaagent <perintah/pertanyaan>\n.novaagent (reply/kirim gambar) — scan gambar: selesaikan tugas, baca foto, dll\n.novaagent reset — hapus sesi chat\n.novaagent pakai suara — jawaban dibacakan jadi VN\n.novaagent suara <gadis/ardi/dll> — pilih suara\n.novaagent suara off — matikan mode suara",
   example: ".novaagent tutup grup\n.novaagent apa itu nodejs\n.novaagent carikan musik faded\n.novaagent kick @user\n.novaagent (reply foto soal) selesaikan soal ini",
   isOwner: false,
   isPremium: false,
@@ -249,8 +249,66 @@ async function handler(m, { sock, conn, config, db }) {
     lines.push("");
     lines.push(`📸 Scan gambar: kirim foto + caption .novaagent <tanya>`);
     lines.push(`💡 Reset sesi chat: .novaagent reset`);
+    lines.push(`🎙️ Mode suara: .novaagent pakai suara — jawabanku dibacakan jadi voice note`);
     lines.push(`💡 Tanya apa saja, atau suruh aku ngapa`);
     return m.reply(claraWrap("novaagent", lines));
+  }
+
+  // 🔹 CHAT: MODE SUARA (request owner 18 Sep 2026: "apa g bsa gini aja
+  // .novaagent pakai suara (mode n aktif)" + ".novaagent suara ardi" +
+  // "jd cmd ttep nova agent gt" — command tetap .novaagent, jawaban
+  // dibacakan jadi voice note neural)
+  {
+    const { VOICE_OPTIONS, getVoiceCfg, setVoiceCfg } = await import("../../src/lib/nova-voice-reply.js");
+    const low = text.toLowerCase().trim();
+    const voiceOn = ["pakai suara", "suara on", "suara aktif", "suara aktifkan", "suara nyala", "suara aktifkan ya", "mode suara", "mode suara on", "mode suara aktif"].includes(low);
+    const voiceOff = ["suara off", "suara mati", "suara matikan", "suara nonaktif", "jangan pakai suara", "jangan pake suara", "tanpa suara", "mode suara off"].includes(low);
+    const voiceStatus = low === "suara" || low === "suara status" || low === "suara info" || low === "suara list";
+    const voiceMatch = low.match(/^suara\s+([a-z]+)$/);
+    if (voiceOn || voiceOff || voiceStatus || (voiceMatch && VOICE_OPTIONS.some(v => v.id === voiceMatch[1]))) {
+      if (voiceOn) {
+        setVoiceCfg(db, m.chat, { on: true });
+        const cfg = getVoiceCfg(db, m.chat);
+        return m.reply(claraWrap("novaagent suara", [
+          "Mode suara AKTIF di chat ini",
+          "Semua jawabanku akan dibacakan jadi voice note",
+          "Suara saat ini: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
+          "",
+          "Ganti suara: .novaagent suara ardi",
+          "Matikan: .novaagent suara off",
+        ]));
+      }
+      if (voiceOff) {
+        setVoiceCfg(db, m.chat, { on: false });
+        return m.reply(claraWrap("novaagent suara", [
+          "Mode suara NONAKTIF",
+          "Jawabanku kembali sebagai teks biasa",
+        ]));
+      }
+      if (voiceMatch && VOICE_OPTIONS.some(v => v.id === voiceMatch[1])) {
+        const v = VOICE_OPTIONS.find(v => v.id === voiceMatch[1]);
+        setVoiceCfg(db, m.chat, { voice: v.id, on: true });
+        return m.reply(claraWrap("novaagent suara", [
+          "Suara diubah: " + v.id,
+          "Nama: " + v.name,
+          "Mode suara: AKTIF (otomatis ikut nyala)",
+        ]));
+      }
+      // status / list
+      const cfg = getVoiceCfg(db, m.chat);
+      const lines = [
+        "Status mode suara: " + (cfg.on ? "AKTIF — jawabanku dibacakan jadi voice note" : "NONAKTIF — jawaban teks biasa"),
+        "Suara saat ini: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
+        "",
+        "Daftar suara:",
+      ];
+      VOICE_OPTIONS.forEach(v => lines.push("• " + v.id + " — " + v.name));
+      lines.push("");
+      lines.push("Aktifkan: .novaagent pakai suara");
+      lines.push("Ganti suara: .novaagent suara ardi");
+      lines.push("Matikan: .novaagent suara off");
+      return m.reply(claraWrap("novaagent suara", lines));
+    }
   }
 
   // 🔹 CHAT: reset sesi
@@ -299,6 +357,28 @@ async function handler(m, { sock, conn, config, db }) {
     for (let i = 1; ok && i < parts.length; i++) {
       try { await sock.sendMessage(m.chat, { text: parts[i] }, { quoted: m }); } catch { break; }
     }
+  };
+
+  // 🔹 VOICE REPLY (request owner 18 Sep 2026: ".novaagent pakai suara
+  // (mode n aktif)" — jawaban dibacakan jadi voice note neural).
+  // Dipanggil di SEMUA jalur jawaban final. return true = sudah dijawab
+  // pakai VN (pemanggil SKIP editFinal teks); return false = jawab teks biasa.
+  const voiceAnswer = async (finalText) => {
+    try {
+      if (typeof finalText !== "string" || !finalText.trim()) return false;
+      const { wantsVoice, getVoiceCfg, speakVoiceNote } = await import("../../src/lib/nova-voice-reply.js");
+      if (!wantsVoice(db, m.chat, textForAi)) return false;
+      const cfg = getVoiceCfg(db, m.chat);
+      const spoke = await speakVoiceNote(sock, m.chat, finalText, cfg.voice, { quoted: m });
+      if (!spoke) return false; // TTS mati → fallback teks biasa
+      // status box jadi catatan singkat; teks penuh tetap dikirim kalau ada link
+      if (/https?:\/\//i.test(finalText)) {
+        await editFinal(finalText);
+      } else {
+        await editFinal("🎙️ " + smallcapsText("jawabannya kuputarakan di voice note di atas ya"));
+      }
+      return true;
+    } catch { return false; }
   };
 
   // 🔹 ROTASI STATUS — fase loading berputar per 8 dtk (lib nova-status-rotate):
@@ -366,6 +446,7 @@ async function handler(m, { sock, conn, config, db }) {
           await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
         }
       }
+      if (visibleText && (await voiceAnswer(visibleText))) { await m.react("🐣"); return; }
       if (visibleText) await editFinal(visibleText);
       await m.react("🐣");
       return;
@@ -467,6 +548,7 @@ async function handler(m, { sock, conn, config, db }) {
           const result = await executeCommand(action, m, sock, config);
           if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
         }
+        if (visibleText && (await voiceAnswer(visibleText))) { await m.react("🐣"); return; }
         if (visibleText) await editFinal(visibleText);
         await m.react("🐣");
         return;
@@ -500,6 +582,7 @@ async function handler(m, { sock, conn, config, db }) {
         const result = await executeCommand(finalAction, m, sock, config);
         if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
       }
+      if (visibleText && (await voiceAnswer(visibleText))) { await m.react("🐣"); return; }
       if (visibleText) await editFinal(visibleText);
       await m.react("🐣");
       return;
@@ -584,7 +667,11 @@ async function handler(m, { sock, conn, config, db }) {
       ([toolKey, topicWord]) => toolKey !== decision.tool && naturalReply.toLowerCase().includes(topicWord.toLowerCase())
     );
     const confirmText = (naturalReply && !conflictTopic) ? naturalReply : (tool.done || naturalReply || "Selesai.");
-    await editFinal(confirmText);
+    if (await voiceAnswer(confirmText)) {
+      // jawaban eksekusi dibacakan VN — sesi tetap dicatat di bawah
+    } else {
+      await editFinal(confirmText);
+    }
     // 🔹 FIX 17 Sep 2026 (owner report: "buatkan gambar kucing" → gambar
     // terkirim → "carikan script md 5k fitur" → MALAH generate gambar LAGI).
     // AKAR: jalur tool-exec gak pernah nyatet hasil ke sesi → histori = 2 user
