@@ -4,6 +4,25 @@
 // Pakai Google Translate API (gratis) + static dictionary untuk common phrases
 import { SUPPORTED_LANGUAGES, getUserLanguage } from "./nova-language.js";
 
+// ── UN-SMALLCAPS (fix 18 Sep 2026, owner: "yg keubah cm caption doang") ──
+// ClaraWrap/menu kebentuk SMALLCAPS Unicode (ꜰɪᴛᴜʀ ᴍᴇɴᴜ...) SEBELUM nyampe
+// ke translateUI → Google Translate gak kenali glyph kecil itu → teks menu gak
+// pernah ke-translate (caption media yang polos Latin ya ke-translate).
+// Solusi: balikin dulu smallcaps → huruf biasa SEBELUM dikirim ke Google.
+const UN_SC = {
+  "\u1d00":"a","\u0299":"b","\u1d04":"c","\u1d05":"d","\u1d07":"e","\ua730":"f",
+  "\u0262":"g","\u029c":"h","\u026a":"i","\u1d0a":"j","\u1d0b":"k","\u029f":"l",
+  "\u1d0d":"m","\u0274":"n","\u1d0f":"o","\u1d18":"p","\u0280":"r","\ua731":"s",
+  "\u1d1b":"t","\u1d1c":"u","\u1d20":"v","\u1d21":"w","\u028f":"y","\u1d1e":"z",
+};
+export function unSmallcaps(text) {
+  let out = String(text || "");
+  for (const [glyph, ascii] of Object.entries(UN_SC)) {
+    out = out.split(glyph).join(ascii);
+  }
+  return out;
+}
+
 // Cache translation biar gak panggil API berulang untuk text yang sama
 const translationCache = new Map();
 const CACHE_MAX = 500;
@@ -134,18 +153,23 @@ export async function translateUI(text, sender) {
     const langInfo = SUPPORTED_LANGUAGES[lang];
     if (!langInfo) return text;
 
-    // 1. Coba dictionary dulu (cephal, gratis, no API)
-    const dictResult = translateWithDictionary(text, lang);
-    if (dictResult !== text) {
+    // 0. UN-SMALLCAPS: menu/claraWrap nyampe sini udah kebentuk ꜰɪᴛᴜʀ —
+    // balikin ke huruf biasa biar Google Translate kenali katanya.
+    const plain = unSmallcaps(text);
+    const wasSmallcaps = plain !== text;
+
+    // 1. Coba dictionary dulu (cephal, gratis, no API) — pakai versi plain
+    const dictResult = translateWithDictionary(plain, lang);
+    if (dictResult !== plain) {
       return dictResult;
     }
 
-    // 2. Cek cache
+    // 2. Cek cache (key = teks asli biar hit stabil)
     const cached = getCache(text, lang);
     if (cached) return cached;
 
-    // 3. Fallback: Google Translate API
-    const translated = await googleTranslate(text, lang, "id");
+    // 3. Fallback: Google Translate API (kirim versi PLAIN, bukan smallcaps)
+    const translated = await googleTranslate(plain, lang, "id");
 
     if (translated && translated.trim()) {
       const cleanResult = translated.trim();
