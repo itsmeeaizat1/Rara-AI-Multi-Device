@@ -58,6 +58,11 @@ function startWatchdog(reconnectFn, options) {
       console.log("");
       console.log("");
       console.log("");
+      // catat di jurnal koneksi biar owner bisa lihat via .connlog bahwa
+      // reconnect ini DISSENGAJA watchdog (30 menit hening), bukan error
+      try {
+        import("./lib/nova-conn-journal.js").then((j) => j.recordWatchdog(WATCHDOG_TIMEOUT / 60000));
+      } catch {}
       connectionState.isReady = false;
       connectionState.isConnected = false;
       try {
@@ -547,6 +552,17 @@ async function startConnection(options = {}) {
       };
 
       const statusMsg = STATUS_MESSAGES[sc] || `❔ Unknown (kode: ${sc})`;
+      // jurnal koneksi persist — biar alasan putus gak hilang di scroll
+      // console VPS, owner bisa audit via .connlog (fix 18 Sep 2026)
+      try {
+        import("./lib/nova-conn-journal.js").then((j) =>
+          j.recordDisconnect({
+            code: sc,
+            msg: statusMsg.replace(/[\u{1F300}-\u{1FAff}\u{2600}-\u{27bf}✦❌⚠️ ]/gu, "").trim(),
+            source: d?.error?.message || "",
+          })
+        );
+      } catch {}
       console.log("");
       console.log("「 ✦ DISCONNECTED ✦ 」");
       console.log("");
@@ -806,6 +822,21 @@ async function startConnection(options = {}) {
             colors.logger.warn("notif", "info section gagal dibangun: " + e.message);
           }
 
+          // jurnal koneksi: catat connect + ambil alasan putus terakhir
+          // (fix 18 Sep 2026 — biar owner langsung lihat KENAPA reconnect)
+          let lastDrop = null;
+          try {
+            const j = await import("./lib/nova-conn-journal.js");
+            j.recordConnect();
+            const entries = j.getJournal();
+            for (let i = entries.length - 1; i >= 0; i--) {
+              if (entries[i].type === "disconnect" || entries[i].type === "watchdog") {
+                lastDrop = entries[i];
+                break;
+              }
+            }
+          } catch {}
+
           const notifText = [
             "「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
             "",
@@ -819,8 +850,11 @@ async function startConnection(options = {}) {
             "",
             isFirstPair
               ? "_Bot baru saja tersambung untuk pertama kali._"
-              : "_Bot kembali aktif dan siap menerima pesan._"
-          ].join("\n");
+              : "_Bot kembali aktif dan siap menerima pesan._",
+            lastDrop
+              ? "_Terakhir putus: " + lastDrop.msg + (lastDrop.code ? " (kode " + lastDrop.code + ")" : "") + "_"
+              : "",
+          ].filter(Boolean).join("\n");
 
           for (const num of ownerNums) {
             try {

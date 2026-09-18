@@ -581,10 +581,10 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
     `Event *${subCmd}* tidak ada dalam daftar toggle.`,
     ``,
     { subHeader: "Event Tersedia" },
-    list.trim(),
+    ...list.trim().split("\n"),
     ``,
     tipText(`Contoh: \`${prefix}switch channel sewaRegister\``),
-  ].join("\n"), "error"))
+  ], "error"))
 }
 
 // ═══════════════════════════════════════════════════════════
