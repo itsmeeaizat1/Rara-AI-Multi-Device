@@ -2343,3 +2343,12 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - `_note` utama + `_note` per-section diupdate: cara baca file sekarang "restapi = nama+endpoint, fitur = daftar fitur bot, catatan = status/tambahan".
 - E2E: bootdoctor 36/36 + import 14/14 + fazzcode 21/21 + googleaimode 24/24 + roleplaychat 19/19 + router9v2 41/41 (semua jalur baca apikeys.json hijau).
 - VPS: `git pull && pm2 restart` (tanpa npm install) — file config saja, gak ada perilaku yang berubah.
+
+## UPGRADE .REMINI HD TINGGI — Ihancer Pro 4x (19 Sep 2026)
+- Request owner: "cba biar remini di enhance lbh tinggi biar jernihnya tuh hd bgt".
+- VERIFIED LIVE: param ihancer `is_pro_version=true` + `is_enhancing_more=true` → output 4x lipat + pass enhance kedua (input 200x150 → 800x600, vs 400x300 param lama).
+- FIX (plugins/tools/remini.js): jalur default .remini kini panggil ihancerEnhance pakai pro + enhancing-more; label "Ihancer AI Pro 4x + Poles (JPEG)"; caption kini nyebut RESOLUSI hasil "Quality: X.XMB (WxH)".
+- FIX (src/scraper/ihancer.js): 429 rate-limit kini RETRY OTOMATIS (3 percobaan, jeda 3 dtk — ketemu live pas tes param pro) + seam _setIhancer429WaitForTest.
+- Hasil >1920px tetep auto-document biar WA gak nge-compress; polish FFmpeg tetep pass terakhir (denoise low + sharpen balanced + color natural, JPEG q:v 2).
+- E2E remini 53→58 (+5: param is_pro_version kekirim, is_enhancing_more kekirim, caption resolusi, retry 429 sukses, 429 abis retry error informatif).
+- VPS: `git pull && pm2 restart` (tanpa npm install) → reply gambar + `.remini`.

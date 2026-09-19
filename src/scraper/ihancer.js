@@ -11,6 +11,8 @@ import axios from "axios";
 import FormData from "form-data";
 
 const ENHANCE_URL = "https://ihancer.com/api/enhance";
+const IHANCER_429_WAIT_MS = 3000; // jeda antar retry pas kena rate-limit
+const IHANCER_429_RETRIES = 2; // total 3 percobaan
 const DEFAULT_HEADERS = {
   accept: "*/*",
   "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -32,6 +34,11 @@ function _looksLikeImage(buf) {
     (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46)
   );
 }
+
+// jeda retry 429 — bisa dipendekin dari e2e biar test cepat
+let _429WaitMsForTest = null;
+function _429WaitMs() { return _429WaitMsForTest ?? IHANCER_429_WAIT_MS; }
+export function _setIhancer429WaitForTest(ms) { _429WaitMsForTest = typeof ms === "number" ? ms : null; }
 
 /**
  * Enhance gambar via ihancer.com.
@@ -65,18 +72,20 @@ export async function ihancerEnhance(imageBuffer, options = {}) {
   formData.append("max_image_size", String(maxImageSize));
   formData.append("file", imageBuffer, { filename, contentType: "image/jpg" });
 
-  let res;
-  if (typeof _http === "function") {
-    // jalur e2e — mock baca { url, data } kaya axios
-    res = await _http({
-      url: ENHANCE_URL,
-      data: formData,
-      headers: { ...formData.getHeaders(), ...DEFAULT_HEADERS },
-    });
-  } else if (_http === null) {
-    throw new Error("ihancer disabled (test)");
-  } else {
-    res = await axios.post(ENHANCE_URL, formData, {
+  // FIX 19 Sep 2026 (owner: "remini di enhance lbh tinggi biar jernihnya HD bgt"):
+  // ihancer gratis kena 429 kalau dipanggil rapat (ketemu live pas tes
+  // param pro) — sekarang retry otomatis dgn jeda, bukan gagal total.
+  const send = async () => {
+    if (typeof _http === "function") {
+      // jalur e2e — mock baca { url, data } kaya axios
+      return await _http({
+        url: ENHANCE_URL,
+        data: formData,
+        headers: { ...formData.getHeaders(), ...DEFAULT_HEADERS },
+      });
+    }
+    if (_http === null) throw new Error("ihancer disabled (test)");
+    return await axios.post(ENHANCE_URL, formData, {
       headers: { ...formData.getHeaders(), ...DEFAULT_HEADERS },
       responseType: "arraybuffer",
       maxBodyLength: Infinity,
@@ -84,6 +93,16 @@ export async function ihancerEnhance(imageBuffer, options = {}) {
       timeout: timeoutMs,
       validateStatus: () => true,
     });
+  };
+
+  let res;
+  for (let attempt = 0; ; attempt++) {
+    res = await send();
+    if ((res?.status ?? 0) === 429 && attempt < IHANCER_429_RETRIES) {
+      await new Promise((r) => setTimeout(r, _429WaitMs()));
+      continue; // 429 = antrean rame, key tetep valid — coba lagi
+    }
+    break;
   }
 
   const status = res?.status ?? 0;
