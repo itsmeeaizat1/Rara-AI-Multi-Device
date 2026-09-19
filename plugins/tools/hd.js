@@ -11,8 +11,8 @@ const pluginConfig = {
   alias: ["hd", "hdx"],
   category: "tools",
   description: "Enhance gambar jadi HD (Sharp Lanczos3 upscaler, no API key)",
-  usage: ".hd (reply gambar)\n.hd doc — kirim sebagai dokumen\n.hd 2x / 4x / 8x / 16x (angka polos juga bisa: .hd 16)",
-  example: ".hd\n.hd 4x doc",
+  usage: ".hd (reply gambar)\n.hd doc — kirim sebagai dokumen\n.hd 2 / 4 / 8 / 16 — angka polos = berapa kali lipat (huruf 'x' gak perlu; .hd 16x juga tetap diterima)",
+  example: ".hd\n.hd 16\n.hd 8 doc",
   cooldown: 15,
   energi: 1,
   isEnabled: true,
@@ -89,7 +89,7 @@ async function handler(m, { sock, args }) {
       "udah diupload sebelumnya, terus ketik .hd",
       "---",
       "Contoh    : .hd (reply gambar apa pun)",
-      "Scale     : .hd 4x (2x/4x/8x/16x)",
+      "Scale     : .hd 16 (2/4/8/16 — angka polos, tanpa x)",
       "Dokumen   : .hd doc (hasil dikirim jpg file)",
     ]));
   }
@@ -100,7 +100,8 @@ async function handler(m, { sock, args }) {
     const wantDoc = argList.includes("doc");
     // FIX 19 Sep 2026: ".hd 16" (angka polos) dulunya GAK dikenali (regex
     // nyari "16x" doang) → diem-diem fallback 2x; dan scale di-clamp max 8.
-    // Sekarang: angka polos + "16x" dua-duanya sah, range 2..16.
+    // Sekarang: angka polos + "16x" dua-duanya sah, range 2..16. "x" di
+    // "16x" itu cuma simbol kali (16 kali lipat), bukan huruf wajib.
     const scaleArg = argList.find((a) => /^\d{1,2}x?$/.test(a));
     let scale = scaleArg ? parseInt(scaleArg.replace("x", "")) : 2;
     scale = Math.max(2, Math.min(16, scale || 2));
