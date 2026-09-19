@@ -229,8 +229,8 @@ out(`\n${pass}/${pass + fail} pass`);
   db.data.users["6289999000001"] = { exp: 9000000000, koin: 0, saldo: 0 };
   let r8 = await buildMenuInfo(m8, { db, config: botConfig, uptime: 60000 });
   let lvl = r8.info.find((x) => x && x.label === "Level");
-  t("info section: owner exp 9e9 (plafon) → Level tampil (MAX), bukan (0%)",
-    lvl && lvl.value.includes("(MAX)") && !lvl.value.includes("(0%)"), JSON.stringify(lvl));
+  t("info section: owner exp 9e9 (plafon) → Level tampil (100%), bukan (0%)",
+    lvl && lvl.value.includes("(100%)") && !lvl.value.includes("(0%)"), JSON.stringify(lvl));
   const m9 = { sender: "6289999000099@s.whatsapp.net", pushName: "U", isOwner: false, isPremium: false, timestamp: 0 };
   db.data.users["6289999000099"] = { exp: 45000, koin: 0, saldo: 0 };
   r8 = await buildMenuInfo(m9, { db, config: botConfig, uptime: 60000 });
