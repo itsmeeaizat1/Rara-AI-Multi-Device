@@ -2327,3 +2327,10 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - FIX 2 (nova-menu-card.js): 3 label chip/popup masuk jalur translateUI (sebelum smallcaps) — "Pilih Kategori Menu", "Menu Selengkapnya", "Versi" kini ikut bahasa user. Otomatis kebagian .menu, .allmenu, .allmenucategory (sama-sama lewat sendMenuCard).
 - E2E: i18n 24→31 (+7: chunk >1500 char, ke-translate penuh, >1 request Google, jumlah baris utuh, 3 label chip/popup) + formatguard 20/20 + import 14/14.
 - VPS: `git pull && pm2 restart` (tanpa npm install) → .languagemenubot on → .languagemenubot en → .menu → .allmenu (teks + popup kategori + chip versi semua ke-translate).
+
+## FIX Boot Doctor: Laporan Nyebut Nama Rest API + Endpoint + Format Gak Membingungkan (19 Sep 2026)
+- Report owner: "apikey expired dr rest api apa aja bot doctor soalnya ga nyebut nama rest api atau dr endpoint yg mananya" + "sdikit membingungkan format pesan si bot doctor g bsa bedain nama rest api dan mana nama fiturnya".
+- AKAR: format lama "Cuki API — .gita .gpt4o — HTTP 401" nyampur semua jadi satu baris — gak keliatan mana nama SITUS rest api (domain endpoint), mana nama key di apikeys.json, mana nama fitur yang kena dampak.
+- FIX (nova-boot-doctor.js): tiap item jadi baris berlabel eksplisit: nama brand di bullet, lalu "Rest API: <domain endpoint yang di-probe> · key apikeys.json: <nama key>", lalu "Fitur kena dampak: <daftar fitur> — HTTP <kode>". Endpoint gratis diberi label "(tanpa key)". Hint ganti key digabung SEKALI di akhir dengan daftar lengkap nama key yang bermasalah (dulu per-kategori kepisah).
+- E2E bootdoctor 30→36 (+6: domain rest api muncul, nama key apikeys.json muncul, daftar key bermasalah gabungan, label "Rest API:", label "Fitur kena dampak:", label "tanpa key").
+- VPS: `git pull && pm2 restart` (tanpa npm install) → restart bot → DM owner / ketik `.bootdoctor` buat lihat format baru.
