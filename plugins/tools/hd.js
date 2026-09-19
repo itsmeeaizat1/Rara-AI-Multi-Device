@@ -124,7 +124,13 @@ async function handler(m, { sock, args }) {
     caption += `Size: ${sizeMB}MB\n`;
     caption += `Engine: Sharp Lanczos3 (Local)${capped ? ` — scale diturunin dari ${scale}x (batas ${MAX_OUTPUT_PX}px)` : ""}\n`;
     
-    if (wantDoc || outW > 1920 || outH > 1920 || resultBuffer.length > 5 * 1024 * 1024) {
+    // Hasil DI ATAS 1080p → otomatis document (instruksi owner: WA bakal
+    // nge-compress kalau dikirim sebagai image — document jaga kualitas HD).
+    // 1080p = 1920x1080, orientasi-agnostik: sisi PANJANG lewat 1920 ATAU
+    // sisi PENDEK lewat 1080 (contoh 1600x1600 = di atas 1080p → document).
+    const longSide = Math.max(outW, outH);
+    const shortSide = Math.min(outW, outH);
+    if (wantDoc || longSide > 1920 || shortSide > 1080 || resultBuffer.length > 5 * 1024 * 1024) {
       await sock.sendMessage(
         m.chat,
         {
