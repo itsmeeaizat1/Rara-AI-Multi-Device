@@ -17,14 +17,25 @@ const HEADERS = {
 
 
 // LRCLIB kadang 503 "server busy" (transient) — retry 1x dengan jeda 1.5 dtk
+// ── seam (pola repo): fn=mock, null=DISABLED, undefined=asli ──
+let _http;
+export function _setLrclibHttpForTest(fn) { _http = fn; }
+
 async function lrclibGet(url, config) {
+  const doGet = async () => {
+    if (_http !== undefined) {
+      if (_http === null) throw new Error("lrclib http DISABLED (test)");
+      return _http(url, config);
+    }
+    return axios.get(url, config);
+  };
   try {
-    return await axios.get(url, config);
+    return await doGet();
   } catch (e) {
     const retryable = e?.response?.status === 503 || e?.response?.status === 429;
     if (!retryable) throw e;
     await new Promise((r) => setTimeout(r, 1500));
-    return axios.get(url, config);
+    return doGet();
   }
 }
 

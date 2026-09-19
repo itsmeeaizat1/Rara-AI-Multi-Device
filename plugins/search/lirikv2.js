@@ -94,11 +94,13 @@ async function handler(m, { sock }) {
             lyrics = lyrics.slice(0, 3500) + "\n\n... (lirik dipotong)"
         }
 
-        const lines = lyrics.split("\n").map(l => l).join("\n")
-        const text =
-            (result.title || "Unknown") + "\n" +
-            "by " + (result.artist || "Unknown") + "\n" +
-            lines + "\n"
+        // format owner 19 Sep: judul/artis/album/durasi → lirik
+        const meta = await enrichLyricsMeta(result.title, result.artist)
+        const text = lyricsCaption({
+            title: result.title, artist: result.artist,
+            album: meta?.album, duration: meta?.duration,
+            lyrics,
+        })
 
         // Kirim dengan thumbnail jika ada
         if (result.thumbnail) {

@@ -14,6 +14,17 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 
+// ── seam (pola repo): fn=mock, null=DISABLED, undefined=asli ──
+let _http;
+export function _setGeniusHttpForTest(fn) { _http = fn; }
+async function httpGet(url, config) {
+  if (_http !== undefined) {
+    if (_http === null) throw new Error("genius http DISABLED (test)");
+    return _http(url, config);
+  }
+  return axios.get(url, config);
+}
+
 const HEADERS = {
   "User-Agent":
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -27,7 +38,7 @@ const HEADERS = {
  * @returns {Promise<string>} teks lirik
  */
 export async function getLyricsByUrl(songUrl) {
-  const response = await axios.get(songUrl, { headers: HEADERS, timeout: 15000 });
+  const response = await httpGet(songUrl, { headers: HEADERS, timeout: 15000 });
   const $ = cheerio.load(response.data);
 
   // Hapus elemen yang bukan bagian dari lirik (credit header, script, style)
@@ -73,7 +84,7 @@ export async function searchSongLyrics(query) {
   }
 
   const searchUrl = `https://genius.com/api/search/multi?per_page=5&q=${encodeURIComponent(query.trim())}`;
-  const response = await axios.get(searchUrl, { headers: HEADERS, timeout: 15000 });
+  const response = await httpGet(searchUrl, { headers: HEADERS, timeout: 15000 });
   const sections = response.data?.response?.sections || [];
 
   const songSection = sections.find((sec) => sec.type === "song");

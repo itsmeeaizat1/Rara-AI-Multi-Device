@@ -5,6 +5,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 import { searchSongLyrics } from '../../src/scraper/genius-lyrics.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/nova-lyrics-format.js";
 
 async function fetchLyrics(judul) {
   try {
@@ -55,11 +56,14 @@ async function handler(m, { sock }) {
                     const lyricsText2 = g.lyrics.length > 3500
                         ? g.lyrics.slice(0, 3500) + "\n\n... (lirik dipotong, lengkapnya di " + g.url + ")"
                         : g.lyrics
+                    // format owner 19 Sep: judul/artis/album/durasi → lirik
+                    const meta2 = await enrichLyricsMeta(g.title, g.artist);
                     const caption2 =
-                        `${g.title}\n` +
-                        `by ${g.artist}\n` +
-                        `\n${lyricsText2}\n` +
-                        `\nSource: Genius`
+                        lyricsCaption({
+                            title: g.title, artist: g.artist,
+                            album: meta2?.album, duration: meta2?.duration,
+                            lyrics: lyricsText2,
+                        }) + `\n\nSource: Genius`
                     await m.react("🐣")
                     if (g.thumbnail) {
                         try {
@@ -81,13 +85,15 @@ async function handler(m, { sock }) {
         const title = data.title || query
         const artist = data.artist || data.lyrics.artist_name || 'Tidak diketahui'
         const lyricsText = data.lyrics.plain_lyrics
-        
-        const texts = `Ketemu nih liriknya! 🎉\n\n` +
-                      `🎵 *ᴊᴜᴅᴜʟ:* ${title}\n` +
-                      `🎤 *ᴀʀᴛɪꜱ:* ${artist}\n\n` +
-                      `Ini dia lirik lengkapnya buat kamu:\n\n` +
-                      `${lyricsText}\n\n` +
-                      `Selamat bernyanyi ria, kak! 🎧💖`
+
+        // format owner 19 Sep: judul/artis/album/durasi → lirik
+        // (nexray gak punya album/durasi → enrich dari LRCLIB, gagal senyap)
+        const meta = await enrichLyricsMeta(title, artist)
+        const texts = lyricsCaption({
+            title, artist,
+            album: meta?.album, duration: meta?.duration,
+            lyrics: lyricsText,
+        })
                       
         if (data.thumbnail && data.thumbnail !== '-') {
             await sock.sendMessage(m.chat, {
