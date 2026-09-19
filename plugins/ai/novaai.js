@@ -366,11 +366,18 @@ async function handler(m, { sock, conn, config, db }) {
   const voiceAnswer = async (finalText) => {
     try {
       if (typeof finalText !== "string" || !finalText.trim()) return false;
-      const { wantsVoice, getVoiceCfg, speakVoiceNote } = await import("../../src/lib/nova-voice-reply.js");
+      const { wantsVoice, getVoiceCfg, speakVoiceNote, diagnoseVoiceTts, voiceFailHint } = await import("../../src/lib/nova-voice-reply.js");
       if (!wantsVoice(db, m.chat, textForAi)) return false;
       const cfg = getVoiceCfg(db, m.chat);
       const spoke = await speakVoiceNote(sock, m.chat, finalText, cfg.voice, { quoted: m });
-      if (!spoke) return false; // TTS mati → fallback teks biasa
+      // 🔹 FIX 19 Sep 2026 (owner: "voice udh on, .novaagent hai malah dibalas
+      // teks bkn vn"): dulu TTS gagal → SENYAP balik teks biasa → owner gak
+      // tau kenapa. Sekarang kegagalannya KELIATAN + diagnosa penyebabnya.
+      if (!spoke) {
+        const issues = await diagnoseVoiceTts();
+        await editFinal(finalText + "\n\n" + voiceFailHint(issues));
+        return true; // sudah dijawab (teks + catatan) — pemanggil jangan kirim dobel
+      }
       // status box jadi catatan singkat; teks penuh tetap dikirim kalau ada link
       if (/https?:\/\//i.test(finalText)) {
         await editFinal(finalText);
