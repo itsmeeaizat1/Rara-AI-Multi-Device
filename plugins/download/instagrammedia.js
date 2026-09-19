@@ -14,6 +14,7 @@ import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
 import { claraWrap, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -174,12 +175,11 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Instagram Media", `Post ini gak ada video — coba .igimage buat ambil fotonya`));
       }
       for (const item of videos.slice(0, 5)) {
-        const caption = mediaCaption({
-          platformIcon: "📸",
-          platformName: "Instagram",
+        // format owner 19 Sep — disamakan ke semua downloader
+        const caption = tiktokCaption({
+          header: "Instagram Downloader",
           title,
-          format: "Video MP4",
-          method: "Instagram DL",
+          download: "MP4",
         });
         await sock.sendMessage(m.chat, {
           video: { url: item.url },
@@ -205,13 +205,12 @@ async function handler(m, { sock }) {
         await m.react("❗");
         return m.reply(claraWrap("Instagram Media", `Post ini gak ada foto — coba .igvideo buat ambil videonya`));
       }
-      const caption = mediaCaption({
-        platformIcon: "📸",
-        platformName: "Instagram",
+      // format owner 19 Sep — disamakan ke semua downloader
+      const caption = tiktokCaption({
+        header: "Instagram Downloader",
         title,
-        format: `Foto (${images.length})`,
-        method: "Instagram DL",
-      }) + `\nLink: ${url}`;
+        download: `Foto (${images.length})`,
+      }) + `\n🔗 *Link:* ${url}`;
       for (let i = 0; i < images.slice(0, 10).length; i++) {
         const content = { image: { url: images[i].url } };
         if (i === 0) {
@@ -239,13 +238,12 @@ async function handler(m, { sock }) {
       }
       const isDirectAudio = video.type === "audio" || /\.(mp3|m4a|ogg|opus)(\?|$)/i.test(video.url);
       const audioBuffer = isDirectAudio ? null : await extractMp3(video.url);
-      const caption = mediaCaption({
-        platformIcon: "📸",
-        platformName: "Instagram",
+      // format owner 19 Sep — disamakan ke semua downloader
+      const caption = tiktokCaption({
+        header: "Instagram Downloader",
         title,
-        format: "🎵 MP3 (128kbps)",
-        method: "Instagram DL + FFmpeg",
-      }) + `\nLink: ${url}`;
+        download: "MP3",
+      }) + `\n🔗 *Link:* ${url}`;
       if (audioBuffer) {
         await sock.sendMessage(m.chat, {
           audio: audioBuffer,

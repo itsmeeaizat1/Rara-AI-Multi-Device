@@ -40,7 +40,7 @@ export function fmtNum(v) {
 export function fmtTiktokDuration(sec) {
   if (sec === null || sec === undefined || sec === "") return "";
   const s = typeof sec === "string" ? sec.trim() : String(sec);
-  if (/^\d{1,2}:\d{1,2}$/.test(s)) {
+  if (/^\d+:\d{1,2}$/.test(s)) {
     const [mm, ss] = s.split(":").map((x) => parseInt(x, 10));
     return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
   }
@@ -56,6 +56,7 @@ export function fmtTiktokDuration(sec) {
  * @returns {string}
  */
 export function tiktokCaption({
+  header = "TikTok Downloader",
   title, uploader, username, duration, views, likes, comments, shares, download,
 } = {}) {
   const handle = (() => {
@@ -65,7 +66,7 @@ export function tiktokCaption({
   })();
 
   const lines = [
-    "*TikTok Downloader*",
+    `*${String(header).trim() || "TikTok Downloader"}*`,
     "",
     title ? `📝 *Judul:* ${String(title).trim()}` : "",
     uploader ? `👤 *Uploader:* ${String(uploader).trim()}` : "",
