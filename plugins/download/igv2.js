@@ -6,6 +6,7 @@ import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import instagramDownloader from "../../src/scraper/ig.js";
 import { novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import te from "../../src/lib/nova-error.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -70,11 +71,11 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       for (const item of result.medias) {
         if (item.type === "video") {
-          const _cap = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Video", method: "IkyyXD" });
+          const _cap = tiktokCaption({ header: "Instagram Downloader", title: result.title || "Instagram Media", download: "MP4" });
           await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap, contextInfo: ctxInfo }, { quoted: m });
           await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: result.title, sourceUrl: url });
         } else {
-          const _cap2 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Image", method: "IkyyXD" });
+          const _cap2 = tiktokCaption({ header: "Instagram Downloader", title: result.title || "Instagram Media", download: "Foto" });
           await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap2, contextInfo: ctxInfo }, { quoted: m });
           await m.reply(novaBerhasil("IG V2"));
         }
@@ -93,11 +94,11 @@ async function handler(m, { sock }) {
         await m.reply(novaBerhasil("IG V2"));
         for (const item of igResult.media) {
           if (item.type === "video") {
-            const _cap3 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Video", method: "ig scraper" });
+            const _cap3 = tiktokCaption({ header: "Instagram Downloader", title: igResult.title || "Instagram Media", download: "MP4" });
             await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap3, contextInfo: ctxInfo }, { quoted: m });
             await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: igResult.title, sourceUrl: url });
           } else {
-            const _cap4 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Image", method: "ig scraper" });
+            const _cap4 = tiktokCaption({ header: "Instagram Downloader", title: igResult.title || "Instagram Media", download: "Foto" });
             await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap4, contextInfo: ctxInfo }, { quoted: m });
           }
           break;

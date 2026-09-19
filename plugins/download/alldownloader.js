@@ -30,6 +30,7 @@ import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { haidarAio } from "../../src/lib/nova-haidar.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import {
   novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan,
@@ -259,18 +260,16 @@ async function sendMedia(sock, m, session, opt, meta) {
     sourceUrl: session.url,
     thumbnailUrl: meta.cover || meta.thumbnail || "",
   });
-  const caption = mediaCaption({
-    platformName: style.name,
-    platformIcon: style.icon,
+  // format owner 19 Sep — disamakan ke semua downloader
+  const caption = tiktokCaption({
+    header: `${style.name} Downloader`,
     title,
-    author: meta.author || null,
-    authorHandle: meta.authorHandle || null,
+    uploader: meta.author || null,
+    username: meta.authorHandle || null,
     duration: meta.duration || null,
     views: meta.views || null,
     likes: meta.likes || null,
-    description: meta.description || null,
-    format: opt.label,
-    method: session.source,
+    download: opt.label,
   });
 
   if (opt.type === "audio") {

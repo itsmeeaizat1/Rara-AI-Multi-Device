@@ -70,7 +70,19 @@ t("fmtTiktokDuration: 0/kosong → ''", fmtTiktokDuration(0) === "" && fmtTiktok
   t("caption: username '-' → baris hilang", !tiktokCaption({ username: "-" }).includes("Username"));
 }
 
-// ── 5 plugin pakai tiktokCaption + label download sesuai kemampuan ──
+// ── header dinamis per platform (request lanjutan owner: fitur lain disamakan) ──
+{
+  const cap = tiktokCaption({ header: "YouTube Downloader", title: "Nova Video", uploader: "Nova Channel", duration: "2:40", views: 1234567, download: "720p" });
+  t("caption: header dinamis — 'YouTube Downloader' bukan TikTok", cap.startsWith("*YouTube Downloader*\n\n📝 *Judul:* Nova Video"));
+  t("caption: durasi '2:40' → dipadding '02:40'", cap.includes("⏱️ *Durasi:* 02:40"));
+  t("caption: views 1234567 → '1,234,567'", cap.includes("👁️ *Views:* 1,234,567"));
+  t("caption: download 720p (kualitas jujur per fitur)", cap.includes("⬇️ *Download:* 720p"));
+  t("caption: header kosong → fallback TikTok Downloader", tiktokCaption({ header: "" }).startsWith("*TikTok Downloader*"));
+  const capLong = tiktokCaption({ header: "All Downloader", duration: "120:30" });
+  t("caption: durasi >99 menit tetap utuh", capLong.includes("⏱️ *Durasi:* 120:30"));
+}
+
+// ── 5 plugin TikTok pakai tiktokCaption + label download sesuai kemampuan ──
 {
   const files = {
     "plugins/download/tiktokdl.js": ['tiktokCaption({', 'download: zann?.type === "nowatermark_hd" ? "HD" : "SD"'],
@@ -86,8 +98,29 @@ t("fmtTiktokDuration: 0/kosong → ''", fmtTiktokDuration(0) === "" && fmtTiktok
   }
 }
 
-// ── smoke import 5 plugin ──
-for (const p of ["plugins/download/tiktokdl.js", "plugins/download/tiktokdl2.js", "plugins/download/tiktokv3.js", "plugins/download/tiktokv4.js", "plugins/download/tiktokmedia.js"]) {
+// ── 10 plugin downloader lain disamakan formatnya ──
+{
+  const files = {
+    "plugins/download/alldl.js": ['tiktokCaption({', '`${platform.name} Downloader`'],
+    "plugins/download/alldownloader.js": ['tiktokCaption({', '`${style.name} Downloader`'],
+    "plugins/download/ytmp4.js": ['tiktokCaption({', '"YouTube Downloader"'],
+    "plugins/download/ytmp3.js": ['tiktokCaption({', '"YouTube Downloader"'],
+    "plugins/download/ytmp4v3.js": ['tiktokCaption({', '"YouTube Downloader"'],
+    "plugins/download/ytmp3v3.js": ['tiktokCaption({', '"YouTube Downloader"'],
+    "plugins/download/douyindl.js": ['tiktokCaption({', '"Douyin Downloader"'],
+    "plugins/download/twitterdl.js": ['tiktokCaption({', '"Twitter/X Downloader"'],
+    "plugins/download/instagrammedia.js": ['tiktokCaption({', '"Instagram Downloader"'],
+    "plugins/download/igv2.js": ['tiktokCaption({', '"Instagram Downloader"'],
+  };
+  for (const [f, needles] of Object.entries(files)) {
+    const src = fs.readFileSync(path.join(REPO, f), "utf8");
+    t(f + " → pakai tiktokCaption satu pintu", src.includes(needles[0]));
+    t(f + " → header platform sesuai fitur", src.includes(needles[1]));
+  }
+}
+
+// ── smoke import 15 plugin ──
+for (const p of ["plugins/download/tiktokdl.js", "plugins/download/tiktokdl2.js", "plugins/download/tiktokv3.js", "plugins/download/tiktokv4.js", "plugins/download/tiktokmedia.js", "plugins/download/alldl.js", "plugins/download/alldownloader.js", "plugins/download/ytmp4.js", "plugins/download/ytmp3.js", "plugins/download/ytmp4v3.js", "plugins/download/ytmp3v3.js", "plugins/download/douyindl.js", "plugins/download/twitterdl.js", "plugins/download/instagrammedia.js", "plugins/download/igv2.js"]) {
   try {
     await import(pathToFileURL(path.join(REPO, p)).href);
     t("import " + p + " OK", true);
