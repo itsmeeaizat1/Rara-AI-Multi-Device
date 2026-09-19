@@ -6,6 +6,7 @@ import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -90,13 +91,12 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("tiktokv3", text);
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      const caption = mediaCaption({
-        platformIcon: "🎵", platformName: "TikTok V3",
+      // format owner 19 Sep
+      const caption = tiktokCaption({
         title: ikyyResult.title || "TikTok Video",
-        author: ikyyResult.author || null,
+        uploader: ikyyResult.author || null,
         duration: ikyyResult.duration || null,
-        description: ikyyResult.description ? String(ikyyResult.description).slice(0, 120) : null,
-        format: "Video (No Watermark)", method: "IkyyXD",
+        download: "SD",
       });
       await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption,
@@ -128,15 +128,15 @@ async function handler(m, { sock }) {
       });
       const buffer = Buffer.from(vidRes.data);
 
-      const caption = mediaCaption({
-        platformIcon: "🎵", platformName: "TikTok V3",
+      // format owner 19 Sep
+      const caption = tiktokCaption({
         title: r.title || r.desc || "TikTok Video",
-        author: r.author || r.username || null,
-        duration: r.duration ? `${r.duration}s` : null,
-        views: r.play_count ? parseInt(r.play_count).toLocaleString() : null,
-        likes: r.digg_count ? parseInt(r.digg_count).toLocaleString() : null,
-        format: `Video (${(buffer.length / 1024 / 1024).toFixed(1)} MB)`,
-        method: "Sanka + tikwm",
+        uploader: r.author || null,
+        username: r.username || null,
+        duration: r.duration || null,
+        views: r.play_count || null,
+        likes: r.digg_count || null,
+        download: "SD",
       });
 
       await sock.sendMessage(m.chat, {

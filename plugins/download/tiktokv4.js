@@ -2,6 +2,7 @@
 // tiktokv4.js — TikTok Downloader V4 via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { claraWrap, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -61,13 +62,12 @@ async function handler(m, { sock }) {
 
     if (result?.medias?.length) {
       const video = result.medias.find(m => m.type === "video") || result.medias[0];
-      const caption = mediaCaption({
-        platformIcon: "🎵", platformName: "TikTok V4",
+      // format owner 19 Sep
+      const caption = tiktokCaption({
         title: result.title || "TikTok Video",
-        author: result.author || null,
+        uploader: result.author || null,
         duration: result.duration || null,
-        description: result.description ? String(result.description).slice(0, 120) : null,
-        format: "Video (No Watermark)", method: "IkyyXD",
+        download: "SD",
       });
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
