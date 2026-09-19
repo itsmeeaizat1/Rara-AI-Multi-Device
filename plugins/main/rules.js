@@ -5,9 +5,9 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
     name: 'rules',
-    alias: ["rules"],
+    alias: ["rules", "peraturan", "ketentuan"],
     category: 'main',
-    description: 'Menampilkan rules/aturan bot',
+    description: 'Peraturan & ketentuan penggunaan bot (plain text)',
     usage: '.rules',
     example: '.rules',
     isOwner: false,
@@ -47,22 +47,17 @@ async function handler(m, { sock, config: botConfig }) {
             }
         }
 
-        const tableData = rulesList.map((rule, i) => [
-            `${i + 1}`,
-            rule
-        ])
-
-        await sock.sendTable(
-            m.chat,
-            '📜 Aturan Bot',
-            ['No', 'Rule'],
-            tableData,
-            m,
-            {
-                headerText: `${botConfig.bot?.name || 'Nova-AI'} *ʀᴜʟᴇꜱ*`,
-                footer: 'Pelanggaran dapat mengakibatkan banned / kick!'
-            }
-        )
+        // Request owner 20 Sep 2026: ganti table/sheet jadi plain text
+        // "peraturan ketentuan penggunaan bot" — simpel, gampang dibaca di semua device.
+        const botName = botConfig.bot?.name || 'Nova-AI'
+        const lines = [
+            `📜 *Peraturan & Ketentuan Penggunaan ${botName}*`,
+            '',
+            ...rulesList.map((rule, i) => `${i + 1}. ${rule}`),
+            '',
+            '⚠️ Pelanggaran dapat mengakibatkan banned / kick!',
+        ]
+        await m.reply(claraWrap('Peraturan Penggunaan Bot', lines))
     } catch (e) {
         m.reply(novaError("Rules", "Ada error nih saat ambil rules"))
     }
