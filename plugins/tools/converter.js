@@ -6,6 +6,7 @@ import { downloadContentFromMessage } from "nova";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
 const pluginConfig = {
   name: "converter",
   alias: ["converter"],
@@ -111,6 +112,13 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
+    // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+    await m.reply(mediaInfoCaption({ header: "Nova Converter", fields: [
+      { icon: "📥", label: "Input", value: `${String(ext).toUpperCase()} (${fmtBytes(buffer.length)})` },
+      { icon: "📤", label: "Output", value: String(targetFormat).toUpperCase() },
+      { icon: "⚙️", label: "Engine", value: "Nova Converter" },
+      { icon: "⬇️", label: "Hasil", value: "Dokumen" },
+    ] }));
   } catch (err) {
     await m.react("❌");
     console.error("[Converter] Error:", err.message);
