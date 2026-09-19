@@ -311,31 +311,10 @@ function buildNativeButtons(buttons = []) {
  * @param {string} [opts.title] - Nama bot, dipakai di subjudul "Kode: <title>"
  * @param {string} [opts.adTitle] - Override judul banner (default: greeting waktu, mis. "Selamat Pagi 🌅")
  */
-// ── Auto-resolve ID newsletter dari link invite ──
-// config.saluran.id sering placeholder (@newsletter) — owner cukup kasih
-// LINK channel, ID numerik (120363xxx@newsletter) di-resolve sekali via
-// sock.newsletterMetadata("invite", kode) lalu di-cache.
-let _cachedNewsletterJid = null;
-async function resolveNewsletterJid(sock) {
-  const saluranId = config.saluran?.id || "";
-  if (/^\d+@newsletter$/.test(saluranId)) return saluranId;
-  if (_cachedNewsletterJid) return _cachedNewsletterJid;
-  try {
-    const link = config.saluran?.link || "";
-    const m = /^https:\/\/whatsapp\.com\/channel\/([A-Za-z0-9_-]+)/.exec(link);
-    if (m && sock?.newsletterMetadata) {
-      const meta = await sock.newsletterMetadata("invite", m[1]);
-      if (meta?.id && /^\d+@newsletter$/.test(meta.id)) {
-        _cachedNewsletterJid = meta.id;
-        logger.info?.("[nova-menu-card] Saluran auto-resolve:", meta.id);
-        return meta.id;
-      }
-    }
-  } catch (e) {
-    console.error("[nova-menu-card] Auto-resolve saluran gagal:", e.message);
-  }
-  return "120363404849776664@newsletter"; // fallback sama dengan .ptvch
-}
+// ── Auto-resolve ID newsletter: SEKARANG SATU PINTU di nova-saluran.js ──
+// (dulu resolver duplikat di sini — sama persis dengan yang bot.js butuhin,
+//  tapi bot.js gak pernah makai → notif .bot off/on gak pernah nyampe saluran)
+import { resolveNewsletterJid } from "./nova-saluran.js";
 
 async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "", adTitle = "", plain = false }) {
   try {

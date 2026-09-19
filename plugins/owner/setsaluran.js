@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { persistSaluranConfig } from "../../src/lib/nova-saluran.js";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -50,12 +51,14 @@ async function handler(m, { sock }) {
       "   Contoh: .setsaluran https://whatsapp.com/channel/1234567890abcdef\n\n" +
       "2. Atau set manual di config.js bagian saluran.id\n" +
       "   Format ID: 120363xxx@newsletter\n\n" +
-      "3. Bikin saluran baru: .buatsaluran <nama>", "setsaluran");
+      "3. Bikin saluran baru: .buatsaluran <nama>\n\n" +
+      "Cuma mau convert link → ID? Ketik: .saluranid <link>", "setsaluran");
   }
 
   // Parse input - could be a link or an ID
   let saluranId = "";
   let saluranLink = "";
+  let saluranName = config.saluran?.name || "Nova AI Official";
 
   if (input.includes("whatsapp.com/channel/")) {
     // It's a link - extract channel code
@@ -73,6 +76,7 @@ async function handler(m, { sock }) {
 
       if (metadata?.id) {
         saluranId = metadata.id;
+        if (metadata?.name) saluranName = metadata.name;
       } else {
         // If can't get ID, save the link and let owner set ID manually
         return m.reply(claraWrap("setsaluran", [
@@ -119,46 +123,24 @@ async function handler(m, { sock }) {
     ]));
   }
 
-  // Update config.js file
+  // Persist ke FILE YANG BENER (src/lib/config/bot-identity.js — dulu nulis ke
+  // config.js yang cuma import reference → regex gak pernah match → ID hilang pas restart)
   try {
-    const configPath = path.resolve(__dirname, "../../config.js");
-    let configContent = fs.readFileSync(configPath, "utf8");
-
-    // Update saluran.id
-    const oldId = config.saluran?.id || "@newsletter";
-    configContent = configContent.replace(
-      /id:\s*["']@newsletter["']/,
-      'id: "' + saluranId + '"'
-    );
-
-    // Update saluran.link if we have a new one
-    if (saluranLink && saluranLink !== "https://whatsapp.com/channel/") {
-      const oldLink = config.saluran?.link || "https://whatsapp.com/channel/";
-      configContent = configContent.replace(
-        new RegExp('link:\\s*["]' + oldLink.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '["]'),
-        'link: "' + saluranLink + '"'
-      );
-    }
-
-    fs.writeFileSync(configPath, configContent);
-
-    // Update runtime config
-    config.saluran.id = saluranId;
-    if (saluranLink) config.saluran.link = saluranLink;
-
+    persistSaluranConfig({ id: saluranId, link: saluranLink, name: saluranName });
 
     let replyText = "*ꜱᴀʟᴜʀᴀɴ ʙᴇʀʜᴀꜱɪʟ ᴅɪ-ꜱᴇᴛ*\n\n";
     replyText += "ID: " + saluranId + "\n";
     replyText += "Link: " + saluranLink + "\n";
-    replyText += "Nama: " + (config.saluran?.name || "Nova AI Official") + "\n\n";
+    replyText += "Nama: " + saluranName + "\n\n";
     replyText += "Broadcast ke saluran sekarang *aktif*.\n";
-    replyText += "Event yang dikirim: daftarsewa, jadibot, ban, block, sewa approve/reject/expired";
+    replyText += "Event yang ikut: notif bot on/off/mute, daftarsewa, jadibot, ban, block, sewa approve/reject/expired\n\n";
+    replyText += "Cuma mau liat ID saluran? Ketik: .saluranid <link>";
 
     return m.reply(replyText);
   } catch (e) {
     return m.reply(
-      "Gagal update config: " + (e.message || "Unknown error") + "\n\n" +
-      "Set manual di config.js:\n" +
+      "Gagal update config: " + (e.message || "Unknown") + "\n\n" +
+      "Set manual di src/lib/config/bot-identity.js:\n" +
       'saluran: { id: "' + saluranId + '", ... }'
     );
   }

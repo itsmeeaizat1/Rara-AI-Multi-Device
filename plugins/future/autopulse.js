@@ -2,6 +2,8 @@
 import { CronJob } from "cron";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { resolveNewsletterJid } from "../../src/lib/nova-saluran.js";
+import { sendSaluranSafe } from "../../src/lib/nova-saluran-safe.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -241,12 +243,14 @@ async function generateAndPostReport(db, groupId, sock) {
   savePulseData(db, groupId, data);
 
   // Post to saluran
-  const saluranId = config.saluran?.id || "";
   const wrappedReport = claraWrap("AutoPulse Report", report);
-
-  if (saluranId && saluranId.includes("@newsletter")) {
+  let saluranId = "";
+  try { saluranId = await resolveNewsletterJid(sock) } catch {}
+  if (saluranId && /^\d+@newsletter$/.test(saluranId)) {
     try {
-      await sock.sendMessage(saluranId, {
+      // saluran: WAJIB sendSaluranSafe — payload kartu/tombol disanitasi biar
+      // gak kena "pesan tidak didukung" di WA channel
+      await sendSaluranSafe(sock, saluranId, {
         text: wrappedReport,
         contextInfo: {
           forwardingScore: 0,

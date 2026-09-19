@@ -249,9 +249,11 @@ function startAutoJob(db, sock) {
           const filePath = tempPath(voiceResult.ext);
           fs.writeFileSync(filePath, voiceResult.buffer);
 
-          // Post to saluran
-          const saluranId = config.saluran?.id || "";
-          if (saluranId && saluranId.includes("@newsletter")) {
+          // Post to saluran — FIX 19 Sep 2026: dulu `saluranId.includes("@newsletter")`
+          // lolos terus sama placeholder "@newsletter" → sendMessage ke JID palsu → gagal senyap.
+          const { resolveNewsletterJid } = await import("../../src/lib/nova-saluran.js");
+          const saluranId = await resolveNewsletterJid(sock).catch(() => "");
+          if (saluranId && /^\d+@newsletter$/.test(saluranId)) {
             await sock.sendMessage(saluranId, {
               audio: await toVoiceNote(fs.readFileSync(filePath)),
               mimetype: "audio/ogg; codecs=opus",
