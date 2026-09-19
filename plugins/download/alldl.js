@@ -24,6 +24,7 @@ import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { haidarAio } from "../../src/lib/nova-haidar.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
@@ -381,22 +382,19 @@ async function runSessionDownload(sock, m, session, choice) {
     sourceUrl: url,
     thumbnailUrl: aioMeta.thumbnail || result.thumbnail_url || "",
   });
-  const caption = mediaCaption({
-    platform: platform.name,
-    platformIcon: platform.icon,
-    title: title,
-    author: aioMeta.author || null,
-    authorHandle: aioMeta.authorHandle || null,
+  // format owner 19 Sep (disamakan ke semua downloader): judul/uploader/username/
+  // durasi/view/like/komentar/share/download — header dinamis per platform
+  const caption = tiktokCaption({
+    header: `${platform.name} Downloader`,
+    title,
+    uploader: aioMeta.author || null,
+    username: aioMeta.authorHandle || null,
     duration: aioMeta.duration || null,
-    uploadDate: aioMeta.uploadDate || null,
     views: aioMeta.views || null,
     likes: aioMeta.likes || null,
     comments: aioMeta.comments || null,
     shares: aioMeta.shares || null,
-    downloads: aioMeta.downloads || null,
-    description: aioMeta.description || null,
-    format: formatLabel,
-    method: methodTag,
+    download: isAudio ? "MP3" : isImage ? "Foto" : (result.format || "HD"),
   });
 
   try {

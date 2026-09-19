@@ -87,15 +87,14 @@ async function handler(m, { sock }) {
     await m.react("🐣");
 
     const durStr = `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`;
-    let msg = mediaCaption({
-      platformIcon: "▶️",
-      platformName: "YouTube MP4 v3",
+    // format owner 19 Sep — disamakan ke semua downloader
+    let msg = tiktokCaption({
+      header: "YouTube Downloader",
       title,
-      author,
+      uploader: author || null,
       duration: durStr,
-      views: parseInt(views).toLocaleString(),
-      format: `Video ${format.qualityLabel || "unknown"} (${(buffer.length / 1024 / 1024).toFixed(1)} MB)`,
-      method: "@distube/ytdl-core",
+      views: views || null,
+      download: format.qualityLabel || "MP4",
     });
 
     await sock.sendMessage(m.chat, {
