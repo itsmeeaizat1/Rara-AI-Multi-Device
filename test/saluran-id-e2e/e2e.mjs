@@ -75,7 +75,7 @@ ch = await getSaluranChannel(chanSock("OWNER"));
 t("2b. bot OWNER di saluran → boleh kirim", ch.ok === true);
 _resetSaluranCacheForTest();
 ch = await getSaluranChannel(chanSock("SUBSCRIBER"));
-t("2c. bot cuma SUBSCRIBER → skip (reason bukan-admin)", ch.ok === false && ch.reason === "bukan-admin");
+t("2c. bot cuma SUBSCRIBER → skip (reason bot-bukan-admin)", ch.ok === false && ch.reason === "bot-bukan-admin");
 _resetSaluranCacheForTest();
 ch = await getSaluranChannel({ newsletterMetadata: async (type) => type === "invite" ? { id: NUM_JID } : null });
 t("2d. metadata jid gak kebaca → tetap coba kirim (ok)", ch.ok === true);

@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
-import { persistSaluranConfig } from "../../src/lib/nova-saluran.js";
+import { persistSaluranConfig, normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -72,7 +72,9 @@ async function handler(m, { sock }) {
     // Try to get newsletter ID from the link
     try {
       // Try to fetch newsletter metadata
-      const metadata = await sock.newsletterMetadata("invite", channelCode).catch(() => null);
+      const metadata = normalizeNewsletterMeta(
+        await sock.newsletterMetadata("invite", channelCode).catch(() => null),
+      );
 
       if (metadata?.id) {
         saluranId = metadata.id;

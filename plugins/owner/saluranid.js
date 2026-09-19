@@ -3,7 +3,7 @@
 // Request owner 19 Sep 2026: "g ada fitur url saluran wa convert jadi id newsletternya".
 // Berguna buat: .setsaluran manual, target broadcast saluran, integrasi fitur channel lain.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { resolveNewsletterJid } from "../../src/lib/nova-saluran.js";
+import { resolveNewsletterJid, normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -85,15 +85,15 @@ async function handler(m, { sock }) {
     await m.react("🔍");
     let meta = null;
     try {
-      meta = await sock.newsletterMetadata("jid", jid).catch(() => null);
+      meta = normalizeNewsletterMeta(await sock.newsletterMetadata("jid", jid).catch(() => null));
     } catch {}
     await m.react("🐣");
     return m.reply(claraWrap("Saluran ID", [
       `ID : ${jid}`,
       `Nama : ${meta?.name || "(metadata gak kebaca)"}`,
-      `Follower : ${meta?.subscribers != null ? meta.subscribers.toLocaleString("id-ID") : "-"}`,
+      `Follower : ${meta?.followers != null ? meta.followers.toLocaleString("id-ID") : "-"}`,
       `Status : ${meta?.state || "-"}`,
-      `Verified : ${meta?.verified === true ? "✅ ya" : "❌ bukan"}`,
+      `Verified : ${meta?.verification === "VERIFIED" ? "✅ ya" : "❌ bukan"}`,
       "",
       meta?.id ? "ID valid & aktif ✅" : "ID gak bisa diverifikasi (saluran gak ada / bot gak join)",
     ].join("\n")));
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
   await m.react("🔍");
   let meta = null;
   try {
-    meta = await sock.newsletterMetadata("invite", invite).catch(() => null);
+    meta = normalizeNewsletterMeta(await sock.newsletterMetadata("invite", invite).catch(() => null));
   } catch {}
 
   if (!meta?.id || !/^\d+@newsletter$/.test(meta.id)) {
@@ -135,9 +135,9 @@ async function handler(m, { sock }) {
     `ID : ${meta.id}`,
     `Link : https://whatsapp.com/channel/${invite}`,
     `Nama : ${meta.name || "-"}`,
-    `Follower : ${meta.subscribers != null ? meta.subscribers.toLocaleString("id-ID") : "-"}`,
+    `Follower : ${meta.followers != null ? meta.followers.toLocaleString("id-ID") : "-"}`,
     `Status : ${meta.state || "-"}`,
-    `Verified : ${meta.verified === true ? "✅ ya" : "❌ bukan"}`,
+    `Verified : ${meta.verification === "VERIFIED" ? "✅ ya" : "❌ bukan"}`,
     "",
     "Mau jadiin saluran utama bot? Ketik:",
     `.setsaluran https://whatsapp.com/channel/${invite}`,

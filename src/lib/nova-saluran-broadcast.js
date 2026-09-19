@@ -80,8 +80,16 @@ async function broadcastToSaluran(sock, message, options = {}) {
     // semua payload lewat nova-saluran-safe (tombol/interaktif/quoted dibuang,
     // gagal → retry versi polos) biar follower gak pernah lihat
     // "Pesan WhatsApp tidak didukung".
+    // DESAIN 19 Sep 2026: notif ke saluran sekarang pakai banner preview card
+    // branding Nova (externalAdReply di-keep sanitizer) — isi teks tetap plain
+    // (aturan owner 5 Sep: notifikasi otomatis = plain text).
     const { sendSaluranSafe } = await import("./nova-saluran-safe.js");
-    const msgPayload = { text: message, ...options };
+    const { notifBanner } = await import("./nova-notif-card.js");
+    const banner = await notifBanner({
+      title: "Nova AI Official",
+      body: "notifikasi otomatis · nova",
+    });
+    const msgPayload = { text: message, contextInfo: banner, ...options };
     await sendSaluranSafe(sock, saluranId, msgPayload);
     return { sent: true, saluranId };
   } catch (e) {

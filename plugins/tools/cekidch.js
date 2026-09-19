@@ -1,3 +1,4 @@
+import { normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
@@ -58,7 +59,7 @@ async function handler(m, { sock, args }) {
 
   try {
     await m.react("🕒");
-    const res = await sock.newsletterMetadata("invite", result);
+    const res = normalizeNewsletterMeta(await sock.newsletterMetadata("invite", result));
 
     if (!res || !res.id) {
       await m.react("🐣");
@@ -68,7 +69,7 @@ async function handler(m, { sock, args }) {
 
     const chId = res.id;
     const chName = res.name || "Unknown";
-    const chSubs = formatSubs(res.subscribers ?? 0);
+    const chSubs = formatSubs(res.followers ?? 0);
     const chVerified = res.verification === "VERIFIED" ? "Terverifikasi" : "Tidak";
     const chCreated = formatDate(res.creation_time);
     const chDesc = res.description || "—";

@@ -30,6 +30,7 @@ import { getApiKey } from "./nova-api-keys.js";
 import { getApiKeys } from "./config/env-loader.js";
 import { getDatabase } from "./nova-database.js";
 import { claraWrap } from "./nova-menu-style.js";
+import { sendNotif } from "./nova-notif-card.js";
 
 const STATE_FILE = path.join(process.cwd(), "src", "data", "bootdoctor.json");
 const THROTTLE_MS = 30 * 60 * 1000; // anti-spam DM pas restart loop
@@ -431,7 +432,17 @@ export async function runAndReport({ send = true } = {}) {
     const jid = getOwnerJid();
     if (sockInstance && jid) {
       try {
-        await sockInstance.sendMessage(jid, { text: report });
+        // DESAIN 19 Sep 2026 (owner: "notif bot doctor g pakai desain skrg kyk
+        // desain .play") — DM laporan kini pakai banner preview card branding
+        // Nova (thumbnail channel-banner renderLarger), isi teks tetap utuh.
+        const problems = results.filter(r => r.status !== "ok" && r.status !== "nokey");
+        const okCount = results.length - problems.length;
+        await sendNotif(sockInstance, jid, report, {
+          title: "Boot Doctor — Nova AI",
+          body: problems.length
+            ? "⚠ " + problems.length + " masalah · " + okCount + " sehat"
+            : "✅ semua fitur sehat",
+        });
       } catch (e) {
         console.error("[bootdoctor] kirim DM gagal:", e.message);
       }

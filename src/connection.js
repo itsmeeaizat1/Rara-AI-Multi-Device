@@ -867,9 +867,16 @@ async function startConnection(options = {}) {
               : "",
           ].filter(Boolean).join("\n");
 
+          // DESAIN 19 Sep 2026 — notif sistem (Bot Online / boot doctor / broadcast
+          // status) sekarang pakai banner preview card branding Nova (nova-notif-card),
+          // sama kayak desain .play / anime notifier. Isi teks gak berubah.
+          const { sendNotif } = await import("./lib/nova-notif-card.js");
           for (const num of ownerNums) {
             try {
-              await sock.sendMessage(num + "@s.whatsapp.net", { text: notifText });
+              await sendNotif(sock, num + "@s.whatsapp.net", notifText, {
+                title: "「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
+                body: (config.bot?.name || "Nova-AI") + " aktif kembali",
+              });
               colors.logger.info("notif", "bot online terkirim ke owner: " + num);
             } catch (e) {
               colors.logger.warn("notif", "gagal kirim ke " + num + ": " + e.message);
