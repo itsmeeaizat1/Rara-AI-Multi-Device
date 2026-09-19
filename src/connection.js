@@ -681,6 +681,17 @@ async function startConnection(options = {}) {
         console.error("[bootdoctor] Failed to start boot doctor:", e.message);
       }
 
+      // 🔹 ALWAYS ONLINE: presence keepalive — bot kelihatan online 24 jam
+      // (.alwaysonline on/off, heartbeat "available" tiap N menit)
+      try {
+        const { startAlwaysOnline } = await import("./lib/nova-always-online.js");
+        if (startAlwaysOnline(sock)) {
+          console.log("│ ✅ Always Online aktif (presence keepalive)");
+        }
+      } catch (e) {
+        console.error("[alwaysonline] gagal start:", e.message);
+      }
+
       // 🔹 REMINDER RESTORE + ALARM SCHEDULER: reminder aktif dari db
       // dipasang ulang timer-nya (yang kelewat dikirim notif "terlewat"),
       // alarm HH:MM harian dicek tiap 30 dtk — dua-duanya sekarang
@@ -1423,6 +1434,22 @@ async function startConnection(options = {}) {
               )
               .catch(() => {});
           }
+          // 🔹 AUTO DOWNLOAD STATUS (.swsave): status kontak → DM owner
+          try {
+            const ownerNums0 = (config.owner?.number || ["628174887770"])
+              .map((n) => String(n).replace(/[^0-9]/g, ""))
+              .filter(Boolean);
+            if (ownerNums0.length && participant) {
+              const { maybeForwardStatus } = await import(
+                "./lib/nova-status-download.js"
+              );
+              maybeForwardStatus(
+                currentSock,
+                msg,
+                `${ownerNums0[0]}@s.whatsapp.net`,
+              ).catch(() => {});
+            }
+          } catch {}
         } catch (e) {
           colors.logger.debug("story", `auto story error: ${e.message}`);
         }
