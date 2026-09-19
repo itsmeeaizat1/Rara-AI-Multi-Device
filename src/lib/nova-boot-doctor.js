@@ -232,8 +232,23 @@ function resolveKey(name) {
   }
 }
 
+// FIX 19 Sep 2026 (owner: "boot doctor ga nyebut nama rest api atau dr
+// endpoint yg mananya"): laporan dulu cuma "label — fitur — HTTP kode".
+// Owner gak bisa tau key yg expired itu milik SITUS REST API yang mana
+// (nama key di apikeys.json beda dari nama brandnya, cth key "cuki" =
+// api.cuki.biz.id). Sekarang tiap item nyebut DOMAIN endpoint yang
+// di-probe + nama key persis di apikeys.json.
+function hostOf(url) {
+  try { return new URL(url).host; } catch { return ""; }
+}
+
 async function probeOne(probe, isKeyProbe) {
-  const result = { label: probe.label, features: probe.features || "", kind: isKeyProbe ? "key" : "endpoint" };
+  const result = {
+    label: probe.label, features: probe.features || "",
+    kind: isKeyProbe ? "key" : "endpoint",
+    keyName: isKeyProbe ? probe.key : "",
+    host: "",
+  };
   try {
     const key = isKeyProbe ? resolveKey(probe.key) : "";
     if (isKeyProbe && !key) {
@@ -241,6 +256,7 @@ async function probeOne(probe, isKeyProbe) {
       return result;
     }
     const url = typeof probe.url === "function" ? probe.url(key) : (probe.url || undefined);
+    result.host = hostOf(url);
     const headers = probe.headers ? probe.headers(key) : {};
     const http = doctorHttp || fetch;
     const res = await http(url, {
@@ -304,6 +320,7 @@ export function buildBootReport(results) {
 
   const problems = Object.entries(CATEGORY_META).sort((a, b) => a[1].order - b[1].order);
   let problemCount = 0;
+  const badKeys = []; // nama key apikeys.json yg key_invalid/quota — dikumpulin buat hint gabungan
   for (const [status, meta] of problems) {
     const items = byStatus[status] || [];
     if (!items.length) continue;
@@ -311,16 +328,35 @@ export function buildBootReport(results) {
     lines.push("");
     lines.push(meta.icon + " " + meta.title + " (" + items.length + ")");
     for (const it of items) {
-      let detail = "• " + it.label;
-      if (it.features) detail += " — " + it.features;
-      if (it.error) detail += " — " + it.error;
-      else if (it.httpStatus) detail += " — HTTP " + it.httpStatus;
-      lines.push(detail);
+      // FIX 19 Sep (owner: "g bsa bedain nama rest api dan mana nama fiturnya"):
+      // format LAMA "Cuki API — .gita .gpt4o — HTTP 401" nyampur jadi satu —
+      // gak keliatan mana nama SITUS rest api, mana nama FITUR. Sekarang tiap
+      // item pake baris berlabel eksplisit biar gak ketukar:
+      //   • Cuki API
+      //     Rest API: api.cuki.biz.id · key apikeys.json: cuki
+      //     Fitur kena dampak: .gita .gpt4o .nayaai — HTTP 401
+      lines.push("• " + it.label);
+      if (it.keyName) {
+        lines.push("  Rest API: " + (it.host || "-") + " · key apikeys.json: " + it.keyName);
+      } else if (it.host) {
+        lines.push("  Rest API: " + it.host + " (tanpa key)");
+      }
+      let dampak = "  Fitur kena dampak: " + (it.features || "-");
+      if (it.error) dampak += " — " + it.error;
+      else if (it.httpStatus) dampak += " — HTTP " + it.httpStatus;
+      lines.push(dampak);
     }
     if (status === "key_invalid" || status === "quota") {
-      lines.push("");
-      lines.push("💡 Ganti key di src/lib/apikey/apikeys.json lalu ketik .reloadkey (tanpa restart)");
+      badKeys.push(...items.filter(it => it.keyName).map(it => it.keyName));
     }
+  }
+
+  // hint GABUNGAN sekali (dulu per-kategori — key expired & quota kepisah,
+  // owner harus scan 2 tempat buat tau key mana aja yang diganti)
+  if (badKeys.length) {
+    lines.push("");
+    lines.push("💡 Key bermasalah di apikeys.json: " + badKeys.join(", ")
+      + " — ganti valuenya lalu ketik .reloadkey (tanpa restart)");
   }
 
   const okKeys = (byStatus.ok || []).filter(r => r.kind === "key").length;

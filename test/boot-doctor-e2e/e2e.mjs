@@ -84,9 +84,9 @@ mod._setDoctorHttpForTest(async (url, opts = {}) => {
 
 w("\n— 3. laporan: kelompok + format (fixture mix) —");
 const fixture = [
-  { label: "Cuki API", features: ".gita .gpt4o", kind: "key", status: "key_invalid", httpStatus: 401 },
-  { label: "Termai", features: ".logicbell", kind: "key", status: "quota", httpStatus: 402 },
-  { label: "MAGMA Indonesia", features: "gunung api", kind: "endpoint", status: "down", error: "timeout" },
+  { label: "Cuki API", features: ".gita .gpt4o", kind: "key", keyName: "cuki", host: "api.cuki.biz.id", status: "key_invalid", httpStatus: 401 },
+  { label: "Termai", features: ".logicbell", kind: "key", keyName: "termai", host: "api.termai.cc", status: "quota", httpStatus: 402 },
+  { label: "MAGMA Indonesia", features: "gunung api", kind: "endpoint", host: "magma.esdm.go.id", status: "down", error: "timeout" },
   { label: "Pollinations", features: ".sdxl", kind: "endpoint", status: "endpoint_err", httpStatus: 404 },
   { label: "ZelAPI", features: "suite z", kind: "key", status: "ok" },
   { label: "Open-Meteo", features: "cuaca", kind: "endpoint", status: "ok" },
@@ -103,6 +103,14 @@ const ROK = norm(reportAllOk);
 t("semua sehat → pesan sehat 🎉", ROK.includes("sehat") && !ROK.includes("expired"), ROK.slice(0, 120));
 t("laporan itung key kosong (fixture 1 nokey)", R.includes("key kosong"), R.slice(0, 160));
 t("laporan kasih hint ganti key + .reloadkey", R.includes("reloadkey") || R.includes("sehat"), R.slice(0, 140));
+// FIX 19 Sep: laporan wajib nyebut NAMA SITUS (domain endpoint) + nama key apikeys.json
+t("laporan nyebut domain rest api yg di-probe (api.cuki.biz.id)", R.includes("api.cuki.biz.id"), R.slice(0, 200));
+t("laporan nyebut nama key persis apikeys.json (key apikeys.json: cuki)", R.includes("key apikeys.json: cuki"), R.slice(0, 200));
+t("hint ganti key nyebut DAFTAR key bermasalah (cuki, termai)", R.includes("cuki, termai"), R.slice(0, 240));
+// FIX 19 Sep (owner: g bsa bedain nama rest api vs nama fitur) — label eksplisit
+t("baris rest api & fitur DIPISAH label eksplisit (Rest API:)", R.includes("rest api:"), R.slice(0, 240));
+t("baris fitur berlabel (Fitur kena dampak:)", R.includes("fitur kena dampak:"), R.slice(0, 240));
+t("endpoint gratis diberi label (tanpa key)", R.includes("tanpa key"), R.slice(0, 240));
 
 w("\n— 4. throttle + kirim DM owner —");
 // reset state baru
