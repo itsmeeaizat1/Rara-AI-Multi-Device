@@ -376,10 +376,21 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // (fix 18 Sep 2026 — menu card gak lewat m.reply, jadi wajib hook sendiri.
     //  Google gak kenali glyph smallcaps → translate HARUS duluan.)
     const _mlSender = m.sender || m.key?.participant || m.key?.remoteJid || "";
+    // FIX 19 Sep 2026 (owner: "tombol menu ke translate tp tdk dgn menu dan
+    // allmenu biasa"): dua label chip/popup ini SEBELUMNYA hardcoded bahasa
+    // Indonesia, gak pernah lewat translateUI sama sekali (beda dari body/
+    // footer/buttons di atas yang sudah ke-translate) — makanya popup kategori
+    // & chip versi keliatan campur: isi baris translated, judul/tombolnya gak.
+    let _mListTitle = "Pilih Kategori Menu";
+    let _mButtonTitle = "Menu Selengkapnya";
+    let _mVersiLabel = "Versi";
     if (needsTranslation(_mlSender)) {
       try {
         if (typeof text === "string" && text) text = await translateUI(text, _mlSender);
         if (typeof footer === "string" && footer) footer = await translateUI(footer, _mlSender);
+        _mListTitle = await translateUI(_mListTitle, _mlSender);
+        _mButtonTitle = await translateUI(_mButtonTitle, _mlSender);
+        _mVersiLabel = await translateUI(_mVersiLabel, _mlSender);
         if (Array.isArray(buttons) && buttons.length) {
           buttons = await Promise.all(buttons.map(async (b) => {
             if (!b || typeof b !== "object") return b;
@@ -507,15 +518,15 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
 
     const _mFlowParams = JSON.stringify({
       limited_time_offer: {
-        text: `${toSC(botName)} • ${toSC("Versi")} ${botVersion || "24.0.0"}`,
+        text: `${toSC(botName)} • ${toSC(_mVersiLabel)} ${botVersion || "24.0.0"}`,
         url: sourceUrl,
         copy_code: _mTanggal,
       },
       bottom_sheet: {
         in_thread_buttons_limit: 2,
         divider_indices: [2, 3, 4, 5, 6, 999],
-        list_title: toSC("Pilih Kategori Menu"),
-        button_title: toSC("Menu Selengkapnya"),
+        list_title: toSC(_mListTitle),
+        button_title: toSC(_mButtonTitle),
       },
     });
 

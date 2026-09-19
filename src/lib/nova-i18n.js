@@ -114,7 +114,7 @@ function setCache(text, lang, translated) {
 
 // Google Translate API (gratis, no API key needed)
 // Endpoint: translate.googleapis.com/translate_a/single
-async function googleTranslate(text, targetLang, sourceLang = "id") {
+async function googleTranslateOnce(text, targetLang, sourceLang = "id") {
   try {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
 
@@ -144,6 +144,48 @@ async function googleTranslate(text, targetLang, sourceLang = "id") {
   }
 }
 
+// FIX 19 Sep 2026 (owner: ".menu/.allmenu masih bahasa bawaan padahal
+// caption fitur lain & tombol udah ke-translate"): teks .menu/.allmenu
+// bisa ribuan karakter (info section + stats + server + weather) —
+// endpoint gratis translate_a/single dirancang buat teks pendek, request
+// SEKALI gagal (network hiccup / rate-limit sesaat) langsung nyerah →
+// SELURUH menu balik ke bahasa asli senyap, padahal caption/button yang
+// pendek (nyaris selalu sukses) kelihatan normal ke-translate. Retry 1x
+// jeda singkat dulu SEBELUM nyerah — transient failure kebanyakan sukses
+// di percobaan ke-2, teks pendek (button/caption) gak berubah perilaku.
+async function googleTranslate(text, targetLang, sourceLang = "id") {
+  const first = await googleTranslateOnce(text, targetLang, sourceLang);
+  if (first) return first;
+  await new Promise((r) => setTimeout(r, 350));
+  return googleTranslateOnce(text, targetLang, sourceLang);
+}
+
+// Google Translate translate_a/single dirancang buat teks pendek —
+// teks panjang (.menu/.allmenu bisa 1500-3000+ karakter dengan box-drawing
+// + emoji + stats) beresiko gagal/terpotong di endpoint gratis ini. FIX:
+// pecah jadi potongan per-baris (BUKAN potong tengah kalimat/baris — box
+// drawing & emoji tetap utuh per baris), tiap potongan ≤ MAX_CHUNK karakter
+// ditranslate terpisah lalu disambung balik pakai newline persis strukturnya.
+const MAX_CHUNK = 1500;
+function chunkLinesForTranslate(text, maxLen = MAX_CHUNK) {
+  const lines = String(text).split("\n");
+  const chunks = [];
+  let cur = [];
+  let curLen = 0;
+  for (const line of lines) {
+    const lineLen = line.length + 1; // +1 buat "\n" penyambung
+    if (curLen + lineLen > maxLen && cur.length) {
+      chunks.push(cur.join("\n"));
+      cur = [];
+      curLen = 0;
+    }
+    cur.push(line);
+    curLen += lineLen;
+  }
+  if (cur.length) chunks.push(cur.join("\n"));
+  return chunks;
+}
+
 // Translate teks UI — pakai dictionary dulu, fallback ke Google Translate
 export async function translateUI(text, sender) {
   try {
@@ -168,8 +210,26 @@ export async function translateUI(text, sender) {
     const cached = getCache(text, lang);
     if (cached) return cached;
 
-    // 3. Fallback: Google Translate API (kirim versi PLAIN, bukan smallcaps)
-    const translated = await googleTranslate(plain, lang, "id");
+    // 3. Fallback: Google Translate API (kirim versi PLAIN, bukan smallcaps).
+    // Teks panjang (.menu/.allmenu) dipecah per-chunk biar gak gagal
+    // senyap di endpoint gratis yang dirancang buat teks pendek.
+    let translated = null;
+    if (plain.length > MAX_CHUNK) {
+      const chunks = chunkLinesForTranslate(plain);
+      const results = await Promise.all(
+        chunks.map((c) => googleTranslate(c, lang, "id")),
+      );
+      // kalau ADA chunk yang gagal, tetap gabung yang sukses + chunk asli
+      // (plain) buat yang gagal — sebagian ke-translate > semua gagal senyap.
+      const anyOk = results.some((r) => r && r.trim());
+      if (anyOk) {
+        translated = results
+          .map((r, i) => (r && r.trim() ? r.trim() : chunks[i]))
+          .join("\n");
+      }
+    } else {
+      translated = await googleTranslate(plain, lang, "id");
+    }
 
     if (translated && translated.trim()) {
       const cleanResult = translated.trim();
