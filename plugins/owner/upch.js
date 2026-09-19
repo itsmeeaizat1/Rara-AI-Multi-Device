@@ -55,7 +55,13 @@ function generateWaveform(audioBuf, samples = 64) {
 
 async function handler(m, { sock }) {
     const args = m.text?.replace(/^\.upch\s+/i, '').split(" ") || []
-    const chId = args[0]?.includes("@newsletter") ? args.shift() : config?.saluran?.id
+    // FIX 19 Sep 2026: dulu default config.saluran.id = placeholder "@newsletter"
+    // → kirim ke JID palsu → gagal senyap. Sekarang resolve dari link invite.
+    let chId = args[0]?.includes("@newsletter") ? args.shift() : null
+    if (!chId) {
+        const { resolveNewsletterJid } = await import("../../src/lib/nova-saluran.js")
+        chId = await resolveNewsletterJid(sock).catch(() => config?.saluran?.id)
+    }
     const chName = config?.saluran?.name || config?.bot?.name || "Nova-AI"
     const caption = args.join(" ").trim()
 

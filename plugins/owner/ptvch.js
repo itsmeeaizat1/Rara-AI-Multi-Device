@@ -35,7 +35,9 @@ async function handler(m, { sock }) {
         }
     }
     
-    const channelId = config.saluran?.id || '120363404849776664@newsletter'
+    // FIX 19 Sep 2026: placeholder "@newsletter" pernah lolos jadi JID → resolve dulu
+    const { resolveNewsletterJid } = await import("../../src/lib/nova-saluran.js")
+    const channelId = await resolveNewsletterJid(sock).catch(() => '120363404849776664@newsletter')
     
     await m.reply(claraWrap("Ptvch", `🕕 *Mengirim Ptv Ke Channel...*`))
     

@@ -3,6 +3,8 @@
 // Intercept-nya ada di paling awal src/handler.js — sebelum semua fitur, anti, auto, dan statistik.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getSaluranChannel } from "../../src/lib/nova-saluran.js";
+import { sendSaluranSafe } from "../../src/lib/nova-saluran-safe.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -50,34 +52,47 @@ async function broadcastStatusChange(sock, db, state) {
 
     // kumpulin target: semua grup yang di-join
     const targets = new Set()
+    let channelTarget = '' // saluran (jika bot admin) — dikirim via sendSaluranSafe
     try {
         for (const jid of Object.keys(db.getAllGroups() || {})) targets.add(jid)
     } catch {}
 
-    // channel utama (config.saluran.id via .setsaluran) — CUMA kalo bot admin di sana
-    // biar gak kirim ke channel orang lain / gak kena error akses
-    const channelId = config.saluran?.id || ''
-    if (channelId && channelId !== '@newsletter') {
-        try {
-            const meta = await sock.newsletterMetadata('jid', channelId).catch(() => null)
-            if (!meta || meta.viewer_role === 'ADMIN' || meta.viewer_role === 'OWNER') {
-                targets.add(channelId) // admin (atau metadata gak kebaca) → aman kirim
-            }
-            // bukan admin → skip diam-diam, gak ada risiko kena flag
-        } catch {}
+    // channel utama — FIX 19 Sep 2026 (owner: "notif gak sampai ke saluran nova official"):
+    // dulu cuma baca config.saluran.id yang placeholder "@newsletter" → DI-SKIP SENYAP.
+    // sekarang ID di-resolve otomatis dari LINK invite (nova-saluran.js), cek admin,
+    // dan kirim via sendSaluranSafe (payload disanitasi khusus saluran).
+    let channelSkippedReason = ''
+    try {
+        const ch = await getSaluranChannel(sock)
+        if (ch.ok) {
+            targets.add(ch.jid) // admin (atau metadata gak kebaca) → aman kirim
+            channelTarget = ch.jid
+        } else {
+            channelSkippedReason = ch.reason // "bukan-admin" — skip biar gak kena flag
+        }
+    } catch {}
+    if (channelSkippedReason) {
+        console.log('[bot] Saluran dilewati:', channelSkippedReason, '(bot bukan admin di saluran)')
     }
 
     let ok = 0
     let fail = 0
     for (const jid of targets) {
         try {
-            await sock.sendMessage(jid, { text })
+            if (jid === channelTarget) {
+                // saluran: payload WAJIB lewat sendSaluranSafe (tombol/kartu gak
+                // didukung WA channel → otomatis disanitasi biar gak "pesan tidak didukung")
+                await sendSaluranSafe(sock, jid, { text })
+            } else {
+                await sock.sendMessage(jid, { text })
+            }
             ok++
         } catch {
             fail++
         }
         await sleep(800) // jeda antar kirim biar gak kena spam-block WhatsApp
     }
+    if (channelTarget) console.log('[bot] Notif status terkirim ke saluran:', channelTarget, '(ok=' + ok + ' fail=' + fail + ')')
     return { total: targets.size, ok, fail }
 }
 

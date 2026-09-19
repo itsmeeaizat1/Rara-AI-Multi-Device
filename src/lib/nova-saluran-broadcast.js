@@ -60,8 +60,19 @@ function getAllNotifyStatus() {
 }
 
 async function broadcastToSaluran(sock, message, options = {}) {
-  const saluranId = config.saluran?.id || "";
-  if (!saluranId || !saluranId.includes("@newsletter") || saluranId === "@newsletter") {
+  // FIX 19 Sep 2026 (owner: "notif ke saluran nova official sama sekali gak terkirim"):
+  // dulu gerbang `saluranId === "@newsletter" → return "belum dikonfigurasi"` — padahal
+  // config default adalah placeholder persis itu → SEMUA notif (sewa/premium/ban/block/
+  // daftar/jadibot/scheduler) gagal senyap dari dulu. Sekarang ID di-RESOLVE otomatis
+  // dari link invite config.saluran.link (satu pintu nova-saluran.js).
+  const { resolveNewsletterJid } = await import("./nova-saluran.js");
+  let saluranId = "";
+  try {
+    saluranId = await resolveNewsletterJid(sock);
+  } catch (e) {
+    return { sent: false, reason: "Gagal resolve ID saluran: " + (e?.message || e) };
+  }
+  if (!/^\d+@newsletter$/.test(saluranId)) {
     return { sent: false, reason: "Saluran ID belum dikonfigurasi" };
   }
   try {
