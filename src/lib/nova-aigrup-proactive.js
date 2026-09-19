@@ -13,24 +13,24 @@ const TIO_FORMATS = {
     label: "OpenAI",
     apiKeyField: "openaiApiKey",
     modelField: "openaiModel",
-    defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://kktoken.cc/v1/chat/completions",
+    defaultModel: "ag/gemini-3-flash",
+    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
     providerKey: "tio_openai",
   },
   gemini: {
     label: "Gemini",
     apiKeyField: "geminiApiKey",
     modelField: "geminiModel",
-    defaultModel: "deepseek-v4-flash:free",
-    endpoint: null,
+    defaultModel: "ag/gemini-3-flash",
+    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
     providerKey: "tio_gemini",
   },
   anthropic: {
     label: "Anthropic",
     apiKeyField: "anthropicApiKey",
     modelField: "anthropicModel",
-    defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://kktoken.cc/v1/messages",
+    defaultModel: "ag/claude-sonnet-4-6",
+    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
     providerKey: "tio_anthropic",
   },
 };
@@ -166,9 +166,8 @@ function getJitteredInterval(baseMin) {
 // Generate pesan proactive
 async function generateProactiveMessage(aiHelp, fmtKey, model, apiKey, groupName, memberNames) {
   const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
-  const apiEndpoint = fmtKey === "gemini"
-    ? `https://kktoken.cc/v1beta/models/${model}:generateContent`
-    : fmt.endpoint;
+  // 9router: OpenAI-compatible saja — semua format pakai endpoint yang sama
+  const apiEndpoint = fmt.endpoint;
 
   // 60% template, 40% AI (lebih banyak template = lebih aman)
   const useAI = Math.random() < 0.3;
@@ -235,7 +234,9 @@ async function runProactive() {
     // ── Resolve format & model ──
     const fmtKey = aigrup.format || "openai";
     const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
-    const model = aigrup.model || fmt.defaultModel;
+    // safety net: model era Tio lama di DB gak ada di 9router → default
+    const rawModel = aigrup.model || fmt.defaultModel;
+    const model = /^ag\//.test(String(rawModel)) ? rawModel : fmt.defaultModel;
 
     const aiHelp = config.aiHelp || {};
     const apiKey = getKeyForFormat(aiHelp, fmtKey);

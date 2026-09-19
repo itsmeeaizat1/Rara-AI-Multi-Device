@@ -10,7 +10,7 @@ import { getTioEndpoint } from "../../src/lib/config/env-loader.js";
  * Reply foto, AI analisis dan kasih caption suggestion
  * Support: IG style, product, funny, aesthetic, motivational
  *
- * API: Tio AI (gateway kktoken.cc) — OpenAI format dengan vision
+ * API: 9Router v2 (pengganti Tio, gateway 9router.cloudku.us.kg) — OpenAI format dengan vision
  * Fallback: Puter.com (free, no key)
  */
 
@@ -51,7 +51,9 @@ function getStylePrompt(style) {
 async function callAIWithImage(imageBase64, prompt, aiConfig) {
   const apiKey = String(aiConfig.openaiApiKey || aiConfig.apiKey || "");
   const endpoint = getTioEndpoint();
-  const model = String(aiConfig.openaiModel || aiConfig.model || "deepseek-v4-flash:free");
+  const model = /^ag\//.test(String(aiConfig.openaiModel || aiConfig.model || ""))
+    ? String(aiConfig.openaiModel || aiConfig.model)
+    : "ag/gemini-pro-agent";
 
   if (!apiKey) {
     throw new Error("NO_API_KEY");

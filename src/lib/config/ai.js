@@ -5,21 +5,22 @@
 import { apiKeys } from "./apikey.js";
 
 // ═══════════════════════════════════════════
-// AI Configuration - Tio AI (AIO)
+// AI Configuration - dulu Tio AI (AIO), sekarang 9ROUTER V2
 // Set API key di src/lib/config/apikey.js atau via .ai-set apiKey <key>
-// Endpoint: gateway kktoken.cc (ai.tioo.eu.org mati 404)
+// Endpoint: gateway 9router.cloudku.us.kg (kktoken.cc/gorouter/tioo udah mati 19 Sep 2026)
 // ═══════════════════════════════════════════
 export const aiHelp = {
   enabled: true,
-  provider: "tio_anthropic",
+  provider: "tio_openai",
   // API keys dari apikey.js
   openaiApiKey: apiKeys.tioKey,
   geminiApiKey: apiKeys.tioKey,
   anthropicApiKey: apiKeys.tioKey,
-  // Endpoint Tio AI (AIO — support OpenAI/Gemini/Anthropic format)
-  apiEndpoint: "https://kktoken.cc/v1/chat/completions",
-  apiEndpointAnthropic: "https://kktoken.cc/v1/messages",
-  apiEndpointGemini: "https://kktoken.cc/v1beta/models",
+  // Endpoint 9ROUTER V2 (OpenAI-compatible SAJA — format anthropic/gemini
+  // auto-dikonversi oleh provider di nova-ai-service.js)
+  apiEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+  apiEndpointAnthropic: "https://9router.cloudku.us.kg/v1/chat/completions",
+  apiEndpointGemini: "https://9router.cloudku.us.kg/v1/chat/completions",
   // ClipDrop API key untuk watermark remover (.nowm)
   clipdropApiKey: apiKeys.clipdropApiKey,
   // API Keys untuk fitur baru
@@ -31,10 +32,10 @@ export const aiHelp = {
   // Fallback key
   apiKey: apiKeys.fallbackApiKey,
   // Default model per format (bisa diganti via .tio model)
-  openaiModel: "kilo-auto/free",
-  geminiModel: "kilo-auto/free",
-  anthropicModel: "kilo-auto/free",
-  model: "kilo-auto/free",
+  openaiModel: "ag/gemini-pro-agent",
+  geminiModel: "ag/gemini-3-flash",
+  anthropicModel: "ag/claude-sonnet-4-6",
+  model: "ag/gemini-pro-agent",
   systemPrompt: "Kamu adalah Nova AI, asisten yang ramah, cerdas, dan helpful. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia. Gunakan emoji yang sesuai dan jawab dengan singkat tapi jelas.",
   // System prompt khusus untuk AI Grup (nimbrung otomatis)
   aigrupSystemPrompt: "Kamu adalah teman dalam grup WhatsApp. Namamu Nova. Kamu sedang ikut nimbrung dalam percakapan grup. Jawab santai, singkat, dan natural seperti chat biasa. Jangan jawab terlalu panjang (maksimal 2-3 kalimat). Pakai bahasa gaul/sehari-hari. Boleh pakai emoji secukupnya, taruh di akhir kalimat saja. JANGAN mulai pesan dengan emoji. Jangan kaku. JANGAN mengaku sebagai AI/bot. Kamu teman biasa.",

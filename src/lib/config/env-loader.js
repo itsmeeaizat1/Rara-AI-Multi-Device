@@ -191,11 +191,13 @@ export function getTioKey() {
 }
 
 /**
- * Endpoint Tio AI — sekarang gateway gorouter.app (token owner VALID di sini; alternatif kktoken.cc — ai.tioo.eu.org sudah mati/404).
+ * Endpoint Tio AI — web lama (ai.tioo.eu.org, kktoken.cc, gorouter.app) SEMUA udah mati.
+ * 19 Sep 2026 (owner): diganti gateway 9ROUTER V2 — 9router.cloudku.us.kg
+ * (OpenAI-compatible, key sama dengan providers.router9v2).
  * Bisa di-override via env TIO_API_URL tanpa edit kode.
  */
 export function getTioEndpoint() {
-  return process.env.TIO_API_URL || "https://gorouter.app/v1/chat/completions";
+  return process.env.TIO_API_URL || "https://9router.cloudku.us.kg/v1/chat/completions";
 }
 
 /** Base URL untuk health-check (/v1/models dll) — diambil dari endpoint chat. */

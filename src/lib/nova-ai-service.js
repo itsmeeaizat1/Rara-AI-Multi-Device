@@ -3,7 +3,7 @@
  * Multi-Provider AI Service
  * Supports: OpenAI, Google Gemini, Anthropic Claude,
  *           Meta Llama, Blackbox AI, GitHub Models, Groq, Together AI,
- *           Tio AI (OpenAI/Gemini/Anthropic formats via kktoken.cc)
+ *           Tio AI → sekarang 9ROUTER V2 (OpenAI-compatible via 9router.cloudku.us.kg)
  *           IkyyXD (gemini, cici, gpt-5-mini, google-gemma, unliai, publicai, perplexity, zai, zerogpt, ai4chat via api.ikyyxd.my.id)
  */
 
@@ -145,11 +145,14 @@ const DEFAULT_PROVIDERS = {
     supportsSystem: true,
   },
   // ═══ Tio AI (AIO) - 3 endpoint formats ═══
+  // ═══ TIO → 9ROUTER V2 (19 Sep 2026: kktoken.cc/gorouter/tioo udah mati,
+  //     semua provider tio_* dialihkan ke 9router.cloudku.us.kg.
+  //     9router OpenAI-compatible SAJA — format anthropic/gemini auto-dikonversi.) ═══
   tio_openai: {
-    name: "Tio AI (OpenAI)",
-    models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo", "deepseek-chat", "deepseek-reasoner"],
-    defaultModel: "gpt-4o-mini",
-    chatEndpoint: "https://kktoken.cc/v1/chat/completions",
+    name: "9Router v2 (Tio)",
+    models: ["ag/gemini-pro-agent", "ag/gemini-3-flash", "ag/gemini-3.8-flash-high", "ag/gpt-oss-120b-medium"],
+    defaultModel: "ag/gemini-pro-agent",
+    chatEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
     authHeader: (key) => ({ Authorization: `Bearer ${key}`, "Content-Type": "application/json" }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 4096 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
@@ -157,25 +160,16 @@ const DEFAULT_PROVIDERS = {
     supportsSystem: true,
   },
   tio_gemini: {
-    name: "Tio AI (Gemini)",
-    models: ["gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash"],
-    defaultModel: "gemini-2.0-flash",
-    chatEndpoint: (model) => `https://kktoken.cc/v1beta/models/${model}:generateContent`,
-    authHeader: (key) => ({ "Content-Type": "application/json", "x-goog-api-key": key }),
-    buildBody: ({ messages, systemPrompt }) => {
-      const contents = messages
-        .filter((m) => m.role !== "system")
-        .map((m) => ({
-          role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
-        }));
-      const body = { contents, generationConfig: { temperature: 0.7, maxOutputTokens: 4096 } };
-      if (systemPrompt) {
-        body.systemInstruction = { parts: [{ text: systemPrompt }] };
-      }
-      return body;
-    },
-    parseResponse: (data) => data?.candidates?.[0]?.content?.parts?.[0]?.text || "",
+    // dulu format Gemini asli (v1beta/models/:generateContent) — 9router gak
+    // support format itu, jadi provider "gemini" kini dialihkan ke jalur
+    // OpenAI-compatible dengan model gemini 9router.
+    name: "9Router v2 (Gemini)",
+    models: ["ag/gemini-3-flash", "ag/gemini-3.8-flash", "ag/gemini-3.5-flash", "ag/gemini-3.1-pro-low"],
+    defaultModel: "ag/gemini-3-flash",
+    chatEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    authHeader: (key) => ({ Authorization: `Bearer ${key}`, "Content-Type": "application/json" }),
+    buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 4096 }),
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
     supportsVision: true,
     supportsSystem: true,
   },
@@ -354,26 +348,16 @@ const DEFAULT_PROVIDERS = {
     supportsSystem: false,
   },
   tio_anthropic: {
-    name: "Tio AI (Anthropic)",
-    models: ["claude-sonnet-4-20250514", "claude-3-5-haiku-20241022", "claude-3-haiku-20240307"],
-    defaultModel: "claude-sonnet-5",
-    chatEndpoint: "https://kktoken.cc/v1/messages",
-    authHeader: (key) => ({
-      "x-api-key": key,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    }),
-    buildBody: ({ model, messages, systemPrompt }) => {
-      const filtered = messages.filter((m) => m.role !== "system");
-      const body = { model, messages: filtered, max_tokens: 4096, temperature: 0.7 };
-      if (systemPrompt) body.system = systemPrompt;
-      else {
-        const sysMsg = messages.find((m) => m.role === "system");
-        if (sysMsg) body.system = sysMsg.content;
-      }
-      return body;
-    },
-    parseResponse: (data) => data?.content?.[0]?.text || data?.content?.map?.(b => b?.text || "").join("") || "",
+    // dulu format Anthropic asli (/v1/messages) — 9router gak support format
+    // itu (404 no active credentials anthropic), jadi dialihkan ke jalur
+    // OpenAI-compatible dengan model claude 9router.
+    name: "9Router v2 (Claude)",
+    models: ["ag/claude-sonnet-4-6", "ag/claude-opus-4-6-thinking"],
+    defaultModel: "ag/claude-sonnet-4-6",
+    chatEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    authHeader: (key) => ({ Authorization: `Bearer ${key}`, "Content-Type": "application/json" }),
+    buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 4096 }),
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
     supportsVision: true,
     supportsSystem: true,
   },
@@ -1039,6 +1023,13 @@ async function callAIRaw(firstArg, secondArg) {
   }
   const provider = resolveProvider(providerKey, providerOverrides);
   if (!provider) throw new Error(`Provider ${providerKey} tidak didukung.`);
+
+  // 9ROUTER V2 safety net: model era Tio lama (gpt-4o, gemini-2.0, claude-sonnet-5,
+  // deepseek-v4-flash:free, kilo-auto/free dst) gak ada di 9router → pakai default
+  // provider biar request gak mati karena model_not_found.
+  if (providerKey.startsWith("tio_") && model && !/^ag\//.test(String(model)) && String(model) !== "Coding") {
+    model = provider.defaultModel;
+  }
 
   // Mood-Driven Theme: inject mood context into system prompt (global, all AI plugins)
   try {

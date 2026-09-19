@@ -90,14 +90,17 @@ ${matchedContext}`;
     if (provider === "tio") {
       const apiKey = String(aiConfig.openaiApiKey || aiConfig.apiKey || "");
       if (apiKey) {
-        const response = await fetch("https://kktoken.cc/v1/chat/completions", {
+        const response = await fetch("https://9router.cloudku.us.kg/v1/chat/completions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
-            model: String(aiConfig.openaiModel || aiConfig.model || "deepseek-v4-flash:free"),
+            // safety net: model era Tio lama gak ada di 9router → default cepat
+            model: /^ag\//.test(String(aiConfig.openaiModel || ""))
+              ? String(aiConfig.openaiModel)
+              : "ag/gemini-3-flash",
             messages: [
               { role: "system", content: systemPrompt },
               { role: "user", content: body },

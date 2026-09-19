@@ -49,8 +49,8 @@ const TIO_FORMATS = {
     emoji: "🟢",
     apiKeyField: "openaiApiKey",
     modelField: "openaiModel",
-    defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://kktoken.cc/v1/chat/completions",
+    defaultModel: "ag/gemini-3-flash",
+    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
     providerKey: "tio_openai",
   },
   gemini: {
@@ -58,8 +58,8 @@ const TIO_FORMATS = {
     emoji: "🔵",
     apiKeyField: "geminiApiKey",
     modelField: "geminiModel",
-    defaultModel: "deepseek-v4-flash:free",
-    endpoint: null,
+    defaultModel: "ag/gemini-3-flash",
+    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
     providerKey: "tio_gemini",
   },
   anthropic: {
@@ -67,8 +67,8 @@ const TIO_FORMATS = {
     emoji: "🟣",
     apiKeyField: "anthropicApiKey",
     modelField: "anthropicModel",
-    defaultModel: "deepseek-v4-flash:free",
-    endpoint: "https://kktoken.cc/v1/messages",
+    defaultModel: "ag/claude-sonnet-4-6",
+    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
     providerKey: "tio_anthropic",
   },
 };
@@ -181,7 +181,10 @@ export async function handleAiGrup(m, sock, botNumber, jadibotCtx = {}) {
     // ═══ Resolve format & model dari database ═══
     const fmtKey = aigrup.format || "openai";
     const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
-    const model = aigrup.model || fmt.defaultModel;
+    // safety net: model era Tio lama di DB (gpt-4o/gemini-2.0/deepseek:free)
+    // gak ada di 9router → pakai default. Model 9router selalu berprefix "ag/".
+    const rawModel = aigrup.model || fmt.defaultModel;
+    const model = /^ag\//.test(String(rawModel)) ? rawModel : fmt.defaultModel;
 
     // ═══ Resolve API key ═══
     const aiHelp = config.aiHelp || {};
@@ -191,9 +194,8 @@ export async function handleAiGrup(m, sock, botNumber, jadibotCtx = {}) {
     if (!apiKey) return false;
 
     // ═══ Set endpoint (Gemini dynamic per model) ═══
-    const apiEndpoint = fmtKey === "gemini"
-      ? `https://kktoken.cc/v1beta/models/${model}:generateContent`
-      : fmt.endpoint;
+    // 9router: OpenAI-compatible saja — semua format pakai endpoint yang sama
+    const apiEndpoint = fmt.endpoint;
 
     // ═══ System prompt dengan anti-spam instruction ═══
     const senderName = m.pushName || m.senderName || "seseorang";

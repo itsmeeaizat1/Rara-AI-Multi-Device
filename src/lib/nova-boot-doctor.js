@@ -109,9 +109,9 @@ const KEY_PROBES = [
     url: k => `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(k)}`,
   },
   {
-    key: "tioApiKey", label: "Tio AI (kktoken)",
-    features: "otak AI .novaai rantai",
-    url: k => "https://kktoken.cc/v1/models",
+    key: "tioApiKey", label: "9Router v2 (Tio)",
+    features: "otak AI .novaai rantai, .aitio, aigrup, smartreply, fun-ai",
+    url: k => "https://9router.cloudku.us.kg/v1/models",
     headers: k => ({ Authorization: `Bearer ${k}` }),
   },
   {

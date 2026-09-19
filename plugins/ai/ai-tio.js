@@ -34,53 +34,47 @@ const pluginConfig = {
 // Semua model dipanggil via OpenAI format endpoint
 // ═══════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════
+// MODEL REGISTRY — 9ROUTER V2 (9router.cloudku.us.kg)
+// Tio lama (kktoken/gorouter/tioo) udah mati 19 Sep 2026 → diganti 9router v2.
+// 21 model live (dicek via /v1/models). Semua dipanggil via OpenAI format endpoint.
+// ═══════════════════════════════════════════════
+
 const TIO_MODELS = [
-  // ── Auto / Router ──
-  { id: "auto",              label: "Auto Router",        aliases: ["auto", "router"],          brand: "Auto",     free: false, desc: "Auto-route ke model terbaik" },
-  { id: "openrouter/free",   label: "OpenRouter Free",   aliases: ["openrouter", "or"],        brand: "Auto",     free: true,  desc: "Auto-route gratis" },
-  { id: "kilo-auto/free",    label: "Kilo Auto",          aliases: ["kilo", "kiloauto"],        brand: "Auto",     free: true,  desc: "Auto + image gen, gratis" },
+  // ── Gemini Agent (default bot) ──
+  { id: "ag/gemini-pro-agent",           label: "Gemini Pro Agent",      aliases: ["pro", "proagent", "gemini"], brand: "Gemini", free: false, desc: "Default bot — seimbang" },
+  { id: "ag/gemini-3-flash",             label: "Gemini 3 Flash",       aliases: ["flash", "cepat", "g3f"],    brand: "Gemini", free: false, desc: "Tier cepat (~1.3 dtk)" },
+  { id: "ag/gemini-3.1-pro-low",         label: "Gemini 3.1 Pro",       aliases: ["g31pro"],                   brand: "Gemini", free: false, desc: "Pro low" },
 
-  // ── DeepSeek ──
-  { id: "deepseek-v4-flash", label: "DeepSeek V4 Flash",  aliases: ["deepseek", "ds", "dsflash"], brand: "DeepSeek", free: false, desc: "Cepat & murah" },
-  { id: "DeepSeek-V4-Pro",   label: "DeepSeek V4 Pro",    aliases: ["dspro", "deepseekpro"],    brand: "DeepSeek", free: false, desc: "Model terkuat DeepSeek" },
-  { id: "deepseek-ai/DeepSeek-V4-Flash-0731", label: "DeepSeek V4 Flash 0731", aliases: ["ds0731", "dsflash0731"], brand: "DeepSeek", free: false, desc: "Versi 0731" },
-  { id: "deepseek/deepseek-v4-pro-0813-free", label: "DeepSeek V4 Pro Free", aliases: ["dsfree", "deepseekfree"], brand: "DeepSeek", free: true, desc: "Pro gratis (rate limit 1/min)" },
+  // ── Gemini 3.8 (generasi terbaru) ──
+  { id: "ag/gemini-3.8-flash-high",     label: "Gemini 3.8 High",      aliases: ["38high", "g38h"],           brand: "Gemini 3.8", free: false, desc: "3.8 reasoning tinggi" },
+  { id: "ag/gemini-3.8-flash-medium",    label: "Gemini 3.8 Medium",    aliases: ["38med", "g38m"],           brand: "Gemini 3.8", free: false, desc: "3.8 sedang" },
+  { id: "ag/gemini-3.8-flash-low",       label: "Gemini 3.8 Low",       aliases: ["38low", "g38l"],            brand: "Gemini 3.8", free: false, desc: "3.8 hemat" },
+  { id: "ag/gemini-3.8-flash",           label: "Gemini 3.8 Flash",      aliases: ["38flash", "g38"],           brand: "Gemini 3.8", free: false, desc: "3.8 standar" },
 
-  // ── Kimi / Moonshot ──
-  { id: "moonshotai/Kimi-K2.6", label: "Kimi K2.6",      aliases: ["kimi", "moonshot"],        brand: "Kimi",     free: false, desc: "Flagship Moonshot" },
+  // ── Gemini 3.7 ──
+  { id: "ag/gemini-3.7-flash-high",     label: "Gemini 3.7 High",      aliases: ["37high", "g37h"],           brand: "Gemini 3.7", free: false, desc: "3.7 reasoning tinggi" },
+  { id: "ag/gemini-3.7-flash-medium",    label: "Gemini 3.7 Medium",    aliases: ["37med", "g37m"],            brand: "Gemini 3.7", free: false, desc: "3.7 sedang" },
+  { id: "ag/gemini-3.7-flash-low",       label: "Gemini 3.7 Low",       aliases: ["37low", "g37l"],            brand: "Gemini 3.7", free: false, desc: "3.7 hemat" },
 
-  // ── Qwen / Alibaba ──
-  { id: "qwen/qwen3.8-max-free", label: "Qwen 3.8 Max Free", aliases: ["qwen", "qwenfree"],   brand: "Qwen",     free: true,  desc: "Qwen Max gratis" },
-  { id: "Qwen3.6-35B-A3B-FP8",    label: "Qwen 3.6 35B",   aliases: ["qwen36", "qwen3.6"],     brand: "Qwen",     free: false, desc: "Efisien & cepat" },
+  // ── Gemini 3.6 ──
+  { id: "ag/gemini-3.6-flash-high",     label: "Gemini 3.6 High",      aliases: ["36high", "g36h"],           brand: "Gemini 3.6", free: false, desc: "3.6 reasoning tinggi" },
+  { id: "ag/gemini-3.6-flash-medium",    label: "Gemini 3.6 Medium",    aliases: ["36med", "g36m"],            brand: "Gemini 3.6", free: false, desc: "3.6 sedang" },
+  { id: "ag/gemini-3.6-flash-low",       label: "Gemini 3.6 Low",       aliases: ["36low", "g36l"],            brand: "Gemini 3.6", free: false, desc: "3.6 hemat" },
 
-  // ── NVIDIA ──
-  { id: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", label: "Nemotron 3 Nano", aliases: ["nemotron", "nano", "nemotronnano"], brand: "NVIDIA", free: true, desc: "Reasoning 30B, gratis" },
-  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron 3 Super", aliases: ["nemotronsuper", "super"], brand: "NVIDIA", free: true, desc: "120B, gratis" },
-  { id: "nvidia/nemotron-3-ultra-550b-a55b:free",  label: "Nemotron 3 Ultra", aliases: ["nemotronultra", "ultra"], brand: "NVIDIA", free: true, desc: "550B terbesar, gratis" },
-  { id: "nvidia/nemotron-3.5-content-safety:free",  label: "Nemotron Safety", aliases: ["safety", "nemotronsafety"], brand: "NVIDIA", free: true, desc: "Content safety model" },
+  // ── Gemini 3.5 ──
+  { id: "ag/gemini-3.5-flash-high",     label: "Gemini 3.5 High",      aliases: ["35high", "g35h"],           brand: "Gemini 3.5", free: false, desc: "3.5 reasoning tinggi" },
+  { id: "ag/gemini-3.5-flash-low",       label: "Gemini 3.5 Low",       aliases: ["35low", "g35l"],            brand: "Gemini 3.5", free: false, desc: "3.5 hemat" },
+  { id: "ag/gemini-3.5-flash-extra-low", label: "Gemini 3.5 XL",        aliases: ["35xl"],                     brand: "Gemini 3.5", free: false, desc: "3.5 paling hemat" },
+  { id: "ag/gemini-3-flash-agent",       label: "Gemini 3 Flash Agent", aliases: ["g3agent"],                  brand: "Gemini 3", free: false, desc: "Flash versi agent" },
 
-  // ── StepFun ──
-  { id: "step-3.5-flash",                          label: "Step 3.5 Flash",   aliases: ["step", "step35", "step3.5"], brand: "StepFun", free: false, desc: "StepFun flash" },
-  { id: "step-3.7-flash",                          label: "Step 3.7 Flash",   aliases: ["step37", "step3.7"],        brand: "StepFun", free: false, desc: "StepFun flash baru" },
-  { id: "stepfun/step-3.7-flash:free",             label: "Step 3.7 Free",   aliases: ["stepfree", "step37free"],   brand: "StepFun", free: true,  desc: "StepFun gratis" },
+  // ── Claude ──
+  { id: "ag/claude-sonnet-4-6",          label: "Claude Sonnet 4.6",    aliases: ["claude", "sonnet"],          brand: "Claude", free: false, desc: "Sonnet via 9router" },
+  { id: "ag/claude-opus-4-6-thinking",   label: "Claude Opus 4.6",      aliases: ["opus", "opusthink"],         brand: "Claude", free: false, desc: "Opus thinking" },
 
-  // ── Cohere ──
-  { id: "cohere/north-mini-code:free", label: "Cohere North Mini", aliases: ["cohere", "north"],  brand: "Cohere",   free: true,  desc: "Code + chat, gratis" },
-
-  // ── MiniMax ──
-  { id: "MiniMaxAI/MiniMax-M2.7", label: "MiniMax M2.7", aliases: ["minimax", "mm"],         brand: "MiniMax",  free: false, desc: "Model MiniMax" },
-
-  // ── Tencent ──
-  { id: "tencent/hy3:free",  label: "Tencent HY3",   aliases: ["tencent", "hy3", "hunyuan"],  brand: "Tencent",  free: true,  desc: "Hunyuan, gratis" },
-
-  // ── SenseNova ──
-  { id: "sensenova-6.7-flash-lite", label: "SenseNova 6.7", aliases: ["sense", "sensenova"], brand: "SenseNova", free: false, desc: "Lite flash" },
-
-  // ── Poolside ──
-  { id: "poolside/laguna-s-2.1:free", label: "Laguna S 2.1", aliases: ["laguna", "poolside"], brand: "Poolside",  free: true,  desc: "Code model, gratis" },
-
-  // ── Kat ──
-  { id: "kat-coder-pro-v2.5", label: "Kat Coder Pro", aliases: ["kat", "katcoder"],         brand: "Kat",       free: false, desc: "Code specialist" },
+  // ── Lain ──
+  { id: "ag/gpt-oss-120b-medium",        label: "GPT-OSS 120B",         aliases: ["gptoss", "oss"],            brand: "OpenAI", free: false, desc: "Open-source 120B" },
+  { id: "Coding",                        label: "Coding",               aliases: ["code", "coding"],           brand: "Tools", free: false, desc: "Spesialis ngoding" },
 ];
 
 // ═══════════════════════════════════════════════
