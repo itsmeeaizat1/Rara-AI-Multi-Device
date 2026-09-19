@@ -5,6 +5,7 @@ import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { live3d } from "../../src/scraper/seaart.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -78,6 +79,13 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, result.image, null, m, {
       type: "image",
     });
+    // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+    await m.reply(mediaInfoCaption({ header: "Nova To Black", fields: [
+      { icon: "📥", label: "Input", value: "Foto" },
+      { icon: "🎨", label: "Style", value: "Skin Tone Gelap" },
+      { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
+      { icon: "⬇️", label: "Hasil", value: "Gambar" },
+    ] }))
   } catch (error) {
     console.log(error);
     m.reply(claraWrap("toblack", te(m.prefix, m.command, m.pushName), "error"));

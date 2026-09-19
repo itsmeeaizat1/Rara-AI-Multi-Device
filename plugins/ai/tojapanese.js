@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import axios from 'axios'
 import { uploadImage } from '../../src/lib/nova-uploader.js'
 import { f } from '../../src/lib/nova-http.js'
@@ -84,6 +85,13 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, resultBuffer, null, m, {
             type: 'image',
         })
+        // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+        await m.reply(mediaInfoCaption({ header: "Nova To Japanese", fields: [
+            { icon: "📥", label: "Input", value: "Foto" },
+            { icon: "🎨", label: "Style", value: "Japanese" },
+            { icon: "⚙️", label: "Engine", value: "FAA AI API" },
+            { icon: "⬇️", label: "Hasil", value: "Gambar" },
+        ] }))
         
     } catch (error) {
         m.reply(claraWrap("tojapanese", te(m.prefix, m.command, m.pushName), "error"))
