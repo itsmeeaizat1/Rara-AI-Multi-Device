@@ -2334,3 +2334,12 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - FIX (nova-boot-doctor.js): tiap item jadi baris berlabel eksplisit: nama brand di bullet, lalu "Rest API: <domain endpoint yang di-probe> · key apikeys.json: <nama key>", lalu "Fitur kena dampak: <daftar fitur> — HTTP <kode>". Endpoint gratis diberi label "(tanpa key)". Hint ganti key digabung SEKALI di akhir dengan daftar lengkap nama key yang bermasalah (dulu per-kategori kepisah).
 - E2E bootdoctor 30→36 (+6: domain rest api muncul, nama key apikeys.json muncul, daftar key bermasalah gabungan, label "Rest API:", label "Fitur kena dampak:", label "tanpa key").
 - VPS: `git pull && pm2 restart` (tanpa npm install) → restart bot → DM owner / ketik `.bootdoctor` buat lihat format baru.
+
+## REFORMAT apikeys.json: Komentar Berlabel restapi/fitur/catatan (19 Sep 2026)
+- Request owner: "di src/lib/apikey/apikeys.json jg hrs dibedain mana nama rest api dan mana fitur fitur dr bagian rest api tersebut jd ktauan oh fitur ini dr rest api ini biar g bingung".
+- SEBELUM: tiap key punya `_note_<nama>` satu kalimat PROSE panjang nyampur ("HAIDARAPIS (api.haidarxd.my.id — ...). FITUR: .alldl, .txt2vid, ... STATUS ...") — gak jelas mana nama rest api, mana fiturnya.
+- SESUDAH: tiap `_note_<nama key>` jadi OBJEK BERLABEL: `"restapi"` = nama + endpoint situs rest api sumbernya, `"fitur"` = daftar fitur bot yang pakai key itu, `"catatan"` = status/pendaftaran/tambahan. Contoh: `_note_cuki` = { restapi: "CUKI API — api.cuki.biz.id", fitur: ".gita, .gpt4o, .nayaai, .pakustad, .lahelu", catatan: "... · STATUS 17 Sep: 401" }.
+- AMAN untuk kode: loader flattenApikeys (env-loader.js) skip semua key berawalan `_` → struktur objek gak pernah dianggap key. 46 note ditransformasi + poles manual (voiceai/betabotz/anabotz/tioApiKey/ptero/fallbackApiKey/router9v2 dll).
+- `_note` utama + `_note` per-section diupdate: cara baca file sekarang "restapi = nama+endpoint, fitur = daftar fitur bot, catatan = status/tambahan".
+- E2E: bootdoctor 36/36 + import 14/14 + fazzcode 21/21 + googleaimode 24/24 + roleplaychat 19/19 + router9v2 41/41 (semua jalur baca apikeys.json hijau).
+- VPS: `git pull && pm2 restart` (tanpa npm install) — file config saja, gak ada perilaku yang berubah.
