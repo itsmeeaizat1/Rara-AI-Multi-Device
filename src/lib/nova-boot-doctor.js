@@ -128,7 +128,8 @@ const KEY_PROBES = [
     method: "POST",
     url: () => "https://api.inceptionlabs.ai/v1/chat/completions",
     headers: k => ({ "Content-Type": "application/json", Authorization: `Bearer ${k}` }),
-    body: () => JSON.stringify({ model: "mercury", messages: [{ role: "user", content: "ping" }] }),
+    // mercury (v1) cuma buat akun pre-Feb-2026 — akun baru wajib mercury-2
+    body: () => JSON.stringify({ model: "mercury-2", messages: [{ role: "user", content: "ping" }] }),
   },
   {
     key: "openWeatherKey", label: "OpenWeatherMap",
