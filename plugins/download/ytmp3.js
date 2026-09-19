@@ -111,16 +111,14 @@ async function handler(m, { sock }) {
       ytMeta = { author: oe?.author_name, thumbnail: result.thumbnail || oe?.thumbnail_url };
     } catch {}
 
-    const caption = mediaCaption({
-      platformIcon: "▶️",
-      platformName: "YouTube",
+    // format owner 19 Sep — disamakan ke semua downloader
+    const caption = tiktokCaption({
+      header: "YouTube Downloader",
       title: result.title || "YouTube Audio",
-      author: ytMeta.author || null,
+      uploader: ytMeta.author || null,
       duration: result.duration || null,
       views: result.views || null,
-      description: result.description ? String(result.description).slice(0, 120) : null,
-      format: "🎵 MP3",
-      method: result.method,
+      download: "MP3",
     });
 
     await m.react("🐣");

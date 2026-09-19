@@ -13,6 +13,7 @@ import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { snaptikDouyin } from "../../src/scraper/snaptik-douyin.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import {
   isDouyinLink,
   isTikTokLink,
@@ -199,13 +200,13 @@ async function handler(m, { sock }) {
     // Step 0: SnapTik (snaptik.fi) — primary, support video + STORY Douyin
     const snap = await snaptikDouyin(text);
     if (snap?.status && snap?.video) {
-      const caption = mediaCaption({
-        platformIcon: "🎵", platformName: "Douyin",
+      // format owner 19 Sep — disamakan ke semua downloader
+      const caption = tiktokCaption({
+        header: "Douyin Downloader",
         title: snap.title || "Douyin Video",
-        author: snap.artist || null,
-        duration: snap.durationSec ? `${Math.floor(snap.durationSec / 60)}:${String(snap.durationSec % 60).padStart(2, "0")}` : null,
-        format: "Video (No Watermark)",
-        method: "SnapTik",
+        uploader: snap.artist || null,
+        duration: snap.durationSec || null,
+        download: "SD",
       });
       await m.react("🐣");
       await sock.sendMessage(m.chat, {

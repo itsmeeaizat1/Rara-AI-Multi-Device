@@ -3,6 +3,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
@@ -84,15 +85,13 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("twitterdl", url, { extraParams: { apikey: "kyzz" } });
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      const caption = mediaCaption({
-        platformIcon: "𝕏",
-        platformName: "Twitter/X",
+      // format owner 19 Sep — disamakan ke semua downloader
+      const caption = tiktokCaption({
+        header: "Twitter/X Downloader",
         title: ikyyResult.title || "Twitter Video",
-        author: ikyyResult.author || null,
+        uploader: ikyyResult.author || null,
         duration: ikyyResult.duration || null,
-        description: ikyyResult.description ? String(ikyyResult.description).slice(0, 120) : null,
-        format: "📹 Video",
-        method: "IkyyXD",
+        download: "SD",
       });
       await sock.sendMessage(m.chat, {
         video: { url: video.url },
@@ -110,13 +109,12 @@ async function handler(m, { sock }) {
     }
 
     const result = await twitterDownload(url);
-    const caption = mediaCaption({
-      platformIcon: "𝕏",
-      platformName: "Twitter/X",
+    // format owner 19 Sep — disamakan ke semua downloader
+    const caption = tiktokCaption({
+      header: "Twitter/X Downloader",
       title: result.title || "Twitter Video",
-      author: result.author || null,
-      format: "📹 Video",
-      method: "Sanka",
+      uploader: result.author || null,
+      download: "SD",
     });
 
     await sock.sendMessage(from, {

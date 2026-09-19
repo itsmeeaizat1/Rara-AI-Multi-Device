@@ -120,13 +120,12 @@ async function handler(m, { sock }) {
             const { data: oeV } = await axios.get(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`, { timeout: 8000 });
             ytMetaV = { author: oeV?.author_name, thumbnail: oeV?.thumbnail_url, title: oeV?.title };
           } catch {}
-          const capV = mediaCaption({
-            platformIcon: "▶️",
-            platformName: "YouTube",
+          // format owner 19 Sep — disamakan ke semua downloader
+          const capV = tiktokCaption({
+            header: "YouTube Downloader",
             title: vid.title || ytMetaV.title || "YouTube Video",
-            author: ytMetaV.author || null,
-            format: `📹 Video ${quality}p • 🎵 Audio HQ (bestaudio)`,
-            method: "yt-dlp (Lokal)",
+            uploader: ytMetaV.author || null,
+            download: `${quality}p`,
           });
           await m.react("🐣");
           // >16MB dikirim jadi dokumen biar pasti nyampe (limit media WA)
@@ -156,16 +155,14 @@ async function handler(m, { sock }) {
       ytMeta = { author: oe?.author_name, thumbnail: result.thumbnail || oe?.thumbnail_url, title: oe?.title };
     } catch {}
 
-    const caption = mediaCaption({
-      platformIcon: "▶️",
-      platformName: "YouTube",
+    // format owner 19 Sep — disamakan ke semua downloader
+    const caption = tiktokCaption({
+      header: "YouTube Downloader",
       title: result.title || ytMeta.title || "YouTube Video",
-      author: ytMeta.author || null,
+      uploader: ytMeta.author || null,
       duration: result.duration || null,
       views: result.views || null,
-      description: result.description ? String(result.description).slice(0, 120) : null,
-      format: "📹 Video (server API)",
-      method: result.method,
+      download: "MP4",
     });
 
     await m.react("🐣");
