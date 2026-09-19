@@ -2186,7 +2186,18 @@ export function getEwsProviderHealth() { return { ...ewsProviderHealth }; }
 
 /** USGS day feed versi EWS — M4.5+ semua (getUsgsDay cuma M5+/M6+). */
 async function getUsgsDayEws() {
-  const d = await fetchJson(USGS_DAY_URL, 9000);
+  // FIX 19 Sep 2026 (owner: "ews kadang gak bekerja"): dulu pakai feed
+  // STATIS 4.5_day.geojson — feed itu CUMA gempa M4.5+, jadi filter
+  // EWS_MIN_MAG 3.5 gak pernah dapat apa-apa di 3.5-4.4. Gempa M3.5-4.4
+  // yang gak dirasakan juga gak muncul di BMKG gempaterkini (feed
+  // terkini = gempa DIRASAKAN saja) → gempa dekat lokasi yang persis
+  // di rentang ambang paling sering kepake MALAH gak pernah ke-alert.
+  // Sekarang: query fdsnws langsung minmagnitude=3.5 (24 jam terakhir,
+  // urut terbaru, limit 60) — event id USGS konsisten sama feed, dedupe
+  // `usgs_<id>` + fingerprint lintas-jalur tetap jalan.
+  const startIso = new Date(Date.now() - 24 * 3600e3).toISOString();
+  const ewsUrl = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=${EWS_MIN_MAG}&orderby=time&limit=60&starttime=${startIso}`;
+  const d = await fetchJson(ewsUrl, 9000);
   return (d?.features ?? [])
     .filter((f) => (f.properties?.mag || 0) >= EWS_MIN_MAG)
     .map((f) => {

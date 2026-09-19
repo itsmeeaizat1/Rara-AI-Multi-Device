@@ -121,17 +121,37 @@ function normalizeSettings(settings) {
   };
 }
 
+// FIX 19 Sep 2026 (owner: "auto cuaca gak respon / notif kadang gak
+// bekerja"): dulu `sock` ditangkap di CLOSURE interval pas start pertama.
+// Bot reconnect tiap 10-30 menit → sock BARU gak pernah masuk → scheduler
+// nyala tapi ngirim ke koneksi MATI → notifikasi cuaca gagal senyap
+// sampai restart berikutnya (gejala: jalan pas baru boot, lalu diam).
+// Sekarang: sock module-level, di-refresh TIAP kali connection open
+// memanggil startWeatherRealtimeScheduler (idempotent), interval selalu
+// pakai sock termutakhir.
+let currentSock = null;
+
 export function startWeatherRealtimeScheduler(sock) {
-  if (schedulerInterval) return; // already running
+  const replaced = currentSock && currentSock !== sock && schedulerInterval;
+  currentSock = sock;
+  if (schedulerInterval) {
+    if (replaced) console.log("[weather-realtime] 🔁 sock WA DIPERBARUI (reconnect) — notifikasi lanjut pakai koneksi baru");
+    return; // interval sudah jalan — cukup refresh sock di atas
+  }
 
   console.log("[weather-realtime] Scheduler started");
   schedulerInterval = setInterval(async () => {
     try {
-      await checkAndSend(sock);
+      await checkAndSend(currentSock);
     } catch (e) {
       console.error("[weather-realtime] Error:", e.message);
     }
   }, 60_000); // cek tiap 1 menit
+}
+
+// Sehat/diagnosa: umur sock yang dipakai scheduler (.wsw status)
+export function getSockFreshness() {
+  return { hasSock: !!currentSock };
 }
 
 export function stopWeatherRealtimeScheduler() {
@@ -186,10 +206,15 @@ export async function sendWeatherNow(sock, { force = false } = {}) {
 
 // Cek alert cuaca ekstrem (tiap 30 mnt saat notifikasi aktif).
 // Exported untuk testing & command `alert test`.
-export async function checkWeatherAlert(sock, { force = false } = {}) {
+export async function checkWeatherAlert(sockParam, { force = false } = {}) {
+  // FIX 19 Sep 2026: (1) sock param kosong → pakai sock termutakhir dari
+  // scheduler (reconnect-safe); (2) alert ekstrem dulu BATAL kalau target
+  // cuma diatur lewat .switch auto (gak ada raw.target manual) — sekarang
+  // target terpusat ikut dihitung, samain sama jalur utama.
+  const sock = sockParam || currentSock;
   const db = getDatabase();
   const raw = db.setting("weatherRealtime");
-  if (!raw || !raw.notification || !raw.target) return { ok: false, reason: "off" };
+  if (!raw || !raw.notification || (!raw.target && !weatherTargetCfg())) return { ok: false, reason: "off" };
   const settings = normalizeSettings(raw);
   if (!settings.alertEnabled && !force) return { ok: false, reason: "alert-off" };
 
@@ -208,7 +233,11 @@ export async function checkWeatherAlert(sock, { force = false } = {}) {
     if (!force && isRepeat) return { ok: true, alert, sent: false };
 
     const name = settings.location?.name || "Lokasi";
-    await sock.sendMessage(settings.target, { text: formatAlertMessage(alert, data, name) });
+    let targets = [settings.target].filter(Boolean);
+    if (weatherTargetCfg()) {
+      targets = (await resolveAutoTargets(sock, weatherTargetKey())).jids;
+    }
+    for (const t of targets) await sock.sendMessage(t, { text: formatAlertMessage(alert, data, name) });
     alertState.lastKey = alert.key;
     alertState.lastSentMs = now;
     console.log(`[weather-alert] ✅ Alert ${alert.levelText} terkirim (${alert.key})`);
