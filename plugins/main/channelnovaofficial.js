@@ -1,3 +1,4 @@
+import { normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import fs from "fs";
@@ -77,9 +78,9 @@ async function handler(m, { sock, db }) {
 
   if (isChannelSet) {
     try {
-      const metadata = await sock.newsletterMetadata("jid", channelId);
+      const metadata = normalizeNewsletterMeta(await sock.newsletterMetadata("jid", channelId));
       if (metadata) {
-        followerCount = metadata.subscribers || metadata.followerCount || null;
+        followerCount = metadata.followers || metadata.followerCount || null;
         channelDesc = metadata.description || metadata.about || metadata.status || "";
         postsCount = metadata.messagesCount || metadata.postsCount || metadata.totalPosts || null;
         createdAt = metadata.creation_time || metadata.createdAt || metadata.creationTime || null;

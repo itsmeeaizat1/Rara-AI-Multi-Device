@@ -28,7 +28,36 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // Broadcast perubahan status ke semua grup yang di-join + channel utama (kalo bot admin di sana).
 // DM user sengaja GAK dikirimin — broadcast massal DM paling berisiko bikin nomor keban WhatsApp.
 // Fire-and-forget — owner udah dapet konfirmasi duluan, gak perlu nunggu selesai.
-async function broadcastStatusChange(sock, db, state) {
+// baris status saluran buat reply owner — biar skip/gagal GAK senyap lagi
+function saluranStatusLine(saluran, channelName) {
+    if (!saluran || saluran.status === 'timeout') {
+        return `+ channel ${channelName ? '*' + channelName + '*' : '-'} (masih diproses…)`
+    }
+    if (saluran.status === 'sent') {
+        return `+ saluran ${channelName ? '*' + channelName + '*' : 'official'} — ✅ terkirim`
+    }
+    if (saluran.status === 'failed') {
+        return `+ saluran — ❌ GAGAL kirim (${saluran.reason || 'error'})`
+    }
+    // skipped — kasih AKAR + solusi biar owner langsung bisa action
+    if (saluran.reason === 'bot-bukan-admin') {
+        return `+ saluran — ⚠ DILEWATI: nomor bot bukan admin di saluran (buka saluran > ikuti > jadikan bot admin, cek .saluranid <link>)`
+    }
+    if (saluran.reason === 'bot-belum-follow-saluran') {
+        return `+ saluran — ⚠ DILEWATI: nomor bot belum follow saluran (join dulu via link saluran)`
+    }
+    return `+ saluran — ⚠ DILEWATI (${saluran.reason || 'unknown'})`
+}
+
+// tunggu hasil bagian SALURAN dari broadcast (max 9 dtk — grup lanjut di background)
+function waitSaluran(sock, db, state) {
+    return Promise.race([
+        broadcastStatusChange(sock, db, state).then(r => (r && r.saluran) || null).catch(() => null),
+        new Promise(r => setTimeout(() => r({ status: 'timeout' }), 9000)),
+    ])
+}
+
+async function broadcastStatusChange(sock, db, state, opts = {}) {
     const text = state === 'off' ? [
             'Bot dimatikan oleh owner.',
             'Semua fitur nonaktif sementara — bot tidak akan merespon apa pun',
@@ -77,15 +106,39 @@ async function broadcastStatusChange(sock, db, state) {
 
     let ok = 0
     let fail = 0
+    // DESAIN 19 Sep 2026 — notif status bot pakai banner preview card branding
+    // Nova (nova-notif-card, ala desain .play). Banner gak ngerubah isi teks.
+    const { notifBanner } = await import("../../src/lib/nova-notif-card.js")
+    const banner = await notifBanner({
+        title: 'Nova AI — Status Bot',
+        body: (config.bot?.name || 'Nova-AI') + ' · notifikasi status',
+    })
+    let saluranOutcome = { status: 'skipped', reason: channelSkippedReason || 'unknown', jid: channelTarget || null }
+    // SALURAN DIKIRIM DULU (sebelum grup yang lama) biar owner cepet liat
+    // hasilnya — laporan onSaluran nyampe ke reply owner dalam 1-2 dtk.
+    if (channelTarget) {
+        try {
+            // saluran: payload WAJIB lewat sendSaluranSafe (tombol/kartu gak
+            // didukung WA channel → otomatis disanitasi biar gak "pesan
+            // tidak didukung"; externalAdReply banner AMAN — di-keep sanitizer)
+            await sendSaluranSafe(sock, channelTarget, { text, contextInfo: banner })
+            saluranOutcome = { status: 'sent', jid: channelTarget }
+            ok++
+        } catch {
+            fail++
+            saluranOutcome = { status: 'failed', reason: 'error kirim', jid: channelTarget }
+        }
+        if (typeof opts?.onSaluran === 'function') {
+            try { opts.onSaluran(saluranOutcome) } catch {}
+        }
+        targets.delete(channelTarget)
+    } else if (typeof opts?.onSaluran === 'function') {
+        // skipped dari awal (bukan-admin / belum follow) → lapor LANGSUNG
+        try { opts.onSaluran(saluranOutcome) } catch {}
+    }
     for (const jid of targets) {
         try {
-            if (jid === channelTarget) {
-                // saluran: payload WAJIB lewat sendSaluranSafe (tombol/kartu gak
-                // didukung WA channel → otomatis disanitasi biar gak "pesan tidak didukung")
-                await sendSaluranSafe(sock, jid, { text })
-            } else {
-                await sock.sendMessage(jid, { text })
-            }
+            await sock.sendMessage(jid, { text, contextInfo: banner })
             ok++
         } catch {
             fail++
@@ -93,7 +146,8 @@ async function broadcastStatusChange(sock, db, state) {
         await sleep(800) // jeda antar kirim biar gak kena spam-block WhatsApp
     }
     if (channelTarget) console.log('[bot] Notif status terkirim ke saluran:', channelTarget, '(ok=' + ok + ' fail=' + fail + ')')
-    return { total: targets.size, ok, fail }
+    else console.log('[bot] Saluran dilewati:', channelSkippedReason || '-')
+    return { total: targets.size, ok, fail, saluran: saluranOutcome }
 }
 
 async function handler(m, { sock }) {
@@ -137,8 +191,9 @@ async function handler(m, { sock }) {
         const grupCount = (() => { try { return Object.keys(db.getAllGroups() || {}).length } catch { return 0 } })()
         const channelName = config.saluran?.name || null
 
-        // fire-and-forget — jangan bikin owner nunggu ratusan pesan keluar
-        broadcastStatusChange(sock, db, 'off').catch(() => {})
+        // tunggu hasil SALURAN doang (grup tetap di background) — biar owner
+        // langsung liat status saluran di reply ini, gak senyap lagi
+        const saluran = await waitSaluran(sock, db, 'off')
 
         return m.reply(claraWrap('Bot Dimatikan', [
             'Bot sekarang *ᴏꜰꜰ* — sunyi total.',
@@ -149,7 +204,7 @@ async function handler(m, { sock }) {
             'Nyoba command apa pun → di-diamin total.',
             '',
             `Notifikasi perpisahan dikirim ke *${grupCount}* grup`,
-            `+ channel ${channelName ? '*' + channelName + '*' : '-'} (bot admin),`,
+            saluranStatusLine(saluran, channelName) + ',',
             'kirimnya cuma sekali ini (saat .bot off).',
             'DM user gak dikirimin — biar nomor aman dari banned.',
             '',
@@ -179,7 +234,7 @@ async function handler(m, { sock }) {
         const grupCount = (() => { try { return Object.keys(db.getAllGroups() || {}).length } catch { return 0 } })()
         const channelName = config.saluran?.name || null
 
-        broadcastStatusChange(sock, db, 'mute').catch(() => {})
+        const saluran = await waitSaluran(sock, db, 'mute')
 
         return m.reply(claraWrap('Bot Dijeda', [
             'Bot sekarang *ᴍᴜᴛᴇ* — sedang dijeda.',
@@ -193,7 +248,7 @@ async function handler(m, { sock }) {
             'info ke user, off di-diamin total.',
             '',
             `Notifikasi dikirim ke *${grupCount}* grup`,
-            `+ channel ${channelName ? '*' + channelName + '*' : '-'} (bot admin).`,
+            saluranStatusLine(saluran, channelName) + '.',
             '',
             'Satu-satunya command yang hidup: *.bot on*',
         ].join('\n')))
@@ -213,13 +268,13 @@ async function handler(m, { sock }) {
         const grupCount = (() => { try { return Object.keys(db.getAllGroups() || {}).length } catch { return 0 } })()
         const channelName = config.saluran?.name || null
 
-        broadcastStatusChange(sock, db, 'on').catch(() => {})
+        const saluran = await waitSaluran(sock, db, 'on')
 
         return m.reply(claraWrap('Bot Dinyalakan', [
             'Bot kembali *ᴏɴ* — semua fitur aktif lagi.',
             '',
             `Notifikasi dikirim ke *${grupCount}* grup`,
-            `+ channel ${channelName ? '*' + channelName + '*' : '-'} (bot admin).`,
+            saluranStatusLine(saluran, channelName) + '.',
             '',
             'Terima kasih udah nunggu 🥳',
         ].join('\n')))

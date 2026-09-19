@@ -48,6 +48,39 @@ export async function resolveNewsletterJid(sock) {
   return "120363404849776664@newsletter";
 }
 
+/**
+ * NORMALIZE metadata saluran — dua bentuk harus di-support:
+ * (1) FORK "nova" (itsmeeaizat-bailey, dipakai bot ini): newsletterMetadata()
+ *     balikin hasil MENTAH WMex — { id, state:{type}, thread_metadata:{ name:{text},
+ *     subscribers_count, verification, invite }, viewer_metadata:{ role, mute } }.
+ *     BUG 19 Sep (owner: ".bot off notif gak nyampe saluran padahal config bener"):
+ *     cek lama baca meta.viewer_role → UNDEFINED di bentuk mentah → bot admin
+ *     sekalipun dianggap "bukan-admin" → saluran di-skip senyap.
+ * (2) Baileys klasik: bentuk flat { id, name, subscribers, verification, viewer_role }.
+ * @returns {{ id, name, description, followers, verification, state, role, invite }|null}
+ */
+export function normalizeNewsletterMeta(meta) {
+  if (!meta || typeof meta !== "object") return null;
+  if (!meta.id) return null; // tanpa id gak bisa identifikasi saluran sama sekali
+  const tm = meta.thread_metadata || {};
+  const role =
+    meta.viewer_role || // bentuk flat
+    meta.viewer_metadata?.role || // bentuk mentah fork "nova"
+    (typeof meta.role === "string" ? meta.role : null);
+  return {
+    id: meta.id || null,
+    name: meta.name || tm.name?.text || tm.name || null,
+    description: meta.description || tm.description?.text || tm.description || null,
+    followers: meta.subscribers != null
+      ? Number(meta.subscribers)
+      : (tm.subscribers_count != null ? Number(tm.subscribers_count) : null),
+    verification: meta.verification || tm.verification || null,
+    state: meta.state?.type || meta.state || null,
+    role,
+    invite: meta.invite || tm.invite || null,
+  };
+}
+
 /** reset cache (buat test / ganti saluran) */
 export function _resetSaluranCacheForTest() {
   _cachedNewsletterJid = null;
@@ -66,11 +99,20 @@ export async function getSaluranChannel(sock) {
       meta = await sock.newsletterMetadata("jid", jid).catch(() => null);
     }
   } catch {}
-  // metadata gak kebaca → tetap coba kirim (beberapa versi fork gak isi viewer_role)
-  if (!meta || meta.viewer_role === "ADMIN" || meta.viewer_role === "OWNER") {
-    return { ok: true, jid, reason: "ok", meta };
+  const n = normalizeNewsletterMeta(meta);
+  // metadata gak kebaca → tetap coba kirim (beberapa versi fork gak isi role)
+  if (!n) return { ok: true, jid, reason: "ok", meta: null };
+  if (n.role === "ADMIN" || n.role === "OWNER" || n.role == null) {
+    // role null (beberapa versi fork gak ngisi viewer_metadata) → TETAP coba
+    // kirim — jangan over-block (pelajaran bug viewer_role undefined)
+    return { ok: true, jid, reason: "ok", meta: n };
   }
-  return { ok: false, jid, reason: "bukan-admin", meta };
+  // reason SPESIFIK biar owner langsung tau kenapa (dulu senyap):
+  // GUEST = bot belum follow saluran, SUBSCRIBER = follow tapi bukan admin
+  const reason = n.role === "GUEST"
+    ? "bot-belum-follow-saluran"
+    : "bot-bukan-admin";
+  return { ok: false, jid, reason, meta: n };
 }
 
 // ═══════════════════════════════════════════════
