@@ -2352,3 +2352,10 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Hasil >1920px tetep auto-document biar WA gak nge-compress; polish FFmpeg tetep pass terakhir (denoise low + sharpen balanced + color natural, JPEG q:v 2).
 - E2E remini 53→58 (+5: param is_pro_version kekirim, is_enhancing_more kekirim, caption resolusi, retry 429 sukses, 429 abis retry error informatif).
 - VPS: `git pull && pm2 restart` (tanpa npm install) → reply gambar + `.remini`.
+
+## FIX .HD 16 → HASILNYA GAK 16x (19 Sep 2026)
+- Report owner: ".hd 16 knp hasilnya bkn 16x malah yg dikirim 4x, bukannya bisa sampai 16x".
+- AKAR (plugins/tools/hd.js): (1) parsing cuma kenal "16x" (regex /^\d+x$/) — "16" angka polos GAK cocok → diem-diem fallback ke 2x; (2) scale di-clamp Math.min(8) — apapun di atas 8 dipaksa turun; (3) single-pass lanczos di scale gede emang lembek.
+- FIX: (1) regex baru /^\d{1,2}x?$/ — angka polos ".hd 16" DAN ".hd 16x" dua-duanya sah; (2) range dinaikin 2..16 (clamp 17→16); (3) scale pangkat-2 (4/8/16) di-upscale BERTAHAP 2x per pass dengan intermediate PNG lossless — detail jauh lebih terjaga vs lompat sekali; (4) batas MAX_OUTPUT_PX 16000 — gambar gede otomatis scale diturunin + caption jujur "scale diturunin dari 4x"; (5) hasil >1920px auto-document (anti kompres WA, pola remini).
+- E2E BARU test/hd-scale-e2e 15/15 (belum pernah ada suite hd sebelumnya) + import 14/14.
+- VPS: `git pull && pm2 restart` (tanpa npm install) → reply gambar + `.hd 16` → caption "Scale: 16x".
