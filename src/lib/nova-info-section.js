@@ -168,7 +168,16 @@ export async function buildMenuInfo(m, ctx = {}) {
   const expMin = (userLevel - 1) * 20000;
   const expMax = userLevel * 20000;
   const expCurr = userExp - expMin;
-  const expPct = expMax > 0 ? Math.floor((expCurr / (expMax - expMin)) * 100) : 0;
+  // FIX 20 Sep 2026 (owner: "level persen tetap 0 pdhal level 450.001"):
+  // owner default exp = 9.000.000.000 = PLAFON MAX_EXP (nova-database.js
+  // updateExp clamp) — 9e9 / 20.000 = tepat 450.000 sisa 0 → level 450.001
+  // dengan persen 0% SELAMANYA (exp gak bisa naik lagi). Di plafon, persen
+  // diganti label "MAX" biar gak keliatan kayak bug.
+  const MAX_USER_EXP = 9000000000;
+  const expAtMax = userExp >= MAX_USER_EXP;
+  const expPct = expAtMax
+    ? "MAX"
+    : (expMax > 0 ? Math.floor((expCurr / (expMax - expMin)) * 100) + "%" : "0%");
 
   // ── Bot info ──
   const prefix = botConfig?.command?.prefix || ".";
@@ -300,7 +309,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     "Info User",
     { label: "Nama", value: m.pushName || "-" },
     { label: "Role", value: userRole },
-    { label: "Level", value: `${formatNum(userLevel)} (${expPct}%)` },
+    { label: "Level", value: `${formatNum(userLevel)} (${expPct})` },
     { label: "Limit", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
     { label: "Energi", value: m.isOwner ? "∞ Unlimited" : `${formatNum(rpgEnergy)} (${rpgEnergyPct}%)` },
     { label: "Exp", value: formatNum(userExp) },
