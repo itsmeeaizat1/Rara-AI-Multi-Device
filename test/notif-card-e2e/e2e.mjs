@@ -147,7 +147,11 @@ const toChannel = bcSent.find((d) => d.jid === NUM_JID);
 t("4a. notif ke GRUP pakai banner", !!toGroup?.payload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(toGroup?.payload || {})));
 t("4b. notif ke SALURAN pakai banner (externalAdReply di-keep sanitizer)", !!toChannel?.payload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(toChannel?.payload || {})));
 t("4c. isi teks notif tetap utuh", /dimatikan/i.test(toGroup?.payload?.text || ""), (toGroup?.payload?.text || "").slice(0, 60));
-t("4d. judul banner Nova AI — Status Bot", (toGroup?.payload?.contextInfo?.externalAdReply?.title || "").includes("Status Bot"), toGroup?.payload?.contextInfo?.externalAdReply?.title);
+t("4d. judul banner nyebut BOT DIMATIKAN (revisi owner 20 Sep: canvas dinamis per state)", (toGroup?.payload?.contextInfo?.externalAdReply?.title || "").includes("BOT DIMATIKAN"), toGroup?.payload?.contextInfo?.externalAdReply?.title);
+t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding statis)", (() => {
+  const th = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
+  return Buffer.isBuffer(th) && th.length > 100 && th[0] === 0xff && th[1] === 0xd8;
+})(), "thumbnail bytes");
 
 // nyala lagi
 bcSent.length = 0;
@@ -159,7 +163,13 @@ const mOn = {
 await botPlugin.handler(mOn, { sock: bSock, isOwner: true });
 await new Promise((r) => setTimeout(r, 2600));
 const onGroup = bcSent.find((d) => d.jid === "999888777-1@g.us");
-t("4e. notif .bot on juga pakai banner", !!onGroup?.payload?.contextInfo?.externalAdReply);
+t("4f. notif .bot on juga pakai banner", !!onGroup?.payload?.contextInfo?.externalAdReply);
+t("4g. judul banner .bot on nyebut BOT DIHIDUPKAN", (onGroup?.payload?.contextInfo?.externalAdReply?.title || "").includes("BOT DIHIDUPKAN"), onGroup?.payload?.contextInfo?.externalAdReply?.title);
+t("4h. thumbnail .bot on BEDA dari thumbnail .bot off (canvas regenerate per state, bukan asset statis)", (() => {
+  const offThumb = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
+  const onThumb = onGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
+  return Buffer.isBuffer(offThumb) && Buffer.isBuffer(onThumb) && !offThumb.equals(onThumb);
+})());
 
 // ═══ SECTION 5: notif saluran (broadcastToSaluran 16+ fitur) ═══
 w("\n— section 5: notif saluran sewa/premium/ban —");

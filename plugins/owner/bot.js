@@ -108,9 +108,13 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
     let fail = 0
     // DESAIN 19 Sep 2026 — notif status bot pakai banner preview card branding
     // Nova (nova-notif-card, ala desain .play). Banner gak ngerubah isi teks.
-    const { notifBanner } = await import("../../src/lib/nova-notif-card.js")
-    const banner = await notifBanner({
-        title: 'Nova AI — Status Bot',
+    // REVISI 20 Sep 2026 (owner: "kan blank hitam aku kira bakal ada tulisan
+    // huruf OFF/BOT DIMATIKAN... generate canvasnya jga ganti kyk bot di on
+    // di thumbnailnya tulisan ON/BOT DIHIDUPKAN"): thumbnail statis diganti
+    // statusBanner() — canvas digambar LIVE per state (off/mute/on), tiap
+    // status beda warna + teks besar, gak lagi banner branding generik.
+    const { statusBanner } = await import("../../src/lib/nova-notif-card.js")
+    const banner = await statusBanner(state, {
         body: (config.bot?.name || 'Nova-AI') + ' · notifikasi status',
     })
     let saluranOutcome = { status: 'skipped', reason: channelSkippedReason || 'unknown', jid: channelTarget || null }
