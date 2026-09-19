@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 
@@ -86,6 +87,13 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, result.image, null, m, {
             type: 'image'
         })
+        // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+        await m.reply(mediaInfoCaption({ header: "Nova Figurine", fields: [
+            { icon: "📥", label: "Input", value: "Foto" },
+            { icon: "🎨", label: "Style", value: "Action Figure" },
+            { icon: "⚙️", label: "Engine", value: "SeaArt Live3D" },
+            { icon: "⬇️", label: "Hasil", value: "Gambar" },
+        ] }))
         
     } catch (error) {
         m.reply(claraWrap("tofigure3", te(m.prefix, m.command, m.pushName), "error"))

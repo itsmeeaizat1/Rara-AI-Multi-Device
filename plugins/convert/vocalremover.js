@@ -4,6 +4,7 @@ import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
 import te from "../../src/lib/nova-error.js";
 import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 
 const pluginConfig = {
   name: "vocalremover",
@@ -47,7 +48,14 @@ async function handler(m, { sock, command }) {
       : res.data.result.vocal_path;
 
     const fileName = isVocalRemover ? "instrumental.mp3" : "vocal.mp3";
-    const caption = isVocalRemover ? "🎵 Instrumental (tanpa vocal)" : "🎤 Vocal saja (tanpa instrumental)";
+
+    // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+    const caption = mediaInfoCaption({ header: "Nova Vocal Remover", fields: [
+      { icon: "📥", label: "Input", value: "Audio" },
+      { icon: "🎛️", label: "Mode", value: isVocalRemover ? "Instrumental (tanpa vocal)" : "Vocal saja (tanpa instrumental)" },
+      { icon: "⚙️", label: "Engine", value: "Betabotz Voice Remover" },
+      { icon: "⬇️", label: "Hasil", value: "Audio MP3" },
+    ] });
 
     await sock.sendMessage(m.chat, {
       audio: { url: resultUrl },
@@ -55,7 +63,6 @@ async function handler(m, { sock, command }) {
       fileName: fileName,
       caption: caption,
     }, { quoted: m });
-    await m.reply(novaBerhasil("vocalremover"));
   } catch (e) {
     console.error("vocalremover error:", e.message);
     await m.react("❌");
