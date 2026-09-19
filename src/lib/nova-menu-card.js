@@ -121,7 +121,7 @@ function pickMenuThumb(requestedPath) {
  * 3. Semua Kategori → single_select popup list kategori (buildCategoryButton)
  * 4. Sewa          → single_select popup: Beli Premium / Sewa Bot
  * 5. Owner         → single_select popup: Laporkan Bug / Kirim Masukan
- * 6. Support       → single_select popup: Join Grup Resmi / Ikuti Saluran
+ * 6. Support       → single_select popup: Beri Penilaian / Join Grup / Saluran
  *                    Resmi / Donasi
  *
  * @param {object} m
@@ -161,6 +161,12 @@ function buildNavButtons(m, db, prefix = ".") {
   ];
 
   const supportRows = [
+    {
+      header: "",
+      title: "Beri Penilaian",
+      description: "Rate bot ini, pilihan puas sampai kecewa",
+      id: `${prefix}penilaian`,
+    },
     {
       header: "",
       title: "Join Grup Resmi",

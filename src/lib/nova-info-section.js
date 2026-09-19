@@ -175,6 +175,19 @@ export async function buildMenuInfo(m, ctx = {}) {
   const runtimeStr = formatUptime(uptime || process.uptime() * 1000);
   const botName = botConfig?.bot?.name || "Nova AI";
 
+  // ── Rating bot (request owner 19 Sep: "rating 4.5/5.0 total rating dr user
+  // yg beri rating tersimpan di db biar g ilang") — sumber db.data.penilaian
+  // yang dipersist plugin penilaian.js (.penilaian), bukan angka statis ──
+  let ratingText = "-/5.0 (belum ada)";
+  try {
+    const list = Array.isArray(db?.data?.penilaian) ? db.data.penilaian : [];
+    const vals = list.map((r) => parseInt(r?.rating, 10)).filter((v) => v >= 1 && v <= 5);
+    if (vals.length) {
+      const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+      ratingText = `${avg.toFixed(1)}/5.0 (${vals.length} penilai)`;
+    }
+  } catch {}
+
   // ── Database info ──
   let totalUsers = 0, totalPremium = 0, totalBanned = 0, totalRegistered = 0;
   let totalGroups = 0, totalActiveGroups = 0;
@@ -312,6 +325,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     "Info Bot",
     { label: "Nama", value: botName },
     { label: "Versi", value: "v" + String(botIdentity.bot?.version || botConfig?.bot?.version || "-").replace(/^v/i, "") },
+    { label: "Rating", value: ratingText },
     { label: "Mode", value: (botConfig?.mode || "public").toUpperCase() },
     { label: "Prefix", value: prefix },
     ...(totalCommands ? [{ label: "Total Perintah", value: formatNum(totalCommands) }] : []),
