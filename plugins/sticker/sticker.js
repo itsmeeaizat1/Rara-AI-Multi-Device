@@ -6,6 +6,7 @@ import { promisify } from 'util'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaCaption, claraWrap, claraLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
 const execAsync = promisify(exec)
 
 const pluginConfig = {
@@ -154,9 +155,11 @@ async function handler(m, { sock, config: botConfig }) {
             const tempVideo = path.join(tempDir, `duration_check_${Date.now()}.mp4`)
             fs.writeFileSync(tempVideo, buffer)
             
+            let videoDur = null
             try {
                 const { stdout } = await execAsync(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${tempVideo}"`)
                 const duration = parseFloat(stdout.trim())
+                videoDur = duration
                 
                 if (duration > 10) {
                     await m.reply(novaError("Sticker", `Video terlalu panjang! ${duration.toFixed(1)} detik, maksimal 10 detik`))
@@ -204,7 +207,21 @@ async function handler(m, { sock, config: botConfig }) {
             await sock.sendVideoAsSticker(m.chat, buffer, m, { packname, author })
         }
         await m.react("🐣");
-        await m.reply(novaBerhasil("Sticker"))
+        // format info hasil (request owner 19-20 Sep — field sesuai fitur)
+        const filters = [
+            options.crop && "crop",
+            options.circle && "circle",
+            options.rounded && "rounded",
+            options.resize && `resize ${options.resize}`,
+        ].filter(Boolean).join(", ")
+        await m.reply(mediaInfoCaption({ header: "Nova Sticker", fields: [
+            { icon: "📥", label: "Input", value: isVideo ? "Video" : "Foto" },
+            { icon: "⏱️", label: "Durasi", value: videoDur ? `${videoDur.toFixed(1)} detik` : null },
+            { icon: "🎨", label: "Filter", value: filters || null },
+            { icon: "👤", label: "Pack", value: `${packname} • ${author}` },
+            { icon: "📦", label: "Ukuran", value: fmtBytes(buffer.length) },
+            { icon: "⬇️", label: "Hasil", value: isVideo ? "Stiker Animasi WebP" : "Stiker WebP" },
+        ] }))
     } catch (error) {
         console.error('[sticker.js]', error.message || error)
         m.reply(novaGangguan("Sticker"))
