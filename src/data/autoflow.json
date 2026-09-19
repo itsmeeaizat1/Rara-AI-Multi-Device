@@ -16,5 +16,71 @@
     "enabled": true,
     "hits": 0,
     "targetChat": "test@g.us"
+  },
+  {
+    "trigger": {
+      "type": "keyword",
+      "value": "assalamualaikum",
+      "match": "contains"
+    },
+    "action": {
+      "type": "reply",
+      "value": "waalaikumsalam"
+    },
+    "scope": "all",
+    "cooldown": 10,
+    "id": "AF-002",
+    "enabled": true,
+    "hits": 0,
+    "targetChat": "y@g.us"
+  },
+  {
+    "trigger": {
+      "type": "schedule",
+      "value": "05:00"
+    },
+    "action": {
+      "type": "reply",
+      "value": "waktunya sholat subuh"
+    },
+    "scope": "all",
+    "cooldown": 10,
+    "id": "AF-003",
+    "enabled": true,
+    "hits": 0,
+    "targetChat": "y@g.us"
+  },
+  {
+    "trigger": {
+      "type": "keyword",
+      "value": "assalamualaikum",
+      "match": "contains"
+    },
+    "action": {
+      "type": "reply",
+      "value": "waalaikumsalam"
+    },
+    "scope": "all",
+    "cooldown": 10,
+    "id": "AF-004",
+    "enabled": true,
+    "hits": 0,
+    "targetChat": "y@g.us"
+  },
+  {
+    "trigger": {
+      "type": "schedule",
+      "value": "05:00"
+    },
+    "action": {
+      "type": "reply",
+      "value": "waktunya sholat subuh"
+    },
+    "scope": "all",
+    "cooldown": 10,
+    "id": "AF-005",
+    "enabled": true,
+    "hits": 0,
+    "targetChat": "y@g.us"
   }
 ]

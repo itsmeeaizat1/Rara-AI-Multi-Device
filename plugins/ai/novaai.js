@@ -378,11 +378,20 @@ async function handler(m, { sock, conn, config, db }) {
         await editFinal(finalText + "\n\n" + voiceFailHint(issues));
         return true; // sudah dijawab (teks + catatan) — pemanggil jangan kirim dobel
       }
-      // status box jadi catatan singkat; teks penuh tetap dikirim kalau ada link
+      // 🔹 REVISI OWNER 20 Sep 2026 ("klo pakai suara pesan ini dihapus aja:
+      // 🎙️ jawabannya kuputarakan di voice note di atas ya jd balasnya via
+      // vn lngsung"): TANPA link → pesan status/loading DIHAPUS TOTAL
+      // (pola delete voicechanger.js) — jawaban murni VN doang, gak ada
+      // catatan 🎙️. ADA link → teks penuh tetap dikirim (link gak kebaca
+      // kalau dibacakan di VN), catatan tetap gak dikirim.
       if (/https?:\/\//i.test(finalText)) {
         await editFinal(finalText);
-      } else {
-        await editFinal("🎙️ " + smallcapsText("jawabannya kuputarakan di voice note di atas ya"));
+      } else if (novaStatusKey) {
+        try {
+          await sock.sendMessage(m.chat, {
+            delete: { remoteJid: m.chat, id: novaStatusKey.id, fromMe: true },
+          });
+        } catch {}
       }
       return true;
     } catch { return false; }
