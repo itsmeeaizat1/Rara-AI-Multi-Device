@@ -172,6 +172,23 @@ const botConfig = {
   t("menu card: row id = .penilaian", rateRow && rateRow.id === ".penilaian", JSON.stringify(rateRow));
 }
 
+// ── case 7b: tombol Penggunaan sebelum Pilih Layanan (Sewa) — popup Rules/Tutorial (owner 20 Sep) ──
+{
+  const m2 = { sender: "6289999000001@s.whatsapp.net", isGroup: false };
+  const btns = buildNavButtons(m2, db, ".");
+  t("menu card: 7 tombol sekarang", btns.length === 7, "jumlah=" + btns.length);
+  const sewaIdx = btns.findIndex((b) => b.type === "single_select" && /sewa/i.test(fromSC(b.text || "")));
+  const pgIdx = btns.findIndex((b) => b.type === "single_select" && /penggunaan/i.test(fromSC(b.text || "")));
+  t("menu card: tombol Penggunaan ada & SEBELUM tombol Sewa (Pilih Layanan)",
+    pgIdx >= 0 && sewaIdx === pgIdx + 1, `pg=${pgIdx} sewa=${sewaIdx}`);
+  const pg = btns[pgIdx];
+  const pgRows = pg?.sections?.[0]?.rows || [];
+  const rulesRow = pgRows.find((r) => /^rules$/i.test(r.title || ""));
+  const tutRow = pgRows.find((r) => /^tutorial$/i.test(r.title || ""));
+  t("menu card: popup Penggunaan ada list 'Rules' (id .rules)", rulesRow && rulesRow.id === ".rules", JSON.stringify(rulesRow));
+  t("menu card: popup Penggunaan ada list 'Tutorial' (id .tutorial)", tutRow && tutRow.id === ".tutorial", JSON.stringify(tutRow));
+}
+
 // ── case 8: info section menu/allmenu nunjukin Rating dari db (persist) ──
 {
   const { buildMenuInfo } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-info-section.js")).href);
