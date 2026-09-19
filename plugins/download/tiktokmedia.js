@@ -8,6 +8,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { claraWrap, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -97,18 +98,16 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("TikTok Search", `Semua hasil untuk "${query}" berupa foto, bukan video.\nCoba .ttimage ${query}`));
       }
       const video = pool[Math.floor(Math.random() * pool.length)];
-      const caption = mediaCaption({
-        platformIcon: "🎵",
-        platformName: "TikTok",
+      // format owner 19 Sep (search engine kasih video HD no watermark)
+      const caption = tiktokCaption({
         title: video.title || "TikTok Video",
-        author: video.author?.nickname || null,
-        authorHandle: video.author?.uniqueId || null,
-        duration: fmtDuration(video.duration),
-        views: video.stats?.plays,
-        likes: video.stats?.likes,
-        format: "Video HD (No Watermark)",
-        method: "TikTok Search",
-      }) + (video.link ? `\nLink: ${video.link}` : "");
+        uploader: video.author?.nickname || null,
+        username: video.author?.uniqueId || null,
+        duration: video.duration || null,
+        views: video.stats?.plays || null,
+        likes: video.stats?.likes || null,
+        download: "HD",
+      }) + (video.link ? `\n🔗 *Link:* ${video.link}` : "");
 
       await sock.sendMessage(m.chat, {
         video: { url: video.download },

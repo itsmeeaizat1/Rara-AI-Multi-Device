@@ -7,6 +7,7 @@ import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { getdlTikTokSearch } from "../../src/scraper/getdl-tiktok.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -203,13 +204,10 @@ async function handler(m, { sock }) {
         await m.react("⏬");
         await sock.sendMessage(m.chat, {
           video: { url: video.playUrl },
-          caption: mediaCaption({
-            platformIcon: "🎵",
-            platformName: "TikTok",
+          caption: tiktokCaption({
             title: video.title || "TikTok Video",
-            duration: video.duration ? `${Math.floor(video.duration / 60)}:${String(video.duration % 60).padStart(2, "0")}` : null,
-            format: "Video (No Watermark)",
-            method: "GetDL Search",
+            duration: video.duration || null,
+            download: "SD",
           }),
           contextInfo: mediaPreviewCard({
             title: video.title || "TikTok Video",
@@ -289,15 +287,12 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("tiktok", text, { urlParam: "query", extraParams: { apikey: "kyzz" } });
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      const caption = mediaCaption({
-        platformIcon: "🎵",
-        platformName: "TikTok",
+      // format owner 19 Sep: judul/uploader/username/durasi/view/like/komentar/share/download
+      const caption = tiktokCaption({
         title: ikyyResult.title || "TikTok Video",
-        author: ikyyResult.author || null,
+        uploader: ikyyResult.author || null,
         duration: ikyyResult.duration || null,
-        description: ikyyResult.description || null,
-        format: "Video HD (No Watermark)",
-        method: "IkyyXD",
+        download: "HD",
       });
       await sock.sendMessage(m.chat, {
         video: { url: video.url },
@@ -324,22 +319,18 @@ async function handler(m, { sock }) {
         (e) => e.type == "nowatermark_hd" || e.type == "nowatermark",
       );
 
-      const caption = mediaCaption({
-        platformIcon: "🎵",
-        platformName: "TikTok",
+      // format owner 19 Sep: judul/uploader/username/durasi/view/like/komentar/share/download
+      // (tikwm kasih hdplay → HD; cuma play biasa → SD — jujur sesuai kemampuan)
+      const caption = tiktokCaption({
         title: result.title || "TikTok Video",
-        author: result.author?.nickname || null,
-        authorHandle: result.author?.fullname || null,
-        duration: result.duration || null,
-        uploadDate: result.taken_at || null,
+        uploader: result.author?.nickname || null,
+        username: result.author?.fullname || null,
+        duration: result.durations || null,
         views: result.stats?.views || null,
         likes: result.stats?.likes || null,
         comments: result.stats?.comment || null,
         shares: result.stats?.share || null,
-        downloads: result.stats?.download || null,
-        description: `🎵 ${result.music_info?.title || ""} - ${result.music_info?.author || ""}`,
-        format: "Video HD (No Watermark)",
-        method: "tikwm",
+        download: zann?.type === "nowatermark_hd" ? "HD" : "SD",
       });
 
       await sock.sendMessage(m.chat, {

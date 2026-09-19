@@ -6,6 +6,7 @@ import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } fr
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -165,17 +166,16 @@ async function handler(m, { sock }) {
     try {
         const result = await savett(url)
 
-        const caption = mediaCaption({
-            platformIcon: "🎵", platformName: "TikTok DL2",
-            title: result.username || "TikTok Video",
-            author: result.username || null,
+        // format owner 19 Sep: judul/uploader/username/durasi/view/like/komentar/share/download
+        // (savett nowm standard → SD)
+        const caption = tiktokCaption({
+            uploader: result.username || null,
             duration: result.duration || null,
             views: result.views || null,
             likes: result.likes || null,
             comments: result.comments || null,
             shares: result.shares || null,
-            format: "Video (No Watermark)",
-            method: "savett scrape",
+            download: result.type === "video" ? "SD" : null,
         });
 
         if (result.type === 'video' && result.downloads.nowm.length > 0) {
