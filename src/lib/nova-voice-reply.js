@@ -137,7 +137,10 @@ async function edgeTTSBuffer(text, voiceLang) {
     const { MsEdgeTTS, OUTPUT_FORMAT } = await import("msedge-tts");
     const clean = String(text).replace(/["`']/g, "").replace(/\n/g, " ").slice(0, 500);
     const tts = new MsEdgeTTS({});
-    await tts.setMetadata(voiceLang, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    // 🔹 FIX 19 Sep 2026 (owner: "suaranya pecah kayak tts android biasa,
+    // bkn suara neural"): 48kbps mono = bitrate serendah TTS murahan —
+    // naik ke 96kbps biar suara neural beneran terdengar HD.
+    await tts.setMetadata(voiceLang, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
     const { audioStream } = tts.toStream(clean);
     const buf = await new Promise((resolve, reject) => {
       const chunks = [];
@@ -157,7 +160,8 @@ async function convertToOgg(inputBuffer) {
   const outFile = tempPath("vrout", ".ogg");
   try {
     fs.writeFileSync(inFile, inputBuffer);
-    await execAsync("ffmpeg -y -i " + inFile + " -codec:a libopus -b:a 32k -ar 48000 " + outFile + " 2>/dev/null", { timeout: 30000 });
+    // opus 32k → 64k (FIX 19 Sep: 32k bikin suara pecah pas diputar WA)
+    await execAsync("ffmpeg -y -i " + inFile + " -codec:a libopus -b:a 64k -ar 48000 " + outFile + " 2>/dev/null", { timeout: 30000 });
     if (fs.existsSync(outFile) && fs.statSync(outFile).size > 500) return fs.readFileSync(outFile);
     return null;
   } catch (e) {
@@ -167,6 +171,37 @@ async function convertToOgg(inputBuffer) {
     try { fs.unlinkSync(inFile); } catch {}
     try { fs.unlinkSync(outFile); } catch {}
   }
+}
+
+// ═══════════ DIAGNOSA — kenapa VN gak jadi (owner 19 Sep: mode suara ON
+// tapi jawaban balik teks SENYAP — sekarang penyebabnya keliatan di chat)
+// return array string masalah; kosong = semua dependensi sehat.
+let _diagImpl; // seam: function = mock; undefined = asli
+export function _setVoiceDiagForTest(fn) { _diagImpl = fn; }
+
+export async function diagnoseVoiceTts() {
+  if (typeof _diagImpl === "function") return _diagImpl();
+  const issues = [];
+  try {
+    await import("msedge-tts");
+  } catch {
+    issues.push("package msedge-tts gak kebaca — jalankan npm install di folder bot lalu pm2 restart");
+  }
+  try {
+    await execAsync("ffmpeg -version", { timeout: 8000 });
+  } catch {
+    issues.push("ffmpeg gak ketemu — apt-get install ffmpeg");
+  }
+  return issues;
+}
+
+// teks catatan kegagalan VN — dipakai pemanggil (novaai voiceAnswer) biar
+// kegagalan TTS gak senyap: jawaban tetep dikirim teks + penyebab jelas.
+export function voiceFailHint(issues) {
+  const why = (issues && issues.length)
+    ? issues.join(" · ")
+    : "Microsoft TTS gagal dijangkau dari VPS (cek log console bot — kemungkinan jaringan diblokir/403)";
+  return "🎙️ ⚠️ Mode suara aktif tapi jawaban gak bisa dibacakan VN.\nPenyebab: " + why;
 }
 
 // ═══════════ SATU PINTU: ucapkan teks jadi voice note (PTT) ═══════════

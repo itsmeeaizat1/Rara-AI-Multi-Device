@@ -262,7 +262,8 @@ async function edgeTTSBuffer(text, voiceLang) {
     const { MsEdgeTTS, OUTPUT_FORMAT } = await import("msedge-tts");
     const clean = text.replace(/["`']/g, "").replace(/\n/g, " ").slice(0, 500);
     const tts = new MsEdgeTTS({});
-    await tts.setMetadata(voiceLang, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    // FIX 19 Sep 2026: 48kbps → 96kbps (sama kyk nova-voice-reply — suara neural HD)
+    await tts.setMetadata(voiceLang, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
     const { audioStream } = tts.toStream(clean);
     const buf = await new Promise((resolve, reject) => {
       const chunks = [];
@@ -283,7 +284,8 @@ async function convertToOgg(inputBuffer) {
   const outFile = tempPath("vnout", ".ogg");
   try {
     fs.writeFileSync(inFile, inputBuffer);
-    await execAsync("ffmpeg -y -i " + inFile + " -codec:a libopus -b:a 32k -ar 48000 " + outFile + " 2>/dev/null", { timeout: 30000 });
+    // opus 32k → 64k (FIX 19 Sep: biar gak pecah pas diputar WA)
+    await execAsync("ffmpeg -y -i " + inFile + " -codec:a libopus -b:a 64k -ar 48000 " + outFile + " 2>/dev/null", { timeout: 30000 });
     if (fs.existsSync(outFile) && fs.statSync(outFile).size > 500) {
       return fs.readFileSync(outFile);
     }
