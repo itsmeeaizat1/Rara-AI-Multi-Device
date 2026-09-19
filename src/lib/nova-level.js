@@ -183,9 +183,19 @@ async function generateLevelInfoCard({ name, rpg }) {
 // fit "contain" biar kartu 800x280 utuh kebaca (letterbox gelap).
 async function levelPreviewThumb(buffer) {
   try {
+    // FIX 19 Sep 2026 (owner: "pas level rpg muncul, thumbnail canvas tdk
+    // tampil krna ditanam di ad external reply"): field thumbnail di
+    // externalAdReply protokol WA = jpegThumbnail — WhatsApp cuma
+    // MERENDER JPEG. Kartu canvas dikirim sebagai PNG RGBA (ada alpha
+    // channel) → WA nolak senyap → preview kosong, cuma teks level up
+    // yang muncul. JPEG di studio (default serialize-thumb) merender
+    // normal, itu yang bikin keliatan "cuma kartu canvas gak muncul".
+    // FIX: flatten alpha ke background gelap (PNG RGBA → JPEG solid) +
+    // encode JPEG q88 (sekalian jauh lebih kecil dari PNG).
     return await sharp(buffer)
       .resize(640, 360, { fit: "contain", background: "#0b0b14" })
-      .png()
+      .flatten({ background: "#0b0b14" })
+      .jpeg({ quality: 88 })
       .toBuffer();
   } catch {
     return buffer;
