@@ -2318,3 +2318,12 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - LIVE VERIFY: kartu generateRpgCard asli → thumbnail JPEG magic byte `ff d8`, 640x360, alpha:false.
 - E2E: level-bar 29/29 + activity-progress 18/18 + weathersystemrpg 23/23 + import 14/14 (e2e level cuma assert thumbnail terisi — aman).
 - VPS: `git pull && pm2 restart` (tanpa npm install) → mainkan RPG sampai naik level → thumbnail kartu level up harus tampil besar di preview.
+
+## FIX Multi-Language: .menu/.allmenu Tetap Bahasa Bawaan (19 Sep 2026)
+- Report owner: "languagemenubot berhasil di caption usage fitur & tombol menu ke-translate, tapi .menu dan .allmenu biasa masih bahasa bawaan".
+- AKAR 1 (TEKS PANJAS GAGAL SENYAP): teks .menu/.allmenu itu ribuan karakter (info user + waktu + database + server + weather + kategori). Endpoint Google Translate gratis (translate_a/single) dirancang buat teks pendek — request untuk teks sebesar itu suka gagal/timeout, dan kode lama langsung nyerah → SELURUH menu balik ke bahasa Indonesia senyap. Caption & tombol yang pendek nyaris selalu sukses — makanya keliatan "caption & tombol berhasil, menu gak".
+- AKAR 2 (LABEL HARDCODE): dua label di chip/popup menu card ("Pilih Kategori Menu" list_title popup kategori, "Menu Selengkapnya" button_title, plus label "Versi" di chip) ditulis langsung toSC("...") — GAK PERNAH lewat translateUI sama sekali, jadi walau body/footer/tombol ke-translate, popup kategori & chip versi tetap bahasa Indonesia.
+- FIX 1 (nova-i18n.js): teks > 1500 karakter dipecah per-BARIS jadi chunk (box drawing & emoji tetap utuh per baris, gak pernah motong tengah baris), tiap chunk ditranslate terpisah lalu disambung balik persis strukturnya; chunk yang gagal tetap pakai teks asli (sebagian translated > semua gagal senyap) + retry 1x jeda 350ms buat transient failure.
+- FIX 2 (nova-menu-card.js): 3 label chip/popup masuk jalur translateUI (sebelum smallcaps) — "Pilih Kategori Menu", "Menu Selengkapnya", "Versi" kini ikut bahasa user. Otomatis kebagian .menu, .allmenu, .allmenucategory (sama-sama lewat sendMenuCard).
+- E2E: i18n 24→31 (+7: chunk >1500 char, ke-translate penuh, >1 request Google, jumlah baris utuh, 3 label chip/popup) + formatguard 20/20 + import 14/14.
+- VPS: `git pull && pm2 restart` (tanpa npm install) → .languagemenubot on → .languagemenubot en → .menu → .allmenu (teks + popup kategori + chip versi semua ke-translate).

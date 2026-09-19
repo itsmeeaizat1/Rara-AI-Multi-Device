@@ -45,10 +45,15 @@ global.fetch = async (url, opts) => {
   fetchCalls.push(String(url));
   if (String(url).startsWith(GT)) {
     const q = decodeURIComponent(String(url).match(/q=([^&]+)/)?.[1] || "");
+    const ql = q.toLowerCase();
     let out = q;
-    if (q.includes("menu utama bot")) out = "main bot menu, please choose a feature";
-    if (q === "pilih fitur") out = "choose a feature";
-    if (q === "unduhan siap") out = "download ready";
+    if (ql.includes("menu utama bot")) out = "main bot menu, please choose a feature";
+    if (ql === "pilih fitur") out = "choose a feature";
+    if (ql === "unduhan siap") out = "download ready";
+    if (ql === "pilih kategori menu") out = "choose menu category";
+    if (ql === "menu selengkapnya") out = "more menu";
+    if (ql === "versi") out = "version";
+    if (ql.includes("baris panjang")) out = q.replace(/baris panjang/ig, "long line");
     return {
       ok: true,
       json: async () => [[ [out, q, null, null], [null, null, "en"] ]],
@@ -143,6 +148,30 @@ w("\n— makeLangAwareSock: jalur sock.sendMessage LANGSUNG ikut ke-translate + 
   try { await db.save(); } catch {}
 }
 
+w("\n— translateUI: teks panjang (.menu/.allmenu) dipecah per-chunk —");
+{
+  // FIX 19 Sep 2026 (owner: ".menu/.allmenu masih bahasa bawaan padahal
+  // caption fitur lain & tombol udah ke-translate"): endpoint gratis Google
+  // Translate dirancang buat teks pendek — 1 request GAGAL/timeout untuk
+  // teks panjang dulu langsung nyerah SELURUH teks balik bahasa asli.
+  // Sekarang teks > MAX_CHUNK dipecah per-baris, tiap potongan translate
+  // SENDIRI (beberapa fetch call), gagal sebagian != gagal semua.
+  const longLine = "baris panjang nomor";
+  const longText = Array.from({ length: 120 }, (_, i) => `${longLine} ${i}`).join("\n");
+  t("teks generate > MAX_CHUNK (1500)", longText.length > 1500, "len=" + longText.length);
+  fetchCalls = [];
+  const outLong = await translateUI(longText, SENDER);
+  t("teks panjang KE-TRANSLATE (dulu: gagal senyap → tetap bahasa asli)",
+    outLong.includes("long line") && !outLong.includes("baris panjang"),
+    outLong.slice(0, 80));
+  t("dipecah jadi LEBIH DARI 1 request Google (bukan 1 request raksasa)",
+    fetchCalls.filter((u) => u.startsWith(GT)).length > 1,
+    "calls=" + fetchCalls.filter((u) => u.startsWith(GT)).length);
+  t("jumlah baris tetap utuh setelah disambung balik (gak ada baris ke-drop)",
+    outLong.split("\n").length === longText.split("\n").length,
+    outLong.split("\n").length + " vs " + longText.split("\n").length);
+}
+
 w("\n— sendMenuCard: menu + tombol ikut ke-translate (hook sebelum smallcaps) —");
 {
   const { sendMenuCard } = await import(R + "/src/lib/nova-menu-card.js");
@@ -179,6 +208,14 @@ w("\n— sendMenuCard: menu + tombol ikut ke-translate (hook sebelum smallcaps) 
     plainDump.includes("main bot menu, please choose a feature"), plainDump.slice(0, 160));
   t("footer ke-translate", plainDump.includes("choose a feature"));
   t("label tombol ke-translate (dictionary Kembali → Back)", plainDump.toLowerCase().includes("back"), plainDump.slice(0, 300));
+  // FIX 19 Sep 2026: dua chip/popup ini SEBELUMNYA hardcoded Indonesia,
+  // gak pernah lewat translateUI — sekarang wajib ikut ke-translate juga.
+  t("chip popup list_title ke-translate (Pilih Kategori Menu → choose menu category)",
+    plainDump.toLowerCase().includes("choose menu category"), plainDump.slice(0, 400));
+  t("chip popup button_title ke-translate (Menu Selengkapnya → more menu)",
+    plainDump.toLowerCase().includes("more menu"), plainDump.slice(0, 400));
+  t("chip versi label ke-translate (Versi → version)",
+    plainDump.toLowerCase().includes("version"), plainDump.slice(0, 400));
   // tanpa bahasa → gak ada translate (sock asli dipakai)
   const mNo = { ...mk().m, sender: "6289990000@s.whatsapp.net" };
   const noLangSends = mk();
