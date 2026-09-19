@@ -115,13 +115,15 @@ function pickMenuThumb(requestedPath) {
  * Set tombol nav standar (request owner 2026-09-04) — dipakai SEMUA command
  * ber-tombol: .menu, .allmenu, .allmenucategory, .sewa, .owner.
  *
- * 6 tombol (revisi owner 2026-09-04):
+ * 7 tombol (tambahan owner 2026-09-20):
  * 1. Menu          → quick_reply .menu
  * 2. Semua Menu    → quick_reply .allmenu
  * 3. Semua Kategori → single_select popup list kategori (buildCategoryButton)
- * 4. Sewa          → single_select popup: Beli Premium / Sewa Bot
- * 5. Owner         → single_select popup: Laporkan Bug / Kirim Masukan
- * 6. Support       → single_select popup: Beri Penilaian / Join Grup / Saluran
+ * 4. Penggunaan    → single_select popup: Rules / Tutorial (owner 20 Sep:
+ *                    tombol SEBELUM Pilih Layanan, popup list Rules & Tutorial)
+ * 5. Sewa          → single_select popup: Beli Premium / Sewa Bot
+ * 6. Owner         → single_select popup: Laporkan Bug / Kirim Masukan
+ * 7. Support       → single_select popup: Beri Penilaian / Join Grup / Saluran
  *                    Resmi / Donasi
  *
  * @param {object} m
@@ -130,6 +132,23 @@ function pickMenuThumb(requestedPath) {
  * @returns {Array} buttons siap dipakai di sendMenuCard
  */
 function buildNavButtons(m, db, prefix = ".") {
+  // Request owner 20 Sep 2026: tombol "Penggunaan" SEBELUM tombol Sewa
+  // (Pilih Layanan) — pas diklik muncul popup list Rules & Tutorial.
+  const penggunaanRows = [
+    {
+      header: "",
+      title: "Rules",
+      description: "Peraturan & ketentuan penggunaan bot",
+      id: `${prefix}rules`,
+    },
+    {
+      header: "",
+      title: "Tutorial",
+      description: "Cara pakai bot untuk pemula",
+      id: `${prefix}tutorial`,
+    },
+  ];
+
   const sewaRows = [
     {
       header: "",
@@ -191,6 +210,12 @@ function buildNavButtons(m, db, prefix = ".") {
     { id: `${prefix}menu`, text: toSC("Menu") },
     { id: `${prefix}allmenu`, text: toSC("Semua Menu") },
     buildCategoryButton(m, db, prefix, toSC("Semua Kategori")),
+    {
+      type: "single_select",
+      text: toSC("Penggunaan"),
+      title: toSC("Penggunaan Bot"),
+      sections: [{ title: toSC("Ketentuan & Panduan"), rows: penggunaanRows }],
+    },
     {
       type: "single_select",
       text: toSC("Sewa"),
