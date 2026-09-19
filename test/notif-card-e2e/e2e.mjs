@@ -123,6 +123,15 @@ db.db.data.groups["999888777-1@g.us"] = { id: "999888777-1@g.us", subject: "Grup
 await db.save();
 
 // reset cache saluran (import segar udah otomatis fresh di process ini)
+// seam canvas: kartu status jadi deterministik di e2e — pakai createCanvas
+// asli tapi loadImage DIBUANG (jalur gradient offline) biar gak nembak
+// network wallpapersden yang bikin test flaky (kadang >2.6 dtk > jeda test)
+const { _setStatusCardCanvasForTest } = await import(R + "/src/lib/nova-notif-card.js");
+const _kit = await import("@napi-rs/canvas");
+_setStatusCardCanvasForTest({
+  createCanvas: _kit.createCanvas,
+  loadImage: async () => { throw new Error("offline e2e"); },
+});
 const botPlugin = await import(R + "/plugins/owner/bot.js");
 const bcSent = [];
 const bSock = {
@@ -152,6 +161,13 @@ t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding stati
   const th = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
   return Buffer.isBuffer(th) && th.length > 100 && th[0] === 0xff && th[1] === 0xd8;
 })(), "thumbnail bytes");
+{
+  // revisi owner 20 Sep: kartu status gaya kartu level — letterbox 640x360 JPEG
+  const sharpMod = (await import("sharp")).default;
+  let dim = { width: 0, height: 0 };
+  try { dim = await sharpMod(toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail).metadata(); } catch {}
+  t("4i. thumbnail 640x360 letterbox — persis ukuran kartu level", dim.width === 640 && dim.height === 360, JSON.stringify(dim));
+}
 
 // nyala lagi
 bcSent.length = 0;
