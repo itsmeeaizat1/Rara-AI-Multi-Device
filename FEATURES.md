@@ -2359,3 +2359,10 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - FIX: (1) regex baru /^\d{1,2}x?$/ — angka polos ".hd 16" DAN ".hd 16x" dua-duanya sah; (2) range dinaikin 2..16 (clamp 17→16); (3) scale pangkat-2 (4/8/16) di-upscale BERTAHAP 2x per pass dengan intermediate PNG lossless — detail jauh lebih terjaga vs lompat sekali; (4) batas MAX_OUTPUT_PX 16000 — gambar gede otomatis scale diturunin + caption jujur "scale diturunin dari 4x"; (5) hasil >1920px auto-document (anti kompres WA, pola remini).
 - E2E BARU test/hd-scale-e2e 15/15 (belum pernah ada suite hd sebelumnya) + import 14/14.
 - VPS: `git pull && pm2 restart` (tanpa npm install) → reply gambar + `.hd 16` → caption "Scale: 16x".
+
+## ATURAN 1080p AUTO-DOCUMENT DIPLIHARA (19 Sep 2026)
+- Konfirmasi owner: hasil enhance DI ATAS 1080p wajib dikirim sebagai document (bukan gambar langsung) — WA nge-compress image, document jaga kualitas.
+- FIX (plugins/tools/hd.js + plugins/tools/remini.js): aturan lama `>1920 dua sisi` bocor — hasil 1600x1600 (udah di atas 1080p) masih dikirim sebagai image. Sekarang 1080p = 1920x1080 ORIENTASI-AGNOSTIK: sisi panjang >1920 ATAU sisi pendek >1080 → document.
+- imgcompress.js tetap pakai resize 1920 (fitur kompres input, beda konteks — bukan aturan kirim).
+- E2E hd-scale 16/16 (tes 1600x1600→document, 800x800→image) + remini 58/58 + import 14/14.
+- VPS: `git pull && pm2 restart` (tanpa npm install).

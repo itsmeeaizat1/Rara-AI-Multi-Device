@@ -55,7 +55,16 @@ out("— .hd 16 (angka polos, dulunya GAK dikenali) —");
   // image WA dikirim sebagai buffer? mock nyimpen buffer persis → probe langsung
   const d = await dims(buf);
   t("1c. dimensi hasil 1600x1600 (16x beneran)", d.w === 1600 && d.h === 1600, JSON.stringify(d));
-  t("1d. hasil 1600px (<1920) tetep dikirim sebagai image", !!img?.msg?.image, "type: " + (img?.msg?.image ? "image" : "doc"));
+  // 1600x1600: sisi pendek 1600 > 1080 → DI ATAS 1080p → document (aturan owner)
+  t("1d. hasil 1600x1600 (di atas 1080p) → document", !!img?.msg?.document, "type: " + (img?.msg?.image ? "image" : "doc"));
+}
+
+out("\n— .hd 8 (800x800, di bawah 1080p) → tetap image —");
+{
+  const src = await makeJpeg(100, 100);
+  const { sent } = await runHd(["8"], src);
+  const img = sent.find((s) => s.type === "msg" && (s.msg.image || s.msg.document));
+  t("4c. hasil 800x800 (di bawah 1080p) → image", !!img?.msg?.image, "type: " + (img?.msg?.image ? "image" : "doc"));
 }
 
 out("\n— .hd 16 input gede → hasil >1920px dikirim document (anti kompres WA) —");

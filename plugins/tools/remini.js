@@ -525,9 +525,13 @@ async function handler(m, { sock, args }) {
 
     await m.react("🐣");
 
-    // Hasil di atas 1080p → otomatis document (WA bakal nge-compress kalo dikirim
-    // sebagai image — document jaga kualitas hasil HD/2K/4K/5K)
-    const autoDoc = outWidth > 1920 || outHeight > 1920;
+    // Hasil di atas 1080p → otomatis document (WA bakal nge-compress kalo
+    // dikirim sebagai image — document jaga kualitas hasil HD/2K/4K/5K).
+    // 1080p = 1920x1080, orientasi-agnostik (instruksi owner 19 Sep):
+    // sisi PANJANG lewat 1920 ATAU sisi PENDEK lewat 1080.
+    const longSide = Math.max(outWidth || 0, outHeight || 0);
+    const shortSide = Math.min(outWidth || 0, outHeight || 0);
+    const autoDoc = longSide > 1920 || shortSide > 1080;
 
     const resTag = outWidth ? ` (${outWidth}x${outHeight})` : "";
     const caption = `*Remini AI Enhanced*\nMode: ${label}\n${engineNote}\nQuality: ${sizeMB}MB${resTag}`;
