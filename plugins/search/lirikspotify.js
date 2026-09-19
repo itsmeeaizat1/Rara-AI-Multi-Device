@@ -7,6 +7,7 @@
 // dibersihin biar enak dibaca di chat.
 import { claraWrap, novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
+import { lyricsCaption } from "../../src/lib/nova-lyrics-format.js";
 
 const pluginConfig = {
   name: "lirikspotify",
@@ -32,12 +33,6 @@ function stripLrc(synced) {
     .map((l) => l.trim())
     .filter(Boolean)
     .join("\n");
-}
-
-function fmtDur(sec) {
-  const s = Number(sec) || 0;
-  if (!s) return "-";
-  return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 }
 
 async function handler(m, { sock }) {
@@ -71,16 +66,15 @@ async function handler(m, { sock }) {
     if (lyrics.length > MAX) lyrics = lyrics.slice(0, MAX) + "\n... (dipotong)";
 
     await m.react("🐣");
+    // format owner 19 Sep: judul/artis/album/durasi → lirik (satu pintu nova-lyrics-format)
     return m.reply(
-      claraWrap("LirikSpotify", [
-        `🎵 *${r.trackName || input}*`,
-        r.artistName ? `🎤 Artis: ${r.artistName}` : "",
-        r.albumName ? `💽 Album: ${r.albumName}` : "",
-        r.duration ? `⏱️ Durasi: ${fmtDur(r.duration)}` : "",
-        `🔗 Sumber: LRCLIB`,
-        ``,
+      lyricsCaption({
+        title: r.trackName || input,
+        artist: r.artistName,
+        album: r.albumName,
+        duration: r.duration,
         lyrics,
-      ].filter(Boolean))
+      }) + `\n\n🔗 Sumber: LRCLIB`
     );
   } catch (err) {
     console.error("[LirikSpotify]", err.message || err);

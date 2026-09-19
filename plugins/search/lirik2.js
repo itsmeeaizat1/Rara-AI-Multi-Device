@@ -11,6 +11,7 @@
 
 import { searchSongLyrics } from "../../src/scraper/genius-lyrics.js";
 import { novaGuide, novaEmpty, novaError, toSC } from "../../src/lib/nova-menu-style.js";
+import { lyricsCaption, enrichLyricsMeta } from "../../src/lib/nova-lyrics-format.js";
 
 const pluginConfig = {
   name: "lirik2",
@@ -54,12 +55,15 @@ async function handler(m, { sock }) {
       lyrics = lyrics.slice(0, 3500) + "\n\n... (lirik dipotong, lengkapnya di " + d.url + ")";
     }
 
+    // format owner 19 Sep: judul/artis/album/durasi → lirik
+    // (genius scrape gak punya album/durasi → enrich dari LRCLIB)
+    const meta = await enrichLyricsMeta(d.title, d.artist);
     const caption =
-      `${d.title}\n` +
-      `by ${d.artist}\n` +
-      (d.release_date ? `Released: ${d.release_date}\n` : "") +
-      `\n${lyrics}\n` +
-      `\nSource: Genius`;
+      lyricsCaption({
+        title: d.title, artist: d.artist,
+        album: meta?.album, duration: meta?.duration,
+        lyrics,
+      }) + `\n\nSource: Genius`;
 
     await m.react("🐣");
 
