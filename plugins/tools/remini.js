@@ -436,11 +436,19 @@ async function handler(m, { sock, args }) {
       };
 
       if (!factorArg) {
-        // ── jalur default: IHANCER AI + poles FFmpeg (engine utama, owner 17 Sep) ──
+        // ── jalur default: IHANCER AI PRO + poles FFmpeg (engine utama) ──
+        // UPGRADE 19 Sep 2026 (owner: "biar enhance lbh tinggi, jernihnya HD
+        // bgt"): parameter pro + enhancing-more — VERIFIED LIVE output naik
+        // 4x lipat (input 200x150 → 800x600 vs 400x300 param lama), sekaligus
+        // pass enhance kedua buat makin jernih.
         let ih = null;
         try {
           try { await m.react("🎨"); } catch {}
-          ih = await ihancerEnhance(mediaBuffer, { timeoutMs: 120000 });
+          ih = await ihancerEnhance(mediaBuffer, {
+            timeoutMs: 120000,
+            isProVersion: true, // versi pro — hasil lebih tinggi
+            isEnhancingMore: true, // pass enhance kedua — makin jernih
+          });
         } catch (e0) {
           console.error("[REMINI] Ihancer gagal:", e0.message);
         }
@@ -449,12 +457,20 @@ async function handler(m, { sock, args }) {
           // polish error, hasil ihancer MENTAH tetep dikirim (jangan buang)
           try {
             resultBuffer = await polishImage(ih);
-            label = "Ihancer AI + Poles (JPEG)";
+            label = "Ihancer AI Pro 4x + Poles (JPEG)";
           } catch {
             resultBuffer = ih;
-            label = "Ihancer AI (JPEG)";
+            label = "Ihancer AI Pro 4x (JPEG)";
           }
-          engineNote = "Engine: Ihancer AI + FFmpeg Polish (tanpa watermark)";
+          engineNote = "Engine: Ihancer AI Pro 4x HD + FFmpeg Polish (tanpa watermark)";
+          // rekam resolusi hasil buat caption + auto-doc
+          try {
+            const sharpMod = await import("sharp");
+            const sharp = sharpMod.default || sharpMod;
+            const meta = await sharp(resultBuffer, { failOn: "none" }).metadata();
+            outWidth = meta.width || 0;
+            outHeight = meta.height || 0;
+          } catch {}
         } else {
           // fallback 1: Photiu AI + polish (engine lama)
           try {
@@ -513,7 +529,8 @@ async function handler(m, { sock, args }) {
     // sebagai image — document jaga kualitas hasil HD/2K/4K/5K)
     const autoDoc = outWidth > 1920 || outHeight > 1920;
 
-    const caption = `*Remini AI Enhanced*\nMode: ${label}\n${engineNote}\nQuality: ${sizeMB}MB`;
+    const resTag = outWidth ? ` (${outWidth}x${outHeight})` : "";
+    const caption = `*Remini AI Enhanced*\nMode: ${label}\n${engineNote}\nQuality: ${sizeMB}MB${resTag}`;
     if (wantDoc || autoDoc || resultBuffer.length > 5 * 1024 * 1024) {
       return await sock.sendMessage(
         m.chat,

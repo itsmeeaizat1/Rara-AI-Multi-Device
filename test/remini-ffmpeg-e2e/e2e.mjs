@@ -196,6 +196,26 @@ w("\n— ihancer scraper (engine utama baru 17 Sep — seam mock) —");
   try { await ihancerEnhance(Buffer.from("")); } catch { threwInput = true; }
   check("ihancer: input kosong → error", threwInput);
 
+  // FIX 19 Sep: 429 → retry otomatis (jeda dipendekin via seam)
+  const { _setIhancer429WaitForTest } = await import("../../src/scraper/ihancer.js");
+  _setIhancer429WaitForTest(5);
+  let calls429 = 0;
+  _setIhancerHttpForTest(async () => {
+    calls429++;
+    if (calls429 <= 2) return { status: 429, data: Buffer.from("slow down") };
+    return { status: 200, data: await makeTestJpeg(800, 600) };
+  });
+  let out429 = null;
+  try { out429 = await ihancerEnhance(srcBuf); } catch (e) { out429 = null; }
+  check("ihancer: 429 2x → retry ke-3 sukses", !!out429 && out429[0] === 0xff && calls429 === 3, "calls: " + calls429);
+
+  // 429 terus-terusan → tetap error informatif
+  _setIhancerHttpForTest(async () => ({ status: 429, data: Buffer.from("slow down") }));
+  let threw429 = false;
+  try { await ihancerEnhance(srcBuf); } catch (e) { threw429 = /HTTP 429/.test(e.message); }
+  check("ihancer: 429 abis retry → error HTTP 429", threw429);
+  _setIhancer429WaitForTest(null);
+
   _clearIhancerHttpForTest();
 }
 
@@ -204,7 +224,8 @@ w("\n— plugin .remini: engine utama IHANCER lewat handler (seam) —");
   const { _setIhancerHttpForTest, _clearIhancerHttpForTest } = await import("../../src/scraper/ihancer.js");
   const { handler: rHandler } = await import("../../plugins/tools/remini.js");
 
-  _setIhancerHttpForTest(async () => ({ status: 200, data: await makeTestJpeg(400, 300) }));
+  let lastFormData = null;
+  _setIhancerHttpForTest(async (req) => { lastFormData = req.data; return { status: 200, data: await makeTestJpeg(800, 600) }; });
   const src = await makeTestJpeg(200, 150);
   const sent = [];
   const reacts = [];
@@ -228,7 +249,13 @@ w("\n— plugin .remini: engine utama IHANCER lewat handler (seam) —");
   await rHandler(m, { sock, args: [] });
   check("hasil dikirim via sendMessage", sent.some((s) => s.type === "msg" && s.msg.image), JSON.stringify(sent.map((s) => s.type)));
   const cap = sent.find((s) => s.msg?.image)?.msg.caption || "";
-  check("caption Engine: Ihancer AI + FFmpeg Polish", cap.includes("Engine: Ihancer AI + FFmpeg Polish"), cap.slice(0, 140));
+  check("caption Engine: Ihancer AI Pro 4x + FFmpeg Polish", cap.includes("Engine: Ihancer AI Pro 4x HD + FFmpeg Polish"), cap.slice(0, 140));
+  // UPGRADE 19 Sep: param pro + enhancing more wajib kekirim (output 4x)
+  // (form-data package gak punya .get() — baca raw multipart buffer)
+  const fdRaw = String(lastFormData?.getBuffer?.() || "");
+  check("ihancer dipanggil pakai is_pro_version=true", /name="is_pro_version"\r\n\r\ntrue/.test(fdRaw), fdRaw.slice(0, 80));
+  check("ihancer dipanggil pakai is_enhancing_more=true", /name="is_enhancing_more"\r\n\r\ntrue/.test(fdRaw), fdRaw.slice(0, 80));
+  check("caption nunjukin resolusi hasil (800x600)", cap.includes("800x600"), cap.slice(0, 200));
   check("react 🎨 → 🐣", reacts.includes("🎨") && reacts.includes("🐣"), reacts.join(","));
   _clearIhancerHttpForTest();
 }
