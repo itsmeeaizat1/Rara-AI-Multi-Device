@@ -76,8 +76,8 @@ const botConfig = {
     const params = JSON.parse(selectBtn.buttonParamsJson);
     const rows = params.sections[0].rows;
     t("no-arg: 5 pilihan rating di popup", rows.length === 5, "dapat " + rows.length);
-    t("no-arg: ada pilihan Puas Banget ⭐⭐⭐⭐⭐", rows.some((r) => /puas banget/i.test(fromSC(r.title)) && (r.title.match(/⭐/g) || []).length === 5));
-    t("no-arg: ada pilihan Kecewa ⭐", rows.some((r) => /kecewa/i.test(fromSC(r.title))));
+    t("no-arg: ada pilihan Sangat Baik ⭐⭐⭐⭐⭐", rows.some((r) => /sangat baik/i.test(fromSC(r.title)) && (r.title.match(/⭐/g) || []).length === 5));
+    t("no-arg: ada pilihan Sangat Buruk ⭐", rows.some((r) => /sangat buruk/i.test(fromSC(r.title))));
     t("no-arg: id row format .penilaian <nilai>", rows.every((r) => /^\.penilaian [1-5]$/.test(r.id || r.rowId || "")), JSON.stringify(rows.map((r) => r.id || r.rowId)));
   }
 }
@@ -90,7 +90,7 @@ const botConfig = {
   await penilaianHandler(mockM(".penilaian 5"), { sock: mockSock(), config: botConfig });
   const rec = (db.data.penilaian || [])[0];
   t("nilai 5: tersimpan ke db.data.penilaian", !!rec && rec.rating === 5, JSON.stringify(rec));
-  t("nilai 5: label Puas Banget + nama pengirim", rec && rec.label === "Puas Banget" && rec.fromName === "Penguji");
+  t("nilai 5: label Sangat Baik + nama pengirim", rec && rec.label === "Sangat Baik" && rec.fromName === "Penguji");
   const thanks = fromSC(replies[0] || "");
   t("nilai 5: reply terima kasih + bintang", /terima kasih/i.test(thanks) && thanks.includes("⭐⭐⭐⭐⭐"));
   t("nilai 5: reply nunjukin owner dapet notifikasi", /owner udah dapet notifikasi/i.test(thanks));
@@ -98,7 +98,7 @@ const botConfig = {
   t("nilai 5: DM ke owner terkirim", !!dmOwner);
   if (dmOwner) {
     const dm = fromSC(dmOwner.payload.text || "");
-    t("nilai 5: DM label 'Penilaian Masuk' + rating", /penilaian masuk/i.test(dm) && /puas banget/i.test(dm));
+    t("nilai 5: DM label 'Penilaian Masuk' + rating", /penilaian masuk/i.test(dm) && /sangat baik/i.test(dm));
   }
 }
 
@@ -166,17 +166,28 @@ const botConfig = {
   const btns = buildNavButtons(m, db, ".");
   const support = btns.find((b) => b.type === "single_select" && /support/i.test(fromSC(b.text || "")));
   t("menu card: tombol Support ada", !!support);
-  const rows = support?.sections?.[0]?.rows || [];
-  const rateRow = rows.find((r) => /beri penilaian/i.test(fromSC(r.title || "")));
-  t("menu card: Support popup ada row 'Beri Penilaian'", !!rateRow);
-  t("menu card: row id = .penilaian", rateRow && rateRow.id === ".penilaian", JSON.stringify(rateRow));
+  // revisi owner 20 Sep: "Beri Penilaian" DIPINDAH jadi tombol nav sendiri
+  // setelah Support (total 8) — popup Support gak punya row rating lagi
+  const sRows = support?.sections?.[0]?.rows || [];
+  t("menu card: Support popup gak ada row 'Beri Penilaian' lagi (dipindah)", !sRows.some((r) => /beri penilaian/i.test(fromSC(r.title || ""))));
+  const rate = btns.find((b) => b.type === "single_select" && /beri penilaian/i.test(fromSC(b.text || "")));
+  t("menu card: tombol nav 'Beri Penilaian' ada", !!rate);
+  const rateRows = rate?.sections?.[0]?.rows || [];
+  t("menu card: popup rating 5 pilihan Sangat Baik s/d Sangat Buruk", rateRows.length === 5
+    && /sangat baik/i.test(fromSC(rateRows[0]?.title || "")) && /sangat buruk/i.test(fromSC(rateRows[4]?.title || "")),
+    JSON.stringify(rateRows.map((r) => fromSC(r.title))));
+  t("menu card: id row = .penilaian 5 s/d .penilaian 1 (input manual sah)",
+    rateRows.every((r) => /^\.penilaian [1-5]$/.test(r.id || "")), JSON.stringify(rateRows.map((r) => r.id)));
 }
 
 // ── case 7b: tombol Penggunaan sebelum Pilih Layanan (Sewa) — popup Rules/Tutorial (owner 20 Sep) ──
 {
   const m2 = { sender: "6289999000001@s.whatsapp.net", isGroup: false };
   const btns = buildNavButtons(m2, db, ".");
-  t("menu card: 7 tombol sekarang", btns.length === 7, "jumlah=" + btns.length);
+  t("menu card: 8 tombol sekarang (revisi owner 20 Sep)", btns.length === 8, "jumlah=" + btns.length);
+  const supIdx = btns.findIndex((b) => b.type === "single_select" && /support/i.test(fromSC(b.text || "")));
+  const rateIdx = btns.findIndex((b) => b.type === "single_select" && /beri penilaian/i.test(fromSC(b.text || "")));
+  t("menu card: tombol Beri Penilaian SETELAH tombol Support", rateIdx === supIdx + 1, `sup=${supIdx} rate=${rateIdx}`);
   const sewaIdx = btns.findIndex((b) => b.type === "single_select" && /sewa/i.test(fromSC(b.text || "")));
   const pgIdx = btns.findIndex((b) => b.type === "single_select" && /penggunaan/i.test(fromSC(b.text || "")));
   t("menu card: tombol Penggunaan ada & SEBELUM tombol Sewa (Pilih Layanan)",
