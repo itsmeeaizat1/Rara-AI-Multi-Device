@@ -98,7 +98,7 @@ function parseJsonLocal(raw) {
 const MAX_ACTS = 3;
 const ACT_ACTIONS = [
   "kick", "add", "promote", "demote", "open", "close", "lockedit", "unlockedit",
-  "rename", "desc", "tagall", "link",
+  "rename", "desc", "tagall", "link", "leave",
   "antilink", "antibadword", "antisticker", "antivoice", "antispam", // toggle fitur automod grup
 ];
 // kata kunci fitur automod — dipakai buat DUA hal: (1) local detector fallback,
@@ -137,7 +137,7 @@ Maksimal ${MAX_QUERIES} query — pendek, spesifik, kata kunci ala google (bukan
 
 2. AKSI WhatsApp grup (tugas meminta otomasi grup: kick member, tutup grup, ubah nama grup, dll):
 {"mode": "act", "actions": [{"action": "kick", "target": "nama persis yang ditulis user", "value": null}]}
-Action valid: kick (keluarkan member), add (tambah member), promote (jadikan admin), demote (turunkan admin), open (buka grup — semua member bisa chat), close (tutup grup — cuma admin bisa chat), lockedit (kunci edit info grup), unlockedit (buka edit info grup), rename (ubah nama grup, value = nama baru), desc (ubah deskripsi grup, value = deskripsi baru), tagall (tag semua member), link (KHUSUS user MINTA/LIHAT/AMBIL link undangan grup — bukan nama fitur), antilink (nyala/matiin filter anti-link, value "on"/"off"), antibadword (nyala/matiin filter kata kasar, value "on"/"off"), antisticker (nyala/matiin blokir sticker, value "on"/"off"), antivoice (nyala/matiin blokir voice note, value "on"/"off"), antispam (nyala/matiin filter spam, value "on"/"off").
+Action valid: kick (keluarkan member), add (tambah member), promote (jadikan admin), demote (turunkan admin), open (buka grup — semua member bisa chat), close (tutup grup — cuma admin bisa chat), lockedit (kunci edit info grup), unlockedit (buka edit info grup), rename (ubah nama grup, value = nama baru), desc (ubah deskripsi grup, value = deskripsi baru), tagall (tag semua member), leave (BOT keluar dari grup — OWNER ONLY, target = nama grup persis yang ditulis user, contoh "keluar dari grup cari teman sejati", bisa dikirim dari DM owner), link (KHUSUS user MINTA/LIHAT/AMBIL link undangan grup — bukan nama fitur), antilink (nyala/matiin filter anti-link, value "on"/"off"), antibadword (nyala/matiin filter kata kasar, value "on"/"off"), antisticker (nyala/matiin blokir sticker, value "on"/"off"), antivoice (nyala/matiin blokir voice note, value "on"/"off"), antispam (nyala/matiin filter spam, value "on"/"off").
 PENTING: kalau user minta "aktifkan/nyalain/matiin antilink" (atau antibadword/antisticker/antivoice/antispam) itu MENYALAKAN FITUR MODERASI, action-nya "antilink" dst dengan value on/off — BUKAN action "link" (action "link" HANYA kalau user eksplisit minta link undangan grup, kata "link" berdiri sendiri, bukan bagian dari nama fitur "antilink").
 Maksimal ${MAX_ACTS} action. Target = nama orang persis seperti ditulis user (atau nomor 62xxx kalau user kasih nomor); action yang gak butuh target isi null. Rename/desc/antilink/antibadword/antisticker/antivoice/antispam isi value.
 
@@ -173,7 +173,7 @@ Aturan jawaban: bahasa yang sama dengan tugas user (default Indonesia). Jawab LE
 
 // deteksi aksi lokal — fallback kalau LLM plan down (biar "tutup grup" dll
 // tetep jalan tanpa AI) — heuristik kata kunci Indonesia
-function detectActLocal(task) {
+export function detectActLocal(task) {
   const raw = String(task);
   const s = raw.toLowerCase();
   const acts = [];
@@ -182,7 +182,22 @@ function detectActLocal(task) {
     const m = raw.match(new RegExp(re.source, "i"));
     return m ? m[1].replace(/\b(yang|itu|dong|ya|pls|please|nih|dari grup|keluar)\b/gi, "").trim() : null;
   };
-  if (/\b(kick|keluarkan|keluarin|buang|usir|tendang|kicking)\b/.test(s))
+  // ── LEAVE GROUP (owner only) — "keluar dari grup X" / "keluarin bot dari
+  // grup X" / "leave grup X". Bisa TANPA nama ("keluar dari grup ini") kalau
+  // perintah dikirim dari dalam grup itu. DETEKSI PERTAMA biar gak ketabrak
+  // regex kick (yang juga kenal "keluarkan/keluarin").
+  let leaveName = null;
+  // antara kata kerja & "grup" CUMA boleh ada perantara bot/aku/dari —
+  // "keluarkan BUDI dari grup ini" tetap kick orang (bukan leave).
+  const leaveM = raw.match(/\b(?:keluar(?:in|kan)?|leave|out)\b(?:\s+(?:bot|aku|saya))*(?:\s+dari)?\s+(?:grup|group|gc)\b\s*(.+)?/i);
+  if (leaveM) {
+    leaveName = (leaveM[1] || "")
+      .replace(/\b(yang|itu|ini|dong|ya|pls|please|sekarang|gih|deh|aj[ai]?)\b/gi, "")
+      .replace(/\b(bot|aku|dari)\b/gi, "")
+      .trim() || null;
+    acts.push({ action: "leave", target: leaveName });
+  }
+  if (!leaveM && /\b(kick|keluarkan|keluarin|buang|usir|tendang|kicking)\b/.test(s))
     acts.push({ action: "kick", target: targetAfter(/\b(?:kick|keluarkan|keluarin|buang|usir|tendang|kicking)\s+(?:orang\s+)?(?:yang\s+)?(?:bernama\s+)?([a-z0-9 @_]{2,40})/) });
   if (/\b(promote|promotein|jadikan admin|jadiin admin)\b/.test(s)) acts.push({ action: "promote", target: targetAfter(/(?:promote|jadikan admin|jadiin admin)\s+(?:orang\s+)?(?:yang\s+)?(?:bernama\s+)?([a-z0-9 @_]{2,40})/) });
   if (/\b(demote|demotein|turunkan admin|lepas admin)\b/.test(s)) acts.push({ action: "demote", target: targetAfter(/(?:demote|turunkan admin|lepas admin)\s+(?:orang\s+)?(?:yang\s+)?(?:bernama\s+)?([a-z0-9 @_]{2,40})/) });
@@ -209,7 +224,13 @@ function detectActLocal(task) {
     if (offRe.test(s)) acts.push({ action: feat, value: "off" });
     else if (onRe.test(s) || /\bon\b/.test(s)) acts.push({ action: feat, value: "on" });
   }
-  return acts.map(a => ({ action: a.action, target: a.target || null, value: a.value || null })).slice(0, MAX_ACTS);
+  // "keluarkan/keluarin bot dari grup X" — regex kick nyasar nangkep;
+  // kalau ada action leave, kick yang targetnya "bot" dibuang.
+  const hasLeave = acts.some((a) => a.action === "leave");
+  const filtered = hasLeave
+    ? acts.filter((a) => !(a.action === "kick" && /\b(bot|aku|saya|diri sendiri)\b/i.test(String(a.target || ""))))
+    : acts;
+  return filtered.map(a => ({ action: a.action, target: a.target || null, value: a.value || null })).slice(0, MAX_ACTS);
 }
 
 /**

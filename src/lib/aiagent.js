@@ -516,9 +516,21 @@ export const TOOLS = {
   // ─── OWNER ONLY: LEAVE GROUP ───
   leavegc: {
     perm: 'owner', danger: false,
-    desc: 'bot keluar dari grup (owner only)',
+    desc: 'bot keluar dari grup (owner only) — sebutin NAMA GRUPNYA kalau perintahnya dari DM owner, contoh: "keluar dari grup cari teman sejati" (args.group = nama grup); tanpa nama = keluar dari grup tempat perintah dikirim',
     done: '✅ Oke, aku keluar dari grup ya.',
-    run: (conn, m) => conn.groupLeave(m.chat)
+    run: async (conn, m, a) => {
+      const gname = String(a?.group || a?.target || a?.name || '').trim()
+      if (gname) {
+        const { resolveGroupByName } = await import('./nova-group-registry.js')
+        const r = await resolveGroupByName(conn, gname)
+        if (!r) throw new Error('Grup "' + gname + '" gak ketemu — tulis nama grupnya persis')
+        if (r.ambiguous) throw new Error('Nama "' + gname + '" ambigu (' + r.ambiguous.join(', ') + ') — tulis lebih spesifik')
+        await conn.groupLeave(r.jid)
+        return '✅ Bot keluar dari grup: ' + r.subject
+      }
+      if (!m?.isGroup) throw new Error('Sebutin nama grupnya (kamu lagi di DM) — contoh: keluar dari grup cari teman sejati')
+      return conn.groupLeave(m.chat)
+    }
   },
 
   // ─── DOWNLOAD FILE DARI WEB (request owner 12 Sep 2026: "aku maunya dia
@@ -781,9 +793,12 @@ export function localParse(text) {
   if (/(buka|open)/.test(t) && /grup|gc\b|group/.test(t)) return { tool: 'opengc', args: {} }
 
   // ─── KICK/USIR ───
+  // "keluarkan BOT dari grup X" = leave, BUKAN kick user "bot" (request
+  // owner 21 Sep: leave-by-name) — sisa teksnya cuma bot/aku → skip ke leavegc.
   if (/(kick|keluarkan|usir|tendang|buang)/.test(t)) {
     const nameMatch = original.replace(/(kick|keluarkan|usir|tendang|buang|dari grup|dari gc|dari group)/gi, '').trim()
-    return { tool: 'kick', args: nameMatch ? { user: nameMatch } : {} }
+    const isBotSelf = /^(bot|aku|saya)\b/i.test(nameMatch) && /\b(?:grup|group|gc)\b/.test(t)
+    if (!isBotSelf) return { tool: 'kick', args: nameMatch ? { user: nameMatch } : {} }
   }
 
   // ─── BLOKIR/UNBLOKIR ───
@@ -914,8 +929,14 @@ export function localParse(text) {
   if (/(hapus|delete|del|buang).*(pesan|message|msg)/.test(t)) return { tool: 'delmsg', args: {} }
   if (/^hapus$/.test(t.trim())) return { tool: 'delmsg', args: {} }
 
-  // ─── LEAVE GROUP (owner) ───
-  if (/(keluar|leave|out).*(grup|gc|group)/.test(t)) return { tool: 'leavegc', args: {} }
+  // ─── LEAVE GROUP (owner) — nama grup kecapture (jalur DM) ───
+  {
+    const lm = t.match(/(?:keluar(?:in|kan)?|leave|out)[^\n]*?\b(?:grup|group|gc)\b\s*(.+)?/i)
+    if (lm) {
+      const gname = (lm[1] || '').replace(/\b(dari|yang|itu|ini|dong|ya|pls|please|bot|aku)\b/gi, '').trim()
+      return { tool: 'leavegc', args: gname ? { group: gname } : {} }
+    }
+  }
 
   // ─── KALKULATOR INSTAN (skills 12 Sep 2026) ───
   // "berapa 25*4+10" / "5+5" → calc tanpa AI call. Nomor telepon gak boleh

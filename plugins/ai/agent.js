@@ -136,6 +136,34 @@ async function execAction(a, ctx, m, sock) {
     throw new Error("bot gak punya akses ubah info grup");
   };
 
+  // ── LEAVE GROUP (owner only) — target NAMA GRUP, jalan dari DM owner
+  // (request 21 Sep 2026: "keluar dari grup cari teman sejati" dari DM).
+  // GAK pakai gate() — perintah memang dateng dari luar grup.
+  if (a.action === "leave") {
+    if (!m.isOwner) return { ok: false, msg: "Cuma owner yang bisa nyuruh bot keluar dari grup" };
+    let jid = null;
+    let gname = "";
+    if (a.target) {
+      const { resolveGroupByName } = await import("../../src/lib/nova-group-registry.js");
+      const r = await resolveGroupByName(sock, a.target);
+      if (!r) return { ok: false, msg: `Grup "${a.target}" gak ketemu — tulis nama grupnya persis kayak yang tertera di info grup` };
+      if (r.ambiguous) return { ok: false, msg: `Nama "${a.target}" ambigu (${r.ambiguous.join(", ")}) — tulis lebih spesifik` };
+      jid = r.jid;
+      gname = r.subject;
+    } else {
+      if (!m.isGroup) return { ok: false, msg: "Sebutin nama grupnya (kamu lagi di DM) — contoh: keluar dari grup cari teman sejati" };
+      jid = m.chat;
+      gname = m.groupMetadata?.subject || m.subject || "grup ini";
+    }
+    if (jid === m.chat && m.isGroup && !m.isOwner) return { ok: false, msg: "Cuma owner yang bisa nyuruh bot keluar" };
+    try {
+      await sock.groupLeave(jid);
+      return { ok: true, msg: `✅ Bot keluar dari grup: ${gname}` };
+    } catch (e) {
+      return { ok: false, msg: `Gagal keluar grup: ${e?.message || "WhatsApp nolak"}` };
+    }
+  }
+
   switch (a.action) {
     case "open": {
       const g = gate(); if (g) return { ok: false, msg: g };
@@ -806,4 +834,4 @@ async function handler(m, { sock, db, deps } = {}) {
   }
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, execAction };

@@ -53,6 +53,43 @@ export async function syncGroupRegistry(sock, db = null) {
   return { added, total };
 }
 
+/**
+ * Cari grup yang bot ikuti BERDASARKAN NAMA (request owner 21 Sep 2026:
+ * "keluar dari grup cari teman sejati" dari DM — agent harus bisa nemuin
+ * grupnya dari nama). Live fetch groupFetchAllParticipating duluan,
+ * fallback registry db. Balikin {jid, subject} kalau unik,
+ * {ambiguous: [nama...]} kalau banyak kandidat, null kalau gak ada.
+ */
+export async function resolveGroupByName(sock, name, db = null) {
+  const n = String(name || "").toLowerCase().trim();
+  if (!n) return null;
+  let groups = [];
+  try {
+    const all = await sock?.groupFetchAllParticipating?.();
+    for (const [jid, meta] of Object.entries(all || {})) {
+      if (meta?.subject) groups.push({ jid, subject: String(meta.subject) });
+    }
+  } catch {}
+  if (!groups.length) {
+    try {
+      const d = safeDb(db);
+      for (const [jid, meta] of Object.entries(d?.getAllGroups?.() || {})) {
+        if (meta?.name) groups.push({ jid, subject: String(meta.name) });
+      }
+    } catch {}
+  }
+  const exact = groups.filter((g) => g.subject.toLowerCase() === n);
+  if (exact.length === 1) return exact[0];
+  if (exact.length > 1) return { ambiguous: exact.map((g) => g.subject) };
+  const partial = groups.filter((g) => {
+    const s = g.subject.toLowerCase();
+    return (s.includes(n) || n.includes(s)) && s !== "";
+  });
+  if (partial.length === 1) return partial[0];
+  if (partial.length > 1) return { ambiguous: partial.map((g) => g.subject) };
+  return null;
+}
+
 // cache hitung live — groupFetchAllParticipating itu network call ke
 // server WA, jangan ditembak tiap buka menu (TTL 5 menit)
 const TTL_MS = 5 * 60 * 1000;
