@@ -21,7 +21,7 @@
   "audioMenu": true,
   "premiumUsers": [],
   "similarity": true,
-  "botRules": "1.tes\\n2. tes",
+  "botRules": null,
   "goodbyeType": 1,
   "onlyAdmin": false,
   "selfAdmin": false,
