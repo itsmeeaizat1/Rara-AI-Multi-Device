@@ -97,6 +97,29 @@ export function recordChatMessage(msg, config) {
 }
 
 /**
+ * Cari SEMUA pesan dari satu pengirim (nomor polos tanpa @) di seluruh chat
+ * — grup maupun DM. Kembali urut BARU → LAMA, max `limit`.
+ * Dipakai fitur .whois (dossier AI dari histori persisten).
+ */
+export function searchSenderMessages(sender, limit = 60) {
+  try {
+    const num = String(sender || "").split("@")[0];
+    if (!num) return [];
+    const store = _store(getDatabase());
+    const out = [];
+    for (const chat of Object.keys(store)) {
+      for (const row of store[chat] || []) {
+        if (String(row.s) === num) out.push({ chat, ...row });
+      }
+    }
+    out.sort((a, b) => (b.t || 0) - (a.t || 0));
+    return out.slice(0, limit);
+  } catch {
+    return [];
+  }
+}
+
+/**
  * Ambil jejak pesan terakhir di chat (urut LAMA → BARU).
  */
 export function getChatHistory(chat, limit = 8) {
