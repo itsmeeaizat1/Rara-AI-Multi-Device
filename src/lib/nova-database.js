@@ -95,6 +95,9 @@ class Database {
         premium: { file: "premium.json", defaults: [] },
         owner: { file: "owner.json", defaults: [] },
         partner: { file: "partner.json", defaults: [] },
+        // CHAT HISTORY PERSISTEN (owner 21 Sep: histori chat tetap kesimpan
+        // saat restart, hilang hanya kalau file databasenya dihapus)
+        chathistory: { file: "chathistory.json", defaults: {} },
       };
 
       for (const [key, { file, defaults }] of Object.entries(fileMap)) {
@@ -122,6 +125,7 @@ class Database {
         sewa: this.stores.sewa.data,
         premium: this.stores.premium.data,
         owner: this.stores.owner.data,
+        chathistory: this.stores.chathistory.data,
       };
 
       this.db.write = () => this.flushAll();
@@ -820,6 +824,7 @@ class Database {
       sewa: this.stores.sewa.data,
       premium: this.stores.premium.data,
       owner: this.stores.owner.data,
+      chathistory: this.stores.chathistory.data,
     };
 
     if (this.stores.partner) {

@@ -26,6 +26,7 @@ import {
 } from "./lib/nova-lid.js";
 import { initAutoBackup } from "./lib/nova-auto-backup.js";
 import { initAutoReport } from "./lib/nova-auto-report.js";
+import { recordChatMessage } from "./lib/nova-chat-log.js";
 import { initAutoBirthday } from "./lib/nova-auto-birthday.js";
 import { initHealthCheck } from "./lib/nova-auto-api-health.js";
 import { initReengage } from "./lib/nova-auto-reengage.js";
@@ -1244,6 +1245,10 @@ async function startConnection(options = {}) {
           const _pdb = (await import("./lib/nova-database.js")).getDatabase(); pulseTrack(_pdb, groupJid, _sender, Date.now());
         }
       } catch {}
+
+      // === CHAT HISTORY PERSISTEN (owner 21 Sep: jejak histori tetap
+      // kesimpan saat restart — dipakai AI satuan keyword tadi/riwayat) ===
+      try { recordChatMessage(msg, config); } catch {}
 
       const metadataKeys = [
         "senderKeyDistributionMessage",
