@@ -8,6 +8,7 @@
  */
 
 import zlib from "node:zlib";
+import { stripMarkdownTables } from "./nova-md-table.js";
 import { getDatabase } from "./nova-database.js";
 import { getProviderApiKey } from "./apikey/ai-chain.js";
 
@@ -1166,7 +1167,7 @@ async function callAIRaw(firstArg, secondArg) {
       if (!data?.status) throw new Error(`AI ${provKey}: ${data?.message || " respon gagal"}`);
       const text = prov.parseResponse(data);
       if (!text) throw new Error("AI mengembalikan respon kosong.");
-      return text;
+      return stripMarkdownTables(text);
     }
 
     const body2 = prov.buildBody({ model: effectiveModel, messages: normalizedMessages, systemPrompt });
@@ -1190,7 +1191,7 @@ async function callAIRaw(firstArg, secondArg) {
     const data = await res.json().catch(() => ({}));
     const text = prov.parseResponse(data);
     if (!text) throw new Error("AI mengembalikan respon kosong.");
-    return text;
+    return stripMarkdownTables(text);
   }
 
   try {
@@ -1213,7 +1214,7 @@ async function callAIRaw(firstArg, secondArg) {
       if (!data?.status) throw new Error(data?.message || "respon gagal");
       const text = ikyyRetry.parseResponse(data);
       if (!text) throw new Error("respon kosong");
-      return text;
+      return stripMarkdownTables(text);
     } catch (retryErr) {
       console.log(`[AI-Service] fallback Ikyy juga gagal: ${retryErr.message}`);
       throw mainErr; // lempar error asli biar caller tahu
