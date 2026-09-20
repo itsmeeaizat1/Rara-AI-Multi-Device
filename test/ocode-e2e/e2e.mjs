@@ -137,15 +137,28 @@ console.log("\n— section 5: plugin —");
   // GOTCHA: judul reply ke-smallcaps — asersi pakai teks isi yang gak ke-transform
   t("5b. .ocode tanpa tugas → panduan", /suruh aku ngoding/i.test(replies[0] || ""), replies[0]?.slice(0, 60));
 
-  // tugas jalan → laporan + summary
+  // tugas jalan → popup izin per file → klik Ijinkan → laporan + summary
   replies.length = 0;
   m = mkM(["ubah", "halo", "jadi", "hai"], true);
   const sent = [];
-  await plugin.handler(m, {
-    sock: { sendMessage: async (jid, p) => { sent.push(p); return { key: { id: "x" } }; } },
-    args: ["ubah", "halo", "jadi", "hai"],
-  });
-  const report = replies.join("\n");
+  const sockMock = { sendMessage: async (jid, p) => { sent.push(p); return { key: { id: "x" } }; } };
+  const taskP = plugin.handler(m, { sock: sockMock, args: ["ubah", "halo", "jadi", "hai"] });
+  // tunggu popup izin muncul (agent jalan async — poll max 5 dtk)
+  let popup = null;
+  for (let k = 0; k < 50 && !popup; k++) {
+    await new Promise((res) => setTimeout(res, 100));
+    popup = sent.find((p) => p?.interactiveMessage);
+  }
+  t("5c0. popup izin muncul pas mau edit", !!popup, sent.length);
+  const popupStr = JSON.stringify(popup || {});
+  t("5c1. popup nyebut file + tombol ijinkan/tolak", /fitur\.js/.test(popup?.interactiveMessage?.body?.text || "") && popupStr.includes("ocodeizin ya") && popupStr.includes("ocodeizin tidak"), popupStr.slice(0, 120));
+  // klik "Ijinkan" → resolve pending approval
+  const mIzin = mkM(["izin", "ya"], true);
+  await plugin.handler(mIzin, { sock: sockMock, args: ["izin", "ya"] });
+  // GOTCHA: judul box ke-smallcaps (ɪᴢɪɴ) — cari teks isi, bukan judul
+  t("5c2. klik izin ya → konfirmasi diijinkan", /diijinkan/i.test(replies.join("\n")), replies.slice(-3));
+  await taskP;
+  const report = replies.filter((x) => !/izin/i.test(x)).join("\n");
   t("5c. laporan selesai muncul", /Laporan|Selesai/i.test(report), report.slice(0, 60));
   t("5d. laporan nyebut file berubah + hint undo", /fitur\.js/.test(report) && /undo/.test(report), report.slice(0, 120));
   t("5e. isi file beneran keganti 'hai'", fs.readFileSync(path.join(ws, "fitur.js"), "utf8").includes("return 'hai';"));
@@ -170,6 +183,54 @@ console.log("\n— section 5: plugin —");
   t("5i. .ocode stop saat idle → info gak ada tugas", /gak ada tugas/i.test(replies[0] || ""), replies[0]?.slice(0, 50));
 
   _setRouter9v2KeyForTest(undefined);
+}
+
+// ═══ SECTION 6: gate izin per file (lib) ═══
+console.log("\n— section 6: gate izin per file —");
+{
+  const fiturPath = path.join(ws, "fitur.js");
+  const reset = () => fs.writeFileSync(fiturPath, "export function halo() {\n  return 'halo';\n}\n");
+  reset();
+
+  // 6a-6b: diijinkan → file keedit + onApproval kebawa info file
+  let asked = [];
+  agent._setOcodeChatForTest(mkChat([
+    wrap('{"action":"edit","path":"fitur.js","find":"return \'halo\';","replace":"return \'ok\';"}'),
+    wrap('{"action":"done","summary":"ok","files":["fitur.js"]}'),
+  ]));
+  r = await agent.runOcodeAgent({ task: "tes izin", onApproval: async (info) => { asked.push(info.path); return { allowed: true }; } });
+  t("6a. onApproval dipanggil buat file editan", asked.length === 1 && asked[0] === "fitur.js", asked);
+  t("6b. diijinkan → file beneran berubah", fs.readFileSync(fiturPath, "utf8").includes("return 'ok';"));
+
+  // 6c-6d: ditolak → file utuh + denied dilaporkan ke owner
+  reset();
+  asked = [];
+  agent._setOcodeChatForTest(mkChat([
+    wrap('{"action":"edit","path":"fitur.js","find":"return \'halo\';","replace":"return \'bocor\';"}'),
+    wrap('{"action":"done","summary":"ditolak","files":[]}'),
+  ]));
+  r = await agent.runOcodeAgent({ task: "tes tolak", onApproval: async (info) => { asked.push(info.path); return { allowed: false }; } });
+  t("6c. ditolak → file TIDAK berubah", fs.readFileSync(fiturPath, "utf8").includes("return 'halo';"));
+  t("6d. file ditolak dilaporkan di denied", (r.denied || []).includes("fitur.js"), r.denied);
+
+  // 6e: 1 file ditanya SEKALI per tugas walau agent nyoba 2x
+  agent._setOcodeChatForTest(mkChat([
+    wrap('{"action":"edit","path":"fitur.js","find":"return \'halo\';","replace":"return \'a\';"}'),
+    wrap('{"action":"edit","path":"fitur.js","find":"return \'a\';","replace":"return \'b\';"}'),
+    wrap('{"action":"done","summary":"cache","files":["fitur.js"]}'),
+  ]));
+  asked = [];
+  r = await agent.runOcodeAgent({ task: "tes cache izin", onApproval: async (info) => { asked.push(info.path); return { allowed: true }; } });
+  t("6e. izin 1x per file per tugas (2 aksi = 1 tanya)", asked.length === 1 && r.iterations === 3, { asked, iter: r.iterations });
+
+  // 6f: izin gak ditanya buat path yang memang diblokir (blacklist) — langsung ERROR
+  asked = [];
+  agent._setOcodeChatForTest(mkChat([
+    wrap('{"action":"write","path":".env","content":"HACK=1"}'),
+    wrap('{"action":"done","summary":"env","files":[]}'),
+  ]));
+  r = await agent.runOcodeAgent({ task: "tes env", onApproval: async (info) => { asked.push(info.path); return { allowed: true }; } });
+  t("6f. path diblokir gak minta izin (langsung ERROR jail)", asked.length === 0 && fs.readFileSync(path.join(ws, ".env"), "utf8") === "SECRET=1", asked);
 }
 
 agent._resetOcodeForTest();
