@@ -157,6 +157,11 @@ t("4a. notif ke GRUP pakai banner", !!toGroup?.payload?.contextInfo?.externalAdR
 t("4b. notif ke SALURAN pakai banner (externalAdReply di-keep sanitizer)", !!toChannel?.payload?.contextInfo?.externalAdReply, JSON.stringify(Object.keys(toChannel?.payload || {})));
 t("4c. isi teks notif tetap utuh", /dimatikan/i.test(toGroup?.payload?.text || ""), (toGroup?.payload?.text || "").slice(0, 60));
 t("4d. judul banner nyebut BOT DIMATIKAN (revisi owner 20 Sep: canvas dinamis per state)", (toGroup?.payload?.contextInfo?.externalAdReply?.title || "").includes("BOT DIMATIKAN"), toGroup?.payload?.contextInfo?.externalAdReply?.title);
+// revisi owner 20 Sep: "jgn link whatsapp tp waktu aja sama tanggal" — sourceUrl
+// dibuang total dari kartu status (baris "🔗 whatsapp.com" gak boleh nongol lagi)
+// + body ganti nunjukin waktu/tanggal, bukan sourceUrl/link/nama bot.
+t("4d2. kartu status GAK ADA sourceUrl (baris link whatsapp.com dihilangkan)", !("sourceUrl" in (toGroup?.payload?.contextInfo?.externalAdReply || { sourceUrl: 1 })));
+t("4d3. body kartu status nunjukin tanggal (bukan link/nama bot)", /\d{4}/.test(toGroup?.payload?.contextInfo?.externalAdReply?.body || ""), toGroup?.payload?.contextInfo?.externalAdReply?.body);
 t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding statis)", (() => {
   const th = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
   return Buffer.isBuffer(th) && th.length > 100 && th[0] === 0xff && th[1] === 0xd8;

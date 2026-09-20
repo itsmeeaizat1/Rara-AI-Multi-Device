@@ -147,18 +147,33 @@ export async function generateStatusCard(state) {
  * Banner status bot (contextInfo.externalAdReply) — thumbnail canvas DINAMIS
  * per state (ganti bareng .bot off/mute/on), bukan asset branding statis.
  * Gagal gambar canvas → fallback ke getBrandThumb() biar notif tetap kekirim.
+ *
+ * REVISI 20 Sep 2026 (owner: "dibagian thumbnail preview status state fitur
+ * bagian ini jgn link whatsapp tp waktu aja sama tanggal" — nunjuk baris
+ * "🔗 whatsapp.com" di bawah kartu preview): sourceUrl DIBUANG total — baris
+ * link/domain itu murni WA render otomatis dari field sourceUrl (protobuf
+ * ContextInfo.ExternalAdReplyInfo.sourceUrl, optional string), gak bisa
+ * diisi teks bebas selain domain URL asli. Pola SAMA kayak nova-level.js
+ * replyWithCardPreview() — externalAdReply TANPA sourceUrl, sudah verified
+ * live kartu RPG level render sempurna (thumbnail+title+body) tanpa baris
+ * link sama sekali. body diganti nunjukin WAKTU+TANGGAL (bukan link) sesuai
+ * request; format Asia/Jakarta biar konsisten sama zona waktu bot.
  * @param {"off"|"mute"|"on"} state
- * @param {object} opts - { title, body, sourceUrl, renderLarger }
+ * @param {object} opts - { title, body, renderLarger }
  */
-export async function statusBanner(state, { title, body, sourceUrl, renderLarger = true } = {}) {
+export async function statusBanner(state, { title, body, renderLarger = true } = {}) {
   const st = STATUS_STYLE[state] || STATUS_STYLE.on;
+  const nowStr = new Date().toLocaleString("id-ID", {
+    timeZone: "Asia/Jakarta",
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
   const ext = {
     title: String(title || `Nova AI — ${st.label}`).substring(0, 60),
-    body: String(body || "notifikasi status bot").substring(0, 45),
+    body: String(body || nowStr).substring(0, 45),
     mediaType: 1,
     renderLargerThumbnail: !!renderLarger,
     showAdAttribution: false,
-    sourceUrl: sourceUrl || config.saluran?.link || "https://whatsapp.com",
   };
   try {
     ext.thumbnail = await generateStatusCard(state);

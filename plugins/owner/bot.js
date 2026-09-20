@@ -113,10 +113,13 @@ async function broadcastStatusChange(sock, db, state, opts = {}) {
     // di thumbnailnya tulisan ON/BOT DIHIDUPKAN"): thumbnail statis diganti
     // statusBanner() — canvas digambar LIVE per state (off/mute/on), tiap
     // status beda warna + teks besar, gak lagi banner branding generik.
+    // REVISI LAGI 20 Sep 2026 (owner: "dibagian thumbnail preview status
+    // state fitur bagian ini jgn link whatsapp tp waktu aja sama tanggal"):
+    // gak kirim `body` custom lagi — biar statusBanner() pakai default-nya
+    // sendiri (waktu+tanggal Asia/Jakarta), sourceUrl juga udah dibuang di
+    // statusBanner jadi baris "🔗 whatsapp.com" gak nongol lagi.
     const { statusBanner } = await import("../../src/lib/nova-notif-card.js")
-    const banner = await statusBanner(state, {
-        body: (config.bot?.name || 'Nova-AI') + ' · notifikasi status',
-    })
+    const banner = await statusBanner(state)
     let saluranOutcome = { status: 'skipped', reason: channelSkippedReason || 'unknown', jid: channelTarget || null }
     // SALURAN DIKIRIM DULU (sebelum grup yang lama) biar owner cepet liat
     // hasilnya — laporan onSaluran nyampe ke reply owner dalam 1-2 dtk.
