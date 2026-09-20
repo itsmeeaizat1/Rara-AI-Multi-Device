@@ -37,6 +37,11 @@ t("3h. switch (.switch auto)", /\.switch auto/i.test(r));
 t("3i. rpg (.dailyreward/.adventure/.berburu/.levelinfo)", /\.dailyreward/i.test(r) && /\.adventure/i.test(r) && /\.berburu/i.test(r) && /\.levelinfo/i.test(r));
 t("3j. info (.rules/.owner/.donasi)", /\.rules/i.test(r) && /\.owner/i.test(r) && /\.donasi/i.test(r));
 
+// FIX OWNER 20 Sep: semua baris isi RATA KIRI (gak ada spasi di awal nomor/teks)
+const raw = replies[0] || "";
+const indented = raw.split("\n").filter((l) => /^ +[^\s]/.test(l));
+t("4z. semua baris isi rata kiri (tanpa spasi di awal)", indented.length === 0, JSON.stringify(indented.slice(0, 3)));
+
 // command yang disebut beneran ada di repo
 const files = [];
 for (const dir of fs.readdirSync(path.join(REPO, "plugins"), { withFileTypes: true })) {

@@ -80,22 +80,37 @@ function buildBox(headerTitle, lines = []) {
   // (gak ada border yang bisa putus, WhatsApp wrap natural). buildBox dipakai
   // claraWrap/novaReply/novaCaption/bracketBox → SEMUA reply plugin kebagian.
   const header = `「 ✦ ${toSC(String(headerTitle))} ✦ 」`;
+  // FIX OWNER 20 Sep 2026 ("kenapa formatnya gak rata kiri, ada spasi di awal
+  // nomor — yg rata kiri cuma judul doang"): baris isi yang di-indent spasi
+  // (contoh baris lanjutan "   contoh: ..." di tutorial) bikin blok keliatan
+  // acak di WA. Sekarang SEMUA baris isi otomatis di-DEDENT (spasi/tab di awal
+  // dibuang) biar rata kiri semua. Pengecualian: baris di dalam code fence
+  // ``` (kode butuh indentasi) tetap verbatim.
   const body = [];
+  let inFence = false;
   for (const line of lines) {
     if (line === "---" || line === "─" || line === "---separator---") {
       body.push("");
-    } else if (typeof line === "object" && line.subHeader) {
-      body.push(`「 ${toSC(line.subHeader)} 」`);
-    } else if (!line || !String(line).trim()) {
-      body.push("");
-    } else {
-      const clean = String(line)
-        .replace(/^╎❏\s*/, '')
-        .replace(/^╎\s*$/, '')
-        .replace(/^┊\s+➶\s*/, '')
-        .replace(/^(?:[•┊╎❏➶╭╰│┃]\s*)+/, '');
-      body.push(scLine(clean));
+      continue;
     }
+    if (typeof line === "object" && line.subHeader) {
+      body.push(`「 ${toSC(line.subHeader)} 」`);
+      continue;
+    }
+    const rawLine = line === undefined || line === null ? "" : String(line);
+    if (/^\s*```/.test(rawLine)) inFence = !inFence;
+    if (!rawLine.trim()) {
+      body.push("");
+      continue;
+    }
+    let clean = rawLine
+      .replace(/^╎❏\s*/, '')
+      .replace(/^╎\s*$/, '')
+      .replace(/^┊\s+➶\s*/, '')
+      .replace(/^(?:[•┊╎❏➶╭╰│┃]\s*)+/, '');
+    // rata kiri: buang spasi/tab pemandangan di awal baris (kecuali dalam fence)
+    if (!inFence) clean = clean.replace(/^[ \t]+/, '');
+    body.push(scLine(clean));
   }
   return [header, ...body].join("\n");
 }
