@@ -128,9 +128,9 @@ db.db.data.groups["999888777-1@g.us"] = { id: "999888777-1@g.us", subject: "Grup
 await db.save();
 
 // reset cache saluran (import segar udah otomatis fresh di process ini)
-// seam canvas: kartu status jadi deterministik di e2e — pakai createCanvas
-// asli tapi loadImage DIBUANG (jalur gradient offline) biar gak nembak
-// network wallpapersden yang bikin test flaky (kadang >2.6 dtk > jeda test)
+// seam canvas: kartu status revisi owner 20 Sep — background HITAM POLOS +
+// teks PUTIH tanpa nama bot, gak ada network load lagi (loadImage dibuang),
+// createCanvas asli cukup deterministik.
 const { _setStatusCardCanvasForTest } = await import(R + "/src/lib/nova-notif-card.js");
 const _kit = await import("@napi-rs/canvas");
 _setStatusCardCanvasForTest({
@@ -181,6 +181,23 @@ t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding stati
   let dim = { width: 0, height: 0 };
   try { dim = await sharpMod(toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail).metadata(); } catch {}
   t("4i. thumbnail 640x360 letterbox — persis ukuran kartu level", dim.width === 640 && dim.height === 360, JSON.stringify(dim));
+
+  // REVISI OWNER 20 Sep: "backgroundnya hitam aja trus teksnya putih jgn ada
+  // nama botnya didalam thumbnail" — validasi piksel: dominan HITAM, ada teks PUTIH
+  let pix = { dark: 0, white: 0, total: 0 };
+  try {
+    const { data, info } = await sharpMod(toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail)
+      .raw().toBuffer({ resolveWithObject: true });
+    pix.total = info.width * info.height;
+    for (let i = 0; i < data.length; i += info.channels * 37) { // sampling tiap ~37px
+      const r = data[i], g = data[i + 1], b = data[i + 2];
+      if (r < 25 && g < 25 && b < 25) pix.dark++;
+      if (r > 200 && g > 200 && b > 200) pix.white++;
+    }
+  } catch {}
+  const samp = pix.dark + pix.white > 0 ? pix.dark / (pix.dark + pix.white) : 0;
+  t("4j. background HITAM POLOS (dominan piksel gelap > 85%)", pix.total > 0 && samp > 0.85, JSON.stringify(pix));
+  t("4k. teks status PUTIH keliatan (ada piksel terang > 0)", pix.white > 5, JSON.stringify(pix));
 }
 
 // nyala lagi
