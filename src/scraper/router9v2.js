@@ -15,8 +15,15 @@ import axios from "axios";
 import fs from "node:fs";
 import { dirname } from "node:path";
 import { getApiKey } from "../lib/nova-api-keys.js";
+import { getTioBase } from "../lib/config/env-loader.js";
 
-export const ROUTER9V2_BASE = process.env.ROUTER9V2_URL || "https://9router.cloudku.us.kg";
+// SATU PINTU (revisi owner 21 Sep): base dari env-loader — bisa dialihin ke
+// 9router LOKAL (npm install -g 9router → http://localhost:20128) via
+// .ai9v2 endpoint <url> / env ROUTER_API_URL / TIO_API_URL, tanpa edit kode.
+export const ROUTER9V2_BASE = process.env.ROUTER9V2_URL || getTioBase(); // compat snapshot load-time
+// internal: base dievaluasi TIAP CALL — biar .ai9v2 endpoint <url> (runtime)
+// langsung kerasan tanpa restart (revisi owner 21 Sep)
+function r9Base() { return process.env.ROUTER9V2_URL || getTioBase(); }
 // default ditetapkan owner 17 Sep 2026: "bsa ga default modelnya gemini pro agent"
 export const ROUTER9V2_DEFAULT_MODEL = "ag/gemini-pro-agent";
 
@@ -61,7 +68,7 @@ export async function router9v2Models() {
   try {
     res = await http({
       method: "GET",
-      url: ROUTER9V2_BASE + "/v1/models",
+      url: r9Base() + "/v1/models",
       headers: { Authorization: "Bearer " + key },
       timeout: 25000,
       validateStatus: null,
@@ -90,7 +97,7 @@ export async function router9v2Chat({ messages, model, maxTokens = 4096, tempera
   try {
     res = await http({
       method: "POST",
-      url: ROUTER9V2_BASE + "/v1/chat/completions",
+      url: r9Base() + "/v1/chat/completions",
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
       data: {
         model: model || ROUTER9V2_DEFAULT_MODEL,

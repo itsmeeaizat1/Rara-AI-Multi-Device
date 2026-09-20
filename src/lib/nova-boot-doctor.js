@@ -31,6 +31,7 @@ import { getApiKeys } from "./config/env-loader.js";
 import { getDatabase } from "./nova-database.js";
 import { claraWrap } from "./nova-menu-style.js";
 import { sendNotif } from "./nova-notif-card.js";
+import { getTioBase } from "./config/env-loader.js";
 
 const STATE_FILE = path.join(process.cwd(), "src", "data", "bootdoctor.json");
 const THROTTLE_MS = 30 * 60 * 1000; // anti-spam DM pas restart loop
@@ -112,7 +113,7 @@ const KEY_PROBES = [
   {
     key: "tioApiKey", label: "9Router v2 (Tio)",
     features: "otak AI .novaai rantai, .aitio, aigrup, smartreply, fun-ai",
-    url: k => "https://9router.cloudku.us.kg/v1/models",
+    url: k => getTioBase() + "/v1/models", // satu pintu env-loader (bisa 9router lokal)
     headers: k => ({ Authorization: `Bearer ${k}` }),
   },
   {

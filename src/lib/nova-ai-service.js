@@ -11,6 +11,7 @@ import zlib from "node:zlib";
 import { stripMarkdownTables } from "./nova-md-table.js";
 import { getDatabase } from "./nova-database.js";
 import { getProviderApiKey } from "./apikey/ai-chain.js";
+import { getTioEndpoint } from "./config/env-loader.js";
 
 const DEFAULT_PROVIDERS = {
   openai: {
@@ -153,7 +154,7 @@ const DEFAULT_PROVIDERS = {
     name: "9Router v2 (Tio)",
     models: ["ag/gemini-pro-agent", "ag/gemini-3-flash", "ag/gemini-3.8-flash-high", "ag/gpt-oss-120b-medium"],
     defaultModel: "ag/gemini-pro-agent",
-    chatEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    get chatEndpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime (tanpa restart) langsung kerasa
     authHeader: (key) => ({ Authorization: `Bearer ${key}`, "Content-Type": "application/json" }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 4096 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
@@ -167,7 +168,7 @@ const DEFAULT_PROVIDERS = {
     name: "9Router v2 (Gemini)",
     models: ["ag/gemini-3-flash", "ag/gemini-3.8-flash", "ag/gemini-3.5-flash", "ag/gemini-3.1-pro-low"],
     defaultModel: "ag/gemini-3-flash",
-    chatEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    get chatEndpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime (tanpa restart) langsung kerasa
     authHeader: (key) => ({ Authorization: `Bearer ${key}`, "Content-Type": "application/json" }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 4096 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
@@ -355,7 +356,7 @@ const DEFAULT_PROVIDERS = {
     name: "9Router v2 (Claude)",
     models: ["ag/claude-sonnet-4-6", "ag/claude-opus-4-6-thinking"],
     defaultModel: "ag/claude-sonnet-4-6",
-    chatEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    get chatEndpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime (tanpa restart) langsung kerasa
     authHeader: (key) => ({ Authorization: `Bearer ${key}`, "Content-Type": "application/json" }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 4096 }),
     parseResponse: (data) => data?.choices?.[0]?.message?.content || "",

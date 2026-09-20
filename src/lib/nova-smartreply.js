@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "./nova-database.js";
 import config from "../../config.js";
+import { getTioEndpoint } from "./config/env-loader.js";
 
 /**
  * Smart Reply Event Handler
@@ -90,7 +91,7 @@ ${matchedContext}`;
     if (provider === "tio") {
       const apiKey = String(aiConfig.openaiApiKey || aiConfig.apiKey || "");
       if (apiKey) {
-        const response = await fetch("https://9router.cloudku.us.kg/v1/chat/completions", {
+        const response = await fetch(getTioEndpoint(), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

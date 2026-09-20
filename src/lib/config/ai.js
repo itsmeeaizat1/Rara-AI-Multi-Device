@@ -3,6 +3,7 @@
 // API keys di-import dari apikey.js, bukan hardcoded di sini
 
 import { apiKeys } from "./apikey.js";
+import { getTioEndpoint } from "./env-loader.js";
 
 // ═══════════════════════════════════════════
 // AI Configuration - dulu Tio AI (AIO), sekarang 9ROUTER V2
@@ -18,9 +19,11 @@ export const aiHelp = {
   anthropicApiKey: apiKeys.tioKey,
   // Endpoint 9ROUTER V2 (OpenAI-compatible SAJA — format anthropic/gemini
   // auto-dikonversi oleh provider di nova-ai-service.js)
-  apiEndpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
-  apiEndpointAnthropic: "https://9router.cloudku.us.kg/v1/chat/completions",
-  apiEndpointGemini: "https://9router.cloudku.us.kg/v1/chat/completions",
+  // endpoint dari SATU PINTU env-loader (bisa dialihin ke 9router LOKAL
+  // via .ai9v2 endpoint <url> atau env ROUTER_API_URL — revisi owner 21 Sep)
+  get apiEndpoint() { return getTioEndpoint(); },
+  get apiEndpointAnthropic() { return getTioEndpoint(); },
+  get apiEndpointGemini() { return getTioEndpoint(); },
   // ClipDrop API key untuk watermark remover (.nowm)
   clipdropApiKey: apiKeys.clipdropApiKey,
   // API Keys untuk fitur baru
