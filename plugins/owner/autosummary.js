@@ -6,7 +6,11 @@
  * - Setiap malem, bot auto-summarize semua obrolan grup hari ini
  * - AI generate ringkasan: siapa ngobrolin apa, topik panas, keputusan
  * - Member yang offline tinggal baca summary, tidak ketinggalan
- * - Message buffer: simpan pesan sepanjang hari, summarize di jam tertentu
+ * - UPGRADE 21 Sep 2026 (owner: "buat no 1" — ringkasan grup terjadwal
+ *   dari histori PERSISTEN): sumber pesan kini chathistory.json
+ *   (nova-chat-log.js, tetap ada walau bot restart — ilang hanya kalau
+ *   file db dihapus). Buffer in-memory jadi FALLBACK kalau histori kosong.
+ *   Default jadi jam 07:00 WIB kirim ke DM owner (tiap pagi).
  * - 2 mode: full (detail per topik) atau brief (sangat singkat)
  * - Per-grup toggle, custom waktu kirim
  * - Kirim ke grup atau PM owner
@@ -32,6 +36,7 @@ import { CronJob } from "cron";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaBox, toSC } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
+import { getChatHistory } from "../../src/lib/nova-chat-log.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -56,8 +61,8 @@ const pluginConfig = {
 const DEFAULT_AUTOSUMMARY = {
   enabled: false,
   mode: "full", // full or brief
-  sendTime: "22:00", // default 22:00 WIB
-  sendTo: "group", // group or owner
+  sendTime: "07:00", // default PAGI (upgrade 21 Sep: digest tiap pagi ke DM owner)
+  sendTo: "owner", // group or owner
   activeGroups: [], // empty = all groups
   maxMessagesPerGroup: 500, // max messages to buffer per group per day
   stats: {
@@ -130,6 +135,42 @@ export function logMessageForSummary(m) {
 }
 
 // ============================================================
+// COLLECT MESSAGES — PERSISTEN duluan (chathistory.json), buffer
+// in-memory cuma fallback (biar restart gak ngerusak digest)
+// ============================================================
+const WINDOW_MS = 24 * 60 * 60 * 1000; // jendela 24 jam terakhir
+
+function collectMessages(groupJid, opts = {}) {
+  const cutoff = (opts.now || Date.now()) - WINDOW_MS;
+  try {
+    const rows = getChatHistory(groupJid, 120)
+      .filter((r) => (r.t || 0) >= cutoff)
+      .map((r) => ({ sender: r.s || "user", text: r.b || "(" + (r.k || "media") + ")", time: r.t || 0 }));
+    if (rows.length) return rows;
+  } catch {}
+  return (messageBuffers[groupJid] || []).filter((x) => x.time >= cutoff);
+}
+
+// daftar grup yang PUNYA pesan 24 jam terakhir — dari histori persisten
+// (tetap kebaca walau bot barusan restart) + buffer fallback
+function groupJidsWithMessages(opts = {}) {
+  const cutoff = (opts.now || Date.now()) - WINDOW_MS;
+  const jids = new Set();
+  try {
+    const store = getDatabase().data.chathistory || {};
+    for (const jid of Object.keys(store)) {
+      if (!jid.endsWith("@g.us")) continue;
+      const rows = store[jid] || [];
+      if (rows.some((r) => (r.t || 0) >= cutoff)) jids.add(jid);
+    }
+  } catch {}
+  for (const jid of Object.keys(messageBuffers)) {
+    if (messageBuffers[jid]?.some((x) => x.time >= cutoff)) jids.add(jid);
+  }
+  return [...jids];
+}
+
+// ============================================================
 // AI GENERATE SUMMARY
 // ============================================================
 async function generateAISummary(groupName, messages, settings) {
@@ -158,7 +199,7 @@ Aturan:
 - Jangan pakai markdown bold/italic
 - Jangan pakai emoji berlebihan (max 3-4 di seluruh pesan)
 - Format polos tanpa garis/border (JANGAN pakai box-drawing ╭╮╰╯│)
-- Pastikan nama member ditulis natural, bukan nomor`;
+- Nama member kadang tampil sebagai nomor telepon — sebut nomornya apa adanya, JANGAN mengarang nama`;
 
   const userPrompt = `Rangkum obrolan grup "${groupName}" hari ini (${messages.length} pesan):\n\n${conversationLog.slice(0, 8000)}`;
 
@@ -246,9 +287,9 @@ function generateFallbackSummary(groupName, messages) {
 // ============================================================
 // GENERATE & SEND SUMMARY FOR A GROUP
 // ============================================================
-async function generateAndSendSummary(sock, groupJid, isManual = false) {
+async function generateAndSendSummary(sock, groupJid, isManual = false, opts = {}) {
   const settings = getSettings();
-  const messages = messageBuffers[groupJid] || [];
+  const messages = collectMessages(groupJid, opts);
 
   if (messages.length === 0) {
     console.log(`[autosummary] No messages for ${groupJid}, skipping`);
@@ -339,7 +380,7 @@ async function sendAllSummaries(sock) {
   // Determine which groups to process
   let groupJids = settings.activeGroups;
   if (groupJids.length === 0) {
-    groupJids = Object.keys(messageBuffers).filter((g) => messageBuffers[g]?.length > 0);
+    groupJids = groupJidsWithMessages();
   }
 
   let sent = 0;
@@ -369,9 +410,9 @@ function startSummaryCron(sock) {
   const settings = getSettings();
   if (!settings.enabled) return;
 
-  const [hour, minute] = (settings.sendTime || "22:00").split(":");
+  const [hour, minute] = (settings.sendTime || "07:00").split(":");
   summaryCron = new CronJob(
-    `0 ${minute || "00"} ${hour || "22"} * * *`,
+    `0 ${minute || "00"} ${hour || "07"} * * *`,
     async () => {
       console.log("[autosummary] Cron triggered — generating daily summaries...");
       await sendAllSummaries(sock);
@@ -574,7 +615,7 @@ async function handler(m, { sock, config: botConfig }) {
       } else {
         await m.reply(novaBox("AUTO-SMART SUMMARY", [
           `Gagal: ${result.reason}`,
-          "Mungkin belum ada pesan yang di-buffer",
+          "Belum ada pesan 24 jam terakhir di histori grup itu",
         ]));
       }
       return { handled: true };
@@ -649,4 +690,9 @@ async function handler(m, { sock, config: botConfig }) {
 // ============================================================
 // EXPORT
 // ============================================================
+// seam khusus e2e — internal jadi kebaca tanpa jalankan cron/send
+export function _autosummaryInternalsForTest() {
+  return { collectMessages, groupJidsWithMessages, messageBuffers, generateFallbackSummary, DEFAULT_AUTOSUMMARY, getSettings };
+}
+
 export { pluginConfig as config, handler };
