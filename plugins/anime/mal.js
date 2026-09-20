@@ -156,13 +156,13 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
         `⭐ Skor : *${a.score ?? "?"}* (${a.ranked || "?"})`,
         `📺 Episode : *${a.episodes ?? "?"}* — ${a.type || "?"}`,
         `📌 Status : *${a.status || "?"}*`,
-        a.aired ? `🗓️ Tayang : ${cut(a.aired, 80)}` : "",
-        (a.studios || []).length ? `🏢 Studio : ${a.studios.map((s) => s?.name || s).join(", ")}` : "",
-        genres.length ? `🎭 Genre : ${genres.join(", ")}` : "",
+        ...(a.aired ? [`🗓️ Tayang : ${cut(a.aired, 80)}`] : []),
+        ...((a.studios || []).length ? [`🏢 Studio : ${a.studios.map((s) => s?.name || s).join(", ")}`] : []),
+        ...(genres.length ? [`🎭 Genre : ${genres.join(", ")}`] : []),
         "",
         `📖 Sinopsis :`,
         cut(a.synopsis, 400) || "—",
-      ].filter(Boolean).join("\n")) +
+      ].join("\n")) +
       (a.url ? "\n\n" + tipText(`Detail lengkap: ${a.url}`) : "") +
       "\n" +
       tipText(`Ketik ${prefix}mal cari <judul> untuk cari anime lain`);

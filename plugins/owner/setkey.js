@@ -119,8 +119,8 @@ async function handler(m, { sock, config: botConfig }) {
       keyDef.usedBy.map(u => "  " + u).join("\n"),
       "",
       "Key tersimpan di runtime DB. Bot restart? Tetap aman.",
-      keyDef.getLink() ? "Daftar key: " + keyDef.getLink() : "",
-    ].filter(Boolean).join("\n"));
+      ...(keyDef.getLink() ? ["Daftar key: " + keyDef.getLink()] : []),
+    ].join("\n"));
 
     await m.reply( text, "setkey");
   } catch (e) {

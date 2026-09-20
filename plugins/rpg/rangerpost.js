@@ -157,13 +157,13 @@ async function handler(m, { sock }) {
           success ? NARRATIVES.success[Math.floor(Math.random() * NARRATIVES.success.length)]
                   : NARRATIVES.fail[Math.floor(Math.random() * NARRATIVES.fail.length)],
           "",
-          success ? `💰 Reward : +${rewardGain} gold` : "Tidak ada reward kali ini",
-          success ? `⭐ EXP : +${task.expReward}` : "",
-          success ? `💵 Uang : Rp ${formatRp(getCash(m))}` : "",
-          badgeGain ? `🎖️ Lencana Jasa : +${badgeGain}x (total ${getTool(m.sender).badges}x)` : "",
+          ...(success ? [`💰 Reward : +${rewardGain} gold`] : ["Tidak ada reward kali ini"]),
+          ...(success ? [`⭐ EXP : +${task.expReward}`] : []),
+          ...(success ? [`💵 Uang : Rp ${formatRp(getCash(m))}`] : []),
+          ...(badgeGain ? [`🎖️ Lencana Jasa : +${badgeGain}x (total ${getTool(m.sender).badges}x)`] : []),
           `📋 Sisa tugas : ${remaining}`,
           ...(remaining === 0 ? ["", "🎯 Semua tugas hari ini selesai! Kembali besok."] : []),
-        ].filter(Boolean).join("\n"),
+        ].join("\n"),
         cta: gameCTA("rangerpost"),
       }));
     }
