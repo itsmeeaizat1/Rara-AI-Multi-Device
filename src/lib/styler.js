@@ -156,12 +156,22 @@ export function formatGuard(text) {
   const reTab = new RegExp(BS + BS + "t", "g");
 
   const NL = String.fromCharCode(10); // newline sungguhan sebagai hasil replace
+  // RATA KIRI (owner 20 Sep 2026: "cek fitur lain yang gak rata kiri, di
+  // awalnya malah ada spasi"): buang spasi/tab di AWAL tiap baris biar semua
+  // reply flush-left. PENGECUALIAN: baris yang mengandung karakter ART
+  // (box-drawing ╭│═ dst, contoh hangman) butuh indentasi visual — dilewati.
+  // Isi code fence sudah terproteksi lewat split chunks di bawah.
+  const ART_CHARS = /[\u2500-\u257F\u2580-\u259F\u256D-\u2570\u02C2\u02C3\u02C5\/\\^]/;
+  const dedentLine = (line) => (ART_CHARS.test(line) ? line : line.replace(/^[ \t]+/, ""));
   const cleanChunk = (chunk) =>
     chunk
       .replace(reCRLF, NL)
       .replace(reNL, NL)
       .replace(reTab, "  ")
       .replace(/[ \t]+\n/g, NL)
+      .split(NL)
+      .map(dedentLine)
+      .join(NL)
       .replace(/\n{3,}/g, NL + NL);
 
   // isi code fence dikirim persis — sama kayak proteksi smallcapsText
@@ -169,5 +179,8 @@ export function formatGuard(text) {
   return chunks
     .map((chunk) => (chunk.startsWith("```") ? chunk : cleanChunk(chunk)))
     .join("")
-    .trim();
+    // trim TANPA makan indent baris pertama (art hangman dll butuh spasi
+    // awal baris 1) — cukup buang newline kosong di awal & semua spasi ekor.
+    .replace(/^\n+/, "")
+    .replace(/[ \t\n]+$/, "");
 }

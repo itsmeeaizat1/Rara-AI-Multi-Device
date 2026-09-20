@@ -41,7 +41,7 @@ w("\n— novaAiUsage provider lain —");
 {
   const out = novaAiUsage("openai", { prefix: "!", command: "openai", modelAktif: providers.openai.defaultModel, models: providers.openai.models });
   check("header openai smallcaps + prefix ! jalan", out.startsWith(`「 ✦ ${toSC("openai")} ✦ 」`) && out.includes("!openai [pertanyaan]"));
-  check("model aktif gpt-4o-mini + list models", out.includes("gpt-4o-mini") && out.includes(" gpt-5.5"));
+  check("model aktif gpt-4o-mini + list models", out.includes("gpt-4o-mini") && out.includes("gpt-5.5"));
 }
 {
   // provider tanpa models list → section list gak muncul
@@ -71,7 +71,7 @@ w("\n— handler ai-providers —");
   const r1 = m1._replies[0];
   check(".gemini → reply 1 pesan", m1._replies.length === 1 && !!r1);
   check(".gemini → header gemini + cara pakai", r1.startsWith(`「 ✦ ${toSC("gemini")} ✦ 」`) && r1.includes(".gemini [pertanyaan]"));
-  check(".gemini → auto-latest + 8 model verbatim", r1.includes("auto-latest") && r1.includes(" gemini-3.7-flash") && r1.includes(" gemini-2.5-flash-lite"));
+  check(".gemini → auto-latest + 8 model verbatim", r1.includes("auto-latest") && r1.includes("gemini-3.7-flash") && r1.includes("gemini-2.5-flash-lite"));
   check(".gemini → gak ada lagi format lama (Key/Provider:/Default:)", !r1.includes("Key") && !r1.includes("Provider  :"));
 
   const m2 = mkM("claude");
@@ -81,7 +81,7 @@ w("\n— handler ai-providers —");
 
   const m3 = mkM("google");
   await provHandler(m3, opts(m3));
-  check(".google alias → provider gemini (model list gemini)", m3._replies[0].includes(" gemini-3.7-flash") && m3._replies[0].startsWith(`「 ✦ ${toSC("google")} ✦ 」`));
+  check(".google alias → provider gemini (model list gemini)", m3._replies[0].includes("gemini-3.7-flash") && m3._replies[0].startsWith(`「 ✦ ${toSC("google")} ✦ 」`));
 
   check("pluginConfig alias keada (gemini/openai/claude)", provConfig.alias.includes("gemini") && provConfig.alias.includes("openai") && provConfig.alias.includes("claude"));
 }

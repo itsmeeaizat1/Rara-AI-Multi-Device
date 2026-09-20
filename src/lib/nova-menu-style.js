@@ -936,7 +936,7 @@ export function novaAiUsage(brand, { prefix = ".", command, modelAktif = null, m
   if (modelAktif) lines.push("", `✨ ${toSC("Model")}:`, modelAktif);
   if (Array.isArray(models) && models.length) {
     lines.push("", `📋 ${toSC("Model Tersedia")}:`);
-    for (const mdl of models) lines.push(" " + String(mdl));
+    for (const mdl of models) lines.push(String(mdl));
   }
   for (const l of extra) lines.push("", l);
   return novaBox(brand, lines);
@@ -956,7 +956,8 @@ export function novaBox(header, lines = [], opts = {}) {
       continue;
     }
     if (!l || !String(l).trim()) { out += "\n"; continue; }
-    out += String(l) + "\n";
+    // rata kiri: buang spasi/tab di awal baris isi (owner 20 Sep 2026)
+    out += String(l).replace(/^[ \t]+/, "") + "\n";
   }
   return out.replace(/\n+$/, "");
 }
