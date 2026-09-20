@@ -172,6 +172,15 @@ async function loadPlugin(filePath, bustCache = false) {
       filePath: filePath,
     };
 
+    // AI SATUAN RICH (owner 21 Sep 2026): tandai plugin yang UDAH ngurus
+    // media sendiri (nunjuk m.quoted / visionScan / m.download di kode) —
+    // dipakai nova-ai-satuan-rich.js biar enrich vision/browsing GAK
+    // dobel proses foto yang udah ditangani pluginnya sendiri.
+    try {
+      const src = fs.readFileSync(filePath, "utf8");
+      pInfo.config._usesQuotedMedia = /m\.quoted|visionScan|m\.download/.test(src);
+    } catch { pInfo.config._usesQuotedMedia = false; }
+
     if (!pInfo.config.name) {
       pInfo.config.name = path.basename(filePath, path.extname(filePath));
     }

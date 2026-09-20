@@ -10,13 +10,14 @@ import {
   novaInfoSections, novaBox, toSC,
 } from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-service.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "ai-set",
   alias: ["ai-set", "ai"],
   category: "ai",
   description: "Set pengaturan AI lewat chat (apiKey, endpoint, model, provider)",
-  usage: ".ai-set — panel status & daftar perintah\n.ai-set provider <nama> — ganti provider\n.ai-set model <model> — ganti model\n.ai-set apiKey [openai|gemini|anthropic] <key> — set API key\n.ai-set endpoint <url> — set endpoint\n.ai-set prompt <teks> — set system prompt\n.ai-set on/off — nyalakan/matikan AI\n.ai-set mode offline/online — ganti mode",
+  usage: ".ai-set — panel status & daftar perintah\n.ai-set provider <nama> — ganti provider\n.ai-set model <model> — ganti model\n.ai-set apiKey [openai|gemini|anthropic] <key> — set API key\n.ai-set endpoint <url> — set endpoint\n.ai-set prompt <teks> — set system prompt\n.ai-set on/off — nyalakan/matikan AI\n.ai-set browsing on/off — auto-browsing AI satuan\n.ai-set mode offline/online — ganti mode",
   example: ".ai-set provider gemini\n.ai-set model gpt-4o-mini\n.ai-set apiKey openai sk-xxx",
   isOwner: true,
   isPremium: false,
@@ -174,6 +175,32 @@ async function handler(m, { sock, config: botConfig }) {
       const shown = prompt.length > 100 ? `${prompt.slice(0, 100)}...` : prompt;
       await m.react("🐣");
       await m.reply(okBox([`${toSC("System Prompt")} : ${shown}`]));
+      return { handled: true };
+    }
+
+    // AI SATUAN RICH (owner 21 Sep 2026): toggle auto-browsing buat AI satuan
+    if (action === "browsing") {
+      if (!m.isOwner) {
+        await m.reply(novaError("ai-set", "khusus owner — hanya owner yang bisa mengatur browsing"));
+        return { handled: true };
+      }
+      const v = String(value || "").toLowerCase();
+      if (v !== "on" && v !== "off") {
+        await m.reply(novaSalah("ai-set", "nilai-nya cuma on atau off — contoh: " + prefix + "ai-set browsing off"));
+        return { handled: true };
+      }
+      const db = getDatabase();
+      db.setting("aiSatuanBrowse", v === "on");
+      db.save?.();
+      await m.react("🐣");
+      await m.reply(okBox([
+        `${toSC("Fitur")} : Auto-browsing AI satuan`,
+        `${toSC("Status")} : ${v.toUpperCase()}`,
+        "",
+        v === "off"
+          ? "Pertanyaan berita/terbaru gak otomatis browsing — flag --search tetap jalan."
+          : "Pertanyaan berita/terbaru/jadwal otomatis ditambah hasil browsing.",
+      ]));
       return { handled: true };
     }
 
