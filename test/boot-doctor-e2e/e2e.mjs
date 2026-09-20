@@ -125,6 +125,11 @@ t("hint ganti key nyebut DAFTAR key bermasalah (cuki, termai)", R.includes("cuki
 t("baris rest api & fitur DIPISAH label eksplisit (Rest API:)", R.includes("rest api:"), R.slice(0, 240));
 t("baris fitur berlabel (Fitur kena dampak:)", R.includes("fitur kena dampak:"), R.slice(0, 240));
 t("endpoint gratis diberi label (tanpa key)", R.includes("tanpa key"), R.slice(0, 240));
+// FIX OWNER 20 Sep: tiap info satu baris sendiri + jarak antar item + jam detik bawah
+t("revisi: label item rata kiri TANPA bullet • (mis. 'cuki api:')", !/•/.test(R) && /cuki api:/i.test(fromSC(R)), R.slice(0, 240));
+t("revisi: Rest API & Key apikeys.json DIPISAH dua baris", !/rest api:[^]*·[^]*key apikeys/i.test(R) && /rest api: api\.cuki\.biz\.id/i.test(fromSC(R)), R.slice(0, 260));
+t("revisi: ada JARAK (baris kosong) antar item dalam kategori", /\n\n[^\n]*:/i.test(fromSC(R).replace(/\n\n[^\n]*\(/g, "\nX(")), fromSC(R).slice(0, 300));
+t("revisi: jam + DETIK di bawah (🕒 HH.MM.SS), gak nempel di atas", /🕒 \d\d\.\d\d\.\d\d/.test(R) && !R.includes("WIB"), R.slice(-200));
 
 w("\n— 4. throttle + kirim DM owner —");
 // reset state baru

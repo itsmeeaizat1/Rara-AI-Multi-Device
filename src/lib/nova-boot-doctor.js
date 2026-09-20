@@ -328,9 +328,9 @@ export function buildBootReport(results) {
   for (const r of results) (byStatus[r.status] ||= []).push(r);
 
   const lines = [];
-  const now = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta", dateStyle: "medium", timeStyle: "short" });
-  lines.push("🕒 " + now + " WIB — cek kesehatan fitur pas bot nyala/restart");
-  lines.push("");
+  // REVISI 20 Sep (owner): deskripsi polos di atas — jam pindah ke BAWAH
+  // dengan DETIK (HH.MM.SS), biar baris atas gak numpang lewat info lain.
+  lines.push("Cek kesehatan fitur pas bot nyala/restart");
   lines.push("Total diperiksa: " + results.length + " (apikey + endpoint gratis)");
 
   const problems = Object.entries(CATEGORY_META).sort((a, b) => a[1].order - b[1].order);
@@ -340,8 +340,10 @@ export function buildBootReport(results) {
     const items = byStatus[status] || [];
     if (!items.length) continue;
     problemCount += items.length;
+    let firstItemInCat = true;
     lines.push("");
-    lines.push(meta.icon + " " + meta.title + " (" + items.length + ")");
+    lines.push("");
+    lines.push(meta.icon + " " + meta.title + " (" + items.length + "):");
     for (const it of items) {
       // FIX 19 Sep (owner: "g bsa bedain nama rest api dan mana nama fiturnya"):
       // format LAMA "Cuki API — .gita .gpt4o — HTTP 401" nyampur jadi satu —
@@ -350,22 +352,28 @@ export function buildBootReport(results) {
       //   • Cuki API
       //     Rest API: api.cuki.biz.id · key apikeys.json: cuki
       //     Fitur kena dampak: .gita .gpt4o .nayaai — HTTP 401
-      lines.push("• " + it.label);
+      // REVISI 20 Sep (owner: "ada yang gak dikasih baris baru jadinya bikin
+      // bingung"): tiap info SATU BARIS SENDIRI + jarak antar item biar gak
+      // nyempil — dulu "Rest API: x · key apikeys.json: y" nyatu satu baris.
+      if (!firstItemInCat) lines.push("");
+      firstItemInCat = false;
+      lines.push(it.label + ":");
       if (it.keyName) {
-        lines.push("  Rest API: " + (it.host || "-") + " · key apikeys.json: " + it.keyName);
+        lines.push("Rest API: " + (it.host || "-"));
+        lines.push("Key apikeys.json: " + it.keyName);
       } else if (it.host) {
-        lines.push("  Rest API: " + it.host + " (tanpa key)");
+        lines.push("Rest API: " + it.host + " (tanpa key)");
       }
-      let dampak = "  Fitur kena dampak: " + (it.features || "-");
+      let dampak = "Fitur kena dampak: " + (it.features || "-");
       if (it.error) dampak += " — " + it.error;
       else if (it.httpStatus) dampak += " — HTTP " + it.httpStatus;
       lines.push(dampak);
       if (status === "ip_gate") {
         // key beneran valid — yang ditolak cuma IP bot. Whitelist di profile
         // dashboard rest api (betabotz: perlu langganan VIP buat whitelist IP).
-        lines.push("  Key valid & dikenal — ketik .bootdoctor tidak perlu ganti key");
-        if (it.gateIp) lines.push("  IP bot yang kena gerbang: " + it.gateIp);
-        lines.push("  Solusi: whitelist IP bot di profile dashboard rest api (VIP) — fitur aktif otomatis setelahnya");
+        lines.push("Key valid & dikenal — ketik .bootdoctor tidak perlu ganti key");
+        if (it.gateIp) lines.push("IP bot yang kena gerbang: " + it.gateIp);
+        lines.push("Solusi: whitelist IP bot di profile dashboard rest api (VIP) — fitur aktif otomatis setelahnya");
       }
     }
     if (status === "key_invalid" || status === "quota") {
@@ -389,7 +397,14 @@ export function buildBootReport(results) {
   if (nokey) lines.push("ℹ Key kosong (fitur auto-skip/fallback): " + nokey);
   lines.push("");
   if (!problemCount) lines.push("Semua fitur sehat, gak ada yang perlu diganti 🎉");
-  else lines.push("Ketik .bootdoctor buat cek ulang manual · .reloadkey setelah ganti key");
+  lines.push("");
+  // jam + tanggal + DETIK paling bawah (contoh owner: "🕒 16.13:12, 20 Sep 2026")
+  const t = new Date().toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+  const d = new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric" });
+  lines.push("🕒 " + t + ", " + d);
+  if (problemCount) lines.push("");
+  if (!problemCount) return claraWrap("Boot Doctor", lines);
+  lines.push("Ketik .bootdoctor buat cek ulang manual · .reloadkey setelah ganti key");
 
   return claraWrap("Boot Doctor", lines);
 }
