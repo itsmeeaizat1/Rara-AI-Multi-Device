@@ -87,7 +87,6 @@ async function broadcastToSaluran(sock, message, options = {}) {
     const { notifBanner } = await import("./nova-notif-card.js");
     const banner = await notifBanner({
       title: "Nova AI Official",
-      body: "notifikasi otomatis · nova",
     });
     const msgPayload = { text: message, contextInfo: banner, ...options };
     await sendSaluranSafe(sock, saluranId, msgPayload);

@@ -470,13 +470,8 @@ export async function runAndReport({ send = true } = {}) {
         // DESAIN 19 Sep 2026 (owner: "notif bot doctor g pakai desain skrg kyk
         // desain .play") — DM laporan kini pakai banner preview card branding
         // Nova (thumbnail channel-banner renderLarger), isi teks tetap utuh.
-        const problems = results.filter(r => r.status !== "ok" && r.status !== "nokey");
-        const okCount = results.length - problems.length;
         await sendNotif(sockInstance, jid, report, {
           title: "Boot Doctor — Nova AI",
-          body: problems.length
-            ? "⚠ " + problems.length + " masalah · " + okCount + " sehat"
-            : "✅ semua fitur sehat",
         });
       } catch (e) {
         console.error("[bootdoctor] kirim DM gagal:", e.message);
