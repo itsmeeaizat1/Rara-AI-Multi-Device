@@ -53,13 +53,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         `Judul: ${title}`,
         `Waktu: ${time}`,
         `Lokasi: ${location}`,
-        `${desc ? "Desc: " + desc : ""}`,
+        ...(desc ? ["Desc: " + desc] : []),
         "",
         `RSVP:`,
         `${usedPrefix}eventrsvp going ${id}`,
         `${usedPrefix}eventrsvp maybe ${id}`,
         `${usedPrefix}eventrsvp notgoing ${id}`,
-      ].filter(Boolean).join("\n")));
+      ].join("\n")));
     }
 
     if (sub === "going" || sub === "maybe" || sub === "notgoing") {
@@ -96,14 +96,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         `Event: ${e.title}`,
         `Waktu: ${e.time}`,
         `Lokasi: ${e.location}`,
-        `${e.desc ? "Desc: " + e.desc : ""}`,
+        ...(e.desc ? ["Desc: " + e.desc] : []),
         "",
         `Going (${e.rsvp.going.length}): ${formatList(e.rsvp.going)}`,
         `Maybe (${e.rsvp.maybe.length}): ${formatList(e.rsvp.maybe)}`,
         `Not Going (${e.rsvp.notgoing.length}): ${formatList(e.rsvp.notgoing)}`,
         "",
         `RSVP: ${usedPrefix}eventrsvp going|maybe|notgoing ${id}`,
-      ].filter(Boolean).join("\n")));
+      ].join("\n")));
     }
 
     if (sub === "del" || sub === "remove") {

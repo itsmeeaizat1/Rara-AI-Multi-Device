@@ -532,10 +532,10 @@ function formatLokerMessage(jobs, { label = "Update", keywords = [], source = ""
     "*INFO LOWONGAN KERJA*",
     "",
     `${date} | ${time} WIB`,
-    label ? `Sesi: *${label}*` : "",
-    keywords.length ? `Kata kunci: ${keywords.join(", ")}` : "",
-    source ? `Sumber: ${source}` : "",
-  ].filter(Boolean).join("\n");
+    ...(label ? [`Sesi: *${label}*`] : []),
+    ...(keywords.length ? [`Kata kunci: ${keywords.join(", ")}`] : []),
+    ...(source ? [`Sumber: ${source}`] : []),
+  ].join("\n");
 
   const body = jobs.map((job, i) => formatJob(job, i + 1)).join("\n\n─────────────────────\n\n");
 

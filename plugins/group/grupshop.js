@@ -121,9 +121,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       `${usedPrefix}grupshop buy <id>`,
       `${usedPrefix}grupshop coins`,
       `${usedPrefix}grupshop leaderboard`,
-      isOwner ? `${usedPrefix}grupshop add <item> <price> <type>` : "",
-      isOwner ? `${usedPrefix}grupshop give @user <amount>` : "",
-    ].filter(Boolean).join("\n")));
+      ...(isOwner ? [`${usedPrefix}grupshop add <item> <price> <type>`, `${usedPrefix}grupshop give @user <amount>`] : []),
+    ].join("\n")));
   } catch (e) {
     console.error("grupshop error:", e);
     return m.reply(novaError("Grupshop", e.message));
