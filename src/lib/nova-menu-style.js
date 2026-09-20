@@ -616,8 +616,13 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
     }
   }
 
-  // ── Footer nama bot (smallcaps) — penutup di akhir list command ──
-  if (footerName) out += `\n${scFn(String(footerName))}`;
+  // FIX 20 Sep 2026 (owner: "nama bot disini dihapus aja soalnya udh ada
+  // nama bot di fotter akhir") — dulu novaMenuLayout nambah baris nama bot
+  // sendiri di akhir body (mis. "ɴᴏᴠᴀ ᴀɪ ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ"), padahal sendMenuCard
+  // SUDAH nampilin nama bot di footer kartu ("✦ Nova AI Whatsapp Bot" dekat
+  // jam) → dobel. footerName param DIBIARKAN (backward-compat call sites)
+  // tapi gak dirender lagi di body.
+  void footerName;
 
   return out;
 }
