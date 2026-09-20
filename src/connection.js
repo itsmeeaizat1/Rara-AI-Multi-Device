@@ -848,24 +848,25 @@ async function startConnection(options = {}) {
             }
           } catch {}
 
+          // FIX OWNER 20 Sep ("gak ada penyesuaian jarak baris baru"): dulu
+          // .filter(Boolean) melenyapkan baris "" pemisah sebelum join —
+          // section nempel tanpa jarak. Sekarang pemisah "" DIPERTAHANKAN,
+          // elemen opsional dibuat kondisional eksplisit.
           const notifText = [
             "「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
             "",
             "• Bot   : " + (config.bot?.name || "Nova-AI"),
             "• Nomor : " + botNum,
             "• Waktu : " + waktu,
-            "",
-            "",
-            "",
-            ...infoSections,
+            ...(infoSections.length ? ["", ...infoSections] : []),
             "",
             isFirstPair
               ? "_Bot baru saja tersambung untuk pertama kali._"
               : "_Bot kembali aktif dan siap menerima pesan._",
-            lastDrop
-              ? "_Terakhir putus: " + lastDrop.msg + (lastDrop.code ? " (kode " + lastDrop.code + ")" : "") + "_"
-              : "",
-          ].filter(Boolean).join("\n");
+            ...(lastDrop
+              ? ["", "_Terakhir putus: " + lastDrop.msg + (lastDrop.code ? " (kode " + lastDrop.code + ")" : "") + "_"]
+              : []),
+          ].join("\n");
 
           // DESAIN 19 Sep 2026 — notif sistem (Bot Online / boot doctor / broadcast
           // status) sekarang pakai banner preview card branding Nova (nova-notif-card),
