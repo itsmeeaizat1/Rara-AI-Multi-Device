@@ -15,6 +15,13 @@
 //      Mode AUTO (default on) nyala kalau pertanyaan mengandung kata
 //      info-terkini (berita/terbaru/hari ini/jadwal/skor/kurs) — matikan
 //      lewat .ai-set browsing off.
+//   3. CONTEXT REPLY/HISTORI (owner 21 Sep: "bsa baca chat histori jejak
+//      misal aku reply pesan user di waktu sebelumnya") — reply pesan lama
+//      APAPUN isiannya dibaca: teks pesan → di-inject; foto → vision;
+//      sticker → vision; video/audio/dokumen → jenis + caption/nama file;
+//      + kalau pertanyaan nyebut "tadi/sebelumnya/riwayat/histori" →
+//      jejak beberapa pesan terakhir di chat (sock.store Baileys,
+//      in-memory sejak boot) ikut di-inject.
 // 🔹 Plugin yang UDAH ngurus media sendiri (nunjuk m.quoted / visionScan /
 //   m.download di kodenya — kebaca otomatis loader nova-plugins.js via
 //   config._usesQuotedMedia) DIKECUALIKAN — gak dobel proses foto.
@@ -33,6 +40,12 @@ export function _setRichSearchForTest(fn) { __rich.search = fn; }
 export function _resetRichForTest() { delete __rich.vision; delete __rich.search; }
 
 const SEARCH_FLAGS = ["--browsing", "--browse", "--search", "--cari", "--web"];
+// trigger jejak histori chat — cuma kalau user eksplisit nyebut waktu/riwayat,
+// biar prompt satuan gak setiap saat dibebani konteks chat
+const HISTORY_RE = /(tadi|sebelumnya|sebelum ini|riwayat|histori|kemarin)/i;
+const CAP_QUOTED_TEXT = 700;  // isi pesan yang di-reply maks 700 char
+const CAP_HISTORY = 900;      // jejak pesan terakhir maks 900 char
+const HISTORY_LIMIT = 8;      // maks 8 pesan terakhir
 // AUTO-browse cuma buat info yang jelas butuh data terkini — kata umum
 // kayak "sekarang/hasil" SENGAJA gak ikut biar gak false-positive ngerusak
 // prompt fitur satuan (mis. .math)
@@ -64,12 +77,52 @@ function isExcluded(cfg) {
   return false;
 }
 
+// ── label jenis pesan yang di-reply (bukan teks/foto/sticker) ──
+function quotedKindLabel(q) {
+  if (q.isVideo) return "video";
+  if (q.isAudio) return "pesan suara (voice note/audio)";
+  if (q.isDocument) return "dokumen";
+  if (q.isViewOnce) return "media sekali-lihat";
+  return "media";
+}
+
+// ── jejak pesan terakhir di chat dari store Baileys (in-memory sejak boot) ──
+function buildHistoryBlock(sock, m) {
+  try {
+    const msgs = sock?.store?.messages?.get?.(m.chat);
+    if (!msgs) return "";
+    const list = typeof msgs.values === "function" ? [...msgs.values()] : Object.values(msgs);
+    if (!Array.isArray(list) || !list.length) return "";
+    const rows = [];
+    for (let i = list.length - 1; i >= 0 && rows.length < HISTORY_LIMIT; i--) {
+      const wm = list[i];
+      // baca isi teks/caption mentah WA — cukup buat jejak singkat
+      const mm = wm?.message || {};
+      const type = Object.keys(mm)[0];
+      if (!type) continue;
+      const body =
+        mm.conversation || mm?.extendedTextMessage?.text ||
+        mm?.imageMessage?.caption || mm?.videoMessage?.caption ||
+        (type === "stickerMessage" ? "(sticker)" : "") || "";
+      if (!body) continue;
+      const who = (wm.key?.participant || wm.key?.remoteJid || "").split("@")[0];
+      rows.push((who ? who + ": " : "") + cap(body, 120));
+    }
+    if (!rows.length) return "";
+    // urut lama → baru (paling bawah = paling baru)
+    return "(Jejak pesan terakhir di chat ini, urut lama ke baru:\n" + cap(rows.reverse().join("\n"), CAP_HISTORY) + ")";
+  } catch {
+    return "";
+  }
+}
+
 /**
- * Enrich prompt AI satuan (vision + browsing). Mutasi m.args/m.text jadi
- * prompt yang udah diberi konteks. Return info atau null kalau gak ada
- * yang berubah. SEMUA error ditelan — jangan pernah ngerusak fitur asli.
+ * Enrich prompt AI satuan (vision + browsing + konteks reply/histori).
+ * Mutasi m.args/m.text jadi prompt yang udah diberi konteks. Return info
+ * atau null kalau gak ada yang berubah. SEMUA error ditelan — jangan
+ * pernah ngerusak fitur asli.
  */
-export async function enrichAiSatuan(m, plugin) {
+export async function enrichAiSatuan(m, plugin, opts = {}) {
   try {
     const cfg = plugin?.config || plugin;
     if (isExcluded(cfg)) return null;
@@ -82,27 +135,49 @@ export async function enrichAiSatuan(m, plugin) {
     let usedVision = false;
     let usedSearch = false;
 
-    // ── 1. VISION: reply foto → deskripsi di-inject ──
-    if (m.quoted?.isImage) {
-      try {
-        const buf = await m.quoted.download();
-        if (buf && buf.length) {
-          m.react("🧠").catch(() => {});
-          const vision = __rich.vision || visionScan;
-          const v = await vision({
-            imageBuffer: buf,
-            question:
-              "Deskripsikan gambar ini secara lengkap dan padat dalam bahasa Indonesia (maksimal 400 karakter): objek, orang/teks yang terbaca, suasana, dan detail penting untuk menjawab pertanyaan tentang gambar ini.",
-            sessionKey: "satuan-rich:" + (m.sender || "anon"),
-          });
-          if (v?.status && v?.text) {
-            parts.push(
-              "(User mereply sebuah foto. Deskripsi isi foto: " + cap(v.text, CAP_DESC) + ")"
-            );
-            usedVision = true;
+    // ── 1. KONTEKS REPLY (owner 21 Sep: "baca chat histori jejak misal aku
+    //    reply pesan user di waktu sebelumnya") — reply pesan lama APA PUN
+    //    isiannya dibaca: foto → vision, sticker → vision, teks → di-inject,
+    //    media lain → jenis + caption.
+    if (m.quoted) {
+      const q = m.quoted;
+      // caption pesan media (imageMessage/videoMessage/documentMessage → caption)
+      const capBody = cap(String(q.body || ""), CAP_QUOTED_TEXT);
+
+      if (q.isImage || q.isSticker) {
+        try {
+          const buf = await q.download();
+          if (buf && buf.length) {
+            m.react("🧠").catch(() => {});
+            const vision = __rich.vision || visionScan;
+            const v = await vision({
+              imageBuffer: buf,
+              question:
+                "Deskripsikan gambar ini secara lengkap dan padat dalam bahasa Indonesia (maksimal 400 karakter): objek, orang/teks yang terbaca, suasana, dan detail penting untuk menjawab pertanyaan tentang gambar ini.",
+              sessionKey: "satuan-rich:" + (m.sender || "anon"),
+            });
+            if (v?.status && v?.text) {
+              parts.push(
+                "(User mereply " + (q.isSticker ? "sebuah sticker" : "sebuah foto") +
+                (capBody ? " dengan caption: \"" + capBody + "\"." : ".") +
+                " Deskripsi isinya: " + cap(v.text, CAP_DESC) + ")"
+              );
+              usedVision = true;
+            }
           }
-        }
-      } catch { /* foto gak kebaca → biarkan satuan jalan normal */ }
+        } catch { /* media gak kebaca → biarkan satuan jalan normal */ }
+      } else if (capBody) {
+        // pesan teks lama → isi pesannya di-inject, satuan bisa "baca" balik
+        parts.push(
+          "(User mereply pesan sebelumnya di chat ini yang isinya: \"" + capBody + "\". Pertanyaan user mengacu ke pesan itu.)"
+        );
+      } else if (q.isMedia || q.isViewOnce) {
+        // media non-foto yang gak bisa dibaca isinya → jenisnya tetap dikasih tau
+        parts.push(
+          "(User mereply " + quotedKindLabel(q) + (capBody ? " dengan caption: \"" + capBody + "\"." : " tanpa caption.") +
+          " — jelaskan sebisanya dari jenis medianya dan caption-nya.)"
+        );
+      }
     }
 
     // ── 2. BROWSING: flag eksplisit ATAU auto-keyword (bisa dimatikan) ──
@@ -138,6 +213,14 @@ export async function enrichAiSatuan(m, plugin) {
       } catch { /* search sibuk → satuan jalan tanpa konteks */ }
     }
 
+    // ── 3. JEJAK HISTORI CHAT — cuma kalau pertanyaan eksplisit nyebut
+    //    waktu/riwayat (tadi/sebelumnya/riwayat/histori/kemarin) →
+    //    beberapa pesan terakhir di chat ikut jadi konteks.
+    if (opts.sock && HISTORY_RE.test(stripped)) {
+      const hist = buildHistoryBlock(opts.sock, m);
+      if (hist) parts.push(hist);
+    }
+
     if (!parts.length) return null;
 
     const enriched = cap(parts.join("\n\n") + "\n\n" + stripped, CAP_TOTAL);
@@ -149,4 +232,4 @@ export async function enrichAiSatuan(m, plugin) {
   }
 }
 
-export { SEARCH_FLAGS, AUTO_BROWSE_RE, isExcluded };
+export { SEARCH_FLAGS, AUTO_BROWSE_RE, HISTORY_RE, isExcluded };

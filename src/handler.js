@@ -1168,7 +1168,7 @@ try {
     // flag --search/kata kunci terkini → hasil browsing di-inject. Satu
     // pintu, 200-an plugin satuan gak perlu diedit; gagal senyap.
     if (plugin.config?.category === "ai") {
-      try { await enrichAiSatuan(m, plugin); } catch {}
+      try { await enrichAiSatuan(m, plugin, { sock }); } catch {}
     }
 
     // Multi-language (fix 18 Sep 2026): sock dibungkus translate-aware supaya

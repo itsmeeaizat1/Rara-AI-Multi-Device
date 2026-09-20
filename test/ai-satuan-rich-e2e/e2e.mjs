@@ -24,16 +24,19 @@ rich._setRichSearchForTest(async (q) => ({ items: [
 ] }));
 
 const pluginGita = { config: { name: "gita", category: "ai", isOwner: false, _usesQuotedMedia: false } };
-function mkM(args, { quotedImage = false } = {}) {
+function mkM(args, { quotedImage = false, quoted = null } = {}) {
   const m = {
-    args: [...args], text: args.join(" "), sender: "62x@s.whatsapp.net",
+    args: [...args], text: args.join(" "), sender: "62x@s.whatsapp.net", chat: "62grup@g.us",
     react: async () => {},
     quoted: quotedImage
-      ? { isImage: true, download: async () => Buffer.from("jpegdata") }
-      : null,
+      ? { isImage: true, body: "", download: async () => Buffer.from("jpegdata") }
+      : quoted,
   };
   return m;
 }
+
+// mock store Baileys (in-memory sejak boot)
+const mkStore = (rows) => ({ messages: { get: (chat) => ({ values: () => rows }) } });
 
 // ═══ SECTION 1: vision enrich ═══
 console.log("— section 1: vision —");
@@ -130,6 +133,56 @@ console.log("— section 3: exclusion & safety —");
   const mBig = mkM(["--search", ...("kata ".repeat(600).trim().split(" "))], { quotedImage: true });
   const rBig = await enrichAiSatuan(mBig, pluginGita);
   t("3f. prompt kecap 2600 char", (mBig.text || "").length <= 2600, (mBig.text || "").length);
+}
+
+// ═══ SECTION 3.5: konteks reply lama + jejak histori ═══
+console.log("— section 3.5: reply context + history —");
+{
+  rich._setRichVisionForTest(async () => ({ status: true, text: "foto kucing oren tidur di kasur" }));
+
+  // reply pesan TEKS lama → isi pesan di-inject
+  const mT = mkM(["apa", "maksud", "pesan", "ini?"], { quoted: { body: "besok rapat jam 8 di kantor", isMedia: false } });
+  const rT = await enrichAiSatuan(mT, pluginGita, {});
+  const jT = mT.args.join(" ");
+  t("3.5a. reply pesan teks lama → isi ke-inject", rT !== null && jT.includes("besok rapat jam 8 di kantor"), jT.slice(0, 90));
+  t("3.5b. label 'pesan sebelumnya' ada", /reply pesan sebelumnya/i.test(jT), jT.slice(0, 130));
+
+  // reply STICKER → vision + label sticker
+  const mS = mkM(["sticker", "apa", "ini"], { quoted: { isSticker: true, body: "", download: async () => Buffer.from("webpdata") } });
+  const rS = await enrichAiSatuan(mS, pluginGita, {});
+  t("3.5c. reply sticker → vision jalan", rS?.vision === true && mS.args.join(" ").includes("sticker"), mS.args.join(" ").slice(0, 80));
+
+  // reply VIDEO + caption → jenis media + caption di-inject (tanpa vision)
+  const mV2 = mkM(["video", "apa", "ini"], { quoted: { isVideo: true, isMedia: true, body: "liburan di bali" } });
+  const rV2 = await enrichAiSatuan(mV2, pluginGita, {});
+  const jV2 = mV2.args.join(" ");
+  t("3.5d. reply video → jenis + caption di-inject", rV2 !== null && /video/.test(jV2) && jV2.includes("liburan di bali"), jV2.slice(0, 110));
+
+  // reply foto + caption → caption ikut bareng deskripsi vision
+  const mFC = mkM(["gambar", "apa", "ini"], { quoted: { isImage: true, body: "kucing kesayangan", download: async () => Buffer.from("jpegdata") } });
+  await enrichAiSatuan(mFC, pluginGita, {});
+  t("3.5e. reply foto + caption → caption ikut ke-inject", mFC.args.join(" ").includes("kucing kesayangan"), mFC.args.join(" ").slice(0, 130));
+
+  // jejak histori: keyword "tadi/sebelumnya" + sock.store → pesan terakhir masuk
+  const rows = [
+    { key: { participant: "628111111111@s.whatsapp.net" }, message: { conversation: "halo semua" } },
+    { key: { participant: "628222222222@s.whatsapp.net" }, message: { extendedTextMessage: { text: "besok jadi ikut acara?" } } },
+    { key: { participant: "628111111111@s.whatsapp.net" }, message: { conversation: "jadi dong jam 7 ya" } },
+  ];
+  const mH = mkM(["apa", "yang", "dibicarakan", "tadi?"]);
+  const rH = await enrichAiSatuan(mH, pluginGita, { sock: { store: mkStore(rows) } });
+  const jH = mH.args.join(" ");
+  t("3.5f. keyword tadi + store → jejak chat masuk", rH !== null && /Jejak pesan terakhir/.test(jH) && jH.includes("besok jadi ikut acara?"), jH.slice(0, 120));
+
+  // tanpa keyword → histori GAK di-inject (gak bikin bloat)
+  const mN = mkM(["apa", "kabar", "semuanya"]);
+  const rN = await enrichAiSatuan(mN, pluginGita, { sock: { store: mkStore(rows) } });
+  t("3.5g. tanpa keyword tadi → gak ada jejak", rN === null, rN);
+
+  // keyword tapi store kosong → senyap
+  const mE = mkM(["ringkas", "pembicaraan", "sebelumnya"]);
+  const rE = await enrichAiSatuan(mE, pluginGita, { sock: {} });
+  t("3.5h. store gak ada → senyap", rE === null, rE);
 }
 
 // ═══ SECTION 4: loader flag _usesQuotedMedia beneran ═══
