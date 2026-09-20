@@ -8,6 +8,7 @@ import { getDatabase } from "./nova-database.js";
 import config from "../../config.js";
 import { logger } from "./nova-logger.js";
 import { toSC, bracketBox } from "./nova-menu-style.js";
+import { getTioBase } from "./config/env-loader.js";
 
 const STATE_FILE = path.join(process.cwd(), "src", "data", "autoapihealth.json");
 const TZ = "Asia/Jakarta";
@@ -19,7 +20,7 @@ let activeCronJob = null;
 // Tiap entry: { name, url, method, expectedStatus, timeoutMs }
 function getApiEndpoints() {
   const endpoints = [
-    { name: "9Router v2 (Tio)", url: "https://9router.cloudku.us.kg/v1/models", method: "GET", expectedStatus: [200, 401], timeoutMs: 8000 },
+    { name: "9Router v2 (Tio)", get url() { return getTioBase() + "/v1/models"; }, method: "GET", expectedStatus: [200, 401], timeoutMs: 8000 },
     { name: "Open-Meteo", url: "https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.6&current=temperature_2m", method: "GET", expectedStatus: [200], timeoutMs: 8000 },
     { name: "SaveNow", url: "https://p.savenow.to", method: "GET", expectedStatus: [200, 301, 302, 403], timeoutMs: 8000 },
   ];

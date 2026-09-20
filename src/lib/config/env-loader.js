@@ -196,13 +196,74 @@ export function getTioKey() {
  * (OpenAI-compatible, key sama dengan providers.router9v2).
  * Bisa di-override via env TIO_API_URL tanpa edit kode.
  */
+const ROUTER9_DEFAULT_ENDPOINT = "https://9router.cloudku.us.kg/v1/chat/completions";
+
+// REVISI 21 Sep 2026 (owner): 9router bisa di-install SENDIRI di Linux
+// (`npm install -g 9router` — situs resmi https://9router.com, open-source
+// github.com/decolua/9router). Endpoint OpenAI-compatible-nya:
+//   http://localhost:20128/v1/chat/completions
+// Key dibuat/kelola LOkal via dashboard http://localhost:20128/dashboard.
+// Gateway cloudku = deployment hosted proyek yang sama — tetap jadi default
+// biar gak ada perilaku berubah, tapi sekarang SEMUA pemakaian 9router di bot
+// (aigrup, aitio, ai9v2, smartreply, fun-ai, nova-ai-service, boot doctor,
+// health check) nyedot endpoint dari SATU PINTU ini — ganti di satu tempet,
+// seluruh rantai ikut. Urutan prioritas:
+//   1. env TIO_API_URL (lama)
+//   2. env ROUTER_API_URL
+//   3. apikeys.json "_router9v2Endpoint" (di-set via .ai9v2 endpoint <url>, persist)
+//   4. default cloudku (hosted)
 export function getTioEndpoint() {
-  return process.env.TIO_API_URL || "https://9router.cloudku.us.kg/v1/chat/completions";
+  const fromFile = typeof apikeysRaw._router9v2Endpoint === "string"
+    ? apikeysRaw._router9v2Endpoint.trim()
+    : "";
+  return process.env.TIO_API_URL || process.env.ROUTER_API_URL || fromFile || ROUTER9_DEFAULT_ENDPOINT;
 }
 
 /** Base URL untuk health-check (/v1/models dll) — diambil dari endpoint chat. */
 export function getTioBase() {
   return getTioEndpoint().replace(/\/v1\/chat\/completions$/, "");
+}
+
+// seam persist buat e2e (default: tulis beneran ke apikeys.json)
+const __env = { persist: null };
+export function _setEndpointWriterForTest(fn) { __env.persist = fn; }
+
+/**
+ * Ganti endpoint 9router + PERSIST ke apikeys.json (field root
+ * "_router9v2Endpoint" — prefix "_" otomatis di-skip flattenApikeys,
+ * jadi gak pernah dibaca sebagai key). Dipakai .ai9v2 endpoint <url>.
+ * @returns {{ok: boolean, error?: string, endpoint: string}}
+ */
+export function setTioEndpoint(url) {
+  const clean = String(url || "").trim();
+  if (!/^https?:\/\/[^\s]+/i.test(clean)) {
+    return { ok: false, error: "URL harus http:// atau https://" };
+  }
+  const prev = apikeysRaw._router9v2Endpoint;
+  apikeysRaw._router9v2Endpoint = clean; // update cache in-memory langsung
+  try {
+    const write = __env.persist || ((filepath, data) => fs.writeFileSync(filepath, data, "utf8"));
+    write(path.join(apikeyDir, "apikeys.json"), JSON.stringify(apikeysRaw, null, 2) + "\n");
+    return { ok: true, endpoint: getTioEndpoint() };
+  } catch (e) {
+    apikeysRaw._router9v2Endpoint = prev; // rollback biar memori konsisten
+    return { ok: false, error: e?.message || "gagal tulis apikeys.json" };
+  }
+}
+
+/**
+ * Hapus override endpoint → balik ke default cloudku (atau env kalau ada).
+ * Dipakai .ai9v2 endpoint default.
+ */
+export function resetTioEndpoint() {
+  delete apikeysRaw._router9v2Endpoint;
+  try {
+    const write = __env.persist || ((filepath, data) => fs.writeFileSync(filepath, data, "utf8"));
+    write(path.join(apikeyDir, "apikeys.json"), JSON.stringify(apikeysRaw, null, 2) + "\n");
+    return { ok: true, endpoint: getTioEndpoint() };
+  } catch (e) {
+    return { ok: false, error: e?.message || "gagal tulis apikeys.json" };
+  }
 }
 
 /**
