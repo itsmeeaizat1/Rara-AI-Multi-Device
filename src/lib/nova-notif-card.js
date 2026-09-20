@@ -168,8 +168,13 @@ export async function statusBanner(state, { title, body, renderLarger = true } =
     dateStyle: "medium",
     timeStyle: "short",
   });
+  // REVISI 20 Sep 2026 (owner: "bagian ini ubah jadi teks status misal klo
+  // bot dihidupkan jadi teks statusnya: BOT DIHIDUPKAN" — nunjuk baris judul
+  // kartu, dulu generik "Nova AI — Status Bot"): title kartu SEKARANG teks
+  // status murni per state (BOT DIMATIKAN/BOT DIJEDA/BOT DIHIDUPKAN), gak
+  // dibungkus embel-embel nama bot lagi — biar langsung kebaca statusnya.
   const ext = {
-    title: String(title || `Nova AI — ${st.label}`).substring(0, 60),
+    title: String(title || st.label).substring(0, 60),
     body: String(body || nowStr).substring(0, 45),
     mediaType: 1,
     renderLargerThumbnail: !!renderLarger,

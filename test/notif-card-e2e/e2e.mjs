@@ -162,6 +162,10 @@ t("4d. judul banner nyebut BOT DIMATIKAN (revisi owner 20 Sep: canvas dinamis pe
 // + body ganti nunjukin waktu/tanggal, bukan sourceUrl/link/nama bot.
 t("4d2. kartu status GAK ADA sourceUrl (baris link whatsapp.com dihilangkan)", !("sourceUrl" in (toGroup?.payload?.contextInfo?.externalAdReply || { sourceUrl: 1 })));
 t("4d3. body kartu status nunjukin tanggal (bukan link/nama bot)", /\d{4}/.test(toGroup?.payload?.contextInfo?.externalAdReply?.body || ""), toGroup?.payload?.contextInfo?.externalAdReply?.body);
+// revisi owner 20 Sep: "bagian ini ubah jadi teks status misal klo bot
+// dihidupkan jadi teks statusnya: BOT DIHIDUPKAN" — title PERSIS label status,
+// gak ada lagi embel-embel "Nova AI —" di depannya.
+t("4d4. judul kartu status PERSIS teks status (tanpa embel Nova AI —)", toGroup?.payload?.contextInfo?.externalAdReply?.title === "BOT DIMATIKAN", toGroup?.payload?.contextInfo?.externalAdReply?.title);
 t("4e. thumbnail banner .bot off = canvas JPEG valid (bukan asset branding statis)", (() => {
   const th = toGroup?.payload?.contextInfo?.externalAdReply?.thumbnail;
   return Buffer.isBuffer(th) && th.length > 100 && th[0] === 0xff && th[1] === 0xd8;
