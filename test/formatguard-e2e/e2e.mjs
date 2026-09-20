@@ -45,11 +45,17 @@ w("\n— formatGuard: unit —");
   t("backslash-r backslash-n (CRLF literal) jadi 1 baris baru",
     formatGuard("A" + BS + "r" + BS + "nB") === "A" + NL + "B");
   t("backslash-t literal jadi spasi", formatGuard("A" + BS + "tB") === "A  B");
-  t("spasi ujung baris dibuang", formatGuard("A   " + NL + " B") === "A" + NL + " B");
+  // REVISI 20 Sep 2026 (rata kiri): baris plain ber-spasi awal kini di-DEDENT,
+  // spasi ujung tetap dibuang — " B" jadi "B"
+  t("spasi ujung baris dibuang + baris plain dedent", formatGuard("A   " + NL + " B") === "A" + NL + "B");
   t("3+ baris kosong dirapatkan jadi 1",
     formatGuard("A" + NL + NL + NL + NL + "B") === "A" + NL + NL + "B");
-  t("trim awal/akhir", formatGuard(NL + "  A  " + NL) === "A");
+  // REVISI 20 Sep 2026: leading-space baris pertama (art) TIDAK lagi di-trim
+  // total — newline kosong di awal dibuang, spasi ekor dibuang, isi dedent.
+  t("trim awal/akhir (newline awal + ekor dibuang)", formatGuard(NL + "  A  " + NL) === "A");
   t("non-string dibalikin apa adanya", formatGuard(123) === 123 && formatGuard(null) === null && formatGuard(undefined) === undefined);
+  t("ratakiri-1. baris plain ber-indent di-dedent", formatGuard("1. Ketik .menu" + NL + "   contoh: reply foto + .hd") === "1. Ketik .menu" + NL + "contoh: reply foto + .hd");
+  t("ratakiri-2. art box-drawing indent UTUH (hangman)", formatGuard("  " + "\u256d\u2500\u2500\u2500\u256e" + NL + "  \u2502   \u2502") === "  \u256d\u2500\u2500\u2500\u256e" + NL + "  \u2502   \u2502");
   const fenced = "contoh:" + "```js" + NL + 'const x = "hi' + BS + 'n";```';
   t("isi code fence DIKIRIM PERSIS (fitur kode gak rusak)", formatGuard(fenced) === fenced);
   t("string kosong utuh", formatGuard("") === "");
