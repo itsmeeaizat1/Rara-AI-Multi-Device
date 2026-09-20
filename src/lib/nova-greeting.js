@@ -23,7 +23,7 @@
 // AKAR #3 — MENU LAMA MUNCUL (nunggu AI): dulu getAiGreeting() SELALU
 // nunggu network (hingga TIMEOUT_MS) tiap kali dipanggil di luar window
 // dedupe 4 detik → .menu/.allmenu jeda kerasa lama nunggu AI jawab.
-// FIX: COOLDOWN_MS 10 detik — kalau ada cache (walau basi/stale), langsung
+// FIX: COOLDOWN_MS (revisi owner 20 Sep: 2 menit) — kalau ada cache (walau basi/stale), langsung
 // BALIKIN cache itu ke menu (instan, gak nunggu) SAMBIL refresh AI di
 // background buat panggilan BERIKUTNYA; cuma panggilan PERTAMA bot baru
 // nyala yang bener2 nunggu network (gak ada cache sama sekali).
@@ -34,7 +34,7 @@ import config from "../../config.js";
 
 const IKY_AI_URL = "https://api.ikyyxd.my.id/ai/gemini";
 const TIMEOUT_MS = 7000; // jangan bikin menu nunggu kelamaan (cuma dipakai first-load)
-const COOLDOWN_MS = 10000; // refresh AI paling cepat tiap 10 detik — sisanya pakai cache instan
+const COOLDOWN_MS = 120000; // REVISI OWNER 20 Sep: "jangan 10 detik terlalu cepat, ubah cooldown 2 menit aja" — refresh AI paling cepat tiap 2 MENIT, sisanya pakai cache instan
 
 // module-level cache: teks terakhir + kapan didapat
 let _cache = { text: null, at: 0 };
@@ -153,7 +153,7 @@ function refreshAndCache() {
 
 /**
  * Ucapan AI pengenalan bot untuk info section menu/allmenu.
- * COOLDOWN 10 detik: kalau ada cache (walau basi), langsung dibalikin
+  * COOLDOWN 2 MENIT (revisi owner 20 Sep): kalau ada cache (walau basi), langsung dibalikin
  * INSTAN (menu gak nunggu AI) sambil refresh jalan di background buat
  * panggilan berikutnya. Cuma panggilan pertama sejak bot nyala (belum
  * ada cache sama sekali) yang nunggu network. Fallback ke ucapan lokal
