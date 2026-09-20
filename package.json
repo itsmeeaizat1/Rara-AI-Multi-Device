@@ -109,6 +109,7 @@
     "puppeteer": "^25.11.0",
     "puppeteer-core": "^25.11.0",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "pakasir-sdk": "^1.0.5",
     "qrcode": "^1.5.4",
     "qs": "^6.16.0",
     "rate-limiter-flexible": "^11.2.1",
