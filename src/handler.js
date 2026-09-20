@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Multi-language: bungkus sock biar sock.sendMessage langsung pun ke-translate
 import { makeLangAwareSock } from "./lib/nova-i18n-sock.js";
+import { enrichAiSatuan } from "./lib/nova-ai-satuan-rich.js";
 import fs from "fs";
 import path from "path";
 import { serialize } from "./lib/nova-serialize.js";
@@ -1162,6 +1163,14 @@ try {
 
     // Statistik realtime: command valid diproses (+1, semua user termasuk owner)
     try { db.incrementStat("commandsRun"); } catch {}
+    // AI SATUAN RICH (owner 21 Sep 2026: "smua ai satuan support vision dan
+    // browsing") — reply foto → deskripsi gambar di-inject ke prompt satuan;
+    // flag --search/kata kunci terkini → hasil browsing di-inject. Satu
+    // pintu, 200-an plugin satuan gak perlu diedit; gagal senyap.
+    if (plugin.config?.category === "ai") {
+      try { await enrichAiSatuan(m, plugin); } catch {}
+    }
+
     // Multi-language (fix 18 Sep 2026): sock dibungkus translate-aware supaya
     // jalur sock.sendMessage LANGSUNG (menu tombol, caption media, hasil
     // fitur yang gak lewat m.reply) ikut ke-translate ke bahasa user.
