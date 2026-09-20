@@ -191,21 +191,28 @@ export async function statusBanner(state, { title, body, renderLarger = true } =
 
 /**
  * Bangun contextInfo banner (externalAdReply) ala desain .play / anime notifier.
+ * REVISI 20 Sep 2026 (owner, screenshot boot doctor & bot online: "bagian
+ * link whatsapp.com ini ubah jd waktu, gayanya kayak gaya bot dimatikan
+ * tadi"): sourceUrl DIBUANG TOTAL (WhatsApp render chip "🔗 whatsapp.com"
+ * dari field ini — sama akar kayak fix statusBanner 20 Sep) — body kini
+ * SELALU waktu+tanggal Asia/Jakarta, sama gaya kartu status off/mute/on.
  * @param {object} opts
  * @param {string} opts.title - Judul card (max 60 char)
- * @param {string} [opts.body] - Sub-label card (max 45 char)
- * @param {string} [opts.sourceUrl] - Link sumber (default: link saluran official)
  * @param {boolean} [opts.renderLarger=true] - Banner besar (hero) kayak .play
  * @returns {Promise<object>} contextInfo siap dipasang di payload sendMessage
  */
-export async function notifBanner({ title, body, sourceUrl, renderLarger = true } = {}) {
+export async function notifBanner({ title, renderLarger = true } = {}) {
+  const nowStr = new Date().toLocaleString("id-ID", {
+    timeZone: "Asia/Jakarta",
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
   const ext = {
     title: String(title || config.bot?.name || "Nova AI").substring(0, 60),
-    body: String(body || "notifikasi otomatis nova").substring(0, 45),
+    body: nowStr.substring(0, 45),
     mediaType: 1,
     renderLargerThumbnail: !!renderLarger,
     showAdAttribution: false,
-    sourceUrl: sourceUrl || config.saluran?.link || "https://whatsapp.com",
   };
   const thumb = await getBrandThumb();
   if (thumb) ext.thumbnail = thumb;

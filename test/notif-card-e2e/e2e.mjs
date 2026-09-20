@@ -26,21 +26,24 @@ const {
 // ═══ SECTION 1: notifBanner — contextInfo banner ala .play ═══
 w("\n— section 1: notifBanner —");
 
-const bn = await notifBanner({ title: "Boot Doctor — Nova AI", body: "⚠ 3 masalah · 29 sehat" });
+// REVISI 20 Sep (owner, screenshot: "link whatsapp.com ini ubah jd waktu,
+// gayanya kayak gaya bot dimatikan tadi") — notifBanner gak nerima `body`
+// lagi, body SELALU waktu+tanggal, sourceUrl DIBUANG TOTAL (sama pola statusBanner).
+const bn = await notifBanner({ title: "Boot Doctor — Nova AI" });
 t("1a. balik contextInfo.externalAdReply", !!bn?.externalAdReply);
 const ext = bn.externalAdReply || {};
-t("1b. title + body masuk card", ext.title === "Boot Doctor — Nova AI" && ext.body === "⚠ 3 masalah · 29 sehat", JSON.stringify(ext).slice(0, 80));
+t("1b. title masuk card + body = waktu/tanggal (bukan teks custom)", ext.title === "Boot Doctor — Nova AI" && /\d{4}/.test(ext.body), JSON.stringify(ext).slice(0, 80));
 t("1c. renderLargerThumbnail (banner gede kayak .play)", ext.renderLargerThumbnail === true);
 t("1d. mediaType 1 + bukan iklan", ext.mediaType === 1 && ext.showAdAttribution === false);
-t("1e. sourceUrl default = link saluran official", typeof ext.sourceUrl === "string" && ext.sourceUrl.length > 0, ext.sourceUrl);
+t("1e. GAK ADA sourceUrl (link whatsapp.com dihilangkan, sama kayak statusBanner)", !("sourceUrl" in ext), JSON.stringify(ext));
 
 const thumb = await getBrandThumb();
 t("1f. thumbnail branding channel-banner ke-load (jpeg 640x360)", !!thumb && thumb.length > 1000, thumb ? String(thumb.length) : "null");
 t("1g. banner bawa thumbnail", !!ext.thumbnail && ext.thumbnail.length > 0);
 
 // clamp panjang title/body (batas WA)
-const bn2 = await notifBanner({ title: "T".repeat(120), body: "B".repeat(90) });
-t("1h. title/body ke-clamp (60/45 char)", bn2.externalAdReply.title.length === 60 && bn2.externalAdReply.body.length === 45);
+const bn2 = await notifBanner({ title: "T".repeat(120) });
+t("1h. title ke-clamp 60 char (body waktu otomatis ≤45 char)", bn2.externalAdReply.title.length === 60 && bn2.externalAdReply.body.length <= 45);
 
 // default tanpa opts
 const bn3 = await notifBanner();
@@ -90,7 +93,9 @@ t("3a. DM owner kekirim", bdSent.length === 1 && bdSent[0].jid === "628174887770
 const bdPayload = bdSent[0]?.payload || {};
 t("3b. laporan beneran pakai banner (contextInfo.externalAdReply)", !!bdPayload.contextInfo?.externalAdReply, JSON.stringify(Object.keys(bdPayload)));
 t("3c. judul banner Boot Doctor", /boot doctor/i.test(bdPayload.contextInfo?.externalAdReply?.title || ""), bdPayload.contextInfo?.externalAdReply?.title);
-t("3d. body banner = ringkasan hasil (semua sehat)", /sehat/i.test(bdPayload.contextInfo?.externalAdReply?.body || ""), bdPayload.contextInfo?.externalAdReply?.body);
+// REVISI 20 Sep: body banner boot doctor SEKARANG waktu+tanggal (bukan ringkasan
+// hasil) — ringkasan tetap ada di ISI TEKS laporan (3e), sama gaya statusBanner.
+t("3d. body banner = waktu/tanggal, GAK ADA sourceUrl link", /\d{4}/.test(bdPayload.contextInfo?.externalAdReply?.body || "") && !("sourceUrl" in (bdPayload.contextInfo?.externalAdReply || { sourceUrl: 1 })), bdPayload.contextInfo?.externalAdReply?.body);
 const { fromSC } = await import(R + "/src/lib/styler.js");
 t("3e. isi laporan teks tetap utuh (plain)", typeof bdPayload.text === "string" && /total diperiksa/.test(fromSC(bdPayload.text)), (bdPayload.text || "").slice(0, 80));
 
@@ -99,7 +104,7 @@ _setDoctorHttpForTest(async (url) => (url.includes("cuki") ? { ok: false, status
 _setBootDoctorStateFileForTest(path.join(tmpState, "state2.json"));
 bdSent.length = 0;
 await runAndReport({ send: true });
-t("3f. ada masalah → body banner nyebut jumlah masalah", /\d+\s*masalah|⚠/i.test(bdPayload2(bdSent)), (bdSent[0]?.payload?.contextInfo?.externalAdReply?.body || ""));
+t("3f. ada masalah → jumlah masalah tetap kebaca di TEKS laporan (bukan body banner)", /masalah/i.test(fromSC(bdSent[0]?.payload?.text || "")), (bdSent[0]?.payload?.text || "").slice(0, 200));
 function bdPayload2(arr) { return arr[0]?.payload?.contextInfo?.externalAdReply?.body || "" }
 
 // cleanup section 3

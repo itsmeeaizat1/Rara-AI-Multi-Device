@@ -876,7 +876,6 @@ async function startConnection(options = {}) {
             try {
               await sendNotif(sock, num + "@s.whatsapp.net", notifText, {
                 title: "「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
-                body: (config.bot?.name || "Nova-AI") + " aktif kembali",
               });
               colors.logger.info("notif", "bot online terkirim ke owner: " + num);
             } catch (e) {
