@@ -6,6 +6,7 @@
 import { getDatabase } from "./nova-database.js";
 import { callAI } from "./nova-ai-service.js";
 import config from "../../config.js";
+import { getTioEndpoint } from "./config/env-loader.js";
 
 // Format definitions (sync dengan aigrup.js)
 const TIO_FORMATS = {
@@ -14,7 +15,7 @@ const TIO_FORMATS = {
     apiKeyField: "openaiApiKey",
     modelField: "openaiModel",
     defaultModel: "ag/gemini-3-flash",
-    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
     providerKey: "tio_openai",
   },
   gemini: {
@@ -22,7 +23,7 @@ const TIO_FORMATS = {
     apiKeyField: "geminiApiKey",
     modelField: "geminiModel",
     defaultModel: "ag/gemini-3-flash",
-    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
     providerKey: "tio_gemini",
   },
   anthropic: {
@@ -30,7 +31,7 @@ const TIO_FORMATS = {
     apiKeyField: "anthropicApiKey",
     modelField: "anthropicModel",
     defaultModel: "ag/claude-sonnet-4-6",
-    endpoint: "https://9router.cloudku.us.kg/v1/chat/completions",
+    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
     providerKey: "tio_anthropic",
   },
 };
