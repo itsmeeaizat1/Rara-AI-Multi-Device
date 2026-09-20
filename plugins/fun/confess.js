@@ -7,6 +7,11 @@
 // LANGSUNG ke nomor orangnya (DM), status/hasil balasan masuk ke grup/
 // chat pengirim — pas buat nembak orang yang suka diam-diam.
 // Confess channel terpusat (v3 lama) pindah ke .confess2 (plugins/fun/confess2.js).
+// REVISI 20 Sep (owner: "yg dlu confessnya g ngaish tau je grup jd sifatnya
+// dm doang") — SEMUA balasan bot (status terkirim + terusan balasan target)
+// DIKIRIM KE DM PENGGIRIM (m.sender), BUKAN m.chat. Kalau command dipakai di
+// grup, grup GAK menerima apa-apa (gak ada reply, gak ada react) — 100% rahasia,
+// makanya gak ada confess komit lama yang begini (semua varian balikin ke m.chat).
 // 2 mode: anonim (default) & non-anonim (dengan nama)
 // .confess nomor|pesan          → anonim
 // .confess nomor|pesan|nama     → non-anonim (identitas terungkap)
@@ -56,11 +61,19 @@ const pluginConfig = {
 
 if (!global.confessData) global.confessData = new Map();
 
+// DM-only: semua balasan ke DM pengirim — nol output di grup (rahasia total).
+async function dmReply(m, sock, text) {
+  await sock.sendMessage(m.sender, {
+    text,
+    contextInfo: { forwardingScore: 0, isForwarded: false },
+  });
+}
+
 async function handler(m, { sock }) {
   const input = m.fullArgs?.trim() || m.text?.trim();
 
   if (!input || !input.includes("|")) {
-    return await m.reply(claraWrap("confess", [
+    return await dmReply(m, sock, claraWrap("confess", [
       `Kirim pesan rahasia ke seseorang, 2 mode: anonim & non-anonim.`,
       ``,
       `📌 Mode anonim (rahasia): ${m.prefix}confess <nomor>|<pesan>`,
@@ -71,6 +84,8 @@ async function handler(m, { sock }) {
       ``,
       `🤫 Mode anonim: identitas 100% aman`,
       `📝 Mode non-anonim: nama kamu ditampilkan`,
+      ``,
+      `🔒 Semua balasan bot masuk ke DM sini — gak ada jejak di grup`,
     ]));
   }
 
@@ -82,7 +97,7 @@ async function handler(m, { sock }) {
   const isAnonim = !senderName;
 
   if (!rawNumber || !message) {
-    return m.reply(claraWrap("confess", [
+    return dmReply(m, sock, claraWrap("confess", [
       `Format salah nih!`,
       ``,
       `📌 Anonim: ${m.prefix}confess <nomor>|<pesan>`,
@@ -97,31 +112,31 @@ async function handler(m, { sock }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(claraWrap("confess", "Nomor tujuan gak valid nih!", "error"));
+    return dmReply(m, sock, claraWrap("confess", "Nomor tujuan gak valid nih!", "error"));
   }
 
   const targetJid = targetNumber + "@s.whatsapp.net";
   const senderNumber = m.sender.split("@")[0];
 
   if (targetNumber === senderNumber) {
-    return m.reply(claraWrap("confess", "Nggak bisa confess ke diri sendiri! 😂", "error"));
+    return dmReply(m, sock, claraWrap("confess", "Nggak bisa confess ke diri sendiri! 😂", "error"));
   }
 
   try {
     const [onWa] = await sock.onWhatsApp(targetNumber);
     if (!onWa?.exists) {
-      return m.reply(claraWrap("confess", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
+      return dmReply(m, sock, claraWrap("confess", `Nomor ${targetNumber} nggak terdaftar di WhatsApp!`, "error"));
     }
   } catch (e) {
     console.error("[confess.js] onWhatsApp check:", e.message);
   }
 
   if (message.length < 5) {
-    return m.reply(claraWrap("confess", "Pesan kependekan nih! Minimal 5 karakter.", "error"));
+    return dmReply(m, sock, claraWrap("confess", "Pesan kependekan nih! Minimal 5 karakter.", "error"));
   }
 
   if (message.length > 1000) {
-    return m.reply(claraWrap("confess", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
+    return dmReply(m, sock, claraWrap("confess", "Pesan kepanjangan! Maksimal 1000 karakter.", "error"));
   }
 
   // Build message based on mode
@@ -155,9 +170,11 @@ async function handler(m, { sock }) {
       },
     });
 
+    // senderChat = DM pengirim (BUKAN m.chat) — balasan target diterusin ke
+    // DM, grup gak pernah lihat apa-apa (revisi owner 20 Sep: sifatnya DM doang).
     global.confessData.set(sentMsg.key.id, {
       senderJid: m.sender,
-      senderChat: m.chat,
+      senderChat: m.sender,
       targetJid: targetJid,
       isAnonim,
       senderName: isAnonim ? null : senderName,
@@ -174,20 +191,22 @@ async function handler(m, { sock }) {
     const modeLine = isAnonim
       ? "│ • 🔒 Mode : Anonim (identitas aman)"
       : `│ • 📝 Mode : Non-Anonim (${senderName})`;
-    await m.reply(novaGameBox({
+    await dmReply(m, sock, novaGameBox({
       title: "pesan terkirim", icon: "💘",
       flavor: "💘 *PESAN TERKIRIM!*",
       body: [
         `│ • 📱 Ke : ${targetNumber}`,
         modeLine,
-        "│ • ✉️ Kalau dia balas, otomatis diterusin ke sini",
+        "│ • ✉️ Kalau dia balas, otomatis diterusin ke sini (DM)",
       ].join("\n"),
       cta: gameCTA("confess"),
     }));
-    await m.react("💌");
+    // react HANYA di private — reaction di grup keliatan semua anggota,
+    // bisa bahaya (bocorin kalau orang itu barusan nembak seseorang).
+    if (!m.isGroup) await m.react("💌");
   } catch (error) {
     console.error("[confess.js] Send error:", error.message);
-    await m.reply(claraWrap("confess", `Gagal kirim pesan! ${error.message}`, "error"));
+    await dmReply(m, sock, claraWrap("confess", `Gagal kirim pesan! ${error.message}`, "error"));
   }
 }
 
