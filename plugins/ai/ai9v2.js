@@ -5,6 +5,7 @@
 // MODUL: src/scraper/router9v2.js — key pusat apikeys.json providers.router9v2.
 // FITUR .ai9 LAMA TETAP UTUH (gak digantiin) — ini tambahan baru.
 import { novaBox } from "../../src/lib/nova-menu-style.js";
+import { getTioEndpoint, setTioEndpoint, resetTioEndpoint } from "../../src/lib/config/env-loader.js";
 import { splitChatChunks } from "../../src/lib/aiagent.js";
 import { appendTurn, toMessages } from "../../src/lib/nova-ai-session.js";
 import {
@@ -32,6 +33,7 @@ const HELP = [
   "Ping      : .ai9v2 ping",
   "Model     : .ai9v2 model <id> <pesan>",
   "Default   : .ai9v2 model <id>",
+  "Endpoint  : .ai9v2 endpoint",
 ];
 
 async function handler(m, { sock, args }) {
@@ -39,6 +41,51 @@ async function handler(m, { sock, args }) {
   const sub = argList[0]?.toLowerCase();
   if (!router9v2Key()) {
     return m.reply(novaBox("9Router V2", ["Key belum di-set — isi di apikeys.json (router9v2) atau env ROUTER_API_KEY."]));
+  }
+
+  // ── .ai9v2 endpoint — lihat/ganti endpoint 9router (OWNER SAJA) ──
+  // Request owner 21 Sep: 9router bisa di-install SENDIRI di Linux
+  // (npm install -g 9router, situs resmi 9router.com) — key dibuat lokal
+  // via dashboard localhost:20128/dashboard. Command ini mindahin SELURUH
+  // rantai 9router bot (aigrup, aitio, fun-ai, smartreply, dsb.) ke
+  // gateway lokal tanpa edit kode, persist di apikeys.json.
+  if (sub === "endpoint") {
+    if (!m.isOwner) {
+      return m.reply(novaBox("9Router V2 — Endpoint", ["Khusus owner."]));
+    }
+    const val = argList[1]?.toLowerCase();
+    // lihat endpoint aktif
+    if (!val) {
+      return m.reply(novaBox("9Router V2 — Endpoint", [
+        "Aktif : " + getTioEndpoint(),
+        "---",
+        "Ganti : .ai9v2 endpoint <url>",
+        "Lokal : .ai9v2 endpoint lokal",
+        "Balik : .ai9v2 endpoint default",
+        "---",
+        "Lokal = 9router di VPS sendiri (npm install -g 9router),",
+        "endpoint http://localhost:20128/v1, key dari dashboard.",
+      ]));
+    }
+    // balik ke default (hapus override)
+    if (val === "default") {
+      const r = resetTioEndpoint();
+      await m.react(r.ok ? "\u26a1" : "\u274c");
+      return m.reply(novaBox("9Router V2 — Endpoint", [
+        r.ok ? "Balik ke default." : "GAGAL: " + r.error,
+        "Aktif: " + r.endpoint,
+      ]));
+    }
+    // ganti ke 9router lokal di VPS / URL apa pun
+    const url = val === "lokal"
+      ? "http://localhost:20128/v1/chat/completions"
+      : argList.slice(1).join(" ");
+    const r = setTioEndpoint(url);
+    await m.react(r.ok ? "\u26a1" : "\u274c");
+    return m.reply(novaBox("9Router V2 — Endpoint", [
+      r.ok ? "Berhasil diganti — seluruh rantai 9router bot ikut (tanpa restart)." : "GAGAL: " + r.error,
+      "Aktif: " + (r.ok ? r.endpoint : getTioEndpoint()),
+    ]));
   }
 
   // ── .ai9v2 ping — diagnosa latency live (bukti di mana lambatnya) ──

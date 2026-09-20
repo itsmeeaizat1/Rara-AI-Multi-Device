@@ -19,6 +19,7 @@
 import config from "../../config.js";
 import { getDatabase } from "./nova-database.js";
 import { getApiKeys } from "./config/env-loader.js";
+import { getTioBase } from "./config/env-loader.js";
 
 // ═══════════════════════════════════════════════════════════════
 // DEFINISI SEMUA API KEY
@@ -92,7 +93,7 @@ export const API_KEYS = {
     description: "Gateway OpenAI-compatible 9router.cloudku.us.kg — chat multi-model (.ai9v2)",
     getConfig: () => config.APIkey?.router9v2 || "",
     getEnv: () => process.env.ROUTER_API_KEY || "",
-    getLink: () => "https://9router.cloudku.us.kg",
+    getLink: () => getTioBase(), // satu pintu env-loader (bisa 9router lokal)
     usedBy: ["ai9v2", "9routerv2"],
   },
   xai: {
