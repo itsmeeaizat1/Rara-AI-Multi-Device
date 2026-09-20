@@ -121,6 +121,12 @@ export function listBackups(root) {
     .map((d) => ({ d, n: Number(d) || 0 })).sort((a, b) => b.n - a.n).slice(0, 10).map((x) => x.d);
 }
 
+// cek path tanpa eksekusi — buat gate izin (cuma tanya kalau path lolos jail+blacklist)
+export function ocodePathCheck(root, rel) {
+  const p = resolveIn(root, rel);
+  return p.blocked ? { blocked: p.blocked } : { ok: true };
+}
+
 // ── eksekusi satu aksi → string hasil untuk model ──
 function execAction(root, a) {
   const act = String(a.action || "").toLowerCase();
@@ -261,9 +267,13 @@ ATURAN:
  * @param {string} [o.model] — model 9router (default ROUTER9V2_DEFAULT_MODEL)
  * @param {string} [o.repoRoot] — root repo (default cwd)
  * @param {(ev:{type:string,text:string})=>void} [o.onEvent] — progress (phase)
- * @returns {Promise<{summary:string,files:string[],changed:string[],iterations:number,aborted:boolean,error?:string}>}
+ * @param {(o:{path:string,action:string,task:string,detail:object})=>Promise<{allowed:boolean,reason?:string}|null>} [o.onApproval]
+ *        — GATE IZIN PER FILE (request owner 21 Sep 2026: "ada allow deny tiap
+ *          dia eksekusi 1 file kyk ai agent pd umumnya"). Dipanggil SEBELUM
+ *          tiap write/edit; keputusan di-cache per file per tugas (tanya 1x).
+ * @returns {Promise<{summary:string,files:string[],changed:string[],denied:string[],iterations:number,aborted:boolean,error?:string}>}
  */
-export async function runOcodeAgent({ task, model, repoRoot, onEvent }) {
+export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval }) {
   if (state.running) return { error: "masih ada tugas berjalan" };
   state.running = true; state.abort = false; state.task = task; state.startedAt = Date.now();
   const root = __oc.root || path.resolve(repoRoot || process.cwd());
@@ -273,6 +283,8 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent }) {
     { role: "user", content: "Tugas: " + task + "\n\nKerjakan sekarang, mulai dari aksi pertama." },
   ];
   const changed = [];
+  const denied = [];           // file yang DITOLAK owner
+  const decisions = new Map();  // izin per file per tugas (rel → boolean)
   let summary = "", files = [], iterations = 0, aborted = false, error = "";
   try {
     for (let i = 0; i < MAX_ITERATIONS; i++) {
@@ -305,6 +317,30 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent }) {
         if (state.abort) { aborted = true; break; }
         if (a.action === "done") { doneHere = true; summary = String(a.summary || ""); files = (a.files || []).map(String); break; }
         const rel = a.path ? String(a.path) : "";
+        // ── GATE IZIN PER FILE (allow/deny ala AI agent umum) ──
+        // tanya owner SEBELUM nulis; 1x per file per tugas; tanpa callback →
+        // auto-izin (backward-compat pemanggil lama / non-ownerless flow)
+        if (a.action === "write" || a.action === "edit") {
+          const chk = ocodePathCheck(root, rel);
+          if (!chk.blocked) {
+            if (!decisions.has(rel)) {
+              let ap = { allowed: true };
+              if (onApproval) {
+                try {
+                  ap = (await onApproval({ path: rel, action: a.action, task, detail: a })) || { allowed: true };
+                } catch (e) {
+                  ap = { allowed: false, reason: "approval error: " + (e?.message || e) };
+                }
+              }
+              decisions.set(rel, !!ap?.allowed);
+            }
+            if (!decisions.get(rel)) {
+              results.push("\u2192 " + rel + "\nDITOLAK oleh owner \u2014 file TIDAK diubah. Jangan tulis file ini lagi dalam tugas ini; lanjutkan tanpa file ini atau akhiri dengan done.");
+              denied.push(rel);
+              continue;
+            }
+          }
+        }
         const r = execAction(root, a);
         results.push("→ " + rel + "\n" + r);
         if ((a.action === "write" || a.action === "edit") && !/^ERROR/.test(r) && !changed.includes(rel)) changed.push(rel);
@@ -319,7 +355,7 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent }) {
   } finally {
     state.running = false; state.abort = false;
   }
-  return { summary, files: files.length ? files : changed, changed, iterations, aborted, error: error || undefined };
+  return { summary, files: files.length ? files : changed, changed, denied, iterations, aborted, error: error || undefined };
 }
 
 /** abort tugas yang sedang jalan (.ocode stop) */
