@@ -123,8 +123,10 @@ function pickMenuThumb(requestedPath) {
  *                    tombol SEBELUM Pilih Layanan, popup list Rules & Tutorial)
  * 5. Sewa          → single_select popup: Beli Premium / Sewa Bot
  * 6. Owner         → single_select popup: Laporkan Bug / Kirim Masukan
- * 7. Support       → single_select popup: Beri Penilaian / Join Grup / Saluran
- *                    Resmi / Donasi
+ * 7. Support       → single_select popup: Join Grup / Saluran Resmi / Donasi
+ * 8. Beri Penilaian → single_select popup: 5 pilihan rating Sangat Baik ⭐⭐⭐⭐⭐
+ *                    s/d Sangat Buruk ⭐ (owner 20 Sep: dipindah dari popup
+ *                    Support jadi tombol nav sendiri — total 8 tombol)
  *
  * @param {object} m
  * @param {object} db
@@ -179,13 +181,21 @@ function buildNavButtons(m, db, prefix = ".") {
     },
   ];
 
+  // 5 pilihan rating — popup LANGSUNG di tombol nav sendiri (request owner
+  // 20 Sep 2026: "tombol beri penilaian gak muncul pilihan 5 pilihan kayak
+  // dari sangat buruk sampai sangat baik, dipindahkan di depan setelah tombol
+  // navigasi support, total 8 tombol"). Dulu cuma row di popup Support yang
+  // ngirim .penilaian → kartu popup KEDUA — sekarang pilihan muncul instan
+  // pas tombol nav diklik. Id sama kayak input manual (plugin parseRating).
+  const ratingRows = [
+    { header: "", title: "⭐⭐⭐⭐⭐ Sangat Baik", description: "Layanan bot luar biasa, keep it up!", id: `${prefix}penilaian 5` },
+    { header: "", title: "⭐⭐⭐⭐ Baik", description: "Bot nyaman dan enak dipakai", id: `${prefix}penilaian 4` },
+    { header: "", title: "⭐⭐⭐ Cukup", description: "Biasa aja, masih bisa lebih baik", id: `${prefix}penilaian 3` },
+    { header: "", title: "⭐⭐ Buruk", description: "Banyak yang perlu dibenerin", id: `${prefix}penilaian 2` },
+    { header: "", title: "⭐ Sangat Buruk", description: "Pengalaman pakai yang jelek", id: `${prefix}penilaian 1` },
+  ];
+
   const supportRows = [
-    {
-      header: "",
-      title: "Beri Penilaian",
-      description: "Rate bot ini, pilihan puas sampai kecewa",
-      id: `${prefix}penilaian`,
-    },
     {
       header: "",
       title: "Join Grup Resmi",
@@ -233,6 +243,12 @@ function buildNavButtons(m, db, prefix = ".") {
       text: toSC("Support"),
       title: toSC("Support Bot"),
       sections: [{ title: toSC("Dukung Bot"), rows: supportRows }],
+    },
+    {
+      type: "single_select",
+      text: toSC("Beri Penilaian"),
+      title: toSC("⭐ Pilih Penilaian"),
+      sections: [{ title: toSC("Penilaian Kamu"), rows: ratingRows }],
     },
   ];
 }

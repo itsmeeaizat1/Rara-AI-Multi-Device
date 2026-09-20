@@ -26,13 +26,15 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// 5 pilihan rating — label persis konsep "puas" ala bot populer
+// 5 pilihan rating — label skala "sangat buruk sampai sangat baik"
+// (revisi owner 20 Sep 2026 — disamain sama popup tombol nav Beri Penilaian
+// di menu card; alias lama "puas banget"/"kecewa" masih kebaca parseRating)
 const RATING_OPTIONS = [
-  { value: 5, label: "Puas Banget", stars: "⭐⭐⭐⭐⭐", description: "Layanan bot luar biasa, keep it up!" },
-  { value: 4, label: "Puas", stars: "⭐⭐⭐⭐", description: "Bot nyaman dan enak dipakai" },
+  { value: 5, label: "Sangat Baik", stars: "⭐⭐⭐⭐⭐", description: "Layanan bot luar biasa, keep it up!" },
+  { value: 4, label: "Baik", stars: "⭐⭐⭐⭐", description: "Bot nyaman dan enak dipakai" },
   { value: 3, label: "Cukup", stars: "⭐⭐⭐", description: "Biasa aja, masih bisa lebih baik" },
-  { value: 2, label: "Kurang", stars: "⭐⭐", description: "Banyak yang perlu dibenerin" },
-  { value: 1, label: "Kecewa", stars: "⭐", description: "Pengalaman pakai yang jelek" },
+  { value: 2, label: "Buruk", stars: "⭐⭐", description: "Banyak yang perlu dibenerin" },
+  { value: 1, label: "Sangat Buruk", stars: "⭐", description: "Pengalaman pakai yang jelek" },
 ];
 
 // ambil rating dari teks — dukung angka (".penilaian 5", ".penilaian 5 bintang")
@@ -43,11 +45,12 @@ function parseRating(raw) {
   if (!t) return null;
   const mNum = t.match(/(?:^|\s)([1-5])(?:\s*(?:bintang|star|x))?/);
   if (mNum) return parseInt(mNum[1], 10);
-  if (/puas\s*banget|mantap|keren\s*banget|bagus\s*banget/.test(t)) return 5;
-  if (/puas|bagus|mantap|keren/.test(t)) return 4;
+  if (/sangat\s*baik|puas\s*banget|mantap|keren\s*banget|bagus\s*banget/.test(t)) return 5;
+  if (/sangat\s*buruk/.test(t)) return 1;
+  if (/baik|puas|bagus|keren/.test(t)) return 4;
   if (/cukup|lumayan|biasa/.test(t)) return 3;
-  if (/kurang/.test(t)) return 2;
-  if (/kecewa|jelek|buruk/.test(t)) return 1;
+  if (/buruk|kurang/.test(t)) return 2;
+  if (/kecewa|jelek/.test(t)) return 1;
   return null;
 }
 
