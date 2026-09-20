@@ -30,6 +30,7 @@
 // Seams buat e2e: setAgentDeps({ aiChat, search, preview }).
 
 import fs from "fs";
+import { stripMarkdownTables } from "./nova-md-table.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { execFileSync } from "child_process";
@@ -335,7 +336,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       const report = results.map(r => `${r.ok ? "✅" : "❌"} ${r.msg}`).join("\n");
       answer = (evidences.length ? String(answer).trim() : "") || report;
       if (evidences.length && report) answer += `\n\n${report}`;
-      return { mode: "tools", answer, results, evidences: evidences.length, steps, voice: !!plan.voice, viaLocal, queries: [], sources: [] };
+      return { mode: "tools", answer: stripMarkdownTables(answer), results, evidences: evidences.length, steps, voice: !!plan.voice, viaLocal, queries: [], sources: [] };
     }
   }
 
@@ -351,7 +352,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
     }
     const answer = results.map(r => `${r.ok ? "✅" : "❌"} ${r.msg}`).join("\n");
     steps.push({ phase: "act", ok: results.some(r => r.ok), aksi: results.length });
-    return { mode: "act", answer, results, steps, voice: !!plan?.voice, queries: [], sources: [] };
+    return { mode: "act", answer: stripMarkdownTables(answer), results, steps, voice: !!plan?.voice, queries: [], sources: [] };
   }
 
   // ── MODE PERSONA — chat/bermain peran (request owner 11 Sep: "klo disuruh
@@ -371,7 +372,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
     if (!answer || !String(answer).trim()) {
       return { error: "AI-nya lagi sibuk, coba lagi bentar ya 🙏" };
     }
-    return { mode: "persona", persona: persona || null, answer: String(answer).trim(), sources: [], queries: [], steps, voice: !!plan.voice, viaLocal: false };
+    return { mode: "persona", persona: persona || null, answer: stripMarkdownTables(String(answer).trim()), sources: [], queries: [], steps, voice: !!plan.voice, viaLocal: false };
   }
 
   // ── MODE RESEARCH — browsing/riset web (alur 5 fase) ──
@@ -486,7 +487,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   }
   steps.push({ phase: "compose", ok: !viaLocal, viaLocal });
 
-  return { mode: "research", answer: String(answer).trim(), queries, sources, steps, voice: !!plan?.voice, viaLocal };
+  return { mode: "research", answer: stripMarkdownTables(String(answer).trim()), queries, sources, steps, voice: !!plan?.voice, viaLocal };
 }
 
 // ═══════════════════════════════════════════════════════════════
