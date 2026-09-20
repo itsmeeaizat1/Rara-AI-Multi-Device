@@ -185,6 +185,64 @@ console.log("— section 3.5: reply context + history —");
   t("3.5h. store gak ada → senyap", rE === null, rE);
 }
 
+// ═══ SECTION 3.6: jejak histori PERSISTEN — tetep ada saat restart ═══
+console.log("— section 3.6: chat history persisten —");
+{
+  const chatlog = await import(R + "/src/lib/nova-chat-log.js"); console.log("MK1");
+  const cfg = { command: { prefix: "." } };
+  const CHAT = "62grup@g.us";
+  const mkRaw = (body, sender, type = "conversation", fromMe = false) => ({
+    key: { remoteJid: CHAT, participant: sender + "@s.whatsapp.net", fromMe },
+    message: type === "conversation" ? { conversation: body } : { [type]: { caption: body } },
+    messageTimestamp: Math.floor(Date.now() / 1000),
+  });
+
+  // pesan biasa → tercatat
+  t("3.6a. pesan teks user → tercatat", chatlog.recordChatMessage(mkRaw("halo semua", "62811"), cfg) === true);
+  chatlog.recordChatMessage(mkRaw("besok jadi ikut acara?", "62822", "extendedTextMessage"), cfg);
+  chatlog.recordChatMessage(mkRaw("jadi dong jam 7 ya", "62811"), cfg);
+  // foto + caption → tercatat sebagai foto
+  chatlog.recordChatMessage(mkRaw("liburan di bali", "62833", "imageMessage"), cfg);
+  // command → GAK dicatat
+  t("3.6b. command .menu → gak dicatat", chatlog.recordChatMessage(mkRaw(".menu", "62811"), cfg) === false);
+  // pesan bot (fromMe) → gak dicatat
+  t("3.6c. pesan bot fromMe → gak dicatat", chatlog.recordChatMessage(mkRaw("jawaban bot", "bot", "conversation", true), cfg) === false);
+  // status → gak dicatat
+  t("3.6d. status broadcast → gak dicatat", chatlog.recordChatMessage({ key: { remoteJid: "status@broadcast" }, message: { conversation: "x" } }, cfg) === false);
+
+  const hist = chatlog.getChatHistory(CHAT, 10);
+  t("3.6e. isi histori 4 baris", hist.length === 4, hist.length);
+  t("3.6f. jenis media ikut (foto)", hist.some((r) => r.k === "foto" && r.b === "liburan di bali"), hist[3]);
+  const rend = chatlog.renderChatHistory(CHAT, 8, 900);
+  t("3.6g. render blok konteks", /Jejak pesan terakhir/.test(rend) && rend.includes("besok jadi ikut acara?"), rend?.slice(0, 100));
+
+  // ── SIMULASI RESTART: flush ke disk → baca file chathistory.json langsung
+  //    (bukti histori nyimpen di FILE, bukan cuma memori — ilang cuma kalau
+  //    file databasenya dihapus)
+  getDatabase().flushAll?.();
+  await new Promise((r) => setTimeout(r, 700));
+  const histFile = path.join(dbDir, "db", "chathistory.json");
+  const onDisk = JSON.parse(fs.readFileSync(histFile, "utf8"));
+  const diskRows = onDisk?.[CHAT] || onDisk?.data?.[CHAT] || [];
+  t("3.6h. histori NYIMPEN di file chathistory.json", Array.isArray(diskRows) && diskRows.length === 4 && diskRows[0]?.b === "halo semua", { file: histFile, rows: diskRows.length });
+
+  // keyword tadi → blok histori persisten ke-inject ke prompt satuan
+  rich._setRichVisionForTest(async () => ({ status: true, text: "foto kucing" }));
+  const mP = mkM(["ringkas", "pembicaraan", "tadi"]);
+  const rP = await enrichAiSatuan(mP, pluginGita, {});
+  const jP = mP.args.join(" ");
+  t("3.6i. keyword tadi → histori persisten masuk prompt", rP !== null && jP.includes("halo semua") && /Jejak pesan terakhir/.test(jP), jP.slice(0, 120));
+
+  // clear → jejak hilang (owner hapus)
+  chatlog.clearChatHistory(CHAT);
+  t("3.6j. clearChatHistory → kosong", chatlog.getChatHistory(CHAT, 10).length === 0, chatlog.getChatHistory(CHAT, 10).length);
+
+  // rotating cap 120
+  for (let i = 0; i < 130; i++) chatlog.recordChatMessage(mkRaw("msg " + i, "62899"), cfg);
+  t("3.6k. rotating cap 120 per chat", chatlog.getChatHistory(CHAT, 200).length === 120, chatlog.getChatHistory(CHAT, 200).length);
+  chatlog.clearChatHistory(CHAT);
+}
+
 // ═══ SECTION 4: loader flag _usesQuotedMedia beneran ═══
 console.log("— section 4: loader flag —");
 {

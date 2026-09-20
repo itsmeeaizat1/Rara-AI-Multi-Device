@@ -32,6 +32,7 @@
 import { visionScan } from "./nova-vision-chain.js";
 import { searchWeb } from "./nova-websearch.js";
 import { getDatabase } from "./nova-database.js";
+import { renderChatHistory } from "./nova-chat-log.js";
 
 // ── seams buat e2e offline ──
 const __rich = {};
@@ -86,8 +87,14 @@ function quotedKindLabel(q) {
   return "media";
 }
 
-// ── jejak pesan terakhir di chat dari store Baileys (in-memory sejak boot) ──
+// ── jejak pesan terakhir di chat — PERSISTEN duluan (nova-chat-log,
+//    tetap ada walau bot restart — konfirmasi owner 21 Sep), kalau kosong
+//    (mis. histori dihapus) fallback ke store Baileys in-memory sejak boot ──
 function buildHistoryBlock(sock, m) {
+  try {
+    const persist = renderChatHistory(m.chat, HISTORY_LIMIT, CAP_HISTORY);
+    if (persist) return persist;
+  } catch { /* db gak siap → lanjut fallback */ }
   try {
     const msgs = sock?.store?.messages?.get?.(m.chat);
     if (!msgs) return "";
@@ -216,7 +223,7 @@ export async function enrichAiSatuan(m, plugin, opts = {}) {
     // ── 3. JEJAK HISTORI CHAT — cuma kalau pertanyaan eksplisit nyebut
     //    waktu/riwayat (tadi/sebelumnya/riwayat/histori/kemarin) →
     //    beberapa pesan terakhir di chat ikut jadi konteks.
-    if (opts.sock && HISTORY_RE.test(stripped)) {
+    if (HISTORY_RE.test(stripped)) {
       const hist = buildHistoryBlock(opts.sock, m);
       if (hist) parts.push(hist);
     }
