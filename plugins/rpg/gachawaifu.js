@@ -6,12 +6,12 @@ import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "petualanggachawaifu",
+  name: "gachawaifu",
   alias: ["gachawaifu", "gwaifu", "pullwaifu", "gachaw"],
   category: "rpg",
   description: "Gacha waifu — pull karakter anime + rarity + marry system",
-  usage: ".petualanggachawaifu (pull)\n.gachawaifu list (cek koleksi)\n.gachawaifu marry <nama> (kawin waifu)\n.gachawaifu divorce <nama> (cerai)",
-  example: ".petualanggachawaifu\n.gachawaifu list\n.gachawaifu marry Rem",
+  usage: ".gachawaifu (pull)\n.gachawaifu list (cek koleksi)\n.gachawaifu marry <nama> (kawin waifu)\n.gachawaifu divorce <nama> (cerai)",
+  example: ".gachawaifu\n.gachawaifu list\n.gachawaifu marry Rem",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 10, energi: 3, isEnabled: true,
 };

@@ -71,7 +71,7 @@ t("1f. matematika terverifikasi benar (sampling anchored)", (() => {
 })());
 
 console.log("— section 2: mulai solo —");
-await handler(mkMsg({ text: ".petualangkuis", args: [] }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena", args: [] }), { sock: mkSock(), config: {} });
 t("2a. sesi solo tercipta", sessions.has("c1@s.whatsapp.net") && sessions.get("c1@s.whatsapp.net").mode === "solo");
 const s = sessions.get("c1@s.whatsapp.net");
 t("2b. wave 1 + hp 100 + level player", s.wave === 1 && s.hp >= 100 && s.hpMax === 100 + (s.lvl * 5));
@@ -111,7 +111,7 @@ const db = getDatabase();
 t("4b. rekor persist ke db.data.quizarena", db.data.quizarena?.perUser?.["628100000001@s.whatsapp.net"]?.bestWave >= 1, JSON.stringify(db.data.quizarena?.perUser?.["628100000001@s.whatsapp.net"]));
 
 console.log("— section 5: pvp duel —");
-await handler(mkMsg({ text: ".petualangkuis pvp", args: ["pvp"], mentionedJid: ["628100000002@s.whatsapp.net"], pushName: "Toko" }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena pvp", args: ["pvp"], mentionedJid: ["628100000002@s.whatsapp.net"], pushName: "Toko" }), { sock: mkSock(), config: {} });
 const p = sessions.get("c1@s.whatsapp.net");
 t("5a. sesi pvp tercipta 2 pemain", p && p.mode === "pvp" && p.players.length === 2 && p.players[0].hp === 100 && p.players[1].hp === 100);
 t("5b. penonton gak bisa jawab", await answerHandler(mkMsg({ sender: "628999999999@s.whatsapp.net", text: "a" }), mkSock()) === true && p.players[0].hp === 100 && p.players[1].hp === 100);
@@ -132,27 +132,27 @@ while (sessions.get("c1@s.whatsapp.net") !== undefined && guard++ < 30) {
 t("5e. hp lawan habis → duel selesai + kemenangan", sessions.get("c1@s.whatsapp.net") === undefined && sent.some((x) => sc(x.payload.text).includes("menang")));
 
 console.log("— section 6: sub command —");
-await handler(mkMsg({ text: ".petualangkuis rank", args: ["rank"] }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena rank", args: ["rank"] }), { sock: mkSock(), config: {} });
 t("6a. rank nampilin papan juara", sc(sent[sent.length-1].payload.text).includes("wave") || sent.length > 0);
 plug._setSoalSourceForTest(null); // stat harus baca bank asli
-await handler(mkMsg({ text: ".petualangkuis stat", args: ["stat"] }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena stat", args: ["stat"] }), { sock: mkSock(), config: {} });
 plug._setSoalSourceForTest(FAKE);
 t("6b. stat nunjukin bank soal 2000+", sc(sent[sent.length-1].payload.text).match(/2\.?0?0?3|[2][0-9]{3}/) !== null, sc(sent[sent.length-1].payload.text).slice(0, 100));
 {
-    await handler(mkMsg({ text: ".petualangkuis stop", args: ["stop"] }), { sock: mkSock(), config: {} });
+    await handler(mkMsg({ text: ".kuisarena stop", args: ["stop"] }), { sock: mkSock(), config: {} });
     t("6c. gak ada game → stop bilang gak ada", sc(sent[sent.length - 1].payload.text).includes("gak ada"));
   }
 // pvp format salah
-await handler(mkMsg({ text: ".petualangkuis pvp", args: ["pvp"], mentionedJid: [] }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena pvp", args: ["pvp"], mentionedJid: [] }), { sock: mkSock(), config: {} });
 t("6d. pvp tanpa tag → format salah", sc(sent[sent.length-1].payload.text).includes("tag"));
 // pvp lawan diri sendiri
-await handler(mkMsg({ text: ".petualangkuis pvp", args: ["pvp"], mentionedJid: ["628100000001@s.whatsapp.net"] }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena pvp", args: ["pvp"], mentionedJid: ["628100000001@s.whatsapp.net"] }), { sock: mkSock(), config: {} });
 t("6e. pvp lawan diri sendiri ditolak", sc(sent[sent.length-1].payload.text).includes("sendiri"));
 // start saat game jalan
 sessions.set("c1@s.whatsapp.net", { mode: "solo", hp: 100, hpMax: 100, wave: 1, current: FAKE[0], answeredThisRound: new Set(), usedIds: new Set() });
-await handler(mkMsg({ text: ".petualangkuis", args: [] }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena", args: [] }), { sock: mkSock(), config: {} });
 t("6f. start saat jalan → ditolak", sc(sent[sent.length-1].payload.text).includes("sedang berjalan"));
-await handler(mkMsg({ text: ".petualangkuis stop", args: ["stop"] }), { sock: mkSock(), config: {} });
+await handler(mkMsg({ text: ".kuisarena stop", args: ["stop"] }), { sock: mkSock(), config: {} });
 t("6g. stop menghapus sesi", sessions.get("c1@s.whatsapp.net") === undefined);
 
 console.log("— section 7: guard data asli —");
