@@ -158,7 +158,7 @@ t("8a. stop: berkas dikembalikan ke arsip", U().active === null);
 await run(["pergi", "1"]);
 t("8b. aksi tanpa kasus → rak arsip kosong", last().includes("rak arsip") || last().includes("belum ada kasus"));
 await run(["kasus"]);
-t("8c. .novadetektif kasus tanpa aktif → arsip", last().includes("rak arsip") || last().includes("belum ada kasus"));
+t("8c. .sangdetektif kasus tanpa aktif → arsip", last().includes("rak arsip") || last().includes("belum ada kasus"));
 // rebirth penuh
 const u8 = U();
 u8.solvedTotal = 20;
