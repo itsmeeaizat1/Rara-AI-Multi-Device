@@ -42,11 +42,12 @@ plug._setRandForTest(() => 0.01); // cuaca cerah, no event
 await run({});
 t("1b. pemain baru: starter pack + tutorial", U() && some("starter pack") && some("cara main"));
 t("1c. gunung DUNIA NYATA terpilih (ada mdpl)", /mdpl/.test(U().gunung) && U().gunung.length > 5, U().gunung);
-t("1c2. nama ada di pool gunung nyata", (await import(R + "/plugins/rpg/gunung.js")).GUNUNG_POOL.includes(U().gunung), U().gunung);
-// migrasi: nama fiktif lama otomatis diganti gunung nyata
-U().gunung = "Gunung Salju Abadi";
+t("1c2. nama ada di pool negara terbuka (Indonesia)", (await import(R + "/plugins/rpg/gunung.js")).COUNTRIES[0].pool.includes(U().gunung), U().gunung);
+t("1c2b. pemain baru mulai dari Indonesia", U().country === "indonesia", U().country);
+// migrasi: nama fiktif lama (tanpa country) otomatis diganti gunung Indonesia nyata
+U().gunung = "Gunung Salju Abadi"; delete U().country;
 await run({});
-t("1c3. migrasi nama fiktif lama → gunung nyata", /mdpl/.test(U().gunung), U().gunung);
+t("1c3. migrasi nama fiktif lama → gunung nyata + country Indonesia", /mdpl/.test(U().gunung) && U().country === "indonesia", `${U().gunung} | ${U().country}`);
 t("1d. mulai di zona 1 stamina penuh", U().zona === 1 && U().stamina === 10);
 
 console.log("— section 2: daki aman & cuaca —");
@@ -215,6 +216,44 @@ t("14f. lawan bayar 100", rCash() === 1900, rCash());
 t("14g. hasil duel dramatis tampil", some("duel pendaki") || some("poin"));
 await run({ args: ["lomba"], mentionedJid: [RIVAL] });
 t("14h. cooldown 1 menit → ditolak", some("1 menit") || some("napas"));
+
+console.log("— section 15: OPEN WORLD — negara bertingkat —");
+U().puncak = 0;
+await run({ args: ["dunia"] });
+t("15a. peta dunia: semua negara tampil + syarat", some("peta dunia") && some("jepang") && some("jerman") && some("china") && some("dunia"));
+t("15b. jepang terkunci di 0 puncak", some("butuh 3 puncak"));
+await run({ args: ["negara", "jepang"] });
+t("15c. negara terkunci → ditolak", U().country === "indonesia" && some("belum terbuka"));
+U().puncak = 3;
+await run({ args: ["negara", "jepang"] });
+t("15d. 3 puncak → jepang TERBUKA, country aktif jepang", U().country === "jepang" && some("negara diganti"));
+U().puncak = 5;
+await run({ args: ["negara", "jerman"] });
+t("15e. jerman butuh 6 → masih terkunci", U().country === "jepang");
+U().puncak = 6;
+await run({ args: ["negara", "jerman"] });
+t("15f. 6 puncak → jerman terbuka", U().country === "jerman");
+U().puncak = 9;
+await run({ args: ["negara", "china"] });
+t("15g. 9 puncak → china terbuka", U().country === "china");
+U().puncak = 12;
+await run({ args: ["negara", "dunia"] });
+t("15h. 12 puncak → dunia (7 puncak) terbuka", U().country === "dunia");
+await run({ args: ["negara", "wakanda"] });
+t("15i. negara gak ada → ditolak", some("negara gak ada"));
+// gunung berikutnya mengikuti negara aktif
+U().zona = 8; U().puncak = 13;
+plug._setRandForTest(() => 0.01);
+await run({ args: ["prestasi"] });
+t("15j. prestasi di negara dunia → gunung dari pool Dunia 7 Puncak", (await import(R + "/plugins/rpg/gunung.js")).COUNTRIES[4].pool.includes(U().gunung), U().gunung);
+// migrasi pemain lama bermountain Everest (pool lama) + 13 puncak → country dunia
+U().zona = 3; U().gunung = "Gunung Everest (8.849 mdpl)"; delete U().country;
+await run({});
+t("15k. migrasi pemain lama Everest 13 puncak → country dunia", U().country === "dunia" && U().gunung === "Gunung Everest (8.849 mdpl)");
+// migrasi pemain lama Fuji + 0 puncak → country indonesia (jepang belum terbuka)
+U().gunung = "Gunung Fuji (3.776 mdpl)"; delete U().country; U().puncak = 0;
+await run({});
+t("15l. migrasi Fuji 0 puncak → country indonesia (tetap Fuji)", U().country === "indonesia" && U().gunung === "Gunung Fuji (3.776 mdpl)");
 
 fs.rmSync(dbDir, { recursive: true, force: true });
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);

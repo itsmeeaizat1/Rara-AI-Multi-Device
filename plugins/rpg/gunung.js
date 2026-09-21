@@ -27,12 +27,33 @@ const ZONA = [
   { n: 7, nama: "☠️ Zona Maut", cost: 3, loot: 320, oksigen: true },
   { n: 8, nama: "🏔️ Puncak Legenda", cost: 3, loot: 400, oksigen: true },
 ];
-const GUNUNG_POOL = [
-  "Gunung Everest (8.849 mdpl)", "Gunung Aconcagua (6.961 mdpl)", "Gunung Denali (6.190 mdpl)",
-  "Gunung Kilimanjaro (5.895 mdpl)", "Gunung Elbrus (5.642 mdpl)", "Gunung Mont Blanc (4.808 mdpl)",
-  "Gunung Fuji (3.776 mdpl)", "Gunung Cartenz (4.884 mdpl)", "Gunung Kerinci (3.805 mdpl)",
-  "Gunung Rinjani (3.726 mdpl)", "Gunung Semeru (3.676 mdpl)", "Gunung Merapi (2.930 mdpl)",
+// ── OPEN WORLD: negara bertingkat, buka dengan PUNCAK (total summit) ──
+const COUNTRIES = [
+  { id: "indonesia", nama: "Indonesia", emoji: "🇮🇩", butuh: 0, pool: [
+    "Gunung Merapi (2.930 mdpl)", "Gunung Merbabu (3.145 mdpl)", "Gunung Semeru (3.676 mdpl)",
+    "Gunung Rinjani (3.726 mdpl)", "Gunung Kerinci (3.805 mdpl)", "Gunung Cartenz (4.884 mdpl)",
+  ] },
+  { id: "jepang", nama: "Jepang", emoji: "🇯🇵", butuh: 3, pool: [
+    "Gunung Fuji (3.776 mdpl)", "Gunung Kita-dake (3.193 mdpl)", "Gunung Hotaka (3.190 mdpl)",
+    "Gunung Yari-gatake (3.180 mdpl)", "Gunung Tateyama (3.015 mdpl)",
+  ] },
+  { id: "jerman", nama: "Jerman", emoji: "🇩🇪", butuh: 6, pool: [
+    "Gunung Zugspitze (2.962 mdpl)", "Gunung Watzmann (2.713 mdpl)", "Gunung Hochkalter (2.607 mdpl)",
+    "Gunung Feldberg (1.493 mdpl)", "Gunung Brocken (1.141 mdpl)",
+  ] },
+  { id: "china", nama: "China", emoji: "🇨🇳", butuh: 9, pool: [
+    "Gunung Everest — Sisi Utara (8.849 mdpl)", "Gunung Minya Konka (7.556 mdpl)", "Gunung Muztagh Ata (7.546 mdpl)",
+    "Gunung Siguniang (6.250 mdpl)", "Gunung Emei (3.099 mdpl)",
+  ] },
+  { id: "dunia", nama: "Dunia (7 Puncak)", emoji: "🌍", butuh: 12, pool: [
+    "Gunung Everest (8.849 mdpl)", "Gunung Aconcagua (6.961 mdpl)", "Gunung Denali (6.190 mdpl)",
+    "Gunung Kilimanjaro (5.895 mdpl)", "Gunung Elbrus (5.642 mdpl)", "Gunung Mont Blanc (4.808 mdpl)",
+    "Gunung Vinson (4.892 mdpl)",
+  ] },
 ];
+const negaraById = (id) => COUNTRIES.find((x) => x.id === id) || COUNTRIES[0];
+const pickMountain = (negaraId) => pick(negaraById(negaraId).pool);
+const negaraTerbuka = (negaraId, puncak) => (puncak || 0) >= negaraById(negaraId).butuh;
 const TOKO = {
   oksigen: { nama: "🫁 Botol Oksigen", harga: 100, desc: "Wajib zona 6-8. 1 botol = 1 daki." },
   jaket: { nama: "🧥 Jaket Tebal", harga: 250, desc: "Biaya stamina daki -1 (min 1). Sekali beli, permanen per gunung." },
@@ -55,9 +76,11 @@ function ensureUser(m) {
   if (!db.data.gunung) db.data.gunung = { users: {}, rombongan: {} };
   let u = db.data.gunung.users[m.sender];
   if (!u) return null;
-  // migrasi kosmetik: nama fiktif lama → gunung dunia nyata (posisi/zona tidak berubah)
-  if (u.gunung && !GUNUNG_POOL.includes(u.gunung)) {
-    u.gunung = pick(GUNUNG_POOL);
+  // migrasi open world: nama lama dipetakan ke negaranya; gunung BERIKUTNYA dari country aktif
+  if (u.country === undefined) {
+    const asal = COUNTRIES.find((x) => x.pool.includes(u.gunung));
+    u.country = asal && negaraTerbuka(asal.id, u.puncak) ? asal.id : "indonesia";
+    if (!asal) u.gunung = pickMountain("indonesia"); // nama fiktif purba → gunung Indonesia nyata
     saveDb();
   }
   regenStamina(u);
@@ -74,7 +97,7 @@ function regenStamina(u) {
 function newUser(m) {
   const db = getDatabase();
   const u = {
-    gunung: pick(GUNUNG_POOL), zona: 1, puncak: 0, prestasi: 0,
+    country: "indonesia", gunung: pickMountain("indonesia"), zona: 1, puncak: 0, prestasi: 0,
     stamina: STAMINA_MAX, staminaAt: Math.floor(Date.now() / 1000),
     oksigen: 1, jaket: false, tenda: 0, pemanas: false, kristal: 0,
     portir: false, portirUsed: false, guaPending: false, lastLombaAt: 0,
@@ -171,7 +194,7 @@ async function handler(m, { sock, config }) {
     if (u.zona < 8) return m.reply(novaGameBox({ title: "gunung", icon: "🔒", flavor: "🔒 *PUNCAK DULU!*", body: `Prestasi hanya bisa diambil setelah menaklukkan ${u.gunung}. Kamu sedang di zona ${u.zona}/8.` }));
     u.prestasi += 1;
     u.puncak += 0; // puncak sudah dihitung saat summit
-    u.gunung = pick(GUNUNG_POOL);
+    u.gunung = pickMountain(u.country || "indonesia");
     u.zona = 1;
     u.stamina = STAMINA_MAX;
     u.staminaAt = Math.floor(Date.now() / 1000);
@@ -179,7 +202,8 @@ async function handler(m, { sock, config }) {
     u.portir = false; u.portirUsed = false; u.guaPending = false;
     u.mulaiPada = Date.now();
     saveDb();
-    return m.reply(novaGameBox({ title: "gunung", icon: "♻️", flavor: "♻️ *PRESTASI BARU!*", body: `Gunung berikutnya: ${u.gunung}!\nSemua EXP pendakian +${u.prestasi * 10}% permanen.\n🧥 Jaket/tenda/pemanas reset (beli lagi di toko).\n\nKetik .gunung daki untuk mulai!` }));
+    const neg = negaraById(u.country || "indonesia");
+    return m.reply(novaGameBox({ title: "gunung", icon: "♻️", flavor: "♻️ *PRESTASI BARU!*", body: `${neg.emoji} Gunung berikutnya dari ${neg.nama}: ${u.gunung}!\nSemua EXP pendakian +${u.prestasi * 10}% permanen.\n🧥 Jaket/tenda/pemanas reset (beli lagi di toko).\n\nKetik .gunung daki untuk mulai!` }));
   }
 
   // ── istirahat (beli stamina) ──
@@ -221,6 +245,46 @@ async function handler(m, { sock, config }) {
     saveDb();
     console.log(`[gunung] ${m.sender} beli ${rest} (${item.harga} gold)`);
     return m.reply(novaGameBox({ title: "gunung", icon: "🎒", flavor: "🎒 *PEMBELIAN SUKSES!*", body: `${item.nama} masuk tas! ${rest === "tenda" ? `Tenda dipasang di zona ${u.tenda} sebagai checkpoint.` : ""}\nSisa gold: ${getCash(m)}` }));
+  }
+
+  // ── 🗺️ PETA DUNIA — open world bertingkat ──
+  if (sub === "dunia" || sub === "peta" || sub === "negara" && (m.args?.[1] || "").toLowerCase() === "list") {
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
+    const puncak = u.puncak || 0;
+    const body = COUNTRIES.map((neg) => {
+      const buka = negaraTerbuka(neg.id, puncak);
+      const aktif = (u.country || "indonesia") === neg.id;
+      const contoh = neg.pool.slice(0, 3).map((g) => g.replace("Gunung ", "")).join(", ");
+      return [
+        `${neg.emoji} ${neg.nama}${aktif ? " ← sedang aktif" : ""}`,
+        buka ? `   ✅ TERBUKA — ${neg.pool.length} gunung (${contoh}…)` : `   🔒 Butuh ${neg.butuh} puncak — kamu baru ${puncak}`,
+      ].join("\n");
+    }).join("\n\n") + `\n\n🗺️ Ganti negara: .gunung negara <nama> (berlaku untuk gunung BERIKUTNYA)\n🏆 Puncak kamu: ${puncak} — kumpulkan puncak untuk membuka negara baru!`;
+    return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *PETA DUNIA PENDAKIAN*", body }));
+  }
+
+  // ── ganti negara aktif ──
+  if (sub === "negara") {
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
+    const q = (m.args?.[1] || "").toLowerCase();
+    if (!q) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *NEGARA MANA?*", body: "Pilih: indonesia · jepang · jerman · china · dunia\nLihat peta: .gunung dunia" }));
+    const alias = {
+      id: "indonesia", indonesia: "indonesia", indo: "indonesia",
+      jp: "jepang", jepang: "jepang", japan: "jepang",
+      de: "jerman", jerman: "jerman", germany: "jerman", german: "jerman",
+      cn: "china", china: "china", cina: "china",
+      world: "dunia", dunia: "dunia", "7puncak": "dunia", seven: "dunia",
+    };
+    const negId = alias[q];
+    if (!negId) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "❓ *NEGARA GAK ADA!*", body: "Pilihan sah: indonesia · jepang · jerman · china · dunia" }));
+    const neg = negaraById(negId);
+    if (!negaraTerbuka(negId, u.puncak || 0)) {
+      return m.reply(novaGameBox({ title: "gunung", icon: "🔒", flavor: "🔒 *BELUM TERBUKA!*", body: `${neg.emoji} ${neg.nama} butuh ${neg.butuh} puncak — kamu baru ${u.puncak || 0}.\nKeep climbing: selesaikan gunung di negara terbuka dulu!` }));
+    }
+    const lama = negaraById(u.country || "indonesia").nama;
+    u.country = negId;
+    saveDb();
+    return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *NEGARA DIGANTI!*", body: `Negara aktif: ${neg.emoji} ${neg.nama} (sebelumnya ${lama}).\nPuncak berikutnya di ${neg.nama} akan diberikan SETELAH kamu menaklukkan gunung sekarang lewat .gunung prestasi.` }));
   }
 
   // ── 🕳️ GUA SAMPING — masuk / lewat ──
@@ -505,6 +569,7 @@ async function handler(m, { sock, config }) {
       flavor: "🏔️ *SELAMAT DATANG DI PENDAKIAN GUNUNG LEGENDA!*",
       body: [
         `Ekspedisimu dimulai di kaki ${u.gunung} — 8 zona menanti sebelum puncak.`,
+        `🗺️ OPEN WORLD: kumpulkan puncak untuk membuka 🇯🇵 Jepang (3), 🇩🇪 Jerman (6), 🇨🇳 China (9), 🌍 Dunia 7 Puncak (12)!`,
         "",
         "🎯 Cara main:",
         "1. .gunung daki aman — naik zona (stamina hemat, loot biasa)",
@@ -529,10 +594,11 @@ async function handler(m, { sock, config }) {
     flavor: `🏔️ *${u.gunung.toUpperCase()} — ZONA ${u.zona}/8*`,
     body: [
       `📍 Posisi: ${zDef(u.zona).nama}`,
+      `🗺️ Negara: ${negaraById(u.country || "indonesia").emoji} ${negaraById(u.country || "indonesia").nama} · 🏆 Puncak: ${u.puncak || 0}`,
       `⚡ Stamina: ${u.stamina}/${STAMINA_MAX} (+1 tiap 5 mnt)`,
       `🫁 Oksigen: ${u.oksigen} botol · 💎 Kristal: ${u.kristal}`,
       `🎒 Jaket: ${u.jaket ? "✅" : "❌"} · ⛺ Tenda checkpoint: ${u.tenda || "—"} · 🔥 Pemanas: ${u.pemanas ? "✅" : "❌"}`,
-      `🏆 Puncak: ${u.puncak} · ♻️ Prestasi: ${u.prestasi} (+${u.prestasi * 10}% EXP)`,
+      `♻️ Prestasi: ${u.prestasi} (+${u.prestasi * 10}% EXP) · 🗺️ .gunung dunia (peta negara)`,
       "",
       ...(u.zona >= 8
         ? ["🏔️ Kamu berdiri di PUNCAK! Ketik .gunung prestasi untuk gunung baru (+10% EXP permanen)"]
@@ -544,7 +610,7 @@ async function handler(m, { sock, config }) {
   }));
 }
 
-export { handler, ZONA, GUNUNG_POOL, TOKO };
+export { handler, ZONA, COUNTRIES, TOKO };
 export const pluginConfig = {
   name: ["gunung", "pendakian", "gununglejenda"],
   type: "rpg",
