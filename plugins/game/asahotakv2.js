@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("asahotakv2", { name: "brainteaserv2", usage: ".brainteaserv2", example: ".brainteaserv2" });
+const plugin = games.createPlugin("asahotakv2");
 
 export const config = plugin.config;
 export const handler = plugin.handler;

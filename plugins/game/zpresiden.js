@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("zpresiden", { name: "guesspresident", usage: ".guesspresident", example: ".guesspresident" });
+const plugin = games.createPlugin("zpresiden");
 
 export const config = plugin.config;
 export const handler = plugin.handler;

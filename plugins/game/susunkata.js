@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("susunkata", { name: "arrangeword", usage: ".arrangeword", example: ".arrangeword" });
+const plugin = games.createPlugin("susunkata");
 
 export const config = plugin.config;
 export const handler = plugin.handler;

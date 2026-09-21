@@ -16,7 +16,7 @@ const AI_COMMANDS = {
   download: { cmds: ["ytmp3", "ytmp4", "igdl", "tiktok", "mediafire", "gdrive"], desc: "Download media dari berbagai platform" },
   sticker: { cmds: ["sticker", "stickerwm", "toimg", "emojimix"], desc: "Buat dan edit sticker" },
   group: { cmds: ["closegc", "opengc", "kick", "add", "promote", "demote", "hidetag"], desc: "Admin grup management" },
-  game: { cmds: ["brainteaser", "cluepuzzle", "quickquiz", "guessflag", "whoami"], desc: "Game tebak-tebakan" },
+  game: { cmds: ["asahotak", "caklontong", "kuis", "tebakbendera", "siapakahaku"], desc: "Game tebak-tebakan" },
   rpg: { cmds: ["rpginventory", "rpgkerja", "rpgquest", "rpgbattle", "rpgshop"], desc: "RPG adventure" },
   ai: { cmds: ["ai", "cegpt", "blackbox", "deepseek", "bardai"], desc: "Chat dengan AI" },
   search: { cmds: ["yts", "google", "pinterest", "wallpaper"], desc: "Cari di internet" },
