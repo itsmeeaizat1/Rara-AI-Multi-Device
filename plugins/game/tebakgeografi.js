@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("tebakgeografi");
+const plugin = games.createPlugin("tebakgeografi", { name: "guessgeography", usage: ".guessgeography", example: ".guessgeography" });
 
 export const config = plugin.config;
 export const handler = plugin.handler;

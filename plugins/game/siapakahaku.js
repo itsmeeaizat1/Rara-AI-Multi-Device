@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("siapakahaku");
+const plugin = games.createPlugin("siapakahaku", { name: "whoami", usage: ".whoami", example: ".whoami" });
 
 export const config = plugin.config;
 export const handler = plugin.handler;

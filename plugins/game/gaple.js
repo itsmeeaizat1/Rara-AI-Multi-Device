@@ -8,13 +8,13 @@ import { formatRp } from "../../src/lib/nova-rpg-service.js";
 import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const pluginConfig = {
-  name: "gaple",
+  name: "domino",
   alias: ["gaple"],
   aliases: ["gaple", "domino"],
   category: "game",
   description: "Game Gaple (Domino) multiplayer di grup",
-  usage: ".gaple | .gaple join | .gaple start | .gaple play <no> <left|right> | .gaple draw | .gaple hand | .gaple pass | .gaple stop",
-  example: ".gaple",
+  usage: ".domino | .domino join | .domino start | .domino play <no> <left|right> | .domino draw | .domino hand | .domino pass | .domino stop",
+  example: ".domino",
   isOwner: false, isPremium: false, isGroup: true, isPrivate: false,
   cooldown: 3, energi: 2, isEnabled: true,
 };
@@ -52,8 +52,8 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       return m.reply(novaBox("Gaple", [
         "Permainan dimulai",
         "---",
-        ".gaple join — bergabung",
-        ".gaple start — mulai (min 2)",
+        ".domino join — bergabung",
+        ".domino start — mulai (min 2)",
       ]));
     }
 
@@ -81,13 +81,13 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (sub === "info") {
       return m.reply(novaBox("Gaple", [
-        ".gaple join — Gabung",
-        ".gaple start — Mulai (min 2)",
-        ".gaple play <no> <left|right> — Main kartu",
-        ".gaple draw — Ambil kartu",
-        ".gaple pass — Lewati",
-        ".gaple hand — Lihat kartu (DM)",
-        ".gaple stop — Hentikan",
+        ".domino join — Gabung",
+        ".domino start — Mulai (min 2)",
+        ".domino play <no> <left|right> — Main kartu",
+        ".domino draw — Ambil kartu",
+        ".domino pass — Lewati",
+        ".domino hand — Lihat kartu (DM)",
+        ".domino stop — Hentikan",
       ]));
     }
 
@@ -144,7 +144,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       return m.reply(novaGameBox({ title: "gaple", icon: "🁣", body: "📢 Butuh " + (game.players.length - game.stopVotes.length) + " vote lagi buat stop." }));
     }
 
-    return m.reply(claraWrap("gaple", "Perintah tidak dikenali. .gaple info untuk panduan.", "guide"));
+    return m.reply(claraWrap("gaple", "Perintah tidak dikenali. .domino info untuk panduan.", "guide"));
   } catch (e) {
     console.error("gaple error:", e.message);
     await m.react("❌");

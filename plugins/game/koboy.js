@@ -6,12 +6,12 @@ import { formatRp } from "../../src/lib/nova-rpg-service.js";
 import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 
 const pluginConfig = {
-  name: "koboy",
+  name: "cowboyduel",
   alias: ["koboy", "tembak"],
   category: "game",
   description: "Game tembak koboy — tembak musuh ninja!",
-  usage: ".koboy kiri/kanan/tengah",
-  example: ".koboy kiri",
+  usage: ".cowboyduel kiri/kanan/tengah",
+  example: ".cowboyduel kiri",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 2, isEnabled: true,
 };
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     const direction = args[0]?.toLowerCase();
 
     if (!direction || !positions.includes(direction)) {
-      return m.reply(claraWrap("koboy", `Pilih arah: kiri, tengah, atau kanan!\n\nContoh: .koboy kiri`, "guide"));
+      return m.reply(claraWrap("koboy", `Pilih arah: kiri, tengah, atau kanan!\n\nContoh: .cowboyduel kiri`, "guide"));
     }
 
     await m.react("🕒");

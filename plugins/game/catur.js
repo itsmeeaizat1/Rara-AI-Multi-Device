@@ -9,13 +9,13 @@ import fs from "fs";
 import path from "path";
 
 const pluginConfig = {
-  name: "catur",
+  name: "chess",
   alias: ["catur"],
   aliases: ["catur","caturterima","caturtolak","caturpapan","caturlangkah","caturmenyerah","caturselesai","caturhelp","caturrank","caturstatus","caturnilai","caturlawan","caturgiliran","caturrematch","caturafk","caturwaktu","caturreset","caturskip","caturdraw","caturhapus","caturnext","caturboard","caturtimer","caturhistory","caturskorreset","caturanalisa","caturtop10","caturnotif"],
   category: "game",
   description: "Sistem catur multiplayer lengkap (tantang, main, skor, rank)",
-  usage: ".catur @tag | .caturlangkah e2 e4 | .caturhelp",
-  example: ".catur @user",
+  usage: ".chess @tag | .caturlangkah e2 e4 | .caturhelp",
+  example: ".chess @user",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 3, energi: 1, isEnabled: true,
 };
@@ -78,7 +78,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     // ═══ CATUR (tantang) ═══
     if (command === "catur") {
       const mentioned = m.mentionedJid || [];
-      if (mentioned.length === 0) return m.reply(claraWrap("catur", "Tag pengguna untuk ditantang!\nContoh: .catur @user", "guide"));
+      if (mentioned.length === 0) return m.reply(claraWrap("catur", "Tag pengguna untuk ditantang!\nContoh: .chess @user", "guide"));
       const lawan = mentioned[0];
       if (lawan === sender) return m.reply(claraWrap("catur", "Kamu tidak bisa menantang dirimu sendiri.", "info"));
       if (caturData[chatId]) return m.reply(claraWrap("catur", "Masih ada game di chat ini.", "info"));
@@ -169,7 +169,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
         "Bermain catur langsung di grup!",
         "---",
         { sub: "Memulai" },
-        ".catur @tag — Tantang pemain",
+        ".chess @tag — Tantang pemain",
         ".caturterima — Terima tantangan",
         ".caturtolak — Tolak tantangan",
         "---",
