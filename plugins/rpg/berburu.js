@@ -8,8 +8,7 @@ import {
   bumpPlayerStat,
   getCash} from "../../src/lib/nova-rpg-service.js";
 import { getRpgWeather, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
-import { animBattle, rpgSleep, animHuntShoot, animHuntResult } from "../../src/lib/nova-rpg-anim.js";
-import { animasiRunner } from "../../src/lib/nova-anim-runner.js";
+import { animBattle, rpgSleep, animHuntTrack, animHuntShoot, animHuntResult } from "../../src/lib/nova-rpg-anim.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
@@ -150,8 +149,7 @@ ${list}
 
     // ANIMASI ALA SCRIPT OWNER (morphing 1 pesan per fase):
     // FASE 1: MELACAK JEJAK → target ditemukan
-    // 🎬 animasi runner: memburu melintasi lintasan (skala level)
-    await animasiRunner(sock, m.chat, { level: rpg.level || 1, aksi: "dungeon", hasil: "🗡️ MONSTER DITEMUKAN! Pertarungan menyusul…" });
+    await animHuntTrack(m, sock, monster.name);
     await m.reply(`🎯 Ditemukan *${monster.name}* di ${zone.name}!\n⚔️ Bersiap bertarung...`);
     // FASE 2: MEMANAH — bidik, tarik tali, lepas
     await animHuntShoot(m, sock, monster.name);

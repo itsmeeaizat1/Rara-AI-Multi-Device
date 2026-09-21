@@ -10,7 +10,6 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import { getCash, spendCash, addCash, addGems, addItem, ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { animasiRunner } from "../../src/lib/nova-anim-runner.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
 
 // ── knob ──
@@ -310,11 +309,10 @@ async function handler(m, { sock, config }) {
 
     // 5+6. ROLLING
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gacha] react loading gagal:", e); } }
-    // 🎬 animasi runner: hadiah 🎁 melintasi jalur menuju finis (edit berulang)
     try {
-      await animasiRunner(sock, m.chat, { level: (ensureRpg(m, m.pushName) || {}).level || 1, aksi: "gacha", hasil: "🎁 KOTAK TERBUKA! Reveal menyusul…" });
+      await m.reply(novaGameBox({ title: "gacha", icon: "🎲", flavor: "🎲 *GACHA BERPUTAR…*", body: pick(ROLLING_TEXTS) }));
     } catch (e) {
-      console.error("[gacha] animasi runner gagal (lanjut ke hasil):", e);
+      console.error("[gacha] animasi rolling gagal terkirim (lanjut ke hasil):", e);
     }
     if (ROLL_DELAY_MS > 0) await sleep(ROLL_DELAY_MS);
 
