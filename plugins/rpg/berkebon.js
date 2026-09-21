@@ -12,7 +12,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "berkebon",
+  name: "gardening",
   alias: ["berkebon", "kebon", "farming", "tanam"],
   category: "rpg",
   description: "Tanam & panen hasil kebun untuk material dan gold",

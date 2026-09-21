@@ -11,7 +11,7 @@ const XP_LINK_CREATOR = 15000;
 const XP_BONUS = { 5: 40000, 10: 100000, 20: 250000, 50: 1000000, 100: 10000000 };
 
 const pluginConfig = {
-  name: "referal",
+  name: "referral",
   alias: ["referal", "ref"],
   category: "rpg",
   description: "Sistem referral RPG — dapatkan EXP dari referral",

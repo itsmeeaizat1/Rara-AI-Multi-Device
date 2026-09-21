@@ -506,7 +506,7 @@ async function handler(m, { sock, config }) {
 
 export { handler, loadCases };
 export const pluginConfig = {
-  name: ["sangdetektif", "detektif", "detektifkasus"],
+  name: ["masterdetective", "sangdetektif", "detektif", "detektifkasus"],
   type: "rpg",
   description: "Sang Detektif — pecahkan kasus kriminal: jelajah lokasi, kumpulkan bukti, interogasi tersangka, tuduh pelaku",
   usage: ".sangdetektif | .sangdetektif kasus | .sangdetektif pergi <no> | .sangdetektif cari | .sangdetektif interogasi <no> | .sangdetektif tanya <no> | .sangdetektif jawab <ans> | .sangdetektif bukti | .sangdetektif tuduh <no> | .sangdetektif hint | .sangdetektif daily | .sangdetektif kopi | .sangdetektif status | .sangdetektif rank | .sangdetektif rebirth | .sangdetektif stop",

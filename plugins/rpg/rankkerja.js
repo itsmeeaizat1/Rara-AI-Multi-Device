@@ -9,8 +9,8 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "rankkerja",
-  alias: ["rankkerja", "workrank", "leaderboardgold"],
+  name: "workrank",
+  alias: ["rankkerja", "leaderboardgold"],
   category: "rpg",
   description: "Ranking pemain berdasarkan total gold",
   usage: ".rankkerja",

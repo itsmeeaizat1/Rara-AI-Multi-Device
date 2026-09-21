@@ -15,8 +15,8 @@ import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "petualangberburu",
-  alias: ["berburu", "hunt"],
+  name: "huntingadventure",
+  alias: ["petualangberburu", "berburu", "hunt"],
   category: "rpg",
   description: "Berburu monster untuk EXP, Gold, dan item drop",
   usage: ".petualangberburu [zone <nama> | trophy]",

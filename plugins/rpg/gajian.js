@@ -10,7 +10,7 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "gajian",
+  name: "payday",
   alias: ["gajian", "salary"],
   category: "rpg",
   description: "Menerima gaji harian",

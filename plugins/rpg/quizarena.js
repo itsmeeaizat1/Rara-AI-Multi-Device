@@ -342,7 +342,7 @@ async function handler(m, { sock, config }) {
 
 export { handler, loadSoal };
 export const pluginConfig = {
-  name: ["kuisarena", "arenakuis", "quizarena"],
+  name: ["quizarena", "kuisarena", "arenakuis"],
   type: "rpg",
   description: "Arena Kuis RPG — jawaban soal = senjata! Solo wave + boss tiap 10, duel PVP",
   usage: ".kuisarena | .kuisarena pvp @user | .kuisarena rank | .kuisarena stat | .kuisarena stop",

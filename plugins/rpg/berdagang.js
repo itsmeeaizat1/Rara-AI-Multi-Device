@@ -17,7 +17,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "berdagang",
+  name: "merchanttrade",
   alias: ["berdagang", "dagang", "trader"],
   category: "rpg",
   description: "Dagang barang antar desa — untung = Sertifikat Dagang, upgrade Karavan biar harga jual naik",

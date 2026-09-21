@@ -13,8 +13,8 @@ import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "petualangan",
-  alias: ["adventure", "petualang", "jelajah"],
+  name: "adventure",
+  alias: ["petualangan", "petualang", "jelajah"],
   category: "rpg",
   description: "Petualangan acak — bisa harta karun, trap, atau encounter",
   usage: ".petualangan",
