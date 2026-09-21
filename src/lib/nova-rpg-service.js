@@ -327,7 +327,10 @@ export function spendCash(m, amount) {
     const rpg = ensureRpg(m);
     if (!rpg) return false;
     const amt = Math.floor(Number(amount) || 0);
-    if (amt <= 0 || (rpg.cash || 0) < amt) return false;
+    if (amt <= 0) return false;
+    // 💎 CHEAT INFINITE (owner-only, .working infinite on): cash gak pernah terpotong
+    if (rpg.cheat === true) return true;
+    if ((rpg.cash || 0) < amt) return false;
     rpg.cash = Math.max(0, (rpg.cash || 0) - amt);
     saveRpg(m, rpg);
     return true;
@@ -428,6 +431,8 @@ export function useEnergy(m, amount, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg) return false;
+    // 💎 CHEAT INFINITE (owner-only, .working infinite on): stamina gak pernah habis
+    if (rpg.cheat === true) return true;
     if (rpg.energy < amount) return false;
     rpg.energy -= amount; rpg.lastActive = Date.now();
     saveRpg(m, rpg);
