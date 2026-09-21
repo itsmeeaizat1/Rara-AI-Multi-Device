@@ -6,7 +6,7 @@
 // kunci + tanpa salah tuduh + tanpa hint) = EXP ×2 + 1 kopi. Crit Intuisi 10% saat .cari.
 // Energi 10 max regen 1/5 mnt (pergi -2, cari/interogasi -1). Kopi: beli hint (1 kopi / 30 gold), minum +5 energi.
 // Rank: 🕵️ Magang → 🎖️ Inspektur → 🥇 Detektif Senior → 👑 Komisaris → 🪙 Legenda Kriminal.
-// Prestige: 20 kasus → .novadetektif rebirth (+10% EXP permanen per rebirth). State persist db.data.detektif.
+// Prestige: 20 kasus → .sangdetektif rebirth (+10% EXP permanen per rebirth). State persist db.data.detektif.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -126,7 +126,7 @@ function fileText(u, c) {
     `🔎 Bukti terkumpul: ${a.evidence.length}${c.evidence.length ? "/" + c.evidence.length : ""} · ❌ Salah tuduh: ${a.wrongAccuse}`,
     `⚡ Energi: ${u.energi}/${ENERGI_MAX} · ☕ Kopi: ${u.kopi}`,
     "",
-    `Aksi: .novadetektif pergi <no/lokasi> · .novadetektif cari · .novadetektif interogasi <no/nama> · .novadetektif bukti · .novadetektif tuduh <no/nama>`,
+    `Aksi: .sangdetektif pergi <no/lokasi> · .sangdetektif cari · .sangdetektif interogasi <no/nama> · .sangdetektif bukti · .sangdetektif tuduh <no/nama>`,
   ].join("\n");
 }
 
@@ -138,7 +138,7 @@ async function handler(m, { sock, config }) {
 
   // ── daily ──
   if (sub === "daily") {
-    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "🕵️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Mulai kariermu dulu: ketik .novadetektif" }));
+    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "🕵️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Mulai kariermu dulu: ketik .sangdetektif" }));
     const now = getLocalDateObject ? getLocalDateObject() : new Date();
     const today = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
     if (u.lastDaily === today) return m.reply(novaGameBox({ title: "detektif", icon: "📅", flavor: "📅 *SUDAH DIKLAIM!*", body: "Bonus harian detektif hari ini sudah diambil. Kembali besok!" }));
@@ -155,7 +155,7 @@ async function handler(m, { sock, config }) {
 
   // ── status ──
   if (sub === "status") {
-    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "🕵️", flavor: "🕵️ *NOVA DETEKTIF*", body: "Kamu belum punya lisensi detektif! Ketik .novadetektif untuk mulai — pemain baru dapat starter pack 100 gold + 2 kopi." }));
+    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "🕵️", flavor: "🕵️ *NOVA DETEKTIF*", body: "Kamu belum punya lisensi detektif! Ketik .sangdetektif untuk mulai — pemain baru dapat starter pack 100 gold + 2 kopi." }));
     const c = caseOf(u);
     return m.reply(novaGameBox({
       title: "detektif", icon: "🕵️",
@@ -163,7 +163,7 @@ async function handler(m, { sock, config }) {
       body: [
         `🏅 Rank: ${rankFor(u.solvedTotal)}`,
         `📁 Kasus selesai: ${u.solvedTotal}`,
-        ...(c ? ["", `🔎 Kasus aktif: ${c.title} (.novadetektif kasus)`] : ["", "📭 Belum ada kasus aktif — ketik .novadetektif"]),
+        ...(c ? ["", `🔎 Kasus aktif: ${c.title} (.sangdetektif kasus)`] : ["", "📭 Belum ada kasus aktif — ketik .sangdetektif"]),
         `⚡ Energi: ${u.energi}/${ENERGI_MAX} (+1 tiap 5 menit) · ☕ Kopi: ${u.kopi}`,
         `♻️ Rebirth: ${u.rebirths} (+${(u.rebirths || 0) * 10}% EXP permanen)`,
         `📅 Daily streak: ${u.dailyStreak} hari`,
@@ -174,20 +174,20 @@ async function handler(m, { sock, config }) {
   // ── rank ──
   if (sub === "rank" || sub === "top") {
     const db = getDatabase();
-    const all = Object.entries(db.data?.novadetektif?.users || {})
+    const all = Object.entries(db.data?.sangdetektif?.users || {})
       .map(([jid, x]) => ({ jid, ...x }))
       .sort((a, b) => b.solvedTotal - a.solvedTotal || b.kopi - a.kopi)
       .slice(0, 10);
     const body = all.length
       ? all.map((r, i) => `${i + 1}. @${r.jid.split("@")[0]}\n   ${rankFor(r.solvedTotal)} · 📁 ${r.solvedTotal} kasus · ♻️ ${r.rebirths}`).join("\n\n")
-      : "Belum ada detektif tercatat! Ketik .novadetektif";
+      : "Belum ada detektif tercatat! Ketik .sangdetektif";
     return m.reply(novaGameBox({ title: "detektif", icon: "🏆", flavor: "🏆 *PAPAN KANTOR DETEKTIF*", body }));
   }
 
   // ── kopi (minum +5 energi) ──
   if (sub === "kopi") {
-    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "☕", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .novadetektif dulu." }));
-    if ((u.kopi || 0) < 1) return m.reply(novaGameBox({ title: "detektif", icon: "☕", flavor: "☕ *STOK HABIS!*", body: "Kamu gak punya kopi. Dapatkan dari .novadetektif daily atau perfect solve (semua bukti kunci + tanpa salah tuduh)." }));
+    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "☕", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .sangdetektif dulu." }));
+    if ((u.kopi || 0) < 1) return m.reply(novaGameBox({ title: "detektif", icon: "☕", flavor: "☕ *STOK HABIS!*", body: "Kamu gak punya kopi. Dapatkan dari .sangdetektif daily atau perfect solve (semua bukti kunci + tanpa salah tuduh)." }));
     u.kopi -= 1;
     u.energi = Math.min(ENERGI_MAX, (u.energi || 0) + 5);
     u.energiAt = Math.floor(Date.now() / 1000);
@@ -197,14 +197,14 @@ async function handler(m, { sock, config }) {
 
   // ── rebirth ──
   if (sub === "rebirth") {
-    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "♻️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .novadetektif dulu." }));
+    if (!u) return m.reply(novaGameBox({ title: "detektif", icon: "♻️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .sangdetektif dulu." }));
     if (u.solvedTotal < REBIRTH_AT) return m.reply(novaGameBox({ title: "detektif", icon: "♻️", flavor: "🔒 *BELUM SIAP!*", body: `Rebirth terbuka setelah ${REBIRTH_AT} kasus selesai. Kamu baru ${u.solvedTotal}.` }));
     u.rebirths += 1;
     u.casesSolved = 0;
     u.usedCases = { "1": [], "2": [], "3": [] };
     u.active = null;
     saveDb();
-    return m.reply(novaGameBox({ title: "detektif", icon: "♻️", flavor: "♻️ *LISENSI EMAS!*", body: `Rebirth ke-${u.rebirths}: semua EXP +${u.rebirths * 10}% permanen.\n📁 Kasus tier direset dari awal (rank all-time tetap ${rankFor(u.solvedTotal)}).\n\nKetik .novadetektif untuk kasus baru.` }));
+    return m.reply(novaGameBox({ title: "detektif", icon: "♻️", flavor: "♻️ *LISENSI EMAS!*", body: `Rebirth ke-${u.rebirths}: semua EXP +${u.rebirths * 10}% permanen.\n📁 Kasus tier direset dari awal (rank all-time tetap ${rankFor(u.solvedTotal)}).\n\nKetik .sangdetektif untuk kasus baru.` }));
   }
 
   // ── stop (kasus dilepas tanpa penalti) ──
@@ -213,14 +213,14 @@ async function handler(m, { sock, config }) {
     const c = caseOf(u);
     u.active = null;
     saveDb();
-    return m.reply(novaGameBox({ title: "detektif", icon: "🗂️", flavor: "🗂️ *BERKAS DITUTUP!*", body: `Kasus "${c.title}" dikembalikan ke rak arsip — pelaku menguap, tapi kamu bisa mengejarnya lagi nanti (.novadetektif akan pilih kasus baru).` }));
+    return m.reply(novaGameBox({ title: "detektif", icon: "🗂️", flavor: "🗂️ *BERKAS DITUTUP!*", body: `Kasus "${c.title}" dikembalikan ke rak arsip — pelaku menguap, tapi kamu bisa mengejarnya lagi nanti (.sangdetektif akan pilih kasus baru).` }));
   }
 
   // ══ aksi dalam kasus — butuh kasus aktif ══
   const needCase = ["kasus", "pergi", "cari", "interogasi", "tanya", "bukti", "jawab", "hint", "tuduh"];
   if (needCase.includes(sub)) {
     if (!u || !u.active) {
-      return m.reply(novaGameBox({ title: "detektif", icon: "📂", flavor: "📂 *RAK ARSIP KOSONG!*", body: "Belum ada kasus aktif. Ketik .novadetektif untuk ambil berkas pertama." }));
+      return m.reply(novaGameBox({ title: "detektif", icon: "📂", flavor: "📂 *RAK ARSIP KOSONG!*", body: "Belum ada kasus aktif. Ketik .sangdetektif untuk ambil berkas pertama." }));
     }
     const c = caseOf(u);
     const a = u.active;
@@ -229,8 +229,8 @@ async function handler(m, { sock, config }) {
 
     if (sub === "pergi") {
       const loc = fuzzyLoc(c, rest);
-      if (!loc) return m.reply(novaGameBox({ title: "detektif", icon: "🗺️", flavor: "❓ *LOKASI GAK DITEMUKAN!*", body: "Lokasi sah:\n" + c.locations.map((l, i) => `${i + 1}. ${l.name}`).join("\n") + "\n\nContoh: .novadetektif pergi 1" }));
-      if (!spendEnergi(u, COST_PERGI)) return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Butuh ${COST_PERGI} energi buat pindah lokasi. Kamu punya ${u.energi}. Regen +1 tiap 5 menit atau minum .novadetektif kopi (+5).` }));
+      if (!loc) return m.reply(novaGameBox({ title: "detektif", icon: "🗺️", flavor: "❓ *LOKASI GAK DITEMUKAN!*", body: "Lokasi sah:\n" + c.locations.map((l, i) => `${i + 1}. ${l.name}`).join("\n") + "\n\nContoh: .sangdetektif pergi 1" }));
+      if (!spendEnergi(u, COST_PERGI)) return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Butuh ${COST_PERGI} energi buat pindah lokasi. Kamu punya ${u.energi}. Regen +1 tiap 5 menit atau minum .sangdetektif kopi (+5).` }));
       if (!a.visited.includes(loc.id)) a.visited.push(loc.id);
       a.curLoc = loc.id;
       a.puzzlePending = null;
@@ -242,16 +242,16 @@ async function handler(m, { sock, config }) {
         body: [
           loc.desc,
           "",
-          loc.evidence.length ? "🔎 Ada jejak yang bisa digali — ketik .novadetektif cari" : "🤷 Gak ada jejak khusus di sini.",
-          ...(loc.puzzle && !a.puzzleSolved.includes(loc.id) ? ["🔒 Ada PETI/BRANKAS terkunci — ketik .novadetektif cari buat periksa"] : []),
+          loc.evidence.length ? "🔎 Ada jejak yang bisa digali — ketik .sangdetektif cari" : "🤷 Gak ada jejak khusus di sini.",
+          ...(loc.puzzle && !a.puzzleSolved.includes(loc.id) ? ["🔒 Ada PETI/BRANKAS terkunci — ketik .sangdetektif cari buat periksa"] : []),
         ].join("\n"),
       }));
     }
 
     if (sub === "cari") {
       const cur = a.curLoc ? c.locations.find((l) => l.id === a.curLoc) : null;
-      if (!cur) return m.reply(novaGameBox({ title: "detektif", icon: "🗺️", flavor: "❓ *BELUM ADA LOKASI!*", body: "Pergi dulu: .novadetektif pergi <no/lokasi>" }));
-      if (!spendEnergi(u, COST_CARI)) return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Butuh ${COST_CARI} energi. Regen +1 tiap 5 menit atau .novadetektif kopi (+5).` }));
+      if (!cur) return m.reply(novaGameBox({ title: "detektif", icon: "🗺️", flavor: "❓ *BELUM ADA LOKASI!*", body: "Pergi dulu: .sangdetektif pergi <no/lokasi>" }));
+      if (!spendEnergi(u, COST_CARI)) return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Butuh ${COST_CARI} energi. Regen +1 tiap 5 menit atau .sangdetektif kopi (+5).` }));
       a.searched = a.searched || [];
       let found = [];
       // puzzle lockbox
@@ -259,11 +259,11 @@ async function handler(m, { sock, config }) {
         if (!a.puzzlePending) {
           a.puzzlePending = cur.id;
           saveDb();
-          return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *LOCKBOX DITEMUKAN!*", body: cur.puzzle.q + "\n\n💡 .novadetektif hint (30 gold / 1 kopi) bantuan kurator\n✍️ Jawab: .novadetektif jawab <jawabanmu>" }));
+          return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *LOCKBOX DITEMUKAN!*", body: cur.puzzle.q + "\n\n💡 .sangdetektif hint (30 gold / 1 kopi) bantuan kurator\n✍️ Jawab: .sangdetektif jawab <jawabanmu>" }));
         }
         // puzzle masih pending (belum dijawab benar) → bukti dalam tetap terkunci
         saveDb();
-        return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *BRANKAS MASIH TERKUNCI!*", body: "Bukti di dalam belum bisa diambil. Pecahkan teka-tekinya dulu: .novadetektif jawab <jawabanmu>\n\n" + cur.puzzle.q }));
+        return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *BRANKAS MASIH TERKUNCI!*", body: "Bukti di dalam belum bisa diambil. Pecahkan teka-tekinya dulu: .sangdetektif jawab <jawabanmu>\n\n" + cur.puzzle.q }));
       }
       for (const evId of (cur.evidence || [])) {
         if (!a.evidence.includes(evId)) { a.evidence.push(evId); found.push(evIn(c, evId)); }
@@ -290,7 +290,7 @@ async function handler(m, { sock, config }) {
           ...found.map((e) => `📌 ${e.name}\n   ${e.desc}`),
           critNote,
           "",
-          "Lihat semua: .novadetektif bukti",
+          "Lihat semua: .sangdetektif bukti",
         ].filter((x) => x !== "").join("\n"),
       }));
     }
@@ -298,7 +298,7 @@ async function handler(m, { sock, config }) {
     if (sub === "jawab") {
       if (!a.puzzlePending) return m.reply(novaGameBox({ title: "detektif", icon: "❓", flavor: "❓ *GAK ADA TEKA-TEKI!*", body: "Belum ada lockbox yang sedang kamu pahami. Cari dulu di lokasi yang punya peti terkunci." }));
       const loc = c.locations.find((l) => l.id === a.puzzlePending);
-      if (!rest) return m.reply(novaGameBox({ title: "detektif", icon: "✍️", flavor: "✍️ *FORMAT!*", body: ".novadetektif jawab <jawabanmu>" }));
+      if (!rest) return m.reply(novaGameBox({ title: "detektif", icon: "✍️", flavor: "✍️ *FORMAT!*", body: ".sangdetektif jawab <jawabanmu>" }));
       if (normalizeAnswer(rest) === normalizeAnswer(loc.puzzle.a)) {
         const puzzleEv = (loc.evidence || []);
         let found = [];
@@ -308,13 +308,13 @@ async function handler(m, { sock, config }) {
         saveDb();
         return m.reply(novaGameBox({ title: "detektif", icon: "🔓", flavor: "🔓 *LOCKBOX TERBUKA!*", body: [...(found.length ? found.map((e) => `📌 ${e.name}\n   ${e.desc}`) : ["Peti kosong — tapi kamu yakin pelakunya pernah ke sini."]), "", "Keren, detektif!"].join("\n") }));
       }
-      return m.reply(novaGameBox({ title: "detektif", icon: "❌", flavor: "❌ *KUNCI DITOLAK!*", body: "Brankas masih terkunci. Baca ulang teka-tekinya — atau ketik .novadetektif hint" }));
+      return m.reply(novaGameBox({ title: "detektif", icon: "❌", flavor: "❌ *KUNCI DITOLAK!*", body: "Brankas masih terkunci. Baca ulang teka-tekinya — atau ketik .sangdetektif hint" }));
     }
 
     if (sub === "interogasi") {
       const sus = fuzzySus(c, rest);
-      if (!sus) return m.reply(novaGameBox({ title: "detektif", icon: "👤", flavor: "❓ *TERSANGKA GAK DITEMUKAN!*", body: "Tersangka:\n" + c.suspects.map((s, i) => `${i + 1}. ${s.name} — ${s.role}`).join("\n") + "\n\nContoh: .novadetektif interogasi 1" }));
-      if (!spendEnergi(u, COST_TANYA_SUS)) return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Interogasi butuh ${COST_TANYA_SUS} energi. Regen +1 tiap 5 menit atau .novadetektif kopi (+5).` }));
+      if (!sus) return m.reply(novaGameBox({ title: "detektif", icon: "👤", flavor: "❓ *TERSANGKA GAK DITEMUKAN!*", body: "Tersangka:\n" + c.suspects.map((s, i) => `${i + 1}. ${s.name} — ${s.role}`).join("\n") + "\n\nContoh: .sangdetektif interogasi 1" }));
+      if (!spendEnergi(u, COST_TANYA_SUS)) return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Interogasi butuh ${COST_TANYA_SUS} energi. Regen +1 tiap 5 menit atau .sangdetektif kopi (+5).` }));
       a.curSus = sus.id;
       a.asked = a.asked || {};
       saveDb();
@@ -325,14 +325,14 @@ async function handler(m, { sock, config }) {
         body: [
           sus.topics.map((tp, i) => `${asked.includes(i) ? "✅" : "❔"} ${i + 1}. ${tp.t}${asked.includes(i) ? " — sudah ditanyakan" : ""}`).join("\n"),
           "",
-          "Tanya topik: .novadetektif tanya <nomor>",
+          "Tanya topik: .sangdetektif tanya <nomor>",
         ].join("\n"),
       }));
     }
 
     if (sub === "tanya") {
       const sus = c.suspects.find((s) => s.id === a.curSus);
-      if (!sus) return m.reply(novaGameBox({ title: "detektif", icon: "👤", flavor: "❓ *BELUM ADA TERSANGKA!*", body: "Mulai interogasi dulu: .novadetektif interogasi <no/nama>" }));
+      if (!sus) return m.reply(novaGameBox({ title: "detektif", icon: "👤", flavor: "❓ *BELUM ADA TERSANGKA!*", body: "Mulai interogasi dulu: .sangdetektif interogasi <no/nama>" }));
       const idx = Number(rest) - 1;
       if (!(idx >= 0 && idx < sus.topics.length)) return m.reply(novaGameBox({ title: "detektif", icon: "❔", flavor: "❔ *TOPIK GAK VALID!*", body: `Topik sah: ${sus.topics.map((tp, i) => (i + 1) + ". " + tp.t).join(", ")}` }));
       a.asked = a.asked || {};
@@ -366,7 +366,7 @@ async function handler(m, { sock, config }) {
     }
 
     if (sub === "tuduh") {
-      if (!rest) return m.reply(novaGameBox({ title: "detektif", icon: "⚖️", flavor: "⚖️ *FORMAT DEDUKSI!*", body: "Tuduh siapa? " + c.suspects.map((s, i) => `${i + 1}. ${s.name}`).join(", ") + "\n\nContoh: .novadetektif tuduh 2" }));
+      if (!rest) return m.reply(novaGameBox({ title: "detektif", icon: "⚖️", flavor: "⚖️ *FORMAT DEDUKSI!*", body: "Tuduh siapa? " + c.suspects.map((s, i) => `${i + 1}. ${s.name}`).join(", ") + "\n\nContoh: .sangdetektif tuduh 2" }));
       const sus = fuzzySus(c, rest);
       if (!sus) return m.reply(novaGameBox({ title: "detektif", icon: "⚖️", flavor: "❓ *TERSANGKA GAK DITEMUKAN!*", body: c.suspects.map((s, i) => `${i + 1}. ${s.name}`).join("\n") }));
       // anti-spam cooldown
@@ -409,7 +409,7 @@ async function handler(m, { sock, config }) {
             "",
             `📁 Kasus selesai: ${u.solvedTotal} · Rank: ${rankFor(u.solvedTotal)}`,
             "",
-            "Ketik .novadetektif untuk berkas berikutnya!",
+            "Ketik .sangdetektif untuk berkas berikutnya!",
           ].join("\n"),
         }));
       }
@@ -429,7 +429,7 @@ async function handler(m, { sock, config }) {
           `💰 Denda reputasi: -${WRONG_ACCUSE_GOLD} gold${paid ? "" : " (dibayar sebagian — nama kamu tetap panas di koran)"}`,
           `⚠️ Salah tuduh kasus ini: ${a.wrongAccuse}x`,
           "",
-          `Kasus masih terbuka. Kumpulkan bukti lagi (.novadetektif cari) atau lihat map: .novadetektif bukti`,
+          `Kasus masih terbuka. Kumpulkan bukti lagi (.sangdetektif cari) atau lihat map: .sangdetektif bukti`,
           pityNote,
         ].filter(Boolean).join("\n"),
       }));
@@ -446,7 +446,7 @@ async function handler(m, { sock, config }) {
   if (!u) { u = newUser(m); isNew = true; }
 
   if ((u.energi || 0) < COST_PERGI) {
-    return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Energi ${u.energi}/${ENERGI_MAX}. Regen +1 tiap 5 menit. Sambil nunggu: .novadetektif daily atau minum kopi (.novadetektif kopi).` }));
+    return m.reply(novaGameBox({ title: "detektif", icon: "⚡", flavor: "⚡ *ENERGI HABIS!*", body: `Energi ${u.energi}/${ENERGI_MAX}. Regen +1 tiap 5 menit. Sambil nunggu: .sangdetektif daily atau minum kopi (.sangdetektif kopi).` }));
   }
 
   const c = pickCase(u);
@@ -468,16 +468,16 @@ async function handler(m, { sock, config }) {
         `Kota ini penuh kasus kotor yang polisi gak sempat urus. Kamu detektif swasta — reputasimu mulai dari nol, berkas pertama sudah menanti.`,
         "",
         `🎯 Cara main:`,
-        `1. .novadetektif kasus — baca berkas (lokasi + tersangka)`,
-        `2. .novadetektif pergi <no> — jelajah lokasi (⚡2)`,
-        `3. .novadetektif cari — gali bukti (⚡1), temukan lockbox (.novadetektif jawab <jawaban>)`,
-        `4. .novadetektif interogasi <no> — dengarkan alibi (⚡1), lalu .novadetektif tanya <topik>`,
-        `5. .novadetektif tuduh <no> — deduksi final! Salah tuduh = denda 50 gold`,
+        `1. .sangdetektif kasus — baca berkas (lokasi + tersangka)`,
+        `2. .sangdetektif pergi <no> — jelajah lokasi (⚡2)`,
+        `3. .sangdetektif cari — gali bukti (⚡1), temukan lockbox (.sangdetektif jawab <jawaban>)`,
+        `4. .sangdetektif interogasi <no> — dengarkan alibi (⚡1), lalu .sangdetektif tanya <topik>`,
+        `5. .sangdetektif tuduh <no> — deduksi final! Salah tuduh = denda 50 gold`,
         "",
         `🎯 PERFECT SOLVE (semua bukti kunci + tanpa salah tuduh + tanpa hint) = EXP ×2 + ☕1 kopi`,
         "",
         `🎁 STARTER PACK: +100 gold · +2 ☕ kopi`,
-        `💡 .novadetektif hint · 📅 .novadetektif daily · ☕ .novadetektif kopi (+5 energi) · 📊 .novadetektif status`,
+        `💡 .sangdetektif hint · 📅 .sangdetektif daily · ☕ .sangdetektif kopi (+5 energi) · 📊 .sangdetektif status`,
         pityLine,
         "",
         "━━━━━━━━━━━━━━━━━━━━",
@@ -485,7 +485,7 @@ async function handler(m, { sock, config }) {
         "",
         c.briefing,
         "",
-        "Ketik .novadetektif kasus buka berkas!",
+        "Ketik .sangdetektif kasus buka berkas!",
       ].filter(Boolean).join("\n"),
     }));
   }
@@ -499,17 +499,17 @@ async function handler(m, { sock, config }) {
       c.briefing,
       pityLine,
       "",
-      "Ketik .novadetektif kasus buka berkas!",
+      "Ketik .sangdetektif kasus buka berkas!",
     ].filter(Boolean).join("\n"),
   }));
 }
 
 export { handler, loadCases };
 export const pluginConfig = {
-  name: ["novadetektif", "detektif", "detektifkasus"],
+  name: ["sangdetektif", "detektif", "detektifkasus"],
   type: "rpg",
-  description: "Nova Detektif — pecahkan kasus kriminal: jelajah lokasi, kumpulkan bukti, interogasi tersangka, tuduh pelaku",
-  usage: ".novadetektif | .novadetektif kasus | .novadetektif pergi <no> | .novadetektif cari | .novadetektif interogasi <no> | .novadetektif tanya <no> | .novadetektif jawab <ans> | .novadetektif bukti | .novadetektif tuduh <no> | .novadetektif hint | .novadetektif daily | .novadetektif kopi | .novadetektif status | .novadetektif rank | .novadetektif rebirth | .novadetektif stop",
+  description: "Sang Detektif — pecahkan kasus kriminal: jelajah lokasi, kumpulkan bukti, interogasi tersangka, tuduh pelaku",
+  usage: ".sangdetektif | .sangdetektif kasus | .sangdetektif pergi <no> | .sangdetektif cari | .sangdetektif interogasi <no> | .sangdetektif tanya <no> | .sangdetektif jawab <ans> | .sangdetektif bukti | .sangdetektif tuduh <no> | .sangdetektif hint | .sangdetektif daily | .sangdetektif kopi | .sangdetektif status | .sangdetektif rank | .sangdetektif rebirth | .sangdetektif stop",
   isOwner: false,
   premium: false,
   group: false,
