@@ -4,6 +4,7 @@ import fs from "node:fs";
 import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
 
 process.env.DETEKTIF_ANSWER_CD_MS = "0"; // e2e jalan mili-detik
+process.env.DETEKTIF_ANIM_MS = "0"; // animasi siram lokasi instan saat e2e
 const R = path.resolve(process.cwd());
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
@@ -168,6 +169,48 @@ t("8d. rebirth di 20 kasus → +1 rebirth, tier reset", u8.rebirths === 1 && u8.
 plug._setCaseSourceForTest(null);
 t("8e. bank asli dimuat ulang", plug.loadCases().length === 8);
 plug._setCaseSourceForTest(FAKE);
+
+
+// ── section 9: animasi khas detektif — siram lokasi (edit berulang) ──
+console.log("— section 9: animasi siram lokasi (edit berulang) —");
+{
+  const u9 = U();
+  u9.active = null; u9.solvedTotal = 0; u9.energi = 10; u9.energiAt = Math.floor(Date.now() / 1000);
+  await run([]); // kasus baru deterministik (tier 1 — reset solvedTotal sisa rebirth 8d)
+  const sends = [], edits = [];
+  const animSock = { sendMessage: async (jid, content) => {
+    if (content?.edit) { edits.push(content.text); return { key: { id: "a1" } }; }
+    sends.push(content.text); return { key: { id: "a1" } };
+  } };
+  const runAnim = (args) => handler(mkMsg({ chat: "d9@s.whatsapp.net", args }), { sock: animSock, config: {} });
+  await runAnim(["pergi", "1"]);
+  const pergiF = [...sends, ...edits];
+  t("9a. animasi pergi: frame pertama + 6 edit berulang", sends.length === 1 && edits.length === 6, `sends=${sends.length} edits=${edits.length}`);
+  t("9b. pergi: detektif 🚶 melintas kota, header MENUJU", pergiF.every((f) => f.includes("🚶") && f.includes("MENUJU")), pergiF[0]);
+  t("9c. pergi: jejak 👣 bertambah + posisi BERGERAK", (() => {
+    const rows = pergiF.map((f) => f.split("\n")[2]);
+    const pos = rows.map((r) => r.indexOf("🚶"));
+    return rows.every((r) => r.includes("👣") || r.indexOf("🚶") === 0) && new Set(pos).size > 1 && pos.every((x, i) => i === 0 || x >= pos[i - 1]);
+  })(), pergiF.map((f) => f.split("\n")[2]).join(" | "));
+  t("9d. pergi: frame akhir TIBA", edits[5].includes("TIBA"));
+  // cari → temu
+  sends.length = 0; edits.length = 0;
+  await runAnim(["cari"]);
+  const cariF = [...sends, ...edits];
+  t("9e. animasi cari: 6 edit + kaca pembesar 🔍 MENYIRIM", edits.length === 6 && cariF.every((f) => f.includes("🔍") && f.includes("MENYIRIM")), cariF[0]);
+  t("9f. cari: frame akhir JEJAK DITEMUKAN (✨)", edits[5].includes("JEJAK DITEMUKAN"));
+  // lockbox → gudang
+  sends.length = 0; edits.length = 0;
+  await runAnim(["pergi", "2"]);
+  sends.length = 0; edits.length = 0;
+  await runAnim(["cari"]);
+  t("9g. lockbox: frame akhir PETI TERKUNCI TERLIHAT", edits.length === 6 && edits[5].includes("PETI TERKUNCI"), edits[5]);
+  // fallback: sock tanpa key → animasi dilewati, aksi tetap jalan
+  let fb = 0;
+  const fbSock = { sendMessage: async () => { fb++; return true; } };
+  await handler(mkMsg({ chat: "d10@s.whatsapp.net", args: ["pergi", "3"] }), { sock: fbSock, config: {} });
+  t("9h. channel tanpa edit → animasi dilewati (1 frame), lokasi tetap tercatat", fb === 1 && (U().active?.visited || []).includes("kantor"), `calls=${fb}`);
+}
 
 fs.rmSync(dbDir, { recursive: true, force: true });
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
