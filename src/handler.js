@@ -537,6 +537,17 @@ try {
       if (config.dev?.debugLog) logger.error("family100", e.message);
     }
 
+    // Arena Kuis RPG (own session system)
+    try {
+      const { answerHandler: quizArenaHandler } = await import("../plugins/rpg/quizarena.js");
+      if (typeof quizArenaHandler === "function") {
+        const qaHandled = await quizArenaHandler(m, sock);
+        if (qaHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("quizarena", e.message);
+    }
+
     // Asah Otak multiplayer (own session system)
     try {
       const { answerHandler: asahHandler } = await import("../plugins/game/asahotak.js");
