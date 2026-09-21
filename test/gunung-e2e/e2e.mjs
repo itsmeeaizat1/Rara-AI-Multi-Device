@@ -264,14 +264,16 @@ const animSock = { sendMessage: async (jid, content) => {
 U().zona = 1; U().stamina = 10; U().oksigen = 2; U().puncak = 13; U().country = "dunia"; U().guaPending = false;
 plug._setRandForTest(() => 0.01);
 await handler(mkMsg({ args: ["daki", "aman"] }), { sock: animSock, config: {} });
-t("16a. daki: pesan animasi DIKIRIM lalu DIEDIT berulang (3 frame = 2 edit)", animFrames.length === 2, animFrames.length);
+t("16a. daki: runner DIKIRIM lalu DIEDIT berulang (zona 1: 8 frame = 7 edit)", animFrames.length === 7, animFrames.length);
 t("16b. semua frame pakai key edit yang sama (edit: true)", animFrames.length > 0 && animFrames.every((f) => f.edit === true));
-t("16c. frame berisi animasi pendakian 🥾", animFrames.some((f) => /🥾/.test(f.text)));
+t("16c. frame runner: 🏃 + tile bioma (⬜ dunia) + code fence", animFrames.some((f) => /🏃/.test(f.text) && /⬜/.test(f.text) && f.text.includes("```")));
+t("16c2. karakter BERGERAK tiap frame (posisi beda)", new Set(animFrames.map((f) => f.text.split("\n")[2].indexOf("🏃"))).size > 1);
+t("16c3. tujuan bendera 🚩 di ujung lintasan", animFrames.every((f) => f.text.includes("🚩")));
 // jalur risiko punya frame sendiri
 animFrames.length = 0;
 U().zona = 3; U().stamina = 10;
 await handler(mkMsg({ args: ["daki", "risiko"] }), { sock: animSock, config: {} });
-t("16d. jalur risiko: frame khusus (batu longgar)", animFrames.some((f) => /longgar/.test(f.text)), animFrames.map((f) => f.text).join("|"));
+t("16d. jalur risiko: ada rintangan 🪨/🌪️ di lintasan", animFrames.some((f) => /🪨|🌪️/.test(f.text)), animFrames.map((f) => f.text).join("|"));
 // edit gak didukung (sendMessage tanpa key) → animasi dilewati, hasil tetap dikirim
 let animTanpaKey = 0;
 await handler(mkMsg({ args: ["daki", "aman"] }), { sock: { sendMessage: async () => { animTanpaKey++; return true; } }, config: {} });
