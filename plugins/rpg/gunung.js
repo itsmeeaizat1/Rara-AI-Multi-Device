@@ -28,8 +28,10 @@ const ZONA = [
   { n: 8, nama: "🏔️ Puncak Legenda", cost: 3, loot: 400, oksigen: true },
 ];
 const GUNUNG_POOL = [
-  "Gunung Salju Abadi", "Gunung Berapi Tidur", "Gunung Kabut Seribu",
-  "Gunung Cahaya Fajar", "Gunung Rimba Purba", "Gunung Bintang Jatuh",
+  "Gunung Everest (8.849 mdpl)", "Gunung Aconcagua (6.961 mdpl)", "Gunung Denali (6.190 mdpl)",
+  "Gunung Kilimanjaro (5.895 mdpl)", "Gunung Elbrus (5.642 mdpl)", "Gunung Mont Blanc (4.808 mdpl)",
+  "Gunung Fuji (3.776 mdpl)", "Gunung Cartenz (4.884 mdpl)", "Gunung Kerinci (3.805 mdpl)",
+  "Gunung Rinjani (3.726 mdpl)", "Gunung Semeru (3.676 mdpl)", "Gunung Merapi (2.930 mdpl)",
 ];
 const TOKO = {
   oksigen: { nama: "🫁 Botol Oksigen", harga: 100, desc: "Wajib zona 6-8. 1 botol = 1 daki." },
@@ -53,6 +55,11 @@ function ensureUser(m) {
   if (!db.data.gunung) db.data.gunung = { users: {}, rombongan: {} };
   let u = db.data.gunung.users[m.sender];
   if (!u) return null;
+  // migrasi kosmetik: nama fiktif lama → gunung dunia nyata (posisi/zona tidak berubah)
+  if (u.gunung && !GUNUNG_POOL.includes(u.gunung)) {
+    u.gunung = pick(GUNUNG_POOL);
+    saveDb();
+  }
   regenStamina(u);
   return u;
 }

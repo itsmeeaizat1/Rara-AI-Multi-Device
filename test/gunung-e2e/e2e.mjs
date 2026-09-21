@@ -41,7 +41,12 @@ t("1a. 8 zona lengkap + zona 6+ wajib oksigen", ZONA.length === 8 && ZONA.slice(
 plug._setRandForTest(() => 0.01); // cuaca cerah, no event
 await run({});
 t("1b. pemain baru: starter pack + tutorial", U() && some("starter pack") && some("cara main"));
-t("1c. gunung acak terpilih", U().gunung.length > 5, U().gunung);
+t("1c. gunung DUNIA NYATA terpilih (ada mdpl)", /mdpl/.test(U().gunung) && U().gunung.length > 5, U().gunung);
+t("1c2. nama ada di pool gunung nyata", (await import(R + "/plugins/rpg/gunung.js")).GUNUNG_POOL.includes(U().gunung), U().gunung);
+// migrasi: nama fiktif lama otomatis diganti gunung nyata
+U().gunung = "Gunung Salju Abadi";
+await run({});
+t("1c3. migrasi nama fiktif lama → gunung nyata", /mdpl/.test(U().gunung), U().gunung);
 t("1d. mulai di zona 1 stamina penuh", U().zona === 1 && U().stamina === 10);
 
 console.log("— section 2: daki aman & cuaca —");
