@@ -537,6 +537,17 @@ try {
       if (config.dev?.debugLog) logger.error("family100", e.message);
     }
 
+    // Menara Seribu Pintu (own session system)
+    try {
+      const { answerHandler: menaraHandler } = await import("../plugins/rpg/menara.js");
+      if (typeof menaraHandler === "function") {
+        const menaraHandled = await menaraHandler(m, sock);
+        if (menaraHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("menara", e.message);
+    }
+
     // Arena Kuis RPG (own session system)
     try {
       const { answerHandler: quizArenaHandler } = await import("../plugins/rpg/quizarena.js");
