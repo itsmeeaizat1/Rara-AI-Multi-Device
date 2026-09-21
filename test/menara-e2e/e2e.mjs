@@ -4,6 +4,7 @@ import fs from "node:fs";
 import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
 
 process.env.MENARA_ANSWER_CD_MS = "0"; // e2e jalan mili-detik — matikan anti-spam
+process.env.MENARA_ANIM_MS = "0"; // animasi pintu instan saat e2e
 const R = path.resolve(process.cwd());
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
@@ -170,6 +171,49 @@ plug._setPuzzleSourceForTest(null);
 const real = plug.loadPuzzles();
 t("8a. bank asli 752", real.length === 752, real.length);
 plug._setPuzzleSourceForTest(FAKE);
+
+
+// ── section 10: animasi khas pintu — merakit kunci (edit berulang) ──
+console.log("— section 10: animasi khas pintu (edit berulang) —");
+{
+  const sends = [], edits = [];
+  const animSock = { sendMessage: async (jid, content) => {
+    if (content?.edit) { edits.push(content.text); return { key: { id: "a1" } }; }
+    sends.push(content.text); return { key: { id: "a1" } };
+  } };
+  const uMain = getDatabase().data.menara.perUser["6281@s.whatsapp.net"];
+  uMain.nafas = 10;
+  await handler(mkMsg({ chat: "c10@s.whatsapp.net", args: [] }), { sock: animSock, config: {} });
+  const allF = [...sends, ...edits];
+  t("10a. animasi pintu: frame pertama dikirim + 6 edit berulang", sends.length >= 1 && edits.length === 6, `sends=${sends.length} edits=${edits.length}`);
+  t("10b. semua edit pakai key edit (bukan pesan baru)", edits.length === 6, `edits=${edits.length}`);
+  t("10c. header kepingan 🧩 + lantai tampil", allF.every((f) => f.includes("🧩") && f.includes("LANTAI")), allF[0]);
+  t("10d. gembok 🔒 awal → 🔓 saat merakit → 🚪✨ terbuka di akhir", (() => {
+    return sends[0].includes("🔒") && edits.slice(0, -1).every((f) => f.includes("🔓")) && edits[5].includes("🚪");
+  })(), sends[0].split("\n")[2]);
+  t("10e. kepingan BERGERAK (jumlah 🧩 naik terus tiap frame)", (() => {
+    const counts = allF.map((f) => (f.match(/🧩/g) || []).length);
+    return new Set(counts).size === allF.length && counts.every((n, i) => i === 0 || n > counts[i - 1]);
+  })(), JSON.stringify(allF.map((f) => (f.match(/🧩/g) || []).length)));
+  t("10f. frame terakhir: TERBUKA! teka-teki menanti", edits[5]?.includes("TERBUKA"));
+
+  // boss lantai 10: gembok ganda 🔒🔒 + header Gerbang Sang Bijak
+  const bSends = [];
+  const bossSock = { sendMessage: async (jid, content) => { bSends.push(content.text); return { key: { id: "b1" } }; } };
+  uMain.floor = 10; uMain.bestFloor = Math.max(uMain.bestFloor || 1, 10); uMain.nafas = 10;
+  sessions.delete("c11@s.whatsapp.net");
+  await handler(mkMsg({ chat: "c11@s.whatsapp.net", args: [] }), { sock: bossSock, config: {} });
+  t("10g. boss lantai 10: header GERBANG SANG BIJAK + gembok ganda 🔒🔒", bSends[0]?.includes("GERBANG SANG BIJAK") && bSends[0]?.includes("🔒🔒"), bSends[0]?.split("\n")[1]);
+  sessions.delete("c11@s.whatsapp.net");
+
+  // fallback: sock tanpa key → animasi dilewati (1 frame), game tetap jalan
+  let fb = 0;
+  const fbSock = { sendMessage: async () => { fb++; return true; } };
+  uMain.floor = 3; uMain.nafas = 10;
+  await handler(mkMsg({ chat: "c12@s.whatsapp.net", args: [] }), { sock: fbSock, config: {} });
+  t("10h. channel tanpa edit → animasi dilewati, sesi pintu tetap dibuat", fb === 1 && sessions.get("c12@s.whatsapp.net") !== undefined, `calls=${fb}`);
+  sessions.delete("c12@s.whatsapp.net");
+}
 
 fs.rmSync(dbDir, { recursive: true, force: true });
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);

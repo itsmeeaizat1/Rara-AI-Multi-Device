@@ -16,6 +16,7 @@ import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { addGameCash, addGold, removeGold, ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
+import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +29,7 @@ const NAFAHS_REGEN_S = 300; // 1 nafas per 5 menit
 const HINT_GOLD = 30;
 const CRIT_CHANCE = 0.1;
 const ANSWER_CD_MS = process.env.MENARA_ANSWER_CD_MS !== undefined ? Number(process.env.MENARA_ANSWER_CD_MS) : 2000; // anti-spam antar jawaban (0 = mati)
+const ANIM_FRAME_MS = process.env.MENARA_ANIM_MS !== undefined ? Number(process.env.MENARA_ANIM_MS) : 700;
 
 // ── bank teka-teki ──
 const DATA_PATH = path.join(__dirname, "..", "..", "src", "data", "menara-puzzles.json");
@@ -120,6 +122,34 @@ function doorText(s, puzzle, extra) {
   ].join("\n");
 }
 
+// ── 🎬 ANIMASI KHAS MENARA: MERAKIT KUNCI PINTU ──
+// Kepingan puzzle 🧩 terpasang satu per satu ke gerbang, gembok 🔒 runtuh jadi 🔓,
+// pintu terbuka 🚪✨ lalu teka-teki menyusul. KHUSUS menara (aturan "beda game beda animasi").
+function doorFrames(s) {
+  const floor = s.user.floor || 1;
+  const th = themeFor(floor);
+  const boss = floor % 10 === 0;
+  const header = boss
+    ? "🧙 GERBANG SANG BIJAK · LANTAI " + floor
+    : "🧩 " + th.name.toUpperCase() + " " + th.emoji + " · LANTAI " + floor;
+  const SLOTS = 6;
+  const frames = [];
+  for (let f = 0; f <= SLOTS; f++) {
+    const pieces = "🧩".repeat(f) + "⬜".repeat(SLOTS - f);
+    let lock, tail;
+    if (f === 0) { lock = boss ? "🔒🔒" : "🔒"; tail = boss ? "GERBANG BOSS TERKUNCI GANDA…" : "PINTU TERKUNCI…"; }
+    else if (f < SLOTS) { lock = "🔓"; tail = "MERAKIT KUNCI… " + f + "/" + SLOTS; }
+    else { lock = "🚪✨"; tail = "TERBUKA! Teka-tekinya menanti…"; }
+    frames.push("```\n" + header + "\n" + lock + " " + pieces + "\n" + tail + "\n```");
+  }
+  return frames;
+}
+
+async function playDoorAnim(m, sock, s) {
+  try { await editFramesAnim(sock, m.chat, doorFrames(s), { frameMs: ANIM_FRAME_MS }); }
+  catch (e) { console.error("[menara] animasi gagal (lanjut):", e?.message || e); }
+}
+
 function askDoor(m, sock, s, prefix) {
   clearTimeout(s.timer);
   s.timer = setTimeout(() => onTimeout(m, sock, s), Q_MS);
@@ -159,11 +189,12 @@ function endSession(m, chatId) {
   sessions.delete(chatId);
 }
 
-function nextDoor(m, sock, s, prefix) {
+async function nextDoor(m, sock, s, prefix) {
   const boss = s.user.floor % 10 === 0;
   s.bossStage = boss ? 1 : 0;
   s.current = pickPuzzle(s.usedIds, s.user.floor);
   s.hintUsed = false;
+  await playDoorAnim(m, sock, s);
   return askDoor(m, sock, s, prefix);
 }
 
@@ -402,6 +433,7 @@ async function handler(m, { sock, config }) {
   const s = { chat: m.chat, player: m.sender, user: u, usedIds: new Set(), bossStage: u.floor % 10 === 0 ? 1 : 0, hintUsed: false, correct: 0, lastAnswerAt: 0 };
   sessions.set(m.chat, s);
   if (m.react) { try { await m.react("🧠"); } catch {} }
+  await playDoorAnim(m, sock, s);
 
   if (isNew) {
     // starter pack + onboarding
