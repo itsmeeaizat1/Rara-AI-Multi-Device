@@ -47,7 +47,7 @@ const run = (o) => handler(mkMsg(o), { sock: mkSock(), config: {} });
 const ans = (o) => answerHandler(mkMsg(o), mkSock());
 
 console.log("— section 1: config & bank —");
-t("1a. command .petualangmenara + alias", pluginConfig.name.includes("menara") && pluginConfig.name.includes("menaraseribupintu"));
+t("1a. command .menaraseribupintu + alias", pluginConfig.name.includes("menara") && pluginConfig.name.includes("menaraseribupintu"));
 const bank = JSON.parse(fs.readFileSync(R + "/src/data/menara-puzzles.json", "utf-8"));
 t("1b. bank teka-teki ≥ 700", bank.length >= 700, bank.length);
 t("1c. 6 jenis teka-teki", new Set(bank.map((x) => x.type)).size === 6, [...new Set(bank.map((x) => x.type))].join(","));
@@ -72,7 +72,7 @@ t("1g. sandi caesar: dekode = jawaban", sandi.every((x) => {
 }));
 
 console.log("— section 2: pemain baru + starter pack —");
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu", args: [] });
 t("2a. sesi tercipta", sessions.has("c1@s.whatsapp.net"));
 const db = getDatabase();
 const u = db.data.menara.perUser["6281@s.whatsapp.net"];
@@ -89,8 +89,8 @@ await ans({ text: s.current.a }); // benar
 t("3a. benar → naik 1 lantai", u.floor === before + 1 && u.bestFloor === 2);
 t("3b. jawab benar → notifikasi pintu terbuka + EXP", sent.some((x) => sc(x.text).includes("pintu terbuka")) && sent.some((x) => sc(x.text).includes("exp")));
 // salah → jatuh 2
-await run({ text: ".petualangmenara stop", args: ["stop"] });
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu stop", args: ["stop"] });
+await run({ text: ".menaraseribupintu", args: [] });
 const s2 = sessions.get("c1@s.whatsapp.net");
 const cur = s2.current.a;
 await ans({ text: "zzzz jawaban ngawur" });
@@ -99,12 +99,12 @@ t("3d. jawaban benar dibocorkan di pesan jatuh", sent.slice(-2).some((x) => sc(x
 t("3e. nafas terpakai lagi", u.nafas < 9);
 
 console.log("— section 4: hint & ekonomi —");
-await run({ text: ".petualangmenara stop", args: ["stop"] });
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu stop", args: ["stop"] });
+await run({ text: ".menaraseribupintu", args: [] });
 const s3 = sessions.get("c1@s.whatsapp.net");
-await run({ text: ".petualangmenara hint", args: ["hint"] });
+await run({ text: ".menaraseribupintu hint", args: ["hint"] });
 t("4a. hint pertama: bayar pakai permata (gold rpg mungkin 0)", u.permata === 2 || u.permata === 3, u.permata);
-t("4b. hint kedua ditolak (1 hint per pintu)", (await (async () => { await run({ text: ".petualangmenara hint", args: ["hint"] }); return last().includes("sudah dipakai"); })()));
+t("4b. hint kedua ditolak (1 hint per pintu)", (await (async () => { await run({ text: ".menaraseribupintu hint", args: ["hint"] }); return last().includes("sudah dipakai"); })()));
 // jawab benar setelah hint = tanpa bonus dobel
 await ans({ text: sessions.get("c1@s.whatsapp.net").current.a });
 t("4c. jawab setelah hint tetap naik", u.floor === 1 || u.floor >= 1);
@@ -113,8 +113,8 @@ console.log("— section 5: boss gerbang (2 tahap) —");
 // paksa ke lantai 10 (boss)
 const ub = db.data.menara.perUser["6281@s.whatsapp.net"];
 ub.floor = 10; ub.bestFloor = 10;
-await run({ text: ".petualangmenara stop", args: ["stop"] });
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu stop", args: ["stop"] });
+await run({ text: ".menaraseribupintu", args: [] });
 const sb = sessions.get("c1@s.whatsapp.net");
 t("5a. pintu boss = Gerbang Sang Bijak", last().includes("gerbang") || last().includes("tahap 1"));
 await ans({ text: sb.current.a });
@@ -124,40 +124,40 @@ t("5c. boss tuntas → naik ke 11 + permata +1", ub.floor === 11, ub.floor);
 t("5d. permata boss masuk", ub.permata >= 3, ub.permata);
 // boss salah tahap 2 → jatuh 3
 ub.floor = 20; // boss ke-2
-await run({ text: ".petualangmenara stop", args: ["stop"] });
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu stop", args: ["stop"] });
+await run({ text: ".menaraseribupintu", args: [] });
 await ans({ text: sessions.get("c1@s.whatsapp.net").current.a }); // tahap 1 benar
 await ans({ text: "ngawur asal" }); // tahap 2 salah
 t("5e. boss gagal → jatuh 3 (20→17)", ub.floor === 17, ub.floor);
 
 console.log("— section 6: daily, status, rank, rebirth —");
-await run({ text: ".petualangmenara stop", args: ["stop"] });
+await run({ text: ".menaraseribupintu stop", args: ["stop"] });
 const uStreakBefore = ub.dailyStreak;
-await run({ text: ".petualangmenara daily", args: ["daily"] });
+await run({ text: ".menaraseribupintu daily", args: ["daily"] });
 t("6a. daily klaim → streak naik + permata", ub.dailyStreak === uStreakBefore + 1 || ub.dailyStreak === 1, ub.dailyStreak);
-await run({ text: ".petualangmenara daily", args: ["daily"] });
+await run({ text: ".menaraseribupintu daily", args: ["daily"] });
 t("6b. daily dobel sehari ditolak", last().includes("sudah diklaim") || last().includes("sudah kamu ambil"));
-await run({ text: ".petualangmenara status", args: ["status"] });
+await run({ text: ".menaraseribupintu status", args: ["status"] });
 t("6c. status: lantai + rank tampil", last().includes("lantai") && (last().includes("common") || last().includes("rare") || last().includes("epic")));
-await run({ text: ".petualangmenara rank", args: ["rank"] });
+await run({ text: ".menaraseribupintu rank", args: ["rank"] });
 t("6d. rank: papan petualang", last().includes("papan") || last().includes("lantai"));
-await run({ text: ".petualangmenara rebirth", args: ["rebirth"] });
+await run({ text: ".menaraseribupintu rebirth", args: ["rebirth"] });
 t("6e. rebirth terkunci sebelum lantai 100", last().includes("belum siap") || last().includes("belum siap") || last().includes("lantai 100"));
 ub.bestFloor = 100;
-await run({ text: ".petualangmenara rebirth", args: ["rebirth"] });
+await run({ text: ".menaraseribupintu rebirth", args: ["rebirth"] });
 t("6f. rebirth jalan → +1 rebirth, reset lantai 1", ub.rebirths === 1 && ub.floor === 1, `${ub.rebirths}/${ub.floor}`);
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu", args: [] });
 t("6g. lanjut main setelah rebirth", sessions.has("c1@s.whatsapp.net"));
 
 console.log("— section 7: nafas habis + guard anti-spam —");
-await run({ text: ".petualangmenara stop", args: ["stop"] });
+await run({ text: ".menaraseribupintu stop", args: ["stop"] });
 const un = db.data.menara.perUser["6281@s.whatsapp.net"];
 un.nafas = 0; un.nafasAt = Math.floor(Date.now() / 1000);
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu", args: [] });
 t("7a. nafas habis → ditolak + info regen", last().includes("nafas") && sessions.get("c1@s.whatsapp.net") === undefined);
 // pemain lain gak bisa jawab
 un.nafas = 5; un.nafasAt = Math.floor(Date.now() / 1000);
-await run({ text: ".petualangmenara", args: [] });
+await run({ text: ".menaraseribupintu", args: [] });
 const s7 = sessions.get("c1@s.whatsapp.net");
 const handled = await ans({ sender: "628999@s.whatsapp.net", text: s7.current.a });
 t("7b. orang lain gak bisa jawab", handled === false);

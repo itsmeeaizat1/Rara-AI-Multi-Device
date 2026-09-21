@@ -4,9 +4,9 @@
 // MODE SOLO: tiap wave 1 soal — jawab BENAR = damage ke musuh, SALAH/timeout =
 // musuh nyerang. Tiap wave ke-10 BOSS (HP ×2.5, reward ×5).
 // HP player 100 + level×5; mati → run over, gold/EXP hasil s/d wave itu tetap.
-// MODE PVP: .petualangkuis pvp @user — soal sama, jawab benar duluan = damage ke lawan.
+// MODE PVP: .kuisarena pvp @user — soal sama, jawab benar duluan = damage ke lawan.
 // Reward numpang ekonomi RPG: addExpWithLevelCheck + addGameCash.
-// Rekor persist db.data.quizarena: bestWave/bestStreak/totalCorrect + .petualangkuis rank.
+// Rekor persist db.data.quizarena: bestWave/bestStreak/totalCorrect + .kuisarena rank.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -251,12 +251,12 @@ export async function answerHandler(m, sock) {
   return sock.sendMessage(m.chat, { text: novaGameBox({ title: "kuisarena", icon: "❌", flavor: "❌ *MELESET!*", body: `${attacker.name} salah! ${defender.name} masih punya kesempatan…` }) }).catch(() => {});
 }
 
-// ── command .petualangkuis ──
+// ── command .kuisarena ──
 async function handler(m, { sock, config }) {
   const sub = (m.args?.[0] || "").toLowerCase();
 
   if (sessions.get(m.chat)) {
-    if (sub !== "stop") return m.reply(novaGameBox({ title: "kuisarena", icon: "⚔️", flavor: "⏳ *GAME SEDANG BERJALAN!*", body: "Arena kuis lagi jalan di chat ini! Balas soalnya (A/B/C/D) atau ketik .petualangkuis stop" }));
+    if (sub !== "stop") return m.reply(novaGameBox({ title: "kuisarena", icon: "⚔️", flavor: "⏳ *GAME SEDANG BERJALAN!*", body: "Arena kuis lagi jalan di chat ini! Balas soalnya (A/B/C/D) atau ketik .kuisarena stop" }));
     const s = sessions.get(m.chat);
     clearTimeout(s.timer);
     sessions.delete(m.chat);
@@ -274,7 +274,7 @@ async function handler(m, { sock, config }) {
       .slice(0, 10);
     const body = rows.length
       ? rows.map((r, i) => `${i + 1}. @${r.jid.split("@")[0]}\n   🏰 Wave ${r.bestWave} · 🔥 ${r.bestStreak} · ✅ ${r.totalCorrect}`).join("\n\n")
-      : "Belum ada yang berani masuk arena! Ketik .petualangkuis";
+      : "Belum ada yang berani masuk arena! Ketik .kuisarena";
     return m.reply(novaGameBox({ title: "kuisarena", icon: "🏆", flavor: "🏆 *TOP PETARUNG ARENA*", body }));
   }
 
@@ -295,9 +295,9 @@ async function handler(m, { sock, config }) {
         `🎮 Total run semua pemain: ${totalRuns}`,
         `🏰 Wave tertinggi: ${best}`,
         "",
-        `⚔️ .petualangkuis — mulai solo`,
-        `🤜 .petualangkuis pvp @user — duel`,
-        `🏆 .petualangkuis rank — papan juara`,
+        `⚔️ .kuisarena — mulai solo`,
+        `🤜 .kuisarena pvp @user — duel`,
+        `🏆 .kuisarena rank — papan juara`,
       ].join("\n"),
     }));
   }
@@ -305,7 +305,7 @@ async function handler(m, { sock, config }) {
   // ── MODE PVP ──
   if (sub === "pvp" || sub === "duel") {
     const target = (m.mentionedJid?.length ? m.mentionedJid : null) || null;
-    if (!target || !target.length) return m.reply(novaGameBox({ title: "kuisarena", icon: "🤜", flavor: "❓ *FORMAT SALAH!*", body: "Tag lawanmu! Contoh: .petualangkuis pvp @user" }));
+    if (!target || !target.length) return m.reply(novaGameBox({ title: "kuisarena", icon: "🤜", flavor: "❓ *FORMAT SALAH!*", body: "Tag lawanmu! Contoh: .kuisarena pvp @user" }));
     if (target[0] === m.sender) return m.reply(novaGameBox({ title: "kuisarena", icon: "🤦", flavor: "😅 *SENDIRI?*", body: "Gak bisa duel sama diri sendiri!" }));
     if (target[0] === (config?.botNumber || "").replace(/[^0-9]/g, "") + "@s.whatsapp.net") return m.reply(novaGameBox({ title: "kuisarena", icon: "🤖", flavor: "🤖 *MELAWAN BOT?*", body: "Duel lawan manusia aja kak!" }));
     const name = (jid) => (jid === m.sender ? (m.pushName || "Kamu") : "@" + jid.split("@")[0]);
@@ -342,10 +342,10 @@ async function handler(m, { sock, config }) {
 
 export { handler, loadSoal };
 export const pluginConfig = {
-  name: ["petualangkuis", "kuisarena", "arenakuis", "quizarena"],
+  name: ["kuisarena", "arenakuis", "quizarena"],
   type: "rpg",
   description: "Arena Kuis RPG — jawaban soal = senjata! Solo wave + boss tiap 10, duel PVP",
-  usage: ".petualangkuis | .petualangkuis pvp @user | .petualangkuis rank | .petualangkuis stat | .petualangkuis stop",
+  usage: ".kuisarena | .kuisarena pvp @user | .kuisarena rank | .kuisarena stat | .kuisarena stop",
   isOwner: false,
   premium: false,
   group: false,
