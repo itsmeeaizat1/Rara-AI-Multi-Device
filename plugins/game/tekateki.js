@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("tekateki", { name: "riddlepuzzle", usage: ".riddlepuzzle", example: ".riddlepuzzle" });
+const plugin = games.createPlugin("tekateki");
 
 export const config = plugin.config;
 export const handler = plugin.handler;

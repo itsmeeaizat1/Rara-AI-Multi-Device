@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("caklontong2", { name: "cluepuzzle2", usage: ".cluepuzzle2", example: ".cluepuzzle2" });
+const plugin = games.createPlugin("caklontong2");
 
 export const config = plugin.config;
 export const handler = plugin.handler;

@@ -7,7 +7,7 @@
 //   • Semua yang benar dapat poin soal + jawaban pertama +3 bonus cepat
 //   • Reveal: jawaban benar + pemenang ronde + list salah + top 5 medali 🥇🥈🥉
 //   • Ronde otomatis lanjut 5 dtk, semua soal habis → juara akhir
-//   • .brainteaser skor (leaderboard persist db) / profil / kategori / stop
+//   • .asahotak skor (leaderboard persist db) / profil / kategori / stop
 // Jawaban dinilai normalizeAnswer + fuzzy grace ≥85% (biar typo kecil tetep dapet).
 
 import fs from "fs";
@@ -124,7 +124,7 @@ function pickQuestion(usedIds, categoryFilter) {
 async function startGame(m, sock, { categoryFilter = null } = {}) {
   const chatId = m.chat;
   if (sessions.has(chatId)) {
-    return safeSend(sock, chatId, "🕒 Game asah otak lagi jalan! Tunggu ronde selesai atau ketik .brainteaser stop");
+    return safeSend(sock, chatId, "🕒 Game asah otak lagi jalan! Tunggu ronde selesai atau ketik .asahotak stop");
   }
   const session = {
     chatId,
@@ -234,7 +234,7 @@ async function revealRound(sock, session, { reason = "timeout", final = false } 
     session.nextTimer = setTimeout(() => finishAll(sock, session), 3000);
     return;
   }
-  safeSend(sock, session.chatId, `🔥 *Ronde selanjutnya dalam 5 detik...*\n💡 Ketik .brainteaser stop jika ingin berhenti`);
+  safeSend(sock, session.chatId, `🔥 *Ronde selanjutnya dalam 5 detik...*\n💡 Ketik .asahotak stop jika ingin berhenti`);
   session.nextTimer = setTimeout(async () => {
     if (sessions.get(session.chatId) !== session) return; // udah di-stop
     await sendRound(null, sock, session);
@@ -265,7 +265,7 @@ async function finishAll(sock, session, { stopped = false } = {}) {
   } else {
     msg += `😔 Belum ada pemain yang mencetak poin.\n\n`;
   }
-  msg += `💡 Ketik .brainteaser untuk bermain ulang!`;
+  msg += `💡 Ketik .asahotak untuk bermain ulang!`;
   endSession(session.chatId);
   safeSend(sock, session.chatId, msg, board.map((p) => p.jid));
 }
@@ -339,12 +339,12 @@ async function answerHandler(m, sock) {
 
 // ─── PLUGIN HANDLER ───
 const pluginConfig = {
-  name: "brainteaser",
+  name: "asahotak",
   alias: ["asahotak"],
   category: "game",
   description: "Asah Otak multiplayer — 5 kategori, ronde otomatis, bonus cepat, leaderboard!",
-  usage: ".brainteaser — mulai game (acak semua kategori)\n.asahotak <kategori> — mulai dengan kategori\n.asahotak stop — hentikan game\n.asahotak skor — leaderboard\n.asahotak profil — statistik kamu\n.asahotak kategori — daftar kategori",
-  example: ".brainteaser\n.asahotak logika\n.asahotak skor",
+  usage: ".asahotak — mulai game (acak semua kategori)\n.asahotak <kategori> — mulai dengan kategori\n.asahotak stop — hentikan game\n.asahotak skor — leaderboard\n.asahotak profil — statistik kamu\n.asahotak kategori — daftar kategori",
+  example: ".asahotak\n.asahotak logika\n.asahotak skor",
   isOwner: false,
   isPremium: false,
   isRegister: true,
@@ -404,7 +404,7 @@ async function handler(m, { sock }) {
       const emoji = CATEGORY_EMOJI[cat] || "❓";
       msg += `${emoji} ${cat} (${count} soal)\n`;
     });
-    msg += `\n💡 Gunakan: .brainteaser [nama kategori]`;
+    msg += `\n💡 Gunakan: .asahotak [nama kategori]`;
     return safeSend(sock, m.chat, msg);
   }
 
