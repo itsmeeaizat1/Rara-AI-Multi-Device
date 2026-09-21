@@ -11,7 +11,7 @@ import { animSabung } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "sabungayam",
+  name: "cockfight",
   alias: ["sabungayam", "sabung", "ayam"],
   category: "rpg",
   description: "Sabung ayam — bet gold pada ayammu melawan AI",

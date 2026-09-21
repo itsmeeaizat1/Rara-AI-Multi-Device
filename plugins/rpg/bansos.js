@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "bansos",
+  name: "socialaid",
   alias: ["bansos", "korupsi"],
   category: "rpg",
   description: "Korupsi dana bansos (high risk, high reward)",

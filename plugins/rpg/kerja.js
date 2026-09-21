@@ -22,7 +22,7 @@ function jobBar(cur, next) {
 }
 
 const pluginConfig = {
-  name: "kerja",
+  name: "working",
   alias: ["kerja", "work"],
   category: "rpg",
   description: "Bekerja untuk mendapatkan gold dan EXP — animasi unik per profesi (penebang, petani, dokter, pilot, dll)",

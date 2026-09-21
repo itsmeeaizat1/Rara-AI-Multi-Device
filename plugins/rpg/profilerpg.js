@@ -3,7 +3,7 @@ import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "profil", alias: ["profil", "profilerpg", "profilrpg"],
+  name: "rpgprofile", alias: ["profil", "profilerpg", "profilrpg"],
   category: "rpg", description: "Tampilkan profil RPG lengkap",
   usage: ".profil", example: ".profil",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

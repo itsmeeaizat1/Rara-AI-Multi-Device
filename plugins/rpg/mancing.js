@@ -12,8 +12,8 @@ import { ensureRpg, spendCash, getCash, formatRp } from "../../src/lib/nova-rpg-
 import { getRpgWeather, applyWeatherToFishWeights, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
 
 const pluginConfig = {
-  name: "mancing",
-  alias: ["mancing", "fishing", "fish", "memancing", "fishrpg"],
+  name: "fishing",
+  alias: ["mancing", "fish", "memancing", "fishrpg"],
   category: "rpg",
   description: "Mancing RPG — pancing ikan dengan rarity, kumpulkan Mutiara, upgrade Joran",
   usage: ".mancing (pancing)\n.mancing inventory (cek koleksi)\n.mancing sell (jual semua ikan)\n.mancing joran (status joran)\n.mancing upgrade (upgrade joran)",

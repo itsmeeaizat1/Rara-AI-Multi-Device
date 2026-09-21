@@ -13,7 +13,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "sampah",
+  name: "scavenger",
   alias: ["sampah", "buangsampah"],
   category: "rpg",
   description: "Kumpulkan sampah untuk didaur ulang — gold kecil tapi EXP lumayan",

@@ -10,7 +10,7 @@ import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
-  name: "tokorpg",
+  name: "rpgstore",
   alias: ["tokorpg", "tokouang", "shouang", "malluang", "tokorp"],
   category: "rpg",
   description: "Toko RPG pakai Uang (Rp) — equip premium, potion, alat profesi (+30% gajian), kotak misteri",
