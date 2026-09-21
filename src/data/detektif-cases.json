@@ -1,0 +1,1369 @@
+[
+ {
+  "id": 1,
+  "tier": 1,
+  "title": "Pencurian di Galeri Cakrawala",
+  "briefing": "Lukisan 'Senja di Pelabuhan' hilang semalam dari Galeri Cakrawala. Tidak ada pecahan jendela — pelaku masuk dengan rapi. Klien kamu: Pak Har, satpam yang takut jadi kambing hitam.",
+  "locations": [
+   {
+    "id": "galeri",
+    "name": "Galeri Utama",
+    "emoji": "🖼️",
+    "desc": "Dinding kosong tempat lukisan menggantung. Lampu sorot masih menyala.",
+    "evidence": [
+     "e4"
+    ]
+   },
+   {
+    "id": "gudang",
+    "name": "Ruang Gudang",
+    "emoji": "📦",
+    "desc": "Kardus bertebaran, berbau debu. Ada lemari besi tua terkunci.",
+    "evidence": [
+     "e5",
+     "e3"
+    ],
+    "puzzle": {
+     "q": "Lemari besi ber-password 4 digit. Sticky note di sisi lemari: 'Tahun galeri berdiri… tapi dibaca terbalik: 2914' — Password?",
+     "a": "4192",
+     "hint": "Angka dibaca terbalik"
+    }
+   },
+   {
+    "id": "kantor",
+    "name": "Kantor Kurator",
+    "emoji": "🖥️",
+    "desc": "Meja rapi, satu laci sedikit terbuka.",
+    "evidence": [
+     "e1",
+     "e2"
+    ]
+   },
+   {
+    "id": "lobi",
+    "name": "Kafe Lobi",
+    "emoji": "☕",
+    "desc": "Meja pojok masih ada dua cangkir kopi tak terselesaikan.",
+    "evidence": []
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Ratna",
+    "emoji": "👩‍💼",
+    "role": "Kurator galeri",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Aku pulang jam 9 malam, cek CCTV absen di dekat tempat lukisan."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Lukisan itu diasuransikan mahal, aku gak ada alasan naruhin rugi."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Satpam kita lemot, siapa pun bisa masuk kalau mau."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Dimas",
+    "emoji": "🧑‍🎨",
+    "role": "Asisten kurator",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya di rumah sepanjang malam, nggak ke mana-mana, Pak.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya yang bikin jadwal patroli dan pegang kartu akses cadangan."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kolektor Om Kiki kemarin minta lukisan itu dipindah, ditolak Ratna."
+     }
+    ],
+    "contradictedBy": "e3"
+   },
+   {
+    "id": "s3",
+    "name": "Pak Har",
+    "emoji": "💂",
+    "role": "Satpam malam",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya ronda jam 11 ke belakang gedung, waktu itu galeri masih aman."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Jadwal ronda malamnya entah kenapa diubah jam 11 malam ini."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Saya lihat lampu gudang nyala tengah malam, kirain cucu owner."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s4",
+    "name": "Om Kiki",
+    "emoji": "🎩",
+    "role": "Kolektor seni",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Aku di acara klub kartu sampai pagi, banyak saksi."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Aku pernah tawar beli 'Senja di Pelabuhan', ditolak — bukan alasan curi."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Yang paling hafal pintu dan lemari gudang ya yang pegang kunci itu."
+     }
+    ],
+    "contradictedBy": null
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Slip pembelian sarung tangan kulit",
+    "desc": "Nota beli sarung tangan kulit hitam seharga 150 ribu — atas nama D."
+   },
+   {
+    "id": "e2",
+    "name": "Jadwal patroli diubah",
+    "desc": "Jadwal ronda malam digeser jam 11, tepat sehari sebelum kejadian."
+   },
+   {
+    "id": "e3",
+    "name": "Kartu akses duplikat",
+    "desc": "Kartu akses cadangan atas nama DIMAS dipakai masuk pintu belakang jam 23:40."
+   },
+   {
+    "id": "e4",
+    "name": "Sobekan sarung tangan kulit",
+    "desc": "Sobekan kulit hitam tersangkut bingkai lukisan, ukuran tangan dewasa muda."
+   },
+   {
+    "id": "e5",
+    "name": "Kardus pengemas lukisan",
+    "desc": "Kardus segar tanpa debu di antara tumpukan berdebu — bekas bungkusan baru."
+   }
+  ],
+  "culprit": "s2",
+  "keyEvidence": [
+   "e3",
+   "e4"
+  ],
+  "solution": "Dimas, asisten kurator, memakai kartu akses cadangan jam 23:40 lewat pintu belakang, membungkus lukisan dengan kardus dari gudang. Jadwal patroli digeser supaya jam 11 satpam ada di belakang. Sarung tangannya tersangkut di bingkai dan nota belinya ada di laci kantornya.",
+  "hint": "Kartu akses mencatat SEMUA orang yang masuk malam itu. Lemari gudang menyimpan barang menarik."
+ },
+ {
+  "id": 2,
+  "tier": 1,
+  "title": "Laptop Rahasia Hilang di Kantor Sentosa",
+  "briefing": "Laptop berisi prototype aplikasi keuangan hilang dari ruang server kantor Sentosa semalam. Belum ada pengumuman resmi — bos kamu diam-diam minta kamu cari sebelum klien tahu.",
+  "locations": [
+   {
+    "id": "ruang",
+    "name": "Ruang Kerja Terbuka",
+    "emoji": "💻",
+    "desc": "Meja-meja rapi, satu kabel LAN tercabut menggantung.",
+    "evidence": [
+     "e1"
+    ]
+   },
+   {
+    "id": "server",
+    "name": "Ruang Server",
+    "emoji": "🖧",
+    "desc": "Rak server berdengung. Terminal log masih menyala.",
+    "evidence": [
+     "e2"
+    ]
+   },
+   {
+    "id": "pantry",
+    "name": "Pantry",
+    "emoji": "🥤",
+    "desc": "Kulkas, dispenser, dan tempat cuci cup kotor.",
+    "evidence": [
+     "e3"
+    ]
+   },
+   {
+    "id": "parkiran",
+    "name": "Parkiran Bawah Tanah",
+    "emoji": "🚗",
+    "desc": "Parkiran lengang, satu tiang CCTV berkedip.",
+    "evidence": [
+     "e5",
+     "e4"
+    ],
+    "puzzle": {
+     "q": "Loker karyawan ditemukan tak terkunci. Gemboknya 3 digit dengan clue: 'Saya datang, pergi, dan pulang — di SHIFT KEDUA (angka shift dikali dirinya sendiri… dua kali)'",
+     "a": "16",
+     "hint": "Shift kedua = 2 → 2×2×2×2"
+    }
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Mbak Sari",
+    "emoji": "👩‍💼",
+    "role": "HRD",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya pulang tepat jam 6 ikut shuttle kantor, bareng banyak orang."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya pegang kunci loker dan absensi — semua karyawan pulang jam 6 kemarin."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Hati-hati, proyek itu bikin iri orang luar juga, bukan cuma dalam."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Bang Jo",
+    "emoji": "🧹",
+    "role": "OB malam",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya ngepel lantai 2 sampai jam 10 terus pulang, mampir warung depan."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Tiap malem saya rutin bersihin ruang server juga, tapi kemarin saya skip."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kabel LAN yang kecabut itu jarang saya lihat — biasanya rapi bingit."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s3",
+    "name": "Vino",
+    "emoji": "👨‍💻",
+    "role": "Programmer proyek",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Aku pulang jam 9 malam habis lembur, terus langsung tidur di rumah.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Laptop itu aku kunci di rak server, passwordnya cuma aku yang pegang."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Aku dengar ada pihak luar tawarin beli prototype — gak cuma aku yang tahu harganya."
+     }
+    ],
+    "contradictedBy": "e2"
+   },
+   {
+    "id": "s4",
+    "name": "Mega",
+    "emoji": "👩‍🎤",
+    "role": "Sales eksekutif",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Aku dinner sama klien sampai tengah malam, bisa dicek restonya."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Aku bahkan gak boleh masuk ruang server, gak punya akses."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kalau mau jual data itu, butuh orang yang paham isi laptopnya — gak sembarangan."
+     }
+    ],
+    "contradictedBy": null
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Kabel LAN tercabut",
+    "desc": "Port laptop di ruang terbuka dicabut rapi — pelaku gak panik."
+   },
+   {
+    "id": "e2",
+    "name": "Log akses server 22:13",
+    "desc": "Akun VINO masuk ruang server jam 22:13 — padahal dia bilang pulang jam 9."
+   },
+   {
+    "id": "e3",
+    "name": "Cup kopi ganda",
+    "desc": "Satu cup kopi ganda tanpa gula di pantry — pesanan langganan Vino."
+   },
+   {
+    "id": "e4",
+    "name": "Stiker laptop 'VX'",
+    "desc": "Stiker logo 'VX' bekas tempel di loker parkiran — laptop prototipe ditandai stiker itu."
+   },
+   {
+    "id": "e5",
+    "name": "Loker terbuka",
+    "desc": "Loker parkiran ditemukan terbuka dan kosong pagi ini."
+   }
+  ],
+  "culprit": "s3",
+  "keyEvidence": [
+   "e2",
+   "e4"
+  ],
+  "solution": "Vino, programmer proyek, kembali ke kantor jam 22:13 pakai kartu aksesnya, ambil laptop dari rak server, simpan sementara di loker parkiran. Log server dan stiker 'VX' yang tertinggal di loker membongkarnya. Motifnya: tawaran pembelian prototype dari pihak luar.",
+  "hint": "Log server mencatat SIAPA dan KAPAN. Cek juga tempat pelaku bisa sembunyikan barang."
+ },
+ {
+  "id": 3,
+  "tier": 1,
+  "title": "Motor Brengsek Hilang dari Pos Ronda",
+  "briefing": "Motor Honda merah milik ketua RT lenyap dari dekat pos ronda semalam. Warga mulai saling tuduh. RT minta kamu selesai sebelum rukun warga pecah.",
+  "locations": [
+   {
+    "id": "pos",
+    "name": "Pos Ronda",
+    "emoji": "🛖",
+    "desc": "Pos kayu tua, ada bangku panjang dan papan absen.",
+    "evidence": [
+     "e1",
+     "e2"
+    ]
+   },
+   {
+    "id": "jalan",
+    "name": "Jalan Gang Mawar",
+    "emoji": "🛣️",
+    "desc": "Jalan gang sempit di belakang rumah warga, licin sehabis hujan.",
+    "evidence": [
+     "e4"
+    ]
+   },
+   {
+    "id": "bengkel",
+    "name": "Bengkel Bang Jef",
+    "emoji": "🔧",
+    "desc": "Bengkel kecil penuh sparepart, cat motor di rak belakang.",
+    "evidence": [
+     "e5"
+    ]
+   },
+   {
+    "id": "rt",
+    "name": "Kantor RT",
+    "emoji": "🗄️",
+    "desc": "Lemari arsip RT dan layar CCTV warga — kemarin dipadamkan.",
+    "evidence": [
+     "e3"
+    ],
+    "puzzle": {
+     "q": "Lemari arsip RT terkunci. Kombinasi 2 huruf: 'Kepanjangan dari Rukun Tetangga… singkatannya dibalik'",
+     "a": "tr",
+     "hint": "RT dibaca terbalik"
+    }
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Andi",
+    "emoji": "💂",
+    "role": "Penjaga pos",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya jaga pos dari jam 10, ketemu pak Ogah warung sampai jam 12."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "CCTV warga kemarin mati dari jam 2 — bukan saya yang matiin."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Yang paling tahu jadwal ronda ya orang-orang sini sendiri."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Lilis",
+    "emoji": "👩",
+    "role": "Warga sebelah",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya tidur, tapi kedengaran suara motor lewat gang belakang jam 2 lewat."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Motor saya juga pernah nyaris hilang — makanya saya sensitif."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Bengkel dekat sini tuh sering nampung barang 'tanpa surat'."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s3",
+    "name": "Bang Jef",
+    "emoji": "🔧",
+    "role": "Pemilik bengkel",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Bengkel saya tutup jam 10 malam, saya langsung pulang, gak balik-balik.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya kadang terima motor 'gak pakai surat' buat dibenerin — semua legal kok."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Motor merah itu kenceng banget bunyinya, suka lewat depan bengkel tiap malam."
+     }
+    ],
+    "contradictedBy": "e3"
+   },
+   {
+    "id": "s4",
+    "name": "Uncu",
+    "emoji": "🧑",
+    "role": "Anak ronda",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya ronda putaran kedua jam 1 sampai jam 2, motor masih ada waktu itu."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Kunci pos dan kunci lapak di situ — semua ronda pegang kunci sama."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Habis jam 2 CCTV mati, motor hilang. Susah banget gak nyambung."
+     }
+    ],
+    "contradictedBy": null
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Bekas oli bengkel",
+    "desc": "Bekas tetesan oli segar di aspal dekat pos — oli bengkel, bukan oli motor biasa."
+   },
+   {
+    "id": "e2",
+    "name": "Kunci T tergeletak",
+    "desc": "Kunci T ukuran 14 tertinggal di dekat bekas parkiran motor."
+   },
+   {
+    "id": "e3",
+    "name": "CCTV dipadam 02:01",
+    "desc": "Aliran CCTV diputus dari panel listrik — jam 02:01, arah kabel dibawa ke bengkel."
+   },
+   {
+    "id": "e4",
+    "name": "Serpihan spion merah",
+    "desc": "Serpihan spion merah persis warna motor korban di gang sempit."
+   },
+   {
+    "id": "e5",
+    "name": "Cat merah segar di lantai",
+    "desc": "Cat merah motor belum kering di lantai bengkel bagian belakang."
+   }
+  ],
+  "culprit": "s3",
+  "keyEvidence": [
+   "e3",
+   "e5"
+  ],
+  "solution": "Bang Jef memadamkan CCTV lewat panel listrik jam 02:01, mencuri motor lewat gang belakang (spion terseok di tembok sempit), menyembunyikannya di bengkel dan langsung mengecat ulang. Bekas oli bengkel, kunci T, dan cat masih basah di lantai bengkel membongkarnya.",
+  "hint": "Siapa yang paling gampang 'menghilangkan' motor tanpa kelihatan? Cek tempat dia bekerja."
+ },
+ {
+  "id": 4,
+  "tier": 2,
+  "title": "Racun di Kopi Pak Endut",
+  "briefing": "Pak Endut, pemilik warung kopi legendaris, tewas dini hari tadi setelah minum kopi racun. Warung tutup, warga gempar. Keluarganya minta bantuanmu sebelum polisi salah tangkap.",
+  "locations": [
+   {
+    "id": "warung",
+    "name": "Warung Kopi Pak Endut",
+    "emoji": "☕",
+    "desc": "Meja kayu panjang, gelas-gelas bersih, satu gelas terbalik di ujung.",
+    "evidence": [
+     "e2"
+    ]
+   },
+   {
+    "id": "dapur",
+    "name": "Dapur Warung",
+    "emoji": "🍳",
+    "desc": "Kompor, rak gelas, dan tempat ampas kopi.",
+    "evidence": [
+     "e1"
+    ]
+   },
+   {
+    "id": "belakang",
+    "name": "Halaman Belakang",
+    "emoji": "🚪",
+    "desc": "Pintu belakang yang cuma keluarga yang tahu. Tong sampah di pojok.",
+    "evidence": [
+     "e5"
+    ],
+    "puzzle": {
+     "q": "Tong sampah terkunci rantai + gembok angka 3 digit. Di tembok ada coretan spidol: 'Nomor polisi warung: AK 4412 KU — ambil TENGAHnya'",
+     "a": "441",
+     "hint": "Tiga digit tengah dari 4412"
+    }
+   },
+   {
+    "id": "rumah",
+    "name": "Rumah Pak Endut",
+    "emoji": "🏠",
+    "desc": "Rumah warung di belakang, gelap dan berbau kapur barus.",
+    "evidence": [
+     "e3",
+     "e4"
+    ]
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Bu Yanti",
+    "emoji": "👩‍🍳",
+    "role": "Istri almarhum",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya tidur di rumah, biasa — Pak Endut selalu berangkat subuh duluan."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Gula dan racun tikus itu saya simpan di rumah, jauh dari dapur."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Dedi si tengkulak besok-besok datang nagih, mukanya merah terus."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Rudi",
+    "emoji": "🧑",
+    "role": "Anak tunggal",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya begadang nonton bola di kamar, keluar cuma ke toilet."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Ayah bikin kalung susu titanium — itu buat saya, gak mungkin saya sakiti dia."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Ayah belakangan sering bertengkar di telepon sama seseorang."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s3",
+    "name": "Mas Toni",
+    "emoji": "🧑‍🍳",
+    "role": "Barista warung",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya pulang jam 9 habis tutup, warung subuh dibuka Pak Endut sendiri."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Racun tikus itu gak akan lewat tangan saya — saya gak boleh pegang-pegang dapur."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kaleng gula kemarin ganti isi, kayaknya yang ganti bukan dari dapur."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s4",
+    "name": "Pak Dedi",
+    "emoji": "😠",
+    "role": "Tengkulak beras",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya gak pernah mampir warung itu pagi-pagi, saya berangkat pasar subuh.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Utang Pak Endut ke saya 40 juta, dia janji bayar minggu ini — sayang banget dia mati."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Banyak orang benci Pak Endut — warungnya minum punya pasaran orang."
+     }
+    ],
+    "contradictedBy": "e5"
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Ampas kopi tercampur",
+    "desc": "Ampas kopi pagi itu tercampur butiran putih — bukan gula, bereaksi dengan air abu."
+   },
+   {
+    "id": "e2",
+    "name": "Surat hutang robek",
+    "desc": "Surat hutang 40 juta di bawah gelas — ada coretan 'LUNAS 1 MINGGU' dengan tinta segar."
+   },
+   {
+    "id": "e3",
+    "name": "Kaleng gula bekas",
+    "desc": "Kaleng gula di rumah kosong setengah, ada bekas butiran putih menempel di bibir kaleng."
+   },
+   {
+    "id": "e4",
+    "name": "Bunga condolence pagi buta",
+    "desc": "Rangkaian bunga 'turut berduka' dikirim jam 5 pagi — sebelum warga tahu Pak Endut meninggal."
+   },
+   {
+    "id": "e5",
+    "name": "Nota beli racun tikus",
+    "desc": "Nota kusut di tong sampah: racun tikus 2 sachet, pembeli 'D.', dibeli dua hari lalu."
+   }
+  ],
+  "culprit": "s4",
+  "keyEvidence": [
+   "e5",
+   "e4"
+  ],
+  "solution": "Pak Dedi, tengkulak yang kredit 40 juta, takut hutangnya tak terbayar saat Pak Endut akan menggunakan surat hutang itu. Dia membeli racun tikus dua hari sebelumnya (nota di tong sampah), menyusup lewat pintu belakang subuh-subuh, menukar isi kaleng gula dengan racun. Bunga 'turut berduka' dikirimnya jam 5 pagi — sebelum siapa pun tahu almarhum meninggal.",
+  "hint": "Siapa yang paling untung dari hilangnya Pak Endut? Cek apa yang dibuang pelaku."
+ },
+ {
+  "id": 5,
+  "tier": 2,
+  "title": "Perampokan Toko Emas Sinar Jaya",
+  "briefing": "Dini hari, toko emas Sinar Jaya dibongkar dari DALAM. Tidak ada jendela pecah. Kerugian hampir 2 miliar. Asuransi menolak bayar sebelum pelaku ketahuan — pemilik toko menyewamu.",
+  "locations": [
+   {
+    "id": "toko",
+    "name": "Lapangan Toko",
+    "emoji": "💍",
+    "desc": "Etalase kosong, kaca laci terbuka rapi tanpa pecahan.",
+    "evidence": [
+     "e3"
+    ]
+   },
+   {
+    "id": "gudang",
+    "name": "Gudang Emas",
+    "emoji": "🔐",
+    "desc": "Ruangan berlantai baja di belakang, pintu terkunci kode 6 digit.",
+    "evidence": [
+     "e5"
+    ],
+    "puzzle": {
+     "q": "Kode gudang 6 digit. Di kertas tempel: 'Tanggal toko berdiri 12-04-1998, dipakai: TAHUN-BULAN-TANGGAL'",
+     "a": "19980412",
+     "hint": "Format YYYYMMDD"
+    }
+   },
+   {
+    "id": "gang",
+    "name": "Gang Samping",
+    "emoji": "🌃",
+    "desc": "Gang sempit di samping toko, ada jendela kecil tinggi.",
+    "evidence": [
+     "e4"
+    ]
+   },
+   {
+    "id": "polisi",
+    "name": "Pos Laporan Polisi",
+    "emoji": "🚓",
+    "desc": "Berkas laporan awal dan daftar karyawan yang diinterogasi.",
+    "evidence": [
+     "e1",
+     "e2"
+    ]
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Bu Lina",
+    "emoji": "👩‍💼",
+    "role": "Pemilik toko",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya di rumah menemani anak ujian, suami bisa saksi."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Kunci laci cuma saya dan Fajar yang pegang — sistemnya juga begitu."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kalau pelaku dari dalam, saya gak mau dengar — Fajar itu kerja 8 tahun."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Fajar",
+    "emoji": "🧑",
+    "role": "Penjaga toko senior",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Toko tutup jam 9, saya pulang langsung, gak balik sama sekali.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya pegang kunci duplikat dan hafal kode gudang — itu bagian kerja saya."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Ada orang luar yang kemarin sempat nanya-nanya harga gelang antik."
+     }
+    ],
+    "contradictedBy": "e5"
+   },
+   {
+    "id": "s3",
+    "name": "Pak Sop",
+    "emoji": "🚚",
+    "role": "Suplier perhiasan",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya di gudang cabang Bekasi semalam, logistik bisa buktiin."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Barang saya baru masuk minggu depan — gak ada stock saya di gudang saat kejadian."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Pencurian sebesar itu butuh waktu — pelaku gak mungkin cuma 10 menit."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s4",
+    "name": "Ny. Ida",
+    "emoji": "👵",
+    "role": "Tetangga toko",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya bangun jam 3 buat salat, dengar pintu besi berbunyi sekali — cuma sekali."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya sering lihat Fajar lewat gang samping sore-sore, padahal jalan raya lebih dekat."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Pencurinya kenal betul toko itu, Pak — masuk dan keluar tanpa suara."
+     }
+    ],
+    "contradictedBy": null
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Laporan: kunci gudang hilang",
+    "desc": "Kunci duplikat gudang dilaporkan hilang oleh Fajar 3 hari sebelum kejadian."
+   },
+   {
+    "id": "e2",
+    "name": "Coretan kombinasi laci",
+    "desc": "Kertas coretan kombinasi laci etalase di tempat sampah pos polisi — tulisan tangan Fajar."
+   },
+   {
+    "id": "e3",
+    "name": "Sepatu berlumpur di etalase",
+    "desc": "Bekas lumpur segar di lantai etalase — jalur gang samping memang becek."
+   },
+   {
+    "id": "e4",
+    "name": "Kaus kaki sobek di jendela",
+    "desc": "Kaus kaki hitam sobek tersangkut paku jendela gang — ukuran kaki pria dewasa."
+   },
+   {
+    "id": "e5",
+    "name": "CCTV dipadam 03:12 dari dalam",
+    "desc": "CCTV gudang dipadam jam 03:12 lewat komputer DALAM gudang — kodenya cuma pegawai senior."
+   }
+  ],
+  "culprit": "s2",
+  "keyEvidence": [
+   "e5",
+   "e2"
+  ],
+  "solution": "Fajar, penjaga senior, pura-pura kunci duplikatnya hilang, lalu masuk lewat jendela gang samping (kaus kakinya sobek di paku), memadamkan CCTV dari dalam jam 03:12 (kode pegawai senior), membongkar etalase dengan kombinasi yang dia coret di kertas, dan keluar lewat pintu besi — bunyi sekali yang didengar Ny. Ida.",
+  "hint": "CCTV gudang dipadam dari dalam — siapa yang hafal kodenya? Cari juga barang yang tertinggal di jalur pelarian."
+ },
+ {
+  "id": 6,
+  "tier": 2,
+  "title": "Kebakaran Gudang Logistik Nusantara",
+  "briefing": "Gudang logistik terbakar semalam. Stok senilai 12 miliar jadi abah. Petugas pemadam menemukan titik api di TIGA tempat berbeda — ini pembakaran. Perusahaan menyewamu sebelum berita bocor.",
+  "locations": [
+   {
+    "id": "gudang",
+    "name": "Gudang Utama",
+    "emoji": "📦",
+    "desc": "Rangka baja hangus, bau cat terbakar masih pekat.",
+    "evidence": [
+     "e3"
+    ],
+    "puzzle": {
+     "q": "Brankas dokumen tahan api terkunci. Di pintu ada stiker: 'Tahun kebakaran dikurangi tahun berdirinya perusahaan: 2026 − 1998' … tapi hasilnya DIBACA TERBALIK.",
+     "a": "82",
+     "hint": "2026−1998=28 → dibalik"
+    }
+   },
+   {
+    "id": "pos",
+    "name": "Pos Penjagaan",
+    "emoji": "🚧",
+    "desc": "Pos kecil dengan layar CCTV dan panel alarm kebakaran.",
+    "evidence": [
+     "e2"
+    ]
+   },
+   {
+    "id": "kantor",
+    "name": "Kantor Administrasi",
+    "emoji": "🗃️",
+    "desc": "Meja-meja hangus separuh, tapi lemari besi selamat.",
+    "evidence": [
+     "e1",
+     "e5"
+    ]
+   },
+   {
+    "id": "parkir",
+    "name": "Area Parkir Truk",
+    "emoji": "🚛",
+    "desc": "Bekas ban truk, oli, dan satu drum mencurigakan.",
+    "evidence": [
+     "e4"
+    ]
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Pak Gol",
+    "emoji": "👷",
+    "role": "Mandor gudang",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya pulang jam 5, begadang nonton bola — tetangga saksi."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Alarm kebakaran mati dari panel pos — yang tahu urutan kode cuma karyawan tetap."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Stok di gudang belakangan sering kurang, laporan saya diabaikan terus."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Tika",
+    "emoji": "👩‍💼",
+    "role": "Admin gudang",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya di rumah sakit nemenin ibu semalam, ada stempel rawat inap."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Dokumen inventaris saya simpan di lemari besi — selamat dari api, untung."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Asuransi perusahaan naik tiga kali lipat bulan lalu — pakai alasan apa ya?"
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s3",
+    "name": "Bang Uc",
+    "emoji": "🚚",
+    "role": "Sopir truk",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Truk saya malam itu di Bengkel Aroma — tukangnya bisa konfirmasi."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Bensin truk saya kemarin penuh, aneh soalnya rute pendek semua."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Saya lihat ada drum yang bukan punya gudang di parkiran sebelum kejadian."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s4",
+    "name": "Pak Sin",
+    "emoji": "🧔",
+    "role": "Pemilik perusahaan",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya di Jakarta rapat dua hari, baru balakangan tadi pagi.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Perusahaan sehat, omzet naik terus — gak butuh drama kebakaran."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Ini pasti ulah karyawan kecewa atau pesaing nakal."
+     }
+    ],
+    "contradictedBy": "e1"
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Nota asuransi naik 3x",
+    "desc": "Polis asuransi stok dinaikkan tiga kali lipat DUA MINGGU sebelum kejadian — tanda tangan pemilik, tanggal tanda tangan MALAM SEBELUM kebakaran."
+   },
+   {
+    "id": "e2",
+    "name": "Alarm diputus",
+    "desc": "Alarm kebakaran diputus dari panel pos jam 01:00 — tanpa jejak pembongkaran paksa."
+   },
+   {
+    "id": "e3",
+    "name": "Titik api tiga tempat",
+    "desc": "Tiga titik api terpisah — bukan korsleting, ini ditata."
+   },
+   {
+    "id": "e4",
+    "name": "Drum bensin di parkiran",
+    "desc": "Drum bensin tanpa label di parkiran — bensin menguap tapi bekas tumpahannya jelas."
+   },
+   {
+    "id": "e5",
+    "name": "Daftar stok kosong",
+    "desc": "Inventaris terakhir menunjukkan stok gudang tinggal 30% — tapi polis menjamin nilai penuh."
+   }
+  ],
+  "culprit": "s4",
+  "keyEvidence": [
+   "e1",
+   "e5"
+  ],
+  "solution": "Pak Sin, pemilik perusahaan, membakar gudangnya sendiri untuk klaim asuransi: stok aslinya sudah dijual diam-diam (inventaris tinggal 30%), polis dinaikkan tiga kali lipat dan ditandatangani malam sebelum kebakaran. Dia menyuruh orang memutus alarm, menata tiga titik api dengan bensin dari drum tak berlabel. Motifnya: perusahaan sekarat, dia menutupnya dengan asuransi.",
+  "hint": "Cui bono — siapa yang diuntungkan? Cek dokumen yang selamat dari api."
+ },
+ {
+  "id": 7,
+  "tier": 3,
+  "title": "Sindikat Pencuri Mobil Mewah",
+  "briefing": "Sebelas mobil mewah hilang dalam dua bulan di kota ini — semua tanpa pecah kaca, tanpa alarm bunyi. Polisi minta bantuan detektif swasta. Pelakunya profesional.",
+  "locations": [
+   {
+    "id": "bengkel",
+    "name": "Bengkel Bash",
+    "emoji": "🏭",
+    "desc": "Bengkel besar dengan area karanting tertutup.",
+    "evidence": [
+     "e5"
+    ]
+   },
+   {
+    "id": "garasi",
+    "name": "Garasi Kosong Pinggir Kota",
+    "emoji": "🅿️",
+    "desc": "Garasi sewaan, pintu besi, selalu terkunci.",
+    "evidence": [
+     "e2"
+    ]
+   },
+   {
+    "id": "kedai",
+    "name": "Kedai Nasi Bu Imas",
+    "emoji": "🍚",
+    "desc": "Kedai ramai dekat terminal, tempat nongkrong sopir-sopir.",
+    "evidence": [
+     "e1"
+    ],
+    "puzzle": {
+     "q": "Di bawah meja pojok ada koper terkunci angka 4 digit. Kopernya bertuliskan: 'Kejadian pertama: 11 Juli. Kejadian terakhir: 11 September. Kode: tanggal dikeduanya digabung (DDDD)'",
+     "a": "1111",
+     "hint": "Tanggal 11 dan 11"
+    }
+   },
+   {
+    "id": "vila",
+    "name": "Vila Pinggir Kota",
+    "emoji": "🏡",
+    "desc": "Vila mewah tersembunyi, sering ada pesta kecil.",
+    "evidence": [
+     "e3",
+     "e4"
+    ]
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Rangga",
+    "emoji": "🏎️",
+    "role": "Street racer populer",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Aku tampil di ajang drag Sentul semalam itu — ribuan orang lihat."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Mobilmu di garasi gak akan hilang kalau gak ada orang dalam yang kasi info."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Orangnya pinter — gak ada satupun alarm berbunyi dari sebelas mobil."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Om Seno",
+    "emoji": "🕴️",
+    "role": "Bandar antik & barang mewah",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya tidak pernah keluar kota — semua transaksi saya di dalam kota, tercatat.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya cuma jual barang antik — mobil bukan ladang saya."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kalau mobil hilang, cari di mana mobil itu DIJUAL ULANG — jauh dari sini."
+     }
+    ],
+    "contradictedBy": "e3"
+   },
+   {
+    "id": "s3",
+    "name": "Ayu",
+    "emoji": "👩‍💼",
+    "role": "Dealer mobil eksotis",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya di pameran mobil Surabaya tiga hari, pembicara tamu even."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya tahu persis spesifikasi kunci pintar semua mobil mewah — itu pekerjaan saya."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kunci duplikat pintar bisa dibikin kalau ada orang dalam yang kasih akses."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s4",
+    "name": "Bang Ijal",
+    "emoji": "🛵",
+    "role": "Kurir paket",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya antar paket malam-malam, log aplikasi saya lengkap."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya sering nongkrong di kedai Bu Imas — semua orang kecil lewat situ."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Ada yang bayar mahal buat info jadwal mobil mewah keluar-masuk."
+     }
+    ],
+    "contradictedBy": null
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Daftar plat nomor target",
+    "desc": "Kertas berisi 11 plat nomor mobil yang hilang — coretan tangan berbeda-beda."
+   },
+   {
+    "id": "e2",
+    "name": "Kunci duplikat pintar",
+    "desc": "Alat duplikasi kunci pintar di garasi — sebelah bekas ban mobil mewah."
+   },
+   {
+    "id": "e3",
+    "name": "Transferan besar ke rekening luar",
+    "desc": "Buku transfer di vila: kelipatan 300-500 juta ke rekening atas nama 'S' — tanggalnya cocok dengan tanggal pencurian."
+   },
+   {
+    "id": "e4",
+    "name": "Surat jalan palsu",
+    "desc": "Surat jalan ekspor mobil antik ke luar pulau — tanda tangan inisial 'S.S.'."
+   },
+   {
+    "id": "e5",
+    "name": "Bekas mobil di karantina",
+    "desc": "Bekas tapak mobil tanpa plat di karanting bengkel — cat mewah khas korban."
+   }
+  ],
+  "culprit": "s2",
+  "keyEvidence": [
+   "e3",
+   "e4"
+  ],
+  "solution": "Om Seno, bandar barang mewah, membeli info jadwal mobil dari kaki tangannya, menduplikasi kunci pintar di garasi sewaan, menyimpan mobil sementara di karanting bengkel, lalu mengeskpor mobil sebagai 'mobil antik' dengan surat jalan palsu (inisial S.S.). Transferan besar ke rekening atas nama 'S' di vilanya membongkar aliran dananya. Motif: pasar gelap mobil mewah lintas pulau.",
+  "hint": "Ikuti uangnya. Pelaku profesional selalu punya jalur KELUAR untuk barang curian."
+ },
+ {
+  "id": 8,
+  "tier": 3,
+  "title": "Cold Case: Kalung Warisan Keluarga Wangsa",
+  "briefing": "Dua puluh tahun lalu, kalung warisan Wangsa hilang semalam sebelum serah terima wasiat. Kasus ini beku — semua saksi sudah tua, bukti nyaris lenyap. Keluarga menyewamu untuk menutup luka dua dekade.",
+  "locations": [
+   {
+    "id": "rumah",
+    "name": "Rumah Tua Wangsa",
+    "emoji": "🏚️",
+    "desc": "Rumah besar berdebu, kamar almarhumah masih terkunci.",
+    "evidence": [
+     "e2",
+     "e3"
+    ]
+   },
+   {
+    "id": "loteng",
+    "name": "Loteng Keluarga",
+    "emoji": "🪜",
+    "desc": "Loteng gelap penuh peti-peti tua, satu peti berlabel 'W'.",
+    "evidence": [
+     "e5"
+    ],
+    "puzzle": {
+     "q": "Peti 'W' terkunci 3 digit. Di tutup peti ada ukiran: 'Rumah ini berdiri 1968. Ambil dua digit TERAKHIR, tambah umur kalung saat hilang (kalung berumur 32 tahun saat itu)'",
+     "a": "100",
+     "hint": "68 + 32 = 100"
+    }
+   },
+   {
+    "id": "makam",
+    "name": "Makam Keluarga",
+    "emoji": "⚰️",
+    "desc": "Makam almarhumah, selalu ada bunga segar setiap pekan.",
+    "evidence": [
+     "e4"
+    ]
+   },
+   {
+    "id": "notaris",
+    "name": "Kantor Notaris Lama",
+    "emoji": "📜",
+    "desc": "Kantor notaris yang mengurus wasiat Wangsa — masih beroperasi.",
+    "evidence": [
+     "e1"
+    ]
+   }
+  ],
+  "suspects": [
+   {
+    "id": "s1",
+    "name": "Suster Wati",
+    "emoji": "👩‍⚕️",
+    "role": "Perawat almarhumah",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya tidur di kamar sebelah saat kalung hilang — almarhumah sehat-sehat waktu itu."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya yang merawat almarhumah 10 tahun — saya tahu semua rutinitasnya."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Malam itu ada tamu yang datang sebelum kalung dinyatakan hilang — saya gak kenal wajahnya."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s2",
+    "name": "Bang Rio",
+    "emoji": "🧑‍🦱",
+    "role": "Ponakan almarhumah",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya di luar kota kuliah, cuma pulang tiap liburan — waktu itu ujian akhir."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya yang sekarang jadi pewaris utama — saya gak pernah minta kalung itu."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Notaris keluarga itu yang paling detail kenal isi rumah — dia yang pegang semua kunci salinan."
+     }
+    ],
+    "contradictedBy": null
+   },
+   {
+    "id": "s3",
+    "name": "Bu Hana",
+    "emoji": "👩‍⚖️",
+    "role": "Notaris keluarga",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya tidak pernah ke rumah Wangsa — semua urusan kertas lewat kantor.",
+      "suspicious": true
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Wasiat dan inventaris warisan saya pegang — semuanya asli dan lengkap."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kalung itu mungkin memang gak pernah ada — cuma cerita keluarga."
+     }
+    ],
+    "contradictedBy": "e2"
+   },
+   {
+    "id": "s4",
+    "name": "Mas Galih",
+    "emoji": "🕶️",
+    "role": "Antiquarian",
+    "topics": [
+     {
+      "t": "Alibi",
+      "text": "Saya baru mengenal keluarga Wangsa lima tahun silam — jauh setelah kejadian."
+     },
+     {
+      "t": "Pekerjaan",
+      "text": "Saya pernah menawarkan appraisal kalung itu — tapi baru dengar ceritanya belakangan."
+     },
+     {
+      "t": "Pendapat",
+      "text": "Kalung sejenis muncul di lelang gelap luar negeri sekitar 20 tahun lalu — saya pernah lihat katalognya."
+     }
+    ],
+    "contradictedBy": null
+   }
+  ],
+  "evidence": [
+   {
+    "id": "e1",
+    "name": "Buku inventaris dirubah",
+    "desc": "Inventaris notaris menunjukkan kalung dicoret dengan tinta berbeda — tanggal coretan sehari SETELAH kalung hilang."
+   },
+   {
+    "id": "e2",
+    "name": "Kunci loteng hilang",
+    "desc": "Di kamar almarhumah ditemukan kunci loteng dengan label kecil 'H' — pegawai rumah tak pernah punya."
+   },
+   {
+    "id": "e3",
+    "name": "Kalung palsu sepuh",
+    "desc": "Di kotak perhiasan tersimpan kalung TEMBAGA sepuh — duplikat murah dari kalung emas asli."
+   },
+   {
+    "id": "e4",
+    "name": "Bunga segar di makam",
+    "desc": "Bunga di makam dikirim mingguan atas nama 'H' — dua puluh tahun tak putus."
+   },
+   {
+    "id": "e5",
+    "name": "Nota lelang rahasia",
+    "desc": "Di peti 'W': nota lelang kalung emas 20 tahun lalu — penjual atas nama 'H', notaris keluarga."
+   }
+  ],
+  "culprit": "s3",
+  "keyEvidence": [
+   "e5",
+   "e2"
+  ],
+  "solution": "Bu Hana, notaris keluarga, mencuri kalung semalam sebelum serah terima wasiat, menukarnya dengan duplikat tembaga, menyembunyikan nota lelangnya di peti 'W' di loteng, dan menjual kalung asli ke lelang gelap luar negeri. Kunci loteng berlabel 'H' di kamar almarhumah dan coretan inventaris sehari setelah kejadian membongkarnya. Bunga mingguan di makam atas nama 'H' — rasa bersalah dua dekade.",
+  "hint": "Siapa yang punya akses ke kertas TAPI mengaku tak pernah menyentuh rumah? Cek loteng dan makam."
+ }
+]
