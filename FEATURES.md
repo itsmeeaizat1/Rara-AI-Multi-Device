@@ -1345,8 +1345,9 @@ barandom, cecanchina, cecanindo, cecanjepang, cecankorea, cecanthai, cecanvietna
 ### 🛐 Religi (6 plugin)
 asmaulhusna, audioquran, hadith, islami, jadwalsholat, sholat
 
-### ⚔️ RPG (244 plugin)
+### ⚔️ RPG (245 plugin)
 Sistem RPG lengkap dengan mining, farming, hunting, cooking, economy, jobs, mini-games, clans, bosses, dungeons, items, pets, dan lebih banyak lagi. Lihat folder `plugins/rpg/` untuk detail.
+- **ARENA KUIS RPG (request owner 21 Sep 2026, ide game RPG baru #3):** .kuisarena (alias .arenakuis/.quizarena) — game RPG di mana JAWABAN SOAL = SENJATA. Bank soal 2.003 item (src/data/arenakuis.json, kategori: matematika 1105, logika 350, geografi 280, indonesia 38, sains 65, sejarah 30, bahasa 50, olahraga 28, teknologi 28, hiburan 29 — generator test/quizarena-e2e/generate.mjs). MODE SOLO: gelombang (wave) musuh ala menara — jawab benar = damage ke musuh (20 + level×3 + streak×2 + bonus boss), salah/timeout = musuh nyerang (8 + wave×2); tiap wave ke-10 BOSS (HP ×2.5, reward ×5 EXP/uang); regen +10 HP tiap kill; HP player 100 + level RPG×5; mati → run over, gold/EXP s/d wave itu tetap masuk (addExpWithLevelCheck + addGameCash). MODE PVP: .kuisarena pvp @user — duel soal sama, jawab benar duluan = 20 damage ke lawan (HP 100), 1 jawaban per ronde per orang, kedua salah → ronde seri; pemenang dapat EXP + uang. Sub: .kuisarena rank (papan juara bestWave per user, persist db.data.quizarena), .kuisarena stat (bank soal per kategori + statistik global), .kuisarena stop. Timer 25 dtk/soal. answerHandler terdaftar di src/handler.js (pola family100). E2E quizarena 31/31 + import 14 + formatguard 22.
 
 ### 💕 RPG Couple (7 plugin)
 cintainfo, couplewar, jadianmatch, kencanmatch, nikahmatch, putusmatch, soulmatematch, kado, honeymoon — Sistem RPG couple: jadian, kencan, nikah, putus, soulmate, kado (kasih item ke pasangan, +affection per rarity), honeymoon (bulan madu khusus nikah, sekali sebulan, bonus berdua). Lihat folder `plugins/rpg-couple/` untuk detail.
