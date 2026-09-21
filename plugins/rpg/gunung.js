@@ -6,11 +6,17 @@
 // toko (oksigen/jaket/tenda/pemanas), PUNCAK = reward besar + .gunung prestasi (rebirth +10% EXP permanen,
 // gunung baru). Daily + streak. State persist db.data.gunung tahan restart.
 
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { addCash, spendCash, getCash } from "../../src/lib/nova-rpg-service.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ── knob ──
 const STAMINA_MAX = process.env.GUNUNG_STAMINA_MAX !== undefined ? Number(process.env.GUNUNG_STAMINA_MAX) : 10;
@@ -28,7 +34,20 @@ const ZONA = [
   { n: 8, nama: "🏔️ Puncak Legenda", cost: 3, loot: 400, oksigen: true },
 ];
 // ── OPEN WORLD: negara bertingkat, buka dengan PUNCAK (total summit) ──
-const COUNTRIES = [
+// DATA GUNUNG DI src/data/gunung-mountains.json — tambah gunung/jalur baru cukup edit JSON, tanpa kode.
+const MOUNTAINS_PATH = path.join(__dirname, "..", "..", "src", "data", "gunung-mountains.json");
+function loadCountries() {
+  try {
+    const data = JSON.parse(fs.readFileSync(MOUNTAINS_PATH, "utf-8"));
+    if (Array.isArray(data.countries) && data.countries.length) return data.countries;
+    console.error("[gunung] data countries kosong/invalid di JSON — pakai default bawaan");
+  } catch (e) {
+    console.error("[gunung] gagal baca gunung-mountains.json — pakai default bawaan:", e);
+  }
+  return FALLBACK_COUNTRIES;
+}
+const COUNTRIES = loadCountries();
+const FALLBACK_COUNTRIES = [
   { id: "indonesia", nama: "Indonesia", emoji: "🇮🇩", butuh: 0, pool: [
     "Gunung Merapi (2.930 mdpl)", "Gunung Merbabu (3.145 mdpl)", "Gunung Semeru (3.676 mdpl)",
     "Gunung Rinjani (3.726 mdpl)", "Gunung Kerinci (3.805 mdpl)", "Gunung Cartenz (4.884 mdpl)",
