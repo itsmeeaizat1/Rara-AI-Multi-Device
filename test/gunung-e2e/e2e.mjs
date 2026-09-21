@@ -255,6 +255,28 @@ U().gunung = "Gunung Fuji (3.776 mdpl)"; delete U().country; U().puncak = 0;
 await run({});
 t("15l. migrasi Fuji 0 puncak → country indonesia (tetap Fuji)", U().country === "indonesia" && U().gunung === "Gunung Fuji (3.776 mdpl)");
 
+console.log("— section 16: ANIMASI EDIT BERULANG —");
+const animFrames = [];
+const animSock = { sendMessage: async (jid, content) => {
+  if (content?.edit) { animFrames.push({ edit: true, text: content.text }); return { key: { id: "anim1" } }; }
+  return { key: { id: "anim1" } };
+} };
+U().zona = 1; U().stamina = 10; U().oksigen = 2; U().puncak = 13; U().country = "dunia"; U().guaPending = false;
+plug._setRandForTest(() => 0.01);
+await handler(mkMsg({ args: ["daki", "aman"] }), { sock: animSock, config: {} });
+t("16a. daki: pesan animasi DIKIRIM lalu DIEDIT berulang (3 frame = 2 edit)", animFrames.length === 2, animFrames.length);
+t("16b. semua frame pakai key edit yang sama (edit: true)", animFrames.length > 0 && animFrames.every((f) => f.edit === true));
+t("16c. frame berisi animasi pendakian 🥾", animFrames.some((f) => /🥾/.test(f.text)));
+// jalur risiko punya frame sendiri
+animFrames.length = 0;
+U().zona = 3; U().stamina = 10;
+await handler(mkMsg({ args: ["daki", "risiko"] }), { sock: animSock, config: {} });
+t("16d. jalur risiko: frame khusus (batu longgar)", animFrames.some((f) => /longgar/.test(f.text)), animFrames.map((f) => f.text).join("|"));
+// edit gak didukung (sendMessage tanpa key) → animasi dilewati, hasil tetap dikirim
+let animTanpaKey = 0;
+await handler(mkMsg({ args: ["daki", "aman"] }), { sock: { sendMessage: async () => { animTanpaKey++; return true; } }, config: {} });
+t("16e. tanpa key edit → animasi dilewati senyap, daki tetap jalan", animTanpaKey === 1 && U().zona >= 3, `calls=${animTanpaKey} zona=${U().zona}`);
+
 fs.rmSync(dbDir, { recursive: true, force: true });
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);
