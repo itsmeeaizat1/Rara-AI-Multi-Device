@@ -1,0 +1,73 @@
+{
+  "_catatan": "DATA OPEN WORLD GUNUNG — tambah gunung/jalur baru: cukup masukkan nama ke pool negara (mdpl wajib). Tambah negara baru: sebutkan butuh berapa puncak. Tanpa edit kode.",
+  "countries": [
+    {
+      "id": "indonesia",
+      "nama": "Indonesia",
+      "emoji": "🇮🇩",
+      "butuh": 0,
+      "pool": [
+        "Gunung Merapi (2.930 mdpl)",
+        "Gunung Merbabu (3.145 mdpl)",
+        "Gunung Semeru (3.676 mdpl)",
+        "Gunung Rinjani (3.726 mdpl)",
+        "Gunung Kerinci (3.805 mdpl)",
+        "Gunung Cartenz (4.884 mdpl)"
+      ]
+    },
+    {
+      "id": "jepang",
+      "nama": "Jepang",
+      "emoji": "🇯🇵",
+      "butuh": 3,
+      "pool": [
+        "Gunung Fuji (3.776 mdpl)",
+        "Gunung Kita-dake (3.193 mdpl)",
+        "Gunung Hotaka (3.190 mdpl)",
+        "Gunung Yari-gatake (3.180 mdpl)",
+        "Gunung Tateyama (3.015 mdpl)"
+      ]
+    },
+    {
+      "id": "jerman",
+      "nama": "Jerman",
+      "emoji": "🇩🇪",
+      "butuh": 6,
+      "pool": [
+        "Gunung Zugspitze (2.962 mdpl)",
+        "Gunung Watzmann (2.713 mdpl)",
+        "Gunung Hochkalter (2.607 mdpl)",
+        "Gunung Feldberg (1.493 mdpl)",
+        "Gunung Brocken (1.141 mdpl)"
+      ]
+    },
+    {
+      "id": "china",
+      "nama": "China",
+      "emoji": "🇨🇳",
+      "butuh": 9,
+      "pool": [
+        "Gunung Everest — Sisi Utara (8.849 mdpl)",
+        "Gunung Minya Konka (7.556 mdpl)",
+        "Gunung Muztagh Ata (7.546 mdpl)",
+        "Gunung Siguniang (6.250 mdpl)",
+        "Gunung Emei (3.099 mdpl)"
+      ]
+    },
+    {
+      "id": "dunia",
+      "nama": "Dunia (7 Puncak)",
+      "emoji": "🌍",
+      "butuh": 12,
+      "pool": [
+        "Gunung Everest (8.849 mdpl)",
+        "Gunung Aconcagua (6.961 mdpl)",
+        "Gunung Denali (6.190 mdpl)",
+        "Gunung Kilimanjaro (5.895 mdpl)",
+        "Gunung Elbrus (5.642 mdpl)",
+        "Gunung Mont Blanc (4.808 mdpl)",
+        "Gunung Vinson (4.892 mdpl)"
+      ]
+    }
+  ]
+}
