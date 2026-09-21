@@ -8,7 +8,8 @@ import {
   getCash} from "../../src/lib/nova-rpg-service.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
-import { animAdventure, animBattleTurns } from "../../src/lib/nova-rpg-anim.js";
+import { animBattleTurns } from "../../src/lib/nova-rpg-anim.js";
+import { animasiRunner } from "../../src/lib/nova-anim-runner.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -141,7 +142,8 @@ async function handler(m, { sock }) {
     let message = event.messages[Math.floor(Math.random() * event.messages.length)];
 
     // Animasi petualangan (morphing message)
-    await animAdventure(m, sock, event.type);
+    // 🎬 animasi runner: menyusur lintasan menuju lokasi event (skala level)
+    await animasiRunner(sock, m.chat, { level: rpg.level || 1, aksi: "menyusur", hasil: "🧭 LOKASI DITEMUKAN! Event menyusul…" });
     let expGain = 0, goldGain = 0, gemGain = 0;
     let drops = [];
     let extraText = "";
