@@ -14,7 +14,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "adventure",
-  alias: ["adventure", "petualang", "jelajah"],
+  alias: ["adventure", "petualang", "jelajah", "petualangan"],
   category: "rpg",
   description: "Petualangan acak — bisa harta karun, trap, atau encounter",
   usage: ".adventure",

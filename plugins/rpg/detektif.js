@@ -506,7 +506,7 @@ async function handler(m, { sock, config }) {
 
 export { handler, loadCases };
 export const pluginConfig = {
-  name: ["detektif", "novadetektif", "detektifkasus"],
+  name: ["detektif", "novadetektif", "detektifkasus", "petualangdetektif"],
   type: "rpg",
   description: "Nova Detektif — pecahkan kasus kriminal: jelajah lokasi, kumpulkan bukti, interogasi tersangka, tuduh pelaku",
   usage: ".detektif | .detektif kasus | .detektif pergi <no> | .detektif cari | .detektif interogasi <no> | .detektif tanya <no> | .detektif jawab <ans> | .detektif bukti | .detektif tuduh <no> | .detektif hint | .detektif daily | .detektif kopi | .detektif status | .detektif rank | .detektif rebirth | .detektif stop",

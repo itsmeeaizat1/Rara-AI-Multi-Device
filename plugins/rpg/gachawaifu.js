@@ -7,7 +7,7 @@ import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
   name: "gachawaifu",
-  alias: ["gachawaifu", "gwaifu", "pullwaifu", "gachaw"],
+  alias: ["gachawaifu", "gwaifu", "pullwaifu", "gachaw", "petualanggachawaifu"],
   category: "rpg",
   description: "Gacha waifu — pull karakter anime + rarity + marry system",
   usage: ".gachawaifu (pull)\n.gachawaifu list (cek koleksi)\n.gachawaifu marry <nama> (kawin waifu)\n.gachawaifu divorce <nama> (cerai)",

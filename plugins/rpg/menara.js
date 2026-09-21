@@ -440,7 +440,7 @@ async function handler(m, { sock, config }) {
 
 export { handler, loadPuzzles };
 export const pluginConfig = {
-  name: ["menara", "menaraseribupintu", "towerpuzzle"],
+  name: ["menara", "menaraseribupintu", "towerpuzzle", "petualangmenara"],
   type: "rpg",
   description: "Menara Seribu Pintu — petualangan teka-teki per lantai, 100 lantai, boss tiap 10, tema dunia acak",
   usage: ".menara | .menara hint | .menara daily | .menara status | .menara rank | .menara rebirth | .menara stop",

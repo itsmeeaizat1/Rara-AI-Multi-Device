@@ -16,7 +16,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "berburu",
-  alias: ["berburu", "hunt"],
+  alias: ["berburu", "hunt", "petualangberburu"],
   category: "rpg",
   description: "Berburu monster untuk EXP, Gold, dan item drop",
   usage: ".berburu [zone <nama> | trophy]",

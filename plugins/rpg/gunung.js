@@ -635,7 +635,7 @@ async function handler(m, { sock, config }) {
 
 export { handler, ZONA, COUNTRIES, TOKO };
 export const pluginConfig = {
-  name: ["gunung", "pendakian", "gununglejenda"],
+  name: ["gunung", "pendakian", "gununglejenda", "petualanggunung"],
   type: "rpg",
   description: "Pendakian Gunung Legenda — 8 zona, cuaca dinamis, jalur risiko, oksigen, prestasi",
   usage: ".gunung | .gunung daki [aman|risiko] | .gunung toko [item] | .gunung istirahat | .gunung daily | .gunung top | .gunung prestasi",

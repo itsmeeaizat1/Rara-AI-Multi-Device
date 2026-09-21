@@ -326,7 +326,7 @@ function isYesterday(last, d) {
 const _setRandForTest = (fn) => { _rand = fn || Math.random; };
 export { handler, ZONA, TOKO, _setRandForTest };
 export default {
-  name: ["palung", "palungmisteri", "diving"],
+  name: ["palung", "palungmisteri", "diving", "petualangpalung"],
   category: "rpg",
   desc: "Petualangan bawah laut: makin dalam makin kaya & berbahaya",
   usage: ".palung | .palung selam [aman|risiko] | .palung toko | .palung prestasi",
