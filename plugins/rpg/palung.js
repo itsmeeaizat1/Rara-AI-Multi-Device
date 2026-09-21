@@ -3,7 +3,7 @@
 // Petualangan bawah laut: makin DALAM makin kaya & berbahaya. 4 zona kedalaman (Cahaya/Senja/Abisal/Hadal),
 // kelola OKSIGEN (regen 1/5 mnt, naik ke permukaan = regen penuh), jalur AMAN vs RISIKO (loot ×2 tapi 35% bahaya),
 // event acak (mutiara/arus/ubur/hiu/kapal karam/bioluminesensi-lore), toko (tabung/lampu/pelampung/sonar),
-// TITIK TERDALAM = boss "Sesuatu di Dasar Palung" + reward besar, .palung prestasi (rebirth +10% EXP, rank
+// TITIK TERDALAM = boss "Sesuatu di Dasar Palung" + reward besar, .petualangpalung prestasi (rebirth +10% EXP, rank
 // Common→Mitos). Daily + streak + starter pack + leaderboard. State persist db.data.palung tahan restart.
 // 🎬 ANIMASI KHAS: selam VERTIKAL — penyelam 🤿 turun kolom kedalaman, jejak gelembung 🫧, denyut sonar ◎.
 
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
   // ── mulai / status / bantuan ──
   let u = loadUser(m);
   if (!u && sub && !["", "mulai", "start", "status"].includes(sub)) {
-    return m.reply(box("❓", "❓ *BELUM TERDAFTAR!*", "Ketik .palung dulu untuk ekspedisi selam pertama."));
+    return m.reply(box("❓", "❓ *BELUM TERDAFTAR!*", "Ketik .petualangpalung dulu untuk ekspedisi selam pertama."));
   }
   if (!u) {
     u = newUser(m);
@@ -119,11 +119,11 @@ async function handler(m, { sock }) {
     addCash(m, 2000); u.pelampung += 1; saveDb();
     return m.reply(box("🌊", "🌊 *SELAMAT DATANG, PENJELAJAH PALUNG!*",
       "Laut menyimpan rahasia di kedalamannya:\n\n" +
-      "🤿 .palung selam aman — aman, loot stabil\n" +
-      "⚔️ .palung selam risiko — loot ×2, bisa bahaya\n" +
-      "⬆️ .palung naik — ke permukaan, oksigen penuh\n" +
-      "🛒 .palung toko — tabung/lampu/pelampung/sonar\n" +
-      "📅 .palung daily · 🏆 .palung top · ♻️ .palung prestasi\n\n" +
+      "🤿 .petualangpalung selam aman — aman, loot stabil\n" +
+      "⚔️ .petualangpalung selam risiko — loot ×2, bisa bahaya\n" +
+      "⬆️ .petualangpalung naik — ke permukaan, oksigen penuh\n" +
+      "🛒 .petualangpalung toko — tabung/lampu/pelampung/sonar\n" +
+      "📅 .petualangpalung daily · 🏆 .petualangpalung top · ♻️ .petualangpalung prestasi\n\n" +
       "🎁 Starter pack: +2.000 uang & 1 pelampung darurat!\n" +
       "Tujuanmu: titik terdalam Zona Hadal… dan Sesuatu di sana."));
   }
@@ -138,21 +138,21 @@ async function handler(m, { sock }) {
       `💰 Uang: ${getCash(m)}\n` +
       `🏆 Titik Terdalam: ${u.titik} · ♻️ Lencana: ${u.lencana} (+${(u.lencana || 0) * 10}% EXP)\n` +
       `🎖️ Rank: ${rankOf(u.lencana)}\n\n` +
-      `Ketik .palung selam untuk menyelam!`));
+      `Ketik .petualangpalung selam untuk menyelam!`));
   }
 
   // ── selam (aman/risiko) ──
   if (sub === "selam" || sub === "menyelam" || sub === "dive") {
     const jalur = (m.args?.[1] || "aman").toLowerCase();
-    if (jalur !== "aman" && jalur !== "risiko") return m.reply(box("🤔", "🤔 *JALUR TIDAK KENAL*", "Pilih: .palung selam aman atau .palung selam risiko"));
+    if (jalur !== "aman" && jalur !== "risiko") return m.reply(box("🤔", "🤔 *JALUR TIDAK KENAL*", "Pilih: .petualangpalung selam aman atau .petualangpalung selam risiko"));
     if (Date.now() - (u.lastSelamAt || 0) < SELAM_CD_MS) return m.reply(box("⏳", "⏳ *SABAR!*", "Ombak belum reda. Tunggu sebentar lalu selam lagi."));
     const z = ZONA[Math.min(ZONA.length, Math.max(0, u.zona - 1))];
-    if (z.butuhLampu && !u.lampu) return m.reply(box("🔦", "🔦 *TERLALU GELAP!*", `Zona ${z.nama} butuh Lampu Selam. Beli di .palung toko (500 uang).`));
+    if (z.butuhLampu && !u.lampu) return m.reply(box("🔦", "🔦 *TERLALU GELAP!*", `Zona ${z.nama} butuh Lampu Selam. Beli di .petualangpalung toko (500 uang).`));
     if (z.butuhTabung && (u.maxOksigen || O2_MAX_BASE) < O2_MAX_BASE + z.butuhTabung * 2) {
-      return m.reply(box("🫁", "🫁 *TEKANAN TERLALU BESAR!*", `Zona Hadal butuh tabung minimal +${z.butuhTabung} upgrade (${O2_MAX_BASE + z.butuhTabung * 2} oksigen). Beli di .palung toko.`));
+      return m.reply(box("🫁", "🫁 *TEKANAN TERLALU BESAR!*", `Zona Hadal butuh tabung minimal +${z.butuhTabung} upgrade (${O2_MAX_BASE + z.butuhTabung * 2} oksigen). Beli di .petualangpalung toko.`));
     }
     const cost = jalur === "risiko" ? 3 : 2;
-    if ((u.oksigen || 0) < cost) return m.reply(box("🫁", "🫁 *OKSIGEN HABIS!*", `Selam ${jalur} butuh ${cost} oksigen (punya ${u.oksigen}). Naik ke permukaan (.palung naik) atau istirahat!`));
+    if ((u.oksigen || 0) < cost) return m.reply(box("🫁", "🫁 *OKSIGEN HABIS!*", `Selam ${jalur} butuh ${cost} oksigen (punya ${u.oksigen}). Naik ke permukaan (.petualangpalung naik) atau istirahat!`));
 
     u.lastSelamAt = Date.now();
     u.oksigen -= cost;
@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
   // ── toko & beli ──
   if (sub === "toko") {
     return m.reply(box("🛒", "🛒 *TOKO PELABUHAN*", Object.entries(TOKO).map(([k, v]) =>
-      `${k} — ${v.nama} · ${v.harga(u)} uang · ${v.efek}`).join("\n") + "\n\nBeli: .palung beli <nama>"));
+      `${k} — ${v.nama} · ${v.harga(u)} uang · ${v.efek}`).join("\n") + "\n\nBeli: .petualangpalung beli <nama>"));
   }
   if (sub === "beli") {
     const item = (m.args?.[1] || "").toLowerCase();
@@ -264,7 +264,7 @@ async function handler(m, { sock }) {
     if (item === "lampu" && u.lampu) return m.reply(box("🔦", "🔦 *SUDAH PUNYA!*", "Lampu selammu sudah menyala terang."));
     if (item === "sonar" && u.sonar) return m.reply(box("📡", "📡 *SUDAH PUNYA!*", "Sonar Pro sudah terpasang di perahu."));
     if (item === "tabung" && (u.maxOksigen || O2_MAX_BASE) >= O2_MAX_BASE + 10) return m.reply(box("🫁", "🫁 *TABUNG MAKSIMAL!*", "Tabungmu sudah di kapasitas terbesar (" + u.maxOksigen + ")."));
-    if (!spendCash(m, harga)) return m.reply(box("💸", "💸 *KURANG UANG!*", `${def.nama} harganya ${harga} uang. Kamu punya ${getCash(m)}. Coba .palung daily dulu!`));
+    if (!spendCash(m, harga)) return m.reply(box("💸", "💸 *KURANG UANG!*", `${def.nama} harganya ${harga} uang. Kamu punya ${getCash(m)}. Coba .petualangpalung daily dulu!`));
     if (item === "tabung") { u.maxOksigen += 2; u.oksigen += 2; }
     if (item === "lampu") u.lampu = true;
     if (item === "pelampung") u.pelampung += 1;
@@ -314,7 +314,7 @@ async function handler(m, { sock }) {
 
   // ── bantuan ──
   return m.reply(box("🌊", "🌊 *PALUNG MISTERI*",
-    "🤿 .palung selam [aman|risiko] — menyelam\n⬆️ .palung naik — permukaan, oksigen penuh\n😴 .palung istirahat — +3 oksigen (" + ISTIRAHAT_GOLD + " uang)\n🛒 .palung toko / .palung beli <item>\n📅 .palung daily · 🏆 .palung top · ♻️ .palung prestasi\n📊 .palung status"));
+    "🤿 .petualangpalung selam [aman|risiko] — menyelam\n⬆️ .petualangpalung naik — permukaan, oksigen penuh\n😴 .petualangpalung istirahat — +3 oksigen (" + ISTIRAHAT_GOLD + " uang)\n🛒 .petualangpalung toko / .petualangpalung beli <item>\n📅 .petualangpalung daily · 🏆 .petualangpalung top · ♻️ .petualangpalung prestasi\n📊 .petualangpalung status"));
 }
 
 function isYesterday(last, d) {
@@ -326,9 +326,9 @@ function isYesterday(last, d) {
 const _setRandForTest = (fn) => { _rand = fn || Math.random; };
 export { handler, ZONA, TOKO, _setRandForTest };
 export default {
-  name: ["palung", "palungmisteri", "diving", "petualangpalung"],
+  name: ["petualangpalung", "palung", "palungmisteri", "diving"],
   category: "rpg",
   desc: "Petualangan bawah laut: makin dalam makin kaya & berbahaya",
-  usage: ".palung | .palung selam [aman|risiko] | .palung toko | .palung prestasi",
+  usage: ".petualangpalung | .petualangpalung selam [aman|risiko] | .petualangpalung toko | .petualangpalung prestasi",
   handler,
 };

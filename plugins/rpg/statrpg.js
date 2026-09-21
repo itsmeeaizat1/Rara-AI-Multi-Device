@@ -37,7 +37,7 @@ async function handler(m) {
         `  💵 Uang Rp ${(rpg.cash ?? 0).toLocaleString("id-ID")}   🪙 Gold ${rpg.gold ?? 0}   💎 Gems ${rpg.gems ?? 0}   🎟️ Tokens ${rpg.tokens ?? 0}`,
         "",
         psSection("tersedia"),
-        "  .adventure  .meditation  .leaderboard",
+        "  .petualangan  .meditation  .leaderboard",
       ].join("\n"),
       cta: gameCTA("adventure"),
     });

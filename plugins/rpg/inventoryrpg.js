@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     const items = Object.entries(inv).filter(([id, data]) => data.qty > 0);
 
     if (items.length === 0) {
-      return m.reply(novaRpgBox("inventory", `Tas RPG kamu kosong!\nMulai berburu (.berburu), menambang (.mining), atau memancing (.mancing) untuk mendapatkan item.`, "info"));
+      return m.reply(novaRpgBox("inventory", `Tas RPG kamu kosong!\nMulai berburu (.petualangberburu), menambang (.mining), atau memancing (.mancing) untuk mendapatkan item.`, "info"));
     }
 
     // Sort by rarity

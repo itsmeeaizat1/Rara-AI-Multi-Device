@@ -34,7 +34,7 @@ t("3e. downloader (.tiktok/.ytmp4/.alldl)", /\.tiktok/i.test(r) && /\.ytmp4/i.te
 t("3f. grup (.tagall/.kick/.welcome)", /\.tagall/i.test(r) && /\.kick/i.test(r) && /\.welcome/i.test(r));
 t("3g. anti (.antispam/.antisticker)", /\.antispam/i.test(r) && /\.antisticker/i.test(r));
 t("3h. switch (.switch auto)", /\.switch auto/i.test(r));
-t("3i. rpg (.dailyreward/.adventure/.berburu/.levelinfo)", /\.dailyreward/i.test(r) && /\.adventure/i.test(r) && /\.berburu/i.test(r) && /\.levelinfo/i.test(r));
+t("3i. rpg (.dailyreward/.petualangan/.petualangberburu/.levelinfo)", /\.dailyreward/i.test(r) && /\.petualangan/i.test(r) && /\.petualangberburu/i.test(r) && /\.levelinfo/i.test(r));
 t("3j. info (.rules/.owner/.donasi)", /\.rules/i.test(r) && /\.owner/i.test(r) && /\.donasi/i.test(r));
 
 // FIX OWNER 20 Sep: semua baris isi RATA KIRI (gak ada spasi di awal nomor/teks)
