@@ -12,7 +12,8 @@ import { fileURLToPath } from "node:url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { addCash, spendCash, getCash } from "../../src/lib/nova-rpg-service.js";
+import { addCash, spendCash, getCash, ensureRpg } from "../../src/lib/nova-rpg-service.js";
+import { animasiRunner } from "../../src/lib/nova-anim-runner.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,58 +23,7 @@ const __dirname = path.dirname(__filename);
 const STAMINA_MAX = process.env.GUNUNG_STAMINA_MAX !== undefined ? Number(process.env.GUNUNG_STAMINA_MAX) : 10;
 const STAMINA_REGEN_S = process.env.GUNUNG_REGEN_S !== undefined ? Number(process.env.GUNUNG_REGEN_S) : 300; // +1 / 5 mnt
 const DAKI_CD_MS = process.env.GUNUNG_DAKI_CD_MS !== undefined ? Number(process.env.GUNUNG_DAKI_CD_MS) : 2000;
-const ANIM_FRAME_MS = process.env.GUNUNG_ANIM_MS !== undefined ? Number(process.env.GUNUNG_ANIM_MS) : 500; // jeda tiap frame animasi edit
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-// 🎬 ANIMASI EDIT BERULANG — pesan dikirim lalu DIEDIT frame demi frame (senyap kalau edit gak didukung)
-async function animasiEdit(sock, m, frames) {
-  try {
-    if (!sock?.sendMessage || !m?.chat || !frames.length) return;
-    const sentMsg = await sock.sendMessage(m.chat, { text: frames[0] });
-    if (!sentMsg?.key) return; // channel/edit gak didukung → animasi dilewati, hasil tetap jalan
-    for (let i = 1; i < frames.length; i++) {
-      await sleep(ANIM_FRAME_MS);
-      await sock.sendMessage(m.chat, { text: frames[i], edit: sentMsg.key });
-    }
-    await sleep(ANIM_FRAME_MS);
-  } catch (e) {
-    console.error("[gunung] animasi edit gagal (dilewati):", e);
-  }
-}
-// 🎬 ANIMASI RUNNER — karakter melintasi lintasan tile, pemandangan di atas, monospace biar rata
-const BIOMA = {
-  indonesia: { tanah: "🟩", adegan: ["🌴", "🌲", "🗻", "🐒", "🌊"] },
-  jepang: { tanah: "🟩", adegan: ["🌸", "⛩️", "🗻", "🏮", "🎋"] },
-  jerman: { tanah: "🟫", adegan: ["🏰", "🌲", "🏘️", "🦌", "🌫️"] },
-  china: { tanah: "🟨", adegan: ["🏯", "🏔️", "🐉", "🏮", "🧧"] },
-  dunia: { tanah: "⬜", adegan: ["🏔️", "❄️", "🐧", "🦅", "🌁"] },
-};
-function animRunnerFrames(u, jalur, tujuan) {
-  const b = BIOMA[u.country] || BIOMA.indonesia;
-  const zona = u.zona || 1;
-  // SKALA: makin tinggi zona & puncak → lintasan makin panjang (maks 22 tile, 8 frame)
-  const len = Math.min(22, 10 + Math.floor(zona / 2) + Math.min(6, u.puncak || 0));
-  const nFrames = Math.min(8, Math.ceil(len / 2));
-  const rintangan = jalur === "risiko";
-  const char = zona >= 6 ? "🧗" : "🏃"; // zona tinggi: panjat, bukan lari
-  const frames = [];
-  for (let f = 0; f < nFrames; f++) {
-    const pos = Math.min(len - 1, f * 2);
-    // pemandangan baris atas: deterministik dari zona (bukan rnd — gak ganggu rolling)
-    const scene = " ".repeat(len + 2).split("");
-    [1, 4, 8, 12, 16, 19].forEach((s, i) => {
-      if (s < len && i <= zona + 1) scene[s] = b.adegan[(i + zona) % b.adegan.length];
-    });
-    if (zona >= 7) scene[len - 3] = "🏔️";
-    if (rintangan) scene[Math.floor(len / 2)] = "🌪️";
-    if (rintangan) scene[2] = "⚡";
-    // baris bawah: lintasan tile + karakter bergerak + tujuan di ujung
-    const tiles = Array.from({ length: len }, (_, i) => (rintangan && i % 7 === 3 ? "🪨" : b.tanah));
-    tiles[len - 1] = tujuan;
-    frames.push("```\n" + scene.join("").replace(/ +$/, "") + "\n" + tiles.slice(0, pos).join("") + char + tiles.slice(pos + 1).join("") + "\n```");
-  }
-  return frames;
-}
+const ANIM_FRAME_MS = process.env.GUNUNG_ANIM_MS !== undefined ? Number(process.env.GUNUNG_ANIM_MS) : undefined; // override jeda frame (default lib: 900ms→600ms)
 
 const ZONA = [
   { n: 1, nama: "🏕️ Basecamp", cost: 1, loot: 40 },
@@ -480,7 +430,7 @@ async function handler(m, { sock, config }) {
     }
 
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
-    await animasiEdit(sock, m, animRunnerFrames(u, jalur, "🚩"));
+    await animasiRunner(sock, m.chat, { level: (ensureRpg(m, m.pushName) || {}).level || 1, frameMs: ANIM_FRAME_MS, aksi: u.zona >= 6 ? "panjat" : null, hasil: `🏁 SAMPAI! Hasil daki zona ${u.zona + 1} menyusul…` });
 
     // ── rolling daki ──
     u.stamina -= cost;
@@ -636,7 +586,7 @@ async function handler(m, { sock, config }) {
     addCash(m, 50);
     saveDb();
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
-    await animasiEdit(sock, m, animRunnerFrames(u, "aman", "🏕️"));
+    await animasiRunner(sock, m.chat, { level: (ensureRpg(m, m.pushName) || {}).level || 1, frameMs: ANIM_FRAME_MS, hasil: "🏕️ BASECAMP TIBA! Ekspedisi dimulai…" });
     return m.reply(novaGameBox({
       title: "gunung", icon: "🏔️",
       flavor: "🏔️ *SELAMAT DATANG DI PENDAKIAN GUNUNG LEGENDA!*",

@@ -130,7 +130,7 @@ G().pityCount = 0;
 G().lastRollAt = Date.now() - 4000;
 setCash(10000); // saldo sehat — supaya refund keuji beneran (bukan ditolak saldo)
 const cashBefore = getCash({ sender: SENDER });
-failReplyOnIndex = 2; // reply ke-2 (pesan HASIL) gagal, animasi tetap terkirim
+failReplyOnIndex = 1; // reply HASIL gagal (animasi runner kini via sock.sendMessage, bukan m.reply — index geser)
 await run({});
 t("8a. kirim gagal → REFUND 2.000 (saldo kembali)", getCash({ sender: SENDER }) === cashBefore - 2000 + 2000, `${cashBefore} → ${getCash({ sender: SENDER })}`);
 t("8b. kirim gagal → kuota TIDAK tercatat", G().jumlahHariIni === 3);
