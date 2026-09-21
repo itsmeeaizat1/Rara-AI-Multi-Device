@@ -255,7 +255,7 @@ U().gunung = "Gunung Fuji (3.776 mdpl)"; delete U().country; U().puncak = 0;
 await run({});
 t("15l. migrasi Fuji 0 puncak → country indonesia (tetap Fuji)", U().country === "indonesia" && U().gunung === "Gunung Fuji (3.776 mdpl)");
 
-console.log("— section 16: ANIMASI EDIT BERULANG —");
+console.log("— section 16: ANIMASI RUNNER (lib nova-anim-runner) —");
 const animFrames = [];
 const animSock = { sendMessage: async (jid, content) => {
   if (content?.edit) { animFrames.push({ edit: true, text: content.text }); return { key: { id: "anim1" } }; }
@@ -264,20 +264,36 @@ const animSock = { sendMessage: async (jid, content) => {
 U().zona = 1; U().stamina = 10; U().oksigen = 2; U().puncak = 13; U().country = "dunia"; U().guaPending = false;
 plug._setRandForTest(() => 0.01);
 await handler(mkMsg({ args: ["daki", "aman"] }), { sock: animSock, config: {} });
-t("16a. daki: runner DIKIRIM lalu DIEDIT berulang (zona 1: 8 frame = 7 edit)", animFrames.length === 7, animFrames.length);
+// level rpg default 1 → 12 tile, 1 bioma, maju 2 tile/frame: 7 frame = 6 edit
+t("16a. daki: runner DIKIRIM lalu DIEDIT berulang (12 tile lvl 1 = 6 edit)", animFrames.length === 6, animFrames.length);
 t("16b. semua frame pakai key edit yang sama (edit: true)", animFrames.length > 0 && animFrames.every((f) => f.edit === true));
-t("16c. frame runner: 🏃 + tile bioma (⬜ dunia) + code fence", animFrames.some((f) => /🏃/.test(f.text) && /⬜/.test(f.text) && f.text.includes("```")));
-t("16c2. karakter BERGERAK tiap frame (posisi beda)", new Set(animFrames.map((f) => f.text.split("\n")[2].indexOf("🏃"))).size > 1);
-t("16c3. tujuan bendera 🚩 di ujung lintasan", animFrames.every((f) => f.text.includes("🚩")));
-// jalur risiko punya frame sendiri
-animFrames.length = 0;
-U().zona = 3; U().stamina = 10;
-await handler(mkMsg({ args: ["daki", "risiko"] }), { sock: animSock, config: {} });
-t("16d. jalur risiko: ada rintangan 🪨/🌪️ di lintasan", animFrames.some((f) => /🪨|🌪️/.test(f.text)), animFrames.map((f) => f.text).join("|"));
-// edit gak didukung (sendMessage tanpa key) → animasi dilewati, hasil tetap dikirim
+t("16c. frame: code fence + 2 baris (pemandangan + lintasan)", animFrames.every((f) => f.text.includes("```") && f.text.split("\n").length >= 4));
+t("16c2. karakter BERGERAK (jejak ⬜ makin panjang)", (() => {
+  const trail = animFrames.map((f) => f.text.split("\n")[2].split("⬆️")[0].split("⬜").length - 1);
+  return trail.every((x, i) => i === 0 || x >= trail[i - 1]) && new Set(trail).size > 1;
+})(), animFrames.map((f) => f.text.split("\n")[2]).join("|"));
+t("16c3. frame finis: 🏁 + baris hasil", animFrames.length > 0 && /🏁/.test(animFrames[animFrames.length - 1].text) && /menyusul/.test(animFrames[animFrames.length - 1].text));
+// tanpa key edit → animasi dilewati senyap, daki tetap jalan
 let animTanpaKey = 0;
 await handler(mkMsg({ args: ["daki", "aman"] }), { sock: { sendMessage: async () => { animTanpaKey++; return true; } }, config: {} });
-t("16e. tanpa key edit → animasi dilewati senyap, daki tetap jalan", animTanpaKey === 1 && U().zona >= 3, `calls=${animTanpaKey} zona=${U().zona}`);
+t("16e. tanpa key edit → animasi dilewati senyap, daki tetap jalan", animTanpaKey === 1 && U().zona >= 2, `calls=${animTanpaKey} zona=${U().zona}`);
+// tes langsung lib: bioma hutan→salju forced + level tinggi (rintangan + peti + sprint)
+const runnerSock = { sendMessage: async (jid, content) => {
+  if (content?.edit) { animFrames.push({ edit: true, text: content.text }); return { key: { id: "r" } }; }
+  return { key: { id: "r" } };
+} };
+animFrames.length = 0;
+const { animasiRunner } = await import(R + "/src/lib/nova-anim-runner.js");
+await animasiRunner(runnerSock, "t@s.whatsapp.net", { level: 30, bioma: ["padang", "salju", "gurun"], hasil: "🎉 SAMPAI! +450 EXP +1.200 uang", frameMs: 0 });
+t("16f. lvl 30: 20 tile 3 bioma, frame lebih banyak (rintangan ⬆️ + peti 💎)", animFrames.length >= 10, animFrames.length);
+t("16g. lvl 30: ada frame lompat ⬆️ atau peti 💎", animFrames.some((f) => /⬆️|💎/.test(f.text)));
+t("16h. lvl 30: bioma berganti di tengah lintasan (🟩 padang → 🟫 gurun)", (() => {
+  const track = animFrames.map((f) => f.text.split("\n")[2]);
+  return track.some((x) => x.includes("🟩")) && track.some((x) => x.includes("🟫"));
+})(), "bioma");
+animFrames.length = 0;
+await animasiRunner(runnerSock, "t@s.whatsapp.net", { level: 60, hasil: "🏁", frameMs: 0 });
+t("16i. lvl 60: bioma langka (🟥 lava / 🟪 langit) muncul", animFrames.some((f) => /🟥|🟪/.test(f.text)), animFrames[0]?.text.split("\n")[2]);
 
 fs.rmSync(dbDir, { recursive: true, force: true });
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
