@@ -22,6 +22,26 @@ const __dirname = path.dirname(__filename);
 const STAMINA_MAX = process.env.GUNUNG_STAMINA_MAX !== undefined ? Number(process.env.GUNUNG_STAMINA_MAX) : 10;
 const STAMINA_REGEN_S = process.env.GUNUNG_REGEN_S !== undefined ? Number(process.env.GUNUNG_REGEN_S) : 300; // +1 / 5 mnt
 const DAKI_CD_MS = process.env.GUNUNG_DAKI_CD_MS !== undefined ? Number(process.env.GUNUNG_DAKI_CD_MS) : 2000;
+const ANIM_FRAME_MS = process.env.GUNUNG_ANIM_MS !== undefined ? Number(process.env.GUNUNG_ANIM_MS) : 700; // jeda tiap frame animasi edit
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// 🎬 ANIMASI EDIT BERULANG — pesan dikirim lalu DIEDIT frame demi frame (senyap kalau edit gak didukung)
+async function animasiEdit(sock, m, frames) {
+  try {
+    if (!sock?.sendMessage || !m?.chat || !frames.length) return;
+    const sentMsg = await sock.sendMessage(m.chat, { text: frames[0] });
+    if (!sentMsg?.key) return; // channel/edit gak didukung → animasi dilewati, hasil tetap jalan
+    for (let i = 1; i < frames.length; i++) {
+      await sleep(ANIM_FRAME_MS);
+      await sock.sendMessage(m.chat, { text: frames[i], edit: sentMsg.key });
+    }
+    await sleep(ANIM_FRAME_MS);
+  } catch (e) {
+    console.error("[gunung] animasi edit gagal (dilewati):", e);
+  }
+}
+const ANIM_START = ["🗺️ membuka peta ekspedisi…", "🎒 mengecek perbekalan…", "🥾 mengikat tali sepatu…", "⛰️ menuju basecamp…"];
+const ANIM_DAKI = ["🥾 menapak jalur…", "🥾🥾 melewati kabut…", "🥾🥾🥾 hampir sampai…"];
 
 const ZONA = [
   { n: 1, nama: "🏕️ Basecamp", cost: 1, loot: 40 },
@@ -428,6 +448,9 @@ async function handler(m, { sock, config }) {
     }
 
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
+    await animasiEdit(sock, m, jalur === "risiko"
+      ? ["🥾 jalur risiko dipilih…", "⚡ mempercepat langkah…", "🌪️ jalur menunjukkan batu longgar…", "🥾🥾🥾 nabung nyawa, panjat!"]
+      : ["🥾 menapak jalur…", "🥾🥾 melewati kabut…", "🥾🥾🥾 hampir sampai…"]);
 
     // ── rolling daki ──
     u.stamina -= cost;
@@ -583,6 +606,7 @@ async function handler(m, { sock, config }) {
     addCash(m, 50);
     saveDb();
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
+    await animasiEdit(sock, m, ANIM_START);
     return m.reply(novaGameBox({
       title: "gunung", icon: "🏔️",
       flavor: "🏔️ *SELAMAT DATANG DI PENDAKIAN GUNUNG LEGENDA!*",
