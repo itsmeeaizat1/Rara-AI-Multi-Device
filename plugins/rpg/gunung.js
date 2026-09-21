@@ -3,7 +3,7 @@
 // Solo progres persist + elemen grup (buff Rombongan & leaderboard). 8 zona per gunung, tema gunung ACAK per run:
 // kelola STAMINA (regen 1/5 mnt) & OKSIGEN (zona 6+ wajib), cuaca berubah per daki (cerah/mendung/hujan/badai),
 // pilih jalur AMAN vs RISIKO (loot ×2 tapi bisa longsor turun zona), event acak (harta/NPC/serangan/kristal),
-// toko (oksigen/jaket/tenda/pemanas), PUNCAK = reward besar + .gunung prestasi (rebirth +10% EXP permanen,
+// toko (oksigen/jaket/tenda/pemanas), PUNCAK = reward besar + .petualanggunung prestasi (rebirth +10% EXP permanen,
 // gunung baru). Daily + streak. State persist db.data.gunung tahan restart.
 
 import fs from "node:fs";
@@ -180,7 +180,7 @@ async function handler(m, { sock, config }) {
 
   // ── daily ──
   if (sub === "daily") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🏔️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung untuk mulai ekspedisi pertama." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🏔️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .petualanggunung untuk mulai ekspedisi pertama." }));
     const now = getLocalDateObject ? getLocalDateObject() : new Date();
     const today = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
     if (u.lastDaily === today) return m.reply(novaGameBox({ title: "gunung", icon: "📅", flavor: "📅 *SUDAH DIKLAIM!*", body: "Bonus pendaki hari ini sudah diambil. Kembali besok!" }));
@@ -198,7 +198,7 @@ async function handler(m, { sock, config }) {
   // ── top (leaderboard solo+global) ──
   if (sub === "top" || sub === "rank") {
     const db = getDatabase();
-    const all = Object.entries(db.data?.gunung?.users || {})
+    const all = Object.entries(db.data?.petualanggunung?.users || {})
       .map(([jid, x]) => ({ jid, puncak: x.puncak || 0, prestasi: x.prestasi || 0, namaGunung: x.gunung }))
       .filter((x) => x.puncak > 0)
       .sort((a, b) => b.puncak - a.puncak || b.prestasi - a.prestasi)
@@ -211,7 +211,7 @@ async function handler(m, { sock, config }) {
 
   // ── prestasi (rebirth) ──
   if (sub === "prestasi" || sub === "rebirth") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "♻️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "♻️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .petualanggunung dulu." }));
     if (u.zona < 8) return m.reply(novaGameBox({ title: "gunung", icon: "🔒", flavor: "🔒 *PUNCAK DULU!*", body: `Prestasi hanya bisa diambil setelah menaklukkan ${u.gunung}. Kamu sedang di zona ${u.zona}/8.` }));
     u.prestasi += 1;
     u.puncak += 0; // puncak sudah dihitung saat summit
@@ -224,14 +224,14 @@ async function handler(m, { sock, config }) {
     u.mulaiPada = Date.now();
     saveDb();
     const neg = negaraById(u.country || "indonesia");
-    return m.reply(novaGameBox({ title: "gunung", icon: "♻️", flavor: "♻️ *PRESTASI BARU!*", body: `${neg.emoji} Gunung berikutnya dari ${neg.nama}: ${u.gunung}!\nSemua EXP pendakian +${u.prestasi * 10}% permanen.\n🧥 Jaket/tenda/pemanas reset (beli lagi di toko).\n\nKetik .gunung daki untuk mulai!` }));
+    return m.reply(novaGameBox({ title: "gunung", icon: "♻️", flavor: "♻️ *PRESTASI BARU!*", body: `${neg.emoji} Gunung berikutnya dari ${neg.nama}: ${u.gunung}!\nSemua EXP pendakian +${u.prestasi * 10}% permanen.\n🧥 Jaket/tenda/pemanas reset (beli lagi di toko).\n\nKetik .petualanggunung daki untuk mulai!` }));
   }
 
   // ── istirahat (beli stamina) ──
   if (sub === "istirahat") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🏕️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
-    if ((u.stamina || 0) >= STAMINA_MAX) return m.reply(novaGameBox({ title: "gunung", icon: "💪", flavor: "💪 *STAMINA PENUH!*", body: `Stamina kamu ${u.stamina}/${STAMINA_MAX} — gak perlu istirahat, langsung .gunung daki!` }));
-    if (!spendCash(m, ISTIRAHAT_GOLD)) return m.reply(novaGameBox({ title: "gunung", icon: "💸", flavor: "💸 *KURANG GOLD!*", body: `Istirahat di basecamp butuh ${ISTIRAHAT_GOLD} gold. Kamu punya ${getCash(m)}. Coba .gunung daily dulu!` }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🏕️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .petualanggunung dulu." }));
+    if ((u.stamina || 0) >= STAMINA_MAX) return m.reply(novaGameBox({ title: "gunung", icon: "💪", flavor: "💪 *STAMINA PENUH!*", body: `Stamina kamu ${u.stamina}/${STAMINA_MAX} — gak perlu istirahat, langsung .petualanggunung daki!` }));
+    if (!spendCash(m, ISTIRAHAT_GOLD)) return m.reply(novaGameBox({ title: "gunung", icon: "💸", flavor: "💸 *KURANG GOLD!*", body: `Istirahat di basecamp butuh ${ISTIRAHAT_GOLD} gold. Kamu punya ${getCash(m)}. Coba .petualanggunung daily dulu!` }));
     regenStamina(u);
     u.stamina = Math.min(STAMINA_MAX, (u.stamina || 0) + 3);
     u.staminaAt = Math.floor(Date.now() / 1000);
@@ -241,7 +241,7 @@ async function handler(m, { sock, config }) {
 
   // ── toko ──
   if (sub === "toko") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🛒", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🛒", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .petualanggunung dulu." }));
     if (!rest) {
       return m.reply(novaGameBox({
         title: "gunung", icon: "🛒",
@@ -249,12 +249,12 @@ async function handler(m, { sock, config }) {
         body: [
           `💵 Gold kamu: ${getCash(m)}`,
           "",
-          ...Object.entries(TOKO).map(([k, it]) => `${it.nama} — ${it.harga} gold\n   ${it.desc}\n   Beli: .gunung toko ${k}`),
+          ...Object.entries(TOKO).map(([k, it]) => `${it.nama} — ${it.harga} gold\n   ${it.desc}\n   Beli: .petualanggunung toko ${k}`),
         ].join("\n"),
       }));
     }
     const item = TOKO[rest];
-    if (!item) return m.reply(novaGameBox({ title: "gunung", icon: "🛒", flavor: "❓ *BARANG GAK ADA!*", body: "Stok toko: oksigen, jaket, tenda, pemanas. Lihat .gunung toko" }));
+    if (!item) return m.reply(novaGameBox({ title: "gunung", icon: "🛒", flavor: "❓ *BARANG GAK ADA!*", body: "Stok toko: oksigen, jaket, tenda, pemanas. Lihat .petualanggunung toko" }));
     if ((rest === "jaket" && u.jaket) || (rest === "pemanas" && u.pemanas)) return m.reply(novaGameBox({ title: "gunung", icon: "🎒", flavor: "🎒 *SUDAH DIPUNYAI!*", body: `Kamu sudah membawa ${item.nama}.` }));
     if (rest === "portir" && u.portir) return m.reply(novaGameBox({ title: "gunung", icon: "🧑‍🌾", flavor: "🧑‍🌾 *PORTIR SUDAH BERSAMA KAMU!*", body: u.portirUsed ? "Kenanga sudah pulang setelah menyelamatkanmu. Rekrut lagi di gunung berikutnya." : "Kenanga masih setia di belakang kamu — 1x penyelamatan siap pakai." }));
     if (!spendCash(m, item.harga)) return m.reply(novaGameBox({ title: "gunung", icon: "💸", flavor: "💸 *GOLD KURANG!*", body: `${item.nama} seharga ${item.harga} gold, kamu punya ${getCash(m)}.` }));
@@ -270,7 +270,7 @@ async function handler(m, { sock, config }) {
 
   // ── 🗺️ PETA DUNIA — open world bertingkat ──
   if (sub === "dunia" || sub === "peta" || sub === "negara" && (m.args?.[1] || "").toLowerCase() === "list") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .petualanggunung dulu." }));
     const puncak = u.puncak || 0;
     const body = COUNTRIES.map((neg) => {
       const buka = negaraTerbuka(neg.id, puncak);
@@ -280,15 +280,15 @@ async function handler(m, { sock, config }) {
         `${neg.emoji} ${neg.nama}${aktif ? " ← sedang aktif" : ""}`,
         buka ? `   ✅ TERBUKA — ${neg.pool.length} gunung (${contoh}…)` : `   🔒 Butuh ${neg.butuh} puncak — kamu baru ${puncak}`,
       ].join("\n");
-    }).join("\n\n") + `\n\n🗺️ Ganti negara: .gunung negara <nama> (berlaku untuk gunung BERIKUTNYA)\n🏆 Puncak kamu: ${puncak} — kumpulkan puncak untuk membuka negara baru!`;
+    }).join("\n\n") + `\n\n🗺️ Ganti negara: .petualanggunung negara <nama> (berlaku untuk gunung BERIKUTNYA)\n🏆 Puncak kamu: ${puncak} — kumpulkan puncak untuk membuka negara baru!`;
     return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *PETA DUNIA PENDAKIAN*", body }));
   }
 
   // ── ganti negara aktif ──
   if (sub === "negara") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .petualanggunung dulu." }));
     const q = (m.args?.[1] || "").toLowerCase();
-    if (!q) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *NEGARA MANA?*", body: "Pilih: indonesia · jepang · jerman · china · dunia\nLihat peta: .gunung dunia" }));
+    if (!q) return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *NEGARA MANA?*", body: "Pilih: indonesia · jepang · jerman · china · dunia\nLihat peta: .petualanggunung dunia" }));
     const alias = {
       id: "indonesia", indonesia: "indonesia", indo: "indonesia",
       jp: "jepang", jepang: "jepang", japan: "jepang",
@@ -305,12 +305,12 @@ async function handler(m, { sock, config }) {
     const lama = negaraById(u.country || "indonesia").nama;
     u.country = negId;
     saveDb();
-    return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *NEGARA DIGANTI!*", body: `Negara aktif: ${neg.emoji} ${neg.nama} (sebelumnya ${lama}).\nPuncak berikutnya di ${neg.nama} akan diberikan SETELAH kamu menaklukkan gunung sekarang lewat .gunung prestasi.` }));
+    return m.reply(novaGameBox({ title: "gunung", icon: "🗺️", flavor: "🗺️ *NEGARA DIGANTI!*", body: `Negara aktif: ${neg.emoji} ${neg.nama} (sebelumnya ${lama}).\nPuncak berikutnya di ${neg.nama} akan diberikan SETELAH kamu menaklukkan gunung sekarang lewat .petualanggunung prestasi.` }));
   }
 
   // ── 🕳️ GUA SAMPING — masuk / lewat ──
   if (sub === "gua") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "📂", flavor: "📂 *BELUM ADA EKSPEDISI!*", body: "Ketik .gunung dulu." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "📂", flavor: "📂 *BELUM ADA EKSPEDISI!*", body: "Ketik .petualanggunung dulu." }));
     const pilihan = (m.args?.[1] || "").toLowerCase();
     if (!u.guaPending) return m.reply(novaGameBox({ title: "gunung", icon: "🕳️", flavor: "🕳️ *GAK ADA GUA!*", body: "Belum ada gua samping yang menunggu. Muncul kadang-kadang di zona 3-5." }));
     if (pilihan === "lewat") {
@@ -318,7 +318,7 @@ async function handler(m, { sock, config }) {
       saveDb();
       return m.reply(novaGameBox({ title: "gunung", icon: "🛤️", flavor: "🛤️ *MELEWATI GUA…*", body: "Kamu menutup senter dan melanjutkan jalur utama. Kadang bijaksana itu membosankan — tapi hidup." }));
     }
-    if (pilihan !== "masuk") return m.reply(novaGameBox({ title: "gunung", icon: "🕳️", flavor: "🕳️ *PILIH!*", body: ".gunung gua masuk — 60% harta besar (loot zona ×3), 40% jebakan (stamina -2)\n.gunung gua lewat — lanjut jalan biasa" }));
+    if (pilihan !== "masuk") return m.reply(novaGameBox({ title: "gunung", icon: "🕳️", flavor: "🕳️ *PILIH!*", body: ".petualanggunung gua masuk — 60% harta besar (loot zona ×3), 40% jebakan (stamina -2)\n.gunung gua lewat — lanjut jalan biasa" }));
     u.guaPending = false;
     const r = rnd();
     if (r < 0.4) {
@@ -367,13 +367,13 @@ async function handler(m, { sock, config }) {
 
   // ── ⚔️ LOMBA PENDAKI — duel @user (taruhan 100 gold) ──
   if (sub === "lomba") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "⚔️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .gunung dulu." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "⚔️", flavor: "❓ *BELUM TERDAFTAR!*", body: "Ketik .petualanggunung dulu." }));
     const target = m.mentionedJid?.[0] || (rest ? rest.replace(/[^0-9]/g, "") + "@s.whatsapp.net" : "");
-    if (!target) return m.reply(novaGameBox({ title: "gunung", icon: "⚔️", flavor: "⚔️ *TANTANG SIAPA?*", body: `Mention lawanmu: .gunung lomba @user (taruhan ${LOMBA_STAKE} gold tiap pendaki, pemenang bawa pulang semua)` }));
+    if (!target) return m.reply(novaGameBox({ title: "gunung", icon: "⚔️", flavor: "⚔️ *TANTANG SIAPA?*", body: `Mention lawanmu: .petualanggunung lomba @user (taruhan ${LOMBA_STAKE} gold tiap pendaki, pemenang bawa pulang semua)` }));
     if (target === m.sender) return m.reply(novaGameBox({ title: "gunung", icon: "🪞", flavor: "🪞 *LAWAN DIRI SENDIRI?*", body: "Pendaki sejati gak melawan bayangannya sendiri. Mention orang lain!" }));
     const db = getDatabase();
     const tUser = db.data.gunung.users[target];
-    if (!tUser) return m.reply(novaGameBox({ title: "gunung", icon: "❓", flavor: "❓ *LAWAN BELUM PENDAKI!*", body: "Dia belum memulai ekspedisi apa pun. Suruh dia ketik .gunung dulu!" }));
+    if (!tUser) return m.reply(novaGameBox({ title: "gunung", icon: "❓", flavor: "❓ *LAWAN BELUM PENDAKI!*", body: "Dia belum memulai ekspedisi apa pun. Suruh dia ketik .petualanggunung dulu!" }));
     const nowS = Date.now();
     if (nowS - (u.lastLombaAt || 0) < 60000) return m.reply(novaGameBox({ title: "gunung", icon: "❄️", flavor: "❄️ *TARIK NAPAS DULU!*", body: "Duel terlalu sering bikin malu. Tunggu 1 menit antar lomba." }));
     if (getCash(m) < LOMBA_STAKE || getCash({ sender: target }) < LOMBA_STAKE) {
@@ -405,10 +405,10 @@ async function handler(m, { sock, config }) {
 
   // ═══ DAKI — inti game ═══
   if (sub === "daki") {
-    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "📂", flavor: "📂 *BELUM ADA EKSPEDISI!*", body: "Ketik .gunung untuk mulai." }));
+    if (!u) return m.reply(novaGameBox({ title: "gunung", icon: "📂", flavor: "📂 *BELUM ADA EKSPEDISI!*", body: "Ketik .petualanggunung untuk mulai." }));
     const jalur = (m.args?.[1] || "").toLowerCase();
     if (jalur && jalur !== "aman" && jalur !== "risiko") {
-      return m.reply(novaGameBox({ title: "gunung", icon: "🧭", flavor: "🧭 *PILIH JALUR!*", body: "Jalur sah:\n🛤️ .gunung daki aman — stamina lebih hemat, loot biasa\n⚡ .gunung daki risiko — loot ×2, tapi bisa longsor turun zona" }));
+      return m.reply(novaGameBox({ title: "gunung", icon: "🧭", flavor: "🧭 *PILIH JALUR!*", body: "Jalur sah:\n🛤️ .petualanggunung daki aman — stamina lebih hemat, loot biasa\n⚡ .petualanggunung daki risiko — loot ×2, tapi bisa longsor turun zona" }));
     }
     if (jalur === "risiko" && u.zona === 1) {
       return m.reply(novaGameBox({ title: "gunung", icon: "🧭", flavor: "🧭 *ZONA 1 GAK ADA JALUR RISIKO!*", body: "Basecamp masih aman kok. Naik dulu ke zona 2." }));
@@ -423,10 +423,10 @@ async function handler(m, { sock, config }) {
     let cost = z.cost + ekCuaca.stamina;
     if (u.jaket) cost = Math.max(1, cost - 1);
     if ((u.stamina || 0) < cost) {
-      return m.reply(novaGameBox({ title: "gunung", icon: "⚡", flavor: "⚡ *STAMINA HABIS!*", body: `Butuh ${cost} stamina untuk daki ke ${zDef(u.zona + 1).nama} (cuaca ${CUACA_ICON[cuaca]} ${cuaca}).\nStamina kamu: ${u.stamina}/${STAMINA_MAX} — regen +1 tiap 5 menit.\n\n🏕️ .gunung istirahat (+3 stamina, ${ISTIRAHAT_GOLD} gold) kalau gak mau nunggu.` }));
+      return m.reply(novaGameBox({ title: "gunung", icon: "⚡", flavor: "⚡ *STAMINA HABIS!*", body: `Butuh ${cost} stamina untuk daki ke ${zDef(u.zona + 1).nama} (cuaca ${CUACA_ICON[cuaca]} ${cuaca}).\nStamina kamu: ${u.stamina}/${STAMINA_MAX} — regen +1 tiap 5 menit.\n\n🏕️ .petualanggunung istirahat (+3 stamina, ${ISTIRAHAT_GOLD} gold) kalau gak mau nunggu.` }));
     }
     if (z.oksigen && (u.oksigen || 0) < 1) {
-      return m.reply(novaGameBox({ title: "gunung", icon: "🫁", flavor: "🫁 *OKSIGEN HABIS!*", body: `Zona ${u.zona} ke atas tipis udaranya — wajib bawa botol oksigen!\nBeli di .gunung toko oksigen (100 gold) atau klaim .gunung daily (+1 gratis).` }));
+      return m.reply(novaGameBox({ title: "gunung", icon: "🫁", flavor: "🫁 *OKSIGEN HABIS!*", body: `Zona ${u.zona} ke atas tipis udaranya — wajib bawa botol oksigen!\nBeli di .petualanggunung toko oksigen (100 gold) atau klaim .petualanggunung daily (+1 gratis).` }));
     }
 
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
@@ -547,7 +547,7 @@ async function handler(m, { sock, config }) {
           `🎁 Hadiah puncak: 🪙 ${summitGold} gold + EXP besar`,
           lvlUp ? "🎊 LEVEL UP!" : "",
           "",
-          "♻️ Ketik .gunung prestasi — EXP +10% permanen & gunung baru menanti!",
+          "♻️ Ketik .petualanggunung prestasi — EXP +10% permanen & gunung baru menanti!",
         ].filter(Boolean).join("\n"),
       }));
     }
@@ -569,13 +569,13 @@ async function handler(m, { sock, config }) {
         ...(gua ? [
           "",
           "🕳️ GUA SAMPING RAHASIA terlihat di sisi jalur!",
-          "   Masuk? .gunung gua masuk (harta besar / jebakan)",
-          "   Lewat? .gunung gua lewat (aman)",
+          "   Masuk? .petualanggunung gua masuk (harta besar / jebakan)",
+          "   Lewat? .petualanggunung gua lewat (aman)",
         ] : []),
-        ...(u.guaPending && !gua ? ["🕳️ Gua samping tadi masih menunggu: .gunung gua masuk / .gunung gua lewat"] : []),
+        ...(u.guaPending && !gua ? ["🕳️ Gua samping tadi masih menunggu: .petualanggunung gua masuk / .petualanggunung gua lewat"] : []),
         "",
         `Jalur berikutnya: ${zDef(u.zona + 1).nama} (⚡ ${zDef(u.zona + 1).cost + ekCuaca.stamina}${zDef(u.zona + 1).oksigen ? " · 🫁 wajib oksigen" : ""})`,
-        "Ketik .gunung daki aman / .gunung daki risiko",
+        "Ketik .petualanggunung daki aman / .petualanggunung daki risiko",
       ].filter(Boolean).join("\n"),
     }));
   }
@@ -595,19 +595,19 @@ async function handler(m, { sock, config }) {
         `🗺️ OPEN WORLD: kumpulkan puncak untuk membuka 🇯🇵 Jepang (3), 🇩🇪 Jerman (6), 🇨🇳 China (9), 🌍 Dunia 7 Puncak (12)!`,
         "",
         "🎯 Cara main:",
-        "1. .gunung daki aman — naik zona (stamina hemat, loot biasa)",
-        "2. .gunung daki risiko — loot ×2, tapi 35% longsor turun zona!",
+        "1. .petualanggunung daki aman — naik zona (stamina hemat, loot biasa)",
+        "2. .petualanggunung daki risiko — loot ×2, tapi 35% longsor turun zona!",
         "3. Kelola ⚡ stamina (regen 1/5 mnt) & 🫁 oksigen (wajib zona 6+)",
         "4. ☁️ Cuaca berubah tiap daki — badai bahaya, hujan loot +20%",
-        "5. Zona 8 = PUNCAK → hadiah besar + .gunung prestasi (+10% EXP permanen)",
+        "5. Zona 8 = PUNCAK → hadiah besar + .petualanggunung prestasi (+10% EXP permanen)",
         "",
-        "🛒 .gunung toko — oksigen/jaket/tenda/pemanas",
-        "🏕️ .gunung istirahat (+3 stamina) · 📅 .gunung daily · 🏆 .gunung top",
+        "🛒 .petualanggunung toko — oksigen/jaket/tenda/pemanas",
+        "🏕️ .petualanggunung istirahat (+3 stamina) · 📅 .petualanggunung daily · 🏆 .petualanggunung top",
         "🤝 Main di grup: pendaki lain yang daki di grup sama = buff Rombongan +20%!",
         "",
         `🎁 STARTER PACK: 50 gold + 1 botol oksigen`,
         "",
-        `Sekarang kamu di ${zDef(u.zona).nama}. Ketik .gunung daki aman untuk langkah pertama!`,
+        `Sekarang kamu di ${zDef(u.zona).nama}. Ketik .petualanggunung daki aman untuk langkah pertama!`,
       ].join("\n"),
     }));
   }
@@ -621,24 +621,24 @@ async function handler(m, { sock, config }) {
       `⚡ Stamina: ${u.stamina}/${STAMINA_MAX} (+1 tiap 5 mnt)`,
       `🫁 Oksigen: ${u.oksigen} botol · 💎 Kristal: ${u.kristal}`,
       `🎒 Jaket: ${u.jaket ? "✅" : "❌"} · ⛺ Tenda checkpoint: ${u.tenda || "—"} · 🔥 Pemanas: ${u.pemanas ? "✅" : "❌"}`,
-      `♻️ Prestasi: ${u.prestasi} (+${u.prestasi * 10}% EXP) · 🗺️ .gunung dunia (peta negara)`,
+      `♻️ Prestasi: ${u.prestasi} (+${u.prestasi * 10}% EXP) · 🗺️ .petualanggunung dunia (peta negara)`,
       "",
       ...(u.zona >= 8
-        ? ["🏔️ Kamu berdiri di PUNCAK! Ketik .gunung prestasi untuk gunung baru (+10% EXP permanen)"]
+        ? ["🏔️ Kamu berdiri di PUNCAK! Ketik .petualanggunung prestasi untuk gunung baru (+10% EXP permanen)"]
         : [`Jalur berikutnya: ${zDef(u.zona + 1).nama} — ⚡ ${zDef(u.zona + 1).cost}${zDef(u.zona + 1).oksigen ? " · 🫁 wajib oksigen" : ""}`]),
       "",
-      "⚡ .gunung daki risiko (loot ×2) / 🛤️ .gunung daki aman",
-      "🛒 .gunung toko · 🏕️ .gunung istirahat · 📅 .gunung daily",
+      "⚡ .petualanggunung daki risiko (loot ×2) / 🛤️ .petualanggunung daki aman",
+      "🛒 .petualanggunung toko · 🏕️ .petualanggunung istirahat · 📅 .petualanggunung daily",
     ].join("\n"),
   }));
 }
 
 export { handler, ZONA, COUNTRIES, TOKO };
 export const pluginConfig = {
-  name: ["gunung", "pendakian", "gununglejenda", "petualanggunung"],
+  name: ["petualanggunung", "gunung", "pendakian", "gununglejenda"],
   type: "rpg",
   description: "Pendakian Gunung Legenda — 8 zona, cuaca dinamis, jalur risiko, oksigen, prestasi",
-  usage: ".gunung | .gunung daki [aman|risiko] | .gunung toko [item] | .gunung istirahat | .gunung daily | .gunung top | .gunung prestasi",
+  usage: ".petualanggunung | .petualanggunung daki [aman|risiko] | .petualanggunung toko [item] | .petualanggunung istirahat | .petualanggunung daily | .petualanggunung top | .petualanggunung prestasi",
   isOwner: false, premium: false, group: false,
 };
 export { pluginConfig as config };

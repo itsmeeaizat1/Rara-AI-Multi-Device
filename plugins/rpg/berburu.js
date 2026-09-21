@@ -15,12 +15,12 @@ import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "berburu",
-  alias: ["berburu", "hunt", "petualangberburu"],
+  name: "petualangberburu",
+  alias: ["berburu", "hunt"],
   category: "rpg",
   description: "Berburu monster untuk EXP, Gold, dan item drop",
-  usage: ".berburu [zone <nama> | trophy]",
-  example: ".berburu\n.berburu zone hutan_tengah\n.berburu trophy",
+  usage: ".petualangberburu [zone <nama> | trophy]",
+  example: ".petualangberburu\n.berburu zone hutan_tengah\n.berburu trophy",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -102,10 +102,10 @@ async function handler(m, { sock }) {
 ${list}
 
 📍 Zone kamu: ${current.name} (Level kamu: ${rpg.level})
-💡 Pindah: .berburu zone <nama>`, "info"));
+💡 Pindah: .petualangberburu zone <nama>`, "info"));
       }
       const zn = HUNT_ZONES[target] || Object.values(HUNT_ZONES).find(z => z.name.toLowerCase().includes(target));
-      if (!zn || !HUNT_ZONES[target]) return m.reply(novaRpgBox("berburu", `Zone *${target}* gak ada. Lihat daftar zone: .berburu zone`, "error"));
+      if (!zn || !HUNT_ZONES[target]) return m.reply(novaRpgBox("berburu", `Zone *${target}* gak ada. Lihat daftar zone: .petualangberburu zone`, "error"));
       if (rpg.level < zn.levelReq) return m.reply(novaRpgBox("berburu", `⚠️ Butuh Level *${zn.levelReq}* untuk masuk ${zn.name}. Level kamu: ${rpg.level}`, "warn"));
       const zoneId = Object.keys(HUNT_ZONES).find(k => HUNT_ZONES[k] === zn);
       rpg.huntZone = zoneId;
@@ -237,7 +237,7 @@ ${list}
         const nextId = ZONE_ORDER[curIdx + 1];
         if (fresh.level >= HUNT_ZONES[nextId].levelReq && fresh.lastZoneNotify !== nextId) {
           fresh.lastZoneNotify = nextId;
-          zoneNotice = `🗺️ *ZONE BARU TERBUKA!*\n📍 ${HUNT_ZONES[nextId].name}\n⚔️ Level Req: ${HUNT_ZONES[nextId].levelReq}\n\nKetik .berburu zone ${nextId} untuk pindah`;
+          zoneNotice = `🗺️ *ZONE BARU TERBUKA!*\n📍 ${HUNT_ZONES[nextId].name}\n⚔️ Level Req: ${HUNT_ZONES[nextId].levelReq}\n\nKetik .petualangberburu zone ${nextId} untuk pindah`;
         }
       }
       // Persist eksplisit trophy + dedup flag (biar gak andalkan ref live)

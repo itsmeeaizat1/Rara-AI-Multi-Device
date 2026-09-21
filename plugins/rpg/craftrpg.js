@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
 
     if (missing.length > 0) {
       await m.react("🚫");
-      return m.reply(novaRpgBox("craftrpg", `Material tidak cukup!\nKurang: *${missing.join(", ")}*\nKumpulkan dengan .berburu, .mining, atau .mancing.`, "warn"));
+      return m.reply(novaRpgBox("craftrpg", `Material tidak cukup!\nKurang: *${missing.join(", ")}*\nKumpulkan dengan .petualangberburu, .mining, atau .mancing.`, "warn"));
     }
 
     // Consume materials
