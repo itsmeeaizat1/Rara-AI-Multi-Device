@@ -147,3 +147,20 @@ export async function animasiRunner(sock, jid, opts = {}) {
 }
 
 export function _resetAnimRunnerForTest() { /* hook seams kalau perlu */ }
+
+// ── mekanisme generik: kirim + edit berulang (isi frames khas per game, bukan seragam) ──
+export async function editFramesAnim(sock, jid, frames, opts = {}) {
+  try {
+    if (!sock?.sendMessage || !jid || !Array.isArray(frames) || frames.length < 2) return false;
+    const sentMsg = await sock.sendMessage(jid, { text: frames[0] });
+    if (!sentMsg?.key) return false; // channel gak dukung edit → pemanggil fallback animasi teks
+    const ms = opts.frameMs !== undefined ? Number(opts.frameMs) : (process.env.NOVA_ANIM_MS !== undefined ? Number(process.env.NOVA_ANIM_MS) : 700);
+    for (let i = 1; i < frames.length; i++) {
+      await sleep(ms);
+      try { await sock.sendMessage(jid, { text: frames[i], edit: sentMsg.key }); }
+      catch (e) { console.error("[anim-frames] edit gagal (stop, fallback pemanggil):", e); return false; }
+    }
+    await sleep(ms);
+    return true;
+  } catch (e) { console.error("[anim-frames] gagal (dilewati senyap):", e); return false; }
+}
