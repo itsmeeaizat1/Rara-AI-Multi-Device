@@ -2,7 +2,6 @@
 // gachawaifu.js — Gacha Waifu System (rarity + marry + collection)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { animGacha } from "../../src/lib/nova-rpg-anim.js";
-import { animasiRunner } from "../../src/lib/nova-anim-runner.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -207,12 +206,7 @@ async function handler(m, { sock }) {
     } catch {}
 
     // Gacha animation
-    await animGacha(m, sock); // suspense reveal teks (khas gacha)
-    // 🎬 animasi runner: 🎁 melintasi jalur menuju finis (skala level RPG)
-    try {
-      const lvl = (await import("../../src/lib/nova-rpg-service.js")).ensureRpg?.(m, m.pushName)?.level || 1;
-      await animasiRunner(sock, m.chat, { level: lvl, aksi: "gacha", hasil: "🎁 KOTAK WAIFU TERBUKA! Reveal menyusul…" });
-    } catch (e) { console.error("[gachawaifu] animasi runner gagal (lanjut):", e); }
+    await animGacha(m, sock);
 
     const waifu = weightedPull();
     const data = await getWaifuData(db, m.sender);
