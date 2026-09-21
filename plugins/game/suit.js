@@ -11,12 +11,12 @@ import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "suit",
+  name: "rockpaperscissors",
   alias: ["suit", "batuguntingkertas", "suitor"],
   category: "game",
   description: "Batu Gunting Kertas vs Bot",
-  usage: ".suit <batu/gunting/kertas>",
-  example: ".suit batu",
+  usage: ".rockpaperscissors <batu/gunting/kertas>",
+  example: ".rockpaperscissors batu",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -39,7 +39,7 @@ async function handler(m, { args, prefix }) {
   const pilihan = (args[0] || "").toLowerCase().trim();
 
   if (!pilihan) {
-    return m.reply(novaGuide("Suit", "Pilih batu, gunting, atau kertas nih!", ".suit batu"));
+    return m.reply(novaGuide("Suit", "Pilih batu, gunting, atau kertas nih!", ".rockpaperscissors batu"));
   }
 
   if (!CHOICES.includes(pilihan)) {

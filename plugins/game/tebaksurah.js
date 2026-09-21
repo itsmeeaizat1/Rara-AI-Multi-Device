@@ -8,12 +8,12 @@ import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 const sessions = new Map();
 
 const pluginConfig = {
-  name: "tebaksurah",
-  alias: ["tebaksurah", "guesssurah"],
+  name: "guesssurah",
+  alias: ["tebaksurah"],
   category: "game",
   description: "Game tebak nama surah Al-Quran",
-  usage: ".tebaksurah",
-  example: ".tebaksurah",
+  usage: ".guesssurah",
+  example: ".guesssurah",
   isOwner: false, isPremium: false, isGroup: true, isPrivate: false,
   cooldown: 10, energi: 2, isEnabled: true,
 };

@@ -10,12 +10,12 @@ const SNAKES = { 29: 7, 24: 12, 72: 36, 90: 56, 75: 64, 91: 72, 97: 78 };
 const LADDERS = { 15: 37, 23: 41, 49: 86, 74: 95 };
 
 const pluginConfig = {
-  name: "ulartangga",
+  name: "snakesandladders",
   alias: ["ulartangga", "snl", "ular"],
   category: "game",
   description: "Game ular tangga — snake & ladders",
-  usage: ".ulartangga [start/roll/join/end]",
-  example: ".ulartangga start\n.ulartangga roll",
+  usage: ".snakesandladders [start/roll/join/end]",
+  example: ".snakesandladders start\n.ulartangga roll",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 2, isEnabled: true,
 };
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const sender = m.sender;
 
     if (!action || action === "start") {
-      if (games.has(from)) return m.reply(claraWrap("ulartangga", "Game sudah ada! Ketik .ulartangga join", "guide"));
+      if (games.has(from)) return m.reply(claraWrap("ulartangga", "Game sudah ada! Ketik .snakesandladders join", "guide"));
       games.set(from, {
         players: [sender],
         positions: { [sender]: 1 },
@@ -43,14 +43,14 @@ async function handler(m, { sock }) {
         "---",
         `Pemain: @${sender.split("@")[0]}`,
         "---",
-        "Ketik .ulartangga join untuk ikut",
-        "Ketik .ulartangga roll untuk mulai",
+        "Ketik .snakesandladders join untuk ikut",
+        "Ketik .snakesandladders roll untuk mulai",
       ]));
     }
 
     if (action === "join") {
       const game = games.get(from);
-      if (!game) return m.reply(claraWrap("ulartangga", "Belum ada game! Ketik .ulartangga start", "guide"));
+      if (!game) return m.reply(claraWrap("ulartangga", "Belum ada game! Ketik .snakesandladders start", "guide"));
       if (game.players.includes(sender)) return m.reply(claraWrap("ulartangga", "Kamu sudah join!", "guide"));
       if (game.started) return m.reply(claraWrap("ulartangga", "Game sudah dimulai!", "guide"));
       game.players.push(sender);
@@ -62,8 +62,8 @@ Total pemain: ${game.players.length}` }));
 
     if (action === "roll") {
       const game = games.get(from);
-      if (!game) return m.reply(claraWrap("ulartangga", "Belum ada game! Ketik .ulartangga start", "guide"));
-      if (!game.players.includes(sender)) return m.reply(claraWrap("ulartangga", "Kamu belum join! Ketik .ulartangga join", "guide"));
+      if (!game) return m.reply(claraWrap("ulartangga", "Belum ada game! Ketik .snakesandladders start", "guide"));
+      if (!game.players.includes(sender)) return m.reply(claraWrap("ulartangga", "Kamu belum join! Ketik .snakesandladders join", "guide"));
       if (game.turn >= game.players.length) game.turn = 0;
       if (game.players[game.turn] !== sender) return m.reply(claraWrap("ulartangga", `Bukan giliranmu! Giliran @${game.players[game.turn].split("@")[0]}`, "guide"));
       game.started = true;
@@ -130,7 +130,7 @@ Total pemain: ${game.players.length}` }));
     if (action === "end") {
       games.delete(from);
       await m.react("🐣");
-      return m.reply(novaGameBox({ title: "ulartangga", icon: "🐍", flavor: "🏁 *PERMAINAN DIHENTIKAN!*", body: "Papan ditutup, ularnya tidur lagi. Ketik .ulartangga buat main lagi." }));
+      return m.reply(novaGameBox({ title: "ulartangga", icon: "🐍", flavor: "🏁 *PERMAINAN DIHENTIKAN!*", body: "Papan ditutup, ularnya tidur lagi. Ketik .snakesandladders buat main lagi." }));
     }
   } catch (err) {
     console.error("ulartangga error:", err);

@@ -3,7 +3,7 @@
 
 import { games } from "../../src/lib/nova-game-factory.js";
 
-const plugin = games.createPlugin("tebakfilm");
+const plugin = games.createPlugin("tebakfilm", { name: "guessmovie", usage: ".guessmovie", example: ".guessmovie" });
 
 export const config = plugin.config;
 export const handler = plugin.handler;

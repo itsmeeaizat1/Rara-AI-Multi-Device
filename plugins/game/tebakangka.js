@@ -11,12 +11,12 @@ import { rollBonus } from "../../src/lib/nova-game-rewards.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "tebakangka",
-  alias: ["tebakangka", "guessnumber", "angka"],
+  name: "guessnumber",
+  alias: ["tebakangka", "angka"],
   category: "game",
   description: "Tebak angka 1-100 dengan hint lebih besar/kecil",
-  usage: ".tebakangka <mulai/angka>",
-  example: ".tebakangka mulai\n.tebakangka 50",
+  usage: ".guessnumber <mulai/angka>",
+  example: ".guessnumber mulai\n.tebakangka 50",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -52,7 +52,7 @@ async function handler(m, { args, prefix }) {
   // Check if game is active
   const game = activeGames.get(chatId);
   if (!game) {
-    return m.reply(novaGuide("TebakAngka", "Belum mulai nih! Ketik mulai dulu", ".tebakangka mulai"));
+    return m.reply(novaGuide("TebakAngka", "Belum mulai nih! Ketik mulai dulu", ".guessnumber mulai"));
   }
 
   // Parse guess
