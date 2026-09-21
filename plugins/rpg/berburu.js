@@ -9,6 +9,7 @@ import {
   getCash} from "../../src/lib/nova-rpg-service.js";
 import { getRpgWeather, rpgWeatherTag } from "../../src/lib/nova-rpg-weather.js";
 import { animBattle, rpgSleep, animHuntTrack, animHuntShoot, animHuntResult } from "../../src/lib/nova-rpg-anim.js";
+import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, novaRpgBox } from "../../src/lib/nova-games.js";
 import te from "../../src/lib/nova-error.js";
@@ -149,7 +150,18 @@ ${list}
 
     // ANIMASI ALA SCRIPT OWNER (morphing 1 pesan per fase):
     // FASE 1: MELACAK JEJAK → target ditemukan
-    await animHuntTrack(m, sock, monster.name);
+    // 🎬 animasi khas BURU SASARAN: crosshair 🎯 merayap menuju jejak 🐾 lalu TERKUNCI
+    const SCW = 10;
+    const target = 3 + Math.floor(Math.random() * 4);
+    const scopeFrames = Array.from({ length: 5 }, (_, f) => {
+      const pos = Math.round((target * f) / 4);
+      const row = Array.from({ length: SCW }, (_, i) =>
+        i === target ? "🐾" : i === pos ? "🎯" : "🟩");
+      const lock = f === 4;
+      return "```\n🔍 BURU " + monster.name.toUpperCase() + (lock ? " — 🎯 SASARAN TERKUNCI!" : "") + "\n" + row.join("") + "\n```";
+    });
+    const scopeOk = await editFramesAnim(sock, m.chat, scopeFrames, {});
+    if (!scopeOk) await animHuntTrack(m, sock, monster.name);
     await m.reply(`🎯 Ditemukan *${monster.name}* di ${zone.name}!\n⚔️ Bersiap bertarung...`);
     // FASE 2: MEMANAH — bidik, tarik tali, lepas
     await animHuntShoot(m, sock, monster.name);

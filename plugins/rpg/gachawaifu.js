@@ -2,6 +2,7 @@
 // gachawaifu.js — Gacha Waifu System (rarity + marry + collection)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { animGacha } from "../../src/lib/nova-rpg-anim.js";
+import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -206,7 +207,16 @@ async function handler(m, { sock }) {
     } catch {}
 
     // Gacha animation
-    await animGacha(m, sock);
+    // 🎬 animasi khas KAPSUL WAIFU (fallback: suspense reveal bila edit gak didukung)
+    const kapsulOk = await editFramesAnim(sock, m.chat, [
+      "```\n🥚🥚🥚🥚🥚\n mesin kapsul bergetar…\n```",
+      "```\n🥚🥚🥚🥚🥚\n      ↓\n🥚 kapsul JATUH!\n```",
+      "```\n     🥚\n  gemetar… gemetar…\n```",
+      "```\n    🥚✨\n cahaya merembes dari celah…\n```",
+      "```\n   💥✨💥\n KAPSUL TERBUKA!\n```",
+      "```\n    💞\n REVEAL! Waifu menyusul…\n```",
+    ], {});
+    if (!kapsulOk) await animGacha(m, sock);
 
     const waifu = weightedPull();
     const data = await getWaifuData(db, m.sender);
