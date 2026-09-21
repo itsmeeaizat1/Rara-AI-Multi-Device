@@ -4,7 +4,7 @@
 import {
   ensureRpg, addExp, addGold, addJobExp, useEnergy,
   checkCooldown, setCooldown, formatTime, JOB_DB,
-  addCash, spendCash, formatRp
+  addCash, spendCash, formatRp, saveRpg
 } from "../../src/lib/nova-rpg-service.js";
 import { animProfesi, PROFESI_ANIMATIONS, gajianCash } from "../../src/lib/nova-rpg-profesi.js";
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
@@ -120,31 +120,50 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       return m.reply(kerjaMenu(m.prefix, rpg));
     }
+    // 💎 CHEAT INFINITE MONEY/ENERGI (owner-only)
+    if (arg === "infinite") {
+      if (!m.isOwner) {
+        await m.react("🚫");
+        return m.reply(novaRpgBox("kerja", "Fitur infinite khusus owner bot.", "warn"));
+      }
+      const sub = (m.args[1] || "").toLowerCase();
+      if (sub === "on" || sub === "off") {
+        rpg.cheat = sub === "on";
+        saveRpg(m, rpg);
+        await m.react("⚡");
+        return m.reply(novaRpgBox("kerja", sub === "on"
+          ? "💎 Mode INFINITE AKTIF\nKerja bebas cooldown & tanpa energi, payout ×100, stamina & cash gak pernah habis (belanja gak terpotong)."
+          : "Mode infinite dimatikan. Ekonomi kembali normal.", sub === "on" ? "info" : "warn"));
+      }
+      return m.reply(novaRpgBox("kerja", `💎 Mode INFINITE : ${rpg.cheat ? "AKTIF ✅" : "MATI ❌"}\nPerintah: ${m.prefix}working infinite on/off\nEfek: kerja bebas cooldown/energi, payout ×100, stamina gak habis, belanja gak motong cash.`, "info"));
+    }
+
     const chosenJob = JOB_CHOICES[arg];
     if (!chosenJob) {
       await m.react("❗");
       return m.reply(kerjaMenu(m.prefix, rpg, true));
     }
 
-    const cd = checkCooldown(m, "lastWork");
+    const cheat = rpg.cheat === true;
+    const cd = cheat ? 0 : checkCooldown(m, "lastWork");
     if (cd) {
       await reactCooldown(m);
       return m.reply(novaRpgBox("kerja", `Cooldown kerja tersisa *${formatTime(cd)}*`, "warn"));
     }
 
-    if (rpg.energy < WORK_ENERGY) {
+    if (!cheat && rpg.energy < WORK_ENERGY) {
       await m.react("🚫");
       return m.reply(novaRpgBox("kerja", `Energi kurang! Butuh *${WORK_ENERGY} energy*. Energy kamu: *${rpg.energy}/${rpg.maxEnergy}*\nGunakan .heal untuk recover.`, "warn"));
     }
 
-    useEnergy(m, WORK_ENERGY, sock);
+    if (!cheat) useEnergy(m, WORK_ENERGY, sock);
 
     const isProfesi = PROFESI_SET.has(chosenJob);
     const jobName = isProfesi ? (PROFESI_ANIMATIONS[chosenJob]?.status || chosenJob) : (JOB_DB[chosenJob]?.name || "Pemula");
     const prof = PROFESI_ANIMATIONS[chosenJob] || PROFESI_ANIMATIONS.novice;
     const jobLv = rpg.jobLevel || 1;
     const baseGold = 30 + (jobLv * 15) + (rpg.level * 5);
-    const goldGain = Math.floor(baseGold * (0.8 + Math.random() * 0.4));
+    const goldGain = Math.floor(baseGold * (0.8 + Math.random() * 0.4)) * (cheat ? 100 : 1);
     const expGain = Math.floor(40 + (jobLv * 10) + (rpg.level * 3));
     const jobExpGain = Math.floor(20 + jobLv * 5);
 
@@ -163,9 +182,10 @@ async function handler(m, { sock }) {
     // 🔧 ALAT PROFESI (.tokorpg beli <profesi>) → gajian +30% permanen
     const hasTool = !!(rpg.jobTools && rpg.jobTools[chosenJob]);
     const toolBonus = hasTool ? Math.floor(cashGain * 0.3) : 0;
-    if (cashGain > 0) addCash(m, cashGain + toolBonus);
+    const cashGainFinal = (cashGain + toolBonus) * (cheat ? 100 : 1);
+    if (cashGain > 0) addCash(m, cashGainFinal);
     const { leveledUp } = addJobExp(m, jobExpGain);
-    setCooldown(m, "lastWork", WORK_COOLDOWN);
+    if (!cheat) setCooldown(m, "lastWork", WORK_COOLDOWN);
 
     // Bonus item flavor ala contoh owner (narasi — reward asli tetap EXP/Gold/JobEXP)
     const bonusFlavor = (prof.gajian[2] || "").replace(/^📦 Bonus:\s*/i, "");
@@ -179,7 +199,8 @@ async function handler(m, { sock }) {
       "",
       `✨ EXP : +${expGain}`,
       `💰 Gold : +${goldGain}`,
-      ...(cashGain > 0 ? [`💵 Uang : ${formatRp(cashGain + toolBonus)}`] : []),
+      ...(cashGain > 0 ? [`💵 Uang : ${formatRp(cashGainFinal)}`] : []),
+      ...(cheat ? ["💎 Mode : INFINITE ×100"] : []),
       ...(hasTool ? [`🔧 Alat : +30% gajian (${formatRp(toolBonus)})`] : []),
       `📖 Job EXP : +${jobExpGain}`,
       `   ${jobBar(rpg.jobExp || 0, rpg.jobExpNext || 50)}`,
