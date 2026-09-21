@@ -138,6 +138,79 @@ t("10a. rombongan aktif: buff +20% terlihat", some("rombongan"), last().slice(0,
 await run({ args: ["daki", "aman"], chat: "c1@s.whatsapp.net" });
 t("10b. di DM: rombongan gak aktif", sent.length > 0 && U().zona === 4);
 
+console.log("— section 11: PORTIR KENANGA — penyelamatan 1x per gunung —");
+setCash(1000);
+await run({ args: ["toko", "portir"] });
+t("11a. rekrut portir: -500 gold", U().portir === true && getCash({ sender: SENDER }) === 500, getCash({ sender: SENDER }));
+U().zona = 4; U().stamina = 10;
+let rc11 = 0;
+plug._setRandForTest(() => (rc11++ === 0 ? 0.01 : 0.05)); // cerah lalu longsor
+await run({ args: ["daki", "risiko"] });
+t("11b. portir menyelamatkan: TETAP di zona 4", U().zona === 4 && U().portirUsed === true, U().zona);
+t("11c. pesan penyelamatan dramatis", some("portir") && some("tetap"));
+rc11 = 0;
+await run({ args: ["daki", "risiko"] });
+t("11d. portir cuma 1x: longsor kedua turun beneran (4→3)", U().zona === 3, U().zona);
+await run({ args: ["toko", "portir"] });
+t("11e. portir dobel → sudah bersama kamu", some("sudah bersama") || some("kenanga"));
+
+console.log("— section 12: GUA SAMPING — masuk vs lewat —");
+U().guaPending = true; U().zona = 5; U().stamina = 10;
+plug._setRandForTest(() => 0.5); // > 0.4 → harta; 0.5 > 0.25 → tanpa kristal
+const cashGua = getCash({ sender: SENDER });
+await run({ args: ["gua", "masuk"] });
+t("12a. gua harta: +loot zona ×3 (180×3=540)", getCash({ sender: SENDER }) === cashGua + 540, getCash({ sender: SENDER }) - cashGua);
+t("12b. guaPending reset", U().guaPending === false);
+U().guaPending = true; U().stamina = 10;
+plug._setRandForTest(() => 0.2); // < 0.4 → jebakan
+await run({ args: ["gua", "masuk"] });
+t("12c. gua jebakan: stamina -2", U().stamina === 8, U().stamina);
+t("12d. guaPending reset setelah jebakan", U().guaPending === false);
+U().guaPending = true;
+await run({ args: ["gua", "lewat"] });
+t("12e. lewat: aman, pending hilang", U().guaPending === false && some("melewati"));
+await run({ args: ["gua", "masuk"] });
+t("12f. tanpa gua pending → gak ada gua", some("gak ada gua"));
+
+console.log("— section 13: BADAI ES zona 6+ —");
+U().zona = 6; U().stamina = 10; U().oksigen = 2; U().pemanas = false;
+let rc13 = 0;
+plug._setRandForTest(() => (rc13++ === 0 ? 0.95 : 0.5)); // badai-es (band 92-100), lonsor 0.5 < 0.4? tidak
+const cashBE = getCash({ sender: SENDER });
+await run({ args: ["daki", "aman"] });
+t("13a. badai es muncul: stamina -4 (cost 2 + badai es 2)", U().stamina === 6, U().stamina);
+t("13b. loot badai es ×1.8", getCash({ sender: SENDER }) - cashBE >= Math.floor(240 * 1.8), getCash({ sender: SENDER }) - cashBE);
+t("13c. cuaca badai-es tampil (🥶)", some("badai-es") || some("🥶"));
+U().zona = 6; U().stamina = 10; U().oksigen = 2; U().pemanas = true;
+plug._setRandForTest(() => 0.95); // badai-es → pemanas → badai → hujan
+await run({ args: ["daki", "aman"] });
+t("13d. pemanas meredam badai es → hujan", some("hujan"));
+
+console.log("— section 14: LOMBA PENDAKI — duel @user —");
+const RIVAL = "6282@s.whatsapp.net";
+db().data.gunung.users[RIVAL] = { ...U(), sender: RIVAL, zona: 1, puncak: 0, portir: false, guaPending: false };
+const rCash = () => getCash({ sender: RIVAL });
+setCash(2000); const r = ensureRpg({ sender: RIVAL, pushName: "R" }); r.cash = 2000; saveRpg({ sender: RIVAL }, r);
+await run({ args: ["lomba"] });
+t("14a. tanpa mention → format duel", some("tantang siapa"));
+await run({ args: ["lomba"], mentionedJid: [SENDER] });
+t("14b. lomba lawan diri sendiri → ditolak", some("lawan diri") || some("bayangan"));
+await run({ args: ["lomba"], mentionedJid: ["6283@s.whatsapp.net"] });
+t("14c. lawan belum pendaki → ditolak", some("belum pendaki"));
+setCash(50);
+await run({ args: ["lomba"], mentionedJid: [RIVAL] });
+t("14d. saldo < 100 → taruhan gak cakup", some("gak cakup"));
+setCash(2000);
+let rc14 = 0;
+plug._setRandForTest(() => (rc14++ === 0 ? 0.5 : 0.01)); // skorA 51+3 vs skorB 2+3 → menang
+const cash14 = getCash({ sender: SENDER });
+await run({ args: ["lomba"], mentionedJid: [RIVAL] });
+t("14e. duel menang: pot 200 masuk (2000-100+200)", getCash({ sender: SENDER }) === cash14 + 100, getCash({ sender: SENDER }) - cash14);
+t("14f. lawan bayar 100", rCash() === 1900, rCash());
+t("14g. hasil duel dramatis tampil", some("duel pendaki") || some("poin"));
+await run({ args: ["lomba"], mentionedJid: [RIVAL] });
+t("14h. cooldown 1 menit → ditolak", some("1 menit") || some("napas"));
+
 fs.rmSync(dbDir, { recursive: true, force: true });
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);
