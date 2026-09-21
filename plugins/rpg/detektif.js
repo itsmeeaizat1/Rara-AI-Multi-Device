@@ -13,6 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
+import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { addGameCash, addGold, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { normalizeAnswer } from "../../src/lib/nova-game-engine.js";
@@ -25,6 +26,7 @@ const __dirname = path.dirname(__filename);
 const ENERGI_MAX = process.env.DETEKTIF_ENERGI_MAX !== undefined ? Number(process.env.DETEKTIF_ENERGI_MAX) : 10;
 const ENERGI_REGEN_S = process.env.DETEKTIF_REGEN_S !== undefined ? Number(process.env.DETEKTIF_REGEN_S) : 300; // 1 energi / 5 mnt
 const COST_PERGI = 2, COST_CARI = 1, COST_TANYA_SUS = 1;
+const ANIM_FRAME_MS = process.env.DETEKTIF_ANIM_MS !== undefined ? Number(process.env.DETEKTIF_ANIM_MS) : 700;
 const WRONG_ACCUSE_GOLD = 50;
 const HINT_GOLD = 30;
 const CRIT_CHANCE = process.env.DETEKTIF_CRIT !== undefined ? Number(process.env.DETEKTIF_CRIT) : 0.1;
@@ -131,6 +133,45 @@ function fileText(u, c) {
 }
 
 // ── handler ──
+
+// ── 🎬 ANIMASI KHAS DETEKTIF: SIRAM LOKASI ──
+// Mode "cari": kaca pembesar 🔍 menyisir sektor objek, jejak ✨ terungkap satu per satu.
+// Mode "pergi": detektif 🚶 melintas kota menuju lokasi, jejak 👣 bekas langkah.
+// KHUSUS detektif (aturan "beda game beda animasi") — beda dari crosshair berburu & selam palung.
+function siramFrames({ mode, locName, locEmoji, hasil }) {
+  const slots = 6;
+  const scene = mode === "pergi"
+    ? ["🏢", "🏪", "🏦", "🏫", "🏭", "🚧"]
+    : ["🪑", "📦", "🗄️", "🚪", "🪟", "🗑️"];
+  const mover = mode === "pergi" ? "🚶" : "🔍";
+  const trail = mode === "pergi" ? "👣" : "✨";
+  const header = mode === "pergi"
+    ? "🚶 MENUJU · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "")
+    : "🔍 MENYIRIM · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "");
+  const hasilText = mode === "pergi"
+    ? "📍 TIBA! Sekitarnya menyusul…"
+    : hasil === "temu" ? "✨ JEJAK DITEMUKAN! Hasil menyusul…"
+    : hasil === "lockbox" ? "🔒 PETI TERKUNCI TERLIHAT!"
+    : hasil === "pending" ? "🔒 PETI MASIH TERKUNCI…"
+    : "🤷 SEKTOR SUDAH BERSIH…";
+  const frames = [];
+  for (let f = 0; f <= slots; f++) {
+    const row = scene.map((s, i) => {
+      if (i === Math.min(f, slots - 1)) return mover;
+      if (i < f) return trail;
+      return s;
+    }).join("");
+    const tail = f === 0 ? "MEMULAI PENYISIRAN…" : f < slots ? (mode === "pergi" ? "MELINTAS… " : "MENYIRIM… ") + f + "/" + slots : hasilText;
+    frames.push("```\n" + header + "\n" + row + "\n" + tail + "\n```");
+  }
+  return frames;
+}
+
+async function playDetektifAnim(m, sock, opts) {
+  try { await editFramesAnim(sock, m.chat, siramFrames(opts), { frameMs: ANIM_FRAME_MS }); }
+  catch (e) { console.error("[detektif] animasi gagal (lanjut):", e?.message || e); }
+}
+
 async function handler(m, { sock, config }) {
   const sub = (m.args?.[0] || "").toLowerCase();
   const rest = (m.args || []).slice(1).join(" ");
@@ -236,6 +277,7 @@ async function handler(m, { sock, config }) {
       a.puzzlePending = null;
       a.curSus = null;
       saveDb();
+      await playDetektifAnim(m, sock, { mode: "pergi", locName: loc.name, locEmoji: loc.emoji });
       return m.reply(novaGameBox({
         title: "detektif", icon: loc.emoji,
         flavor: `${loc.emoji} *${loc.name.toUpperCase()}*`,
@@ -259,10 +301,12 @@ async function handler(m, { sock, config }) {
         if (!a.puzzlePending) {
           a.puzzlePending = cur.id;
           saveDb();
+          await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "lockbox" });
           return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *LOCKBOX DITEMUKAN!*", body: cur.puzzle.q + "\n\n💡 .sangdetektif hint (30 gold / 1 kopi) bantuan kurator\n✍️ Jawab: .sangdetektif jawab <jawabanmu>" }));
         }
         // puzzle masih pending (belum dijawab benar) → bukti dalam tetap terkunci
         saveDb();
+        await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "pending" });
         return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *BRANKAS MASIH TERKUNCI!*", body: "Bukti di dalam belum bisa diambil. Pecahkan teka-tekinya dulu: .sangdetektif jawab <jawabanmu>\n\n" + cur.puzzle.q }));
       }
       for (const evId of (cur.evidence || [])) {
@@ -270,6 +314,7 @@ async function handler(m, { sock, config }) {
       }
       saveDb();
       if (!found.length) {
+        await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "bersih" });
         return m.reply(novaGameBox({ title: "detektif", icon: "🔍", flavor: "🔍 *SUDAH BERSIH!*", body: `Gak ada bukti baru di ${cur.name}. Coba lokasi lain.` }));
       }
       // crit Intuisi Detektif
@@ -281,6 +326,7 @@ async function handler(m, { sock, config }) {
           critNote = `\n\n✨ INTUISI DETEKTIF: instingmu berdesir — bukti kunci kasus ini tersembunyi di sektor "${loc2 ? loc2.name : "yang belum kamu datangi"}".`;
         }
       }
+      await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "temu" });
       return m.reply(novaGameBox({
         title: "detektif", icon: "🔍",
         flavor: "🔍 *JEJAK DITEMUKAN!*",
