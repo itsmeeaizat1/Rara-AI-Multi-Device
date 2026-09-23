@@ -528,7 +528,7 @@ try {
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     // Chat anonim antar member (relay pesan sesi aktif — plugins/fun/anonymouschat.js)
     try {
-      const { answerHandler: anonChatRelay } = await import("../plugins/fun/anonymouschat.js");
+      const { answerHandler: anonChatRelay } = await import("../plugins/fun/chatibanonymouschat.js");
       if (typeof anonChatRelay === "function") {
         const anonHandled = await anonChatRelay(m, sock);
         if (anonHandled) return;

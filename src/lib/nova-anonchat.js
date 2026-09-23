@@ -62,17 +62,17 @@ export async function closeSession(sock, db, jid, reasonText, { violator = null,
   const isViolator = violator === jid;
   const txtMe = violator
     ? (isViolator
-        ? `${reasonText}\n\nKamu ngirim link/materi yang gak diizinkan — sesi ditutup otomatis. Cari partner baru: .anonymouschat`
-        : `${reasonText}\n\nLawan chatmu ngirim link/materi terlarang — sesi ditutup otomatis demi keamanan. Cari partner baru: .anonymouschat`)
-    : `${reasonText}\n\nCari partner baru: .anonymouschat`;
+        ? `${reasonText}\n\nKamu ngirim link/materi yang gak diizinkan — sesi ditutup otomatis. Cari partner baru: .chatibanonymouschat`
+        : `${reasonText}\n\nLawan chatmu ngirim link/materi terlarang — sesi ditutup otomatis demi keamanan. Cari partner baru: .chatibanonymouschat`)
+    : `${reasonText}\n\nCari partner baru: .chatibanonymouschat`;
   await dm(sock, jid, claraWrap("Chat Anonim", txtMe));
   // partner
   const isPartnerViolator = violator && violator === partner;
   const txtPartner = violator
     ? (isPartnerViolator
-        ? `${reasonText}\n\nKamu ngirim link/materi yang gak diizinkan — sesi ditutup otomatis. Cari partner baru: .anonymouschat`
-        : `${reasonText}\n\nLawan chatmu ngirim link/materi terlarang — sesi ditutup otomatis demi keamanan. Cari partner baru: .anonymouschat`)
-    : `${reasonText}\n\nLawan chatmu keluar. Cari partner baru: .anonymouschat`;
+        ? `${reasonText}\n\nKamu ngirim link/materi yang gak diizinkan — sesi ditutup otomatis. Cari partner baru: .chatibanonymouschat`
+        : `${reasonText}\n\nLawan chatmu ngirim link/materi terlarang — sesi ditutup otomatis demi keamanan. Cari partner baru: .chatibanonymouschat`)
+    : `${reasonText}\n\nLawan chatmu keluar. Cari partner baru: .chatibanonymouschat`;
   await dm(sock, partner, claraWrap("Chat Anonim", txtPartner));
   if (notifyOwner && violator) {
     await dm(sock, ownerJid(), `[CHAT ANONIM] Guard menutup sesi: ${violator.split("@")[0]} ngirim link/materi terlarang. Nomor lawan chatnya TIDAK dibocorin ke pengirim.`);
@@ -85,7 +85,7 @@ export async function startChat(m, sock, db) {
   const a = getAnon(db);
   const jid = m.sender;
   if (a.sessions[jid]) {
-    return m.reply(claraWrap("Chat Anonim", `Kamu lagi di sesi chat. Keluar dulu pakai .stopanon atau ganti partner pakai .skipanon ya.`));
+    return m.reply(claraWrap("Chat Anonim", `Kamu lagi di sesi chat. Keluar dulu pakai .chatibstop atau ganti partner pakai .chatibskip ya.`));
   }
   const inQueue = a.queue.findIndex((q) => q.jid === jid);
   if (inQueue >= 0) {
@@ -108,7 +108,7 @@ export async function startChat(m, sock, db) {
       `Kamu terhubung sama stranger! 💬`,
       "",
       "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu.",
-      "Ganti partner: .skipanon · Keluar: .stopanon",
+      "Ganti partner: .chatibskip · Keluar: .chatibstop",
       "",
       "Catatan: ngirim link = sesi otomatis ditutup (guard keamanan).",
     ]));
@@ -116,7 +116,7 @@ export async function startChat(m, sock, db) {
       `Ada stranger yang terhubung sama kamu! 💬`,
       "",
       "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu.",
-      "Ganti partner: .skipanon · Keluar: .stopanon",
+      "Ganti partner: .chatibskip · Keluar: .chatibstop",
       "",
       "Catatan: ngirim link = sesi otomatis ditutup (guard keamanan).",
     ]));
@@ -131,7 +131,7 @@ export async function startChat(m, sock, db) {
     "Begitu ada user lain yang mulai chat juga, kamu otomatis di-cocokin — pantau DM kamu ya.",
     "",
     `Yang nunggu sekarang: ${a.queue.length} (termasuk kamu).`,
-    "Batal cari: .stopanon",
+    "Batal cari: .chatibstop",
   ]));
 }
 
@@ -140,7 +140,7 @@ export async function skipChat(m, sock, db) {
   const a = getAnon(db);
   const jid = m.sender;
   if (!a.sessions[jid]) {
-    return m.reply(claraWrap("Chat Anonim", "Kamu lagi gak di sesi chat. Mulai dulu: .anonymouschat"));
+    return m.reply(claraWrap("Chat Anonim", "Kamu lagi gak di sesi chat. Mulai dulu: .chatibanonymouschat"));
   }
   await closeSession(sock, db, jid, "Sesi diputuskan (skip).");
   return startChat(m, sock, db);
@@ -154,7 +154,7 @@ export async function stopChat(m, sock, db) {
   if (qi >= 0) {
     a.queue.splice(qi, 1);
     db.save();
-    return m.reply(claraWrap("Chat Anonim", "Kamu keluar dari daftar tunggu. Kapan pun mau nyoba lagi: .anonymouschat"));
+    return m.reply(claraWrap("Chat Anonim", "Kamu keluar dari daftar tunggu. Kapan pun mau nyoba lagi: .chatibanonymouschat"));
   }
   if (a.sessions[jid]) {
     await closeSession(sock, db, jid, "Lawan chatmu keluar dari sesi (stop).");
