@@ -14,7 +14,7 @@ const pluginConfig = {
   alias: ["autoorder"],
   category: "owner",
   description: "Config Auto Order Panel (on/off, panel, Pakasir, harga)",
-  usage: ".autoorder status | on/off | panel <vN> | pakasir <slug> <apikey> | pediatopup <api_id> <api_key> | markuptopup <jumlah> | harga <paket> <harga> | hargaadmin <harga>",
+  usage: ".autoorder status | on/off | panel <vN> | pakasir <slug> <apikey> | pediatopup <api_id> <api_key> | markuptopup <jumlah> | pacific <api_key> | markupsmm <persen> | harga <paket> <harga> | hargaadmin <harga>",
   example: ".autoorder harga 2gb 5000",
   isOwner: true,
   isPremium: false,
@@ -32,12 +32,13 @@ function statusText(cfg, panelOk) {
     `Panel: v${cfg.panel} ${panelOk ? "(terkonfigurasi)" : "(BELUM ada domain/apikey!)"}`,
     `Pakasir: ${cfg.pakasir.slug ? `slug "${cfg.pakasir.slug}" tersimpan` : "BELUM di-set"}`,
     `PanelPedia TopUp: ${cfg.pediatopup.apiId ? `api id ${cfg.pediatopup.apiId} tersimpan · markup ${fmtRupiah(cfg.pediatopup.markup || 0)}` : "BELUM di-set"}`,
+    `Pacific SMM: ${cfg.pacific.apiKey ? `apikey tersimpan · markup +${cfg.pacific.markupPct}%` : "BELUM di-set"}`,
     `Harga admin panel: ${fmtRupiah(cfg.adminPrice)}`,
     "",
     "Harga paket:",
     ...rows,
     "",
-    "Sub: on/off · panel <vN> · pakasir <slug> <apikey> · pediatopup <api_id> <api_key> · markuptopup <jumlah> · harga <paket> <harga> · hargaadmin <harga>",
+    "Sub: on/off · panel <vN> · pakasir <slug> <apikey> · pediatopup <api_id> <api_key> · markuptopup <jumlah> · pacific <api_key> · markupsmm <persen> · harga <paket> <harga> · hargaadmin <harga>",
   ]);
 }
 
@@ -96,6 +97,24 @@ async function handler(m, { sock, db: _db }) {
     cfg.pediatopup.markup = v;
     db.save();
     return m.reply(claraWrap("Config Auto Order", `Markup topup: ${fmtRupiah(v)} (ditambah ke harga modal PanelPedia tiap layanan)`));
+  }
+
+  if (sub === "pacific") {
+    const apiKey = (args[1] || "").trim();
+    if (!apiKey || apiKey.length < 8) {
+      return m.reply(claraWrap("Config Auto Order", "Format: .autoorder pacific <api_key>\nAmbil di api.pacific-pedia.co.id (menu profil).", "error"));
+    }
+    cfg.pacific.apiKey = apiKey;
+    db.save();
+    return m.reply(claraWrap("Config Auto Order", `Pacific SMM tersimpan: apikey ${apiKey.slice(0, 6)}…\nTes koneksi: .smmlist`));
+  }
+
+  if (sub === "markupsmm") {
+    const v = parseInt(args[1], 10);
+    if (!Number.isFinite(v) || v < 0 || v > 100) return m.reply(claraWrap("Config Auto Order", "Markup SMM persen 0-100 ya, contoh: .autoorder markupsmm 25", "error"));
+    cfg.pacific.markupPct = v;
+    db.save();
+    return m.reply(claraWrap("Config Auto Order", `Markup SMM: +${v}% di atas harga modal Pacific tiap layanan`));
   }
 
   if (sub === "hargaadmin") {

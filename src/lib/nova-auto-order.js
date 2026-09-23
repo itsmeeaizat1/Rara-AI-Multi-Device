@@ -47,6 +47,11 @@ export function ensureOrderCfg(db) {
   if (typeof c.pediatopup.apiKey !== "string") c.pediatopup.apiKey = "";
   if (!Number.isFinite(c.pediatopup.markup)) c.pediatopup.markup = 0;
   if (!c.topupOrders || typeof c.topupOrders !== "object") c.topupOrders = {};
+  // Pacific Pedia SMM (23 Sep 2026): auto order layanan sosmed api.pacific-pedia.co.id
+  if (!c.pacific || typeof c.pacific !== "object") c.pacific = {};
+  if (typeof c.pacific.apiKey !== "string") c.pacific.apiKey = "";
+  if (!Number.isFinite(c.pacific.markupPct)) c.pacific.markupPct = 20;
+  if (!c.smmOrders || typeof c.smmOrders !== "object") c.smmOrders = {};
   return c;
 }
 
