@@ -14,7 +14,7 @@ const pluginConfig = {
   alias: ["autoorder"],
   category: "owner",
   description: "Config Auto Order Panel (on/off, panel, Pakasir, harga)",
-  usage: ".autoorder status | on/off | panel <vN> | pakasir <slug> <apikey> | pediatopup <api_id> <api_key> | markuptopup <jumlah> | pacific <api_key> | markupsmm <persen> | harga <paket> <harga> | hargaadmin <harga>",
+  usage: ".autoorder status | on/off | panel <vN> | pakasir <slug> <apikey> | pediatopup <api_id> <api_key> | markuptopup <jumlah> | pacific <api_key> | markupsmm <persen> | premku <api_key> | markupprem <jumlah> | harga <paket> <harga> | hargaadmin <harga>",
   example: ".autoorder harga 2gb 5000",
   isOwner: true,
   isPremium: false,
@@ -33,12 +33,13 @@ function statusText(cfg, panelOk) {
     `Pakasir: ${cfg.pakasir.slug ? `slug "${cfg.pakasir.slug}" tersimpan` : "BELUM di-set"}`,
     `PanelPedia TopUp: ${cfg.pediatopup.apiId ? `api id ${cfg.pediatopup.apiId} tersimpan · markup ${fmtRupiah(cfg.pediatopup.markup || 0)}` : "BELUM di-set"}`,
     `Pacific SMM: ${cfg.pacific.apiKey ? `apikey tersimpan · markup +${cfg.pacific.markupPct}%` : "BELUM di-set"}`,
+    `Premku App Premium: ${cfg.premku.apiKey ? `apikey tersimpan · markup ${fmtRupiah(cfg.premku.markup || 0)}` : "BELUM di-set"}`,
     `Harga admin panel: ${fmtRupiah(cfg.adminPrice)}`,
     "",
     "Harga paket:",
     ...rows,
     "",
-    "Sub: on/off · panel <vN> · pakasir <slug> <apikey> · pediatopup <api_id> <api_key> · markuptopup <jumlah> · pacific <api_key> · markupsmm <persen> · harga <paket> <harga> · hargaadmin <harga>",
+    "Sub: on/off · panel <vN> · pakasir <slug> <apikey> · pediatopup <api_id> <api_key> · markuptopup <jumlah> · pacific <api_key> · markupsmm <persen> · premku <api_key> · markupprem <jumlah> · harga <paket> <harga> · hargaadmin <harga>",
   ]);
 }
 
@@ -115,6 +116,24 @@ async function handler(m, { sock, db: _db }) {
     cfg.pacific.markupPct = v;
     db.save();
     return m.reply(claraWrap("Config Auto Order", `Markup SMM: +${v}% di atas harga modal Pacific tiap layanan`));
+  }
+
+  if (sub === "premku") {
+    const apiKey = (args[1] || "").trim();
+    if (!apiKey || apiKey.length < 8) {
+      return m.reply(claraWrap("Config Auto Order", "Format: .autoorder premku <api_key>\nAmbil di premku.com (menu profil/API).", "error"));
+    }
+    cfg.premku.apiKey = apiKey;
+    db.save();
+    return m.reply(claraWrap("Config Auto Order", `Premku tersimpan: apikey ${apiKey.slice(0, 6)}…\nTes koneksi: .premkulist`));
+  }
+
+  if (sub === "markupprem") {
+    const v = parseInt(args[1], 10);
+    if (!Number.isFinite(v) || v < 0 || v > 100000) return m.reply(claraWrap("Config Auto Order", "Markup prem angka rupiah 0-100000 ya, contoh: .autoorder markupprem 2000", "error"));
+    cfg.premku.markup = v;
+    db.save();
+    return m.reply(claraWrap("Config Auto Order", `Markup app premium: ${fmtRupiah(v)} (ditambah ke harga produk Premku tiap pesanan)`));
   }
 
   if (sub === "hargaadmin") {

@@ -52,6 +52,11 @@ export function ensureOrderCfg(db) {
   if (typeof c.pacific.apiKey !== "string") c.pacific.apiKey = "";
   if (!Number.isFinite(c.pacific.markupPct)) c.pacific.markupPct = 20;
   if (!c.smmOrders || typeof c.smmOrders !== "object") c.smmOrders = {};
+  // Premku (23 Sep 2026): auto order app premium premku.com
+  if (!c.premku || typeof c.premku !== "object") c.premku = {};
+  if (typeof c.premku.apiKey !== "string") c.premku.apiKey = "";
+  if (!Number.isFinite(c.premku.markup)) c.premku.markup = 0;
+  if (!c.premOrders || typeof c.premOrders !== "object") c.premOrders = {};
   return c;
 }
 
