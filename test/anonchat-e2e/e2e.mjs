@@ -16,7 +16,7 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase(path.join(dbDir, "db"));
 
 const lib = await import(R + "/src/lib/nova-anonchat.js");
-const plug = await import(R + "/plugins/fun/chatibanonymouschat.js");
+const plug = await import(R + "/plugins/fun/vibychatanonymouschat.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
 
@@ -29,7 +29,7 @@ const mkSock = () => ({
 });
 let reactions = [];
 const mkM = (over = {}) => ({
-  text: "", args: [], command: "chatibanonymouschat", prefix: ".", chat: "jid-x@s.whatsapp.net",
+  text: "", args: [], command: "vibychatanonymouschat", prefix: ".", chat: "jid-x@s.whatsapp.net",
   sender: "jid-x@s.whatsapp.net", isGroup: false, mtype: "conversation",
   react: async (e) => { reactions.push(e); },
   reply: async (x) => { sent.push({ jid: "reply-" + (mkM.currentSender || "x"), payload: { text: String(x) } }); },
@@ -90,7 +90,7 @@ console.log("— section 1b: alias lama tetap jalan —");
   const a1b = lib.getAnon(db);
   a1b.queue = a1b.queue.filter((q) => q.jid !== C);
   db.save();
-  t("1b-b. pluginConfig.name = chatibanonymouschat", (await import(R + "/plugins/fun/chatibanonymouschat.js")).config.name === "chatibanonymouschat");
+  t("1b-b. pluginConfig.name = vibychatanonymouschat", (await import(R + "/plugins/fun/vibychatanonymouschat.js")).config.name === "vibychatanonymouschat");
   t("1b-c. sesi A-B gak keganggu", !!lib.getAnon(db).sessions[A] && !!lib.getAnon(db).sessions[B], JSON.stringify(lib.getAnon(db).sessions));
 }
 
@@ -147,18 +147,18 @@ console.log("— section 5: skip & stop —");
   await run(A); // A skip
   // A masih di sesi sama B? setelah section 4 ya
   const sessBefore = !!lib.getAnon(db).sessions[A];
-  await plug.handler(mkM({ sender: A, chat: A, command: "chatibskip", args: [], text: "", react: async () => {} }), { sock: mkSock(), db });
+  await plug.handler(mkM({ sender: A, chat: A, command: "vibychatskip", args: [], text: "", react: async () => {} }), { sock: mkSock(), db });
   t("5a. skip: sesi A-B putus + A langsung re-pair sama C", sessBefore && lib.getAnon(db).sessions[A]?.partner === C, JSON.stringify(lib.getAnon(db).sessions));
   t("5b. B dapat kabar partner skip", msgsTo(B).some((x) => x.includes("diputuskan") || x.includes("keluar")), JSON.stringify(msgsTo(B)));
   sent.length = 0;
-  await plug.handler(mkM({ sender: A, chat: A, command: "chatibstop", args: [], text: "", react: async () => {} }), { sock: mkSock(), db });
+  await plug.handler(mkM({ sender: A, chat: A, command: "vibychatstop", args: [], text: "", react: async () => {} }), { sock: mkSock(), db });
   t("5c. stop: A keluar dari queue", !lib.getAnon(db).queue.some((q) => q.jid === A) && !lib.getAnon(db).sessions[A], JSON.stringify(lib.getAnon(db).queue));
 }
 
 console.log("— section 6: grup ditolak + sesi gak dibocorin —");
 {
   sent.length = 0;
-  await plug.handler(mkM({ sender: A, chat: "123@g.us", isGroup: true, command: "chatibanonymouschat", args: [], text: "", react: async () => {} }), { sock: mkSock(), db });
+  await plug.handler(mkM({ sender: A, chat: "123@g.us", isGroup: true, command: "vibychatanonymouschat", args: [], text: "", react: async () => {} }), { sock: mkSock(), db });
   t("6a. dipakai di grup → disuruh DM bot", sent.some((s) => sc(s.payload?.text || "").includes("dm bot")), JSON.stringify(sent.map((s) => sc(s.payload?.text || "").slice(0, 60))));
   // relay dari sesi yang kirim di grup → gak diteruskan
   await run(A); await run(B);

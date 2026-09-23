@@ -526,9 +526,9 @@ try {
   // Game answer handler (non-command reply to game message) — skip in self mode for non-owner
   // Checks all registered game sessions via nova-games + family100
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
-    // Chat anonim antar member (relay pesan sesi aktif — plugins/fun/chatibanonymouschat.js)
+    // Chat anonim antar member (relay pesan sesi aktif — plugins/fun/vibychatanonymouschat.js)
     try {
-      const { answerHandler: anonChatRelay } = await import("../plugins/fun/chatibanonymouschat.js");
+      const { answerHandler: anonChatRelay } = await import("../plugins/fun/vibychatanonymouschat.js");
       if (typeof anonChatRelay === "function") {
         const anonHandled = await anonChatRelay(m, sock);
         if (anonHandled) return;
