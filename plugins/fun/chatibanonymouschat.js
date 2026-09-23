@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// anonymouschat.js — CHAT ANONIM ANTAR MEMBER BOT (DM only).
+// chatibanonymouschat.js — CHAT ANONIM ANTAR MEMBER BOT (DM only).
 // Dua user di-pair acak, pesan diteruskan anonim tanpa nunjukin nomor.
 // - .anonymouschat  (alias: chatanon, chatrandom, anonchat, temanchat)
 //     masuk daftar tunggu → otomatis di-cocokin begitu ada partner
@@ -12,11 +12,11 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { startChat, skipChat, stopChat, relayMessage } from "../../src/lib/nova-anonchat.js";
 
 const pluginConfig = {
-  name: "anonymouschat",
-  alias: ["anonymouschat", "chatanon", "chatrandom", "anonchat", "temanchat", "skipanon", "stopanon"],
+  name: "chatibanonymouschat",
+  alias: ["chatibanonymouschat", "anonymouschat", "chatanon", "chatrandom", "anonchat", "temanchat", "chatibskip", "chatibstop", "skipanon", "stopanon"],
   category: "fun",
   description: "Chat anonim sama member bot lain — pesan diteruskan tanpa nunjukin nomor",
-  usage: ".anonymouschat · .skipanon · .stopanon",
+  usage: ".chatibanonymouschat · .chatibskip · .chatibstop",
   example: ".anonymouschat",
   isOwner: false,
   isPremium: false,
@@ -43,8 +43,8 @@ async function handler(m, { sock, db: _db }) {
     return m.reply(claraWrap("Chat Anonim", "Chat anonim cuma bisa dipakai di DM bot ya — chat pribadi bot biar privat."));
   }
 
-  if (cmd === "skipanon") return skipChat(m, sock, db);
-  if (cmd === "stopanon") return stopChat(m, sock, db);
+  if (["chatibskip", "skipanon"].includes(cmd)) return skipChat(m, sock, db);
+  if (["chatibstop", "stopanon"].includes(cmd)) return stopChat(m, sock, db);
   return startChat(m, sock, db);
 }
 
