@@ -41,6 +41,12 @@ export function ensureOrderCfg(db) {
   if (typeof c.pakasir.apikey !== "string") c.pakasir.apikey = "";
   if (!c.prices || typeof c.prices !== "object") c.prices = {};
   if (!Number.isFinite(c.adminPrice)) c.adminPrice = DEFAULT_ADMIN_PRICE;
+  // PanelPedia TopUp (21 Sep 2026): auto order layanan topup panelpediatopup.com
+  if (!c.pediatopup || typeof c.pediatopup !== "object") c.pediatopup = {};
+  if (typeof c.pediatopup.apiId !== "string") c.pediatopup.apiId = "";
+  if (typeof c.pediatopup.apiKey !== "string") c.pediatopup.apiKey = "";
+  if (!Number.isFinite(c.pediatopup.markup)) c.pediatopup.markup = 0;
+  if (!c.topupOrders || typeof c.topupOrders !== "object") c.topupOrders = {};
   return c;
 }
 
