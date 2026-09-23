@@ -411,6 +411,7 @@ async function main() {
         initScheduler(config, sock);
         // Dynamic imports for schedulers (graceful if 'cron' package is missing)
         const schedulerInits = [
+          { name: "AnonChat", fn: () => import("./src/lib/nova-anonchat.js").then(m => m.initAnonChatSweeper?.(sock)) },
           { name: "AutoJPM", fn: () => import("./src/lib/nova-auto-jpm.js").then(m => m.initAutoJpmScheduler?.(sock)) },
           { name: "Sholat", fn: () => import("./src/lib/nova-sholat-scheduler.js").then(m => m.initSholatScheduler?.(sock)) },
           { name: "Notif", fn: () => import("./src/lib/nova-notif-scheduler.js").then(m => m.initNotifScheduler?.(sock)) },

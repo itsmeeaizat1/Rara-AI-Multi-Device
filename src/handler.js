@@ -526,6 +526,17 @@ try {
   // Game answer handler (non-command reply to game message) — skip in self mode for non-owner
   // Checks all registered game sessions via nova-games + family100
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
+    // Chat anonim antar member (relay pesan sesi aktif — plugins/fun/anonymouschat.js)
+    try {
+      const { answerHandler: anonChatRelay } = await import("../plugins/fun/anonymouschat.js");
+      if (typeof anonChatRelay === "function") {
+        const anonHandled = await anonChatRelay(m, sock);
+        if (anonHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("anonchat", e.message);
+    }
+
     // Family 100 (separate plugin, own session system)
     try {
       const { answerHandler: fam100Handler } = await import("../plugins/game/family100.js");
