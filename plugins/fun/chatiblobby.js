@@ -1,0 +1,55 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// chatiblobby.js — CHATIB LOBBY: ruang obrol anonim multi-user (inspirasi chatib.chat).
+// Beda dari vibychat (1-on-1 random): semua member lobby saling ngobrol
+// pakai NICKNAME — nomor WA gak pernah dibocorin.
+// - .chatiblobby [nama]  (alias: chatib, lobbyanon, anonymouslobby)
+//     masuk lobby — nama opsional, auto-nickname kalau gak dikasih
+// - .chatibnick <nama>   ganti nickname (unik, gak bisa nabrak milik orang)
+// - .chatiblist           daftar nickname yang online (nomor gak pernah muncul)
+// - .chatibleave           keluar lobby
+// GUARD (standar layanan anonim Nova): ngirim link → di-KICK otomatis
+// + laporan DM owner. Media ditolak, flood guard, idle 15 mnt auto-leave.
+// Engine: src/lib/nova-chatib-lobby.js (relay via answerHandler di handler.js).
+import { getDatabase } from "../../src/lib/nova-database.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { joinLobby, setNick, listMembers, leaveLobby, relayLobbyMessage } from "../../src/lib/nova-chatib-lobby.js";
+
+const pluginConfig = {
+  name: "chatiblobby",
+  alias: ["chatiblobby", "chatib", "lobbyanon", "anonymouslobby", "chatibnick", "chatiblist", "chatibleave", "leavechatib"],
+  category: "fun",
+  description: "Chatib Lobby — ruang obrol anonim multi-user pakai nickname",
+  usage: ".chatiblobby [nama] · .chatibnick <nama> · .chatiblist · .chatibleave",
+  example: ".chatiblobby KucingGalak",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 3,
+  energi: 0,
+  isEnabled: true,
+};
+
+// hook non-command: pesan teks biasa di DM di-broadcast ke lobby (handler.js)
+export async function answerHandler(m, sock) {
+  try {
+    return await relayLobbyMessage(m, sock, getDatabase());
+  } catch { return false; }
+}
+
+async function handler(m, { sock, db: _db }) {
+  const db = _db || getDatabase();
+  const cmd = (m.command || "").toLowerCase();
+
+  // layanan anonim cuma jalan di DM bot (privasi)
+  if (m.isGroup || (m.chat || "").endsWith("@g.us")) {
+    return m.reply(claraWrap("Chatib Lobby", "Chatib Lobby cuma bisa dipakai di DM bot ya — biar privat."));
+  }
+
+  if (cmd === "chatibnick") return setNick(m, sock, db);
+  if (cmd === "chatiblist") return listMembers(m, db);
+  if (["chatibleave", "leavechatib"].includes(cmd)) return leaveLobby(m, sock, db);
+  return joinLobby(m, sock, db); // chatiblobby / chatib / lobbyanon / anonymouslobby
+}
+
+export { pluginConfig as config, handler };

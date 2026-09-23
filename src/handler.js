@@ -537,6 +537,17 @@ try {
       if (config.dev?.debugLog) logger.error("anonchat", e.message);
     }
 
+    // Chatib Lobby — ruang obrol anonim multi-user (plugins/fun/chatiblobby.js)
+    try {
+      const { answerHandler: chatibRelay } = await import("../plugins/fun/chatiblobby.js");
+      if (typeof chatibRelay === "function") {
+        const chatibHandled = await chatibRelay(m, sock);
+        if (chatibHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("chatiblobby", e.message);
+    }
+
     // Family 100 (separate plugin, own session system)
     try {
       const { answerHandler: fam100Handler } = await import("../plugins/game/family100.js");
