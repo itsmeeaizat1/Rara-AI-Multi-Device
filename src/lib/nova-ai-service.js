@@ -918,6 +918,17 @@ export async function callImageGenChain(prompt, opts = {}) {
 // 🔹 provider "anak" yang key-nya nimpa slot induknya
 const KEY_ALIAS = { codestral: "mistral", kimicode: "kimi" };
 
+// ═══ CIRCUIT BREAKER IkyyXD ═══
+// IkyyXD suka degraded (8-25 dtk/call, 520, timeout) tanpa mati total.
+// Tanpa breaker, rantai callIkyy nyoba 7 model ikyy berurutan = user nunggu
+// 2-3 menit. Setelah 2 kali gagal ikyy berurutan, ikyy di-skip total
+// selama IKYY_BREAKER_MS dan callIkyy langsung ke 9Router.
+const IKYY_BREAKER_MS = 10 * 60 * 1000;
+const __ikyyHealth = { skipUntil: 0 };
+function _ikyyDown() { return Date.now() < __ikyyHealth.skipUntil; }
+function _markIkyyDown() { __ikyyHealth.skipUntil = Date.now() + IKYY_BREAKER_MS; }
+export function _resetIkyyBreakerForTest() { __ikyyHealth.skipUntil = 0; }
+
 function resolveApiKeyForProvider(rawProviderKey, aiConfig = {}) {
   const providerKey = KEY_ALIAS[rawProviderKey] || rawProviderKey;
   // 9Router lokal memakai key dashboard lewat ROUTER_API_KEY. Prioritaskan
@@ -1092,7 +1103,14 @@ async function callAIRaw(firstArg, secondArg) {
   // gak jalan walau toggle-nya ON. Fix: key kosong + bukan provider GET
   // (Ikyy dll) + tanpa apiEndpoint custom → otomatis pindah ke
   // ikyy_gemini (api.ikyyxd.my.id, free no-key, terverifikasi hidup).
-  let effectiveApiKey = String(apiKey || "");
+  // 🔹 KEY RESOLUTION: callAI dulu MENGABAIKAN key di apikeys.json di jalur
+  // chat teks (resolveApiKeyForProvider gak pernah dipanggil) — fallback
+  // tio_openai di rantai callIkyy gak pernah bawa key → auto-fallback malah
+  // muter balik ke ikyy_gemini. Fix: key kosong → resolve dari config/env.
+  let effectiveApiKey = String(apiKey || "").trim();
+  if (!effectiveApiKey) {
+    try { effectiveApiKey = String(resolveApiKeyForProvider(providerKey, {}) || "").trim(); } catch {}
+  }
   let activeProviderKey = providerKey;
   let activeProvider = provider;
   if (
@@ -1151,12 +1169,15 @@ async function callAIRaw(firstArg, secondArg) {
   // Endpoint custom (mis. Tio AI) suka mati diam-diam → fitur AI otomatis
   // (autoconflict, autosmartmod, autosmartwelcome, dll) mati walau ON.
   // Owner request: fitur WAJIB tetap jalan → gagal = fallback Ikyy (free).
-  async function requestOnce(prov, provKey) {
-    const url2 = typeof prov.chatEndpoint === "function" ? prov.chatEndpoint(effectiveModel) : prov.chatEndpoint;
+  async function requestOnce(prov, provKey, modelOverride) {
+    // modelOverride: saat retry lewat provider lain (mis. tio_openai), model
+    // provider asli (gpt-4o-mini dst) gak valid di 9router → pakai default.
+    const useModel = modelOverride || effectiveModel;
+    const url2 = typeof prov.chatEndpoint === "function" ? prov.chatEndpoint(useModel) : prov.chatEndpoint;
     const finalUrl2 = String(url2 || "").replace("__API_KEY__", encodeURIComponent(effectiveApiKey));
 
     if (prov.method === "GET" && prov.buildParams) {
-      const params = prov.buildParams({ model: effectiveModel, messages: normalizedMessages, systemPrompt, apiKey: effectiveApiKey });
+      const params = prov.buildParams({ model: useModel, messages: normalizedMessages, systemPrompt, apiKey: effectiveApiKey });
       const queryString = new URLSearchParams(
         Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== ""),
       ).toString();
@@ -1164,6 +1185,7 @@ async function callAIRaw(firstArg, secondArg) {
       const res = await fetch(getUrl, {
         method: "GET",
         headers: { "User-Agent": "Mozilla/5.0", ...prov.authHeader(effectiveApiKey) },
+        signal: AbortSignal.timeout(25000),
       });
       if (!res.ok) {
         const errText = await res.text();
@@ -1176,7 +1198,7 @@ async function callAIRaw(firstArg, secondArg) {
       return stripMarkdownTables(text);
     }
 
-    const body2 = prov.buildBody({ model: effectiveModel, messages: normalizedMessages, systemPrompt });
+    const body2 = prov.buildBody({ model: useModel, messages: normalizedMessages, systemPrompt });
     // gemini & sejenisnya bangun body sendiri (generationConfig) — inject
     // temperature/max_tokens top-level bikin 400 "Unknown name temperature"
     const finalBody = body2?.generationConfig || body2?.systemInstruction
@@ -1189,6 +1211,7 @@ async function callAIRaw(firstArg, secondArg) {
         ...(effectiveApiKey ? prov.authHeader(effectiveApiKey) : prov.authHeader("")),
       },
       body: JSON.stringify(finalBody),
+      signal: AbortSignal.timeout(60000),
     });
     if (!res.ok) {
       const text = await res.text();
@@ -1205,6 +1228,21 @@ async function callAIRaw(firstArg, secondArg) {
   } catch (mainErr) {
     // udah di Ikyy? jangan fallback ke dirinya sendiri
     if (activeProviderKey === "ikyy_gemini" || hasImage) throw mainErr; // ada gambar → jangan fallback ke provider teks (gambar bakal hilang diam2)
+    // Breaker Ikyy aktif → jangan bakar 25 dtk di upstream yang lagi degraded.
+    // Provider utama BUKAN 9Router → coba 9Router sekali (model default-nya).
+    if (_ikyyDown() && !String(activeProviderKey).startsWith("tio_")) {
+      const routerRetry = resolveProvider("tio_openai", {});
+      if (routerRetry) {
+        console.log(`[AI-Service] ${activeProviderKey} gagal + breaker Ikyy ON → fallback 9Router`);
+        try {
+          return await requestOnce(routerRetry, "tio_openai", routerRetry.defaultModel);
+        } catch (routerErr) {
+          console.log(`[AI-Service] fallback 9Router juga gagal: ${routerErr.message}`);
+          throw mainErr; // lempar error asli biar caller tahu
+        }
+      }
+      throw mainErr;
+    }
     const ikyyRetry = resolveProvider("ikyy_gemini", {});
     if (!ikyyRetry) throw mainErr;
     console.log(`[AI-Service] ${activeProviderKey} gagal (${mainErr.message.slice(0, 100)}) → fallback IkyyXD Gemini`);
@@ -1213,7 +1251,7 @@ async function callAIRaw(firstArg, secondArg) {
     try {
       const res = await fetch(
         `https://api.ikyyxd.my.id/ai/gemini?${new URLSearchParams(ikyyRetry.buildParams({ model: "gemini", messages: retryMessages, systemPrompt, apiKey: "" }))}`,
-        { method: "GET", headers: { "User-Agent": "Mozilla/5.0" } },
+        { method: "GET", headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(25000) },
       );
       if (!res.ok) throw new Error(`Ikyy error ${res.status}`);
       const data = await res.json().catch(() => ({}));
@@ -1430,6 +1468,28 @@ async function callIkyyRaw(prompt, opts = {}) {
   const model = opts.model || "gemini";
   const providerKey = `ikyy_${model}`;
 
+  // 9Router sebagai fallback terakhir — key di-resolve di callAIRaw
+  // (ROUTER_API_KEY env → apikeys.json providers.router9v2).
+  const viaRouter = () => callAI({
+    providerKey: "tio_openai",
+    messages,
+    senderJid: opts.senderJid || "",
+    systemPrompt: opts.systemPrompt || "",
+  });
+
+  // ═══ CIRCUIT BREAKER: ikyy lagi degraded → LANGSUNG 9Router.
+  // Dulu rantai ini nyusuri 7 model ikyy (8-25 dtk/call saat upstream
+  // lambat) = user nunggu 2-3 menit sebelum 9Router kejawab.
+  if (_ikyyDown()) {
+    console.log("[callIkyy] breaker aktif — IkyyXD di-skip, langsung 9Router");
+    try {
+      return await viaRouter();
+    } catch (routerErr) {
+      console.error("[callIkyy] 9Router fallback failed:", routerErr.message);
+      throw new Error("Provider AI cadangan gagal. Coba lagi nanti.");
+    }
+  }
+
   try {
     return await callAI({
       providerKey,
@@ -1438,40 +1498,37 @@ async function callIkyyRaw(prompt, opts = {}) {
       systemPrompt: opts.systemPrompt || "",
       senderJid: opts.senderJid || "",
     });
-  } catch (geminiErr) {
-    console.error(`[callIkyy] ${model} failed:`, geminiErr.message);
-    // Fallback chain: cici → unliai → publicai → gpt-5-mini → google-gemma
-    const fallbackChain = [
+  } catch (primaryErr) {
+    console.error(`[callIkyy] ${model} failed:`, primaryErr.message);
+    // Cukup SATU model ikyy cadangan. Kalau dua-duanya gagal, upstream
+    // sedang degraded → panjang umur breaker, pindah ke 9Router.
+    const fb0 = [
       { key: "ikyy_cici", label: "cici" },
       { key: "ikyy_unliai", label: "unliai" },
       { key: "ikyy_publicai", label: "publicai" },
       { key: "ikyy_zai", label: "zai" },
       { key: "ikyy_gpt5", label: "gpt-5-mini" },
       { key: "ikyy_gemma", label: "google-gemma" },
-    ].filter(f => f.key !== `ikyy_${model}`);
-
-    for (const fb of fallbackChain) {
+    ].find(f => f.key !== providerKey);
+    if (fb0) {
       try {
         return await callAI({
-          providerKey: fb.key,
+          providerKey: fb0.key,
           apiKey,
           messages,
           senderJid: opts.senderJid || "",
         });
       } catch (fbErr) {
-        console.error(`[callIkyy] ${fb.label} fallback failed:`, fbErr.message);
+        console.error(`[callIkyy] ${fb0.label} fallback failed:`, fbErr.message);
       }
     }
+    _markIkyyDown();
+    console.log(`[callIkyy] IkyyXD 2x gagal (${model} + ${fb0?.label || "-"}) — breaker ON ${IKYY_BREAKER_MS / 60000} mnt, lanjut 9Router`);
 
     // IkyyXD upstream dapat mati tanpa pemberitahuan. Gunakan 9Router
     // yang sudah menjadi provider aktif Nova sebagai fallback terakhir untuk chat teks.
     try {
-      return await callAI({
-        providerKey: "tio_openai",
-        messages,
-        senderJid: opts.senderJid || "",
-        systemPrompt: opts.systemPrompt || "",
-      });
+      return await viaRouter();
     } catch (routerErr) {
       console.error("[callIkyy] 9Router fallback failed:", routerErr.message);
       throw new Error("Provider AI cadangan gagal. Coba lagi nanti.");
