@@ -1,11 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // vibychatanonymouschat.js — CHAT ANONIM ANTAR MEMBER BOT (DM only).
 // Dua user di-pair acak, pesan diteruskan anonim tanpa nunjukin nomor.
-// - .anonymouschat  (alias: chatanon, chatrandom, anonchat, temanchat)
+// - .vibychatanonymouschat  (alias: anonymouschat, chatanon, chatrandom, anonchat, temanchat)
 //     masuk daftar tunggu → otomatis di-cocokin begitu ada partner
-// - .skipanon       putus sesi sekarang, langsung cari partner baru
-// - .stopanon       keluar sesi / daftar tunggu
-// GUARD (request owner): link → sesi ditutup OTOMATIS + DM owner.
+// - .vibychatskip       putus sesi sekarang, langsung cari partner baru
+// - .vibychatstop       keluar sesi / daftar tunggu
+// ATURAN (revisi owner 24 Sep 2026): link BOLEH dikirim & diteruskan.
+// Sesi nutup otomatis kalau gak ada yang balas selama 1 JAM.
 // Engine: src/lib/nova-anonchat.js (relay via answerHandler di handler.js).
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
