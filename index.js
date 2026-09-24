@@ -446,6 +446,7 @@ async function main() {
           { name: "AutoConflict", fn: () => import("./plugins/owner/autoconflict.js").then(m => m.processConflictMessage?.(null, sock)) },
           { name: "AutoSummary", fn: () => import("./plugins/owner/autosummary.js").then(m => m.startAutoSummary?.(sock)) },
           { name: "AutoTask", fn: () => import("./plugins/owner/autotask.js").then(m => m.resumeAutoTasks?.(sock)) },
+          { name: "AgentLoop", fn: () => import("./plugins/owner/agentloop.js").then(m => m.resumeAgentLoops?.(sock)) },
           { name: "AutoSwgc", fn: () => import("./plugins/owner/autoswgc.js").then(m => m.startAutoSwgc?.(sock)) },
           { name: "AutoResource", fn: () => import("./plugins/owner/autoresource.js").then(m => m.startAutoResource?.(sock)) },
           { name: "Doctor", fn: () => import("./src/lib/nova-doctor.js").then(m => m.initDoctorMonitor?.(sock)) },
