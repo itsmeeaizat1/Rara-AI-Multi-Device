@@ -69,17 +69,12 @@ async function handler(m, { sock }) {
   const media = await getMediaBuffer(m);
 
   if (!media) {
-    let txt = "IMAGE COMPRESSOR\n\n";
-    txt += "Kompres gambar untuk mengurangi ukuran file.\n\n";
-    txt += "Cara pakai:\n";
-    txt += "1. .imgcompress (reply gambar) — Kompres default 70%\n";
-    txt += "2. .imgcompress 50 (reply gambar) — Kompres dengan level 50%\n";
-    txt += "3. .imgcompress max (reply gambar) — Kompres maksimal\n";
-    txt += "4. .imgcompress info (reply gambar) — Info detail gambar\n\n";
-    txt += "Level 1-100 (semakin rendah = semakin kecil ukuran)\n";
-    txt += "Default: 70% | Max: 20%\n";
-    txt += "Format: JPG, PNG, WebP";
-    return m.reply( txt, "imgcompress");
+    return m.reply(novaGuide(
+      "imgcompress",
+      "Kompres gambar untuk mengurangi ukuran file",
+      ".imgcompress (reply gambar) — kompres default 70%\n.imgcompress 50 (reply gambar) — kompres level 50%\n.imgcompress max (reply gambar) — kompres maksimal\n.imgcompress info (reply gambar) — info detail gambar",
+      "Level 1-100 (semakin rendah = semakin kecil ukuran)\nDefault: 70% | Max: 20%\nFormat: JPG, PNG, WebP"
+    ), "imgcompress");
   }
 
   const isImage = (media.mime || "").startsWith("image/");

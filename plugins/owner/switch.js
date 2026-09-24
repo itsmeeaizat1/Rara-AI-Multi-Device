@@ -56,8 +56,10 @@ const pluginConfig = {
   ],
   category: "owner",
   description: 'Switch on/off semua fitur (channel, group, auto, command)',
-  usage: '.switch [status|channel|group|auto|fitur|semua] | .switch <fitur> on|off [target]',
-  example: '.switch status all\n.switch channel\n.switch group welcome\n.switch group welcome on 12036302xxx@g.us | on all | on list\n.switch group all on <target> (semua fitur grup)\n.switch auto autobackup on\n.switch auto all on|off (semua fitur otomatis)\n.switch auto autosholat set (kustomisasi target: dm/grup/semua/gabungan)\n.switch fitur off rpg\n.switch semua on|off (MASTER: semuanya)',
+  // REWORK 24 Sep (owner: usage terlalu ribet) — cukup pintu masuk panel,
+  // detail tiap kategori muncul di dalam panel .switch sendiri.
+  usage: '.switch — panel on/off semua fitur',
+  example: '.switch\n.switch status all\n.switch channel\n.switch group\n.switch auto\n.switch fitur',
   isOwner: true,
   isPremium: false,
   isGroup: false,

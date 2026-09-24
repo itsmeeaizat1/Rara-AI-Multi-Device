@@ -26,12 +26,12 @@ async function handler(m, { sock }) {
         const db = getDatabase()
         const currentDefault = db.setting('defaultLimit') || config.limits?.default || 25
         
-        return m.reply(claraWrap("sEt DeғAult Limit", 
-            `Limit default saat ini: \`${currentDefault}\`\n\n` +
-            `*Cara pakai:*\n` +
-            `\`${m.prefix}setlimitdefault <jumlah>\`\n\n` +
-            `*Contoh:*\n` +
-            `\`${m.prefix}setlimitdefault 50\``))
+        return m.reply(novaGuide(
+            "setlimitdefault",
+            `Limit default saat ini: ${currentDefault}`,
+            `${m.prefix}setlimitdefault 50`,
+            "Range 1 - 1000"
+        ))
     }
     
     if (newLimit < 1 || newLimit > 1000) {

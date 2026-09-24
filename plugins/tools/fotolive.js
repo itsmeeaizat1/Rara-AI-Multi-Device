@@ -87,17 +87,12 @@ async function handler(m, { sock }) {
 
     if (!isVideo) {
       return m.reply(
-        `Cara pakai:\n` +
-        `Reply video lalu ketik ${m.prefix}fotolive\n\n` +
-        `Opsi:\n` +
-        `1. ${m.prefix}fotolive — Default (3s, 480p, 15fps)\n` +
-        `2. ${m.prefix}fotolive 5 — 5 detik\n` +
-        `3. ${m.prefix}fotolive 5 720 — 5 detik, 720p\n` +
-        `4. ${m.prefix}fotolive 3 720 20 — 3 detik, 720p, 20fps\n\n` +
-        `Limit video sumber:\n` +
-        `Minimal: ${SRC_MIN_DURATION}s (wajib)\n` +
-        `Lebih panjang: auto-trim\n` +
-        `Limit durasi output: ${OUT_MIN_DURATION}s - ${OUT_MAX_DURATION}s`,
+        novaGuide(
+          "fotolive",
+          `Ubah video jadi foto live WhatsApp\nReply video lalu ketik ${m.prefix}fotolive`,
+          `${m.prefix}fotolive — default (3s, 480p, 15fps)\n${m.prefix}fotolive 5 — 5 detik\n${m.prefix}fotolive 5 720 — 5 detik, 720p\n${m.prefix}fotolive 3 720 20 — 3 detik, 720p, 20fps`,
+          `Limit video sumber: minimal ${SRC_MIN_DURATION}s (lebih panjang auto-trim)\nLimit durasi output: ${OUT_MIN_DURATION}s - ${OUT_MAX_DURATION}s`
+        ),
         "fotolive"
       );
     }
