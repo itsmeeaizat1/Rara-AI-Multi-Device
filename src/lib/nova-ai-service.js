@@ -1458,7 +1458,19 @@ async function callIkyyRaw(prompt, opts = {}) {
       }
     }
 
-    throw new Error("Semua model IkyyXD API gagal. Coba lagi nanti.");
+    // IkyyXD upstream dapat mati tanpa pemberitahuan. Gunakan 9Router
+    // yang sudah menjadi provider aktif Nova sebagai fallback terakhir untuk chat teks.
+    try {
+      return await callAI({
+        providerKey: "tio_openai",
+        messages,
+        senderJid: opts.senderJid || "",
+        systemPrompt: opts.systemPrompt || "",
+      });
+    } catch (routerErr) {
+      console.error("[callIkyy] 9Router fallback failed:", routerErr.message);
+      throw new Error("Provider AI cadangan gagal. Coba lagi nanti.");
+    }
   }
 }
 
