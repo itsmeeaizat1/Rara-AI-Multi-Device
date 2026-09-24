@@ -62,6 +62,11 @@ function readLegacyKeys() {
 // fallback key lama biar key yang UDAH ada di apikeys.json / env tetep kepake
 // walau slot apikey di ai-providers.json kosong (backward compatible).
 const LEGACY_SLOTS = {
+  // provider tio_* (9Router) → slot router9v2 di apikeys.json (fallback
+  // terakhir rantai callIkyy jadi beneran nyampe ke 9Router)
+  tio_openai: { slot: "router9v2", env: "ROUTER_API_KEY" },
+  tio_gemini: { slot: "router9v2", env: "ROUTER_API_KEY" },
+  tio_anthropic: { slot: "router9v2", env: "ROUTER_API_KEY" },
   groq: { slot: "groqkey", env: "GROQ_KEY" },
   openai: { slot: "openai", env: "OPENAI_KEY" },
   deepseek: { slot: "deepseekkey", env: "DEEPSEEK_KEY" },
