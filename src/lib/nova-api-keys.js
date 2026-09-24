@@ -223,6 +223,16 @@ export const API_KEYS = {
     usedBy: ["onepixiv", "oneyoutube", "onedl", "oneimage", "onephoto", "oneai", "onettts", "hololive", "onehentai"],
   },
 
+  // ── KYIO REST API (opsional — free tier tanpa key) ──
+  kyio: {
+    label: "KyioAPI (330 endpoint: AI/downloader/tools/search)",
+    description: "Untuk .kyiodeepseek .kyiogemini .kyiotiktok .kyioytdl .kyiobrat .kyioqrcode dkk — OPSIONAL: tanpa key jalan (free tier 10 RPM), dengan key 120 RPM + endpoint premium",
+    getConfig: () => config.kyio?.apiKey || "",
+    getEnv: () => process.env.KYIO_API_KEY || "",
+    getLink: () => "https://api.kyio.web.id",
+    usedBy: ["kyio", "kyioai", "kyiodl", "kyiotools", "kyiosearch", "kyioimage", "kyionews", "kyioislamic", "kyiomaker", "kyiofun", "kyiogames", "kyioinfo", "kyiomovie", "kyiotts"],
+  },
+
   // ── EMAIL OTP ─────────────────────────────────
   emailOtp: {
     label: "Email OTP (SMTP)",
