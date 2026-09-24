@@ -2491,3 +2491,98 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - imgcompress.js tetap pakai resize 1920 (fitur kompres input, beda konteks — bukan aturan kirim).
 - E2E hd-scale 16/16 (tes 1600x1600→document, 800x800→image) + remini 58/58 + import 14/14.
 - VPS: `git pull && pm2 restart` (tanpa npm install).
+
+## v24.2.0 — EWS GEMPA + SCOPE LOKASI 3 TINGKAT (24 Sep 2026)
+- `.dsw lokasi <kota>` — kategori bencana — pantau radius sekitar kota (perilaku lama, mis. `.dsw lokasi anyer`).
+- `.dsw lokasi <pulau>` — kategori bencana — pantau SELURUH pulau via bbox wilayah (mis. `.dsw lokasi jawa`, `.dsw lokasi sumatra`, `.dsw lokasi kalimantan`). Terdeteksi otomatis dari Nominatim `addresstype=island`.
+- `.dsw lokasi <negara>` — kategori bencana — pantau SELURUH negara (mis. `.dsw lokasi indonesia`, `.dsw lokasi jepang`). Terdeteksi otomatis dari `addresstype=country`.
+- `.dsw lokasi <provinsi>` — kategori bencana — scope `daerah` (mis. `.dsw lokasi bali`) → bbox provinsi.
+- `.dsw` — kategori bencana — EWS gempa TANPA lokasi tetap dapat notif (level `UMUM`/"INFO GEMPA TERDETEKSI") selama memenuhi `minmag` (default 3.5); sebelumnya cuma gempa M6.5+ global.
+- `.wsw alert` — kategori owner — interval cek alert cuaca ekstrem dipercepat 30 menit → 5 menit (bisa dioverride `alertCheckMinutes`).
+- `.switch auto <fitur> on` — kategori owner — sekarang memakai default lokasi yang sama dengan scheduler (fix fetch error senyap) + langsung menampilkan TOMBOL pilih target DM/grup/gabungan.
+- `.switch auto autoweatherrealtime` — kategori owner — peringatan eksplisit kalau target belum diset (dulu gagal senyap total).
+- `.switch auto bencanawatch` — kategori owner — peringatan eksplisit kalau belum ada subscriber (monitor gak nyala tanpa subscriber).
+- Fix: daftar sumber EWS disatukan (`BENCANA_SUMBER` + `evSumberKey`) — event JMA (`jepang`) & EMSC (`global`) dulu SELALU dibuang saat filter sumber diset.
+- Fix: rantai `try/catch` bertingkat di `src/connection.js` diratakan — dulu satu init gagal bisa melewati `startWeatherRealtimeScheduler` (scheduler cuaca mati senyap).
+- E2E: `bencana-scope-e2e` 23/23, `bencana-notifier-e2e` 98/98, `weather-otomatis-e2e` 60/60, `test-plugins.js` 7/7, bulk load 1991/1991 plugin.
+
+## v24.2.1 — SEMUA FITUR AUTO PAKAI TOMBOL SET TARGET (24 Sep 2026)
+- `.switch auto <fitur> on` — kategori owner — TOMBOL set target (Semua Grup / Grup Tertentu / DM / Gabungan / Reset) sekarang tersedia untuk SEMUA fitur auto yang mengirim notifikasi. Fitur tambahan: `webwatch`, `cryptoalert`, `autohealth`, `autorefill`, `autobackup` (total 21 fitur).
+- `.switch auto webwatch set` — kategori owner — target terpusat webwatch (subscriber chat tetap dapat, target terpusat menambah jangkauan).
+- `.switch auto cryptoalert set` — kategori owner — target terpusat crypto alert.
+- `.switch auto autohealth set` — kategori owner — laporan API health bisa dikirim ke target terpusat (selain owner).
+- `.switch auto autorefill set` — kategori owner — laporan refill bisa ke target terpusat.
+- `.switch auto autobackup set` — kategori owner — file backup bisa ke target terpusat.
+- Fix: caption AutoBackup salah ketik `+ +` → baris "Waktu" jadi `NaN` (sekarang normal).
+- E2E: webwatch 34/34, cryptoalert 36/36, depfeatures 41/41, bencana-scope 23/23, weather-otomatis 60/60, test-plugins 7/7, bulk load 1991/1991.
+
+## v24.2.2 — FIX AUTO ANIME & AUTO MOVIE (24 Sep 2026)
+- Fix `autoanimenotifier` — sumber utama **AniList selalu kosong**: parameter `genre_in` AniList berperilaku AND (bukan OR), jadi mengirim 11 genre favorit → 0 hasil → tiap cek jatuh ke Kitsu (skor N/A, tanpa info episode berikutnya). Sekarang query tanpa genre + preferensi genre disaring di sisi bot, dengan fallback anti-nol. Live: sumber kembali **AniList**.
+- Fix `automovienotifier` — sumber utama **IMDbOT mati**: `/search?q=` balas HTTP 400 dan `/title/<id>` balas non-JSON. Diganti ke endpoint hidup `/justwatch?q=` dengan mapping toleran (mendukung `imdbId`, poster, backdrop).
+- Fix `automovienotifier` — urutan provider daftar diperbaiki: **Cinemeta jadi utama** (katalog asli: top / year / imdbRating), IMDbOT cadangan. Sebab `/justwatch?q=` itu pencarian JUDUL, bukan katalog — query "popular" dulu memunculkan acara berjudul "Popular" (1999) sebagai "film trending". Enrich detail juga Cinemeta dulu (rating IMDb + kru + sinopsis lengkap).
+- Fix portabilitas: 3 file test (`anime-card-mock`, `movie-mock`, `ai-satuan-rich-e2e`) memakai path absolut server penulis (`/app/conversations/...`) → sekarang relatif ke lokasi file test (`import.meta.url`), bisa dijalankan di mesin mana pun.
+- E2E: anime-card-mock 26/26, animedigest 37/37, movie-mock 27/27, ai-satuan-rich 47/47.
+- Catatan cara jalan test mock (WAJIB): `mkdir -p /tmp/<x>-e2e/src/data && cd /tmp/<x>-e2e && node --experimental-loader <repo>/test/<mock>/loader.mjs <repo>/test/<x>-e2e/e2e.mjs`
+
+## v24.2.3 — FIX AUTO BERITA (24 Sep 2026)
+- Fix `autoberitanotify` lewat `.switch auto autoberitanotify on` — toggle dulu pakai **dynamic import tanpa await** → balasan "ON" muncul sebelum state tersimpan (race) dan kegagalan import senyap total. Sekarang statik & sinkron.
+- Fix `autoberitanotify` — `enabled` saja TIDAK cukup: tanpa subscriber/target, `runCheck` balik "gak ada subscriber/target" → 0 pesan senyap. Sekarang `.switch` menampilkan peringatan + tombol target.
+- Fix sumber RSS `kompas` MATI (Cloudflare HTTP 202, body 0 byte; semua varian feed gagal) → diganti **Antara News** (`www.antaranews.com/rss/terkini.xml`, verified live 50 item + thumbnail). Setting lama `kompas` dialihkan otomatis ke `antara`; sumber tak dikenal jatuh aman ke `cnn`.
+- E2E: beritanotify 41/41, berita-rss 38/38, test-plugins 7/7.
+
+## v24.2.4 — AUDIT & FIX AUTO HUJAN / WEBWATCH / CRYPTOALERT (24 Sep 2026)
+- Audit sumber data (semua diverifikasi LIVE):
+  - `autorainnotify`: Open-Meteo `minutely_15` precipitation ✅ (One Call 3.0 butuh API key → HTTP 401 → otomatis fallback ke Open-Meteo), geocode Nominatim ✅.
+  - `webwatch`: fetch URL apa pun ✅ (deteksi perubahan hash konten).
+  - `cryptoalert`: CoinGecko `/simple/price` + `/search` ✅.
+- Semua target terpusat TERBUKTI jalan (uji kirim nyata):
+  - hujan `autorainnotify` → grup target terima ✅
+  - webwatch → subscriber + grup target terima ✅
+  - cryptoalert → subscriber + grup target terima ✅
+- Fix `cryptoalert`: `addAlert` dulu SELALU melaporkan `coin_not_found` walau penyebabnya CoinGecko error/rate-limit (429) → sekarang dibedakan jadi `api_error` + pesan jelas di plugin ("CoinGecko lagi gak bisa diakses (rate-limit/down), coba lagi bentar").
+- Fix `cryptoalert`: `runCheck` gagal ambil harga → dulu `return []` diam-diam → sekarang nulis peringatan ke log (maks 1x/menit).
+- Fix `webwatch` + `cryptoalert`: `checkNow()` dulu fire-and-forget (`forEach`) → command `.webwatch now` / `.cryptoalert now` balas SEBELUM alert terkirim (kelihatan seperti "gak ngirim"). Sekarang di-await.
+- Bersihkan state dev (`src/data/webwatch.json`, `cryptoalert.json`, `autoanimenotifier.json`, `automovienotifier.json`) dari data test.
+- E2E: hujannotify 34/34, webwatch 34/34, cryptoalert 36/36, test-plugins 7/7, bulk load 1991/1991.
+
+## v24.2.5 — AUTO HUJAN: status OWM + key OpenWeather (24 Sep 2026)
+- Konfirmasi: **key OpenWeather SUDAH ADA & TERBACA** (`apikeys.json → fitur.openWeatherKey`, dibaca `getOwmKey()` lewat `config.aiHelp.openWeatherKey`). Diverifikasi: endpoint gratis `api.openweathermap.org/data/2.5/weather` → **HTTP 200** ✅.
+- Catatan: **One Call 3.0 butuh langganan terpisah** ("One Call by Call"). Tanpa itu OWM balas **HTTP 401** — pesan resmi: *"using One Call 3.0 requires a separate subscription to the One Call by Call plan"*. Bot otomatis fallback ke **Open-Meteo `minutely_15`** (gratis, tanpa key) sehingga notifikasi hujan tetap jalan.
+- Fix `autorainnotify`: `owmError` dulu **selalu ketimpa jadi null** — `noteOwmError()` menyimpan pesan, tapi `runRainCheck()` menyimpan ulang objek `st` versi lama di akhir fungsi. Akibatnya `.hujannotif status` TIDAK PERNAH bisa menampilkan alasan OWM gagal. Sekarang pesannya diset langsung di objek yang disimpan.
+- E2E: hujannotify 34/34, test-plugins 7/7.
+
+## v24.2.6 — AUTO HUJAN pakai key OpenWeather + hemat kuota One Call (24 Sep 2026)
+- Key OpenWeather **dipakai** di rantai nowcast. Hasil uji key:
+  - `data/2.5/weather` (Current) → **HTTP 200** ✅
+  - `data/2.5/forecast` (Forecast 5 hari/langkah 3 jam, ada `pop` + `rain.3h`) → **HTTP 200** ✅
+  - `data/3.0/onecall` (One Call 3.0, nowcast **per-menit**) → **HTTP 401** butuh langganan "One Call by Call"
+  - `data/2.5/onecall` (One Call 2.5 legacy) → **HTTP 401** "Invalid API key" (versi legacy sudah dimatikan)
+- Fitur baru: `fetchOwmForecast()` — **Forecast 2.5** jadi sumber cadangan terakhir (memakai key OWM) kalau One Call & Open-Meteo sama-sama gagal. Jadi key tidak lagi jadi beban mati.
+- Optimasi: kalau One Call 3.0 terdeteksi butuh langganan, percobaan dilewati **6 jam** (`owmSkipUntil`) — hemat kuota & waktu siklus.
+- Rantai nowcast: **One Call 3.0 (per-menit)** → **Open-Meteo `minutely_15` (15 menit, gratis)** → **OWM Forecast 2.5 (key OWM)**.
+- Pesan peringatan sudah "sebelum hujan turun", contoh: `⛈️ Hujan *lebat* diperkirakan datang dalam *20 menit*!`
+- E2E: hujannotify 34/34.
+- CATATAN: untuk nowcast **per-menit** (=paling realtime), akun OWM perlu subscribe paket **One Call by Call** (gratis 1000 panggilan/hari) di halaman pricing. Setelah di-subscribe, bot OTOMATIS memakai per-menit tanpa ubah kode.
+
+## v24.2.7 — AUTO HUJAN tanpa set lokasi (kota bergilir, anti spam) (24 Sep 2026)
+- Owner: "klo blm set lokasi otomatis hanya memberitahu lokasi akan hujan contoh di jakarta, di tangerang kyk random" + "dibuat secanggihnya biar gak spam lokasi".
+- Fitur: kalau lokasi **belum di-set** (dan warisan weather kosong), bot TIDAK diam lagi — otomatis memakai **16 kota fallback** (Jakarta, Tangerang, Bekasi, Depok, Bogor, Serang, Bandung, Semarang, Yogyakarta, Surabaya, Medan, Palembang, Makassar, Denpasar, Balikpapan, Pontianak).
+- **Bergilir (round-robin) + cooldown per kota** → tiap siklus beda kota, kota yang baru dinotifikasi ditahan sampai cooldown lewat (default 2 jam). Tidak spam satu lokasi.
+- Pesan diberi catatan: `📍 Lokasi dipilih otomatis (kamu belum set lokasi). Set biar pantau kotamu: .hujannotif lokasi <nama kota>` + `Pantauan kota bergilir — gak akan spam satu kota terus.`
+- Kalau lokasi **di-set** (mis. `.hujannotif lokasi Serang`) → selalu pakai Serang, rotasi nonaktif.
+- Monitor tidak lagi mensyaratkan lokasi: cukup `on` + ada penerima.
+- Bukti uji: tanpa lokasi → `Jakarta → Tangerang → Bekasi → Depok → Bogor` (5/5 kota berbeda); dengan `Serang` → selalu Serang.
+- E2E: hujannotify 35/35.
+
+## v24.2.8 — AUTO LOKER: loker INDONESIA asli (24 Sep 2026)
+- Owner: "cek fitur auto loker itu fiturnya beneran notif loker dr indonesia ga kyk lowongan kerja indonesia".
+- TEMUAN: 4 portal Indonesia yang jadi sumber default **SEMUA memblokir scraping**:
+  - JobStreet → Andaraz HTTP 500, direct HTTP 404
+  - Glints → HTTP 403
+  - Kalibrr → HTTP 404 (2 endpoint)
+  - Indeed → HTTP 403
+  → `fetchAllIndonesiaJobs()` selalu **0 loker**, jadi notif isinya loker **luar negeri** (USA/Jerman dari Remotive/Arbeitnow). Bukan lowongan Indonesia.
+- FIX: tambah **`fetchLinkedinID()`** pakai LinkedIn guest API (`jobs-guest/.../seeMoreJobPostings/search`) yang masih terbuka & mengembalikan **loker Indonesia asli**. Verified live: *Staff CRD - Graphic Designer @ PT. Selaras Husada, Surabaya*, *Quantity Surveyor @ PT. Pakuwon Jati Tbk*, dll.
+- `linkedin` dijadikan sumber **pertama** di: `src/lib/config/schedulers.js`, default `nova-loker-scheduler.js`, daftar `AVAILABLE` di `.loker sumber`, dan plugin **`.ayokerja`**.
+- Format notif: judul + perusahaan + lokasi + tipe + tanggal dibuka + link LinkedIn.
+- E2E baru: `test/loker-id-e2e` 13/13.

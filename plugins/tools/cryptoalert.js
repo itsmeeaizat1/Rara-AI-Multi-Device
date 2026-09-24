@@ -124,7 +124,9 @@ async function handler(m, { sock }) {
         direction_invalid: `Direction-nya harus *diatas* atau *dibawah*.\n\nContoh: ${m.prefix}cryptoalert btc diatas 150jt`,
         target_invalid: "Harga targetnya gak valid. Contoh: 150jt / 150000000 / 40.500.000",
         limit: "Maksimal 5 alarm per chat. Hapus salah satu dulu.",
-        coin_not_found: "Coin-nya gak ketemu / API-nya lagi down. Coba tickernya (btc, eth, sol...)",
+        coin_not_found: "Coin-nya gak ketemu. Coba tickernya (btc, eth, sol...)",
+        // v24.2.4 — dibedakan dari coin_not_found biar pesannya gak menyesatkan
+        api_error: "CoinGecko lagi gak bisa diakses (rate-limit / down). Coba lagi bentar ya 🙏",
       };
       return m.reply(claraWrap("cryptoalert", msgs[res.error] || "Gagal pasang alarm.", "error"));
     }

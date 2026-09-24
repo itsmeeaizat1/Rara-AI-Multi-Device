@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
+import { mergeAutoTargets } from "./nova-auto-target.js";
 import archiver from "archiver";
 import { CronJob } from "cron";
 import config from "../../config.js";
@@ -262,7 +263,8 @@ async function sendBackupToOwner(backupInfo) {
     const state = loadBackupState();
 
     const caption =
-      `「 ✦ Aᴜᴛᴏ Bᴀᴄᴋᴜᴘ ✦ 」\n` + +
+      `「 ✦ Aᴜᴛᴏ Bᴀᴄᴋᴜᴘ ✦ 」\n` +
+      // FIX v24.2.0: dulu ada `+ +` (plus ganda) → baris "Waktu" jadi NaN.
       `• *Waktu:* ${timeHelper.formatDateTime("DD MMMM YYYY HH:mm:ss")} WIB\n` +
       `• *Size:* ${sizeInMB} MB\n` +
       `• *Files:* ${backupInfo.fileCount}\n` +
@@ -271,12 +273,19 @@ async function sendBackupToOwner(backupInfo) {
       
       `${config.bot?.name || "Nova-AI"}`;
 
-    await sockInstance.sendMessage(ownerJid, {
-      document: { url: backupInfo.path },
-      mimetype: "application/zip",
-      fileName: path.basename(backupInfo.path),
-      caption,
-    });
+    // TARGET TERPUSAT (v24.2.0): owner tetap dapat; target terpusat ikut.
+    let bTargets = [ownerJid];
+    try { bTargets = await mergeAutoTargets(sockInstance, "autobackup", [ownerJid]); } catch { /* pakai owner */ }
+    for (const jid of bTargets) {
+      try {
+        await sockInstance.sendMessage(jid, {
+          document: { url: backupInfo.path },
+          mimetype: "application/zip",
+          fileName: path.basename(backupInfo.path),
+          caption,
+        });
+      } catch {}
+    }
 
     state.lastBackup = new Date().toISOString();
     state.backupCount++;

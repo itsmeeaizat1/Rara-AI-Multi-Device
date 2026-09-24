@@ -82,9 +82,11 @@ async function handler(m, { sock }) {
 
     const mergedCategories = category ? [category] : settings.categories || [];
 
-    // Coba 4 portal Indonesia dulu (JobStreet, Glints, Kalibrr, Indeed)
+    // v24.2.8 — LinkedIn DULU. 4 portal di bawah memblokir scraping
+    // (JobStreet 500/404, Glints 403, Kalibrr 404, Indeed 403) sehingga
+    // sebelumnya hasilnya selalu kosong lalu jatuh ke loker luar negeri.
     let jobs = await fetchAllIndonesiaJobs({
-      sources: ["jobstreet", "glints", "kalibrr", "indeed"],
+      sources: ["linkedin", "jobstreet", "glints", "kalibrr", "indeed"],
       keywords: mergedKeywords,
       limit: 5,
       sentIds: {},

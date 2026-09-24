@@ -84,6 +84,12 @@ function getWRSettings(db) {
   if (!s.autoCheckMinutes) s.autoCheckMinutes = 5;
   if (!s.minGapMinutes) s.minGapMinutes = 10;
   if (!s.provider) s.provider = "openmeteo";
+  // FIX v24.1.1: objek setting yang SUDAH ADA (mis. dibuat .switch) dulu gak
+  // pernah dapet lokasi default → fetch error "Koordinat lokasi cuaca belum
+  // diatur" & notif GAK PERNAH kekirim. Sekarang lokasi selalu diisi.
+  if (!s.location || !Number.isFinite(Number(s.location.latitude)) || !Number.isFinite(Number(s.location.longitude))) {
+    s.location = config.weather?.location || { name: "Jakarta", latitude: -6.2088, longitude: 106.8456 };
+  }
   if (s.adm4 === undefined) s.adm4 = null;
   if (s.alertEnabled === undefined) s.alertEnabled = true;
   if (!s.thresholds) s.thresholds = {};

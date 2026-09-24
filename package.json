@@ -1,8 +1,9 @@
 {
   "_watermark": "NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA",
   "name": "nova-md",
-  "version": "24.0.0",
+  "version": "24.2.8",
   "description": "WhatsApp Multi-Device Bot dengan sistem plugin modular",
+  "fixes": "v24.2.0 — EWS gempa tanpa lokasi tetap notif, sumber EWS disatukan, alert cuaca 5 menit, tombol target .switch, boot scheduler anti-skip. Lihat FIXES.md",
   "main": "index.js",
   "scripts": {
     "start": "set NODE_ENV=development&& node index.js",
@@ -135,5 +136,25 @@
     "eslint": "^10.10.0",
     "globals": "^17.12.0",
     "nodemon": "^3.1.14"
+  },
+  "allowScripts": {
+    "@ffmpeg-installer/linux-x64@4.1.0": true,
+    "onnxruntime-node@1.30.0": true,
+    "onnxruntime-node@1.17.3": true,
+    "sharp@0.32.6": true,
+    "sharp@0.30.7": true,
+    "9router@0.5.75": true,
+    "btch-downloader@6.4.0": true,
+    "canvas@3.2.3": true,
+    "cpu-features@0.0.10": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.27.7": true,
+    "msedge-tts@2.0.7": true,
+    "protobufjs@7.6.5": true,
+    "puppeteer@25.11.0": true,
+    "skia-canvas@3.0.8": true,
+    "ssh2@1.17.0": true,
+    "tesseract.js@7.0.0": true,
+    "youtube-dl-exec@3.1.15": true
   }
 }
