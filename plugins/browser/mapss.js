@@ -20,7 +20,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { splitChatChunks } from "../../src/lib/aiagent.js";
 import {
-  mapsScreenshotSearch, mapsPlaceDetail,
+  mapsScreenshotSearch, mapsPlaceDetail, parseMapCoords,
   registerMapsChoice, takeMapsChoice, getMapsSession, clearMapsChoice,
 } from "../../src/scraper/nova-maps-browser.js";
 
@@ -180,6 +180,21 @@ export async function answerHandler(m, sock) {
     const chunks = splitChatChunks(full, { chunkChars: 6000 });
     for (const chunk of chunks) {
       await sock.sendMessage(m.chat, { text: chunk }, { quoted: m });
+    }
+
+    // [3] pin lokasi native WhatsApp (peta interaktif — tap langsung
+    // kebuka di app Maps) — koordinat diparse dari URL place Google
+    // Maps; gak ketemu → skip senyap (screenshot + teks udah cukup)
+    const coords = parseMapCoords(item.url);
+    if (coords) {
+      await sock.sendMessage(m.chat, {
+        location: {
+          degreesLatitude: coords.lat,
+          degreesLongitude: coords.lng,
+          name: d.name || item.name || "Lokasi",
+          address: d.address || "",
+        },
+      }, { quoted: m }).catch(() => {});
     }
     await m.react("⚡");
     return true;

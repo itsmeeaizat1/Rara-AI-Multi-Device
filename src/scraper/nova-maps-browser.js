@@ -58,6 +58,21 @@ export function getMapsSession(chat) {
 export function clearMapsChoice(chat) { mapsSessions.delete(chat); }
 export function _clearMapsSessionsForTest() { mapsSessions.clear(); }
 
+// ── parse koordinat dari URL place Google Maps ────────────────
+// format di URL kartu hasil: "!8m2!3d-6.2244444!4d106.8411111"
+// (3d = latitude, 4d = longitude) → buat pin lokasi native WhatsApp.
+// Fallback: pola "@-6.22,106.84" / "?q=-6.22,106.84".
+export function parseMapCoords(url) {
+  const s = decodeURIComponent(String(url || ""));
+  let m = s.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+  if (!m) m = s.match(/[@?&q=](-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+  if (!m) return null;
+  const lat = Number(m[1]), lng = Number(m[2]);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+  return { lat, lng };
+}
+
 // ── consent Google (kadang muncul di IP Eropa) → Accept all ──
 async function dismissConsent(page) {
   try {

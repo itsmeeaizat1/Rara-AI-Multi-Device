@@ -44,12 +44,12 @@ function mockSock() {
   return {
     media, sent,
     sendMedia: async (chat, buf, caption, m, opts) => { media.push({ chat, buf, caption: String(caption), opts }); return {}; },
-    sendMessage: async (chat, payload, opts) => { sent.push({ chat, text: payload?.text || "" }); return {}; },
+    sendMessage: async (chat, payload, opts) => { sent.push({ chat, text: payload?.text || "", loc: payload?.location || null }); return {}; },
   };
 }
 
 const PLACES = [
-  { name: "Kopi Kenangan Mall", rating: "4,6", reviews: "(1.234)", meta: "Cafe · Jakarta", hours: "Buka 24 jam", url: "https://www.google.com/maps/place/kopi-kenang" },
+  { name: "Kopi Kenangan Mall", rating: "4,6", reviews: "(1.234)", meta: "Cafe · Jakarta", hours: "Buka 24 jam", url: "https://www.google.com/maps/place/kopi-kenang/data=!4m7!3m6!1s0xabc!8m2!3d-6.2244444!4d106.8411111!16s%2Fg%2F11x" },
   { name: "Cafe Sabi 21", rating: "4,2", reviews: "(98)", meta: "Coffee shop · Jakarta", hours: "Buka · Tutup pukul 22.00", url: "https://www.google.com/maps/place/cafe-sabi" },
   { name: "Tanpa Link", rating: "4,0", reviews: "(12)", meta: "Kafe · Bogor", hours: "", url: "" },
 ];
@@ -123,6 +123,28 @@ w("\n— 4. balas nomor 2 → buka halaman place no.2 —");
   check("4g. ada readmore invisible (U+200E×4001) buat konten panjang", txt.includes(String.fromCharCode(8206).repeat(4001)));
   check("4h. ulasan kebawa setelah readmore", has(txt, "budi") && has(txt, "kopinya enak") && has(txt, "sari"));
   check("4i. link Maps place di akhir", txt.includes("https://www.google.com/maps/place/cafe-sabi"));
+}
+
+w("\n— 4b. pin lokasi native WhatsApp —");
+{
+  // nomor 1: URL ada koordinat (!8m2!3d..!4d..) → pin terkirim
+  mkM._replies.length = 0; mkM._reacts.length = 0;
+  const sockA = mockSock();
+  await answerHandler(mkM({ text: "1" }), sockA);
+  const pin = sockA.sent.find((s) => s.loc);
+  check("4b-a. pin lokasi terkirim (payload location)", !!pin);
+  check("4b-b. koordinat bener (lat -6.2244, lng 106.8411)", pin?.loc?.degreesLatitude === -6.2244444 && pin?.loc?.degreesLongitude === 106.8411111, JSON.stringify(pin?.loc));
+  check("4b-c. pin ada nama + alamat tempat (dari detail)", pin?.loc?.name === "Cafe Sabi 21" && String(pin?.loc?.address || "").includes("Jl. Sabana"), JSON.stringify(pin?.loc).slice(0, 90));
+
+  // nomor 2: URL TANPA koordinat → gak ada pin (skip senyap)
+  const sockB = mockSock();
+  await answerHandler(mkM({ text: "2" }), sockB);
+  check("4b-d. URL tanpa koordinat → tanpa pin (senyap)", !sockB.sent.some((s) => s.loc));
+
+  // unit: parseMapCoords
+  check("4b-e. parseMapCoords: pola !3d!4d", JSON.stringify(lib.parseMapCoords("https://www.google.com/maps/place/x/data=!8m2!3d-6.5!4d107.2")) === JSON.stringify({ lat: -6.5, lng: 107.2 }));
+  check("4b-f. parseMapCoords: pola @lat,lng + q=lat,lng", lib.parseMapCoords("https://maps.google.com/@-6.1,106.9,17z")?.lat === -6.1 && lib.parseMapCoords("https://maps.google.com/?q=-6.3,107.0")?.lng === 107.0);
+  check("4b-g. parseMapCoords: invalid lat/lng → null", lib.parseMapCoords("https://www.google.com/maps/place/x/data=!8m2!3d-999!4d999") === null && lib.parseMapCoords("https://example.com") === null);
 }
 
 // ══════════════════════════════════════════════════════════════
