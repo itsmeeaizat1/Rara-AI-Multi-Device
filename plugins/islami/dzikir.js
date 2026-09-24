@@ -1,16 +1,36 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// dzikir.js — Dzikir Pagi, Petang, Doa Harian, Doa Pilihan, Dzikir Setelah Shalat.
+// UPGRADE 24 Sep 2026: API-first via dua-dhikr.vercel.app (fitrahive/dua-dhikr, daftar
+// farizdotid, TANPA API KEY) — teks arab LENGKAP (19 pagi + 19 petang + 38 doa harian +
+// 8 pilihan + 13 setelah shalat), latin, terjemahan, jumlah bacaan, keutamaan + sumber hadis.
+// GOTCHA: server baca header Accept-Language (Fastify request.languages()) — WAJIB "id" polos.
+// Data offline lama tetap ada sebagai FALLBACK kalau API down (arab kepotong "...").
+import axios from "axios";
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
-const pluginConfig = {
-  name: "dzikir",
-  alias: ["dzikir"],
-  aliases: ["dzikir", "zikir", "dhikr", "dzikirpagi", "dzikirpetang"],
-  category: "islami",
-  description: "Dzikir pagi & petang lengkap (Arab, Latin, Arti)",
-  usage: ".dzikir pagi | .dzikir petang | .dzikir list",
-  example: ".dzikir pagi | .dzikir petang",
-  isGroupOnly: false,
+const DZIKIR_API = "https://dua-dhikr.vercel.app";
+
+// ── SEAM TEST ──────────────────────────────────────────────
+let _http = null; // async (url) => {status, data}
+export function _setHttpForTest(fn) { _http = fn; }
+export function _resetSeamsForTest() { _http = null; }
+
+async function fetchJson(url) {
+  if (_http) return _http(url);
+  const res = await axios.get(url, {
+    timeout: 40000, validateStatus: () => true,
+    headers: { "Accept-Language": "id" },
+  });
+  return { status: res.status, data: res.data };
 }
+
+const KATEGORI = {
+  pagi: { slug: "morning-dhikr", judul: "Dzikir Pagi", offline: "pagi" },
+  petang: { slug: "evening-dhikr", judul: "Dzikir Petang", offline: "petang" },
+  doa: { slug: "daily-dua", judul: "Doa Harian", offline: null },
+  pilihan: { slug: "selected-dua", judul: "Doa Pilihan", offline: null },
+  shalat: { slug: "dhikr-after-salah", judul: "Dzikir Setelah Shalat", offline: null },
+};
 
 const DZIKIR_PAGI = [
   { nama: "Ayat Kursi", arab: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...", latin: "Allaahu laa ilaaha illaa huwal hayyul qayyuum...", jumlah: "1x", keutamaan: "Siapa baca pagi, dilindungi dari segala gangguan sampai sore" },
@@ -38,48 +58,117 @@ const DZIKIR_PETANG = [
   { nama: "Istighfar Sebelum Tidur", arab: "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ", latin: "Astaghfirullaahal 'azhiim alladzii laa ilaaha illaa huwal hayyul qayyuumu wa atuubu ilaih (3x)", jumlah: "3x", keutamaan: "Dihapus dosa meski sebanyak buih lautan" },
 ];
 
-async function handler(m, { conn, text, args, usedPrefix, command }) {
-  try {
-    const input = (args[0] || "").toLowerCase().trim();
+const pluginConfig = {
+  name: "dzikir",
+  alias: ["dzikir"],
+  aliases: ["dzikir", "zikir", "dhikr", "dzikirpagi", "dzikirpetang"],
+  category: "islami",
+  description: "Dzikir pagi & petang, doa harian, doa pilihan, dzikir setelah shalat (Arab lengkap, Latin, Arti, sumber hadis)",
+  usage: ".dzikir pagi|petang|doa|pilihan|shalat [nomor]",
+  example: ".dzikir pagi | .dzikir pagi 5",
+  isGroupOnly: false,
+}
 
-    if (!input || input === "list") {
-      return m.reply(claraWrap("Dzikir Pagi & Petang", [
-        "Dzikir harian lengkap dari hadits shahih",
+const fallbackList = (key, judul) => {
+  const list = key === "pagi" ? DZIKIR_PAGI : DZIKIR_PETANG;
+  const lines = [`${judul} - ${list.length} dzikir (offline)`, ""];
+  list.forEach((d, i) => {
+    lines.push(`${i + 1}. ${d.nama}`);
+    lines.push(`   Jumlah: ${d.jumlah}`);
+    lines.push(`   Arab: ${d.arab}`);
+    lines.push(`   Latin: ${d.latin}`);
+    lines.push(`   Keutamaan: ${d.keutamaan}`);
+    lines.push("");
+  });
+  return claraWrap(judul, lines.join("\n"));
+};
+
+async function handler(m, { sock, db }) {
+  const args = (m.args || []).map((a) => String(a).toLowerCase().trim()).filter(Boolean);
+  const cmd = String(m.command || "").toLowerCase();
+  // alias langsung: .dzikirpagi [nomor] / .dzikirpetang [nomor]
+  let input = args[0] || "";
+  let nomor = args[1] ? parseInt(args[1], 10) : null;
+  if (cmd === "dzikirpagi" || cmd === "dzikirpetang") {
+    const base = cmd === "dzikirpagi" ? "pagi" : "petang";
+    if (!input) input = base;
+    else if (/^\d+$/.test(input)) { nomor = parseInt(input, 10); input = base; }
+  }
+
+  if (!input || input === "list") {
+    return m.reply(claraWrap("Dzikir & Doa", [
+      "Kumpulan dzikir & doa dari sunnah (sumber hadis dicantumkan)",
+      "",
+      "Cara pakai:",
+      "▸ .dzikir pagi — daftar 19 dzikir pagi",
+      "▸ .dzikir petang — daftar 19 dzikir petang",
+      "▸ .dzikir doa — 38 doa harian",
+      "▸ .dzikir pilihan — 8 doa pilihan",
+      "▸ .dzikir shalat — 13 dzikir setelah shalat",
+      "",
+      "Detail lengkap: .dzikir pagi 5 (teks Arab utuh + terjemahan + keutamaan)",
+    ].join("\n")));
+  }
+
+  const katKey = (input === "sore" || input === "malam") ? "petang"
+    : (input === "sholat" || input === "sesudahshalat") ? "shalat"
+    : (input === "doaharian") ? "doa" : input;
+  const kat = KATEGORI[katKey];
+  if (!kat) {
+    return m.reply(claraWrap("Dzikir", "Pilihan: pagi · petang · doa · pilihan · shalat\n💡 Contoh: .dzikir pagi"));
+  }
+
+  // ── API dua-dhikr (teks arab lengkap) ──
+  try {
+    if (nomor && Number.isInteger(nomor) && nomor > 0) {
+      const { status, data } = await fetchJson(`${DZIKIR_API}/categories/${kat.slug}/${nomor}`);
+      if (status === 200 && data?.data?.title) {
+        const d = data.data;
+        return m.reply(claraWrap(d.title || kat.judul, [
+          d.arabic || "",
+          "",
+          `"${d.latin || ""}"`,
+          "",
+          `Artinya: ${d.translation || "-"}`,
+          d.notes ? `\nJumlah: ${d.notes}` : "",
+          d.fawaid ? `\nKeutamaan: ${d.fawaid}` : "",
+          d.source ? `\nSumber: ${d.source}` : "",
+        ].join("\n")));
+      }
+      // nomor gak ada / API down → lanjut fallback di bawah
+    }
+    const { status, data } = await fetchJson(`${DZIKIR_API}/categories/${kat.slug}`);
+    if (status === 200 && Array.isArray(data?.data) && data.data.length) {
+      const list = data.data;
+      if (!nomor) {
+        const lines = [`${kat.judul} — ${list.length} item`, ""];
+        list.forEach((d, i) => lines.push(`${i + 1}. ${d.title}`));
+        lines.push("");
+        lines.push(`Detail: .dzikir ${katKey} <nomor>`);
+        return m.reply(claraWrap(kat.judul, lines.join("\n")));
+      }
+      const d = list[nomor - 1];
+      if (d) return m.reply(claraWrap(d.title || kat.judul, [
+        d.arabic || "",
         "",
-        "Cara pakai:",
-        usedPrefix + "dzikir pagi (10 dzikir pagi)",
-        usedPrefix + "dzikir petang (10 dzikir petang)",
-        usedPrefix + "dzikir list (menu ini)",
+        `"${d.latin || ""}"`,
+        "",
+        `Artinya: ${d.translation || "-"}`,
+        d.notes ? `\nJumlah: ${d.notes}` : "",
+        d.fawaid ? `\nKeutamaan: ${d.fawaid}` : "",
+        d.source ? `\nSumber: ${d.source}` : "",
       ].join("\n")));
     }
-
-    let list, judul;
-    if (input === "pagi") {
-      list = DZIKIR_PAGI;
-      judul = "Dzikir Pagi";
-    } else if (input === "petang" || input === "sore") {
-      list = DZIKIR_PETANG;
-      judul = "Dzikir Petang";
-    } else {
-      return m.reply(claraWrap("Dzikir", "Pilihan: pagi atau petang\n💡 *Contoh:* " + usedPrefix + "dzikir pagi"));
-    }
-
-    let lines = [];
-    lines.push(judul + " - " + list.length + " Dzikir");
-    lines.push("");
-    list.forEach((d, i) => {
-      lines.push((i + 1) + ". " + d.nama);
-      lines.push("   Jumlah: " + d.jumlah);
-      lines.push("   Arab: " + d.arab);
-      lines.push("   Latin: " + d.latin);
-      lines.push("   Keutamaan: " + d.keutamaan);
-      lines.push("");
-    });
-
-    return m.reply(claraWrap(judul, lines.join("\n")));
   } catch (e) {
-    return m.reply(claraWrap("Dzikir", "Error: " + e.message));
+    // API down → fallback offline
   }
+
+  // ── FALLBACK OFFLINE (hanya pagi/petang) ──
+  if (kat.offline) {
+    return m.reply(fallbackList(kat.offline, kat.judul));
+  }
+  return m.reply(claraWrap("Dzikir", "❌ Server dzikir lagi gak bisa dihubungi. Coba lagi nanti.\n(Dzikir pagi & petang masih bisa via .dzikir pagi / .dzikir petang saat offline)"));
 }
 
 export { pluginConfig as config, handler };
+export default handler;

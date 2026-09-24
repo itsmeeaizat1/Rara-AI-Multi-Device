@@ -139,5 +139,109 @@ console.log("— 3. anti-dobel dengan fitur lama —");
   t("3d. cmd kuncijawabantts gak ada di plugin lain", !zlAlias.includes("kuncijawabantts") && !dhAlias.includes("kuncijawabantts"), "");
 }
 
+
+console.log("— 4. hargakripto (Indodax) —");
+const krip = await import(R + "/plugins/search/hargakripto.js");
+{
+  t("4. config ok (name/alias/category search)", krip.pluginConfig?.name === "hargakripto" && krip.pluginConfig?.alias?.includes("indodax") && krip.pluginConfig?.category === "search");
+  mkM._replies.length = 0;
+  krip._setHttpForTest(async (url) => {
+    if (url.includes("ticker_all")) return { status: 200, data: { tickers: {
+      btc_idr: { last: "1502100000", buy: "1502100000", sell: "1502101000", high: "1550001000", low: "1491453000", vol_btc: "35.03" },
+      eth_idr: { last: "48000000", buy: "47900000", sell: "48100000", high: "49000000", low: "47000000", vol_eth: "120" },
+    } } };
+    return { status: 200, data: {} };
+  });
+  await krip.handler(mkM({ command: "hargakripto", args: [] }), { sock: {}, db: {} });
+  t("4a. tanpa arg → daftar koin populer + harga format rupiah", hasSC(lastReply(), "bitcoin (btc)") && lastReply().includes("1.502.100.000"), lastReply().slice(0, 150));
+  mkM._replies.length = 0;
+  let gotUrl = "";
+  krip._setHttpForTest(async (url) => {
+    gotUrl = url;
+    return { status: 200, data: { ticker: { buy: "1502100000", high: "1550001000", last: "1502100000", low: "1491453000", sell: "1502101000", server_time: 1790213169, vol_btc: "35.03367753", vol_idr: "53294156742" } } };
+  });
+  await krip.handler(mkM({ command: "hargakripto", args: ["btc"] }), { sock: {}, db: {} });
+  t("4b. .hargakripto btc → path ticker/btc_idr", gotUrl.endsWith("/api/ticker/btc_idr"), gotUrl);
+  t("4c. detail dirender (harga/beli/jual/high/low/vol)", hasSC(lastReply(), "btc/idr") && lastReply().includes("1.502.100.000") && hasSC(lastReply(), "24j tertinggi"), lastReply().slice(0, 200));
+  mkM._replies.length = 0;
+  krip._setHttpForTest(async (url) => {
+    gotUrl = url;
+    if (url.endsWith("ticker/eth_usdt")) return { status: 200, data: { ticker: { last: "3200", buy: "3199", sell: "3201", high: "3300", low: "3100", vol_eth: "88" } } };
+    return { status: 404, data: {} };
+  });
+  await krip.handler(mkM({ command: "hargakripto", args: ["eth", "usdt"] }), { sock: {}, db: {} });
+  t("4d. .hargakripto eth usdt → pair eth_usdt", gotUrl.endsWith("/api/ticker/eth_usdt"), gotUrl);
+  mkM._replies.length = 0;
+  krip._setHttpForTest(async () => ({ status: 200, data: { error: "invalid_pair", error_description: "Invalid Pair" } }));
+  await krip.handler(mkM({ command: "hargakripto", args: ["xyzabc"] }), { sock: {}, db: {} });
+  t("4e. pair gak ada → jujur + contoh", hasSC(lastReply(), "gak ada di indodax"), lastReply().slice(0, 130));
+  mkM._replies.length = 0;
+  let urlPair = "";
+  krip._setHttpForTest(async (url) => { urlPair = url; return { status: 200, data: { ticker: { last: "1", buy: "1", sell: "1", high: "1", low: "1" } } }; });
+  await krip.handler(mkM({ command: "hargakripto", args: ["btc_usdt"] }), { sock: {}, db: {} });
+  t("4f. arg underscore dipakai langsung sebagai pair", urlPair.endsWith("/api/ticker/btc_usdt"), urlPair);
+  mkM._replies.length = 0;
+  krip._setHttpForTest(async () => { throw new Error("down"); });
+  await krip.handler(mkM({ command: "hargakripto", args: ["btc"] }), { sock: {}, db: {} });
+  t("4g. koneksi gagal → jujur", hasSC(lastReply(), "gagal nyambung"), lastReply().slice(0, 120));
+  krip._resetSeamsForTest();
+}
+
+console.log("— 5. dzikir upgrade (dua-dhikr API + fallback offline) —");
+const dzkMod = await import(R + "/plugins/islami/dzikir.js");
+const dzk = dzkMod.default || dzkMod.handler;
+const dzkCfg = dzkMod.config || dzkMod.pluginConfig;
+{
+  t("5. config utuh (nama dzikir + alias dzikirpagi/petang)", dzkCfg?.name === "dzikir" && [...(dzkCfg?.alias || []), ...(dzkCfg?.aliases || [])].includes("dzikirpagi"), "");
+  mkM._replies.length = 0;
+  await dzk(mkM({ command: "dzikir", args: [] }), { sock: {}, db: {} });
+  t("5a. tanpa arg → menu 5 kategori", hasSC(lastReply(), "pagi") && hasSC(lastReply(), "petang") && hasSC(lastReply(), "doa") && hasSC(lastReply(), "pilihan") && hasSC(lastReply(), "shalat"), lastReply().slice(0, 150));
+  mkM._replies.length = 0;
+  dzkMod._setHttpForTest(async (url) => {
+    if (url.includes("/categories/morning-dhikr/")) return { status: 404, data: null };
+    return { status: 200, data: { data: [
+      { id: 1, title: "Ayat al-Kursi", category: "morning-dhikr", categoryName: "Dzikir Pagi" },
+      { id: 2, title: "Al-Ikhlas", category: "morning-dhikr", categoryName: "Dzikir Pagi" },
+    ] } };
+  });
+  await dzk(mkM({ command: "dzikir", args: ["pagi"] }), { sock: {}, db: {} });
+  t("5b. .dzikir pagi → list dari API", hasSC(lastReply(), "ayat al-kursi") && hasSC(lastReply(), "2 item"), lastReply().slice(0, 150));
+  t("5c. hint nomor detail ditampilkan", hasSC(lastReply(), "detail: .dzikir pagi"), lastReply().slice(0, 150));
+  mkM._replies.length = 0;
+  dzkMod._setHttpForTest(async (url) => {
+    if (url.includes("/morning-dhikr/1")) return { status: 200, data: { data: {
+      id: 1, title: "Ayat al-Kursi", arabic: "اللهُ لا إلهَ", latin: "Allaahu laa ilaaha illaa huwal hayyul qayyuum", translation: "Allah, tidak ada Tuhan melainkan Dia", notes: "Dibaca 1x", fawaid: "Dilindungi hingga petang", source: "HR. at-Tirmidzi: 2879",
+    } } };
+    return { status: 200, data: { data: [] } };
+  });
+  await dzk(mkM({ command: "dzikir", args: ["pagi", "1"] }), { sock: {}, db: {} });
+  t("5d. detail: arab utuh + latin + arti + jumlah + keutamaan + sumber", lastReply().includes("اللهُ") && hasSC(lastReply(), "hr. at-tirmidzi: 2879") && hasSC(lastReply(), "dibaca 1x"), lastReply().slice(0, 200));
+  mkM._replies.length = 0;
+  let urlSeen = "";
+  dzkMod._setHttpForTest(async (url) => { urlSeen = url; return { status: 200, data: { data: [{ id: 1, title: "Ayat al-Kursi" }] } }; });
+  await dzk(mkM({ command: "dzikirpagi", args: [] }), { sock: {}, db: {} });
+  t("5e. .dzikirpagi (tanpa sub) → morning-dhikr", urlSeen.includes("/categories/morning-dhikr"), urlSeen);
+  mkM._replies.length = 0;
+  let urlSeen2 = "";
+  dzkMod._setHttpForTest(async (url) => { urlSeen2 = url; return { status: 200, data: { data: { title: "X", arabic: "ا", latin: "l", translation: "t" } } }; });
+  await dzk(mkM({ command: "dzikirpagi", args: ["5"] }), { sock: {}, db: {} });
+  t("5f. .dzikirpagi 5 → detail nomor 5", urlSeen2.includes("/categories/morning-dhikr/5"), urlSeen2);
+  mkM._replies.length = 0;
+  let urlSeen3 = "";
+  dzkMod._setHttpForTest(async (url) => { urlSeen3 = url; return { status: 200, data: { data: [{ id: 1, title: "Doa Sebelum Tidur" }] } }; });
+  await dzk(mkM({ command: "dzikir", args: ["doa"] }), { sock: {}, db: {} });
+  t("5g. .dzikir doa → daily-dua", urlSeen3.includes("/categories/daily-dua"), urlSeen3);
+  await dzk(mkM({ command: "dzikir", args: ["sholat"] }), { sock: {}, db: {} });
+  t("5h. alias sholat → dhikr-after-salah", urlSeen3.includes("/categories/dhikr-after-salah"), urlSeen3);
+  mkM._replies.length = 0;
+  dzkMod._setHttpForTest(async () => { throw new Error("down"); });
+  await dzk(mkM({ command: "dzikir", args: ["pagi"] }), { sock: {}, db: {} });
+  t("5i. API down → fallback offline (dzikir pagi 10 item)", hasSC(lastReply(), "ayat kursi") && hasSC(lastReply(), "10 dzikir (offline)"), lastReply().slice(0, 130));
+  mkM._replies.length = 0;
+  await dzk(mkM({ command: "dzikir", args: ["doa"] }), { sock: {}, db: {} });
+  t("5j. API down + kategori doa (gak ada offline) → jujur", hasSC(lastReply(), "gak bisa dihubungi"), lastReply().slice(0, 130));
+  dzkMod._resetSeamsForTest();
+}
+
 console.log(`\n══════ ${pass} PASS, ${fail} FAIL ══════`);
 process.exit(fail > 0 ? 1 : 0);
