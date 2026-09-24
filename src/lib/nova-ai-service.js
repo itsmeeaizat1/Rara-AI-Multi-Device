@@ -1037,7 +1037,7 @@ async function callAIRaw(firstArg, secondArg) {
   try {
     const sender = senderJid || global.__novaMoodSender || "";
     if (sender) {
-      const { getMoodSystemPrompt } = await import("../plugins/owner/moodtheme.js");
+      const { getMoodSystemPrompt } = await import("../../plugins/owner/moodtheme.js");
       if (typeof getMoodSystemPrompt === "function") {
         const moodPrompt = getMoodSystemPrompt(sender);
         if (moodPrompt) systemPrompt = (systemPrompt || "") + moodPrompt;
@@ -1051,7 +1051,7 @@ async function callAIRaw(firstArg, secondArg) {
   try {
     const sender = senderJid || global.__novaMoodSender || "";
     if (sender) {
-      const { getTimewarpPrompt } = await import("../plugins/ai/aitimewarp.js");
+      const { getTimewarpPrompt } = await import("../../plugins/ai/aitimewarp.js");
       if (typeof getTimewarpPrompt === "function") {
         const warpPrompt = getTimewarpPrompt(sender);
         if (warpPrompt) systemPrompt = (systemPrompt || "") + warpPrompt;

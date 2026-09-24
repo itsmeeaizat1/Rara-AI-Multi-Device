@@ -24,7 +24,8 @@ const { setAutoTargetConfig, getAutoTargetConfig } = await import(R + "/src/lib/
 const low = (s) => fromSC(norm(s));
 
 t("1a. plugin beritanotify kategori berita", config.name === "beritanotify" && config.category === "berita" && config.alias.includes("beritabarak"));
-t("1b. 4 sumber RSS (cnn/tempo/cnbc/kompas)", Object.keys(lib.SOURCES).join(",") === "cnn,tempo,cnbc,kompas");
+// FIX v24.2.3: sumber `kompas` mati (Cloudflare 202/0 byte) → diganti Antara.
+t("1b. 4 sumber RSS (cnn/tempo/cnbc/antara)", Object.keys(lib.SOURCES).join(",") === "cnn,tempo,cnbc,antara");
 
 // ═══ fixture RSS ala CNN (enclosure thumbnail) ═══
 const items = [];

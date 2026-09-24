@@ -3,11 +3,11 @@
     "u1": {
       "name": "Aizat",
       "level": 3,
-      "exp": 7,
+      "exp": 4,
       "maxExp": 169,
       "energy": 80,
-      "maxEnergy": 110,
-      "gold": 36000,
+      "maxEnergy": 120,
+      "gold": 486000,
       "inventory": {},
       "tools": [
         "Oven",
@@ -24,24 +24,24 @@
         "soto_ayam",
         "ikan_bakar"
       ],
-      "totalCook": 3,
+      "totalCook": 6,
       "bestDish": {
         "name": "Telur Dadar",
         "price": 12000
       },
-      "lastRest": 1789315311258,
+      "lastRest": 1790220572320,
       "joinedAt": "2026-09-13T16:01:51.233Z"
     },
     "6281111@s.whatsapp.net": {
       "name": "Aizat",
       "level": 1,
-      "exp": 8,
+      "exp": 18,
       "maxExp": 100,
       "energy": 90,
       "maxEnergy": 100,
-      "gold": 31000,
+      "gold": 91000,
       "inventory": {
-        "Telur": 3
+        "Telur": 6
       },
       "tools": [
         "Panci"
@@ -52,12 +52,12 @@
         "telur_dadar",
         "sayur_kangkung"
       ],
-      "totalCook": 1,
+      "totalCook": 2,
       "bestDish": {
         "name": "Telur Dadar",
         "price": 10000
       },
-      "lastRest": 1789315311311,
+      "lastRest": 1790220572452,
       "joinedAt": "2026-09-13T16:01:51.259Z"
     }
   }

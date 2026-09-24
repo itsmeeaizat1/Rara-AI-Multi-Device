@@ -15,10 +15,12 @@ import { fromSC } from "../../src/lib/styler.js";
 
 // ── mock nowcast: 61 titik data per-menit, bisa digeser dari test ──
 let nowcast = Array.from({ length: 61 }, () => ({ precip: 0 })); // cerah default
-let owmUp = true, omUp = true, owmCalls = 0, omCalls = 0, aiCalls = 0;
+// v24.2.6: tambah sumber cadangan OWM Forecast 2.5 (pakai key OWM free tier)
+let owmUp = true, omUp = true, owmFcUp = true, owmCalls = 0, omCalls = 0, owmFcCalls = 0, aiCalls = 0;
 lib.setRainFetcher({
   owm: async () => { owmCalls++; if (!owmUp) throw new Error("owm down"); return nowcast.map((m) => ({ precip: m.precip })); },
   openmeteo: async () => { omCalls++; if (!omUp) throw new Error("om down"); return nowcast.map((m) => ({ precip: m.precip })); },
+  owmForecast: async () => { owmFcCalls++; if (!owmFcUp) throw new Error("owm forecast down"); return nowcast.map((m) => ({ precip: m.precip })); },
   aiTip: async (an) => { aiCalls++; return "Segera siapkan payung atau cari tempat teduh ya 😊"; },
 });
 lib.setRainSock({ sendMessage: async (chatId, c) => sent.push({ chatId, text: c?.text || "" }) });
@@ -81,12 +83,21 @@ r = await lib.runRainCheck();
 check("8a. OWM down → fallback Open-Meteo jalan", r.source === "open-meteo-minutely15" && r.sent === 1 && omCalls === 1);
 owmUp = true;
 
-// ═══ 9. kedua provider mati → error jelas ═══
-owmUp = false; omUp = false;
+// ═══ 9. SEMUA provider mati → error jelas (v24.2.6: termasuk OWM Forecast) ═══
+owmUp = false; omUp = false; owmFcUp = false;
 let err = null;
 try { await lib.runRainCheck(); } catch (e) { err = e; }
 check("9a. semua sumber down → throw error asli", !!err && /semua sumber nowcast down/.test(err.message));
-owmUp = true; omUp = true;
+owmUp = true; owmFcUp = true;
+
+// ═══ 9b. v24.2.6: One Call + Open-Meteo down → key OWM dipakai (Forecast 2.5) ═══
+owmUp = false; omUp = false; owmFcUp = true; owmFcCalls = 0; // One Call & Open-Meteo down, OWM Forecast hidup
+sent.length = 0;
+nowcast = Array.from({ length: 61 }, (_, i) => ({ precip: i >= 5 && i < 35 ? 1.5 : 0 }));
+const r9b = await lib.runRainCheck();
+check("9b. One Call + Open-Meteo down → fallback OWM Forecast 2.5 (key OWM terpakai)",
+  r9b.source === "openweathermap-forecast25" && owmFcCalls === 1, `source=${r9b.source} calls=${owmFcCalls}`);
+owmUp = true; omUp = true; owmFcUp = true;
 
 // ═══ 10. interval & cooldown validasi ═══
 check("10a. interval 3 ditolak (min 5)", lib.setIntervalMenit(3) === null);

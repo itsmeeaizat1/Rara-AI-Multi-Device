@@ -25,12 +25,20 @@ const MAX_PER_CHECK = 3;
 const SEEN_CAP = 200;
 
 // ── Sumber RSS (feed asli, bukan API perantara) ────────────────
+// FIX v24.2.3 — sumber `kompas` MATI: www.kompas.com/rss dibalas Cloudflare
+// (HTTP 202, body 0 byte) dan semua varian feed-nya (rss.kompas.com, /feed,
+// /rss/nasional) gagal parse/404. Akibatnya kalau sumber diset ke kompas,
+// berita TIDAK PERNAH masuk. Diganti Antara News (verified live: 50 item +
+// thumbnail di enclosure).
 export const SOURCES = {
   cnn: { label: "CNN Indonesia", feed: "https://www.cnnindonesia.com/rss" },
   tempo: { label: "Tempo", feed: "https://rss.tempo.co" },
   cnbc: { label: "CNBC Indonesia", feed: "https://www.cnbcindonesia.com/rss" },
-  kompas: { label: "Kompas", feed: "https://www.kompas.com/rss" },
+  antara: { label: "Antara News", feed: "https://www.antaranews.com/rss/terkini.xml" },
 };
+// Key lama yang sudah mati → diarahkan ke penggantinya (biar setting lama
+// "kompas" gak bikin notifier gagal total).
+export const SOURCE_ALIAS = { kompas: "antara" };
 
 const parser = new Parser({
   headers: {
@@ -54,6 +62,10 @@ export function loadState() {
       lastCheck: 0,
       lastSent: 0,
       ...st,
+      // FIX v24.2.3 — HARUS di SETELAH ...st (kalau di atas, nilai st menimpa).
+      // Sumber lama yang mati/tak dikenal (mis. "kompas") → aman ke pengganti/
+      // cnn, biar fetchFeed gak throw tiap siklus.
+      source: SOURCE_ALIAS[st.source] || (SOURCES[st.source] ? st.source : "cnn"),
     };
   } catch {
     return { enabled: false, intervalMin: DEFAULT_INTERVAL, source: "cnn", subscribers: [], seen: [], lastCheck: 0, lastSent: 0 };
@@ -120,7 +132,8 @@ export function isSubscriber(jid) { return loadState().subscribers.includes(jid)
 
 // ── Config ───────────────────────────────────────────────────
 export function setSource(name) {
-  const key = String(name || "").toLowerCase();
+  let key = String(name || "").toLowerCase();
+  if (SOURCE_ALIAS[key]) key = SOURCE_ALIAS[key]; // kompas → antara (feed lama mati)
   if (!SOURCES[key]) return null;
   const st = loadState();
   st.source = key;

@@ -3,6 +3,7 @@
 // Notif user saat energi/limit harian di-refill, dengan toggle on/off
 import { CronJob } from "cron";
 import moment from "moment-timezone";
+import { mergeAutoTargets } from "./nova-auto-target.js";
 import path from "path";
 import fs from "fs";
 import { getDatabase } from "./nova-database.js";
@@ -119,9 +120,12 @@ async function doRefillNotif() {
         `${toSC("Notif terkirim")}: ${sent}`,
         `${toSC("Gratis")}: ${defaultLimit} | ${toSC("Premium")}: ${premiumLimit}`,
       ]);
-      try {
-        await sockInstance.sendMessage(ownerJid, { text: ownerNotif });
-      } catch {}
+      // TARGET TERPUSAT (v24.2.0): owner tetap dapat; target terpusat ikut.
+      let rTargets = [ownerJid];
+      try { rTargets = await mergeAutoTargets(sockInstance, "autorefill", [ownerJid]); } catch { /* pakai owner */ }
+      for (const jid of rTargets) {
+        try { await sockInstance.sendMessage(jid, { text: ownerNotif }); } catch {}
+      }
     }
   } catch (error) {
     logger.error("AutoRefill", `Refill failed: ${error.message}`);

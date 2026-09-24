@@ -36,9 +36,11 @@ console.log("── 2. boxLeft: format tanpa garis ──");
   rest.some((l) => l.trim()) ? ok("isi tetap ada di bawah header") : no("isi hilang");
 }
 
-console.log("── 3. E2E .bencanawatch — output handler nyata ──");
+console.log("── 3. E2E .dsw (disastersystemwatch) — output handler nyata ──");
 {
-  const { handler } = await import("./plugins/bencana/bencanawatch.js");
+  // FIX v24.1.0: plugin sudah di-rename dari .bencanawatch → plugins/bencana/disastersystemwatch.js
+  // (command utama .dsw). Import lama nunjuk file yang sudah tidak ada → test selalu gagal.
+  const { handler } = await import("./plugins/bencana/disastersystemwatch.js");
   const replies = [];
   const sock = { groupFetchAllParticipating: async () => ({}) };
   const mk = (text) => {
@@ -46,7 +48,7 @@ console.log("── 3. E2E .bencanawatch — output handler nyata ──");
     return { chat: "6281234567890@s.whatsapp.net", sender: "6281234567890@s.whatsapp.net", args,
       react: async () => {}, reply: async (t) => { replies.push(String(t)); return true; } };
   };
-  for (const cmd of [".bencanawatch status", ".bencanawatch guide", ".bencanawatch onglobal", ".bencanawatch xyz"]) {
+  for (const cmd of [".dsw status", ".dsw guide", ".dsw onglobal", ".dsw xyz"]) {
     await handler(mk(cmd), { sock });
   }
   replies.length >= 4 ? ok("4 perintah dibalas") : no("balasan kurang", String(replies.length));
