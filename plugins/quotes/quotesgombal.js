@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { renderQuoteCard } from "../../src/lib/nova-quote-card.js";
 
 const quotes = [
   "Kamu tahu kenapa aku suka hujan? Karena setiap tetesnya mengingatkan aku padamu.",
@@ -47,14 +46,7 @@ async function handler(m, { sock }) {
     result += `"${q}"\n`;
     result += `
 `;
-        // 🔹 TEKS DULU + KARTU DI BAWAHNYA (13 Sep, revisi owner "versi plain teks
-    // tetep ada jadi di atas versi gambarnya"): plain text dikirim dulu,
-    // kartu estetik menyusul; render gagal → teks doang (gak pernah rusak).
     await sock.sendMessage(from, { text: result }, { quoted: m });
-    try {
-      const _card = await renderQuoteCard({ quote: q, author: "", category: "gombal" });
-      await sock.sendMessage(from, { image: _card, caption: "ᴠᴇʀꜱɪ ᴋᴀʀᴛᴜ" });
-    } catch {}
     await sock.sendMessage(from, { react: { text: "🐣", key: m.key } });
   } catch (err) {
     const from = m.key.remoteJid;
