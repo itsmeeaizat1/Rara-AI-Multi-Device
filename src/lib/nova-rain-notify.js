@@ -56,17 +56,44 @@ export function getOwmKey() {
   ).trim();
 }
 
+// v24.2.7 — KOTA FALLBACK kalau lokasi belum di-set.
+// Owner: "klo blm set lokasi otomatis hanya memberitahu lokasi akan hujan
+// contoh di jakarta, di tangerang kyk random" + "dibuat secanggihnya biar gak
+// spam lokasi". Jadi: dipakai BERGILIR (round-robin) + COOLDOWN PER KOTA →
+// variatif antar kota, tidak menotifikasi kota yang sama terus (anti spam).
+export const AUTO_CITIES = [
+  { name: "Jakarta",    lat: -6.2088, lon: 106.8456 },
+  { name: "Tangerang",  lat: -6.1783, lon: 106.6300 },
+  { name: "Bekasi",     lat: -6.2383, lon: 106.9756 },
+  { name: "Depok",      lat: -6.4025, lon: 106.7942 },
+  { name: "Bogor",      lat: -6.5971, lon: 106.8060 },
+  { name: "Serang",     lat: -6.1200, lon: 106.1500 },
+  { name: "Bandung",    lat: -6.9175, lon: 107.6191 },
+  { name: "Semarang",   lat: -6.9932, lon: 110.4203 },
+  { name: "Yogyakarta", lat: -7.7956, lon: 110.3695 },
+  { name: "Surabaya",   lat: -7.2575, lon: 112.7521 },
+  { name: "Medan",      lat:  3.5952, lon:  98.6722 },
+  { name: "Palembang",  lat: -2.9761, lon: 104.7754 },
+  { name: "Makassar",   lat: -5.1477, lon: 119.4327 },
+  { name: "Denpasar",   lat: -8.6500, lon: 115.2167 },
+  { name: "Balikpapan", lat: -1.2379, lon: 116.8529 },
+  { name: "Pontianak",  lat: -0.0263, lon: 109.3425 },
+];
+
 function defaultSettings() {
   return {
     enabled: false,
     targets: [],
     location: null, // { name, lat, lon }
+    autoCityIdx: 0, // v24.2.7 — penunjuk rotasi kota fallback
+    autoCitySent: {}, // v24.2.7 — { namaKota: ISO } cooldown per kota (anti spam)
     intervalMenit: DEFAULT_INTERVAL_MENIT,
     cooldownMenit: DEFAULT_COOLDOWN_MENIT,
     lastNotified: {}, // chatId → ISO terakhir kirim (anti-spam per chat)
     lastCheck: null,
     lastSource: null,
     owmError: null, // pesan kalau One Call 3.0 belum subscribe (petunjuk status)
+    owmSkipUntil: 0, // v24.2.6 — skip coba One Call 3.0 sampai waktu ini (hemat kuota)
   };
 }
 
@@ -87,14 +114,22 @@ function saveSettings(st) {
   }
 }
 
+// Teks masalah One Call 3.0 — dipakai bareng oleh noteOwmError() & runRainCheck()
+// FIX v24.2.5: dulu logikanya cuma di dalam noteOwmError, sementara runRainCheck
+// menyimpan objek `st` versi LAMA di akhir fungsi → pesannya selalu ketimpa
+// jadi null dan .hujannotif status TIDAK PERNAH bisa nunjukin alasan OWM gagal.
+function owmErrorText(e) {
+  const msg = String(e?.message || e || "");
+  return /subscription|separate subscription/i.test(msg)
+    ? "key valid tapi One Call 3.0 belum di-subscribe (buka https://openweathermap.org/pricing → One Call by Call, gratis 1000 panggilan/hari) — sementara nowcast pakai Open-Meteo 15-menit"
+    : msg.slice(0, 160);
+}
+
 // Catat masalah One Call 3.0 (mis. belum subscribe) biar .status kasih petunjuk
 function noteOwmError(e) {
-  const msg = String(e?.message || e || "");
   try {
     const st = getSettings();
-    st.owmError = /subscription|separate subscription/i.test(msg)
-      ? "key valid tapi One Call 3.0 belum di-subscribe (buka https://openweathermap.org/price → One Call by Call, gratis 1000 panggilan/hari) — sementara nowcast pakai Open-Meteo 15-menit"
-      : msg.slice(0, 160);
+    st.owmError = owmErrorText(e);
     saveSettings(st);
   } catch { /* diam */ }
 }
@@ -109,10 +144,12 @@ function clearOwmError() {
 
 let owmFetcher = null;
 let omFetcher = null;
+let owmFcFetcher = null;
 let aiTipMaker = null;
-export function setRainFetcher({ owm, openmeteo, aiTip } = {}) {
+export function setRainFetcher({ owm, openmeteo, owmForecast, aiTip } = {}) {
   if (owm) owmFetcher = owm;
   if (openmeteo) omFetcher = openmeteo;
+  if (owmForecast) owmFcFetcher = owmForecast;
   if (aiTip) aiTipMaker = aiTip;
 }
 
@@ -138,6 +175,30 @@ async function fetchOwmMinutely(lat, lon) {
   if (!minutely.length) throw new Error("minutely kosong dari One Call 3.0");
   // Normalisasi: [{ precip }] per menit
   return minutely.map((m) => ({ precip: m.precipitation || 0 }));
+}
+
+// OWM Forecast 2.5 (5 hari / langkah 3 JAM) — INI yang bisa dipakai key free.
+// FIX v24.2.6: sebelumnya key OWM cuma dipakai jalur One Call 3.0 yang butuh
+// langganan "One Call by Call" (401) → key terasa "gak kepake". Sekarang key
+// tetap berguna sebagai sumber CADANGAN kalau One Call & Open-Meteo tumbang.
+// Catatan: langkah 3 jam terlalu kasar buat nowcast 30-60 mnt, makanya posisinya
+// di belakang Open-Meteo (15 mnt) — bukan karena key-nya salah.
+async function fetchOwmForecast(lat, lon) {
+  if (owmFcFetcher) return owmFcFetcher(lat, lon);
+  const key = getOwmKey();
+  if (!key) throw new Error("apikey openweather belum diset (apikeys.json → fitur.openWeatherKey)");
+  const res = await axios.get("https://api.openweathermap.org/data/2.5/forecast", {
+    params: { lat, lon, appid: key, units: "metric" },
+    headers: HEADERS,
+    timeout: 15000,
+  });
+  const list = res.data?.list || [];
+  if (!list.length) throw new Error("forecast kosong dari OWM 2.5");
+  // Slot terdekat → mm/3jam disebar merata: per-menit = mm3h / 180
+  const slot = list[0];
+  const mm3h = Number(slot?.rain?.["3h"] || slot?.rain?.["1h"] || 0);
+  const perMinute = mm3h / 180;
+  return Array.from({ length: 60 }, () => ({ precip: Number.isFinite(perMinute) ? perMinute : 0 }));
 }
 
 // Open-Meteo — minutely_15 (gratis): langkah 15 mnt di-expand per menit
@@ -276,7 +337,27 @@ async function doRunRainCheck({ force = false, chatId = null } = {}) {
       }
     } catch { /* warisan gak ada */ }
   }
-  if (!loc) return { noLocation: true };
+  // v24.2.7 — belum ada lokasi (dan warisan kosong): pakai kota fallback
+  // BERGILIR + cooldown per kota. Tujuan: tetap kasih info hujan tanpa spam
+  // satu kota terus, dan tanpa mengharuskan owner set lokasi dulu.
+  let autoPicked = false;
+  if (!loc) {
+    const n = AUTO_CITIES.length;
+    const cdMs = (Number(st.cooldownMenit) || DEFAULT_COOLDOWN_MENIT) * 60000;
+    const startIdx = Number(st.autoCityIdx) || 0;
+    let chosen = null;
+    for (let i = 0; i < n; i++) {
+      const idx = (startIdx + i) % n;
+      const c = AUTO_CITIES[idx];
+      const lastAt = st.autoCitySent?.[c.name] ? new Date(st.autoCitySent[c.name]).getTime() : 0;
+      if (!lastAt || Date.now() - lastAt >= cdMs) { chosen = { c, idx }; break; }
+    }
+    // semua kota masih cooldown → tetap rotasi (jangan diam), mulai dari penunjuk
+    if (!chosen) { const idx = startIdx % n; chosen = { c: AUTO_CITIES[idx], idx }; }
+    loc = chosen.c;
+    st.autoCityIdx = (chosen.idx + 1) % n;
+    autoPicked = true;
+  }
   const targets = chatId
     ? [chatId]
     : await mergeAutoTargets(sock, "autorainnotify", [...st.targets]);
@@ -284,17 +365,33 @@ async function doRunRainCheck({ force = false, chatId = null } = {}) {
 
   // Rantai provider: OWM One Call 3.0 → Open-Meteo minutely_15
   let minutely, source;
+  // v24.2.6 — kalau One Call 3.0 sudah ketahuan butuh langganan, jangan dicoba
+  // tiap siklus (hemat kuota & waktu). Dicoba lagi setelah 6 jam.
+  const skipOwmOneCall = st.owmSkipUntil && Date.now() < st.owmSkipUntil;
   try {
+    if (skipOwmOneCall) throw new Error("One Call 3.0 dilewati sementara (butuh langganan One Call by Call)");
     minutely = await fetchOwmMinutely(loc.lat, loc.lon);
     source = "openweathermap-onecall3";
-    if (st.owmError) st.owmError = null;
+    st.owmError = null;
+    st.owmSkipUntil = 0;
   } catch (eOwm) {
-    noteOwmError(eOwm);
+    // FIX v24.2.5: set LANGSUNG di objek `st` yang bakal di-save di akhir fungsi
+    // (dulu cuma noteOwmError() → save objek lain, lalu saveSettings(st) di akhir
+    // menimpa balik jadi null → .status gak pernah nunjukin alasan).
+    st.owmError = owmErrorText(eOwm);
+    if (/subscription/i.test(String(eOwm?.message || ""))) st.owmSkipUntil = Date.now() + 6 * 3600_000;
     try {
       minutely = await fetchOmMinutely(loc.lat, loc.lon);
       source = "open-meteo-minutely15";
     } catch (eOm) {
-      throw new Error("semua sumber nowcast down: " + eOwm.message + " / " + eOm.message);
+      // v24.2.6 — key OWM tetap dipakai: Forecast 2.5 (free tier) sebagai
+      // sumber terakhir, biar key gak jadi beban mati saat Open-Meteo tumbang.
+      try {
+        minutely = await fetchOwmForecast(loc.lat, loc.lon);
+        source = "openweathermap-forecast25";
+      } catch (eFc) {
+        throw new Error("semua sumber nowcast down: " + eOwm.message + " / " + eOm.message + " / " + eFc.message);
+      }
     }
   }
   st.lastCheck = new Date().toISOString();
@@ -303,7 +400,12 @@ async function doRunRainCheck({ force = false, chatId = null } = {}) {
   const an = analyzeRain(minutely);
   let sent = 0;
   if (an.willRain) {
-    const msg = await buildRainMessage(loc.name, an);
+    let msg = await buildRainMessage(loc.name, an);
+    // v24.2.7 — jelasin kalau lokasinya dipilih otomatis (biar user paham
+    // kenapa yang muncul bukan kotanya) + kasih cara set lokasi sendiri.
+    if (autoPicked) {
+      msg += "\n\n_📍 Lokasi dipilih otomatis (kamu belum set lokasi). Set biar pantau kotamu: `.hujannotif lokasi <nama kota>`_\n_Pantauan kota bergilir — gak akan spam satu kota terus._";
+    }
     const now = Date.now();
     const cooldownMs = (Number(st.cooldownMenit) || DEFAULT_COOLDOWN_MENIT) * 60000;
     for (const t of targets) {
@@ -314,6 +416,10 @@ async function doRunRainCheck({ force = false, chatId = null } = {}) {
         st.lastNotified[t] = new Date().toISOString();
         sent++;
       }
+    }
+    // catat kota otomatis yg baru saja dinotifkan (cooldown per kota)
+    if (sent && autoPicked) {
+      st.autoCitySent = { ...(st.autoCitySent || {}), [loc.name]: new Date().toISOString() };
     }
   }
   saveSettings(st);
@@ -440,6 +546,7 @@ export function getStatus() {
     lastSource: st.lastSource,
     lastNotified: st.lastNotified,
     owmError: st.owmError || null,
+    owmSkipUntil: st.owmSkipUntil || 0,
     running: !!timer,
   };
 }
@@ -450,8 +557,10 @@ let timer = null;
 
 export function syncRainMonitor() {
   const st = getSettings();
-  if (st.enabled && st.targets.length && st.location && !timer) startTimer();
-  if ((!st.enabled || !st.targets.length || !st.location) && timer) stopRainMonitor();
+  // v24.2.7 — lokasi TIDAK lagi syarat: kalau belum di-set, sekarang pakai
+  // kota fallback bergilir. Cukup enabled + ada penerima.
+  if (st.enabled && st.targets.length && !timer) startTimer();
+  if ((!st.enabled || !st.targets.length) && timer) stopRainMonitor();
   return { started: !!timer };
 }
 

@@ -34,6 +34,16 @@ import { isLinkedInNotifierOn, setLinkedInNotifierOn } from '../../src/lib/nova-
 import { loadState as loadWinbuState, saveState as saveWinbuState, startAutoCheck as startWinbuCheck, stopAutoCheck as stopWinbuCheck, isRunning as isWinbuRunning } from '../../src/lib/nova-auto-anime.js'
 import { getSettings as getCleanSettings, updateSettings as updateCleanSettings, startCleaner, stopCleaner } from '../../src/lib/nova-cache-cleaner.js'
 import { getLokerStatus, updateLokerSettings, startLokerJobs, stopLokerJob } from '../../src/lib/nova-loker-scheduler.js'
+// FIX v24.1.1 — dipakai toggle autoweatherrealtime: pakai default yang SAMA dengan
+// scheduler (lokasi dll), supaya nyalain via .switch gak bikin fetch error senyap.
+import { normalizeSettings as normalizeWeatherSettings, resetAutoState as resetWeatherAutoState } from '../../src/lib/nova-weather-realtime-scheduler.js'
+// FIX v24.1.2 — ngitung subscriber bencana buat peringatan di .switch
+// (ON di .switch TIDAK cukup: monitor wajib punya >=1 subscriber).
+import { watcherCount as bencanaWatcherCount } from '../../src/lib/nova-bencana.js'
+// FIX v24.2.3 — auto berita: toggle sinkron (dulu dynamic import TANPA await →
+// balasan "ON" muncul sebelum state tersimpan, dan gagal import senyap total)
+// + statusInfo dipakai buat peringatan "belum ada penerima".
+import { setBeritaNotifierOn as setBeritaOn, statusInfo as beritaStatusInfo } from '../../src/lib/nova-berita-notifier.js'
 
 const pluginConfig = {
   name: "switch",
@@ -165,7 +175,10 @@ const AUTO_REGISTRY = {
   autoberitanotify: {
     label: "Auto Berita Notifier",
     getStatus: () => { try { return getDatabase().setting("beritaNotifier")?.enabled ?? false } catch { return false } },
-    toggle: (on) => { import("./../src/lib/nova-berita-notifier.js").then(m => { m.setBeritaNotifierOn?.(on) }) },
+    // FIX v24.2.3: dulu `import(...).then(...)` TANPA await → balasan "ON"
+    // muncul di chat SEBELUM state benar-benar tersimpan (race), dan kalau
+    // import gagal tidak ada jejak sama sekali. Sekarang statik & sinkron.
+    toggle: (on) => { setBeritaOn(on) },
   },
   autoloker: {
     label: "Auto Loker (Info Lowongan Kerja)",
@@ -318,13 +331,23 @@ const AUTO_REGISTRY = {
   autoweatherrealtime: {
     label: "Auto Notifikasi Cuaca Realtime",
     getStatus: () => { try { return getDatabase().setting("weatherRealtime")?.notification ?? false } catch { return false } },
+    // FIX v24.1.1 — AKAR MASALAH "notif cuaca gak muncul": toggle ini dulu
+    // HANYA nge-set `notification:true`. Akibatnya:
+    //   1. `location` kosong → fetchWeatherForSettings() THROW "Koordinat
+    //      lokasi cuaca belum diatur" (error cuma di console, gak kelihatan
+    //      di WhatsApp);
+    //   2. `target` kosong → checkAndSend() `return` DIAM (nol pesan, nol error).
+    // Sekarang pakai normalizeSettings() — default yang sama dengan scheduler,
+    // jadi lokasi ikut keisi. TARGET sengaja TIDAK di-auto-set (owner mau pilih
+    // manual); pengingatnya muncul sebagai peringatan + tombol di .switch.
     toggle: (on) => {
       try {
         const db = getDatabase();
-        const s = db.setting("weatherRealtime") || {};
-        s.notification = on;
-        db.setting("weatherRealtime", s);
+        const cur = db.setting("weatherRealtime") || {};
+        db.setting("weatherRealtime", normalizeWeatherSettings({ ...cur, notification: on }));
         db.save();
+        // dinyalakan → reset state deteksi biar cek pertama langsung kirim
+        if (on) { try { resetWeatherAutoState(); } catch { /* abaikan */ } }
       } catch (e) { console.error("[switch] weatherRealtime:", e.message); }
     },
   },
@@ -902,6 +925,10 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
 // ═══════════════════════════════════════════════════════════
 // AUTO HANDLER
 // ═══════════════════════════════════════════════════════════
+// Fitur otomatis yang punya TARGET pengiriman — dipakai tombol pilih target
+// di jalur toggle (biar owner gak perlu ngetik `.switch auto <fitur> set ...`).
+const AUTO_TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'autobolanotify', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify', 'automovienotifier', 'autolinkedin', 'autorainnotify', 'webwatch', 'cryptoalert', 'autohealth', 'autorefill', 'autobackup']
+
 async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   const prefix = cfg?.command?.prefix || '.'
   const args = m.args || []
@@ -997,6 +1024,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       'autoanimenotifier', 'bencanawatch', 'autoanime', 'autoreengage',
       'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify',
       'autobolanotify', 'automovienotifier', 'autolinkedin', 'autorainnotify',
+      'webwatch', 'cryptoalert', 'autohealth', 'autorefill', 'autobackup',
     ]
     if (!TARGETABLE.includes(autoKey)) {
       return m.reply(`*${reg.label}* gak mengirim notifikasi terjadwal — gak ada target yang bisa diset.\nFitur yang bisa diatur targetnya: ${TARGETABLE.map((k) => '\`' + k + '\`').join(', ')}`)
@@ -1161,7 +1189,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     const current = reg.getStatus()
     let replyTxt = `${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`
     // Fitur targetable: tampilkan target sekarang di status
-    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'autobolanotify', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify', 'automovienotifier', 'autolinkedin', 'autorainnotify']
+    const TARGETABLE = ['autosholat', 'autobmkg', 'autoweatherrealtime', 'autoloker', 'autoanimenotifier', 'autobolanotify', 'bencanawatch', 'autoanime', 'autoreengage', 'autoulah', 'autoreport', 'autorenewal', 'autoberitanotify', 'automovienotifier', 'autolinkedin', 'autorainnotify', 'webwatch', 'cryptoalert', 'autohealth', 'autorefill', 'autobackup']
     const SUBSCRIBER_FEATURES = { bencanawatch: 1, autoanime: 1, autoanimenotifier: 1, autobolanotify: 1, autolinkedin: 1, autoberitanotify: 1, automovienotifier: 1, autorainnotify: 1 }
     if (TARGETABLE.includes(autoKey)) {
       const cfg = getAutoTargetConfig(autoKey)
@@ -1174,7 +1202,66 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
   const enable = action === 'on'
   try {
     reg.toggle(enable, { sock }) // sock dikasih buat fitur yang butuh (V1 winbu); entry lain nge-ignore
-    return m.reply(`${reg.label}: *${enable ? "ON" : "OFF"}*\n` + (scopeLine(FEATURE_SCOPES.global) || ""))
+
+    const base = `${reg.label}: *${enable ? "ON" : "OFF"}*\n` + (scopeLine(FEATURE_SCOPES.global) || "")
+
+    // ── TOMBOL PILIH TARGET (request owner: "ngetik cmd ribet, mending tombol") ──
+    // Begitu fitur ber-target di-ON, langsung tampilkan tombol DM/grup/gabungan
+    // — gak perlu hafal `.switch auto <fitur> set ...`.
+    if (enable && AUTO_TARGETABLE.includes(autoKey)) {
+      const cfgNow = getAutoTargetConfig(autoKey)
+      // Peringatan khusus bencana: ON di sini gak cukup, butuh subscriber.
+      let extraWarn = ''
+      if (autoKey === 'bencanawatch') {
+        let n = 0
+        try { n = bencanaWatcherCount() } catch { n = 0 }
+        if (n === 0) {
+          extraWarn = `\n\n⚠️ Belum ada SUBSCRIBER — notifikasi bencana BELUM akan terkirim.\nJalankan \`${prefix}disastersystemwatch on\` di chat/grup target (atau pakai tombol target di bawah).`
+        }
+      }
+      // v24.2.3 — auto berita: `enabled` saja TIDAK cukup, wajib ada PENERIMA.
+      // Dulu nyalain via .switch = enabled true tapi subscribers kosong →
+      // runCheck balik "gak ada subscriber/target" → 0 pesan (senyap).
+      if (autoKey === 'autoberitanotify') {
+        let subs = 0, hasTarget = false
+        try { subs = (beritaStatusInfo().subscribers || []).length } catch { subs = 0 }
+        try { hasTarget = !!getAutoTargetConfig('autoberitanotify') } catch { hasTarget = false }
+        if (!subs && !hasTarget) {
+          extraWarn = `\n\n⚠️ Belum ada PENERIMA — notifikasi berita BELUM akan terkirim.\n• Pilih target lewat TOMBOL di bawah, ATAU\n• Jalankan \`${prefix}beritanotify on\` di chat/grup yang mau dapat berita.`
+        }
+      }
+      const body = claraWrap("Switch Auto Target", [
+        `${reg.label} : ON`,
+        ``,
+        `Target sekarang : ${describeAutoTarget(cfgNow)}`,
+        ``,
+        `🎯 Mau dikirim ke mana? Pilih lewat tombol di bawah:`,
+        ``,
+        `🌐 Semua Grup — semua grup yang bot ikuti`,
+        `📍 Grup Tertentu — pilih grup satu per satu`,
+        `📮 DM — nomor tertentu / semua user terdaftar`,
+        `🔀 Gabungan — semua grup + semua DM`,
+        `♻️ Reset — kembali ke default (semua grup)`,
+      ].join("\n")) + extraWarn
+      const setCmd = (sub) => `${prefix}switch auto ${autoKey} set ${sub}`
+      try {
+        await sock.sendButton(m.chat, null, body, m, {
+          buttons: [
+            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "🌐 Semua Grup", id: setCmd('semua') }) },
+            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "📍 Grup Tertentu", id: setCmd('grup') }) },
+            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "📮 DM", id: setCmd('dm') }) },
+            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "🔀 Gabungan", id: setCmd('gabungan') }) },
+            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: "♻️ Reset", id: setCmd('reset') }) },
+          ],
+        })
+        return
+      } catch {
+        // fallback teks kalau tombol gak didukung di chat ini
+        return m.reply(base + `\n\nAtur target: \`${prefix}switch auto ${autoKey} set\``)
+      }
+    }
+
+    return m.reply(base)
   } catch (e) {
     return m.reply(`❌ ${e.message || e}`)
   }

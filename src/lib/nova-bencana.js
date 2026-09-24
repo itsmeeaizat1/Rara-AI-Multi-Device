@@ -732,6 +732,79 @@ export async function getWatchersSafe() {
  * Geocode nama tempat → { lat, lon, city, detail } via Open-Meteo
  * (gratis, tanpa key). Cache di db.setting("bencanaGeoCache").
  */
+// ── SCOPE LOKASI 3 TINGKAT (request owner 2026-09) ──
+// `.dsw lokasi anyer`     → KOTA   : pantau radius sekitar kota itu (perilaku lama)
+// `.dsw lokasi jawa`      → PULAU  : pantau SEMUA kejadian di pulau itu (bbox)
+// `.dsw lokasi indonesia` → NEGARA : pantau SEMUA kejadian di negara itu (bbox)
+// `.dsw lokasi bali`      → DAERAH : provinsi/state (bbox)
+// Sumber utama: Nominatim/OpenStreetMap — dia kasih `addresstype` + `boundingbox`
+// jadi scope-nya bisa ditentukan otomatis. Open-Meteo tetap jadi fallback (kota).
+
+/** Tentukan scope dari item Nominatim. */
+export function classifyGeoScope(item) {
+  const t = String(item?.addresstype || item?.type || "").toLowerCase();
+  if (t === "country") return "negara";
+  if (t === "island" || t === "archipelago") return "pulau";
+  if (["state", "province", "region", "county", "administrative"].includes(t)) return "daerah";
+  return "kota";
+}
+
+/** Titik lat/lon ada di dalam kotak wilayah (negara/pulau/daerah)? */
+export function inBbox(lat, lon, bbox) {
+  if (!bbox || lat == null || lon == null) return false;
+  const la = Number(lat), lo = Number(lon);
+  return Number.isFinite(la) && Number.isFinite(lo) &&
+    la >= bbox.south && la <= bbox.north && lo >= bbox.west && lo <= bbox.east;
+}
+
+/** Scope area = pantau SELURUH wilayah (bukan radius dari 1 titik). */
+export function isAreaScope(sub) {
+  return !!sub?.bbox && (sub.scope === "negara" || sub.scope === "pulau" || sub.scope === "daerah");
+}
+
+/** Label scope buat ditampilkan di .dsw. */
+export function scopeLabel(scope) {
+  return { negara: "NEGARA (seluruh wilayah)", pulau: "PULAU (seluruh pulau)", daerah: "DAERAH (seluruh provinsi)", kota: "KOTA (radius)" }[scope] || "KOTA (radius)";
+}
+
+/** Geocode via Nominatim — bedain negara/pulau/daerah/kota + bbox wilayah. */
+async function geocodeNominatim(q) {
+  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1&addressdetails=1&accept-language=id`;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 12000);
+  try {
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: { "User-Agent": "Nova-AI-Whatsapp-Bot/1.0 (bencana-watch)" },
+    });
+    if (!res.ok) throw new Error(`Nominatim HTTP ${res.status}`);
+    const d = await res.json();
+    const it = d?.[0];
+    if (!it) return null;
+    const scope = classifyGeoScope(it);
+    const parts = String(it.display_name || "").split(",").map((x) => x.trim()).filter(Boolean);
+    const loc = {
+      lat: parseFloat(it.lat),
+      lon: parseFloat(it.lon),
+      city: parts[0] || q,
+      detail: parts.slice(1, 3).join(", "),
+      scope,
+    };
+    const bb = Array.isArray(it.boundingbox) ? it.boundingbox.map(Number) : null;
+    if (bb && bb.length === 4 && bb.every(Number.isFinite)) {
+      const [south, north, west, east] = bb;
+      // bbox cuma dipakai buat scope area (kota tetap radius — bbox kota
+      // kadang aneh, mis. "Tokyo" balikin bbox se-Jepang)
+      if (["negara", "pulau", "daerah"].includes(scope) && south < north && west < east) {
+        loc.bbox = { south, north, west, east };
+      }
+    }
+    return loc;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 export async function geocodeLocation(query) {
   const q = String(query || "").trim();
   if (q.length < 2) throw new Error("Nama tempat minimal 2 huruf.");
@@ -739,6 +812,24 @@ export async function geocodeLocation(query) {
   try { cache = getDatabase().setting("bencanaGeoCache") || {}; } catch (e) { console.error("[bencana] ❌ Gagal baca cache geocode:", e?.message || e); }
   const key = q.toLowerCase();
   if (cache[key]) return cache[key];
+
+  const save = (loc) => {
+    const keys = Object.keys(cache);
+    if (keys.length > 300) delete cache[keys[0]]; // cache max 300
+    cache[key] = loc;
+    try { getDatabase().setting("bencanaGeoCache", cache); } catch (e) { console.error("[bencana] ❌ Gagal simpan cache geocode:", e?.message || e); }
+    return loc;
+  };
+
+  // 1) Nominatim — bisa bedain negara / pulau / daerah / kota + bbox
+  try {
+    const loc = await geocodeNominatim(q);
+    if (loc) return save(loc);
+  } catch (e) {
+    console.error("[bencana] ⚠ Nominatim gagal → fallback Open-Meteo:", e?.message || e);
+  }
+
+  // 2) Fallback Open-Meteo (kota saja)
   const url = `${GEOCODE_URL}?name=${encodeURIComponent(q)}&count=1&language=id&format=json`;
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 12000);
@@ -748,17 +839,13 @@ export async function geocodeLocation(query) {
     const d = await res.json();
     const g = d?.results?.[0];
     if (!g) throw new Error(`Tempat "${q}" tidak ditemukan.`);
-    const loc = {
+    return save({
       lat: g.latitude,
       lon: g.longitude,
       city: g.name,
       detail: [g.admin1, g.country].filter(Boolean).join(", "),
-    };
-    const keys = Object.keys(cache);
-    if (keys.length > 100) delete cache[keys[0]]; // cache max 100
-    cache[key] = loc;
-    try { getDatabase().setting("bencanaGeoCache", cache); } catch (e) { console.error("[bencana] ❌ Gagal simpan cache geocode:", e?.message || e); }
-    return loc;
+      scope: "kota",
+    });
   } finally {
     clearTimeout(t);
   }
@@ -1048,15 +1135,27 @@ export function clearWatcherSchedules(chatId) {
 /** Jenis bencana valid buat filter subscriber. */
 export const BENCANA_JENIS = ["gempa", "banjir", "topan", "gunungapi", "kebakaran", "kering", "tsunami"];
 
-export const BENCANA_SUMBER = ["bmkg", "usgs", "gdacs", "pvmbg"];
+// FIX v24.1.2 — dulu cuma ["bmkg","usgs","gdacs","pvmbg"], padahal EWS
+// (dispatchEws) memakai key "jepang" (JMA) & "global" (EMSC). Akibatnya:
+//   1. kalau subscriber set `.dsw sumber <apa pun>`, event JMA & EMSC SELALU
+//      DIBUANG (provKey-nya gak ada di daftar) → notifikasi terasa "hilang";
+//   2. key itu bahkan DILARANG di-set (dianggap "Sumber tidak dikenal").
+// Sekarang disatukan supaya seleksi sumber konsisten 4+2 provider.
+export const BENCANA_SUMBER = ["bmkg", "usgs", "gdacs", "pvmbg", "jepang", "global"];
 
 /** Key sumber canonical dari event (ev.sumber string bebas). */
 export function evSumberKey(ev) {
-  const s = String(ev?.sumber || "");
+  // FIX v24.1.2: event JMA (provider "JEPANG") & EMSC (provider "GLOBAL")
+  // TIDAK punya field `sumber` — dulu return null → kalau subscriber set
+  // filter sumber, event dua provider ini selalu kena buang. Sekarang baca
+  // `provider` sebagai fallback dan map keduanya ke key canonical.
+  const s = String(ev?.sumber || ev?.provider || "");
   if (/BMKG/i.test(s)) return "bmkg";
   if (/USGS/i.test(s)) return "usgs";
   if (/GDACS/i.test(s)) return "gdacs";
   if (/PVMBG|MAGMA/i.test(s)) return "pvmbg";
+  if (/JEPANG|JMA/i.test(s)) return "jepang";
+  if (/GLOBAL|EMSC/i.test(s)) return "global";
   return null;
 }
 
@@ -1308,6 +1407,22 @@ export async function sendRegionalAlert(_sock, chatId, ev, sub, opts = {}) {
 // ───────────────────────────── monitor auto-alert ─────────────────────────────
 
 let sock = null;
+
+// ── PERINGATAN SUBSCRIBER TANPA LOKASI (FIX v24.1.2) ──
+// EWS gempa menentukan level dari JARAK pusat gempa ke lokasi subscriber.
+// Tanpa `lat/lon`, gempa lokal (yang paling penting!) TIDAK dikirim — cuma
+// gempa M6.5+ (severe) yang lolos. Dulu ini SENYAP total, jadi owner merasa
+// "fitur EWS gak jalan". Sekarang ditinggalin jejak di log (maks 1x/jam).
+let lastNoLocWarnMs = 0;
+function warnSubscriberTanpaLokasi() {
+  const now = Date.now();
+  if (now - lastNoLocWarnMs < 3600_000) return;
+  lastNoLocWarnMs = now;
+  console.warn(
+    "[bencana] ⚠ Ada subscriber TANPA lokasi — gempa LOKAL tidak akan dinotifikasi " +
+    "(hanya gempa M6.5+ global). Set: `.disastersystemwatch lokasi <nama kota>`",
+  );
+}
 let fastTimer = null;
 let slowTimer = null;
 let volcanoTimer = null;
@@ -1824,13 +1939,21 @@ export async function dispatchNearEvent(sendSock, ev, kindKey = "gempa", sumberK
   if (hasJadwal) pushPending(ev); // subscriber jadwal terima lewat rangkuman
   for (const [watcherKey, chatId, sub] of await expandTargets(s)) {
     try {
-      if (sub?.lat == null || ev?.lat == null) continue; // wajib punya lokasi
+      // Scope area (negara/pulau/daerah) cukup pakai bbox — gak butuh lat/lon
+      const areaScope = isAreaScope(sub);
+      if (!areaScope && (sub?.lat == null || ev?.lat == null)) continue; // wajib punya lokasi
       const mode = sub.mode || "otomatis";
       if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes(kindKey)) continue;
       if (Array.isArray(sub.sumber) && sub.sumber.length && !sub.sumber.includes(sumberKey)) continue;
-      const distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
-      const radius = sub.radius || DEFAULT_RADIUS_KM;
-      if (distKm > radius) continue; // di luar radius → bukan urusan fitur ini
+      let distKm = null;
+      if (areaScope) {
+        if (!inBbox(ev.lat, ev.lon, sub.bbox)) continue; // di luar negara/pulau/daerah
+        if (sub.lat != null && ev.lat != null) distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
+      } else {
+        distKm = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
+        const radius = sub.radius || DEFAULT_RADIUS_KM;
+        if (distKm > radius) continue; // di luar radius → bukan urusan fitur ini
+      }
       // ambang magnitudo per subscriber (default 3.5 — owner 15 Sep 2026)
       const minMagSub = parseFloat(sub.minMag ?? DEFAULT_MIN_MAG);
       const magEv = parseFloat(ev.mag);
@@ -2238,7 +2361,7 @@ function bmkgToEws(g) {
  * MERAH membawa instruksi darurat DROP-COVER-HOLD ON; ETA ≤90 dtk
  * ditulis dalam DETIK (urgensi terasa), di atasnya menit.
  */
-export function formatEwsWarning(ev, { jarak = null, eta = null, city = null, level = "HIJAU", near = false } = {}) {
+export function formatEwsWarning(ev, { jarak = null, eta = null, city = null, level = "HIJAU", near = false, scope = null } = {}) {
   const mag = parseFloat(ev.mag) || ev.mag;
   const etaText = eta == null ? null
     : eta <= 90 ? `*${eta} DETIK*`
@@ -2293,6 +2416,24 @@ export function formatEwsWarning(ev, { jarak = null, eta = null, city = null, le
     return msg;
   }
 
+  if (level === "UMUM") {
+    // v24.1.3 — subscriber TANPA lokasi: tetap dikabari (owner: "kejadian di
+    // Bandung tetep notif walau bukan lokasi yg diset"). Tanpa ETA/jarak
+    // karena jarak memang belum bisa dihitung.
+    let msg = "ℹ️ *INFO GEMPA TERDETEKSI*\n\n";
+    msg += `💥 Magnitudo : *M ${mag}*\n`;
+    msg += `📍 Lokasi : ${ev.wilayah}\n`;
+    msg += `🕐 Waktu : ${ev.waktu}\n`;
+    msg += `🌊 Potensi : ${ev.tsunami || "-"}\n`;
+    msg += `📏 Kedalaman: ${ev.depth}\n\n`;
+    msg += (scope === "negara" || scope === "pulau" || scope === "daerah")
+      ? `_Info otomatis wilayah ${city || "pantauan"} — mode SELURUH ${scope.toUpperCase()}, jarak/ETA gak dihitung._\n`
+      : "_Info otomatis (lokasi pantau belum di-set). Atur `.dsw lokasi <kota>` biar dapat jarak + perkiraan ETA getaran & peringatan dini._\n";
+    if (ev.lat != null && ev.lon != null) msg += `\n🗺️ ${mapsLink(ev.lat, ev.lon)}\n`;
+    msg += `\n📡 _Sumber: ${ev.provider}_`;
+    return msg;
+  }
+
   // HIJAU — info saja
   let msg = "ℹ️ *INFO GEMPA*\n\n";
   msg += `💥 M ${mag} | 📍 ${ev.wilayah}\n`;
@@ -2334,7 +2475,16 @@ async function dispatchEws(sendSock, ev, subs) {
       if (Array.isArray(sub.jenis) && sub.jenis.length && !sub.jenis.includes("gempa")) continue;
 
       let jarak = null, eta = null, level = null;
-      if (sub.lat != null && sub.lon != null && ev.lat != null && ev.lon != null) {
+      const minMagSub = parseFloat(sub.minMag ?? DEFAULT_MIN_MAG);
+      // ── SCOPE AREA (negara / pulau / daerah) — request owner 2026-09 ──
+      // `.dsw lokasi indonesia` → SEMUA gempa di Indonesia; `.dsw lokasi jawa`
+      // → semua di Pulau Jawa. Bukan radius dari 1 titik, tapi cek bbox wilayah.
+      if (isAreaScope(sub)) {
+        if (!inBbox(ev.lat, ev.lon, sub.bbox)) continue; // di luar wilayah → bukan urusan dia
+        const magArea = parseFloat(ev.mag);
+        if (!severe && !(Number.isFinite(magArea) && magArea >= minMagSub)) continue;
+        level = (severe || magArea >= 6.5) ? "MERAH" : magArea >= 5.5 ? "KUNING" : "UMUM";
+      } else if (sub.lat != null && sub.lon != null && ev.lat != null && ev.lon != null) {
         jarak = haversineKm(sub.lat, sub.lon, ev.lat, ev.lon);
         eta = etaGetaranDetik(jarak); // detik (gelombang S 3,6 km/dtk)
         // EWS v2 (spec owner 15 Sep): level ditentukan kombinasi magnitudo + jarak
@@ -2348,25 +2498,36 @@ async function dispatchEws(sendSock, ev, subs) {
         if (!level) level = null; // di luar semua level → cek severe global di bawah
         else if (!near && level === "HIJAU" && !severe) { /* tetap kirim — info sesuai spec */ }
       }
-      // ambang magnitudo per subscriber (default 3.5 — owner 15 Sep 2026):
-      // bisa NAIK (filter gempa kecil) atau TURUN di bawah KUNING 3.5 —
-      // gempa >= ambang & <= 500 km tetap dapat KUNING walau di bawah spec
-      const minMagSub = parseFloat(sub.minMag ?? DEFAULT_MIN_MAG);
+      // (minMagSub sudah dihitung di atas — dipakai jalur area & radius)
       if (!level && Number.isFinite(parseFloat(ev.mag))) {
         const inKuningRange = jarak != null && jarak <= EWS_LEVELS.KUNING.radiusKm;
         if (parseFloat(ev.mag) >= minMagSub && inKuningRange) level = "KUNING"; // minmag turunkan lantai KUNING
       }
       if (!level) {
-        // subscriber tanpa lokasi / gempa di luar jangkauan → hanya gempa BESAR global
-        if (!severe) continue;
-        level = "GLOBAL";
+        // subscriber tanpa lokasi / gempa di luar jangkauan
+        if (!severe) {
+          // FIX v24.1.3 — owner: "tanpa lokasi notif tetap ada, mis. kejadian
+          // di Bandung tetep notif walau bukan lokasi yg diset". Jadi subscriber
+          // TANPA lokasi tetap dikabari (level UMUM) selama memenuhi ambang
+          // minMag-nya. Subscriber yang PUNYA lokasi tapi di luar jangkauan
+          // tetap dilewati (biar gak spam gempa jauh).
+          if (sub.lat == null || sub.lon == null) {
+            const magEv = parseFloat(ev.mag);
+            if (Number.isFinite(magEv) && magEv >= minMagSub) level = "UMUM";
+            else { warnSubscriberTanpaLokasi(); continue; }
+          } else {
+            continue;
+          }
+        } else {
+          level = "GLOBAL";
+        }
       }
       // gempa di bawah ambang subscriber gak dikirim EWS, KECUALI gempa besar global
       if (!severe && Number.isFinite(parseFloat(ev.mag)) && parseFloat(ev.mag) < minMagSub) continue;
       // parameter alert per jenis — gempa juga bisa diatur minlevel
       if (!paramAllowsKind(sub, "gempa", level, jarak, severe)) continue;
 
-      const text = formatEwsWarning(ev, { jarak, eta, city: sub.city, level });
+      const text = formatEwsWarning(ev, { jarak, eta, city: sub.city, level, scope: sub.scope });
       await s.sendMessage(chatId, { text });
       sent++;
     } catch (e) {
@@ -2763,7 +2924,14 @@ export function startBencanaMonitor(sockParam = null) {
     return false;
   }
   if (watcherCount() === 0) {
-    console.log("[bencana] ⚙️ monitor belum bisa nyala — belum ada subscriber (.disastersystemwatch on)");
+    // FIX v24.1.2 — dulu console.log (kelihatan seperti info biasa). Padahal
+    // ini penyebab "notifikasi bencana gak muncul": ON di .switch TIDAK cukup,
+    // WAJIB ada minimal 1 subscriber. Sekarang di-warn + disebut commandnya.
+    console.warn(
+      "[bencana] ⚠ monitor TIDAK nyala — belum ada subscriber. " +
+      "Jalankan `.disastersystemwatch on` di chat/grup target (atau `.switch auto bencanawatch set`). " +
+      "Tanpa subscriber, TIDAK ada notifikasi bencana sama sekali.",
+    );
     return false;
   }
   if (!getBencanaAutoEnabled()) {

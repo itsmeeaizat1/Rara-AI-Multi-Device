@@ -542,6 +542,24 @@ export function weatherGroupOf(data) {
   return "lainnya";
 }
 
+// 🔹 KUNCI DETEKSI PERUBAHAN (v24.1.1) — dipakai scheduler mode otomatis.
+// Dulu pembandingnya GRUP kasar (weatherGroupOf), jadi perubahan nyata seperti
+// "Hujan Ringan → Hujan Lebat" (61→65) atau "Berawan → Mendung" (2→3) dianggap
+// "masih satu grup" dan TIDAK memicu notifikasi. Sekarang pembandingnya KODE/
+// kondisi cuaca itu sendiri, jadi perubahan nyata ikut tertangkap.
+// Suhu SENGAJA tidak dihitung: kalau cuma suhu naik/turun 1°C, notif tetap diam
+// (bukan perubahan kondisi). Anti-flip-flop (minGapMinutes) tetap meredam
+// cuaca yang bolak-balik dalam waktu singkat.
+// Format: "code:<wmo>" kalau provider punya weather_code, else "text:<kondisi>".
+export function weatherDetectKey(data) {
+  if (!data) return "";
+  const hasCode = data.weather_code !== undefined || data.weathercode !== undefined;
+  const code = Number(data.weather_code ?? data.weathercode);
+  if (hasCode && Number.isFinite(code)) return "code:" + code;
+  const cond = String(data.condition || "").trim().toLowerCase();
+  return cond ? "text:" + cond : "";
+}
+
 // Pesan notifikasi saat GRUP cuaca berubah — format dokumen diagnosis:
 // "Cuaca Berubah — <lokasi>" + Dari/Ke + suhu + curah hujan + hati-hati.
 export function formatWeatherChange(data, name, prevGroup, prevCondition) {

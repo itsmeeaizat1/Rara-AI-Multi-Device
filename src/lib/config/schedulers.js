@@ -46,5 +46,8 @@ export const lokerScheduler = {
     { key: "siang", label: "Siang", hour: 13, minute: 0 },
     { key: "sore", label: "Sore", hour: 17, minute: 0 },
   ],
-  sources: ["jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"],
+  // v24.2.8 — "linkedin" pertama: satu-satunya sumber loker INDONESIA yang
+  // masih hidup. JobStreet/Glints/Kalibrr/Indeed memblokir scraping (500/404/403)
+  // → kalau cuma mereka, notif isinya loker luar negeri (USA/Jerman).
+  sources: ["linkedin", "jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"],
 };

@@ -13,7 +13,7 @@
 
 import {
   addWatcher, removeWatcher, getWatchersSafe, syncBencanaMonitor, watcherCount,
-  setWatcherLocation, clearWatcherLocation, setWatcherRadius, haversineKm,
+  setWatcherLocation, clearWatcherLocation, setWatcherRadius, haversineKm, scopeLabel,
   setWatcherMode, addWatcherSchedule, removeWatcherSchedule, clearWatcherSchedules,
   setWatcherJenis, BENCANA_JENIS, setWatcherSumber, BENCANA_SUMBER,
   setWatcherKirim,
@@ -139,7 +139,7 @@ async function handler(m, { sock }) {
         `→ .dsw sumber bmkg`,
         `Jenis : ${fJenis}`,
         `→ .dsw jenis gempa`,
-        `Lokasi : ${me0?.city || "belum di-set"}`,
+        `Lokasi : ${me0?.city ? `${me0.city} [${scopeLabel(me0.scope)}]` : "belum di-set"}`,
         `→ .dsw lokasi jakarta`,
         `Radius : ${me0?.radius || 300} km`,
         `→ .dsw radius 500`,
@@ -163,7 +163,12 @@ async function handler(m, { sock }) {
           "Set lokasi buat peringatan khusus wilayah.",
           "Bot kasih tahu kalau ada bencana baru DEKAT lokasi kamu.",
           "---",
-          `Contoh : .dsw lokasi Palu`,
+          "3 TINGKAT SCOPE (otomatis dideteksi):",
+          "• KOTA   : .dsw lokasi Anyer      → radius sekitar kota",
+          "• PULAU  : .dsw lokasi Jawa       → SELURUH Pulau Jawa",
+          "• NEGARA : .dsw lokasi Indonesia  → SELURUH Indonesia",
+          "           .dsw lokasi Jepang     → seluruh Jepang",
+          "---",
           `Contoh : .dsw lokasi Kota Malang, Jawa Timur`,
           `Hapus   : .dsw lokasi hapus`,
         ]));
@@ -183,19 +188,25 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         return m.reply(novaBox("Bencana Watch", [
           `Lokasi tersimpan.`,
-          `Kota    : ${rec.city}`,
+          `Nama    : ${rec.city}`,
+          `Scope   : ${scopeLabel(rec.scope)}`,
           `Detail  : ${rec.detail || "-"}`,
           `Koordinat : ${rec.lat.toFixed(3)}, ${rec.lon.toFixed(3)}`,
+          ...(rec.bbox ? [`Wilayah : ${rec.bbox.south.toFixed(2)}..${rec.bbox.north.toFixed(2)} LAT, ${rec.bbox.west.toFixed(2)}..${rec.bbox.east.toFixed(2)} LON`] : []),
           "---",
-          "ALERT GEMPA DEKAT LOKASI aktif:",
-          "gempa terdeteksi BMKG dalam radius kamu",
-          "langsung muncul sebagai peringatan",
-          "wilayah — termasuk gempa kecil di bawah",
-          "M 5.0 (yang gak masuk alert umum).",
+          rec.scope === "kota"
+            ? "ALERT GEMPA DEKAT LOKASI aktif: gempa dalam"
+            : `ALERT WILAYAH aktif: SEMUA bencana di ${rec.scope.toUpperCase()}`,
+          rec.scope === "kota"
+            ? "radius kamu langsung muncul sebagai peringatan."
+            : "yang terdeteksi bot akan dinotifikasi (negara/",
+          rec.scope === "kota"
+            ? "Termasuk gempa kecil (bawah M 5.0)."
+            : "pulau = jangkauan luas, gak pakai radius).",
           "---",
-          `Radius sekarang ${rec.radius || 300} km — makin gede radius,`,
-          "makin luas wilayah yang dianggap dekat.",
-          `Atur: .dsw radius 500`,
+          rec.scope === "kota"
+            ? `Radius sekarang ${rec.radius || 300} km — atur: .dsw radius 500`
+            : `Ganti ke kota spesifik: .dsw lokasi Anyer`,
           ...(alsoG ? ["Lokasi diterapkan juga ke langganan global."] : []),
         ]));
       } catch (e) {
@@ -1055,8 +1066,11 @@ async function handler(m, { sock }) {
         }
       } else if (me) {
         lines.push("---");
-        lines.push("Lokasi  : belum di-set (alert umum saja)");
-        lines.push("Set     : .dsw lokasi <nama kota>");
+        // FIX v24.1.2 — dulu cuma "belum di-set (alert umum saja)", gak jelas
+        // dampaknya. Padahal tanpa lokasi, EWS gempa LOKAL gak pernah kirim.
+        lines.push("⚠️ Lokasi  : BELUM DI-SET — gempa LOKAL TIDAK akan");
+        lines.push("             dinotifikasi (cuma gempa global M6.5+).");
+        lines.push("Set     : .dsw lokasi <nama kota>  (WAJIB utk EWS gempa)");
       }
       if (!me && !(isDm && hasGlobalWatcher(m.sender))) lines.push("---", "Aktifkan dengan .dsw on");
 

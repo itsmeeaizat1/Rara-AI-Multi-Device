@@ -40,12 +40,11 @@ const GENRE_DEFAULT = [
 ];
 
 const ANILIST_QUERY = `
-  query ($page: Int, $perPage: Int, $genre: [String]) {
+  query ($page: Int, $perPage: Int) {
     Page(page: $page, perPage: $perPage) {
       media(
         type: ANIME,
         sort: [UPDATED_AT_DESC, POPULARITY_DESC],
-        genre_in: $genre,
         status_in: [RELEASING, NOT_YET_RELEASED]
       ) {
         id
@@ -227,13 +226,24 @@ function normAnilist(m) {
   };
 }
 
-async function checkAniList(genres) {
+// FIX v24.2.2 — `genre_in` AniList berperilaku AND (bukan OR): mengirim 11
+// genre favorit membuat hasilnya 0 item → sumber UTAMA selalu kosong dan tiap
+// check jatuh ke Kitsu (notif kurang kaya: skor N/A, tanpa info episode
+// berikutnya). Sekarang query TANPA genre, preferensi genre disaring di sisi
+// kita, dan kalau tak ada yang cocok tetap kirim (jangan sampai nol).
+async function checkAniList(genres = []) {
   const res = await axios.post(
     ANILIST_ENDPOINT,
-    { query: ANILIST_QUERY, variables: { page: 1, perPage: PER_PAGE, genre: genres.length ? genres : null } },
+    { query: ANILIST_QUERY, variables: { page: 1, perPage: PER_PAGE } },
     { headers: HEADERS, timeout: 20_000 },
   );
-  return (res.data?.data?.Page?.media || []).map(normAnilist);
+  const list = (res.data?.data?.Page?.media || []).map(normAnilist);
+  const want = (genres || []).map((g) => String(g).toLowerCase());
+  if (want.length && list.length) {
+    const cocok = list.filter((m) => (m.genres || []).some((g) => want.includes(String(g).toLowerCase())));
+    if (cocok.length) return cocok;
+  }
+  return list;
 }
 
 async function checkKitsu() {
