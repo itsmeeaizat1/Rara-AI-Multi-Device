@@ -920,6 +920,11 @@ const KEY_ALIAS = { codestral: "mistral", kimicode: "kimi" };
 
 function resolveApiKeyForProvider(rawProviderKey, aiConfig = {}) {
   const providerKey = KEY_ALIAS[rawProviderKey] || rawProviderKey;
+  // 9Router lokal memakai key dashboard lewat ROUTER_API_KEY. Prioritaskan
+  // env ini agar key cloud di apikeys.json tidak mengambil alih endpoint lokal.
+  if (String(providerKey).startsWith("tio_") && process.env.ROUTER_API_KEY?.trim()) {
+    return process.env.ROUTER_API_KEY.trim();
+  }
   // 🔹 1) CONFIG BARU: src/lib/apikey/ai-providers.json — single source of
   // truth. Fitur AI satuan (.grok, .openai, .deepseek, ikyy_*, dll) ambil
   // key dari sini. Keluarga ikyy otomatis pakai shared key ikyy (kyzz).

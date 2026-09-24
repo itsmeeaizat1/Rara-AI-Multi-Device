@@ -39,7 +39,9 @@ export function _resetRouter9v2ForTest() { for (const k of Object.keys(__r9)) de
 // ── key: seam > pusat apikeys.json > env ──
 export function router9v2Key() {
   if (__r9.key !== undefined) return __r9.key;
-  return getApiKey("router9v2") || process.env.ROUTER_API_KEY || "";
+  // Key lokal wajib menang atas key cloud di apikeys.json ketika owner
+  // mengaktifkan 9Router self-hosted lewat ROUTER_API_KEY.
+  return process.env.ROUTER_API_KEY || getApiKey("router9v2") || "";
 }
 
 // ── parse SSE → teks gabungan (fallback server yang ngotot stream) ──
