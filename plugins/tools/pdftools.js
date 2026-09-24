@@ -51,25 +51,19 @@ async function handler(m, { sock }) {
   const prefix = m.prefix || ".";
 
   if (!subCmd) {
-    let txt = "PDF TOOLS\n\n";
-    txt += "1. img2pdf — Gambar ke PDF (reply/kirim gambar)\n";
-    txt += "   .pdftools img2pdf\n\n";
-    txt += "2. merge — Gabung 2+ PDF jadi 1 (reply PDF)\n";
-    txt += "   .pdftools merge\n\n";
-    txt += "3. info — Info detail PDF (reply PDF)\n";
-    txt += "   .pdftools info\n\n";
-    txt += "4. split — Pisah PDF per halaman (reply PDF)\n";
-    txt += "   .pdftools split\n\n";
-    txt += "5. text — Extract teks dari PDF (reply PDF)\n";
-    txt += "   .pdftools text\n\n";
-    txt += "6. pages — Jumlah halaman PDF (reply PDF)\n";
-    txt += "   .pdftools pages\n\n";
-    txt += "7. rotate — Rotasi PDF 90 derajat (reply PDF)\n";
-    txt += "   .pdftools rotate\n\n";
-    txt += "8. compress — Kompres ukuran PDF (reply PDF)\n";
-    txt += "   .pdftools compress\n\n";
-    txt += "Cara pakai: Reply file PDF/gambar dengan command di atas";
-    return m.reply( txt, "pdftools");
+    return m.reply(novaGuide(
+      "pdftools",
+      "8 alat PDF dalam 1 command",
+      `${prefix}pdftools img2pdf — gambar ke PDF (reply/kirim gambar)\n` +
+      `${prefix}pdftools merge — gabung 2+ PDF jadi 1 (reply PDF)\n` +
+      `${prefix}pdftools info — info detail PDF (reply PDF)\n` +
+      `${prefix}pdftools split — pisah PDF per halaman (reply PDF)\n` +
+      `${prefix}pdftools text — extract teks dari PDF (reply PDF)\n` +
+      `${prefix}pdftools pages — jumlah halaman PDF (reply PDF)\n` +
+      `${prefix}pdftools rotate — rotasi PDF 90 derajat (reply PDF)\n` +
+      `${prefix}pdftools compress — kompres ukuran PDF (reply PDF)`,
+      "Reply file PDF/gambar dengan command di atas"
+    ), "pdftools");
   }
 
   // === img2pdf ===

@@ -183,16 +183,12 @@ async function handler(m, { sock, args }) {
   const text = args.join(" ");
 
   if (!text || text.length < 20) {
-    let txt = `Parafrase Teks\n\n`;
-    txt += `Ubah teks dengan synonym replacement untuk menghindari plagiarisme.\n\n`;
-    txt += `Cara pakai:\n`;
-    txt += `1. \`${m.prefix}paraphrase <teks>\` - Parafrase normal\n`;
-    txt += `2. \`${m.prefix}paraphrase agresif <teks>\` - Parafrase agresif (lebih banyak perubahan)\n\n`;
-    txt += `Dukung: Bahasa Indonesia & English\n`;
-    txt += `Maks 3000 karakter\n\n`;
-    txt += `Contoh:\n`;
-    txt += `\`${m.prefix}paraphrase Penelitian ini menggunakan metode kualitatif...\``;
-    return await m.reply( txt, { commandName: "paraphrase" });
+    return await m.reply(novaGuide(
+      "paraphrase",
+      "Ubah teks dengan synonym replacement untuk menghindari plagiarisme",
+      `${m.prefix}paraphrase Penelitian ini menggunakan metode kualitatif...\n${m.prefix}paraphrase agresif teks yang sama (lebih banyak perubahan)`,
+      "Dukung: Bahasa Indonesia & English\nMaks 3000 karakter"
+    ), { commandName: "paraphrase" });
   }
   try {
     let intensity = 0.5;
