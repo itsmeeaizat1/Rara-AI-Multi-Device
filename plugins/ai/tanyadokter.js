@@ -81,20 +81,11 @@ async function handler(m, { sock }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    const help =
-      `\n` +
-      `Tanya dokter AI tentang kesehatan\n` +
-      `Gejala, penyakit, gizi, obat, tips\n` +
-      `*Gratis* — via API Xemoz\n` +
-      `\n` +
-      `*Cara pakai:*\n` +
-      `${m.prefix}tanyadokter <pertanyaan>\n\n` +
-      `*Contoh:*\n` +
-      `${m.prefix}tanyadokter cara agar jantung sehat\n` +
-      `${m.prefix}aikesehatan cara biar sembuh\n` +
-      `${m.prefix}tanyadokter gejala demam berdarah\n\n` +
-      `*Reset sesi:*\n` +
-      `${m.prefix}tanyadokter reset`;
+    const help = novaGuide(
+      "tanyadokter",
+      `Tanya dokter AI tentang kesehatan — gejala, penyakit, gizi, obat, tips\n${m.prefix}tanyadokter <pertanyaan>\n${m.prefix}tanyadokter reset — reset sesi percakapan`,
+      `${m.prefix}tanyadokter cara agar jantung sehat\n${m.prefix}aikesehatan cara biar sembuh\n${m.prefix}tanyadokter gejala demam berdarah`
+    );
     return m.reply(help, "tanyadokter");
   }
 

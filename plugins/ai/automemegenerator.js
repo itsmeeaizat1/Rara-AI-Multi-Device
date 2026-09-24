@@ -40,16 +40,15 @@ async function doMemeAnalysis(m, sock, style) {
     const msg = m.message || {};
     const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) {
-      await m.reply(claraWrap("Auto Meme", [
-        "Tidak ada foto terdeteksi.",
-        "Reply foto dengan command ini untuk generate meme.",
-        "",
-        "Cara pakai:",
-        "  .automeme — auto style (reply foto)",
-        "  .automeme top — teks di atas",
-        "  .automeme bottom — teks di bawah (classic)",
-        "  .automeme full — caption panjang",
-      ].join("\n")));
+      await m.reply(novaGuide(
+        "automeme",
+        "Tidak ada foto terdeteksi — reply foto dengan command ini untuk generate meme\n" +
+        prefix + "automeme — auto style (reply foto)\n" +
+        prefix + "automeme top — teks di atas\n" +
+        prefix + "automeme bottom — classic (teks di bawah)\n" +
+        prefix + "automeme full — caption panjang",
+        prefix + "automeme top (reply foto)"
+      ));
       return { handled: true };
     }
 
@@ -259,20 +258,19 @@ async function handler(m, { sock, config: botConfig }) {
     if (["top", "bottom", "full", "auto"].includes(args[0])) {
       style = args[0];
     } else if (args[0]) {
-      await m.reply(claraWrap("Auto Meme", [
-        "Meme Generator dari foto via AI Vision",
-        "",
-        "Cara pakai (one-shot):",
-        prefix + "automeme — auto style (reply foto)",
-        prefix + "automeme top — teks di atas",
-        prefix + "automeme bottom — classic (bawah)",
+      await m.reply(novaGuide(
+        "automeme",
+        "Meme generator dari foto via AI Vision\n" +
+        prefix + "automeme — auto style (reply foto)\n" +
+        prefix + "automeme top — teks di atas\n" +
+        prefix + "automeme bottom — classic (bawah)\n" +
         prefix + "automeme full — caption panjang",
-        "",
-        "Persistent (owner):",
-        prefix + "toggleautomeme on/off",
-        prefix + "toggleautomeme style <style>",
-        prefix + "toggleautomeme status",
-      ].join("\n")));
+        prefix + "automeme top\n" + prefix + "automeme full",
+        "Persistent (owner):\n" +
+        prefix + "toggleautomeme on/off\n" +
+        prefix + "toggleautomeme style <style>\n" +
+        prefix + "toggleautomeme status"
+      ));
       return { handled: true };
     }
 

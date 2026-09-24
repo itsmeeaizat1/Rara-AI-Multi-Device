@@ -2,7 +2,7 @@
 // editimg — Edit gambar dengan AI (text-to-image editing)
 import { Img2Img } from "../../src/scraper/img2img.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -29,20 +29,15 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        "" +
-        `🎨 Edit gambar dengan AI\n` +
-        `
-` +
-        `📌 Cara pakai:\n` +
-        `Kirim/reply foto + caption instruksi\n` +
-        `
-` +
-        `💡 Contoh:\n` +
-        `${prefix}editimg ubah background jadi pantai\n` +
-        `${prefix}editimg tambahkan kacamata hitam\n` +
-        `${prefix}editimg ubah jadi gaya anime\n` +
-        `${prefix}editimg hapus orang di belakang\n` +
-        ""
+        novaGuide(
+          "editimg",
+          "Edit gambar dengan AI\n" +
+          "Kirim/reply foto + caption instruksi",
+          `${prefix}editimg ubah background jadi pantai\n` +
+          `${prefix}editimg tambahkan kacamata hitam\n` +
+          `${prefix}editimg ubah jadi gaya anime\n` +
+          `${prefix}editimg hapus orang di belakang`
+        )
       );
     }
 
