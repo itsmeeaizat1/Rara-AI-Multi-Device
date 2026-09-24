@@ -1,3 +1,5 @@
+- **FILE.IO TEMPORARY UPLOAD (24 Sep 2026):** Fitur baru `.fileio` (alias `.tmpfiles` dan `.temporaryfile`) menerima reply/kiriman gambar, video, audio, dokumen, atau sticker lalu mengunggahnya ke `https://file.io/` via REST multipart. Masa berlaku default 14 hari; file juga terhapus setelah diunduh. Batas timeout 60 detik, validasi respons ketat, dan metadata nama file dibersihkan.
+
 - **CONCISEAI EMPTY RESPONSE FIX (24 Sep 2026):** Endpoint ConciseAI kadang membalas HTTP 200 dengan `[]` tanpa jawaban. `.conciseaiv2` sekarang memvalidasi HTTP dan isi respons, lalu memakai fallback `callIkyy` jika respons kosong. Scope `text` juga diperbaiki agar fallback tidak crash karena variabel di luar blok `try`.
 
 - **9ROUTER LOCAL KEY PRIORITY (24 Sep 2026):** Jika `ROUTER_API_KEY` diisi dengan key hasil dashboard 9Router lokal, key tersebut diprioritaskan di atas key cloud `providers.router9v2`. Berlaku untuk `.ai9v2`, fallback 9Router, smart reply, aigrup, dan jalur `tio_*`; endpoint tetap diubah lewat `.ai9v2 endpoint lokal`.
