@@ -5,9 +5,6 @@ import os from "os";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
-import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
-import { getApiKeys } from "../../src/lib/config/env-loader.js";
-import axios from "axios";
 
 const pluginConfig = {
   name: "togif",
@@ -51,20 +48,8 @@ async function handler(m, { sock }) {
         ] }),
       }, { quoted: m });
     } catch (err) {
-      // Fallback: upload ke catbox lalu convert webp → mp4
-      const link = await uploadToCatbox(mediaBuffer, "media.webp");
-      const convertRes = await axios.get(`https://api.betabotz.eu.org/api/tools/webp2mp4?url=${link}&apikey=${getApiKeys().betabotz || "beta-gilang"}`, { timeout: 60000 });
-      const convertUrl = convertRes.data?.result?.url || convertRes.data?.url;
-      if (!convertUrl) throw new Error("Gagal convert ke GIF");
-
-      await m.react("🐣");
-      await sock.sendMessage(m.chat, { video: { url: convertUrl }, gifPlayback: true }, { quoted: m });
-      // format info hasil (request owner 19-20 Sep — field sesuai fitur)
-      await m.reply(mediaInfoCaption({ header: "Nova To GIF", fields: [
-        { icon: "📥", label: "Input", value: "Sticker" },
-        { icon: "📤", label: "Output", value: "GIF" },
-        { icon: "⚙️", label: "Engine", value: "Betabotz webp2mp4" },
-      ] }));
+      // Jalur utama WA gifPlayback sudah tidak bergantung provider eksternal.
+      throw new Error(`WA gifPlayback gagal: ${err.message}`);
     }
   } catch (e) {
     console.error("togif error:", e.message);
