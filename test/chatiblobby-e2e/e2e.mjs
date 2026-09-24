@@ -66,7 +66,7 @@ console.log("— section 1: join lobby + nickname —");
   await run(A, { args: ["KucingGalak"] });
   const lobby = lib.getLobby(db);
   t("1a. A masuk lobby dengan nickname pilihan", !!lobby.members[A] && lobby.members[A].nick === "KucingGalak", nickOf(A));
-  t("1b. dapet aturan + peringatan guard link", lastReplyOf(A).includes("guard") && lastReplyOf(A).includes("nickname"), lastReplyOf(A));
+  t("1b. dapet aturan + info idle 1 jam", lastReplyOf(A).includes("1 jam") && lastReplyOf(A).includes("nickname"), lastReplyOf(A));
   t("1c. reaksi ⚡ saat join", reactions.includes("⚡"), reactions.join(","));
   await run(A);
   t("1d. join ulang → ditolak (udah di lobby)", lastReplyOf(A).includes("udah di lobby"), lastReplyOf(A));
@@ -88,21 +88,22 @@ console.log("— section 2: relay broadcast (nomor gak pernah muncul) —");
   t("2d. non-member gak ke-relay", handledNo === false, handledNo);
 }
 
-console.log("— section 3: GUARD LINK → kick otomatis —");
+console.log("— section 3: ATURAN BARU — link boleh, di-broadcast normal —");
 {
   sent.length = 0;
+  // flood seam 5 dtk — B barusan ngerelay di section 2, reset dulu
+  lib.getLobby(db).members[B].lastRelayAt = 0; db.save();
   await relay(B, "cek bonus di bit.ly/hadiah99");
   const lobby = lib.getLobby(db);
-  t("3a. pengirim link di-KICK dari lobby", !lobby.members[B], JSON.stringify(lobby.members));
-  t("3b. pengirim dapet kabar kick + jejaknya", msgsTo(B).some((x) => x.includes("guard") && x.includes("di-kick")), JSON.stringify(msgsTo(B)));
-  t("3c. link GAK pernah ke-broadcast", !sent.some((s) => sc(s.text).includes("bit.ly") && s.jid === A), JSON.stringify(msgsTo(A)));
-  t("3d. member lain dapet kabar kick (nomor gak dibocorin)", msgsTo(A).some((x) => x.includes("di-kick") && !x.includes("62812")), JSON.stringify(msgsTo(A)));
-  t("3e. owner dapet laporan guard (nick + nomor pelanggar)", msgsTo(OWNER).some((x) => x.includes("62812") && x.includes("guard kick")), JSON.stringify(msgsTo(OWNER)));
-  // varian link lain
+  t("3a. pengirim link TETAP di lobby (gak di-kick)", !!lobby.members[B], JSON.stringify(Object.keys(lobby.members)));
+  t("3b. link di-broadcast ke member lain", msgsTo(A).some((x) => x.includes("bit.ly/hadiah99")), JSON.stringify(msgsTo(A)));
+  t("3c. owner GAK dapat laporan apa pun", msgsTo(OWNER).length === 0, JSON.stringify(msgsTo(OWNER)));
+  // varian link lain juga lolos
   for (const v of ["wa.me/62811", "kunjungi www.hadiah.com", "daftar di chatib.info ya"]) {
-    await run(B, { args: ["UjiCoba"] });
+    sent.length = 0;
+    lobby.members[B].lastRelayAt = 0; db.save();
     await relay(B, v);
-    t(`3f-${v.slice(0, 16)} → kick otomatis`, !lib.getLobby(db).members[B], v);
+    t(`3d-${v.slice(0, 16)} → di-broadcast & tetap di lobby`, msgsTo(A).some((x) => x.includes(v.split(" ").pop())) && !!lib.getLobby(db).members[B], v);
   }
 }
 
@@ -169,7 +170,7 @@ console.log("— section 7: sweeper idle auto-leave —");
   await lib.initChatibLobbySweeper(mkSock(), 100);
   await new Promise((r) => setTimeout(r, 500));
   t("7a. member idle di-keluarkan otomatis", !lib.getLobby(db).members[A], JSON.stringify(Object.keys(lib.getLobby(db).members)));
-  t("7b. member lain dapet kabar keluarnya", msgsTo(B).some((x) => x.includes("keluar") || x.includes("aktivitas")), JSON.stringify(msgsTo(B)));
+  t("7b. member lain dapet kabar keluarnya (1 jam)", msgsTo(B).some((x) => x.includes("keluar") || x.includes("1 jam")), JSON.stringify(msgsTo(B)));
   lib._stopChatibSweeperForTest();
 }
 

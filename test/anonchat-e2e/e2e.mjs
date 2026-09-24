@@ -62,6 +62,7 @@ const msgsTo = (jid) => sent.filter((s) => s.jid === jid).map((s) => sc(s.payloa
 const repliesOf = (sender) => sent.filter((s) => s.jid === "reply-" + sender).map((s) => sc(s.payload?.text || ""));
 const lastReplyOf = (sender) => repliesOf(sender)[repliesOf(sender).length - 1] || "";
 const dmOwner = () => msgsTo(OWNER);
+const resetFlood = (jid) => { const s = lib.getAnon(db).sessions[jid]; if (s) { s.lastRelayAt = 0; db.save(); } };
 
 console.log("— section 1: mulai & pairing —");
 {
@@ -74,7 +75,7 @@ console.log("— section 1: mulai & pairing —");
   await run(B);
   const a = lib.getAnon(db).sessions;
   t("1d. B masuk → langsung terpasang sama A", a[A]?.partner === B && a[B]?.partner === A, JSON.stringify(a));
-  t("1e. kedua pihak dapat info pairing + aturan guard link", lastReplyOf(B).includes("terhubung sama stranger") && lastReplyOf(B).includes("guard") && msgsTo(A).some((x) => x.includes("terhubung") && x.includes("guard")), lastReplyOf(B));
+  t("1e. kedua pihak dapat info pairing + info idle 1 jam", lastReplyOf(B).includes("terhubung sama stranger") && lastReplyOf(B).includes("1 jam") && lastReplyOf(B).includes("link juga boleh") && msgsTo(A).some((x) => x.includes("terhubung") && x.includes("1 jam")), lastReplyOf(B));
   t("1f. queue kosong setelah pairing", lib.getAnon(db).queue.length === 0, lib.getAnon(db).queue.length);
   t("1g. reaksi ⚡ saat pairing", reactions.includes("⚡"), reactions.join(","));
 }
@@ -106,23 +107,22 @@ console.log("— section 2: relay pesan dua arah —");
   t("2d. user C (bukan peserta) gak ke-relay", handledNo === false, handledNo);
 }
 
-console.log("— section 3: GUARD LINK → sesi ditutup otomatis —");
+console.log("— section 3: ATURAN BARU — link boleh, tetap diteruskan —");
 {
   sent.length = 0;
-  const handled = await relay(A, "cek ini guys https://phising.ruhadiah.xyz");
-  t("3a. link terdeteksi → pesan di-handle (gak diteruskan)", handled === true, handled);
-  t("3b. sesi DITUTUP dua arah", !lib.getAnon(db).sessions[A] && !lib.getAnon(db).sessions[B], JSON.stringify(lib.getAnon(db).sessions));
-  t("3c. pengirim dibilangin soal pelanggaran", msgsTo(A).some((x) => x.includes("guard") && x.includes("materi yang gak diizinkan")), JSON.stringify(msgsTo(A)));
-  t("3d. partner dapat penjelasan sesi ditutup otomatis", msgsTo(B).some((x) => x.includes("sesi ditutup otomatis") && x.includes("terlarang")), JSON.stringify(msgsTo(B)));
-  t("3e. link GAK diteruskan ke B", !msgsTo(B).join(" ").includes("phising"), JSON.stringify(msgsTo(B)));
-  t("3f. owner dapat laporan guard (pengirim + nomor partner dirahasiain dari pengirim)", dmOwner().some((x) => x.includes("62811") && x.includes("tidak dibocorin")), JSON.stringify(dmOwner()));
-  // varian: wa.me, www., domain polos, shortener
+  resetFlood(A);
+  const handled = await relay(A, "cek ini guys https://contoh.com/video");
+  t("3a. link DIKIRIM → di-handle & diteruskan normal", handled === true, handled);
+  t("3b. sesi TETAP TERBUKA (gak ditutup)", !!lib.getAnon(db).sessions[A] && !!lib.getAnon(db).sessions[B], JSON.stringify(Object.keys(lib.getAnon(db).sessions)));
+  t("3c. link nyampe ke partner", msgsTo(B).some((x) => x.includes("contoh.com")), JSON.stringify(msgsTo(B)));
+  t("3d. owner GAK dapat laporan apa pun", dmOwner().length === 0, JSON.stringify(dmOwner()));
+  // varian link lain juga lolos + diteruskan
   const variants = ["wa.me/628123", "kunjungi www.hadiah.com", "daftar di premku.info ya", "bit.ly/xx99"];
   for (const v of variants) {
-    await run(A); await run(B); // pasang lagi
-    const okPaired = !!lib.getAnon(db).sessions[A];
+    sent.length = 0;
+    resetFlood(A);
     await relay(A, v);
-    t(`3g-${v.slice(0, 18)} → sesi ditutup otomatis`, okPaired && !lib.getAnon(db).sessions[A], v);
+    t(`3e-${v.slice(0, 16)} → diteruskan & sesi tetap`, msgsTo(B).some((x) => x.includes(v.split(" ").pop())) && !!lib.getAnon(db).sessions[A], v);
   }
 }
 
@@ -182,7 +182,7 @@ console.log("— section 7: sweeper timeout idle —");
   await lib.initAnonChatSweeper(sock, 100);
   await new Promise((r) => setTimeout(r, 450));
   t("7a. sesi idle ditutup otomatis sama sweeper", !lib.getAnon(db).sessions[A] && !lib.getAnon(db).sessions[B], JSON.stringify(lib.getAnon(db).sessions));
-  t("7b. kedua pihak dapet kabar timeout", msgsTo(A).some((x) => x.includes("aktivitas")) && msgsTo(B).some((x) => x.includes("aktivitas")), JSON.stringify(msgsTo(A)));
+  t("7b. kedua pihak dapet kabar timeout 1 jam", msgsTo(A).some((x) => x.includes("1 jam")) && msgsTo(B).some((x) => x.includes("1 jam")), JSON.stringify(msgsTo(A)));
   lib._stopAnonSweeperForTest();
   // queue kedaluwarsa dibuang
   const a2 = lib.getAnon(db);
