@@ -237,16 +237,12 @@ async function handler(m, { sock }) {
   const url = args.slice(1).join(" ").trim() || "";
 
   if (!providerName || !url) {
-    let txt = "SHORTLINK\n\n";
-    txt += "Format: .shortlink <provider> <url>\n\n";
-    txt += "Provider gratis: tinyurl, isgd, vgd, cleanuri, 1pt\n";
-    txt += "Provider berbayar: bitly, cuttly, rebrandly, shorte, ouo, tinycc\n\n";
-    txt += "Contoh:\n";
-    txt += "1. .shortlink tinyurl https://google.com\n";
-    txt += "2. .shortlink isgd https://example.com\n";
-    txt += "3. .shortlink bitly https://github.com\n\n";
-    txt += "Ketik .shortlink list buat lihat semua provider";
-    return m.reply( txt, "shortlink");
+    return m.reply(novaGuide(
+      "shortlink",
+      "Perpendek URL dengan berbagai provider",
+      `${m.prefix}shortlink tinyurl https://google.com\n${m.prefix}shortlink isgd https://example.com`,
+      "Provider gratis: tinyurl, isgd, vgd, cleanuri, 1pt\nProvider berbayar: bitly, cuttly, rebrandly, shorte, ouo, tinycc\nKetik .shortlink list buat lihat semua provider"
+    ), "shortlink");
   }
 
   const provider = PROVIDERS[providerName];

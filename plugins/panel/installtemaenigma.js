@@ -66,10 +66,11 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply(`Usage: \`${m.prefix}installtemaenigma <ip>|<password>|<link_wa>|<link_group>|<link_channel>\`
-
-Contoh:
-\`${m.prefix}installtemaenigma 192.168.1.1|pass|https://wa.me/628xxx|https://t.me/group|https://t.me/channel\``)
+        return m.reply(novaGuide(
+            "installtemaenigma",
+            "Install tema Enigma ke VPS",
+            `${m.prefix}installtemaenigma 192.168.1.1|pass|https://wa.me/628xxx|https://t.me/group|https://t.me/channel`
+        ))
     }
 
     const parts = text.split('|')

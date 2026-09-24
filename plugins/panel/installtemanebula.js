@@ -70,8 +70,11 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `
-│ Usage: \`${m.prefix}installtemanebula <ip>|<password>\`\n\n\`Contoh: ${m.prefix}installtemanebula 192.168.1.1|secretpass\``, "installtemanebula")
+        return m.reply(novaGuide(
+            "installtemanebula",
+            "Install tema Nebula ke VPS",
+            `${m.prefix}installtemanebula 192.168.1.1|secretpass`
+        ), "installtemanebula")
     }
 
     const parts = text.split('|')
