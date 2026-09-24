@@ -144,14 +144,6 @@ export const API_KEYS = {
     getLink: () => "https://covenant.sbs",
     usedBy: ["downloader"],
   },
-  betabotz: {
-    label: "BetaBotz API",
-    description: "API downloader & tools",
-    getConfig: () => config.APIkey?.betabotz || "",
-    getEnv: () => process.env.BETABOTZ_API_KEY || "",
-    getLink: () => "",
-    usedBy: ["downloader"],
-  },
   fgsi: {
     label: "FGSI API",
     description: "API Indonesia",

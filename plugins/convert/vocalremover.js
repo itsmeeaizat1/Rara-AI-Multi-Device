@@ -1,8 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from "axios";
-import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
+import { separateStems } from "../../src/lib/nova-stemsplit.js";
 import te from "../../src/lib/nova-error.js";
-import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 
@@ -33,19 +31,12 @@ async function handler(m, { sock, command }) {
 
     if (mediaBuffer.length > 5 * 1024 * 1024) { await m.react("❌"); return m.reply(claraWrap("vocalremover", "Ukuran audio terlalu besar, maksimal 5MB.")); }
 
-    const link = await uploadToCatbox(mediaBuffer, "audio.mp3");
-    const apiUrl = `https://api.betabotz.eu.org/api/tools/voiceremover?url=${link}&apikey=${getApiKeys().betabotz || "beta-gilang"}`;
-    const res = await axios.get(apiUrl, { timeout: 120000 });
-
-    if (!res.data?.status) { await m.react("❌"); return m.reply(claraWrap("vocalremover", "Gagal memproses audio dari API.")); }
-
+    const stems = await separateStems(mediaBuffer, { filename: "audio.mp3", contentType: "audio/mpeg" });
     await m.react("🐣");
 
     // vocalremover → kirim instrumental | instrumenremover → kirim vocal
     const isVocalRemover = command === "vocalremover" || command === "vocalremove";
-    const resultUrl = isVocalRemover
-      ? res.data.result.instrumental_path
-      : res.data.result.vocal_path;
+    const resultUrl = isVocalRemover ? stems.instrumental : stems.vocals;
 
     const fileName = isVocalRemover ? "instrumental.mp3" : "vocal.mp3";
 
@@ -53,7 +44,7 @@ async function handler(m, { sock, command }) {
     const caption = mediaInfoCaption({ header: "Nova Vocal Remover", fields: [
       { icon: "📥", label: "Input", value: "Audio" },
       { icon: "🎛️", label: "Mode", value: isVocalRemover ? "Instrumental (tanpa vocal)" : "Vocal saja (tanpa instrumental)" },
-      { icon: "⚙️", label: "Engine", value: "Betabotz Voice Remover" },
+      { icon: "⚙️", label: "Engine", value: "StemSplit REST API" },
       { icon: "⬇️", label: "Hasil", value: "Audio MP3" },
     ] });
 

@@ -139,11 +139,6 @@ const KEY_PROBES = [
     url: k => `https://api.openweathermap.org/data/2.5/weather?q=Jakarta&appid=${encodeURIComponent(k)}`,
   },
   {
-    key: "betabotz", label: "Betabotz",
-    features: ".togif .vocalremover",
-    url: k => `https://api.betabotz.eu.org/api/tools/webp2mp4?url=https://example.com/a.webp&apikey=${encodeURIComponent(k)}`,
-  },
-  {
     key: "anabot", label: "Anabot",
     features: ".izen",
     url: k => `https://anabot.my.id/api/tools/izenLOL?url=https://wa.me&apikey=${encodeURIComponent(k)}`,
@@ -202,10 +197,8 @@ const FREE_PROBES = [
 const RE_KEY_INVALID = /(invalid api|invalid key|api[_ ]?key.*(salah|invalid|expired|tidak ditemukan|not found)|unauthorized|banned apikey|apikey kadaluarsa|silakan daftar|akses ditolak)/i;
 const RE_QUOTA = /(quota|kuota|limit exceeded|rate limit habis|kehabis)/i;
 
-// FIX 20 Sep 2026 (owner: "betabotz ttep kedetek expired di boot doctor"):
-// key betabotz BARU itu VALID — yang nolak gerbang IP WHITELIST di sisi
-// rest api (HTTP 403 + body "IP tidak diwhitelist"), BUKAN key expired.
-// Label lama "APIKEY EXPIRED" menyesatkan → kategori sendiri ip_gate.
+// Provider tertentu dapat mengembalikan HTTP 403 karena gerbang IP whitelist.
+// Itu berbeda dari key expired, jadi dipisahkan ke kategori ip_gate.
 const RE_IP_GATE = /(ip tidak diwhitelist|whitelist ip|ip belum diwhitelist|whitelist ip anda)/i;
 
 function classifyHttp(status, bodyText) {
@@ -316,7 +309,7 @@ export async function runBootDoctor() {
 // LAPORAN (line-free — aturan owner, tanpa garis │/╭/╰)
 // ═══════════════════════════════════════════════════════════════
 const CATEGORY_META = {
-  ip_gate: { title: "KEY VALID — IP BOT BELUM DIWHITELIST di rest api (betabotz)", icon: "🟠", order: 1 },
+  ip_gate: { title: "KEY VALID — IP BOT BELUM DIWHITELIST di REST API", icon: "🟠", order: 1 },
   key_invalid: { title: "APIKEY EXPIRED / SALAH — butuh ganti key", icon: "❌", order: 2 },
   quota: { title: "KUOTA ABIS / perlu top-up", icon: "⚠", order: 3 },
   ratelimit: { title: "RATE-LIMIT (key valid, kena limit)", icon: "⚠", order: 4 },
@@ -371,7 +364,7 @@ export function buildBootReport(results) {
       lines.push(dampak);
       if (status === "ip_gate") {
         // key beneran valid — yang ditolak cuma IP bot. Whitelist di profile
-        // dashboard rest api (betabotz: perlu langganan VIP buat whitelist IP).
+        // dashboard REST API provider terkait.
         lines.push("Key valid & dikenal — ketik .bootdoctor tidak perlu ganti key");
         if (it.gateIp) lines.push("IP bot yang kena gerbang: " + it.gateIp);
         lines.push("Solusi: whitelist IP bot di profile dashboard rest api (VIP) — fitur aktif otomatis setelahnya");

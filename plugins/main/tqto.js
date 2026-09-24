@@ -46,7 +46,7 @@ async function handler(m, { sock, uptime }) {
         'IkyyXD (Iky) — api.ikyyxd.my.id',
         'HaidarApis (Haidar) — api.haidarxd.my.id',
         'Cuki API — api.cuki.biz.id',
-        'Betabotz — api.betabotz.eu.org',
+        'StemSplit — stemsplit.io/api/v1',
         'FazzCode — api.fazzcode.eu.cc',
         'Xemoz Official — api-xemoz-official.my.id',
         'KuroNeko / Sylvatica — sylvatica.my.id',
