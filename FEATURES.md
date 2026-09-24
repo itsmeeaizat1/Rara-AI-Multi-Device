@@ -1,3 +1,5 @@
+- **CONCISEAI EMPTY RESPONSE FIX (24 Sep 2026):** Endpoint ConciseAI kadang membalas HTTP 200 dengan `[]` tanpa jawaban. `.conciseaiv2` sekarang memvalidasi HTTP dan isi respons, lalu memakai fallback `callIkyy` jika respons kosong. Scope `text` juga diperbaiki agar fallback tidak crash karena variabel di luar blok `try`.
+
 - **9ROUTER LOCAL KEY PRIORITY (24 Sep 2026):** Jika `ROUTER_API_KEY` diisi dengan key hasil dashboard 9Router lokal, key tersebut diprioritaskan di atas key cloud `providers.router9v2`. Berlaku untuk `.ai9v2`, fallback 9Router, smart reply, aigrup, dan jalur `tio_*`; endpoint tetap diubah lewat `.ai9v2 endpoint lokal`.
 
 - **FALLBACK PROVIDER BERMASALAH (24 Sep 2026):** Fitur `.text2img` dipindahkan dari Firefly ke HaidarApis `nano-banana` yang sudah aktif. `.aisensenova` chat memakai 9Router jika SenseNova gagal. Semua pemanggilan chat teks melalui `callIkyy` mendapat fallback terakhir ke 9Router setelah seluruh model Ikyy gagal. FGSI tetap hanya jalur cadangan `.editimg` dan ObscuraWorks tidak memiliki fitur aktif yang perlu dipertahankan; keduanya tidak diganti dengan endpoint spekulatif.
