@@ -7,9 +7,9 @@
 // - .chatibnick <nama>   ganti nickname (unik, gak bisa nabrak milik orang)
 // - .chatiblist           daftar nickname yang online (nomor gak pernah muncul)
 // - .chatibleave           keluar lobby
-// GUARD (standar layanan anonim Nova): ngirim link → di-KICK otomatis
-// + laporan DM owner. Media ditolak, flood guard, idle 15 mnt auto-leave.
-// Engine: src/lib/nova-chatib-lobby.js (relay via answerHandler di handler.js).
+// ATURAN (revisi owner 24 Sep 2026): link BOLEH & di-broadcast normal.
+// Member di-keluarkan otomatis kalau gak ada aktivitas selama 1 JAM.
+// Media ditolak, flood guard. Engine: src/lib/nova-chatib-lobby.js.
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { joinLobby, setNick, listMembers, leaveLobby, relayLobbyMessage } from "../../src/lib/nova-chatib-lobby.js";
