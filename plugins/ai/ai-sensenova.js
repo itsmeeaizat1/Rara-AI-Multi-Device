@@ -7,6 +7,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { sensenovaChat, sensenovaVision } from "../../src/scraper/sensenova.js";
+import { callAI } from "../../src/lib/nova-ai-service.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 
 const pluginConfig = {
@@ -57,10 +58,19 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("aisensenova", result?.error || "Gagal menganalisis gambar", "error"));
       }
     } else {
-      // Chat teks — langsung ke SenseNova.
-      // STRICT (owner 11 Sep: satuan gak ada fallback) — SenseNova down / key
-      // mati → throw ke catch luar → error reply, GAK jatuh ke brand lain.
-      reply = await sensenovaChat(text);
+      // Chat teks: SenseNova utama, 9Router dipakai bila endpoint/key bermasalah.
+      try {
+        reply = await sensenovaChat(text);
+      } catch (primaryErr) {
+        console.error("aisensenova SenseNova gagal, fallback 9Router:", primaryErr.message);
+        reply = await callAI({
+          providerKey: "tio_openai",
+          messages: [{ role: "user", content: text }],
+          systemPrompt: "Jawab dalam bahasa Indonesia dengan jelas.",
+          senderJid: m.sender,
+        });
+        engine = "9Router fallback";
+      }
       try {
         const { appendTurn } = await import("../../src/lib/nova-ai-session.js");
         appendTurn("satuan:" + m.sender, text, reply);
