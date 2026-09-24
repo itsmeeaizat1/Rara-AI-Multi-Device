@@ -5,7 +5,7 @@
  *        cara perawatan (sirah/cahaya/pupuk), racun buat hewan, fakta.
  *        Engine: vision chain (Gemini → SenseNova → describe+LLM).
  */
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, tipText, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 
 const pluginConfig = {
@@ -97,13 +97,12 @@ async function handler(m, { sock, config: botConfig }) {
 
   if (!isPhoto) {
     return m.reply(
-      claraWrap("Tanaman", [
-        "🌱 Identifikasi tanaman pakai AI",
-        "",
-        `Cara pakai: reply/kirim foto tanaman, daun, atau bunga, terus ketik ${prefix}tanaman`,
-        "",
-        "Hasilnya: nama + nama latin, cara perawatan (sirah/cahaya/pupuk), aman/gak buat kucing & anjing, plus fakta menarik ✨",
-      ].join("\n")) + "\n" + tipText(`Contoh: foto monstera + ketik ${prefix}tanaman`)
+      novaGuide(
+        "tanaman",
+        `Identifikasi tanaman pakai AI — reply/kirim foto tanaman, daun, atau bunga, terus ketik ${prefix}tanaman`,
+        `${prefix}tanaman (reply foto monstera)`,
+        "Hasilnya: nama + nama latin, cara perawatan (sirah/cahaya/pupuk), aman/gak buat kucing & anjing, plus fakta menarik"
+      )
     );
   }
 

@@ -2,7 +2,7 @@
 // aipr — Foto soal/PR/tugas → AI baca + jawab
 import { GeminiVision } from "../../src/scraper/geminiVision.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -29,14 +29,15 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        `Foto soal → AI jawab + jelasin\n\n` +
-        `Cara pakai:\n` +
-        `Kirim/reply foto soal + caption (opsional)\n\n` +
-        `Contoh:\n` +
-        `${prefix}aipr (reply foto soal)\n` +
-        `${prefix}aipr matematika (reply foto)\n` +
-        `${prefix}aipr fisika (reply foto)\n` +
-        `${prefix}aipr b.inggris (reply foto)`
+        novaGuide(
+          "aipr",
+          "Foto soal → AI jawab + jelasin\n" +
+          "Kirim/reply foto soal + caption mata pelajaran (opsional)",
+          `${prefix}aipr (reply foto soal)\n` +
+          `${prefix}aipr matematika (reply foto)\n` +
+          `${prefix}aipr fisika (reply foto)\n` +
+          `${prefix}aipr b.inggris (reply foto)`
+        )
       );
     }
 

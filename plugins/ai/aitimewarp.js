@@ -213,19 +213,13 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "status" || sub === "info") {
     const session = warpSessions.get(sender);
     if (!session || !session.active) {
-      await m.reply( claraWrap("Time-Warp", [
-        "Status: TIDAK AKTIF",
-        "",
-        "Kamu lagi di realitas normal.",
-        "",
-        "Cara pakai:",
-        prefix + "timewarp <tahun/era> — one-shot (semua user)",
+      await m.reply(novaGuide(
+        "timewarp",
+        "Status: TIDAK AKTIF — kamu lagi di realitas normal\n" +
+        prefix + "timewarp <tahun/era> — one-shot (semua user)\n" +
         prefix + "timewarp <tahun/era> on — persistent (owner)",
-        "",
-        "Contoh one-shot:",
-        prefix + "timewarp 2035 apa itu ikan koi?",
-        prefix + "timewarp 1990 gimana sekolah dulu?",
-      ].join("\n")), "aitimewarp");
+        prefix + "timewarp 2035 apa itu ikan koi?\n" + prefix + "timewarp 1990 gimana sekolah dulu?"
+      ), "aitimewarp");
       return { handled: true };
     }
     const duration = Math.floor((Date.now() - session.startedAt) / 1000);
@@ -320,24 +314,18 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   const eraInput = args.slice(1).join(" ").trim();
   if (!eraInput) {
-    await m.reply( claraWrap("Time-Warp", [
-      "Mode Chat Lintas Waktu",
-      "",
-      "Cara pakai:",
-      prefix + "timewarp <tahun> <pertanyaan> — one-shot",
-      prefix + "timewarp on <tahun/era> — persistent (owner)",
-      prefix + "timewarp off — keluar mode (owner)",
-      prefix + "timewarp status — lihat status",
+    await m.reply(novaGuide(
+      "timewarp",
+      "Mode chat lintas waktu\n" +
+      prefix + "timewarp <tahun> <pertanyaan> — one-shot\n" +
+      prefix + "timewarp on <tahun/era> — persistent (owner)\n" +
+      prefix + "timewarp off — keluar mode (owner)\n" +
+      prefix + "timewarp status — lihat status\n" +
       prefix + "timewarp list — lihat preset era",
-      "",
-      "Contoh one-shot:",
-      prefix + "timewarp 2035 apa itu ikan koi?",
-      prefix + "timewarp 1990 gimana sekolah dulu?",
-      "",
-      "Contoh persistent (owner):",
-      prefix + "timewarp on 2035",
-      prefix + "timewarp on zaman-kolonial",
-    ].join("\n")), "aitimewarp");
+      prefix + "timewarp 2035 apa itu ikan koi?\n" +
+      prefix + "timewarp 1990 gimana sekolah dulu?\n" +
+      prefix + "timewarp on zaman-kolonial"
+    ), "aitimewarp");
     return { handled: true };
   }
 

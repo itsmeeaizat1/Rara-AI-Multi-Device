@@ -3,7 +3,7 @@
 // Gabungan Gemini Vision (baca gambar) + UnlimitedAI (jawab) + Image gen (kirim gambar)
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 // UnlimitedAI replaced with callIkyy (ikyyxd API)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -96,15 +96,16 @@ async function handler(m, { sock }) {
     // Mode: chat teks biasa
     if (!text) {
       return m.reply(
-        `Chat AI yang bisa lihat gambar & generate gambar\n\n` +
-        `Cara pakai:\n` +
-        `• Kirim foto + caption pertanyaan → AI analisis\n` +
-        `• Ketik "gambar <deskripsi>" → AI bikin gambar\n` +
-        `• Ketik pertanyaan biasa → AI jawab\n\n` +
-        `Contoh:\n` +
-        `${prefix}aichatimg apa di foto ini? (reply foto)\n` +
-        `${prefix}aichatimg gambar kucing astronot\n` +
-        `${prefix}aichatimg jelaskan teori relativitas`
+        novaGuide(
+          "aichatimg",
+          "Chat AI yang bisa lihat gambar & bikin gambar\n" +
+          "Kirim foto + caption pertanyaan → AI analisis\n" +
+          'Ketik "gambar <deskripsi>" → AI bikin gambar\n' +
+          "Ketik pertanyaan biasa → AI jawab",
+          `${prefix}aichatimg apa di foto ini? (reply foto)\n` +
+          `${prefix}aichatimg gambar kucing astronot\n` +
+          `${prefix}aichatimg jelaskan teori relativitas`
+        )
       );
     }
 
