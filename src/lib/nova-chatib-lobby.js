@@ -2,24 +2,21 @@
 // nova-chatib-lobby.js — engine LOBBY ANONIM MULTI-USER (inspirasi chatib.chat).
 // Beda dari vibychat (1-on-1 random): chatib = ruang lobby — semua member
 // saling nyapa pakai NICKNAME (nomor WA gak pernah dibocorin).
-// GUARD KEAMANAN (standar layanan anonim Nova): ngirim link → di-KICK
-// otomatis dari lobby + laporan DM owner (nick + nomor pelanggar).
-// Media ditolak (cuma teks), flood guard, idle >15 mnt auto-leave,
+// ATURAN (revisi owner 24 Sep 2026): ngirim link BOLEH (di-broadcast
+// normal). Member di-keluarkan otomatis kalau GAK ADA AKTIVITAS
+// selama 1 JAM. Media ditolak (cuma teks), flood guard,
 // pesan TIDAK disimpan — cuma daftar member di db.data.chatiblobby.
 import { getDatabase } from "./nova-database.js";
 import { claraWrap } from "./nova-menu-style.js";
-import { config } from "../../config.js";
 
 // ── konstanta ──
-const IDLE_KICK_MS = 15 * 60 * 1000;  // member diam > 15 mnt → auto-leave
+const IDLE_KICK_MS = 60 * 60 * 1000;  // gak ada aktivitas > 1 jam → auto-leave
 const FLOOD_MS = 800;                 // jarak minimal antar pesan per member
 const MAX_LEN = 600;                  // cap panjang pesan broadcast
 const MAX_NICK_LEN = 16;
 const MAX_MEMBERS = 20;               // lobby penuh di atas ini
 const TEXT_TYPES = new Set(["conversation", "extendedTextMessage"]);
 
-// GUARD: link / materi mencurigakan → kick otomatis (standar sama kayak vibychat)
-const LINK_RE = /(\bhttps?:\/\/|www\.|\bwa\.me\/|\bt\.me\/|\bbit\.ly\/|\btinyurl\.com\/|\b[a-z0-9][a-z0-9-]*\.(com|net|org|id|io|me|link|xyz|tv|gg|app|site|shop|info|online|store|web\.id|my\.id|co\.id)\b)/i;
 
 // ── seams buat e2e ──
 let _idleMs = IDLE_KICK_MS, _floodMs = FLOOD_MS, _maxMembers = MAX_MEMBERS;
@@ -41,12 +38,6 @@ export function getLobby(db) {
     if (!m || !m.nick) delete l.members[jid]; // data korup → buang
   }
   return l;
-}
-
-function ownerJid() {
-  const n = (config.owner?.number || [])[0] || "";
-  const digits = String(n).replace(/\D/g, "");
-  return digits ? digits + "@s.whatsapp.net" : "";
 }
 
 async function dm(sock, jid, text) {
@@ -84,7 +75,7 @@ function rulesText(count) {
     "Semua member lihat pesanmu, tapi nomor kamu TIDAK pernah dibocorin — kamu cuma dikenal lewat nickname.",
     "Ganti nama: .chatibnick <nama> · Daftar member: .chatiblist · Keluar: .chatibleave",
     "",
-    "Catatan: ngirim link = langsung di-kick dari lobby (guard keamanan).",
+    "Catatan: kamu di-keluarkan otomatis kalau gak ada aktivitas selama 1 jam.",
   ].join("\n");
 }
 
@@ -148,7 +139,7 @@ export async function listMembers(m, db) {
 }
 
 // ── keluar lobby (idempotent) ──
-export async function leaveLobby(m, sock, db, { reason = null, violator = false, notifyOwner = false } = {}) {
+export async function leaveLobby(m, sock, db, { reason = null } = {}) {
   const l = getLobby(db);
   const jid = m.sender;
   const me = l.members[jid];
@@ -158,17 +149,9 @@ export async function leaveLobby(m, sock, db, { reason = null, violator = false,
   delete l.members[jid];
   db.save();
   const left = Object.keys(l.members).length;
-  const txtMe = violator
-    ? (reason || "GUARD: link/materi mencurigakan terdeteksi.") + `\n\nKamu di-kick dari lobby. Nomor kamu dilaporkan ke owner bot. Masuk lagi: .chatiblobby`
-    : (reason || `Kamu keluar dari lobby. Kapan pun balik lagi: .chatiblobby`);
-  await dm(sock, jid, claraWrap("Chatib Lobby", txtMe));
+  await dm(sock, jid, claraWrap("Chatib Lobby", reason || `Kamu keluar dari lobby. Kapan pun balik lagi: .chatiblobby`));
   for (const [otherJid] of Object.entries(l.members)) {
-    await dm(sock, otherJid, claraWrap("Chatib Lobby", violator
-      ? `${me.nick} di-kick dari lobby — ngirim link/materi terlarang. (${left} online)`
-      : `${me.nick} keluar dari lobby. (${left} online)`));
-  }
-  if (notifyOwner) {
-    await dm(sock, ownerJid(), `[CHATIB LOBBY] Guard kick member: ${me.nick} (${jid.split("@")[0]}) ngirim link/materi terlarang.`);
+    await dm(sock, otherJid, claraWrap("Chatib Lobby", `${me.nick} keluar dari lobby. (${left} online)`));
   }
   return true;
 }
@@ -195,11 +178,7 @@ export async function relayLobbyMessage(m, sock, db) {
   if (!text) return true;
   // command (awalan prefix) → biarin dispatch command normal
   if (text.startsWith(".")) return false;
-  // GUARD: link → kick otomatis + owner dilapori
-  if (LINK_RE.test(text)) {
-    await leaveLobby(m, sock, db, { reason: "GUARD: link/materi mencurigakan terdeteksi.", violator: true, notifyOwner: true });
-    return true;
-  }
+  // (aturan baru: link BOLEH — di-broadcast normal ke semua member)
   // flood guard
   if (now - (me.lastRelayAt || 0) < _floodMs) {
     const lastNotice = me._floodNoticeAt || 0;
@@ -234,7 +213,7 @@ export async function initChatibLobbySweeper(sock, intervalMs = 60 * 1000) {
       for (const [jid, rec] of Object.entries(l.members)) {
         if (now - (rec.lastActive || rec.joinedAt || 0) > _idleMs) {
           const fakeM = { sender: jid, reply: async () => {} };
-          await leaveLobby(fakeM, sock, db, { reason: "Kamu di-keluarkan otomatis: gak ada aktivitas lebih dari 15 menit." });
+          await leaveLobby(fakeM, sock, db, { reason: "Kamu di-keluarkan otomatis: gak ada aktivitas selama 1 jam." });
         }
       }
     } catch { /* sabar */ }

@@ -1,24 +1,19 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nova-anonchat.js — engine chat anonim antar member bot (DM only).
 // Dua user di-pair acak, pesan diteruskan TANPA nunjukin nomor.
-// GUARD KEAMANAN (request owner 23 Sep 2026): lawan chat ngirim link /
-// materi mencurigakan → sesi DITUTUP OTOMATIS + laporan DM owner
-// (pengirim link tetap gak dibocorin ke partner, cuma owner yang tahu).
-// Media gak diteruskan (cuma teks). Flood guard + timeout idle 10 mnt.
+// ATURAN (revisi owner 24 Sep 2026): ngirim link BOLEH (diteruskan
+// normal). Sesi ditutup otomatis kalau GAK ADA YANG BALAS selama
+// 1 JAM (sama juga kalau ngirim spam/mobilitas aneh).
+// Media gak diteruskan (cuma teks). Flood guard + idle timeout 1 jam.
 import { getDatabase } from "./nova-database.js";
 import { claraWrap } from "./nova-menu-style.js";
-import { config } from "../../config.js";
 
 // ── konstanta ──
-const IDLE_TIMEOUT_MS = 10 * 60 * 1000;   // sesi idle > 10 mnt → tutup
+const IDLE_TIMEOUT_MS = 60 * 60 * 1000;   // gak ada yang balas > 1 jam → tutup
 const QUEUE_TIMEOUT_MS = 30 * 60 * 1000;   // nunggu partner > 30 mnt → batal
 const FLOOD_MS = 800;                      // jarak minimal antar pesan per user
 const MAX_LEN = 800;                       // cap panjang pesan diteruskan
 const TEXT_TYPES = new Set(["conversation", "extendedTextMessage"]);
-
-// GUARD: link / materi mencurigakan → sesi langsung ditutup
-// (url apa pun, wa.me, t.me, domain umum, bit.ly dkk)
-const LINK_RE = /(\bhttps?:\/\/|www\.|\bwa\.me\/|\bt\.me\/|\bbit\.ly\/|\btinyurl\.com\/|\b[a-z0-9][a-z0-9-]*\.(com|net|org|id|io|me|link|xyz|tv|gg|app|site|shop|info|online|store|web\.id|my\.id|co\.id)\b)/i;
 
 // ── seams buat e2e ──
 let _idleMs = IDLE_TIMEOUT_MS, _floodMs = FLOOD_MS;
@@ -38,19 +33,13 @@ export function getAnon(db) {
   return a;
 }
 
-function ownerJid() {
-  const n = (config.owner?.number || [])[0] || "";
-  const digits = String(n).replace(/\D/g, "");
-  return digits ? digits + "@s.whatsapp.net" : "";
-}
-
 async function dm(sock, jid, text) {
   if (!sock || !jid) return false;
   try { await sock.sendMessage(jid, { text }); return true; } catch { return false; }
 }
 
 // ── tutup sesi dua arah (idempotent) ──
-export async function closeSession(sock, db, jid, reasonText, { violator = null, notifyOwner = false } = {}) {
+export async function closeSession(sock, db, jid, reasonText) {
   const a = getAnon(db);
   const me = a.sessions[jid];
   if (!me) return false;
@@ -58,25 +47,8 @@ export async function closeSession(sock, db, jid, reasonText, { violator = null,
   delete a.sessions[jid];
   delete a.sessions[partner];
   db.save();
-  // pengirim pelanggaran / pihak yang keluar
-  const isViolator = violator === jid;
-  const txtMe = violator
-    ? (isViolator
-        ? `${reasonText}\n\nKamu ngirim link/materi yang gak diizinkan — sesi ditutup otomatis. Cari partner baru: .vibychatanonymouschat`
-        : `${reasonText}\n\nLawan chatmu ngirim link/materi terlarang — sesi ditutup otomatis demi keamanan. Cari partner baru: .vibychatanonymouschat`)
-    : `${reasonText}\n\nCari partner baru: .vibychatanonymouschat`;
-  await dm(sock, jid, claraWrap("Chat Anonim", txtMe));
-  // partner
-  const isPartnerViolator = violator && violator === partner;
-  const txtPartner = violator
-    ? (isPartnerViolator
-        ? `${reasonText}\n\nKamu ngirim link/materi yang gak diizinkan — sesi ditutup otomatis. Cari partner baru: .vibychatanonymouschat`
-        : `${reasonText}\n\nLawan chatmu ngirim link/materi terlarang — sesi ditutup otomatis demi keamanan. Cari partner baru: .vibychatanonymouschat`)
-    : `${reasonText}\n\nLawan chatmu keluar. Cari partner baru: .vibychatanonymouschat`;
-  await dm(sock, partner, claraWrap("Chat Anonim", txtPartner));
-  if (notifyOwner && violator) {
-    await dm(sock, ownerJid(), `[CHAT ANONIM] Guard menutup sesi: ${violator.split("@")[0]} ngirim link/materi terlarang. Nomor lawan chatnya TIDAK dibocorin ke pengirim.`);
-  }
+  await dm(sock, jid, claraWrap("Chat Anonim", `${reasonText}\n\nCari partner baru: .vibychatanonymouschat`));
+  await dm(sock, partner, claraWrap("Chat Anonim", `${reasonText}\n\nLawan chatmu keluar. Cari partner baru: .vibychatanonymouschat`));
   return true;
 }
 
@@ -107,18 +79,18 @@ export async function startChat(m, sock, db) {
     await m.reply(claraWrap("Chat Anonim", [
       `Kamu terhubung sama stranger! 💬`,
       "",
-      "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu.",
+      "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu (link juga boleh).",
       "Ganti partner: .vibychatskip · Keluar: .vibychatstop",
       "",
-      "Catatan: ngirim link = sesi otomatis ditutup (guard keamanan).",
+      "Catatan: sesi nutup otomatis kalau gak ada yang balas selama 1 jam.",
     ]));
     await dm(sock, waited.jid, claraWrap("Chat Anonim", [
       `Ada stranger yang terhubung sama kamu! 💬`,
       "",
-      "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu.",
+      "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu (link juga boleh).",
       "Ganti partner: .vibychatskip · Keluar: .vibychatstop",
       "",
-      "Catatan: ngirim link = sesi otomatis ditutup (guard keamanan).",
+      "Catatan: sesi nutup otomatis kalau gak ada yang balas selama 1 jam.",
     ]));
     try { await m.react("⚡"); } catch {}
     return;
@@ -185,11 +157,7 @@ export async function relayMessage(m, sock, db) {
   if (!text) return true;
   // command (diawali prefix) → biarin dispatch command normal
   if (text.startsWith(".")) return false;
-  // GUARD: link → sesi ditutup otomatis + owner dilapori
-  if (LINK_RE.test(text)) {
-    await closeSession(sock, db, m.sender, "GUARD: link/materi mencurigakan terdeteksi.", { violator: m.sender, notifyOwner: true });
-    return true;
-  }
+  // (aturan baru: link BOLEH — diteruskan normal ke partner)
   // flood guard
   if (now - (me.lastRelayAt || 0) < _floodMs) {
     const lastNotice = me._floodNoticeAt || 0;
@@ -228,7 +196,7 @@ export async function initAnonChatSweeper(sock, intervalMs = 60 * 1000) {
         seen.add(jid);
         seen.add(rec.partner);
         if (now - (rec.lastActive || rec.startedAt || 0) > _idleMs) {
-          await closeSession(sock, db, jid, "Sesi ditutup otomatis: gak ada aktivitas lebih dari 10 menit.");
+          await closeSession(sock, db, jid, "Sesi ditutup otomatis: gak ada yang balas selama 1 jam.");
         }
       }
       // queue kedaluwarsa
