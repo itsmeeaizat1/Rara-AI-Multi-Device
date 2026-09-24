@@ -213,6 +213,16 @@ export const API_KEYS = {
     usedBy: ["alightmotion"],
   },
 
+  // ── ONEPUNYA REST API ────────────────────────
+  onepunya: {
+    label: "Onepunya API (31 endpoint: search/AI/TTS/downloader/hololive)",
+    description: "Untuk .onepixiv .oneyts .oneytmusic .onedl .oneimg .onechat .onettts .hololive .hentaisearch dkk",
+    getConfig: () => config.onepunya?.apiKey || "",
+    getEnv: () => process.env.ONEPUNYA_API_KEY || "",
+    getLink: () => "https://onepunya.qzz.io",
+    usedBy: ["onepixiv", "oneyoutube", "onedl", "oneimage", "onephoto", "oneai", "onettts", "hololive", "onehentai"],
+  },
+
   // ── EMAIL OTP ─────────────────────────────────
   emailOtp: {
     label: "Email OTP (SMTP)",
