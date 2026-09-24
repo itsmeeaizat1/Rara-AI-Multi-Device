@@ -13,8 +13,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  const text = (m.args || []).join(" ").trim();
   try {
-    const text = m.args.join(" ").trim();
     if (!text) return m.reply(claraWrap("conciseaiv2", `Mau nanya apa?\nContoh: ${m.prefix}conciseaiv2 apa itu fotosintesis`, "guide"));
     await m.react("🕒");
     const user_id = crypto.randomUUID().replace(/-/g, "");
@@ -31,7 +31,13 @@ async function handler(m, { sock }) {
       body: form.toString(),
     });
     const data = await res.json();
-    await m.reply(data?.answer || data?.result || data?.response || "Tidak ada jawaban.");
+    const answer = typeof data === "string"
+      ? data.trim()
+      : String(data?.answer || data?.result || data?.response || "").trim();
+    // ConciseAI kadang HTTP 200 tetapi hanya mengembalikan [] atau object kosong.
+    // Itu bukan jawaban sukses, jadi lempar ke fallback AI, bukan mengirim pesan kosong.
+    if (!res.ok || !answer) throw new Error(`ConciseAI empty/HTTP ${res.status}`);
+    await m.reply(answer);
     await m.react("🐣");
   } catch (e) {
     // IkyyXD fallback
