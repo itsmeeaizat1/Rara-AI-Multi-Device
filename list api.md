@@ -127,7 +127,7 @@
 | Android1 | `an1.com` | android1, android1-get | ✅ Free |
 
 | AlbyOffc | `api.albyoffc.my.id` | — | ❌ DEAD (Vercel 404) |
-| Firefly Maiku | `firefly.maiku.my.id` | stalk-youtube, stalk-instagram, stalk-github, stalk-tiktok, stalk-npm, deepaichat, crikk (TTS), pinterestvideo | ✅ Free (key: OurinNextGen) |
+| Firefly Maiku | `firefly.maiku.my.id` | stalk-youtube, stalk-instagram, stalk-github, stalk-tiktok, stalk-npm, deepaichat, crikk (TTS), pinterestvideo | ⚠️ Web live check 24 Sep 2026: HTTP 530; public page still lists key `OurinNextGen`, no replacement key verified |
 ---
 
 ## 📥 Download / Media API
