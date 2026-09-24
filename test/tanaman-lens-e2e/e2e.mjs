@@ -53,7 +53,13 @@ w("\n— TANAMAN: AI plant identifier —");
     const mk = mkMock();
     await handler(mk.m, ctx(mk.sock));
     const txt = norm(mk.sends.at(-1).txt);
-    check("tanpa foto → panduan (cara pakai + hasil)", txt.includes("tanaman") && txt.includes("kucing"), txt.slice(0, 60));
+    // REWORK 24 Sep: panduan kini novaGuide (intro/note di-smallcaps; contoh
+    // verbatim) — asersi harus smallcaps-aware (GOTCHA: teks smallcaps gak
+    // bisa di-lowercase balik, jadi bandingkan dua-duanya).
+    const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
+    const sc = (x) => String(x).replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+    const has = (w) => txt.includes(w) || txt.includes(sc(w));
+    check("tanpa foto → panduan (cara pakai + hasil)", has("tanaman") && has("kucing"), txt.slice(0, 60));
   }
 
   // foto tanaman → kartu lengkap

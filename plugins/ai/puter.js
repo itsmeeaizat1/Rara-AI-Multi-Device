@@ -200,8 +200,12 @@ async function handler(m, { sock, config: botConfig }) {
   // Validasi pesan
   if (!text) {
     const currentModel = MODELS[session.model]?.label || session.model;
-    const help = `Model aktif: ${currentModel}\n\nCara pakai:\n.puter <pesan> — Chat dengan model aktif\n.puter model <id> — Ganti model\n.puter list — Lihat semua model\n.puter reset — Reset sesi`;
-    return m.reply( claraWrap("Puter", help));
+    return m.reply(novaGuide(
+      "puter",
+      ".puter <pesan> — chat dengan model aktif\n.puter model <id> — ganti model\n.puter list — lihat semua model\n.puter reset — reset sesi",
+      ".puter jelaskan teori relativitas\n.puter model gpt-4o-mini\n.puter list",
+      "Model aktif: " + currentModel
+    ));
   }
   try {
   await m.react("🕒");

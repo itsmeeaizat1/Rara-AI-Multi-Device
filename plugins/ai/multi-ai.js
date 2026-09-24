@@ -52,18 +52,12 @@ async function handler(m, { sock, config: botConfig }) {
         lines += `${provider.name || key} (${key})\n${modelList}\n`;
       }
 
-      const text = `Router AI — Pilih Provider & Model
-
-Providers:
-${lines}
-Cara Pakai:
-${prefix}multi-ai <provider> <pesan>
-${prefix}multi-ai <provider> <model> <pesan>
-
-Contoh:
-${prefix}multi-ai gemini apa itu AI
-${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum
-${prefix}multi-ai groq buat puisi`;
+      const text = novaGuide(
+        "multi-ai",
+        `Router AI — pilih provider & model\n${prefix}multi-ai <provider> <pesan>\n${prefix}multi-ai <provider> <model> <pesan>`,
+        `${prefix}multi-ai gemini apa itu AI\n${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum\n${prefix}multi-ai groq buat puisi`,
+        "Providers:\n" + lines
+      );
 
       await m.reply(text);
       return { handled: true };
@@ -91,11 +85,11 @@ ${prefix}multi-ai groq buat puisi`;
     }
 
     if (!userMessage) {
-      const text = `Provider: ${provider.name || providerArg}
-Model: ${model}
-
-Cara Pakai: *${prefix}multi-ai ${providerArg} [model] <pesan>*
-Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*`;
+      const text = novaGuide(
+        `multi-ai ${providerArg}`,
+        `Provider: ${provider.name || providerArg}\nModel: ${model}\n${prefix}multi-ai ${providerArg} [model] <pesan>`,
+        `${prefix}multi-ai ${providerArg} ${model} apa itu AI`
+      );
       await m.reply(text);
       return { handled: true };
     }

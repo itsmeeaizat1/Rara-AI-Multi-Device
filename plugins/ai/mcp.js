@@ -11,7 +11,7 @@ import {
   getMcpServers, mcpAddServer, mcpRemoveServer,
   mcpListTools, mcpCallTool, mcpTestServer, getMcpTools,
 } from "../../src/lib/nova-mcp.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 // ═══ PRESET — server MCP publik gratis no-key, udah diverifikasi live ═══
 // (12 Sep 2026, request owner "ya mau bikin lengkap mcpnya")
@@ -234,11 +234,18 @@ async function handler(m, { args, sock }) {
     }
   }
 
-  return m.reply(claraWrap("mcp", [
-    `Subcommand: list / add / adds / remove / tools / test / call`,
-    "",
-    `Usage: ${pluginConfig.usage}`,
-  ]));
+  return m.reply(novaGuide(
+    "mcp",
+    ".mcp list — daftar server MCP\n" +
+    ".mcp preset add <nama|all> — tambah dari preset\n" +
+    ".mcp add <nama> <url> — tambah server (owner)\n" +
+    ".mcp adds <nama> <command...> — daftarkan tool jadi command (owner)\n" +
+    ".mcp remove <nama> — hapus server (owner)\n" +
+    ".mcp tools <nama> — daftar tool server\n" +
+    ".mcp test <nama> — tes koneksi server\n" +
+    ".mcp call <nama> <tool> <json> — panggil tool",
+    ".mcp list\n.mcp tools <nama>\n.mcp call <nama> <tool> {\"a\":1}"
+  ));
 }
 
 export { pluginConfig as config, handler };

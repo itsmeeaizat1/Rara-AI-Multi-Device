@@ -41,15 +41,14 @@ async function doOcrAnalysis(m, sock, mode) {
     const msg = m.message || {};
     const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) {
-      await m.reply(claraWrap("OCR Solve", [
-        "Tidak ada foto terdeteksi.",
-        "Reply foto dengan command ini untuk analisis.",
-        "",
-        "Cara pakai:",
-        "  .ocrsolve — auto detect (reply foto)",
-        "  .ocrsolve math — khusus matematika",
-        "  .ocrsolve code — khusus kode error",
-      ].join("\n")));
+      await m.reply(novaGuide(
+        "ocrsolve",
+        "Tidak ada foto terdeteksi — reply foto dengan command ini untuk analisis\n" +
+        prefix + "ocrsolve — auto detect (reply foto)\n" +
+        prefix + "ocrsolve math — khusus matematika\n" +
+        prefix + "ocrsolve code — khusus kode error",
+        prefix + "ocrsolve math (reply foto soal)"
+      ));
       return { handled: true };
     }
 
@@ -242,19 +241,18 @@ async function handler(m, { sock, config: botConfig }) {
       mode = args[0];
     } else if (args[0] && !["math", "code", "auto"].includes(args[0])) {
       // Unknown sub-command → show help
-      await m.reply(claraWrap("OCR Solve", [
-        "Solver foto soal/kode via AI Vision",
-        "",
-        "Cara pakai (one-shot):",
-        prefix + "ocrsolve — auto detect (reply foto)",
-        prefix + "ocrsolve math — khusus matematika",
+      await m.reply(novaGuide(
+        "ocrsolve",
+        "Solver foto soal/kode via AI Vision\n" +
+        prefix + "ocrsolve — auto detect (reply foto)\n" +
+        prefix + "ocrsolve math — khusus matematika\n" +
         prefix + "ocrsolve code — khusus kode error",
-        "",
-        "Persistent (owner):",
-        prefix + "toggleocrsolve on/off",
-        prefix + "toggleocrsolve mode math/code/auto",
-        prefix + "toggleocrsolve status",
-      ].join("\n")));
+        prefix + "ocrsolve math\n" + prefix + "ocrsolve code",
+        "Persistent (owner):\n" +
+        prefix + "toggleocrsolve on/off\n" +
+        prefix + "toggleocrsolve mode math/code/auto\n" +
+        prefix + "toggleocrsolve status"
+      ));
       return { handled: true };
     }
 
