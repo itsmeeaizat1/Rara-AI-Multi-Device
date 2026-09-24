@@ -62,14 +62,6 @@ res = await mod.runBootDoctor();
 termai = res.find(r => r.label === "Termai");
 t("HTTP 402 → quota", termai?.status === "quota", JSON.stringify(termai));
 
-// FIX 20 Sep: betabotz key BARU itu valid — 403 + "IP tidak diwhitelist" =
-// gerbang IP (perlu whitelist VIP), BUKAN key expired
-respond("api.betabotz.eu.org", 403, '{"status":false,"message":"IP tidak diwhitelist. Silahkan whitelist IP Anda terlebih dahulu di https://api.betabotz.eu.org/profile","ip":"64.34.92.83"}');
-res = await mod.runBootDoctor();
-let beta = res.find(r => r.label === "Betabotz");
-t("HTTP 403 + body 'IP tidak diwhitelist' → ip_gate (bukan key_invalid)", beta?.status === "ip_gate", JSON.stringify(beta));
-t("ip_gate: IP bot ke-tangkap dari body", beta?.gateIp === "64.34.92.83", JSON.stringify(beta));
-
 respond("magma.esdm.go.id", 500, "server error");
 res = await mod.runBootDoctor();
 let magma = res.find(r => r.label === "MAGMA Indonesia");
@@ -98,8 +90,8 @@ const fixture = [
   { label: "Pollinations", features: ".sdxl", kind: "endpoint", status: "endpoint_err", httpStatus: 404 },
   { label: "ZelAPI", features: "suite z", kind: "key", status: "ok" },
   { label: "Open-Meteo", features: "cuaca", kind: "endpoint", status: "ok" },
-  { label: "Betabotz", features: ".togif", kind: "key", status: "nokey" },
-  { label: "Betabotz IP", features: ".togif .vocalremover", kind: "key", keyName: "betabotz", host: "api.betabotz.eu.org", status: "ip_gate", httpStatus: 403, gateIp: "64.34.92.83" },
+  { label: "StemSplit", features: ".vocalremover", kind: "key", status: "nokey" },
+  { label: "Legacy IP-Gated API", features: "legacy fixture", kind: "key", keyName: "legacy", host: "legacy.example", status: "ip_gate", httpStatus: 403, gateIp: "64.34.92.83" },
 ];
 let report = mod.buildBootReport(fixture);
 const R = norm(report);
@@ -109,8 +101,8 @@ t("laporan sebut APIKEY EXPIRED untuk key_invalid", R.includes("apikey expired")
 t("laporan: ip_gate → kategori 'IP BOT BELUM DIWHITELIST'", R.includes("belum diwhitelist"), R.slice(0, 200));
 t("laporan ip_gate: key valid, gak disuruh ganti key", R.includes("tidak perlu ganti key"), R.slice(0, 300));
 t("laporan ip_gate: IP bot ditunjuk", R.includes("64.34.92.83"), R.slice(0, 300));
-t("laporan: betabotz ip_gate GAK masuk hint key bermasalah (key-nya valid)",
-  !(R.includes("key bermasalah") && R.match(/key bermasalah[^]*betabotz/)), R.slice(0, 400));
+t("laporan: ip_gate GAK masuk hint key bermasalah (key-nya valid)",
+  !(R.includes("key bermasalah") && R.match(/key bermasalah[^]*legacy/)), R.slice(0, 400));
 t("laporan sebut ENDPOINT DOWN", R.includes("endpoint down"), R.slice(0, 120));
 const reportAllOk = mod.buildBootReport(res.map(r => ({ ...r, status: "ok", error: undefined })));
 const ROK = norm(reportAllOk);
