@@ -187,24 +187,20 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const ownerNum = (await import("../../config.js")).default?.owner?.number?.[0] || "Tidak diset";
-    let txt = `Auto Backup Google Drive\n\n`;
-    txt += `Status: ${state.enabled ? "ON" : "OFF"}\n`;
-    txt += `Interval: ${formatInterval(state.intervalMs)} (${state.intervalStr})\n`;
-    txt += `Last backup: ${state.lastBackup ? new Date(state.lastBackup).toLocaleString("id-ID") : "-"}\n`;
-    txt += `Total backup: ${state.backupCount}\n`;
-    txt += `Drive folder: ${state.folderId || getFolderId() || "Tidak diset"}\n`;
-    txt += `Notif ke: ${ownerNum}\n\n`;
-    txt += `Cara Pakai:\n`;
-    txt += `${m.prefix}autobackupdrive on <interval>\n`;
-    txt += `${m.prefix}autobackupdrive off\n`;
-    txt += `${m.prefix}autobackupdrive status\n`;
-    txt += `${m.prefix}autobackupdrive now\n`;
-    txt += `${m.prefix}autobackupdrive folder <id>\n\n`;
-    txt += `Format interval: 30m, 1h, 6h, 1d\n\n`;
-    txt += `Contoh:\n`;
-    txt += `${m.prefix}autobackupdrive on 6h - backup tiap 6 jam\n`;
-    txt += `${m.prefix}autobackupdrive on 1d - backup tiap 1 hari`;
-    return await m.reply( txt, "autobackupdrive");
+    const status = claraWrap("autobackupdrive", [
+      `Status: ${state.enabled ? "ON" : "OFF"}`,
+      `Interval: ${formatInterval(state.intervalMs)} (${state.intervalStr})`,
+      `Last backup: ${state.lastBackup ? new Date(state.lastBackup).toLocaleString("id-ID") : "-"}`,
+      `Total backup: ${state.backupCount}`,
+      `Drive folder: ${state.folderId || getFolderId() || "Tidak diset"}`,
+      `Notif ke: ${ownerNum}`,
+    ].join("\n"));
+    return await m.reply(status + "\n\n" + novaGuide(
+      "autobackupdrive",
+      "Backup otomatis database bot ke Google Drive",
+      `${m.prefix}autobackupdrive on 6h\n${m.prefix}autobackupdrive off\n${m.prefix}autobackupdrive status\n${m.prefix}autobackupdrive now\n${m.prefix}autobackupdrive folder <id>`,
+      "Format interval: 30m, 1h, 6h, 1d"
+    ), "autobackupdrive");
   }
 
   switch (action) {
