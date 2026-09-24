@@ -231,8 +231,12 @@ async function handler(m, { sock, config: botConfig }) {
   // Validasi pesan
   if (!text) {
     const currentModel = FREE_MODELS[session.model]?.label || session.model;
-    const help = `Model aktif: ${currentModel}\n\nCara pakai:\n.openrouter <pesan> — Chat dengan model aktif\n.openrouter model <nama> — Ganti model\n.openrouter list — Lihat semua model\n.openrouter reset — Reset sesi`;
-    return m.reply( claraWrap("OpenRouter", help));
+    return m.reply(novaGuide(
+      "openrouter",
+      ".openrouter <pesan> — chat dengan model aktif\n.openrouter model <nama> — ganti model\n.openrouter list — lihat semua model\n.openrouter reset — reset sesi",
+      ".openrouter jelaskan teori relativitas\n.openrouter model deepseek-r1\n.openrouter list",
+      "Model aktif: " + currentModel
+    ));
   }
   try {
   await m.react("🕒");

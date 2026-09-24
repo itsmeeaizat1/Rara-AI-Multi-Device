@@ -185,21 +185,11 @@ export default {
 
     // ─── Validasi input ───
     if (!inputText || inputText.length < 2) {
-      const text =
-        claraWrap("Slang Translator", [
-          `📌 *Cara Pakai:*`,
-          ``,
-          `1. Reply pesan teks/VN yang mau diterjemahkan`,
-          `lalu ketik *${prefix}slangtranslate*`,
-          ``,
-          `2. Atau ketik langsung:`,
-          `*${prefix}slangtranslate <teks>*`,
-          ``,
-          `💡 *Contoh:*`,
-          `*${prefix}slangtranslate that's cap fr fr*`,
-          `*${prefix}slangtranslate ngap sih lo*`,
-          `Reply VN bahasa Sunda → *.slangtranslate*`,
-        ].join("\n"));
+      const text = novaGuide(
+        "slangtranslate",
+        `Reply pesan teks/VN yang mau diterjemahkan, lalu ketik ${prefix}slangtranslate\nAtau ketik langsung ${prefix}slangtranslate <teks>`,
+        `${prefix}slangtranslate that's cap fr fr\n${prefix}slangtranslate ngap sih lo\nReply VN bahasa Sunda → .slangtranslate`
+      );
       await m.reply(text);
       return { handled: true };
     }
