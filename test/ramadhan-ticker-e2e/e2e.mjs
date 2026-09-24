@@ -30,7 +30,8 @@ w("\n— computeRamadhanPhase —");
   const now = Date.now();
   const ph = computeRamadhanPhase(now);
   check("sekarang (Sep 2026) → countdown 1448H", ph?.phase === "countdown" && ph.hijri === 1448, JSON.stringify(ph));
-  check("daysLeft masuk akal (~148 hari)", ph && ph.daysLeft >= 140 && ph.daysLeft <= 160, String(ph?.daysLeft));
+  const expectedDays = Math.ceil((moment.tz("2027-02-08 00:00", "YYYY-MM-DD HH:mm", "Asia/Jakarta").valueOf() - now) / 86400000);
+  check("daysLeft sesuai tanggal estimasi 1 Ramadhan 1448", ph && Math.abs(ph.daysLeft - expectedDays) <= 1, `actual=${ph?.daysLeft} expected=${expectedDays}`);
   const ts1 = moment.tz("2027-02-05 12:00", "YYYY-MM-DD HH:mm", "Asia/Jakarta").valueOf();
   check("3 hari sebelum 1448 → daysLeft 3", computeRamadhanPhase(ts1)?.daysLeft === 3);
 }
