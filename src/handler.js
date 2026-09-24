@@ -610,6 +610,21 @@ try {
     }
   }
 
+  // Maps search answer handler (balas nomor hasil .mapss → buka halaman
+  // place: screenshot + plain text isi — plugins/browser/mapss.js) —
+  // DIPASANG SETELAH game handler biar jawaban game prioritas duluan
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
+    try {
+      const { answerHandler: mapssHandler } = await import("../plugins/browser/mapss.js");
+      if (typeof mapssHandler === "function") {
+        const mapssHandled = await mapssHandler(m, sock);
+        if (mapssHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("mapss-answer", e.message);
+    }
+  }
+
   // Pacaran answer handler (reply terima/tolak to tembakan) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
