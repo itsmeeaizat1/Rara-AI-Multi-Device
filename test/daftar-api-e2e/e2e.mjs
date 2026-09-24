@@ -1,0 +1,143 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// test/daftar-api-e2e/e2e.mjs — E2E 2 plugin baru dari daftar farizdotid (tanpa API key):
+// .kuncijawabantts (kunci-tts-api.vercel.app) + .caridoa (doa-doa-api-ahmadramadhan.fly.dev).
+// Semua akses HTTP lewat seam _setHttpForTest — gak ada network di e2e.
+// Jalankan: node test/daftar-api-e2e/e2e.mjs
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+const R = path.resolve(import.meta.dirname, "../..");
+let pass = 0, fail = 0;
+const t = (name, ok, extra = "") => {
+  if (ok) { pass++; console.log(`  ✅ ${name}`); }
+  else { fail++; console.log(`  ❌ ${name} → ${typeof extra === "string" ? extra.slice(0, 200) : JSON.stringify(extra)?.slice(0, 200)}`); }
+};
+const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
+const hasSC = (reply, expected) => String(reply).toLowerCase().includes(toSC(expected));
+
+// ── init db ringan ──
+const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "daftarapi-e2e-"));
+const { initDatabase } = await import(R + "/src/lib/nova-database.js");
+await initDatabase(path.join(dbDir, "db"));
+
+function mkM(over = {}) {
+  return {
+    command: "kuncijawabantts",
+    args: [],
+    text: "",
+    chat: "62812user@s.whatsapp.net",
+    sender: "62812user@s.whatsapp.net",
+    reply: async (x) => { mkM._replies.push(String(x)); },
+    ...over,
+  };
+}
+mkM._replies = [];
+const lastReply = () => (mkM._replies.length ? mkM._replies[mkM._replies.length - 1] : "");
+
+console.log("— 1. kuncijawabantts —");
+const tts = await import(R + "/plugins/fun/kuncijawabantts.js");
+{
+  t("1. config ok (name/alias/category fun)", tts.pluginConfig?.name === "kuncijawabantts" && tts.pluginConfig?.alias?.includes("kuncitts") && tts.pluginConfig?.category === "fun");
+  // soal kosong → panduan
+  mkM._replies.length = 0;
+  await tts.handler(mkM({ text: "" }), { sock: {}, db: {} });
+  t("1a. soal kosong → panduan cara pakai", hasSC(lastReply(), "cara pakai"), lastReply().slice(0, 120));
+  // happy path — 3 jawaban
+  mkM._replies.length = 0;
+  let gotUrl = "";
+  tts._setHttpForTest(async (url) => {
+    gotUrl = url;
+    return {
+      status: 200,
+      data: { title: "Kunci jawaban TTS Tidak Jujur", total: 3, answers: [
+        { stars: 5, word: "CURANG", clue: "Tidak jujur" },
+        { stars: 4, word: "FAIR", clue: "Sportif, jujur" },
+        { stars: 3, word: "BOHONG", clue: "Tidak jujur" },
+      ] },
+    };
+  });
+  await tts.handler(mkM({ text: "tidak jujur" }), { sock: {}, db: {} });
+  t("1b. param question ter-encode ke URL", gotUrl.includes("question=tidak%20jujur"), gotUrl);
+  t("1c. jawaban dirender + bintang kecocokan", hasSC(lastReply(), "curang") && lastReply().includes("★★★★★"), lastReply().slice(0, 150));
+  t("1d. clue jawaban ikut ditampilkan", hasSC(lastReply(), "sportif"), lastReply().slice(0, 150));
+  // cap 12 jawaban
+  mkM._replies.length = 0;
+  tts._setHttpForTest(async () => ({
+    status: 200,
+    data: { title: "T", total: 25, answers: Array.from({ length: 25 }, (_, i) => ({ stars: 3, word: `WORD${i + 1}`, clue: "" })) },
+  }));
+  await tts.handler(mkM({ text: "banyak" }), { sock: {}, db: {} });
+  t("1e. 25 jawaban → 12 teratas + info total", hasSC(lastReply(), "word12") && !hasSC(lastReply(), "word13,") && hasSC(lastReply(), "25 jawaban"), lastReply().slice(0, 150));
+  // gak ketemu
+  mkM._replies.length = 0;
+  tts._setHttpForTest(async () => ({ status: 200, data: { title: "X", total: 0, answers: [] } }));
+  await tts.handler(mkM({ text: "xyzabc" }), { sock: {}, db: {} });
+  t("1f. gak ketemu → jujur + saran kata kunci", hasSC(lastReply(), "gak ketemu"), lastReply().slice(0, 120));
+  // server error
+  mkM._replies.length = 0;
+  tts._setHttpForTest(async () => ({ status: 500, data: null }));
+  await tts.handler(mkM({ text: "tes" }), { sock: {}, db: {} });
+  t("1g. 500 → pesan server bermasalah", hasSC(lastReply(), "server tts bermasalah"), lastReply().slice(0, 120));
+  // network gagal
+  mkM._replies.length = 0;
+  tts._setHttpForTest(async () => { throw new Error("network down"); });
+  await tts.handler(mkM({ text: "tes" }), { sock: {}, db: {} });
+  t("1h. koneksi gagal → jujur", hasSC(lastReply(), "gagal nyambung"), lastReply().slice(0, 120));
+  tts._resetSeamsForTest();
+}
+
+console.log("— 2. caridoa —");
+const doa = await import(R + "/plugins/islami/caridoa.js");
+{
+  t("2. config ok (name/alias/category islami)", doa.pluginConfig?.name === "caridoa" && doa.pluginConfig?.alias?.includes("doadoa") && doa.pluginConfig?.category === "islami");
+  // nama kosong → panduan
+  mkM._replies.length = 0;
+  await doa.handler(mkM({ command: "caridoa", text: "" }), { sock: {}, db: {} });
+  t("2a. nama kosong → panduan + contoh doa", hasSC(lastReply(), "cara pakai") && hasSC(lastReply(), "sebelum makan"), lastReply().slice(0, 120));
+  // happy path
+  mkM._replies.length = 0;
+  let gotUrl = "";
+  doa._setHttpForTest(async (url) => {
+    gotUrl = url;
+    return {
+      status: 200,
+      data: { id: "30", doa: "Doa sebelum makan", ayat: "اَللّٰهُمَّ بَارِكْ لَنَا فِيْمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ", latin: "Allahumma baarik lanaa fiimaa rozaqtanaa", artinya: "Ya Allah, berkahilah kami dalam rezeki yang telah Engkau berikan" },
+    };
+  });
+  await doa.handler(mkM({ command: "caridoa", text: "sebelum makan" }), { sock: {}, db: {} });
+  t("2b. slug nama doa masuk ke path API", gotUrl.includes("/api/doa/sebelum makan") || gotUrl.includes("/api/doa/sebelum%20makan"), gotUrl);
+  t("2c. doa dirender: nama + ayat + latin + arti", hasSC(lastReply(), "doa sebelum makan") && lastReply().includes("اَللّٰهُمَّ") && hasSC(lastReply(), "ya allah, berkahilah"), lastReply().slice(0, 200));
+  // fuzzy — API gak ketemu: array msg
+  mkM._replies.length = 0;
+  doa._setHttpForTest(async () => ({ status: 200, data: [{ data: "", msg: "mohon maaf doa yang anda cari gak ketemu" }] }));
+  await doa.handler(mkM({ command: "caridoa", text: "xyz" }), { sock: {}, db: {} });
+  t("2d. gak ketemu (format array) → jujur + saran", hasSC(lastReply(), "gak ketemu"), lastReply().slice(0, 120));
+  // 404 / status lain
+  mkM._replies.length = 0;
+  doa._setHttpForTest(async () => ({ status: 404, data: null }));
+  await doa.handler(mkM({ command: "caridoa", text: "tes" }), { sock: {}, db: {} });
+  t("2e. 404 → pesan server bermasalah", hasSC(lastReply(), "server doa bermasalah"), lastReply().slice(0, 120));
+  // network gagal
+  mkM._replies.length = 0;
+  doa._setHttpForTest(async () => { throw new Error("timeout"); });
+  await doa.handler(mkM({ command: "caridoa", text: "tes" }), { sock: {}, db: {} });
+  t("2f. koneksi gagal → jujur", hasSC(lastReply(), "gagal nyambung"), lastReply().slice(0, 120));
+  doa._resetSeamsForTest();
+}
+
+console.log("— 3. anti-dobel dengan fitur lama —");
+{
+  // .doaharian (offline) & .zlokal suite harus tetap ada dan gak ketimpa alias
+  const dh = (await import(R + "/plugins/islami/doaharian.js")).config;
+  const dhAlias = dh?.alias || dh?.aliases || [];
+  t("3a. .doaharian lama tetap utuh (nama beda)", dh?.name === "doaharian" && !dhAlias.includes("caridoa"), "");
+  t("3b. alias caridoa gak nabrak doaharian", !doa.pluginConfig.alias.includes("doaharian"), "");
+  const zl = (await import(R + "/plugins/search/zlokal.js")).config;
+  const zlAlias = zl?.alias || zl?.aliases || [];
+  t("3c. alias baru gak nabrak zlokal (puasasunnah milik zlokal)", !doa.pluginConfig.alias.includes("puasasunnah") && !tts.pluginConfig.alias.includes("puasasunnah") && zlAlias.includes("puasasunnah"), "");
+  t("3d. cmd kuncijawabantts gak ada di plugin lain", !zlAlias.includes("kuncijawabantts") && !dhAlias.includes("kuncijawabantts"), "");
+}
+
+console.log(`\n══════ ${pass} PASS, ${fail} FAIL ══════`);
+process.exit(fail > 0 ? 1 : 0);
