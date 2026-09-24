@@ -1,8 +1,10 @@
 // E2E: MODE OTOMATIS auto cuaca realtime (request owner 12 Sep 2026 +
 // UPGRADE 15 Sep 2026: "notif tiap cuaca berganti gak kekirim" —
-// dokumen diagnosis owner: deteksi per GRUP cuaca + state PERSIST ke db
-// biar tahan restart). Test: grup deteksi, kirim pas grup berubah,
-// diam kalau cuma ganti kode dalam grup sama, throttle, anti flip-flop,
+// dokumen diagnosis owner: state PERSIST ke db biar tahan restart).
+// v24.1.1 PERTAJAM DETEKSI: pembanding berubah dari GRUP kasar → KODE/kondisi
+// cuaca (weatherDetectKey). "Hujan Ringan → Hujan Lebat" (61→65) yang dulu
+// dianggap satu grup & senyap, sekarang IKUT memicu notif. Suhu doang tetap
+// senyap. Test: grup deteksi, kode deteksi, throttle, anti flip-flop,
 // persist + pulihkan state tiap "restart", command plugin.
 import path from "node:path";
 
@@ -95,9 +97,9 @@ const stg = getSchedulerStatus();
 t("3h. lastGroup keupdate ke hujan", stg.auto.lastGroup === "hujan", stg.auto.lastGroup);
 sent.length = 0;
 _setAutoStateForTest({ lastCheckMs: 0 });
-fakeData = { ...fakeData, weather_code: 65, condition: "Hujan Lebat", temperature: 26 }; // MASIH grup hujan
+fakeData = { ...fakeData, weather_code: 65, condition: "Hujan Lebat", temperature: 26 }; // MASIH grup hujan, TAPI kode beda
 await checkAndSend(sockMock);
-t("3i. hujan ringan → hujan lebat (grup sama) → gak spam notif", sent.length === 0, `sent=${sent.length}`);
+t("3i. hujan ringan → hujan lebat (kode 61→65) → KIRIM (deteksi per kondisi v24.1.1)", sent.length === 1, `sent=${sent.length}`);
 
 // 3e. FLIP-FLOP balik ke cerah (barusan dikirim < gap) → ditahan anti-spam
 sent.length = 0;

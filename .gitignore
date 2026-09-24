@@ -36,3 +36,12 @@ src/data/linkedinnotify.json
 src/data/cooking.json
 src/data/donasi-db.json
 src/data/bootdoctor.json
+
+# ── SECRET ──
+# Repo ini PRIVATE (dikonfirmasi owner 24 Sep 2026) → apikeys.json IKUT di-push
+# supaya deploy/restore gampang. Kalau repo suatu saat dibuat PUBLIC lagi,
+# WAJIB kembalikan exclude di bawah ini dulu.
+# src/lib/apikey/apikeys.json
+# src/lib/apikey/apikeys.json.bak
+session/
+storage/

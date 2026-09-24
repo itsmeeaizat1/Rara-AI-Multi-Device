@@ -97,17 +97,48 @@ export function setSock(_sock) {
 
 // ───────────────────────────── provider: IMDbOT (script owner) ─────────────────────────────
 
+// FIX v24.2.2 — IMDbOT: endpoint LAMA sudah MATI.
+//   /search?q=…  → HTTP 400 (selalu)    /title/<id> → balas teks non-JSON
+// Karena itu rantai IMDbOT dulu SELALU gagal dan fitur cuma hidup dari
+// fallback Cinemeta. Endpoint yang masih hidup: /justwatch?q=… → item punya
+// `imdbId` (tt…), poster, backdrop. Mapping dibuat TOLERAN: mendukung bentuk
+// /justwatch ASLI maupun fixture lama (/search) biar test lama tetap jalan.
+function mapImdbotItem(x) {
+  const poster = Array.isArray(x.photo_url) ? x.photo_url[0] : (x.photo_url || x.poster || null);
+  const backdrop = Array.isArray(x.backdrops) ? x.backdrops[0] : (x.backdrop || null);
+  return {
+    ...x,
+    id: x.imdbId || x.imdb_id || x.id || x.tconst || null,
+    title: x.title || x.name || "Unknown",
+    poster: poster || x.poster || null,
+    backdrop,
+    // /justwatch gak punya rating IMDb (jwRating 0-1, bukan IMDb) → biar
+    // diisi enrichMovie dari Cinemeta.
+    rating: x.rating || null,
+    genres: x.genres || (Array.isArray(x.genre) ? x.genre : x.genre ? [x.genre] : []),
+    runtime: x.runtime || x.duration || null,
+    director: x.directors || (Array.isArray(x.director) ? x.director : x.director ? [x.director] : []),
+    actors: x.actors || x.cast || [],
+    description: x.plot || x.overview || x.description || "",
+  };
+}
+
 async function imdbotSearch(q) {
-  const res = await axios.get(`${IMDBOT_API}/search?q=${encodeURIComponent(q)}`, { headers: HEADERS, timeout: 15_000 });
-  const list = res.data?.results || [];
-  if (!Array.isArray(list) || !list.length) throw new Error("IMDbOT search kosong");
+  const res = await axios.get(`${IMDBOT_API}/justwatch?q=${encodeURIComponent(q)}`, { headers: HEADERS, timeout: 15_000 });
+  const raw = res.data?.description || res.data?.results || [];
+  const list = (Array.isArray(raw) ? raw : []).map(mapImdbotItem).filter((x) => x.id);
+  if (!list.length) throw new Error("IMDbOT justwatch kosong");
   return list;
 }
 
 async function imdbotDetails(imdbId) {
-  const res = await axios.get(`${IMDBOT_API}/title/${imdbId}`, { headers: HEADERS, timeout: 15_000 });
-  if (!res.data || res.data.error || res.data.ok === false) throw new Error("IMDbOT title error");
-  return res.data;
+  const res = await axios.get(`${IMDBOT_API}/justwatch?q=${encodeURIComponent(imdbId)}`, { headers: HEADERS, timeout: 15_000 });
+  if (!res.data || res.data.error || res.data.ok === false) throw new Error("IMDbOT justwatch error");
+  const raw = res.data?.description || res.data?.results || [];
+  const hit = (Array.isArray(raw) ? raw : [])
+    .find((x) => (x.imdbId || x.imdb_id || x.id) === imdbId) || raw[0];
+  if (!hit) throw new Error("IMDbOT detail kosong");
+  return mapImdbotItem({ ...hit, id: hit.imdbId || hit.imdb_id || hit.id || imdbId });
 }
 
 // ───────────────────────────── provider: Cinemeta (fallback live) ─────────────────────────────
@@ -176,7 +207,13 @@ function normCinemeta(m) {
   };
 }
 
-/** Rantai: IMDbOT (utama) → Cinemeta (fallback). Return list normalisasi. */
+/** Rantai daftar film: **Cinemeta (utama)** → IMDbOT (cadangan).
+ * FIX v24.2.2 — dulu IMDbOT di depan. Sisa pakai endpoint `/search` yang sudah
+ * MATI, dan setelah dibenerin ke `/justwatch` ternyata endpoint itu PENCARIAN
+ * JUDUL, bukan katalog: query "popular"/"best"/<tahun> mengembalikan item yang
+ * JUDULNYA kebetulan berbunyi begitu (contoh nyata: acara berjudul "Popular"
+ * tahun 1999 muncul sebagai "film trending"). Cinemeta punya katalog asli
+ * (top / year / imdbRating) + rating IMDb + kru, jadi hasilnya BENAR. */
 async function fetchList(type, limit = 10) {
   const year = new Date().getFullYear();
   const queries = {
@@ -186,23 +223,26 @@ async function fetchList(type, limit = 10) {
   }[type];
   if (!queries) throw new Error(`tipe gak dikenal: ${type}`);
   try {
-    const list = await imdbotSearch(queries.imdbot);
-    return { list: list.slice(0, limit).map(normImdbot), source: "IMDbOT" };
-  } catch (e) {
-    logger.warn?.("movie-notifier", `IMDbOT ${type} gagal (${e.message}) — fallback Cinemeta`);
     const list = await cinemetaCatalog(queries.cinemeta, limit);
     return { list: list.map(normCinemeta), source: "Cinemeta" };
+  } catch (e) {
+    logger.warn?.("movie-notifier", `Cinemeta ${type} gagal (${e.message}) — fallback IMDbOT`);
+    const list = await imdbotSearch(queries.imdbot);
+    return { list: list.slice(0, limit).map(normImdbot), source: "IMDbOT" };
   }
 }
 
-/** Detail film rantai: IMDbOT /title → Cinemeta /meta. */
+/** Detail film rantai: Cinemeta /meta (paling lengkap) → IMDbOT justwatch.
+ * FIX v24.2.2: dulu IMDbOT `/title` di depan — endpoint itu MATI, jadi tiap
+ * enrich kena throw dulu. Sekarang Cinemeta duluan (rating IMDb + kru +
+ * sinopsis lengkap), IMDbOT cuma cadangan. */
 async function getMovieDetails(ttId) {
   try {
-    const d = await imdbotDetails(ttId);
-    return { ...normImdbot(d), id: ttId };
-  } catch {
     const m = await cinemetaMeta(ttId);
     return normCinemeta(m);
+  } catch {
+    const d = await imdbotDetails(ttId);
+    return { ...normImdbot(d), id: ttId };
   }
 }
 
@@ -231,12 +271,13 @@ export async function enrichMovie(m) {
 
 /** Search manual (.movie <judul>) — rantai IMDbOT → Cinemeta. */
 export async function searchMovies(query, limit = 5) {
+  // FIX v24.2.2: Cinemeta dulu (ID IMDb + rating lengkap), IMDbOT cadangan.
   try {
-    const list = await imdbotSearch(query);
-    return { list: list.slice(0, limit).map(normImdbot), source: "IMDbOT" };
-  } catch {
     const list = await cinemetaSearch(query, limit);
     return { list: list.map(normCinemeta), source: "Cinemeta" };
+  } catch {
+    const list = await imdbotSearch(query);
+    return { list: list.slice(0, limit).map(normImdbot), source: "IMDbOT" };
   }
 }
 

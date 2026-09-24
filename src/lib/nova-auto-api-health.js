@@ -3,6 +3,7 @@
 // Cek API eksternal tiap interval, kirim notif ke owner kalau ada yang down
 import { CronJob } from "cron";
 import path from "path";
+import { mergeAutoTargets } from "./nova-auto-target.js";
 import fs from "fs";
 import { getDatabase } from "./nova-database.js";
 import config from "../../config.js";
@@ -174,9 +175,12 @@ async function doHealthCheck() {
       }
 
       const notif = bracketBox("🩺", toSC("API Health Alert"), lines);
-      try {
-        await sockInstance.sendMessage(ownerJid, { text: notif });
-      } catch {}
+      // TARGET TERPUSAT (v24.2.0): owner tetap dapat; target terpusat ikut.
+      let hTargets = [ownerJid];
+      try { hTargets = await mergeAutoTargets(sockInstance, "autohealth", [ownerJid]); } catch { /* pakai owner */ }
+      for (const jid of hTargets) {
+        try { await sockInstance.sendMessage(jid, { text: notif }); } catch {}
+      }
     }
 
     logger.info("ApiHealth", `Check done: ${downApis.length} down, ${recoveredApis.length} recovered`);

@@ -4,7 +4,11 @@
 import fs from "fs";
 import path from "path";
 
-const REPO = "/app/conversations/6a8e916412b12b330016328e/nova-repo";
+// FIX v24.2.2: dulu path absolut server penulis (/app/conversations/...) →
+// test SELALU gagal di mesin lain. Sekarang diturunkan dari LOKASI FILE TEST
+// (bukan process.cwd(), karena test ini dijalankan dari cwd direktori KOSONG).
+import { fileURLToPath } from "node:url";
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase("/tmp/movie-e2e/db"));
 
 const M = await import(REPO + "/src/lib/nova-movie-notifier.js");
@@ -144,14 +148,18 @@ const fb = sent[0];
 check("12a. poster gagal → text card + banner tetep ada (gak crash)", fb?.content?.text?.includes("No Poster Film") && fb.content.contextInfo?.externalAdReply?.title === "No Poster Film");
 
 // ─── 13. IMDbOT UP → dipakai (utama sesuai script) ───
+// v24.2.2: Cinemeta sekarang sumber UTAMA daftar (katalog asli, hasil benar).
+// IMDbOT jadi CADANGAN — buktikan cadangan itu benar-benar berfungsi dengan
+// mematikan Cinemeta.
 globalThis.__IMDBOT_UP__ = true;
 globalThis.__IMDBOT_RESPONSE__ = { results: [{ id: "tt900", title: "Dari IMDbOT", year: "2026", rating: 7.5, genres: ["Drama"], runtime: 100, directors: ["Sutradara X"], actors: ["Aktor A"], plot: "Plot IMDbOT.", poster: "https://img/ok.jpg" }] };
-globalThis.__CINEMETA__["catalog/movie/top.json"] = { metas: [meta("tt901", "Harus gak kepake")] };
+globalThis.__CINEMETA_DOWN__ = true;
 sent.length = 0;
 const r13 = await M.runCheck();
 const cap13 = sent.find((s) => s.content?.caption?.includes("Dari IMDbOT"));
-check("13a. IMDbOT hidup → sumber utama (normImdbot jalan)", !!cap13 && r13.summary.trending >= 1);
+check("13a. Cinemeta down → fallback IMDbOT justwatch jalan (normImdbot)", !!cap13 && r13.summary.trending >= 1);
 globalThis.__IMDBOT_UP__ = false;
+globalThis.__CINEMETA_DOWN__ = false;
 
 // ─── 14. knob interval ───
 check("14a. interval invalid ditolak (2, 800, abc)", M.setIntervalMenit(2) === null && M.setIntervalMenit(800) === null && M.setIntervalMenit("abc") === null);

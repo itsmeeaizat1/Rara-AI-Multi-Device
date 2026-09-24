@@ -896,45 +896,29 @@ async function startConnection(options = {}) {
         }
       }, 5000);
 
-      try {
-        initAutoBackup(sock);
-      try {
-        initAutoReport(sock);
-      } catch (e) {
-        colors.logger.debug("report", "skipped: " + e.message);
-      }
-      try {
-        initAutoBirthday(sock);
-      try {
-        initHealthCheck(sock);
-      } catch (e) {
-        colors.logger.debug("apihealth", "skipped: " + e.message);
-      }
-      try {
-        initReengage(sock);
-      } catch (e) {
-        colors.logger.debug("reengage", "skipped: " + e.message);
-      }
-      try {
-        initRefill(sock);
-      try {
-        initRenewalReminder(sock);
-        try { const { initQuizVerify } = await import("./lib/nova-quiz-verify.js"); initQuizVerify(sock); } catch (e) { colors.logger.error("init", "QuizVerify init failed: " + e.message); }
-        try { const { initActivityTracker } = await import("./lib/nova-activity-tracker.js"); initActivityTracker(); } catch (e) { colors.logger.error("init", "ActivityTracker init failed: " + e.message); }
-        try { const { initAutoTranslate } = await import("./lib/nova-autotranslate.js"); initAutoTranslate(); } catch (e) { colors.logger.error("init", "AutoTranslate init failed: " + e.message); }
-        try { startWeatherRealtimeScheduler(sock); } catch (e) { colors.logger.error("init", "WeatherRealtime scheduler failed: " + e.message); }
-        try { const { initHariBesarScheduler } = await import("./lib/nova-haribesar.js"); initHariBesarScheduler(sock); } catch (e) { colors.logger.error("init", "HariBesar scheduler failed: " + e.message); }
-      } catch (e) {
-        colors.logger.debug("renewal", "skipped: " + e.message);
-      }
-      } catch (e) {
-        colors.logger.debug("refill", "skipped: " + e.message);
-      }
-      } catch (e) {
-        colors.logger.debug("birthday", "skipped: " + e.message);
-      }
-      } catch (e) {
-        colors.logger.debug("backup", "skipped: " + e.message);
+      // FIX v24.1.1 — RANTAI try/catch BERTINGKAT (penyebab "scheduler cuaca
+      // gak jalan"): dulu satu `try` membungkus BANYAK init berurutan, jadi
+      // kalau init pertama throw, catch-nya menelan error DAN MELEWATI semua
+      // init setelahnya — termasuk startWeatherRealtimeScheduler → notifikasi
+      // cuaca mati SENYAP (cuma kelihatan kalau debugLog nyala).
+      // Sekarang tiap init dibungkus sendiri: satu gagal, sisanya tetap jalan.
+      const _bootSteps = [
+        ["AutoBackup", () => initAutoBackup(sock), "debug"],
+        ["AutoReport", () => initAutoReport(sock), "debug"],
+        ["AutoBirthday", () => initAutoBirthday(sock), "debug"],
+        ["ApiHealth", () => initHealthCheck(sock), "debug"],
+        ["ReEngage", () => initReengage(sock), "debug"],
+        ["AutoRefill", () => initRefill(sock), "debug"],
+        ["AutoRenewal", () => initRenewalReminder(sock), "debug"],
+        ["QuizVerify", async () => { const { initQuizVerify } = await import("./lib/nova-quiz-verify.js"); initQuizVerify(sock); }, "debug"],
+        ["ActivityTracker", async () => { const { initActivityTracker } = await import("./lib/nova-activity-tracker.js"); initActivityTracker(); }, "debug"],
+        ["AutoTranslate", async () => { const { initAutoTranslate } = await import("./lib/nova-autotranslate.js"); initAutoTranslate(); }, "debug"],
+        ["WeatherRealtime", () => startWeatherRealtimeScheduler(sock), "warn"],
+        ["HariBesar", async () => { const { initHariBesarScheduler } = await import("./lib/nova-haribesar.js"); initHariBesarScheduler(sock); }, "debug"],
+      ];
+      for (const [name, fn, lvl] of _bootSteps) {
+        try { await fn(); }
+        catch (e) { (lvl === "warn" ? colors.logger.warn : colors.logger.debug)("init", name + " skipped: " + e.message); }
       }
       try {
         const { startGiveawayChecker } =

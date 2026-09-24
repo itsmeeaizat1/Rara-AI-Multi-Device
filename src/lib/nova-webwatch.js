@@ -12,6 +12,7 @@
 
 import axios from "axios";
 import crypto from "crypto";
+import { mergeAutoTargets } from "./nova-auto-target.js";
 import fs from "fs";
 import path from "path";
 import { logger } from "./nova-logger.js";
@@ -262,7 +263,7 @@ export function syncMonitor() {
   }
 }
 
-function sendAlert({ watch, oldSize, newSize, snippet }) {
+async function sendAlert({ watch, oldSize, newSize, snippet }) {
   if (!sock) return;
   const delta = newSize - oldSize;
   const deltaTxt = delta === 0 ? "" : (delta > 0 ? ` (+${delta.toLocaleString("id-ID")} char)` : ` (${delta.toLocaleString("id-ID")} char)`);
@@ -282,14 +283,21 @@ function sendAlert({ watch, oldSize, newSize, snippet }) {
   }
   lines.push("");
   lines.push(`⏱️ Dicek tiap ${watch.intervalMenit} menit`);
-  sock.sendMessage(watch.chatId, { text: lines.join("\n") }).catch(() => {});
+  const text = lines.join("\n");
+  // TARGET TERPUSAT (v24.2.0): chat subscriber TETAP dapat; kalau
+  // `.switch auto webwatch set` diatur, target terpusat ikut dikirim.
+  let targets = [watch.chatId];
+  try { targets = await mergeAutoTargets(sock, "webwatch", [watch.chatId]); } catch { /* pakai default */ }
+  for (const jid of targets) sock.sendMessage(jid, { text }).catch(() => {});
 }
 
 export async function checkNow(chatId) {
   const mine = state.watches.filter((w) => w.chatId === chatId);
   const alerts = await runCheck({ force: true });
   const myAlerts = alerts.filter((a) => a.watch.chatId === chatId);
-  myAlerts.forEach((a) => sendAlert(a));
+  // FIX v24.2.4 — dulu fire-and-forget (`forEach`): command `.webwatch now`
+  // balas SEBELUM alert benar-benar terkirim (kelihatan seperti "gak ngirim").
+  for (const a of myAlerts) { try { await sendAlert(a); } catch { /* lanjut */ } }
   return { checked: mine.length, changed: myAlerts.length, alerts: myAlerts };
 }
 

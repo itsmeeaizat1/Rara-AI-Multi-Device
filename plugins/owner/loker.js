@@ -287,7 +287,7 @@ async function handler(m, { sock }) {
 
   // ── SUMBER (toggle sources) ──────────────────────────────────────────
   if (action === "sumber" || action === "sources") {
-    const AVAILABLE = ["jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"];
+    const AVAILABLE = ["linkedin", "jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"];
     const choice = (args[0] || "").toLowerCase();
 
     if (!choice) {

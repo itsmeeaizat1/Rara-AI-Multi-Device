@@ -5,7 +5,11 @@
 import fs from "fs";
 import path from "path";
 
-const REPO = "/app/conversations/6a8e916412b12b330016328e/nova-repo";
+// FIX v24.2.2: dulu path absolut server penulis (/app/conversations/...) →
+// test SELALU gagal di mesin lain. Sekarang diturunkan dari LOKASI FILE TEST
+// (bukan process.cwd(), karena test ini dijalankan dari cwd direktori KOSONG).
+import { fileURLToPath } from "node:url";
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 // initDatabase wajib path eksplisit (gotcha lama: tanpa path → silent exit)
 await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase("/tmp/anime-e2e/db"));
 

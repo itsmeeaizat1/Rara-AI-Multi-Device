@@ -1,6 +1,9 @@
 // e2e — nova-ai-satuan-rich: enrich vision + browsing buat AI satuan
 import fs from "node:fs"; import os from "node:os"; import path from "node:path";
-const R = "/app/conversations/6a8e916412b12b330016328e/nova-repo";
+import { fileURLToPath } from "node:url";
+// FIX v24.2.2: dulu path absolut server penulis → test gagal di mesin lain.
+// Diturunkan dari LOKASI FILE TEST, bukan cwd (bisa dijalankan dari mana saja).
+const R = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 let pass = 0, fail = 0;
 function t(name, ok, extra) {
   if (ok) { pass++; }

@@ -12,12 +12,14 @@
 
 import axios from "axios";
 import fs from "fs";
+import { mergeAutoTargets } from "./nova-auto-target.js";
 import path from "path";
 import { logger } from "./nova-logger.js";
 
 const STATE_FILE = path.join(process.cwd(), "src", "data", "cryptoalert.json");
 
 const CG_BASE = "https://api.coingecko.com/api/v3";
+let lastApiWarnMs = 0; // rate-limit log peringatan API (v24.2.4)
 const TICK_MS = 60 * 1000; // cek tiap 1 menit
 const MAX_ALERTS_PER_CHAT = 5;
 
@@ -148,11 +150,17 @@ export async function addAlert(chatId, coinQuery, directionRaw, targetRaw) {
   const mine = state.alerts.filter((a) => a.chatId === chatId);
   if (mine.length >= MAX_ALERTS_PER_CHAT) return { ok: false, error: "limit" };
 
-  let coin;
+  let coin, apiErr = null;
   try {
     coin = await resolveCoin(coinQuery);
-  } catch { coin = null; }
-  if (!coin || coin.currentPrice == null) return { ok: false, error: "coin_not_found" };
+  } catch (e) { apiErr = e; coin = null; }
+  if (!coin || coin.currentPrice == null) {
+    // FIX v24.2.4 — dulu SELALU dilaporkan "coin_not_found", padahal bisa jadi
+    // CoinGecko lagi error/rate-limit (HTTP 429). Pesan yang menyesatkan bikin
+    // user ngetik ulang nama coin terus. Sekarang dibedakan.
+    if (apiErr) return { ok: false, error: "api_error", message: String(apiErr.message || apiErr).slice(0, 160) };
+    return { ok: false, error: "coin_not_found" };
+  }
 
   const alert = {
     id: newId(),
@@ -229,6 +237,12 @@ export async function runCheck({ force = false } = {}) {
   try {
     prices = await fetchPrices(ids);
   } catch (e) {
+    // FIX v24.2.4 — dulu return [] diam-diam; log biar ketahuan kalau CoinGecko
+    // rate-limit/down (maks 1x/menit biar log gak banjir).
+    if (Date.now() - lastApiWarnMs > 60_000) {
+      lastApiWarnMs = Date.now();
+      console.warn("[cryptoalert] ⚠ gagal ambil harga CoinGecko — alarm ditahan (bukan false fire):", String(e?.message || e).slice(0, 140));
+    }
     return []; // API down — jangan false fire, alarm tetap ada
   }
 
@@ -254,7 +268,7 @@ export async function runCheck({ force = false } = {}) {
   return fired;
 }
 
-function sendAlert(a, change24h) {
+async function sendAlert(a, change24h) {
   if (!sock) return;
   const chg = typeof change24h === "number" ? ` (${change24h >= 0 ? "+" : ""}${change24h.toFixed(2)}% 24 jam)` : "";
   const lines = [
@@ -267,14 +281,21 @@ function sendAlert(a, change24h) {
     `📊 Waktu pasang: ${formatRp(a.startPrice)}`,
     "✅ Alarm satu kali pakai — otomatis terhapus",
   ];
-  sock.sendMessage(a.chatId, { text: lines.join("\n") }).catch(() => {});
+  const text = lines.join("\n");
+  // TARGET TERPUSAT (v24.2.0): chat pasang alarm TETAP dapat; target
+  // terpusat (`.switch auto cryptoalert set`) ikut dikirim kalau diatur.
+  let targets = [a.chatId];
+  try { targets = await mergeAutoTargets(sock, "cryptoalert", [a.chatId]); } catch { /* pakai default */ }
+  for (const jid of targets) sock.sendMessage(jid, { text }).catch(() => {});
 }
 
 export async function checkNow(chatId) {
   const before = listAlerts(chatId).length;
   const fired = await runCheck({ force: true });
   const mineFired = fired.filter((a) => a.chatId === chatId);
-  mineFired.forEach((a) => sendAlert(a));
+  // FIX v24.2.4 — dulu fire-and-forget (`forEach`), jadi command balas dulu
+  // sebelum alert benar-benar terkirim (kelihatan seperti "gak ngirim").
+  for (const a of mineFired) { try { await sendAlert(a); } catch { /* lanjut */ } }
   return { checked: before, fired: mineFired.length, alerts: mineFired };
 }
 

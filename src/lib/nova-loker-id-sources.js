@@ -1,14 +1,15 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * nova-loker-id-sources.js
- * Fetcher lowongan kerja Indonesia untuk 4 portal:
- * 1. JobStreet Indonesia (via Andaraz API + direct fallback)
- * 2. Glints Indonesia (via GraphQL API)
- * 3. Kalibrr Indonesia (via public API)
- * 4. Indeed Indonesia (via RSS + API)
+ * Fetcher lowongan kerja Indonesia.
+ * 1. LinkedIn Indonesia (guest API) — SATU-SATUNYA yang terbukti hidup (v24.2.8)
+ * 2. JobStreet Indonesia (via Andaraz API + direct fallback) — sekarang 500/404
+ * 3. Glints Indonesia (via GraphQL API) — sekarang 403
+ * 4. Kalibrr Indonesia (via public API) — sekarang 404
+ * 5. Indeed Indonesia (via RSS + API) — sekarang 403
  *
- * Catatan: Beberapa endpoint mungkin di-block dari IP tertentu.
- * Setiap fetcher punya multiple fallback endpoint.
+ * Catatan: portal besar memblokir scraping dari IP server. LinkedIn guest
+ * endpoint masih terbuka; sisanya dipertahankan sebagai cadangan kalau pulih.
  */
 
 import { getAndarazConfig } from "./config/env-loader.js";
@@ -379,13 +380,70 @@ async function fetchIndeedID({ keywords = [], limit = 10 } = {}) {
 // AGGREGATE: Fetch dari semua portal Indonesia
 // ────────────────────────────────────────────────────────────────────────────
 
+// ────────────────────────────────────────────────────────────────────────────
+// LINKEDIN INDONESIA (guest API — SATU-SATUNYA YANG TERBUKTI HIDUP)
+// ────────────────────────────────────────────────────────────────────────────
+// FIX v24.2.8: 4 portal di bawah (JobStreet/Glints/Kalibrr/Indeed) sekarang
+// MEMBLOKIR scrape (JobStreet 500/404, Glints 403, Kalibrr 404, Indeed 403),
+// jadi fetchAllIndonesiaJobs selalu 0 dan notif loker isinya luar negeri
+// (USA/Jerman dari Remotive/Arbeitnow). Endpoint `jobs-guest` LinkedIn masih
+// terbuka dan mengembalikan LOKER INDONESIA asli — verified live:
+// "Staff CRD - Graphic Designer @ PT. Selaras Husada, Surabaya".
+function normalizeLinkedin(job) {
+  return {
+    id: `linkedin_${job.jobId || job.title}`,
+    title: job.title || "-",
+    company: job.company || "-",
+    location: job.location || "Indonesia",
+    type: job.type || "Full time",
+    tags: [],
+    url: job.url || "https://www.linkedin.com/jobs/search/?location=Indonesia",
+    postedAt: job.postedAt || "",
+    expiryDate: "",
+    salary: "",
+    source: "LinkedIn ID",
+    image: null,
+  };
+}
+
+async function fetchLinkedinID({ keywords = [], location = "Indonesia", limit = 10 } = {}) {
+  const kw = Array.isArray(keywords) && keywords.length ? keywords.join(" ") : "";
+  const lok = location || "Indonesia";
+  const url = `https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=${encodeURIComponent(kw)}&location=${encodeURIComponent(lok)}&start=0`;
+  try {
+    const res = await _fetch(url, { headers: { Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const html = await res.text();
+    const jobs = [];
+    for (const card of html.split("<li>").slice(1)) {
+      const title = _decodeEntities(((card.match(/class="base-search-card__title"[^>]*>\s*([^<]+)/) || [])[1] || "")).trim();
+      if (!title) continue;
+      const company = _decodeEntities(((card.match(/class="hidden-nested-link"[^>]*>\s*([^<]+)/) || [])[1] || "")).trim();
+      const loc = _decodeEntities(((card.match(/class="job-search-card__location"[^>]*>\s*([^<]+)/) || [])[1] || "")).trim();
+      const link = (card.match(/href="(https:\/\/[a-z]{2}\.linkedin\.com\/jobs\/view\/[^"?]+)/) || [])[1] || "";
+      const dt = (card.match(/datetime="([^"]+)"/) || [])[1] || "";
+      const jobId = (link.match(/-(\d+)$/) || [])[1] || "";
+      jobs.push(normalizeLinkedin({ title, company, location: loc, url: link, postedAt: dt, jobId }));
+      if (jobs.length >= limit) break;
+    }
+    if (!jobs.length) throw new Error("parse LinkedIn 0 loker — markup berubah?");
+    logger.info("LOKER-ID", `LinkedIn: ${jobs.length} jobs`);
+    return jobs;
+  } catch (err) {
+    logger.warn("LOKER-ID", `LinkedIn error: ${err.message}`);
+    return [];
+  }
+}
+
 async function fetchAllIndonesiaJobs({
-  sources = ["jobstreet", "glints", "kalibrr", "indeed"],
+  sources = ["linkedin", "jobstreet", "glints", "kalibrr", "indeed"],
   keywords = [],
   limit = 10,
   sentIds = {},
 } = {}) {
   const fetchers = [];
+  // v24.2.8 — LinkedIn dulu (satu-satunya yang hidup); 4 portal lain jadi cadangan
+  if (sources.includes("linkedin")) fetchers.push(fetchLinkedinID({ keywords, limit }));
   if (sources.includes("jobstreet")) fetchers.push(fetchJobstreetID({ keywords, limit }));
   if (sources.includes("glints")) fetchers.push(fetchGlintsID({ keywords, limit }));
   if (sources.includes("kalibrr")) fetchers.push(fetchKalibrrID({ keywords, limit }));
@@ -408,6 +466,8 @@ async function fetchAllIndonesiaJobs({
 }
 
 export {
+  fetchLinkedinID,
+  normalizeLinkedin,
   fetchJobstreetID,
   fetchGlintsID,
   fetchKalibrrID,

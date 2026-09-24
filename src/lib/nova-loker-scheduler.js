@@ -13,6 +13,7 @@ import { logger } from "./nova-logger.js";
 import config from "../../config.js";
 import { getAndarazConfig } from "./config/env-loader.js";
 import {
+  fetchLinkedinID,
   fetchJobstreetID,
   fetchGlintsID,
   fetchKalibrrID,
@@ -70,7 +71,10 @@ function getLokerSettings(db) {
         ]),
     sources: Array.isArray(stored.sources) && stored.sources.length
       ? stored.sources
-      : (Array.isArray(base.sources) ? base.sources : ["jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"]),
+      // v24.2.8 — "linkedin" ditaruh pertama: satu-satunya sumber loker
+      // INDONESIA yang masih hidup (JobStreet/Glints/Kalibrr/Indeed di-block,
+      // Remotive/Arbeitnow isinya luar negeri).
+      : (Array.isArray(base.sources) ? base.sources : ["linkedin", "jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"]),
     targets: Array.isArray(stored.targets) ? stored.targets : [],
   };
 }
@@ -435,6 +439,8 @@ async function fetchNewJobs({ sources, keywords, categories, limit, sentIds = {}
   const fetchers = [];
 
   // Portal Indonesia (prioritas)
+  // v24.2.8 — LinkedIn Indonesia: sumber UTAMA (terbukti hidup, loker ID asli)
+  if (sources.includes("linkedin")) fetchers.push(fetchLinkedinID({ keywords, limit: limit + 20 }));
   if (sources.includes("jobstreet")) fetchers.push(fetchJobstreetID({ keywords, limit: limit + 20 }));
   if (sources.includes("glints")) fetchers.push(fetchGlintsID({ keywords, limit: limit + 20 }));
   if (sources.includes("kalibrr")) fetchers.push(fetchKalibrrID({ keywords, limit: limit + 20 }));

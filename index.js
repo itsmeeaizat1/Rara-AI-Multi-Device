@@ -466,30 +466,17 @@ async function main() {
           const { initServerSpeedtest } = await import("./src/lib/nova-speedtest.js");
           initServerSpeedtest(sock).catch(() => {});
         } catch { }
-        try {
-          const { initSahurCron } =
-            await import("./plugins/religi/autosahur.js");
-          initSahurCron(sock);
-        } catch { }
-        try {
-          const { startOrderPoller } = await import("./src/lib/nova-order-poller.js");
-          if (typeof startOrderPoller === "function") {
-            try {
-              startOrderPoller(sock);
-            } catch (e) {
-              logger.warn("ORDER", `startOrderPoller failed during start: ${e.message}`);
-            }
-          } else {
-            logger.warn("ORDER", "startOrderPoller not exported or not a function");
-          }
-        } catch (e) {
-          logger.warn("ORDER", `startOrderPoller unavailable: ${e.message}`);
-        }
-        try {
-          const { startOtpPoller: _startOtp } =
-            await import("./src/lib/nova-otp-poller.js");
-          _startOtp(sock);
-        } catch { }
+        // ── FIX v24.1.0 — HAPUS IMPORT HANTU (audit import path) ──
+        // Tiga modul di bawah ini direferensikan tapi FILE-nya tidak pernah
+        // ada di repo: ./plugins/religi/autosahur.js,
+        // ./src/lib/nova-order-poller.js, ./src/lib/nova-otp-poller.js.
+        // Karena dibungkus try/catch, kegagalannya SENYAP (fitur dikira jalan
+        // padahal selalu di-skip). Order polling sudah ditangani inline oleh
+        // plugins/panel/orderpanel.js (poll sampai lunas/kedaluwarsa), dan OTP
+        // dipanggil on-demand via src/lib/nova-otp-service.js. Referensi mati
+        // dihapus supaya tidak menyesatkan. Kalau nanti mau fitur ini sbg
+        // background cron, implementasinya dibuat sebagai modul baru + didaftarkan
+        // di scheduler resmi (src/lib/nova-scheduler.js), bukan import hantu.
 
         try {
           const { getAllJadibotSessions, restartJadibotSession } =
