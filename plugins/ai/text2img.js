@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from "axios";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
-import config from "../../config.js";
+import { haidarTxt2img } from "../../src/scraper/haidar-ai.js";
 import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -59,16 +58,13 @@ async function handler(m, { sock }) {
   }
   try {
   await m.react("🕒");
-    const url = `https://firefly.maiku.my.id/api/deepai?apikey=${config.APIkey.firefly}&prompt=${encodeURIComponent(text)}`;
-    const data = await axios.get(url);
-
-    const content = data.data.data.output_url;
+    const content = await haidarTxt2img(text);
     const caption = mediaCaption({
       platformIcon: "🎨",
       platformName: "AI Image",
       title: text.slice(0, 60),
       format: "Image",
-      method: "Nova AI",
+      method: "HaidarApis nano-banana",
     });
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
