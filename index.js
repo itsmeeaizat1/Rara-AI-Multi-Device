@@ -443,7 +443,6 @@ async function main() {
           { name: "AutoContent", fn: () => import("./plugins/owner/autocontent.js").then(m => m.startAutoContent?.(sock)) },
           { name: "AutoPredict", fn: () => import("./plugins/owner/autopredict.js").then(m => m.startAutoPredict?.(sock)) },
           { name: "AutoFailover", fn: () => import("./plugins/owner/autofailover.js").then(m => m.startAutoFailover?.(sock)) },
-          { name: "AutoSmartWelcome", fn: () => import("./plugins/owner/autosmartwelcome.js").then(m => m.startAutoSmartWelcome?.(sock)) },
           { name: "AutoConflict", fn: () => import("./plugins/owner/autoconflict.js").then(m => m.processConflictMessage?.(null, sock)) },
           { name: "AutoSummary", fn: () => import("./plugins/owner/autosummary.js").then(m => m.startAutoSummary?.(sock)) },
           { name: "AutoTask", fn: () => import("./plugins/owner/autotask.js").then(m => m.resumeAutoTasks?.(sock)) },
