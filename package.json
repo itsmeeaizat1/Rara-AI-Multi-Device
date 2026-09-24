@@ -123,7 +123,7 @@
     "tar": "^7.5.22",
     "tesseract.js": "^7.0.0",
     "tough-cookie": "^6.0.2",
-    "undici": "^8.10.2",
+    "undici": "^7.29.1",
     "unfurl.js": "^6.4.0",
     "wa-sticker-formatter": "^4.4.4",
     "youtube-dl-exec": "^3.1.15",
