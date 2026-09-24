@@ -23,7 +23,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=22.22.2"
   },
   "dependencies": {
     "@adiwajshing/keyed-db": "^0.2.4",
