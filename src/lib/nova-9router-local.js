@@ -14,7 +14,7 @@
 //      ke src/lib/apikey/9routerapikey.json (gateway.apikey).
 //   4. Provider key berbayar/butuh apikey: owner isi di 9routerapikey.json
 //      (providers[]), bot sync ke 9router (POST /api/providers) saat boot /
-//      .ai9 sync — key gak pernah keluar dari server sendiri.
+//      .9router sync — key gak pernah keluar dari server sendiri.
 //   5. Chat: OpenAI SDK → http://127.0.0.1:20128/v1/chat/completions.
 //      TANPA FALLBACK ke AI API lain (nexai/ikyy/zhipu/dll) — kalau 9router
 //      bermasalah, bot jawab jujur. 747 model hidup via /v1/models.
@@ -206,7 +206,7 @@ export async function ensureRouter9GatewayKey({ create = true } = {}) {
   if (!create) return "";
   const r = await mgmtApi("POST", "/api/keys", { name: "nova-bot" });
   const key = r.ok && r.json?.key;
-  if (!key) throw new Error(`gagal bikin gateway key 9router (HTTP ${r.status}) — cek .ai9 status`);
+  if (!key) throw new Error(`gagal bikin gateway key 9router (HTTP ${r.status}) — cek .9router status`);
   cfg.gateway = { ...(cfg.gateway || {}), apikey: key };
   writeRouter9Config(cfg);
   return key;
@@ -325,7 +325,7 @@ export async function router9Chat({
   if (!up.up) {
     _state.stats.fail++;
     _state.stats.lastError = up.error || "9router mati";
-    throw new Error(`9Router lokal belum jalan${up.error ? ` — ${up.error}` : ""}. Coba lagi atau .ai9 status`);
+    throw new Error(`9Router lokal belum jalan${up.error ? ` — ${up.error}` : ""}. Coba lagi atau .9router status`);
   }
 
   let key = apiKey;
@@ -356,7 +356,7 @@ export async function router9Chat({
     });
     const text = res?.choices?.[0]?.message?.content || "";
     if (!text.trim()) {
-      throw new Error("9router balas kosong — kemungkinan belum ada provider AI aktif. Buka dashboard 9router atau isi src/lib/apikey/9routerapikey.json lalu .ai9 sync");
+      throw new Error("9router balas kosong — kemungkinan belum ada provider AI aktif. Buka dashboard 9router atau isi src/lib/apikey/9routerapikey.json lalu .9router sync");
     }
     const latencyMs = Date.now() - t0;
     _state.stats.ok++;
@@ -382,14 +382,14 @@ function mapRouter9Error(e, model) {
   const raw = String(e?.error?.message || e?.message || "");
   if (status === 401 || status === 403) return `gateway key 9router ditolak (${status}) — hapus gateway.apikey di 9routerapikey.json lalu restart`;
   if (status === 404 && /no active credentials/i.test(raw)) {
-    return `belum ada provider aktif untuk model "${model}" — hubungkan provider di dashboard 9router (http://127.0.0.1:${getRouter9Port()}/dashboard) atau isi src/lib/apikey/9routerapikey.json lalu .ai9 sync`;
+    return `belum ada provider aktif untuk model "${model}" — hubungkan provider di dashboard 9router (http://127.0.0.1:${getRouter9Port()}/dashboard) atau isi src/lib/apikey/9routerapikey.json lalu .9router sync`;
   }
-  if (status === 404) return `model "${model}" gak ditemukan di 9Router — lihat .ai9 list`;
+  if (status === 404) return `model "${model}" gak ditemukan di 9Router — lihat .9router model`;
   if (status === 429) return "9router kena rate limit — tunggu sebentar";
   if (status === 402) return `provider untuk model "${model}" berbayar dan kuotanya gak cukup — cek dashboard 9router`;
   if (status >= 500) return `9router error internal (HTTP ${status}) — cek logs/9router-local.log`;
   if (e?.code === "ECONNREFUSED" || /fetch failed|networkerror/i.test(raw)) {
-    return "9router lokal gak kejangkau — pastikan jalan (.ai9 status)";
+    return "9router lokal gak kejangkau — pastikan jalan (.9router status)";
   }
   return raw || "9router gagal tanpa keterangan";
 }
