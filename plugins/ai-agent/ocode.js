@@ -174,7 +174,7 @@ async function handler(m, { sock, args, config: botConfig }) {
             "Endpoint: " + getTioEndpoint().replace("/chat/completions", ""),
             "Backup  : " + (backups.length ? backups.length + " set (terbaru: " + backups[0] + ")" : "belum ada"),
             "---",
-            "Shell   : MATI (mode aman — agent cuma bisa baca/edit file)",
+            "Shell   : MATI (mode aman — baca/edit file + tool MCP eksternal via aksi mcp)",
             "Undo    : .ocode undo (balikin perubahan terakhir)",
         ]));
     }

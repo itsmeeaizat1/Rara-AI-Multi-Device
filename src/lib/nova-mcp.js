@@ -78,10 +78,13 @@ async function stdioRpc(server, method, params, notif = false) {
   return new Promise((resolve, reject) => {
     let child
     try {
+      // env khusus server (token/key) di-merge di atas process.env — pola
+      // mcp-config Claude (env per server di config), tanpa dependency SDK.
+      const childEnv = { ...process.env, ...Object.fromEntries(Object.entries(server.env || {}).map(([k, v]) => [k, String(v)])) }
       const sh = server.shell === true
       child = sh
-        ? spawn(server.command, { shell: true })
-        : spawn(server.command, server.args || [], { stdio: ["pipe", "pipe", "pipe"] })
+        ? spawn(server.command, { shell: true, env: childEnv })
+        : spawn(server.command, server.args || [], { stdio: ["pipe", "pipe", "pipe"], env: childEnv })
     } catch (e) { return reject(new Error("gak bisa spawn: " + e.message)) }
     let buf = ""
     let settled = false
@@ -140,8 +143,13 @@ export async function mcpAddServer(name, cfg) {
   if (!name || !/^[a-z0-9_-]{2,20}$/i.test(name)) throw new Error("nama server 2-20 huruf (a-z, 0-9, -, _)")
   if (cfg.type === "http") {
     if (!/^https?:\/\//i.test(cfg.url || "")) throw new Error("URL http/https wajib")
+    if (cfg.headers !== undefined && (typeof cfg.headers !== "object" || Array.isArray(cfg.headers))) throw new Error("headers harus objek key:value")
   } else if (cfg.type === "stdio") {
     if (!cfg.command) throw new Error("command wajib buat stdio")
+    if (cfg.env !== undefined) {
+      if (typeof cfg.env !== "object" || Array.isArray(cfg.env)) throw new Error("env harus objek KEY:value")
+      for (const [k, v] of Object.entries(cfg.env)) if (typeof v !== "string" && typeof v !== "number") throw new Error("env " + k + " harus string")
+    }
   } else throw new Error("type harus http atau stdio")
   const db = getDatabase()
   const servers = await getMcpServers()
@@ -149,6 +157,40 @@ export async function mcpAddServer(name, cfg) {
   await db.setting("mcpServers", servers)
   toolCache.delete(name)
   return servers[name]
+}
+// set/hapus satu env var server stdio (value kosong = hapus). Nilai env TIDAK
+// PERNAH dikirim balik ke chat — cuma nama key (redact token).
+export async function mcpSetEnv(name, key, value) {
+  if (!key || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) throw new Error("nama env gak valid (huruf/angka/underscore)")
+  const db = getDatabase()
+  const servers = await getMcpServers()
+  const srv = servers[name]
+  if (!srv) throw new Error(`server "${name}" gak ada`)
+  if (srv.type !== "stdio") throw new Error(`server "${name}" bukan stdio (env cuma buat server stdio)`)
+  if (!srv.env) srv.env = {}
+  if (value === undefined || value === "") delete srv.env[key]
+  else srv.env[key] = String(value)
+  if (!Object.keys(srv.env).length) delete srv.env
+  await db.setting("mcpServers", servers)
+  toolCache.delete(name)
+  return value === undefined || value === "" ? `${key} dihapus` : `${key} disimpan`
+}
+// set/hapus satu header server http (value kosong = hapus) — buat token
+// Authorization Bearer PAT (GitHub MCP remote), apikey, dll.
+export async function mcpSetHeader(name, key, value) {
+  if (!key || !/^[A-Za-z-]+$/.test(key)) throw new Error("nama header gak valid (huruf/tanda hubung)")
+  const db = getDatabase()
+  const servers = await getMcpServers()
+  const srv = servers[name]
+  if (!srv) throw new Error(`server "${name}" gak ada`)
+  if (srv.type !== "http") throw new Error(`server "${name}" bukan http (header cuma buat server http)`)
+  if (!srv.headers) srv.headers = {}
+  if (value === undefined || value === "") delete srv.headers[key]
+  else srv.headers[key] = String(value)
+  if (!Object.keys(srv.headers).length) delete srv.headers
+  await db.setting("mcpServers", servers)
+  toolCache.delete(name)
+  return value === undefined || value === "" ? `${key} dihapus` : `${key} disimpan`
 }
 export async function mcpRemoveServer(name) {
   const db = getDatabase()

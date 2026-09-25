@@ -233,6 +233,69 @@ console.log("\n— section 6: gate izin per file —");
   t("6f. path diblokir gak minta izin (langsung ERROR jail)", asked.length === 0 && fs.readFileSync(path.join(ws, ".env"), "utf8") === "SECRET=1", asked);
 }
 
+// ═══ SECTION 7: aksi MCP (request owner 25 Sep 2026 — server MCP via .mcp
+// kebaca ocode juga: prompt dinamis + aksi mcp + hasil jadi konteks) ═══
+{
+  console.log("\n— section 7: aksi mcp —");
+  const calls = [];
+  let sysSeen = "";
+  agent._setOcodeMcpForTest({
+    call: async (server, tool, args) => {
+      calls.push({ server, tool, args });
+      if (server === "docs" && tool === "caridok") return "Baileys sendMessage signature: (jid, content, options)";
+      throw new Error("server gak ada");
+    },
+    tools: [
+      { server: "docs", tool: "caridok", desc: "cari dokumentasi library" },
+      { server: "memory", tool: "recall", desc: "inget konteks tugas lama" },
+    ],
+  });
+  // 7a: daftar tool MCP ke-inject ke system prompt
+  let hasilAksiSeen = "";
+  agent._setOcodeChatForTest(mkChat([
+    (cfg) => { sysSeen = cfg.messages[0].content; return wrap('{"action":"mcp","server":"docs","tool":"caridok","args":{"libraryName":"baileys"}}'); },
+    (cfg) => { hasilAksiSeen = cfg.messages[cfg.messages.length - 1].content; return wrap('{"action":"done","summary":"dokumentasi baileys udah kebaca.","files":[]}'); },
+  ]));
+  calls.length = 0;
+  r = await agent.runOcodeAgent({ task: "cek cara pakai sendMessage baileys" });
+  t("7a. tool MCP ke-inject ke system prompt", /mcp\.docs\.caridok/.test(sysSeen) && /TOOL MCP TERPASANG/.test(sysSeen), sysSeen.slice(-200));
+  t("7b. aksi mcp jalan — server+tool+args nyampe", calls.length === 1 && calls[0].server === "docs" && calls[0].tool === "caridok" && calls[0].args?.libraryName === "baileys", calls);
+  t("7c. hasil tool MCP dibalikin ke model (loop lanjut)", r.iterations === 2 && /baileys/.test(r.summary || ""), { iter: r.iterations, sum: r.summary });
+  t("7d. hasil mcp jadi konteks di pesan HASIL AKSI", /MCP docs\.caridok OK/.test(hasilAksiSeen) && /sendMessage signature/.test(hasilAksiSeen), hasilAksiSeen.slice(0, 160));
+
+  // 7e: server gak ada → ERROR jujur, agent gak mati
+  agent._setOcodeChatForTest(mkChat([
+    wrap('{"action":"mcp","server":"hantu","tool":"x","args":{}}'),
+    wrap('{"action":"done","summary":"selesai.","files":[]}'),
+  ]));
+  r = await agent.runOcodeAgent({ task: "tes server hantu" });
+  t("7e. server MCP gak ada → error jujur, loop tetap lanjut", !r.error && r.iterations === 2, { err: r.error, iter: r.iterations });
+
+  // 7f: field mcp gak lengkap → ERROR informatif
+  agent._setOcodeChatForTest(mkChat([
+    wrap('{"action":"mcp","server":"docs"}'),
+    wrap('{"action":"done","summary":"ok","files":[]}'),
+  ]));
+  r = await agent.runOcodeAgent({ task: "tes mcp rusak" });
+  t("7f. aksi mcp tanpa tool → ERROR field", !r.error && r.iterations === 2, r.error);
+
+  // 7g: TANPA server MCP terpasang → prompt TANPA blok TOOL MCP
+  agent._setOcodeMcpForTest({ call: null, tools: [] });
+  sysSeen = "";
+  agent._setOcodeChatForTest(mkChat([
+    (cfg) => { sysSeen = cfg.messages[0].content; return wrap('{"action":"done","summary":"done aja.","files":[]}'); },
+  ]));
+  r = await agent.runOcodeAgent({ task: "tanpa mcp" });
+  t("7g. tanpa server MCP → prompt polos tanpa blok TOOL", !/TOOL MCP TERPASANG/.test(sysSeen), sysSeen.slice(-100));
+
+  // 7h: default (seam gak dipasang, db belum init) → gak crash, tools []
+  agent._resetOcodeForTest();
+  agent._setOcodePathsForTest({ root: ws, backupDir: bk });
+  agent._setOcodeChatForTest(mkChat([wrap('{"action":"done","summary":"default ok.","files":[]}')]));
+  r = await agent.runOcodeAgent({ task: "default tanpa seam" });
+  t("7h. default mcp (db belum init) gak crash", !r.error, r.error);
+}
+
 agent._resetOcodeForTest();
 try { fs.rmSync(ws, { recursive: true, force: true }); } catch {}
 console.log("\n===== " + pass + " PASS, " + fail + " FAIL =====");
