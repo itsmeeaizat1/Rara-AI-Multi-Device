@@ -2613,6 +2613,15 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Format notif: judul + perusahaan + lokasi + tipe + tanggal dibuka + link LinkedIn.
 - E2E baru: `test/loker-id-e2e` 13/13.
 
+## v24.4.1 — AGENT GATE AKSES COMMAND (25 Sep 2026)
+
+- **REQUEST OWNER:** user boleh akses AI agent, tapi agent cuma boleh jalanin command yang user itu berhak pakai — fitur owner-only ditolak jujur ("harus owner"), bukan dijalankan diam-diam.
+- **GATE `gateCommandAccess(cmd, m)` (plugins/ai/agent.js):** sebelum executor `command` nembak messageHandler, flag plugin di-lookup via `getPlugin()` (nova-plugins registry, alias ikut) — `isOwner`/`isPremium`/`isPartner` di cek ke `m.isOwner`/`m.isPremium`/`m.isPartner`. Ditolak → `{ok:false, msg: ".x itu fitur OWNER-ONLY — minta ke owner"}` dan planner menyampaikan apa adanya. SEBELUMNYA: middleware nolak senyap tapi executor balikin "Perintah dijalankan" → agent bohong sukses.
+- **ATURAN PLANNER (nova-agent.js SYS_PLAN "ATURAN HAK AKSES"):** penolakan dikasih tahu ke user, gak boleh dijanjiin sukses, gak boleh diulangin nyoba command yang sama.
+- **ANTI-LOOP EXTRA:** manggil agent dari dalam agent kini blok `agent`+`aisuperagent`+`novaagent` (sebelumnya cuma `agent`, nama utama lolos → risiko rekursi).
+- **PLUGIN `.aisuperagent` TETAP SEMUA USER** (isOwner:false, isPremium:false) — energi/cooldown middleware tetap jalan; aksi grup (kick/promote/leave/bikin fitur) udah punya gate `m.isOwner`/admin sendiri dari sebelumnya.
+- **E2E:** BARU `test/agent-access-e2e` 20/20 (gate owner/premium/partner × user/premium/owner, alias, command bebas, command nyata .bootdoctor/.sticker dari registry asli via loadPlugins, wiring source). Regresi agent 115/115 + agentloop 40/40 + autotask 31/31 + formatguard 22/22.
+
 ## v24.4.0 — AGENT SKILLS: 183 SKILL SPESIALIS (25 Sep 2026)
 
 - **Sumber:** wshobson/agents (spec Anthropic Agent Skills) — 183 skill di `skills/<nama>/SKILL.md` (425 file, 3.2MB) dipindah ke repo; index tipis `src/data/skills-index.json` (nama + deskripsi) di-generate `test/agent-skills-e2e/generate.mjs`.
