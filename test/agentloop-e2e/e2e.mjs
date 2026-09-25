@@ -205,7 +205,7 @@ console.log("— section 6: usage tanpa argumen —");
 I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   replies = [];
   await handler(mkM({ text: "" }), { sock, db: getDatabase(), config: cfg });
-  t("6a. usage novaGuide keluar", replies.length === 1 && /✦/.test(replies[0]), replies[0]?.slice(0, 60));
+  t("6a. usage desain V2 keluar (✧ kaomoji)", replies.length === 1 && /✧/.test(replies[0]) && /ᴀɢᴇɴᴛʟᴏᴏᴘ/.test(replies[0]), replies[0]?.slice(0, 60));
   t("6b. usage nunjukin bedanya sama autotask", /ᴀᴜᴛᴏᴛᴀꜱᴋ|autotask/i.test(replies[0]), replies[0]?.includes("autotask"));
 
   // tugas kependekan

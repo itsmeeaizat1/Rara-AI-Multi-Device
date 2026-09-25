@@ -32,6 +32,7 @@ import { novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { runAgent } from "../../src/lib/nova-agent.js";
 import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
+import { skillsBlock } from "../../src/lib/nova-askills.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -191,8 +192,9 @@ async function runIteration(run) {
   // 🔹 MEMORY LAYER: fakta durabel user (nova-memory.js — store sama kayak
   // .novaai/.novaagent) di-inject ke prompt putaran biar loop inget owner
   const memLine = run.sender ? memoryBlock(getDatabase(), run.sender, run.plan.goal) : "";
+  const skillLine = skillsBlock(run.plan.goal);
   const prompt =
-    `${memLine}${memLine ? "\n" : ""}Tugas induk: "${run.plan.goal}"\n` +
+    `${memLine}${memLine ? "\n" : ""}${skillLine}${skillLine ? "\n" : ""}Tugas induk: "${run.plan.goal}"\n` +
     `Kriteria sukses: ${run.plan.criteria}\n` +
     `Hasil putaran sebelumnya (jangan ulangi kerja yang sama, isi celah yang kurang):\n${scratchpadOf(run)}\n\n` +
     `Kerjakan SAAT INI instruksi berikut: "${instruction}"\n` +

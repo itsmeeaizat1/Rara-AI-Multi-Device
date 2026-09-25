@@ -736,8 +736,8 @@ w("\n— plugin: no-arg → usage —");
   };
   await agHandler(m, { sock: {} });
   const u = sent[0] || "";
-  check("header ✦ agent ✦", u.includes(`「 ✦ ${toSC("AGENT")} ✦ 」`));
-  check("cara pakai smallcaps", u.includes(toSC("Cara Pakai")));
+  check("header ✧ agent ✧ (desain V2)", u.includes(`「✧ ${toSC("AGENT")} ✧」`));
+  check("kaomoji + baris contoh 📍 (desain V2)", /\(๑ᵔ⤙ᵔ๑\)♡/.test(u) && u.includes(toSC("Contoh")));
   check("contoh verbatim", u.includes(".agent <tugas apa pun>"));
   check("pluginConfig benar", agConfig.name === "aisuperagent" && agConfig.category === "ai" && agConfig.isEnabled); // rename 460f28f1
 }
