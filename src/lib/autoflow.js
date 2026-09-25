@@ -5,6 +5,8 @@
 import { foldHistory, appendTurn, clearSession, clearSessionPrefix } from "./nova-ai-session.js";
 import fs from "fs";
 import { askAI } from "./aiagent.js";
+import { memoryBlock, extractMemories } from "./nova-memory.js";
+import { getDatabase } from "./nova-database.js";
 
 const DB = "./src/data/autoflow.json";
 const cooldown = new Map();
@@ -188,11 +190,19 @@ async function execute(conn, m, rule, extra = {}) {
         const memKey = `agent:${user || "anon"}`;
         const ctx = foldHistory(memKey, { userName: senderName });
 
+        // 🔹 MEMORY JANGKA PANJANG (upgrade #2, owner 25 Sep 2026: "autonovaagent
+        // juga harusnya punya memory jangka panjang krna itu ai otomatis") —
+        // fakta durabel user (nova-memory.js, STORE SAMA dengan .novaai/
+        // .novaagent) di-inject ke prompt + diekstrak ulang tiap jawaban.
+        // Rule aichat = AI OTOMATIS — dia wajib inget user kayak agent manual.
+        let memSys = "";
+        try { memSys = memoryBlock(getDatabase(), user, userText); } catch {}
         try {
-          const aiReply = await askAI(persona + (ctx ? "\n\n" + ctx : ""), userText);
+          const aiReply = await askAI(persona + (ctx ? "\n\n" + ctx : "") + memSys, userText);
           if (aiReply?.trim()) {
             await send({ text: aiReply.trim() });
             appendTurn(memKey, userText, aiReply.trim());
+            try { extractMemories(getDatabase(), user, userText, aiReply.trim()).catch(() => {}); } catch {}
           }
         } catch (e) {
           console.log(`[AutoFlow] aichat gagal: ${e.message}`);

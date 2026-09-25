@@ -12,6 +12,7 @@
 import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
+import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
@@ -737,6 +738,10 @@ async function handler(m, { sock, db, deps } = {}) {
       execTools: executors,
       toolbox,
       history: getAgentHistory(db, m.chat),
+      // 🔹 MEMORY LAYER: fakta durabel tentang user (store sama dengan .novaai/
+      // .novaagent) — biar superagent juga inget user antar sesi (owner 25 Sep:
+      // "harusnya nyambung ke dua ai agent novaagent dan aisuperagent")
+      memBlock: memoryBlock(db, m.sender, task),
       context: {
         isGroup: m.isGroup !== false,
         isAdmin: !!m.isAdmin,
@@ -766,6 +771,9 @@ async function handler(m, { sock, db, deps } = {}) {
 
     // inget jejak percakapan (biar .agent ingat percakapan sebelumnya)
     saveAgentMemory(db, m.chat, task, res.mode, res.answer);
+    // 🔹 auto-ekstrak fakta durabel baru dari tugas+jawaban ini (fire-and-forget,
+    // gak nge-block pengiriman; hormatin toggle .memory on/off per user)
+    try { extractMemories(db, m.sender, task, res.answer).catch(() => {}); } catch {}
 
     // jawaban final di-EDIT ke pesan status (revisi owner: cukup 1 chat);
     // VN tetap dikirim pesan baru (audio gak bisa di-edit dari teks)

@@ -25,6 +25,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaBox } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { runAgent } from "../../src/lib/nova-agent.js";
+import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -57,6 +58,7 @@ const running = new Set(); // id yang loop-nya lagi hidup di proses ini
 // seams buat e2e
 let _planner = null;   // override pembuat tahapan
 let _stageRunner = null; // override eksekusi tahap
+let _extractor = null; // override ekstraksi memori (nova-memory.js)
 
 // ────────────────────────────────────────────────────────────────────────────
 // STORE
@@ -160,8 +162,11 @@ async function runStage(task, stageIdx) {
       return null;
     } catch { return null; }
   };
+  // 🔹 MEMORY LAYER: fakta durabel user (nova-memory.js — store sama kayak
+  // .novaai/.novaagent) di-inject ke prompt tahap biar tugas inget owner
+  const memLine = task.sender ? memoryBlock(getDatabase(), task.sender, task.task) : "";
   const prompt =
-    `Tugas induk: "${task.task}"\n` +
+    `${memLine}${memLine ? "\n" : ""}Tugas induk: "${task.task}"\n` +
     `Konteks hasil tahap sebelumnya: ${stageContext(task, stageIdx)}\n\n` +
     `Kerjakan SAAT INI tahap "${stage.title}": ${stage.instruction}\n` +
     `Balas HASIT tahap ini saja — ringkas, faktual, berbasis data nyata ` +
@@ -209,6 +214,11 @@ async function runTaskLoop(sock, id) {
       const stage = task.stages[idx];
       stage.result = ok ? ok.slice(0, STAGE_RESULT_CAP) : null;
       stage.status = ok ? "done" : "failed";
+      // 🔹 auto-ekstrak fakta durabel baru (fire-and-forget, hormatin .memory off)
+      if (ok) {
+        const doExtract = _extractor !== null ? _extractor : extractMemories;
+        try { Promise.resolve(doExtract(getDatabase(), task.sender, stage.instruction, ok)).catch(() => {}); } catch {}
+      }
       stage.finishedAt = Date.now();
       task.reports.push({
         title: stage.title, ok: !!ok, at: Date.now(),
@@ -414,6 +424,7 @@ async function handler(m, { sock, db: _db, config: botConfig }) {
   st.tasks[id] = {
     id,
     task: taskText,
+    sender: m.sender || null, // buat memory layer (nova-memory.js per-user)
     stages: stages.map((s) => ({ ...s, status: "pending", result: null, finishedAt: null })),
     status: "running",
     cur: 0,
@@ -444,7 +455,8 @@ export function _autotaskInternalsForTest() {
     dmOwner, ownerJid, statusLine,
     setPlanner: (fn) => { _planner = fn; },
     setStageRunner: (fn) => { _stageRunner = fn; },
-    resetSeams: () => { _planner = null; _stageRunner = null; },
+    setExtractor: (fn) => { _extractor = fn; },
+    resetSeams: () => { _planner = null; _stageRunner = null; _extractor = null; },
   };
 }
 
