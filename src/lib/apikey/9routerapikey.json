@@ -1,0 +1,71 @@
+{
+  "_catatan": "Konfigurasi APIKEY 9Router LOKAL (native). Bagian 'gateway.apikey' diisi OTOMATIS oleh bot (jangan diubah manual). Bagian 'providers' diisi owner untuk model berbayar / provider yang butuh apikey — key di sini otomatis di-sync ke 9Router lokal saat bot boot / .ai9 sync. Dashboard 9Router: http://127.0.0.1:20128/dashboard",
+  "gateway": {
+    "apikey": ""
+  },
+  "providers": [
+    {
+      "provider": "glm",
+      "label": "GLM / Zhipu",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "kimi",
+      "label": "Moonshot Kimi",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "minimax",
+      "label": "MiniMax",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "openrouter",
+      "label": "OpenRouter",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "groq",
+      "label": "Groq",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "openai",
+      "label": "OpenAI",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "anthropic",
+      "label": "Anthropic Claude",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "gemini",
+      "label": "Google Gemini",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    },
+    {
+      "provider": "deepseek",
+      "label": "DeepSeek",
+      "apikey": "",
+      "model": "",
+      "aktif": true
+    }
+  ]
+}

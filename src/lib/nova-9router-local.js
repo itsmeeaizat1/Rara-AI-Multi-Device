@@ -1,0 +1,416 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// nova-9router-local.js — 9ROUTER LOKAL NATIVE (v1)
+//
+// 9Router (npm: 9router) jalan BENERAN di Node.js bareng bot ini:
+//   1. Boot bot → ensure9RouterRunning() spawn `node_modules/9router/cli.js`
+//      headless di 127.0.0.1:20128 (run bareng, satu mesin, satu dependensi).
+//   2. Self-heal sql-wasm.wasm: npm publish 9router nyabut file wasm dari
+//      sql.js NESTED (node_modules/9router/app/node_modules/sql.js/dist).
+//      Bot pasang sql.js sebagai dependensi sendiri (gak di-strip) lalu
+//      copy wasm-nya ke path bundled — tanpa ini semua query DB 9router 500
+//      ("No SQLite driver available").
+//   3. Gateway key: otomatis dibikin via API manajemen internal 9router
+//      (POST /api/keys, auth x-9r-cli-token dari ~/.9router) lalu disimpan
+//      ke src/lib/apikey/9routerapikey.json (gateway.apikey).
+//   4. Provider key berbayar/butuh apikey: owner isi di 9routerapikey.json
+//      (providers[]), bot sync ke 9router (POST /api/providers) saat boot /
+//      .ai9 sync — key gak pernah keluar dari server sendiri.
+//   5. Chat: OpenAI SDK → http://127.0.0.1:20128/v1/chat/completions.
+//      TANPA FALLBACK ke AI API lain (nexai/ikyy/zhipu/dll) — kalau 9router
+//      bermasalah, bot jawab jujur. 747 model hidup via /v1/models.
+//
+// GOTCHA (pelajaran sandbox 25 Sep): server Next-nya 9router ganti process
+// title jadi "next-server" — pkill pola "9router" GAK nembak dia; bunuh via
+// pemilik port. Token CLI = sha256(machine-id + "9r-cli-auth" + cli-secret)
+// hex[0:16] — file di ~/.9router/{machine-id, auth/cli-secret}.
+
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import os from "node:os";
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import OpenAI from "openai";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+export const ROUTER9_REPO_ROOT = path.resolve(__dirname, "..", "..");
+
+// ── konfigurasi (env bisa dioverride — dipakai e2e buat arahin ke mock) ──
+export function getRouter9Port() {
+  return Number(process.env.ROUTER9_PORT || 20128);
+}
+export function getRouter9Base() {
+  return (process.env.ROUTER9_URL || `http://127.0.0.1:${getRouter9Port()}`).replace(/\/+$/, "");
+}
+function getRouter9ConfigPath() {
+  return process.env.ROUTER9_CONFIG || path.join(ROUTER9_REPO_ROOT, "src", "lib", "apikey", "9routerapikey.json");
+}
+function getRouter9DataDir() {
+  return process.env.ROUTER9_DATA_DIR || path.join(os.homedir(), ".9router");
+}
+export const ROUTER9_DEFAULT_MODEL = process.env.ROUTER9_DEFAULT_MODEL || "alicode-intl/glm-4.7";
+
+// ── state runtime ──
+const _state = {
+  child: null,          // proses cli.js yang kita spawn (bisa null kalau 9router hidup duluan)
+  upSince: 0,           // kapan terakhir dipastikan hidup
+  startingPromise: null,// single-flight: gak spawn dobel (skill 5.4)
+  stats: { requests: 0, ok: 0, fail: 0, lastLatencyMs: null, lastError: null, lastModel: null },
+};
+
+export function router9Stats() {
+  return { ..._state.stats, upSince: _state.upSince || null };
+}
+
+// ── http kecil tanpa dependensi tambahan ──
+async function httpJson(url, { method = "GET", headers = {}, body = null, timeoutMs = 8000 } = {}) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      method, headers: body ? { "Content-Type": "application/json", ...headers } : headers,
+      body: body ? JSON.stringify(body) : undefined,
+      signal: ctrl.signal,
+    });
+    const text = await res.text();
+    let json = null;
+    try { json = JSON.parse(text); } catch { /* body bukan json — biarkan null */ }
+    return { ok: res.ok, status: res.status, json, text: json ? undefined : text.slice(0, 500) };
+  } catch (e) {
+    return { ok: false, status: 0, json: null, error: e?.name === "AbortError" ? "timeout" : (e?.code || e?.message) };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// ── health & spawn ──
+export async function router9IsUp({ force = false } = {}) {
+  if (!force && _state.upSince && Date.now() - _state.upSince < 3000) return true; // cache 3 dtk
+  const r = await httpJson(`${getRouter9Base()}/api/health`, { timeoutMs: 3000 });
+  if (r.ok) { _state.upSince = Date.now(); return true; }
+  _state.upSince = 0;
+  return false;
+}
+
+// Self-heal: copy sql-wasm.wasm dari sql.js dependensi bot → bundled 9router.
+// npm publish 9router strip wasm nested; tanpa wasm semua akses DB 500.
+function healSqlWasm() {
+  try {
+    const bundledDir = path.join(ROUTER9_REPO_ROOT, "node_modules", "9router", "app", "node_modules", "sql.js", "dist");
+    const bundled = path.join(bundledDir, "sql-wasm.wasm");
+    if (fs.existsSync(bundled)) return true;
+    const ours = path.join(ROUTER9_REPO_ROOT, "node_modules", "sql.js", "dist", "sql-wasm.wasm");
+    if (!fs.existsSync(ours)) return false;
+    fs.mkdirSync(bundledDir, { recursive: true });
+    fs.copyFileSync(ours, bundled);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function ensure9RouterRunning({ waitMs = 30000, log = () => {} } = {}) {
+  if (await router9IsUp({ force: true })) return { up: true, spawned: false };
+  if (_state.startingPromise) return _state.startingPromise; // single-flight
+
+  // mode tanpa-spawn: 9router dikelola terpisah (systemd) / keperluan tes
+  if (process.env.ROUTER9_NO_SPAWN === "1") {
+    return { up: false, spawned: false, error: "spawn dinonaktifkan (ROUTER9_NO_SPAWN=1) — 9router dianggap dikelola terpisah" };
+  }
+
+  _state.startingPromise = (async () => {
+    const cliJs = path.join(ROUTER9_REPO_ROOT, "node_modules", "9router", "cli.js");
+    if (!fs.existsSync(cliJs)) {
+      return { up: false, spawned: false, error: "paket 9router belum terpasang — jalankan npm install" };
+    }
+    healSqlWasm(); // sebelum spawn biar server pertama langsung dapet db sehat
+
+    const port = getRouter9Port();
+    const logDir = path.join(ROUTER9_REPO_ROOT, "logs");
+    try { fs.mkdirSync(logDir, { recursive: true }); } catch { /* best effort */ }
+    const out = (() => {
+      try { return fs.openSync(path.join(logDir, "9router-local.log"), "a"); } catch { return "ignore"; }
+    })();
+    try {
+      _state.child = spawn(process.execPath, [
+        cliJs, "-p", String(port), "-H", "127.0.0.1", "-n", "--skip-update",
+      ], { detached: true, stdio: ["ignore", out, out], env: { ...process.env }, cwd: ROUTER9_REPO_ROOT });
+      _state.child.unref();
+    } catch (e) {
+      _state.child = null;
+      return { up: false, spawned: true, error: `gagal spawn 9router: ${e?.message || e}` };
+    }
+
+    const deadline = Date.now() + waitMs;
+    while (Date.now() < deadline) {
+      await new Promise(r => setTimeout(r, 600));
+      if (await router9IsUp({ force: true })) {
+        log(`[9router-lokal] hidup di ${getRouter9Base()} (port ${port})`);
+        return { up: true, spawned: true };
+      }
+    }
+    return { up: false, spawned: true, error: `9router belum juga hidup setelah ${waitMs}ms — cek logs/9router-local.log` };
+  })();
+
+  try {
+    return await _state.startingPromise;
+  } finally {
+    _state.startingPromise = null;
+  }
+}
+
+// ── token manajemen internal 9router ──
+export function getRouter9CliToken() {
+  if (process.env.ROUTER9_CLI_TOKEN) return process.env.ROUTER9_CLI_TOKEN;
+  try {
+    const dir = getRouter9DataDir();
+    const mid = fs.readFileSync(path.join(dir, "machine-id"), "utf8").trim();
+    const secret = fs.readFileSync(path.join(dir, "auth", "cli-secret"), "utf8").trim();
+    if (!mid || !secret) return "";
+    return crypto.createHash("sha256").update(mid + "9r-cli-auth" + secret).digest("hex").slice(0, 16);
+  } catch {
+    return "";
+  }
+}
+
+async function mgmtApi(method, apiPath, body = null) {
+  const token = getRouter9CliToken();
+  return httpJson(`${getRouter9Base()}${apiPath}`, {
+    method, body,
+    headers: token ? { "x-9r-cli-token": token } : {},
+    timeoutMs: 15000,
+  });
+}
+
+// ── konfigurasi apikey (src/lib/apikey/9routerapikey.json) ──
+function readRouter9Config() {
+  try {
+    return JSON.parse(fs.readFileSync(getRouter9ConfigPath(), "utf8"));
+  } catch {
+    return { gateway: { apikey: "" }, providers: [] };
+  }
+}
+function writeRouter9Config(cfg) {
+  const p = getRouter9ConfigPath();
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  fs.writeFileSync(p, JSON.stringify(cfg, null, 2) + "\n");
+}
+
+// Gateway key: otomatis dibikin kalau belum ada — user gak perlu buka dashboard
+// cuma buat copy key. Disimpan balik ke 9routerapikey.json biar persist.
+export async function ensureRouter9GatewayKey({ create = true } = {}) {
+  const cfg = readRouter9Config();
+  const existing = cfg?.gateway?.apikey?.trim();
+  if (existing) return existing;
+  if (!create) return "";
+  const r = await mgmtApi("POST", "/api/keys", { name: "nova-bot" });
+  const key = r.ok && r.json?.key;
+  if (!key) throw new Error(`gagal bikin gateway key 9router (HTTP ${r.status}) — cek .ai9 status`);
+  cfg.gateway = { ...(cfg.gateway || {}), apikey: key };
+  writeRouter9Config(cfg);
+  return key;
+}
+
+// Sync provider key berbayar dari 9routerapikey.json → 9Router lokal.
+// Skip yang kosong / gak aktif; skip yang udah ada (dedupe by name) biar gak dobel.
+export async function syncRouter9ProviderKeys() {
+  const cfg = readRouter9Config();
+  const entries = (cfg?.providers || []).filter(p => p?.apikey?.trim() && p.aktif !== false);
+  if (!entries.length) return { synced: 0, skipped: 0, errors: [] };
+
+  const list = await mgmtApi("GET", "/api/providers");
+  const existing = new Set((list.json?.connections || []).map(c => c?.name).filter(Boolean));
+  const errors = [];
+  let synced = 0, skipped = 0;
+
+  for (const p of entries) {
+    const name = p.label || p.provider;
+    if (existing.has(name)) { skipped++; continue; }
+    const r = await mgmtApi("POST", "/api/providers", {
+      provider: p.provider, name,
+      apiKey: p.apikey.trim(),
+      ...(p.model ? { defaultModel: p.model } : {}),
+    });
+    if (r.ok && r.json?.connection) synced++;
+    else errors.push(`${name}: HTTP ${r.status}${r.json?.error ? ` (${r.json.error})` : ""}`);
+  }
+  return { synced, skipped, errors };
+}
+
+// ── katalog model LIVE dari 9router (747 model) ──
+export async function router9Models() {
+  // /v1/models butuh Bearer gateway key (sejak 9router bikin key pertama)
+  let key = "";
+  try { key = await ensureRouter9GatewayKey(); } catch { /* belum ada → biar 401 jujur */ }
+  const r = await httpJson(`${getRouter9Base()}/v1/models`, {
+    timeoutMs: 10000,
+    headers: key ? { Authorization: `Bearer ${key}` } : {},
+  });
+  if (!r.ok || !Array.isArray(r.json?.data)) {
+    throw new Error(`gagal ambil daftar model 9router (HTTP ${r.status || "gak kejangkau"})`);
+  }
+  return r.json.data.map(m => ({
+    id: m.id,
+    owner: m.owned_by || m.id.split("/")[0],
+    vision: Boolean(m.capabilities?.vision),
+    imageOutput: Boolean(m.capabilities?.imageOutput),
+    reasoning: Boolean(m.capabilities?.reasoning),
+    tools: Boolean(m.capabilities?.tools),
+    search: Boolean(m.capabilities?.search),
+    ctx: m.capabilities?.contextWindow || null,
+    maxOut: m.capabilities?.maxOutput || null,
+  }));
+}
+
+export async function router9FindModel(id) {
+  if (!id) return null;
+  const needle = id.toLowerCase();
+  const all = await router9Models();
+  return all.find(m => m.id.toLowerCase() === needle)
+    || all.find(m => m.id.toLowerCase().endsWith("/" + needle))
+    || null;
+}
+
+// Model yang bisa BIKIN gambar (imageOutput) — dipakai .9router gambar
+export async function router9ImageModels() {
+  const all = await router9Models();
+  return all.filter(m => m.imageOutput);
+}
+
+// Model yang bisa BACA gambar (vision) — dipakai jalur multimodal .9router
+export async function router9VisionModels() {
+  const all = await router9Models();
+  return all.filter(m => m.vision);
+}
+
+// ── IMAGE GENERATION via /v1/images/generations (native 9router) ──
+// Catatan: pool gratis gak punya model imageOutput — fitur gambar butuh
+// koneksi provider image (poe:nano-banana / nvidia:flux / openai dall-e).
+export async function router9ImageGen({ model, prompt, n = 1, size = "1024x1024", timeoutMs = 180000 } = {}) {
+  if (!prompt?.trim()) throw new Error("prompt gambar kosong");
+  const up = await ensure9RouterRunning();
+  if (!up.up) throw new Error(`9Router lokal belum jalan${up.error ? ` — ${up.error}` : ""}. Coba lagi atau .9router status`);
+  const key = await ensureRouter9GatewayKey();
+  const client = new OpenAI({ baseURL: `${getRouter9Base()}/v1`, apiKey: key, timeout: timeoutMs, maxRetries: 0 });
+  try {
+    const res = await client.images.generate({
+      model: model || undefined, // kosong → 9router pilih default image model
+      prompt: prompt.trim(),
+      n, size,
+    });
+    const d = res?.data?.[0];
+    if (!d) throw new Error("9router gak balas data gambar");
+    return { b64: d.b64_json || null, url: d.url || null, model: model || "default" };
+  } catch (e) {
+    const raw = String(e?.error?.message || e?.message || "");
+    if (e?.status === 404 || /no active credentials|no credentials/i.test(raw)) {
+      throw new Error("belum ada provider image-gen yang aktif di 9Router (mis. poe:nano-banana / nvidia:flux / openai dall-e) — isi key di src/lib/apikey/9routerapikey.json lalu .9router sync");
+    }
+    if (e?.status === 401 || e?.status === 403) throw new Error("gateway key 9router ditolak — cek gateway.apikey di 9routerapikey.json");
+    if (e?.status === 429) throw new Error("9router kena rate limit — tunggu sebentar");
+    throw new Error(raw || "gagal generate gambar via 9router");
+  }
+}
+
+// ── CHAT — jantung 9router lokal. TANPA FALLBACK ke API AI lain. ──
+export async function router9Chat({
+  model, system, user, history = [], maxTokens = 1024, temperature = 0.7,
+  timeoutMs = 120000, apiKey = null,
+} = {}) {
+  const t0 = Date.now();
+  _state.stats.requests++;
+
+  const up = await ensure9RouterRunning();
+  if (!up.up) {
+    _state.stats.fail++;
+    _state.stats.lastError = up.error || "9router mati";
+    throw new Error(`9Router lokal belum jalan${up.error ? ` — ${up.error}` : ""}. Coba lagi atau .ai9 status`);
+  }
+
+  let key = apiKey;
+  if (!key) {
+    try { key = await ensureRouter9GatewayKey(); }
+    catch (e) { _state.stats.fail++; _state.stats.lastError = e.message; throw e; }
+  }
+
+  const messages = [];
+  if (system) messages.push({ role: "system", content: system });
+  for (const h of history) messages.push(h);
+  // user: string ATAU array multimodal [{type:"text"},{type:"image_url",...}] (vision)
+  if (user) messages.push({ role: "user", content: user });
+
+  const client = new OpenAI({
+    baseURL: `${getRouter9Base()}/v1`,
+    apiKey: key,
+    timeout: timeoutMs,
+    maxRetries: 0, // jujur & cepat gagal — gak nyamar sukses lewat retry panjang
+  });
+
+  try {
+    const res = await client.chat.completions.create({
+      model: model || ROUTER9_DEFAULT_MODEL,
+      messages,
+      max_tokens: maxTokens,
+      temperature,
+    });
+    const text = res?.choices?.[0]?.message?.content || "";
+    if (!text.trim()) {
+      throw new Error("9router balas kosong — kemungkinan belum ada provider AI aktif. Buka dashboard 9router atau isi src/lib/apikey/9routerapikey.json lalu .ai9 sync");
+    }
+    const latencyMs = Date.now() - t0;
+    _state.stats.ok++;
+    _state.stats.lastLatencyMs = latencyMs;
+    _state.stats.lastModel = res?.model || model;
+    _state.stats.lastError = null;
+    return { text: text.trim(), model: res?.model || model, latencyMs };
+  } catch (e) {
+    const latencyMs = Date.now() - t0;
+    _state.stats.fail++;
+    const msg = mapRouter9Error(e, model);
+    _state.stats.lastError = msg;
+    _state.stats.lastLatencyMs = latencyMs;
+    const err = new Error(msg);
+    err.status = e?.status || 0;
+    throw err;
+  }
+}
+
+// Error mapping — selalu jujur, gak pernah "sukses palsu".
+function mapRouter9Error(e, model) {
+  const status = e?.status;
+  const raw = String(e?.error?.message || e?.message || "");
+  if (status === 401 || status === 403) return `gateway key 9router ditolak (${status}) — hapus gateway.apikey di 9routerapikey.json lalu restart`;
+  if (status === 404 && /no active credentials/i.test(raw)) {
+    return `belum ada provider aktif untuk model "${model}" — hubungkan provider di dashboard 9router (http://127.0.0.1:${getRouter9Port()}/dashboard) atau isi src/lib/apikey/9routerapikey.json lalu .ai9 sync`;
+  }
+  if (status === 404) return `model "${model}" gak ditemukan di 9Router — lihat .ai9 list`;
+  if (status === 429) return "9router kena rate limit — tunggu sebentar";
+  if (status === 402) return `provider untuk model "${model}" berbayar dan kuotanya gak cukup — cek dashboard 9router`;
+  if (status >= 500) return `9router error internal (HTTP ${status}) — cek logs/9router-local.log`;
+  if (e?.code === "ECONNREFUSED" || /fetch failed|networkerror/i.test(raw)) {
+    return "9router lokal gak kejangkau — pastikan jalan (.ai9 status)";
+  }
+  return raw || "9router gagal tanpa keterangan";
+}
+
+// ── boot hook (dipanggil schedulerInits index.js — idempotent) ──
+export async function initRouter9Boot({ log = console.log } = {}) {
+  try {
+    const up = await ensure9RouterRunning({ log });
+    if (!up.up) {
+      log(`[9router-lokal] ❌ belum jalan: ${up.error || "unknown"}`);
+      return { up: false };
+    }
+    let gateway = "";
+    try { gateway = await ensureRouter9GatewayKey(); } catch (e) { log(`[9router-lokal] ⚠️ ${e.message}`); }
+    const sync = await syncRouter9ProviderKeys().catch(e => ({ synced: 0, skipped: 0, errors: [e.message] }));
+    let modelCount = 0;
+    try { modelCount = (await router9Models()).length; } catch { /* katalog bisa telat */ }
+    log(`[9router-lokal] ✅ ${getRouter9Base()} • ${modelCount} model • gateway ${gateway ? "ok" : "belum"} • sync +${sync.synced} key`);
+    return { up: true, gateway, sync, modelCount };
+  } catch (e) {
+    log(`[9router-lokal] ❌ ${e?.message || e}`);
+    return { up: false, error: e?.message };
+  }
+}
