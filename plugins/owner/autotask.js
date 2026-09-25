@@ -26,6 +26,7 @@ import { novaBox } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { runAgent } from "../../src/lib/nova-agent.js";
 import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
+import { skillsBlock } from "../../src/lib/nova-askills.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -165,8 +166,9 @@ async function runStage(task, stageIdx) {
   // 🔹 MEMORY LAYER: fakta durabel user (nova-memory.js — store sama kayak
   // .novaai/.novaagent) di-inject ke prompt tahap biar tugas inget owner
   const memLine = task.sender ? memoryBlock(getDatabase(), task.sender, task.task) : "";
+  const skillLine = skillsBlock(task.task);
   const prompt =
-    `${memLine}${memLine ? "\n" : ""}Tugas induk: "${task.task}"\n` +
+    `${memLine}${memLine ? "\n" : ""}${skillLine}${skillLine ? "\n" : ""}Tugas induk: "${task.task}"\n` +
     `Konteks hasil tahap sebelumnya: ${stageContext(task, stageIdx)}\n\n` +
     `Kerjakan SAAT INI tahap "${stage.title}": ${stage.instruction}\n` +
     `Balas HASIT tahap ini saja — ringkas, faktual, berbasis data nyata ` +

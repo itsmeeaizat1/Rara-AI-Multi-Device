@@ -13,6 +13,7 @@ import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
 import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
+import { skillsBlock } from "../../src/lib/nova-askills.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { callImageGenChain } from "../../src/lib/nova-ai-service.js";
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
@@ -742,6 +743,7 @@ async function handler(m, { sock, db, deps } = {}) {
       // .novaagent) — biar superagent juga inget user antar sesi (owner 25 Sep:
       // "harusnya nyambung ke dua ai agent novaagent dan aisuperagent")
       memBlock: memoryBlock(db, m.sender, task),
+      skillBlock: skillsBlock(task),
       context: {
         isGroup: m.isGroup !== false,
         isAdmin: !!m.isAdmin,

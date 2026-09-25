@@ -2613,6 +2613,15 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Format notif: judul + perusahaan + lokasi + tipe + tanggal dibuka + link LinkedIn.
 - E2E baru: `test/loker-id-e2e` 13/13.
 
+## v24.4.0 — AGENT SKILLS: 183 SKILL SPESIALIS (25 Sep 2026)
+
+- **Sumber:** wshobson/agents (spec Anthropic Agent Skills) — 183 skill di `skills/<nama>/SKILL.md` (425 file, 3.2MB) dipindah ke repo; index tipis `src/data/skills-index.json` (nama + deskripsi) di-generate `test/agent-skills-e2e/generate.mjs`.
+- **PROGRESSIVE DISCLOSURE (`src/lib/nova-askills.js`):** teks tugas di-token match ke index (token nama bobot 3 / deskripsi 1, sinonim id→en, nama hyphen dipecah per kata) → top-3 skill relevan aja yang ISINYA di-inject ke prompt. Gak ada match → blok kosong, prompt gak bengkak.
+- **AUTO-INJECT 4 PINTU AI:** `.novaagent`/`.aisuperagent` (runAgent `skillBlock` di plan/act/compose), `.agentloop` (per putaran, match ke goal), `.autotask` (per tahap, match ke task). Tidak disentuh: aichat/autoflow (chat santai, gak perlu panduan teknis).
+- **PLUGIN `.skill` (owner, plugins/owner/skill.js, alias skills/agenskill):** `.skill list [kata]` daftar/filter 183 · `.skill <nama>` isi SKILL.md (cap 12k + splitChatChunks) · `.skill match <tugas>` preview skill apa yang bakal ke-inject + skor · `.skill count`.
+- **GOTCHA:** `nova-skills.js` SUDAH ADA (registry tool internal .novaagent — translate/wiki/currency, folder `src/skills/`) → lib baru WAJIB nama beda `nova-askills.js`; tabrakan nama bikin aiagent.js gagal import `awaitSkillPacks`.
+- **E2E:** BARU `test/agent-skills-e2e` 38/38 (index, tokenizer, disclosure, cap, sanitasi path, seam, plugin, hook). FIX asersi basi pre-existing V2: agent-e2e 115/115 (header ✧ + kaomoji), agentloop-e2e 40/40 (✧ bukan ✦). Regresi autotask 31/31 + formatguard 22/22 + plugins-import 14/14 + novaguide-v2 29/29.
+
 ## v24.3.0 — DESAIN USAGE V2 KAMOJI (25 Sep 2026)
 
 - **NOVA GUIDE V2 (request owner 25 Sep, sampel persis `.play`):** Kartu usage non-game baru: `「✧ ɴᴀᴍᴀ ✧」` → `kaomoji ɴᴀᴍᴀ!!` → sapaan cute + kaomoji → `📍 ᴄᴀʀᴀ:` → `ᴄᴏɴᴛᴏʜ:` → note `~` (tiap bagian baris sendiri) → spec `⚡/⏱/💸`. Helper `novaGuideV2(brand, {kaomoji, sapaan, cara, contoh, note, spec, modelAktif, models})` + `novaSalahV2` (salah cmd 3 baris cute: `kaomoji ʏᴀʜ ᴋᴀᴋ...` + pesan + `➤ contoh`) di nova-menu-style.js. BEDA PLUGIN = BEDA SAPAAN + KAOMOJI (aturan owner).
