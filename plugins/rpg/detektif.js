@@ -13,7 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { playSiramAnim } from "../../src/lib/libanimationrpg/libmasterdetectiverpg.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { addGameCash, addGold, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { normalizeAnswer } from "../../src/lib/nova-game-engine.js";
@@ -138,38 +138,9 @@ function fileText(u, c) {
 // Mode "cari": kaca pembesar 🔍 menyisir sektor objek, jejak ✨ terungkap satu per satu.
 // Mode "pergi": detektif 🚶 melintas kota menuju lokasi, jejak 👣 bekas langkah.
 // KHUSUS detektif (aturan "beda game beda animasi") — beda dari crosshair berburu & selam palung.
-function siramFrames({ mode, locName, locEmoji, hasil }) {
-  const slots = 6;
-  const scene = mode === "pergi"
-    ? ["🏢", "🏪", "🏦", "🏫", "🏭", "🚧"]
-    : ["🪑", "📦", "🗄️", "🚪", "🪟", "🗑️"];
-  const mover = mode === "pergi" ? "🚶" : "🔍";
-  const trail = mode === "pergi" ? "👣" : "✨";
-  const header = mode === "pergi"
-    ? "🚶 MENUJU · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "")
-    : "🔍 MENYIRIM · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "");
-  const hasilText = mode === "pergi"
-    ? "📍 TIBA! Sekitarnya menyusul…"
-    : hasil === "temu" ? "✨ JEJAK DITEMUKAN! Hasil menyusul…"
-    : hasil === "lockbox" ? "🔒 PETI TERKUNCI TERLIHAT!"
-    : hasil === "pending" ? "🔒 PETI MASIH TERKUNCI…"
-    : "🤷 SEKTOR SUDAH BERSIH…";
-  const frames = [];
-  for (let f = 0; f <= slots; f++) {
-    const row = scene.map((s, i) => {
-      if (i === Math.min(f, slots - 1)) return mover;
-      if (i < f) return trail;
-      return s;
-    }).join("");
-    const tail = f === 0 ? "MEMULAI PENYISIRAN…" : f < slots ? (mode === "pergi" ? "MELINTAS… " : "MENYIRIM… ") + f + "/" + slots : hasilText;
-    frames.push("```\n" + header + "\n" + row + "\n" + tail + "\n```");
-  }
-  return frames;
-}
-
+// ── 🎬 ANIMASI dimuat dari lib libmasterdetectiverpg.js (siram lokasi 🚶/🔍) ──
 async function playDetektifAnim(m, sock, opts) {
-  try { await editFramesAnim(sock, m.chat, siramFrames(opts), { frameMs: ANIM_FRAME_MS }); }
-  catch (e) { console.error("[detektif] animasi gagal (lanjut):", e?.message || e); }
+  await playSiramAnim(sock, m.chat, opts, ANIM_FRAME_MS);
 }
 
 async function handler(m, { sock, config }) {

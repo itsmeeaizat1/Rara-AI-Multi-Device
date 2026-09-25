@@ -2,7 +2,7 @@
 // RPG Mount — Tunggangan, feed mount, bonus spd
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { playStableAnim as libPlayStableAnim } from "../../src/lib/libanimationrpg/libmountrpg.js";
 import te from "../../src/lib/nova-error.js";
 import { novaRpgBox } from "../../src/lib/nova-games.js";
 
@@ -30,31 +30,9 @@ const MOUNTS = {
 // KHUSUS mount (aturan "beda game beda animasi") — beda dari siram detektif & pendakian gunung.
 const ANIM_FRAME_MS = process.env.MOUNT_ANIM_MS !== undefined ? Number(process.env.MOUNT_ANIM_MS) : 700;
 
-function stableFrames({ mode, mountName, emoji }) {
-  const slots = 6;
-  const animal = emoji || "🐎";
-  const header = (mode === "feed" ? "🥕 MEMBERI MAKAN · " : "🤠 MENJINAKKAN · ") + String(mountName || "TUNGGANGAN").toUpperCase();
-  const anchor = mode === "feed" ? "🥕" : "🤠";
-  const endTail = mode === "feed" ? "💛 MAKAN LAHAP! HAPPINESS NAIK…" : "💞 JINAK! SIAP DITUNGGANGI…";
-  const frames = [];
-  for (let f = 0; f <= slots; f++) {
-    const animalAt = Math.min(slots - 1, Math.max(1, slots - f));
-    const row = [];
-    for (let i = 0; i < slots; i++) {
-      if (i === 0) row.push(anchor);
-      else if (i === animalAt) row.push(animal);
-      else if (i > animalAt) row.push("✨");
-      else row.push("🌾");
-    }
-    const tail = f === 0 ? "MEMANGGIL DARI KANDANG…" : f < slots ? "MENDEKATI… " + f + "/" + slots : endTail;
-    frames.push("```\n" + header + "\n" + row.join("") + "\n" + tail + "\n```");
-  }
-  return frames;
-}
-
+// ── 🎬 ANIMASI dimuat dari lib libmountrpg.js (kandang 🐎 berjalan / 🥕 makan) ──
 async function playStableAnim(m, sock, opts) {
-  try { await editFramesAnim(sock, m.chat, stableFrames(opts), { frameMs: ANIM_FRAME_MS }); }
-  catch (e) { console.error("[mount] animasi gagal (lanjut):", e?.message || e); }
+  await libPlayStableAnim(sock, m.chat, opts, ANIM_FRAME_MS);
 }
 
 async function handler(m, { sock, text }) {
