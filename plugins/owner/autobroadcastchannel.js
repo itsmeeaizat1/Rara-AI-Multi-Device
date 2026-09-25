@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { novaBox } from "../../src/lib/nova-menu-style.js";
 import {
   NOTIFY_EVENTS,
   getAllNotifyStatus,
@@ -69,9 +70,14 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   // Toggle specific event
-  if (NOTIFY_EVENTS[subCmd]) {
+  // FIX FINALISASI 25 Sep (ketangkep e2e 1f): subCmd di-lowercase dari chat,
+  // tapi key event camelCase (premiumAdd, userBanned, dst) — lookup lama
+  // `NOTIFY_EVENTS[subCmd]` GAK PERNAH cocok → toggle per-event gak pernah jalan
+  // sama sekali. Resolve case-insensitive ke key ASLI sebelum dipakai.
+  const evKey = Object.keys(NOTIFY_EVENTS).find((k) => k.toLowerCase() === subCmd);
+  if (evKey) {
     const statuses = getAllNotifyStatus();
-    const current = statuses[subCmd].enabled;
+    const current = statuses[evKey].enabled;
 
     const explicitArg = args[1]?.toLowerCase();
     let newVal;
@@ -79,9 +85,9 @@ async function handler(m, { sock, config: botConfig }) {
     else if (explicitArg === "off") newVal = false;
     else newVal = !current;
 
-    setNotifyEnabled(subCmd, newVal);
+    setNotifyEnabled(evKey, newVal);
 
-    return m.reply(novaBox("Auto Broadcast Channel", ["Event: " + NOTIFY_EVENTS[subCmd], "Status: " + (newVal ? "✅ ON" : "❌ OFF"), "---", newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan", "Cek semua: " + prefix + "autobroadcastchannel"]));
+    return m.reply(novaBox("Auto Broadcast Channel", ["Event: " + NOTIFY_EVENTS[evKey], "Status: " + (newVal ? "✅ ON" : "❌ OFF"), "---", newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan", "Cek semua: " + prefix + "autobroadcastchannel"]));
   }
 
   // Unknown event

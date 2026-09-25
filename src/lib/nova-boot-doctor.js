@@ -317,7 +317,7 @@ const CATEGORY_META = {
   endpoint_err: { title: "ERROR LAIN (endpoint bermasalah)", icon: "🟡", order: 6 },
 };
 
-export function buildBootReport(results) {
+export function buildBootReport(results, extraLines = []) {
   const byStatus = {};
   for (const r of results) (byStatus[r.status] ||= []).push(r);
 
@@ -397,6 +397,14 @@ export function buildBootReport(results) {
   const d = new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric" });
   lines.push("🕒 " + t + ", " + d);
   if (problemCount) lines.push("");
+  // seksi SALURAN WA (finalisasi 25 Sep — extraLines dari nova-saluran-hub;
+  // muncul baik laporan sehat maupun ada masalah, SELALU sebelum penutup)
+  if (Array.isArray(extraLines) && extraLines.length) {
+    lines.push("");
+    lines.push("📡 SALURAN WA:");
+    for (const l of extraLines) lines.push(l);
+  }
+
   if (!problemCount) return claraWrap("Boot Doctor", lines);
   lines.push("Ketik .bootdoctor buat cek ulang manual · .reloadkey setelah ganti key");
 
@@ -451,7 +459,18 @@ function getOwnerJid() {
 
 export async function runAndReport({ send = true } = {}) {
   const results = await runBootDoctor();
-  const report = buildBootReport(results);
+  // FINALISASI SALURAN 25 Sep: laporan kesehatan kini SEKALIGUS cek semua
+  // modul Saluran WA (resolve/autopost/react/reply/autobroadcast). Lazy
+  // import — boot doctor gak boleh mati gara-gara modul saluran/db kagak
+  // siap pas bot baru nyala. Gagal → baris jujur, gak diem.
+  let saluranLines;
+  try {
+    const { buildSaluranHealthLines } = await import("./nova-saluran-hub.js");
+    saluranLines = await buildSaluranHealthLines(sockInstance);
+  } catch (e) {
+    saluranLines = ["Saluran: gak bisa dicek saat ini (" + String(e?.message || e).slice(0, 80) + ")"];
+  }
+  const report = buildBootReport(results, saluranLines);
   const st = loadState();
   st.lastRun = Date.now();
   st.lastSummary = results.filter(r => r.status !== "ok" && r.status !== "nokey").map(r => r.label + "=" + r.status).join(", ") || "semua sehat";
