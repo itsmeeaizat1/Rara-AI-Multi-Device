@@ -10,7 +10,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import { getCash, spendCash, addCash, addGems, addItem, ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { playSlotAnim } from "../../src/lib/libanimationrpg/libgachaitemrpg.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
 
 // ── knob ──
@@ -21,17 +21,6 @@ const ROLL_DELAY_MS = process.env.GACHA_ROLL_DELAY_MS !== undefined ? Number(pro
 const SLOT_ANIM_MS = process.env.GACHA_ANIM_MS !== undefined ? Number(process.env.GACHA_ANIM_MS) : 650;
 // 🎬 animasi khas gacha: SLOT 3-REEL — reel berputar lalu TERKUNCI satu per satu
 const REEL_ICONS = ["✨", "🌟", "💎", "🔮", "🏆", "🌈"];
-function slotFrames() {
-  const finalIcons = [0, 1, 2].map(() => REEL_ICONS[Math.floor(Math.random() * REEL_ICONS.length)]);
-  const frames = [];
-  for (let f = 0; f <= 9; f++) {
-    const locked = Math.min(3, Math.floor((f - 1) / 3)); // reel kunci tiap 3 frame
-    const reels = [0, 1, 2].map((r) => (r < locked ? finalIcons[r] : REEL_ICONS[(f + r * 2) % REEL_ICONS.length]));
-    const status = [0, 1, 2].map((r) => (r < locked ? "🔒" : "🔄")).join("");
-    frames.push("```\n🎰 ━ GACHA SLOT ━\n[ " + reels.join(" ] [ ") + " ]\n" + status + (locked >= 3 ? "\n🎰 REEL BERHENTI! Reveal menyusul…" : "\n") + "```");
-  }
-  return frames;
-}
 const PITY_AT = 5; // pull ke-5 tanpa Epic+ → garansi Epic+, lalu reset
 
 // ── loot table (rate % global + sub-reward berbobot) ──
@@ -325,7 +314,8 @@ async function handler(m, { sock, config }) {
     // 5+6. ROLLING
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gacha] react loading gagal:", e); } }
     // 🎬 animasi khas GACHA SLOT (fallback: teks rolling bila channel gak dukung edit)
-    const slotOk = await editFramesAnim(sock, m.chat, slotFrames(), { frameMs: SLOT_ANIM_MS });
+    // 🎬 animasi dimuat dari lib libgachaitemrpg.js (slot 3-reel)
+    const slotOk = await playSlotAnim(sock, m.chat, REEL_ICONS, SLOT_ANIM_MS);
     if (!slotOk) {
       try {
         await m.reply(novaGameBox({ title: "gacha", icon: "🎲", flavor: "🎲 *GACHA BERPUTAR…*", body: pick(ROLLING_TEXTS) }));

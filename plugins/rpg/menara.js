@@ -16,7 +16,7 @@ import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { addGameCash, addGold, removeGold, ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { normalizeAnswer, getSimilarity } from "../../src/lib/nova-game-engine.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { playDoorAnim as libPlayDoorAnim } from "../../src/lib/libanimationrpg/libthousanddoortowerrpg.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -122,32 +122,11 @@ function doorText(s, puzzle, extra) {
   ].join("\n");
 }
 
-// ── 🎬 ANIMASI KHAS MENARA: MERAKIT KUNCI PINTU ──
-// Kepingan puzzle 🧩 terpasang satu per satu ke gerbang, gembok 🔒 runtuh jadi 🔓,
-// pintu terbuka 🚪✨ lalu teka-teki menyusul. KHUSUS menara (aturan "beda game beda animasi").
-function doorFrames(s) {
-  const floor = s.user.floor || 1;
-  const th = themeFor(floor);
-  const boss = floor % 10 === 0;
-  const header = boss
-    ? "🧙 GERBANG SANG BIJAK · LANTAI " + floor
-    : "🧩 " + th.name.toUpperCase() + " " + th.emoji + " · LANTAI " + floor;
-  const SLOTS = 6;
-  const frames = [];
-  for (let f = 0; f <= SLOTS; f++) {
-    const pieces = "🧩".repeat(f) + "⬜".repeat(SLOTS - f);
-    let lock, tail;
-    if (f === 0) { lock = boss ? "🔒🔒" : "🔒"; tail = boss ? "GERBANG BOSS TERKUNCI GANDA…" : "PINTU TERKUNCI…"; }
-    else if (f < SLOTS) { lock = "🔓"; tail = "MERAKIT KUNCI… " + f + "/" + SLOTS; }
-    else { lock = "🚪✨"; tail = "TERBUKA! Teka-tekinya menanti…"; }
-    frames.push("```\n" + header + "\n" + lock + " " + pieces + "\n" + tail + "\n```");
-  }
-  return frames;
-}
-
+// ── 🎬 ANIMASI dimuat dari lib libthousanddoortowerrpg.js (kepingan 🧩 merakit kunci pintu) ──
 async function playDoorAnim(m, sock, s) {
-  try { await editFramesAnim(sock, m.chat, doorFrames(s), { frameMs: ANIM_FRAME_MS }); }
-  catch (e) { console.error("[menara] animasi gagal (lanjut):", e?.message || e); }
+  const fl = s.user.floor || 1;
+  const th = themeFor(fl);
+  await libPlayDoorAnim(sock, m.chat, { floor: fl, themeName: th.name, themeEmoji: th.emoji }, ANIM_FRAME_MS);
 }
 
 function askDoor(m, sock, s, prefix) {

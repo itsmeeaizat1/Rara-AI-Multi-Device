@@ -9,7 +9,7 @@ import {
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animAdventure, animBattleTurns } from "../../src/lib/nova-rpg-anim.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { playPetaAnim } from "../../src/lib/libanimationrpg/libadventurerpg.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -147,13 +147,8 @@ async function handler(m, { sock }) {
     const LANDMARK = ["🌲", "⛰️", "🏕️", "🌊", "🌴", "🗿", "🌉"];
     const LMAP = 10;
     const trail = "·";
-    const petaFrames = Array.from({ length: 6 }, (_, f) => {
-      const pos = Math.min(LMAP - 1, f * 2);
-      const row = Array.from({ length: LMAP }, (_, i) =>
-        i === pos ? "📍" : i === LMAP - 1 ? "🏕️" : i < pos ? trail : LANDMARK[(i + f) % LANDMARK.length]);
-      return "```\n🧭 " + ARAH[f % ARAH.length] + " MENUJU " + event.type.toUpperCase() + "\n" + row.join("") + "\n```";
-    });
-    const petaOk = await editFramesAnim(sock, m.chat, petaFrames, {});
+    // 🎬 animasi dimuat dari lib libadventurerpg.js (peta kompas 🧭 menyusuri landmark)
+    const petaOk = await playPetaAnim(sock, m.chat, { eventType: event.type, landmarks: LANDMARK, arahs: ARAH });
     if (!petaOk) await animAdventure(m, sock, event.type);
     let expGain = 0, goldGain = 0, gemGain = 0;
     let drops = [];
