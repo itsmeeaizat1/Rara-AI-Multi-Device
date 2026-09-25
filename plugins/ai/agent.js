@@ -242,12 +242,45 @@ async function execAction(a, ctx, m, sock) {
 // TOOLS MODE — executor serba bisa (injectable via deps buat e2e)
 // ═══════════════════════════════════════════════════════════════
 
+/**
+ * 🔒 GATE AKSES COMMAND (owner 25 Sep 2026): agent jalan ATAS NAMA user yang
+ * manggil — command yang user-nya gak berhak pakai DITOLAK DI SINI (sebelum
+ * eksekusi), biar agent jawab jujur "fitur ini owner-only" ke user.
+ * Dulu: middleware sebenernya nolak senyap, tapi executor tetap balikin
+ * "Perintah dijalankan" → agent bohong sukses ke user.
+ * @returns {Promise<{ok:false,msg:string}|null>} null = boleh jalan
+ */
+export async function gateCommandAccess(cmd, m) {
+  const c = String(cmd || "").toLowerCase().trim();
+  if (!c) return null;
+  let pc = null;
+  try {
+    const { getPlugin } = await import("../../src/lib/nova-plugins.js");
+    pc = getPlugin(c)?.config || null;
+  } catch { pc = null; }
+  if (!pc) return null; // gak ada di registry → biarkan messageHandler jawab
+  if (pc.isOwner && !m?.isOwner) {
+    return { ok: false, msg: `.${c} itu fitur OWNER-ONLY — kamu bukan owner bot, jadi aku gak bisa jalanin buat kamu. Minta langsung ke owner ya.` };
+  }
+  if (pc.isPremium && !m?.isPremium && !m?.isOwner) {
+    return { ok: false, msg: `.${c} itu fitur PREMIUM-ONLY — jadi user premium dulu biar aku bisa jalanin.` };
+  }
+  if (pc.isPartner && !m?.isPartner && !m?.isOwner) {
+    return { ok: false, msg: `.${c} itu fitur PARTNER-ONLY — khusus partner bot.` };
+  }
+  return null;
+}
+
 function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
   // ⚡ command — jalanin command bot lain lewat messageHandler penuh
   //    (gates/cooldown/energi middleware tetap jalan — konsisten)
   const command = deps.command || (async (t) => {
     const cmd = String(t.cmd || "").toLowerCase().trim();
-    if (!cmd || cmd === "agent") return { ok: false, msg: "Command gak valid / gak boleh manggil .agent dari dalam agent (loop)" };
+    if (!cmd || cmd === "agent" || cmd === "aisuperagent" || cmd === "novaagent") return { ok: false, msg: "Command gak valid / gak boleh manggil agent dari dalam agent (loop)" };
+    // 🔒 gate akses (owner 25 Sep): non-owner gak boleh nyuruh agent
+    // jalanin fitur owner/premium/partner-only — agent jawab jujur
+    const denied = await gateCommandAccess(cmd, m);
+    if (denied) return denied;
     const text = "." + cmd + (t.args ? " " + t.args : "");
     try {
       const { messageHandler } = await import("../../src/handler.js");
