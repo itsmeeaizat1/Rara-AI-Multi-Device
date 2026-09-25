@@ -6,6 +6,7 @@ import { ensureRpg, saveRpg, getCash } from "../../src/lib/nova-rpg-service.js";
 
 process.env.PALUNG_SELAM_CD_MS = "0"; // e2e anti-flaky
 process.env.PALUNG_ANIM_MS = "0";
+process.env.PALUNG_CINEMATIC_MS = "0"; // e2e anti-flaky
 const R = path.resolve(process.cwd());
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
@@ -123,31 +124,43 @@ await run({ args: ["daily"] });
 t("8b. daily dobel → SUDAH DIKLAIM", some("SUDAH DIKLAIM"));
 
 const pos2 = () => animFrames.map((f) => f.text.split("\n")[2].indexOf("\u{1F93F}")).join(",");
-console.log("— section 9: animasi khas selam (edit berulang) —");
-const animFrames = [];
-const animSock = { sendMessage: async (jid, content) => {
-  if (content?.edit) { animFrames.push({ edit: true, text: content.text }); return { key: { id: "a1" } }; }
-  return { key: { id: "a1" } };
-} };
-U().oksigen = 14;
-await handler(mkMsg({ args: ["selam", "aman"] }), { sock: animSock, config: {} });
-t("9a. animasi selam: frame diedit berulang (6 frame = 5 edit)", animFrames.length === 5, `edits=${animFrames.length}`);
-t("9b. semua frame pakai key edit", animFrames.every((f) => f.edit === true));
-t("9c. penyelam 🤿 turun + jejak gelembung 🫧 + sonar (◎/◉/○)", animFrames.every((f) => f.text.includes("🤿") && f.text.includes("🫧") && f.text.includes("SONAR") && /[◎◉○]/.test(f.text)), animFrames.map((f) => f.text.split("\n")[2]).join(" | "));
-t("9d. penyelam BERGERAK turun (posisi naik terus)", (() => {
-  const rows = animFrames.map((f) => f.text.split("\n")[2]);
-  const pos = rows.map((r) => r.indexOf("\u{1F93F}"));
-  return new Set(pos).size > 1 && pos.every((x, i) => i === 0 || x > pos[i - 1]);
-})(), pos2());
-t("9e. frame terakhir: penyelam sampai target (🤿 + 💎 TARGET)", (() => { const lf = animFrames[animFrames.length - 1]; return lf.text.includes("🤿") && lf.text.includes("💎") && lf.text.includes("TARGET"); })());
-// fallback: sock tanpa key → selam tetap sukses
-let fallbackCalls = 0;
-await handler(mkMsg({ args: ["selam", "aman"] }), { sock: { sendMessage: async () => { fallbackCalls++; return true; } }, config: {} });
-t("9f. channel tanpa edit → animasi dilewati, selam tetap jalan", fallbackCalls === 1 && U().stats.selam >= 2, `calls=${fallbackCalls}`);
-
 console.log("— section 10: sub tak dikenal → bantuan —");
 await run({ args: ["ngawur"] });
 t("10a. subcommand tak dikenal → menu bantuan", some("PALUNG MISTERI"));
+
+console.log("— section C: ANIMASI CINEMATIC (lib libtrenchdiverrpg, gaya Nintendo) —");
+const animLib2 = await import(R + "/src/lib/libanimationrpg/libtrenchdiverrpg.js");
+const { sceneTotalMs } = await import(R + "/src/lib/nova-anim-runner.js");
+const animFramesP = [];
+const animSockP = { sendMessage: async (jid, content) => {
+  if (content?.edit) { animFramesP.push({ edit: true, text: content.text }); return { key: { id: "p1" } }; }
+  return { key: { id: "p1" } };
+} };
+U().zona = 1; U().oksigen = 10; U().maxOksigen = 10; U().dives = 0; U().titik = 0; U().lampu = false; U().pelampung = 0;
+plug._setRandForTest(() => 0.99); // tanpa event/bahaya
+await handler(mkMsg({ args: ["selam", "aman"] }), { sock: animSockP, config: {} });
+// zona 1 aman: perahu 2 + selam (3+1=4) + loot 3 = 9 frame → 8 edit
+t("Ca. selam: cinematic DIKIRIM lalu DIEDIT berulang (9 frame = 8 edit)", animFramesP.length === 8, animFramesP.length);
+t("Cb. semua frame pakai key edit sama", animFramesP.length > 0 && animFramesP.every((f) => f.edit === true));
+t("Cc. selam vertikal khas palung: penyelam turun kolom + gelembung", animFramesP.filter((f) => f.text.includes("🤿")).length >= 3 && animFramesP.some((f) => f.text.includes("🫧")));
+t("Cd. frame final: loot naik berdetak full", /\+\d+ ✅/.test(animFramesP[animFramesP.length - 1].text));
+let tanpaKeyP = 0;
+await handler(mkMsg({ args: ["selam", "aman"] }), { sock: { sendMessage: async () => { tanpaKeyP++; return true; } }, config: {} });
+t("Ce. tanpa key edit → cinematic senyap, selam tetap jalan", tanpaKeyP === 1 && U().dives >= 2, `calls=${tanpaKeyP}`);
+animFramesP.length = 0;
+U().zona = 4; U().dives = 5; U().lampu = true; U().maxOksigen = 14; U().oksigen = 14; U().pelampung = 1;
+plug._setRandForTest(() => 0.01); // bahaya (risiko) + event mutiara
+await handler(mkMsg({ args: ["selam", "risiko"] }), { sock: animSockP, config: {} });
+t("Cf. zona 4 + bahaya + event + boss: edit LEBIH BANYAK dari zona 1", animFramesP.length > 8, animFramesP.length);
+t("Cg. babak bahaya pelampung terlihat", animFramesP.some((f) => f.text.includes("PELAMPUNG DARURAT")));
+t("Ch. babak boss Sesuatu di Dasar Palung terlihat", animFramesP.some((f) => f.text.includes("TITIK TERDALAM") || f.text.includes("RAKSASA")));
+animLib2._setTrenchdiverAnimMsForTest(700);
+const scLow = animLib2.selamCinematic({ zona: 1, zonaNama: "Zona Cahaya", zonaTile: "🌊", jalur: "aman", bahaya: false, selamat: false, event: null, loot: 40, boss: false });
+const scHigh = animLib2.selamCinematic({ zona: 4, zonaNama: "Zona Hadal", zonaTile: "⬛", jalur: "risiko", bahaya: true, selamat: true, event: "kapal", loot: 300, boss: true });
+t("Ci. durasi nyesuaikan situasi: hadal+event+boss > zona 1 aman", sceneTotalMs(scHigh, 700) > sceneTotalMs(scLow, 700), sceneTotalMs(scHigh, 700) + " vs " + sceneTotalMs(scLow, 700));
+t("Cj. selam normal ±7-10 dtk", sceneTotalMs(scLow, 700) >= 7000 && sceneTotalMs(scLow, 700) <= 10000, "ms=" + sceneTotalMs(scLow, 700));
+t("Ck. naik permukaan: cinematic pendek sendiri", sceneTotalMs(animLib2.naikCinematic({}), 700) >= 1500 && sceneTotalMs(animLib2.naikCinematic({}), 700) <= 3500, "ms=" + sceneTotalMs(animLib2.naikCinematic({}), 700));
+animLib2._setTrenchdiverAnimMsForTest(0);
 
 fs.rmSync(dbDir, { recursive: true, force: true });
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);

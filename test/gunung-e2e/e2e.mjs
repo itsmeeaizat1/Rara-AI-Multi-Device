@@ -5,6 +5,7 @@ import { initDatabase, getDatabase } from "../../src/lib/nova-database.js";
 import { ensureRpg, saveRpg, getCash } from "../../src/lib/nova-rpg-service.js";
 
 process.env.GUNUNG_DAKI_CD_MS = "0"; // e2e anti-flaky
+process.env.GUNUNG_CINEMATIC_MS = "0"; // cutscene anti-flaky
 const R = path.resolve(process.cwd());
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
@@ -255,28 +256,51 @@ U().gunung = "Gunung Fuji (3.776 mdpl)"; delete U().country; U().puncak = 0;
 await run({});
 t("15l. migrasi Fuji 0 puncak → country indonesia (tetap Fuji)", U().country === "indonesia" && U().gunung === "Gunung Fuji (3.776 mdpl)");
 
-console.log("— section 16: ANIMASI RUNNER (lib nova-anim-runner) —");
+console.log("— section 16: ANIMASI CINEMATIC (lib libmountainclimberrpg, gaya Nintendo) —");
+const animLib = await import(R + "/src/lib/libanimationrpg/libmountainclimberrpg.js");
+const { sceneTotalMs } = await import(R + "/src/lib/nova-anim-runner.js");
 const animFrames = [];
 const animSock = { sendMessage: async (jid, content) => {
   if (content?.edit) { animFrames.push({ edit: true, text: content.text }); return { key: { id: "anim1" } }; }
   return { key: { id: "anim1" } };
 } };
 U().zona = 1; U().stamina = 10; U().oksigen = 2; U().puncak = 13; U().country = "dunia"; U().guaPending = false;
-plug._setRandForTest(() => 0.01);
+plug._setRandForTest(() => 0.99); // tanpa longsor/event/gua → daki bersih
 await handler(mkMsg({ args: ["daki", "aman"] }), { sock: animSock, config: {} });
-// level rpg default 1 → 12 tile, 1 bioma, maju 2 tile/frame: 7 frame = 6 edit
-t("16a. daki: runner DIKIRIM lalu DIEDIT berulang (12 tile lvl 1 = 6 edit)", animFrames.length === 6, animFrames.length);
+// zona 1 → 2: SCENE basecamp 2 + lintasan (3+2=5) + hasil 3 = 10 frame → 9 edit
+t("16a. daki: cinematic DIKIRIM lalu DIEDIT berulang (10 frame = 9 edit)", animFrames.length === 9, animFrames.length);
 t("16b. semua frame pakai key edit yang sama (edit: true)", animFrames.length > 0 && animFrames.every((f) => f.edit === true));
-t("16c. frame: code fence + 2 baris (pemandangan + lintasan)", animFrames.every((f) => f.text.includes("```") && f.text.split("\n").length >= 4));
-t("16c2. karakter BERGERAK (jejak ⬜ makin panjang)", (() => {
-  const trail = animFrames.map((f) => f.text.split("\n")[2].split("⬆️")[0].split("⬜").length - 1);
-  return trail.every((x, i) => i === 0 || x >= trail[i - 1]) && new Set(trail).size > 1;
-})(), animFrames.map((f) => f.text.split("\n")[2]).join("|"));
-t("16c3. frame finis: 🏁 + baris hasil", animFrames.length > 0 && /🏁/.test(animFrames[animFrames.length - 1].text) && /menyusul/.test(animFrames[animFrames.length - 1].text));
+t("16c. frame: code fence monospace", animFrames.every((f) => f.text.includes("```")));
+t("16c2. lintasan daki: karakter melintas + jejak ⬜ makin panjang (khas gunung)", (() => {
+  const track = animFrames.filter((f) => f.text.includes("⬜")).map((f) => f.text.split("\n").filter((l) => l.includes("⬜")).pop() || "");
+  return track.length >= 3 && track.every((x, i) => i === 0 || (x.split("⬜").length - 1) >= (track[i - 1].split("⬜").length - 1));
+})(), "track=" + animFrames.filter((f) => f.text.includes("⬜")).length);
+t("16c3. frame final: zona capai + gold full berdetak", (() => {
+  const last = animFrames[animFrames.length - 1];
+  return animFrames.some((f) => /TERCAPAI|ZONA/.test(f.text)) && /\+\d+ ✅/.test(last.text);
+})());
 // tanpa key edit → animasi dilewati senyap, daki tetap jalan
 let animTanpaKey = 0;
 await handler(mkMsg({ args: ["daki", "aman"] }), { sock: { sendMessage: async () => { animTanpaKey++; return true; } }, config: {} });
-t("16e. tanpa key edit → animasi dilewati senyap, daki tetap jalan", animTanpaKey === 1 && U().zona >= 2, `calls=${animTanpaKey} zona=${U().zona}`);
+t("16e. tanpa key edit → cinematic dilewati senyap, daki tetap jalan", animTanpaKey === 1 && U().zona >= 3, `calls=${animTanpaKey} zona=${U().zona}`);
+// zona tinggi → babak lintasan makin panjang (durasi nyesuaikan situasi)
+animFrames.length = 0;
+U().zona = 6; U().stamina = 10; U().oksigen = 2;
+plug._setRandForTest(() => 0.01); // harta event → babak event ekstra muncul
+await handler(mkMsg({ args: ["daki", "aman"] }), { sock: animSock, config: {} });
+t("16d. zona 7 + event harta: edit LEBIH BANYAK dari zona rendah (babak ekstra)", animFrames.length > 10, animFrames.length);
+t("16d2. babak event harta terlihat (PETI HARTA)", animFrames.some((f) => f.text.includes("PETI HARTA")));
+// audit durasi: zona tinggi + event + gua > zona rendah; puncak paling megah
+animLib._setMountainclimberAnimMsForTest(700);
+const scLow = animLib.dakiCinematic({ level: 1, zona: 2, zonaNama: "Zona Kabut", aksi: null, cuacaIcon: "☀️", cuaca: "cerah", events: [], gua: false, gold: 60 });
+const scHigh = animLib.dakiCinematic({ level: 20, zona: 7, zonaNama: "Zona Es", aksi: "panjat", cuacaIcon: "❄️", cuaca: "badai-es", events: ["harta"], gua: true, gold: 400 }); // game asli max 1 event per daki
+const scSummit = animLib.puncakCinematic({ gunungNama: "Gunung Fuji", puncak: 2, gold: 3000 });
+t("16j. durasi nyesuaikan situasi: zona tinggi+event+gua > zona rendah", sceneTotalMs(scHigh, 700) > sceneTotalMs(scLow, 700), sceneTotalMs(scHigh, 700) + " vs " + sceneTotalMs(scLow, 700));
+t("16j2. daki normal ±8-11 dtk (gak bosen, gak kepanjangan)", sceneTotalMs(scLow, 700) >= 8000 && sceneTotalMs(scLow, 700) <= 11000, "ms=" + sceneTotalMs(scLow, 700));
+t("16j3. puncak = momen paling megah (paling panjang)", sceneTotalMs(scSummit, 700) >= sceneTotalMs(scHigh, 700), "ms=" + sceneTotalMs(scSummit, 700));
+t("16j4. cutscene longsor & portir versi dramatis sendiri", sceneTotalMs(animLib.longsorCinematic({ zonaKe: 3 }), 700) >= 3000 && animLib.portirCinematic({ zona: 4 }).length === 1);
+animLib._setMountainclimberAnimMsForTest(0);
+
 // tes langsung lib: bioma hutan→salju forced + level tinggi (rintangan + peti + sprint)
 const runnerSock = { sendMessage: async (jid, content) => {
   if (content?.edit) { animFrames.push({ edit: true, text: content.text }); return { key: { id: "r" } }; }

@@ -11,14 +11,13 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { addCash, spendCash, getCash } from "../../src/lib/nova-rpg-service.js";
-import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
+import { playTrenchdiverCinematic, selamCinematic, naikCinematic } from "../../src/lib/libanimationrpg/libtrenchdiverrpg.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
 
 // ── knob ──
 const O2_MAX_BASE = process.env.PALUNG_O2_MAX !== undefined ? Number(process.env.PALUNG_O2_MAX) : 10;
 const O2_REGEN_S = process.env.PALUNG_REGEN_S !== undefined ? Number(process.env.PALUNG_REGEN_S) : 300; // +1 / 5 mnt
 const SELAM_CD_MS = process.env.PALUNG_SELAM_CD_MS !== undefined ? Number(process.env.PALUNG_SELAM_CD_MS) : 2000;
-const ANIM_FRAME_MS = process.env.PALUNG_ANIM_MS !== undefined ? Number(process.env.PALUNG_ANIM_MS) : 700;
 const DIVES_PER_ZONE = process.env.PALUNG_DIVES_PER_ZONE !== undefined ? Number(process.env.PALUNG_DIVES_PER_ZONE) : 5;
 const DIVES_BOSS = process.env.PALUNG_DIVES_BOSS !== undefined ? Number(process.env.PALUNG_DIVES_BOSS) : 6;
 const ISTIRAHAT_GOLD = 40;
@@ -55,21 +54,6 @@ const prestigeBonus = (l) => 1 + (l || 0) * 0.1;
 let _rand = Math.random;
 const rand = () => _rand();
 const pick = (arr) => arr[Math.floor(rand() * arr.length)];
-
-// ── animasi khas: selam vertikal (gelembung naik + sonar denyut) — BEDA dari runner gunung ──
-function selamFrames(u) {
-  const z = ZONA[Math.min(ZONA.length, Math.max(0, (u.zona || 1) - 1))];
-  const tiles = 10;
-  const rings = ["◎", "◉", "◎", "○"];
-  const frames = [];
-  for (let f = 0; f <= 5; f++) {
-    const pos = Math.min(tiles - 1, f * 2);
-    const sampai = pos >= tiles - 1;
-    const col = [];
-    for (let i = 0; i < tiles; i++) col.push(i === pos ? "\u{1F93F}" : i < pos ? "\u{1FAE7}" : i === tiles - 1 ? "\u{1F48E}" : z.tile);
-    frames.push("```\n" + rings[f % rings.length] + " SONAR · " + z.nama.toUpperCase() + " · " + (pos * ((z.id * 250) / 2) | 0) + "m\n" + col.join("") + (sampai ? "\n\u{1F48E} TARGET! Hasil menyusul…" : "") + "\n```");
-  }
-  return frames;}
 
 // ── state ──
 function loadUser(m) {
@@ -158,16 +142,15 @@ async function handler(m, { sock }) {
     u.oksigen -= cost;
     saveDb();
 
-    // 🎬 animasi khas selam vertikal (fallback senyap bila channel gak dukung edit)
-    try { await editFramesAnim(sock, m.chat, selamFrames(u), { frameMs: ANIM_FRAME_MS }); } catch (e) { console.error("[palung] animasi gagal (lanjut):", e); }
-
     let cash = 25 + u.zona * 15 + Math.floor(rand() * 21);
     const baseCash = cash;
     if (jalur === "risiko") cash *= 2;
     let bahaya = jalur === "risiko" && rand() < 0.35;
     let bahayaText = "";
+    let selamatPelampung = false;
     if (bahaya) {
       if (u.pelampung > 0) {
+        selamatPelampung = true;
         u.pelampung -= 1;
         bahaya = false;
         bahayaText = "🛟 Pelampung darurat menyelamatkanmu dari " + pick(BAHAYA_TEXTS).toLowerCase();
@@ -182,14 +165,15 @@ async function handler(m, { sock }) {
     // event acak 18% (28% dengan sonar)
     const eventChance = u.sonar ? 0.28 : 0.18;
     let eventText = "";
+    let evTipe = null;
     if (rand() < eventChance) {
       const ev = rand();
-      if (ev < 0.3) { const bonus = 50 * u.zona; cash += bonus; eventText = "🦪 Mutiara raksasa sebesar kepalan! +" + bonus + " uang."; }
-      else if (ev < 0.5) { u.oksigen = Math.max(0, u.oksigen - 1); eventText = "🌊 Arus kuat menabrakmu — -1 oksigen."; }
-      else if (ev < 0.65) { u.oksigen = Math.max(0, u.oksigen - 2); eventText = "⚡ Ubur-ubur listrik menyengatmu — -2 oksigen!"; }
-      else if (ev < 0.8) { cash = Math.floor(cash * 0.6); eventText = "🦈 Hiu! Kamu kabur sambil menjatuhkan sebagian harta."; }
-      else if (ev < 0.95) { const bonus = 100 * u.zona; cash += bonus; u.stats.kapal += 1; eventText = "⚓ Kapal karam berusia ratusan tahun! Artifak diangkat: +" + bonus + " uang."; }
-      else { u.kristal += 1; u.stats.bio += 1; eventText = "✨ Bioluminesensi… " + pick(EVENT_BIO) + "\n\n💎 +1 Kristal Laut."; }
+      if (ev < 0.3) { evTipe = "mutiara"; const bonus = 50 * u.zona; cash += bonus; eventText = "🦪 Mutiara raksasa sebesar kepalan! +" + bonus + " uang."; }
+      else if (ev < 0.5) { evTipe = "arus"; u.oksigen = Math.max(0, u.oksigen - 1); eventText = "🌊 Arus kuat menabrakmu — -1 oksigen."; }
+      else if (ev < 0.65) { evTipe = "ubur"; u.oksigen = Math.max(0, u.oksigen - 2); eventText = "⚡ Ubur-ubur listrik menyengatmu — -2 oksigen!"; }
+      else if (ev < 0.8) { evTipe = "hiu"; cash = Math.floor(cash * 0.6); eventText = "🦈 Hiu! Kamu kabur sambil menjatuhkan sebagian harta."; }
+      else if (ev < 0.95) { evTipe = "kapal"; const bonus = 100 * u.zona; cash += bonus; u.stats.kapal += 1; eventText = "⚓ Kapal karam berusia ratusan tahun! Artifak diangkat: +" + bonus + " uang."; }
+      else { evTipe = "bio"; u.kristal += 1; u.stats.bio += 1; eventText = "✨ Bioluminesensi… " + pick(EVENT_BIO) + "\n\n💎 +1 Kristal Laut."; }
     }
 
     // progres zona
@@ -231,6 +215,12 @@ async function handler(m, { sock }) {
     if (bossText) lines.push("", bossText);
     if (naikText) lines.push("", naikText);
     if (lvlUp) lines.push("", "🎉 LEVEL UP! " + (typeof lvlUp === "string" ? lvlUp : JSON.stringify(lvlUp)));
+    // 🎬 cutscene gaya Nintendo — durasi nyesuaikan situasi (zona/jalur/bahaya/event/boss)
+    await playTrenchdiverCinematic(sock, m.chat, selamCinematic({
+      zona: z.id, zonaNama: z.nama, zonaTile: z.tile, jalur,
+      bahaya: bahaya || selamatPelampung, selamat: selamatPelampung, event: evTipe,
+      loot: cash, boss: Boolean(bossText),
+    }));
     return m.reply(box("🤿", "🤿 *HASIL MENYELAM*", lines.join("\n")));
   }
 
@@ -240,6 +230,7 @@ async function handler(m, { sock }) {
     u.oksigen = u.maxOksigen;
     u.o2At = Math.floor(Date.now() / 1000);
     saveDb();
+    await playTrenchdiverCinematic(sock, m.chat, naikCinematic({}));
     return m.reply(box("⬆️", "⬆️ *KE PERMUKAAN!*", "Kamu menepi ke perahu. Oksigen penuh kembali: " + u.oksigen + "/" + u.maxOksigen + ".\n\nWaktu oksigen: laut menunggumu kembali 🌊"));
   }
 
