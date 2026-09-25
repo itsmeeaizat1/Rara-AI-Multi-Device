@@ -149,6 +149,53 @@ export async function animasiRunner(sock, jid, opts = {}) {
 export function _resetAnimRunnerForTest() { /* hook seams kalau perlu */ }
 
 // ── mekanisme generik: kirim + edit berulang (isi frames khas per game, bukan seragam) ──
+// ─── CINEMATIC MULTI-SCENE (request owner 25 Sep 2026: gaya cuplikan Nintendo) ───
+// Animasi edit berulang multi-BABAK: scenes = [{ frames: [..], frameMs?, holdMs? }]
+// Tiap scene bisa punya kecepatan frame sendiri + jeda drama di akhir babak (holdMs).
+// Durasi total OTOMATIS nyesuaikan situasi game (jumlah scene/frame disusun pemanggil).
+// Semua jalan di SATU pesan (edit berulang). Fallback: gak dukung edit → false (pemanggil lanjut senyap).
+export async function editSceneAnim(sock, jid, scenes, opts = {}) {
+  try {
+    if (!sock?.sendMessage || !jid || !Array.isArray(scenes) || !scenes.length) return false;
+    const baseMs = opts.frameMs !== undefined ? Number(opts.frameMs) : (process.env.NOVA_ANIM_MS !== undefined ? Number(process.env.NOVA_ANIM_MS) : 700);
+    // rata scene → timeline flat {text, delay} (delay = jeda SEBELUM frame ini muncul)
+    const timeline = [];
+    let extraHold = 0;
+    for (const sc of scenes) {
+      const frames = Array.isArray(sc) ? sc : sc.frames;
+      if (!Array.isArray(frames) || !frames.length) continue;
+      const ms = (sc && sc.frameMs !== undefined) ? Number(sc.frameMs) : baseMs;
+      for (let i = 0; i < frames.length; i++) {
+        const text = String(frames[i]);
+        if (i === 0) { timeline.push({ text, delay: ms + extraHold }); extraHold = 0; }
+        else timeline.push({ text, delay: ms });
+      }
+      if (sc && sc.holdMs) extraHold = Number(sc.holdMs); // jeda drama sebelum scene berikut
+    }
+    if (timeline.length < 2) return false;
+    const sentMsg = await sock.sendMessage(jid, { text: timeline[0].text });
+    if (!sentMsg?.key) return false; // channel gak dukung edit → pemanggil fallback animasi teks
+    for (let i = 1; i < timeline.length; i++) {
+      await sleep(timeline[i].delay);
+      try { await sock.sendMessage(jid, { text: timeline[i].text, edit: sentMsg.key }); }
+      catch (e) { console.error("[anim-scenes] edit gagal (stop, fallback pemanggil):", e); return false; }
+    }
+    await sleep(timeline[timeline.length - 1].delay);
+    return true;
+  } catch (e) { console.error("[anim-scenes] gagal (dilewati senyap):", e); return false; }
+}
+// estimasi durasi total scene (buat e2e audit "berapa detik animasinya")
+export function sceneTotalMs(scenes, baseMs = 700) {
+  let total = 0;
+  for (const sc of scenes) {
+    const frames = Array.isArray(sc) ? sc : sc.frames;
+    if (!Array.isArray(frames) || !frames.length) continue;
+    const ms = (sc && sc.frameMs !== undefined) ? Number(sc.frameMs) : baseMs;
+    total += frames.length * ms + (sc && sc.holdMs ? Number(sc.holdMs) : 0);
+  }
+  return total;
+}
+
 export async function editFramesAnim(sock, jid, frames, opts = {}) {
   try {
     if (!sock?.sendMessage || !jid || !Array.isArray(frames) || frames.length < 2) return false;
