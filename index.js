@@ -450,6 +450,7 @@ async function main() {
           { name: "AgentLoop", fn: () => import("./plugins/owner/agentloop.js").then(m => m.resumeAgentLoops?.(sock)) },
           { name: "AutoSwgc", fn: () => import("./plugins/owner/autoswgc.js").then(m => m.startAutoSwgc?.(sock)) },
           { name: "AutoResource", fn: () => import("./plugins/owner/autoresource.js").then(m => m.startAutoResource?.(sock)) },
+          { name: "ChannelHub", fn: () => import("./src/lib/nova-saluran-hub.js").then(m => m.initSaluranHubScheduler?.(sock)) },
           { name: "Doctor", fn: () => import("./src/lib/nova-doctor.js").then(m => m.initDoctorMonitor?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {

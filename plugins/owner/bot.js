@@ -41,7 +41,7 @@ function saluranStatusLine(saluran, channelName) {
     }
     // skipped — kasih AKAR + solusi biar owner langsung bisa action
     if (saluran.reason === 'bot-bukan-admin') {
-        return `+ saluran — ⚠ DILEWATI: nomor bot bukan admin di saluran (buka saluran > ikuti > jadikan bot admin, cek .saluranid <link>)`
+        return `+ saluran — ⚠ DILEWATI: nomor bot bukan admin di saluran (buka saluran > ikuti > jadikan bot admin, cek .channelid <link>)`
     }
     if (saluran.reason === 'bot-belum-follow-saluran') {
         return `+ saluran — ⚠ DILEWATI: nomor bot belum follow saluran (join dulu via link saluran)`

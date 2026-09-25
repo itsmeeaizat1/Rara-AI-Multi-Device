@@ -1,18 +1,18 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .saluranid — CONVERT URL/INVITE SALURAN WA → ID NEWSLETTER (120363xxx@newsletter)
+// .channelid — CONVERT URL/INVITE SALURAN WA → ID NEWSLETTER (120363xxx@newsletter)
 // Request owner 19 Sep 2026: "g ada fitur url saluran wa convert jadi id newsletternya".
-// Berguna buat: .setsaluran manual, target broadcast saluran, integrasi fitur channel lain.
+// Berguna buat: .setchannel manual, target broadcast saluran, integrasi fitur channel lain.
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { resolveNewsletterJid, normalizeNewsletterMeta } from "../../src/lib/nova-saluran.js";
 import config from "../../config.js";
 
 const pluginConfig = {
-  name: "saluranid",
-  alias: ["idsaluran", "newsletterid", "saluraninfo"],
+  name: "channelid",
+  alias: ["saluranid", "idsaluran", "newsletterid", "saluraninfo"],
   category: "owner",
   description: "Convert URL saluran WhatsApp jadi ID newsletter (120363xxx@newsletter)",
-  usage: ".saluranid <url saluran | kode invite | ID@newsletter>",
-  example: ".saluranid https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29",
+  usage: ".channelid <url saluran | kode invite | ID@newsletter>",
+  example: ".channelid https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -46,8 +46,8 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     return m.reply(claraWrap("Saluran ID", [
       "Cara pakai:",
-      `Ketik *.saluranid <url saluran>* contoh:`,
-      `.saluranid https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29`,
+      `Ketik *.channelid <url saluran>* contoh:`,
+      `.channelid https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29`,
       "",
       "Input yang diterima:",
       "1. Link saluran WA (whatsapp.com/channel/...)",
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
       "Saluran utama bot sekarang:",
       `Link : ${config.saluran?.link || "-"}`,
       `ID config : ${config.saluran?.id || "-"}`,
-      `Mau ID numeriknya? Ketik *.saluranid cek*`,
+      `Mau ID numeriknya? Ketik *.channelid cek*`,
     ].join("\n")));
   }
 
@@ -107,8 +107,8 @@ async function handler(m, { sock }) {
       "Input gak dikenali sebagai link/kode saluran.",
       "",
       "Contoh bener:",
-      ".saluranid https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29",
-      ".saluranid 0029Vb97Nir9RZAWiwelWi29",
+      ".channelid https://whatsapp.com/channel/0029Vb97Nir9RZAWiwelWi29",
+      ".channelid 0029Vb97Nir9RZAWiwelWi29",
     ].join("\n")));
   }
 
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     `Verified : ${meta.verification === "VERIFIED" ? "✅ ya" : "❌ bukan"}`,
     "",
     "Mau jadiin saluran utama bot? Ketik:",
-    `.setsaluran https://whatsapp.com/channel/${invite}`,
+    `.setchannel https://whatsapp.com/channel/${invite}`,
   ];
   return m.reply(claraWrap("Saluran ID — Convert URL → Newsletter ID", lines.join("\n")));
 }

@@ -164,7 +164,7 @@ t("3a. bot admin → reply nunjukin saluran ✅ terkirim", /terkirim/.test(repAd
 // SUBSCRIBER → reply bilang DILEWATI + solusi "jadikan admin"
 const repSub = fromSC(await runBotOff("SUBSCRIBER"));
 t("3b. bukan admin → reply nunjukin DILEWATI (gak senyap)", /dilewati/i.test(repSub), repSub.split("\n").find((l) => l.includes("saluran") || /dilewati/i.test(l)));
-t("3c. kasih solusi jadikan bot admin + .saluranid", /jadikan bot admin/.test(repSub) && /\.saluranid/.test(repSub), repSub.split("\n").find((l) => /dilewati/i.test(l)));
+t("3c. kasih solusi jadikan bot admin + .channelid", /jadikan bot admin/.test(repSub) && /\.channelid/.test(repSub), repSub.split("\n").find((l) => /dilewati/i.test(l)));
 
 // GUEST → reply nunjukin "belum follow"
 const repGuest = fromSC(await runBotOff("GUEST"));

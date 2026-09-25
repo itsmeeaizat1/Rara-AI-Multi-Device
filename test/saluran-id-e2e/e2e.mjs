@@ -1,4 +1,4 @@
-// E2E — Saluran ID: resolve URL→ID newsletter + fix notif .bot on/off ke saluran + .setsaluran persist
+// E2E — Saluran ID: resolve URL→ID newsletter + fix notif .bot on/off ke saluran + .setchannel persist
 // Request owner 19 Sep 2026: "bot dimatiikan/diaktifkan notifnya gak sampai ke saluran nova
 // official" + "g ada fitur url saluran wa convert jadi id newsletternya".
 import { strict as assert } from "assert";
@@ -102,10 +102,10 @@ persistSaluranConfig({ id: "999888777666555@newsletter" });
 t("3f. re-persist: id lama numerik JUGO bisa keganti (regex gak cuma match placeholder)", fs.readFileSync(tmpFile, "utf8").includes('id: "999888777666555@newsletter"'));
 _setSaluranConfigPathForTest(null);
 
-// ═══ SECTION 4: plugin .saluranid (URL → ID newsletter) ═══
-w("\n— section 4: plugin .saluranid —");
+// ═══ SECTION 4: plugin .channelid (URL → ID newsletter) ═══
+w("\n— section 4: plugin .channelid —");
 
-const plugin = await import("../../plugins/owner/saluranid.js");
+const plugin = await import("../../plugins/owner/channelid.js");
 const handler = plugin.default ? plugin.default.handler : plugin.handler;
 const pluginCfg = plugin.default ? plugin.default.config : plugin.config;
 t("4a. named export config + handler (pola loader)", !!(pluginCfg && handler) || !!(plugin.config && plugin.handler));
@@ -138,24 +138,24 @@ const saluranSock = {
 
 // convert URL → ID
 {
-  const { m, sent } = mkM(`.saluranid https://whatsapp.com/channel/${INVITE_CODE}?mode=r`);
+  const { m, sent } = mkM(`.channelid https://whatsapp.com/channel/${INVITE_CODE}?mode=r`);
   await handler(m, { sock: saluranSock });
   const out = sent[0] || "";
   t("4c. URL saluran → reply ada ID numerik", out.includes(NUM_JID), out.slice(0, 120));
   t("4d. reply nunjukin nama + follower", out.toLowerCase().includes("nova ai official") && out.includes("12.345"), out.slice(0, 160));
-  t("4e. reply kasih hint .setsaluran biar langsung dipasang", out.includes(".setsaluran"));
+  t("4e. reply kasih hint .setchannel biar langsung dipasang", out.includes(".setchannel"));
 }
 
 // kode invite polos
 {
-  const { m, sent } = mkM(`.saluranid ${INVITE_CODE}`);
+  const { m, sent } = mkM(`.channelid ${INVITE_CODE}`);
   await handler(m, { sock: saluranSock });
   t("4f. kode invite polos → juga dikenali", (sent[0] || "").includes(NUM_JID), (sent[0] || "").slice(0, 120));
 }
 
 // input ID newsletter → validasi + info
 {
-  const { m, sent } = mkM(`.saluranid ${NUM_JID}`);
+  const { m, sent } = mkM(`.channelid ${NUM_JID}`);
   await handler(m, { sock: saluranSock });
   const out = sent[0] || "";
   t("4g. input ID@newsletter → validasi + info verified", out.includes(NUM_JID) && out.toLowerCase().includes("verified"), out.slice(0, 140));
@@ -163,22 +163,22 @@ const saluranSock = {
 
 // invalid
 {
-  const { m, sent } = mkM(".saluranid ini bukan link");
+  const { m, sent } = mkM(".channelid ini bukan link");
   await handler(m, { sock: saluranSock });
   t("4h. input gak dikenali → pesan error + contoh", (sent[0] || "").toLowerCase().includes("gak dikenali"));
 }
 {
-  const { m, sent } = mkM(".saluranid https://whatsapp.com/channel/zzzzzzzzzzzzzz");
+  const { m, sent } = mkM(".channelid https://whatsapp.com/channel/zzzzzzzzzzzzzz");
   await handler(m, { sock: saluranSock });
   t("4i. invite gak ada → error informatif", (sent[0] || "").includes("Gagal dapat ID") || (sent[0] || "").toLowerCase().includes("gagal"));
 }
 
 // tanpa arg → guide
 {
-  const { m, sent } = mkM(".saluranid");
+  const { m, sent } = mkM(".channelid");
   await handler(m, { sock: saluranSock });
   const out = sent[0] || "";
-  t("4j. tanpa arg → panduan cara pakai", out.includes("saluranid") && out.includes("whatsapp.com/channel"));
+  t("4j. tanpa arg → panduan cara pakai", out.includes("channelid") && out.includes("whatsapp.com/channel"));
 }
 
 // ═══ SECTION 5: broadcastStatusChange kirim ke saluran (bug asli owner) ═══

@@ -1,12 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: ["buatsaluran", "createsaluran", "createnewsletter"],
+  name: "createchannel",
   alias: ["buatsaluran", "createsaluran", "createnewsletter"],
   category: "owner",
   description: "Buat saluran/newsletter baru",
-  usage: ".buatsaluran <nama>|<deskripsi>",
-  example: ".buatsaluran Info Bot|Update terbaru bot kami",
+  usage: ".createchannel <nama>|<deskripsi>",
+  example: ".createchannel Info Bot|Update terbaru bot kami",
   isOwner: true,
   cooldown: 5,
   energi: 0,
@@ -28,11 +28,11 @@ async function handler(m, { sock }) {
 
   if (!name || name.length < 2) {
     return m.reply( "📢 *Buat sAluran*\n\n" +
-        "`.buatsaluran Nama Saluran`\n" +
-        "`.buatsaluran Nama|Deskripsi`\n\n" +
+        "`.createchannel Nama Saluran`\n" +
+        "`.createchannel Nama|Deskripsi`\n\n" +
         "📝 Contoh:\n" +
-        "`.buatsaluran Info Bot`\n" +
-        "`.buatsaluran Info Bot|Update terbaru bot kami`", "buatsaluran");
+        "`.createchannel Info Bot`\n" +
+        "`.createchannel Info Bot|Update terbaru bot kami`", "createchannel");
   }
 
   try {
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         `Subscribers: ${result?.subscribers || 0}\n\n` +
         `_Saluran ini bisa dikonfigurasi di config.saluran.id_`);
   } catch (err) {
-    return m.reply(claraWrap("buatsaluran", `❌ Gagal membuat saluran: ${err.message}`));
+    return m.reply(claraWrap("createchannel", `❌ Gagal membuat saluran: ${err.message}`));
   }
 }
 

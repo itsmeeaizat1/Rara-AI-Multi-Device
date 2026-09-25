@@ -10,12 +10,12 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const pluginConfig = {
-  name: "setsaluran",
-  alias: ["setsaluran"],
+  name: "setchannel",
+  alias: ["setsaluran", "saluranset"],
   category: "owner",
   description: "Set ID & link saluran WA untuk broadcast",
-  usage: ".setsaluran <link saluran>",
-  example: ".setsaluran https://whatsapp.com/channel/1234567890abcdef",
+  usage: ".setchannel <link saluran>",
+  example: ".setchannel https://whatsapp.com/channel/1234567890abcdef",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -47,12 +47,12 @@ async function handler(m, { sock }) {
       "Link: " + currentLink + "\n" +
       "Status: " + status + "\n\n" +
       "Cara set:\n" +
-      "1. Ketik: .setsaluran <link saluran>\n" +
-      "   Contoh: .setsaluran https://whatsapp.com/channel/1234567890abcdef\n\n" +
+      "1. Ketik: .setchannel <link saluran>\n" +
+      "   Contoh: .setchannel https://whatsapp.com/channel/1234567890abcdef\n\n" +
       "2. Atau set manual di config.js bagian saluran.id\n" +
       "   Format ID: 120363xxx@newsletter\n\n" +
-      "3. Bikin saluran baru: .buatsaluran <nama>\n\n" +
-      "Cuma mau convert link → ID? Ketik: .saluranid <link>", "setsaluran");
+      "3. Bikin saluran baru: .createchannel <nama>\n\n" +
+      "Cuma mau convert link → ID? Ketik: .channelid <link>", "setchannel");
   }
 
   // Parse input - could be a link or an ID
@@ -81,17 +81,17 @@ async function handler(m, { sock }) {
         if (metadata?.name) saluranName = metadata.name;
       } else {
         // If can't get ID, save the link and let owner set ID manually
-        return m.reply(claraWrap("setsaluran", [
+        return m.reply(claraWrap("setchannel", [
           "Tidak bisa dapat ID dari link tersebut.",
           "",
           "💡 Coba cara manual:",
           "1. Buka saluran di HP",
           "2. Titik tiga -> Info Saluran",
           "3. Salin ID (format: 120363xxx@newsletter)",
-          "4. Ketik: .setsaluran <ID>",
+          "4. Ketik: .setchannel <ID>",
           "",
           "Atau tetap simpan link dulu?",
-          "Ketik: .setsaluran link " + saluranLink,
+          "Ketik: .setchannel link " + saluranLink,
         ]));
       }
     } catch (e) {
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
         "Set manual:\n" +
         "1. Buka saluran di HP\n" +
         "2. Salin ID (format: 120363xxx@newsletter)\n" +
-        "3. Ketik: .setsaluran <ID>"
+        "3. Ketik: .setchannel <ID>"
       );
     }
   } else if (input.includes("@newsletter")) {
@@ -114,14 +114,14 @@ async function handler(m, { sock }) {
     saluranId = config.saluran?.id || "@newsletter";
     // Don't change ID, just update link
   } else {
-    return m.reply(claraWrap("setsaluran", [
+    return m.reply(claraWrap("setchannel", [
       "Format tidak dikenal.",
       "",
       "💡 Ketik:",
-      "1. .setsaluran <link saluran> - auto detect ID",
-      "2. .setsaluran 120363xxx@newsletter - set ID manual",
-      "3. .setsaluran link <url> - set link saja",
-      "4. .setsaluran - lihat config saat ini",
+      "1. .setchannel <link saluran> - auto detect ID",
+      "2. .setchannel 120363xxx@newsletter - set ID manual",
+      "3. .setchannel link <url> - set link saja",
+      "4. .setchannel - lihat config saat ini",
     ]));
   }
 
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
     replyText += "Nama: " + saluranName + "\n\n";
     replyText += "Broadcast ke saluran sekarang *aktif*.\n";
     replyText += "Event yang ikut: notif bot on/off/mute, daftarsewa, jadibot, ban, block, sewa approve/reject/expired\n\n";
-    replyText += "Cuma mau liat ID saluran? Ketik: .saluranid <link>";
+    replyText += "Cuma mau liat ID saluran? Ketik: .channelid <link>";
 
     return m.reply(replyText);
   } catch (e) {
