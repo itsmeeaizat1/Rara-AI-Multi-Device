@@ -51,10 +51,26 @@ const FORBIDDEN = [
 ];
 
 // ── seams buat e2e ──
-const __oc = { chat: null, root: null, backupDir: null };
+const __oc = { chat: null, root: null, backupDir: null, mcpCall: null, mcpTools: null };
 export function _setOcodeChatForTest(fn) { __oc.chat = fn; }
 export function _setOcodePathsForTest({ root, backupDir }) { __oc.root = root; __oc.backupDir = backupDir; }
+export function _setOcodeMcpForTest({ call, tools } = {}) { __oc.mcpCall = call || null; __oc.mcpTools = tools || null; }
 export function _resetOcodeForTest() { for (const k of Object.keys(__oc)) delete __oc[k]; state.running = false; state.abort = false; }
+
+// ── MCP (request owner 25 Sep 2026: "mcp di github bsa diakses ai agent dan
+// ── opencode") — server MCP terpasang via .mcp kebaca ocode juga. Lazy
+// ── import biar modul tetap ringan & e2e tanpa database gak kena.
+async function defaultMcpCall(server, tool, args) {
+  const { mcpCallTool } = await import("./nova-mcp.js");
+  return mcpCallTool(server, tool, args);
+}
+async function defaultMcpTools() {
+  try {
+    const { getMcpTools } = await import("./nova-mcp.js");
+    return await getMcpTools();
+  } catch { return []; } // db belum init / server mati gak boleh matiin agent
+}
+const MAX_MCP_OUT_CHARS = 12000; // hasil tool MCP dipotong biar context gak meledak
 export function _ocodeState() { return { ...state }; }
 
 // ── util ──
@@ -128,7 +144,8 @@ export function ocodePathCheck(root, rel) {
 }
 
 // ── eksekusi satu aksi → string hasil untuk model ──
-function execAction(root, a) {
+// async: aksi mcp panggil server eksternal (tool MCP dari .mcp).
+async function execAction(root, a) {
   const act = String(a.action || "").toLowerCase();
   if (act === "done") return null; // sinyal selesai (ditangani caller)
   if (act === "list") {
@@ -198,10 +215,22 @@ function execAction(root, a) {
     fs.writeFileSync(p.abs, content, "utf8");
     return "OK: " + a.path + " ditulis (" + content.split("\n").length + " baris) — backup otomatis dibuat";
   }
-  if (act === "run" || act === "bash" || act === "shell") {
-    return "ERROR: shell DIMATIKAN (mode aman). Aksi yang ada: list, read, search, write, edit, done.";
+  if (act === "mcp") {
+    const server = String(a.server || "").toLowerCase();
+    const tool = String(a.tool || "");
+    if (!server || !tool) return "ERROR: aksi mcp butuh field server & tool (lihat daftar TOOL MCP di prompt)";
+    const call = __oc.mcpCall || defaultMcpCall;
+    try {
+      const out = await call(server, tool, a.args && typeof a.args === "object" ? a.args : {});
+      return "MCP " + server + "." + tool + " OK:\n" + String(out).slice(0, MAX_MCP_OUT_CHARS);
+    } catch (e) {
+      return "ERROR: MCP " + server + "." + tool + " gagal: " + (e?.message || e);
+    }
   }
-  return "ERROR: aksi gak dikenal: " + act + " (yang ada: list, read, search, write, edit, done)";
+  if (act === "run" || act === "bash" || act === "shell") {
+    return "ERROR: shell DIMATIKAN (mode aman). Aksi yang ada: list, read, search, mcp, write, edit, done.";
+  }
+  return "ERROR: aksi gak dikenal: " + act + " (yang ada: list, read, search, mcp, write, edit, done)";
 }
 
 // ── parse blok ```ocode {json}``` dari jawaban model ──
@@ -249,6 +278,11 @@ Balas HANYA dengan satu atau lebih blok aksi berikut — JSON murni dalam fence 
 → tulis ulang/buat file penuh (semua newline ditulis \\n dalam string JSON).
 
 \`\`\`ocode
+{"action":"mcp","server":"context7","tool":"resolve-library-id","args":{"libraryName":"react"}}
+\`\`\`
+→ panggil tool MCP eksternal (baca docs, data GitHub, memory, dll — daftar tool MCP yang TERPASANG ada di bagian paling bawah prompt; kalau kosong = tidak ada server MCP, jangan pake aksi ini).
+
+\`\`\`ocode
 {"action":"done","summary":"ringkas perubahan & cara pakai (bahasa Indonesia)","files":["yang diubah/dibuat"]}
 \`\`\`
 → TUGAS SELESAI (WAJIB diakhiri ini).
@@ -256,9 +290,21 @@ Balas HANYA dengan satu atau lebih blok aksi berikut — JSON murni dalam fence 
 ATURAN:
 - Setelah tiap aksi kamu menerima hasilnya sebagai balasan user. Kerjakan BERTAHAP: cari → baca → edit → verifikasi ulang → done.
 - Shell TIDAK ADA. Kamu TIDAK bisa install dependency — hanya edit file yang ada / buat file baru dari dependency yang sudah terpasang.
+- Tool MCP eksternal (aksi mcp) BOLEH dipakai buat baca dokumentasi/data eksternal — hasilnya cuma konteks, TIDAK mengubah file server.
 - Area DILARANG (otomatis diblokir): .env, apikey/apikeys.json, storage/, .git/, node_modules/ — jangan buang aksi kesana.
 - Utamakan edit presisi (aksi edit) ketimbang write penuh. Jaga gaya kode file yang sedang diedit.
 - Setelah done, tulis ringkasan perubahan + file yang disentuh + apakah perlu pm2 restart.`;
+
+// system prompt + daftar tool MCP terpasang (dinamis per tugas)
+function buildSystemPrompt(mcpTools) {
+  let p = SYSTEM_PROMPT;
+  if (mcpTools && mcpTools.length) {
+    const lines = mcpTools.slice(0, 60).map((t) => `- mcp.${t.server}.${t.tool} — ${(t.desc || "").slice(0, 120)}`);
+    p += "\n\nTOOL MCP TERPASANG (aksi mcp, field server/tool HARUS persis):\n" + lines.join("\n")
+      + (mcpTools.length > 60 ? `\n(…+${mcpTools.length - 60} tool lagi — .mcp tools <nama> di chat owner)` : "");
+  }
+  return p;
+}
 
 /**
  * Jalankan tugas coding agent.
@@ -278,8 +324,9 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval
   state.running = true; state.abort = false; state.task = task; state.startedAt = Date.now();
   const root = __oc.root || path.resolve(repoRoot || process.cwd());
   const chat = __oc.chat || ((o) => router9v2Chat(o));
+  const mcpToolList = __oc.mcpTools !== null ? __oc.mcpTools : await defaultMcpTools();
   const messages = [
-    { role: "system", content: SYSTEM_PROMPT },
+    { role: "system", content: buildSystemPrompt(mcpToolList) },
     { role: "user", content: "Tugas: " + task + "\n\nKerjakan sekarang, mulai dari aksi pertama." },
   ];
   const changed = [];
@@ -316,7 +363,7 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval
       for (const a of actions) {
         if (state.abort) { aborted = true; break; }
         if (a.action === "done") { doneHere = true; summary = String(a.summary || ""); files = (a.files || []).map(String); break; }
-        const rel = a.path ? String(a.path) : "";
+        const rel = a.path ? String(a.path) : (a.action === "mcp" ? `mcp ${a.server}.${a.tool}` : "");
         // ── GATE IZIN PER FILE (allow/deny ala AI agent umum) ──
         // tanya owner SEBELUM nulis; 1x per file per tugas; tanpa callback →
         // auto-izin (backward-compat pemanggil lama / non-ownerless flow)
@@ -341,7 +388,7 @@ export async function runOcodeAgent({ task, model, repoRoot, onEvent, onApproval
             }
           }
         }
-        const r = execAction(root, a);
+        const r = await execAction(root, a);
         results.push("→ " + rel + "\n" + r);
         if ((a.action === "write" || a.action === "edit") && !/^ERROR/.test(r) && !changed.includes(rel)) changed.push(rel);
         if (onEvent) onEvent({ type: "phase", text: (a.action === "write" || a.action === "edit" ? "\u270f\ufe0f " : "\U0001f4d6 ") + rel });
