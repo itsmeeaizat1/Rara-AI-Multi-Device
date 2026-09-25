@@ -13,7 +13,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { addCash, spendCash, getCash, ensureRpg } from "../../src/lib/nova-rpg-service.js";
-import { animasiRunner } from "../../src/lib/nova-anim-runner.js";
+import { playGunungCinematic, dakiCinematic, puncakCinematic, longsorCinematic, portirCinematic, basecampCinematic } from "../../src/lib/libanimationrpg/libmountainclimberrpg.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +23,7 @@ const __dirname = path.dirname(__filename);
 const STAMINA_MAX = process.env.GUNUNG_STAMINA_MAX !== undefined ? Number(process.env.GUNUNG_STAMINA_MAX) : 10;
 const STAMINA_REGEN_S = process.env.GUNUNG_REGEN_S !== undefined ? Number(process.env.GUNUNG_REGEN_S) : 300; // +1 / 5 mnt
 const DAKI_CD_MS = process.env.GUNUNG_DAKI_CD_MS !== undefined ? Number(process.env.GUNUNG_DAKI_CD_MS) : 2000;
-const ANIM_FRAME_MS = process.env.GUNUNG_ANIM_MS !== undefined ? Number(process.env.GUNUNG_ANIM_MS) : undefined; // override jeda frame (default lib: 900ms→600ms)
+
 
 const ZONA = [
   { n: 1, nama: "🏕️ Basecamp", cost: 1, loot: 40 },
@@ -430,7 +430,6 @@ async function handler(m, { sock, config }) {
     }
 
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
-    await animasiRunner(sock, m.chat, { level: (ensureRpg(m, m.pushName) || {}).level || 1, frameMs: ANIM_FRAME_MS, aksi: u.zona >= 6 ? "panjat" : null, hasil: `🏁 SAMPAI! Hasil daki zona ${u.zona + 1} menyusul…` });
 
     // ── rolling daki ──
     u.stamina -= cost;
@@ -463,6 +462,7 @@ async function handler(m, { sock, config }) {
       // 🧑‍🌾 PORTIR KENANGA menyelamatkan — tetap di zona, stamina aman
       u.portirUsed = true;
       saveDb();
+      await playGunungCinematic(sock, m.chat, portirCinematic({ zona: u.zona }));
       console.log(`[gunung] ${m.sender} diselamatkan portir dari longsor zona ${u.zona}`);
       return m.reply(novaGameBox({
         title: "gunung", icon: "🧑‍🌾",
@@ -486,6 +486,7 @@ async function handler(m, { sock, config }) {
       u.zona = targetZona;
       u.stamina = Math.max(0, u.stamina - 1);
       saveDb();
+      await playGunungCinematic(sock, m.chat, longsorCinematic({ zonaDari: dari, zonaKe: targetZona, cuacaIcon: CUACA_ICON[cuaca] }));
       console.log(`[gunung] ${m.sender} LONSOR zona ${dari} → turun ke ${targetZona}`);
       return m.reply(novaGameBox({
         title: "gunung", icon: "⛰️",
@@ -531,6 +532,7 @@ async function handler(m, { sock, config }) {
       const summitGold = 2500 + u.puncak * 250;
       addCash(m, summitGold);
       saveDb();
+      await playGunungCinematic(sock, m.chat, puncakCinematic({ gunungNama: u.gunung, puncak: u.puncak, gold: summitGold }));
       console.log(`[gunung] ${m.sender} PUNCAK! ${u.gunung} (#${u.puncak})`);
       return m.reply(novaGameBox({
         title: "gunung", icon: "🏔️",
@@ -551,6 +553,16 @@ async function handler(m, { sock, config }) {
         ].filter(Boolean).join("\n"),
       }));
     }
+
+    // 🎬 cutscene gaya Nintendo — durasi nyesuaikan situasi (zona/event/gua)
+    await playGunungCinematic(sock, m.chat, dakiCinematic({
+      level: (ensureRpg(m, m.pushName) || {}).level || 1,
+      zona: u.zona, zonaNama: naikKe.nama,
+      aksi: u.zona >= 6 ? "panjat" : null,
+      cuacaIcon: CUACA_ICON[cuaca], cuaca,
+      events: extraEvents.map((e) => e.t), gua,
+      gold: goldGain, rombongan, risiko,
+    }));
 
     return m.reply(novaGameBox({
       title: "gunung", icon: naikKe.nama.split(" ")[0],
@@ -586,7 +598,7 @@ async function handler(m, { sock, config }) {
     addCash(m, 50);
     saveDb();
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
-    await animasiRunner(sock, m.chat, { level: (ensureRpg(m, m.pushName) || {}).level || 1, frameMs: ANIM_FRAME_MS, hasil: "🏕️ BASECAMP TIBA! Ekspedisi dimulai…" });
+    await playGunungCinematic(sock, m.chat, basecampCinematic({ gunungNama: u.gunung }));
     return m.reply(novaGameBox({
       title: "gunung", icon: "🏔️",
       flavor: "🏔️ *SELAMAT DATANG DI PENDAKIAN GUNUNG LEGENDA!*",
