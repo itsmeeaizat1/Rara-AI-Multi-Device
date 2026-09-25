@@ -1,5 +1,5 @@
 {
-  "_catatan": "Konfigurasi APIKEY 9Router LOKAL (native). Bagian 'gateway.apikey' diisi OTOMATIS oleh bot (jangan diubah manual). Bagian 'providers' diisi owner untuk model berbayar / provider yang butuh apikey — key di sini otomatis di-sync ke 9Router lokal saat bot boot / .ai9 sync. Dashboard 9Router: http://127.0.0.1:20128/dashboard",
+  "_catatan": "Konfigurasi APIKEY 9Router LOKAL (native). Bagian 'gateway.apikey' diisi OTOMATIS oleh bot (jangan diubah manual). Bagian 'providers' diisi owner untuk model berbayar / provider yang butuh apikey — key di sini otomatis di-sync ke 9Router lokal saat bot boot / .9router sync. Dashboard 9Router: http://127.0.0.1:20128/dashboard",
   "gateway": {
     "apikey": ""
   },
