@@ -2620,7 +2620,8 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - **ATURAN PLANNER (nova-agent.js SYS_PLAN "ATURAN HAK AKSES"):** penolakan dikasih tahu ke user, gak boleh dijanjiin sukses, gak boleh diulangin nyoba command yang sama.
 - **ANTI-LOOP EXTRA:** manggil agent dari dalam agent kini blok `agent`+`aisuperagent`+`novaagent` (sebelumnya cuma `agent`, nama utama lolos → risiko rekursi).
 - **PLUGIN `.aisuperagent` TETAP SEMUA USER** (isOwner:false, isPremium:false) — energi/cooldown middleware tetap jalan; aksi grup (kick/promote/leave/bikin fitur) udah punya gate `m.isOwner`/admin sendiri dari sebelumnya.
-- **E2E:** BARU `test/agent-access-e2e` 20/20 (gate owner/premium/partner × user/premium/owner, alias, command bebas, command nyata .bootdoctor/.sticker dari registry asli via loadPlugins, wiring source). Regresi agent 115/115 + agentloop 40/40 + autotask 31/31 + formatguard 22/22.
+- **REVISI OWNER (kedua): ADMIN GRUP BOLEH** — bot admin di grup orang + admin grup suruh agent kick/task admin (non-owner) → DIBOLEHKAN. Gate ditambah `isAdmin` (caller harus admin grup / owner — mirror middleware; di DM dibiarkan lewat, plugin isGroup yang jawab "khusus grup") dan `isBotAdmin` (bot harus admin di grup itu) → ditolak jujur, bukan pura-pura sukses. Fitur owner-only TETAP keblok buat admin grup.
+- **E2E:** BARU `test/agent-access-e2e` 29/29 (gate owner/premium/partner/admin/botadmin × user/premium/owner/admin-grup, alias, command bebas, command nyata .bootdoctor/.sticker/.add dari registry asli via loadPlugins, wiring source). Regresi agent 115/115 + agentloop 40/40 + autotask 31/31 + formatguard 22/22.
 
 ## v24.4.0 — AGENT SKILLS: 183 SKILL SPESIALIS (25 Sep 2026)
 

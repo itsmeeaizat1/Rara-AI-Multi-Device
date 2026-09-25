@@ -17,6 +17,8 @@ const FAKES = [
   { config: { name: "fakepremiumq", alias: ["premcmd"], category: "tools", isPremium: true, isEnabled: true } },
   { config: { name: "fakepartnerx", alias: ["partcmd"], category: "tools", isPartner: true, isEnabled: true } },
   { config: { name: "fakeeveryone", alias: ["allcmd"], category: "fun", isEnabled: true } },
+  { config: { name: "fakeadmincmd", alias: [], category: "group", isAdmin: true, isBotAdmin: true, isEnabled: true } },
+  { config: { name: "fakesetwelcome", alias: [], category: "group", isAdmin: true, isEnabled: true } },
 ];
 // registry plugin NYATA dulu (boots, sticker, dll) — loadPlugins CLEAR store,
 // jadi WAJIB dipanggil SEBELUM register fake
@@ -84,15 +86,41 @@ w("\n— 6. command nyata bot —");
   check("6b. .sticker (bebas nyata) + user biasa → boleh", r2 === null, JSON.stringify(r2));
 }
 
-// ─── 7. WIRING: executor nyuruh gate + anti-loop + aturan planner ───
-w("\n— 7. wiring sumber —");
+// ─── 7. GATE ADMIN GRUP (revisi owner 25 Sep: admin grup boleh, asal non-owner) ───
+w("\n— 7. gate admin grup —");
+{
+  const GA = { isGroup: true, isAdmin: true, isBotAdmin: true, isOwner: false, isPremium: false, isPartner: false };
+  const GN = { isGroup: true, isAdmin: false, isBotAdmin: true, isOwner: false, isPremium: false, isPartner: false };
+  const DM = { isGroup: false, isAdmin: false, isOwner: false, isPremium: false, isPartner: false };
+  const r = await gateCommandAccess("fakesetwelcome", GA);
+  check("7a. admin-cmd + admin grup → boleh", r === null, JSON.stringify(r));
+  const r2 = await gateCommandAccess("fakesetwelcome", GN);
+  check("7b. admin-cmd + member biasa → ditolak", r2?.ok === false, JSON.stringify(r2));
+  check("7c. pesan jelas ADMIN GRUP", /ADMIN GRUP/.test(r2?.msg || ""), r2?.msg);
+  const r3 = await gateCommandAccess("fakesetwelcome", { ...GA, isAdmin: false, isOwner: true });
+  check("7d. admin-cmd + owner → boleh (owner lewat semua)", r3 === null, JSON.stringify(r3));
+  const r4 = await gateCommandAccess("fakesetwelcome", DM);
+  check("7e. admin-cmd + DM → biarin lewat (plugin jawab khusus grup)", r4 === null, JSON.stringify(r4));
+  const r5 = await gateCommandAccess("fakeadmincmd", { ...GA, isBotAdmin: false }); // caller admin, BOT bukan admin
+  check("7f. botadmin-cmd + bot bukan admin → ditolak", r5?.ok === false && /aku belum jadi admin/.test(r5?.msg || ""), JSON.stringify(r5));
+  const r6 = await gateCommandAccess("fakeadmincmd", GA);
+  check("7g. admin+botadmin ok → boleh", r6 === null, JSON.stringify(r6));
+  // command nyata bot: .add = isAdmin + isBotAdmin
+  const r7 = await gateCommandAccess("add", GA);
+  check("7h. .add nyata + admin grup → boleh", r7 === null, JSON.stringify(r7));
+  const r8 = await gateCommandAccess("add", GN);
+  check("7i. .add nyata + member biasa → ditolak", r8?.ok === false, JSON.stringify(r8));
+}
+
+// ─── 8. WIRING: executor nyuruh gate + anti-loop + aturan planner ───
+w("\n— 8. wiring sumber —");
 {
   const fsReal = fs;
   const src = fsReal.readFileSync(new URL("../../plugins/ai/agent.js", import.meta.url), "utf-8");
-  check("7a. executor panggil gateCommandAccess sebelum eksekusi", /const denied = await gateCommandAccess\(cmd, m\);\s*\n\s*if \(denied\) return denied;/.test(src), "");
-  check("7b. anti-loop: .aisuperagent/.novaagent juga keblok", /cmd === "aisuperagent" \|\| cmd === "novaagent"/.test(src), "");
+  check("8a. executor panggil gateCommandAccess sebelum eksekusi", /const denied = await gateCommandAccess\(cmd, m\);\s*\n\s*if \(denied\) return denied;/.test(src), "");
+  check("8b. anti-loop: .aisuperagent/.novaagent juga keblok", /cmd === "aisuperagent" \|\| cmd === "novaagent"/.test(src), "");
   const agentSrc = fsReal.readFileSync(new URL("../../src/lib/nova-agent.js", import.meta.url), "utf-8");
-  check("7c. SYS_PLAN ada aturan hak akses", agentSrc.includes("ATURAN HAK AKSES"), "");
-  check("7d. no-toolbox replace pattern tetap utuh", agentSrc.includes('TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\\n{{TOOLBOX}}'), "");
+  check("8c. SYS_PLAN ada aturan hak akses", agentSrc.includes("ATURAN HAK AKSES"), "");
+  check("8d. no-toolbox replace pattern tetap utuh", agentSrc.includes('TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\\n{{TOOLBOX}}'), "");
 }
 setTimeout(() => { try { w(`\n===== ${pass} PASS, ${fail} FAIL =====`); process.exit(fail ? 1 : 0); } catch {} }, 300);
