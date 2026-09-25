@@ -287,7 +287,7 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
   //    (gates/cooldown/energi middleware tetap jalan — konsisten)
   const command = deps.command || (async (t) => {
     const cmd = String(t.cmd || "").toLowerCase().trim();
-    if (!cmd || cmd === "agent" || cmd === "aisuperagent" || cmd === "novaagent") return { ok: false, msg: "Command gak valid / gak boleh manggil agent dari dalam agent (loop)" };
+    if (!cmd || cmd === "agent" || cmd === "aisuperagent" || cmd === "novaagent" || cmd === "9router") return { ok: false, msg: "Command gak valid / gak boleh manggil agent dari dalam agent (loop)" };
     // 🔒 gate akses (owner 25 Sep): non-owner gak boleh nyuruh agent
     // jalanin fitur owner/premium/partner-only — agent jawab jujur
     const denied = await gateCommandAccess(cmd, m);
@@ -888,4 +888,4 @@ async function handler(m, { sock, db, deps } = {}) {
   }
 }
 
-export { pluginConfig as config, handler, execAction };
+export { pluginConfig as config, handler, execAction, buildExecutors };

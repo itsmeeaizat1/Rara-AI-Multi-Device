@@ -45,7 +45,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const SUBS = ["model", "setmodel", "modelset", "status", "sync", "start", "gambar", "image", "img", "buat"];
+const SUBS = ["model", "setmodel", "modelset", "status", "sync", "start", "gambar", "image", "img", "buat", "ag", "agent"];
 const IMG_WORDS = ["gambar", "image", "img", "buat", "buatkan"];
 
 // ── helper pref model per chat ──
@@ -64,15 +64,15 @@ function guide(m) {
   return m.reply(novaGuideV2("9router", {
     kaomoji: "ヾ(≧▽≦*)o 🚀",
     sapaan: "9Router lokal udah jalan bareng bot — 747 model AI siap dipakai!",
-    cara: "tiket pertanyaan buat chat AI, gambar buat bikin gambar, model buat liat daftar model, setmodel buat ganti model default",
-    contoh: ".9router jelaskan siapa presiden indonesia\n.9router buatkan gambar kucing\n.9router model glm\n.9router setmodel glm/glm-4.7",
+    cara: "tiket pertanyaan buat chat AI, ag <tugas> buat suruh agent browsing/bikin kode/bikin file, gambar buat bikin gambar, model buat liat daftar model, setmodel buat ganti model default",
+    contoh: ".9router jelaskan siapa presiden indonesia\n.9router ag browsing berita hari ini\n.9router ag buatkan kode fitur html\n.9router model glm\n.9router setmodel glm/glm-4.7",
     note: "kirim/reply foto + caption pertanyaan juga bisa — dibaca model vision native 9router\nsync & start hanya owner",
     modelAktif: getModelPref(m.chat),
     spec: ["⚡ ʟᴀʏᴀɴᴀɴ ʟᴏᴋᴀʟ 9ʀᴏᴜᴛᴇʀ", "⏱ ᴄᴏᴏʟᴅᴏᴡɴ 5 ᴅᴛᴋ", "💸 ɢʀᴀᴛɪꜱ"],
   }));
 }
 
-async function handler(m, { sock, args, botConfig }) {
+async function handler(m, { sock, args, botConfig, db, deps } = {}) {
   const argList = (args || []).map(String);
   const sub = argList[0]?.toLowerCase() || "";
 
@@ -326,6 +326,92 @@ async function handler(m, { sock, args, botConfig }) {
 
   // ── default: CHAT ──
   const text = argList.join(" ").trim();
+  // ── .9router ag <tugas> — AGENT MODE (tangan buat 9Router): browsing, bikin kode/file, dll ──
+  if (sub === "ag" || sub === "agent") {
+    const task = argList.slice(1).join(" ").trim();
+    if (!task) {
+      return m.reply(novaBox("9Router", [
+        "Kasih tugasnya setelah 'ag':",
+        "",
+        "• .9router ag browsing berita gempa hari ini",
+        "• .9router ag buatkan kode login page html",
+        "• .9router ag bikin file catatan.txt isinya rencama liburan",
+      ]));
+    }
+    await m.react("🛠️");
+    let statusKey = null;
+    try {
+      // pre-check: 9router harus hidup duluan — gak boleh nyaru jadi error riset
+      const up = await ensure9RouterRunning();
+      if (!up.up) {
+        await m.react("❌");
+        return m.reply(novaBox("9Router", [
+          "9Router lokal belum jalan" + (up.error ? " — " + up.error : ""),
+          "Coba lagi atau .9router start (owner)",
+        ]));
+      }
+      const [{ runAgent }, { buildExecutors, buildToolbox }, { memoryBlock }, { skillsBlock }] = await Promise.all([
+        import("../../src/lib/nova-agent.js"),
+        import("../ai-agent/agent.js"),
+        import("../../src/lib/nova-memory.js"),
+        import("../../src/lib/nova-askills.js"),
+      ]);
+      const model = getModelPref(m.chat);
+      // semua panggilan AI agent diarahkan ke model 9Router lokal (override per-call, gak ganti deps global)
+      const router9Ai = async (prompt, opts = {}) => {
+        const r = await router9Chat({ model, user: prompt, system: opts.systemPrompt, maxTokens: 4096 });
+        return r.text;
+      };
+      const setStatus = async (text) => {
+        try {
+          if (!statusKey) {
+            const sent = await sock.sendMessage(m.chat, { text: String(text) });
+            statusKey = sent?.key || null;
+          } else {
+            await sock.sendMessage(m.chat, { text: String(text), edit: statusKey });
+          }
+        } catch {}
+      };
+      const executors = buildExecutors(m, sock, db, null, deps || {}, setStatus);
+      const toolbox = await buildToolbox();
+      await setStatus("🛠️ agent 9router nyala — tugas: " + task.slice(0, 120));
+      const res = await runAgent(task, {
+        ai: router9Ai,
+        execTools: executors,
+        toolbox,
+        memBlock: memoryBlock(db, m.sender, task),
+        skillBlock: skillsBlock(task),
+        context: {
+          isGroup: m.isGroup !== false,
+          isAdmin: !!m.isAdmin,
+          isOwner: !!m.isOwner,
+          isBotAdmin: !!m.isBotAdmin,
+          chat: m.chat,
+          sender: m.sender,
+          mediaAttached: false,
+        },
+      });
+      if (res?.error) {
+        await m.react("❌");
+        return m.reply(novaBox("9Router", [res.error]));
+      }
+      // tools/browse/riset udah kirim hasilnya sendiri via executor; jawaban akhir tetep dikirim
+      const via = "— via 9Router Lokal • " + model + " • mode " + (res?.mode || "agent");
+      const ans = String(res?.answer || "").trim();
+      if (ans) {
+        const body = ans.length > 6000 ? ans.slice(0, 6000) + "..." : ans;
+        await m.reply(body + "\n\n" + via);
+      }
+      await m.react("🐣");
+      if (statusKey) { try { await sock.sendMessage(m.chat, { text: "✅ selesai", edit: statusKey }); } catch {} }
+    } catch (e) {
+      console.error("[9router-ag]:", e.message);
+      await m.react("❌");
+      return m.reply(novaBox("9Router", ["Gagal: " + String(e.message).slice(0, 200)]));
+    }
+    return;
+  }
+
   if (!text) return guide(m);
 
   try {
