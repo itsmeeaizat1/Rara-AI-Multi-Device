@@ -148,7 +148,7 @@ check("13c. .skor kosong → pesan gak ada laga", fromSC(String(mkM.lastReply ||
 // ═══ 14. liveinterval subcommand ═══
 const mP3 = mkM(["liveinterval"]);
 await jbn.handler(mP3, { sock: mockSock, args: ["liveinterval"] });
-check("14a. .liveinterval nunjukin interval", String(mkM.lastReply || "").toLowerCase().includes("2 menit"));
+check("14a. .liveinterval nunjukin interval (smallcaps-aware)", fromSC(String(mkM.lastReply || "")).includes("2 menit"));
 const mP4 = mkM(["liveinterval", "99"]);
 await jbn.handler(mP4, { sock: mockSock, args: ["liveinterval", "99"] });
 check("14b. interval invalid ditolak", String(mkM.lastReply || "").toLowerCase().includes("1–30") || String(mkM.lastReply).toLowerCase().includes("1-30"));

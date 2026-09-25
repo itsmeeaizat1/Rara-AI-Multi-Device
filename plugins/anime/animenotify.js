@@ -15,7 +15,7 @@ import {
   getContentTypes, setContentType, DIGEST_LABELS,
   setIntervalMenit, getListMode, setListMode,
 } from "../../src/lib/nova-auto-anime-notifier.js";
-import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, novaGuideV2, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animenotify",
@@ -122,13 +122,13 @@ async function handler(m, { sock, args }) {
       setListMode(false);
       return m.reply(novaSuccess(pluginConfig.name, "Mode List *OFF* — digest anime cuma kirim *1 info anime terbaru* per notifikasi (anti-spam)"));
     }
-    return m.reply(
-      `「 ✦ ${pluginConfig.name.toUpperCase()} — MODE LIST ✦ 」\n\n` +
-      `Mode sekarang: *${getListMode() ? "ON" : "OFF"}*\n` +
-      `${getListMode() ? "ON = digest terbaru/hangat kirim beberapa card anime + rangkuman sisa" : "OFF = digest terbaru/hangat cuma kirim 1 info anime TERBARU (anti-spam, default)"}\n\n` +
-      `Atur: *.animenotify list on|off*\n` +
-      `Contoh: *.animenotify list on* → balik ke bentuk beberapa info`
-    );
+    return m.reply(novaGuideV2(pluginConfig.name, {
+      kaomoji: "(๑˃ᴗ˂)ﻭ",
+      sapaan: `mode list sekarang *${getListMode() ? "ON" : "OFF"}* — mau diubah?`,
+      cara: "ketik .animenotify list on atau off",
+      contoh: ".animenotify list on",
+      note: getListMode() ? "ON = digest kirim beberapa card anime + rangkuman sisa" : "OFF = digest cuma kirim 1 info anime terbaru (anti-spam, default)",
+    }));
   }
 
   // Interval cek (menit, 5-720) — request owner 9 Sep: "cek tiap 1 jam bisa diset"
@@ -136,13 +136,13 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(
-        `「 ✦ ${pluginConfig.name.toUpperCase()} — INTERVAL ✦ 」\n\n` +
-        `Interval cek sekarang: *tiap ${st.intervalMenit} menit*\n` +
-        `Mode otomatis: begitu ada anime/episode baru terdeteksi, langsung dikirim ke subscriber (dedup — gak dobel).\n\n` +
-        `Atur: *.animenotify interval <menit>* (5–720)\n` +
-        `Contoh: *.animenotify interval 60* → cek tiap 1 jam`
-      );
+      return m.reply(novaGuideV2(pluginConfig.name, {
+        kaomoji: "(๑˃ᴗ˂)ﻭ",
+        sapaan: `interval cek sekarang tiap ${st.intervalMenit} menit — mau diatur?`,
+        cara: "ketik .animenotify interval <menit> (5–720)",
+        contoh: ".animenotify interval 60",
+        note: "begitu ada anime atau episode baru terdeteksi langsung dikirim ke subscriber (dedup, gak dobel)",
+      }));
     }
     const res = setIntervalMenit(val);
     if (!res) {

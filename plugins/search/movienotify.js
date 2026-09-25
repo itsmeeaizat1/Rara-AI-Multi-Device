@@ -16,7 +16,7 @@ import {
   MOVIE_TYPES, searchMovies, fetchTrending, fetchUpcoming, fetchNowPlaying,
   setIntervalMenit, sendMovieCardTo, enrichMovie,
 } from "../../src/lib/nova-movie-notifier.js";
-import { novaError, novaSuccess, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaSuccess, novaGuide, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "movienotify",
@@ -110,12 +110,13 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(
-        `「 ✦ ${pluginConfig.name.toUpperCase()} — INTERVAL ✦ 」\n\n` +
-        `Interval cek sekarang: *tiap ${st.intervalMenit} menit*\n\n` +
-        `Atur: *.movienotify interval <menit>* (5–720)\n` +
-        `Contoh: *.movienotify interval 60* → cek tiap 1 jam`
-      );
+      return m.reply(novaGuideV2(pluginConfig.name, {
+        kaomoji: "(ノ◕ヮ◕)ノ",
+        sapaan: `interval cek sekarang tiap ${st.intervalMenit} menit — mau diatur?`,
+        cara: "ketik .movienotify interval <menit> (5–720)",
+        contoh: ".movienotify interval 60",
+        note: "film baru dideteksi berkala lalu dikirim ke semua chat yang langganan",
+      }));
     }
     const res = setIntervalMenit(val);
     if (!res) {
@@ -170,16 +171,13 @@ async function handler(m, { sock, args }) {
     return null;
   }
 
-  return m.reply(
-    `「 ✦ ${pluginConfig.name.toUpperCase()} ✦ 」\n\n` +
-    `🎯 *Auto:* ${isEnabled() ? "ON" : "OFF"} global — film baru otomatis masuk (gratis, no API key)\n\n` +
-    `📌 *Langganan:* .movienotify on | off | status\n` +
-    `📌 *Tipe:* .movienotify info [trending|upcoming|nowplaying] [on|off]\n` +
-    `📌 *Interval:* .movienotify interval <menit> (5–720)\n` +
-    `📌 *Sekarang:* .movienotify now\n` +
-    `📌 *Manual:* .movienotify cari <judul> | trending | upcoming | nowplaying\n\n` +
-    `🔥 Contoh: .movienotify cari avengers`
-  );
+  return m.reply(novaGuideV2(pluginConfig.name, {
+    kaomoji: "(ノ◕ヮ◕)ノ",
+    sapaan: `pengin update film terbaru otomatis? langganan aja! (auto ${isEnabled() ? "ON" : "OFF"} global, gratis tanpa apikey)`,
+    cara: "on buat langganan · off berhenti · status cek kondisi · info atur tipe · interval atur jeda · now kirim sekarang · cari <judul> buat manual",
+    contoh: ".movienotify on\n.movienotify cari avengers",
+    note: "film baru trending/upcoming/nowplaying otomatis masuk ke chat yang langganan",
+  }));
 }
 
 export { pluginConfig as config, handler }

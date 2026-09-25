@@ -18,7 +18,7 @@ import {
   getContentTypes, setContentType, BOLA_TYPES, LEAGUE_DB,
   setIntervalMenit, setApifyIntervalMenit, setLiveIntervalMenit, getLiveNow,
 } from "../../src/lib/nova-auto-bola-notifier.js";
-import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, novaGuideV2, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jadwalbolanotify",
@@ -149,12 +149,13 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(
-        `「 ✦ ${pluginConfig.name.toUpperCase()} — INTERVAL ✦ 」\n\n` +
-        `Interval cek sekarang: *tiap ${st.intervalMenit} menit*\n\n` +
-        `Atur: *.jadwalbolanotify interval <menit>* (5–720)\n` +
-        `Contoh: *.jadwalbolanotify interval 15* → cek tiap 15 menit`
-      );
+      return m.reply(novaGuideV2(pluginConfig.name, {
+        kaomoji: "(•̀ᴗ•́)و",
+        sapaan: `interval cek sekarang tiap ${st.intervalMenit} menit — mau diatur?`,
+        cara: "ketik .jadwalbolanotify interval <menit> (5–720)",
+        contoh: ".jadwalbolanotify interval 15",
+        note: "jadwal hari ini dicek berulang biar perubahan jam kickoff kekirim juga",
+      }));
     }
     const res = setIntervalMenit(val);
     if (!res) return m.reply(novaError(pluginConfig.name, "interval harus 5–720 menit (contoh: .jadwalbolanotify interval 15)"));
@@ -169,15 +170,13 @@ async function handler(m, { sock, args }) {
       if (!res) return m.reply(novaError(pluginConfig.name, "interval Apify harus 15–720 menit — jaga credit free Apify $5/bln (biaya $0.003/match record)"));
       return m.reply(novaSuccess(pluginConfig.name, `interval cek Apify (Liga 2 via Flashscore) sekarang *tiap ${res} menit*`));
     }
-    return m.reply(
-      `「 ✦ ${pluginConfig.name.toUpperCase()} — APIFY FLASHSCORE ✦ 」\n\n` +
-      `Liga 2 Indonesia datanya CUMA ada di Flashscore (via Apify).\n` +
-      `Token: ${st.apifyToken ? "✅ sudah diset" : "❌ BELUM — set env APIFY_TOKEN atau apikeys.json apifyToken"}\n` +
-      `Interval cek: *tiap ${st.apifyIntervalMenit} menit* (window 07:00–24:00 WIB)\n` +
-      `Cek terakhir: ${st.lastApifyCheck ? new Date(st.lastApifyCheck).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "belum pernah"}\n\n` +
-      `💡 Biaya Apify: $0.003/match record + $0.00005/run — interval default 120 mnt biar credit free $5/bulan aman.\n` +
-      `Atur: *.jadwalbolanotify apify <menit>* (15–720)`
-    );
+    return m.reply(novaGuideV2(pluginConfig.name, {
+      kaomoji: "(•̀ᴗ•́)و",
+      sapaan: "apify flashscore buat liga 2 indonesia — cek kondisinya dulu ya",
+      cara: `ketik .jadwalbolanotify apify <menit> (15–720)${st.apifyToken ? "" : " — token BELUM diset (env APIFY_TOKEN / apikeys.json apifyToken)"}`,
+      contoh: ".jadwalbolanotify apify 120",
+      note: `interval sekarang tiap ${st.apifyIntervalMenit} menit (window 07:00–24:00 WIB) — biaya $0.003/match record, default 120 mnt biar credit free $5/bulan aman`,
+    }));
   }
 
   // SKOR BERJALAN — cek live manual, gak perlu langganan (ala .jadwalbola)
@@ -221,13 +220,13 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(
-        `「 ✦ ${pluginConfig.name.toUpperCase()} — LIVE TICKER ✦ 」\n\n` +
-        `Ticker gol cek skor *tiap ${st.liveIntervalMenit} menit* (tipe live: ${st.liveTipe ? "AKTIF" : "MATI"})\n` +
-        `Laga terlacak live: ${st.liveTracked}\n\n` +
-        `Atur: *.jadwalbolanotify liveinterval <menit>* (1–30)\n` +
-        `Contoh: *.jadwalbolanotify liveinterval 2* → deteksi gol lebih cepat`
-      );
+      return m.reply(novaGuideV2(pluginConfig.name, {
+        kaomoji: "(•̀ᴗ•́)و",
+        sapaan: `ticker gol cek skor tiap ${st.liveIntervalMenit} menit (tipe live: ${st.liveTipe ? "AKTIF" : "MATI"}, ${st.liveTracked} laga terlacak)`,
+        cara: "ketik .jadwalbolanotify liveinterval <menit> (1–30)",
+        contoh: ".jadwalbolanotify liveinterval 2",
+        note: "makin kecil interval makin cepet gol kekirim",
+      }));
     }
     const res = setLiveIntervalMenit(val);
     if (!res) return m.reply(novaError(pluginConfig.name, "interval live harus 1–30 menit (contoh: .jadwalbolanotify liveinterval 2)"));
