@@ -65,7 +65,7 @@ function makeM({ quotedImage = false, attachImage = false, text = "" } = {}) {
 const plugins = [
   ["vision", "../../plugins/ai/vision.js"],
   ["ai-ocr", "../../plugins/ai/ai-ocr.js"],
-  ["ai9", "../../plugins/ai/ai9.js"],
+  ["9router", "../../plugins/ai/9router.js"],
   ["aianalyze", "../../plugins/ai/aianalyze.js"],
   ["enhance", "../../plugins/ai-image/enhance.js"],
   ["ocrsolve", "../../plugins/ai/ocrsolve.js"],
@@ -105,11 +105,12 @@ console.log("— vision attach —");
   check("attach foto: deteksi lolos (download kepanggil)", !!mAttach._downloadCalled, r.slice(0, 60));
 }
 
-// 4. Attach foto + caption → ai9 harus pakai caption sebagai prompt
-console.log("— ai9 caption —");
+// 4. Attach foto + caption → 9router harus pakai caption sebagai prompt (vision native)
+console.log("— 9router caption —");
 {
-  const src = (await import("node:fs")).readFileSync(new URL("../../plugins/ai/ai9.js", import.meta.url), "utf8");
-  check("ai9: caption dibaca dari m.message?.imageMessage?.caption (bukan m.msg)", src.includes("m.message?.imageMessage?.caption?.trim()"), "masih m.msg");
+  const src = (await import("node:fs")).readFileSync(new URL("../../plugins/ai/9router.js", import.meta.url), "utf8");
+  check("9router: caption dibaca dari m.message?.imageMessage?.caption (bukan m.msg)", src.includes("m.message?.imageMessage?.caption?.trim()"), "masih m.msg");
+  check("9router: foto dikirim multimodal ke 9router (bukan Gemini external)", src.includes("image_url") && !src.includes("GeminiVision"), "masih eksternal");
 }
 
 console.log(`\n${pass} PASS / ${fail} FAIL`);

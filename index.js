@@ -449,6 +449,7 @@ async function main() {
           { name: "AutoSummary", fn: () => import("./plugins/owner/autosummary.js").then(m => m.startAutoSummary?.(sock)) },
           { name: "AutoTask", fn: () => import("./plugins/ai-agent/autotask.js").then(m => m.resumeAutoTasks?.(sock)) },
           { name: "AgentLoop", fn: () => import("./plugins/ai-agent/agentloop.js").then(m => m.resumeAgentLoops?.(sock)) },
+          { name: "9Router", fn: () => import("./src/lib/nova-9router-local.js").then(m => m.initRouter9Boot?.()) },
           { name: "AutoSwgc", fn: () => import("./plugins/owner/autoswgc.js").then(m => m.startAutoSwgc?.(sock)) },
           { name: "AutoResource", fn: () => import("./plugins/owner/autoresource.js").then(m => m.startAutoResource?.(sock)) },
           { name: "ChannelHub", fn: () => import("./src/lib/nova-saluran-hub.js").then(m => m.initSaluranHubScheduler?.(sock)) },
