@@ -1,0 +1,358 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// 9router.js — 9ROUTER LOKAL NATIVE (rename owner 25 Sep: cmd .9router, bukan .ai9)
+//
+// Seakan-akan bot sudah menginstal & menjalankan 9router BENERAN di Node.js:
+// engine src/lib/nova-9router-local.js spawn `9router` bareng bot
+// (127.0.0.1:20128), gateway key di-auto-provision, key provider berbayar
+// di-sync dari src/lib/apikey/9routerapikey.json. Chat 100% lewat 9router
+// lokal — TANPA fallback ke AI API lain (nexai/ikyy/zhipu/groq/dll).
+//
+// Command (semua berawalan titik):
+//   .9router <pesan>                      → chat AI (default model per chat)
+//   .9router gambar <prompt>              → generate gambar (imageOutput model)
+//   .9router model [keyword]              → daftar model live (747 model)
+//   .9router setmodel <id>                → ganti model default chat ini
+//   .9router status                       → kondisi 9router lokal
+//   .9router sync                         → (owner) sync key dari 9routerapikey.json
+//   .9router start                        → (owner) paksa nyalain 9router
+//
+// + VISION NATIVE: kirim/reply foto + caption → model vision live (glm-4.6v
+//   dsb) via multimodal chat 9router — bukan Gemini external.
+// + Model yang dipakai nongol di footer tiap jawaban (transparansi routing).
+import { novaBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import {
+  ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys,
+  router9Models, router9FindModel, router9Chat, router9ImageGen,
+  router9ImageModels, router9VisionModels, router9Stats,
+  getRouter9Base, getRouter9Port, ROUTER9_DEFAULT_MODEL,
+} from "../../src/lib/nova-9router-local.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
+import { getSession, appendTurn, toMessages } from "../../src/lib/nova-ai-session.js";
+
+const pluginConfig = {
+  name: "9router",
+  alias: ["ai9", "router9", "novarouter"], // nama lama tetap jalan
+  category: "ai",
+  description: "9Router Lokal — chat AI 747 model via 9router native yang jalan bareng bot (tanpa API luar)",
+  usage: ".9router <pesan> | .9router gambar <prompt> | .9router model [keyword] | .9router setmodel <id> | .9router status | .9router sync (owner)",
+  example: ".9router jelaskan siapa presiden indonesia\n.9router buatkan gambar kucing\n.9router model glm\n.9router setmodel glm/glm-4.7\n.9router status",
+  isOwner: false,
+  isPremium: false,
+  isGroup: true,
+  isPrivate: false,
+  cooldown: 5,
+  energi: 0,
+  isEnabled: true,
+};
+
+const SUBS = ["model", "setmodel", "modelset", "status", "sync", "start", "gambar", "image", "img", "buat"];
+const IMG_WORDS = ["gambar", "image", "img", "buat", "buatkan"];
+
+// ── helper pref model per chat ──
+function getPrefs() {
+  const db = getDatabase();
+  if (!db.data.router9 || typeof db.data.router9 !== "object") db.data.router9 = { prefs: {} };
+  if (!db.data.router9.prefs) db.data.router9.prefs = {};
+  return db.data.router9.prefs;
+}
+function getModelPref(chatId) {
+  return getPrefs()[chatId] || ROUTER9_DEFAULT_MODEL;
+}
+
+// ── kartu panduan (usage V2) ──
+function guide(m) {
+  return m.reply(novaGuideV2("9router", {
+    kaomoji: "ヾ(≧▽≦*)o 🚀",
+    sapaan: "9Router lokal udah jalan bareng bot — 747 model AI siap dipakai!",
+    cara: "tiket pertanyaan buat chat AI, gambar buat bikin gambar, model buat liat daftar model, setmodel buat ganti model default",
+    contoh: ".9router jelaskan siapa presiden indonesia\n.9router buatkan gambar kucing\n.9router model glm\n.9router setmodel glm/glm-4.7",
+    note: "kirim/reply foto + caption pertanyaan juga bisa — dibaca model vision native 9router\nsync & start hanya owner",
+    modelAktif: getModelPref(m.chat),
+    spec: ["⚡ ʟᴀʏᴀɴᴀɴ ʟᴏᴋᴀʟ 9ʀᴏᴜᴛᴇʀ", "⏱ ᴄᴏᴏʟᴅᴏᴡɴ 5 ᴅᴛᴋ", "💸 ɢʀᴀᴛɪꜱ"],
+  }));
+}
+
+async function handler(m, { sock, args, botConfig }) {
+  const argList = (args || []).map(String);
+  const sub = argList[0]?.toLowerCase() || "";
+
+  // ── VISION NATIVE: foto di-attach (caption = pertanyaan) atau di-reply ──
+  const hasImage = (m.quoted && m.quoted.isImage) || m.isImage;
+  if (hasImage && !SUBS.includes(sub)) {
+    try {
+      await m.react("🕒");
+      const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
+      if (!buffer?.length) {
+        await m.react("❌");
+        return m.reply(novaBox("9Router", ["Gagal download gambar — coba kirim ulang."]));
+      }
+      const prompt =
+        (m.isImage && m.message?.imageMessage?.caption?.trim()) ||
+        m.text?.trim() ||
+        "Analisis gambar ini dan jelaskan dengan detail dalam bahasa Indonesia.";
+      if (!prompt || /^(gambar|image|img|buat)$/i.test(prompt)) {
+        await m.react("❌");
+        return m.reply(novaBox("9Router", [
+          "Caption-nya kosong — tulis pertanyaannya di caption foto,",
+          "atau reply foto pakai .9router <pertanyaan>",
+        ]));
+      }
+
+      // pilih model vision: pref kalau vision-capable, kalau gak → model vision pertama
+      let model = getModelPref(m.chat);
+      let vis = null;
+      try {
+        const all = await router9Models();
+        const cur = all.find((x) => x.id === model);
+        if (!cur?.vision) {
+          vis = await router9VisionModels();
+          model = vis[0]?.id || model;
+        }
+      } catch { /* katalog gagal → pake pref, biar error asli yang muncul */ }
+
+      const b64 = Buffer.from(buffer).toString("base64");
+      const sKey = "satuan:" + m.sender;
+      const history = toMessages(sKey);
+      const r = await router9Chat({
+        model,
+        history,
+        user: [
+          { type: "text", text: prompt },
+          { type: "image_url", image_url: { url: `data:image/jpeg;base64,${b64}` } },
+        ],
+      });
+      appendTurn(sKey, prompt, r.text);
+      await m.react("🐣");
+      const body = r.text.length > 3500 ? r.text.slice(0, 3500) + "..." : r.text;
+      return m.reply(`${body}\n\n— via 9Router Lokal • ${r.model} • ${r.latencyMs}ms`);
+    } catch (e) {
+      console.error("[9router-vision]:", e.message);
+      await m.react("❌");
+      return m.reply(novaBox("9Router", ["Gagal: " + String(e.message).slice(0, 200)]));
+    }
+  }
+
+  // ── .9router status ──
+  if (sub === "status") {
+    const st = router9Stats();
+    const up = await ensure9RouterRunning({ waitMs: 5000 }).catch(() => ({ up: false }));
+    let modelCount = "-", gw = "-";
+    if (up.up) {
+      try { modelCount = (await router9Models()).length; } catch { modelCount = "gagal"; }
+      try {
+        gw = (await ensureRouter9GatewayKey({ create: false })) ? "ok" : "belum";
+      } catch { gw = "belum"; }
+    }
+    const lines = [
+      `9Router Lokal Native — ${up.up ? "✅ hidup" : "❌ mati"}`,
+      `Endpoint     : ${getRouter9Base()}/v1`,
+      `Dashboard    : ${getRouter9Base()}/dashboard`,
+      `Model live   : ${modelCount}`,
+      `Gateway key  : ${gw}`,
+      `Spawn bareng : ${up.spawned ? "baru saja" : "sudah jalan"}`,
+      "---",
+      `Permintaan   : ${st.requests} (ok ${st.ok} • gagal ${st.fail})`,
+      `Latensi akhir: ${st.lastLatencyMs != null ? st.lastLatencyMs + "ms" : "-"}`,
+      `Model akhir  : ${st.lastModel || "-"}`,
+      st.lastError ? `Error akhir : ${String(st.lastError).slice(0, 100)}` : null,
+      "---",
+      `Key provider : src/lib/apikey/9routerapikey.json`,
+      `Sync ulang   : .9router sync (owner)`,
+      `Model aktif  : ${getModelPref(m.chat)}`,
+    ].filter(Boolean);
+    return m.reply(novaBox("9Router Lokal — Status", lines));
+  }
+
+  // ── .9router model [keyword] — daftar model LIVE ──
+  if (sub === "model") {
+    const kw = argList.slice(1).join(" ").toLowerCase().trim();
+    try {
+      await m.react("🕒");
+      const all = await router9Models();
+      const vis = all.filter((x) => x.vision).length;
+      const img = all.filter((x) => x.imageOutput).length;
+      let pool = all;
+      if (kw) pool = all.filter((x) => x.id.toLowerCase().includes(kw) || x.owner.toLowerCase().includes(kw));
+      if (!pool.length) {
+        await m.react("❌");
+        return m.reply(novaBox("9Router", [
+          `Gak ada model yang cocok dengan "${kw}".`,
+          `Total model live: ${all.length} — lihat semua: .9router model`,
+        ]));
+      }
+      const cap = 40;
+      const lines = [`Total ${all.length} model live • 👁 vision ${vis} • 🎨 image-gen ${img}${kw ? ` • filter "${kw}": ${pool.length}` : ""}`, "---"];
+      for (const x of pool.slice(0, cap)) {
+        const tags = [x.vision ? "👁" : null, x.imageOutput ? "🎨" : null, x.reasoning ? "🧠" : null].filter(Boolean).join("");
+        lines.push(`• ${x.id}${tags ? " " + tags : ""}`);
+      }
+      if (pool.length > cap) lines.push(`… dan ${pool.length - cap} lagi — sempit pakai keyword: .9router model ${kw || "glm"}`);
+      lines.push("---", `Pakai model ini: .9router setmodel <id>`, `Model aktif kamu: ${getModelPref(m.chat)}`);
+      await m.react("🐣");
+      return m.reply(novaBox("9Router — Daftar Model", lines));
+    } catch (e) {
+      await m.react("❌");
+      return m.reply(novaBox("9Router", ["Gagal ambil daftar model: " + String(e.message).slice(0, 160)]));
+    }
+  }
+
+  // ── .9router setmodel <id> — ganti model default chat ini ──
+  if (sub === "setmodel" || sub === "modelset") {
+    const id = argList[1];
+    if (!id) {
+      return m.reply(novaBox("9Router", [
+        `Format: .9router setmodel <id-model>`,
+        `Contoh : .9router setmodel ${ROUTER9_DEFAULT_MODEL}`,
+        `Daftar  : .9router model [keyword]`,
+        `Aktif   : ${getModelPref(m.chat)}`,
+      ]));
+    }
+    try {
+      await m.react("🕒");
+      const found = await router9FindModel(id);
+      if (!found) {
+        await m.react("❌");
+        return m.reply(novaBox("9Router", [
+          `Model "${id}" gak ada di daftar live 9Router.`,
+          `Cari yang mirip: .9router model ${id.split("/").pop()}`,
+        ]));
+      }
+      getPrefs()[m.chat] = found.id;
+      getDatabase().save?.();
+      await m.react("🐣");
+      const tags = [found.vision ? "👁 bisa baca gambar" : null, found.imageOutput ? "🎨 bisa bikin gambar" : null, found.reasoning ? "🧠 reasoning" : null].filter(Boolean);
+      return m.reply(novaBox("9Router — Model Diganti", [
+        `Model default chat ini: ${found.id}`,
+        tags.length ? `Kemampuan: ${tags.join(" • ")}` : null,
+        `Context: ${found.ctx ? found.ctx.toLocaleString("id-ID") + " token" : "-"} • Max out: ${found.maxOut || "-"}`,
+        "---",
+        `Langsung coba: .9router halo`,
+        `Balikin awal: .9router setmodel ${ROUTER9_DEFAULT_MODEL}`,
+      ].filter(Boolean)));
+    } catch (e) {
+      await m.react("❌");
+      return m.reply(novaBox("9Router", ["Gagal: " + String(e.message).slice(0, 160)]));
+    }
+  }
+
+  // ── .9router sync (owner) — kirim key provider dari 9routerapikey.json ──
+  if (sub === "sync") {
+    if (!m.isOwner) {
+      return m.reply(novaBox("9Router", ["Khusus owner."]));
+    }
+    try {
+      await m.react("🕒");
+      const up = await ensure9RouterRunning({ waitMs: 20000 });
+      if (!up.up) {
+        await m.react("❌");
+        return m.reply(novaBox("9Router", [`9Router belum jalan: ${up.error || "-"}`]));
+      }
+      await ensureRouter9GatewayKey().catch((e) => console.error("[9router-sync]:", e.message));
+      const r = await syncRouter9ProviderKeys();
+      await m.react("🐣");
+      const lines = [
+        `Key baru di-sync : ${r.synced}`,
+        `Sudah ada (skip) : ${r.skipped}`,
+      ];
+      if (r.errors?.length) lines.push("---", "Gagal:", ...r.errors.map((x) => "• " + x));
+      lines.push("---", `Sumber: src/lib/apikey/9routerapikey.json`, `Status: .9router status`);
+      return m.reply(novaBox("9Router — Sync Key Provider", lines));
+    } catch (e) {
+      await m.react("❌");
+      return m.reply(novaBox("9Router", ["Gagal sync: " + String(e.message).slice(0, 160)]));
+    }
+  }
+
+  // ── .9router start (owner) — paksa nyalain 9router ──
+  if (sub === "start") {
+    if (!m.isOwner) {
+      return m.reply(novaBox("9Router", ["Khusus owner."]));
+    }
+    await m.react("🕒");
+    const up = await ensure9RouterRunning({ waitMs: 30000 });
+    if (!up.up) {
+      await m.react("❌");
+      return m.reply(novaBox("9Router", [`Gagal: ${up.error || "unknown"}`, "Cek logs/9router-local.log"]));
+    }
+    let count = "-";
+    try { count = (await router9Models()).length; } catch { /* telat gak masalah */ }
+    await m.react("🐣");
+    return m.reply(novaBox("9Router — Hidup", [
+      `9Router jalan di ${getRouter9Base()}`,
+      `Model live: ${count}`,
+      `Dashboard: ${getRouter9Base()}/dashboard`,
+    ]));
+  }
+
+  // ── .9router gambar <prompt> — generate gambar via 9router ──
+  if (IMG_WORDS.includes(sub)) {
+    // buang kata perintah di depan prompt: "buatkan gambar kucing" → "kucing"
+    const rest = argList.slice(1);
+    while (rest.length && IMG_WORDS.includes(rest[0]?.toLowerCase())) rest.shift();
+    const prompt = rest.join(" ").trim();
+    if (!prompt) {
+      return m.reply(novaBox("9Router", [
+        "Format: .9router gambar <yang mau digambar>",
+        "Contoh : .9router buatkan gambar kucing astronot",
+      ]));
+    }
+    try {
+      await m.react("🕒");
+      // model imageOutput: preferensi kalo cocok, kalau gak → pertama yang live
+      let model = null;
+      try {
+        const imgs = await router9ImageModels();
+        const cur = getModelPref(m.chat);
+        model = imgs.find((x) => x.id === cur)?.id || imgs[0]?.id || null;
+      } catch { /* katalog gagal → null = default server */ }
+      const r = await router9ImageGen({ model, prompt, n: 1 });
+      let buf = null;
+      if (r.b64) buf = Buffer.from(r.b64, "base64");
+      else if (r.url) {
+        const dl = await fetch(r.url);
+        if (!dl.ok) throw new Error(`gagal download hasil gambar (HTTP ${dl.status})`);
+        buf = Buffer.from(await dl.arrayBuffer());
+      }
+      if (!buf?.length) throw new Error("9router gak balas gambar");
+      await m.react("🐣");
+      await sock.sendMessage(m.chat, { image: buf, caption: prompt + `\n\n— via 9Router Lokal • ${r.model}` }, { quoted: m });
+      return;
+    } catch (e) {
+      console.error("[9router-gambar]:", e.message);
+      await m.react("❌");
+      return m.reply(novaBox("9Router", ["Generate gambar gagal: " + String(e.message).slice(0, 200)]));
+    }
+  }
+
+  // ── default: CHAT ──
+  const text = argList.join(" ").trim();
+  if (!text) return guide(m);
+
+  try {
+    await m.react("🕒");
+    const quotedText = m.quoted?.text?.trim() || "";
+    const userMsg = quotedText
+      ? `${text}\n\n[User membalas pesan ini — jadikan konteks]: ${quotedText.slice(0, 500)}`
+      : text;
+
+    const sKey = "satuan:" + m.sender;
+    const history = toMessages(sKey);
+    const model = getModelPref(m.chat);
+    const r = await router9Chat({ model, user: userMsg, history });
+    appendTurn(sKey, userMsg, r.text);
+    await m.react("🐣");
+    const replyText = r.text.length > 3500 ? r.text.slice(0, 3500) + "..." : r.text;
+    return m.reply(`${replyText}\n\n— via 9Router Lokal • ${r.model} • ${r.latencyMs}ms`);
+  } catch (e) {
+    console.error("[9router]:", e.message);
+    await m.react("❌");
+    return m.reply(novaBox("9Router", [
+      "9Router lokal gagal 😔",
+      `Info: ${String(e.message).slice(0, 220)}`,
+      "---",
+      "Cek kondisi: .9router status",
+    ]));
+  }
+}
+
+export { pluginConfig as config, handler };
