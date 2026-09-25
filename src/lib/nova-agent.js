@@ -249,7 +249,9 @@ export function detectActLocal(task) {
  * @param {Object} [opts.context] info grup (isGroup/isAdmin/isOwner/isBotAdmin/chat/sender) — dikirim ke LLM plan + executor
  * @returns {Promise<{mode,answer,queries,sources,steps,results,viaLocal,voice}|{error}>}
  */
-export async function runAgent(task, { onPhase, act, execTools, history, context, toolbox, memBlock, skillBlock } = {}) {
+export async function runAgent(task, { onPhase, act, execTools, history, context, toolbox, memBlock, skillBlock, ai } = {}) {
+  // 🔹 override AI per-call (mis. .9router ag → model 9router lokal) — tanpa sentuh deps global
+  const aiChat = ai || _aiChat;
   const phase = (p, info) => { try { onPhase?.(p, info); } catch {} };
   const steps = [];
   // 🔹 MEMORY LAYER (upgrade #2 "bot masa depan", owner 25 Sep 2026): blok
@@ -278,7 +280,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   const toolboxStr = String(toolbox || "").trim();
   const sysPlan = toolboxStr ? SYS_PLAN.replace("{{TOOLBOX}}", toolboxStr) : SYS_PLAN.replace("TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\n{{TOOLBOX}}", "(tool skill/mcp gak terpasang di bot ini)");
   try {
-    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}${histLine}${mem}${skl}`, { systemPrompt: sysPlan }));
+    plan = parseJsonLocal(await aiChat(`Tugas user: ${task}${ctxLine}${histLine}${mem}${skl}`, { systemPrompt: sysPlan }));
   } catch {}
   // NORMALISASI FORMAT FLAT (ketahuan live 12 Sep): model kadang jawab
   // {"mode":"skill","skill":"kbbi","args":"makan"} LANGSUNG di level atas
@@ -359,7 +361,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       if (evidences.length) {
         phase("compose");
         try {
-          answer = await _aiChat(`Tugas user: ${task}${mem}${skl}\n\nBUKTI/HASIL TOOLS:\n${evidences.join("\n\n").slice(0, 24000)}`, { systemPrompt: SYS_ANSWER });
+          answer = await aiChat(`Tugas user: ${task}${mem}${skl}\n\nBUKTI/HASIL TOOLS:\n${evidences.join("\n\n").slice(0, 24000)}`, { systemPrompt: SYS_ANSWER });
         } catch {}
         if (!answer || !String(answer).trim()) {
           viaLocal = true;
@@ -400,7 +402,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       : "";
     let answer = "";
     try {
-      answer = await _aiChat(`Tugas/pesan user: ${task}${histBlock}${mem}${skl}`, { systemPrompt: personaPrompt(persona) });
+      answer = await aiChat(`Tugas/pesan user: ${task}${histBlock}${mem}${skl}`, { systemPrompt: personaPrompt(persona) });
     } catch {}
     if (!answer || !String(answer).trim()) {
       return { error: "AI-nya lagi sibuk, coba lagi bentar ya 🙏" };
@@ -476,7 +478,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   const listText = offer.map((p, i) => `${i + 1}. [${p.domain}] ${p.title} — ${p.snippet.slice(0, 120)}`).join("\n");
   let pick = null;
   try {
-    pick = parseJsonLocal(await _aiChat(`Tugas user: ${task}\n\nKandidat halaman:\n${listText}`, { systemPrompt: SYS_PICK }));
+    pick = parseJsonLocal(await aiChat(`Tugas user: ${task}\n\nKandidat halaman:\n${listText}`, { systemPrompt: SYS_PICK }));
   } catch {}
   let idxs = Array.isArray(pick?.picks) && pick.picks.length
     ? pick.picks.map(n => parseInt(n, 10) - 1).filter(i => Number.isInteger(i) && i >= 0 && i < offer.length)
@@ -514,7 +516,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   let answer = "";
   let viaLocal = false;
   try {
-    answer = await _aiChat(`Tugas user: ${task}${mem}${skl}\n\nBUKTI:\n${evidence}`, { systemPrompt: SYS_ANSWER });
+    answer = await aiChat(`Tugas user: ${task}${mem}${skl}\n\nBUKTI:\n${evidence}`, { systemPrompt: SYS_ANSWER });
   } catch {}
   if (!answer || !String(answer).trim()) {
     // fallback terakhir: digest lokal dari bukti (tetep informatif + sumber)
