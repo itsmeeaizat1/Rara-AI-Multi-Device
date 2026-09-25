@@ -248,6 +248,9 @@ async function execAction(a, ctx, m, sock) {
  * eksekusi), biar agent jawab jujur "fitur ini owner-only" ke user.
  * Dulu: middleware sebenernya nolak senyap, tapi executor tetap balikin
  * "Perintah dijalankan" → agent bohong sukses ke user.
+ * REVISI OWNER 25 Sep (kedua): admin grup di grup orang BOLEH suruh agent
+ * kick/task admin (fitur non-owner), asal cuma fitur admin grup — jadi gate
+ * isAdmin/isBotAdmin ditambahin ngikutin logika middleware.
  * @returns {Promise<{ok:false,msg:string}|null>} null = boleh jalan
  */
 export async function gateCommandAccess(cmd, m) {
@@ -267,6 +270,14 @@ export async function gateCommandAccess(cmd, m) {
   }
   if (pc.isPartner && !m?.isPartner && !m?.isOwner) {
     return { ok: false, msg: `.${c} itu fitur PARTNER-ONLY — khusus partner bot.` };
+  }
+  // admin grup: mirror middleware — cuma nolak kalau di grup dan caller bukan
+  // admin/owner (di DM biarin lewat, plugin isGroup yang jawab "khusus grup")
+  if (pc.isAdmin && m?.isGroup && !m?.isAdmin && !m?.isOwner) {
+    return { ok: false, msg: `.${c} itu fitur ADMIN GRUP — kamu bukan admin di grup ini, jadi aku gak bisa jalanin. Minta admin grup yang nyuruh.` };
+  }
+  if (pc.isBotAdmin && m?.isGroup && !m?.isBotAdmin) {
+    return { ok: false, msg: `.${c} butuh aku jadi ADMIN grup — aku belum jadi admin di sini.` };
   }
   return null;
 }
