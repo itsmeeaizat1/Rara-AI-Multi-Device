@@ -312,6 +312,28 @@ section("6. sumber: jalur lama dibuang, tanpa API eksternal");
   t("6e. file lama .ai9/nova-ai-router udah gak ada", !fs.existsSync(path.join(R, "plugins/ai/ai9.js")) && !fs.existsSync(path.join(R, "src/lib/nova-ai-router.js")));
 }
 
+// ═══ 7. ISOLASI DARI 9ROUTERV2 (aturan owner 25 Sep 2026: lokal JANGAN
+// nyentuh v2 — v2 = API endpoint punya orang, bukan lokal) ═══
+section("7. isolasi dari 9routerv2 (cloud milik orang)");
+{
+  const engSrc = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
+  const plugSrc = fs.readFileSync(path.join(R, "plugins/ai/9router.js"), "utf8");
+  const cfgSrc = fs.readFileSync(path.join(R, "src/lib/apikey/9routerapikey.json"), "utf8");
+  const banned = /router9v2|ai9v2|cloudku|getTioBase|getTioEndpoint|env-loader|tio_|TIO_API|ROUTER_API_URL|ROUTER_API_KEY/;
+  t("7a. engine lokal: gak ada referensi v2/cloudku/tio/env ROUTER_API", !banned.test(engSrc.replace(/^\s*\/\/.*$/gm, "")), (engSrc.match(banned) || ["?"])[0]);
+  t("7b. plugin .9router: gak ada referensi v2/cloudku/tio", !banned.test(plugSrc), (plugSrc.match(banned) || ["?"])[0]);
+  t("7c. konfigurasi 9routerapikey.json: gak ada endpoint v2", !banned.test(cfgSrc), (cfgSrc.match(banned) || ["?"])[0]);
+  t("7d. engine: default endpoint hardcoded 127.0.0.1 (lokal doang)", engSrc.includes("127.0.0.1") && /ROUTER9_URL \|\| `http:\/\/127\.0\.0\.1/.test(engSrc));
+  t("7e. engine: cuma baca env ROUTER9_* (bukan ROUTER_API_*/TIO_*)", !/env\.(?!ROUTER9_)[A-Z_]+\b/.test([...engSrc.matchAll(/process\.env\.([A-Z0-9_]+)/g)].map((m) => "env." + m[1]).join("\n").replace(/env\.ROUTER9_[A-Z0-9_]*/g, "env.ROUTER9_X")));
+  // bukti runtime: jalur lokal gak kepengaruh env v2 sama sekali
+  process.env.TIO_API_URL = "https://9router.cloudku.us.kg/v1";
+  process.env.ROUTER_API_URL = "https://9router.cloudku.us.kg/v1";
+  process.env.ROUTER_API_KEY = "key-v2-bohongan";
+  const baseStillLocal = getRouter9Base();
+  t("7f. runtime: env v2 (TIO_API_URL/ROUTER_API_URL) di-set → base lokal TETAP 127.0.0.1", baseStillLocal.includes("127.0.0.1"), baseStillLocal);
+  delete process.env.TIO_API_URL; delete process.env.ROUTER_API_URL; delete process.env.ROUTER_API_KEY;
+}
+
 srv.close();
 w(`\n${pass} PASS / ${fail} FAIL`);
 process.exit(fail ? 1 : 0);

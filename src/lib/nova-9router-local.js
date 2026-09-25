@@ -37,6 +37,10 @@ const __dirname = path.dirname(__filename);
 export const ROUTER9_REPO_ROOT = path.resolve(__dirname, "..", "..");
 
 // ── konfigurasi (env bisa dioverride — dipakai e2e buat arahin ke mock) ──
+// ⚠️ ATURAN OWNER (25 Sep 2026): 9Router LOKAL ini DILARANG nyambung ke
+// 9RouterV2 (.ai9v2 — 9router.cloudku.us.kg, API endpoint milik orang lain).
+// Engine ini CUMA boleh ngomong ke 127.0.0.1 (spawn bareng bot). JANGAN
+// import router9v2.js / env-loader / getTioBase, JANGAN baca env ROUTER_API_*.
 export function getRouter9Port() {
   return Number(process.env.ROUTER9_PORT || 20128);
 }
