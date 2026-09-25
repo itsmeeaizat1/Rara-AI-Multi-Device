@@ -2613,6 +2613,16 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Format notif: judul + perusahaan + lokasi + tipe + tanggal dibuka + link LinkedIn.
 - E2E baru: `test/loker-id-e2e` 13/13.
 
+## v24.5.0 — DAILY BRIEFING PERSONAL (25 Sep 2026)
+
+- **REQUEST OWNER:** fitur "bot masa depan" no.2 — briefing pagi personal yang BENERAN HIDUP (bukan mock): semua bagian dari API live, section gagal ditulis jujur "gagal saya ambil", gak ada data bohongan.
+- **BARU `plugins/user/briefing.js` `.briefing` (alias .briefing/.dailybriefing — semua user, energi 2, cooldown 15):** tanpa argumen = kartu LANGSUNG dari data live + panduan. Subperintah: `.briefing on [HH:mm]` (nyalakan DM harian, default 06:00 WIB) · `.briefing off` · `.briefing jam HH:mm` · `.briefing lokasi <kota>` · `.briefing tim <nama tim>` (maks 3, scan 9 liga ESPN; `tim clear/list`) · `.briefing status` · `.briefing tes`.
+- **BARU `src/lib/nova-briefing.js` (engine):** kartu per-user berisi: sapaan+tanggal WIB · cuaca lokasi (open-meteo via `geocodeCity`/`getWmo` numpang nova-bmkg-cuaca-scheduler, TANPA key) · gempa 24 jam (BMKG gempaterkini.json, TANPA key; tenang = "gak ada gempa") · jadwal tim favorit hari ini (ESPN scoreboard, 9 liga: EPL/LaLiga/Serie A/Bundesliga/Ligue1/UCL/UEL/BRI/Saudi) · agenda reminder mendatang (global.novaReminders) · saldo RPG + streak (db user) · catatan personal (nova-memory). Section paralel + validasi bentuk respon keras (HTTP 200 bukan sukses); semua liga ESPN gagal = "gagal diambil", BUKAN "tim gak main".
+- **SCHEDULER `initBriefingScheduler`** (index.js "Briefing", interval 60 dtk): per-user `{on, jam, lokasi, tim, lastDate}` dedupe per hari, resume aman restart, claim lastDate SEBELUM kirim (anti dobel-DM), kirim gagal → `lastError` dicatat, gak di-retry spam di hari yang sama. DM ke JID user.
+- **LIVE VERIFIED:** BMKG + open-meteo + ESPN di-probe live sebelum koding; kartu live asli terverifikasi (Jakarta 34°C hujan 86%, gempa tenang, tim gak main hari itu). **GOTCHA UA:** ESPN 403 buat User-Agent "NovaBot/1.0" — httpGet TANPA UA custom (UA default node lolos 200).
+- **E2E BARU `test/briefing-e2e` 50/50:** parseJam validasi, kartu live-shape fixture (sapaan/tanggal/cuaca/gempa/bola/agenda/rpg), kejujuran kegagalan per-section, respon ngaco (forecast kosong/HTML ESPN), skip senyap, scheduler dedupe + hari baru + claim anti-dobel, send gagal anti-spam, plugin on/off/jam/lokasi/tim (maks 3, dobel ditolak)/status/sub ngaco, init idempotent. Regresi: plugins-import 14/14 + formatguard 22/22.
+- **DEPLOY VPS:** `git pull && pm2 restart` (TANPA npm install) → `.briefing` (kartu live langsung) → `.briefing on 06:30` → `.briefing lokasi <kotamu>` → `.briefing tim <tim favorit>`.
+
 ## v24.4.1 — AGENT GATE AKSES COMMAND (25 Sep 2026)
 
 - **REQUEST OWNER:** user boleh akses AI agent, tapi agent cuma boleh jalanin command yang user itu berhak pakai — fitur owner-only ditolak jujur ("harus owner"), bukan dijalankan diam-diam.
