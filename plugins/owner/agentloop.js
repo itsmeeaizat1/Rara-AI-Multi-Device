@@ -31,6 +31,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaBox, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { runAgent } from "../../src/lib/nova-agent.js";
+import { memoryBlock, extractMemories } from "../../src/lib/nova-memory.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -70,6 +71,7 @@ let _planner = null;   // override penyusun rencana awal
 let _runner = null;    // override eksekusi putaran
 let _critic = null;    // override evaluator diri
 let _composer = null;  // override penyusun jawaban final
+let _extractor = null; // override ekstraksi memori (nova-memory.js)
 
 // ────────────────────────────────────────────────────────────────────────────
 // STORE — persisten di db.data.agentloop
@@ -186,8 +188,11 @@ async function runIteration(run) {
     } catch { return null; }
   };
 
+  // 🔹 MEMORY LAYER: fakta durabel user (nova-memory.js — store sama kayak
+  // .novaai/.novaagent) di-inject ke prompt putaran biar loop inget owner
+  const memLine = run.sender ? memoryBlock(getDatabase(), run.sender, run.plan.goal) : "";
   const prompt =
-    `Tugas induk: "${run.plan.goal}"\n` +
+    `${memLine}${memLine ? "\n" : ""}Tugas induk: "${run.plan.goal}"\n` +
     `Kriteria sukses: ${run.plan.criteria}\n` +
     `Hasil putaran sebelumnya (jangan ulangi kerja yang sama, isi celah yang kurang):\n${scratchpadOf(run)}\n\n` +
     `Kerjakan SAAT INI instruksi berikut: "${instruction}"\n` +
@@ -330,6 +335,9 @@ async function runLoopLoop(sock, id) {
         save();
         continue;
       }
+      // 🔹 auto-ekstrak fakta durabel baru (fire-and-forget, hormatin .memory off)
+      const doExtract = _extractor !== null ? _extractor : extractMemories;
+      try { Promise.resolve(doExtract(getDatabase(), run.sender, it.instruction, it.result)).catch(() => {}); } catch {}
       const critique = await withTimeout(critiqueIteration(run), CRITIC_TIMEOUT_MS);
       it.critique = critique;
       if (critique.satisfied) run.met = true;
@@ -495,6 +503,7 @@ async function handler(m, { sock, config: botConfig }) {
   st.runs[id] = {
     id,
     task: taskText,
+    sender: m.sender || null, // buat memory layer (nova-memory.js per-user)
     plan,
     status: "running",
     met: false,
@@ -536,7 +545,8 @@ export function _agentloopInternalsForTest() {
     setRunner: (fn) => { _runner = fn; },
     setCritic: (fn) => { _critic = fn; },
     setComposer: (fn) => { _composer = fn; },
-    resetSeams: () => { _planner = null; _runner = null; _critic = null; _composer = null; },
+    setExtractor: (fn) => { _extractor = fn; },
+    resetSeams: () => { _planner = null; _runner = null; _critic = null; _composer = null; _extractor = null; },
   };
 }
 

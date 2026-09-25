@@ -43,6 +43,7 @@ console.log("— section 1: parseStages (planner) —");
 console.log("— section 2: buat tugas via handler + loop + DM milestone —");
 {
   I.resetSeams();
+I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   I.setPlanner(async () => JSON.stringify([
     { title: "Riset data", instruction: "cari data di web" },
     { title: "Susun laporan", instruction: "rangkum jadi 5 poin" },

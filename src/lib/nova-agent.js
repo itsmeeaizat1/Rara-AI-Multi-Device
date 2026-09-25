@@ -244,12 +244,18 @@ export function detectActLocal(task) {
  * @param {Object.<string, Function>} [opts.execTools] executor per-tool mode tools
  *        ({tool, ...payload}, ctx) => {ok, msg, evidence?} — implementasi di plugin
  * @param {string[]} [opts.history] riwayat percakapan agent di chat ini (biar ingat konteks)
+ * @param {string} [opts.memBlock] blok memori user (nova-memory.js memoryBlock) — di-inject ke prompt
  * @param {Object} [opts.context] info grup (isGroup/isAdmin/isOwner/isBotAdmin/chat/sender) — dikirim ke LLM plan + executor
  * @returns {Promise<{mode,answer,queries,sources,steps,results,viaLocal,voice}|{error}>}
  */
-export async function runAgent(task, { onPhase, act, execTools, history, context, toolbox } = {}) {
+export async function runAgent(task, { onPhase, act, execTools, history, context, toolbox, memBlock } = {}) {
   const phase = (p, info) => { try { onPhase?.(p, info); } catch {} };
   const steps = [];
+  // 🔹 MEMORY LAYER (upgrade #2 "bot masa depan", owner 25 Sep 2026): blok
+  // fakta durabel tentang user (nova-memory.js memoryBlock) — dikirim pemanggil,
+  // di-inject ke prompt planner + persona + compose biar agent inget user
+  // antar sesi. Kosong kalau memory off / user belum punya fakta.
+  const mem = typeof memBlock === "string" ? memBlock : "";
 
   // ── FASE 1: PLAN — AI milih mode (research/act) + susun rencana ──
   phase("plan");
@@ -266,7 +272,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   const toolboxStr = String(toolbox || "").trim();
   const sysPlan = toolboxStr ? SYS_PLAN.replace("{{TOOLBOX}}", toolboxStr) : SYS_PLAN.replace("TOOLBOX TERSEDIA (skill + server MCP terpasang di bot ini — cuma boleh pakai yang di daftar):\n{{TOOLBOX}}", "(tool skill/mcp gak terpasang di bot ini)");
   try {
-    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}${histLine}`, { systemPrompt: sysPlan }));
+    plan = parseJsonLocal(await _aiChat(`Tugas user: ${task}${ctxLine}${histLine}${mem}`, { systemPrompt: sysPlan }));
   } catch {}
   // NORMALISASI FORMAT FLAT (ketahuan live 12 Sep): model kadang jawab
   // {"mode":"skill","skill":"kbbi","args":"makan"} LANGSUNG di level atas
@@ -347,7 +353,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       if (evidences.length) {
         phase("compose");
         try {
-          answer = await _aiChat(`Tugas user: ${task}\n\nBUKTI/HASIL TOOLS:\n${evidences.join("\n\n").slice(0, 24000)}`, { systemPrompt: SYS_ANSWER });
+          answer = await _aiChat(`Tugas user: ${task}${mem}\n\nBUKTI/HASIL TOOLS:\n${evidences.join("\n\n").slice(0, 24000)}`, { systemPrompt: SYS_ANSWER });
         } catch {}
         if (!answer || !String(answer).trim()) {
           viaLocal = true;
@@ -388,7 +394,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       : "";
     let answer = "";
     try {
-      answer = await _aiChat(`Tugas/pesan user: ${task}${histBlock}`, { systemPrompt: personaPrompt(persona) });
+      answer = await _aiChat(`Tugas/pesan user: ${task}${histBlock}${mem}`, { systemPrompt: personaPrompt(persona) });
     } catch {}
     if (!answer || !String(answer).trim()) {
       return { error: "AI-nya lagi sibuk, coba lagi bentar ya 🙏" };
@@ -468,7 +474,10 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   } catch {}
   let idxs = Array.isArray(pick?.picks) && pick.picks.length
     ? pick.picks.map(n => parseInt(n, 10) - 1).filter(i => Number.isInteger(i) && i >= 0 && i < offer.length)
-    : [0, 1, 2];
+    // 🔹 FIX 25 Sep (bug tersembunyi, ketemu pas e2e memory layer): fallback
+    // [0,1,2] WAJIB di-clamp ke jumlah kandidat — pool 1-2 item bikin
+    // offer[1].domain TypeError & agent mati di fase pick
+    : [0, 1, 2].filter(i => i < offer.length);
   if (!idxs.length) idxs = [0];
   idxs = [...new Set(idxs)].slice(0, MAX_PICKS);
   steps.push({ phase: "pick", ok: !!pick, pilihan: idxs.map(i => offer[i].domain) });
@@ -499,7 +508,7 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   let answer = "";
   let viaLocal = false;
   try {
-    answer = await _aiChat(`Tugas user: ${task}\n\nBUKTI:\n${evidence}`, { systemPrompt: SYS_ANSWER });
+    answer = await _aiChat(`Tugas user: ${task}${mem}\n\nBUKTI:\n${evidence}`, { systemPrompt: SYS_ANSWER });
   } catch {}
   if (!answer || !String(answer).trim()) {
     // fallback terakhir: digest lokal dari bukti (tetep informatif + sumber)
