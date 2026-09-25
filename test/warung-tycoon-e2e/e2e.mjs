@@ -266,13 +266,14 @@ const cekIsolasi = fs.readFileSync(path.join(R, "plugins/rpg/warungtycoon.js"), 
 t("12b. gak ada sisa debug/konfigurasi ngawur", !/console\.log\(/.test(cekIsolasi));
 
 console.log("— section 13: cutscene cinematic (gaya cuplikan Nintendo) —");
-plug._setWarungAnimMsForTest(700);
-const { bukaCinematic, masakCinematic } = plug;
+{ const lib = await import(R + "/src/lib/libanimationrpg/libwarungrpg.js"); lib._setWarungAnimMsForTest(700); }
+const { bukaCinematic, masakCinematic } = await import(R + "/src/lib/libanimationrpg/libwarungrpg.js");
 const { sceneTotalMs } = await import(R + "/src/lib/nova-anim-runner.js");
-const scFull = bukaCinematic(U(), { pelanggan: 8, terjual: 8, omzet: 960, kosong: false, eventTipe: null, eventSukses: false });
-const scKosong = bukaCinematic(U(), { pelanggan: 5, terjual: 0, omzet: 0, kosong: true, eventTipe: null, eventSukses: false });
-const scEvent = bukaCinematic(U(), { pelanggan: 8, terjual: 8, omzet: 960, kosong: false, eventTipe: "kritikus", eventSukses: true });
-const scSupplier = bukaCinematic(U(), { pelanggan: 8, terjual: 8, omzet: 960, kosong: false, eventTipe: "supplier", eventSukses: true });
+const cek = { tile: "🛒", rating: 3 };
+const scFull = bukaCinematic({ ...cek, pelanggan: 8, terjual: 8, omzet: 960, kosong: false, eventTipe: null, eventSukses: false });
+const scKosong = bukaCinematic({ ...cek, pelanggan: 5, terjual: 0, omzet: 0, kosong: true, eventTipe: null, eventSukses: false });
+const scEvent = bukaCinematic({ ...cek, pelanggan: 8, terjual: 8, omzet: 960, kosong: false, eventTipe: "kritikus", eventSukses: true });
+const scSupplier = bukaCinematic({ ...cek, pelanggan: 8, terjual: 8, omzet: 960, kosong: false, eventTipe: "supplier", eventSukses: true });
 const nFrames = (scenes) => scenes.reduce((a, x) => a + x.frames.length, 0);
 t("13a. ramai penuh: cutscene ±10 dtk (9-12s)", sceneTotalMs(scFull, 700) >= 9000 && sceneTotalMs(scFull, 700) <= 12000, "ms=" + sceneTotalMs(scFull, 700));
 t("13b. warung kosong: LEBIH PENDEK dari ramai", sceneTotalMs(scKosong, 700) < sceneTotalMs(scFull, 700) && sceneTotalMs(scKosong, 700) >= 6500, "ms=" + sceneTotalMs(scKosong, 700));
@@ -284,7 +285,7 @@ t("13g. frame final tampil omzet full + bintang rating", scFull[scFull.length - 
 t("13h. kas berdetak naik bertahap (sepertiga→2/3→full)", scFull[scFull.length - 1].frames[0].includes("320") && scFull[scFull.length - 1].frames[1].includes("640"));
 t("13i. masak mini-cutscene ~3-4 dtk", sceneTotalMs(masakCinematic(MENUS[0], 5), 700) >= 2500 && sceneTotalMs(masakCinematic(MENUS[0], 5), 700) <= 5000, "ms=" + sceneTotalMs(masakCinematic(MENUS[0], 5), 700));
 t("13j. semua frame dalam code fence monospace", scFull.every((x) => x.frames.every((f) => f.startsWith("\n```") || f.startsWith("```"))));
-plug._setWarungAnimMsForTest(0);
+{ const lib = await import(R + "/src/lib/libanimationrpg/libwarungrpg.js"); lib._setWarungAnimMsForTest(0); }
 
 console.log("\n══════ HASIL E2E WARUNG TYCOON: " + pass + " PASS, " + fail + " FAIL ══════");
 if (fail > 0) process.exit(1);
