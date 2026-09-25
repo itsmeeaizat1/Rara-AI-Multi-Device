@@ -70,7 +70,7 @@ Seeing sparks in the air`;
 }
 
 // ── smoke import 4 plugin ──
-for (const p of ["plugins/search/lyrics.js", "plugins/search/lirik2.js", "plugins/search/lirikv2.js", "plugins/search/lirikspotify.js"]) {
+for (const p of ["plugins/search/lyrics.js", "plugins/search/lyrics2.js", "plugins/search/lyricsv2.js", "plugins/search/lyricsspotify.js"]) {
   try {
     await import(pathToFileURL(path.join(REPO, p)).href);
     t("import " + p + " OK (tanpa error)", true);
@@ -82,7 +82,7 @@ for (const p of ["plugins/search/lyrics.js", "plugins/search/lirik2.js", "plugin
 // ── handler .lirik2 — genius scrape via seam + enrich via seam ──
 {
   const { _setGeniusHttpForTest } = await import(pathToFileURL(path.join(REPO, "src/scraper/genius-lyrics.js")).href);
-  const { config, handler } = await import(pathToFileURL(path.join(REPO, "plugins/search/lirik2.js")).href);
+  const { config, handler } = await import(pathToFileURL(path.join(REPO, "plugins/search/lyrics2.js")).href);
 
   const LYRICS_HTML = `<html><body><div data-lyrics-container="true">We had fireworks on the first date<br>Seeing sparks in the air</div></body></html>`;
   _setGeniusHttpForTest(async (url) => {
@@ -126,7 +126,7 @@ for (const p of ["plugins/search/lyrics.js", "plugins/search/lirik2.js", "plugin
 // ── handler .lirikspotify — lrclib via seam (data lengkap) ──
 {
   const { _setLrclibHttpForTest } = await import(pathToFileURL(path.join(REPO, "src/scraper/spotify-lyrics.js")).href);
-  const { config, handler } = await import(pathToFileURL(path.join(REPO, "plugins/search/lirikspotify.js")).href);
+  const { config, handler } = await import(pathToFileURL(path.join(REPO, "plugins/search/lyricsspotify.js")).href);
 
   _setLrclibHttpForTest(async (url) => ({
     data: {

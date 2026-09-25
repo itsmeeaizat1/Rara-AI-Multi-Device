@@ -1,0 +1,186 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { getDatabase } from "../../src/lib/nova-database.js";
+import config from "../../config.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import fs from "fs";
+
+const pluginConfig = {
+  name: "belistore",
+  alias: ["belistore", "beli"],
+  category: 'owner',
+  description: "🛒 Pesan produk dan dapatkan nomor transaksi",
+  usage: ".beli <nomor_produk>",
+  example: ".beli 1",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 2,
+  isEnabled: true,
+};
+
+function formatPrice(n) {
+  return "Rp " + n.toLocaleString("id-ID");
+}
+
+async function handler(m, { sock }) {
+  const db = getDatabase();
+  const products = db.setting("storeProducts") || [];
+
+  if (products.length === 0) {
+    return m.reply(
+      `📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ ᴛᴇʀꜱᴇᴅɪᴀ.*\n\nKetik \`${m.prefix}listproduk\` untuk melihat daftar produk 🛍️`,
+    );
+  }
+
+  const args = m.text?.trim().split(/\s+/) || [];
+  const idx = parseInt(args[0]) - 1;
+
+  if (isNaN(idx) || idx < 0 || idx >= products.length) {
+    let txt = `🛒 *ᴘɪʟɪʜ ᴘʀᴏᴅᴜᴋ*\n\nKetik \`${m.prefix}beli <nomor>\` untuk memesan.\n\n`;
+    for (let i = 0; i < products.length; i++) {
+      const p = products[i];
+      const typeIcon = p.type === "fisik" ? "📦" : "🔑";
+      const isAvailable =
+        p.type === "fisik"
+          ? p.stock > 0 || p.stock === -1
+          : p.stockItems?.length > 0 || p.stock === -1;
+      txt += `${typeIcon} *${i + 1}.* ${p.name} — ${formatPrice(p.price)} ${isAvailable ? "✅" : "❌"}`;
+      if (p.kategori && p.kategori !== "umum") txt += ` [${p.kategori}]`;
+      txt += `\n`;
+    }
+    return m.reply(claraWrap("belistore", txt));
+  }
+
+  const product = products[idx];
+  const typeIcon = product.type === "fisik" ? "📦" : "🔑";
+  const typeLabel = product.type === "fisik" ? "Fisik" : "Digital";
+
+  const isAvailable =
+    product.type === "fisik"
+      ? product.stock > 0 || product.stock === -1
+      : product.stockItems?.length > 0 || product.stock === -1;
+
+  if (!isAvailable) {
+    return m.reply(
+      `❌ *ꜱᴛᴏᴋ ʜᴀʙɪꜱ*\n\n` +
+        `${typeIcon} Produk *${product.name}* saat ini sedang tidak tersedia 😔\n\n` +
+        `Silakan hubungi admin atau cek kembali nanti.\n\n` +
+        `_Kami akan segera mengisi ulang stok_ 🙏`,
+    );
+  }
+
+  const transactions = db.setting("storeTransactions") || {};
+  let trxCounter = db.setting("storeTrxCounter") || 0;
+  trxCounter++;
+  const trxId = `TRX-${String(trxCounter).padStart(3, "0")}`;
+  db.setting("storeTrxCounter", trxCounter);
+
+  transactions[trxId] = {
+    trxId,
+    buyerJid: m.sender,
+    buyerName: m.pushName || m.sender.split("@")[0],
+    purchaseChat: m.chat,
+    purchaseIsGroup: m.isGroup,
+    productIndex: idx,
+    productId: product.id,
+    productName: product.name,
+    productType: product.type,
+    price: product.price,
+    status: "pending",
+    createdAt: new Date().toISOString(),
+  };
+  db.setting("storeTransactions", transactions);
+
+  const ownerNumbers = config.owner?.number || [];
+  const ownerJid =
+    ownerNumbers.length > 0
+      ? `${String(ownerNumbers[0]).replace(/[^0-9]/g, "")}@s.whatsapp.net`
+      : null;
+
+  let txt = `🛒 *ᴘᴇꜱᴀɴᴀɴ ᴅɪʙᴜᴀᴛ*\n\n`;
+  txt += `🧾 Nomor Transaksi: \`${trxId}\`\n\n`;
+  txt += `📦 *ᴅᴇᴛᴀɪʟ ᴘᴇꜱᴀɴᴀɴ:*\n`;
+  txt += `${typeIcon} Produk: *${product.name}*\n`;
+  txt += `🏷️ Tipe: *${typeLabel}*\n`;
+  if (product.kategori && product.kategori !== "umum") txt += `🏷️ Kategori: *${product.kategori}*\n`;
+  txt += `💰 Harga: *${formatPrice(product.price)}*\n`;
+  if (product.originalPrice)
+    txt += `🏷️ ~~${formatPrice(product.originalPrice)}~~\n`;
+  if (product.description) txt += `📝 _${product.description}_\n`;
+  txt += `\n`;
+
+  if (product.image) {
+    await sock.sendMessage(
+      m.chat,
+      { image: { url: product.image }, caption: txt },
+      { quoted: m },
+    );
+  } else if (product.video) {
+    await sock.sendMessage(
+      m.chat,
+      { video: { url: product.video }, caption: txt },
+      { quoted: m },
+    );
+  } else {
+    await m.reply(claraWrap("belistore", txt));
+  }
+
+  let paymentTxt = `💳 *ɪɴꜱᴛʀᴜᴋꜱɪ ᴘᴇᴍʙᴀʏᴀʀᴀɴ*\n\n`;
+  paymentTxt += `1️⃣ Transfer sebesar *${formatPrice(product.price)}* ke nomor admin 💰\n`;
+
+  if (config.store?.payment?.length) {
+    for (const p of config.store.payment) {
+      paymentTxt += `   🏦 ${p.name}: \`${p.number}\` a.n ${p.holder}\n`;
+    }
+  }
+  if (config.store?.qris) {
+    paymentTxt += `   📱 QRIS: Tersedia\n`;
+  }
+
+  paymentTxt += `\n2️⃣ Setelah transfer, kirim *ʙᴜᴋᴛɪ ᴘᴇᴍʙᴀʏᴀʀᴀɴ* ke admin 📸\n`;
+  paymentTxt += `3️⃣ Admin akan memverifikasi dan mengirim data produk ke Anda ✅\n\n`;
+  paymentTxt += `🧾 Nomor Transaksi Anda: \`${trxId}\`\n`;
+  paymentTxt += `_Simpan nomor ini untuk referensi_ 📌`;
+
+  if (ownerJid) {
+    paymentTxt += `\n\n📞 Hubungi admin: wa.me/${ownerJid.split("@")[0]}`;
+  }
+
+  await m.reply(paymentTxt);
+
+  // Auto-reply QRIS image kalau tersedia
+  const qrisUrl = config.payment?.qrisUrl || "";
+  if (qrisUrl) {
+    try {
+      let qrisBuffer;
+      if (/^https?:\/\//.test(qrisUrl)) {
+        const response = await fetch(qrisUrl);
+        qrisBuffer = Buffer.from(await response.arrayBuffer());
+      } else {
+        qrisBuffer = fs.readFileSync(qrisUrl);
+      }
+      await sock.sendMessage(m.chat, {
+        image: qrisBuffer,
+        caption: "\n*ꜱᴄᴀɴ qʀɪꜱ ᴅɪ ᴀᴛᴀꜱ ᴜɴᴛᴜᴋ ᴘᴇᴍʙᴀʏᴀʀᴀɴ*"
+      }, { quoted: m });
+    } catch (e) { console.error('[buy.js]:', e.message); }
+  }
+
+  if (ownerJid) {
+    const buyerNum = m.sender.split("@")[0];
+    await sock.sendMessage(ownerJid, {
+      text:
+        `🛒 *ᴘᴇꜱᴀɴᴀɴ ʙᴀʀᴜ*\n\n` +
+        `🧾 TRX: \`${trxId}\`\n` +
+        `👤 Pembeli: *${m.pushName || buyerNum}*\n` +
+        `📱 Nomor: \`${buyerNum}\`\n` +
+        `${typeIcon} Produk: *${product.name}*\n` +
+        `💰 Harga: *${formatPrice(product.price)}*\n\n` +
+        `_Setelah menerima bukti transfer 📸, reply pesan pembeli lalu ketik \`${m.prefix}done ${trxId}\`_ ✅`,
+    });
+  }
+}
+
+export { pluginConfig as config, handler };

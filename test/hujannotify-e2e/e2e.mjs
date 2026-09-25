@@ -123,7 +123,7 @@ r = await lib.runRainCheck();
 check("12b. runRainCheck jalan pakai lokasi warisan", r.source === "openweathermap-onecall3" && r.sent === 0);
 
 // ═══ 13. plugin handler: set via geocode mock + on + cek ═══
-const hj = await import("../../plugins/info/hujannotify.js");
+const hj = await import("../../plugins/info/rainnotify.js");
 hj._setHujanHttpForTest({ geocode: async (q) => q.toLowerCase().includes("serang") ? { name: "Serang", lat: -6.1203, lon: 106.1504 } : null });
 getDatabase().setting("rainNotify", { enabled: false, targets: [], location: null, lastNotified: {} });
 let replies = [];

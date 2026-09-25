@@ -162,7 +162,7 @@ if (global.__novaHariBesarTimer?.unref) t("4c. timer unref (test gak hang)", tru
 else t("4c. timer unref (test gak hang)", false)
 
 // ═══ 5. Plugin handler — on/status/tambah + gate owner ═══
-const { pluginConfig, handler } = await import(R + "/plugins/info/haribesar.js")
+const { pluginConfig, handler } = await import(R + "/plugins/info/nationalday.js")
 t("5a. plugin config valid", pluginConfig.name === "haribesar" && pluginConfig.isEnabled === true && pluginConfig.category === "info")
 const replies = []
 function mockM(args, opts = {}) {
@@ -215,18 +215,18 @@ t("5h. list custom + upcoming muncul", /2027-06-15|20\d\d-\d\d-\d\d/.test(replie
   t("5n. .haribesar penting → hari penting (bukan libur)", /28-10|21-04|25-11/.test(replies.at(-1) || ""))
 
   // plugin .harilibur ROMBAK — data lokal package, tanpa API eksternal
-  const { handler: liburHandler } = await import(R + "/plugins/info/harilibur.js")
+  const { handler: liburHandler } = await import(R + "/plugins/info/holiday.js")
   const lReplies = []
   const mLibur = { chat: GID, isGroup: true, isOwner: true, reply: async (txt) => lReplies.push(String(txt)) }
   await liburHandler(mLibur, { sock: mockSock })
   const rl = (lReplies.at(-1) || "")
   t("5o. .harilibur tanpa API — daftar libur package (25-12-2026) + tanpa error", rl.includes("25-12-2026") && rl.length > 50, rl.slice(0, 200))
-  const src = await import("node:fs").then(fs => fs.readFileSync(path.resolve("plugins/info/harilibur.js"), "utf8"))
+  const src = await import("node:fs").then(fs => fs.readFileSync(path.resolve("plugins/info/holiday.js"), "utf8"))
   t("5p. .harilibur gak pakai axios/API eksternal lagi", !/axios|nexray|api\./.test(src))
 }
 
 // ═══ 6. Import guard senyap: modul + plugin ke-import tanpa error ═══
-try { await import(R + "/plugins/info/haribesar.js"); t("6a. re-import plugin aman", true) }
+try { await import(R + "/plugins/info/nationalday.js"); t("6a. re-import plugin aman", true) }
 catch (e) { t("6a. re-import plugin aman", false, e.message) }
 
 out("")

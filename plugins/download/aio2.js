@@ -108,7 +108,7 @@ export function buildPickerSections(medias, { source, statistics } = {}) {
   return { sections, statsText: statistics ? statistics : null };
 }
 
-/** Popup single_select — pola proven penilaian.js (placeholder Elaina V3). */
+/** Popup single_select — pola proven grading.js (placeholder Elaina V3). */
 async function sendPicker(m, sock, { source, title, author, bodyText, sections, statsText }) {
   const botName = config?.bot?.name || "Nova AI";
   const icon = PLATFORM_ICON[source] || "📥";

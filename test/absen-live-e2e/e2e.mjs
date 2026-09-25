@@ -137,7 +137,7 @@ w("\n— .mulaiabsen: jam mulai + count-up sesi berjalan —");
   // reset sesi absensi grup
   const { getDatabase } = await import(R + "/src/lib/nova-database.js");
   const db = getDatabase();
-  const mabs = await import(R + "/plugins/group/mulaiabsen.js");
+  const mabs = await import(R + "/plugins/group/startattendance.js");
 
   const mk = mkMock();
   mk.m.command = "mulaiabsen";

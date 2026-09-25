@@ -656,7 +656,7 @@ async function extendSocket(sock) {
       return sock.sendMessage(jid, plainMsg, { quoted });
     }
 
-    // Pattern PROVEN JALAN (sama seperti nova-menu-card.js / cekidgc.js):
+    // Pattern PROVEN JALAN (sama seperti nova-menu-card.js / checkidgc.js):
     // interactiveMessage dibungkus viewOnceMessage + dikirim via relayMessage,
     // BUKAN via sock.sendMessage dengan field interactiveButtons ditempel flat
     // ke object image/caption — itulah yang bikin WhatsApp versi lama/tertentu

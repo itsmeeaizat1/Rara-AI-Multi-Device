@@ -37,7 +37,7 @@ function mkMock() {
 const texts = (mk) => mk.sends.map((s) => norm(s.txt)).filter(Boolean);
 const tickerCards = (mk) => texts(mk).filter((x) => x.includes("sedang dekat"));
 
-const hafalan = await import(R + "/plugins/islami/hafalan.js");
+const hafalan = await import(R + "/plugins/islami/memorization.js");
 const run = async (mk, text) => { mk.m.text = text; await hafalan.handler(mk.m, { sock: mk.sock, config }); };
 
 const db = getDatabase();

@@ -129,7 +129,7 @@ lib.setContentType("live", true);
 
 // ═══ 13. plugin .jadwalbolanotify skor ═══
 market["eng.1"] = [mkMatch("in", 2, 1, "78th")];
-const jbn = await import("../../plugins/info/jadwalbolanotify.js");
+const jbn = await import("../../plugins/info/footballschedulenotify.js");
 const mkM = (args) => ({
   args, chat: CHAT, replyed: [], reacts: [],
   reply: async (s) => { mkM.lastReply = String(s); return true; },

@@ -21,7 +21,7 @@ await initDatabase("/tmp/penilaian-e2e-db/nova.json");
 const db = getDatabase();
 
 const { config: pluginConfig, handler: penilaianHandler } =
-  await import(pathToFileURL(path.join(REPO, "plugins/info/penilaian.js")).href);
+  await import(pathToFileURL(path.join(REPO, "plugins/info/grading.js")).href);
 
 // ── plugin config ──
 t("config: name = penilaian", pluginConfig.name === "penilaian");

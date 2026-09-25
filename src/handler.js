@@ -482,7 +482,7 @@ try {
   // Skip in self mode for non-owner.
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { registrationAnswerHandler } = await import("./../plugins/user/daftar.js");
+      const { registrationAnswerHandler } = await import("./../plugins/user/register.js");
       if (typeof registrationAnswerHandler === "function") {
         const regHandled = await registrationAnswerHandler(m, sock);
         if (regHandled) return;
@@ -513,7 +513,7 @@ try {
   // Captcha session handler (daftarotomatis captcha verification) — skip in self mode for non-owner
   if (!__novaSelfModeSkip) {
     try {
-      const { captchaAnswerHandler } = await import("./../plugins/user/daftarotomatis.js");
+      const { captchaAnswerHandler } = await import("./../plugins/user/autoregister.js");
       if (typeof captchaAnswerHandler === "function") {
         const captchaHandled = await captchaAnswerHandler(m, sock);
         if (captchaHandled) return;
@@ -628,7 +628,7 @@ try {
   // Pacaran answer handler (reply terima/tolak to tembakan) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { answerHandler: pacaranHandler } = await import("../plugins/fun/pacaran.js");
+      const { answerHandler: pacaranHandler } = await import("../plugins/fun/dating.js");
       if (typeof pacaranHandler === "function") {
         const handled = await pacaranHandler(m, sock);
         if (handled) return;
@@ -641,7 +641,7 @@ try {
   // Nikah answer handler (reply terima/tolak to lamaran) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { answerHandler: nikahHandler } = await import("../plugins/fun/nikah.js");
+      const { answerHandler: nikahHandler } = await import("../plugins/fun/marriage.js");
       if (typeof nikahHandler === "function") {
         const handled = await nikahHandler(m, sock);
         if (handled) return;
@@ -654,7 +654,7 @@ try {
   // RPG Cinta answer handler (reply terima/tolak to jadianmatch) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { answerHandler: jadianMatchHandler } = await import("../plugins/rpg-couple/jadianmatch.js");
+      const { answerHandler: jadianMatchHandler } = await import("../plugins/rpg-couple/daterpg.js");
       if (typeof jadianMatchHandler === "function") {
         const handled = await jadianMatchHandler(m, sock);
         if (handled) return;
@@ -667,7 +667,7 @@ try {
   // RPG Cinta nikah answer handler (reply terima/tolak to nikahmatch) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { answerHandler: nikahMatchHandler } = await import("../plugins/rpg-couple/nikahmatch.js");
+      const { answerHandler: nikahMatchHandler } = await import("../plugins/rpg-couple/marriagematch.js");
       if (typeof nikahMatchHandler === "function") {
         const handled = await nikahMatchHandler(m, sock);
         if (handled) return;

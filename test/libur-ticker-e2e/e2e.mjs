@@ -18,7 +18,7 @@ fs.mkdirSync(DB_DIR, { recursive: true });
 const { initDatabase } = await import(R + "/src/lib/nova-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
-const { handler } = await import(R + "/plugins/info/harilibur.js");
+const { handler } = await import(R + "/plugins/info/holiday.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

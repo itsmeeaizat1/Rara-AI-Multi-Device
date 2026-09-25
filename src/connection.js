@@ -1248,7 +1248,7 @@ async function startConnection(options = {}) {
         if (protocolMessage?.type === 30 && protocolMessage?.memberLabel) {
           try {
             const { handleLabelChange } =
-              await import("../plugins/group/notifgantitag.js");
+              await import("../plugins/group/tagnotify.js");
             if (handleLabelChange) {
               await handleLabelChange(msg, currentSock);
             }

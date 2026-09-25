@@ -18,7 +18,7 @@ await initDatabase(TMP + "/db.json");
 const { fromSC } = await import("../../src/lib/styler.js");
 const norm = (s) => fromSC(String(s || "")).toLowerCase();
 
-const plug = await import("../../plugins/anime/nonton.js");
+const plug = await import("../../plugins/anime/watch.js");
 
 let sends = [], reacts = [], gotUrls = [];
 const setHttp = (json, status = 200) => {

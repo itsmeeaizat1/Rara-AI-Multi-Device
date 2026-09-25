@@ -36,7 +36,7 @@ mkM._replies = [];
 const lastReply = () => (mkM._replies.length ? mkM._replies[mkM._replies.length - 1] : "");
 
 console.log("— 1. kuncijawabantts —");
-const tts = await import(R + "/plugins/fun/kuncijawabantts.js");
+const tts = await import(R + "/plugins/fun/answerkeytts.js");
 {
   t("1. config ok (name/alias/category fun)", tts.pluginConfig?.name === "kuncijawabantts" && tts.pluginConfig?.alias?.includes("kuncitts") && tts.pluginConfig?.category === "fun");
   // soal kosong → panduan
@@ -88,7 +88,7 @@ const tts = await import(R + "/plugins/fun/kuncijawabantts.js");
 }
 
 console.log("— 2. caridoa —");
-const doa = await import(R + "/plugins/islami/caridoa.js");
+const doa = await import(R + "/plugins/islami/prayerfinder.js");
 {
   t("2. config ok (name/alias/category islami)", doa.pluginConfig?.name === "caridoa" && doa.pluginConfig?.alias?.includes("doadoa") && doa.pluginConfig?.category === "islami");
   // nama kosong → panduan
@@ -129,7 +129,7 @@ const doa = await import(R + "/plugins/islami/caridoa.js");
 console.log("— 3. anti-dobel dengan fitur lama —");
 {
   // .doaharian (offline) & .zlokal suite harus tetap ada dan gak ketimpa alias
-  const dh = (await import(R + "/plugins/islami/doaharian.js")).config;
+  const dh = (await import(R + "/plugins/islami/dailyprayer.js")).config;
   const dhAlias = dh?.alias || dh?.aliases || [];
   t("3a. .doaharian lama tetap utuh (nama beda)", dh?.name === "doaharian" && !dhAlias.includes("caridoa"), "");
   t("3b. alias caridoa gak nabrak doaharian", !doa.pluginConfig.alias.includes("doaharian"), "");
@@ -141,7 +141,7 @@ console.log("— 3. anti-dobel dengan fitur lama —");
 
 
 console.log("— 4. hargakripto (Indodax) —");
-const krip = await import(R + "/plugins/search/hargakripto.js");
+const krip = await import(R + "/plugins/search/cryptoprice.js");
 {
   t("4. config ok (name/alias/category search)", krip.pluginConfig?.name === "hargakripto" && krip.pluginConfig?.alias?.includes("indodax") && krip.pluginConfig?.category === "search");
   mkM._replies.length = 0;
