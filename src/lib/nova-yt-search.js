@@ -2,7 +2,7 @@
 // ============================================================
 // 🔹 YOUTUBE SEARCH ENGINE BERSAMA — dipakai DUA agent:
 //   • .novaagent  (src/lib/aiagent.js — TOOLS.searchyt)
-//   • .aisuperagent (plugins/ai/agent.js — deteksi lokal + tool ytsearch)
+//   • .aisuperagent (plugins/ai-agent/agent.js — deteksi lokal + tool ytsearch)
 // 🔹 Request owner 14 Sep 2026: ".aisuperagent juga di-upgrade — agent itu
 // novaagent sama aisuperagent bermasalah ngbug" — akarnya sama: request
 // "cairkan/carikan X di youtube" gak pernah ke-detect, jatuh ke planner AI

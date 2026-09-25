@@ -11,7 +11,7 @@ import {
   getVoiceCfg, setVoiceCfg, wantsVoice, voiceSubReply,
   _setVoiceTtsForTest,
 } from "../../src/lib/nova-voice-reply.js";
-import { config as agConfig, handler as agHandler } from "../../plugins/ai/agent.js";
+import { config as agConfig, handler as agHandler } from "../../plugins/ai-agent/agent.js";
 import { handler as anovaHandler, createRule, _setAutonovaRuleAiForTest } from "../../plugins/ai/autonovaai.js";
 
 let pass = 0, fail = 0;

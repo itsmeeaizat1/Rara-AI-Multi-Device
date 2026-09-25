@@ -171,7 +171,7 @@ async function messageHandler(msg, sock, jadibotCtx = {}) {
   // lain). Kalau gak ada session aktif, lanjut normal (return false).
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaModeBlocked && (m.isImage || m.isMedia)) {
     try {
-      const { handleOutfitPhotoHook } = await import("../plugins/ai/omnioutfitchanger.js");
+      const { handleOutfitPhotoHook } = await import("../plugins/ai-image/omnioutfitchanger.js");
       const handled = await handleOutfitPhotoHook(m);
       if (handled) return;
     } catch (e) {
@@ -640,7 +640,7 @@ try {
   // Pacaran answer handler (reply terima/tolak to tembakan) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { answerHandler: pacaranHandler } = await import("../plugins/fun/dating.js");
+      const { answerHandler: pacaranHandler } = await import("../plugins/couple/dating.js");
       if (typeof pacaranHandler === "function") {
         const handled = await pacaranHandler(m, sock);
         if (handled) return;
@@ -653,7 +653,7 @@ try {
   // Nikah answer handler (reply terima/tolak to lamaran) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
-      const { answerHandler: nikahHandler } = await import("../plugins/fun/marriage.js");
+      const { answerHandler: nikahHandler } = await import("../plugins/couple/marriage.js");
       if (typeof nikahHandler === "function") {
         const handled = await nikahHandler(m, sock);
         if (handled) return;
@@ -692,7 +692,7 @@ try {
   // Confess reply handler (balasan ke pesan confess anonim/non-anonim) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && m.quoted && !__novaSelfModeSkip) {
     try {
-      const { replyHandler: confessReply } = await import("../plugins/fun/confess.js");
+      const { replyHandler: confessReply } = await import("../plugins/confess-menfess/confess.js");
       if (typeof confessReply === "function") {
         const handled = await confessReply(m, { sock });
         if (handled) return;
@@ -705,7 +705,7 @@ try {
   // ConfessViral reply handler (balasan ke pesan confess viral) — skip in self mode for non-owner
   if (!m.isCommand && !m.isNewsletter && m.quoted && !__novaSelfModeSkip) {
     try {
-      const { replyHandler: viralReply } = await import("../plugins/fun/confessviral.js");
+      const { replyHandler: viralReply } = await import("../plugins/confess-menfess/confessviral.js");
       if (typeof viralReply === "function") {
         const handled = await viralReply(m, { sock });
         if (handled) return;

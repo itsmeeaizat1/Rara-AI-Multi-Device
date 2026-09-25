@@ -56,7 +56,7 @@ r = await sd.stableDiffusion("kucing pink");
 t("5a. timeout → pesan 'antrean pollinations sibuk'", r.status === false && /antrean pollinations sibuk/.test(r.error || ""), JSON.stringify(r));
 
 out("\n— plugin: fallback ZelAPI —");
-const mod = await import(R + "/plugins/ai/sdxl.js");
+const mod = await import(R + "/plugins/ai-image/sdxl.js");
 t("6a. plugin re-export seam _setSdHttpForTest", typeof mod._setSdHttpForTest === "function");
 
 const replies = [];

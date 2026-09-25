@@ -35,7 +35,7 @@ import { initRefill } from "./lib/nova-auto-refill.js";
 import { initRenewalReminder } from "./lib/nova-auto-renewal.js";
 import { startWeatherRealtimeScheduler } from "./lib/nova-weather-realtime-scheduler.js";
 import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/auth.js";
-import { trackMessage as pulseTrack } from "../plugins/future/autopulse.js";
+import { trackMessage as pulseTrack } from "../plugins/smart/autopulse.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
 const processedMessages = new NodeCache({ stdTTL: 30, useClones: false });
 const msgRetryCounterCache = new NodeCache({ stdTTL: 60, useClones: false });

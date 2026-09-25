@@ -211,7 +211,7 @@ resetMcpRpc()
 w("\n— preset server mcp —")
 const { fromSC } = await import("../../src/lib/styler.js")
 const norm = (s) => fromSC(String(s)).toLowerCase()
-const { pluginConfig, handler } = await import("../../plugins/ai/mcp.js")
+const { pluginConfig, handler } = await import("../../plugins/ai-agent/mcp.js")
 const mp = { chat: "pc@t", prefix: ".", reply: (x) => { sent2.push(String(x)); return sent2.length }, argsRaw: "" }
 const sent2 = []
 await handler(mp, { args: ["preset"] })

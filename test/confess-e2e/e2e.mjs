@@ -20,8 +20,8 @@ const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO,
 await initDatabase("/tmp/confess-e2e-db/nova.json");
 const db = getDatabase();
 
-const confess = await import(pathToFileURL(path.join(REPO, "plugins/fun/confess.js")).href);
-const confess2 = await import(pathToFileURL(path.join(REPO, "plugins/fun/confess2.js")).href);
+const confess = await import(pathToFileURL(path.join(REPO, "plugins/confess-menfess/confess.js")).href);
+const confess2 = await import(pathToFileURL(path.join(REPO, "plugins/confess-menfess/confess2.js")).href);
 const confessHandler = confess.handler;
 const confessReply = confess.replyHandler;
 const confess2Handler = confess2.handler;

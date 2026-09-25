@@ -90,7 +90,7 @@ t("2m. lang javascript → ext js", gen.ext === "js");
 // ═══ 3. tool code .aisuperagent (executor asli + deps.aiChat) ═══
 out("\n— tool code .aisuperagent —");
 const { resetAgentDeps, setAgentDeps } = await import(R + "/src/lib/nova-agent.js");
-const ag = await import(R + "/plugins/ai/agent.js");
+const ag = await import(R + "/plugins/ai-agent/agent.js");
 const agHandler = ag.handler;
 // deps.aiChat untuk PLAN + COMPOSE juga — planReply buat mastiin mode tools
 let planN = 0;
@@ -160,7 +160,7 @@ t("4b. konten kepotong → dilengkapi jadi utuh", cfDoc && cfDoc.body.includes("
 // ═══ 5. prompt planner — gak ngajarin placeholder lagi ═══
 out("\n— prompt planner —");
 const fs = await import("node:fs");
-const agentSrc = fs.readFileSync(R + "/plugins/ai/agent.js", "utf-8");
+const agentSrc = fs.readFileSync(R + "/plugins/ai-agent/agent.js", "utf-8");
 const aiagentSrc = fs.readFileSync(R + "/src/lib/aiagent.js", "utf-8");
 const novaAgentSrc = fs.readFileSync(R + "/src/lib/nova-agent.js", "utf-8");
 t("5a. aiagent: contoh placeholder KODE LENGKAP dihapus", !aiagentSrc.includes('content":"<!DOCTYPE html> ... KODE LENGKAP ..."'));

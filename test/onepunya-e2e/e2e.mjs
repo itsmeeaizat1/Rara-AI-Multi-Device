@@ -321,7 +321,7 @@ console.log("— section 5: handler onedl (6 platform) —");
 
 console.log("— section 6: handler oneimage / onephoto / oneai —");
 {
-  const plugImg = await import(R + "/plugins/tools/oneimage.js");
+  const plugImg = await import(R + "/plugins/ai/oneimage.js");
   resetSent();
   await plugImg.handler(mkM({ command: "oneimg", args: ["kucing", "oren"] }), { sock: mkSock() });
   const im = lastMsg();

@@ -67,7 +67,7 @@ const plugins = [
   ["ai-ocr", "../../plugins/ai/ai-ocr.js"],
   ["ai9", "../../plugins/ai/ai9.js"],
   ["aianalyze", "../../plugins/ai/aianalyze.js"],
-  ["enhance", "../../plugins/ai/enhance.js"],
+  ["enhance", "../../plugins/ai-image/enhance.js"],
   ["ocrsolve", "../../plugins/ai/ocrsolve.js"],
   ["automeme", "../../plugins/ai/automemegenerator.js"],
 ];

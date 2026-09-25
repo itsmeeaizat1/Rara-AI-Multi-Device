@@ -14,7 +14,7 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase("/tmp/clothes-e2e-db/nova.json");
 const db = getDatabase();
 
-const { config, handler, buildEditPrompt, parseClothesDesc, expandPreset, parseHdFlag, PRESET_STYLES, HAIR_PRESETS, buildAgePrompt, buildHairPrompt, buildGenderPrompt, buildBgPrompt, buildRemovePrompt, buildFaceSwapPrompt, parseFaceDesc, _setClothesDepsForTest } = await import(R + "/plugins/ai/clotheschanger.js");
+const { config, handler, buildEditPrompt, parseClothesDesc, expandPreset, parseHdFlag, PRESET_STYLES, HAIR_PRESETS, buildAgePrompt, buildHairPrompt, buildGenderPrompt, buildBgPrompt, buildRemovePrompt, buildFaceSwapPrompt, parseFaceDesc, _setClothesDepsForTest } = await import(R + "/plugins/ai-image/clotheschanger.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s || ""));
 

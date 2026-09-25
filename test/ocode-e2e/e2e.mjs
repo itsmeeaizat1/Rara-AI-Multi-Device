@@ -116,7 +116,7 @@ console.log("\n— section 5: plugin —");
     wrap('{"action":"edit","path":"fitur.js","find":"return \'halo\';","replace":"return \'hai\';"}'),
     wrap('{"action":"done","summary":"ubah ke hai","files":["fitur.js"]}'),
   ]));
-  const plugin = await import(R + "/plugins/owner/ocode.js");
+  const plugin = await import(R + "/plugins/ai-agent/ocode.js");
   const replies = [];
   const reactions = [];
   const mkM = (args, isOwner) => ({

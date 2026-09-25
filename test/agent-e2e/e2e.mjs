@@ -2,7 +2,7 @@
 // Deterministik tanpa network. Jalankan dari cwd DIR KOSONG:
 //   mkdir -p /tmp/agent-e2e && cd /tmp/agent-e2e && node <repo>/test/agent-e2e/e2e.mjs
 import { setAgentDeps, resetAgentDeps, runAgent, generatePlugin } from "../../src/lib/nova-agent.js";
-import { config as agConfig, handler as agHandler } from "../../plugins/ai/agent.js";
+import { config as agConfig, handler as agHandler } from "../../plugins/ai-agent/agent.js";
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
@@ -739,7 +739,7 @@ w("\n— plugin: no-arg → usage —");
   check("header ✧ agent ✧ (desain V2)", u.includes(`「✧ ${toSC("AGENT")} ✧」`));
   check("kaomoji + baris contoh 📍 (desain V2)", /\(๑ᵔ⤙ᵔ๑\)♡/.test(u) && u.includes(toSC("Contoh")));
   check("contoh verbatim", u.includes(".agent <tugas apa pun>"));
-  check("pluginConfig benar", agConfig.name === "aisuperagent" && agConfig.category === "ai" && agConfig.isEnabled); // rename 460f28f1
+  check("pluginConfig benar", agConfig.name === "aisuperagent" && agConfig.category === "ai agent" && agConfig.isEnabled); // kategori ai agent 25 Sep
 }
 
 resetAgentDeps();
@@ -794,7 +794,7 @@ w("\n— TOOLBOX INJECTION: daftar skill+mcp masuk plan prompt —");
 
 w("\n— buildToolbox: daftar skill pack live dari plugin —");
 {
-  const { buildToolbox } = await import("../../plugins/ai/agent.js");
+  const { buildToolbox } = await import("../../plugins/ai-agent/agent.js");
   const tb = await buildToolbox();
   check("skill pack ke-list (kbbi/gempa/hoki/lirik)", tb.includes("skill kbbi") && tb.includes("skill gempa") && tb.includes("skill hoki") && tb.includes("skill lirik"), tb.slice(0, 120));
   check("skill built-in ke-list (calc/translate)", tb.includes("skill calc") && tb.includes("skill translate"));

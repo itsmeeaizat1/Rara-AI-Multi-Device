@@ -111,7 +111,7 @@ console.log("— section 2: runAgent opts.memBlock — blok nyangkut di prompt A
 
 console.log("— section 3: .agentloop — recall ke prompt putaran + auto-extract —");
 {
-  const al = await import(R + "/plugins/owner/agentloop.js");
+  const al = await import(R + "/plugins/ai-agent/agentloop.js");
   const I = al._agentloopInternalsForTest();
   const replies = [];
   const mkM = (over = {}) => ({
@@ -152,7 +152,7 @@ console.log("— section 3: .agentloop — recall ke prompt putaran + auto-extra
 
 console.log("— section 4: .autotask — recall ke prompt tahap + auto-extract —");
 {
-  const at = await import(R + "/plugins/owner/autotask.js");
+  const at = await import(R + "/plugins/ai-agent/autotask.js");
   const I = at._autotaskInternalsForTest();
   const replies = [];
   const mkM = (over = {}) => ({
@@ -192,7 +192,7 @@ console.log("— section 4: .autotask — recall ke prompt tahap + auto-extract 
 console.log("— section 5: wiring statis semua pintu agent (owner 25 Sep) —");
 {
   const src = (p) => fs.readFileSync(R + "/" + p, "utf8");
-  const agentJs = src("plugins/ai/agent.js");
+  const agentJs = src("plugins/ai-agent/agent.js");
   t("5a. .aisuperagent: recall (memBlock) + auto-extract terpasang", agentJs.includes("memBlock: memoryBlock(db, m.sender, task)") && agentJs.includes("extractMemories(db, m.sender, task"), null);
   const novaaiJs = src("plugins/ai/novaai.js");
   t("5b. .novaagent: recall + extract udah nyambung (store sama)", novaaiJs.includes("memoryBlock(db, m.sender") && novaaiJs.includes("extractMemories(db, m.sender"), null);
@@ -200,9 +200,9 @@ console.log("— section 5: wiring statis semua pintu agent (owner 25 Sep) —")
   t("5c. .anovaagent rule aichat (AI otomatis): recall + extract", autoflowJs.includes("memoryBlock(getDatabase(), user") && autoflowJs.includes("extractMemories(getDatabase(), user"), null);
   const engineJs = src("src/lib/nova-agent.js");
   t("5d. engine runAgent nerima opts.memBlock + inject ${mem}", /export async function runAgent\([^)]*\{[^}]*memBlock/.test(engineJs) && engineJs.includes("${mem}"), null);
-  const loopJs = src("plugins/owner/agentloop.js");
+  const loopJs = src("plugins/ai-agent/agentloop.js");
   t("5e. agentloop: memoryBlock per-sender + extractor seam", loopJs.includes("memoryBlock(getDatabase(), run.sender") && loopJs.includes("setExtractor"), null);
-  const atJs = src("plugins/owner/autotask.js");
+  const atJs = src("plugins/ai-agent/autotask.js");
   t("5f. autotask: memoryBlock per-sender + extractor seam", atJs.includes("memoryBlock(getDatabase(), task.sender") && atJs.includes("setExtractor"), null);
 }
 
