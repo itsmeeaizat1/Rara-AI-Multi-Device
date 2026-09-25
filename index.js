@@ -430,6 +430,7 @@ async function main() {
           { name: "RainNotifier", fn: () => import("./src/lib/nova-rain-notify.js").then(m => m.initRainNotifier?.(sock)) },
           { name: "LinkedInNotifier", fn: () => import("./src/lib/nova-linkedin-notify.js").then(m => m.initLinkedInNotifier?.(sock)) },
           { name: "NovaWeb", fn: () => import("./src/lib/nova-web-server.js").then(m => m.initNovaWebServer?.(sock)) },
+          { name: "Dashboard", fn: () => import("./src/lib/nova-dashboard.js").then(m => m.initDashboardServer?.(sock)) },
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
           { name: "Family100Harvest", fn: () => import("./src/lib/nova-family100-harvest.js").then(m => m.initAutoRefresh?.(sock)) },
           { name: "WebWatch", fn: () => import("./src/lib/nova-webwatch.js").then(m => m.initWebWatch?.(sock)) },
