@@ -12,7 +12,7 @@
 // ═════════════════════════════════════════════
 
 import { zelLyrics, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 export { _setZelHttpForTest, _setZelKeyForTest };
 
@@ -30,16 +30,19 @@ const pluginConfig = {
 async function handler(m) {
   try {
     const raw = (m.args || []).join(" ").trim();
-    const usage = `🎵 *ZLIRIK — GENERATOR LIRIK AI (ZELAPI)*\n\n` +
-      `⚠️ Ini generator LIRIK TEKS, bukan lagu/audio beneran (engine musik zelapi lagi mati semua — suno/sunora/melody/remusic).\n\n` +
-      `Format: *.zlirik <topik> | <genre opsional> | <mood opsional>*\n\n` +
-      `Contoh:\n• .zlirik kehilangan sahabat\n• .zlirik cinta yang tak terbalas | pop | sedih\n\n` +
-      `💡 Mau lirik yang lebih fleksibel/kreatif? Coba *.lirikai* (pakai AI beda).`;
-    if (!raw) return m.reply(claraWrap("zlirik", usage));
+    const usage = () => novaGuideV2("zlirik", {
+ kaomoji: "(๑´ㅂ`๑)",
+ sapaan: "generator lirik AI — bikin lirik lagu dari topik bebas! (◍•ᴗ•◍)",
+      cara: "ketik topiknya, genre & mood opsional pakai pemisah |",
+      contoh: `${m.prefix}zlirik cinta yang tak terbalas | pop | sedih`,
+      note: "ini lirik teks doang, bukan lagu/audio beneran · mau lebih fleksibel coba .lirikai",
+      spec: ["⚡ energi 1", "⏱ 20dtk", "💸 gratis"],
+    });
+    if (!raw) return m.reply(usage());
 
     const parts = raw.split("|").map((s) => s.trim());
     const [topic, genre, mood] = parts;
-    if (!topic) return m.reply(claraWrap("zlirik", usage));
+    if (!topic) return m.reply(usage());
 
     await m.react("🧠");
     // ailyrics support genre+emotion lengkap → dicoba duluan, fallback lyricsai (cuma topic+style)

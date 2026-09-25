@@ -6,7 +6,7 @@
 // ═════════════════════════════════════════════
 
 import { zelAiChat, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { sendImage } from "../../src/lib/nova-message.js";
 import { fetchBuffer } from "../../src/lib/nova-utils.js";
 
@@ -31,9 +31,13 @@ async function handler(m, { sock }) {
     const cmd = (m.command || "").toLowerCase();
     const text = (m.args || []).join(" ").trim();
 
-    const usage = `💡 *.${cmd}* — AI dari zelapi.eu.cc\n\nContoh: *.${cmd} siapa presiden indonesia*` +
-      (m.quoted?.isImage ? "\n\n📷 reply foto + pertanyaan juga bisa (mode vision)" : "");
-    if (!text) return m.reply(claraWrap("zelai", usage));
+    if (!text) return m.reply(novaGuideV2("zelaichat2", {
+ kaomoji: "(๑˃ᴗ˂)ﻭ",
+ sapaan: "AI zelapi jawab apa aja, reply foto juga bisa mode vision! (≧∇≦)ﾉ",
+      cara: "ketik pertanyaannya sesudah command" + (m.quoted?.isImage ? " (atau reply foto + pertanyaan, mode vision)" : ""),
+      contoh: `.${cmd} siapa presiden indonesia`,
+      spec: ["⚡ energi 1", "⏱ 15dtk", "💸 gratis"],
+    }));
 
     await m.react("🧠");
 

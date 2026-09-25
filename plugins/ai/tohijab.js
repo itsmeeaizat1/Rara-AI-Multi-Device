@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import axios from 'axios'
 import { uploadImage } from '../../src/lib/nova-uploader.js'
@@ -57,7 +57,13 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        { const __navText = claraWrap("Hijab sTyle", `Kirim/reply gambar\n\n\`${m.prefix}tohijab\``); return await m.reply(__navText, "tohijab"); }
+        return m.reply(novaGuideV2("tohijab", {
+ kaomoji: "(◕ᴗ◕)",
+ sapaan: "pasangkan hijab cantik di fotomu secara natural!",
+        cara: "kirim atau reply gambar dengan caption commandnya",
+        contoh: `${m.prefix}tohijab`,
+        spec: ["⚡ energi 2", "⏱ 30dtk", "💸 gratis"],
+      }), "tohijab");
     }
     try {
     await m.react("🕒");

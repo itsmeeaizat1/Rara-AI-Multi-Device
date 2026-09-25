@@ -4,7 +4,7 @@
 // Persona KuroNeko, SESSION PERSIST per user (token session API disimpan di
 // db.setting kuroaiSession) — AI inget percakapan sebelumnya per orang.
 // STRICT SATU RUTE (pola satuan owner): API down → error jelas, gak nyamber.
-import { claraWrap, novaAiUsage, novaInfoSections } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2, novaInfoSections } from "../../src/lib/nova-menu-style.js";
 import { kuroaiChat } from "../../src/scraper/evernight.js";
 
 const pluginConfig = {
@@ -65,16 +65,19 @@ async function handler(m, { sock, db } = {}) {
   if (!prompt) {
     const hasSession = !!getSession(db, m.sender);
     return m.reply(
-      novaAiUsage("KuroAI", {
-        prefix: m.prefix,
-        command: "kuroai",
+      novaGuideV2("KuroAI", {
+ kaomoji: "(^◡^)",
+ sapaan: `pengen ngobrol santai? sapa aja! (=^･ω･^=) ${hasSession ? " sesi obrolanmu masih kuinget lho~" : ""}`,
+        cara: "ketik pesannya sesudah command, bot jawab santai dan inget obrolanmu",
+        contoh: `${m.prefix}kuroai halo, siapa kamu?`,
+        note: "obrolan baru bisa dimulai lewat reset sesi",
         modelAktif: `KuroNeko AI${hasSession ? " (sesi aktif — AI inget obrolanmu)" : ""}`,
         models: ["KuroNeko AI (evernight)"],
         extra: [
           `📍 Chat: ${m.prefix}kuroai <pesan> — contoh ${m.prefix}kuroai halo, siapa kamu?`,
           `📍 Obrolan baru: ${m.prefix}kuroai reset — hapus memori sesi`,
-          "📍 AI ngobrol santai, inget percakapan sebelumnya per user",
         ],
+        spec: ["⚡ energi 1", "⏱ 5dtk", "💸 gratis"],
       })
     );
   }

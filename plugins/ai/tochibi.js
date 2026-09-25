@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import { uploadImage } from '../../src/lib/nova-uploader.js'
 import { f } from '../../src/lib/nova-http.js'
@@ -57,7 +57,13 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        { const __navText = claraWrap("Chibi sTyle", `Kirim/reply gambar untuk diubah ke style Chibi\n\n\`${m.prefix}tochibi\``); return await m.reply(__navText, "tochibi"); }
+        return m.reply(novaGuideV2("tochibi", {
+ kaomoji: "(๑ᵔ⤙ᵔ๑)",
+ sapaan: "ubah fotomu jadi gaya chibi yang gemesin!",
+        cara: "kirim atau reply gambar dengan caption commandnya",
+        contoh: `${m.prefix}tochibi`,
+        spec: ["⚡ energi 2", "⏱ 30dtk", "💸 gratis"],
+      }), "tochibi");
     }
     try {
     await m.react("🕒");

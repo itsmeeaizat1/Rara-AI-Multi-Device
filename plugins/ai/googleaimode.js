@@ -8,7 +8,7 @@
 // ═════════════════════════════════════════════
 
 import { googleAiModeSearch, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
 
 // seam buat e2e: upload gambar bisa di-mock
@@ -32,13 +32,14 @@ async function handler(m, { sock }) {
     const isPhoto = (m.quoted && m.quoted.isImage) || m.isImage;
 
     if (!q && !isPhoto) {
-      return m.reply(claraWrap("googleaimode",
-        `🔍 *GOOGLE AI MODE — JAWABAN AI GOOGLE + SUMBER*\n\n` +
-        `Tanya apa aja → dijawab AI Mode Google (riset real-time) + link sumber.\n\n` +
-        `Contoh:\n` +
-        `• .googleaimode siapa presiden indonesia\n` +
-        `• .googleaimode apa itu fotosintesis\n` +
-        `• reply foto + .googleaimode ini gambar apa`));
+      return m.reply(novaGuideV2("googleaimode", {
+ kaomoji: "(◍•ᴗ•◍)",
+ sapaan: "tanya apa aja — dijawab AI Mode Google + link sumber riset real-time! (◕ᴗ◕)",
+        cara: "ketik pertanyaannya sesudah command, atau reply foto + command",
+        contoh: `${m.prefix}googleaimode siapa presiden indonesia`,
+        note: "jawaban lengkap + sumber google, agak lama dikit",
+        spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
+      }));
     }
 
     await m.react("🧠");

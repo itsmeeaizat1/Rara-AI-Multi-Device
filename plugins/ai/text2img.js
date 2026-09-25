@@ -2,7 +2,7 @@
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { haidarTxt2img } from "../../src/scraper/haidar-ai.js";
-import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -54,7 +54,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("Text To Image", `Masukkan teks\n\n\`Contoh: ${m.prefix}text2img Buat gambar dari teks\``), "text2img");
+    return m.reply(novaGuideV2("text2img", {
+ kaomoji: "(◍'◡'◍)",
+ sapaan: "ubah teks jadi gambar, deskripsikan aja yang kamu mau! (◍•ᴗ•◍)",
+      cara: "ketik deskripsi gambar yang mau dibuat",
+      contoh: `${m.prefix}text2img Buat gambar dari teks`,
+      spec: ["⚡ energi 1", "⏱ 5dtk", "💸 gratis"],
+    }), "text2img");
   }
   try {
   await m.react("🕒");

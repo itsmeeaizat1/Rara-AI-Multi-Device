@@ -5,7 +5,7 @@
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo, isYtDlpAvailable } from "../../src/scraper/nova-ytdlp.js";
-import { novaDlUsage, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -96,11 +96,13 @@ async function handler(m, { sock }) {
   const quality = qi >= 0 ? tokens[qi].replace(/p$/i, "") : "720";
   const url = tokens.filter((_, i) => i !== qi).join(" ").trim();
   if (!url) {
-    return m.reply(novaDlUsage("YTmp4", {
-      prefix: m.prefix,
-      command: m.command || "ytmp4",
-      cara: [`${m.prefix}${m.command || "ytmp4"} [link youtube]`],
-      contoh: [`${m.prefix}${m.command || "ytmp4"} https://youtu.be/xxx`],
+    return m.reply(novaGuideV2("ytmp4", {
+ kaomoji: "(๑•̀ㅂ•́)✧",
+ sapaan: "download video youtube full? gas! (◕‿◕)♡",
+      cara: "tempel link youtubenya sesudah command",
+      contoh: `${m.prefix}${m.command || "ytmp4"} https://youtu.be/xxx`,
+      note: "nanti bot unduh videonya langsung dalam format mp4",
+      spec: ["⚡ energi 2", "⏱ 20dtk", "💸 gratis"],
     }));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {

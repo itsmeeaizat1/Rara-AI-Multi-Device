@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
@@ -23,7 +23,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(claraWrap("Gita Gpt", `Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}gita What is dharma?\``), "gita")
+        return m.reply(novaGuideV2("gita", {
+ kaomoji: "(๑ᵔ⤙ᵔ๑)",
+ sapaan: "nanya apa aja ke Gita GPT, asisten AI serba bisa! (◕ᴗ◕)",
+          cara: "ketik pertanyaannya sesudah command",
+          contoh: `${m.prefix}gita What is dharma?`,
+          spec: ["⚡ energi 1", "⏱ 5dtk", "💸 gratis"],
+        }), "gita")
     }
     try {
     await m.react("🕒");

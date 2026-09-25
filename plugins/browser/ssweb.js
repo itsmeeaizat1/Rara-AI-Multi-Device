@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ssweb",
@@ -34,13 +34,14 @@ async function handler(m, { sock }) {
   let text = m.text?.trim();
 
   if (!text) {
-    return m.reply(claraWrap("ssweb", [
-      `Screenshot halaman website.`,
-      ``,
-      `📌 Format: ${m.prefix}ssweb <url> [opsi]`,
-      `💡 Contoh: ${m.prefix}ssweb https://google.com`,
-      `${m.prefix}ss https://github.com --mobile`,
-    ]));
+    return m.reply(novaGuideV2("ssweb", {
+ kaomoji: "(≧▽≦)",
+ sapaan: "tangkap layar website jadi gambar? gas! (ᵔ◡ᵔ)",
+      cara: "tempel link webnya sesudah command, opsi --mobile buat tampilan HP",
+      contoh: `${m.prefix}ssweb https://google.com · ${m.prefix}ss https://github.com --mobile`,
+      note: "hasilnya langsung jadi foto halaman web tersebut",
+      spec: ["⏱ 15dtk", "💸 gratis"],
+    }));
   }
 
   let mode = "desktop";

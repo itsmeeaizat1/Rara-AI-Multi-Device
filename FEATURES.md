@@ -2612,3 +2612,11 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - `linkedin` dijadikan sumber **pertama** di: `src/lib/config/schedulers.js`, default `nova-loker-scheduler.js`, daftar `AVAILABLE` di `.loker sumber`, dan plugin **`.ayokerja`**.
 - Format notif: judul + perusahaan + lokasi + tipe + tanggal dibuka + link LinkedIn.
 - E2E baru: `test/loker-id-e2e` 13/13.
+
+## v24.3.0 — DESAIN USAGE V2 KAMOJI (25 Sep 2026)
+
+- **NOVA GUIDE V2 (request owner 25 Sep, sampel persis `.play`):** Kartu usage non-game baru: `「✧ ɴᴀᴍᴀ ✧」` → `kaomoji ɴᴀᴍᴀ!!` → sapaan cute + kaomoji → `📍 ᴄᴀʀᴀ:` → `ᴄᴏɴᴛᴏʜ:` → note `~` (tiap bagian baris sendiri) → spec `⚡/⏱/💸`. Helper `novaGuideV2(brand, {kaomoji, sapaan, cara, contoh, note, spec, modelAktif, models})` + `novaSalahV2` (salah cmd 3 baris cute: `kaomoji ʏᴀʜ ᴋᴀᴋ...` + pesan + `➤ contoh`) di nova-menu-style.js. BEDA PLUGIN = BEDA SAPAAN + KAOMOJI (aturan owner).
+- **AUTO-V2:** `novaGuide`/`novaNoInput` otomatis render V2 → SEMUA plugin non-game (700+) sekalian pindah; `novaAiUsage` (usage AI) juga V2 (model + list model tetap VERBATIM); `novaSalah` (salah cmd) auto 3 baris cute. Game tetap novaBox lama.
+- **REVISI OWNER 25 Sep (2x):** (1) kaomoji TANPA emoji unicode di sebelahnya (emoji muka keliatan gaya Android di HP owner — distrip dari pool + 74 plugin yang sudah migrasi manual + salah-cmd); (2) symbol bunga `✿` dihapus semua (dekoratif, gak melambangkan apa-apa) — `♡` TETAP karena ekspresi perasaan. Pool kaomoji 25 entri polos, dedupe dijaga.
+- **MIGRASI MANUAL:** 74 plugin (download, ai, stiker, tools, group, dll) pindah ke `novaGuideV2`/`novaSalahV2` dengan sapaan + kaomoji + note beda-beda per fitur (konten panduan lama dipertahankan).
+- **E2E:** BARU `test/novaguide-v2-e2e` 29/29; di-update `ai-usage` 21/21, `usage-unified` 36/36, `dl-usage` 18/18, `menu-layout` 4/4; regresi `formatguard` 22/22 + `plugins-import` 14/14.

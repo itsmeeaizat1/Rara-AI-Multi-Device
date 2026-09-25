@@ -1,7 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tebakangka.js — Tebak angka 1-100 dengan hint lebih besar/kecil (no API)
 
-import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaError } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox } from "../../src/lib/nova-games.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
@@ -52,7 +53,13 @@ async function handler(m, { args, prefix }) {
   // Check if game is active
   const game = activeGames.get(chatId);
   if (!game) {
-    return m.reply(novaGuide("TebakAngka", "Belum mulai nih! Ketik mulai dulu", ".guessnumber mulai"));
+    return m.reply(novaGameBox({
+      title: "tebak angka",
+      icon: "🔢",
+      flavor: "🔢 *TEBAK ANGKA!*",
+      body: "Belum ada ronde jalan di chat ini.\nMulai dulu rondenya, terus tebak angka 1-100",
+      cta: "Contoh: .guessnumber mulai → .guessnumber 50",
+    }));
   }
 
   // Parse guess

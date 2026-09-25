@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -52,7 +52,13 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-  if (!m.fullArgs) { return await m.reply(claraWrap(m.command, `Masukkan prompt.\n\n💡 Contoh: ${m.prefix + m.command} car`)); }
+  if (!m.fullArgs) { return await m.reply(novaGuideV2(m.command, {
+ kaomoji: "(◕ᴗ◕)",
+ sapaan: "bikin gambar dari teks, deskripsikan aja yang kamu mau!",
+    cara: "ketik prompt/deskripsi gambarnya sesudah command",
+    contoh: `${m.prefix + m.command} car`,
+    spec: ["⚡ energi 5", "⏱ 10dtk", "💸 gratis"],
+  })); }
   try {
   await m.react("🕒");
     const url = `https://api-abztech.zone.id/ai/genimg?text=${encodeURIComponent(m.fullArgs)}`

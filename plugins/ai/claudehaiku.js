@@ -2,7 +2,7 @@
 import { ClaudeHaiku } from "../../src/scraper/claudehaiku.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "claudehaiku",
@@ -23,19 +23,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("claudehaiku", [
-      "Tanya apa aja ke AI Claude Haiku — cepat dan ringan, cocok buat pertanyaan sehari-hari.",
-      "",
-      "📌 Format:",
-      `${m.prefix}claudehaiku <pertanyaan>`,
-      "",
-      "💡 Contoh:",
-      `${m.prefix}claudehaiku Jelaskan teori relativitas`,
-      "",
-      `${m.prefix}claudehaiku Tips biar produktif`,
-      "",
-      "Respons cepat, tapi tetap cerdas",
-    ]));
+    return m.reply(novaGuideV2("claudehaiku", {
+ kaomoji: "(⌒‿⌒)",
+ sapaan: "tanya apa aja ke Claude Haiku — cepat, ringan, cocok buat tanyaan harian! (ᵔ◡ᵔ)",
+      cara: "ketik pertanyaannya sesudah command",
+      contoh: `${m.prefix}claudehaiku Jelaskan teori relativitas`,
+      note: "respons cepat tapi tetap cerdas",
+      spec: ["⚡ energi 2", "⏱ 10dtk", "💸 gratis"],
+    }));
   }
   try {
   await m.react("🕒");

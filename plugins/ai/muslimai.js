@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import { f } from '../../src/lib/nova-http.js';
 import te from '../../src/lib/nova-error.js';
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
@@ -61,7 +61,13 @@ class MuslimAI {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(claraWrap("Muslim AI", `Masukkan pertanyaan tentang Islam.\n\nContoh: ${m.prefix}muslimai Apa itu sholat?`))
+        return m.reply(novaGuideV2("muslimai", {
+ kaomoji: "(⌒‿⌒)",
+ sapaan: "nanya apa aja seputar Islam, dijawab dengan landasan yang benar! (ᵔ◡ᵔ)",
+          cara: "ketik pertanyaannya tentang Islam sesudah command",
+          contoh: `${m.prefix}muslimai Apa itu sholat?`,
+          spec: ["⚡ energi 1", "⏱ 5dtk", "💸 gratis"],
+        }))
     }
     try {
     await m.react("🕒");

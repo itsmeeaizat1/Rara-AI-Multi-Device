@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
@@ -61,11 +61,13 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return m.reply(claraWrap("tocermin", [
-      "Kirim/reply gambar untuk efek cermin",
-      "",
-      `${m.prefix}tocermin`,
-    ]))
+        return m.reply(novaGuideV2("tocermin", {
+ kaomoji: "(⌒‿⌒)",
+ sapaan: "kasih efek cermin estetik ke fotomu!",
+      cara: "kirim atau reply gambar dengan caption commandnya",
+      contoh: `${m.prefix}tocermin`,
+      spec: ["⚡ energi 3", "⏱ 60dtk", "💸 gratis"],
+    }))
     }
     try {
     await m.react("🕒");

@@ -7,7 +7,7 @@
 // ═════════════════════════════════════════════
 
 import { turboseekSearch } from "../../src/scraper/fazzcode-ai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "turboseek",
@@ -24,13 +24,14 @@ async function handler(m, { sock }) {
   try {
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(claraWrap("turboseek",
-        `🔍 *TURBOSEEK — SEARCH ENGINE AI*\n\n` +
-        `Tanya apa aja — dijawab AI lengkap dengan sumber hasil riset web (ala Perplexity).\n\n` +
-        `Contoh:\n` +
-        `• .turboseek siapa presiden indonesia\n` +
-        `• .turboseek cuaca hari ini di jakarta\n` +
-        `• .turboseek apa itu fotosintesis`));
+      return m.reply(novaGuideV2("turboseek", {
+ kaomoji: "(๑˃ᴗ˂)ﻭ",
+ sapaan: "tanya apa aja — dijawab AI lengkap dengan sumber riset web ala Perplexity! (≧∇≦)ﾉ",
+        cara: "ketik pertanyaan risetmu sesudah command",
+        contoh: `${m.prefix}turboseek siapa presiden indonesia`,
+        note: "jawaban lengkap + sumber web, agak lama dikit",
+        spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
+      }));
     }
 
     await m.react("🧠");

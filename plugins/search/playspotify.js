@@ -18,7 +18,7 @@
 import axios from "axios";
 import { searchSpotiDown, downloadSpotiAudio } from "../../src/scraper/spotidown.js";
 import { getLyrics } from "../../src/scraper/spotify-lyrics.js";
-import { novaGagal, novaGangguan, novaDlUsage, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { novaGagal, novaGangguan, novaGuideV2, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 
@@ -96,11 +96,13 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return m.reply(
-      novaDlUsage("Playspotify", {
-        prefix: m.prefix,
-        command: "playspotify",
-        cara: [`${m.prefix}playspotify [judul lagu]`],
-        contoh: [`${m.prefix}playspotify Faded Alan Walker`],
+      novaGuideV2("playspotify", {
+ kaomoji: "(๑´ㅂ`๑)",
+ sapaan: "mau dengerin lagu dari spotify? ketik judulnya! (˶ᵔ ᵕ ᵔ˶)",
+        cara: "ketik judul lagunya sesudah command",
+        contoh: `${m.prefix}playspotify faded alan walker`,
+        note: "nanti bot carin lagunya di spotify terus kirim audionya",
+        spec: ["⚡ energi 1", "⏱ 15dtk", "💸 gratis"],
       })
     );
   }

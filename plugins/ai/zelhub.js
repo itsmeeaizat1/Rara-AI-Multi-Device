@@ -4,7 +4,7 @@
 // ═════════════════════════════════════════════
 
 import { zelAiChat, zelAiImage, ZEL_AI_REGISTRY, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { sendImage } from "../../src/lib/nova-message.js";
 
 const pluginConfig = {
@@ -25,7 +25,13 @@ async function handler(m, { sock }) {
     const text = args.join(" ").trim();
 
     if (cmd === "zimage") {
-      if (!text) return m.reply(claraWrap("zelai", "🎨 Generator gambar AI zelapi.\n\nContoh: *.zimage kucing astronot lucu*"));
+      if (!text) return m.reply(novaGuideV2("zimage", {
+ kaomoji: "(◍•ᴗ•◍)",
+ sapaan: "generator gambar AI zelapi, deskripsikan aja yang kamu mau!",
+        cara: "ketik deskripsi gambar yang mau dibuat",
+        contoh: `${m.prefix}zimage kucing astronot lucu`,
+        spec: ["⚡ energi 1", "⏱ 15dtk", "💸 gratis"],
+      }));
       await m.react("🧠");
       const r = await zelAiImage(text);
       if (!r.ok) {

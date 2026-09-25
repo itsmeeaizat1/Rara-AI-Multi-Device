@@ -4,7 +4,7 @@
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaGuideV2, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -53,11 +53,22 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply(novaGuide('AIO', 'Download dari berbagai platform! Kasih linknya ya!', `${m.prefix}aio https://instagram.com/p/xxx`));
+    return m.reply(novaGuideV2("aio", {
+ kaomoji: "(◕ᴗ◕)",
+ sapaan: "download semua platform! tinggal kasih linknya! (≧∇≦)ﾉ",
+      cara: "tempel linknya sesudah command",
+      contoh: `${m.prefix}aio https://instagram.com/p/xxx`,
+      note: "bot otomatis deteksi platformnya dan langsung kasih hasilnya",
+      spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
+    }));
   }
 
   if (!url.startsWith("http")) {
-    return m.reply(novaGuide('AIO', 'URL-nya gak valid nih! Harus diawali http/https', `${m.prefix}aio https://instagram.com/p/xxx`));
+    return m.reply(novaSalahV2("aio", {
+ kaomoji: "(;ω;)",
+      pesan: "linknya gak valid nih kak, harus diawali http atau https~",
+      contoh: `${m.prefix}aio link`,
+    }));
   }
 
   try {

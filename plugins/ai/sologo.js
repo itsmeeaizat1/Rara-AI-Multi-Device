@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -24,7 +24,13 @@ async function handler(m, { sock }) {
   const prompt = m.text?.trim() || m.args.join(" ");
 
   if (!prompt) {
-    { const __navText = "❌ Masukkan deskripsi logo yang ingin dibuat.\n\n💡 *Contoh:* `.sologo robot keren warna merah`"; return await m.reply(__navText, "sologo"); };
+        return m.reply(novaGuideV2("sologo", {
+ kaomoji: "(¬‿¬)✧",
+ sapaan: "bikin logo dari deskripsi teks, hasilnya clean! (⌒‿⌒)",
+      cara: "ketik deskripsi logo yang mau dibuat",
+      contoh: `${m.prefix}sologo robot keren warna merah`,
+      spec: ["⚡ energi 2", "⏱ 10dtk", "💸 gratis"],
+    }), "sologo");
   }
   try {
   await m.react("🕒");

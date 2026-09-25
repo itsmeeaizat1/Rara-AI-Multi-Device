@@ -5,7 +5,7 @@
 // + VISION : reply/kirim gambar + caption → analisis gambar (Gemini Vision)
 // + IMAGEGEN: .ai9 gambar <prompt> → generate gambar (callImageGen + fallback free)
 import te from "../../src/lib/nova-error.js";
-import { novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { routerChat, getRouterStatus, resetProviderHealth } from "../../src/lib/nova-ai-router.js";
 import { getSession, appendTurn, toMessages } from "../../src/lib/nova-ai-session.js";
 import { GeminiVision } from "../../src/scraper/geminiVision.js";
@@ -74,11 +74,13 @@ async function handler(m, { sock, args, botConfig }) {
   if (GEN_WORDS.includes(sub)) {
     const prompt = argList.slice(1).join(" ").trim();
     if (!prompt) {
-      return m.reply(novaBox("AI Router", [
-        "Ketik deskripsi gambar yang mau dibuat",
-        "---",
-        "Contoh: .ai9 gambar kucing astronot realistis",
-      ]));
+      return m.reply(novaGuideV2("ai9", {
+ kaomoji: "(๑˃ᴗ˂)ﻭ",
+ sapaan: "bikin gambar apa aja, router AI nyari model terbaik buatmu! (≧∇≦)ﾉ",
+        cara: "ketik deskripsi gambar yang mau dibuat",
+        contoh: `${m.prefix}ai9 gambar kucing astronot realistis`,
+        spec: ["⏱ 5dtk", "💸 gratis"],
+      }));
     }
     try {
       await m.react("🕒");

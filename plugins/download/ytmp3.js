@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/ytmp3 → Sanka AIO → ytdl fallback
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { novaDlUsage, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -90,15 +90,21 @@ async function getAudioDownload(url) {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaDlUsage("YTmp3", {
-      prefix: m.prefix,
-      command: m.command || "ytmp3",
-      cara: [`${m.prefix}${m.command || "ytmp3"} [link youtube]`],
-      contoh: [`${m.prefix}${m.command || "ytmp3"} https://youtu.be/xxx`],
+    return m.reply(novaGuideV2("ytmp3", {
+ kaomoji: "ヾ(´︶`*)ﾉ",
+ sapaan: "konversi video youtube jadi mp3? gas! (◠‿◠)",
+      cara: "tempel link youtubenya sesudah command",
+      contoh: `${m.prefix}${m.command || "ytmp3"} https://youtu.be/xxx`,
+      note: "nanti bot unduh langsung audionya dari video tersebut",
+      spec: ["⚡ energi 2", "⏱ 20dtk", "💸 gratis"],
     }));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
-    return m.reply(novaGuide("YTmp3", "Link-nya harus URL YouTube yang valid ya!", `${m.prefix}ytmp3 https://youtu.be/xxx`));
+    return m.reply(novaSalahV2("ytmp3", {
+ kaomoji: "(・_・;)",
+      pesan: "linknya kok bukan dari youtube kak? ulangi yang bener ya~",
+      contoh: `${m.prefix}${m.command || "ytmp3"} link youtube`,
+    }));
   }
 
   try {

@@ -4,7 +4,7 @@ import { uploadImage } from "../../src/lib/nova-uploader.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -58,7 +58,13 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!isImage) {
-    return m.reply(claraWrap("Black sTyle", `Kirim/reply gambar\n\n\`${m.prefix}toblack\``), "toblack");
+    return m.reply(novaGuideV2("toblack", {
+ kaomoji: "(¬‿¬)",
+ sapaan: "ubah kulit fotomu jadi lebih gelap secara natural dan realistis!",
+      cara: "kirim atau reply gambar dengan caption commandnya",
+      contoh: `${m.prefix}toblack`,
+      spec: ["⚡ energi 2", "⏱ 30dtk", "💸 gratis"],
+    }), "toblack");
   }
 
   const PROMPT = `Transform skin tone to a darker complexion, maintain facial features, realistic shadows, high detail, natural skin texture, no distortion`;

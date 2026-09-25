@@ -4,7 +4,7 @@
 //   One-shot (all users): .ocrsolve — reply ke foto, analisis sekali
 //   Persistent (owner): .toggleocrsolve on/off — auto detect tiap foto masuk
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaGuideV2, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -26,6 +26,9 @@ const pluginConfig = {
 // ════ One-shot OCR analysis ════
 async function doOcrAnalysis(m, sock, mode) {
   try {
+    // FIX 25 Sep (bug pre-existing): path ini pakai `prefix` tapi gak pernah
+    // didefinisin di scope doOcrAnalysis → ReferenceError tiap reply usage.
+    const prefix = m.prefix || ".";
     const botConfig = (await import("../../config.js")).default;
     const aiConfig = botConfig.aiHelp || {};
     const apiKey = String(aiConfig.apiKey || "");
@@ -41,14 +44,14 @@ async function doOcrAnalysis(m, sock, mode) {
     const msg = m.message || {};
     const imageMsg = msg.imageMessage || (m.quoted?.isImage ? m.quoted.message?.imageMessage : null); // FIX 10 Sep: quoted flags
     if (!imageMsg) {
-      await m.reply(novaGuide(
-        "ocrsolve",
-        "Tidak ada foto terdeteksi — reply foto dengan command ini untuk analisis\n" +
-        prefix + "ocrsolve — auto detect (reply foto)\n" +
-        prefix + "ocrsolve math — khusus matematika\n" +
-        prefix + "ocrsolve code — khusus kode error",
-        prefix + "ocrsolve math (reply foto soal)"
-      ));
+      await m.reply(novaGuideV2("ocrsolve", {
+ kaomoji: "(๑ᵔ⤙ᵔ๑)",
+ sapaan: "jawab soal dari gambar cukup dengan reply! (◕‿◕)",
+        cara: "reply foto soalnya lalu ketik command, mode opsional math atau code",
+        contoh: prefix + "ocrsolve math (reply foto soal) · " + prefix + "ocrsolve code",
+        note: "bot baca soalnya dari gambar terus jawab langsung, math khusus matematika dan code khusus kode error",
+        spec: ["⏱ 3dtk", "💸 gratis"],
+      }));
       return { handled: true };
     }
 
@@ -241,18 +244,14 @@ async function handler(m, { sock, config: botConfig }) {
       mode = args[0];
     } else if (args[0] && !["math", "code", "auto"].includes(args[0])) {
       // Unknown sub-command → show help
-      await m.reply(novaGuide(
-        "ocrsolve",
-        "Solver foto soal/kode via AI Vision\n" +
-        prefix + "ocrsolve — auto detect (reply foto)\n" +
-        prefix + "ocrsolve math — khusus matematika\n" +
-        prefix + "ocrsolve code — khusus kode error",
-        prefix + "ocrsolve math\n" + prefix + "ocrsolve code",
-        "Persistent (owner):\n" +
-        prefix + "toggleocrsolve on/off\n" +
-        prefix + "toggleocrsolve mode math/code/auto\n" +
-        prefix + "toggleocrsolve status"
-      ));
+      await m.reply(novaGuideV2("ocrsolve", {
+ kaomoji: "(๑ᵔ⤙ᵔ๑)",
+ sapaan: "jawab soal dari gambar cukup dengan reply! (◕‿◕)",
+        cara: "reply foto soalnya lalu ketik command, mode opsional math atau code",
+        contoh: prefix + "ocrsolve math · " + prefix + "ocrsolve code",
+        note: "sub-command yang dikenal cuma math, code, dan auto — mode default bisa diatur owner lewat toggleocrsolve",
+        spec: ["⏱ 3dtk", "💸 gratis"],
+      }));
       return { handled: true };
     }
 

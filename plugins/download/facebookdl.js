@@ -4,7 +4,7 @@
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { fbdown } from "btch-downloader";
 import te from "../../src/lib/nova-error.js";
-import { novaDlUsage, claraWrap, claraLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, claraWrap, claraLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,11 +51,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaDlUsage("Facebook", {
-      prefix: m.prefix,
-      command: m.command || "facebookdl",
-      cara: [`${m.prefix}${m.command || "facebookdl"} [link]`],
-      contoh: [`${m.prefix}${m.command || "facebookdl"} https://www.facebook.com/watch?v=xxx`],
+    return m.reply(novaGuideV2("facebook", {
+ kaomoji: "(◕‿◕)",
+ sapaan: "video facebook keren nih? tempel linknya! (◍'◡'◍)",
+      cara: "tempel link video facebooknya sesudah command",
+      contoh: `${m.prefix}${m.command || "facebookdl"} https://www.facebook.com/watch?v=xxx`,
+      note: "bot otomatis unduh videonya",
+      spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
     }));
   }
   if (!url.match(/facebook\.com|fb\.watch|fb\.com/i)) {

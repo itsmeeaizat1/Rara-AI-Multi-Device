@@ -4,7 +4,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { novaDlUsage, claraWrap, claraLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, claraWrap, claraLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -51,15 +51,21 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaDlUsage("Instagram", {
-      prefix: m.prefix,
-      command: m.command || "instagramdl",
-      cara: [`${m.prefix}${m.command || "instagramdl"} [link]`],
-      contoh: [`${m.prefix}${m.command || "instagramdl"} https://www.instagram.com/reel/xxx`],
+    return m.reply(novaGuideV2("instagram", {
+ kaomoji: "(•̀ᴗ•́)و",
+ sapaan: "mau simpen reel atau post IG? tempel linknya! (⌒‿⌒)",
+      cara: "tempel link instagramnya sesudah command",
+      contoh: `${m.prefix}${m.command || "instagramdl"} https://www.instagram.com/reel/xxx`,
+      note: "bot otomatis unduh medianya, foto maupun video sekaligus",
+      spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
     }));
   }
   if (!url.match(/instagram\.com|instagr\.am/i)) {
-    return m.reply(novaGuide("Instagram DL", "URL-nya gak valid nih! Pakai link Instagram ya.", `${m.prefix}instagramdl https://www.instagram.com/reel/xxx`));
+    return m.reply(novaSalahV2("instagram", {
+ kaomoji: "(´･_･`)",
+      pesan: "linknya bukan link instagram nih, cek lagi ya~",
+      contoh: `${m.prefix}${m.command || "instagramdl"} link instagram`,
+    }));
   }
 
   try {

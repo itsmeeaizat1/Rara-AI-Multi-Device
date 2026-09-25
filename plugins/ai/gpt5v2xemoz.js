@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 /**
@@ -53,8 +53,13 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
 
   if (!text) {
-    const help = `Kirim pertanyaan setelah command.\n💡 *Contoh:* .gpt5v2xemoz jelaskan kuantum computing`;
-    return m.reply( claraWrap("GPT-5.5", help));
+    return m.reply(novaGuideV2("gpt5v2xemoz", {
+ kaomoji: "(•̀ᴗ•́)و",
+ sapaan: "tanya apa aja ke GPT-5.5! (๑•̀ㅂ•́)و✧",
+      cara: "kirim pertanyaannya setelah command",
+      contoh: `${m.prefix}gpt5v2xemoz jelaskan kuantum computing`,
+      spec: ["⏱ 5dtk", "💸 gratis"],
+    }));
   }
   try {
   await m.react("🕒");

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -24,7 +24,13 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-    { const __navText = "❌ Mau ngobrol apa sama Simi?\n\n💡 *Contoh:* `.simi Halo Simi!`"; return await m.reply(__navText, "simi"); };
+        return m.reply(novaGuideV2("simi", {
+ kaomoji: "(◕ᴗ◕)",
+ sapaan: "mau ngobrol apa sama Simi? dia jawab sembarangan lho! (≧◡≦) ♡",
+      cara: "ketik apa aja yang mau kamu omongin",
+      contoh: `${m.prefix}simi Halo Simi!`,
+      spec: ["⚡ energi 1", "⏱ 3dtk", "💸 gratis"],
+    }), "simi");
   }
   try {
   await m.react("🕒");

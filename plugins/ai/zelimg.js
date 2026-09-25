@@ -6,7 +6,7 @@
 
 import { zelImageEndpoint, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
 import { ZEL_IMAGE_REGISTRY, getZelImageSpec } from "../../src/lib/nova-zel-registry.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { sendImage } from "../../src/lib/nova-message.js";
 import { fetchBuffer } from "../../src/lib/nova-utils.js";
 
@@ -49,12 +49,22 @@ async function handler(m, { sock }) {
 
     const prompt = args.join(" ").trim();
     const isImgEdit = spec.type === "imgedit" || (spec.type === "flex" && m.quoted?.isImage);
-    const usage = `🎨 *${cmd}* — ${spec.desc}\n\n${isImgEdit || spec.type === "imgedit" ? "✏️ *REPLY FOTO* + prompt ini.\n\nContoh: reply foto → *.${cmd} jadi gaya ghibli*" : "Contoh: *.${cmd} kucing astronot lucu*"}`;
-
     if (isImgEdit && !m.quoted?.isImage) {
-      return m.reply(claraWrap("zelai", `✏️ *${cmd}* — ${spec.desc}\n\n⚠️ WAJIB reply foto + prompt.\n\nContoh: reply foto → *.${cmd} ubah jadi kartun*`));
+      return m.reply(novaGuideV2(cmd, {
+ kaomoji: "(๑ᵔ⤙ᵔ๑)",
+ sapaan: spec.desc + " (wajib reply foto dulu ya!)",
+        cara: "reply foto + ketik prompt ini sebagai caption",
+        contoh: `reply foto → ${m.prefix}${cmd} ubah jadi kartun`,
+        spec: ["⚡ energi 2", "⏱ 20dtk", "💸 gratis"],
+      }));
     }
-    if (!prompt) return m.reply(claraWrap("zelai", usage));
+    if (!prompt) return m.reply(novaGuideV2(cmd, {
+ kaomoji: "(≧ω≦)",
+ sapaan: spec.desc + "!",
+      cara: (isImgEdit || spec.type === "imgedit") ? "reply foto + ketik prompt ini sebagai caption" : "ketik prompt/deskripsinya sesudah command",
+      contoh: (isImgEdit || spec.type === "imgedit") ? `reply foto → ${m.prefix}${cmd} jadi gaya ghibli` : `${m.prefix}${cmd} kucing astronot lucu`,
+      spec: ["⚡ energi 2", "⏱ 20dtk", "💸 gratis"],
+    }));
 
     await m.react("🧠");
 

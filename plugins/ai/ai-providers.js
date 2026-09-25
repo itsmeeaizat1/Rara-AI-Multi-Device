@@ -16,7 +16,7 @@ const FALLBACK_MODEL = {
   cloudflare: "gemini", jina: "gemini", stability: "gemini", ai21: "gemini",
   reka: "gemini", codestral: "gemini", kimicode: "gemini",
 };
-import { novaBox, claraWrap, novaAiUsage } from "../../src/lib/nova-menu-style.js";
+import { novaBox, claraWrap, novaAiUsage, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Command → providerKey mapping
 const PROVIDER_COMMANDS = {
@@ -125,15 +125,19 @@ async function handler(m, { sock, config, db, args, text }) {
     const quotedImage = m.quoted?.isImage ? m.quoted : null;
     const imageSource = directImage || quotedImage;
 
-    // No text → USAGE DESAIN AI BARU ala owner (10 Sep 2026):
-    // 「 ✦ Gemini ✦ 」 + 📝 Cara Pakai + 💡 Contoh + ✨ Model aktif +
-    // 📋 model tersedia per baris. Label smallcaps, command & model VERBATIM.
+    // No text → USAGE DESAIN V2 ala owner (25 Sep 2026): kaomoji + sapaan +
+    // 📍 cara/contoh/note + TAMBAHAN KHUSUS AI (request owner 25 Sep): ✨ model
+    // aktif + 📋 model tersedia + baris spec. Model & command VERBATIM.
     if (!fullText && !imageSource) {
-      const box = novaAiUsage(cmdUsed, {
-        prefix,
-        command: cmdUsed,
+      const box = novaGuideV2(cmdUsed, {
+ kaomoji: "(◍•ᴗ•◍)",
+ sapaan: "ada yang mau ditanyain? tanya aja langsung! (≧ω≦)",
+        cara: "ketik pertanyaannya sesudah command, reply atau kirim gambar juga bisa",
+        contoh: `${prefix}${cmdUsed} apa itu AI?`,
+        note: "jawaban otomatis dari model yang aktif, ganti modelnya lewat contoh di atas atau perintah setmodel",
         modelAktif: provider.defaultModel || provider.model || null,
         models: Array.isArray(provider.models) ? provider.models : [],
+        spec: ["💸 gratis"],
       });
       await m.reply(box);
       return { handled: true };

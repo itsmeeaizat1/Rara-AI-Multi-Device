@@ -22,7 +22,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("Gpt-4O", `Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}gpt4o Hai apa kabar?\``), "gpt4o");
+    return m.reply(novaGuideV2("gpt4o", {
+ kaomoji: "(≧▽≦)",
+ sapaan: "tanya apa aja ke GPT-4O! (◕‿◕)",
+      cara: "ketik pertanyaannya sesudah command",
+      contoh: `${m.prefix}gpt4o Hai apa kabar?`,
+      spec: ["⚡ energi 1", "⏱ 5dtk", "💸 gratis"],
+    }), "gpt4o");
   }
   try {
     await m.react("🕒");

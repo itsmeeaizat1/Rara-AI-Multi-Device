@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "waguri-ai",
@@ -22,16 +22,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("waguri-ai", [
-      "Gadis pemalu dari 'The Girl I Like Forgot Her Glasses'",
-      "Manis, perhatian, dan sering salah tingkah~",
-      "",
-      "📌 Format:",
-      `${m.prefix}waguri-ai <pertanyaan>`,
-      "",
-      "💡 Contoh:",
-      `${m.prefix}waguri-ai Waguri-san, halo!`,
-    ]));
+    return m.reply(novaGuideV2("waguri-ai", {
+ kaomoji: "(๑ᵔ⤙ᵔ๑)",
+ sapaan: "ngobrol sama Waguri, gadis pemalu yang manis dan sering salah tingkah! (˶ᵔ ᵕ ᵔ˶)",
+      cara: "ketik pertanyaannya sesudah command",
+      contoh: `${m.prefix}waguri-ai Waguri-san, halo!`,
+      spec: ["⚡ energi 2", "⏱ 10dtk", "💸 gratis"],
+    }));
   }
   try {
   await m.react("🕒");
