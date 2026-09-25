@@ -2,7 +2,7 @@
 // Qwen3 replaced with callIkyy (ikyyxd qwen endpoint)
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {
@@ -24,19 +24,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("qwen3", [
-      "Tanya apa aja ke AI Qwen3 — model besar dari Alibaba yang jago bahasa apa aja.",
-      "",
-      "📌 Format:",
-      `${m.prefix}qwen3 <pertanyaan>`,
-      "",
-      "💡 Contoh:",
-      `${m.prefix}qwen3 Apa itu machine learning?`,
-      "",
-      `${m.prefix}qwen3 Buat resep masakan Indonesia`,
-      "",
-      "Model 80B, jadi agak lama tapi jawabannya mantap",
-    ]));
+    return m.reply(novaGuideV2("qwen3", {
+ kaomoji: "(๑´ㅂ`๑)",
+ sapaan: "tanya apa aja ke Qwen3, model besar dari Alibaba yang jago bahasa apa aja! (◍•ᴗ•◍)",
+      cara: "ketik pertanyaannya sesudah command",
+      contoh: `${m.prefix}qwen3 Apa itu machine learning?`,
+      note: "model 80B, jadi agak lama tapi jawabannya mantap",
+      spec: ["⚡ energi 2", "⏱ 10dtk", "💸 gratis"],
+    }));
   }
   try {
     await m.react("🕒");

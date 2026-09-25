@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
@@ -61,11 +61,13 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return m.reply(claraWrap("toanime", [
-      "Kirim/reply gambar untuk diubah ke gaya anime",
-      "",
-      `${m.prefix}toanime`,
-    ]))
+        return m.reply(novaGuideV2("toanime", {
+ kaomoji: "(≧▽≦)",
+ sapaan: "ubah fotomu jadi gaya anime khas jepang!",
+      cara: "kirim atau reply gambar dengan caption commandnya",
+      contoh: `${m.prefix}toanime`,
+      spec: ["⚡ energi 3", "⏱ 60dtk", "💸 gratis"],
+    }))
     }
     
     try {

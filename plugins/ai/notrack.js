@@ -9,7 +9,7 @@
 // ═════════════════════════════════════════════
 
 import { notrackChat } from "../../src/scraper/fazzcode-ai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "notrack",
@@ -26,12 +26,13 @@ async function handler(m, { sock }) {
   try {
     const q = (m.args || []).join(" ").trim();
     if (!q) {
-      return m.reply(claraWrap("notrack",
-        `🤖 *NOTRACK AI*\n\n` +
-        `Chat AI satuan NoTrack (via fazzcode) — gak nyimpen track kamu.\n\n` +
-        `Contoh:\n` +
-        `• .notrack ceritain lelucon pendek\n` +
-        `• .notrack rekomendasi film malam ini`));
+      return m.reply(novaGuideV2("notrack", {
+ kaomoji: "(¬‿¬)",
+ sapaan: "tanya apa aja — AI satuan NoTrack yang gak nyimpen track kamu! (⌒‿⌒)",
+        cara: "ketik pertanyaannya sesudah command",
+        contoh: `${m.prefix}notrack ceritain lelucon pendek`,
+        spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
+      }));
     }
 
     await m.react("🧠");

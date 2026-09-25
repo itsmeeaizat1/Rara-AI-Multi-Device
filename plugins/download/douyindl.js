@@ -23,7 +23,7 @@ import {
 } from "../../src/lib/nova-playdouyin.js";
 import { haidarDouyin, sylvaticaDouyin } from "../../src/lib/nova-douyin-dl.js";
 import axios from "axios";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan, novaDlUsage } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -154,17 +154,13 @@ async function handler(m, { sock }) {
   const text = args.join(" ").trim() || (m.text || "").trim();
 
   if (!text) {
-    return m.reply(novaDlUsage("Douyin", {
-      prefix: m.prefix,
-      command: "douyin",
-      cara: [
-        `${m.prefix}douyin [keyword]`,
-        `${m.prefix}douyin [link]`,
-      ],
-      contoh: [
-        `${m.prefix}douyin kucing lucu`,
-        `${m.prefix}douyin https://v.douyin.com/xxx`,
-      ],
+    return m.reply(novaGuideV2("douyin", {
+ kaomoji: "(・∀・)",
+ sapaan: "video douyin mau disimpen? kasih link atau judulnya! (๑>ᴗ<)و",
+      cara: "tempel linknya atau ketik keyword pencariannya",
+      contoh: `${m.prefix}douyin kucing lucu · ${m.prefix}douyin https://v.douyin.com/xxx`,
+      note: "kalo pake keyword, nanti bot cariin videonya dulu",
+      spec: ["⚡ energi 1", "⏱ 15dtk", "💸 gratis"],
     }));
   }
 

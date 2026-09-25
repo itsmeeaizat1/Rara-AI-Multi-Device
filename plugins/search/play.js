@@ -10,7 +10,7 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan, novaDlUsage } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 
@@ -264,14 +264,23 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan bitrate (default 256kbps)
   if (!query) {
-    return m.reply(novaDlUsage("Play", {
-      prefix: m.prefix,
-      command: "play",
-      cara: [`${m.prefix}play [judul]`],
-      contoh: [
-        `${m.prefix}play Faded Alan Walker`,
-        `${m.prefix}play 320 Faded Alan Walker`,
-      ],
+    return m.reply(novaGuideV2("play", {
+ kaomoji: "ヾ(≧▽≦*)o",
+ sapaan: "mau lagu favorit? ketik aja judulnya! (≧◡≦)",
+      cara: "ketik judul lagunya sesudah command",
+      contoh: `${m.prefix}play faded alan walker · ${m.prefix}play 320 faded alan walker`,
+      note: "nanti bot yang carin audionya otomatis, bitrate bisa dipilih lewat contoh kedua",
+      spec: ["⏱ 15dtk", "💸 gratis"],
+    }));
+  }
+
+  // SALAH CMD CUTE (owner 25 Sep): ketik link padahal .play mau judul lagu
+  if (/^(https?:\/\/|www\.)|\b(?:facebook|fb\.watch|tiktok|instagram|youtu\.?be)\.com/i.test(query)) {
+    await m.react("🐣");
+    return m.reply(novaSalahV2("play", {
+ kaomoji: "(>_<)",
+      pesan: "kakak malah ketik linknya, padahal ini mah mau judul lagunya~",
+      contoh: `${m.prefix}play nama lagu`,
     }));
   }
 

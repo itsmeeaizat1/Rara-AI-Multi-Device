@@ -2,7 +2,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { novaDlUsage, novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, toSC, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
@@ -173,17 +173,13 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
   const command = m?.command;
   if (!text) {
-    return m.reply(novaDlUsage("TikTok", {
-      prefix,
-      command,
-      cara: [
-        `${prefix + command} [link]`,
-        `${prefix + command} [keyword]`,
-      ],
-      contoh: [
-        `${prefix + command} https://vt.tiktok.com/xxx`,
-        `${prefix + command} viral`,
-      ],
+    return m.reply(novaGuideV2("tiktok", {
+ kaomoji: "(≧◡≦) ♡",
+ sapaan: "tiktok favorit mau disimpen? kasih link atau keywordnya! (⌒‿⌒)ﻭ",
+      cara: "tempel linknya atau ketik keyword pencariannya",
+      contoh: `${prefix + command} https://vt.tiktok.com/xxx · ${prefix + command} viral`,
+      note: "kalo pake keyword, nanti bot cariin videonya dulu",
+      spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
     }), { commandName: "tiktok" });
   }
   // ─── Pilih hasil pencarian sebelumnya (ala .play): .tt 2 ───

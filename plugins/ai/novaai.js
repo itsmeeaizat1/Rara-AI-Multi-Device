@@ -10,7 +10,7 @@
 import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, buildSearchQuery, quickWebSearch, splitChatChunks, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, bracketBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { startStatusRotation as startStatusRotationLib } from "../../src/lib/nova-status-rotate.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/nova-plugins.js";
@@ -237,21 +237,23 @@ async function handler(m, { sock, conn, config, db }) {
     };
     const lines = [];
     const toolCount = Object.keys(TOOLS).length + Object.keys(getAllSkills()).length;
-    lines.push(`🧠 AI Agent — ${toolCount} perintah grup`);
-    lines.push(`💬 Ngobrol & auto-execute command bot`);
-    lines.push("");
     for (const [cat, tools] of Object.entries(categories)) {
-      lines.push({ subHeader: toSC(cat) });
+      lines.push(`「 ${toSC(cat)} 」`);
       for (const tool of tools) {
         if (TOOLS[tool]) lines.push(examples[tool] || tool);
       }
     }
-    lines.push("");
-    lines.push(`📸 Scan gambar: kirim foto + caption .novaagent <tanya>`);
-    lines.push(`💡 Reset sesi chat: .novaagent reset`);
-    lines.push(`🎙️ Mode suara: .novaagent pakai suara — jawabanku dibacakan jadi voice note`);
-    lines.push(`💡 Tanya apa saja, atau suruh aku ngapa`);
-    return m.reply(claraWrap("novaagent", lines));
+    lines.push(`📸 scan gambar: kirim foto + caption .novaagent <tanya>`);
+    lines.push(`🎙️ mode suara: .novaagent pakai suara — jawabanku dibacakan jadi voice note`);
+    return m.reply(novaGuideV2("novaai", {
+ kaomoji: "(๑˃ᴗ˂)ﻭ",
+ sapaan: `ai agent dengan ${toolCount} perintah — ngobrol santai atau suruh aku ngapa'in! (≧∇≦)ﾉ`,
+      cara: "tanya apa aja, atau suruh aku jalanin command bot",
+      contoh: `${m.prefix}novaagent buka grup`,
+      note: `reset sesi chat: ${m.prefix}novaagent reset`,
+      spec: ["⚡ energi 1", "⏱ 3dtk", "💸 gratis"],
+      extra: lines,
+    }));
   }
 
   // 🔹 CHAT: MODE SUARA (request owner 18 Sep 2026: "apa g bsa gini aja

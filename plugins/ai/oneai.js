@@ -5,7 +5,7 @@
 // Sumber: onepunya.qzz.io (key .setkey onepunya) — numpang model Onepunya,
 // beda dari AI satuan (.gpt4o dkk) yang udah ada.
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { aiChat, multimodalChat } from "../../src/lib/nova-onepunya.js";
 import { uploadImage } from "../../src/lib/nova-uploader.js";
 
@@ -64,7 +64,14 @@ async function handler(m, { sock }) {
 
     // ── teks biasa → AI chat ──
     if (!text) {
-      return m.reply(claraWrap("Onepunya AI", `Masukkan pertanyaan!\n\nContoh: .onechat ${model === "chatgpt" ? "" : model + " "}jelaskan kuantum singkat\n\nModel: ${MODELS.join(" | ")}`));
+      return m.reply(novaGuideV2("onechat", {
+ kaomoji: "(๑˃̵ᴗ˂̵)و",
+ sapaan: "satu pintu banyak model AI, tanya apa pun! (๑•̀ㅂ•́)✧",
+        cara: "ketik pertanyaannya sesudah command",
+        contoh: `${m.prefix}onechat ${model === "chatgpt" ? "" : model + " "}jelaskan kuantum singkat`,
+        note: `model tersedia: ${MODELS.join(" | ")}`,
+        spec: ["⚡ energi 3", "⏱ 12dtk", "💸 gratis"],
+      }));
     }
     const res = await aiChat(apiKey, {
       model: model.toUpperCase(),

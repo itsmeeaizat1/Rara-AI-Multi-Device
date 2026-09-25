@@ -8,7 +8,7 @@
 //            .aitio qwen jelaskan kuantum
 // ═══════════════════════════════════════════════
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { getTioKey, getTioEndpoint } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -207,25 +207,23 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ═══ No args → show help ═══
     if (!body) {
-      const lines = [
-        `Pilih model langsung, semua dalam satu command`,
-        ``,
-        `Format: *${prefix}aitio <model> <prompt>*`,
-        `Contoh: *${prefix}aitio deepseek halo*`,
-        ``,
-        `Model populer:`,
-        `  deepseek  — DeepSeek V4 Flash`,
-        `  kimi      — Kimi K2.6 (Moonshot)`,
-        `  qwen      — Qwen 3.8 Max (Free)`,
-        `  nemotron  — Nemotron 3 Nano (Free)`,
-        `  cohere    — Cohere North Mini (Free)`,
-        `  auto      — Auto Router`,
-        ``,
-        `Ketik *${prefix}aitio list* untuk lihat semua model`,
-        `Ketik *${prefix}aitio list free* untuk model gratis`,
-      ];
       await m.react("🐣");
-      return m.reply(claraWrap("Tio AI", lines.join("\n")), "ai-tio");
+      return m.reply(novaGuideV2("aitio", {
+ kaomoji: "(๑>ᴗ<)و",
+ sapaan: "pilih model langsung, semua dalam satu command! (≧∇≦)ﾉ",
+        cara: "ketik nama model + promptnya sesudah command",
+        contoh: `${prefix}aitio deepseek halo`,
+        note: `model populer: deepseek, kimi, qwen, nemotron, cohere, auto · ${prefix}aitio list buat semua model`,
+        spec: ["⏱ 5dtk", "💸 gratis"],
+        extra: [
+          `  deepseek  — DeepSeek V4 Flash`,
+          `  kimi      — Kimi K2.6 (Moonshot)`,
+          `  qwen      — Qwen 3.8 Max (Free)`,
+          `  nemotron  — Nemotron 3 Nano (Free)`,
+          `  cohere    — Cohere North Mini (Free)`,
+          `  auto      — Auto Router`,
+        ],
+      }), "ai-tio");
     }
 
     const parts = body.split(/[ \t]+/).filter(Boolean);

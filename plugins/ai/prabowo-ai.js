@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "prabowo-ai",
@@ -22,16 +22,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("prabowo-ai", [
-      "Pria Sawit — Presiden RI",
-      "Tegas, patriotik, dan karismatik",
-      "",
-      "📌 Format:",
-      `${m.prefix}prabowo-ai <pertanyaan>`,
-      "",
-      "💡 Contoh:",
-      `${m.prefix}prabowo-ai Saudara, kita harus berdaulat!`,
-    ]));
+    return m.reply(novaGuideV2("prabowo-ai", {
+ kaomoji: "(๑•̀ㅂ•́)و✧",
+ sapaan: "ngobrol sama Pak Prabowo, Pria Sawit yang tegas dan karismatik! (•̀ᴗ•́)و",
+      cara: "ketik pertanyaannya sesudah command",
+      contoh: `${m.prefix}prabowo-ai Saudara, kita harus berdaulat!`,
+      spec: ["⚡ energi 2", "⏱ 10dtk", "💸 gratis"],
+    }));
   }
   try {
   await m.react("🕒");

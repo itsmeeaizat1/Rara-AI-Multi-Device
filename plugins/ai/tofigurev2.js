@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import axios from 'axios'
 import { uploadImage } from '../../src/lib/nova-uploader.js'
@@ -57,7 +57,13 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        { const __navText = claraWrap("Figure sTyle V2", `Kirim/reply gambar untuk diubah ke style Figure\n\n\`${m.prefix}tofigurev2\``); return await m.reply(__navText, "tofigurev2"); }
+        return m.reply(novaGuideV2("tofigurev2", {
+ kaomoji: "(๑˃̵ᴗ˂̵)و",
+ sapaan: "ubah fotomu jadi figure versi 2 yang detail!",
+        cara: "kirim atau reply gambar dengan caption commandnya",
+        contoh: `${m.prefix}tofigurev2`,
+        spec: ["⚡ energi 2", "⏱ 30dtk", "💸 gratis"],
+      }), "tofigurev2");
     }
     try {
     await m.react("🕒");

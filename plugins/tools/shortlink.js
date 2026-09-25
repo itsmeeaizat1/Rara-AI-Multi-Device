@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaGuideV2, novaSalahV2, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -237,20 +237,24 @@ async function handler(m, { sock }) {
   const url = args.slice(1).join(" ").trim() || "";
 
   if (!providerName || !url) {
-    return m.reply(novaGuide(
-      "shortlink",
-      "Perpendek URL dengan berbagai provider",
-      `${m.prefix}shortlink tinyurl https://google.com\n${m.prefix}shortlink isgd https://example.com`,
-      "Provider gratis: tinyurl, isgd, vgd, cleanuri, 1pt\nProvider berbayar: bitly, cuttly, rebrandly, shorte, ouo, tinycc\nKetik .shortlink list buat lihat semua provider"
-    ), "shortlink");
+    return m.reply(novaGuideV2("shortlink", {
+ kaomoji: "(¬‿¬)",
+ sapaan: "link panjang mau dipendekin? gih! (￣▽￣)ノ",
+      cara: "ketik provider lalu linknya sesudah command",
+      contoh: `${m.prefix}shortlink tinyurl https://google.com · ${m.prefix}shortlink list`,
+      note: "provider gratis tinyurl, isgd, vgd, cleanuri, 1pt — berbayar bitly, cuttly, rebrandly, shorte, ouo, tinycc, daftar lengkap ketik contoh kedua di atas",
+      spec: ["⏱ 3dtk", "💸 gratis"],
+    }), "shortlink");
   }
 
   const provider = PROVIDERS[providerName];
   if (!provider) {
-    let txt = "Provider tidak ditemukan: " + providerName + "\n\n";
-    txt += "Provider tersedia: " + Object.keys(PROVIDERS).join(", ") + "\n\n";
-    txt += "Ketik .shortlink list buat lihat detail";
-    return m.reply(claraWrap("shortlink", txt));
+    await m.react("🐣");
+    return m.reply(novaSalahV2("shortlink", {
+ kaomoji: "(・_・;)",
+      pesan: "providerinya gak ada nih kak, cek daftar provider dulu ya~",
+      contoh: `${m.prefix}shortlink list`,
+    }), "shortlink");
   }
 
   // Validasi URL

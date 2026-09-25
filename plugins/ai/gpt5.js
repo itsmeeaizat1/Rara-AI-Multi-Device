@@ -2,7 +2,7 @@
 import { GPT5 } from "../../src/scraper/gpt5.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gpt5",
@@ -23,19 +23,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("gpt5", [
-      "Tanya apa aja ke AI, nanti dijawab pakai model GPT-4.1 Nano.",
-      "",
-      "📌 Format:",
-      `${m.prefix}gpt5 <pertanyaan>`,
-      "",
-      "💡 Contoh:",
-      `${m.prefix}gpt5 Apa itu quantum computing?`,
-      "",
-      `${m.prefix}gpt5 Buat puisi tentang Indonesia`,
-      "",
-      "Jawaban bisa agak lama, sabar ya",
-    ]));
+    return m.reply(novaGuideV2("gpt5", {
+ kaomoji: "(๑˃ᴗ˂)ﻭ",
+ sapaan: "tanya apa aja ke AI, dijawab pakai model GPT-4.1 Nano! (≧∇≦)ﾉ",
+      cara: "ketik pertanyaannya sesudah command",
+      contoh: `${m.prefix}gpt5 Apa itu quantum computing?`,
+      note: "jawaban bisa agak lama, sabar ya",
+      spec: ["⚡ energi 2", "⏱ 10dtk", "💸 gratis"],
+    }));
   }
   try {
   await m.react("🕒");

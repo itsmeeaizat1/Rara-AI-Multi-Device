@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aihelp",
@@ -35,12 +35,19 @@ async function handler(m, { sock }) {
 
   if (!keyword) {
     const cats = Object.keys(AI_COMMANDS).map(k => `${prefix}aihelp ${k}`).join("\n");
-    return m.reply(claraWrap("AI Help", `Cari command berdasarkan kategori.\n\nContoh:\n${cats}`));
+    return m.reply(novaGuideV2("aihelp", {
+ kaomoji: "(◍•ᴗ•◍)",
+ sapaan: "mau nyari command AI? tinggal sebut kategorinya! (◕‿◕)",
+      cara: "pilih kategori yang mau dilihat daftar commandnya",
+      contoh: cats,
+      note: `kategori lain: ${Object.keys(AI_COMMANDS).join(", ")}`,
+      spec: ["⏱ 5dtk", "💸 gratis"],
+    }));
   }
 
   const match = AI_COMMANDS[keyword];
   if (!match) {
-    return m.reply(claraWrap("AI Help", `Tidak ada kategori "${keyword}".\nCoba: download, sticker, group, game, rpg, ai, search, tools`));
+    return m.reply(novaSalahV2("aihelp", { kaomoji: "(・_・;) 😅", pesan: `kategori "${keyword}" gak ada nih kak, coba: download, sticker, group, game, rpg, ai, search, tools~`, contoh: `${prefix}aihelp download` }));
   }
 
   const cmds = match.cmds.map(c => `${prefix}${c}`).join(" · ");

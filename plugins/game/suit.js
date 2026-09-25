@@ -1,7 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // suit.js — Batu Gunting Kertas vs Bot (single player, no API needed)
 
-import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaError } from "../../src/lib/nova-menu-style.js";
+import { novaGameBox } from "../../src/lib/nova-games.js";
 // GUARD FORMAT: pesan berkotak wajib boxLeft() (src/lib/styler.js),
 // dilarang nulis "│ " manual — kalimat bebas panjang, wrapText yang motong.
 import { boxMessage } from "../../src/lib/styler.js";
@@ -39,7 +40,13 @@ async function handler(m, { args, prefix }) {
   const pilihan = (args[0] || "").toLowerCase().trim();
 
   if (!pilihan) {
-    return m.reply(novaGuide("Suit", "Pilih batu, gunting, atau kertas nih!", ".rockpaperscissors batu"));
+    return m.reply(novaGameBox({
+      title: "suit",
+      icon: "✊",
+      flavor: "✊ *SUIT: BATU GUNTING KERTAS!*",
+      body: "Lawan bot langsung 1 ronde.\nPilih: batu, gunting, atau kertas",
+      cta: "Contoh: .rockpaperscissors batu",
+    }));
   }
 
   if (!CHOICES.includes(pilihan)) {

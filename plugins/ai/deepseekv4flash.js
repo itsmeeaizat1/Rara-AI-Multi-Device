@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/ai/deepseekv4flash.js
@@ -104,8 +104,14 @@ async function handler(m, { sock }) {
   const sessionId = toSessionId(key);
 
   if (!text) {
-    const help = `Kirim pertanyaan setelah command.\n💡 *Contoh:* .deepseekv4flash halo siapa kamu?\n\n.deepseekv4flash reset — Reset sesi percakapan`;
-    return m.reply( claraWrap("DeepSeek V4 Flash", help));
+    return m.reply(novaGuideV2("deepseekv4flash", {
+ kaomoji: "(๑˘ᘿ˂๑)",
+ sapaan: "ngobrol sama DeepSeek V4 Flash, inget sesi percakapanmu lho! (≧◡≦) ♡",
+      cara: "kirim pertanyaannya setelah command, reset buat hapus sesi",
+      contoh: `${m.prefix}deepseekv4flash halo siapa kamu? · ${m.prefix}deepseekv4flash reset`,
+      note: "bot inget obrolan sebelumnya per user",
+      spec: ["⏱ 5dtk", "💸 gratis"],
+    }));
   }
 
   // Reset session — reset param terima value apa saja

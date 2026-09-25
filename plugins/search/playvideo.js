@@ -5,7 +5,7 @@ import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
-import { novaDlUsage, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
@@ -229,14 +229,23 @@ async function handler(m, { sock }) {
 
   // Usage: pilihan resolusi (default 480p)
   if (!query) {
-    return m.reply(novaDlUsage("Playvideo", {
-      prefix: m.prefix,
-      command: "playvideo",
-      cara: [`${m.prefix}playvideo [judul]`],
-      contoh: [
-        `${m.prefix}playvideo Faded Alan Walker`,
-        `${m.prefix}playvideo hd Faded Alan Walker`,
-      ],
+    return m.reply(novaGuideV2("playvideo", {
+ kaomoji: "(๑•̀ㅂ•́)و✧",
+ sapaan: "pengen sekalian videonya? ketik judulnya! (≧▽≦)b",
+      cara: "ketik judul lagunya sesudah command",
+      contoh: `${m.prefix}playvideo faded alan walker · ${m.prefix}playvideo hd faded alan walker`,
+      note: "nanti bot carin videonya otomatis, resolusi bisa dipilih lewat contoh kedua",
+      spec: ["⏱ 20dtk", "💸 gratis"],
+    }));
+  }
+
+  // SALAH CMD CUTE (owner 25 Sep): link padahal .playvideo mau judul lagu
+  if (/^(https?:\/\/|www\.)|\b(?:facebook|fb\.watch|tiktok|instagram|youtu\.?be)\.com/i.test(query)) {
+    await m.react("🐣");
+    return m.reply(novaSalahV2("playvideo", {
+ kaomoji: "(¬_¬;)",
+      pesan: "kok yang diketik linknya kak? ini mah mau judul lagunya~",
+      contoh: `${m.prefix}playvideo nama lagu`,
     }));
   }
 

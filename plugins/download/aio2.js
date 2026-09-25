@@ -9,7 +9,7 @@
 import { aioDl, teraboxDl } from "../../src/scraper/nexray-dl.js";
 import { registerChoice } from "../../src/lib/nova-aio2-session.js";
 import { fetchChoiceBuffer } from "../../src/scraper/nexray-dl.js";
-import { toSC, claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { toSC, claraWrap, novaGuide, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -167,10 +167,21 @@ async function handler(m, { sock, config: botConfig }) {
   const url = String(m.text || "").trim();
 
   if (!url) {
-    return m.reply(novaGuide("AIO v2", "Kasih linknya ya — popup pilihan kualitas bakal muncul.", `${prefix}aio2 https://youtube.com/watch?v=xxx`));
+    return m.reply(novaGuideV2("aio2", {
+ kaomoji: "(๑˃ᴗ˂)ﻭ",
+ sapaan: "pengen pilih kualitas sendiri? pakai yang ini! (⌒‿⌒)♡",
+      cara: "tempel linknya sesudah command",
+      contoh: `${prefix}aio2 https://youtube.com/watch?v=xxx`,
+      note: "popup pilihan kualitas bakal muncul, tinggal balas nomornya",
+      spec: ["⚡ energi 2", "⏱ 12dtk", "💸 gratis"],
+    }));
   }
   if (!/^https?:\/\//i.test(url)) {
-    return m.reply(novaGuide("AIO v2", "Link-nya gak valid — harus diawali http/https.", `${prefix}aio2 https://youtube.com/watch?v=xxx`));
+    return m.reply(novaSalahV2("aio2", {
+ kaomoji: "(;∀;)",
+      pesan: "linknya gak valid kak, harus diawali http atau https~ ulangi ya",
+      contoh: `${prefix}aio2 link`,
+    }));
   }
 
   try {

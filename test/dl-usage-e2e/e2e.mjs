@@ -63,23 +63,23 @@ w("\n— handler plugins —");
   await playHandler(m1, {});
   const r1 = m1._replies[0];
   check(".play no-input → reply 1 pesan", m1._replies.length === 1 && !!r1);
-  check(".play → header ᴘʟᴀʏ + cara pakai .play [judul]", r1.startsWith(`「 ✦ ${toSC("play")} ✦ 」`) && r1.includes(".play [judul]"));
-  check(".play → contoh Faded Alan Walker", r1.includes(".play Faded Alan Walker"));
+  check(".play → header 「✧ ᴘʟᴀʏ ✧」 + kaomoji + sapaan", r1.startsWith(`「✧ ${toSC("play")} ✧」`) && r1.includes(`${toSC("play")}!!`) && r1.includes(toSC("mau lagu favorit")), r1.split("\n").slice(0, 2).join(" | "));
+  check(".play → 📍 ᴄᴀʀᴀ + ᴄᴏɴᴛᴏʜ baris sendiri", r1.includes(`📍 ${toSC("Cara")}: ${toSC("ketik judul lagunya sesudah command")}`) && r1.includes(`ᴄᴏɴᴛᴏʜ: .play faded alan walker`), r1.split("\n").slice(5, 8).join(" | "));
   check(".play → gak ada lagi layout bitrate lama", !r1.includes("128ᴋʙᴘs"));
 
   const m2 = mkM("instagramdl", "");
   await igHandler(m2, {});
   const r2 = m2._replies[0];
-  check(".instagramdl no-input → header ɪɴꜱᴛᴀɢʀᴀᴍ + [link]", r2.startsWith(`「 ✦ ${toSC("instagram")} ✦ 」`) && r2.includes(".instagramdl [link]"));
+  check(".instagramdl no-input → header 「✧ ɪɴꜱᴛᴀɢʀᴀᴍ ✧」 + contoh VERBATIM", r2.startsWith(`「✧ ${toSC("instagram")} ✧」`) && r2.includes("ᴄᴏɴᴛᴏʜ: .instagramdl https://www.instagram.com/reel/xxx"), r2.split("\n")[0]);
   check(".instagramdl → contoh link reel", r2.includes(".instagramdl https://www.instagram.com/reel/xxx"));
   const m2b = mkM("instagramdl", "bukanlink");
   await igHandler(m2b, {});
-  check(".instagramdl link invalid → error novaGuide (header ᴅʟ, bukan usage)", !m2b._replies[0].startsWith(`「 ✦ ${toSC("instagram")} ✦ 」`) && m2b._replies[0].includes(toSC("URL-nya gak valid")));
+  check(".instagramdl link invalid → novaSalahV2 cute (bukan kartu usage)", !m2b._replies[0].startsWith(`「✧ ${toSC("instagram")} ✧」`) && m2b._replies[0].includes(toSC("linknya bukan link instagram nih, cek lagi ya~")) && m2b._replies[0].includes("➤ .instagramdl link instagram"), m2b._replies[0]);
 
   const m3 = mkM("ytmp3", "");
   await yt3Handler(m3, {});
   const r3 = m3._replies[0];
-  check(".ytmp3 no-input → header ʏᴛᴍᴘ3 + [link youtube]", r3.startsWith(`「 ✦ ${toSC("ytmp3")} ✦ 」`) && r3.includes(".ytmp3 [link youtube]"));
+  check(".ytmp3 no-input → header 「✧ ʏᴛᴍᴘ3 ✧」 + contoh youtu.be VERBATIM", r3.startsWith(`「✧ ${toSC("ytmp3")} ✧」`) && r3.includes("ᴄᴏɴᴛᴏʜ: .ytmp3 https://youtu.be/xxx"), r3.split("\n")[0]);
   check(".ytmp3 → contoh youtu.be", r3.includes(".ytmp3 https://youtu.be/xxx"));
 
   check("pluginConfig play/instagramdl/ytmp3 utuh", playConfig.name === "play" && igConfig.name && yt3Config.name);

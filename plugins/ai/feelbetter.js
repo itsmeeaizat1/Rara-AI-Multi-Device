@@ -2,7 +2,7 @@
 import { FeelBetter } from "../../src/scraper/feeb.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "feelbetter",
@@ -23,19 +23,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("feelbetter", [
-      "AI yang siap mendengarkan curhatan kamu — tanpa menghakimi, dengan hangat dan empatik.",
-      "",
-      "📌 Format:",
-      `${m.prefix}feelbetter <curhatan>`,
-      "",
-      "💡 Contoh:",
-      `${m.prefix}feelbetter lagi sedih nih`,
-      "",
-      `${m.prefix}feelbetter aku capek banget belakangan`,
-      "",
-      "Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman",
-    ]));
+    return m.reply(novaGuideV2("feelbetter", {
+ kaomoji: "(ᵔ◡ᵔ)",
+ sapaan: "curhat apa aja ke aku, aku dengerin tanpa nghakimi! (⌒‿⌒)",
+      cara: "ketik curhatan atau pertanyaannya sesudah command",
+      contoh: `${m.prefix}feelbetter lagi sedih nih`,
+      note: "aku bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman",
+      spec: ["⚡ energi 2", "⏱ 10dtk", "💸 gratis"],
+    }));
   }
   try {
   await m.react("🕒");

@@ -5,6 +5,7 @@
 // panjang). Dulu wrapLine motong di 60 char — lebih lebar dari layar HP,
 // WhatsApp melipat sisanya TANPA prefix "│ " → teks nabrak border kiri.
 import { wrapText as guardWrapText } from "./styler.js";
+import { getPlugin } from "./nova-plugins.js";
 
 // Aesthetic khas bot WhatsApp dev Indonesia:
 // 「 ✦  ✦」 box drawing, │ clean body lines, │ sub-section, ╰────  •  ──── footer
@@ -117,6 +118,27 @@ function buildBox(headerTitle, lines = []) {
 
 // novaCaption: caption panduan pakai fitur (no-input guide) — pakai buildBox modern style
 function novaCaption({ emoji = "", name = "", description = "", usage = "", example = "", note = "" } = {}) {
+  // REWORK 25 Sep — kartu usage → DESAIN V2 kaomoji + emoji muka cute.
+  // usage/example VERBATIM; description/note smallcaps; spec dari pluginConfig.
+  // Game category tetap render box lama (desain khas game sendiri).
+  if (isGameCmd(name)) return novaCaptionClassic({ emoji, name, description, usage, example, note });
+  const title = name ? toSC(name) : toSC("Guide");
+  let out = `「✧ ${toSC(String(title).toLowerCase())} ✧」\n`;
+  out += `${v2Kaomoji(name)} ${toSC(String(title).toLowerCase())}!!\n`;
+  if (description && String(description).trim()) out += `\n${scLine(description)}\n`;
+  if (usage || example || note) {
+    out += `\n📍`;
+    if (usage && String(usage).trim()) out += ` ${toSC("Cara")}: ${String(usage).replace(/\`/g, "").trim()}`;
+    if (example && String(example).trim()) out += ` ${toSC("Contoh")}: ${String(example).replace(/\`/g, "").trim()}`;
+    if (note && String(note).trim()) out += `, ${scLine(note)}~`;
+    out += `\n`;
+  }
+  const cspec = v2Spec(name);
+  if (cspec) out += `\n${cspec}\n`;
+  return out.replace(/\n+$/, "");
+}
+// render box lama — fallback game + kompat
+function novaCaptionClassic({ emoji = "", name = "", description = "", usage = "", example = "", note = "" } = {}) {
   const title = name ? toSC(name) : toSC("Guide");
   const lines = [];
 
@@ -318,6 +340,23 @@ function claraWrap(title, body, type = "info") {
     prevBlank = isBlank;
   }
   lines = collapsed;
+
+  // REWORK 25 Sep (owner: "semua plugin diubah usage jadi desain kaomoji") —
+  // kind "guide" = kartu USAGE → render V2 kaomoji + emoji muka cute. Body
+  // tetap VERBATIM (isi command "Contoh: .xxx" gak boleh ke-smallcaps).
+  // Game/rpg/rpg-cinta/rpg-couple tetap box lama (desain khas game sendiri).
+  if (type === "guide" && !isGameCmd(title)) {
+    const gname = toSC(String(title || "guide").toLowerCase());
+    let gout = `「✧ ${gname} ✧」\n`;
+    gout += `${v2Kaomoji(title)} ${gname}!!\n`;
+    if (lines.length) {
+      const bodyTxt = lines.map((l) => (typeof l === "object" && l !== null) ? `◈ ${l.subHeader || l.sub || ""}` : l).join("\n");
+      gout += `\n${bodyTxt}\n`;
+    }
+    const gspec = v2Spec(title);
+    if (gspec) gout += `\n${gspec}\n`;
+    return gout.replace(/\n+$/, "");
+  }
 
   // Prefix icon di baris pertama untuk status type (error/success/warn)
   if (type === "error" && lines.length) {
@@ -742,9 +781,9 @@ const NOVA_REPLIES = {
     "Yah, gak ada yang cocok 😵 Coba keyword lain yuk!",
   ],
   noInput: [
-    "Eh, input-nya mana nih 🗄️ Isi dulu dong",
-    "Kosong banget 😭 Kasih teks/link dong",
-    "Bentar, teksnya mana? 🫠 Jangan lupa diisi ya",
+    "Eh, input-nya mana nih? Isi dulu dong",
+    "Kosong banget, kasih teks/link dong",
+    "Bentar, teksnya mana? Jangan lupa diisi ya",
   ],
   noQuoted: [
     "Reply pesannya dong 📿 Bukan komen stand-alone",
@@ -804,10 +843,29 @@ function novaEmpty(commandName, detail) {
 // REWORK 2026-09-10 (owner): layout section — ⚠ sapaan natural tetap di atas,
 // 📝 Cara Pakai (hint) + 💡 Contoh (example VERBATIM).
 function novaNoInput(commandName, hint, example) {
-  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
-  if (hint && String(hint).trim()) out += `\n📝 ${toSC("Cara Pakai")}:\n${scLine(hint)}\n`;
-  if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
+  // REWORK 25 Sep — DESAIN V2: frase noInput random jadi sapaan, hint jadi
+  // ᴄᴀʀᴀ, example jadi ᴄᴏɴᴛᴏʜ, spec otomatis dari pluginConfig. Game → klasik.
+  if (isGameCmd(commandName)) {
+    let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+    out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
+    if (hint && String(hint).trim()) out += `\n📝 ${toSC("Cara Pakai")}:\n${scLine(hint)}\n`;
+    if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
+    return out.replace(/\n+$/, "");
+  }
+  const name = toSC(String(commandName).toLowerCase());
+  let out = `「✧ ${name} ✧」\n`;
+  out += `${v2Kaomoji(commandName)} ${name}!!\n`;
+  out += `\n${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
+  if ((hint && String(hint).trim()) || example) {
+    if (hint && String(hint).trim()) {
+      out += `\n📍 ${toSC("Cara")}: ${scLine(hint)}\n`;
+      if (example) out += `${toSC("Contoh")}: ${example}\n`;
+    } else if (example) {
+      out += `\n📍 ${toSC("Contoh")}: ${example}\n`;
+    }
+  }
+  const spec = v2Spec(commandName);
+  if (spec) out += `\n${spec}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -847,10 +905,81 @@ function novaSuccess(commandName, message) {
 // reply salah pemakaian SINGKAT (1-2 kalimat), TANPA header box & TANPA
 // section 📝/💡 — beda total dari layout usage. Cuma:
 //   ❗ cara pemakaian salah (+pesan singkat opsional) + arahan ketik .<cmd>.
+// ─── DESAIN V2 GLOBAL (owner 25 Sep: "semua plugin diterapin dr ai sampai
+// plugin owner diubah usage dan pesan eror cmd") — novaGuide/novaNoInput/
+// novaSalah otomatis render kartu kaomoji V2. Isi teks (intro/contoh/note)
+// PER-PLUGIN TETAP UTUH — yang generik cuma bingkai. Guard kategori:
+// game/minigame/rpg/rpg-cinta JANGAN pake desain ini (owner 25 Sep: "klo
+// usage fitur game minigame, rpg, rpg cinta mngkin agak berbeda jgn
+// diterapin desain mirip sprti dibuat khusus msing2") — mereka pakai
+// novaGameBox/kartu khas sendiri; fallback ke render klasik.
+// owner 25 Sep (revisi): "hapus emoji android, aku mau cm emoji cutenya
+// doang" — kaomoji TANPA emoji unicode di sebelahnya (emoji standar
+// keliatan gaya Android di HP owner). Cuma buat KARTU USAGE (V2 pool ini);
+// persona AI/fitur inti JANGAN disentuh. Revisi lanjutan: symbol bunga ✿
+// dihapus juga — gak melambangkan apa-apa (owner: "klo g penting dihapus
+// aja symbol bunganya"), muka kaomoji cukup kurung + mata + mulut.
+const V2_KAOMOJI_POOL = [
+  "ヾ(≧▽≦*)o", "(๑•̀ㅂ•́)و✧", "(•̀ᴗ•́)و", "(◕ᴗ◕)", "(๑˃ᴗ˂)ﻭ",
+  "(¬‿¬)", "(๑ᵔ⤙ᵔ๑)", "(≧▽≦)", "(◍•ᴗ•◍)", "(≧∇≦)ﾉ",
+  "(⌒‿⌒)", "(๑˘ᘿ˂๑)", "(ᵔ◡ᵔ)", "(◕‿◕)", "(≧ω≦)",
+  "(๑´ㅂ`๑)", "(˶ᵔ ᵕ ᵔ˶)", "(๑˃̵ᴗ˂̵)و", "(◍'◡'◍)", "(๑>ᴗ<)و",
+  "(・∀・)", "(≧◡≦) ♡", "(๑ᵔ⤙ᵔ๑)♡", "(•‿•)", "(¬‿¬)✧",
+];
+function v2Kaomoji(name) {
+  const key = String(name || "x").toLowerCase();
+  let h = 0;
+  for (const ch of key) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+  return V2_KAOMOJI_POOL[h % V2_KAOMOJI_POOL.length];
+}
+// spec dari pluginConfig ASLI (registry nova-plugins) — fakta nyata, bukan karangan
+function v2Spec(commandName) {
+  try {
+    const key = String(commandName || "").toLowerCase().replace(/\s+/g, "");
+    const pl = getPlugin(key) || getPlugin(String(commandName || "").toLowerCase());
+    if (!pl) return null;
+    const items = [];
+    const energi = Number(pl.energi);
+    if (energi > 0) items.push(`⚡ ${toSC("energi")} ${energi}`);
+    const cd = Number(pl.cooldown);
+    if (cd > 0) items.push(`⏱ ${cd}${toSC("dtk")}`);
+    if (!pl.isPremium) items.push(`💸 ${toSC("gratis")}`);
+    return items.length ? items.join(" • ") : null;
+  } catch { return null; }
+}
+const V2_GAME_CATS = new Set(["game", "rpg", "rpgcinta", "rpg-cinta", "rpg-couple"]);
+function isGameCmd(commandName) {
+  try {
+    const pl = getPlugin(String(commandName || "").toLowerCase());
+    return !!pl && V2_GAME_CATS.has(String(pl.category || "").toLowerCase());
+  } catch { return false; }
+}
+// render klasik 「 ✦ 」 — fallback game + kompat
+function novaGuideClassic(commandName, intro, example, note) {
+  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scLine(intro)}\n`;
+  if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
+  if (note) {
+    const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
+    out += `\n📍 ${scLine(nl[0])}\n`;
+    if (nl.length > 1) out += nl.slice(1).map((l) => scLine(l)).join("\n") + "\n";
+  }
+  return out.replace(/\n+$/, "");
+}
+
 function novaSalah(commandName, message) {
-  let out = `❗ ${toSC("Cara pemakaian salah")}`;
-  if (message && String(message).trim()) out += ` — ${scLine(message)}`;
-  out += `\n${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}`;
+  // REWORK 25 Sep (owner: pesan salah cmd versi cute "yah kak kakak ketik
+  // cmd yang salah, ulangi ketik ...") — kaomoji + kalimat custom caller
+  // + ➤ arahan singkat. Game category tetap format lama (khas game).
+  if (isGameCmd(commandName)) {
+    let out = `❗ ${toSC("Cara pemakaian salah")}`;
+    if (message && String(message).trim()) out += ` — ${scLine(message)}`;
+    out += `\n${scLine(`Ketik .${String(commandName).toLowerCase()} buat lihat cara pemakaian`)}`;
+    return out.replace(/\n+$/, "");
+  }
+  let out = `(>_<) ${toSC("yah kak")}...\n`;
+  if (message && String(message).trim()) out += `${scLine(message)}\n`;
+  out += `➤ ${scLine(`ulangi ketik .${String(commandName).toLowerCase()} ya`)}`;
   return out.replace(/\n+$/, "");
 }
 
@@ -858,16 +987,26 @@ function novaSalah(commandName, message) {
 // AI/DL usage): 📝 Cara Pakai + 💡 Contoh + ⚠ catatan DETAIL di bawah contoh.
 // Example & command VERBATIM; intro/note di-smallcaps (URL aman via scLine).
 function novaGuide(commandName, intro, example, note) {
-  let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  if (intro && String(intro).trim()) out += `📝 ${toSC("Cara Pakai")}:\n${scLine(intro)}\n`;
-  if (example) out += `\n💡 ${toSC("Contoh")}:\n${example}\n`;
-  if (note) {
-    // REWORK 10 Sep (owner: "biar rapih jgn nyamping ke kanan") — note multi-
-    // baris: 📍 label sendirian di atas, isi tiap baris di bawahnya.
-    const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
-    out += `\n📍 ${scLine(nl[0])}\n`;
-    if (nl.length > 1) out += nl.slice(1).map((l) => scLine(l)).join("\n") + "\n";
+  // REWORK 25 Sep — SEMUA plugin non-game otomatis ke DESAIN V2 kaomoji
+  // (owner: "semua plugin diterapin dr ai sampai plugin owner diubah usage
+  // dan pesan eror cmd"). Intro per-plugin jadi sapaan; contoh VERBATIM;
+  // note di-smallcaps; spec dari pluginConfig asli (fakta nyata).
+  // Game/minigame/rpg/rpg-cinta → render klasik (desain khas game sendiri).
+  if (isGameCmd(commandName)) return novaGuideClassic(commandName, intro, example, note);
+  const name = toSC(String(commandName).toLowerCase());
+  let out = `「✧ ${name} ✧」\n`;
+  out += `${v2Kaomoji(commandName)} ${name}!!\n`;
+  if (intro && String(intro).trim()) out += `\n${scLine(intro)}\n`;
+  if (example || note) {
+    const exLines = String(example || "").split("\n").map((l) => l.trim()).filter(Boolean);
+    if (exLines.length) out += `\n📍 ${toSC("Contoh")}: ${exLines.join(" · ")}\n`;
+    if (note) {
+      const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
+      if (nl.length) out += nl.map((l) => scLine(l)).join("\n") + "~\n";
+    }
   }
+  const spec = v2Spec(commandName);
+  if (spec) out += `\n${spec}\n`;
   return out.replace(/\n+$/, "");
 }
 
@@ -924,22 +1063,97 @@ export function novaDlUsage(brand, { prefix = ".", command, cara = null, contoh 
   return novaBox(brand, lines);
 }
 
-export function novaAiUsage(brand, { prefix = ".", command, modelAktif = null, models = [], extra = [] } = {}) {
-  const cmd = `${prefix}${command || brand}`;
-  const lines = [
-    `📝 ${toSC("Cara Pakai")}:`,
-    `${cmd} [pertanyaan]`,
-    "",
-    `💡 ${toSC("Contoh")}:`,
-    `${cmd} apa itu AI?`,
-  ];
-  if (modelAktif) lines.push("", `✨ ${toSC("Model")}:`, modelAktif);
-  if (Array.isArray(models) && models.length) {
-    lines.push("", `📋 ${toSC("Model Tersedia")}:`);
-    for (const mdl of models) lines.push(String(mdl));
+// novaGuideV2 — DESAIN USAGE BARU ala owner (25 Sep 2026, sesi "desain
+// kaomoji lucu"): 「✧ ɴᴀᴍᴀ ✧」 + kaomoji semangat + sapaan ajakan 1 baris +
+// 📍 baris ᴄᴀʀᴀ/ᴄᴏɴᴛᴏʜ/ɴᴏᴛᴇ mengalir (note = kalimat panduan natural per
+// fitur) + (KHUSUS AI, request owner 25 Sep "usage kyk ai mngkin ada tmbahan
+// kyk field model yg dipakai dan yg tersedianya") ✨ model aktif + 📋 model
+// tersedia + baris spec ⚡⏱💸 (CUMA fakta nyata plugin — item gak ada dilewati,
+// gak ada fakta = baris gak muncul). Kaomoji + sapaan DITULIS MANUAL per
+// fitur, dan WAJIB BEDA antar plugin (owner 25 Sep: "tiap plugin
+// sapaannya beda beda g sama") — jangan pakai kaomoji/sapaan plugin lain —
+// novaGuide/novaDlUsage/novaAiUsage lama TETAP dipakai plugin belum dimigrasi.
+// novaSalahV2 — REPLY SALAH PEMAKAIAN versi cute (owner 25 Sep: "hrs kirim
+// pesan salah cmd kyk 'yah kak kakak ketik cmd yang salah, ulangi ketik
+// .play nama lagu'"): kaomoji lucu + "ʏᴀʜ ᴋᴀᴋ..." + kalimat cute smallcaps
+// (WAJIB custom & beda-beda per plugin) + ➤ contoh yang bener VERBATIM.
+// SINGKAT 3 baris — beda total dari kartu usage novaGuideV2 (aturan owner
+// 10 Sep: salah pemakaian singkat, usage detail).
+export function novaSalahV2(commandName, opts = {}) {
+  const {
+    kaomoji = "(>_<)",
+    pesan = "kakak ketik cmd yang salah, ulangi ketik yang bener ya~",
+    contoh = "",
+  } = opts;
+  let out = `${kaomoji} ${toSC("yah kak")}...\n`;
+  out += `${scLine(pesan)}\n`;
+  if (contoh) out += `➤ ${contoh}\n`;
+  return out.replace(/\n+$/, "");
+}
+
+export function novaGuideV2(commandName, opts = {}) {
+  const {
+    kaomoji = "ヾ(≧▽≦*)o 😆", sapaan = "", cara = "", contoh = "", note = "",
+    modelAktif = null, models = [], spec = [], extra = [],
+  } = opts;
+  const name = toSC(String(commandName).toLowerCase());
+  let out = `「✧ ${name} ✧」\n`;
+  out += `${kaomoji} ${name}!!\n`;
+  if (sapaan && String(sapaan).trim()) out += `\n${scLine(sapaan)}\n`;
+  if (cara || contoh || note) {
+    out += `\n📍 ${toSC("Cara")}: ${scLine(cara)}\n`;
+    if (contoh) out += `${toSC("Contoh")}: ${contoh}\n`;
+    if (note) {
+      const nl = String(note).split("\n").map((l) => l.trim()).filter(Boolean);
+      if (nl.length) out += nl.map((l) => scLine(l)).join("\n") + "~\n";
+    }
   }
-  for (const l of extra) lines.push("", l);
-  return novaBox(brand, lines);
+  if (Array.isArray(extra) && extra.length) {
+    out += `\n${extra.map(String).join("\n")}\n`;
+  }
+  if (modelAktif) out += `\n✨ ${toSC("Model aktif")}: ${modelAktif}\n`;
+  if (Array.isArray(models) && models.length) {
+    out += `📋 ${toSC("Model tersedia")}: ${models.map(String).join(" · ")}\n`;
+  }
+  if (Array.isArray(spec) && spec.length) out += `\n${spec.map((x) => scLine(x)).join(" • ")}\n`;
+  return out.replace(/\n+$/, "");
+}
+
+export function novaAiUsage(brand, { prefix = ".", command, modelAktif = null, models = [], extra = [] } = {}) {
+  // REWORK 25 Sep — kartu usage AI → DESAIN V2 kaomoji + emoji muka cute
+  // (owner: mulai dr AI dulu). Model & extra VERBATIM. Game → novaBox lama.
+  if (isGameCmd(brand)) {
+    const cmdL = `${prefix}${command || brand}`;
+    const linesL = [
+      `📝 ${toSC("Cara Pakai")}:`,
+      `${cmdL} [pertanyaan]`,
+      "",
+      `💡 ${toSC("Contoh")}:`,
+      `${cmdL} apa itu AI?`,
+    ];
+    if (modelAktif) linesL.push("", `✨ ${toSC("Model")}:`, modelAktif);
+    if (Array.isArray(models) && models.length) {
+      linesL.push("", `📋 ${toSC("Model Tersedia")}:`);
+      for (const mdl of models) linesL.push(String(mdl));
+    }
+    for (const l of extra) linesL.push("", l);
+    return novaBox(brand, linesL);
+  }
+  const cmd = `${prefix}${command || brand}`;
+  const name = toSC(String(brand).toLowerCase());
+  let out = `「✧ ${name} ✧」\n`;
+  out += `${v2Kaomoji(brand)} ${name}!!\n`;
+  out += `\n📍 ${toSC("Cara")}: ${cmd} [pertanyaan]\n`;
+  out += `${toSC("Contoh")}: ${cmd} apa itu AI?\n`;
+  if (modelAktif) out += `\n✨ ${toSC("Model aktif")}: ${modelAktif}\n`;
+  if (Array.isArray(models) && models.length) {
+    out += `\n📋 ${toSC("Model tersedia")}:\n`;
+    for (const mdl of models) out += `${mdl}\n`;
+  }
+  if (Array.isArray(extra) && extra.length) out += `\n${extra.map(String).join("\n")}\n`;
+  const spec = v2Spec(command || brand);
+  if (spec) out += `\n${spec}\n`;
+  return out.replace(/\n+$/, "");
 }
 
 export function novaBox(header, lines = [], opts = {}) {

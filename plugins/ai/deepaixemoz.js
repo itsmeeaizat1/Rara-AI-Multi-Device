@@ -64,8 +64,14 @@ async function handler(m, { sock }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    const help = `Kirim pesan setelah command.\n💡 *Contoh:* .deepaixemoz halo, siapa kamu?\n\n.deepaixemoz reset — Reset sesi percakapan`;
-    return m.reply( claraWrap("DeepAI Chat", help));
+    return m.reply(novaGuideV2("deepaixemoz", {
+ kaomoji: "(◕‿◕)",
+ sapaan: "ngobrol sama DeepAI Xemoz, otaknya serba bisa! (≧▽≦)",
+      cara: "kirim pertanyaannya setelah command, reset buat hapus sesi",
+      contoh: `${m.prefix}deepaixemoz halo, siapa kamu? · ${m.prefix}deepaixemoz reset`,
+      note: "bot inget obrolan sebelumnya per user",
+      spec: ["⏱ 3dtk", "💸 gratis"],
+    }));
   }
 
   if (input.toLowerCase() === "reset") {

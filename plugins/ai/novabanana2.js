@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { fluxImage } from "../../src/scraper/seaart.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "novabanana2",
@@ -21,11 +21,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.text;
   if (!prompt) {
-    return m.reply(claraWrap("novabanana2", [
-      "Buat gambar dengan AI",
-      "",
-      `💡 Contoh: ${m.prefix}novabanana2 make a cat`,
-    ]));
+    return m.reply(novaGuideV2("novabanana2", {
+ kaomoji: "(◕ᴗ◕)",
+ sapaan: "bikin gambar apa aja pakai AI Banana2, deskripsikan aja! (≧▽≦)",
+      cara: "ketik deskripsi gambar yang mau dibuat",
+      contoh: `${m.prefix}novabanana2 make a cat`,
+      spec: ["⚡ energi 1", "⏱ 30dtk", "💸 gratis"],
+    }));
   }
   try {
   await m.react("🕒");

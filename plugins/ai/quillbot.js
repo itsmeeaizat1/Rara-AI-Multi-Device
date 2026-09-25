@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -24,7 +24,13 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-    { const __navText = "❌ Masukkan teks yang ingin disempurnakan.\n\n💡 *Contoh:* `.quilbot Saya sedang makan nasi di rumah`"; return await m.reply(__navText, "quilbot"); };
+        return m.reply(novaGuideV2("quilbot", {
+ kaomoji: "(◍'◡'◍)",
+ sapaan: "mau teksmu disempurnakan biar lebih enak dibaca? kirim aja! (◍•ᴗ•◍)",
+      cara: "ketik teks yang mau diperbaiki sesudah command",
+      contoh: `${m.prefix}quilbot Saya sedang makan nasi di rumah`,
+      spec: ["⚡ energi 1", "⏱ 5dtk", "💸 gratis"],
+    }), "quilbot");
   }
   try {
   await m.react("🕒");

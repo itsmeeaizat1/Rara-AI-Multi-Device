@@ -4,7 +4,7 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import te from "../../src/lib/nova-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { novaDlUsage, claraWrap, claraLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, claraWrap, claraLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -52,11 +52,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(novaDlUsage("MediaFire", {
-      prefix: m.prefix,
-      command: m.command || "mfdl",
-      cara: [`${m.prefix}${m.command || "mfdl"} [link]`],
-      contoh: [`${m.prefix}${m.command || "mfdl"} https://www.mediafire.com/file/xxx`],
+    return m.reply(novaGuideV2("mediafire", {
+ kaomoji: "(¬‿¬)✧",
+ sapaan: "file di mediafire pengen diunduh? tempel linknya! (๑˃̵ᴗ˂̵)و",
+      cara: "tempel link file mediafirenya sesudah command",
+      contoh: `${m.prefix}${m.command || "mfdl"} https://www.mediafire.com/file/xxx`,
+      note: "bot unduh file-nya lalu kirim langsung ke chat",
+      spec: ["⚡ energi 1", "⏱ 10dtk", "💸 gratis"],
     }));
   }
   if (!url.match(/mediafire\.com/i)) {
