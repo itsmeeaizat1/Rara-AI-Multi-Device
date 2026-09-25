@@ -21,7 +21,7 @@
 // Kalimat saran persiapan (payung/isteduh) dibuat bantuan AI (aiChainChat
 // best-effort — AI down → kalimat default, fitur tetap jalan).
 //
-// Dipakai plugin .hujannotif (plugins/info/rainnotify.js):
+// Dipakai plugin .hujannotif (plugins/info/autoweatherrain.js):
 //   • .hujannotif on/off/status/cek | set <tempat|lat,lon|reply lokasi WA>
 //   • interval <5-60> | cooldown <30-720>
 // Lokasi default mewarisi weatherScheduler (biar owner gak set 2x).
