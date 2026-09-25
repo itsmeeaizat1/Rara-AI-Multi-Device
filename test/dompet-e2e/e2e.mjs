@@ -18,7 +18,7 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase("/tmp/dompet-e2e-db/nova.json");
 const db = getDatabase();
 
-const { config, handler, parseLocal, parseAmount } = await import(R + "/plugins/ai/dompet.js");
+const { config, handler, parseLocal, parseAmount } = await import(R + "/plugins/ai/wallet.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s || "")).toLowerCase();
 
@@ -60,7 +60,7 @@ const sockMock = {
 
 // AI seam: parse natural + insight (string balasan)
 let aiReplies = 0;
-const { _setDompetParsersForTest } = await import(R + "/plugins/ai/dompet.js");
+const { _setDompetParsersForTest } = await import(R + "/plugins/ai/wallet.js");
 _setDompetParsersForTest({
   text: async () => { aiReplies++; return '{"type":"keluar","amount":18000,"cat":"makan","desc":"kopi susu kekinian"}'; },
   vision: async () => ({ status: true, text: '{"items":[{"nama":"Indomie Goreng","harga":3500},{"nama":"Teh Kotak","harga":5000}],"total":8500,"toko":"Indomaret"}', engine: "vision-test" }),

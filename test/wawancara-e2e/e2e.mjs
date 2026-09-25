@@ -17,7 +17,7 @@ const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.j
 await initDatabase("/tmp/wawancara-e2e-db/nova.json");
 const db = getDatabase();
 
-const { config, handler, _setWawancaraDepsForTest } = await import(R + "/plugins/ai/wawancara.js");
+const { config, handler, _setWawancaraDepsForTest } = await import(R + "/plugins/ai/interview.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(low(s));
 

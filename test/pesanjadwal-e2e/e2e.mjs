@@ -13,8 +13,8 @@ fs.mkdirSync(DB_DIR, { recursive: true });
 const { initDatabase } = await import(R + "/src/lib/nova-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
-const { parseWhen, formatWib } = await import(R + "/plugins/tools/pesanjadwal.js");
-const { handler } = await import(R + "/plugins/tools/pesanjadwal.js");
+const { parseWhen, formatWib } = await import(R + "/plugins/tools/messageschedule.js");
+const { handler } = await import(R + "/plugins/tools/messageschedule.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const {
   cancelReminder, listActiveReminders, persistReminders,

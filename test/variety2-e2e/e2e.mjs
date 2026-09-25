@@ -60,7 +60,7 @@ for (const cmd of ["cekganteng", "cekbucin", "cekgabut"]) {
 }
 {
   // edit gagal → fallback m.reply kartu hasil
-  const { config, handler } = await import(R + "/plugins/cek/cekgila.js");
+  const { config, handler } = await import(R + "/plugins/cek/checkcrazy.js");
   const sock = mockSock();
   sock.sendMessage = async () => { throw new Error("gak bisa kirim"); };
   const m = mkM({ command: "cekgila", mentionedJid: [] });

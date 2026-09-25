@@ -2613,6 +2613,16 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Format notif: judul + perusahaan + lokasi + tipe + tanggal dibuka + link LinkedIn.
 - E2E baru: `test/loker-id-e2e` 13/13.
 
+## v24.6.0 — RENAME FILE PLUGIN → BAHASA INGGRIS (25 Sep 2026)
+
+- **REQUEST OWNER:** nama file plugin campur Indonesia/Inggris — seragamkan **nama FILE** ke Inggris. **CMD & FIELD `name` GAK DISENTUH SAMA SEKALI** (verified: 0 baris name/alias/usage berubah di seluruh diff).
+- **365 file plugin di-rename** (`git mv`, branch `feat/rename-plugin-files-english`): tebak*→guess*, cek*→check*, gunung.js→mountainclimber.js (ngikutin cmd utama Inggris), hargakripto.js→cryptoprice.js, kuncijawabantts.js→answerkeytts.js, ganti-nova*→change-nova*, berita*→news*, sewa.js→rent.js, absen.js→attendance.js, cecan*→prettygirl*, gombal.js→pickuplines.js, dll.
+- **SEMUA CALLER/IMPORT DI-UPDATE** (157 file): index.js schedulerInits, src/connection.js, src/handler.js, cross-import antar plugin, 28 suite e2e, komentar header. Verifikasi checker statis: semua ref path resolve.
+- **GOTCHA:** (1) pola replace WAJIB `/` sebelum nama + `.js` gak boleh diikuti huruf — tanpa itu antibucin.js termakan "bucin", file DB sewa.json→rent.json, endpoint BMKG autogempa.json keganti. (2) **BENTROK NAMA PLUGIN vs LIB**: src/lib/sewa/sewa.js di-import 8 file — ref lib DIPULIHKAN, cuma ref plugin yang diubah ke rent.js. (3) ref src/skills/gempa.js (skill, bukan plugin) termakan → dipulihkan. (4) FIXES.md log historis, gak disentuh.
+- **KEEP-LIST:** istilah agama (ayatkursi, asmaulhusna, murrotal, zakat) · istilah budaya (pantun, weton, primbon, menfess, arisan) · brand (tempo, kompas, tribun, sapi*, GAG, melolo, jalanTikus) · persona (prabowo-ai, pakustad) · slang otaku universal (husbu, bocil, loli).
+- **E2E:** plugins-import 14/14 (load ~2.000 plugin) · 25/28 suite terdampak hijau · battery game gunung 81 + menara 45 + palung 42 + detektif 54 + quizarena 31 + mount 17 + gacha 31 · usage-unified 36 · formatguard 22 semua PASS. jadibot-mock & kalori-e2e gagal PRE-EXISTING (dibuktikan run di HEAD sebelum rename).
+- **DEPLOY VPS:** `git pull && pm2 restart` (TANPA npm install) — semua cmd jalan seperti biasa, cuma nama file repo yang berubah.
+
 ## v24.5.0 — DAILY BRIEFING PERSONAL (25 Sep 2026)
 
 - **REQUEST OWNER:** fitur "bot masa depan" no.2 — briefing pagi personal yang BENERAN HIDUP (bukan mock): semua bagian dari API live, section gagal ditulis jujur "gagal saya ambil", gak ada data bohongan.

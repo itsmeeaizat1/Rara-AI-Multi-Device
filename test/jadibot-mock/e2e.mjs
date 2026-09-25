@@ -9,7 +9,7 @@ db.setting("jadibotAccess", { mode: "all", allowedUsers: [] });
 const mock = await import("./nova-mock.mjs");
 const stub = await import("./handler-stub.mjs");
 const mgr = await import(R + "/src/lib/nova-jadibot-manager.js");
-const jb = await import(R + "/plugins/main/jadibot.js");
+const jb = await import(R + "/plugins/main/becomebot.js");
 const sb = await import(R + "/plugins/main/stopjadibot.js");
 
 let pass = 0, fail = 0;

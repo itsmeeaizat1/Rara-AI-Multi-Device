@@ -65,7 +65,7 @@ function mockFetchLeague(payload) {
 // ═══════════════════════════════════════════════════════════════
 w("\n— JADWALBOLA: ESPN rewire + kickoff ticker —");
 {
-  const jb = await import(R + "/plugins/info/jadwalbola.js");
+  const jb = await import(R + "/plugins/info/footballschedule.js");
   const { handler, findLeagueKey, getMatches } = jb;
 
   // mapping liga
@@ -129,7 +129,7 @@ w("\n— JADWALBOLA: ESPN rewire + kickoff ticker —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— GEMPA: wave anim + fix crash —");
 {
-  const g = await import(R + "/plugins/info/gempa.js");
+  const g = await import(R + "/plugins/info/earthquake.js");
   const { handler } = g;
 
   const gempaFix = {

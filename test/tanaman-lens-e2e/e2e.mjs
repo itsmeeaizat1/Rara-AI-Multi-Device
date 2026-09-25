@@ -45,7 +45,7 @@ const ctx = (sock) => ({ sock, config: { command: { prefix: "." } } });
 // ═══════════════════════════════════════════════════════════════
 w("\n— TANAMAN: AI plant identifier —");
 {
-  const t = await import(R + "/plugins/ai/tanaman.js");
+  const t = await import(R + "/plugins/ai/plants.js");
   const { handler, _setTanamanVisionForTest, _resetTanamanVisionForTest } = t;
 
   // tanpa foto → panduan

@@ -186,7 +186,7 @@ w("\n— ARISAN: manajer grup —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— BUTAWARNA: tes Ishihara —");
 {
-  const b = await import(R + "/plugins/fun/butawarna.js");
+  const b = await import(R + "/plugins/fun/colorblind.js");
   const { handler, renderIshiharaPlate, _getSessionsForTest } = b;
 
   // render plate: buffer PNG beneran + angka keisi titik figure

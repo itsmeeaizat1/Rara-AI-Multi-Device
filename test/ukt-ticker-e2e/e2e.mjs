@@ -17,7 +17,7 @@ const {
   getRecord, setRecord, deleteRecord, remainingMs, daysUntil,
   fireUktTicker, checkUktOnce, restoreUkt, startUktChecker, _resetUktForTest,
 } = await import(R + "/src/lib/nova-ukt-reminder.js");
-const { handler } = await import(R + "/plugins/education/pengingatukt.js");
+const { handler } = await import(R + "/plugins/education/tuitionreminder.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
 

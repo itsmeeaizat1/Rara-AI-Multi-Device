@@ -14,7 +14,7 @@ const { initDatabase } = await import(R + "/src/lib/nova-database.js");
 await initDatabase(DB_DIR + "/db.json");
 const { getDatabase } = await import(R + "/src/lib/nova-database.js");
 
-const { handler } = await import(R + "/plugins/education/tugas.js");
+const { handler } = await import(R + "/plugins/education/assignment.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s)).toLowerCase();
 

@@ -197,7 +197,7 @@ w("\n— global: novaGuide/novaNoInput/novaSalah auto-V2 + guard game —");
   check("5b. ai-providers pakai novaGuideV2 + modelAktif + models", ap.includes("novaGuideV2(cmdUsed") && ap.includes("modelAktif:") && ap.includes("models:"), null);
   const migrated = ["plugins/search/play.js", "plugins/search/playvideo.js", "plugins/download/instagramdl.js", "plugins/download/ytmp3.js", "plugins/download/aio.js", "plugins/download/aio2.js", "plugins/tools/shortlink.js", "plugins/ai/ocrsolve.js", "plugins/browser/ssweb.js", "plugins/ai/kuroai.js", "plugins/ai/min1ai.js", "plugins/search/playspotify.js", "plugins/download/douyindl.js", "plugins/download/facebookdl.js", "plugins/download/mediafiredl.js", "plugins/download/tiktokdl.js", "plugins/download/ytmp4.js"];
   check("5c. 17 plugin import novaGuideV2", migrated.every((f) => fs.readFileSync(f, "utf8").includes("novaGuideV2")), null);
-  const games = ["plugins/game/suit.js", "plugins/game/tebakangka.js"];
+  const games = ["plugins/game/rockpaperscissors.js", "plugins/game/guessnumber.js"];
   check("5c2. 2 mini-game pakai novaGameBox (desain khas game, bukan V2)", games.every((f) => fs.readFileSync(f, "utf8").includes("novaGameBox") && !fs.readFileSync(f, "utf8").includes("novaGuide")), null);
   const dup = [...new Set(["ヾ(≧▽≦*)o", "(>_<)", "(๑•̀ㅂ•́)و✧", "(¬‿¬;)", "(•̀ᴗ•́)و", "(´･_･`)", "ヾ(´︶`*)ﾉ", "(・_・;)", "(◕ᴗ◕)", "(;ω;)", "(๑˃ᴗ˂)ﻭ", "(;∀;)", "(¬‿¬)", "(๑ᵔ⤙ᵔ๑)", "(≧▽≦)", "(◍•ᴗ•◍)", "(^◡^)", "(๑ᵔ⤙ᵔ๑)♡", "(๑´ㅂ`๑)", "(・∀・)", "(•‿•)", "(¬‿¬)✧", "(≧◡≦) ♡", "(๑•̀ㅂ•́)✧", "(ノ◕ヮ◕)ノ"])];
   check("5d. kaomoji unik antar plugin (header semua beda)", dup.length === 25, null);

@@ -171,7 +171,7 @@ export function isVnCaptchaStrict() {
 }
 
 // === START VN CAPTCHA CHALLENGE ===
-// Called from daftarotomatis.js after text captcha is verified
+// Called from autoregister.js after text captcha is verified
 export async function startVnCaptchaChallenge(m, sock, registrationData) {
   try {
     if (!isVnCaptchaEnabled()) return { skip: true };
@@ -351,7 +351,7 @@ export async function verifyVnCaptcha(m, sock) {
 
         // Complete registration after VN passes
         try {
-          const { completeRegistrationAfterVn } = await import("../user/daftarotomatis.js");
+          const { completeRegistrationAfterVn } = await import("../user/autoregister.js");
           if (typeof completeRegistrationAfterVn === "function" && session.registrationData) {
             await completeRegistrationAfterVn(m, sock, session.registrationData);
           }

@@ -4,7 +4,7 @@
 // ✦ UTAK ATIK HARGA CUKUP DI FILE INI — semua fitur auto-update:
 //   .sewa, .premium, .payment (carousel), .buysewa, .buyprem, .sc, .addsewa
 //
-// Dipindah dari: src/lib/sewa.js (sewa) + hardcode PREMIUM_PRICES di
+// Dipindah dari: src/lib/rent.js (sewa) + hardcode PREMIUM_PRICES di
 // plugins/info/premium.js & plugins/main/buyprem.js (premium).
 
 // ═══════════════════════════════════════════

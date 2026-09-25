@@ -41,7 +41,7 @@ const texts = (mk) => mk.sends.map((s) => norm(s.txt)).filter(Boolean);
 // ═══════════════════════════════════════════════════════════════
 w("\n— LELANG CREATE: kartu live countdown + bar —");
 {
-  const lelang = await import(R + "/plugins/group/lelang.js");
+  const lelang = await import(R + "/plugins/group/groupauction.js");
   const mk = mkMock();
   mk.m.text = "create jam tangan | 50000 | 12s";
   const p = lelang.handler(mk.m, { sock: mk.sock, config: { command: { prefix: "." } } });
@@ -89,7 +89,7 @@ w("\n— LELANG CREATE: kartu live countdown + bar —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— LELANG INFO: bar terpakai + ticker aktif ≤24 jam —");
 {
-  const lelang = await import(R + "/plugins/group/lelang.js");
+  const lelang = await import(R + "/plugins/group/groupauction.js");
   const db = getDatabase();
   const all = db.setting("auctions") || {};
   const aid = "TST-INFO1";

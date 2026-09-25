@@ -7,7 +7,7 @@
 // dikasih frame bertema sendiri — biar TIAP pilihan kerja punya
 // animasi unik, gak ada yang generik.
 //
-// Dipakai: plugins/rpg/kerja.js via animProfesi() → rpgScene
+// Dipakai: plugins/rpg/working.js via animProfesi() → rpgScene
 // (morphing message: edit-in-place antar scene, fallback pesan baru).
 
 import { rpgScene } from "./nova-rpg-anim.js";

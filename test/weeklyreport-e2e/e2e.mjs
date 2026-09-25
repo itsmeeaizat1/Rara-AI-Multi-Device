@@ -152,7 +152,7 @@ t("3c. groupanalytics: total pesan > 0 tampil", /total pesan/i.test(gar) && /\d{
 t("3d. groupanalytics: jam paling rame tampil", /jam paling rame/i.test(gar));
 
 // grupdashboard
-const gd = await import(R + "/plugins/group/grupdashboard.js");
+const gd = await import(R + "/plugins/group/groupdashboard.js");
 replies.length = 0;
 await gd.handler(mockM([], "6281111@s.whatsapp.net"), { sock: sockMock, config: { command: { prefix: "." } } });
 const gdr = norm(replies.at(-1) || "");

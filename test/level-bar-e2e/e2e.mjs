@@ -82,7 +82,7 @@ w("\n— .kerja: bar progress Job EXP di kartu hasil —");
 {
   seedRpg({ energy: 100 });
   const mk = mkMock();
-  const { handler } = await import(R + "/plugins/rpg/kerja.js");
+  const { handler } = await import(R + "/plugins/rpg/working.js");
   mk.m.args = ["penebang"];
   await handler(mk.m, { sock: mk.sock, config });
   const out = texts(mk);

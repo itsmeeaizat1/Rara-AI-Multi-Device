@@ -18,7 +18,7 @@ await initDatabase("/tmp/berita-e2e-db/nova.json");
 const db = getDatabase();
 
 const lib = await import(R + "/src/lib/nova-berita-notifier.js");
-const { config, handler } = await import(R + "/plugins/berita/beritanotify.js");
+const { config, handler } = await import(R + "/plugins/berita/newsnotify.js");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const { setAutoTargetConfig, getAutoTargetConfig } = await import(R + "/src/lib/nova-auto-target.js");
 const low = (s) => fromSC(norm(s));

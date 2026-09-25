@@ -13,7 +13,7 @@
  * dan gambar model ini TIDAK punya opsi "simpan ke galeri" di WhatsApp
  * (cuma link-preview, bukan attachment asli).
  *
- * Pattern PROVEN untuk tombol (dipakai di plugins/group/cekidgc.js):
+ * Pattern PROVEN untuk tombol (dipakai di plugins/group/checkidgc.js):
  * - contextInfo diletakkan LANGSUNG di dalam interactiveMessage (bukan di
  *   messageContextInfo.contextInfo) via proto.Message.InteractiveMessage.fromObject().
  * - externalAdReply ditaruh di contextInfo YANG SAMA (proto InteractiveMessage

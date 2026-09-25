@@ -187,7 +187,7 @@ export async function buildMenuInfo(m, ctx = {}) {
 
   // ── Rating bot (request owner 19 Sep: "rating 4.5/5.0 total rating dr user
   // yg beri rating tersimpan di db biar g ilang") — sumber db.data.penilaian
-  // yang dipersist plugin penilaian.js (.penilaian), bukan angka statis ──
+  // yang dipersist plugin grading.js (.penilaian), bukan angka statis ──
   let ratingText = "-/5.0 (belum ada)";
   try {
     const list = Array.isArray(db?.data?.penilaian) ? db.data.penilaian : [];

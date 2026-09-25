@@ -17,7 +17,7 @@ const { initDatabase } = await import(R + "/src/lib/nova-database.js");
 await initDatabase(DB_DIR + "/db.json");
 
 const { handler: absenHandler } = await import(R + "/plugins/group/absen.js");
-const { handler: cekHandler } = await import(R + "/plugins/group/cekabsen.js");
+const { handler: cekHandler } = await import(R + "/plugins/group/checkattendance.js");
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
