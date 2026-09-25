@@ -199,7 +199,7 @@ console.log("— section 5: wiring statis semua pintu agent (owner 25 Sep) —")
   const autoflowJs = src("src/lib/autoflow.js");
   t("5c. .anovaagent rule aichat (AI otomatis): recall + extract", autoflowJs.includes("memoryBlock(getDatabase(), user") && autoflowJs.includes("extractMemories(getDatabase(), user"), null);
   const engineJs = src("src/lib/nova-agent.js");
-  t("5d. engine runAgent nerima opts.memBlock + inject ${mem}", engineJs.includes("memBlock } = {}") && engineJs.includes("${mem}"), null);
+  t("5d. engine runAgent nerima opts.memBlock + inject ${mem}", /export async function runAgent\([^)]*\{[^}]*memBlock/.test(engineJs) && engineJs.includes("${mem}"), null);
   const loopJs = src("plugins/owner/agentloop.js");
   t("5e. agentloop: memoryBlock per-sender + extractor seam", loopJs.includes("memoryBlock(getDatabase(), run.sender") && loopJs.includes("setExtractor"), null);
   const atJs = src("plugins/owner/autotask.js");
