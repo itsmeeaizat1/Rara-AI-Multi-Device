@@ -55,6 +55,7 @@ console.log("— section 1: parseJsonObject & normalizePlan (planner) —");
 console.log("— section 2: loop happy path — 2 putaran lalu satisfied —");
 {
   I.resetSeams();
+I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   sent = []; replies = [];
   I.setPlanner(async () => JSON.stringify({
     goal: "rekomendasi laptop gaming terbaik",
@@ -95,6 +96,7 @@ console.log("— section 2: loop happy path — 2 putaran lalu satisfied —");
 console.log("— section 3: budget habis tanpa satisfied — laporan jujur —");
 {
   I.resetSeams();
+I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   sent = []; replies = [];
   I.setPlanner(async () => JSON.stringify({ goal: "analisis pasar kripto", criteria: "prediksi akurat", steps: ["kumpulkan data"] }));
   I.setRunner(async (p, run, n) => `HASIL ${n + 1}`);
@@ -113,6 +115,7 @@ console.log("— section 3: budget habis tanpa satisfied — laporan jujur —")
 console.log("— section 4: putaran gagal + stop + subcommand —");
 {
   I.resetSeams();
+I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   sent = []; replies = [];
   I.setPlanner(async () => JSON.stringify({ goal: "g", criteria: "c", steps: ["s1", "s2"] }));
   I.setRunner(async (p, run, n) => n === 0 ? null : `HASIL ${n + 1}`);
@@ -138,6 +141,7 @@ console.log("— section 4: putaran gagal + stop + subcommand —");
 
   // ─── stop loop yang masih jalan (critic gak pernah puas, 4 putaran perlu waktu) ───
   I.resetSeams();
+I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   sent = []; replies = [];
   I.setPlanner(async () => JSON.stringify({ goal: "g4", criteria: "c4", steps: ["satu", "dua", "tiga", "empat"] }));
   // runner lambat biar loop masih jalan pas stop
@@ -167,6 +171,7 @@ console.log("— section 4: putaran gagal + stop + subcommand —");
 console.log("— section 5: resume setelah restart + guard dobel —");
 {
   I.resetSeams();
+I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   sent = []; replies = [];
   // loop "running" tersisa l3? buat kondisi manual: set l3 jadi running lagi
   const st = I.store();
@@ -197,6 +202,7 @@ console.log("— section 5: resume setelah restart + guard dobel —");
 console.log("— section 6: usage tanpa argumen —");
 {
   I.resetSeams();
+I.setExtractor(async () => 0); // memory layer: jangan ekstrak live di e2e
   replies = [];
   await handler(mkM({ text: "" }), { sock, db: getDatabase(), config: cfg });
   t("6a. usage novaGuide keluar", replies.length === 1 && /✦/.test(replies[0]), replies[0]?.slice(0, 60));
