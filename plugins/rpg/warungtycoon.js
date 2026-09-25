@@ -21,7 +21,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaGameBox } from "../../src/lib/nova-games.js";
 import { addCash, spendCash, getCash } from "../../src/lib/nova-rpg-service.js";
 import { editFramesAnim, editSceneAnim, sceneTotalMs } from "../../src/lib/nova-anim-runner.js";
-import { bukaCinematic, masakCinematic } from "../../src/lib/libanimationrpg/libwarungrpg.js";
+import { bukaCinematic, masakCinematic } from "../../src/lib/libanimationrpg/libwarungtycoonrpg.js";
 import { getLocalDateObject } from "../../src/lib/nova-time.js";
 
 // ── knob (pattern: !== undefined biar 0 tetap valid) ──
@@ -478,7 +478,7 @@ function isYesterday(last, d) {
 
 const _setRandForTest = (fn) => { _rand = fn || Math.random; };
 export { handler, MENUS, RESEP_RAHASIA, TIERS, _setRandForTest };
-export { _setWarungAnimMsForTest } from "../../src/lib/libanimationrpg/libwarungrpg.js";
+export { _setWarungAnimMsForTest } from "../../src/lib/libanimationrpg/libwarungtycoonrpg.js";
 export default {
   name: ["warungtycoon", "warung", "tycoon"],
   category: "rpg",
