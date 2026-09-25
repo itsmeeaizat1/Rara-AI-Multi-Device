@@ -1,6 +1,6 @@
 // E2E AISUPERAGENT YTSEARCH (fix owner 14 Sep 2026: ".aisuperagent juga
 // di-upgrade — agent itu novaagent sama aisuperagent bermasalah ngbug").
-// .aisuperagent (plugins/ai/agent.js) kena akar bug yang sama kaya
+// .aisuperagent (plugins/ai-agent/agent.js) kena akar bug yang sama kaya
 // .novaagent: request "cairkan/carikan X di youtube" gak pernah ke-detect
 // → planner AI milih tool salah / jawab halusinasi. FIX: (1) logic cari
 // YouTube dipindah ke LIB BERSAMA src/lib/nova-yt-search.js
@@ -11,7 +11,7 @@
 import fs from "node:fs";
 import { initDatabase } from "../../src/lib/nova-database.js";
 import { setAgentDeps, resetAgentDeps } from "../../src/lib/nova-agent.js";
-import { config as agConfig, handler as agHandler } from "../../plugins/ai/agent.js";
+import { config as agConfig, handler as agHandler } from "../../plugins/ai-agent/agent.js";
 import {
   detectYtSearchIntent, searchYoutubeAndSend,
   _setYtSearchDepsForTest, _resetYtSearchDepsForTest,

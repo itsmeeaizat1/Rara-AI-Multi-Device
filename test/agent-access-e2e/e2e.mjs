@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { registerPlugin, loadPlugins } from "../../src/lib/nova-plugins.js";
-import { config as agentCfg, gateCommandAccess } from "../../plugins/ai/agent.js";
+import { config as agentCfg, gateCommandAccess } from "../../plugins/ai-agent/agent.js";
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
@@ -116,7 +116,7 @@ w("\n— 7. gate admin grup —");
 w("\n— 8. wiring sumber —");
 {
   const fsReal = fs;
-  const src = fsReal.readFileSync(new URL("../../plugins/ai/agent.js", import.meta.url), "utf-8");
+  const src = fsReal.readFileSync(new URL("../../plugins/ai-agent/agent.js", import.meta.url), "utf-8");
   check("8a. executor panggil gateCommandAccess sebelum eksekusi", /const denied = await gateCommandAccess\(cmd, m\);\s*\n\s*if \(denied\) return denied;/.test(src), "");
   check("8b. anti-loop: .aisuperagent/.novaagent juga keblok", /cmd === "aisuperagent" \|\| cmd === "novaagent"/.test(src), "");
   const agentSrc = fsReal.readFileSync(new URL("../../src/lib/nova-agent.js", import.meta.url), "utf-8");

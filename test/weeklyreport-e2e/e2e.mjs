@@ -144,7 +144,7 @@ t("3a. topchat: data live (member tercatat + pesan)", /6281111|tono/.test(tcr.to
 t("3b. topchat: total pesan mingguan tampil", /total pesan/i.test(tcr));
 
 // groupanalytics
-const ga = await import(R + "/plugins/future/groupanalytics.js");
+const ga = await import(R + "/plugins/smart/groupanalytics.js");
 replies.length = 0;
 await ga.handler(mockM([], "6281111@s.whatsapp.net"), { sock: sockMock, config: { command: { prefix: "." } } });
 const gar = norm(replies.at(-1) || "");

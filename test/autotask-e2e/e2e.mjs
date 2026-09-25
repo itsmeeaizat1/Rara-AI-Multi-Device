@@ -16,7 +16,7 @@ const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "autotask-e2e-"));
 const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const at = await import(R + "/plugins/owner/autotask.js");
+const at = await import(R + "/plugins/ai-agent/autotask.js");
 const { config: pc, handler } = at;
 const I = at._autotaskInternalsForTest();
 const cfg = { command: { prefix: "." } };

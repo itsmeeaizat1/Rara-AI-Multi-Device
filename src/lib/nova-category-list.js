@@ -41,20 +41,21 @@ const CATEGORY_ORDER = [
   // → PALING AKHIR: panel, vps, main, info, owner
   // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
   // maker → download → group → tools → sisanya → PALING AKHIR admin section.
-  "user", "ai", "ai image", "sticker", "maker", "download", "group", "tools",
-  "browser", "canvas", "convert", "ephoto", "fun", "couple", "confess menfess", "game",
-  "rpg", "rpg couple", "clan", "turnamen",
+  "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "tools",
+  "browser", "canvas", "convert", "fun", "couple", "confess menfess", "game",
+  "rpg", "rpg couple", "clan",
   "search", "stalker", "anime", "jkt48", "airich", "asupan", "cecan", "nsfw",
   "media", "tts", "quotes", "primbon",
   "education", "food", "cek", "berita", "bencana",
-  "islami", "religi", "premium", "future", "utility", "misc", "random", "clean",
-  "store", "market", "jpm", "pushkontak", "kerja", "sekolah", "umum", "date", "primary",
+  "islami", "smart", "utility", "misc", "random",
+  "store", "market", "jpm", "pushkontak",
   // PALING AKHIR (owner): panel, vps, main, info, owner
-  "panel", "vps", "main", "info", "linode", "general", "owner",
+  "panel", "vps", "main", "info", "owner",
 ];
 
 const CATEGORY_EMOJI = {
   ai: "🧠",
+  "ai agent": "🤖", "smart": "✨",
   "ai image": "🎨", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️", browser: "🌐",
   canvas: "🎨", convert: "🔄", maker: "🖌️", ephoto: "📸",
   fun: "🎉", couple: "💕", "confess menfess": "💌", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
@@ -106,9 +107,9 @@ function buildCategoryRows(m, db, prefix = ".") {
 
   let modeExcludeMap = {
     md: ["panel", "pushkontak", "store"],
-    store: ["panel", "pushkontak", "jpm", "ephoto", "cpanel"],
-    pushkontak: ["panel", "store", "jpm", "ephoto", "cpanel"],
-    cpanel: ["pushkontak", "store", "jpm", "ephoto"],
+    store: ["panel", "pushkontak", "jpm", "cpanel"],
+    pushkontak: ["panel", "store", "jpm", "cpanel"],
+    cpanel: ["pushkontak", "store", "jpm"],
   };
   try {
     if (botmodePlugin?.MODES) {

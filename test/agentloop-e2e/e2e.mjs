@@ -17,7 +17,7 @@ const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), "agentloop-e2e-"));
 const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
 await initDatabase(path.join(dbDir, "db"));
 
-const al = await import(R + "/plugins/owner/agentloop.js");
+const al = await import(R + "/plugins/ai-agent/agentloop.js");
 const { config: pc, handler } = al;
 const I = al._agentloopInternalsForTest();
 const cfg = { command: { prefix: "." } };

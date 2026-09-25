@@ -18,7 +18,7 @@ await initDatabase(path.join(dbDir, "db"));
 
 const registry = await import(R + "/src/lib/nova-group-registry.js");
 const novaAgent = await import(R + "/src/lib/nova-agent.js");
-const agentPlugin = await import(R + "/plugins/ai/agent.js");
+const agentPlugin = await import(R + "/plugins/ai-agent/agent.js");
 const aiagentLib = await import(R + "/src/lib/aiagent.js");
 const cfg = { command: { prefix: "." } };
 

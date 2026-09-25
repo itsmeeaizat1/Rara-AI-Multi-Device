@@ -2,7 +2,7 @@
 // ============================================================
 // 🔹 SITE SEARCH ENGINE BERSAMA — dipakai DUA agent:
 //   • .novaagent  (src/lib/aiagent.js — TOOLS.searchsite)
-//   • .aisuperagent (plugins/ai/agent.js — deteksi lokal + tool planner)
+//   • .aisuperagent (plugins/ai-agent/agent.js — deteksi lokal + tool planner)
 // 🔹 Request owner 14 Sep 2026: "cba tes klo disuruh cari kayak carikan
 // aplikasi whatsapp di apkmiror" — tes live nunjukin planner milih tool
 // download (403, salah total) karena gak ada tool buka situs sembarang.

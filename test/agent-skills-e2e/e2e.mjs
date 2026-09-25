@@ -6,7 +6,7 @@ import {
   matchSkills, getSkillBody, skillsBlock, findSkill, listSkills,
   skillCount, _setSkillsIndexForTest, _resetSkillsForTest,
 } from "../../src/lib/nova-askills.js";
-import { config as skillCfg, handler as skillH } from "../../plugins/owner/skill.js";
+import { config as skillCfg, handler as skillH } from "../../plugins/ai-agent/skill.js";
 
 let pass = 0, fail = 0;
 // output menu/reply Nova = smallcaps — asersi wajib lewat fromSC
@@ -140,11 +140,11 @@ w("\n— 7. hook pintu AI —");
   const src = (await import("node:fs")).readFileSync(new URL("../../src/lib/nova-agent.js", import.meta.url), "utf-8");
   check("7b. runAgent nerima skillBlock", /skillBlock \} = \{\}\)/.test(src) || /skillBlock/.test(src), "");
   check("7c. skillBlock di-inject ke prompt (≥3 titik)", (src.match(/\$\{skl\}/g) || []).length >= 3, (src.match(/\$\{skl\}/g) || []).length);
-  const loopSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/owner/agentloop.js", import.meta.url), "utf-8");
+  const loopSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/ai-agent/agentloop.js", import.meta.url), "utf-8");
   check("7d. agentloop panggil skillsBlock(goal)", /skillsBlock\(run\.plan\.goal\)/.test(loopSrc), "");
-  const taskSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/owner/autotask.js", import.meta.url), "utf-8");
+  const taskSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/ai-agent/autotask.js", import.meta.url), "utf-8");
   check("7e. autotask panggil skillsBlock(task)", /skillsBlock\(task\.task\)/.test(taskSrc), "");
-  const aiSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/ai/agent.js", import.meta.url), "utf-8");
+  const aiSrc = (await import("node:fs")).readFileSync(new URL("../../plugins/ai-agent/agent.js", import.meta.url), "utf-8");
   check("7f. novaagent/aisuperagent pass skillBlock(task)", /skillBlock: skillsBlock\(task\)/.test(aiSrc), "");
 }
 
