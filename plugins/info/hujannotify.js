@@ -17,7 +17,7 @@ import {
   getLocation, setLocation, geocodePlace, runRainCheck, rainNowCard,
   setIntervalMenit, setCooldownMenit, setRainSock, syncRainMonitor,
 } from "../../src/lib/nova-rain-notify.js";
-import { novaError, novaGuide, novaSuccess } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, novaGuideV2, novaSuccess } from "../../src/lib/nova-menu-style.js";
 
 // seam buat e2e offline
 const __http = { geocode: null };
@@ -174,12 +174,13 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(
-        "「 ✦ " + pluginConfig.name.toUpperCase() + " — INTERVAL ✦ 」\n\n" +
-        "Cek nowcast sekarang: *tiap " + st.intervalMenit + " menit*\n\n" +
-        "Atur: *.hujannotif interval <menit>* (5–60)\n" +
-        "Contoh: *.hujannotif interval 5* → cek tiap 5 menit (lebih responsif)"
-      );
+      return m.reply(novaGuideV2(pluginConfig.name, {
+        kaomoji: "(´･ω･`)",
+        sapaan: "cek nowcast sekarang tiap " + st.intervalMenit + " menit — mau diatur?",
+        cara: "ketik .hujannotif interval <menit> (5–60)",
+        contoh: ".hujannotif interval 5",
+        note: "makin kecil interval makin responsif nangkep hujan di awal",
+      }));
     }
     const res = setIntervalMenit(val);
     if (!res) return m.reply(novaError(pluginConfig.name, "interval harus 5–60 menit"));
@@ -190,12 +191,13 @@ async function handler(m, { sock, args }) {
     const val = Number(args?.[1]);
     const st = getStatus();
     if (!val) {
-      return m.reply(
-        "「 ✦ " + pluginConfig.name.toUpperCase() + " — COOLDOWN ✦ 」\n\n" +
-        "Anti-spam sekarang: *1 notif maks tiap " + st.cooldownMenit + " menit* per chat\n\n" +
-        "Atur: *.hujannotif cooldown <menit>* (30–720)\n" +
-        "Contoh: *.hujannotif cooldown 60* → boleh notif ulang tiap 1 jam selama hujan"
-      );
+      return m.reply(novaGuideV2(pluginConfig.name, {
+        kaomoji: "(´･ω･`)",
+        sapaan: "anti-spam sekarang 1 notif maks tiap " + st.cooldownMenit + " menit per chat",
+        cara: "ketik .hujannotif cooldown <menit> (30–720)",
+        contoh: ".hujannotif cooldown 60",
+        note: "cooldown jaga gak dobel notif hujan di chat yang sama",
+      }));
     }
     const res = setCooldownMenit(val);
     if (!res) return m.reply(novaError(pluginConfig.name, "cooldown harus 30–720 menit"));
