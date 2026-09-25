@@ -422,6 +422,7 @@ async function main() {
           { name: "BMKG-Cuaca", fn: () => import("./src/lib/nova-bmkg-cuaca-scheduler.js").then(m => m.initCuacaScheduler?.(sock)) },
           { name: "Bencana", fn: () => import("./src/lib/nova-bencana.js").then(m => m.initBencanaMonitor?.(sock)) },
           { name: "WxAlert", fn: () => import("./plugins/bencana/wxalert.js").then(m => m.initWxAlertMonitor?.(sock)) },
+          { name: "Briefing", fn: () => import("./src/lib/nova-briefing.js").then(m => m.initBriefingScheduler?.(sock)) },
           { name: "AnimeNotifier", fn: () => import("./src/lib/nova-auto-anime-notifier.js").then(m => m.initAnimeNotifier?.(sock)) },
           { name: "AutoAnimeWinbu", fn: () => import("./src/lib/nova-auto-anime.js").then(m => m.initAutoStart?.(sock)) },
           { name: "MovieNotifier", fn: () => import("./src/lib/nova-movie-notifier.js").then(m => m.initMovieNotifier?.(sock)) },
