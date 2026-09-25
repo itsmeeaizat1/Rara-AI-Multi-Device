@@ -344,6 +344,53 @@ export async function inboundHandler(sock, m) {
 }
 
 // ═══════════════════════════════════════════════
+// HEALTH CHECK — seksi SALURAN WA buat boot doctor (finalisasi 25 Sep)
+// Satu pintu cek SEMUA modul saluran: resolve channel, autopost, react,
+// reply, autobroadcast event. Format satu-info-per-baris (aturan boot
+// doctor 20 Sep). THROW kalau gak bisa dicek — caller nanggepin jujur.
+// ═══════════════════════════════════════════════
+export async function buildSaluranHealthLines(sock) {
+  const db = getDatabase();
+  const s = ensureHubState(db);
+  const lines = [];
+
+  // resolve saluran utama (nama + follower) — gak nyuruh db, nyuruh WA
+  const ch = await getSaluranChannel(sock);
+  if (ch.ok) {
+    const f = ch.meta?.followers;
+    lines.push("Saluran: " + (ch.meta?.name || config.saluran?.name || ch.jid) + " ✓" +
+      (Number.isFinite(Number(f)) ? " (" + Number(f).toLocaleString("id-ID") + " follower)" : ""));
+  } else {
+    lines.push("Saluran: ⚠ " + (ch.reason || "gak bisa resolve") + " — cek .channelid cek");
+  }
+
+  const a = s.autopost, r = s.react, rp = s.reply;
+  lines.push("Autopost: " + (a.on ? "ON " + (a.jam || "08:00") + " WIB" : "off") +
+    " · topic: " + (a.topic || "default"));
+  if (a.lastError) lines.push("Autopost error terakhir: " + a.lastError);
+  lines.push("Auto-react: " + (r.on ? "ON · " + (r.emojis || []).join("") : "off") +
+    " · cooldown " + (r.cooldownMin || 3) + " mnt");
+  lines.push("Auto-reply: " + (rp.on ? "ON · " + (rp.rules || []).length + " rules" : "off"));
+
+  // autobroadcast event (nova-saluran-broadcast.js — state db.setting saluranNotify_*)
+  let onCount = 0, total = 0;
+  try {
+    const { NOTIFY_EVENTS } = await import("./nova-saluran-broadcast.js");
+    total = Object.keys(NOTIFY_EVENTS).length;
+    for (const k of Object.keys(NOTIFY_EVENTS)) {
+      if (db.setting("saluranNotify_" + k) === true) onCount++;
+    }
+  } catch { /* broadcast lib gak kebaca → tampil jujur tanpa angka event */ }
+  lines.push("Autobroadcast: " + onCount + "/" + total + " event ON");
+
+  const snaps = s.stats?.snapshots || [];
+  if (snaps.length) {
+    lines.push("Analitik: " + snaps.length + " snapshot · follower terakhir " + snaps[snaps.length - 1].count.toLocaleString("id-ID"));
+  }
+  return lines;
+}
+
+// ═══════════════════════════════════════════════
 // SCHEDULER (idempotent — skill 5.4)
 // ═══════════════════════════════════════════════
 let _timer = null;

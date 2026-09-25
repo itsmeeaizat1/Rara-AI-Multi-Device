@@ -1,0 +1,80 @@
+// NOVA AI WHATSAPP BOT — E2E: AUTO BROADCAST SALURAN (finalisasi Saluran WA
+// 25 Sep). Plugin .autobroadcastchannel tadinya GAK punya e2e — bug nyata
+// ketemu pas audit finalisasi: novaBox dipakai 4x tapi GAK pernah diimport
+// → ReferenceError crash di `.autobroadcastchannel all on/off` + toggle event
+// (hanya tampilan status yang jalan). Suite ini maksa jalur-jalur itu.
+import os from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const R = path.resolve(__dirname, "../..");
+process.chdir(R);
+
+let pass = 0, fail = 0;
+function t(name, cond, info) {
+  if (cond) { pass++; console.log("  ✅ " + name); }
+  else { fail++; console.error("  ❌ " + name, info !== undefined ? JSON.stringify(info)?.slice(0, 200) : ""); }
+}
+const section = (x) => console.log("\n— " + x + " —");
+
+const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
+await initDatabase(path.join(os.tmpdir(), "saluran-autobc-e2e-db-" + Date.now()));
+
+const { NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled } = await import(R + "/src/lib/nova-saluran-broadcast.js");
+const db = getDatabase();
+
+// ═══ SECTION 1: plugin .autobroadcastchannel ═══
+section("1. plugin .autobroadcastchannel");
+const plugin = await import(R + "/plugins/owner/autobroadcastchannel.js");
+const sent = [];
+const mkM = (text) => ({
+  text, isOwner: true, prefix: ".", chat: "o@s", sender: "o@s",
+  args: text.slice(1).split(/\s+/).slice(1),
+  react: async () => true,
+  reply: async (x) => { sent.push(String(x)); return true; },
+});
+const run = async (text) => { sent.length = 0; await plugin.handler(mkM(text), { sock: null, config: (await import(R + "/config.js")).default }); return sent.join("\n"); };
+
+// 1a: status tampil semua event (jalur yang GAK kena bug — baseline)
+const outStatus = await run(".autobroadcastchannel");
+t("1a. status tampil daftar event (" + Object.keys(NOTIFY_EVENTS).length + ")", Object.keys(NOTIFY_EVENTS).every((k) => outStatus.includes(k)), outStatus.slice(0, 120));
+
+// 1b: all on — jalur novaBox yang tadinya CRASH (ReferenceError)
+let crashed = false;
+let outAll = "";
+try { outAll = await run(".autobroadcastchannel all on"); } catch (e) { crashed = true; }
+t("1b. all on GAK crash (bug novaBox fixed)", !crashed, { crashed, out: outAll.slice(0, 120) });
+t("1c. all on → semua event kecatat ON", Object.values(getAllNotifyStatus()).every((x) => x.enabled === true));
+t("1d. state db.setting tersimpan (bukan cuma teks)", db.setting("saluranNotify_userBanned") === true);
+
+// 1e: all off
+await run(".autobroadcastchannel all off");
+t("1e. all off → semua event kembali off", Object.values(getAllNotifyStatus()).every((x) => x.enabled === false));
+
+// 1f: toggle per-event
+const outOne = await run(".autobroadcastchannel premiumAdd on");
+t("1f. toggle per-event jalan + jujur", !crashed && db.setting("saluranNotify_premiumAdd") === true, outOne.slice(0, 120));
+await run(".autobroadcastchannel premiumAdd off");
+t("1g. toggle off per-event", db.setting("saluranNotify_premiumAdd") === false);
+
+// 1h: event gak dikenal → pesan error informatif (bukan crash)
+let outBad = "";
+crashed = false;
+try { outBad = await run(".autobroadcastchannel eventHantu on"); } catch (e) { crashed = true; }
+t("1h. event gak dikenal → error jujur, gak crash", !crashed && /tidak ada|event tersedia/i.test(outBad), outBad.slice(0, 120));
+
+// 1i: `all` tanpa on/off → hint format
+crashed = false;
+let outFmt = "";
+try { outFmt = await run(".autobroadcastchannel all"); } catch (e) { crashed = true; }
+t("1i. all tanpa arg → hint format, gak crash", !crashed && /on\/off/i.test(outFmt), outFmt.slice(0, 120));
+
+// ═══ SECTION 2: lib broadcast — toggle + bentuk balasan default ═══
+section("2. lib nova-saluran-broadcast");
+t("2a. default semua event OFF (gak spam tanpa izin owner)", Object.values(getAllNotifyStatus()).every((x) => x.enabled === false));
+t("2b. setNotifyEnabled balikin nilai baru", setNotifyEnabled("userRegister", true) === true && setNotifyEnabled("userRegister", false) === false);
+t("2c. label event manusiawi (bukan key mentah)", getAllNotifyStatus().userRegister.label && getAllNotifyStatus().userRegister.label !== "userRegister", getAllNotifyStatus().userRegister);
+
+console.log("\n===== " + pass + " PASS, " + fail + " FAIL =====");
+process.exitCode = fail > 0 ? 1 : 0;

@@ -174,6 +174,39 @@ w("\n— 7. hook terpasang di connection.js —");
 const connSrc = fs.readFileSync(path.join(REPO, "src/connection.js"), "utf8");
 t("connection.js manggil initBootDoctor pas open", connSrc.includes("nova-boot-doctor.js") && connSrc.includes("initBootDoctor(sock)"), "hook gak ketemu");
 
+w("\n— 8. seksi SALURAN WA (finalisasi 25 Sep) —");
+// 8a: backward compat — buildBootReport TANPA extraLines → gak ada seksi saluran
+const noExtra = norm(mod.buildBootReport(fixture));
+t("8a. tanpa extraLines → laporan polos TANPA seksi saluran", !noExtra.includes("saluran wa"), noExtra.slice(-120));
+// 8b: extraLines → seksi SALURAN WA muncul
+const withExtra = norm(mod.buildBootReport(fixture, ["baris tes saluran"]));
+t("8b. extraLines → seksi 📡 SALURAN WA muncul + baris masuk", withExtra.includes("saluran wa") && withExtra.includes("baris tes saluran"), withExtra.slice(-200));
+// 8c: runAndReport TANPA db init → fallback jujur (boot doctor gak boleh mati)
+fs.rmSync(tmpState, { force: true });
+mod._setBootDoctorSockForTest(null);
+const outSal1 = await mod.runAndReport({ send: false });
+const R1 = norm(outSal1.report);
+t("8c. runAndReport tanpa db → seksi saluran fallback jujur 'gak bisa dicek'", R1.includes("saluran wa") && R1.includes("gak bisa dicek"), R1.slice(-200));
+// 8d: db init + state hub → modul kebaca di laporan
+const { initDatabase, getDatabase } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-database.js")).href);
+await initDatabase(path.join(os.tmpdir(), "bootdoctor-saluran-db-" + Date.now() + ".json"));
+const dbr = getDatabase();
+const { ensureHubState } = await import(pathToFileURL(path.join(REPO, "src/lib/nova-saluran-hub.js")).href);
+const hub = ensureHubState(dbr);
+hub.autopost.on = true; hub.autopost.jam = "09:30"; hub.autopost.topic = "tips bot";
+hub.react.on = true;
+hub.reply.on = true; hub.reply.rules.push({ key: "menu", text: "ketik .menu", hits: 0 });
+dbr.setting("saluranNotify_premiumAdd", true);
+dbr.save?.();
+mod._setBootDoctorSockForTest({ sendMessage: async () => true });
+const outSal2 = await mod.runAndReport({ send: false });
+const R2 = norm(outSal2.report);
+t("8d. autopost ON 09:30 + topic kebaca di laporan", R2.includes("autopost") && R2.includes("09:30") && R2.includes("tips bot"), R2.slice(-300));
+t("8e. auto-react ON kebaca", R2.includes("auto-react") && /on/.test(R2.slice(R2.indexOf("auto-react"), R2.indexOf("auto-react") + 40)), R2.slice(-240));
+t("8f. auto-reply 1 rule kebaca", R2.includes("auto-reply") && R2.includes("1 rule"), R2.slice(-240));
+t("8g. autobroadcast 1/14 event ON kebaca", R2.includes("autobroadcast") && R2.includes("1/14"), R2.slice(-240));
+t("8h. seksi saluran gak ganggu klasifikasi utama (endpoint down tetep ada)", R2.includes("endpoint down"), R2.slice(0, 160));
+
 fs.rmSync(tmpState, { force: true });
 w("\n═══════ BOOT DOCTOR E2E: " + pass + " pass · " + fail + " fail ═══════\n");
 process.exit(fail ? 1 : 0);
