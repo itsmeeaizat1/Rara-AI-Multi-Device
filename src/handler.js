@@ -523,6 +523,18 @@ try {
     }
   }
 
+  // Channel Hub — auto-react & auto-reply post di SALURAN WA utama (fitur no.1
+  // "bot masa depan" 25 Sep; engine src/lib/nova-saluran-hub.js, toggle .channelhub).
+  // NOTE: blok game di bawah skip isNewsletter → hook saluran WAJIB punya blok sendiri.
+  if (m.isNewsletter && !m.isCommand && !m.fromMe) {
+    try {
+      const { inboundHandler } = await import("../src/lib/nova-saluran-hub.js");
+      await inboundHandler(sock, m);
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("saluranhub", e.message);
+    }
+  }
+
   // Game answer handler (non-command reply to game message) — skip in self mode for non-owner
   // Checks all registered game sessions via nova-games + family100
   if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
