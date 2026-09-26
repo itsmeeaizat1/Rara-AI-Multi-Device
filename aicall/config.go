@@ -18,6 +18,9 @@ type Config struct {
 	GrokAPI       string // xAI Grok key (env XAI_API / GROK_API)
 	GrokModel     string // default "grok-3-mini"
 	GroqChatModel string // model chat Groq, default "openai/gpt-oss-20b"
+	AgentURL      string // gateway 9router (otak AI agent bot utama) — OpenAI-compatible
+	AgentKey      string // key gateway 9router (dikirim per-request dari apikeys.json)
+	AgentModel    string // default "ag/gemini-pro-agent"
 	OpenAIAPI     string
 	ElevenAPI     string
 	SystemPrompt  string
@@ -91,10 +94,31 @@ func LoadConfig() *Config {
 	if groqChatModel == "" {
 		groqChatModel = "openai/gpt-oss-20b"
 	}
+
+	// 🔹 GATEWAY 9ROUTER (owner 26 Sep 2026: "kalau key Grok gak dipasang
+	// karena mahal, fallback ke ai biasa — tembak ke ai agent"). OpenAI-
+	// compatible, key + endpoint sama dengan provider tio_* bot utama.
+	agentURL := os.Getenv("ROUTER9_API_URL")
+	if agentURL == "" {
+		agentURL = os.Getenv("TIO_API_URL")
+	}
+	if agentURL == "" {
+		agentURL = "https://9router.cloudku.us.kg/v1/chat/completions"
+	}
+	agentKey := os.Getenv("ROUTER9_API_KEY")
+	if agentKey == "" {
+		agentKey = os.Getenv("TIO_API_KEY")
+	}
+	agentModel := os.Getenv("ROUTER9_MODEL")
+	if agentModel == "" {
+		agentModel = "ag/gemini-pro-agent"
+	}
 	if aiProvider == "" {
 		// urutan otomatis: grok (xAI) → groq → gemini, sesuai key yang ada
 		if grokAPI != "" {
 			aiProvider = "grok"
+		} else if agentKey != "" {
+			aiProvider = "agent" // gateway 9router = otak AI agent bot utama (26 Sep)
 		} else if groqAPI != "" {
 			aiProvider = "groq" // key owner 17 Sep 2026 (gsk_) — Groq super cepat
 		} else {
@@ -185,6 +209,9 @@ func LoadConfig() *Config {
 		GrokAPI:       grokAPI,
 		GrokModel:     grokModel,
 		GroqChatModel: groqChatModel,
+		AgentURL:      agentURL,
+		AgentKey:      agentKey,
+		AgentModel:    agentModel,
 		OpenAIAPI:     openAIAPI,
 		ElevenAPI:     elevenAPI,
 		SystemPrompt:  sysPrompt,
@@ -206,7 +233,10 @@ func LoadConfig() *Config {
 		log.Println("[WARNING] GEMINI_API key is missing in .env! AI chat functionality might fail.")
 	}
 	if AppConfig.AIProvider == "grok" && AppConfig.GrokAPI == "" {
-		log.Println("[WARNING] AI_PROVIDER=grok tapi XAI_API key kosong! AI chat akan fallback ke Groq/Gemini.")
+		log.Println("[WARNING] AI_PROVIDER=grok tapi XAI_API key kosong! AI chat akan fallback ke agent/groq/gemini.")
+	}
+	if AppConfig.AIProvider == "agent" && AppConfig.AgentURL == "" {
+		log.Println("[WARNING] AI_PROVIDER=agent tapi ROUTER9_API_URL kosong! AI chat akan fallback ke groq/gemini.")
 	}
 
 	tempDir := filepath.Join(".", "temp")

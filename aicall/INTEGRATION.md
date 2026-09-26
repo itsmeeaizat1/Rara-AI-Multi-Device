@@ -26,8 +26,9 @@ Owner: ".aicall 628xxx" (chat WA)
         └─ POST http://127.0.0.1:8788/call  (key pusat ikut dikirim)
              └─ Service Go ini (whatsmeow + meowcaller, device ke-2 WA)
                   └─ VOIP call: rekam 6 dtk → Groq Whisper STT
-                     → otak AI jawab (GROK xAI / GROQ / Gemini — rantai
-                       fallback otomatis) → TTS (Edge/Gemini/11labs) → MLow
+                     → otak AI jawab (GROK xAI / AGENT 9router / GROQ /
+                       Gemini — rantai fallback otomatis) → TTS
+                       (Edge/Gemini/11labs) → MLow
 ```
 
 Panggilan MASUK ke nomor bot juga dijawab AI otomatis (hanya nomor di OWNER).
@@ -94,8 +95,13 @@ Matikan auto-run: `touch aicall/.noautostart`. Hasil auto-run terakhir kelihatan
    di nomor khusus. Keputusan di tangan owner.
 2. **Key**: GROQ_API valid baru 17 Sep (gsk_... — otak chat groq + STT
    whisper sekalian, gratis console.groq.com). Otak percakapan urutan
-   otomatis: GROK (xAI, kalau key XAI_API ada) → GROQ → Gemini (opsional).
-   Ganti live dari bot: `.aicall ai grok|groq|gemini`.
+   otomatis (26 Sep, request owner "key Grok mahal gak dipasang, fallback
+   ke ai agent"): GROK (xAI, kalau key XAI_API ada) → **AGENT** (gateway
+   9router cloudku.us.kg — otak AI agent bot utama, persona Aina, key
+   tioApiKey dikirim per-request dari pusat apikeys.json) → GROQ → Gemini
+   (opsional). Ganti live dari bot: `.aicall ai grok|agent|groq|gemini`.
+   Env opsional di aicall/.env: ROUTER9_API_URL (endpoint 9router),
+   ROUTER9_API_KEY, ROUTER9_MODEL (default ag/gemini-pro-agent).
    CATATAN: key xAI Grok diawali `xai-` — JANGAN tertukar dengan key Groq
    (`gsk_...`, itu provider berbeda sama sekali).
 3. TTS `edgetts` 100% gratis tanpa key; kuota Gemini untuk otak percakapan.
