@@ -157,7 +157,7 @@ Command yang paling sering dipakai sehari-hari:
 
 ---
 
-## 🚀 Cara Pakai
+## 🚀 Cara Pemasangan & Persiapan
 
 ### 1. Install & Jalankan
 
