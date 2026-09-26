@@ -167,7 +167,7 @@ Command yang paling sering dipakai sehari-hari:
 git clone https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device.git
 cd Nova-Ai-Whatsapp-Bot-Multi-Device
 npm install
-node index.js
+npm start
 ```
 
 **Pterodactyl Panel:**
@@ -178,13 +178,20 @@ node index.js
 
 ### 2. Sambungkan Nomor Bot
 
-Jalankan dengan flag pairing — kode 8 digit muncul di terminal, masukkan di WhatsApp → Perangkat Tertaut:
+Cukup jalankan `npm start` — kalau nomor bot belum diatur, bot menanyakan sandi pairing dulu, lalu langsung minta nomor bot di terminal. Masukkan nomor, kode 8 digit muncul, lalu buka WhatsApp → Perangkat Tertaut:
 
 ```bash
-node index.js --pairing 6281234567890
+npm start
 ```
 
-Tanpa flag, bot menanyakan nomor langsung di terminal (timeout 3 menit). Scan QR juga tersedia sebagai alternatif.
+Atau langsung sekalian dari awal tanpa ditanya:
+
+```bash
+npm start 6281234567890
+npm start -- --pairing 6281234567890
+```
+
+Tekan enter tanpa mengisi nomor untuk mode QR Code.
 
 ### 3. Mulai Pakai
 

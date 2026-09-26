@@ -288,54 +288,15 @@ async function startConnection(options = {}) {
   // Override nomor pairing tanpa edit src/lib/config/bot-identity.js.
   const cliPairing = normalizePhone(parseCliPairing(process.argv || []));
 
-  const usePairingCode = config.session?.usePairingCode === true || !!cliPairing;
-  const pairingNumber = cliPairing || config.session?.pairingNumber || "";
-
-  const sock = makeWASocket({
-    version,
-    logger,
-    autoFollowNewsletterOnConnect: false, // disable hidden auto-follow to OURIN channel baked into ourin-baileys fork
-    printQRInTerminal:
-      !usePairingCode && (config.session?.printQRInTerminal ?? true),
-    auth: {
-      creds: state.creds,
-      keys: makeCacheableSignalKeyStore(state.keys, logger),
-    },
-    browser: ["Ubuntu", "Chrome", "20.0.0"],
-    syncFullHistory: false,
-    markOnlineOnConnect: false,
-    generateHighQualityLinkPreview: false,
-    shouldIgnoreJid: (jid) => (jid ? jid.includes("meta_ai") : false),
-    getMessage: async (key) => {
-      if (store) {
-        const msg = await store.loadMessage(key.remoteJid, key.id);
-        return msg?.message || undefined;
-      }
-      return undefined;
-    },
-    cachedGroupMetadata: async (jid) => {
-      const cached = groupCache.get(jid);
-      if (cached) return cached;
-      try {
-        const fresh = await sock.groupMetadata(jid);
-        groupCache.set(jid, fresh);
-        return fresh;
-      } catch {
-        return undefined;
-      }
-    },
-    msgRetryCounterCache,
-  });
-
-  store.bind(sock.ev);
-  sock.store = store;
-
-  connectionState.sock = sock;
-  extendSocket(sock);
+  const alreadyRegistered = state.creds.registered === true;
+  const cfgNumberRaw = String(config.session?.pairingNumber || "");
+  const cfgNumber = normalizePhone(cfgNumberRaw);
+  const cfgValid =
+    cfgNumber && !cfgNumberRaw.toLowerCase().includes("x") && cfgNumber.length >= 8;
 
   // === PAIRING PASSWORD PROTECTION ===
   const _sysAuthKey = getAuthKey();
-  if (_sysAuthKey && !sock.authState.creds.registered) {
+  if (_sysAuthKey && !alreadyRegistered) {
     console.log("");
     console.log("「 ✦ PAIRING ✦ 」");
     console.log("");
@@ -399,6 +360,92 @@ async function startConnection(options = {}) {
   }
   // === END PAIRING PASSWORD PROTECTION ===
 
+  // ─── PAIRING INTERAKTIF (rev 26 Sep 2026, request owner: "npm start doang,
+  // abis sandi langsung nanya nomor bot di log, gak hrs node index.js --pairing") ───
+  // Prioritas: CLI arg (npm start 628xxx / -- --pairing 628xxx) → config → prompt interaktif → QR fallback.
+  let usePairingCode = false;
+  let pairingNumber = "";
+
+  if (!alreadyRegistered) {
+    if (cliPairing) {
+      usePairingCode = true;
+      pairingNumber = cliPairing;
+    } else if (config.session?.usePairingCode === true && cfgValid) {
+      usePairingCode = true;
+      pairingNumber = cfgNumber;
+    } else if (!cfgValid) {
+      // Nomor gak ada di mana-mana → nanya langsung di log (kosong = QR)
+      console.log("");
+      console.log("「 ✦ PAIRING ✦ 」");
+      console.log("");
+      console.log("│ 📱 Nomor bot belum diatur");
+      console.log("│ 💡 Masukkan nomor WhatsApp bot, contoh: 6281234567890");
+      console.log("│ 💡 Kosongkan (enter) untuk mode QR Code");
+      console.log("");
+      console.log("");
+      const asked = await askQuestion(
+        colors.chalk.cyan("📱 Masukkan nomor WhatsApp bot: "),
+        180000,
+      );
+      const askedNorm = normalizePhone(asked);
+      if (askedNorm && askedNorm.length >= 8) {
+        usePairingCode = true;
+        pairingNumber = askedNorm;
+      } else {
+        console.log("");
+        console.log("「 ✦ PAIRING ✦ 」");
+        console.log("");
+        console.log("│ 📱 Tanpa nomor → lanjut mode QR Code");
+        console.log("");
+        console.log("");
+      }
+    }
+    // catatan: cfgValid tapi usePairingCode false → tetap mode QR (perilaku lama)
+  }
+
+  const sock = makeWASocket({
+    version,
+    logger,
+    autoFollowNewsletterOnConnect: false, // disable hidden auto-follow to OURIN channel baked into ourin-baileys fork
+    printQRInTerminal:
+      !usePairingCode && (config.session?.printQRInTerminal ?? true),
+    auth: {
+      creds: state.creds,
+      keys: makeCacheableSignalKeyStore(state.keys, logger),
+    },
+    browser: ["Ubuntu", "Chrome", "20.0.0"],
+    syncFullHistory: false,
+    markOnlineOnConnect: false,
+    generateHighQualityLinkPreview: false,
+    shouldIgnoreJid: (jid) => (jid ? jid.includes("meta_ai") : false),
+    getMessage: async (key) => {
+      if (store) {
+        const msg = await store.loadMessage(key.remoteJid, key.id);
+        return msg?.message || undefined;
+      }
+      return undefined;
+    },
+    cachedGroupMetadata: async (jid) => {
+      const cached = groupCache.get(jid);
+      if (cached) return cached;
+      try {
+        const fresh = await sock.groupMetadata(jid);
+        groupCache.set(jid, fresh);
+        return fresh;
+      } catch {
+        return undefined;
+      }
+    },
+    msgRetryCounterCache,
+  });
+
+  store.bind(sock.ev);
+  sock.store = store;
+
+  connectionState.sock = sock;
+  extendSocket(sock);
+
+
   if (usePairingCode && !sock.authState.creds.registered) {
 
     let phoneNumber = pairingNumber;
@@ -415,7 +462,7 @@ async function startConnection(options = {}) {
       console.log("「 ✦ PAIRING ✦ 」");
       console.log("");
       console.log("│ ⚠ Nomor pairing belum diatur (config)");
-      console.log("│ 💡 Tips: `node index.js --pairing 628xxx` biar gak nanya lagi");
+      console.log("│ 💡 Tips: `npm start 628xxx` biar gak nanya lagi");
       console.log("");
       console.log("");
       console.log("");
