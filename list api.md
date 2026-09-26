@@ -1860,6 +1860,35 @@ https://upscayl.org
 14. **.lichess <username>** — Stats catur Lichess
 15. **.chesscom <username>** — Stats catur Chess.com
 
+## 🌐 AltFTool — altftool.com (Gudang Porting Fitur, BARU 26 September 2026)
+
+> **BUKAN API** — direktori **13.947 tool browser client-side** TANPA server (gratis, tanpa akun, tanpa upload file). Semua logika jalan di browser user → gak bisa di-hit via axios; cara pakainya = **PORT NATIVE** (tulis ulang logikanya jadi plugin bot, bukan API call). Owner 26 Sep 2026: "terlalu banyak fiturnya, simpan aja webnya buat bikin fitur yang lain nantinya."
+
+| Aspek | Detail |
+|-------|--------|
+| URL | https://altftool.com/ |
+| Status | ✅ 200 polos (26 Sep 2026, tanpa Cloudflare) |
+| Isi | 13.947 tool · 22 kategori: converter 10.102, productivity 8.261, developer 458, calculators 503, image 76, pdf 39, security 358, education 396, **62 game browser**, 14 Labs experiment |
+| Cara pakai | Riset toolnya di web → port logikanya native ke plugin (pola sama kayak .ftool*/game hasil port) |
+
+### Sudah di-port ke Nova (selesai — jangan dobel)
+- **22 tool** prefix `.ftool*` (plugins/tools/ftool*.js): jwt, textrepeat, slugify, textcount, textfreq, textreverse, roman, rot13, timestamp, uuid, texthex, urlcode, base32, asciitext, numberwords, durasi, striptags, deduplines, sortlines, nato, emojiremove, replace. Nama lama tetap alias. E2E altftools 86/86.
+- **6 game WA teks** (plugins/game/): .dailywordgame (wordle harian deterministik), .game2048, .fourinarow, .slidingpuzzle, .minesweeper (klik pertama aman), .emojiquiz. E2E altfgames 35/35.
+- **4 game HTML** (plugins/html/ + src/htmlgames/): .htmlsnake, .htmltetris, .htmldino, .htmlpong — kategori menu "html". E2E htmlgames 17/17.
+
+### Yang udah ada di bot (SKIP)
+hangman, tictactoe, truthordare, neverhaveiever, guessnumber, suit/RPS, chess, typingrace, diceroll, .cipher (caesar), .biner.
+
+### Kandidat porting berikutnya (kalau diminta owner)
+- **Tool**: validator JSON/CSS/HTML, color picker → hex/konversi warna, perhitungan gizi/kalori, berbagai converter dev.
+- **Game teks layak**: Memory Card (pasangan emoji), Simon Says (urutan emoji), Spin the Bottle (party grup), Bingo (5x5 grup), Nonogram (5x5), Sudoku (input per baris), Ultimate Wheel Spin, Chess Puzzle Trainer.
+- **Game HTML** (dokumen .html): Brick Breaker, Maze Muncher, Space Rocks, Tap Glider, Block Stacker, Merge Blocks, Candy Match 3, Whack-a-Mole, Insect Tracker.
+
+### Pola porting konsisten
+- Tool: prefix `ftool<nama>` sejak awal, novaGuideV2/novaSalahV2, cd 3 dtk, e2e ke test/altftools-e2e.
+- Game teks: cmd utama Inggris, animasi khas beda-beda per game, sesi in-memory + timeout, answerHandler return false kalau input gak valid.
+- Game HTML: category "html", file self-contained di src/htmlgames/, kirim document text/html.
+
 ---
 
-*Updated by Nova AI • 12 September 2026*
+*Updated by Nova AI • 26 September 2026*
