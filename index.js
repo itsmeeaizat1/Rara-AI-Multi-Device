@@ -413,6 +413,7 @@ async function main() {
         const schedulerInits = [
           { name: "PingLog", fn: () => import("./src/lib/nova-pinglog.js").then(m => m.startPingLog?.(sock)) },
           { name: "Optimizer", fn: () => import("./src/lib/nova-optimizer.js").then(m => m.initOptimizerMonitor?.(sock)) },
+          { name: "AutoJoin", fn: () => import("./src/lib/nova-autojoin.js").then(m => m.initAutoJoinScheduler?.(sock)) },
           { name: "AnonChat", fn: () => import("./src/lib/nova-anonchat.js").then(m => m.initAnonChatSweeper?.(sock)) },
           { name: "ChatibLobby", fn: () => import("./src/lib/nova-chatib-lobby.js").then(m => m.initChatibLobbySweeper?.(sock)) },
           { name: "AutoJPM", fn: () => import("./src/lib/nova-auto-jpm.js").then(m => m.initAutoJpmScheduler?.(sock)) },
