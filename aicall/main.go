@@ -53,6 +53,34 @@ var (
 	activeCallPeer string
 )
 
+// contactName — nama PUBLIK user (full/push name dari contacts store
+// whatsmeow). Owner 26 Sep: "AI sebutkan nama penelponnya siapa klo nama
+// user publik" buat pesan sibuk. Kosong kalau gak ketemu → pesan tetap
+// generik "pengguna lain" (nama gak dipakai kalau emang gak publik).
+func contactName(number string) string {
+	cli := waClientRef
+	if cli == nil || cli.Store == nil || cli.Store.Contacts == nil {
+		return ""
+	}
+	jid, err := types.ParseJID(strings.TrimSpace(number) + "@s.whatsapp.net")
+	if err != nil {
+		return ""
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
+	defer cancel()
+	ci, err := cli.Store.Contacts.GetContact(ctx, jid)
+	if err != nil || !ci.Found {
+		return ""
+	}
+	for _, n := range []string{ci.FullName, ci.FirstName, ci.PushName, ci.BusinessName} {
+		n = strings.TrimSpace(n)
+		if n != "" {
+			return n
+		}
+	}
+	return ""
+}
+
 func clearActiveCall(peer string) {
 	activeCallMu.Lock()
 	defer activeCallMu.Unlock()
@@ -148,10 +176,15 @@ func main() {
 				return
 			}
 			// ngomong + tutup di goroutine — handler gak keblok (callback
-			// dipakai meowcaller buat event lain juga)
+			// dipakai meowcaller buat event lain juga). Sebut NAMA user
+			// yang lagi telepon kalau publik/tersimpan (owner 26 Sep).
 			go func() {
+				txt := "Maaf, saat ini saya sedang mengobrol dengan pengguna lain. Mohon menunggu telepon berakhir atau silakan coba lagi nanti ya."
+				if nm := contactName(busyWith); nm != "" {
+					txt = "Maaf, saat ini saya sedang bicara dengan " + nm + ". Mohon menunggu telepon berakhir atau silakan coba lagi nanti ya."
+				}
 				sess := NewAICallSession(call)
-				sess.speakText("Maaf, saat ini saya sedang mengobrol dengan pengguna lain. Mohon menunggu telepon berakhir atau silakan coba lagi nanti ya.")
+				sess.speakText(txt)
 				sess.Stop()
 				_ = call.Hangup()
 			}()
