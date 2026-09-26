@@ -43,7 +43,7 @@ async function handler(m) {
     `---\n` +
     `` +
     `\`🎁 Bonus Sewa:\`\n` +
-    `• *Termasuk benefit gratis Premium*\n` +
+    `• *Termasuk benefit gratis Premium (khusus nomor penyewa)*\n` +
     `• Gratis setup & konfigurasi awal\n` +
     `• Support via WhatsApp 24/7\n` +
     `• Garansi kalau bot down (di-restart)\n` +

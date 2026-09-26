@@ -5,6 +5,7 @@ import fs from "fs";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
+import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "renewsewa",
@@ -163,6 +164,10 @@ async function handler(m, { sock }) {
     delete existing._warned1h;
     db.db.write();
 
+    // Auto-extend Premium untuk NOMOR PENYEWA ASLI (addedBy) — bukan yang menjalankan renew (owner)
+    // Kebijakan owner 26 Sep 2026: premium cuma untuk nomor yang menyewa
+    const premiumGrant = grantSewaPremium(existing.addedBy, durationStr);
+
     // Sinkron dengan sistem join/out otomatis: kalau bot sudah keluar
     // (sewa expired → auto-out), coba join lagi via link undangan
     const presence = await ensureBotInGroup(sock, groupId, inviteCode);
@@ -193,6 +198,9 @@ async function handler(m, { sock }) {
     text += `Grup: *${groupName}*\n`;
     text += `Tambahan: *${formatDuration(durationStr)}*\n`;
     text += `Expired baru: *${expiredStr}*\n`;
+    text += `Premium: ${premiumGrant.ok
+      ? `✅ ${premiumGrant.extended ? "diperpanjang" : "gratis"} ${premiumGrant.days} hari utk ${existing.addedBy?.split("@")[0]}`
+      : "❌ gagal (grant error, cek manual)"}\n`;
     if (presence.rejoined) {
       text += `\n✅ Bot sudah keluar sebelumnya — otomatis join ulang ke grup`;
     } else if (!presence.isMember) {

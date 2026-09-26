@@ -4,6 +4,7 @@ import * as timeHelper from "../../src/lib/nova-time.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { notifySewaApproved, notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
+import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -144,6 +145,9 @@ async function handler(m, { sock }) {
     db.db.data.sewa.registrations[regKey].approvedBy = m.sender;
     db.db.write();
 
+    // Auto-grant Premium untuk NOMOR PENYEWA (bukan member/admin grup) — kebijakan owner 26 Sep 2026
+    const premiumGrant = grantSewaPremium(regData.sender, regData.duration, regData.name);
+
     // Try to join group
     const joinResult = await tryJoinGroup(sock, regData.inviteCode, regData.groupId);
 
@@ -156,6 +160,9 @@ async function handler(m, { sock }) {
     ownerText += "Nomor: " + regData.phoneNumber + "\n";
     ownerText += "Durasi: *" + formatDuration(regData.duration) + "*\n";
     ownerText += "Expired: *" + expiredStr + "*\n";
+    ownerText += "Premium: " + (premiumGrant.ok
+      ? "✅ " + (premiumGrant.extended ? "diperpanjang" : "gratis") + " " + premiumGrant.days + " hari utk " + regData.phoneNumber
+      : "❌ gagal (grant error, cek manual)") + "\n";
 
     if (joinResult.joined) {
       ownerText += "\nBot: " + joinResult.reason;
@@ -186,7 +193,11 @@ async function handler(m, { sock }) {
           "SEWA DIAPPROVE!\n\n" +
           "Grup: *" + regData.groupName + "*\n" +
           "Durasi: *" + formatDuration(regData.duration) + "*\n" +
-          "Expired: *" + expiredStr + "*\n\n" +
+          "Expired: *" + expiredStr + "*\n" +
+          (premiumGrant.ok
+            ? "🎁 Bonus: kamu dapat akses *Premium* " + (premiumGrant.extended ? "diperpanjang " : "gratis ") + premiumGrant.days + " hari!\n"
+            : "") +
+          "\n" +
           (joinResult.joined
             ? "Bot sudah join ke grup kamu. Ketik .menu di grup untuk lihat fitur."
             : "Bot gagal join otomatis. Tambahkan bot manual ke grup."),
