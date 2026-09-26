@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,6 +40,53 @@ func (s *AICallSession) Stop() {
 		s.IsActive = false
 		close(s.stopChan)
 	}
+}
+
+// tryVoiceCommand — kirim transkrip ke voice-command bridge bot utama
+// (nova-aicall-bridge.js, POST /voice). Balikin teks yang harus DIUCAPKAN di
+// telepon, atau "" kalau bukan perintah / bridge gak sempat jawab (timeout
+// pendek biar percakapan gak nyendat).
+func (s *AICallSession) tryVoiceCommand(text string) string {
+	baseURL := strings.TrimSpace(os.Getenv("AICALL_BRIDGE_URL"))
+	if baseURL == "" {
+		baseURL = "http://127.0.0.1:8790"
+	}
+	body, err := json.Marshal(map[string]string{
+		"text":   text,
+		"number": s.Call.Peer().String(),
+	})
+	if err != nil {
+		return ""
+	}
+	req, err := http.NewRequest("POST", baseURL+"/voice", bytes.NewReader(body))
+	if err != nil {
+		return ""
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if key := strings.TrimSpace(os.Getenv("AICALL_HTTP_KEY")); key != "" {
+		req.Header.Set("X-Api-Key", key)
+	}
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "" // bridge gak ada / bot mati → ngobrol aja normal
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return ""
+	}
+	var r struct {
+		Type string `json:"type"`
+		Text string `json:"text"`
+		Cmd  string `json:"cmd"`
+	}
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&r); err != nil {
+		return ""
+	}
+	if r.Type == "command" && strings.TrimSpace(r.Text) != "" {
+		return r.Text
+	}
+	return ""
 }
 
 // StartVoiceLoop manages the active AI conversation during a WhatsApp call
@@ -96,6 +147,17 @@ func (s *AICallSession) StartVoiceLoop() {
 		}
 
 		log.Printf("[AI Call] User Said: %q", transcription)
+
+		// 🔹 VOICE COMMAND BRIDGE (owner 26 Sep 2026: "lg telepon ai call
+		// 'halo tolong matikan bot' otomatis respon ke cmd bot off atau
+		// fitur lain") — transkrip dikirim ke bot utama dulu; kalau cocok
+		// perintah suara, bot jalanin command dan kita NYUARAIN konfirmasi.
+		// Gak cocok / bridge gak ada → lanjut percakapan AI normal.
+		if spoken := s.tryVoiceCommand(transcription); spoken != "" {
+			log.Printf("[AI Call] Voice command dijalankan — diucapkan: %q", spoken)
+			s.speakText(spoken)
+			continue
+		}
 
 		log.Printf("[AI Call] Generating AI response with Gemini (%s)...", AppConfig.GeminiModel)
 		aiReply, err := s.Conversation.Chat(transcription)
