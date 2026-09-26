@@ -44,8 +44,10 @@ function mkM(over = {}) {
 
 // ═══════════════════════════════════════════════════════════════
 w("\n— keluarga .cek*: langsung hasil (animasi ▓░ dihapus 14 Sep) —");
-for (const cmd of ["cekganteng", "cekbucin", "cekgabut"]) {
-  const { config, handler } = await import(R + "/plugins/cek/" + cmd + ".js");
+// file di-rename Inggris (check*) — cmd name tetap Indonesia; import pakai filename
+const CEK_FILES = { cekganteng: "checkhandsome", cekbucin: "checklovestruck", cekgabut: "checkboredom" };
+for (const cmd of Object.keys(CEK_FILES)) {
+  const { config, handler } = await import(R + "/plugins/fun/" + CEK_FILES[cmd] + ".js");
   const sock = mockSock();
   const m = mkM({ command: cmd, mentionedJid: ["62801@row"] });
   const t0 = Date.now();
@@ -60,7 +62,7 @@ for (const cmd of ["cekganteng", "cekbucin", "cekgabut"]) {
 }
 {
   // edit gagal → fallback m.reply kartu hasil
-  const { config, handler } = await import(R + "/plugins/cek/checkcrazy.js");
+  const { config, handler } = await import(R + "/plugins/fun/checkcrazy.js");
   const sock = mockSock();
   sock.sendMessage = async () => { throw new Error("gak bisa kirim"); };
   const m = mkM({ command: "cekgila", mentionedJid: [] });
