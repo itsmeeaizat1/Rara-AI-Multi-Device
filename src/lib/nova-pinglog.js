@@ -23,7 +23,6 @@ import path from "path";
 import os from "os";
 import { logger } from "./nova-logger.js";
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
 import config from "../../config.js";
 import { getAuthKey } from "./auth/auth.js";
 
