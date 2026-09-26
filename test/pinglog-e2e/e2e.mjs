@@ -20,7 +20,7 @@ const {
   formatDuration, formatBytes, buildPingLine,
   notePingMessage, notePingError,
   startPingLog, stopPingLog, _pingLogInternalsForTest,
-  scanCodeTree, diffCodeTrees, renderDeteksiFiles,
+  scanCodeTree, diffCodeTrees, renderDeteksiFiles, formatClockLine,
 } = mod;
 
 // ─── 1. formatDuration ───
@@ -165,6 +165,22 @@ t("9e kode utuh default", line9b.includes("🔒 kode ✅"));
   const okLine = printed10.find((x) => x.includes("🔒 kode ✅"));
   t("10f baris ping balik kode ✅", !!okLine, printed10.join(" | "));
   stopPingLog();
+}
+
+// ─── 11. log jam WIB tiap 10 dtk (format owner: "🕒 18:18:23, 07 September 2026") ───
+const jamFix = formatClockLine(new Date("2026-09-07T11:18:23Z")); // 18:18:23 WIB
+t("11a format jam lengkap", jamFix === "🕒 18:18:23, 07 September 2026", jamFix);
+{
+  const logs11 = [];
+  const origLog11 = console.log;
+  console.log = (...a) => logs11.push(a.join(" "));
+  startPingLog(fakeSock, { intervalMs: 30000, clockMs: 40 });
+  await new Promise((r) => setTimeout(r, 130));
+  console.log = origLog11;
+  const jamLines = logs11.filter((x) => /^🕒 \d{2}:\d{2}:\d{2}, \d{2} \w+ \d{4}$/.test(x));
+  t("11b clock ticker jalan ≥2x", jamLines.length >= 2, JSON.stringify(logs11));
+  stopPingLog();
+  t("11c clock ikut berhenti", itl.isClockRunning() === false);
 }
 
 w("");

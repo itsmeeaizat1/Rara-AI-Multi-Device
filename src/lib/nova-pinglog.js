@@ -25,8 +25,10 @@ import { logger } from "./nova-logger.js";
 import { getAuthKey } from "./auth/auth.js";
 
 const DEFAULT_MS = Number(process.env.PINGLOG_MS) > 0 ? Number(process.env.PINGLOG_MS) : 20000;
+const DEFAULT_CLOCK_MS = Number(process.env.PINGCLOCK_MS) > 0 ? Number(process.env.PINGCLOCK_MS) : 10000;
 
 let pingTimer = null;
+let clockTimer = null;
 let pingSock = null;
 let evBound = null;
 const stats = { msgs: 0, errors: 0, lastError: "", waStatus: "open" };
@@ -57,6 +59,18 @@ export function formatBytes(bytes = 0) {
   if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
   if (b < 1024 * 1024 * 1024) return `${(b / (1024 * 1024)).toFixed(0)} MB`;
   return `${(b / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+}
+
+// log jam WIB tiap 10 dtk — format owner: "🕒 18:18:23, 07 September 2026"
+export function formatClockLine(now = new Date()) {
+  const d = now instanceof Date ? now : new Date(now);
+  const jam = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
+  }).format(d); // en-GB → pemisah ":" (id-ID pakai ".")
+  const tanggal = new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta", day: "2-digit", month: "long", year: "numeric",
+  }).format(d); // "07 September 2026"
+  return `🕒 ${jam}, ${tanggal}`;
 }
 
 function clockString(now) {
@@ -310,12 +324,22 @@ export function startPingLog(sock, opts = {}) {
   tick().catch(() => {});
   pingTimer = setInterval(() => tick().catch(() => {}), ms);
   pingTimer.unref?.();
+
+  // log jam WIB tiap 10 dtk (knob PINGCLOCK_MS / PINGCLOCK_OFF)
+  if (process.env.PINGCLOCK_OFF !== "1") {
+    const cms = Number(opts.clockMs) > 0 ? Number(opts.clockMs) : DEFAULT_CLOCK_MS;
+    console.log(formatClockLine());
+    clockTimer = setInterval(() => console.log(formatClockLine()), cms);
+    clockTimer.unref?.();
+  }
   return { started: true, intervalMs: ms };
 }
 
 export function stopPingLog() {
   if (pingTimer) clearInterval(pingTimer);
+  if (clockTimer) clearInterval(clockTimer);
   pingTimer = null;
+  clockTimer = null;
   try {
     if (evBound?.msgs) pingSock?.ev?.off?.("messages.upsert", evBound.msgs);
     if (evBound?.conn) pingSock?.ev?.off?.("connection.update", evBound.conn);
@@ -329,6 +353,7 @@ export function _pingLogInternalsForTest() {
   return {
     stats,
     isRunning: () => !!pingTimer,
+    isClockRunning: () => !!clockTimer,
     currentSock: () => pingSock,
     setWaStatus: (s) => (stats.waStatus = s),
     resetStats: () => {
