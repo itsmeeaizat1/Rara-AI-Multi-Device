@@ -105,8 +105,8 @@ t("5f .index optimizer off → state off", offCard.includes("ᴅɪᴍᴀᴛɪᴋ
 // ram & status & optimize
 const ramCard = await run(["ram"]);
 t("5g .index ram", ramCard.includes("ʀᴀᴍ") && ramCard.includes("ᴍʙ"), ramCard.slice(0, 90));
-const stAll = await run(["status"]);
-t("5h .index status ringkasan", stAll.includes("ᴏᴘᴛɪᴍɪᴢᴇʀ") && stAll.includes("ᴜᴘᴛɪᴍᴇ") || stAll.includes("ᴏᴘᴛɪᴍɪᴢᴇʀ") && stAll.includes("ᴡᴀ"), stAll.slice(0, 90));
+const stRamCard = await run(["status"]);
+t("5h .index status ringkasan", stRamCard.includes("ᴏᴘᴛɪᴍɪᴢᴇʀ") && stRamCard.includes("ᴜᴘᴛɪᴍᴇ") || stRamCard.includes("ᴏᴘᴛɪᴍɪᴢᴇʀ") && stRamCard.includes("ᴡᴀ"), stRamCard.slice(0, 90));
 const optCard = await run(["optimize"]);
 t("5i .index optimize manual", optCard.includes("ᴏᴘᴛɪᴍᴀꜱɪ") && optCard.includes("ᴍʙ"));
 
@@ -185,6 +185,56 @@ const wdWrong = await run(["watchdog", "ngasal"]);
 t("9i sub watchdog asal → kartu salah", wdWrong.includes("ʏᴀʜ ᴋᴀᴋ"));
 conn9.stopWatchdog();
 t("9j cleanup: watchdog dimatiin lagi", conn9.getWatchdogStatus().active === false);
+
+// ─── 10. RAM ALERT (owner 26 Sep: "ya mau defaultnya off") ───
+const pl = await import(R + "/src/lib/nova-pinglog.js");
+const { evaluateRamAlert, setRamAlert, getRamAlertStatus, _setRamMemForTest, _clearRamMemForTest, _setRamAlertOwnerJidForTest, _clearRamAlertOwnerJidForTest, _pingLogInternalsForTest } = pl;
+
+// 10a. unit: logika keputusan
+t("10a default ramalert OFF", getRamAlertStatus().on === false && getRamAlertStatus().thresholdPct === 80);
+t("10b evaluate: off → gak alert", evaluateRamAlert({ on: false, thresholdPct: 80, sysPct: 95 }) === false || evaluateRamAlert({ on: false, thresholdPct: 80, sysPct: 95 }).shouldAlert === false);
+t("10c evaluate: on + RAM 90% ≥ ambang 80% → alert", evaluateRamAlert({ on: true, thresholdPct: 80, lastAlertAt: 0, sysPct: 90, now: 1000000 }).shouldAlert === true);
+t("10d evaluate: RAM 70% < ambang 80% → gak", evaluateRamAlert({ on: true, thresholdPct: 80, lastAlertAt: 0, sysPct: 70, now: 1000000 }).shouldAlert === false);
+t("10e evaluate: cooldown 30 mnt → gak dobel", evaluateRamAlert({ on: true, thresholdPct: 80, lastAlertAt: 1000000, sysPct: 90, now: 1000000 + 29 * 60 * 1000 }).shouldAlert === false);
+t("10f evaluate: lewat cooldown → alert lagi", evaluateRamAlert({ on: true, thresholdPct: 80, lastAlertAt: 1000000, sysPct: 90, now: 1000000 + 31 * 60 * 1000 }).shouldAlert === true);
+
+// 10b. DM flow — alert ke owner via pinglog sock
+const dmSent = [];
+const mockAlertSock = { sendMessage: async (jid, payload) => { dmSent.push({ jid, text: String(payload?.text || "") }); return { key: { id: "x" } }; } };
+_setRamAlertOwnerJidForTest(() => "628000000001@s.whatsapp.net");
+pl.startPingLog(mockAlertSock, { clockMs: 60000 });
+_setRamMemForTest({ total: 1024 * 1024 * 1024, free: 50 * 1024 * 1024 }); // 1 GB, sisa 50 MB → ~95%
+setRamAlert(true, 80);
+const itlRam = _pingLogInternalsForTest();
+await itlRam.runCheckRamAlert(() => {});
+t("10g RAM 95% + alert on → DM owner kekirim", dmSent.length === 1 && dmSent[0].jid === "628000000001@s.whatsapp.net", JSON.stringify(dmSent.map((d) => d.jid)));
+t("10h isi DM: kartu ram tinggi + ambang + waktu", sc(dmSent[0]?.text).includes("ram") && sc(dmSent[0]?.text).includes("tinggi") && sc(dmSent[0]?.text).includes("95%") && sc(dmSent[0]?.text).includes("ambang"), sc(dmSent[0]?.text).slice(0, 160));
+dmSent.length = 0;
+await itlRam.runCheckRamAlert(() => {});
+t("10i cooldown → gak DM dobel", dmSent.length === 0, dmSent.length + "");
+setRamAlert(false);
+dmSent.length = 0;
+await itlRam.runCheckRamAlert(() => {});
+t("10j alert off → RAM tinggi pun gak DM", dmSent.length === 0);
+_clearRamMemForTest();
+_clearRamAlertOwnerJidForTest();
+
+// 10c. lewat plugin .index ramalert
+setRamAlert(false);
+let rp = "";
+rp = await run(["ramalert", "status"]);
+t("10k .index ramalert status → kartu kondisi", sc(rp).includes("status ram alert") && sc(rp).includes("off"), sc(rp).slice(0, 90));
+rp = await run(["ramalert", "on"]);
+t("10l .index ramalert on → aktif + ambang 80", sc(rp).includes("aktif") && getRamAlertStatus().on === true && getRamAlertStatus().thresholdPct === 80, sc(rp).slice(0, 90));
+await run(["ramalert", "on", "85"]);
+t("10m .index ramalert on 85 → ambang 85", getRamAlertStatus().thresholdPct === 85);
+rp = await run(["ramalert", "on", "40"]);
+t("10n ambang di luar 50-99 ditolak (tetap 85)", getRamAlertStatus().thresholdPct === 85 && sc(rp).includes("50-99"), sc(rp).slice(0, 90));
+rp = await run(["ramalert", "off"]);
+t("10o .index ramalert off → mati", sc(rp).includes("dimatikan"), sc(rp).slice(0, 90));
+t("10p state akhir: off (default balik)", getRamAlertStatus().on === false);
+const stRamCard2 = await run(["status"]);
+t("10q .index status nunjukin baris RAM Alert", sc(stRamCard2).includes("ram alert"), sc(stRamCard2).slice(0, 200));
 
 w("");
 w(`===== ${pass} PASS, ${fail} FAIL =====`);
