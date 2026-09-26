@@ -370,10 +370,11 @@ async function startConnection(options = {}) {
     if (cliPairing) {
       usePairingCode = true;
       pairingNumber = cliPairing;
-    } else if (config.session?.usePairingCode === true && cfgValid) {
+    } else if (cfgValid) {
+      // Nomor udah diset di bot identity → LANGSUNG pairing code, gak nanya lagi
       usePairingCode = true;
       pairingNumber = cfgNumber;
-    } else if (!cfgValid) {
+    } else {
       // Nomor gak ada di mana-mana → nanya langsung di log (kosong = QR)
       console.log("");
       console.log("「 ✦ PAIRING ✦ 」");
@@ -400,7 +401,6 @@ async function startConnection(options = {}) {
         console.log("");
       }
     }
-    // catatan: cfgValid tapi usePairingCode false → tetap mode QR (perilaku lama)
   }
 
   const sock = makeWASocket({
