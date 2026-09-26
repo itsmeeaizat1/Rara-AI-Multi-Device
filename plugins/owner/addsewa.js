@@ -7,13 +7,14 @@ import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
+import { grantSewaPremium } from "../../src/lib/nova-sewa-premium.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 const pluginConfig = {
   name: "addsewa",
   alias: ["addsewa"],
   category: "owner",
   description: "Tambah grup ke whitelist sewa + auto join",
-  usage: ".addsewa <link/id grup> <durasi>",
+  usage: ".addsewa <link/id grup> <durasi> [harga] [nomor-penyewa]",
   example: ".addsewa https://chat.whatsapp.com/xxx 30d",
   isOwner: true,
   isPremium: false,
@@ -144,6 +145,8 @@ async function handler(m, { sock }) {
   const input = args[0];
   const durationStr = args[1];
   const customPrice = args[2]; // Optional: owner set harga manual
+  // Optional: nomor PENYEWA (auto-grant Premium untuk nomor ini — kebijakan owner 26 Sep 2026)
+  const renterArg = args[3] ? args[3].replace(/[^0-9]/g, "") : "";
   const expiredAt = parseDuration(durationStr);
 
   if (!expiredAt)
@@ -164,9 +167,14 @@ async function handler(m, { sock }) {
       addedAt: Date.now(),
       expiredAt: isLifetime ? 0 : expiredAt,
       isLifetime,
-      addedBy: m.sender,
+      addedBy: renterArg ? renterArg + "@s.whatsapp.net" : m.sender,
     };
     db.db.write();
+
+    // Auto-grant Premium untuk NOMOR PENYEWA (kalau disebutkan) — bukan member/admin grup
+    const premiumGrant = renterArg
+      ? grantSewaPremium(renterArg + "@s.whatsapp.net", durationStr)
+      : { ok: false, reason: "no-renter" };
 
     const expiredStr = isLifetime
       ? "Permanent"
@@ -188,7 +196,15 @@ async function handler(m, { sock }) {
     text += `Grup: *${groupName}*\n`;
     text += `ID: ${groupId.split("@")[0]}\n`;
     text += `Durasi: *${formatDuration(durationStr)}*\n`;
-    text += `Expired: *${expiredStr}*\n\n`;
+    text += `Expired: *${expiredStr}*\n`;
+    if (premiumGrant.ok) {
+      text += `Premium: ✅ ${premiumGrant.extended ? "diperpanjang" : "gratis"} ${premiumGrant.days} hari utk ${renterArg}\n`;
+    } else if (premiumGrant.reason === "no-renter") {
+      text += `Premium: ⏭️ dilewati (nomor penyewa tidak disebut)\n`;
+    } else {
+      text += `Premium: ❌ gagal (grant error, cek manual)\n`;
+    }
+    text += `\n`;
 
     const joinResult = await tryJoinGroup(sock, inviteCode, groupId);
 
