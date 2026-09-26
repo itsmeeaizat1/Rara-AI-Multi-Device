@@ -11,7 +11,7 @@ const STATE = path.join(process.cwd(), "src", "database", "auto", "linkedinnotif
 try { fs.unlinkSync(STATE); } catch {}
 
 const lib = await import("../../src/lib/nova-linkedin-notify.js");
-const plug = (await import("../../plugins/info/linkedinnotify.js")).default;
+const plug = (await import("../../plugins/loker/linkedinnotify.js")).default;
 
 // ── market lowongan ala actor valig (struktur ASLI live) ──
 const job = (id, over = {}) => ({

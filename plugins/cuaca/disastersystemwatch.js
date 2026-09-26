@@ -57,7 +57,7 @@ const novaGuide = (header, intro, example) =>
 const pluginConfig = {
   name: "disastersystemwatch",
   alias: ["disastersystemwatch", "dsw"], // dsw = singkatan (16 Sep 2026, owner: sama kayak .wsw); rename 15 Sep: alias lama dihapus total
-  category: "bencana",
+  category: "cuaca",
   description: "Langganan auto-alert bencana realtime — per chat, per grup target, atau global DM + semua grup",
   usage: ".dsw <perintah> — ketik .dsw atau .dsw guide untuk panduan lengkap",
   example: ".dsw on\n.dsw lokasi palu\n.dsw atur",

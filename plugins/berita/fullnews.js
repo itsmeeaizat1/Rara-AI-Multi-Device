@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "beritalengkap",
   alias: ["beritalengkap"],
-  category: "info",
+  category: "berita",
   description: "Berita Lengkap — 10 sumber berita Indonesia via Andaraz API",
   usage: ".beritalengkap <source> — Lihat berita\n.beritalengkap list — Lihat semua sumber\n.beritalengkap — Info plugin",
   example: ".beritalengkap detik\n.beritalengkap kompas\n.beritalengkap sindonews",

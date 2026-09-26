@@ -65,7 +65,7 @@ const CATEGORY_ORDER = [
   "rpg", "rpg couple", "clan",
   "search", "stalker", "anime", "jkt48", "airich", "asupan", "cecan", "nsfw",
   "media", "tts", "quotes", "primbon",
-  "education", "food", "cek", "berita", "bencana",
+  "education", "food", "cek", "berita", "cuaca", "loker",
   "islami", "smart", "utility", "misc", "random",
   "store", "market", "jpm", "pushkontak",
   // PALING AKHIR (revisi owner 26 Sep): main & bot sebelum owner, panel setelah owner
@@ -75,6 +75,7 @@ const CATEGORY_ORDER = [
 const CATEGORY_NAMES = {
   ai: "AI", "ai agent": "AI Agent", "smart": "Smart", "ai image": "AI Image", sticker: "Sticker", maker: "Maker",
   vps: "VPS", tts: "TTS", quotes: "Quotes", primbon: "Primbon",
+  berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
   anime: "Anime", nsfw: "NSFW", convert: "Convert", search: "Search",
   stalker: "Stalker", jkt48: "JKT48", airich: "AI Rich", education: "Education", islami: "Islami", browser: "Browser", html: "HTML",
   download: "Download", fun: "Fun", couple: "Couple", "confess menfess": "Confess & Menfess",

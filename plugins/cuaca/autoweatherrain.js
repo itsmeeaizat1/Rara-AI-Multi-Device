@@ -27,7 +27,7 @@ export function _resetHujanHttpForTest() { __http.geocode = null; }
 const pluginConfig = {
   name: "hujannotif",
   alias: ["hujannotify", "rainnotify", "rainalert", "peringatancuaca", "hujan"],
-  category: "info",
+  category: "cuaca",
   description: "Notif otomatis 'akan segera hujan dalam X menit' — nowcast per-menit (OpenWeatherMap One Call 3.0)",
   usage: ".hujannotif <on/off/set/cek/status/interval/cooldown>",
   example: ".hujannotif set Serang\n.hujannotif on\n.hujannotif cek",

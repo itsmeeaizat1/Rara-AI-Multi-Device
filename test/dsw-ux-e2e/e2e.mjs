@@ -15,7 +15,7 @@ function t(label, cond, extra) {
   else { fail++; out("❌ " + label + (extra ? " — " + extra : "")); }
 }
 
-const mod = await import(R + "/plugins/bencana/disastersystemwatch.js");
+const mod = await import(R + "/plugins/cuaca/disastersystemwatch.js");
 const replies = [];
 function mockM(args, { group = false } = {}) {
   return {

@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "jobstreet",
   alias: ["jobstreet"],
-  category: "info",
+  category: "loker",
   description: "JobStreet Indonesia — cari lowongan kerja & lihat detail lowongan",
   usage: ".jobstreet <keyword> — Cari lowongan\n.jobstreet detail <id> — Lihat detail lowongan\n.jobstreet — Info plugin",
   example: ".jobstreet developer\n.jobstreet detail 93291047",
