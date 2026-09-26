@@ -119,8 +119,10 @@ async function checkRamAlert(print = () => {}) {
     if (!pingSock?.sendMessage) return true;
     const ownerJid = _ramAlertOwnerJid();
     if (!ownerJid) return true;
-    const jam = new Date(now).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hour12: false }).replace(":", ".");
-    const tgl = new Date(now).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric" });
+    // rev owner 26 Sep: "jgn sebut wibnya, tambah tgl bln thn" — format
+    // sama dengan jam ping log: "🕒 14.32.15, 26 September 2026"
+    const jam = new Date(now).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).replaceAll(":", ".");
+    const tgl = new Date(now).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "long", year: "numeric" });
     const cpu = getCpuLoadInfo();
     await pingSock.sendMessage(ownerJid, {
       text: claraWrap("index", [
@@ -130,7 +132,7 @@ async function checkRamAlert(print = () => {}) {
         `Ambang: ${st.thresholdPct}%`,
         `RAM bot: ${formatBytes(process.memoryUsage().rss)}`,
         `💻 CPU: load ${cpu.load} (${cpu.cores} core) ≈ ${cpu.pct}%`,
-        `🕒 ${jam} WIB, ${tgl}`,
+        `🕒 ${jam}, ${tgl}`,
         "",
         `Cek proses borak: .index ramalert · optimasi: .index optimize`,
       ]),
