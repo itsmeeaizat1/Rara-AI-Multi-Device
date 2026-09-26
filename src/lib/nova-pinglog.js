@@ -325,14 +325,25 @@ export function startPingLog(sock, opts = {}) {
   pingTimer = setInterval(() => tick().catch(() => {}), ms);
   pingTimer.unref?.();
 
-  // log jam WIB tiap 10 dtk (knob PINGCLOCK_MS / PINGCLOCK_OFF)
-  if (process.env.PINGCLOCK_OFF !== "1") {
-    const cms = Number(opts.clockMs) > 0 ? Number(opts.clockMs) : DEFAULT_CLOCK_MS;
-    console.log(formatClockLine());
-    clockTimer = setInterval(() => console.log(formatClockLine()), cms);
-    clockTimer.unref?.();
-  }
+  // log jam WIB tiap 10 dtk — bisa dikontrol runtime lewat startPingClock/stopPingClock
+  startPingClock({ ms: opts.clockMs });
   return { started: true, intervalMs: ms };
+}
+
+// ─── Clock ticker terpisah (dikontrol runtime via .index jam on/off) ───
+export function startPingClock(opts = {}) {
+  if (process.env.PINGCLOCK_OFF === "1") return { started: false, reason: "PINGCLOCK_OFF" };
+  if (clockTimer) return { started: true, reused: true };
+  const cms = Number(opts.ms) > 0 ? Number(opts.ms) : DEFAULT_CLOCK_MS;
+  console.log(formatClockLine());
+  clockTimer = setInterval(() => console.log(formatClockLine()), cms);
+  clockTimer.unref?.();
+  return { started: true, intervalMs: cms };
+}
+
+export function stopPingClock() {
+  if (clockTimer) clearInterval(clockTimer);
+  clockTimer = null;
 }
 
 export function stopPingLog() {
