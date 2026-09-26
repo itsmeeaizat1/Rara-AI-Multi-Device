@@ -157,6 +157,14 @@ t("7a .index dbsave → tersimpan", saveCard.includes("ᴛᴇʀꜱɪᴍᴘᴀɴ"
 const saveCardAlias = await run(["db"]);
 t("7b alias db → jalan juga", saveCardAlias.includes("ᴛᴇʀꜱɪᴍᴘᴀɴ"));
 
+// ─── 8. .index reconnect (no.4 — tanpa sock nyata → jujur gagal) ───
+const rcCard = await run(["reconnect"]);
+t("8a .index reconnect tanpa koneksi → jujur gagal", rcCard.includes("ɢᴀɢᴀʟ") && rcCard.includes("ᴋᴏɴᴇᴋꜱɪ"), rcCard.slice(0, 100));
+const connMod = await import(R + "/src/connection.js");
+t("8b forceReconnect diekspor connection.js", typeof connMod.forceReconnect === "function");
+const rcRes = connMod.forceReconnect("tes e2e");
+t("8c tanpa socket → {ok:false} aman", rcRes.ok === false && rcRes.reason.includes("belum ada koneksi"), JSON.stringify(rcRes));
+
 w("");
 w(`===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail > 0 ? 1 : 0);

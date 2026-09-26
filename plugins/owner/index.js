@@ -7,7 +7,7 @@
 // · ram · status.
 import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { getConnectionState } from "../../src/connection.js";
+import { getConnectionState, forceReconnect } from "../../src/connection.js";
 import { formatBytes, formatDuration, formatClockLine } from "../../src/lib/nova-pinglog.js";
 import {
   getOptimizerState, setOptimizer, optimizeNow,
@@ -41,6 +41,7 @@ const SUB_LIST = [
   "status — ringkasan semua kontrol",
   "restart — restart bot dari chat (konfirmasi: restart ya)",
   "dbsave — simpan database sekarang (anti rugi data)",
+  "reconnect — putus & nyambung lagi WA tanpa restart proses",
 ];
 
 async function handler(m, { sock, config: botConfig }) {
@@ -185,6 +186,27 @@ async function handler(m, { sock, config: botConfig }) {
         "💾 Database tersimpan sekarang.",
         "",
         "Semua perubahan (user, sesi, config) udah ditulis ke disk.",
+      ]));
+    }
+
+    // ─── reconnect (no.4 — bot beku? putus & nyambung lagi TANPA restart proses) ───
+    if (sub === "reconnect") {
+      const db = getDatabase();
+      try { await db?.save?.(); } catch {}
+      const res = forceReconnect("panel .index reconnect (owner)");
+      if (!res.ok) {
+        return mm.reply(claraWrap("index", [
+          "❌ Reconnect gagal dijalankan.",
+          "",
+          res.reason || "Koneksi belum aktif.",
+          "Kalau bot emang beku parah, pakai " + prefix + "index restart ya.",
+        ]));
+      }
+      return mm.reply(claraWrap("index", [
+        "🔄 Reconnect dijalankan...",
+        "",
+        "Koneksi sengaja diputus (DB udah disimpan), bot nyambung lagi otomatis.",
+        "Tunggu ± 15 dtk — tanpa restart proses, log panel tetap jalan.",
       ]));
     }
 
