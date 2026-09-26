@@ -208,7 +208,8 @@ setRamAlert(true, 80);
 const itlRam = _pingLogInternalsForTest();
 await itlRam.runCheckRamAlert(() => {});
 t("10g RAM 95% + alert on → DM owner kekirim", dmSent.length === 1 && dmSent[0].jid === "628000000001@s.whatsapp.net", JSON.stringify(dmSent.map((d) => d.jid)));
-t("10h isi DM: kartu ram tinggi + ambang + waktu", sc(dmSent[0]?.text).includes("ram") && sc(dmSent[0]?.text).includes("tinggi") && sc(dmSent[0]?.text).includes("95%") && sc(dmSent[0]?.text).includes("ambang"), sc(dmSent[0]?.text).slice(0, 160));
+t("10h isi DM: kartu ram tinggi + ambang + cpu + waktu", sc(dmSent[0]?.text).includes("ram") && sc(dmSent[0]?.text).includes("tinggi") && sc(dmSent[0]?.text).includes("95%") && sc(dmSent[0]?.text).includes("ambang") && sc(dmSent[0]?.text).includes("cpu") && sc(dmSent[0]?.text).includes("core"), sc(dmSent[0]?.text).slice(0, 200));
+t("10h2 getCpuLoadInfo balikin angka valid", pl.getCpuLoadInfo().cores >= 1 && typeof pl.getCpuLoadInfo().load === "number" && typeof pl.getCpuLoadInfo().pct === "number");
 dmSent.length = 0;
 await itlRam.runCheckRamAlert(() => {});
 t("10i cooldown → gak DM dobel", dmSent.length === 0, dmSent.length + "");
@@ -224,6 +225,10 @@ setRamAlert(false);
 let rp = "";
 rp = await run(["ramalert", "status"]);
 t("10k .index ramalert status → kartu kondisi", sc(rp).includes("status ram alert") && sc(rp).includes("off"), sc(rp).slice(0, 90));
+{
+  const rpCpu = await run(["ramalert", "status"]);
+  t("10k2 status ramalert nunjukin cpu", sc(rpCpu).includes("cpu") && sc(rpCpu).includes("core"), sc(rpCpu).slice(0, 220));
+}
 rp = await run(["ramalert", "on"]);
 t("10l .index ramalert on → aktif + ambang 80", sc(rp).includes("aktif") && getRamAlertStatus().on === true && getRamAlertStatus().thresholdPct === 80, sc(rp).slice(0, 90));
 await run(["ramalert", "on", "85"]);
