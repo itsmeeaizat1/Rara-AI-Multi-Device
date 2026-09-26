@@ -12,7 +12,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "fakestory",
   alias: ["fakestory"],
-  category: "canvas",
+  category: "maker",
   description: "Membuat fake Instagram story dengan 2 gambar",
   usage: ".fakestory <nama>",
   example: ".fakestory Misaki (reply 2 gambar)",

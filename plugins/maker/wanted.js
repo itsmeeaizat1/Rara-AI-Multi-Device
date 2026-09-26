@@ -11,7 +11,7 @@ import { novaError, tipText, claraWrap } from "../../src/lib/nova-menu-style.js"
 const pluginConfig = {
   name: "wanted",
   alias: ["wanted"],
-  category: "canvas",
+  category: "maker",
   description: "Buat wanted poster ala Wild West dari gambar (lokal canvas)",
   usage: ".wanted",
   example: ".wanted (kirim/reply gambar)",

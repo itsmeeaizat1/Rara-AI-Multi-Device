@@ -80,7 +80,7 @@ w("\n— kategori html di menu —");
 {
   const allmenu = fs.readFileSync(path.join(root, "plugins/main/allmenu.js"), "utf-8");
   const cat = fs.readFileSync(path.join(root, "plugins/main/allmenucategory.js"), "utf-8");
-  t("  allmenu.js: 'html' di CATEGORY_ORDER", /CATEGORY_ORDER[\s\S]*?"html"/.test(allmenu) && allmenu.includes('"browser", "html", "canvas"'));
+  t("  allmenu.js: 'html' di CATEGORY_ORDER", /CATEGORY_ORDER[\s\S]*?"html"/.test(allmenu) && allmenu.includes('"browser", "html", "convert"'));
   t("  allmenu.js: CATEGORY_NAMES html: HTML", /html:\s*"HTML"/.test(allmenu));
   t("  allmenucategory.js: CATEGORY_NAMES html: HTML", /html:\s*"HTML"/.test(cat));
 }

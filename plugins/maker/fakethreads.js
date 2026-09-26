@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakethreads",
   alias: ["fakethreads", "faketread", "fakethread"],
-  category: "canvas",
+  category: "maker",
   description: "Fake Threads screenshot generator",
   usage: ".fakethreads <username> | <text>",
   example: ".fakethreads aizat | Halo semua, lagi apa?",

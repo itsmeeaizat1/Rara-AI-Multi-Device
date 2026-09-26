@@ -7,7 +7,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "topixel",
   alias: ["topixel"],
-  category: "canvas",
+  category: "maker",
   description: "Ubah foto kamu jadi gambar pixel art yang keren",
   usage: ".topixel [level] (reply/kirim foto)",
   example: ".topixel 30",
