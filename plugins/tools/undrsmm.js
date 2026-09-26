@@ -11,7 +11,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 // Rate: USD per 1000 (auto convert to IDR for display)
 // ============================================================
 
-const DATA_FILE = path.join(process.cwd(), "src", "data", "undrsmm.json");
+const DATA_FILE = path.join(process.cwd(), "src", "database", "panel", "undrsmm.json");
 const UNDR_API = "https://undrctrl.id/api/v2";
 const UNDR_V3 = "https://undr.sh/items/services";
 const USD_RATE = 16500; // Approximate IDR per USD

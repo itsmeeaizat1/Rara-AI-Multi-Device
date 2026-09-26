@@ -17,7 +17,7 @@ const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (
 const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
 const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
 
-const DB_PATH = path.join(process.cwd(), "src", "data", "donasi-db.json");
+const DB_PATH = path.join(process.cwd(), "src", "database", "group", "donasi-db.json");
 const OWNER = "6281234567890@s.whatsapp.net";
 const CHAT = "12036302@g.us";
 

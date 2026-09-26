@@ -4,7 +4,7 @@ const w = (s) => process.stdout.write(s + "\n");
 let pass = 0, fail = 0;
 const check = (name, ok) => { w((ok ? "  ✅ " : "  ❌ ") + name); ok ? pass++ : fail++; };
 
-const STATE = new URL("../../src/data/autobolanotify.json", import.meta.url).pathname;
+const STATE = new URL("../../src/database/auto/autobolanotify.json", import.meta.url).pathname;
 try { fs.unlinkSync(STATE); } catch {}
 
 // ── market ESPN yang bisa digeser dari test ──

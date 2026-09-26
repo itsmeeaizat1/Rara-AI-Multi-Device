@@ -154,7 +154,7 @@ async function sectionGempa() {
     const data = _http?.quake ? await _http.quake() : (await (await httpGet(BMKG_RECENT)).json());
     const list = data?.Infogempa?.gempa;
     if (!Array.isArray(list)) throw new Error("bentuk respon BMKG gak dikenal");
-    const batas = Date.now() - 24 * 60 * 60 * 1000;
+    const batas = (_now ? _now().getTime() : Date.now()) - 24 * 60 * 60 * 1000;
     const recent = list.filter((g) => {
       const t = Date.parse(g?.DateTime || "");
       return Number.isFinite(t) && t >= batas;

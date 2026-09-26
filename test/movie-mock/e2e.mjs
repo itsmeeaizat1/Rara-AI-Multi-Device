@@ -1,5 +1,5 @@
 // E2E movie notifier (feat baru 9 Sep 2026). Jalankan dari cwd dir KOSONG:
-//   mkdir -p /tmp/movie-e2e/src/data && cd /tmp/movie-e2e &&
+//   mkdir -p /tmp/movie-e2e/src/database/auto && cd /tmp/movie-e2e &&
 //   node --experimental-loader <repo>/test/movie-mock/loader.mjs <repo>/test/movie-mock/e2e.mjs
 import fs from "fs";
 import path from "path";
@@ -9,7 +9,7 @@ import path from "path";
 // (bukan process.cwd(), karena test ini dijalankan dari cwd direktori KOSONG).
 import { fileURLToPath } from "node:url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase("/tmp/movie-e2e/db"));
+await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase(path.join(process.cwd(), "db")));
 
 const M = await import(REPO + "/src/lib/nova-movie-notifier.js");
 const JID = "6281234567890@s.whatsapp.net";
@@ -77,7 +77,7 @@ check("3b. diff gak mutasi input", JSON.stringify(diff3) === JSON.stringify([{ i
 M.addTarget(JID);
 sent.length = 0;
 const r4 = await M.runCheck();
-const st4 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "automovienotifier.json"), "utf8"));
+const st4 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "database", "auto", "automovienotifier.json"), "utf8"));
 const aktivasi = sent.find((s) => s.content?.text?.includes("MOVIE NOTIFIER AKTIF"));
 check("4a. first-run: initDone + pesan aktivasi terkirim", st4.initDone === true && !!aktivasi, JSON.stringify(r4).slice(0, 90));
 check("4b. first-run: baseline cache semua tipe (4+2+2 id) + sumber Cinemeta", (st4.caches.trending?.length === 4) && (st4.caches.upcoming?.length === 2) && (st4.caches.nowplaying?.length === 2) && st4.lastSources?.trending === "Cinemeta");
@@ -107,7 +107,7 @@ sent.length = 0;
 const r7 = await M.runCheck();
 const imgs7 = sent.filter((s) => s.content?.image);
 check("7a. cap: cuma 3 card (5 film baru), sisanya masuk cache gak dobel", imgs7.length === 3 && r7.summary.trending === 5);
-const st7 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "automovienotifier.json"), "utf8"));
+const st7 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "database", "auto", "automovienotifier.json"), "utf8"));
 check("7b. semua id baru masuk cache (tt30-tt34) — sisa cap gak dikirim ulang", ["tt30", "tt31", "tt32", "tt33", "tt34"].every((id) => st7.caches.trending.includes(id)));
 
 // ─── 8. tipe off → skip ───
@@ -123,7 +123,7 @@ globalThis.__CINEMETA__["catalog/movie/top.json"] = { metas: [meta("tt30", "C1")
 // ─── 9. force now: sample tanpa nyentuh cache ───
 sent.length = 0;
 await M.runCheck({ force: true, chatId: JID });
-const st9 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "automovienotifier.json"), "utf8"));
+const st9 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "database", "auto", "automovienotifier.json"), "utf8"));
 const dbg9 = sent.map((s) => (s.content?.caption ? "IMG:" + s.content.caption.split("\n")[2] : s.content?.text ? "TXT:" + s.content.text.split("\n")[0] : "?"));
 check("9a. force: sample 2 per tipe terkirim ke chatId", sent.filter((s) => s.content?.image).length === 6, JSON.stringify(dbg9));
 check("9b. force TIDAK nyentuh cache (tt40 tetap gak di-cache)", !st9.caches.trending.includes("tt40"));
@@ -171,7 +171,7 @@ const stL = { caches: { trending: Array.from({ length: 150 }, (_, i) => "tt" + i
 // pushCache gak diexport — cek via behavior: total id di cache gak lewat 100
 globalThis.__CINEMETA__["catalog/movie/top.json"] = { metas: Array.from({ length: 12 }, (_, i) => meta("ttL" + i, "L" + i)) };
 await M.runCheck();
-const st15 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "automovienotifier.json"), "utf8"));
+const st15 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "database", "auto", "automovienotifier.json"), "utf8"));
 check("15a. cache dibatasi ≤ 100 per tipe (ala script 200→100)", (st15.caches.trending || []).length <= 100, `len=${(st15.caches.trending || []).length}`);
 
 console.log(`═══ ${pass} PASS, ${fail} FAIL ═══`);

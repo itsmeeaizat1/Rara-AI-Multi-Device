@@ -11,7 +11,7 @@ import { logger } from "./nova-logger.js";
 import { toSC, bracketBox } from "./nova-menu-style.js";
 import { getTioBase } from "./config/env-loader.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "autoapihealth.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "autoapihealth.json");
 const TZ = "Asia/Jakarta";
 
 let sockInstance = null;

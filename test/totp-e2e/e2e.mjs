@@ -56,10 +56,10 @@ const r4 = lib.removeAccount("user1", "facebook");
 check("19. del lagi → not found", r4.ok === false && r4.error === "not_found");
 
 // 10. state persist
-check("20. state file tersimpan", fs.existsSync("src/data/totp.json"));
+check("20. state file tersimpan", fs.existsSync("src/database/user/totp.json"));
 
 // ────────── handler e2e ──────────
-fs.rmSync("src/data/totp.json");
+fs.rmSync("src/database/user/totp.json");
 // reset state in-memory: re-import module fresh
 const libUrl = new URL("../../src/lib/nova-totp.js", import.meta.url).href + "?t=" + Date.now();
 const lib2 = await import(libUrl);
@@ -105,7 +105,7 @@ await handler(mockM(["paypal"]), { sock: mockSock });
 check("28. akun gak ada → error ramah", /ɢᴀᴋ ᴀᴅᴀ|gak ada/i.test(replies.at(-1)));
 
 // cleanup
-fs.rmSync("src/data/totp.json");
+fs.rmSync("src/database/user/totp.json");
 
 w(`\n${fail === 0 ? "🎉 SEMUA PASS" : "⚠️ ADA FAIL"} — ${pass} pass, ${fail} fail`);
 await new Promise((r) => setTimeout(r, 300));

@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
+import { relocateDatabaseFiles } from "./nova-db-relocate.js";
 import config from "../../config.js";
 import { logger } from "./nova-logger.js";
 const FLUSH_INTERVAL_MS = 5000;
@@ -80,28 +81,39 @@ class Database {
 
   async init() {
     try {
+      // migrasi file DB lama (src/data/main, src/data/*.json runtime) ke
+      // struktur baru — copy-if-missing, idempotent, aman dipanggil tiap boot
+      const moved = relocateDatabaseFiles();
+      if (moved > 0) {
+        logger.success("database", `relokasi DB: ${moved} file dimigrasi ke src/database/<kategori>/`);
+      }
       const { LowSync } = await import("lowdb");
       const { JSONFileSync } = await import("lowdb/node");
 
       this.migrateFromOldPath();
       await this.migrateFromSingleFile();
 
+      // RELOKASI (owner 26 Sep 2026): tiap store lowdb kini punya folder
+      // kategori sendiri di src/database/<kategori>/<store>.json — request
+      // "src/database/sewa/sewa.json". Konten statis (soal game dll) TETAP
+      // di src/data/, cuma DB runtime yang pindah ke src/database/.
       const fileMap = {
-        users: { file: "users.json", defaults: defaultUsers },
-        groups: { file: "groups.json", defaults: defaultGroups },
-        settings: { file: "settings.json", defaults: defaultSettings },
-        stats: { file: "stats.json", defaults: defaultStats },
-        sewa: { file: "sewa.json", defaults: defaultSewa },
-        premium: { file: "premium.json", defaults: [] },
-        owner: { file: "owner.json", defaults: [] },
-        partner: { file: "partner.json", defaults: [] },
+        users: { file: "user/users.json", defaults: defaultUsers },
+        groups: { file: "group/groups.json", defaults: defaultGroups },
+        settings: { file: "settings/settings.json", defaults: defaultSettings },
+        stats: { file: "stats/stats.json", defaults: defaultStats },
+        sewa: { file: "sewa/sewa.json", defaults: defaultSewa },
+        premium: { file: "premium/premium.json", defaults: [] },
+        owner: { file: "owner/owner.json", defaults: [] },
+        partner: { file: "partner/partner.json", defaults: [] },
         // CHAT HISTORY PERSISTEN (owner 21 Sep: histori chat tetap kesimpan
         // saat restart, hilang hanya kalau file databasenya dihapus)
-        chathistory: { file: "chathistory.json", defaults: {} },
+        chathistory: { file: "chathistory/chathistory.json", defaults: {} },
       };
 
       for (const [key, { file, defaults }] of Object.entries(fileMap)) {
         const filePath = path.join(this.dbPath, file);
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
         this.validateJsonFile(filePath, defaults, file);
         const adapter = new JSONFileSync(filePath);
         const store = new LowSync(adapter, defaults);
@@ -300,11 +312,11 @@ class Database {
       const data = JSON.parse(content);
 
       const files = {
-        "users.json": data.users || {},
-        "groups.json": data.groups || {},
-        "settings.json": data.settings || { selfMode: false },
-        "stats.json": data.stats || {},
-        "sewa.json": data.sewa || { enabled: false, groups: {} },
+        "user/users.json": data.users || {},
+        "group/groups.json": data.groups || {},
+        "settings/settings.json": data.settings || { selfMode: false },
+        "stats/stats.json": data.stats || {},
+        "sewa/sewa.json": data.sewa || { enabled: false, groups: {} },
       };
 
       for (const [file, fileData] of Object.entries(files)) {
@@ -780,14 +792,14 @@ class Database {
     fs.mkdirSync(backupFolder, { recursive: true });
 
     const fileMap = {
-      users: { file: "users.json", defaults: defaultUsers },
-      groups: { file: "groups.json", defaults: defaultGroups },
-      settings: { file: "settings.json", defaults: defaultSettings },
-      stats: { file: "stats.json", defaults: defaultStats },
-      sewa: { file: "sewa.json", defaults: defaultSewa },
-      premium: { file: "premium.json", defaults: [] },
-      owner: { file: "owner.json", defaults: [] },
-      partner: { file: "partner.json", defaults: [] },
+      users: { file: "user/users.json", defaults: defaultUsers },
+      groups: { file: "group/groups.json", defaults: defaultGroups },
+      settings: { file: "settings/settings.json", defaults: defaultSettings },
+      stats: { file: "stats/stats.json", defaults: defaultStats },
+      sewa: { file: "sewa/sewa.json", defaults: defaultSewa },
+      premium: { file: "premium/premium.json", defaults: [] },
+      owner: { file: "owner/owner.json", defaults: [] },
+      partner: { file: "partner/partner.json", defaults: [] },
     };
 
     let resetCount = 0;
@@ -1040,6 +1052,8 @@ class Database {
 let dbInstance = null;
 
 async function initDatabase(dbPath) {
+  // fallback default = root DB baru (dipakai kalau caller gak kasih path)
+  if (!dbPath) dbPath = path.join(process.cwd(), "src", "database");
   if (!dbInstance) {
     dbInstance = new Database(dbPath);
     await dbInstance.init();

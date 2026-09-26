@@ -7,7 +7,7 @@ let pass = 0, fail = 0;
 const check = (name, ok, extra) => { w((ok ? "  ✅ " : "  ❌ ") + name + (ok ? "" : " — " + (extra || ""))); ok ? pass++ : fail++; };
 
 // state file dihapus biar fresh tiap run
-const STATE = path.join(process.cwd(), "src", "data", "linkedinnotify.json");
+const STATE = path.join(process.cwd(), "src", "database", "auto", "linkedinnotify.json");
 try { fs.unlinkSync(STATE); } catch {}
 
 const lib = await import("../../src/lib/nova-linkedin-notify.js");

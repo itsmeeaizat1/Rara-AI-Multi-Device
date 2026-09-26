@@ -241,7 +241,7 @@ const ENERGY_PER_COOK = 20;
 const REST_AMOUNT = 50;
 const REST_COOLDOWN_MS = 3 * 60 * 1000;   // fix: script gak ada cooldown istirahat
 
-let STATE_FILE = path.join(process.cwd(), "src", "data", "cooking.json");
+let STATE_FILE = path.join(process.cwd(), "src", "database", "game", "cooking.json");
 let state = null;
 
 /** Seam e2e: arahkan state ke path khusus test. */

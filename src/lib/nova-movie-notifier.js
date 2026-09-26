@@ -26,7 +26,7 @@ import { mergeAutoTargets } from "./nova-auto-target.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "automovienotifier.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "automovienotifier.json");
 
 const IMDBOT_API = "https://imdb.iamidiotareyoutoo.com";
 const CINEMETA_API = "https://v3-cinemeta.strem.io";

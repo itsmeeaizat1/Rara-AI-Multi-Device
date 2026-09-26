@@ -52,7 +52,7 @@ function getCachedPrefixes() {
   let prefixList = [configPrefix];
   let isNoPrefix = false;
   try {
-    const prefixDbPath = join(process.cwd(), "src", "data", "prefix.json");
+    const prefixDbPath = join(process.cwd(), "src", "database", "owner", "prefix.json");
     if (existsSync(prefixDbPath)) {
       const prefixData = JSON.parse(fsc.readFileSync(prefixDbPath, "utf8"));
       prefixList = [configPrefix, ...(prefixData.prefixes || [])];

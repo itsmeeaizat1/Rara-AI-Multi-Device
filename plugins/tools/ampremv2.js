@@ -24,7 +24,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const SESSION_FILE = path.join(process.cwd(), "src", "data", "am-v2-session.json");
+const SESSION_FILE = path.join(process.cwd(), "src", "database", "tools", "am-v2-session.json");
 
 const USER_AGENTS = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",

@@ -4,7 +4,7 @@
 
 import fs from "fs";
 
-const DB = "./src/data/autorole.json";
+const DB = "./src/database/group/autorole.json";
 
 // ===== DEFINISI ROLE =====
 export const ROLES = {

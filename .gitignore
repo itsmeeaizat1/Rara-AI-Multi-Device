@@ -21,21 +21,16 @@ incoming_files/
 scripts/
 
 # Model AI lokal (Swin2SR/Real-ESRGAN) — diunduh otomatis di pemakaian pertama
+# Model AI lokal (Swin2SR/Real-ESRGAN) — diunduh otomatis di pemakaian pertama
 src/data/models/
-src/data/ptero-panels.json
-src/data/ai-sessions.json
-src/data/autoflow-memory.json
-src/data/nova-database.json/
+
+# RELOKASI (owner 26 Sep 2026): SEMUA file DB runtime kini di
+# src/database/<kategori>/ — data user/fitur TIDAK PERNAH di-push ke git.
+# src/data/ cuma boleh berisi konten statis (soal game, kata-kata, dll).
+src/database/
 src/data/remini-mobile-token.json
-src/data/bencana-state.json
 src/data/ai-router-health.json
-src/data/autoanimenotifier.json
-src/data/automovienotifier.json
-src/data/autobolanotify.json
-src/data/linkedinnotify.json
-src/data/cooking.json
-src/data/donasi-db.json
-src/data/bootdoctor.json
+src/data/nova-database.json/
 
 # ── SECRET ──
 # Repo ini PRIVATE (dikonfirmasi owner 24 Sep 2026) → apikeys.json IKUT di-push

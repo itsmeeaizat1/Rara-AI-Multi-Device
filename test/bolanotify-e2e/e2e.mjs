@@ -5,7 +5,7 @@ let pass = 0, fail = 0;
 const check = (name, ok) => { w((ok ? "  ✅ " : "  ❌ ") + name); ok ? pass++ : fail++; };
 
 // state file dihapus biar fresh tiap run
-const STATE = new URL("../../src/data/autobolanotify.json", import.meta.url).pathname;
+const STATE = new URL("../../src/database/auto/autobolanotify.json", import.meta.url).pathname;
 try { fs.unlinkSync(STATE); } catch {}
 
 // ── fake ESPN: pertandingan bisa digeser dari test ──

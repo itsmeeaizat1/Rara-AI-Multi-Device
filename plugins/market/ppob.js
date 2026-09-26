@@ -12,7 +12,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 // Flow: lihat produk -> pesan -> bayar (QRIS/Dana/Bank) -> owner konfirmasi -> proses
 // ============================================================
 
-const DATA_FILE = path.join(process.cwd(), "src", "data", "ppob.json");
+const DATA_FILE = path.join(process.cwd(), "src", "database", "panel", "ppob.json");
 
 // ============================================================
 // PROVIDER ABSTRACTION

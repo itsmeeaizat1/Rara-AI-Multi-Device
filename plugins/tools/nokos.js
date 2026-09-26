@@ -34,7 +34,7 @@ const PROVIDER_NAMES = {
   "0887": "Smartfren", "0888": "Smartfren", "0889": "Smartfren",
 };
 
-const SAVE_FILE = path.join(process.cwd(), "src", "data", "nokos_result.json");
+const SAVE_FILE = path.join(process.cwd(), "src", "database", "panel", "nokos_result.json");
 
 const pluginConfig = {
   name: ["nokos", "nomorkosong", "nomorkos"],

@@ -11,7 +11,7 @@ import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import fs2 from "fs";
-const MOOD_DB = path.join(process.cwd(), "src", "data", "moodtrack.json");
+const MOOD_DB = path.join(process.cwd(), "src", "database", "user", "moodtrack.json");
 
 function loadMoodDB() {
   try {

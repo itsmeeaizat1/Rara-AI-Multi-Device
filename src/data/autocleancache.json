@@ -1,8 +1,0 @@
-{
-  "enabled": false,
-  "intervalMs": 3600000,
-  "intervalStr": "1 hour",
-  "lastClean": null,
-  "totalCleaned": 0,
-  "totalFreedKB": 0
-}
