@@ -6,7 +6,7 @@
   "fixes": "v24.2.0 — EWS gempa tanpa lokasi tetap notif, sumber EWS disatukan, alert cuaca 5 menit, tombol target .switch, boot scheduler anti-skip. Lihat FIXES.md",
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_ENV=development&& node index.js",
+    "start": "node index.js",
     "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint plugins/",
