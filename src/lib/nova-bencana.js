@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ============================================================
-//  nova-bencana.js — Core fitur Bencana Alam (kategori "bencana")
+//  nova-bencana.js — Core fitur Bencana Alam (kategori "cuaca")
 //  Sumber data (semua API resmi, gratis, tanpa key):
 //    🇮🇩 BMKG         — data.bmkg.go.id (gempa Indonesia, shakemap, tsunami)
 //    🛰  GDACS (EU/UN) — www.gdacs.org (banjir, topan, gunung api, kekeringan,

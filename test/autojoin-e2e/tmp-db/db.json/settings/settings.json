@@ -1,0 +1,33 @@
+{
+  "selfMode": true,
+  "autoreactvnEnabled": false,
+  "disabledCommands": [],
+  "disabledCategories": [],
+  "menuThumbVariant": 2,
+  "_lastEnergiDefault": 300,
+  "_lastEnergiPremium": 1000,
+  "autojoinTasks": [
+    {
+      "id": "AJ-WXPO4",
+      "action": "join",
+      "target": "group",
+      "link": "https://chat.whatsapp.com/AbCdEf12345",
+      "code": "AbCdEf12345",
+      "at": 1791008128428,
+      "createdAt": 1790403328428,
+      "owner": "6281111111111@s.whatsapp.net",
+      "status": "pending"
+    },
+    {
+      "id": "AJ-WXPO5",
+      "action": "join",
+      "target": "channel",
+      "link": "https://whatsapp.com/channel/0029VaXyz123",
+      "code": null,
+      "at": 1790405128428,
+      "createdAt": 1790403328428,
+      "owner": "6281111111111@s.whatsapp.net",
+      "status": "pending"
+    }
+  ]
+}

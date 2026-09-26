@@ -2,7 +2,7 @@
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
- * plugins/info/jobhunt.js
+ * plugins/loker/jobhunt.js
  * Command .ayokerja — cek lowongan kerja manual untuk semua user.
  * Sumber: Remotive + Arbeitnow (gratis, tanpa API key).
  */
@@ -17,7 +17,7 @@ import {
 const pluginConfig = {
   name: "ayokerja",
   alias: ["ayokerja"],
-  category: "info",
+  category: "loker",
   description: "Cari lowongan kerja Indonesia (JobStreet, Glints, Kalibrr, Indeed)",
   usage: ".ayokerja [kata kunci]",
   example: ".ayokerja developer",

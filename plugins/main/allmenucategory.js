@@ -38,6 +38,7 @@ const CATEGORY_NAMES = {
   canvas: "Canvas", tools: "Tools", game: "Game", html: "HTML", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+  berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium", bot: "Bot",
@@ -111,7 +112,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // Entertainment
         "media", "tts", "quotes", "primbon",
         // Knowledge
-        "education", "food", "info", "cek", "berita",
+        "education", "food", "info", "cek", "berita", "cuaca", "loker",
         // Religion
         "islami", "religi",
         // System & User

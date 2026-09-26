@@ -10,7 +10,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap } from "../../
 const pluginConfig = {
   name: "cekcuaca",
   alias: ["cekcuaca"],
-  category: "info",
+  category: "cuaca",
   description: "Cek informasi cuaca saat ini",
   usage: ".cekcuaca [nama kota]",
   example: ".cekcuaca Bandung",

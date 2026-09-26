@@ -19,7 +19,7 @@ await initDatabase(path.join(dbDir, "db"));
 const db = getDatabase();
 const { toSC } = await import(R + "/src/lib/nova-menu-style.js");
 
-const plug = await import(R + "/plugins/bencana/wxalert.js");
+const plug = await import(R + "/plugins/cuaca/wxalert.js");
 const handler = plug.handler;
 
 // claraWrap output kecil-semua (smallcaps) — bandingkan pakai toSC biar gak gotcha
@@ -63,7 +63,7 @@ const STORM = (id, name, cls) => ({
 // ══════════════════════════════════════════════════════════════
 w("\n— 1. config + manual query —");
 {
-  check("1. config (name/alias/category bencana)", plug.pluginConfig?.name === "wxalert" && (plug.pluginConfig?.alias || []).includes("ewsv2") && plug.pluginConfig?.category === "bencana");
+  check("1. config (name/alias/category cuaca)", plug.pluginConfig?.name === "wxalert" && (plug.pluginConfig?.alias || []).includes("ewsv2") && plug.pluginConfig?.category === "cuaca");
   plug._setHttpForTest(async (url) => {
     if (url.includes("CurrentStorms")) return { status: 200, data: { activeStorms: [STORM("al062026", "Fay", "TD")] } };
     return NWS_OK([
@@ -215,8 +215,8 @@ w("\n— 5. multi-chat + digest tropis + cap —");
 // ══════════════════════════════════════════════════════════════
 w("\n— 6. anti-dobel dgn fitur lama —");
 {
-  const dis = await import(R + "/plugins/bencana/disastersystemwatch.js");
-  const disaster = await import(R + "/plugins/bencana/disaster.js");
+  const dis = await import(R + "/plugins/cuaca/disastersystemwatch.js");
+  const disaster = await import(R + "/plugins/cuaca/disaster.js");
   const cfgs = [plug.pluginConfig, dis.config || dis.pluginConfig, disaster.config || disaster.pluginConfig];
   const names = cfgs.map((c) => c?.name);
   const aliasSets = cfgs.map((c) => new Set((c?.alias || c?.aliases || []).filter(Boolean)));
@@ -224,8 +224,8 @@ w("\n— 6. anti-dobel dgn fitur lama —");
   for (let i = 0; i < aliasSets.length; i++)
     for (let j = i + 1; j < aliasSets.length; j++)
       for (const a of aliasSets[i]) if (aliasSets[j].has(a)) dupes.push(a);
-  check("6a. nama 3 plugin bencana gak dobel", new Set(names).size === 3, names.join(","));
-  check("6b. gak ada alias dobel antar plugin bencana", dupes.length === 0, dupes.join(","));
+  check("6a. nama 3 plugin cuaca gak dobel", new Set(names).size === 3, names.join(","));
+  check("6b. gak ada alias dobel antar plugin cuaca", dupes.length === 0, dupes.join(","));
 }
 
 w(`\n— summary —\nPASS ${pass} / FAIL ${fail}`);

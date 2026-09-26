@@ -18,7 +18,7 @@ import { novaError, novaSuccess, novaGuide } from "../../src/lib/nova-menu-style
 const pluginConfig = {
   name: "linkedinnotify",
   alias: ["linkedin", "lnjobs", "linkedinjobs", "lokerlinkedin", "autolinkedin", "lnnotify"],
-  category: "info",
+  category: "loker",
   description: "Auto notifikasi lowongan LinkedIn baru (via Apify) — card metadata lengkap per job",
   usage: ".linkedinnotify <on/off/status/now/keyword/lokasi/periode/easyapply/interval>",
   example: ".linkedinnotify on\n.linkedinnotify keyword add frontend\n.linkedinnotify lokasi Jakarta",

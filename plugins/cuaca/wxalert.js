@@ -113,7 +113,7 @@ function markSeen(w, id) {
 const pluginConfig = {
   name: "wxalert",
   alias: ["wxalert", "wxrundown", "nwsalert", "ewsv2", "cuacaalert"],
-  category: "bencana",
+  category: "cuaca",
   description: "Alert cuaca AS realtime (NWS) + siklon tropis (NHC) + langganan auto EWS v2 dengan push per-alert — versi bot wxrundown.com",
   usage: ".wxalert | .wxalert <state> | .wxalert tropis | .wxalert on [nasional|tropis|<state>…] | .wxalert off | .wxalert status | .wxalert tes | .wxalert health",
   example: ".wxalert texas | .wxalert on tropis | .wxalert on fl tx | .wxalert tes",
