@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "blacklistscammer",
   alias: ["blacklistscammer", "scammerblacklist"],
-  category: "owner",
+  category: "group",
   description: "Registry penipu/scammer - catat, cek, pantau nomor penipu",
   usage: ".blacklistscammer <add/cek/list/info/remove/stats>",
   example: ".blacklistscammer add 08123456789 | judi online | screenshot bukti",
