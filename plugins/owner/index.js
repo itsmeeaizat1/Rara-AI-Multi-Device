@@ -8,6 +8,9 @@
 import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getConnectionState, forceReconnect } from "../../src/connection.js";
+import {
+  startWatchdog, stopWatchdog, getWatchdogStatus, setWatchdogInterval,
+} from "../../src/connection.js";
 import { formatBytes, formatDuration, formatClockLine } from "../../src/lib/nova-pinglog.js";
 import {
   getOptimizerState, setOptimizer, optimizeNow,
@@ -42,6 +45,7 @@ const SUB_LIST = [
   "restart — restart bot dari chat (konfirmasi: restart ya)",
   "dbsave — simpan database sekarang (anti rugi data)",
   "reconnect — putus & nyambung lagi WA tanpa restart proses",
+  "watchdog status|on|off|interval <mnt> — kontrol detektor koneksi beku",
 ];
 
 async function handler(m, { sock, config: botConfig }) {
@@ -187,6 +191,42 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Semua perubahan (user, sesi, config) udah ditulis ke disk.",
       ]));
+    }
+
+    // ─── watchdog (no.5 — detektor koneksi beku, kini bisa diatur runtime) ───
+    if (sub === "watchdog") {
+      const act = (arg1 || "").toLowerCase();
+      if (act === "status") {
+        const wd = getWatchdogStatus();
+        return mm.reply(claraWrap("index", [
+          "🐕 Status Watchdog",
+          "",
+          `Kondisi: ${wd.active ? "🟢 aktif" : "🔴 mati"}`,
+          `Batas hening: ${wd.intervalMin} menit`,
+          `Senyap sekarang: ${wd.silentMin} menit`,
+          `Kalau senyap lewat batas, koneksi di-restart otomatis.`,
+        ]));
+      }
+      if (act === "on") {
+        startWatchdog(() => forceReconnect("watchdog aktif"));
+        return mm.reply(claraWrap("index", "✅ Watchdog dinyalakan — bot beku akan di-restart otomatis saat hening lewat batas."));
+      }
+      if (act === "off") {
+        stopWatchdog();
+        return mm.reply(claraWrap("index", "❌ Watchdog dimatikan — koneksi beku gak dideteksi otomatis lagi."));
+      }
+      if (act === "interval") {
+        const res = setWatchdogInterval(m.args[2]);
+        if (!res.ok) {
+          return mm.reply(claraWrap("index", [
+            "❌ Interval gak valid.",
+            "",
+            `Harus 1-1440 menit. Contoh: ${prefix}index watchdog interval 10`,
+          ]));
+        }
+        return mm.reply(claraWrap("index", `✅ Batas watchdog diubah ke ${res.intervalMin} menit — langsung aktif tanpa restart.`));
+      }
+      return mm.reply(novaSalahV2("index", { pesan: "sub watchdog gak dikenal — status / on / off / interval", contoh: prefix + "index watchdog interval 10" }));
     }
 
     // ─── reconnect (no.4 — bot beku? putus & nyambung lagi TANPA restart proses) ───

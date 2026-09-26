@@ -165,6 +165,27 @@ t("8b forceReconnect diekspor connection.js", typeof connMod.forceReconnect === 
 const rcRes = connMod.forceReconnect("tes e2e");
 t("8c tanpa socket → {ok:false} aman", rcRes.ok === false && rcRes.reason.includes("belum ada koneksi"), JSON.stringify(rcRes));
 
+// ─── 9. .index watchdog (no.5 — kontrol runtime detektor beku) ───
+const conn9 = await import(R + "/src/connection.js");
+const wd0 = conn9.getWatchdogStatus();
+t("9a getWatchdogStatus bentuk bener", typeof wd0.active === "boolean" && wd0.intervalMin === 30 && typeof wd0.silentMin === "number", JSON.stringify(wd0));
+t("9b setWatchdogInterval(45)", conn9.setWatchdogInterval(45).ok === true && conn9.getWatchdogStatus().intervalMin === 45);
+t("9c interval gak valid ditolak (0, 5000, abc)", conn9.setWatchdogInterval(0).ok === false && conn9.setWatchdogInterval(5000).ok === false && conn9.setWatchdogInterval("abc").ok === false);
+const wdCard = await run(["watchdog", "status"]);
+t("9d .index watchdog status", wdCard.includes("ᴡᴀᴛᴄʜᴅᴏɢ") && wdCard.includes("45"), wdCard.slice(0, 90));
+const wdSet = await run(["watchdog", "interval", "10"]);
+t("9e .index watchdog interval 10", conn9.getWatchdogStatus().intervalMin === 10 && wdSet.includes("10"), wdSet.slice(0, 90));
+const wdBad = await run(["watchdog", "interval", "0"]);
+t("9f interval gak valid → kartu tolak", wdBad.includes("ɢᴀᴋ ᴠᴀʟɪᴅ"), wdBad.slice(0, 80));
+await run(["watchdog", "off"]);
+t("9g .index watchdog off → berhenti", conn9.getWatchdogStatus().active === false);
+await run(["watchdog", "on"]);
+t("9h .index watchdog on → aktif lagi", conn9.getWatchdogStatus().active === true);
+const wdWrong = await run(["watchdog", "ngasal"]);
+t("9i sub watchdog asal → kartu salah", wdWrong.includes("ʏᴀʜ ᴋᴀᴋ"));
+conn9.stopWatchdog();
+t("9j cleanup: watchdog dimatiin lagi", conn9.getWatchdogStatus().active === false);
+
 w("");
 w(`===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail > 0 ? 1 : 0);

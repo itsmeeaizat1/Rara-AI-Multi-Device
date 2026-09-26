@@ -40,10 +40,13 @@ const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
 const processedMessages = new NodeCache({ stdTTL: 30, useClones: false });
 const msgRetryCounterCache = new NodeCache({ stdTTL: 60, useClones: false });
 
-let lastMessageReceived = Date.now();
-let watchdogTimer = null;
 const WATCHDOG_TIMEOUT = 30 * 60 * 1000;
 const WATCHDOG_CHECK_INTERVAL = 60 * 1000;
+
+let lastMessageReceived = Date.now();
+let watchdogTimer = null;
+// interval watchdog kini bisa diatur runtime via .index watchdog (no.5, 26 Sep 2026)
+let watchdogTimeoutMs = WATCHDOG_TIMEOUT;
 
 function startWatchdog(reconnectFn, options) {
   if (watchdogTimer) clearInterval(watchdogTimer);
@@ -51,7 +54,7 @@ function startWatchdog(reconnectFn, options) {
 
   watchdogTimer = setInterval(() => {
     const silentMs = Date.now() - lastMessageReceived;
-    if (silentMs > WATCHDOG_TIMEOUT && connectionState.isReady) {
+    if (silentMs > watchdogTimeoutMs && connectionState.isReady) {
       console.log("");
       console.log("「 ✦ WATCHDOG ✦ 」");
       console.log("");
@@ -62,7 +65,7 @@ function startWatchdog(reconnectFn, options) {
       // catat di jurnal koneksi biar owner bisa lihat via .connlog bahwa
       // reconnect ini DISSENGAJA watchdog (30 menit hening), bukan error
       try {
-        import("./lib/nova-conn-journal.js").then((j) => j.recordWatchdog(WATCHDOG_TIMEOUT / 60000));
+        import("./lib/nova-conn-journal.js").then((j) => j.recordWatchdog(watchdogTimeoutMs / 60000));
       } catch {}
       connectionState.isReady = false;
       connectionState.isConnected = false;
@@ -75,8 +78,32 @@ function startWatchdog(reconnectFn, options) {
   if (watchdogTimer.unref) watchdogTimer.unref();
   colors.logger.success(
     "watchdog",
-    `aktif, batas waktu ${WATCHDOG_TIMEOUT / 60000} menit`,
+    `aktif, batas waktu ${watchdogTimeoutMs / 60000} menit`,
   );
+}
+
+/**
+ * Status watchdog runtime (.index watchdog status — fitur no.5)
+ */
+function getWatchdogStatus() {
+  return {
+    active: !!watchdogTimer,
+    intervalMin: Math.round(watchdogTimeoutMs / 60000),
+    silentMin: Math.round((Date.now() - lastMessageReceived) / 60000),
+  };
+}
+
+/**
+ * Atur batas waktu watchdog runtime (.index watchdog interval <mnt>)
+ * @param {number|string} minutes - 1-1440 menit
+ */
+function setWatchdogInterval(minutes) {
+  const m = Number(minutes);
+  if (!Number.isFinite(m) || m < 1 || m > 1440) {
+    return { ok: false, reason: "harus 1-1440 menit" };
+  }
+  watchdogTimeoutMs = m * 60000;
+  return { ok: true, intervalMin: m };
 }
 
 function stopWatchdog() {
@@ -2208,4 +2235,8 @@ export {
   getUptime,
   logout,
   forceReconnect,
+  startWatchdog,
+  stopWatchdog,
+  getWatchdogStatus,
+  setWatchdogInterval,
 };
