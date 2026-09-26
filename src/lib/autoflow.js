@@ -8,7 +8,7 @@ import { askAI } from "./aiagent.js";
 import { memoryBlock, extractMemories } from "./nova-memory.js";
 import { getDatabase } from "./nova-database.js";
 
-const DB = "./src/data/autoflow.json";
+const DB = "./src/database/ai/autoflow.json";
 const cooldown = new Map();
 
 // ================= ANTI-LOOP (echo balasan bot sendiri) =================
@@ -34,7 +34,7 @@ let _conn = null; // koneksi otomatis terisi dari pesan pertama
 // Contoh: user 62817366363 bahas ular → riwayatnya gak nyampur sama
 // user 62817366632 yang bahas topik lain di grup yang sama.
 // Disimpan ke file biar konteks gak hilang pas bot restart.
-const MEM_DB = "./src/data/autoflow-memory.json";
+const MEM_DB = "./src/database/ai/autoflow-memory.json";
 const MAX_HISTORY = 24; // 12 pertukaran terakhir (user+AI) per orang — cukup buat konteks
 
 let _memCache = null;

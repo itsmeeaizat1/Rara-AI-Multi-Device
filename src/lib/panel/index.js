@@ -14,7 +14,7 @@ import fs from "fs";
 import path from "path";
 
 export const MAX_PANELS = 100;
-const STORE_PATH = path.join(process.cwd(), "src/data/ptero-panels.json");
+const STORE_PATH = path.join(process.cwd(), "src/database/panel/ptero-panels.json");
 const VALID_FIELDS = ["domain", "apikey", "capikey", "egg", "nestid", "location"];
 
 // ── store JSON ──

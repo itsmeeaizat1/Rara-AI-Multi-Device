@@ -12,7 +12,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 // API: POST https://fmpedia.id/api/prepaid
 // ============================================================
 
-const DATA_FILE = path.join(process.cwd(), "src", "data", "fmpulsa.json");
+const DATA_FILE = path.join(process.cwd(), "src", "database", "panel", "fmpulsa.json");
 const BASE_API = "https://fmpedia.id/api/prepaid";
 
 function loadData() {

@@ -78,7 +78,7 @@ const botConfig = { bot: { name: "Nova-AI" } };
 
 // ── case 6: settings.json baru → botRules null (fallback default) ──
 {
-  const d = JSON.parse(fs.readFileSync(path.join(REPO, "src/data/main/settings.json"), "utf8"));
+  const d = JSON.parse(fs.readFileSync(path.join(REPO, "src/database/settings/settings.json"), "utf8"));
   t("6a. settings.json botRules = null (bukan nilai tes lama)", d.botRules === null, JSON.stringify(d.botRules));
 }
 

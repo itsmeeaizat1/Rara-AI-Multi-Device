@@ -11,7 +11,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 // Rate: USD per 1000 (auto convert to IDR)
 // ============================================================
 
-const DATA_FILE = path.join(process.cwd(), "src", "data", "provsmm.json");
+const DATA_FILE = path.join(process.cwd(), "src", "database", "panel", "provsmm.json");
 const PROV_API = "https://providersmm.id/api/v2";
 const USD_RATE = 16500;
 

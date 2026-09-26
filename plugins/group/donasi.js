@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DB_PATH = path.join(__dirname, "..", "..", "src", "data", "donasi-db.json");
+const DB_PATH = path.join(__dirname, "..", "..", "src", "database", "group", "donasi-db.json");
 const QR_DIR = path.join(__dirname, "..", "..", "assets", "image", "donasi");
 
 // ─── Database ───
