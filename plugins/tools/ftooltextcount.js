@@ -1,11 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .textcount — statistik teks (port altftool.com/tools/all/word-character-counter)
+// .ftooltextcount — statistik teks (port altftool.com/tools/all/word-character-counter)
 import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "textcount", alias: ["textcount", "counttext", "hitungteks"], category: "tools",
-  description: "Hitung kata, karakter, kalimat, paragraf + waktu baca", usage: ".textcount <teks>",
-  example: ".textcount teks apa pun di sini", isOwner: false, isPremium: false,
+  name: "ftooltextcount", alias: ["textcount", "counttext", "hitungteks"], category: "tools",
+  description: "Hitung kata, karakter, kalimat, paragraf + waktu baca", usage: ".ftooltextcount <teks>",
+  example: ".ftooltextcount teks apa pun di sini", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
@@ -15,14 +15,14 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(novaGuideV2("textcount", {
+      return m.reply(novaGuideV2("ftooltextcount", {
         kaomoji: "(◍•ᴗ•◍)",
         sapaan: "teks mau dihitung statistiknya? tempel aja di sini~",
         cara: "ketik teks apa pun setelah command, nanti dihitung otomatis",
-        contoh: `${prefix}textcount sekali membaca itu jauh lebih baik daripada sepuluh kali meniru`,
+        contoh: `${prefix}ftooltextcount sekali membaca itu jauh lebih baik daripada sepuluh kali meniru`,
         note: "hasil: jumlah kata, karakter, kalimat, paragraf, plus estimasi waktu baca",
         spec: ["⏱ 3dtk", "💸 gratis"],
-      }), "textcount");
+      }), "ftooltextcount");
     }
     const chars = [...text].length;
     const noSpace = text.replace(/\s+/g, "").length;

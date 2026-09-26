@@ -1,12 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .uuid — generator UUID v4 (port altftool.com/tools/all/uuid-generator) pakai crypto.randomUUID().
+// .ftooluuid — generator UUID v4 (port altftool.com/tools/all/uuid-generator) pakai crypto.randomUUID().
 import { randomUUID } from "node:crypto";
 import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "uuid", alias: ["uuid", "uuidgen", "guid"], category: "tools",
-  description: "Generate UUID v4 acak", usage: ".uuid [jumlah]",
-  example: ".uuid 5", isOwner: false, isPremium: false,
+  name: "ftooluuid", alias: ["uuid", "uuidgen", "guid"], category: "tools",
+  description: "Generate UUID v4 acak", usage: ".ftooluuid [jumlah]",
+  example: ".ftooluuid 5", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
@@ -22,11 +22,11 @@ async function handler(m, { sock, config: botConfig }) {
       n = parseInt(raw, 10);
       if (!Number.isFinite(n) || n < 1) {
         await m.react("❌");
-        return m.reply(novaSalahV2("uuid", {
+        return m.reply(novaSalahV2("ftooluuid", {
           kaomoji: "(・_・;)",
           pesan: "jumlahnya harus angka lebih dari 0",
-          contoh: `${prefix}uuid 5`,
-        }), "uuid");
+          contoh: `${prefix}ftooluuid 5`,
+        }), "ftooluuid");
       }
       n = Math.min(n, MAX);
     }

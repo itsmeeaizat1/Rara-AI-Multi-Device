@@ -1,12 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .textrepeat — ulang teks berkalang-kali (port altftool.com/tools/all/text-repeater)
+// .ftooltextrepeat — ulang teks berkalang-kali (port altftool.com/tools/all/text-repeater)
 // Cap 20x + 3000 karakter biar gak jadi senjata spam.
 import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "textrepeat", alias: ["textrepeat", "repeattext", "ulangteks"], category: "tools",
-  description: "Ulangi teks sebanyak N kali", usage: ".textrepeat <jumlah>|<teks>",
-  example: ".textrepeat 5|halo dunia", isOwner: false, isPremium: false,
+  name: "ftooltextrepeat", alias: ["textrepeat", "repeattext", "ulangteks"], category: "tools",
+  description: "Ulangi teks sebanyak N kali", usage: ".ftooltextrepeat <jumlah>|<teks>",
+  example: ".ftooltextrepeat 5|halo dunia", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
@@ -19,24 +19,24 @@ async function handler(m, { sock, config: botConfig }) {
     const raw = (m.text || "").trim();
     const pipe = raw.indexOf("|");
     if (!raw || pipe < 1) {
-      return m.reply(novaGuideV2("textrepeat", {
+      return m.reply(novaGuideV2("ftooltextrepeat", {
         kaomoji: "(๑˃ᴗ˂)ﻭ",
         sapaan: "teks mau diulang berkali-kali? tinggal kasih jumlahnya~",
         cara: "ketik jumlah lalu tanda | lalu teksnya",
-        contoh: `${prefix}textrepeat 5|halo dunia`,
+        contoh: `${prefix}ftooltextrepeat 5|halo dunia`,
         note: "maksimal 20x pengulangan, hasil dipotong di 3000 karakter",
         spec: ["⏱ 3dtk", "💸 gratis"],
-      }), "textrepeat");
+      }), "ftooltextrepeat");
     }
     const n = parseInt(raw.slice(0, pipe).trim(), 10);
     const text = raw.slice(pipe + 1).trim();
     if (!Number.isFinite(n) || n < 1 || !text) {
       await m.react("❌");
-      return m.reply(novaSalahV2("textrepeat", {
+      return m.reply(novaSalahV2("ftooltextrepeat", {
         kaomoji: "(・_・;)",
         pesan: "jumlahnya harus angka lebih dari 0 dan teksnya gak boleh kosong",
-        contoh: `${prefix}textrepeat 5|halo dunia`,
-      }), "textrepeat");
+        contoh: `${prefix}ftooltextrepeat 5|halo dunia`,
+      }), "ftooltextrepeat");
     }
     const times = Math.min(n, MAX_REPEAT);
     const full = Array.from({ length: times }, () => text).join("\n");
