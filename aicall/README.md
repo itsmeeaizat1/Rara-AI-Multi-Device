@@ -98,6 +98,8 @@ TTS_PITCH=-1Hz
 TTS_SPEED=1.0
 
 # Fitur Owner — WAJIB diisi (26 Sep: mode publik DIHAPUS, service terkunci penuh jika kosong)
+# AKSES PANGGILAN (26 Sep): OWNER selalu lolos; user PREMIUM boleh telepon
+# (dicek real-time via bridge bot utama POST /acl); lainnya ditolak otomatis.
 OWNER=628123456789,628987654321
 ```
 

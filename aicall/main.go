@@ -103,8 +103,11 @@ func main() {
 		peer := call.Peer().User
 		log.Printf("[Call] Incoming call from %s (Call ID: %s)", call.Peer().String(), call.ID())
 
-		if !IsOwner(peer) {
-			log.Printf("[Call] Rejecting incoming call from non-owner: %s", peer)
+		// Owner 26 Sep: user biasa BOLEH telepon AI asal PREMIUM (ceker
+		// premium via bridge bot utama POST /acl). Non-owner non-premium
+		// ditolak; owner selalu lolos walau bridge mati.
+		if callerACLViaBridge(peer) == "none" {
+			log.Printf("[Call] Rejecting incoming call from non-owner/non-premium: %s", peer)
 			_ = call.Reject()
 			return
 		}
