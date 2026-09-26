@@ -141,9 +141,7 @@ Command yang paling sering dipakai sehari-hari:
 | `.aboutnova` | Info bot & creator |
 | `.owner` / `.donasi` | Kontak owner & dukungan developer |
 
-## 💻 Spesifikasi Panel/Server
-
-### Minimum (1-3 jadibot)
+## 💻 Spesifikasi Server
 
 | Resource | Minimum | Rekomendasi |
 |----------|---------|-------------|
@@ -153,38 +151,18 @@ Command yang paling sering dipakai sehari-hari:
 | Disk | 1 GB | 2 GB |
 | Node.js | v20 | v22 (LTS) |
 
-### Optimal (5-10 jadibot)
-
-| Resource | Minimum | Rekomendasi |
-|----------|---------|-------------|
-| CPU | 200% (2 vCore) | 400% (4 vCore) |
-| RAM | 3 GB | 4 GB |
-| Swap | 2 GB | 4 GB |
-| Disk | 1 GB | 2 GB |
-| Node.js | v20 | v22 (LTS) |
-
-### High Load (15+ jadibot)
-
-| Resource | Minimum | Rekomendasi |
-|----------|---------|-------------|
-| CPU | 200% (2 vCore) | 400% (4 vCore) |
-| RAM | 3 GB | 4 GB |
-| Swap | 2 GB | 4 GB |
-| Disk | 2 GB | 5 GB |
-| Node.js | v22 (LTS) | v22 (LTS) |
-
-### Catatan Resource
-
-- ⚠️ **Minimum mutlak: 3 GB RAM + 2 GB Swap + 200% CPU (2 vCore)** — bot gak akan jalan stabil di bawah ini
-- Ukuran repo: ~24 MB (tanpa node_modules)
-- Ukuran plugins: ~4 MB (1.521 file .js)
-- Dependencies: 50+ package npm
+- ⚠️ **Minimum mutlak: 3 GB RAM + 2 GB Swap + 2 vCore** — di bawah ini bot gak stabil
 - Memory naik seiring jumlah jadibot session aktif
-- Cocok untuk Pterodactyl, VPS, Termux, Docker
+- Cocok jalan di Pterodactyl, VPS, Termux, dan Docker
 
-## 🚀 Cara Instalasi
+---
 
-### Termux / VPS
+## 🚀 Cara Pakai
+
+### 1. Install & Jalankan
+
+**Termux / VPS:**
+
 ```bash
 git clone https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device.git
 cd Nova-Ai-Whatsapp-Bot-Multi-Device
@@ -192,59 +170,52 @@ npm install
 node index.js
 ```
 
-### Pterodactyl Panel
-1. Buat server Node.js (min v20+), startup: `node index.js`
-2. Clone repo: `git clone https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device.git .`
-3. Install: `npm install`
-4. Start: `node index.js`
+**Pterodactyl Panel:**
 
-## ⚙️ Konfigurasi
+1. Buat server Node.js v20+, startup file: `node index.js`
+2. Clone repo ke dalam server, lalu `npm install`
+3. Start server
 
-- **Saluran WA:** `.setsaluran <link>` atau set di config.js
-- **AI API Key:** `.ai-set apiKey <key>` (DM only)
-- **Jadibot mode:** `.setjadibot <all|premium|specific>`
-- **Nav Buttons:** `.menunav on/off`
-- **Moderasi:** `.anti18+ on/off`, `.antijudi on/off`, dst
-- **Toko:** `.toko add/list/del`, `.setpayment add/list`
-- **Auto features:** `.autoweather`, `.autoloker`, `.autosholat`, `.autobmkg`
+### 2. Sambungkan Nomor Bot
 
-## 🔗 Multi Session Jadibot (Banyak Nomor)
+Jalankan dengan flag pairing — kode 8 digit muncul di terminal, masukkan di WhatsApp → Perangkat Tertaut:
 
-Satu bot utama bisa dipakai banyak nomor — tiap nomor jadi bot penuh dengan session terisolasi.
+```bash
+node index.js --pairing 6281234567890
+```
 
-### Komponen Inti
+Tanpa flag, bot menanyakan nomor langsung di terminal (timeout 3 menit). Scan QR juga tersedia sebagai alternatif.
 
-| Komponen | Fungsi |
-|----------|--------|
-| `useMultiFileAuthState(folder)` | Membuat auth state terisolasi per session |
-| `printQRInTerminal: false` | WAJIB, agar bot menggunakan Pairing Code |
-| `await sock.requestPairingCode(number)` | Meminta kode 8 digit untuk nomor target |
-| Map aktif | Menyimpan session yang sedang berjalan untuk dikelola |
+### 3. Mulai Pakai
 
-### Cara Pakai
+- Ketik `.menu` di chat untuk lihat semua fitur, atau `.allmenu` untuk daftar lengkap 51 kategori
+- `.switch` untuk menyalakan/mematikan fitur sesuai kebutuhan grup
+- `.setkey <provider> <key>` atau `.ai-set apiKey <key>` untuk pasang API key tanpa edit kode
+- `.owner` kalau butuh bantuan langsung
+
+### 4. Jadibot — Satu Bot Utama, Banyak Nomor
+
+Tiap nomor bisa jadi bot penuh dengan session terisolasi. Akses diatur via `.setjadibot <all|premium|specific>`.
 
 | Command | Fungsi |
 |---------|--------|
 | `.jadibot` | Jadikan nomor kamu sendiri jadi bot (pairing code) |
-| `.jadibot <nomor>` | Pasang nomor LAIN jadi bot — kode pairing dikirim di chat ini, teruskan ke pemilik nomor |
-| `.jadibot qr` / `.jadibot qr <nomor>` | Mode QR Code |
-| `.stopjadibot` | Hentikan jadibot kamu (session tersimpan) |
-| `.stopjadibot <nomor>` | (Owner) hentikan session nomor lain |
-| `.listjadibotaktif` | Daftar semua session jadibot yang jalan |
+| `.jadibot <nomor>` | Pasang nomor lain jadi bot — kode pairing dikirim di chat, teruskan ke pemilik nomor |
+| `.jadibot qr` | Mode QR Code (juga bisa `qr <nomor>`) |
+| `.stopjadibot` | Hentikan session kamu (session tersimpan) |
+| `.listjadibotaktif` | Daftar semua session yang jalan |
 
-Nomor otomatis dinormalisasi: `08xxx` / `8xxx` → `628xxx`. Session tiap nomor tersimpan di `jadibot_auth/<nomor>/` dan auto-restore saat bot restart. Akses diatur via `.setjadibot <all|premium|specific>`.
+Nomor otomatis dinormalisasi (`08xxx` → `628xxx`), session tersimpan di `jadibot_auth/<nomor>/` dan auto-restore saat bot restart.
 
-### Pairing Bot Utama via CMD
+### 5. Konfigurasi yang Sering Dipakai
 
-Gak perlu edit `bot-identity.js` — langsung dari terminal:
+- **Saluran WA:** `.setsaluran <link>`
+- **Nav Buttons:** `.menunav on/off`
+- **Moderasi:** `.anti18+ on/off`, `.antijudi on/off`, dst
+- **Toko:** `.toko add/list/del`, `.setpayment add/list`
+- **Fitur otomatis:** `.autoweather`, `.autoloker`, `.autosholat`, `.autobmkg`
 
-```bash
-node index.js --pairing 6281234567890   # atau:
-node index.js --pairing=6281234567890
-node index.js 6281234567890             # alias singkat
-```
-
-Tanpa flag, bot akan menanyakan nomor langsung di terminal (timeout 3 menit).
+---
 
 ## About
 
