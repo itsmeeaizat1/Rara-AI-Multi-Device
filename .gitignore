@@ -43,3 +43,7 @@ storage/
 
 # folder DB legacy nova.json/ (era config.database.path lama) — migrasi otomatis ke src/database/<kategori>/, jangan pernah di-git
 nova.json/
+
+# key API jangan pernah ke-commit (security)
+src/lib/apikey/apikeys.json
+src/lib/apikey/apikeys.json.bak
