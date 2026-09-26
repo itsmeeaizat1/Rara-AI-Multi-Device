@@ -137,7 +137,7 @@ section("7. sampel file pindahan ke-import");
 
 const samples = [
   "plugins/couple/couple.js", "plugins/confess-menfess/confess.js", "plugins/cecan/cecankorea.js",
-  "plugins/ai-image/text2img.js", "plugins/nsfw/remove-clothes.js", "plugins/store/buyprem.js",
+  "plugins/ai-image/text2img.js", "plugins/nsfw/remove-clothes.js", "plugins/sewa-premium/buyprem.js",
   "plugins/sewa-premium/rent.js", "plugins/tools/q.js", "plugins/convert/vid2gif.js",
   "plugins/group/notifmakan.js", "plugins/panel/linode.js", "plugins/smart/autopulse.js",
   "plugins/smart/ailearn.js", "plugins/smart/sudoku.js",
