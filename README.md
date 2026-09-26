@@ -1,16 +1,16 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 4.600+ Command, 1.850+ Plugin & 46 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 6.700+ Command, 1.900+ Plugin & 51 Kategori!</b></p>
 </div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-24.0.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1850%2B-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-4600%2B-blueviolet?style=flat-square&logo=terminal">
-  <img src="https://img.shields.io/badge/Kategori-46-green?style=flat-square&logo=folder">
-  <img src="https://img.shields.io/badge/Downloader-55-yellow?style=flat-square&logo=download">
-  <img src="https://img.shields.io/badge/RPG_Game-161-ff69b4?style=flat-square&logo=target">
-  <img src="https://img.shields.io/badge/AI_Plugin-179-9cf?style=flat-square&logo=ai">
+  <img src="https://img.shields.io/badge/Total_Plugin-1900%2B-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-6700%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Kategori-51-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Downloader-59-yellow?style=flat-square&logo=download">
+  <img src="https://img.shields.io/badge/RPG_Game-242-ff69b4?style=flat-square&logo=target">
+  <img src="https://img.shields.io/badge/AI_Plugin-213-9cf?style=flat-square&logo=ai">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
 </p>
@@ -85,7 +85,7 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | Keamanan & Moderasi | Anti-link, antispam, antitoxic, kick/welcome otomatis, limit tiered, dan gate akses premium/owner |
 | Panel & Server | Hirarki panel Owner > CEO > Reseller, jadibot multi-session, monitoring VPS, backup otomatis ke Drive, dan auto-deploy GitHub Actions |
 
-> Daftar command lengkap dengan cara pakainya tersedia langsung di bot melalui menu all-menu yang terbagi 46 kategori.
+> Daftar command lengkap dengan cara pakainya tersedia langsung di bot melalui menu all-menu yang terbagi 51 kategori.
 
 ---
 
@@ -93,19 +93,19 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.853 (1.781 dengan command aktif) |
-| Total Command | 4.665 (1.725 utama + 2.940 alias) |
-| Kategori | 46 |
-| RPG Module | 161 (152 rpg + 9 couple) |
-| AI Plugin | 179 (134 ai + 45 ai image) |
+| Total Plugin | 1.999 (1.990 dengan command aktif) |
+| Total Command | 6.760 (1.990 utama + 4.770 alias) |
+| Kategori | 51 |
+| RPG Module | 242 (158 rpg + 9 couple + 75 game) |
+| AI Plugin | 213 (159 ai + 47 ai image + 7 ai agent) |
 | AI Model | 34 |
-| Downloader | 55 |
+| Downloader | 59 |
 | Education | 25 |
 | Panel Pterodactyl | 100 slot (28 plugin kontrol) |
-| Convert Plugin | 32 |
-| Tools Plugin | 188 |
+| Convert Plugin | 34 |
+| Tools Plugin | 217 |
 | Notifier Otomatis | 9 (cuaca, sholat, bmkg, anime, movie, jadwalbola, web, crypto, loker) |
-| Browser Plugin | 11 |
+| Browser Plugin | 13 |
 | Menu Variasi | 6 |
 | Nav Button Plugin | 1.019 |
 | Welcome/Goodbye | 5 variasi |
