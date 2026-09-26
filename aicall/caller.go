@@ -16,6 +16,16 @@ import (
 	"github.com/purpshell/meowcaller"
 )
 
+// 🔹 PENANGAN HENING (owner 26 Sep: "user g ngmong apa apa ai ngmong sendiri
+// 'halo apa masih ada yg bisa aku bantu' — lbh dr 5 menit telepon ditutup
+// jika hening"). AI nyapa duluan tiap beberapa giliran sepi, dan panggilan
+// ditutup otomatis kalau user hening terus 5 menit penuh.
+const (
+	SILENCE_TIMEOUT    = 5 * time.Minute // hening total 5 menit → tutup telepon
+	SILENCE_HI_ROUNDS  = 3               // giliran sepi ke-3 → AI nyapa duluan
+	SILENCE_HI_EVERY   = 10              // terus nyapa tiap 10 giliran sepi
+)
+
 type AICallSession struct {
 	Call         *meowcaller.Call
 	Conversation *Conversation
@@ -145,6 +155,8 @@ func (s *AICallSession) StartVoiceLoop() {
 
 	// 2. Main interactive conversation loop
 	round := 0
+	lastUserSpeech := time.Now() // terakhir kali user kedengeran ngomong
+	silentRounds := 0             // giliran berturut-turut tanpa terdeteksi ucapan
 	for {
 		select {
 		case <-s.stopChan:
@@ -174,6 +186,7 @@ func (s *AICallSession) StartVoiceLoop() {
 		fi, err := os.Stat(recFile)
 		if err != nil || fi.Size() < 4000 {
 			_ = os.Remove(recFile)
+			silentRounds++ // audio nyaris kosong = hening juga
 			continue
 		}
 
@@ -188,10 +201,28 @@ func (s *AICallSession) StartVoiceLoop() {
 
 		transcription = strings.TrimSpace(transcription)
 		if len(transcription) == 0 {
-			log.Printf("[AI Call] No speech detected in audio.")
+			log.Printf("[AI Call] No speech detected in audio. (hening %d giliran, %.0f detik)", silentRounds, time.Since(lastUserSpeech).Seconds())
+
+			// hening TOTAL 5 menit → pamit & tutup telepon
+			if time.Since(lastUserSpeech) >= SILENCE_TIMEOUT {
+				log.Printf("[AI Call] User hening %v — tutup panggilan otomatis.", SILENCE_TIMEOUT)
+				s.speakText("Sepertinya sudah tidak ada aktivitas. Saya tutup panggilannya ya. Terima kasih, sampai jumpa!")
+				_ = s.Call.Hangup()
+				s.Stop()
+				return
+			}
+
+			// AI ngomong duluan: "halo, masih ada? ada yang bisa saya bantu?"
+			silentRounds++
+			if silentRounds == SILENCE_HI_ROUNDS || silentRounds > SILENCE_HI_ROUNDS && silentRounds%SILENCE_HI_EVERY == 0 {
+				s.speakText("Halo? Apa kamu masih ada? Ada yang bisa saya bantu?")
+			}
 			continue
 		}
 
+		// user kedengeran ngomong → reset pelacak hening
+		lastUserSpeech = time.Now()
+		silentRounds = 0
 		log.Printf("[AI Call] User Said: %q", transcription)
 
 		// 🔹 VOICE COMMAND BRIDGE (owner 26 Sep 2026: "lg telepon ai call
