@@ -121,9 +121,9 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // Misc
         "misc", "random", "utility", "clean",
         // Admin
-        "vps", "linode", "panel", "jpm", "pushkontak", "kerja",
+        "vps", "linode", "jpm", "pushkontak", "kerja",
         "sekolah", "umum", "general", "date", "primary",
-        "bot", "owner",
+        "bot", "owner", "panel",
       ];
 
       const allCats = [...new Set([...categories, ...Object.keys(casesByCategory)])];

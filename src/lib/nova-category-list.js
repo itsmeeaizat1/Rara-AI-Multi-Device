@@ -50,8 +50,8 @@ const CATEGORY_ORDER = [
   "education", "food", "cek", "berita", "bencana",
   "islami", "smart", "utility", "misc", "random",
   "store", "market", "jpm", "pushkontak",
-  // PALING AKHIR (owner): panel, vps, main, info, owner
-  "panel", "vps", "main", "info", "bot", "owner",
+  // PALING AKHIR (revisi owner 26 Sep): main & bot sebelum owner, panel setelah owner
+  "vps", "main", "info", "bot", "owner", "panel",
 ];
 
 const CATEGORY_EMOJI = {
