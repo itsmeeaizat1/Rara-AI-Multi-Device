@@ -89,7 +89,7 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 
 ---
 
-## 📊 Statistik Bot v24.0.0
+## 📊 Statistik Bot
 
 | Metric | Count |
 |--------|-------|
