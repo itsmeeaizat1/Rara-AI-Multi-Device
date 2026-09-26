@@ -67,7 +67,7 @@ const CATEGORY_ORDER = [
   "media", "tts", "quotes", "primbon",
   "education", "food", "cek", "berita", "cuaca", "loker",
   "islami", "smart", "utility", "misc", "random",
-  "store", "market", "jpm", "pushkontak",
+  "store", "market", "jpm",
   // PALING AKHIR (revisi owner 26 Sep): main & bot sebelum owner, panel setelah owner
   "vps", "main", "info", "bot", "owner", "panel",
 ];
@@ -83,7 +83,7 @@ const CATEGORY_NAMES = {
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
-  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
+  ephoto: "Ephoto", jpm: "JPM",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium",
   bot: "Bot",
 };
@@ -205,7 +205,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
     });
 
-    let modeExcludeMap = { md: ["panel", "pushkontak", "store"] };
+    let modeExcludeMap = { md: ["panel", "store"] };
     try {
       if (botmodePlugin?.MODES) {
         modeExcludeMap = {};

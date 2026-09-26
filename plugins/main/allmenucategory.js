@@ -40,7 +40,7 @@ const CATEGORY_NAMES = {
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
-  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
+  ephoto: "Ephoto", jpm: "JPM",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium", bot: "Bot",
   anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
   downloader: "Downloader", education: "Education", future: "Future",
@@ -85,10 +85,9 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
       const botMode = groupData.botMode || "md";
 
       let modeExcludeMap = {
-        md: ["panel", "pushkontak", "store"],
-        store: ["panel", "pushkontak", "jpm", "ephoto", "cpanel"],
-        pushkontak: ["panel", "store", "jpm", "ephoto", "cpanel"],
-        cpanel: ["pushkontak", "store", "jpm", "ephoto"],
+        md: ["panel", "store"],
+        store: ["panel", "jpm", "ephoto", "cpanel"],
+        cpanel: ["store", "jpm", "ephoto"],
       };
       try {
         if (botmodePlugin?.MODES) {
@@ -122,7 +121,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // Misc
         "misc", "random", "utility", "clean",
         // Admin
-        "vps", "linode", "jpm", "pushkontak", "kerja",
+        "vps", "linode", "jpm", "kerja",
         "sekolah", "umum", "general", "date", "primary",
         "bot", "owner", "panel",
       ];

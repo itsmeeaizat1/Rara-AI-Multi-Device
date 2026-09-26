@@ -32,7 +32,7 @@ const CATEGORY_NAMES = {
   "sewa premium": "Sewa & Premium", store: "Store", market: "Market",
   future: "Future", misc: "Misc", random: "Random",
   utility: "Utility", vps: "VPS", linode: "Linode",
-  panel: "Panel", jpm: "JPM", pushkontak: "Push Kontak",
+  panel: "Panel", jpm: "JPM",
   bot: "Bot",
   owner: "Owner",
 };
@@ -50,7 +50,7 @@ const CATEGORY_ORDER = [
   "media", "tts", "quotes", "primbon",
   "education", "food", "cek", "berita", "cuaca", "loker",
   "islami", "smart", "utility", "misc", "random",
-  "store", "market", "jpm", "pushkontak",
+  "store", "market", "jpm",
   // PALING AKHIR (revisi owner 26 Sep): main & bot sebelum owner, panel setelah owner
   "vps", "main", "info", "bot", "owner", "panel",
 ];
@@ -69,7 +69,7 @@ const CATEGORY_EMOJI = {
   main: "🏠", user: "👤", premium: "💎", future: "🌌",
   "sewa premium": "💳", store: "🏬", market: "🛒",
   misc: "📦", random: "🎲", utility: "🧰", clean: "🧹",
-  vps: "🖧", linode: "☁️", panel: "🖥️", jpm: "📡", pushkontak: "📲",
+  vps: "🖧", linode: "☁️", panel: "🖥️", jpm: "📡",
   bot: "🚀",
   owner: "👑",
   kerja: "💼", sekolah: "🎓", umum: "🏷️", general: "⚙️", date: "📅", primary: "⭐",
@@ -110,10 +110,9 @@ function buildCategoryRows(m, db, prefix = ".") {
   const botMode = groupData.botMode || "md";
 
   let modeExcludeMap = {
-    md: ["panel", "pushkontak", "store"],
-    store: ["panel", "pushkontak", "jpm", "cpanel"],
-    pushkontak: ["panel", "store", "jpm", "cpanel"],
-    cpanel: ["pushkontak", "store", "jpm"],
+    md: ["panel", "store"],
+    store: ["panel", "jpm", "cpanel"],
+    cpanel: ["store", "jpm"],
   };
   try {
     if (botmodePlugin?.MODES) {

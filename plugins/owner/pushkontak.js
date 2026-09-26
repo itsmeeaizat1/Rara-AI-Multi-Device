@@ -14,7 +14,7 @@ import {
 const pluginConfig = {
   name: "pushkontak",
   alias: ["pushkontak"],
-  category: "pushkontak",
+  category: "owner",
   description: "Push pesan ke semua member grup + auto simpan kontak VCF",
   usage: ".pushkontak",
   example: ".pushkontak",
