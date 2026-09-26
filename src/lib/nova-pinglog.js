@@ -124,19 +124,20 @@ async function checkRamAlert(print = () => {}) {
     const jam = new Date(now).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).replaceAll(":", ".");
     const tgl = new Date(now).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "long", year: "numeric" });
     const cpu = getCpuLoadInfo();
-    await pingSock.sendMessage(ownerJid, {
-      text: claraWrap("index", [
-        `🧠 RAM SISTEM TINGGI`,
-        "",
-        `Pemakaian: ${sysPct}% (${formatBytes(used)} dari ${formatBytes(mem.total)})`,
-        `Ambang: ${st.thresholdPct}%`,
-        `RAM bot: ${formatBytes(process.memoryUsage().rss)}`,
-        `💻 CPU: load ${cpu.load} (${cpu.cores} core) ≈ ${cpu.pct}%`,
-        `🕒 ${jam}, ${tgl}`,
-        "",
-        `Cek proses borak: .index ramalert · optimasi: .index optimize`,
-      ]),
-    });
+    // rev owner 26 Sep: "pas dikirim ke chat jgn ada format ballpointnya" —
+    // DM alert dikirim PLAIN TEXT, tanpa bingkai kotak claraWrap.
+    const dmLines = [
+      `🧠 RAM SISTEM TINGGI`,
+      ``,
+      `Pemakaian: ${sysPct}% (${formatBytes(used)} dari ${formatBytes(mem.total)})`,
+      `Ambang: ${st.thresholdPct}%`,
+      `RAM bot: ${formatBytes(process.memoryUsage().rss)}`,
+      `💻 CPU: load ${cpu.load} (${cpu.cores} core) ≈ ${cpu.pct}%`,
+      `🕒 ${jam}, ${tgl}`,
+      ``,
+      `Cek proses borak: .index ramalert · optimasi: .index optimize`,
+    ];
+    await pingSock.sendMessage(ownerJid, { text: dmLines.join("\n") });
   } catch (e) {
     try { logger.error("RamAlert", `DM gagal: ${e?.message || e}`); } catch {}
   }

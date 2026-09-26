@@ -212,6 +212,7 @@ const dmTxt = sc(dmSent[0]?.text);
 const jamLine = (dmTxt.split("\n").find((l) => l.includes("🕒")) || "");
 t("10h isi DM: kartu ram tinggi + ambang + cpu + waktu", dmTxt.includes("ram") && dmTxt.includes("tinggi") && dmTxt.includes("95%") && dmTxt.includes("ambang") && dmTxt.includes("cpu") && dmTxt.includes("core"), dmTxt.slice(0, 200));
 t("10h1 jam TANPA sebutan wib", !dmTxt.includes("wib"), dmTxt.slice(0, 200));
+t("10h1b DM TANPA bingkai kotak (plain text, rev owner)", !dmTxt.includes("┃") && !dmTxt.includes("「"), dmTxt.slice(0, 120));
 t("10h3 jam + tgl bln thn lengkap (dtk + bulan panjang)", /\d{2}\.\d{2}\.\d{2}, \d{1,2} [a-z]+ \d{4}/.test(jamLine), jamLine);
 t("10h2 getCpuLoadInfo balikin angka valid", pl.getCpuLoadInfo().cores >= 1 && typeof pl.getCpuLoadInfo().load === "number" && typeof pl.getCpuLoadInfo().pct === "number");
 dmSent.length = 0;
