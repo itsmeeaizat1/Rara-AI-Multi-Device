@@ -2,12 +2,12 @@
 import { novaReply } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "fakeff2",
-  alias: ["fakeff2"],
-  category: "canvas",
-  description: "Membuat gambar Free Fire 2 (API maintenance)",
-  usage: ".fakeff2 <text>",
-  example: ".fakeff2 Hai cantik",
+  name: "fakedev",
+  alias: ["fakedev"],
+  category: "maker",
+  description: "Membuat fake developer profile card (API maintenance)",
+  usage: ".fakedev <nama> (reply/kirim foto)",
+  example: ".fakedev Misaki",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -19,7 +19,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   const msg = novaReply({
-    title: "Fake FF 2",
+    title: "Fake Developer",
     info: [
       { label: "Status", value: "API nova.my.id OFFLINE" },
     ],

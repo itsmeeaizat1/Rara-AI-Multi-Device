@@ -7,7 +7,7 @@ import path from "path";
 const pluginConfig = {
   name: "fakecall",
   alias: ["fakecall", "fakecallwa"],
-  category: "canvas",
+  category: "maker",
   description: "Membuat gambar fake call WhatsApp (lokal canvas)",
   usage: ".fakecall <nama> | <durasi>",
   example: ".fakecall Aizat | 19.00",

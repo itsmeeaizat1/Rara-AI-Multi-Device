@@ -41,7 +41,7 @@ async function generate(angka) {
 const pluginConfig = {
     name: 'fakedana',
     alias: ["fakedana"],
-    category: 'canvas',
+    category: "maker",
     description: 'Membuat gambar fake dana',
     usage: '.fakedana <text>',
     example: '.fakedana Hai cantik',

@@ -7,7 +7,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "musiccard",
   alias: ["musiccard"],
-  category: "canvas",
+  category: "maker",
   description: "Membuat kartu musik (music card) keren dari gambar yang dikirim.",
   usage: ".musiccard <judul>|<nama artis>",
   example: ".musiccard Rewrite The Stars|James Arthur",
