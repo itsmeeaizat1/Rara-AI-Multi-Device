@@ -1,0 +1,99 @@
+{
+  "enabled": false,
+  "targets": [
+    "6281234567890@s.whatsapp.net"
+  ],
+  "seenIds": [
+    "al-101184",
+    "al-101635",
+    "al-199340",
+    "al-179981",
+    "al-185657",
+    "al-966",
+    "al-118123",
+    "al-213860",
+    "al-209980",
+    "al-199217",
+    "al-213131",
+    "al-8687",
+    "al-206874",
+    "al-195210",
+    "al-200230",
+    "al-214650",
+    "al-193699",
+    "al-169102",
+    "al-197620",
+    "al-178031",
+    "al-209827",
+    "al-179068",
+    "al-213477",
+    "al-199185",
+    "al-199404",
+    "al-126016",
+    "al-204747",
+    "al-207385",
+    "al-204362",
+    "al-204738",
+    "al-167151",
+    "al-185515",
+    "al-209670",
+    "al-204011",
+    "al-204293",
+    "al-190244",
+    "al-213360"
+  ],
+  "episodes": {
+    "al-199340": 1,
+    "al-966": 1354,
+    "al-118123": 385,
+    "al-8687": 934,
+    "al-200230": 12,
+    "al-204011": 1
+  },
+  "initDone": true,
+  "genres": [
+    "Action",
+    "Adventure",
+    "Comedy",
+    "Drama",
+    "Fantasy",
+    "Horror",
+    "Mystery",
+    "Romance",
+    "Sci-Fi",
+    "Slice of Life",
+    "Thriller"
+  ],
+  "contentTypes": {
+    "episode": true,
+    "baru": true,
+    "terbaru": true,
+    "hangat": true,
+    "berita": true,
+    "video": false
+  },
+  "digestIntervals": {
+    "terbaru": 12,
+    "hangat": 12,
+    "berita": 6,
+    "video": 6
+  },
+  "lastDigest": {
+    "terbaru": {
+      "ts": 1790258165280,
+      "hash": "-167926024"
+    },
+    "hangat": {
+      "ts": 1790258166526,
+      "hash": "-1003903814"
+    },
+    "berita": {
+      "ts": 1790258166685,
+      "hash": "861164824"
+    }
+  },
+  "listMode": false,
+  "lastCheck": "2026-09-24T16:58:30.906Z",
+  "lastSource": "AniList",
+  "intervalMenit": 60
+}

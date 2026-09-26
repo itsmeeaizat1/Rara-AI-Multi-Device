@@ -1,6 +1,6 @@
 // E2E BOOT DOCTOR (17 Sep 2026) — cek kesehatan fitur pas bot nyala/restart.
 // Fitur: nova-boot-doctor.js (probe apikey + endpoint gratis, klasifikasi,
-// laporan DM owner + throttle) + plugins/owner/bootdoctor.js (.bootdoctor).
+// laporan DM owner + throttle) + plugins/bot/bootdoctor.js (.bootdoctor).
 // Jalankan dari repo root: node test/boot-doctor-e2e/e2e.mjs
 import fs from "fs";
 import path from "path";
@@ -163,7 +163,7 @@ t("key kosong di pusat (fishaudio/autoresbot) di-resolve kosong → probe jadi n
 t("key terisi di pusat ter-resolve (min1ai/zelapi)", mod._resolveKeyForTest("min1ai").length > 10 && mod._resolveKeyForTest("zelapi").length > 3, "key pusat gak kebaca");
 
 w("\n— 6. import plugin .bootdoctor (named export) —");
-const plugUrl = pathToFileURL(path.join(REPO, "plugins/owner/bootdoctor.js")).href;
+const plugUrl = pathToFileURL(path.join(REPO, "plugins/bot/bootdoctor.js")).href;
 const plug = await import(plugUrl);
 t("plugin export named config + handler", typeof plug.config === "object" && typeof plug.handler === "function");
 t("plugin default export utuh", plug.default?.pluginConfig?.name === "bootdoctor");

@@ -9,7 +9,7 @@ import {
   setDoctorOn, setDoctorAuto, recordDoctorError, extractRepoFrame,
   doctorScan, doctorClean, doctorHeal, recordDoctorErrorAuto, initDoctorMonitor,
 } from "../../src/lib/nova-doctor.js";
-import { config as docConfig, handler as docHandler } from "../../plugins/owner/doctor.js";
+import { config as docConfig, handler as docHandler } from "../../plugins/bot/doctor.js";
 
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");

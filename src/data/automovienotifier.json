@@ -1,0 +1,57 @@
+{
+  "enabled": true,
+  "targets": [
+    "6281234567890@s.whatsapp.net"
+  ],
+  "intervalMenit": 30,
+  "initDone": true,
+  "caches": {
+    "trending": [
+      "tt27165187",
+      "tt28014327",
+      "tt35298123",
+      "tt11561116",
+      "tt37287335",
+      "tt0120791",
+      "tt27681354",
+      "tt5177120",
+      "tt33095251",
+      "tt14173636"
+    ],
+    "upcoming": [
+      "tt16478058",
+      "tt35538033",
+      "tt10794054",
+      "tt40231163",
+      "tt36983905",
+      "tt32588798",
+      "tt36073210",
+      "tt36150957",
+      "tt31349844",
+      "tt43691517"
+    ],
+    "nowplaying": [
+      "tt16478058",
+      "tt28014327",
+      "tt35519455",
+      "tt36590417",
+      "tt27165187",
+      "tt33095251",
+      "tt35298123",
+      "tt32332915",
+      "tt18259538",
+      "tt36307021"
+    ]
+  },
+  "contentTypes": {
+    "trending": true,
+    "upcoming": true,
+    "nowplaying": true
+  },
+  "lastCheck": "2026-09-24T16:58:30.910Z",
+  "lastSources": {
+    "trending": "Cinemeta",
+    "upcoming": "Cinemeta",
+    "nowplaying": "Cinemeta"
+  }
+}

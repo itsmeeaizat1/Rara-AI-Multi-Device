@@ -89,7 +89,7 @@ async function messageHandler(msg, sock, jadibotCtx = {}) {
   //               yang nyoba command tetap dikasih notif "bot sedang dijeda
   //               oleh owner" (throttle GLOBAL 10 dtk biar gak keban).
   // Pesan biasa (bukan command) di-diamin total di kedua mode.
-  // State disimpan di settings.botPower + settings.botMute oleh plugins/owner/bot.js.
+  // State disimpan di settings.botPower + settings.botMute oleh plugins/bot/bot.js.
   try {
     const __novaPowerOff = db.db?.data?.settings?.botPower === false;
     const __novaMuted = db.db?.data?.settings?.botMute === true;

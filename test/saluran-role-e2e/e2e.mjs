@@ -118,7 +118,7 @@ t("2f. bentuk FLAT admin → OK", rFlat.ok === true);
 // ═══ SECTION 3: saluranStatusLine — reply owner gak senyap lagi ═══
 w("\n— section 3: saluranStatusLine (bot.js) —");
 
-const botPlugin = await import(R + "/plugins/owner/bot.js");
+const botPlugin = await import(R + "/plugins/bot/bot.js");
 // saluranStatusLine gak di-export (internal) — tes lewat reply .bot off/on
 const { initDatabase, getDatabase } = await import(R + "/src/lib/nova-database.js");
 await initDatabase("/tmp/saluran-role-e2e-db/nova.json");
