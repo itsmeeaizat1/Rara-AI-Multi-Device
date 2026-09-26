@@ -46,7 +46,7 @@ const texts = (mk) => mk.sends.map((s) => norm(s.txt || "")).filter(Boolean);
 // ═══════════════════════════════════════════════════════════════
 w("\n— RENAME: .absen → .absenjam (fix konflik dead code) —");
 {
-  const root = await import(R + "/plugins/absen.js");
+  const root = await import(R + "/plugins/group/absenjam.js");
   const group = await import(R + "/plugins/group/absen.js");
   check("root absen sekarang absenjam", root.config.name === "absenjam" && root.config.alias.includes("absenjam"));
   check("group absen tetap .absen (check-in)", group.config.name === "absen" && group.config.alias.includes("absen"));
@@ -58,7 +58,7 @@ w("\n— RENAME: .absen → .absenjam (fix konflik dead code) —");
 w("\n— .absenjam buka: LIVE COUNTDOWN ke tenggat —");
 {
   // cleanup sesi sisa run sebelumnya (persist di src/database/group/absen.json)
-  const store = await import(R + "/plugins/absen.js");
+  const store = await import(R + "/plugins/group/absenjam.js");
   {
     const mkC = mkMock();
     mkC.m.args = ["tutup"];
@@ -99,7 +99,7 @@ w("\n— .absenjam buka: LIVE COUNTDOWN ke tenggat —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— .absenjam tutup manual: cancel adaptif + rekap meter —");
 {
-  const store = await import(R + "/plugins/absen.js");
+  const store = await import(R + "/plugins/group/absenjam.js");
   const mk = mkMock();
   mk.m.args = ["buka", "2", "jam", "rapat", "wajib"];
   store.handler(mk.m, { sock: mk.sock, config: { command: { prefix: "." } } }).catch(() => {});
