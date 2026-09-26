@@ -116,6 +116,31 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | Saluran Event | 8 |
 | API Endpoint | 700+ (lihat list api.md) |
 
+## 📝 Command Penting
+
+Command yang paling sering dipakai sehari-hari:
+
+| Command | Fungsi |
+|---------|--------|
+| `.menu` / `.allmenu` | Navigasi: menu ringkas & daftar lengkap 51 kategori |
+| `.switch` | On/off semua fitur terpusat (per fitur / bulk / master, grup & saluran) |
+| `.aisuperagent` / `.novaagent` | AI agent: tugas multi-langkah, 183 skill, ingat pengguna |
+| `.aihelp` | Tanya AI cara pakai command mana pun |
+| `.sticker` | Buat stiker dari foto/video/gambar |
+| `.ytmp3` / `.ytmp4` / `.aio` | Download YouTube & auto-detect platform apa pun |
+| `.briefing` | Kartu briefing harian: cuaca, gempa, jadwal tim, agenda, saldo |
+| `.mapss` | Cari tempat + pin lokasi asli WhatsApp |
+| `.wxalert` / `.bencanawatch` | Peringatan dini cuaca ekstrem & gempa/tsunami |
+| `.setkey` | Pasang API key (kyio, onepunya, dll) tanpa edit kode |
+| `.bootdoctor` | Health check bot & semua API sekaligus (owner) |
+| `.rpgprofile` | Profil RPG: level, saldo, inventory, prestasi |
+| `.working` / `.daily` | Kerja gajian & klaim harian |
+| `.gachaitem` | Gacha item dengan pity system |
+| `.jadibot` | Jadikan nomor lain jadi bot (multi-session) |
+| `.daftarsewa` | Daftar sewa bot per grup |
+| `.aboutnova` | Info bot & creator |
+| `.owner` / `.donasi` | Kontak owner & dukungan developer |
+
 ## 💻 Spesifikasi Panel/Server
 
 ### Minimum (1-3 jadibot)
@@ -220,28 +245,6 @@ node index.js 6281234567890             # alias singkat
 ```
 
 Tanpa flag, bot akan menanyakan nomor langsung di terminal (timeout 3 menit).
-
-## 📝 Command Penting
-
-| Command | Fungsi |
-|---------|--------|
-| `.menu` | Tampilkan menu (6 varian) |
-| `.allmenu` | Semua command |
-| `.aboutnova` | Info bot & creator |
-| `.menunav` | Toggle tombol navigasi |
-| `.aihelp` | Tanya AI tentang command |
-| `.toko` | Manajemen toko |
-| `.belanja` | Belanja produk |
-| `.setpayment` | Konfigurasi pembayaran |
-| `.autobmkg` | Notifikasi gempa |
-| `.cuacav2` | Cuaca detail |
-| `.alquran` | Quran + murottal |
-| `.jadibot` | Jadikan nomor jadi bot (bisa `<nomor>` untuk nomor lain) |
-| `.daftarsewa` | Daftar sewa bot |
-| `.switch` | On/off SEMUA fitur terpusat (auto / grup / saluran / fitur / semua) |
-| `.aigrup` | AI ikut chat di grup |
-| `.owner` | Kontak owner |
-| `.donasi` | Support developer |
 
 ## About
 
