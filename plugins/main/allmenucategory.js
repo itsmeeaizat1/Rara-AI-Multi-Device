@@ -37,7 +37,7 @@ const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun", jkt48: "JKT48", airich: "AI Rich",
   tools: "Tools", game: "Game", html: "HTML", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
-  utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+  utility: "Utility", religi: "Religi", info: "Info",
   berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM",
@@ -111,7 +111,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // Entertainment
         "media", "tts", "quotes", "primbon",
         // Knowledge
-        "education", "food", "info", "cek", "berita", "cuaca", "loker",
+        "education", "food", "info", "berita", "cuaca", "loker",
         // Religion
         "islami", "religi",
         // System & User
