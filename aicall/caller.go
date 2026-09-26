@@ -89,6 +89,52 @@ func (s *AICallSession) tryVoiceCommand(text string) string {
 	return ""
 }
 
+// callerACLViaBridge — tanya bot utama level akses pemanggil: owner /
+// premium / none (owner 26 Sep: "user bsa akses aicall tp hrs premium dlu
+// biar g dispam"). Bridge gak ada / bot mati → fallback IsOwner: owner
+// tetap bisa telepon, selain itu ditolak (safe default, bukan kebalik).
+func callerACLViaBridge(peer string) string {
+	if IsOwner(peer) {
+		return "owner"
+	}
+	baseURL := strings.TrimSpace(os.Getenv("AICALL_BRIDGE_URL"))
+	if baseURL == "" {
+		baseURL = "http://127.0.0.1:8790"
+	}
+	body, err := json.Marshal(map[string]string{"number": peer})
+	if err != nil {
+		return "none"
+	}
+	req, err := http.NewRequest("POST", baseURL+"/acl", bytes.NewReader(body))
+	if err != nil {
+		return "none"
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if key := strings.TrimSpace(os.Getenv("AICALL_HTTP_KEY")); key != "" {
+		req.Header.Set("X-Api-Key", key)
+	}
+	client := &http.Client{Timeout: 3 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "none" // bridge gak ada → cuma owner yang lolos (di atas)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return "none"
+	}
+	var r struct {
+		Level string `json:"level"`
+	}
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&r); err != nil {
+		return "none"
+	}
+	switch r.Level {
+	case "owner", "premium":
+		return r.Level
+	}
+	return "none"
+}
+
 // StartVoiceLoop manages the active AI conversation during a WhatsApp call
 func (s *AICallSession) StartVoiceLoop() {
 	log.Printf("[AI Call] Voice loop started for call ID: %s (Peer: %s)", s.Call.ID(), s.Call.Peer().String())
