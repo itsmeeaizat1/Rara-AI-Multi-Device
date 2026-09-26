@@ -9,7 +9,7 @@ const pluginConfig = {
   description: "Registry penipu/scammer - catat, cek, pantau nomor penipu",
   usage: ".blacklistscammer <add/cek/list/info/remove/stats>",
   example: ".blacklistscammer add 08123456789 | judi online | screenshot bukti",
-  isOwner: true,
+  isOwner: false,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
