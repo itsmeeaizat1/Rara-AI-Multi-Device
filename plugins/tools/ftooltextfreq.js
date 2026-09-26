@@ -1,11 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .textfreq — kata paling sering muncul (port altftool.com/tools/all/word-frequency-counter)
+// .ftooltextfreq — kata paling sering muncul (port altftool.com/tools/all/word-frequency-counter)
 import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "textfreq", alias: ["textfreq", "wordfreq", "frekuensikata"], category: "tools",
-  description: "Hitung frekuensi kata terbanyak dalam teks", usage: ".textfreq <teks>",
-  example: ".textfreq teks apa pun di sini", isOwner: false, isPremium: false,
+  name: "ftooltextfreq", alias: ["textfreq", "wordfreq", "frekuensikata"], category: "tools",
+  description: "Hitung frekuensi kata terbanyak dalam teks", usage: ".ftooltextfreq <teks>",
+  example: ".ftooltextfreq teks apa pun di sini", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
@@ -15,14 +15,14 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(novaGuideV2("textfreq", {
+      return m.reply(novaGuideV2("ftooltextfreq", {
         kaomoji: "(๑´ㅂ`๑)",
         sapaan: "mau tau kata apa yang paling sering muncul? tempel teksnya~",
         cara: "ketik teks apa pun, nanti dihitung top 10 kata terbanyak",
-        contoh: `${prefix}textfreq aku belajar ai karena ai membantu aku`,
+        contoh: `${prefix}ftooltextfreq aku belajar ai karena ai membantu aku`,
         note: "huruf besar/kecil dianggap sama, hasil top 10 kata terbanyak",
         spec: ["⏱ 3dtk", "💸 gratis"],
-      }), "textfreq");
+      }), "ftooltextfreq");
     }
     const words = (text.toLowerCase().match(/[\p{L}\p{N}']+/gu) || []);
     if (!words.length) {

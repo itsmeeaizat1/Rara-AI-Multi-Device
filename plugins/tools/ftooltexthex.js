@@ -1,11 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .texthex — teks ↔ heksadesimal (port altftool.com/tools/all/text-to-hex)
+// .ftooltexthex — teks ↔ heksadesimal (port altftool.com/tools/all/text-to-hex)
 import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "texthex", alias: ["texthex", "hex", "texttohex"], category: "tools",
-  description: "Ubah teks ke heksadesimal dan sebaliknya", usage: ".texthex <enc/dec> <teks>",
-  example: ".texthex enc halo", isOwner: false, isPremium: false,
+  name: "ftooltexthex", alias: ["texthex", "hex", "texttohex"], category: "tools",
+  description: "Ubah teks ke heksadesimal dan sebaliknya", usage: ".ftooltexthex <enc/dec> <teks>",
+  example: ".ftooltexthex enc halo", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
@@ -17,14 +17,14 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      return m.reply(novaGuideV2("texthex", {
+      return m.reply(novaGuideV2("ftooltexthex", {
         kaomoji: "(◕ᴗ◕)",
         sapaan: "teks mau diubah ke heksadesimal? atau heksa ke teks?",
         cara: "ketik enc (teks→hex) atau dec (hex→teks) lalu isinya",
-        contoh: `${prefix}texthex enc halo · ${prefix}texthex dec 68616c6f`,
+        contoh: `${prefix}ftooltexthex enc halo · ${prefix}ftooltexthex dec 68616c6f`,
         note: "hex = kode byte per karakter, 2 digit tiap huruf",
         spec: ["⏱ 3dtk", "💸 gratis"],
-      }), "texthex");
+      }), "ftooltexthex");
     }
     let result;
     if (action === "enc" || action === "encode") {
@@ -33,20 +33,20 @@ async function handler(m, { sock, config: botConfig }) {
       const hex = text.replace(/\s+/g, "");
       if (!/^([0-9a-fA-F]{2})+$/.test(hex)) {
         await m.react("❌");
-        return m.reply(novaSalahV2("texthex", {
+        return m.reply(novaSalahV2("ftooltexthex", {
           kaomoji: "(・_・;)",
           pesan: "string heksadesimalnya gak valid — harus pasangan digit 0-9 a-f dan genap jumlahnya",
-          contoh: `${prefix}texthex dec 68616c6f`,
-        }), "texthex");
+          contoh: `${prefix}ftooltexthex dec 68616c6f`,
+        }), "ftooltexthex");
       }
       result = Buffer.from(hex, "hex").toString("utf-8");
     } else {
       await m.react("❌");
-      return m.reply(novaSalahV2("texthex", {
+      return m.reply(novaSalahV2("ftooltexthex", {
         kaomoji: "(・_・;)",
         pesan: "pilih enc atau dec ya",
-        contoh: `${prefix}texthex enc halo`,
-      }), "texthex");
+        contoh: `${prefix}ftooltexthex enc halo`,
+      }), "ftooltexthex");
     }
     await m.react("🐣");
     await m.reply(claraWrap("Text Hex", [`Hasil (${action === "enc" || action === "encode" ? "teks→hex" : "hex→teks"}):`,

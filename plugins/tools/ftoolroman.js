@@ -1,12 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .roman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
+// .ftoolroman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
 // Auto-detect: angka → Romawi, huruf romawi → angka. Range standar 1-3999.
 import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "roman", alias: ["roman", "romannumeral", "romawi"], category: "tools",
-  description: "Konversi angka Arab ↔ Romawi (auto)", usage: ".roman <angka|romawi>",
-  example: ".roman 2026", isOwner: false, isPremium: false,
+  name: "ftoolroman", alias: ["roman", "romannumeral", "romawi"], category: "tools",
+  description: "Konversi angka Arab ↔ Romawi (auto)", usage: ".ftoolroman <angka|romawi>",
+  example: ".ftoolroman 2026", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
@@ -31,45 +31,45 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const raw = (m.text || "").trim().toUpperCase();
     if (!raw) {
-      return m.reply(novaGuideV2("roman", {
+      return m.reply(novaGuideV2("ftoolroman", {
         kaomoji: "(๑•̀ㅂ•́)و",
         sapaan: "angka mau diubah ke romawi atau sebaliknya? tinggal ketik~",
         cara: "masukkan angka biasa ATAU angka romawi, bot otomatis mendeteksi arahnya",
-        contoh: `${prefix}roman 2026 → MMXXVI · ${prefix}roman MMXXVI → 2026`,
+        contoh: `${prefix}ftoolroman 2026 → MMXXVI · ${prefix}ftoolroman MMXXVI → 2026`,
         note: "rentang yang valid 1 sampai 3999 (MMMCMXCIX)",
         spec: ["⏱ 3dtk", "💸 gratis"],
-      }), "roman");
+      }), "ftoolroman");
     }
     let result, label;
     if (/^\d+$/.test(raw)) {
       const n = parseInt(raw, 10);
       if (n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(novaSalahV2("roman", {
+        return m.reply(novaSalahV2("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "angkanya di luar rentang 1-3999",
-          contoh: `${prefix}roman 2026`,
-        }), "roman");
+          contoh: `${prefix}ftoolroman 2026`,
+        }), "ftoolroman");
       }
       result = toRoman(n); label = `${n} (Arab) → ${result} (Romawi)`;
     } else if (ROMAN_RE.test(raw)) {
       const n = fromRoman(raw);
       if (n === null || n < 1 || n > 3999) {
         await m.react("❌");
-        return m.reply(novaSalahV2("roman", {
+        return m.reply(novaSalahV2("ftoolroman", {
           kaomoji: "(・_・;)",
           pesan: "kombinasi huruf romawinya gak valid",
-          contoh: `${prefix}roman MMXXVI`,
-        }), "roman");
+          contoh: `${prefix}ftoolroman MMXXVI`,
+        }), "ftoolroman");
       }
       result = String(n); label = `${raw} (Romawi) → ${n} (Arab)`;
     } else {
       await m.react("❌");
-      return m.reply(novaSalahV2("roman", {
+      return m.reply(novaSalahV2("ftoolroman", {
         kaomoji: "(・_・;)",
         pesan: "input harus angka biasa atau huruf romawi (I V X L C D M)",
-        contoh: `${prefix}roman 2026`,
-      }), "roman");
+        contoh: `${prefix}ftoolroman 2026`,
+      }), "ftoolroman");
     }
     await m.react("🐣");
     await m.reply(claraWrap("Roman Numeral", ["KONVERSI BERHASIL",

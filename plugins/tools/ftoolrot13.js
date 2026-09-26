@@ -1,12 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .rot13 — sandi ROT13 (port altftool.com/tools/all/rot13) — geser huruf 13 posisi.
+// .ftoolrot13 — sandi ROT13 (port altftool.com/tools/all/rot13) — geser huruf 13 posisi.
 // ROT13 symmetric: encode = decode. Huruf saja, angka/emoji/aksara lain gak disentuh.
 import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "rot13", alias: ["rot13", "sandirot13"], category: "tools",
-  description: "Enkripsi/dekripsi teks dengan sandi ROT13", usage: ".rot13 <teks>",
-  example: ".rot13 halo dunia", isOwner: false, isPremium: false,
+  name: "ftoolrot13", alias: ["rot13", "sandirot13"], category: "tools",
+  description: "Enkripsi/dekripsi teks dengan sandi ROT13", usage: ".ftoolrot13 <teks>",
+  example: ".ftoolrot13 halo dunia", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
@@ -23,14 +23,14 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const text = (m.text || "").trim();
     if (!text) {
-      return m.reply(novaGuideV2("rot13", {
+      return m.reply(novaGuideV2("ftoolrot13", {
         kaomoji: "(¬‿¬)✧",
         sapaan: "teks mau disandikan ROT13? ketik aja, ulangi perintahnya buat ngembaliin~",
         cara: "setiap huruf digeser 13 posisi, ketik dua kali hasilnya balik ke teks asli",
-        contoh: `${prefix}rot13 halo dunia → unyb qhavn`,
+        contoh: `${prefix}ftoolrot13 halo dunia → unyb qhavn`,
         note: "huruf besar/kecil tetap dipertahankan, angka dan emoji gak disentuh",
         spec: ["⏱ 3dtk", "💸 gratis"],
-      }), "rot13");
+      }), "ftoolrot13");
     }
     const out = rot13(text);
     await m.react("🐣");
@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
       "",
       "```" + out + "```",
       "",
-      `Balikin: ${prefix}rot13 ${out}`].join("\n")));
+      `Balikin: ${prefix}ftoolrot13 ${out}`].join("\n")));
   } catch (e) {
     await m.react("❌");
     await m.reply(claraWrap("ROT13", ["ERROR: " + (e?.message || e)].join("\n")));
