@@ -12,6 +12,7 @@ import { formatBytes, formatDuration, formatClockLine } from "../../src/lib/nova
 import {
   getOptimizerState, setOptimizer, optimizeNow,
 } from "../../src/lib/nova-optimizer.js";
+import { gracefulRestart, isRestarting } from "../../src/lib/nova-process-control.js";
 
 const pluginConfig = {
   name: "index",
@@ -38,6 +39,7 @@ const SUB_LIST = [
   "ram — cek pemakaian RAM sekarang",
   "optimize — optimasi RAM SEKARANG (manual)",
   "status — ringkasan semua kontrol",
+  "restart — restart bot dari chat (konfirmasi: restart ya)",
 ];
 
 async function handler(m, { sock, config: botConfig }) {
@@ -170,6 +172,28 @@ async function handler(m, { sock, config: botConfig }) {
         `RAM: ${formatBytes(process.memoryUsage().rss)}`,
         `WA: ${cs?.isConnected ? "✅ nyambung" : "❌ terputus"}`,
         `Uptime: ${formatDuration(process.uptime())}`,
+      ]));
+    }
+
+    // ─── restart (no.2 — restart bot dari chat, DB disimpan dulu) ───
+    if (sub === "restart") {
+      const act = (arg1 || "").toLowerCase();
+      if (act === "ya") {
+        const res = await gracefulRestart();
+        if (!res.ok) {
+          return mm.reply(claraWrap("index", "⚠ Proses restart udah jalan — bot bakal bangun sendiri."));
+        }
+        return mm.reply(claraWrap("index", [
+          "🔄 Restart dijalankan...",
+          "",
+          "Database disimpan dulu, bot keluar, lalu pm2 bangunin lagi.",
+          "Tunggu ± 10 dtk, panel log bakal nampilin boot berikutnya.",
+        ]));
+      }
+      return mm.reply(claraWrap("index", [
+        "⚠ Restart bot akan memutus koneksi WA sejenak (± 10 dtk).",
+        "",
+        `Yakin? Ketik: ${prefix}index restart ya`,
       ]));
     }
 

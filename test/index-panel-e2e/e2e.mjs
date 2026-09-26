@@ -28,6 +28,7 @@ const {
   initOptimizerMonitor, stopOptimizerMonitor, _optimizerInternalsForTest,
 } = await import(R + "/src/lib/nova-optimizer.js");
 const plugin = await import(R + "/plugins/owner/index.js");
+const procCtl = await import(R + "/src/lib/nova-process-control.js");
 
 // ─── 1. optimizer state ───
 t("1a plugin config name=index kategori owner", plugin.config.name === "index" && plugin.config.category === "owner" && plugin.config.isOwner === true);
@@ -132,6 +133,23 @@ await plugin.handler(fakeM(["ping", "on"], ".index ping on"), { sock: fakeSockCt
 t("5p .index ping on (alias)", pitl.isRunning() === true);
 const pingOff = await run(["ping", "off"]);
 t("5q .index ping off (alias) → mati", pitl.isRunning() === false && pingOff.includes("ᴍᴀᴛɪᴋᴀɴ"), pingOff.slice(0, 60));
+
+// ─── 6. .index restart (no.2 — DB disimpan dulu, exit via seam) ───
+const pctl = procCtl._processControlForTest();
+const exitCalls = [];
+pctl.setExit((code) => exitCalls.push(code));
+const cardR1 = await run(["restart"]);
+t("6a restart tanpa konfirmasi → kartu peringatan", cardR1.includes("ʏᴀᴋɪɴ") || cardR1.includes("ʀᴇꜱᴛᴀʀᴛ"), cardR1.slice(0, 90));
+const cardR2 = await run(["restart", "ya"]);
+t("6b restart ya → dijalankan (belum exit, jeda 1.5 dtk)", cardR2.includes("ᴅɪᴊᴀʟᴀɴᴋᴀɴ") && exitCalls.length === 0, cardR2.slice(0, 90));
+t("6c isRestarting aktif", procCtl.isRestarting() === true);
+const resDup = await procCtl.gracefulRestart();
+t("6d panggilan kedua ditolak (idempotent)", resDup.ok === false && resDup.reason.includes("sedang"));
+// tunggu jeda 1.6 dtk → exit(0) via seam terpanggil
+await new Promise((r) => setTimeout(r, 1700));
+t("6e exit(0) terpanggil setelah jeda", exitCalls.length === 1 && exitCalls[0] === 0, JSON.stringify(exitCalls));
+pctl.restoreExit();
+pctl.resetRestarting();
 
 w("");
 w(`===== ${pass} PASS, ${fail} FAIL =====`);
