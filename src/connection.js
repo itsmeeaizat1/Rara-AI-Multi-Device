@@ -2118,6 +2118,32 @@ function getConnectionState() {
 }
 
 /**
+ * Reconnect manual dari runtime (.index reconnect — fitur no.4 panel owner,
+ * 26 Sep 2026). Pola sama dengan watchdog: putus sengaja → event close
+ * → handler reconnect nyambung lagi otomatis. Proses TIDAK dimatikan.
+ * @param {string} reason - Alasan reconnect (untuk jurnal koneksi)
+ * @returns {{ok: boolean, reason?: string}}
+ */
+function forceReconnect(reason = "manual (.index reconnect)") {
+  if (!connectionState.sock) return { ok: false, reason: "belum ada koneksi aktif" };
+  try {
+    import("./lib/nova-conn-journal.js").then((j) =>
+      j.recordDisconnect({
+        code: 0,
+        msg: "Reconnect manual dari panel .index (sengaja)",
+        source: reason,
+      }),
+    );
+  } catch {}
+  connectionState.isReady = false;
+  connectionState.isConnected = false;
+  try {
+    connectionState.sock.end();
+  } catch {}
+  return { ok: true };
+}
+
+/**
  * Mendapatkan socket instance
  * @returns {Object|null} Socket atau null jika tidak terkoneksi
  */
@@ -2181,4 +2207,5 @@ export {
   isConnected,
   getUptime,
   logout,
+  forceReconnect,
 };
