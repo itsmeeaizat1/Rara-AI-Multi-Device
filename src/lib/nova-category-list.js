@@ -41,14 +41,14 @@ const CATEGORY_ORDER = [
   // → PALING AKHIR: panel, vps, main, info, owner
   // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
   // maker → download → group → tools → sisanya → PALING AKHIR admin section.
-  "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "tools",
+  "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "sewa premium", "tools",
   "browser", "canvas", "convert", "fun", "couple", "confess menfess", "game",
   "rpg", "rpg couple", "clan",
   "search", "stalker", "anime", "jkt48", "airich", "asupan", "cecan", "nsfw",
   "media", "tts", "quotes", "primbon",
   "education", "food", "cek", "berita", "bencana",
   "islami", "smart", "utility", "misc", "random",
-  "store", "market", "sewa premium", "jpm", "pushkontak",
+  "store", "market", "jpm", "pushkontak",
   // PALING AKHIR (owner): panel, vps, main, info, owner
   "panel", "vps", "main", "info", "owner",
 ];

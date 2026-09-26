@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
       const categoryOrder = [
         // Core Bot
-        "ai", "sticker", "group", "download", "tools", "browser",
+        "ai", "sticker", "group", "sewa premium", "download", "tools", "browser",
         // Media & Kreatif
         "canvas", "convert", "maker", "ephoto", "fun", "game",
         // Game & RPG
@@ -117,7 +117,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // System & User
         "main", "user", "premium", "future",
         // Store
-        "store", "market", "sewa premium",
+        "store", "market",
         // Misc
         "misc", "random", "utility", "clean",
         // Admin
