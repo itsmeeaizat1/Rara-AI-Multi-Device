@@ -11,7 +11,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "fakestory4",
   alias: ["fakestory4"],
-  category: "canvas",
+  category: "maker",
   description: "Fake Instagram story dengan 2 gambar berbeda",
   usage: ".fakestory4 <nama>",
   example: ".fakestory4 Misaki (reply album/2 gambar)",

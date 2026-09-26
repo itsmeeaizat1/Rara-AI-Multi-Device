@@ -17,7 +17,7 @@ import { getCasesByCategory } from "../../case/nova.js";
 const CATEGORY_NAMES = {
   ai: "AI",
   "ai image": "AI Image", sticker: "Sticker", group: "Group", download: "Download",
-  tools: "Tools", browser: "Browser", canvas: "Canvas", fun: "Fun",
+  tools: "Tools", browser: "Browser", fun: "Fun",
   couple: "Couple", "confess menfess": "Confess & Menfess", game: "Game",
   rpg: "RPG", "rpg couple": "RPG Couple", clan: "Clan",
   search: "Search", stalker: "Stalker", anime: "Anime", jkt48: "JKT48", airich: "AI Rich",
@@ -44,7 +44,7 @@ const CATEGORY_ORDER = [
   // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
   // maker → download → group → tools → sisanya → PALING AKHIR admin section.
   "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "sewa premium", "tools",
-  "browser", "canvas", "convert", "fun", "couple", "confess menfess", "game",
+  "browser", "convert", "fun", "couple", "confess menfess", "game",
   "rpg", "rpg couple", "clan",
   "search", "stalker", "anime", "jkt48", "airich", "asupan", "cecan", "nsfw",
   "media", "tts", "quotes", "primbon",
@@ -59,7 +59,7 @@ const CATEGORY_EMOJI = {
   ai: "🧠",
   "ai agent": "🤖", "smart": "✨",
   "ai image": "🎨", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️", browser: "🌐",
-  canvas: "🎨", convert: "🔄", maker: "🖌️", ephoto: "📸",
+  convert: "🔄", maker: "🖌️", ephoto: "📸",
   fun: "🎉", couple: "💕", "confess menfess": "💌", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
   search: "🔍", stalker: "🕵️", anime: "🎌", jkt48: "🌸", airich: "✨", asupan: "😍", cecan: "💃", nsfw: "🔞",
   media: "🎬", tts: "🔊", quotes: "💬", primbon: "🔮",

@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakeff",
   alias: ["fakeff"],
-  category: "canvas",
+  category: "maker",
   description: "Membuat gambar ff",
   usage: ".fakeff <text>",
   example: ".fakeff Hai cantik",

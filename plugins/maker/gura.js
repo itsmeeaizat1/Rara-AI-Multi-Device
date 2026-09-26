@@ -9,7 +9,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "gura",
   alias: ["gura"],
-  category: "canvas",
+  category: "maker",
   description: "Bikin efek canvas gura dari fotomu",
   usage: ".gura (reply/kirim foto)",
   example: ".gura",

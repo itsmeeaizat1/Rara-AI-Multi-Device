@@ -7,7 +7,7 @@ import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "iqc",
   alias: ["iqc"],
-  category: "canvas",
+  category: "maker",
   description: "Membuat gambar chat iPhone/Android style (2 varian)",
   usage: ".iqc android/iphone <text>",
   example: ".iqc iphone Hai cantik",
