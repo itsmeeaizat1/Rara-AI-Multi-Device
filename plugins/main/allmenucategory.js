@@ -40,7 +40,7 @@ const CATEGORY_NAMES = {
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
-  panel: "Panel", owner: "Owner", store: "Store",
+  panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium",
   anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
   downloader: "Downloader", education: "Education", future: "Future",
   islami: "Islami", islamic: "Islamic", menu: "Menu", maker: "Maker",
@@ -117,7 +117,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // System & User
         "main", "user", "premium", "future",
         // Store
-        "store", "market",
+        "store", "market", "sewa premium",
         // Misc
         "misc", "random", "utility", "clean",
         // Admin

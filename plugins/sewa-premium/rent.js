@@ -12,7 +12,7 @@ import fs from "fs";
 const pluginConfig = {
   name: "sewa",
   alias: ["sewa"],
-  category: "store",
+  category: "sewa premium",
   description: "Info detail sewa bot - harga, fitur, dan cara sewa",
   usage: ".sewa",
   example: ".sewa",
