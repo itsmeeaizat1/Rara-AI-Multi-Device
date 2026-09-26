@@ -33,6 +33,17 @@ Owner: ".aicall 628xxx" (chat WA)
 
 Panggilan MASUK ke nomor bot juga dijawab AI otomatis (hanya nomor di OWNER).
 
+### Voice Command Bridge (26 Sep 2026 — owner: "lg telepon ai call 'halo
+tolong matikan bot' otomatis respon ke cmd bot off atau fitur lain")
+Transkrip STT tiap giliran bicara dikirim dulu ke bot utama
+(nova-aicall-bridge.js, POST /voice di 127.0.0.1:8790, key AICALL_HTTP_KEY):
+- "matikan bot" → .bot off · "nyalakan bot" → .bot on · "bisukan bot" →
+  .bot mute · "restart bot" → .index restart · "sambungkan ulang koneksi"
+  → .index reconnect · "simpan database" → .index db save
+- "titik <command>" → SEMUA fitur bot via suara (tetap lewat middleware izin)
+- Hanya nomor OWNER yang bisa; nomor lain selalu dijawab percakapan biasa.
+- restart/reconnect: dijawab dulu, eksekusi 800ms kemudian (reply-first).
+
 ## Deploy VPS (urus sekali)
 
 ```bash
