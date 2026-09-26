@@ -17,6 +17,8 @@ import NodeCache from "node-cache";
 import config, { isOwner as isOwners, setBotNumber } from "../config.js";
 import * as colors from "./lib/nova-logger.js";
 import { extendSocket } from "./lib/nova-socket.js";
+// Voice command bridge AI Call — owner kontrol bot lewat telepon (26 Sep)
+import { startAicallVoiceBridge } from "./lib/nova-aicall-bridge.js";
 import {
   isLid,
   lidToJid,
@@ -471,6 +473,9 @@ async function startConnection(options = {}) {
 
   connectionState.sock = sock;
   extendSocket(sock);
+  // AI Call voice-command bridge: POST /voice dari service Go aicall →
+  // "matikan bot" di telepon = .bot off. Fire-and-forget, gagal-senyap-proof.
+  try { startAicallVoiceBridge(sock); } catch (e) { console.error("[aicall-bridge] init gagal:", e?.message || e); }
 
 
   if (usePairingCode && !sock.authState.creds.registered) {
