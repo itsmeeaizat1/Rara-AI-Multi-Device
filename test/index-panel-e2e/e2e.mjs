@@ -151,6 +151,12 @@ t("6e exit(0) terpanggil setelah jeda", exitCalls.length === 1 && exitCalls[0] =
 pctl.restoreExit();
 pctl.resetRestarting();
 
+// ─── 7. .index dbsave (no.3 — paksa simpan DB) ───
+const saveCard = await run(["dbsave"]);
+t("7a .index dbsave → tersimpan", saveCard.includes("ᴛᴇʀꜱɪᴍᴘᴀɴ"), saveCard.slice(0, 80));
+const saveCardAlias = await run(["db"]);
+t("7b alias db → jalan juga", saveCardAlias.includes("ᴛᴇʀꜱɪᴍᴘᴀɴ"));
+
 w("");
 w(`===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail > 0 ? 1 : 0);

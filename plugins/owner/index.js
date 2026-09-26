@@ -40,6 +40,7 @@ const SUB_LIST = [
   "optimize — optimasi RAM SEKARANG (manual)",
   "status — ringkasan semua kontrol",
   "restart — restart bot dari chat (konfirmasi: restart ya)",
+  "dbsave — simpan database sekarang (anti rugi data)",
 ];
 
 async function handler(m, { sock, config: botConfig }) {
@@ -172,6 +173,18 @@ async function handler(m, { sock, config: botConfig }) {
         `RAM: ${formatBytes(process.memoryUsage().rss)}`,
         `WA: ${cs?.isConnected ? "✅ nyambung" : "❌ terputus"}`,
         `Uptime: ${formatDuration(process.uptime())}`,
+      ]));
+    }
+
+    // ─── dbsave (no.3 — paksa simpan DB sebelum restart/backup) ───
+    if (sub === "dbsave" || sub === "db" || sub === "dbsimpan") {
+      const db = getDatabase();
+      if (!db?.save) return mm.reply(claraWrap("index", "❌ Database belum siap."));
+      await db.save();
+      return mm.reply(claraWrap("index", [
+        "💾 Database tersimpan sekarang.",
+        "",
+        "Semua perubahan (user, sesi, config) udah ditulis ke disk.",
       ]));
     }
 
