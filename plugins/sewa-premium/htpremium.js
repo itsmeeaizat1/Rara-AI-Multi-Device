@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['htpremium', 'hidetagpremium', 'htprem'],
     alias: ["htpremium", "hidetagpremium", "htprem"],
-    category: 'group',
+    category: 'sewa premium',
     description: 'Hidetag dengan support reply pesan (teks/media)',
     usage: '.htprem [pesan] atau reply pesan',
     example: '.htprem atau reply pesan lalu .htprem',

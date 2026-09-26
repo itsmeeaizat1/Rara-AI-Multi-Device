@@ -5,7 +5,7 @@ import { claraWrap, commandListLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
  name: 'benefitpremium',
  alias: ["benefitpremium"],
- category: 'main',
+ category: 'sewa premium',
  description: 'Lihat penjelasan dan daftar fitur khusus Premium',
  usage: '.benefitpremium',
  isOwner: false,
