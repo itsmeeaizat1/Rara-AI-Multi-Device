@@ -35,7 +35,7 @@ const pluginConfig = {
 
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun", jkt48: "JKT48", airich: "AI Rich",
-  canvas: "Canvas", tools: "Tools", game: "Game", html: "HTML", rpg: "RPG",
+  tools: "Tools", game: "Game", html: "HTML", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
@@ -104,7 +104,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // Core Bot
         "ai", "sticker", "group", "sewa premium", "download", "tools", "browser",
         // Media & Kreatif
-        "canvas", "convert", "maker", "ephoto", "fun", "game",
+        "convert", "maker", "ephoto", "fun", "game",
         // Game & RPG
         "rpg", "rpg couple", "clan", "turnamen",
         // Search & Info

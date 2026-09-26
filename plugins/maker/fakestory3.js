@@ -9,12 +9,12 @@ import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "fakestory2",
-  alias: ["fakestory2"],
-  category: "canvas",
-  description: "Fake Instagram story dengan 1 gambar full",
-  usage: ".fakestory2 <nama>",
-  example: ".fakestory2 Misaki (reply gambar)",
+  name: "fakestory3",
+  alias: ["fakestory3"],
+  category: "maker",
+  description: "Fake Instagram story dengan text overlay",
+  usage: ".fakestory3 <nama>|<text1>|<text2>",
+  example: ".fakestory3 Misaki|Tersenyumlah|untuk menutupi kesedihan",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -82,23 +82,49 @@ function drawCoverImage(ctx, img, x, y, w, h) {
   ctx.drawImage(img, drawX, drawY, drawW, drawH);
   ctx.restore();
 }
-function drawBlurredBackground(ctx, canvas, img) {
+function drawBlurredBackground(ctx, canvas, imgTop, imgBottom) {
   const w = canvas.width;
   const h = canvas.height;
   ctx.save();
   ctx.filter = "blur(30px) brightness(30%)";
   const bleed = 40;
-  drawCoverImage(ctx, img, -bleed, -bleed, w + bleed * 2, h + bleed * 2);
+  drawCoverImage(ctx, imgTop, -bleed, -bleed, w + bleed * 2, h / 2 + bleed);
+  drawCoverImage(ctx, imgBottom, -bleed, h / 2, w + bleed * 2, h / 2 + bleed);
   ctx.restore();
 }
-async function createFakeStory(username, avatarBuffer, imageBuffer) {
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(" ");
+  const lines = [];
+  let currentLine = "";
+  for (const word of words) {
+    const testLine = currentLine + (currentLine ? " " : "") + word;
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  }
+  if (currentLine) lines.push(currentLine);
+  return lines;
+}
+async function createFakeStory(
+  username,
+  avatarBuffer,
+  imageTopBuffer,
+  imageBottomBuffer,
+  text1,
+  text2,
+) {
   const { createCanvas, loadImage, Path2D } = _canvas;
   const height = 1150;
   const canvas = createCanvas(canvasConfig.width, height);
   const ctx = canvas.getContext("2d");
   const avatar = await loadImage(avatarBuffer);
-  const img = await loadImage(imageBuffer);
-  drawBlurredBackground(ctx, canvas, img);
+  const imgTop = await loadImage(imageTopBuffer);
+  const imgBottom = await loadImage(imageBottomBuffer);
+  drawBlurredBackground(ctx, canvas, imgTop, imgBottom);
   const cardMarginX = 25;
   const cardMarginY = 60;
   const cardW = canvasConfig.width - cardMarginX * 2;
@@ -126,8 +152,52 @@ async function createFakeStory(username, avatarBuffer, imageBuffer) {
   ctx.fill(pOpts);
   ctx.restore();
   const footerHeight = 70;
-  const contentHeight = cardH - headerHeight - footerHeight;
-  drawCoverImage(ctx, img, cardX, cardY + headerHeight, cardW, contentHeight);
+  const contentAvailableHeight = cardH - headerHeight - footerHeight;
+  const singleImageHeight = contentAvailableHeight / 2;
+  drawCoverImage(
+    ctx,
+    imgTop,
+    cardX,
+    cardY + headerHeight,
+    cardW,
+    singleImageHeight,
+  );
+  if (text1) {
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.shadowColor = "rgba(0,0,0,0.8)";
+    ctx.shadowBlur = 8;
+    const lines1 = wrapText(ctx, text1, cardW - 60);
+    const textY1 =
+      cardY + headerHeight + singleImageHeight - 30 - lines1.length * 24;
+    lines1.forEach((line, i) => {
+      ctx.fillText(line, cardX + cardW / 2, textY1 + i * 24);
+    });
+    ctx.shadowBlur = 0;
+  }
+  drawCoverImage(
+    ctx,
+    imgBottom,
+    cardX,
+    cardY + headerHeight + singleImageHeight,
+    cardW,
+    singleImageHeight,
+  );
+  if (text2) {
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.shadowColor = "rgba(0,0,0,0.8)";
+    ctx.shadowBlur = 8;
+    const lines2 = wrapText(ctx, text2, cardW - 60);
+    const textY2 =
+      cardY + headerHeight + singleImageHeight * 2 - 30 - lines2.length * 24;
+    lines2.forEach((line, i) => {
+      ctx.fillText(line, cardX + cardW / 2, textY2 + i * 24);
+    });
+    ctx.shadowBlur = 0;
+  }
   const iconY = cardY + cardH - footerHeight / 2;
   function drawSvgOutline(pathData, x, y, scale) {
     ctx.save();
@@ -172,20 +242,28 @@ async function getAvatarBuffer(sock, jid) {
     if (ppUrl) {
       return await downloadImage(ppUrl);
     }
-  } catch (e) { console.error('[fakestory2.js]:', e.message); }
+  } catch (e) { console.error('[fakestory3.js]:', e.message); }
   if (DEFAULT_PP_BUFFER) {
     return DEFAULT_PP_BUFFER;
   }
   throw new Error("Tidak dapat mengambil foto profil");
 }
 async function handler(m, { sock }) {
-  const username = m.args.join(" ").trim() || m.pushName || "User";
+  const input = m.args.join(" ");
+  if (!input || !input.includes("|")) {
+    return m.reply( `📷 *Fake sTory 3*\n\n` +
+        `Reply gambar dengan format:\n` +
+        `\`${m.prefix}fakestory3 nama|text1|text2\`\n\n` +
+        `Contoh:\n` +
+        `\`${m.prefix}fakestory3 Misaki|Tersenyumlah|untuk menutupi kesedihan\``, "fakestory3");
+  }
+  const parts = input.split("|").map((s) => s.trim());
+  const username = parts[0] || m.pushName || "User";
+  const text1 = parts[1] || "";
+  const text2 = parts[2] || "";
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return m.reply( `📷 *Fake sTory 2*\n\n` +
-        `Reply gambar!\n\n` +
-        `Format: \`${m.prefix}fakestory2 <nama>\`\n` +
-        `Contoh: \`${m.prefix}fakestory2 Misaki\``, "fakestory2");
+    return m.reply(novaError("FakeStory3", "Reply gambar dulu nih!"));
   }
   try {
     await m.react("🕒");
@@ -198,20 +276,28 @@ async function handler(m, { sock }) {
     }
     if (!imageBuffer) {
       await m.react("❌");
-      return m.reply(novaError("FakeStory2", "Gagal download gambar nih"));
+      return m.reply(novaError("FakeStory3", "Gagal download gambar nih"));
     }
     const resultBuffer = await createFakeStory(
       username,
       avatarBuffer,
       imageBuffer,
+      imageBuffer,
+      text1,
+      text2,
     );
     await m.react("🐣");
-    await sock.sendMedia(m.chat, resultBuffer, null, m, {
-      type: "image",
-    });
+    await sock.sendMessage(
+      m.chat,
+      {
+        image: resultBuffer,
+        caption: `📷 *ꜰᴀᴋᴇ ꜱᴛᴏʀʏ*\n\nUsername: \`${username}\``,
+      },
+      { quoted: m },
+    );
   } catch (error) {
     await m.react("❌");
-    m.reply(claraWrap("fakestory2", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(claraWrap("fakestory3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

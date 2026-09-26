@@ -56,7 +56,7 @@ async function generateImage(saldo, greet) {
 const pluginConfig = {
     name: 'fakebankjago',
     alias: ["fakebankjago"],
-    category: 'canvas',
+    category: "maker",
     description: 'Membuat gambar chat iPhone style',
     usage: '.fakebankjago <text>',
     example: '.fakebankjago Hai cantik',

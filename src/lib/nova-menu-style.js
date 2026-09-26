@@ -482,7 +482,7 @@ function closeBoxRight(text) {
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
   couple: "Couple", "confess menfess": "Confess & Menfess",
-  canvas: "Canvas", tools: "Tools", rpg: "RPG", "rpg couple": "RPG Couple",
+  tools: "Tools", rpg: "RPG", "rpg couple": "RPG Couple",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
@@ -499,7 +499,7 @@ const CATEGORY_NAMES = {
 
 const CATEGORY_EMOJIS = {
   ai: "🧠", sticker: "🖼️", download: "📥", fun: "🎮", jkt48: "🌸", airich: "✨", couple: "💕", "confess menfess": "💌",
-  canvas: "🎨", tools: "🛠️", rpg: "🎯", "rpg couple": "❤️",
+  tools: "🛠️", rpg: "🎯", "rpg couple": "❤️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
   utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
   economy: "💰", user: "📊", random: "🎲", premium: "💎",

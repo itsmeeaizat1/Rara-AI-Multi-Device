@@ -12,7 +12,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "fakeml",
   alias: ["fakeml"],
-  category: "canvas",
+  category: "maker",
   description: "Membuat fake ML profile card",
   usage: ".fakeml <nama> (reply/kirim foto)",
   example: ".fakeml Misaki",
