@@ -7,7 +7,7 @@ import config from "../../config.js";
 const pluginConfig = {
   name: "cekcuacav2",
   alias: ["cekcuacav2"],
-  category: "info",
+  category: "cuaca",
   description: "Cek cuaca via OpenWeather (suhu, kelembaban, angin, deskripsi)",
   usage: ".cekcuacav2 [nama kota]",
   example: ".cekcuacav2 Jakarta\n.cekcuacav2 London",

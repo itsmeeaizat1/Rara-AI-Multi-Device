@@ -24,7 +24,7 @@ const novaGuide = (header, intro, example) =>
 const pluginConfig = {
   name: "disaster",
   alias: ["disaster"], // rename owner 15 Sep 2026 — alias lama dihapus (request "hapus aja nama lamanya")
-  category: "bencana",
+  category: "cuaca",
   description: "Cek bencana alam aktif dunia (banjir, topan, gunung api, karhutla, gempa, tsunami, kekeringan)",
   usage: ".disaster [gempa/banjir/badai/gunungapi/kebakaran/kering/tsunami]",
   example: ".disaster\n.disaster banjir",

@@ -6,7 +6,7 @@ import * as cheerio from 'cheerio';
 const pluginConfig = {
     name: "beritav2",
     alias: ["beritav2"],
-    category: 'info',
+    category: "berita",
     description: 'Berita terkini dari RSS Indonesia (Detik, Kompas, CNN, Tribun)',
     usage: '.beritav2 <sumber>',
     example: '.beritav2 detik',

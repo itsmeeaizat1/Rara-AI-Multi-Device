@@ -10,7 +10,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "gempa",
   alias: ["gempa", "infogempa", "gempaterkini"],
-  category: "info",
+  category: "cuaca",
   description: "Info gempa terkini dari BMKG (gempa terbaru, dirasakan, list)",
   usage: ".gempa [terkini/dirasakan/list]",
   example: ".gempa",

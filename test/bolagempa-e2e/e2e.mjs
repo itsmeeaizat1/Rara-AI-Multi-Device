@@ -129,7 +129,7 @@ w("\n— JADWALBOLA: ESPN rewire + kickoff ticker —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— GEMPA: wave anim + fix crash —");
 {
-  const g = await import(R + "/plugins/info/autodisasterearthquake.js");
+  const g = await import(R + "/plugins/cuaca/autodisasterearthquake.js");
   const { handler } = g;
 
   const gempaFix = {
