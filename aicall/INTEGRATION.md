@@ -98,6 +98,9 @@ Matikan auto-run: `touch aicall/.noautostart`. Hasil auto-run terakhir kelihatan
 - `.aicall 62<nomor>` → bot menelepon, AI menyapa "Halo! Saya adalah AI Asisten..."
 - `.aicall engine edgetts` / `.aicall voice id-ID-ArdiNeural` — ganti suara live
 - Telpon nomor bot dari HP owner → AI yang angkat
+- HENING (26 Sep): user diam → AI nyapa duluan "Halo? Apa kamu masih ada?
+  Ada yang bisa saya bantu?" (giliran sepi ke-3, lalu tiap 10 giliran);
+  hening TOTAL 5 MENIT → AI pamit & telepon ditutup otomatis.
 - AKSES (26 Sep): owner selalu lolos; user PREMIUM boleh telepon (dicek
   bridge POST /acl — premium list bot utama); non-owner non-premium DITOLAK.
   Premium yang nyuruh perintah kontrol bot ("matikan bot" dll) → AI jawab
