@@ -19,13 +19,17 @@
 //
 // Key Gemini + Groq + GROK (xAI) diambil dari PUSAT apikeys.json dan
 // dikirim per-request — service Go pakai itu, .env cuma fallback.
-// Otak percakapan: GROK (xai) kalau key-nya ada, kalau tidak GROQ (key owner
-// 17 Sep, model gpt-oss-20b super cepat), kalau tidak Gemini.
-// Ganti otak live: .aicall ai grok / groq / gemini.
+// Otak percakapan: GROK (xai) kalau key-nya ada, kalau tidak AGENT
+// (gateway 9router — otak AI agent bot utama, request owner 26 Sep:
+// "key Grok mahal gak dipasang, fallback tembak ke ai agent"), kalau
+// tidak GROQ (key owner 17 Sep, model gpt-oss-20b super cepat), kalau
+// tidak Gemini.
+// Ganti otak live: .aicall ai grok / agent / groq / gemini.
 // Deploy/aturan lengkap: aicall/INTEGRATION.md
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
 import { getAicallAutostartStatus } from "../../src/lib/nova-aicall-autostart.js";
+import { getTioEndpoint, getTioKey } from "../../src/lib/config/env-loader.js";
 
 const AICALL_BASE = process.env.AICALL_HTTP_BASE || "http://127.0.0.1:8788";
 
@@ -74,12 +78,43 @@ function pusatKey(name) {
   }
 }
 
+// 🔹 seam e2e — function = mock {key,url,model}; undefined = baca pusat asli
+let _agentInfoImpl;
+export function _setAicallAgentForTest(fn) { _agentInfoImpl = fn; }
+export function _clearAicallAgentForTest() { _agentInfoImpl = undefined; }
+
+// info gateway 9router (otak AI agent) — endpoint + key dari pusat, sama
+// dengan provider tio_* bot utama. Gagal baca pusat → dianggap gak ada.
+function agentInfo() {
+  if (typeof _agentInfoImpl === "function") return _agentInfoImpl();
+  try {
+    const key = String(getTioKey() || "").trim();
+    const url = String(getTioEndpoint() || "").trim();
+    return { key, url, model: "ag/gemini-pro-agent" };
+  } catch {
+    return { key: "", url: "", model: "ag/gemini-pro-agent" };
+  }
+}
+
+// persona Aina versi panggilan suara — request owner 26 Sep: "fallback ke
+// ai biasa, tembak ke ai agent, jadi seolah-olah telepon interaksi bicara
+// dengan ai agent". Sopan, saya/kamu, SINGKAT (suara telepon).
+const AINA_CALL_PROMPT = [
+  "Kamu adalah Aina, asisten AI wanita Indonesia yang sedang berbicara lewat panggilan telepon WhatsApp.",
+  "Aturan penting:",
+  "1. Jawab dengan SINGKAT, SOPAN, dan ALAMI (maksimal 1-2 kalimat pendek, maksimal 25 kata).",
+  "2. Gunakan kata 'saya' untuk dirimu dan 'kamu' untuk lawan bicara. Jangan pakai bahasa gaul atau slang.",
+  "3. JANGAN jawaban panjang, bertele-tele, atau berbentuk daftar agar suara tidak terpotong.",
+  "4. JANGAN gunakan format markdown (bintang, pagar, bullet) atau emoji — kamu berbicara, bukan menulis.",
+  "5. Basa-basi secukupnya: sapa manis, tanya kabar sekali di awal, lalu fokus bantu kebutuhannya.",
+].join("\n");
+
 const pluginConfig = {
   name: "aicall",
   alias: ["aicall", "aicaller"],
   category: "owner",
   description: "Panggilan suara AI — telepon kesambung AI (service aicall)",
-  usage: ".aicall <nomor> — bot AI menelepon nomor tujuan\n.aicall status — status service AI Call\n.aicall engine <edgetts|geminitts|elevenlabs|openai|animetts> — ganti TTS engine live\n.aicall voice <nama_suara> — ganti suara live\n.aicall ai <grok|groq|gemini> — ganti otak percakapan live\n\nNomor format internasional tanpa + (contoh: 628123456789). Panggilan masuk ke nomor bot juga dijawab AI.",
+  usage: ".aicall <nomor> — bot AI menelepon nomor tujuan\n.aicall status — status service AI Call\n.aicall engine <edgetts|geminitts|elevenlabs|openai|animetts> — ganti TTS engine live\n.aicall voice <nama_suara> — ganti suara live\n.aicall ai <grok|agent|groq|gemini> — ganti otak percakapan live\n\nNomor format internasional tanpa + (contoh: 628123456789). Panggilan masuk ke nomor bot juga dijawab AI.",
   example: ".aicall 628123456789\n.aicall status",
   isOwner: true,
   isPremium: false,
@@ -119,7 +154,7 @@ async function handler(m) {
         "",
         "Sesi WA: " + (j.connected ? "terhubung" : "BELUM TERTAUT — cek pm2 logs nova-aicall (pairing code)"),
         "Uptime: " + (j.uptime || "-"),
-        "Otak AI: " + (j.provider ? j.provider + (j.provider === "grok" ? " (" + (j.grok_model || "grok-3-mini") + ")" : j.provider === "groq" ? " (" + (j.groq_chat_model || "openai/gpt-oss-20b") + ")" : "") : "-"),
+        "Otak AI: " + (j.provider ? j.provider + (j.provider === "grok" ? " (" + (j.grok_model || "grok-3-mini") + ")" : j.provider === "agent" ? " (" + (j.agent_model || "ag/gemini-pro-agent") + " — AI agent)" : j.provider === "groq" ? " (" + (j.groq_chat_model || "openai/gpt-oss-20b") + ")" : "") : "-"),
         "Model AI: " + (j.model || "-"),
         "TTS Engine: " + (j.engine || "-"),
         "Suara: " + (j.voice || "-"),
@@ -167,12 +202,19 @@ async function handler(m) {
     // ── .aicall ai <grok|groq|gemini> — ganti otak percakapan live ──
     if (sub === "ai" || sub === "otak" || sub === "provider") {
       const provider = (args[1] || "").toLowerCase();
-      if (provider !== "grok" && provider !== "groq" && provider !== "gemini") {
-        return m.reply(claraWrap("aicall", "Pilihan otak AI: grok (xAI) / groq (super cepat) / gemini\nContoh: .aicall ai groq"));
+      if (provider !== "grok" && provider !== "agent" && provider !== "groq" && provider !== "gemini") {
+        return m.reply(claraWrap("aicall", "Pilihan otak AI: grok (xAI) / agent (AI agent 9router) / groq (super cepat) / gemini\nContoh: .aicall ai agent"));
       }
       try { await m.react("🛠️"); } catch {}
       const body = { ai_provider: provider };
       if (provider === "grok") body.grok_api = pusatKey("grok") || pusatKey("xai");
+      if (provider === "agent") {
+        const ag = agentInfo();
+        body.agent_url = ag.url;
+        body.agent_key = ag.key;
+        body.agent_model = ag.model;
+        body.system_prompt = AINA_CALL_PROMPT;
+      }
       if (provider === "groq") body.groq_api = pusatKey("groq");
       const r = await apiCall("/config", { method: "POST", body });
       const j = r.json || {};
@@ -187,6 +229,12 @@ async function handler(m) {
       }
       if (provider === "groq" && !pusatKey("groq")) {
         keyNote = "\n⚠️ Key Groq belum ada di pusat apikeys.json (bagian groq).";
+      }
+      if (provider === "agent" && !agentInfo().key) {
+        keyNote = "\n⚠️ Key gateway 9router belum ada di pusat apikeys.json (bagian tioApiKey). Sementara pakai .aicall ai groq dulu ya.";
+      }
+      if (provider === "agent" && agentInfo().key) {
+        keyNote = "\nPersona panggilan: Aina (sopan, saya/kamu) — seolah-olah telepon dengan AI agent.";
       }
       return m.reply(claraWrap("aicall", "Otak AI panggilan diganti ke " + provider + "." + keyNote));
     }
@@ -218,8 +266,19 @@ async function handler(m) {
     if (xk) {
       body.grok_api = xk;
       body.ai_provider = "grok";
-    } else if (qk) {
-      body.ai_provider = "groq";
+    } else {
+      // owner 26 Sep: key Grok gak dipasang (mahal) → tembak ke AI agent
+      // (gateway 9router, persona Aina) SEBELUM groq/gemini
+      const ag = agentInfo();
+      if (ag.key && ag.url) {
+        body.ai_provider = "agent";
+        body.agent_url = ag.url;
+        body.agent_key = ag.key;
+        body.agent_model = ag.model;
+        body.system_prompt = AINA_CALL_PROMPT;
+      } else if (qk) {
+        body.ai_provider = "groq";
+      }
     }
     const r = await apiCall("/call", { method: "POST", body, timeoutMs: 60000 });
     const j = r.json || {};

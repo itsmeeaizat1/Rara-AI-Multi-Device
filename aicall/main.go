@@ -30,18 +30,20 @@ import (
 // support tlpon kesambung ai pakai fitur ini") ═══
 // Service ini jalan BERSAMA bot utama Node.js (Baileys gak support VOIP
 // call WhatsApp). Bot utama manggil lewat HTTP lokal (plugin .aicall):
-//   POST /call    {"number":"628xxx","gemini_api":"","groq_api":""}
-//   POST /config  {"engine":"edgetts","voice":"id-ID-GadisNeural"}
-//   GET  /health  status sesi + config aktif
+//
+//	POST /call    {"number":"628xxx","gemini_api":"","groq_api":""}
+//	POST /config  {"engine":"edgetts","voice":"id-ID-GadisNeural"}
+//	GET  /health  status sesi + config aktif
+//
 // Chat command service ini (default OFF via COMMANDS_ENABLED=false) biar gak
 // dobalas dengan bot utama.
 var botStartTime = time.Now()
 
 var (
-	waClientRef    *whatsmeow.Client
-	callerRef      *meowcaller.Client
-	aicallMu       sync.Mutex // guard mutasi AppConfig via HTTP
-	commandsOn     bool        // COMMANDS_ENABLED=true → chat command aktif
+	waClientRef *whatsmeow.Client
+	callerRef   *meowcaller.Client
+	aicallMu    sync.Mutex // guard mutasi AppConfig via HTTP
+	commandsOn  bool       // COMMANDS_ENABLED=true → chat command aktif
 )
 
 func main() {
@@ -58,7 +60,7 @@ func main() {
 		conv := NewConversation()
 		reply, err := conv.Chat("Jawab dengan satu kata: siap")
 		if err != nil {
-			fmt.Println("[AI_CHAT_TEST] GAGAL — provider '" + cfg.AIProvider + "':", err)
+			fmt.Println("[AI_CHAT_TEST] GAGAL — provider '"+cfg.AIProvider+"':", err)
 			os.Exit(1)
 		}
 		fmt.Printf("[AI_CHAT_TEST] OK — provider '%s' jawab: %s\n", cfg.AIProvider, reply)
@@ -411,7 +413,10 @@ type callRequest struct {
 	Number       string `json:"number"`
 	GeminiAPI    string `json:"gemini_api,omitempty"`
 	GroqAPI      string `json:"groq_api,omitempty"`
-	GrokAPI      string `json:"grok_api,omitempty"` // xAI Grok — otak percakapan (owner 17 Sep)
+	GrokAPI      string `json:"grok_api,omitempty"`  // xAI Grok — otak percakapan (owner 17 Sep)
+	AgentURL     string `json:"agent_url,omitempty"` // gateway 9router — otak AI agent (owner 26 Sep)
+	AgentKey     string `json:"agent_key,omitempty"`
+	AgentModel   string `json:"agent_model,omitempty"`
 	AIProvider   string `json:"ai_provider,omitempty"`
 	SystemPrompt string `json:"system_prompt,omitempty"`
 }
@@ -425,6 +430,9 @@ type configRequest struct {
 	GeminiAPI    string  `json:"gemini_api,omitempty"`
 	GroqAPI      string  `json:"groq_api,omitempty"`
 	GrokAPI      string  `json:"grok_api,omitempty"`
+	AgentURL     string  `json:"agent_url,omitempty"` // gateway 9router (owner 26 Sep)
+	AgentKey     string  `json:"agent_key,omitempty"`
+	AgentModel   string  `json:"agent_model,omitempty"`
 	AIProvider   string  `json:"ai_provider,omitempty"`
 }
 
@@ -501,17 +509,18 @@ func startHTTPAPI() {
 		}
 		connected := waClientRef != nil && waClientRef.IsConnected()
 		writeJSON(w, 200, map[string]interface{}{
-			"ok":         true,
-			"connected":  connected,
-			"uptime":     time.Since(botStartTime).Truncate(time.Second).String(),
-			"provider":       AppConfig.AIProvider,
-			"grok_model":     AppConfig.GrokModel,
+			"ok":              true,
+			"connected":       connected,
+			"uptime":          time.Since(botStartTime).Truncate(time.Second).String(),
+			"provider":        AppConfig.AIProvider,
+			"grok_model":      AppConfig.GrokModel,
 			"groq_chat_model": AppConfig.GroqChatModel,
-			"model":      AppConfig.GeminiModel,
-			"engine":     AppConfig.TTSEngine,
-			"voice":      AppConfig.TTSVoice,
-			"owners":     len(AppConfig.Owners),
-			"commands":   commandsOn,
+			"agent_model":     AppConfig.AgentModel,
+			"model":           AppConfig.GeminiModel,
+			"engine":          AppConfig.TTSEngine,
+			"voice":           AppConfig.TTSVoice,
+			"owners":          len(AppConfig.Owners),
+			"commands":        commandsOn,
 		})
 	})
 
@@ -547,9 +556,18 @@ func startHTTPAPI() {
 		if strings.TrimSpace(req.GrokAPI) != "" {
 			AppConfig.GrokAPI = strings.TrimSpace(req.GrokAPI)
 		}
+		if strings.TrimSpace(req.AgentURL) != "" {
+			AppConfig.AgentURL = strings.TrimSpace(req.AgentURL)
+		}
+		if strings.TrimSpace(req.AgentKey) != "" {
+			AppConfig.AgentKey = strings.TrimSpace(req.AgentKey)
+		}
+		if strings.TrimSpace(req.AgentModel) != "" {
+			AppConfig.AgentModel = strings.TrimSpace(req.AgentModel)
+		}
 		if strings.TrimSpace(req.AIProvider) != "" {
 			p := strings.ToLower(strings.TrimSpace(req.AIProvider))
-			if p == "grok" || p == "groq" || p == "gemini" {
+			if p == "grok" || p == "agent" || p == "groq" || p == "gemini" {
 				AppConfig.AIProvider = p
 			}
 		}
@@ -613,13 +631,22 @@ func startHTTPAPI() {
 		if strings.TrimSpace(req.GrokAPI) != "" {
 			AppConfig.GrokAPI = strings.TrimSpace(req.GrokAPI)
 		}
+		if strings.TrimSpace(req.AgentURL) != "" {
+			AppConfig.AgentURL = strings.TrimSpace(req.AgentURL)
+		}
+		if strings.TrimSpace(req.AgentKey) != "" {
+			AppConfig.AgentKey = strings.TrimSpace(req.AgentKey)
+		}
+		if strings.TrimSpace(req.AgentModel) != "" {
+			AppConfig.AgentModel = strings.TrimSpace(req.AgentModel)
+		}
 		if strings.TrimSpace(req.AIProvider) != "" {
 			p := strings.ToLower(strings.TrimSpace(req.AIProvider))
-			if p == "grok" || p == "groq" || p == "gemini" {
+			if p == "grok" || p == "agent" || p == "groq" || p == "gemini" {
 				AppConfig.AIProvider = p
 			} else {
 				aicallMu.Unlock()
-				writeErr(w, 400, "provider tidak valid (grok/groq/gemini)")
+				writeErr(w, 400, "provider tidak valid (grok/agent/groq/gemini)")
 				return
 			}
 		}

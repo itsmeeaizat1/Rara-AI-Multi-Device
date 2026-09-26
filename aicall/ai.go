@@ -67,7 +67,9 @@ func (c *Conversation) Chat(userPrompt string) (string, error) {
 		provider = "groq"
 	}
 	order = append(order, provider)
-	for _, p := range []string{"grok", "groq", "gemini"} {
+	// owner 26 Sep 2026: key Grok mahal/gak dipasang → fallback ke "agent"
+	// (gateway 9router — otak AI agent bot utama) SEBELUM groq/gemini.
+	for _, p := range []string{"grok", "agent", "groq", "gemini"} {
 		if p != provider {
 			order = append(order, p)
 		}
@@ -83,6 +85,11 @@ func (c *Conversation) Chat(userPrompt string) (string, error) {
 				continue
 			}
 			reply, err = c.chatGrok()
+		case "agent":
+			if AppConfig.AgentURL == "" {
+				continue
+			}
+			reply, err = c.chatAgent()
 		case "groq":
 			if AppConfig.GroqAPI == "" {
 				continue
@@ -175,6 +182,26 @@ func (c *Conversation) chatGroq() (string, error) {
 	}
 	models = append(models, "qwen/qwen3.8-27b")
 	return c.chatOpenAICompat("https://api.groq.com/openai/v1/chat/completions", AppConfig.GroqAPI, models, "groq")
+}
+
+// chatAgent — percakapan via gateway 9router (OpenAI-compatible) = otak
+// AI agent bot utama. Request owner 26 Sep 2026: "kalau apikey Grok gak
+// dipasang (mahal), fallback ngandelin ke ai biasa, tembak ke ai agent".
+// Key & endpoint dikirim per-request dari pusat apikeys.json bot utama
+// (tioApiKey) — .env cuma fallback.
+func (c *Conversation) chatAgent() (string, error) {
+	if AppConfig.AgentURL == "" {
+		return "", fmt.Errorf("ROUTER9_API_URL (gateway 9router) belum dikonfigurasi")
+	}
+	primaryModel := AppConfig.AgentModel
+	if primaryModel == "" {
+		primaryModel = "ag/gemini-pro-agent"
+	}
+	models := []string{primaryModel}
+	if primaryModel != "ag/gemini-3-flash" {
+		models = append(models, "ag/gemini-3-flash")
+	}
+	return c.chatOpenAICompat(AppConfig.AgentURL, AppConfig.AgentKey, models, "agent")
 }
 
 // chatOpenAICompat — generic OpenAI chat completions (dipakai grok & groq)
