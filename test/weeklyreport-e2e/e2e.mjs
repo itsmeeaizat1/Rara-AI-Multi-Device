@@ -15,8 +15,8 @@ function t(label, cond, extra) {
 const R = path.resolve(".");
 const { fromSC } = await import(R + "/src/lib/styler.js");
 const norm = (s) => fromSC(String(s || ""));
-// tracker pakai DB_PATH process.cwd()/src/data/activity-tracker.json — sandbox pakai file lokal biar gak ganggu data asli
-const TRACKER_DB = path.join(R, "src", "data", "activity-tracker.json");
+// tracker pakai DB_PATH process.cwd()/src/database/auto/activity-tracker.json — sandbox pakai file lokal biar gak ganggu data asli
+const TRACKER_DB = path.join(R, "src", "database", "auto", "activity-tracker.json");
 const BACKUP = TRACKER_DB + ".bak-e2e";
 const existed = fs.existsSync(TRACKER_DB);
 if (existed) fs.copyFileSync(TRACKER_DB, BACKUP);

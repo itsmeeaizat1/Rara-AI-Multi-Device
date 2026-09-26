@@ -12,7 +12,8 @@ import { logger } from "./nova-logger.js";
 const BACKUP_STATE_FILE = path.join(
   process.cwd(),
   "src",
-  "data",
+  "database",
+  "auto",
   "autobackup.json",
 );
 let sockInstance = null;

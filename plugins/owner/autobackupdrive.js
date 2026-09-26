@@ -12,7 +12,7 @@ import fs from "fs";
 import path from "path";
 import { CronJob } from "cron";
 
-const DRIVE_STATE_FILE = path.join(process.cwd(), "src", "data", "autobackup_drive.json");
+const DRIVE_STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "autobackup_drive.json");
 const CREDS_PATH = path.join(process.cwd(), "config", "gdrive-service-account.json");
 const FOLDER_ID_FILE = path.join(process.cwd(), "config", "gdrive-folder-id.txt");
 

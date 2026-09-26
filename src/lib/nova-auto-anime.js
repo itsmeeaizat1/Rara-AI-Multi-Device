@@ -5,7 +5,7 @@ import * as cheerio from 'cheerio'
 import fs from 'fs'
 import path from 'path'
 const BASE_URL = 'https://winbu.net'
-const DATA_DIR = path.join(process.cwd(), 'src', 'data')
+const DATA_DIR = path.join(process.cwd(), 'src', 'database', 'auto')
 const SENT_FILE = path.join(DATA_DIR, 'autoanime_winbu_sent.json')
 const STATE_FILE = path.join(DATA_DIR, 'autoanime_winbu_state.json')
 

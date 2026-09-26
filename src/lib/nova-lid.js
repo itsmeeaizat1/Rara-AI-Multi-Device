@@ -4,7 +4,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
 
 const lidCache = new Map();
-const LID_CACHE_PATH = join(process.cwd(), "src", "data", "lid-cache.json");
+const LID_CACHE_PATH = join(process.cwd(), "src", "database", "system", "lid-cache.json");
 let _persistDirty = false;
 let _persistTimer = null;
 
@@ -24,7 +24,7 @@ function loadPersistentCache() {
 function savePersistentCache() {
   if (!_persistDirty) return;
   try {
-    const dirPath = join(process.cwd(), "src", "data");
+    const dirPath = join(process.cwd(), "src", "database", "system");
     if (!existsSync(dirPath)) mkdirSync(dirPath, { recursive: true });
     const obj = Object.fromEntries(lidCache);
     writeFileSync(LID_CACHE_PATH, JSON.stringify(obj));

@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const DATA_PATH = path.join(__dirname, "..", "data", "family100.json");
-export const STATE_PATH = path.join(__dirname, "..", "data", "family100.state.json");
+export const STATE_PATH = path.join(__dirname, "..", "database", "game", "family100.state.json");
 
 // ─── Sumber soal internet (dataset family100 publik) ───
 // Dataset komunitas berputar di banyak repo tapi isinya mirip — dedup by soal,

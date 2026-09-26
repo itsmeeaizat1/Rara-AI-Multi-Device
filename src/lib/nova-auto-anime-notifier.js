@@ -24,7 +24,7 @@ import { mergeAutoTargets } from "./nova-auto-target.js";
 import config from "../../config.js";
 import { logger } from "./nova-logger.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "autoanimenotifier.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "autoanimenotifier.json");
 const DEFAULT_INTERVAL_MENIT = 30; // default 30 menit — bisa diset .animenotify interval <menit>
 const MAX_SEEN = 300; // ala script: cache limit 500 → keep 300 terbaru
 const PER_PAGE = 20;

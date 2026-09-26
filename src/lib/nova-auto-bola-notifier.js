@@ -37,7 +37,7 @@ import path from "path";
 import { mergeAutoTargets } from "./nova-auto-target.js";
 import { logger } from "./nova-logger.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "autobolanotify.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "autobolanotify.json");
 
 const ESPN_API = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const TSDB_API = "https://www.thesportsdb.com/api/v1/json/3";

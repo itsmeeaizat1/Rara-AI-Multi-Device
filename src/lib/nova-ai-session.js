@@ -13,7 +13,7 @@
 
 import fs from "node:fs";
 
-const DB = "./src/data/ai-sessions.json";
+const DB = "./src/database/ai/ai-sessions.json";
 const MAX_HISTORY = 24;
 const TTL_MS = 30 * 60 * 1000; // 30 menit
 

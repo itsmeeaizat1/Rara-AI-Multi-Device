@@ -66,7 +66,7 @@ const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
 
 // PENTING (15 Sep 2026): let + seam — e2e test bisa arahin state file ke
 // /tmp biar gak nyetag state produksi.
-let STATE_FILE = path.join(process.cwd(), "src", "data", "bencana-state.json");
+let STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "bencana-state.json");
 export function _setBencanaStateFileForTest(f) { STATE_FILE = f || STATE_FILE; }
 
 // ───────────────────────────── util ─────────────────────────────

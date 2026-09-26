@@ -13,7 +13,7 @@ let _botJid = null;
 let _watcherStarted = false;
 let _upsertHooked = false;
 
-const DB_PATH = path.join(process.cwd(), "src", "data", "absen.json");
+const DB_PATH = path.join(process.cwd(), "src", "database", "group", "absen.json");
 
 // ── Database helpers ──
 function loadDB() {

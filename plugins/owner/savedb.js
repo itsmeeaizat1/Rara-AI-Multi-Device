@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     if (!config.isOwner(m.sender)) {
         { const __navText = '❌ *Owner Only!*'; return await m.reply(__navText); }
     }
-    const dbPath = path.join(process.cwd(), "src", "data", 'db.json')
+    const dbPath = path.join(process.cwd(), "src", "database", 'main', 'db.json')
     if (!fs.existsSync(dbPath)) {
         return m.reply(claraWrap("savedb", `❌ File database tidak ditemukan!`))
     }

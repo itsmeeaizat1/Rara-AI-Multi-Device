@@ -17,7 +17,7 @@ import fs from "fs";
 import path from "path";
 import { logger } from "./nova-logger.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "webwatch.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "webwatch.json");
 
 const DEFAULT_INTERVAL_MENIT = 15;
 export const MIN_INTERVAL = 5;

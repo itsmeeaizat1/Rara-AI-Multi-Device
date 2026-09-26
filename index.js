@@ -289,7 +289,7 @@ async function main() {
 
   const dbPath = path.join(
     process.cwd(),
-    config.database?.path || "./database/main",
+    config.database?.path || "./src/database",
   );
   await initDatabase(dbPath);
   const db = getDatabase();

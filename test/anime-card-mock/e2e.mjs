@@ -1,5 +1,5 @@
 // E2E anime notifier preview card (upgrade 9 Sep 2026, perpaduan script owner).
-// Jalankan dari cwd DIR KOSONG: mkdir -p /tmp/anime-e2e/src/data && cd /tmp/anime-e2e &&
+// Jalankan dari cwd DIR KOSONG: mkdir -p /tmp/anime-e2e/src/database/auto && cd /tmp/anime-e2e &&
 // node --experimental-loader <repo>/test/anime-card-mock/loader.mjs <repo>/test/anime-card-mock/e2e.mjs
 // (cwd dir kosong biar STATE_FILE & db test gak nyampur repo)
 import fs from "fs";
@@ -11,7 +11,7 @@ import path from "path";
 import { fileURLToPath } from "node:url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 // initDatabase wajib path eksplisit (gotcha lama: tanpa path → silent exit)
-await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase("/tmp/anime-e2e/db"));
+await import(REPO + "/src/lib/nova-database.js").then((m) => m.initDatabase(path.join(process.cwd(), "db")));
 
 const N = await import(REPO + "/src/lib/nova-auto-anime-notifier.js");
 const JID = "6281234567890@s.whatsapp.net";
@@ -85,7 +85,7 @@ globalThis.__ANIME_FIXTURE__ = [anime(1, { nextEp: 1, timeUntilH: 5 }), anime(2,
 N.addTarget(JID);
 sent.length = 0;
 const r1 = await N.runCheck();
-const st1 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "autoanimenotifier.json"), "utf8"));
+const st1 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "database", "auto", "autoanimenotifier.json"), "utf8"));
 check("4a. first-run: baseline initDone + sample terkirim", st1.initDone === true && sent.length >= 1, JSON.stringify(r1));
 check("4b. sample pakai banner card renderLargerThumbnail", sent[0]?.content?.contextInfo?.externalAdReply?.renderLargerThumbnail === true);
 
@@ -144,11 +144,11 @@ globalThis.__IMG_DOWN__ = false;
 // ─── 10. knob interval: .animenotify interval <menit> (5–720) ───
 check("10a. interval invalid (2, 800, abc) ditolak", N.setIntervalMenit(2) === null && N.setIntervalMenit(800) === null && N.setIntervalMenit("abc") === null);
 const iv = N.setIntervalMenit(60);
-const st10 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "autoanimenotifier.json"), "utf8"));
+const st10 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "database", "auto", "autoanimenotifier.json"), "utf8"));
 check("10b. interval 60 menit tersimpan & kebaca status", iv === 60 && st10.intervalMenit === 60 && N.getStatus().intervalMenit === 60);
 
 // ─── 9. cache limit: seenIds dibatasi 300 (ala script 500→300) ───
-const st9 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "data", "autoanimenotifier.json"), "utf8"));
+const st9 = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "database", "auto", "autoanimenotifier.json"), "utf8"));
 check("9a. seenIds ≤ 300 setelah beberapa run", (st9.seenIds || []).length <= 300, `len=${(st9.seenIds || []).length}`);
 
 console.log(`═══ ${pass} PASS, ${fail} FAIL ═══`);
