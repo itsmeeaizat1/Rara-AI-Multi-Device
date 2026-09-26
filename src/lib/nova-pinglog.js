@@ -9,9 +9,11 @@
 //   │ 📥 12 msg │ ❌ 0 err │ 🔒 kode ✅ │ 🔐 sandi ON
 // Deteksi kerusakan & keamanan:
 //   ⚠ deteksi error (hook logger.error, per window 20 dtk)
-//   🔐 DETEKSI PERUBAHAN KODE — jumlah file berubah/baru/hilang TANPA
-//      menyebutkan file atau isi kodenya (baseline stat: size+mtime
-//      seluruh .js plugins/ + src/ + index.js, dibangun saat boot).
+//   🔐 DETEKSI PERUBAHAN KODE — file berubah/baru/hilang DISEBUTKAN
+//      lengkap dengan lokasinya (rev owner 26 Sep: "file disebutin mana
+//      yg diubah lokasinya, bisa deteksi file ditambah & dihapus");
+//      isi kodenya TETAP gak pernah ditampilkan. Baseline stat:
+//      size+mtime seluruh .js plugins/ + src/ + index.js, dibangun saat boot.
 //
 // Anti-leak: interval idempotent (panggil 2x gak dobel), timer unref biar
 // proses bisa exit wajar, PINGLOG_OFF=1 matiin total.
@@ -126,17 +128,42 @@ export function scanCodeTree(rootDir = process.cwd()) {
   return out;
 }
 
-// diff murni: hitung berubah/baru/hilang — TANPA nama file keluar
+// diff murni: hitung berubah/baru/hilang + DAFTAR file-nya (rev owner:
+// file & lokasi disebutin; isi kode tetap gak pernah keluar)
 export function diffCodeTrees(baseline = {}, current = {}) {
-  let changed = 0, added = 0, deleted = 0;
+  const changedFiles = [], addedFiles = [], deletedFiles = [];
   for (const [f, sig] of Object.entries(current)) {
-    if (!(f in baseline)) added++;
-    else if (baseline[f] !== sig) changed++;
+    if (!(f in baseline)) addedFiles.push(f);
+    else if (baseline[f] !== sig) changedFiles.push(f);
   }
   for (const f of Object.keys(baseline)) {
-    if (!(f in current)) deleted++;
+    if (!(f in current)) deletedFiles.push(f);
   }
-  return { changed, added, deleted };
+  const sortRel = (arr) => arr
+    .map((f) => path.relative(process.cwd(), f) || f)
+    .sort();
+  return {
+    changed: changedFiles.length,
+    added: addedFiles.length,
+    deleted: deletedFiles.length,
+    changedFiles: sortRel(changedFiles),
+    addedFiles: sortRel(addedFiles),
+    deletedFiles: sortRel(deletedFiles),
+  };
+}
+
+// render daftar file deteksi — cap 5 per kategori biar log gak kebanjiran
+const DETEKSI_CAP = 5;
+export function renderDeteksiFiles(kode = {}) {
+  const lines = [];
+  const push = (icon, files) => {
+    files.slice(0, DETEKSI_CAP).forEach((f) => lines.push(`      ${icon} ${f}`));
+    if (files.length > DETEKSI_CAP) lines.push(`      … +${files.length - DETEKSI_CAP} file lainnya`);
+  };
+  push("✏", kode.changedFiles || []);
+  push("＋", kode.addedFiles || []);
+  push("－", kode.deletedFiles || []);
+  return lines;
 }
 
 // ─── Counter window (reset tiap tick) ───
@@ -197,7 +224,10 @@ async function tick(print = console.log) {
     kode = diffCodeTrees(codeBaseline, scanCodeTree());
   }
   const kodeTotal = kode.changed + kode.added + kode.deleted;
-  const kodeSig = `${kode.changed}.${kode.added}.${kode.deleted}`;
+  const kodeSig = [
+    kode.changed, kode.added, kode.deleted,
+    ...(kode.changedFiles || []), ...(kode.addedFiles || []), ...(kode.deletedFiles || []),
+  ].join("|");
 
   print(
     buildPingLine({
@@ -226,6 +256,7 @@ async function tick(print = console.log) {
   if (codeBaseline && kodeSig !== lastCodeSig) {
     if (kodeTotal > 0) {
       print(`   🔐 DETEKSI PERUBAHAN KODE: ${kode.changed} berubah · ${kode.added} baru · ${kode.deleted} hilang — restart bot biar perubahan aktif`);
+      for (const fl of renderDeteksiFiles(kode)) print(fl);
     } else if (lastCodeSig !== "0.0.0") {
       print("   ✅ kode kembali utuh sesuai baseline boot");
     }

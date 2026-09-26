@@ -20,7 +20,7 @@ const {
   formatDuration, formatBytes, buildPingLine,
   notePingMessage, notePingError,
   startPingLog, stopPingLog, _pingLogInternalsForTest,
-  scanCodeTree, diffCodeTrees,
+  scanCodeTree, diffCodeTrees, renderDeteksiFiles,
 } = mod;
 
 // ─── 1. formatDuration ───
@@ -117,6 +117,11 @@ const fakeCur = { "/x/a.js": "999:9", "/x/c.js": "50:3" };
 const d = diffCodeTrees(fakeBase, fakeCur);
 t("8b diff: 1 berubah · 1 baru · 1 hilang", d.changed === 1 && d.added === 1 && d.deleted === 1, JSON.stringify(d));
 t("8c diff identik = 0 semua", diffCodeTrees(fakeBase, fakeBase).changed === 0);
+t("8d diff sebut daftar file", (d.changedFiles || []).length === 1 && (d.addedFiles || []).length === 1 && (d.deletedFiles || []).length === 1, JSON.stringify(d));
+// render daftar: cap 5 per kategori + baris "+N lainnya"
+const banyak = Array.from({ length: 7 }, (_, i) => `f${i}.js`);
+const ren = renderDeteksiFiles({ changedFiles: banyak, addedFiles: ["baru.js"], deletedFiles: [] });
+t("8e render cap 5 + sisa", ren.filter((x) => x.startsWith("      ✏")).length === 5 && ren.some((x) => x.includes("+2 file lainnya")), ren.join(" / "));
 
 // ─── 9. field baru baris ping: cpu, kode, sandi ───
 const line9 = buildPingLine({ cpu: 0.75, kodeChanged: 2, kodeNew: 1, kodeGone: 0, sandiOn: true });
@@ -144,7 +149,9 @@ t("9e kode utuh default", line9b.includes("🔒 kode ✅"));
   await itl.runTick((s) => printed10.push(s));
   const deteksi = printed10.find((x) => x.includes("DETEKSI PERUBAHAN KODE")) || "";
   t("10b deteksi kode berubah muncul", deteksi.includes("1 berubah") && deteksi.includes("1 baru") && deteksi.includes("1 hilang"), printed10.join(" | "));
-  t("10c DETEKSI gak nyebut nama file/kode", !/\.js/.test(deteksi), deteksi);
+  const fileList = printed10.filter((x) => x.startsWith("      "));
+  t("10c DETEKSI nyebut lokasi file (rev owner)", fileList.some((x) => x.includes("✏") && x.endsWith(".js")) && fileList.some((x) => x.includes("－") && x.includes("fake-hilang")), printed10.join(" | "));
+  t("10c2 isi kode tetap gak pernah ditampilkan", !printed10.some((x) => x.includes("999999:999999")), printed10.join(" | "));
   // tick kedua: signature sama → gak dobel baris deteksi
   printed10.length = 0;
   await itl.runTick((s) => printed10.push(s));
