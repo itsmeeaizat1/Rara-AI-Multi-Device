@@ -18,6 +18,16 @@ const tsP = await from("ftooltimestamp");
 const uidP = await from("ftooluuid");
 const hexP = await from("ftooltexthex");
 const urlP = await from("ftoolurlcode");
+const b32P = await from("ftoolbase32");
+const ascP = await from("ftoolasciitext");
+const nwP = await from("ftoolnumberwords");
+const durP = await from("ftooldurasi");
+const stP = await from("ftoolstriptags");
+const ddP = await from("ftooldeduplines");
+const slP = await from("ftoolsortlines");
+const ntP = await from("ftoolnato");
+const erP = await from("ftoolemojiremove");
+const rpP = await from("ftoolreplace");
 const { fromSC } = await import("../../src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
 
@@ -49,6 +59,9 @@ t("  6 handler exported", plugs.every(([, p]) => typeof p.handler === "function"
 const plugs2 = [["roman", romP], ["rot13", rotP], ["timestamp", tsP], ["uuid", uidP], ["texthex", hexP], ["urlcode", urlP]];
 t("  batch 2: 6 plugin tools + enabled + cd 3", plugs2.every(([, p]) => p.config.category === "tools" && p.config.isEnabled === true && p.config.cooldown === 3 && p.config.name.startsWith("ftool")));
 t("  batch 2: 6 handler exported", plugs2.every(([, p]) => typeof p.handler === "function"));
+const plugs3 = [["ftoolbase32", b32P], ["ftoolasciitext", ascP], ["ftoolnumberwords", nwP], ["ftooldurasi", durP], ["ftoolstriptags", stP], ["ftooldeduplines", ddP], ["ftoolsortlines", slP], ["ftoolnato", ntP], ["ftoolemojiremove", erP], ["ftoolreplace", rpP]];
+t("  batch 3: 10 plugin ftool prefix + tools + cd 3", plugs3.every(([, p]) => p.config.name.startsWith("ftool") && p.config.category === "tools" && p.config.isEnabled === true && p.config.cooldown === 3));
+t("  batch 3: 10 handler exported", plugs3.every(([, p]) => typeof p.handler === "function"));
 
 // ═══ 2. JWT ═══
 w("\n— .jwt —");
@@ -266,6 +279,182 @@ w("\n— .urlcode —");
 {
   const m = mkM("dec %zz", "ftoolurlcode"); await run(urlP, m);
   t("  % gak valid → ditolak + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 14. BASE32 ═══
+w("\n— .ftoolbase32 —");
+{
+  const m = mkM("enc foobar", "ftoolbase32"); await run(b32P, m);
+  t("  enc foobar → MZXW6YTBOI====== (RFC 4648)", has(m, "MZXW6YTBOI======") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("enc f", "ftoolbase32"); await run(b32P, m);
+  t("  enc f → MY======", has(m, "MY======"));
+}
+{
+  const m = mkM("dec MZXW6YTBOI", "ftoolbase32"); await run(b32P, m);
+  t("  dec MZXW6YTBOI → foobar", has(m, "foobar"));
+}
+{
+  const m = mkM("dec bukan-base32-1!", "ftoolbase32"); await run(b32P, m);
+  t("  dec invalid → pesan salah + ❌", m.reacts.includes("❌"));
+}
+{
+  const m = mkM("", "ftoolbase32"); await run(b32P, m);
+  t("  tanpa arg → kartu usage", last(m).includes(sc("ftoolbase32")));
+}
+
+// ═══ 15. ASCIITEXT ═══
+w("\n— .ftoolasciitext —");
+{
+  const m = mkM("enc abc", "ftoolasciitext"); await run(ascP, m);
+  t("  enc abc → 97 98 99", has(m, "97 98 99") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("dec 104 97 108 111", "ftoolasciitext"); await run(ascP, m);
+  t("  dec 104 97 108 111 → halo", has(m, "halo"));
+}
+{
+  const m = mkM("dec 104,97", "ftoolasciitext"); await run(ascP, m);
+  t("  dec pakai koma juga bisa → ha", has(m, "ha"));
+}
+{
+  const m = mkM("dec xyz", "ftoolasciitext"); await run(ascP, m);
+  t("  dec bukan angka → pesan salah + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 16. NUMBERWORDS ═══
+w("\n— .ftoolnumberwords —");
+{
+  const m = mkM("2026", "ftoolnumberwords"); await run(nwP, m);
+  t("  2026 → dua ribu dua puluh enam", has(m, "dua ribu dua puluh enam") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("1500000", "ftoolnumberwords"); await run(nwP, m);
+  t("  1500000 → satu juta lima ratus ribu", has(m, "satu juta lima ratus ribu"));
+}
+{
+  const m = mkM("100", "ftoolnumberwords"); await run(nwP, m);
+  t("  100 → seratus", has(m, "seratus"));
+}
+{
+  const m = mkM("0", "ftoolnumberwords"); await run(nwP, m);
+  t("  0 → nol", has(m, "nol"));
+}
+{
+  const m = mkM("15", "ftoolnumberwords"); await run(nwP, m);
+  t("  15 → lima belas", has(m, "lima belas"));
+}
+{
+  const m = mkM("1001", "ftoolnumberwords"); await run(nwP, m);
+  t("  1001 → seribu satu", has(m, "seribu satu"));
+}
+{
+  const m = mkM("abc", "ftoolnumberwords"); await run(nwP, m);
+  t("  input bukan angka → pesan salah + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 17. DURASI ═══
+w("\n— .ftooldurasi —");
+{
+  const m = mkM("2026-09-26|2026-12-31", "ftooldurasi"); await run(durP, m);
+  t("  26 Sep → 31 Des 2026 = 96 hari (13 mgg 5 hr)", has(m, "96 hari", "13 minggu 5 hari") && m.reacts.includes("🐣"), last(m).substring(0, 220));
+}
+{
+  const m = mkM("2026-12-31|2026-09-26", "ftooldurasi"); await run(durP, m);
+  t("  urutan dibalik → hasil sama (swap otomatis)", has(m, "96 hari"));
+}
+{
+  const m = mkM("26-09-2026 08:00|26-09-2026 10:30", "ftooldurasi"); await run(durP, m);
+  t("  selisih jam → total 0 hari + detail 2 jam 30 menit", has(m, "total: 0 hari", "2 jam 30 menit"), last(m).substring(0, 220));
+}
+{
+  const m = mkM("besok|lusa", "ftooldurasi"); await run(durP, m);
+  t("  tanggal gak valid → pesan salah + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 18. STRIPTAGS ═══
+w("\n— .ftoolstriptags —");
+{
+  const m = mkM("<p>halo <b>dunia</b></p>", "ftoolstriptags"); await run(stP, m);
+  t("  tag dibuang: halo dunia", has(m, "halo dunia") && !last(m).includes("<b>") && m.reacts.includes("🐣"), last(m).substring(0, 160));
+}
+{
+  const m = mkM("a &amp; b", "ftoolstriptags"); await run(stP, m);
+  t("  entity &amp; → &", has(m, "a & b"));
+}
+{
+  const m = mkM("<br>", "ftoolstriptags"); await run(stP, m);
+  t("  hasil kosong → error jujur + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 19. DEDUPLINES ═══
+w("\n— .ftooldeduplines —");
+{
+  const m = mkM("nasi\ngoreng\nnasi\nbakso", "ftooldeduplines"); await run(ddP, m);
+  t("  4 baris → 3 unik, dihapus 1", has(m, "unik: 3", "dihapus: 1") && m.reacts.includes("🐣"), last(m).substring(0, 200));
+}
+{
+  const m = mkM("a\nb\na\nb\na", "ftooldeduplines"); await run(ddP, m);
+  t("  urutan pertama dipertahankan", last(m).indexOf("a") < last(m).indexOf("b"));
+}
+
+// ═══ 20. SORTLINES ═══
+w("\n— .ftoolsortlines —");
+{
+  const m = mkM("az mangga\napel\njeruk", "ftoolsortlines"); await run(slP, m);
+  const scaz = last(m).replace(/\n/g, " ");
+  t("  az → apel jeruk mangga (3 baris)", has(m, "×3 baris") && sc(scaz).indexOf("apel") < sc(scaz).indexOf("jeruk") && sc(scaz).indexOf("jeruk") < sc(scaz).indexOf("mangga") && m.reacts.includes("🐣"), last(m).substring(0, 200));
+}
+{
+  const m = mkM("za mangga\napel\njeruk", "ftoolsortlines"); await run(slP, m);
+  const scza = sc(last(m)).replace(/\n/g, " ");
+  t("  za → mangga jeruk apel", scza.indexOf("mangga") < scza.indexOf("apel"));
+}
+{
+  const m = mkM("acak x\ny\nz", "ftoolsortlines"); await run(slP, m);
+  t("  acak → 3 baris tetap lengkap", last(m).includes("x") && last(m).includes("y") && last(m).includes("z"));
+}
+{
+  const m = mkM("turun mangga apel", "ftoolsortlines"); await run(slP, m);
+  t("  mode gak dikenal → kartu usage", last(m).includes(sc("ftoolsortlines")));
+}
+
+// ═══ 21. NATO ═══
+w("\n— .ftoolnato —");
+{
+  const m = mkM("budi", "ftoolnato"); await run(ntP, m);
+  t("  budi → Bravo Uniform Delta India", has(m, "bravo uniform delta india") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("b1", "ftoolnato"); await run(ntP, m);
+  t("  angka ikut dieja: b1 → Bravo One", has(m, "bravo one"));
+}
+
+// ═══ 22. EMOJIREMOVE ═══
+w("\n— .ftoolemojiremove —");
+{
+  const m = mkM("halo 🎉 dunia 😄", "ftoolemojiremove"); await run(erP, m);
+  t("  emoji dibuang: halo dunia", has(m, "halo dunia") && !last(m).includes("🎉") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("🎉😄", "ftoolemojiremove"); await run(erP, m);
+  t("  isinya emoji semua → error jujur + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 23. REPLACE ═══
+w("\n— .ftoolreplace —");
+{
+  const m = mkM("kucing|anjing|kucing hitam dan kucing putih", "ftoolreplace"); await run(rpP, m);
+  t("  kucing→anjing 2x diganti", has(m, "anjing hitam dan anjing putih", "2x diganti") && m.reacts.includes("🐣"), last(m).substring(0, 220));
+}
+{
+  const m = mkM("halo||halo dunia", "ftoolreplace"); await run(rpP, m);
+  t("  hapus mode (ke kosong) → dunia", has(m, "dunia"));
+}
+{
+  const m = mkM("x", "ftoolreplace"); await run(rpP, m);
+  t("  kurang argumen → kartu usage", last(m).includes(sc("ftoolreplace")));
 }
 
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
