@@ -28,9 +28,27 @@ const MAIN_STORE_MAP = {
   "src/data/main/partner.json": "src/database/partner/partner.json",
 };
 
+// ─── folder DB legacy nova.json/ di root (request owner 26 Sep 2026:
+// "folder nova.json yg di main ga dihapus, dipindahin aja ke src/database
+// sesuai kategori masing2") — dir multi-store era sebelum relokasi
+// (config.database.path "nova.json"); copy-if-missing, data di
+// src/database SELALU menang, idempotent tiap boot.
+const LEGACY_NOVA_DIR_MAP = {
+  "nova.json/users.json": "src/database/user/users.json",
+  "nova.json/groups.json": "src/database/group/groups.json",
+  "nova.json/settings.json": "src/database/settings/settings.json",
+  "nova.json/stats.json": "src/database/stats/stats.json",
+  "nova.json/sewa.json": "src/database/sewa/sewa.json",
+  "nova.json/premium.json": "src/database/premium/premium.json",
+  "nova.json/owner.json": "src/database/owner/owner.json",
+  "nova.json/partner.json": "src/database/partner/partner.json",
+  "nova.json/chathistory.json": "src/database/chathistory/chathistory.json",
+};
+
 // ─── file DB per-fitur (kategori = domain fitur) ───
 export const RELOCATE_FILES = {
   ...MAIN_STORE_MAP,
+  ...LEGACY_NOVA_DIR_MAP,
 
   // kategori: auto/ — state semua fitur otomatis (notifier/watcher/scheduler)
   "src/data/autoanimenotifier.json": "src/database/auto/autoanimenotifier.json",
