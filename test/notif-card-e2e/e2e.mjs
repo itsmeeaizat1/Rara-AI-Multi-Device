@@ -137,7 +137,7 @@ _setStatusCardCanvasForTest({
   createCanvas: _kit.createCanvas,
   loadImage: async () => { throw new Error("offline e2e"); },
 });
-const botPlugin = await import(R + "/plugins/owner/bot.js");
+const botPlugin = await import(R + "/plugins/bot/bot.js");
 const bcSent = [];
 const bSock = {
   newsletterMetadata: async (type, key) => {

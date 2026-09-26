@@ -1,6 +1,6 @@
 // NOVA AI — formatGuard e2e: sanitizer format pesan permanen
 // Fix 18 Sep 2026 (owner: pesan ".bot on" broadcast muncul literal "\n"
-// sebagai teks — akar: plugins/owner/bot.js join('\\n') dua-backslash.
+// sebagai teks — akar: plugins/bot/bot.js join('\\n') dua-backslash.
 // FIX berlapis: (1) akar dibenerin di bot.js, (2) formatGuard() di
 // styler.js dipasang di m.reply + makeLangAwareSock — biar kelas bug
 // typo-backslash/JSON-round-trip di plugin mana pun gak pernah muncul
@@ -111,7 +111,7 @@ w("\n— plugin bot.js: broadcast .bot on HARUS baris baru sungguhan (REGRESI BU
   // seed 1 grup biar broadcast punya target (db.getAllGroups() baca ini)
   db.setGroup("1203630111@g.us", { subject: "Grup Tes" });
 
-  const plugin = await import(R + "/plugins/owner/bot.js");
+  const plugin = await import(R + "/plugins/bot/bot.js");
   const mod = plugin.default || plugin;
   const handler = mod.handler || (typeof mod === "function" ? mod : null);
   if (typeof handler !== "function") throw new Error("handler bot.js gak kebaca: " + Object.keys(mod));
