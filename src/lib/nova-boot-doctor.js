@@ -18,7 +18,7 @@
 //      nokey         → key kosong (fitur auto-skip/fallback — bukan error)
 // 4. Laporan dikelompokin → DM owner (throttle 30 mnt biar crash-guard restart
 //    loop gak spam DM; laporan BERUBAH selalu dikirim).
-// 5. `.bootdoctor` (plugins/owner/bootdoctor.js) — cek manual + status.
+// 5. `.bootdoctor` (plugins/bot/bootdoctor.js) — cek manual + status.
 //
 // GOTCHA: probe AI chat (min1ai/searchapi/sensenova/inception) makan 1 request
 // kecil per boot — wajar buat validasi key, throttled biar gak boros.

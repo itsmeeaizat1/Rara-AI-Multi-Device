@@ -85,7 +85,7 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | Keamanan & Moderasi | Anti-link, antispam, antitoxic, kick/welcome otomatis, limit tiered, dan gate akses premium/owner |
 | Panel & Server | Hirarki panel Owner > CEO > Reseller, jadibot multi-session, monitoring VPS, backup otomatis ke Drive, dan auto-deploy GitHub Actions |
 
-> Daftar command lengkap dengan cara pakainya tersedia langsung di bot melalui menu all-menu yang terbagi 52 kategori.
+> Daftar command lengkap dengan cara pakainya tersedia langsung di bot melalui menu all-menu yang terbagi 53 kategori.
 
 ---
 
@@ -122,7 +122,7 @@ Command yang paling sering dipakai sehari-hari:
 
 | Command | Fungsi |
 |---------|--------|
-| `.menu` / `.allmenu` | Navigasi: menu ringkas & daftar lengkap 52 kategori |
+| `.menu` / `.allmenu` | Navigasi: menu ringkas & daftar lengkap 53 kategori |
 | `.switch` | On/off semua fitur terpusat (per fitur / bulk / master, grup & saluran) |
 | `.aisuperagent` / `.novaagent` | AI agent: tugas multi-langkah, 183 skill, ingat pengguna |
 | `.aihelp` | Tanya AI cara pakai command mana pun |
@@ -195,7 +195,7 @@ Tekan enter tanpa mengisi nomor untuk mode QR Code.
 
 ### 3. Mulai Pakai
 
-- Ketik `.menu` di chat untuk lihat semua fitur, atau `.allmenu` untuk daftar lengkap 52 kategori
+- Ketik `.menu` di chat untuk lihat semua fitur, atau `.allmenu` untuk daftar lengkap 53 kategori
 - `.switch` untuk menyalakan/mematikan fitur sesuai kebutuhan grup
 - `.setkey <provider> <key>` atau `.ai-set apiKey <key>` untuk pasang API key tanpa edit kode
 - `.owner` kalau butuh bantuan langsung

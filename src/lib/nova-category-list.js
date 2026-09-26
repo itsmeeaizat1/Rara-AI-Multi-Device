@@ -32,6 +32,7 @@ const CATEGORY_NAMES = {
   future: "Future", misc: "Misc", random: "Random",
   utility: "Utility", vps: "VPS", linode: "Linode",
   panel: "Panel", jpm: "JPM", pushkontak: "Push Kontak",
+  bot: "Bot",
   owner: "Owner",
 };
 
@@ -50,7 +51,7 @@ const CATEGORY_ORDER = [
   "islami", "smart", "utility", "misc", "random",
   "store", "market", "jpm", "pushkontak",
   // PALING AKHIR (owner): panel, vps, main, info, owner
-  "panel", "vps", "main", "info", "owner",
+  "panel", "vps", "main", "info", "bot", "owner",
 ];
 
 const CATEGORY_EMOJI = {
@@ -67,6 +68,7 @@ const CATEGORY_EMOJI = {
   "sewa premium": "💳", store: "🏬", market: "🛒",
   misc: "📦", random: "🎲", utility: "🧰", clean: "🧹",
   vps: "🖧", linode: "☁️", panel: "🖥️", jpm: "📡", pushkontak: "📲",
+  bot: "🚀",
   owner: "👑",
   kerja: "💼", sekolah: "🎓", umum: "🏷️", general: "⚙️", date: "📅", primary: "⭐",
 };
@@ -145,7 +147,7 @@ function buildCategoryRows(m, db, prefix = ".") {
 
   const rows = [];
   for (const cat of sortedCats) {
-    if (cat === "owner" && !m?.isOwner) continue;
+    if ((cat === "owner" || cat === "bot") && !m?.isOwner) continue;
     if (excludeCategories.includes(cat.toLowerCase())) continue;
 
     const pluginCmds = commandsByCategory[cat] || [];

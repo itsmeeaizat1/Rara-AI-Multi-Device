@@ -27,11 +27,11 @@ const {
   getOptimizerState, setOptimizer, optimizeNow,
   initOptimizerMonitor, stopOptimizerMonitor, _optimizerInternalsForTest,
 } = await import(R + "/src/lib/nova-optimizer.js");
-const plugin = await import(R + "/plugins/owner/index.js");
+const plugin = await import(R + "/plugins/bot/index.js");
 const procCtl = await import(R + "/src/lib/nova-process-control.js");
 
 // ─── 1. optimizer state ───
-t("1a plugin config name=index kategori owner", plugin.config.name === "index" && plugin.config.category === "owner" && plugin.config.isOwner === true);
+t("1a plugin config name=index kategori bot", plugin.config.name === "index" && plugin.config.category === "bot" && plugin.config.isOwner === true);
 t("1b default optimizer OFF + threshold 500", getOptimizerState().on === false && getOptimizerState().thresholdMB === 500);
 t("1c setOptimizer(true, 600)", setOptimizer(true, 600).on === true && getOptimizerState().thresholdMB === 600);
 t("1d threshold gak valid (<100) diabaikan", setOptimizer(true, 50).thresholdMB === 600);

@@ -184,7 +184,7 @@ const saluranSock = {
 // ═══ SECTION 5: broadcastStatusChange kirim ke saluran (bug asli owner) ═══
 w("\n— section 5: notif .bot off/on nyampe saluran —");
 
-const botPlugin = await import("../../plugins/owner/bot.js");
+const botPlugin = await import("../../plugins/bot/bot.js");
 const { initDatabase, getDatabase } = await import("../../src/lib/nova-database.js");
 await initDatabase("/tmp/saluran-id-e2e-db/nova.json");
 const db = getDatabase();
