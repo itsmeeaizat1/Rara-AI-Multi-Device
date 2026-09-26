@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
-const DB_FILE = path.join(process.cwd(), "src", "data", "chat_dna.json");
+const DB_FILE = path.join(process.cwd(), "src", "database", "user", "chat_dna.json");
 
 // ─── Database helpers ───
 function loadDB() {

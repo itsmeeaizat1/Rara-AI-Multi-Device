@@ -97,7 +97,7 @@ lib.setEnabled(false);
 check("28. OFF: monitor stop, alarm tetap", lib.getStatus().enabled === false && lib.getStatus().running === false && lib.getStatus().total === 5);
 lib.setEnabled(true);
 check("29. ON: nyala lagi", lib.getStatus().running === true);
-check("30. state file persist", fs.existsSync("src/data/cryptoalert.json"));
+check("30. state file persist", fs.existsSync("src/database/auto/cryptoalert.json"));
 
 // ────────── handler e2e ──────────
 const { config, handler } = await import("../../plugins/tools/cryptoalert.js");
@@ -126,7 +126,7 @@ await handler(mockM(["info"]), { sock: mockSock });
 check("36. info: status tampil", /ꜱᴛᴀᴛᴜꜱ/.test(replies.at(-1)));
 
 // cleanup
-fs.rmSync("src/data/cryptoalert.json");
+fs.rmSync("src/database/auto/cryptoalert.json");
 for (const a of lib.listAlerts("chatC")) lib.removeAlert("chatC", a.id);
 
 w(`\n${fail === 0 ? "🎉 SEMUA PASS" : "⚠️ ADA FAIL"} — ${pass} pass, ${fail} fail`);

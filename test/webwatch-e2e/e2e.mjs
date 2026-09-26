@@ -101,7 +101,7 @@ lib.setEnabled(true);
 check("26. ON: monitor nyala lagi", lib.getStatus().enabled === true && lib.getStatus().running === true);
 
 // 14. state persist ke file
-check("27. state file tersimpan", fs.existsSync("src/data/webwatch.json"));
+check("27. state file tersimpan", fs.existsSync("src/database/auto/webwatch.json"));
 
 // ────────── handler e2e (plugin) ──────────
 const { config, handler } = await import("../../plugins/tools/webwatch.js");
@@ -136,7 +136,7 @@ await handler(mockM(["info"]), { sock: mockSock });
 check("34. info command: status", replies.at(-1).includes("ꜱᴛᴀᴛᴜꜱ"));
 
 // cleanup state test
-fs.rmSync("src/data/webwatch.json");
+fs.rmSync("src/database/auto/webwatch.json");
 for (const wch of lib.listWatches("chatB")) lib.removeWatch("chatB", wch.id);
 
 w(`\n${fail === 0 ? "🎉 SEMUA PASS" : "⚠️ ADA FAIL"} — ${pass} pass, ${fail} fail`);

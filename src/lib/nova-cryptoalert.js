@@ -16,7 +16,7 @@ import { mergeAutoTargets } from "./nova-auto-target.js";
 import path from "path";
 import { logger } from "./nova-logger.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "cryptoalert.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "cryptoalert.json");
 
 const CG_BASE = "https://api.coingecko.com/api/v3";
 let lastApiWarnMs = 0; // rate-limit log peringatan API (v24.2.4)

@@ -35,7 +35,7 @@ import { logger } from "./nova-logger.js";
 import config from "../../config.js";
 
 const TZ = "Asia/Jakarta";
-const STATE_FILE = path.join(process.cwd(), "src", "data", "linkedinnotify.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "linkedinnotify.json");
 const ACTOR = "valig~linkedin-jobs-scraper";
 const DEFAULT_INTERVAL_MENIT = 120;
 const WINDOW_START = 7;   // 07:00 WIB

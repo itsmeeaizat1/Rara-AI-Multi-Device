@@ -14,7 +14,7 @@ import path from "path";
 import crypto from "crypto";
 import { logger } from "./nova-logger.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "totp.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "user", "totp.json");
 const MAX_ACCOUNTS_PER_USER = 10;
 
 // ------------------------------ state ------------------------------

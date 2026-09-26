@@ -18,7 +18,7 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
 
-const ABSEN_DB = R + "/src/data/absen.json";
+const ABSEN_DB = R + "/src/database/group/absen.json";
 const absenDbOriginal = fs.existsSync(ABSEN_DB) ? fs.readFileSync(ABSEN_DB) : null;
 
 const SENDER = "628111111111@s.whatsapp.net";
@@ -57,7 +57,7 @@ w("\n— RENAME: .absen → .absenjam (fix konflik dead code) —");
 // ═══════════════════════════════════════════════════════════════
 w("\n— .absenjam buka: LIVE COUNTDOWN ke tenggat —");
 {
-  // cleanup sesi sisa run sebelumnya (persist di src/data/absen.json)
+  // cleanup sesi sisa run sebelumnya (persist di src/database/group/absen.json)
   const store = await import(R + "/plugins/absen.js");
   {
     const mkC = mkMock();

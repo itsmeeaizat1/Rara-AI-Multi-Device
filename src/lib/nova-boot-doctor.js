@@ -33,7 +33,7 @@ import { claraWrap } from "./nova-menu-style.js";
 import { sendNotif } from "./nova-notif-card.js";
 import { getTioBase } from "./config/env-loader.js";
 
-const STATE_FILE = path.join(process.cwd(), "src", "data", "bootdoctor.json");
+const STATE_FILE = path.join(process.cwd(), "src", "database", "auto", "bootdoctor.json");
 const THROTTLE_MS = 30 * 60 * 1000; // anti-spam DM pas restart loop
 const PROBE_TIMEOUT_MS = 12000;
 const BOOT_DELAY_MS = 15000;

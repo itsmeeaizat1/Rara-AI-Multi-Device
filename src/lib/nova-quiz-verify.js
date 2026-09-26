@@ -10,7 +10,7 @@ import { toSC, bracketBox, tipText } from "./nova-menu-style.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DB_PATH = path.join(process.cwd(), "src", "data", "quiz-verify.json");
+const DB_PATH = path.join(process.cwd(), "src", "database", "game", "quiz-verify.json");
 const DEFAULT_TIMEOUT = 5; // minutes
 const MAX_ATTEMPTS = 3;
 

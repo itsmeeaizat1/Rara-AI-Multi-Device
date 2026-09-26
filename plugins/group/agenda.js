@@ -8,7 +8,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DB_PATH = path.join(__dirname, "..", "..", "src", "data", "agenda-db.json");
+const DB_PATH = path.join(__dirname, "..", "..", "src", "database", "group", "agenda-db.json");
 
 // ─── Database ───
 function loadDB() {

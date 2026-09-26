@@ -10,7 +10,7 @@ import http from "http";
 import { URL } from "url";
 import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
-const DB_FILE = path.join(process.cwd(), "src", "data", "checklink.json");
+const DB_FILE = path.join(process.cwd(), "src", "database", "group", "checklink.json");
 
 // ─── Database helpers ───
 function loadDB() {

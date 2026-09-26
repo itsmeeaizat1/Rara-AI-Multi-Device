@@ -3,7 +3,9 @@
 
 import { apiKeys } from "./apikey.js";
 
-export const database = { path: "./src/data/main" };
+// RELOKASI (owner 26 Sep 2026): root DB runtime kini src/database/<kategori>/,
+// konten statis (soal game dll) tetap di src/data/
+export const database = { path: "./src/database" };
 
 export const backup = {
   enabled: false,

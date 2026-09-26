@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import archiver from 'archiver'
 import * as timeHelper from './nova-time.js'
-const DATABASE_DIR = path.join(process.cwd(), "src", "data")
+const DATABASE_DIR = path.join(process.cwd(), "src", "database")
 const TEMP_DIR = path.join(process.cwd(), 'temp')
 
 const SCHEMA_VERSION = '1.0.0'
@@ -62,6 +62,7 @@ async function createDatabaseBackup() {
                     const fullPath = path.join(DATABASE_DIR, entry.name)
                     
                     if (entry.name.endsWith('.zip')) continue
+                    if (entry.name === 'backups') continue // folder backup lama gak ikut di-zip
                     
                     if (entry.isDirectory()) {
                         archive.directory(fullPath, `database/${entry.name}`)
@@ -83,7 +84,7 @@ async function createDatabaseBackup() {
                     archive.file(rootDbFile, { name: 'db.json' })
                 }
                 
-                const mainDbFile = path.join(process.cwd(), "src", "data", 'main', 'db.json')
+                const mainDbFile = path.join(process.cwd(), "src", "database", 'main', 'db.json')
                 if (fs.existsSync(mainDbFile)) {
                     archive.file(mainDbFile, { name: 'src/data/main/db.json' })
                 }

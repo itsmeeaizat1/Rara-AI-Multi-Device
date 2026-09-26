@@ -49,7 +49,7 @@ function safe(fn, fallback = false) {
 
 function readDriveState() {
   try {
-    const p = path.join(process.cwd(), "src", "data", "autobackup_drive.json");
+    const p = path.join(process.cwd(), "src", "database", "auto", "autobackup_drive.json");
     if (!fs.existsSync(p)) return false;
     return !!JSON.parse(fs.readFileSync(p, "utf-8")).enabled;
   } catch {
