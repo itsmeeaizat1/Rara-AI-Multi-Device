@@ -19,7 +19,7 @@ import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-sty
 const pluginConfig = {
   name: "autojoin",
   alias: ["autojoin", "autojoingroup", "autojoinchannel", "autoout", "autooutgroup", "autooutchannel", "autoleavegroup", "autoleave"],
-  category: "owner",
+  category: "bot",
   description: "Jadwalkan bot join/leave grup & channel otomatis di waktu ditentukan",
   usage: ".autojoin group|channel <link> <waktu>",
   example: ".autojoin group https://chat.whatsapp.com/xxx 18:30",

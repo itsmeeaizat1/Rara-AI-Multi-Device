@@ -135,7 +135,7 @@ t("7d terlewat dieksekusi → unfollow dipanggil lagi", calls.unfollowChannel.le
 t("7e DM terlewat ada penanda (smallcaps)", calls.dm.some((d) => d.text.includes("ᴛᴇʀʟᴇᴡᴀᴛ")), calls.dm.map((d) => d.text.includes("ᴛᴇʀʟᴇᴡᴀᴛ")).join(","));
 
 // ─── 8. dispatch plugin ───
-const plugin = await import(R + "/plugins/owner/autojoin.js");
+const plugin = await import(R + "/plugins/bot/autojoin.js");
 const replyTag = [];
 function mkM(args, cmdName) {
   return {
