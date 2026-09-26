@@ -69,7 +69,7 @@ const CATEGORY_ORDER = [
   "islami", "smart", "utility", "misc", "random",
   "store", "market", "jpm", "pushkontak",
   // PALING AKHIR (owner): panel, vps, main, info, owner
-  "panel", "vps", "main", "info", "owner",
+  "panel", "vps", "main", "info", "bot", "owner",
 ];
 
 const CATEGORY_NAMES = {
@@ -84,6 +84,7 @@ const CATEGORY_NAMES = {
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium",
+  bot: "Bot",
 };
 
 function getCommandSymbols(cmdName) {
@@ -217,7 +218,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const menuCats = [];
     for (const category of sortedCategories) {
-      if (category === "owner" && !m.isOwner) continue;
+      if ((category === "owner" || category === "bot") && !m.isOwner) continue;
       if (category === "hidden") continue;
       if (excludeCategories.includes(category.toLowerCase())) continue;
       const pluginCmds = commandsByCategory[category] || [];

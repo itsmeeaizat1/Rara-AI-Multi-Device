@@ -40,7 +40,7 @@ const CATEGORY_NAMES = {
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
-  panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium",
+  panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium", bot: "Bot",
   anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
   downloader: "Downloader", education: "Education", future: "Future",
   islami: "Islami", islamic: "Islamic", menu: "Menu", maker: "Maker",
@@ -123,7 +123,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
         // Admin
         "vps", "linode", "panel", "jpm", "pushkontak", "kerja",
         "sekolah", "umum", "general", "date", "primary",
-        "owner",
+        "bot", "owner",
       ];
 
       const allCats = [...new Set([...categories, ...Object.keys(casesByCategory)])];
@@ -134,7 +134,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
       });
 
       const visibleCats = sortedCats.filter((cat) => {
-        if (cat === "owner" && !m.isOwner) return false;
+        if ((cat === "owner" || cat === "bot") && !m.isOwner) return false;
         if (cat === "hidden") return false;
         if (excludeCategories.includes(cat.toLowerCase())) return false;
         const total = (commandsByCategory[cat] || []).length + (casesByCategory[cat] || []).length;
