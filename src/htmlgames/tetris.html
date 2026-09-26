@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nova Arcade — Tetris</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
+  h1 { font-size:18px; letter-spacing:2px; margin-bottom:4px; }
+  .sub { font-size:11px; color:#7d8db3; margin-bottom:10px; }
+  #score { font-size:14px; margin-bottom:8px; color:#9fb4e6; }
+  canvas { background:#101a30; border:2px solid #29406e; border-radius:10px; }
+  #pad { margin-top:14px; display:grid; grid-template-columns:repeat(4,64px); gap:8px; }
+  #pad button { background:#1b2c52; color:#e8eefc; border:1px solid #29406e; border-radius:12px; font-size:18px; padding:12px 0; }
+  #pad button:active { background:#2a4a8f; }
+  #msg { margin-top:10px; font-size:13px; color:#ffd166; min-height:18px; }
+</style>
+</head>
+<body>
+<h1>🧱 NOVA TETRIS</h1>
+<div class="sub">Susun balok, bersihkan baris, jangan numpuk sampai atas</div>
+<div id="score">Skor: 0 · Baris: 0 · Level: 1</div>
+<canvas id="c" width="180" height="360"></canvas>
+<div id="msg"></div>
+<div id="pad">
+  <button data-a="l">◀</button><button data-a="r">▶</button><button data-a="rot">⟳</button><button data-a="drop">⤓</button>
+</div>
+<script>
+const W=10,H=20,S=18,C=document.getElementById("c"),X=C.getContext("2d");
+const P=[[[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],[[1,0,0],[1,1,1]],[[0,0,1],[1,1,1]],[[1,1,0],[0,1,1]],[[0,1,1],[1,1,0]]];
+const CL=["#4dd2ff","#ffd166","#c792ea","#66d97f","#ff8fa3","#ffb74d","#7fdbff"];
+let grid,cur,curIdx,nxt,nxtIdx,pos,score,lines,level,dead,timer,best=+(localStorage.novaTetrisBest||0);
+const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
+const randIdx=()=>~~(Math.random()*P.length);
+function spawn(){ if(nxt===undefined){ nxtIdx=randIdx(); nxt=P[nxtIdx].map(r=>[...r]); }
+  cur=nxt; curIdx=nxtIdx; nxtIdx=randIdx(); nxt=P[nxtIdx].map(r=>[...r]);
+  pos={x:~~((W-cur[0].length)/2),y:0};
+  if(hit(pos.x,pos.y,cur)) die(); }
+function hit(px,py,p){ return p.some((row,ry)=>row.some((v,rx)=>v&&(px+rx<0||px+rx>=W||py+ry>=H||(py+ry>=0&&grid[py+ry][px+rx])))); }
+function lock(){
+  cur.forEach((row,ry)=>row.forEach((v,rx)=>{ if(v&&pos.y+ry>=0) grid[pos.y+ry][pos.x+rx]=CL[curIdx]; }));
+  let cleared=0;
+  for(let y=H-1;y>=0;y--){ if(grid[y].every(v=>v)){ grid.splice(y,1); grid.unshift(Array(W).fill(0)); cleared++; y++; } }
+  if(cleared){ lines+=cleared; score+=[0,100,300,500,800][cleared]*level; level=1+~~(lines/10); }
+  spawn(); }
+function rotate(){ const r=cur[0].map((_,i)=>cur.map(row=>row[i]).reverse()); if(!hit(pos.x,pos.y,r)) cur=r; }
+function drop(){ if(!hit(pos.x,pos.y+1,cur)) pos.y++; else lock(); draw(); }
+function move(dx){ if(!hit(pos.x+dx,pos.y,cur)) pos.x+=dx; draw(); }
+function die(){ dead=true; clearInterval(timer);
+  if(score>best){ best=score; localStorage.novaTetrisBest=best; msgEl.textContent="🏆 REKOR BARU: "+score; }
+  else msgEl.textContent="💀 Game Over — ketuk ▶ untuk main lagi"; draw(); }
+function draw(){
+  X.fillStyle="#101a30"; X.fillRect(0,0,180,360);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){ if(grid[y][x]){ X.fillStyle=grid[y][x]; X.fillRect(x*S+1,y*S+1,S-2,S-2); } }
+  if(cur&&!dead) cur.forEach((row,ry)=>row.forEach((v,rx)=>{ if(v){ X.fillStyle=CL[curIdx]; X.fillRect((pos.x+rx)*S+1,(pos.y+ry)*S+1,S-2,S-2); } }));
+  if(dead){ X.fillStyle="rgba(220,60,60,.85)"; X.font="bold 18px system-ui"; X.textAlign="center"; X.fillText("GAME OVER",90,180); }
+  scoreEl.textContent="Skor: "+score+" · Baris: "+lines+" · Level: "+level;
+}
+document.querySelectorAll("#pad button").forEach(b=>b.addEventListener("click",()=>{ if(dead){ if(b.dataset.a==="r")start(); return; }
+  ({l:()=>move(-1),r:()=>move(1),rot:rotate,drop})[b.dataset.a](); }));
+document.addEventListener("keydown",e=>{ const k={ArrowLeft:"l",ArrowRight:"r",ArrowUp:"rot",ArrowDown:"drop", " ":"drop"}[e.key];
+  if(k&&!dead){ e.preventDefault(); ({l:()=>move(-1),r:()=>move(1),rot:rotate,drop})[k](); } });
+function start(){ grid=Array.from({length:H},()=>Array(W).fill(0)); score=0; lines=0; level=1; dead=false; nxt=undefined; msgEl.textContent="";
+  spawn(); if(timer)clearInterval(timer); timer=setInterval(()=>{ if(!hit(pos.x,pos.y+1,cur)) pos.y++; else lock(); draw(); },Math.max(120,600-level*50)); draw(); }
+start();
+</script>
+</body>
+</html>

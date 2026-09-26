@@ -35,7 +35,7 @@ const pluginConfig = {
 
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun", jkt48: "JKT48", airich: "AI Rich",
-  canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
+  canvas: "Canvas", tools: "Tools", game: "Game", html: "HTML", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
