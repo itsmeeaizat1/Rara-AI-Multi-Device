@@ -16,7 +16,7 @@ import { sewaPrice } from "../../src/lib/sewa/sewa.js";
 const pluginConfig = {
   name: "buysewa",
   alias: ["buysewa"],
-  category: "main",
+  category: "sewa premium",
   description: "Beli sewa bot untuk grup - pilih durasi, lihat harga, bayar via QRIS/E-Wallet",
   usage: ".buysewa [durasi] [link-grup]",
   example: ".buysewa 30d https://chat.whatsapp.com/xxx",

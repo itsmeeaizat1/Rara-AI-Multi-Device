@@ -16,7 +16,7 @@ import axios from "axios";
 const pluginConfig = {
   name: "buyprem",
   alias: ["buyprem", "buypremium"],
-  category: "store",
+  category: "sewa premium",
   description: "Beli premium bot - pilih durasi, lihat harga, bayar via QRIS/E-Wallet",
   usage: ".buyprem [durasi]",
   example: ".buyprem 30d  atau  .buyprem (pilih dari list)",
