@@ -4,7 +4,8 @@
 // dan list fitur yang tersedia untuk kontrol bot — mengontrol bagian
 // di index dan connection").
 // Sub: optimizer (RAM auto-turun > 500MB, default off) · pinglog · jam
-// · ram · status.
+// · ram · ramalert (DM owner pas RAM sistem lewat ambang, default off) ·
+// status.
 import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getConnectionState, forceReconnect } from "../../src/connection.js";
@@ -40,6 +41,9 @@ const SUB_LIST = [
   "ping on|off — nyalain/matikan log ping tiap 20 dtk (alias pinglog)",
   "jam on|off — nyalain/matikan log jam tiap 10 dtk",
   "ram — cek pemakaian RAM sekarang",
+  "ramalert on [persen] — alert DM owner pas RAM SISTEM lewat ambang (default 80%, fitur ini default OFF)",
+  "ramalert off — matiin alert RAM",
+  "ramalert status — lihat kondisi alert RAM sekarang",
   "optimize — optimasi RAM SEKARANG (manual)",
   "status — ringkasan semua kontrol",
   "restart — restart bot dari chat (konfirmasi: restart ya)",
@@ -163,6 +167,52 @@ async function handler(m, { sock, config: botConfig }) {
       ]));
     }
 
+    // ─── ramalert (owner 26 Sep: "ya mau defaultnya off") ───
+    if (sub === "ramalert") {
+      const { setRamAlert, getRamAlertStatus } = await import("../../src/lib/nova-pinglog.js");
+      const act = (arg1 || "status").toLowerCase();
+      if (act === "on") {
+        const persen = Number(m.args[2]);
+        if (Number.isFinite(persen) && (persen < 50 || persen > 99)) {
+          return mm.reply(novaSalahV2("index", { pesan: "ambang persen harus 50-99 (persen pemakaian RAM sistem)", contoh: prefix + "index ramalert on 85" }));
+        }
+        const st = setRamAlert(true, Number.isFinite(persen) ? persen : undefined);
+        // alert numpang tick pinglog — kalau pinglog mati, nyalain sekalian
+        let nyalain = "";
+        const { _pingLogInternalsForTest } = await import("../../src/lib/nova-pinglog.js");
+        const itl = _pingLogInternalsForTest();
+        if (!itl.isRunning()) {
+          const { startPingLog } = await import("../../src/lib/nova-pinglog.js");
+          startPingLog(sock);
+          nyalain = "\nPing log tadi mati — saya nyalain sekalian biar alert bisa jalan.";
+        }
+        return mm.reply(claraWrap("index", [
+          `✅ RAM Alert AKTIF`,
+          "",
+          `Ambang: ${st.thresholdPct}% RAM sistem`,
+          `Kalau pemakaian RAM server lewat ambang, saya DM kamu (maks 1x per 30 menit).` + nyalain,
+        ]));
+      }
+      if (act === "off") {
+        setRamAlert(false);
+        return mm.reply(claraWrap("index", "❌ RAM Alert dimatikan — gak ada DM lagi pas RAM tinggi."));
+      }
+      if (act === "status") {
+        const st = getRamAlertStatus();
+        const last = st.lastAlertAt ? new Date(st.lastAlertAt).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "belum pernah";
+        return mm.reply(claraWrap("index", [
+          `🧠 Status RAM Alert`,
+          "",
+          `Kondisi: ${st.on ? "🟢 ON" : "🔴 OFF (default)"}`,
+          `Ambang: ${st.thresholdPct}%`,
+          `RAM sistem: ${st.sysPct}% (${formatBytes(st.sysUsed)} dari ${formatBytes(st.sysTotal)})`,
+          `RAM bot: ${formatBytes(st.rss)}`,
+          `Alert terakhir: ${last}`,
+        ]));
+      }
+      return mm.reply(novaSalahV2("index", { pesan: "aksi gak dikenal — on [persen] / off / status", contoh: prefix + "index ramalert on 85" }));
+    }
+
     // ─── status ───
     if (sub === "status") {
       const st = getOptimizerState();
@@ -178,6 +228,7 @@ async function handler(m, { sock, config: botConfig }) {
         `RAM: ${formatBytes(process.memoryUsage().rss)}`,
         `WA: ${cs?.isConnected ? "✅ nyambung" : "❌ terputus"}`,
         `Uptime: ${formatDuration(process.uptime())}`,
+        `RAM Alert: ${(await import("../../src/lib/nova-pinglog.js")).getRamAlertStatus().on ? "🟢 ON" : "🔴 OFF (default)"}`,
       ]));
     }
 
