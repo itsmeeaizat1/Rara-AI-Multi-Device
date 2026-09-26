@@ -1,17 +1,26 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nova-pinglog.js — Ping log interaktif panel (rev 26 Sep 2026, request
-// owner: "di log panel saat bot udah run ada log ping tiap 20 detik, log
-// deteksi kerusakan, dll — biar log interaktif lengkap").
+// owner: "lognya ibarat log bot modern masa depan, banyak field lengkap:
+// keamanan, ping, deteksi ada yg ubah kode entah aku atau orang lain di
+// panel sewa — tapi kode/file yg diubah GAK disebuttin").
 //
-// Tiap 20 dtk (knob env PINGLOG_MS) satu baris status ringkas keluar di log:
-//   🕒 10.53.12 │ ⏱ up 1j 5m │ 🧠 412 MB │ ⚡ 342ms │ 📡 WA ✅ │ 📥 12 msg │ ❌ 0 err
-// Deteksi kerusakan: ping WA timeout / koneksi close → WA ❌, error via hook
-// logger.error → baris "⚠ deteksi: ..." sampai error terakhir tiap window.
+// Tiap 20 dtk (knob env PINGLOG_MS) satu baris status keluar di log:
+//   🕒 10.53.12 │ ⏱ up 1j 5m │ 🧠 412 MB │ 💻 cpu 0.8 │ ⚡ 342ms │ 📡 WA ✅
+//   │ 📥 12 msg │ ❌ 0 err │ 🔒 kode ✅ │ 🔐 sandi ON
+// Deteksi kerusakan & keamanan:
+//   ⚠ deteksi error (hook logger.error, per window 20 dtk)
+//   🔐 DETEKSI PERUBAHAN KODE — jumlah file berubah/baru/hilang TANPA
+//      menyebutkan file atau isi kodenya (baseline stat: size+mtime
+//      seluruh .js plugins/ + src/ + index.js, dibangun saat boot).
 //
 // Anti-leak: interval idempotent (panggil 2x gak dobel), timer unref biar
 // proses bisa exit wajar, PINGLOG_OFF=1 matiin total.
 
+import fs from "fs";
+import path from "path";
+import os from "os";
 import { logger } from "./nova-logger.js";
+import { getAuthKey } from "./auth/auth.js";
 
 const DEFAULT_MS = Number(process.env.PINGLOG_MS) > 0 ? Number(process.env.PINGLOG_MS) : 20000;
 
@@ -20,6 +29,10 @@ let pingSock = null;
 let evBound = null;
 const stats = { msgs: 0, errors: 0, lastError: "", waStatus: "open" };
 let loggerHooked = false;
+
+// integritas kode: baseline { path → "size:mtime" }, dibangun saat start
+let codeBaseline = null;
+let lastCodeSig = "0.0.0";
 
 // ─── Format murni (dites e2e) ───
 
@@ -60,17 +73,70 @@ export function buildPingLine(opts = {}) {
     waOk = true,
     msgs = 0,
     errors = 0,
+    cpu = 0,
+    kodeChanged = 0,
+    kodeNew = 0,
+    kodeGone = 0,
+    sandiOn = null,
   } = opts;
+  const kodeTotal = kodeChanged + kodeNew + kodeGone;
+  const kodeTag = kodeTotal === 0 ? "🔒 kode ✅" : `🔒 kode ${kodeTotal}≠`;
+  const sandiTag = sandiOn === null ? "🔐 sandi –" : sandiOn ? "🔐 sandi ON" : "🔐 sandi OFF";
   const parts = [
     `🕒 ${clockString(now)}`,
     `⏱ up ${formatDuration(upSec)}`,
     `🧠 ${formatBytes(rss)}`,
+    `💻 cpu ${Math.max(0, Number(cpu) || 0).toFixed(1)}`,
     pingMs >= 0 ? `⚡ ${Math.round(pingMs)}ms` : "⚡ ∅",
     waOk ? "📡 WA ✅" : "📡 WA ❌",
     `📥 ${msgs} msg`,
     `❌ ${errors} err`,
+    kodeTag,
+    sandiTag,
   ];
   return parts.join(" │ ");
+}
+
+// ─── Integritas kode (tanpa menyebutkan file/isi kode) ───
+
+// scan seluruh .js di plugins/ + src/ + index.js → signature stat (size:mtime)
+export function scanCodeTree(rootDir = process.cwd()) {
+  const out = {};
+  const skipDirs = new Set(["node_modules", "storage", "jadibot_auth", "session"]);
+  const walk = (dir) => {
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (e.name.startsWith(".") || skipDirs.has(e.name)) continue;
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (e.isFile() && e.name.endsWith(".js")) {
+        try {
+          const st = fs.statSync(full);
+          out[full] = `${st.size}:${Math.floor(st.mtimeMs)}`;
+        } catch {}
+      }
+    }
+  };
+  for (const rel of ["plugins", "src"]) walk(path.join(rootDir, rel));
+  try {
+    const st = fs.statSync(path.join(rootDir, "index.js"));
+    out[path.join(rootDir, "index.js")] = `${st.size}:${Math.floor(st.mtimeMs)}`;
+  } catch {}
+  return out;
+}
+
+// diff murni: hitung berubah/baru/hilang — TANPA nama file keluar
+export function diffCodeTrees(baseline = {}, current = {}) {
+  let changed = 0, added = 0, deleted = 0;
+  for (const [f, sig] of Object.entries(current)) {
+    if (!(f in baseline)) added++;
+    else if (baseline[f] !== sig) changed++;
+  }
+  for (const f of Object.keys(baseline)) {
+    if (!(f in current)) deleted++;
+  }
+  return { changed, added, deleted };
 }
 
 // ─── Counter window (reset tiap tick) ───
@@ -124,6 +190,15 @@ async function measurePing(sock) {
 async function tick(print = console.log) {
   const pingMs = pingSock ? await measurePing(pingSock) : -1;
   const waOk = pingMs >= 0 && stats.waStatus !== "close";
+
+  // integritas kode: scan & diff tiap tick (stat doang, ringan)
+  let kode = { changed: 0, added: 0, deleted: 0 };
+  if (codeBaseline) {
+    kode = diffCodeTrees(codeBaseline, scanCodeTree());
+  }
+  const kodeTotal = kode.changed + kode.added + kode.deleted;
+  const kodeSig = `${kode.changed}.${kode.added}.${kode.deleted}`;
+
   print(
     buildPingLine({
       now: new Date(),
@@ -133,12 +208,30 @@ async function tick(print = console.log) {
       waOk,
       msgs: stats.msgs,
       errors: stats.errors,
+      cpu: os.loadavg?.()?.[0] || 0,
+      kodeChanged: kode.changed,
+      kodeNew: kode.added,
+      kodeGone: kode.deleted,
+      sandiOn: typeof getAuthKey === "function" ? !!getAuthKey() : null,
     }),
   );
+
   // log deteksi kerusakan: error di window ini ditampilkan detilnya
   if (stats.errors > 0 && stats.lastError) {
     print(`   ⚠ deteksi ${stats.errors}x — ${stats.lastError}`);
   }
+
+  // log deteksi perubahan kode — TANPA menyebutkan file/kode mana pun.
+  // baris khusus cuma muncul saat jumlah berubah; baris ping tetap nunjukin totalnya.
+  if (codeBaseline && kodeSig !== lastCodeSig) {
+    if (kodeTotal > 0) {
+      print(`   🔐 DETEKSI PERUBAHAN KODE: ${kode.changed} berubah · ${kode.added} baru · ${kode.deleted} hilang — restart bot biar perubahan aktif`);
+    } else if (lastCodeSig !== "0.0.0") {
+      print("   ✅ kode kembali utuh sesuai baseline boot");
+    }
+    lastCodeSig = kodeSig;
+  }
+
   stats.msgs = 0;
   stats.errors = 0;
   stats.lastError = "";
@@ -159,6 +252,10 @@ export function startPingLog(sock, opts = {}) {
   pingSock = sock || null;
   hookLoggerError();
 
+  // baseline integritas kode dibangun SEKALI saat boot
+  codeBaseline = scanCodeTree();
+  lastCodeSig = "0.0.0";
+
   // pantau status koneksi + hitung pesan masuk
   evBound = { msgs: null, conn: null };
   try {
@@ -175,7 +272,7 @@ export function startPingLog(sock, opts = {}) {
   console.log("");
   console.log("「 ✦ PING LOG ✦ 」");
   console.log("");
-  console.log(`│ 🕒 aktif tiap ${ms >= 1000 ? Math.round(ms / 1000) + " dtk" : ms + "ms"} — ping, RAM, koneksi, pesan, error`);
+  console.log(`│ 🕒 aktif tiap ${ms >= 1000 ? Math.round(ms / 1000) + " dtk" : ms + "ms"} — ping, RAM, cpu, koneksi, pesan, error, sandi, integritas kode`);
   console.log("");
 
   // tick pertama langsung, sisanya interval
@@ -210,5 +307,9 @@ export function _pingLogInternalsForTest() {
       stats.waStatus = "open";
     },
     runTick: (print) => tick(print),
+    getCodeBaseline: () => codeBaseline,
+    setCodeBaseline: (b) => (codeBaseline = b),
+    getLastCodeSig: () => lastCodeSig,
+    setLastCodeSig: (s) => (lastCodeSig = s),
   };
 }

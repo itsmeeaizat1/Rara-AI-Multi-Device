@@ -20,6 +20,7 @@ const {
   formatDuration, formatBytes, buildPingLine,
   notePingMessage, notePingError,
   startPingLog, stopPingLog, _pingLogInternalsForTest,
+  scanCodeTree, diffCodeTrees,
 } = mod;
 
 // ─── 1. formatDuration ───
@@ -107,6 +108,57 @@ const res7 = startPingLog(fakeSock, {});
 t("7a PINGLOG_OFF=1 gak start", res7.started === false);
 delete process.env.PINGLOG_OFF;
 stopPingLog();
+
+// ─── 8. scan & diff integritas kode (TANPA nama file keluar) ───
+const tree = scanCodeTree(R);
+t("8a scanCodeTree nemu file .js repo", Object.keys(tree).length > 100, String(Object.keys(tree).length));
+const fakeBase = { "/x/a.js": "100:1", "/x/b.js": "200:2" };
+const fakeCur = { "/x/a.js": "999:9", "/x/c.js": "50:3" };
+const d = diffCodeTrees(fakeBase, fakeCur);
+t("8b diff: 1 berubah · 1 baru · 1 hilang", d.changed === 1 && d.added === 1 && d.deleted === 1, JSON.stringify(d));
+t("8c diff identik = 0 semua", diffCodeTrees(fakeBase, fakeBase).changed === 0);
+
+// ─── 9. field baru baris ping: cpu, kode, sandi ───
+const line9 = buildPingLine({ cpu: 0.75, kodeChanged: 2, kodeNew: 1, kodeGone: 0, sandiOn: true });
+t("9a cpu tampil", line9.includes("💻 cpu 0.8"));
+t("9b kode 3≠ saat berubah", line9.includes("🔒 kode 3≠"), line9);
+t("9c sandi ON", line9.includes("🔐 sandi ON"));
+const line9b = buildPingLine({ sandiOn: false });
+t("9d sandi OFF", line9b.includes("🔐 sandi OFF"));
+t("9e kode utuh default", line9b.includes("🔒 kode ✅"));
+
+// ─── 10. tick deteksi perubahan kode via baseline seam ───
+{
+  const printed10 = [];
+  const res10 = startPingLog(fakeSock, { intervalMs: 60000 });
+  t("10a start + baseline kode kebangun", res10.started === true && Object.keys(itl.getCodeBaseline()).length > 100);
+  await new Promise((r) => setTimeout(r, 50));
+  // rusak baseline → tick harus deteksi TANPA nama file
+  const real = itl.getCodeBaseline();
+  const keys = Object.keys(real);
+  const tampered = { ...real, [keys[0]]: "999999:999999" };   // 1 berubah
+  delete tampered[keys[1]];                                     // hilang dr baseline → terhitung BARU
+  tampered["/x/fake-hilang.js"] = "1:1";                        // ada di baseline, gak ada di real → 1 HILANG
+  itl.setCodeBaseline(tampered);
+  itl.resetStats();
+  await itl.runTick((s) => printed10.push(s));
+  const deteksi = printed10.find((x) => x.includes("DETEKSI PERUBAHAN KODE")) || "";
+  t("10b deteksi kode berubah muncul", deteksi.includes("1 berubah") && deteksi.includes("1 baru") && deteksi.includes("1 hilang"), printed10.join(" | "));
+  t("10c DETEKSI gak nyebut nama file/kode", !/\.js/.test(deteksi), deteksi);
+  // tick kedua: signature sama → gak dobel baris deteksi
+  printed10.length = 0;
+  await itl.runTick((s) => printed10.push(s));
+  t("10d deteksi gak dobel tiap tick sama", printed10.filter((x) => x.includes("DETEKSI PERUBAHAN KODE")).length === 0, printed10.join(" | "));
+  // baseline dipulihkan → kode kembali utuh
+  itl.setCodeBaseline(real);
+  printed10.length = 0;
+  await itl.runTick((s) => printed10.push(s));
+  t("10e kode utuh lagi → baris pemulihan", printed10.some((x) => x.includes("✅ kode kembali utuh")), printed10.join(" | "));
+  // baris ping utuh lagi
+  const okLine = printed10.find((x) => x.includes("🔒 kode ✅"));
+  t("10f baris ping balik kode ✅", !!okLine, printed10.join(" | "));
+  stopPingLog();
+}
 
 w("");
 w(`===== ${pass} PASS, ${fail} FAIL =====`);
