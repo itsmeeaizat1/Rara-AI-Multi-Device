@@ -25,6 +25,7 @@ import { logger } from "./nova-logger.js";
 import { getDatabase } from "./nova-database.js";
 import config from "../../config.js";
 import { getAuthKey } from "./auth/auth.js";
+import { noteBotDoctorTick } from "./nova-botdoctor.js";
 
 const DEFAULT_MS = Number(process.env.PINGLOG_MS) > 0 ? Number(process.env.PINGLOG_MS) : 20000;
 const DEFAULT_CLOCK_MS = Number(process.env.PINGCLOCK_MS) > 0 ? Number(process.env.PINGCLOCK_MS) : 10000;
@@ -400,6 +401,9 @@ async function tick(print = console.log) {
   // RAM alert — DM owner pas RAM sistem lewat ambang (default OFF,
   // dinyalain via .index ramalert on [persen]; cooldown DM 30 mnt)
   await checkRamAlert(print).catch(() => {});
+
+  // 🔹 DOKTER BOT (26 Sep): sampel denyut buat diagnosa harian — senyap-proof
+  noteBotDoctorTick({ pingMs, waOk, errs: stats.errors, msgs: stats.msgs });
 
   stats.msgs = 0;
   stats.errors = 0;

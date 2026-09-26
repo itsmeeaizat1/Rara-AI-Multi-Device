@@ -426,6 +426,7 @@ async function main() {
           { name: "Bencana", fn: () => import("./src/lib/nova-bencana.js").then(m => m.initBencanaMonitor?.(sock)) },
           { name: "WxAlert", fn: () => import("./plugins/bencana/wxalert.js").then(m => m.initWxAlertMonitor?.(sock)) },
           { name: "Briefing", fn: () => import("./src/lib/nova-briefing.js").then(m => m.initBriefingScheduler?.(sock)) },
+          { name: "BotDoctor", fn: () => import("./src/lib/nova-botdoctor.js").then(m => m.initBotDoctorScheduler?.(sock)) },
           { name: "AnimeNotifier", fn: () => import("./src/lib/nova-auto-anime-notifier.js").then(m => m.initAnimeNotifier?.(sock)) },
           { name: "AutoAnimeWinbu", fn: () => import("./src/lib/nova-auto-anime.js").then(m => m.initAutoStart?.(sock)) },
           { name: "MovieNotifier", fn: () => import("./src/lib/nova-movie-notifier.js").then(m => m.initMovieNotifier?.(sock)) },
