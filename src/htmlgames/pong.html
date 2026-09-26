@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nova Arcade — Pong</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
+  h1 { font-size:18px; letter-spacing:2px; margin-bottom:4px; }
+  .sub { font-size:11px; color:#7d8db3; margin-bottom:10px; }
+  #score { font-size:14px; margin-bottom:8px; color:#9fb4e6; }
+  canvas { background:#101a30; border:2px solid #29406e; border-radius:10px; max-width:100%; }
+  #msg { margin-top:10px; font-size:13px; color:#ffd166; min-height:18px; }
+</style>
+</head>
+<body>
+<h1>🏓 NOVA PONG</h1>
+<div class="sub">Geser jari di layar untuk gerakkan paddle · lomba sampai 7 poin lawan AI</div>
+<div id="score">Kamu 0 — 0 AI</div>
+<canvas id="c" width="320" height="200"></canvas>
+<div id="msg"></div>
+<script>
+const C=document.getElementById("c"),X=C.getContext("2d"),W=320,H=200,PW=8,PH=48;
+let py,ay,bx,by,vx,vy,ps,as,dead,raf,wins=+(localStorage.novaPongWins||0);
+const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
+function reset(){ py=H/2-PH/2; ay=H/2-PH/2; ps=0; as=0; dead=false; msgEl.textContent=""; serve(1); loop(); }
+function serve(d){ bx=W/2; by=H/2; vx=4*d; vy=(Math.random()*4-2); }
+function loop(){
+  if(dead) return;
+  bx+=vx; by+=vy;
+  if(by<4||by>H-4) vy=-vy;
+  if(bx<10+PW&&by>py&&by<py+PH&&vx<0){ vx=-vx*1.06; vy+=(by-(py+PH/2))*0.08; }
+  if(bx>W-10-PW&&by>ay&&by<ay+PH&&vx>0){ vx=-vx*1.06; vy+=(by-(ay+PH/2))*0.08; }
+  if(bx<-10){ as++; check(); serve(1); }
+  if(bx>W+10){ ps++; check(); serve(-1); }
+  const target=by-PH/2; ay+=Math.max(-3.4,Math.min(3.4,(target-ay)*0.16));
+  X.fillStyle="#101a30"; X.fillRect(0,0,W,H);
+  X.strokeStyle="#29406e"; X.setLineDash([6,8]); X.beginPath(); X.moveTo(W/2,0); X.lineTo(W/2,H); X.stroke(); X.setLineDash([]);
+  X.fillStyle="#4da6ff"; X.fillRect(10,py,PW,PH);
+  X.fillStyle="#ff6b81"; X.fillRect(W-10-PW,ay,PW,PH);
+  X.fillStyle="#ffd166"; X.beginPath(); X.arc(bx,by,5,0,7); X.fill();
+  scoreEl.textContent="Kamu "+ps+" — "+as+" AI";
+  raf=requestAnimationFrame(loop);
+}
+function check(){ if(ps>=7||as>=7){ dead=true; cancelAnimationFrame(raf);
+  if(ps>=7){ wins++; localStorage.novaPongWins=wins; }
+  msgEl.textContent=ps>=7?"🏆 KAMU MENANG "+ps+"-"+as+"! (total menang: "+wins+") Ketuk untuk main lagi":"💀 AI MENANG "+as+"-"+ps+". Ketuk untuk main lagi";
+  X.fillStyle="rgba(0,0,0,.55)"; X.fillRect(0,0,W,H);
+  X.fillStyle="#fff"; X.font="bold 22px system-ui"; X.textAlign="center";
+  X.fillText(ps>=7?"MENANG!":"KALAH…",W/2,H/2); } }
+C.addEventListener("pointermove",e=>{ const r=C.getBoundingClientRect(); py=(e.clientY-r.top)*(H/r.height)-PH/2; py=Math.max(0,Math.min(H-PH,py)); });
+C.addEventListener("pointerdown",e=>{ if(dead) reset(); });
+document.addEventListener("keydown",e=>{ if(e.key==="ArrowUp")py=Math.max(0,py-24); if(e.key==="ArrowDown")py=Math.min(H-PH,py+24); });
+reset();
+</script>
+</body>
+</html>

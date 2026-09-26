@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nova Arcade — Dino Run</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
+  h1 { font-size:18px; letter-spacing:2px; margin-bottom:4px; }
+  .sub { font-size:11px; color:#7d8db3; margin-bottom:10px; }
+  #score { font-size:14px; margin-bottom:8px; color:#9fb4e6; }
+  canvas { background:#101a30; border:2px solid #29406e; border-radius:10px; max-width:100%; }
+  #msg { margin-top:10px; font-size:13px; color:#ffd166; min-height:18px; }
+</style>
+</head>
+<body>
+<h1>🦖 NOVA DINO RUN</h1>
+<div class="sub">Ketuk layar untuk lompat · hindari kaktus</div>
+<div id="score">Skor: 0 · Rekor: 0</div>
+<canvas id="c" width="340" height="160"></canvas>
+<div id="msg"></div>
+<script>
+const C=document.getElementById("c"),X=C.getContext("2d"),G=130;
+let y,vy,jumping,obs,speed,score,dead,raf,best=+(localStorage.novaDinoBest||0),t=0;
+const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
+function reset(){ y=G; vy=0; jumping=false; obs=[]; speed=5; score=0; dead=false; t=0; msgEl.textContent=""; raf=requestAnimationFrame(loop); }
+function jump(){ if(dead){ reset(); return; } if(!jumping){ jumping=true; vy=-11; } }
+function loop(){
+  if(dead) return;
+  t++;
+  if(jumping){ vy+=0.55; y+=vy; if(y>=G){ y=G; jumping=false; vy=0; } }
+  if(t%Math.max(45,90-~~(score/50))===0) obs.push({x:360,h:22+~~(Math.random()*16)});
+  obs.forEach(o=>o.x-=speed); obs=obs.filter(o=>o.x>-30);
+  score+=0.15; speed=5+score/40;
+  X.fillStyle="#101a30"; X.fillRect(0,0,340,160);
+  X.strokeStyle="#29406e"; X.beginPath(); X.moveTo(0,G+26); X.lineTo(340,G+26); X.stroke();
+  X.font="24px serif"; X.fillText("🦖",20,y+8);
+  X.font="18px serif";
+  obs.forEach(o=>X.fillText("🌵",o.x,G+16-o.h+8));
+  for(let i=0;i<5;i++){ const gx=(340-(t*speed*0.3)%40)-i*40; X.fillStyle="#1b2c52"; X.fillRect(gx,G+28,20,2); }
+  if(obs.some(o=>o.x>20&&o.x<44)) die();
+  scoreEl.textContent="Skor: "+~~score+" · Rekor: "+best;
+  raf=requestAnimationFrame(loop);
+}
+function die(){ dead=true; cancelAnimationFrame(raf);
+  const s=~~score;
+  if(s>best){ best=s; localStorage.novaDinoBest=best; msgEl.textContent="🏆 REKOR BARU: "+s+" — ketuk untuk main lagi"; }
+  else msgEl.textContent="💀 Nabrak kaktus! Ketuk untuk main lagi";
+  X.fillStyle="rgba(220,60,60,.6)"; X.fillRect(0,0,340,160);
+  X.fillStyle="#fff"; X.font="bold 20px system-ui"; X.textAlign="center"; X.fillText("GAME OVER",170,80); }
+C.addEventListener("pointerdown",e=>{ e.preventDefault(); jump(); });
+document.addEventListener("keydown",e=>{ if(e.key===" "||e.key==="ArrowUp"){ e.preventDefault(); jump(); } });
+reset();
+</script>
+</body>
+</html>

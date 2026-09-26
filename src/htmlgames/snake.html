@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nova Arcade — Snake</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:#0b1220; color:#e8eefc; font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; padding:12px; touch-action:none; }
+  h1 { font-size:18px; letter-spacing:2px; margin-bottom:4px; }
+  .sub { font-size:11px; color:#7d8db3; margin-bottom:10px; }
+  #score { font-size:14px; margin-bottom:8px; color:#9fb4e6; }
+  canvas { background:#101a30; border:2px solid #29406e; border-radius:10px; max-width:100%; }
+  #pad { margin-top:14px; display:grid; grid-template-columns:repeat(3,64px); grid-template-rows:repeat(2,52px); gap:8px; }
+  #pad button { background:#1b2c52; color:#e8eefc; border:1px solid #29406e; border-radius:12px; font-size:20px; }
+  #pad button:active { background:#2a4a8f; }
+  .empty { visibility:hidden; }
+  #msg { margin-top:10px; font-size:13px; color:#ffd166; min-height:18px; }
+</style>
+</head>
+<body>
+<h1>🐍 NOVA SNAKE</h1>
+<div class="sub">Geser layar atau pakai tombol · makan 🍎 untuk tumbuh</div>
+<div id="score">Skor: 0 · Rekor: 0</div>
+<canvas id="c" width="320" height="320"></canvas>
+<div id="msg"></div>
+<div id="pad">
+  <button class="empty"></button><button data-d="up">▲</button><button class="empty"></button>
+  <button data-d="left">◀</button><button data-d="down">▼</button><button data-d="right">▶</button>
+</div>
+<script>
+const N=16, C=document.getElementById("c"), X=C.getContext("2d");
+let snake, dir, nextDir, food, score, best=+(localStorage.novaSnakeBest||0), dead, timer;
+const scoreEl=document.getElementById("score"), msgEl=document.getElementById("msg");
+function reset(){ snake=[{x:8,y:8},{x:7,y:8},{x:6,y:8}]; dir={x:1,y:0}; nextDir=dir; score=0; dead=false; placeFood(); msgEl.textContent=""; loop(); }
+function placeFood(){ do{ food={x:~~(Math.random()*N),y:~~(Math.random()*N)}; }while(snake.some(s=>s.x===food.x&&s.y===food.y)); }
+function loop(){ if(timer)clearInterval(timer); timer=setInterval(tick,140); }
+function tick(){
+  dir=nextDir;
+  const h={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+  if(h.x<0||h.x>=N||h.y<0||h.y>=N||snake.some(s=>s.x===h.x&&s.y===h.y)){ die(); return; }
+  snake.unshift(h);
+  if(h.x===food.x&&h.y===food.y){ score+=10; placeFood(); } else snake.pop();
+  draw();
+}
+function die(){ dead=true; clearInterval(timer);
+  if(score>best){ best=score; localStorage.novaSnakeBest=best; msgEl.textContent="🏆 REKOR BARU! Ketuk layar untuk main lagi"; }
+  else msgEl.textContent="💀 Game Over — ketuk layar untuk main lagi";
+  draw(); }
+function draw(){
+  X.fillStyle="#101a30"; X.fillRect(0,0,320,320);
+  const s=320/N;
+  X.font=s*0.8+"px serif"; X.textAlign="center"; X.textBaseline="middle";
+  X.fillText("🍎", food.x*s+s/2, food.y*s+s/2);
+  snake.forEach((p,i)=>{ X.fillStyle=i===0?"#4da6ff":"#2f7dcc"; X.fillRect(p.x*s+1,p.y*s+1,s-2,s-2); });
+  if(dead){ X.fillStyle="rgba(220,60,60,.85)"; X.font="bold 24px system-ui"; X.fillText("GAME OVER",160,160); }
+  scoreEl.textContent="Skor: "+score+" · Rekor: "+best;
+}
+function turn(d){ const m={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}}[d];
+  if(!m||(m.x===-dir.x&&m.y===-dir.y))return; nextDir=m; }
+document.querySelectorAll("#pad button").forEach(b=>b.addEventListener("click",()=>turn(b.dataset.d)));
+let tx,ty;
+C.addEventListener("touchstart",e=>{ if(dead){reset();return;} tx=e.touches[0].clientX; ty=e.touches[0].clientY; });
+C.addEventListener("touchmove",e=>{ e.preventDefault(); const dx=e.touches[0].clientX-tx, dy=e.touches[0].clientY-ty;
+  if(Math.hypot(dx,dy)>24){ turn(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up")); tx=e.touches[0].clientX; ty=e.touches[0].clientY; } });
+C.addEventListener("click",()=>{ if(dead)reset(); });
+document.addEventListener("keydown",e=>{ const k={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"}[e.key]; if(k){e.preventDefault();turn(k);} });
+reset();
+</script>
+</body>
+</html>

@@ -61,7 +61,7 @@ const CATEGORY_ORDER = [
   // URUTAN BARU (owner 10 Sep 2026): user dulu → ai → ai image → stiker →
   // maker → download → group → tools → sisanya → PALING AKHIR admin section.
   "user", "ai", "ai agent", "ai image", "sticker", "maker", "download", "group", "tools",
-  "browser", "canvas", "convert", "fun", "couple", "confess menfess", "game",
+  "browser", "html", "canvas", "convert", "fun", "couple", "confess menfess", "game",
   "rpg", "rpg couple", "clan",
   "search", "stalker", "anime", "jkt48", "airich", "asupan", "cecan", "nsfw",
   "media", "tts", "quotes", "primbon",
@@ -76,7 +76,7 @@ const CATEGORY_NAMES = {
   ai: "AI", "ai agent": "AI Agent", "smart": "Smart", "ai image": "AI Image", sticker: "Sticker", maker: "Maker",
   vps: "VPS", tts: "TTS", quotes: "Quotes", primbon: "Primbon",
   anime: "Anime", nsfw: "NSFW", convert: "Convert", search: "Search",
-  stalker: "Stalker", jkt48: "JKT48", airich: "AI Rich", education: "Education", islami: "Islami", browser: "Browser",
+  stalker: "Stalker", jkt48: "JKT48", airich: "AI Rich", education: "Education", islami: "Islami", browser: "Browser", html: "HTML",
   download: "Download", fun: "Fun", couple: "Couple", "confess menfess": "Confess & Menfess",
   canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
