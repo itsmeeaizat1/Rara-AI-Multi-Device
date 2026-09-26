@@ -134,7 +134,7 @@ async function checkRamAlert(print = () => {}) {
       `💻 CPU: load ${cpu.load} (${cpu.cores} core) ≈ ${cpu.pct}%`,
       `🕒 ${jam}, ${tgl}`,
       ``,
-      `Cek proses borak: .index ramalert · optimasi: .index optimize`,
+      `Cek proses beban: .index ramalert · optimasi: .index optimize`,
     ];
     await pingSock.sendMessage(ownerJid, { text: dmLines.join("\n") });
   } catch (e) {
