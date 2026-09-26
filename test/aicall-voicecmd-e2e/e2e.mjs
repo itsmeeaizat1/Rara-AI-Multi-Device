@@ -6,7 +6,7 @@ const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
 const b = await import("../../src/lib/nova-aicall-bridge.js");
-const { matchVoiceCommand, normalizeVoiceText, startAicallVoiceBridge, _setBridgeMessageHandlerForTest, _clearBridgeMessageHandlerForTest, _setBridgeOwnerCheckForTest, _clearBridgeOwnerCheckForTest } = b;
+const { matchVoiceCommand, normalizeVoiceText, startAicallVoiceBridge, _setBridgeMessageHandlerForTest, _clearBridgeMessageHandlerForTest, _setBridgeOwnerCheckForTest, _clearBridgeOwnerCheckForTest, _setBridgePremiumCheckForTest, _clearBridgePremiumCheckForTest, callerAcl, VOICE_REJECT_TXT } = b;
 
 // ═══ 1. matcher peta perintah suara ═══
 w("\n— matcher: kata → command —");
@@ -36,6 +36,7 @@ w("\n— matcher: kata → command —");
 // ═══ 2. HTTP bridge ═══
 w("\n— HTTP /voice (mock messageHandler + owner check) —");
 const OWNER = "628111111111";
+const PREMIUM = "628222222222";
 const STRANGER = "628999999999";
 const PORT = 18790;
 let mhCalls = [];
@@ -44,11 +45,21 @@ const mockSock = {
   sendMessage: async (jid, payload) => { dmSent.push({ jid, text: String(payload?.text || "") }); return { key: { id: "x" } }; },
 };
 _setBridgeOwnerCheckForTest((jid) => String(jid).startsWith(OWNER));
+_setBridgePremiumCheckForTest((jid) => String(jid).startsWith(PREMIUM));
 _setBridgeMessageHandlerForTest(async (raw, sock) => {
   mhCalls.push({ chat: raw.key.remoteJid, sender: raw.key.participant, text: raw.message.conversation });
   await sock.sendMessage(raw.key.remoteJid, { text: "Perintah selesai tanpa error." });
 });
 startAicallVoiceBridge(mockSock, { port: PORT });
+
+async function postAcl(body, headers = {}) {
+  const res = await fetch(`http://127.0.0.1:${PORT}/acl`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...headers },
+    body: JSON.stringify(body),
+  });
+  return { status: res.status, json: await res.json().catch(() => ({})) };
+}
 
 async function postVoice(body, headers = {}) {
   const res = await fetch(`http://127.0.0.1:${PORT}/voice`, {
@@ -101,6 +112,45 @@ async function postVoice(body, headers = {}) {
   const dur = Date.now() - t0;
   check("restart → replyFirst: jawaban instan (gak nunggu eksekusi)", r.json?.type === "command" && dur < 1500, dur + "ms");
   check("eksekusi .index restart dateng belakangan (async)", await new Promise((res) => { setTimeout(() => res(mhCalls.some((c) => c.text === ".index restart")), 1500); }), JSON.stringify(mhCalls));
+}
+{
+  // ═══ ACL: user premium boleh telepon, non-owner non-premium ditolak ═══
+  w("\n— ACL premium (rev owner: user akses aicall hrs premium) —");
+  check("callerAcl owner → owner", callerAcl(OWNER + "@s.whatsapp.net") === "owner");
+  check("callerAcl premium → premium", callerAcl(PREMIUM + "@s.whatsapp.net") === "premium");
+  check("callerAcl stranger → none", callerAcl(STRANGER + "@s.whatsapp.net") === "none");
+  {
+    const r = await postAcl({ number: PREMIUM + "@s.whatsapp.net" });
+    check("POST /acl premium → level=premium (buat gate Go)", r.status === 200 && r.json?.ok === true && r.json?.level === "premium", JSON.stringify(r.json));
+  }
+  {
+    const r = await postAcl({ number: STRANGER + "@s.whatsapp.net" });
+    check("POST /acl stranger → level=none", r.json?.level === "none", JSON.stringify(r.json));
+  }
+  {
+    const r = await postAcl({ number: OWNER + "@s.whatsapp.net" });
+    check("POST /acl owner → level=owner", r.json?.level === "owner", JSON.stringify(r.json));
+  }
+}
+{
+  // premium maksa perintah kontrol FIXED → AI ngucapin tolakan eksplisit
+  mhCalls = []; dmSent = [];
+  const r = await postVoice({ text: "tolong matikan bot sekarang ya", number: PREMIUM + "@s.whatsapp.net" });
+  check("premium + \"matikan bot\" → type=command + teks ditolak", r.json?.type === "command" && (r.json?.text || "").includes("ditolak"), JSON.stringify(r.json));
+  check("kalimat tolakan: hanya admin dan owner", (r.json?.text || "") === VOICE_REJECT_TXT && VOICE_REJECT_TXT.includes("admin dan owner"), r.json?.text);
+  check("command gak pernah dieksekusi buat premium", mhCalls.length === 0, JSON.stringify(mhCalls));
+}
+{
+  // premium + jalur generik → tetap lewat middleware (izin per-fitur)
+  mhCalls = []; dmSent = [];
+  const r = await postVoice({ text: "titik bootdoctor", number: PREMIUM + "@s.whatsapp.net" });
+  check("premium + \"titik <cmd>\" → dieksekusi lewat middleware", r.json?.type === "command" && mhCalls.length === 1 && mhCalls[0]?.text === ".bootdoctor", JSON.stringify(r.json) + " | " + JSON.stringify(mhCalls));
+}
+{
+  // stranger + perintah fixed → chat polos, gak ada eksekusi (lapisan cadangan)
+  mhCalls = []; dmSent = [];
+  const r = await postVoice({ text: "tolong matikan bot", number: STRANGER + "@s.whatsapp.net" });
+  check("stranger + perintah → tetap chat (gak jalanin)", r.json?.type === "chat" && mhCalls.length === 0, JSON.stringify(r.json));
 }
 {
   const r = await postVoice({});

@@ -12,17 +12,21 @@
 //       text} → Go nyuarain konfirmasi ke telinga owner.
 //   - gak cocok → {type:"chat"} → lanjut percakapan AI normal.
 // 🔹 KEAMANAN: 127.0.0.1 SAJA; key X-Api-Key (env AICALL_HTTP_KEY — sama
-//   dengan service Go); command suara CUMA buat NOMOR OWNER (config.isOwner)
-//   — nomor lain selalu {type:"chat"}; izin per-fitur tetap dicek
-//   middleware (sender = nomor peer, jadi fitur owner-only cuma jalan kalau
-//   peer-nya emang owner). ".bot" selalu lolos gate kill-switch di handler
-//   → "nyalakan bot" via telepon TETAP jalan walau bot lagi off.
+//   dengan service Go). Owner 26 Sep: "user bsa akses aicall tp hrs premium
+//   dlu biar g dispam trus user g bsa akses fitur yg owner only". Level akses
+//   = owner > premium > none (POST /acl buat Go ngecek sebelum angkat).
+//   Perintah FIXED (matikan bot dll) CUMA owner; premium yang maksa → AI
+//   ngucapin tolakan eksplisit. Jalur generik "titik <cmd>" tetap lewat
+//   middleware bot (izin per-fitur — owner-only ditolak otomatis).
+//   ".bot" selalu lolos gate kill-switch di handler → "nyalakan bot"
+//   via telepon TETAP jalan walau bot lagi off (owner).
 // 🔹 REPLY-FIRST: perintah yang bikin bot mati/nyambung ulang (restart,
 //   reconnect) dijawab DULU ke Go, eksekusi 800ms kemudian — kalau
 //   sinkron, proses Node mati duluan dan respons gak pernah sampai.
 // ============================================================
 import http from "node:http";
 import { isOwner } from "../../config.js";
+import { isPremium } from "./nova-premium-db.js";
 
 const DEFAULT_PORT = parseInt(process.env.AICALL_BRIDGE_PORT || "8790", 10) || 8790;
 const EXEC_TIMEOUT_MS = parseInt(process.env.AICALL_BRIDGE_EXEC_MS || "20000", 10) || 20000;
@@ -35,11 +39,32 @@ export function _clearBridgeMessageHandlerForTest() { _messageHandlerImpl = unde
 let _isOwnerImpl;
 export function _setBridgeOwnerCheckForTest(fn) { _isOwnerImpl = fn; }
 export function _clearBridgeOwnerCheckForTest() { _isOwnerImpl = undefined; }
+let _isPremiumImpl;
+export function _setBridgePremiumCheckForTest(fn) { _isPremiumImpl = fn; }
+export function _clearBridgePremiumCheckForTest() { _isPremiumImpl = undefined; }
 
 function ownerCheck(jid) {
   if (typeof _isOwnerImpl === "function") return _isOwnerImpl(jid);
   try { return isOwner(jid); } catch { return false; }
 }
+
+function premiumCheck(jid) {
+  if (typeof _isPremiumImpl === "function") return _isPremiumImpl(jid);
+  try { return isPremium(jid); } catch { return false; }
+}
+
+// level akses pemanggil — owner > premium > none (owner 26 Sep: "user bsa
+// akses aicall tp hrs premium dlu biar g dispam")
+export function callerAcl(jid) {
+  if (ownerCheck(jid)) return "owner";
+  if (premiumCheck(jid)) return "premium";
+  return "none";
+}
+
+// kalimat tolakan yang DIUCAPKAN AI di telepon buat premium yang nyoba
+// perintah kontrol bot fixed ("matikan bot" dll) — owner 26 Sep: "otomatis
+// ai bilang ditolak atau g bsa ini hanya admin dan owner saja"
+export const VOICE_REJECT_TXT = "Maaf, permintaan ditolak. Kontrol bot lewat telepon hanya bisa digunakan admin dan owner saja.";
 
 // ── Peta perintah suara (kata → command bot) ──
 // Urutan penting: paling spesifik duluan. Teks dinormalkan (lowercase +
@@ -147,7 +172,7 @@ export function startAicallVoiceBridge(sock, { port } = {}) {
   try {
     const server = http.createServer((req, res) => {
       const url = new URL(req.url, "http://127.0.0.1");
-      if (req.method !== "POST" || url.pathname !== "/voice") {
+      if (req.method !== "POST" || (url.pathname !== "/voice" && url.pathname !== "/acl")) {
         res.writeHead(404, { "Content-Type": "application/json" });
         return res.end(JSON.stringify({ ok: false, error: "not found" }));
       }
@@ -164,20 +189,43 @@ export function startAicallVoiceBridge(sock, { port } = {}) {
         try {
           const body = JSON.parse(buf || "{}");
           const peerJid = cleanPeerJid(body.number);
+          // gate /acl — buat service Go cek level akses SEBELUM angkat telepon
+          // (cukup nomor, gak butuh text)
+          if (url.pathname === "/acl") {
+            if (!peerJid) {
+              res.writeHead(400, { "Content-Type": "application/json" });
+              return res.end(JSON.stringify({ ok: false, error: "number wajib" }));
+            }
+            res.writeHead(200, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify({ ok: true, level: callerAcl(peerJid) }));
+          }
           if (!body.text || !peerJid) {
             res.writeHead(400, { "Content-Type": "application/json" });
             return res.end(JSON.stringify({ ok: false, error: "text & number wajib" }));
-          }
-          // keamanan: command suara CUMA buat nomor owner
-          if (!ownerCheck(peerJid)) {
-            res.writeHead(200, { "Content-Type": "application/json" });
-            return res.end(JSON.stringify({ ok: true, type: "chat" }));
           }
           const entry = matchVoiceCommand(body.text);
           if (!entry) {
             res.writeHead(200, { "Content-Type": "application/json" });
             return res.end(JSON.stringify({ ok: true, type: "chat" }));
           }
+          // keamanan: level akses pemanggil menentukan apa yang boleh
+          const level = callerAcl(peerJid);
+          if (level === "none") {
+            // bukan owner/premium — command gak pernah jalan (Go harusnya
+            // udah nolak panggilannya; ini lapisan cadangan)
+            res.writeHead(200, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify({ ok: true, type: "chat" }));
+          }
+          if (level === "premium" && !entry.generic) {
+            // premium BOLEH telepon AI, tapi perintah kontrol FIXED
+            // ("matikan bot" dll) cuma owner — AI ngucapin tolakan,
+            // gak pura-pura jalanin atau ngobrol ngalor-ngidul
+            res.writeHead(200, { "Content-Type": "application/json" });
+            return res.end(JSON.stringify({ ok: true, type: "command", cmd: "", text: VOICE_REJECT_TXT }));
+          }
+          // premium + jalur generik "titik <cmd>": TETAP lewat middleware
+          // bot (izin per-fitur dicek — owner-only ditolak middleware,
+          // premium-fitur jalan sesuai haknya). Owner: semua jalan.
           if (entry.replyFirst) {
             // restart/reconnect: jawab DULU, eksekusi belakangan (proses bisa mati)
             res.writeHead(200, { "Content-Type": "application/json" });
