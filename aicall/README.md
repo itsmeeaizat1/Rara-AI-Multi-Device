@@ -97,7 +97,7 @@ TTS_VOICE=ms-MY-YasminNeural
 TTS_PITCH=-1Hz
 TTS_SPEED=1.0
 
-# Fitur Owner (Kosongkan jika ingin publik)
+# Fitur Owner — WAJIB diisi (26 Sep: mode publik DIHAPUS, service terkunci penuh jika kosong)
 OWNER=628123456789,628987654321
 ```
 

@@ -246,8 +246,11 @@ func LoadConfig() *Config {
 }
 
 func IsOwner(sender string) bool {
+	// Owner 26 Sep 2026: "aicall cm owner only aja yg bsa gunakan" —
+	// mode publik DIHAPUS. Tanpa daftar owner (OWNER= kosong di .env),
+	// service terkunci penuh: SEMUA panggilan & command ditolak.
 	if len(AppConfig.Owners) == 0 {
-		return true
+		return false
 	}
 	cleanedSender := strings.TrimPrefix(sender, "+")
 	cleanedSender = strings.Split(cleanedSender, "@")[0]

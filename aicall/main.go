@@ -270,7 +270,7 @@ func handleMessage(client *whatsmeow.Client, callerClient *meowcaller.Client, ms
 		if len(AppConfig.Owners) > 0 {
 			ownerText = fmt.Sprintf("👑 *DAFTAR OWNER BOT:*\n• %s\n\n_Hanya nomor terdaftar di atas yang dapat menggunakan perintah panggilan AI._", strings.Join(AppConfig.Owners, "\n• "))
 		} else {
-			ownerText = "🔓 *STATUS BOT:* Publik (Siapa saja dapat melakukan panggilan AI)."
+			ownerText = "🔒 *STATUS BOT:* Terkunci — OWNER belum di-set di aicall/.env. Isi OWNER=62xxx lalu restart service; sementara SEMUA panggilan ditolak."
 		}
 		sendReply(client, msg, ownerText)
 
