@@ -77,7 +77,7 @@ check("3b. cuma absen.js yang di root (dikenal, kategori group)", staleFiles.len
 // ══ 4. folder selaras kategori ══════════════════════════════════════════════
 section("4. folder selaras kategori (mismatch cuma yang disengaja)");
 
-const OK_MISMATCH = ["plugins/store/", "plugins/rpg-couple/", "plugins/absen.js"];
+const OK_MISMATCH = ["plugins/store/", "plugins/rpg-couple/", "plugins/group/absenjam.js"];
 const norm = (s) => String(s).replace(/[-\s]/g, "");
 const mismatches = [];
 for (const p of walkPlugins()) {
