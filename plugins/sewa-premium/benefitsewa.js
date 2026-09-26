@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/sewa-premium/benefitsewa.js — Kartu manfaat sewa bot (pasangan .benefitpremium)
 // Harga live dari src/lib/sewa/sewa.js (ikutin override .setsewa otomatis)
+// Sistem sewa: sewaChecker (nova-scheduler.js) cek tiap 10 mnt — expired → bot auto keluar grup
 import config from '../../config.js'
 import { sewaPrice } from '../../src/lib/sewa/sewa.js'
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
@@ -21,19 +22,28 @@ async function handler(m) {
 
   const message =
     `🏠 *Apa Itu Sewa?*\n\n` +
-    `Sewa adalah *ɴʏᴇᴡᴀ ʙᴏᴛ* supaya bot masuk dan aktif di grup kamu selama durasi sewa. Semua member di grup bisa pakai fitur bot rame-rame tanpa limit per-orang.\n\n` +
+    `Sewa adalah *ɴʏᴇᴡᴀ ʙᴏᴛ* supaya bot dimasukin ke grup kamu selama durasi tertentu. *ᴛᴀɴᴘᴀ ꜱᴇᴡᴀ ʙᴏᴛ ᴛɪᴅᴀᴋ ʙɪꜱᴀ ᴅɪ-ꜱᴇᴛᴜᴘ ᴍᴀꜱᴜᴋ ɢʀᴜᴘ.*\n\n` +
     `` +
-    `\`\`\`Bot aktif 24 jam di grup kamu\`\`\`\n` +
-    `\`\`\`1200+ command dipakai rame-rame\`\`\`\n` +
-    `\`\`\`Game & RPG economy lengkap\`\`\`\n` +
-    `\`\`\`AI Chat multi-provider\`\`\`\n` +
-    `\`\`\`Download YT, TikTok, IG, Facebook\`\`\`\n` +
-    `\`\`\`Group moderation (antilink, antitoxic)\`\`\`\n` +
-    `\`\`\`Gratis update selama sewa aktif\`\`\`\n` +
-    `\`\`\`Bot gak akan keluar dari grup\`\`\`\n` +
+    `\`⏳ Sistem Waktu:\`\n` +
+    `• Sewa pakai hitungan waktu + *ᴄᴏᴜɴᴛᴅᴏᴡɴ*\n` +
+    `• Sisa waktu kelihatan di \`\`\`${prefix}sewa\`\`\`\n` +
+    `• Peringatan otomatis H-3 hari & 24 jam sebelum habis\n` +
+    `• Kalau sudah habis, bot *ᴏᴛᴏᴍᴀᴛɪꜱ ᴋᴇʟᴜᴀʀ ɢʀᴜᴘ*\n` +
+    `• Mau lanjut? tinggal perpanjang sewa\n` +
+    `---\n` +
+    `` +
+    `\`⭐ Keuntungan Sewa:\`\n` +
+    `• Bot aktif 24 jam di grup kamu\n` +
+    `• 1200+ command dipakai rame-rame\n` +
+    `• Game & RPG economy lengkap\n` +
+    `• AI Chat multi-provider\n` +
+    `• Download YT, TikTok, IG, Facebook\n` +
+    `• Group moderation (antilink, antitoxic)\n` +
+    `• Gratis update selama sewa aktif\n` +
     `---\n` +
     `` +
     `\`🎁 Bonus Sewa:\`\n` +
+    `• *Termasuk benefit gratis Premium*\n` +
     `• Gratis setup & konfigurasi awal\n` +
     `• Support via WhatsApp 24/7\n` +
     `• Garansi kalau bot down (di-restart)\n` +
