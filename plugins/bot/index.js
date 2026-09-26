@@ -12,7 +12,7 @@ import { getConnectionState, forceReconnect } from "../../src/connection.js";
 import {
   startWatchdog, stopWatchdog, getWatchdogStatus, setWatchdogInterval,
 } from "../../src/connection.js";
-import { formatBytes, formatDuration, formatClockLine } from "../../src/lib/nova-pinglog.js";
+import { formatBytes, formatDuration, formatClockLine, getCpuLoadInfo } from "../../src/lib/nova-pinglog.js";
 import {
   getOptimizerState, setOptimizer, optimizeNow,
 } from "../../src/lib/nova-optimizer.js";
@@ -207,6 +207,7 @@ async function handler(m, { sock, config: botConfig }) {
           `Ambang: ${st.thresholdPct}%`,
           `RAM sistem: ${st.sysPct}% (${formatBytes(st.sysUsed)} dari ${formatBytes(st.sysTotal)})`,
           `RAM bot: ${formatBytes(st.rss)}`,
+          `CPU: load ${st.cpu.load} (${st.cpu.cores} core) ≈ ${st.cpu.pct}%`,
           `Alert terakhir: ${last}`,
         ]));
       }

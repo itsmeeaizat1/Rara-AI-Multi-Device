@@ -50,6 +50,15 @@ const RAMALERT_COOLDOWN_MS = 30 * 60 * 1000;
 const RAMALERT_DEFAULT_PCT = 80;
 let _ramMemForTest = null; // seam e2e: { total, free }
 
+// info CPU buat kartu alert/status (owner 26 Sep: "termasuk penggunaan
+// cpu juga diunjukan?") — load average 1 menit vs jumlah core = persen kasar
+export function getCpuLoadInfo() {
+  const cores = (os.cpus?.() || []).length || 1;
+  const load = os.loadavg?.()?.[0] || 0;
+  const pct = Math.min(999, Math.round((load / cores) * 100));
+  return { cores, load: Math.round(load * 100) / 100, pct };
+}
+
 function getRamAlertState() {
   let st = null;
   try {
@@ -82,7 +91,7 @@ export function getRamAlertStatus() {
   const mem = _ramMemForTest || { total: os.totalmem(), free: os.freemem() };
   const used = Math.max(0, mem.total - mem.free);
   const pct = mem.total > 0 ? Math.round((used / mem.total) * 100) : 0;
-  return { ...st, sysUsed: used, sysTotal: mem.total, sysPct: pct, rss: process.memoryUsage().rss };
+  return { ...st, sysUsed: used, sysTotal: mem.total, sysPct: pct, rss: process.memoryUsage().rss, cpu: getCpuLoadInfo() };
 }
 
 // murni (dites e2e): keputusan alert dari nilai eksplisit
@@ -112,6 +121,7 @@ async function checkRamAlert(print = () => {}) {
     if (!ownerJid) return true;
     const jam = new Date(now).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hour12: false }).replace(":", ".");
     const tgl = new Date(now).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric" });
+    const cpu = getCpuLoadInfo();
     await pingSock.sendMessage(ownerJid, {
       text: claraWrap("index", [
         `🧠 RAM SISTEM TINGGI`,
@@ -119,6 +129,7 @@ async function checkRamAlert(print = () => {}) {
         `Pemakaian: ${sysPct}% (${formatBytes(used)} dari ${formatBytes(mem.total)})`,
         `Ambang: ${st.thresholdPct}%`,
         `RAM bot: ${formatBytes(process.memoryUsage().rss)}`,
+        `💻 CPU: load ${cpu.load} (${cpu.cores} core) ≈ ${cpu.pct}%`,
         `🕒 ${jam} WIB, ${tgl}`,
         "",
         `Cek proses borak: .index ramalert · optimasi: .index optimize`,
