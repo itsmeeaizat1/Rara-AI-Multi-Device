@@ -3,13 +3,13 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "blacklist",
-  alias: ["blacklist"],
-  category: "cek",
+  name: "blacklistscammer",
+  alias: ["blacklistscammer", "scammerblacklist"],
+  category: "owner",
   description: "Registry penipu/scammer - catat, cek, pantau nomor penipu",
-  usage: ".blacklist <add/cek/list/info/remove/stats>",
-  example: ".blacklist add 08123456789 | judi online | screenshot bukti",
-  isOwner: false,
+  usage: ".blacklistscammer <add/cek/list/info/remove/stats>",
+  example: ".blacklistscammer add 08123456789 | judi online | screenshot bukti",
+  isOwner: true,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
@@ -64,10 +64,10 @@ async function handler(m, { sock, config: botConfig }) {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 2) {
         return m.reply(
-          prefix + "blacklist add <nomor> | <alasan> | <bukti>\n\n" +
+          prefix + "blacklistscammer add <nomor> | <alasan> | <bukti>\n\n" +
           "Contoh:\n" +
-          prefix + "blacklist add 08123456789 | judi online | link grup judi\n" +
-          prefix + "blacklist add 08123456789 | pinjol ilegal\n\n" +
+          prefix + "blacklistscammer add 08123456789 | judi online | link grup judi\n" +
+          prefix + "blacklistscammer add 08123456789 | pinjol ilegal\n\n" +
           "Bukti opsional. Nomor bisa 08xxx, 628xxx, atau @nomor",
           { title: "Blacklist - Add" }
         );
@@ -135,7 +135,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "cek") {
       const numberInput = args[1];
       if (!numberInput) {
-        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklist cek <nomor>\n💡 *Contoh:* " + prefix + "blacklist cek 08123456789"));
+        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklistscammer cek <nomor>\n💡 *Contoh:* " + prefix + "blacklistscammer cek 08123456789"));
       }
 
       const number = normalizeNumber(numberInput);
@@ -176,7 +176,7 @@ async function handler(m, { sock, config: botConfig }) {
       const entries = Object.values(blacklist);
 
       if (entries.length === 0) {
-        return m.reply(claraWrap("Blacklist", "Belum ada nomor di blacklist.\nTambah: " + prefix + "blacklist add <nomor> | <alasan>"));
+        return m.reply(claraWrap("Blacklist", "Belum ada nomor di blacklist.\nTambah: " + prefix + "blacklistscammer add <nomor> | <alasan>"));
       }
 
       // Sort by report count (most reported first)
@@ -203,7 +203,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "info") {
       const numberInput = args[1];
       if (!numberInput) {
-        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklist info <nomor>"));
+        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklistscammer info <nomor>"));
       }
 
       const number = normalizeNumber(numberInput);
@@ -255,7 +255,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const numberInput = args[1];
       if (!numberInput) {
-        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklist remove <nomor>"));
+        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklistscammer remove <nomor>"));
       }
 
       const number = normalizeNumber(numberInput);
@@ -313,12 +313,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     // --- HELP / default ---
     return m.reply(
-      prefix + "blacklist add <nomor> | <alasan> | <bukti>\n" +
-      prefix + "blacklist cek <nomor>\n" +
-      prefix + "blacklist list\n" +
-      prefix + "blacklist info <nomor>\n" +
-      prefix + "blacklist remove <nomor> (owner/admin)\n" +
-      prefix + "blacklist stats\n\n" +
+      prefix + "blacklistscammer add <nomor> | <alasan> | <bukti>\n" +
+      prefix + "blacklistscammer cek <nomor>\n" +
+      prefix + "blacklistscammer list\n" +
+      prefix + "blacklistscammer info <nomor>\n" +
+      prefix + "blacklistscammer remove <nomor> (owner/admin)\n" +
+      prefix + "blacklistscammer stats\n\n" +
       "Auto-verified jika 3+ laporan dari user berbeda",
       { title: "Blacklist - Menu" }
     );
