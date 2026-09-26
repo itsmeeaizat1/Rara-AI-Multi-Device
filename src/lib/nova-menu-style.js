@@ -485,6 +485,7 @@ const CATEGORY_NAMES = {
   canvas: "Canvas", tools: "Tools", rpg: "RPG", "rpg couple": "RPG Couple",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+  berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium", bot: "Bot",
@@ -509,6 +510,7 @@ const CATEGORY_EMOJIS = {
   future: "🔮", islami: "🕌", islamic: "🕌", menu: "📋",
   maker: "", news: "📰", nsfw: "🔞", linode: "☁️",
   primbon: "🔮", cecan: "👧", stalker: "🔎", tts: "🔊",
+  berita: "📰", cuaca: "🌦️", loker: "💼",
   vps: "🖥️",
 };
 

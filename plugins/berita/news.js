@@ -6,7 +6,7 @@ import config from "../../config.js";
 const pluginConfig = {
   name: "berita",
   alias: ["berita"],
-  category: "info",
+  category: "berita",
   desc: "Cari & rangkum berita terkini real-time dari internet tanpa clickbait",
   usage: ".berita <topik>",
   example: ".berita teknologi terbaru",
