@@ -67,7 +67,7 @@ const CATEGORY_ORDER = [
   "media", "tts", "quotes", "primbon",
   "education", "food", "cek", "berita", "bencana",
   "islami", "smart", "utility", "misc", "random",
-  "store", "market", "jpm", "pushkontak",
+  "store", "market", "sewa premium", "jpm", "pushkontak",
   // PALING AKHIR (owner): panel, vps, main, info, owner
   "panel", "vps", "main", "info", "owner",
 ];
@@ -83,7 +83,7 @@ const CATEGORY_NAMES = {
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
   ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
-  panel: "Panel", owner: "Owner", store: "Store",
+  panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium",
 };
 
 function getCommandSymbols(cmdName) {

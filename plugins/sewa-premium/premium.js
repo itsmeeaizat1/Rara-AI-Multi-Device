@@ -20,7 +20,7 @@ import { premiumPrice as PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
 const pluginConfig = {
   name: "premium",
   alias: ["premium"],
-  category: "info",
+  category: "sewa premium",
   description: "Info detail premium bot - harga, benefit, dan cara beli premium",
   usage: ".premium",
   example: ".premium",

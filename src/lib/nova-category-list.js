@@ -28,7 +28,7 @@ const CATEGORY_NAMES = {
   info: "Info", cek: "Cek", berita: "Berita", bencana: "Bencana",
   islami: "Islami", religi: "Religi",
   main: "Main", user: "User", premium: "Premium",
-  store: "Store", market: "Market",
+  "sewa premium": "Sewa & Premium", store: "Store", market: "Market",
   future: "Future", misc: "Misc", random: "Random",
   utility: "Utility", vps: "VPS", linode: "Linode",
   panel: "Panel", jpm: "JPM", pushkontak: "Push Kontak",
@@ -48,7 +48,7 @@ const CATEGORY_ORDER = [
   "media", "tts", "quotes", "primbon",
   "education", "food", "cek", "berita", "bencana",
   "islami", "smart", "utility", "misc", "random",
-  "store", "market", "jpm", "pushkontak",
+  "store", "market", "sewa premium", "jpm", "pushkontak",
   // PALING AKHIR (owner): panel, vps, main, info, owner
   "panel", "vps", "main", "info", "owner",
 ];
@@ -64,7 +64,7 @@ const CATEGORY_EMOJI = {
   education: "📚", food: "🍔", info: "ℹ️", cek: "🔎", berita: "📰", bencana: "🚨",
   islami: "☪️", religi: "🕌",
   main: "🏠", user: "👤", premium: "💎", future: "🌌",
-  store: "🏬", market: "🛒",
+  "sewa premium": "💳", store: "🏬", market: "🛒",
   misc: "📦", random: "🎲", utility: "🧰", clean: "🧹",
   vps: "🖧", linode: "☁️", panel: "🖥️", jpm: "📡", pushkontak: "📲",
   owner: "👑",

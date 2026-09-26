@@ -5,7 +5,7 @@
 //   .sewa, .premium, .payment (carousel), .buysewa, .buyprem, .sc, .addsewa
 //
 // Dipindah dari: src/lib/rent.js (sewa) + hardcode PREMIUM_PRICES di
-// plugins/info/premium.js & plugins/store/buyprem.js (premium).
+// plugins/sewa-premium/premium.js & plugins/store/buyprem.js (premium).
 
 // ═══════════════════════════════════════════
 // OVERRIDE LIVE VIA .setsewa (persist DB, tanpa edit file)

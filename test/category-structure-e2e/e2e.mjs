@@ -138,7 +138,7 @@ section("7. sampel file pindahan ke-import");
 const samples = [
   "plugins/couple/couple.js", "plugins/confess-menfess/confess.js", "plugins/cecan/cecankorea.js",
   "plugins/ai-image/text2img.js", "plugins/nsfw/remove-clothes.js", "plugins/store/buyprem.js",
-  "plugins/store/rent.js", "plugins/tools/q.js", "plugins/convert/vid2gif.js",
+  "plugins/sewa-premium/rent.js", "plugins/tools/q.js", "plugins/convert/vid2gif.js",
   "plugins/group/notifmakan.js", "plugins/panel/linode.js", "plugins/smart/autopulse.js",
   "plugins/smart/ailearn.js", "plugins/smart/sudoku.js",
 ];
@@ -152,7 +152,7 @@ check("7a. 14 sampel ke-import (" + imported + " OK)", err.length === 0, err.sli
 // ══ 8. anti-regresi rename: nama command gak ikut keganti ═══════════════════
 section("8. nama command gak berubah (rename folder ≠ rename cmd)");
 check("8a. confess masih .confess", /name:\s*"confess"/.test(fs.readFileSync("plugins/confess-menfess/confess.js", "utf-8")));
-check("8b. sewa masih .sewa", /name:\s*"sewa"/.test(fs.readFileSync("plugins/store/rent.js", "utf-8")));
+check("8b. sewa masih .sewa", /name:\s*"sewa"/.test(fs.readFileSync("plugins/sewa-premium/rent.js", "utf-8")));
 check("8c. text2img masih .text2imgv2", /name:\s*"text2imgv2"/.test(fs.readFileSync("plugins/ai-image/text2img.js", "utf-8")));
 check("8d. setanovaagent masih .setanovaagent", /name:\s*"setanovaagent"/.test(fs.readFileSync("plugins/ai-agent/setanovaagent.js", "utf-8")));
 check("8e. cmd linode* tetap, kategori panel", fs.readFileSync("plugins/panel/linode.js", "utf-8").includes("linode2gb") && pluginCat("plugins/panel/linode.js") === "panel");
