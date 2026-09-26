@@ -40,3 +40,6 @@ src/data/nova-database.json/
 # src/lib/apikey/apikeys.json.bak
 session/
 storage/
+
+# folder DB legacy nova.json/ (era config.database.path lama) — migrasi otomatis ke src/database/<kategori>/, jangan pernah di-git
+nova.json/
