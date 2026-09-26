@@ -1,28 +1,43 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
-import crypto from "node:crypto";
+// .uuid — generator UUID v4 (port altftool.com/tools/all/uuid-generator) pakai crypto.randomUUID().
+import { randomUUID } from "node:crypto";
+import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "uuid", alias: ["uuid"], category: "tools",
-  alias: ["uuid"],
-  description: "Generate UUID v4", usage: ".uuid",
-  example: ".uuid", isOwner: false, isPremium: false,
-  isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,
+  name: "uuid", alias: ["uuid", "uuidgen", "guid"], category: "tools",
+  description: "Generate UUID v4 acak", usage: ".uuid [jumlah]",
+  example: ".uuid 5", isOwner: false, isPremium: false,
+  isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
+const MAX = 10;
+
 async function handler(m, { sock, config: botConfig }) {
+  const prefix = botConfig.command?.prefix || ".";
   try {
     await m.react("🕒");
-    const u1 = crypto.randomUUID();
-    const u2 = crypto.randomUUID();
-    const u3 = crypto.randomUUID();
-    { const __navText = (claraWrap("UUID Generator", [`1: \`${u1}\``,
-      `2: \`${u2}\``,
-      `3: \`${u3}\``].join("\n")) + "\n" + tipText(`Ketik ${prefix}uuid untuk generate lagi`));       await m.react("🐣");
-await m.reply(__navText); };
+    const raw = (m.text || "").trim();
+    let n = 1;
+    if (raw) {
+      n = parseInt(raw, 10);
+      if (!Number.isFinite(n) || n < 1) {
+        await m.react("❌");
+        return m.reply(novaSalahV2("uuid", {
+          kaomoji: "(・_・;)",
+          pesan: "jumlahnya harus angka lebih dari 0",
+          contoh: `${prefix}uuid 5`,
+        }), "uuid");
+      }
+      n = Math.min(n, MAX);
+    }
+    const ids = Array.from({ length: n }, () => randomUUID());
+    await m.react("🐣");
+    await m.reply(claraWrap("UUID Generator", [`UUID V4 ×${n} BERHASIL`,
+      "",
+      "```" + ids.join("\n") + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply("Error: " + e.message);
+    await m.reply(claraWrap("UUID Generator", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

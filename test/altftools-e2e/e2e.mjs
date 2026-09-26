@@ -12,6 +12,12 @@ const slugP = await from("slugify");
 const cntP = await from("textcount");
 const frqP = await from("textfreq");
 const revP = await from("textreverse");
+const romP = await from("roman");
+const rotP = await from("rot13");
+const tsP = await from("timestamp");
+const uidP = await from("uuid");
+const hexP = await from("texthex");
+const urlP = await from("urlcode");
 const { fromSC } = await import("../../src/lib/styler.js");
 const sc = (s) => fromSC(String(s || "")).toLowerCase();
 
@@ -40,6 +46,9 @@ t("  6 plugin config utuh: tools + enabled + cd 3",
   plugs.every(([, p]) => p.config.category === "tools" && p.config.isEnabled === true && p.config.cooldown === 3),
   plugs.map(([, p]) => p.config.cooldown).join(","));
 t("  6 handler exported", plugs.every(([, p]) => typeof p.handler === "function"));
+const plugs2 = [["roman", romP], ["rot13", rotP], ["timestamp", tsP], ["uuid", uidP], ["texthex", hexP], ["urlcode", urlP]];
+t("  batch 2: 6 plugin tools + enabled + cd 3", plugs2.every(([, p]) => p.config.category === "tools" && p.config.isEnabled === true && p.config.cooldown === 3));
+t("  batch 2: 6 handler exported", plugs2.every(([, p]) => typeof p.handler === "function"));
 
 // ═══ 2. JWT ═══
 w("\n— .jwt —");
@@ -143,6 +152,120 @@ w("\n— .textreverse —");
 {
   const m = mkM("", "textreverse"); await run(revP, m);
   t("  tanpa teks → kartu usage", last(m).includes(sc("textreverse")));
+}
+
+// ═══ 8. ROMAN ═══
+w("\n— .roman —");
+{
+  const m = mkM("2026", "roman"); await run(romP, m);
+  t("  2026 → MMXXVI", has(m, "MMXXVI") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("MMXXVI", "roman"); await run(romP, m);
+  t("  MMXXVI → 2026", has(m, "2026"));
+}
+{
+  const m = mkM("3999", "roman"); await run(romP, m);
+  t("  3999 → MMMCMXCIX (batas atas)", has(m, "MMMCMXCIX"));
+}
+{
+  const m = mkM("4000", "roman"); await run(romP, m);
+  t("  4000 → di luar rentang + ❌", m.reacts.includes("❌") && last(m).length > 0);
+}
+{
+  const m = mkM("IIII", "roman"); await run(romP, m);
+  t("  IIII (format gak valid) → ditolak + ❌", m.reacts.includes("❌"));
+}
+{
+  const m = mkM("", "roman"); await run(romP, m);
+  t("  tanpa input → kartu usage", last(m).includes(sc("roman")));
+}
+
+// ═══ 9. ROT13 ═══
+w("\n— .rot13 —");
+{
+  const m = mkM("halo dunia", "rot13"); await run(rotP, m);
+  t("  'halo dunia' → 'unyb qhavn'", has(m, "unyb qhavn") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m2 = mkM("unyb qhavn", "rot13"); await run(rotP, m2);
+  t("  symmetric: rot13(rot13(x)) = x", has(m2, "halo dunia"));
+}
+{
+  const m = mkM("A🙂B 123", "rot13"); await run(rotP, m);
+  t("  besar tetap besar + emoji/angka gak disentuh", has(m, "N🙂O 123"));
+}
+
+// ═══ 10. TIMESTAMP ═══
+w("\n— .timestamp —");
+{
+  const m = mkM("1727300000", "timestamp"); await run(tsP, m);
+  t("  angka → tanggal WIB + relatif", has(m, "2024") && (has(m, "yang lalu") || has(m, "ke depan")) && m.reacts.includes("🐣"), last(m).substring(0, 200));
+}
+{
+  const m = mkM("", "timestamp"); await run(tsP, m);
+  t("  tanpa arg → waktu sekarang", has(m, "waktu sekarang") && last(m).match(/\d{10}/));
+}
+{
+  const m = mkM("2026-09-26", "timestamp"); await run(tsP, m);
+  t("  yyyy-mm-dd (00:00 WIB) → 1790355600", has(m, "1790355600"), last(m).substring(0, 200));
+}
+{
+  const m = mkM("26-09-2026 14:30", "timestamp"); await run(tsP, m);
+  t("  dd-mm-yyyy HH:mm → 1790407800", has(m, "1790407800"), last(m).substring(0, 200));
+}
+{
+  const m = mkM("bukan-tanggal", "timestamp"); await run(tsP, m);
+  t("  format aneh → pesan salah + ❌", m.reacts.includes("❌") && last(m).length > 0);
+}
+
+// ═══ 11. UUID ═══
+w("\n— .uuid —");
+{
+  const m = mkM("", "uuid"); await run(uidP, m);
+  t("  default 1 uuid v4 valid", last(m).match(/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/) && m.reacts.includes("🐣"));
+}
+{
+  const m = mkM("5", "uuid"); await run(uidP, m);
+  t("  .uuid 5 → 5 uuid", (last(m).match(/[0-9a-f]{8}-/g) || []).length === 5);
+}
+{
+  const m = mkM("0", "uuid"); await run(uidP, m);
+  t("  0 → pesan salah + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 12. TEXTHEX ═══
+w("\n— .texthex —");
+{
+  const m = mkM("enc halo", "texthex"); await run(hexP, m);
+  t("  enc halo → 68616c6f", has(m, "68616c6f") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("dec 68616c6f", "texthex"); await run(hexP, m);
+  t("  dec 68616c6f → halo", has(m, "halo"));
+}
+{
+  const m = mkM("dec xyz", "texthex"); await run(hexP, m);
+  t("  hex gak valid → ditolak + ❌", m.reacts.includes("❌"));
+}
+{
+  const m = mkM("dec 686", "texthex"); await run(hexP, m);
+  t("  hex ganjil → ditolak + ❌", m.reacts.includes("❌"));
+}
+
+// ═══ 13. URLCODE ═══
+w("\n— .urlcode —");
+{
+  const m = mkM("enc halo dunia? 1=2", "urlcode"); await run(urlP, m);
+  t("  enc → halo%20dunia%3F%201%3D2", has(m, "halo%20dunia%3F%201%3D2") && m.reacts.includes("🐣"), last(m).substring(0, 120));
+}
+{
+  const m = mkM("dec halo%20dunia", "urlcode"); await run(urlP, m);
+  t("  dec → halo dunia", has(m, "halo dunia"));
+}
+{
+  const m = mkM("dec %zz", "urlcode"); await run(urlP, m);
+  t("  % gak valid → ditolak + ❌", m.reacts.includes("❌"));
 }
 
 fs.rmSync(new URL("./e2e-db.json", import.meta.url), { recursive: true, force: true });
