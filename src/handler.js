@@ -604,6 +604,67 @@ try {
       if (config.dev?.debugLog) logger.error("asahotak", e.message);
     }
 
+    // AltF games batch (port altftool.com — plugins/game/*.js, own session systems)
+    try {
+      const { answerHandler: dwHandler } = await import("../plugins/game/dailywordgame.js");
+      if (typeof dwHandler === "function") {
+        const dwHandled = await dwHandler(m, sock);
+        if (dwHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("dailywordgame", e.message);
+    }
+
+    try {
+      const { answerHandler: g2048Handler } = await import("../plugins/game/game2048.js");
+      if (typeof g2048Handler === "function") {
+        const g2048Handled = await g2048Handler(m, sock);
+        if (g2048Handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("game2048", e.message);
+    }
+
+    try {
+      const { answerHandler: c4Handler } = await import("../plugins/game/fourinarow.js");
+      if (typeof c4Handler === "function") {
+        const c4Handled = await c4Handler(m, sock);
+        if (c4Handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("fourinarow", e.message);
+    }
+
+    try {
+      const { answerHandler: slideHandler } = await import("../plugins/game/slidingpuzzle.js");
+      if (typeof slideHandler === "function") {
+        const slideHandled = await slideHandler(m, sock);
+        if (slideHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("slidingpuzzle", e.message);
+    }
+
+    try {
+      const { answerHandler: mineHandler } = await import("../plugins/game/minesweeper.js");
+      if (typeof mineHandler === "function") {
+        const mineHandled = await mineHandler(m, sock);
+        if (mineHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("minesweeper", e.message);
+    }
+
+    try {
+      const { answerHandler: emojiQuizHandler } = await import("../plugins/game/emojiquiz.js");
+      if (typeof emojiQuizHandler === "function") {
+        const eqHandled = await emojiQuizHandler(m, sock);
+        if (eqHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("emojiquiz", e.message);
+    }
+
     // All other games (via nova-game-factory — shared session map in nova-game-engine)
     try {
       const { games } = await import("./lib/nova-game-factory.js");
