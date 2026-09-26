@@ -22,6 +22,9 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import { logger } from "./nova-logger.js";
+import { getDatabase } from "./nova-database.js";
+import { claraWrap } from "./nova-menu-style.js";
+import config from "../../config.js";
 import { getAuthKey } from "./auth/auth.js";
 
 const DEFAULT_MS = Number(process.env.PINGLOG_MS) > 0 ? Number(process.env.PINGLOG_MS) : 20000;
@@ -37,6 +40,110 @@ let loggerHooked = false;
 // integritas kode: baseline { path → "size:mtime" }, dibangun saat start
 let codeBaseline = null;
 let lastCodeSig = "0.0.0";
+
+// ─── RAM Alert (owner 26 Sep: "alert DM pas RAM lewat ambang — mau,
+// defaultnya OFF") — pantau RAM SISTEM (os.totalmem - os.freemem), bukan
+// RSS bot doang, biar keliatan bot + aicall + 9router yang borak barengan.
+// Dicek tiap tick pinglog (20 dtk); DM owner max 1x per 30 mnt (cooldown).
+// State persist: db.data.pinglog.ramAlert { on, thresholdPct, lastAlertAt }.
+const RAMALERT_COOLDOWN_MS = 30 * 60 * 1000;
+const RAMALERT_DEFAULT_PCT = 80;
+let _ramMemForTest = null; // seam e2e: { total, free }
+
+function getRamAlertState() {
+  let st = null;
+  try {
+    const db = getDatabase();
+    if (!db.data.pinglog || typeof db.data.pinglog !== "object") db.data.pinglog = {};
+    if (!db.data.pinglog.ramAlert || typeof db.data.pinglog.ramAlert !== "object") {
+      db.data.pinglog.ramAlert = { on: false, thresholdPct: RAMALERT_DEFAULT_PCT, lastAlertAt: 0 };
+    }
+    st = db.data.pinglog.ramAlert;
+  } catch {
+    st = { on: false, thresholdPct: RAMALERT_DEFAULT_PCT, lastAlertAt: 0 };
+  }
+  if (typeof st.on !== "boolean") st.on = false; // DEFAULT OFF
+  const pct = Number(st.thresholdPct);
+  st.thresholdPct = Number.isFinite(pct) && pct >= 50 && pct <= 99 ? pct : RAMALERT_DEFAULT_PCT;
+  if (typeof st.lastAlertAt !== "number") st.lastAlertAt = 0;
+  return st;
+}
+
+// set dari .index ramalert on|off [persen] — balikin state baru
+export function setRamAlert(on, thresholdPct) {
+  const st = getRamAlertState();
+  st.on = !!on;
+  const pct = Number(thresholdPct);
+  if (on && Number.isFinite(pct) && pct >= 50 && pct <= 99) st.thresholdPct = pct;
+  return { ...st };
+}
+export function getRamAlertStatus() {
+  const st = getRamAlertState();
+  const mem = _ramMemForTest || { total: os.totalmem(), free: os.freemem() };
+  const used = Math.max(0, mem.total - mem.free);
+  const pct = mem.total > 0 ? Math.round((used / mem.total) * 100) : 0;
+  return { ...st, sysUsed: used, sysTotal: mem.total, sysPct: pct, rss: process.memoryUsage().rss };
+}
+
+// murni (dites e2e): keputusan alert dari nilai eksplisit
+export function evaluateRamAlert({ on, thresholdPct, lastAlertAt = 0, sysPct, now = Date.now() } = {}) {
+  if (!on) return { shouldAlert: false };
+  if (!(Number(sysPct) >= Number(thresholdPct))) return { shouldAlert: false };
+  // lastAlertAt 0 = belum pernah → jangan dianggap "masih cooldown" (falsy trap)
+  const la = Number(lastAlertAt || 0);
+  if (la > 0 && Number(now) - la < RAMALERT_COOLDOWN_MS) return { shouldAlert: false };
+  return { shouldAlert: true };
+}
+
+// eksekusi di tiap tick — DM owner kalau lewat ambang (gagal senyap-proof)
+async function checkRamAlert(print = () => {}) {
+  const st = getRamAlertState();
+  const mem = _ramMemForTest || { total: os.totalmem(), free: os.freemem() };
+  const used = Math.max(0, mem.total - mem.free);
+  const sysPct = mem.total > 0 ? Math.round((used / mem.total) * 100) : 0;
+  const now = Date.now();
+  const verdict = evaluateRamAlert({ on: st.on, thresholdPct: st.thresholdPct, lastAlertAt: st.lastAlertAt, sysPct, now });
+  if (!verdict.shouldAlert) return false;
+  st.lastAlertAt = now;
+  print(`   🧠 RAM ALERT: sistem ${sysPct}% ≥ ambang ${st.thresholdPct}% — DM owner`);
+  try {
+    if (!pingSock?.sendMessage) return true;
+    const ownerJid = _ramAlertOwnerJid();
+    if (!ownerJid) return true;
+    const jam = new Date(now).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", hour12: false }).replace(":", ".");
+    const tgl = new Date(now).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", year: "numeric" });
+    await pingSock.sendMessage(ownerJid, {
+      text: claraWrap("index", [
+        `🧠 RAM SISTEM TINGGI`,
+        "",
+        `Pemakaian: ${sysPct}% (${formatBytes(used)} dari ${formatBytes(mem.total)})`,
+        `Ambang: ${st.thresholdPct}%`,
+        `RAM bot: ${formatBytes(process.memoryUsage().rss)}`,
+        `🕒 ${jam} WIB, ${tgl}`,
+        "",
+        `Cek proses borak: .index ramalert · optimasi: .index optimize`,
+      ]),
+    });
+  } catch (e) {
+    try { logger.error("RamAlert", `DM gagal: ${e?.message || e}`); } catch {}
+  }
+  return true;
+}
+
+// jid owner (pola nova-auto-api-health) — seam-able
+let _ownerJidImpl = null;
+export function _setRamAlertOwnerJidForTest(fn) { _ownerJidImpl = fn; }
+export function _clearRamAlertOwnerJidForTest() { _ownerJidImpl = null; }
+export function _setRamMemForTest(v) { _ramMemForTest = v; }
+export function _clearRamMemForTest() { _ramMemForTest = null; }
+function _ramAlertOwnerJid() {
+  if (typeof _ownerJidImpl === "function") return _ownerJidImpl();
+  try {
+    const nums = config?.owner?.number || [];
+    const num = String(nums[0] || "").replace(/[^0-9]/g, "");
+    return num ? `${num}@s.whatsapp.net` : null;
+  } catch { return null; }
+}
 
 // ─── Format murni (dites e2e) ───
 
@@ -277,6 +384,10 @@ async function tick(print = console.log) {
     lastCodeSig = kodeSig;
   }
 
+  // RAM alert — DM owner pas RAM sistem lewat ambang (default OFF,
+  // dinyalain via .index ramalert on [persen]; cooldown DM 30 mnt)
+  await checkRamAlert(print).catch(() => {});
+
   stats.msgs = 0;
   stats.errors = 0;
   stats.lastError = "";
@@ -374,6 +485,7 @@ export function _pingLogInternalsForTest() {
       stats.waStatus = "open";
     },
     runTick: (print) => tick(print),
+    runCheckRamAlert: (print) => checkRamAlert(print),
     getCodeBaseline: () => codeBaseline,
     setCodeBaseline: (b) => (codeBaseline = b),
     getLastCodeSig: () => lastCodeSig,
