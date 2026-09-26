@@ -46,6 +46,21 @@ var (
 	commandsOn  bool       // COMMANDS_ENABLED=true → chat command aktif
 )
 
+// 🔹 TRACKER PANGGILAN AKTIF — satu panggilan AI per waktu (owner 26 Sep).
+// activeCallPeer = nomor user yang lagi telepon; kosong = bebas.
+var (
+	activeCallMu   sync.Mutex
+	activeCallPeer string
+)
+
+func clearActiveCall(peer string) {
+	activeCallMu.Lock()
+	defer activeCallMu.Unlock()
+	if activeCallPeer == peer {
+		activeCallPeer = ""
+	}
+}
+
 func main() {
 	log.Println("==================================================")
 	log.Println("     WhatsApp AI Call Assistant Bot (Golang)      ")
@@ -112,9 +127,41 @@ func main() {
 			return
 		}
 
+		// 🔹 SATU PANGGILAN SEKALIGUS (owner 26 Sep: "user lain mau telepon
+		// → gak diangkat penuh, AI bilang lagi ada user telepon, mohon
+		// menunggu"). Kalau lagi sibuk: diangkat SEBENTAR → AI ngomong
+		// sendiri "sedang ada pengguna lain" → ditutup lagi, sesi pertama
+		// gak tersentuh.
+		activeCallMu.Lock()
+		busyWith := ""
+		if activeCallPeer != "" && activeCallPeer != peer {
+			busyWith = activeCallPeer
+		} else {
+			activeCallPeer = peer
+		}
+		activeCallMu.Unlock()
+		if busyWith != "" {
+			log.Printf("[Call] Line busy — active call with %s; telling %s to wait", busyWith, peer)
+			if err := call.Answer(); err != nil {
+				log.Printf("[Call] Failed to answer busy call: %v (reject)", err)
+				_ = call.Reject()
+				return
+			}
+			// ngomong + tutup di goroutine — handler gak keblok (callback
+			// dipakai meowcaller buat event lain juga)
+			go func() {
+				sess := NewAICallSession(call)
+				sess.speakText("Maaf, saat ini saya sedang mengobrol dengan pengguna lain. Mohon menunggu telepon berakhir atau silakan coba lagi nanti ya.")
+				sess.Stop()
+				_ = call.Hangup()
+			}()
+			return
+		}
+
 		// Answer incoming call
 		if err := call.Answer(); err != nil {
 			log.Printf("[Call] Failed to answer call: %v", err)
+			clearActiveCall(peer)
 			return
 		}
 
@@ -122,6 +169,7 @@ func main() {
 		call.OnEnd(func(reason string) {
 			log.Printf("[Call] Call ended (Reason: %s)", reason)
 			session.Stop()
+			clearActiveCall(peer)
 		})
 
 		// Start AI Voice Loop in background
