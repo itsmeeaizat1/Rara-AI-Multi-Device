@@ -1,0 +1,482 @@
+{
+  "_note": "API KEY CONFIG — SATU FILE BUAT SEMUA (semua key dipusatkan di sini biar gampang diganti). CARA BACA (FIX 19 Sep 2026, biar jelas mana nama rest api & mana fiturnya): tiap key punya '_note_<nama key>' berbentuk BERLABEL — \"restapi\" = nama + endpoint rest api sumbernya, \"fitur\" = daftar fitur bot yang pakai key itu, \"catatan\" = status/pendaftaran/tambahan. GANTI KEY = edit nilai string key-nya, ketik .reloadkey (atau restart bot) — gak perlu ubah kode. Urutan baca key oleh bot (nova-api-keys.js): db runtime (.setkey) > file ini > config lama > env var.",
+  "aiSatuan": {
+    "_note": "KEY FITUR AI SATUAN & AI WRAPPER — tiap key punya '_note_<nama key>' BERLABEL: restapi = nama+endpoint rest api sumbernya, fitur = daftar fitur bot yang pakai key itu, catatan = status/pendaftaran/tambahan.",
+    "_note_haidar": {
+      "restapi": "HAIDARAPIS — api.haidarxd.my.id",
+      "fitur": ".alldl/.alldownloader/.alldownloaderv3 (fallback downloader), .txt2vid, .tts haidar (text2speech), .img2style, .nanobanana (image gen), .ai haidar (blackbox chat), nova-haidar textpro suite, sumber soal game factory (zmaths dll), fallback rantai AI + douyin",
+      "catatan": "336 endpoint all-in-one, daftar gratis api.haidarxd.my.id/register"
+    },
+    "haidar": "haidarapis-83c256f3a48c4bf43752aa5b",
+    "_note_ikyyxd": {
+      "restapi": "IKYYXD — api.ikyyxd.my.id",
+      "fitur": "rantai AI cadangan ikyy_gemini/ikyy_gpt5mini/ikyy_cici/ikyy_gemma (.novaai & fitur AI otomatis), .ikyydl (downloader ytmp3/ytmp4/tiktok fallback), .getdltiktok, .snaptikdouyin, .unlimitedai, fallback AI satuan (nova-ai-fallback)",
+      "catatan": "preset gratis key 'kyzz'"
+    },
+    "ikyyxd": "kyzz",
+    "_note_cuki": {
+      "restapi": "CUKI API — api.cuki.biz.id",
+      "fitur": ".gita, .gpt4o, .nayaai, .pakustad, .lahelu",
+      "catatan": "chatbot persona naya, dashboard key api.cuki.biz.id/auth/dashboard · STATUS 19 Sep: key baru dipasang dari owner (cukimwah-…), live probe OK"
+    },
+    "cuki": "cukimwah-hv4uku3",
+    "_note_termai": {
+      "restapi": "TERMAI — api.termai.cc",
+      "fitur": ".logicbell, .tourl, .animeapaini, .musikapaini, .qrcustom",
+      "catatan": "AI logic-bell · STATUS 17 Sep: kena 429 rate-limit (kemungkinan kuota harian abis) — cek kuota kalau fitur tetap kena limit"
+    },
+    "termai": "AIzaBj7z2z3xBjsk",
+    "_note_voiceai": {
+      "restapi": "VOICEAI — api.voiceai",
+      "fitur": ".suaraai (TTS suara AI)",
+      "catatan": "TTS suara AI"
+    },
+    "voiceai": "dac23a9006fc4039ae6aac98ae7c7b46",
+    "_note_fishaudio": {
+      "restapi": "FISH AUDIO — fish.audio",
+      "fitur": ".voiceclone (fallback voice)",
+      "catatan": "TTS voice clone · kosong = fitur skip fish.audio, pakai engine lain"
+    },
+    "fishaudio": "",
+    "_note_anabot": {
+      "restapi": "ANABOT — anabot.my.id",
+      "fitur": ".izen (shortener analyzer)",
+      "catatan": "key default 'freeApikey' gratis"
+    },
+    "anabot": "freeApikey",
+    "_note_autoresbot": {
+      "restapi": "AUTORESBOT — api.autoresbot.com",
+      "fitur": "",
+      "catatan": "CADANGAN — kosong = skip, gak ada fitur wajib yang bergantung"
+    },
+    "autoresbot": "",
+    "_note_min1ai": {
+      "restapi": "1MIN.AI — api.1min.ai/api/chat-with-ai",
+      "fitur": "urutan #1 rantai AI NovaAI (.novaai/.autonovaai/fitur AI otomatis), aiagent, fallback AI satuan. Model free: qwen3-8b",
+      "catatan": "auth header 'API-KEY', daftar app.1min.ai"
+    },
+    "min1ai": "e0c62b6f680315d27f80d8c434398aa5be8fb3ae39e1546f691e6f0e8abe5f3c",
+    "_note_fazzcode": {
+      "restapi": "FAZZCODE — api.fazzcode.eu.cc",
+      "fitur": ".airoleplaychat (chatbot-role), .fazzroleplay",
+      "catatan": "auth Bearer"
+    },
+    "fazzcode": "re_live_1472c77baf48a05717956396ce32a3d73fd06bb4",
+    "_note_searchapi": {
+      "restapi": "SEARCHAPI.IO — www.searchapi.io",
+      "fitur": ".googleaimode",
+      "catatan": "engine google_ai_mode, free trial ±100 req/bulan"
+    },
+    "searchapi": "Tc66NG8LWDH67NuCmsovkqqz",
+    "_note_zelapi": {
+      "restapi": "ZELAPI — zelapi.eu.cc",
+      "fitur": "SEMUA suite z — .zchatgpt .zsearch (.zcookpad .zdetik .zdns .zgroupwa .zjadwaltv .zapkmody .zdeviant .ztwixtor .zacode), .zinfo (.ztokengratis .zgold .zgunung .zcrypto .zsaham .zongkir), .zff (free fire), .zeldl (downloader + .zspotify), .zeldetail (.zappstore .zplaystore .zgmaps .zchannel .zidnlive .zspeedtest .zxiaomi), .ztools/.ztools2 (.zqr .zmorse .zkurs .zepho dll), .jktai/.zjktai (18 persona JKT48), .jkt48 (showroom), .zlokal/.zkodepos/.zklasemen/.zbasa/.zquran/.zsound, fallback .sdxl",
+      "catatan": "docs zelapi.eu.cc/docs, key 'zelapi-xxx'"
+    },
+    "zelapi": "zelapi-jpgz3p1"
+  },
+  "aiMultiprovider": {
+    "_note": "CONFIG MULTI-PROVIDER AI (pindahan ai-providers.json — sekarang satu file di apikeys.json). (1) 'chain' = urutan prioritas otak AI .novaai/.autonovaai/autoflow — down/rate-limit otomatis geser kebawah. (2) 'providers' = KEY semua provider buat fitur AI satuan (.grok/.openai/.claude/dll) & rantai — isi 'apikey' provider yang lo punya; kosong = di-skip otomatis. Provider ikyy (free) udah preset key 'kyzz'. Dibaca LIVE tiap pemanggilan — edit tanpa restart.",
+    "chain": [
+      "min1ai",
+      "nexai",
+      "groq",
+      "openai",
+      "ikyy_gemini",
+      "ikyy_gpt5mini",
+      "deepseek",
+      "zhipu",
+      "kimi",
+      "claude",
+      "ikyy_cici",
+      "ikyy_gemma"
+    ],
+    "providers": {
+      "groq": {
+        "label": "Groq API resmi (console.groq.com) — key baru 17 Sep 2026 (valid, 13 model: gpt-oss-20b chat aicall + whisper STT)",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "openai/gpt-oss-120b",
+        "apikey": "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"
+      },
+      "openai": {
+        "label": "OpenAI (resmi)",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "gpt-4o-mini",
+        "apikey": ""
+      },
+      "ikyy_gemini": {
+        "label": "IkyyXD Gemini — free (preset, gak perlu diisi)",
+        "url": "https://api.ikyyxd.my.id/ai/gemini",
+        "method": "get",
+        "textParam": "text",
+        "apikey": "kyzz",
+        "free": true
+      },
+      "ikyy_gpt5mini": {
+        "label": "IkyyXD GPT-5 Mini — free (preset)",
+        "url": "https://api.ikyyxd.my.id/ai/gpt-5-mini",
+        "method": "get",
+        "textParam": "question",
+        "apikey": "kyzz",
+        "free": true
+      },
+      "deepseek": {
+        "label": "DeepSeek",
+        "url": "https://api.deepseek.com/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "deepseek-chat",
+        "apikey": ""
+      },
+      "zhipu": {
+        "label": "Zhipu AI (GLM)",
+        "url": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "glm-4-flash",
+        "apikey": ""
+      },
+      "kimi": {
+        "label": "Kimi (Moonshot AI)",
+        "url": "https://api.moonshot.cn/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "kimi-k2-0905-preview",
+        "apikey": ""
+      },
+      "claude": {
+        "label": "Claude (Anthropic)",
+        "url": "https://api.anthropic.com/v1/messages",
+        "method": "post",
+        "format": "anthropic",
+        "model": "claude-sonnet-4-20250514",
+        "apikey": ""
+      },
+      "ikyy_cici": {
+        "label": "IkyyXD Cici — cadangan free (preset)",
+        "url": "https://api.ikyyxd.my.id/ai/cici",
+        "method": "get",
+        "textParam": "prompt",
+        "apikey": "kyzz",
+        "free": true
+      },
+      "ikyy_gemma": {
+        "label": "IkyyXD Gemma — cadangan terakhir free (preset)",
+        "url": "https://api.ikyyxd.my.id/ai/google-gemma",
+        "method": "get",
+        "textParam": "question",
+        "apikey": "kyzz",
+        "free": true
+      },
+      "meta": {
+        "apikey": ""
+      },
+      "openrouter": {
+        "apikey": ""
+      },
+      "xai": {
+        "label": "xAI Grok resmi (console.x.ai) — key baru 17 Sep 2026 (valid; team BELUM punya kredit — beli di console.x.ai/team)",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "grok-3-mini",
+        "apikey": "xai-KOtwy15EbEmUxacr7pXhuTCbkIRHEQq2TMbL7dgYVZaHWV3YhV0oQpMXJdhx5HhZ7CkKs3gu5S8tTFOr"
+      },
+      "gemini": {
+        "label": "Google Gemini (resmi, key aistudio.google.com — bukan Tio)",
+        "apikey": ""
+      },
+      "qwen": {
+        "label": "Qwen (Alibaba Cloud)",
+        "apikey": ""
+      },
+      "cohere": {
+        "label": "Cohere",
+        "apikey": ""
+      },
+      "perplexity": {
+        "label": "Perplexity",
+        "apikey": ""
+      },
+      "fireworks": {
+        "label": "Fireworks AI",
+        "apikey": ""
+      },
+      "ai21": {
+        "label": "AI21 Labs",
+        "apikey": ""
+      },
+      "reka": {
+        "label": "Reka AI",
+        "apikey": ""
+      },
+      "cerebras": {
+        "label": "Cerebras",
+        "apikey": ""
+      },
+      "huggingface": {
+        "label": "Hugging Face",
+        "apikey": ""
+      },
+      "voyage": {
+        "label": "Voyage AI",
+        "apikey": ""
+      },
+      "cloudflare": {
+        "label": "Cloudflare Workers AI",
+        "apikey": ""
+      },
+      "stability": {
+        "label": "Stability AI",
+        "apikey": ""
+      },
+      "jina": {
+        "label": "Jina AI",
+        "apikey": ""
+      },
+      "mistral": {
+        "label": "Mistral",
+        "apikey": ""
+      },
+      "together": {
+        "label": "Together AI",
+        "apikey": ""
+      },
+      "grok": {
+        "label": "alias xAI Groq/Grok — key xai- 17 Sep 2026 (menunggu kredit team xAI)",
+        "apikey": "xai-KOtwy15EbEmUxacr7pXhuTCbkIRHEQq2TMbL7dgYVZaHWV3YhV0oQpMXJdhx5HhZ7CkKs3gu5S8tTFOr"
+      },
+      "min1ai": {
+        "url": "https://api.1min.ai/api/chat-with-ai",
+        "model": "qwen3-8b",
+        "format": "min1ai",
+        "free": true
+      },
+      "nexai": {
+        "label": "NexAI APInex — 23 model, free/* zero-cost, default GLM (request owner 12 Sep)",
+        "url": "https://api.apinex.bond/v1/chat/completions",
+        "method": "post",
+        "format": "openai",
+        "model": "free/glm-5.3-flash",
+        "apikey": "sk-apxbcc5810b991a7a82c5bbeb831f997b234215e6f26b0ae1e"
+      },
+      "router9v2": {
+        "label": "9ROUTER V2 CLOUD (hosted 9router.cloudku.us.kg — OpenAI-compatible, key 17 Sep 2026)",
+        "model": "ag/gemini-pro-agent",
+        "apikey": "sk-76d5cd22f743be8a-osqk8r-c6d857b6"
+      },
+      "_note_router9v2": {
+        "restapi": "9ROUTER V2 — 9router.cloudku.us.kg",
+        "fitur": ".ai9v2 / .9routerv2 (chat multi-model 21 model: gemini-pro-agent default (owner 17 Sep), claude, gpt-oss, agent variants) + endpoint /v1/models",
+        "catatan": "BUKAN gateway npm 9router lokal, BUKAN fitur .ai9 lama · key valid live 17 Sep 2026 (models 200, chat 200)"
+      }
+    },
+    "pools": {
+      "_note": "RANCANGAN 9ROUTER — key pooling: list apikey per provider, diputar round-robin. Contoh: \"pools\": {\"groq\": [\"key1\", \"key2\"]}. Key kena 429/401 -> router otomatis pindah key berikutnya. Kosongkan/skip provider yang cuma punya 1 key (tetep pake providers.<nama>.apikey)."
+    }
+  },
+  "novaai": {
+    "_note": "KEY ENGINE NOVA AI — otak fitur AI utama. Komentar berlabel per key di bawah (restapi/fitur/catatan).",
+    "_note_tioApiKey": {
+      "restapi": "9ROUTER V2 — 9router.cloudku.us.kg (pengganti Tio, web gorouter/kktoken udah mati)",
+      "fitur": ".aitio, rantai AI nova-ai-service (.aichat/.aigrup/fitur AI otomatis semua), .aicaption, smartreply, fun-ai",
+      "catatan": "key SAMA dengan providers.router9v2 · format OpenAI-compatible SAJA (anthropic/gemini format auto-dikonversi kode) · bisa override env TIO_API_URL"
+    },
+    "tioApiKey": "sk-76d5cd22f743be8a-osqk8r-c6d857b6",
+    "_note_google": {
+      "restapi": "GOOGLE GEMINI RESMI — aistudio.google.com/apikey",
+      "fitur": "image gen gemini (.txt2img rantai), vision chain (baca gambar AI), .autoai",
+      "catatan": "BEDA dari key Tio"
+    },
+    "google": "Ab8RN6I9akckrF9inEsfCm-I1KyihGlYDNSoZ_b8nNgAIB-aDg",
+    "_note_groqkey": {
+      "restapi": "GROQ — console.groq.com",
+      "fitur": "fallback aiagent + STT cepat (.stt, aiautointeractionvn)"
+    },
+    "groqkey": "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",
+    "_note_deepseekkey": {
+      "restapi": "DEEPSEEK — platform.deepseek.com",
+      "fitur": "provider utama aiagent",
+      "catatan": "kosong = aiagent pakai fallback lain"
+    },
+    "deepseekkey": "",
+    "_note_inception": {
+      "restapi": "INCEPTION LABS — inceptionlabs.ai",
+      "fitur": ".ai-mercury (image gen cepat)",
+      "catatan": "mercury diffusion"
+    },
+    "inception": "sk_5aaef87ce73ea492e6fc2f5c5430c329",
+    "_note_sensenova": {
+      "restapi": "SENSENOVA — token.sensenova.ai",
+      "fitur": ".ai-sensenova + fallback ke-2 vision chain",
+      "catatan": "4 model, 6.7/6.8 flash-lite vision gratis"
+    },
+    "sensenova": "sk-RPKXI4vCqWbp5xmDYWqPzjN9yagzbUnc"
+  },
+  "scraper": {
+    "_note": "KEY API SCRAPER DOWNLOADER/MAKER/STALKER — pernah hardcoded di root & file terpisah, sekarang satu tempat. Komentar berlabel per key (restapi/fitur/catatan).",
+    "_note_andaraz": {
+      "restapi": "ANDARAZ — api.andaraz.com",
+      "fitur": ".animecouple, .beritalengkap, .jobstreet, .alightmotion, .ampremv2"
+    },
+    "andaraz": {
+      "apikey": "ddc4f0b1",
+      "baseUrl": "https://api.andaraz.com"
+    },
+    "_note_sanka": {
+      "restapi": "SANKAVOLLEREI — www.sankavollerei.web.id",
+      "fitur": ".aiov2, .douyinv2, .facebookv2, .spotifyplay, .tiktokv2, .ytmp3v2, .ytmp4v2, .aronasanka, .comicsanka, .cpsanka, .quoteanimesanka, .quotessanka, .ttsnahidasanka"
+    },
+    "sanka": {
+      "apikey": "planaai",
+      "baseUrl": "https://www.sankavollerei.web.id"
+    },
+    "_note_kuroneko": {
+      "restapi": "KURONEKO — api AI media",
+      "fitur": ".aivideo, .aivoiceceleb, .animetoreal"
+    },
+    "kuroneko": "sylva-RrCPbLcp",
+    "_note_lolhuman": {
+      "restapi": "LOLHUMAN — api.lolhuman.xyz",
+      "fitur": "downloader/stalker/info cadangan",
+      "catatan": "key belum valid (placeholder) + API lagi bermasalah — isi key baru kalau mau dipakai"
+    },
+    "lolhuman": "APIKey-Milik-Bot-NovaMD",
+    "_note_neoxr": {
+      "restapi": "NEOXR — api.neoxr.eu",
+      "fitur": ".anime-gen, .txt2img, .asupantiktok, .pixeldraindl",
+      "catatan": "sering rate-limit"
+    },
+    "neoxr": "Milik-Bot-OurinMD",
+    "_note_fgsi": {
+      "restapi": "FGSI — fgsi.xyz",
+      "fitur": ".editimg, .hdvid, .img2img",
+      "catatan": "scraper media · key BANNED upstream — ganti kalau fiturnya mau dipakai"
+    },
+    "fgsi": "fgsiapi-20c1605c-6d",
+    "_note_covenant": {
+      "restapi": "COVENANT — covenant.sbs",
+      "fitur": "",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "covenant": "cov_live_bb660c9e5f735e46d808b7ae362914cfe35c2936739ee2b2",
+    "_note_onlym": {
+      "restapi": "ONLYM — api.onlym.dev",
+      "fitur": "",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "onlym": "ONLym-783d29",
+    "_note_obscura": {
+      "restapi": "OBSCURA — obscura.web.id",
+      "fitur": "",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "obscura": "obs-byOn9RVGMzvPXZQTsP9W",
+    "_note_firefly": {
+      "restapi": "FIREFLY — firefly.maiku.my.id",
+      "fitur": "",
+      "catatan": "DEAD upstream — key disimpen buat arsip"
+    },
+    "firefly": "OurinNextGen"
+  },
+  "fitur": {
+    "_note": "KEY FITUR NON-AI (cuaca, panel, berita, dll) — dulu hardcoded di src/lib/config/apikey.js & misc.json, sekarang satu tempat. Komentar berlabel per key (restapi/fitur/catatan).",
+    "_note_geminiStandalone": {
+      "restapi": "GEMINI STANDALONE — aistudio.google.com/apikey",
+      "fitur": ".autoai (otak AI interaksi otomatis)"
+    },
+    "geminiStandalone": "Ab8RN6I9akckrF9inEsfCm-I1KyihGlYDNSoZ_b8nNgAIB-aDg",
+    "_note_openWeatherKey": {
+      "restapi": "OPENWEATHERMAP — openweathermap.org",
+      "fitur": ".weather/.cekcuacav2 (provider OWM), .hujannotif (nowcast hujan 30 menit)",
+      "catatan": "key ini juga buat One Call 3.0 nowcast per-menit · paket One Call 3.0 wajib di-subscribe di openweathermap.org/price (gratis 1000/hari)"
+    },
+    "openWeatherKey": "a4c5d5ca39730767177299ee25c55a61",
+    "_note_savenow": {
+      "restapi": "SAVENOW — 4kdownload.to",
+      "fitur": "fallback .alldl (audio/video)"
+    },
+    "savenow": "69b714c57af9bbcec5197038f7c42f8474a1ce85",
+    "_note_deepai": {
+      "restapi": "DEEPAI — api.deepai.org",
+      "fitur": "",
+      "catatan": "key expired — hd.js sekarang pakai sharp local. Diisi kalau mau balik ke API"
+    },
+    "deepai": "",
+    "_note_ptero": {
+      "restapi": "PTERODACTYL PANEL — panel pterodactyl (domain + PTLA apikey + PTLC client apikey)",
+      "fitur": ".createpanel suite (server1)",
+      "catatan": "tambah server2, server3... ikuti pola ptero_serverN_*"
+    },
+    "ptero_server1_domain": "https://benefit-utils-protective-nebraska.trycloudflare.com",
+    "ptero_server1_apikey": "ptla_jSBrjeEFXXCZVt1DytYqMu9TyFlGre04xATB5Ijl4YN",
+    "ptero_server1_capikey": "ptla_jSBrjeEFXXCZVt1DytYqMu9TyFlGre04xATB5Ijl4YN",
+    "_note_vercel": {
+      "restapi": "VERCEL — vercel.com/account/tokens",
+      "fitur": "deploy tools (opsional)"
+    },
+    "vercelToken": "",
+    "_note_clipdrop": {
+      "restapi": "CLIPDROP — clipdrop.co/apis",
+      "fitur": ".nowm (watermark remover)",
+      "catatan": "gratis 100 credit"
+    },
+    "clipdropApiKey": "",
+    "_note_newsApiKey": {
+      "restapi": "NEWSAPI.ORG — newsapi.org",
+      "fitur": ".berita provider newsapi",
+      "catatan": "free 100 req/day"
+    },
+    "newsApiKey": "",
+    "_note_newsDataKey": {
+      "restapi": "NEWSDATA.IO — newsdata.io",
+      "fitur": ".berita provider newsdata",
+      "catatan": "free 200 req/day"
+    },
+    "newsDataKey": "",
+    "_note_rawgApiKey": {
+      "restapi": "RAWG — rawg.io",
+      "fitur": ".gamedb/info game",
+      "catatan": "free game database"
+    },
+    "rawgApiKey": "",
+    "_note_binderbyte": {
+      "restapi": "BINDERBYTE — binderbyte.com",
+      "fitur": ".cekresi (cek resi kurir)"
+    },
+    "binderbyteKey": "",
+    "_note_fallbackApiKey": {
+      "restapi": "FALLBACK KEY (generik — bukan rest api)",
+      "fitur": "",
+      "catatan": "dipakai kalau key per-format kosong"
+    },
+    "fallbackApiKey": "",
+    "_note_digitalOcean": {
+      "restapi": "DIGITALOCEAN — cloud.digitalocean.com",
+      "fitur": "tools VPS (opsional)"
+    },
+    "digitalOceanToken": "",
+    "_note_alightMotion": {
+      "restapi": "ALIGHT MOTION PREMIUM — api.znn.my.id",
+      "fitur": ".alightmotion preset pro",
+      "catatan": "token dari admin x-znn wa.me/6285348284121, IP server wajib di-whitelist"
+    },
+    "alightMotionToken": "",
+    "_note_weatherApiKey": {
+      "restapi": "WEATHERAPI.COM — weatherapi.com",
+      "fitur": ".weather provider weatherapi",
+      "catatan": "provider cuaca berbayar"
+    },
+    "weatherApiKey": "",
+    "_note_emailOtp": {
+      "restapi": "EMAIL OTP — disarankan via env EMAILOTP_USER/EMAILOTP_PASS",
+      "fitur": "OTP email masuk (opsional)"
+    },
+    "emailOtpUser": "",
+    "emailOtpPass": ""
+  }
+}
