@@ -28,7 +28,6 @@ src/data/models/
 # src/database/<kategori>/ — data user/fitur TIDAK PERNAH di-push ke git.
 # src/data/ cuma boleh berisi konten statis (soal game, kata-kata, dll).
 # src/database/ DIKEPALIKAN IKUT di-push (owner 27 Sep 2026: daripada data hilang bareng VPS, snapshot DB disimpan di repo private)
-src/data/remini-mobile-token.json
 src/data/ai-router-health.json
 src/data/nova-database.json/
 
