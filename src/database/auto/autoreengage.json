@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "hour": 10,
+  "minute": 0,
+  "inactiveThresholdDays": 7,
+  "lastCheck": null,
+  "totalSent": 0,
+  "contactedUsers": []
+}

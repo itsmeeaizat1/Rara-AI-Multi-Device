@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "intervalMinutes": 30,
+  "lastCheck": null,
+  "totalChecks": 0,
+  "totalDown": 0,
+  "apiStatus": {}
+}
