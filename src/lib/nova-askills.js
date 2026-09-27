@@ -1,6 +1,8 @@
 // nova-askills.js — AGENT SKILLS layer (progressive disclosure, spec Anthropic
-// Agent Skills; sumber wshobson/agents — 183 skill di skills/<nama>/SKILL.md
-// + src/data/skills-index.json; owner 25 Sep 2026: "183 skill sekaligus").
+// Agent Skills; sumber wshobson/agents (183) + kurasi skills.sh 28 Sep 2026:
+// 212 repo official/populer (Anthropic/Vercel/Google/Microsoft/OpenAI/Prisma/
+// Supabase/HeyGen/Lark/dll) → 4.727 skill di skills/<nama>/SKILL.md
+// + src/data/skills-index.json; duplikat di-dedupe, official menang).
 // Cara kerja: index tipis (nama + deskripsi) dipakai nge-match teks tugas →
 // top-N skill RELEVAN aja yang isi SKILL.md-nya di-inject ke prompt agent.
 // Gak ada match → blok kosong, prompt gak bengkak.

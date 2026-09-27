@@ -2,8 +2,8 @@
 /**
  * .skill — AGENT SKILLS BROWSER (owner-only).
  *
- * Registry 183 skill spesialis (sumber wshobson/agents, spec Anthropic
- * Agent Skills) di skills/<nama>/SKILL.md — di-inject OTOMATIS ke pintu
+ * Registry 4.727 skill (wshobson/agents + kurasi skills.sh: 212 repo
+ * official/populer, dedupe) di skills/<nama>/SKILL.md — di-inject OTOMATIS ke pintu
  * AI (.novaagent/.aisuperagent/.agentloop/.autotask) lewat nova-askills.js
  * skillsBlock (progressive disclosure: cuma skill yang nyambung sama tugas
  * yang isinya dimuat). Plugin ini buat lihat/mastuin isinya manual.
@@ -24,7 +24,7 @@ const pluginConfig = {
   name: "skill",
   alias: ["skill", "skills", "agenskill", "agentskill"],
   category: "ai agent",
-  description: "Browser 183 skill spesialis agent — lihat daftar, isi, dan preview match",
+  description: "Browser ribuan skill agent (wshobson + kurasi skills.sh) — lihat daftar, isi, dan preview match",
   usage: ".skill <list|nama|match|count>",
   example: ".skill list\n.skill e2e-testing-patterns\n.skill match bikin e2e test checkout",
   isOwner: true,
@@ -39,9 +39,9 @@ async function handler(m, { sock }) {
   if (!sub) {
     return m.reply(novaGuide(
       pluginConfig.name,
-      "183 skill spesialis terpasang — AI otomatis pakai yang nyambung sama tugasmu",
+      `${skillCount()} skill terpasang — AI otomatis pakai yang nyambung sama tugasmu`,
       ".skill list [kata] · .skill <nama> · .skill match <tugas> · .skill count",
-      `skill diambil dari wshobson/agents (spec anthropic agent skills) dan otomatis di-inject ke .novaagent/.aisuperagent/.agentloop/.autotask`,
+      `skill dari wshobson/agents + kurasi skills.sh (212 repo official/populer, dedupe), otomatis di-inject ke .novaagent/.aisuperagent/.agentloop/.autotask`,
     ));
   }
 
@@ -52,13 +52,19 @@ async function handler(m, { sock }) {
     if (!filtered.length) {
       return m.reply(novaError(pluginConfig.name, `gak ada skill yang cocok dengan "${q}"`));
     }
+    // plafon tampilan — registry gede, gak mungkin dump ribuan baris
+    const MAX_TAMPIL = 60;
+    const shown = filtered.slice(0, MAX_TAMPIL);
     const lines = [
       `「 ✦ ${filtered.length} SKILL${q ? ` COCOK "${q}"` : ""} ✦ 」`,
       "",
-      ...filtered.map((s, i) => `${i + 1}. ${s.n}`),
+      ...shown.map((s, i) => `${i + 1}. ${s.n}`),
       "",
-      `Lihat isi: .skill <nama> — total ${skillCount()} skill terpasang`,
     ];
+    if (filtered.length > MAX_TAMPIL) {
+      lines.push(`⋯ +${filtered.length - MAX_TAMPIL} lainnya — rapikan dengan .skill list <kata>`);
+    }
+    lines.push(`Lihat isi: .skill <nama> — total ${skillCount()} skill terpasang`);
     for (const chunk of splitChatChunks(lines.join("\n"))) {
       await m.reply(chunk);
     }
