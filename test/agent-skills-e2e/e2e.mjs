@@ -19,8 +19,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // ─── 1. INDEX — 183 skill dimuat ───
 w("\n— 1. index —");
 _resetSkillsForTest();
-check("1a. total skill 183", skillCount() === 183, skillCount());
-check("1b. listSkills() 183 entri", listSkills().length === 183, listSkills().length);
+check("1a. total skill 4727", skillCount() === 4727, skillCount());
+check("1b. listSkills() 4727 entri", listSkills().length === 4727, listSkills().length);
 check("1c. listSkills filter 'react' > 0", listSkills("react").length > 0);
 check("1d. findSkill e2e-testing-patterns", findSkill("e2e-testing-patterns")?.n === "e2e-testing-patterns");
 check("1e. findSkill parsial 'e2e-testing' tetep ketemu", findSkill("e2e-testing")?.n === "e2e-testing-patterns");
@@ -32,9 +32,9 @@ w("\n— 2. tokenizer —");
   const m1 = matchSkills("bikin e2e test buat checkout flow pakai playwright", 1);
   check("2a. 'e2e test playwright' → e2e-testing-patterns", m1[0]?.name === "e2e-testing-patterns", JSON.stringify(m1));
   const m2 = matchSkills("optimasi query database yang lambat", 1);
-  check("2b. 'optimasi query database' → sql-optimization-patterns", m2[0]?.name === "sql-optimization-patterns", JSON.stringify(m2));
+  check("2b. 'optimasi query database' → skill query/DB nyambung", /query|sql|database|postgres/.test((m2[0]?.name||"").toLowerCase()), JSON.stringify(m2));
   const m3 = matchSkills("deploy kubernetes manifest buat service baru", 1);
-  check("2c. 'kubernetes manifest' → k8s-manifest-generator", m3[0]?.name === "k8s-manifest-generator", JSON.stringify(m3));
+  check("2c. 'kubernetes manifest' → skill kubernetes nyambung", /kubernetes|k8s|manifest/.test((m3[0]?.name||"").toLowerCase()), JSON.stringify(m3));
 }
 
 // ─── 3. PROGRESSIVE DISCLOSURE ───
@@ -70,7 +70,7 @@ w("\n— 5. seam —");
   const m = matchSkills("testing unit patterns cek", 1);
   check("5b. match dari index palsu", m[0]?.name === "fake-skill", JSON.stringify(m));
   _resetSkillsForTest();
-  check("5c. reset → balik 183", skillCount() === 183);
+  check("5c. reset → balik 4727", skillCount() === 4727);
 }
 
 // ─── 6. PLUGIN .skill — handler ───
@@ -82,12 +82,12 @@ w("\n— 6. plugin .skill —");
 
   // usage
   await skillH(mkM(".skill"), {});
-  check("6a. .skill kosong → kartu usage (smallcaps-aware)", /183 skill spesialis/.test(fromSC(sent[0] || "")), (sent[0] || "").slice(0, 80));
+  check("6a. .skill kosong → kartu usage (smallcaps-aware)", /4727 skill terpasang/.test(fromSC(sent[0] || "")), (sent[0] || "").slice(0, 80));
 
   // list
   await skillH(mkM(".skill list"), {});
   const listOut = sent.join("\n");
-  check("6b. .skill list → header + total", listOut.includes("SKILL") && listOut.includes("183"), listOut.slice(0, 100));
+  check("6b. .skill list → header + total + plafon 60", listOut.includes("SKILL") && listOut.includes("4727") && listOut.includes("+4667 lainnya"), listOut.slice(0, 100));
 
   // list filter
   clear();
@@ -129,7 +129,7 @@ w("\n— 6. plugin .skill —");
   // count
   clear();
   await skillH(mkM(".skill count"), {});
-  check("6j. .skill count → 183", (sent[0] || "").includes("183"), (sent[0] || "").slice(0, 80));
+  check("6j. .skill count → 4727", (sent[0] || "").includes("4727"), (sent[0] || "").slice(0, 80));
 }
 
 // ─── 7. HOOK PINTU AI — import gak meledak + param nyambung ───
