@@ -428,6 +428,7 @@ async function main() {
           { name: "Briefing", fn: () => import("./src/lib/nova-briefing.js").then(m => m.initBriefingScheduler?.(sock)) },
           { name: "BotDoctor", fn: () => import("./src/lib/nova-botdoctor.js").then(m => m.initBotDoctorScheduler?.(sock)) },
           { name: "RentAuto", fn: () => import("./src/lib/nova-rent-auto.js").then(m => m.initRentAutoScheduler?.(sock)) },
+          { name: "KeyPatrol", fn: () => import("./src/lib/nova-key-patrol.js").then(m => m.initKeyPatrolScheduler?.(sock)) },
           { name: "WorldEvent", fn: () => import("./src/lib/nova-world-event.js").then(m => m.initWorldEventScheduler?.(sock)) },
           { name: "AnimeNotifier", fn: () => import("./src/lib/nova-auto-anime-notifier.js").then(m => m.initAnimeNotifier?.(sock)) },
           { name: "AutoAnimeWinbu", fn: () => import("./src/lib/nova-auto-anime.js").then(m => m.initAutoStart?.(sock)) },
