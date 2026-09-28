@@ -165,7 +165,10 @@ w("\n===== 9. animasi khas (libguildwarrpg.js) =====");
   check("frame sebut kedua guild", fr[0].includes("NAGA HITAM") && fr[0].includes("ELANG BIRU"), fr[0]);
   check("frame bentrok ada 💥 + .guild attack", fr[5].includes("💥") && fr[5].includes(".guild attack"), fr[5]);
   const vf = anim.victoryFrames({ name: "Naga Hitam", emoji: "🐉" });
+  check("grid 4 baris: HUD · pasukan/trophy · adegan medan · status", fr.every((x) => (x.match(/\n/g) || []).length >= 5) && fr.some((x) => x.includes("\u{1F3D4}\uFE0F") || x.includes("genderang")), fr[0]);
+  check("adegan medan makin tegang: bukit → genderang → 🔥 → 💥🌪️", fr[3].includes("\u26A1") && fr[4].includes("\u{1F525}") && fr[5].includes("\u{1F32A}\uFE0F"), fr.map((x) => x.split("\n")[3]).join(" | ").slice(0, 150));
   check("victory frames: JUARA + naik trophy", vf.length === 4 && vf[3].includes("JUARA") === false || vf[vf.length - 1].includes("NAGA HITAM"), JSON.stringify(vf.map(x => x.slice(0, 30))));
+  check("victory grid: adegan perayaan 📣→🎊→🔦→🎉", vf[0].includes("\u{1F4E3}") && vf[1].includes("\u{1F38A}") && vf[2].includes("\u{1F526}") && vf[3].includes("\u{1F389}"), vf.map((x) => x.split("\n")[3]).join(" | "));
 }
 
 w("\n===== 10. plugin handler (registry + alur) =====");
