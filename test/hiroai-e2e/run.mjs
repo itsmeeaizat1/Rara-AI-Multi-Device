@@ -45,6 +45,7 @@ ok("hiro-db write/read roundtrip", db2.read().hiaiTest?.n === db.data.hiaiTest.n
 const mod = await import("../../plugins/ai-agent/hiai.js");
 ok("plugin config & handler ter-ekspor", !!mod.config?.name && typeof mod.handler === "function");
 ok("cmd hiai (beda dari ai/novaagent/mcp)", mod.config.name === "hiai" && !["ai", "novaagent", "mcp"].includes(mod.config.name));
+ok("owner-only (anti penyalahgunaan)", mod.config.isOwner === true);
 ok("alias gak bentrok novaagent/mcp/ai", (mod.config.alias || []).every((a) => !["ai", "novaagent", "mcp", "aichat"].includes(a)), JSON.stringify(mod.config.alias));
 
 console.log(`─── hasil: ${pass}/${total} ${pass === total ? "PASSED ✓" : "ADA YANG GAGAL ✗"} ───`);

@@ -11,7 +11,7 @@ const pluginConfig = {
   description: "AI agent MCP Hiro — chat AI dengan tool aktif (grup, media, web, database, pengingat)",
   usage: ".hiai <tugas> | .hiai reset | .hiai tools | .hiai info | .hiai models",
   example: ".hiai carikan berita tekno hari ini lalu rangkum",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: true,
   isPrivate: false,
@@ -84,8 +84,8 @@ async function handler(m, { sock, config: botConfig }) {
       conn: sock,
       m,
       jid: m.chat,
-      isOwner: !!m.isOwner,
-      isROwner: !!m.isOwner,
+      isOwner: true,
+      isROwner: true,
       timezone: "Asia/Jakarta",
     });
 
