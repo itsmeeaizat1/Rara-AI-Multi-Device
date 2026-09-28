@@ -14,7 +14,7 @@ const pluginConfig = {
   alias: ["autoorder"],
   category: "owner",
   description: "Config Auto Order Panel (on/off, panel, Pakasir, harga)",
-  usage: ".autoorder status | on/off | panel <vN> | pakasir <slug> <apikey> | pediatopup <api_id> <api_key> | markuptopup <jumlah> | pacific <api_key> | markupsmm <persen> | premku <api_key> | markupprem <jumlah> | harga <paket> <harga> | hargaadmin <harga>",
+  usage: ".autoorder status | on/off | panel <vN> | pakasir <slug> <apikey> | pediatopup <api_id> <api_key> | markuptopup <jumlah> | pacific <api_key> | markupsmm <persen> | premku <api_key> | markupprem <jumlah> | nokos <api_token> | markupnokos <persen> | harga <paket> <harga> | hargaadmin <harga>",
   example: ".autoorder harga 2gb 5000",
   isOwner: true,
   isPremium: false,
@@ -34,6 +34,7 @@ function statusText(cfg, panelOk) {
     `PanelPedia TopUp: ${cfg.pediatopup.apiId ? `api id ${cfg.pediatopup.apiId} tersimpan · markup ${fmtRupiah(cfg.pediatopup.markup || 0)}` : "BELUM di-set"}`,
     `Pacific SMM: ${cfg.pacific.apiKey ? `apikey tersimpan · markup +${cfg.pacific.markupPct}%` : "BELUM di-set"}`,
     `Premku App Premium: ${cfg.premku.apiKey ? `apikey tersimpan · markup ${fmtRupiah(cfg.premku.markup || 0)}` : "BELUM di-set"}`,
+    `Nokos 5SIM: ${cfg.nokos?.apiKey ? `token tersimpan · markup +${cfg.nokos.markupPct}%` : "BELUM di-set"}`,
     `Harga admin panel: ${fmtRupiah(cfg.adminPrice)}`,
     "",
     "Harga paket:",
@@ -134,6 +135,24 @@ async function handler(m, { sock, db: _db }) {
     cfg.premku.markup = v;
     db.save();
     return m.reply(claraWrap("Config Auto Order", `Markup app premium: ${fmtRupiah(v)} (ditambah ke harga produk Premku tiap pesanan)`));
+  }
+
+  if (sub === "nokos") {
+    const apiKey = (args[1] || "").trim();
+    if (!apiKey || apiKey.length < 8) {
+      return m.reply(claraWrap("Config Auto Order", "Format: .autoorder nokos <api_token>\nAmbil di 5sim.net (login → menu Profile → API keys).", "error"));
+    }
+    cfg.nokos.apiKey = apiKey;
+    db.save();
+    return m.reply(claraWrap("Config Auto Order", `Nokos 5SIM tersimpan: token ${apiKey.slice(0, 6)}…\nTes koneksi: .nokoslist`));
+  }
+
+  if (sub === "markupnokos") {
+    const v = parseInt(args[1], 10);
+    if (!Number.isFinite(v) || v < 0 || v > 100) return m.reply(claraWrap("Config Auto Order", "Markup nokos persen 0-100 ya, contoh: .autoorder markupnokos 25", "error"));
+    cfg.nokos.markupPct = v;
+    db.save();
+    return m.reply(claraWrap("Config Auto Order", `Markup nokos: +${v}% di atas harga modal 5SIM tiap nomor`));
   }
 
   if (sub === "hargaadmin") {
