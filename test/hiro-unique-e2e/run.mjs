@@ -31,6 +31,7 @@ for (const [key, p] of Object.entries(files)) {
 
 ok("cmd react (nama asli Hiro, tanpa v2)", mods.react?.config?.name === "react");
 ok("cmd pollination (nama asli Hiro)", mods.pollination?.config?.name === "pollination");
+ok("pollenimg alias kepasang (image gen)", (mods.pollination?.config?.alias || []).includes("pollenimg"));
 ok("cmd crm alias copyrelay", (mods.crm?.config?.alias || []).includes("copyrelay"));
 ok("simulate owner-only", mods.simulate?.config?.isOwner === true);
 ok("imgmotion punya answerHandler step-2 video", typeof mods.imgmotion?.answerHandler === "function");
