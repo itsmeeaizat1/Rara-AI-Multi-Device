@@ -100,7 +100,8 @@ async function notifyOwner(sock, m, data) {
 │ ${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}
 
 ${toSC("User ini menunggu konfirmasi pembayaran.")}
-${toSC("Jika sudah bayar, ketik")}: *.addprem ${buyerNumber} ${data.days}*`;
+${toSC("Cek bukti transfer, lalu ketik")}: *.approveprem ${buyerNumber}*
+${toSC("Tolak")}: *.approveprem ${buyerNumber} tolak <alasan>*`;
 
   for (const num of ownerNumbers) {
     try {
@@ -134,6 +135,24 @@ async function handler(m, { sock }) {
       buySessions.set(sender, { ...pkg, startedAt: Date.now() });
       setTimeout(() => buySessions.delete(sender), SESSION_TIMEOUT);
 
+      // catat pesanan pending buat .approveprem (mirror approvetopup)
+      const db = getDatabase();
+      if (!db.data.premiumOrders || typeof db.data.premiumOrders !== "object") {
+        db.data.premiumOrders = { pending: {}, history: [] };
+      }
+      const buyerNum = (m.sender || "").replace(/[^0-9]/g, "");
+      db.data.premiumOrders.pending[sender] = {
+        phoneNumber: buyerNum,
+        name: m.pushName || "Unknown",
+        label: pkg.label,
+        duration: pkg.duration,
+        days: pkg.days,
+        price: pkg.price,
+        status: "pending",
+        orderedAt: Date.now(),
+      };
+      db.save();
+
       const priceBox = bracketBox("💰", "Detail Pembelian", [
         `Paket: *${pkg.label}*`,
         `Harga: *${pkg.price}*`,
@@ -151,7 +170,7 @@ async function handler(m, { sock }) {
         `1. Bayar *${pkg.price}* via QRIS/E-Wallet`,
         `2. Screenshot bukti transfer`,
         `3. Kirim bukti ke owner`,
-        `4. Owner konfirmasi → premium aktif!`,
+        `4. Owner approve → premium aktif otomatis!`,
       ]);
 
       const contactBox = bracketBox("👨‍💻", "Kontak Owner", [
