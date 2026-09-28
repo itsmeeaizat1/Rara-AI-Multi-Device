@@ -1,11 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// libanimationrpg/libtrenchdiverrpg.js — LIB ANIMASI CINEMATIC khusus Trenchdiver / palung (owner 25 Sep 2026)
-// Gaya cuplikan Nintendo: cutscene multi-babak via EDIT BERULANG satu pesan, durasi OTOMATIS nyesuaikan situasi
-// (makin dalam zona → babak selam makin panjang · jalur risiko ngebut · bahaya/pelampung/event/boss nambah babak).
+// libanimationrpg/libtrenchdiverrpg.js — LIB ANIMASI EMOJI-GRID khusus Trenchdiver / palung
+// (upgrade owner 28 Sep 2026: cutscene teks → GRID EMOJI FRAME-BY-FRAME ala "scene situasional")
+// Tiap frame = grid 4 baris: HUD (sonar · zona · kedalaman) · kolom selam vertikal (gelembung 🫧 di atas
+// penyelam 🤿) · baris gelap kedalaman (makin turun makin ⬛ — situasional) · status aksi.
+// Animasi KONTEKSTUAL: babak makin panjang di zona dalam, jalur risiko ngebut (frameMs lebih cepat),
+// bahaya/pelampung/event/boss nambah babak, impact 💥✨ di momen kritis, status dramatis (🏆/🛟/⚡).
 // Isinya MURNI KODE ANIMASI: pure scene-builder dari ctx (gak import plugin, gak ada logic game di sini).
-// Konvensi folder src/lib/libanimationrpg/: file lib<namagame>rpg.js, satu lib per game, animasi BEDA antar game —
-// palung = SELAM VERTIKAL (kolom kedalaman, penyelam 🤿 turun, jejak gelembung 🫧, sonar ◎◉○),
-// gunung = side-scrolling daki, warung = antrean pelanggan. Fallback gak dukung edit → senyap.
+// Konvensi folder src/lib/libanimationrpg/: file lib<namagame>rpg.js per game, animasi BEDA antar game —
+// palung = SELAM VERTIKAL (kolom kedalaman, jejak gelembung 🫧, sonar ◎◉○), gunung = side-scrolling daki.
+// Fallback gak dukung edit → editSceneAnim return false → pemanggil senyap lanjut.
 
 import { editSceneAnim } from "../nova-anim-runner.js";
 
@@ -15,14 +18,17 @@ export const _setTrenchdiverAnimMsForTest = (ms) => { _animBaseMs = Number(ms) |
 const fr = (x) => Math.round(_animBaseMs * x);
 const QQ = "\u201C"; // kutip pintar dekoratif dialog cutscene
 
+const grid = (lines) => "```\n" + lines.join("\n") + "\n```";
+
 // ── mesin putar: sistem edit berulang (satu pesan, frame demi frame) ──
 export async function playTrenchdiverCinematic(sock, jid, scenes) {
   try { return await editSceneAnim(sock, jid, scenes, {}); }
   catch (e) { console.error("[anim-palung] gagal (dilewati senyap):", e); return false; }
 }
 
-// ── SCENE signature: selam vertikal — penyelam turun kolom kedalaman (khas palung — BEDA dari semua game) ──
-// durasi nyesuaikan: makin dalam zona makin panjang babaknya (3 + zona frame)
+// ── SCENE signature: SELAM VERTIKAL grid — penyelam turun kolom kedalaman (khas palung — BEDA dari semua game) ──
+// durasi nyesuaikan: makin dalam zona makin panjang babaknya (3 + min(zona,4) frame).
+// Grid 4 baris: HUD sonar+kedalaman · kolom (🫧 di atas 🤿) · baris gelap makin tebal · status.
 function selamFrames(ctx) {
   const zTile = ctx.zonaTile || "🌊";
   const zNama = (ctx.zonaNama || "ZONA").toUpperCase();
@@ -33,7 +39,10 @@ function selamFrames(ctx) {
     const pos = Math.min(10, f * 2);
     const col = [];
     for (let i = 0; i < 10; i++) col.push(i === pos ? "🤿" : i < pos ? "🫧" : i === 9 ? "💎" : zTile);
-    frames.push("```\\n" + sonar[f % sonar.length] + " SONAR · " + zNama + " · " + (pos * 250) + "m\\n" + col.join("") + "\\n```");
+    const gelap = Math.min(8, Math.floor(pos / 2)); // makin dalam makin gelap (situasional)
+    const dark = "⬛".repeat(gelap) + zTile.repeat(Math.max(0, 10 - gelap));
+    const status = pos >= 8 ? "💎 Dasar kedalaman terlihat…" : (ctx.jalur === "risiko" ? "⚡ Ngebut menuruni kolom…" : "🫁 Pelan-pelan turun…");
+    frames.push(grid([sonar[f % sonar.length] + " SONAR · " + zNama + " · " + (pos * 250) + "m", col.join(""), dark, status]));
   }
   return frames;
 }
@@ -42,71 +51,71 @@ function selamFrames(ctx) {
 // ctx: { zona, zonaNama, zonaTile, jalur: aman|risiko, bahaya, selamat (pelampung), event, loot, boss }
 export function selamCinematic(ctx) {
   const scenes = [];
-  // SCENE 1 — perahu: cek oksigen + siap selam
+  // SCENE 1 — perahu grid: cek oksigen + siap selam
   scenes.push({ frames: [
-    "```\\n🫁 Cek tabung oksigen… OK!\\n🤿 Suit selam dicek… rapat!\\n```",
-    "```\\n" + (ctx.jalur === "risiko" ? "⚡ JALUR RISIKO dipilih.\\nLoot ×2… bahaya 35%." : "🛟 Jalur aman dipilih.\\nTenang, pelan-pelan.") + "\\n```",
+    grid(["⛵ PERAHU — PERSIAPAN SELAM", "🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊", "🫁 ✓   🤿 ✓", QQ + "Cek tabung oksigen… OK! Suit selam… rapat!" + QQ]),
+    grid([(ctx.jalur === "risiko" ? "⚡ JALUR RISIKO DIPILIH" : "🛟 JALUR AMAN DIPILIH"), "🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊", "🤿 ➡️ 🌊", ctx.jalur === "risiko" ? "Loot ×2… bahaya 35% menanti." : "Tenang, pelan-pelan saja."]),
   ], frameMs: fr(1), holdMs: fr(0.7) });
-  // SCENE 2 — selam vertikal (durasi ∝ zona; risiko ngebut)
+  // SCENE 2 — selam vertikal grid (durasi ∝ zona; risiko ngebut)
   scenes.push({ frames: selamFrames(ctx), frameMs: ctx.jalur === "risiko" ? fr(0.7) : fr(0.95), holdMs: fr(0.6) });
-  // SCENE 3 — bahaya (versi pelampung selamat / kena)
+  // SCENE 3 — bahaya (versi pelampung selamat / kena) — grid impact
   if (ctx.bahaya) {
     scenes.push(ctx.selamat ? { frames: [
-      "```\\n🌀 Arus pusaran MENYERET!\\nSemua terasa terlambat…\\n```",
-      "```\\n🛟 PELAMPUNG DARURAT MENGEMBANG!\\nKamu diselamatkan — hasil tetap utuh!\\n```",
+      grid(["🌀 ARUS PUSATAN MENYERET!", "🌀 🌀 🌀", "🤿 ⬇️ ⁉️", "Semua terasa terlambat…"]),
+      grid(["🛟 PELAMPUNG DARURAT MENGEMBANG!", "💥 🛟 ✨", "🤿 😮‍💨", "Kamu diselamatkan — hasil tetap utuh!"]),
     ], frameMs: fr(0.9), holdMs: fr(0.6) } : { frames: [
-      "```\\n🦈 GIGITAN DARI KEgelapan!\\nKamu buru-buru naik sambil menjatuhkan loot…\\n```",
-      "```\\n💨 Sampai di perahu, napas ngos-ngosan.\\nSebagian harta hilang di kedalaman…\\n```",
+      grid(["🦈 GIGITAN DARI KEGELAPAN!", "⬛ 🦈 ⬛", "🤿 💥 😱", "Buru-buru naik sambil menjatuhkan loot…"]),
+      grid(["💨 SAMPAI DI PERAHU…", "⛵ 💨", "😮‍💨 🤿", "Napas ngos-ngosan. Sebagian harta hilang di kedalaman…"]),
     ], frameMs: fr(0.9), holdMs: fr(0.6) });
   }
-  // SCENE 4 — event kedalaman (babak ekstra per event)
+  // SCENE 4 — event kedalaman (babak grid ekstra per event)
   if (ctx.event === "mutiara") scenes.push({ frames: [
-    "```\\n✨ Sesuatu BERSINAR di celah karang…\\n```",
-    "```\\n🦪 MUTIARA RAKSASA sebesar kepalan!\\nDiangkat dengan hati-hati.\\n```",
+    grid(["✨ SESUATU BERSINAR DI CELAH KARANG…", "🪸 ✨ 🪸", "🤿 👀", "Mendekat pelan-pelan…"]),
+    grid(["🦪 MUTIARA RAKSASA!", "🪸 💥 🦪 ✨", "🤿 🤩", "Sebesar kepalan! Diangkat dengan hati-hati."]),
   ], frameMs: fr(0.9), holdMs: fr(0.5) });
   else if (ctx.event === "arus") scenes.push({ frames: [
-    "```\\n🌊 ARUS KUAT menabrak badan…\\n```",
-    "```\\n🌀 Kamu bertahan di balik karang…\\nOksigen terkuras, tapi berhasil!\\n```",
+    grid(["🌊 ARUS KUAT MENABRAK BADAN…", "🌊 ➡️ 🤿", "Aduh!"]),
+    grid(["🌀 BERTAHAN DI BALIK KARANG…", "🪸 🤿 🪸", "Oksigen terkuras, tapi berhasil!"]),
   ], frameMs: fr(0.9), holdMs: fr(0.5) });
   else if (ctx.event === "ubur") scenes.push({ frames: [
-    "```\\n⚡ Derau listrik di air…\\n```",
-    "```\\n⚡ UBUR-UBUR LISTRIK MENYENGAT!\\nKamu menggigil — oksigen terkuras!\\n```",
+    grid(["⚡ DERAU LISTRIK DI AIR…", "⬛ ⚡ ⬛", "🤿 ⁉️", "Rambutmu berdiri sendiri…"]),
+    grid(["⚡ UBUR-UBUR LISTRIK MENYENGAT!", "💥 ⚡ 🪼 💥", "🤿 🥶", "Kamu menggigil — oksigen terkuras!"]),
   ], frameMs: fr(0.9), holdMs: fr(0.5) });
   else if (ctx.event === "hiu") scenes.push({ frames: [
-    "```\\n🦈 PUNGGUNG ABU-ABU MELINTAS…\\n```",
-    "```\\n🏃 Kamu kabur sambil menjatuhkan sebagian harta.\\nNyawa lebih mahal!\\n```",
+    grid(["🦈 PUNGGUNG ABU-ABU MELINTAS…", "⬛ 🦈 ⬛", "🤿 😨", "Jangan gerak… jangan gerak…"]),
+    grid(["🏃 KABUR! NYAWA LEBIH MAHAL!", "🦈 ➡️ 🤿💨", "💥 Sebagian harta dijatuhkan."]),
   ], frameMs: fr(0.9), holdMs: fr(0.5) });
   else if (ctx.event === "kapal") scenes.push({ frames: [
-    "```\\n⚓ LAMPU SOROT MENEMUKAN LAMBUNG TUA…\\n```",
-    "```\\n⚓ KAPAL KARAM berusia ratusan tahun!\\nArtifak diangkat satu per satu.\\n```",
+    grid(["⚓ LAMPU SOROT MENEMUKAN LAMBUNG TUA…", "⬛ 🏴‍☠️ ⬛", "🤿 🔦", "Kayunya hitam pekat…"]),
+    grid(["⚓ KAPAL KARAM RATUSAN TAHUN!", "💥 ⚓ ✨", "🤿 🤩", "Artifak diangkat satu per satu."]),
   ], frameMs: fr(0.9), holdMs: fr(0.5) });
   else if (ctx.event === "bio") scenes.push({ frames: [
-    "```\\n✨ Cahaya-cahaya kecil MENARI…\\n```",
-    "```\\n✨ BIOLUMINESISI!\\nSosok raksasa lewat di kejauhan… matanya menatapmu sedetik.\\n```",
+    grid(["✨ CAHAYA-CAHAYA KECIL MENARI…", "✨ ✨ ✨", "🤿 😮", "Sulit dipercaya…"]),
+    grid(["✨ BIOLUMINESISI!", "🐙 ✨ 👀", "Sosok raksasa lewat di kejauhan… matanya menatapmu sedetik."]),
   ], frameMs: fr(0.9), holdMs: fr(0.5) });
-  // SCENE 5 — BOSS: Sesuatu di Dasar Palung (momen paling megah)
+  // SCENE 5 — BOSS: Sesuatu di Dasar Palung (momen paling megah, grid dramatis)
   if (ctx.boss) scenes.push({ frames: [
-    "```\\n🌊 Kedalaman maksimal tercapai…\\nSonar mendeteksi… SESUATU.\\n```",
-    "```\\n🦑 BAYANGAN RAKSASA MUNCUL!\\nAir membeku. Waktu berhenti.\\n```",
-    "```\\n🦑 Ia menatapmu lama…\\n…lalu MENYINGKIR, seolah mengizinkan.\\n```",
-    "```\\n🏆 TITIK TERDALAM TERJANGKAU!\\nKamu mengangkat kristal dengan hormat.\\n```",
+    grid(["🌊 KE DALAMAN MAKSIMAL…", "◎ ◉ ◎", "⬛⬛⬛⬛⬛", "Sonar mendeteksi… SESUATU."]),
+    grid(["🦑 BAYANGAN RAKSASA MUNCUL!", "💥 🦑 💥", "⬛⬛⬛⬛⬛", "Air membeku. Waktu berhenti."]),
+    grid(["🦑 IA MENATAPMU LAMA…", "🦑 … 🤿", "…lalu MENYINGKIR, seolah mengizinkan."]),
+    grid(["🏆 TITIK TERDALAM TERJANGKAU!", "💎 ✨ 🏆", "🤿 🫡", "Kamu mengangkat kristal dengan hormat."]),
   ], frameMs: fr(1.2), holdMs: fr(1.2) });
   // SCENE 6 — loot naik berdetak
   const g = Math.max(0, ctx.loot || 0);
   scenes.push({ frames: [
-    "```\\n💰 Loot dibuka…\\n+" + Math.floor(g / 3) + " uang…\\n```",
-    "```\\n💰 +" + Math.floor((g * 2) / 3) + "… berdetak naik…\\n```",
-    "```\\n💰 +" + g + " ✅\\n" + (ctx.jalur === "risiko" ? "⚡ Risiko terbayar!" : "🛟 Aman sampai atas!") + "\\n```",
+    grid(["💰 LOOT DIBUKA…", "+" + Math.floor(g / 3) + " uang…", "…"]),
+    grid(["💰 BERDETAK NAIK…", "+" + Math.floor((g * 2) / 3) + "…", "…"]),
+    grid(["💰 +" + g + " ✅", ctx.jalur === "risiko" ? "⚡ Risiko terbayar!" : "🛟 Aman sampai atas!"]),
   ], frameMs: fr(0.95), holdMs: fr(0.9) });
   return scenes;
 }
 
-// ── cinematic NAIK PERMUKAAN (istirahat/naik — pendek) ──
+// ── cinematic NAIK PERMUKAAN (istirahat/naik — pendek, grid naik) ──
 export function naikCinematic(ctx) {
   return [
     { frames: [
-      "```\\n🤿 Muka ke atas…\\nCahaya makin terang…\\n```",
-      "```\\n☀️ PERAHU TIBA.\\nOksigen penuh kembali. Laut menunggumu kembali.\\n```",
+      grid(["⬆️ NAIK KE PERMUKAAN…", "🌊 ⬛ ⬛ 🤿", "🫧🫧", "Cahaya makin terang…"]),
+      grid(["☀️ PERAHU TIBA!", "☀️ 🌊 🌊", "🤿 😌 ⛵", "Oksigen penuh kembali. Laut menunggumu kembali 🌊"]),
     ], frameMs: fr(0.9), holdMs: fr(0.5) },
   ];
 }
