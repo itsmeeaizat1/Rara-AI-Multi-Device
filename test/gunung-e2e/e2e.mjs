@@ -299,6 +299,21 @@ t("16j. durasi nyesuaikan situasi: zona tinggi+event+gua > zona rendah", sceneTo
 t("16j2. daki normal ±8-11 dtk (gak bosen, gak kepanjangan)", sceneTotalMs(scLow, 700) >= 8000 && sceneTotalMs(scLow, 700) <= 11000, "ms=" + sceneTotalMs(scLow, 700));
 t("16j3. puncak = momen paling megah (paling panjang)", sceneTotalMs(scSummit, 700) >= sceneTotalMs(scHigh, 700), "ms=" + sceneTotalMs(scSummit, 700));
 t("16j4. cutscene longsor & portir versi dramatis sendiri", sceneTotalMs(animLib.longsorCinematic({ zonaKe: 3 }), 700) >= 3000 && animLib.portirCinematic({ zona: 4 }).length === 1);
+t("16k. grid emoji: frame daki 4 baris (HUD · langit · lintasan · status)", (() => {
+  const sc = animLib.dakiCinematic({ level: 20, zona: 7, zonaNama: "Zona Es", aksi: "panjat", cuacaIcon: "❄️", cuaca: "badai-es", events: ["serangan"], gua: false, gold: 400 });
+  const f = sc.flatMap((x) => x.frames.map(String));
+  return f.every((x) => x.includes("```")) && f.some((x) => (x.match(/\n/g) || []).length >= 5) && f.some((x) => x.includes("💥"));
+})());
+t("16l. longsor grid dramatik: impact 💥 + status ⬇️ zona", (() => {
+  const sc = animLib.longsorCinematic({ zonaKe: 3 });
+  const f = sc.flatMap((x) => x.frames.map(String));
+  return f.some((x) => x.includes("💥")) && f.some((x) => x.includes("⬇️ TURUN KE ZONA 3"));
+})());
+t("16m. puncak grid megah: bendera 🚩 + status 🏆", (() => {
+  const sc = animLib.puncakCinematic({ gunungNama: "Gunung Fuji", puncak: 2, gold: 3000 });
+  const f = sc.flatMap((x) => x.frames.map(String));
+  return f.some((x) => x.includes("🚩")) && f.some((x) => x.includes("DITAKLUKKAN")) && f.some((x) => x.includes("🏆"));
+})());
 animLib._setMountainclimberAnimMsForTest(0);
 
 // tes langsung lib: bioma hutan→salju forced + level tinggi (rintangan + peti + sprint)

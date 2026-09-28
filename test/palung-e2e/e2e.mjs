@@ -160,6 +160,18 @@ const scHigh = animLib2.selamCinematic({ zona: 4, zonaNama: "Zona Hadal", zonaTi
 t("Ci. durasi nyesuaikan situasi: hadal+event+boss > zona 1 aman", sceneTotalMs(scHigh, 700) > sceneTotalMs(scLow, 700), sceneTotalMs(scHigh, 700) + " vs " + sceneTotalMs(scLow, 700));
 t("Cj. selam normal ±7-10 dtk", sceneTotalMs(scLow, 700) >= 7000 && sceneTotalMs(scLow, 700) <= 10000, "ms=" + sceneTotalMs(scLow, 700));
 t("Ck. naik permukaan: cinematic pendek sendiri", sceneTotalMs(animLib2.naikCinematic({}), 700) >= 1500 && sceneTotalMs(animLib2.naikCinematic({}), 700) <= 3500, "ms=" + sceneTotalMs(animLib2.naikCinematic({}), 700));
+t("Cl. grid emoji: frame selam 4 baris (HUD · kolom · gelap · status)", (() => {
+  const f = animLib2.selamCinematic({ zona: 3, zonaNama: "Zona Gelap", zonaTile: "🌑", jalur: "risiko", bahaya: true, selamat: true, event: "hiu", loot: 200, boss: false }).flatMap((x) => x.frames.map(String));
+  return f.every((x) => x.includes("```")) && f.some((x) => (x.match(/\n/g) || []).length >= 5);
+})());
+t("Cm. grid situasional: kolom makin gelap saat turun (⬛)", (() => {
+  const f = animLib2.selamCinematic({ zona: 1, zonaNama: "Zona Cahaya", zonaTile: "🌊", jalur: "aman", bahaya: false, selamat: false, event: null, loot: 40, boss: false }).flatMap((x) => x.frames.map(String));
+  return f.some((x) => x.includes("⬛"));
+})());
+t("Cn. event grid impact: hiu 💥", (() => {
+  const f = animLib2.selamCinematic({ zona: 2, zonaNama: "Zona Senja", zonaTile: "🌑", jalur: "aman", bahaya: false, selamat: false, event: "hiu", loot: 100, boss: false }).flatMap((x) => x.frames.map(String));
+  return f.some((x) => x.includes("💥"));
+})());
 animLib2._setTrenchdiverAnimMsForTest(0);
 
 fs.rmSync(dbDir, { recursive: true, force: true });
