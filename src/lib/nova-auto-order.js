@@ -57,6 +57,11 @@ export function ensureOrderCfg(db) {
   if (typeof c.premku.apiKey !== "string") c.premku.apiKey = "";
   if (!Number.isFinite(c.premku.markup)) c.premku.markup = 0;
   if (!c.premOrders || typeof c.premOrders !== "object") c.premOrders = {};
+  // 5SIM nokos (28 Sep 2026): auto order nomor kosong 5sim.net
+  if (!c.nokos || typeof c.nokos !== "object") c.nokos = {};
+  if (typeof c.nokos.apiKey !== "string") c.nokos.apiKey = "";
+  if (!Number.isFinite(c.nokos.markupPct)) c.nokos.markupPct = 20;
+  if (!c.nokos.orders || typeof c.nokos.orders !== "object") c.nokos.orders = {};
   return c;
 }
 
