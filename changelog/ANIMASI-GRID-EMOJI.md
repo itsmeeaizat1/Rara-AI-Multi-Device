@@ -32,12 +32,21 @@
 
 ## ⬜ Game RPG belum punya animasi — antrean animasi baru (langsung gaya grid)
 
+**Prioritas tinggi (antrean audit 21 Sep):**
 `quizarena` → `bossraid` → `weeklyboss` → `duelrpg` → `arenapvp` → `bounty` → `summon` → `fortune` →
 `witchcauldron` → `alchemist` → `crafting2` → `cookrpg` → `trading` → `tournament` → `meditation` →
 `pet` → `petevolve`
 
-Prioritas lebih rendah (RPG kerja/kegiatan): `cockfight`, `scavenger`, `merchanttrade`, `highwayrobber`,
-`payday`, `fishing`, `gardening`, `socialaid`, `working`.
+**Kandidat lengkap — hasil audit 161 plugin `plugins/rpg/` (28 Sep 2026), ~75 game:**
+
+- 🎰 *Casino/keberuntungan:* `casinorpg`, `slotmachine`, `roulette`, `lottery`, `rafflerpg`, `dicebattle`, `cockfight`, `horserace`, `blackinvest`, `fortune`
+- ⚔️ *Battle/arena/event:* `arenapvp`, `arenav3`, `bossfight`, `bossraid`, `weeklyboss`, `duelrpg`, `bounty`, `summon`, `tournament`, `invasion`, `rift`, `kingdom`, `zombieeventrpg`, `worldeventrpg`, `heist`, `spyrpg`, `scoutrpg`, `patrol`, `defendrpg`, `finaltrialrpg`, `survival`, `dungeon`
+- 💼 *Kerja/kegiatan:* `working`, `workrank`, `payday`, `menialwork`, `ridehailingrpg`, `scavenger`, `merchanttrade`, `highwayrobber`, `mining`, `nebang`, `forage`, `treasurehunt`, `expedition`, `travelrpg`
+- 🍳 *Craft/kebun/masak:* `crafting2`, `craftrpg`, `cookrpg`, `cooking`, `farmrpg`, `gardening`, `fishing`, `trading`, `alchemist`, `witchcauldron`, `bansos`
+- 🐾 *Pet/meditasi/lain:* `pet`, `petevolve`, `meditation`, `aimrpg`, `atmallrpg`, `hilorpg`, `huntwildrpg`, `traprpg`, `trapwildrpg`, `quizarena`, `riddlerpg`, `legendaryquest`, `storyquest`, `timetravelrpg`, `mutaterpg`, `darkmoderpg`, `distortionrpg`, `spiritrpg`, `reincarnaterpg`, `comborpg` *(beberapa mungkin ternyata sistem saat dibedah — geser kategori saat upgrade)*
+
+**Sistem/ekonomi/core (~74, BUKAN target animasi):** bank, toko, jual-beli, inventory, equip, skill,
+class, talent, prestige, rebirth, dll — panel & meta RPG, animasi grid gak relevan.
 
 ## 🎮 Mini-game (prioritas rendah / skip)
 
