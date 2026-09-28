@@ -1,9 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libmountainclimberrpg.js — LIB ANIMASI EMOJI-GRID khusus Mountainclimber / gunung
-// (upgrade owner 28 Sep 2026: cutscene teks → GRID EMOJI FRAME-BY-FRAME ala "scene situasional")
-// Tiap frame = grid 3-4 baris: HUD (zona/cuaca/jalur) · pemandangan bioma · lintasan daki (jejak ⬜) · status aksi.
-// Animasi KONTEKSTUAL: babak makin panjang di zona tinggi, rintangan 🪨 + lompat ⬆️ (zona 4+),
-// panjat 🧗 + HUD 🫁 oksigen (zona 6+), impact 💥✨🔥 di momen kritis, frame status dramatis (🏆/⬇️/🫡).
+// (upgrade owner 28 Sep 2026: OPEN WORLD PER NEGARA — beda negara beda animasi, durasi TIDAK buru-buru:
+//  SITUASI MENENTUKAN LEVEL ANIMASI — zona + jalur risiko + cuaca buruk memperpanjang babak lintasan,
+//  3 + min(situasi, 8) frame, tempo diperlambat fr(1.0) — pendakian "butuh berapa waktu, butuhlah")
+// Tiap frame = grid 3-4 baris: HUD (negara/zona/cuaca/jalur) · langit & pemandangan KHAS NEGARA ·
+// lintasan daki (jejak ⬜) · status aksi. Rintangan 🪨 + lompat ⬆️ (zona 4+), panjat 🧗 + HUD 🫁 (zona 6+),
+// impact 💥✨🔥 di momen kritis, frame status dramatis (🏆/⬇️/🫡).
 // Isinya MURNI KODE ANIMASI: pure scene-builder dari ctx (gak import plugin, gak ada logic game di sini).
 // Konvensi folder src/lib/libanimationrpg/: file lib<namagame>rpg.js per game, animasi BEDA antar game —
 // gunung = SIDE-SCROLLING DAKI (jejak ⬜, char melintas tile). Fallback: editSceneAnim false → senyap lanjut.
@@ -16,13 +18,17 @@ export const _setMountainclimberAnimMsForTest = (ms) => { _animBaseMs = Number(m
 const fr = (x) => Math.round(_animBaseMs * x);
 const QQ = "\u201C"; // kutip pintar dekoratif dialog cutscene
 
-// pemandangan & lintasan bioma sesuai level (visual murni animasi)
-const BIOMA_CLIMB = [
-  { tanah: "🟩", adegan: ["🌲", "🌳", "⛰️"], char: "🥾" },
-  { tanah: "🟫", adegan: ["🪨", "🏜️", "⛰️"], char: "🥾" },
-  { tanah: "⬜", adegan: ["❄️", "🏔️", "☃️"], char: "🧗" },
-];
-const biomaOf = (level) => BIOMA_CLIMB[level >= 20 ? 2 : level >= 8 ? 1 : 0];
+// ── OPEN WORLD: preset visual per negara (id sama dengan COUNTRIES di plugins/rpg/gunung.js) ──
+// Beda negara = beda langit/pemandangan, tanah, dan karakter daki. Unknown id → Indonesia.
+const NEGARA_CLIMB = {
+  indonesia: { nama: "INDONESIA", emoji: "🇮🇩", langit: ["🌴", "🌋", "⛺"], tanah: "🟩", char: "🥾" },
+  jepang: { nama: "JEPANG", emoji: "🇯🇵", langit: ["🌸", "🗻", "⛩️"], tanah: "🟩", char: "🥾" },
+  jerman: { nama: "JERMAN", emoji: "🇩🇪", langit: ["🌲", "🏰", "🦌"], tanah: "🟫", char: "🥾" },
+  china: { nama: "CHINA", emoji: "🇨🇳", langit: ["🧊", "🥶", "🏔️"], tanah: "⬜", char: "🧗" },
+  dunia: { nama: "7 PUNCAK DUNIA", emoji: "🌍", langit: ["🌍", "🧊", "☀️"], tanah: "⬜", char: "🧗" },
+};
+const negaraOf = (id) => NEGARA_CLIMB[id] || NEGARA_CLIMB.indonesia;
+
 const CUACA_FX = { cerah: "☀️", mendung: "☁️", hujan: "🌧️", badai: "⚡", "badai-es": "❄️" };
 
 const grid = (lines) => "```\n" + lines.join("\n") + "\n```";
@@ -34,28 +40,31 @@ export async function playGunungCinematic(sock, jid, scenes) {
 }
 
 // ── SCENE 2 signature: GRID DAKI side-scrolling (khas gunung — BEDA dari semua game) ──
-// 3 baris grid: HUD · pemandangan · lintasan(+status). Rintangan 🪨 zona 4+ dengan lompatan ⬆️,
-// panjat 🧗 + HUD oksigen zona 6+, cuaca tampil di HUD + langit. Durasi ∝ zona (3 + min(zona,5) frame).
+// 4 baris grid: HUD negara+zona · langit khas negara · lintasan(+status).
+// DURASI ∝ SITUASI (owner 28 Sep: "jangan buru-buru — butuh berapa waktu, butuhlah"):
+//   level animasi = zona + jalur risiko(+1) + cuaca badai/badai-es(+1) → steps = 3 + min(level, 8).
+//   Zona 2 cerah aman = 5 frame · zona 8 badai-es risiko = 11 frame. Tempo fr(1.0), pelan sedari awal.
 function lintasanFrames(ctx) {
-  const b = biomaOf(ctx.level || 1);
+  const N = negaraOf(ctx.country);
   const zona = ctx.zona || 1;
   const panjat = ctx.aksi === "panjat" || zona >= 6;
-  const char = panjat ? "🧗" : b.char;
+  const char = panjat ? "🧗" : N.char;
   const tiles = 12;
-  const steps = 3 + Math.min(zona, 5);
+  const situasi = zona + (ctx.risiko ? 1 : 0) + ((ctx.cuaca === "badai" || ctx.cuaca === "badai-es") ? 1 : 0);
+  const steps = 3 + Math.min(situasi, 8);
   const fx = CUACA_FX[ctx.cuaca] || "☀️";
-  const hud = (ctx.cuacaIcon || fx) + " ZONA " + zona + "/8 · " + (ctx.risiko ? "⚡ RISIKO" : "🛡️ AMAN") + (panjat ? " · 🫁 OKS" : "");
+  const hud = N.emoji + " ZONA " + zona + "/8 · " + (ctx.risiko ? "⚡ RISIKO" : "🛡️ AMAN") + (panjat ? " · 🫁 OKS" : "");
   const hasRock = zona >= 4;
   const frames = [];
   let pos = 0;
   while (frames.length < steps) {
     const at = Math.min(pos, tiles - 1);
-    const sky = Array.from({ length: 4 }, (_, i) => b.adegan[(i + frames.length + 1) % b.adegan.length]).join("  ") + "  " + fx;
+    const sky = Array.from({ length: 4 }, (_, i) => N.langit[(i + frames.length + 1) % N.langit.length]).join("  ") + "  " + fx;
     const trail = "⬜".repeat(at);
-    const depan = b.tanah.repeat(Math.max(0, tiles - 1 - at));
+    const depan = N.tanah.repeat(Math.max(0, tiles - 1 - at));
     const jump = hasRock && (at === 4 || at === 7) && frames.length < steps - 1;
     if (jump) {
-      frames.push(grid([hud, sky, trail + "⬆️🪨" + b.tanah.repeat(Math.max(0, tiles - 2 - at)), "🪨 Rintangan! LOMPAT!"]));
+      frames.push(grid([hud, sky, trail + "⬆️🪨" + N.tanah.repeat(Math.max(0, tiles - 2 - at)), "🪨 Rintangan! LOMPAT!"]));
       pos += 3;
     } else {
       frames.push(grid([hud, sky, trail + char + depan, panjat ? "🧗 Menanjak tebing…" : "🥾 Melangkah…"]));
@@ -66,16 +75,19 @@ function lintasanFrames(ctx) {
 }
 
 // ── cinematic DAKI SUKSES (diputar sebelum kartu hasil zona) ──
-// ctx: { level, zona, zonaNama, aksi, cuacaIcon, cuaca, events: [harta|kristal|npc|serangan], gua, gold, rombongan, risiko }
+// ctx: { level, zona, zonaNama, aksi, cuacaIcon, cuaca, events: [harta|kristal|npc|serangan], gua, gold,
+//        rombongan, risiko, country, gunungNama }
 export function dakiCinematic(ctx) {
+  const N = negaraOf(ctx.country);
+  const langitRow = N.langit.join("  ") + "  ⛺🔥";
   const scenes = [];
-  // SCENE 1 — BASECAMP grid: cek peralatan + jalur
+  // SCENE 1 — BASECAMP grid: negara + target gunung + cek peralatan + jalur
   scenes.push({ frames: [
-    grid(["🏕️ BASECAMP", "🌲  ⛺  🔥  🌲", "🎒🥾 ✓", QQ + "Cek tali… cek sepatu… SIAP!" + QQ]),
-    grid([(ctx.cuacaIcon || "☀️") + " CUACA: " + (ctx.cuaca || "cerah").toUpperCase(), "🌲 ⛺🔥 🌲", "➡️➜ " + (ctx.zonaNama || "ZONA BERIKUTNYA"), (ctx.risiko ? "⚡ Jalur RISIKO dilirik…" : "🛡️ Jalur aman dipilih…") + (ctx.rombongan ? "\n🤝 Rombongan ikut: loot +20%!" : "")]),
+    grid(["🏕️ BASECAMP " + N.emoji + " " + N.nama, langitRow, "🎒🥾 ✓", QQ + "Cek tali… cek sepatu… SIAP!" + QQ]),
+    grid([(ctx.cuacaIcon || "☀️") + " CUACA: " + (ctx.cuaca || "cerah").toUpperCase() + " · ⛰️ " + (ctx.gunungNama || "GUNUNG"), langitRow, "➡️➜ " + (ctx.zonaNama || "ZONA BERIKUTNYA"), (ctx.risiko ? "⚡ Jalur RISIKO dilirik…" : "🛡️ Jalur aman dipilih…") + (ctx.rombongan ? "\n🤝 Rombongan ikut: loot +20%!" : "")]),
   ], frameMs: fr(1), holdMs: fr(0.7) });
-  // SCENE 2 — GRID DAKI (durasi ∝ zona, rintangan zona 4+, panjat zona 6+)
-  scenes.push({ frames: lintasanFrames(ctx), frameMs: fr(0.9), holdMs: fr(0.6) });
+  // SCENE 2 — GRID DAKI (durasi ∝ SITUASI: zona/risiko/cuaca; rintangan zona 4+, panjat zona 6+)
+  scenes.push({ frames: lintasanFrames(ctx), frameMs: fr(1), holdMs: fr(0.7) });
   // SCENE 3 — event ekstra (tiap event = babak grid tambahan)
   for (const ev of (ctx.events || []).slice(0, 2)) {
     if (ev === "harta") scenes.push({ frames: [
@@ -103,7 +115,7 @@ export function dakiCinematic(ctx) {
   // SCENE 4 — hasil: zona capai + gold berdetak naik
   const g = Math.max(0, ctx.gold || 0);
   scenes.push({ frames: [
-    grid(["🏔️ " + (ctx.zonaNama || "ZONA") + " TERCAPAI!", "🌲 🏁 ✨", "💥 💪", "Zona " + (ctx.zona || 1) + "/8"]),
+    grid(["🏔️ " + (ctx.zonaNama || "ZONA") + " TERCAPAI! " + N.emoji, langitRow, "💥 💪", "Zona " + (ctx.zona || 1) + "/8"]),
     grid(["🪙 GOLD BERDETAK…", "+" + Math.floor(g / 3) + "…", "…"]),
     grid(["🪙 +" + g + " ✅", (ctx.aksi === "panjat" ? "🧗 Panjat berhasil!" : "🥾 Daki selesai!")]),
   ], frameMs: fr(0.95), holdMs: fr(0.9) });
@@ -111,27 +123,33 @@ export function dakiCinematic(ctx) {
 }
 
 // ── cinematic PUNCAK (momen paling megah — babak terbanyak & terlama, grid dramatis) ──
+// ctx: { gunungNama, puncak, gold, country }
 export function puncakCinematic(ctx) {
+  const N = negaraOf(ctx.country);
   const scenes = [];
   // SCENE 1: daki final malam menuju fajar — udara tipis
   scenes.push({ frames: [
-    grid(["🌑 DAKI FINAL — UDARA TIPIS", "⭐    🌑", "🧗 🪨🪨🪨🪨", "🫁… Napas pendek…"]),
+    grid(["🌑 DAKI FINAL — UDARA TIPIS " + N.emoji, "⭐    🌑", "🧗 🪨🪨🪨🪨", "🫁… Napas pendek…"]),
     grid(["🌑 JARI MEMBEKU", "⭐  🌑  ⭐", "🧗 🪨🪨🪨🪨", "Tarik… angkat… !!!"]),
+    grid(["🌬️ ANGIN MEMOTONG WAJAH", "⭐ 🌑 ⭐", "🧗 🪨🪨🪨", "Setiap langkah sewaktu sejam."]),
     grid(["🌓 BIBIR TEBING TERLIHAT…", "🌑 → 🌅", "🧗 🪨🪨🏁", "Kamu MELIHATNYA."]),
+    grid(["🪢 TALI TERAKHIR… TARIK!", "🌅  🪢", "🧗 🪨🏁", "Sebelas jari, satu tujuan."]),
     grid(["🌅 SEBENTAR LAGI…", "🌅  ⭐", "🧗 🪨🏁", "Tangan terakhir melampaui bibir tebing…"]),
   ], frameMs: fr(1.1), holdMs: fr(1) });
   // SCENE 2: bendera + matahari terbit (momen paling megah)
   scenes.push({ frames: [
-    grid(["🚩 BENDERA TERTANCAP!", "🌅 🚩 🏔️", "🧍 ✋", "Angin membawa namamu ke seluruh lembah."]),
-    grid(["🌅 MATAHARI TERBIT DI BAWAH KAKIMU", "🌅 ☀️ ☁️", "🏔️ 🚩 🧍", "Segalanya kecil, kecuali hatimu."]),
+    grid(["🚩 BENDERA TERTANCAP! " + N.emoji, "🌅 🚩 🏔️", "🧍 ✋", "Angin membawa namamu ke seluruh lembah."]),
+    grid(["🌅 MATAHARI TERBIT DI BAWAH KAKIMU", "🌅 ☀️ " + N.langit[0], "🏔️ 🚩 🧍", "Segalanya kecil, kecuali hatimu."]),
     grid(["✨ AWAN BERARAK MEMBERI JALAN", "☁️ ☁️ ☁️", "🏔️ 🚩 🧍", "Kamu berdiri di atap dunia."]),
-    grid(["🏆 " + (ctx.gunungNama || "PUNCAK") + " DITAKLUKKAN!", "🏔️ 🚩 ✨", "🧍 📸", "🏆 Puncak ke-" + (ctx.puncak || 1)]),
+    grid(["🌤️ LANGIT " + N.nama + " TERBUKA", N.langit.join("  ") + "  ☀️", "🏔️ 🚩 🧍", "Dari sini " + N.nama + " terlihat utuh."]),
+    grid(["🏆 " + (ctx.gunungNama || "PUNCAK") + " DITAKLUKKAN! " + N.emoji, "🏔️ 🚩 ✨", "🧍 📸", "🏆 Puncak ke-" + (ctx.puncak || 1)]),
   ], frameMs: fr(1.2), holdMs: fr(1.2) });
   // SCENE 3: selebrasi puncak
   scenes.push({ frames: [
     grid(["🎉 SELEBRASI!", "🎉 🎉 🎉", "🧍 ✋", "Seluruh lembah bersorak (katanya)."]),
     grid(["📸 FOTO DULU, PENDAKI!", "🏔️ 🧍 📸", "Baterai HP beku, kenangan abadi."]),
     grid(["😌 HENING PUNCAK", "🏔️", "🧍", "Kamu menikmatinya sendirian dulu."]),
+    grid(["🌄 PANORAMA 360°", N.langit.join("  ") + "  🏔️", "Semua arah adalah turunan."]),
   ], frameMs: fr(1), holdMs: fr(1) });
   // SCENE 4: hadiah puncak berdetak + status dramatis penutup
   const g = Math.max(0, ctx.gold || 0);
@@ -139,7 +157,7 @@ export function puncakCinematic(ctx) {
     grid(["🎁 HADIAH PUNCAK BERDETAK…", "🎁 ✨", "🪙 +" + Math.floor(g / 2) + "…"]),
     grid(["🎁 🪙 +" + g + " ✅ · 💎 +3 KRISTAL", "🪙 💎"]),
     grid(["♻️ PRESTASI MENANTI", "Gunung baru, cerita baru."]),
-    grid(["🏔️ LEGENDA BARU BERDIRI.", "🏆 ✨", "Pendakian selesai."]),
+    grid(["🏔️ LEGENDA BARU BERDIRI. " + N.emoji, "🏆 ✨", "Pendakian selesai."]),
   ], frameMs: fr(1.1), holdMs: fr(1.4) });
   return scenes;
 }
@@ -168,9 +186,10 @@ export function portirCinematic(ctx) {
 
 // ── cinematic BASECAMP MULAI (diputar saat user baru terdaftar) ──
 export function basecampCinematic(ctx) {
+  const N = negaraOf(ctx.country);
   return [
     { frames: [
-      grid(["🥾 SEBUAH PERJALANAN DIMULAI…", "⛰️ 🌲 🌲", "… 🥾 …", "Kaki melangkah ke kaki gunung."]),
+      grid(["🥾 SEBUAH PERJALANAN DIMULAI… " + N.emoji, "⛰️ 🌲 🌲", "… 🥾 …", "Kaki melangkah ke kaki gunung."]),
       grid(["🏕️ BASECAMP TIBA!", "🌲 ⛺ 🔥 🌲", "🧍 🎒", (ctx.gunungNama || "Gunung Legenda") + " menanti di atas sana."]),
     ], frameMs: fr(1), holdMs: fr(0.5) },
   ];

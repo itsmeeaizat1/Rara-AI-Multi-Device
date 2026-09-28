@@ -12,23 +12,23 @@
 
 | Game | Cmd | File animasi | Signature grid | Commit | E2E |
 |------|-----|--------------|----------------|--------|-----|
-| Gunung (pendakian) | `.mountainclimber` / `.gunung` | `src/lib/libanimationrpg/libmountainclimberrpg.js` | side-scroll daki, jejak ⬜, HUD zona/cuaca/oksigen, rintangan ⬆️, panjat 🧗 zona 6+, longsor 💥, puncak 🚩🏆 | `2bb8f752` | 90/90 |
+| Gunung (pendakian) | `.mountainclimber` / `.gunung` | `src/lib/libanimationrpg/libmountainclimberrpg.js` | OPEN-WORLD PER NEGARA 🇮🇩🇯🇵🇩🇪🇨🇳🌍 (beda negara beda langit/adegan/char), durasi ∝ SITUASI (zona+risiko+badai → lintasan 3+min(situasi,8) frame, tempo pelan), puncak paling megah + panorama negara, longsor 💥, 🚩🏆 | `6bd21677` | 93/93 |
 | Palung (selam) | `.trenchdiver` / `.palung` | `src/lib/libanimationrpg/libtrenchdiverrpg.js` | selam vertikal kolom, gelembung 🫧, HUD sonar ◎◉ + meter kedalaman, kolom makin ⬛ gelap, boss 🦑💥 | `5fbc0988` | 50/50 |
 | Menara seribu pintu | `.thousanddoortower` / `.menara` | `src/lib/libanimationrpg/libthousanddoortowerrpg.js` | grid kepingan 🧩 0→6, adegan tema per dunia, gembok 🔒→🔓→🚪✨, boss 🧙⚡ gembok ganda | `48b4e090` | 47/47 |
 | Detektif | `.masterdetective` / `.sangdetektif` | `src/lib/libanimationrpg/libmasterdetectiverpg.js` | grid siram lokasi, adegan kota 🏙️ vs interior 🕯️, impact 💥 temu / 🔒 lockbox | `d1a83ccf` | 57/57 |
 | Adventure | `.adventure` | `src/lib/libanimationrpg/libadventurerpg.js` | grid peta kompas, arah 🧭 berputar, adegan 🗺️ per langkah, akhir ✨ TIBA | `ff7e8e58` | 10/10 |
 | Berburu | `.huntingadventure` / `.berburu` | `src/lib/libanimationrpg/libhuntingadventurerpg.js` | grid crosshair 🎯 merayap ke jejak 🐾, adegan rimba intens, terkunci 💥 | `2fe2b4b2` | 11/11 |
 | Gacha item | `.gachaitem` | `src/lib/libanimationrpg/libgachaitemrpg.js` | grid slot 3-reel, kunci terpisah 🔒/🔄, adegan mesin makin tegang | `0441bba0` | 36/36 |
+| Gacha waifu | `.gachawaifu` | `src/lib/libanimationrpg/libgachawaifurpg.js` | grid kapsul 6 fase, adegan 💫→⬇️→💦→✨→🎆→💗, reveal 💞 | `8e21f249` | 9/9 |
+| Tunggangan | `.mount` | `src/lib/libanimationrpg/libmountrpg.js` | grid kandang, adegan padang 🏞️ vs kandang 🏠, 💞 jinak / 💛 kenyang | `60e6efbc` | 20/20 |
+| Guild war | `.guildwar` | `src/lib/libanimationrpg/libguildwarrpg.js` | grid pasukan mendekat, adegan medan 🏔️→🥁→🔥→💥🌪️, victory 📣→🎊→🎉 | `1d8d5026` | 67/67 |
 
 ## 🟨 Punya animasi cinematic (belum gaya grid) — ANTREAN UPGRADE
 
 | # | Game | Cmd | File animasi | Animasi sekarang |
 |---|------|-----|--------------|-------------------|
-| 1 | Gacha waifu | `.gachawaifu` | `libgachawaifurpg.js` | 🥚 kapsul jatuh-retak-terbuka |
-| 2 | Tunggangan | `.mount` | `libmountrpg.js` | 🐎 berjalan padang 🌾 / feed 🥕 |
-| 3 | Guild war | `.guildwar` | `libguildwarrpg.js` | battle antar grup |
-| 4 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
-| 5 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
+| 1 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
+| 2 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
 
 ## ⬜ Game RPG belum punya animasi — antrean animasi baru (langsung gaya grid)
 
