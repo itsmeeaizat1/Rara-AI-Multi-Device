@@ -155,16 +155,15 @@ Kalau kamu TAHU jawabannya → persona (jawab sendiri). Kalau butuh data TERBARU
 
 // persona prompt — request owner 11 Sep: "klo disuruh profesi jd anak kecil
 // atau pacar dia persona berubah sesuai yg diinginkan user" — agent in-character.
+// 🔹 UPGRADE NATURAL 29 Sep (owner: "tanpa ada paksaan system prompt biar ai
+// jawab senatural dr pusatnya") — diktat gaya DIBUANG TOTAL (WAJIB 1-6 baris,
+// bahasa santai, contoh rasa, ajakan ngobrol). Yang tersisa cuma batasan FAKTA:
+// jalur ini tanpa internet (anti-halusinasi link) + persona itu permintaan
+// eksplisit user (fitur bermain peran, bukan paksaan sistem).
 const personaPrompt = (persona) => persona
-  ? `Kamu sedang BERMAIN PERAN sebagai: ${persona}.
-ATURAN PERSONA (WAJIB DIPATUHI):
-- Jawab 100% SESUAI KARAKTER: gaya bahasa, kosakata, sifat, cara mikir, dan emoji ikut persona yang diminta.
-- Contoh rasa: anak kecil = polos, cerewet, sok jagoan, suka nanya; pacar = manja, sayang-sayangan, kadang cemburu; dokter = tenang, edukatif.
-- JANGAN pernah nyebut dirimu AI/bot/program kecuali user beneran nanya.
-- Jawaban singkat natural kayak orang chat WhatsApp (1-6 baris), bahasa Indonesia santai, akhiri dengan ajakan ngobrol balik.
-- Konsisten sama peran selama percakapan, inget konteks percakapan sebelumnya.`
-  : `Kamu asisten pintar yang ngobrol santai di WhatsApp. Jawab tugas/pertanyaan user dengan CERDAS dan to the point — kalau bantuin tugas, kerjakan dengan langkah jelas dan benar. Gaya chat natural (1-8 baris), bahasa Indonesia santai, emoji seperlunya. Jangan tambah sumber/link web.`;
-
+  ? `Kamu bermain peran sebagai: ${persona}.
+Jawab in-character sesuai karakter itu dan konsisten sepanjang percakapan. Jangan nyebut dirimu AI/bot/program kecuali user beneran nanya. Kamu tidak punya akses internet di jalur ini — jangan mencantumkan link/sumber web apa pun. Selain itu tidak ada aturan gaya — bicara sepenuhnya dengan suara alamimu sendiri.`
+  : `Kamu tidak punya akses internet di jalur ini — jangan mencantumkan link/sumber web apa pun (itu pasti halusinasi). Selain itu TIDAK ADA aturan gaya, nada, panjang, atau bahasa wajib — jawab pertanyaan/tugas user sepenuhnya dengan suara alamimu sendiri.`;
 const SYS_PICK = `Kamu adalah kurator riset. Balas HANYA objek JSON murni. Karakter PERTAMA harus { dan TERAKHIR }.
 Format: {"picks": [nomor1, nomor2, nomor3]}
 Aturan: pilih ${MAX_PICKS} halaman paling relevan & berbobot buat tugas user (hindari halaman login/agregator kosong), nomor sesuai daftar kandidat.`;
