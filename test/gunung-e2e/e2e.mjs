@@ -267,8 +267,9 @@ const animSock = { sendMessage: async (jid, content) => {
 U().zona = 1; U().stamina = 10; U().oksigen = 2; U().puncak = 13; U().country = "dunia"; U().guaPending = false;
 plug._setRandForTest(() => 0.99); // tanpa longsor/event/gua → daki bersih
 await handler(mkMsg({ args: ["daki", "aman"] }), { sock: animSock, config: {} });
-// zona 1 → 2: SCENE basecamp 2 + lintasan (3+2=5) + hasil 3 = 10 frame → 9 edit
-t("16a. daki: cinematic DIKIRIM lalu DIEDIT berulang (10 frame = 9 edit)", animFrames.length === 9, animFrames.length);
+// zona 1 → 2, rand 0.99 → cuaca BADAI: situasi = zona 2 + badai 1 = 3 → lintasan 3+3=6
+// SCENE basecamp 2 + lintasan 6 + hasil 3 = 11 frame → 10 edit
+t("16a. daki: cinematic DIKIRIM lalu DIEDIT berulang (11 frame = 10 edit)", animFrames.length === 10, animFrames.length);
 t("16b. semua frame pakai key edit yang sama (edit: true)", animFrames.length > 0 && animFrames.every((f) => f.edit === true));
 t("16c. frame: code fence monospace", animFrames.every((f) => f.text.includes("```")));
 t("16c2. lintasan daki: karakter melintas + jejak ⬜ makin panjang (khas gunung)", (() => {
@@ -310,6 +311,23 @@ t("16l. longsor grid dramatik: impact 💥 + status ⬇️ zona", (() => {
   return f.some((x) => x.includes("💥")) && f.some((x) => x.includes("⬇️ TURUN KE ZONA 3"));
 })());
 t("16m. puncak grid megah: bendera 🚩 + status 🏆", (() => {
+// ── OPEN WORLD: beda negara beda animasi + situasi menentukan level animasi (owner 28 Sep) ──
+t("16n. beda negara beda animasi: langit 🇮🇩 🌴🌋 vs 🇯🇵 🌸🗻", (() => {
+  const base = { zona: 2, zonaNama: "Zona Kabut", cuaca: "cerah", events: [], gold: 60 };
+  const fId = animLib.dakiCinematic({ ...base, country: "indonesia" }).flatMap((x) => x.frames.map(String)).join("|");
+  const fJp = animLib.dakiCinematic({ ...base, country: "jepang" }).flatMap((x) => x.frames.map(String)).join("|");
+  return fId.includes("\u{1F1EE}\u{1F1E9}") && fJp.includes("\u{1F1EF}\u{1F1F5}") && fJp.includes("\u{1F338}") && fId.includes("\u{1F334}") && fId !== fJp;
+})());
+t("16o. situasi menentukan level animasi: zona 8 badai-es + risiko → lintasan 11 frame", (() => {
+  const lint = (sc) => sc[1].frames.length;
+  const tenang = animLib.dakiCinematic({ zona: 2, zonaNama: "Z2", cuaca: "cerah", events: [], gold: 60 });
+  const ekstrem = animLib.dakiCinematic({ zona: 8, zonaNama: "Z8", cuaca: "badai-es", risiko: true, events: [], gold: 400 });
+  return lint(ekstrem) === 11 && lint(ekstrem) > lint(tenang) && lint(tenang) === 5;
+})(), animLib.dakiCinematic({ zona: 8, zonaNama: "Z8", cuaca: "badai-es", risiko: true, events: [], gold: 400 })[1].frames.length);
+t("16p. puncak kenal negara: 🇯🇵 + nama gunung tampil", (() => {
+  const f = animLib.puncakCinematic({ country: "jepang", gunungNama: "Gunung Fuji", puncak: 2, gold: 3000 }).flatMap((x) => x.frames.map(String));
+  return f.some((x) => x.includes("\u{1F1EF}\u{1F1F5}")) && f.some((x) => x.includes("Gunung Fuji"));
+})());
   const sc = animLib.puncakCinematic({ gunungNama: "Gunung Fuji", puncak: 2, gold: 3000 });
   const f = sc.flatMap((x) => x.frames.map(String));
   return f.some((x) => x.includes("🚩")) && f.some((x) => x.includes("DITAKLUKKAN")) && f.some((x) => x.includes("🏆"));

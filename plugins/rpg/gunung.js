@@ -532,7 +532,7 @@ async function handler(m, { sock, config }) {
       const summitGold = 2500 + u.puncak * 250;
       addCash(m, summitGold);
       saveDb();
-      await playGunungCinematic(sock, m.chat, puncakCinematic({ gunungNama: u.gunung, puncak: u.puncak, gold: summitGold }));
+      await playGunungCinematic(sock, m.chat, puncakCinematic({ gunungNama: u.gunung, puncak: u.puncak, gold: summitGold, country: u.country }));
       console.log(`[gunung] ${m.sender} PUNCAK! ${u.gunung} (#${u.puncak})`);
       return m.reply(novaGameBox({
         title: "gunung", icon: "🏔️",
@@ -562,6 +562,7 @@ async function handler(m, { sock, config }) {
       cuacaIcon: CUACA_ICON[cuaca], cuaca,
       events: extraEvents.map((e) => e.t), gua,
       gold: goldGain, rombongan, risiko,
+      country: u.country, gunungNama: u.gunung,
     }));
 
     return m.reply(novaGameBox({
@@ -598,7 +599,7 @@ async function handler(m, { sock, config }) {
     addCash(m, 50);
     saveDb();
     if (m.react) { try { await m.react("🧠"); } catch (e) { console.error("[gunung] react gagal:", e); } }
-    await playGunungCinematic(sock, m.chat, basecampCinematic({ gunungNama: u.gunung }));
+    await playGunungCinematic(sock, m.chat, basecampCinematic({ gunungNama: u.gunung, country: u.country }));
     return m.reply(novaGameBox({
       title: "gunung", icon: "🏔️",
       flavor: "🏔️ *SELAMAT DATANG DI PENDAKIAN GUNUNG LEGENDA!*",
