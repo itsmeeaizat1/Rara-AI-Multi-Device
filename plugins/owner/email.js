@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .email — kirim & baca email langsung dari WhatsApp (SMTP + IMAP). OWNER-ONLY.
 import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { setEmailConfig, setEmailHosts, getEmailConfig, clearEmailConfig, sendEmail, readEmails, validateEmailAddr } from "../../src/lib/nova-email.js";
+import { setEmailConfig, setEmailHosts, getEmailConfig, clearEmailConfig, sendEmail, readEmails, validateEmailAddr } from "../../src/lib/nova-emailbot.js";
 
 const pluginConfig = {
   name: "email",
