@@ -154,7 +154,7 @@ ${list}
     const SCW = 10;
     const target = 3 + Math.floor(Math.random() * 4);
     // 🎬 animasi dimuat dari lib libhuntingadventurerpg.js (crosshair 🎯 merayap ke sasaran)
-    const scopeOk = await playScopeAnim(sock, m.chat, { monsterName: monster.name });
+    const scopeOk = await playScopeAnim(sock, m.chat, { monsterName: monster.name, rare: monster.rare === true });
     if (!scopeOk) await animHuntTrack(m, sock, monster.name);
     await m.reply(`🎯 Ditemukan *${monster.name}* di ${zone.name}!\n⚔️ Bersiap bertarung...`);
     // FASE 2: MEMANAH — bidik, tarik tali, lepas
