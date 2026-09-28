@@ -12,6 +12,7 @@ console.log("─── HIAI e2e ───");
 const mcp = await import("../../src/lib/hiroai/mcp.js");
 ok("engine mcp ke-import", typeof mcp.runAgent === "function");
 ok("API runAgent/resetSession/listTools/countTools/setContext ada", ["runAgent","resetSession","listTools","countTools","setContext","MODELS","getApiKeys"].every((k) => k in mcp));
+ok("getApiKeys balikin array (apikeys.json hiai + env AI_KEYS gabungan)", Array.isArray(mcp.getApiKeys()));
 ok("MODELS ada isinya", mcp.MODELS && Object.keys(mcp.MODELS).length > 0, JSON.stringify(Object.keys(mcp.MODELS || {})));
 
 // 2. runAgent duluo (loader tools jalan lewat runAgent) — tanpa API key → jujur gak ngelempar

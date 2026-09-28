@@ -631,6 +631,7 @@ const axios = {
 };
 import db from './hiro-db.js';
 import { matchParticipant } from './hiro-shim.js';
+import { getApiKeys as getNovaApiKeys } from '../config/env-loader.js';
 
 // ── SHIM NOVA: global Hiro gak ada di Nova — sediakan default aman ──
 if (!global.settings) global.settings = { botname: 'Nova AI', owner: [], prefix: '.', ai: {}, timezone: 'Asia/Jakarta' };
@@ -830,7 +831,15 @@ async function withSenderLock(jid, fn) {
     }
 }
 export function getApiKeys() {
-    const envRaw = process.env.AI_KEYS || '';
+    let envRaw = process.env.AI_KEYS || '';
+    try {
+        const novaKeys = getNovaApiKeys();
+        const val = novaKeys.hiai || novaKeys.hiroai || '';
+        if (val) {
+            const joined = Array.isArray(val) ? val.join(',') : String(val);
+            envRaw = envRaw ? `${envRaw},${joined}` : joined;
+        }
+    } catch (_) {}
     if (!envRaw)
         return [];
     let str = String(envRaw).trim();
