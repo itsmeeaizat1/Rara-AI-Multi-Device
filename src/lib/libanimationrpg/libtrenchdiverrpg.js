@@ -27,13 +27,21 @@ export async function playTrenchdiverCinematic(sock, jid, scenes) {
 }
 
 // ── SCENE signature: SELAM VERTIKAL grid — penyelam turun kolom kedalaman (khas palung — BEDA dari semua game) ──
-// durasi nyesuaikan: makin dalam zona makin panjang babaknya (3 + min(zona,4) frame).
+// DURASI ∝ SITUASI (owner 28 Sep: "jangan buru-buru, situasi menentukan level"): level animasi =
+//   zona + jalur risiko(+1) + bahaya(+1) → steps = 3 + min(situasi, 6). Zona 1 aman = 4 frame,
+//   Hadal risiko + bahaya = 9 frame. Tempo: aman pelan fr(1.0) · risiko NEBUT fr(0.7) (khas palung).
+//   Beda kondisi beda HUD: zona 3+ wajib lampu 🔦 · zona 4 (Hadal) tambah tabung ganda 🫁🫁.
 // Grid 4 baris: HUD sonar+kedalaman · kolom (🫧 di atas 🤿) · baris gelap makin tebal · status.
 function selamFrames(ctx) {
   const zTile = ctx.zonaTile || "🌊";
   const zNama = (ctx.zonaNama || "ZONA").toUpperCase();
   const sonar = ["◎", "◉", "◎", "○"];
-  const steps = 3 + Math.min(ctx.zona || 1, 4);
+  const zona = ctx.zona || 1;
+  // SITUASI MENENTUKAN LEVEL ANIMASI: zona + risiko + bahaya (bukan zona doang)
+  const situasi = zona + (ctx.jalur === "risiko" ? 1 : 0) + (ctx.bahaya ? 1 : 0);
+  const steps = 3 + Math.min(situasi, 6);
+  // beda kondisi beda HUD: zona 3+ wajib lampu, Hadal tambah tabung ganda
+  const peralatan = (zona >= 3 ? " · 🔦" : "") + (zona >= 4 ? " 🫁🫁" : "");
   const frames = [];
   for (let f = 1; f <= steps; f++) {
     const pos = Math.min(10, f * 2);
@@ -42,7 +50,7 @@ function selamFrames(ctx) {
     const gelap = Math.min(8, Math.floor(pos / 2)); // makin dalam makin gelap (situasional)
     const dark = "⬛".repeat(gelap) + zTile.repeat(Math.max(0, 10 - gelap));
     const status = pos >= 8 ? "💎 Dasar kedalaman terlihat…" : (ctx.jalur === "risiko" ? "⚡ Ngebut menuruni kolom…" : "🫁 Pelan-pelan turun…");
-    frames.push(grid([sonar[f % sonar.length] + " SONAR · " + zNama + " · " + (pos * 250) + "m", col.join(""), dark, status]));
+    frames.push(grid([sonar[f % sonar.length] + " SONAR · " + zNama + " · " + (pos * 250) + "m" + peralatan, col.join(""), dark, status]));
   }
   return frames;
 }
@@ -57,7 +65,7 @@ export function selamCinematic(ctx) {
     grid([(ctx.jalur === "risiko" ? "⚡ JALUR RISIKO DIPILIH" : "🛟 JALUR AMAN DIPILIH"), "🌊🌊🌊🌊🌊🌊🌊🌊🌊🌊", "🤿 ➡️ 🌊", ctx.jalur === "risiko" ? "Loot ×2… bahaya 35% menanti." : "Tenang, pelan-pelan saja."]),
   ], frameMs: fr(1), holdMs: fr(0.7) });
   // SCENE 2 — selam vertikal grid (durasi ∝ zona; risiko ngebut)
-  scenes.push({ frames: selamFrames(ctx), frameMs: ctx.jalur === "risiko" ? fr(0.7) : fr(0.95), holdMs: fr(0.6) });
+  scenes.push({ frames: selamFrames(ctx), frameMs: ctx.jalur === "risiko" ? fr(0.7) : fr(1.0), holdMs: fr(0.7) });
   // SCENE 3 — bahaya (versi pelampung selamat / kena) — grid impact
   if (ctx.bahaya) {
     scenes.push(ctx.selamat ? { frames: [

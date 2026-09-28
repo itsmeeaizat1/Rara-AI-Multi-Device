@@ -164,6 +164,18 @@ t("Cl. grid emoji: frame selam 4 baris (HUD · kolom · gelap · status)", (() =
   const f = animLib2.selamCinematic({ zona: 3, zonaNama: "Zona Gelap", zonaTile: "🌑", jalur: "risiko", bahaya: true, selamat: true, event: "hiu", loot: 200, boss: false }).flatMap((x) => x.frames.map(String));
   return f.every((x) => x.includes("```")) && f.some((x) => (x.match(/\n/g) || []).length >= 5);
 })());
+t("Co. situasi menentukan level animasi: Hadal risiko+bahaya → 9 frame selam vs zona 1 aman 4", (() => {
+  const lint = (sc) => sc[1].frames.length;
+  const aman = animLib2.selamCinematic({ zona: 1, zonaNama: "Zona Cahaya", zonaTile: "\u{1F30A}", jalur: "aman", bahaya: false, selamat: false, event: null, loot: 40, boss: false });
+  const ekstrem = animLib2.selamCinematic({ zona: 4, zonaNama: "Zona Hadal", zonaTile: "\u{2B1B}", jalur: "risiko", bahaya: true, selamat: true, event: null, loot: 300, boss: false });
+  return lint(ekstrem) === 9 && lint(aman) === 4;
+})());
+t("Cp. beda kondisi beda HUD: zona 3+ wajib lampu 🔦, zona 4 tabung ganda 🫁🫁", (() => {
+  const f3 = animLib2.selamCinematic({ zona: 3, zonaNama: "Zona Gelap", zonaTile: "\u{1F311}", jalur: "aman", bahaya: false, selamat: false, event: null, loot: 100, boss: false }).flatMap((x) => x.frames.map(String));
+  const f4 = animLib2.selamCinematic({ zona: 4, zonaNama: "Zona Hadal", zonaTile: "\u{2B1B}", jalur: "aman", bahaya: false, selamat: false, event: null, loot: 100, boss: false }).flatMap((x) => x.frames.map(String));
+  const f1 = animLib2.selamCinematic({ zona: 1, zonaNama: "Zona Cahaya", zonaTile: "\u{1F30A}", jalur: "aman", bahaya: false, selamat: false, event: null, loot: 100, boss: false }).flatMap((x) => x.frames.map(String));
+  return f3.some((x) => x.includes("\u{1F526}")) && f4.some((x) => x.includes("\u{1FAC1}\u{1FAC1}")) && !f1.some((x) => x.includes("\u{1F526}"));
+})());
 t("Cm. grid situasional: kolom makin gelap saat turun (⬛)", (() => {
   const f = animLib2.selamCinematic({ zona: 1, zonaNama: "Zona Cahaya", zonaTile: "🌊", jalur: "aman", bahaya: false, selamat: false, event: null, loot: 40, boss: false }).flatMap((x) => x.frames.map(String));
   return f.some((x) => x.includes("⬛"));
