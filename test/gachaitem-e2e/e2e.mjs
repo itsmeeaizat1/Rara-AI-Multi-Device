@@ -16,6 +16,21 @@ let pass = 0, fail = 0;
 const t = (name, cond, extra) => { if (cond) pass++; else { fail++; console.log("  ❌ " + name + (extra ? " → " + String(extra).slice(0, 170) : "")); } };
 
 const dbDir = path.join(process.cwd(), "test", "gachaitem-e2e", "db-tmp");
+console.log("— section 11: animasi slot grid (lib langsung) —");
+const slotLib = await import(R + "/src/lib/libanimationrpg/libgachaitemrpg.js");
+const SF = slotLib.slotFrames(["✨", "🌟", "💎", "🔮", "🏆", "🌈"]);
+t("11a. 10 frame + semua code fence + grid 4 baris", SF.length === 10 && SF.every((x) => x.startsWith("```") && (x.match(/\n/g) || []).length >= 5), SF[0]);
+t("11b. reel terkunci PROGRESIF: 0 → 1 → 2 → 3 (tiap 3 frame)", (() => {
+  const locksOf = (x) => (x.split("\n")[3].match(/🔒/g) || []).length;
+  return locksOf(SF[0]) === 0 && locksOf(SF[3]) === 1 && locksOf(SF[6]) === 2 && locksOf(SF[9]) === 3;
+})(), SF.map((x) => (x.split("\n")[3].match(/🔒/g) || []).length).join(","));
+t("11c. baris kunci 🔒/🔄 tampil terpisah dari reel", SF.every((x) => /🔒|🔄/.test(x.split("\n")[3])), SF[0].split("\n")[3]);
+t("11d. adegan mesin kontekstual makin tegang + akhir REEL BERHENTI", SF[2].includes("Lever") && SF[9].includes("REEL BERHENTI"), SF[2]);
+t("11e. ikon reel dari ctx dipakai di frame", (() => {
+  const all = SF.join("");
+  return ["✨", "🌟", "💎", "🔮", "🏆", "🌈"].every((i) => all.includes(i));
+})());
+
 fs.rmSync(dbDir, { recursive: true, force: true });
 await initDatabase(dbDir);
 
