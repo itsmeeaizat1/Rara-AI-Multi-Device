@@ -4,39 +4,37 @@
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-24.0.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1900%2B-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Version-24.2.8-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Total_Plugin-2050%2B-blue?style=flat-square&logo=fire">
   <img src="https://img.shields.io/badge/Total_Command-6700%2B-blueviolet?style=flat-square&logo=terminal">
   <img src="https://img.shields.io/badge/Kategori-51-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Downloader-59-yellow?style=flat-square&logo=download">
-  <img src="https://img.shields.io/badge/RPG_Game-242-ff69b4?style=flat-square&logo=target">
-  <img src="https://img.shields.io/badge/AI_Plugin-213-9cf?style=flat-square&logo=ai">
+  <img src="https://img.shields.io/badge/RPG_Game-255-ff69b4?style=flat-square&logo=target">
+  <img src="https://img.shields.io/badge/AI_Plugin-218-9cf?style=flat-square&logo=ai">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
-  <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
+  <a href="https://www.npmjs.com/package/itsmeeaizat-bailey"><img src="https://img.shields.io/badge/Baileys-itsmeeaizat--bailey%401.0.5-blue?style=flat-square&logo=whatsapp&logoColor=white"></a>
 </p>
 
 ---
 
 Build:
-![Bot Run](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/bot-run.yaml/badge.svg)
-![Bot Prepare Check](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/bot-prepare-check.yaml/badge.svg)
+![Bot Prepare Check](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/bot-prepare-check.yaml/badge.svg)
 
 Deploy:
-![Auto Deploy](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Auto-Deploy-to-Panel-&-VPS.yaml/badge.svg)
-![Release Zip](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/release-zip.yaml/badge.svg)
-![Auto Clean Session](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Auto-Clean-Session-Cache.yaml/badge.svg)
+![Auto Deploy](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/auto-deploy.yaml/badge.svg)
+![Release Zip](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/release-zip.yaml/badge.svg)
+![Auto Clean Session](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/Auto-Clean-Session-Cache.yaml/badge.svg)
 
 Code Quality:
-![Syntax Scanner](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/syntax-error-scanner.yaml/badge.svg)
-![ESLint Auto Fix](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/github_workflows_EslintAutoFix.yaml/badge.svg)
-![CodeQL](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/codeql.yaml/badge.svg)
+![Syntax Scanner](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/syntax-error-scanner.yaml/badge.svg)
+![ESLint Auto Fix](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/eslint-autofix.yaml/badge.svg)
+![CodeQL](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/codeql.yaml/badge.svg)
 
 Automation:
-![Keep Alive](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/keep-alive.yaml/badge.svg)
-![Auto Sync](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/auto-sync.yaml/badge.svg)
-![Feature Notifier](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Feature-notifier.yaml/badge.svg)
-![Update Badge](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Update-badge.yaml/badge.svg)
-![Main](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/main.yml/badge.svg)
+![Keep Alive](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/keep-alive.yaml/badge.svg)
+![Auto Sync](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/auto-sync.yaml/badge.svg)
+![Feature Notifier](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/Feature-notifier.yaml/badge.svg)
+![Update Badge](https://github.com/itsmeeaizat1/Nova-AI-Multi-Device/actions/workflows/Update-badge.yaml/badge.svg)
 
 
 <!--START_SECTION:latest-update-->
@@ -46,17 +44,25 @@ Automation:
 
 ---
 
-## ✨ Fitur Unggulan v24.0.0
+## ✨ Fitur Unggulan v24.2.8
 
 Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buatan, otomasi realtime, sistem RPG yang dalam, dan ratusan utilitas produktivitas dalam satu bot — semuanya bisa dipakai langsung dari chat.
 
 ### 🆕 Fitur Terbaru
 
+- **4.727 Skill untuk AI Agent** — katalog skill terbesar hasil integrasi skills.sh, dicocokkan otomatis ke prompt agent sesuai tugas; owner bisa eksplorasi via `.skill`.
+- **Guild War & Time Capsule RPG** — battle antar grup dengan pot taruhan, hadiah MVP, plus event dunia sekali-terjadi (komet, world boss, festival) yang tidak bisa diulang.
+- **Order Nokos (5SIM)** — beli nomor virtual WA/TG/GG/TT: stok live, monitoring OTP, auto-refund, dan pembatalan otomatis.
+- **Porting Penuh Fitur HIROBOT** — `.aicard` kartu GenAI, `.hiai` AI agent MCP 46 tool (owner), `.voipcall` telepon/video call (owner), `.webpanel` web dashboard, plus 10 fitur unik Hiro lainnya.
+- **Baileys Milik Sendiri** — kini berjalan di fork npm `itsmeeaizat-bailey`: WhatsApp Web 2.3000.1047970367 dan guard anti-crash logger saat reconnect.
+- **Sistem Approve Premium Manual** — `.buyprem` membuat pending record, owner konfirmasi via `.approveprem`, status premium ter-apply otomatis.
+- **Bot Doctor** — health monitoring internal: sampel performa tiap 20 detik, deteksi memory leak & latency spike, laporan diagnostik berkala.
+
 - **Animasi Sinematik per Game** — setiap game kini punya animasi khasnya sendiri yang dimuat dari pustaka animasi terpusat: pendakian gunung dengan runner side-scrolling, selam palung vertikal, slot gacha tiga reel, peta kompas petualangan, hingga cutscene masak multi-babak ala game konsul. Durasi animasi menyesuaikan situasi permainan.
 - **Warung Tycoon** — game simulasi usaha kuliner: masak resep, kelola rating warung, dan gacha resep rahasia dengan cutscene sinematik.
 - **22 Tool Native Offline** — rangkaian konverter dan utilitas teks (JWT, ROT13, UUID, slug, statistik teks, penomoran, dan lainnya) yang berjalan sepenuhnya lokal tanpa API pihak ketiga — cepat, gratis, tanpa limit.
 - **10 Game Baru** — Wordle harian deterministik, 2048, Connect Four lawan AI, sliding puzzle yang dijamin bisa diselesaikan, Minesweeper dengan klik pertama aman, kuis emoji, serta empat game arcade (Snake, Tetris, Dino Run, Pong) yang dikirim sebagai file HTML mandiri dan dimainkan langsung di browser HP.
-- **AI Agent Cerdas** — agen AI dengan 183 keterampilan, loop kerja iteratif (rencana → kerja → kritik diri → koreksi), memori jangka panjang per pengguna, dan sistem izin akses yang menghormati level member, premium, dan owner.
+- **AI Agent Cerdas** — agen AI dengan 4.727 keterampilan (katalog skills.sh), loop kerja iteratif (rencana → kerja → kritik diri → koreksi), memori jangka panjang per pengguna, dan sistem izin akses yang menghormati level member, premium, dan owner.
 - **Daily Briefing** — kartu ringkasan pagi hari berisi cuaca, gempa terkini, jadwal tim favorit, agenda pengingat, saldo RPG, dan catatan pribadi, dikirim otomatis sesuai jam yang diatur.
 - **Pencarian Tempat + Pin Lokasi** — hasil pencarian tempat lengkap dengan ringkasan, ulasan, jam buka, tangkapan layar, dan pin lokasi asli WhatsApp.
 - **Peringatan Dini Realtime** — gempa multi-provider (BMKG, USGS, JMA, EMSC), cuaca ekstrem, dan peringatan tsunami dengan estimasi guncangan tiba.
@@ -85,7 +91,7 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | Keamanan & Moderasi | Anti-link, antispam, antitoxic, kick/welcome otomatis, limit tiered, dan gate akses premium/owner |
 | Panel & Server | Hirarki panel Owner > CEO > Reseller, jadibot multi-session, monitoring VPS, backup otomatis ke Drive, dan auto-deploy GitHub Actions |
 
-> Daftar command lengkap dengan cara pakainya tersedia langsung di bot melalui menu all-menu yang terbagi 53 kategori.
+> Daftar command lengkap dengan cara pakainya tersedia langsung di bot melalui menu all-menu yang terbagi 51 kategori.
 
 ---
 
@@ -93,17 +99,17 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.999 (1.990 dengan command aktif) |
+| Total Plugin | 2.050 |
 | Total Command | 6.760 (1.990 utama + 4.770 alias) |
 | Kategori | 51 |
-| RPG Module | 242 (158 rpg + 9 couple + 75 game) |
-| AI Plugin | 213 (159 ai + 47 ai image + 7 ai agent) |
+| RPG Module | 255 (161 rpg + 17 couple + 77 game) + 4 arcade HTML |
+| AI Plugin | 218 (163 ai + 47 ai image + 8 ai agent) |
 | AI Model | 34 |
 | Downloader | 59 |
 | Education | 25 |
 | Panel Pterodactyl | 100 slot (28 plugin kontrol) |
 | Convert Plugin | 34 |
-| Tools Plugin | 217 |
+| Tools Plugin | 227 |
 | Notifier Otomatis | 9 (cuaca, sholat, bmkg, anime, movie, jadwalbola, web, crypto, loker) |
 | Browser Plugin | 13 |
 | Menu Variasi | 6 |
@@ -115,6 +121,7 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | Adzan Layer | 3 |
 | Saluran Event | 8 |
 | API Endpoint | 700+ (lihat list api.md) |
+| Agent Skill | 4.727 (integrasi skills.sh) |
 
 ## 📝 Command Penting
 
@@ -122,9 +129,9 @@ Command yang paling sering dipakai sehari-hari:
 
 | Command | Fungsi |
 |---------|--------|
-| `.menu` / `.allmenu` | Navigasi: menu ringkas & daftar lengkap 53 kategori |
+| `.menu` / `.allmenu` | Navigasi: menu ringkas & daftar lengkap 51 kategori |
 | `.switch` | On/off semua fitur terpusat (per fitur / bulk / master, grup & saluran) |
-| `.aisuperagent` / `.novaagent` | AI agent: tugas multi-langkah, 183 skill, ingat pengguna |
+| `.aisuperagent` / `.novaagent` | AI agent: tugas multi-langkah, 4.727 skill, ingat pengguna |
 | `.aihelp` | Tanya AI cara pakai command mana pun |
 | `.sticker` | Buat stiker dari foto/video/gambar |
 | `.ytmp3` / `.ytmp4` / `.aio` | Download YouTube & auto-detect platform apa pun |
@@ -164,8 +171,8 @@ Command yang paling sering dipakai sehari-hari:
 **Termux / VPS:**
 
 ```bash
-git clone https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device.git
-cd Nova-Ai-Whatsapp-Bot-Multi-Device
+git clone https://github.com/itsmeeaizat1/Nova-AI-Multi-Device.git
+cd Nova-AI-Multi-Device
 npm install
 npm start
 ```
@@ -195,7 +202,7 @@ Tekan enter tanpa mengisi nomor untuk mode QR Code.
 
 ### 3. Mulai Pakai
 
-- Ketik `.menu` di chat untuk lihat semua fitur, atau `.allmenu` untuk daftar lengkap 53 kategori
+- Ketik `.menu` di chat untuk lihat semua fitur, atau `.allmenu` untuk daftar lengkap 51 kategori
 - `.switch` untuk menyalakan/mematikan fitur sesuai kebutuhan grup
 - `.setkey <provider> <key>` atau `.ai-set apiKey <key>` untuk pasang API key tanpa edit kode
 - `.owner` kalau butuh bantuan langsung
@@ -231,7 +238,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 <p align="center">
   <a href="https://www.tiktok.com/@itsmee_aizat"><img src="https://img.shields.io/badge/TikTok-@itsmee_aizat-black?style=flat-square&logo=tiktok&logoColor=white"></a>
   <a href="https://www.instagram.com"><img src="https://img.shields.io/badge/Instagram-@itsmee_aizat-E4405F?style=flat-square&logo=instagram&logoColor=white"></a>
-  <a href="https://github.com/itsmeeaizat"><img src="https://img.shields.io/badge/GitHub-itsmeeaizat-181717?style=flat-square&logo=github&logoColor=white"></a>
+  <a href="https://github.com/itsmeeaizat1"><img src="https://img.shields.io/badge/GitHub-itsmeeaizat1-181717?style=flat-square&logo=github&logoColor=white"></a>
 </p>
 
 <div align="center">
@@ -306,7 +313,7 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 
 ## 📄 License
 
-Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat)  
+Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat1)  
 All Rights Reserved. Made in Indonesia 🇮🇩
 
 Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
