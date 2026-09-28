@@ -92,5 +92,15 @@ console.log("— section 4: fallback channel tanpa edit —");
 }
 
 fs.rmSync(dbDir, { recursive: true, force: true });
+console.log("— section 5: grid emoji (lib langsung) —");
+const stableLib = await import(R + "/src/lib/libanimationrpg/libmountrpg.js");
+const mgJ = stableLib.stableFrames({ mode: "jinak", mountName: "Kuda", emoji: "🐎" });
+const mgF = stableLib.stableFrames({ mode: "feed", mountName: "Kuda", emoji: "🐎" });
+t("5a. grid 4 baris: HUD · padang · adegan · status", mgJ.length === 7 && mgJ.every((x) => (x.match(/\n/g) || []).length >= 5), mgJ[0]);
+t("5b. adegan kontekstual beda per mode: jinak padang 🏞️ vs feed kandang 🏠", mgJ[0].includes("🏞️") && mgF[0].includes("🏠"), mgJ[0].split("\n")[3] + " | " + mgF[0].split("\n")[3]);
+t("5c. adegan akhir sesuai mode: 💞 jinak vs 💛 kenyang", mgJ[6].includes("💞") && mgF[6].includes("💛"), mgJ[6].split("\n")[3]);
+
+console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
+process.exit(fail ? 1 : 0);
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);
