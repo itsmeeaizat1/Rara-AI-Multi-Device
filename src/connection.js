@@ -7,6 +7,9 @@ import {
   fetchLatestBaileysVersion,
 } from "nova";
 import { Boom } from "@hapi/boom";
+// AI RICH (port HIROBOT): attach sock.aiRich() — kartu GenAI native WhatsApp
+// (markdown, code block tersorot, citation, hyperlink) — dipakai .hiai/.aicard/tools hiroai.
+import { AIRich } from "./lib/nova-airich-hiro.js";
 import pino from "pino";
 import fs from "fs";
 import path from "path";
@@ -467,6 +470,9 @@ async function startConnection(options = {}) {
     },
     msgRetryCounterCache,
   });
+  // AI RICH (port HIROBOT 29 Sep): conn.aiRich() gaya Hiro — dipakai tools hiroai
+  // (files/media) & .hiai render jawaban codeblock; fallback teks biasa kalau gak didukung.
+  sock.aiRich = () => new AIRich(sock);
 
   store.bind(sock.ev);
   sock.store = store;
