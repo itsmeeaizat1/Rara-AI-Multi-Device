@@ -21,14 +21,14 @@
 | Gacha item | `.gachaitem` | `src/lib/libanimationrpg/libgachaitemrpg.js` | grid slot 3-reel, kunci terpisah 🔒/🔄, adegan mesin makin tegang | `0441bba0` | 36/36 |
 | Gacha waifu | `.gachawaifu` | `src/lib/libanimationrpg/libgachawaifurpg.js` | grid kapsul 6 fase, adegan 💫→⬇️→💦→✨→🎆→💗, reveal 💞 | `8e21f249` | 9/9 |
 | Tunggangan | `.mount` | `src/lib/libanimationrpg/libmountrpg.js` | grid kandang, adegan padang 🏞️ vs kandang 🏠, 💞 jinak / 💛 kenyang | `60e6efbc` | 20/20 |
+| Guild war | `.guildwar` | `src/lib/libanimationrpg/libguildwarrpg.js` | grid pasukan mendekat, adegan medan 🏔️→🥁→🔥→💥🌪️, victory 📣→🎊→🎉 | `1d8d5026` | 67/67 |
 
 ## 🟨 Punya animasi cinematic (belum gaya grid) — ANTREAN UPGRADE
 
 | # | Game | Cmd | File animasi | Animasi sekarang |
 |---|------|-----|--------------|-------------------|
-| 1 | Guild war | `.guildwar` | `libguildwarrpg.js` | battle antar grup |
-| 2 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
-| 3 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
+| 1 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
+| 2 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
 
 ## ⬜ Game RPG belum punya animasi — antrean animasi baru (langsung gaya grid)
 
