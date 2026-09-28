@@ -14,21 +14,21 @@
 |------|-----|--------------|----------------|--------|-----|
 | Gunung (pendakian) | `.mountainclimber` / `.gunung` | `src/lib/libanimationrpg/libmountainclimberrpg.js` | side-scroll daki, jejak ⬜, HUD zona/cuaca/oksigen, rintangan ⬆️, panjat 🧗 zona 6+, longsor 💥, puncak 🚩🏆 | `2bb8f752` | 90/90 |
 | Palung (selam) | `.trenchdiver` / `.palung` | `src/lib/libanimationrpg/libtrenchdiverrpg.js` | selam vertikal kolom, gelembung 🫧, HUD sonar ◎◉ + meter kedalaman, kolom makin ⬛ gelap, boss 🦑💥 | `5fbc0988` | 50/50 |
+| Menara seribu pintu | `.thousanddoortower` / `.menara` | `src/lib/libanimationrpg/libthousanddoortowerrpg.js` | grid kepingan 🧩 0→6, adegan tema per dunia, gembok 🔒→🔓→🚪✨, boss 🧙⚡ gembok ganda | `48b4e090` | 47/47 |
 
 ## 🟨 Punya animasi cinematic (belum gaya grid) — ANTREAN UPGRADE
 
 | # | Game | Cmd | File animasi | Animasi sekarang |
 |---|------|-----|--------------|-------------------|
-| 1 | Menara seribu pintu | `.thousanddoortower` / `.menara` | `libthousanddoortowerrpg.js` | 🧩 kepingan pintu 1 per 1 + gembok 🔒→🔓 |
-| 2 | Detektif | `.masterdetective` / `.sangdetektif` | `libmasterdetectiverpg.js` | 🔍 siram sektor lokasi, akhir sesuai hasil |
-| 3 | Adventure | `.adventure` | `libadventurerrpg.js` | 🧭 kompas menyusuri landmark |
-| 4 | Berburu | `.huntingadventure` / `.berburu` | `libhuntingadventurerpg.js` | 🔍 crosshair merayap ke sasaran |
-| 5 | Gacha item | `.gachaitem` | `libgachaitemrpg.js` | 🎰 slot 3-reel berputar terkunci |
-| 6 | Gacha waifu | `.gachawaifu` | `libgachawaifurpg.js` | 🥚 kapsul jatuh-retak-terbuka |
-| 7 | Tunggangan | `.mount` | `libmountrpg.js` | 🐎 berjalan padang 🌾 / feed 🥕 |
-| 8 | Guild war | `.guildwar` | `libguildwarrpg.js` | battle antar grup |
-| 9 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
-| 10 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
+| 1 | Detektif | `.masterdetective` / `.sangdetektif` | `libmasterdetectiverpg.js` | 🔍 siram sektor lokasi, akhir sesuai hasil |
+| 2 | Adventure | `.adventure` | `libadventurerrpg.js` | 🧭 kompas menyusuri landmark |
+| 3 | Berburu | `.huntingadventure` / `.berburu` | `libhuntingadventurerpg.js` | 🔍 crosshair merayap ke sasaran |
+| 4 | Gacha item | `.gachaitem` | `libgachaitemrpg.js` | 🎰 slot 3-reel berputar terkunci |
+| 5 | Gacha waifu | `.gachawaifu` | `libgachawaifurpg.js` | 🥚 kapsul jatuh-retak-terbuka |
+| 6 | Tunggangan | `.mount` | `libmountrpg.js` | 🐎 berjalan padang 🌾 / feed 🥕 |
+| 7 | Guild war | `.guildwar` | `libguildwarrpg.js` | battle antar grup |
+| 8 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
+| 9 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
 
 ## ⬜ Game RPG belum punya animasi — antrean animasi baru (langsung gaya grid)
 
