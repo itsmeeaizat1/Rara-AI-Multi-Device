@@ -18,17 +18,17 @@
 | Detektif | `.masterdetective` / `.sangdetektif` | `src/lib/libanimationrpg/libmasterdetectiverpg.js` | grid siram lokasi, adegan kota 🏙️ vs interior 🕯️, impact 💥 temu / 🔒 lockbox | `d1a83ccf` | 57/57 |
 | Adventure | `.adventure` | `src/lib/libanimationrpg/libadventurerpg.js` | grid peta kompas, arah 🧭 berputar, adegan 🗺️ per langkah, akhir ✨ TIBA | `ff7e8e58` | 10/10 |
 | Berburu | `.huntingadventure` / `.berburu` | `src/lib/libanimationrpg/libhuntingadventurerpg.js` | grid crosshair 🎯 merayap ke jejak 🐾, adegan rimba intens, terkunci 💥 | `2fe2b4b2` | 11/11 |
+| Gacha item | `.gachaitem` | `src/lib/libanimationrpg/libgachaitemrpg.js` | grid slot 3-reel, kunci terpisah 🔒/🔄, adegan mesin makin tegang | `0441bba0` | 36/36 |
 
 ## 🟨 Punya animasi cinematic (belum gaya grid) — ANTREAN UPGRADE
 
 | # | Game | Cmd | File animasi | Animasi sekarang |
 |---|------|-----|--------------|-------------------|
-| 1 | Gacha item | `.gachaitem` | `libgachaitemrpg.js` | 🎰 slot 3-reel berputar terkunci |
-| 2 | Gacha waifu | `.gachawaifu` | `libgachawaifurpg.js` | 🥚 kapsul jatuh-retak-terbuka |
-| 3 | Tunggangan | `.mount` | `libmountrpg.js` | 🐎 berjalan padang 🌾 / feed 🥕 |
-| 4 | Guild war | `.guildwar` | `libguildwarrpg.js` | battle antar grup |
-| 5 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
-| 6 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
+| 1 | Gacha waifu | `.gachawaifu` | `libgachawaifurpg.js` | 🥚 kapsul jatuh-retak-terbuka |
+| 2 | Tunggangan | `.mount` | `libmountrpg.js` | 🐎 berjalan padang 🌾 / feed 🥕 |
+| 3 | Guild war | `.guildwar` | `libguildwarrpg.js` | battle antar grup |
+| 4 | Warung tycoon | `.warungtycoon` | `libwarungtycoonrpg.js` (+ editFramesAnim inline) | antrean pelanggan |
+| 5 | World event (time capsule) | `.worldevent` | `libworldeventrpg.js` | komet / boss dunia / festival |
 
 ## ⬜ Game RPG belum punya animasi — antrean animasi baru (langsung gaya grid)
 
