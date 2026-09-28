@@ -9,7 +9,7 @@ import {
 import { reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA, renderStatBar, novaRpgBox } from "../../src/lib/nova-games.js";
 import { animAdventure, animBattleTurns } from "../../src/lib/nova-rpg-anim.js";
-import { playPetaAnim } from "../../src/lib/libanimationrpg/libadventurerpg.js";
+import { playPetaAnim as libPlayPetaAnim, playAdventureCinematic } from "../../src/lib/libanimationrpg/libadventurerpg.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -148,7 +148,8 @@ async function handler(m, { sock }) {
     const LMAP = 10;
     const trail = "·";
     // 🎬 animasi dimuat dari lib libadventurerpg.js (peta kompas 🧭 menyusuri landmark)
-    const petaOk = await playPetaAnim(sock, m.chat, { eventType: event.type, landmarks: LANDMARK, arahs: ARAH });
+    const petaOk = await playAdventureCinematic(sock, m.chat, { eventType: event.type, landmarks: LANDMARK, arahs: ARAH })
+      || await libPlayPetaAnim(sock, m.chat, { eventType: event.type, landmarks: LANDMARK, arahs: ARAH });
     if (!petaOk) await animAdventure(m, sock, event.type);
     let expGain = 0, goldGain = 0, gemGain = 0;
     let drops = [];
