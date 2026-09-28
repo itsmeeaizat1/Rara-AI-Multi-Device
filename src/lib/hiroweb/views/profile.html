@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/x-icon" href="" id="favicon">
+  <title>Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="page-profile">
+<div class="page">
+
+  <div id="loading">
+    <span class="dot-anim"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg></span>&nbsp;&nbsp;&nbsp;<span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg></span>&nbsp;&nbsp;&nbsp;<span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg></span></span>
+  </div>
+
+  <div id="content">
+<div class="header">
+      <div class="header-left" onclick="window.location.href='/'" style="cursor:pointer">
+        <div class="logo">
+          <img src="" alt="Bot" id="header-logo-img" draggable="false" oncontextmenu="return false">
+        </div>
+        <span class="logo-text" id="header-logo-text">HIRO BOT</span>
+      </div>
+      <div class="header-right">
+        <div class="bell-wrap" id="bell-wrap">
+          <button class="bell-btn" id="bell-btn" onclick="toggleBellTooltip()">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="bell-dot" id="bell-dot" style="display:none"></span>
+          </button>
+          <div class="bell-tooltip" id="bell-tooltip"></div>
+        </div>
+        <div class="nav-tabs">
+          <button class="nav-btn active" data-tab="home" aria-label="Home" title="Home">
+            <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H10v-5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V20h3.5a1 1 0 0 0 1-1v-9"/></svg>
+          </button>
+          <button class="nav-btn" data-tab="account" aria-label="Account" title="Account">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-6.5 7-6.5s7 2.9 7 6.5"/></svg>
+          </button>
+          <button class="nav-btn" data-tab="database" id="db-tab" aria-label="Database" title="Database" style="display:none">
+            <svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3V6"/><path d="M4.5 12v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+<div id="tab-home" class="tab-panel active-panel">
+<div class="profile-glow-wrap" id="profile-glow-wrap">
+      <svg class="profile-glow-svg" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="glow-fade-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="var(--glow-c1, #ffffff)" stop-opacity="0"/>
+            <stop offset="100%" stop-color="var(--glow-c1, #ffffff)" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <rect class="glow-trail" x="1" y="1" width="99%" height="99%" rx="11" pathLength="100"></rect>
+      </svg>
+      <div class="card profile-card">
+        <div class="profile-hero">
+          <div class="avatar-wrap">
+            <div class="avatar" id="avatar-letter">?</div>
+            <img id="profile-pic" src="" alt="">
+          </div>
+          <div class="profile-hero-info">
+            <div class="profile-hero-top">
+              <div class="profile-name" id="profile-name">-</div>
+              <div class="premium-wrap" id="premium-wrap" style="display:none">
+                <button class="premium-badge" id="premium-badge" onclick="togglePremiumTooltip()" style="display:none"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg></span></button>
+                <div class="premium-tooltip" id="premium-tooltip"></div>
+              </div>
+            </div>
+<div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value" id="stat-tier"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg></span></div>
+                <div class="stat-label">Tier</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="stat-exp">0</div>
+                <div class="stat-label">Exp</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="stat-gems">0</div>
+                <div class="stat-label">Gem</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="stat-limit">0</div>
+                <div class="stat-label">Limit</div>
+              </div>
+            </div>
+<div class="exp-bar-wrap" id="exp-bar-wrap">
+              <div class="exp-bar-track">
+                <div class="exp-bar-fill" id="exp-bar-fill" style="width:0%"></div>
+              </div>
+              <div class="exp-bar-header">
+                <span id="exp-bar-sub"></span>
+                <span id="exp-bar-pct">0%</span>
+              </div>
+            </div>
+
+            <div class="profile-hero-bottom">
+              <div class="badge-row">
+                <div class="badge-row-label">Badge</div>
+                <div class="badge-icons" id="badge-icons"></div>
+              </div>
+              <button class="tierup-btn" id="tierup-btn" onclick="doTierUp()">
+                <span class="btn-text"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="6 11 12 5 18 11"/></svg></span> Tier Up</span>
+                <div class="spinner"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="divider-lg"></div>
+
+      <div class="home-grid">
+<div class="card daily-bonus-card">
+          <div class="text-md font-bold">Daily Bonus</div>
+          <div class="text-sm text-muted2">500 Exp . 5 Gems</div>
+          <button class="btn btn-small ready daily-claim-btn" id="reward-btn" onclick="claimReward()">Claim</button>
+        </div>
+<div class="menu-col">
+          <div class="menu-list" id="menu-list">
+            <div class="menu-highlight" id="menu-highlight"></div>
+            <button class="menu-btn" id="menu-gacha" onclick="toggleSection('gacha')">Gacha</button>
+            <button class="menu-btn" id="menu-shop" onclick="toggleSection('shop')">Shop</button>
+            <button class="menu-btn" id="menu-info" onclick="toggleSection('info')">Info</button>
+          </div>
+          <div class="search-box">
+            <span class="search-icon"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+            <input type="text" id="user-search-input" class="search-input" placeholder="Search user by their number/username" oninput="onUserSearchInput()">
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-lg" id="section-divider" style="display:none"></div>
+<div class="section-panel" id="section-gacha">
+        <div class="section-heading">GACHA</div>
+        <div class="card">
+          <div class="card-title"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a3.3 3.3 0 0 0-3 4.9A3.3 3.3 0 1 0 7 13a3.3 3.3 0 0 0 2.3-.9C9 13.6 8 15 6.5 16h11C16 15 15 13.6 14.7 12.1a3.3 3.3 0 0 0 2.3.9 3.3 3.3 0 1 0-2-6.1A3.3 3.3 0 0 0 12 2z"/><rect x="10.5" y="15" width="3" height="6" fill="currentColor"/></svg></span> Slot</div>
+          <div class="slot-machine">
+            <div class="slot-row">
+              <div class="slot-spin-btn">
+                <button class="spin-button" id="slot-btn" onclick="spinSlot()">SPIN</button>
+              </div>
+              <div class="slot-display">
+                <div class="slot-box" id="slot1"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="2.4"/><circle cx="12" cy="5.5" r="3"/><circle cx="12" cy="18.5" r="3"/><circle cx="5.5" cy="12" r="3"/><circle cx="18.5" cy="12" r="3"/></svg></span></div>
+                <div class="slot-box" id="slot2"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l5 6-5 14L7 8z"/></svg></span></div>
+                <div class="slot-box" id="slot3">7</div>
+              </div>
+              <div class="slot-prize-btn">
+                <button class="prize-button" onclick="openPrizeModal()">&lt;</button>
+              </div>
+            </div>
+            <div class="slot-cost-info"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></span> 200 EXP per spin</div>
+            <div class="slot-cost-info" style="color:var(--muted2);margin-top:-8px"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3.5v5.4c0 5-3.4 8.8-8 11-4.6-2.2-8-6-8-11V5.5z"/></svg></span> Pity: <span id="pity-count">0</span>/100 losses</div>
+            <div id="slot-result" class="slot-result"></div>
+          </div>
+        </div>
+      </div>
+<div class="section-panel" id="section-shop">
+        <div class="section-heading">SHOP</div>
+        <div class="shop-grid">
+          <div class="card shop-card">
+            <div class="shop-card-header">
+              <span class="shop-card-title">Limit</span>
+              <span class="shop-card-price">1 Gem / Limit</span>
+            </div>
+            <input type="range" class="shop-slider" id="limit-slider" min="1" max="1" value="1" oninput="onLimitSliderInput()">
+            <div class="shop-card-footer">
+              <span class="shop-card-qty" id="limit-qty-label">5 limits</span>
+              <button class="btn btn-small btn-flat" onclick="buyLimit()">Buy</button>
+            </div>
+          </div>
+          <div class="card shop-card">
+            <div class="shop-card-header">
+              <span class="shop-card-title">Premium</span>
+              <span class="shop-card-price">100 Gem / week</span>
+            </div>
+            <input type="range" class="shop-slider" id="premium-slider" min="1" max="1" value="1" oninput="onPremiumSliderInput()">
+            <div class="shop-card-footer">
+              <span class="shop-card-qty" id="premium-qty-label">1 week</span>
+              <button class="btn btn-small btn-flat" onclick="buyPremium()">Buy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+<div class="section-panel" id="section-info">
+        <div class="section-heading">INFO</div>
+        <div class="card">
+          <div class="card-title">Badge Info</div>
+          <div class="badge-info-list">
+            <div class="badge-info-item">
+              <span class="badge-info-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg></span>
+              <div>
+                <div class="badge-info-name">Newcomer</div>
+                <div class="badge-info-desc">0–1 month of continuous premium.</div>
+              </div>
+            </div>
+            <div class="badge-info-item">
+              <span class="badge-info-icon shimmer-gold"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg></span>
+              <div>
+                <div class="badge-info-name shimmer-gold">Gold Streak</div>
+                <div class="badge-info-desc">2+ months of continuous premium.</div>
+              </div>
+            </div>
+            <div class="badge-info-item">
+              <span class="badge-info-icon shimmer-diamond"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg></span>
+              <div>
+                <div class="badge-info-name shimmer-diamond">Diamond Streak</div>
+                <div class="badge-info-desc">4+ months of continuous premium.</div>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="badge-info-note">Missing a renewal breaks your streak, but you get a 1-day grace period after expiry to renew and keep it alive.</div>
+        </div>
+      </div>
+<div class="section-panel" id="section-search-results" style="display:none">
+        <div class="search-results-label">Search Results</div>
+        <div id="search-results-list"></div>
+      </div>
+
+    </div>
+<div id="tab-account" class="tab-panel">
+      <div class="card">
+        <div class="card-title">Change Name</div>
+        <input type="text" id="rename-input" class="input-field" placeholder="New display name" maxlength="32">
+        <div class="btn-circle-row mt-8">
+          <button class="btn-circle" id="rename-btn" onclick="doRename()">
+            <span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Change Password</div>
+        <input type="password" id="pw-old" class="input-field" placeholder="Current password">
+        <input type="password" id="pw-new" class="input-field mt-8" placeholder="New password">
+        <input type="password" id="pw-new2" class="input-field mt-8" placeholder="Confirm new password">
+        <div class="btn-circle-row mt-8">
+          <button class="btn-circle" id="pw-btn" onclick="changePassword()">
+            <span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <div class="account-row">
+        <div class="card gift-code-card">
+          <div class="card-title">Gift Code</div>
+          <input type="text" id="gc-input" class="input-field" placeholder="Enter gift code" maxlength="32" style="text-transform:uppercase">
+          <div class="btn-circle-row mt-8">
+            <button class="btn-circle" id="gc-btn" onclick="redeemCode()">
+              <span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+              <div class="spinner"></div>
+            </button>
+          </div>
+          <div id="gc-result" style="display:none;margin-top:10px;padding:10px;border-radius:5px;text-align:center;font-size: 9px;font-weight:600;"></div>
+        </div>
+
+        <button class="logout-btn-plain" onclick="logout()">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+<div id="tab-database" class="tab-panel">
+      <div class="card">
+        <div class="card-title">Gift Code Manager</div>
+        <div class="text-xs text-muted2 mb-8">
+          Format: <strong>CODE</strong> <span class="icon-inline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span> <strong>type:value</strong><br>
+          Types: exp:2000 · limit:5 · premium:2 · level:1 · gems:50
+        </div>
+        <div class="flex-row gap-4 flex-wrap">
+          <input type="text" id="gc-new-code" class="input-field" style="flex:1;min-width:80px;" placeholder="CODE" maxlength="32">
+          <input type="text" id="gc-new-reward" class="input-field" style="flex:1;min-width:100px;" placeholder="exp:2000">
+          <button class="btn btn-small btn-success" onclick="addGiftCode()">+ Add</button>
+        </div>
+        <div id="gc-list" class="mt-8">
+          <div class="text-center text-muted2 text-sm">Loading codes...</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Database Editor</div>
+        <button class="btn btn-small btn-secondary" onclick="loadDatabaseData()">⟳ Refresh</button>
+        <div class="scroll-list-container mt-8">
+          <div id="db-users-list" class="scroll-list">
+            <div class="text-center text-muted2 text-sm">Loading users...</div>
+          </div>
+          <div class="top-gradient" id="db-top-gradient"></div>
+          <div class="bottom-gradient" id="db-bottom-gradient"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="modal-overlay-prize" id="prize-overlay" onclick="closePrizeModal()"></div>
+  <div class="prize-modal" id="prize-modal">
+    <div class="prize-modal-header">
+      <span class="prize-modal-title"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l5 6-5 14L7 8z"/></svg></span> PRIZE LIST</span>
+      <button class="prize-modal-close" onclick="closePrizeModal()">×</button>
+    </div>
+    <div class="prize-list">
+      <div class="prize-item"><div class="prize-icons" data-icon-row="sparkle" data-count="3"></div><div class="prize-value jackpot"><span class="shimmer-diamond">+200k EXP</span> <span style="font-size: 7px;color:var(--muted2)">0.001%</span></div></div>
+      <div class="prize-item"><div class="prize-icons">7 7 7</div><div class="prize-value jackpot"><span class="shimmer-gold">+77.7k EXP</span> <span style="font-size: 7px;color:var(--muted2)">0.1%</span></div></div>
+      <div class="prize-item"><div class="prize-icons" data-icon-row="diamond" data-count="3"></div><div class="prize-value positive">+10k EXP <span style="font-size: 7px;color:var(--muted2)">0.5%</span></div></div>
+      <div class="prize-item"><div class="prize-icons" data-icon-row="club" data-count="3"></div><div class="prize-value positive">+5k EXP <span style="font-size: 7px;color:var(--muted2)">1%</span></div></div>
+      <div class="prize-item"><div class="prize-icons" data-icon-row="heart" data-count="3"></div><div class="prize-value positive">+3k EXP <span style="font-size: 7px;color:var(--muted2)">1.5%</span></div></div>
+      <div class="prize-item"><div class="prize-icons" data-icon-row="spade" data-count="3"></div><div class="prize-value positive">+2k EXP <span style="font-size: 7px;color:var(--muted2)">2%</span></div></div>
+      <div class="prize-item"><div class="prize-icons" data-icon-row="note" data-count="3"></div><div class="prize-value positive">+1k EXP <span style="font-size: 7px;color:var(--muted2)">3%</span></div></div>
+      <div class="prize-item"><div class="prize-icons" data-icon-row="flower" data-count="3"></div><div class="prize-value positive">+500 EXP <span style="font-size: 7px;color:var(--muted2)">4%</span></div></div>
+      <div class="prize-item"><div class="prize-icons" data-icon-row="cross" data-count="3"></div><div class="prize-value negative">−300 EXP <span style="font-size: 7px;color:var(--muted2)">~30%</span></div></div>
+      <div class="prize-item"><div class="prize-icons">No Match</div><div class="prize-value negative">−200 EXP <span style="font-size: 7px;color:var(--muted2)">~57.9%</span></div></div>
+      <div class="prize-item" style="border-top: none;margin-top:4px;padding-top:8px"><div class="prize-icons" style="font-size: 8px;color:var(--warn)"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg></span> PITY</div><div class="prize-value" style="font-size: 8px;color:var(--warn)">Guaranteed <span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg></span>/7/<span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l5 6-5 14L7 8z"/></svg></span> every 100 losses</div></div>
+    </div>
+  </div>
+<div class="modal-overlay" id="tierup-modal">
+    <div class="modal">
+      <div class="modal-icon"><span class="icon-inline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg></span></div>
+      <div class="modal-title" id="modal-title">Tier Up!</div>
+      <div class="modal-body" id="modal-body"></div>
+      <button class="modal-close" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script>
+const ICONS = {
+  star:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg>',
+  starOutline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.7l7.1-.6z"/></svg>',
+  sparkle:   '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.6 3.6 2 6.2 5 8-3 1.8-4.4 4.4-5 8-.6-3.6-2-6.2-5-8 3-1.8 4.4-4.4 5-8z"/></svg>',
+  shield:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3.5v5.4c0 5-3.4 8.8-8 11-4.6-2.2-8-6-8-11V5.5z"/></svg>',
+  bolt:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>',
+  arrowUp:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="6 11 12 5 18 11"/></svg>',
+  arrowRight:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>',
+  chevronRight:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>',
+  close:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>',
+  confetti:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l3.5-1 11-11-2.5-2.5-11 11z"/><circle cx="18" cy="5" r="1.4" fill="currentColor" stroke="none"/><circle cx="20" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="14" cy="3" r="1" fill="currentColor" stroke="none"/></svg>',
+  sad:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M8.5 16c1-1.3 2.2-2 3.5-2s2.5.7 3.5 2"/><line x1="8.5" y1="9.5" x2="8.5" y2="9.51"/><line x1="15.5" y1="9.5" x2="15.5" y2="9.51"/></svg>',
+  diamond:   '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l5 6-5 14L7 8z"/></svg>',
+  club:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a3.3 3.3 0 0 0-3 4.9A3.3 3.3 0 1 0 7 13a3.3 3.3 0 0 0 2.3-.9C9 13.6 8 15 6.5 16h11C16 15 15 13.6 14.7 12.1a3.3 3.3 0 0 0 2.3.9 3.3 3.3 0 1 0-2-6.1A3.3 3.3 0 0 0 12 2z"/><rect x="10.5" y="15" width="3" height="6" fill="currentColor"/></svg>',
+  heart:     '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.3 5 5.7 5 8 5 9.7 6.3 12 9c2.3-2.7 4-4 6.3-4 3.4 0 5.2 3.4 3.7 6.7C19.5 16.4 12 21 12 21z"/></svg>',
+  spade:     '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9 6.5 4 9.5 4 13.5a4 4 0 0 0 6.8 2.9c-.4 2-1.5 3.4-3.3 4.6h9c-1.8-1.2-2.9-2.6-3.3-4.6A4 4 0 0 0 20 13.5C20 9.5 15 6.5 12 2z"/></svg>',
+  note:      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>',
+  flower:    '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="2.4"/><circle cx="12" cy="5.5" r="3"/><circle cx="12" cy="18.5" r="3"/><circle cx="5.5" cy="12" r="3"/><circle cx="18.5" cy="12" r="3"/></svg>',
+  cross:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>'
+}
+function icon(name, cls) {
+  return `<span class="icon-inline ${cls || ''}">${ICONS[name] || ''}</span>`
+}
+
+const SLOT_SYMBOL_ICON = {
+  '✦': 'sparkle',
+  '♦': 'diamond',
+  '♣': 'club',
+  '♥': 'heart',
+  '♠': 'spade',
+  '♪': 'note',
+  '✿': 'flower',
+  '×': 'cross',
+  '7': null
+}
+function slotSymbolHtml(sym) {
+  const key = SLOT_SYMBOL_ICON[sym]
+  return key ? icon(key) : escapeHtml(sym)
+}
+
+function renderPrizeIconRows() {
+  document.querySelectorAll('[data-icon-row]').forEach(el => {
+    const key = el.getAttribute('data-icon-row')
+    const count = parseInt(el.getAttribute('data-count'), 10) || 1
+    el.innerHTML = Array(count).fill(icon(key)).join(' ')
+  })
+}
+document.addEventListener('DOMContentLoaded', renderPrizeIconRows)
+
+function safeRedirect(url) { window.location.href = url }
+
+async function safeFetch(url, opts = {}, timeoutMs = 15000) {
+  opts.headers = { ...(opts.headers || {}), 'bypass-tunnel-reminder': '1' }
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(url, { ...opts, signal: controller.signal })
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+let token = localStorage.getItem('token')
+let phone = localStorage.getItem('phone')
+
+let cachedTierAsset = null
+let currentExp = 0
+let currentLevel = 0
+let currentLimit = 0
+let currentGems = 0
+let currentPremiumTime = 0
+let isOwner = false
+let timerInterval = null
+let shopResetAt = null
+let shopTimerInterval = null
+
+async function loadBotName() {
+  try {
+    const res = await safeFetch('/api/botInfo', { headers: { 'Authorization': 'Bearer ' + token } })
+    const data = await res.json()
+    if (data && data.icon) {
+      document.getElementById('favicon').href = data.icon
+      document.getElementById('header-logo-img').src = data.icon
+    }
+    if (data && data.name) {
+      document.title = `Profile — ${data.name}`
+      document.getElementById('header-logo-text').textContent = data.name
+      document.getElementById('header-logo-img').alt = data.name
+    }
+  } catch {}
+}
+
+async function fetchTierAsset() {
+  try {
+    const res = await safeFetch('/api/tierAsset', { headers: { 'Authorization': 'Bearer ' + token } })
+    const data = await res.json()
+    if (data && data.name) { cachedTierAsset = data; return cachedTierAsset }
+    return null
+  } catch { return null }
+}
+
+function getTierAsset() {
+  return cachedTierAsset
+}
+
+function getTierName(level) { return getTierAsset().name[level] }
+function getTierExp(level) { return getTierAsset().exp[level] }
+function getTierLimit(level) { return getTierAsset().limit[level] }
+
+function fmtExp(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k'
+  return n.toString()
+}
+
+function fmtCooldown(totalSeconds) {
+  totalSeconds = Math.max(0, Math.floor(totalSeconds))
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+}
+
+function escapeHtml(str) {
+  if (str == null) return ''
+  return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))
+}
+
+function makeSafeId(key) { return key.replace(/[^a-zA-Z0-9]/g, '_') }
+
+function showToast(msg, type = 'success', iconKey = '') {
+  const t = document.getElementById('toast')
+  t.innerHTML = (iconKey ? icon(iconKey) + ' ' : '') + escapeHtml(msg)
+  t.className = 'toast ' + type + ' show'
+  setTimeout(() => t.classList.remove('show'), 3000)
+}
+
+function setLoading(el, loading) {
+  if (typeof el === 'string') el = document.getElementById(el)
+  if (!el) return
+  el.classList.toggle('loading', loading)
+  el.disabled = loading
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'))
+  document.querySelector(`.nav-btn[data-tab="${tabId}"]`).classList.add('active')
+  document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active-panel'))
+  document.getElementById(`tab-${tabId}`).classList.add('active-panel')
+
+  if (tabId === 'database' && isOwner) { loadDatabaseData(); loadGiftCodes() }
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')))
+})
+
+function closeModal() { document.getElementById('tierup-modal').classList.remove('show') }
+function openPrizeModal() {
+  document.getElementById('prize-overlay').classList.add('open')
+  document.getElementById('prize-modal').classList.add('open')
+}
+function closePrizeModal() {
+  document.getElementById('prize-overlay').classList.remove('open')
+  document.getElementById('prize-modal').classList.remove('open')
+}
+
+function formatPremiumRemaining(ms) {
+  if (ms <= 0) return 'Expired'
+  const totalSeconds = Math.floor(ms / 1000)
+  const days = Math.floor(totalSeconds / 86400)
+  const hours = Math.floor((totalSeconds % 86400) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (days > 0) return `${days}d ${hours}h ${minutes}m`
+  if (hours > 0) return `${hours}h ${minutes}m`
+  if (minutes > 0) return `${minutes}m ${seconds}s`
+  return `${seconds}s`
+}
+
+let premiumTooltipInterval = null
+
+function tickPremiumTooltip() {
+  const tooltip = document.getElementById('premium-tooltip')
+  if (!tooltip || !tooltip.classList.contains('open')) return
+  const remaining = currentPremiumTime - Date.now()
+  tooltip.innerHTML = `<span class="pt-label">Premium expires in</span><span class="pt-value">${formatPremiumRemaining(remaining)}</span>`
+  if (remaining <= 0) {
+    clearInterval(premiumTooltipInterval)
+    premiumTooltipInterval = null
+  }
+}
+
+function togglePremiumTooltip() {
+  const tooltip = document.getElementById('premium-tooltip')
+  const isOpen = tooltip.classList.contains('open')
+  if (isOpen) {
+    tooltip.classList.remove('open')
+    if (premiumTooltipInterval) { clearInterval(premiumTooltipInterval); premiumTooltipInterval = null }
+    return
+  }
+  tickPremiumTooltip()
+  tooltip.classList.add('open')
+  if (premiumTooltipInterval) clearInterval(premiumTooltipInterval)
+  premiumTooltipInterval = setInterval(tickPremiumTooltip, 1000)
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('premium-wrap')
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('premium-tooltip').classList.remove('open')
+    if (premiumTooltipInterval) { clearInterval(premiumTooltipInterval); premiumTooltipInterval = null }
+  }
+})
+
+const SECTION_IDS = ['gacha', 'shop', 'info']
+let activeSection = null
+
+function toggleSection(id) {
+  const isSame = activeSection === id
+  hideSearchResults()
+
+  SECTION_IDS.forEach(s => {
+    document.getElementById('section-' + s).classList.remove('open')
+    document.getElementById('menu-' + s).classList.remove('active')
+  })
+
+  const menuList = document.getElementById('menu-list')
+  const highlight = document.getElementById('menu-highlight')
+
+  if (!isSame) {
+    document.getElementById('section-' + id).classList.add('open')
+    document.getElementById('menu-' + id).classList.add('active')
+    activeSection = id
+    if (id === 'shop') { renderLimitSlider(true); renderPremiumSlider(true) }
+
+    const btn = document.getElementById('menu-' + id)
+    highlight.style.height = btn.offsetHeight + 'px'
+    highlight.style.transform = `translateY(${btn.offsetTop}px)`
+    menuList.classList.add('has-active')
+  } else {
+    activeSection = null
+    menuList.classList.remove('has-active')
+  }
+}
+
+const LIMIT_PRICE = 1
+const PREMIUM_PRICE = 100
+
+function renderLimitSlider(reset) {
+  const slider = document.getElementById('limit-slider')
+  const label = document.getElementById('limit-qty-label')
+  const btn = document.querySelector('#limit-slider')?.closest('.shop-card')?.querySelector('.btn')
+  const maxAffordable = Math.floor(currentGems / LIMIT_PRICE)
+
+  if (maxAffordable < 1) {
+    slider.min = 1
+    slider.max = 1
+    slider.value = 1
+    slider.disabled = true
+    if (btn) btn.disabled = true
+    label.textContent = 'Not enough Gems'
+    return
+  }
+
+  slider.disabled = false
+  if (btn) btn.disabled = false
+  slider.min = 1
+  slider.max = maxAffordable
+  if (reset || Number(slider.value) > maxAffordable || Number(slider.value) < 1) slider.value = 1
+  label.textContent = `${slider.value} limit${slider.value == 1 ? '' : 's'}`
+}
+function onLimitSliderInput() { renderLimitSlider(false) }
+
+async function buyLimit() {
+  const amount = parseInt(document.getElementById('limit-slider').value)
+  if (!amount || amount <= 0) { showToast('Select an amount first.', 'warn'); return }
+  try {
+    const res = await safeFetch('/api/buy-limit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ amount })
+    })
+    const data = await res.json()
+    if (data.success) {
+      showToast(data.message || 'Limit purchased!', 'success')
+      await loadProfile(true)
+      renderLimitSlider(false)
+    } else {
+      showToast(data.message || 'Purchase failed.', 'error')
+    }
+  } catch { showToast('Connection error.', 'error') }
+}
+
+function renderPremiumSlider(reset) {
+  const slider = document.getElementById('premium-slider')
+  const label = document.getElementById('premium-qty-label')
+  const btn = document.querySelector('#premium-slider')?.closest('.shop-card')?.querySelector('.btn')
+  const maxAffordable = Math.floor(currentGems / PREMIUM_PRICE)
+
+  if (maxAffordable < 1) {
+    slider.min = 1
+    slider.max = 1
+    slider.value = 1
+    slider.disabled = true
+    if (btn) btn.disabled = true
+    label.textContent = 'Not enough Gems'
+    return
+  }
+
+  slider.disabled = false
+  if (btn) btn.disabled = false
+  slider.min = 1
+  slider.max = maxAffordable
+  if (reset || Number(slider.value) > maxAffordable || Number(slider.value) < 1) slider.value = 1
+  label.textContent = `${slider.value} week${slider.value == 1 ? '' : 's'}`
+}
+function onPremiumSliderInput() { renderPremiumSlider(false) }
+
+async function buyPremium() {
+  const weeks = parseInt(document.getElementById('premium-slider').value)
+  if (!weeks || weeks <= 0) { showToast('Select an amount first.', 'warn'); return }
+  try {
+    const res = await safeFetch('/api/buy-premium', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ weeks })
+    })
+    const data = await res.json()
+    if (data.success) {
+      showToast(data.message || 'Premium purchased!', 'success')
+      await loadProfile(true)
+      renderPremiumSlider(false)
+    } else {
+      showToast(data.message || 'Purchase failed.', 'error')
+    }
+  } catch { showToast('Connection error.', 'error') }
+}
+
+let userSearchDebounce = null
+
+function hideSearchResults() {
+  document.getElementById('section-search-results').style.display = 'none'
+}
+
+function onUserSearchInput() {
+  const q = document.getElementById('user-search-input').value.trim()
+  clearTimeout(userSearchDebounce)
+
+  if (!q) { hideSearchResults(); return }
+
+  userSearchDebounce = setTimeout(() => runUserSearch(q), 300)
+}
+
+async function runUserSearch(q) {
+  try {
+    const res = await safeFetch('/api/user-search?q=' + encodeURIComponent(q), {
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    const data = await res.json()
+
+    SECTION_IDS.forEach(s => {
+      document.getElementById('section-' + s).classList.remove('open')
+      document.getElementById('menu-' + s).classList.remove('active')
+    })
+    activeSection = null
+    document.getElementById('menu-list')?.classList.remove('has-active')
+
+    const list = document.getElementById('search-results-list')
+
+    if (data.success === false) {
+      list.innerHTML = `<div class="search-empty">${icon('cross')} ${escapeHtml(data.message || 'Search failed.')}</div>`
+      document.getElementById('section-search-results').style.display = 'block'
+      return
+    }
+
+    const results = data.results || []
+
+    if (results.length === 0) {
+      list.innerHTML = '<div class="search-empty">No users found.</div>'
+    } else {
+      list.innerHTML = results.map(u => {
+        const initials = (u.name && u.name !== '-' ? u.name : u.phone).slice(0, 2).toUpperCase()
+        const avatarHtml = u.profilePicCache
+          ? `<div class="sr-avatar-wrap"><img class="sr-avatar" src="${escapeHtml(u.profilePicCache)}" alt=""></div>`
+          : `<div class="sr-avatar-wrap"><div class="sr-avatar">${escapeHtml(initials)}</div></div>`
+        const nameClass = getPremiumBadgeClass(u)
+        const badgesHtml = renderBadgeIcons(u.badge, true)
+        return `
+          <div class="search-result-card">
+            ${avatarHtml}
+            <div class="sr-info">
+              <div class="sr-name ${nameClass}">${escapeHtml(u.name || u.phone)}</div>
+              ${badgesHtml}
+            </div>
+            <div class="sr-tier">
+              <div class="sr-tier-value">${escapeHtml(u.tier)}</div>
+              <div class="sr-tier-label">Tier</div>
+            </div>
+          </div>
+        `
+      }).join('')
+    }
+
+    document.getElementById('section-search-results').style.display = 'block'
+  } catch {
+  }
+}
+
+function getBadgeItems(badge) {
+  const items = []
+  if (!badge) return items
+  if (badge.developer) {
+    items.push({ type: 'developer', icon: '</>', tooltip: 'Developer' })
+  }
+  if (badge.premium && badge.premium.active) {
+    const sinceDate = badge.premium.since
+      ? new Date(badge.premium.since).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+      : ''
+    items.push({ type: 'premium', icon: 'sparkle', tooltip: sinceDate ? `Premium since ${sinceDate}` : 'Premium' })
+  }
+  return items
+}
+
+function renderBadgeIcons(badge) {
+  const items = getBadgeItems(badge)
+  if (items.length === 0) return ''
+  return `<div class="sr-badges">${items.map(it =>
+    `<span class="sr-badge-icon sr-badge-${it.type}" title="${escapeHtml(it.tooltip)}">${it.type === 'developer' ? escapeHtml(it.icon) : icon(it.icon)}</span>`
+  ).join('')}</div>`
+}
+
+function renderTopBadgeRow(badge) {
+  const container = document.getElementById('badge-icons')
+  const items = getBadgeItems(badge)
+  if (items.length === 0) {
+    container.innerHTML = '<span class="badge-row-icon">–</span>'
+    return
+  }
+  container.innerHTML = items.map((it, i) => `
+    <div class="badge-icon-wrap">
+      <button type="button" class="badge-row-icon clickable badge-active badge-${it.type}" onclick="toggleBadgeTooltip(this)">${it.type === 'developer' ? escapeHtml(it.icon) : icon(it.icon)}</button>
+      <div class="badge-tooltip">${escapeHtml(it.tooltip)}</div>
+    </div>
+  `).join('')
+}
+
+function toggleBadgeTooltip(btn) {
+  const tooltip = btn.nextElementSibling
+  const isOpen = tooltip.classList.contains('open')
+  document.querySelectorAll('.badge-tooltip.open').forEach(t => t.classList.remove('open'))
+  if (!isOpen) tooltip.classList.add('open')
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.badge-icon-wrap')) {
+    document.querySelectorAll('.badge-tooltip.open').forEach(t => t.classList.remove('open'))
+  }
+})
+
+function getPremiumBadgeClass(u) {
+  if (!u.premium) return ''
+  if (!u.premiumSince) return ''
+  const months = Math.floor((Date.now() - u.premiumSince) / (30 * 86400000))
+  if (months >= 4) return 'shimmer-diamond'
+  if (months >= 2) return 'shimmer-gold'
+  return ''
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div')
+  div.textContent = str == null ? '' : String(str)
+  return div.innerHTML
+}
+
+function formatNumber(n) {
+  n = n || 0
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
+  return String(n)
+}
+
+function renderNotifications(list) {
+  const dot = document.getElementById('bell-dot')
+  const tooltip = document.getElementById('bell-tooltip')
+  const items = Array.isArray(list) ? list.slice(0, 10) : []
+
+  if (items.length === 0) {
+    dot.style.display = 'none'
+    tooltip.innerHTML = '<span class="bt-empty">No notifications.</span>'
+    return
+  }
+
+  dot.style.display = 'block'
+  tooltip.innerHTML = items.map(n => {
+    const msg = typeof n === 'string' ? n : (n.message || '')
+    const time = (n && n.time) ? `<div class="bt-time">${escapeHtml(new Date(n.time).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }))}</div>` : ''
+    return `<div class="bt-item">${escapeHtml(msg)}${time}</div>`
+  }).join('')
+}
+
+function toggleBellTooltip() {
+  document.getElementById('bell-tooltip').classList.toggle('open')
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('bell-wrap')
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('bell-tooltip').classList.remove('open')
+  }
+})
+
+function updateTierDisplay() {
+  const tierName = getTierName(currentLevel)
+  document.getElementById('stat-tier').textContent = tierName
+
+  const asset = getTierAsset()
+  const maxLevel = Object.keys(asset.exp).length
+
+  if (currentLevel >= maxLevel) {
+    document.getElementById('exp-bar-wrap').style.display = 'none'
+    document.getElementById('tierup-btn').style.display = 'none'
+    return
+  }
+
+  const nextLevel = currentLevel + 1
+  const needed = getTierExp(currentLevel)
+  const nextTierName = getTierName(nextLevel)
+  const pct = Math.min(100, (currentExp / needed) * 100)
+
+  document.getElementById('exp-bar-fill').style.width = pct + '%'
+  document.getElementById('exp-bar-pct').textContent = Math.floor(pct) + '%'
+  document.getElementById('exp-bar-sub').innerHTML =
+    `${fmtExp(currentExp)} / ${fmtExp(needed)} EXP ${icon('arrowRight')} ${escapeHtml(nextTierName)}`
+
+  const btn = document.getElementById('tierup-btn')
+  btn.style.display = 'block'
+  if (currentExp >= needed) {
+    btn.disabled = false
+    btn.querySelector('.btn-text').innerHTML = `${icon('arrowUp')} Tier Up`
+    btn.title = `Advance to ${nextTierName}`
+  } else {
+    btn.disabled = true
+    btn.querySelector('.btn-text').innerHTML = `${icon('arrowUp')} Tier Up`
+    btn.title = `Need ${fmtExp(needed - currentExp)} more EXP`
+  }
+}
+
+async function loadProfile(silent = false) {
+  try {
+    const res = await safeFetch('/api/profile', { headers: token ? { 'Authorization': 'Bearer ' + token } : {} })
+    const data = await res.json()
+    if (!data.success) { localStorage.clear(); return safeRedirect('/') }
+
+    const u = data.user
+    if (!phone) phone = u.phone || u.number || ''
+    currentExp = u.exp ?? 0
+    currentLevel = u.level ?? 0
+    currentLimit = u.limit ?? 0
+    currentGems = u.gems ?? 0
+
+    try {
+      const ownerRes = await safeFetch('/api/check-owner', { headers: { 'Authorization': 'Bearer ' + token } })
+      const ownerData = await ownerRes.json()
+      isOwner = ownerData.isOwner === true
+      document.getElementById('db-tab').style.display = isOwner ? 'block' : 'none'
+    } catch {}
+
+    if (!silent) {
+      const displayName = (u.name && u.name !== phone) ? u.name : phone
+      document.getElementById('avatar-letter').textContent = displayName.slice(0, 2).toUpperCase()
+
+      const nameEl = document.getElementById('profile-name')
+      const glowWrap = document.getElementById('profile-glow-wrap')
+      if (u.premium && u.premiumTime > Date.now()) {
+        const tierClass = getPremiumBadgeClass({ premium: u.premium, premiumSince: u.premiumSince })
+        nameEl.className = tierClass || 'shimmer-premium-white'
+        currentPremiumTime = u.premiumTime
+        document.getElementById('premium-wrap').style.display = 'block'
+
+        if (glowWrap) {
+          const glowTier = tierClass === 'shimmer-diamond' ? 'glow-diamond'
+            : tierClass === 'shimmer-gold' ? 'glow-gold'
+            : 'glow-white'
+          glowWrap.classList.remove('glow-diamond', 'glow-gold', 'glow-white')
+          glowWrap.classList.add('premium-glow', glowTier)
+        }
+      } else {
+        nameEl.className = ''
+        currentPremiumTime = 0
+        document.getElementById('premium-wrap').style.display = 'none'
+        document.getElementById('premium-tooltip').classList.remove('open')
+        if (premiumTooltipInterval) { clearInterval(premiumTooltipInterval); premiumTooltipInterval = null }
+        if (glowWrap) glowWrap.classList.remove('premium-glow', 'glow-diamond', 'glow-gold', 'glow-white')
+      }
+      nameEl.textContent = displayName
+
+      const picEl = document.getElementById('profile-pic')
+      const avatarEl = document.getElementById('avatar-letter')
+      if (u.profilePic) {
+        picEl.src = u.profilePic
+        picEl.style.display = 'block'
+        avatarEl.style.display = 'none'
+      } else {
+        picEl.style.display = 'none'
+        avatarEl.style.display = 'flex'
+      }
+
+      renderTopBadgeRow(u.badge)
+
+      document.getElementById('stat-exp').textContent = fmtExp(currentExp)
+      document.getElementById('stat-gems').textContent = fmtExp(currentGems)
+      document.getElementById('stat-limit').textContent = currentLimit
+
+      updateTierDisplay()
+
+      if (u.daily && (Date.now() - u.daily) < 86400000) {
+        startRewardTimer(u.daily + 86400000)
+      } else {
+        const btn = document.getElementById('reward-btn')
+        btn.disabled = false
+        btn.textContent = 'Claim'
+        btn.className = 'btn btn-small ready daily-claim-btn'
+      }
+
+      document.getElementById('loading').style.display = 'none'
+      document.getElementById('content').style.display = 'block'
+      renderNotifications(u.notification || [])
+    } else {
+      document.getElementById('stat-exp').textContent = fmtExp(currentExp)
+      document.getElementById('stat-gems').textContent = fmtExp(currentGems)
+      document.getElementById('stat-limit').textContent = currentLimit
+      updateTierDisplay()
+      renderNotifications(u.notification || [])
+    }
+  } catch (err) {
+    console.error('[loadProfile]', err)
+    if (!silent) {
+      const isTimeout = err?.name === 'AbortError'
+      document.getElementById('loading').innerHTML = isTimeout
+        ? `// ${icon('cross')} Request timed out. <a href="#" onclick="location.reload();return false;" style="color:inherit;text-decoration:underline;">Retry</a>`
+        : `// ${icon('cross')} failed to load data. <a href="#" onclick="location.reload();return false;" style="color:inherit;text-decoration:underline;">Retry</a>`
+    }
+  }
+}
+
+function startRewardTimer(nextTime) {
+  if (timerInterval) clearInterval(timerInterval)
+  const btn = document.getElementById('reward-btn')
+
+  const update = () => {
+    const diff = nextTime - Date.now()
+    if (diff <= 0) {
+      clearInterval(timerInterval)
+      btn.disabled = false
+      btn.textContent = 'Claim'
+      btn.className = 'btn btn-small ready daily-claim-btn'
+    }
+  }
+
+  btn.disabled = true
+  btn.textContent = 'Claim'
+  btn.className = 'btn btn-small claimed daily-claim-btn'
+  update()
+  timerInterval = setInterval(update, 1000)
+}
+
+async function claimReward() {
+  const btn = document.getElementById('reward-btn')
+  btn.disabled = true
+  btn.textContent = '...'
+  btn.className = 'btn btn-small claimed daily-claim-btn'
+
+  try {
+    const res = await safeFetch('/api/daily', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } })
+    const data = await res.json()
+    if (data.success) {
+      currentExp = data.exp
+      currentGems = data.gems || 0
+      document.getElementById('stat-exp').textContent = fmtExp(currentExp)
+      document.getElementById('stat-gems').textContent = fmtExp(currentGems)
+      updateTierDisplay()
+      startRewardTimer(data.daily + 86400000)
+      showToast(`+${data.expReward} EXP, +${data.gemReward} Gems claimed!`, 'success', 'confetti')
+    } else {
+      showToast(data.message || 'Failed to claim.', 'error')
+      btn.disabled = false
+      btn.textContent = 'Claim'
+      btn.className = 'btn btn-small ready daily-claim-btn'
+    }
+  } catch {
+    showToast('Connection error.', 'error')
+    btn.disabled = false
+    btn.textContent = 'Claim'
+    btn.className = 'btn btn-small ready daily-claim-btn'
+  }
+}
+
+async function doTierUp() {
+  setLoading('tierup-btn', true)
+  try {
+    const res = await safeFetch('/api/tierup', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } })
+    const data = await res.json()
+    if (data.success) {
+      currentExp = data.exp
+      currentLevel = data.level
+      currentLimit = data.limit
+      document.getElementById('stat-exp').textContent = fmtExp(currentExp)
+      document.getElementById('stat-limit').textContent = currentLimit
+      document.getElementById('stat-tier').textContent = getTierName(currentLevel)
+      updateTierDisplay()
+      document.getElementById('modal-title').innerHTML = `${escapeHtml(data.oldTier)} ${icon('arrowRight')} ${escapeHtml(data.newTier)}`
+      document.getElementById('modal-body').innerHTML =
+        `Congratulations! You've reached <strong>${data.newTier}</strong>.<br><br>New limit: <strong>${data.limit}</strong><br>Remaining EXP: <strong>${fmtExp(data.exp)}</strong>`
+      document.getElementById('tierup-modal').classList.add('show')
+      showToast(`Tier Up! ${data.oldTier} ${icon('arrowRight')} ${data.newTier}`, 'success', 'confetti')
+    } else {
+      showToast(data.message || 'Tier up failed.', 'error')
+    }
+  } catch {
+    showToast('Connection error.', 'error')
+  }
+  setLoading('tierup-btn', false)
+}
+
+const SPIN_COOLDOWN_MS = 500
+let spinCooldownEnd = 0
+let cooldownTimer = null
+let isSpinning = false
+
+function startSpinCooldown() {
+  spinCooldownEnd = Date.now() + SPIN_COOLDOWN_MS
+  const btn = document.getElementById('slot-btn')
+  if (cooldownTimer) clearInterval(cooldownTimer)
+  cooldownTimer = setInterval(() => {
+    const remaining = Math.ceil((spinCooldownEnd - Date.now()) / 1000)
+    if (remaining <= 0) {
+      clearInterval(cooldownTimer)
+      cooldownTimer = null
+      if (!isSpinning) { btn.disabled = false; btn.textContent = 'SPIN' }
+    } else {
+      btn.disabled = true
+      btn.textContent = remaining + 's'
+    }
+  }, 100)
+}
+
+async function spinSlot() {
+  if (isSpinning) { showToast('Please wait, still spinning...', 'warn'); return }
+  if (Date.now() < spinCooldownEnd) {
+    const remaining = Math.ceil((spinCooldownEnd - Date.now()) / 1000)
+    showToast(`Cooldown! Wait ${remaining}s`, 'warn'); return
+  }
+
+  const btn = document.getElementById('slot-btn')
+  const s1 = document.getElementById('slot1')
+  const s2 = document.getElementById('slot2')
+  const s3 = document.getElementById('slot3')
+  const resultEl = document.getElementById('slot-result')
+
+  resultEl.innerHTML = ''
+  resultEl.className = 'slot-result'
+  isSpinning = true
+  btn.disabled = true
+  btn.textContent = '...'
+
+  const icons = ['♣', '♦', '♠', '♥', '♪', '7', '×', '✦', '✿']
+  const spinInterval = setInterval(() => {
+    s1.innerHTML = slotSymbolHtml(icons[Math.floor(Math.random() * icons.length)])
+    s2.innerHTML = slotSymbolHtml(icons[Math.floor(Math.random() * icons.length)])
+    s3.innerHTML = slotSymbolHtml(icons[Math.floor(Math.random() * icons.length)])
+  }, 40)
+  const maxSpinVisual = setTimeout(() => clearInterval(spinInterval), 600)
+
+  try {
+    const res = await safeFetch('/api/slot', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } }, 12000)
+    const data = await res.json()
+    clearTimeout(maxSpinVisual)
+    clearInterval(spinInterval)
+
+    if (data.success) {
+      s1.innerHTML = slotSymbolHtml(data.slots[0])
+      s2.innerHTML = slotSymbolHtml(data.slots[1])
+      s3.innerHTML = slotSymbolHtml(data.slots[2])
+      currentExp = data.newExp
+      document.getElementById('stat-exp').textContent = fmtExp(currentExp)
+      updateTierDisplay()
+      const pityMsg = data.isPity ? ` ${icon('star')} PITY!` : ''
+      resultEl.innerHTML = escapeHtml(data.winMessage) + pityMsg
+      resultEl.classList.add(data.isWin ? 'win' : 'lose')
+      showToast(escapeHtml(data.winMessage) + pityMsg, data.isWin ? 'success' : 'error', data.isWin ? 'confetti' : 'sad')
+      document.getElementById('pity-count').textContent = data.spinCount ?? 0
+    } else {
+      s1.innerHTML = slotSymbolHtml('♣'); s2.innerHTML = slotSymbolHtml('♦'); s3.textContent = '7'
+      showToast(data.message || 'Spin failed!', 'error')
+    }
+  } catch {
+    clearTimeout(maxSpinVisual)
+    clearInterval(spinInterval)
+    s1.innerHTML = slotSymbolHtml('♣'); s2.innerHTML = slotSymbolHtml('♦'); s3.textContent = '7'
+    showToast('Connection error!', 'error')
+  } finally {
+    isSpinning = false
+    startSpinCooldown()
+  }
+}
+
+async function doRename() {
+  const newName = document.getElementById('rename-input').value.trim()
+  if (!newName) return showToast('Name cannot be empty.', 'error')
+  if (newName.length > 32) return showToast('Max 32 characters.', 'error')
+  setLoading('rename-btn', true)
+
+  try {
+    const res = await safeFetch('/api/rename', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ newName })
+    })
+    const data = await res.json()
+    if (data.success) {
+      showToast('Name updated!', 'success')
+      document.getElementById('rename-input').value = ''
+      await loadProfile(false)
+    } else {
+      showToast(data.message || 'Failed.', 'error')
+    }
+  } catch { showToast('Connection error.', 'error') }
+  setLoading('rename-btn', false)
+}
+
+async function changePassword() {
+  const oldPw = document.getElementById('pw-old').value
+  const newPw = document.getElementById('pw-new').value
+  const newPw2 = document.getElementById('pw-new2').value
+  if (!oldPw || !newPw || !newPw2) return showToast('Fill in all fields.', 'error')
+  if (newPw !== newPw2) return showToast('Passwords do not match.', 'error')
+  if (newPw.length < 6) return showToast('Min 6 characters.', 'error')
+  if (oldPw === newPw) return showToast('New password must be different.', 'error')
+
+  setLoading('pw-btn', true)
+  try {
+    const res = await safeFetch('/api/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw })
+    })
+    const data = await res.json()
+    if (data.success) {
+      showToast('Password updated.', 'success')
+      document.getElementById('pw-old').value = ''
+      document.getElementById('pw-new').value = ''
+      document.getElementById('pw-new2').value = ''
+    } else {
+      showToast(data.message || 'Failed.', 'error')
+    }
+  } catch { showToast('Connection error.', 'error') }
+  setLoading('pw-btn', false)
+}
+
+async function redeemCode() {
+  const code = document.getElementById('gc-input').value.trim().toUpperCase()
+  if (!code) return showToast('Enter a gift code.', 'error')
+
+  const resultEl = document.getElementById('gc-result')
+  resultEl.style.display = 'none'
+
+  setLoading('gc-btn', true)
+  try {
+    const res = await safeFetch('/api/redeem', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ code })
+    })
+    const data = await res.json()
+    if (data.success) {
+      document.getElementById('gc-input').value = ''
+      resultEl.style.display = 'block'
+      resultEl.style.background = 'rgba(85,204,119,0.08)'
+      resultEl.style.border = '1px solid rgba(85,204,119,0.25)'
+      resultEl.style.color = 'var(--success)'
+      resultEl.textContent = data.message
+      showToast(data.message, 'success')
+      await loadProfile(true)
+    } else {
+      resultEl.style.display = 'block'
+      resultEl.style.background = 'rgba(255,85,85,0.07)'
+      resultEl.style.border = '1px solid rgba(255,85,85,0.2)'
+      resultEl.style.color = 'var(--error)'
+      resultEl.innerHTML = icon('cross') + ' ' + escapeHtml(data.message || 'Invalid code.')
+      showToast(data.message || 'Invalid code.', 'error')
+    }
+  } catch { showToast('Connection error.', 'error') }
+  setLoading('gc-btn', false)
+}
+
+async function logout() {
+  try { await safeFetch('/api/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } }) } catch {}
+  localStorage.clear()
+  safeRedirect('/')
+}
+
+async function loadDatabaseData() {
+  const container = document.getElementById('db-users-list')
+  container.innerHTML = '<div class="text-center text-muted2 text-sm">Loading users...</div>'
+
+  try {
+    const res = await safeFetch('/api/admin/users', { headers: { 'Authorization': 'Bearer ' + token } })
+    if (!res.ok) { container.innerHTML = `<div class="text-center text-error text-sm">Server error: ${res.status}</div>`; return }
+    const data = await res.json()
+    if (!data.success) { container.innerHTML = `<div class="text-center text-error text-sm">${escapeHtml(data.message)}</div>`; return }
+
+    const users = data.users || []
+    if (users.length === 0) { container.innerHTML = '<div class="text-center text-muted2 text-sm">No users found.</div>'; return }
+
+    container.innerHTML = ''
+    for (const userData of users) {
+      const userKey = userData.userKey || userData.number || ''
+      if (userKey.endsWith('@g.us')) continue
+      const safeKey = makeSafeId(userKey)
+      const displayName = userData.name || userKey.split('@')[0] || userKey.slice(0, 15)
+
+      const userDiv = document.createElement('div')
+      userDiv.className = 'db-user-item'
+      const initials = (displayName || userKey).slice(0, 2).toUpperCase()
+      const avatarHtml = userData.profilePicCache
+        ? `<div class="db-avatar-wrap"><img class="db-avatar" src="${escapeHtml(userData.profilePicCache)}" alt=""></div>`
+        : `<div class="db-avatar-wrap"><div class="db-avatar">${escapeHtml(initials)}</div></div>`
+      userDiv.innerHTML = `
+        <div class="db-user-header" onclick="toggleUserFields('${escapeHtml(userKey)}')">
+          ${avatarHtml}
+          <span class="db-user-name">${escapeHtml(displayName)}</span>
+          <span class="db-user-expand" id="expand-${safeKey}">${icon('chevronRight')}</span>
+        </div>
+        <div class="db-user-fields" id="fields-${safeKey}">
+          ${['exp', 'limit', 'level', 'gems'].map(f => `
+            <div class="db-field-row">
+              <span class="db-field-label">${f}</span>
+              <input type="number" id="${f}-${safeKey}" class="db-field-input number" value="${Number(userData[f]) || 0}">
+            </div>
+          `).join('')}
+          <div class="db-field-row">
+            <span class="db-field-label">name</span>
+            <input type="text" id="name-${safeKey}" class="db-field-input string" value="${escapeHtml(userData.name || '')}">
+          </div>
+          <div class="db-field-row">
+            <span class="db-field-label">premium</span>
+            <input type="checkbox" id="premium-${safeKey}" ${userData.premium ? 'checked' : ''}>
+          </div>
+          <div class="db-field-row">
+            <span class="db-field-label">premium time</span>
+            <input type="datetime-local" id="premiumTime-${safeKey}" class="db-field-input" value="${userData.premiumTime ? toLocalDatetimeValue(userData.premiumTime) : ''}">
+          </div>
+          <button class="db-save-btn" id="save-${safeKey}" style="width:100%;margin-top:6px;" onclick="saveUserFields('${escapeHtml(userKey)}')">Save</button>
+        </div>
+      `
+      container.appendChild(userDiv)
+    }
+    initDbScrollAnimations()
+  } catch (err) {
+    container.innerHTML = `<div class="text-center text-error text-sm">Error: ${escapeHtml(err.message)}</div>`
+  }
+}
+
+function initDbScrollAnimations() {
+  const container = document.getElementById('db-users-list')
+  const topG = document.getElementById('db-top-gradient')
+  const bottomG = document.getElementById('db-bottom-gradient')
+  if (!container) return
+
+  if (container._dbScrollHandler) container.removeEventListener('scroll', container._dbScrollHandler)
+  const updateGradients = () => {
+    if (!topG || !bottomG) return
+    const { scrollTop, scrollHeight, clientHeight } = container
+    topG.style.opacity = Math.min(scrollTop / 50, 1)
+    const bottomDistance = scrollHeight - (scrollTop + clientHeight)
+    bottomG.style.opacity = scrollHeight <= clientHeight ? 0 : Math.min(bottomDistance / 50, 1)
+  }
+  container._dbScrollHandler = updateGradients
+  container.addEventListener('scroll', updateGradients)
+  updateGradients()
+
+  if (container._dbObserver) container._dbObserver.disconnect()
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle('in-view', entry.isIntersecting)
+    })
+  }, { root: container, threshold: 0.5 })
+  container.querySelectorAll('.db-user-item').forEach(el => observer.observe(el))
+  container._dbObserver = observer
+}
+
+function toLocalDatetimeValue(ts) {
+  const d = new Date(ts)
+  const pad = n => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+window.toggleUserFields = function(userKey) {
+  const safeKey = makeSafeId(userKey)
+  const fields = document.getElementById(`fields-${safeKey}`)
+  const icon = document.getElementById(`expand-${safeKey}`)
+  if (!fields || !icon) return
+  const isOpen = fields.classList.contains('open')
+  fields.classList.toggle('open', !isOpen)
+  icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)'
+}
+
+window.saveUserFields = async function(userKey) {
+  const safeKey = makeSafeId(userKey)
+  const btn = document.getElementById(`save-${safeKey}`)
+
+  const fields = [
+    { field: 'exp', value: parseInt(document.getElementById(`exp-${safeKey}`).value) || 0 },
+    { field: 'limit', value: parseInt(document.getElementById(`limit-${safeKey}`).value) || 0 },
+    { field: 'level', value: parseInt(document.getElementById(`level-${safeKey}`).value) || 0 },
+    { field: 'gems', value: parseInt(document.getElementById(`gems-${safeKey}`).value) || 0 },
+    { field: 'name', value: document.getElementById(`name-${safeKey}`).value },
+    { field: 'premium', value: document.getElementById(`premium-${safeKey}`).checked },
+    { field: 'premiumTime', value: (() => {
+        const v = document.getElementById(`premiumTime-${safeKey}`).value
+        return v ? new Date(v).getTime() : 0
+      })() }
+  ]
+
+  if (btn) { btn.disabled = true; btn.textContent = '...' }
+
+  try {
+    let anyFailed = false
+    for (const { field, value } of fields) {
+      const res = await safeFetch('/api/admin/update-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ userKey, field, value })
+      })
+      const data = await res.json()
+      if (!data.success) anyFailed = true
+    }
+    if (anyFailed) {
+      showToast('Some fields failed to save.', 'error')
+    } else {
+      showToast('Saved!', 'success')
+      await loadProfile(true)
+    }
+  } catch {
+    showToast('Connection error.', 'error')
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Save' }
+}
+
+async function loadGiftCodes() {
+  const list = document.getElementById('gc-list')
+  list.innerHTML = '<div class="text-center text-muted2 text-sm">Loading codes...</div>'
+
+  try {
+    const res = await safeFetch('/api/admin/giftcodes', { headers: { 'Authorization': 'Bearer ' + token } })
+    const data = await res.json()
+    if (!data.success) { list.innerHTML = `<div class="text-center text-error text-sm">${escapeHtml(data.message)}</div>`; return }
+    const codes = data.codes || []
+    if (codes.length === 0) { list.innerHTML = '<div class="text-center text-muted2 text-sm">No gift codes yet.</div>'; return }
+    list.innerHTML = codes.map(([code, reward]) => `
+      <div class="gc-item">
+        <div><span class="gc-item-code">${escapeHtml(code)}</span><br><span class="gc-item-reward">${escapeHtml(reward)}</span></div>
+        <button class="gc-del-btn" onclick="deleteGiftCode('${escapeHtml(code)}')">×</button>
+      </div>
+    `).join('')
+  } catch {
+    list.innerHTML = '<div class="text-center text-error text-sm">Error loading codes</div>'
+  }
+}
+
+async function addGiftCode() {
+  const codeEl = document.getElementById('gc-new-code')
+  const rewardEl = document.getElementById('gc-new-reward')
+  const code = codeEl.value.trim().toUpperCase()
+  const reward = rewardEl.value.trim()
+  if (!code) return showToast('Enter a code name.', 'error')
+  if (!reward || !reward.includes(':')) return showToast('Reward format: type:value', 'error')
+
+  try {
+    const res = await safeFetch('/api/admin/giftcodes/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ code, reward })
+    })
+    const data = await res.json()
+    if (data.success) {
+      codeEl.value = ''; rewardEl.value = ''
+      showToast(`Code "${code}" added!`, 'success')
+      loadGiftCodes()
+    } else {
+      showToast(data.message || 'Failed.', 'error')
+    }
+  } catch { showToast('Connection error.', 'error') }
+}
+
+async function deleteGiftCode(code) {
+  try {
+    const res = await safeFetch('/api/admin/giftcodes/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ code })
+    })
+    const data = await res.json()
+    if (data.success) {
+      showToast(`Code "${code}" deleted.`, 'success')
+      loadGiftCodes()
+    } else {
+      showToast(data.message || 'Failed.', 'error')
+    }
+  } catch { showToast('Connection error.', 'error') }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await fetchTierAsset()
+  loadBotName()
+  await loadProfile()
+  setInterval(() => { loadProfile(true) }, 30000)
+})
+</script>
+</body>
+</html>
