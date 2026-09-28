@@ -34,5 +34,20 @@ t("2b. channel tanpa key → senyap false (pemanggil fallback animHuntTrack)", f
 t("2c. sock null → senyap false gak throw", (await lib.playScopeAnim(null, "x", {})) === false);
 t("2d. tanpa monsterName → default SASARAN (gak crash)", lib.scopeFrames({}).every((x) => x.includes("SASARAN")));
 
+
+console.log("— section 3: SITUASI rare — rayap lebih lama & hati-hati —");
+const FR = lib.scopeFrames({ monsterName: "Naga Emas", rare: true });
+t("3a. situasi menentukan level: rare = 7 frame vs common 5", FR.length === 7 && F.length === 5, FR.length);
+t("3b. rare: HUD badge 💎 LANGKA + adegan menyusup 🤫/🫥 vs common 🌲 rimba", (() => {
+  return FR.every((x) => x.includes("\u{1F48E} LANGKA")) && FR.slice(0, 6).some((x) => x.includes("\u{1F92B}") || x.includes("\u{1FAE5}"))
+    && F.slice(0, 4).some((x) => x.includes("\u{1F332}")) && !F[0].includes("LANGKA");
+})());
+t("3c. rare: frame akhir JEJAK LANGKA DITEMUKAN + 💥 + 🎯🐾 + 💎", FR[6].includes("JEJAK LANGKA DITEMUKAN") && FR[6].includes("💥") && FR[6].includes("🎯🐾") && FR[6].includes("💎"), FR[6].split("\n")[3]);
+t("3e. rare: crosshair tetap merayap non-decreasing ke jejak 🐾", (() => {
+  const rows = FR.map((x) => x.split("\n")[2]);
+  const pos = rows.map((r) => r.indexOf("🎯"));
+  return rows.every((r) => r.includes("🐾")) && pos.every((x, i) => i === 0 || x >= pos[i - 1]) && rows[6].includes("🎯🐾");
+})());
+
 console.log(`\n===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);
