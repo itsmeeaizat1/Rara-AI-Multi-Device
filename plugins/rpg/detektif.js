@@ -248,7 +248,7 @@ async function handler(m, { sock, config }) {
       a.puzzlePending = null;
       a.curSus = null;
       saveDb();
-      await playDetektifAnim(m, sock, { mode: "pergi", locName: loc.name, locEmoji: loc.emoji });
+      await playDetektifAnim(m, sock, { mode: "pergi", locName: loc.name, locEmoji: loc.emoji, tier: tierFor(u.solvedTotal) });
       return m.reply(novaGameBox({
         title: "detektif", icon: loc.emoji,
         flavor: `${loc.emoji} *${loc.name.toUpperCase()}*`,
@@ -272,12 +272,12 @@ async function handler(m, { sock, config }) {
         if (!a.puzzlePending) {
           a.puzzlePending = cur.id;
           saveDb();
-          await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "lockbox" });
+          await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "lockbox", tier: tierFor(u.solvedTotal) });
           return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *LOCKBOX DITEMUKAN!*", body: cur.puzzle.q + "\n\n💡 .sangdetektif hint (30 gold / 1 kopi) bantuan kurator\n✍️ Jawab: .sangdetektif jawab <jawabanmu>" }));
         }
         // puzzle masih pending (belum dijawab benar) → bukti dalam tetap terkunci
         saveDb();
-        await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "pending" });
+        await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "pending", tier: tierFor(u.solvedTotal) });
         return m.reply(novaGameBox({ title: "detektif", icon: "🔒", flavor: "🔒 *BRANKAS MASIH TERKUNCI!*", body: "Bukti di dalam belum bisa diambil. Pecahkan teka-tekinya dulu: .sangdetektif jawab <jawabanmu>\n\n" + cur.puzzle.q }));
       }
       for (const evId of (cur.evidence || [])) {
@@ -285,7 +285,7 @@ async function handler(m, { sock, config }) {
       }
       saveDb();
       if (!found.length) {
-        await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "bersih" });
+        await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "bersih", tier: tierFor(u.solvedTotal) });
         return m.reply(novaGameBox({ title: "detektif", icon: "🔍", flavor: "🔍 *SUDAH BERSIH!*", body: `Gak ada bukti baru di ${cur.name}. Coba lokasi lain.` }));
       }
       // crit Intuisi Detektif
@@ -297,7 +297,7 @@ async function handler(m, { sock, config }) {
           critNote = `\n\n✨ INTUISI DETEKTIF: instingmu berdesir — bukti kunci kasus ini tersembunyi di sektor "${loc2 ? loc2.name : "yang belum kamu datangi"}".`;
         }
       }
-      await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "temu" });
+      await playDetektifAnim(m, sock, { mode: "cari", locName: cur.name, locEmoji: cur.emoji, hasil: "temu", tier: tierFor(u.solvedTotal) });
       return m.reply(novaGameBox({
         title: "detektif", icon: "🔍",
         flavor: "🔍 *JEJAK DITEMUKAN!*",
