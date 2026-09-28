@@ -85,7 +85,7 @@ export async function browserSiteSearch(site, query, { limit = 5, timeoutMs = 30
   }
 }
 
-// 🔹 WEB SEARCH UMUM (tanpa site:) — buat .googleairich: query bebas,
+// 🔹 WEB SEARCH UMUM (tanpa site:) — query bebas (pola searchsite),
 // hasil DDG polos {title, url, snippet} — pola sama kayak browserSiteSearch
 // (chromium beneran, DDG blok request axios polos dari IP datacenter).
 export async function browserWebSearch(query, { limit = 5, timeoutMs = 30000 } = {}) {

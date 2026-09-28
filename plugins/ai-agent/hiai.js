@@ -3,6 +3,7 @@
 // Nama cmd SENGAJA beda dari agent Nova (.novaagent/.mcp/.ai lain) biar gak bentrok.
 import { novaGuide, novaError, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { runAgent, resetSession, listTools, countTools, MODELS, getApiKeys, setContext } from "../../src/lib/hiroai/mcp.js";
+import { AIRich } from "../../src/lib/nova-airich-hiro.js";
 
 const pluginConfig = {
   name: "hiai",
@@ -90,6 +91,16 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const result = await runAgent(sock, m, bodyText, {});
+    if (result?.type === "message" && (await renderRichResult(sock, m, result))) {
+      await m.react("⚡");
+      return { handled: true };
+    }
+    if (result?.type === "confirm" || result?.type === "error") {
+      const t = result?.text || "";
+      await m.react(result?.type === "error" ? "❌" : "⚡");
+      if (t) await m.reply(t);
+      return { handled: true };
+    }
     const text = result?.text || result?.message || "";
     if (!text) {
       await m.react("❌");
@@ -105,6 +116,54 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   return { handled: true };
+}
+
+// ── AI RICH RENDER (port ai.js HIROBOT 29 Sep): jawaban agent bertipe message ──
+// codeblock → kartu GenAI native (sock.aiRich: title + teks hyperlink + code tersorot),
+// buttons → nativeFlow WhatsApp (url/copy/reply), semuanya fallback teks biasa kalau
+// channel/baileys gak dukung. return true kalau udah dirender (handler berhenti di sini).
+export async function renderRichResult(sock, m, result) {
+  const d = result?.messageData || {};
+  if (result?.messageType === "codeblock") {
+    try {
+      const rich = (typeof sock?.aiRich === "function" ? sock.aiRich() : new AIRich(sock));
+      if (d.title) rich.setTitle(d.title);
+      if (d.description) rich.addText(`${d.description}\n`, { hyperlink: true });
+      rich.addCode(d.language || "text", d.code || "");
+      await rich.send(m.chat, { quoted: m });
+      return true;
+    } catch (e) {
+      console.error("[hiai] aiRich gagal, fallback teks:", e.message);
+      let msg = "";
+      if (d.title) msg += `*${d.title}*\n\n`;
+      if (d.description) msg += `${d.description}\n\n`;
+      msg += "```" + (d.language || "text") + "\n" + (d.code || "") + "\n```";
+      await m.reply(msg);
+      return true;
+    }
+  }
+  if (result?.messageType === "buttons") {
+    try {
+      const btns = (d.buttons || []).map((btn) => {
+        const type = (btn.type || "reply").toLowerCase();
+        if (type === "url") return { text: btn.label || "Link", url: btn.value || "", useWebview: true };
+        if (type === "copy") return { text: btn.label || "Copy", copy: btn.value || "" };
+        return { text: btn.label || "Button", id: btn.value || "" };
+      });
+      const msg = { text: d.body || "", nativeFlow: btns };
+      if (d.footer) msg.footer = d.footer;
+      await sock.sendMessage(m.chat, msg, { quoted: m });
+      return true;
+    } catch (e) {
+      console.error("[hiai] nativeFlow gagal, fallback teks:", e.message);
+      const lines = [d.body || ""];
+      if (d.footer) lines.push(`_${d.footer}_`);
+      (d.buttons || []).forEach((b) => lines.push(`• ${b.label}: ${b.value}`));
+      await m.reply(lines.join("\n"));
+      return true;
+    }
+  }
+  return false;
 }
 
 export { pluginConfig as config, handler }

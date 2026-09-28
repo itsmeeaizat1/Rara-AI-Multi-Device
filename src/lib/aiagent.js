@@ -1141,7 +1141,7 @@ export function _clearBrowserSearchForTest() { _browserSearchForTest = undefined
 // mbg beracun" dijawab "saya tidak tahu" — engine scrape Bing/DDG/Brave
 // balikin SERP SAMPAH dari IP datacenter (tailor/ads page) → lowRelevance
 // → null → AI jawab gak tahu. Chromium beneran (html.duckduckgo.com) LEWAT
-// blok itu (pola sama kayak googleairich — jalan normal di VPS).
+// blok itu (pola sama kayak searchsite — jalan normal di VPS).
 async function browserSearchFallback(query, limit) {
   if (typeof _browserSearchForTest === "function") return _browserSearchForTest(query, { limit });
   if (_browserSearchForTest === null) return null; // e2e disabled
