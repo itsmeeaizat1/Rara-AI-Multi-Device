@@ -219,6 +219,19 @@ const doorLib = await import(R + "/src/lib/libanimationrpg/libthousanddoortowerr
 const dg = doorLib.doorFrames({ floor: 3, themeName: "Hutan", themeEmoji: "🌲" });
 t("10i. grid 4 baris: HUD tema · adegan tema · gerbang kepingan · status", dg.length === 7 && dg.every((x) => (x.match(/\n/g) || []).length >= 5) && dg.some((x) => x.includes("🌲 🏰")), dg[0]);
 const dgb = doorLib.doorFrames({ floor: 10, themeName: "Bijak", themeEmoji: "⚡" });
+t("10k. situasi menentukan level: lantai 25 → 8 kepingan (9 frame) vs lantai 3 = 6 (7 frame)", (() => {
+  const d25 = doorLib.doorFrames({ floor: 25, themeName: "Kota", themeEmoji: "🏙️" });
+  return d25.length === 9 && dg.length === 7;
+})());
+t("10l. boss lebih berat: lantai 10 → 9 kepingan (10 frame) > lantai 9 = 7 frame", (() => {
+  const d10 = doorLib.doorFrames({ floor: 10, themeName: "Bijak", themeEmoji: "⚡" });
+  const d9 = doorLib.doorFrames({ floor: 9, themeName: "Hutan", themeEmoji: "🌲" });
+  return d10.length === 10 && d9.length === 7 && d10.some((x) => x.includes("MERAKIT KUNCI GANDA"));
+})());
+t("10m. badge bintang per 10 lantai: lantai 20 ⭐⭐, lantai 3 tanpa", (() => {
+  const d20 = doorLib.doorFrames({ floor: 20, themeName: "Kota", themeEmoji: "🏙️" });
+  return d20[0].includes("⭐⭐") && !dg[0].includes("⭐");
+})());
 t("10j. grid boss: adegan 🧙⚡ + gembok ganda", dgb[0].includes("🧙 🏰 ⚡") && dgb[0].includes("🔒🔒"), dgb[0].split("\n")[2]);
 }
 
