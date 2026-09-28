@@ -665,6 +665,28 @@ try {
       if (config.dev?.debugLog) logger.error("emojiquiz", e.message);
     }
 
+    // ImgMotion — step 2 video (plugins/tools/imgmotion.js)
+    try {
+      const { answerHandler: imgMotionHandler } = await import("../plugins/tools/imgmotion.js");
+      if (typeof imgMotionHandler === "function") {
+        const imHandled = await imgMotionHandler(m, sock);
+        if (imHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("imgmotion", e.message);
+    }
+
+    // Ampro — step 2 magic link (plugins/tools/ampro.js)
+    try {
+      const { answerHandler: amproHandler } = await import("../plugins/tools/ampro.js");
+      if (typeof amproHandler === "function") {
+        const apHandled = await amproHandler(m, sock);
+        if (apHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("ampro", e.message);
+    }
+
     // All other games (via nova-game-factory — shared session map in nova-game-engine)
     try {
       const { games } = await import("./lib/nova-game-factory.js");
