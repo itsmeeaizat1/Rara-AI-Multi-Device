@@ -1,6 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// libanimationrpg/libgachaitemrpg.js — LIB ANIMASI khusus Gacha Item (owner 25 Sep 2026)
-// Slot 3-reel: reel ✨🌟💎 berputar → 🔒 terkunci satu per satu → reel berhenti.
+// libanimationrpg/libgachaitemrpg.js — LIB ANIMASI EMOJI-GRID khusus Gacha Item
+// (upgrade owner 28 Sep 2026: cutscene 3 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
+// Grid per frame: HUD mesin slot · baris reel 3-reel (🟦 berputar → 🔒 terkunci satu per satu) · baris kunci
+// (🔒/🔄 per reel) · adegan mesin kontekstual (lever ditarik → reel kunci → tegang → BERHENTI).
+// Kontekstual: ikon reel disuplai game lewat ctx (REEL_ICONS milik gachaitem), mesin "bergetar" 💫 saat reel
+// masih berputar, status makin tegang tiap reel berhenti, frame akhir 🎰 REEL BERHENTI!.
 // KHUSUS gachaitem (aturan "beda game beda animasi"). Isi MURNI KODE ANIMASI (pure, gak import plugin).
 // Dipanggil plugin saat user main game — animasi dimuat dari lib ini. Fallback gak dukung edit → senyap.
 
@@ -14,8 +18,12 @@ export function slotFrames(reelIcons) {
   for (let f = 0; f <= 9; f++) {
     const locked = Math.min(3, Math.floor(f / 3)); // reel kunci tiap 3 frame (bug fix: dulu max 2, reel ke-3 gak pernah terkunci)
     const reels = [0, 1, 2].map((r) => (r < locked ? finalIcons[r] : IC[(f + r * 2) % IC.length]));
-    const status = [0, 1, 2].map((r) => (r < locked ? "🔒" : "🔄")).join("");
-    frames.push("```\n🎰 ━ GACHA SLOT ━\n[ " + reels.join(" ] [ ") + " ]\n" + status + (locked >= 3 ? "\n🎰 REEL BERHENTI! Reveal menyusul…" : "\n") + "```");
+    const locks = [0, 1, 2].map((r) => (r < locked ? "🔒" : "🔄")).join("   ");
+    const adegan = locked === 0 ? "🕹️ Lever ditarik… 💫 mesin bergetar!"
+      : locked === 1 ? "✨ Reel 1 terkunci — dua masih berputar…"
+      : locked === 2 ? "🌟 Dua reel berhenti… satu lagi… tegang…"
+      : "🎰 REEL BERHENTI! Reveal menyusul…";
+    frames.push("```\n🎰 ━ GACHA SLOT ━\n[ " + reels.join(" ] [ ") + " ]\n" + locks + "\n" + adegan + "\n```");
   }
   return frames;
 }
