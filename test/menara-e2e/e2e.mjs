@@ -213,6 +213,13 @@ console.log("— section 10: animasi khas pintu (edit berulang) —");
   await handler(mkMsg({ chat: "c12@s.whatsapp.net", args: [] }), { sock: fbSock, config: {} });
   t("10h. channel tanpa edit → animasi dilewati, sesi pintu tetap dibuat", fb === 1 && sessions.get("c12@s.whatsapp.net") !== undefined, `calls=${fb}`);
   sessions.delete("c12@s.whatsapp.net");
+
+// grid emoji: lib langsung (deterministik)
+const doorLib = await import(R + "/src/lib/libanimationrpg/libthousanddoortowerrpg.js");
+const dg = doorLib.doorFrames({ floor: 3, themeName: "Hutan", themeEmoji: "🌲" });
+t("10i. grid 4 baris: HUD tema · adegan tema · gerbang kepingan · status", dg.length === 7 && dg.every((x) => (x.match(/\n/g) || []).length >= 5) && dg.some((x) => x.includes("🌲 🏰")), dg[0]);
+const dgb = doorLib.doorFrames({ floor: 10, themeName: "Bijak", themeEmoji: "⚡" });
+t("10j. grid boss: adegan 🧙⚡ + gembok ganda", dgb[0].includes("🧙 🏰 ⚡") && dgb[0].includes("🔒🔒"), dgb[0].split("\n")[2]);
 }
 
 fs.rmSync(dbDir, { recursive: true, force: true });
