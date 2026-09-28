@@ -1,10 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .pollenai — free AI chat via pollinations.ai (port HIROBOT pollination.js)
-import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pollination",
-  alias: ["pollen", "freeaichat"],
+  alias: ["pollen", "freeaichat", "pollenimg"],
   category: "ai",
   description: "Chat AI gratis via pollinations.ai dengan ingatan percakapan",
   usage: ".pollenai <pertanyaan> | .pollenai reset",
@@ -24,7 +24,33 @@ async function handler(m, { sock, config: botConfig }) {
   const prefix = botConfig.command?.prefix || ".";
   try {
     await m.react("🧠");
-    const text = (m.text || "").replace(new RegExp("^" + prefix + "pollenation\\s*", "i"), "").trim();
+    // .pollenimg <prompt> — IMAGE GEN via image.pollinations.ai (gratis tanpa key)
+    if (/^\.\w*pollenimg/i.test(m.text || "")) {
+      const prompt = (m.text || "").replace(new RegExp("^" + prefix + "pollenimg\\s*", "i"), "").trim();
+      if (!prompt) {
+        await m.react("🐣");
+        await m.reply(novaGuide(
+          "pollenimg",
+          "Bikin gambar AI gratis via pollinations.ai (tanpa key).",
+          prefix + "pollenimg kucing astronot gaya cat air",
+          "Opsi: --ar 1024x1024 (default) atau --ar 768x1344 buat portrait."
+        ));
+        return { handled: true };
+      }
+      let size = "1024x1024";
+      const arMatch = prompt.match(/--ar\s+(\d{2,4})x(\d{2,4})/i);
+      let cleanPrompt = prompt;
+      if (arMatch) { size = arMatch[1] + "x" + arMatch[2]; cleanPrompt = prompt.replace(/--ar\s+\d{2,4}x\d{2,4}/i, "").trim(); }
+      const [w, h] = size.split("x");
+      const url = "https://image.pollinations.ai/prompt/" + encodeURIComponent(cleanPrompt) + "?width=" + w + "&height=" + h + "&nologo=true";
+      const res = await fetch(url, { signal: AbortSignal.timeout(180000) });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const buf = Buffer.from(await res.arrayBuffer());
+      await m.react("⚡");
+      await sock.sendMessage(m.chat, { image: buf, caption: claraWrap("PollenImg", cleanPrompt.slice(0, 100)) }, { quoted: m });
+      return { handled: true };
+    }
+    const text = (m.text || "").replace(new RegExp("^" + prefix + "pollination\\s*", "i"), "").trim();
     if (!text || text.toLowerCase() === "help") {
       await m.react("🐣");
       await m.reply(novaGuide(
