@@ -4,7 +4,6 @@
 
 import { foldHistory, appendTurn, clearSession, clearSessionPrefix } from "./nova-ai-session.js";
 import fs from "fs";
-import { askAI } from "./aiagent.js";
 import { memoryBlock, extractMemories } from "./nova-memory.js";
 import { getDatabase } from "./nova-database.js";
 
@@ -177,28 +176,64 @@ async function execute(conn, m, rule, extra = {}) {
         await conn.groupSettingUpdate(chat, "not_announcement");
         break;
       case "aichat": {
-        // 🔹 FREE CHAT: balasan digenerate AI tiap kali (bukan teks statis)
-        // a.value = persona/instruction bebas, contoh "ngobrol santai kayak temen"
+        // 🔹 UPGRADE 29 Sep (owner report: "disuruh cari info berita viral
+        // malah kayak gak bisa, padahal udah jadi ai agent bisa browsing, cari
+        // informasi, dilengkapi mcp dan skill juga harusnya semua terintegrasi"
+        // + "hai smiley berulang kayak template, harusnya natural lanjut
+        // obrolan biasa") — GANTI dari askAI() single-shot MENTAH (TANPA
+        // riset/tool/mcp/skill sama sekali, itu sebabnya "gak bisa browsing")
+        // ke runAgent() ENGINE PENUH SAMA dengan .aisuperagent: plan otomatis
+        // pilih mode persona/research(browsing beneran)/tools, skill 183 +
+        // mcp terpasang, gaya natural tanpa diktat & anti-sapaan-template
+        // (lihat personaPrompt()/SYS_ANSWER di nova-agent.js).
+        // a.value = gaya bicara custom dari owner (opsional, boleh kosong).
         const userText = m?.text || m?.body || "";
         if (!userText.trim()) break;
-        const persona = a.value?.trim() ||
-          "Kamu asisten WhatsApp yang ramah dan santai. Balas singkat dan natural seperti chat biasa, jangan kaku, jangan mengaku sebagai AI kalau tidak ditanya.";
+        const persona = a.value?.trim() || "";
 
         // 🔹 MEMORY PER-USER TERPADU: key "agent:<sender>" — SAMA dengan .novaai
         // → obrolan di .novaai diterusin di aichat autoflow & sebaliknya (1 sistem)
         const senderName = m?.pushName || (user ? user.split("@")[0] : "user");
         const memKey = `agent:${user || "anon"}`;
-        const ctx = foldHistory(memKey, { userName: senderName });
+        const historyCtx = foldHistory(memKey, { userName: senderName });
 
         // 🔹 MEMORY JANGKA PANJANG (upgrade #2, owner 25 Sep 2026: "autonovaagent
         // juga harusnya punya memory jangka panjang krna itu ai otomatis") —
         // fakta durabel user (nova-memory.js, STORE SAMA dengan .novaai/
-        // .novaagent) di-inject ke prompt + diekstrak ulang tiap jawaban.
-        // Rule aichat = AI OTOMATIS — dia wajib inget user kayak agent manual.
+        // .novaagent/.aisuperagent) di-inject ke prompt + diekstrak ulang tiap
+        // jawaban. Rule aichat = AI OTOMATIS — dia wajib inget user kayak agent manual.
+        const db = getDatabase();
         let memSys = "";
         try { memSys = memoryBlock(getDatabase(), user, userText); } catch {}
+
+        // gaya custom owner (kalau diisi) ditempel jadi instruksi konteks —
+        // runAgent tetap otomatis pilih mode (persona/research/tools) dari isi
+        // task, styleNote cuma nitip preferensi gaya, TIDAK maksa mode.
+        const styleNote = persona ? `[Instruksi gaya bicara dari owner bot, ikuti selama masih natural: ${persona}]\n\n` : "";
+        const task = `${styleNote}${historyCtx}${userText}`;
+
         try {
-          const aiReply = await askAI(persona + (ctx ? "\n\n" + ctx : "") + memSys, userText);
+          const { runAgent } = await import("./nova-agent.js");
+          const { execAction, buildExecutors, buildToolbox } = await import("../../plugins/ai-agent/agent.js");
+          const { skillsBlock } = await import("./nova-askills.js");
+          const toolbox = await buildToolbox();
+          const executors = buildExecutors(m, conn, db, null, {}, null);
+          const res = await runAgent(task, {
+            act: (act, ctx2) => execAction(act, ctx2, m, conn),
+            execTools: executors,
+            toolbox,
+            memBlock: memSys,
+            skillBlock: skillsBlock(userText),
+            context: {
+              isGroup: m?.isGroup !== false,
+              isAdmin: !!m?.isAdmin,
+              isOwner: !!m?.isOwner,
+              isBotAdmin: !!m?.isBotAdmin,
+              chat,
+              sender: user,
+            },
+          });
+          const aiReply = res?.answer || res?.error || "";
           if (aiReply?.trim()) {
             await send({ text: aiReply.trim() });
             appendTurn(memKey, userText, aiReply.trim());

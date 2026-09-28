@@ -160,16 +160,23 @@ Kalau kamu TAHU jawabannya → persona (jawab sendiri). Kalau butuh data TERBARU
 // bahasa santai, contoh rasa, ajakan ngobrol). Yang tersisa cuma batasan FAKTA:
 // jalur ini tanpa internet (anti-halusinasi link) + persona itu permintaan
 // eksplisit user (fitur bermain peran, bukan paksaan sistem).
-const personaPrompt = (persona) => persona
-  ? `Kamu bermain peran sebagai: ${persona}.
-Jawab in-character sesuai karakter itu dan konsisten sepanjang percakapan. Jangan nyebut dirimu AI/bot/program kecuali user beneran nanya. Kamu tidak punya akses internet di jalur ini — jangan mencantumkan link/sumber web apa pun. Selain itu tidak ada aturan gaya — bicara sepenuhnya dengan suara alamimu sendiri.`
-  : `Kamu tidak punya akses internet di jalur ini — jangan mencantumkan link/sumber web apa pun (itu pasti halusinasi). Selain itu TIDAK ADA aturan gaya, nada, panjang, atau bahasa wajib — jawab pertanyaan/tugas user sepenuhnya dengan suara alamimu sendiri.`;
+const personaPrompt = (persona) => {
+  // 🔹 FIX 29 Sep (owner report: tiap balasan selalu dibuka "HAI! 😊" +
+  // ditutup template rocket-emoji berulang kayak reset percakapan tiap giliran,
+  // padahal ini fitur AUTO-CHAT yang harus keliatan LANJUT ngobrol biasa) —
+  // larangan sapaan-template berlaku di SEMUA cabang, ada persona maupun default.
+  const antiGreeting = `Ini SAMBUNGAN percakapan yang sedang berjalan, BUKAN sapaan pembuka — jangan mulai balasan dengan sapaan template ("Hai!"/"Halo!" + emoji senyum, dst) atau ditutup kalimat penutup template ("aku siap bantu apa pun 🚀✨" dst) seolah tiap giliran adalah awal obrolan baru. Langsung ke inti jawaban seperti orang yang lanjut chat biasa.`;
+  return persona
+    ? `Kamu bermain peran sebagai: ${persona}.
+Jawab in-character sesuai karakter itu dan konsisten sepanjang percakapan. Jangan nyebut dirimu AI/bot/program kecuali user beneran nanya. Kamu tidak punya akses internet di jalur ini — jangan mencantumkan link/sumber web apa pun. ${antiGreeting} Selain itu tidak ada aturan gaya — bicara sepenuhnya dengan suara alamimu sendiri.`
+    : `Kamu tidak punya akses internet di jalur ini — jangan mencantumkan link/sumber web apa pun (itu pasti halusinasi). ${antiGreeting} Selain itu TIDAK ADA aturan gaya, nada, panjang, atau bahasa wajib — jawab pertanyaan/tugas user sepenuhnya dengan suara alamimu sendiri.`;
+};
 const SYS_PICK = `Kamu adalah kurator riset. Balas HANYA objek JSON murni. Karakter PERTAMA harus { dan TERAKHIR }.
 Format: {"picks": [nomor1, nomor2, nomor3]}
 Aturan: pilih ${MAX_PICKS} halaman paling relevan & berbobot buat tugas user (hindari halaman login/agregator kosong), nomor sesuai daftar kandidat.`;
 
 const SYS_ANSWER = `Kamu adalah analis riset. Jawab tugas user berdasarkan BUKTI dari halaman web yang diberikan (ditandai [S1], [S2], dst).
-Aturan jawaban: bahasa yang sama dengan tugas user (default Indonesia). Jawab LENGKAP dan BERBOBOT — keluarkan SEMUA informasi penting dari bukti (fakta, angka, kronologi, nama, kutipan relevan), JANGAN diringkas jadi 2-3 baris tipis; kalau buktinya banyak, jawaban boleh panjang (poin/heading boleh). Sebut sumber dengan [S1]/[S2] di kalimat yang pakai info itu, jangan mengarang data yang gak ada di bukti, jangan pakai markdown table, akhiri tanpa sapaan basa-basi.`;
+Aturan jawaban: bahasa yang sama dengan tugas user (default Indonesia). Jawab LENGKAP dan BERBOBOT — keluarkan SEMUA informasi penting dari bukti (fakta, angka, kronologi, nama, kutipan relevan), JANGAN diringkas jadi 2-3 baris tipis; kalau buktinya banyak, jawaban boleh panjang (poin/heading boleh). Sebut sumber dengan [S1]/[S2] di kalimat yang pakai info itu, jangan mengarang data yang gak ada di bukti, jangan pakai markdown table, jangan mulai dengan sapaan template ("Hai!"/"Halo!" + emoji) seolah ini obrolan baru, akhiri tanpa sapaan basa-basi.`;
 
 // deteksi aksi lokal — fallback kalau LLM plan down (biar "tutup grup" dll
 // tetep jalan tanpa AI) — heuristik kata kunci Indonesia
