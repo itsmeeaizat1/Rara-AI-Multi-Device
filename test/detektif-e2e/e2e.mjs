@@ -205,6 +205,18 @@ console.log("— section 9: animasi siram lokasi (edit berulang) —");
   sends.length = 0; edits.length = 0;
   await runAnim(["cari"]);
   t("9g. lockbox: frame akhir PETI TERKUNCI TERLIHAT", edits.length === 6 && edits[5].includes("PETI TERKUNCI"), edits[5]);
+// grid emoji: lib langsung (deterministik)
+const siramLib = await import(R + "/src/lib/libanimationrpg/libmasterdetectiverpg.js");
+const sgPergi = siramLib.siramFrames({ mode: "pergi", locName: "Pasar", locEmoji: "🏪", hasil: null });
+const sgCari = siramLib.siramFrames({ mode: "cari", locName: "Gudang", locEmoji: "📦", hasil: "temu" });
+t("9h. grid 4 baris: HUD · gerak · adegan kontekstual · status", sgPergi.length === 7 && sgPergi.every((x) => (x.match(/\n/g) || []).length >= 5) && sgPergi.some((x) => x.includes("🏙️")), sgPergi[0]);
+t("9i. adegan beda per mode: pergi kota 🏙️ vs cari interior 🕯️", sgPergi.some((x) => x.includes("🏙️")) && sgCari.some((x) => x.includes("🕯️")), sgCari[0]);
+t("9j. impact grid sesuai hasil: temu 💥 / lockbox 🔒", (() => {
+  const sgTemu = siramLib.siramFrames({ mode: "cari", locName: "X", locEmoji: "📦", hasil: "temu" });
+  const sgBox = siramLib.siramFrames({ mode: "cari", locName: "X", locEmoji: "📦", hasil: "lockbox" });
+  return sgTemu[6].includes("💥") && sgBox[6].includes("🔒");
+})());
+
   // fallback: sock tanpa key → animasi dilewati, aksi tetap jalan
   let fb = 0;
   const fbSock = { sendMessage: async () => { fb++; return true; } };
