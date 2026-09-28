@@ -204,17 +204,27 @@ console.log("— section 9: animasi siram lokasi (edit berulang) —");
   await runAnim(["pergi", "2"]);
   sends.length = 0; edits.length = 0;
   await runAnim(["cari"]);
-  t("9g. lockbox: frame akhir PETI TERKUNCI TERLIHAT", edits.length === 6 && edits[5].includes("PETI TERKUNCI"), edits[5]);
+  t("9g. lockbox: frame akhir PETI TERKUNCI TERLIHAT (misteri +1 frame per situasi)", edits.length >= 6 && edits[edits.length - 1].includes("PETI TERKUNCI"), edits[edits.length - 1]);
 // grid emoji: lib langsung (deterministik)
 const siramLib = await import(R + "/src/lib/libanimationrpg/libmasterdetectiverpg.js");
 const sgPergi = siramLib.siramFrames({ mode: "pergi", locName: "Pasar", locEmoji: "🏪", hasil: null });
 const sgCari = siramLib.siramFrames({ mode: "cari", locName: "Gudang", locEmoji: "📦", hasil: "temu" });
 t("9h. grid 4 baris: HUD · gerak · adegan kontekstual · status", sgPergi.length === 7 && sgPergi.every((x) => (x.match(/\n/g) || []).length >= 5) && sgPergi.some((x) => x.includes("🏙️")), sgPergi[0]);
 t("9i. adegan beda per mode: pergi kota 🏙️ vs cari interior 🕯️", sgPergi.some((x) => x.includes("🏙️")) && sgCari.some((x) => x.includes("🕯️")), sgCari[0]);
+t("9k. situasi menentukan level animasi: tier 3 + lockbox → 12 frame vs tier 1 = 7", (() => {
+  const t1 = siramLib.siramFrames({ mode: "cari", locName: "X", locEmoji: "📦", hasil: "temu", tier: 1 });
+  const t3 = siramLib.siramFrames({ mode: "cari", locName: "X", locEmoji: "📦", hasil: "lockbox", tier: 3 });
+  return t1.length === 7 && t3.length === 12;
+})());
+t("9l. beda tier beda suasana: tier 1 kota 🏙️ vs tier 3 jalanan berbahaya 🌃🚔 + badge ⭐", (() => {
+  const p1 = siramLib.siramFrames({ mode: "pergi", locName: "X", locEmoji: "🏪", hasil: null, tier: 1 }).join("|");
+  const p3 = siramLib.siramFrames({ mode: "pergi", locName: "X", locEmoji: "🏪", hasil: null, tier: 3 }).join("|");
+  return p1.includes("\u{1F3D9}\uFE0F") && p3.includes("\u{1F303}") && p3.includes("\u{1F694}") && !p1.includes("\u{1F303}") && p3.includes("\u2B50\u2B50\u2B50");
+})());
 t("9j. impact grid sesuai hasil: temu 💥 / lockbox 🔒", (() => {
   const sgTemu = siramLib.siramFrames({ mode: "cari", locName: "X", locEmoji: "📦", hasil: "temu" });
   const sgBox = siramLib.siramFrames({ mode: "cari", locName: "X", locEmoji: "📦", hasil: "lockbox" });
-  return sgTemu[6].includes("💥") && sgBox[6].includes("🔒");
+    return sgTemu[sgTemu.length - 1].includes("💥") && sgBox[sgBox.length - 1].includes("🔒");
 })());
 
   // fallback: sock tanpa key → animasi dilewati, aksi tetap jalan

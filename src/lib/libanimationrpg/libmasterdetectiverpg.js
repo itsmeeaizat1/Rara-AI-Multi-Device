@@ -4,25 +4,30 @@
 // Grid per frame: HUD (MENUJU/MENYIRIM · lokasi) · baris gerak (🚶 melintas kota / 🔍 menyisir sektor,
 // jejak 👣/✨) · baris adegan kontekstual (pergi = kota 🏙️🚕 · cari = interior lokasi 🕯️🕸️, impact 💥 saat temu/
 // 🔒 saat lockbox) · status aksi. Baris gerak TETAP di posisi line index 2 (kontrak e2e jejak bertambah).
+// SITUASI MENENTUKAN LEVEL ANIMASI (owner 28 Sep): tier kasus menambah sektor (t1=6 · t2=8 · t3=10, +1 lockbox).
+// BEDA TIER BEDA SUASANA: t1 kota 🏙️🚕 · t2 senja gerimis 🌆🌧️ · t3 jalanan berbahaya 🌃🚔🌧️. Badge ⭐ per tier di HUD.
 // KHUSUS detektif (aturan "beda game beda animasi"). Isi MURNI KODE ANIMASI (pure dari ctx, gak import plugin).
 // Dipanggil plugin saat user main game — animasi dimuat dari lib ini. Fallback channel gak dukung edit → senyap.
 
 import { editFramesAnim } from "../nova-anim-runner.js";
 
 // ctx: { mode: pergi|cari, locName, locEmoji, hasil }
-export function siramFrames({ mode, locName, locEmoji, hasil }) {
-  const slots = 6;
+export function siramFrames({ mode, locName, locEmoji, hasil, tier }) {
+  const t = Math.min(3, Math.max(1, Number(tier) || 1));
+  const misteri = mode === "cari" && (hasil === "lockbox" || hasil === "pending") ? 1 : 0;
+  const slots = 6 + (t - 1) * 2 + misteri; // SITUASI MENENTUKAN LEVEL: tier naik & lockbox → menyisir makin lama
   const scene = mode === "pergi"
     ? ["🏢", "🏪", "🏦", "🏫", "🏭", "🚧"]
     : ["🪑", "📦", "🗄️", "🚪", "🪟", "🗑️"];
   const mover = mode === "pergi" ? "🚶" : "🔍";
   const trail = mode === "pergi" ? "👣" : "✨";
-  const header = mode === "pergi"
-    ? "🚶 MENUJU · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "")
-    : "🔍 MENYIRIM · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "");
+  const badge = "⭐".repeat(t);
+const header = mode === "pergi"
+    ? "🚶 MENUJU · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "") + " " + badge
+    : "🔍 MENYIRIM · " + (locName || "LOKASI").toUpperCase() + " " + (locEmoji || "") + " " + badge;
   // baris adegan grid — kontekstual per mode + akhir sesuai hasil (impact 💥/🔒)
-  const adeganPergi = "🏙️  🚕  🏙️  🌆";
-  const adeganCari = (locEmoji || "🕯️") + "  🕸️  🪟  🕯️";
+  const adeganPergi = ["🏙️  🚕  🏙️  🌆", "🌆  🚕  🌃  🌧️", "🌃  🚔  🌧️  🌡️"][t - 1];
+  const adeganCari = [(locEmoji || "🕯️") + "  🕸️  🪟  🕯️", (locEmoji || "🕯️") + "  🕸️  🌧️  📠", (locEmoji || "🕯️") + "  🕸️  🚨  🌧️"][t - 1];
   const adeganAkhir = mode === "pergi" ? "📍 ✨ 🏁"
     : hasil === "temu" ? "💥 ✨ 💡"
     : hasil === "lockbox" ? "🔒 ✨ 🗝️"
