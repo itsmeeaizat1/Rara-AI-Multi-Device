@@ -12,7 +12,7 @@
 
 | Game | Cmd | File animasi | Signature grid | Commit | E2E |
 |------|-----|--------------|----------------|--------|-----|
-| Gunung (pendakian) | `.mountainclimber` / `.gunung` | `src/lib/libanimationrpg/libmountainclimberrpg.js` | side-scroll daki, jejak ⬜, HUD zona/cuaca/oksigen, rintangan ⬆️, panjat 🧗 zona 6+, longsor 💥, puncak 🚩🏆 | `2bb8f752` | 90/90 |
+| Gunung (pendakian) | `.mountainclimber` / `.gunung` | `src/lib/libanimationrpg/libmountainclimberrpg.js` | OPEN-WORLD PER NEGARA 🇮🇩🇯🇵🇩🇪🇨🇳🌍 (beda negara beda langit/adegan/char), durasi ∝ SITUASI (zona+risiko+badai → lintasan 3+min(situasi,8) frame, tempo pelan), puncak paling megah + panorama negara, longsor 💥, 🚩🏆 | `6bd21677` | 93/93 |
 | Palung (selam) | `.trenchdiver` / `.palung` | `src/lib/libanimationrpg/libtrenchdiverrpg.js` | selam vertikal kolom, gelembung 🫧, HUD sonar ◎◉ + meter kedalaman, kolom makin ⬛ gelap, boss 🦑💥 | `5fbc0988` | 50/50 |
 | Menara seribu pintu | `.thousanddoortower` / `.menara` | `src/lib/libanimationrpg/libthousanddoortowerrpg.js` | grid kepingan 🧩 0→6, adegan tema per dunia, gembok 🔒→🔓→🚪✨, boss 🧙⚡ gembok ganda | `48b4e090` | 47/47 |
 | Detektif | `.masterdetective` / `.sangdetektif` | `src/lib/libanimationrpg/libmasterdetectiverpg.js` | grid siram lokasi, adegan kota 🏙️ vs interior 🕯️, impact 💥 temu / 🔒 lockbox | `d1a83ccf` | 57/57 |
