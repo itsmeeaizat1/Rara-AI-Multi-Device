@@ -125,7 +125,23 @@ function saveSession(email, data) {
   fs.writeFileSync(FILE, JSON.stringify(all, null, 2));
 }
 
-const waitingLink = new Map();
+// pending magic-link per sender — DI FILE (fix 29 Sep: dulu in-memory Map → hilang pas bot
+// restart di antara .ampro dan reply → bot senyap total; sekarang tahan restart + gak pernah senyap)
+const PKEY = "__pending";
+function loadPending(sender) {
+  const p = loadSessions()[PKEY];
+  return p && p[sender] ? p[sender] : null;
+}
+function savePending(sender, data) {
+  const all = loadSessions();
+  all[PKEY] = { ...(all[PKEY] || {}), [sender]: { ...data, savedAt: Date.now() } };
+  fs.mkdirSync(path.dirname(FILE), { recursive: true });
+  fs.writeFileSync(FILE, JSON.stringify(all, null, 2));
+}
+function deletePending(sender) {
+  const all = loadSessions();
+  if (all[PKEY]) { delete all[PKEY][sender]; fs.writeFileSync(FILE, JSON.stringify(all, null, 2)); }
+}
 
 async function handler(m, { sock, config: botConfig }) {
   const prefix = botConfig.command?.prefix || ".";
@@ -180,8 +196,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(novaError("Ampro", "Gagal kirim link: " + String(r.why).slice(0, 150)));
       return { handled: true };
     }
-    waitingLink.set(m.sender, { email, at: Date.now(), chat: m.chat });
-    setTimeout(() => waitingLink.delete(m.sender), TTL);
+    savePending(m.sender, { email, at: Date.now(), chat: m.chat });
     await m.react("⚡");
     await m.reply(claraWrap("Ampro", [
       "Magic link ke " + email + " udah dikirim!",
@@ -197,15 +212,29 @@ async function handler(m, { sock, config: botConfig }) {
   return { handled: true };
 }
 
-// step 2: user reply pesan magic-link dengan link
+// step 2: user reply pesan magic-link dengan link.
+// FIX 29 Sep: pending dari FILE (tahan restart) + pesan yang jelas di TIAP kegagalan —
+// dulu semua jalur return false SENYAP (restart bot / link gak kebaca / TTL lewat → "gak ada respon").
+// Chat biasa (tanpa link/kode) tetap gak diganggu → false supaya handler lain jalan.
 export async function answerHandler(m, { sock }) {
-  const st = waitingLink.get(m.sender);
+  const st = loadPending(m.sender);
   if (!st) return false;
   const rawLink = (m.text || "").trim();
   const code = extractCode(rawLink);
-  if (!code) return false;
-  if (Date.now() - st.at > TTL) { waitingLink.delete(m.sender); return false; }
-  waitingLink.delete(m.sender);
+  const linkish = /https?:\/\/|oobCode|[a-zA-Z0-9_-]{20,}/i.test(rawLink);
+  if (!code && !linkish) return false; // obrolan biasa — gak dipegang ampro
+  if (Date.now() - st.at > TTL) {
+    deletePending(m.sender);
+    await m.react("\u274C");
+    await m.reply(novaError("Ampro", "Sesi link kedaluwarsa (maks 10 menit). Kirim ulang: .ampro " + st.email));
+    return true;
+  }
+  if (!code) {
+    await m.react("\u274C");
+    await m.reply(novaError("Ampro", "Link-nya gak bisa dibaca — kode oobCode gak ketemu.\n\nCopy link UTUH dari tombol di email AlightMotion (jangan cuma teksnya), terus reply lagi di sini."));
+    return true;
+  }
+  deletePending(m.sender);
   try {
     await m.react("🛠️");
     const v = await verifyLink(st.email, rawLink);
