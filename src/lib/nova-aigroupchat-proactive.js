@@ -4,37 +4,13 @@
 // Bot ngomong sendiri dengan jeda aman & random
 // ═══════════════════════════════════════════════
 import { getDatabase } from "./nova-database.js";
-import { callAI } from "./nova-ai-service.js";
+import { min1aiChat } from "../scraper/min1ai.js";
+import { resolveAigroupModel, AIGROUP_DEFAULT_MODEL } from "./nova-aigroupchat.js";
 import config from "../../config.js";
 import { getTioEndpoint } from "./config/env-loader.js";
 
-// Format definitions (sync dengan aigroupchat.js)
-const TIO_FORMATS = {
-  openai: {
-    label: "OpenAI",
-    apiKeyField: "openaiApiKey",
-    modelField: "openaiModel",
-    defaultModel: "ag/gemini-3-flash",
-    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
-    providerKey: "tio_openai",
-  },
-  gemini: {
-    label: "Gemini",
-    apiKeyField: "geminiApiKey",
-    modelField: "geminiModel",
-    defaultModel: "ag/gemini-3-flash",
-    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
-    providerKey: "tio_gemini",
-  },
-  anthropic: {
-    label: "Anthropic",
-    apiKeyField: "anthropicApiKey",
-    modelField: "anthropicModel",
-    defaultModel: "ag/claude-sonnet-4-6",
-    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
-    providerKey: "tio_anthropic",
-  },
-};
+// ENGINE: Min1AI (1min.ai) — GLM thinking (sync nova-aigroupchat.js)
+// owner 29 Sep: "aigrup pakai glm thinking pnya min1ai, jgn yg glm flash"
 
 // ═══════════════════════════════════════════════
 // ANTI-BAN SETTINGS
@@ -112,12 +88,6 @@ function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getKeyForFormat(aiHelp, fmtKey) {
-  const fmt = TIO_FORMATS[fmtKey];
-  const fmtKey2 = aiHelp[fmt.apiKeyField] || "";
-  const fallback = aiHelp.apiKey || process.env.OPENAI_API_KEY || "";
-  return fmtKey2 || fallback;
-}
 
 // Cek apakah sekarang dalam jam aktif
 function isWithinActiveHours() {
@@ -165,15 +135,12 @@ function getJitteredInterval(baseMin) {
 }
 
 // Generate pesan proactive
-async function generateProactiveMessage(aiHelp, fmtKey, model, apiKey, groupName, memberNames) {
-  const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
-  // 9router: OpenAI-compatible saja — semua format pakai endpoint yang sama
-  const apiEndpoint = fmt.endpoint;
+async function generateProactiveMessage(aiHelp, model, groupName, memberNames) {
 
   // 60% template, 40% AI (lebih banyak template = lebih aman)
   const useAI = Math.random() < 0.3;
 
-  if (!useAI || !apiKey) {
+  if (!useAI) {
     return getRandomItem(CONVERSATION_STARTERS);
   }
 
@@ -188,23 +155,15 @@ async function generateProactiveMessage(aiHelp, fmtKey, model, apiKey, groupName
     const topicPrompt = getRandomItem(TOPIC_PROMPTS);
     const userPrompt = `Kamu ada di grup "${groupName}". ${topicPrompt}. Buat pesan singkat untuk memulai percakapan, langsung to the point.`;
 
-    const messages = [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt },
-    ];
+    // Min1AI: system + user jadi SATU prompt
+    const reply = await min1aiChat(`${systemPrompt}\n\n${userPrompt}`, { model, timeoutMs: 60000 });
+    const cleanReply = String(reply)
+      .replace(/<think>[\s\S]*?<\/think>/gi, "")
+      .replace(/<answer>([\s\S]*?)<\/answer>/gi, "$1")
+      .trim();
 
-    const reply = await callAI({
-      providerKey: fmt.providerKey,
-      model: model,
-      messages: messages,
-      apiKey: apiKey,
-      apiEndpoint: apiEndpoint,
-      temperature: 0.9,
-      maxTokens: 80,
-    });
-
-    if (reply && reply.length > 3 && reply.length < 200) {
-      return reply.trim();
+    if (cleanReply.length > 3 && cleanReply.length < 200) {
+      return cleanReply;
     }
   } catch (e) {
     console.error("[aigrup-proactive]", e.message);
@@ -232,16 +191,9 @@ async function runProactive() {
       return;
     }
 
-    // ── Resolve format & model ──
-    const fmtKey = aigrup.format || "openai";
-    const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
-    // safety net: model era Tio lama di DB gak ada di 9router → default
-    const rawModel = aigrup.model || fmt.defaultModel;
-    const model = /^ag\//.test(String(rawModel)) ? rawModel : fmt.defaultModel;
-
+    // ── Resolve model GLM thinking (Min1AI) ──
+    const model = resolveAigroupModel(aigrup.model);
     const aiHelp = config.aiHelp || {};
-    const apiKey = getKeyForFormat(aiHelp, fmtKey);
-    if (!apiKey) return;
 
     // ── Ambil semua grup ──
     let groups = [];
@@ -298,7 +250,7 @@ async function runProactive() {
 
         // Generate pesan
         const message = await generateProactiveMessage(
-          aiHelp, fmtKey, model, apiKey, groupName, memberNames
+          aiHelp, model, groupName, memberNames
         );
 
         if (!message || message.length < 2) continue;

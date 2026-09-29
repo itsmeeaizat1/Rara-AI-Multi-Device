@@ -101,7 +101,7 @@ export const MIN1AI_MODELS = Object.values(MIN1AI_MODEL_GROUPS)
   .map((s) => String(s).replace(/\s*\(free\)\s*$/i, "").trim());
 
 
-async function getMin1aiKey() {
+export async function getMin1aiKey() {
   let key = process.env.MIN1AI_API_KEY || "";
   if (!key) {
     try {

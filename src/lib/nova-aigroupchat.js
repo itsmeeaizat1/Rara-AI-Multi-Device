@@ -6,9 +6,8 @@
 // ═══════════════════════════════════════════════
 import { getDatabase } from "./nova-database.js";
 import { getJadibotSetting } from "./nova-jadibot-database.js";
-import { callAI } from "./nova-ai-service.js";
+import { min1aiChat } from "../scraper/min1ai.js";
 import config from "../../config.js";
-import { getTioEndpoint } from "./config/env-loader.js";
 
 // ═══════════════════════════════════════════════
 // ANTI-SPAM SETTINGS
@@ -42,37 +41,19 @@ const IGNORE_PATTERNS = [
 const IGNORE_TYPES = ["stickerMessage", "reactionMessage", "protocolMessage"];
 
 // ═══════════════════════════════════════════════
-// Format definitions (sync dengan aigroupchat.js)
+// ENGINE: Min1AI (1min.ai) — GLM Thinking
+// (owner 29 Sep: "aigrup pakai glm thinking pnya min1ai, jgn yg glm flash")
+// Katalog GLM 1min.ai (verified live 29 Sep 2026): glm-5.3 = flagship
+// reasoning/thinking (DEFAULT), glm-5.2, glm-5.1, glm-5.
+// GAK ADA varian "-thinking"/"-flash" di 1min.ai (UNSUPPORTED_MODEL).
 // ═══════════════════════════════════════════════
-const TIO_FORMATS = {
-  openai: {
-    label: "OpenAI",
-    emoji: "🟢",
-    apiKeyField: "openaiApiKey",
-    modelField: "openaiModel",
-    defaultModel: "ag/gemini-3-flash",
-    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
-    providerKey: "tio_openai",
-  },
-  gemini: {
-    label: "Gemini",
-    emoji: "🔵",
-    apiKeyField: "geminiApiKey",
-    modelField: "geminiModel",
-    defaultModel: "ag/gemini-3-flash",
-    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
-    providerKey: "tio_gemini",
-  },
-  anthropic: {
-    label: "Anthropic",
-    emoji: "🟣",
-    apiKeyField: "anthropicApiKey",
-    modelField: "anthropicModel",
-    defaultModel: "ag/claude-sonnet-4-6",
-    get endpoint() { return getTioEndpoint(); }, // getter: ganti endpoint runtime langsung kerasa
-    providerKey: "tio_anthropic",
-  },
-};
+export const AIGROUP_DEFAULT_MODEL = "glm-5.3";
+export const AIGROUP_GLM_MODELS = ["glm-5.3", "glm-5.2", "glm-5.1", "glm-5"];
+
+export function resolveAigroupModel(raw) {
+  const m = String(raw || "").trim();
+  return AIGROUP_GLM_MODELS.includes(m) ? m : AIGROUP_DEFAULT_MODEL;
+}
 
 // ═══════════════════════════════════════════════
 // State tracking
@@ -179,24 +160,11 @@ export async function handleAiGrup(m, sock, botNumber, jadibotCtx = {}) {
     const userMessage = (m.text || "").trim();
     if (!userMessage || userMessage.length < MIN_MESSAGE_LENGTH) return false;
 
-    // ═══ Resolve format & model dari database ═══
-    const fmtKey = aigrup.format || "openai";
-    const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
-    // safety net: model era Tio lama di DB (gpt-4o/gemini-2.0/deepseek:free)
-    // gak ada di 9router → pakai default. Model 9router selalu berprefix "ag/".
-    const rawModel = aigrup.model || fmt.defaultModel;
-    const model = /^ag\//.test(String(rawModel)) ? rawModel : fmt.defaultModel;
+    // ═══ Resolve model GLM thinking (Min1AI) ═══
+    // state lama era 9router (openai/deepseek/ag/*) → default glm-5.3
+    const model = resolveAigroupModel(aigrup.model);
 
-    // ═══ Resolve API key ═══
     const aiHelp = config.aiHelp || {};
-    const formatKey = aiHelp[fmt.apiKeyField] || "";
-    const fallbackKey = aiHelp.apiKey || process.env.OPENAI_API_KEY || "";
-    const apiKey = formatKey || fallbackKey;
-    if (!apiKey) return false;
-
-    // ═══ Set endpoint (Gemini dynamic per model) ═══
-    // 9router: OpenAI-compatible saja — semua format pakai endpoint yang sama
-    const apiEndpoint = fmt.endpoint;
 
     // ═══ System prompt dengan anti-spam instruction ═══
     const senderName = m.pushName || m.senderName || "seseorang";
@@ -214,9 +182,8 @@ export async function handleAiGrup(m, sock, botNumber, jadibotCtx = {}) {
       `JANGAN respon ke pesan yang tidak perlu balasan. ` +
       `Kalau pesan tidak menarik atau tidak perlu respon, balas kosong.`;
 
-    // Build messages
-    const messages = [];
-    messages.push({ role: "user", content: `${senderName}: ${userMessage}` });
+    // Min1AI gak support system message terpisah → jadiin satu prompt
+    const fullPrompt = `${systemPrompt}\n\n${senderName}: ${userMessage}`;
 
     // Typing indicator
     await sock.sendPresenceUpdate("composing", m.chat);
@@ -225,17 +192,14 @@ export async function handleAiGrup(m, sock, botNumber, jadibotCtx = {}) {
     const delay = Math.min(userMessage.length * 12, 2000);
     await new Promise((r) => setTimeout(r, delay));
 
-    // Call AI
-    const reply = await callAI({
-      providerKey: fmt.providerKey,
-      model: model,
-      messages: messages,
-      systemPrompt,  // callAI inject mood otomatis via global.__novaMoodSender
-      apiKey: apiKey,
-      apiEndpoint: apiEndpoint,
-      temperature: 0.8,
-      maxTokens: 200,
-    });
+    // Call Min1AI (1min.ai) — GLM thinking
+    let reply = await min1aiChat(fullPrompt, { model, timeoutMs: 60000 });
+
+    // buang blok reasoning  · raw thinking leftover)
+    reply = String(reply)
+      .replace(/<think>[\s\S]*?<\/think>/gi, "")
+      .replace(/<answer>([\s\S]*?)<\/answer>/gi, "$1")
+      .trim();
 
     // Filter empty/too short responses
     if (!reply || reply.length < 2) return false;
