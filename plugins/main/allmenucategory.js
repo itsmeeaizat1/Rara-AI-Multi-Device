@@ -40,7 +40,7 @@ const CATEGORY_NAMES = {
   utility: "Utility", religi: "Religi", info: "Info",
   berita: "Berita", cuaca: "Cuaca & Bencana", loker: "Lowongan Kerja",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
-  ephoto: "Ephoto", jpm: "JPM",
+  ephoto: "Ephoto", jpm: "JPM", promotion: "Promotion",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium", bot: "Bot",
   anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
   downloader: "Downloader", education: "Education", future: "Future",
