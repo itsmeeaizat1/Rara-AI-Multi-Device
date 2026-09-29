@@ -32,7 +32,8 @@
 //   .jasher cooldown <menit|off>       → set/lihat jeda antar broadcast
 //   .jasher stop                       → batalkan broadcast yang lagi jalan
 //
-// OWNER-ONLY. Akses DM & grup (isGroup + isPrivate true = bypass middleware).
+// PREMIUM-ONLY (bukan gratis — revisi owner 29 Sep). Owner & partner tetap
+// lolos (bypass middleware). Akses DM & grup (isGroup + isPrivate true).
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -42,8 +43,10 @@ const pluginConfig = {
   description: "Broadcast promosi/pengumuman ke semua grup bot (WA + Telegram), teks atau media+caption",
   usage: ".jasher <teks> — Broadcast semua target aktif\n.jasher grup <kata[,kata]> <teks> — Grup target saja\n.jasher list — Daftar grup & saluran\n.jasher set group|channel on|off — Toggle tipe target (default group on, channel off)\n.jasher cooldown <menit|off> — Jeda antar broadcast (default off)\n.jasher info — Riwayat pemakaian (siapa, cuplikan, waktu)\n.jasher stop — Batalkan broadcast",
   example: ".jasher Diskon 50% semua produk hari ini!",
-  isOwner: true,
-  isPremium: false,
+  // PREMIUM-ONLY (revisi owner 29 Sep: "fitur jasher hnya premium jd g gratis")
+  // — owner tetap lolos (bypass m.isOwner di checkPermission).
+  isOwner: false,
+  isPremium: true,
   isGroup: true,
   isPrivate: true,
   cooldown: 5,
@@ -447,7 +450,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
       `${prefix}jasher stop — batalkan broadcast`,
       "---",
       `Contoh: ${prefix}jasher Diskon 50% hari ini!`,
-    ].join("\n")) + "\n" + tipText(`Owner-only — Ketik ${prefix}menu untuk kembali`);
+    ].join("\n")) + "\n" + tipText(`💎 Premium only — Ketik ${prefix}menu untuk kembali`);
     await m.reply(out);
     return { handled: true };
   }
