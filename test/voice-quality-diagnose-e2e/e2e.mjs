@@ -61,7 +61,8 @@ _setVoiceTtsForTest(async () => Buffer.alloc(3000, 1));
 const sent = [];
 const sock = { sendMessage: (jid, content, opts) => { sent.push({ jid, content, opts }); return { key: { id: "s" + sent.length } }; } };
 const spoke = await speakVoiceNote(sock, CHAT, "Halo! Tes suara neural kualitas baru.", "gadis", { quoted: { id: "q1" } });
-ok("VN PTT terkirim", spoke === true && sent.length === 1 && sent[0].content.ptt === true && String(sent[0].content.mimetype).includes("ogg"));
+ok("VN PTT terkirim", spoke === true && sent.length === 2 && sent[0].content.ptt === true && String(sent[0].content.mimetype).includes("ogg"));
+ok("tag sumber suara ikut terkirim", !!sent[1]?.content?.text && /ʙᴀᴡᴀᴀɴ|ɪɴᴡᴏʀʟᴅ/.test(sent[1].content.text));
 _setVoiceTtsForTest(null); // TTS mati
 sent.length = 0;
 ok("TTS gagal → speakVoiceNote false (pemanggil kirim teks + hint)", (await speakVoiceNote(sock, CHAT, "tes", "gadis")) === false && sent.length === 0);
@@ -71,13 +72,15 @@ _setVoiceTtsForTest(async () => Buffer.alloc(3000, 1)); // edge mock aktif — k
 lib._setInworldVoiceTtsForTest(async (t) => Buffer.alloc(3000, 7)); // inworld sukses, byte 7 biar beda
 sent.length = 0;
 const spokeInw = await speakVoiceNote(sock, CHAT, "Tes suara inworld neural", "gadis");
-ok("Inworld sukses → VN dari buffer Inworld (bukan edge)", spokeInw === true && sent.length === 1 && sent[0].content.audio[0] === 7, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
+ok("Inworld sukses → VN dari buffer Inworld (bukan edge)", spokeInw === true && sent.length === 2 && sent[0].content.audio[0] === 7, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
+ok("Inworld sukses → tag bilang ɪɴᴡᴏʀʟᴅ (bukan ʙᴀᴡᴀᴀɴ)", /ɪɴᴡᴏʀʟᴅ/.test(sent[1]?.content?.text || "") && !/ʙᴀᴡᴀᴀɴ/.test(sent[1]?.content?.text || ""), JSON.stringify(sent[1]?.content || {}));
 
 lib._setInworldVoiceTtsForTest(null); // simulate Inworld DOWN
 _setVoiceTtsForTest(async () => Buffer.alloc(3000, 1)); // edge fallback
 sent.length = 0;
 const spokeFb = await speakVoiceNote(sock, CHAT, "Tes fallback", "gadis");
-ok("Inworld down → fallback voice pertama (edge) tetep kirim VN", spokeFb === true && sent.length === 1 && sent[0].content.audio[0] === 1, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
+ok("Inworld down → fallback voice pertama (edge) tetep kirim VN", spokeFb === true && sent.length === 2 && sent[0].content.audio[0] === 1, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
+ok("Inworld down → tag jujur bilang ʙᴀᴡᴀᴀɴ", /ʙᴀᴡᴀᴀɴ/.test(sent[1]?.content?.text || ""), JSON.stringify(sent[1]?.content || {}));
 
 lib._setInworldVoiceTtsForTest(null);
 _setVoiceTtsForTest(null); // edge juga mati
@@ -99,6 +102,19 @@ const srcStt = fs.readFileSync("src/lib/nova-stt.js", "utf8");
 ok("source: Inworld STT di urutan pertama pipeline", srcStt.indexOf("0) INWORLD STT") < srcStt.indexOf("1) Gemini multimodal"));
 const srcVr = fs.readFileSync("src/lib/nova-voice-reply.js", "utf8");
 ok("source: Inworld TTS dicoba SEBELUM edge fallback", srcVr.indexOf("inworldTTSBuffer(spoken)") < srcVr.indexOf("edgeTTSBuffer(spoken, voice.lang)"));
+
+console.log("— section 8: kartu suara jujur soal sumber utama (owner 29 Sep: 'suara saat ini: gadis' bikin bingung) —");
+const { voiceSubReply, VOICE_KEYS } = lib;
+const dbS = { setting: () => undefined };
+const cardOn = voiceSubReply(dbS, "cx", "pakai suara", VOICE_KEYS.novaagent);
+const cardOnStr = cardOn.join(" ");
+ok("kartu ON: ada baris sumber utama", /Sumber utama/.test(cardOnStr), cardOnStr);
+ok("kartu ON: fallback bawaan dilabeli jelas (bukan 'suara saat ini')", /Fallback bawaan/.test(cardOnStr) && !/Suara saat ini/.test(cardOnStr), cardOnStr);
+ok("kartu ON: status key inworld disebut (✓ atau ✗)", /(✓|✗)/.test(cardOnStr), cardOnStr);
+const cardSt = voiceSubReply(dbS, "cx", "suara", VOICE_KEYS.anovaagent).join(" ");
+ok("kartu status: sumber utama + fallback bawaan", /Sumber utama/.test(cardSt) && /Fallback bawaan/.test(cardSt), cardSt);
+const cardV = voiceSubReply(dbS, "cx", "suara ardi", VOICE_KEYS.aisuperagent).join(" ");
+ok("kartu ganti: dilabeli 'fallback diganti' + catatan inworld tetap utama", /fallback diganti/i.test(cardV) && /Inworld tetap utama/.test(cardV), cardV);
 
 console.log("");
 console.log(`===== ${pass} PASS, ${fail} FAIL =====`);
