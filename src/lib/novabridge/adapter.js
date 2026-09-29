@@ -354,30 +354,45 @@ export async function handleBridgeMessage(rawMsg, sock, ctx = {}) {
   }
   if (rawMsg.key.fromMe || rawMsg._bridge?.isBot) return { handled: "self" };
   const text = String(body).trim();
-  if (!text || !text.startsWith(prefix)) return { handled: "ignored" };
-  const cmd = text.slice(prefix.length).split(/\s+/)[0].toLowerCase();
+  if (!text) return { handled: "ignored" };
 
-  if (!rateAllow(rawMsg.key.remoteJid)) {
-    try { await sock.sendMessage(rawMsg.key.remoteJid, `Sabar ya — maksimal 20 pesan/menit per user di ${platform || "platform ini"}.`); } catch {}
-    return { handled: "ratelimit" };
-  }
+  // Chat polos (tanpa prefix) TETAP diteruskan ke messageHandler — paritas
+  // WhatsApp: autoflow trigger "any"/aichat, autoAI, autoRole, XP RPG dll
+  // hidup dari pesan ngobrol biasa, bukan cuma command. Dulu fase 1 chat
+  // polos di-"ignore" → rule .anovaagent "ajak ngobrol" GAK PERNAH jalan
+  // di Telegram (report owner 29 Sep).
+  // Catatan: rate limit 20/mnt + gate kategori CUMA buat command — chat polos
+  // gak makan bucket rate limit biar grup ramai gak ngeblok command user.
+  const isCommand = text.startsWith(prefix);
+  let cmd = null;
+  if (isCommand) {
+    cmd = text.slice(prefix.length).split(/\s+/)[0].toLowerCase();
 
-  if (!isCategoryAllowed(db, cmd)) {
-    const p = getPlugin(cmd);
-    if (p) {
-      // command dikenal tapi kategorinya di luar whitelist
-      const cat = p.config?.category || p.category || "?";
-      try { await sock.sendMessage(rawMsg.key.remoteJid, `Perintah .${cmd} (kategori ${cat}) belum tersedia di platform ini.`); } catch {}
-      return { handled: "category-blocked" };
+    if (!rateAllow(rawMsg.key.remoteJid)) {
+      try { await sock.sendMessage(rawMsg.key.remoteJid, `Sabar ya — maksimal 20 pesan/menit per user di ${platform || "platform ini"}.`); } catch {}
+      return { handled: "ratelimit" };
     }
-    // command gak dikenal → biarkan messageHandler jawab sendiri
+
+    if (!isCategoryAllowed(db, cmd)) {
+      const p = getPlugin(cmd);
+      if (p) {
+        // command dikenal tapi kategorinya di luar whitelist
+        const cat = p.config?.category || p.category || "?";
+        try { await sock.sendMessage(rawMsg.key.remoteJid, `Perintah .${cmd} (kategori ${cat}) belum tersedia di platform ini.`); } catch {}
+        return { handled: "category-blocked" };
+      }
+      // command gak dikenal → biarkan messageHandler jawab sendiri
+    }
   }
 
   try {
     await messageHandler(rawMsg, sock, {});
   } catch (e) {
     log(`bridge handler error (${platform}): ${e?.message || e}`);
-    try { await sock.sendMessage(rawMsg.key.remoteJid, "Terjadi error saat menjalankan perintah — coba lagi."); } catch {}
+    if (isCommand) {
+      try { await sock.sendMessage(rawMsg.key.remoteJid, "Terjadi error saat menjalankan perintah — coba lagi."); } catch {}
+    }
+    // error di chat polos → senyap (anti-spam loop), gak perlu error card
   }
   return { handled: "dispatched", cmd };
 }
