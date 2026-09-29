@@ -50,8 +50,7 @@ _setVoiceTtsForTest(async () => Buffer.alloc(3000, 1));
 const sent = [];
 const sock = { sendMessage: (jid, content, opts) => { sent.push({ jid, content, opts }); return { key: { id: "s" + sent.length } }; } };
 const spoke = await speakVoiceNote(sock, CHAT, "Halo *kamu*! [Baca ini](https://x.com) suara natural.", "gadis", { quoted: { id: "q1" } });
-ok("VN terkirim (ptt opus)", spoke === true && sent.length === 2 && sent[0].content.ptt === true && String(sent[0].content.mimetype).includes("ogg"), JSON.stringify(sent[0]?.content || {}));
-ok("tag sumber suara nyusul VN (owner 29 Sep: bedain inworld vs bawaan)", sent[1]?.content?.text && /ʙᴀᴡᴀᴀɴ|ɪɴᴡᴏʀʟᴅ/.test(sent[1].content.text), JSON.stringify(sent[1]?.content || {}));
+ok("VN terkirim (ptt opus) — VN DOANG tanpa tag susulan (revisi owner 29 Sep)", spoke === true && sent.length === 1 && sent[0].content.ptt === true && String(sent[0].content.mimetype).includes("ogg"), JSON.stringify(sent[0]?.content || {}));
 ok("teks suara bersih dari markdown/link", true); // dibersihin di lib (regex) — cek lewat mock TTS
 let ttsTextArg = "";
 _setVoiceTtsForTest(async (t) => { ttsTextArg = t; return Buffer.alloc(3000, 1); });

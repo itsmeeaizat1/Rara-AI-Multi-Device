@@ -120,12 +120,14 @@ export function createTelegramClient({ token, log = () => {} } = {}) {
     }
   }
 
-  async function uploadMedia(chatId, method, field, file, caption = "") {
+  async function uploadMedia(chatId, method, field, file, caption = "", title = "") {
     // file: { buffer, filename, mimetype } — multipart FormData (native Node 20)
     const url = `${API_BASE}/bot${token}/${method}`;
     const fd = new FormData();
     fd.append("chat_id", String(chatId));
     if (caption) fd.append("caption", String(caption).slice(0, 1024));
+    // judul audio (owner 29 Sep: "bentuk audio ada judulnya, bertuliskan voice aja")
+    if (title) fd.append("title", title);
     if (file && typeof file === "object" && (file.buffer || file.url)) {
       if (file.url) fd.append(field, file.url);
       else
@@ -152,7 +154,8 @@ export function createTelegramClient({ token, log = () => {} } = {}) {
 
   const sendPhoto = (chatId, file, caption) => uploadMedia(chatId, "sendPhoto", "photo", file, caption);
   const sendVideo = (chatId, file, caption) => uploadMedia(chatId, "sendVideo", "video", file, caption);
-  const sendAudio = (chatId, file, caption) => uploadMedia(chatId, "sendAudio", "audio", file, caption);
+  // judul audio di Telegram dibaca "voice" — bukan nama file mentah (owner 29 Sep)
+  const sendAudio = (chatId, file, caption) => uploadMedia(chatId, "sendAudio", "audio", file, caption, "voice");
   const sendDocument = (chatId, file, caption) => uploadMedia(chatId, "sendDocument", "document", file, caption);
   const sendAnimation = (chatId, file, caption) => uploadMedia(chatId, "sendAnimation", "animation", file, caption);
 

@@ -274,10 +274,11 @@ export async function speakVoiceNote(sock, jid, text, voiceId, { quoted } = {}) 
 
     // 🔹 SUARA UTAMA: Inworld TTS-2 neural; kalau down/tanpa key → fallback
     // ke voice pertama yang asli (msedge-tts) — permintaan owner 29 Sep.
-    let engine = "inworld";
+    // Info sumber suara (inworld vs bawaan) CUKUP di kartu usage/status
+    // (voiceSubReply) — revisi owner 29 Sep: "jgn dikasih tag di tiap VN,
+    // VN doang yang dikirim".
     let mp3 = await inworldTTSBuffer(spoken);
     if (!mp3) {
-      engine = "edge"; // fallback: voice pertama yang asli
       mp3 = await edgeTTSBuffer(spoken, voice.lang);
       if (!mp3) mp3 = await edgeTTSBuffer(spoken, VOICE_OPTIONS[1].lang); // fallback ardi
     }
@@ -287,23 +288,7 @@ export async function speakVoiceNote(sock, jid, text, voiceId, { quoted } = {}) 
     const sent = ogg
       ? await sock.sendMessage(jid, { audio: ogg, mimetype: "audio/ogg; codecs=opus", ptt: true }, opts)
       : await sock.sendMessage(jid, { audio: mp3, mimetype: "audio/mpeg" }, opts);
-    if (!sent) return false;
-
-    // 🔹 NOTIFIKASI SUMBER SUARA (owner 29 Sep: "gak bisa bedain mana suara
-    // dari inworld mana yang fallback saat anovaagent suara on") — 1 baris
-    // kecil smallcaps nempel di VN, jelas asalnya tanpa perlu nebak.
-    let tag;
-    if (engine === "inworld") {
-      let vName = "";
-      try { const { getLastInworldVoice } = await import("./nova-inworld.js"); vName = getLastInworldVoice()?.name || ""; } catch {}
-      tag = "🎙️ sᴜᴀʀᴀ ɪɴᴡᴏʀʟᴅ ᴛᴛs-2" + (vName ? " — ɴᴀᴍᴀ: " + vName : "");
-    } else {
-      tag = "🔊 sᴜᴀʀᴀ ʙᴀᴡᴀᴀɴ — ɪɴᴡᴏʀʟᴅ ᴏꜰꜰ/ᴅᴏᴡɴ, ꜰᴀʟʟʙᴀᴄᴋ ᴍsᴇᴅɢᴇ-ᴛᴛs";
-    }
-    try {
-      await sock.sendMessage(jid, { text: tag }, { quoted: sent.key ? { key: sent.key } : undefined });
-    } catch {}
-    return true;
+    return !!sent;
   } catch (e) {
     console.error("[VoiceReply] speak error:", e?.message || e);
     return false;
