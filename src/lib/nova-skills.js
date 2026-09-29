@@ -7,7 +7,7 @@
 //   * Bentuk entry IDENTIK TOOLS (perm/args/danger/desc/done/run) → executor
 //     novaai.js (gerbang admin/owner + konfirmasi danger) jalan tanpa edit.
 //   * Built-in 14 skill — SEMUA gratis tanpa API key.
-//   * Skill pack eksternal: taruh file .js di src/skills/ (export default
+//   * Source pack eksternal: taruh file .js di src/source/ (export default
 //     {name, skill}) → ke-load otomatis (registerSkillPacks).
 // Seam: setSkillsHttp / resetSkillsHttp buat e2e (tanpa network).
 
@@ -303,8 +303,8 @@ registerSkill({
   }
 })
 
-// ── loader skill pack eksternal (src/skills/*.js) — best-effort ──
-// auto-load skill pack src/skills/ saat modul ke-import —
+// ── loader source pack eksternal (src/source/*.js) — best-effort ──
+// auto-load source pack src/source/ saat modul ke-import —
 // think()/getAgentTools() nunggu packsReady jadi prompt & registry
 // selalu ke-list skill pack (request owner 12 Sep 2026).
 const packsReady = registerSkillPacks().catch(() => 0)
@@ -314,13 +314,13 @@ export async function registerSkillPacks() {
   const { readdir } = await import("node:fs/promises")
   let loaded = 0
   let dir
-  try { dir = await readdir(new URL("../skills/", import.meta.url)) } catch { return 0 }
+  try { dir = await readdir(new URL("../source/", import.meta.url)) } catch { return 0 }
   for (const f of dir.filter((x) => x.endsWith(".js"))) {
     try {
-      const mod = await import(new URL("../skills/" + f, import.meta.url).href)
+      const mod = await import(new URL("../source/" + f, import.meta.url).href)
       const def = mod.default || mod.skill
       if (def?.name && typeof def?.run === "function" && registerSkill({ ...def, name: def.name })) loaded++
-    } catch (e) { console.log("[nova-skills] skill pack " + f + " gagal load: " + e.message) }
+    } catch (e) { console.log("[nova-skills] source pack " + f + " gagal load: " + e.message) }
   }
   return loaded
 }

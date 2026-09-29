@@ -1,6 +1,6 @@
 // NOVA SKILL PACK — KBBI / ARTI KATA (12 Sep 2026)
 // Arti kata Indonesia via Wiktionary id (w/api.php, gratis no-key).
-// Skill pack: taruh di src/skills/ → ke-load otomatis registerSkillPacks.
+// Source pack: taruh di src/source/ → ke-load otomatis registerSkillPacks.
 // Seam: _setKbbiHttp buat e2e.
 
 // Wikimedia butuh User-Agent proper — tanpa itu balik HTML (bukan JSON)

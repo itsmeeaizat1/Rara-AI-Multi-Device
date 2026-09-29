@@ -7,7 +7,7 @@
 // top-N skill RELEVAN aja yang isi SKILL.md-nya di-inject ke prompt agent.
 // Gak ada match → blok kosong, prompt gak bengkak.
 // CATATAN: JANGAN tertukar dengan nova-skills.js (registry tool internal
-// .novaagent — translate/wiki/currency, folder src/skills/). Ini dua sistem beda.
+// .novaagent — translate/wiki/currency, folder src/source/). Ini dua sistem beda.
 import { readFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
