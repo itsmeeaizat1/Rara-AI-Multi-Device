@@ -7,6 +7,8 @@ import {
   fetchLatestBaileysVersion,
 } from "nova";
 import { Boom } from "@hapi/boom";
+// Router outbound multi-platform (29 Sep): scheduler kirim ke jid tg_... → bridge
+import { wrapOutboundSends } from "./lib/novabridge/manager.js";
 // AI RICH (port HIROBOT): attach sock.aiRich() — kartu GenAI native WhatsApp
 // (markdown, code block tersorot, citation, hyperlink) — dipakai .hiai/.aicard/tools hiroai.
 import { AIRich } from "./lib/nova-airich-hiro.js";
@@ -477,7 +479,11 @@ async function startConnection(options = {}) {
   store.bind(sock.ev);
   sock.store = store;
 
-  connectionState.sock = sock;
+  // Bungkus sock utama dengan router outbound: kirim ke jid tg_* (user/grup
+// Telegram) otomatis dibelokkin ke bridge Telegram, jid WhatsApp tetap normal.
+// Idempotent + senyap — kalau bridge mati, semua lewat jalur WA asli.
+wrapOutboundSends(sock);
+connectionState.sock = sock;
   extendSocket(sock);
   // AI Call voice-command bridge: POST /voice dari service Go aicall →
   // "matikan bot" di telepon = .bot off. Fire-and-forget, gagal-senyap-proof.

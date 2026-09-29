@@ -83,6 +83,7 @@ export async function startTelegramBridge(opts = {}) {
     : createTelegramClient({ token, log: (m) => log("telegram", m) });
 
   const sock = makeBridgeSock({ platform: "telegram", client, chatMap: state.telegram.chatMap, log: (m) => log("telegram", m) });
+  state.telegram.bridgeSock = sock; // dipakai wrapOutboundSends (router scheduler → TG)
   const { config } = await getCtx("telegram");
   const prefix = (config.command?.prefix || ".");
 
@@ -125,6 +126,8 @@ export async function startTelegramBridge(opts = {}) {
 }
 
 export function stopTelegramBridge() {
+  state.telegram.bridgeSock = null;
+
   try { state.telegram.client?.stop(); } catch {}
   state.telegram.running = false;
   return { ok: true };
@@ -225,6 +228,47 @@ function makeDiscordApi(dc) {
     },
     stop: () => { try { dc.destroy(); } catch {} },
   };
+}
+
+// ── Router outbound scheduler → bridge ───────────────────
+// Di VPS, semua scheduler (bmkg, briefing, wxalert, anime, dll) megang sock
+// WHATSAPP utama. Tanpa router, kirim ke jid "tg_..." bakal nyangkut di jalur WA
+// (jid gak dikenal → notifikasi auto gak pernah nyampe ke user Telegram).
+// wrapOutboundSends(sock) dibungkus sekali di koneksi utama: jid berprefix tg_
+// dibelokkin ke bridge Telegram (kalau running), sisanya tetap jalur WA asli.
+export function wrapOutboundSends(sock) {
+  if (!sock || typeof sock.sendMessage !== "function" || sock._novaOutboundRouted) return sock;
+  const orig = {
+    sendMessage: sock.sendMessage.bind(sock),
+    sendMedia: typeof sock.sendMedia === "function" ? sock.sendMedia.bind(sock) : null,
+    sendReaction: typeof sock.sendReaction === "function" ? sock.sendReaction.bind(sock) : null,
+  };
+  const bridgeFor = (jid) => {
+    const target = typeof jid === "string" ? jid : String(jid?.key?.remoteJid || jid?.remoteJid || jid || "");
+    if (target.startsWith("tg_") && state.telegram.running && state.telegram.bridgeSock) return state.telegram.bridgeSock;
+    return null;
+  };
+  sock.sendMessage = async (jid, content, opts) => {
+    const b = bridgeFor(jid);
+    if (b) { try { return await b.sendMessage(jid, content, opts); } catch (e) { log("telegram", `router send gagal: ${e?.message || e}`); } }
+    return orig.sendMessage(jid, content, opts);
+  };
+  if (orig.sendMedia) {
+    sock.sendMedia = async (jid, source, caption, quoted, options) => {
+      const b = bridgeFor(jid);
+      if (b) { try { return await b.sendMedia(jid, source, caption, quoted, options); } catch (e) { log("telegram", `router media gagal: ${e?.message || e}`); } }
+      return orig.sendMedia(jid, source, caption, quoted, options);
+    };
+  }
+  if (orig.sendReaction) {
+    sock.sendReaction = async (jid, emoji) => {
+      const b = bridgeFor(jid);
+      if (b) { try { return await b.sendReaction(jid, emoji); } catch (e) { log("telegram", `router react gagal: ${e?.message || e}`); } }
+      return orig.sendReaction(jid, emoji);
+    };
+  }
+  sock._novaOutboundRouted = true;
+  return sock;
 }
 
 // ── Status & boot ───────────────────────────────────────
