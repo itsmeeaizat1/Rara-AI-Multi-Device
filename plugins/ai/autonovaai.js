@@ -31,7 +31,7 @@ export function _setAutonovaRuleAiForTest(fn) { _ruleAiForTest = fn; }
 const SYS = `Kamu menerjemahkan kalimat bahasa manusia menjadi SATU objek JSON rule automation bot WhatsApp.
 
 Format WAJIB:
-{"trigger":{"type":"keyword|schedule|join|leave|media","value":"...","match":"contains|exact|start"},"action":{"type":"reply|react|image|audio|kick|closegc|opengc","value":"...","caption":"..."},"scope":"all|group|private","cooldown":10}
+{"trigger":{"type":"keyword|schedule|join|leave|media","value":"...","match":"contains|exact|start"},"action":{"type":"reply|react|image|audio|kick|closegc|opengc","value":"...","caption":"..."},"scope":"all|group|private"}
 
 Aturan:
 - trigger.keyword: value = kata/frasa pemicu huruf kecil. match "contains" jika boleh di tengah kalimat, "exact" jika pesan harus sama persis, "start" jika di awal
@@ -47,12 +47,12 @@ Aturan:
 - action.audio: value = path audio, contoh "./assets/audio/menu.mp3". Jika tidak disebut, pakai itu
 - action.kick/closegc/opengc: tanpa value
 - scope: "group" jika hanya grup, "private" jika chat pribadi, "all" jika keduanya
-- cooldown: detik jeda anti-spam per chat (default 10, isi 0 jika harus selalu jalan). Untuk trigger.any WAJIB minimal 5 (jangan 0, terlalu boros & spam)
+- cooldown: diabaikan (anti-spam dihapus owner 29 Sep — autoflow respon setiap pesan yang match, boleh spam)
 - Balas HANYA JSON mentah, tanpa \`\`\` dan tanpa teks lain
 
 Contoh khusus free-chat:
-"kalau ada orang chat ikut ngobrol" => {"trigger":{"type":"any"},"action":{"type":"aichat","value":""},"scope":"all","cooldown":10}
-"kalau ada yg chat di grup ikut jawab ya bebas, gaya santai kayak temen" => {"trigger":{"type":"any"},"action":{"type":"aichat","value":"Balas santai kayak ngobrol sama temen dekat, singkat dan natural"},"scope":"group","cooldown":10}`;
+"kalau ada orang chat ikut ngobrol" => {"trigger":{"type":"any"},"action":{"type":"aichat","value":""},"scope":"all"}
+"kalau ada yg chat di grup ikut jawab ya bebas, gaya santai kayak temen" => {"trigger":{"type":"any"},"action":{"type":"aichat","value":"Balas santai kayak ngobrol sama temen dekat, singkat dan natural"},"scope":"group"}`;
 
 // ===== cek & rapikan rule buatan AI =====
 function validate(r) {
@@ -78,9 +78,9 @@ function validate(r) {
   // action "aichat" — value BOLEH kosong (default persona ramah santai)
   if (r.action.type === "aichat" && typeof r.action.value !== "string") r.action.value = "";
   if (!SCOPES.includes(r.scope)) r.scope = "all";
-  if (typeof r.cooldown !== "number" || r.cooldown < 0 || r.cooldown > 3600) r.cooldown = 10;
-  // trigger "any" minimal cooldown 5s — biar gak spam/boros API di chat ramai
-  if (r.trigger.type === "any" && r.cooldown < 5) r.cooldown = 5;
+  // 🔹 cooldown/anti-spam DIHAPUS (owner 29 Sep: "biar spam jga") — field
+  // cooldown di rule tetap diterima (kompatibel format lama) tapi DIABAIKAN
+  r.cooldown = 0;
   return null;
 }
 
@@ -120,7 +120,7 @@ export function extractJson(text) {
 export function localParse(t) {
   const s = (t || "").toLowerCase().trim();
   if (!s) return null;
-  const rule = { trigger: {}, action: {}, scope: "all", cooldown: 10 };
+  const rule = { trigger: {}, action: {}, scope: "all", cooldown: 0 };
 
   // scope
   if (/\b(grup|group|gc)\b/.test(s) && !/pribadi|private|\bpc\b/.test(s)) rule.scope = "group";
@@ -442,7 +442,7 @@ try { await m.react("🐣"); } catch {}
 const confirmText =
   `✅ Rule ${rule.id} aktif\n\n` +
   `${describe(rule)}\n` +
-  `Scope: ${rule.scope} • Cooldown: ${rule.cooldown}s\n\n` +
+  `Scope: ${rule.scope}\n\n` +
   (viaLocal ? "_⚙️ Rule dibikin lokal (AI lagi ngaco) — cek lagi ya hasilnya, kalau kurang pas hapus aja: .anovaagent del " + rule.id + "_\n\n" : "") +
   `Kelola: .anovaagent list | .anovaagent del ${rule.id} | .anovaagent off ${rule.id}`;
 // 🔹 MODE SUARA (upgrade owner 18 Sep): konfirmasi rule DIBACAKAN jadi

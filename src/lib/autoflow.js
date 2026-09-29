@@ -8,7 +8,9 @@ import { memoryBlock, extractMemories } from "./nova-memory.js";
 import { getDatabase } from "./nova-database.js";
 
 const DB = "./src/database/ai/autoflow.json";
-const cooldown = new Map();
+// 🔹 ANTI-SPAM COOLDOWN DIHAPUS TOTAL (owner 29 Sep: "fitur anti spam
+// anovaagent dihapus aja biar spam jga") — autoflow sekarang respon SETIAP
+// pesan yang match, tanpa jeda. Rule lama yang punya field cooldown diabaikan.
 
 // ================= ANTI-LOOP (echo balasan bot sendiri) =================
 // TIDAK blanket-skip semua fromMe — owner sering testing rule via self-chat
@@ -335,10 +337,7 @@ export async function handleMessage(conn, m) {
     if (s === "private" && m.isGroup) continue;
     if ((s.endsWith("@g.us") || s.endsWith("@s.whatsapp.net")) && m.chat !== s) continue;
 
-    // cooldown anti-spam
-    const cd = Number.isFinite(rule.cooldown) ? rule.cooldown : 10;
-    const key = rule.id + ":" + m.chat;
-    if (cd > 0 && Date.now() - (cooldown.get(key) || 0) < cd * 1000) continue;
+    // (anti-spam cooldown dihapus — owner 29 Sep, autoflow boleh spam)
 
     // cek pemicunya
     let match = false;
@@ -356,7 +355,6 @@ export async function handleMessage(conn, m) {
     }
     if (!match) continue;
 
-    if (cd > 0) cooldown.set(key, Date.now());
     await execute(conn, m, rule);
   }
 }
