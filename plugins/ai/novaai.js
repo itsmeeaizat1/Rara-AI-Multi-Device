@@ -415,13 +415,13 @@ async function handler(m, { sock, conn, config, db }) {
     const question = text || "Jelaskan apa yang ada di gambar ini secara lengkap dan berguna.";
     try {
     await m.react("🕒");
-      await setStatus("👀 " + smallcapsText("novaagent membaca gambar..."));
+      await setStatus("👀 " + smallcapsText("Scanning..."));
       appendSession(key, "user", `(mengirim gambar) ${question}`);
       const stopRotateV = startStatusRotation([
-        "👀 " + smallcapsText("novaagent membaca gambar..."),
-        "🔍 " + smallcapsText("novaagent sedang mencari detail gambar..."),
-        "🛠️ " + smallcapsText("novaagent sedang mengerjakan analisis..."),
-        "✍️ " + smallcapsText("novaagent sedang menyusun jawaban..."),
+        "👀 " + smallcapsText("Scanning..."),
+        "🔍 " + smallcapsText("Searching..."),
+        "🛠️ " + smallcapsText("Action..."),
+        "✍️ " + smallcapsText("Composing..."),
       ]);
       let buffer = null;
       let answer = null;
@@ -490,12 +490,12 @@ async function handler(m, { sock, conn, config, db }) {
   // TAHAP 2: think() — kalimat rumit → AI provider (dengan histori sesi)
   if (!decision) {
     // react 🧠 global udah ada di atas (line react 🧠) — cukup status text
-    await setStatus("🧠 " + smallcapsText("novaagent sedang berpikir..."));
+    await setStatus("🧠 " + smallcapsText("Thinking..."));
     const stopRotate = startStatusRotation([
-      "🧠 " + smallcapsText("novaagent sedang berpikir..."),
-      "🔍 " + smallcapsText("novaagent sedang mencari jawaban..."),
-      "🛠️ " + smallcapsText("novaagent sedang mengerjakan..."),
-      "✍️ " + smallcapsText("novaagent sedang menyusun jawaban..."),
+      "🧠 " + smallcapsText("Thinking..."),
+      "🔍 " + smallcapsText("Searching..."),
+      "🛠️ " + smallcapsText("Action..."),
+      "✍️ " + smallcapsText("Composing..."),
     ]);
     try {
       const prefixForThink = config?.command?.prefix || ".";

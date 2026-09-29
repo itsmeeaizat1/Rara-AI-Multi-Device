@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -20,8 +21,8 @@ const pluginConfig = {
 
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
+  let aiStatus = null;
   try {
-  await m.react("🕒");
     const raw = m.text?.trim() || "";
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const lang = parts[0] && !parts[0].startsWith(".") ? parts[0] : "English";
@@ -44,6 +45,8 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
+    // 🔹 status loading ala agent (owner 29 Sep) — 🧠 Thinking... → hasil edit-in-place
+    aiStatus = await startAiStatus(sock, m);
     const prompt = `Terjemahkan teks berikut ke ${lang}. Hanya kirim hasil terjemahan tanpa penjelasan tambahan.\n\n${text.slice(0, 4000)}`;
     const reply = await callAI({
       providerKey: "ikyy_gemini",
@@ -61,13 +64,14 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-    await m.reply(out);
+    await aiStatus.finish(out);
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("AITranslate", "Gagal nih, coba lagi ya");
 
-    await m.reply(text);
+    if (aiStatus) await aiStatus.fail("AI Translate gagal — coba lagi ya");
+    else { await m.react("❌"); await m.reply(text); }
   }
 
   return { handled: true };

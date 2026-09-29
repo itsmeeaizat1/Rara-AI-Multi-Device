@@ -20,6 +20,7 @@
 //   dsb) via multimodal chat 9router — bukan Gemini external.
 // + Model yang dipakai nongol di footer tiap jawaban (transparansi routing).
 import { novaBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { smallcapsText } from "../../src/lib/styler.js";
 import {
   ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys,
   router9Models, router9FindModel, router9Chat, router9ImageGen,
@@ -374,7 +375,7 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       };
       const executors = buildExecutors(m, sock, db, null, deps || {}, setStatus);
       const toolbox = await buildToolbox();
-      await setStatus("🛠️ agent 9router nyala — tugas: " + task.slice(0, 120));
+      await setStatus("🛠️ " + smallcapsText("Action — 9router task: " + task.slice(0, 120)));
       const res = await runAgent(task, {
         ai: router9Ai,
         execTools: executors,

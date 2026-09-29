@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
+import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -58,8 +59,8 @@ const pluginConfig = {
 
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
+  let aiStatus = null; // status loading ala agent (owner 29 Sep)
   try {
-  await m.react("🕒");
     const raw = m.text?.trim() || "";
     const chatId = m.chat;
 
@@ -100,6 +101,10 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
+    // 🔹 STATUS LOADING ALA AGENT (owner 29 Sep: "ai satuan juga animasi biar
+    // ketauan dia lg ngapain") — 🧠 Thinking... di-edit jadi jawaban final.
+    aiStatus = await startAiStatus(sock, m);
+
     const history = getHistory(chatId);
     appendHistory(chatId, "user", message);
 
@@ -135,14 +140,13 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-    await m.reply(text);
+    await aiStatus.finish(text);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      novaError("AIChat", "Gagal nih, coba lagi ya");
-
-    await m.react("🐣");
-    await m.reply(text, "aichat");
+    if (aiStatus) await aiStatus.fail("AI Chat gagal merespons — coba lagi ya");
+    else {
+      await m.react("❌");
+      await m.reply(novaError("AIChat", "Gagal nih, coba lagi ya"), "aichat");
+    }
   }
 
   return { handled: true };

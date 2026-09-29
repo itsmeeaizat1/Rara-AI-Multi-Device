@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
+import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,8 +32,8 @@ const pluginConfig = {
 
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
+  let aiStatus = null;
   try {
-  await m.react("🕒");
 
     const media = (m.quoted && m.quoted.isImage) || m.isImage; // FIX 10 Sep: flags isImage
     if (!media) {
@@ -68,6 +69,9 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(out);
       return { handled: true };
     }
+
+    // 🔹 status loading ala agent (owner 29 Sep) — 👀 scanning gambar → jawaban
+    aiStatus = await startAiStatus(sock, m, { phases: ["👀 Scanning...", "🧠 Thinking...", "✍️ Composing..."] });
     const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: {
@@ -104,13 +108,14 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-    await m.reply(out);
+    await aiStatus.finish(out);
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
       novaError("AIAnalyze", "Gagal nih, coba lagi ya");
 
-    await m.reply(text, "aianalyze");
+    if (aiStatus) await aiStatus.fail("AI Analyze gagal — coba lagi ya");
+    else { await m.react("❌"); await m.reply(text, "aianalyze"); }
   }
 
   return { handled: true };
