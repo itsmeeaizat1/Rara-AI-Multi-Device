@@ -659,7 +659,7 @@ export const TOOLS = {
 // MCP = tool dari server MCP eksternal (nova-mcp.js). Semua bentuknya sama
 // (perm/args/danger/desc/run) → gerbang + executor novaai.js jalan generik.
 export async function getAgentTools() {
-  await awaitSkillPacks() // skill pack src/skills/ siap sebelum registry dibangun
+  await awaitSkillPacks() // source pack src/source/ siap sebelum registry dibangun
   let mcp = {};
   try { mcp = await getMcpToolEntries(); } catch { /* MCP down gak boleh matiin agent */ }
   return { ...TOOLS, ...getAllSkills(), ...mcp };

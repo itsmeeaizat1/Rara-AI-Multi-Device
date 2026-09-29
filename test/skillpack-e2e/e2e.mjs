@@ -1,13 +1,13 @@
-// E2E SKILL PACK (12 Sep 2026) — 4 pack baru src/skills/ ke-load otomatis:
+// E2E SKILL PACK (12 Sep 2026) — 4 pack baru src/source/ ke-load otomatis:
 // kbbi (arti kata) | gempa (BMKG+USGS) | hoki (nomor hoki primbon) | lirik (LRCLIB)
 // + integrasi: registry getAgentTools + prompt buildThinkSystemPrompt.
 import fs from "node:fs"
 import { initDatabase } from "../../src/lib/nova-database.js"
 import { getAgentTools, buildThinkSystemPrompt } from "../../src/lib/aiagent.js"
-import { hitungHoki } from "../../src/skills/hoki.js"
-import { _setKbbiHttp } from "../../src/skills/kbbi.js"
-import { _setGempaHttp } from "../../src/skills/gempa.js"
-import { _setLirikFn } from "../../src/skills/lirik.js"
+import { hitungHoki } from "../../src/source/hoki.js"
+import { _setKbbiHttp } from "../../src/source/kbbi.js"
+import { _setGempaHttp } from "../../src/source/gempa.js"
+import { _setLirikFn } from "../../src/source/lirik.js"
 
 const DB = "/tmp/skillpack-e2e-db.json"
 fs.rmSync(DB, { recursive: true, force: true })
