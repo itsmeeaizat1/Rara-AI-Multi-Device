@@ -7,7 +7,8 @@ const pluginConfig = {
   alias: ["calendar"],
   description: "Kalender event grup", usage: ".calendar <add/list/del>",
   example: ".calendar add 25-12-2026 Natal", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
+  isGroup: true,
+  isPrivate: true, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

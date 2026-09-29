@@ -14,7 +14,8 @@ const pluginConfig = {
   description: "Game tebak nama surah Al-Quran",
   usage: ".guesssurah",
   example: ".guesssurah",
-  isOwner: false, isPremium: false, isGroup: true, isPrivate: false,
+  isOwner: false, isPremium: false, isGroup: true,
+  isPrivate: true, isPrivate: false,
   cooldown: 10, energi: 2, isEnabled: true,
 };
 

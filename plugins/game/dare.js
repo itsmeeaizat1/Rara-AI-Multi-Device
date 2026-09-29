@@ -33,7 +33,7 @@ export const config = {
   isPremium: true,
   isRegister: true,
   isGroup: true,
-  isPrivate: false,
+  isPrivate: true,
   cooldown: 3,
   energi: 1,
   isEnabled: true,
