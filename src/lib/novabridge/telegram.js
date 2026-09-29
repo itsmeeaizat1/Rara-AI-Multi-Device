@@ -173,6 +173,9 @@ export function createTelegramClient({ token, log = () => {} } = {}) {
     const updates = Array.isArray(body) ? body : [];
     for (const u of updates) {
       offset = Math.max(offset, (u.update_id || 0) + 1);
+      // Diagnostik update masuk (biar pesan grup "gak nyampe" keliatan di log)
+      const __um = u.message || u.edited_message;
+      log(`update masuk: ${Object.keys(u).filter((k) => k !== "update_id").join(",") || "?"} chat=${__um?.chat?.id ?? "-"} tipe=${__um?.chat?.type ?? "-"} dari=${__um?.from?.id ?? "-"} teks=${JSON.stringify(String(__um?.text ?? __um?.caption ?? "").slice(0, 40))}`);
       if (u.message || u.edited_message) {
         try {
           await handler(u.message || u.edited_message, u);

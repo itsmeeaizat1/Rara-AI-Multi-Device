@@ -188,13 +188,13 @@
     },
     "action": {
       "type": "aichat",
-      "value": "Gen Z style: casual, slang, emojis, short and trendy"
+      "value": "Bicara dengan bahasa anak kecil, sederhana, polos, dan penuh imajinasi"
     },
     "scope": "all",
     "cooldown": 10,
-    "id": "AF-012",
+    "id": "AF-013",
     "enabled": true,
-    "hits": 1,
+    "hits": 2,
     "targetChat": "tg_g1004391233300@g.us"
   }
 ]
