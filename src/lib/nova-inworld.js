@@ -105,14 +105,28 @@ export async function inworldListVoices({ pageSize = 300, force = false } = {}) 
   return r.json.voices;
 }
 
-// default voice: voice CUSTOM workspace (mis. "Aizat" buatan owner) > katalog
-// (TTS-2 cross-lingual — voice en tetap ngomong Indonesia lumayan bagus).
+// default voice: voice CUSTOM workspace bernama "Aizat" (buatan owner —
+// diminta 29 Sep: "aku mau suara inworld yg nama aizat itu") > custom LAIN
+// > katalog (TTS-2 cross-lingual — voice en tetap ngomong Indonesia bagus).
+let _lastVoice = { id: "", name: "" };
+export function getLastInworldVoice() { return _lastVoice; }
+const PREFERRED_VOICE_NAME = /aizat/i; // nama voice custom owner
 export async function resolveDefaultVoice() {
   try {
     const voices = await inworldListVoices();
-    const custom = voices.find(v => v.isCustom && v.voiceId);
-    if (custom) return custom.voiceId;
-    return voices.find(v => v.voiceId)?.voiceId || "Daniel";
+    const customs = voices.filter(v => v.isCustom && v.voiceId);
+    // 1) voice custom bernama "Aizat" duluan (permintaan owner 29 Sep)
+    // 2) voice custom lain 3) katalog bebas
+    const picked =
+      customs.find(v => PREFERRED_VOICE_NAME.test(String(v.displayName || ""))) ||
+      customs[0] ||
+      voices.find(v => v.voiceId) ||
+      null;
+    if (picked) {
+      _lastVoice = { id: picked.voiceId, name: String(picked.displayName || picked.voiceId) };
+      return picked.voiceId;
+    }
+    return "Daniel";
   } catch { return "Daniel"; }
 }
 

@@ -27,7 +27,7 @@ const pChat = fs.readFileSync(path.join(R, "plugins/ai/inworldchat.js"), "utf8")
 ok("plugin inworldchat: kategori ai + optional <model>|<teks>", pChat.includes('category: "ai"') && pChat.includes("includes(\"/\")"));
 
 console.log("─── 2. normalizeKey (gotcha padding terpotong) ───");
-const { normalizeKey, _setInworldHttpForTest, _resetVoiceCacheForTest, inworldSynthesize, inworldListVoices, resolveDefaultVoice, inworldTranscribe, inworldChat, getInworldKey } = await import(pathToFileURL(path.join(R, "src/lib/nova-inworld.js")).href);
+const { normalizeKey, _setInworldHttpForTest, _resetVoiceCacheForTest, inworldSynthesize, inworldListVoices, resolveDefaultVoice, getLastInworldVoice, inworldTranscribe, inworldChat, getInworldKey } = await import(pathToFileURL(path.join(R, "src/lib/nova-inworld.js")).href);
 ok("padding '==' dipulihkan bila len%4==2", normalizeKey("abcabcabcabcabcabcabca") === "abcabcabcabcabcabcabca==");
 ok("padding '=' dipulihkan bila len%4==3", normalizeKey("abcabcabcabcabcabcabcab") === "abcabcabcabcabcabcabcab=");
 ok("key lengkap gak diubah + 'Basic ' dibuang", normalizeKey("Basic abcd") === "abcd");
@@ -55,6 +55,16 @@ _setInworldHttpForTest(async () => ({ status: 200, ok: true, json: { voices: [
 ] } }));
 const dv = await resolveDefaultVoice();
 ok("default voice = voice CUSTOM workspace duluan (bukan katalog)", dv === "posh-delta-5795__design-voice-2b8df495", dv);
+_resetVoiceCacheForTest();
+// owner 29 Sep: "aku mau suara inworld yg nama aizat itu" — kalau di workspace
+// ada beberapa voice custom, yang bernama Aizat HARUS menang
+_setInworldHttpForTest(async () => ({ status: 200, ok: true, json: { voices: [
+  { voiceId: "posh-delta-5795__design-voice-2b8df495", displayName: "Voice", languages: ["id"], isCustom: true },
+  { voiceId: "aizat-custom-id", displayName: "Aizat", languages: ["id"], isCustom: true },
+] } }));
+const dvAizat = await resolveDefaultVoice();
+ok("voice custom bernama 'Aizat' MENANG dari custom lain (preferensi owner)", dvAizat === "aizat-custom-id", dvAizat);
+ok("getLastInworldVoice nyimpen nama voice terakhir", getLastInworldVoice()?.name === "Aizat" && getLastInworldVoice()?.id === "aizat-custom-id", JSON.stringify(getLastInworldVoice()));
 _resetVoiceCacheForTest();
 _setInworldHttpForTest(async () => ({ status: 200, ok: true, json: { voices: [{ voiceId: "Daniel", isCustom: false }, { voiceId: "Mia", isCustom: false }] } }));
 ok("fallback katalog bila gak ada custom", (await resolveDefaultVoice()) === "Daniel");
