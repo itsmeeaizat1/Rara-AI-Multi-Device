@@ -41,7 +41,7 @@ async function main() {
   check("0. registry .setkey discord (env DISCORD_BOT_TOKEN)", keysSrc.includes("discord: {") && keysSrc.includes("process.env.DISCORD_BOT_TOKEN"));
   const plugSrc = fs.readFileSync(path.join(R, "plugins/owner/bridge.js"), "utf8");
   check("0. plugin .bridge owner-only + alias novabridge", plugSrc.includes('isOwner: true') && plugSrc.includes('"novabridge"'));
-  const featSrc = fs.readFileSync(path.join(R, "FEATURES.md"), "utf8");
+  const featSrc = fs.readFileSync(path.join(R, "changelogs", "FEATURES.md"), "utf8");
   check("0. FEATURES.md ada entri .bridge", /\.bridge\b/.test(featSrc));
 
   // DB temp + plugin registry nyata (pola agent-access: load SEBELUM register fake)
