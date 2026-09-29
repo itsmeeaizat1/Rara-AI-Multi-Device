@@ -78,7 +78,11 @@ export function telegramToRaw(tgMsg) {
   // DM tetap tg_<id> (chat.id === from.id di private, jadi gak ada perubahan perilaku DM).
   const isGroupChat = chat.type === "group" || chat.type === "supergroup";
   const chatIdStr = String(chat.id ?? senderId).replace(/^-/, "");
-  const remoteJid = isGroupChat ? `tg_g${chatIdStr}@g.us` : `tg_${senderId}`;
+  // SALURAN (channel, 29 Sep): bot admin saluran nerima channel_post — jid
+  // khusus tg_c<id>@newsletter biar .jasher bisa bedain saluran vs grup
+  // (suffix sama kayak WA newsletter, prefix tg_ = Telegram).
+  const isChannelChat = chat.type === "channel";
+  const remoteJid = isChannelChat ? `tg_c${chatIdStr}@newsletter` : (isGroupChat ? `tg_g${chatIdStr}@g.us` : `tg_${senderId}`);
   const participant = isGroupChat ? `tg_${senderId}` : remoteJid;
   return {
     key: {
@@ -96,9 +100,9 @@ export function telegramToRaw(tgMsg) {
     },
     messageTimestamp: tgMsg?.date || Math.floor(Date.now() / 1000),
     pushName: from.first_name || from.username || "Telegram User",
-    _bridge: { platform: "telegram", chatId: chat.id, invokeMsgId: tgMsg?.message_id, isBot: !!from.is_bot, hasMedia: !!(tgMsg && (tgMsg.photo || tgMsg.video || tgMsg.document || tgMsg.audio || tgMsg.voice)), isGroup: isGroupChat,
+    _bridge: { platform: "telegram", chatId: chat.id, invokeMsgId: tgMsg?.message_id, isBot: !!from.is_bot, hasMedia: !!(tgMsg && (tgMsg.photo || tgMsg.video || tgMsg.document || tgMsg.audio || tgMsg.voice)), isGroup: isGroupChat, isChannel: isChannelChat,
       // judul grup (registry .jasher — broadcast promosi lintas platform, 29 Sep)
-      groupTitle: isGroupChat ? (chat.title || null) : null },
+      groupTitle: (isGroupChat || isChannelChat) ? (chat.title || null) : null },
   };
 }
 
@@ -353,7 +357,8 @@ export async function handleBridgeMessage(rawMsg, sock, ctx = {}) {
   // tapi Bot API Telegram GAK BISA enumerasi grup → registry ini cara .jasher
   // nemuin grup TG yang bot join (persist di DB, tahan restart).
   try {
-    if (rawMsg._bridge?.isGroup && String(rawMsg.key.remoteJid).endsWith("@g.us") && !rawMsg.key.fromMe && !rawMsg._bridge?.isBot) {
+    // grup (@g.us) DAN saluran (@newsletter) — dua-duanya dicatat buat .jasher
+    if ((rawMsg._bridge?.isGroup || rawMsg._bridge?.isChannel) && (String(rawMsg.key.remoteJid).endsWith("@g.us") || String(rawMsg.key.remoteJid).endsWith("@newsletter")) && !rawMsg.key.fromMe && !rawMsg._bridge?.isBot) {
       const jid = String(rawMsg.key.remoteJid);
       const title = rawMsg._bridge?.groupTitle || null;
       const data = db?.db?.data;

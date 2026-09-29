@@ -18,10 +18,16 @@
 // COOLDOWN (default OFF, owner yang set): jeda minimum antar broadcast
 // biar gak spam grup. .jasher cooldown <menit> / .jasher cooldown off.
 //
+// SALURAN (request owner 29 Sep): .jasher juga support Saluran WhatsApp
+// (newsletter) + Saluran Telegram (bot harus admin saluran). Toggle per tipe
+// target — owner yang set: .jasher set group on|off · .jasher set channel on|off
+// DEFAULT: group ON, channel OFF.
+//
 // Sub:
-//   .jasher <teks>                     → broadcast ke SEMUA grup
+//   .jasher <teks>                     → broadcast ke semua target aktif
 //   .jasher grup <kata[,kata]> <teks>  → hanya grup yang namanya match
 //   .jasher list                       → daftar semua grup (nomor, nama, platform)
+//   .jasher set group|channel on|off   → toggle tipe target (default group on, channel off)
 //   .jasher cooldown <menit|off>       → set/lihat jeda antar broadcast
 //   .jasher stop                       → batalkan broadcast yang lagi jalan
 //
@@ -33,7 +39,7 @@ const pluginConfig = {
   alias: ["jasher"],
   category: "promotion",
   description: "Broadcast promosi/pengumuman ke semua grup bot (WA + Telegram), teks atau media+caption",
-  usage: ".jasher <teks> — Broadcast semua grup\n.jasher grup <kata[,kata]> <teks> — Grup target saja\n.jasher list — Daftar grup\n.jasher cooldown <menit|off> — Jeda antar broadcast (default off)\n.jasher stop — Batalkan broadcast",
+  usage: ".jasher <teks> — Broadcast semua target aktif\n.jasher grup <kata[,kata]> <teks> — Grup target saja\n.jasher list — Daftar grup & saluran\n.jasher set group|channel on|off — Toggle tipe target (default group on, channel off)\n.jasher cooldown <menit|off> — Jeda antar broadcast (default off)\n.jasher stop — Batalkan broadcast",
   example: ".jasher Diskon 50% semua produk hari ini!",
   isOwner: true,
   isPremium: false,
@@ -63,26 +69,57 @@ export function _resetJasherMediaForTest() { _mediaDownloadForTest = null; }
 // ── enumerasi semua grup: WA live + registry TG ──
 async function collectTargets(sock, dbData) {
   const map = new Map();
+  const add = (jid, name, platform, type) => {
+    if (!jid) return;
+    map.set(jid, { name: name || jid.split("@")[0], platform, type });
+  };
+  // ── grup WA ──
   try {
     const groups = await sock.groupFetchAllParticipating?.();
     for (const [jid, g] of Object.entries(groups || {})) {
       if (!jid.endsWith("@g.us")) continue;
-      map.set(jid, { name: g?.subject || jid.split("@")[0], platform: "WA" });
+      add(jid, g?.subject, "WA", "group");
     }
   } catch {}
+  // ── saluran WA (newsletter yang akun ikuti) ──
+  try {
+    const nls = await sock.newsletterFetchAllSubscribe?.();
+    for (const nl of nls || []) {
+      if (!nl) continue;
+      const jid = String(nl.id || nl.jid || "");
+      if (!jid.endsWith("@newsletter")) continue;
+      add(jid, nl.name || nl.handleText || nl?.threadMetadata?.handleText, "WA", "channel");
+    }
+  } catch {}
+  // ── registry bridge: grup + saluran TG/Discord ──
   try {
     const reg = dbData?.jasher?.groups || {};
     for (const [jid, info] of Object.entries(reg)) {
-      if (!jid.endsWith("@g.us") || map.has(jid)) continue;
-      map.set(jid, { name: info?.name || jid.split("@")[0], platform: String(info?.platform || "telegram").toLowerCase().includes("discord") ? "Discord" : "TG" });
+      if (map.has(jid)) continue;
+      const isChannel = jid.endsWith("@newsletter");
+      if (!jid.endsWith("@g.us") && !isChannel) continue;
+      const platform = String(info?.platform || "telegram").toLowerCase().includes("discord") ? "Discord" : "TG";
+      add(jid, info?.name, platform, isChannel ? "channel" : "group");
     }
   } catch {}
-  return [...map.entries()].map(([jid, v]) => ({ jid, name: v.name, platform: v.platform }));
+  return [...map.entries()].map(([jid, v]) => ({ jid, ...v }));
+}
+
+// ── settings tipe target — DEFAULT group ON, channel OFF ──
+function getSettings(dbData) {
+  const st = dbData?.jasher?.settings || {};
+  return {
+    group: st.group !== false,     // default ON
+    channel: st.channel === true,  // default OFF
+  };
 }
 
 function fmtList(targets) {
-  const lines = targets.map((t, i) => `${i + 1}. ${t.name} ${t.platform === "WA" ? "🟢" : t.platform === "TG" ? "🔵" : "🟣"} (${t.jid})`);
-  return lines.join("\n") || "(belum ada grup)";
+  const lines = targets.map((t, i) => {
+    const p = t.platform === "WA" ? "🟢" : t.platform === "TG" ? "🔵" : "🟣";
+    return `${i + 1}. ${t.type === "channel" ? "📣" : p} ${t.name} (${t.jid})`;
+  });
+  return lines.join("\n") || "(belum ada grup/saluran)";
 }
 
 // ── ambil media: reply media, atau media langsung (caption) ──
@@ -212,10 +249,13 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
   // ── sub: list ──
   if (args[0]?.toLowerCase() === "list") {
     const targets = await collectTargets(sock, dbData);
-    const wa = targets.filter(t => t.platform === "WA").length;
-    const tg = targets.filter(t => t.platform === "TG").length;
-    const out = claraWrap("Jasher — Daftar Grup", [
-      `Total: ${targets.length} grup (WA ${wa} · TG ${tg})`,
+    const st = getSettings(dbData);
+    const wa = targets.filter(t => t.platform === "WA" && t.type === "group").length;
+    const tg = targets.filter(t => t.platform === "TG" && t.type === "group").length;
+    const ch = targets.filter(t => t.type === "channel").length;
+    const out = claraWrap("Jasher — Daftar Grup & Saluran", [
+      `Total: ${targets.length} target — grup WA ${wa} · grup TG ${tg} · saluran ${ch}`,
+      `Aktif: grup ${st.group ? "🟢" : "🔴"} · saluran ${st.channel ? "🟢" : "🔴"} (ubah: ${prefix}jasher set group|channel on|off)`,
       "---",
       fmtList(targets).slice(0, 3800),
     ].join("\n")) + "\n" + tipText(`Broadcast: ${prefix}jasher <teks> — Target: ${prefix}jasher grup <nama> <teks>`);
@@ -254,6 +294,49 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     await persist();
     await m.react("⚡");
     await m.reply(claraWrap("Jasher — Cooldown", `Cooldown broadcast AKTIF: ${mins} menit antar broadcast. Gak bisa kirim .jasher lagi sebelum jeda lewat.`));
+    return { handled: true };
+  }
+
+  // ── sub: set — toggle tipe target (default group ON, channel OFF) ──
+  if (args[0]?.toLowerCase() === "set") {
+    const kind = (args[1] || "").toLowerCase(); // group | channel
+    const val = (args[2] || "").toLowerCase();  // on | off
+    if (!kind && !val) {
+      const st = getSettings(dbData);
+      const out = [
+        `Target broadcast saat ini:`,
+        `• Grup: ${st.group ? "🟢 ON" : "🔴 OFF"} (default on)`,
+        `• Saluran (WA & Telegram): ${st.channel ? "🟢 ON" : "🔴 OFF"} (default off)`,
+        "---",
+        `Ubah: ${prefix}jasher set group on|off · ${prefix}jasher set channel on|off`,
+      ].join("\n");
+      await m.reply(claraWrap("Jasher — Target", out));
+      return { handled: true };
+    }
+    if (kind !== "group" && kind !== "channel" && kind !== "grup" && kind !== "saluran") {
+      await m.reply(claraWrap("Jasher — Target", [
+        "Tipe target harus: group atau channel.",
+        `Contoh: ${prefix}jasher set channel on`,
+      ].join("\n")));
+      return { handled: true };
+    }
+    if (val !== "on" && val !== "off") {
+      await m.reply(claraWrap("Jasher — Target", [
+        "Nilai harus on atau off.",
+        `Contoh: ${prefix}jasher set channel on`,
+      ].join("\n")));
+      return { handled: true };
+    }
+    const key = (kind === "group" || kind === "grup") ? "group" : "channel";
+    try {
+      dbData.jasher ??= { groups: {} };
+      dbData.jasher.settings ??= {};
+      dbData.jasher.settings[key] = val === "on";
+      await persist();
+    } catch {}
+    const label = key === "group" ? "Grup" : "Saluran (WA & Telegram)";
+    await m.react("⚡");
+    await m.reply(claraWrap("Jasher — Target", `Target ${label}: ${val === "on" ? "🟢 ON — bakal kekirim .jasher" : "🔴 OFF — dilewati broadcast"}`));
     return { handled: true };
   }
 
@@ -312,7 +395,8 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
       `${prefix}jasher grup <kata[,kata]> <teks> — hanya grup yang namanya match`,
       `Reply gambar/video + ${prefix}jasher <caption> — broadcast media+caption`,
       `Kirim gambar/video caption: ${prefix}jasher <teks> — idem`,
-      `${prefix}jasher list — lihat daftar grup`,
+      `${prefix}jasher list — lihat daftar grup & saluran`,
+      `${prefix}jasher set group|channel on|off — toggle tipe target (default grup on, saluran off)`,
       `${prefix}jasher cooldown <menit|off> — jeda antar broadcast (default off)`,
       `${prefix}jasher stop — batalkan broadcast`,
       "---",
@@ -337,10 +421,18 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     return { handled: true };
   }
 
-  // ── enumerasi + filter target ──
-  let targets = await collectTargets(sock, dbData);
+  // ── enumerasi + filter tipe target (settings: default group ON, channel OFF) ──
+  const st = getSettings(dbData);
+  let targets = (await collectTargets(sock, dbData)).filter(t => t.type === "channel" ? st.channel : st.group);
+  if (!st.group && !st.channel) {
+    await m.reply(claraWrap("Jasher", [
+      `Grup & saluran dua-duanya OFF — gak ada target broadcast.`,
+      `Nyalakan salah satu: ${prefix}jasher set group on atau ${prefix}jasher set channel on`,
+    ].join("\n")));
+    return { handled: true };
+  }
   if (!targets.length) {
-    await m.reply(claraWrap("Jasher", "Bot belum join grup mana pun (WA & TG)."));
+    await m.reply(claraWrap("Jasher", "Gak ada target aktif — bot belum join grup/saluran yang menyala (cek .jasher list & .jasher set)."));
     return { handled: true };
   }
   if (targetMode) {
