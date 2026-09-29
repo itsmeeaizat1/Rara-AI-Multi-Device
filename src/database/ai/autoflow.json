@@ -181,5 +181,20 @@
     "enabled": true,
     "hits": 0,
     "targetChat": "y@g.us"
+  },
+  {
+    "trigger": {
+      "type": "any"
+    },
+    "action": {
+      "type": "aichat",
+      "value": "Gen Z style: casual, slang, emojis, short and trendy"
+    },
+    "scope": "all",
+    "cooldown": 10,
+    "id": "AF-012",
+    "enabled": true,
+    "hits": 1,
+    "targetChat": "tg_g1004391233300@g.us"
   }
 ]

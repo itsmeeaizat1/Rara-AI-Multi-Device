@@ -167,7 +167,7 @@ async function main() {
   const mkTg = (text, from = { id: 771234, is_bot: false }) => adapter.telegramToRaw({ from, chat: { id: from.id }, text, message_id: Math.floor(Math.random() * 100000), date: Math.floor(Date.now() / 1000) });
   const run = (raw, extra = {}) => adapter.handleBridgeMessage(raw, sock, { db, messageHandler: fakeMH, prefix: ".", platform: "telegram", chatMap, ...extra });
 
-  check("5a. non-command (teks polos) → ignored", (await run(mkTg("halo apa kabar"))).handled === "ignored" && dispatched.length === 0);
+  check("5a. non-command (teks polos) → TETAP diteruskan ke messageHandler (paritas WA — autoflow any/aichat hidup)", (await run(mkTg("halo apa kabar"))).handled === "dispatched" && dispatched.at(-1) === "tg_771234:halo apa kabar");
   check("5b. fromMe/bot sendiri → skip", (await run(mkTg(".menu", { id: 771234, is_bot: true }))).handled === "self");
   check("5c. media input → ditolak jujur fase 1", (await run(adapter.telegramToRaw({ from: { id: 771234, is_bot: false }, chat: { id: 771234 }, photo: [{}], message_id: 5, date: 1 }))).handled === "media-rejected");
   check("5d. command whitelist → dispatch ke messageHandler", (await run(mkTg(".wlcmd tes"))).handled === "dispatched" && dispatched.at(-1) === "tg_771234:.wlcmd tes");
@@ -187,6 +187,37 @@ async function main() {
   adapter._resetRateForTest();
   const runErr = (raw) => adapter.handleBridgeMessage(raw, sock, { db, messageHandler: async () => { throw new Error("boom"); }, prefix: ".", platform: "telegram", chatMap });
   check("5h. handler crash → balasan error jujur", (await runErr(mkTg(".wlcmd err"))).handled === "dispatched");
+
+  // 5i. INTEGRASI AUTOFLOW: chat polos Telegram → messageHandler beneran →
+  // rule .anovaagent trigger "any" KEBAKAR (bug nyata 29 Sep: rule owner
+  // "ajak ngobrol" gak pernah respon di TG karena chat polos di-ignore)
+  {
+    const realMH = (await import(url("src/handler.js"))).messageHandler;
+    const autoflow = await import(url("src/lib/autoflow.js"));
+    // ISOLASI: stash semua rule beneran (termasuk rule owner AF-012 any→aichat)
+    // — aichat bakal nunggu jawaban AI & narik network, bikin tes gak
+    // deterministik. Tes cukup buktiin pipeline: chat polos → messageHandler
+    // → autoflow rule "any" KEBAKAR di bridge Telegram.
+    const stash = autoflow.load();
+    autoflow.save([{
+      id: "AF-BRIDGE-TST", enabled: true, trigger: { type: "any" },
+      action: { type: "reply", value: "oke aku ikutan ngobrol" },
+      scope: "all", cooldown: 0,
+    }]);
+    try {
+      adapter._resetRateForTest();
+      const before = sent.length;
+      const r5i = await adapter.handleBridgeMessage(mkTg("halo guys pagi"), sock, {
+        db, messageHandler: realMH, prefix: ".", platform: "telegram", chatMap,
+      });
+      await new Promise((res) => setTimeout(res, 700));
+      const gotReply = sent.slice(before).some((x) => /oke aku ikutan ngobrol/i.test(String(x?.text ?? x?.caption ?? "")));
+      check("5i. chat polos TG → rule autoflow any KEBAKAR (paritas WA)", r5i?.handled === "dispatched" && gotReply);
+    } finally {
+      autoflow.save(stash); // rule owner dikembalikan persis
+    }
+  }
+
 
   w("\n— 6. plugin .bridge (m fake) —");
   const { config: bridgeCfg, handler: bridgeHandler } = await import(url("plugins/owner/bridge.js"));
