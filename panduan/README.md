@@ -13,4 +13,4 @@ Satu fitur satu file biar gampang dicari.
 
 | **Instalasi bot dari nol** | [INSTALASI-BOT.md](INSTALASI-BOT.md) | Prasyarat, clone, npm install, pairing, pm2 |
 
-Fitur lain cukup lihat `.menu` / FEATURES.md — gak butuh setup tambahan.
+Fitur lain cukup lihat `.menu` / `changelogs/FEATURES.md` — gak butuh setup tambahan.

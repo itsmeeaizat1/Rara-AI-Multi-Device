@@ -94,7 +94,7 @@ Setelah bot nyala dan pairing sukses:
 - Fitur yang butuh setup tambahan, buka panduan khususnya:
   [AICALL.md](AICALL.md) · [9ROUTER.md](9ROUTER.md) · [HIAI.md](HIAI.md) ·
   [WEBPANEL.md](WEBPANEL.md) · [VOIPCALL.md](VOIPCALL.md)
-- Daftar lengkap fitur + status: `FEATURES.md`.
+- Daftar lengkap fitur + status: `changelogs/FEATURES.md`.
 
 ## 5. Update Bot
 
