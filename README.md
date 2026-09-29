@@ -152,13 +152,13 @@ Command yang paling sering dipakai sehari-hari:
 
 | Resource | Minimum | Rekomendasi |
 |----------|---------|-------------|
-| CPU | 200% (2 vCore) | 400% (4 vCore) |
-| RAM | 3 GB | 4 GB |
+| CPU | 150% (1.5 vCore) | 400% (4 vCore) |
+| RAM | 2 GB | 4 GB |
 | Swap | 2 GB | 4 GB |
-| Disk | 1 GB | 2 GB |
-| Node.js | v20 | v22 (LTS) |
+| Disk | 5 GB | 10 GB |
+| Node.js | v22 (LTS) | v22 (LTS) |
 
-- ⚠️ **Minimum mutlak: 3 GB RAM + 2 GB Swap + 2 vCore** — di bawah ini bot gak stabil
+- ⚠️ **Minimum mutlak: 2 GB RAM + 2 GB Swap + 150% CPU + 5 GB Disk** — di bawah ini bot gak stabil (script + node_modules + sesi aja udah > 4 GB)
 - Memory naik seiring jumlah jadibot session aktif
 - Cocok jalan di Pterodactyl, VPS, Termux, dan Docker
 
