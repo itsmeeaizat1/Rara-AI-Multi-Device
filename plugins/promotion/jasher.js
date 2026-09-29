@@ -28,6 +28,7 @@
 //   .jasher grup <kata[,kata]> <teks>  → hanya grup yang namanya match
 //   .jasher list                       → daftar semua grup (nomor, nama, platform)
 //   .jasher set group|channel on|off   → toggle tipe target (default group on, channel off)
+//   .jasher info                       → riwayat pemakaian: siapa, cuplikan pesan, kapan
 //   .jasher cooldown <menit|off>       → set/lihat jeda antar broadcast
 //   .jasher stop                       → batalkan broadcast yang lagi jalan
 //
@@ -39,7 +40,7 @@ const pluginConfig = {
   alias: ["jasher"],
   category: "promotion",
   description: "Broadcast promosi/pengumuman ke semua grup bot (WA + Telegram), teks atau media+caption",
-  usage: ".jasher <teks> — Broadcast semua target aktif\n.jasher grup <kata[,kata]> <teks> — Grup target saja\n.jasher list — Daftar grup & saluran\n.jasher set group|channel on|off — Toggle tipe target (default group on, channel off)\n.jasher cooldown <menit|off> — Jeda antar broadcast (default off)\n.jasher stop — Batalkan broadcast",
+  usage: ".jasher <teks> — Broadcast semua target aktif\n.jasher grup <kata[,kata]> <teks> — Grup target saja\n.jasher list — Daftar grup & saluran\n.jasher set group|channel on|off — Toggle tipe target (default group on, channel off)\n.jasher cooldown <menit|off> — Jeda antar broadcast (default off)\n.jasher info — Riwayat pemakaian (siapa, cuplikan, waktu)\n.jasher stop — Batalkan broadcast",
   example: ".jasher Diskon 50% semua produk hari ini!",
   isOwner: true,
   isPremium: false,
@@ -103,6 +104,15 @@ async function collectTargets(sock, dbData) {
     }
   } catch {}
   return [...map.entries()].map(([jid, v]) => ({ jid, ...v }));
+}
+
+// ── snippet pesan buat log .jasher info — CUPLIKAN pertama aja
+// (request owner 29 Sep: promosi emang panjang, takut penuhin log)
+function snippetOf(text, media) {
+  const kind = media ? (media.kind === "image" ? "[gambar] " : media.kind === "video" ? "[video] " : "[berkas] ") : "";
+  const t = String(text || "").replace(/\s+/g, " ").trim();
+  const cut = t.length > 70 ? t.slice(0, 70) + "…" : t;
+  return (kind + cut) || (media ? kind.trim() : "(kosong)");
 }
 
 // ── settings tipe target — DEFAULT group ON, channel OFF ──
@@ -340,6 +350,39 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     return { handled: true };
   }
 
+  // ── sub: info — riwayat pemakaian (siapa, cuplikan pesan, kapan) ──
+  if (args[0]?.toLowerCase() === "info") {
+    const hist = dbData?.jasher?.history || [];
+    if ((args[1] || "").toLowerCase() === "clear") {
+      try { dbData.jasher ??= { groups: {} }; dbData.jasher.history = []; await persist(); } catch {}
+      await m.reply(claraWrap("Jasher — Riwayat", "Riwayat broadcast dibersihkan."));
+      return { handled: true };
+    }
+    if (!hist.length) {
+      await m.reply(claraWrap("Jasher — Riwayat", [
+        "Belum ada riwayat broadcast yang tercatat.",
+        `Setiap .jasher yang terkirim otomatis dicatat: siapa pengirim, cuplikan pesan, waktu, jumlah target.`,
+      ].join("\n")));
+      return { handled: true };
+    }
+    const fmtTime = (ts) => {
+      try {
+        return new Date(ts).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+      } catch { return String(ts); }
+    };
+    const shortJid = (j) => String(j || "").replace(/@.+$/, "");
+    const rows = hist.slice(-10).reverse().map((h, i) =>
+      `${i + 1}. ${fmtTime(h.at)} WIB · ${shortJid(h.by)}${h.aborted ? " ⛔dibatalkan" : ""}\n   "${h.snippet}" → ${h.ok}/${h.targets} target${h.mode ? ` (${h.mode})` : ""}`
+    );
+    const out = claraWrap("Jasher — Riwayat Broadcast", [
+      `Total tercatat: ${hist.length} (menampilkan ${Math.min(10, hist.length)} terbaru)`,
+      "---",
+      rows.join("\n"),
+    ].join("\n")) + "\n" + tipText(`${prefix}jasher info clear — bersihkan riwayat`);
+    await m.reply(out);
+    return { handled: true };
+  }
+
   // ── sub: stop ──
   if (args[0]?.toLowerCase() === "stop") {
     if (running) {
@@ -398,6 +441,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
       `${prefix}jasher list — lihat daftar grup & saluran`,
       `${prefix}jasher set group|channel on|off — toggle tipe target (default grup on, saluran off)`,
       `${prefix}jasher cooldown <menit|off> — jeda antar broadcast (default off)`,
+      `${prefix}jasher info — riwayat pemakaian (siapa, cuplikan, waktu)`,
       `${prefix}jasher stop — batalkan broadcast`,
       "---",
       `Contoh: ${prefix}jasher Diskon 50% hari ini!`,
@@ -456,6 +500,23 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
   await m.react("📢");
   const result = await broadcast(sock, m, targets, text, media);
   await m.react(result.aborted ? "❌" : "🐣");
+
+  // ── catat riwayat pemakaian (siapa, cuplikan pesan, kapan, hasil) ──
+  try {
+    dbData.jasher ??= { groups: {} };
+    dbData.jasher.history ??= [];
+    dbData.jasher.history.push({
+      at: Date.now(),
+      by: m.sender || m.key?.participant || "owner",
+      snippet: snippetOf(text, media),
+      targets: targets.length,
+      ok: result?.ok || 0,
+      mode: targetMode ? `target: ${targetMode.join(",")}` : "",
+      aborted: !!result?.aborted,
+    });
+    if (dbData.jasher.history.length > 30) dbData.jasher.history = dbData.jasher.history.slice(-30); // cap 30 entri
+    await persist();
+  } catch {}
   return { handled: true };
 }
 
