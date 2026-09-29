@@ -10,6 +10,7 @@
 //   KEY = "novaAgentVoice" | "aisuperagentVoice" | "anovaagentVoice"
 // Satu chat bisa beda mode per fitur — cfg gak nyampur.
 import { exec } from "child_process";
+import { getInworldKey } from "./nova-inworld.js";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
@@ -82,6 +83,17 @@ export function wantsVoice(db, chat, userText, key = VOICE_KEYS.novaagent) {
 const VOICE_ON = ["pakai suara", "pake suara", "suara on", "suara aktif", "suara aktifkan", "suara nyala", "mode suara", "mode suara on", "mode suara aktif"];
 const VOICE_OFF = ["suara off", "suara mati", "suara matikan", "suara nonaktif", "jangan pakai suara", "jangan pake suara", "tanpa suara", "mode suara off"];
 const VOICE_STATUS = ["suara", "suara status", "suara info", "suara list"];
+// 🔹 STATUS SUMBER SUARA (owner 29 Sep: kartu "suara saat ini: gadis"
+// bikin bingung — gadis itu cuma fallback bawaan; sumber UTAMA Inworld.
+// Baris ini jujur: mana yang utama, mana yang bawaan.
+function voiceSourceLine() {
+  let hasKey = false;
+  try { hasKey = !!getInworldKey(); } catch {}
+  return hasKey
+    ? "Sumber utama: Inworld TTS-2 (neural) ✓ — voice custom owner prioritas"
+    : "Sumber utama: Inworld TTS-2 ✗ — key belum di-set (.setkey inworld <key>) → jadi pakai bawaan";
+}
+
 export function voiceSubReply(db, chat, low, key = VOICE_KEYS.novaagent) {
   low = String(low || "").toLowerCase().trim();
   const vm = low.match(/^suara\s+([a-z]+)$/);
@@ -96,7 +108,8 @@ export function voiceSubReply(db, chat, low, key = VOICE_KEYS.novaagent) {
     return [
       "🎙️ Mode suara AKTIF",
       "Semua jawabanku akan dibacakan jadi voice note",
-      "Suara saat ini: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
+      voiceSourceLine(),
+      "Fallback bawaan: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice) + " (dipakai kalau Inworld down)",
     ];
   }
   if (isOff) {
@@ -110,17 +123,20 @@ export function voiceSubReply(db, chat, low, key = VOICE_KEYS.novaagent) {
     const v = VOICE_OPTIONS.find(x => x.id === vm[1]);
     setVoiceCfg(db, chat, { voice: v.id, on: true }, key);
     return [
-      "🎙️ Suara diganti: " + v.name,
+      "🎙️ Suara fallback diganti: " + v.name,
       "Mode suara ikut AKTIF",
+      voiceSourceLine(),
+      "Catatan: suara ini kepakai kalau Inworld down/tanpa key (Inworld tetap utama)",
     ];
   }
   // status
   const cfg = getVoiceCfg(db, chat, key);
   return [
     "🎙️ Status mode suara: " + (cfg.on ? "AKTIF — jawabanku dibacakan jadi voice note" : "NONAKTIF — jawaban teks biasa"),
-    "Suara saat ini: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
+    voiceSourceLine(),
+    "Fallback bawaan: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
     "",
-    "Ganti suara: " + VOICE_OPTIONS.map(v => v.id).join(", "),
+    "Ganti fallback: " + VOICE_OPTIONS.map(v => v.id).join(", "),
   ];
 }
 
@@ -258,8 +274,10 @@ export async function speakVoiceNote(sock, jid, text, voiceId, { quoted } = {}) 
 
     // 🔹 SUARA UTAMA: Inworld TTS-2 neural; kalau down/tanpa key → fallback
     // ke voice pertama yang asli (msedge-tts) — permintaan owner 29 Sep.
+    let engine = "inworld";
     let mp3 = await inworldTTSBuffer(spoken);
     if (!mp3) {
+      engine = "edge"; // fallback: voice pertama yang asli
       mp3 = await edgeTTSBuffer(spoken, voice.lang);
       if (!mp3) mp3 = await edgeTTSBuffer(spoken, VOICE_OPTIONS[1].lang); // fallback ardi
     }
@@ -269,7 +287,18 @@ export async function speakVoiceNote(sock, jid, text, voiceId, { quoted } = {}) 
     const sent = ogg
       ? await sock.sendMessage(jid, { audio: ogg, mimetype: "audio/ogg; codecs=opus", ptt: true }, opts)
       : await sock.sendMessage(jid, { audio: mp3, mimetype: "audio/mpeg" }, opts);
-    return !!sent;
+    if (!sent) return false;
+
+    // 🔹 NOTIFIKASI SUMBER SUARA (owner 29 Sep: "gak bisa bedain mana suara
+    // dari inworld mana yang fallback saat anovaagent suara on") — 1 baris
+    // kecil smallcaps nempel di VN, jelas asalnya tanpa perlu nebak.
+    const tag = engine === "inworld"
+      ? "🎙️ sᴜᴀʀᴀ ɪɴᴡᴏʀʟᴅ ᴛᴛs-2"
+      : "🔊 sᴜᴀʀᴀ ʙᴀᴡᴀᴀɴ — ɪɴᴡᴏʀʟᴅ ᴏꜰꜰ/ᴅᴏᴡɴ, ꜰᴀʟʟʙᴀᴄᴋ ᴍsᴇᴅɢᴇ-ᴛᴛs";
+    try {
+      await sock.sendMessage(jid, { text: tag }, { quoted: sent.key ? { key: sent.key } : undefined });
+    } catch {}
+    return true;
   } catch (e) {
     console.error("[VoiceReply] speak error:", e?.message || e);
     return false;
