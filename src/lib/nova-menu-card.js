@@ -365,6 +365,25 @@ import { resolveNewsletterJid } from "./nova-saluran.js";
 
 async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "", adTitle = "", plain = false }) {
   try {
+    // BRIDGE MULTI-PLATFORM (29 Sep): Telegram/Discord gak punya kartu interactive
+    // WA — teks menu polos aja (kejut + antiarm), sama kayak jalur newsletter.
+    if (sock && sock._bridgePlatform) {
+      // Telegram/Discord: thumbnail menu (gambar/VIDEO) dikirim duluan sebagai
+      // media + caption pendek (caption TG maks 1024 char), lalu teks menu
+      // lengkap sebagai pesan terpisah.
+      const _brThumb = pickMenuThumb(thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"));
+      const _brBuf = getThumbnailBuffer(_brThumb.path);
+      const _brText = typeof text === "string" && text ? smallcapsText(text) : text;
+      const _brCaption = String(title || "").slice(0, 900);
+      if (_brBuf) {
+        await sock.sendMessage(m.chat, _brThumb.isVideo
+          ? { video: _brBuf, caption: _brCaption }
+          : { image: _brBuf, caption: _brCaption });
+      }
+      await sock.sendMessage(m.chat, { text: _brText }, { quoted: m });
+      return true;
+    }
+
     // WhatsApp Channel (saluran/newsletter) TIDAK support interactiveMessage/
     // nativeFlowMessage sama sekali — follower akan lihat "Anda menerima info
     // saluran, tetapi versi WhatsApp Anda tidak mendukungnya. Perbarui WhatsApp".

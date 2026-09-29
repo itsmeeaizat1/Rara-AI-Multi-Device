@@ -223,7 +223,11 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   // Info user dari database + deteksi negara dari nomor
   const userData = db.getUser(participantJid) || {};
   const displayName = userData.name || userData.regName || username;
-  const country = detectCountry(participantJid);
+  // Bridge (Telegram/Discord): jid = tg_<id>/dc_<id> — tampilin NAMA platform dari db
+  // (disimpen bridge pas service message join), bukan ID mentah (request owner 29 Sep)
+  const isBridgeJid = /^(tg|dc)_/.test(participantJid);
+  const handle = isBridgeJid ? String(userData.name || username).slice(0, 30) : username;
+  const country = isBridgeJid ? (participantJid.startsWith("tg_") ? "Telegram" : "Discord") : detectCountry(participantJid);
 
   // Nama owner grup (buat placeholder {owner})
   const ownerJid = metadata?.owner || "";
@@ -236,7 +240,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   const customMsg = String(groupData.welcomeMsg || "").trim();
   if (customMsg) {
     rulesText = fillWelcomeTemplate(customMsg, {
-      username,
+      username: handle, // bridge: {user}/{number} → nama platform (tg_ gak ada nomor hp)
       groupName,
       memberCount,
       desc: metadata?.desc || "",
@@ -251,17 +255,17 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
 
   // Sapaan acak biar gak monoton
   const SAPAAN = [
-    `Halo kak @${username}, selamat datang!`,
-    `Wew, akhirnya @${username} nyampe juga!`,
-    `Ada member baru nih, welcome ya @${username}!`,
-    `Ketemu lagi di sini, selamat datang @${username}!`,
-    `Tumben @${username} mampir ke sini, haha welcome!`,
+    `Halo kak @${handle}, selamat datang!`,
+    `Wew, akhirnya @${handle} nyampe juga!`,
+    `Ada member baru nih, welcome ya @${handle}!`,
+    `Ketemu lagi di sini, selamat datang @${handle}!`,
+    `Tumben @${handle} mampir ke sini, haha welcome!`,
   ];
   const sapaan = SAPAAN[Math.floor(Math.random() * SAPAAN.length)];
 
   const rows = [
     `│ • 👤 Nama : ${displayName}`,
-    `│ • 📱 Nomor : @${username}`,
+    `│ • 📱 ${isBridgeJid ? "Akun" : "Nomor"} : @${handle}`,
     `│ • 🌏 Negara : ${country}`,
     `│ • 🏠 Grup : ${groupName}`,
     `│ • 👥 Total Member : ${memberCount}`,

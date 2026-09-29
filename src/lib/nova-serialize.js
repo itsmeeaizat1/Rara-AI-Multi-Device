@@ -863,6 +863,17 @@ async function serialize(sock, msg, store = {}) {
 
     let quotedMsg = options.quoted !== false ? msg : undefined;
 
+    // BRIDGE MULTI-PLATFORM (29 Sep 2026): kartu interactive WA (externalAdReply
+    // + thumbnail sharp + fake location) gak relevan & rapuh di Telegram/Discord —
+    // teks polos aja. Sock bridge ditandai _bridgePlatform di novabridge/adapter.
+    if (sock && sock._bridgePlatform) {
+      return sock.sendMessage(
+        m.chat,
+        { text, ...options },
+        { quoted: quotedMsg },
+      );
+    }
+
     // V1 — FAKE LOCATION (interactiveMessage + externalAdReply + weather)
     // Mantan V7, sekarang jadi V1 (default). Plain text fallback dihapus.
     if (replyVariant === 1) {
