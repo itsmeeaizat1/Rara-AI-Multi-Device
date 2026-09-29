@@ -206,6 +206,15 @@ export const API_KEYS = {
   },
 
   // ── ONEPUNYA REST API ────────────────────────
+  // ── INWORLD AI (TTS/STT/LLM) ─────────────────
+  inworld: {
+    label: "Inworld AI (TTS 200+ bahasa, STT profil suara, LLM chat)",
+    description: "Untuk .inworldtts .inworldvoice .inworldvoices .inworldstt .inworldchat",
+    getConfig: () => config.inworld?.apiKey || "",
+    getEnv: () => process.env.INWORLD_API_KEY || "",
+    getLink: () => "https://platform.inworld.ai/api-keys",
+    usedBy: ["inworldtts", "inworldvoice", "inworldvoices", "inworldstt", "inworldchat"],
+  },
   onepunya: {
     label: "Onepunya API (31 endpoint: search/AI/TTS/downloader/hololive)",
     description: "Untuk .onepixiv .oneyts .oneytmusic .onedl .oneimg .onechat .onettts .hololive .hentaisearch dkk",
