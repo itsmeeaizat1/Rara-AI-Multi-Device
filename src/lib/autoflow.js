@@ -212,12 +212,32 @@ async function execute(conn, m, rule, extra = {}) {
         const styleNote = persona ? `[Instruksi gaya bicara dari owner bot, ikuti selama masih natural: ${persona}]\n\n` : "";
         const task = `${styleNote}${historyCtx}${userText}`;
 
+        // 🔹 UPGRADE 29 Sep #2 (owner: "gimana biar anovaagent ini kyk ai
+        // agent novaagent dan aisuperagent bisa browsing dan melakukan
+        // apapun") — engine (runAgent/toolbox/executors) SUDAH SAMA persis
+        // dengan .novaagent/.aisuperagent sejak upgrade sebelumnya (browsing
+        // real, tools, skill 183, mcp semua kepakai). Gap yang KETEMU pas
+        // dibandingin baris-per-baris sama plugins/ai-agent/agent.js:
+        // (1) vision — reply/attach gambar gak ke-scan (mediaBuffer selalu
+        // null); (2) jawaban panjang cuma 1x send() polos — riset/tools bisa
+        // kepotong WA/Telegram tanpa splitChatChunks; (3) mode research gak
+        // nampilin sumber [S1][S2] (footer link ilang); (4) mode suara
+        // .anovaagent (VOICE_KEYS.anovaagent SUDAH ADA tapi cuma kepakai pas
+        // konfirmasi rule dibuat, BUKAN pas rule beneran jawab). Port semua 4
+        // biar jawaban otomatis SETARA .aisuperagent.
+        let mediaBuffer = null;
+        try {
+          const mediaMsg = m?.isImage ? m : m?.quoted?.isImage ? m.quoted : null;
+          if (mediaMsg && typeof mediaMsg.download === "function") mediaBuffer = await mediaMsg.download();
+        } catch {}
+
         try {
           const { runAgent } = await import("./nova-agent.js");
           const { execAction, buildExecutors, buildToolbox } = await import("../../plugins/ai-agent/agent.js");
           const { skillsBlock } = await import("./nova-askills.js");
+          const { splitChatChunks } = await import("./aiagent.js");
           const toolbox = await buildToolbox();
-          const executors = buildExecutors(m, conn, db, null, {}, null);
+          const executors = buildExecutors(m, conn, db, mediaBuffer, {}, null);
           const res = await runAgent(task, {
             act: (act, ctx2) => execAction(act, ctx2, m, conn),
             execTools: executors,
@@ -231,14 +251,40 @@ async function execute(conn, m, rule, extra = {}) {
               isBotAdmin: !!m?.isBotAdmin,
               chat,
               sender: user,
+              mediaAttached: !!mediaBuffer,
             },
           });
-          const aiReply = res?.answer || res?.error || "";
-          if (aiReply?.trim()) {
-            await send({ text: aiReply.trim() });
-            appendTurn(memKey, userText, aiReply.trim());
-            try { extractMemories(getDatabase(), user, userText, aiReply.trim()).catch(() => {}); } catch {}
+          if (res?.error) {
+            console.log(`[AutoFlow] aichat gagal: ${res.error}`);
+            break;
           }
+          // mode research → tempel footer sumber [S1][S2] (paritas .aisuperagent);
+          // mode persona/tools → jawaban polos apa adanya
+          const src = (res?.sources || []).map((s, i) => `${i + 1}. [${s.tag}] ${s.domain} — ${s.url}`).join("\n");
+          const footer = src ? `\n\n📎 sumber\n${src}` : "";
+          const fullAnswer = String(res?.answer || "").trim() + footer;
+          if (fullAnswer.trim()) {
+            // jawaban panjang → chat terusan (gak kepotong), sama pola .aisuperagent
+            const parts = splitChatChunks(fullAnswer);
+            let ok = false;
+            for (let i = 0; i < parts.length; i++) {
+              try { await send({ text: parts[i] }); ok = true; } catch { break; }
+              if (!ok) break;
+            }
+            appendTurn(memKey, userText, String(res?.answer || "").trim());
+            try { extractMemories(getDatabase(), user, userText, String(res?.answer || "").trim()).catch(() => {}); } catch {}
+          }
+          // mode suara (VOICE_KEYS.anovaagent, per chat) — keyword request
+          // ATAU toggle .anovaagent suara on, sama pola .aisuperagent
+          try {
+            const { wantsVoice, getVoiceCfg, speakVoiceNote, VOICE_KEYS } = await import("./nova-voice-reply.js");
+            const wantVoice = res.voice === true || /\b(vn|voice\s?note|pakai suara|pake suara|dengan suara)\b/i.test(userText)
+              || wantsVoice(db, chat, userText, VOICE_KEYS.anovaagent);
+            if (wantVoice && res?.answer) {
+              const cfg = getVoiceCfg(db, chat, VOICE_KEYS.anovaagent);
+              await speakVoiceNote(conn, chat, res.answer, cfg.voice, m?.key ? { quoted: m } : {});
+            }
+          } catch {}
         } catch (e) {
           console.log(`[AutoFlow] aichat gagal: ${e.message}`);
         }

@@ -66,6 +66,40 @@ _setVoiceTtsForTest(null); // TTS mati
 sent.length = 0;
 ok("TTS gagal → speakVoiceNote false (pemanggil kirim teks + hint)", (await speakVoiceNote(sock, CHAT, "tes", "gadis")) === false && sent.length === 0);
 
+console.log("— section 6: INWORLD TTS-2 suara utama + fallback voice pertama (owner 29 Sep) —");
+_setVoiceTtsForTest(async () => Buffer.alloc(3000, 1)); // edge mock aktif — kalau routing salah, byte=1 & test gagal
+lib._setInworldVoiceTtsForTest(async (t) => Buffer.alloc(3000, 7)); // inworld sukses, byte 7 biar beda
+sent.length = 0;
+const spokeInw = await speakVoiceNote(sock, CHAT, "Tes suara inworld neural", "gadis");
+ok("Inworld sukses → VN dari buffer Inworld (bukan edge)", spokeInw === true && sent.length === 1 && sent[0].content.audio[0] === 7, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
+
+lib._setInworldVoiceTtsForTest(null); // simulate Inworld DOWN
+_setVoiceTtsForTest(async () => Buffer.alloc(3000, 1)); // edge fallback
+sent.length = 0;
+const spokeFb = await speakVoiceNote(sock, CHAT, "Tes fallback", "gadis");
+ok("Inworld down → fallback voice pertama (edge) tetep kirim VN", spokeFb === true && sent.length === 1 && sent[0].content.audio[0] === 1, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
+
+lib._setInworldVoiceTtsForTest(null);
+_setVoiceTtsForTest(null); // edge juga mati
+sent.length = 0;
+ok("Inworld down + edge down → false (pemanggil fallback teks)", (await speakVoiceNote(sock, CHAT, "tes", "gadis")) === false && sent.length === 0);
+lib._setInworldVoiceTtsForTest(undefined); // balikin asli
+_setVoiceTtsForTest(undefined);
+
+console.log("— section 7: INWORLD STT pipeline utama + fallback lama (nova-stt) —");
+const stt = await import("../../src/lib/nova-stt.js");
+stt._setInworldSttForTest((buf, mime) => "halo ini transkrip inworld");
+const t1 = await stt.transcribeAudio(Buffer.alloc(2000, 1), "audio/ogg; codecs=opus");
+ok("STT Inworld sukses → transkrip dari Inworld", t1 === "halo ini transkrip inworld", "got: " + JSON.stringify(t1));
+stt._setInworldSttForTest(null); // simulate Inworld STT down
+const t2 = await stt.transcribeAudio(Buffer.alloc(2000, 1), "audio/ogg; codecs=opus");
+ok("Inworld STT down → fallback pipeline lama (tanpa key → null, gak throw)", t2 === null, "got: " + JSON.stringify(t2));
+stt._setInworldSttForTest(undefined); // balikin asli
+const srcStt = fs.readFileSync("src/lib/nova-stt.js", "utf8");
+ok("source: Inworld STT di urutan pertama pipeline", srcStt.indexOf("0) INWORLD STT") < srcStt.indexOf("1) Gemini multimodal"));
+const srcVr = fs.readFileSync("src/lib/nova-voice-reply.js", "utf8");
+ok("source: Inworld TTS dicoba SEBELUM edge fallback", srcVr.indexOf("inworldTTSBuffer(spoken)") < srcVr.indexOf("edgeTTSBuffer(spoken, voice.lang)"));
+
 console.log("");
 console.log(`===== ${pass} PASS, ${fail} FAIL =====`);
 process.exit(fail ? 1 : 0);
