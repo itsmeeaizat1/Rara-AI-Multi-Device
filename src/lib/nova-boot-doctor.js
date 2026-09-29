@@ -112,7 +112,7 @@ const KEY_PROBES = [
   },
   {
     key: "tioApiKey", label: "9Router v2 (Tio)",
-    features: "otak AI .novaai rantai, .aitio, aigrup, smartreply, fun-ai",
+    features: "otak AI .novaai rantai, .aitio, aigroupchat (alias .aigrup), smartreply, fun-ai",
     url: k => getTioBase() + "/v1/models", // satu pintu env-loader (bisa 9router lokal)
     headers: k => ({ Authorization: `Bearer ${k}` }),
   },
