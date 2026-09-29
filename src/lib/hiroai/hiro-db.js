@@ -1,9 +1,9 @@
 // hiro-db.js — shim database gaya HIROBOT (db.data / db.read / db.write)
-// File JSON sendiri di data/hiroai-db.json — gak nyampur db Nova.
+// File JSON sendiri di src/database/ai/hiroai-db.json — gak nyampur db Nova.
 import fs from 'fs';
 import path from 'path';
 
-const FILE = path.join(process.cwd(), 'data', 'hiroai-db.json');
+const FILE = path.join(process.cwd(), 'src', 'database', 'ai', 'hiroai-db.json');
 let _data = null;
 
 export function read() {
