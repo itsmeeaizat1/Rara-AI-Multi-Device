@@ -310,6 +310,35 @@ async function main() {
     check("7h. welcome WA: perilaku lama tetap (@nomor, bukan nama)", waw.includes("@628123456789"), JSON.stringify(waw.slice(0, 90)));
   }
 
+  // ── 9. ROUTER OUTBOUND: scheduler (bmkg/briefing/dll) kirim ke jid tg_ ──
+  {
+    const tgSends = [], waSends = [];
+    manager._setBridgeClientFactoryForTest({
+      telegram: ({ token }) => ({
+        start: async () => ({ id: 42, username: "router_bot" }),
+        stop: () => true,
+        sendMessage: async (chatId, text) => { tgSends.push([String(chatId), String(text)]); return { message_id: 1 }; },
+        setMessageReaction: async () => ({}),
+        editMessageText: async () => ({}),
+      }),
+    });
+    const rStart = await manager.startTelegramBridge();
+    const fakeWaSock = { sendMessage: async (jid, c) => { waSends.push([jid, c]); return { key: { id: "w" } }; } };
+    manager.wrapOutboundSends(fakeWaSock);
+    await fakeWaSock.sendMessage("tg_8672332446", { text: "notif bmkg" });
+    check("9a. start router → ok", rStart.ok === true);
+    check("9b. jid tg_ → dibelokkin ke client Telegram (WA gak tersentuh)", tgSends.some(([c, t]) => c.includes("8672332446") && t.includes("notif bmkg")) && waSends.length === 0, JSON.stringify(tgSends));
+    await fakeWaSock.sendMessage("6281234567890@s.whatsapp.net", { text: "halo wa" });
+    check("9c. jid WA → tetap jalur WA asli", waSends.some(([j]) => j === "6281234567890@s.whatsapp.net") && tgSends.length === 1);
+    manager.wrapOutboundSends(fakeWaSock);
+    await fakeWaSock.sendMessage("tg_8672332446", { text: "lagi" });
+    check("9d. re-wrap idempotent (gak dobel kirim)", tgSends.length === 2, `tg=${tgSends.length}`);
+    manager.stopTelegramBridge();
+    await fakeWaSock.sendMessage("tg_8672332446", { text: "off" });
+    check("9e. bridge mati → fallback jalur WA (gak error, gak senyap)", waSends.some(([j]) => j === "tg_8672332446"), "fallback gak jalan");
+    manager._setBridgeClientFactoryForTest({});
+  }
+
   // cleanup: stop bridge nyata (kalau ada yang ke-start) + pulihkan env
   try {
     const m2 = await import(url("src/lib/novabridge/manager.js"));
