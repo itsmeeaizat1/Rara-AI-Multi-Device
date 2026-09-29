@@ -61,8 +61,7 @@ _setVoiceTtsForTest(async () => Buffer.alloc(3000, 1));
 const sent = [];
 const sock = { sendMessage: (jid, content, opts) => { sent.push({ jid, content, opts }); return { key: { id: "s" + sent.length } }; } };
 const spoke = await speakVoiceNote(sock, CHAT, "Halo! Tes suara neural kualitas baru.", "gadis", { quoted: { id: "q1" } });
-ok("VN PTT terkirim", spoke === true && sent.length === 2 && sent[0].content.ptt === true && String(sent[0].content.mimetype).includes("ogg"));
-ok("tag sumber suara ikut terkirim", !!sent[1]?.content?.text && /ʙᴀᴡᴀᴀɴ|ɪɴᴡᴏʀʟᴅ/.test(sent[1].content.text));
+ok("VN PTT terkirim — VN doang, tanpa tag susulan (revisi owner 29 Sep)", spoke === true && sent.length === 1 && sent[0].content.ptt === true && String(sent[0].content.mimetype).includes("ogg"));
 _setVoiceTtsForTest(null); // TTS mati
 sent.length = 0;
 ok("TTS gagal → speakVoiceNote false (pemanggil kirim teks + hint)", (await speakVoiceNote(sock, CHAT, "tes", "gadis")) === false && sent.length === 0);
@@ -72,15 +71,13 @@ _setVoiceTtsForTest(async () => Buffer.alloc(3000, 1)); // edge mock aktif — k
 lib._setInworldVoiceTtsForTest(async (t) => Buffer.alloc(3000, 7)); // inworld sukses, byte 7 biar beda
 sent.length = 0;
 const spokeInw = await speakVoiceNote(sock, CHAT, "Tes suara inworld neural", "gadis");
-ok("Inworld sukses → VN dari buffer Inworld (bukan edge)", spokeInw === true && sent.length === 2 && sent[0].content.audio[0] === 7, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
-ok("Inworld sukses → tag bilang ɪɴᴡᴏʀʟᴅ (bukan ʙᴀᴡᴀᴀɴ)", /ɪɴᴡᴏʀʟᴅ/.test(sent[1]?.content?.text || "") && !/ʙᴀᴡᴀᴀɴ/.test(sent[1]?.content?.text || ""), JSON.stringify(sent[1]?.content || {}));
+ok("Inworld sukses → VN dari buffer Inworld (bukan edge), tanpa tag susulan", spokeInw === true && sent.length === 1 && sent[0].content.audio[0] === 7, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
 
 lib._setInworldVoiceTtsForTest(null); // simulate Inworld DOWN
 _setVoiceTtsForTest(async () => Buffer.alloc(3000, 1)); // edge fallback
 sent.length = 0;
 const spokeFb = await speakVoiceNote(sock, CHAT, "Tes fallback", "gadis");
-ok("Inworld down → fallback voice pertama (edge) tetep kirim VN", spokeFb === true && sent.length === 2 && sent[0].content.audio[0] === 1, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
-ok("Inworld down → tag jujur bilang ʙᴀᴡᴀᴀɴ", /ʙᴀᴡᴀᴀɴ/.test(sent[1]?.content?.text || ""), JSON.stringify(sent[1]?.content || {}));
+ok("Inworld down → fallback voice pertama (edge) tetep kirim VN, tanpa tag susulan", spokeFb === true && sent.length === 1 && sent[0].content.audio[0] === 1, "byte pertama: " + (sent[0]?.content?.audio?.[0]));
 
 lib._setInworldVoiceTtsForTest(null);
 _setVoiceTtsForTest(null); // edge juga mati
