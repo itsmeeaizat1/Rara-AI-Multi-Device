@@ -371,7 +371,9 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
       } catch { return String(ts); }
     };
     const shortJid = (j) => String(j || "").replace(/@.+$/, "");
-    const rows = hist.slice(-10).reverse().map((h, i) =>
+    // SORTIR: paling BARU di paling atas — eksplisit per timestamp (bukan
+    // urutan insert), biar aman walau data restore/merge urutannya kacau.
+    const rows = [...hist].sort((a, b) => (b?.at || 0) - (a?.at || 0)).slice(0, 10).map((h, i) =>
       `${i + 1}. ${fmtTime(h.at)} WIB · ${shortJid(h.by)}${h.aborted ? " ⛔dibatalkan" : ""}\n   "${h.snippet}" → ${h.ok}/${h.targets} target${h.mode ? ` (${h.mode})` : ""}`
     );
     const out = claraWrap("Jasher — Riwayat Broadcast", [
