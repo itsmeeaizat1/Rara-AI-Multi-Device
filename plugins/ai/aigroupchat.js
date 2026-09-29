@@ -340,7 +340,7 @@ async function handler(m, ctx) {
         aigrup.proactiveEnabled = true;
         db.save();
         try {
-          const { restartProactiveTimer } = await import("../../src/lib/nova-aigrup-proactive.js");
+          const { restartProactiveTimer } = await import("../../src/lib/nova-aigroupchat-proactive.js");
           const { getSocket } = await import("../../src/connection.js");
           const sock = getSocket();
           if (sock) restartProactiveTimer(sock);
@@ -359,7 +359,7 @@ async function handler(m, ctx) {
         aigrup.proactiveEnabled = false;
         db.save();
         try {
-          const { stopProactiveTimer } = await import("../../src/lib/nova-aigrup-proactive.js");
+          const { stopProactiveTimer } = await import("../../src/lib/nova-aigroupchat-proactive.js");
           stopProactiveTimer();
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
@@ -410,7 +410,7 @@ async function handler(m, ctx) {
         aigrup.proactiveInterval = minutes;
         db.save();
         try {
-          const { restartProactiveTimer } = await import("../../src/lib/nova-aigrup-proactive.js");
+          const { restartProactiveTimer } = await import("../../src/lib/nova-aigroupchat-proactive.js");
           const { getSocket } = await import("../../src/connection.js");
           const sock = getSocket();
           if (sock) restartProactiveTimer(sock);
@@ -427,7 +427,7 @@ async function handler(m, ctx) {
       db.save();
       // Restart timer
       try {
-        const { restartProactiveTimer } = await import("../../src/lib/nova-aigrup-proactive.js");
+        const { restartProactiveTimer } = await import("../../src/lib/nova-aigroupchat-proactive.js");
         const { getSocket } = await import("../../src/connection.js");
         const sock = getSocket();
         if (sock) restartProactiveTimer(sock);

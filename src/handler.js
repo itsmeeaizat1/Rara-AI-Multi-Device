@@ -462,11 +462,11 @@ try {
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && m.isGroup && !__novaSelfModeSkip) {
     try {
       // Catat aktivitas grup untuk proactive messaging
-      const { recordGroupActivity } = await import("./lib/nova-aigrup-proactive.js");
+      const { recordGroupActivity } = await import("./lib/nova-aigroupchat-proactive.js");
       if (typeof recordGroupActivity === "function") recordGroupActivity(m.chat);
 
       // Cek AI Grup nimbrung
-      const { handleAiGrup, isAiGrupEnabled } = await import("./lib/nova-aigrup.js");
+      const { handleAiGrup, isAiGrupEnabled } = await import("./lib/nova-aigroupchat.js");
       if (typeof isAiGrupEnabled === "function" && isAiGrupEnabled(jadibotCtx)) {
         const handled = await handleAiGrup(m, sock, undefined, jadibotCtx);
         if (handled) return;

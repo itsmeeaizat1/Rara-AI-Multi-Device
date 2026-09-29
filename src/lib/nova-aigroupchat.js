@@ -42,7 +42,7 @@ const IGNORE_PATTERNS = [
 const IGNORE_TYPES = ["stickerMessage", "reactionMessage", "protocolMessage"];
 
 // ═══════════════════════════════════════════════
-// Format definitions (sync dengan aigrup.js)
+// Format definitions (sync dengan aigroupchat.js)
 // ═══════════════════════════════════════════════
 const TIO_FORMATS = {
   openai: {

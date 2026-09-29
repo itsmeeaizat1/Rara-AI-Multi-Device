@@ -15,8 +15,8 @@ const { initDatabase } = await import(R + "/src/lib/nova-database.js")
 await initDatabase("/tmp/aigrup-session-db/nova.json")
 const db = (await import(R + "/src/lib/nova-database.js")).getDatabase()
 
-const { isAiGrupEnabled, handleAiGrup } = await import(R + "/src/lib/nova-aigrup.js")
-const { handler } = await import(R + "/plugins/ai/aigrup.js")
+const { isAiGrupEnabled, handleAiGrup } = await import(R + "/src/lib/nova-aigroupchat.js")
+const { handler } = await import(R + "/plugins/ai/aigroupchat.js")
 const { getJadibotSetting, setJadibotSetting } = await import(R + "/src/lib/nova-jadibot-database.js")
 const config = (await import(R + "/config.js")).default
 
