@@ -1,0 +1,345 @@
+{
+  "bmkg": "2026-09-28T14:43:09+00:00",
+  "gdacs": [
+    "TC-1001325",
+    "FL-1104081",
+    "FL-1104121",
+    "DR-1018332",
+    "DR-1018431",
+    "DR-1027449",
+    "DR-1027450",
+    "DR-1027465"
+  ],
+  "usgs": [],
+  "pending": [],
+  "firedJadwal": [],
+  "fp": [],
+  "ews": {
+    "bootstrapped": true,
+    "seen": [
+      "bmkg_2026-09-28T14:43:09+00:00",
+      "usgs_us6000tyat",
+      "usgs_us6000tyab",
+      "usgs_us6000tya5",
+      "usgs_us6000ty9j",
+      "usgs_us6000ty9i",
+      "usgs_us6000ty8v",
+      "usgs_us6000ty7u",
+      "usgs_us6000ty73",
+      "usgs_us6000ty71",
+      "usgs_aka2026tfzjzc",
+      "usgs_us6000ty5m",
+      "usgs_aka2026tfvugv",
+      "usgs_us6000ty5h",
+      "usgs_us6000ty5f",
+      "usgs_us6000ty5c",
+      "usgs_us6000ty5b",
+      "usgs_us6000ty57",
+      "usgs_us6000ty4w",
+      "usgs_aka2026tfplzt",
+      "usgs_pr2026271000",
+      "usgs_us6000ty43",
+      "usgs_us6000ty3w",
+      "jma_20260929044513_+36.1+139.9-50000/",
+      "jma_20260929044513_+36.1+139.9-50000/",
+      "jma_20260929044513_+36.1+139.9-50000/",
+      "jma_20260928210410_+38.9+142.0-50000/",
+      "emsc_20260929_0000078",
+      "emsc_20260929_0000076",
+      "emsc_20260929_0000071"
+    ],
+    "history": []
+  },
+  "volcano": {
+    "baseline": true,
+    "levels": {
+      "Merapi": {
+        "num": 3,
+        "id": 327076
+      },
+      "Semeru": {
+        "num": 3,
+        "id": 327075
+      },
+      "Sinabung": {
+        "num": 3,
+        "id": 327074
+      },
+      "Anak Krakatau": {
+        "num": 2,
+        "id": 327010
+      },
+      "Anak Ranakah": {
+        "num": 2,
+        "id": 327062
+      },
+      "Awu": {
+        "num": 2,
+        "id": 327033
+      },
+      "Banda Api": {
+        "num": 2,
+        "id": 327071
+      },
+      "Bromo": {
+        "num": 2,
+        "id": 327017
+      },
+      "Bur Ni Telong": {
+        "num": 2,
+        "id": 327051
+      },
+      "Dempo": {
+        "num": 2,
+        "id": 327066
+      },
+      "Dukono": {
+        "num": 2,
+        "id": 327001
+      },
+      "Gamalama": {
+        "num": 2,
+        "id": 327004
+      },
+      "Ibu": {
+        "num": 2,
+        "id": 327002
+      },
+      "Ili Lewotolok": {
+        "num": 2,
+        "id": 327006
+      },
+      "Iya": {
+        "num": 2,
+        "id": 327070
+      },
+      "Karangetang": {
+        "num": 2,
+        "id": 327014
+      },
+      "Lewotobi Laki-laki": {
+        "num": 2,
+        "id": 327003
+      },
+      "Lokon": {
+        "num": 2,
+        "id": 327038
+      },
+      "Marapi": {
+        "num": 2,
+        "id": 327015
+      },
+      "Raung": {
+        "num": 2,
+        "id": 327021
+      },
+      "Rinjani": {
+        "num": 2,
+        "id": 327061
+      },
+      "Sangeangapi": {
+        "num": 2,
+        "id": 327072
+      },
+      "Slamet": {
+        "num": 2,
+        "id": 327022
+      },
+      "Soputan": {
+        "num": 2,
+        "id": 327024
+      },
+      "Sorikmarapi": {
+        "num": 2,
+        "id": 327048
+      },
+      "Tambora": {
+        "num": 2,
+        "id": 327025
+      },
+      "Agung": {
+        "num": 1,
+        "id": 327067
+      },
+      "Ambang": {
+        "num": 1,
+        "id": 327035
+      },
+      "Arjuno Welirang": {
+        "num": 1,
+        "id": 327068
+      },
+      "Batur": {
+        "num": 1,
+        "id": 327069
+      },
+      "Batutara": {
+        "num": 1,
+        "id": 304360
+      },
+      "Ciremai": {
+        "num": 1,
+        "id": 327031
+      },
+      "Colo": {
+        "num": 1,
+        "id": 327039
+      },
+      "Dieng": {
+        "num": 1,
+        "id": 327056
+      },
+      "Ebulobo": {
+        "num": 1,
+        "id": 327026
+      },
+      "Egon": {
+        "num": 1,
+        "id": 327011
+      },
+      "Galunggung": {
+        "num": 1,
+        "id": 327049
+      },
+      "Gamkonora": {
+        "num": 1,
+        "id": 327055
+      },
+      "Gede": {
+        "num": 1,
+        "id": 327063
+      },
+      "Guntur": {
+        "num": 1,
+        "id": 327041
+      },
+      "Hobal": {
+        "num": 1,
+        "id": 293107
+      },
+      "Ijen": {
+        "num": 1,
+        "id": 327073
+      },
+      "Ile Werung": {
+        "num": 1,
+        "id": 327019
+      },
+      "Ili Boleng": {
+        "num": 1,
+        "id": 327052
+      },
+      "Inielika": {
+        "num": 1,
+        "id": 327058
+      },
+      "Inierie": {
+        "num": 1,
+        "id": 327050
+      },
+      "Kaba": {
+        "num": 1,
+        "id": 327053
+      },
+      "Kelimutu": {
+        "num": 1,
+        "id": 327046
+      },
+      "Kelud": {
+        "num": 1,
+        "id": 327030
+      },
+      "Kie Besi": {
+        "num": 1,
+        "id": 327059
+      },
+      "Lamongan": {
+        "num": 1,
+        "id": 327044
+      },
+      "Lereboleng": {
+        "num": 1,
+        "id": 327054
+      },
+      "Lewotobi Perempuan": {
+        "num": 1,
+        "id": 327005
+      },
+      "Mahawu": {
+        "num": 1,
+        "id": 327036
+      },
+      "Papandayan": {
+        "num": 1,
+        "id": 327028
+      },
+      "Peut Sague": {
+        "num": 1,
+        "id": 327047
+      },
+      "Rokatenda": {
+        "num": 1,
+        "id": 327009
+      },
+      "Ruang": {
+        "num": 1,
+        "id": 327060
+      },
+      "Salak": {
+        "num": 1,
+        "id": 327027
+      },
+      "Seulawah Agam": {
+        "num": 1,
+        "id": 327043
+      },
+      "Sirung": {
+        "num": 1,
+        "id": 327023
+      },
+      "Sumbing": {
+        "num": 1,
+        "id": 327040
+      },
+      "Sundoro": {
+        "num": 1,
+        "id": 327034
+      },
+      "Talang": {
+        "num": 1,
+        "id": 327057
+      },
+      "Tandikat": {
+        "num": 1,
+        "id": 327045
+      },
+      "Tangkoko": {
+        "num": 1,
+        "id": 327065
+      },
+      "Tangkuban Parahu": {
+        "num": 1,
+        "id": 327029
+      },
+      "Wurlali": {
+        "num": 1,
+        "id": 327064
+      }
+    },
+    "coords": {}
+  },
+  "mdEws": {
+    "bootstrapped": true,
+    "seen": [
+      "TC-1001325",
+      "FL-1104081",
+      "FL-1104121",
+      "DR-1018332",
+      "DR-1018431",
+      "DR-1027449",
+      "DR-1027450",
+      "DR-1027465"
+    ]
+  },
+  "gdacsInit": true
+}

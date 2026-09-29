@@ -513,4 +513,4 @@ async function handler(m, { sock, config: botConfig }) {
   return m.reply(novaError("autoapicheck", te(m.prefix, m.command, m.pushName), ".autoapicheck now"));
 }
 
-export { pluginConfig, handler };
+export { pluginConfig, handler, pluginConfig as config };

@@ -294,4 +294,4 @@ async function handler(m, { sock, args, config: botConfig }) {
     }
 }
 
-export { handler, pluginConfig, ocodeModel };
+export { handler, pluginConfig, ocodeModel, pluginConfig as config };

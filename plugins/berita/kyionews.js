@@ -33,5 +33,5 @@ async function handler(m, { sock, db }) {
   return runKyioTable(m, sock, TABLE, { title: "Kyio News" });
 }
 
-export { handler, pluginConfig, TABLE };
+export { handler, pluginConfig, TABLE, pluginConfig as config };
 export default handler;

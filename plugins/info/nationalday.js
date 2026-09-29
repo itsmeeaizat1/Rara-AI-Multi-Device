@@ -201,4 +201,4 @@ async function handler(m, { sock, args, prefix }) {
 }
 
 export default { config: pluginConfig, handler };
-export { pluginConfig, handler };
+export { pluginConfig, handler, pluginConfig as config };

@@ -627,5 +627,5 @@ async function handler(m, ctx = {}) {
   return runAllDlFallback("v3", m, ctx);
 }
 
-export { pluginConfig, handler };
+export { pluginConfig, handler, pluginConfig as config };
 export default { pluginConfig, handler };

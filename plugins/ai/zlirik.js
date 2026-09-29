@@ -66,5 +66,5 @@ async function handler(m) {
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig, handler, pluginConfig as config };
 export default { pluginConfig, handler };

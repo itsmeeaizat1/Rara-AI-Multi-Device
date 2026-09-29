@@ -703,4 +703,4 @@ async function handler(m, { sock, config: botConfig }) {
   return m.reply(novaError("autoweeklyreport", novaGuide(botConfig.command?.prefix || ".", "autoweeklyreport", m.pushName), ".autoweeklyreport now"));
 }
 
-export { pluginConfig, handler };
+export { pluginConfig, handler, pluginConfig as config };

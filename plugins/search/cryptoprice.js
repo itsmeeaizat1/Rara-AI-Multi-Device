@@ -91,5 +91,5 @@ async function handler(m, { sock, db }) {
   }
 }
 
-export { handler, pluginConfig };
+export { handler, pluginConfig, pluginConfig as config };
 export default handler;
