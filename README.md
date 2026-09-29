@@ -159,6 +159,14 @@ Command yang paling sering dipakai sehari-hari:
 | Node.js | v22 (LTS) | v22 (LTS) |
 
 - ⚠️ **Minimum mutlak: 2 GB RAM + 2 GB Swap + 150% CPU + 5 GB Disk** — di bawah ini bot gak stabil (script + node_modules + sesi aja udah > 4 GB)
+
+**Spek kalau fitur tambahan aktif:**
+
+| Fitur aktif | Spek minimum naik jadi |
+|-------------|------------------------|
+| 9router (gateway AI lokal) | 3 GB RAM + 250% CPU + 6 GB Disk — server Next.js + SQLite jalan bareng bot (747 model) |
+| Bridge (Telegram/Discord) | 3 GB RAM + 200% CPU + 6 GB Disk — adapter bridge jalan di proses bot |
+| 9router + Bridge dua-duanya aktif | 4 GB RAM + 300% CPU + 8 GB Disk — dua-duanya nambah beban RAM + CPU signifikan |
 - Memory naik seiring jumlah jadibot session aktif
 - Cocok jalan di Pterodactyl, VPS, Termux, dan Docker
 
