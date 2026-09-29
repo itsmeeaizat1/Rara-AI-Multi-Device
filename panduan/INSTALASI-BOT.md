@@ -1,8 +1,43 @@
 # 🚀 Panduan INSTALASI BOT NOVA
 
-Instalasi script bot Nova dari nol di VPS (Ubuntu/Debian).
+Urutan: **set config (nomor owner & nomor bot) → instalasi → penggunaan menu**.
 
-## 1. Prasyarat server
+## 1. Set Config — Nomor Owner & Nomor Bot (LANGKAH AWAL)
+
+Edit file `src/lib/config/bot-identity.js`:
+
+```js
+owner: {
+  name: "Nama Kamu",          // nama owner
+  number: ["628xxxxxxx"],     // NOMOR OWNER (format 62, tanpa + dan spasi)
+},
+
+session: {
+  pairingNumber: "628xxxxxxx", // NOMOR BOT — nomor WA yang mau dijadiin bot
+  usePairingCode: true,        // login via pairing code (gak perlu scan QR)
+},
+```
+
+Atur juga nama bot di `.env`:
+
+```bash
+cp .env.example .env
+nano .env    # BOT_NAME=Nova AI
+```
+
+**Kenapa duluan?** Biar pas bot pertama kali nyala, langsung nyambung ke
+nomor owner — gak perlu edit-edit lagi setelahnya.
+
+## 2. Ambil Script Bot
+
+```bash
+git clone https://github.com/itsmeeaizat1/Nova-AI-Multi-Device.git
+cd Nova-AI-Multi-Device
+```
+
+## 3. Instalasi
+
+### 3a. Prasyarat server
 
 | Kebutuhan | Keterangan |
 |---|---|
@@ -29,14 +64,7 @@ ffmpeg -version
 sudo npm install -g pm2
 ```
 
-## 2. Ambil script bot
-
-```bash
-git clone https://github.com/itsmeeaizat1/Nova-AI-Multi-Device.git
-cd Nova-AI-Multi-Device
-```
-
-## 3. Install dependensi
+### 3b. Install dependensi
 
 ```bash
 npm install
@@ -45,36 +73,30 @@ npm install
 Ini sekalian pasang 9router + semua library bot (termasuk Baileys
 `itsmeeaizat-bailey`).
 
-## 4. Config
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-Isi sesuai kebutuhan (nama bot, nomor owner, dll). API key gak perlu
-ditaruh di .env — cukup isi key lewat command `.setkey` pas bot udah
-jalan (disimpan di `src/lib/apikey/*.json`, lebih aman).
-
-## 5. Jalankan + pairing
+### 3c. Jalankan + pairing
 
 ```bash
 pm2 start index.js --name nova-bot
 pm2 logs nova-bot
-# → pairing code / QR muncul di log → masukkan di HP (Perangkat Tertaut)
+# → pairing code muncul di log → masukkan di nomor bot (WA → Perangkat Tertaut)
 pm2 save
 pm2 startup    # biar ikut nyala saat VPS reboot
 ```
 
-## 6. Setelah nyala
+## 4. Penggunaan — Menu & Fitur
 
-- Tes dengan `.menu` di chat bot.
-- Isi key fitur yang dibutuhin lewat `.setkey` (lihat panduan per fitur
-  di folder ini).
-- Aktivasi fitur tambahan yang butuh setup: lihat file panduan lain
-  (AICALL, 9ROUTER, HIAI, WEBPANEL, VOIPCALL).
+Setelah bot nyala dan pairing sukses:
 
-## 7. Update bot
+- Kirim **`.menu`** di chat bot → semua command tampil per kategori
+  (1.900+ plugin, 6.700+ command, 51 kategori).
+- **Isi key fitur** lewat `.setkey` — key gak perlu di .env, disimpan
+  otomatis di `src/lib/apikey/*.json` (lebih aman).
+- Fitur yang butuh setup tambahan, buka panduan khususnya:
+  [AICALL.md](AICALL.md) · [9ROUTER.md](9ROUTER.md) · [HIAI.md](HIAI.md) ·
+  [WEBPANEL.md](WEBPANEL.md) · [VOIPCALL.md](VOIPCALL.md)
+- Daftar lengkap fitur + status: `FEATURES.md`.
+
+## 5. Update Bot
 
 ```bash
 cd Nova-AI-Multi-Device
@@ -82,7 +104,7 @@ git pull
 pm2 restart nova-bot
 ```
 
-## 8. Troubleshooting
+## 6. Troubleshooting
 
 - **Gak muncul pairing code** → hapus folder sesi lama kalau perangkat
   penuh (WA maks 4 perangkat tertaut), lalu `pm2 restart nova-bot`.
