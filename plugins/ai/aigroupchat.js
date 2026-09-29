@@ -7,6 +7,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,
   claraLine,
 } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getMin1aiKey } from "../../src/scraper/min1ai.js";
 import { getJadibotSetting, setJadibotSetting } from "../../src/lib/nova-jadibot-database.js";
 import config from "../../config.js";
 
@@ -14,9 +15,9 @@ const pluginConfig = {
   name: "aigroupchat",
   alias: ["aigrup", "aigroup", "aig"],
   category: "ai",
-  description: "AI nimbrung otomatis di grup — ikut ngobrol tiap ada chat (atur format, model, on/off dari DM)",
-  usage: ".aigroupchat <format> <model> on/off/status",
-  example: ".aigroupchat openai deepseek-v4-flash:free on\n.aigroupchat gemini kimi-k3:free on\n.aigroupchat off",
+  description: "AI nimbrung otomatis di grup — engine GLM Thinking Min1AI (atur model, on/off dari DM)",
+  usage: ".aigroupchat glm <model> on/off/status",
+  example: ".aigroupchat glm glm-5.3 on\n.aigroupchat glm glm-5.2 on\n.aigroupchat off",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -29,84 +30,31 @@ const pluginConfig = {
 // ═══════════════════════════════════════════════
 // Format & Model definitions (sync dengan ai-tio.js)
 // ═══════════════════════════════════════════════
+// ENGINE BARU (owner 29 Sep): Min1AI (1min.ai) — GLM thinking.
+// Key: apikeys.json aiSatuan.min1ai (fallback env MIN1AI_API_KEY) — bukan aiHelp.
 const TIO_FORMATS = {
-  openai: { label: "OpenAI", emoji: "🟢", apiKeyField: "openaiApiKey", modelField: "openaiModel", defaultModel: "deepseek-v4-flash:free" },
-  gemini: { label: "Gemini", emoji: "🔵", apiKeyField: "geminiApiKey", modelField: "geminiModel", defaultModel: "deepseek-v4-flash:free" },
-  anthropic: { label: "Anthropic", emoji: "🟣", apiKeyField: "anthropicApiKey", modelField: "anthropicModel", defaultModel: "deepseek-v4-flash:free" },
+  min1ai: { label: "Min1AI (1min.ai)", emoji: "🧠", apiKeyField: "min1aiApiKey", modelField: "min1aiModel", defaultModel: "glm-5.3" },
 };
 
 const FORMAT_ALIASES = {
-  o: "openai", open: "openai", oai: "openai", gpt: "openai",
-  g: "gemini", gem: "gemini", google: "gemini",
-  a: "anthropic", ant: "anthropic", claude: "anthropic", antro: "anthropic",
+  glm: "min1ai", m: "min1ai", min1: "min1ai", "1min": "min1ai", onemin: "min1ai",
+  // alias era 9router lama → dialihkan ke min1ai biar state lama gak nyasar
+  o: "min1ai", open: "min1ai", oai: "min1ai", gpt: "min1ai", openai: "min1ai",
+  g: "min1ai", gem: "min1ai", google: "min1ai", gemini: "min1ai",
+  a: "min1ai", ant: "min1ai", claude: "min1ai", antro: "min1ai", anthropic: "min1ai",
 };
 
 // ═══════════════════════════════════════════════
-// Model dikelompok per brand/family
-// Semua model support 3 format: openai, gemini, anthropic
+// Model GLM 1min.ai (Min1AI) — engine aigroupchat
 // ═══════════════════════════════════════════════
+// Katalog GLM 1min.ai (verified live 29 Sep 2026). glm-5.3 = flagship
+// REASONING/THINKING — berpikir dulu sebelum jawab (owner: "jgn yg glm flash").
+// Gak ada varian "-thinking"/"-flash" di 1min.ai (UNSUPPORTED_MODEL).
 const TIO_MODELS = [
-  // ── Auto / Router ──
-  { id: "auto", label: "Auto Router", brand: "Auto", desc: "Auto-route ke model terbaik", free: false },
-  { id: "openrouter/free", label: "OpenRouter", brand: "Auto", desc: "Auto-route gratis", free: true },
-  { id: "step-router-v1", label: "Step Router V1", brand: "Auto", desc: "Router StepFun", free: false },
-  { id: "kilo-auto/free", label: "Kilo Auto", brand: "Auto", desc: "Auto + image gen", free: true },
-
-  // ── DeepSeek ──
-  { id: "deepseek-v4-flash:free", label: "DeepSeek V4 Flash", brand: "DeepSeek", desc: "Cepat & gratis", free: true },
-  { id: "DeepSeek-V4-Flash", label: "DeepSeek V4 Flash (Pro)", brand: "DeepSeek", desc: "Versi pro", free: false },
-  { id: "deepseek-v4-flash", label: "DeepSeek V4 Flash (Alt)", brand: "DeepSeek", desc: "Endpoint alternatif", free: false },
-  { id: "DeepSeek-V4-Pro", label: "DeepSeek V4 Pro", brand: "DeepSeek", desc: "Model terkuat DeepSeek", free: false },
-
-  // ── Kimi / Moonshot ──
-  { id: "kimi-k3:free", label: "Kimi K3", brand: "Kimi", desc: "Moonshot AI gratis", free: true },
-  { id: "moonshotai/kimi-k3-free", label: "Kimi K3 (Alt)", brand: "Kimi", desc: "Endpoint alternatif", free: true },
-  { id: "moonshotai/Kimi-K2.6", label: "Kimi K2.6", brand: "Kimi", desc: "Flagship Moonshot", free: false },
-
-  // ── Qwen / Alibaba ──
-  { id: "Qwen3.5-397B-A17B", label: "Qwen 3.5 (397B)", brand: "Qwen", desc: "Model besar Alibaba", free: false },
-  { id: "Qwen3.6-35B-A3B", label: "Qwen 3.6 (35B)", brand: "Qwen", desc: "Efisien & cepat", free: false },
-
-  // ── GLM / Zhipu (Claude-style) ──
-  { id: "glm-5.2", label: "GLM 5.2", brand: "GLM", desc: "Zhipu AI terbaru", free: false },
+  { id: "glm-5.3", label: "GLM 5.3 (Thinking)", brand: "GLM", desc: "GLM thinking flagship — berpikir dulu, default", free: false },
+  { id: "glm-5.2", label: "GLM 5.2", brand: "GLM", desc: "Zhipu AI", free: false },
   { id: "glm-5.1", label: "GLM 5.1", brand: "GLM", desc: "Zhipu AI", free: false },
-
-  // ── MiniMax ──
-  { id: "MiniMaxAI/MiniMax-M2.7", label: "MiniMax M2.7", brand: "MiniMax", desc: "Model MiniMax", free: false },
-
-  // ── NVIDIA Nemotron ──
-  { id: "nvidia/nemotron-3-ultra-550b-a55b:free", label: "Nemotron Ultra 550B", brand: "NVIDIA", desc: "Model terbesar NVIDIA", free: true },
-  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron Super 120B", brand: "NVIDIA", desc: "Kuat & cepat", free: true },
-  { id: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", label: "Nemotron Nano 30B", brand: "NVIDIA", desc: "Reasoning kecil", free: true },
-  { id: "nvidia/nemotron-3.5-content-safety:free", label: "Nemotron Safety", brand: "NVIDIA", desc: "Content safety", free: true },
-
-  // ── StepFun ──
-  { id: "stepfun/step-3.7-flash:free", label: "Step 3.7 Flash", brand: "StepFun", desc: "Gratis", free: true },
-  { id: "step-3.7-flash", label: "Step 3.7 Flash (Pro)", brand: "StepFun", desc: "Versi pro", free: false },
-  { id: "step-3.5-flash", label: "Step 3.5 Flash", brand: "StepFun", desc: "Versi lama", free: false },
-  { id: "step-3.5-flash-2603", label: "Step 3.5 Flash 2603", brand: "StepFun", desc: "Build 2603", free: false },
-
-  // ── Tencent ──
-  { id: "tencent/hy3:free", label: "Tencent HY3", brand: "Tencent", desc: "Tencent AI gratis", free: true },
-
-  // ── Xiaomi ──
-  { id: "mimo-v2.5:free", label: "Mimo V2.5", brand: "Xiaomi", desc: "Xiaomi AI gratis", free: true },
-
-  // ── SenseTime ──
-  { id: "sensenova-6.7-flash-lite", label: "SenseNova 6.7", brand: "SenseTime", desc: "SenseTime flash", free: false },
-
-  // ── Cohere ──
-  { id: "cohere/north-mini-code:free", label: "Cohere North", brand: "Cohere", desc: "Coding model gratis", free: true },
-
-  // ── InclusionAI ──
-  { id: "inclusionai/ling-3.0-flash:free", label: "Ling 3.0 Flash", brand: "InclusionAI", desc: "Gratis", free: true },
-
-  // ── Poolside ──
-  { id: "poolside/laguna-s-2.1:free", label: "Laguna S 2.1", brand: "Poolside", desc: "Gratis", free: true },
-  { id: "poolside/laguna-xs-2.1:free", label: "Laguna XS 2.1", brand: "Poolside", desc: "Gratis kecil", free: true },
-
-  // ── Coding ──
-  { id: "kat-coder-pro-v2.5", label: "Kat Coder Pro", brand: "Coding", desc: "Coding pro", free: false },
+  { id: "glm-5", label: "GLM 5", brand: "GLM", desc: "GLM 5 base", free: false },
 ];
 
 function resolveFormat(arg) {
@@ -116,12 +64,9 @@ function resolveFormat(arg) {
   return null;
 }
 
-// Get API key for a format: format-specific → fallback → env
-function getKeyForFormat(aiHelp, fmtKey) {
-  const fmt = TIO_FORMATS[fmtKey];
-  const fmtKey2 = aiHelp[fmt.apiKeyField] || "";
-  const fallback = aiHelp.apiKey || process.env.OPENAI_API_KEY || "";
-  return fmtKey2 || fallback;
+// Key min1ai: apikeys.json aiSatuan.min1ai → env MIN1AI_API_KEY
+async function getKeyForFormat() {
+  return getMin1aiKey();
 }
 
 // ═══ AI Grup per-session jadibot ═══
@@ -134,7 +79,7 @@ async function handleSessionAigrup(m, ctx, prefix) {
   const args = raw.split(/[ \t]+/).filter(Boolean);
   const subcmd = (args[0] || "status").toLowerCase();
 
-  const st = getJadibotSetting(jadibotId, "aigrup") || { enabled: false, probability: 10, format: "openai", model: "deepseek-v4-flash:free" };
+  const st = getJadibotSetting(jadibotId, "aigrup") || { enabled: false, probability: 10, format: "min1ai", model: "glm-5.3" };
 
   const isOn = st.enabled ? "ON \u2705" : "OFF \u274c";
 
@@ -210,13 +155,14 @@ async function handler(m, ctx) {
 
     const db = getDatabase();
     if (!db?.db?.data) return m.reply(novaError("AIGrup", "Database belum siap nih"));
-    if (!db.db.data.aigrup) db.db.data.aigrup = { enabled: false, groups: {}, probability: 10, format: "openai", model: "deepseek-v4-flash:free" };
+    if (!db.db.data.aigrup) db.db.data.aigrup = { enabled: false, groups: {}, probability: 10, format: "min1ai", model: "glm-5.3" };
 
     const aigrup = db.db.data.aigrup;
     const aiHelp = botConfig.aiHelp || {};
-    const currentFmt = aigrup.format || "openai";
-    const currentModel = aigrup.model || aiHelp.openaiModel || "deepseek-v4-flash:free";
-    const currentKey = getKeyForFormat(aiHelp, currentFmt);
+    // migrasi state era 9router (openai/gemini/anthropic/deepseek/ag/*) → min1ai glm-5.3
+    const currentFmt = resolveFormat(aigrup.format) || "min1ai";
+    const currentModel = /^glm-/.test(String(aigrup.model)) ? aigrup.model : "glm-5.3";
+    const currentKey = await getKeyForFormat();
     const subcmd = (args[0] || "").toLowerCase();
 
     // ═══ Block dari grup ═══
@@ -246,7 +192,7 @@ async function handler(m, ctx) {
           `Probability: *${aigrup.probability}%*`,
           `Proactive: *${aigrup.proactiveInterval || 10} menit*`,
           `Grup aktif: *${enabledGroups.length}*`].join("\n")) +
-        claraWrap("Command", [`*${prefix}aigroupchat openai <model> on* — set format+model, ON`, `*${prefix}aigroupchat gemini <model> on* — set format+model, ON`, `*${prefix}aigroupchat anthropic <model> on* — set format+model, ON`, `*${prefix}aigroupchat openai on* — pakai format OpenAI, ON`, `*${prefix}aigroupchat on* — pakai format saat ini, ON`, `*${prefix}aigroupchat off* — matikan`, `*${prefix}aigroupchat prob <0-100>* — atur probability respon`, `*${prefix}aigroupchat spam on/off* — toggle proactive`, `*${prefix}aigroupchat interval <menit>* — atur jeda ngomong`, `*${prefix}aigroupchat model* — lihat semua model`, `*${prefix}aigroupchat list* — lihat grup aktif`].join("\n")) +
+        claraWrap("Command", [`*${prefix}aigroupchat glm <model> on* — set model GLM, ON`, `*${prefix}aigroupchat glm on* — pakai model default (glm-5.3), ON`, `*${prefix}aigroupchat on* — pakai model saat ini, ON`, `*${prefix}aigroupchat off* — matikan`, `*${prefix}aigroupchat prob <0-100>* — atur probability respon`, `*${prefix}aigroupchat spam on/off* — toggle proactive`, `*${prefix}aigroupchat interval <menit>* — atur jeda ngomong`, `*${prefix}aigroupchat model* — lihat semua model`, `*${prefix}aigroupchat list* — lihat grup aktif`].join("\n")) +
         
         "\n" ;
       await m.reply(text);
@@ -447,8 +393,8 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       if (await blockFromGroup("Toggle AI Grup")) return { handled: true };
       if (!currentKey) {
         await m.reply(
-          claraWrap("API Key Belum Diisi", [`API Key untuk format *${TIO_FORMATS[currentFmt]?.label || currentFmt}* belum di-set`,
-            `Set di config.js: aiHelp.${TIO_FORMATS[currentFmt]?.apiKeyField || "apiKey"}`].join("\n"))
+          claraWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
+            `Set: .setkey min1ai <key> (atau apikeys.json aiSatuan.min1ai)`].join("\n"))
         );
         return { handled: true };
       }
@@ -483,19 +429,19 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
     }
 
     // ═══ Format-based commands ═══
-    // .aigroupchat openai <model> on   → set format + model + ON
-    // .aigroupchat openai <model>      → set format + model (no toggle)
-    // .aigroupchat openai on           → set format + ON (default model)
-    // .aigroupchat openai              → show models for this format
+    // .aigroupchat glm <model> on       → set model GLM + ON
+    // .aigroupchat glm <model>          → set model (no toggle)
+    // .aigroupchat glm on               → ON pakai default model (glm-5.3)
+    // .aigroupchat glm                  → lihat semua model GLM
     const fmtKey = resolveFormat(subcmd);
 
     if (fmtKey) {
       if (await blockFromGroup("Set format/model AI Grup")) return { handled: true };
 
       const fmt = TIO_FORMATS[fmtKey];
-      const apiKey = getKeyForFormat(aiHelp, fmtKey);
+      const apiKey = await getKeyForFormat();
 
-      // .aigroupchat openai (tanpa argumen lain) → tampilkan model
+      // .aigroupchat glm (tanpa argumen lain) → tampilkan model
       if (args.length === 1) {
         // Group by brand
         const brands = {};
@@ -533,12 +479,12 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       const modelArgs = turnOn ? args.slice(1, -1) : args.slice(1);
       const modelInput = modelArgs.join(" ").trim();
 
-      // Kalau cuma ".aigroupchat openai on" → pakai default model
+      // Kalau cuma ".aigroupchat glm on" → pakai default model
       if (!modelInput && turnOn) {
         if (!apiKey) {
           await m.reply(
-            claraWrap("API Key Belum Diisi", [`API Key untuk *${fmt.label}* belum di-set`,
-              `Set di config.js: aiHelp.${fmt.apiKeyField}`].join("\n"))
+            claraWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
+            `Set: .setkey min1ai <key> (atau apikeys.json aiSatuan.min1ai)`].join("\n"))
           );
           return { handled: true };
         }
@@ -577,8 +523,8 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       if (turnOn) {
         if (!apiKey) {
           await m.reply(
-            claraWrap("API Key Belum Diisi", [`API Key untuk *${fmt.label}* belum di-set`,
-              `Set di config.js: aiHelp.${fmt.apiKeyField}`,
+            claraWrap("API Key Belum Diisi", [`API Key Min1AI (1min.ai) belum di-set`,
+              `Set: .setkey min1ai <key>`,
               `Model sudah disimpan, tapi bot belum ON`].join("\n"))
           );
           db.save();
