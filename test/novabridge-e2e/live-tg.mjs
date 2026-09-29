@@ -11,7 +11,9 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 if (!token) { console.error("TELEGRAM_BOT_TOKEN gak ada di env"); process.exit(1); }
 
 const { initDatabase } = await import(url("src/lib/nova-database.js"));
-await initDatabase(path.join(os.tmpdir(), "novabridge-live-" + Date.now()));
+// DB PERSISTEN antar restart — kalau pakai Date.now() tiap boot bikin db baru,
+// semua setting (.welcome on dll) hilang tiap restart (bug 29 Sep)
+await initDatabase(path.join(os.tmpdir(), "novabridge-live"));
 const { loadPlugins } = await import(url("src/lib/nova-plugins.js"));
 const n = await loadPlugins(path.join(R, "plugins"));
 console.log(`[live] ${n} plugin loaded`);

@@ -272,7 +272,7 @@ async function main() {
     const { tgServiceEventForTest } = await import(url("src/lib/novabridge/manager.js"));
     const svc = tgServiceEventForTest();
     const add = svc({ chat: { id: -100123 }, new_chat_members: [{ id: 111, first_name: "Budi", last_name: "Santoso" }, { id: 222, username: "rina_tg" }] }, 999);
-    check("7a. new_chat_members → {action:add, jid grup tg_g…@g.us}", add?.id === "tg_g-100123@g.us" && add?.action === "add" && add?.participants[0] === "tg_111" && add?.participants.length === 2, JSON.stringify(add));
+    check("7a. new_chat_members → {action:add, jid grup tg_g…@g.us}", add?.id === "tg_g100123@g.us" && add?.action === "add" && add?.participants[0] === "tg_111" && add?.participants.length === 2, JSON.stringify(add));
     check("7a2. _profiles bawa nama Telegram (first+last > username)", add?._profiles?.tg_111 === "Budi Santoso" && add?._profiles?.tg_222 === "rina_tg", JSON.stringify(add?._profiles));
     const onlyBot = svc({ chat: { id: -100123 }, new_chat_members: [{ id: 999 }] }, 999);
     check("7b. bot sendiri join → null (jangan welcome diri sendiri)", onlyBot === null);
@@ -284,21 +284,21 @@ async function main() {
     // render welcome nyata dengan jid bridge + nama tersimpan di db
     const { getDatabase } = await import(url("src/lib/nova-database.js"));
     const db = getDatabase();
-    db.setGroup("tg_g-100123@g.us", { welcome: true });
+    db.setGroup("tg_g100123@g.us", { welcome: true });
     db.setUser("tg_111", { name: "Budi Santoso" });
-    db.setGroup("tg_g-100456@g.us", { goodbye: true });
+    db.setGroup("tg_g100456@g.us", { goodbye: true });
     const welcomeMod = await import(url("plugins/group/welcome.js"));
     const goodbyeMod = await import(url("plugins/group/goodbye.js"));
     const sends = [];
     const fakeSock = { sendMessage: async (jid, c) => { sends.push(typeof c === "string" ? c : (c?.text || "")); return { key: { id: "x" } }; } };
     const wf = welcomeMod.sendWelcomeMessage || welcomeMod.default?.sendWelcomeMessage;
-    await wf(fakeSock, "tg_g-100123@g.us", "tg_111", null);
+    await wf(fakeSock, "tg_g100123@g.us", "tg_111", null);
     const wtext = sends.join("\n");
     check("7e. welcome bridge: nama Telegram muncul", wtext.includes("Budi Santoso"), JSON.stringify(wtext.slice(0, 90)));
     check("7f. welcome bridge: gak ada id mentah tg_111", !wtext.includes("tg_111"), "masih ada id mentah");
     sends.length = 0;
     const gf = goodbyeMod.sendGoodbyeMessage || goodbyeMod.default?.sendGoodbyeMessage;
-    await gf(fakeSock, "tg_g-100456@g.us", "tg_111", null);
+    await gf(fakeSock, "tg_g100456@g.us", "tg_111", null);
     const gtext = sends.join("\n");
     check("7g. goodbye bridge: nama Telegram muncul, tanpa id mentah", gtext.includes("Budi Santoso") && !gtext.includes("tg_111"), JSON.stringify(gtext.slice(0, 90)));
     // WA jangan berubah: nomor murni tanpa prefix → deteksi negara & @nomor tetap
