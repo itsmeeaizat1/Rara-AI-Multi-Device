@@ -46,9 +46,10 @@ function log(platform, msg) {
 function tgServiceEvent(tgMsg, botTgId) {
   if (!tgMsg?.chat?.id) return null;
   const chatId = String(tgMsg.chat.id);
-  // jid grup bridge = tg_g<chatId>@g.us (SAMAKAN dengan adapter telegramToRaw,
-  // biar setting .welcome on yang disimpan di grup kebaca)
-  const groupJid = `tg_g${chatId}@g.us`;
+  // jid grup bridge = tg_g<chatId>@g.us — chatId TANPA minus (sama kayak adapter
+  // telegramToRaw: replace(/^-/,"")) biar setting .welcome on yang disimpan
+  // di grup kebaca (bug 29 Sep: minus nyelip → jid beda → welcome senyap)
+  const groupJid = `tg_g${chatId.replace(/^-/, "")}@g.us`;
   const toJid = (u) => "tg_" + String(u?.id ?? "");
   // Nama tampilan Telegram: first + last > username > id (dipakai welcome/goodbye)
   const toName = (u) => [u?.first_name, u?.last_name].filter(Boolean).join(" ").trim() || u?.username || String(u?.id ?? "");
