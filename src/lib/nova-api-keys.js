@@ -243,6 +243,16 @@ export const API_KEYS = {
     getLink: () => "",
     usedBy: ["emailotp"],
   },
+
+  // ── VEXFILE PPD (remote upload, staging tmpfiles) ──
+  vexfile: {
+    label: "VexFile (file host PPD — upload arsip/APK, bayar per download)",
+    description: "Untuk .vexfile .vexfiles .vex .vexupload",
+    getConfig: () => config.vexfile?.apiKey || "",
+    getEnv: () => process.env.VEXFILES_API_KEY || "",
+    getLink: () => "https://vexfile.com",
+    usedBy: ["vexfile", "vexfiles", "vex", "vexupload"],
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════
