@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// PROBE API — test endpoint free (TANPA KEY / TANPA CREDIT) dari list api.md
+// PROBE API — test endpoint free (TANPA KEY / TANPA CREDIT) dari docs/list api.md
 // Jalankan: node api-probe.mjs (dari folder mana aja)
 // Fokus: endpoint yang DIPAKAI bot + endpoint Wilz (param bener per docs)
 const TIMEOUT = 12000;

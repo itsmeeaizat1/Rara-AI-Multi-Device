@@ -43,7 +43,44 @@ dikerjain model vision (glm-4.6v dsb) lewat multimodal chat.
 
 Model yang kepakai nongol di footer tiap jawaban (transparansi routing).
 
-## 4. Troubleshooting
+## 4. Mode service manual (opsional, pm2)
+
+Mode di atas = 9router dikelola engine bot (auto spawn). Kalau mau juga
+jalanin **gateway 9router asli** sebagai service terpisah (dashboard +
+endpoint OpenAI-compatible ke 60+ provider):
+
+```bash
+# WAJIB: set JWT secret sendiri — jangan andalkan default
+export ROUTER_JWT_SECRET="$(openssl rand -hex 32)"
+
+# Bind localhost aja — dashboard JANGAN diexpose ke internet
+pm2 start node_modules/.bin/9router --name 9router -- start --port 20128 --host 127.0.0.1
+pm2 save
+```
+
+Catatan: beda sama fitur `.ai9` (Nova Router) — itu implementasi sendiri
+(`src/lib/nova-ai-router.js`), gak butuh package 9router.
+
+## 5. Dapetin API key gateway
+
+Website 9router.com **gak nerbitin API key lagi** — key digenerate **lokal
+di mesin yang jalanin gateway** (terikat machineId, format
+`sk-{machineId}-{keyId}-{crc8}`):
+
+1. Jalankan gateway (auto via bot, atau manual pm2 di atas).
+2. Buka dashboard `http://localhost:20128/dashboard` — dari luar VPS pakai
+   SSH tunnel: `ssh -L 20128:127.0.0.1:20128 user@vps`.
+3. Generate key dari halaman API Keys — otomatis terikat machineId VPS,
+   gak bisa dipindah-pindah.
+
+## 6. Checklist keamanan
+
+- [ ] `ROUTER_JWT_SECRET` custom, bukan default (CVE lama <0.4.77 bypass auth).
+- [ ] Port 20128 cuma bind `127.0.0.1`, gak ke `0.0.0.0`.
+- [ ] Firewall VPS blokir port 20128 dari luar.
+- [ ] Update rutin: `npm outdated 9router` sebelum upgrade.
+
+## 7. Troubleshooting
 
 - **Status OFF / gak kebaca** → `.9router start`, kalau masih mati cek
   `~/.9router/` ada file machine-id + auth/cli-secret.

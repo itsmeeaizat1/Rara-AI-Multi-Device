@@ -57,7 +57,7 @@
 ## Catatan
 - Total: 21 plugin terdampak (16 DEAD, 3 TIMEOUT, 2 butuh API key, 1 placeholder)
 - Solusi: migrate ke API alternatif yang alive atau set graceful error handling
-- Sebelum mendifikasi, selalu cek `list api.md` di root repo untuk API cadangan
+- Sebelum mendifikasi, selalu cek `docs/list api.md` untuk API cadangan
 
 ---
 
