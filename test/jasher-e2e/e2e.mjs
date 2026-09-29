@@ -313,5 +313,59 @@ const t20 = sentToGroups()
 t("20e. saluran TG kekirim saat channel ON", t20.includes("tg_c10022334455@newsletter"), t20.join(","))
 t("20f. total 7 target (5 grup + 2 saluran)", t20.length === 7, "n=" + t20.length)
 
+// ═══ 21. INFO: riwayat pemakaian (siapa, cuplikan, waktu) ═══
+db.db.data.jasher = {
+  groups: db.db.data.jasher?.groups || {},
+  settings: { group: true, channel: false },
+  cooldownMinutes: 0, lastBroadcastAt: 0, history: [],
+}
+await db.save()
+replies.length = 0
+await run(".jasher info")
+t("21a. info kosong → jujur", /belum ada riwayat/.test(sc(replies.join("\n"))))
+// broadcast teks → tercatat
+sends.length = 0; replies.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await run(".jasher Promo kemerdekaan diskon besar semua produk")
+t("21b. riwayat tercatat setelah broadcast", (getJasherDb()?.history?.length || 0) === 1)
+const h1 = getJasherDb()?.history?.[0]
+t("21c. entri ada pengirim + waktu", h1?.by && Number(h1?.at) > 0)
+t("21d. cuplikan kepotong maks 70+…", (h1?.snippet || "").length <= 71, "len=" + (h1?.snippet || "").length)
+t("21e. jumlah target tercatat", h1?.targets === 5 && h1?.ok === 5)
+replies.length = 0
+await run(".jasher info")
+let gotInfo = sc(replies.join("\n"))
+t("21f. info nunjukin cuplikan pesan", gotInfo.includes("promo kemerdekaan diskon besar"))
+t("21g. info nunjukin hasil 5/5 target", /5\/5 target/.test(gotInfo))
+t("21h. info nunjukin total tercatat", /total tercatat: 1/.test(gotInfo))
+// broadcast media → snippet tandai [gambar] + caption
+_setJasherMediaForTest(async () => ({ buf: FAKE_BUF, kind: "image", mimetype: "image/jpeg" }))
+sends.length = 0; replies.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await handler(mQuoted, { sock: mockSock, config, db })
+_resetJasherMediaForTest()
+const h2 = getJasherDb()?.history?.[1]
+t("21i. media → snippet [gambar] + caption", String(h2?.snippet || "").startsWith("[gambar]") && String(h2?.snippet || "").includes("Promo gambar"), h2?.snippet)
+// mode target tercatat
+sends.length = 0; replies.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await run(".jasher grup warung Promo targeted")
+const h3 = getJasherDb()?.history?.[2]
+t("21j. mode target tercatat di riwayat", /target: warung/.test(String(h3?.mode || "")), h3?.mode)
+t("21k. mode target jumlahnya bener (2 grup)", h3?.targets === 2 && h3?.ok === 2)
+// info clear
+replies.length = 0
+await run(".jasher info clear")
+t("21l. riwayat kebersihkan", (getJasherDb()?.history?.length || 0) === 0 && /riwayat broadcast dibersihkan/.test(sc(replies.join("\n"))))
+// cap 30 entri
+for (let i = 0; i < 33; i++) {
+  db.db.data.jasher.history.push({ at: Date.now(), by: "x", snippet: "s" + i, targets: 1, ok: 1, mode: "", aborted: false })
+}
+db.db.data.jasher.lastBroadcastAt = 0
+sends.length = 0
+await run(".jasher Promo cap test")
+t("21m. riwayat di-cap 30 entri", (getJasherDb()?.history?.length || 0) === 30, "n=" + getJasherDb()?.history?.length)
+t("21n. entri terbaru tetap dipertahankan (cap test)", /promo cap test/i.test(String(getJasherDb()?.history?.[29]?.snippet || "")), getJasherDb()?.history?.[29]?.snippet)
+
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 process.exit(fail ? 1 : 0)
