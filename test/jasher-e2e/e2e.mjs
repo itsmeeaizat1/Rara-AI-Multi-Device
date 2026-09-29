@@ -24,7 +24,8 @@ db.db.data.jasher = {
 }
 await db.save()
 
-const { handler } = await import(R + "/plugins/promotion/jasher.js")
+const { checkPermission } = await import(R + "/src/lib/nova-middleware.js")
+const { handler, config: plug } = await import(R + "/plugins/promotion/jasher.js")
 const { fromSC } = await import(R + "/src/lib/styler.js")
 // GOTCHA: claraWrap merender smallcaps → asersi WAJIB dinormalisasi fromSC
 const sc = (s) => fromSC(String(s || "")).toLowerCase()
@@ -108,7 +109,7 @@ await run(".jasher")
 got = replies.join("\n")
 t("6a. guide tampil", sc(got).includes("jasher"))
 t("6b. guide ada semua sub", sc(got).includes("list") && sc(got).includes("stop") && sc(got).includes("grup"))
-t("6c. guide owner-only", /owner-only/i.test(sc(got)))
+t("6c. guide premium only", /premium only/i.test(sc(got)))
 
 // ═══ 7. STOP SAAT IDLE ═══
 replies.length = 0
@@ -387,6 +388,37 @@ const iNew = gotSort.indexOf("promosi terbaru"), iMid = gotSort.indexOf("promosi
 t("22a. terbaru di paling atas", iNew !== -1 && iNew < iMid && iNew < iOld, "new=" + iNew + " mid=" + iMid + " old=" + iOld)
 t("22b. urutan turun: terbaru → tengah → lama", iMid !== -1 && iMid < iOld)
 t("22c. nomor 1 = entri terbaru", /1\. \d{2}\/\d{2}, \d{2}\.\d{2}[\s\S]*promosi terbaru/.test(gotSort))
+
+// ═══ 23. GATE: PREMIUM-ONLY (bukan gratis — revisi owner 29 Sep) ═══
+t("23a. flag isPremium true", plug.isPremium === true)
+t("23b. flag isOwner false (bukan lagi owner-only)", plug.isOwner === false)
+const mkM = (sender, flags) => ({ sender, command: "jasher", ...flags })
+t("23c. checkPermission: user biasa DITOLAK premium-only", (() => {
+  const r = checkPermission(mkM("62biasa@s.whatsapp.net", { isOwner: false, isPremium: false, isPartner: false }), plug)
+  return r.allowed === false && /premium/i.test(String(r.reason || ""))
+})())
+t("23d. checkPermission: premium user LOLOS", (() => {
+  const r = checkPermission(mkM("62prem@s.whatsapp.net", { isOwner: false, isPremium: true, isPartner: false }), plug)
+  return r.allowed === true
+})())
+t("23e. checkPermission: owner TETAP lolos (bypass)", (() => {
+  const r = checkPermission(mkM("62owner@s.whatsapp.net", { isOwner: true, isPremium: false, isPartner: false }), plug)
+  return r.allowed === true
+})())
+t("23f. checkPermission: partner juga lolos", (() => {
+  const r = checkPermission(mkM("62partner@s.whatsapp.net", { isOwner: false, isPremium: false, isPartner: true }), plug)
+  return r.allowed === true
+})())
+{
+  replies.length = 0
+  const mNoArgs = {
+    text: ".jasher", args: [], isOwner: true, isGroup: false, isPremium: true,
+    chat: "62899@s.whatsapp.net", sender: "62899@s.whatsapp.net", prefix: ".",
+    react: async (e) => reacts.push(e), reply: async (txt) => replies.push(String(txt)),
+  }
+  await handler(mNoArgs, { sock: mockSock, config, db })
+  t("23g. guide tampil 💎 premium only", sc(replies.join("\n")).includes("premium only"))
+}
 
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 process.exit(fail ? 1 : 0)
