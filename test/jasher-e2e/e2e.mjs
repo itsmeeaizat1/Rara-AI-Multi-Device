@@ -40,6 +40,7 @@ const mockSock = {
   user: { id: "bot" },
   sendPresenceUpdate: async () => {},
   groupFetchAllParticipating: async () => WA_GROUPS,
+  newsletterFetchAllSubscribe: async () => [{ id: "123456789@newsletter", name: "Saluran Nova Promo" }],
   sendMessage: async (to, msg) => {
     sends.push({ to, msg })
     return { key: { id: "s" + sends.length, remoteJid: to } }
@@ -56,21 +57,24 @@ function mockM(text) {
 }
 const run = async (text, ctxExtra = {}) =>
   await handler(mockM(text), { sock: mockSock, config, db, ...ctxExtra })
-const sentToGroups = () => sends.filter(s => s.to.endsWith("@g.us") && !s.msg?.edit).map(s => s.to)
+// target broadcast = grup @g.us ATAU saluran @newsletter (bukan pesan progress)
+const sentToGroups = () => sends.filter(s => (s.to.endsWith("@g.us") || s.to.endsWith("@newsletter")) && !s.msg?.edit).map(s => s.to)
 
 // ═══ 1. LIST: WA + TG registry digabung ═══
 await run(".jasher list")
 let got = replies.join("\n")
-t("1a. list nunjukin 5 grup (3 WA + 2 TG)", (got.match(/^\d+\./gm) || []).length === 5, (got.match(/^\d+\./gm) || []).join())
+t("1a. list nunjukin 6 target (5 grup + 1 saluran)", (got.match(/^\d+\./gm) || []).length === 6, (got.match(/^\d+\./gm) || []).join())
 t("1b. nama grup WA kebaca", sc(got).includes("warung olshop"))
 t("1c. nama grup TG kebaca", sc(got).includes("grup saya telegram") || sc(got).includes("warung kopi tg"))
-t("1d. total & platform ringkas", /5 grup \(wa 3 · tg 2\)/.test(sc(got)))
+t("1d. total & platform ringkas (grup WA/TG + saluran)", /total: 6 target — grup wa 3 · grup tg 2 · saluran 1/.test(sc(got)))
+t("1e. status toggle tampil (default grup on, saluran off)", /aktif: grup 🟢 · saluran 🔴/.test(sc(got)))
+t("1f. saluran kebaca di list", sc(got).includes("saluran nova promo"))
 
 // ═══ 2. BROADCAST SEMUA (tanpa target) ═══
 replies.length = 0; sends.length = 0; reacts.length = 0
 const r2 = await run(".jasher Diskon 50% hari ini!")
 const targets = sentToGroups()
-t("2a. kirim ke SEMUA 5 grup", targets.length === 5, targets.join(","))
+t("2a. kirim ke SEMUA 5 grup (saluran default OFF gak ikut)", targets.length === 5 && !targets.some(j => j.endsWith("@newsletter")), targets.join(","))
 t("2b. pesan promosi verbatim", sends.some(s => (s.msg?.text || "").includes("Diskon 50% hari ini!")))
 t("2c. grup WA kena", targets.includes("120363022102@g.us"))
 t("2d. grup TG kena (routing bridge)", targets.includes("tg_g1004391233000@g.us"))
@@ -191,6 +195,7 @@ t("12d. laporan selesai nyebut media", sc(replies.join("\n")).includes("gambar +
 const strictSock = {
   user: { id: "bot" }, sendPresenceUpdate: async () => {},
   groupFetchAllParticipating: async () => WA_GROUPS,
+  newsletterFetchAllSubscribe: async () => [{ id: "123456789@newsletter", name: "Saluran Nova Promo" }],
   sendMessage: async (to, msg) => {
     // media+caption DITOLAK; media doang & teks doang BOLEH
     if ((msg?.image || msg?.video || msg?.document) && msg?.caption) throw new Error("caption not supported")
@@ -238,6 +243,75 @@ db.db.data.jasher.lastBroadcastAt = 0
 await handler(mDirect, { sock: mockSock, config, db })
 t("15a. media langsung ke-deteksi (image kirim)", sends.filter(s => s.msg?.image).length === 5)
 t("15b. caption = teks setelah command", sends.every(s => !s.msg?.image || s.msg?.caption?.includes("Promo langsung")))
+_resetJasherMediaForTest() // WAJIB: tanpa ini tes berikut kekirim sebagai media (caption bukan text)
+
+// ═══ 16. SET: STATUS DEFAULT (group on, channel off) ═══
+db.db.data.jasher = {
+  groups: db.db.data.jasher?.groups || {},
+  settings: undefined, cooldownMinutes: 0, lastBroadcastAt: 0,
+}
+await db.save()
+replies.length = 0
+await run(".jasher set")
+let gotSet = sc(replies.join("\n"))
+t("16a. status: grup ON default", /grup: 🟢 on/i.test(gotSet))
+t("16b. status: saluran OFF default", /saluran \(wa & telegram\): 🔴 off/i.test(gotSet))
+
+// ═══ 17. SET CHANNEL ON → broadcast ikut saluran ═══
+replies.length = 0; reacts.length = 0
+await run(".jasher set channel on")
+t("17a. set channel on tersimpan", getJasherDb()?.settings?.channel === true)
+t("17b. konfirmasi channel ON", /target saluran \(wa & telegram\): 🟢 on/i.test(sc(replies.join("\n"))))
+sends.length = 0; replies.length = 0; reacts.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await run(".jasher Promo saluran")
+const t17 = sentToGroups()
+t("17c. broadcast kini 6 target (5 grup + 1 saluran)", t17.length === 6, t17.join(","))
+t("17d. saluran WA kekirim", t17.includes("123456789@newsletter"))
+t("17e. teks ke saluran verbatim", sends.some(s => s.to === "123456789@newsletter" && (s.msg?.text || "").includes("Promo saluran")))
+
+// ═══ 18. SET GROUP OFF → hanya saluran ═══
+replies.length = 0
+await run(".jasher set group off")
+t("18a. set group off tersimpan", getJasherDb()?.settings?.group === false)
+sends.length = 0; replies.length = 0; reacts.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await run(".jasher Promo cuma saluran")
+const t18 = sentToGroups()
+t("18b. hanya saluran yang kekirim", t18.length === 1 && t18[0] === "123456789@newsletter", t18.join(","))
+
+// ═══ 19. DUA-DUANYA OFF → jujur tolak ═══
+replies.length = 0
+await run(".jasher set channel off")
+sends.length = 0; replies.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await run(".jasher Promo nol")
+t("19a. group+channel off → ditolak jujur", /gak ada target broadcast|nyalakan salah satu/.test(sc(replies.join("\n"))))
+t("19b. gak ada pesan terkirim", sentToGroups().length === 0)
+// balikin default buat test berikut
+await run(".jasher set group on")
+db.db.data.jasher.lastBroadcastAt = 0
+
+// ═══ 20. SALURAN TELEGRAM: telegramToRaw + registry ──
+const rawCh = telegramToRaw({ from: { id: 0 }, chat: { id: -10022334455, type: "channel", title: "Saluran Promo Aizat" }, text: "posting", message_id: 9 })
+t("20a. jid saluran TG tg_c*@newsletter", rawCh.key.remoteJid === "tg_c10022334455@newsletter", rawCh.key.remoteJid)
+t("20b. _bridge.isChannel true & isGroup false", rawCh._bridge.isChannel === true && rawCh._bridge.isGroup === false)
+t("20c. judul saluran kebawa (registry)", rawCh._bridge.groupTitle === "Saluran Promo Aizat")
+// saluran TG di registry → kebaca collectTargets sebagai channel
+db.db.data.jasher.groups["tg_c10022334455@newsletter"] = { name: "Saluran Promo Aizat", platform: "telegram" }
+await db.save()
+replies.length = 0
+await run(".jasher list")
+t("20d. saluran TG kebaca di list (7 target)", /total: 7 target — grup wa 3 · grup tg 2 · saluran 2/.test(sc(replies.join("\n"))))
+// channel ON → broadcast ikut saluran TG
+db.db.data.jasher.lastBroadcastAt = 0
+await run(".jasher set channel on")
+sends.length = 0; replies.length = 0; reacts.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await run(".jasher Promo lintas")
+const t20 = sentToGroups()
+t("20e. saluran TG kekirim saat channel ON", t20.includes("tg_c10022334455@newsletter"), t20.join(","))
+t("20f. total 7 target (5 grup + 2 saluran)", t20.length === 7, "n=" + t20.length)
 
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 process.exit(fail ? 1 : 0)
