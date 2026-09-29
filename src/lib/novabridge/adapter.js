@@ -96,7 +96,9 @@ export function telegramToRaw(tgMsg) {
     },
     messageTimestamp: tgMsg?.date || Math.floor(Date.now() / 1000),
     pushName: from.first_name || from.username || "Telegram User",
-    _bridge: { platform: "telegram", chatId: chat.id, invokeMsgId: tgMsg?.message_id, isBot: !!from.is_bot, hasMedia: !!(tgMsg && (tgMsg.photo || tgMsg.video || tgMsg.document || tgMsg.audio || tgMsg.voice)), isGroup: isGroupChat },
+    _bridge: { platform: "telegram", chatId: chat.id, invokeMsgId: tgMsg?.message_id, isBot: !!from.is_bot, hasMedia: !!(tgMsg && (tgMsg.photo || tgMsg.video || tgMsg.document || tgMsg.audio || tgMsg.voice)), isGroup: isGroupChat,
+      // judul grup (registry .jasher — broadcast promosi lintas platform, 29 Sep)
+      groupTitle: isGroupChat ? (chat.title || null) : null },
   };
 }
 
@@ -346,6 +348,26 @@ export async function handleBridgeMessage(rawMsg, sock, ctx = {}) {
   const { db, messageHandler, prefix = ".", log = () => {}, platform, chatMap = null } = ctx;
   if (!rawMsg?.key) return null;
   if (chatMap && rawMsg._bridge) chatMap.set(String(rawMsg.key.remoteJid), { chatId: rawMsg._bridge.chatId, invokeMsgId: rawMsg._bridge.invokeMsgId });
+  // ── REGISTRY GRUP (.jasher, 29 Sep) — catat setiap grup yang ngirim pesan:
+  // jid → {name, platform}. WA bisa enumerasi via groupFetchAllParticipating,
+  // tapi Bot API Telegram GAK BISA enumerasi grup → registry ini cara .jasher
+  // nemuin grup TG yang bot join (persist di DB, tahan restart).
+  try {
+    if (rawMsg._bridge?.isGroup && String(rawMsg.key.remoteJid).endsWith("@g.us") && !rawMsg.key.fromMe && !rawMsg._bridge?.isBot) {
+      const jid = String(rawMsg.key.remoteJid);
+      const title = rawMsg._bridge?.groupTitle || null;
+      const data = db?.db?.data;
+      if (data) {
+        data.jasher ??= { groups: {} };
+        data.jasher.groups ??= {};
+        const cur = data.jasher.groups[jid];
+        if (!cur || (title && cur.name !== title)) {
+          data.jasher.groups[jid] = { name: title || cur?.name || jid.split("@")[0], platform: rawMsg._bridge?.platform || "telegram", updated: Date.now() };
+          try { db.save?.(); } catch {}
+        }
+      }
+    }
+  } catch {}
   const body = rawMsg.message?.conversation || "";
   if (rawMsg._bridge?.hasMedia) {
     // fase 1: input media ditolak jujur

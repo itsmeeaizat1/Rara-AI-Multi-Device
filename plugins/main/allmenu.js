@@ -67,7 +67,7 @@ const CATEGORY_ORDER = [
   "media", "tts", "quotes", "primbon",
   "education", "food", "berita", "cuaca", "loker",
   "islami", "smart", "utility", "misc", "random",
-  "store", "market", "jpm",
+  "store", "market", "jpm", "promotion",
   // PALING AKHIR (revisi owner 26 Sep): main & bot sebelum owner, panel setelah owner
   "vps", "main", "info", "bot", "owner", "panel",
 ];
@@ -83,7 +83,7 @@ const CATEGORY_NAMES = {
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
-  ephoto: "Ephoto", jpm: "JPM",
+  ephoto: "Ephoto", jpm: "JPM", promotion: "Promotion",
   panel: "Panel", owner: "Owner", store: "Store", "sewa premium": "Sewa & Premium",
   bot: "Bot",
 };
