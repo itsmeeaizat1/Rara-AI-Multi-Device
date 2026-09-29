@@ -751,7 +751,7 @@ connectionState.sock = sock;
 
       // Start AI Grup proactive timer
       try {
-        const { startProactiveTimer } = await import("./lib/nova-aigrup-proactive.js");
+        const { startProactiveTimer } = await import("./lib/nova-aigroupchat-proactive.js");
         startProactiveTimer(sock);
       } catch (e) {
         console.error("[aigrup] Failed to start proactive timer:", e.message);

@@ -8,7 +8,7 @@ import { callAI } from "./nova-ai-service.js";
 import config from "../../config.js";
 import { getTioEndpoint } from "./config/env-loader.js";
 
-// Format definitions (sync dengan aigrup.js)
+// Format definitions (sync dengan aigroupchat.js)
 const TIO_FORMATS = {
   openai: {
     label: "OpenAI",
