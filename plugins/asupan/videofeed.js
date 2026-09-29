@@ -53,7 +53,7 @@ const pluginConfig = {
 }
 
 function loadJsonData() {
-    const tiktokDir = path.join(process.cwd(), 'src', 'tiktok')
+    const tiktokDir = path.join(process.cwd(), 'src', 'data')
     const files = ['bocil.json', 'gheayubi.json', 'kayes.json', 'notnot.json', 'panrika.json', 'santuy.json', 'tiktokgirl.json', 'ukhty.json']
     let allUrls = []
     
