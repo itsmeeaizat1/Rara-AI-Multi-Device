@@ -660,4 +660,4 @@ async function handler(m, { sock, config: botConfig }) {
   return m.reply(novaError("autochurn", novaGuide(botConfig.command?.prefix || ".", "autochurn", m.pushName), ".autochurn scan"));
 }
 
-export { pluginConfig, handler };
+export { pluginConfig, handler, pluginConfig as config };

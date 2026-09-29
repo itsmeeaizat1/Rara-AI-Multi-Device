@@ -593,4 +593,4 @@ async function handler(m, { sock, config: botConfig }) {
   return m.reply(novaError("autoplugin", te(m.prefix, m.command, m.pushName), ".autoplugin report"));
 }
 
-export { pluginConfig, handler };
+export { pluginConfig, handler, pluginConfig as config };

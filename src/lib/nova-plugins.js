@@ -158,6 +158,13 @@ async function loadPlugin(filePath, bustCache = false) {
       plugin = plugin.default;
     }
 
+    // Fallback pelindung (29 Sep): sebagian plugin nge-export "pluginConfig"
+    // bukan "config" — tanpa fallback ini pluginnya di-skip SENYAP dari registry
+    // (bug .wxalert/.kyio/.hargakripto dll gak kebaca command-nya sama sekali).
+    if (!plugin.config && plugin.pluginConfig) {
+      plugin.config = plugin.pluginConfig;
+    }
+
     if (!plugin.config || !plugin.handler) {
       return null;
     }
