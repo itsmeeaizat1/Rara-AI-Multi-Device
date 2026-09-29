@@ -123,5 +123,121 @@ t("9c. _bridge.isGroup true", rawTg._bridge.isGroup === true)
 const rawDm = telegramToRaw({ from: { id: 111 }, chat: { id: 111, type: "private" }, text: "hai", message_id: 2 })
 t("9d. DM tetap tg_<id> + tanpa title", rawDm.key.remoteJid === "tg_111" && rawDm._bridge.groupTitle === null)
 
+// ═══ 10. COOLDOWN: DEFAULT OFF ═══
+const { _setJasherMediaForTest, _resetJasherMediaForTest } = await import(R + "/plugins/promotion/jasher.js")
+db.db.data.jasher = {
+  groups: db.db.data.jasher?.groups || {},
+  cooldownMinutes: 0, lastBroadcastAt: 0,
+}
+await db.save()
+replies.length = 0
+await run(".jasher cooldown")
+t("10a. status default → OFF", /cooldown broadcast: off/i.test(sc(replies.join("\n"))))
+t("10b. nilai cooldown default 0", getJasherDb()?.cooldownMinutes === 0)
+
+function getJasherDb() { return db.db.data.jasher }
+
+// ═══ 11. COOLDOWN: SET + GUARD + OFF ═══
+replies.length = 0; reacts.length = 0
+await run(".jasher cooldown 10")
+t("11a. set 10 menit tersimpan", getJasherDb()?.cooldownMinutes === 10)
+t("11b. konfirmasi aktif", /cooldown broadcast aktif: 10 menit/i.test(sc(replies.join("\n"))))
+// broadcast pertama BOLEH (belum ada lastBroadcastAt)
+sends.length = 0; replies.length = 0; reacts.length = 0
+await run(".jasher Promo pertama")
+t("11c. broadcast pertama lewat (cooldown gak blok)", sentToGroups().length === 5)
+t("11d. lastBroadcastAt tercatat", Number(getJasherDb()?.lastBroadcastAt) > 0)
+// broadcast kedua KEBLOK (belum 10 menit)
+sends.length = 0; replies.length = 0; reacts.length = 0
+await run(".jasher Promo kedua")
+t("11e. broadcast kedua diblok cooldown", sentToGroups().length === 0)
+t("11f. pesan sisa waktu jelas", /tunggu \d+ menit lagi/.test(sc(replies.join("\n"))))
+t("11g. react ❌ saat diblok", reacts.includes("❌"))
+// cooldown OFF → bebas lagi
+replies.length = 0
+await run(".jasher cooldown off")
+t("11h. cooldown off tersimpan", getJasherDb()?.cooldownMinutes === 0)
+sends.length = 0; replies.length = 0; reacts.length = 0
+await run(".jasher Promo ketiga")
+t("11i. setelah off broadcast jalan lagi", sentToGroups().length === 5)
+// nilai invalid ditolak
+replies.length = 0
+await run(".jasher cooldown abc")
+t("11j. nilai invalid → jujur 1-1440", /1-1440 menit/.test(sc(replies.join("\n"))))
+
+// ═══ 12. MEDIA: REPLY GAMBAR + CAPTION SATU PESAN ═══
+db.db.data.jasher.cooldownMinutes = 0; db.db.data.jasher.lastBroadcastAt = 0
+await db.save()
+const FAKE_BUF = Buffer.alloc(64, 1)
+_setJasherMediaForTest(async () => ({ buf: FAKE_BUF, kind: "image", mimetype: "image/jpeg" }))
+const mQuoted = {
+  text: ".jasher Promo gambar", args: ["Promo", "gambar"], isOwner: true, isGroup: false,
+  chat: "62899@s.whatsapp.net", sender: "62899@s.whatsapp.net", prefix: ".",
+  fromMe: false,
+  quoted: { key: { id: "q1" }, message: { imageMessage: { mimetype: "image/jpeg" } } },
+  message: { conversation: ".jasher Promo gambar" },
+  react: async (e) => reacts.push(e),
+  reply: async (txt) => replies.push(String(txt)),
+}
+replies.length = 0; sends.length = 0; reacts.length = 0
+await handler(mQuoted, { sock: mockSock, config, db })
+let imgSends = sends.filter(s => s.msg?.image)
+t("12a. kirim image ke semua 5 grup", imgSends.length === 5, "n=" + imgSends.length)
+t("12b. caption nempel di media (satu pesan)", imgSends.every(s => s.msg?.caption?.includes("Promo gambar")))
+t("12c. gak ada teks susulan saat media+caption sukses", !sends.some(s => s.msg?.text && !s.msg?.edit && s.to.endsWith("@g.us") && (s.msg?.text || "").includes("Promo gambar")) === true || imgSends.every(s => s.msg?.caption))
+t("12d. laporan selesai nyebut media", sc(replies.join("\n")).includes("gambar + caption") || sends.some(s => sc(s.msg?.text || "").includes("gambar + caption")))
+
+// ═══ 13. MEDIA FALLBACK: caption GAGAL → media dulu, teks susul ═══
+const strictSock = {
+  user: { id: "bot" }, sendPresenceUpdate: async () => {},
+  groupFetchAllParticipating: async () => WA_GROUPS,
+  sendMessage: async (to, msg) => {
+    // media+caption DITOLAK; media doang & teks doang BOLEH
+    if ((msg?.image || msg?.video || msg?.document) && msg?.caption) throw new Error("caption not supported")
+    sends.push({ to, msg })
+    return { key: { id: "s" + sends.length, remoteJid: to } }
+  },
+}
+replies.length = 0; sends.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await handler(mQuoted, { sock: strictSock, config, db })
+const mediaOnly = sends.filter(s => s.msg?.image && !s.msg?.caption)
+const textAfter = sends.filter(s => s.msg?.text && !s.msg?.edit && s.to.endsWith("@g.us"))
+t("13a. fallback: media doang terkirim 5 grup", mediaOnly.length === 5, "n=" + mediaOnly.length)
+t("13b. fallback: teks menyusul setelah media", textAfter.some(s => (s.msg?.text || "").includes("Promo gambar")))
+t("13c. urutan media dulu baru teks", (() => {
+  const firstMedia = sends.findIndex(s => s.msg?.image && !s.msg?.caption && s.to.endsWith("@g.us"))
+  const firstText = sends.findIndex(s => s.msg?.text && !s.msg?.edit && s.to.endsWith("@g.us") && (s.msg?.text || "").includes("Promo gambar"))
+  return firstMedia !== -1 && firstText !== -1 && firstMedia < firstText
+})())
+
+// ═══ 14. VIDEO REPLY: payload video+caption ═══
+_setJasherMediaForTest(async () => ({ buf: FAKE_BUF, kind: "video", mimetype: "video/mp4" }))
+replies.length = 0; sends.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await handler(mQuoted, { sock: mockSock, config, db })
+t("14a. kirim video ke semua grup", sends.filter(s => s.msg?.video).length === 5)
+t("14b. caption nempel di video", sends.filter(s => s.msg?.video && s.msg?.caption?.includes("Promo gambar")).length === 5)
+_resetJasherMediaForTest()
+
+// ═══ 15. MEDIA LANGSUNG (caption, tanpa reply) ═══
+_setJasherMediaForTest(async (mm) => {
+  if (mm?.quoted?.message) return null // harus ke-deteksi dari m.message
+  return { buf: FAKE_BUF, kind: "image", mimetype: "image/jpeg" }
+})
+const mDirect = {
+  text: ".jasher Promo langsung", args: ["Promo", "langsung"], isOwner: true, isGroup: false,
+  chat: "62899@s.whatsapp.net", sender: "62899@s.whatsapp.net", prefix: ".",
+  fromMe: false, quoted: null,
+  message: { imageMessage: { mimetype: "image/jpeg", caption: ".jasher Promo langsung" } },
+  react: async (e) => reacts.push(e),
+  reply: async (txt) => replies.push(String(txt)),
+}
+replies.length = 0; sends.length = 0
+db.db.data.jasher.lastBroadcastAt = 0
+await handler(mDirect, { sock: mockSock, config, db })
+t("15a. media langsung ke-deteksi (image kirim)", sends.filter(s => s.msg?.image).length === 5)
+t("15b. caption = teks setelah command", sends.every(s => !s.msg?.image || s.msg?.caption?.includes("Promo langsung")))
+
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 process.exit(fail ? 1 : 0)
