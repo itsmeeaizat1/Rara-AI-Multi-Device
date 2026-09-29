@@ -367,5 +367,26 @@ await run(".jasher Promo cap test")
 t("21m. riwayat di-cap 30 entri", (getJasherDb()?.history?.length || 0) === 30, "n=" + getJasherDb()?.history?.length)
 t("21n. entri terbaru tetap dipertahankan (cap test)", /promo cap test/i.test(String(getJasherDb()?.history?.[29]?.snippet || "")), getJasherDb()?.history?.[29]?.snippet)
 
+// ═══ 22. INFO: SORTIR TERBARU DI PALING ATAS ═══
+db.db.data.jasher = {
+  groups: db.db.data.jasher?.groups || {},
+  settings: { group: true, channel: false },
+  cooldownMinutes: 0, lastBroadcastAt: 0,
+  // urutan insert SENGAJA kacau (lama di belakang) — sortir wajib per timestamp
+  history: [
+    { at: Date.now() - 300000, by: "lama@s.whatsapp.net", snippet: "promosi lama", targets: 3, ok: 3, mode: "", aborted: false },
+    { at: Date.now(), by: "baru@s.whatsapp.net", snippet: "promosi terbaru", targets: 5, ok: 5, mode: "", aborted: false },
+    { at: Date.now() - 150000, by: "tengah@s.whatsapp.net", snippet: "promosi tengah", targets: 2, ok: 2, mode: "", aborted: false },
+  ],
+}
+await db.save()
+replies.length = 0
+await run(".jasher info")
+let gotSort = sc(replies.join("\n"))
+const iNew = gotSort.indexOf("promosi terbaru"), iMid = gotSort.indexOf("promosi tengah"), iOld = gotSort.indexOf("promosi lama")
+t("22a. terbaru di paling atas", iNew !== -1 && iNew < iMid && iNew < iOld, "new=" + iNew + " mid=" + iMid + " old=" + iOld)
+t("22b. urutan turun: terbaru → tengah → lama", iMid !== -1 && iMid < iOld)
+t("22c. nomor 1 = entri terbaru", /1\. \d{2}\/\d{2}, \d{2}\.\d{2}[\s\S]*promosi terbaru/.test(gotSort))
+
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 process.exit(fail ? 1 : 0)
