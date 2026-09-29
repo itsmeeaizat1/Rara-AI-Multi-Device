@@ -690,13 +690,13 @@ async function handler(m, { sock, db, deps } = {}) {
   // 🛠️ tools, ⚡ aksi. Tanpa bar/langkah/daftar sumber — sumber cuma di 📎 footer.
   // PLUS reaksi di pesan user: 🧠/🔍/🛠️/⚡ sesuai fase (dedupe berurutan).
   const PHASE_LABEL = {
-    plan: "🧠 " + smallcapsText("superagent merencanakan..."),
-    search: "🔍 " + smallcapsText("superagent mencari informasi..."),
-    pick: "🎯 " + smallcapsText("superagent memilih sumber terbaik..."),
-    read: "📖 " + smallcapsText("superagent membaca halaman..."),
-    compose: "✍️ " + smallcapsText("superagent menyusun jawaban..."),
-    act: "⚡ " + smallcapsText("superagent mengeksekusi aksi..."),
-    tool: "🛠️ " + smallcapsText("superagent pakai tools..."),
+    plan: "🧠 " + smallcapsText("Thinking..."),
+    search: "🔍 " + smallcapsText("Searching..."),
+    pick: "🎯 " + smallcapsText("Selecting..."),
+    read: "📖 " + smallcapsText("Reading..."),
+    compose: "✍️ " + smallcapsText("Composing..."),
+    act: "⚡ " + smallcapsText("Executing..."),
+    tool: "🛠️ " + smallcapsText("Action..."),
   };
   const PHASE_REACT = { plan: "🧠", search: "🔍", pick: "🔍", read: "🔍", compose: "🧠", tool: "🛠️", act: "⚡" };
   let lastReact = "";
@@ -730,7 +730,7 @@ async function handler(m, { sock, db, deps } = {}) {
     const ytIntent = detectYtSearchIntent(norm(task), task);
     if (ytIntent) {
       await reactPhase("🔍");
-      await setStatus("🔍 " + smallcapsText("superagent cari video di youtube..."));
+      await setStatus("🔍 " + smallcapsText("Searching youtube..."));
       const ytSend = deps.ytsearchSend || searchYoutubeAndSend;
       try {
         await ytSend(sock, m, { query: ytIntent.query, wantDownload: ytIntent.download });
@@ -753,7 +753,7 @@ async function handler(m, { sock, db, deps } = {}) {
     const siteIntent = detectSiteSearchIntent(norm(task), task);
     if (siteIntent) {
       await reactPhase("🔍");
-      await setStatus("🔍 " + smallcapsText("superagent nyari di " + siteIntent.site + "..."));
+      await setStatus("🔍 " + smallcapsText("Searching " + siteIntent.site + "..."));
       const siteSend = deps.sitesearchSend || searchSiteAndSend;
       try {
         await siteSend(sock, m, { site: siteIntent.site, query: siteIntent.query });
@@ -802,7 +802,7 @@ async function handler(m, { sock, db, deps } = {}) {
         let label = PHASE_LABEL[phase] || PHASE_LABEL.plan;
         // fase tools/act kasih detail singkat (lagi ngejalanin apa)
         if ((phase === "tool" || phase === "act") && info) {
-          label = (phase === "tool" ? "🛠️ " : "⚡ ") + smallcapsText("superagent menjalankan: " + info.slice(0, 60));
+          label = (phase === "tool" ? "🛠️ " : "⚡ ") + smallcapsText("Running: " + info.slice(0, 60));
         }
         setStatus(label);
       },

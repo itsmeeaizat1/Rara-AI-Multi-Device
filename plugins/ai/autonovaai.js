@@ -347,7 +347,7 @@ const editFinal = async (text) => {
   if (!ok) await m.reply(clipped);
 };
 try { await m.react("🧠"); } catch {}
-await setStatus("🧠 " + smallcapsText("setanovaagent menerjemahkan kalimatmu jadi rule..."));
+await setStatus("🧠 " + smallcapsText("Thinking..."));
 
 // 1) minta AI nerjemahin — 4 LAPIS (request owner: AI REST API manapun
 //    yang aktif — punya key apa pun — harus tetep bisa ngerjain ini):
@@ -388,7 +388,7 @@ let aiResult = await withBudget(askAiNow(SYS, body), Math.min(remain(), 35000));
   // TIMEOUT/gagal network, retry provider yang sama = buang 35 dtk lagi.
   if (!rule && aiResult && !aiTimeouted && remain() > 25000) {
     console.log("[autonovaai] balasan AI tanpa JSON → retry dengan perintah tegas");
-    await setStatus("🧠 " + smallcapsText("setanovaagent mencoba lagi, lebih teliti..."));
+    await setStatus("🧠 " + smallcapsText("Thinking harder..."));
     aiResult = await withBudget(askAiNow(SYS_STRICT, body), Math.min(remain() - 5000, 35000));
     rule = extractJson(aiResult);
   }
@@ -401,7 +401,7 @@ let aiResult = await withBudget(askAiNow(SYS, body), Math.min(remain(), 35000));
 if (!rule && remain() > 15000) {
   try {
     console.log("[autonovaai] turun ke rantai AI satuan (aiFallbackChat)...");
-    await setStatus("🧠 " + smallcapsText("setanovaagent nyari otak AI lain..."));
+    await setStatus("🧠 " + smallcapsText("Trying another model..."));
     const satuan = await withBudget(aiChainChat(body, { systemPrompt: SYS_STRICT }), Math.min(remain() - 5000, 35000));
     rule = extractJson(satuan);
   } catch (e) {

@@ -5,6 +5,7 @@ import { visionScan } from "../../src/lib/nova-vision-chain.js";
 // UnlimitedAI replaced with callIkyy (ikyyxd API)
 import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -36,19 +37,22 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("aichatimg", `Mau gambar apa?\nContoh: ${prefix}aichatimg gambar kucing lucu warna pink`, "guide"));
       }
 
-      await m.react("🕒");
+      // 🔹 status ala agent (owner 29 Sep) — media gak bisa di-edit, tapi pesan
+      // "🎨 Generating..." nunjukin bot lg kerja; stop pas gambar siap
+      const genStatus = await startAiStatus(sock, m, { phases: ["🎨 Generating...", "✨ Refining..."] });
       try {
         const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
         const axios = (await import("axios")).default;
         const res = await axios.get(url, { responseType: "arraybuffer", timeout: 60000 });
         const buffer = Buffer.from(res.data);
 
+        genStatus.stop();
         await m.react("🐣");
         let caption = `Prompt: *${prompt}*\nEngine: *pollinations*`;
         return await sock.sendMedia(m.chat, buffer, null, m, { type: "image", caption });
       } catch (e) {
-        await m.react("❌");
-        return m.reply(claraWrap("aichatimg", "Gagal generate gambar. Coba lagi.", "error"));
+        await genStatus.fail("Gagal generate gambar — coba lagi ya");
+        return;
       }
     }
 
@@ -61,7 +65,8 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("aichatimg", `Kasih pertanyaan tentang gambarnya!\n\nContoh: ${prefix}aichatimg apa di foto ini? (reply foto)\n${prefix}aichatimg jelaskan isi diagram (reply foto)`, "guide"));
       }
 
-      await m.react("🕒");
+      // 🔹 status ala agent: 👀 scanning → jawaban final di-edit ke pesan status
+      const aiStatus = await startAiStatus(sock, m, { phases: ["👀 Scanning...", "🧠 Thinking...", "✍️ Composing..."] });
 
       // Download gambar
       let buffer;
@@ -72,8 +77,8 @@ async function handler(m, { sock }) {
       }
 
       if (!buffer) {
-        await m.react("❌");
-        return m.reply(claraWrap("aichatimg", "Gagal download gambar.", "error"));
+        await aiStatus.fail("Gagal download gambar");
+        return;
       }
 
       // Rantai vision: Gemini Vision (key valid) → describe+Mercury (tanpa key)
@@ -85,12 +90,11 @@ async function handler(m, { sock }) {
       }).catch((e) => ({ status: false, error: e.message }));
 
       if (visionResult.status) {
-        await m.react("🐣");
-        return m.reply(`🖼️ Engine: ${visionResult.engine}\n\n${visionResult.text}`);
+        return aiStatus.finish(`🖼️ Engine: ${visionResult.engine}\n\n${visionResult.text}`);
       }
 
-      await m.react("❌");
-      return m.reply(claraWrap("aichatimg", visionResult.error || "Gagal menganalisis gambar", "error"));
+      await aiStatus.fail(visionResult.error || "Gagal menganalisis gambar");
+      return;
     }
 
     // Mode: chat teks biasa
@@ -109,15 +113,15 @@ async function handler(m, { sock }) {
       );
     }
 
-    await m.react("🕒");
+    // 🔹 status ala agent: 🧠 Thinking... → jawaban di-edit ke pesan status
+    const chatStatus = await startAiStatus(sock, m);
     const result = await callIkyy(text, {});
     if (!result.status || !result.answer) {
-      await m.react("❌");
-      return m.reply(claraWrap("aichatimg", "AI lagi offline nih 🤖", "error"));
+      await chatStatus.fail("AI lagi offline nih 🤖");
+      return;
     }
 
-    await m.react("🐣");
-    return m.reply(result.answer.trim());
+    return chatStatus.finish(result.answer.trim());
   } catch (err) {
     console.error("aichatimg error:", err);
     await m.react("❌");

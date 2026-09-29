@@ -2462,7 +2462,7 @@ function stripInternalNotes(str) {
 }
 const STEP_LABELS_I18N = {
     id: {
-        _thinking: 'Sedang berpikir...',
+        _thinking: 'Thinking...',
         _processing: 'Memproses hasil...',
         _default: (name) => [`Menjalankan ${name}`, `Selesai ${name}`],
         map: {

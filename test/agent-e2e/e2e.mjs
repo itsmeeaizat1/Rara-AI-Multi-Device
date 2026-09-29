@@ -606,7 +606,7 @@ w("\n— plugin .agent: loading 1 chat edit berulang + reaksi + jawaban —");
   check("urutan reaksi sesuai fase", JSON.stringify(reacts) === JSON.stringify(["🧠","🔍","🧠","🐣"]), JSON.stringify(reacts));
   check("teks aktivitas teredit ≥ 5 fase (1 chat)", edits.length >= 5, String(edits.length));
   check("teks aktivitas tanpa sumber domain", !edits.slice(0, -1).some(e => e.text.includes("gadgetrev.com") || e.text.includes("sunlogin")), "domain bocor");
-  check("aktivitas smallcaps (ᴀɢᴇɴᴛ ᴍᴇɴᴄᴀʀɪ...)", edits.some(e => e.text.includes("ᴍᴇɴᴄᴀʀɪ")), edits[1]?.text);
+  check("aktivitas smallcaps (ꜱᴇᴀʀᴄʜɪɴɢ... — label Inggris profesional, owner 29 Sep)", edits.some(e => e.text.includes("ꜱᴇᴀʀᴄʜɪɴɢ")), edits[1]?.text);
   check("jawaban final di-EDIT ke chat yang sama", edits[edits.length - 1]?.text.includes("POCO X7"), edits[edits.length - 1]?.text.slice(0, 60));
   check("sumber dilampirkan di jawaban final", edits[edits.length - 1]?.text.includes("gadgetrev.com"));
   check("gak ada jawaban dobel di reply terpisah", !replies.some(r => r.text.includes("POCO X7")), String(replies.length));

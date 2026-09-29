@@ -18,6 +18,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { listRoleplayCharacters, callRoleplay } from "../../src/scraper/fazzroleplay.js";
 import { getFazzcodeKey } from "../../src/lib/config/env-loader.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 
 const SESSION_KEY = "roleplaySession";
 
@@ -214,23 +215,23 @@ async function handler(m, { sock }) {
         `🎭 Daftar karakter: *${m.prefix}airoleplaychat list*`));
     }
 
-    // chat dengan konteks lokal
-    await m.react("🧠");
+    // chat dengan konteks lokal — 🔹 status ala agent (owner 29 Sep):
+    // 🧠 Thinking... di-edit jadi balasan karakter di pesan yang sama
+    const aiStatus = await startAiStatus(sock, m);
     const r = await callRoleplay("chat", {
       character: session.character,
       query: buildQuery(session, pesan),
       name: session.userName || m.pushName || "Player",
     });
     if (!r.ok) {
-      await m.react("❌");
-      return m.reply(claraWrap("airoleplaychat", `⚠️ ${session.character} lagi gak bisa membalas (${r.error === "API_KEY" ? "API key kosong" : r.error}). Coba lagi nanti ya.`));
+      await aiStatus.fail(`${session.character} lagi gak bisa membalas (${r.error === "API_KEY" ? "API key kosong" : r.error})`);
+      return;
     }
     // update riwayat lokal (max 6 giliran disimpan)
     const hist = [...(session.history || []), { who: "user", text: pesan }, { who: "char", text: r.reply }].slice(-6);
     saveSession(m, { ...session, history: hist });
 
-    await m.react("🐣");
-    return m.reply(claraWrap(session.character,
+    return aiStatus.finish(claraWrap(session.character,
       `🎭 *${session.character.toUpperCase()}*\n\n${r.reply}\n\n` +
       `─\n💡 Lanjut: *${m.prefix}airoleplaychat <pesan>* • Akhiri: *.airoleplaychat stop*`));
   } catch (err) {
