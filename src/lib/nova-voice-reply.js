@@ -292,9 +292,14 @@ export async function speakVoiceNote(sock, jid, text, voiceId, { quoted } = {}) 
     // 🔹 NOTIFIKASI SUMBER SUARA (owner 29 Sep: "gak bisa bedain mana suara
     // dari inworld mana yang fallback saat anovaagent suara on") — 1 baris
     // kecil smallcaps nempel di VN, jelas asalnya tanpa perlu nebak.
-    const tag = engine === "inworld"
-      ? "🎙️ sᴜᴀʀᴀ ɪɴᴡᴏʀʟᴅ ᴛᴛs-2"
-      : "🔊 sᴜᴀʀᴀ ʙᴀᴡᴀᴀɴ — ɪɴᴡᴏʀʟᴅ ᴏꜰꜰ/ᴅᴏᴡɴ, ꜰᴀʟʟʙᴀᴄᴋ ᴍsᴇᴅɢᴇ-ᴛᴛs";
+    let tag;
+    if (engine === "inworld") {
+      let vName = "";
+      try { const { getLastInworldVoice } = await import("./nova-inworld.js"); vName = getLastInworldVoice()?.name || ""; } catch {}
+      tag = "🎙️ sᴜᴀʀᴀ ɪɴᴡᴏʀʟᴅ ᴛᴛs-2" + (vName ? " — ɴᴀᴍᴀ: " + vName : "");
+    } else {
+      tag = "🔊 sᴜᴀʀᴀ ʙᴀᴡᴀᴀɴ — ɪɴᴡᴏʀʟᴅ ᴏꜰꜰ/ᴅᴏᴡɴ, ꜰᴀʟʟʙᴀᴄᴋ ᴍsᴇᴅɢᴇ-ᴛᴛs";
+    }
     try {
       await sock.sendMessage(jid, { text: tag }, { quoted: sent.key ? { key: sent.key } : undefined });
     } catch {}
