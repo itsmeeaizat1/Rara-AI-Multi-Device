@@ -120,7 +120,7 @@ Nova AI adalah asisten WhatsApp multi-device yang menggabungkan kecerdasan buata
 | Payment Method | 4 (Cash, QRIS, E-Wallet, Bank) |
 | Adzan Layer | 3 |
 | Saluran Event | 8 |
-| API Endpoint | 700+ (lihat list api.md) |
+| API Endpoint | 700+ (lihat `docs/list api.md`) |
 | Agent Skill | 4.727 (integrasi skills.sh) |
 
 ## 📝 Command Penting
