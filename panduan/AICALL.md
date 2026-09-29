@@ -27,10 +27,10 @@ nano .env
 ```
 
 Isi minimal:
-- `GROQ_API=gsk_...` — key Groq (STT whisper + otak chat)
+- `GROQ_API` — isi key Groq (buat STT whisper + otak chat)
 - `TTS_ENGINE=edgetts` (gratis) + `TTS_VOICE=id-ID-GadisNeural`
 - `OWNER=62<nomor owner>` + `PAIR_PHONE=62<nomor owner>` (login via pairing code)
-- `AICALL_HTTP_KEY=<token random>` — WAJIB sama dengan env bot utama
+- `AICALL_HTTP_KEY` — isi key acak bebas, WAJIB sama dengan env bot utama
 
 Key Gemini/Grok kalau ada di pusat apikeys.json bot utama otomatis
 dikirim per-request — .env cuma fallback.
@@ -46,7 +46,7 @@ pm2 logs nova-aicall       # cari "PAIRING CODE: XXXX-XXXX" → masukin di HP
 pm2 save
 ```
 
-Set env `AICALL_HTTP_KEY` (token sama) di bot utama lalu `pm2 restart <bot>`.
+Set env `AICALL_HTTP_KEY` (isi key yang sama) di bot utama lalu `pm2 restart <bot>`.
 
 **Auto-run:** bot utama otomatis nyalain service ini saat boot kalau binary
 +.env ada (src/lib/nova-aicall-autostart.js). Matiin: `touch aicall/.noautostart`.

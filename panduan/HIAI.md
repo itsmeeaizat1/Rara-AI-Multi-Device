@@ -8,11 +8,11 @@ Sengaja cmd-nya BEDA dari `.ai`/`.novaagent`/`.mcp` biar gak bentrok.
 
 ## 1. Instalasi
 
-Gak ada setup tambahan — engine udah nempel di repo. Yang perlu cuma **API
-key Gemini** (otak agent):
+Gak ada setup tambahan — engine udah nempel di repo. Yang perlu cuma API
+key Gemini (otak agent) — cukup isi key lewat command:
 
 ```
-.setkey hiai <key_gemini>
+.setkey hiai <isi key kamu>
 ```
 
 Bisa multiple key dipisah koma — rotasi otomatis kalau satu kena limit.
