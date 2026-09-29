@@ -20,7 +20,7 @@ const pluginConfig = {
   isOwner: true,
   isPremium: false,
   isGroup: true,
-  isPrivate: false,
+  isPrivate: true,
   cooldown: 5,
   energi: 0,
   isEnabled: true,
