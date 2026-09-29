@@ -3,7 +3,7 @@
   "name": "nova-md",
   "version": "24.2.8",
   "description": "WhatsApp Multi-Device Bot dengan sistem plugin modular",
-  "fixes": "v24.2.0 — EWS gempa tanpa lokasi tetap notif, sumber EWS disatukan, alert cuaca 5 menit, tombol target .switch, boot scheduler anti-skip. Lihat FIXES.md",
+  "fixes": "v24.2.0 — EWS gempa tanpa lokasi tetap notif, sumber EWS disatukan, alert cuaca 5 menit, tombol target .switch, boot scheduler anti-skip. Lihat changelogs/FIXES.md",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
