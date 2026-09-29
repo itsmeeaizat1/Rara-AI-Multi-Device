@@ -1,1 +1,43 @@
-{}
+{
+  "tg_g1004391233300@g.us": {
+    "groupId": "tg_g1004391233300@g.us",
+    "weekStart": "2026-09-27T17:00:00.000Z",
+    "trackingEnabled": true,
+    "members": {
+      "tg_8672332446": {
+        "name": "Aizat",
+        "messageCount": 7,
+        "commandCount": 7,
+        "mediaCount": 0,
+        "lastActive": 1790667496696,
+        "points": 14
+      }
+    },
+    "hourly": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      7,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

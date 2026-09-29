@@ -27,6 +27,23 @@ import { getTioBase } from "./config/env-loader.js";
 // ═══════════════════════════════════════════════════════════════
 
 export const API_KEYS = {
+  // ── BRIDGE MULTI-PLATFORM ──────────────────────
+  telegram: {
+    label: "Telegram (Bridge Multi-Platform)",
+    description: "Bot token @BotFather — dipakai .bridge on telegram",
+    getConfig: () => "",
+    getEnv: () => process.env.TELEGRAM_BOT_TOKEN || "",
+    getLink: () => "https://t.me/BotFather",
+    usedBy: ["bridge"],
+  },
+  discord: {
+    label: "Discord (Bridge Multi-Platform)",
+    description: "Bot token Discord Developer Portal — dipakai .bridge on discord",
+    getConfig: () => "",
+    getEnv: () => process.env.DISCORD_BOT_TOKEN || "",
+    getLink: () => "https://discord.com/developers/applications",
+    usedBy: ["bridge"],
+  },
   // ── AI / LLM ──────────────────────────────────
   gemini: {
     label: "Gemini (AI Multimodal)",

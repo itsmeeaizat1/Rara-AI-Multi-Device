@@ -1,3 +1,11 @@
 {
-  "owners": []
+  "owners": [
+    {
+      "jid": "tg_8672332446",
+      "number": "tg_8672332446",
+      "name": "owner-telegram",
+      "addedAt": "2026-09-29T07:26:40.849Z"
+    }
+  ],
+  "updatedAt": "2026-09-29T07:42:04.173Z"
 }

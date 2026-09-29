@@ -93,5 +93,13 @@
       "lastAlert": 0,
       "alertCount": 0
     }
+  },
+  "bridge": {
+    "ownerIds": {
+      "telegram": [
+        "8672332446"
+      ],
+      "discord": []
+    }
   }
 }

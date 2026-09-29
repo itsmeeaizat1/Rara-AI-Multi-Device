@@ -336,6 +336,12 @@ async function main() {
     .then((m) => m.ensureAicallRunning())
     .catch((e) => console.error("[aicall-autostart] gagal:", e?.message || e));
 
+  // 🔹 NOVA BRIDGE MULTI-PLATFORM (29 Sep 2026) — gateway Telegram & Discord
+  // nyalain otomatis kalau .bridge on sebelumnya. Fire-and-forget — bot WA tetap boot.
+  import("./src/lib/novabridge/manager.js")
+    .then((m) => m.initBridgeFromBoot())
+    .catch((e) => console.error("[novabridge] gagal init:", e?.message || e));
+
   const bootTime = Date.now() - startTime;
   logger.success("boot", `System initialized in ${bootTime}ms`);
   divider();

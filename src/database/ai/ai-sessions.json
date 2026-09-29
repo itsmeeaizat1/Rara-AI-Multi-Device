@@ -1,146 +1,24 @@
 {
-  "satuan:tester@s.whatsapp.net": [
+  "agent:tg_8672332446": [
     {
       "role": "user",
-      "content": "bikin pantun",
-      "ts": 1790329683467
+      "content": "halo",
+      "ts": 1790666475543
     },
     {
       "role": "assistant",
-      "content": "jawaban-nexai-glm-free",
-      "ts": 1790329683467
+      "content": "Halo! Ada yang bisa saya bantu hari ini? 😊",
+      "ts": 1790666486084
     },
     {
       "role": "user",
-      "content": "halo apa kabar",
-      "ts": 1790329683471
+      "content": "hai",
+      "ts": 1790667114189
     },
     {
       "role": "assistant",
-      "content": "jawaban-groq-direct",
-      "ts": 1790329683471
-    },
-    {
-      "role": "user",
-      "content": "tes lagi",
-      "ts": 1790329683477
-    },
-    {
-      "role": "assistant",
-      "content": "jawaban-nexai-glm-free",
-      "ts": 1790329683477
-    },
-    {
-      "role": "user",
-      "content": "pantun",
-      "ts": 1790329683477
-    },
-    {
-      "role": "assistant",
-      "content": "jawaban-ikyy",
-      "ts": 1790329683477
-    },
-    {
-      "role": "user",
-      "content": "bikin pantun",
-      "ts": 1790329693846
-    },
-    {
-      "role": "assistant",
-      "content": "jawaban-nexai-glm-free",
-      "ts": 1790329693846
-    },
-    {
-      "role": "user",
-      "content": "halo apa kabar",
-      "ts": 1790329693851
-    },
-    {
-      "role": "assistant",
-      "content": "jawaban-groq-direct",
-      "ts": 1790329693851
-    },
-    {
-      "role": "user",
-      "content": "tes lagi",
-      "ts": 1790329693857
-    },
-    {
-      "role": "assistant",
-      "content": "jawaban-nexai-glm-free",
-      "ts": 1790329693857
-    },
-    {
-      "role": "user",
-      "content": "pantun",
-      "ts": 1790329693857
-    },
-    {
-      "role": "assistant",
-      "content": "jawaban-ikyy",
-      "ts": 1790329693857
-    }
-  ],
-  "satuan:62812@s.whatsapp.net": [
-    {
-      "role": "user",
-      "content": "bikin pantun",
-      "ts": 1790329703988
-    },
-    {
-      "role": "assistant",
-      "content": "Siap.",
-      "ts": 1790329703988
-    },
-    {
-      "role": "user",
-      "content": "buat pantun",
-      "ts": 1790329703989
-    },
-    {
-      "role": "assistant",
-      "content": "Siap.",
-      "ts": 1790329703989
-    },
-    {
-      "role": "user",
-      "content": "panjang",
-      "ts": 1790329703989
-    },
-    {
-      "role": "assistant",
-      "content": "baris ke-0\nbaris ke-1\nbaris ke-2\nbaris ke-3\nbaris ke-4\nbaris ke-5\nbaris ke-6\nbaris ke-7\nbaris ke-8\nbaris ke-9\nbaris ke-10\nbaris ke-11\nbaris ke-12\nbaris ke-13\nbaris ke-14\nbaris ke-15\nbaris ke-16\nbaris ke-17\nbaris ke-18\nbaris ke-19\nbaris ke-20\nbaris ke-21\nbaris ke-22\nbaris ke-23\nbaris ke-24\nbaris ke-25\nbaris ke-26\nbaris ke-27\nbaris ke-28\nbaris ke-29\nbaris ke-30\nbaris ke-31\nbaris ke-32\nbaris ke-33\nbaris ke-34\nbaris ke-35\nbaris ke-36\nbaris ke-37\nbaris ke-38\nbaris ke-39\nbaris ke-40\nbaris ke-41\nbaris ke-42\nbaris ke-43\nbaris ke-44\nbaris ke-45\nbaris ke-46\nbaris ke-47\nbaris ke-48\nbaris ke-49\nbaris ke-50\nbaris ke-51\nbaris ke-52\nbaris ke-53\nbaris ke-54\nbaris ke-55\nbaris ke-56\nbaris ke-57\nbaris ke-58\nbaris ke-59\nbaris ke-60\nbaris ke-61\nbaris ke-62\nbaris ke-63\nbaris ke-64\nbaris ke-65\nbaris ke-66\nbaris ",
-      "ts": 1790329703989
-    },
-    {
-      "role": "user",
-      "content": "bikin pantun",
-      "ts": 1790330942131
-    },
-    {
-      "role": "assistant",
-      "content": "Siap.",
-      "ts": 1790330942131
-    },
-    {
-      "role": "user",
-      "content": "buat pantun",
-      "ts": 1790330942132
-    },
-    {
-      "role": "assistant",
-      "content": "Siap.",
-      "ts": 1790330942132
-    },
-    {
-      "role": "user",
-      "content": "panjang",
-      "ts": 1790330942132
-    },
-    {
-      "role": "assistant",
-      "content": "baris ke-0\nbaris ke-1\nbaris ke-2\nbaris ke-3\nbaris ke-4\nbaris ke-5\nbaris ke-6\nbaris ke-7\nbaris ke-8\nbaris ke-9\nbaris ke-10\nbaris ke-11\nbaris ke-12\nbaris ke-13\nbaris ke-14\nbaris ke-15\nbaris ke-16\nbaris ke-17\nbaris ke-18\nbaris ke-19\nbaris ke-20\nbaris ke-21\nbaris ke-22\nbaris ke-23\nbaris ke-24\nbaris ke-25\nbaris ke-26\nbaris ke-27\nbaris ke-28\nbaris ke-29\nbaris ke-30\nbaris ke-31\nbaris ke-32\nbaris ke-33\nbaris ke-34\nbaris ke-35\nbaris ke-36\nbaris ke-37\nbaris ke-38\nbaris ke-39\nbaris ke-40\nbaris ke-41\nbaris ke-42\nbaris ke-43\nbaris ke-44\nbaris ke-45\nbaris ke-46\nbaris ke-47\nbaris ke-48\nbaris ke-49\nbaris ke-50\nbaris ke-51\nbaris ke-52\nbaris ke-53\nbaris ke-54\nbaris ke-55\nbaris ke-56\nbaris ke-57\nbaris ke-58\nbaris ke-59\nbaris ke-60\nbaris ke-61\nbaris ke-62\nbaris ke-63\nbaris ke-64\nbaris ke-65\nbaris ke-66\nbaris ",
-      "ts": 1790330942132
+      "content": "Halo! Halo juga. Ada yang bisa aku bantu hari ini? Mau tanya-tanya, ngobrol, atau butuh bantuan sesuatu? Chat aja, ya.",
+      "ts": 1790667135498
     }
   ]
 }
