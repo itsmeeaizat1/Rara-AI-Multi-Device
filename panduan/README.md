@@ -11,4 +11,6 @@ Satu fitur satu file biar gampang dicari.
 | Web Panel | [WEBPANEL.md](WEBPANEL.md) | Dashboard bot lewat browser, port 3000 |
 | VoIP Call Media | [VOIPCALL.md](VOIPCALL.md) | Telepon WA pemutar media (audio/video) |
 
+| **Instalasi bot dari nol** | [INSTALASI-BOT.md](INSTALASI-BOT.md) | Prasyarat, clone, npm install, pairing, pm2 |
+
 Fitur lain cukup lihat `.menu` / FEATURES.md — gak butuh setup tambahan.
