@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// nova-voice-reply.js — SATU PINTU balasan suara (TTS msedge-tts → ogg → PTT)
+// nova-voice-reply.js — SATU PINTU balasan suara (Inworld TTS-2 neural → fallback msedge-tts → ogg → PTT)
+// (owner 29 Sep 2026: suara utama Inworld biar gak pecah; Inworld down → voice pertama msedge-tts)
 // Dipakai BANYAK FITUR (mode suara per chat, per fitur):
 //   • .novaagent pakai suara / .novaagent suara <id> (request owner 18 Sep)
 //   • .aisuperagent pakai suara (upgrade owner 18 Sep: "fitur suaraa ini jg
@@ -204,6 +205,39 @@ export function voiceFailHint(issues) {
   return "🎙️ ⚠️ Mode suara aktif tapi jawaban gak bisa dibacakan VN.\nPenyebab: " + why;
 }
 
+// ═══════════ INWORLD TTS-2 — SUARA UTAMA (owner 29 Sep 2026: "apa bsa
+// diimplementasikan suara voice agent yg suaranya pecah kyk tts baku ke
+// stt generate buatan dr ai inworld ai?") — Inworld TTS-2 neural nggantian
+// msedge-tts sebagai suara PERTAMA yang dicoba (voice custom workspace
+// owner prioritas, cross-lingual). Kalau Inworld DOWN/tanpa key/error →
+// FALLBACK ke voice pertama yang asli (msedge-tts) — owner: "klo nanti
+// inworld ai down falback ke voice prtama yg buatan".
+// ═══════════ seam e2e: undefined = asli; null = simulate Inworld down;
+// function = mock(text) → buffer ═══════════
+let _inworldTtsImpl;
+export function _setInworldVoiceTtsForTest(fn) { _inworldTtsImpl = fn; }
+
+// teks → MP3 buffer via Inworld TTS-2; return null kalau down/tanpa key
+// (PENTING: null BUKAN throw — biar speakVoiceNote lanjut ke fallback)
+async function inworldTTSBuffer(text) {
+  if (_inworldTtsImpl !== undefined) {
+    if (_inworldTtsImpl === null) return null; // simulate Inworld down
+    try { return await _inworldTtsImpl(text); } catch { return null; }
+  }
+  try {
+    const { getInworldKey, resolveDefaultVoice, inworldSynthesize } = await import("./nova-inworld.js");
+    // tanpa key → gak usah nyobain API, langsung fallback (hemat latency VN)
+    if (!getInworldKey()) return null;
+    // voice custom workspace (mis. "Aizat" buatan owner) > katalog Inworld
+    const voiceId = await resolveDefaultVoice();
+    const r = await inworldSynthesize({ text, voiceId, encoding: "MP3" });
+    return r?.buffer || null;
+  } catch (e) {
+    console.log("[VoiceReply] Inworld TTS gagal (" + (e?.message || e) + ") — fallback ke voice pertama (msedge-tts)");
+    return null;
+  }
+}
+
 // ═══════════ SATU PINTU: ucapkan teks jadi voice note (PTT) ═══════════
 // return true kalau VN sukses terkirim, false kalau gagal (pemanggil wajib
 // fallback ke balasan teks biasa).
@@ -222,8 +256,13 @@ export async function speakVoiceNote(sock, jid, text, voiceId, { quoted } = {}) 
       .slice(0, 500);
     if (!spoken) return false;
 
-    let mp3 = await edgeTTSBuffer(spoken, voice.lang);
-    if (!mp3) mp3 = await edgeTTSBuffer(spoken, VOICE_OPTIONS[1].lang); // fallback ardi
+    // 🔹 SUARA UTAMA: Inworld TTS-2 neural; kalau down/tanpa key → fallback
+    // ke voice pertama yang asli (msedge-tts) — permintaan owner 29 Sep.
+    let mp3 = await inworldTTSBuffer(spoken);
+    if (!mp3) {
+      mp3 = await edgeTTSBuffer(spoken, voice.lang);
+      if (!mp3) mp3 = await edgeTTSBuffer(spoken, VOICE_OPTIONS[1].lang); // fallback ardi
+    }
     if (!mp3) return false;
     const ogg = await convertToOgg(mp3);
     const opts = quoted ? { quoted } : {};

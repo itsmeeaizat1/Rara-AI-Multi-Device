@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // src/lib/nova-stt.js — Speech-to-Text (STT) shared helper
-// Pipeline: Gemini multimodal (kalau ada key) → OpenAI Whisper → Groq Whisper (whisper-large-v3) → null
+// Pipeline: Inworld STT-1 (utama, owner 29 Sep) → Gemini multimodal → OpenAI Whisper → Groq Whisper → null
 // Dipakai oleh: nova-auto-ai.js (fitur .autoai — respon VN), dst.
 
 import config from "../../config.js";
@@ -12,11 +12,45 @@ import { getApiKey } from "./nova-api-keys.js";
  * @param {string} mimeType - mimetype audio, default "audio/ogg; codecs=opus"
  * @returns {Promise<string|null>} teks transkripsi, atau null kalau semua pipeline gagal
  */
+// 🔹 SEAM E2E (owner 29 Sep: Inworld STT jadi pipeline utama): undefined =
+// asli (coba Inworld beneran kalau ada key); null = simulate Inworld down;
+// function = mock(buffer, mime) → transcript string.
+let _inworldSttImpl;
+export function _setInworldSttForTest(fn) { _inworldSttImpl = fn; }
+
 export async function transcribeAudio(buffer, mimeType) {
   if (!buffer || buffer.length < 500) return null;
   const mime = mimeType || "audio/ogg; codecs=opus";
   const geminiKey = String(config.aiHelp?.geminiApiKey || "");
   const openaiKey = getApiKey("aiFallback") || getApiKey("openai");
+
+  // 0) INWORLD STT (owner 29 Sep 2026: "stt generate buatan dr ai inworld ai")
+  // — pipeline UTAMA: inworld-stt-1 + voice profile. Kalau down/tanpa key →
+  // fallback ke pipeline lama (Gemini → OpenAI → Groq), gak ada yang berubah.
+  if (_inworldSttImpl !== undefined) {
+    if (_inworldSttImpl !== null) {
+      try {
+        const t = await _inworldSttImpl(buffer, mime);
+        if (t && t.trim().length > 1) return t.trim();
+      } catch {}
+    }
+    // null/throw = simulate down → lanjut pipeline lama
+  } else {
+    try {
+      const { getInworldKey, inworldTranscribe } = await import("./nova-inworld.js");
+      if (getInworldKey()) {
+        const r = await inworldTranscribe({
+          audioB64: buffer.toString("base64"),
+          encoding: "OGG_OPUS", // VN WhatsApp = ogg opus
+          language: "id",
+        });
+        const t = r?.transcript;
+        if (t && t.trim().length > 1) return t.trim();
+      }
+    } catch (e) {
+      console.log("[STT] Inworld gagal (" + (e?.message || e) + ") — fallback ke pipeline lama");
+    }
+  }
 
   // 1) Gemini multimodal — gratis & cepat kalau key diset
   if (geminiKey) {
