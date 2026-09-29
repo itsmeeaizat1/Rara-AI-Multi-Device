@@ -11,6 +11,9 @@ Instalasi script bot Nova dari nol di VPS (Ubuntu/Debian).
 | RAM | minimal 2 GB (plugin 1.900+, banyak fitur jalan bareng) |
 | CPU | minimal 150% (biar animasi + AI + game gak lag) |
 | ffmpeg + ffprobe | wajib buat fitur media/converter/voip |
+| 9router aktif | naik ke 3 GB RAM + 250% CPU + 6 GB Disk |
+| Bridge (Telegram/Discord) aktif | naik ke 3 GB RAM + 200% CPU + 6 GB Disk |
+| 9router + Bridge aktif bareng | naik ke 4 GB RAM + 300% CPU + 8 GB Disk |
 
 ```bash
 # Node.js 22
