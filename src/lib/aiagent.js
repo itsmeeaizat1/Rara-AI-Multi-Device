@@ -1137,6 +1137,21 @@ let _browserSearchForTest;
 export function _setBrowserSearchForTest(fn) { _browserSearchForTest = fn; }
 export function _clearBrowserSearchForTest() { _browserSearchForTest = undefined; }
 
+// 🔹 UPGRADE 30 Sep (owner: "klo ga tau nyari browsing lewat puppeteer") —
+// seam BUKA HALAMAN chromium (browserPageFacts). Semantik sama: function =
+// mock; null = DISABLED (e2e); undefined = chromium asli
+let _browserFactsForTest;
+export function _setBrowserFactsForTest(fn) { _browserFactsForTest = fn; }
+export function _clearBrowserFactsForTest() { _browserFactsForTest = undefined; }
+async function browserFactsFallback(url) {
+  if (typeof _browserFactsForTest === "function") return _browserFactsForTest(url);
+  if (_browserFactsForTest === null) return null;
+  try {
+    const { browserPageFacts } = await import("../scraper/nova-web-browser.js");
+    return await browserPageFacts(url);
+  } catch { return null; }
+}
+
 // 🔹 FALLBACK CHROMIUM (owner report 17 Sep 2026: "carikan berita makanan
 // mbg beracun" dijawab "saya tidak tahu" — engine scrape Bing/DDG/Brave
 // balikin SERP SAMPAH dari IP datacenter (tailor/ads page) → lowRelevance
@@ -1161,6 +1176,20 @@ async function _sourcesFromItems(res, query, readTop) {
       new Promise((resolve) => setTimeout(() => resolve(null), 8000)),
     ]).catch(() => null)
   ));
+  // 🔹 UPGRADE 30 Sep: halaman ngeblok fetch biasa (datacenter block / butuh
+  // JS) → BUKA BENERAN via chromium (browserPageFacts) — snippet doang bikin
+  // AI jawab tipis, isi halaman nyata bikin jawaban nyambung
+  for (let i = 0; i < top.length; i++) {
+    const p = pages[i];
+    if (p && p.text && String(p.text).trim()) continue;
+    try {
+      const facts = await Promise.race([
+        browserFactsFallback(top[i].url),
+        new Promise((resolve) => setTimeout(() => resolve(null), 15000)),
+      ]).catch(() => null);
+      if (facts?.text) pages[i] = { title: facts.title, text: facts.text };
+    } catch {}
+  }
   let sources = top.map((it, i) => {
     const p = pages[i];
     const body = (p && !p.error && p.text && String(p.text).trim()) ? String(p.text).slice(0, 900) : (it.snippet || "");
@@ -1329,7 +1358,20 @@ ${ctx.webSearch}
 WAJIB: user minta MENCARI/menemukan sesuatu dari internet dan hasil pencarian nyata ada di atas — jawab dari hasil pencarian itu. Set "tool" ke null dan "execCommand" ke null, JANGAN pakai createfile/genimage (itu buat MEMBUAT barang baru, user minta MENCARI yang sudah ada). Sebutin sumber yang relevan secara natural.`
     : ''
 
-  return sys + memorySection + webSearchSection
+  // 🔹 UPGRADE 30 Sep (owner: "biar ai agent gak kaku — pakai kecerdasan dia
+  // dulu, klo ga tau nyari browsing") — aturan kecerdasan-dulu + anti-nyerah:
+  // pertanyaan yang diketahui & stabil dijawab dari nalar sendiri; info baru
+  // udah otomatis ke-search engine-nya; hasil gak nemu → WAJIB jawab dari
+  // pengetahuan internal + catatan, JANGAN menyerah
+  const intelligenceSection = `
+
+== KECERDASAN DULU, BROWSING KALAU GA TAU ==
+- Pertanyaan yang kamu KETAHUI dan stabil (pengetahuan umum, konsep, matematika, opini, konsultasi) → jawab langsung dari kecerdasanmu sendiri, susun jawaban yang NYAMBUNG (analisa + hubungan antar info + kesimpulan), bukan fakta mentah.
+- Info baru/real-time sudah otomatis dicari ke internet oleh engine sebelum giliranmu — kalau ada blok "HASIL PENCARIAN WEB TERKINI" di atas, WAJIB jawab dari situ.
+- Kalau TIDAK ada blok hasil pencarian (pencarian gagal / gak nemu) → JANGAN bilang "saya tidak tahu / saya tidak bisa mencari" mentah-mentah. WAJIB jawab sebaik mungkin dari pengetahuan internalmu, lalu tambahkan SATU catatan singkat di akhir bahwa infonya mungkin tidak paling terkini.
+- Jangan ngarang data spesifik (angka/harga/nama rilisan baru) yang kamu gak yakin — jawab kerangkanya dari pengetahuanmu + tandai bagian yang perlu diverifikasi.`
+
+  return sys + intelligenceSection + memorySection + webSearchSection
 }
 
 // 🔹 AI AGENT: think() — nerjemahin bahasa manusia jadi perintah tool (JSON)
