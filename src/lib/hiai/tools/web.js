@@ -1,4 +1,5 @@
 import { ctx, MODELS, captureWebsiteScreenshot, createGeminiClient, detectPlatform, fetchWebsiteHtmlFallback, getNextKey, getPersonality, peekAnalyzeWithVision, peekFetchBuffer, peekFetchVideoBuffer, searchWebGrounded } from '../mcp.js';
+import { browserWebSearch, browserPageFacts } from '../../../scraper/nova-web-browser.js';
 import fs from 'fs'
 
 export default [
@@ -291,6 +292,39 @@ export default [
         } catch (e) {
             console.warn(`[search_web] Error: ${e.message}`)
             return `Search gagal: ${e.message}. Jawab dari pengetahuanmu dan tandai bahwa info mungkin tidak terkini.`
+        }
+    }
+},
+{
+    name: 'browse_web',
+    description: 'BROWSING BENERAN pakai chromium/puppeteer di server — bisa DUA mode dari satu tool: (1) MODE CARI: kasih kata kunci pencarian (bukan URL) → cari di web via DuckDuckGo (chromium nyata, gak lewat API grounding) dan balikin daftar hasil {judul, url, snippet}; (2) MODE BUKA: kasih URL lengkap → buka halamannya di chromium beneran, sedot judul + deskripsi + isi teks utama halaman. PAKAI INI kalau: search_web gagal/limit/tidak tersedia, kamu butuh ISI HALAMAN lengkap (bukan cuma snippet grounding), halaman butuh browser beneran buat kebuka (site search, halaman berat/JS), atau kamu udah dapat URL dari hasil cari dan mau baca isinya. Alur bagus: browse_web("kata kunci") → pilih hasil paling relevan → browse_web("<url hasilnya>") → jawab user. Tool ini GRATIS (tanpa API key, tanpa limit) dan bisa dipanggil BERULANG (multi-langkah) — jangan ragu buka 2-3 halaman kalau hasil pertama kurang nyambung.',
+    parameters: {
+        query_or_url: { type: 'string', description: 'Kata kunci pencarian (mode cari) ATAU URL lengkap http(s) (mode buka). Kalau inputnya bukan URL, otomatis dianggap kata kunci pencarian.', required: true },
+        focus: { type: 'string', description: 'Apa yang dicari/diinginkan dari halaman ini (opsional — hanya buat konteks, isi halaman tetap dikirim penuh untuk kamu olah dengan nalar sendiri)', required: false }
+    },
+    execute: async ({ query_or_url, focus }) => {
+        const input = String(query_or_url || '').trim()
+        if (!input) return 'Input kosong — kasih kata kunci pencarian atau URL.'
+
+        const isUrl = /^https?:\/\//i.test(input)
+        try {
+            if (isUrl) {
+                const facts = await browserPageFacts(input)
+                const parts = [`[ISI HALAMAN: ${input}]`]
+                if (facts.title) parts.push(`Judul: ${facts.title}`)
+                if (facts.description) parts.push(`Deskripsi: ${facts.description}`)
+                if (focus) parts.push(`Fokus pencarian user: ${focus}`)
+                parts.push(`Isi halaman:\n${facts.text || '(halaman tidak punya teks yang bisa dibaca)'}`)
+                const out = parts.join('\n')
+                return out + '\n\n[Olah isi di atas pakai nalar kamu, jawab pertanyaan user secara natural. Kalau isinya kurang, panggil browse_web lagi dengan query atau URL lain.]'
+            }
+            const items = await browserWebSearch(input, { limit: 8 })
+            if (!items || !items.length) return 'Tidak ada hasil untuk pencarian itu. Coba kata kunci lain atau jawab dari pengetahuanmu dengan catatan info mungkin tidak terkini.'
+            const list = items.map((it, i) => `${i + 1}. ${it.title}\n   ${it.url}\n   ${it.snippet || ''}`).join('\n')
+            return `[HASIL PENCARIAN WEB untuk "${input}" — ${items.length} hasil, browsing via chromium:]\n${list}\n\n[Pilih hasil yang paling nyambung dengan pertanyaan user, lalu panggil browse_web lagi dengan URL hasilnya buat baca isi lengkapnya, TERUS jawab user secara natural. Kalau snippet udah cukup buat jawab, boleh langsung jawab tanpa buka halaman.]`
+        } catch (err) {
+            console.warn(`[browse_web] Error: ${err.message}`)
+            return `Browsing gagal: ${err.message}. Alternatif: coba kata kunci/URL lain, pakai search_web (grounding), atau jawab dari pengetahuanmu dengan catatan info mungkin tidak terkini.`
         }
     }
 }
