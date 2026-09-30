@@ -49,5 +49,25 @@ ok("cmd hiaiagent (beda dari ai/novaagent/mcp)", mod.config.name === "hiaiagent"
 ok("owner-only (anti penyalahgunaan)", mod.config.isOwner === true);
 ok("alias gak bentrok novaagent/mcp/ai", (mod.config.alias || []).every((a) => !["ai", "novaagent", "mcp", "aichat"].includes(a)), JSON.stringify(mod.config.alias));
 
+// 7. REGRESI BUG (30 Sep 2026): "Cannot read properties of undefined (reading
+// '<jid>')" di ensureChatSlot/getSession — akar: db.data.chats sendiri belum
+// tentu ada (db fresh/JSON tanpa key "chats"), ensureChatSlot cuma cek db.data
+// lalu langsung index db.data.chats[jid] tanpa cek db.data.chats dulu.
+// Reproduksi persis skenario user: hapus key chats, panggil getSession.
+delete db.data.chats;
+db.write();
+let threwChatSlot = false, sess;
+try {
+  sess = mcp.getSession("628174887770@s.whatsapp.net");
+} catch (e) { threwChatSlot = true; }
+ok("getSession gak throw walau db.data.chats belum ada (fresh db)", !threwChatSlot && Array.isArray(sess), threwChatSlot ? "THREW" : typeof sess);
+ok("db.data.chats ke-inisialisasi otomatis jadi object", typeof db.data.chats === "object" && db.data.chats !== null);
+ok("slot jid ke-buat dengan aiSessionChat array", Array.isArray(db.data.chats["628174887770@s.whatsapp.net"]?.aiSessionChat));
+// resetSession juga harus aman walau slot belum ada
+delete db.data.chats;
+let threwReset = false;
+try { mcp.resetSession("000@s.whatsapp.net"); } catch (e) { threwReset = true; }
+ok("resetSession gak throw walau chats belum ada & jid belum ada slot", !threwReset);
+
 console.log(`─── hasil: ${pass}/${total} ${pass === total ? "PASSED ✓" : "ADA YANG GAGAL ✗"} ───`);
 process.exit(pass === total ? 0 : 1);
