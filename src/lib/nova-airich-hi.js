@@ -12,6 +12,33 @@ import sharp from 'sharp';
 import { resolveBaileysModule } from './hivoip/shim/baileys-resolve.js';
 
 const execFileAsync = util.promisify(execFile);
+
+// ── VERIFICATION METADATA (BUGFIX 30 Sep 2026) ──────────────────────────────
+// AKAR ".aicard gak render — WA nunjukin 'Diteruskan' + 'tidak bisa
+// memverifikasi keamanan media ini'": port UTUH engine asal INI GAK PERNAH
+// nyertain messageContextInfo.botMetadata.verificationMetadata sama sekali.
+// Riwayat 14-17 Sep di engine airich LAMA (NIXCODE, sudah dihapus) sudah
+// KETEMU + KEBUKTIAN via AIRICH_MODE eksperimen: WA client cuma nampilin
+// UI kartu GenAI kalau verificationMetadata.proofs (signature + certificateChain)
+// ADA — isinya OPAK/gak divalidasi kriptografis beneran oleh client, tapi
+// STRUKTURNYA WAJIB ada. Tanpa itu WA nganggep pesan gak dikenal → fallback
+// jadi "media gak diverifikasi" + label Diteruskan. Pola sama dipertahankan
+// di sini: signature & tiap entri certificateChain = padding random bytes
+// nempel di belakang string material NIXEL MessageBuilderV4.7 verbatim.
+export function generateVerificationMetadata() {
+    const sigMat = Buffer.from('NIXEL.MessageBuilderV4.7-VerificationSignature.Metadata');
+    const certMat = Buffer.from('NIXEL.MessageBuilderV4.7-CertificateChain.Metadata');
+    const signature = Buffer.concat([sigMat, crypto.randomBytes(Math.max(0, 64 - sigMat.length))]).toString('base64');
+    const certificateChain = [
+        Buffer.concat([certMat, crypto.randomBytes(Math.max(0, 684 - certMat.length))]).toString('base64'),
+        Buffer.concat([certMat, crypto.randomBytes(Math.max(0, 892 - certMat.length))]).toString('base64'),
+    ];
+    return {
+        proofs: [
+            { version: 1, useCase: 'WA_BOT_MSG', signature: Buffer.from(signature, 'base64'), certificateChain },
+        ],
+    };
+}
 const FFMPEG_PATH = process.env.FFMPEG_PATH || '/usr/bin/ffmpeg';
 const FFPROBE_PATH = process.env.FFPROBE_PATH || '/usr/bin/ffprobe';
 
@@ -1014,6 +1041,7 @@ class AIRich extends BaseBuilder {
 				botMetadata: {
 					messageDisclaimerText: this._title,
 					richResponseSourcesMetadata: { sources: this._richResponseSources },
+					verificationMetadata: generateVerificationMetadata(),
 					...notif,
 				},
 			},

@@ -6,7 +6,7 @@ const R = path.resolve(process.cwd());
 let pass = 0, fail = 0, total = 0;
 const ok = (name, cond, extra) => { total++; if (cond) { pass++; console.log("  ✓ " + name); } else { fail++; console.log("  ❌ " + name + (extra ? " → " + String(extra).slice(0, 170) : "")); } };
 
-const { AIRich } = await import(pathToFileURL(R + "/src/lib/nova-airich-hi.js").href);
+const { AIRich, generateVerificationMetadata } = await import(pathToFileURL(R + "/src/lib/nova-airich-hi.js").href);
 const hiaiagent = await import(pathToFileURL(R + "/plugins/ai-agent/hiaiagent.js").href);
 
 console.log("─── 1. engine AIRich (port simple.js engine asal) ───");
@@ -19,6 +19,22 @@ ok("AIRich class ada (engine utuh)", typeof AIRich === "function");
   const sent = await rich.send("c1@s.whatsapp.net", { quoted: { key: { id: "q1" } } });
   ok("send → relayMessage terpanggil ke jid benar", sent === "sent" && relayed?.jid === "c1@s.whatsapp.net");
   ok("payload relay berisi pesan GenAI (bukan kosong)", !!relayed?.msg && JSON.stringify(relayed.msg).length > 50, relayed?.msg ? undefined : "msg kosong");
+}
+
+console.log("─── 1b. REGRESI BUG (30 Sep 2026): .aicard nunjuk 'Diteruskan + tidak bisa memverifikasi' di WA asli ───");
+{
+  const vm = generateVerificationMetadata();
+  ok("generateVerificationMetadata: proofs ada isinya", Array.isArray(vm?.proofs) && vm.proofs.length === 1);
+  ok("proof punya signature (Buffer) & certificateChain (2 entri base64)", Buffer.isBuffer(vm.proofs[0].signature) && Array.isArray(vm.proofs[0].certificateChain) && vm.proofs[0].certificateChain.length === 2);
+  ok("useCase enum valid WA_BOT_MSG (bukan placeholder mentah)", vm.proofs[0].useCase === "WA_BOT_MSG");
+
+  let relayed3 = null;
+  const fakeConn3 = { relayMessage: async (jid, msg) => { relayed3 = msg; return "sent"; } };
+  const rich3 = new AIRich(fakeConn3);
+  rich3.addText("halo semua");
+  await rich3.send("c1@s.whatsapp.net", {});
+  const botMeta = relayed3?.messageContextInfo?.botMetadata;
+  ok("build() SELALU nyertain verificationMetadata (akar bug: dulu gak ada sama sekali)", !!botMeta?.verificationMetadata?.proofs?.length, JSON.stringify(botMeta));
 }
 
 console.log("─── 2. .hiaiagent renderRichResult ───");
