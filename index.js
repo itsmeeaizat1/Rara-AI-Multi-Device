@@ -467,6 +467,7 @@ async function main() {
           { name: "AutoResource", fn: () => import("./plugins/owner/autoresource.js").then(m => m.startAutoResource?.(sock)) },
           { name: "ChannelHub", fn: () => import("./src/lib/nova-saluran-hub.js").then(m => m.initSaluranHubScheduler?.(sock)) },
           { name: "Doctor", fn: () => import("./src/lib/nova-doctor.js").then(m => m.initDoctorMonitor?.(sock)) },
+          { name: "ChatRevive", fn: () => import("./src/lib/nova-chat-revive.js").then(m => m.initChatReviveScheduler?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
