@@ -5,6 +5,7 @@ import { enrichAiSatuan } from "./lib/nova-ai-satuan-rich.js";
 import fs from "fs";
 import path from "path";
 import { serialize } from "./lib/nova-serialize.js";
+import { noteChatActivity } from "./lib/nova-chat-revive.js";
 import { getPlugin, pluginStore } from "./lib/nova-plugins.js";
 import { recordPluginExecution, postExecutionCheck } from "./lib/nova-plugin-health-hook.js";
 import { getDatabase } from "./lib/nova-database.js";
@@ -126,6 +127,14 @@ async function messageHandler(msg, sock, jadibotCtx = {}) {
 
   // Statistik realtime: tiap pesan masuk dihitung (semua user, termasuk owner)
   try { db.incrementStat("messagesReceived"); } catch {}
+
+  // === ChatRevive: catat aktivitas MANUSIA per grup (.chatrevive) ===
+  // Penanda "grup masih hidup" buat fitur revive grup sepi. Cuma pesan
+  // non-bot, semua platform (WA + bridge TG lewat sini juga). Silent-fail
+  // — fitur ini gak boleh ganggu jalurnya pesan.
+  try {
+    if (!m.fromMe) noteChatActivity(m.chat);
+  } catch {}
 
   // === Mode PC/GC Only — gate fitur yang bikin bot "ngobrol" (autoflow,
   // autoAI, autoRole) supaya mode beneran dituruti, BUKAN cuma command.
