@@ -719,6 +719,13 @@ function ensureChatSlot(jid) {
     if (!db?.data) {
         throw new Error('[Session] db.data belum siap saat getSession() dipanggil — pastikan db sudah di-load (mis. await db.read()) sebelum mcp.js dipakai.');
     }
+    // BUGFIX (30 Sep 2026): db.data.chats sendiri belum tentu ada (db fresh /
+    // file JSON belum punya key "chats") — indexing db.data.chats[jid] LANGSUNG
+    // tanpa cek ini bikin "Cannot read properties of undefined (reading '<jid>')".
+    // Symptom nyata: .hiaiagent selalu error di WA walau .hiai lama gak masalah.
+    if (!db.data.chats) {
+        db.data.chats = {};
+    }
     if (!db.data.chats[jid])
         db.data.chats[jid] = {};
     if (!Array.isArray(db.data.chats[jid].aiSessionChat)) {
