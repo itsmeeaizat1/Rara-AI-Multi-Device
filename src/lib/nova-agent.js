@@ -424,7 +424,15 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
       : "";
     let answer = "";
     try {
-      answer = await aiChat(`Tugas/pesan user: ${task}${histBlock}${mem}${skl}`, { systemPrompt: personaPrompt(persona) });
+      // 🔹 FIX 30 Sep (owner report: AI autoflow "kyk ngbaca index atau log,
+      // bukan ngbaca yg ada di chat") — skl (PANDUAN SPESIALIS, isi dokumen
+      // skill utuh ribuan baris) WAJIB GAK masuk ke jawaban PERSONA: kata
+      // sepele kayak "index"/"log"/"error" di chat santai bikin skillsBlock
+      // nyuntik dokumen spesialis gak nyambung, lalu model DAUR ULANG isi
+      // dokumen itu alih-alih isi percakapan. Persona = jawab dari
+      // kecerdasan + memori + riwayat chat. skl tetep kepakai di plan/tools/
+      // research (memang konteks tugas).
+      answer = await aiChat(`Tugas/pesan user: ${task}${histBlock}${mem}`, { systemPrompt: personaPrompt(persona) });
     } catch {}
     if (!answer || !String(answer).trim()) {
       return { error: "AI-nya lagi sibuk, coba lagi bentar ya 🙏" };
