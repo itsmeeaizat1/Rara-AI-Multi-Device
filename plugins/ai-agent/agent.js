@@ -579,7 +579,20 @@ function buildExecutors(m, sock, db, mediaBuffer, deps = {}, onStatus = null) {
     if (!/^https?:\/\//i.test(url)) return { ok: false, msg: "Kasih link URL-nya (http/https)" };
     try {
       const { fetchPagePreview } = await import("../../src/lib/nova-websearch.js");
-      const page = await fetchPagePreview(url);
+      let page = await fetchPagePreview(url).catch(() => null);
+      // 🔹 UPGRADE 30 Sep (owner: "klo ga tau browsing lewat puppeteer") —
+      // halaman ngeblok fetch biasa / butuh JS → buka BENERAN di chromium
+      // (browserPageFacts) — pola fallback sama kayak search engine-nya
+      if (!page?.text || !String(page.text).trim()) {
+        try {
+          const { browserPageFacts } = await import("../../src/scraper/nova-web-browser.js");
+          const facts = await Promise.race([
+            browserPageFacts(url),
+            new Promise((resolve) => setTimeout(() => resolve(null), 25000)),
+          ]);
+          if (facts?.text) page = { title: facts.title, description: facts.description, text: facts.text };
+        } catch {}
+      }
       const body = String(page?.text || "").trim();
       if (!body) return { ok: false, msg: "Halaman gak kebaca: " + (page?.error || "kosong / butuh javascript") };
       const head = page?.title ? "Judul: " + page.title + (page.description ? "\n" + page.description : "") + "\n\n" : "";

@@ -94,12 +94,17 @@ w("\n— degradasi: compose gagal → digest lokal —");
   check("digest kasih link", r.answer.includes("https://"));
 }
 
-w("\n— search gagal total → error —");
+w("\n— search gagal total → jawab dari pengetahuan internal (anti-nyerah 30 Sep) —");
 {
   resetAgentDeps();
-  mkDeps({ searchOk: false, browserSearch: null });
+  const calls = mkDeps({ searchOk: false, browserSearch: null });
   const r = await runAgent("tes", {});
-  check("error hasil kosong", !!r.error && r.error.includes("pencarian"));
+  // 🔹 UPGRADE 30 Sep: pool kosong + chromium gagal ≠ error mentah — agent
+  // WAJIB jawab dari pengetahuan model + catatan jujur viaKnowledge: true
+  check("jawab via pengetahuan internal", r.viaKnowledge === true && !!r.answer && !r.error);
+  // mock aiChat balas fixed text — verifikasi instruksi "jawab dari pengetahuan
+  // + catatan jujur" emang dikirim engine ke prompt komposisi
+  check("instruksi pengetahuan internal ke-kirim", calls.ai.some(c => /PENGETAHUANMU SENDIRI/i.test(String(c.p || "")) && /tidak paling baru/i.test(String(c.p || ""))));
 }
 
 // 🔹 NEW 17 Sep: search engine gagal → FALLBACK CHROMIUM nyelametin riset

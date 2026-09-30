@@ -80,6 +80,22 @@ async function _browserSearchRun(query, limit) {
   } catch { return null; }
 }
 
+// 🔹 UPGRADE 30 Sep 2026 (owner: "klo dia ga tau dia nyari browsing lewat
+// puppeteer") — BUKA HALAMAN via chromium beneran (browserPageFacts) buat
+// fallback baca halaman yang ngeblok fetch biasa / butuh JS. Semantik seam
+// sama _browserSearch: function = mock; null = DISABLED; undefined = asli.
+let _browserFacts;
+export function setBrowserFacts(fn) { _browserFacts = fn; }
+export function _resetBrowserFacts() { _browserFacts = undefined; }
+export async function _browserFactsRun(url) {
+  if (typeof _browserFacts === "function") return _browserFacts(url);
+  if (_browserFacts === null) return null;
+  try {
+    const { browserPageFacts } = await import("../scraper/nova-web-browser.js");
+    return await browserPageFacts(url);
+  } catch { return null; }
+}
+
 // ── util ──
 function domainOf(url) {
   try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return String(url); }
@@ -475,7 +491,29 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
   }
   steps.push({ phase: "search", ok: pool.length > 0, hasil: pool.length });
   if (!pool.length) {
-    return { error: "hasil pencarian kosong — semua mesin search sibuk, coba lagi bentar" };
+    // 🔹 UPGRADE 30 Sep (owner: "biar gak kaku — pakai kecerdasan dia dulu,
+    // jangan nyerah") — pool kosong SETELAH chromium fallback ≠ error mentah:
+    // agent jawab dari pengetahuan internal model + catatan jujur. Research
+    // boleh gagal, jawaban tetep ada.
+    phase("compose");
+    let kbAnswer = "";
+    try {
+      kbAnswer = await aiChat(`Tugas user: ${task}${mem}${skl}\n\nPENCARIAN WEB GAGAL SEMUA (semua mesin search + chromium tidak menemukan hasil). Jawab tugas ini dari PENGETAHUANMU SENDIRI sebaik mungkin. Di akhir jawaban WAJIB tambahkan SATU kalimat catatan jujur bahwa info ini berasal dari pengetahuan internal (bukan hasil pencarian web terkini) jadi kemungkinan tidak paling baru. JANGAN bilang tidak bisa/tidak tahu mentah-mentah.`, { systemPrompt: SYS_ANSWER });
+    } catch {}
+    kbAnswer = String(kbAnswer || "").trim();
+    steps.push({ phase: "compose", ok: !!kbAnswer, viaKnowledge: true, halaman: 0 });
+    if (!kbAnswer) {
+      return { error: "hasil pencarian kosong — semua mesin search sibuk, coba lagi bentar" };
+    }
+    return {
+      mode: "research",
+      answer: stripMarkdownTables(kbAnswer),
+      queries,
+      sources: [],
+      steps,
+      voice: !!plan?.voice,
+      viaKnowledge: true,
+    };
   }
 
   // ── FASE 3: PICK — AI milih halaman paling relevan ──
@@ -503,6 +541,18 @@ export async function runAgent(task, { onPhase, act, execTools, history, context
     phase("read", p.domain);
     let pv = null;
     try { pv = await _preview(p.url); } catch {}
+    // 🔹 UPGRADE 30 Sep: halaman ngeblok fetch biasa / butuh JS → BUKA
+    // BENERAN via chromium (browserPageFacts) — jangan nyerah cuma gara2
+    // axios diblokir halamannya (pola fallback _browserSearchRun)
+    if (!pv?.text) {
+      try {
+        const facts = await Promise.race([
+          _browserFactsRun(p.url),
+          new Promise((resolve) => setTimeout(() => resolve(null), 20000)),
+        ]);
+        if (facts?.text) pv = { title: facts.title, description: facts.description, text: facts.text };
+      } catch {}
+    }
     if (pv?.text) {
       reads.push({ ...p, text: String(pv.text).slice(0, PAGE_TEXT_CAP) });
     }
