@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .fakemsg — ganti tampilan teks pesan yang di-reply (port HIROBOT fakemsg.js)
+// Plugin .fakemsg — ganti tampilan teks pesan yang di-reply (port engine lama fakemsg.js)
 import { delay } from "nova";
 import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
 

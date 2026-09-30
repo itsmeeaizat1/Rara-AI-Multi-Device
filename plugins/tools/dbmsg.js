@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .addmsg/.getmsg/.delmsg/.listmsg — bank pesan tersimpan (port HIROBOT dbmsg.js)
+// Plugin .addmsg/.getmsg/.delmsg/.listmsg — bank pesan tersimpan (port engine lama dbmsg.js)
 // Simpan pesan (vn/video/sticker/img/teks) dengan nama, panggil kembali kapan pun.
 import fs from "fs";
 import path from "path";

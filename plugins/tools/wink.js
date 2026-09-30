@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .wink — enhance/restorasi foto AI Meitu (port HIROBOT wink.js, tanpa key)
+// Plugin .wink — enhance/restorasi foto AI Meitu (port engine lama wink.js, tanpa key)
 import crypto from "crypto";
 import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 

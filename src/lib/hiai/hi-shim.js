@@ -1,5 +1,5 @@
-// hiro-shim.js — matchParticipant versi ringkas (port dari HIROBOT lib/utils/simple.js)
-// Versi sederhana: cocokkan jid & nomor polos (tanpa normalizeParticipant Hiro).
+// hi-shim.js — matchParticipant versi ringkas (port dari lib/utils/simple.js engine asal)
+// Versi sederhana: cocokkan jid & nomor polos (tanpa normalizeParticipant engine asal).
 export function decodeJid(jid) {
   if (!jid || typeof jid !== 'string') return jid;
   const [number] = jid.split('@');

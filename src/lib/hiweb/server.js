@@ -8,9 +8,9 @@ import { createHash, randomBytes, scrypt, timingSafeEqual } from 'crypto'
 import { promisify } from 'util'
 import { lookup as dnsLookup } from 'dns/promises'
 import { isIP } from 'net'
-import db, { loadDatabase } from "./hiro-web-db.js"
-import chalk from "./hiro-web-chalk.js"
-import axios from "./hiro-web-axios.js"
+import db, { loadDatabase } from "./hi-web-db.js"
+import chalk from "./hi-web-chalk.js"
+import axios from "./hi-web-axios.js"
 
 // ==================== minimal WebSocket server (replaces the 'ws' package) ====================
 // RFC 6455 implementation on node:http + node:crypto. Covers only what this file

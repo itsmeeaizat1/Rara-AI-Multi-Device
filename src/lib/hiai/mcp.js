@@ -629,11 +629,11 @@ const axios = {
     post: (url, data, cfg = {}) => _req('POST', url, { ...cfg, body: data }),
     head: (url, cfg = {}) => _req('HEAD', url, { ...cfg }),
 };
-import db from './hiro-db.js';
-import { matchParticipant } from './hiro-shim.js';
+import db from './hi-db.js';
+import { matchParticipant } from './hi-shim.js';
 import { getApiKeys as getNovaApiKeys } from '../config/env-loader.js';
 
-// ── SHIM NOVA: global Hiro gak ada di Nova — sediakan default aman ──
+// ── SHIM NOVA: global engine gak ada di Nova — sediakan default aman ──
 if (!global.settings) global.settings = { botname: 'Nova AI', owner: [], prefix: '.', ai: {}, timezone: 'Asia/Jakarta' };
 if (!global.prefix) global.prefix = '.';
 if (!global.timezone) global.timezone = 'Asia/Jakarta';
@@ -834,7 +834,7 @@ export function getApiKeys() {
     let envRaw = process.env.AI_KEYS || '';
     try {
         const novaKeys = getNovaApiKeys();
-        const val = novaKeys.hiai || novaKeys.hiroai || '';
+        const val = novaKeys.hiai || '';
         if (val) {
             const joined = Array.isArray(val) ? val.join(',') : String(val);
             envRaw = envRaw ? `${envRaw},${joined}` : joined;

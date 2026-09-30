@@ -1,7 +1,7 @@
 # ☎️ Panduan VOIPCALL — Telepon WA Pemutar Media
 
 `.voipcall` = bot nelepon orang dan **muter media** (audio/video) di
-dalam panggilan. Port ke-3 HIROBOT (engine `src/lib/hirovoip/`), owner-only.
+dalam panggilan. Engine `src/lib/hivoip/`, owner-only.
 
 ## 1. Prasyarat (WAJIB di VPS)
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .aicheck — detektor teks AI (port HIROBOT aicheck.js, originality.ai free)
+// Plugin .aicheck — detektor teks AI (port engine lama aicheck.js, originality.ai free)
 import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {

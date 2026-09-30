@@ -1,5 +1,5 @@
-// NOVA AI RICH GENAI CARD ENGINE (nova-airich-hiro.js)
-// Port dari HIROBOT (HirooSy) — credit asli: class AIRich di lib/utils/simple.js
+// NOVA AI RICH GENAI CARD ENGINE (nova-airich-hi.js)
+// Port engine lama — credit asli: class AIRich di lib/utils/simple.js
 // Kartu GenAI native WhatsApp (GenAIMarkdownTextUXPrimitive) gaya Meta AI:
 // markdown, code block tersorot, citation, LaTeX [expr]<url>, hyperlink — via relayMessage.
 // PENDAMPING (BUKAN PENGGANTI) src/lib/nova-airich.js (engine NIXCODE HTML bubble
@@ -170,7 +170,7 @@ async function waitAllPromises(input) {
 }
 
 
-// Toolkit minimal — versi ramping dari Toolkit HIROBOT (tanpa jimp/ffmpeg)
+// Toolkit minimal — versi ramping dari toolkit engine asal (tanpa jimp/ffmpeg)
 class Toolkit {
 	constructor() {}
 	static extractIE(text, opts = {}) {

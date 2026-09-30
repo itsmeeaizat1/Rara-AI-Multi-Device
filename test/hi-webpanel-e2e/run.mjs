@@ -1,4 +1,4 @@
-// E2E hiro-webpanel — web dashboard port HIROBOT + plugin .webpanel
+// E2E hi-webpanel — web dashboard + plugin .webpanel
 let pass = 0, total = 0;
 function ok(name, cond, detail = "") {
   total++;
@@ -7,7 +7,7 @@ function ok(name, cond, detail = "") {
 }
 console.log("─── HIRO WEBPANEL e2e ───");
 
-const mod = await import("../../src/lib/hiroweb/server.js");
+const mod = await import("../../src/lib/hiweb/server.js");
 ok("engine server ke-import (export default connect)", typeof mod.default === "function");
 
 // boot nyata + fetch halaman
@@ -27,7 +27,7 @@ ok("server close bersih", true);
 const plugin = await import("../../plugins/owner/webpanel.js");
 ok("plugin .webpanel config & handler", !!plugin.config?.name && typeof plugin.handler === "function");
 ok("owner-only", plugin.config.isOwner === true);
-ok("alias dashboard/hiroweb", (plugin.config.alias || []).includes("dashboard"));
+ok("alias dashboard/hiweb", (plugin.config.alias || []).includes("dashboard"));
 
 // usage tanpa arg → guide
 let replied = null;
