@@ -4,6 +4,7 @@
 
 ### Pertanyaan owner
 > "cek fitur auto loker itu fiturnya beneran notif loker dr indonesia ga kyk lowongan kerja indonesia"
+- **RESET RULE AUTOFLOW BEKAS TESTING (30 Sep 2026, fix):** owner report "default pairing harusnya rule kosong". Snapshot DB (policy 27 Sep: ikut di-push ke repo private) nyempit 12 rule bekas testing di src/database/ai/autoflow.json (AF-001..AF-011 chat dummy test@g.us/y@g.us dobel-dobel + AF-013 trigger any/scope all persona anak kecil — biang autoflow nyepam nyambar semua chat) dan hiai-db.json berisi test junk. DIRESET: autoflow.json jadi [] , hiai-db.json jadi {} — fresh pairing kini beneran mulai dari rule kosong; rule cuma ada kalau dibikin via .setanovaagent. E2E autoflow-aichat 13/13 + hiaiagent 15/15 + anova-suara 34/34.
 
 ### Temuan: 4 portal Indonesia SEMUA mati
 | Sumber | Hasil uji langsung |
