@@ -1,11 +1,48 @@
 // NOVA AI RICH GENAI CARD ENGINE (nova-airich-hi.js)
-// Port engine lama — credit asli: class AIRich di lib/utils/simple.js
-// Kartu GenAI native WhatsApp (GenAIMarkdownTextUXPrimitive) gaya Meta AI:
-// markdown, code block tersorot, citation, LaTeX [expr]<url>, hyperlink — via relayMessage.
-// PENDAMPING (BUKAN PENGGANTI) src/lib/nova-airich.js (engine NIXCODE HTML bubble
-// buat .plane/.googleairich/.youtubeairich — JANGAN ditimpa!). Engine ini self-contained.
-
+// Port UTUH class AIRich + BaseBuilder + Toolkit + extractIE + waitAllPromises
+// (credit asli: lib/utils/simple.js engine asal) — kartu GenAI native WhatsApp:
+// markdown, code block tersorot, citation, LaTeX, hyperlink, table, image, video, reels, html — via relayMessage.
+// Versi ramping lama DIGANTI TOTAL dengan port utuh ini (owner 30 Sep: versen ramping ga work).
+// Adaptasi Nova: baileys lewat resolver shim (kandidat 'nova' dulu), jimp.resize → shim sharp.
+import fs from 'node:fs';
+import util from 'node:util';
+import { execFile, spawn } from 'node:child_process';
 import crypto from 'node:crypto';
+import sharp from 'sharp';
+import { resolveBaileysModule } from './hivoip/shim/baileys-resolve.js';
+
+const execFileAsync = util.promisify(execFile);
+const FFMPEG_PATH = process.env.FFMPEG_PATH || '/usr/bin/ffmpeg';
+const FFPROBE_PATH = process.env.FFPROBE_PATH || '/usr/bin/ffprobe';
+
+const {
+	proto,
+	downloadContentFromMessage,
+	jidDecode,
+	areJidsSameUser,
+	generateForwardMessageContent,
+	generateWAMessageFromContent,
+	extractMessageContent,
+	getContentType,
+	toReadable,
+	prepareWAMessageMedia,
+	jidNormalizedUser,
+	encryptedStream,
+	USyncQuery,
+	USyncUser,
+	getBinaryNodeChild,
+	S_WHATSAPP_NET,
+} = await resolveBaileysModule();
+
+// shim jimp.resize — pengganti wrapper canvas engine asal (cuma resize yang dipakai Toolkit);
+// pola sama: pengganti sharp(...).resize(w,h,opts).toFormat(out).toBuffer()
+const jimp = {
+	async resize(input, x, y, { fit = 'cover', position = 'centre', background, out = 'png' } = {}) {
+		const formats = { png: 'png', jpeg: 'jpeg', jpg: 'jpeg', webp: 'webp' };
+		const pipeline = sharp(input).resize(x, y, { fit, position, background });
+		return await pipeline.toFormat(formats[out] || 'png').toBuffer();
+	},
+};
 
 function extractIE(text, { extract = true, hyperlink = true, citation = true, latex = true } = {}) {
 	if (!extract) {
@@ -152,8 +189,6 @@ function extractIE(text, { extract = true, hyperlink = true, citation = true, la
 		inline_entities,
 	};
 }
-
-
 async function waitAllPromises(input) {
 	const isPromise = (v) => v && typeof v.then === 'function';
 	const isObject = (v) => v && typeof v === 'object';
@@ -168,20 +203,41 @@ async function waitAllPromises(input) {
 	};
 	return deep(await input);
 }
-
-
-// Toolkit minimal — versi ramping dari toolkit engine asal (tanpa jimp/ffmpeg)
+let _ffmpegChecked = false
+let _ffmpegError = null
+async function getFfmpeg() {
+	if (_ffmpegChecked) {
+		if (_ffmpegError) throw _ffmpegError
+		return FFMPEG_PATH
+	}
+	_ffmpegChecked = true
+	try {
+		if (!fs.existsSync(FFMPEG_PATH)) throw new Error(`Binary tidak ditemukan di ${FFMPEG_PATH}`)
+		return FFMPEG_PATH
+	} catch (err) {
+		_ffmpegError = new Error(`ffmpeg tidak tersedia (fitur preview video tidak tersedia): ${err.message}`)
+		throw _ffmpegError
+	}
+}
 class Toolkit {
 	constructor() {}
-	static extractIE(text, opts = {}) {
-		return extractIE(text, opts);
+	static extractIE(text, { extract = true, hyperlink = true, citation = true, latex = true } = {}) {
+		return extractIE(text, { extract, hyperlink, citation, latex });
+	}
+	static async resize(buffer, x, y, fit = 'cover') {
+		return await jimp.resize(buffer, x, y, {
+			fit,
+			position: 'center',
+			background: { r: 0, g: 0, b: 0, alpha: 0 },
+			out: 'png',
+		})
 	}
 	static async waitAllPromises(input) {
 		return await waitAllPromises(input);
 	}
 	static async fetchBuffer(url, options = {}, { silent = true } = {}) {
 		try {
-			const response = await fetch(url, options);
+			let response = await fetch(url, options);
 			if (!response.ok) throw Error(`HTTP ${response.status}`);
 			return Buffer.from(await response.arrayBuffer());
 		} catch (error) {
@@ -189,25 +245,186 @@ class Toolkit {
 			throw error;
 		}
 	}
-	static async resolveMedia(_client, media, mediaType = 'image', { resolveUrl = false } = {}) {
-		if (!media) return '';
+	static async toUrl(_client, path, mediaType = 'document') {
+		if (!path) throw new Error('Url or buffer needed');
+		const media = await prepareWAMessageMedia(
+			{
+				[mediaType]: Buffer.isBuffer(path) ? path : { url: path },
+			},
+			{
+				upload: _client.waUploadToServer,
+				jid: '@newsletter',
+			}
+		);
+		return Object.values(media)[0]?.url;
+	}
+	static async resolveMedia(_client, media, mediaType = 'image', { resolveUrl = false, resolveWAUrl = false, result = 'url', resize = false, width = 300, height = 300 } = {}) {
+		const isUrl = (str) => /^https?:\/\/.+/i.test(str);
+		const isWAUrl = (str) => /^https?:\/\/[^/]*\.whatsapp\.net\//i.test(str);
 		if (Array.isArray(media)) {
-			return Promise.all(media.map((item) => Toolkit.resolveMedia(_client, item, mediaType, { resolveUrl })));
+			return Promise.all(
+				media.map((item) =>
+					Toolkit.resolveMedia(_client, item, mediaType, {
+						resolveUrl,
+						resolveWAUrl,
+						result,
+						resize,
+						width,
+						height,
+					})
+				)
+			);
 		}
-		if (typeof media === 'string') return media;
-		if (Buffer.isBuffer(media)) {
-			try {
-				const { prepareWAMessageMedia } = await import('nova');
-				const out = await prepareWAMessageMedia({ [mediaType]: media }, { upload: _client?.waUploadToServer, jid: '@newsletter' });
-				return Object.values(out)[0]?.url ?? '';
-			} catch {
-				return '';
+		const originalIsBuffer = Buffer.isBuffer(media);
+		if (typeof media === 'string' && isUrl(media)) {
+			if (isWAUrl(media)) {
+				if (resolveWAUrl) {
+					media = await Toolkit.fetchBuffer(media, {}, { silent: true });
+				} else if (!resolveUrl) {
+					if (result === 'url') return media;
+					media = await Toolkit.fetchBuffer(media, {}, { silent: true });
+				}
+			} else {
+				if (!resolveUrl) {
+					if (result === 'url') return media;
+					media = await Toolkit.fetchBuffer(media, {}, { silent: true });
+				} else {
+					media = await Toolkit.fetchBuffer(media, {}, { silent: true });
+				}
 			}
 		}
-		return '';
+		if (typeof media === 'string' && !isUrl(media)) {
+			media = Buffer.from(media, 'base64');
+		}
+		if (!Buffer.isBuffer(media) || !media.length) {
+			return;
+		}
+		if (resize && Buffer.isBuffer(media)) {
+			media = await Toolkit.resize(media, width, height);
+		}
+		if (result === 'buffer') {
+			return media;
+		}
+		if (result === 'base64') {
+			return media.toString('base64');
+		}
+		if (originalIsBuffer) {
+			return Toolkit.toUrl(_client, media, mediaType);
+		}
+		return Toolkit.toUrl(_client, media, mediaType);
+	}
+	static getMp4Duration(buffer, { silent = true } = {}) {
+		try {
+			if (!Buffer.isBuffer(buffer) || buffer.length < 8) {
+				if (silent) return 0;
+				throw new Error('Invalid buffer');
+			}
+			let offset = 0;
+			while (offset < buffer.length - 8) {
+				const size = buffer.readUInt32BE(offset);
+				if (size < 8 || offset + size > buffer.length) {
+					if (silent) return 0;
+					throw new Error('Invalid atom size');
+				}
+				const type = buffer.toString('ascii', offset + 4, offset + 8);
+				if (type === 'moov') {
+					let moovOffset = offset + 8;
+					const moovEnd = offset + size;
+					while (moovOffset < moovEnd - 8) {
+						const childSize = buffer.readUInt32BE(moovOffset);
+						if (childSize < 8 || moovOffset + childSize > moovEnd) {
+							if (silent) return 0;
+							throw new Error('Invalid child atom size');
+						}
+						const childType = buffer.toString('ascii', moovOffset + 4, moovOffset + 8);
+						if (childType === 'mvhd') {
+							const version = buffer.readUInt8(moovOffset + 8);
+							if (version === 0) {
+								const timescale = buffer.readUInt32BE(moovOffset + 20);
+								const duration = buffer.readUInt32BE(moovOffset + 24);
+								if (!timescale) {
+									if (silent) return 0;
+									throw new Error('Invalid timescale');
+								}
+								return duration / timescale;
+							}
+							if (version === 1) {
+								const timescale = buffer.readUInt32BE(moovOffset + 32);
+								const duration = Number(buffer.readBigUInt64BE(moovOffset + 36));
+								if (!timescale) {
+									if (silent) return 0;
+									throw new Error('Invalid timescale');
+								}
+								return duration / timescale;
+							}
+						}
+						moovOffset += childSize;
+					}
+				}
+				offset += size;
+			}
+			if (silent) return 0;
+			throw new Error('No mvhd found!');
+		} catch (err) {
+			if (silent) return 0;
+			throw err;
+		}
+	}
+	static getMp4Preview(videoBuffer, { time, result = 'buffer', resize = true, width = 300, height = 300, silent = true } = {}) {
+		return new Promise((resolve, reject) => {
+			const fail = (err) => {
+				if (silent) {
+					return resolve(result === 'base64' ? '' : Buffer.alloc(0));
+				}
+				return reject(err);
+			};
+			(async () => {
+				try {
+					if (!Buffer.isBuffer(videoBuffer) || !videoBuffer.length) {
+						return fail(new Error('videoBuffer tidak valid atau kosong'));
+					}
+					await getFfmpeg()
+					time ??= Math.min(Toolkit.getMp4Duration(videoBuffer) * 0.2, 10);
+					const chunks = [];
+					const stderrChunks = [];
+					const proc = spawn(FFMPEG_PATH, [
+						'-i', 'pipe:0',
+						'-ss', String(time),
+						'-vframes', '1',
+						'-vcodec', 'png',
+						'-f', 'image2pipe',
+						'pipe:1'
+					]);
+					proc.stdout.on('data', (chunk) => chunks.push(chunk));
+					proc.stderr.on('data', (chunk) => stderrChunks.push(chunk));
+					proc.on('error', (err) => fail(new Error(`ffmpeg error: ${err.message}`)));
+					proc.on('close', async (code) => {
+						try {
+							if (code !== 0) {
+								return fail(new Error(`ffmpeg exited with code ${code}: ${Buffer.concat(stderrChunks).toString()}`));
+							}
+							let output = Buffer.concat(chunks);
+							if (!output.length) {
+								return fail(new Error('Output kosong — cek format atau timestamp video'));
+							}
+							if (resize) {
+								output = await Toolkit.resize(output, width, height);
+							}
+							return resolve(result === 'base64' ? output.toString('base64') : output);
+						} catch (err) {
+							return fail(err);
+						}
+					});
+					proc.stdin.on('error', () => {})
+					proc.stdin.write(videoBuffer);
+					proc.stdin.end();
+				} catch (err) {
+					return fail(err);
+				}
+			})();
+		});
 	}
 }
-
 class BaseBuilder {
 	constructor() {
 		this._title = '';
@@ -260,8 +477,6 @@ class BaseBuilder {
 		return this;
 	}
 }
-
-
 class AIRich extends BaseBuilder {
 	#client;
 	constructor(client) {
@@ -1020,7 +1235,6 @@ class AIRich extends BaseBuilder {
 	}
 }
 
-// ─── Helper ringkas untuk plugin ─────────────────────────────────────────────
 export async function sendAIRich(sock, jid, build) {
 	const rich = new AIRich(sock);
 	await build(rich);
