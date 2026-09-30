@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .imgmotion — motion image (foto bergerak) WA native (port HIROBOT imgmotion.js)
+// Plugin .imgmotion — motion image (foto bergerak) WA native (port engine lama imgmotion.js)
 // 2 langkah: .imgmotion + gambar → kirim video (caption "2") → jadi motion image.
 import { prepareWAMessageMedia, generateWAMessageFromContent } from "nova";
 import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";

@@ -1,4 +1,4 @@
-// hiro-web-axios.js — shim axios gaya HIROBOT (get only) via fetch global
+// hi-web-axios.js — shim axios gaya engine lama (get only) via fetch global
 import { Readable } from "stream";
 
 const axios = {

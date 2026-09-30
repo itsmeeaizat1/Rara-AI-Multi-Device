@@ -252,7 +252,7 @@ ATURAN:
    database.json atau semacamnya — itu TIDAK sinkron dengan db.data yang
    lagi jalan di memory dan bisa bikin data korup. Pakai read_database
    untuk lihat struktur/isi dulu (key_path yang tepat), lalu write_database
-   untuk set/delete-nya (mis. key_path "users.<jid>.name", value "\"Hiro\"").
+   untuk set/delete-nya (mis. key_path "users.<jid>.name", value "\"Budi\"").
    write_database ini owner-only.
 5. MEDIA (gambar/video/audio/dokumen): kalau ada media terlampir di pesan ini
    (baik dikirim langsung maupun lewat reply/quote ke pesan lama), medianya

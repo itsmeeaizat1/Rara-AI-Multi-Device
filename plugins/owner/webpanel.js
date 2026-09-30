@@ -1,13 +1,13 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .webpanel — start/stop WEB DASHBOARD (port HIROBOT lib/package/website utuh)
-// Engine: src/lib/hiroweb/ — server HTTP standalone + halaman login + panel. OWNER-ONLY.
+// Plugin .webpanel — start/stop WEB DASHBOARD (port website engine lama utuh)
+// Engine: src/lib/hiweb/ — server HTTP standalone + halaman login + panel. OWNER-ONLY.
 import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "webpanel",
-  alias: ["dashboard", "hiroweb"],
+  alias: ["dashboard", "hiweb"],
   category: "owner",
-  description: "Panel web dashboard bot (port HIROBOT) — akses lewat browser",
+  description: "Panel web dashboard bot — akses lewat browser",
   usage: ".webpanel on | .webpanel off | .webpanel status",
   example: ".webpanel on",
   isOwner: true,
@@ -37,7 +37,7 @@ async function start(m, sock) {
   }
   state.starting = true;
   try {
-    const { default: startServer } = await import("../../src/lib/hiroweb/server.js");
+    const { default: startServer } = await import("../../src/lib/hiweb/server.js");
     const srv = startServer(sock, getPort());
     if (srv?.on && !srv.listening) {
       await new Promise((resolve) => {
@@ -93,7 +93,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.react("🐣");
       await m.reply(novaGuide(
         "webpanel",
-        "Panel web dashboard bot (port utuh dari HIROBOT): monitoring, kelola file & sesi — semua lewat browser.",
+        "Panel web dashboard bot : monitoring, kelola file & sesi — semua lewat browser.",
         prefix + "webpanel on",
         "Setelah nyala buka http://<ip-vps>:3000 (port bisa diubah via env NOVA_WEB_PORT). Matikan: " + prefix + "webpanel off. Owner-only."
       ));

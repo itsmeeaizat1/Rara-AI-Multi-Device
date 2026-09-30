@@ -1,4 +1,4 @@
-// E2E hiro-unique-ports — 10 plugin unik port HIROBOT
+// E2E hi-unique-ports — 10 plugin unik port engine lama
 let pass = 0, total = 0;
 function ok(name, cond, detail = "") {
   total++;

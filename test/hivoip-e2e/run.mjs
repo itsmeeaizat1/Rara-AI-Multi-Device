@@ -1,4 +1,4 @@
-// E2E hirovoip — engine VOIP port HIROBOT + plugin (call flow nyata cuma bisa di VPS live)
+// E2E hivoip — engine VOIP + plugin (call flow nyata cuma bisa di VPS live)
 let pass = 0, total = 0;
 function ok(name, cond, detail = "") {
   total++;
@@ -7,12 +7,12 @@ function ok(name, cond, detail = "") {
 }
 console.log("─── HIROVOIP e2e ───");
 
-const mod = await import("../../src/lib/hirovoip/index.js");
+const mod = await import("../../src/lib/hivoip/index.js");
 ok("engine Voip ke-import", typeof mod.default === "function");
 const voip = new mod.default({ user: { id: "b@s.whatsapp.net" } });
 ok("instance Voip jalan", typeof voip.call === "function" && typeof voip.end === "function");
 
-const resolver = await import("../../src/lib/hirovoip/shim/baileys-resolve.js");
+const resolver = await import("../../src/lib/hivoip/shim/baileys-resolve.js");
 ok("resolver: kandidat utama 'nova'", (await resolver.resolveBaileysModule()).jidDecode != null);
 
 const plugin = await import("../../plugins/owner/voipcall.js");

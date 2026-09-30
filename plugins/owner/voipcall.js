@@ -1,17 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .voipcall — telepon/video call WA dengan pemutar media (port VOIP HIROBOT)
-// Engine: src/lib/hirovoip/ — OWNER-ONLY (anti penyalahgunaan, owner 28 Sep 2026)
+// Plugin .voipcall — telepon/video call WA dengan pemutar media (port engine lama)
+// Engine: src/lib/hivoip/ — OWNER-ONLY (anti penyalahgunaan, owner 28 Sep 2026)
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
-import Voip from "../../src/lib/hirovoip/index.js";
+import Voip from "../../src/lib/hivoip/index.js";
 import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "voipcall",
   alias: ["voip"],
   category: "owner",
-  description: "Telepon/video call nomor WA lewat bot + putar audio/video (port VOIP HIROBOT)",
+  description: "Telepon/video call nomor WA lewat bot + putar audio/video (port engine lama)",
   usage: ".voipcall <nomor> [url_media] [240p-1080p] [auto] [loop] | .voipend [force] | .voipsilent",
   example: ".voipcall 6281234567890 https://contoh.com/lagu.mp3 auto",
   isOwner: true,

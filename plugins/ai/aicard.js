@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .aicard — kartu GenAI native WhatsApp (engine Hiro: src/lib/nova-airich-hiro.js)
-// SATU-SATUNYA engine AI rich Nova (GenAI card Hiro port) — HTML bubble NIXCODE udah dihapus total 29 Sep.
+// Plugin .aicard — kartu GenAI native WhatsApp (engine: src/lib/nova-airich-hi.js)
+// SATU-SATUNYA engine AI rich Nova (GenAI card port) — HTML bubble NIXCODE udah dihapus total 29 Sep.
 import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
-import { AIRich } from "../../src/lib/nova-airich-hiro.js";
+import { AIRich } from "../../src/lib/nova-airich-hi.js";
 
 const pluginConfig = {
   name: "aicard",

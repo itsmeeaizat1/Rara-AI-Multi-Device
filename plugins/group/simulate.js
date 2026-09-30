@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .simulate — simulasi event grup (port HIROBOT simulate.js, adaptasi via ev.emit)
+// Plugin .simulate — simulasi event grup (port engine lama simulate.js, adaptasi via ev.emit)
 import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {

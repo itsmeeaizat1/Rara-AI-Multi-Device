@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .ampro/.amrefresh — aktifin AlightMotion premium via magic link email (port HIROBOT alightmotion.js)
+// Plugin .ampro/.amrefresh — aktifin AlightMotion premium via magic link email (port engine lama alightmotion.js)
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
@@ -154,7 +154,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.react("🐣");
       await m.reply(novaGuide(
         "ampro",
-        "Aktifin AlightMotion premium gratis via magic link email (port HIROBOT).",
+        "Aktifin AlightMotion premium gratis via magic link email (port engine lama).",
         prefix + "ampro nama@gmail.com",
         "Buka email → copy link dari AlightMotion → reply pesan magic-link bot dengan link itu. Re-aktif kapan pun: " + prefix + "amrefresh <email>"
       ));

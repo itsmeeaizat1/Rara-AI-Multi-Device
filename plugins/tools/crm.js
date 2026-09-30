@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .crm — message recipe inspector (port HIROBOT crm.js): reply pesan apapun →
-// keluar kode JS buat re-create pesan itu via relayMessage. Engine toCode verbatim Hiro.
+// Plugin .crm — message recipe inspector (port engine lama crm.js): reply pesan apapun →
+// keluar kode JS buat re-create pesan itu via relayMessage. Engine toCode verbatim engine asal.
 import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -153,7 +153,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.react("🐣");
       await m.reply(novaGuide(
         "crm",
-        "Reply pesan yang mau diambil kodenya — keluar kode JS buat re-create pesan itu (port HIROBOT).",
+        "Reply pesan yang mau diambil kodenya — keluar kode JS buat re-create pesan itu (port engine lama).",
         prefix + "crm (reply pesan button/kartu/sticker)",
         "Berguna buat bikin pesan format rumit: kirim contohnya, ambil resepnya, edit."
       ));

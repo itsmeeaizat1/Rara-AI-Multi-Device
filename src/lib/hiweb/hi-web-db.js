@@ -1,9 +1,9 @@
-// hiro-web-db.js — shim database gaya HIROBOT buat web dashboard (db.data / loadDatabase)
-// File JSON sendiri di src/database/panel/hiroweb-db.json — gak nyampur db Nova. Auto-save 10 dtk.
+// hi-web-db.js — shim database gaya engine lama buat web dashboard (db.data / loadDatabase)
+// File JSON sendiri di src/database/panel/hiweb-db.json — gak nyampur db Nova. Auto-save 10 dtk.
 import fs from "fs";
 import path from "path";
 
-const FILE = path.join(process.cwd(), "src", "database", "panel", "hiroweb-db.json");
+const FILE = path.join(process.cwd(), "src", "database", "panel", "hiweb-db.json");
 let _data = null;
 
 export function read() {
@@ -17,7 +17,7 @@ export function write() {
   try {
     fs.mkdirSync(path.dirname(FILE), { recursive: true });
     fs.writeFileSync(FILE, JSON.stringify(_data ?? {}, null, 2));
-  } catch (e) { console.error("[hiroweb-db]:", e.message); }
+  } catch (e) { console.error("[hiweb-db]:", e.message); }
 }
 export const loadDatabase = read;
 export const saveSync = write;

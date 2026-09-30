@@ -1,7 +1,7 @@
 # 🌐 Panduan WEBPANEL — Dashboard Bot via Browser
 
 Panel web untuk ngelola/monitor bot dari browser (port HIROBOT,
-engine `src/lib/hiroweb/`). Owner-only.
+engine `src/lib/hiweb/`). Owner-only.
 
 ## 1. Instalasi
 
