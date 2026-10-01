@@ -24,6 +24,25 @@ ok("personaPrompt: larangan sapaan template ada di SEMUA cabang (persona & defau
 ok("SYS_ANSWER research: larang mulai dgn sapaan template juga", na.includes('jangan mulai dengan sapaan template'));
 ok("diktat gaya WAJIB lama SUDAH TETAP HILANG (regresi upgrade sebelumnya)", !na.includes("ATURAN PERSONA (WAJIB DIPATUHI)"));
 
+console.log("─── 2b. REGRESI BUG (1 Okt 2026): .anovaagent balas 'hai' malah lanjut topik lama (API error) ───");
+ok("antiGreeting kasih pengecualian sapaan singkat polos (hai/halo/p/test) — JANGAN paksa lanjut topik lama", /TAPI kalau pesan TERBARU dari user cuma sapaan singkat/.test(na));
+ok("pengecualian itu nyebut contoh \"hai\"/\"halo\" eksplisit", na.includes('"hai", "halo"'));
+{
+  const { runAgent: runAgentForGreet, setAgentDeps: setDepsForGreet, resetAgentDeps } = await import(pathToFileURL(path.join(R, "src/lib/nova-agent.js")).href);
+  let seenSystemPrompt = "";
+  const mockAiGreet = async (prompt, opts) => {
+    if (opts?.systemPrompt?.includes("perencana aksi")) return JSON.stringify({ mode: "persona", persona: null });
+    seenSystemPrompt = opts?.systemPrompt || "";
+    return "hai juga! santai aja, ada yang mau diobrolin?";
+  };
+  setDepsForGreet({ aiChat: mockAiGreet });
+  const histBlock = "Riwayat obrolanmu dengan Aizat sebelumnya (terbaru di bawah — pakai sebagai konteks, jangan ulangi jawaban yang sama):\nAizat: kenapa error api groq?\nKamu: itu karena API key expired, perlu di-regenerate\n\nhai";
+  const resGreet = await runAgentForGreet(histBlock);
+  ok("mode persona kepilih buat sapaan singkat (bukan lanjut riset API)", resGreet?.mode === "persona", JSON.stringify(resGreet));
+  ok("system prompt yang dikirim ke model BAWA pengecualian sapaan (akar fix)", seenSystemPrompt.includes("JANGAN langsung nyemplung jawab panjang soal topik lama"), seenSystemPrompt.slice(0, 120));
+  resetAgentDeps();
+}
+
 console.log("─── 3. functional: runAgent nyambung ke mode research (browsing beneran) ───");
 const { runAgent, setAgentDeps } = await import(pathToFileURL(path.join(R, "src/lib/nova-agent.js")).href);
 {
