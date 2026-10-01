@@ -2687,7 +2687,7 @@ function classifyApiError(msg = '') {
     const isQuota = msg.includes('429') || msg.includes('RESOURCE_EXHAUSTED') || /quota/i.test(msg);
     const isOverloaded = msg.includes('503') || /UNAVAILABLE/i.test(msg) || /overloaded|high demand/i.test(msg);
     const isAuth = msg.includes('401') || msg.includes('403') || /api key not valid/i.test(msg);
-    const isNetwork = /ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|fetch failed|network/i.test(msg);
+    const isNetwork = /ECONNRESET|ECONNABORTED|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|fetch failed|network|socket hang up|\baborted\b/i.test(msg);
     return { isQuota, isOverloaded, isAuth, isNetwork, isTransient: isQuota || isOverloaded || isNetwork };
 }
 export function isTransientApiError(err) {
@@ -2695,7 +2695,7 @@ export function isTransientApiError(err) {
 }
 function isDownstreamApiError(err) {
     const msg = (err?.message || String(err) || '');
-    const networkPatterns = /ECONNRESET|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|fetch failed|FetchError|AbortError|timed out|timeout/i;
+    const networkPatterns = /ECONNRESET|ECONNREFUSED|ECONNABORTED|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|fetch failed|FetchError|AbortError|timed out|timeout|socket hang up|\baborted\b/i;
     const httpStatusPatterns = /\b(500|502|503|504)\b|Internal Server Error|Bad Gateway|Service Unavailable|Gateway Timeout/i;
     const parsePatterns = /Unexpected token .* in JSON|is not valid JSON|Unexpected end of JSON input/i;
     const knownScraperErrorPatterns = /Scrape trouble|download error|Failed to initiate download|Download failed|No download URL found|Download timed out|API Error:/i;
@@ -2724,9 +2724,17 @@ async function mcpLoopOnce(history, apiKey, modelKey, onStep, stepLang) {
             }
             catch (e) {
                 lastErr = e;
-                const { isQuota, isOverloaded, isAuth } = classifyApiError(e.message || '');
+                const { isQuota, isOverloaded, isAuth, isNetwork } = classifyApiError(e.message || '');
                 if (isQuota || isOverloaded) {
                     console.warn(`[MCP] ${model} ${isOverloaded ? 'overload (503)' : 'rate limit'}, try the next model...`);
+                    continue;
+                }
+                if (isNetwork) {
+                    // Koneksi putus/aborted di tengah request — bukan berarti key/model-nya rusak,
+                    // kemungkinan besar cuma socket yang kebetulan mati. Request berikutnya pakai
+                    // koneksi baru, jadi coba model lain dulu (atau key lain kalau model sudah habis)
+                    // sebelum benar-benar nyerah.
+                    console.warn(`[MCP] ${model} koneksi putus (${e.message.slice(0, 60)}), coba model lain...`);
                     continue;
                 }
                 if (isAuth) {
@@ -2747,7 +2755,7 @@ async function mcpLoopWithFallback(history, apiKey, modelKey, onStep, stepLang) 
         return await mcpLoopOnce(history, apiKey, modelKey, onStep, stepLang);
     }
     catch (e) {
-        const { isOverloaded, isQuota } = classifyApiError(e.message || '');
+        const { isOverloaded, isQuota, isNetwork } = classifyApiError(e.message || '');
         if (isOverloaded || isQuota) {
             console.warn('[MCP] Semua model overload/rate-limit, retry sekali lagi setelah 4 detik...');
             try {
@@ -2758,6 +2766,16 @@ async function mcpLoopWithFallback(history, apiKey, modelKey, onStep, stepLang) 
             catch (_) { }
             history.length = baseLen;
             await new Promise(r => setTimeout(r, 4000));
+            return await mcpLoopOnce(history, apiKey, modelKey, onStep, stepLang);
+        }
+        if (isNetwork) {
+            // Semua kombinasi model/key tetap kena putus koneksi — mungkin cuma blip jaringan
+            // sesaat (bukan quota/overload). Diem-diem retry sekali lagi abis delay pendek,
+            // request baru = socket baru, seringkali langsung pulih tanpa perlu ngomong apa-apa
+            // ke user (biar gak berisik tiap ada network blip kecil).
+            console.warn('[MCP] Koneksi putus di semua model/key, retry sekali lagi setelah 2 detik...');
+            history.length = baseLen;
+            await new Promise(r => setTimeout(r, 2000));
             return await mcpLoopOnce(history, apiKey, modelKey, onStep, stepLang);
         }
         throw e;
@@ -3128,6 +3146,25 @@ export async function handleError(conn, m, err, pluginName = 'unknown') {
                 text: isOwner
                     ? `Error in *${pluginName}*\n\`\`\`\n${errorMsg.slice(0, 200)}\n\`\`\`\n(Auto-heal disabled)`
                     : `Something went wrong.`
+            }, { quoted: m });
+        }
+        catch (_) { }
+        return;
+    }
+    if (sourceFiles.length === 0) {
+        // Stack trace error-nya 100% internal Node (node:_http_client, node:net, dst) — gak ada
+        // satu pun file kode project ini yang kesebut. Auto-heal yang nulis write_file BUTA tanpa
+        // konteks file sama sekali gampang nebak sembarangan dan malah ngerusak kode yang justru
+        // sehat (pernah kejadian: error jaringan sesaat dikira bug, "diperbaiki" dengan ngedit file
+        // yang gak relevan, akibatnya SEMUA request berikutnya ikut rusak). Kalau gak ada file yang
+        // bisa dijadiin pijakan, ini kemungkinan besar bukan bug kode — stop di sini, JANGAN panggil
+        // runAgent self-heal, cukup kasih tau owner biar dicek manual kalau emang berulang terus.
+        console.warn(`[Auto-Heal] Skip — stack trace error 100% internal Node, gak ada file project yang teridentifikasi (kemungkinan network blip, bukan bug kode): ${errorMsg.slice(0, 150)}`);
+        try {
+            await conn.sendMessage(chat, {
+                text: isOwner
+                    ? `Error in *${pluginName}* — gak ada file project yang teridentifikasi dari stack trace-nya (semuanya internal Node):\n\`\`\`\n${errorMsg.slice(0, 200)}\n\`\`\`\nKemungkinan cuma koneksi putus sesaat, bukan bug kode — auto-heal di-skip biar gak nebak sembarangan. Coba ulang; kalau SELALU berulang baru perlu dicek manual.`
+                    : `This feature is having issues, try again later.`
             }, { quoted: m });
         }
         catch (_) { }
