@@ -4,7 +4,7 @@
 //   model: GFPGANv1.2 | GFPGANv1.3 | GFPGANv1.4 (default) | RestoreFormer
 //   rescale: 1-4 (default 2)
 // .onenobg <reply foto> — hapus background foto
-// Alur: foto WA di-download → di-upload ke host (termai) → URL dikirim ke API
+// Alur: foto WA di-download → di-upload ke host publik (nova-uploader) → URL dikirim ke API
 // (API Onepunya cuma terima image URL, bukan buffer/base64).
 import axios from "axios";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";

@@ -21,11 +21,10 @@
     },
     "cuki": "cukimwah-hv4uku3",
     "_note_termai": {
-      "restapi": "TERMAI — api.termai.cc",
-      "fitur": ".logicbell, .tourl, .animeapaini, .musikapaini, .qrcustom",
-      "catatan": "AI logic-bell · STATUS 17 Sep: kena 429 rate-limit (kemungkinan kuota harian abis) — cek kuota kalau fitur tetap kena limit"
+      "restapi": "TERMAI — api.termai.cc (DILEPAS 1 Okt 2026)",
+      "fitur": "(dulu) .logicbell, .tourl, .animeapaini, .musikapaini, .qrcustom",
+      "catatan": "Jadi free-tier limit kecil (logic-bell 429 permanen, upload cepat kena limit) → semua fitur dimigrasi ke host upload publik nova-uploader (Kappa → Pone → Uguu). Zelapi gak dipakai: /tools/upload-nya mati. Key dibuang dari config."
     },
-    "termai": "AIzaBj7z2z3xBjsk",
     "_note_voiceai": {
       "restapi": "VOICEAI — api.voiceai",
       "fitur": ".suaraai (TTS suara AI)",

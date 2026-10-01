@@ -1,35 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from 'axios'
-import FormData from 'form-data'
+// ═════════════════════════════════════════════
+// 🔹 nova-tmpfiles.js — shim upload URL (dulu host Termai)
+// 🔹 1 Okt 2026: Termai jadi free-tier limit kecil → dilepas. Zelapi gak
+//    punya upload yang hidup. Engine baru: nova-uploader.js (Kappa → Pone
+//    → Uguu, semua diuji live dari IP datacenter).
+// 🔹 Signature + return shape dipertahankan ({ url, directUrl }) biar
+//    importer lama (fakeml/fakeff) gak berubah.
+// ═════════════════════════════════════════════
+import { uploadFile } from './nova-uploader.js'
 
-const termaiKey = 'AIzaBj7z2z3xBjsk'
-const termaiDomain = 'https://c.termai.cc'
-
-async function uploadTo0x0(buffer, opts) {
-  if (!Buffer.isBuffer(buffer)) throw new Error("buffer harus Buffer");
-  
+export async function uploadTo0x0(buffer, opts) {
+  if (!Buffer.isBuffer(buffer)) throw new Error("buffer harus Buffer")
   const filename = opts?.filename || 'image.jpg'
-  const form = new FormData();
-  form.append('file', buffer, { filename, contentType: opts?.contentType || "application/octet-stream" });
-
-  const res = await axios.post(`${termaiDomain}/api/upload?key=${termaiKey}`, form, {
-    headers: { ...form.getHeaders(), Accept: "application/json" },
-    timeout: opts?.timeoutMs ?? 60_000,
-    maxBodyLength: Infinity,
-    maxContentLength: Infinity,
-    validateStatus: () => true,
-  })
-
-  if (res.status < 200 || res.status >= 300) {
-    throw new Error(`Upload gagal (HTTP ${res.status}): ${typeof res.data === "string" ? res.data : JSON.stringify(res.data)}`);
-  }
-  
-  if (res.data?.status && res.data?.path) {
-    return { url: res.data.path, directUrl: res.data.path }
-  }
-
-  throw new Error("Response tidak ada data valid dari Termai");
+  const url = await uploadFile(buffer, filename)
+  return { url, directUrl: url }
 }
-
-// Map everything locally to termai wrapper, keeping exported name identical for compatibility
-export { uploadTo0x0 }

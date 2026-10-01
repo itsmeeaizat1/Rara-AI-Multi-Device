@@ -4,7 +4,6 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 import axios from 'axios'
 import config from '../../config.js'
 import { downloadContentFromMessage } from 'nova'
-import FormData from 'form-data'
 import te from '../../src/lib/nova-error.js'
 const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
@@ -25,19 +24,11 @@ const pluginConfig = {
 }
 
 
+// Upload via engine nova-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
+import { uploadImage } from "../../src/lib/nova-uploader.js"
+
 async function uploadToTempfiles(buffer) {
-    const form = new FormData()
-    form.append('file', buffer, { filename: 'image.jpg', contentType: 'image/jpeg' })
-    
-    const response = await axios.post('https://c.termai.cc/api/upload?key=' + config.APIkey.termai, form, {
-        headers: form.getHeaders(),
-        timeout: 30000
-    })
-    
-    if (response.data?.files?.[0]?.url) {
-        return response.data
-    }
-    throw new Error('Upload gagal')
+    return uploadImage(buffer, 'image.jpg')
 }
 
 

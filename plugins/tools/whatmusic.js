@@ -1,6 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from "axios";
-import FormData from "form-data";
 import config from "../../config.js";
 import { downloadMediaMessage } from "nova";
 import te from "../../src/lib/nova-error.js";
@@ -20,24 +18,13 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+// Upload via engine nova-uploader (Kappa → Pone → Uguu) — termai dilepas 1 Okt 2026
+// FIX laten: dulu balikin OBJECT (res.data) padahal call site butuh URL STRING
+// (neoxr whatMusic kirim [object Object] ke param url)
+import { uploadImage } from "../../src/lib/nova-uploader.js";
+
 async function uploadTo0x0(buffer, filename) {
-  const form = new FormData();
-  form.append("file", buffer, {
-    filename,
-    contentType: "application/octet-stream",
-  });
-
-  const res = await axios.post(
-    "https://c.termai.cc/api/upload?key=" + config.APIkey.termai,
-    form,
-    {
-      headers: form.getHeaders(),
-      timeout: 60000,
-    },
-  );
-
-  if (!res.data?.status ? res.data.path : "") throw new Error("Upload gagal");
-  return res.data;
+  return uploadImage(buffer, filename);
 }
 
 async function handler(m, { sock }) {
