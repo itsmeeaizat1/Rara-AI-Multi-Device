@@ -55,3 +55,7 @@ session/jadibot/
 # 🔹 cookies YouTube buat yt-dlp (JANGAN PERNAH di-commit — credential)
 data/yt-cookies.txt
 *.cookies.txt
+
+# 🔹 proxy yt-dlp (bisa nyimpen user:password — JANGAN di-commit)
+data/yt-proxy.txt
+data/yt-proxy.txt.bak

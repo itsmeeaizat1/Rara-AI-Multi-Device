@@ -116,6 +116,37 @@ function getYtCookiesArgs() {
   return "";
 }
 
+// 🔹 YT-DLP PROXY — fallback kedua (1 Okt 2026, request owner "fallback
+// kedua klo yt dlp ke limit"): kalau YouTube blokir IP datacenter VPS dan
+// cookies belum ada/expire, yt-dlp bisa lewat PROXY (IP lain gak kena blokir
+// datacenter). Sumber (urutan):
+//   1. env NOVA_YTDLP_PROXY (URL proxy: http://user:pass@host:port — http/https/
+//      socks5, socks5 butuh dukungan build yt-dlp, paling amal pakai http)
+//   2. data/yt-proxy.txt (file 1 baris: URL proxy — tinggal upload)
+// File gak ada & env kosong → flag kosong, perilaku lama (langsung).
+function getYtProxyArgs() {
+  const candidates = [
+    process.env.NOVA_YTDLP_PROXY,
+    (() => {
+      try {
+        const f = path.join(process.cwd(), "data", "yt-proxy.txt");
+        if (fs.existsSync(f) && fs.statSync(f).size > 5) {
+          return fs.readFileSync(f, "utf8").split("\n").map((l) => l.trim()).filter(Boolean)[0] || null;
+        }
+      } catch {}
+      return null;
+    })(),
+  ].filter(Boolean);
+  for (const proxyUrl of candidates) {
+    if (/^(https?|socks[45]):\/\//i.test(proxyUrl)) {
+      console.log(`[nova-ytdlp] 🌐 yt-dlp via proxy: ${proxyUrl.replace(/:[^:@/]+@/, ':***@')}`);
+      return `--proxy "${proxyUrl}"`;
+    }
+    console.warn(`[nova-ytdlp] ⚠️ proxy diabaikan (bukan URL http/https/socks): ${proxyUrl.slice(0, 40)}`);
+  }
+  return "";
+}
+
 /**
  * Download audio via yt-dlp dengan pilihan kbps
  * @param {string} url - YouTube URL
@@ -148,7 +179,7 @@ async function downloadAudioYtDlp(url, kbps = "128") {
 
     // Get title first
     const { stdout: titleOut } = await run(
-      `${getYtDlpCmd()} ${getYtCookiesArgs()} --get-title --no-warnings "${url}"`,
+      `${getYtDlpCmd()} ${getYtCookiesArgs()} ${getYtProxyArgs()} --get-title --no-warnings "${url}"`,
       { timeout: 15000 },
     );
     const title = titleOut.trim() || "Audio";
@@ -157,6 +188,7 @@ async function downloadAudioYtDlp(url, kbps = "128") {
     const cmd = [
       getYtDlpCmd(),
       getYtCookiesArgs(),
+      getYtProxyArgs(),
       ...getYtDlpFfmpegArgs(),
       "-x",                              // extract audio
       "--audio-format", "mp3",
@@ -216,7 +248,7 @@ async function downloadVideoYtDlp(url, quality = "720") {
   try {
     // Get title first
     const { stdout: titleOut } = await run(
-      `${getYtDlpCmd()} ${getYtCookiesArgs()} --get-title --no-warnings "${url}"`,
+      `${getYtDlpCmd()} ${getYtCookiesArgs()} ${getYtProxyArgs()} --get-title --no-warnings "${url}"`,
       { timeout: 15000 },
     );
     const title = titleOut.trim() || "Video";
@@ -225,6 +257,7 @@ async function downloadVideoYtDlp(url, quality = "720") {
     const cmd = [
       getYtDlpCmd(),
       getYtCookiesArgs(),
+      getYtProxyArgs(),
       ...getYtDlpFfmpegArgs(),
       // WA-safe: prefer H.264 (avc1) + AAC (m4a) — AV1/Opus di mp4
       // sering gak bisa diputar di WhatsApp
@@ -333,7 +366,7 @@ async function downloadAudio(url, kbps = "128") {
 
   // 3. Fallback to ytdl.js (ytmp3.mobi) — no kbps control, default 128
   if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
-    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX: ekspor cookies YouTube ke file data/yt-cookies.txt (format Netscape) lalu restart — panduan: changelogs/FIXES.md");
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX (pilih satu): (1) ekspor cookies YouTube ke data/yt-cookies.txt (.ytcookies), (2) pasang proxy ke env NOVA_YTDLP_PROXY / data/yt-proxy.txt — panduan: changelogs/FIXES.md");
   }
   throw new Error("Semua API audio gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
@@ -367,7 +400,7 @@ async function downloadVideo(url, quality = "720") {
   }
 
   if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
-    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX: ekspor cookies YouTube ke file data/yt-cookies.txt (format Netscape) lalu restart — panduan: changelogs/FIXES.md");
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX (pilih satu): (1) ekspor cookies YouTube ke data/yt-cookies.txt (.ytcookies), (2) pasang proxy ke env NOVA_YTDLP_PROXY / data/yt-proxy.txt — panduan: changelogs/FIXES.md");
   }
   throw new Error("Semua API video gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
@@ -379,4 +412,6 @@ export {
   downloadVideoYtDlp,
   isYtDlpAvailable,
   isFfmpegAvailable,
+  getYtProxyArgs,
+  getYtCookiesArgs,
 };
