@@ -5,7 +5,7 @@ import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { generateWAMessage } from "nova";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const botConfig = config;
 
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     }
 
     if (!buffer) {
-      return m.reply(claraWrap("Swgcv2all", "❌ Gagal mengunduh media. Silakan coba lagi."));
+      return m.reply(novaWrap("Swgcv2all", "❌ Gagal mengunduh media. Silakan coba lagi."));
     }
 
     const fileType = await fileTypeFromBuffer(buffer);
@@ -74,13 +74,13 @@ async function handler(m, { sock }) {
         ptt: m.quoted?.ptt || m.ptt || false,
       };
     } else {
-      return m.reply(claraWrap("Swgcv2all", "❌ Format media tidak didukung untuk SW GC."));
+      return m.reply(novaWrap("Swgcv2all", "❌ Format media tidak didukung untuk SW GC."));
     }
   } else if (text) {
     rawContent = { text: text };
   } else {
     return m.reply(
-      claraWrap(
+      novaWrap(
       "Swgcv2all",
       `👋 *sWgcv2 All Global*\n\n` +
       `Kirim pesan *Status Grup V2* ke SEMUA grup sekaligus.\n\n` +
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
     const groupIds = Object.keys(groups);
 
     if (groupIds.length === 0) {
-      return m.reply(claraWrap("Swgcv2all", "❌ Bot tidak berada di grup manapun."));
+      return m.reply(novaWrap("Swgcv2all", "❌ Bot tidak berada di grup manapun."));
     }
 
 
@@ -166,7 +166,7 @@ async function handler(m, { sock }) {
         failCount++;
       }
     }
-    await m.reply(claraWrap("swgcv2all", `✅ *sWgcv2 All sElesai*\n\n` +
+    await m.reply(novaWrap("swgcv2all", `✅ *sWgcv2 All sElesai*\n\n` +
       "" +
       `🌐 Total Grup: *${groupIds.length}*\n` +
       `✅ Sukses: *${successCount}*\n` +
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[SwgcV2All] Error:", error.message);
-    await m.reply(claraWrap("swgcv2all", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("swgcv2all", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

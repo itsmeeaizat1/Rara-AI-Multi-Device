@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autostreak",
@@ -43,7 +43,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Streak", "Khusus owner."));
+      await m.reply(novaWrap("Auto Streak", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = true;
@@ -52,18 +52,18 @@ async function handler(m, { sock, db, config: botConfig }) {
       if (!isNaN(h) && h >= 0 && h <= 23) cfg.deadlineHour = h;
     }
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Streak", "AKTIF!\nDeadline harian: jam " + cfg.deadlineHour + ":00\nBot akan alert member yang streak hampir putus."));
+    await m.reply(novaWrap("Auto Streak", "AKTIF!\nDeadline harian: jam " + cfg.deadlineHour + ":00\nBot akan alert member yang streak hampir putus."));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Streak", "Khusus owner."));
+      await m.reply(novaWrap("Auto Streak", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = false;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Streak", "Dimatikan."));
+    await m.reply(novaWrap("Auto Streak", "Dimatikan."));
     return { handled: true };
   }
 
@@ -73,7 +73,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       .sort((a, b) => b[1].streak - a[1].streak)
       .slice(0, 10);
     const list = activeStreaks.map(([jid, u], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + u.streak + " hari").join("\n") || "(kosong)";
-    await m.reply(claraWrap("Auto Streak", [
+    await m.reply(novaWrap("Auto Streak", [
       "Status: " + (cfg.enabled ? "AKTIF" : "MATI"),
       "Deadline: jam " + cfg.deadlineHour + ":00",
       "Total tracked: " + Object.keys(cfg.users).length,
@@ -87,16 +87,16 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "reset") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Streak", "Khusus owner."));
+      await m.reply(novaWrap("Auto Streak", "Khusus owner."));
       return { handled: true };
     }
     cfg.users = {};
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Streak", "Streak direset."));
+    await m.reply(novaWrap("Auto Streak", "Streak direset."));
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Auto Streak", [
+  await m.reply(novaWrap("Auto Streak", [
     "AUTO STREAK ALERT",
     "",
     prefix + "autostreak on [deadline jam] - aktifkan",

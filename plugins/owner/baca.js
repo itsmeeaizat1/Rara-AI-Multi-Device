@@ -1,4 +1,4 @@
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
   name: ["baca", "read", "markread"],
@@ -16,9 +16,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await sock.readMessages([m.key]);
-    return m.reply(claraWrap("Baca", "📖 *Pesan ditandai sudah dibaca*"));
+    return m.reply(novaWrap("Baca", "📖 *Pesan ditandai sudah dibaca*"));
   } catch (err) {
-    return m.reply(claraWrap("baca", `❌ Gagal: ${err.message}`));
+    return m.reply(novaWrap("baca", `❌ Gagal: ${err.message}`));
   }
 }
 

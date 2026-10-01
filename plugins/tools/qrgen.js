@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // qrgen.js — QR Code Generator v2 (qrcode npm, local generation)
 import QRCode from "qrcode";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "qrgen",
@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim() || m.text?.trim();
     if (!text) {
-      return m.reply(claraWrap("qrgen", `Mau buat QR Code dari apa?\n\nContoh:\n${m.prefix}qrgen https://google.com\n${m.prefix}qrgen Halo dunia`, "guide"));
+      return m.reply(novaWrap("qrgen", `Mau buat QR Code dari apa?\n\nContoh:\n${m.prefix}qrgen https://google.com\n${m.prefix}qrgen Halo dunia`, "guide"));
     }
 
     if (text.length > 1000) {

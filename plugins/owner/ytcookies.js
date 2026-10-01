@@ -17,7 +17,7 @@
 // file lama GAK ditimpa sampai valid.
 import fs from "fs";
 import path from "path";
-import { novaError, novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const COOKIES_PATH = path.join(process.cwd(), "data", "yt-cookies.txt");
 
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     const st = cookiesStatus();
     if (!st) {
       return m.reply(
-        claraWrap("Yt Cookies", [
+        novaWrap("Yt Cookies", [
           "🔴 *tidak ada cookies terpasang*",
           "",
           "YouTube lagi ngeblokir IP server → .play/.playvideo gagal di konversi.",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     }
     const ageDays = ((Date.now() - st.modified.getTime()) / 86400000).toFixed(1);
     return m.reply(
-      claraWrap("Yt Cookies", [
+      novaWrap("Yt Cookies", [
         `${st.valid ? "🟢" : "🟡"} *cookies ${st.valid ? "valid" : "bermasalah"}*`,
         `• lokasi : data/yt-cookies.txt`,
         `• ukuran : ${(st.size / 1024).toFixed(1)} KB`,
@@ -119,9 +119,9 @@ async function handler(m, { sock }) {
   if (sub === "clear" || sub === "off" || sub === "logout") {
     if (fs.existsSync(COOKIES_PATH)) {
       fs.unlinkSync(COOKIES_PATH);
-      return m.reply(claraWrap("Yt Cookies", ["🟡 *cookies dihapus* — bot balik mode tanpa login YouTube.", "", "Kalau .play masih kebutuh login, kirim file cookies.txt baru."].join("\n")));
+      return m.reply(novaWrap("Yt Cookies", ["🟡 *cookies dihapus* — bot balik mode tanpa login YouTube.", "", "Kalau .play masih kebutuh login, kirim file cookies.txt baru."].join("\n")));
     }
-    return m.reply(claraWrap("Yt Cookies", ["Tidak ada cookies tersimpan — sudah bersih dari awal."].join("\n")));
+    return m.reply(novaWrap("Yt Cookies", ["Tidak ada cookies tersimpan — sudah bersih dari awal."].join("\n")));
   }
 
   // ── Jalur utama: file cookies.txt dikirim/reply ─────────────
@@ -183,7 +183,7 @@ async function handler(m, { sock }) {
 
   await m.react("🐣");
   return m.reply(
-    claraWrap("Yt Cookies", [
+    novaWrap("Yt Cookies", [
       "🟢 *login youtube berhasil* 🎉",
       `• baris cookie : ${res.cookieLines} (yt: ${res.ytLines})`,
       "• tersimpan : data/yt-cookies.txt",

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // quotesislamic.js — Quotes Islami
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const QUOTES = [
   { arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", arti: "Sesungguhnya bersama kesulitan ada kemudahan (QS. Al-Insyirah: 6)" },
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("quotesislami error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("quotesislami", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("quotesislami", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

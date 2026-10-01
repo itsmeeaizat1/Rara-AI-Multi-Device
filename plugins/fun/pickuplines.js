@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -89,7 +89,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (arg && !GOMBAL_DB[arg] && !arg.startsWith("@") && !mentioned) {
-      return m.reply(claraWrap("Gombal", "Kategori tidak ditemukan!\n\nTersedia: " + CATEGORIES.join(", "), "warn"));
+      return m.reply(novaWrap("Gombal", "Kategori tidak ditemukan!\n\nTersedia: " + CATEGORIES.join(", "), "warn"));
     }
 
     const selectedCat = category || CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
@@ -114,7 +114,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }));
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Gombal", "Error: " + e.message, "error"));
+    return m.reply(novaWrap("Gombal", "Error: " + e.message, "error"));
   }
 }
 

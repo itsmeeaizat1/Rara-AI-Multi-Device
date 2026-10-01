@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "calculator",
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = typeof val === "number" || typeof val === "string" ? String(val) : format(val, { precision: 10 });
     } catch {
       const text =
-        claraWrap("Calculator", [`Ekspresi: *${expr}*`,
+        novaWrap("Calculator", [`Ekspresi: *${expr}*`,
           "Status: *ekspresi tidak valid*"].join("\n")) +
         "\n" +
         tipText(`Contoh valid: sqrt(16), 5^2 + sin(pi/2), 2 * (3 + 4)`);
@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Calculator", [`Ekspresi: *${expr}*`,
+      novaWrap("Calculator", [`Ekspresi: *${expr}*`,
         `Hasil: *${result}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}calc <ekspresi> untuk menghitung lagi`) +

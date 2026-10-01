@@ -12,7 +12,7 @@ import {
 import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "jadwalsholat2",
   alias: ["jadwalsholat", "jadwalsolat", "solat", "prayerschedule"],
@@ -114,7 +114,7 @@ _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
       } catch {}
     }
   } catch (error) {
-    m.reply(claraWrap("jadwalsholat2", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("jadwalsholat2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     }
     
     if (!mediaSource) {
-        await m.reply( claraWrap("GAGAL", 
+        await m.reply( novaWrap("GAGAL", 
             `Tidak ada audio/video yang terdeteksi!\n\n` +
             `*cara penggunaan:*\n` +
             `1. Kirim audio/video + caption \`${m.prefix}tovn\`\n` +
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            await m.reply(claraWrap("GAGAL", 
+            await m.reply(novaWrap("GAGAL", 
                 `Tidak dapat mengunduh media.\n` +
                 `Media mungkin sudah tidak tersedia.`))
             return
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
 
         if (!fs.existsSync(outputPath)) {
             await m.react("🐣");
-            await m.reply(claraWrap("KONVERsI GAGAL", 
+            await m.reply(novaWrap("KONVERsI GAGAL", 
                 `Gagal mengkonversi ke voice note.\n` +
                 `Pastikan ffmpeg terinstall dengan benar.`))
             return
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
     await m.react("❌");
-        await m.reply(claraWrap("ERROR", 
+        await m.reply(novaWrap("ERROR", 
             `Terjadi kesalahan saat memproses.\n` +
             `_${error.message}_`))
     } finally {

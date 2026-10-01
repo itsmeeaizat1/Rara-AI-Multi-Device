@@ -2,7 +2,7 @@
 // mlhero.js — Mobile Legends hero info
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const HEROES = [
   "Layla", "Miya", "Zilong", "Sabre", "Alice", "Tigreal", "Balmond",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const hero = HEROES.find(h => h.toLowerCase().includes(query.toLowerCase()));
     if (!hero) {
       await m.react("🚫");
-      return m.reply(claraWrap("mlhero", `Hero "${query}" tidak ditemukan!`, "error"));
+      return m.reply(novaWrap("mlhero", `Hero "${query}" tidak ditemukan!`, "error"));
     }
     const role = ROLES[Math.floor(Math.random() * ROLES.length)];
     const diff = DIFFICULTY[Math.floor(Math.random() * DIFFICULTY.length)];
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("mlhero error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("mlhero", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("mlhero", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

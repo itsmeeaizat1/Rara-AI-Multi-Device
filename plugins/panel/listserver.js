@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
 import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const allCommands = [...VALID_SERVERS.slice(0, 5).map(v => `listserver${v}`), 'listserver']
 const allAliases = VALID_SERVERS.map(v => `servers${v}`)
 
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("listserver", `❌ *akses ditolak*\n\n` +
+        return m.reply(novaWrap("listserver", `❌ *akses ditolak*\n\n` +
             `Maaf ya, kamu tidak memiliki izin akses penuh ke panel *${serverLabel}* ini.\n` +
             `Status peran kamu saat ini: *${userRole || 'Tidak ada'}*`))
     }
@@ -120,14 +120,14 @@ async function handler(m, { sock }) {
         } else {
             txt += `Sepertinya konfigurasi server Pterodactyl di file \`config.js\` belum diatur dengan benar. Silakan periksa kembali ya!`
         }
-        return m.reply(claraWrap("listserver", txt))
+        return m.reply(novaWrap("listserver", txt))
     }
     
     try {
         const servers = await fetchAllServers(serverConfig)
         
         if (servers.length === 0) {
-            return m.reply(claraWrap("listserver", `📋 *Daftar sErver ${serverLabel}*\n\nSaat ini belum ada server yang terdaftar di panel ini.`))
+            return m.reply(novaWrap("listserver", `📋 *Daftar sErver ${serverLabel}*\n\nSaat ini belum ada server yang terdaftar di panel ini.`))
         }
         
         let txt = `📋 *Daftar sErver ${serverLabel}*\n\n`
@@ -151,11 +151,11 @@ async function handler(m, { sock }) {
             txt += `\n\nServer lainnya yang tersedia: *${available.filter(s => s !== serverVersion).join(', ')}*`
         }
         
-        return m.reply(claraWrap("listserver", txt))
+        return m.reply(novaWrap("listserver", txt))
         
     } catch (err) {
         console.error(err)
-        return m.reply(claraWrap("listserver", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaWrap("listserver", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

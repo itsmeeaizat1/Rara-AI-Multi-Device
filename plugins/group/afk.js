@@ -3,7 +3,7 @@
 // kpan user mulai afk dan wktu brapa lama user afknya gt"):
 // kartu lengkap jam mulai + durasi + alasan + nama, persist di db
 // (selamat restart), subcommand cek/list/off, auto jawab yang mention.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import {
   getAfkUser, setAfkUser, removeAfkUser, isUserAfk, loadAfkMap,
   formatWib, formatDuration,
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     if (Array.isArray(m.mentionedJid) && m.mentionedJid.length) target = m.mentionedJid[0];
     if (!target && m.quoted?.sender) target = m.quoted.sender;
     if (!target) {
-      return m.reply(claraWrap("Cek AFK", [
+      return m.reply(novaWrap("Cek AFK", [
         "Cek status AFK orang lain:",
         "• Reply pesan dia + `.afk cek`",
         "• Atau tag dia + `.afk cek @user`",
@@ -45,14 +45,14 @@ async function handler(m, { sock }) {
     }
     const info = getAfkUser(target);
     if (!info) {
-      return m.reply(claraWrap("Cek AFK", [
+      return m.reply(novaWrap("Cek AFK", [
         `\`@${target.split("@")[0]}\` gak lagi AFK — dia lagi ada di sini.`,
       ].join("\n")), { mentions: [target] });
     }
     const tnum = target.split("@")[0];
     // 🔹 LIVE TICKER (13 Sep): durasi AFK nge-tick hidup di kartu — bukan
     // angka beku. Kartu di-edit tiap detik ±12 dtk lalu settle final.
-    const card = (durasiMs) => claraWrap("Cek AFK", [
+    const card = (durasiMs) => novaWrap("Cek AFK", [
       `👤 Nama : ${info.name || "@" + tnum}`,
       `⏰ Mulai : ${formatWib(info.since)}`,
       `⏱️ Durasi : ${formatDuration(durasiMs)}`,
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
       mode: "up", sinceTs: Number(info.since), upRunMs: Number(process.env.NOVAFK_TICKER_MS) || 12000,
       initialCard: card(Date.now() - info.since),
       tickCard: (st) => card(st.elapsedMs),
-      finalCard: (st) => claraWrap("Cek AFK", [
+      finalCard: (st) => novaWrap("Cek AFK", [
         `👤 Nama : ${info.name || "@" + tnum}`,
         `⏰ Mulai : ${formatWib(info.since)}`,
         `⏱️ Durasi : ${formatDuration(st.elapsedMs)} (dan terus berjalan)`,
@@ -83,9 +83,9 @@ async function handler(m, { sock }) {
       return `• ${n} — ${formatWib(info.since)} (${formatDuration(now - info.since)})`;
     });
     if (!rows.length) {
-      return m.reply(claraWrap("Daftar AFK", "Belum ada yang AFK sekarang — semua lagi online!", "info"));
+      return m.reply(novaWrap("Daftar AFK", "Belum ada yang AFK sekarang — semua lagi online!", "info"));
     }
-    return m.reply(claraWrap("Daftar AFK", [
+    return m.reply(novaWrap("Daftar AFK", [
       `${rows.length} orang lagi AFK:`,
       ``,
       ...rows,
@@ -96,9 +96,9 @@ async function handler(m, { sock }) {
   if (sub === "off" || sub === "stop" || sub === "batal") {
     const old = removeAfkUser(m.sender);
     if (!old) {
-      return m.reply(claraWrap("AFK", "Kamu emang gak lagi AFK — santai.", "info"));
+      return m.reply(novaWrap("AFK", "Kamu emang gak lagi AFK — santai.", "info"));
     }
-    return m.reply(claraWrap("AFK Dibatalkan", [
+    return m.reply(novaWrap("AFK Dibatalkan", [
       `\`AFK kamu dibatalkan\``,
       `⏰ Tadi mulai : ${formatWib(old.since)}`,
       `⏱️ Durasi : ${formatDuration(Date.now() - old.since)}`,
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
   const { entry, prev } = setAfkUser(m.sender, { reason, name: label, chat: m.chat });
 
   if (prev) {
-    return m.reply(claraWrap("AFK Diperbarui", [
+    return m.reply(novaWrap("AFK Diperbarui", [
       `👤 Nama : ${label}`,
       `📝 Alasan Baru : ${reason}`,
       `⏰ Mulai Baru : ${formatWib(entry.since)}`,
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
 
   // 🔹 LIVE TICKER (13 Sep): kartu AFK aktif nunjukin durasi yang nge-tick
   // hidup ±12 dtk — keliatan timer-nya jalan beneran, bukan kartu beku.
-  const setCard = (durasiMs) => claraWrap("AFK Aktif", [
+  const setCard = (durasiMs) => novaWrap("AFK Aktif", [
     `👤 Nama : ${label}`,
     `📝 Alasan : ${reason}`,
     `⏰ Mulai : ${formatWib(entry.since)}`,

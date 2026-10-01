@@ -12,7 +12,7 @@ const t = (name, ok, extra = "") => {
   if (ok) { pass++; console.log(`  ✅ ${name}`); }
   else { fail++; console.log(`  ❌ ${name} → ${typeof extra === "string" ? extra.slice(0, 200) : JSON.stringify(extra)?.slice(0, 200)}`); }
 };
-// decoder smallcaps → huruf normal (output claraWrap dikecilin semua)
+// decoder smallcaps → huruf normal (output novaWrap dikecilin semua)
 const SC_MAP = { "ᴀ": "a", "ʙ": "b", "ᴄ": "c", "ᴅ": "d", "ᴇ": "e", "ꜰ": "f", "ɢ": "g", "ʜ": "h", "ɪ": "i", "ᴊ": "j", "ᴋ": "k", "ʟ": "l", "ᴍ": "m", "ɴ": "n", "ᴏ": "o", "ᴘ": "p", "ǫ": "q", "ʀ": "r", "ꜱ": "s", "ᴛ": "t", "ᴜ": "u", "ᴠ": "v", "ᴡ": "w", "ʏ": "y", "ᴢ": "z" };
 const fromSC = (s) => String(s).toLowerCase().replace(/[\u{1D00}-\u{1DBF}]/gu, (ch) => SC_MAP[ch] || ch).replace(/\u{A730}-\u{A73F}/gu, (ch) => SC_MAP[ch] || ch);
 

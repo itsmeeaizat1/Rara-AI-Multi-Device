@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antighost",
@@ -54,7 +54,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (daysArg && daysArg >= 1 && daysArg <= 90) cfg.inactiveDays = daysArg;
       await db.save();
 
-      return m.reply(claraWrap("Anti Ghost", [
+      return m.reply(novaWrap("Anti Ghost", [
         "Anti Ghost DIAKTIFKAN!",
         "",
         "Threshold: " + cfg.inactiveDays + " hari tidak chat",
@@ -69,7 +69,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false;
       await db.save();
-      return m.reply(claraWrap("Anti Ghost", "Anti Ghost DIMATIKAN.\nKetik .antighost on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Anti Ghost", "Anti Ghost DIMATIKAN.\nKetik .antighost on untuk aktifkan lagi."));
     }
 
     // ACTION
@@ -80,13 +80,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
       cfg.action = action;
       await db.save();
-      return m.reply(claraWrap("Anti Ghost", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
+      return m.reply(novaWrap("Anti Ghost", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
     }
 
     // STATUS
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastScanStr = cfg.lastScan ? new Date(cfg.lastScan).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
-      return m.reply(claraWrap("Anti Ghost", [
+      return m.reply(novaWrap("Anti Ghost", [
         "Status: " + (cfg.enabled ? "*AKTIF*" : "Nonaktif"),
         "Threshold: " + cfg.inactiveDays + " hari",
         "Action: " + (cfg.action || "warn").toUpperCase(),
@@ -155,7 +155,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("Semua member active! Gak ada ghost.");
       }
 
-      const payload = { text: claraWrap("Anti Ghost", lines) };
+      const payload = { text: novaWrap("Anti Ghost", lines) };
       if (ghosts.length > 0) payload.mentions = ghosts.slice(0, 20);
       return m.reply(payload);
     }
@@ -201,7 +201,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         }
       }
 
-      return m.reply(claraWrap("Anti Ghost", [
+      return m.reply(novaWrap("Anti Ghost", [
         "KICK GHOST SELESAI!",
         "",
         "Total ghost: " + ghosts.length,

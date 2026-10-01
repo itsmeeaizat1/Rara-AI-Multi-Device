@@ -2,7 +2,7 @@
 import { GPT5 } from "../../src/scraper/gpt5.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gpt5",
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const result = await GPT5(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("GPT-5 Gagal", `${result.error || "Gagal dapet respons nih"}`));
+      return m.reply(novaWrap("GPT-5 Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
 
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("gpt5", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("gpt5", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

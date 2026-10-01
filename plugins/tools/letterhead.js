@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const pdfMime = m.quoted?.msg?.mimetype || "";
 
   if (!isPdf && !pdfMime.includes("pdf")) {
-    const help = claraWrap("Kop", [
+    const help = novaWrap("Kop", [
       `Tambah Kop Surat ke PDF`,
       ``,
       `📌 Format:`,
@@ -148,15 +148,15 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const kopData = parseKopArgs(args || "");
 
   if (!kopData.instansi) {
-    return m.reply(claraWrap("Kop", `❌ Minimal isi instansi= \n\n💡 *Contoh:* ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta`));
+    return m.reply(novaWrap("Kop", `❌ Minimal isi instansi= \n\n💡 *Contoh:* ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta`));
   }
-  m.reply(claraWrap("Kop", "Tambah kop surat ke PDF..."));
+  m.reply(novaWrap("Kop", "Tambah kop surat ke PDF..."));
 
   try {
     await m.react("🕒");
     const pdfBuffer = await m.quoted.download();
     if (!pdfBuffer || pdfBuffer.length === 0) {
-      return m.reply(claraWrap("Kop", "❌ Gagal download PDF."));
+      return m.reply(novaWrap("Kop", "❌ Gagal download PDF."));
     }
 
     const resultBuffer = await addKopToPDF(pdfBuffer, kopData);
@@ -170,7 +170,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   } catch (error) {
     await m.react("❌");
     console.error("kop error:", error);
-    m.reply(claraWrap("Kop", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(novaWrap("Kop", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

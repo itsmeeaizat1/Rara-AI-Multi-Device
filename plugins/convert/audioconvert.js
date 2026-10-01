@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,14 +34,14 @@ const FORMATS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio Convert", "Reply audio yang mau di-convert."));
+    if (!quoted) return m.reply(novaWrap("Audio Convert", "Reply audio yang mau di-convert."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage || quoted.documentMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio Convert", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio Convert", "Reply harus audio/voice note!"));
 
     const format = (args[0] || "").toLowerCase();
     if (!format || !FORMATS[format]) {
       const list = Object.entries(FORMATS).map(([k, v]) => k + " - " + v.desc).join("\n");
-      return m.reply(claraWrap("Audio Convert", [
+      return m.reply(novaWrap("Audio Convert", [
         "Format tujuan harus diisi!",
         "Format tersedia:",
         list,
@@ -80,7 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: fmt.mime,
       ptt: isPtt,
-      caption: claraWrap("Audio Convert", [
+      caption: novaWrap("Audio Convert", [
         "Berhasil convert!",
         "Format: " + format.toUpperCase() + " (" + fmt.desc + ")",
         "Codec: " + fmt.codec,

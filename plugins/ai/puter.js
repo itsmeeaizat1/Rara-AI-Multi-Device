@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 /**
@@ -156,7 +156,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase() === "list" || text.toLowerCase() === "models") {
     const currentModel = MODELS[session.model]?.label || session.model;
     const body = `Model aktif: ${currentModel}\n\n${formatModelList()}\nGanti model: .puter model <id>`;
-    return m.reply( claraWrap("Puter Models", body));
+    return m.reply( novaWrap("Puter Models", body));
   }
 
   // Sub-command: model <nama>
@@ -164,37 +164,37 @@ async function handler(m, { sock, config: botConfig }) {
     const modelName = text.slice(6).trim();
     const resolved = resolveModel(modelName);
     if (!resolved) {
-      return m.reply(claraWrap("Puter", `Model "${modelName}" tidak ditemukan.\n\nKetik .puter list untuk lihat model tersedia.`));
+      return m.reply(novaWrap("Puter", `Model "${modelName}" tidak ditemukan.\n\nKetik .puter list untuk lihat model tersedia.`));
     }
     session.model = resolved;
     session.messages = [];
     const label = MODELS[resolved]?.label || resolved;
-    return m.reply(claraWrap("Puter", `Model diganti ke: ${label}\nSesi direset untuk model baru.`));
+    return m.reply(novaWrap("Puter", `Model diganti ke: ${label}\nSesi direset untuk model baru.`));
   }
 
   // Sub-command: reset
   if (text.toLowerCase() === "reset") {
     session.messages = [];
-    return m.reply(claraWrap("Puter", "Sesi percakapan direset."));
+    return m.reply(novaWrap("Puter", "Sesi percakapan direset."));
   }
 
   // Sub-command: setkey (owner only)
   if (text.toLowerCase().startsWith("setkey ")) {
     if (!m.isOwner) {
-      return m.reply(claraWrap("Puter", "Hanya owner yang bisa set token."));
+      return m.reply(novaWrap("Puter", "Hanya owner yang bisa set token."));
     }
     const newToken = text.slice(7).trim();
     if (!newToken) {
-      return m.reply(claraWrap("Puter", "Token tidak boleh kosong.\nDaftar gratis di https://puter.com/dashboard lalu klik Create token"));
+      return m.reply(novaWrap("Puter", "Token tidak boleh kosong.\nDaftar gratis di https://puter.com/dashboard lalu klik Create token"));
     }
     tokenStore = newToken;
-    return m.reply(claraWrap("Puter", "Token Puter tersimpan.\nDaftar model: .puter list"));
+    return m.reply(novaWrap("Puter", "Token Puter tersimpan.\nDaftar model: .puter list"));
   }
 
   // Validasi token sebelum chat
   if (!token) {
     const help = `Token Puter belum diatur.\n\nDaftar gratis di https://puter.com/dashboard lalu klik Create token\n\nSet token (owner only):\n.puter setkey <token>\n\nAtau set di config.js:\nAPIkey: { puter: "token-anda" }`;
-    return m.reply( claraWrap("Puter Setup", help));
+    return m.reply( novaWrap("Puter Setup", help));
   }
 
   // Validasi pesan
@@ -225,7 +225,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Simpan reply AI ke session
     session.messages.push({ role: "assistant", content: reply });
     const label = MODELS[modelId]?.label || modelId;
-    return m.reply(claraWrap(`Puter | ${label}`, reply));
+    return m.reply(novaWrap(`Puter | ${label}`, reply));
   } catch (error) {
     // IkyyXD fallback
     try {
@@ -248,7 +248,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     await m.react("🐣");
-    return m.reply(claraWrap("Puter Error", errMsg));
+    return m.reply(novaWrap("Puter Error", errMsg));
   }
 }
 

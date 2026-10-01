@@ -6,7 +6,7 @@
 // beda dari .yts (NeoXR) dan downloader YouTube yang udah ada.
 import axios from "axios";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { youtubeSearch, ytmusicPlay } from "../../src/lib/nova-onepunya.js";
 
 const pluginConfig = {
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   const cmd = (m.command || "").toLowerCase();
   const query = (m.args || []).join(" ").trim();
   if (!query) {
-    return m.reply(claraWrap("Onepunya YouTube", `Masukkan kata kunci!\n\nContoh: .${cmd === "oneytmusic" || cmd === "oneplay" ? "oneytmusic monolog pamungkas" : "oneyts lagu hits"}`));
+    return m.reply(novaWrap("Onepunya YouTube", `Masukkan kata kunci!\n\nContoh: .${cmd === "oneytmusic" || cmd === "oneplay" ? "oneytmusic monolog pamungkas" : "oneyts lagu hits"}`));
   }
   const apiKey = getApiKey("onepunya");
 
@@ -38,9 +38,9 @@ async function handler(m, { sock }) {
     try {
       const song = await ytmusicPlay(apiKey, query);
       if (!song?.audioUrl) {
-        return m.reply(claraWrap("Onepunya YT Music", `Lagu "${query}" gak ketemu link audionya.`));
+        return m.reply(novaWrap("Onepunya YT Music", `Lagu "${query}" gak ketemu link audionya.`));
       }
-      await m.reply(claraWrap("Onepunya YT Music", `🎵 ${song.title || query}\n👤 ${song.author || "-"} · ⏱ ${song.duration || "-"}\n\n⬇️ Lagu lagi dikirim...`));
+      await m.reply(novaWrap("Onepunya YT Music", `🎵 ${song.title || query}\n👤 ${song.author || "-"} · ⏱ ${song.duration || "-"}\n\n⬇️ Lagu lagi dikirim...`));
       try {
         const res = await axios.get(song.audioUrl, { responseType: "arraybuffer", timeout: 120_000 });
         await sock.sendMessage(m.chat, {
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       }
       return;
     } catch (e) {
-      return m.reply(claraWrap("Onepunya YT Music", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+      return m.reply(novaWrap("Onepunya YT Music", `Gagal: ${String(e.message || e).slice(0, 200)}`));
     }
   }
 
@@ -63,16 +63,16 @@ async function handler(m, { sock }) {
     const results = await youtubeSearch(apiKey, query);
     const list = (Array.isArray(results) ? results : []).slice(0, 10);
     if (!list.length) {
-      return m.reply(claraWrap("Onepunya YouTube", `Gak ada hasil untuk: ${query}`));
+      return m.reply(novaWrap("Onepunya YouTube", `Gak ada hasil untuk: ${query}`));
     }
     let text = `▶️ Onepunya YouTube Search\nKueri: ${query}\n\n`;
     list.forEach((v, i) => {
       text += `${i + 1}. ${String(v.title || "").slice(0, 70)}\n   ${v.author || "-"} · ⏱ ${v.duration || "-"} · 👁 ${Number(v.views || 0).toLocaleString("id-ID")}\n   ${v.url || ""}\n`;
     });
     text += `\n💡 Download pakai: .onedl <link> [720p|mp3]`;
-    return m.reply(claraWrap("Onepunya YouTube", text));
+    return m.reply(novaWrap("Onepunya YouTube", text));
   } catch (e) {
-    return m.reply(claraWrap("Onepunya YouTube", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+    return m.reply(novaWrap("Onepunya YouTube", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 

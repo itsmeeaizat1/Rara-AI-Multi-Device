@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "verotp",
@@ -51,14 +51,14 @@ async function handler(m, { args, sock }) {
   const user = db.getUser(m.sender);
 
   if (user?.isRegistered) {
-    return await m.reply(claraWrap("verotp", "✅ Kamu sudah terdaftar!"));
+    return await m.reply(novaWrap("verotp", "✅ Kamu sudah terdaftar!"));
   }
 
   const session = getOtpSession(m.sender);
   if (!session) {
     let txt = `Gak ada sesi OTP aktif nih!\n\n`;
     txt += `Daftar dulu dengan: \`${m.prefix}regmail <nama>, <email>\``;
-    return await m.reply(claraWrap("Verotp", txt), { commandName: "verotp" });
+    return await m.reply(novaWrap("Verotp", txt), { commandName: "verotp" });
   }
 
   if (!args[0]) {
@@ -66,7 +66,7 @@ async function handler(m, { args, sock }) {
     txt += `Masukkan kode OTP yang dikirim ke email:\n`;
     txt += `\`${m.prefix}verotp <kode>\`\n\n`;
     txt += `Contoh: \`${m.prefix}verotp 123456\``;
-    return await m.reply(claraWrap("Verotp", txt), { commandName: "verotp" });
+    return await m.reply(novaWrap("Verotp", txt), { commandName: "verotp" });
   }
 
   const inputOtp = args[0].trim();
@@ -78,7 +78,7 @@ async function handler(m, { args, sock }) {
       let txt = `Kode OTP salah ${MAX_ATTEMPTS}x!\n\n`;
       txt += `Sesi dibatalkan. Silakan daftar ulang:\n`;
       txt += `\`${m.prefix}regmail <nama>, <email>\``;
-      await m.reply(claraWrap("verotp", txt));
+      await m.reply(novaWrap("verotp", txt));
       return;
     }
 
@@ -86,7 +86,7 @@ async function handler(m, { args, sock }) {
     let txt = `Kode OTP salah!\n\n`;
     txt += `Sisa percobaan: *${remaining}x*\n`;
     txt += `Ketik: \`${m.prefix}verotp <kode>\``;
-    await m.reply(claraWrap("verotp", txt));
+    await m.reply(novaWrap("verotp", txt));
     return;
   }
 
@@ -139,7 +139,7 @@ async function handler(m, { args, sock }) {
     txt += `Selamat datang di ${config.bot?.name || "Nova AI"}!\n`;
     txt += `Ketik \`${m.prefix}menu\` untuk melihat fitur`;
 
-    await m.reply(claraWrap("Verotp", txt), { commandName: "verotp" });
+    await m.reply(novaWrap("Verotp", txt), { commandName: "verotp" });
   } catch (e) {
     console.error("[VerOTP] Error:", e.message);
     await m.reply(novaError("VerOTP", "Ada error saat verifikasi nih, coba lagi ya"));

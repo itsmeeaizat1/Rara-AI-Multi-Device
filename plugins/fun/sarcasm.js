@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nyindir",
@@ -74,7 +74,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (arg && !SINDIRAN_DB[arg] && !arg.startsWith("@") && !mentioned) {
-      return m.reply(claraWrap("Nyindir", "Kategori tidak ada!\n\nTersedia: " + KATEGORI.join(", "), "warn"));
+      return m.reply(novaWrap("Nyindir", "Kategori tidak ada!\n\nTersedia: " + KATEGORI.join(", "), "warn"));
     }
 
     const selectedCat = category || KATEGORI[Math.floor(Math.random() * KATEGORI.length)];
@@ -95,10 +95,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     lines.push(usedPrefix + "nyindir <kategori> untuk lagi");
 
     await m.react("🐣");
-    return m.reply(claraWrap("Nyindir", lines, "info"));
+    return m.reply(novaWrap("Nyindir", lines, "info"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Nyindir", "Error: " + e.message, "error"));
+    return m.reply(novaWrap("Nyindir", "Error: " + e.message, "error"));
   }
 }
 

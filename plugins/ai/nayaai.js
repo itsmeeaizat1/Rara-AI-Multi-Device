@@ -2,7 +2,7 @@
 // nayaai — Naya AI via api.cuki.biz.id
 import { nayaAI } from "../../src/scraper/cuki-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("nayaai", `Mau nanya apa ke Naya AI?\n\nContoh: ${m.prefix}nayaai rekomendasi film horor\n${m.prefix}nayaai cara membuat kopi manual brew`, "guide"));
+      return m.reply(novaWrap("nayaai", `Mau nanya apa ke Naya AI?\n\nContoh: ${m.prefix}nayaai rekomendasi film horor\n${m.prefix}nayaai cara membuat kopi manual brew`, "guide"));
     }
 
     await m.react("🕒");
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("nayaai", "Naya AI lagi offline 🤖", "error"));
+      return m.reply(novaWrap("nayaai", "Naya AI lagi offline 🤖", "error"));
     }
 
     await m.react("🐣");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("nayaai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("nayaai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("nayaai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

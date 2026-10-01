@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'notifsholat',
     alias: ["notifsholat"],
@@ -19,7 +19,7 @@ const pluginConfig = {
 
 function handler(m, { sock, db }) {
     if (!m.isAdmin && !m.isOwner) {
-        return m.reply(claraWrap("Notifsholat", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"));
+        return m.reply(novaWrap("Notifsholat", `Hanya admin grup yang bisa menggunakan fitur ini`, "error"));
     }
 
     const args = m.args[0]?.toLowerCase();
@@ -51,13 +51,13 @@ function handler(m, { sock, db }) {
     if (args === 'on') {
         group.notifSholat = true;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `notif sholat diaktifkan\n\nGrup ini akan menerima pengingat waktu sholat\nLokasi: ${kotaSetting.nama}`, "success"));
+        return m.reply(novaWrap("Notifsholat", `notif sholat diaktifkan\n\nGrup ini akan menerima pengingat waktu sholat\nLokasi: ${kotaSetting.nama}`, "success"));
     }
 
     if (args === 'off') {
         group.notifSholat = false;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `notif sholat dinonaktifkan`, "error"));
+        return m.reply(novaWrap("Notifsholat", `notif sholat dinonaktifkan`, "error"));
     }
 }
 

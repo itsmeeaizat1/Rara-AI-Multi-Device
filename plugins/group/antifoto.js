@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antifoto",
@@ -57,17 +57,17 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antifoto: true });
-    await m.reply(claraWrap("Antifoto", `Anti Foto diaktifkan`));
+    await m.reply(novaWrap("Antifoto", `Anti Foto diaktifkan`));
     return;
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antifoto: false });
-    await m.reply(claraWrap("Antifoto", `Anti Foto dinonaktifkan`));
+    await m.reply(novaWrap("Antifoto", `Anti Foto dinonaktifkan`));
     return;
   }
 
-  await m.reply(claraWrap("Anti foto", `Gunakan \`${m.prefix}antifoto on\` atau \`${m.prefix}antifoto off\``, "info"));
+  await m.reply(novaWrap("Anti foto", `Gunakan \`${m.prefix}antifoto on\` atau \`${m.prefix}antifoto off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiFoto };

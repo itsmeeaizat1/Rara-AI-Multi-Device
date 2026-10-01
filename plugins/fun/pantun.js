@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pantun",
@@ -64,7 +64,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const theme = args[0]?.toLowerCase();
 
     if (theme && !PANTUN_DB[theme]) {
-      return m.reply(claraWrap("Pantun", "Tema tidak ditemukan!\n\nTersedia: " + THEMES.join(", "), "warn"));
+      return m.reply(novaWrap("Pantun", "Tema tidak ditemukan!\n\nTersedia: " + THEMES.join(", "), "warn"));
     }
 
     const selectedTheme = theme || THEMES[Math.floor(Math.random() * THEMES.length)];
@@ -72,7 +72,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const pantun = pool[Math.floor(Math.random() * pool.length)];
 
     await m.react("🐣");
-    return m.reply(claraWrap("Pantun", [
+    return m.reply(novaWrap("Pantun", [
       "Tema: " + selectedTheme,
       "",
       pantun,
@@ -81,7 +81,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ], "info"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Pantun", "Error: " + e.message, "error"));
+    return m.reply(novaWrap("Pantun", "Error: " + e.message, "error"));
   }
 }
 

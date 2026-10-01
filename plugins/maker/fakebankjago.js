@@ -7,7 +7,7 @@
 // Font-nya SUDAH ADA di assets/fonts/ bawaan repo, jadi gak perlu download
 // ulang dari GitHub tiap kali file gak ketemu di path yang salah — langsung
 // register dari path absolut via import.meta.url (immune ke cwd).
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
 import te from '../../src/lib/nova-error.js'
 import { fileURLToPath } from "url";
@@ -72,7 +72,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const [nama,nominal] = m.text?.split(',')
     if (!nama || !nominal) {
-        return m.reply(claraWrap("fakebankjago", [
+        return m.reply(novaWrap("fakebankjago", [
             "Bikin screenshot chat fake bank ala Bank Jago.",
             "",
             `📌 Format: ${m.prefix}fakebank <nama>,<nominal>`,
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
             `💡 Contoh: ${m.prefix}fakebank Aizat,10000`,
         ]))
     }
-    if(isNaN(nominal)) { return m.reply(claraWrap("fakebankjago", "Nominal harus berupa angka kak.", "error")); }
+    if(isNaN(nominal)) { return m.reply(novaWrap("fakebankjago", "Nominal harus berupa angka kak.", "error")); }
     try {
         await m.react("🕒");
         const saldo = Number(nominal.replace(/[^0-9]/g, '')).toLocaleString('id-ID')
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
         })
     } catch (error) {
         await m.react("❌");
-        m.reply(claraWrap("fakebankjago", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("fakebankjago", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

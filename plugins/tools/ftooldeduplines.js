@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooldeduplines — hapus baris duplikat (port altftool.com/tools/all/duplicate-line-remover)
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooldeduplines", alias: ["deduplines", "hapusduplikat", "uniquelines"], category: "tools",
@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
     const removed = lines.filter((l) => l.trim()).length - out.length;
     if (!out.length) {
       await m.react("❌");
-      return m.reply(claraWrap("Dedup Lines", ["ERROR: gak ada baris yang bisa diproses"].join("\n")));
+      return m.reply(novaWrap("Dedup Lines", ["ERROR: gak ada baris yang bisa diproses"].join("\n")));
     }
     const lines2 = ["HASIL DEDUP",
       "",
@@ -44,10 +44,10 @@ async function handler(m, { sock, config: botConfig }) {
       "",
       "```" + (out.join("\n").length > 800 ? out.join("\n").substring(0, 800) + "…" : out.join("\n")) + "```"];
     await m.react("🐣");
-    await m.reply(claraWrap("Dedup Lines", lines2.join("\n")));
+    await m.reply(novaWrap("Dedup Lines", lines2.join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Dedup Lines", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Dedup Lines", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

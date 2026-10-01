@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "otakudict",
@@ -75,18 +75,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "otakudict <nomor>")
       lines.push("Contoh: " + usedPrefix + "otakudict 3")
-      return m.reply(claraWrap("Kamus Otaku", lines.join("\n")))
+      return m.reply(novaWrap("Kamus Otaku", lines.join("\n")))
     }
 
     const item = ISTILAH[input - 1]
-    return m.reply(claraWrap("Istilah: " + item.istilah, [
+    return m.reply(novaWrap("Istilah: " + item.istilah, [
       "Kategori: " + item.kategori,
       "",
       "Arti:",
       item.arti,
     ].join("\n")))
   } catch (e) {
-    return m.reply(claraWrap("Kamus Otaku", "Error: " + e.message))
+    return m.reply(novaWrap("Kamus Otaku", "Error: " + e.message))
   }
 }
 

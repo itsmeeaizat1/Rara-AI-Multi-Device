@@ -8,7 +8,7 @@ import path from "path";
 import os from "os";
 import { exec } from "child_process";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import fs2 from "fs";
 const MOOD_DB = path.join(process.cwd(), "src", "database", "user", "moodtrack.json");
@@ -181,7 +181,7 @@ async function triggerAIConversation(sock, groupId, userJid, pushName, mood, moo
       ].join("\n");
 
       await sock.sendMessage(groupId, {
-        text: claraWrap("Mood AI Connect", body),
+        text: novaWrap("Mood AI Connect", body),
         mentions: userJid ? [userJid] : [],
       });
     }
@@ -200,7 +200,7 @@ async function triggerAIConversation(sock, groupId, userJid, pushName, mood, moo
       `_Pesan ini dikirim otomatis karena 3x terakhir mood kamu terdeteksi: ${mood}_`,
     ].join("\n");
     await sock.sendMessage(groupId, {
-      text: claraWrap("Mood Support", fallbackBody),
+      text: novaWrap("Mood Support", fallbackBody),
       mentions: userJid ? [userJid] : [],
     });
   }
@@ -550,7 +550,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Mood Tracking ON ───
     if (command === "moodtrackon") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadMoodDB();
@@ -558,28 +558,28 @@ async function handler(m, { sock }) {
       db.groups[groupId].tracking = true;
       db.groups[groupId].trackEnabledAt = Date.now();
       saveMoodDB(db);
-      await m.reply(claraWrap("Mood Track", "Mood Tracking untuk grup ini sudah DINYALAKAN.\n\nSetiap hasil .moodcheck akan tersimpan di database untuk riwayat mood.\n\nLihat riwayat: .moodhistory"));
+      await m.reply(novaWrap("Mood Track", "Mood Tracking untuk grup ini sudah DINYALAKAN.\n\nSetiap hasil .moodcheck akan tersimpan di database untuk riwayat mood.\n\nLihat riwayat: .moodhistory"));
       return;
     }
 
     // ─── Toggle: Mood Tracking OFF ───
     if (command === "moodtrackoff") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].tracking = false;
       saveMoodDB(db);
-      await m.reply(claraWrap("Mood Track", "Mood Tracking untuk grup ini sudah DIMATIKAN.\n\nHasil .moodcheck tetap berfungsi tapi tidak disimpan ke database."));
+      await m.reply(novaWrap("Mood Track", "Mood Tracking untuk grup ini sudah DIMATIKAN.\n\nHasil .moodcheck tetap berfungsi tapi tidak disimpan ke database."));
       return;
     }
 
     // ─── Toggle: Mood Suggest ON ───
     if (command === "moodsuggon") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadMoodDB();
@@ -587,28 +587,28 @@ async function handler(m, { sock }) {
       db.groups[groupId].moodSuggest = true;
       db.groups[groupId].suggEnabledAt = Date.now();
       saveMoodDB(db);
-      await m.reply(claraWrap("Mood Suggest", "Auto Mood Suggest sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif (Sedih, Stres, Marah, Gugup), bot akan kirim pesan support otomatis.\n\nCatatan: Mood Tracking juga harus ON (.moodtrackon) agar fitur ini berfungsi."));
+      await m.reply(novaWrap("Mood Suggest", "Auto Mood Suggest sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif (Sedih, Stres, Marah, Gugup), bot akan kirim pesan support otomatis.\n\nCatatan: Mood Tracking juga harus ON (.moodtrackon) agar fitur ini berfungsi."));
       return;
     }
 
     // ─── Toggle: Mood Suggest OFF ───
     if (command === "moodsuggoff") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodSuggest = false;
       saveMoodDB(db);
-      await m.reply(claraWrap("Mood Suggest", "Auto Mood Suggest sudah DIMATIKAN untuk grup ini.\n\nBot berhenti mengirim pesan support otomatis. Mood tracking tetap berjalan kalau masih ON."));
+      await m.reply(novaWrap("Mood Suggest", "Auto Mood Suggest sudah DIMATIKAN untuk grup ini.\n\nBot berhenti mengirim pesan support otomatis. Mood tracking tetap berjalan kalau masih ON."));
       return;
     }
 
     // ─── Toggle: Mood AI Connect ON ───
     if (command === "moodaion") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadMoodDB();
@@ -616,35 +616,35 @@ async function handler(m, { sock }) {
       db.groups[groupId].moodAI = true;
       db.groups[groupId].moodAIEnabledAt = Date.now();
       saveMoodDB(db);
-      await m.reply(claraWrap("Mood AI Connect", "Mood AI Connect sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif, bot akan menghubungkan mereka ke AI untuk ngobrol interaktif.\n\n*cooldown:* Default 30 menit per user. Bisa diubah dengan .moodaiset <menit>.\n\n*syarat:* Mood Tracking juga harus ON (.moodtrackon) dan AI config harus terisi (apiKey di .aihelp)."));
+      await m.reply(novaWrap("Mood AI Connect", "Mood AI Connect sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif, bot akan menghubungkan mereka ke AI untuk ngobrol interaktif.\n\n*cooldown:* Default 30 menit per user. Bisa diubah dengan .moodaiset <menit>.\n\n*syarat:* Mood Tracking juga harus ON (.moodtrackon) dan AI config harus terisi (apiKey di .aihelp)."));
       return;
     }
 
     // ─── Toggle: Mood AI Connect OFF ───
     if (command === "moodaioff") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodAI = false;
       saveMoodDB(db);
-      await m.reply(claraWrap("Mood AI Connect", "Mood AI Connect sudah DIMATIKAN untuk grup ini.\n\nBot berhenti menghubungkan user ke AI otomatis. Mood Suggest (pesan statis) tetap berjalan kalau masih ON."));
+      await m.reply(novaWrap("Mood AI Connect", "Mood AI Connect sudah DIMATIKAN untuk grup ini.\n\nBot berhenti menghubungkan user ke AI otomatis. Mood Suggest (pesan statis) tetap berjalan kalau masih ON."));
       return;
     }
 
     // ─── Set AI Cooldown Duration ───
     if (command === "moodaiset") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
+        await m.reply(novaWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const args = m.body?.split(" ").slice(1) || [];
       const minutes = parseInt(args[0]);
 
       if (!minutes || minutes < 1 || minutes > 1440) {
-        await m.reply(claraWrap("Mood AI Cooldown", "Format: .moodaiset <menit>\n\nContoh:\n.moodaiset 15 - Set cooldown 15 menit\n.moodaiset 60 - Set cooldown 1 jam\n.moodaiset 0 - Reset ke default (30 menit)\n\nRange: 1-1440 menit (24 jam max)"));
+        await m.reply(novaWrap("Mood AI Cooldown", "Format: .moodaiset <menit>\n\nContoh:\n.moodaiset 15 - Set cooldown 15 menit\n.moodaiset 60 - Set cooldown 1 jam\n.moodaiset 0 - Reset ke default (30 menit)\n\nRange: 1-1440 menit (24 jam max)"));
         return;
       }
       const db = loadMoodDB();
@@ -653,14 +653,14 @@ async function handler(m, { sock }) {
       if (minutes === 0) {
         delete db.groups[groupId].aiCooldownMin;
         saveMoodDB(db);
-        await m.reply(claraWrap("Mood AI Cooldown", "Cooldown direset ke default (30 menit)."));
+        await m.reply(novaWrap("Mood AI Cooldown", "Cooldown direset ke default (30 menit)."));
       } else {
         db.groups[groupId].aiCooldownMin = minutes;
         saveMoodDB(db);
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
         const display = hours > 0 ? `${hours} jam ${mins > 0 ? mins + " menit" : ""}` : `${minutes} menit`;
-        await m.reply(claraWrap("Mood AI Cooldown", `Cooldown AI Connect untuk grup ini diset ke *${display}*.\n\nSetiap user hanya bisa di-trigger AI maksimal 1x per ${display}.`));
+        await m.reply(novaWrap("Mood AI Cooldown", `Cooldown AI Connect untuk grup ini diset ke *${display}*.\n\nSetiap user hanya bisa di-trigger AI maksimal 1x per ${display}.`));
       }
       return;
     }
@@ -715,7 +715,7 @@ async function handler(m, { sock }) {
         `9. .moodhistory - Lihat riwayat mood kamu`,
         `10. .moodhistory @user - Lihat mood orang lain (owner)`,
       ].join("\n");
-      await m.reply(claraWrap("Mood Track Status", statusBody));
+      await m.reply(novaWrap("Mood Track Status", statusBody));
       return;
     }
 
@@ -731,7 +731,7 @@ async function handler(m, { sock }) {
       const mentioned = m.mentionedJid?.[0];
       if (mentioned) {
         if (!isOwner) {
-          await m.reply(claraWrap("Akses Ditolak", "🚫 Lihat mood history orang lain khusus Owner."));
+          await m.reply(novaWrap("Akses Ditolak", "🚫 Lihat mood history orang lain khusus Owner."));
           return;
         }
         targetJid = mentioned;
@@ -741,7 +741,7 @@ async function handler(m, { sock }) {
       const history = getMoodHistory(targetJid, 10);
 
       if (history.length === 0) {
-        await m.reply(claraWrap("Mood History", "Belum ada riwayat mood untuk user ini.\n\nGunakan .moodcheck dulu untuk mulai rekam, dan pastikan mood tracking sudah ON (.moodtrackon)."));
+        await m.reply(novaWrap("Mood History", "Belum ada riwayat mood untuk user ini.\n\nGunakan .moodcheck dulu untuk mulai rekam, dan pastikan mood tracking sudah ON (.moodtrackon)."));
         return;
       }
 
@@ -798,7 +798,7 @@ async function handler(m, { sock }) {
         distLines,
       ].join("\n");
 
-      await m.reply(claraWrap("Mood History", body));
+      await m.reply(novaWrap("Mood History", body));
       return;
     }
 
@@ -806,7 +806,7 @@ async function handler(m, { sock }) {
     const isQuoted = m.quoted;
 
     if (!isVN) {
-      const help = claraWrap(
+      const help = novaWrap(
         "Mood Check",
         [
           "Voice Note Mood & Emotion Analyzer",
@@ -904,7 +904,7 @@ async function handler(m, { sock }) {
                 `_Pesan ini dikirim otomatis karena 3x terakhir mood kamu terdeteksi: ${moodKey}_`,
               ].join("\n");
               await sock.sendMessage(groupId, {
-                text: claraWrap("Mood Support", supportBody),
+                text: novaWrap("Mood Support", supportBody),
                 mentions: senderJid ? [senderJid] : [],
               });
             }
@@ -915,7 +915,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🐣");
-      await m.reply(claraWrap(`Mood Check - ${analysis.moodLabels[analysis.topMood[0]]}`, report));
+      await m.reply(novaWrap(`Mood Check - ${analysis.moodLabels[analysis.topMood[0]]}`, report));
     } finally {
       // Cleanup
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[moodcheck.js]:', e.message); }
@@ -924,7 +924,7 @@ async function handler(m, { sock }) {
     await m.react("❌");
     console.error("[MOODCHECK] Error:", error.message);
     try { fs.unlinkSync(path.join(os.tmpdir(), `mood_input_${Date.now()}.ogg`)); } catch (e) { console.error('[moodcheck.js]:', e.message); }
-    await m.reply(claraWrap("Mood Check", "Terjadi error saat menganalisis audio. Pastikan kamu reply ke Voice Note yang valid (bukan sticker/video)."));
+    await m.reply(novaWrap("Mood Check", "Terjadi error saat menganalisis audio. Pastikan kamu reply ke Voice Note yang valid (bukan sticker/video)."));
   }
 }
 

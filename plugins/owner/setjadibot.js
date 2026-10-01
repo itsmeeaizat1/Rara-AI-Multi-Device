@@ -6,7 +6,7 @@
  */
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setjadibot",
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
   if (action === "mode" || action === "setmode") {
     const mode = (args[0] || "").toLowerCase();
     if (!["all", "premium", "specific"].includes(mode)) {
-      return m.reply(claraWrap("setjadibot", [
+      return m.reply(novaWrap("setjadibot", [
         "Mode tidak valid.",
         "",
         "💡 Pilih salah satu:",
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
       specific: "User Tertentu",
     }[mode];
 
-    return m.reply(claraWrap("Setjadibot", `Akses jadibot diatur ke: *${modeLabel}*`));
+    return m.reply(novaWrap("Setjadibot", `Akses jadibot diatur ke: *${modeLabel}*`));
   }
 
   if (action === "add" || action === "tambah") {
@@ -115,9 +115,9 @@ async function handler(m, { sock }) {
     if (!access.allowedUsers.includes(jid)) {
       access.allowedUsers.push(jid);
       saveJadibotAccess(access);
-      return m.reply(claraWrap("Setjadibot", `User @${jid.split("@")[0]} ditambahkan ke daftar jadibot.`));
+      return m.reply(novaWrap("Setjadibot", `User @${jid.split("@")[0]} ditambahkan ke daftar jadibot.`));
     }
-    return m.reply(claraWrap("Setjadibot", "User sudah ada di daftar."));
+    return m.reply(novaWrap("Setjadibot", "User sudah ada di daftar."));
   }
 
   if (action === "remove" || action === "del" || action === "hapus") {
@@ -138,15 +138,15 @@ async function handler(m, { sock }) {
     if (idx !== -1) {
       access.allowedUsers.splice(idx, 1);
       saveJadibotAccess(access);
-      return m.reply(claraWrap("Setjadibot", `User @${jid.split("@")[0]} dihapus dari daftar jadibot.`));
+      return m.reply(novaWrap("Setjadibot", `User @${jid.split("@")[0]} dihapus dari daftar jadibot.`));
     }
-    return m.reply(claraWrap("Setjadibot", "User tidak ada di daftar."));
+    return m.reply(novaWrap("Setjadibot", "User tidak ada di daftar."));
   }
 
   if (action === "list" || action === "daftar") {
     const access = getJadibotAccess();
     if (!access.allowedUsers.length) {
-      return m.reply(claraWrap("Setjadibot", "Daftar user jadibot kosong."));
+      return m.reply(novaWrap("Setjadibot", "Daftar user jadibot kosong."));
     }
     let txt = "*Daftar User Jadibot*\n\n";
     access.allowedUsers.forEach((u, i) => {
@@ -155,7 +155,7 @@ async function handler(m, { sock }) {
     return sock.sendMessage(m.chat, { text: txt, mentions: access.allowedUsers }, { quoted: m });
   }
 
-  return m.reply(claraWrap("setjadibot", [
+  return m.reply(novaWrap("setjadibot", [
     "Pengaturan akses jadibot:",
     "",
     "1. " + m.prefix + "setjadibot mode <all/premium/specific>",

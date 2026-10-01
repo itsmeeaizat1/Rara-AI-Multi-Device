@@ -10,7 +10,7 @@
 import { TOOLS, localParse, think, resolveUserByName, sanitizeAiReply, needsWebSearch, buildSearchQuery, quickWebSearch, splitChatChunks, getAgentTools, getAllSkills, TOOL_TOPIC, TOOL_NATURAL_DOING } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy, callGeminiVision } from "../../src/lib/nova-ai-service.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { claraWrap, bracketBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, bracketBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import { startStatusRotation as startStatusRotationLib } from "../../src/lib/nova-status-rotate.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/nova-plugins.js";
@@ -271,7 +271,7 @@ async function handler(m, { sock, conn, config, db }) {
       if (voiceOn) {
         setVoiceCfg(db, m.chat, { on: true });
         const cfg = getVoiceCfg(db, m.chat);
-        return m.reply(claraWrap("novaagent suara", [
+        return m.reply(novaWrap("novaagent suara", [
           "Mode suara AKTIF di chat ini",
           "Semua jawabanku akan dibacakan jadi voice note",
           "Suara saat ini: " + (VOICE_OPTIONS.find(v => v.id === cfg.voice)?.name || cfg.voice),
@@ -282,7 +282,7 @@ async function handler(m, { sock, conn, config, db }) {
       }
       if (voiceOff) {
         setVoiceCfg(db, m.chat, { on: false });
-        return m.reply(claraWrap("novaagent suara", [
+        return m.reply(novaWrap("novaagent suara", [
           "Mode suara NONAKTIF",
           "Jawabanku kembali sebagai teks biasa",
         ]));
@@ -290,7 +290,7 @@ async function handler(m, { sock, conn, config, db }) {
       if (voiceMatch && VOICE_OPTIONS.some(v => v.id === voiceMatch[1])) {
         const v = VOICE_OPTIONS.find(v => v.id === voiceMatch[1]);
         setVoiceCfg(db, m.chat, { voice: v.id, on: true });
-        return m.reply(claraWrap("novaagent suara", [
+        return m.reply(novaWrap("novaagent suara", [
           "Suara diubah: " + v.id,
           "Nama: " + v.name,
           "Mode suara: AKTIF (otomatis ikut nyala)",
@@ -309,7 +309,7 @@ async function handler(m, { sock, conn, config, db }) {
       lines.push("Aktifkan: .novaagent pakai suara");
       lines.push("Ganti suara: .novaagent suara ardi");
       lines.push("Matikan: .novaagent suara off");
-      return m.reply(claraWrap("novaagent suara", lines));
+      return m.reply(novaWrap("novaagent suara", lines));
     }
   }
 
@@ -461,7 +461,7 @@ async function handler(m, { sock, conn, config, db }) {
         if (db) config.__db = db;
         const result = await executeCommand(action, m, sock, config);
         if (!result.success && result.message) {
-          await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
+          await editFinal(novaWrap("Info", `⚠️ ${result.message}`));
         }
       }
       if (visibleText && (await voiceAnswer(visibleText))) { await m.react("🐣"); return; }
@@ -471,7 +471,7 @@ async function handler(m, { sock, conn, config, db }) {
     } catch (e) {
       console.error("[novaai] vision gagal:", e.message);
       await m.react("❌");
-      return editFinal(claraWrap("novaagent", `Gagal menganalisis gambar: ${e.message}`, "error"));
+      return editFinal(novaWrap("novaagent", `Gagal menganalisis gambar: ${e.message}`, "error"));
     }
   }
 
@@ -564,7 +564,7 @@ async function handler(m, { sock, conn, config, db }) {
           await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + action.command));
           if (db) config.__db = db;
           const result = await executeCommand(action, m, sock, config);
-          if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
+          if (!result.success && result.message) await editFinal(novaWrap("Info", `⚠️ ${result.message}`));
         }
         if (visibleText && (await voiceAnswer(visibleText))) { await m.react("🐣"); return; }
         if (visibleText) await editFinal(visibleText);
@@ -572,7 +572,7 @@ async function handler(m, { sock, conn, config, db }) {
         return;
       } catch (e2) {
         await m.react("❌");
-        return editFinal(claraWrap("novaagent", `Gagal ke otak AI: ${e2.message}`, "error"));
+        return editFinal(novaWrap("novaagent", `Gagal ke otak AI: ${e2.message}`, "error"));
       }
     } finally {
       stopRotate(); // wajib: think SUKSES pun rotator harus berhenti
@@ -598,7 +598,7 @@ async function handler(m, { sock, conn, config, db }) {
         await setStatus("⚡ " + smallcapsText("novaagent sedang mengeksekusi: " + finalAction.command));
         if (db) config.__db = db;
         const result = await executeCommand(finalAction, m, sock, config);
-        if (!result.success && result.message) await editFinal(claraWrap("Info", `⚠️ ${result.message}`));
+        if (!result.success && result.message) await editFinal(novaWrap("Info", `⚠️ ${result.message}`));
       }
       if (visibleText && (await voiceAnswer(visibleText))) { await m.react("🐣"); return; }
       if (visibleText) await editFinal(visibleText);
@@ -606,19 +606,19 @@ async function handler(m, { sock, conn, config, db }) {
       return;
     }
     await m.react("❌");
-    return editFinal(claraWrap("novaagent", "Tidak ada respons yang cocok", "error"));
+    return editFinal(novaWrap("novaagent", "Tidak ada respons yang cocok", "error"));
   }
 
   const tool = AGENT_TOOLS[decision.tool];
 
   // GERBANG IZIN — dicek di level KODE
   if (tool.perm === "admin") {
-    if (!m.isGroup) return m.reply(claraWrap("novaagent", "Perintah ini hanya bisa di dalam grup", "error"));
-    if (!m.isAdmin) return m.reply(claraWrap("novaagent", "Kamu bukan admin, tidak bisa menjalankan ini", "error"));
-    if (!m.isBotAdmin) return m.reply(claraWrap("novaagent", "Jadikan aku admin dulu supaya bisa menjalankan ini", "error"));
+    if (!m.isGroup) return m.reply(novaWrap("novaagent", "Perintah ini hanya bisa di dalam grup", "error"));
+    if (!m.isAdmin) return m.reply(novaWrap("novaagent", "Kamu bukan admin, tidak bisa menjalankan ini", "error"));
+    if (!m.isBotAdmin) return m.reply(novaWrap("novaagent", "Jadikan aku admin dulu supaya bisa menjalankan ini", "error"));
   }
   if (tool.perm === "owner") {
-    if (!m.isOwner) return m.reply(claraWrap("novaagent", "Perintah ini khusus owner bot", "error"));
+    if (!m.isOwner) return m.reply(novaWrap("novaagent", "Perintah ini khusus owner bot", "error"));
   }
 
   // normalisasi user (dari @mention / reply / NAMA member / nomor)
@@ -635,16 +635,16 @@ async function handler(m, { sock, conn, config, db }) {
         const resolved = await resolveUserByName(sock, m, user);
         if (resolved && resolved.multiple) {
           const list = resolved.multiple.map(c => `• ${c.name} (${c.jid.split("@")[0]})`).join("\n");
-          return m.reply(claraWrap("novaagent", `Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`, "error"));
+          return m.reply(novaWrap("novaagent", `Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`, "error"));
         }
         if (!resolved) {
-          return m.reply(claraWrap("novaagent", `Nama "${user}" tidak ditemukan di grup ini.\nCoba @mention langsung, reply pesannya, atau tulis nomornya (62xxx).`, "error"));
+          return m.reply(novaWrap("novaagent", `Nama "${user}" tidak ditemukan di grup ini.\nCoba @mention langsung, reply pesannya, atau tulis nomornya (62xxx).`, "error"));
         }
         user = resolved;
       }
     }
     user = String(user || "").replace(/[^0-9]/g, "");
-    if (!user) return m.reply(claraWrap("novaagent", `Usernya siapa? Reply pesannya, @mention, atau sebutkan nama membernya.\n\n💡 Contoh: ${m.prefix}${m.command} kick @user`, "error"));
+    if (!user) return m.reply(novaWrap("novaagent", `Usernya siapa? Reply pesannya, @mention, atau sebutkan nama membernya.\n\n💡 Contoh: ${m.prefix}${m.command} kick @user`, "error"));
     finalArgs.user = user + "@s.whatsapp.net";
   }
 
@@ -703,7 +703,7 @@ async function handler(m, { sock, conn, config, db }) {
     try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
   } catch (e) {
     try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
-    await editFinal(claraWrap("novaagent", `Gagal eksekusi: ${e.message}`, "error"));
+    await editFinal(novaWrap("novaagent", `Gagal eksekusi: ${e.message}`, "error"));
   }
 }
 
@@ -718,15 +718,15 @@ export function novaaiConfirmHandler(m, sock) {
     (async () => {
       const reg = await getAgentTools();
       const tool = reg[p.tool];
-      if (!tool) return m.reply(claraWrap("novaagent", "Tool-nya gak ketemu lagi (dicabut?)", "error"));
+      if (!tool) return m.reply(novaWrap("novaagent", "Tool-nya gak ketemu lagi (dicabut?)", "error"));
       try {
         await tool.run(sock, m, p.args);
         appendSession(`agent:${m.sender}`, "assistant", `[SUDAH DIEKSEKUSI] tool "${p.tool}" — ${tool.done || ""}`);
         m.reply(tool.done || "");
       }
-      catch (e) { m.reply(claraWrap("novaagent", `Gagal: ${e.message}`, "error")); }
+      catch (e) { m.reply(novaWrap("novaagent", `Gagal: ${e.message}`, "error")); }
     })();
-  } else { m.reply(claraWrap("novaagent", "Dibatalkan")); }
+  } else { m.reply(novaWrap("novaagent", "Dibatalkan")); }
   return true;
 }
 

@@ -2,7 +2,7 @@
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
-import { claraWrap, claraLine, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, toSC } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
         const data = loadJsonData('ukhty.json')
         
         if (data.length === 0) {
-            return m.reply(claraWrap("Ukhty", `❌ Data tidak tersedia`))
+            return m.reply(novaWrap("Ukhty", `❌ Data tidak tersedia`))
         }
         
         const item = data[Math.floor(Math.random() * data.length)]
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
         
         
     } catch (error) {
-        m.reply(claraWrap("Error", `Video tidak ditemukan`))
+        m.reply(novaWrap("Error", `Video tidak ditemukan`))
     }
 }
 

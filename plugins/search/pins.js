@@ -9,7 +9,7 @@ import crypto from "crypto";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pins",
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
     }
   } catch (err) {
     console.error("[Pins] Error:", err.message);
-    m.reply(claraWrap("pins", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("pins", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

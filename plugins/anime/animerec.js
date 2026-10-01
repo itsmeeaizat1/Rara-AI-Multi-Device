@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animerec",
@@ -21,7 +21,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = text.trim();
 
     if (!input) {
-      return m.reply(claraWrap("Anime Rec", [
+      return m.reply(novaWrap("Anime Rec", [
         "Cari & rekomendasi anime dari MyAnimeList.",
         "",
         "Contoh:",
@@ -37,7 +37,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "top") {
       const res = await axios.get(JIKAN_API + "/top/anime?limit=10", { timeout: 10000 });
       const animes = res.data?.data || [];
-      if (!animes.length) return m.reply(claraWrap("Anime Rec", "Gagal ambil top anime."));
+      if (!animes.length) return m.reply(novaWrap("Anime Rec", "Gagal ambil top anime."));
 
       let lines = ["Top Anime (MyAnimeList)", ""];
       animes.forEach((a, i) => {
@@ -45,13 +45,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   Score: " + (a.score || "N/A") + " | Episodes: " + (a.episodes || "?") + " | Type: " + (a.type || "?"));
         lines.push("");
       });
-      return m.reply(claraWrap("Anime Rec - Top", lines.join("\n")));
+      return m.reply(novaWrap("Anime Rec - Top", lines.join("\n")));
     }
 
     if (sub === "season") {
       const res = await axios.get(JIKAN_API + "/seasons/now?limit=10", { timeout: 10000 });
       const animes = res.data?.data || [];
-      if (!animes.length) return m.reply(claraWrap("Anime Rec", "Gagal ambil anime musim ini."));
+      if (!animes.length) return m.reply(novaWrap("Anime Rec", "Gagal ambil anime musim ini."));
 
       let lines = ["Anime Musim Ini", ""];
       animes.forEach((a, i) => {
@@ -59,13 +59,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   Score: " + (a.score || "N/A") + " | Type: " + (a.type || "?") + " | " + (a.studios?.[0]?.name || "Unknown"));
         lines.push("");
       });
-      return m.reply(claraWrap("Anime Rec - Season", lines.join("\n")));
+      return m.reply(novaWrap("Anime Rec - Season", lines.join("\n")));
     }
 
     if (sub === "random") {
       const res = await axios.get(JIKAN_API + "/random/anime", { timeout: 10000 });
       const a = res.data?.data;
-      if (!a) return m.reply(claraWrap("Anime Rec", "Gagal ambil anime random."));
+      if (!a) return m.reply(novaWrap("Anime Rec", "Gagal ambil anime random."));
 
       const genres = a.genres?.map(g => g.name).join(", ") || "N/A";
       const studios = a.studios?.map(s => s.name).join(", ") || "N/A";
@@ -82,13 +82,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "",
         a.synopsis ? a.synopsis.slice(0, 300) + "..." : "No synopsis",
       ];
-      return m.reply(claraWrap("Anime Rec - Random", lines.join("\n")));
+      return m.reply(novaWrap("Anime Rec - Random", lines.join("\n")));
     }
 
     // Search by title
     const res = await axios.get(JIKAN_API + "/anime?q=" + encodeURIComponent(input) + "&limit=5&order_by=score&sort=desc", { timeout: 10000 });
     const animes = res.data?.data || [];
-    if (!animes.length) return m.reply(claraWrap("Anime Rec", "Anime tidak ditemukan untuk: " + input));
+    if (!animes.length) return m.reply(novaWrap("Anime Rec", "Anime tidak ditemukan untuk: " + input));
 
     let lines = ["Hasil pencarian: " + input, ""];
     animes.forEach((a, i) => {
@@ -98,10 +98,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("   " + (a.synopsis ? a.synopsis.slice(0, 100) + "..." : "No synopsis"));
       lines.push("");
     });
-    return m.reply(claraWrap("Anime Rec - Search", lines.join("\n")));
+    return m.reply(novaWrap("Anime Rec - Search", lines.join("\n")));
   } catch (e) {
     console.error("animerec error:", e.message);
-    return m.reply(claraWrap("Anime Rec", "Error: " + e.message));
+    return m.reply(novaWrap("Anime Rec", "Error: " + e.message));
   }
 }
 

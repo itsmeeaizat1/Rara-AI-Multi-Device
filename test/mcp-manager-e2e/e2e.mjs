@@ -25,7 +25,7 @@ await initDatabase(path.join(os.tmpdir(), "mcp-manager-e2e-db-" + Date.now()));
 
 const mcp = await import(R + "/src/lib/nova-mcp.js");
 const { setMcpRpc, resetMcpRpc } = mcp;
-const { toSC } = await import(R + "/src/lib/styler.js"); // claraWrap → smallcaps (GOTCHA: asersi wajib toSC)
+const { toSC } = await import(R + "/src/lib/styler.js"); // novaWrap → smallcaps (GOTCHA: asersi wajib toSC)
 
 // ── server MCP stdio NYATA: node -e, respon initialize/tools/list/tools/call.
 // tool "whoami" balikin env NOVA_MCP_TEST_TOKEN → bukti env PASSTHROUGH.

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setwelcome",
   alias: ["setwelcome"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const text = m.fullArgs?.trim() || m.args.join(" ");
 
   if (!text) {
-    return m.reply(claraWrap("setwelcome", [
+    return m.reply(novaWrap("setwelcome", [
       "Set pesan welcome custom buat grup ini.",
       "",
       `📌 Format: ${m.prefix}setwelcome <pesan>`,
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
   db.setGroup(m.chat, { welcomeMsg: text, welcome: true });
   db.save();
-  await m.reply(claraWrap("setwelcome", [
+  await m.reply(novaWrap("setwelcome", [
     "Pesan welcome berhasil di set!",
     "",
     `📌 Isi : ${text}`,

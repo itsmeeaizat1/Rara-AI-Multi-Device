@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,13 +19,13 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio Volume", "Reply audio yang mau diubah volumenya."));
+    if (!quoted) return m.reply(novaWrap("Audio Volume", "Reply audio yang mau diubah volumenya."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio Volume", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio Volume", "Reply harus audio/voice note!"));
 
     const percent = parseInt(args[0]);
     if (!percent || percent < 1 || percent > 500) {
-      return m.reply(claraWrap("Audio Volume", [
+      return m.reply(novaWrap("Audio Volume", [
         "Volume 1% - 500%",
         "100 = normal, 200 = 2x lebih keras, 50 = setengah",
         "",
@@ -68,7 +68,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: claraWrap("Audio Volume", [
+      caption: novaWrap("Audio Volume", [
         "Berhasil!",
         "Volume: " + descVol,
         percent > 200 ? "Limiter: aktif (anti clipping)" : "Limiter: tidak aktif",

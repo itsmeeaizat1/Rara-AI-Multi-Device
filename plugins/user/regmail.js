@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendOtpEmail, isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/nova-email.js";
 import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "regmail",
@@ -98,7 +98,7 @@ async function handler(m, { args, sock }) {
     txt += `Owner perlu set email SMTP dulu dengan:\n`;
     txt += `\`${m.prefix}setemail <email> <app-password>\`\n\n`;
     txt += `Atau gunakan \`${m.prefix}daftar\` untuk daftar tanpa email.`;
-    return await m.reply(claraWrap("regmail", txt));
+    return await m.reply(novaWrap("regmail", txt));
   }
 
   if (getOtpSession(m.sender)) {
@@ -166,7 +166,7 @@ async function handler(m, { args, sock }) {
     let txt = `Gagal kirim OTP ke email nih!\n\n`;
     txt += `Error: ${e.message}\n\n`;
     txt += `Pastikan email valid dan SMTP terkonfigurasi dengan benar.`;
-    await m.reply(claraWrap("regmail", txt));
+    await m.reply(novaWrap("regmail", txt));
   }
 }
 

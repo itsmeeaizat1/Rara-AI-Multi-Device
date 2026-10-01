@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gptimage — Generate gambar dari teks via GPT Image (IkyyXD)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(claraWrap("GPT Image", [
+      return m.reply(novaWrap("GPT Image", [
         "Generate gambar dari teks via GPT Image AI",
         "",
         "CARA PAKAI:",
@@ -49,23 +49,23 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: Buffer.from(res.data),
-        caption: claraWrap("GPT Image", `Prompt: ${text}`),
+        caption: novaWrap("GPT Image", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       // Maybe it returned JSON error
       try {
         const errData = JSON.parse(res.data.toString());
         await m.react("❌");
-        await m.reply(claraWrap("GPT Image", errData?.error || errData?.message || "Gagal generate gambar."));
+        await m.reply(novaWrap("GPT Image", errData?.error || errData?.message || "Gagal generate gambar."));
       } catch {
         await m.react("❌");
-        await m.reply(claraWrap("GPT Image", "Gagal generate gambar. Coba prompt lain."));
+        await m.reply(novaWrap("GPT Image", "Gagal generate gambar. Coba prompt lain."));
       }
     }
   } catch (e) {
     console.error("[gptimage.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("GPT Image", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("GPT Image", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gombalai — AI generator gombalan/pickup lines
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("gombalai", `Mau gombal untuk siapa?\n\nContoh: ${m.prefix}gombalai untuk Sari\n${m.prefix}gombalai gombalan islami\n${m.prefix}gombalai lucu buat crush`, "guide"));
+      return m.reply(novaWrap("gombalai", `Mau gombal untuk siapa?\n\nContoh: ${m.prefix}gombalai untuk Sari\n${m.prefix}gombalai gombalan islami\n${m.prefix}gombalai lucu buat crush`, "guide"));
     }
 
     await m.react("🕒");
@@ -44,7 +44,7 @@ Tiap gombalan maksimal 2-3 kalimat. Bahasa Indonesia. Buat yang original, jangan
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("gombalai", "AI-nya lagi malu nih 😳", "error"));
+      return m.reply(novaWrap("gombalai", "AI-nya lagi malu nih 😳", "error"));
     }
 
     await m.react("🐣");
@@ -53,7 +53,7 @@ Tiap gombalan maksimal 2-3 kalimat. Bahasa Indonesia. Buat yang original, jangan
   } catch (err) {
     console.error("gombalai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("gombalai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("gombalai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

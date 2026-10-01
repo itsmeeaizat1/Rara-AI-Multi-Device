@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autodigest",
@@ -45,50 +45,50 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Digest", "Khusus owner."));
+      await m.reply(novaWrap("Auto Digest", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = true;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Digest", "AKTIF!\nHari: " + DAYS[cfg.day] + "\nJam: " + cfg.time + "\nBot kirim ringkasan mingguan otomatis."));
+    await m.reply(novaWrap("Auto Digest", "AKTIF!\nHari: " + DAYS[cfg.day] + "\nJam: " + cfg.time + "\nBot kirim ringkasan mingguan otomatis."));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Digest", "Khusus owner."));
+      await m.reply(novaWrap("Auto Digest", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = false;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Digest", "Dimatikan."));
+    await m.reply(novaWrap("Auto Digest", "Dimatikan."));
     return { handled: true };
   }
 
   if (sub === "day" || sub === "hari") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Digest", "Khusus owner."));
+      await m.reply(novaWrap("Auto Digest", "Khusus owner."));
       return { handled: true };
     }
     const day = parseInt(args[2] || "-1", 10);
     if (isNaN(day) || day < 0 || day > 6) {
-      await m.reply(claraWrap("Auto Digest", "Format: " + prefix + "autodigest day <0-6>\n0=Minggu, 1=Senin, ..., 6=Sabtu"));
+      await m.reply(novaWrap("Auto Digest", "Format: " + prefix + "autodigest day <0-6>\n0=Minggu, 1=Senin, ..., 6=Sabtu"));
       return { handled: true };
     }
     cfg.day = day;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Digest", "Hari diset: " + DAYS[day]));
+    await m.reply(novaWrap("Auto Digest", "Hari diset: " + DAYS[day]));
     return { handled: true };
   }
 
   if (sub === "now" || sub === "kirim") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Digest", "Khusus owner."));
+      await m.reply(novaWrap("Auto Digest", "Khusus owner."));
       return { handled: true };
     }
     const sorted = Object.entries(cfg.weekly.senders).sort((a, b) => b[1] - a[1]).slice(0, 5);
     const topChatters = sorted.map(([jid, count], i) => (i + 1) + ". @" + jid.split("@")[0] + " (" + count + ")").join("\n") || "(kosong)";
-    await m.reply(claraWrap("Ringkasan Mingguan Grup", [
+    await m.reply(novaWrap("Ringkasan Mingguan Grup", [
       "Total pesan minggu ini: " + cfg.weekly.messages,
       "Member aktif: " + Object.keys(cfg.weekly.senders).length,
       "Member baru: " + cfg.weekly.newMembers,
@@ -104,17 +104,17 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "reset") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Digest", "Khusus owner."));
+      await m.reply(novaWrap("Auto Digest", "Khusus owner."));
       return { handled: true };
     }
     cfg.weekly = { messages: 0, senders: {}, newMembers: 0, topLinks: [], lastReset: Date.now() };
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Digest", "Statistik mingguan direset."));
+    await m.reply(novaWrap("Auto Digest", "Statistik mingguan direset."));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
-    await m.reply(claraWrap("Auto Digest", [
+    await m.reply(novaWrap("Auto Digest", [
       "Status: " + (cfg.enabled ? "AKTIF" : "MATI"),
       "Hari: " + DAYS[cfg.day],
       "Jam: " + cfg.time,
@@ -125,7 +125,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Auto Digest", [
+  await m.reply(novaWrap("Auto Digest", [
     "AUTO WEEKLY DIGEST",
     "",
     prefix + "autodigest on/off",

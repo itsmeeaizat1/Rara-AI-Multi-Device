@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
 
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
           : "")
       : "-";
 
-    let msg = claraWrap("Alight Motion Data", [`*judul* → ${info.title || "-"}`, `*ukuran* → ${fmtSize(info.size)}`, `*download* → ${info.downloads ?? 0}x`, `*likes* → ${info.likes ?? 0}`, `*versi* → \`${info.amVersionString || "-"}\``, `*platform* → ${info.amPlatform || "-"}`, `*max ff* → v${info.maxFFVer || "-"}`, `*tanggal* → ${fmtDate(info.shareDate)}`, ``, `🎬 *project*`, projects, ``, `*effects* → ${effects}`].join("\n"));
+    let msg = novaWrap("Alight Motion Data", [`*judul* → ${info.title || "-"}`, `*ukuran* → ${fmtSize(info.size)}`, `*download* → ${info.downloads ?? 0}x`, `*likes* → ${info.likes ?? 0}`, `*versi* → \`${info.amVersionString || "-"}\``, `*platform* → ${info.amPlatform || "-"}`, `*max ff* → v${info.maxFFVer || "-"}`, `*tanggal* → ${fmtDate(info.shareDate)}`, ``, `🎬 *project*`, projects, ``, `*effects* → ${effects}`].join("\n"));
 
     if (info.largeThumbUrl) {
       await sock.sendMedia(m.chat, info.largeThumbUrl, null, m, {
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     await m.react("❌");
     console.log(e);
-    m.reply(claraWrap("am-data", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("am-data", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

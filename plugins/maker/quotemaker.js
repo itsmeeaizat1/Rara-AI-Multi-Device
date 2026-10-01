@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -36,7 +36,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input) {
-      return m.reply(claraWrap("quotemaker", [
+      return m.reply(novaWrap("quotemaker", [
         "Buat quote card dari teks sendiri.",
         "",
         "📌 Format: " + usedPrefix + "quotemaker <teks> | <author> | <bg>",
@@ -56,7 +56,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const bg = BG_PRESETS[bgName] || BG_PRESETS.dark;
 
     if (quoteText.length > 200) {
-      return m.reply(claraWrap("quotemaker", "Teks maksimal 200 karakter."));
+      return m.reply(novaWrap("quotemaker", "Teks maksimal 200 karakter."));
     }
 
     const canvas = await getCanvas();
@@ -131,7 +131,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("quotemaker error:", e);
-    return m.reply(claraWrap("quotemaker", "Gagal buat quote. Coba lagi.", "error"));
+    return m.reply(novaWrap("quotemaker", "Gagal buat quote. Coba lagi.", "error"));
   }
 }
 

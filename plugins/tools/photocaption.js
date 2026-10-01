@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Caption — Tambah caption text di atas/bawah gambar (local via sharp + SVG, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photocaption",
@@ -115,7 +115,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         usedPrefix + "photocaption top | Halo Dunia",
         usedPrefix + "photocaption bottom | meme | Nova AI Bot",
       ];
-      return m.reply(claraWrap("Photo Caption", lines, "info"));
+      return m.reply(novaWrap("Photo Caption", lines, "info"));
     }
 
     // Parse: posisi | text  OR  posisi | style | text
@@ -138,7 +138,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!captionText) {
-      return m.reply(claraWrap("Photo Caption", [
+      return m.reply(novaWrap("Photo Caption", [
         "Text caption tidak boleh kosong",
         "",
         "Format: " + usedPrefix + "photocaption <posisi> | <text>",
@@ -147,24 +147,24 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (captionText.length > 200) {
-      return m.reply(claraWrap("Photo Caption", "Text terlalu panjang (max 200 karakter)", "warn"));
+      return m.reply(novaWrap("Photo Caption", "Text terlalu panjang (max 200 karakter)", "warn"));
     }
 
     // Get image
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("Photo Caption", [
+      return m.reply(novaWrap("Photo Caption", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "photocaption " + input,
       ], "warn"));
     }
 
-    m.reply(claraWrap("Photo Caption", "Menambahkan caption..."));
+    m.reply(novaWrap("Photo Caption", "Menambahkan caption..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(claraWrap("Photo Caption", "Gagal download gambar.", "warn"));
+      return m.reply(novaWrap("Photo Caption", "Gagal download gambar.", "warn"));
     }
 
     const meta = await sharp(imgBuffer).metadata();
@@ -180,14 +180,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!result || result.length === 0) {
       await m.react("🐣");
-      return m.reply(claraWrap("Photo Caption", "Gagal processing caption.", "warn"));
+      return m.reply(novaWrap("Photo Caption", "Gagal processing caption.", "warn"));
     }
 
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: claraWrap("Photo Caption", [
+        caption: novaWrap("Photo Caption", [
           "Text: " + captionText,
           "Posisi: " + (POSITIONS[position] || position),
           "Style: " + style,
@@ -199,7 +199,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoCaption]", e);
-    m.reply(claraWrap("Photo Caption", [
+    m.reply(novaWrap("Photo Caption", [
       "Error: " + e.message,
       "",
       "Ketik " + usedPrefix + "photocaption list untuk bantuan",

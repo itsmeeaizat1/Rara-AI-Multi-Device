@@ -7,7 +7,7 @@ import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { handleAntiSwGc } from "../../src/lib/nova-group-protection.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const botConfig = config;
 
 function buildSyntheticSwGcRawMessage(sock, remoteJid, content, messageId) {
@@ -110,7 +110,7 @@ async function handler(m, { sock, db }) {
     const pendingData = pendingSwgc.get(m.sender);
 
     if (!pendingData) {
-      m.reply(claraWrap("Swgc", `⚠️ *Tidak ada data pending. Silakan kirim ulang media + .swgc*`));
+      m.reply(novaWrap("Swgc", `⚠️ *Tidak ada data pending. Silakan kirim ulang media + .swgc*`));
       return;
     }
 
@@ -199,7 +199,7 @@ async function handler(m, { sock, db }) {
     try {
       buffer = await m.quoted.download();
       if (!buffer) {
-        m.reply(claraWrap("Swgc", `❌ Gagal mengambil media.`));
+        m.reply(novaWrap("Swgc", `❌ Gagal mengambil media.`));
         return;
       }
       const fileType = await fileTypeFromBuffer(buffer);
@@ -220,7 +220,7 @@ async function handler(m, { sock, db }) {
         rawContent.ptt = m.quoted.msg?.ptt || false;
       }
     } catch (e) {
-      await m.reply(claraWrap("swgc", te(m.prefix, m.command, m.pushName), "error"));
+      await m.reply(novaWrap("swgc", te(m.prefix, m.command, m.pushName), "error"));
       return;
     }
   } else if (
@@ -232,7 +232,7 @@ async function handler(m, { sock, db }) {
     try {
       buffer = await m.download();
       if (!buffer) {
-        m.reply(claraWrap("Swgc", `❌ Gagal mengambil media.`));
+        m.reply(novaWrap("Swgc", `❌ Gagal mengambil media.`));
         return;
       }
       const fileType = await fileTypeFromBuffer(buffer);
@@ -288,7 +288,7 @@ async function handler(m, { sock, db }) {
     const groupList = Object.entries(groups);
 
     if (groupList.length === 0) {
-      await m.reply(claraWrap("Swgc", `⚠️ *Bot tidak berada di grup manapun.*`));
+      await m.reply(novaWrap("Swgc", `⚠️ *Bot tidak berada di grup manapun.*`));
       return;
     }
 

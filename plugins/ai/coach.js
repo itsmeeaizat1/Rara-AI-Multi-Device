@@ -12,7 +12,7 @@
 
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
-import { claraWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { renderChart } from "../tools/chart.js";
 import te from "../../src/lib/nova-error.js";
@@ -231,18 +231,18 @@ async function handler(m, { sock, config: botConfig }) {
       const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
       if (!buffer || !buffer.length) {
         await m.react("❌");
-        return m.reply(claraWrap("coach", "Gagal download gambar. Coba kirim ulang.", "error"));
+        return m.reply(novaWrap("coach", "Gagal download gambar. Coba kirim ulang.", "error"));
       }
       const res = await depVision({ imageBuffer: buffer, question: bodyPrompt(), sessionKey: null })
         .catch((e) => ({ status: false, error: e.message }));
       if (!res?.status) {
         await m.react("❌");
-        return m.reply(claraWrap("coach", res?.error || "Gagal membaca gambar", "error"));
+        return m.reply(novaWrap("coach", res?.error || "Gagal membaca gambar", "error"));
       }
       const body = parseBody(res.text);
       if (!body) {
         await m.react("❌");
-        return m.reply(claraWrap("coach", "Gak kedeteksi foto badan yang jelas. Kirim foto badan berdiri/samping dengan pencahayaan bagus.", "error"));
+        return m.reply(novaWrap("coach", "Gak kedeteksi foto badan yang jelas. Kirim foto badan berdiri/samping dengan pencahayaan bagus.", "error"));
       }
       // simpan vision note — dipakai pas generate/regenerate program
       const merged = { ...(store || { goal: "badan sehat", history: [] }), vision: body, startedAt: store?.startedAt || Date.now() };
@@ -269,7 +269,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (sub === "mulai" || sub === "start") {
       const goal = args.slice(1).join(" ").trim() || (store?.goal ? "" : "");
       if (!goal && !store?.goal) {
-        return m.reply(claraWrap("coach", `Goal-nya apa?\n\nContoh: ${prefix}coach mulai turun berat badan / naik otot / badan sehat`, "info"));
+        return m.reply(novaWrap("coach", `Goal-nya apa?\n\nContoh: ${prefix}coach mulai turun berat badan / naik otot / badan sehat`, "info"));
       }
       const finalGoal = goal || store.goal;
       const regen = !!store?.program;
@@ -291,7 +291,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ═══ butuh sesi ═══
     if (!store?.program) {
-      return m.reply(claraWrap("coach", `Belum ada program. Mulai dulu: ${prefix}coach mulai <goal>`, "info"));
+      return m.reply(novaWrap("coach", `Belum ada program. Mulai dulu: ${prefix}coach mulai <goal>`, "info"));
     }
 
     // ═══ jadwal ═══
@@ -307,7 +307,7 @@ async function handler(m, { sock, config: botConfig }) {
       const today = ymd(Date.now());
       if ((store.history || []).some((h) => h.d === today)) {
         const { streak } = streakInfo(store.history);
-        return m.reply(claraWrap("coach", `Hari ini udah di-check-in 🔥 Streak kamu ${streak} hari — besok lagi ya!`, "info"));
+        return m.reply(novaWrap("coach", `Hari ini udah di-check-in 🔥 Streak kamu ${streak} hari — besok lagi ya!`, "info"));
       }
       const history = [...(store.history || []), { d: today, done: 1 }];
       saveStore(m, { ...store, history });
@@ -315,7 +315,7 @@ async function handler(m, { sock, config: botConfig }) {
       const msg = streak >= 2
         ? `🔥 *STREAK ${streak} HARI — KONSISTEN!*\nJangan putus besok, badan kamu yang untung.`
         : `✅ *Workout hari ini kelar!*\nBesok lagi ya — streak dimulai dari 1.`;
-      return m.reply(claraWrap("coach", msg + `\n\n📊 Rekor terbaikmu: ${best} hari${best === streak ? " (baru!)" : ""}`));
+      return m.reply(novaWrap("coach", msg + `\n\n📊 Rekor terbaikmu: ${best} hari${best === streak ? " (baru!)" : ""}`));
     }
 
     // ═══ progress ═══
@@ -339,21 +339,21 @@ async function handler(m, { sock, config: botConfig }) {
         await sock.sendMedia(m.chat, png, null, m, { type: "image" });
         chartNote = "📊 Chart terkirim di atas";
       } catch {}
-      return m.reply(claraWrap("coach", `📈 *PROGRESS — ${store.goal}*\n\n🔥 Streak: ${streak} hari (rekor: ${best})\n📅 7 hari terakhir: ${week}%\n🗓 30 hari terakhir: ${month}%\n\n${week >= 70 ? "Sustain mode! Badanmu mulai terbiasa." : week >= 40 ? "Udah jalan — tinggal rapikan jadwal biar gak bolong." : "Masih bolong-bolong — mulai dari 3x seminggu aja dulu."}${chartNote ? `\n\n${chartNote}` : ""}`));
+      return m.reply(novaWrap("coach", `📈 *PROGRESS — ${store.goal}*\n\n🔥 Streak: ${streak} hari (rekor: ${best})\n📅 7 hari terakhir: ${week}%\n🗓 30 hari terakhir: ${month}%\n\n${week >= 70 ? "Sustain mode! Badanmu mulai terbiasa." : week >= 40 ? "Udah jalan — tinggal rapikan jadwal biar gak bolong." : "Masih bolong-bolong — mulai dari 3x seminggu aja dulu."}${chartNote ? `\n\n${chartNote}` : ""}`));
     }
 
     // ═══ reset ═══
     if (sub === "reset") {
       saveStore(m, { goal: "", program: null, vision: null, history: [], startedAt: 0 });
-      return m.reply(claraWrap("coach", "♻ Program & streak direset. Mulai fresh kapan aja: .coach mulai <goal>"));
+      return m.reply(novaWrap("coach", "♻ Program & streak direset. Mulai fresh kapan aja: .coach mulai <goal>"));
     }
 
     // ═══ sub gak dikenal → guide singkat ═══
-    return m.reply(claraWrap("coach", `Sub gak dikenal. Yang ada: mulai | jadwal | done | progress | reset`, "info"));
+    return m.reply(novaWrap("coach", `Sub gak dikenal. Yang ada: mulai | jadwal | done | progress | reset`, "info"));
   } catch (err) {
     console.error("coach error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("coach", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(novaWrap("coach", te.novaError(err) || "Gagal memproses", "error"));
   }
 }
 

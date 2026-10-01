@@ -4,7 +4,7 @@
 // Persona KuroNeko, SESSION PERSIST per user (token session API disimpan di
 // db.setting kuroaiSession) — AI inget percakapan sebelumnya per orang.
 // STRICT SATU RUTE (pola satuan owner): API down → error jelas, gak nyamber.
-import { claraWrap, novaGuideV2, novaInfoSections } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2, novaInfoSections } from "../../src/lib/nova-menu-style.js";
 import { kuroaiChat } from "../../src/scraper/evernight.js";
 
 const pluginConfig = {
@@ -93,7 +93,7 @@ async function handler(m, { sock, db } = {}) {
   } catch (err) {
     console.error("[KuroAI]", err.message || err);
     await m.react("❌");
-    return m.reply(claraWrap("kuroai", err.message || "KuroNeko AI lagi gangguan, coba lagi ya", "error"));
+    return m.reply(novaWrap("kuroai", err.message || "KuroNeko AI lagi gangguan, coba lagi ya", "error"));
   }
 }
 

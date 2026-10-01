@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autocompress",
@@ -36,7 +36,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "on") {
       data.enabled = true;
       await db.save();
-      return m.reply(claraWrap("Auto Compress", [
+      return m.reply(novaWrap("Auto Compress", [
         "Auto compress diaktifkan!",
         `Max width: ${data.maxWidth}px`,
         `Quality: ${data.quality}%`,
@@ -49,7 +49,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "off") {
       data.enabled = false;
       await db.save();
-      return m.reply(claraWrap("Auto Compress", "Auto compress dimatikan."));
+      return m.reply(novaWrap("Auto Compress", "Auto compress dimatikan."));
     }
 
     if (sub === "set") {
@@ -58,30 +58,30 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       if (key === "maxwidth" || key === "width") {
         const px = parseInt(val);
-        if (!px || px < 320 || px > 3840) return m.reply(claraWrap("Usage", "Max width 320-3840px.\nContoh: .autocompress set maxwidth 1280"));
+        if (!px || px < 320 || px > 3840) return m.reply(novaWrap("Usage", "Max width 320-3840px.\nContoh: .autocompress set maxwidth 1280"));
         data.maxWidth = px;
         await db.save();
-        return m.reply(claraWrap("Auto Compress", `Max width diatur ke ${px}px.`, "info"));
+        return m.reply(novaWrap("Auto Compress", `Max width diatur ke ${px}px.`, "info"));
       }
 
       if (key === "quality" || key === "q") {
         const q = parseInt(val);
-        if (!q || q < 10 || q > 100) return m.reply(claraWrap("Usage", "Quality 10-100%.\nContoh: .autocompress set quality 80"));
+        if (!q || q < 10 || q > 100) return m.reply(novaWrap("Usage", "Quality 10-100%.\nContoh: .autocompress set quality 80"));
         data.quality = q;
         await db.save();
-        return m.reply(claraWrap("Auto Compress", `Quality diatur ke ${q}%.`));
+        return m.reply(novaWrap("Auto Compress", `Quality diatur ke ${q}%.`));
       }
 
       if (key === "format") {
         if (!["jpeg", "webp", "png"].includes((val || "").toLowerCase())) {
-          return m.reply(claraWrap("Usage", "Format: jpeg, webp, atau png.\nContoh: .autocompress set format webp"));
+          return m.reply(novaWrap("Usage", "Format: jpeg, webp, atau png.\nContoh: .autocompress set format webp"));
         }
         data.format = val.toLowerCase();
         await db.save();
-        return m.reply(claraWrap("Auto Compress", `Format diatur ke: ${data.format.toUpperCase()}.`, "info"));
+        return m.reply(novaWrap("Auto Compress", `Format diatur ke: ${data.format.toUpperCase()}.`, "info"));
       }
 
-      return m.reply(claraWrap("Auto Compress", [
+      return m.reply(novaWrap("Auto Compress", [
         `Set: maxwidth, quality, format`,
         `Contoh: ${usedPrefix}autocompress set maxwidth 1280`,
       ].join("\n")));
@@ -90,7 +90,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "status") {
       const status = data.enabled ? "AKTIF" : "MATI";
       const savedKB = Math.round((data.stats.bytesSaved || 0) / 1024);
-      return m.reply(claraWrap("Auto Compress", [
+      return m.reply(novaWrap("Auto Compress", [
         `Status: ${status}`,
         `Max width: ${data.maxWidth}px`,
         `Quality: ${data.quality}%`,
@@ -103,7 +103,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "reset") {
       data.stats = { totalCompressed: 0, bytesSaved: 0 };
       await db.save();
-      return m.reply(claraWrap("Auto Compress", "Statistik direset."));
+      return m.reply(novaWrap("Auto Compress", "Statistik direset."));
     }
 
     if (sub === "test") {
@@ -117,9 +117,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         ctx.font = "16px Arial";
         ctx.fillText("Compress Test", 30, 55);
         const buf = canvas.toBuffer("image/jpeg", { quality: data.quality / 100 });
-        await conn.sendMessage(groupId, { image: buf, caption: claraWrap("Auto Compress", `Test compress: ${data.maxWidth}px, Q${data.quality}, ${buf.length} bytes`, "info") });
+        await conn.sendMessage(groupId, { image: buf, caption: novaWrap("Auto Compress", `Test compress: ${data.maxWidth}px, Q${data.quality}, ${buf.length} bytes`, "info") });
       } catch (e) {
-        return m.reply(claraWrap("Auto Compress", [
+        return m.reply(novaWrap("Auto Compress", [
           "Canvas module tidak tersedia.",
           "Install: npm install canvas",
           "Atau bot akan gunakan sharp/jimp fallback.",
@@ -128,7 +128,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return;
     }
 
-    return m.reply(claraWrap("Auto Compress", [
+    return m.reply(novaWrap("Auto Compress", [
       `Auto Compress - Resize image otomatis di grup`,
       "",
       `Command:`,

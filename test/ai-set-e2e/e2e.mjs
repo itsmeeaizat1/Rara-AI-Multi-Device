@@ -10,7 +10,7 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
-// smallcaps map (claraWrap/toSC smallcaps semua label — assert pakai toSC)
+// smallcaps map (novaWrap/toSC smallcaps semua label — assert pakai toSC)
 const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
 // UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
 const toSC = (s) => String(s ?? "");

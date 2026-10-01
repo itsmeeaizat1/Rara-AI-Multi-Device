@@ -2,7 +2,7 @@
 // Sistem Pacaran — Tolak tembakan
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     }
 
     if (!shooterJid) {
-      return m.reply(claraWrap("tolak", [
+      return m.reply(novaWrap("tolak", [
         `Tolak tembakan seseorang dengan halus.`,
         ``,
         `📌 Format: reply pesan tembakan + ${m.prefix}tolak`,

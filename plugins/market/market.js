@@ -7,7 +7,7 @@
  * User: belanja, lacak paket, cek riwayat
  */
 
-import { claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
 import {
   getProducts, getCategories, listByCategory,
   cartTotal, getCart, listInvoices,
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
 
     return m.reply(novaBox("MARKET ALFAMART", lines));
   } catch (error) {
-    return m.reply(claraWrap("Market", toSC("Error") + ": " + error.message));
+    return m.reply(novaWrap("Market", toSC("Error") + ": " + error.message));
   }
 }
 

@@ -2,7 +2,7 @@
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { sendToolsPreview, saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ipwho",
   alias: ["ipwho"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const ip = m.args?.[0];
 
   if (!ip) {
-    return m.reply(claraWrap("ipwho", [
+    return m.reply(novaWrap("ipwho", [
       `📌 Format: ${m.prefix}ipwho <ip>`,
       `💡 Contoh: ${m.prefix}ipwho 8.8.8.8`
     ]));
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const data = await res.json();
 
     if (!data.success) {
-      return m.reply(claraWrap("Ipwho", `❌ *ip tidak ditemukan*\n\nIP ${ip} tidak valid`));
+      return m.reply(novaWrap("Ipwho", `❌ *ip tidak ditemukan*\n\nIP ${ip} tidak valid`));
     }
 
     if (data.latitude && data.longitude) {
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
       quoted: m,
     });
   } catch (e) {
-    m.reply(claraWrap("ipwho", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("ipwho", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

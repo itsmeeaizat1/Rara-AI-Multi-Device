@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
 import {
   enableAutoBirthday,
   disableAutoBirthday,
@@ -79,13 +79,13 @@ async function handler(m, { sock }) {
       const [hour, minute] = timeArg.split(":").map(Number);
 
       if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        return m.reply(claraWrap("autoulah", toSC("Jam tidak valid!")));
+        return m.reply(novaWrap("autoulah", toSC("Jam tidak valid!")));
       }
 
       const result = enableAutoBirthday(hour, minute, sock);
 
       if (!result.success) {
-        return m.reply(claraWrap("autoulah", `❌ ${toSC(result.error || "Gagal")}`));
+        return m.reply(novaWrap("autoulah", `❌ ${toSC(result.error || "Gagal")}`));
       }
       return m.reply(
         bracketBox("✅", toSC("Auto Birthday Diaktifkan"), [
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableAutoBirthday();
-      return m.reply(claraWrap("autoulah", toSC("Auto Birthday dinonaktifkan")));
+      return m.reply(novaWrap("autoulah", toSC("Auto Birthday dinonaktifkan")));
     }
 
     case "status":
@@ -137,9 +137,9 @@ async function handler(m, { sock }) {
     case "trigger": {
       try {
         await triggerManualBirthday(sock);
-        return m.reply(claraWrap("autoulah", toSC("Cek birthday dijalankan! User yang ultah hari ini sudah dikirim ucapan.")));
+        return m.reply(novaWrap("autoulah", toSC("Cek birthday dijalankan! User yang ultah hari ini sudah dikirim ucapan.")));
       } catch (error) {
-        return m.reply(claraWrap("autoulah", te(m.prefix, m.command, m.pushName), "error"));
+        return m.reply(novaWrap("autoulah", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 

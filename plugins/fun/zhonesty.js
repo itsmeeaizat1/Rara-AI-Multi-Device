@@ -5,7 +5,7 @@
 // ═════════════════════════════════════════════
 
 import { zelHonesty, ZEL_HONESTY_ANSWERS, _setZelGamesHttpForTest, _setZelGamesKeyForTest } from "../../src/scraper/zelgames.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "zhonesty",
@@ -19,7 +19,7 @@ const pluginConfig = {
 };
 
 function usageCard() {
-  return claraWrap("zhonesty", [
+  return novaWrap("zhonesty", [
     "🔍 HONESTY SCORE (zelapi):",
     "",
     "▸ .zhonesty <pertanyaan> | <jujur / tidak jujur / ragu>",
@@ -35,15 +35,15 @@ async function handler(m, { sock }) {
     if (!raw) return m.reply(usageCard());
     if (!raw.includes("|")) return m.reply(usageCard());
     const [q, a] = raw.split("|").map((s) => s.trim());
-    if (!q) { await m.react("❌"); return m.reply(claraWrap("zhonesty", "Pertanyaannya kosong — .zhonesty <pertanyaan> | <jawaban>")); }
+    if (!q) { await m.react("❌"); return m.reply(novaWrap("zhonesty", "Pertanyaannya kosong — .zhonesty <pertanyaan> | <jawaban>")); }
     if (!ZEL_HONESTY_ANSWERS.includes(String(a || "").toLowerCase())) {
       await m.react("❌");
-      return m.reply(claraWrap("zhonesty", `Jawaban cuma boleh: ${ZEL_HONESTY_ANSWERS.join(" / ")}`));
+      return m.reply(novaWrap("zhonesty", `Jawaban cuma boleh: ${ZEL_HONESTY_ANSWERS.join(" / ")}`));
     }
 
     await m.react("🧠");
     const r = await zelHonesty(q, a);
-    if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zhonesty", `Honesty bermasalah: ${r.error}`)); }
+    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zhonesty", `Honesty bermasalah: ${r.error}`)); }
     const d = r.result;
     const score = Number(d.honesty_score);
     const bar = "▰".repeat(Math.max(0, Math.min(10, Math.round(score)))) + "▱".repeat(Math.max(0, 10 - Math.round(score)));
@@ -57,11 +57,11 @@ async function handler(m, { sock }) {
       `🏅 Level: ${d.honesty_level || "-"}`,
     ];
     if (d.feedback) lines.push("", `💬 ${String(d.feedback).trim()}`);
-    await m.reply(claraWrap("zhonesty", lines.join("\n")));
+    await m.reply(novaWrap("zhonesty", lines.join("\n")));
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(claraWrap("zhonesty", `fitur error: ${e?.message || e}`));
+    await m.reply(novaWrap("zhonesty", `fitur error: ${e?.message || e}`));
   }
 }
 

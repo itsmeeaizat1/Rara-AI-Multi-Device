@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraHeader,  separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import {  novaHeader,  separator, tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -28,12 +28,12 @@ async function handler(m, { sock, config: botConfig }) {
       params: { q: query, limit: 5 }, timeout: 10000,
     });
     if (!data?.data?.items?.length) {
-      await m.reply(claraWrap("Hadis", [`Kata kunci: *${query}*`, "Coba kata kunci lain"].join("\n")));
+      await m.reply(novaWrap("Hadis", [`Kata kunci: *${query}*`, "Coba kata kunci lain"].join("\n")));
       return { handled: true };
     }
-    let text = claraWrap("Hasil Cari Hadis", "📖") + "\n\n";
+    let text = novaWrap("Hasil Cari Hadis", "📖") + "\n\n";
     for (const item of data.data.items.slice(0, 5)) {
-      text += claraWrap(item.book || "Hadis", [
+      text += novaWrap(item.book || "Hadis", [
         `Nomor: *${item.number || item.hadithNumber || "-"}*`,
         `Isi: ${item.arabic || item.text || "-"}`,
       ]) + "\n\n";

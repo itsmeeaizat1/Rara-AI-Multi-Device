@@ -13,7 +13,7 @@ const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 
 
-// claraWrap smallcaps semua teks — assert WAJIB pakai smallcaps (gotcha lama)
+// novaWrap smallcaps semua teks — assert WAJIB pakai smallcaps (gotcha lama)
 const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h', i: 'i', j: 'j', k: 'k', l: 'l', m: 'm', n: 'n', o: 'o', p: 'p', r: 'r', s: 's', t: 't', u: 'u', v: 'v', w: 'w', y: 'y', z: 'z' };
 // UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
 const toSC = (s) => String(s ?? "");

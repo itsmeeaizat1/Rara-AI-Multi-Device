@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'nova-large',
     alias: ["nova-large", "nova"],
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Nova-large", `🖼️ *nova large preset*\n\nKirim/reply gambar untuk mengganti kumpulan foto besar (nova.jpg, panel/panel-thumb.jpg, nova-v10.jpg) sekaligus.\nPastikan rasio gambar sesuai dengan yang diinginkan.`))
+        return m.reply(novaWrap("Nova-large", `🖼️ *nova large preset*\n\nKirim/reply gambar untuk mengganti kumpulan foto besar (nova.jpg, panel/panel-thumb.jpg, nova-v10.jpg) sekaligus.\nPastikan rasio gambar sesuai dengan yang diinginkan.`))
     }
     try {
         let buffer
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(claraWrap("Nova-large", `❌ Gagal mendownload gambar`))
+            return m.reply(novaWrap("Nova-large", `❌ Gagal mendownload gambar`))
         }
         
         const targetImages = [
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         { const __navText = `✅ *berhasil*\n\nGambar bundle *nova-large* berhasil diganti secara massal.\nMencakup: ${targetImages.join(', ')}\nRestart bot jika gambar tidak langsung berubah.`; await m.reply(__navText); }
         
     } catch (error) {
-        await m.reply(claraWrap("nova-large", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("nova-large", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -173,7 +173,7 @@ export default {
     // ─── Toggle commands ───
     if (new RegExp(`^${prefix}donasion\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
@@ -181,7 +181,7 @@ export default {
         return { handled: true };
       }
       toggleOn(groupId);
-      await m.reply(claraWrap("Donasi", [
+      await m.reply(novaWrap("Donasi", [
         `Status: *Aktif*`,
         ``,
         `Fitur Donasi & Sedekah dinyalakan.`,
@@ -192,7 +192,7 @@ export default {
 
     if (new RegExp(`^${prefix}donasioff\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
@@ -200,7 +200,7 @@ export default {
         return { handled: true };
       }
       toggleOff(groupId);
-      await m.reply(claraWrap("Donasi", [
+      await m.reply(novaWrap("Donasi", [
         `Status: *Nonaktif*`,
         ``,
         `Fitur Donasi dimatikan.`,
@@ -213,7 +213,7 @@ export default {
     if (new RegExp(`^${prefix}donasihistory\\b`, "i").test(raw)) {
       const all = getCampaigns(groupId);
       if (all.length === 0) {
-        await m.reply(claraWrap("Donasi - Riwayat", [
+        await m.reply(novaWrap("Donasi - Riwayat", [
           `Belum ada riwayat donasi di grup ini.`,
         ].join("\n")));
         return { handled: true };
@@ -231,7 +231,7 @@ export default {
         );
       });
 
-      await m.reply(claraWrap("Donasi - Riwayat", lines.join("\n")));
+      await m.reply(novaWrap("Donasi - Riwayat", lines.join("\n")));
       return { handled: true };
     }
 
@@ -287,14 +287,14 @@ export default {
         lines.push(
           ``, `QRIS belum tersedia — hubungi owner untuk metode donasi.`
         );
-        await m.reply(claraWrap("Donasi", lines.join("\n")));
+        await m.reply(novaWrap("Donasi", lines.join("\n")));
       }
       return { handled: true };
     }
 
     // Check if enabled
     if (!isDonasiOn(groupId)) {
-      await m.reply(claraWrap("Donasi", [
+      await m.reply(novaWrap("Donasi", [
         `Status: *nonaktif di grup ini*`,
         ``,
         `Owner: ketik *${prefix}donasion* untuk mengaktifkan.`,
@@ -311,7 +311,7 @@ export default {
     if (subCmd && subCmd[1] === "list") {
       const active = getActiveCampaigns(groupId);
       if (active.length === 0) {
-        await m.reply(claraWrap("Donasi - Aktif", [
+        await m.reply(novaWrap("Donasi - Aktif", [
           `Tidak ada kampanye donasi aktif.`,
           ``,
           `Bikin baru: *${prefix}donasi <target> | <keterangan>*`,
@@ -334,7 +334,7 @@ export default {
         );
       });
 
-      await m.reply(claraWrap("Donasi - Daftar Aktif", lines.join("\n")));
+      await m.reply(novaWrap("Donasi - Daftar Aktif", lines.join("\n")));
       return { handled: true };
     }
 
@@ -344,7 +344,7 @@ export default {
       const campaignId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!campaignId) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Format: *${prefix}donasi status <id>*`,
           `💡 *Contoh:* *${prefix}donasi status DNR3A2*`,
         ].join("\n")));
@@ -353,7 +353,7 @@ export default {
 
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Kampanye *${campaignId}* tidak ditemukan.`,
           `Ketik *${prefix}donasi list* untuk lihat yang aktif.`,
         ].join("\n")));
@@ -410,7 +410,7 @@ export default {
             `Yuk ikut donasi: *${prefix}donasi beri ${campaign.shortId} <jumlah>*`,
           );
 
-          const text = claraWrap("Donasi - Status", lines.join("\n")) +
+          const text = novaWrap("Donasi - Status", lines.join("\n")) +
             "\n" +
             tipText(`${prefix}donasi beri ${campaign.shortId} 50000 untuk donasi`);
 
@@ -426,7 +426,7 @@ export default {
         lines.push(``, `🎉 Target tercapai! Alhamdulillah!`);
       }
 
-      const statusCaption = claraWrap("Donasi - Status", lines.join("\n")) +
+      const statusCaption = novaWrap("Donasi - Status", lines.join("\n")) +
         "\n" +
         tipText(`${prefix}donasi beri ${campaign.shortId} <jumlah> untuk donasi`);
 
@@ -451,7 +451,7 @@ export default {
     if (subCmd && subCmd[1] === "beri") {
       const idMatch = raw.match(new RegExp(`^${prefix}donasi\\s+beri\\s+(\\S+)\\s+(\\d+)`, "i"));
       if (!idMatch) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Format: *${prefix}donasi beri <id> <jumlah>*`,
           `💡 *Contoh:* *${prefix}donasi beri DNR3A2 50000*`,
         ].join("\n")));
@@ -462,7 +462,7 @@ export default {
       const amount = parseInt(idMatch[2], 10);
 
       if (!amount || amount < 1) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Jumlah gak valid nih. Minimal Rp1`,
         ].join("\n")));
         return { handled: true };
@@ -470,14 +470,14 @@ export default {
 
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Kampanye *${campaignId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (campaign.status !== "active") {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Kampanye *${campaignId}* sudah ditutup.`,
         ].join("\n")));
         return { handled: true };
@@ -512,7 +512,7 @@ export default {
           updateCampaign(groupId, campaign.id, (c) => { c.status = "closed"; c.closedAt = Date.now(); });
         }
 
-        await m.reply(claraWrap("Donasi - Tambah", lines.join("\n")));
+        await m.reply(novaWrap("Donasi - Tambah", lines.join("\n")));
         return { handled: true };
       }
 
@@ -550,14 +550,14 @@ export default {
 
       lines.push(``, `Jazakallah khair! Semoga berkat.`, `Ketik *${prefix}donasi status ${campaign.shortId}* untuk lihat progress.`);
 
-      await m.reply(claraWrap("Donasi - Terima", lines.join("\n")));
+      await m.reply(novaWrap("Donasi - Terima", lines.join("\n")));
       return { handled: true };
     }
 
     // .donasi terima <id> @tag <jumlah> - owner records someone's donation
     if (subCmd && (subCmd[1] === "terima")) {
       if (!isOwner) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mencatat donasi orang lain.`,
@@ -573,7 +573,7 @@ export default {
       const amount = amountMatch ? parseInt(amountMatch[1], 10) : 0;
 
       if (!campaignId || mentionedJids.length === 0 || !amount) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Format: *${prefix}donasi terima <id> @tag <jumlah>*`,
           `💡 *Contoh:* *${prefix}donasi terima DNR3A2 @62812... 50000*`,
         ].join("\n")));
@@ -582,14 +582,14 @@ export default {
 
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Kampanye *${campaignId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (campaign.status !== "active") {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Kampanye *${campaignId}* sudah ditutup.`,
         ].join("\n")));
         return { handled: true };
@@ -647,7 +647,7 @@ export default {
       }
 
       await sock.sendMessage(groupId, {
-        text: claraWrap("Donasi - Terima (Owner)", lines.join("\n")),
+        text: novaWrap("Donasi - Terima (Owner)", lines.join("\n")),
         mentions: mentionedJids,
       });
       return { handled: true };
@@ -656,7 +656,7 @@ export default {
     // .donasi close <id>
     if (subCmd && (subCmd[1] === "close" || subCmd[1] === "tutup")) {
       if (!isOwner) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa menutup kampanye.`,
@@ -668,7 +668,7 @@ export default {
       const campaignId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!campaignId) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Format: *${prefix}donasi close <id>*`,
           `💡 *Contoh:* *${prefix}donasi close DNR3A2*`,
         ].join("\n")));
@@ -677,14 +677,14 @@ export default {
 
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Kampanye *${campaignId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (campaign.status === "closed") {
-        await m.reply(claraWrap("Donasi", [
+        await m.reply(novaWrap("Donasi", [
           `Kampanye *${campaignId}* sudah ditutup sebelumnya.`,
         ].join("\n")));
         return { handled: true };
@@ -713,13 +713,13 @@ export default {
         lines.push(``, `📌 Target belum tercapai (${100 - pct}% lagi).`);
       }
 
-      await m.reply(claraWrap("Donasi - Tutup", lines.join("\n")));
+      await m.reply(novaWrap("Donasi - Tutup", lines.join("\n")));
       return { handled: true };
     }
 
     // .donasi help
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
-      await m.reply(claraWrap("Donasi - Bantuan", [
+      await m.reply(novaWrap("Donasi - Bantuan", [
         `📌 *Cara Pakai:*`,
         ``,
         `1. Bikin kampanye donasi:`,
@@ -753,7 +753,7 @@ export default {
     const body = raw.replace(new RegExp(`^${prefix}donasi\\s+`, "i"), "").trim();
 
     if (!body) {
-      await m.reply(claraWrap("Donasi - Bantuan", [
+      await m.reply(novaWrap("Donasi - Bantuan", [
         `📌 *Cara Pakai:*`,
         ``,
         `*${prefix}donasi <target> | <keterangan>*`,
@@ -777,7 +777,7 @@ export default {
     const parts = body.split("|").map(p => p.trim()).filter(p => p);
 
     if (parts.length < 1) {
-      await m.reply(claraWrap("Donasi", [
+      await m.reply(novaWrap("Donasi", [
         `Format: *${prefix}donasi <target> | <keterangan>*`,
         `💡 *Contoh:* *${prefix}donasi 5000000 | Sedekah korban banjir*`,
       ].join("\n")));
@@ -789,7 +789,7 @@ export default {
     const target = parseInt(targetStr, 10);
 
     if (!target || target < 1) {
-      await m.reply(claraWrap("Donasi", [
+      await m.reply(novaWrap("Donasi", [
         `Target gak valid nih: *${parts[0]}*`,
         `Gunakan angka, contoh: 5000000`,
       ].join("\n")));
@@ -797,7 +797,7 @@ export default {
     }
 
     if (target > 999999999999) {
-      await m.reply(claraWrap("Donasi", [
+      await m.reply(novaWrap("Donasi", [
         `Target terlalu besar. Maksimal Rp999.999.999.999`,
       ].join("\n")));
       return { handled: true };
@@ -862,7 +862,7 @@ export default {
       `Ketik *${prefix}donasi status ${campaignId}*`,
     ];
 
-    const caption = claraWrap("Donasi - Kampanye Baru", lines2.join("\n")) +
+    const caption = novaWrap("Donasi - Kampanye Baru", lines2.join("\n")) +
       "\n" +
       tipText(`Scan QR lalu transfer, lalu ketik .donasi beri ${campaignId} <nominal>`);
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "robots",
@@ -131,13 +131,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!res.ok) {
       if (res.status === 404) {
-        return m.reply(claraWrap("Robots.txt: " + baseDomain, [
+        return m.reply(novaWrap("Robots.txt: " + baseDomain, [
           "Status: 404 Not Found",
           "Tidak ada robots.txt",
           "Bot boleh crawl semua halaman (no restrictions)",
         ].join("\n")));
       }
-      return m.reply(claraWrap("Robots.txt", "Gagal fetch: " + res.status + " " + res.statusText));
+      return m.reply(novaWrap("Robots.txt", "Gagal fetch: " + res.status + " " + res.statusText));
     }
 
     const txt = await res.text();
@@ -193,11 +193,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(claraWrap("Robots.txt: " + baseDomain, lines.join("\n")));
+    return m.reply(novaWrap("Robots.txt: " + baseDomain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("robots error:", e);
-    return m.reply(claraWrap("Robots", "Error: " + e.message));
+    return m.reply(novaWrap("Robots", "Error: " + e.message));
   }
 }
 

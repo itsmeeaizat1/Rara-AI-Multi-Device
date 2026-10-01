@@ -2,7 +2,7 @@
 // imdb.js — Info film dari IMDB
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBox, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBox, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "imdb",
@@ -20,11 +20,11 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
-    if (!query) return m.reply(claraWrap("imdb", `Masukkan judul film!\n\nContoh: .imdb Inception`, "guide"));
+    if (!query) return m.reply(novaWrap("imdb", `Masukkan judul film!\n\nContoh: .imdb Inception`, "guide"));
 
     const res = await axios.get(`https://www.omdbapi.com/?t=${encodeURIComponent(query)}&apikey=af9b9e87`);
     const d = res.data;
-    if (d.Response === "False") return m.reply(claraWrap("imdb", `Film "${query}" tidak ditemukan!`, "error"));
+    if (d.Response === "False") return m.reply(novaWrap("imdb", `Film "${query}" tidak ditemukan!`, "error"));
 
     let _lines = [];
       _lines.push(`🎬 Title: ${d.Title}`);

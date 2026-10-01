@@ -5,7 +5,7 @@ import path from "path";
 import archiver from "archiver";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "backupsc",
   alias: ["backupsc"],
@@ -209,7 +209,7 @@ async function handler(m, { sock }) {
       fs.unlinkSync(zipFilePath);
     } catch (e) { console.error('[backupsc.js]:', e.message); }
   } catch (error) {
-    await m.reply(claraWrap("backupsc", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("backupsc", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

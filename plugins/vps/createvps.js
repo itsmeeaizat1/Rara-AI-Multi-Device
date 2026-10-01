@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply(claraWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."))
+        return m.reply(novaWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."))
     }
     
     const hostname = m.text?.trim()
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     }
     
     if (!/^[a-zA-Z0-9-]+$/.test(hostname)) {
-        return m.reply(claraWrap("Info", "❌ Hostname hanya boleh huruf, angka, dan dash."))
+        return m.reply(novaWrap("Info", "❌ Hostname hanya boleh huruf, angka, dan dash."))
     }
     
     const spec = VPS_SPECS[m.command]
@@ -111,7 +111,7 @@ ssh_pwauth: True`,
         const droplet = response.data.droplet
         const dropletId = droplet.id
         
-        await m.reply(claraWrap("VPS", `Menunggu VPS siap...\nID: ${dropletId}\nEstimasi: 60 detik`))
+        await m.reply(novaWrap("VPS", `Menunggu VPS siap...\nID: ${dropletId}\nEstimasi: 60 detik`))
         
         await new Promise(resolve => setTimeout(resolve, 60000))
         
@@ -139,7 +139,7 @@ ssh_pwauth: True`,
 Simpan data ini baik-baik!`
         
         await sock.sendMessage(m.sender, { text: detailTxt })
-        await m.reply(claraWrap("VPS", "✅ VPS berhasil dibuat. Data dikirim ke private chat."))
+        await m.reply(novaWrap("VPS", "✅ VPS berhasil dibuat. Data dikirim ke private chat."))
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

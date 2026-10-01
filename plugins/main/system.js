@@ -4,7 +4,7 @@ import config from '../../config.js'
 import os from 'os'
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 const pluginConfig = {
     name: "system",
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
                              `Used: ${formatSize(usedMem)}\n` +
                              `Free: ${formatSize(freeMem)}\n` +
                              `Platform: ${os.platform()} (${os.arch()})`;
-                await m.reply(claraWrap("system", text));
+                await m.reply(novaWrap("system", text));
             }
             break;
 
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
                 const minutes = Math.floor((uptime % 3600) / 60);
                 const seconds = Math.floor(uptime % 60);
                 const uptimeStr = `${hours}h ${minutes}m ${seconds}s`;
-                m.reply(claraWrap("System", `🖥️ cpu info\n\nModel: ${model}\nSpeed: ${speed} MHz\nCores: ${cores}\nServer Uptime: ${uptimeStr}`, "info"));
+                m.reply(novaWrap("System", `🖥️ cpu info\n\nModel: ${model}\nSpeed: ${speed} MHz\nCores: ${cores}\nServer Uptime: ${uptimeStr}`, "info"));
             }
             break;
 
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
                 else if (latency < 500) speed = '⚡ Good';
                 else if (latency < 1000) speed = '🐢 Oke';
                 else speed = '🐌 Slow';
-                m.reply(claraWrap("System", `📶 Pong!\nLatency: ${latency}ms\nResponse: ${speed}`, "info"));
+                m.reply(novaWrap("System", `📶 Pong!\nLatency: ${latency}ms\nResponse: ${speed}`, "info"));
             }
             break;
         }

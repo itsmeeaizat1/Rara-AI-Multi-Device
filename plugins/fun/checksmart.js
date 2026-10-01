@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
 const pluginConfig = {
     name: 'cekpintar',
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
          `Kepintaran (IQ) dia: ${iq}`,
          `"${desc}"`].join("\n")
     
-    await m.reply(claraWrap("cekpintar", txt), { mentions: [mentioned] });
+    await m.reply(novaWrap("cekpintar", txt), { mentions: [mentioned] });
 }
 
 export { pluginConfig as config, handler }

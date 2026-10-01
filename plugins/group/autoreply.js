@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 import fs from 'fs'
 import path from 'path'
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "autoreply",
     alias: ["autoreply"],
@@ -45,12 +45,12 @@ async function handler(m, { sock }) {
         
         if (subAction === 'on') {
             db.setting('autoreplyPrivate', true)
-            return m.reply(claraWrap("Autoreply", `autoreply private diaktifkan\n\nBot akan merespon otomatis di private chat`, "success"))
+            return m.reply(novaWrap("Autoreply", `autoreply private diaktifkan\n\nBot akan merespon otomatis di private chat`, "success"))
         }
         
         if (subAction === 'off') {
             db.setting('autoreplyPrivate', false)
-            return m.reply(claraWrap("Autoreply", `autoreply private dinonaktifkan\n\nBot tidak akan merespon otomatis di private chat`, "error"))
+            return m.reply(novaWrap("Autoreply", `autoreply private dinonaktifkan\n\nBot tidak akan merespon otomatis di private chat`, "error"))
         }
         
         const currentStatus = db.setting('autoreplyPrivate') ?? false
@@ -119,7 +119,7 @@ async function handler(m, { sock }) {
             db.setting('globalCustomReplies', globalCustomReplies)
             await db.save()
             
-            return m.reply(claraWrap("Autoreply", `🗑️ global autoreply dihapus\n\nTrigger ${trigger} berhasil dihapus!`, "info"))
+            return m.reply(novaWrap("Autoreply", `🗑️ global autoreply dihapus\n\nTrigger ${trigger} berhasil dihapus!`, "info"))
         }
         
         if (subAction === 'list' || !subAction) {
@@ -208,12 +208,12 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
     
     if (action === 'on') {
         db.setGroup(m.chat, { ...groupData, autoreply: true })
-        return m.reply(claraWrap("Autoreply", `autoreply diaktifkan\n\nBot akan merespon otomatis di grup ini`, "success"))
+        return m.reply(novaWrap("Autoreply", `autoreply diaktifkan\n\nBot akan merespon otomatis di grup ini`, "success"))
     }
     
     if (action === 'off') {
         db.setGroup(m.chat, { ...groupData, autoreply: false })
-        return m.reply(claraWrap("Autoreply", `autoreply dinonaktifkan\n\nBot tidak akan merespon otomatis di grup ini`, "error"))
+        return m.reply(novaWrap("Autoreply", `autoreply dinonaktifkan\n\nBot tidak akan merespon otomatis di grup ini`, "error"))
     }
     
     if (action === 'add') {
@@ -245,7 +245,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         const reply = fullBody.substring(pipeIdx + 1)
         
         if (!trigger) {
-            return m.reply(claraWrap("Autoreply", `gagal\n\nTrigger tidak boleh kosong!`, "error"))
+            return m.reply(novaWrap("Autoreply", `gagal\n\nTrigger tidak boleh kosong!`, "error"))
         }
         
         let imageBuffer = null
@@ -380,7 +380,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         
         text += `_Catatan: Default triggers bawaan bot tidak bisa di-edit._`
         
-        return await m.reply(claraWrap("autoreply", text))
+        return await m.reply(novaWrap("autoreply", text))
     }
     
     if (action === 'reset' || action === 'clear') {
@@ -394,10 +394,10 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         }
         
         db.setGroup(m.chat, { ...groupData, customReplies: [] })
-        return m.reply(claraWrap("Autoreply", `🗑️ autoreply direset\n\nSemua autoreply custom dihapus!`, "info"))
+        return m.reply(novaWrap("Autoreply", `🗑️ autoreply direset\n\nSemua autoreply custom dihapus!`, "info"))
     }
     
-    return m.reply(claraWrap("Auto reply", `Action Tidak Valid\n\nGunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``, "error"))
+    return m.reply(novaWrap("Auto reply", `Action Tidak Valid\n\nGunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``, "error"))
 }
 
 export { pluginConfig as config, handler }

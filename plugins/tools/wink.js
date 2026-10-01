@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .wink — enhance/restorasi foto AI Meitu (port engine lama wink.js, tanpa key)
 import crypto from "crypto";
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wink",
@@ -110,7 +110,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("⚡");
     await sock.sendMessage(m.chat, {
       image: buf,
-      caption: claraWrap("Wink", "Enhance selesai" + (result.width && result.height ? " (" + result.width + "x" + result.height + ")" : "")),
+      caption: novaWrap("Wink", "Enhance selesai" + (result.width && result.height ? " (" + result.width + "x" + result.height + ")" : "")),
       mimetype: "image/png",
     }, { quoted: m });
   } catch (error) {

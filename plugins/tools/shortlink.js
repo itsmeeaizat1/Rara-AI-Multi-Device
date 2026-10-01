@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaGuideV2, novaSalahV2, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaGuideV2, novaSalahV2, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -267,7 +267,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const shortUrl = await provider.shorten(cleanUrl, m);
 
-    const txt = claraWrap("Shortlink", ["SHORTLINK BERHASIL", "Provider: " + provider.name, "URL asli: " + cleanUrl, "URL pendek: " + shortUrl].join("\n"));
+    const txt = novaWrap("Shortlink", ["SHORTLINK BERHASIL", "Provider: " + provider.name, "URL asli: " + cleanUrl, "URL pendek: " + shortUrl].join("\n"));
     await m.react("🐣");
     return m.reply( txt, "shortlink");
   } catch (e) {
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
     txt += "URL: " + cleanUrl + "\n";
     txt += "Error: " + e.message + "\n\n";
     txt += "Coba provider lain: .shortlink tinyurl <url>";
-    return m.reply(claraWrap("shortlink", txt));
+    return m.reply(novaWrap("shortlink", txt));
   }
 }
 

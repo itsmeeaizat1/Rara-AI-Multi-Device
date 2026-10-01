@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "android1-get",
   alias: ["android1-get", "android1"],
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     }
   } catch (err) {
     console.log(err);
-    return m.reply(claraWrap("android1-get", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("android1-get", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

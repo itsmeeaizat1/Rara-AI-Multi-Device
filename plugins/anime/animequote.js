@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animequote",
@@ -53,7 +53,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       // Random quote jika tidak ada argumen
       if (!args[0]) {
         const q = QUOTES[Math.floor(Math.random() * QUOTES.length)]
-        return m.reply(claraWrap("Anime Quote #" + q.no, [
+        return m.reply(novaWrap("Anime Quote #" + q.no, [
           '"' + q.quote + '"',
           "",
           "Indonesia:",
@@ -73,11 +73,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "animequote <nomor>")
       lines.push("Atau ketik " + usedPrefix + "animequote untuk random")
-      return m.reply(claraWrap("Anime Quote", lines.join("\n")))
+      return m.reply(novaWrap("Anime Quote", lines.join("\n")))
     }
 
     const q = QUOTES[input - 1]
-    return m.reply(claraWrap("Anime Quote #" + q.no, [
+    return m.reply(novaWrap("Anime Quote #" + q.no, [
       '"' + q.quote + '"',
       "",
       "Indonesia:",
@@ -87,7 +87,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "Karakter: " + q.karakter,
     ].join("\n")))
   } catch (e) {
-    return m.reply(claraWrap("Anime Quote", "Error: " + e.message))
+    return m.reply(novaWrap("Anime Quote", "Error: " + e.message))
   }
 }
 

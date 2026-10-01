@@ -10,7 +10,7 @@
 //   .anticall on    → DITOLAK otomatis + pesan penjelasan
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const MODES = {
   on: { key: true, label: "TOLAK otomatis + kirim pesan penjelasan" },
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
 
   if (!option || option === "status") {
     const cur = currentMode();
-    return m.reply(claraWrap("Anti Call", [
+    return m.reply(novaWrap("Anti Call", [
       "Mode saat ini: " + (cur === "on" ? "TOLAK (panggilan ditolak otomatis)" : cur === "info" ? "INFO (gak ditolak, bot kirim pesan info)" : "OFF (panggilan dibiarkan bunyi normal)"),
       "Default bot: OFF — panggilan tidak ditolak",
       "",
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
 
   const mode = MODES[option];
   if (!mode) {
-    return m.reply(claraWrap("Anti Call", [
+    return m.reply(novaWrap("Anti Call", [
       "Mode tidak valid!",
       "Pilihan: on (tolak) / info (pesan info saja) / off (biarkan)",
       "Contoh: " + prefix + "anticall info",
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
   }
 
   db.setting("antiCall", mode.key);
-  return m.reply(claraWrap("Anti Call", [
+  return m.reply(novaWrap("Anti Call", [
     "Mode diubah: " + option.toUpperCase(),
     mode.label,
   ]));

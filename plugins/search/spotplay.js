@@ -13,7 +13,7 @@
 // emang gak ada, gak dipaksa sama kayak .playspotify/.spotifyplay2.
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotplay",
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.log(e);
     await m.react("❌");
-    m.reply(claraWrap("spotplay", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("spotplay", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

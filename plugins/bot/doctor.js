@@ -6,7 +6,7 @@
 //   Yang bahaya (AI nulis kode) owner-gate, yang aman (cleanup, monitoring)
 //   jalan otomatis selama doctor ON.
 // ============================================================
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import {
   getDoctorData, isDoctorOn, isDoctorAuto, setDoctorOn, setDoctorAuto,
@@ -38,7 +38,7 @@ async function handler(m, { sock, db } = {}) {
     const on = sub === "on";
     const now = setDoctorOn(db, on, m.sender);
     if (on) initDoctorMonitor(sock).catch(() => {});
-    return m.reply(claraWrap("Doctor", on
+    return m.reply(novaWrap("Doctor", on
       ? [`🩺 Self-Healing Bot ${smallcapsText("AKTIF")}`,
          ``,
          `${smallcapsText("monitoring")} — error kecatat + notif ke sini`,
@@ -52,12 +52,12 @@ async function handler(m, { sock, db } = {}) {
   if (sub === "auto") {
     const mode = (args[1] || "").toLowerCase();
     if (mode !== "on" && mode !== "off") {
-      return m.reply(claraWrap("Doctor", [`${smallcapsText("pemakaian")}: .doctor auto on/off`,
+      return m.reply(novaWrap("Doctor", [`${smallcapsText("pemakaian")}: .doctor auto on/off`,
         ``, `auto = AI langsung nulis + nerapin patch sendiri tiap error baru (tanpa nanya)`, `syarat: .doctor on dulu`]));
     }
     const res = setDoctorAuto(db, mode === "on");
-    if (!res.ok) return m.reply(claraWrap("Doctor", [res.msg]));
-    return m.reply(claraWrap("Doctor", res.auto
+    if (!res.ok) return m.reply(novaWrap("Doctor", [res.msg]));
+    return m.reply(novaWrap("Doctor", res.auto
       ? ["🤖 Auto-heal NYALA", ``, `AI langsung benerin error baru sendiri (patch → syntax test → backup → apply)`, `Notifikasi hasil tetap masuk ke sini`]
       : ["🤖 Auto-heal mati", ``, `Error cuma dicatat + dinotifin — perbaikan lewat .doctor heal manual`]));
   }
@@ -65,7 +65,7 @@ async function handler(m, { sock, db } = {}) {
   // ── SCAN — laporan error tercatat ──
   if (sub === "scan") {
     const s = doctorScan(db);
-    if (!s.total) return m.reply(claraWrap("Doctor", ["Belum ada error yang tercatat — bot sehat 🎉"]));
+    if (!s.total) return m.reply(novaWrap("Doctor", ["Belum ada error yang tercatat — bot sehat 🎉"]));
     const lines = [`${smallcapsText("error tercatat")}: ${s.total} (on: ${s.on ? "iya" : "tidak"}, auto-heal: ${s.auto ? "iya" : "tidak"})`, ``];
     s.errors.slice(0, 8).forEach((e, i) => {
       lines.push(`𝗡𝗼 ${i + 1}${e.healed ? " ✅healed" : ""} — ${e.message.slice(0, 70)}`);
@@ -74,22 +74,22 @@ async function handler(m, { sock, db } = {}) {
     });
     if (s.total > 8) lines.push(``, `+${s.total - 8} lainnya`);
     lines.push(``, `${smallcapsText("benerin")}: .doctor heal <no>`);
-    return m.reply(claraWrap("Doctor", lines));
+    return m.reply(novaWrap("Doctor", lines));
   }
 
   // ── HEAL — AI tulis patch (owner-gate: cuma owner bisa nyuruh) ──
   if (sub === "heal") {
-    if (!isDoctorOn(db)) return m.reply(claraWrap("Doctor", ["Doctor masih OFF", ``, `.doctor on dulu biar monitoring jalan`]));
+    if (!isDoctorOn(db)) return m.reply(novaWrap("Doctor", ["Doctor masih OFF", ``, `.doctor on dulu biar monitoring jalan`]));
     const idx = parseInt(args[1], 10);
     const s = doctorScan(db);
-    if (!s.errors.length) return m.reply(claraWrap("Doctor", ["Belum ada error yang tercatat"]));
+    if (!s.errors.length) return m.reply(novaWrap("Doctor", ["Belum ada error yang tercatat"]));
     const targetIdx = Number.isFinite(idx) && idx >= 1 ? idx - 1 : 0;
-    if (targetIdx >= s.errors.length) return m.reply(claraWrap("Doctor", [`Nomor ${idx} gak ada — total cuma ${s.errors.length}`, `Lihat daftar: .doctor scan`]));
+    if (targetIdx >= s.errors.length) return m.reply(novaWrap("Doctor", [`Nomor ${idx} gak ada — total cuma ${s.errors.length}`, `Lihat daftar: .doctor scan`]));
     await m.react("🧠");
     const res = await doctorHeal(db, targetIdx);
-    if (!res.ok) { await m.react("❌"); return m.reply(claraWrap("Doctor", [`${smallcapsText("gagal heal")}`, ``, res.msg])); }
+    if (!res.ok) { await m.react("❌"); return m.reply(novaWrap("Doctor", [`${smallcapsText("gagal heal")}`, ``, res.msg])); }
     await m.react("🐣");
-    return m.reply(claraWrap("Doctor", [
+    return m.reply(novaWrap("Doctor", [
       `✅ ${smallcapsText("patch diterapkan")}`,
       ``,
       `${smallcapsText("file")}: ${res.file}`,
@@ -105,7 +105,7 @@ async function handler(m, { sock, db } = {}) {
   // ── CLEAN — bersihin log manual ──
   if (sub === "clean") {
     const res = doctorClean(db);
-    return m.reply(claraWrap("Doctor", [`${smallcapsText("log error dibersihin")}`, ``, `Dihapus: ${res.removed} • Sisa: ${res.total}`]));
+    return m.reply(novaWrap("Doctor", [`${smallcapsText("log error dibersihin")}`, ``, `Dihapus: ${res.removed} • Sisa: ${res.total}`]));
   }
 
   // ── TEST — injeksi error dummy buat tes alur ──
@@ -113,7 +113,7 @@ async function handler(m, { sock, db } = {}) {
     const e = new Error("dummy: doctor self-test — bukan error beneran");
     e.stack = `Error: dummy: doctor self-test — bukan error beneran\n    at Object.<anonymous> (${import.meta.url.replace("file://", "")}:1:1)`;
     recordDoctorError(db, "doctor-test", e);
-    return m.reply(claraWrap("Doctor", [
+    return m.reply(novaWrap("Doctor", [
       `🧪 ${smallcapsText("error dummy disuntik")}`,
       ``,
       `Cek: .doctor scan — bakal muncul paling atas`,
@@ -124,7 +124,7 @@ async function handler(m, { sock, db } = {}) {
   // ── STATUS (default) ──
   const d = getDoctorData(db);
   const fresh = d.errors.filter((e) => !e.healed).length;
-  return m.reply(claraWrap("Doctor", [
+  return m.reply(novaWrap("Doctor", [
     `🩺 ${smallcapsText("self-healing bot")}`,
     ``,
     `${smallcapsText("status")}: ${d.on ? "ON" : "OFF (default — owner aktifin manual)"}`,

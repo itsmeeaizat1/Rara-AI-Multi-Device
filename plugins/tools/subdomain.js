@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "subdomain",
@@ -68,12 +68,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     const domain = text.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "").trim();
     if (!domain) {
-      return m.reply(claraWrap("Subdomain", "Domain tidak boleh kosong!"));
+      return m.reply(novaWrap("Subdomain", "Domain tidak boleh kosong!"));
     }
     const subdomains = await getSubdomains(domain);
 
     if (subdomains.length === 0) {
-      return m.reply(claraWrap("Subdomain: " + domain, "Tidak ada subdomain ditemukan"));
+      return m.reply(novaWrap("Subdomain: " + domain, "Tidak ada subdomain ditemukan"));
     }
 
     let lines = [
@@ -92,11 +92,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("... +" + (subdomains.length - 40) + " lagi");
     }
     await m.react("🐣");
-    return m.reply(claraWrap("Subdomain: " + domain, lines.join("\n")));
+    return m.reply(novaWrap("Subdomain: " + domain, lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("subdomain error:", e);
-    return m.reply(claraWrap("Subdomain", "Error: " + e.message));
+    return m.reply(novaWrap("Subdomain", "Error: " + e.message));
   }
 }
 

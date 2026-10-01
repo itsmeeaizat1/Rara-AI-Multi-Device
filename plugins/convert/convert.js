@@ -5,7 +5,7 @@ import path from "path";
 import os from "os";
 import axios from "axios";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { novaBox, novaError, novaGuide, novaSalah, claraWrap, novaBerhasil, novaGagal, novaGangguan, toSC, scLine } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, novaSalah, novaWrap, novaBerhasil, novaGagal, novaGangguan, toSC, scLine } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import {
   AUDIO_FORMATS,

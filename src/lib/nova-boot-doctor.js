@@ -29,7 +29,7 @@ import config from "../../config.js";
 import { getApiKey } from "./nova-api-keys.js";
 import { getApiKeys } from "./config/env-loader.js";
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { sendNotif } from "./nova-notif-card.js";
 import { getTioBase } from "./config/env-loader.js";
 
@@ -400,10 +400,10 @@ export function buildBootReport(results, extraLines = []) {
     for (const l of extraLines) lines.push(l);
   }
 
-  if (!problemCount) return claraWrap("Boot Doctor", lines);
+  if (!problemCount) return novaWrap("Boot Doctor", lines);
   lines.push("Ketik .bootdoctor buat cek ulang manual · .reloadkey setelah ganti key");
 
-  return claraWrap("Boot Doctor", lines);
+  return novaWrap("Boot Doctor", lines);
 }
 
 // ═══════════════════════════════════════════════════════════════

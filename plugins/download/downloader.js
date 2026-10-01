@@ -6,7 +6,7 @@ import yts from "yt-search";
 import { aiodl, detectPlatform } from "../../src/scraper/aio.js";
 import scdl from "../../src/scraper/soundclouddl.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { toSC, claraWrap, novaError, novaGuide, novaBox, bracketBox, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { toSC, novaWrap, novaError, novaGuide, novaBox, bracketBox, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
@@ -349,7 +349,7 @@ async function handler(m, { sock }) {
       `${k.padEnd(12)} ${prefix}downloader ${k} ${PLATFORMS[k].needsUrl ? "<url>" : "<keyword>"}`
     ).join("\n");
 
-    return m.reply(claraWrap("downloader", [
+    return m.reply(novaWrap("downloader", [
       "📌 Format: " + prefix + "downloader <platform> <format> <url/keyword>",
       "",
       "Platform tersedia: " + platforms,

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -91,7 +91,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = (args[0] || "").toLowerCase().trim()
 
     if (!input) {
-      return m.reply(claraWrap("Angka Naas & Hoki", [
+      return m.reply(novaWrap("Angka Naas & Hoki", [
         "Pilih jenis untuk cek angka:",
         "",
         "1. kedutan - Angka berdasarkan kedutan",
@@ -112,7 +112,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   Arti: " + k.arti)
         lines.push("   Angka: " + k.angka)
       })
-      return m.reply(claraWrap("Angka Kedutan", lines.join("\n")))
+      return m.reply(novaWrap("Angka Kedutan", lines.join("\n")))
     }
 
     if (input === "mimpi") {
@@ -124,7 +124,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   Arti: " + mm.arti)
         lines.push("   Angka: " + mm.angka)
       })
-      return m.reply(claraWrap("Angka Mimpi", lines.join("\n")))
+      return m.reply(novaWrap("Angka Mimpi", lines.join("\n")))
     }
 
     if (input === "weton") {
@@ -137,12 +137,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       })
       lines.push("")
       lines.push("Cari wetonmu: " + usedPrefix + "weton <hari> <pasaran>")
-      return m.reply(claraWrap("Angka Weton", lines.join("\n")))
+      return m.reply(novaWrap("Angka Weton", lines.join("\n")))
     }
 
     return m.reply(novaError("AngkaNaas", "Jenis gak valid nih! Gunakan: kedutan, mimpi, atau weton"))
   } catch (e) {
-    return m.reply(claraWrap("Angka Naas", "Error: " + e.message))
+    return m.reply(novaWrap("Angka Naas", "Error: " + e.message))
   }
 }
 

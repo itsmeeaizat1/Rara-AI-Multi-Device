@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hotseat",
@@ -76,16 +76,16 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "start" || sub === "mulai") {
     if (game && game.active) {
-      await m.reply(claraWrap("Hot Seat", "Masih ada sesi aktif! @" + game.target.split("@")[0] + " di hot seat.\n" + prefix + "hotseat stop untuk hentikan."), { mentions: [game.target] });
+      await m.reply(novaWrap("Hot Seat", "Masih ada sesi aktif! @" + game.target.split("@")[0] + " di hot seat.\n" + prefix + "hotseat stop untuk hentikan."), { mentions: [game.target] });
       return { handled: true };
     }
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(claraWrap("Hot Seat", "Khusus admin/owner buat mulai."));
+      await m.reply(novaWrap("Hot Seat", "Khusus admin/owner buat mulai."));
       return { handled: true };
     }
     const target = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : null;
     if (!target) {
-      await m.reply(claraWrap("Hot Seat", "Tag orang yang mau di-hot seat!\n💡 *Contoh:* " + prefix + "hotseat start @user"));
+      await m.reply(novaWrap("Hot Seat", "Tag orang yang mau di-hot seat!\n💡 *Contoh:* " + prefix + "hotseat start @user"));
       return { handled: true };
     }
 
@@ -104,7 +104,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     };
     saveConfig(db, gid, data);
 
-    await m.reply(claraWrap("Hot Seat", [
+    await m.reply(novaWrap("Hot Seat", [
       "HOT SEAT DIMULAI!",
       "",
       "Target: @" + target.split("@")[0],
@@ -122,23 +122,23 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "answer" || sub === "jawab") {
     if (!game || !game.active) {
-      await m.reply(claraWrap("Hot Seat", "Tidak ada sesi aktif."));
+      await m.reply(novaWrap("Hot Seat", "Tidak ada sesi aktif."));
       return { handled: true };
     }
     if (game.target !== m.sender) {
-      await m.reply(claraWrap("Hot Seat", "Bukan kamu yang di hot seat! @" + game.target.split("@")[0] + " yang jawab."), { mentions: [game.target] });
+      await m.reply(novaWrap("Hot Seat", "Bukan kamu yang di hot seat! @" + game.target.split("@")[0] + " yang jawab."), { mentions: [game.target] });
       return { handled: true };
     }
     const text = args.slice(2).join(" ").trim();
     if (!text) {
-      await m.reply(claraWrap("Hot Seat", "Ketik jawaban: " + prefix + "hotseat answer <jawaban>"));
+      await m.reply(novaWrap("Hot Seat", "Ketik jawaban: " + prefix + "hotseat answer <jawaban>"));
       return { handled: true };
     }
 
     const currentQuestion = game.questions[game.currentQ];
     game.answers.push({ q: currentQuestion.q, a: text, level: currentQuestion.level, votes: [], ts: Date.now() });
 
-    await m.reply(claraWrap("Hot Seat - Jawaban", [
+    await m.reply(novaWrap("Hot Seat - Jawaban", [
       "Q: " + currentQuestion.q,
       "@" + target.split("@")[0] + ":",
       text,
@@ -150,27 +150,27 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "vote" || sub === "react") {
     if (!game || !game.active) {
-      await m.reply(claraWrap("Hot Seat", "Tidak ada sesi aktif."));
+      await m.reply(novaWrap("Hot Seat", "Tidak ada sesi aktif."));
       return { handled: true };
     }
     if (game.target === m.sender) {
-      await m.reply(claraWrap("Hot Seat", "Tidak bisa vote jawaban sendiri!"));
+      await m.reply(novaWrap("Hot Seat", "Tidak bisa vote jawaban sendiri!"));
       return { handled: true };
     }
     if (game.answers.length === 0) {
-      await m.reply(claraWrap("Hot Seat", "Belum ada jawaban untuk di-vote."));
+      await m.reply(novaWrap("Hot Seat", "Belum ada jawaban untuk di-vote."));
       return { handled: true };
     }
     const emoji = (args[2] || "").trim();
     if (emoji !== "👍" && emoji !== "👎") {
-      await m.reply(claraWrap("Hot Seat", "Ketik: " + prefix + "hotseat vote 👍 atau " + prefix + "hotseat vote 👎"));
+      await m.reply(novaWrap("Hot Seat", "Ketik: " + prefix + "hotseat vote 👍 atau " + prefix + "hotseat vote 👎"));
       return { handled: true };
     }
 
     const lastAnswer = game.answers[game.answers.length - 1];
     if (!lastAnswer.voters) lastAnswer.voters = {};
     if (lastAnswer.voters[m.sender]) {
-      await m.reply(claraWrap("Hot Seat", "Kamu sudah vote!"));
+      await m.reply(novaWrap("Hot Seat", "Kamu sudah vote!"));
       return { handled: true };
     }
     lastAnswer.voters[m.sender] = emoji;
@@ -180,11 +180,11 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "next" || sub === "lanjut") {
     if (!game || !game.active) {
-      await m.reply(claraWrap("Hot Seat", "Tidak ada sesi aktif."));
+      await m.reply(novaWrap("Hot Seat", "Tidak ada sesi aktif."));
       return { handled: true };
     }
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(claraWrap("Hot Seat", "Khusus admin/owner."));
+      await m.reply(novaWrap("Hot Seat", "Khusus admin/owner."));
       return { handled: true };
     }
     game.currentQ++;
@@ -192,7 +192,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       // Session complete
       const answerList = game.answers.map((a, i) => "Q" + (i + 1) + " [" + a.level + "]: " + a.q + "\nA: " + a.a + "\n").join("\n");
       delConfig(db, gid);
-      await m.reply(claraWrap("Hot Seat - SELESAI", [
+      await m.reply(novaWrap("Hot Seat - SELESAI", [
         "@" + game.target.split("@")[0] + " telah menjawab semua!",
         "",
         "Rekap jawaban:",
@@ -205,7 +205,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     const nextQ = game.questions[game.currentQ];
     saveConfig(db, gid, game);
-    await m.reply(claraWrap("Hot Seat - Pertanyaan #" + (game.currentQ + 1), [
+    await m.reply(novaWrap("Hot Seat - Pertanyaan #" + (game.currentQ + 1), [
       "[" + nextQ.level.toUpperCase() + "]",
       nextQ.q,
       "",
@@ -216,7 +216,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game) {
-      await m.reply(claraWrap("Hot Seat", [
+      await m.reply(novaWrap("Hot Seat", [
         "HOT SEAT",
         "",
         prefix + "hotseat start @user (admin) - mulai sesi",
@@ -229,7 +229,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       ].join("\n")));
       return { handled: true };
     }
-    await m.reply(claraWrap("Hot Seat Status", [
+    await m.reply(novaWrap("Hot Seat Status", [
       "Target: @" + game.target.split("@")[0],
       "Pertanyaan: " + (game.currentQ + 1) + "/" + game.questions.length,
       "Jawaban diberikan: " + game.answers.length,
@@ -239,15 +239,15 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "stop" || sub === "batal") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(claraWrap("Hot Seat", "Khusus admin/owner."));
+      await m.reply(novaWrap("Hot Seat", "Khusus admin/owner."));
       return { handled: true };
     }
     delConfig(db, gid);
-    await m.reply(claraWrap("Hot Seat", "Sesi dihentikan."));
+    await m.reply(novaWrap("Hot Seat", "Sesi dihentikan."));
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Hot Seat", [
+  await m.reply(novaWrap("Hot Seat", [
     "HOT SEAT",
     "",
     prefix + "hotseat start @user (admin) - mulai",

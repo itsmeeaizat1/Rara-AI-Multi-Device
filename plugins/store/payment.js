@@ -20,7 +20,7 @@ import fs from "fs";
 import path from "path";
 import config from "../../config.js";
 import { sewaPrice, PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "payment",
@@ -208,7 +208,7 @@ async function handler(m, { sock }) {
       buildDonasiBody() +
       "\n\nHubungi owner: wa.me/" +
       String((config.owner?.number || [])[0] || "").replace(/[^0-9]/g, "");
-    await m.reply(claraWrap("payment", fallback));
+    await m.reply(novaWrap("payment", fallback));
   }
 }
 

@@ -3,7 +3,7 @@ import { bratGen } from "brat-canvas";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "brat",

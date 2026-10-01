@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "shio",
@@ -41,16 +41,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "shio <nama shio>")
       lines.push("Contoh: " + usedPrefix + "shio naga")
-      return m.reply(claraWrap("12 Shio", lines.join("\n")))
+      return m.reply(novaWrap("12 Shio", lines.join("\n")))
     }
 
     const shio = SHIO.find(s => s.nama.toLowerCase().includes(input))
 
     if (!shio) {
-      return m.reply(claraWrap("Shio", "Shio tidak ditemukan: " + input + "\nKetik " + usedPrefix + "shio untuk lihat list."))
+      return m.reply(novaWrap("Shio", "Shio tidak ditemukan: " + input + "\nKetik " + usedPrefix + "shio untuk lihat list."))
     }
 
-    return m.reply(claraWrap("Shio " + shio.nama, [
+    return m.reply(novaWrap("Shio " + shio.nama, [
       "Tahun: " + shio.tahun,
       "Elemen: " + shio.elemen,
       "",
@@ -66,7 +66,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "Kekuatan: " + shio.kekuatan,
     ].join("\n")))
   } catch (e) {
-    return m.reply(claraWrap("Shio", "Error: " + e.message))
+    return m.reply(novaWrap("Shio", "Error: " + e.message))
   }
 }
 

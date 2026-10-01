@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import tls from "tls";
 
 const pluginConfig = {
@@ -90,12 +90,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     const domain = text.replace(/^https?:\/\//, "").replace(/\/.*$/, "").trim();
     if (!domain) {
-      return m.reply(claraWrap("SSL", "Domain tidak boleh kosong!"));
+      return m.reply(novaWrap("SSL", "Domain tidak boleh kosong!"));
     }
     const result = await checkSSL(domain);
 
     if (result.error) {
-      return m.reply(claraWrap("SSL Error", [
+      return m.reply(novaWrap("SSL Error", [
         "Domain: " + domain,
         "Error: " + result.error,
       ].join("\n")));
@@ -111,7 +111,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (sanList.length > 100) sanList = sanList.substring(0, 100) + "...";
     }
     await m.react("🐣");
-    return m.reply(claraWrap("SSL Check: " + domain, [
+    return m.reply(novaWrap("SSL Check: " + domain, [
       "Status: " + status,
       "Subject: " + result.subject,
       "Issuer: " + result.issuer,
@@ -126,7 +126,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     await m.react("❌");
     console.error("sslcheck error:", e);
-    return m.reply(claraWrap("SSL", "Error: " + e.message));
+    return m.reply(novaWrap("SSL", "Error: " + e.message));
   }
 }
 

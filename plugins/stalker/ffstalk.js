@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ffstalk",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const uid = m.text?.trim() || m.args[0];
 
   if (!uid) {
-    return m.reply(claraWrap("ffstalk", "❌ *Waduh, ID Free Fire-nya belum dimasukkan!*\n\nKamu harus mengetikkan UID pemain Free Fire yang ingin di-stalk. \n\n💡 *Contoh:* `.ffstalk 470699855`"));
+    return m.reply(novaWrap("ffstalk", "❌ *Waduh, ID Free Fire-nya belum dimasukkan!*\n\nKamu harus mengetikkan UID pemain Free Fire yang ingin di-stalk. \n\n💡 *Contoh:* `.ffstalk 470699855`"));
   }
   try {
     const res = await axios.get(`https://api.nexray.eu.cc/stalker/freefire?uid=${uid}`, {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const data = res.data;
 
     if (!data.status || !data.result) {
-      return m.reply(claraWrap("ffstalk", `⚠️ *Pencarian Gagal!*\n\nID *${uid}* tidak ditemukan atau API sedang bermasalah. Pastikan ID yang kamu masukkan sudah benar ya.`));
+      return m.reply(novaWrap("ffstalk", `⚠️ *Pencarian Gagal!*\n\nID *${uid}* tidak ditemukan atau API sedang bermasalah. Pastikan ID yang kamu masukkan sudah benar ya.`));
     }
 
     const r = data.result;
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[FFStalk]", error.message);
-    m.reply(claraWrap("ffstalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Free Fire. Silakan coba beberapa saat lagi ya."));
+    m.reply(novaWrap("ffstalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Free Fire. Silakan coba beberapa saat lagi ya."));
   }
 }
 

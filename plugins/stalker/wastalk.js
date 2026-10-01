@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import moment from 'moment-timezone'
 import PhoneNum from 'awesome-phonenumber'
 import config from '../../config.js'
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     let num = m.quoted?.sender || m.mentionedJid?.[0] || text;
     console.log(num)
     if (!num) {
-        return m.reply(claraWrap("wastalk", `Example: ${m.prefix}${m.command} @tag / 628xxx`));
+        return m.reply(novaWrap("wastalk", `Example: ${m.prefix}${m.command} @tag / 628xxx`));
     }
 
     num = num.replace(/\D/g, '') + '@s.whatsapp.net';
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
 
     } catch (e) {
         console.error('WaStalk Error:', e);
-        m.reply(claraWrap('Error', '❌ Failed to stalk user.'));
+        m.reply(novaWrap('Error', '❌ Failed to stalk user.'));
     }
 }
 

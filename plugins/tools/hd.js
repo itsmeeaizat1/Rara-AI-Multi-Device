@@ -4,7 +4,7 @@
 import sharp from "sharp";
 import te from "../../src/lib/nova-error.js";
 import cfg from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hd",
@@ -114,7 +114,7 @@ async function handler(m, { sock, args }) {
       buffer = await m.download();
     }
     if (!buffer || !buffer.length) {
-      return await m.reply(claraWrap("hd", "Gagal download gambar! Coba lagi."));
+      return await m.reply(novaWrap("hd", "Gagal download gambar! Coba lagi."));
     }
 
     const { buffer: resultBuffer, width: outW, height: outH, scale: finalScale, capped } = await upscaleImage(buffer, scale);
@@ -158,7 +158,7 @@ async function handler(m, { sock, args }) {
     let txt = "";
     txt += `Gagal enhance gambar!\n`;
     txt += `${e.message}\n`;
-        await m.reply(claraWrap("hd", txt));
+        await m.reply(novaWrap("hd", txt));
   }
 }
 

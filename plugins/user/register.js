@@ -12,7 +12,7 @@ import {
 } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
 import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "daftar",
@@ -202,7 +202,7 @@ async function sendRegistrationPrompt(sock, m, text, options = {}) {
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     return msg;
   } else {
-    return await m.reply(claraWrap("daftar", text));
+    return await m.reply(novaWrap("daftar", text));
   }
 }
 

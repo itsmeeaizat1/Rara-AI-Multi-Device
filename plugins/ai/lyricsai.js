@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // lirikai — AI generator lirik lagu
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("lirikai", `Mau bikin lirik lagu tentang apa?\n\nContoh: ${m.prefix}lirikai cinta tak terbalas\n${m.prefix}lirikai perpisahan sahabat`, "guide"));
+      return m.reply(novaWrap("lirikai", `Mau bikin lirik lagu tentang apa?\n\nContoh: ${m.prefix}lirikai cinta tak terbalas\n${m.prefix}lirikai perpisahan sahabat`, "guide"));
     }
 
     await m.react("🕒");
@@ -59,7 +59,7 @@ Lirik harus puitis, catchy, dan punya rima. Bahasa Indonesia, maksimal 3 verse +
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("lirikai", "AI-nya lagi nggak inspiratif nih 🎵", "error"));
+      return m.reply(novaWrap("lirikai", "AI-nya lagi nggak inspiratif nih 🎵", "error"));
     }
 
     await m.react("🐣");
@@ -72,7 +72,7 @@ Lirik harus puitis, catchy, dan punya rima. Bahasa Indonesia, maksimal 3 verse +
   } catch (err) {
     console.error("lirikai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("lirikai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("lirikai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

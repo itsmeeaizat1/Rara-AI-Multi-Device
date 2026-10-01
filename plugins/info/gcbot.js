@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader,  separator, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getSupportStatus } from "../../src/lib/support/support.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Section Join Grup Resmi — link dari src/lib/support/support.js
     const st = getSupportStatus();
     const joinSection = st.groupSet
-      ? claraWrap("Join Grup Resmi", [
+      ? novaWrap("Join Grup Resmi", [
           `Nama: ${st.raw.group.name}`,
           `Link: ${st.raw.group.link}`,
           "",
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
       : "";
 
     const text =
-      claraWrap("Grup Bot", ["👥", "---", ...lines]) +
+      novaWrap("Grup Bot", ["👥", "---", ...lines]) +
       "\n\n" +
       joinSection +
       tipText(`Total grup: ${groups.length}`) +

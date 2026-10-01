@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
+import { novaWrap, novaBerhasil } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -25,7 +25,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
   try {
     const input = text.trim();
     if (!input || !input.includes("|")) {
-      return m.reply(claraWrap("certmaker", [
+      return m.reply(novaWrap("certmaker", [
         "Buat sertifikat custom.",
         "",
         "📌 Format: " + usedPrefix + "certmaker <nama>|<judul>|<pemberi>|<tanggal>",
@@ -41,7 +41,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     const issuer = parts[2] || "Nova AI";
     const date = parts[3] || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-    if (name.length > 40) return m.reply(claraWrap("certmaker", "Nama maksimal 40 karakter."));
+    if (name.length > 40) return m.reply(novaWrap("certmaker", "Nama maksimal 40 karakter."));
 
     const canvas = await getCanvas();
     const W = 1000, H = 700;
@@ -150,7 +150,7 @@ async function handler(m, { conn, text, usedPrefix, command }) {
     fs.unlinkSync(outPath);
   } catch (e) {
     console.error("certmaker error:", e);
-    return m.reply(claraWrap("certmaker", "Gagal buat sertifikat. Coba lagi.", "error"));
+    return m.reply(novaWrap("certmaker", "Gagal buat sertifikat. Coba lagi.", "error"));
   }
 }
 

@@ -7,7 +7,7 @@
 // ═════════════════════════════════════════════
 
 import { turboseekSearch } from "../../src/scraper/fazzcode-ai.js";
-import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "turboseek",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     const r = await turboseekSearch(q);
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(claraWrap("turboseek", `⚠️ Gagal nyari jawaban (${r.error === "API_KEY" ? "API key fazzcode belum di-set" : r.error}). Coba lagi nanti ya.`));
+      return m.reply(novaWrap("turboseek", `⚠️ Gagal nyari jawaban (${r.error === "API_KEY" ? "API key fazzcode belum di-set" : r.error}). Coba lagi nanti ya.`));
     }
 
     // sumber: max 5, domain singkat
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     }).join("\n");
 
     await m.react("🐣");
-    return m.reply(claraWrap("turboseek",
+    return m.reply(novaWrap("turboseek",
       `🔍 *JAWABAN AI — ${q.toUpperCase().slice(0, 60)}*\n\n` +
       `${r.answer}\n` +
       (srcs ? `\n📚 *SUMBER RISET:*\n${srcs}\n` : "") +
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[turboseek]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("turboseek", "⚠️ Ada error pas nyari. Coba lagi ya."));
+    return m.reply(novaWrap("turboseek", "⚠️ Ada error pas nyari. Coba lagi ya."));
   }
 }
 

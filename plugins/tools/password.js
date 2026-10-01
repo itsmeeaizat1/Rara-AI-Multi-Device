@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 import crypto from "node:crypto";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     const bytes = crypto.randomBytes(len);
     for (let i = 0; i < len; i++) pw += all[bytes[i] % all.length];
     const strength = len >= 16 ? "Sangat Kuat" : len >= 12 ? "Kuat" : "Sedang";
-    { const __navText = (claraWrap("Password Generator", [`Password: \`${pw}\``,
+    { const __navText = (novaWrap("Password Generator", [`Password: \`${pw}\``,
       `Panjang: *${len} karakter*`,
       `Kekuatan: *${strength}*`].join("\n")) + "\n" + tipText("Jangan share password ke siapapun!"));       await m.react("🐣");
 await m.reply(__navText); };

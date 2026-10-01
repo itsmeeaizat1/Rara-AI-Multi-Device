@@ -2,7 +2,7 @@
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { addExifToWebp, isAnimatedWebp, DEFAULT_METADATA } from '../../src/lib/nova-exif.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'swm',
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted
     
     if (!quoted) {
-        return m.reply(claraWrap("swm", [
+        return m.reply(novaWrap("swm", [
             "Reply sticker dengan caption:",
             m.prefix + "swm packname",
             "",

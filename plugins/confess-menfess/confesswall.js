@@ -3,7 +3,7 @@
 // Disimpan di db.setting("confesswall") per-grup
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     if (sub === "post" || sub === "tulis" || sub === "curhat") {
       const text = args.slice(1).join(" ").trim();
       if (!text || text.length < 5) {
-        await m.reply(claraWrap("confesswall", [
+        await m.reply(novaWrap("confesswall", [
           `Pesan kependekan nih! Minimal 5 karakter.`,
           ``,
           `💡 Contoh: ${m.prefix}confesswall post <confess kamu>`,
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
         return;
       }
       if (text.length > 500) {
-        await m.reply(claraWrap("confesswall", "Pesan kepanjangan nih! Maksimal 500 karakter.", "error"));
+        await m.reply(novaWrap("confesswall", "Pesan kepanjangan nih! Maksimal 500 karakter.", "error"));
         return;
       }
 
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
     if (sub === "list" || sub === "daftar" || sub === "wall" || !sub) {
       const recent = (wall.posts || []).slice(-5).reverse();
       if (recent.length === 0) {
-        await m.reply(claraWrap("confesswall", [
+        await m.reply(novaWrap("confesswall", [
           `Wall masih kosong nih!`,
           ``,
           `💡 Mulai dengan ${m.prefix}confesswall post <confess>`,

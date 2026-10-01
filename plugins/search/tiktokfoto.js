@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import axios from 'axios'
 import crypto from 'crypto'
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         caption += `🆔 *ID:* ${post.id || '-'}\n\n`
         caption += `📝 ${trimText(post.description || post.title, 220)}`
 
-        await m.reply(claraWrap("tiktokfoto", caption))
+        await m.reply(novaWrap("tiktokfoto", caption))
 
         const mediaList = []
         for (const url of images) {
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         console.log(error)
-        m.reply(claraWrap("tiktokfoto", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("tiktokfoto", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

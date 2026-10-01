@@ -3,7 +3,7 @@
 // API asli (velyn.biz.id) udah mati → chat lewat rantai fallback multi-API
 // (nova-ai-fallback.js: Haidar → Ikyy → Xemoz), image gen via callIkyyImage,
 // link TikTok diarahkan ke downloader .tiktok yang udah hidup.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { callIkyyImage } from "../../src/lib/nova-ai-service.js";
 import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
@@ -17,14 +17,14 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
-  if (!text) return m.reply(claraWrap("aliceaiv2", `Chat, atau minta gambar.\nContoh: ${m.prefix}aliceaiv2 hai apa kabar?\n${m.prefix}aliceaiv2 buatkan gambar kucing\n\nLink TikTok? Pakai ${m.prefix}tiktok aja ya — downloadernya siap.`, "guide"));
+  if (!text) return m.reply(novaWrap("aliceaiv2", `Chat, atau minta gambar.\nContoh: ${m.prefix}aliceaiv2 hai apa kabar?\n${m.prefix}aliceaiv2 buatkan gambar kucing\n\nLink TikTok? Pakai ${m.prefix}tiktok aja ya — downloadernya siap.`, "guide"));
   try {
     await m.react("🕒");
     const isTikTok = /(https?:\/\/)?(www\.|vm\.|vt\.)?tiktok\.com\/[^\s]+/i.test(text);
     const isImageReq = /(gambar|buatkan.*gambar|bikin.*gambar|buat.*gambar)/i.test(text);
 
     if (isTikTok) {
-      return m.reply(claraWrap("aliceaiv2", `Untuk link TikTok pakai ${m.prefix}tiktok <link> ya — downloadernya lebih lengkap (video/foto/slide).`, "guide"));
+      return m.reply(novaWrap("aliceaiv2", `Untuk link TikTok pakai ${m.prefix}tiktok <link> ya — downloadernya lebih lengkap (video/foto/slide).`, "guide"));
     }
 
     if (isImageReq) {
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("aliceaiv2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("aliceaiv2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(novaWrap("aliceaiv2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -7,7 +7,7 @@
 // al-Qura (penetapan final via rukyatul hilal).
 // ═══════════════════════════════════════════════════════════════════
 import moment from "moment-timezone";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { formatRemaining } from "./nova-countdown.js";
 
 // 1 Ramadhan (mulai) — estimasi Umm al-Qura; end = hari sebelum 1 Syawal
@@ -68,17 +68,17 @@ export function ramadhanHeaderLine(phase) {
  * kalau sisa < 24 jam. remainingMs <= 0 → kartu "DIMULAI".
  */
 export function buildRamadhanCard(phase, remainingMs) {
-  if (!phase) return claraWrap("Ramadhan", "Tanggal Ramadhan belum tersedia");
+  if (!phase) return novaWrap("Ramadhan", "Tanggal Ramadhan belum tersedia");
   const done = Number(remainingMs) <= 0;
   if (done) {
-    return claraWrap(`Ramadhan ${phase.hijri}H`, [
+    return novaWrap(`Ramadhan ${phase.hijri}H`, [
       "🌙 *RAMADHAN DIMULAI!*",
       "",
       `✨ Marhaban ya Ramadhan ${phase.hijri}H`,
       "🤲 Semoga puasanya lancar & ibadahnya diterima",
     ].join("\n"));
   }
-  return claraWrap(`Menuju Ramadhan ${phase.hijri}H`, [
+  return novaWrap(`Menuju Ramadhan ${phase.hijri}H`, [
     "🌙 *RAMADHAN SEBENTAR LAGI*",
     "",
     `🕒 *${formatRemaining(remainingMs)}* lagi`,

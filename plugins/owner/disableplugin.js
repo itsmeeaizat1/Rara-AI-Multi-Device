@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "disableplugin",
   alias: ["disableplugin"],
@@ -67,13 +67,13 @@ async function handler(m, { sock }) {
   const found = await findPluginFile(pluginName);
 
   if (!found) {
-    return m.reply(claraWrap("Disableplugin", `❌ Plugin *${pluginName}* tidak ditemukan!`));
+    return m.reply(novaWrap("Disableplugin", `❌ Plugin *${pluginName}* tidak ditemukan!`));
   }
 
   const { filePath, plugin, category, file } = found;
 
   if (plugin.config.isEnabled === false) {
-    return m.reply(claraWrap("Disableplugin", `⚠️ Plugin *${pluginName}* sudah dinonaktifkan!`));
+    return m.reply(novaWrap("Disableplugin", `⚠️ Plugin *${pluginName}* sudah dinonaktifkan!`));
   }
 
   try {
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 
     fs.writeFileSync(filePath, content);
 
-    await m.reply(claraWrap("disableplugin", `✅ *Plugin Disabled*\n\n` +
+    await m.reply(novaWrap("disableplugin", `✅ *Plugin Disabled*\n\n` +
         `📦 Plugin: *${plugin.config.name}*\n` +
         `🏷️ Category: *${category}*\n` +
         `📄 File: *${file}*\n` +
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
         `\n` +
         `Restart bot atau gunakan hot reload untuk apply.`));
   } catch (error) {
-    await m.reply(claraWrap("disableplugin", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("disableplugin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

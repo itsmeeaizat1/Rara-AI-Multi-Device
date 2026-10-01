@@ -2,7 +2,7 @@
 // .setmenu = alias semantik .setallmenu (dua-duanya ngatur varian thumbnail
 // menu yang sama — menuThumbVariant dipakai sendMenuCard SEMUA menu).
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { VARIANTS, parseVariantKey, applyMenuVariant } from "./setallmenu.js";
 
 const pluginConfig = {
@@ -26,7 +26,7 @@ async function handler(m, { sock, db }) {
   const variant = parseVariantKey(args[0]);
 
   if (args[0] && !variant) {
-    m.reply(claraWrap("Setmenu", `❗ *varian tidak valid*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
+    m.reply(novaWrap("Setmenu", `❗ *varian tidak valid*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
     return;
   }
 
@@ -37,7 +37,7 @@ async function handler(m, { sock, db }) {
 
   const current = db.setting("menuThumbVariant") === 2 ? 2 : 1;
   const v = VARIANTS[`v${current}`];
-  await m.reply(claraWrap("setmenu", `🖼️🎬 *varian thumbnail menu*\n\n` +
+  await m.reply(novaWrap("setmenu", `🖼️🎬 *varian thumbnail menu*\n\n` +
     `Varian aktif saat ini: *V${current} — ${v?.name}* (${v?.desc})\n\n` +
     `Ganti: *.setmenu v1* (gambar) / *.setmenu v2* (video)`));
 }

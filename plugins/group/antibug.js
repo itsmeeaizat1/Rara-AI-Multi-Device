@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antibug",
@@ -117,15 +117,15 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antibug: true });
-    return m.reply(claraWrap("Antibug", `Anti Bug diaktifkan`));
+    return m.reply(novaWrap("Antibug", `Anti Bug diaktifkan`));
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antibug: false });
-    return m.reply(claraWrap("Antibug", `Anti Bug dinonaktifkan`));
+    return m.reply(novaWrap("Antibug", `Anti Bug dinonaktifkan`));
   }
 
-  return m.reply(claraWrap("Anti bug", `Gunakan \`${m.prefix}antibug on\` atau \`${m.prefix}antibug off\``, "info"));
+  return m.reply(novaWrap("Anti bug", `Gunakan \`${m.prefix}antibug on\` atau \`${m.prefix}antibug off\``, "info"));
 }
 
 export { pluginConfig as config, handler, handleAntiBug };

@@ -9,7 +9,7 @@
 // owner di-DM. Kredensial: .autoorder nokos <token> · .autoorder markupnokos <persen>.
 import { config } from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import {
   ensureOrderCfg, buildPakasir, fmtRupiah, getOrderTimings,
   _setPakasirFactoryForTest, _resetPakasirFactoryForTest,
@@ -63,7 +63,7 @@ function fmtCount(n) { return Number(n || 0).toLocaleString("id-ID"); }
 async function listPrices(m, db, argCountry) {
   const negara = argCountry ? findCountry(argCountry) : findCountry("indonesia");
   if (!negara) {
-    return m.reply(claraWrap("Auto Order Nokos", `Negara "${argCountry}" gak dikenal. Yang populer: ${NOKOS_COUNTRIES.map((c) => c.label).join(", ")}`, "error"));
+    return m.reply(novaWrap("Auto Order Nokos", `Negara "${argCountry}" gak dikenal. Yang populer: ${NOKOS_COUNTRIES.map((c) => c.label).join(", ")}`, "error"));
   }
   const cfg = ensureOrderCfg(db);
   const rows = [];
@@ -80,9 +80,9 @@ async function listPrices(m, db, argCountry) {
     } catch { /* satu produk gagal gak boleh matiin semua */ }
   }
   if (!rows.length) {
-    return m.reply(claraWrap("Auto Order Nokos", `Harga produk di ${negara.label} gak bisa diambil sekarang — coba lagi nanti.`, "error"));
+    return m.reply(novaWrap("Auto Order Nokos", `Harga produk di ${negara.label} gak bisa diambil sekarang — coba lagi nanti.`, "error"));
   }
-  return m.reply(claraWrap(`Nokos ${negara.label}`, [
+  return m.reply(novaWrap(`Nokos ${negara.label}`, [
     `Kurs estimasi: 1 USD ≈ ${fmtRupiah(NOKOS_USD_RATE)}`,
     ...rows,
     "",
@@ -97,29 +97,29 @@ async function runNokos(m, { sock, db }, raw) {
   const buyer = m.sender;
   const chat = m.chat;
 
-  if (!cfg.on) return m.reply(claraWrap("Auto Order Nokos", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
+  if (!cfg.on) return m.reply(novaWrap("Auto Order Nokos", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
   if (!cfg.pakasir.slug || !cfg.pakasir.apikey) {
-    return m.reply(claraWrap("Auto Order Nokos", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
+    return m.reply(novaWrap("Auto Order Nokos", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
   }
   if (!cfg.nokos.apiKey) {
-    return m.reply(claraWrap("Auto Order Nokos", "Layanan belum siap (owner belum set token 5SIM).", "error"));
+    return m.reply(novaWrap("Auto Order Nokos", "Layanan belum siap (owner belum set token 5SIM).", "error"));
   }
   if (pendingNokos.has(buyer)) {
-    return m.reply(claraWrap("Auto Order Nokos", "Kamu masih punya order nokos berjalan. Tunggu selesai dulu ya (cek: .nokosotp <order_id>).", "error"));
+    return m.reply(novaWrap("Auto Order Nokos", "Kamu masih punya order nokos berjalan. Tunggu selesai dulu ya (cek: .nokosotp <order_id>).", "error"));
   }
 
   const [prodRaw, countryRaw] = String(raw || "").split("|").map((v) => (v || "").trim());
   if (!prodRaw || !countryRaw) {
-    return m.reply(claraWrap("Auto Order Nokos", [
+    return m.reply(novaWrap("Auto Order Nokos", [
       "Format: .ordernokos <produk>|<negara>",
       "Cek harga dulu: .nokoslist [negara]",
       "Contoh: .ordernokos whatsapp|indonesia · .ordernokos telegram|philippines",
     ]));
   }
   const prod = findProduct(prodRaw);
-  if (!prod) return m.reply(claraWrap("Auto Order Nokos", `Produk "${prodRaw}" gak dikenal. Lihat daftar: .nokoslist`, "error"));
+  if (!prod) return m.reply(novaWrap("Auto Order Nokos", `Produk "${prodRaw}" gak dikenal. Lihat daftar: .nokoslist`, "error"));
   const negara = findCountry(countryRaw);
-  if (!negara) return m.reply(claraWrap("Auto Order Nokos", `Negara "${countryRaw}" gak dikenal. Yang populer: ${NOKOS_COUNTRIES.map((c) => c.label).join(", ")}`, "error"));
+  if (!negara) return m.reply(novaWrap("Auto Order Nokos", `Negara "${countryRaw}" gak dikenal. Yang populer: ${NOKOS_COUNTRIES.map((c) => c.label).join(", ")}`, "error"));
 
   pendingNokos.add(buyer);
   const { intervalMs, timeoutMs } = getOrderTimings();
@@ -129,7 +129,7 @@ async function runNokos(m, { sock, db }, raw) {
     if (!pr.ok) throw new Error(pr.error);
     const best = cheapestInStock(pr.list);
     if (!best) {
-      return m.reply(claraWrap("Auto Order Nokos", `Stok nomor ${prod.label} ${negara.label} sedang HABIS. Coba negara lain (.nokoslist <negara>) atau nanti lagi.`, "error"));
+      return m.reply(novaWrap("Auto Order Nokos", `Stok nomor ${prod.label} ${negara.label} sedang HABIS. Coba negara lain (.nokoslist <negara>) atau nanti lagi.`, "error"));
     }
     const modalRp = usdToRupiah(best.cost);
     if (!modalRp) throw new Error("harga modal gak valid dari 5SIM");
@@ -162,8 +162,8 @@ async function runNokos(m, { sock, db }, raw) {
       "",
       `Order kedaluwarsa otomatis ${Math.round(timeoutMs / 60000)} menit. Lunas = nomor langsung dibeliin.`,
     ].join("\n");
-    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: claraWrap("Invoice Nokos", invoiceBody) }, { quoted: m });
-    else await m.reply(claraWrap("Invoice Nokos", invoiceBody));
+    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: novaWrap("Invoice Nokos", invoiceBody) }, { quoted: m });
+    else await m.reply(novaWrap("Invoice Nokos", invoiceBody));
 
     // poll sampai lunas/kedaluwarsa
     const t0 = Date.now();
@@ -178,21 +178,21 @@ async function runNokos(m, { sock, db }, raw) {
     }
 
     if (status === "canceled") {
-      await m.reply(claraWrap("Auto Order Nokos", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
+      await m.reply(novaWrap("Auto Order Nokos", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
       return;
     }
     if (status !== "completed") {
-      await m.reply(claraWrap("Auto Order Nokos", `Order ${orderId} kedaluwarsa (belum dibayar). Nomor tidak dibeli.`));
+      await m.reply(novaWrap("Auto Order Nokos", `Order ${orderId} kedaluwarsa (belum dibayar). Nomor tidak dibeli.`));
       return;
     }
 
     // LUNAS → beli nomor di 5SIM
-    await m.reply(claraWrap("Auto Order Nokos", `Pembayaran diterima! Membeli nomor ${prod.label} ${negara.label}…`));
+    await m.reply(novaWrap("Auto Order Nokos", `Pembayaran diterima! Membeli nomor ${prod.label} ${negara.label}…`));
     const buy = await nokosBuy(cfg, { country: negara.slug, operator: best.operator, product: prod.slug });
     if (!buy.ok) {
       const msgFail = `Order ${orderId} LUNAS tapi pembelian nomor di 5SIM GAGAL: ${buy.error}. Dana diproses manual — owner sudah dihubungi.`;
       await dm(sock, ownerJid(), `[AUTO ORDER NOKOS] Order ${orderId} (${prod.label} ${negara.label}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}) LUNAS tapi 5SIM gagal: ${buy.error}. Mohon proses manual/refund.`);
-      return m.reply(claraWrap("Auto Order Nokos", msgFail, "error"));
+      return m.reply(novaWrap("Auto Order Nokos", msgFail, "error"));
     }
 
     // catat order
@@ -214,7 +214,7 @@ async function runNokos(m, { sock, db }, raw) {
       `Bot otomatis pantau OTP masuk (maks ~${Math.round(_otpPoll.timeoutMs / 60000)} menit).`,
       "Cek manual kapan pun: .nokosotp " + orderId,
     ].join("\n");
-    await m.reply(claraWrap("Nomor Nokos Dibeli", notifBody));
+    await m.reply(novaWrap("Nomor Nokos Dibeli", notifBody));
     await dm(sock, ownerJid(), `[AUTO ORDER NOKOS] Order ${orderId} LUNAS: ${prod.label} ${negara.label} → nomor ${buy.data.phone} (${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}). Pantau OTP…`);
 
     // pantau OTP sampai RECEIVED / timeout
@@ -249,11 +249,11 @@ async function runNokos(m, { sock, db }, raw) {
         "",
         "Selesai — nomor + OTP kamu udah lengkap ya.",
       ].join("\n");
-      const sentDm = await dm(sock, buyer, claraWrap("OTP Nokos Diterima", otpBody));
+      const sentDm = await dm(sock, buyer, novaWrap("OTP Nokos Diterima", otpBody));
       if (!sentDm) {
-        await m.reply(claraWrap("Auto Order Nokos", `OTP kamu SUDAH DATANG tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu: .nokosotp ${orderId}`));
+        await m.reply(novaWrap("Auto Order Nokos", `OTP kamu SUDAH DATANG tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu: .nokosotp ${orderId}`));
       } else if (m.isGroup) {
-        await m.reply(claraWrap("Auto Order Nokos", `OTP datang — dikirim ke DM kamu ya (${orderId}).`));
+        await m.reply(novaWrap("Auto Order Nokos", `OTP datang — dikirim ke DM kamu ya (${orderId}).`));
       }
       await dm(sock, ownerJid(), `[AUTO ORDER NOKOS] Order ${orderId} OTP diterima (${prod.label}, buyer ${buyer.split("@")[0]}). Selesai.`);
     } else {
@@ -266,7 +266,7 @@ async function runNokos(m, { sock, db }, raw) {
       } catch (e) { cancelNote = `pembatalan gagal: ${e?.message || e}`; }
       rec.status = "NO_OTP_CANCELED";
       db.save();
-      await m.reply(claraWrap("Auto Order Nokos", [
+      await m.reply(novaWrap("Auto Order Nokos", [
         `Order ${orderId}: OTP gak datang dalam ${Math.round(_otpPoll.timeoutMs / 60000)} menit.`,
         `Di sisi provider: ${cancelNote}.`,
         "Pembayaran WA kamu akan direfund owner secara manual — owner sudah di-DM.",
@@ -274,7 +274,7 @@ async function runNokos(m, { sock, db }, raw) {
       await dm(sock, ownerJid(), `[AUTO ORDER NOKOS] Order ${orderId} (${prod.label}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}) OTP TIDAK datang. ${cancelNote}. Mohon refund buyer manual.`);
     }
   } catch (e) {
-    await m.reply(claraWrap("Auto Order Nokos", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
+    await m.reply(novaWrap("Auto Order Nokos", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
   } finally {
     pendingNokos.delete(buyer);
   }
@@ -284,37 +284,37 @@ async function runNokos(m, { sock, db }, raw) {
 async function otpOrder(m, { sock, db }, orderId) {
   const cfg = ensureOrderCfg(db);
   const rec = cfg.nokos.orders[String(orderId || "").trim()];
-  if (!rec) return m.reply(claraWrap("Auto Order Nokos", `Order "${orderId}" gak ketemu. Id kamu dapat saat order (format NOK-…).`, "error"));
-  if (rec.buyer !== m.sender) return m.reply(claraWrap("Auto Order Nokos", "Order itu punya orang lain — gak bisa dicek dari sini.", "error"));
+  if (!rec) return m.reply(novaWrap("Auto Order Nokos", `Order "${orderId}" gak ketemu. Id kamu dapat saat order (format NOK-…).`, "error"));
+  if (rec.buyer !== m.sender) return m.reply(novaWrap("Auto Order Nokos", "Order itu punya orang lain — gak bisa dicek dari sini.", "error"));
   if (rec.otp) {
-    return m.reply(claraWrap("OTP Nokos", `Order ${orderId}\nNomor: ${rec.phone}\nKode OTP: ${rec.otp}`));
+    return m.reply(novaWrap("OTP Nokos", `Order ${orderId}\nNomor: ${rec.phone}\nKode OTP: ${rec.otp}`));
   }
   const ck = await nokosCheck(cfg, rec.fivesimId);
-  if (!ck.ok) return m.reply(claraWrap("Auto Order Nokos", ck.error, "error"));
+  if (!ck.ok) return m.reply(novaWrap("Auto Order Nokos", ck.error, "error"));
   if (ck.data.status === "RECEIVED" && ck.data.sms?.[0]?.code) {
     rec.status = "RECEIVED";
     rec.otp = String(ck.data.sms[0].code);
     db.save();
-    return m.reply(claraWrap("OTP Nokos", `Order ${orderId}\nNomor: ${rec.phone}\nKode OTP: ${rec.otp}`));
+    return m.reply(novaWrap("OTP Nokos", `Order ${orderId}\nNomor: ${rec.phone}\nKode OTP: ${rec.otp}`));
   }
   const statusLabel = ck.data.status === "PENDING" ? "OTP belum masuk — sabar ya, bot juga pantau otomatis." : `Status provider: ${ck.data.status}`;
-  return m.reply(claraWrap("Auto Order Nokos", `Order ${orderId}\nNomor: ${rec.phone}\n${statusLabel}`));
+  return m.reply(novaWrap("Auto Order Nokos", `Order ${orderId}\nNomor: ${rec.phone}\n${statusLabel}`));
 }
 
 // ── .nokoscancel <order_id> — batalkan (refund provider) ──
 async function cancelOrder(m, { sock, db }, orderId) {
   const cfg = ensureOrderCfg(db);
   const rec = cfg.nokos.orders[String(orderId || "").trim()];
-  if (!rec) return m.reply(claraWrap("Auto Order Nokos", `Order "${orderId}" gak ketemu.`, "error"));
-  if (rec.buyer !== m.sender) return m.reply(claraWrap("Auto Order Nokos", "Order itu punya orang lain — gak bisa dibatalkan dari sini.", "error"));
-  if (rec.otp) return m.reply(claraWrap("Auto Order Nokos", `Order ${orderId} udah dapet OTP (${rec.otp}) — gak bisa dibatalkan.`, "error"));
-  if (rec.status === "NO_OTP_CANCELED") return m.reply(claraWrap("Auto Order Nokos", `Order ${orderId} udah dibatalkan sebelumnya.`, "error"));
+  if (!rec) return m.reply(novaWrap("Auto Order Nokos", `Order "${orderId}" gak ketemu.`, "error"));
+  if (rec.buyer !== m.sender) return m.reply(novaWrap("Auto Order Nokos", "Order itu punya orang lain — gak bisa dibatalkan dari sini.", "error"));
+  if (rec.otp) return m.reply(novaWrap("Auto Order Nokos", `Order ${orderId} udah dapet OTP (${rec.otp}) — gak bisa dibatalkan.`, "error"));
+  if (rec.status === "NO_OTP_CANCELED") return m.reply(novaWrap("Auto Order Nokos", `Order ${orderId} udah dibatalkan sebelumnya.`, "error"));
   const cx = await nokosCancel(cfg, rec.fivesimId);
-  if (!cx.ok) return m.reply(claraWrap("Auto Order Nokos", `Gagal cancel di 5SIM: ${cx.error}`, "error"));
+  if (!cx.ok) return m.reply(novaWrap("Auto Order Nokos", `Gagal cancel di 5SIM: ${cx.error}`, "error"));
   rec.status = "CANCELED_BUYER";
   db.save();
   await dm(sock, ownerJid(), `[AUTO ORDER NOKOS] Buyer ${m.sender.split("@")[0]} cancel order ${orderId} (${rec.product}, ${fmtRupiah(rec.priceRp)}). Dana provider balik ke saldo 5SIM — refund pembayaran WA ke buyer mohon proses manual.`);
-  return m.reply(claraWrap("Auto Order Nokos", [
+  return m.reply(novaWrap("Auto Order Nokos", [
     `Order ${orderId} dibatalkan.`,
     "Dana di sisi provider balik ke saldo owner. Refund pembayaran WA kamu diproses owner manual — sudah di-DM.",
   ].join("\n")));

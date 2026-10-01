@@ -2,7 +2,7 @@
 // applemusicdl — Download lagu dari Apple Music via IkyyXD
 // Primary: IkyyXD /download/applemusic | Fallback: manual info (no audio)
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { claraWrap, novaError, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("AppleMusic DL", [
+      await m.reply(novaWrap("AppleMusic DL", [
         "Gagal download — endpoint Apple Music sedang down.",
         "Coba lagi nanti atau gunakan .applemusic untuk cari lagunya dulu.",
       ].join("\n"), "error"));

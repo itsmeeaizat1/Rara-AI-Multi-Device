@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoreactvn",
@@ -30,7 +30,7 @@ function ensureVnDir() {
 
 async function handler(m, { sock, args }) {
   if (!m.isOwner) {
-    return m.reply(claraWrap("autoreactvn", "Fitur ini khusus owner!"));
+    return m.reply(novaWrap("autoreactvn", "Fitur ini khusus owner!"));
   }
 
   const db = getDatabase();
@@ -72,7 +72,7 @@ async function handler(m, { sock, args }) {
       onTxt += "\n\nCek: " + m.prefix + "autoreactvn list";
     }
 
-    return m.reply(claraWrap("AutoReactVN", onTxt));
+    return m.reply(novaWrap("AutoReactVN", onTxt));
   }
 
   // OFF
@@ -80,7 +80,7 @@ async function handler(m, { sock, args }) {
     db.setting("autoreactvnEnabled", false);
     await db.save();
     return m.reply(
-      claraWrap("AutoReactVN", [
+      novaWrap("AutoReactVN", [
         "❌ AUTOREACTVN DINONAKTIFKAN",
         "",
         "Bot tidak akan auto-reply VN",
@@ -108,7 +108,7 @@ async function handler(m, { sock, args }) {
       .filter(t => t.length > 0);
 
     if (triggerList.length === 0) {
-      return m.reply(claraWrap("autoreactvn", "Trigger tidak boleh kosong!"));
+      return m.reply(novaWrap("autoreactvn", "Trigger tidak boleh kosong!"));
     }
 
     // Cek apakah ada media audio (VN)
@@ -125,7 +125,7 @@ async function handler(m, { sock, args }) {
       triggerList.forEach((t, i) => {
         txt += "  " + (i + 1) + ". " + t + "\n";
       });
-      return m.reply(claraWrap("autoreactvn", txt));
+      return m.reply(novaWrap("autoreactvn", txt));
     }
 
     // Download VN
@@ -133,11 +133,11 @@ async function handler(m, { sock, args }) {
     try {
       buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     } catch (e) {
-      return m.reply(claraWrap("autoreactvn", "Gagal download VN. Coba lagi.", "error"));
+      return m.reply(novaWrap("autoreactvn", "Gagal download VN. Coba lagi.", "error"));
     }
 
     if (!buffer || buffer.length === 0) {
-      return m.reply(claraWrap("autoreactvn", "VN kosong, coba kirim ulang!"));
+      return m.reply(novaWrap("autoreactvn", "VN kosong, coba kirim ulang!"));
     }
 
     // Simpan VN ke assets/vn/
@@ -184,19 +184,19 @@ async function handler(m, { sock, args }) {
     });
     resultTxt += "\nTotal triggers sekarang: " + triggers.length;
 
-    return m.reply(claraWrap("AutoReactVN", resultTxt));
+    return m.reply(novaWrap("AutoReactVN", resultTxt));
   }
 
   // DEL: .autoreactvn del <trigger>
   if (action === "del" || action === "rm") {
     const trigger = args.slice(1).join(" ").trim().toLowerCase();
     if (!trigger) {
-      return m.reply(claraWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n" + m.prefix + "autoreactvn del <trigger>"));
+      return m.reply(novaWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n" + m.prefix + "autoreactvn del <trigger>"));
     }
 
     const index = triggers.findIndex(t => t.trigger === trigger);
     if (index === -1) {
-      return m.reply(claraWrap("Info", "❌ Trigger " + trigger + " tidak ditemukan!"));
+      return m.reply(novaWrap("Info", "❌ Trigger " + trigger + " tidak ditemukan!"));
     }
 
     const vnFile = triggers[index].vnFile;
@@ -216,7 +216,7 @@ async function handler(m, { sock, args }) {
     await db.save();
 
     return m.reply(
-      claraWrap("AutoReactVN", [
+      novaWrap("AutoReactVN", [
         "🗑 TRIGGER DIHAPUS",
         "",
         "Trigger: " + trigger,
@@ -245,7 +245,7 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 1) {
-      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n" + m.prefix + "autoreactvn jeda 5"));
+      return m.reply(novaWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n" + m.prefix + "autoreactvn jeda 5"));
     }
 
     db.setting("autoreactvnJedaPrivate", seconds * 1000);
@@ -271,7 +271,7 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 1) {
-      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n" + m.prefix + "autoreactvn jedagrup 15"));
+      return m.reply(novaWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n" + m.prefix + "autoreactvn jedagrup 15"));
     }
 
     db.setting("autoreactvnJedaGrup", seconds * 1000);
@@ -287,7 +287,7 @@ async function handler(m, { sock, args }) {
   if (action === "list" || action === "ls") {
     if (triggers.length === 0) {
       return m.reply(
-        claraWrap("AutoReactVN", [
+        novaWrap("AutoReactVN", [
           "DAFTAR TRIGGER",
           "",
           "Status: " + (db.setting("autoreactvnEnabled") ? "✅ AKTIF" : "❌ NONAKTIF"),
@@ -352,7 +352,7 @@ async function handler(m, { sock, args }) {
   txt += " | Triggers: " + triggers.length;
   txt += " | Jeda: " + jedaStatus;
 
-  return m.reply(claraWrap("autoreactvn", txt));
+  return m.reply(novaWrap("autoreactvn", txt));
 }
 
 export { pluginConfig as config, handler };

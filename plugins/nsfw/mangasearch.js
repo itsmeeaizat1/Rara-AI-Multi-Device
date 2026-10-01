@@ -2,7 +2,7 @@
 // mangasearch.js — Search manga (NSFW)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mangasearch",
@@ -19,11 +19,11 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕠");
     const query = m.args?.join(" ").trim();
-    if (!query) return m.reply(claraWrap("mangasearch", "Masukkan judul manga!", "guide"));
+    if (!query) return m.reply(novaWrap("mangasearch", "Masukkan judul manga!", "guide"));
 
     const res = await axios.get(`https://api.siputzx.my.id/api/s/manga?q=${encodeURIComponent(query)}`, { timeout: 15000 });
     const data = res.data?.data || [];
-    if (!data.length) return m.reply(claraWrap("mangasearch", "Manga tidak ditemukan!", "error"));
+    if (!data.length) return m.reply(novaWrap("mangasearch", "Manga tidak ditemukan!", "error"));
 
     let _lines = [];
     data.slice(0, 8).forEach((item, i) => {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("mangasearch error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("mangasearch", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("mangasearch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

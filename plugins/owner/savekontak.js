@@ -1,4 +1,4 @@
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: "savekontak",
@@ -29,12 +29,12 @@ async function handler(m, { sock, args }) {
             if (chats[target]) {
                 groups.push(chats[target]);
             } else {
-                return m.reply(claraWrap("savekontak", "❌ Grup tidak ditemukan."));
+                return m.reply(novaWrap("savekontak", "❌ Grup tidak ditemukan."));
             }
         }
 
         if (groups.length === 0) {
-            return m.reply(claraWrap("Savekontak", "❌ Bot tidak berada di grup mana pun."));
+            return m.reply(novaWrap("Savekontak", "❌ Bot tidak berada di grup mana pun."));
         }
 
         
@@ -61,7 +61,7 @@ async function handler(m, { sock, args }) {
         }
 
         if (count === 0) {
-            return m.reply(claraWrap("Savekontak", "❌ Tidak ada kontak yang bisa diekstrak."));
+            return m.reply(novaWrap("Savekontak", "❌ Tidak ada kontak yang bisa diekstrak."));
         }
 
         await sock.sendMessage(m.chat, {
@@ -86,7 +86,7 @@ async function handler(m, { sock, args }) {
     const groupList = Object.values(chats);
 
     if (groupList.length === 0) {
-        return m.reply(claraWrap("Savekontak", "❌ Bot tidak berada di grup mana pun."));
+        return m.reply(novaWrap("Savekontak", "❌ Bot tidak berada di grup mana pun."));
     }
 
     const sections = [

@@ -9,7 +9,7 @@
 
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
-import { claraWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaCaption, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { searchWeb } from "../../src/lib/nova-websearch.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -146,18 +146,18 @@ async function handler(m, { sock, config: botConfig }) {
       const buffer = m.quoted?.isImage ? await m.quoted.download() : await m.download();
       if (!buffer || !buffer.length) {
         await m.react("❌");
-        return m.reply(claraWrap("spybelanja", "Gagal download gambar. Coba kirim ulang.", "error"));
+        return m.reply(novaWrap("spybelanja", "Gagal download gambar. Coba kirim ulang.", "error"));
       }
       const res = await depVision({ imageBuffer: buffer, question: productPrompt(), sessionKey: null })
         .catch((e) => ({ status: false, error: e.message }));
       if (!res?.status) {
         await m.react("❌");
-        return m.reply(claraWrap("spybelanja", res?.error || "Gagal membaca gambar", "error"));
+        return m.reply(novaWrap("spybelanja", res?.error || "Gagal membaca gambar", "error"));
       }
       const parsed = parseJson(res.text);
       if (!parsed || !parsed.isProduct) {
         await m.react("❌");
-        return m.reply(claraWrap("spybelanja", "Gak kedeteksi produk marketplace di gambarnya. Screenshot halaman produk Shopee/Tokopedia ya.", "error"));
+        return m.reply(novaWrap("spybelanja", "Gak kedeteksi produk marketplace di gambarnya. Screenshot halaman produk Shopee/Tokopedia ya.", "error"));
       }
       product = { ...parsed, fromPhoto: true };
     } else {
@@ -207,7 +207,7 @@ async function handler(m, { sock, config: botConfig }) {
       msg += `🌐 *Harga pasar dari pencarian:*\n` + hasil.slice(0, 5).map((h, i) => `${i + 1}. ${h.title}\n   ${(h.snippet || "").slice(0, 90)}`).join("\n") + `\n\n⚖ Belum bisa verdict final — data mentah di atas, cek sendiri ya.`;
     } else {
       await m.react("❌");
-      return m.reply(claraWrap("spybelanja", "Pencarian harga dan AI-nya lagi sibuk barengan. Coba lagi bentar ya.", "error"));
+      return m.reply(novaWrap("spybelanja", "Pencarian harga dan AI-nya lagi sibuk barengan. Coba lagi bentar ya.", "error"));
     }
     if (hasil.length) {
       msg += `\n📎 ${toSC("sumber")}: ${hasil.length} ${toSC("hasil pencarian")}${searchNote ? ` (${toSC("sebagian engine gagal")})` : ""}`;
@@ -216,7 +216,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (err) {
     console.error("spybelanja error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("spybelanja", te.novaError(err) || "Gagal memproses", "error"));
+    return m.reply(novaWrap("spybelanja", te.novaError(err) || "Gagal memproses", "error"));
   }
 }
 

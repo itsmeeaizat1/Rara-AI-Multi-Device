@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -34,9 +34,9 @@ const PRESETS = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio EQ", "Reply audio yang mau di-EQ."));
+    if (!quoted) return m.reply(novaWrap("Audio EQ", "Reply audio yang mau di-EQ."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio EQ", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio EQ", "Reply harus audio/voice note!"));
 
     let bassGain, midGain, trebleGain;
     const sub = (args[0] || "").toLowerCase();
@@ -45,7 +45,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const presetName = (args[1] || "").toLowerCase();
       if (!PRESETS[presetName]) {
         const list = Object.entries(PRESETS).map(([k, v]) => k + " - " + v.desc).join("\n");
-        return m.reply(claraWrap("Audio EQ", [
+        return m.reply(novaWrap("Audio EQ", [
           "Preset tersedia:",
           list,
           "",
@@ -60,13 +60,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const list = Object.entries(PRESETS).map(([k, v]) => 
         k + " | bass:" + v.bass + " mid:" + v.mid + " treble:" + v.treble + " | " + v.desc
       ).join("\n");
-      return m.reply(claraWrap("Audio EQ", ["Presets:", "", list].join("\n")));
+      return m.reply(novaWrap("Audio EQ", ["Presets:", "", list].join("\n")));
     } else {
       bassGain = parseInt(args[0]);
       midGain = parseInt(args[1]);
       trebleGain = parseInt(args[2]);
       if (isNaN(bassGain) || isNaN(midGain) || isNaN(trebleGain)) {
-        return m.reply(claraWrap("Audio EQ", [
+        return m.reply(novaWrap("Audio EQ", [
           "Format: " + usedPrefix + "audioeq <bass> <mid> <treble>",
           "Range: -12 sampai +12 dB",
           "",
@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (bassGain < -12 || bassGain > 12 || midGain < -12 || midGain > 12 || trebleGain < -12 || trebleGain > 12) {
-      return m.reply(claraWrap("Info", "Setiap gain harus -12 sampai +12 dB."));
+      return m.reply(novaWrap("Info", "Setiap gain harus -12 sampai +12 dB."));
     }
 
     const isPtt = !!quoted.pttMessage;
@@ -109,7 +109,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: claraWrap("Audio EQ", [
+      caption: novaWrap("Audio EQ", [
         "Berhasil!",
         "Bass: " + (bassGain >= 0 ? "+" : "") + bassGain + " dB (100Hz)",
         "Mid: " + (midGain >= 0 ? "+" : "") + midGain + " dB (1kHz)",

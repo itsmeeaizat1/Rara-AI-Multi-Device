@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
       } catch (e) { console.error('[aichat.js]:', e.message); }
 
       const text =
-        claraWrap("AI Chat", ["Status: *Dihapus*",
+        novaWrap("AI Chat", ["Status: *Dihapus*",
           "Memori percakapan sudah direset."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}aichat <pesan> untuk mulai lagi`) +
@@ -133,7 +133,7 @@ async function handler(m, { sock, config: botConfig }) {
     appendHistory(chatId, "assistant", reply);
 
     const text =
-      claraWrap("AI Chat", [`Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
+      novaWrap("AI Chat", [`Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
         `AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aichat <pesan> untuk lanjut chat`) +

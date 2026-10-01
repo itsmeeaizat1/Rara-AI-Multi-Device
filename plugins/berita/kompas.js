@@ -2,7 +2,7 @@
 // kompas.js — Berita Kompas
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kompas",
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data || [];
     if (!Array.isArray(data) || data.length === 0) {
       await m.react("❌");
-      return m.reply(claraWrap("kompas", "Gagal mengambil berita!", "error"));
+      return m.reply(novaWrap("kompas", "Gagal mengambil berita!", "error"));
     }
 
     let _lines = [];
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("kompas error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("kompas", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("kompas", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

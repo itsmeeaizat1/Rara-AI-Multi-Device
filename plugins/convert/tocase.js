@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tocase",
@@ -18,7 +18,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   try {
-    if (!m.quoted || !m.quoted.text) return m.reply(claraWrap("tocase", "Reply ke plugin handler (ESM/CJS) yang mau diubah jadi case.", "guide"));
+    if (!m.quoted || !m.quoted.text) return m.reply(novaWrap("tocase", "Reply ke plugin handler (ESM/CJS) yang mau diubah jadi case.", "guide"));
 
     await m.react("🕒");
     const code = m.quoted.text.trim();
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
                      code.match(/async function.*?\([\s\S]*?\)\s*{([\s\S]+?)^\}/m) ||
                      code.match(/async function handler[\s\S]*?{([\s\S]+?)^}/m);
 
-    if (!cmdMatch || !bodyMatch) { await m.react("❌"); return m.reply(claraWrap("tocase", "Tidak bisa mendeteksi struktur command atau isi fungsi.")); }
+    if (!cmdMatch || !bodyMatch) { await m.react("❌"); return m.reply(novaWrap("tocase", "Tidak bisa mendeteksi struktur command atau isi fungsi.")); }
 
     const commands = cmdMatch[1].split(",").map(v => v.replace(/['"\[\]\s]/g, "")).filter(Boolean);
     const body = bodyMatch[1].trim();
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("tocase error:", e.message);
     await m.react("❌");
-    m.reply(claraWrap("tocase", "Gagal mengonversi plugin: " + e.message, "error"));
+    m.reply(novaWrap("tocase", "Gagal mengonversi plugin: " + e.message, "error"));
   }
 }
 

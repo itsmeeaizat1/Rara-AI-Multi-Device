@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autochallenge",
@@ -82,7 +82,7 @@ export function startAutoChallenge(groupId, sock, db) {
       msg += "\n\nMode: Otomatis tiap " + g.interval + " menit";
 
       await sock.sendMessage(groupId, {
-        text: claraWrap("Auto Challenge", msg, "info"),
+        text: novaWrap("Auto Challenge", msg, "info"),
       });
     } catch (e) {
       console.error("[AutoChallenge interval]", e);
@@ -124,7 +124,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       startAutoChallenge(groupId, conn, db);
 
-      return m.reply(claraWrap("Auto Challenge", [
+      return m.reply(novaWrap("Auto Challenge", [
         "Challenge otomatis DIAKTIFKAN!",
         "",
         "Interval: " + interval + " menit",
@@ -141,14 +141,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
       stopAutoChallenge(groupId);
 
-      return m.reply(claraWrap("Auto Challenge", "Challenge otomatis DIMATIKAN.\nKetik .autochallenge on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Challenge", "Challenge otomatis DIMATIKAN.\nKetik .autochallenge on untuk aktifkan lagi."));
     }
 
     // STATUS
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
 
-      return m.reply(claraWrap("Auto Challenge", [
+      return m.reply(novaWrap("Auto Challenge", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total challenge: " + (cfg.totalSent || 0),
@@ -173,34 +173,34 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         msg += "\n\nJawab: .autochallenge answer <jawaban>";
       }
 
-      return m.reply(claraWrap("Auto Challenge", msg, "info"));
+      return m.reply(novaWrap("Auto Challenge", msg, "info"));
     }
 
     // ANSWER
     if (sub === "answer" || sub === "jawab") {
       const answer = args.slice(1).join(" ").trim().toLowerCase();
       if (!cfg.lastChallenge) {
-        return m.reply(claraWrap("Auto Challenge", "Belum ada challenge. Ketik .autochallenge now."));
+        return m.reply(novaWrap("Auto Challenge", "Belum ada challenge. Ketik .autochallenge now."));
       }
       if (cfg.lastType !== "tebak" && cfg.lastType !== "quiz") {
-        return m.reply(claraWrap("Auto Challenge", "Challenge terakhir bukan tipe tebak/quiz. Gak ada jawaban."));
+        return m.reply(novaWrap("Auto Challenge", "Challenge terakhir bukan tipe tebak/quiz. Gak ada jawaban."));
       }
 
       // Cari jawaban dari CHALLENGES berdasarkan lastChallenge
       const challenge = CHALLENGES.find((c) => c.text === cfg.lastChallenge);
       if (!challenge || !challenge.answer) {
-        return m.reply(claraWrap("Auto Challenge", "Jawaban tidak tersedia untuk challenge ini."));
+        return m.reply(novaWrap("Auto Challenge", "Jawaban tidak tersedia untuk challenge ini."));
       }
 
       if (answer === challenge.answer.toLowerCase() || answer.replace(/\s/g, "") === challenge.answer.toLowerCase().replace(/\s/g, "")) {
-        return m.reply(claraWrap("Auto Challenge", "BENAR! @" + sender.split("@")[0] + " jawabannya: " + challenge.answer, "success"));
+        return m.reply(novaWrap("Auto Challenge", "BENAR! @" + sender.split("@")[0] + " jawabannya: " + challenge.answer, "success"));
       } else {
-        return m.reply(claraWrap("Auto Challenge", "Salah! Coba lagi atau ketik .autochallenge now untuk challenge baru.", "warn"));
+        return m.reply(novaWrap("Auto Challenge", "Salah! Coba lagi atau ketik .autochallenge now untuk challenge baru.", "warn"));
       }
     }
 
     // HELP
-    return m.reply(claraWrap("Auto Challenge", [
+    return m.reply(novaWrap("Auto Challenge", [
       "Bot kasih challenge random ke grup otomatis",
       "",
       "CARA PAKAI:",
@@ -219,7 +219,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Auto Challenge]", e);
-    m.reply(claraWrap("Auto Challenge", "Error: " + e.message));
+    m.reply(novaWrap("Auto Challenge", "Error: " + e.message));
   }
 }
 

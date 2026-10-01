@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "htmlpong", alias: ["pongnya"], category: "html",
@@ -23,7 +23,7 @@ async function handler(m, { sock, config }) {
       document: html,
       mimetype: "text/html",
       fileName: "nova-pong.html",
-      caption: claraWrap("HTML Game — Pong", [
+      caption: novaWrap("HTML Game — Pong", [
         "🏓 GAME PONG SIAP MAIN",
         "",
         "1. Buka lampiran nova-pong.html",
@@ -36,7 +36,7 @@ async function handler(m, { sock, config }) {
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("HTML Game — Pong", ["ERROR: gagal menyiapkan game — " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("HTML Game — Pong", ["ERROR: gagal menyiapkan game — " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

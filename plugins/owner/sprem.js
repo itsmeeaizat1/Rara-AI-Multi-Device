@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { generateWAMessageFromContent, proto } from "nova";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: ["sprem", "stickerpremium", "premiumsticker"],
@@ -17,7 +17,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   if (!m.quoted) {
-    return m.reply(claraWrap("sprem", [
+    return m.reply(novaWrap("sprem", [
         "Reply sticker yang mau dijadikan premium!",
         "",
         "💡 Contoh: " + m.prefix + "sprem (reply sticker)",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
   try {
     const msg = q.message?.stickerMessage;
-    if (!msg) return m.reply(claraWrap("Sprem", "❌ Gagal membaca data sticker"));
+    if (!msg) return m.reply(novaWrap("Sprem", "❌ Gagal membaca data sticker"));
 
     const stickerMessage = proto.Message.StickerMessage.fromObject({
       url: msg.url,
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     });
   } catch (err) {
     console.error("[sprem]", err.message);
-    return m.reply(claraWrap("sprem", `❌ Gagal: ${err.message}`));
+    return m.reply(novaWrap("sprem", `❌ Gagal: ${err.message}`));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import { downloadContentFromMessage } from 'nova'
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "openvo",
     alias: ["openvo", "rvo"],

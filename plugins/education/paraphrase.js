@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "paraphrase",
@@ -200,11 +200,11 @@ async function handler(m, { sock, args }) {
     }
 
     if (inputText.length < 20) {
-      return m.reply(claraWrap("Paraphrase", "Teks terlalu pendek! Minimal 20 karakter."));
+      return m.reply(novaWrap("Paraphrase", "Teks terlalu pendek! Minimal 20 karakter."));
     }
 
     if (inputText.length > 3000) {
-      return m.reply(claraWrap("Paraphrase", "Teks terlalu panjang! Maksimal 3000 karakter."));
+      return m.reply(novaWrap("Paraphrase", "Teks terlalu panjang! Maksimal 3000 karakter."));
     }
 
     const result = paraphraseText(inputText, intensity);

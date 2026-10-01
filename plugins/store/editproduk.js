@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import axios from 'axios'
@@ -86,20 +86,20 @@ async function handler(m, { sock }) {
     let value = match[3]?.trim() || ''
 
     if (idx < 0 || idx >= products.length) {
-        return m.reply(claraWrap("editproduk", `❌ *nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
+        return m.reply(novaWrap("editproduk", `❌ *nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
     }
 
     const product = products[idx]
 
     switch (field) {
         case 'nama': {
-            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *nama terlalu pendek.* Minimal 2 karakter 🏷️`))
+            if (!value || value.length < 2) return m.reply(novaWrap("editproduk", `❌ *nama terlalu pendek.* Minimal 2 karakter 🏷️`))
             product.name = value
             break
         }
         case 'harga': {
             const price = parseInt(value)
-            if (isNaN(price) || price < 1000) return m.reply(claraWrap("editproduk", `❌ *harga tidak valid.* Minimal Rp 1.000 💰`))
+            if (isNaN(price) || price < 1000) return m.reply(novaWrap("editproduk", `❌ *harga tidak valid.* Minimal Rp 1.000 💰`))
             product.price = price
             break
         }
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
             if (isNaN(origPrice) || origPrice === 0) {
                 product.originalPrice = null
             } else {
-                if (origPrice <= product.price) return m.reply(claraWrap("editproduk", `❌ *harga diskon harus lebih besar dari harga jual.*\n\nHarga jual saat ini: Rp ${product.price.toLocaleString('id-ID')} 💰`))
+                if (origPrice <= product.price) return m.reply(novaWrap("editproduk", `❌ *harga diskon harus lebih besar dari harga jual.*\n\nHarga jual saat ini: Rp ${product.price.toLocaleString('id-ID')} 💰`))
                 product.originalPrice = origPrice
             }
             break
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
             break
         }
         case 'kategori': {
-            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *kategori tidak valid.* Minimal 2 karakter 🏷️`))
+            if (!value || value.length < 2) return m.reply(novaWrap("editproduk", `❌ *kategori tidak valid.* Minimal 2 karakter 🏷️`))
             product.kategori = value.toLowerCase().trim()
             break
         }
@@ -151,37 +151,37 @@ async function handler(m, { sock }) {
         case 'gambar': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === 'imageMessage')
             const isDirectImage = m.isImage
-            if (!hasMedia && !isDirectImage) return m.reply(claraWrap("editproduk", `🖼️ *reply atau kirim gambar baru.*\n\nKirim gambar lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectImage) return m.reply(novaWrap("editproduk", `🖼️ *reply atau kirim gambar baru.*\n\nKirim gambar lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'image.jpg')
                     if (url) product.image = url
-                    else return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
+                    else return m.reply(novaWrap("editproduk", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
                 }
             } catch {
-                return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
+                return m.reply(novaWrap("editproduk", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
             }
             break
         }
         case 'video': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isVideo || m.quoted?.type === 'videoMessage')
             const isDirectVideo = m.isVideo
-            if (!hasMedia && !isDirectVideo) return m.reply(claraWrap("editproduk", `🎬 *reply atau kirim video baru.*\n\nKirim video lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectVideo) return m.reply(novaWrap("editproduk", `🎬 *reply atau kirim video baru.*\n\nKirim video lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'video.mp4')
                     if (url) product.video = url
-                    else return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
+                    else return m.reply(novaWrap("editproduk", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
                 }
             } catch {
-                return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
+                return m.reply(novaWrap("editproduk", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
             }
             break
         }
         default:
-            return m.reply(claraWrap("editproduk", `❌ *field tidak dikenali.*\n\nGunakan: nama, harga, diskon, stok, tipe, deskripsi, detail, gambar, video 📋`))
+            return m.reply(novaWrap("editproduk", `❌ *field tidak dikenali.*\n\nGunakan: nama, harga, diskon, stok, tipe, deskripsi, detail, gambar, video 📋`))
     }
 
     db.setting('storeProducts', products)
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
     if (field === 'video') reply += `🎬 Video: ✅\n`
     reply += `\n👀 _Lihat perubahan: \`${m.prefix}listproduk\`_`
 
-    return await m.reply(claraWrap("editproduk", reply))
+    return await m.reply(novaWrap("editproduk", reply))
 }
 
 export { pluginConfig as config, handler }

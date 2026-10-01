@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import {
   getSettings,
   updateSettings,
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
     if (action === "off") {
       stopCleaner();
       updateSettings({ enabled: false });
-      return m.reply(claraWrap("Autocleancache", "Auto Clean Cache: *OFF*\n\nCache tidak akan dibersihkan otomatis."));
+      return m.reply(novaWrap("Autocleancache", "Auto Clean Cache: *OFF*\n\nCache tidak akan dibersihkan otomatis."));
     }
 
     // Status
@@ -120,9 +120,9 @@ async function handler(m, { sock }) {
         let txt = "Cache dibersihkan!\n\n";
         for (const d of result.details) txt += d + "\n";
         txt += "\nTotal: " + result.totalCleaned + " file | " + formatSize(result.totalFreed) + " dibebaskan";
-        return m.reply(claraWrap("autocleancache", txt));
+        return m.reply(novaWrap("autocleancache", txt));
       } else {
-        return m.reply(claraWrap("Autocleancache", "Cache sudah bersih, tidak ada file yang perlu dihapus."));
+        return m.reply(novaWrap("Autocleancache", "Cache sudah bersih, tidak ada file yang perlu dihapus."));
       }
     }
 
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     console.error("[autocleancache] Error:", e.message);
-    return m.reply(claraWrap("autocleancache", "Gagal proses. Coba lagi.", "error"));
+    return m.reply(novaWrap("autocleancache", "Gagal proses. Coba lagi.", "error"));
   }
 }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
@@ -79,7 +79,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     await m.react("🕒");
     const input = text.trim()
     if (!input || !input.includes("&")) {
-      return m.reply(claraWrap("Love Calculator", [
+      return m.reply(novaWrap("Love Calculator", [
         "Hitung persentase kecocokan cinta 2 nama.",
         "",
         "Cara: " + usedPrefix + "lovecalc <nama1> & <nama2>",
@@ -89,7 +89,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const parts = input.split("&").map(s => s.trim())
     if (parts.length < 2 || !parts[0] || !parts[1]) {
-      return m.reply(claraWrap("Love Calculator", "Format salah. Gunakan: " + usedPrefix + "lovecalc Nama1 & Nama2"))
+      return m.reply(novaWrap("Love Calculator", "Format salah. Gunakan: " + usedPrefix + "lovecalc Nama1 & Nama2"))
     }
 
     const name1 = parts[0]
@@ -121,7 +121,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }))
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Love Calculator", "Error: " + e.message))
+    return m.reply(novaWrap("Love Calculator", "Error: " + e.message))
   }
 }
 

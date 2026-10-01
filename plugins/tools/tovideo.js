@@ -5,7 +5,7 @@ import path from 'path'
 import te from '../../src/lib/nova-error.js'
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
 import ffmpeg from 'fluent-ffmpeg'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 const pluginConfig = {
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Tovideo", `❌ *gagal*\n\nTidak dapat mengunduh sticker.`))
+            return m.reply(novaWrap("Tovideo", `❌ *gagal*\n\nTidak dapat mengunduh sticker.`))
         }
 
         const animated = isAnimatedWebp(buffer)
@@ -141,14 +141,14 @@ async function handler(m, { sock }) {
         }
         const gifBuffer = await webpToGif(buffer)
         if (!gifBuffer) {
-            return m.reply(claraWrap("tovideo", `❌ *gagal*\n\nSticker tidak bisa dikonversi (tidak animated)`))
+            return m.reply(novaWrap("tovideo", `❌ *gagal*\n\nSticker tidak bisa dikonversi (tidak animated)`))
         }
 
         const mp4Buffer = await gifToMp4(gifBuffer)
 
         if (!mp4Buffer || mp4Buffer.length < 100) {
             await m.react("🐣");
-            return m.reply(claraWrap("Tovideo", `❌ *gagal*\n\nVideo output kosong`))
+            return m.reply(novaWrap("Tovideo", `❌ *gagal*\n\nVideo output kosong`))
         }
 
         await sock.sendMedia(m.chat, mp4Buffer, null, m, {
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
     } catch (error) {
     await m.react("❌");
         console.error('[ToVideo] Error:', error.message)
-        m.reply(claraWrap("tovideo", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("tovideo", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-namadev',
     alias: ["ganti-namadev"],
@@ -39,10 +39,10 @@ async function handler(m, { sock, config }) {
         
         config.bot.developer = newName
         
-        m.reply(claraWrap("Ganti-namadev", `✅ *Berhasil*\n\nNama developer diganti ke: *${newName}*`))
+        m.reply(novaWrap("Ganti-namadev", `✅ *Berhasil*\n\nNama developer diganti ke: *${newName}*`))
         
     } catch (error) {
-        await m.reply(claraWrap("ganti-namadev", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("ganti-namadev", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

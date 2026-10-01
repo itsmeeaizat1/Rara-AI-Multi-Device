@@ -6,7 +6,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 
 const pluginConfig = {
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
       );
     delete db.db.data.autoai_personas[pKey];
     db.save();
-    return m.reply(claraWrap("Autoai", `Persona "${pKey}" berhasil dihapus`, "success"));
+    return m.reply(novaWrap("Autoai", `Persona "${pKey}" berhasil dihapus`, "success"));
   }
 
   if (subcmd === "enablecommand" || subcmd === "enablecmd") {
@@ -187,7 +187,7 @@ async function handler(m, { sock }) {
     txt += `.autoai tambahpersona nama | logic\n`;
     txt += `.autoai hapuspersona nama\n`;
     txt += `.autoai global on/off`;
-    return await m.reply(claraWrap("autoai", txt));
+    return await m.reply(novaWrap("autoai", txt));
   }
 
   if (subcmd === "global") {
@@ -288,7 +288,7 @@ async function handler(m, { sock }) {
     };
     let txt = fmt(cfg, "GRUP INI") + "\n\n" + fmt(g, "GLOBAL");
     txt += `\n\n💡 Kalau AI-nya jawab gaya aneh (misal kayak anime), cek Persona/Logic di atas — itu yang dipakai bot. Ganti: .autoai on --novamode=custom --logic=kamu adalah ...`;
-    return m.reply(claraWrap("Autoai Status", txt));
+    return m.reply(novaWrap("Autoai Status", txt));
   }
 
   const mode = subcmd;
@@ -363,7 +363,7 @@ async function handler(m, { sock }) {
     txt +=
       responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
     txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
-    return m.reply(claraWrap("Auto AI", txt), { mentions: [m.sender] });
+    return m.reply(novaWrap("Auto AI", txt), { mentions: [m.sender] });
   }
 
   const customPersona = db.db.data.autoai_personas[charKey];
@@ -391,7 +391,7 @@ async function handler(m, { sock }) {
     txt +=
       responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
     txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
-    return m.reply(claraWrap("Auto AI", txt), { mentions: [m.sender] });
+    return m.reply(novaWrap("Auto AI", txt), { mentions: [m.sender] });
   }
 
   if (!characters[charKey]) {
@@ -430,7 +430,7 @@ async function handler(m, { sock }) {
     responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
   txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
 
-  await m.reply(claraWrap("Auto AI", txt), { mentions: [m.sender] });
+  await m.reply(novaWrap("Auto AI", txt), { mentions: [m.sender] });
 }
 
 async function generateVoiceResponse(text, sock, chatId, quotedMsg) {

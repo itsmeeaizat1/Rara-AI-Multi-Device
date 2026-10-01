@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fakechat",
@@ -23,7 +23,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = text || args.join(" ");
 
     if (!input || !input.includes("|")) {
-      return m.reply(claraWrap("Fake Chat", [
+      return m.reply(novaWrap("Fake Chat", [
         "FAKE CHAT WHATSAPP",
         "Format: nama|pesan",
         "Format+jam: nama|pesan|jam",
@@ -73,7 +73,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     return m.reply("```" + chatText + "```");
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Fake Chat", "Error: " + e.message, "error"));
+    return m.reply(novaWrap("Fake Chat", "Error: " + e.message, "error"));
   }
 }
 

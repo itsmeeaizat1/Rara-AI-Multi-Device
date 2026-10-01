@@ -12,7 +12,7 @@ import axios from "axios";
 import crypto from "crypto";
 import FormData from "form-data";
 import config from "../../config.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { isLid, lidToJid } from "../../src/lib/nova-lid.js";
 import { hasAccessToServer, getUserRole } from "../../src/lib/nova-roles-cpanel.js";
 import { isGcSeller } from "./gcseller.js";
@@ -125,7 +125,7 @@ function buildGuide(m) {
   txt += `Contoh: ${p}cpanel unli aizat,628174887770,1\n`;
   txt += `RAM: 1gb - 10gb, unli\n\n`;
   txt += `Panel aktif: ${available.join(", ") || "belum ada"}`;
-  return claraWrap("cpanel", txt);
+  return novaWrap("cpanel", txt);
 }
 
 // cari server by name (case-insensitive) di panel — return attr + suggestions
@@ -163,7 +163,7 @@ async function findServerByName(serverConfig, name) {
 async function doPanelLogin(m, username, password, panelId) {
   const slot = getSlot(panelId);
   if (!slot?.domain || !slot?.apikey) {
-    return m.reply(claraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}`));
+    return m.reply(novaWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}`));
   }
   const ver = "v" + panelId;
 
@@ -193,7 +193,7 @@ async function doPanelLogin(m, username, password, panelId) {
     }
     if (!email) {
       await m.react("❗");
-      return m.reply(claraWrap("cpanel", `Username "${username}" tidak ditemukan di panel ${ver.toUpperCase()}.`));
+      return m.reply(novaWrap("cpanel", `Username "${username}" tidak ditemukan di panel ${ver.toUpperCase()}.`));
     }
 
     // 2. verifikasi password via login API
@@ -207,11 +207,11 @@ async function doPanelLogin(m, username, password, panelId) {
       authToken = loginRes.data?.token || loginRes.data?.data?.token;
     } catch (e) {
       await m.react("❗");
-      return m.reply(claraWrap("cpanel", `Username atau password salah. Coba lagi.`));
+      return m.reply(novaWrap("cpanel", `Username atau password salah. Coba lagi.`));
     }
     if (!authToken) {
       await m.react("❗");
-      return m.reply(claraWrap("cpanel", `Login gagal, coba lagi nanti.`));
+      return m.reply(novaWrap("cpanel", `Login gagal, coba lagi nanti.`));
     }
 
     // 3. buat client API key (ptlc) untuk session
@@ -226,7 +226,7 @@ async function doPanelLogin(m, username, password, panelId) {
     const ptlc = keyRes.data?.secret || keyRes.data?.data?.secret;
     if (!ptlc) {
       await m.react("❗");
-      return m.reply(claraWrap("cpanel", `Login berhasil tapi gagal membuat session key. Coba lagi.`));
+      return m.reply(novaWrap("cpanel", `Login berhasil tapi gagal membuat session key. Coba lagi.`));
     }
 
     // 4. simpan session 7 hari
@@ -264,11 +264,11 @@ async function handler(m, { sock }) {
     const serverName = args[1];
     const panelId = parsePanelId(args[2]);
     if (!serverName || !panelId) {
-      return m.reply(claraWrap("cpanel", `Format salah.\n\nContoh: ${m.prefix || "."}cpanel ${sub} ${serverName || "namaserver"} <idpanel>\nId panel: 1-100 (contoh 1 = domain panel no 1)`));
+      return m.reply(novaWrap("cpanel", `Format salah.\n\nContoh: ${m.prefix || "."}cpanel ${sub} ${serverName || "namaserver"} <idpanel>\nId panel: 1-100 (contoh 1 = domain panel no 1)`));
     }
     const slot = getSlot(panelId);
     if (!slot?.domain || !slot?.apikey) {
-      return m.reply(claraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet via: ${m.prefix || "."}setpanel v${panelId} <domain>`));
+      return m.reply(novaWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}\nSet via: ${m.prefix || "."}setpanel v${panelId} <domain>`));
     }
     const ver = "v" + panelId;
     // akses: owner / gc-seller / role panel  →  ATAU  session login user (server sendiri)
@@ -276,7 +276,7 @@ async function handler(m, { sock }) {
     const session = !isAdminAccess ? getSession(m, panelId) : null;
     if (!isAdminAccess && !session) {
       const role = getUserRole(m.sender, ver) || "Tidak ada";
-      return m.reply(claraWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}\n\nLogin pakai akun panelmu:\n${m.prefix || "."}panel <username> <password>,${panelId}`));
+      return m.reply(novaWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}\n\nLogin pakai akun panelmu:\n${m.prefix || "."}panel <username> <password>,${panelId}`));
     }
 
     await m.react("🕒");
@@ -294,7 +294,7 @@ async function handler(m, { sock }) {
           const names = mine.slice(0, 10).map((a) => a.name);
           let txt = `Server "${serverName}" tidak ditemukan di akunmu (panel ${ver.toUpperCase()}).`;
           if (names.length) txt += `\n\nServer milik akun ${session.username}: ${names.join(", ")}`;
-          return m.reply(claraWrap("cpanel", txt));
+          return m.reply(novaWrap("cpanel", txt));
         }
         attr = { id: hit.internal_id, uuid: hit.uuid, name: hit.name };
         clientKey = session.ptlc;
@@ -305,7 +305,7 @@ async function handler(m, { sock }) {
           let txt = `Server "${serverName}" tidak ditemukan di panel ${ver.toUpperCase()} (total ${found.total} server).`;
           if (found.suggestions.length) txt += `\n\nNama mirip: ${found.suggestions.join(", ")}`;
           txt += `\n\nLihat daftar: ${m.prefix || "."}listserver ${panelId}`;
-          return m.reply(claraWrap("cpanel", txt));
+          return m.reply(novaWrap("cpanel", txt));
         }
         attr = found.exact.attributes;
       }
@@ -331,7 +331,7 @@ async function handler(m, { sock }) {
       // client API: user login pakai ptlc session-nya; admin pakai capikey
       if (!clientKey && !slot.capikey) {
         await m.react("❗");
-        return m.reply(claraWrap("cpanel", `Fitur ${sub} butuh Client API key (capikey) panel ${ver.toUpperCase()} — atau login dulu via ${m.prefix || "."}cpanel login.\n\nSet capikey via: ${m.prefix || "."}setpanel v${panelId} capikey ptlc_xxxx`));
+        return m.reply(novaWrap("cpanel", `Fitur ${sub} butuh Client API key (capikey) panel ${ver.toUpperCase()} — atau login dulu via ${m.prefix || "."}cpanel login.\n\nSet capikey via: ${m.prefix || "."}setpanel v${panelId} capikey ptlc_xxxx`));
       }
       if (!clientKey) clientKey = slot.capikey;
 
@@ -354,7 +354,7 @@ async function handler(m, { sock }) {
         const quotedMsg = m.quoted?.message;
         if (!quotedMsg) {
           await m.react("❗");
-          return m.reply(claraWrap("cpanel", `Reply file/audio/gambar/video dengan caption:\n${m.prefix || "."}cpanel upload ${serverName} ${panelId}`));
+          return m.reply(novaWrap("cpanel", `Reply file/audio/gambar/video dengan caption:\n${m.prefix || "."}cpanel upload ${serverName} ${panelId}`));
         }
         let buffer, filename;
         try {
@@ -365,7 +365,7 @@ async function handler(m, { sock }) {
           filename = media.fileName || `upload_${Date.now()}.${ext}`;
         } catch (e) {
           await m.react("❗");
-          return m.reply(claraWrap("cpanel", `Gagal mengunduh media. Pastikan kamu reply file dengan caption command.`));
+          return m.reply(novaWrap("cpanel", `Gagal mengunduh media. Pastikan kamu reply file dengan caption command.`));
         }
         // ambil upload URL dari client API
         const upRes = await axios.get(
@@ -395,7 +395,7 @@ async function handler(m, { sock }) {
     const raw = args.slice(1).join(" ");
     const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
     if (!parts[0] || !parts[1] || !parsePanelId(parts[2])) {
-      return m.reply(claraWrap("cpanel", `Format salah.\n\n${m.prefix || "."}panel <username> <password>,<idpanel>\n\nContoh: ${m.prefix || "."}panel aizat aizat123, 1`));
+      return m.reply(novaWrap("cpanel", `Format salah.\n\n${m.prefix || "."}panel <username> <password>,<idpanel>\n\nContoh: ${m.prefix || "."}panel aizat aizat123, 1`));
     }
     return doPanelLogin(m, parts[0], parts[1], parsePanelId(parts[2]));
   }
@@ -406,10 +406,10 @@ async function handler(m, { sock }) {
     const sessions = loadSessions();
     const key = cleanJid(m.sender);
     if (!sessions[key]) {
-      return m.reply(claraWrap("cpanel", `Kamu tidak punya session login aktif.`));
+      return m.reply(novaWrap("cpanel", `Kamu tidak punya session login aktif.`));
     }
     if (panelId && sessions[key].panelId !== panelId) {
-      return m.reply(claraWrap("cpanel", `Session kamu bukan di panel v${panelId}. Session kamu: v${sessions[key].panelId}`));
+      return m.reply(novaWrap("cpanel", `Session kamu bukan di panel v${panelId}. Session kamu: v${sessions[key].panelId}`));
     }
     const uname = sessions[key].username;
     delete sessions[key];
@@ -421,7 +421,7 @@ async function handler(m, { sock }) {
   if (sub === "me") {
     const s = getSession(m, null);
     if (!s) {
-      return m.reply(claraWrap("cpanel", `Belum login.\n\nLogin: ${m.prefix || "."}cpanel login <username>,<password>,<idpanel>`));
+      return m.reply(novaWrap("cpanel", `Belum login.\n\nLogin: ${m.prefix || "."}cpanel login <username>,<password>,<idpanel>`));
     }
     const days = Math.max(0, Math.ceil((s.expiresAt - Date.now()) / 86400000));
     return m.reply(`Session Panel\n\nUsername: ${s.username}\nPanel: v${s.panelId}\nBerlaku: ${days} hari lagi`);
@@ -438,22 +438,22 @@ async function handler(m, { sock }) {
     if (!panelId) panelId = parsePanelId(restTokens[restTokens.length - 1]);
 
     if (!username || !nomor || !panelId) {
-      return m.reply(claraWrap("cpanel", `Format salah.\n\n${m.prefix || "."}cpanel ${sub} <username>,<nomor>,<idpanel>\n\nContoh: ${m.prefix || "."}cpanel ${sub} aizat,628174887770,1`));
+      return m.reply(novaWrap("cpanel", `Format salah.\n\n${m.prefix || "."}cpanel ${sub} <username>,<nomor>,<idpanel>\n\nContoh: ${m.prefix || "."}cpanel ${sub} aizat,628174887770,1`));
     }
     const slot = getSlot(panelId);
     if (!slot?.domain || !slot?.apikey) {
-      return m.reply(claraWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}`));
+      return m.reply(novaWrap("cpanel", `Panel v${panelId} belum dikonfigurasi.\n\nPanel aktif: ${getAvailableSlots().join(", ") || "belum ada"}`));
     }
     const ver = "v" + panelId;
     const specs = RAM_SPECS[sub];
     if (!/^[a-z0-9_]{3,16}$/.test(username)) {
-      return m.reply(claraWrap("cpanel", `Username hanya boleh huruf kecil, angka, underscore (3-16 karakter).`));
+      return m.reply(novaWrap("cpanel", `Username hanya boleh huruf kecil, angka, underscore (3-16 karakter).`));
     }
 
     const gcSellerAccess = isGcSeller(m.chat, ver);
     if (!gcSellerAccess && !hasAccessToServer(m.sender, ver, m.isOwner)) {
       const role = getUserRole(m.sender, ver) || "Tidak ada";
-      return m.reply(claraWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}`));
+      return m.reply(novaWrap("cpanel", `Akses ditolak.\n\nKamu tidak punya akses ke panel ${ver.toUpperCase()}.\nRole kamu: ${role}`));
     }
     const jedaCheck = checkPanelJeda(m);
     if (!jedaCheck.allowed) return m.reply(jedaCheck.message);
@@ -462,10 +462,10 @@ async function handler(m, { sock }) {
     try {
       const [onWa] = await sock.onWhatsApp(targetUser.split("@")[0]);
       if (!onWa?.exists) {
-        return m.reply(claraWrap("cpanel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp.`));
+        return m.reply(novaWrap("cpanel", `Nomor ${targetUser.split("@")[0]} tidak terdaftar di WhatsApp.`));
       }
     } catch (e) {
-      return m.reply(claraWrap("cpanel", `Gagal validasi nomor WhatsApp.`));
+      return m.reply(novaWrap("cpanel", `Gagal validasi nomor WhatsApp.`));
     }
 
     await m.react("🕒");
@@ -492,7 +492,7 @@ async function handler(m, { sock }) {
       } catch (e) {
         const raw = e?.response?.data?.errors?.[0]?.detail || e.message;
         if (String(raw).includes("already been taken")) {
-          return m.reply(claraWrap("cpanel", `Username/email ${username} sudah dipakai, coba username lain.`));
+          return m.reply(novaWrap("cpanel", `Username/email ${username} sudah dipakai, coba username lain.`));
         }
         throw e;
       }
@@ -565,7 +565,7 @@ async function handler(m, { sock }) {
         unauthorized: "API key tidak punya permission",
       };
       const friendly = Object.entries(errorMap).find(([k]) => String(rawMsg).toLowerCase().includes(k));
-      return m.reply(claraWrap("cpanel", `Gagal membuat akun panel.\n\n${friendly ? friendly[1] : rawMsg}`));
+      return m.reply(novaWrap("cpanel", `Gagal membuat akun panel.\n\n${friendly ? friendly[1] : rawMsg}`));
     }
   }
 

@@ -10,7 +10,7 @@
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { downloadAudio as downloadAudioYtDlp } from "../../src/scraper/nova-ytdlp.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 

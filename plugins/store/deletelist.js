@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
             const mediaIcon = l.image ? '🖼️' : l.video ? '🎬' : '📝'
             txt += `${mediaIcon} *${i + 1}.* ${l.name}\n`
         }
-        return await m.reply(claraWrap("hapuslist", txt))
+        return await m.reply(novaWrap("hapuslist", txt))
     }
 
     const deleted = lists.splice(idx, 1)[0]

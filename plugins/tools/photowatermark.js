@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Watermark — Tambah watermark text ke gambar (local via sharp, no API)
 import sharp from "sharp";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photowatermark",
@@ -96,7 +96,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         usedPrefix + "photowatermark Nova AI",
         usedPrefix + "photowatermark top-right | Nova AI",
       ];
-      return m.reply(claraWrap("Photo Watermark", lines, "info"));
+      return m.reply(novaWrap("Photo Watermark", lines, "info"));
     }
 
     // Parse: position | text  OR  just text
@@ -113,7 +113,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!wmText) {
-      return m.reply(claraWrap("Photo Watermark", [
+      return m.reply(novaWrap("Photo Watermark", [
         "Text watermark tidak boleh kosong",
         "",
         "Format: " + usedPrefix + "photowatermark <text>",
@@ -122,24 +122,24 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (wmText.length > 100) {
-      return m.reply(claraWrap("Photo Watermark", "Text terlalu panjang (max 100 karakter)", "warn"));
+      return m.reply(novaWrap("Photo Watermark", "Text terlalu panjang (max 100 karakter)", "warn"));
     }
 
     // Get image from reply
     const q = m.quoted || m;
     const mime = q.message?.[Object.keys(q.message)[0]]?.mimetype || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("Photo Watermark", [
+      return m.reply(novaWrap("Photo Watermark", [
         "Reply gambar dulu, lalu ketik:",
         usedPrefix + "photowatermark " + input,
       ], "warn"));
     }
 
-    m.reply(claraWrap("Photo Watermark", "Menambahkan watermark..."));
+    m.reply(novaWrap("Photo Watermark", "Menambahkan watermark..."));
 
     const imgBuffer = await q.download();
     if (!imgBuffer || imgBuffer.length === 0) {
-      return m.reply(claraWrap("Photo Watermark", "Gagal download gambar.", "warn"));
+      return m.reply(novaWrap("Photo Watermark", "Gagal download gambar.", "warn"));
     }
 
     const meta = await sharp(imgBuffer).metadata();
@@ -155,14 +155,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!result || result.length === 0) {
       await m.react("🐣");
-      return m.reply(claraWrap("Photo Watermark", "Gagal processing watermark.", "warn"));
+      return m.reply(novaWrap("Photo Watermark", "Gagal processing watermark.", "warn"));
     }
 
     await conn.sendMessage(
       m.key.remoteJid,
       {
         image: result,
-        caption: claraWrap("Photo Watermark", [
+        caption: novaWrap("Photo Watermark", [
           "Text: " + wmText,
           "Posisi: " + position,
           "Powered by sharp (local)",
@@ -173,7 +173,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[PhotoWatermark]", e);
-    m.reply(claraWrap("Photo Watermark", [
+    m.reply(novaWrap("Photo Watermark", [
       "Error: " + e.message,
       "",
       "Ketik " + usedPrefix + "photowatermark list untuk bantuan",

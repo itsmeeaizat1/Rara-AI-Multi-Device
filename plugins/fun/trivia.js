@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // trivia.js — Trivia quiz via Open Trivia DB + The Trivia API fallback (no API key)
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -118,7 +118,7 @@ async function handler(m, { sock, config, db }) {
     }
 
     if (category === "help" || category === "list") {
-      return m.reply(claraWrap("Trivia Quiz", [
+      return m.reply(novaWrap("Trivia Quiz", [
         "Quiz trivia multiple choice dari Open Trivia DB",
         "",
         "📌 *Cara Pakai:*",
@@ -140,7 +140,7 @@ async function handler(m, { sock, config, db }) {
     if (activeTrivia.has(m.chat)) {
       const existing = activeTrivia.get(m.chat);
       if (Date.now() - existing.startTime < 60000) {
-        return m.reply(claraWrap("Trivia Quiz", [
+        return m.reply(novaWrap("Trivia Quiz", [
           "Masih ada soal yang belum dijawab!",
           "",
           existing.question,
@@ -206,7 +206,7 @@ async function handler(m, { sock, config, db }) {
     });
     text += `\nBalas dengan A/B/C/D atau "${m.prefix}trivia skip" untuk lewati`;
     await m.react("🐣");
-    return m.reply(claraWrap("Trivia Quiz", text));
+    return m.reply(novaWrap("Trivia Quiz", text));
   } catch (e) {
     await m.react("❌");
     console.error("[trivia] error:", e.message);

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "niatpuasa",
@@ -97,11 +97,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: " + usedPrefix + "niatpuasa <jenis>");
       lines.push("Contoh: " + usedPrefix + "niatpuasa ramadhan | " + usedPrefix + "niatpuasa buka");
-      return m.reply(claraWrap("Panduan Puasa", lines.join("\n")));
+      return m.reply(novaWrap("Panduan Puasa", lines.join("\n")));
     }
 
     if (input === "buka" || input === "iftar") {
-      return m.reply(claraWrap("Doa Buka Puasa", [
+      return m.reply(novaWrap("Doa Buka Puasa", [
         "Teks Arab:",
         DOA_BUKA.arab,
         "",
@@ -118,11 +118,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!JENIS_PUASA[input]) {
-      return m.reply(claraWrap("Panduan Puasa", "Jenis puasa tidak ditemukan: " + input + "\nKetik " + usedPrefix + "niatpuasa list"));
+      return m.reply(novaWrap("Panduan Puasa", "Jenis puasa tidak ditemukan: " + input + "\nKetik " + usedPrefix + "niatpuasa list"));
     }
 
     const p = JENIS_PUASA[input];
-    return m.reply(claraWrap("Niat Puasa - " + p.judul, [
+    return m.reply(novaWrap("Niat Puasa - " + p.judul, [
       "Niat:",
       "",
       p.niat,
@@ -141,7 +141,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "Doa Buka: Ketik " + usedPrefix + "niatpuasa buka",
     ].join("\n")));
   } catch (e) {
-    return m.reply(claraWrap("Panduan Puasa", "Error: " + e.message));
+    return m.reply(novaWrap("Panduan Puasa", "Error: " + e.message));
   }
 }
 

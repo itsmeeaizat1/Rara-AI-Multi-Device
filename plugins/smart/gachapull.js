@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gachapull",
@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const totalCost = PULL_COST * count;
 
     if (user.coin < totalCost) {
-      await m.reply(claraWrap("Gacha", "Coin tidak cukup!\nButuh: " + totalCost + " coins\nCoin kamu: " + (user.coin || 0)));
+      await m.reply(novaWrap("Gacha", "Coin tidak cukup!\nButuh: " + totalCost + " coins\nCoin kamu: " + (user.coin || 0)));
       return { handled: true };
     }
     user.coin -= totalCost;
@@ -139,7 +139,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return (i + 1) + ". [" + p.rarity + "] " + stars + " " + p.name + " (" + p.element + ") ATK:" + p.atk;
     }).join("\n");
 
-    await m.reply(claraWrap("Gacha Pull " + (isMulti ? "x10" : "x1"), [
+    await m.reply(novaWrap("Gacha Pull " + (isMulti ? "x10" : "x1"), [
       "(-" + totalCost + " coins)",
       "Best pull: [" + bestRarity + "] " + "★".repeat(bestStars),
       "",
@@ -162,7 +162,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const sorted = owned.sort((a, b) => b.stars - a.stars);
     const list = sorted.map(c => "[" + c.rarity + "] " + "★".repeat(c.stars) + " " + c.name + " (" + c.element + ") x" + c.count + " | ATK:" + c.atk + " DEF:" + c.def + " HP:" + c.hp).join("\n");
-    await m.reply(claraWrap("Gacha Collection", [
+    await m.reply(novaWrap("Gacha Collection", [
       "Total pulls: " + gdata.totalPulls,
       "Unique: " + owned.length + "/" + (CHARACTERS.length * RARITIES.length),
       "Duplicates: " + gdata.duplicates,
@@ -174,7 +174,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "rates" || sub === "rate") {
     const list = RARITIES.map(r => r.name + " (" + r.color + "): " + r.weight + "% - " + "★".repeat(r.stars)).join("\n");
-    await m.reply(claraWrap("Gacha Rates", [
+    await m.reply(novaWrap("Gacha Rates", [
       "Cost: " + PULL_COST + " coins/pull",
       "",
       list,
@@ -186,7 +186,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "stats" || sub === "cek") {
-    await m.reply(claraWrap("Gacha Stats", [
+    await m.reply(novaWrap("Gacha Stats", [
       "Total pulls: " + gdata.totalPulls,
       "Coins spent: " + gdata.coinsSpent,
       "Unique cards: " + Object.keys(gdata.collection).length,
@@ -196,7 +196,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Gacha", [
+  await m.reply(novaWrap("Gacha", [
     "GACHA COLLECTION SYSTEM",
     "",
     prefix + "gachapull - pull 1x (" + PULL_COST + " coins)",

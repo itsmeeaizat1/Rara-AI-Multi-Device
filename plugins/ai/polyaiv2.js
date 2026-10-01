@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // polyaiv2 — Poly AI v2 (polybuzz.ai)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -13,7 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("polyaiv2", `Tanya apa?\nContoh: ${m.prefix}polyaiv2 ceritakan dongeng`, "guide"));
+    if (!text) return m.reply(novaWrap("polyaiv2", `Tanya apa?\nContoh: ${m.prefix}polyaiv2 ceritakan dongeng`, "guide"));
     await m.react("🕒");
     const form = new URLSearchParams();
     form.append("currentChatStyleId", "1");
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     console.error("polyaiv2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("polyaiv2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(novaWrap("polyaiv2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

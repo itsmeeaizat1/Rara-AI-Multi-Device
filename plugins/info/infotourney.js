@@ -4,7 +4,7 @@ import * as cheerio from "cheerio";
 import moment from "moment-timezone";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "infotourney",
   alias: ["infotourney"],
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     const tournaments = await getInfoTourney();
 
     if (!tournaments || tournaments.length === 0) {
-      return m.reply(claraWrap("Infotourney", "❌ Tidak ada turnamen yang ditemukan"));
+      return m.reply(novaWrap("Infotourney", "❌ Tidak ada turnamen yang ditemukan"));
     }
 
     const saluranId = config.saluran?.id || "@newsletter";
@@ -97,10 +97,10 @@ async function handler(m, { sock }) {
         type: "image",
       });
     } else {
-      await m.reply(claraWrap("Info Turnamen", text.split("\n")));
+      await m.reply(novaWrap("Info Turnamen", text.split("\n")));
     }
   } catch (error) {
-    m.reply(claraWrap("infotourney", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("infotourney", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

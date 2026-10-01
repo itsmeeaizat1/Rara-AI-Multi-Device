@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config, { getOwnerName } from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { sendMenuCard, buildNavButtons } from "../../src/lib/nova-menu-card.js";
 
 const pluginConfig = {
@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
     ].join("\n");
     // FIX OWNER 2026-09-07: card owner = plain text + thumbnail externalAdReply
     await sendMenuCard(sock, m, {
-      text: claraWrap("👨‍💻 Owner", followUpText),
+      text: novaWrap("👨‍💻 Owner", followUpText),
       footer: "",
       plain: true,
       title: botName,
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
     ].join("\n");
 
     await sendMenuCard(sock, m, {
-      text: claraWrap("👨‍💻 Owner", ownerText),
+      text: novaWrap("👨‍💻 Owner", ownerText),
       footer: "",
       buttons: buildNavButtons(m, db, "."),
       title: botName,

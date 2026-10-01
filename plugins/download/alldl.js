@@ -26,7 +26,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 import { tiktokCaption } from "../../src/lib/nova-tiktok-format.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, bracketBox, tipText, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({

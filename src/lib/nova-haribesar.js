@@ -26,7 +26,7 @@
 
 import Holidays from "date-holidays";
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 
 const KEY = "haribesarState";
 const JAM_KIRIM = "08:00"; // WIB — jam kirim harian (request owner)
@@ -488,7 +488,7 @@ export async function buildHariBesarText(entry, ymd, extra = null) {
   if (entry.merah) lines.push(`🔴 *Tanggal Merah — Libur Nasional*`);
   if (extra) lines.push(extra);
   lines.push("", `✨ _${inspirasi}_`);
-  return claraWrap("Hari Besar", lines);
+  return novaWrap("Hari Besar", lines);
 }
 
 // ─── dispatch: kirim ke semua target yang belum kirim hari ini ───
@@ -541,7 +541,7 @@ async function _eventsForDay(ymd) {
         covered.add(chain.mulaiYmd);
       }
       clines.push("", `Semoga cutinya menyenangkan! 😊`);
-      events.push({ key: `cuti__${ymd}`, kind: "cuti", text: claraWrap("Hari Besar", clines.join("\n")) });
+      events.push({ key: `cuti__${ymd}`, kind: "cuti", text: novaWrap("Hari Besar", clines.join("\n")) });
     }
   }
 
@@ -568,7 +568,7 @@ async function _eventsForDay(ymd) {
         covered.add(chain.mulaiYmd);
       }
       // dedup PER CHECKPOINT (H-7/H-3/H-1 libur sama = 3 pesan beda, tiap satu sekali)
-      events.push({ key: `hX_${diff}__${nxt.ymd}`, kind: "H-" + diff, text: claraWrap("Hari Besar", lines.join("\n")) });
+      events.push({ key: `hX_${diff}__${nxt.ymd}`, kind: "H-" + diff, text: novaWrap("Hari Besar", lines.join("\n")) });
     }
   }
 
@@ -579,7 +579,7 @@ async function _eventsForDay(ymd) {
     events.push({
       key: `long__${chain.mulaiYmd}`,
       kind: "panjang",
-      text: claraWrap("Hari Besar", [
+      text: novaWrap("Hari Besar", [
         `🏖️ *Ada Libur Panjang!*`,
         `Mulai : ${cp.tanggalIndo}`,
         `Durasi : *${chain.totalHari} hari* beruntun (sampai ${cs.tanggalIndo})`,

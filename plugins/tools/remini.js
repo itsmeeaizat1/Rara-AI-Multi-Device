@@ -21,7 +21,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 // Worker thread pool: inference Swin2SR jalan di thread terpisah — bot tetap
 // responsif selama render (dulu ngeblok event loop total, command lain mati)
 import { enhanceLocalAsync, hdQueueInfo, isModelCached } from "../../src/lib/nova-hd-pool.js";
@@ -303,7 +303,7 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && (m.quoted.type === "imageMessage" || m.quoted.isImage));
 
   if (!img) {
-    return m.reply(claraWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini asli, tanpa watermark. Mode: face (default), hd, real (restore 4x local), atau bp hd/16k/product/text/concert (BeautyPlus, bisa ada watermark).", "guide"), "remini");
+    return m.reply(novaWrap("remini", "Reply atau kirim gambar dengan caption .remini untuk face restore ala Remini asli, tanpa watermark. Mode: face (default), hd, real (restore 4x local), atau bp hd/16k/product/text/concert (BeautyPlus, bisa ada watermark).", "guide"), "remini");
   }
 
   try {
@@ -332,7 +332,7 @@ async function handler(m, { sock, args }) {
     if (targetOut > 1920 && !m.isOwner) {
       await m.react("🚫");
       return m.reply(
-        claraWrap("remini", "Ukuran di atas 1080p hanya untuk Owner. User biasa bisa pakai .remini biasa (face restore) atau .remini real.", "error"),
+        novaWrap("remini", "Ukuran di atas 1080p hanya untuk Owner. User biasa bisa pakai .remini biasa (face restore) atau .remini real.", "error"),
         "remini"
       );
     }
@@ -346,12 +346,12 @@ async function handler(m, { sock, args }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer) || mediaBuffer.length < 100) {
       await m.react("❌");
-      return m.reply(claraWrap("remini", "Gagal mengunduh gambar. Coba reply gambarnya lagi.", "error"), "remini");
+      return m.reply(novaWrap("remini", "Gagal mengunduh gambar. Coba reply gambarnya lagi.", "error"), "remini");
     }
 
     if (mediaBuffer.length > 15 * 1024 * 1024) {
       await m.react("❌");
-      return m.reply(claraWrap("remini", "Ukuran gambar maksimal 15MB untuk fitur ini.", "error"), "remini");
+      return m.reply(novaWrap("remini", "Ukuran gambar maksimal 15MB untuk fitur ini.", "error"), "remini");
     }
 
     let resultBuffer;
@@ -366,11 +366,11 @@ async function handler(m, { sock, args }) {
       const q = hdQueueInfo();
       if (q.busy) {
         try { await m.react("🕒"); } catch {}
-        m.reply(claraWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${q.ahead + 1}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
+        m.reply(novaWrap("remini", `Render sedang diproses${q.ahead > 0 ? `, ${q.ahead} antrian lain` : ""} — kamu antrian ke-${q.ahead + 1}. Mohon tunggu, hasil otomatis dikirim setelah selesai.`));
       }
       if (!isModelCached(mode)) {
         try { await m.react("🧠"); } catch {}
-        m.reply(claraWrap("remini", "Model AI lokal belum ada di server — sedang diunduh otomatis (±59MB, cukup sekali saja). Proses pertama lebih lama dari biasanya, mohon tunggu ya."));
+        m.reply(novaWrap("remini", "Model AI lokal belum ada di server — sedang diunduh otomatis (±59MB, cukup sekali saja). Proses pertama lebih lama dari biasanya, mohon tunggu ya."));
       }
       const opts = targetOut
         ? { maxSide: Math.max(128, Math.round(targetOut / (mode === "real" ? 4 : 2))), enlarge: true }
@@ -554,7 +554,7 @@ async function handler(m, { sock, args }) {
           : e.message === "process_failed"
             ? "AI gagal memproses gambar. Coba gambar lain, atau mode .remini real."
             : te(m.prefix, m.command, m.pushName);
-    return m.reply(claraWrap("remini", msg, "error"), "remini");
+    return m.reply(novaWrap("remini", msg, "error"), "remini");
   }
 }
 

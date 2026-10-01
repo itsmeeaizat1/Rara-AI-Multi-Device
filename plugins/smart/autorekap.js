@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autorekap",
@@ -43,34 +43,34 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "on" || sub === "enable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Rekap", "Khusus owner."));
+      await m.reply(novaWrap("Auto Rekap", "Khusus owner."));
       return { handled: true };
     }
     const time = args[2] || cfg.time;
     if (!/^\d{2}:\d{2}$/.test(time)) {
-      await m.reply(claraWrap("Auto Rekap", "Format jam: HH:MM\n💡 *Contoh:* " + prefix + "autorekap on 20:00"));
+      await m.reply(novaWrap("Auto Rekap", "Format jam: HH:MM\n💡 *Contoh:* " + prefix + "autorekap on 20:00"));
       return { handled: true };
     }
     cfg.enabled = true;
     cfg.time = time;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Rekap", "AKTIF!\nJam: " + time + "\nBot akan kirim ringkasan tiap hari pada jam tersebut."));
+    await m.reply(novaWrap("Auto Rekap", "AKTIF!\nJam: " + time + "\nBot akan kirim ringkasan tiap hari pada jam tersebut."));
     return { handled: true };
   }
 
   if (sub === "off" || sub === "disable") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Rekap", "Khusus owner."));
+      await m.reply(novaWrap("Auto Rekap", "Khusus owner."));
       return { handled: true };
     }
     cfg.enabled = false;
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Rekap", "Dimatikan."));
+    await m.reply(novaWrap("Auto Rekap", "Dimatikan."));
     return { handled: true };
   }
 
   if (sub === "status" || sub === "cek" || !sub) {
-    await m.reply(claraWrap("Auto Rekap", [
+    await m.reply(novaWrap("Auto Rekap", [
       "Status: " + (cfg.enabled ? "AKTIF" : "MATI"),
       "Jam: " + cfg.time,
       "Pesan hari ini: " + cfg.stats.messages,
@@ -82,12 +82,12 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "now" || sub === "kirim") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Rekap", "Khusus owner."));
+      await m.reply(novaWrap("Auto Rekap", "Khusus owner."));
       return { handled: true };
     }
     const sorted = Object.entries(cfg.stats.senders).sort((a, b) => b[1] - a[1]).slice(0, 5);
     const topChatters = sorted.map(([jid, count], i) => (i + 1) + ". @" + jid.split("@")[0] + " (" + count + " pesan)").join("\n") || "(kosong)";
-    await m.reply(claraWrap("Rekap Grup Hari Ini", [
+    await m.reply(novaWrap("Rekap Grup Hari Ini", [
       "Total pesan: " + cfg.stats.messages,
       "Member aktif: " + Object.keys(cfg.stats.senders).length,
       "Link dibagikan: " + cfg.stats.links.length,
@@ -100,16 +100,16 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "reset") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Auto Rekap", "Khusus owner."));
+      await m.reply(novaWrap("Auto Rekap", "Khusus owner."));
       return { handled: true };
     }
     cfg.stats = { messages: 0, senders: {}, links: [], lastReset: Date.now() };
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Auto Rekap", "Statistik direset."));
+    await m.reply(novaWrap("Auto Rekap", "Statistik direset."));
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Auto Rekap", [
+  await m.reply(novaWrap("Auto Rekap", [
     "AUTO REKAP GRUP",
     "",
     prefix + "autorekap on <HH:MM> - aktifkan",

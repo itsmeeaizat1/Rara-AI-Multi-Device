@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -86,7 +86,7 @@ const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title
     });
 
     const text =
-      claraWrap("Terabox", [`Link: *${url}*`,
+      novaWrap("Terabox", [`Link: *${url}*`,
         "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}terabox <link> untuk download file lain`);

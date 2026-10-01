@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "yesno",
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   if (!question && m.quoted) question = m.quoted.text;
 
   if (!question || question.trim().length < 3) {
-    const help = claraWrap("YesNo", [
+    const help = novaWrap("YesNo", [
       `Decision maker dramatis`,
       ``,
       `📌 Format:`,
@@ -85,7 +85,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     `_Putusan dari semesta, bukan sumber resmi ya :v_`,
   ].join("\n");
 
-  await m.reply(claraWrap("YesNo", result));
+  await m.reply(novaWrap("YesNo", result));
   return { handled: true };
 }
 

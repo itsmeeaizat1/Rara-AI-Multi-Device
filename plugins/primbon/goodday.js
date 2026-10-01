@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -46,7 +46,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = (args[0] || "").toLowerCase().trim()
 
     if (!input) {
-      return m.reply(claraWrap("Hari Baik & Larangan Jawa", [
+      return m.reply(novaWrap("Hari Baik & Larangan Jawa", [
         "Pilih jenis:",
         "",
         "1. baik - Hari-hari baik untuk kegiatan",
@@ -68,7 +68,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       })
       lines.push("")
       lines.push("Manfaatkan hari-hari ini untuk kegiatan penting!")
-      return m.reply(claraWrap("Hari Baik", lines.join("\n")))
+      return m.reply(novaWrap("Hari Baik", lines.join("\n")))
     }
 
     if (input === "naas" || input === "2") {
@@ -82,7 +82,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       })
       lines.push("")
       lines.push("Hindari kegiatan penting di hari-hari ini!")
-      return m.reply(claraWrap("Hari Naas", lines.join("\n")))
+      return m.reply(novaWrap("Hari Naas", lines.join("\n")))
     }
 
     if (input === "larangan" || input === "3") {
@@ -94,12 +94,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   Larangan: " + h.larangan)
         lines.push("   Keterangan: " + h.keterangan)
       })
-      return m.reply(claraWrap("Hari Larangan", lines.join("\n")))
+      return m.reply(novaWrap("Hari Larangan", lines.join("\n")))
     }
 
     return m.reply(novaError("HariBaik", "Jenis gak valid nih! Gunakan: baik, naas, atau larangan"))
   } catch (e) {
-    return m.reply(claraWrap("Hari Baik", "Error: " + e.message))
+    return m.reply(novaWrap("Hari Baik", "Error: " + e.message))
   }
 }
 

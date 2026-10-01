@@ -2,7 +2,7 @@
 
 import { getQuotedStickerHash, addStickerCommand, listStickerCommands } from '../../src/lib/nova-sticker-command.js'
 import { getPlugin } from '../../src/lib/nova-plugins.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addcmdsticker',
     alias: ["addcmdsticker"],
@@ -45,17 +45,17 @@ async function handler(m, { sock }) {
             txt += `---`
         }
         
-        return await m.reply(claraWrap("addcmdsticker", txt))
+        return await m.reply(novaWrap("addcmdsticker", txt))
     }
     
     // Validasi reply sticker
     if (!m.quoted) {
-        return m.reply(claraWrap("Addcmdsticker", '⚠️ *reply sticker* yang ingin dijadikan command!'))
+        return m.reply(novaWrap("Addcmdsticker", '⚠️ *reply sticker* yang ingin dijadikan command!'))
     }
     
     const stickerHash = getQuotedStickerHash(m)
     if (!stickerHash) {
-        return m.reply(claraWrap("Addcmdsticker", '⚠️ Pesan yang di-reply bukan *sticker*!'))
+        return m.reply(novaWrap("Addcmdsticker", '⚠️ Pesan yang di-reply bukan *sticker*!'))
     }
     
     // Validasi command exists

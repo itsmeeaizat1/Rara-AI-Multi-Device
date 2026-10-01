@@ -2,7 +2,7 @@
 // ass.js — Random ass (NSFW)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ass",
@@ -23,14 +23,14 @@ async function handler(m, { sock }) {
     const url = res.data?.url || res.data?.image;
     if (!url) {
       await m.react("❌");
-      return m.reply(claraWrap("ass", "Gagal mengambil gambar!", "error"));
+      return m.reply(novaWrap("ass", "Gagal mengambil gambar!", "error"));
     }
     await sock.sendMessage(from, { image: { url }, caption: "ass ~" }, { quoted: m });
     await m.react("🐣");
   } catch (err) {
     console.error("ass error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("ass", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("ass", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -122,7 +122,7 @@ function buildBox(headerTitle, lines = []) {
   // replynya hapus garisnya") — buildBox TANPA garis: header 「 ✦ Title ✦ 」,
   // isi polos tanpa prefix │, tanpa footer ╰────, tanpa wrapLine 30-char
   // (gak ada border yang bisa putus, WhatsApp wrap natural). buildBox dipakai
-  // claraWrap/novaReply/novaCaption/bracketBox → SEMUA reply plugin kebagian.
+  // novaWrap/novaReply/novaCaption/bracketBox → SEMUA reply plugin kebagian.
   const header = `「 ✦ ${toSC(String(headerTitle))} ✦ 」`;
   // FIX OWNER 20 Sep 2026 ("kenapa formatnya gak rata kiri, ada spasi di awal
   // nomor — yg rata kiri cuma judul doang"): baris isi yang di-indent spasi
@@ -304,7 +304,7 @@ function buildSection(title, items = []) {
   return [closedHeader, ...closedBody, closedFooter].join("\n");
 }
 
-function claraHeader(title, emoji = "") {
+function novaHeader(title, emoji = "") {
   if (isRealEmoji(emoji)) return `「 ✦ ${emoji} ${toSC(title)} ✦ 」`;
   return `「 ✦ ${toSC(title)} ✦ 」`;
 }
@@ -363,7 +363,7 @@ function tipText(text) {
   return `💡 *${toSC("Tip")}:* ${scLine(text)}`;
 }
 
-function claraWrap(title, body, type = "info") {
+function novaWrap(title, body, type = "info") {
   const raw = Array.isArray(body) ? body : String(body).split("\n");
   // FIX: dulu .filter(l => l.trim()) buang SEMUA baris kosong, termasuk
   // pemisah paragraf yang disengaja (\n\n atau "" di array) — bikin info
@@ -415,11 +415,11 @@ function claraWrap(title, body, type = "info") {
   return buildBox(title, lines);
 }
 
-function claraLine(title, text) {
+function novaLine(title, text) {
   return String(text || "");
 }
 
-const alyaHeader = claraHeader;
+const alyaHeader = novaHeader;
 
 function formatNumber(num) {
   return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -791,9 +791,9 @@ export {
   progressBar, statusDot, kv,
   categoryBox,
   sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
-  claraHeader, bracketBox,
+  novaHeader, bracketBox,
   commandListLine, separator, tipText,
-  claraWrap, claraLine,
+  novaWrap, novaLine,
   alyaHeader,
   formatNumber, broadcastFormat,
   novaUsage, infoBox, listBox, closeBoxRight,

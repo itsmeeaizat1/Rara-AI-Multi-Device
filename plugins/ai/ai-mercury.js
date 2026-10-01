@@ -4,7 +4,7 @@
 // OpenAI-compatible. Key: apikeys.json novaai.inception (fallback env INCEPTION_API_KEY).
 // STRICT SATU RUTE (owner 11 Sep: satuan gak ada fallback) — Mercury doang;
 // key belum diset / Mercury down → error, GAK jatuh ke brand lain.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { viaMercury } from "../../src/lib/nova-ai-fallback.js";
 import { smallcapsText } from "../../src/lib/styler.js";
@@ -28,7 +28,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
   if (!text) {
-    return m.reply(claraWrap("aimercury", `Mau nanya apa?\n\nContoh: ${m.prefix}aimercury apa itu diffusion model?`, "guide"));
+    return m.reply(novaWrap("aimercury", `Mau nanya apa?\n\nContoh: ${m.prefix}aimercury apa itu diffusion model?`, "guide"));
   }
   try {
     await m.react("🕒");
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("aimercury error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("aimercury", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("aimercury", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

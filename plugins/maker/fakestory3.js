@@ -7,7 +7,7 @@ import * as _canvas from '@napi-rs/canvas'
 
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakestory3",
   alias: ["fakestory3"],
@@ -297,7 +297,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     await m.react("❌");
-    m.reply(claraWrap("fakestory3", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("fakestory3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

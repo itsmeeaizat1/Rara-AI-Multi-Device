@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getAiGroupAnnounce, buildFallbackAnnounce } from "../../src/lib/nova-group-announce-ai.js";
 const pluginConfig = {
     name: "open",

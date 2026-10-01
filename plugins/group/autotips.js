@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autotips",
@@ -79,7 +79,7 @@ export function startAutoTips(groupId, sock, db) {
       const tip = TIPS[Math.floor(Math.random() * TIPS.length)];
       g.lastTip = tip; g.lastSent = Date.now(); g.totalSent = (g.totalSent || 0) + 1;
       await db2.save();
-      await sock.sendMessage(groupId, { text: claraWrap("Auto Tips", "Tip Harian:\n\n" + tip + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info") });
+      await sock.sendMessage(groupId, { text: novaWrap("Auto Tips", "Tip Harian:\n\n" + tip + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info") });
     } catch (e) { console.error("[AutoTips interval]", e); }
   }, intervalMs);
 }
@@ -107,23 +107,23 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const interval = intervalArg && intervalArg >= MIN_INTERVAL && intervalArg <= MAX_INTERVAL ? intervalArg : DEFAULT_INTERVAL;
       cfg.enabled = true; cfg.interval = interval; cfg.activatedBy = sender; cfg.activatedAt = Date.now();
       await db.save(); startAutoTips(groupId, conn, db);
-      return m.reply(claraWrap("Auto Tips", ["Tips otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total tips: " + TIPS.length, "", "Ketik .autotips off untuk matikan.", "Ketik .autotips now untuk kirim sekarang."], "success"));
+      return m.reply(novaWrap("Auto Tips", ["Tips otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total tips: " + TIPS.length, "", "Ketik .autotips off untuk matikan.", "Ketik .autotips now untuk kirim sekarang."], "success"));
     }
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false; await db.save(); stopAutoTips(groupId);
-      return m.reply(claraWrap("Auto Tips", "Tips otomatis DIMATIKAN.\nKetik .autotips on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Tips", "Tips otomatis DIMATIKAN.\nKetik .autotips on untuk aktifkan lagi."));
     }
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
-      return m.reply(claraWrap("Auto Tips", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Tips tersedia: " + TIPS.length]));
+      return m.reply(novaWrap("Auto Tips", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Tips tersedia: " + TIPS.length]));
     }
     if (sub === "now" || sub === "sekarang") {
       const tip = TIPS[Math.floor(Math.random() * TIPS.length)];
       cfg.lastTip = tip; cfg.lastSent = Date.now(); cfg.totalSent = (cfg.totalSent || 0) + 1; await db.save();
-      return m.reply(claraWrap("Auto Tips", ["Tip Harian:", "", tip, "", "Total terkirim: " + cfg.totalSent]));
+      return m.reply(novaWrap("Auto Tips", ["Tip Harian:", "", tip, "", "Total terkirim: " + cfg.totalSent]));
     }
-    return m.reply(claraWrap("Auto Tips", ["Kirim tips harian random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autotips on [menit] — Aktifkan (default 60, min 20, max 360)", usedPrefix + "autotips off — Matikan", usedPrefix + "autotips status — Lihat status", usedPrefix + "autotips now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autotips on 30", usedPrefix + "autotips off"]));
-  } catch (e) { console.error("[Auto Tips]", e); m.reply(claraWrap("Auto Tips", "Error: " + e.message)); }
+    return m.reply(novaWrap("Auto Tips", ["Kirim tips harian random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "autotips on [menit] — Aktifkan (default 60, min 20, max 360)", usedPrefix + "autotips off — Matikan", usedPrefix + "autotips status — Lihat status", usedPrefix + "autotips now — Kirim sekarang", "", "CONTOH:", usedPrefix + "autotips on 30", usedPrefix + "autotips off"]));
+  } catch (e) { console.error("[Auto Tips]", e); m.reply(novaWrap("Auto Tips", "Error: " + e.message)); }
 }
 
 export { pluginConfig as config, handler };

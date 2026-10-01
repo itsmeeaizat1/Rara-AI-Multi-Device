@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command per kategori (Clara-MD box style + thumbnail menu.jpg)
+// allmenu.js — Semua command per kategori (Nova box style + thumbnail menu.jpg)
 import * as botmodePlugin from "../group/botmode.js";
 import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
 import config from "../../config.js";

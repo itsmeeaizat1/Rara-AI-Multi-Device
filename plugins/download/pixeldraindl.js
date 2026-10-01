@@ -6,7 +6,7 @@ import path from 'path'
 import fs from 'fs'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m })
     } else if (sizeInMB > 100) {
-      await m.reply(claraWrap("Pixeldraindl", `⚠️ *file terlalu besar*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
+      await m.reply(novaWrap("Pixeldraindl", `⚠️ *file terlalu besar*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
     }
       await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("pixeldraindl"));
   } catch (error) {

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!buffer) {
       const text =
-        claraWrap("Cecan", ["Status: *gagal*",
+        novaWrap("Cecan", ["Status: *gagal*",
           "Alasan: *endpoint cecan saat ini tidak merespons.*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      claraWrap("Cecan", ["Sumber: *api*",
+      novaWrap("Cecan", ["Sumber: *api*",
         "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}cecan untuk hasil lain`) +

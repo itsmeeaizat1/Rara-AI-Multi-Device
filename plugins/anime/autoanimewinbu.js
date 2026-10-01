@@ -2,7 +2,7 @@
 import { loadSent, saveSent, loadState, saveState, getOngoingAnimeList, startAutoCheck, stopAutoCheck, runCheck, isRunning } from '../../src/lib/nova-auto-anime.js'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'autoanimewinbu',
     alias: ["autoanimewinbu"],
@@ -27,7 +27,7 @@ async function handler(m, { sock, args }) {
     switch (sub) {
         case 'start': {
             if (isRunning()) {
-                return m.reply(claraWrap("Autoanimewinbu", `⚠️ AutoAnime sudah berjalan!`))
+                return m.reply(novaWrap("Autoanimewinbu", `⚠️ AutoAnime sudah berjalan!`))
             }
 
             const groups = state.groups || []
@@ -88,7 +88,7 @@ async function handler(m, { sock, args }) {
         case 'stop': {
             stopAutoCheck()
             saveState({ ...state, enabled: false })
-            return m.reply(claraWrap("Autoanimewinbu", `🛑 *autoanime dihentikan*`))
+            return m.reply(novaWrap("Autoanimewinbu", `🛑 *autoanime dihentikan*`))
         }
 
         case 'status': {
@@ -118,20 +118,20 @@ async function handler(m, { sock, args }) {
             if (!isRunning()) {
                 startAutoCheck(sock, state.interval || 5)
             }
-            await m.reply(claraWrap("Autoanimewinbu", '🔍 Mengecek anime terbaru...'))
+            await m.reply(novaWrap("Autoanimewinbu", '🔍 Mengecek anime terbaru...'))
             try {
                 await runCheck()
-                return m.reply(claraWrap("Autoanimewinbu", '✅ Pengecekan selesai'))
+                return m.reply(novaWrap("Autoanimewinbu", '✅ Pengecekan selesai'))
             } catch (e) {
-                m.reply(claraWrap("autoanimewinbu", te(m.prefix, m.command, m.pushName), "error"))
+                m.reply(novaWrap("autoanimewinbu", te(m.prefix, m.command, m.pushName), "error"))
             }
         }
 
         case 'list': {
-            await m.reply(claraWrap("Autoanimewinbu", '📺 Mengambil daftar anime...'))
+            await m.reply(novaWrap("Autoanimewinbu", '📺 Mengambil daftar anime...'))
             try {
                 const list = await getOngoingAnimeList()
-                if (list.length === 0) return m.reply(claraWrap("Autoanimewinbu", '❌ Tidak ada anime ditemukan'))
+                if (list.length === 0) return m.reply(novaWrap("Autoanimewinbu", '❌ Tidak ada anime ditemukan'))
 
                 let txt = `📺 *daftar anime terbaru*\n\n`
                 txt += `Total: *${list.length}* anime\n\n`
@@ -142,7 +142,7 @@ async function handler(m, { sock, args }) {
 
                 return sock.sendMessage(m.chat, { text: txt }, { quoted: m })
             } catch (e) {
-                m.reply(claraWrap("autoanimewinbu", te(m.prefix, m.command, m.pushName), "error"))
+                m.reply(novaWrap("autoanimewinbu", te(m.prefix, m.command, m.pushName), "error"))
             }
         }
 
@@ -150,7 +150,7 @@ async function handler(m, { sock, args }) {
             const sent = loadSent()
             const count = sent.size
             saveSent(new Set())
-            return m.reply(claraWrap("Autoanimewinbu", `✅ Reset! *${count}* episode dihapus dari riwayat.\nSemua episode bisa terkirim ulang.`))
+            return m.reply(novaWrap("Autoanimewinbu", `✅ Reset! *${count}* episode dihapus dari riwayat.\nSemua episode bisa terkirim ulang.`))
         }
 
         case 'addgrup':
@@ -170,7 +170,7 @@ async function handler(m, { sock, args }) {
 
             const groups = state.groups || []
             if (groups.includes(grupId)) {
-                return m.reply(claraWrap("Autoanimewinbu", `⚠️ Grup sudah ada di daftar target`))
+                return m.reply(novaWrap("Autoanimewinbu", `⚠️ Grup sudah ada di daftar target`))
             }
 
             groups.push(grupId)
@@ -190,7 +190,7 @@ async function handler(m, { sock, args }) {
             const groups = state.groups || []
             const idx = groups.indexOf(grupId)
             if (idx === -1) {
-                return m.reply(claraWrap("autoanimewinbu", `❌ Grup tidak ditemukan di daftar target`))
+                return m.reply(novaWrap("autoanimewinbu", `❌ Grup tidak ditemukan di daftar target`))
             }
 
             groups.splice(idx, 1)
@@ -202,7 +202,7 @@ async function handler(m, { sock, args }) {
             const rest = (typeof args === 'string' ? args : '').replace(/^interval\s*/i, '').trim()
             const mins = parseInt(rest)
             if (!mins || mins < 1 || mins > 60) {
-                return m.reply(claraWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\n💡 *Contoh:* \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
+                return m.reply(novaWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\n💡 *Contoh:* \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
             }
 
             saveState({ ...state, interval: mins })
@@ -212,7 +212,7 @@ async function handler(m, { sock, args }) {
                 startAutoCheck(sock, mins)
             }
 
-            return m.reply(claraWrap("Autoanimewinbu", `✅ Interval diubah ke *${mins} menit*`))
+            return m.reply(novaWrap("Autoanimewinbu", `✅ Interval diubah ke *${mins} menit*`))
         }
 
         default: {

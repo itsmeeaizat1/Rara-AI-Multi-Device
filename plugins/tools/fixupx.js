@@ -7,7 +7,7 @@
 // ═════════════════════════════════════════════
 
 import { zelFixupxTweet, _setZelBypassHttpForTest } from "../../src/scraper/zelbypass.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fixupx",
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const url = (m.args || []).join(" ").trim();
 
     if (!url) {
-      return m.reply(claraWrap("fixupx",
+      return m.reply(novaWrap("fixupx",
         `🐦 *CEK TWEET*\n\n` +
         `Kirim link tweet (twitter.com / x.com), sistem ambil teks + media + statistiknya.\n\n` +
         `Contoh:\n.fixupx https://x.com/elonmusk/status/123456789`));
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     if (!/^https?:\/\//i.test(url)) {
       await m.react("❌");
-      return m.reply(claraWrap("fixupx", `❌ *URL TIDAK VALID*\n\nKirim link lengkap (harus diawali http:// atau https://).`));
+      return m.reply(novaWrap("fixupx", `❌ *URL TIDAK VALID*\n\nKirim link lengkap (harus diawali http:// atau https://).`));
     }
 
     await m.react("🧠");
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
         API_KEY: "⚠️ API key zelapi.eu.cc belum di-set — owner isi dulu di apikeys.json (slot zelapi).",
         URL_INVALID: "URL tidak valid.",
       };
-      return m.reply(claraWrap("fixupx", `❌ *GAGAL: ${map[r.error] || r.error}*`));
+      return m.reply(novaWrap("fixupx", `❌ *GAGAL: ${map[r.error] || r.error}*`));
     }
 
     const stats = [];
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     if (typeof r.replies === "number") stats.push(`💬 ${r.replies}`);
     if (typeof r.views === "number") stats.push(`👁️ ${r.views}`);
 
-    const caption = claraWrap("fixupx",
+    const caption = novaWrap("fixupx",
       `🐦 *${r.name || r.username || "TWEET"}*${r.username ? ` (@${r.username})` : ""}\n\n` +
       `${r.text || "(tanpa teks)"}\n` +
       (stats.length ? `\n${stats.join("  ")}\n` : ""));
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[fixupx]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("fixupx", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("fixupx", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

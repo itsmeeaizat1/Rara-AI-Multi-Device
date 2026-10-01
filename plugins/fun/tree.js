@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pohon",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   if (!name) name = m.pushName || "kamu";
 
   if (!args && !m.quoted) {
-    const help = claraWrap("Pohon", [
+    const help = novaWrap("Pohon", [
       `Generator silsilah keluarga lucu`,
       ``,
       `📌 Format:`,
@@ -73,12 +73,12 @@ Aturan:
     const result = await UnlimitedAI(prompt, "nova-ai");
 
     if (!result || result.trim().length < 10) {
-      await m.reply(claraWrap("Pohon", "AI lagi cari buku catatan keluarga, coba lagi ya."));
+      await m.reply(novaWrap("Pohon", "AI lagi cari buku catatan keluarga, coba lagi ya."));
       return { handled: true };
     }
 
     await m.react("🐣");
-    await m.reply(claraWrap(`Pohon Keluarga - ${name}`, result.trim()));
+    await m.reply(novaWrap(`Pohon Keluarga - ${name}`, result.trim()));
   } catch (error) {
     await m.react("❌");
     console.error("pohon error:", error);

@@ -5,7 +5,7 @@
 // Auto aktif di grup: deteksi VN marah/sedih/debat -> respon empatik
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
         threshold: cfg[gid]?.threshold || "medium",
       };
       db.db.write();
-      const text = claraWrap("Ambient Context Mimicry", [
+      const text = novaWrap("Ambient Context Mimicry", [
         "Status: ON",
         "Mode: " + cfg[gid].mode + (cfg[gid].mode === "auto" ? " (auto-detect di grup)" : " (manual per VN)"),
         "Threshold: " + cfg[gid].threshold,
@@ -110,7 +110,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = claraWrap("Ambient Context Mimicry", [
+      const text = novaWrap("Ambient Context Mimicry", [
         "Status: OFF",
         "Ambient detection dimatikan di chat ini",
       ].join("\n"));
@@ -118,7 +118,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "mode") {
       const mode = args[1] || "auto";
       if (!["auto", "manual"].includes(mode)) {
-        const text = claraWrap("Ambient Context Mimicry", [
+        const text = novaWrap("Ambient Context Mimicry", [
           "Mode tidak valid!",
           "auto = auto-detect setiap VN di grup (rekomendasi)",
           "manual = hanya saat VN memenukan threshold emosi",
@@ -134,7 +134,7 @@ async function handler(m, { sock, config: botConfig }) {
         auto: "Setiap VN masuk di-analyze (lingkungan + emosi + respon)",
         manual: "Hanya VN dengan emosi kuat (marah/sedih/panik) yang di-respon",
       };
-      const text = claraWrap("Ambient Context Mimicry", [
+      const text = novaWrap("Ambient Context Mimicry", [
         "Mode diubah: " + mode,
         modeDesc[mode],
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
@@ -143,7 +143,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "threshold") {
       const threshold = args[1] || "medium";
       if (!["low", "medium", "high"].includes(threshold)) {
-        const text = claraWrap("Ambient Context Mimicry", "Threshold tidak valid! Tersedia: low, medium, high");
+        const text = novaWrap("Ambient Context Mimicry", "Threshold tidak valid! Tersedia: low, medium, high");
         await m.reply( text, "ambientmimic");
         return { handled: true };
       }
@@ -156,7 +156,7 @@ async function handler(m, { sock, config: botConfig }) {
         medium: "Respon VN dengan emosi terdeteksi (rekomendasi)",
         high: "Hanya VN dengan emosi KUAT (marah/sedih/panik ekstrem)",
       };
-      const text = claraWrap("Ambient Context Mimicry", [
+      const text = novaWrap("Ambient Context Mimicry", [
         "Threshold: " + threshold,
         threshDesc[threshold],
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
@@ -166,7 +166,7 @@ async function handler(m, { sock, config: botConfig }) {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const mode = cfg[gid]?.mode || "auto";
       const threshold = cfg[gid]?.threshold || "medium";
-      const text = claraWrap("Ambient Context Mimicry", [
+      const text = novaWrap("Ambient Context Mimicry", [
         "Status: " + status,
         "Mode: " + mode,
         "Threshold: " + threshold,
@@ -182,7 +182,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "ambientmimic");
     }
   } catch (e) {
-    await m.reply(claraWrap("ambientmimic", "Gagal proses. Coba lagi.", "error"));
+    await m.reply(novaWrap("ambientmimic", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }
@@ -314,7 +314,7 @@ export async function handleAmbientMimic(m, sock) {
 
     if (parsed.lingkungan && parsed.emosi) {
       // Show what bot "heard"
-      const contextLine = claraWrap("Ambient Context Detection", [
+      const contextLine = novaWrap("Ambient Context Detection", [
         "Lingkungan: " + parsed.lingkungan,
         "Emosi: " + parsed.emosi,
       ].join("\n")) + "\n\n";

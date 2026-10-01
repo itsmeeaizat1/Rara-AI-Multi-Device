@@ -176,7 +176,7 @@ async function sendBuffer(sock, m, buffer, mime, caption) {
   return sock.sendMessage(m.chat, { document: buffer, mimetype: mime || "application/octet-stream", fileName: "kyio-file" }, { quoted: m });
 }
 
-async function trySendMediaUrl(sock, m, url, caption, claraWrap) {
+async function trySendMediaUrl(sock, m, url, caption, novaWrap) {
   try {
     const { status, headers, data } = await rawFetchUrl(url);
     if (status === 200 && data && data.byteLength > 512) {
@@ -189,17 +189,17 @@ async function trySendMediaUrl(sock, m, url, caption, claraWrap) {
 }
 
 // ── PARSE PARAM DARI PESAN ─────────────────────────────────
-async function buildParams(m, entry, claraWrap) {
+async function buildParams(m, entry, novaWrap) {
   const argsText = typeof m.text === "string" && m.text.trim() ? m.text.trim() : (m.args || []).join(" ").trim();
   const spec = entry.param || "q";
   if (spec === "none") return { ok: true, params: {} };
   if (spec === "voice-text") {
-    if (!argsText) return { ok: false, err: panduan(entry, claraWrap) };
+    if (!argsText) return { ok: false, err: panduan(entry, novaWrap) };
     if (argsText.includes("|")) {
       const i = argsText.indexOf("|");
       const voice = argsText.slice(0, i).trim();
       const text = argsText.slice(i + 1).trim();
-      if (!text) return { ok: false, err: panduan(entry, claraWrap) };
+      if (!text) return { ok: false, err: panduan(entry, novaWrap) };
       return { ok: true, params: { voice, text } };
     }
     return { ok: true, params: { text: argsText } };
@@ -215,30 +215,30 @@ async function buildParams(m, entry, claraWrap) {
       } catch { /* lempar ke panduan */ }
     }
   }
-  if (!argsText) return { ok: false, err: panduan(entry, claraWrap) };
+  if (!argsText) return { ok: false, err: panduan(entry, novaWrap) };
   return { ok: true, params: { [spec]: argsText } };
 }
 
-function panduan(entry, claraWrap) {
+function panduan(entry, novaWrap) {
   const label = entry.hint || `.${entry.cmd} <${entry.param && entry.param !== "none" ? entry.param : "teks"}>`;
-  return claraWrap("Kyio API", `Cara pakai:\n${label}${entry.note ? `\n\n${entry.note}` : ""}`);
+  return novaWrap("Kyio API", `Cara pakai:\n${label}${entry.note ? `\n\n${entry.note}` : ""}`);
 }
 
 // ── RUNNER TABEL (dipanggil tiap plugin kategori) ──────────
 export async function runKyioTable(m, sock, table, opts = {}) {
-  const claraWrap = opts.claraWrap || (await import("./nova-menu-style.js")).claraWrap;
+  const novaWrap = opts.novaWrap || (await import("./nova-menu-style.js")).novaWrap;
   const cmd = String(m.command || "").toLowerCase();
   const entry = table.find(e => e.cmd === cmd || (e.aliases || []).includes(cmd));
   if (!entry) return false;
 
-  const built = await buildParams(m, entry, claraWrap);
+  const built = await buildParams(m, entry, novaWrap);
   if (!built.ok) { await m.reply(built.err); return true; }
 
   let status = 0, headers = {}, data = null;
   try {
     ({ status, headers, data } = await rawRequest(entry.method || "GET", entry.path, built.params, entry.timeout));
   } catch (e) {
-    await m.reply(claraWrap("Kyio API", `❌ Gagal nyambung ke Kyio: ${e.message || e}`));
+    await m.reply(novaWrap("Kyio API", `❌ Gagal nyambung ke Kyio: ${e.message || e}`));
     return true;
   }
 
@@ -269,12 +269,12 @@ export async function runKyioTable(m, sock, table, opts = {}) {
   } catch { /* bukan JSON */ }
 
   if (!json) {
-    await m.reply(claraWrap(opts.title || "Kyio API", status >= 400 ? kyioHumanizeError(status) : `⚠️ Respon gak dikenal dari Kyio (${status}).`));
+    await m.reply(novaWrap(opts.title || "Kyio API", status >= 400 ? kyioHumanizeError(status) : `⚠️ Respon gak dikenal dari Kyio (${status}).`));
     return true;
   }
 
   if (json?.error || status >= 400) {
-    await m.reply(claraWrap(opts.title || "Kyio API", kyioHumanizeError(status, json)));
+    await m.reply(novaWrap(opts.title || "Kyio API", kyioHumanizeError(status, json)));
     return true;
   }
 
@@ -284,11 +284,11 @@ export async function runKyioTable(m, sock, table, opts = {}) {
   const mediaUrl = kyioFindMediaUrl(payload.result ?? payload);
   if (mediaUrl) {
     const teks = kyioRenderResult(payload, 1200);
-    await trySendMediaUrl(sock, m, mediaUrl, teks.length > 60 ? teks : entry.caption || "", claraWrap);
+    await trySendMediaUrl(sock, m, mediaUrl, teks.length > 60 ? teks : entry.caption || "", novaWrap);
     return true;
   }
 
   const teks = kyioRenderResult(payload);
-  await m.reply(claraWrap(opts.title || "Kyio API", teks));
+  await m.reply(novaWrap(opts.title || "Kyio API", teks));
   return true;
 }

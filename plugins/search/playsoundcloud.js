@@ -2,7 +2,7 @@
 import { scSearch } from "./soundcloud.js";
 import scdl from "../../src/scraper/soundclouddl.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "playsoundcloud",
@@ -28,7 +28,7 @@ async function handler(m, { args, sock }) {
     txt += `👉 \`${m.prefix}playsc <judul lagu>\`\n\n`;
     txt += `*contoh:*\n`;
     txt += `\`${m.prefix}playsc Only We Know\``;
-    return await m.reply(claraWrap("playsoundcloud", txt));
+    return await m.reply(novaWrap("playsoundcloud", txt));
   }
   try {
     const searchResults = await scSearch(args.join(" "));

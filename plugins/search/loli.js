@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      claraWrap("Foto", ["Status: *berhasil*"].join("\n")) +
+      novaWrap("Foto", ["Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}loli untuk hasil lain`) +
       "\n" +

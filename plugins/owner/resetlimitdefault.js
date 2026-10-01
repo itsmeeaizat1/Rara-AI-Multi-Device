@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     
     db.setting('defaultLimit', null)
     
-    await m.reply(claraWrap("Berhasil", 
+    await m.reply(novaWrap("Berhasil", 
         `Default limit direset ke config: \`${configDefault}\`\n` +
         `User baru akan mendapat limit dari config`))
 }

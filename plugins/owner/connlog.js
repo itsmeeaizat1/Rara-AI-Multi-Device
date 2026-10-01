@@ -24,7 +24,7 @@ import {
   clearJournal,
   analyzeJournal,
 } from "../../src/lib/nova-conn-journal.js";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "connlog",
@@ -78,7 +78,7 @@ async function handler(m, { config: botConfig }) {
 
     if (sub === "clear" || sub === "hapus") {
       clearJournal();
-      return m.reply(claraWrap("Conn Log", [
+      return m.reply(novaWrap("Conn Log", [
         "Jurnal koneksi dihapus.",
         "",
         tipText("Riwayat baru mulai tercatat dari sekarang"),
@@ -89,14 +89,14 @@ async function handler(m, { config: botConfig }) {
     const a = analyzeJournal();
 
     if (!entries.length) {
-      return m.reply(claraWrap("Conn Log", [
+      return m.reply(novaWrap("Conn Log", [
         "Jurnal masih kosong — belum ada catatan disconnect/connect.",
         "",
         tipText("Jurnal otomatis tercatat tiap bot putus/nyambung. Coba lagi setelah reconnect berikutnya"),
       ]));
     }
 
-    // NOTE: claraWrap guard .trim() elemen pertama — subHeader object gak
+    // NOTE: novaWrap guard .trim() elemen pertama — subHeader object gak
     // boleh di posisi 0, jadi baris pertama wajib string.
     const lines = ["Riwayat koneksi — tercatat otomatis tiap bot putus/nyambung."];
 
@@ -139,9 +139,9 @@ async function handler(m, { config: botConfig }) {
     lines.push("");
     lines.push(tipText("Hapus jurnal: `" + prefix + "connlog clear`"));
 
-    return m.reply(claraWrap("Conn Log", lines));
+    return m.reply(novaWrap("Conn Log", lines));
   } catch (err) {
-    return m.reply(claraWrap("Conn Log", [
+    return m.reply(novaWrap("Conn Log", [
       "Gagal baca jurnal koneksi: " + (err?.message || String(err)),
     ], "error"));
   }

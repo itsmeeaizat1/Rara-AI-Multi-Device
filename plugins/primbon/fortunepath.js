@@ -2,7 +2,7 @@
 // fortunepath.js — Arah rejeki
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "arahrejeki",
@@ -19,13 +19,13 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕒");
     const text = m.args?.join(" ").trim();
-    if (!text) return m.reply(claraWrap("arahrejeki", "Contoh: .arahrejeki 7,7,2005", "guide"));
+    if (!text) return m.reply(novaWrap("arahrejeki", "Contoh: .arahrejeki 7,7,2005", "guide"));
     const [tgl, bln, thn] = text.split(",");
-    if (!tgl || !bln || !thn) return m.reply(claraWrap("arahrejeki", "Format: tgl,bln,thn", "guide"));
+    if (!tgl || !bln || !thn) return m.reply(novaWrap("arahrejeki", "Format: tgl,bln,thn", "guide"));
 
     const res = await axios.get(`https://api.siputzx.my.id/api/primbon/arah-rejeki?tgl=${tgl}&bln=${bln}&thn=${thn}`, { timeout: 15000 });
     const d = res.data?.data;
-    if (!d) return m.reply(claraWrap("arahrejeki", "Data tidak ditemukan!", "error"));
+    if (!d) return m.reply(novaWrap("arahrejeki", "Data tidak ditemukan!", "error"));
 
     let _lines = [];
       _lines.push(`📅 Hari Lahir: ${d.hari_lahir || "-"}`);
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("arahrejeki error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("arahrejeki", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("arahrejeki", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bountyboard",
@@ -113,7 +113,7 @@ async function handler(m, { sock, db }) {
       "Koin untuk reward diambil dari saldo koin kamu.",
       "Pastikan saldo cukup sebelum post!",
     ].join("\n");
-    await safeReply(m, sock, claraWrap("Bounty Board", helpText));
+    await safeReply(m, sock, novaWrap("Bounty Board", helpText));
     return { handled: true };
   }
 
@@ -188,7 +188,7 @@ async function handler(m, { sock, db }) {
       `Claim dengan: ${prefix}bounty claim ${bounty.id}`,
     ].join("\n");
 
-    await safeReply(m, sock, claraWrap("Bounty Board", postText, "success"),
+    await safeReply(m, sock, novaWrap("Bounty Board", postText, "success"),
       { mentions: [m.sender] });
 
     await safeReact(m, sock, "✅");
@@ -215,7 +215,7 @@ async function handler(m, { sock, db }) {
       listText += `   ${timeAgo(b.createdAt)}\n\n`;
     });
 
-    await safeReply(m, sock, claraWrap("Bounty Board - List", listText.trim()));
+    await safeReply(m, sock, novaWrap("Bounty Board - List", listText.trim()));
     return { handled: true };
   }
 
@@ -268,7 +268,7 @@ async function handler(m, { sock, db }) {
       `${prefix}bounty done ${bounty.id}`,
     ].join("\n");
 
-    await safeReply(m, sock, claraWrap("Bounty Board", claimText, "success"),
+    await safeReply(m, sock, novaWrap("Bounty Board", claimText, "success"),
       { mentions: [m.sender, bounty.poster] });
     return { handled: true };
   }
@@ -318,7 +318,7 @@ async function handler(m, { sock, db }) {
       `+${bounty.reward} koin ditransfer ke @${bounty.claimer.split("@")[0]}`,
     ].join("\n");
 
-    await safeReply(m, sock, claraWrap("Bounty Board", doneText, "success"),
+    await safeReply(m, sock, novaWrap("Bounty Board", doneText, "success"),
       { mentions: [bounty.poster, bounty.claimer] });
     return { handled: true };
   }
@@ -327,7 +327,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "unclaim" || subCmd === "lepas") {
     const bountyId = (args[2] || "").toUpperCase().trim();
     if (!bountyId) {
-      await safeReply(m, sock, claraWrap("Bounty Board", `Format: ${prefix}bounty unclaim <id>`, "warn"));
+      await safeReply(m, sock, novaWrap("Bounty Board", `Format: ${prefix}bounty unclaim <id>`, "warn"));
       return { handled: true };
     }
 
@@ -338,7 +338,7 @@ async function handler(m, { sock, db }) {
     }
 
     if (bounty.status !== "CLAIMED") {
-      await safeReply(m, sock, claraWrap("Bounty Board", `Tugas ${bountyId} tidak sedang di-claim!`, "warn"));
+      await safeReply(m, sock, novaWrap("Bounty Board", `Tugas ${bountyId} tidak sedang di-claim!`, "warn"));
       return { handled: true };
     }
 
@@ -362,7 +362,7 @@ async function handler(m, { sock, db }) {
       `Tugas tersedia lagi untuk di-claim!`,
     ].join("\n");
 
-    await safeReply(m, sock, claraWrap("Bounty Board", unclaimText, "success"));
+    await safeReply(m, sock, novaWrap("Bounty Board", unclaimText, "success"));
     return { handled: true };
   }
 
@@ -406,7 +406,7 @@ async function handler(m, { sock, db }) {
       `Reward: ${bounty.reward} koin (dikembalikan ke poster)`,
     ].join("\n");
 
-    await safeReply(m, sock, claraWrap("Bounty Board", cancelText, "warn"),
+    await safeReply(m, sock, novaWrap("Bounty Board", cancelText, "warn"),
       { mentions: [bounty.poster] });
     return { handled: true };
   }
@@ -438,7 +438,7 @@ async function handler(m, { sock, db }) {
       });
     }
 
-    await safeReply(m, sock, claraWrap("Bounty Board", myText.trim()));
+    await safeReply(m, sock, novaWrap("Bounty Board", myText.trim()));
     return { handled: true };
   }
 
@@ -476,7 +476,7 @@ async function handler(m, { sock, db }) {
       infoText += `\nSelesai: ${timeAgo(bounty.completedAt)}`;
     }
 
-    await safeReply(m, sock, claraWrap("Bounty Board", infoText),
+    await safeReply(m, sock, novaWrap("Bounty Board", infoText),
       { mentions: bounty.claimer ? [bounty.poster, bounty.claimer] : [bounty.poster] });
     return { handled: true };
   }

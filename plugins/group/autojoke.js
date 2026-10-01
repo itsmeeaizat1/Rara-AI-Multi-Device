@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autojoke",
@@ -94,7 +94,7 @@ export function startAutoJoke(groupId, sock, db) {
       await db2.save();
 
       await sock.sendMessage(groupId, {
-        text: claraWrap("Auto Joke", joke + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info"),
+        text: novaWrap("Auto Joke", joke + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info"),
       });
     } catch (e) {
       console.error("[AutoJoke interval]", e);
@@ -136,7 +136,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       startAutoJoke(groupId, conn, db);
 
-      return m.reply(claraWrap("Auto Joke", [
+      return m.reply(novaWrap("Auto Joke", [
         "Joke otomatis DIAKTIFKAN!",
         "",
         "Interval: " + interval + " menit",
@@ -154,14 +154,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
       stopAutoJoke(groupId);
 
-      return m.reply(claraWrap("Auto Joke", "Joke otomatis DIMATIKAN.\nKetik .autojoke on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Joke", "Joke otomatis DIMATIKAN.\nKetik .autojoke on untuk aktifkan lagi."));
     }
 
     // STATUS
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
 
-      return m.reply(claraWrap("Auto Joke", [
+      return m.reply(novaWrap("Auto Joke", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total terkirim: " + (cfg.totalSent || 0),
@@ -178,7 +178,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.totalSent = (cfg.totalSent || 0) + 1;
       await db.save();
 
-      return m.reply(claraWrap("Auto Joke", [
+      return m.reply(novaWrap("Auto Joke", [
         joke,
         "",
         "Mode: Manual trigger",
@@ -187,7 +187,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
-    return m.reply(claraWrap("Auto Joke", [
+    return m.reply(novaWrap("Auto Joke", [
       "Kirim joke random otomatis tiap interval",
       "",
       "CARA PAKAI:",
@@ -203,7 +203,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Auto Joke]", e);
-    m.reply(claraWrap("Auto Joke", "Error: " + e.message));
+    m.reply(novaWrap("Auto Joke", "Error: " + e.message));
   }
 }
 

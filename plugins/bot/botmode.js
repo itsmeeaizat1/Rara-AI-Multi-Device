@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
         txt += `\`${m.prefix}botmode md\` → Mode default\n`
         txt += `\`${m.prefix}botmode all\` → Semua fitur`
         
-        await m.reply(claraWrap("botmode", txt))
+        await m.reply(novaWrap("botmode", txt))
         return
     }
 

@@ -25,7 +25,7 @@ const { getDatabase } = await import(R + "/src/lib/nova-database.js");
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
-const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: claraWrap = smallcaps
+const norm = (s) => fromSC(String(s)).toLowerCase(); // GOTCHA: novaWrap = smallcaps
 
 const CHAT = "g1@g.us";
 let sends = [];

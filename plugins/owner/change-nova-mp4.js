@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
 import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-nova.mp4',
     alias: ["ganti-nova.mp4"],
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isVideo = m.type === 'videoMessage' || (m.quoted && m.quoted.type === 'videoMessage')
     
     if (!isVideo) {
-        return m.reply( claraWrap("Ganti-nova.mp4", `Kirim/reply video untuk mengganti\nFile: assets/video/nova.mp4`), { commandName: "ganti-nova.mp4" })
+        return m.reply( novaWrap("Ganti-nova.mp4", `Kirim/reply video untuk mengganti\nFile: assets/video/nova.mp4`), { commandName: "ganti-nova.mp4" })
     }
     
     try {
@@ -36,17 +36,17 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(claraWrap("Ganti-nova.mp4", `❌ Gagal mendownload video`))
+            return m.reply(novaWrap("Ganti-nova.mp4", `❌ Gagal mendownload video`))
         }
         
         try {
             const newUrl = await updateAssetUrl('nova-mp4', buffer, 'nova.mp4')
             { const __navText = `✅ *berhasil*\n\nFile nova.mp4 telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
-            m.reply(claraWrap("ganti-nova.mp4", `❌ Gagal mengupload file: ${e.message}`))
+            m.reply(novaWrap("ganti-nova.mp4", `❌ Gagal mengupload file: ${e.message}`))
         }
     } catch (error) {
-        await m.reply(claraWrap("ganti-nova.mp4", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("ganti-nova.mp4", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

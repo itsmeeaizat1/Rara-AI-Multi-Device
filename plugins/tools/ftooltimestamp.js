@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltimestamp — konversi Unix timestamp ↔ tanggal WIB (port altftool.com/tools/all/unix-timestamp-converter)
 // Tanpa arg = waktu sekarang. Angka = timestamp → tanggal. Tanggal (yyyy-mm-dd / dd-mm-yyyy [+HH:mm]) → timestamp.
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltimestamp", alias: ["timestamp", "unixtime", "epoch"], category: "tools",
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!raw) {
       const now = Math.floor(Date.now() / 1000);
       await m.react("🐣");
-      return m.reply(claraWrap("Timestamp", ["WAKTU SEKARANG (WIB)",
+      return m.reply(novaWrap("Timestamp", ["WAKTU SEKARANG (WIB)",
         "",
         "```" + now + "```",
         "",
@@ -65,10 +65,10 @@ async function handler(m, { sock, config: botConfig }) {
       lines = ["TANGGAL → TIMESTAMP", "", "```" + sec + "```", "", fmtWib(sec), "", rel(sec)];
     }
     await m.react("🐣");
-    await m.reply(claraWrap("Timestamp", lines.join("\n")));
+    await m.reply(novaWrap("Timestamp", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Timestamp", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Timestamp", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

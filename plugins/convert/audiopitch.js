@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -19,13 +19,13 @@ const pluginConfig = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio Pitch", "Reply audio yang mau diubah pitch-nya."));
+    if (!quoted) return m.reply(novaWrap("Audio Pitch", "Reply audio yang mau diubah pitch-nya."));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio Pitch", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio Pitch", "Reply harus audio/voice note!"));
 
     let semitone = parseFloat(args[0]);
     if (isNaN(semitone) || semitone < -12 || semitone > 12) {
-      return m.reply(claraWrap("Audio Pitch", [
+      return m.reply(novaWrap("Audio Pitch", [
         "Pitch range -12 sampai +12 semitone",
         "+ = naik (lebih tinggi), - = turun (lebih rendah)",
         "",
@@ -81,7 +81,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: claraWrap("Audio Pitch", [
+      caption: novaWrap("Audio Pitch", [
         "Berhasil!",
         "Pitch: " + descPitch,
         "Factor: " + pitchFactor.toFixed(4) + "x",

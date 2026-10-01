@@ -4,7 +4,7 @@ import config from "../../config.js";
 import axios from "axios";
 import { generateWAMessageFromContent, proto } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
  name: "cekidgc",

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animesearch",
@@ -56,7 +56,7 @@ async function searchAnime(m, sock, query) {
   const res = await jikanGet(url);
 
   if (res.status !== 200 || !res.data?.data?.length) {
-    return m.reply(claraWrap("animesearch", `Anime "${query}" tidak ditemukan!`));
+    return m.reply(novaWrap("animesearch", `Anime "${query}" tidak ditemukan!`));
   }
 
   const a = res.data.data[0];
@@ -99,7 +99,7 @@ async function searchAnime(m, sock, query) {
       }
     } catch (e) { /* fall through to text */ }
   }
-  await m.reply(claraWrap("animesearch", txt));
+  await m.reply(novaWrap("animesearch", txt));
 }
 
 async function searchManga(m, sock, query) {
@@ -107,7 +107,7 @@ async function searchManga(m, sock, query) {
   const res = await jikanGet(url);
 
   if (res.status !== 200 || !res.data?.data?.length) {
-    return m.reply(claraWrap("animesearch", `Manga "${query}" tidak ditemukan!`));
+    return m.reply(novaWrap("animesearch", `Manga "${query}" tidak ditemukan!`));
   }
 
   const a = res.data.data[0];
@@ -149,7 +149,7 @@ async function searchManga(m, sock, query) {
       }
     } catch (e) { /* fall through */ }
   }
-  await m.reply(claraWrap("animesearch", txt));
+  await m.reply(novaWrap("animesearch", txt));
 }
 
 async function searchCharacter(m, sock, query) {
@@ -157,7 +157,7 @@ async function searchCharacter(m, sock, query) {
   const res = await jikanGet(url);
 
   if (res.status !== 200 || !res.data?.data?.length) {
-    return m.reply(claraWrap("animesearch", `Karakter "${query}" tidak ditemukan!`));
+    return m.reply(novaWrap("animesearch", `Karakter "${query}" tidak ditemukan!`));
   }
 
   const a = res.data.data[0];
@@ -190,7 +190,7 @@ async function searchCharacter(m, sock, query) {
       }
     } catch (e) { /* fall through */ }
   }
-  await m.reply(claraWrap("animesearch", txt));
+  await m.reply(novaWrap("animesearch", txt));
 }
 
 async function handler(m, { sock, args }) {
@@ -230,7 +230,7 @@ async function handler(m, { sock, args }) {
     let txt = `Gagal mencari!\n\n`;
     txt += `Error: ${e.message}\n\n`;
     txt += `Jikan API mungkin sedang overload. Coba lagi nanti.`;
-    await m.reply(claraWrap("animesearch", txt));
+    await m.reply(novaWrap("animesearch", txt));
   }
 }
 

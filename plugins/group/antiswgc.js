@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antiswgc',
@@ -40,7 +40,7 @@ async function handler(m, { sock,  db }) {
 
     if (action === 'on') {
         db.setGroup(m.chat, { ...group, antiswgc: 'on' })
-        await m.reply(claraWrap("Antiswgc", '✅ *antiswgc aktif*\n\nTipe SW group mention akan dihapus otomatis.'))
+        await m.reply(novaWrap("Antiswgc", '✅ *antiswgc aktif*\n\nTipe SW group mention akan dihapus otomatis.'))
         return
     }
 
@@ -50,7 +50,7 @@ async function handler(m, { sock,  db }) {
         return
     }
 
-    await m.reply(claraWrap("Antiswgc", '❌ Gunakan: on atau off'))
+    await m.reply(novaWrap("Antiswgc", '❌ Gunakan: on atau off'))
 }
 
 export { pluginConfig as config, handler }

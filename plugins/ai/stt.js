@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import axios from "axios";
 import { novaError, novaEmpty, novaGuide, novaNoInput,  
   separator,
-  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,9 +50,9 @@ async function handler(m, { sock, config: botConfig }) {
     const aiReply = await callAI(prompt, botConfig.aiHelp);
 
     const out =
-      claraWrap("Speech to Text", [`Hasil: *${replyText.slice(0, 300)}${replyText.length > 300 ? "..." : ""}*`].join("\n")) +
+      novaWrap("Speech to Text", [`Hasil: *${replyText.slice(0, 300)}${replyText.length > 300 ? "..." : ""}*`].join("\n")) +
       "\n\n" +
-      claraWrap("RANGKUM", `Ringkasan: *${aiReply}*`) +
+      novaWrap("RANGKUM", `Ringkasan: *${aiReply}*`) +
       "\n" +
       tipText(`Ketik ${prefix}stt untuk ringkas pesan lain`) +
       "\n" +
@@ -62,7 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`Status: *Gagal*`,
+      novaWrap("Gagal", [`Status: *Gagal*`,
         `Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

@@ -4,7 +4,7 @@ import path from "path";
 import { pathToFileURL } from "url";
 import { hotReloadPlugin } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gantiscraper",
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
   if (args[0]?.toLowerCase() === "list") {
     const scrapers = listScrapers();
     if (!scrapers.length) {
-      return m.reply(claraWrap("Gantiscraper", `📂 Folder src/scraper kosong`));
+      return m.reply(novaWrap("Gantiscraper", `📂 Folder src/scraper kosong`));
     }
 
     let text = `📂 *DAFTAR SCRAPER*\n\n` + ``;
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
       `Total: ${scrapers.length} scraper\n\n` +
       `Gunakan \`${m.prefix}gantiscraper <nama>\` dengan reply code`;
 
-    return await m.reply(claraWrap("gantiscraper", text));
+    return await m.reply(novaWrap("gantiscraper", text));
   }
 
   if (!quoted) {
@@ -149,12 +149,12 @@ async function handler(m, { sock }) {
     try {
       code = (await quoted.download()).toString();
     } catch (e) {
-      return m.reply(claraWrap("gantiscraper", `❌ *GAGAL*\n\nGagal download file`));
+      return m.reply(novaWrap("gantiscraper", `❌ *GAGAL*\n\nGagal download file`));
     }
   }
 
   if (!code || code.length < 30) {
-    return m.reply(claraWrap("gantiscraper", `❌ *GAGAL*\n\nCode terlalu pendek atau tidak valid`));
+    return m.reply(novaWrap("gantiscraper", `❌ *GAGAL*\n\nCode terlalu pendek atau tidak valid`));
   }
 
   const hasExport =
@@ -196,7 +196,7 @@ async function handler(m, { sock }) {
   fileName = fileName.toLowerCase().replace(/[^a-z0-9\-_]/g, "");
 
   if (!fileName) {
-    return m.reply(claraWrap("gantiscraper", `❌ *GAGAL*\n\nNama file tidak valid`));
+    return m.reply(novaWrap("gantiscraper", `❌ *GAGAL*\n\nNama file tidak valid`));
   }
   try {
     if (!fs.existsSync(SCRAPER_DIR)) {
@@ -302,7 +302,7 @@ async function handler(m, { sock }) {
 
     return m.reply(replyText);
   } catch (error) {
-    await m.reply(claraWrap("gantiscraper", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("gantiscraper", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

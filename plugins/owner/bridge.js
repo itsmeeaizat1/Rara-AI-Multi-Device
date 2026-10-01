@@ -18,7 +18,7 @@ import {
   bridgeStatus,
 } from "../../src/lib/novabridge/manager.js";
 import { ensureBridgeState, DEFAULT_BRIDGE_CATEGORIES, BRIDGE_PLATFORMS } from "../../src/lib/novabridge/adapter.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bridge",
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     if (sub === "on" || sub === "off") {
       const plats = target === "all" ? BRIDGE_PLATFORMS : [target];
       if (!BRIDGE_PLATFORMS.includes(target) && target !== "all") {
-        return m.reply(claraWrap("📌 " + prefix + "bridge " + sub + " <telegram|discord|all>", "Platform harus telegram, discord, atau all."));
+        return m.reply(novaWrap("📌 " + prefix + "bridge " + sub + " <telegram|discord|all>", "Platform harus telegram, discord, atau all."));
       }
       const out = [];
       for (const p of plats) {
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
         }
       }
       db.db.write();
-      return m.reply(claraWrap("📍 Status gateway bridge", out.join("\n")));
+      return m.reply(novaWrap("📍 Status gateway bridge", out.join("\n")));
     }
 
     // ── KATEGORI ──
@@ -82,18 +82,18 @@ async function handler(m, { sock }) {
       const act = (args[1] || "").toLowerCase();
       const cat = (args[2] || "").toLowerCase();
       if (act === "add" || act === "del") {
-        if (!cat) return m.reply(claraWrap("📌 " + prefix + "bridge kategori " + act + " <kategori>", "Sebutkan kategorinya."));
+        if (!cat) return m.reply(novaWrap("📌 " + prefix + "bridge kategori " + act + " <kategori>", "Sebutkan kategorinya."));
         if (act === "add") {
-          if (b.categories.includes(cat)) return m.reply(claraWrap("📍 Whitelist bridge", "Kategori " + cat + " sudah ada di whitelist."));
+          if (b.categories.includes(cat)) return m.reply(novaWrap("📍 Whitelist bridge", "Kategori " + cat + " sudah ada di whitelist."));
           b.categories.push(cat);
         } else {
-          if (!b.categories.includes(cat)) return m.reply(claraWrap("📍 Whitelist bridge", "Kategori " + cat + " gak ada di whitelist."));
+          if (!b.categories.includes(cat)) return m.reply(novaWrap("📍 Whitelist bridge", "Kategori " + cat + " gak ada di whitelist."));
           b.categories = b.categories.filter((x) => x !== cat);
         }
         db.db.write();
-        return m.reply(claraWrap("📍 Whitelist bridge di-update", `Whitelist kini: ${b.categories.join(", ")}`));
+        return m.reply(novaWrap("📍 Whitelist bridge di-update", `Whitelist kini: ${b.categories.join(", ")}`));
       }
-      return m.reply(claraWrap(
+      return m.reply(novaWrap(
         "📍 Whitelist kategori command bridge",
         `Kategori aktif (fase 1):\n${b.categories.map((c) => "• " + c).join("\n")}\n\nTambah: ${prefix}bridge kategori add <kategori>\nHapus: ${prefix}bridge kategori del <kategori>\nDefault: ${DEFAULT_BRIDGE_CATEGORIES.join(", ")}`,
       ));
@@ -105,25 +105,25 @@ async function handler(m, { sock }) {
       const plat = (args[2] || "").toLowerCase();
       const id = (args[3] || "").replace(/\D/g, "");
       if (act !== "add" && act !== "del")
-        return m.reply(claraWrap("📌 Owner platform bridge", `Cara daftar ID platform kamu:\n${prefix}bridge ownerid add telegram 123456789\n${prefix}bridge ownerid add discord 987654321098\n\nID Telegram: chat sama @userinfobot · ID Discord: aktifin Developer Mode → klik profil → Copy User ID.`));
-      if (!BRIDGE_PLATFORMS.includes(plat)) return m.reply(claraWrap("📌 " + prefix + "bridge ownerid " + act + " <platform> <id>", "Platform harus telegram atau discord."));
-      if (!id) return m.reply(claraWrap("📌 " + prefix + "bridge ownerid " + act + " " + plat + " <id>", "ID-nya gak kebaca — angka aja (tanpa tg_/dc_)."));
+        return m.reply(novaWrap("📌 Owner platform bridge", `Cara daftar ID platform kamu:\n${prefix}bridge ownerid add telegram 123456789\n${prefix}bridge ownerid add discord 987654321098\n\nID Telegram: chat sama @userinfobot · ID Discord: aktifin Developer Mode → klik profil → Copy User ID.`));
+      if (!BRIDGE_PLATFORMS.includes(plat)) return m.reply(novaWrap("📌 " + prefix + "bridge ownerid " + act + " <platform> <id>", "Platform harus telegram atau discord."));
+      if (!id) return m.reply(novaWrap("📌 " + prefix + "bridge ownerid " + act + " " + plat + " <id>", "ID-nya gak kebaca — angka aja (tanpa tg_/dc_)."));
       const platformId = (plat === "telegram" ? "tg_" : "dc_") + id;
       const r = act === "add" ? addOwner(platformId, "owner-" + plat) : removeOwner(platformId);
-      if (!r.success) return m.reply(claraWrap("📍 Owner platform bridge", r.message + " (" + platformId + ")"));
+      if (!r.success) return m.reply(novaWrap("📍 Owner platform bridge", r.message + " (" + platformId + ")"));
       // simpan juga jejak di state bridge biar gampang audit
       const list = b.ownerIds[plat] || (b.ownerIds[plat] = []);
       if (act === "add") { if (!list.includes(id)) list.push(id); }
       else b.ownerIds[plat] = list.filter((x) => x !== id);
       db.db.write();
-      return m.reply(claraWrap("📍 Owner platform bridge", `${platformId} ${act === "add" ? "ditambahkan ke" : "dihapus dari"} daftar owner — command owner-only kini jalan dari ${plat === "telegram" ? "Telegram" : "Discord"}.`));
+      return m.reply(novaWrap("📍 Owner platform bridge", `${platformId} ${act === "add" ? "ditambahkan ke" : "dihapus dari"} daftar owner — command owner-only kini jalan dari ${plat === "telegram" ? "Telegram" : "Discord"}.`));
     }
 
     // ── STATUS ──
     const st = bridgeStatus();
     const tgTok = !!(getApiKey("telegram") || process.env.TELEGRAM_BOT_TOKEN);
     const dcTok = !!(getApiKey("discord") || process.env.DISCORD_BOT_TOKEN);
-    return m.reply(claraWrap(
+    return m.reply(novaWrap(
       "📍 Nova Bridge — status gateway",
       [
         line("telegram", st.telegram.running, tgTok),

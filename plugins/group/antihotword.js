@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antihotword",
@@ -95,7 +95,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "on" || sub === "aktif") {
       cfg.enabled = true;
       await db.save();
-      return m.reply(claraWrap("Anti Hot Word", [
+      return m.reply(novaWrap("Anti Hot Word", [
         "Anti Hot Word DIAKTIFKAN!",
         "",
         "Action: " + (cfg.action || "alert").toUpperCase(),
@@ -110,57 +110,57 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false;
       await db.save();
-      return m.reply(claraWrap("Anti Hot Word", "Anti Hot Word DIMATIKAN.\nKetik .antihotword on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Anti Hot Word", "Anti Hot Word DIMATIKAN.\nKetik .antihotword on untuk aktifkan lagi."));
     }
 
     // ADD
     if (sub === "add" || sub === "tambah") {
       const word = args.slice(1).join(" ").trim().toLowerCase();
-      if (!word) return m.reply(claraWrap("Anti Hot Word", "Masukkan kata!\n💡 *Contoh:* .antihotword add judi"));
+      if (!word) return m.reply(novaWrap("Anti Hot Word", "Masukkan kata!\n💡 *Contoh:* .antihotword add judi"));
       if (!cfg.words) cfg.words = [];
-      if (cfg.words.includes(word)) return m.reply(claraWrap("Anti Hot Word", "Kata '" + word + "' sudah ada di daftar."));
+      if (cfg.words.includes(word)) return m.reply(novaWrap("Anti Hot Word", "Kata '" + word + "' sudah ada di daftar."));
       cfg.words.push(word);
       await db.save();
-      return m.reply(claraWrap("Anti Hot Word", "Kata '" + word + "' ditambahkan!\nTotal keyword: " + cfg.words.length, "success"));
+      return m.reply(novaWrap("Anti Hot Word", "Kata '" + word + "' ditambahkan!\nTotal keyword: " + cfg.words.length, "success"));
     }
 
     // DEL
     if (sub === "del" || sub === "hapus" || sub === "remove") {
       const word = args.slice(1).join(" ").trim().toLowerCase();
-      if (!word) return m.reply(claraWrap("Anti Hot Word", "Masukkan kata!\n💡 *Contoh:* .antihotword del judi"));
+      if (!word) return m.reply(novaWrap("Anti Hot Word", "Masukkan kata!\n💡 *Contoh:* .antihotword del judi"));
       if (!cfg.words) cfg.words = [];
       const idx = cfg.words.indexOf(word);
-      if (idx === -1) return m.reply(claraWrap("Anti Hot Word", "Kata '" + word + "' tidak ditemukan."));
+      if (idx === -1) return m.reply(novaWrap("Anti Hot Word", "Kata '" + word + "' tidak ditemukan."));
       cfg.words.splice(idx, 1);
       await db.save();
-      return m.reply(claraWrap("Anti Hot Word", "Kata '" + word + "' dihapus!\nTotal keyword: " + cfg.words.length, "success"));
+      return m.reply(novaWrap("Anti Hot Word", "Kata '" + word + "' dihapus!\nTotal keyword: " + cfg.words.length, "success"));
     }
 
     // LIST
     if (sub === "list" || sub === "daftar") {
       if (!cfg.words || cfg.words.length === 0) {
-        return m.reply(claraWrap("Anti Hot Word", "Belum ada keyword. Tambah: .antihotword add <kata>"));
+        return m.reply(novaWrap("Anti Hot Word", "Belum ada keyword. Tambah: .antihotword add <kata>"));
       }
       let lines = ["Daftar Hot Word (" + cfg.words.length + "):", ""];
       cfg.words.forEach((w, i) => lines.push((i + 1) + ". " + w));
       lines.push("", "Total deteksi: " + (cfg.totalDetected || 0));
-      return m.reply(claraWrap("Anti Hot Word", lines));
+      return m.reply(novaWrap("Anti Hot Word", lines));
     }
 
     // ACTION
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["alert", "warn", "delete"].includes(action)) {
-        return m.reply(claraWrap("Anti Hot Word", "Pilih: alert, warn, atau delete\nalert = mention admin\nwarn = catat warning\ndelete = hapus pesan"));
+        return m.reply(novaWrap("Anti Hot Word", "Pilih: alert, warn, atau delete\nalert = mention admin\nwarn = catat warning\ndelete = hapus pesan"));
       }
       cfg.action = action;
       await db.save();
-      return m.reply(claraWrap("Anti Hot Word", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
+      return m.reply(novaWrap("Anti Hot Word", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
     }
 
     // STATUS
     if (sub === "status" || sub === "cek" || sub === "info") {
-      return m.reply(claraWrap("Anti Hot Word", [
+      return m.reply(novaWrap("Anti Hot Word", [
         "Status: " + (cfg.enabled ? "*AKTIF*" : "Nonaktif"),
         "Action: " + (cfg.action || "alert").toUpperCase(),
         "Total keyword: " + (cfg.words?.length || 0),
@@ -175,7 +175,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "log" || sub === "riwayat") {
       const logs = cfg.log || [];
       if (logs.length === 0) {
-        return m.reply(claraWrap("Anti Hot Word", "Belum ada riwayat deteksi."));
+        return m.reply(novaWrap("Anti Hot Word", "Belum ada riwayat deteksi."));
       }
       let lines = ["Riwayat deteksi (" + logs.length + " terakhir):", ""];
       logs.slice(-10).reverse().forEach((l, i) => {
@@ -185,7 +185,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         lines.push("   " + new Date(l.time).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }));
         lines.push("");
       });
-      return m.reply(claraWrap("Anti Hot Word", lines));
+      return m.reply(novaWrap("Anti Hot Word", lines));
     }
 
     // RESET
@@ -194,11 +194,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.totalDetected = 0;
       if (cfg.warns) cfg.warns = {};
       await db.save();
-      return m.reply(claraWrap("Anti Hot Word", "Log dan counter direset.", "success"));
+      return m.reply(novaWrap("Anti Hot Word", "Log dan counter direset.", "success"));
     }
 
     // HELP
-    return m.reply( claraWrap("Anti Hot Word", [
+    return m.reply( novaWrap("Anti Hot Word", [
       "Deteksi kata/hot word khusus di grup",
       "",
       "Berguna untuk: pantau kata sensitif, waspadai penipuan, dll",
@@ -221,7 +221,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]), "antihotword");
   } catch (e) {
     console.error("[Anti Hot Word]", e);
-    m.reply(claraWrap("Anti Hot Word", "Error: " + e.message));
+    m.reply(novaWrap("Anti Hot Word", "Error: " + e.message));
   }
 }
 

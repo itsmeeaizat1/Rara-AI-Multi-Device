@@ -7,7 +7,7 @@
 
 import { lokMyinstants, _setLokalHttpForTest } from "../../src/scraper/lokalapi.js";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 import fs from "fs";
 import os from "os";
@@ -29,16 +29,16 @@ async function handler(m, { sock }) {
     const text = (m.text || (m.args || []).join(" ") || "").trim();
     if (!text) {
       await m.react("❌");
-      return m.reply(claraWrap("zsound", "Query kosong — kirim nama sound.\nContoh: .zsound bruh\n.zsound naruto run\n\nSumber: MyInstants (ribuan sound) — hasil #1 dikirim jadi VN, 4 berikutnya dilist."));
+      return m.reply(novaWrap("zsound", "Query kosong — kirim nama sound.\nContoh: .zsound bruh\n.zsound naruto run\n\nSumber: MyInstants (ribuan sound) — hasil #1 dikirim jadi VN, 4 berikutnya dilist."));
     }
     await m.react("🧠");
 
     const r = await lokMyinstants(text);
-    if (!r.ok) { await m.react("❌"); return m.reply(claraWrap("zsound", `Sound bermasalah: ${r.error}`)); }
+    if (!r.ok) { await m.react("❌"); return m.reply(novaWrap("zsound", `Sound bermasalah: ${r.error}`)); }
 
     const first = r.list[0];
     const others = r.list.slice(1, 5);
-    const listCard = claraWrap("zsound", [
+    const listCard = novaWrap("zsound", [
       `✅ MYINSTANTS "${text}" — ${r.list.length} sound`,
       "",
       `🎵 Dikirim (VN): ${first.title}`,
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(claraWrap("zsound", `fitur error: ${e?.message || e}`));
+    await m.reply(novaWrap("zsound", `fitur error: ${e?.message || e}`));
   }
 }
 

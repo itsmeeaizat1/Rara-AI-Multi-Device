@@ -6,7 +6,7 @@
 // base, dan keterangan lisensi. Bagian panjang disembunyikan di balik
 // readmore biar teks gak langsung muncul panjang nimpa teks atas.
 
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { formatUptime } from "../../src/lib/nova-formatter.js";
 import config from '../../config.js'
 
@@ -107,7 +107,7 @@ Script Nova AI WhatsApp Bot berlisensi proprietary — dilarang menyalin,
 menjual, atau menyebarkan sebagian maupun keseluruhan kode tanpa izin
 tertulis dari pembuat.`
 
-    await m.reply(claraWrap("tqto", navText))
+    await m.reply(novaWrap("tqto", navText))
 }
 
 export { pluginConfig as config, handler }

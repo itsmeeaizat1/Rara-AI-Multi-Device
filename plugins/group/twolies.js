@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "twotruths",
@@ -33,7 +33,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.revealed = {};
       game.phase = "submit";
       await db.save();
-      return m.reply(claraWrap("Two Truths One Lie", [
+      return m.reply(novaWrap("Two Truths One Lie", [
         `Game dimulai!`,
         `Phase: Submit statements`,
         "",
@@ -45,14 +45,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "submit") {
-      if (!game.active) return m.reply(claraWrap("Info", `Belum mulai. Ketik ${usedPrefix}twotruths start`, "info"));
-      if (game.phase !== "submit") return m.reply(claraWrap("Info", "\u274c Phase submit sudah selesai."));
-      if (game.players[sender]) return m.reply(claraWrap("Info", "\u274c Kamu sudah submit!"));
+      if (!game.active) return m.reply(novaWrap("Info", `Belum mulai. Ketik ${usedPrefix}twotruths start`, "info"));
+      if (game.phase !== "submit") return m.reply(novaWrap("Info", "\u274c Phase submit sudah selesai."));
+      if (game.players[sender]) return m.reply(novaWrap("Info", "\u274c Kamu sudah submit!"));
 
       const parts = text.split("|").map(s => s.trim());
       parts.shift();
       if (parts.length !== 3) {
-        return m.reply(claraWrap("Two Truths One Lie", [
+        return m.reply(novaWrap("Two Truths One Lie", [
           `Butuh 3 statement dipisah dengan |`,
           `Tandai yang BOHONG dengan *`,
           `Contoh: ${usedPrefix}twotruths submit Aku suka kopi | Aku bisa renang | *Aku pernah juara`,
@@ -61,7 +61,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       const lieIndex = parts.findIndex(p => p.startsWith("*"));
       if (lieIndex === -1) {
-        return m.reply(claraWrap("Two Truths One Lie", "Tandai statement BOHONG dengan * di depan!"));
+        return m.reply(novaWrap("Two Truths One Lie", "Tandai statement BOHONG dengan * di depan!"));
       }
 
       const statements = parts.map((p, i) => ({
@@ -73,7 +73,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
 
       const display = statements.map((s, i) => `${i + 1}. ${s.text}`).join("\n");
-      return m.reply(claraWrap("Two Truths One Lie", [
+      return m.reply(novaWrap("Two Truths One Lie", [
         `@${sender.split("@")[0]} sudah submit!`,
         `Statements:`,
         display,
@@ -84,7 +84,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "guess") {
-      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
+      if (!game.active) return m.reply(novaWrap("Info", "\u274c Tidak ada game aktif."));
       const target = m.mentionedJid?.[0];
       const guessNum = parseInt(args[2]) || parseInt(args[1]);
       if (!target) {
@@ -93,7 +93,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           await db.save();
         }
         const playerList = Object.entries(game.players).map(([jid, p], i) => `${i + 1}. @${jid.split("@")[0]}`).join("\n");
-        return m.reply(claraWrap("Two Truths One Lie", [
+        return m.reply(novaWrap("Two Truths One Lie", [
           `Phase: Guess`,
           `Cara: ${usedPrefix}twotruths guess @player <nomor>`,
           "",
@@ -101,10 +101,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           playerList,
         ].join("\n")));
       }
-      if (!game.players[target]) return m.reply(claraWrap("Info", "\u274c Player tidak ditemukan."));
-      if (target === sender) return m.reply(claraWrap("Info", "\u274c Tidak bisa tebak sendiri!"));
-      if (game.players[target].guessedBy[sender]) return m.reply(claraWrap("Info", "\u274c Kamu sudah tebak player ini!"));
-      if (!guessNum || guessNum < 1 || guessNum > 3) return m.reply(claraWrap("Usage", "Pilih nomor 1, 2, atau 3."));
+      if (!game.players[target]) return m.reply(novaWrap("Info", "\u274c Player tidak ditemukan."));
+      if (target === sender) return m.reply(novaWrap("Info", "\u274c Tidak bisa tebak sendiri!"));
+      if (game.players[target].guessedBy[sender]) return m.reply(novaWrap("Info", "\u274c Kamu sudah tebak player ini!"));
+      if (!guessNum || guessNum < 1 || guessNum > 3) return m.reply(novaWrap("Usage", "Pilih nomor 1, 2, atau 3."));
 
       const isCorrect = game.players[target].statements[guessNum - 1].isLie;
       game.players[target].guessedBy[sender] = guessNum;
@@ -112,7 +112,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (isCorrect && game.players[sender]) game.players[sender].correctGuesses++;
       await db.save();
 
-      return m.reply(claraWrap("Two Truths One Lie", [
+      return m.reply(novaWrap("Two Truths One Lie", [
         `@${sender.split("@")[0]} menebak @${target.split("@")[0]}:`,
         `Pilihan: ${guessNum} - "${game.players[target].statements[guessNum - 1].text}"`,
         isCorrect ? "BENAR! Itu memang bohong!" : "SALAH! Itu statement benar.",
@@ -120,7 +120,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "reveal") {
-      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
+      if (!game.active) return m.reply(novaWrap("Info", "\u274c Tidak ada game aktif."));
       game.phase = "revealed";
       const results = Object.entries(game.players).map(([jid, p]) => {
         const lieIdx = p.statements.findIndex(s => s.isLie);
@@ -136,16 +136,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }).join("\n\n");
       game.active = false;
       await db.save();
-      return m.reply(claraWrap("Two Truths One Lie", `Hasil Reveal:\n\n${results}`, "info"));
+      return m.reply(novaWrap("Two Truths One Lie", `Hasil Reveal:\n\n${results}`, "info"));
     }
 
     if (sub === "list") {
-      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
+      if (!game.active) return m.reply(novaWrap("Info", "\u274c Tidak ada game aktif."));
       const list = Object.entries(game.players).map(([jid, p]) => {
         const s = p.statements.map((st, i) => `${i + 1}. ${st.text}`).join("\n");
         return `@${jid.split("@")[0]}:\n${s}`;
       }).join("\n\n");
-      return m.reply(claraWrap("Two Truths One Lie", `Players (${Object.keys(game.players).length}):\n\n${list}`, "info"));
+      return m.reply(novaWrap("Two Truths One Lie", `Players (${Object.keys(game.players).length}):\n\n${list}`, "info"));
     }
 
     if (sub === "stop") {
@@ -153,10 +153,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.players = {};
       game.phase = "idle";
       await db.save();
-      return m.reply(claraWrap("Two Truths One Lie", "Game dihentikan."));
+      return m.reply(novaWrap("Two Truths One Lie", "Game dihentikan."));
     }
 
-    return m.reply(claraWrap("Two Truths One Lie", [
+    return m.reply(novaWrap("Two Truths One Lie", [
       `Two Truths One Lie - 2 benar 1 bohong, tebak!`,
       "",
       `Command:`,

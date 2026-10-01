@@ -1,5 +1,5 @@
 
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "block2",
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
     const text =
-      claraWrap("Block", [`Target: *${targetName}*`,
+      novaWrap("Block", [`Target: *${targetName}*`,
         "Status: *berhasil diblokir*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

@@ -6,7 +6,7 @@ import os from 'os'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 import util from 'util'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'eval',
     alias: ["eval"],
@@ -27,7 +27,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, store }) {
     if (!config.isOwner(m.sender)) {
-        return m.rem.reply(claraWrap("Eval", '❌ *Owner Only!*')) }
+        return m.rem.reply(novaWrap("Eval", '❌ *Owner Only!*')) }
 
     const code = m.fullArgs?.trim() || m.text?.trim()
 

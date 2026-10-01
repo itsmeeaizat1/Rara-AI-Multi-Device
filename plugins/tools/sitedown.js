@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sitedown",
@@ -91,10 +91,10 @@ async function handler(m, { sock, config: botConfig }) {
       if (result.redirected) {
         lines.push("Final URL: " + (result.finalUrl.length > 60 ? result.finalUrl.substring(0, 60) + "..." : result.finalUrl));
       }
-      return m.reply(claraWrap("Site Check: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
+      return m.reply(novaWrap("Site Check: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
     } else {
       await m.react("🐣");
-      return m.reply(claraWrap("Site Check: " + url.replace(/^https?:\/\//, ""), [
+      return m.reply(novaWrap("Site Check: " + url.replace(/^https?:\/\//, ""), [
         "Status: DOWN",
         "Error: " + result.error,
         "Time: " + result.responseTime + "ms",
@@ -103,7 +103,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     await m.react("❌");
     console.error("sitedown error:", e);
-    return m.reply(claraWrap("SiteDown", "Error: " + e.message));
+    return m.reply(novaWrap("SiteDown", "Error: " + e.message));
   }
 }
 

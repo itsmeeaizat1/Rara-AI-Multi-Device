@@ -2,7 +2,7 @@
 import axios from "axios";
 import { uploadToCatbox } from "../../src/lib/nova-uploader.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "totato",
@@ -19,14 +19,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage" || m.quoted.mtype === "imageMessage"));
-    if (!isImage) return m.reply(claraWrap("totato", "Reply gambar dengan caption .totato untuk efek tato.", "guide"));
+    if (!isImage) return m.reply(novaWrap("totato", "Reply gambar dengan caption .totato untuk efek tato.", "guide"));
 
     await m.react("🕒");
 
     let mediaBuffer;
     if (m.isImage && m.download) mediaBuffer = await m.download();
     else if (m.quoted && m.quoted.download) mediaBuffer = await m.quoted.download();
-    if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) { await m.react("❌"); return m.reply(claraWrap("totato", "Gagal mengunduh gambar.")); }
+    if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) { await m.react("❌"); return m.reply(novaWrap("totato", "Gagal mengunduh gambar.")); }
 
     const link = await uploadToCatbox(mediaBuffer, "image.jpg");
     const apiUrl = `https://api-faa.my.id/faa/tato?url=${encodeURIComponent(link)}`;
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     } else {
       const json = JSON.parse(res.data.toString());
       const imageUrl = json.url || json.result || json.image || json.data?.url || json.data;
-      if (!imageUrl) { await m.react("❌"); return m.reply(claraWrap("totato", "API tidak mengembalikan gambar.")); }
+      if (!imageUrl) { await m.react("❌"); return m.reply(novaWrap("totato", "API tidak mengembalikan gambar.")); }
       const img = await axios.get(imageUrl, { responseType: "arraybuffer", timeout: 60000 });
       imgBuffer = Buffer.from(img.data);
     }

@@ -2,7 +2,7 @@
 // myip.js — Cek IP address
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "myip",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("myip error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("myip", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("myip", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

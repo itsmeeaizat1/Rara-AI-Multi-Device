@@ -2,7 +2,7 @@
 import sharp from "sharp";
 import { downloadMediaMessage, getContentType } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "topixel",
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (!type || type !== "imageMessage") {
-      return m.reply(claraWrap("Topixel", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
+      return m.reply(novaWrap("Topixel", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
     }
     media = await downloadMediaMessage(m.quoted, "buffer", {});
   } else if (m.message) {
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       { quoted: m }
     );
   } catch (err) {
-    m.reply(claraWrap("topixel", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("topixel", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

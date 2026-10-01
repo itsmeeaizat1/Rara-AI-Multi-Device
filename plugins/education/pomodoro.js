@@ -5,7 +5,7 @@
  *        live ticker 🕒 edit-in-place tiap fase + scheduler otomatis
  *        ganti fokus⇄istirahat (engine: src/lib/nova-pomodoro.js)
  */
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import {
   getSession, createSession, endSession,
   buildPhaseCard, firePhaseTicker, ensurePomodoroScheduler,
@@ -46,7 +46,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .pomodoro start [focus_min] [break_min]
   if (sub === "start" || sub === "mulai") {
     if (getSession(sender)) {
-      return m.reply( claraWrap("Pomodoro", [
+      return m.reply( novaWrap("Pomodoro", [
         "Sesi sedang berjalan!",
         `Ketik ${prefix}pomodoro status untuk cek`,
         `Ketik ${prefix}pomodoro stop untuk berhenti`,
@@ -69,7 +69,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     ensurePomodoroScheduler(sock);
 
     // kartu mulai + live ticker 🕒 sampai fokus selesai
-    await m.reply( claraWrap("Pomodoro — Mulai", [
+    await m.reply( novaWrap("Pomodoro — Mulai", [
       "🍅 *SESI FOKUS DIMULAI!*",
       "",
       `⏱ Fokus: *${focusMin} menit*`,
@@ -85,7 +85,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "status" || sub === "cek") {
     let s = getSession(sender);
     if (!s) {
-      return m.reply( claraWrap("Pomodoro", [
+      return m.reply( novaWrap("Pomodoro", [
         "Belum ada sesi aktif.",
         `Ketik ${prefix}pomodoro start untuk mulai`,
       ].join("\n")), { commandName: "pomodoro" });
@@ -102,12 +102,12 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "stop" || sub === "berhenti") {
     const s = getSession(sender);
     if (!s) {
-      return m.reply( claraWrap("Pomodoro", [
+      return m.reply( novaWrap("Pomodoro", [
         "Tidak ada sesi aktif.",
       ].join("\n")), { commandName: "pomodoro" });
     }
     const res = endSession(sender); // ticker fase lama otomatis kebatalin (isCancelled)
-    return m.reply( claraWrap("Pomodoro — Selesai", [
+    return m.reply( novaWrap("Pomodoro — Selesai", [
       "⏹ *Sesi dihentikan.*",
       "",
       `🔁 Cycle: ${res.cycles}x`,
@@ -118,7 +118,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   }
 
   // Default: help
-  const txt = claraWrap("Pomodoro Timer", [
+  const txt = novaWrap("Pomodoro Timer", [
     `Timer belajar Pomodoro: fokus ${DEFAULT_FOCUS} menit + istirahat ${DEFAULT_BREAK} menit`,
     "",
     `Perintah:`,

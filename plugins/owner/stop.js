@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'stop',
     alias: ["stop"],
@@ -17,7 +17,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    { const __navText = claraWrap("Stopping Bot...", '🛑 *Stopping Bot...*\n\nBot dimatikan. Harus dinyalakan manual dari terminal.'); await m.reply(__navText); }
+    { const __navText = novaWrap("Stopping Bot...", '🛑 *Stopping Bot...*\n\nBot dimatikan. Harus dinyalakan manual dari terminal.'); await m.reply(__navText); }
     console.log('Stopping via command...')
     
     // Allow message to send before exit

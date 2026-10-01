@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import {  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import crypto from "node:crypto";
 
 const pluginConfig = {
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!valid.includes(algo)) throw new Error(`Algoritma tidak didukung. Pilih: ${valid.join(", ")}`);
     const hash = crypto.createHash(algo).update(text, "utf-8").digest("hex");
     await m.react("🐣");
-    await m.reply(claraWrap("Hash", [`Algoritma: *${algo}*`,
+    await m.reply(novaWrap("Hash", [`Algoritma: *${algo}*`,
       `Input: *${text.substring(0,40)}*`,
       `Hash: \`${hash}\``].join("\n")));
   } catch (e) {

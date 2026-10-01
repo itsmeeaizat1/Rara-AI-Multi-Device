@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gura",
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (!type || type !== "imageMessage") {
-      return m.reply(claraWrap("Gura", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
+      return m.reply(novaWrap("Gura", "⚠️ Kak, tolong reply ke pesan gambar ya!"));
     }
     media = await downloadMediaMessage(m.quoted, "buffer", {});
   } else if (m.message) {
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, { image: buffer, caption: "🦈 *RAWWRR! Gura is here!*" }, { quoted: m });
   } catch (err) {
     await m.react("❌");
-    m.reply(claraWrap("gura", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("gura", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

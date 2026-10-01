@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, response.data, m.fullArgs, m, { type: 'image' })
   } catch (e) {
     console.error(e)
-    return m.reply(claraWrap("text2img2", te(m.prefix, m.command, m.pushName), "error"))
+    return m.reply(novaWrap("text2img2", te(m.prefix, m.command, m.pushName), "error"))
   }
 }
 

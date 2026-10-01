@@ -30,7 +30,7 @@
 // tidak Gemini.
 // Ganti otak live: .aicall2 ai grok / agent / groq / gemini.
 // Deploy/aturan lengkap: aicall/INTEGRATION.md
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
 import { getAicallAutostartStatus } from "../../src/lib/nova-aicall-autostart.js";
 import { getTioEndpoint, getTioKey } from "../../src/lib/config/env-loader.js";
@@ -136,7 +136,7 @@ async function handler(m) {
   try {
     if (!m.isOwner) {
       try { await m.react("🚫"); } catch {}
-      return m.reply(claraWrap("aicall2", "Perintah ini khusus Owner bot."));
+      return m.reply(novaWrap("aicall2", "Perintah ini khusus Owner bot."));
     }
     const args = (m.text || "").trim().split(/\s+/).filter(Boolean);
     const sub = (args[0] || "").toLowerCase();
@@ -150,10 +150,10 @@ async function handler(m) {
         try { await m.react("❌"); } catch {}
         // hasil auto-run boot terakhir — nunjukin KENAPA service gak jalan
         const auto = getAicallAutostartStatus();
-        return m.reply(claraWrap("aicall2", `Service AI Call tidak merespons${j.error ? " — " + j.error : ""}. Auto-run saat boot: ${auto ? auto.reason : "belum ada catatan (bot baru start?)"}${auto && auto.reason.includes("belum merespon") ? " — cek pm2 logs nova-aicall (sesi mungkin belum pairing)" : ""}`));
+        return m.reply(novaWrap("aicall2", `Service AI Call tidak merespons${j.error ? " — " + j.error : ""}. Auto-run saat boot: ${auto ? auto.reason : "belum ada catatan (bot baru start?)"}${auto && auto.reason.includes("belum merespon") ? " — cek pm2 logs nova-aicall (sesi mungkin belum pairing)" : ""}`));
       }
       try { await m.react("🐣"); } catch {}
-      return m.reply(claraWrap("aicall2", [
+      return m.reply(novaWrap("aicall2", [
         "AI Call Service — Status",
         "",
         "Sesi WA: " + (j.connected ? "terhubung" : "BELUM TERTAUT — cek pm2 logs nova-aicall (pairing code)"),
@@ -173,41 +173,41 @@ async function handler(m) {
     if (sub === "engine") {
       const engine = (args[1] || "").toLowerCase();
       if (!ENGINES.includes(engine)) {
-        return m.reply(claraWrap("aicall2", "Pilihan engine: " + ENGINES.join(" / ") + "\nContoh: .aicall2 engine edgetts"));
+        return m.reply(novaWrap("aicall2", "Pilihan engine: " + ENGINES.join(" / ") + "\nContoh: .aicall2 engine edgetts"));
       }
       try { await m.react("🛠️"); } catch {}
       const r = await apiCall("/config", { method: "POST", body: { engine } });
       const j = r.json || {};
       if (r.status !== 200 || j.ok !== true) {
         try { await m.react("❌"); } catch {}
-        return m.reply(claraWrap("aicall2", `Gagal ganti engine${j.error ? " — " + j.error : ""}.`));
+        return m.reply(novaWrap("aicall2", `Gagal ganti engine${j.error ? " — " + j.error : ""}.`));
       }
       try { await m.react("🐣"); } catch {}
-      return m.reply(claraWrap("aicall2", "TTS engine diganti ke " + (j.engine || engine) + ", suara aktif: " + (j.voice || "-") + "."));
+      return m.reply(novaWrap("aicall2", "TTS engine diganti ke " + (j.engine || engine) + ", suara aktif: " + (j.voice || "-") + "."));
     }
 
     // ── .aicall2 voice <nama> ──
     if (sub === "voice") {
       const voice = (args.slice(1).join(" ") || "").trim();
       if (!voice) {
-        return m.reply(claraWrap("aicall2", "Pilihan suara: " + VOICE_HINT + "\nContoh: .aicall2 voice id-ID-GadisNeural"));
+        return m.reply(novaWrap("aicall2", "Pilihan suara: " + VOICE_HINT + "\nContoh: .aicall2 voice id-ID-GadisNeural"));
       }
       try { await m.react("🛠️"); } catch {}
       const r = await apiCall("/config", { method: "POST", body: { voice } });
       const j = r.json || {};
       if (r.status !== 200 || j.ok !== true) {
         try { await m.react("❌"); } catch {}
-        return m.reply(claraWrap("aicall2", `Gagal ganti suara${j.error ? " — " + j.error : ""}.`));
+        return m.reply(novaWrap("aicall2", `Gagal ganti suara${j.error ? " — " + j.error : ""}.`));
       }
       try { await m.react("🐣"); } catch {}
-      return m.reply(claraWrap("aicall2", "Suara diganti ke " + (j.voice || voice) + "."));
+      return m.reply(novaWrap("aicall2", "Suara diganti ke " + (j.voice || voice) + "."));
     }
 
     // ── .aicall2 ai <grok|groq|gemini> — ganti otak percakapan live ──
     if (sub === "ai" || sub === "otak" || sub === "provider") {
       const provider = (args[1] || "").toLowerCase();
       if (provider !== "grok" && provider !== "agent" && provider !== "groq" && provider !== "gemini") {
-        return m.reply(claraWrap("aicall2", "Pilihan otak AI: grok (xAI) / agent (AI agent 9router) / groq (super cepat) / gemini\nContoh: .aicall2 ai agent"));
+        return m.reply(novaWrap("aicall2", "Pilihan otak AI: grok (xAI) / agent (AI agent 9router) / groq (super cepat) / gemini\nContoh: .aicall2 ai agent"));
       }
       try { await m.react("🛠️"); } catch {}
       const body = { ai_provider: provider };
@@ -224,7 +224,7 @@ async function handler(m) {
       const j = r.json || {};
       if (r.status !== 200 || j.ok !== true) {
         try { await m.react("❌"); } catch {}
-        return m.reply(claraWrap("aicall2", "Gagal ganti otak AI" + (j.error ? " — " + j.error : "") + "."));
+        return m.reply(novaWrap("aicall2", "Gagal ganti otak AI" + (j.error ? " — " + j.error : "") + "."));
       }
       try { await m.react("🐣"); } catch {}
       let keyNote = "";
@@ -240,7 +240,7 @@ async function handler(m) {
       if (provider === "agent" && agentInfo().key) {
         keyNote = "\nPersona panggilan: Aina (sopan, saya/kamu) — seolah-olah telepon dengan AI agent.";
       }
-      return m.reply(claraWrap("aicall2", "Otak AI panggilan diganti ke " + provider + "." + keyNote));
+      return m.reply(novaWrap("aicall2", "Otak AI panggilan diganti ke " + provider + "." + keyNote));
     }
 
     // ── .aicall2 <nomor> ──
@@ -249,7 +249,7 @@ async function handler(m) {
     const numRaw = (m.text || "").trim();
     const num = normalizeNumber(numRaw);
     if (!num || num.length < 8 || !/^\d+$/.test(num)) {
-      return m.reply(claraWrap("aicall2", [
+      return m.reply(novaWrap("aicall2", [
         "Cara pakai AI Call:",
         ".aicall2 <nomor> — bot AI menelepon (contoh: .aicall2 628123456789)",
         ".aicall2 status — status service",
@@ -289,18 +289,18 @@ async function handler(m) {
     if (r.status !== 200 || j.ok !== true) {
       try { await m.react("❌"); } catch {}
       const reason = j.error || (r.status ? "HTTP " + r.status : "service tidak merespons");
-      return m.reply(claraWrap("aicall2", [
+      return m.reply(novaWrap("aicall2", [
         "Panggilan AI gagal: " + reason,
         "",
         r.status === 0 || !r.json ? "Service AI Call belum jalan di VPS — pm2 start ./ai-call --name nova-aicall (lihat aicall/INTEGRATION.md)" : "Cek .aicall2 status untuk detail.",
       ].join("\n")));
     }
     try { await m.react("🐣"); } catch {}
-    return m.reply(claraWrap("aicall2", "Bot AI sedang menelepon " + num + " — tunggu tersambung, AI akan menyapa duluan."));
+    return m.reply(novaWrap("aicall2", "Bot AI sedang menelepon " + num + " — tunggu tersambung, AI akan menyapa duluan."));
   } catch (e) {
     console.error("[AICALL] error:", e.message);
     try { await m.react("❌"); } catch {}
-    return m.reply(claraWrap("aicall2", "Service AI Call tidak bisa dihubungi — pastikan service jalan di VPS (pm2 start nova-aicall). Detail: aicall/INTEGRATION.md"));
+    return m.reply(novaWrap("aicall2", "Service AI Call tidak bisa dihubungi — pastikan service jalan di VPS (pm2 start nova-aicall). Detail: aicall/INTEGRATION.md"));
   }
 }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "taubat",
@@ -147,16 +147,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("")
       lines.push("Cara: " + usedPrefix + "taubat <nomor>")
       lines.push("Contoh: " + usedPrefix + "taubat 1 (Sayyidul Istighfar)")
-      return m.reply(claraWrap("Taubat & Istighfar", lines.join("\n")))
+      return m.reply(novaWrap("Taubat & Istighfar", lines.join("\n")))
     }
 
     const t = TAUBAT[input - 1]
 
     if (t.isi) {
-      return m.reply(claraWrap("Taubat - " + t.judul, t.isi.join("\n")))
+      return m.reply(novaWrap("Taubat - " + t.judul, t.isi.join("\n")))
     }
 
-    return m.reply(claraWrap("Taubat - " + t.judul, [
+    return m.reply(novaWrap("Taubat - " + t.judul, [
       "Teks Arab:",
       t.arab,
       "",
@@ -170,7 +170,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       t.keutamaan,
     ].join("\n")))
   } catch (e) {
-    return m.reply(claraWrap("Taubat & Istighfar", "Error: " + e.message))
+    return m.reply(novaWrap("Taubat & Istighfar", "Error: " + e.message))
   }
 }
 

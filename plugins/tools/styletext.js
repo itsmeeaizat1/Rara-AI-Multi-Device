@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "styletext",
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args?.join(" ").trim() || (m.quoted && (m.quoted.text || m.quoted.caption));
     if (!text) {
-      return m.reply(claraWrap("styletext", `Masukkan teks yang ingin diubah gaya fontnya!\n\nContoh: ${m.prefix}styletext Hello World`, "guide"));
+      return m.reply(novaWrap("styletext", `Masukkan teks yang ingin diubah gaya fontnya!\n\nContoh: ${m.prefix}styletext Hello World`, "guide"));
     }
 
     await m.react("🕒");
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("styletext error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("styletext", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("styletext", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

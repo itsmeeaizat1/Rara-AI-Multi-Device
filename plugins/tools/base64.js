@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "base64", alias: ["base64"], category: "tools",
@@ -17,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      { const __navText = (claraWrap("Base64", [`Encode: *${prefix}base64 enc <text>*`,
+      { const __navText = (novaWrap("Base64", [`Encode: *${prefix}base64 enc <text>*`,
         `Decode: *${prefix}base64 dec <base64>*`].join("\n"))); await m.reply( __navText, "base64"); };
       return { handled: true };
     }
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = Buffer.from(text, "base64").toString("utf-8");
     } else { throw new Error("Pilih enc atau dec"); }
     await m.react("🐣");
-    await m.reply(claraWrap("Base64", [`Input: *${text.substring(0,50)}*`,
+    await m.reply(novaWrap("Base64", [`Input: *${text.substring(0,50)}*`,
       `Output: \`${result}\``].join("\n")));
   } catch (e) {
     await m.react("❌");

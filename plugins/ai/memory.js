@@ -5,7 +5,7 @@
 // 🔹 Toggle on/off buat auto-extract + auto-recall pas ngobrol .novaai
 // 🔹 Kenangan persist di database — aman walau bot restart
 // ============================================================
-import { claraWrap, novaError } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError } from "../../src/lib/nova-menu-style.js";
 import {
   listMemories, addMemory, removeMemory, resetMemories,
   isMemoryOn, toggleMemory, relevantMemories,
@@ -37,7 +37,7 @@ function fmtAge(ts) {
 
 function listBox(m, facts, header) {
   const lines = facts.map((f, i) => `${i + 1}. ${f.text} _(${fmtAge(f.ts)})_`);
-  return claraWrap(header, [
+  return novaWrap(header, [
     `📌 Kenangan bot tentang kamu:`,
     ``,
     ...lines,
@@ -54,7 +54,7 @@ async function handler(m, { sock, db } = {}) {
   if (sub === "on" || sub === "off") {
     const now = toggleMemory(db, m.sender, sub === "on");
     await m.react("🐣");
-    return m.reply(claraWrap("Memory", [
+    return m.reply(novaWrap("Memory", [
       `✅ Memori ${now ? "diaktifkan" : "dimatikan"}.`,
       now ? `Bot otomatis inget fakta penting dari obrolan .novaai dan manggilnya balik pas relevan.` : `Bot berhenti nyatet — kenangan lama tetep kesimpen, cuma gak dipake.`,
     ]));
@@ -64,7 +64,7 @@ async function handler(m, { sock, db } = {}) {
   if (sub === "reset") {
     resetMemories(db, m.sender);
     await m.react("🐣");
-    return m.reply(claraWrap("Memory", [`✅ Semua kenangan tentang kamu udah dihapus.`]));
+    return m.reply(novaWrap("Memory", [`✅ Semua kenangan tentang kamu udah dihapus.`]));
   }
 
   // ── hapus <no> ──
@@ -78,7 +78,7 @@ async function handler(m, { sock, db } = {}) {
       return m.reply(novaError("Memory", `Gak ada kenangan nomor ${idx} — total kamu punya ${facts.length}.`));
     }
     await m.react("🐣");
-    return m.reply(claraWrap("Memory", [`✅ Dihapus: "${removed.text}"`]));
+    return m.reply(novaWrap("Memory", [`✅ Dihapus: "${removed.text}"`]));
   }
 
   // ── add <fakta> ──
@@ -87,7 +87,7 @@ async function handler(m, { sock, db } = {}) {
     if (!fact) return m.reply(novaError("Memory", `Fakta apa yang mau diinget? Contoh: ${m.prefix}memory add aku suka seblak pedas`));
     if (addMemory(db, m.sender, fact, { source: "manual" })) {
       await m.react("🐣");
-      return m.reply(claraWrap("Memory", [`✅ Gue catet: "${fact}"`]));
+      return m.reply(novaWrap("Memory", [`✅ Gue catet: "${fact}"`]));
     }
     await m.react("❌");
     return m.reply(novaError("Memory", `Itu udah gue inget / mirip sama yang udah ada — cek ${m.prefix}memory`));
@@ -101,13 +101,13 @@ async function handler(m, { sock, db } = {}) {
     const rel = relevantMemories(db, m.sender, q, 5);
     if (!rel.length) {
       const shown = Math.min(facts.length, 5);
-      return m.reply(claraWrap("Memory", [
+      return m.reply(novaWrap("Memory", [
         `🔍 Gak nemu kenangan tentang "${q}".`,
         facts.length ? `Kamu punya ${facts.length} kenangan${shown ? " — beberapa terbaru:" : ""}` : "Dan kamu belum punya kenangan tersimpan.",
         ...(shown ? ["", ...facts.slice(-shown).map((f, i) => `• ${f.text}`)] : []),
       ]));
     }
-    return m.reply(claraWrap("Memory", [
+    return m.reply(novaWrap("Memory", [
       `🔍 Kenangan tentang "${q}":`,
       ``,
       ...rel.map((f) => `• ${f.text} _(${fmtAge(f.ts)})_`),
@@ -118,7 +118,7 @@ async function handler(m, { sock, db } = {}) {
   const facts = listMemories(db, m.sender);
   const on = isMemoryOn(db, m.sender);
   if (!facts.length) {
-    return m.reply(claraWrap("Memory", [
+    return m.reply(novaWrap("Memory", [
       `📌 Belum ada kenangan tentang kamu.`,
       ``,
       `Bot otomatis nyatet fakta penting pas kamu ngobrol di .novaai${on ? "" : " (tapi kamu matikan auto-nya — nyalakan: .memory on)"}.`,

@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "imgcompress",
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
   const isImage = (media.mime || "").startsWith("image/");
 
   if (!isImage) {
-    return m.reply(claraWrap("Imgcompress", "File bukan gambar. Reply gambar dengan .imgcompress"));
+    return m.reply(novaWrap("Imgcompress", "File bukan gambar. Reply gambar dengan .imgcompress"));
   }
 
   // === INFO ===

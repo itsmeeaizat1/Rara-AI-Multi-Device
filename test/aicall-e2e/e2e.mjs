@@ -29,7 +29,7 @@ async function mkM(text, { isOwner = true } = {}) {
     reacts,
   };
 }
-// claraWrap bikin semua teks jadi smallcaps — asersi WAJIB dinormalkan balik
+// novaWrap bikin semua teks jadi smallcaps — asersi WAJIB dinormalkan balik
 const box = (e) => fromSC((e.sent.find((s) => s.type === "reply") || { txt: "" }).txt);
 
 // ═══ 1. config ═══

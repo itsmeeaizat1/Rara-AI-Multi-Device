@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 
@@ -102,7 +102,7 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = data?.choices?.[0]?.message?.content || "Tidak dapat menganalisis media.";
 
     const out =
-      claraWrap("AI Analyze", [`Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      novaWrap("AI Analyze", [`Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aianalyze untuk analisis lain`) +
       "\n" +

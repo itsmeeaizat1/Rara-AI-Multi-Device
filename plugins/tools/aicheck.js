@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .aicheck — detektor teks AI (port engine lama aicheck.js, originality.ai free)
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aicheck",
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
     const aiPercent = ((data?.ai ?? 0) * 100).toFixed(2);
     const humanPercent = ((data?.original ?? data?.human ?? 0) * 100).toFixed(2);
     await m.react("⚡");
-    await m.reply(claraWrap("AI Check", [
+    await m.reply(novaWrap("AI Check", [
       "Teks: *" + text.slice(0, 60) + (text.length > 60 ? "..." : "") + "*",
       "Kemungkinan AI: *" + aiPercent + "%*",
       "Kemungkinan manusia: *" + humanPercent + "%*",

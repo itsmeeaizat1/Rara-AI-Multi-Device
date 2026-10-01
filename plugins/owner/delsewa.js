@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "delsewa",
   alias: ["delsewa"],
@@ -56,12 +56,12 @@ async function handler(m, { sock }) {
   } else {
     const result = await resolveGroupId(sock, input);
     if (!result)
-      return m.reply(claraWrap("delsewa", `❌ Link tidak valid atau grup tidak ditemukan`));
+      return m.reply(novaWrap("delsewa", `❌ Link tidak valid atau grup tidak ditemukan`));
     groupId = result.id;
     groupName = result.name;
   }
 
-  if (!groupId) return m.reply(claraWrap("Delsewa", `❌ Tidak dapat menentukan grup`));
+  if (!groupId) return m.reply(novaWrap("Delsewa", `❌ Tidak dapat menentukan grup`));
 
   const sewaData = db.db.data.sewa.groups[groupId];
   if (!sewaData)
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
 
   delete db.db.data.sewa.groups[groupId];
   db.db.write();
-  await m.reply(claraWrap("Delsewa", `✅ *SEWA DIHAPUS*\n\nGrup: *${groupName}*\nID: ${groupId.split("@")[0]}`));
+  await m.reply(novaWrap("Delsewa", `✅ *SEWA DIHAPUS*\n\nGrup: *${groupName}*\nID: ${groupId.split("@")[0]}`));
 
   if (db.db.data.sewa.enabled) {
     try {

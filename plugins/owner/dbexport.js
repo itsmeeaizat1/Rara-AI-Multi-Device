@@ -8,7 +8,7 @@ import ExcelJS from "exceljs";
 import path from "path";
 import fs from "fs";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const TMP_DIR = path.join(process.cwd(), "tmp");
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("dbexport", "Gagal export database: " + e.message, "error"));
+    m.reply(novaWrap("dbexport", "Gagal export database: " + e.message, "error"));
   }
 }
 

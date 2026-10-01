@@ -25,7 +25,7 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok || !extra ? "" : " — " + extra)); ok ? pass++ : fail++; };
 
-// GOTCHA (ke-6x): claraWrap = smallcaps — assert output kartu WAJIB fromSC (→ lowercase)
+// GOTCHA (ke-6x): novaWrap = smallcaps — assert output kartu WAJIB fromSC (→ lowercase)
 const norm = (s) => fromSC(String(s)).toLowerCase();
 
 // ═══════════════════════════════════════════════════════════════

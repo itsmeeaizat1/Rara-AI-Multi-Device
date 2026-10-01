@@ -19,7 +19,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { claraWrap, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { enhanceLocalAsync, isModelCached } from "../../src/lib/nova-hd-pool.js";
 
 const pluginConfig = {
@@ -79,10 +79,10 @@ async function handler(m, { sock }) {
   const tmpFiles = [];
   try {
     const quoted = m.quoted;
-    if (!quoted) return m.reply(claraWrap("toimage", "Reply sticker-nya dulu, terus ketik .toimage", "guide"));
+    if (!quoted) return m.reply(novaWrap("toimage", "Reply sticker-nya dulu, terus ketik .toimage", "guide"));
 
     const isSticker = quoted.isSticker || quoted.type === "stickerMessage" || quoted.mtype === "stickerMessage";
-    if (!isSticker) return m.reply(claraWrap("toimage", "Yang di-reply harus sticker! 💡 Reply sticker → .toimage", "guide"));
+    if (!isSticker) return m.reply(novaWrap("toimage", "Yang di-reply harus sticker! 💡 Reply sticker → .toimage", "guide"));
 
     // mode: cepat/hd = lokal sharp aja (instan), default = remini AI
     const mode = (m.args?.[0] || "").toLowerCase();
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     if (!fastMode && !isModelCached("real")) {
       // model AI belum ke-download di mesin ini → kasih notice sekali (unduh ±59MB, setelah itu permanen offline)
       try {
-        await m.reply(claraWrap("toimage", [
+        await m.reply(novaWrap("toimage", [
           "🕒 Remini AI: unduh model pertama kali (±59MB)...",
           "",
           "Setelah ini model ke-cache permanen — pemakaian berikutnya jauh lebih cepat.",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     const mediaBuffer = await quoted.download();
     if (!mediaBuffer || !mediaBuffer.length) {
       await m.react("❌");
-      return m.reply(claraWrap("toimage", "Gagal mengunduh sticker — coba reply ulang sticker-nya.", "error"));
+      return m.reply(novaWrap("toimage", "Gagal mengunduh sticker — coba reply ulang sticker-nya.", "error"));
     }
 
     // decode webp via sharp dulu (frame pertama kalau animasi) — AI & HD dua-duanya
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
     }
     if (!decoded || !decoded.length) {
       await m.react("❌");
-      return m.reply(claraWrap("toimage", "Sticker ini gak bisa di-convert ke gambar (kemungkinan sticker lottie). Coba sticker lain!", "error"));
+      return m.reply(novaWrap("toimage", "Sticker ini gak bisa di-convert ke gambar (kemungkinan sticker lottie). Coba sticker lain!", "error"));
     }
 
     // ── pipeline hasil ──

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "foodfact",
@@ -20,7 +20,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = text.trim();
 
     if (!input) {
-      return m.reply(claraWrap("Food Fact", [
+      return m.reply(novaWrap("Food Fact", [
         "Fakta nutrisi & resep makanan dari TheMealDB",
         "",
         "Cara pakai:",
@@ -35,7 +35,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "list" || sub === "kategori") {
       const res = await axios.get(API_BASE + "/list.php?c=list", { timeout: 10000 });
       const cats = res.data?.meals?.map(m => m.strCategory) || [];
-      return m.reply(claraWrap("Food Fact - Kategori", [
+      return m.reply(novaWrap("Food Fact - Kategori", [
         "Kategori makanan tersedia:",
         "",
         cats.map((c, i) => (i + 1) + ". " + c).join("\n"),
@@ -55,7 +55,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!meal) {
-      return m.reply(claraWrap("Food Fact", "Makanan tidak ditemukan: " + input));
+      return m.reply(novaWrap("Food Fact", "Makanan tidak ditemukan: " + input));
     }
 
     // Extract ingredients
@@ -89,10 +89,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Source: " + meal.strSource);
     }
 
-    return m.reply(claraWrap("Food Fact - " + meal.strMeal, lines.join("\n")));
+    return m.reply(novaWrap("Food Fact - " + meal.strMeal, lines.join("\n")));
   } catch (e) {
     console.error("foodfact error:", e.message);
-    return m.reply(claraWrap("Food Fact", "Error: " + e.message));
+    return m.reply(novaWrap("Food Fact", "Error: " + e.message));
   }
 }
 

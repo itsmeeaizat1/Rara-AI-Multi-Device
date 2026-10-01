@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     const { data } = await axios.get("https://image.pollinations.ai/prompt/" + encodeURIComponent(prompt), {
       timeout: 60000, responseType: "arraybuffer",
     });
-    await sock.sendMessage(m.key.remoteJid, { image: Buffer.from(data), caption: claraWrap("AI Image", [`Prompt: *${prompt.substring(0,60)}*`].join("\n")) }, { quoted: m });
+    await sock.sendMessage(m.key.remoteJid, { image: Buffer.from(data), caption: novaWrap("AI Image", [`Prompt: *${prompt.substring(0,60)}*`].join("\n")) }, { quoted: m });
   } catch (e) {
     await m.reply(novaError("AIImage", e.message || "Gagal nih"));
   }

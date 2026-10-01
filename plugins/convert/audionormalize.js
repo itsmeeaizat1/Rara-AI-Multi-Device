@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -27,13 +27,13 @@ const MODES = {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     const quoted = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    if (!quoted) return m.reply(claraWrap("Audio Normalize", `Reply audio/voice note yang mau di-normalize.`));
+    if (!quoted) return m.reply(novaWrap("Audio Normalize", `Reply audio/voice note yang mau di-normalize.`));
     const audioMsg = quoted.audioMessage || quoted.pttMessage;
-    if (!audioMsg) return m.reply(claraWrap("Audio Normalize", "Reply harus audio/voice note!"));
+    if (!audioMsg) return m.reply(novaWrap("Audio Normalize", "Reply harus audio/voice note!"));
 
     const mode = (args[0] || "default").toLowerCase();
     if (!MODES[mode]) {
-      return m.reply(claraWrap("Audio Normalize", [
+      return m.reply(novaWrap("Audio Normalize", [
         `Mode: ${Object.keys(MODES).join(", ")}`,
         `Contoh: ${usedPrefix}audionormalize loud`,
       ].join("\n")));
@@ -61,7 +61,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       audio: buf,
       mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
-      caption: claraWrap("Audio Normalize", [
+      caption: novaWrap("Audio Normalize", [
         `Berhasil normalize!`,
         `Mode: ${mode}`,
         `Filter: ${MODES[mode].desc}`,

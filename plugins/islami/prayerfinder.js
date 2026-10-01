@@ -5,7 +5,7 @@
 // Riset 24 Sep 2026: path /api/doa/<slug>, respon {id, doa, ayat, latin, artinya};
 // nama gak persis → tetap ketemu (fuzzy); gak ketemu → {data:"", msg:"..."}.
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const BASE = "https://doa-doa-api-ahmadramadhan.fly.dev/api/doa";
 
@@ -41,26 +41,26 @@ const pluginConfig = {
 async function handler(m, { sock, db }) {
   const nama = (m.text || (m.args || []).join(" ")).trim();
   if (!nama) {
-    return m.reply(claraWrap("Cari Doa",
+    return m.reply(novaWrap("Cari Doa",
       `Cara pakai:\n.caridoa <nama doa>\n\nContoh:\n${CONTOH}\n\nNama gak harus persis — cukup kata kuncinya (misal "makan").`));
   }
   try {
     const { status, data } = await fetchJson(`${BASE}/${nama}`);
     if (status !== 200 || !data) {
-      return m.reply(claraWrap("Cari Doa", `❌ Server doa bermasalah (${status}). Coba lagi nanti.`));
+      return m.reply(novaWrap("Cari Doa", `❌ Server doa bermasalah (${status}). Coba lagi nanti.`));
     }
     if (Array.isArray(data)) {
       // respon gak-ketemu: [{data:"", msg:"..."}]
       const msg = data[0]?.msg || "gak ketemu";
-      return m.reply(claraWrap("Cari Doa", `🔎 Doa "${nama}" gak ketemu. ${msg}\n\nCoba kata kunci lain, misal:\n${CONTOH}`));
+      return m.reply(novaWrap("Cari Doa", `🔎 Doa "${nama}" gak ketemu. ${msg}\n\nCoba kata kunci lain, misal:\n${CONTOH}`));
     }
     if (!data.ayat) {
-      return m.reply(claraWrap("Cari Doa", `🔎 Doa "${nama}" gak ketemu. Coba kata kunci lain (misal "makan", "tidur", "masjid").`));
+      return m.reply(novaWrap("Cari Doa", `🔎 Doa "${nama}" gak ketemu. Coba kata kunci lain (misal "makan", "tidur", "masjid").`));
     }
-    return m.reply(claraWrap("Cari Doa",
+    return m.reply(novaWrap("Cari Doa",
       `${data.doa || "Doa"}\n\n${data.ayat}\n\n"${data.latin || ""}"\n\nArtinya: ${data.artinya || "-"}`));
   } catch (e) {
-    return m.reply(claraWrap("Cari Doa", `❌ Gagal nyambung ke server doa: ${e.message || e}`));
+    return m.reply(novaWrap("Cari Doa", `❌ Gagal nyambung ke server doa: ${e.message || e}`));
   }
 }
 

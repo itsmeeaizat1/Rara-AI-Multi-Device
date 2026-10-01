@@ -9,7 +9,7 @@
 // API key owner: .autoorder premku <api_key>.
 import { config } from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import {
   ensureOrderCfg, buildPakasir, fmtRupiah, getOrderTimings,
   _setPakasirFactoryForTest, _resetPakasirFactoryForTest,
@@ -71,18 +71,18 @@ function detailRows(d, skip = []) {
 async function listProducts(m, { db }, keyword) {
   const cfg = ensureOrderCfg(db);
   if (!cfg.premku.apiKey) {
-    return m.reply(claraWrap("Auto Order Prem", "Layanan belum siap (owner belum set API Premku).", "error"));
+    return m.reply(novaWrap("Auto Order Prem", "Layanan belum siap (owner belum set API Premku).", "error"));
   }
   const r = await premProducts(cfg);
-  if (!r.ok) return m.reply(claraWrap("Auto Order Prem", `Gak bisa ambil produk: ${r.error}`, "error"));
+  if (!r.ok) return m.reply(novaWrap("Auto Order Prem", `Gak bisa ambil produk: ${r.error}`, "error"));
   let list = r.list.filter((p) => p.status === "available" && p.stock > 0);
   const kw = String(keyword || "").toLowerCase().trim();
   if (kw) list = list.filter((p) => p.name.toLowerCase().includes(kw) || p.productType.toLowerCase().includes(kw) || p.description.toLowerCase().includes(kw));
-  if (!list.length) return m.reply(claraWrap("Auto Order Prem", `Gak ada produk${kw ? ` yang cocok "${keyword}"` : ""} yang aktif/stok ada. Coba lagi nanti.`));
+  if (!list.length) return m.reply(novaWrap("Auto Order Prem", `Gak ada produk${kw ? ` yang cocok "${keyword}"` : ""} yang aktif/stok ada. Coba lagi nanti.`));
   const markup = Number(cfg.premku.markup || 0);
   const shown = list.slice(0, 15);
   const rows = shown.map((p) => `• [${p.id}] ${p.name}\n   Harga: ${fmtRupiah(p.price + markup)} · Stok: ${p.stock}`);
-  return m.reply(claraWrap("Auto Order Prem", [
+  return m.reply(novaWrap("Auto Order Prem", [
     `Total produk aktif: ${list.length}${kw ? ` · cocok "${keyword}": ${list.length}` : ""}${r.list.length > 15 ? " (tampil maks 15)" : ""}`,
     ...(kw ? [] : ["", `Cari: .premkulist <keyword> (contoh: .premkulist capcut)`]),
     "",
@@ -110,14 +110,14 @@ async function statusOrder(m, { db }, orderId) {
   const cfg = ensureOrderCfg(db);
   const isOwner = m.sender === ownerJid();
   const found = findOrder(cfg, orderId);
-  if (!found) return m.reply(claraWrap("Auto Order Prem", `Order ${orderId} gak ketemu di catatan bot. Cek ID-nya lagi ya.`, "error"));
+  if (!found) return m.reply(novaWrap("Auto Order Prem", `Order ${orderId} gak ketemu di catatan bot. Cek ID-nya lagi ya.`, "error"));
   if (found.rec.buyer !== m.sender && !isOwner) {
-    return m.reply(claraWrap("Auto Order Prem", "Order itu bukan punya kamu — cek pakai order_id kamu sendiri ya.", "error"));
+    return m.reply(novaWrap("Auto Order Prem", "Order itu bukan punya kamu — cek pakai order_id kamu sendiri ya.", "error"));
   }
-  if (!cfg.premku.apiKey) return m.reply(claraWrap("Auto Order Prem", "API Premku belum di-set owner.", "error"));
+  if (!cfg.premku.apiKey) return m.reply(novaWrap("Auto Order Prem", "API Premku belum di-set owner.", "error"));
   const r = await premStatus(cfg, found.rec.invoice);
-  if (!r.ok) return m.reply(claraWrap("Auto Order Prem", `Cek status gagal: ${r.error}`, "error"));
-  return m.reply(claraWrap("Status Order Prem", [
+  if (!r.ok) return m.reply(novaWrap("Auto Order Prem", `Cek status gagal: ${r.error}`, "error"));
+  return m.reply(novaWrap("Status Order Prem", [
     `Order ID: ${found.key}`,
     `Invoice: ${found.rec.invoice}`,
     `Produk: ${found.rec.produk}`,
@@ -135,28 +135,28 @@ async function runPrem(m, { sock, db }, raw) {
   const buyer = m.sender;
   const chat = m.chat;
 
-  if (!cfg.on) return m.reply(claraWrap("Auto Order Prem", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
+  if (!cfg.on) return m.reply(novaWrap("Auto Order Prem", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
   if (!cfg.pakasir.slug || !cfg.pakasir.apikey) {
-    return m.reply(claraWrap("Auto Order Prem", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
+    return m.reply(novaWrap("Auto Order Prem", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
   }
   if (!cfg.premku.apiKey) {
-    return m.reply(claraWrap("Auto Order Prem", "Layanan belum siap (owner belum set API Premku).", "error"));
+    return m.reply(novaWrap("Auto Order Prem", "Layanan belum siap (owner belum set API Premku).", "error"));
   }
   if (pendingPrem.has(buyer)) {
-    return m.reply(claraWrap("Auto Order Prem", "Kamu masih punya order berjalan. Tunggu selesai dulu ya.", "error"));
+    return m.reply(novaWrap("Auto Order Prem", "Kamu masih punya order berjalan. Tunggu selesai dulu ya.", "error"));
   }
 
   const [idRaw, qtyRaw] = String(raw || "").split("|").map((v) => (v || "").trim());
   const productId = String(idRaw || "").replace(/\D/g, "");
   const qty = qtyRaw ? parseInt(qtyRaw, 10) : 1;
   if (!productId) {
-    return m.reply(claraWrap("Auto Order Prem", novaGuide(".orderprem <product_id>[|qty]", [
+    return m.reply(novaWrap("Auto Order Prem", novaGuide(".orderprem <product_id>[|qty]", [
       "Lihat daftar produk: .premkulist",
       "Contoh: .orderprem 4|1",
     ])));
   }
   if (!Number.isFinite(qty) || qty < 1 || qty > 10) {
-    return m.reply(claraWrap("Auto Order Prem", "Qty antara 1-10 ya.", "error"));
+    return m.reply(novaWrap("Auto Order Prem", "Qty antara 1-10 ya.", "error"));
   }
 
   pendingPrem.add(buyer);
@@ -165,12 +165,12 @@ async function runPrem(m, { sock, db }, raw) {
     const prof = await premProfile(cfg);
     if (!prof.ok) throw new Error(`cek profile gagal: ${prof.error}`);
     const prod = await premFindProduct(cfg, productId);
-    if (!prod.ok) return m.reply(claraWrap("Auto Order Prem", prod.error, "error"));
+    if (!prod.ok) return m.reply(novaWrap("Auto Order Prem", prod.error, "error"));
     if (prod.prod.status !== "available") {
-      return m.reply(claraWrap("Auto Order Prem", `Produk "${prod.prod.name}" sedang tidak tersedia.`, "error"));
+      return m.reply(novaWrap("Auto Order Prem", `Produk "${prod.prod.name}" sedang tidak tersedia.`, "error"));
     }
     if (prod.prod.stock < qty) {
-      return m.reply(claraWrap("Auto Order Prem", `Stok "${prod.prod.name}" tinggal ${prod.prod.stock}. Kurangi qty atau pilih produk lain ya.`, "error"));
+      return m.reply(novaWrap("Auto Order Prem", `Stok "${prod.prod.name}" tinggal ${prod.prod.stock}. Kurangi qty atau pilih produk lain ya.`, "error"));
     }
     const markup = Number(cfg.premku.markup || 0);
     const price = (prod.prod.price * qty) + markup;
@@ -202,8 +202,8 @@ async function runPrem(m, { sock, db }, raw) {
       "",
       `Order kedaluwarsa otomatis ${Math.round(timeoutMs / 60000)} menit. Lunas = pesanan langsung dikirim ke sistem.`,
     ].join("\n");
-    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: claraWrap("Invoice Prem", invoiceTextBody) }, { quoted: m });
-    else await m.reply(claraWrap("Invoice Prem", invoiceTextBody));
+    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: novaWrap("Invoice Prem", invoiceTextBody) }, { quoted: m });
+    else await m.reply(novaWrap("Invoice Prem", invoiceTextBody));
 
     // poll sampai lunas/kedaluwarsa
     const t0 = Date.now();
@@ -218,25 +218,25 @@ async function runPrem(m, { sock, db }, raw) {
     }
 
     if (status === "canceled") {
-      await m.reply(claraWrap("Auto Order Prem", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
+      await m.reply(novaWrap("Auto Order Prem", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
       return;
     }
     if (status !== "completed") {
-      await m.reply(claraWrap("Auto Order Prem", `Order ${orderId} kedaluwarsa (belum dibayar). Pesanan tidak dibuat.`));
+      await m.reply(novaWrap("Auto Order Prem", `Order ${orderId} kedaluwarsa (belum dibayar). Pesanan tidak dibuat.`));
       return;
     }
 
     // LUNAS → order ke Premku
-    await m.reply(claraWrap("Auto Order Prem", `Pembayaran diterima! Mengirim pesanan ${produk} ke sistem…`));
+    await m.reply(novaWrap("Auto Order Prem", `Pembayaran diterima! Mengirim pesanan ${produk} ke sistem…`));
     const ord = await premOrder(cfg, { productId, qty });
     if (!ord.ok) {
       const msgFail = `Order ${orderId} LUNAS tapi pengiriman ke Premku GAGAL: ${ord.error}. Dana diproses manual — owner sudah dihubungi.`;
       await dm(sock, ownerJid(), `[AUTO ORDER PREM] Order ${orderId} (${produk}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}) LUNAS tapi API gagal: ${ord.error}. Mohon proses manual/refund.`);
-      return m.reply(claraWrap("Auto Order Prem", msgFail, "error"));
+      return m.reply(novaWrap("Auto Order Prem", msgFail, "error"));
     }
     if (!ord.invoice) {
       await dm(sock, ownerJid(), `[AUTO ORDER PREM] Order ${orderId} (${produk}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}) LUNAS, API sukses, TAPI respon gak ada invoice — cek dashboard premku.com. Raw: ${JSON.stringify(ord.data).slice(0, 300)}`);
-      return m.reply(claraWrap("Auto Order Prem", `Order ${orderId} masuk ke sistem tapi invoice-nya belum kebaca bot. Owner sedang dicek — detail menyusul ya.`));
+      return m.reply(novaWrap("Auto Order Prem", `Order ${orderId} masuk ke sistem tapi invoice-nya belum kebaca bot. Owner sedang dicek — detail menyusul ya.`));
     }
 
     // catat order (buat .premstatus)
@@ -270,15 +270,15 @@ async function runPrem(m, { sock, db }, raw) {
       "",
       `Cek kapan pun: .premstatus ${orderId}`,
     ].join("\n");
-    const sentDm = await dm(sock, buyer, claraWrap("Order Prem Berhasil", receipt));
+    const sentDm = await dm(sock, buyer, novaWrap("Order Prem Berhasil", receipt));
     if (!sentDm) {
-      await m.reply(claraWrap("Auto Order Prem", `Order kamu masuk tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu cek .premstatus ${orderId}.`));
+      await m.reply(novaWrap("Auto Order Prem", `Order kamu masuk tapi bot gak bisa DM kamu — chat bot dulu (kirim "halo"), lalu cek .premstatus ${orderId}.`));
     } else if (m.isGroup) {
-      await m.reply(claraWrap("Auto Order Prem", `Order kamu masuk — struk dikirim ke DM kamu ya (${orderId}).`));
+      await m.reply(novaWrap("Auto Order Prem", `Order kamu masuk — struk dikirim ke DM kamu ya (${orderId}).`));
     }
     await dm(sock, ownerJid(), `[AUTO ORDER PREM] Order ${orderId} masuk: ${produk} ×${qty} ${fmtRupiah(price)} — buyer ${buyer.split("@")[0]} (invoice ${ord.invoice}).`);
   } catch (e) {
-    await m.reply(claraWrap("Auto Order Prem", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
+    await m.reply(novaWrap("Auto Order Prem", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
   } finally {
     pendingPrem.delete(buyer);
   }

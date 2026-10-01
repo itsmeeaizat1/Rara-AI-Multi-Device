@@ -3,49 +3,42 @@
     {
       "role": "user",
       "content": "jelaskan siapa presiden indonesia",
-      "ts": 1790859242645
+      "ts": 1790874481230
     },
     {
       "role": "assistant",
       "content": "jawaban-mock",
-      "ts": 1790859242645
+      "ts": 1790874481230
     },
     {
       "role": "user",
       "content": "halo",
-      "ts": 1790859242781
+      "ts": 1790874481251
     },
     {
       "role": "assistant",
       "content": "jawaban-mock",
-      "ts": 1790859242781
+      "ts": 1790874481251
     },
     {
       "role": "user",
       "content": "ini foto apa?",
-      "ts": 1790859242891
+      "ts": 1790874481265
     },
     {
       "role": "assistant",
       "content": "jawaban-mock-multimodal",
-      "ts": 1790859242891
+      "ts": 1790874481265
     },
     {
       "role": "user",
       "content": "halo",
-      "ts": 1790859242903
+      "ts": 1790874481269
     },
     {
       "role": "assistant",
       "content": "jawaban-mock",
-      "ts": 1790859242903
-    }
-  ],
-  "agent:6281234567890@s.whatsapp.net": [
-    {
-      "role": "user",
-      "content": "suara apa itu pahlawan",
-      "ts": 1790859377762
+      "ts": 1790874481269
     }
   ]
 }

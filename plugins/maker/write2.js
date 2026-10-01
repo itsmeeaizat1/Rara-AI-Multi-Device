@@ -2,7 +2,7 @@
 // write2.js — Nulis v2 (nexray maker API, tulis tangan)
 import axios from "axios";
 import { nexrayNulis } from "../../src/scraper/nexray-maker.js";
-import { claraWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nulis2",
@@ -19,10 +19,10 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("nulis2", `Mau nulis apa?\n\n💡 Contoh: ${m.prefix}nulis2 Halo dunia`, "guide"));
+      return m.reply(novaWrap("nulis2", `Mau nulis apa?\n\n💡 Contoh: ${m.prefix}nulis2 Halo dunia`, "guide"));
     }
     if (text.length > 300) {
-      return m.reply(claraWrap("nulis2", "Teks terlalu panjang! Maksimal 300 karakter.", "error"));
+      return m.reply(novaWrap("nulis2", "Teks terlalu panjang! Maksimal 300 karakter.", "error"));
     }
 
     await m.react("🕒");
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.buffer) {
       await m.react("❌");
-      return m.reply(claraWrap("nulis2", "Gagal generate tulisan. Coba lagi.", "error"));
+      return m.reply(novaWrap("nulis2", "Gagal generate tulisan. Coba lagi.", "error"));
     }
 
     await m.react("🐣");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("nulis2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("nulis2", err.message || "Error", "error"));
+    return m.reply(novaWrap("nulis2", err.message || "Error", "error"));
   }
 }
 

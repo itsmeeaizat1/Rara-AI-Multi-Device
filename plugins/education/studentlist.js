@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "daftarsiswa",
@@ -47,7 +47,7 @@ async function handler(m, { sock, args }) {
   if (cmd === "profil" || cmd === "profile" || cmd === "cek") {
     const reg = db.db.data.eduRegistered[sender];
     if (!reg) {
-      return m.reply(claraWrap("daftarsiswa", "Kamu belum terdaftar!\n\nDaftar: `.daftarsiswa <nama>`"));
+      return m.reply(novaWrap("daftarsiswa", "Kamu belum terdaftar!\n\nDaftar: `.daftarsiswa <nama>`"));
     }
     let txt = `Profil Siswa\n\n`;
     txt += `Nama: *${reg.name}*\n`;
@@ -72,11 +72,11 @@ async function handler(m, { sock, args }) {
   if (cmd.startsWith("ubah ")) {
     const newName = name.slice(5).trim();
     if (!newName || newName.length < 2) {
-      return m.reply(claraWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\n💡 *Contoh:* `.daftarsiswa ubah Budi Santoso`"));
+      return m.reply(novaWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\n💡 *Contoh:* `.daftarsiswa ubah Budi Santoso`"));
     }
     const reg = db.db.data.eduRegistered[sender];
     if (!reg) {
-      return m.reply(claraWrap("daftarsiswa", "Kamu belum terdaftar!\n\nDaftar: `.daftarsiswa <nama>`"));
+      return m.reply(novaWrap("daftarsiswa", "Kamu belum terdaftar!\n\nDaftar: `.daftarsiswa <nama>`"));
     }
     const oldName = reg.name;
     reg.name = newName;
@@ -85,28 +85,28 @@ async function handler(m, { sock, args }) {
       db.db.data.eduScores[sender].name = newName;
     }
     db.write();
-    await m.reply(claraWrap("daftarsiswa", `Nama diubah!\n\nSebelumnya: ${oldName}\nSekarang: *${newName}*\n\nLeaderboard akan tampil nama barumu.`));
+    await m.reply(novaWrap("daftarsiswa", `Nama diubah!\n\nSebelumnya: ${oldName}\nSekarang: *${newName}*\n\nLeaderboard akan tampil nama barumu.`));
     return;
   }
 
   // === DELETE ===
   if (cmd === "hapus" || cmd === "delete" || cmd === "unregister") {
     if (!db.db.data.eduRegistered[sender]) {
-      return m.reply(claraWrap("daftarsiswa", "Kamu belum terdaftar!"));
+      return m.reply(novaWrap("daftarsiswa", "Kamu belum terdaftar!"));
     }
     delete db.db.data.eduRegistered[sender];
     db.write();
-    await m.reply(claraWrap("daftarsiswa", "Pendaftaran dihapus. Kamu tidak bisa main game belajar sampai daftar lagi.\n\nDaftar: `.daftarsiswa <nama>`"));
+    await m.reply(novaWrap("daftarsiswa", "Pendaftaran dihapus. Kamu tidak bisa main game belajar sampai daftar lagi.\n\nDaftar: `.daftarsiswa <nama>`"));
     return;
   }
 
   // === REGISTER ===
   // Validate name
   if (name.length < 2) {
-    return m.reply(claraWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\n💡 *Contoh:* `.daftarsiswa Andi Pratama`"));
+    return m.reply(novaWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\n💡 *Contoh:* `.daftarsiswa Andi Pratama`"));
   }
   if (name.length > 30) {
-    return m.reply(claraWrap("Daftarsiswa", "Nama terlalu panjang! Maks 30 karakter."));
+    return m.reply(novaWrap("Daftarsiswa", "Nama terlalu panjang! Maks 30 karakter."));
   }
 
   // Check if already registered

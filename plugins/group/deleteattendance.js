@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { persistLoad, persistSave } from "../../src/lib/nova-ram-persist.js";
 const pluginConfig = {
     name: 'hapusabsen',
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const chatId = m.chat
     
     if (!global.absensi[chatId]) {
-        return m.reply(claraWrap("Tidak Ada Absen", `Tidak ada sesi absen di grup ini!`, "info"))
+        return m.reply(novaWrap("Tidak Ada Absen", `Tidak ada sesi absen di grup ini!`, "info"))
     }
     
     const absen = global.absensi[chatId]
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     delete global.absensi[chatId]
   persistSave("absensi")
     
-    await m.reply(claraWrap("ABSEN DITUTUP!", 
+    await m.reply(novaWrap("ABSEN DITUTUP!", 
         `Penyebab?\n` +
         `📝 ${absen.keterangan}\n` +
         `👥 Total hadir: ${totalPeserta}\n\n` +

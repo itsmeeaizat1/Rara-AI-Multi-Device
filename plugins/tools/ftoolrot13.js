@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolrot13 — sandi ROT13 (port altftool.com/tools/all/rot13) — geser huruf 13 posisi.
 // ROT13 symmetric: encode = decode. Huruf saja, angka/emoji/aksara lain gak disentuh.
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolrot13", alias: ["rot13", "sandirot13"], category: "tools",
@@ -34,14 +34,14 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const out = rot13(text);
     await m.react("🐣");
-    await m.reply(claraWrap("ROT13", ["SANDI ROT13 BERHASIL",
+    await m.reply(novaWrap("ROT13", ["SANDI ROT13 BERHASIL",
       "",
       "```" + out + "```",
       "",
       `Balikin: ${prefix}ftoolrot13 ${out}`].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("ROT13", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("ROT13", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

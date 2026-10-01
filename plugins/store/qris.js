@@ -7,7 +7,7 @@
 import fs from "fs";
 import path from "path";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "qris",
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
 
     if (!qrisPath) {
       return m.reply(
-        claraWrap("Qris", [
+        novaWrap("Qris", [
           "Status: *gagal*",
           "Alasan: *File QRIS tidak ditemukan*",
           `Minta QRIS langsung ke owner: wa.me/${ownerNumber}`,
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     console.error("[qris.js] error:", e.message);
-    await m.reply(claraWrap("Qris", "Yah gagal kirim QRIS-nya, coba lagi ya 😩"));
+    await m.reply(novaWrap("Qris", "Yah gagal kirim QRIS-nya, coba lagi ya 😩"));
   }
   return { handled: true };
 }

@@ -37,7 +37,7 @@ import { haidarAio } from "../../src/lib/nova-haidar.js";
 import { pixivDownload, pixivUgoiraToMp4 } from "../../src/scraper/pixiv.js";
 import { bandcampDownload } from "../../src/scraper/bandcamp.js";
 import { moriScrape } from "../../src/scraper/mori-bridge.js";
-import { claraWrap, novaGuide, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide, toSC } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -534,7 +534,7 @@ async function handlerCore(m, { sock }) {
     }
     body.push("");
     body.push(`Batch: tempel beberapa link sekaligus (maks ${MAX_BATCH}).`);
-    await m.reply(claraWrap("Downloader V3", body));
+    await m.reply(novaWrap("Downloader V3", body));
     await m.react("🐣");
     return true;
   }
@@ -598,7 +598,7 @@ async function handlerCore(m, { sock }) {
   }
 
   if (okCount === 0) {
-    await m.reply(claraWrap("Downloader V3", [
+    await m.reply(novaWrap("Downloader V3", [
       "❌ Semua link gagal — semua engine di chain udah dicoba.",
       "",
       ...failLogs.map((l) => l.slice(0, 160)),
@@ -615,7 +615,7 @@ async function handlerCore(m, { sock }) {
     for (const l of failLogs) body.push("❌ " + l);
   }
   if (batch.length > 1 || failLogs.length || skipped) {
-    await m.reply(claraWrap("Downloader V3", body, "success"));
+    await m.reply(novaWrap("Downloader V3", body, "success"));
   }
   await m.react("🐣");
   return true;

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "blinddate",
@@ -68,12 +68,12 @@ async function handler(m, { sock, db, config: botConfig }) {
       };
       saveConfig(db, gid, data);
       if (data.participants.includes(m.sender)) {
-        await m.reply(claraWrap("Blind Date", "Kamu sudah join!"));
+        await m.reply(novaWrap("Blind Date", "Kamu sudah join!"));
         return { handled: true };
       }
       data.participants.push(m.sender);
       saveConfig(db, gid, data);
-      await m.reply(claraWrap("Blind Date", [
+      await m.reply(novaWrap("Blind Date", [
         "Kamu masuk waiting list!",
         "Peserta: " + data.participants.length,
         "",
@@ -84,35 +84,35 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (game.participants.includes(m.sender)) {
-      await m.reply(claraWrap("Blind Date", "Kamu sudah join!"));
+      await m.reply(novaWrap("Blind Date", "Kamu sudah join!"));
       return { handled: true };
     }
     if (game.phase !== "join") {
     }
     game.participants.push(m.sender);
     saveConfig(db, gid, game);
-    await m.reply(claraWrap("Blind Date", "Kamu masuk waiting list!\nPeserta: " + game.participants.length + "\n\n" + prefix + "blinddate start (admin) untuk mulai"));
+    await m.reply(novaWrap("Blind Date", "Kamu masuk waiting list!\nPeserta: " + game.participants.length + "\n\n" + prefix + "blinddate start (admin) untuk mulai"));
     return { handled: true };
   }
 
   if (sub === "leave" || sub === "keluar") {
     if (!game || game.phase !== "join") {
-      await m.reply(claraWrap("Blind Date", "Belum ada sesi join."));
+      await m.reply(novaWrap("Blind Date", "Belum ada sesi join."));
       return { handled: true };
     }
     game.participants = game.participants.filter(j => j !== m.sender);
     saveConfig(db, gid, game);
-    await m.reply(claraWrap("Blind Date", "Keluar dari waiting list. Sisa: " + game.participants.length));
+    await m.reply(novaWrap("Blind Date", "Keluar dari waiting list. Sisa: " + game.participants.length));
     return { handled: true };
   }
 
   if (sub === "start" || sub === "mulai") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(claraWrap("Blind Date", "Khusus admin/owner."));
+      await m.reply(novaWrap("Blind Date", "Khusus admin/owner."));
       return { handled: true };
     }
     if (!game || game.participants.length < 4) {
-      await m.reply(claraWrap("Blind Date", "Min 4 peserta untuk mulai. Sekarang: " + (game?.participants.length || 0)));
+      await m.reply(novaWrap("Blind Date", "Min 4 peserta untuk mulai. Sekarang: " + (game?.participants.length || 0)));
       return { handled: true };
     }
     // Shuffle and pair
@@ -133,7 +133,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     // DM each participant their match
     for (const match of matches) {
-      const msgA = claraWrap("Blind Date Match", [
+      const msgA = novaWrap("Blind Date Match", [
         "Kamu sudah di-match!",
         "Icebreaker: " + match.icebreaker,
         "",
@@ -149,7 +149,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       }
     }
 
-    await m.reply(claraWrap("Blind Date", [
+    await m.reply(novaWrap("Blind Date", [
       "MATCHING SELESAI!",
       "Peserta: " + game.participants.length,
       "Pasangan: " + matches.length,
@@ -164,16 +164,16 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "reveal" || sub === "bukaidentitas") {
     if (!game || game.phase !== "matched") {
-      await m.reply(claraWrap("Blind Date", "Belum ada match. Ketik " + prefix + "blinddate join dulu."));
+      await m.reply(novaWrap("Blind Date", "Belum ada match. Ketik " + prefix + "blinddate join dulu."));
       return { handled: true };
     }
     if (game.revealed.includes(m.sender)) {
-      await m.reply(claraWrap("Blind Date", "Kamu sudah reveal!"));
+      await m.reply(novaWrap("Blind Date", "Kamu sudah reveal!"));
       return { handled: true };
     }
     const match = game.matches.find(mm => mm.a === m.sender || mm.b === m.sender);
     if (!match) {
-      await m.reply(claraWrap("Blind Date", "Kamu tidak ada di match mana pun."));
+      await m.reply(novaWrap("Blind Date", "Kamu tidak ada di match mana pun."));
       return { handled: true };
     }
     const partner = match.a === m.sender ? match.b : match.a;
@@ -187,7 +187,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       saveConfig(db, gid, game);
     }
 
-    await m.reply(claraWrap("Blind Date Reveal", [
+    await m.reply(novaWrap("Blind Date Reveal", [
       "Identitas pasangan kamu:",
       "@" + partner.split("@")[0],
       "",
@@ -198,13 +198,13 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "status" || sub === "cek" || !sub) {
     if (!game) {
-      await m.reply(claraWrap("Blind Date", "Belum ada sesi.\n" + prefix + "blinddate join untuk mulai."));
+      await m.reply(novaWrap("Blind Date", "Belum ada sesi.\n" + prefix + "blinddate join untuk mulai."));
       return { handled: true };
     }
     const isJoined = game.participants.includes(m.sender);
     const hasMatch = game.matches.find(mm => mm.a === m.sender || mm.b === m.sender);
     const hasRevealed = game.revealed.includes(m.sender);
-    await m.reply(claraWrap("Blind Date", [
+    await m.reply(novaWrap("Blind Date", [
       "Status: " + game.phase,
       "Peserta: " + game.participants.length,
       "Pasangan: " + game.matches.length,
@@ -219,14 +219,14 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "stop" || sub === "batal") {
     if (!m.isAdmin && !m.isOwner) {
-      await m.reply(claraWrap("Blind Date", "Khusus admin/owner."));
+      await m.reply(novaWrap("Blind Date", "Khusus admin/owner."));
       return { handled: true };
     }
     delConfig(db, gid);
-    await m.reply(claraWrap("Blind Date", "Sesi dibatalkan."));
+    await m.reply(novaWrap("Blind Date", "Sesi dibatalkan."));
     return { handled: true };
   }
-  await m.reply(claraWrap("Blind Date", [
+  await m.reply(novaWrap("Blind Date", [
     "BLIND DATE MATCHING",
     "",
     prefix + "blinddate join - daftar peserta",

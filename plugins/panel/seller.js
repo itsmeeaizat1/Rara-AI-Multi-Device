@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import fs from 'fs'
 import path from 'path'
@@ -72,11 +72,11 @@ function handler(m, { sock }) {
     const pteroConfig = config.pterodactyl
     
     if (!hasAccess(m.sender, m.isOwner, pteroConfig)) {
-        return m.reply(claraWrap("seller", novaError("Panel", "Akses ditolak nih! Khusus Owner")))
+        return m.reply(novaWrap("seller", novaError("Panel", "Akses ditolak nih! Khusus Owner")))
     }
     
     if (!pteroConfig) {
-        return m.reply(claraWrap("seller", novaError("Panel", "Config pterodactyl gak ada nih!")))
+        return m.reply(novaWrap("seller", novaError("Panel", "Config pterodactyl gak ada nih!")))
     }
     
     if (!pteroConfig.sellers) {
@@ -89,7 +89,7 @@ function handler(m, { sock }) {
     
     if (isList) {
         if (pteroConfig.sellers.length === 0) {
-            return m.reply(claraWrap("seller", `📋 *Daftar sEller/Reseller*\n\nBelum ada seller terdaftar.`))
+            return m.reply(novaWrap("seller", `📋 *Daftar sEller/Reseller*\n\nBelum ada seller terdaftar.`))
         }
         
         let txt = `📋 *Daftar sEller/Reseller*\n\n`
@@ -98,7 +98,7 @@ function handler(m, { sock }) {
             txt += `${i + 1}. \`${s}\`\n`
         })
         txt += `\n_Seller bisa create server (1gb-10gb v1/v2/v3)_`
-        return m.reply(claraWrap("seller", txt))
+        return m.reply(novaWrap("seller", txt))
     }
     
     let targetUser = null
@@ -142,7 +142,7 @@ function handler(m, { sock }) {
                 `${roleChanged}`)
         } else {
             pteroConfig.sellers = pteroConfig.sellers.filter(s => s !== targetUser)
-            return m.reply(claraWrap("seller", `Gagal menyimpan ke config.js`))
+            return m.reply(novaWrap("seller", `Gagal menyimpan ke config.js`))
         }
     }
     
@@ -158,7 +158,7 @@ function handler(m, { sock }) {
                 `Nomor: \`${targetUser}\`\n` +
                 `Total: *${pteroConfig.sellers.length}* seller`)
         } else {
-            return m.reply(claraWrap("seller", `Gagal menyimpan ke config.js`))
+            return m.reply(novaWrap("seller", `Gagal menyimpan ke config.js`))
         }
     }
 }

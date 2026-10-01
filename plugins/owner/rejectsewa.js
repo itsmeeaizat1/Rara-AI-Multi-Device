@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { notifySewaRejected } from "../../src/lib/nova-saluran-broadcast.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rejectsewa",
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
 
   const input = m.text?.trim();
   if (!input) {
-    return m.reply( claraWrap("Rejectsewa", "Format: *.rejectsewa <nomor> <alasan>*\n\n💡 *Contoh:* .rejectsewa 628xxx grup penuh"), { commandName: "rejectsewa" });
+    return m.reply( novaWrap("Rejectsewa", "Format: *.rejectsewa <nomor> <alasan>*\n\n💡 *Contoh:* .rejectsewa 628xxx grup penuh"), { commandName: "rejectsewa" });
   }
 
   const parts = input.split(/\s+/);
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   const reason = parts.slice(1).join(" ") || "Ditolak oleh owner";
 
   if (!phoneNum) {
-    return m.reply(claraWrap("Rejectsewa", "Nomor tidak valid. Format: .rejectsewa <nomor> <alasan>"));
+    return m.reply(novaWrap("Rejectsewa", "Nomor tidak valid. Format: .rejectsewa <nomor> <alasan>"));
   }
 
   // Find registration
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   }
 
   if (!regData) {
-    return m.reply(claraWrap("rejectsewa", "Tidak ada pendaftaran pending dari nomor " + phoneNum));
+    return m.reply(novaWrap("rejectsewa", "Tidak ada pendaftaran pending dari nomor " + phoneNum));
   }
 
   // Update registration status

@@ -3,7 +3,7 @@ import { pixa } from '../../src/scraper/removebackground.js'
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'removebg',
     alias: ["removebg"],
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
         const isImage = m.isImage || (m.quoted && m.quoted.isImage);
         if (!isImage) {
-            return m.reply(claraWrap("Removebg", '❌ *gambar dibutuhkan*\n\nReply atau kirim gambar dengan caption .removebg'));
+            return m.reply(novaWrap("Removebg", '❌ *gambar dibutuhkan*\n\nReply atau kirim gambar dengan caption .removebg'));
         }
         let mediaBuffer;
         if (m.isImage && m.download) {
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         }
         
         if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-            return m.reply(claraWrap("Removebg", '❌ Buffer gambar tidak valid'));
+            return m.reply(novaWrap("Removebg", '❌ Buffer gambar tidak valid'));
         }
         const pathnya = path.join(process.cwd(), 'temp', `rmbg_${Date.now()}.jpg`);
         fs.writeFileSync(pathnya, mediaBuffer);
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     } catch (error) {
     await m.react("❌");
         console.error('[RemoveBG Error]', error);
-        m.reply(claraWrap("removebg", te(m.prefix, m.command, m.pushName), "error"));
+        m.reply(novaWrap("removebg", te(m.prefix, m.command, m.pushName), "error"));
     }
 }
 

@@ -8,7 +8,7 @@
 // .predictivenudge voice on/off — Nudge pakai VN suara neural atau teks
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -485,7 +485,7 @@ async function handler(m, { sock, config: botConfig }) {
         voiceLang: cfg[gid]?.voiceLang || "id-ID-GadisNeural",
       };
       db.db.write();
-      const text = claraWrap("Predictive Life-Nudge", [
+      const text = novaWrap("Predictive Life-Nudge", [
         "Status: ON",
         "Voice: " + (cfg[gid].voice ? "ON (Gadis neural)" : "OFF (teks)"),
         "",
@@ -509,7 +509,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = claraWrap("Predictive Life-Nudge", ["Status: OFF", "Pengingat proaktif dimatikan"].join("\n"));
+      const text = novaWrap("Predictive Life-Nudge", ["Status: OFF", "Pengingat proaktif dimatikan"].join("\n"));
       await m.reply( text, "predictivenudge");
     } else if (args[0] === "voice") {
       const voiceOpt = args[1];
@@ -520,13 +520,13 @@ async function handler(m, { sock, config: botConfig }) {
       } else if (voiceOpt === "off") {
         cfg[gid].voice = false;
       } else {
-        const text = claraWrap("Predictive Life-Nudge", "Pilih: on (VN neural) atau off (teks)");
+        const text = novaWrap("Predictive Life-Nudge", "Pilih: on (VN neural) atau off (teks)");
         await m.reply( text, "predictivenudge");
         return { handled: true };
       }
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
-      const text = claraWrap("Predictive Life-Nudge", [
+      const text = novaWrap("Predictive Life-Nudge", [
         "Voice: " + (cfg[gid].voice ? "ON (Gadis neural VN)" : "OFF (teks)"),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
@@ -558,7 +558,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push(prefix + "predictivenudge nudge now — Test nudge");
 
-      const text = claraWrap("Predictive Life-Nudge", lines.join("\n"));
+      const text = novaWrap("Predictive Life-Nudge", lines.join("\n"));
       await m.reply( text, "predictivenudge");
     } else if (args[0] === "nudge" && args[1] === "now") {
       // Manual test nudge
@@ -602,11 +602,11 @@ async function handler(m, { sock, config: botConfig }) {
         db.db.data.predictiveNudgeData[uid] = { messages: [], nudges: [], createdAt: Date.now() };
         db.db.write();
       }
-      const text = claraWrap("Predictive Life-Nudge", ["Data pola direset", "Bot akan belajar ulang dari awal"].join("\n"));
+      const text = novaWrap("Predictive Life-Nudge", ["Data pola direset", "Bot akan belajar ulang dari awal"].join("\n"));
       await m.reply( text, "predictivenudge");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
-      const text = claraWrap("Predictive Life-Nudge", [
+      const text = novaWrap("Predictive Life-Nudge", [
         "Status: " + status,
         "Voice: " + (cfg[gid]?.voice !== false ? "ON (Gadis neural)" : "OFF (teks)"),
         "Default: OFF (tidak aktif saat pairing)",
@@ -621,7 +621,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "predictivenudge");
     }
   } catch (e) {
-    await m.reply(claraWrap("predictivenudge", "Gagal proses. Coba lagi.", "error"));
+    await m.reply(novaWrap("predictivenudge", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }

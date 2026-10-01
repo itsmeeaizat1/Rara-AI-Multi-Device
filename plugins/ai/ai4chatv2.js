@@ -2,7 +2,7 @@
 // ai4chatv2 — AI4Chat versi 2 (nexray API + fallback unlimitedai)
 import { ai4chat as nexrayAi4Chat } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("ai4chatv2", `Mau nanya apa?\n\nContoh: ${m.prefix}ai4chatv2 apa itu machine learning?`, "guide"));
+      return m.reply(novaWrap("ai4chatv2", `Mau nanya apa?\n\nContoh: ${m.prefix}ai4chatv2 apa itu machine learning?`, "guide"));
     }
 
     await m.react("🕒");
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("ai4chatv2", "AI offline 😅", "error"));
+      return m.reply(novaWrap("ai4chatv2", "AI offline 😅", "error"));
     }
 
     await m.react("🐣");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ai4chatv2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("ai4chatv2", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("ai4chatv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

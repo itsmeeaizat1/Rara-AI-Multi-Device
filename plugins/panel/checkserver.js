@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js"
+import { novaWrap } from "../../src/lib/nova-menu-style.js"
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js"
 import axios from 'axios'
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const panelKey = await getPanelKey(m)
     
     if (!panelKey || !panelKey.ptlc) {
-        return m.reply(claraWrap('Panel', 
+        return m.reply(novaWrap('Panel', 
             'Belum ada Client API Key (ptlc_) tersimpan\n\n' +
             'ptlc_ otomatis dibuat saat kamu create panel (.1gbv1)\n' +
             'Kalau panel dibuat sebelum fitur ini, generate manual di:\n' +
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     
     const serverId = m.text?.trim()?.split(' ')[0] || panelKey.serverId
     if (!serverId) {
-        return m.reply(claraWrap('Panel', 'Server ID tidak ditemukan. Gunakan: ' + prefix + 'cekserver <serverid>'))
+        return m.reply(novaWrap('Panel', 'Server ID tidak ditemukan. Gunakan: ' + prefix + 'cekserver <serverid>'))
     }
     
     try {
@@ -113,10 +113,10 @@ async function handler(m, { sock }) {
             }
         }
         
-        await m.reply(claraWrap('Panel', txt))
+        await m.reply(novaWrap('Panel', txt))
     } catch (err) {
         const rawMsg = err?.response?.data?.errors?.[0]?.detail || err.message
-        return m.reply(claraWrap('Panel', `Gagal cek server\n\n${rawMsg}`))
+        return m.reply(novaWrap('Panel', `Gagal cek server\n\n${rawMsg}`))
     }
 }
 

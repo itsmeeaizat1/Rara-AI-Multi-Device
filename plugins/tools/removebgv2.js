@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 import { removeBgLocal } from "../../src/scraper/removebg-v2.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!isImage) {
       const text =
-        claraWrap("RemoveBG V2", [`Reply atau kirim gambar dengan caption .removebgv2`,
+        novaWrap("RemoveBG V2", [`Reply atau kirim gambar dengan caption .removebgv2`,
           `AI lokal, hasil bersih, gratis tanpa API`,
           `Output: PNG transparan (full quality)`,
           ``,
@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = await m.quoted.download();
     } else {
       const text =
-        claraWrap("RemoveBG V2", [`Status: *gagal download gambar*`,
+        novaWrap("RemoveBG V2", [`Status: *gagal download gambar*`,
           `Coba reply gambar yang valid`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        claraWrap("RemoveBG V2", [`Status: *buffer gambar tidak valid*`,
+        novaWrap("RemoveBG V2", [`Status: *buffer gambar tidak valid*`,
           `Coba gambar lain`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
@@ -72,7 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (mediaBuffer.length > MAX_FILE_SIZE) {
       const sizeMB = (mediaBuffer.length / 1024 / 1024).toFixed(1);
       const text =
-        claraWrap("RemoveBG V2", [`Status: *file terlalu besar*`,
+        novaWrap("RemoveBG V2", [`Status: *file terlalu besar*`,
           `Ukuran: *${sizeMB} MB*`,
           `Maksimal: *10 MB*`,
           `Compress gambar dulu atau gunakan resolusi lebih kecil`].join("\n")) + "\n" +
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!resultBuffer || resultBuffer.length === 0) {
       const text =
-        claraWrap("RemoveBG V2", [`Status: *gagal hapus background*`,
+        novaWrap("RemoveBG V2", [`Status: *gagal hapus background*`,
           `Mungkin gambar tidak support, coba gambar lain`].join("\n")) + "\n" +
         tipText("Coba gambar dengan subjek yang jelas");
 
@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
         fileName: "removebg_result.png",
         mimetype: "image/png",
         caption:
-          claraWrap("RemoveBG V2", [`Status: *background dihapus*`,
+          novaWrap("RemoveBG V2", [`Status: *background dihapus*`,
             `Mode: *Dokumen (no compress)*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
             `Format: *png transparan*`,
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
       await sock.sendMessage(m.chat, {
         image: resultBuffer,
         caption:
-          claraWrap("RemoveBG V2", [`Status: *background dihapus*`,
+          novaWrap("RemoveBG V2", [`Status: *background dihapus*`,
             `Mode: *gambar*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
             `Format: *png transparan*`,

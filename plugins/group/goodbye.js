@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // goodbye.js — pesan perpisahan member keluar (single design, engine text)
-import { novaError, novaGuide, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { detectCountry, fillWelcomeTemplate } from "../../src/lib/nova-welcome-card.js";
@@ -19,7 +19,7 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
     db.setGroup(m.chat, { goodbye: args === "on" });
 
-    await m.reply(claraWrap("goodbye", [
+    await m.reply(novaWrap("goodbye", [
       `Fitur : goodbye message`,
       `Status : ${args === "on" ? "ON" : "OFF"}`,
       `Grup : ${m.chat}`,

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dalleai — DALL-E style image generation (free via pollinations flux)
 import { dalleStyle } from "../../src/scraper/stable-diffusion.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("dalleai", `Mau gambar apa?\n\nContoh: ${m.prefix}dalleai photorealistic mountain landscape\n${m.prefix}dalleai potret pria pakai jas hitam`, "guide"));
+      return m.reply(novaWrap("dalleai", `Mau gambar apa?\n\nContoh: ${m.prefix}dalleai photorealistic mountain landscape\n${m.prefix}dalleai potret pria pakai jas hitam`, "guide"));
     }
 
     await m.react("🕒");
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.buffer) {
       await m.react("❌");
-      return m.reply(claraWrap("dalleai", "Gagal generate gambar. Coba lagi.", "error"));
+      return m.reply(novaWrap("dalleai", "Gagal generate gambar. Coba lagi.", "error"));
     }
 
     await m.react("🐣");
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("dalleai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("dalleai", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("dalleai", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

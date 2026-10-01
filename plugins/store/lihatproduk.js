@@ -5,7 +5,7 @@
  */
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "lihatproduk",
@@ -34,12 +34,12 @@ async function handler(m, { sock }) {
   const idx = parseInt(input) - 1;
 
   if (isNaN(idx) || idx < 0 || idx >= products.length) {
-    return m.reply(claraWrap("lihatproduk", "Format: .lihatproduk <nomor>"));
+    return m.reply(novaWrap("lihatproduk", "Format: .lihatproduk <nomor>"));
   }
 
   const product = products[idx];
   if (!product.image) {
-    return m.reply(claraWrap("lihatproduk", "Produk ini tidak punya gambar."));
+    return m.reply(novaWrap("lihatproduk", "Produk ini tidak punya gambar."));
   }
 
   const lines = [""];
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       caption: caption,
     }, { quoted: m });
   } catch (e) {
-    return m.reply(claraWrap("lihatproduk", "Gagal load gambar. URL: " + product.image));
+    return m.reply(novaWrap("lihatproduk", "Gagal load gambar. URL: " + product.image));
   }
 }
 

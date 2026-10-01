@@ -2,7 +2,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wikipedia",
@@ -197,7 +197,7 @@ async function handler(m, { sock }) {
     const search = await searchWikipedia(query);
 
     if (!search.results.length) {
-      return m.reply(claraWrap("wikipedia", `⚠️ Artikel tentang *${query}* tidak ditemukan di Wikipedia.`));
+      return m.reply(novaWrap("wikipedia", `⚠️ Artikel tentang *${query}* tidak ditemukan di Wikipedia.`));
     }
 
     const first = search.results[0];
@@ -228,7 +228,7 @@ async function handler(m, { sock }) {
         caption: text
       }, { quoted: m });
     } else {
-      await m.reply(claraWrap("wikipedia", text));
+      await m.reply(novaWrap("wikipedia", text));
     }
   } catch (error) {
     console.error("[Wikipedia Search]", error.message);

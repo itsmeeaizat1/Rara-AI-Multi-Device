@@ -2,7 +2,7 @@
 import { FeelBetter } from "../../src/scraper/feeb.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2, novaSalahV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "feelbetter",
@@ -37,14 +37,14 @@ async function handler(m, { sock }) {
     const result = await FeelBetter(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("FeelBetter Gagal", `${result.error || "Gagal dapet respons nih"}`));
+      return m.reply(novaWrap("FeelBetter Gagal", `${result.error || "Gagal dapet respons nih"}`));
     }
     const reply = `${result.answer}`;
     await m.react("🐣");
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("feelbetter", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("feelbetter", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

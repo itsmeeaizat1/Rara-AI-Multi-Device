@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // alasanai — AI generator alasan (excuse generator)
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("alasanai", `Mau alasan untuk apa?\n\nContoh: ${m.prefix}alasanai telat masuk kerja\n${m.prefix}alasanai gak bales chat pacar\n${m.prefix}alasanai batal kumpul teman`, "guide"));
+      return m.reply(novaWrap("alasanai", `Mau alasan untuk apa?\n\nContoh: ${m.prefix}alasanai telat masuk kerja\n${m.prefix}alasanai gak bales chat pacar\n${m.prefix}alasanai batal kumpul teman`, "guide"));
     }
 
     await m.react("🕒");
@@ -44,7 +44,7 @@ Tiap alasan 1-2 kalimat. Bahasa Indonesia. Buat yang masuk akal dan tidak terlal
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("alasanai", "AI-nya juga bingung cari alasan 😅", "error"));
+      return m.reply(novaWrap("alasanai", "AI-nya juga bingung cari alasan 😅", "error"));
     }
 
     await m.react("🐣");
@@ -53,7 +53,7 @@ Tiap alasan 1-2 kalimat. Bahasa Indonesia. Buat yang masuk akal dan tidak terlal
   } catch (err) {
     console.error("alasanai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("alasanai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("alasanai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

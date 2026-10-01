@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "techstack",
@@ -107,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await detectTech(text);
 
     if (result.detected.length === 0) {
-      return m.reply(claraWrap("TechStack: " + text.replace(/^https?:\/\//, ""), [
+      return m.reply(novaWrap("TechStack: " + text.replace(/^https?:\/\//, ""), [
         "Status: " + result.status,
         "Tidak ada teknologi terdeteksi",
         "",
@@ -144,11 +144,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     await m.react("🐣");
-    return m.reply(claraWrap("TechStack: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
+    return m.reply(novaWrap("TechStack: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("techstack error:", e);
-    return m.reply(claraWrap("TechStack", "Error: " + e.message));
+    return m.reply(novaWrap("TechStack", "Error: " + e.message));
   }
 }
 

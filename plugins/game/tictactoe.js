@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tictactoe.js — Tic Tac Toe game (2 player via reply, no API needed)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -55,7 +55,7 @@ async function handler(m, { sock, config, db }) {
     const mentioned = m.mentionedJid?.[0];
 
     if (!mentioned) {
-      return m.reply(claraWrap("Tic Tac Toe", [
+      return m.reply(novaWrap("Tic Tac Toe", [
         "Game Tic Tac Toe (X vs O)",
         "",
         "📌 *Cara Pakai:*",
@@ -74,7 +74,7 @@ async function handler(m, { sock, config, db }) {
     if (games.has(m.chat)) {
       const existing = games.get(m.chat);
       if (!existing.ended) {
-        return m.reply(claraWrap("Tic Tac Toe", [
+        return m.reply(novaWrap("Tic Tac Toe", [
           "Masih ada game yang sedang berlangsung!",
           `Pemain: ${existing.p1Name} (❌) vs ${existing.p2Name} (⭕)`,
           `Giliran: ${existing.turn === "X" ? existing.p1Name : existing.p2Name}`,
@@ -88,7 +88,7 @@ async function handler(m, { sock, config, db }) {
     if (m.text?.toLowerCase().includes("end")) {
       if (games.has(m.chat)) {
         games.delete(m.chat);
-        return m.reply(claraWrap("Tic Tac Toe", "Game diakhiri."));
+        return m.reply(novaWrap("Tic Tac Toe", "Game diakhiri."));
       }
     }
 
@@ -126,7 +126,7 @@ async function handler(m, { sock, config, db }) {
       }
     }, 300000);
     const turnName = p1Sym === "X" ? p1Name : p2Name;
-    return m.reply(claraWrap("Tic Tac Toe", [
+    return m.reply(novaWrap("Tic Tac Toe", [
       `${p1Name} (${p1Sym === "X" ? "❌" : "⭕"}) vs ${p2Name} (${p2Sym === "X" ? "❌" : "⭕"})`,
       "",
       renderBoard(game.board),

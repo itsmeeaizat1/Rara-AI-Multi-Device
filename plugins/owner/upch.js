@@ -7,7 +7,7 @@ import { promisify } from 'util'
 import { downloadMediaMessage } from 'nova'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const run = promisify(exec)
 
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     try {
         if (!isMedia && caption) {
             await sock.sendMessage(chId, { text: caption })
-            return m.reply(claraWrap("Upch", `✅ Teks berhasil dikirim ke saluran`))
+            return m.reply(novaWrap("Upch", `✅ Teks berhasil dikirim ke saluran`))
         }
 
         const mediaBuf = await downloadMediaMessage(quoted, "buffer", {})
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
                 image: mediaBuf,
                 caption: caption || undefined
             })
-            return m.reply(claraWrap("Upch", "✅ Gambar berhasil dikirim ke saluran"))
+            return m.reply(novaWrap("Upch", "✅ Gambar berhasil dikirim ke saluran"))
         }
 
         if (isVideo) {
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
                 video: mediaBuf,
                 caption: caption || undefined
             })
-            return m.reply(claraWrap("Upch", "✅ Video berhasil dikirim ke saluran"))
+            return m.reply(novaWrap("Upch", "✅ Video berhasil dikirim ke saluran"))
         }
 
         if (isAudio) {
@@ -116,13 +116,13 @@ async function handler(m, { sock }) {
                 ptt: true,
                 waveform: Array.from(waveform)
             })
-            return m.reply(claraWrap("Upch", "✅ Audio berhasil dikirim ke saluran"))
+            return m.reply(novaWrap("Upch", "✅ Audio berhasil dikirim ke saluran"))
         }
 
         { const __navText = "❌ Tipe media tidak didukung"; await m.reply(__navText); }
     } catch (e) {
         console.error("[UpCh]", e)
-        await m.reply(claraWrap("upch", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("upch", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

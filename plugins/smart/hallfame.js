@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hallfame",
@@ -107,7 +107,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     saveConfig(db, gid, cfg);
 
     const trackedCount = Object.keys(monthData.members).length;
-    await m.reply(claraWrap("Hall of Fame", [
+    await m.reply(novaWrap("Hall of Fame", [
       "Tracking diupdate!",
       "Bulan: " + getMonthName(),
       "Members tracked: " + trackedCount,
@@ -121,14 +121,14 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "awards" || sub === "penghargaan" || !sub) {
     if (!cfg.current[monthKey] || !cfg.current[monthKey].members) {
-      await m.reply(claraWrap("Hall of Fame", "Belum ada data bulan ini. Ketik " + prefix + "hallfame track untuk mulai tracking."));
+      await m.reply(novaWrap("Hall of Fame", "Belum ada data bulan ini. Ketik " + prefix + "hallfame track untuk mulai tracking."));
       return { handled: true };
     }
     const members = cfg.current[monthKey].members;
     const memberList = Object.entries(members).filter(([_, s]) => s.messages > 0 || s.commands > 0);
 
     if (memberList.length === 0) {
-      await m.reply(claraWrap("Hall of Fame", "Belum ada aktivitas tercatat bulan ini. Gunakan bot lebih aktif!"));
+      await m.reply(novaWrap("Hall of Fame", "Belum ada aktivitas tercatat bulan ini. Gunakan bot lebih aktif!"));
       return { handled: true };
     }
 
@@ -159,12 +159,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
 
     if (awards.length === 0) {
-      await m.reply(claraWrap("Hall of Fame", "Belum cukup data untuk penghargaan. Gunakan bot lebih aktif!"));
+      await m.reply(novaWrap("Hall of Fame", "Belum cukup data untuk penghargaan. Gunakan bot lebih aktif!"));
       return { handled: true };
     }
 
     const list = awards.map(a => a.cat.emoji + " " + a.cat.title + "\n   @" + a.winner.split("@")[0]).join("\n\n");
-    await m.reply(claraWrap("Hall of Fame - " + getMonthName(), [
+    await m.reply(novaWrap("Hall of Fame - " + getMonthName(), [
       "PENGHARGAAN BULAN INI",
       "",
       list,
@@ -176,7 +176,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "leaderboard" || sub === "ranking" || sub === "top") {
     if (!cfg.current[monthKey] || !cfg.current[monthKey].members) {
-      await m.reply(claraWrap("Hall of Fame", "Belum ada data. Ketik " + prefix + "hallfame track."));
+      await m.reply(novaWrap("Hall of Fame", "Belum ada data. Ketik " + prefix + "hallfame track."));
       return { handled: true };
     }
     const members = Object.entries(cfg.current[monthKey].members)
@@ -186,7 +186,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       .slice(0, 10);
 
     if (members.length === 0) {
-      await m.reply(claraWrap("Hall of Fame", "Belum ada aktivitas tercatat."));
+      await m.reply(novaWrap("Hall of Fame", "Belum ada aktivitas tercatat."));
       return { handled: true };
     }
 
@@ -195,14 +195,14 @@ async function handler(m, { sock, db, config: botConfig }) {
       const medal = i < 3 ? medals[i] + " " : (i + 1) + ". ";
       return medal + "@" + mem.jid.split("@")[0] + " - " + mem.score + " pts";
     }).join("\n");
-    await m.reply(claraWrap("Leaderboard " + getMonthName(), list), { mentions: members.map(m => m.jid) });
+    await m.reply(novaWrap("Leaderboard " + getMonthName(), list), { mentions: members.map(m => m.jid) });
     return { handled: true };
   }
 
   if (sub === "history" || sub === "arsip") {
     const months = Object.keys(cfg.history || {});
     if (months.length === 0) {
-      await m.reply(claraWrap("Hall of Fame", "Belum ada history. Penghargaan bulan lalu akan muncul setelah bulan berganti."));
+      await m.reply(novaWrap("Hall of Fame", "Belum ada history. Penghargaan bulan lalu akan muncul setelah bulan berganti."));
       return { handled: true };
     }
     const sorted = months.sort().reverse().slice(0, 3);
@@ -213,24 +213,24 @@ async function handler(m, { sock, db, config: botConfig }) {
       return monthName + ":\n   " + (awardList || "(tidak ada)");
     }).join("\n\n");
     const allWinners = sorted.flatMap(mk => (cfg.history[mk]?.awards || []).map(a => a.winner));
-    await m.reply(claraWrap("Hall of Fame History", list), { mentions: allWinners });
+    await m.reply(novaWrap("Hall of Fame History", list), { mentions: allWinners });
     return { handled: true };
   }
 
   if (sub === "categories" || sub === "kategori") {
     const list = AWARD_CATEGORIES.map(c => c.emoji + " " + c.title + " - " + c.desc).join("\n");
-    await m.reply(claraWrap("Hall of Fame Categories", "Kategori penghargaan:\n\n" + list));
+    await m.reply(novaWrap("Hall of Fame Categories", "Kategori penghargaan:\n\n" + list));
     return { handled: true };
   }
 
   if (sub === "archive" || sub === "arsipkan") {
     if (!m.isOwner && !m.isAdmin) {
-      await m.reply(claraWrap("Hall of Fame", "Khusus admin/owner."));
+      await m.reply(novaWrap("Hall of Fame", "Khusus admin/owner."));
       return { handled: true };
     }
     // Move current month to history
     if (!cfg.current[monthKey]) {
-      await m.reply(claraWrap("Hall of Fame", "Tidak ada data bulan ini untuk di-arsip."));
+      await m.reply(novaWrap("Hall of Fame", "Tidak ada data bulan ini untuk di-arsip."));
       return { handled: true };
     }
     const members = Object.entries(cfg.current[monthKey].members);
@@ -255,21 +255,21 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (!cfg.history) cfg.history = {};
     cfg.history[monthKey] = { awards, archivedAt: Date.now() };
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Hall of Fame", "Data " + getMonthName() + " di-arsip!\n" + awards.length + " penghargaan tersimpan."));
+    await m.reply(novaWrap("Hall of Fame", "Data " + getMonthName() + " di-arsip!\n" + awards.length + " penghargaan tersimpan."));
     return { handled: true };
   }
 
   if (sub === "reset") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("Hall of Fame", "Khusus owner."));
+      await m.reply(novaWrap("Hall of Fame", "Khusus owner."));
       return { handled: true };
     }
     cfg.current = {};
     saveConfig(db, gid, cfg);
-    await m.reply(claraWrap("Hall of Fame", "Tracking bulan ini direset."));
+    await m.reply(novaWrap("Hall of Fame", "Tracking bulan ini direset."));
     return { handled: true };
   }
-  await m.reply(claraWrap("Hall of Fame", [
+  await m.reply(novaWrap("Hall of Fame", [
     "HALL OF FAME GRUP",
     "",
     prefix + "hallfame track - update tracking member",

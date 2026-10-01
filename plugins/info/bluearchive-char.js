@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "bluearchive-char",
   alias: ["bluearchive-char", "bluearchive"],
@@ -144,10 +144,10 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     } else {
-      await m.reply(claraWrap("bluearchive-char", caption));
+      await m.reply(novaWrap("bluearchive-char", caption));
     }
   } catch (error) {
-    m.reply(claraWrap("bluearchive-char", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("bluearchive-char", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

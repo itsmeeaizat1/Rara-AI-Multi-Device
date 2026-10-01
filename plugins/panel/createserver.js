@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "nova";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import crypto from 'crypto'
 import config from '../../config.js'
@@ -223,7 +223,7 @@ async function handler(m, { sock }) {
   const mArgs = m.args || [];
   const parsed = parseCommand(m.command, mArgs);
   if (!parsed) {
-    return m.reply( claraWrap("Panel", `❌ Format command tidak valid.`), "Panel");
+    return m.reply( novaWrap("Panel", `❌ Format command tidak valid.`), "Panel");
   }
 
   const { ram, server: serverVersion, serverKey } = parsed;
@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
     } else {
       txt += `Isi config pterodactyl di \`config.js\``;
     }
-    return m.reply(claraWrap("Panel", txt));
+    return m.reply(novaWrap("Panel", txt));
   }
 
   let targetUser = null;
@@ -318,7 +318,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetUser) {
-    return m.reply(claraWrap("Panel", `❌ Tidak dapat menentukan nomor target.`));
+    return m.reply(novaWrap("Panel", `❌ Tidak dapat menentukan nomor target.`));
   }
 
   try {
@@ -329,12 +329,12 @@ async function handler(m, { sock }) {
       );
     }
   } catch (e) {
-    return m.reply(claraWrap("Panel", `Gagal validasi nomor WhatsApp.`));
+    return m.reply(novaWrap("Panel", `Gagal validasi nomor WhatsApp.`));
   }
 
   const specs = RAM_SPECS[ram];
   if (!specs) {
-    return m.reply(claraWrap("Panel", `❌ Paket tidak ditemukan.`));
+    return m.reply(novaWrap("Panel", `❌ Paket tidak ditemukan.`));
   }
 
   const email = `${username}@nova.md`;
@@ -536,7 +536,7 @@ async function handler(m, { sock }) {
       if (targetUser !== m.sender) {
         await sendDetailToChat(targetUser)
       }
-      await m.reply(claraWrap("Panel", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
+      await m.reply(novaWrap("Panel", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
     }
     // Mode 2: Grup Only - kirim detail lengkap di grup/chat
     else if (deliveryMode === 2) {
@@ -566,7 +566,7 @@ async function handler(m, { sock }) {
       'unauthorized': 'API key tidak punya permission, buat key baru dengan semua permissions',
     };
     const friendly = Object.entries(errorMap).find(([k]) => rawMsg.toLowerCase().includes(k));
-    return m.reply(claraWrap("Panel", `GAGAL MEMBUAT PANEL\n\n${friendly ? friendly[1] : rawMsg}`));
+    return m.reply(novaWrap("Panel", `GAGAL MEMBUAT PANEL\n\n${friendly ? friendly[1] : rawMsg}`));
   }
 }
 

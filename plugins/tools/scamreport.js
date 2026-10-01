@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "scamreport",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
   // ===== HELP =====
   if (!sub || sub === "help" || sub === "menu") {
-    return m.reply( claraWrap("Scam Report", [
+    return m.reply( novaWrap("Scam Report", [
       "Lapor & cek nomor penipu — database komunitas",
       "",
       "CARA PAKAI:",
@@ -59,12 +59,12 @@ async function handler(m, { sock }) {
   if (sub === "cek" || sub === "check") {
     const num = normalizeNumber(args[1] || "");
     if (!num || num.length < 8) {
-      return m.reply(claraWrap("Scam Report", "Nomor tidak valid!\n💡 *Contoh:* .scamreport cek 6281234567890"));
+      return m.reply(novaWrap("Scam Report", "Nomor tidak valid!\n💡 *Contoh:* .scamreport cek 6281234567890"));
     }
 
     const report = scamDB.numbers[num];
     if (!report) {
-      return m.reply(claraWrap("Scam Report", [
+      return m.reply(novaWrap("Scam Report", [
         "Nomor: " + num,
         "Status: BELUM DILAPORKAN",
         "",
@@ -89,14 +89,14 @@ async function handler(m, { sock }) {
 
     lines.push("Hati-hati! Nomor ini sudah dilaporkan " + report.count + "x.");
 
-    return m.reply(claraWrap("Scam Report", lines, "warn"));
+    return m.reply(novaWrap("Scam Report", lines, "warn"));
   }
 
   // ===== LIST TOP SCAMMERS =====
   if (sub === "list" || sub === "top") {
     const numbers = Object.entries(scamDB.numbers).sort((a, b) => b[1].count - a[1].count);
     if (numbers.length === 0) {
-      return m.reply(claraWrap("Scam Report", "Belum ada laporan. Jadilah yang pertama lapor!\n" + m.prefix + "scamreport <nomor> <laporan>"));
+      return m.reply(novaWrap("Scam Report", "Belum ada laporan. Jadilah yang pertama lapor!\n" + m.prefix + "scamreport <nomor> <laporan>"));
     }
 
     let lines = [
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
       lines.push("Menampilkan 10 dari " + numbers.length + " nomor.");
     }
 
-    return m.reply(claraWrap("Scam Report", lines));
+    return m.reply(novaWrap("Scam Report", lines));
   }
 
   // ===== MY REPORTS =====
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
     });
 
     if (myReports.length === 0) {
-      return m.reply(claraWrap("Scam Report", "Kamu belum pernah lapor nomor penipu."));
+      return m.reply(novaWrap("Scam Report", "Kamu belum pernah lapor nomor penipu."));
     }
 
     let lines = ["Laporan kamu (" + myReports.length + "):", ""];
@@ -139,7 +139,7 @@ async function handler(m, { sock }) {
       lines.push("");
     });
 
-    return m.reply(claraWrap("Scam Report", lines));
+    return m.reply(novaWrap("Scam Report", lines));
   }
 
   // ===== REPORT SCAM =====
@@ -147,10 +147,10 @@ async function handler(m, { sock }) {
   const reportText = args.slice(1).join(" ").trim();
 
   if (!num || num.length < 8) {
-    return m.reply(claraWrap("Scam Report", "Nomor tidak valid!\n💡 *Contoh:* .scamreport 6281234567890 Penipu"));
+    return m.reply(novaWrap("Scam Report", "Nomor tidak valid!\n💡 *Contoh:* .scamreport 6281234567890 Penipu"));
   }
   if (!reportText || reportText.length < 3) {
-    return m.reply(claraWrap("Scam Report", "Jelaskan penipuannya!\n💡 *Contoh:* .scamreport 6281234567890 Kiriman gak dikirim"));
+    return m.reply(novaWrap("Scam Report", "Jelaskan penipuannya!\n💡 *Contoh:* .scamreport 6281234567890 Kiriman gak dikirim"));
   }
 
   // Cek apakah sudah pernah lapor nomor ini
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
 
   const alreadyReported = scamDB.numbers[num].reports.some((r) => r.reporter === sender);
   if (alreadyReported) {
-    return m.reply(claraWrap("Scam Report", "Kamu sudah pernah lapor nomor ini!"));
+    return m.reply(novaWrap("Scam Report", "Kamu sudah pernah lapor nomor ini!"));
   }
 
   scamDB.numbers[num].count++;
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
   scamDB.totalReports = (scamDB.totalReports || 0) + 1;
   await db.save();
 
-  return m.reply(claraWrap("Scam Report", [
+  return m.reply(novaWrap("Scam Report", [
     "Laporan tersimpan!",
     "",
     "Nomor: " + num,

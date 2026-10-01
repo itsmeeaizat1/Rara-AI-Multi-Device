@@ -10,7 +10,7 @@ import fs from "fs";
 import path from "path";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "smeme",
   alias: ["smeme"],
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     m.isSticker ||
     (m.quoted && (m.quoted.isSticker || m.quoted.type === "stickerMessage"));
   if (!isImage && !isSticker) {
-    return m.reply(claraWrap("smeme", [
+    return m.reply(novaWrap("smeme", [
       "Reply atau kirim gambar/sticker dengan caption",
       "",
       "💡 Contoh: " + m.prefix + "smeme Top|Bottom",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   }
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {
-    return m.reply(claraWrap("smeme", [
+    return m.reply(novaWrap("smeme", [
       "📌 Format: top|bottom",
       "",
       "💡 Contoh: " + m.prefix + "smeme Ketika|Kamu Lupa",

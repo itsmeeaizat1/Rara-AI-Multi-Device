@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -89,7 +89,7 @@ async function handler(m, { sock, args }) {
       const input = cmdArgs.join(" ");
       const parts = input.split("|").map(s => s.trim());
       if (parts.length < 4) {
-        return m.reply(claraWrap("jadwal", "Format salah!\n\n💡 *Contoh:* `.jadwal add senin | 08.00 | 09.30 | Kalkulus | R.301`\n\nFormat: <hari> | <jam mulai> | <jam selesai> | <matkul> | <ruang (opsional)>"));
+        return m.reply(novaWrap("jadwal", "Format salah!\n\n💡 *Contoh:* `.jadwal add senin | 08.00 | 09.30 | Kalkulus | R.301`\n\nFormat: <hari> | <jam mulai> | <jam selesai> | <matkul> | <ruang (opsional)>"));
       }
 
       const day = parts[0].toLowerCase();
@@ -108,7 +108,7 @@ async function handler(m, { sock, args }) {
       }
 
       if (timeToMinutes(endTime) <= timeToMinutes(startTime)) {
-        return m.reply(claraWrap("Jadwal", "Jam selesai harus setelah jam mulai!"));
+        return m.reply(novaWrap("Jadwal", "Jam selesai harus setelah jam mulai!"));
       }
 
       const subject = parts[3] || "Tanpa nama";
@@ -131,7 +131,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "list" || cmd === "all" || cmd === "semua") {
       const schedule = getSchedule(db, sender);
       if (schedule.length === 0) {
-        return m.reply(claraWrap("jadwal", "Belum ada jadwal tersimpan.\n\nKetik `.jadwal add` untuk menambah."));
+        return m.reply(novaWrap("jadwal", "Belum ada jadwal tersimpan.\n\nKetik `.jadwal add` untuk menambah."));
       }
 
       // Group by day
@@ -157,7 +157,7 @@ async function handler(m, { sock, args }) {
       const todayClasses = schedule.filter(s => s.day === today).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
       if (todayClasses.length === 0) {
-        return m.reply(claraWrap("Jadwal", `Hari ini (${formatDay(today)}) tidak ada kelas. Santai dulu!`));
+        return m.reply(novaWrap("Jadwal", `Hari ini (${formatDay(today)}) tidak ada kelas. Santai dulu!`));
       }
 
       const now = new Date();
@@ -205,7 +205,7 @@ async function handler(m, { sock, args }) {
       }
 
       if (!nextClass) {
-        return m.reply(claraWrap("Jadwal", "Tidak ada kelas terjadwal untuk minggu ini!"));
+        return m.reply(novaWrap("Jadwal", "Tidak ada kelas terjadwal untuk minggu ini!"));
       }
 
       let txt = `Kelas Terdekat\n\n`;
@@ -237,7 +237,7 @@ async function handler(m, { sock, args }) {
       const dayClasses = schedule.filter(s => s.day === day).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
       if (dayClasses.length === 0) {
-        return m.reply(claraWrap("Jadwal", `${formatDay(day)} tidak ada kelas.`));
+        return m.reply(novaWrap("Jadwal", `${formatDay(day)} tidak ada kelas.`));
       }
 
       let txt = `Jadwal ${formatDay(day)}\n\n`;
@@ -257,13 +257,13 @@ async function handler(m, { sock, args }) {
       const idx = schedule.findIndex(s => s.id === id);
 
       const removed = schedule.splice(idx, 1)[0];
-      await m.reply(claraWrap("Jadwal", `Jadwal dihapus!\n\n${removed.subject} - ${formatDay(removed.day)} ${removed.startTime}`));
+      await m.reply(novaWrap("Jadwal", `Jadwal dihapus!\n\n${removed.subject} - ${formatDay(removed.day)} ${removed.startTime}`));
     }
 
     // === CLEAR ===
     else if (cmd === "clear" || cmd === "reset") {
       scheduleStore.set(sender, []);
-      await m.reply(claraWrap("Jadwal", "Semua jadwal dihapus!"));
+      await m.reply(novaWrap("Jadwal", "Semua jadwal dihapus!"));
     }
 
     else {
@@ -271,7 +271,7 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[JADWAL] Error:", e.message);
-    await m.reply(claraWrap("jadwal", `Error: ${e.message}`));
+    await m.reply(novaWrap("jadwal", `Error: ${e.message}`));
   }
 }
 

@@ -8,7 +8,7 @@
 // ═════════════════════════════════════════════
 
 import { googleAiModeSearch, _setSearchApiHttpForTest } from "../../src/scraper/searchapi.js";
-import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { uploadToUguu } from "../../src/scraper/kuroneko.js";
 
 // seam buat e2e: upload gambar bisa di-mock
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         imageUrl = _uguuFn ? await _uguuFn(buffer) : await uploadToUguu(buffer, "aimode.jpg");
       } catch (imgErr) {
         await m.react("❌");
-        return m.reply(claraWrap("googleaimode",
+        return m.reply(novaWrap("googleaimode",
           `⚠️ Gagal upload foto buat mode visual (${imgErr?.message || "error"}). Kirim ulang fotonya, atau tanya pakai teks doang.`));
       }
     }
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
       const map = {
         API_KEY: "⚠️ API key searchapi.io belum di-set — owner isi dulu di apikeys.json (slot searchapi). Daftar gratis di searchapi.io (free trial ±100 request/bulan).",
       };
-      return m.reply(claraWrap("googleaimode",
+      return m.reply(novaWrap("googleaimode",
         `❌ *GAGAL: ${map[r.error] || r.error}*`));
     }
 
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     const followups = (r.followups || []).map((f, i) => `${i + 1}. ${f}`).join("\n");
 
     await m.react("🐣");
-    return m.reply(claraWrap("googleaimode",
+    return m.reply(novaWrap("googleaimode",
       `🔍 *AI MODE GOOGLE — ${(q || "ANALISIS GAMBAR").toUpperCase().slice(0, 60)}*\n\n` +
       `${r.answer}\n` +
       (srcs ? `\n📚 *SUMBER:*\n${srcs}\n` : "") +
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[googleaimode]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("googleaimode", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("googleaimode", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

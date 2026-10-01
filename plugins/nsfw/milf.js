@@ -2,7 +2,7 @@
 // milf.js — Random MILF (NSFW)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "milf",
@@ -23,14 +23,14 @@ async function handler(m, { sock }) {
     const url = res.data?.url || res.data?.image;
     if (!url) {
       await m.react("❌");
-      return m.reply(claraWrap("milf", "Gagal mengambil gambar!", "error"));
+      return m.reply(novaWrap("milf", "Gagal mengambil gambar!", "error"));
     }
     await sock.sendMessage(from, { image: { url }, caption: "milf ~" }, { quoted: m });
     await m.react("🐣");
   } catch (err) {
     console.error("milf error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("milf", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("milf", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

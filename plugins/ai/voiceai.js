@@ -3,7 +3,7 @@
 // Indonesia: Gadis/Ardi/Siti/Dimas/Tuti/Jajang — Jepang: Aoi/Daichi/Mayu dll —
 // Korea: BongJin/JiMin dll — Inggris: Mia/Olivia dll.
 // Fallback seleb voice (Taylor Swift, Goku, dll): .aivoiceceleb (KuroNeko).
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { haidarTTS, HAIDAR_VOICES } from "../../src/scraper/haidar-ai.js";
 
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const groups = Object.entries(VOICE_GROUPS)
       .map(([g, vs]) => `${g}: ${vs.map((v) => `*${v}*`).join(", ")}`)
       .join("\n\n");
-    return m.reply(claraWrap("suaraai",
+    return m.reply(novaWrap("suaraai",
       `AI voice natural ${HAIDAR_VOICES.length} suara!\n\nCARA PAKAI:\n${m.prefix}suaraai <voice> <teks>\n\n${groups}\n\nContoh: ${m.prefix}suaraai siti halo semua apa kabar?\n\nMau suara selebritas (Taylor Swift, Goku, Eminem)? Pakai ${m.prefix}aivoiceceleb`, "guide"));
   }
 
@@ -49,10 +49,10 @@ async function handler(m, { sock }) {
   const text = (voice ? args.slice(1) : args).join(" ").trim();
 
   if (!voice) {
-    return m.reply(claraWrap("suaraai", `Voice *${sub}* gak ada!\n\nKetik ${m.prefix}suaraai list buat daftar ${HAIDAR_VOICES.length} voice\nContoh: ${m.prefix}suaraai siti halo semua`, "guide"));
+    return m.reply(novaWrap("suaraai", `Voice *${sub}* gak ada!\n\nKetik ${m.prefix}suaraai list buat daftar ${HAIDAR_VOICES.length} voice\nContoh: ${m.prefix}suaraai siti halo semua`, "guide"));
   }
   if (!text) {
-    return m.reply(claraWrap("suaraai", `Kasih teksnya!\n\nContoh: ${m.prefix}suaraai ${voice} halo semuanya apa kabar`, "guide"));
+    return m.reply(novaWrap("suaraai", `Kasih teksnya!\n\nContoh: ${m.prefix}suaraai ${voice} halo semuanya apa kabar`, "guide"));
   }
 
   try {
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("suaraai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("suaraai", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("suaraai", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

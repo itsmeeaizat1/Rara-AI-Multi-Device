@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply(claraWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."))
+        return m.reply(novaWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."))
     }
     
     const dropletId = m.text?.trim()
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         return m.reply( `Cara pakai:\n${m.prefix}delvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "delvps")
     }
     
-    await m.reply(claraWrap("VPS", `\u23f3 Menghapus VPS...\nID: ${dropletId}`))
+    await m.reply(novaWrap("VPS", `\u23f3 Menghapus VPS...\nID: ${dropletId}`))
     
     try {
         await axios.delete(`https://api.digitalocean.com/v2/droplets/${dropletId}`, {

@@ -2,7 +2,7 @@
 import http from "http";
 import https from "https";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "searchthatsong",
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
     const result = await search(query);
 
     if (!result.song) {
-      return m.reply(claraWrap("searchthatsong", "⚠️ Lagu tidak ditemukan. Coba gunakan lirik yang lebih spesifik."));
+      return m.reply(novaWrap("searchthatsong", "⚠️ Lagu tidak ditemukan. Coba gunakan lirik yang lebih spesifik."));
     }
 
     let caption = `🎵 *search that song* 🎵\n\n`;

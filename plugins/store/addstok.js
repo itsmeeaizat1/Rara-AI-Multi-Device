@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "addstok",
@@ -21,7 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   if (m.isGroup) {
-    return m.reply(claraWrap("addstok", `🚫 *akses ditolak*\n\n` +
+    return m.reply(novaWrap("addstok", `🚫 *akses ditolak*\n\n` +
         `Untuk menjaga privasi data stok 🛡️, penambahan stok hanya dapat dilakukan di *private chat*.\n\n` +
         `Silakan chat bot secara langsung 📱`));
   }
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
             );
           }
           if (!fileBuffer || fileBuffer.length === 0)
-            return m.reply(claraWrap("addstok", `❌ *file kosong.* 📄`));
+            return m.reply(novaWrap("addstok", `❌ *file kosong.* 📄`));
 
           const fileContent = fileBuffer.toString("utf-8").trim();
           const lines = [];
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
             lines.push(...tokens);
           }
           if (lines.length === 0)
-            return m.reply(claraWrap("addstok", `❌ *file tidak berisi data valid.* 📄`));
+            return m.reply(novaWrap("addstok", `❌ *file tidak berisi data valid.* 📄`));
           if (lines.length > 1000)
             return m.reply(
               `❌ *terlalu banyak item.* Maksimal 1.000 per import 📄`,
@@ -186,21 +186,21 @@ async function handler(m, { sock }) {
     }
     product.stock = (product.stock === -1 ? 0 : product.stock) + addCount;
     db.setting("storeProducts", products);
-    return m.reply(claraWrap("addstok", `📦 *stok fisik ditambahkan*\n\n` +
+    return m.reply(novaWrap("addstok", `📦 *stok fisik ditambahkan*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `➕ Ditambahkan: *${addCount} pcs*\n` +
         `📊 Total stok: *${product.stock} pcs*`));
   }
 
   if (!detail || detail.length < 3) {
-    return m.reply(claraWrap("Detail stok terlalu pendek.", `Minimal 3 karakter diperlukan agar data stok dapat digunakan 🔑`));
+    return m.reply(novaWrap("Detail stok terlalu pendek.", `Minimal 3 karakter diperlukan agar data stok dapat digunakan 🔑`));
   }
 
   if (!product.stockItems) product.stockItems = [];
 
   const isDuplicate = product.stockItems.some((item) => item.detail === detail);
   if (isDuplicate) {
-    return m.reply(claraWrap("addstok", `⚠️ *data stok sudah ada.*\n\nItem dengan detail yang sama sudah terdaftar di produk *${product.name}* 🔑`));
+    return m.reply(novaWrap("addstok", `⚠️ *data stok sudah ada.*\n\nItem dengan detail yang sama sudah terdaftar di produk *${product.name}* 🔑`));
   }
 
   product.stockItems.push({

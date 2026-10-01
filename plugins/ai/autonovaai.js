@@ -6,7 +6,7 @@ import fs from "fs";
 import { askAI } from "../../src/lib/aiagent.js";
 import { aiChainChat } from "../../src/lib/nova-ai-fallback.js";
 import { load, save, clearAichatMemory } from "../../src/lib/autoflow.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 
 const DB = "./src/data/autoflow.json";
@@ -237,14 +237,14 @@ async function handler(m, { sock, conn, db }) {
     try {
       const { voiceSubReply, VOICE_KEYS } = await import("../../src/lib/nova-voice-reply.js");
       const subReply = voiceSubReply(db, m.chat, body.toLowerCase(), VOICE_KEYS.anovaagent);
-      if (subReply) return m.reply(claraWrap("anovaagent", subReply));
+      if (subReply) return m.reply(novaWrap("anovaagent", subReply));
     } catch {}
 
     // ---- .anovaagent list ----
     if (sub === "list") {
       const rules = load();
       if (!rules.length) {
-        return m.reply(claraWrap("anovaagent", "Belum ada rule.\n\n💡 Bikin: .setanovaagent <kalimat bebas>"));
+        return m.reply(novaWrap("anovaagent", "Belum ada rule.\n\n💡 Bikin: .setanovaagent <kalimat bebas>"));
       }
       const text = rules
         .map((r) => `${r.enabled ? "🟢" : "🔴"} ${r.id} [${r.hits || 0}x]\n${describe(r)}`)
@@ -257,7 +257,7 @@ async function handler(m, { sock, conn, db }) {
       const id = (parts[1] || "").toUpperCase();
       clearAichatMemory(id || null, null, null);
       return m.reply(
-        claraWrap("anovaagent", id
+        novaWrap("anovaagent", id
           ? `Memori obrolan AI rule ${id} dihapus. AI mulai fresh tanpa konteks lama.`
           : `Semua memori obrolan AI dihapus. Semua rule aichat mulai fresh.`),
       );
@@ -266,33 +266,33 @@ async function handler(m, { sock, conn, db }) {
     // ---- .anovaagent del AF-1 ----
     if (sub === "del") {
       const id = (parts[1] || "").toUpperCase();
-      if (!id) return m.reply(claraWrap("anovaagent", "💡 Contoh: .anovaagent del AF-001"));
+      if (!id) return m.reply(novaWrap("anovaagent", "💡 Contoh: .anovaagent del AF-001"));
       const rules = load();
       const sisa = rules.filter((r) => r.id !== id);
       if (sisa.length === rules.length)
-        return m.reply(claraWrap("anovaagent", `Rule ${id} tidak ketemu. Cek: .anovaagent list`, "error"));
+        return m.reply(novaWrap("anovaagent", `Rule ${id} tidak ketemu. Cek: .anovaagent list`, "error"));
       save(sisa);
-      return m.reply(claraWrap("anovaagent", `Rule ${id} dihapus`));
+      return m.reply(novaWrap("anovaagent", `Rule ${id} dihapus`));
     }
 
     // ---- .anovaagent on AF-1 / .anovaagent off AF-1 ----
     if (sub === "on" || sub === "off") {
       const id = (parts[1] || "").toUpperCase();
-      if (!id) return m.reply(claraWrap("anovaagent", `💡 Contoh: .anovaagent ${sub} AF-001`));
+      if (!id) return m.reply(novaWrap("anovaagent", `💡 Contoh: .anovaagent ${sub} AF-001`));
       const rules = load();
       const r = rules.find((x) => x.id === id);
-      if (!r) return m.reply(claraWrap("anovaagent", `Rule ${id} tidak ketemu. Cek: .anovaagent list`, "error"));
+      if (!r) return m.reply(novaWrap("anovaagent", `Rule ${id} tidak ketemu. Cek: .anovaagent list`, "error"));
       r.enabled = sub === "on";
       save(rules);
       return m.reply(
-        claraWrap("anovaagent", `Rule ${id} ${r.enabled ? "dinyalakan" : "dimatikan"}`),
+        novaWrap("anovaagent", `Rule ${id} ${r.enabled ? "dinyalakan" : "dimatikan"}`),
       );
     }
 
     // ---- default: .anovaagent = kelola rule. SET rule lewat .setanovaagent ----
     if (!body) {
       return m.reply(
-        claraWrap("anovaagent", [
+        novaWrap("anovaagent", [
           "💡 Buat/set rule: .setanovaagent <kalimat bebas>",
           "",
           ".setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
@@ -308,12 +308,12 @@ async function handler(m, { sock, conn, db }) {
     // teks bebas di .anovaagent → arahin ke .setanovaagent (request owner:
     // bikin/set rule pakai .setanovaagent; .anovaagent khusus kelola)
     return m.reply(
-      claraWrap("anovaagent", "💡 Buat/set rule pakai .setanovaagent <kalimat bebas>\n\nContoh: .setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam\nKelola rule: .anovaagent list / del / on / off", "error"),
+      novaWrap("anovaagent", "💡 Buat/set rule pakai .setanovaagent <kalimat bebas>\n\nContoh: .setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam\nKelola rule: .anovaagent list / del / on / off", "error"),
     );
   } catch (e) {
     console.error("[autonovaai] error:", e.message);
     try { await m.react("❌"); } catch {}
-    return m.reply(claraWrap("anovaagent", e.message || "Ada yang error nih, coba lagi ya", "error"));
+    return m.reply(novaWrap("anovaagent", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
   // CATATAN: novaStatusKey/editFinal scoped di dalam cabang bikin rule —
   // subcommand instan (list/del/on/off/reset) tetep tanpa status, sesuai desain.
@@ -414,7 +414,7 @@ if (!rule) {
 }
 if (!rule) {
   try { await m.react("❌"); } catch {}
-  return editFinal(claraWrap("anovaagent", [
+  return editFinal(novaWrap("anovaagent", [
     "Gagal bikin rule: SEMUA AI (novaai + satuan) gak ngembaliin JSON dan kalimatnya belum dikenali parser lokal.",
     "Coba tulis lebih spesifik, contoh:",
     "• .setanovaagent kalau ada yang bilang assalamualaikum, balas waalaikumsalam",
@@ -426,7 +426,7 @@ if (!rule) {
 const err = validate(rule);
 if (err) {
   try { await m.react("❌"); } catch {}
-  return editFinal(claraWrap("setanovaagent", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
+  return editFinal(novaWrap("setanovaagent", `Rule ditolak: ${err}\nCoba tulis kalimatnya lebih jelas.`, "error"));
 }
 
 // 3) simpan → langsung aktif

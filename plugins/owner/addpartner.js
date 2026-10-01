@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addpartner',
     alias: ["addpartner"],
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
             targetNumber = '62' + targetNumber.slice(1)
         }
         if (config.isOwner(targetNumber)) {
-            return m.reply(claraWrap("Addpartner", `⚠️ @${targetNumber} sudah menjadi owner!`))
+            return m.reply(novaWrap("Addpartner", `⚠️ @${targetNumber} sudah menjadi owner!`))
         }
         const existingIndex = db.data.partner.findIndex(p => p.id === targetNumber)
         const days = parseInt(m.args?.find(a => /^\d+$/.test(a) && a.length <= 4)) || 30
@@ -78,14 +78,14 @@ async function handler(m, { sock }) {
 
         const expDate = new Date(newExpired).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
 
-        await m.reply(claraWrap("Addpartner", `✅ Berhasil ${existingIndex !== -1 ? 'memperpanjang' : 'menambahkan'} partner @${targetNumber} selama *${days} hari*\nExpired: *${expDate}*`))
+        await m.reply(novaWrap("Addpartner", `✅ Berhasil ${existingIndex !== -1 ? 'memperpanjang' : 'menambahkan'} partner @${targetNumber} selama *${days} hari*\nExpired: *${expDate}*`))
         return
     }
 
     if (cmd === 'delpartner') {
         const target = await extractNumber(m)
         if (!target) {
-            return m.reply(claraWrap("Addpartner", `⚠️ Tag atau reply user yang ingin dihapus dari partner.`))
+            return m.reply(novaWrap("Addpartner", `⚠️ Tag atau reply user yang ingin dihapus dari partner.`))
         }
         let targetNumber = target.replace(/@.+/g, '')
         if (targetNumber.startsWith('08')) {
@@ -97,9 +97,9 @@ async function handler(m, { sock }) {
         
         if (db.data.partner.length < initialLength) {
             db.save()
-            await m.reply(claraWrap("Addpartner", `✅ Berhasil menghapus @${targetNumber} dari partner`))
+            await m.reply(novaWrap("Addpartner", `✅ Berhasil menghapus @${targetNumber} dari partner`))
         } else {
-            return m.reply(claraWrap("Addpartner", `⚠️ User tersebut bukan partner.`))
+            return m.reply(novaWrap("Addpartner", `⚠️ User tersebut bukan partner.`))
         }
         return
     }
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     if (cmd === 'listpartner') {
         const partners = db.data.partner
         if (!partners.length) {
-            return m.reply(claraWrap("addpartner", `🤝 *Daftar Partner*\n\nBelum ada partner.`))
+            return m.reply(novaWrap("addpartner", `🤝 *Daftar Partner*\n\nBelum ada partner.`))
         }
 
         let txt = `🤝 *DAFTAR PARTNER*\n\n`
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
             mentions.push(`${num}@s.whatsapp.net`)
         })
         txt += `\nTotal: *${partners.length}* partner`
-        await m.reply(claraWrap("addpartner", txt))
+        await m.reply(novaWrap("addpartner", txt))
         return
     }
 }

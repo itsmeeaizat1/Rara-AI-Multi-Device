@@ -5,7 +5,7 @@ import { mconverter } from "../../src/scraper/mconverter.js";
 import { downloadContentFromMessage } from "nova";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption, fmtBytes } from "../../src/lib/nova-media-info.js";
 const pluginConfig = {
   name: "converter",
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const targetFormat = m.text?.trim()?.toLowerCase();
 
   if (!m.quoted && !m.isMedia) {
-    return m.reply(claraWrap("converter", [
+    return m.reply(novaWrap("converter", [
       `🔄 *converter*`,
       `Reply file dengan format tujuan`,
       `\`${m.prefix}converter <format>\``,
@@ -57,9 +57,9 @@ async function handler(m, { sock }) {
   }
 
   if (!mediaMessage) {
-    return m.reply(claraWrap("Converter", `❌ Reply file yang mau diconvert!`));
+    return m.reply(novaWrap("Converter", `❌ Reply file yang mau diconvert!`));
   }
-  await m.reply(claraWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
+  await m.reply(novaWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
 
   try {
     await m.react("🕒");
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     }
 
     if (result.error) {
-      return m.reply(claraWrap("converter", `❌ *gagal convert*\n\n${result.error}`));
+      return m.reply(novaWrap("converter", `❌ *gagal convert*\n\n${result.error}`));
     }
 
     const saluranId = config.saluran?.id || "@newsletter";
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     await m.react("❌");
     console.error("[Converter] Error:", err.message);
-    return m.reply(claraWrap("converter", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("converter", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

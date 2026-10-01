@@ -12,7 +12,7 @@ import {
 } from "nova";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[PinVid] Error:", error.message);
-    m.reply(claraWrap("pinvid", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("pinvid", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

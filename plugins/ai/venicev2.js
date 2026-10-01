@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // venicev2 — Venice AI (dolphin-3.0-mistral-24b)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -13,7 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
-    if (!text) return m.reply(claraWrap("venicev2", `Mau nanya apa?\nContoh: ${m.prefix}venicev2 jelaskan relativitas`, "guide"));
+    if (!text) return m.reply(novaWrap("venicev2", `Mau nanya apa?\nContoh: ${m.prefix}venicev2 jelaskan relativitas`, "guide"));
     await m.react("🕒");
     const res = await fetch("https://outerface.venice.ai/api/inference/chat", {
       method: "POST",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
     console.error("venicev2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("venicev2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(novaWrap("venicev2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

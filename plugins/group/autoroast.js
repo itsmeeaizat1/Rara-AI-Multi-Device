@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoroast",
@@ -112,7 +112,7 @@ export function startAutoRoast(groupId, sock, db) {
       msg += roast;
       msg += "\n\nMode: Otomatis tiap " + g.interval + " menit";
 
-      const payload = { text: claraWrap("Auto Roast", msg, "warn") };
+      const payload = { text: novaWrap("Auto Roast", msg, "warn") };
       if (target) payload.mentions = [target.id];
 
       await sock.sendMessage(groupId, payload);
@@ -156,7 +156,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       startAutoRoast(groupId, conn, db);
 
-      return m.reply(claraWrap("Auto Roast", [
+      return m.reply(novaWrap("Auto Roast", [
         "Roast otomatis DIAKTIFKAN!",
         "",
         "Interval: " + interval + " menit",
@@ -173,7 +173,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
       stopAutoRoast(groupId);
 
-      return m.reply(claraWrap("Auto Roast", "Roast otomatis DIMATIKAN.\nKetik .autoroast on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Roast", "Roast otomatis DIMATIKAN.\nKetik .autoroast on untuk aktifkan lagi."));
     }
 
     // STATUS
@@ -181,7 +181,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
       const lastTargetStr = cfg.lastTarget ? "@" + cfg.lastTarget.split("@")[0] : "Belum ada";
 
-      return m.reply(claraWrap("Auto Roast", [
+      return m.reply(novaWrap("Auto Roast", [
         "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total roast: " + (cfg.totalSent || 0),
@@ -214,7 +214,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (target) msg = "Roast untuk @" + target.id.split("@")[0] + ":\n\n" + roast;
       msg += "\n\nTotal roast: " + cfg.totalSent;
 
-      const payload = { text: claraWrap("Auto Roast", msg, "warn") };
+      const payload = { text: novaWrap("Auto Roast", msg, "warn") };
       if (target) payload.mentions = [target.id];
 
       return m.reply(payload);

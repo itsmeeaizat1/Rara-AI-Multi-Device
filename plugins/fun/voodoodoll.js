@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "voodoodoll",
@@ -56,7 +56,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       });
       lines.push("");
       lines.push("Contoh: " + usedPrefix + "voodoodoll @target tikam");
-      return m.reply(claraWrap("Voodoo Doll", lines, "info"));
+      return m.reply(novaWrap("Voodoo Doll", lines, "info"));
     }
 
     const aksiId = args[1]?.toLowerCase();
@@ -75,13 +75,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       });
       lines.push("");
       lines.push("Contoh: " + usedPrefix + "voodoodoll @" + target.split("@")[0] + " tikam");
-      return m.reply(claraWrap("Voodoo Doll", lines, "info"));
+      return m.reply(novaWrap("Voodoo Doll", lines, "info"));
     }
 
     const hasil = aksi.hasil[Math.floor(Math.random() * aksi.hasil.length)];
 
     await m.react("🐣");
-    return m.reply(claraWrap("Voodoo Doll", [
+    return m.reply(novaWrap("Voodoo Doll", [
       "VOODOO " + aksi.nama.toUpperCase() + "!",
       "",
       "Target: @" + target.split("@")[0],
@@ -94,7 +94,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ], "info"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Voodoo Doll", "Error: " + e.message, "error"));
+    return m.reply(novaWrap("Voodoo Doll", "Error: " + e.message, "error"));
   }
 }
 

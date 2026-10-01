@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolnumberwords — angka → terbilang Bahasa Indonesia (port altftool.com/tools/all/number-to-words)
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolnumberwords", alias: ["numberwords", "terbilang", "kataangka"], category: "tools",
@@ -67,12 +67,12 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const words = terbilang(n);
     await m.react("🐣");
-    await m.reply(claraWrap("Terbilang", [`Angka: ${raw}`,
+    await m.reply(novaWrap("Terbilang", [`Angka: ${raw}`,
       "",
       "```" + words.charAt(0).toUpperCase() + words.slice(1) + ".```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Terbilang", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Terbilang", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

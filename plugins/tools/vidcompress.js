@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 ffmpeg.setFfmpegPath(ffmpegPath.path);
 
@@ -182,18 +182,18 @@ async function handler(m, { sock }) {
   const media = await getMediaBuffer(m);
 
   if (!media) {
-    return m.reply(claraWrap("Vidcompress", "Reply video dengan command .vidcompress\n\nKetik .vidcompress buat lihat cara pakai."));
+    return m.reply(novaWrap("Vidcompress", "Reply video dengan command .vidcompress\n\nKetik .vidcompress buat lihat cara pakai."));
   }
 
   const isVideo = (media.mime || "").startsWith("video/");
   const isAudio = (media.mime || "").startsWith("audio/");
 
   if (!isVideo && !isAudio) {
-    return m.reply(claraWrap("Vidcompress", "File bukan video. Reply video dengan .vidcompress"));
+    return m.reply(novaWrap("Vidcompress", "File bukan video. Reply video dengan .vidcompress"));
   }
 
   if (media.buffer.length > 100 * 1048576) {
-    return m.reply(claraWrap("Vidcompress", "Video terlalu besar (max 100 MB). Pilih video yang lebih kecil."));
+    return m.reply(novaWrap("Vidcompress", "Video terlalu besar (max 100 MB). Pilih video yang lebih kecil."));
   }
 
   const inputPath = getTmpFile("mp4");
@@ -284,7 +284,7 @@ async function handler(m, { sock }) {
     await m.react("❌");
     cleanup(inputPath);
     cleanup(outputPath);
-    return m.reply(claraWrap("Error", "\u274c Gagal kompres video: " + e.message + "\n\nPastikan video valid dan tidak terlalu panjang (max 5 menit)."));
+    return m.reply(novaWrap("Error", "\u274c Gagal kompres video: " + e.message + "\n\nPastikan video valid dan tidak terlalu panjang (max 5 menit)."));
   }
 }
 

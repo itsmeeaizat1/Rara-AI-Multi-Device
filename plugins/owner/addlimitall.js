@@ -2,7 +2,7 @@
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addlimitall',
     alias: ["addlimitall", "addenergiall"],
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         const participants = groupMeta.participants || []
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("Addenergiall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
+            return m.reply(novaWrap("Addenergiall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
         }
         const db = getDatabase()
         let successCount = 0
@@ -53,10 +53,10 @@ async function handler(m, { sock }) {
         const gb = m?.groupMetadata
         
         await db.save()
-        await m.reply(claraWrap("Addenergiall", `✅ Berhasil menambahkan limit ke semua member ( Total *${successCount}* Member ) di grup *${gb?.subject}*`))
+        await m.reply(novaWrap("Addenergiall", `✅ Berhasil menambahkan limit ke semua member ( Total *${successCount}* Member ) di grup *${gb?.subject}*`))
         
     } catch (error) {
-        await m.reply(claraWrap("addenergiall", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("addenergiall", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

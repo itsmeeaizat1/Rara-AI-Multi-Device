@@ -7,7 +7,7 @@ import axios from "axios"
 import config from "../../config.js"
 import te from "../../src/lib/nova-error.js"
 import { addExifToWebp } from "../../src/lib/nova-exif.js"
-import { novaError, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js"
+import { novaError, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js"
 
 function getSharp() { return _sharp }
 
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
             })
         } catch (packErr) {
             console.error("[PinPack] Pack send failed:", packErr.message)
-            await m.reply(claraWrap("pinpack", "Pack gagal, mengirim satu per satu..."))
+            await m.reply(novaWrap("pinpack", "Pack gagal, mengirim satu per satu..."))
 
             let sent = 0
             for (const buf of stickerBuffers) {
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
             }
 
             if (sent > 0) {
-                await m.reply(claraWrap("pinpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
+                await m.reply(novaWrap("pinpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
             } else {
                 await m.reply(novaGagal("PinPack"))
             }

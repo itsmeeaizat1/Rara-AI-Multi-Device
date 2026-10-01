@@ -1,4 +1,4 @@
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const MUSIC_LIST = []
 for (let i = 1; i <= 52; i++) {
@@ -37,7 +37,7 @@ async function handler(m, { sock, command }) {
             ptt: false
         })
     } catch (err) {
-        m.reply(claraWrap("music", `❌ *error*\n\nMusik tidak ditemukan atau gagal diambil.`))
+        m.reply(novaWrap("music", `❌ *error*\n\nMusik tidak ditemukan atau gagal diambil.`))
     }
 }
 

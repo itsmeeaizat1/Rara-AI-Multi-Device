@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolasciitext — teks ↔ kode ASCII/Unicode (port altftool.com/tools/all/text-ascii)
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolasciitext", alias: ["asciitext", "kodeascii", "textascii"], category: "tools",
@@ -49,12 +49,12 @@ async function handler(m, { sock, config: botConfig }) {
       }), "ftoolasciitext");
     }
     await m.react("🐣");
-    await m.reply(claraWrap("ASCII Text", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
+    await m.reply(novaWrap("ASCII Text", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("ASCII Text", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("ASCII Text", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

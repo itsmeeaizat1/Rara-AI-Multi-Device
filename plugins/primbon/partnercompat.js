@@ -2,7 +2,7 @@
 // partnercompat.js — Kecocokan pasangan
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kecocokanpasangan",
@@ -19,12 +19,12 @@ async function handler(m, { sock }) {
   try {
     await m.react("\U0001F560");
     const text = m.args?.join(" ").trim();
-    if (!text || !text.includes("|")) return m.reply(claraWrap("kecocokanpasangan", "Contoh: .kecocokanpasangan Aizat|Novia", "guide"));
+    if (!text || !text.includes("|")) return m.reply(novaWrap("kecocokanpasangan", "Contoh: .kecocokanpasangan Aizat|Novia", "guide"));
     const [nama1, nama2] = text.split("|");
 
     const res = await axios.get(`https://api.siputzx.my.id/api/primbon/kecocokan-pasangan?nama1=${encodeURIComponent(nama1)}&nama2=${encodeURIComponent(nama2)}`, { timeout: 15000 });
     const d = res.data?.data;
-    if (!d) return m.reply(claraWrap("kecocokanpasangan", "Data tidak ditemukan!", "error"));
+    if (!d) return m.reply(novaWrap("kecocokanpasangan", "Data tidak ditemukan!", "error"));
 
     let _lines = [];
     Object.entries(d).forEach(([k, v]) => {
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("kecocokanpasangan error:", err);
     await m.react("\u274C");
-    return m.reply(claraWrap("kecocokanpasangan", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("kecocokanpasangan", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

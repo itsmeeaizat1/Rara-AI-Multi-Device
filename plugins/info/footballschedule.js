@@ -7,7 +7,7 @@
  */
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { runLiveTicker, formatRemaining } from "../../src/lib/nova-countdown.js";
 
 const pluginConfig = {
@@ -139,7 +139,7 @@ async function handler(m, { sock }) {
 
     if (!events.length) {
       await m.react("🐣");
-      return m.reply(claraWrap("Jadwal Bola", [
+      return m.reply(novaWrap("Jadwal Bola", [
         "⚽ Gak ada pertandingan ditemukan" + (leagueKey ? ` buat ${LEAGUES[leagueKey].name}` : " 2 hari ke depan") + ".",
         "",
         "Liga yang didukung: " + Object.values(LEAGUES).map((l, i, a) => (a.findIndex((x) => x.code === l.code) === i ? l.name : null)).filter(Boolean).join(", "),
@@ -181,12 +181,12 @@ async function handler(m, { sock }) {
     }
     lines.push("Sumber: ESPN ⚽");
 
-    await m.reply(claraWrap("Jadwal Bola", lines.join("\n")));
+    await m.reply(novaWrap("Jadwal Bola", lines.join("\n")));
     await m.react("🐣");
 
     // ── kickoff countdown live (≤24 jam) ──
     if (nextEv && nextIs24h) {
-      const tickCard = (st) => claraWrap("Jadwal Bola", [
+      const tickCard = (st) => novaWrap("Jadwal Bola", [
         "⚽ *KICKOFF*",
         "",
         `🏟 ${nextEv.home} vs ${nextEv.away}`,
@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
         "",
         `🕒 Kickoff dalam: *${formatRemaining(st.remainingMs)}*`,
       ].join("\n"));
-      const finalCard = claraWrap("Jadwal Bola", [
+      const finalCard = novaWrap("Jadwal Bola", [
         "⚽ *KICKOFF!*",
         "",
         `🏟 ${nextEv.home} vs ${nextEv.away}`,
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[jadwalbola]", err.message || err);
     await m.react("❌");
-    return m.reply(claraWrap("jadwalbola", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("jadwalbola", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

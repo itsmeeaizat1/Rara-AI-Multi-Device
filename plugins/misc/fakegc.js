@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fakegc.js — Fake group chat screenshot
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fakegc",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fakegc error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("fakegc", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("fakegc", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

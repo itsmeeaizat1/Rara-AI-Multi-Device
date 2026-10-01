@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "metatag",
@@ -97,12 +97,12 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     if (!res.ok) {
-      return m.reply(claraWrap("MetaTag", "Gagal fetch: " + res.status + " " + res.statusText));
+      return m.reply(novaWrap("MetaTag", "Gagal fetch: " + res.status + " " + res.statusText));
     }
 
     const contentType = res.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) {
-      return m.reply(claraWrap("MetaTag", "Bukan halaman HTML! Content-Type: " + contentType));
+      return m.reply(novaWrap("MetaTag", "Bukan halaman HTML! Content-Type: " + contentType));
     }
 
     const html = await res.text();
@@ -175,11 +175,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.splice(40, lines.length - 40, "... (output dipotong)");
     }
     await m.react("🐣");
-    return m.reply(claraWrap("Meta Tags: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
+    return m.reply(novaWrap("Meta Tags: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("metatag error:", e);
-    return m.reply(claraWrap("MetaTag", "Error: " + e.message));
+    return m.reply(novaWrap("MetaTag", "Error: " + e.message));
   }
 }
 

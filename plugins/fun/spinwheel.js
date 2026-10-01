@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spinwheel",
@@ -29,7 +29,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     await m.react("🕒");
     if (args[0]?.toLowerCase() === "info") {
-      return m.reply(claraWrap("Spin Wheel", [
+      return m.reply(novaWrap("Spin Wheel", [
         "RODA PUTAR ACAK",
         "Input pilihan dipisah koma, bot putar & kasih hasil",
         "",
@@ -42,15 +42,15 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const input = text || args.join(" ");
     if (!input) {
-      return m.reply(claraWrap("Spin Wheel", "Masukkan pilihan dipisah koma!\n\n💡 *Contoh:* " + usedPrefix + "spinwheel pizza,burger,sate", "warn"));
+      return m.reply(novaWrap("Spin Wheel", "Masukkan pilihan dipisah koma!\n\n💡 *Contoh:* " + usedPrefix + "spinwheel pizza,burger,sate", "warn"));
     }
 
     const choices = input.split(",").map(c => c.trim()).filter(Boolean);
     if (choices.length < 2) {
-      return m.reply(claraWrap("Spin Wheel", "Min 2 pilihan! Contoh: " + usedPrefix + "spinwheel A,B,C", "warn"));
+      return m.reply(novaWrap("Spin Wheel", "Min 2 pilihan! Contoh: " + usedPrefix + "spinwheel A,B,C", "warn"));
     }
     if (choices.length > 20) {
-      return m.reply(claraWrap("Spin Wheel", "Max 20 pilihan!", "warn"));
+      return m.reply(novaWrap("Spin Wheel", "Max 20 pilihan!", "warn"));
     }
 
     // Spin animation
@@ -63,7 +63,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const winIndex = choices.indexOf(winner) + 1;
 
     await m.react("🐣");
-    return m.reply(claraWrap("Spin Wheel", [
+    return m.reply(novaWrap("Spin Wheel", [
       "RODA PUTAR ACAK",
       "",
       "Pilihan (" + choices.length + "):",
@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ], "info"));
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Spin Wheel", "Error: " + e.message, "error"));
+    return m.reply(novaWrap("Spin Wheel", "Error: " + e.message, "error"));
   }
 }
 

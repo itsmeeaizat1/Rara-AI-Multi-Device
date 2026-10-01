@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: ["arsip", "archive"],
   alias: ["arsip", "archive"],
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       );
     } catch (err) {
       global.isFetchingGroups = false;
-      return m.reply(claraWrap("arsip", `❌ Gagal: ${err.message}`));
+      return m.reply(novaWrap("arsip", `❌ Gagal: ${err.message}`));
     }
   } else {
     if (m.mentionedJid?.length > 0) {
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
         ? `🗄️ *Chat Diarsipkan*\n\nTarget: ${target}\nGunakan \`.arsip buka ${target}\` untuk membuka`
         : `🗄️ *Arsip Dibuka*\n\nTarget: ${target}`);
   } catch (err) {
-    return m.reply(claraWrap("arsip", `❌ Gagal: ${err.message}`));
+    return m.reply(novaWrap("arsip", `❌ Gagal: ${err.message}`));
   }
 }
 

@@ -19,7 +19,7 @@
 // Langganan: .wxalert on [nasional|tropis|<state>…] · off · status · tes · health.
 // Dedupe per alert id (seen cap 300/watcher), severity Severe/Extreme doang di-push.
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { logger } from "../../src/lib/nova-logger.js";
 
@@ -125,7 +125,7 @@ const pluginConfig = {
 // MANUAL QUERY
 // ══════════════════════════════════════════════════════════════
 function buildNational(feats) {
-  if (!feats.length) return claraWrap("WX Alert — Nasional AS", "✨ Gak ada alert aktif di seluruh AS sekarang.");
+  if (!feats.length) return novaWrap("WX Alert — Nasional AS", "✨ Gak ada alert aktif di seluruh AS sekarang.");
   const perSev = {};
   feats.forEach((f) => { perSev[f.severity] = (perSev[f.severity] || 0) + 1; });
   const sevLine = ["Extreme", "Severe", "Moderate", "Minor"]
@@ -134,7 +134,7 @@ function buildNational(feats) {
     .filter((f) => SEV_RANK[f.severity] >= 3)
     .sort((a, b) => SEV_RANK[b.severity] - SEV_RANK[a.severity])
     .slice(0, 6);
-  return claraWrap("WX Alert — Nasional AS (NWS)", [
+  return novaWrap("WX Alert — Nasional AS (NWS)", [
     `Total alert aktif: ${feats.length}`,
     sevLine,
     "",
@@ -152,7 +152,7 @@ async function nationalSummary() {
   if (cacheValid()) return buildNational(_cache.feats);
   const { status, data } = await fetchJson(NWS);
   if (status !== 200 || !Array.isArray(data?.features)) {
-    return claraWrap("WX Alert", `❌ API NWS bermasalah (${status}). Coba lagi nanti.`);
+    return novaWrap("WX Alert", `❌ API NWS bermasalah (${status}). Coba lagi nanti.`);
   }
   const feats = data.features.map((f) => ({ id: f.id, ...f.properties }));
   _cache = { ts: Date.now(), feats };
@@ -162,7 +162,7 @@ async function nationalSummary() {
 async function stateAlerts(q) {
   const code = STATES[q];
   if (!code) {
-    return claraWrap("WX Alert", [
+    return novaWrap("WX Alert", [
       `🔎 Wilayah "${q}" gak dikenal. Pakai kode/nama negara bagian AS, contoh: TX · texas · FL · california.`,
       "",
       "Ringkasan nasional: .wxalert",
@@ -171,23 +171,23 @@ async function stateAlerts(q) {
   }
   const { status, data } = await fetchJson(`${NWS}?area=${code}`);
   if (status !== 200 || !Array.isArray(data?.features)) {
-    return claraWrap("WX Alert", `❌ API NWS bermasalah (${status}). Coba lagi nanti.`);
+    return novaWrap("WX Alert", `❌ API NWS bermasalah (${status}). Coba lagi nanti.`);
   }
   const feats = data.features.map((f) => f.properties)
     .sort((a, b) => (SEV_RANK[b.severity] || 0) - (SEV_RANK[a.severity] || 0));
-  if (!feats.length) return claraWrap(`WX Alert — ${code}`, `✨ Gak ada alert aktif di ${code} sekarang.`);
+  if (!feats.length) return novaWrap(`WX Alert — ${code}`, `✨ Gak ada alert aktif di ${code} sekarang.`);
   const lines = [`Alert aktif di ${code}: ${feats.length}`, "", ...feats.slice(0, 10).map(renderAlert)];
   if (feats.length > 10) lines.push("", `…+${feats.length - 10} alert lain (mayoritas minor/advisory)`);
-  return claraWrap(`WX Alert — ${code} (NWS)`, lines.join("\n"));
+  return novaWrap(`WX Alert — ${code} (NWS)`, lines.join("\n"));
 }
 
 async function tropical() {
   const { status, data } = await fetchJson(NHC);
   if (status !== 200 || !Array.isArray(data?.activeStorms)) {
-    return claraWrap("WX Tropis", `❌ API NHC bermasalah (${status}). Coba lagi nanti.`);
+    return novaWrap("WX Tropis", `❌ API NHC bermasalah (${status}). Coba lagi nanti.`);
   }
   const storms = data.activeStorms;
-  if (!storms.length) return claraWrap("WX Tropis — NHC", "✨ Gak ada sistem tropis aktif di Atlantik/Pasifik sekarang.");
+  if (!storms.length) return novaWrap("WX Tropis — NHC", "✨ Gak ada sistem tropis aktif di Atlantik/Pasifik sekarang.");
   const lines = storms.map((s) => {
     const arah = ARAH[Math.round(((Number(s.movementDir) || 0) % 360) / 45) % 8];
     const klas = KLASIFIKASI[s.classification] || s.classification;
@@ -200,7 +200,7 @@ async function tropical() {
       s.publicAdvisory?.url ? `    Advisory: ${s.publicAdvisory.url}` : "",
     ].filter(Boolean).join("\n");
   });
-  return claraWrap(`WX Tropis — ${storms.length} Sistem Aktif (NHC)`, lines.join("\n\n") + "\n\nSumber: NHC NOAA.");
+  return novaWrap(`WX Tropis — ${storms.length} Sistem Aktif (NHC)`, lines.join("\n\n") + "\n\nSumber: NHC NOAA.");
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -228,7 +228,7 @@ function trackPush(db) {
 // EWS v2 — LANGGANAN
 // ══════════════════════════════════════════════════════════════
 function subHelp() {
-  return claraWrap("EWS v2 — Langganan Alert Cuaca", [
+  return novaWrap("EWS v2 — Langganan Alert Cuaca", [
     "Fitur auto-push alert cuaca AS (EWS v2 — upgrade dari EWS gempa .dsw):",
     "",
     "▸ .wxalert on — langganan nasional (Severe/Extreme seluruh AS)",
@@ -259,7 +259,7 @@ async function sendActivationSample(m, sock, db, w) {
       const serious = feats.filter((f) => SEV_RANK[f.severity] >= 3).slice(0, 2);
       for (const f of serious) {
         markSeen(w, f.id);
-        const ok = await safeSend(chat, claraWrap("EWS v2 — Contoh Alert Aktif", [
+        const ok = await safeSend(chat, novaWrap("EWS v2 — Contoh Alert Aktif", [
           `Ini sampel kondisi yang LAGI AKTIF di ${code}:`,
           "",
           renderAlert(f),
@@ -275,7 +275,7 @@ async function sendActivationSample(m, sock, db, w) {
       for (const s of storms.slice(0, 1)) {
         markSeen(w, s.id);
         const klas = KLASIFIKASI[s.classification] || s.classification;
-        const ok = await safeSend(chat, claraWrap("EWS v2 — Contoh Siklon Aktif", [
+        const ok = await safeSend(chat, novaWrap("EWS v2 — Contoh Siklon Aktif", [
           `Ini sampel sistem tropis yang LAGI AKTIF:`,
           "",
           `🌀 ${s.name} — ${klas} · angin ${s.intensity} kt · tekanan ${s.pressure} mb`,
@@ -317,12 +317,12 @@ async function subOn(m, sock, db, args) {
   if (bad.length) lines.push("", `⚠️ Gak dikenali (di-skip): ${bad.join(", ")}`);
   lines.push("", "Notifikasi diuji langsung — sampel menyusul di bawah.");
   lines.push("Berhenti: .wxalert off");
-  await m.reply(claraWrap("EWS v2 — WX Alert", lines.join("\n")));
+  await m.reply(novaWrap("EWS v2 — WX Alert", lines.join("\n")));
   // bukti langsung: kirim kondisi aktif sekarang (gak nunggu tick pertama)
   const n = await sendActivationSample(m, sock, db, w);
   saveDb(db);
   if (!n) {
-    await m.reply(claraWrap("EWS v2", "ℹ️ Belum ada kondisi serius aktif di langgananmu sekarang — alert BARU bakal otomatis muncul. Uji jalur kirim: .wxalert tes"));
+    await m.reply(novaWrap("EWS v2", "ℹ️ Belum ada kondisi serius aktif di langgananmu sekarang — alert BARU bakal otomatis muncul. Uji jalur kirim: .wxalert tes"));
   }
 }
 
@@ -330,17 +330,17 @@ async function subOff(m, db) {
   const store = getStore(db);
   const chatId = m.key.remoteJid;
   if (!store.watchers[chatId]) {
-    return m.reply(claraWrap("EWS v2", "ℹ️ Chat ini gak ada langganan WX Alert. Aktifin: .wxalert on"));
+    return m.reply(novaWrap("EWS v2", "ℹ️ Chat ini gak ada langganan WX Alert. Aktifin: .wxalert on"));
   }
   delete store.watchers[chatId];
   saveDb(db);
-  return m.reply(claraWrap("EWS v2 — WX Alert", "✅ Langganan alert cuaca chat ini udah dihentikan."));
+  return m.reply(novaWrap("EWS v2 — WX Alert", "✅ Langganan alert cuaca chat ini udah dihentikan."));
 }
 
 async function subStatus(m, db) {
   const store = getStore(db);
   const w = store.watchers[m.key.remoteJid];
-  if (!w) return m.reply(claraWrap("EWS v2", "ℹ️ Chat ini belum langganan. Aktifin: .wxalert on [nasional|tropis|<state>]"));
+  if (!w) return m.reply(novaWrap("EWS v2", "ℹ️ Chat ini belum langganan. Aktifin: .wxalert on [nasional|tropis|<state>]"));
   const lines = ["Status langganan EWS v2 chat ini:", ""];
   lines.push(w.nasional ? "▸ Nasional: 🟢 ON" : "▸ Nasional: 🔴 off");
   lines.push(w.tropis ? "▸ Tropis (NHC): 🟢 ON" : "▸ Tropis (NHC): 🔴 off");
@@ -348,7 +348,7 @@ async function subStatus(m, db) {
   lines.push(`▸ Alert udah dikirim (dedupe): ${Object.keys(w.seen || {}).length}`);
   const h = store.health;
   lines.push("", `Monitor: last tick ${h.lastTickAt ? toWIB(new Date(h.lastTickAt).toISOString()) : "—"} · total push ${h.pushes || 0}`);
-  return m.reply(claraWrap("EWS v2 — Status", lines.join("\n")));
+  return m.reply(novaWrap("EWS v2 — Status", lines.join("\n")));
 }
 
 // .wxalert tes — kirim alert CONTOH ke chat ini lewat jalur kirim yang sama
@@ -362,7 +362,7 @@ async function subTes(m, sock, db) {
     areaDesc: "Dummy County, TX",
     ends: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
   };
-  const ok = await safeSend(chat, claraWrap("EWS v2 — TES NOTIFIKASI", [
+  const ok = await safeSend(chat, novaWrap("EWS v2 — TES NOTIFIKASI", [
     "🚨 Tornado Warning (TES) — Dummy County, TX",
     `    s/d ${toWIB(fake.ends)}`,
     "",
@@ -370,9 +370,9 @@ async function subTes(m, sock, db) {
     "Kamu terima ini = notifikasi di chat ini BISA jalan.",
     "Alert ASLI di-push otomatis tiap 5 menit setelah ini.",
   ].join("\n")));
-  if (!ok) return m.reply(claraWrap("EWS v2", "❌ Tes kirim GAGAL — bot gak bisa kirim ke chat ini. Cek log."));
+  if (!ok) return m.reply(novaWrap("EWS v2", "❌ Tes kirim GAGAL — bot gak bisa kirim ke chat ini. Cek log."));
   trackPush(db); saveDb(db);
-  return m.reply(claraWrap("EWS v2", "✅ Tes kirim BERHASIL — notifikasi di chat ini berfungsi."));
+  return m.reply(novaWrap("EWS v2", "✅ Tes kirim BERHASIL — notifikasi di chat ini berfungsi."));
 }
 
 async function subHealth(m, db) {
@@ -398,7 +398,7 @@ async function subHealth(m, db) {
       lines.push(`▸ ${c.replace(/@\w+\.us$/, "…")}: ${tags}`);
     }
   }
-  return m.reply(claraWrap("EWS v2 — Health", lines.join("\n")));
+  return m.reply(novaWrap("EWS v2 — Health", lines.join("\n")));
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -413,7 +413,7 @@ async function pushAlertsPerChat(db, chat, w, feats, label) {
   let sent = 0;
   const batch = fresh.slice(0, PUSH_CAP);
   for (const f of batch) {
-    const out = claraWrap("EWS v2 — Alert Cuaca AS" + (label ? " · " + label : ""), [
+    const out = novaWrap("EWS v2 — Alert Cuaca AS" + (label ? " · " + label : ""), [
       "🚨 ALERT BARU:",
       "",
       renderAlert(f),
@@ -427,7 +427,7 @@ async function pushAlertsPerChat(db, chat, w, feats, label) {
   }
   if (fresh.length > PUSH_CAP) {
     const rest = fresh.slice(PUSH_CAP);
-    const out = claraWrap("EWS v2 — Ringkasan Sisa", [
+    const out = novaWrap("EWS v2 — Ringkasan Sisa", [
       `…+${fresh.length - PUSH_CAP} alert lain baru di ${label || "langgananmu"}:`,
       "",
       ...rest.slice(0, 8).map(renderAlert),
@@ -474,7 +474,7 @@ async function pollTropical(db, watchers) {
     for (const s of fresh.slice(0, 4)) {
       const klas = KLASIFIKASI[s.classification] || s.classification;
       const arah = ARAH[Math.round(((Number(s.movementDir) || 0) % 360) / 45) % 8];
-      const out = claraWrap("EWS v2 — Siklon Tropis BARU", [
+      const out = novaWrap("EWS v2 — Siklon Tropis BARU", [
         `🌀 ${s.name} — ${klas}`,
         "",
         `Angin: ${s.intensity} kt · Tekanan: ${s.pressure} mb`,
@@ -487,7 +487,7 @@ async function pollTropical(db, watchers) {
       if (ok) trackPush(db);
     }
     if (fresh.length > 4) {
-      await safeSend(chat, claraWrap("EWS v2 — Tropis", `…+${fresh.length - 4} sistem tropis baru lain: ${fresh.slice(4).map((s) => s.name).join(", ")}`));
+      await safeSend(chat, novaWrap("EWS v2 — Tropis", `…+${fresh.length - 4} sistem tropis baru lain: ${fresh.slice(4).map((s) => s.name).join(", ")}`));
     }
   }
 }
@@ -559,7 +559,7 @@ async function handler(m, { sock, db }) {
     else out = await stateAlerts(args[0]);
     return m.reply(out);
   } catch (e) {
-    return m.reply(claraWrap("WX Alert", `❌ Gagal nyambung ke API cuaca AS: ${e.message || e}`));
+    return m.reply(novaWrap("WX Alert", `❌ Gagal nyambung ke API cuaca AS: ${e.message || e}`));
   }
 }
 

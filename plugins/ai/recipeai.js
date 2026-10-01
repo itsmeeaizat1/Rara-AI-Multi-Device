@@ -2,7 +2,7 @@
 // AI Recipe — AI generates recipes based on available ingredients
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("recipeai", `Kasih tau bahan yang kamu punya!\n\nContoh: ${m.prefix}recipeai telur, bawang, nasi\n${m.prefix}recipeai ayam, kecap, bawang putih`, "guide"));
+      return m.reply(novaWrap("recipeai", `Kasih tau bahan yang kamu punya!\n\nContoh: ${m.prefix}recipeai telur, bawang, nasi\n${m.prefix}recipeai ayam, kecap, bawang putih`, "guide"));
     }
 
     await m.react("🕒");
@@ -49,7 +49,7 @@ Gunakan bahasa Indonesia. Resep harus praktis dan bisa dibuat di rumah.`;
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("recipeai", "AI-nya lagi di dapur yang lain 😅", "error"));
+      return m.reply(novaWrap("recipeai", "AI-nya lagi di dapur yang lain 😅", "error"));
     }
 
     // Format the response
@@ -99,7 +99,7 @@ Gunakan bahasa Indonesia. Resep harus praktis dan bisa dibuat di rumah.`;
   } catch (err) {
     console.error("recipeai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("recipeai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("recipeai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

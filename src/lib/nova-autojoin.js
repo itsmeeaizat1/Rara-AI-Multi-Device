@@ -14,7 +14,7 @@
 
 import moment from "moment-timezone";
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 
 const TZ = "Asia/Jakarta";
 const KEY = "autojoinTasks";
@@ -171,7 +171,7 @@ export async function fireAutojoinTask(sock, task, missed = false) {
     `Hasil: ${ok ? "✅ Berhasil" : "❌ Gagal"} — ${detail}`,
     `Dijadwalkan: ${formatWaktuAutojoin(task.at)}`,
   ];
-  await dmOwner(sock, task.owner, claraWrap("Autojoin", lines.join("\n")));
+  await dmOwner(sock, task.owner, novaWrap("Autojoin", lines.join("\n")));
   return ok;
 }
 

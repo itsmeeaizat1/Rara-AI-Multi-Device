@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gag2",
@@ -82,14 +82,14 @@ function formatStock(d) {
 async function modeStock(m) {
   const r = await gag2Fetch();
   if (!r.ok) {
-    return m.reply(claraWrap("gag2", `❌ ${r.error}`));
+    return m.reply(novaWrap("gag2", `❌ ${r.error}`));
   }
   return m.reply(formatStock(r.data));
 }
 
 async function modeWatch(watchItems, m, sock) {
   const wants = watchItems.map((w) => w.toLowerCase());
-  await m.reply(claraWrap("Gag2", `👀 *watching for:* ${watchItems.join(", ")}\nMax 5 iterations (~2.5 menit). Re-run buat extend.`));
+  await m.reply(novaWrap("Gag2", `👀 *watching for:* ${watchItems.join(", ")}\nMax 5 iterations (~2.5 menit). Re-run buat extend.`));
 
   for (let i = 1; i <= 5; i++) {
     const r = await gag2Fetch();
@@ -133,7 +133,7 @@ async function handler(m, { sock, args }) {
     }
   } catch (err) {
     console.error("[Gag2]", err.message);
-    m.reply(claraWrap("gag2", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("gag2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

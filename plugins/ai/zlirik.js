@@ -12,7 +12,7 @@
 // ═════════════════════════════════════════════
 
 import { zelLyrics, _setZelHttpForTest, _setZelKeyForTest } from "../../src/scraper/zelapi.js";
-import { claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 export { _setZelHttpForTest, _setZelKeyForTest };
 
@@ -52,17 +52,17 @@ async function handler(m) {
     if (!r.ok) {
       await m.react("❌");
       const map = { API_KEY: "⚠️ Key zelapi belum di-set — owner isi apikeys.json slot *zelapi*." };
-      return m.reply(claraWrap("zlirik", map[r.error] || `❌ *GAGAL: ${r.error}*`));
+      return m.reply(novaWrap("zlirik", map[r.error] || `❌ *GAGAL: ${r.error}*`));
     }
     await m.react("🐣");
 
-    return m.reply(claraWrap("zlirik",
+    return m.reply(novaWrap("zlirik",
       `🎵 *${r.title}*${r.genre && r.genre !== "-" ? ` (${r.genre})` : ""}\n\n${r.lyrics.slice(0, 3500)}\n\n` +
       `_(generator lirik teks zelapi — belum ada audio)_`));
   } catch (err) {
     console.error("[zlirik]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("zlirik", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("zlirik", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

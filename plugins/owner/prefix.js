@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import config from '../../config.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const PREF_DB_PATH = path.join(process.cwd(), "src", "database", "owner", 'prefix.json')
 
 function loadPrefixes() {
@@ -86,7 +86,7 @@ function handler(m, { sock }) {
             })
             
             if (newPrefixes.length === 0) {
-                return m.reply(claraWrap("Prefix", `❌ Tidak ada prefix baru yang valid!`))
+                return m.reply(novaWrap("Prefix", `❌ Tidak ada prefix baru yang valid!`))
             }
             
             data.prefixes = [...new Set([...data.prefixes, ...newPrefixes])]
@@ -157,7 +157,7 @@ function handler(m, { sock }) {
             if (args.includes('<noprefix>') || args.includes('noprefix')) {
                 data.noprefix = false
                 savePrefixes(data)
-                return m.reply(claraWrap("Prefix", `✅ *NopreғIx DinonaktiғKan*`))
+                return m.reply(novaWrap("Prefix", `✅ *NopreғIx DinonaktiғKan*`))
             }
             
             const toDelete = args
@@ -202,7 +202,7 @@ function handler(m, { sock }) {
             if (data.noprefix) text += ` + noprefix`
             text += `\n\`${all.join('` `')}\``
             
-            m.reply(claraWrap("prefix", text))
+            m.reply(novaWrap("prefix", text))
             break
         }
         

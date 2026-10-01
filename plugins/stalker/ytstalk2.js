@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ytstalk2.js — YouTube Stalker v2 (nexray API)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ytstalk2",
@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
   try {
     const username = m.args.join(" ").trim().replace(/@/g, "");
     if (!username) {
-      return m.reply(claraWrap("ytstalk2", `Stalk YouTube channel siapa?\n\nContoh: ${m.prefix}ytstalk2 MrBeast`, "guide"));
+      return m.reply(novaWrap("ytstalk2", `Stalk YouTube channel siapa?\n\nContoh: ${m.prefix}ytstalk2 MrBeast`, "guide"));
     }
 
     await m.react("🕒");
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
     if (!data || data.status === false || (!data.result && !data.data)) {
       await m.react("❌");
-      return m.reply(claraWrap("ytstalk2", `Channel "${username}" tidak ditemukan.`, "error"));
+      return m.reply(novaWrap("ytstalk2", `Channel "${username}" tidak ditemukan.`, "error"));
     }
 
     const r = data.result || data.data || data;
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ytstalk2 error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("ytstalk2", err.message || "Error", "error"));
+    return m.reply(novaWrap("ytstalk2", err.message || "Error", "error"));
   }
 }
 

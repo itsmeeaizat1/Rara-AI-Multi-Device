@@ -4,7 +4,7 @@
 // Fallback: edge-tts + FFmpeg pitch/formant shift (tanpa API key)
 import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
 import fs from "fs";
@@ -226,7 +226,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "apikey" || action === "key") {
       const key = args[1];
       if (!key) {
-        return m.reply(claraWrap("Voice Clone", [
+        return m.reply(novaWrap("Voice Clone", [
           "Set Fish Audio API Key untuk voice cloning real.",
           "",
           "Dapatkan API key gratis di: https://fish.audio/app/api-keys/",
@@ -244,7 +244,7 @@ async function handler(m, { sock, config: botConfig }) {
         keys.fishaudio = key;
         fs.writeFileSync(keysPath, JSON.stringify(keys, null, 2));
       } catch {}
-      return m.reply(claraWrap("Voice Clone", [
+      return m.reply(novaWrap("Voice Clone", [
         "Fish Audio API Key tersimpan!",
         "",
         "Mode: Real Voice Cloning (Fish Audio S2.1 Pro)",
@@ -259,7 +259,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "set") {
       const quoted = m.quoted;
       if (!quoted || !(quoted.message?.audioMessage || quoted.message?.pttMessage)) {
-        return m.reply(claraWrap("Voice Clone", [
+        return m.reply(novaWrap("Voice Clone", [
           "Simpan sample suara untuk cloning.",
           "",
           "Cara Pakai:",
@@ -279,7 +279,7 @@ async function handler(m, { sock, config: botConfig }) {
       try {
         await downloadAudio(quoted, samplePath);
       } catch (e) {
-        return m.reply(claraWrap("Voice Clone", `Gagal download VN: ${e.message}`));
+        return m.reply(novaWrap("Voice Clone", `Gagal download VN: ${e.message}`));
       }
 
       // Mode Fish Audio: upload ke Fish Audio buat create voice model
@@ -299,7 +299,7 @@ async function handler(m, { sock, config: botConfig }) {
           state.activeProfile = profileName;
           saveState(state);
 
-          return m.reply(claraWrap("Voice Clone", [
+          return m.reply(novaWrap("Voice Clone", [
             `Profil tersimpan: *${profileName}*`,
             `Mode: Fish Audio (Real Voice Clone)`,
             `Voice ID: ${voiceId}`,
@@ -320,7 +320,7 @@ async function handler(m, { sock, config: botConfig }) {
           };
           state.activeProfile = profileName;
           saveState(state);
-          return m.reply(claraWrap("Voice Clone", [
+          return m.reply(novaWrap("Voice Clone", [
             `Fish Audio gagal: ${e.message}`,
             `Fallback ke mode edge-tts (pitch shift)`,
             `Profil tersimpan: *${profileName}*`,
@@ -341,7 +341,7 @@ async function handler(m, { sock, config: botConfig }) {
       state.activeProfile = profileName;
       saveState(state);
 
-      return m.reply(claraWrap("Voice Clone", [
+      return m.reply(novaWrap("Voice Clone", [
         `Profil tersimpan: *${profileName}*`,
         `Mode: edge-tts (pitch shift fallback)`,
         `Pitch shift: ${analysis.pitchShift > 0 ? "+" : ""}${analysis.pitchShift} semitone`,
@@ -375,14 +375,14 @@ async function handler(m, { sock, config: botConfig }) {
       if (!useFishAudio) {
         txt += `\nSet API key Fish Audio untuk real clone:\n${prefix}voiceclone apikey <key>`;
       }
-      return m.reply(claraWrap("Voice Clone", txt));
+      return m.reply(novaWrap("Voice Clone", txt));
     }
 
     // === LIST ===
     if (action === "list") {
       const profiles = Object.keys(state.profiles);
       if (profiles.length === 0) {
-        return m.reply(claraWrap("Voice Clone", `Belum ada profil tersimpan.\n\nKetik: ${prefix}voiceclone set <nama> (reply VN)`));
+        return m.reply(novaWrap("Voice Clone", `Belum ada profil tersimpan.\n\nKetik: ${prefix}voiceclone set <nama> (reply VN)`));
       }
       let txt = `Daftar Voice Profile\n\n`;
       for (const p of profiles) {
@@ -395,31 +395,31 @@ async function handler(m, { sock, config: botConfig }) {
         if (prof.analysis) txt += `Pitch: ${prof.analysis.pitchShift > 0 ? "+" : ""}${prof.analysis.pitchShift}\n`;
         txt += `\n`;
       }
-      return m.reply(claraWrap("Voice Clone", txt));
+      return m.reply(novaWrap("Voice Clone", txt));
     }
 
     // === USE: pilih profil aktif ===
     if (action === "use") {
       const name = args[1];
       if (!name || !state.profiles[name]) {
-        return m.reply(claraWrap("Voice Clone", `Profil tidak ditemukan: ${name || "(kosong)"}\n\nKetik: ${prefix}voiceclone list`));
+        return m.reply(novaWrap("Voice Clone", `Profil tidak ditemukan: ${name || "(kosong)"}\n\nKetik: ${prefix}voiceclone list`));
       }
       state.activeProfile = name;
       saveState(state);
-      return m.reply(claraWrap("Voice Clone", `Profil aktif: *${name}*\n\nKetik: ${prefix}voiceclone <teks>`));
+      return m.reply(novaWrap("Voice Clone", `Profil aktif: *${name}*\n\nKetik: ${prefix}voiceclone <teks>`));
     }
 
     // === DEL: hapus profil ===
     if (action === "del") {
       const name = args[1];
       if (!name || !state.profiles[name]) {
-        return m.reply(claraWrap("Voice Clone", `Profil tidak ditemukan: ${name || "(kosong)"}\n\nKetik: ${prefix}voiceclone list`));
+        return m.reply(novaWrap("Voice Clone", `Profil tidak ditemukan: ${name || "(kosong)"}\n\nKetik: ${prefix}voiceclone list`));
       }
       try { fs.unlinkSync(state.profiles[name].samplePath); } catch {}
       delete state.profiles[name];
       if (state.activeProfile === name) state.activeProfile = null;
       saveState(state);
-      return m.reply(claraWrap("Voice Clone", `Profil dihapus: *${name}*`));
+      return m.reply(novaWrap("Voice Clone", `Profil dihapus: *${name}*`));
     }
 
     // === VOICE: pilih base voice (untuk edge-tts mode) ===
@@ -431,11 +431,11 @@ async function handler(m, { sock, config: botConfig }) {
           txt += `  ${id} - ${v.name}\n`;
         }
         txt += `\n💡 *Contoh:* ${prefix}voiceclone voice ardi`;
-        return m.reply(claraWrap("Voice Clone", txt));
+        return m.reply(novaWrap("Voice Clone", txt));
       }
       state.baseVoice = voiceId;
       saveState(state);
-      return m.reply(claraWrap("Voice Clone", `Base voice: *${BASE_VOICES[voiceId].name}*\n\nKetik: ${prefix}voiceclone <teks>`));
+      return m.reply(novaWrap("Voice Clone", `Base voice: *${BASE_VOICES[voiceId].name}*\n\nKetik: ${prefix}voiceclone <teks>`));
     }
 
     // === HELP ===
@@ -460,16 +460,16 @@ async function handler(m, { sock, config: botConfig }) {
         txt += `2. Set: ${prefix}voiceclone apikey <key>\n`;
         txt += `3. Simpan sample: ${prefix}voiceclone set <nama>\n`;
       }
-      return m.reply(claraWrap("Voice Clone", txt));
+      return m.reply(novaWrap("Voice Clone", txt));
     }
 
     // === GENERATE SPEECH ===
     const speechText = text;
     if (!speechText || speechText.length < 2) {
-      return m.reply(claraWrap("Voice Clone", `Teks tidak boleh kosong!\n\n💡 *Contoh:* ${prefix}voiceclone Halo semuanya`));
+      return m.reply(novaWrap("Voice Clone", `Teks tidak boleh kosong!\n\n💡 *Contoh:* ${prefix}voiceclone Halo semuanya`));
     }
     if (speechText.length > 500) {
-      return m.reply(claraWrap("Voice Clone", "Teks maksimal 500 karakter."));
+      return m.reply(novaWrap("Voice Clone", "Teks maksimal 500 karakter."));
     }
 
     const profile = state.activeProfile ? state.profiles[state.activeProfile] : null;
@@ -516,7 +516,7 @@ async function handler(m, { sock, config: botConfig }) {
       try {
         await generateEdgeTTS(speechText, voiceId, ttsPath);
       } catch (e) {
-        return m.reply(claraWrap("Voice Clone", `Gagal generate TTS: ${e.message}\n\nPastikan edge-tts terinstall: pip install edge-tts`));
+        return m.reply(novaWrap("Voice Clone", `Gagal generate TTS: ${e.message}\n\nPastikan edge-tts terinstall: pip install edge-tts`));
       }
 
       audioPath = path.join(CLONE_DIR, `clone_${Date.now()}.ogg`);
@@ -530,7 +530,7 @@ async function handler(m, { sock, config: botConfig }) {
         try {
           await execAsync(`ffmpeg -y -i "${ttsPath}" -c:a libopus -b:a 64k "${audioPath}"`, { timeout: 15000 });
         } catch (e2) {
-          return m.reply(claraWrap("Voice Clone", `Gagal convert audio: ${e2.message}`));
+          return m.reply(novaWrap("Voice Clone", `Gagal convert audio: ${e2.message}`));
         }
       }
       try { fs.unlinkSync(ttsPath); } catch {}
@@ -551,9 +551,9 @@ async function handler(m, { sock, config: botConfig }) {
       info += `Profil: ${state.activeProfile || "default"}\n`;
       info += `Mode: ${mode}\n`;
       info += `Teks: "${speechText.slice(0, 60)}${speechText.length > 60 ? "..." : ""}"`;
-      await m.reply(claraWrap("Voice Clone", info));
+      await m.reply(novaWrap("Voice Clone", info));
     } catch (e) {
-      return m.reply(claraWrap("Voice Clone", `Gagal kirim VN: ${e.message}`));
+      return m.reply(novaWrap("Voice Clone", `Gagal kirim VN: ${e.message}`));
     }
 
     // Cleanup
@@ -561,7 +561,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   } catch (e) {
     console.error("[voiceclone] Error:", e.message);
-    return m.reply(claraWrap("Voice Clone", `Error: ${e.message}`));
+    return m.reply(novaWrap("Voice Clone", `Error: ${e.message}`));
   }
 }
 

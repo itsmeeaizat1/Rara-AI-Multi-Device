@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "astrologi",
@@ -84,7 +84,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const dateStr = (args[1] || "").trim();
 
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    await m.reply(claraWrap("Astrologi", "Format: " + prefix + "astrologi <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "astrologi 2000-05-15"));
+    await m.reply(novaWrap("Astrologi", "Format: " + prefix + "astrologi <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "astrologi 2000-05-15"));
     return { handled: true };
   }
 
@@ -101,7 +101,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const lifePath = getLifePath(dateStr);
   const lifePathMeaning = LIFE_PATHS[lifePath] || "Unik & bermakna";
 
-  await m.reply(claraWrap("Astrologi: " + dateStr, [
+  await m.reply(novaWrap("Astrologi: " + dateStr, [
     "Zodiac: " + zodiac.name + " (" + zodiac.symbol + ")",
     "Element: " + zodiac.element,
     "Quality: " + zodiac.quality,

@@ -8,7 +8,7 @@ import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({

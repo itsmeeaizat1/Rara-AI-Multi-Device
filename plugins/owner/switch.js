@@ -11,7 +11,7 @@ import { pluginStore } from '../../src/lib/nova-plugins.js'
 import {
   NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled
 } from '../../src/lib/nova-saluran-broadcast.js'
-import { toSC, claraWrap, bracketBox, tipText, separator, novaCaption } from '../../src/lib/nova-menu-style.js'
+import { toSC, novaWrap, bracketBox, tipText, separator, novaCaption } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
 
@@ -555,7 +555,7 @@ async function handleChannel(m, { sock, config: cfg, direct }) {
   if (!subCmd || subCmd === 'status' || subCmd === 'cek') {
     const statuses = getAllNotifyStatus()
     let onCount = 0, offCount = 0
-    let text = claraWrap("Switch Channel", `Channel: *${cfg?.saluran?.name || "Belum diset nih"}*
+    let text = novaWrap("Switch Channel", `Channel: *${cfg?.saluran?.name || "Belum diset nih"}*
 Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
 
     for (const [key, info] of Object.entries(statuses)) {
@@ -570,11 +570,11 @@ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
   if (subCmd === 'all') {
     const action = args[2]?.toLowerCase()
     if (action !== 'on' && action !== 'off')
-      return m.reply(claraWrap("Switch Channel", `Gunakan: \`${prefix}switch channel all on\` atau \`${prefix}switch channel all off\``))
+      return m.reply(novaWrap("Switch Channel", `Gunakan: \`${prefix}switch channel all on\` atau \`${prefix}switch channel all off\``))
     const enabled = action === 'on'
     let count = 0
     for (const key of Object.keys(NOTIFY_EVENTS)) { setNotifyEnabled(key, enabled); count++ }
-    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap("SEMUA EVENT", `Status: *${enabled ? "ALL ON" : "ALL OFF"}*
+    return m.reply(novaWrap("Switch Channel", "🔔") + "\n\n" + novaWrap("SEMUA EVENT", `Status: *${enabled ? "ALL ON" : "ALL OFF"}*
 Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch channel\``))
   }
 
@@ -585,14 +585,14 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
     const current = getAllNotifyStatus()[subCmd].enabled
     const newVal = verb === 'on' ? true : verb === 'off' ? false : !current
     if (newVal === current && (verb === 'on' || verb === 'off'))
-      return m.reply(claraWrap("Switch Channel", [
+      return m.reply(novaWrap("Switch Channel", [
         `Event: *${NOTIFY_EVENTS[subCmd]}*`,
         `Sudah *${newVal ? "ON" : "OFF"}* — gak ada perubahan`,
         ``,
         scopeLine(FEATURE_SCOPES.saluran),
       ].join("\n")))
     setNotifyEnabled(subCmd, newVal)
-    return m.reply(claraWrap("Switch Channel", [
+    return m.reply(novaWrap("Switch Channel", [
       `Event: *${NOTIFY_EVENTS[subCmd]}*`,
       `Status: *${newVal ? "ON" : "OFF"}*`,
       ``,
@@ -602,7 +602,7 @@ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch chan
 
   let list = ""
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) list += `\`${key}\` — ${label}\n`
-  return m.reply(claraWrap("Switch Channel", [
+  return m.reply(novaWrap("Switch Channel", [
     `Event *${subCmd}* tidak ada dalam daftar toggle.`,
     ``,
     { subHeader: "Event Tersedia" },
@@ -623,7 +623,7 @@ async function sendGroupTargetPicker(m, sock, prefix, feature, featureName, forc
     .map((g) => ({ jid: g.id, subject: (g.subject || g.id || "").trim(), count: (g.participants || []).length }))
     .sort((a, b) => a.subject.localeCompare(b.subject))
 
-  const text = claraWrap("Switch Group", [
+  const text = novaWrap("Switch Group", [
     `Fitur : ${feature.label}`,
     `Mode : target terpusat`,
     ``,
@@ -733,14 +733,14 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       try { groups = (await sock.groupFetchAllParticipating()) || {} } catch {}
       const list = Object.values(groups)
       if (!list.length)
-        return m.reply(claraWrap("Switch Group", [
+        return m.reply(novaWrap("Switch Group", [
           `Fitur : SEMUA fitur grup`,
           `Target : semua grup`,
           ``,
           `Bot belum berada di grup mana pun.`,
         ].join("\n")))
       for (const g of list) applyBulk(g.id)
-      return m.reply(claraWrap("Switch Group", [
+      return m.reply(novaWrap("Switch Group", [
         `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
         `Target : semua grup`,
         `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
@@ -752,14 +752,14 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     if (target && isJidLikeBulk) {
       let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
       if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
-        return m.reply(claraWrap("Switch Group", [
+        return m.reply(novaWrap("Switch Group", [
           `JID grup tidak valid: *${groupJid}*`,
           ``,
           `Contoh benar: \`${prefix}switch group all ${verb} 12036302xxxxx@g.us\``,
         ].join("\n"), "warn"))
       let subject = groupJid
       try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
-        return m.reply(claraWrap("Switch Group", [
+        return m.reply(novaWrap("Switch Group", [
           `Fitur : SEMUA fitur grup`,
           `Target : ${groupJid}`,
           ``,
@@ -768,14 +768,14 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
         ].join("\n")))
       }
       applyBulk(groupJid)
-      return m.reply(claraWrap("Switch Group", [
+      return m.reply(novaWrap("Switch Group", [
         `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
         `Target : ${subject}`,
         `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
       ].join("\n")))
     }
     if (!String(m.chat || "").endsWith("@g.us")) {
-      return m.reply(claraWrap("Switch Group", [
+      return m.reply(novaWrap("Switch Group", [
         `Fitur : SEMUA fitur grup`,
         `Lokasi : chat pribadi`,
         ``,
@@ -786,7 +786,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       ].join("\n")))
     }
     applyBulk(m.chat)
-    return m.reply(claraWrap("Switch Group", [
+    return m.reply(novaWrap("Switch Group", [
       `Fitur : SEMUA fitur grup (${Object.keys(GROUP_FEATURES).length})`,
       `Grup : grup ini`,
       `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
@@ -797,7 +797,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
   const feature = GROUP_FEATURES[resolved]
 
   if (!feature)
-    return m.reply(claraWrap("Switch Group", [
+    return m.reply(novaWrap("Switch Group", [
       `Fitur tidak ditemukan: *${featureName}*`,
       ``,
       `Ketik \`${prefix}switch group\` untuk melihat daftar`,
@@ -810,7 +810,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     const inGrpInfo = String(m.chat || "").endsWith("@g.us")
     const gdInfo = inGrpInfo ? (db.getGroup(m.chat) || {}) : {}
     const activeInfo = inGrpInfo ? isOn(gdInfo[feature.dbKey], feature.on) : null
-    return m.reply(claraWrap("Info Fitur", [
+    return m.reply(novaWrap("Info Fitur", [
       `Fitur : ${feature.label}`,
       scopeLine(FEATURE_SCOPES.grup),
       ``,
@@ -842,7 +842,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
     try { groups = (await sock.groupFetchAllParticipating()) || {} } catch {}
     const list = Object.values(groups)
     if (!list.length)
-      return m.reply(claraWrap("Switch Group", [
+      return m.reply(novaWrap("Switch Group", [
         `Fitur : ${feature.label}`,
         `Target : semua grup`,
         ``,
@@ -853,7 +853,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       db.setGroup(g.id, forceOff ? { [feature.dbKey]: feature.off } : { [feature.dbKey]: feature.on })
       count++
     }
-    return m.reply(claraWrap("Switch Group", [
+    return m.reply(novaWrap("Switch Group", [
       `Fitur : ${feature.label}`,
       `Target : semua grup`,
       `Status : *${forceOff ? "OFF" : "ON"}*`,
@@ -869,14 +869,14 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
   if (target && isJidLikeTarget) {
     let groupJid = target.endsWith('@g.us') ? target : `${target.replace(/[^0-9-]/g, "")}@g.us`
     if (!/^\d[\d-]{7,}@g\.us$/.test(groupJid))
-      return m.reply(claraWrap("Switch Group", [
+      return m.reply(novaWrap("Switch Group", [
           `JID grup tidak valid: *${groupJid}*`,
           ``,
           `Contoh benar: \`${prefix}switch group ${featureName} on 12036302xxxxx@g.us\``,
         ].join("\n"), "warn"))
     let subject = groupJid
     try { subject = (await sock.groupMetadata(groupJid))?.subject || groupJid } catch {
-      return m.reply(claraWrap("Switch Group", [
+      return m.reply(novaWrap("Switch Group", [
         `Fitur : ${feature.label}`,
         `Target : ${groupJid}`,
         ``,
@@ -887,7 +887,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff, direct }) {
       ].join("\n")))
     }
     db.setGroup(groupJid, forceOff ? { [feature.dbKey]: feature.off } : { [feature.dbKey]: feature.on })
-    return m.reply(claraWrap("Switch Group", [
+    return m.reply(novaWrap("Switch Group", [
       `Fitur : ${feature.label}`,
       `Target : ${subject}`,
       `Status : *${forceOff ? "OFF" : "ON"}*`,
@@ -957,7 +957,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     if (sub === 'all' || sub === 'semua') {
       const act = (args[2] || '').toLowerCase()
       if (act !== 'on' && act !== 'off')
-        return m.reply(claraWrap("Switch Auto", [
+        return m.reply(novaWrap("Switch Auto", [
           `Fitur : SEMUA fitur otomatis`,
           ``,
           `Gunakan: \`${prefix}switch auto all on\` atau \`${prefix}switch auto all off\``,
@@ -967,7 +967,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       for (const reg of Object.values(AUTO_REGISTRY)) {
         try { reg.toggle(on); ok++ } catch { fail++ }
       }
-      return m.reply(claraWrap("Switch Auto", [
+      return m.reply(novaWrap("Switch Auto", [
         `Fitur : SEMUA fitur otomatis`,
         `Status : *${on ? "ALL ON" : "ALL OFF"}*`,
         ``,
@@ -989,12 +989,12 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       txt += `\n`
     }
     txt += tipText(`ON: \`${prefix}switch auto <nama> on\` | OFF: \`${prefix}switch auto <nama> off\` | SEMUA: \`${prefix}switch auto all on/off\``)
-    return m.reply(claraWrap("Switch Auto", txt.trim()))
+    return m.reply(novaWrap("Switch Auto", txt.trim()))
   }
 
   const reg = AUTO_REGISTRY[autoKey]
   if (!reg)
-    return m.reply(claraWrap("Switch Auto", [
+    return m.reply(novaWrap("Switch Auto", [
       `Fitur tidak ditemukan: *${autoKey}*`,
       ``,
       `Ketik \`${prefix}switch auto\` untuk melihat daftar`,
@@ -1075,7 +1075,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       }
       // tanpa nomor → TOMBOT NAV (request owner 12 Sep: tombol biar gampang):
       // single_select daftar grup (kirim JID langsung) + quick_reply nav
-      const body = claraWrap("Switch Auto Target", [
+      const body = novaWrap("Switch Auto Target", [
         `Fitur : ${reg.label}`,
         `Mode : pilih grup tujuan`,
         ``,
@@ -1111,7 +1111,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
       const sub = rest[1] || ''
       if (!sub) {
         // 🔹 TOMBOL NAV (request owner 12 Sep) — pilih via tombol atau ketik manual
-        const body = claraWrap("Switch Auto Target", [
+        const body = novaWrap("Switch Auto Target", [
           `Fitur : ${reg.label}`,
           `Mode : pilih target DM`,
           ``,
@@ -1149,7 +1149,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
     // ── set (tanpa opsi) → status + TOMBOL NAV (request owner 12 Sep: "tambah
     // tombol nav agar mempermudah") — pilih DM/grup/global via tombol, fallback teks
     const setCmd = (sub) => `${prefix}switch auto ${autoKey} set ${sub}`
-    const body = claraWrap("Switch Auto Target", [
+    const body = novaWrap("Switch Auto Target", [
       `Fitur : ${reg.label}`,
       `Target sekarang : ${describeAutoTarget(cfg)}`,
       ``,
@@ -1232,7 +1232,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey, explicitAction }) {
           extraWarn = `\n\n⚠️ Belum ada PENERIMA — notifikasi berita BELUM akan terkirim.\n• Pilih target lewat TOMBOL di bawah, ATAU\n• Jalankan \`${prefix}beritanotify on\` di chat/grup yang mau dapat berita.`
         }
       }
-      const body = claraWrap("Switch Auto Target", [
+      const body = novaWrap("Switch Auto Target", [
         `${reg.label} : ON`,
         ``,
         `Target sekarang : ${describeAutoTarget(cfgNow)}`,
@@ -1395,7 +1395,7 @@ async function handleMaster(m, { sock, config: cfg }) {
   const db = getDatabase()
   const action = ((m.args || [])[1] || '').toLowerCase()
   if (action !== 'on' && action !== 'off')
-    return m.reply(claraWrap("Switch Semua", [
+    return m.reply(novaWrap("Switch Semua", [
       `Mode : master switch terpusat`,
       ``,
       `Mengatur SEMUANYA sekaligus:`,
@@ -1434,7 +1434,7 @@ async function handleMaster(m, { sock, config: cfg }) {
     groupCount++
   }
 
-  return m.reply(claraWrap("Switch Semua", [
+  return m.reply(novaWrap("Switch Semua", [
     `Mode : master switch`,
     `Status : *${on ? "SEMUA ON" : "SEMUA OFF"}*`,
     ``,
@@ -1505,7 +1505,7 @@ async function handleStatusAll(m, { sock, config: cfg }) {
   txt += "\n" + tipText(`📍 Grup (hanya di grup) | 🌍 Global (grup & DM) | 📢 Saluran (broadcast di saluran WA)`)
   txt += "\n" + tipText(`Aktif: ${on} | Mati: ${off} | Total: ${total}`)
   txt += "\n" + tipText(`Detail: \`${prefix}switch auto\` | \`${prefix}switch channel\` | \`${prefix}switch group\` | \`${prefix}switch fitur\``)
-  return m.reply(claraWrap("Switch Status", txt.trim()))
+  return m.reply(novaWrap("Switch Status", txt.trim()))
 }
 
 // ═══════════════════════════════════════════════════════════

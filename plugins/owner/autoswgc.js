@@ -10,7 +10,7 @@
 import fs from "fs";
 import path from "path";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { formatTime, formatDate } from "../../src/lib/nova-time.js";
 import { config } from "../../config.js";
 
@@ -169,7 +169,7 @@ function fmtCfg(cfg) {
   const media = cfg.mediaFile && fs.existsSync(cfg.mediaFile)
     ? `ada (${mediaKindOf(fs.readFileSync(cfg.mediaFile)) || "file"})`
     : "belum ada";
-  return claraWrap("Auto SWGC", [
+  return novaWrap("Auto SWGC", [
     `Status: ${cfg.on ? "🟢 AKTIF" : "🔴 MATI"}`,
     "",
     `⏰ Jadwal: ${(cfg.time || []).join(", ") || "-"} WIB`,
@@ -193,10 +193,10 @@ async function handler(m, { sock, db: _db }) {
   // caption <teks>
   if (sub === "caption") {
     const teks = rest.replace(/^\S+\s+\S+\s?/, "").trim();
-    if (!teks) return m.reply(claraWrap("Auto SWGC", "Kasih teksnya: .autoswgc caption Selamat pagi semua!", "error"));
+    if (!teks) return m.reply(novaWrap("Auto SWGC", "Kasih teksnya: .autoswgc caption Selamat pagi semua!", "error"));
     cfg.caption = teks;
     db.save();
-    return m.reply(claraWrap("Auto SWGC", `Caption ke-simpen: "${teks.slice(0, 80)}"`));
+    return m.reply(novaWrap("Auto SWGC", `Caption ke-simpen: "${teks.slice(0, 80)}"`));
   }
 
   // media — reply foto/video → simpan persist
@@ -207,10 +207,10 @@ async function handler(m, { sock, db: _db }) {
       }
       cfg.mediaFile = null;
       db.save();
-      return m.reply(claraWrap("Auto SWGC", "Media AutoSWGC dihapus — nanti kirim teks caption doang."));
+      return m.reply(novaWrap("Auto SWGC", "Media AutoSWGC dihapus — nanti kirim teks caption doang."));
     }
     const src = m.quoted?.isImage || m.quoted?.isVideo ? m.quoted : (m.isImage || m.isVideo ? m : null);
-    if (!src) return m.reply(claraWrap("Auto SWGC", "Reply foto/video yang mau jadi media AutoSWGC, atau .autoswgc media clear", "error"));
+    if (!src) return m.reply(novaWrap("Auto SWGC", "Reply foto/video yang mau jadi media AutoSWGC, atau .autoswgc media clear", "error"));
     try {
       const buf = await src.download();
       if (!buf || buf.length < 100) throw new Error("media kosong");
@@ -225,9 +225,9 @@ async function handler(m, { sock, db: _db }) {
       }
       cfg.mediaFile = file;
       db.save();
-      return m.reply(claraWrap("Auto SWGC", `Media ${kind === "image" ? "foto" : "video"} ke-simpen (persist, aman pas restart).`));
+      return m.reply(novaWrap("Auto SWGC", `Media ${kind === "image" ? "foto" : "video"} ke-simpen (persist, aman pas restart).`));
     } catch (e) {
-      return m.reply(claraWrap("Auto SWGC", `Gagal simpen media: ${e?.message || e}`, "error"));
+      return m.reply(novaWrap("Auto SWGC", `Gagal simpen media: ${e?.message || e}`, "error"));
     }
   }
 
@@ -236,75 +236,75 @@ async function handler(m, { sock, db: _db }) {
     const act = (args[1] || "list").toLowerCase();
     const val = (args[2] || "").trim();
     if (act === "list") {
-      return m.reply(claraWrap("Auto SWGC", `Jadwal: ${(cfg.time || []).join(", ") || "-"} WIB`));
+      return m.reply(novaWrap("Auto SWGC", `Jadwal: ${(cfg.time || []).join(", ") || "-"} WIB`));
     }
     if (!/^\d{1,2}:\d{2}$/.test(val)) {
-      return m.reply(claraWrap("Auto SWGC", "Format jam HH:mm ya, contoh: .autoswgc time add 08:00", "error"));
+      return m.reply(novaWrap("Auto SWGC", "Format jam HH:mm ya, contoh: .autoswgc time add 08:00", "error"));
     }
     const [hh, mm] = val.split(":").map(Number);
     const norm = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
-    if (hh > 23 || mm > 59) return m.reply(claraWrap("Auto SWGC", "Jam gak valid (HH 00-23, mm 00-59).", "error"));
+    if (hh > 23 || mm > 59) return m.reply(novaWrap("Auto SWGC", "Jam gak valid (HH 00-23, mm 00-59).", "error"));
     if (act === "add") {
-      if (cfg.time.includes(norm)) return m.reply(claraWrap("Auto SWGC", `Jadwal ${norm} udah ada.`));
+      if (cfg.time.includes(norm)) return m.reply(novaWrap("Auto SWGC", `Jadwal ${norm} udah ada.`));
       cfg.time.push(norm);
       cfg.time.sort();
       db.save();
-      return m.reply(claraWrap("Auto SWGC", `Jadwal ${norm} WIB ditambah. Sekarang: ${cfg.time.join(", ")}`));
+      return m.reply(novaWrap("Auto SWGC", `Jadwal ${norm} WIB ditambah. Sekarang: ${cfg.time.join(", ")}`));
     }
     if (act === "del") {
       const i = cfg.time.indexOf(norm);
-      if (i < 0) return m.reply(claraWrap("Auto SWGC", `Jadwal ${norm} gak ada di daftar.`, "error"));
+      if (i < 0) return m.reply(novaWrap("Auto SWGC", `Jadwal ${norm} gak ada di daftar.`, "error"));
       cfg.time.splice(i, 1);
       db.save();
-      return m.reply(claraWrap("Auto SWGC", `Jadwal ${norm} WIB dihapus. Sisa: ${cfg.time.join(", ") || "-"}`));
+      return m.reply(novaWrap("Auto SWGC", `Jadwal ${norm} WIB dihapus. Sisa: ${cfg.time.join(", ") || "-"}`));
     }
-    return m.reply(claraWrap("Auto SWGC", "Sub time: add <HH:mm> · del <HH:mm> · list", "error"));
+    return m.reply(novaWrap("Auto SWGC", "Sub time: add <HH:mm> · del <HH:mm> · list", "error"));
   }
 
   // delay <detik>
   if (sub === "delay") {
     const d = parseInt(args[1], 10);
-    if (!d || d < 3 || d > 120) return m.reply(claraWrap("Auto SWGC", "Delay 3-120 detik ya, contoh: .autoswgc delay 21", "error"));
+    if (!d || d < 3 || d > 120) return m.reply(novaWrap("Auto SWGC", "Delay 3-120 detik ya, contoh: .autoswgc delay 21", "error"));
     cfg.delaySec = d;
     db.save();
-    return m.reply(claraWrap("Auto SWGC", `Jeda antar grup: ${d}s`));
+    return m.reply(novaWrap("Auto SWGC", `Jeda antar grup: ${d}s`));
   }
 
   // blacklist — dipakai DI GRUP (toggle grup itu)
   if (sub === "blacklist") {
     const act = (args[1] || "toggle").toLowerCase();
     if (act === "list") {
-      return m.reply(claraWrap("Auto SWGC", `Blacklist ${cfg.blacklist.length} grup:\n${cfg.blacklist.join("\n") || "-"}`));
+      return m.reply(novaWrap("Auto SWGC", `Blacklist ${cfg.blacklist.length} grup:\n${cfg.blacklist.join("\n") || "-"}`));
     }
     if (act === "clear") {
       cfg.blacklist = [];
       db.save();
-      return m.reply(claraWrap("Auto SWGC", "Blacklist dikosongkan — semua grup kembali dikirimi."));
+      return m.reply(novaWrap("Auto SWGC", "Blacklist dikosongkan — semua grup kembali dikirimi."));
     }
     if (!m.isGroup || !m.chat?.endsWith("@g.us")) {
-      return m.reply(claraWrap("Auto SWGC", "Blacklist dipakai DI DALAM grup yang mau di-skip: .autoswgc blacklist (toggle) · list · clear", "error"));
+      return m.reply(novaWrap("Auto SWGC", "Blacklist dipakai DI DALAM grup yang mau di-skip: .autoswgc blacklist (toggle) · list · clear", "error"));
     }
     const i = cfg.blacklist.indexOf(m.chat);
     if (i >= 0) {
       cfg.blacklist.splice(i, 1);
       db.save();
-      return m.reply(claraWrap("Auto SWGC", `Grup ini DIKELUARKAN dari blacklist — AutoSWGC aktif lagi di sini.`));
+      return m.reply(novaWrap("Auto SWGC", `Grup ini DIKELUARKAN dari blacklist — AutoSWGC aktif lagi di sini.`));
     }
     cfg.blacklist.push(m.chat);
     db.save();
-    return m.reply(claraWrap("Auto SWGC", `Grup ini DIBLACKLIST — AutoSWGC skip grup ini.`));
+    return m.reply(novaWrap("Auto SWGC", `Grup ini DIBLACKLIST — AutoSWGC skip grup ini.`));
   }
 
   // tes / kirim — jalankan SEKARANG
   if (sub === "tes" || sub === "kirim") {
     const res = await runAutoSwgcOnce(sock, db);
     if (res?.skipped === "kosong") {
-      return m.reply(claraWrap("Auto SWGC", "Caption & media masih kosong — set dulu via .autoswgc caption <teks>", "error"));
+      return m.reply(novaWrap("Auto SWGC", "Caption & media masih kosong — set dulu via .autoswgc caption <teks>", "error"));
     }
     if (res?.skipped === "running") {
-      return m.reply(claraWrap("Auto SWGC", "Masih ada pengiriman berjalan — sabar ya."));
+      return m.reply(novaWrap("Auto SWGC", "Masih ada pengiriman berjalan — sabar ya."));
     }
-    return m.reply(claraWrap("Auto SWGC", [
+    return m.reply(novaWrap("Auto SWGC", [
       `Tes kirim selesai: ${res.success}/${res.total} grup (${res.media})`,
       ...(res.failed?.length ? ["", `Gagal: ${res.failed.join(", ")}`] : []),
     ]));
@@ -314,7 +314,7 @@ async function handler(m, { sock, db: _db }) {
   if (sub === "on" || sub === "off") {
     cfg.on = sub === "on";
     db.save();
-    return m.reply(claraWrap("Auto SWGC", `AutoSWGC ${cfg.on ? "DIHIDUPKAN 🟢" : "DIMATIKAN 🔴"} — jadwal: ${cfg.time.join(", ")} WIB`));
+    return m.reply(novaWrap("Auto SWGC", `AutoSWGC ${cfg.on ? "DIHIDUPKAN 🟢" : "DIMATIKAN 🔴"} — jadwal: ${cfg.time.join(", ")} WIB`));
   }
 
   // status / default

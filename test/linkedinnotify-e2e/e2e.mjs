@@ -44,7 +44,7 @@ const mkM = (chat) => ({
   react: async (e) => { },
 });
 const lastReply = () => String(mkM._last || "");
-const toSC = (s) => String(s); // claraWrap smallcaps — assert pakai substring longgar
+const toSC = (s) => String(s); // novaWrap smallcaps — assert pakai substring longgar
 
 const clear = () => { sent.length = 0; mkM._last = null; };
 

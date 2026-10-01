@@ -5,7 +5,7 @@
 
 import { evaluate, format } from "mathjs";
 import {
-  novaError, novaCaption, claraWrap, tipText,
+  novaError, novaCaption, novaWrap, tipText,
 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -85,7 +85,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
 
     if (!/to|ke|->|→|=/i.test(raw) || !/\d/.test(raw)) {
       const text =
-        claraWrap("Convert", [
+        novaWrap("Convert", [
           `Input: *${raw}*`,
           "Status: *format salah*",
           "",
@@ -106,7 +106,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     );
 
     const text =
-      claraWrap("Convert", [
+      novaWrap("Convert", [
         `📐 *${raw}*`,
         `Hasil : *${pretty}*`,
       ].join("\n")) +

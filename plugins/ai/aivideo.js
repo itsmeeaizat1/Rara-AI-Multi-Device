@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aivideo — TEXT → VIDEO AI (KuroNeko text2vid, engine sora) — GENERATOR
 // VIDEO AI PERTAMA di bot! Key: apikeys.json kuroneko.
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { haidarTxt2vid } from "../../src/scraper/haidar-ai.js";
 
@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.args.join(" ").trim();
   if (!prompt) {
-    return m.reply(claraWrap("aivideo", `Bikin video AI dari teks!\n\nContoh: ${m.prefix}aivideo kucing astronot berjalan di bulan\n${m.prefix}aivideo ombak besar di pantai saat senja\n\nProses 1-3 menit, sabar ya 🎬`, "guide"));
+    return m.reply(novaWrap("aivideo", `Bikin video AI dari teks!\n\nContoh: ${m.prefix}aivideo kucing astronot berjalan di bulan\n${m.prefix}aivideo ombak besar di pantai saat senja\n\nProses 1-3 menit, sabar ya 🎬`, "guide"));
   }
   try {
     await m.react("🕒");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     if (!buf || buf.length < 20000) throw new Error("file video kosong");
 
     await m.react("🐣");
-    const caption = claraWrap("aivideo", `🎬 Video AI berhasil dibuat!\n\n📝 Prompt: *${prompt}*\n⚙️ Engine: Haidar txt2vid (sora)\n📦 Ukuran: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
+    const caption = novaWrap("aivideo", `🎬 Video AI berhasil dibuat!\n\n📝 Prompt: *${prompt}*\n⚙️ Engine: Haidar txt2vid (sora)\n📦 Ukuran: ${(buf.length / 1024 / 1024).toFixed(1)} MB`);
     await sock.sendMessage(m.chat, {
       video: buf,
       caption,
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aivideo error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("aivideo", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("aivideo", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

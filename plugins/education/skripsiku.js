@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -26,7 +26,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .skripsiku ide <bidang>
   if (sub === "ide" || sub === "judul") {
     if (!input) {
-      return m.reply( claraWrap("Skripsiku - Ide Judul", [
+      return m.reply( novaWrap("Skripsiku - Ide Judul", [
         `Generate ide judul skripsi berdasarkan bidang.`,
         ``,
         `Contoh:`,
@@ -51,7 +51,7 @@ Kriteria:
 - Jangan terlalu umum, spesifik`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return m.reply( claraWrap("Skripsiku - Ide Judul", `${input}\n\n${result}`), { commandName: "skripsiku" });
+      return m.reply( novaWrap("Skripsiku - Ide Judul", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
       return m.reply( novaError("Skripsiku", `Gagal generate nih: ${e.message}`), { commandName: "skripsiku" });
     }
@@ -60,7 +60,7 @@ Kriteria:
   // .skripsiku outline <topik>
   if (sub === "outline" || sub === "struktur") {
     if (!input) {
-      return m.reply( claraWrap("Skripsiku - Outline", [
+      return m.reply( novaWrap("Skripsiku - Outline", [
         `Generate outline bab 1-5 berdasarkan topik.`,
         ``,
         `Contoh:`,
@@ -80,7 +80,7 @@ BAB X: [Nama Bab]
 Sesuaikan dengan standar skripsi Indonesia. Bab 3 harus sesuai jenis penelitian (kualitatif/kuantitatif/R&D).`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return m.reply( claraWrap("Skripsiku - Outline", `${input}\n\n${result}`), { commandName: "skripsiku" });
+      return m.reply( novaWrap("Skripsiku - Outline", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
       return m.reply( novaError("Skripsiku", `Gagal generate nih: ${e.message}`), { commandName: "skripsiku" });
     }
@@ -89,7 +89,7 @@ Sesuaikan dengan standar skripsi Indonesia. Bab 3 harus sesuai jenis penelitian 
   // .skripsiku review <teks paragraf>
   if (sub === "review" || sub === "cek") {
     if (!input) {
-      return m.reply( claraWrap("Skripsiku - Review", [
+      return m.reply( novaWrap("Skripsiku - Review", [
         `Review paragraf skripsi (struktur, bahasa, logika).`,
         ``,
         `Contoh:`,
@@ -110,7 +110,7 @@ Format:
 5. Revisi: [versi paragraf yang sudah diperbaiki]`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah reviewer skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return m.reply( claraWrap("Skripsiku - Review", result), { commandName: "skripsiku" });
+      return m.reply( novaWrap("Skripsiku - Review", result), { commandName: "skripsiku" });
     } catch (e) {
       return m.reply( novaError("Skripsiku", `Gagal review nih: ${e.message}`), { commandName: "skripsiku" });
     }
@@ -119,7 +119,7 @@ Format:
   // .skripsiku referensi <topik>
   if (sub === "referensi" || sub === "sumber") {
     if (!input) {
-      return m.reply( claraWrap("Skripsiku - Referensi", [
+      return m.reply( novaWrap("Skripsiku - Referensi", [
         `Saran referensi pendukung untuk topik.`,
         ``,
         `Contoh:`,
@@ -136,14 +136,14 @@ Format:
 Minimal 3 referensi jurnal internasional, sisanya bebas (buku/web akademik).`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return m.reply( claraWrap("Skripsiku - Referensi", `${input}\n\n${result}`), { commandName: "skripsiku" });
+      return m.reply( novaWrap("Skripsiku - Referensi", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
       return m.reply( novaError("Skripsiku", `Gagal nih: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
   // Default: help
-  const txt = claraWrap("Skripsiku - Asisten Skripsi AI", [
+  const txt = novaWrap("Skripsiku - Asisten Skripsi AI", [
     `Bantuan skripsi pakai AI (ide judul, outline, review, referensi)`,
     ``,
     `Perintah:`,

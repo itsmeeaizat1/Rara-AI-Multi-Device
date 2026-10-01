@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { Txt2Img2 } from "../../src/scraper/txt2img2.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "txt2img2",
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const result = await Txt2Img2(text);
 
     if (!result.status) {
-      { return await m.reply(claraWrap(m.command, result.error || "Generate gagal, coba lagi ya", "error")); };
+      { return await m.reply(novaWrap(m.command, result.error || "Generate gagal, coba lagi ya", "error")); };
     }
 
     await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\nPrompt: *${result.prompt}*`, m, {

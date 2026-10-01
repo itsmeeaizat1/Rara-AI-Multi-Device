@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "tts",
   alias: ["tts"],
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (err) {
-    m.reply(claraWrap("tts", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("tts", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

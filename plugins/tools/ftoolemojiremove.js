@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolemojiremove — buang emoji dari teks (port altftool.com/tools/all/emoji-remover)
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolemojiremove", alias: ["emojiremove", "hapusemoji", "stripemoji"], category: "tools",
@@ -30,15 +30,15 @@ async function handler(m, { sock, config: botConfig }) {
       .trim();
     if (!out) {
       await m.react("❌");
-      return m.reply(claraWrap("Emoji Remove", ["ERROR: hasilnya kosong — isinya emoji semua?"].join("\n")));
+      return m.reply(novaWrap("Emoji Remove", ["ERROR: hasilnya kosong — isinya emoji semua?"].join("\n")));
     }
     await m.react("🐣");
-    await m.reply(claraWrap("Emoji Remove", ["EMOJI DIBUANG",
+    await m.reply(novaWrap("Emoji Remove", ["EMOJI DIBUANG",
       "",
       "```" + (out.length > 800 ? out.substring(0, 800) + "…" : out) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Emoji Remove", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Emoji Remove", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

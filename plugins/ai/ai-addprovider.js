@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
 
 
@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
           })
         : ["(belum ada provider custom)"];
 
-      const text = claraWrap("AI Providers",
+      const text = novaWrap("AI Providers",
         "🤖 BAWAAN:\n" + builtinLines.join("\n") +
         "\n\n➕ CUSTOM:\n" + customLines.join("\n") +
         "\n\n📋 PAKAI:\n" +
@@ -84,7 +84,7 @@ async function handler(m, { sock, config: botConfig }) {
       const key = String(parts[2] || "").trim().toLowerCase();
       if (!key) {
         const text =
-          claraWrap("Hapus Provider", [`Nama provider tidak boleh kosong.`,
+          novaWrap("Hapus Provider", [`Nama provider tidak boleh kosong.`,
             `Contoh: *${prefix}ai-addprovider delete myai*`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
       const custom = getCustomProviders();
       if (!custom[key]) {
         const text =
-          claraWrap("Tidak Ditemukan", [`Provider *${key}* tidak ditemukan.`,
+          novaWrap("Tidak Ditemukan", [`Provider *${key}* tidak ditemukan.`,
             `Ketik *${prefix}ai-addprovider list* untuk lihat daftar.`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
       setCustomProviders(custom);
 
       const text =
-        claraWrap("AI Providers", [`Provider *${key}* sudah dihapus.`].join("\n")) +
+        novaWrap("AI Providers", [`Provider *${key}* sudah dihapus.`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}ai-addprovider list untuk cek sisa provider`) +
         "\n" +
@@ -154,7 +154,7 @@ async function handler(m, { sock, config: botConfig }) {
     setCustomProviders(custom);
 
     const text =
-      claraWrap("AI Providers", [`Nama: *${name}*`,
+      novaWrap("AI Providers", [`Nama: *${name}*`,
         `Endpoint: *${endpoint}*`,
         `Model: *${model}*`,
         `API Key: *${apiKey ? "Tersimpan" : "Kosong"}*`].join("\n")) +

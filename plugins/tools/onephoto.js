@@ -8,7 +8,7 @@
 // (API Onepunya cuma terima image URL, bukan buffer/base64).
 import axios from "axios";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { upscaleImage, removeBg } from "../../src/lib/nova-onepunya.js";
 import { uploadImage } from "../../src/lib/nova-uploader.js";
 
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   try {
     const imgUrl = await getQuotedImageUrl(m);
     if (!imgUrl) {
-      return m.reply(claraWrap("Onepunya Photo", `Reply/kutip sebuah foto dengan command ini!\n\nContoh: reply foto → .${cmd === "onenobg" || cmd === "onebgremove" ? "onenobg" : "oneupscale"}`));
+      return m.reply(novaWrap("Onepunya Photo", `Reply/kutip sebuah foto dengan command ini!\n\nContoh: reply foto → .${cmd === "onenobg" || cmd === "onebgremove" ? "onenobg" : "oneupscale"}`));
     }
 
     // ── Hapus background ──
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     if (MODELS.includes(args2[0]?.toUpperCase?.() || "")) { model = args2.shift().toUpperCase(); }
     if (/^[1-4]$/.test(args2[0] || "")) { rescale = parseInt(args2.shift(), 10); }
     if (!MODELS.includes(model)) {
-      return m.reply(claraWrap("Onepunya Photo", `Model gak valid: ${model}\n\nYang tersedia: ${MODELS.join(" | ")}`));
+      return m.reply(novaWrap("Onepunya Photo", `Model gak valid: ${model}\n\nYang tersedia: ${MODELS.join(" | ")}`));
     }
     const res = await upscaleImage(apiKey, imgUrl, model, rescale);
     const out = res?.url || "";
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     const dl = await axios.get(out, { responseType: "arraybuffer", timeout: 120_000 });
     await sock.sendMessage(m.chat, { image: Buffer.from(dl.data), caption: `🪄 ${model} · rescale ${rescale}x — Onepunya API` }, { quoted: m });
   } catch (e) {
-    return m.reply(claraWrap("Onepunya Photo", `Gagal: ${String(e.message || e).slice(0, 200)}`));
+    return m.reply(novaWrap("Onepunya Photo", `Gagal: ${String(e.message || e).slice(0, 200)}`));
   }
 }
 

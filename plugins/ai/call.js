@@ -5,7 +5,7 @@
 // 🔹 .telpon <teks> → jawab satu kali pakai VN
 // 🔹 .telpon suara <nama> → ganti voice (Gadis/Ardi/Siti/dll)
 // ============================================================
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import {
   isTelponOn, setTelponMode, getTelponVoice, setTelponVoice,
   telponSpeak, handleTelponVn,
@@ -37,26 +37,26 @@ async function handler(m, { sock, db, config } = {}) {
   // ── on / off ──
   if (sub === "on" || sub === "off") {
     if (sub === "on" && on) {
-      return m.reply(claraWrap("Telpon", [`📞 Mode telepon udah AKTIF di chat ini.`]));
+      return m.reply(novaWrap("Telpon", [`📞 Mode telepon udah AKTIF di chat ini.`]));
     }
     setTelponMode(db, m.chat, sub === "on");
     await m.react("🐣");
     if (sub === "on") {
-      return m.reply(claraWrap("Telpon", [
+      return m.reply(novaWrap("Telpon", [
         `📞 Mode telepon AKTIF!`,
         ``,
         `Kirim voice note apa aja — aku dengerin terus jawab pakai suara. Otaknya sama kayak .novaagent: inget obrolan + kenangan kamu.`,
         `Matikan: ${m.prefix}telpon off`,
       ]));
     }
-    return m.reply(claraWrap("Telpon", [`📴 Mode telepon mati. Ngobrol lagi: ${m.prefix}telpon on`]));
+    return m.reply(novaWrap("Telpon", [`📴 Mode telepon mati. Ngobrol lagi: ${m.prefix}telpon on`]));
   }
 
   // ── suara <nama> ──
   if (sub === "suara" || sub === "voice") {
     const picked = (args[1] || "").replace(/^./, (c) => c.toUpperCase());
     if (!picked || !HAIDAR_VOICES.includes(picked)) {
-      return m.reply(claraWrap("Telpon", [
+      return m.reply(novaWrap("Telpon", [
         `🎤 Voice kamu sekarang: ${voice}`,
         ``,
         `Pilihan voice:`,
@@ -67,7 +67,7 @@ async function handler(m, { sock, db, config } = {}) {
     }
     setTelponVoice(db, m.sender, picked);
     await m.react("🐣");
-    return m.reply(claraWrap("Telpon", [`✅ Voice diganti jadi ${picked}.`]));
+    return m.reply(novaWrap("Telpon", [`✅ Voice diganti jadi ${picked}.`]));
   }
 
   // ── teks → dijawab VN (one-shot) ──
@@ -82,7 +82,7 @@ async function handler(m, { sock, db, config } = {}) {
   }
 
   // ── default: status + panduan ──
-  return m.reply(claraWrap("Telpon", [
+  return m.reply(novaWrap("Telpon", [
     `📞 Voice agent — ngobrol pakai suara ala telepon.`,
     ``,
     `Status chat ini: ${on ? "🟢 AKTIF — semua VN dijawab suara" : "🔴 mati"}`,

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import FormData from "form-data";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "shazam",
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const isAudio = m.message?.audioMessage || (quoted && (quoted.audioMessage || quoted.pttMessage));
 
     if (!isAudio) {
-      return m.reply(claraWrap("shazam", `Kirim/reply audio dengan caption ${m.prefix}shazam untuk recognize lagu.`, "guide"));
+      return m.reply(novaWrap("shazam", `Kirim/reply audio dengan caption ${m.prefix}shazam untuk recognize lagu.`, "guide"));
     }
 
     await m.react("🕒");
@@ -36,12 +36,12 @@ async function handler(m, { sock }) {
       }
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("shazam", "Gagal download audio. Coba lagi.", "error"));
+      return m.reply(novaWrap("shazam", "Gagal download audio. Coba lagi.", "error"));
     }
 
     if (!audioBuffer) {
       await m.react("❌");
-      return m.reply(claraWrap("shazam", "Audio tidak ditemukan.", "error"));
+      return m.reply(novaWrap("shazam", "Audio tidak ditemukan.", "error"));
     }
 
     // Upload ke audd.io
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
 
     if (!data || data.status !== "success" || !data.result) {
       await m.react("❌");
-      return m.reply(claraWrap("shazam", "Lagu tidak dikenali. Coba audio yang lebih jelas.", "error"));
+      return m.reply(novaWrap("shazam", "Lagu tidak dikenali. Coba audio yang lebih jelas.", "error"));
     }
 
     const r = data.result;
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("shazam error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("shazam", err.message || "Error", "error"));
+    return m.reply(novaWrap("shazam", err.message || "Error", "error"));
   }
 }
 

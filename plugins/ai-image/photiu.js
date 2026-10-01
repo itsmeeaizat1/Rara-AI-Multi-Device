@@ -2,7 +2,7 @@
 // photiu — Generate gambar dari teks via GPT Image (IkyyXD)
 // Original /ai/photiu down, redirected to /ai/gptimage
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(claraWrap("Photiu", [
+      return m.reply(novaWrap("Photiu", [
         "Generate gambar dari teks via Photiu AI",
         "",
         "CARA PAKAI:",
@@ -49,22 +49,22 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: Buffer.from(res.data),
-        caption: claraWrap("Photiu", `Prompt: ${text}`),
+        caption: novaWrap("Photiu", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       try {
         const errData = JSON.parse(res.data.toString());
         await m.react("❌");
-        await m.reply(claraWrap("Photiu", errData?.error || errData?.message || "Gagal generate gambar."));
+        await m.reply(novaWrap("Photiu", errData?.error || errData?.message || "Gagal generate gambar."));
       } catch {
         await m.react("❌");
-        await m.reply(claraWrap("Photiu", "Gagal generate gambar. Coba prompt lain."));
+        await m.reply(novaWrap("Photiu", "Gagal generate gambar. Coba prompt lain."));
       }
     }
   } catch (e) {
     console.error("[photiu.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Photiu", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("Photiu", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

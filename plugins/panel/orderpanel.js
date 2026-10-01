@@ -9,7 +9,7 @@
 // Config owner: .autoorder (plugins/owner/autoorder.js).
 import { config } from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import {
   RAM_PACKAGES, ensureOrderCfg, packagePrice, getOrderPanelCfg, checkPanelOnline,
   buildPakasir, provisionPanel, provisionAdmin, fmtRupiah, getOrderTimings,
@@ -48,7 +48,7 @@ async function dm(sock, jid, text) {
 // ── daftar harga ──
 function priceList(cfg, panelNum) {
   const rows = Object.keys(RAM_PACKAGES).map((k) => `• ${k.toUpperCase()} — ${fmtRupiah(packagePrice(cfg, k))}`);
-  return claraWrap("Auto Order Panel", [
+  return novaWrap("Auto Order Panel", [
     `Panel: v${panelNum} · Bayar QRIS otomatis (Pakasir)`,
     "",
     ...rows,
@@ -71,16 +71,16 @@ async function runOrder(m, { sock, db }, kind) {
   const chat = m.chat;
 
   // guard konfigurasi
-  if (!cfg.on) return m.reply(claraWrap("Auto Order Panel", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
+  if (!cfg.on) return m.reply(novaWrap("Auto Order Panel", "Auto order sedang tidak aktif. Hubungi owner ya.", "error"));
   if (!cfg.pakasir.slug || !cfg.pakasir.apikey) {
-    return m.reply(claraWrap("Auto Order Panel", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
+    return m.reply(novaWrap("Auto Order Panel", "Pembayaran belum dikonfigurasi (owner belum set Pakasir).", "error"));
   }
   const panelCfg = getOrderPanelCfg(cfg.panel);
   if (!panelCfg) {
-    return m.reply(claraWrap("Auto Order Panel", `Panel v${cfg.panel} belum dikonfigurasi. Hubungi owner.`, "error"));
+    return m.reply(novaWrap("Auto Order Panel", `Panel v${cfg.panel} belum dikonfigurasi. Hubungi owner.`, "error"));
   }
   if (pendingOrders.has(buyer)) {
-    return m.reply(claraWrap("Auto Order Panel", "Kamu masih punya order berjalan. Tunggu selesai/dibatalkan dulu ya.", "error"));
+    return m.reply(novaWrap("Auto Order Panel", "Kamu masih punya order berjalan. Tunggu selesai/dibatalkan dulu ya.", "error"));
   }
 
   // parse argumen
@@ -95,13 +95,13 @@ async function runOrder(m, { sock, db }, kind) {
   }
   const clean = String(username || "").toLowerCase().replace(/[^a-z0-9_]/g, "");
   if (kind !== "admin" && !RAM_PACKAGES[pkgKey]) {
-    return m.reply(claraWrap("Auto Order Panel", novaGuide(".orderpanel <ram>|<username>", [
+    return m.reply(novaWrap("Auto Order Panel", novaGuide(".orderpanel <ram>|<username>", [
       `Paket RAM tersedia: ${Object.keys(RAM_PACKAGES).join(", ")}`,
       `Contoh: .orderpanel 2gb|budi123`,
     ])));
   }
   if (!clean || clean.length < 3) {
-    return m.reply(claraWrap("Auto Order Panel", `Username minimal 3 huruf/angka${kind === "admin" ? `.\nContoh: .orderadmin budi123` : ` setelah tanda |.\nContoh: .orderpanel 2gb|budi123`}`, "error"));
+    return m.reply(novaWrap("Auto Order Panel", `Username minimal 3 huruf/angka${kind === "admin" ? `.\nContoh: .orderadmin budi123` : ` setelah tanda |.\nContoh: .orderpanel 2gb|budi123`}`, "error"));
   }
   const price = kind === "admin" ? cfg.adminPrice : packagePrice(cfg, pkgKey);
   const orderId = "NOVA-" + Date.now().toString(36).toUpperCase() + "-" + clean.slice(0, 6);
@@ -109,7 +109,7 @@ async function runOrder(m, { sock, db }, kind) {
 
   // panel harus online
   const cek = await checkPanelOnline(panelCfg.domain);
-  if (!cek.ready) return m.reply(claraWrap("Auto Order Panel", `Panel sedang tidak tersedia: ${cek.message}`, "error"));
+  if (!cek.ready) return m.reply(novaWrap("Auto Order Panel", `Panel sedang tidak tersedia: ${cek.message}`, "error"));
 
   pendingOrders.add(buyer);
   const { intervalMs, timeoutMs } = getOrderTimings();
@@ -139,8 +139,8 @@ async function runOrder(m, { sock, db }, kind) {
       "",
       `Order kedaluwarsa otomatis ${Math.round(timeoutMs / 60000)} menit. Lunas = panel dibuat otomatis.`,
     ].join("\n");
-    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: claraWrap("Invoice Order", invoiceTextBody) }, { quoted: m });
-    else await m.reply(claraWrap("Invoice Order", invoiceTextBody));
+    if (qrBuf) await sock.sendMessage(chat, { image: qrBuf, caption: novaWrap("Invoice Order", invoiceTextBody) }, { quoted: m });
+    else await m.reply(novaWrap("Invoice Order", invoiceTextBody));
 
     // poll sampai lunas/kedaluwarsa
     const t0 = Date.now();
@@ -155,16 +155,16 @@ async function runOrder(m, { sock, db }, kind) {
     }
 
     if (status === "canceled") {
-      await m.reply(claraWrap("Auto Order Panel", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
+      await m.reply(novaWrap("Auto Order Panel", `Order ${orderId} dibatalkan. Order lagi kapan pun ya.`));
       return;
     }
     if (status !== "completed") {
-      await m.reply(claraWrap("Auto Order Panel", `Order ${orderId} kedaluwarsa (belum dibayar). Panel tidak dibuat.`));
+      await m.reply(novaWrap("Auto Order Panel", `Order ${orderId} kedaluwarsa (belum dibayar). Panel tidak dibuat.`));
       return;
     }
 
     // LUNAS → provisioning otomatis
-    await m.reply(claraWrap("Auto Order Panel", `Pembayaran diterima! Membuat ${produk} untuk ${clean}… tunggu sebentar.`));
+    await m.reply(novaWrap("Auto Order Panel", `Pembayaran diterima! Membuat ${produk} untuk ${clean}… tunggu sebentar.`));
     const result = kind === "admin"
       ? await provisionAdmin(panelCfg, clean)
       : await provisionPanel(panelCfg, pkgKey, clean);
@@ -172,7 +172,7 @@ async function runOrder(m, { sock, db }, kind) {
     if (!result.ok) {
       const msgFail = `Order ${orderId} LUNAS tapi provisioning GAGAL: ${result.error}. Sertifikasi sudah dihubungi owner — dana diproses manual.`;
       await dm(sock, ownerJid(), `[AUTO ORDER] Order ${orderId} (${produk}, ${fmtRupiah(price)}, buyer ${buyer.split("@")[0]}) LUNAS tapi provisioning gagal: ${result.error}. Mohon proses manual.`);
-      return m.reply(claraWrap("Auto Order Panel", msgFail, "error"));
+      return m.reply(novaWrap("Auto Order Panel", msgFail, "error"));
     }
 
     // kredensial — SELALU ke DM buyer
@@ -190,16 +190,16 @@ async function runOrder(m, { sock, db }, kind) {
       "",
       "Simpan kredensial ini baik-baik ya. Selamat memakai!",
     ].join("\n");
-    const sentDm = await dm(sock, buyer, claraWrap("Panel Kamu Siap", credText));
+    const sentDm = await dm(sock, buyer, novaWrap("Panel Kamu Siap", credText));
     if (!sentDm) {
       // DM gagal (misal buyer gak pernah chat bot) — kasih tau lewat chat asal TANPA password
-      await m.reply(claraWrap("Auto Order Panel", `Panel kamu udah jadi, tapi bot gak bisa DM kamu. Chat bot ini dulu (kirim "halo") lalu minta owner kirim ulang kredensial order ${orderId}.`));
+      await m.reply(novaWrap("Auto Order Panel", `Panel kamu udah jadi, tapi bot gak bisa DM kamu. Chat bot ini dulu (kirim "halo") lalu minta owner kirim ulang kredensial order ${orderId}.`));
     } else if (m.isGroup) {
-      await m.reply(claraWrap("Auto Order Panel", `Panel kamu udah jadi — kredensial dikirim ke DM kamu ya ${orderId}.`));
+      await m.reply(novaWrap("Auto Order Panel", `Panel kamu udah jadi — kredensial dikirim ke DM kamu ya ${orderId}.`));
     }
     await dm(sock, ownerJid(), `[AUTO ORDER] Order ${orderId} sukses: ${produk} ${fmtRupiah(price)} — buyer ${buyer.split("@")[0]} (username: ${result.username}).`);
   } catch (e) {
-    await m.reply(claraWrap("Auto Order Panel", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
+    await m.reply(novaWrap("Auto Order Panel", `Order gagal: ${e?.message || e}. Coba lagi atau hubungi owner.`, "error"));
   } finally {
     pendingOrders.delete(buyer);
   }

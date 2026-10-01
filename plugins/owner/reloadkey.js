@@ -7,7 +7,7 @@
 // .reloadkey status — cek key mana yang aktif (masked)
 import { reloadKeys } from "../../src/lib/config/env-loader.js";
 import { getAllKeyStatus, getMaskedKey } from "../../src/lib/nova-api-keys.js";
-import { novaError, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "reloadkey",
@@ -41,12 +41,12 @@ async function handler(m, { config: botConfig }) {
         "",
         "File pusat: src/lib/apikey/apikeys.json",
       ];
-      return m.reply(claraWrap(lines.join("\n")));
+      return m.reply(novaWrap(lines.join("\n")));
     }
 
     reloadKeys();
     return m.reply(
-      claraWrap(
+      novaWrap(
         "Semua API key di-reload dari src/lib/apikey/apikeys.json.\n\n" +
           "Fitur AI/downloader langsung pakai key baru — tanpa restart.\n\n" +
           tipText(prefix + "reloadkey status — lihat key aktif")

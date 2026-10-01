@@ -2,7 +2,7 @@
 // Qwen3 replaced with callIkyy (ikyyxd qwen endpoint)
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
 const pluginConfig = {

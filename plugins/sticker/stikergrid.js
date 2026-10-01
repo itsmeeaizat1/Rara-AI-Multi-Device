@@ -4,7 +4,7 @@ import path from "path";
 import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stikergrid",
@@ -47,7 +47,7 @@ function createSession(chatJid, sender, sock, m) {
       sessions.delete(chatJid);
       try {
         await sock.sendMessage(chatJid, {
-          text: claraWrap(
+          text: novaWrap(
             "Stiker Grid",
             `Sesi kolase kedaluwarsa.\nFoto terkumpul: ${s.images.length}/${MIN_PHOTOS}\n\nKirim ulang \`${config.command?.prefix || "."}stikergrid\` untuk mencoba lagi.`
           ),
@@ -189,7 +189,7 @@ async function handler(m, { sock, db }) {
 
       if (count < MIN_PHOTOS) {
         await m.reply(
-          claraWrap(
+          novaWrap(
             "Stiker Grid",
             `Foto ${count}/${MIN_PHOTOS} terkumpul.\nKirim ${MIN_PHOTOS - count} foto lagi, atau kirim ${MAX_PHOTOS - count} foto maksimal.\n\nKetik *selesai* untuk langsung buat, atau *batal* untuk batalkan.`
           )
@@ -201,7 +201,7 @@ async function handler(m, { sock, db }) {
       if (count < MAX_PHOTOS) {
         // Beri pilihan: lanjut kirim atau sekarang
         await m.reply(
-          claraWrap(
+          novaWrap(
             "Stiker Grid",
             `Foto ${count} terkumpul.\n\nKirim ${MAX_PHOTOS - count} foto lagi untuk grid lebih penuh, atau ketik *selesai* untuk buat stiker sekarang.\nKetik *batal* untuk membatalkan.`
           )
@@ -213,7 +213,7 @@ async function handler(m, { sock, db }) {
       await processCollage(session, chatJid, sock, m);
     } catch (err) {
       console.log("[StikerGrid] Error collecting:", err.message);
-      await m.reply(claraWrap("Stiker Grid", "Terjadi error saat mengumpulkan foto."));
+      await m.reply(novaWrap("Stiker Grid", "Terjadi error saat mengumpulkan foto."));
     }
     return;
   }
@@ -233,7 +233,7 @@ async function handler(m, { sock, db }) {
   if (m.text?.toLowerCase().trim() === "batal" && session) {
     clearTimeout(session.timer);
     sessions.delete(chatJid);
-    await m.reply(claraWrap("Stiker Grid", "Sesi kolase dibatalkan."));
+    await m.reply(novaWrap("Stiker Grid", "Sesi kolase dibatalkan."));
     return;
   }
 
@@ -258,7 +258,7 @@ async function handler(m, { sock, db }) {
   const collected = newSession.images.length;
 
   await m.reply(
-    claraWrap(
+    novaWrap(
       "Stiker Grid",
       `Mode kolase stiker aktif.\n\nKirim ${MIN_PHOTOS}-${MAX_PHOTOS} foto untuk digabung jadi satu stiker grid.\n\nFoto terkumpul: ${collected}/${MIN_PHOTOS}\n\nKetik *selesai* untuk buat stiker (min ${MIN_PHOTOS} foto).\nKetik *batal* untuk membatalkan.\nSesi otomatis berakhir dalam 45 detik.`
     )
@@ -270,7 +270,7 @@ async function processCollage(session, chatJid, sock, m) {
   try {
     if (session.images.length < MIN_PHOTOS) {
       await sock.sendMessage(chatJid, {
-        text: claraWrap(
+        text: novaWrap(
           "Stiker Grid",
           `Foto belum cukup. Minimal ${MIN_PHOTOS} foto, saat ini ${session.images.length}.`
         ),
@@ -283,7 +283,7 @@ async function processCollage(session, chatJid, sock, m) {
     }
 
     await sock.sendMessage(chatJid, {
-      text: claraWrap("Stiker Grid", `Membuat kolase dari ${session.images.length} foto...`),
+      text: novaWrap("Stiker Grid", `Membuat kolase dari ${session.images.length} foto...`),
     });
 
     // Build collage

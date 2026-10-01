@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import {  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -43,13 +43,13 @@ async function handler(m, { sock }) {
             count++
         }
         if (status) {
-            return m.reply(claraWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
+            return m.reply(novaWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `✅ Welcome: *AKTIF*\n` +
                 `---\n\n` +
                 `Semua member baru akan disambut otomatis!`))       } else {
-            return m.reply(claraWrap("welcomeall", `❌ *Welcome Global Off*\n\n` +
+            return m.reply(novaWrap("welcomeall", `❌ *Welcome Global Off*\n\n` +
                 "" +
                 `🌐 Total Grup: *${count}*\n` +
                 `❌ Welcome: *NONAKTIF*\n` +
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         console.error('[WelcomeAll] Error:', error.message)
-        await m.reply(claraWrap("welcomeall", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("welcomeall", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

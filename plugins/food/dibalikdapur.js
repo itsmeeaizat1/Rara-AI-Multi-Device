@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 // === KONVERSI UKURAN DAPUR ===
 const CONVERSIONS = {
@@ -207,7 +207,7 @@ async function handler(m, { sock, args }) {
     const from = parts[1];
     const to = parts[2];
 
-    if (isNaN(amount)) return m.reply(claraWrap("Dibalikdapur", `Angka tidak valid: "${parts[0]}"`));
+    if (isNaN(amount)) return m.reply(novaWrap("Dibalikdapur", `Angka tidak valid: "${parts[0]}"`));
 
     const conv = CONVERSIONS[from];
     if (!conv) return m.reply(`Satuan "${from}" tidak ditemukan.\n\nKetik \`${m.prefix}dapur konversi\` untuk lihat daftar satuan.`);

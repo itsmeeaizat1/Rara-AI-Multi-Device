@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import fs from "fs";
 import path from "path";
 import cekfemboy from "../../src/scraper/lufemboy.js";
@@ -88,9 +88,9 @@ ${result.hasil}`;
       });
     }
 
-    { const __navText = claraWrap("Cek Femboy", txt); await m.reply(__navText, { mentions: [mentioned] }); };
+    { const __navText = novaWrap("Cek Femboy", txt); await m.reply(__navText, { mentions: [mentioned] }); };
   } catch (err) {
-    return m.reply(claraWrap("cekfemboy", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("cekfemboy", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

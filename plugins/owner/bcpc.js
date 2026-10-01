@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   }
 
   if (global.statusBcpc) {
-    return m.reply(claraWrap("bcpc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcpc* untuk hentikan"));
+    return m.reply(novaWrap("bcpc", "Sedang berjalan.\nKetik *" + m.prefix + "stopbcpc* untuk hentikan"));
   }
 
   try {
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     delete global.statusBcpc;
-    m.reply(claraWrap("bcpc", "Gagal broadcast. Coba lagi.", "error"));
+    m.reply(novaWrap("bcpc", "Gagal broadcast. Coba lagi.", "error"));
   }
 }
 

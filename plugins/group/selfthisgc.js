@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "selfthisgc",
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
   const isSelfGroup = selfGroups.includes(m.chat);
 
   if (isSelfGroup) {
-    return m.reply(claraWrap("Grup Ini sUdah Mode sElf", 
+    return m.reply(novaWrap("Grup Ini sUdah Mode sElf", 
         `Bot hanya merespon owner & bot sendiri\n\n` +
         `_Gunakan ${m.prefix}publicthisgc untuk membuka akses_`));
   }
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   const updatedPublic = publicGroups.filter((id) => id !== m.chat);
   db.setting("publicGroups", updatedPublic);
 
-  return m.reply(claraWrap("Mode sElf Aktif", 
+  return m.reply(novaWrap("Mode sElf Aktif", 
       `Bot di grup ini sekarang hanya merespon:\n` +
       `Owner bot\n` +
       `Bot sendiri (fromMe)\n\n` +

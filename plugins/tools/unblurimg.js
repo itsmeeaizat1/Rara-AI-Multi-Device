@@ -2,7 +2,7 @@
 // UnblurImage AI — Unblur & upscale gambar via unblurimage.ai API, no token needed
 // Tested: v1 PASS (53KB->4.1MB), v2 PASS (53KB->663KB), v3 FAIL (Cloudflare block)
 import crypto from "node:crypto";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "unblurimg",
@@ -148,7 +148,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const q = m.quoted || m;
     const mime = (q.message?.[Object.keys(q.message)[0]]?.mimetype) || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("UnblurImage AI", [
+      return m.reply(novaWrap("UnblurImage AI", [
         "Unblur & upscale gambar ke HD via unblurimage.ai",
         "Gratis tanpa token, IP spoofing otomatis",
         "",
@@ -171,15 +171,15 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // Download image
     const imageBuffer = await q.download();
     if (!imageBuffer || imageBuffer.length === 0) {
-      return m.reply(claraWrap("UnblurImage AI", "Gagal download gambar. Coba lagi!"));
+      return m.reply(novaWrap("UnblurImage AI", "Gagal download gambar. Coba lagi!"));
     }
 
     // Validate size (min 5KB, max 10MB)
     if (imageBuffer.length < 5000) {
-      return m.reply(claraWrap("UnblurImage AI", "Gambar terlalu kecil (min 5KB). Gunakan gambar yang lebih besar."));
+      return m.reply(novaWrap("UnblurImage AI", "Gambar terlalu kecil (min 5KB). Gunakan gambar yang lebih besar."));
     }
     if (imageBuffer.length > 10 * 1024 * 1024) {
-      return m.reply(claraWrap("UnblurImage AI", "Gambar terlalu besar (max 10MB)."));
+      return m.reply(novaWrap("UnblurImage AI", "Gambar terlalu besar (max 10MB)."));
     }
 
     // Unblur/upscale
@@ -189,7 +189,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     try {
       await conn.sendMessage(m.key.remoteJid, {
         image: result.buffer,
-        caption: claraWrap("UnblurImage AI", [
+        caption: novaWrap("UnblurImage AI", [
           "UNBLUR & UPSCALE BERHASIL",
           "",
           "Scale: " + scale + "x",
@@ -203,7 +203,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     } catch (sendErr) {
       // Fallback: send URL
       await m.react("🐣");
-      return m.reply(claraWrap("UnblurImage AI", [
+      return m.reply(novaWrap("UnblurImage AI", [
         "UNBLUR & UPSCALE BERHASIL",
         "",
         "Scale: " + scale + "x | Model: " + model,
@@ -215,7 +215,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   } catch (e) {
     await m.react("❌");
     console.error("[UnblurImage AI]", e);
-    m.reply(claraWrap("UnblurImage AI", [
+    m.reply(novaWrap("UnblurImage AI", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",

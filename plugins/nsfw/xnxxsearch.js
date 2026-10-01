@@ -2,7 +2,7 @@
 // xnxxsearch.js — Search video NSFW
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "xnxxsearch",
@@ -19,11 +19,11 @@ async function handler(m, { sock }) {
   try {
     await m.react("🕠");
     const query = m.args?.join(" ").trim();
-    if (!query) return m.reply(claraWrap("xnxxsearch", "Masukkan kata kunci!", "guide"));
+    if (!query) return m.reply(novaWrap("xnxxsearch", "Masukkan kata kunci!", "guide"));
 
     const res = await axios.get(`https://api.siputzx.my.id/api/s/xnxx?q=${encodeURIComponent(query)}`, { timeout: 15000 });
     const data = res.data?.data || res.data?.result || [];
-    if (!data.length) return m.reply(claraWrap("xnxxsearch", "Tidak ada hasil!", "error"));
+    if (!data.length) return m.reply(novaWrap("xnxxsearch", "Tidak ada hasil!", "error"));
 
     let _lines = [];
     _lines.push(`Query: ${query}`);
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("xnxxsearch error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("xnxxsearch", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("xnxxsearch", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getBackupStatus } from "../../src/lib/nova-auto-backup.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "securityaudit",
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
     lines.push("Semua proteksi sudah aktif. Mantap!");
   }
 
-  return m.reply(claraWrap("Security Audit", lines));
+  return m.reply(novaWrap("Security Audit", lines));
 }
 
 export { pluginConfig as config, handler };

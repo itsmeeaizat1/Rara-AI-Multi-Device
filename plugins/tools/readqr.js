@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -16,7 +16,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🕒");
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      { const __navText = (claraWrap("Read QR", [`Reply gambar QR code dengan *${prefix}readqr*`,
+      { const __navText = (novaWrap("Read QR", [`Reply gambar QR code dengan *${prefix}readqr*`,
         "Bot akan membaca isi QR code"].join("\n"))); await m.reply( __navText, "readqr"); };
       return { handled: true };
     }
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = Array.isArray(data) ? data[0]?.symbol?.[0]?.data : data;
     if (!result) throw new Error("QR tidak terbaca");
     await m.react("🐣");
-    await m.reply(claraWrap("Read QR", [`Isi QR: *${result}*`].join("\n")));
+    await m.reply(novaWrap("Read QR", [`Isi QR: *${result}*`].join("\n")));
   } catch (e) {
     await m.react("❌");
     await m.reply(novaError("Tools", "Gagal nih"));

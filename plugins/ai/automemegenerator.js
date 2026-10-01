@@ -4,7 +4,7 @@
 //   One-shot (all users): .automeme — reply ke foto, generate meme sekali
 //   Persistent (owner): .toggleautomeme on/off — auto generate tiap foto masuk (default ON)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -33,7 +33,7 @@ async function doMemeAnalysis(m, sock, style) {
     const model = String(aiConfig.model || "gpt-4o-mini");
 
     if (!apiKey) {
-      await m.reply(claraWrap("Auto Meme", "API Key belum di-set. Owner: .setkey openai <key>"));
+      await m.reply(novaWrap("Auto Meme", "API Key belum di-set. Owner: .setkey openai <key>"));
       return { handled: true };
     }
 
@@ -163,7 +163,7 @@ async function doMemeAnalysis(m, sock, style) {
 
       await sock.sendMessage(m.key.remoteJid, {
         image: memeBuffer,
-        caption: claraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n")),
+        caption: novaWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n")),
       }, { quoted: m });
       memeSent = true;
     } catch (e) {
@@ -171,14 +171,14 @@ async function doMemeAnalysis(m, sock, style) {
     }
 
     if (!memeSent) {
-      await m.reply(claraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 300)].join("\n")));
+      await m.reply(novaWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 300)].join("\n")));
     }
 
     try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }
     return { handled: true };
   } catch (e) {
     console.error("[AutoMeme] One-shot error:", e.message);
-    await m.reply(claraWrap("automemegenerator", e.message || "Ada yang error nih, coba lagi ya", "error"));
+    await m.reply(novaWrap("automemegenerator", e.message || "Ada yang error nih, coba lagi ya", "error"));
     return { handled: true };
   }
 }
@@ -204,7 +204,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (isToggleAlias || (isToggleSubCmd && ["toggleautomeme", "automemetoggle"].includes(cmdName))) {
       if (!isOwner) {
         await m.react("🐣");
-        await m.reply( claraWrap("Auto Meme", [
+        await m.reply( novaWrap("Auto Meme", [
           "Toggle persistent hanya untuk owner.",
           "",
           "Kamu bisa pakai one-shot:",
@@ -217,7 +217,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (args[0] === "on" || (cmdName === "toggleautomeme" && !args[0])) {
         cfg[gid] = { enabled: true, style: cfg[gid]?.style || "auto" };
         db.db.write();
-        const text = claraWrap("Auto Meme Generator", [
+        const text = novaWrap("Auto Meme Generator", [
           "Status: ON (persistent)",
           "Style: " + (cfg[gid].style || "auto"),
           "",
@@ -230,7 +230,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (!cfg[gid]) cfg[gid] = {};
         cfg[gid].enabled = false;
         db.db.write();
-        await m.reply(claraWrap("Auto Meme Generator", "Status: OFF. Persistent mode dimatikan."), "automemegenerator");
+        await m.reply(novaWrap("Auto Meme Generator", "Status: OFF. Persistent mode dimatikan."), "automemegenerator");
         return { handled: true };
       } else if (args[0] === "style") {
         const style = args[1] || "auto";
@@ -243,12 +243,12 @@ async function handler(m, { sock, config: botConfig }) {
         cfg[gid].enabled = cfg[gid].enabled !== false; // keep current or default ON
         db.db.write();
         const styleDesc = { top: "Teks meme di atas foto", bottom: "Teks meme di bawah foto (classic)", full: "Caption panjang lucu", auto: "AI pilih style terbaik" };
-        await m.reply(claraWrap("Auto Meme Generator", ["Style: " + style, "Desc: " + styleDesc[style], "Status: " + (cfg[gid].enabled !== false ? "ON" : "OFF")].join("\n")), "automemegenerator");
+        await m.reply(novaWrap("Auto Meme Generator", ["Style: " + style, "Desc: " + styleDesc[style], "Status: " + (cfg[gid].enabled !== false ? "ON" : "OFF")].join("\n")), "automemegenerator");
         return { handled: true };
       } else if (args[0] === "status") {
         const enabled = cfg[gid]?.enabled !== false;
         const style = cfg[gid]?.style || "auto";
-        await m.reply(claraWrap("Auto Meme Generator", ["Status: " + (enabled ? "ON" : "OFF"), "Style: " + style, "", "Persistent: " + prefix + "toggleautomeme on/off", "One-shot: " + prefix + "automeme (reply foto)"].join("\n")), "automemegenerator");
+        await m.reply(novaWrap("Auto Meme Generator", ["Status: " + (enabled ? "ON" : "OFF"), "Style: " + style, "", "Persistent: " + prefix + "toggleautomeme on/off", "One-shot: " + prefix + "automeme (reply foto)"].join("\n")), "automemegenerator");
         return { handled: true };
       }
     }
@@ -276,7 +276,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return await doMemeAnalysis(m, sock, style);
   } catch (e) {
-    await m.reply(claraWrap("automemegenerator", e.message || "Ada yang error nih, coba lagi ya", "error"));
+    await m.reply(novaWrap("automemegenerator", e.message || "Ada yang error nih, coba lagi ya", "error"));
   }
   return { handled: true };
 }
@@ -410,7 +410,7 @@ export async function handleAutoMemeGen(m, sock) {
 
       await sock.sendMessage(m.key.remoteJid, {
         image: memeBuffer,
-        caption: claraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n")),
+        caption: novaWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 200)].join("\n")),
       }, { quoted: m });
       memeSent = true;
     } catch (e) {
@@ -418,7 +418,7 @@ export async function handleAutoMemeGen(m, sock) {
     }
 
     if (!memeSent) {
-      await sock.sendMessage(m.key.remoteJid, { text: claraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 300)].join("\n")) }, { quoted: m });
+      await sock.sendMessage(m.key.remoteJid, { text: novaWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 300)].join("\n")) }, { quoted: m });
     }
 
     try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }

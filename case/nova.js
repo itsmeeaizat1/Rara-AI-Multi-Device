@@ -12,7 +12,7 @@ import { getStaticThumbnail } from "../src/lib/nova-asset-manager.js";
 import {
   buildBox,
   novaReply,
-  claraWrap,
+  novaWrap,
   toSC,
   tipText,
 } from "../src/lib/nova-menu-style.js";
@@ -110,7 +110,7 @@ async function handleCommand(m, sock) {
         } catch (error) {
           console.error("[CPing] Error:", error);
           await m.react("❌");
-          await m.reply(claraWrap("Gagal", error.message, "error"));
+          await m.reply(novaWrap("Gagal", error.message, "error"));
         }
         return { handled: true };
       }
@@ -177,7 +177,7 @@ async function handleCommand(m, sock) {
         } catch (error) {
           console.error("[ListAllCase] Error:", error);
           await m.react("❌");
-          await m.reply(claraWrap("Gagal", error.message, "error"));
+          await m.reply(novaWrap("Gagal", error.message, "error"));
         }
         return { handled: true };
       }
@@ -248,7 +248,7 @@ async function handleCommand(m, sock) {
         } catch (error) {
           console.error("[ListAllPlugin] Error:", error);
           await m.react("❌");
-          await m.reply(claraWrap("Gagal", error.message, "error"));
+          await m.reply(novaWrap("Gagal", error.message, "error"));
         }
         return { handled: true };
       }
@@ -260,7 +260,7 @@ async function handleCommand(m, sock) {
   } catch (error) {
     console.error("[CaseHandler] Error:", error);
     try {
-      await m.reply(claraWrap("Error", error.message, "error"));
+      await m.reply(novaWrap("Error", error.message, "error"));
     } catch {}
     return { handled: true, error: error.message };
   }

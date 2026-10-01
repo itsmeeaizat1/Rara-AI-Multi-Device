@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "quoteanimesanka",
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     console.error("[QUOTEANIMESANKA] Error:", e.message);
     let txt = `Gagal mengambil quote anime!\n\n`;
     txt += `Error: ${e.message}`;
-    await m.reply(claraWrap("quoteanimesanka", txt));
+    await m.reply(novaWrap("quoteanimesanka", txt));
   }
 }
 

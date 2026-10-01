@@ -2,7 +2,7 @@
 import { f } from '../../src/lib/nova-http.js'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'anime-gen',
     alias: ["anime-gen", "anime"],
@@ -49,9 +49,9 @@ async function handler(m, { sock }) {
     } catch (error) {
         if (error.code === 'ECONNABORTED') {
             await m.react("🐣");
-            m.reply(claraWrap("Anime-gen", '⏱️ *Timeout*\n\nRequest terlalu lama. Coba lagi!'))
+            m.reply(novaWrap("Anime-gen", '⏱️ *Timeout*\n\nRequest terlalu lama. Coba lagi!'))
         } else {
-            m.reply(claraWrap("anime-gen", te(m.prefix, m.command, m.pushName), "error"))
+            m.reply(novaWrap("anime-gen", te(m.prefix, m.command, m.pushName), "error"))
         }
     }
 }

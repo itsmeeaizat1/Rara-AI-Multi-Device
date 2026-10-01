@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { hotReloadPlugin } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "addplugin",
@@ -50,18 +50,18 @@ async function handler(m, { sock }) {
     try {
       code = (await quoted.download()).toString();
     } catch (e) {
-      return m.reply(claraWrap("addplugin", `❌ Gagal download file`));
+      return m.reply(novaWrap("addplugin", `❌ Gagal download file`));
     }
   }
 
   if (!code || code.length < 50) {
-    return m.reply(claraWrap("addplugin", `❌ Code terlalu pendek atau tidak valid`));
+    return m.reply(novaWrap("addplugin", `❌ Code terlalu pendek atau tidak valid`));
   }
 
   const hasExport = code.includes("module.exports") || code.includes("export ");
   const hasConfig = code.includes("pluginConfig") || code.includes("config");
   if (!hasExport || !hasConfig) {
-    return m.reply(claraWrap("Addplugin", `❌ Code bukan format plugin yang valid\nHarus ada export dan config`));
+    return m.reply(novaWrap("Addplugin", `❌ Code bukan format plugin yang valid\nHarus ada export dan config`));
   }
 
   const extracted = extractPluginInfo(code);
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
   folderName = folderName.toLowerCase().replace(/[^a-z0-9\-_]/g, "");
 
   if (!fileName) {
-    return m.reply(claraWrap("Addplugin", `❌ Nama file tidak valid`));
+    return m.reply(novaWrap("Addplugin", `❌ Nama file tidak valid`));
   }
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
         `Plugin sudah aktif dan siap digunakan!`,
     );
   } catch (error) {
-    await m.reply(claraWrap("addplugin", te(m.prefix, m.command, m.pushName), "error"));
+    await m.reply(novaWrap("addplugin", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

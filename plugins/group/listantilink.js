@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'listantilink',
@@ -54,7 +54,7 @@ function handler(m, { sock }) {
     txt += `\`${m.prefix}addantilink <link>\` untuk tambah\n`
     txt += `\`${m.prefix}delantilink <link>\` untuk hapus`
     
-    m.reply(claraWrap("listantilink", txt))
+    m.reply(novaWrap("listantilink", txt))
 }
 
 export { pluginConfig as config, handler, DEFAULT_BLOCKED_LINKS }

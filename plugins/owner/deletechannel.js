@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "deletechannel",
   alias: ["hapussaluran", "deletesaluran", "deletenewsletter"],
@@ -31,9 +31,9 @@ async function handler(m, { sock }) {
 
     try {
         await sock.newsletterDelete(targetJid)
-        return m.reply(claraWrap("Hapussaluran", `🗑️ *Saluran dihapus*\n\nID: ${targetJid}`))
+        return m.reply(novaWrap("Hapussaluran", `🗑️ *Saluran dihapus*\n\nID: ${targetJid}`))
     } catch (err) {
-        return m.reply(claraWrap("deletechannel", `❌ Gagal menghapus saluran: ${err.message}`))
+        return m.reply(novaWrap("deletechannel", `❌ Gagal menghapus saluran: ${err.message}`))
     }
 }
 

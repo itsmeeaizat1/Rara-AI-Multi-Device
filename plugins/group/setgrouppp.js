@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText, claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.updateGroupPicture(m.chat, buffer);
 
     const text =
-      claraWrap("Set Group PP", [`Group: *${m.chat}*`,
+      novaWrap("Set Group PP", [`Group: *${m.chat}*`,
         "Status: *success*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

@@ -2,7 +2,7 @@
 // .game2048 — puzzle geser gabung angka sampai 2048 (port altftool.com "2048 Game")
 // Kontrol reply: w (atas) a (kiri) s (bawah) d (kanan).
 // ANIMASI KHAS: tile angka menggabung 2→4→8 (beda dari game lain).
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { editFramesAnim } from "../../src/lib/nova-anim-runner.js";
 
 const pluginConfig = {
@@ -90,10 +90,10 @@ async function handler(m, { sock, config }) {
   if (sessions.has(k)) {
     if ((m.text || "").trim().toLowerCase() === "stop") {
       sessions.delete(k);
-      return m.reply(claraWrap("2048", ["Sesi diakhiri. Skor akhir tersimpan di kartu terakhir~"].join("\n")));
+      return m.reply(novaWrap("2048", ["Sesi diakhiri. Skor akhir tersimpan di kartu terakhir~"].join("\n")));
     }
     const s = sessions.get(k);
-    return m.reply(claraWrap("2048", ["```" + render(s.grid, s.score) + "```",
+    return m.reply(novaWrap("2048", ["```" + render(s.grid, s.score) + "```",
       "",
       "Reply: w atas · a kiri · s bawah · d kanan"].join("\n")));
   }
@@ -102,7 +102,7 @@ async function handler(m, { sock, config }) {
   resetT();
   sessions.set(k, s);
   await animasiMulai(sock, m.chat);
-  return m.reply(claraWrap("2048", ["PUZZLE 2048 DIMULAI",
+  return m.reply(novaWrap("2048", ["PUZZLE 2048 DIMULAI",
     "",
     "```" + render(s.grid, s.score) + "```",
     "",
@@ -124,7 +124,7 @@ export async function answerHandler(m, sock) {
   const changed = next.some((v, i) => v !== s.grid[i]);
   if (!changed) {
     resetT(s);
-    await m.reply(claraWrap("2048", ["Gak ada tile yang bisa bergeser ke " + (DIRS[dir] || dir),
+    await m.reply(novaWrap("2048", ["Gak ada tile yang bisa bergeser ke " + (DIRS[dir] || dir),
       "",
       "```" + render(s.grid, s.score) + "```"].join("\n")));
     return true;
@@ -133,7 +133,7 @@ export async function answerHandler(m, sock) {
   if (gained > 0 || canMove(s.grid)) spawn(s.grid);
   if (s.grid.includes(2048) && !s.won) {
     s.won = true;
-    await m.reply(claraWrap("2048", ["🏆 2048 TERCAPAI!",
+    await m.reply(novaWrap("2048", ["🏆 2048 TERCAPAI!",
       "",
       "```" + render(s.grid, s.score) + "```",
       "",
@@ -144,7 +144,7 @@ export async function answerHandler(m, sock) {
   if (!canMove(s.grid)) {
     const score = s.score, moves = s.moves, grid = s.grid;
     sessions.delete(k);
-    await m.reply(claraWrap("2048", ["💀 GAME OVER — gak ada langkah tersisa",
+    await m.reply(novaWrap("2048", ["💀 GAME OVER — gak ada langkah tersisa",
       "",
       "```" + render(grid, score) + "```",
       "",
@@ -153,7 +153,7 @@ export async function answerHandler(m, sock) {
     return true;
   }
   resetT(s);
-  await m.reply(claraWrap("2048", [gained > 0 ? `+${gained} poin!` : "",
+  await m.reply(novaWrap("2048", [gained > 0 ? `+${gained} poin!` : "",
     "```" + render(s.grid, s.score) + "```"].filter(Boolean).join("\n")));
   return true;
 }

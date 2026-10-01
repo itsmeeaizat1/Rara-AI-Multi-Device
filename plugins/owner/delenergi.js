@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delenergi',
     alias: ["delenergi"],
@@ -49,13 +49,13 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\nJumlah harus lebih dari 0`))
+        return m.reply(novaWrap("Delenergi", `❌ *Gagal*\n\nJumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\nUser tidak ditemukan di database`))
+        return m.reply(novaWrap("Delenergi", `❌ *Gagal*\n\nUser tidak ditemukan di database`))
     }
     
     if (user.energi === -1) {
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     }
     
     const newEnergi = db.updateEnergi(targetJid, -amount)
-    await m.reply(claraWrap("delenergi", `✅ *Energi Dikurangi*\n\n` +
+    await m.reply(novaWrap("delenergi", `✅ *Energi Dikurangi*\n\n` +
         "" +
         `👤 User: @${targetJid.split('@')[0]}\n` +
         `➖ Kurang: *-${formatNumber(amount)}*\n` +

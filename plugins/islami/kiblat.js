@@ -14,7 +14,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kiblat",
@@ -248,7 +248,7 @@ async function handler(m, { sock }) {
     const fromLocation = resolveQuotedLocation(m);
     if (!fromLocation && !query) {
       await m.react("❌");
-      return m.reply(claraWrap("kiblat", [
+      return m.reply(novaWrap("kiblat", [
         "Mau cek arah kiblat dari mana?",
         "",
         "📍 *Cara 1:* reply pesan lokasi (kirim lokasi di WhatsApp, terus reply dengan .kiblat)",
@@ -268,7 +268,7 @@ async function handler(m, { sock }) {
 
     if (!loc) {
       await m.react("❌");
-      return m.reply(claraWrap("kiblat", `Tempat "${query}" gak ketemu — coba nama yang lebih spesifik (contoh: ${m.prefix}kiblat Monas Jakarta)`, "error"));
+      return m.reply(novaWrap("kiblat", `Tempat "${query}" gak ketemu — coba nama yang lebih spesifik (contoh: ${m.prefix}kiblat Monas Jakarta)`, "error"));
     }
 
     const bearing = qiblaBearing(loc.lat, loc.lon);
@@ -306,7 +306,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("kiblat error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("kiblat", "gagal hitung arah kiblat: " + (err?.message || "error"), "error"));
+    return m.reply(novaWrap("kiblat", "gagal hitung arah kiblat: " + (err?.message || "error"), "error"));
   }
 }
 

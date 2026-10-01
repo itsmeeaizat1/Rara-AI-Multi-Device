@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[nhentai.js]:', e.message); }
 
     const text =
-      claraWrap("NHentai", [`Query: *${query}*`,
+      novaWrap("NHentai", [`Query: *${query}*`,
         `Hasil: *${resultText}*`,
         "Status: *berhasil*"].join("\n")) +
       "\n" +

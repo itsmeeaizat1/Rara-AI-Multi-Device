@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pddikti",
@@ -158,12 +158,12 @@ async function handler(m, { sock,  args }) {
     const mode = args[0].toLowerCase();
     
     if (mode === "detail") {
-      if (args.length < 2) return m.reply(claraWrap("Pddikti", "❌ Masukkan ID Mahasiswa!"));
+      if (args.length < 2) return m.reply(novaWrap("Pddikti", "❌ Masukkan ID Mahasiswa!"));
       const mhsId = args[1];
       const res = await pddikti({ mode: "detail", mahasiswaId: mhsId });
       
       if (!res.Status) {
-        return m.reply(claraWrap("pddikti", `❌ ${res.Error}`));
+        return m.reply(novaWrap("pddikti", `❌ ${res.Error}`));
       }
       
       const r = res.Result;
@@ -177,16 +177,16 @@ async function handler(m, { sock,  args }) {
       txt += `- 📅 Tgl Masuk     : *${r.tanggalMasuk}*\n`;
       txt += `- 📊 Status        : *${r.statusSaatIni}*\n`;
       txt += `- 💼 Jenis Daftar  : *${r.jenisDaftar}*\n`;
-      return await m.reply(claraWrap("pddikti", txt));
+      return await m.reply(novaWrap("pddikti", txt));
     }
     
     // For other modes
     const query = args.slice(1).join(" ");
-    if (!query) return m.reply(claraWrap("Pddikti", "❌ Masukkan kata kunci pencarian!"));
+    if (!query) return m.reply(novaWrap("Pddikti", "❌ Masukkan kata kunci pencarian!"));
     
     const res = await pddikti({ mode, query });
     if (!res.Status) {
-      return m.reply(claraWrap("pddikti", `❌ ${res.Error}`));
+      return m.reply(novaWrap("pddikti", `❌ ${res.Error}`));
     }
     
     const r = res.Result;
@@ -242,7 +242,7 @@ async function handler(m, { sock,  args }) {
     
   } catch (err) {
     console.error("[PDDIKTI]", err.message);
-    m.reply(claraWrap("pddikti", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("pddikti", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

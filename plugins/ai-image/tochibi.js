@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 import { uploadImage } from '../../src/lib/nova-uploader.js'
 import { f } from '../../src/lib/nova-http.js'
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(claraWrap("tochibi", `❌ Gagal mendownload gambar`))
+            return m.reply(novaWrap("tochibi", `❌ Gagal mendownload gambar`))
         }
 
         const PROMPT = `Transform into chibi style, big head and small body proportions, cute expression, big sparkling eyes, smooth shading, soft lighting, highly detailed, high quality`
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
         ] }))
         
     } catch (error) {
-        m.reply(claraWrap("tochibi", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("tochibi", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

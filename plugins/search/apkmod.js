@@ -4,7 +4,7 @@ import axios from "axios";
 import config from "../../config.js";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "apkmod",
   alias: ["apkmod"],
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
       },
     );
   } catch (err) {
-    return m.reply(claraWrap("apkmod", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("apkmod", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

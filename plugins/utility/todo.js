@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaHeader, separator, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -25,24 +25,24 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "add" && task) {
       todos.push({ text: task, done: false, created: Date.now() });
       db.write();
-      await m.reply(claraWrap("To-Do List", [`Tugas: *${task}*`, `Total: *${todos.length}*`].join("\n")) + "\n" + tipText(`Ketik ${prefix}todo list untuk lihat semua`));
+      await m.reply(novaWrap("To-Do List", [`Tugas: *${task}*`, `Total: *${todos.length}*`].join("\n")) + "\n" + tipText(`Ketik ${prefix}todo list untuk lihat semua`));
     } else if (action === "done" && task) {
       const idx = parseInt(task) - 1;
       if (idx >= 0 && idx < todos.length) { todos[idx].done = true; db.write(); }
-      await m.reply(claraWrap("To-Do List", [`Tugas #${idx+1} ditandai selesai`].join("\n")));
+      await m.reply(novaWrap("To-Do List", [`Tugas #${idx+1} ditandai selesai`].join("\n")));
     } else if (action === "del" && task) {
       const idx = parseInt(task) - 1;
       if (idx >= 0 && idx < todos.length) { todos.splice(idx, 1); db.write(); }
-      await m.reply(claraWrap("To-Do List", [`Tugas #${idx+1} dihapus`].join("\n")));
+      await m.reply(novaWrap("To-Do List", [`Tugas #${idx+1} dihapus`].join("\n")));
     } else if (action === "clear") {
       todos.length = 0; db.write();
-      await m.reply(claraWrap("To-Do List", ["Semua tugas dihapus"].join("\n")));
+      await m.reply(novaWrap("To-Do List", ["Semua tugas dihapus"].join("\n")));
     } else {
       if (!todos.length) {
-        await m.reply(claraWrap("To-Do List", ["Belum ada tugas", `Ketik: *${prefix}todo add <tugas>*`].join("\n")));
+        await m.reply(novaWrap("To-Do List", ["Belum ada tugas", `Ketik: *${prefix}todo add <tugas>*`].join("\n")));
         return { handled: true };
       }
-      let text = claraHeader("To-Do List", "📝") + "\n\n";
+      let text = novaHeader("To-Do List", "📝") + "\n\n";
       todos.forEach((t, i) => {
         text += `${t.done ? "✅" : "⬜"} ${i+1}. ${t.text}\n`;
       });
@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(text);
     }
   } catch (e) {
-    await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
+    await m.reply(novaWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

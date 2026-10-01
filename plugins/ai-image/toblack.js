@@ -4,7 +4,7 @@ import { uploadImage } from "../../src/lib/nova-uploader.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { mediaInfoCaption } from "../../src/lib/nova-media-info.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     }
 
     if (!buffer) {
-      return m.reply(claraWrap("toblack", `❌ Gagal mendownload gambar`));
+      return m.reply(novaWrap("toblack", `❌ Gagal mendownload gambar`));
     }
     const result = await live3d(buffer, PROMPT);
     await sock.sendMedia(m.chat, result.image, null, m, {
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     ] }))
   } catch (error) {
     console.log(error);
-    m.reply(claraWrap("toblack", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("toblack", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

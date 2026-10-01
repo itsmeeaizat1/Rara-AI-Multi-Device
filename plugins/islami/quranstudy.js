@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "mengaji",
@@ -188,17 +188,17 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("");
       lines.push("Cara: " + usedPrefix + "mengaji <topik>");
       lines.push("Contoh: " + usedPrefix + "mengaji hijaiyah | " + usedPrefix + "mengaji nun");
-      return m.reply(claraWrap("Belajar Mengaji", lines.join("\n")));
+      return m.reply(novaWrap("Belajar Mengaji", lines.join("\n")));
     }
 
     if (!TOPIK[input]) {
-      return m.reply(claraWrap("Belajar Mengaji", "Topik tidak ditemukan: " + input + "\nKetik " + usedPrefix + "mengaji list"));
+      return m.reply(novaWrap("Belajar Mengaji", "Topik tidak ditemukan: " + input + "\nKetik " + usedPrefix + "mengaji list"));
     }
 
     const t = TOPIK[input];
-    return m.reply(claraWrap("Mengaji - " + t.judul, t.isi.join("\n")));
+    return m.reply(novaWrap("Mengaji - " + t.judul, t.isi.join("\n")));
   } catch (e) {
-    return m.reply(claraWrap("Belajar Mengaji", "Error: " + e.message));
+    return m.reply(novaWrap("Belajar Mengaji", "Error: " + e.message));
   }
 }
 

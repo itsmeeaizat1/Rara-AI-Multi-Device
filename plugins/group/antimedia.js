@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "antimedia",
   alias: ["antimedia"],
@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
 
   if (action === "off") {
     db.setGroup(m.chat, { antimedia: false });
-    await m.reply(claraWrap("Antimedia", `antimedia dinonaktifkan`, "error"));
+    await m.reply(novaWrap("Antimedia", `antimedia dinonaktifkan`, "error"));
     return;
   }
 
-  await m.reply(claraWrap("Anti media", `Gunakan \`.antimedia on\` atau \`.antimedia off\``, "error"));
+  await m.reply(novaWrap("Anti media", `Gunakan \`.antimedia on\` atau \`.antimedia off\``, "error"));
 }
 
 export { pluginConfig as config, handler, checkAntimedia };

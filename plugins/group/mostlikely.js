@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mostlikely",
@@ -84,7 +84,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.round = (game.round || 0) + 1;
       await db.save();
 
-      return m.reply(claraWrap("Most Likely", [
+      return m.reply(novaWrap("Most Likely", [
         "Ronde #" + game.round,
         "",
         game.question + "??",
@@ -116,7 +116,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.voters[sender] = target;
       await db.save();
 
-      return m.reply(claraWrap("Most Likely", [
+      return m.reply(novaWrap("Most Likely", [
         "@" + sender.split("@")[0] + " vote @" + target.split("@")[0] + "!",
         "",
         "Total vote: " + Object.keys(game.voters).length,
@@ -139,7 +139,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         result += (i + 1) + ". @" + user.split("@")[0] + " — " + count + " vote\n";
       });
 
-      return m.reply(claraWrap("Most Likely", result));
+      return m.reply(novaWrap("Most Likely", result));
     }
 
     // STOP
@@ -159,7 +159,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           result += (i + 1) + ". @" + user.split("@")[0] + " — " + count + " vote\n";
         });
       }
-      return m.reply(claraWrap("Most Likely", result, "warn"));
+      return m.reply(novaWrap("Most Likely", result, "warn"));
     }
 
     // DEFAULT - help

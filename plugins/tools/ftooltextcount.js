@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftooltextcount — statistik teks (port altftool.com/tools/all/word-character-counter)
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftooltextcount", alias: ["textcount", "counttext", "hitungteks"], category: "tools",
@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
     const readSec = Math.round((words / 200) * 60);
     const readTxt = readSec < 60 ? readSec + " detik" : (Math.round(readSec / 60) + " menit");
     await m.react("🐣");
-    await m.reply(claraWrap("Text Count", ["STATISTIK TEKS",
+    await m.reply(novaWrap("Text Count", ["STATISTIK TEKS",
       "",
       `Kata: ${words}`,
       `Karakter: ${chars} (tanpa spasi: ${noSpace})`,
@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
       `Estimasi baca: ±${readTxt}`].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Text Count", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Text Count", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

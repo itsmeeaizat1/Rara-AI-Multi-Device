@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fliptext",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args?.join(" ").trim() || (m.quoted && (m.quoted.text || m.quoted.caption));
     if (!text) {
-      return m.reply(claraWrap("fliptext", `Masukkan teks yang ingin dibalik!\n\nContoh: ${m.prefix}fliptext hello world`, "guide"));
+      return m.reply(novaWrap("fliptext", `Masukkan teks yang ingin dibalik!\n\nContoh: ${m.prefix}fliptext hello world`, "guide"));
     }
 
     await m.react("🕒");
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("fliptext error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("fliptext", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("fliptext", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

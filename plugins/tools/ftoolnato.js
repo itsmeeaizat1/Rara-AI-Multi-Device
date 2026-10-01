@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolnato — eja NATO/ICAO alphabet (port altftool.com/tools/all/nato-phonetic-alphabet)
-import { novaGuideV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolnato", alias: ["nato", "natoalphabet", "ejaannato"], category: "tools",
@@ -29,15 +29,15 @@ async function handler(m, { sock, config: botConfig }) {
     const words = [...text.toLowerCase()].map((ch) => NATO[ch] || null).filter(Boolean);
     if (!words.length) {
       await m.react("❌");
-      return m.reply(claraWrap("NATO Alphabet", ["ERROR: gak ada huruf/angka yang bisa dieja"].join("\n")));
+      return m.reply(novaWrap("NATO Alphabet", ["ERROR: gak ada huruf/angka yang bisa dieja"].join("\n")));
     }
     await m.react("🐣");
-    await m.reply(claraWrap("NATO Alphabet", [`Teks: ${text.substring(0, 80)}`,
+    await m.reply(novaWrap("NATO Alphabet", [`Teks: ${text.substring(0, 80)}`,
       "",
       "```" + words.join(" ").substring(0, 800) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("NATO Alphabet", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("NATO Alphabet", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

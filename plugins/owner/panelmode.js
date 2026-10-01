@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js"
+import { novaWrap } from "../../src/lib/nova-menu-style.js"
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js"
 
@@ -45,11 +45,11 @@ async function handler(m, { sock }) {
         txt += '  dmdangroup = DM + Group (dua-duanya)\n\n'
         txt += 'Cara pakai: ' + prefix + 'togglecpanelinfo dm'
 
-        return m.reply(claraWrap('panelmode', txt))
+        return m.reply(novaWrap('panelmode', txt))
     }
 
     if (!MODES[text]) {
-        return m.reply(claraWrap('panelmode', 
+        return m.reply(novaWrap('panelmode', 
             'Mode tidak valid. Pilih: dm, group, atau dmdangroup\n\n' +
             prefix + 'togglecpanelinfo dm\n' +
             prefix + 'togglecpanelinfo group\n' +
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     txt += '  .1gbv1 - .10gbv1\n'
     txt += '  .cadminv1 - .cadminv5'
 
-    await m.reply(claraWrap('panelmode', txt))
+    await m.reply(novaWrap('panelmode', txt))
 }
 
 export { pluginConfig as config, handler }

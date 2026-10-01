@@ -5,7 +5,7 @@
 // Riset 24 Sep 2026: param `question`, respon {title, total, answers:[{stars,word,clue}]},
 // stars 1-5 (bintang = tingkat kecocokan). Plugin standalone + seam _setHttpForTest.
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const BASE = "https://kunci-tts-api.vercel.app/api/answers";
 
@@ -38,17 +38,17 @@ const pluginConfig = {
 async function handler(m, { sock, db }) {
   const soal = (m.text || (m.args || []).join(" ")).trim();
   if (!soal) {
-    return m.reply(claraWrap("Kunci Jawaban TTS",
+    return m.reply(novaWrap("Kunci Jawaban TTS",
       "Cara pakai:\n.kuncijawabantts <soal tts>\n\nContoh:\n▸ .kuncijawabantts tidak jujur\n▸ .kuncijawabantts ibu kota jepang\n\n★ = tingkat kecocokan jawaban."));
   }
   try {
     const { status, data } = await fetchJson(`${BASE}?question=${encodeURIComponent(soal)}`);
     if (status !== 200 || !data) {
-      return m.reply(claraWrap("Kunci Jawaban TTS", `❌ Server TTS bermasalah (${status}). Coba lagi nanti.`));
+      return m.reply(novaWrap("Kunci Jawaban TTS", `❌ Server TTS bermasalah (${status}). Coba lagi nanti.`));
     }
     const answers = Array.isArray(data.answers) ? data.answers : [];
     if (!answers.length) {
-      return m.reply(claraWrap("Kunci Jawaban TTS", `🔎 Gak ketemu kunci jawaban buat soal "${soal}". Coba kata kunci lain, misal potongan soalnya aja.`));
+      return m.reply(novaWrap("Kunci Jawaban TTS", `🔎 Gak ketemu kunci jawaban buat soal "${soal}". Coba kata kunci lain, misal potongan soalnya aja.`));
     }
     const list = answers.slice(0, 12).map((a, i) => {
       const kata = a.word || a.jawaban || "-";
@@ -56,10 +56,10 @@ async function handler(m, { sock, db }) {
       return `${i + 1}. ${stars(a.stars)} ${String(kata).toUpperCase()}${petunjuk}`;
     }).join("\n");
     const total = data.total || answers.length;
-    return m.reply(claraWrap("Kunci Jawaban TTS",
+    return m.reply(novaWrap("Kunci Jawaban TTS",
       `Soal: ${data.title || soal}\nDitemukan ${total} jawaban${total > 12 ? " (12 teratas)" : ""}:\n\n${list}\n\n★ bintang makin banyak = makin cocok.`));
   } catch (e) {
-    return m.reply(claraWrap("Kunci Jawaban TTS", `❌ Gagal nyambung ke server TTS: ${e.message || e}`));
+    return m.reply(novaWrap("Kunci Jawaban TTS", `❌ Gagal nyambung ke server TTS: ${e.message || e}`));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { calculateLevel, getRole, addExpWithLevelCheck } from '../../src/lib/nova-level.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addlevel',
     alias: ["addlevel"],
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     }
     
     if (levels <= 0) {
-        return m.reply(claraWrap("Addlevel", `❌ *Gagal*\n\nJumlah level harus lebih dari 0`))
+        return m.reply(novaWrap("Addlevel", `❌ *Gagal*\n\nJumlah level harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid) || db.setUser(targetJid)
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     const expToAdd = levels * 20000
     
     const addResult = addExpWithLevelCheck(sock, m, db, user, expToAdd)
-    await m.reply(claraWrap("Addlevel", `✅ Berhasil menambahkan level *@${targetJid.split('@')[0]}* sebanyak *${levels} Level*\n\nKini dia mempunyai *${addResult.newLevel || calculateLevel(user.exp)}* level. dan memiliki role *${getRole(addResult.newLevel || calculateLevel(user.exp))}*`))
+    await m.reply(novaWrap("Addlevel", `✅ Berhasil menambahkan level *@${targetJid.split('@')[0]}* sebanyak *${levels} Level*\n\nKini dia mempunyai *${addResult.newLevel || calculateLevel(user.exp)}* level. dan memiliki role *${getRole(addResult.newLevel || calculateLevel(user.exp))}*`))
 }
 
 export { pluginConfig as config, handler }

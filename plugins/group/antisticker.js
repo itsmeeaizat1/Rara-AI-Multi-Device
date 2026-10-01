@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "antisticker",
     alias: ["antisticker"],
@@ -62,11 +62,11 @@ async function handler(m, { sock }) {
 
     if (action === 'off') {
         db.setGroup(m.chat, { antisticker: false })
-        await m.reply(claraWrap("Antisticker", `antisticker dinonaktifkan`, "error"))
+        await m.reply(novaWrap("Antisticker", `antisticker dinonaktifkan`, "error"))
         return
     }
 
-    await m.reply(claraWrap("Anti sticker", `Gunakan \`.antisticker on\` atau \`.antisticker off\``, "error"))
+    await m.reply(novaWrap("Anti sticker", `Gunakan \`.antisticker on\` atau \`.antisticker off\``, "error"))
 }
 
 export { pluginConfig as config, handler, checkAntisticker }

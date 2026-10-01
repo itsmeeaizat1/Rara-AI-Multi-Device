@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import fs from 'fs'
 import path from 'path'
 import config from '../../config.js'
@@ -108,7 +108,7 @@ function handler(m, { sock }) {
     if (action === 'add') {
         const current = loadGcSeller(version)
         if (current === m.chat) {
-            return m.reply(claraWrap("gcseller", `❌ Grup ini sudah terdaftar sebagai GC Seller *${serverLabel}*.`))
+            return m.reply(novaWrap("gcseller", `❌ Grup ini sudah terdaftar sebagai GC Seller *${serverLabel}*.`))
         }
 
         saveGcSeller(version, m.chat)
@@ -122,13 +122,13 @@ function handler(m, { sock }) {
         }
         txt += `\n`
         txt += `Semua member grup ini sekarang bisa create server ${serverLabel}.`
-        return m.reply(claraWrap("gcseller", txt))
+        return m.reply(novaWrap("gcseller", txt))
     }
 
     if (action === 'reset') {
         const current = loadGcSeller(version)
         if (!current) {
-            return m.reply(claraWrap("${serverLabel}", `❌ Belum ada GC Seller terdaftar untuk *${serverLabel}*.`))
+            return m.reply(novaWrap("${serverLabel}", `❌ Belum ada GC Seller terdaftar untuk *${serverLabel}*.`))
         }
 
         saveGcSeller(version, null)

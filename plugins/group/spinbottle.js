@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spinbottle",
@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await db.save();
 
       const spins = Math.floor(Math.random() * 5) + 3;
-      return m.reply(claraWrap("Spin The Bottle", [
+      return m.reply(novaWrap("Spin The Bottle", [
         `Botol diputar ${spins}x...`,
         `Dan mendarat di: @${randomTarget.split("@")[0]}`,
         "",
@@ -93,7 +93,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const q = TRUTH_QUESTIONS[Math.floor(Math.random() * TRUTH_QUESTIONS.length)];
       game.phase = "answered";
       await db.save();
-      return m.reply(claraWrap("Spin The Bottle", [
+      return m.reply(novaWrap("Spin The Bottle", [
         `Truth untuk @${sender.split("@")[0]}:`,
         "",
         `"${q}"`,
@@ -107,7 +107,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const d = DARE_CHALLENGES[Math.floor(Math.random() * DARE_CHALLENGES.length)];
       game.phase = "answered";
       await db.save();
-      return m.reply(claraWrap("Spin The Bottle", [
+      return m.reply(novaWrap("Spin The Bottle", [
         `Dare untuk @${sender.split("@")[0]}:`,
         "",
         `"${d}"`,
@@ -121,7 +121,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.phase = "idle";
       game.target = null;
       await db.save();
-      return m.reply(claraWrap("Spin The Bottle", `Giliran selesai. Spin lagi: ${usedPrefix}spinbottle spin`, "info"));
+      return m.reply(novaWrap("Spin The Bottle", `Giliran selesai. Spin lagi: ${usedPrefix}spinbottle spin`, "info"));
     }
 
     if (sub === "stop") {
@@ -131,18 +131,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.phase = "idle";
       game.turns = 0;
       await db.save();
-      return m.reply(claraWrap("Spin The Bottle", "Game dihentikan."));
+      return m.reply(novaWrap("Spin The Bottle", "Game dihentikan."));
     }
 
     if (sub === "status") {
-      return m.reply(claraWrap("Spin The Bottle", [
+      return m.reply(novaWrap("Spin The Bottle", [
         `Status: ${game.active ? "AKTIF" : "MATI"}`,
         `Turns: ${game.turns}`,
         game.target ? `Target: @${game.target.split("@")[0]}` : "Target: -",
       ].join("\n")));
     }
 
-    return m.reply(claraWrap("Spin The Bottle", [
+    return m.reply(novaWrap("Spin The Bottle", [
       `Spin The Bottle - Putar botol, truth or dare`,
       "",
       `Command:`,

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mysterybox",
@@ -65,7 +65,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "buka" || sub === "open" || sub === "pull") {
     if (user.coin < BOX_PRICE) {
-      await m.reply(claraWrap("Mystery Box", "Coin tidak cukup!\nHarga: " + BOX_PRICE + " coins\nCoin kamu: " + (user.coin || 0)));
+      await m.reply(novaWrap("Mystery Box", "Coin tidak cukup!\nHarga: " + BOX_PRICE + " coins\nCoin kamu: " + (user.coin || 0)));
       return { handled: true };
     }
     user.coin -= BOX_PRICE;
@@ -93,7 +93,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     db.setUser(m.sender, user);
     db.save();
 
-    await m.reply(claraWrap("Mystery Box", [
+    await m.reply(novaWrap("Mystery Box", [
       "Kotak dibuka! (-" + BOX_PRICE + " coins)",
       "",
       "Tier: " + t.name + " (" + t.color + ")",
@@ -107,7 +107,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "multi" || sub === "burst") {
     const count = Math.min(parseInt(args[2] || "3", 10), 10);
     if (user.coin < BOX_PRICE * count) {
-      await m.reply(claraWrap("Mystery Box", "Coin tidak cukup untuk " + count + " box!\nButuh: " + (BOX_PRICE * count) + " coins\nCoin kamu: " + (user.coin || 0)));
+      await m.reply(novaWrap("Mystery Box", "Coin tidak cukup untuk " + count + " box!\nButuh: " + (BOX_PRICE * count) + " coins\nCoin kamu: " + (user.coin || 0)));
       return { handled: true };
     }
     user.coin -= BOX_PRICE * count;
@@ -129,7 +129,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     db.setUser(m.sender, user);
     db.save();
 
-    await m.reply(claraWrap("Mystery Box x" + count, [
+    await m.reply(novaWrap("Mystery Box x" + count, [
       "(-" + (BOX_PRICE * count) + " coins)",
       "",
       ...results.map((r, i) => (i + 1) + ". " + r),
@@ -141,7 +141,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "rates" || sub === "rate") {
     const list = Object.entries(TIERS).map(([key, t]) => t.name + " (" + t.color + "): " + t.weight + "%").join("\n");
-    await m.reply(claraWrap("Mystery Box Rates", [
+    await m.reply(novaWrap("Mystery Box Rates", [
       "Harga: " + BOX_PRICE + " coins/box",
       "",
       list,
@@ -152,7 +152,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "stats" || sub === "cek" || !sub) {
     const myPulls = cfg.pullsBy[m.sender] || 0;
     const myBest = cfg.bestPulls[m.sender] || { tier: "none", count: 0 };
-    await m.reply(claraWrap("Mystery Box", [
+    await m.reply(novaWrap("Mystery Box", [
       "Harga: " + BOX_PRICE + " coins/box",
       "Total dibuka (grup): " + cfg.totalOpened,
       "Total coins spent: " + cfg.totalCoinsSpent,
@@ -164,7 +164,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Mystery Box", [
+  await m.reply(novaWrap("Mystery Box", [
     "MYSTERY BOX - LOOT BOX",
     "",
     prefix + "mysterybox buka - buka 1 box",

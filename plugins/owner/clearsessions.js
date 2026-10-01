@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'clearsessions',
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
         )
         
     } catch (error) {
-        await m.reply(claraWrap("clearsessions", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("clearsessions", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

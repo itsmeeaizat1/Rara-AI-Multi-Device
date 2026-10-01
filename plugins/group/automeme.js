@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automemegc",
@@ -82,7 +82,7 @@ export function startAutoMeme(groupId, sock, db) {
       await db2.save();
 
       await sock.sendMessage(groupId, {
-        text: claraWrap("Auto Meme", meme + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info"),
+        text: novaWrap("Auto Meme", meme + "\n\nMode: Otomatis tiap " + g.interval + " menit", "info"),
       });
     } catch (e) { console.error("[AutoMeme interval]", e); }
   }, intervalMs);
@@ -112,23 +112,23 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.enabled = true; cfg.interval = interval; cfg.activatedBy = sender; cfg.activatedAt = Date.now();
       await db.save();
       startAutoMeme(groupId, conn, db);
-      return m.reply(claraWrap("Auto Meme", ["Meme otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total meme: " + MEMES.length, "", "Ketik .automeme off untuk matikan.", "Ketik .automeme now untuk kirim sekarang."], "success"));
+      return m.reply(novaWrap("Auto Meme", ["Meme otomatis DIAKTIFKAN!", "", "Interval: " + interval + " menit", "Total meme: " + MEMES.length, "", "Ketik .automeme off untuk matikan.", "Ketik .automeme now untuk kirim sekarang."], "success"));
     }
     if (sub === "off" || sub === "mati" || sub === "nonaktif") {
       cfg.enabled = false; await db.save(); stopAutoMeme(groupId);
-      return m.reply(claraWrap("Auto Meme", "Meme otomatis DIMATIKAN.\nKetik .automeme on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Auto Meme", "Meme otomatis DIMATIKAN.\nKetik .automeme on untuk aktifkan lagi."));
     }
     if (sub === "status" || sub === "cek" || sub === "info") {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
-      return m.reply(claraWrap("Auto Meme", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Meme tersedia: " + MEMES.length]));
+      return m.reply(novaWrap("Auto Meme", ["Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"), "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit", "Total terkirim: " + (cfg.totalSent || 0), "Terakhir kirim: " + lastSentStr, "Meme tersedia: " + MEMES.length]));
     }
     if (sub === "now" || sub === "sekarang") {
       const meme = MEMES[Math.floor(Math.random() * MEMES.length)];
       cfg.lastMeme = meme; cfg.lastSent = Date.now(); cfg.totalSent = (cfg.totalSent || 0) + 1; await db.save();
-      return m.reply(claraWrap("Auto Meme", [meme, "", "Total terkirim: " + cfg.totalSent]));
+      return m.reply(novaWrap("Auto Meme", [meme, "", "Total terkirim: " + cfg.totalSent]));
     }
-    return m.reply(claraWrap("Auto Meme", ["Kirim meme text random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "automeme on [menit] — Aktifkan (default 30, min 10, max 180)", usedPrefix + "automeme off — Matikan", usedPrefix + "automeme status — Lihat status", usedPrefix + "automeme now — Kirim sekarang", "", "CONTOH:", usedPrefix + "automeme on 15", usedPrefix + "automeme off"]));
-  } catch (e) { console.error("[Auto Meme]", e); m.reply(claraWrap("Auto Meme", "Error: " + e.message)); }
+    return m.reply(novaWrap("Auto Meme", ["Kirim meme text random otomatis tiap interval", "", "CARA PAKAI:", usedPrefix + "automeme on [menit] — Aktifkan (default 30, min 10, max 180)", usedPrefix + "automeme off — Matikan", usedPrefix + "automeme status — Lihat status", usedPrefix + "automeme now — Kirim sekarang", "", "CONTOH:", usedPrefix + "automeme on 15", usedPrefix + "automeme off"]));
+  } catch (e) { console.error("[Auto Meme]", e); m.reply(novaWrap("Auto Meme", "Error: " + e.message)); }
 }
 
 export { pluginConfig as config, handler };

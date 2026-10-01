@@ -3,7 +3,7 @@
 // Gabungan Gemini Vision (baca gambar) + UnlimitedAI (jawab) + Image gen (kirim gambar)
 import { visionScan } from "../../src/lib/nova-vision-chain.js";
 // UnlimitedAI replaced with callIkyy (ikyyxd API)
-import { claraWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 import { startAiStatus } from "../../src/lib/nova-ai-status.js";
 import te from "../../src/lib/nova-error.js";
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
       const prompt = text.replace(/^(gambar|generate|buat gambar)\s+/i, "").trim();
       if (!prompt) {
         await m.react("❌");
-        return m.reply(claraWrap("aichatimg", `Mau gambar apa?\nContoh: ${prefix}aichatimg gambar kucing lucu warna pink`, "guide"));
+        return m.reply(novaWrap("aichatimg", `Mau gambar apa?\nContoh: ${prefix}aichatimg gambar kucing lucu warna pink`, "guide"));
       }
 
       // 🔹 status ala agent (owner 29 Sep) — media gak bisa di-edit, tapi pesan
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     if (isImage) {
       if (!text) {
         await m.react("❌");
-        return m.reply(claraWrap("aichatimg", `Kasih pertanyaan tentang gambarnya!\n\nContoh: ${prefix}aichatimg apa di foto ini? (reply foto)\n${prefix}aichatimg jelaskan isi diagram (reply foto)`, "guide"));
+        return m.reply(novaWrap("aichatimg", `Kasih pertanyaan tentang gambarnya!\n\nContoh: ${prefix}aichatimg apa di foto ini? (reply foto)\n${prefix}aichatimg jelaskan isi diagram (reply foto)`, "guide"));
       }
 
       // 🔹 status ala agent: 👀 scanning → jawaban final di-edit ke pesan status
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("aichatimg error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("aichatimg", err.message || te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("aichatimg", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

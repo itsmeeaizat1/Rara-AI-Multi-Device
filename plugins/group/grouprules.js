@@ -3,7 +3,7 @@ import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import fs from "fs";
 import path from "path";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "rulesgrup",
   alias: ["rulesgrup"],
@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
       type: "image",
     });
   } else {
-    { const __navText = (rulesText); await m.reply(claraWrap("rulesgrup", __navText)); };
+    { const __navText = (rulesText); await m.reply(novaWrap("rulesgrup", __navText)); };
   }
 }
 

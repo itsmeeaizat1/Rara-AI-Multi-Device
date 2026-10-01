@@ -7,7 +7,7 @@
 // selama 1 JAM. Media ditolak (cuma teks), flood guard,
 // pesan TIDAK disimpan — cuma daftar member di db.data.chatiblobby.
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 
 // ── konstanta ──
 const IDLE_KICK_MS = 60 * 60 * 1000;  // gak ada aktivitas > 1 jam → auto-leave
@@ -85,21 +85,21 @@ export async function joinLobby(m, sock, db) {
   const jid = m.sender;
   const count = Object.keys(l.members).length;
   if (l.members[jid]) {
-    return m.reply(claraWrap("Chatib Lobby", `Kamu udah di lobby sebagai "${l.members[jid].nick}". Keluar dulu pakai .chatibleave kalau mau, atau langsung chat aja.`));
+    return m.reply(novaWrap("Chatib Lobby", `Kamu udah di lobby sebagai "${l.members[jid].nick}". Keluar dulu pakai .chatibleave kalau mau, atau langsung chat aja.`));
   }
   if (count >= _maxMembers) {
-    return m.reply(claraWrap("Chatib Lobby", `Lobby lagi penuh (${count}/${_maxMembers} member). Coba lagi nanti ya.`));
+    return m.reply(novaWrap("Chatib Lobby", `Lobby lagi penuh (${count}/${_maxMembers} member). Coba lagi nanti ya.`));
   }
   const wanted = cleanNick((m.args || []).join(" "));
   const nick = uniqueNick(l, wanted || genNick());
   const now = Date.now();
   l.members[jid] = { nick, joinedAt: now, lastActive: now, lastRelayAt: 0 };
   db.save();
-  await m.reply(claraWrap("Chatib Lobby", rulesText(count + 1) + `\n\nNickname kamu: ${nick}${wanted && wanted !== nick ? ` (nama "${wanted}" udah dipake, kamu dikasih "${nick}")` : ""}`));
+  await m.reply(novaWrap("Chatib Lobby", rulesText(count + 1) + `\n\nNickname kamu: ${nick}${wanted && wanted !== nick ? ` (nama "${wanted}" udah dipake, kamu dikasih "${nick}")` : ""}`));
   // broadcast ke member lain
   for (const [otherJid, om] of Object.entries(l.members)) {
     if (otherJid === jid) continue;
-    await dm(sock, otherJid, claraWrap("Chatib Lobby", `${nick} masuk lobby 👋 (${count + 1} online)`));
+    await dm(sock, otherJid, novaWrap("Chatib Lobby", `${nick} masuk lobby 👋 (${count + 1} online)`));
   }
   try { await m.react("⚡"); } catch {}
   return true;
@@ -110,20 +110,20 @@ export async function setNick(m, sock, db) {
   const l = getLobby(db);
   const me = l.members[m.sender];
   if (!me) {
-    return m.reply(claraWrap("Chatib Lobby", "Kamu belum masuk lobby. Masuk dulu: .chatiblobby [nama]"));
+    return m.reply(novaWrap("Chatib Lobby", "Kamu belum masuk lobby. Masuk dulu: .chatiblobby [nama]"));
   }
   const wanted = cleanNick((m.args || []).join(" "));
   if (!wanted) {
-    return m.reply(claraWrap("Chatib Lobby", `Nama kamu sekarang: ${me.nick}. Ganti: .chatibnick <nama baru>`));
+    return m.reply(novaWrap("Chatib Lobby", `Nama kamu sekarang: ${me.nick}. Ganti: .chatibnick <nama baru>`));
   }
   const nick = uniqueNick(l, wanted);
   const old = me.nick;
   me.nick = nick;
   db.save();
-  await m.reply(claraWrap("Chatib Lobby", `Nickname kamu jadi "${nick}".`));
+  await m.reply(novaWrap("Chatib Lobby", `Nickname kamu jadi "${nick}".`));
   for (const [otherJid] of Object.entries(l.members)) {
     if (otherJid === m.sender) continue;
-    await dm(sock, otherJid, claraWrap("Chatib Lobby", `${old} ganti nama jadi "${nick}".`));
+    await dm(sock, otherJid, novaWrap("Chatib Lobby", `${old} ganti nama jadi "${nick}".`));
   }
   return true;
 }
@@ -133,9 +133,9 @@ export async function listMembers(m, db) {
   const l = getLobby(db);
   const nicks = Object.values(l.members).map((x) => x.nick);
   if (!nicks.length) {
-    return m.reply(claraWrap("Chatib Lobby", "Lobby lagi kosong. Kamu yang pertama? Masuk: .chatiblobby [nama]"));
+    return m.reply(novaWrap("Chatib Lobby", "Lobby lagi kosong. Kamu yang pertama? Masuk: .chatiblobby [nama]"));
   }
-  return m.reply(claraWrap("Chatib Lobby", `Online sekarang (${nicks.length}):\n` + nicks.map((n) => `• ${n}`).join("\n")));
+  return m.reply(novaWrap("Chatib Lobby", `Online sekarang (${nicks.length}):\n` + nicks.map((n) => `• ${n}`).join("\n")));
 }
 
 // ── keluar lobby (idempotent) ──
@@ -144,14 +144,14 @@ export async function leaveLobby(m, sock, db, { reason = null } = {}) {
   const jid = m.sender;
   const me = l.members[jid];
   if (!me) {
-    return m.reply(claraWrap("Chatib Lobby", "Kamu memang gak ada di lobby. Masuk: .chatiblobby [nama]"));
+    return m.reply(novaWrap("Chatib Lobby", "Kamu memang gak ada di lobby. Masuk: .chatiblobby [nama]"));
   }
   delete l.members[jid];
   db.save();
   const left = Object.keys(l.members).length;
-  await dm(sock, jid, claraWrap("Chatib Lobby", reason || `Kamu keluar dari lobby. Kapan pun balik lagi: .chatiblobby`));
+  await dm(sock, jid, novaWrap("Chatib Lobby", reason || `Kamu keluar dari lobby. Kapan pun balik lagi: .chatiblobby`));
   for (const [otherJid] of Object.entries(l.members)) {
-    await dm(sock, otherJid, claraWrap("Chatib Lobby", `${me.nick} keluar dari lobby. (${left} online)`));
+    await dm(sock, otherJid, novaWrap("Chatib Lobby", `${me.nick} keluar dari lobby. (${left} online)`));
   }
   return true;
 }
@@ -170,7 +170,7 @@ export async function relayLobbyMessage(m, sock, db) {
     if (now - lastNotice > 5000) {
       me._mediaNoticeAt = now;
       db.save();
-      await m.reply(claraWrap("Chatib Lobby", "Media (foto/video/stiker/dll) gak bisa dikirim di lobby — cuma teks ya."));
+      await m.reply(novaWrap("Chatib Lobby", "Media (foto/video/stiker/dll) gak bisa dikirim di lobby — cuma teks ya."));
     }
     return true;
   }
@@ -185,7 +185,7 @@ export async function relayLobbyMessage(m, sock, db) {
     if (now - lastNotice > 3000) {
       me._floodNoticeAt = now;
       db.save();
-      await m.reply(claraWrap("Chatib Lobby", "Pelan-pelan ya, jangan spam."));
+      await m.reply(novaWrap("Chatib Lobby", "Pelan-pelan ya, jangan spam."));
     }
     return true;
   }
@@ -193,7 +193,7 @@ export async function relayLobbyMessage(m, sock, db) {
   me.lastRelayAt = now;
   me.lastActive = now;
   db.save();
-  const body = claraWrap("Chatib Lobby", `${me.nick} 💬\n${text.slice(0, MAX_LEN)}`);
+  const body = novaWrap("Chatib Lobby", `${me.nick} 💬\n${text.slice(0, MAX_LEN)}`);
   let delivered = 0;
   for (const [otherJid] of Object.entries(l.members)) {
     if (otherJid === m.sender) continue;

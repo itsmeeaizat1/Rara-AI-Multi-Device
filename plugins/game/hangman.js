@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // hangman.js — Tebak kata (Hangman style, Indonesia + English)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { formatRp } from "../../src/lib/nova-rpg-service.js";
 import { rollBonus } from "../../src/lib/nova-game-rewards.js";
@@ -78,7 +78,7 @@ async function handler(m, { sock, config, db }) {
     const input = (m.args?.[0] || "").toUpperCase();
 
     if (!input || input === "HELP") {
-      return m.reply(claraWrap("Hangman", [
+      return m.reply(novaWrap("Hangman", [
         "Tebak kata sebelum gantungan penuh!",
         "",
         "📌 *Cara Pakai:*",
@@ -111,7 +111,7 @@ async function handler(m, { sock, config, db }) {
           sessions.delete(m.chat);
         }
       }, 180000);
-      return m.reply(claraWrap("Hangman", [
+      return m.reply(novaWrap("Hangman", [
         `Game dimulai! Bahasa: ${lang === "id" ? "Indonesia" : "English"}`,
         `Panjang kata: ${word.length} huruf`,
         "",
@@ -126,12 +126,12 @@ async function handler(m, { sock, config, db }) {
     const session = sessions.get(m.chat);
 
     if (!session || !session.active) {
-      return m.reply(claraWrap("Hangman", `Belum ada game aktif. Ketik "${m.prefix}hangman start"`));
+      return m.reply(novaWrap("Hangman", `Belum ada game aktif. Ketik "${m.prefix}hangman start"`));
     }
 
     if (input === "END" || input === "GIVEUP") {
       sessions.delete(m.chat);
-      return m.reply(claraWrap("Hangman", `Game diakhiri. Jawaban: ${session.word}`));
+      return m.reply(novaWrap("Hangman", `Game diakhiri. Jawaban: ${session.word}`));
     }
 
     // Process letter guess
@@ -139,7 +139,7 @@ async function handler(m, { sock, config, db }) {
       const letter = input;
 
       if (session.guessed.has(letter)) {
-        return m.reply(claraWrap("Hangman", `Huruf "${letter}" sudah ditebak! Pilih huruf lain.`));
+        return m.reply(novaWrap("Hangman", `Huruf "${letter}" sudah ditebak! Pilih huruf lain.`));
       }
 
       session.guessed.add(letter);
@@ -154,7 +154,7 @@ async function handler(m, { sock, config, db }) {
           // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
           let hmCash = { gain: 0, saldo: 0 };
           try { hmCash = rollBonus(m, "hangman"); } catch {}
-          return m.reply(claraWrap("Hangman", [
+          return m.reply(novaWrap("Hangman", [
             `🎉 Selamat! Kata: ${session.word}`,
             `💵 Uang: +${formatRp(hmCash.gain)} (saldo ${formatRp(hmCash.saldo)})`,
             ...(hmCash.jackpot ? ["🎰 JACKPOT! Bonus 3x uang!"] : []),
@@ -165,7 +165,7 @@ async function handler(m, { sock, config, db }) {
             masked,
           ]));
         }
-        return m.reply(claraWrap("Hangman", [
+        return m.reply(novaWrap("Hangman", [
           `✅ "${letter}" benar!`,
           "",
           HANGMAN_STAGES[session.wrong],
@@ -180,14 +180,14 @@ async function handler(m, { sock, config, db }) {
 
         if (session.wrong >= session.maxWrong) {
           sessions.delete(m.chat);
-          return m.reply(claraWrap("Hangman", [
+          return m.reply(novaWrap("Hangman", [
             `💀 Game over! Kata: ${session.word}`,
             "Yuk coba kata lain kak, jangan takut kena gantung 🥳",
             "",
             HANGMAN_STAGES[MAX_WRONG],
           ]));
         }
-        return m.reply(claraWrap("Hangman", [
+        return m.reply(novaWrap("Hangman", [
           `❌ "${letter}" tidak ada!`,
           `Sisa: ${session.maxWrong - session.wrong}`,
           "",
@@ -207,7 +207,7 @@ async function handler(m, { sock, config, db }) {
         // 💵 uang (semua game ada uang — request owner 8 Sep 2026)
         let hwCash = { gain: 0, saldo: 0 };
         try { hwCash = rollBonus(m, "hangman"); } catch {}
-        return m.reply(claraWrap("Hangman", [
+        return m.reply(novaWrap("Hangman", [
           `🎉 Benar! Kata: ${session.word}`,
           `💵 Uang: +${formatRp(hwCash.gain)} (saldo ${formatRp(hwCash.saldo)})`,
           ...(hwCash.jackpot ? ["🎰 JACKPOT! Bonus 3x uang!"] : []),
@@ -219,21 +219,21 @@ async function handler(m, { sock, config, db }) {
         session.wrong++;
         if (session.wrong >= session.maxWrong) {
           sessions.delete(m.chat);
-          return m.reply(claraWrap("Hangman", [
+          return m.reply(novaWrap("Hangman", [
             `💀 Game over! Kata: ${session.word}`,
             "Yuk coba kata lain kak, jangan takut kena gantung 🥳",
             "",
             HANGMAN_STAGES[MAX_WRONG],
           ]));
         }
-        return m.reply(claraWrap("Hangman", [
+        return m.reply(novaWrap("Hangman", [
           `❌ Bukan "${input}"! Sisa: ${session.maxWrong - session.wrong}`,
           "",
           maskWord(session.word, session.guessed),
         ]));
       }
     }
-    return m.reply(claraWrap("Hangman", `Ketik 1 huruf atau kata penuh. Contoh: ${m.prefix}hangman a`));
+    return m.reply(novaWrap("Hangman", `Ketik 1 huruf atau kata penuh. Contoh: ${m.prefix}hangman a`));
   } catch (e) {
     console.error("[hangman] error:", e.message);
     return m.reply(te(m.prefix, m.command, m.pushName), "hangman");

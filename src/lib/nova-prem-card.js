@@ -4,7 +4,7 @@
 // ".premium countdown statis doang" — sisa premium < 24 jam → ticker
 // live edit-in-place sampai habis, terus kartu BERAKHIR + hint upgrade.
 // ═══════════════════════════════════════════════════════════════════
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 import { formatRemaining } from "./nova-countdown.js";
 
 /**
@@ -18,7 +18,7 @@ export function buildPremTickerCard(name, remainingMs, prefix = ".") {
   const p = prefix.endsWith(" ") ? prefix : prefix;
   const done = Number(remainingMs) <= 0;
   if (done) {
-    return claraWrap("Premium Berakhir", [
+    return novaWrap("Premium Berakhir", [
       "❌ *PREMIUM KAMU SUDAH BERAKHIR*",
       "",
       `⬜ ${nm} sekarang balik jadi *Free User*`,
@@ -30,7 +30,7 @@ export function buildPremTickerCard(name, remainingMs, prefix = ".") {
       "_jangan sampai fitur favoritmu kekunci ya_ ✨",
     ].join("\n"));
   }
-  return claraWrap("Premium Hampir Habis", [
+  return novaWrap("Premium Hampir Habis", [
     "🕒 *PREMIUM HAMPIR HABIS*",
     "",
     `👑 ${nm}, sisa premiummu:`,

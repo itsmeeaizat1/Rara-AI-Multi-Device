@@ -3,7 +3,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import config from "../../config.js";
-import { claraWrap, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaGuide, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "linesticker",
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
   const url = m.args?.[0]?.trim();
 
   if (!url || !url.includes("store.line.me")) {
-    return m.reply(claraWrap("linesticker", `Download LINE sticker pack!\n\nContoh: ${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "guide"));
+    return m.reply(novaWrap("linesticker", `Download LINE sticker pack!\n\nContoh: ${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "guide"));
   }
 
   try {
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     }
 
     // Send info
-    await m.reply(claraWrap("LINE Sticker", [
+    await m.reply(novaWrap("LINE Sticker", [
       `Title: ${data.title}`,
       `Author: ${data.author}`,
       `Animated: ${data.isAnimated ? "Ya" : "Tidak"}`,
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     }
 
     if (sent > 0) {
-      await m.reply(claraWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
+      await m.reply(novaWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
       await m.react("🐣");
     await m.reply(novaBerhasil("linesticker"));
     } else {
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[LineSticker]", err);
     await m.react("❌");
-    m.reply(claraWrap("linesticker", "Gagal download sticker LINE. Pastikan URL valid!", "error"));
+    m.reply(novaWrap("linesticker", "Gagal download sticker LINE. Pastikan URL valid!", "error"));
   }
 }
 

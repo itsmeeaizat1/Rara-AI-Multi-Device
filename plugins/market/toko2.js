@@ -23,7 +23,7 @@
  *   .toko2 promo del <kode>
  */
 
-import { claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 import FormData from "form-data";
 
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
     if (action === "add" || action === "tambah") {
       const raw = args.join(" ");
       if (!raw || !raw.includes("|")) {
-        return m.reply(claraWrap("Toko2",
+        return m.reply(novaWrap("Toko2",
           "Format: .toko2 add <nama>|<harga>|<stok>|<desc>|<kategori>\n" +
           "Contoh: .toko2 add Spotify Premium|25000|10|Akun 1 bulan|digital\n\n" +
           "Stok -1 = unlimited. Kategori opsional.\n" +
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
       }
       const parts = raw.split("|").map((s) => s.trim());
       if (parts.length < 3) {
-        return m.reply(claraWrap("Toko2", "Minimal: nama|harga|stok"));
+        return m.reply(novaWrap("Toko2", "Minimal: nama|harga|stok"));
       }
       const name = parts[0];
       const price = parseInt(parts[1]);
@@ -133,8 +133,8 @@ async function handler(m, { sock }) {
       const desc = parts[3] || "";
       const category = parts[4] || "umum";
 
-      if (!name || isNaN(price) || price < 0) return m.reply(claraWrap("Toko2", "Nama & harga harus valid."));
-      if (isNaN(stock) || stock < -1) return m.reply(claraWrap("Toko2", "Stok harus angka (-1 = unlimited)."));
+      if (!name || isNaN(price) || price < 0) return m.reply(novaWrap("Toko2", "Nama & harga harus valid."));
+      if (isNaN(stock) || stock < -1) return m.reply(novaWrap("Toko2", "Stok harus angka (-1 = unlimited)."));
 
       // Upload gambar ke Catbox (opsional — reply/kirim gambar dengan command)
       let imageUrl = null;
@@ -161,7 +161,7 @@ async function handler(m, { sock }) {
       if (desc) reply += "\n" + toSC("Desc") + ": " + desc;
       if (imageUrl) reply += "\n" + toSC("Gambar") + ": OK (Catbox)";
       else reply += "\n" + toSC("Gambar") + ": - (opsional)";
-      return m.reply(claraWrap("Toko2", reply));
+      return m.reply(novaWrap("Toko2", reply));
     }
 
     // ============================================================
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
       const cat = args[0] || "";
       const products = listByCategory(cat);
       if (!products.length) {
-        return m.reply(claraWrap("Toko2", toSC("Belum ada produk") + (cat ? " di kategori " + cat : "") + "."));
+        return m.reply(novaWrap("Toko2", toSC("Belum ada produk") + (cat ? " di kategori " + cat : "") + "."));
       }
       const lines = [""];
       if (cat && cat !== "all") lines.push(toSC("Kategori") + ": " + cat, "");
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "kategori" || action === "categories") {
       const cats = getCategories();
-      if (!cats.length) return m.reply(claraWrap("Toko2", toSC("Belum ada kategori.")));
+      if (!cats.length) return m.reply(novaWrap("Toko2", toSC("Belum ada kategori.")));
       const lines = [""];
       for (const c of cats) {
         const count = getProducts().filter((p) => p.category === c).length;
@@ -205,9 +205,9 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "cari" || action === "search") {
       const query = args.join(" ").trim();
-      if (!query) return m.reply(claraWrap("Toko2", "Format: .toko2 cari <query>"));
+      if (!query) return m.reply(novaWrap("Toko2", "Format: .toko2 cari <query>"));
       const results = searchProducts(query);
-      if (!results.length) return m.reply(claraWrap("Toko2", toSC("Tidak ditemukan untuk") + ": " + query));
+      if (!results.length) return m.reply(novaWrap("Toko2", toSC("Tidak ditemukan untuk") + ": " + query));
       const lines = [""];
       for (const p of results) {
         lines.push(p.id + " — " + p.name);
@@ -223,13 +223,13 @@ async function handler(m, { sock }) {
     if (action === "stok" || action === "stock") {
       const kode = args[0] || "";
       const jumlah = parseInt(args[1] || "0");
-      if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 stok <kode> <jumlah>"));
-      if (isNaN(jumlah)) return m.reply(claraWrap("Toko2", "Jumlah harus angka."));
+      if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 stok <kode> <jumlah>"));
+      if (isNaN(jumlah)) return m.reply(novaWrap("Toko2", "Jumlah harus angka."));
       const product = getProduct(kode);
-      if (!product) return m.reply(claraWrap("Toko2", toSC("Produk tidak ditemukan.")));
+      if (!product) return m.reply(novaWrap("Toko2", toSC("Produk tidak ditemukan.")));
       const oldStock = product.stock;
       const updated = updateStock(kode, jumlah);
-      return m.reply(claraWrap("Toko2",
+      return m.reply(novaWrap("Toko2",
         toSC("Stok diperbarui") + "\n\n" +
         toSC("Produk") + ": " + updated.name + "\n" +
         toSC("Stok lama") + ": " + formatStock(oldStock) + "\n" +
@@ -242,11 +242,11 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "del" || action === "hapus") {
       const kode = args[0] || "";
-      if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 del <kode>"));
+      if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 del <kode>"));
       const product = getProduct(kode);
-      if (!product) return m.reply(claraWrap("Toko2", toSC("Produk tidak ditemukan.")));
+      if (!product) return m.reply(novaWrap("Toko2", toSC("Produk tidak ditemukan.")));
       deleteProduct(kode);
-      return m.reply(claraWrap("Toko2", toSC("Produk dihapus") + ": " + product.name + " (" + product.id + ")"));
+      return m.reply(novaWrap("Toko2", toSC("Produk dihapus") + ": " + product.name + " (" + product.id + ")"));
     }
 
     // ============================================================
@@ -256,40 +256,40 @@ async function handler(m, { sock }) {
       const kode = args[0] || "";
       const field = (args[1] || "").toLowerCase();
       const nilai = args.slice(2).join(" ").trim();
-      if (!kode || !field) return m.reply(claraWrap("Toko2", "Format: .toko2 edit <kode> <nama|harga|desc|kategori|gambar> <nilai>"));
+      if (!kode || !field) return m.reply(novaWrap("Toko2", "Format: .toko2 edit <kode> <nama|harga|desc|kategori|gambar> <nilai>"));
       const product = getProduct(kode);
-      if (!product) return m.reply(claraWrap("Toko2", toSC("Produk tidak ditemukan.")));
+      if (!product) return m.reply(novaWrap("Toko2", toSC("Produk tidak ditemukan.")));
 
       // Gambar: reply gambar + .toko2 edit <kode> gambar
       if (field === "gambar" || field === "image") {
         const hasQuotedMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === "imageMessage");
         const isDirectImage = m.isMedia && m.isImage;
         if (!hasQuotedMedia && !isDirectImage) {
-          return m.reply(claraWrap("Toko2", "Reply/kirim gambar lalu ketik .toko2 edit <kode> gambar"));
+          return m.reply(novaWrap("Toko2", "Reply/kirim gambar lalu ketik .toko2 edit <kode> gambar"));
         }
         try {
           const buffer = hasQuotedMedia ? await m.quoted.download() : await m.download();
-          if (!buffer) return m.reply(claraWrap("Toko2", "Gagal download gambar."));
+          if (!buffer) return m.reply(novaWrap("Toko2", "Gagal download gambar."));
           const imageUrl = await uploadToCatbox(buffer, "image.jpg");
-          if (!imageUrl) return m.reply(claraWrap("Toko2", "Gagal upload ke Catbox."));
+          if (!imageUrl) return m.reply(novaWrap("Toko2", "Gagal upload ke Catbox."));
           updateProduct(kode, { image: imageUrl });
-          return m.reply(claraWrap("Toko2", toSC("Gambar diperbarui") + ": " + kode + "\nURL: " + imageUrl));
+          return m.reply(novaWrap("Toko2", toSC("Gambar diperbarui") + ": " + kode + "\nURL: " + imageUrl));
         } catch (e) {
-          return m.reply(claraWrap("Toko2", "Error upload: " + e.message));
+          return m.reply(novaWrap("Toko2", "Error upload: " + e.message));
         }
       }
 
-      if (!nilai) return m.reply(claraWrap("Toko2", "Format: .toko2 edit <kode> <nama|harga|desc|kategori> <nilai>"));
+      if (!nilai) return m.reply(novaWrap("Toko2", "Format: .toko2 edit <kode> <nama|harga|desc|kategori> <nilai>"));
 
       let updates = {};
       if (field === "nama" || field === "name") updates.name = nilai;
       else if (field === "harga" || field === "price") updates.price = parseInt(nilai);
       else if (field === "desc" || field === "deskripsi") updates.desc = nilai;
       else if (field === "kategori" || field === "category") updates.category = nilai;
-      else return m.reply(claraWrap("Toko2", "Field: nama, harga, desc, kategori, gambar"));
+      else return m.reply(novaWrap("Toko2", "Field: nama, harga, desc, kategori, gambar"));
 
       updateProduct(kode, updates);
-      return m.reply(claraWrap("Toko2", toSC("Produk diperbarui") + ": " + kode + " (" + field + " = " + nilai + ")"));
+      return m.reply(novaWrap("Toko2", toSC("Produk diperbarui") + ": " + kode + " (" + field + " = " + nilai + ")"));
     }
 
     // ============================================================
@@ -297,9 +297,9 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "invoice") {
       const kode = (args[0] || "").toUpperCase();
-      if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 invoice <kode>"));
+      if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 invoice <kode>"));
       const inv = getInvoice(kode);
-      if (!inv) return m.reply(claraWrap("Toko2", toSC("Invoice tidak ditemukan.")));
+      if (!inv) return m.reply(novaWrap("Toko2", toSC("Invoice tidak ditemukan.")));
       return m.reply(novaBox("DETAIL INVOICE", formatReceipt(inv)));
     }
 
@@ -310,7 +310,7 @@ async function handler(m, { sock }) {
       const filter = (args[0] || "").toLowerCase();
       const invoices = listInvoices(filter && filter !== "all" ? filter : null);
       if (!invoices.length) {
-        return m.reply(claraWrap("Toko2", toSC("Tidak ada invoice.") + (filter ? " Status: " + filter : "")));
+        return m.reply(novaWrap("Toko2", toSC("Tidak ada invoice.") + (filter ? " Status: " + filter : "")));
       }
       const lines = [""];
       for (const inv of invoices.slice(0, 15)) {
@@ -327,11 +327,11 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "confirm" || action === "konfirmasi") {
       const kode = (args[0] || "").toUpperCase();
-      if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 confirm <kode>"));
+      if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 confirm <kode>"));
       const inv = getInvoice(kode);
-      if (!inv) return m.reply(claraWrap("Toko2", toSC("Invoice tidak ditemukan.")));
+      if (!inv) return m.reply(novaWrap("Toko2", toSC("Invoice tidak ditemukan.")));
       if (inv.status !== "paid" && inv.status !== "pending") {
-        return m.reply(claraWrap("Toko2", toSC("Status") + ": " + statusText(inv.status) + ". " + toSC("Tidak bisa dikonfirmasi.")));
+        return m.reply(novaWrap("Toko2", toSC("Status") + ": " + statusText(inv.status) + ". " + toSC("Tidak bisa dikonfirmasi.")));
       }
       updateInvoice(kode, { status: "confirmed" });
 
@@ -340,7 +340,7 @@ async function handler(m, { sock }) {
         await sock.sendMessage(inv.buyerJid, { text: novaBox("INVOICE DIKONFIRMI", formatReceipt(inv)) });
       } catch {}
 
-      return m.reply(claraWrap("Toko2", toSC("Invoice dikonfirmasi") + ": " + inv.code + "\n" + toSC("Notifikasi dikirim ke pembeli")));
+      return m.reply(novaWrap("Toko2", toSC("Invoice dikonfirmasi") + ": " + inv.code + "\n" + toSC("Notifikasi dikirim ke pembeli")));
     }
 
     // ============================================================
@@ -348,10 +348,10 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "done" || action === "selesai") {
       const kode = (args[0] || "").toUpperCase();
-      if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 done <kode>"));
+      if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 done <kode>"));
       const inv = getInvoice(kode);
-      if (!inv) return m.reply(claraWrap("Toko2", toSC("Invoice tidak ditemukan.")));
-      if (inv.status !== "confirmed") return m.reply(claraWrap("Toko2", toSC("Invoice harus dikonfirmasi dulu.")));
+      if (!inv) return m.reply(novaWrap("Toko2", toSC("Invoice tidak ditemukan.")));
+      if (inv.status !== "confirmed") return m.reply(novaWrap("Toko2", toSC("Invoice harus dikonfirmasi dulu.")));
       updateInvoice(kode, { status: "done" });
 
       // Increment sold count per item
@@ -372,7 +372,7 @@ async function handler(m, { sock }) {
         await sock.sendMessage(inv.buyerJid, { text: novaBox("TRANSAKSI SELESAI", buyerLines) });
       } catch {}
 
-      return m.reply(claraWrap("Toko2", toSC("Transaksi selesai") + ": " + inv.code));
+      return m.reply(novaWrap("Toko2", toSC("Transaksi selesai") + ": " + inv.code));
     }
 
     // ============================================================
@@ -380,10 +380,10 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "cancel" || action === "batal") {
       const kode = (args[0] || "").toUpperCase();
-      if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 cancel <kode>"));
+      if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 cancel <kode>"));
       const inv = getInvoice(kode);
-      if (!inv) return m.reply(claraWrap("Toko2", toSC("Invoice tidak ditemukan.")));
-      if (inv.status === "done") return m.reply(claraWrap("Toko2", toSC("Sudah selesai, tidak bisa dibatalkan.")));
+      if (!inv) return m.reply(novaWrap("Toko2", toSC("Invoice tidak ditemukan.")));
+      if (inv.status === "done") return m.reply(novaWrap("Toko2", toSC("Sudah selesai, tidak bisa dibatalkan.")));
 
       // Restock
       for (const item of (inv.items || [])) {
@@ -402,7 +402,7 @@ async function handler(m, { sock }) {
         await sock.sendMessage(inv.buyerJid, { text: novaBox("INVOICE DIBATALKAN", buyerLines) });
       } catch {}
 
-      return m.reply(claraWrap("Toko2", toSC("Invoice dibatalkan") + ": " + inv.code));
+      return m.reply(novaWrap("Toko2", toSC("Invoice dibatalkan") + ": " + inv.code));
     }
 
     // ============================================================
@@ -414,7 +414,7 @@ async function handler(m, { sock }) {
       if (sub === "add" || sub === "tambah") {
         const raw = args.join(" ");
         if (!raw || !raw.includes("|")) {
-          return m.reply(claraWrap("Toko2",
+          return m.reply(novaWrap("Toko2",
             "Format: .toko2 promo add <kode>|<type>|<value>|<desc>|<minSpend>\n" +
             "Contoh: .toko2 promo add HEMAT10|percent|10|Diskon 10%|50000\n" +
             "Type: percent / fixed"
@@ -428,8 +428,8 @@ async function handler(m, { sock }) {
           desc: parts[3] || "",
           minSpend: parseFloat(parts[4]) || 0,
         });
-        if (result.error) return m.reply(claraWrap("Toko2", result.error));
-        return m.reply(claraWrap("Toko2",
+        if (result.error) return m.reply(novaWrap("Toko2", result.error));
+        return m.reply(novaWrap("Toko2",
           toSC("Promo ditambah") + "\n\n" +
           toSC("Kode") + ": " + result.promo.code + "\n" +
           toSC("Type") + ": " + result.promo.type + "\n" +
@@ -440,7 +440,7 @@ async function handler(m, { sock }) {
 
       if (sub === "list" || sub === "daftar") {
         const promos = getPromos();
-        if (!promos.length) return m.reply(claraWrap("Toko2", toSC("Belum ada promo.")));
+        if (!promos.length) return m.reply(novaWrap("Toko2", toSC("Belum ada promo.")));
         const lines = [""];
         for (const p of promos) {
           const val = p.type === "percent" ? p.value + "%" : formatRupiah(p.value);
@@ -454,29 +454,29 @@ async function handler(m, { sock }) {
 
       if (sub === "off" || sub === "nonaktif") {
         const kode = (args[0] || "").toUpperCase();
-        if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 promo off <kode>"));
+        if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 promo off <kode>"));
         const result = togglePromo(kode, false);
-        if (!result) return m.reply(claraWrap("Toko2", toSC("Promo tidak ditemukan.")));
-        return m.reply(claraWrap("Toko2", toSC("Promo dimatikan") + ": " + kode));
+        if (!result) return m.reply(novaWrap("Toko2", toSC("Promo tidak ditemukan.")));
+        return m.reply(novaWrap("Toko2", toSC("Promo dimatikan") + ": " + kode));
       }
 
       if (sub === "on" || sub === "aktif") {
         const kode = (args[0] || "").toUpperCase();
-        if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 promo on <kode>"));
+        if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 promo on <kode>"));
         const result = togglePromo(kode, true);
-        if (!result) return m.reply(claraWrap("Toko2", toSC("Promo tidak ditemukan.")));
-        return m.reply(claraWrap("Toko2", toSC("Promo diaktifkan") + ": " + kode));
+        if (!result) return m.reply(novaWrap("Toko2", toSC("Promo tidak ditemukan.")));
+        return m.reply(novaWrap("Toko2", toSC("Promo diaktifkan") + ": " + kode));
       }
 
       if (sub === "del" || sub === "hapus") {
         const kode = (args[0] || "").toUpperCase();
-        if (!kode) return m.reply(claraWrap("Toko2", "Format: .toko2 promo del <kode>"));
+        if (!kode) return m.reply(novaWrap("Toko2", "Format: .toko2 promo del <kode>"));
         const ok = deletePromo(kode);
-        if (!ok) return m.reply(claraWrap("Toko2", toSC("Promo tidak ditemukan.")));
-        return m.reply(claraWrap("Toko2", toSC("Promo dihapus") + ": " + kode));
+        if (!ok) return m.reply(novaWrap("Toko2", toSC("Promo tidak ditemukan.")));
+        return m.reply(novaWrap("Toko2", toSC("Promo dihapus") + ": " + kode));
       }
 
-      return m.reply(claraWrap("Toko2",
+      return m.reply(novaWrap("Toko2",
         toSC("Promo") + "\n\n" +
         ".toko2 promo add <kode>|<type>|<value>|<desc>|<minSpend>\n" +
         ".toko2 promo list\n" +
@@ -497,20 +497,20 @@ async function handler(m, { sock }) {
         // Show kurir list if no args
         if (!kode) {
           const kList = Object.entries(KURIR_LIST).map(([k, v]) => k + " (" + v.name + ")").join(", ");
-          return m.reply(claraWrap("Toko2",
+          return m.reply(novaWrap("Toko2",
             "Format: .toko2 resi <invoice> <nomor_resi> <kurir>\n\n" +
             "Kurir tersedia:\n" + kList
           ));
         }
-        return m.reply(claraWrap("Toko2", "Format: .toko2 resi <invoice> <nomor_resi> <kurir>"));
+        return m.reply(novaWrap("Toko2", "Format: .toko2 resi <invoice> <nomor_resi> <kurir>"));
       }
 
       if (!KURIR_LIST[kurir]) {
-        return m.reply(claraWrap("Toko2", toSC("Kurir tidak dikenal.") + " Tersedia: " + Object.keys(KURIR_LIST).join(", ")));
+        return m.reply(novaWrap("Toko2", toSC("Kurir tidak dikenal.") + " Tersedia: " + Object.keys(KURIR_LIST).join(", ")));
       }
 
       const result = addResi(kode, resiNumber, kurir);
-      if (result.error) return m.reply(claraWrap("Toko2", result.error));
+      if (result.error) return m.reply(novaWrap("Toko2", result.error));
 
       // Notify buyer
       try {
@@ -527,7 +527,7 @@ async function handler(m, { sock }) {
         await sock.sendMessage(result.invoice.buyerJid, { text: novaBox("RESI DIKIRIM", buyerLines) });
       } catch {}
 
-      return m.reply(claraWrap("Toko2",
+      return m.reply(novaWrap("Toko2",
         toSC("Resi ditambah") + "\n\n" +
         toSC("Invoice") + ": " + kode + "\n" +
         toSC("Resi") + ": " + resiNumber + "\n" +
@@ -544,14 +544,14 @@ async function handler(m, { sock }) {
       const kurir = (args[1] || "").toLowerCase();
 
       if (!resiNumber || !kurir) {
-        return m.reply(claraWrap("Toko2", "Format: .toko2 track <nomor_resi> <kurir>"));
+        return m.reply(novaWrap("Toko2", "Format: .toko2 track <nomor_resi> <kurir>"));
       }
 
       const loading = await m.react("\u{1F551}").catch(() => {});
       const result = await trackResi(resiNumber, kurir);
       await m.react("\u{1F423}").catch(() => {});
 
-      if (result.error) return m.reply(claraWrap("Toko2", result.error));
+      if (result.error) return m.reply(novaWrap("Toko2", result.error));
 
       const lines = [""];
       if (result.summary) {
@@ -581,7 +581,7 @@ async function handler(m, { sock }) {
     if (action === "setkey" || action === "setapikey") {
       const key = args[0] || "";
       if (!key) {
-        return m.reply(claraWrap("Toko2",
+        return m.reply(novaWrap("Toko2",
           toSC("Set Binderbyte API key untuk auto-track resi") + "\n\n" +
           "Format: .toko2 setkey <key>\n\n" +
           "Daftar gratis: binderbyte.com"
@@ -590,7 +590,7 @@ async function handler(m, { sock }) {
       const db = getDatabase();
       db.setting("binderbyteKey", key);
       db.save();
-      return m.reply(claraWrap("Toko2", toSC("Binderbyte API key disimpan.")));
+      return m.reply(novaWrap("Toko2", toSC("Binderbyte API key disimpan.")));
     }
 
     // ============================================================
@@ -612,14 +612,14 @@ async function handler(m, { sock }) {
 
       if (kategori === "all" || kategori === "semua") {
         const result = seedAll();
-        return m.reply(claraWrap("Toko2",
+        return m.reply(novaWrap("Toko2",
           toSC("Katalog diisi") + "\n\n" + toSC("Ditambah") + ": " + result.totalAdded + " produk\n" + toSC("Skip (sudah ada)") + ": " + result.totalSkipped + " produk"
         ));
       }
 
       const result = seedKategori(kategori);
-      if (result.error) return m.reply(claraWrap("Toko2", result.error));
-      return m.reply(claraWrap("Toko2",
+      if (result.error) return m.reply(novaWrap("Toko2", result.error));
+      return m.reply(novaWrap("Toko2",
         toSC("Kategori diisi") + ": " + result.label + "\n\n" +
         toSC("Ditambah") + ": " + result.added + " produk\n" +
         toSC("Skip") + ": " + result.skipped + " produk"
@@ -628,7 +628,7 @@ async function handler(m, { sock }) {
 
     return help(m);
   } catch (error) {
-    return m.reply(claraWrap("Toko2", toSC("Error") + ": " + error.message));
+    return m.reply(novaWrap("Toko2", toSC("Error") + ": " + error.message));
   }
 }
 

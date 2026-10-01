@@ -6,7 +6,7 @@
  *        info progres, riwayat pemenang. Persist di database.
  */
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "arisan",
@@ -47,11 +47,11 @@ async function handler(m, { sock, config: botConfig }) {
   if (sub === "mulai" || sub === "start") {
     const all = getAll();
     if (all[gid]?.active) {
-      return m.reply(claraWrap("Arisan", `Arisan di grup ini lagi jalan! Ketik ${prefix}arisan info buat lihat progresnya.`));
+      return m.reply(novaWrap("Arisan", `Arisan di grup ini lagi jalan! Ketik ${prefix}arisan info buat lihat progresnya.`));
     }
     const setoran = Number(String(arg).replace(/[^\d]/g, ""));
     if (!Number.isFinite(setoran) || setoran < 1000) {
-      return m.reply(claraWrap("Arisan", [
+      return m.reply(novaWrap("Arisan", [
         "🎯 *Mulai Arisan*",
         "",
         `Format: ${prefix}arisan mulai <setoran>`,
@@ -66,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
     all2[gid] = { active: true, setoran, peserta: [], riwayat: [], createdAt: Date.now() };
     saveAll(all2);
     await m.react("🐣");
-    return m.reply(claraWrap("Arisan", [
+    return m.reply(novaWrap("Arisan", [
       "🎉 *ARISAN DIMULAI!*",
       "",
       `💰 Setoran: ${rp(setoran)}/orang per giliran`,
@@ -83,14 +83,14 @@ async function handler(m, { sock, config: botConfig }) {
 
   // ── join ──
   if (sub === "join" || sub === "ikut") {
-    if (!arisan?.active) return m.reply(claraWrap("Arisan", `Belum ada arisan di grup ini. Ketik ${prefix}arisan mulai <setoran>`));
+    if (!arisan?.active) return m.reply(novaWrap("Arisan", `Belum ada arisan di grup ini. Ketik ${prefix}arisan mulai <setoran>`));
     if (arisan.peserta.some((p) => p.id === m.sender)) {
-      return m.reply(claraWrap("Arisan", "Kamu udah terdaftar di arisan ini 😄"));
+      return m.reply(novaWrap("Arisan", "Kamu udah terdaftar di arisan ini 😄"));
     }
     arisan.peserta.push({ id: m.sender, name: m.pushName || m.sender.split("@")[0], dapat: null });
     saveAll(all);
     await m.react("🐣");
-    return m.reply(claraWrap("Arisan", [
+    return m.reply(novaWrap("Arisan", [
       "✅ *Berhasil Gabung Arisan!*",
       "",
       `👤 ${m.pushName || m.sender.split("@")[0]} masuk daftar`,
@@ -104,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
   // ── info ──
   if (!sub || sub === "info" || sub === "status") {
     if (!arisan?.active) {
-      return m.reply(claraWrap("Arisan", [
+      return m.reply(novaWrap("Arisan", [
         "🎯 *Arisan Manager*",
         "",
         `Belum ada arisan jalan di grup ini.`,
@@ -135,25 +135,25 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("", "🏆 *Sudah dapat:*");
       sudah.forEach((p) => lines.push(`• ${p.name}`));
     }
-    return m.reply(claraWrap("Arisan", lines.join("\n")));
+    return m.reply(novaWrap("Arisan", lines.join("\n")));
   }
 
   if (!arisan?.active) {
-    return m.reply(claraWrap("Arisan", `Belum ada arisan di grup ini. Ketik ${prefix}arisan mulai <setoran>`));
+    return m.reply(novaWrap("Arisan", `Belum ada arisan di grup ini. Ketik ${prefix}arisan mulai <setoran>`));
   }
 
   // ── undi ──
   if (sub === "undi") {
     const belum = arisan.peserta.filter((p) => !p.dapat);
-    if (arisan.peserta.length < 2) return m.reply(claraWrap("Arisan", `Butuh minimal 2 peserta buat undian. Ajak temenmu ketik ${prefix}arisan join`));
-    if (!belum.length) return m.reply(claraWrap("Arisan", "🎉 Semua peserta udah dapat giliran! Arisan kelar — ketik .arisan stop buat nutup."));
+    if (arisan.peserta.length < 2) return m.reply(novaWrap("Arisan", `Butuh minimal 2 peserta buat undian. Ajak temenmu ketik ${prefix}arisan join`));
+    if (!belum.length) return m.reply(novaWrap("Arisan", "🎉 Semua peserta udah dapat giliran! Arisan kelar — ketik .arisan stop buat nutup."));
     const win = belum[Math.floor(Math.random() * belum.length)];
     win.dapat = Date.now();
     arisan.riwayat.push({ id: win.id, name: win.name, ts: win.dapat, total: arisan.setoran * arisan.peserta.length });
     saveAll(all);
     await m.react("🎉");
     const sisa = belum.length - 1;
-    return m.reply(claraWrap("Arisan", [
+    return m.reply(novaWrap("Arisan", [
       "🎉🎉 *UNDIAN ARISAN* 🎉🎉",
       "",
       `🎊 *SELAMAT!* ${win.name} dapet giliran ini!`,
@@ -167,23 +167,23 @@ async function handler(m, { sock, config: botConfig }) {
 
   // ── riwayat ──
   if (sub === "riwayat") {
-    if (!arisan.riwayat.length) return m.reply(claraWrap("Arisan", "Belum ada yang dapat giliran — ketik .arisan undi"));
+    if (!arisan.riwayat.length) return m.reply(novaWrap("Arisan", "Belum ada yang dapat giliran — ketik .arisan undi"));
     const lines = ["📜 *Riwayat Pemenang Arisan*", ""];
     arisan.riwayat.forEach((r, i) => {
       const d = new Date(r.ts).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
       lines.push(`${i + 1}. ${r.name} — ${rp(r.total)} (${d})`);
     });
-    return m.reply(claraWrap("Arisan", lines.join("\n")));
+    return m.reply(novaWrap("Arisan", lines.join("\n")));
   }
 
   // ── keluar ──
   if (sub === "keluar") {
     const idx = arisan.peserta.findIndex((p) => p.id === m.sender);
-    if (idx === -1) return m.reply(claraWrap("Arisan", "Kamu gak terdaftar di arisan ini."));
-    if (arisan.peserta[idx].dapat) return m.reply(claraWrap("Arisan", "Kamu udah pernah dapat giliran — gak bisa keluar (biar adil 😄)."));
+    if (idx === -1) return m.reply(novaWrap("Arisan", "Kamu gak terdaftar di arisan ini."));
+    if (arisan.peserta[idx].dapat) return m.reply(novaWrap("Arisan", "Kamu udah pernah dapat giliran — gak bisa keluar (biar adil 😄)."));
     arisan.peserta.splice(idx, 1);
     saveAll(all);
-    return m.reply(claraWrap("Arisan", `👋 ${m.pushName || "Kamu"} keluar dari arisan. Sisa ${arisan.peserta.length} peserta.`));
+    return m.reply(novaWrap("Arisan", `👋 ${m.pushName || "Kamu"} keluar dari arisan. Sisa ${arisan.peserta.length} peserta.`));
   }
 
   // ── stop ──
@@ -191,11 +191,11 @@ async function handler(m, { sock, config: botConfig }) {
     delete all[gid];
     saveAll(all);
     await m.react("🐣");
-    return m.reply(claraWrap("Arisan", "🛑 Arisan di grup ini udah ditutup. Makasih, sampai jumpa arisan berikutnya!"));
+    return m.reply(novaWrap("Arisan", "🛑 Arisan di grup ini udah ditutup. Makasih, sampai jumpa arisan berikutnya!"));
   }
 
   await m.react("❌");
-  return m.reply(claraWrap("Arisan", `Subcommand gak dikenal: "${sub}". Ketik ${prefix}arisan buat lihat menu.`));
+  return m.reply(novaWrap("Arisan", `Subcommand gak dikenal: "${sub}". Ketik ${prefix}arisan buat lihat menu.`));
 }
 
 export { pluginConfig as config, handler };

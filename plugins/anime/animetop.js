@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -74,7 +74,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const maxPage = Math.ceil(TOP_ANIME.length / PER_PAGE)
 
     if (page < 1 || page > maxPage) {
-      return m.reply(claraWrap("Top Anime", "Halaman tidak valid. Tersedia 1-" + maxPage + "\nCara: " + usedPrefix + "animetop <halaman>"))
+      return m.reply(novaWrap("Top Anime", "Halaman tidak valid. Tersedia 1-" + maxPage + "\nCara: " + usedPrefix + "animetop <halaman>"))
     }
 
     const start = (page - 1) * PER_PAGE
@@ -97,9 +97,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("Ini halaman terakhir!")
     }
 
-    return m.reply(claraWrap("Top Anime #" + page, lines.join("\n")))
+    return m.reply(novaWrap("Top Anime #" + page, lines.join("\n")))
   } catch (e) {
-    return m.reply(claraWrap("Top Anime", "Error: " + e.message))
+    return m.reply(novaWrap("Top Anime", "Error: " + e.message))
   }
 }
 

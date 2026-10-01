@@ -13,7 +13,7 @@
 
 import assert from "node:assert";
 
-// DB eksplisit (gotcha: claraWrap lookup contacts butuh DB aktif, tanpa path → TypeError senyap)
+// DB eksplisit (gotcha: novaWrap lookup contacts butuh DB aktif, tanpa path → TypeError senyap)
 const { initDatabase } = await import("../../src/lib/nova-database.js");
 await initDatabase("/tmp/vision-media-e2e-db/nova.json");
 

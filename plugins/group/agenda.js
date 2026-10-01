@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CronJob } from "cron";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -272,7 +272,7 @@ function startAgendaChecker() {
 
               try {
                 await sock.sendMessage(groupId, {
-                  text: claraWrap("Agenda - Pengingat", lines.join("\n")),
+                  text: novaWrap("Agenda - Pengingat", lines.join("\n")),
                 });
               } catch (e) { console.error('[agenda.js]:', e.message); }
 
@@ -293,7 +293,7 @@ function startAgendaChecker() {
 
               try {
                 await sock.sendMessage(groupId, {
-                  text: claraWrap("Agenda - Pengingat", lines.join("\n")),
+                  text: novaWrap("Agenda - Pengingat", lines.join("\n")),
                 });
               } catch (e) { console.error('[agenda.js]:', e.message); }
 
@@ -313,7 +313,7 @@ function startAgendaChecker() {
 
               try {
                 await sock.sendMessage(groupId, {
-                  text: claraWrap("Agenda - Waktu Tiba", lines.join("\n")),
+                  text: novaWrap("Agenda - Waktu Tiba", lines.join("\n")),
                 });
               } catch (e) { console.error('[agenda.js]:', e.message); }
 
@@ -359,7 +359,7 @@ export default {
     // ─── Toggle ───
     if (new RegExp(`^${prefix}agendaon\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
@@ -367,7 +367,7 @@ export default {
         return { handled: true };
       }
       toggleOn(groupId);
-      await m.reply(claraWrap("Agenda", [
+      await m.reply(novaWrap("Agenda", [
         `Status: *Aktif*`,
         ``,
         `Fitur Smart Agenda dinyalakan.`,
@@ -378,13 +378,13 @@ export default {
 
     if (new RegExp(`^${prefix}agendaoff\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Status: *akses ditolak*`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
-      await m.reply(claraWrap("Agenda", [
+      await m.reply(novaWrap("Agenda", [
         `Status: *Nonaktif*`,
         ``,
         `Fitur Agenda dimatikan.`,
@@ -397,7 +397,7 @@ export default {
     if (new RegExp(`^${prefix}agendahistory\\b`, "i").test(raw)) {
       const all = getEvents(groupId);
       if (all.length === 0) {
-        await m.reply(claraWrap("Agenda - Riwayat", [
+        await m.reply(novaWrap("Agenda - Riwayat", [
           `Belum ada riwayat acara di grup ini.`,
         ].join("\n")));
         return { handled: true };
@@ -414,13 +414,13 @@ export default {
         );
       });
 
-      await m.reply(claraWrap("Agenda - Riwayat", lines.join("\n")));
+      await m.reply(novaWrap("Agenda - Riwayat", lines.join("\n")));
       return { handled: true };
     }
 
     // Check if enabled
     if (!isAgendaOn(groupId)) {
-      await m.reply(claraWrap("Agenda", [
+      await m.reply(novaWrap("Agenda", [
         `Status: *nonaktif di grup ini*`,
         ``,
         `Owner: ketik *${prefix}agendaon* untuk mengaktifkan.`,
@@ -437,7 +437,7 @@ export default {
     if (subCmd && subCmd[1] === "list") {
       const active = getActiveEvents(groupId);
       if (active.length === 0) {
-        await m.reply(claraWrap("Agenda - Aktif", [
+        await m.reply(novaWrap("Agenda - Aktif", [
           `Tidak ada acara aktif.`,
           ``,
           `Bikin baru: *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
@@ -460,7 +460,7 @@ export default {
 
       lines.push(`Ketik *${prefix}agenda status <id>* untuk detail.`);
 
-      await m.reply(claraWrap("Agenda - Daftar Aktif", lines.join("\n")));
+      await m.reply(novaWrap("Agenda - Daftar Aktif", lines.join("\n")));
       return { handled: true };
     }
 
@@ -470,7 +470,7 @@ export default {
       const eventId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!eventId) {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Format: *${prefix}agenda status <id>*`,
           `💡 *Contoh:* *${prefix}agenda status AGD3A2*`,
         ].join("\n")));
@@ -479,7 +479,7 @@ export default {
 
       const event = findEvent(groupId, eventId);
       if (!event) {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Acara *${eventId}* tidak ditemukan.`,
           `Ketik *${prefix}agenda list* untuk lihat yang aktif.`,
         ].join("\n")));
@@ -514,7 +514,7 @@ export default {
         if (event.reminded1h) lines.push(`Pengingat H-1 jam: ✅ terkirim`);
       }
 
-      const text = claraWrap("Agenda - Status", lines.join("\n")) +
+      const text = novaWrap("Agenda - Status", lines.join("\n")) +
         "\n" +
         tipText(`${prefix}agenda hapus ${event.shortId} untuk hapus (owner)`);
 
@@ -525,7 +525,7 @@ export default {
     // .agenda hapus <id>
     if (subCmd && subCmd[1] === "hapus") {
       if (!isOwner) {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa menghapus acara.`,
@@ -537,7 +537,7 @@ export default {
       const eventId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!eventId) {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Format: *${prefix}agenda hapus <id>*`,
           `💡 *Contoh:* *${prefix}agenda hapus AGD3A2*`,
         ].join("\n")));
@@ -546,7 +546,7 @@ export default {
 
       const event = findEvent(groupId, eventId);
       if (!event) {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Acara *${eventId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
@@ -554,12 +554,12 @@ export default {
 
       const deleted = deleteEvent(groupId, event.id);
       if (deleted) {
-        await m.reply(claraWrap("Agenda - Hapus", [
+        await m.reply(novaWrap("Agenda - Hapus", [
           `✅ Acara *${event.shortId}* dihapus.`,
           `${event.name}`,
         ].join("\n")));
       } else {
-        await m.reply(claraWrap("Agenda", [
+        await m.reply(novaWrap("Agenda", [
           `Gagal hapus acara nih`,
         ].join("\n")));
       }
@@ -568,7 +568,7 @@ export default {
 
     // .agenda help
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
-      await m.reply(claraWrap("Agenda - Bantuan", [
+      await m.reply(novaWrap("Agenda - Bantuan", [
         `📌 *Cara Pakai:*`,
         ``,
         `1. Tambah acara:`,
@@ -605,7 +605,7 @@ export default {
     const body = raw.replace(new RegExp(`^${prefix}agenda\\s+`, "i"), "").trim();
 
     if (!body || (!subCmd && !body.toLowerCase().startsWith("tambah"))) {
-      await m.reply(claraWrap("Agenda - Bantuan", [
+      await m.reply(novaWrap("Agenda - Bantuan", [
         `📌 *Cara Pakai:*`,
         ``,
         `*${prefix}agenda tambah | <nama> | <tanggal jam>*`,
@@ -628,7 +628,7 @@ export default {
     const parts = body.split("|").map(p => p.trim()).filter(p => p);
 
     if (parts.length < 3) {
-      await m.reply(claraWrap("Agenda", [
+      await m.reply(novaWrap("Agenda", [
         `Format kurang lengkap.`,
         ``,
         `Format: *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
@@ -648,7 +648,7 @@ export default {
     const eventTime = parseDateTime(dateTimeStr);
 
     if (!eventTime) {
-      await m.reply(claraWrap("Agenda", [
+      await m.reply(novaWrap("Agenda", [
         `Format tanggal gak valid nih: *${dateTimeStr}*`,
         ``,
         `Format yang didukung:`,
@@ -662,7 +662,7 @@ export default {
     }
 
     if (eventTime <= Date.now()) {
-      await m.reply(claraWrap("Agenda", [
+      await m.reply(novaWrap("Agenda", [
         `Waktu yang dimasukkan sudah lewat.`,
         `Gunakan tanggal & jam yang masih akan datang.`,
       ].join("\n")));
@@ -705,7 +705,7 @@ export default {
       `Saat waktunya tiba (notifikasi tanpa tag)`,
     ];
 
-    const text = claraWrap("Agenda - Acara Baru", lines.join("\n")) +
+    const text = novaWrap("Agenda - Acara Baru", lines.join("\n")) +
       "\n" +
       tipText(`${prefix}agenda status ${eventId} untuk cek countdown`);
 

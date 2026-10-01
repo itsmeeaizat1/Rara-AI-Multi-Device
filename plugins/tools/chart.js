@@ -6,7 +6,7 @@
 //   .chart <label..> | <nilai..>  → grafik custom (label & nilai dipisah koma)
 //   .chart <nilai..>              → grafik nilai aja (label otomatis #1..#N)
 import { createCanvas } from "@napi-rs/canvas";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getLeaderboard, formatRp } from "../../src/lib/nova-rpg-service.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -167,7 +167,7 @@ const RPG_LABELS = {
 };
 
 function chartHelp(m) {
-  return claraWrap("chart", [
+  return novaWrap("chart", [
     "📊 *mode grafik*",
     "",
     `▸ ${m.prefix}chart rpg <tipe>`,
@@ -210,7 +210,7 @@ async function handler(m, { sock }) {
       const type = RPG_TYPES[key];
       if (!type) {
         await m.react("❌");
-        return m.reply(claraWrap("chart", [
+        return m.reply(novaWrap("chart", [
           "❌ *tipe rpg nya tidak ketemu*",
           "",
           `▸ ${m.prefix}chart rpg gold`,
@@ -223,7 +223,7 @@ async function handler(m, { sock }) {
       const players = getLeaderboard(type, 10);
       if (!players.length) {
         await m.react("❌");
-        return m.reply(claraWrap("chart", "Belum ada data pemain RPG buat dijadikan grafik.", "error"));
+        return m.reply(novaWrap("chart", "Belum ada data pemain RPG buat dijadikan grafik.", "error"));
       }
       await m.react("🕒");
       const png = await renderChart({
@@ -251,28 +251,28 @@ async function handler(m, { sock }) {
       values = parseNumbers(valuePart);
       if (values.some(Number.isNaN)) {
         await m.react("❌");
-        return m.reply(claraWrap("chart", "❌ Nilainya harus angka semua, dipisah koma.\n\nContoh: .chart pisang,jeruk | 10,25", "error"));
+        return m.reply(novaWrap("chart", "❌ Nilainya harus angka semua, dipisah koma.\n\nContoh: .chart pisang,jeruk | 10,25", "error"));
       }
       if (labels.length !== values.length) {
         await m.react("❌");
-        return m.reply(claraWrap("chart", "❌ Jumlah label & nilai harus sama.\n\nContoh: .chart pisang,jeruk,apel | 10,25,7", "error"));
+        return m.reply(novaWrap("chart", "❌ Jumlah label & nilai harus sama.\n\nContoh: .chart pisang,jeruk,apel | 10,25,7", "error"));
       }
     } else {
       values = parseNumbers(raw);
       labels = values.map((_, i) => `#${i + 1}`);
       if (values.some(Number.isNaN)) {
         await m.react("❌");
-        return m.reply(claraWrap("chart", "❌ Nilainya harus angka, dipisah koma.\n\nContoh: .chart 10,25,7 atau .chart pisang,jeruk | 10,25", "error"));
+        return m.reply(novaWrap("chart", "❌ Nilainya harus angka, dipisah koma.\n\nContoh: .chart 10,25,7 atau .chart pisang,jeruk | 10,25", "error"));
       }
     }
 
     if (values.length < 2) {
       await m.react("❌");
-      return m.reply(claraWrap("chart", "❌ Minimal 2 data biar keliatan grafiknya 😄", "error"));
+      return m.reply(novaWrap("chart", "❌ Minimal 2 data biar keliatan grafiknya 😄", "error"));
     }
     if (values.length > 12) {
       await m.react("❌");
-      return m.reply(claraWrap("chart", "❌ Maksimal 12 data per grafik.", "error"));
+      return m.reply(novaWrap("chart", "❌ Maksimal 12 data per grafik.", "error"));
     }
 
     await m.react("🕒");
@@ -285,7 +285,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("chart", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("chart", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

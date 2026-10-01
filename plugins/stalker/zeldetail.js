@@ -13,7 +13,7 @@ import {
   resolveGmapsShortlink, resolveAppstoreId,
   _setZelDetailHttpForTest, _setZelDetailKeyForTest, _setItunesHttpForTest, _setZelShortResolverForTest,
 } from "../../src/scraper/zeldetail.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "zeldetail",
@@ -227,9 +227,9 @@ async function handler(m, { sock }) {
       else {
         const det = detectZelDetailKind(rest);
         if (det) { kind = det; }
-        else if (!rest) { await m.reply(claraWrap("zeldetail", usageCard(m.prefix))); return; }
+        else if (!rest) { await m.reply(novaWrap("zeldetail", usageCard(m.prefix))); return; }
         else {
-          await m.reply(claraWrap("zeldetail", [
+          await m.reply(novaWrap("zeldetail", [
             `Gak tau harus cari apa dari "${short(rest, 60)}" 😅`,
             "",
             `ketik ${m.prefix}zeldetail buat liat 7 pencarian yang ada`,
@@ -239,7 +239,7 @@ async function handler(m, { sock }) {
       }
     }
     if (!rest) {
-      await m.reply(claraWrap("zeldetail", [
+      await m.reply(novaWrap("zeldetail", [
         `${ZEL_DETAIL_KINDS[kind].label} — detail dari zelapi`,
         "",
         `cara pakai: ${ZEL_DETAIL_KINDS[kind].hint}`,
@@ -253,17 +253,17 @@ async function handler(m, { sock }) {
 
     // resolve value → id/url final
     const rv = await resolveValue(kind, rest);
-    if (!rv.ok) { await m.react("❌"); await m.reply(claraWrap("zeldetail", rv.error)); return; }
+    if (!rv.ok) { await m.react("❌"); await m.reply(novaWrap("zeldetail", rv.error)); return; }
     let value = rv.value;
     if (kind === "appstore" && rv.appId) value = rv.appId;
 
     const r = await zeldetailDetail(kind, value);
-    if (!r.ok) { await m.react("❌"); await m.reply(claraWrap("zeldetail", `Endpoint ${kind} bermasalah: ${r.error}`)); return; }
+    if (!r.ok) { await m.react("❌"); await m.reply(novaWrap("zeldetail", `Endpoint ${kind} bermasalah: ${r.error}`)); return; }
 
     const body = RENDER[kind](r.data);
-    if (!body) { await m.react("❌"); await m.reply(claraWrap("zeldetail", `Data ${ZEL_DETAIL_KINDS[kind].label} kosong — coba link/id lain`)); return; }
+    if (!body) { await m.react("❌"); await m.reply(novaWrap("zeldetail", `Data ${ZEL_DETAIL_KINDS[kind].label} kosong — coba link/id lain`)); return; }
 
-    await m.reply(claraWrap("zeldetail", [
+    await m.reply(novaWrap("zeldetail", [
       `✅ ${ZEL_DETAIL_KINDS[kind].label}`,
       "",
       body,
@@ -273,7 +273,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(claraWrap("zeldetail", `fitur error: ${e?.message || e}`));
+    await m.reply(novaWrap("zeldetail", `fitur error: ${e?.message || e}`));
   }
 }
 

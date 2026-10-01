@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { GoogleSearch } from "../../src/scraper/google.js";
 import axios from "axios";
@@ -193,7 +193,7 @@ export default {
     // ─── .cekfaktaon ───
     if (command === "cekfaktaon") {
       if (!isOwner) {
-        await m.reply(claraWrap("Cek Fakta", [
+        await m.reply(novaWrap("Cek Fakta", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
@@ -201,7 +201,7 @@ export default {
         return { handled: true };
       }
       toggleOn(groupId);
-      await m.reply(claraWrap("Cek Fakta", [
+      await m.reply(novaWrap("Cek Fakta", [
         `Status: *Aktif*`,
         ``,
         `Fitur Cek Fakta & Hoax Detector v2 dinyalakan.`,
@@ -215,7 +215,7 @@ export default {
     // ─── .cekfaktaoff ───
     if (command === "cekfaktaoff") {
       if (!isOwner) {
-        await m.reply(claraWrap("Cek Fakta", [
+        await m.reply(novaWrap("Cek Fakta", [
           `Status: *akses ditolak*`,
           ``,
           `Hanya owner yang bisa mengatur fitur ini.`,
@@ -223,7 +223,7 @@ export default {
         return { handled: true };
       }
       toggleOff(groupId);
-      await m.reply(claraWrap("Cek Fakta", [
+      await m.reply(novaWrap("Cek Fakta", [
         `Status: *Nonaktif*`,
         ``,
         `Fitur Cek Fakta dimatikan.`,
@@ -236,7 +236,7 @@ export default {
     if (command === "cekfaktastatus") {
       const stats = getStats(groupId);
       const statusText = stats.enabled ? "AKTIF" : "NONAKTIF";
-      await m.reply(claraWrap("Cek Fakta - Status", [
+      await m.reply(novaWrap("Cek Fakta - Status", [
         `Status: *${statusText}*`,
         ``,
         `📊 Statistik Grup Ini:`,
@@ -254,7 +254,7 @@ export default {
 
     // ─── Main: .cekfakta (fact-check) ───
     if (!isCekFaktaOn(groupId)) {
-      await m.reply(claraWrap("Cek Fakta", [
+      await m.reply(novaWrap("Cek Fakta", [
         `Status: *nonaktif di grup ini*`,
         ``,
         `Owner: ketik *${prefix}cekfaktaon* untuk mengaktifkan.`,
@@ -263,7 +263,7 @@ export default {
     }
 
     if (!aiConfig.apiKey) {
-      await m.reply(claraWrap("Cek Fakta", [
+      await m.reply(novaWrap("Cek Fakta", [
         `Status: *ai belum dikonfigurasi*`,
         ``,
         `Owner: ketik *${prefix}aihelp* untuk set API key.`,
@@ -285,7 +285,7 @@ export default {
     }
 
     if (!claimText || claimText.length < 3) {
-      await m.reply(claraWrap("Cek Fakta", [
+      await m.reply(novaWrap("Cek Fakta", [
         `📌 *Cara Pakai:*`,
         ``,
         `1. Reply pesan/berita → ketik *${prefix}cekfakta*`,
@@ -312,7 +312,7 @@ export default {
     let searchContext = "";
     let searchSources = [];
     try {
-      await m.reply(claraWrap("Cek Fakta - Searching", [
+      await m.reply(novaWrap("Cek Fakta - Searching", [
         `🔍 Mencari informasi di internet...`,
         `🤖 AI akan menganalisis hasil pencarian...`,
       ].join("\n")));
@@ -475,7 +475,7 @@ Aturan:
       );
 
       const text =
-        claraWrap("Cek Fakta & Hoax Detector v2", lines.join("\n")) +
+        novaWrap("Cek Fakta & Hoax Detector v2", lines.join("\n")) +
         "\n" +
         tipText(`Reply klaim lain + ${prefix}cekfakta untuk cek lagi`);
 
@@ -484,7 +484,7 @@ Aturan:
       incrementStats(groupId, verdictColor);
     } catch (error) {
       const text =
-        claraWrap("Cek Fakta - Error", [
+        novaWrap("Cek Fakta - Error", [
           `Status: *gagal*`,
           `Alasan: *${error.message}*`,
           ``,

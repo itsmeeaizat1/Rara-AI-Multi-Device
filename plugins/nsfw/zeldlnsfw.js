@@ -10,7 +10,7 @@ import {
   zeldlDownload, ZEL_DL_NSFW_KINDS, collectLinks, pickDirectLink, mediaTypeOf,
   _setZelDlHttpForTest, _setZelDlKeyForTest,
 } from "../../src/scraper/zeldl.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { fetchBuffer } from "../../src/lib/nova-utils.js";
 
 let _fetchBufferForTest;
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
       if (ZEL_DL_NSFW_KINDS[k]) { kind = k; raw = args.slice(1).join(" ").trim(); }
     }
     if (!raw) {
-      await m.reply(claraWrap("zeldlnsfw", [
+      await m.reply(novaWrap("zeldlnsfw", [
         "⚠️ DOWNLOADER NSFW ZELAPI — fitur nonaktif by default.",
         "",
         "6 engine: .zmissav · .znekopoi · .zeporner · .zkingbokep · .zpixhentai · .ztokyomotion",
@@ -58,18 +58,18 @@ async function handler(m, { sock }) {
       return;
     }
     if (!kind) {
-      await m.reply(claraWrap("zeldlnsfw", "Kind gak dikenal — pilihan: " + Object.keys(ZEL_DL_NSFW_KINDS).join(" / ")));
+      await m.reply(novaWrap("zeldlnsfw", "Kind gak dikenal — pilihan: " + Object.keys(ZEL_DL_NSFW_KINDS).join(" / ")));
       return;
     }
     await m.react("🧠");
     const r = await zeldlDownload(kind, raw);
-    if (!r.ok) { await m.react("❌"); await m.reply(claraWrap("zeldlnsfw", `${ZEL_DL_NSFW_KINDS[kind].label} bermasalah: ${r.error}`)); return; }
+    if (!r.ok) { await m.react("❌"); await m.reply(novaWrap("zeldlnsfw", `${ZEL_DL_NSFW_KINDS[kind].label} bermasalah: ${r.error}`)); return; }
     const links = collectLinks(r.data);
-    if (!links.length) { await m.react("❌"); await m.reply(claraWrap("zeldlnsfw", "Gak nemu link unduhan buat URL ini")); return; }
+    if (!links.length) { await m.react("❌"); await m.reply(novaWrap("zeldlnsfw", "Gak nemu link unduhan buat URL ini")); return; }
     const direct = pickDirectLink(links);
     const lines = [`✅ ${ZEL_DL_NSFW_KINDS[kind].label}`, "", `📥 ${links.length} link:`];
     links.slice(0, 5).forEach((l, i) => lines.push(`${i + 1}. ${String(l.url).slice(0, 90)}${l.label ? " (" + l.label + ")" : ""}`));
-    await m.reply(claraWrap("zeldlnsfw", lines.join("\n")));
+    await m.reply(novaWrap("zeldlnsfw", lines.join("\n")));
     if (direct) {
       try {
         const buf = await getBuf(direct.url);
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (e) {
     try { await m.react("❌"); } catch {}
-    await m.reply(claraWrap("zeldlnsfw", `fitur error: ${e?.message || e}`));
+    await m.reply(novaWrap("zeldlnsfw", `fitur error: ${e?.message || e}`));
   }
 }
 

@@ -3,7 +3,7 @@ import { PDFDocument, rgb } from "pdf-lib";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 async function saveTemp(buffer, ext) {
   const tmpdir = os.tmpdir();
@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   // Check: is user replying to a PDF?
   if (!isPdfReplied && !pdfMime.includes("pdf")) {
-    const help = claraWrap("Ttd", [
+    const help = novaWrap("Ttd", [
       `Tanda Tangan Digital di PDF`,
       ``,
       `*Mode Gambar (ttd gambar):*`,
@@ -138,14 +138,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     // Download the PDF from replied message
     const pdfBuffer = await m.quoted.download();
     if (!pdfBuffer || pdfBuffer.length === 0) {
-      return m.reply(claraWrap("Ttd", "❌ Gagal download PDF."));
+      return m.reply(novaWrap("Ttd", "❌ Gagal download PDF."));
     }
 
     let resultBuffer;
 
     if (isImageMode) {
       // Image signature mode
-      m.reply(claraWrap("Ttd", "Stamp tanda tangan gambar ke PDF..."));
+      m.reply(novaWrap("Ttd", "Stamp tanda tangan gambar ke PDF..."));
       let sigBuffer;
       if (m.quoted && m.quoted.isMedia && m.quoted.type === "imageMessage") {
         // Signature is the quoted image, PDF is the quoted-of-quoted (not possible in WA)
@@ -156,7 +156,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       }
 
       if (!sigBuffer || sigBuffer.length === 0) {
-        return m.reply(claraWrap("Ttd", "❌ Gagal download gambar tanda tangan."));
+        return m.reply(novaWrap("Ttd", "❌ Gagal download gambar tanda tangan."));
       }
 
       // Convert to PNG if needed (pdf-lib needs PNG for transparency)
@@ -181,14 +181,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       }
     } else if (cleanArgs.length > 0) {
       // Text signature mode
-      m.reply(claraWrap("Ttd", "Tambah tanda tangan teks ke PDF..."));
+      m.reply(novaWrap("Ttd", "Tambah tanda tangan teks ke PDF..."));
       resultBuffer = await addTextSignaturePDF(pdfBuffer, cleanArgs, opts);
     } else {
-      return m.reply(claraWrap("Ttd", `❌ Kirim gambar ttd atau ketik nama. Contoh: ${prefix}ttd Budi Santoso`));
+      return m.reply(novaWrap("Ttd", `❌ Kirim gambar ttd atau ketik nama. Contoh: ${prefix}ttd Budi Santoso`));
     }
 
     if (!resultBuffer) {
-      return m.reply(claraWrap("Ttd", "❌ Gagal menambahkan tanda tangan."));
+      return m.reply(novaWrap("Ttd", "❌ Gagal menambahkan tanda tangan."));
     }
 
     await m.react("🐣");
@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   } catch (error) {
     await m.react("❌");
     console.error("ttd error:", error);
-    m.reply(claraWrap("Ttd", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
+    m.reply(novaWrap("Ttd", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
   }
 
   return { handled: true };

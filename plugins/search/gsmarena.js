@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import gsmarena from "gsmarena-api";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gsmarena",
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const results = await gsmarena.search.search(text);
 
     if (!results || results.length === 0) {
-      return m.reply(claraWrap("gsmarena", `📱 HP tidak ditemukan untuk *${text}*`));
+      return m.reply(novaWrap("gsmarena", `📱 HP tidak ditemukan untuk *${text}*`));
     }
 
     if (results.length === 1) {
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     return m.reply(formatList(results, text, m.prefix));
   } catch (error) {
     console.log(error);
-    m.reply(claraWrap("gsmarena", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("gsmarena", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

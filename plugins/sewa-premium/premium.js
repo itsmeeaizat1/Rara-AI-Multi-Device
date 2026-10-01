@@ -13,7 +13,7 @@ import { runLiveTicker } from "../../src/lib/nova-countdown.js";
 import { buildPremTickerCard } from "../../src/lib/nova-prem-card.js";
 import { getAllPlugins, getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import { premiumPrice as PREMIUM_PRICES } from "../../src/lib/sewa/sewa.js";
 
@@ -352,7 +352,7 @@ async function handler(m, { sock, config: botConfig, db }) {
   } catch (error) {
     console.error("[premium.js] error:", error);
     await m.reply(
-      claraWrap("Premium", [
+      novaWrap("Premium", [
         "Status: *GAGAL*",
         "Alasan: *" + (error.message || "Unknown error") + "*",
         "Coba lagi ya",

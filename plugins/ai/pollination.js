@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Plugin .pollenai — free AI chat via pollinations.ai (port engine lama pollination.js)
-import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pollination",
@@ -47,7 +47,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!res.ok) throw new Error("HTTP " + res.status);
       const buf = Buffer.from(await res.arrayBuffer());
       await m.react("⚡");
-      await sock.sendMessage(m.chat, { image: buf, caption: claraWrap("PollenImg", cleanPrompt.slice(0, 100)) }, { quoted: m });
+      await sock.sendMessage(m.chat, { image: buf, caption: novaWrap("PollenImg", cleanPrompt.slice(0, 100)) }, { quoted: m });
       return { handled: true };
     }
     const text = (m.text || "").replace(new RegExp("^" + prefix + "pollination\\s*", "i"), "").trim();

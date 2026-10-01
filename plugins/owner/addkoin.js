@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addkoin',
     alias: ["addkoin"],
@@ -58,13 +58,13 @@ async function handler(m, { sock }) {
     const user = db.getUser(targetJid) || db.setUser(targetJid)
 
     if (user.koin === -1) {
-        return m.reply(claraWrap("addkoin", `💰 *INFORMATION*\n` +
+        return m.reply(novaWrap("addkoin", `💰 *INFORMATION*\n` +
             `@${targetJid.split('@')[0]} sudah memiliki koin *∞ Unlimited*\n` +
             `Tidak perlu menambahkan koin lagi`))
     }
 
     const newKoin = db.updateKoin(targetJid, amount)
-    await m.reply(claraWrap("Addkoin", `✅ Berhasil menambahkan koin *@${targetJid.split('@')[0]}* sebanyak *${formatKoin(amount)}*`))
+    await m.reply(novaWrap("Addkoin", `✅ Berhasil menambahkan koin *@${targetJid.split('@')[0]}* sebanyak *${formatKoin(amount)}*`))
 }
 
 export { pluginConfig as config, handler }

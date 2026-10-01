@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
     const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
     const text =
-      claraWrap("Unban", [`Target: *${targetName}*`,
+      novaWrap("Unban", [`Target: *${targetName}*`,
         "Status: *berhasil di-unban*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}unban <@target> untuk unban orang lain`) +

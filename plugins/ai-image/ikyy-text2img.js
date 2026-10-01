@@ -2,7 +2,7 @@
 // ikyy-text2img — Generate gambar dari teks via GPT Image (IkyyXD)
 // Original /ai/text2img down (text2video.aritek.app ENOTFOUND), redirected to /ai/gptimage
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(claraWrap("Ikyy Text2Img", [
+      return m.reply(novaWrap("Ikyy Text2Img", [
         "Generate gambar dari teks via IkyyXD",
         "",
         "CARA PAKAI:",
@@ -49,22 +49,22 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: Buffer.from(res.data),
-        caption: claraWrap("Ikyy Text2Img", `Prompt: ${text}`),
+        caption: novaWrap("Ikyy Text2Img", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       try {
         const errData = JSON.parse(res.data.toString());
         await m.react("❌");
-        await m.reply(claraWrap("Ikyy Text2Img", errData?.error || errData?.message || "Gagal generate gambar."));
+        await m.reply(novaWrap("Ikyy Text2Img", errData?.error || errData?.message || "Gagal generate gambar."));
       } catch {
         await m.react("❌");
-        await m.reply(claraWrap("Ikyy Text2Img", "Gagal generate gambar. Coba lagi nanti."));
+        await m.reply(novaWrap("Ikyy Text2Img", "Gagal generate gambar. Coba lagi nanti."));
       }
     }
   } catch (e) {
     console.error("[ikyy-text2img.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Ikyy Text2Img", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("Ikyy Text2Img", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

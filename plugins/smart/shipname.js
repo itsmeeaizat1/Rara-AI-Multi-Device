@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "shipname",
@@ -97,7 +97,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   const mentioned = m.mentionedJid && m.mentionedJid.length >= 2 ? m.mentionedJid : null;
   if (!mentioned) {
-    await m.reply(claraWrap("Ship Name", "Tag 2 orang!\n💡 *Contoh:* " + prefix + "shipname @user1 @user2"));
+    await m.reply(novaWrap("Ship Name", "Tag 2 orang!\n💡 *Contoh:* " + prefix + "shipname @user1 @user2"));
     return { handled: true };
   }
 
@@ -119,7 +119,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   const bar = "▰".repeat(Math.floor(compat / 10)) + "▱".repeat(10 - Math.floor(compat / 10));
 
-  await m.reply(claraWrap("Ship Name", [
+  await m.reply(novaWrap("Ship Name", [
     "Ship: " + shipName,
     "",
     "@" + num1 + " x @" + num2,

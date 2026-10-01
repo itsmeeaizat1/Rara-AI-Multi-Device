@@ -4,7 +4,7 @@
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { novaGuideV2, novaSalahV2, claraWrap, claraLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap, novaLine, toSC, novaError, novaEmpty, novaGuide, novaNoInput, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({

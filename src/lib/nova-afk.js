@@ -4,7 +4,7 @@
 // interaktif gt cntoh di .afk g ada wktu kpan user mulai afk dan wktu
 // brapa lama user afknya gt".
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 
 const AFK_KEY = "novaAfkUsers";
 
@@ -104,7 +104,7 @@ export async function handleAfkHooks(m, sock, db = null) {
         ``,
         `_Senang kamu kembali!_`,
       ].join("\n");
-      await m.reply(claraWrap("AFK Berakhir", body, "success"), { mentions: [m.sender] });
+      await m.reply(novaWrap("AFK Berakhir", body, "success"), { mentions: [m.sender] });
     }
 
     // (2) mention user AFK
@@ -140,7 +140,7 @@ export async function handleAfkHooks(m, sock, db = null) {
           );
         }
         lines.push(`_Kalau dia masih AFK, infoku ulang maksimal 1 menit sekali._`);
-        await m.reply(claraWrap("User AFK", lines.join("\n")), { mentions });
+        await m.reply(novaWrap("User AFK", lines.join("\n")), { mentions });
       }
     }
   } catch (e) {

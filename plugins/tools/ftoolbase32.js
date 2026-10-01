@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolbase32 — teks ↔ Base32 RFC 4648 (port altftool.com/tools/all/base32)
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolbase32", alias: ["base32"], category: "tools",
@@ -70,12 +70,12 @@ async function handler(m, { sock, config: botConfig }) {
       }), "ftoolbase32");
     }
     await m.react("🐣");
-    await m.reply(claraWrap("Base32", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
+    await m.reply(novaWrap("Base32", [`Hasil (${action.startsWith("e") ? "encode" : "decode"}):`,
       "",
       "```" + (result.length > 800 ? result.substring(0, 800) + "…" : result) + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Base32", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Base32", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

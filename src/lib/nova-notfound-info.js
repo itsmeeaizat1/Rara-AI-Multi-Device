@@ -6,7 +6,7 @@
 // tanpa footer ╰──── (pola buildBox line-free 7 Sep).
 
 import config from "../../config.js";
-import { claraWrap, toSC } from "./nova-menu-style.js";
+import { novaWrap, toSC } from "./nova-menu-style.js";
 
 /**
  * Build not-found reply (line-free, tanpa drawing box)
@@ -54,5 +54,5 @@ export async function buildNotFoundReply(m, ctx, command, closest, level, totalH
     lines.push(toSC("Atau cek daftar") + ": *" + prefix + "menu*");
   }
 
-  return claraWrap("Not Found", lines);
+  return novaWrap("Not Found", lines);
 }

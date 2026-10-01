@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/tools/wallpaperwallhaven.js
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   if (!text) {
     const help = `Wallhaven Wallpaper\n\nCara pakai:\n.wh <kata kunci> — Cari wallpaper\n.wh anime <karakter> — Wallpaper anime\n.wh <kata kunci> hd — HD 1920x1080+\n.wh <kata kunci> 2k — 2K 2560x1440+\n.wh <kata kunci> 4k — 4K 3840x2160+\n.wh <kata kunci> mobile — Portrait HP\n.wh random — Wallpaper acak\n.wh anime random — Anime acak\n\nContoh:\n.wh mekkah hd\n.wh anime miku\n.wh nature 4k\n.wh anime gojo mobile\n.wh mosque\n.wh space 2k`;
-    return m.reply( claraWrap("Wallhaven", help));
+    return m.reply( novaWrap("Wallhaven", help));
   }
   try {
     await m.react("🕒");
@@ -123,7 +123,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!data || data.data.length === 0) {
       const catLabel = category === "010" ? "anime" : category === "100" ? "general" : "semua";
-      return m.reply(claraWrap("Wallhaven", `Tidak ada wallpaper untuk "${query || "random"}" (kategori: ${catLabel}).\n\nCoba kata kunci lain.`));
+      return m.reply(novaWrap("Wallhaven", `Tidak ada wallpaper untuk "${query || "random"}" (kategori: ${catLabel}).\n\nCoba kata kunci lain.`));
     }
 
     // Pilih 1 random dari top 10 hasil
@@ -141,11 +141,11 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("🐣");
     await sock.sendMessage(m.chat, {
       image: imageBuffer,
-      caption: claraWrap("Wallhaven Wallpaper", caption),
+      caption: novaWrap("Wallhaven Wallpaper", caption),
     }, { quoted: m });
   } catch (error) {
     await m.react("❌");
-    return m.reply(claraWrap("Wallhaven Error", error.message || "Gagal mencari wallpaper."));
+    return m.reply(novaWrap("Wallhaven Error", error.message || "Gagal mencari wallpaper."));
   }
 }
 

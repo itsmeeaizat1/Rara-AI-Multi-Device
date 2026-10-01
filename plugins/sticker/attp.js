@@ -9,7 +9,7 @@ import { execFile } from "child_process";
 import { promisify } from "util";
 import config from "../../config.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -108,10 +108,10 @@ async function handler(m, { sock }) {
     text = m.quoted.text.trim();
   }
   if (!text) {
-    return m.reply(claraWrap("attp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}attp Hello World`, "guide"));
+    return m.reply(novaWrap("attp", `Masukkan teks untuk sticker!\n\nContoh: ${m.prefix}attp Hello World`, "guide"));
   }
   if (text.length > 100) {
-    return m.reply(claraWrap("attp", "Teks terlalu panjang! Maksimal 100 karakter.", "error"));
+    return m.reply(novaWrap("attp", "Teks terlalu panjang! Maksimal 100 karakter.", "error"));
   }
 
   try {
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[ATTP]", err);
     await m.react("❌");
-    m.reply(claraWrap("attp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
+    m.reply(novaWrap("attp", "Gagal membuat sticker. Coba lagi nanti!", "error"));
   }
 }
 

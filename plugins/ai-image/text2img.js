@@ -2,7 +2,7 @@
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { haidarTxt2img } from "../../src/scraper/haidar-ai.js";
-import { claraWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     }, { quoted: m });
   } catch (error) {
     console.error(error);
-    m.reply(claraWrap("text2imgv2", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("text2imgv2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

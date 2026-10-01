@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 /** Bar meter standar: ▰▰▰▱▱▱▱▱▱▱ XX% */
 function meterBar(pct) {
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim();
     
     if (!text) {
-        return m.reply( claraWrap("Rate", [
+        return m.reply( novaWrap("Rate", [
         `Masukkan sesuatu untuk dinilai!`,
         ``,
         `📌 Format: ${m.prefix}rate <pertanyaan>`,
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
 
     // 🔹 14 Sep (owner): animasi morphing ▓░ dihapus — loading react emoji
     // udah cukup, hasil langsung keluar. Meter final pakai standar ▰▱.
-    const finalCard = claraWrap("Rate", [
+    const finalCard = novaWrap("Rate", [
       `📊 *${rating.score}*`,
       meterBar(rating.meterPct ?? Math.floor(Math.random() * 41) + 55),
       ``,

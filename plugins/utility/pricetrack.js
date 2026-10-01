@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -27,11 +27,11 @@ async function handler(m, { sock, config: botConfig }) {
     const { data: html } = await axios.get(url, { timeout: 15000, headers: { "User-Agent": "Mozilla/5.0" } });
     const title = (html.match(/<title>([^<]+)<\/title>/i) || [,""])[1].trim();
     const price = (html.match(/(?:price|harga)["'\s:>]+([\d.,]+)/i) || [,"-"])[1];
-    await m.reply(claraWrap("Price Track", [`Produk: *${title.substring(0,80)}*`,
+    await m.reply(novaWrap("Price Track", [`Produk: *${title.substring(0,80)}*`,
       `Harga: *${price}*`,
       `URL: ${url.substring(0,60)}...`].join("\n")) + "\n" + tipText("Harga bisa berubah sewaktu-waktu"));
   } catch (e) {
-    await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
+    await m.reply(novaWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

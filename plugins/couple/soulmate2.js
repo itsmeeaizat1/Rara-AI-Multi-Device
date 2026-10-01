@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 import path from "path";
 import fs from "fs";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 const pluginConfig = {
   name: "jodoh",
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     groupMeta = m.groupMetadata;
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("jodoh", "Tidak bisa mengambil data grup!", "error"));
+    return m.reply(novaWrap("jodoh", "Tidak bisa mengambil data grup!", "error"));
   }
 
   const participants = groupMeta.participants || [];
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     .filter((jid) => jid && jid !== botNumber);
 
   if (memberJids.length < 2) {
-    return m.reply(claraWrap("jodoh", "Minimal ada 2 member untuk dijodohkan!", "error"));
+    return m.reply(novaWrap("jodoh", "Minimal ada 2 member untuk dijodohkan!", "error"));
   }
 
   const allUsers = db.getAllUsers();
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
   if (registrationRequired && registeredMembers.length < 2) {
     return m.reply(
-      claraWrap("jodoh", "Mode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!", "error"),
+      novaWrap("jodoh", "Mode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!", "error"),
     );
   }
 

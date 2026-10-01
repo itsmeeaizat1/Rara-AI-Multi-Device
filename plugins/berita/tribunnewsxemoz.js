@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/news/tribunnewsxemoz.js
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
     const articles = getAllArticles(data);
 
     if (articles.length === 0) {
-      return m.reply(claraWrap("Tribunnews", `Tidak ada berita ditemukan untuk "${search}".`));
+      return m.reply(novaWrap("Tribunnews", `Tidak ada berita ditemukan untuk "${search}".`));
     }
 
     const header = search
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     // Send header text first (no preview)
-    await m.reply(claraWrap("Tribunnews", header));
+    await m.reply(novaWrap("Tribunnews", header));
 
     // Send each article as image + caption
     const toSend = articles.slice(0, MAX_ARTICLES);
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     await m.react("❌");
-    return m.reply(claraWrap("Tribunnews Error", error.message || "Gagal ambil nih berita."));
+    return m.reply(novaWrap("Tribunnews Error", error.message || "Gagal ambil nih berita."));
   }
 }
 

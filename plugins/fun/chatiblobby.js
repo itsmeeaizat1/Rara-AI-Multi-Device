@@ -11,7 +11,7 @@
 // Member di-keluarkan otomatis kalau gak ada aktivitas selama 1 JAM.
 // Media ditolak, flood guard. Engine: src/lib/nova-chatib-lobby.js.
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { joinLobby, setNick, listMembers, leaveLobby, relayLobbyMessage } from "../../src/lib/nova-chatib-lobby.js";
 
 const pluginConfig = {
@@ -43,7 +43,7 @@ async function handler(m, { sock, db: _db }) {
 
   // layanan anonim cuma jalan di DM bot (privasi)
   if (m.isGroup || (m.chat || "").endsWith("@g.us")) {
-    return m.reply(claraWrap("Chatib Lobby", "Chatib Lobby cuma bisa dipakai di DM bot ya — biar privat."));
+    return m.reply(novaWrap("Chatib Lobby", "Chatib Lobby cuma bisa dipakai di DM bot ya — biar privat."));
   }
 
   if (cmd === "chatibnick") return setNick(m, sock, db);

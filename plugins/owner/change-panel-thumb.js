@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
 import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-panel-thumb',
     alias: ["ganti-panel-thumb"],
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Ganti-panel-thumb", `Kirim/reply gambar untuk mengganti\nFile: assets/image/panel/panel-thumb.jpg`))
+        return m.reply(novaWrap("Ganti-panel-thumb", `Kirim/reply gambar untuk mengganti\nFile: assets/image/panel/panel-thumb.jpg`))
     }
     
     try {
@@ -36,17 +36,17 @@ async function handler(m, { sock }) {
         }
         
         if (!buffer) {
-            return m.reply(claraWrap("Ganti-panel-thumb", `❌ Gagal mendownload gambar`))
+            return m.reply(novaWrap("Ganti-panel-thumb", `❌ Gagal mendownload gambar`))
         }
         
         try {
             const newUrl = await updateAssetUrl('panel-thumb', buffer, 'panel-thumb.jpg')
             { const __navText = `✅ *Berhasil*\n\nGambar panel-thumb.jpg telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
-            m.reply(claraWrap("ganti-panel-thumb", `❌ Gagal mengupload gambar: ${e.message}`))
+            m.reply(novaWrap("ganti-panel-thumb", `❌ Gagal mengupload gambar: ${e.message}`))
         }
     } catch (error) {
-        await m.reply(claraWrap("ganti-panel-thumb", te(m.prefix, m.command, m.pushName), "error"))
+        await m.reply(novaWrap("ganti-panel-thumb", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

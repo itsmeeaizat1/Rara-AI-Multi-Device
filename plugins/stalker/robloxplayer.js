@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import axios from 'axios'
 import config from '../../config.js'
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         })
         
         if (!res.data?.status || !res.data?.data?.length) {
-            return m.reply(claraWrap("robloxplayer", `❌ Tidak ditemukan player dengan username: ${query}`))
+            return m.reply(novaWrap("robloxplayer", `❌ Tidak ditemukan player dengan username: ${query}`))
         }
         
         const players = res.data.data.slice(0, 10)
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
         await m.reply(text)
     } catch (err) {
         console.error('[RobloxPlayer] Error:', err.message)
-        return m.reply(claraWrap("robloxplayer", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaWrap("robloxplayer", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -2,7 +2,7 @@
 // Sistem Nikah — Tolak lamaran
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if (!proposerJid) {
-      return m.reply(claraWrap("tolaknikah", [
+      return m.reply(novaWrap("tolaknikah", [
         `Tolak lamaran seseorang dengan halus.`,
         ``,
         `📌 Format: reply pesan lamaran + ${m.prefix}tolaknikah`,

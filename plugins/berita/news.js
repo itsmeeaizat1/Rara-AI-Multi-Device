@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { GoogleSearch } from "../../src/scraper/google.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -117,7 +117,7 @@ async function handler(m, { sock, config: botConfig }) {
   const query = m.text?.trim();
 
   if (!query) {
-    const text = claraWrap("Berita AI", [
+    const text = novaWrap("Berita AI", [
       `Mencari dan merangkum berita terkini real-time dari internet.`,
       ``,
       `Penggunaan: *${prefix}berita <topik>*`,
@@ -172,7 +172,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       await m.react("🐣");
-      await m.reply(claraWrap("Berita AI", output));
+      await m.reply(novaWrap("Berita AI", output));
       return;
     }
 
@@ -188,17 +188,17 @@ async function handler(m, { sock, config: botConfig }) {
       });
       output += "\n(AI summarizer sedang tidak tersedia, menampilkan headline mentah)";
       await m.react("🐣");
-      await m.reply(claraWrap("Berita AI", output));
+      await m.reply(novaWrap("Berita AI", output));
       return;
     }
 
     // Total gagal
     await m.react("❌");
-    await m.reply(claraWrap("Berita AI", `Tidak ada berita ditemukan untuk "${query}". Coba topik lain.`));
+    await m.reply(novaWrap("Berita AI", `Tidak ada berita ditemukan untuk "${query}". Coba topik lain.`));
   } catch (err) {
     console.log("[Berita] Error:", err.message);
     await m.react("❌");
-    await m.reply(claraWrap("Berita AI", `Terjadi error: ${err.message?.slice(0, 100) || "Unknown error"}`));
+    await m.reply(novaWrap("Berita AI", `Terjadi error: ${err.message?.slice(0, 100) || "Unknown error"}`));
   }
 }
 

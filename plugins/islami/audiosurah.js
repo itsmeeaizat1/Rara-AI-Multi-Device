@@ -2,7 +2,7 @@
 // audiosurah.js — Audio murattal surah
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const SURAH_LIST = {
   1: "Al-Fatihah", 2: "Al-Baqarah", 3: "Ali Imran", 4: "An-Nisa", 5: "Al-Maidah",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
 
     const res = await axios.get(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`);
     const d = res.data?.data;
-    if (!d) return m.reply(claraWrap("audiosurah", "Surah tidak ditemukan!", "error"));
+    if (!d) return m.reply(novaWrap("audiosurah", "Surah tidak ditemukan!", "error"));
 
     const audioUrl = d.audio;
     if (audioUrl) {
@@ -50,13 +50,13 @@ async function handler(m, { sock }) {
         caption: `Murattal: ${d.englishName} (${d.numberOfAyahs} ayat)`
       }, { quoted: m });
     } else {
-      return m.reply(claraWrap("audiosurah", "Audio tidak tersedia!", "error"));
+      return m.reply(novaWrap("audiosurah", "Audio tidak tersedia!", "error"));
     }
     await m.react("🐣");
   } catch (err) {
     console.error("audiosurah error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("audiosurah", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("audiosurah", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

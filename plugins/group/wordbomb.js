@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wordbomb",
@@ -41,10 +41,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // START
     if (sub === "start") {
       if (game.active) {
-        return m.reply(claraWrap("Word Bomb", "Game lagi jalan!\nKetik .wordbomb stop untuk hentikan."));
+        return m.reply(novaWrap("Word Bomb", "Game lagi jalan!\nKetik .wordbomb stop untuk hentikan."));
       }
       if (game.players.length < 2) {
-        return m.reply(claraWrap("Word Bomb", "Minimal 2 pemain!\nKetik .wordbomb join dulu."));
+        return m.reply(novaWrap("Word Bomb", "Minimal 2 pemain!\nKetik .wordbomb join dulu."));
       }
 
       const picked = THEMES[Math.floor(Math.random() * THEMES.length)];
@@ -59,7 +59,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.currentPlayer = game.players[0];
       await db.save();
 
-      m.reply(claraWrap("Word Bomb", [
+      m.reply(novaWrap("Word Bomb", [
         "Bom kata dimulai!",
         "",
         "Tema: *" + game.theme + "*",
@@ -82,7 +82,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           const g = db2.data.wordBomb[groupId];
           if (g && g.active && g.currentPlayer === game.currentPlayer && g.timer === game.timer) {
             g.scores[g.currentPlayer] = (g.scores[g.currentPlayer] || 0) - 1;
-            await conn.sendMessage(groupId, { text: claraWrap("Word Bomb", [
+            await conn.sendMessage(groupId, { text: novaWrap("Word Bomb", [
               "BOM MELEDAK!",
               "@" + g.currentPlayer.split("@")[0] + " terlambat! -1 poin",
               "",
@@ -99,15 +99,15 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // JOIN
     if (sub === "join") {
       if (game.active) {
-        return m.reply(claraWrap("Word Bomb", "Game sudah dimulai! Tunggu ronde berikutnya."));
+        return m.reply(novaWrap("Word Bomb", "Game sudah dimulai! Tunggu ronde berikutnya."));
       }
       if (game.players.includes(sender)) {
-        return m.reply(claraWrap("Word Bomb", "Kamu sudah join!"));
+        return m.reply(novaWrap("Word Bomb", "Kamu sudah join!"));
       }
       game.players.push(sender);
       await db.save();
 
-      return m.reply(claraWrap("Word Bomb", [
+      return m.reply(novaWrap("Word Bomb", [
         "@" + sender.split("@")[0] + " join game!",
         "Total pemain: " + game.players.length,
         "",
@@ -118,7 +118,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // STOP
     if (sub === "stop") {
       if (!game.active) {
-        return m.reply(claraWrap("Word Bomb", "Gak ada game aktif."));
+        return m.reply(novaWrap("Word Bomb", "Gak ada game aktif."));
       }
       game.active = false;
       const scores = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
@@ -127,13 +127,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         result += (i + 1) + ". @" + p.split("@")[0] + ": " + s + " poin\n";
       });
       await db.save();
-      return m.reply(claraWrap("Word Bomb", result, "success"));
+      return m.reply(novaWrap("Word Bomb", result, "success"));
     }
 
     // STATS
     if (sub === "stats" || sub === "skor") {
       if (!game.active && Object.keys(game.scores).length === 0) {
-        return m.reply(claraWrap("Word Bomb", "Belum ada game. Ketik .wordbomb start."));
+        return m.reply(novaWrap("Word Bomb", "Belum ada game. Ketik .wordbomb start."));
       }
       const scores = Object.entries(game.scores).sort((a, b) => b[1] - a[1]);
       let result = "Skor sementara:\n";
@@ -144,26 +144,26 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         result += "\nTema: " + game.theme + "\n";
         result += "Kata terpakai: " + game.usedWords.length;
       }
-      return m.reply(claraWrap("Word Bomb", result));
+      return m.reply(novaWrap("Word Bomb", result));
     }
 
     // ANSWER
     if (game.active && game.currentPlayer === sender) {
       const word = text.trim().toLowerCase();
       if (!word) {
-        return m.reply(claraWrap("Word Bomb", "Ketik kata sesuai tema: " + game.theme));
+        return m.reply(novaWrap("Word Bomb", "Ketik kata sesuai tema: " + game.theme));
       }
       if (game.usedWords.includes(word)) {
         game.scores[sender] = (game.scores[sender] || 0) - 1;
         await db.save();
-        return m.reply(claraWrap("Word Bomb", "Kata sudah dipakai! -1 poin\nKetik kata lain.", "warn"));
+        return m.reply(novaWrap("Word Bomb", "Kata sudah dipakai! -1 poin\nKetik kata lain.", "warn"));
       }
       if (game.words.includes(word)) {
         game.usedWords.push(word);
         game.scores[sender] = (game.scores[sender] || 0) + 1;
         game.round++;
         await db.save();
-        m.reply(claraWrap("Word Bomb", "Betul! +1 poin\nKata: " + word + "\nTotal: " + game.scores[sender] + " poin", "success"));
+        m.reply(novaWrap("Word Bomb", "Betul! +1 poin\nKata: " + word + "\nTotal: " + game.scores[sender] + " poin", "success"));
 
         if (game.round >= game.maxRounds) {
           return endGame(db, groupId, conn);
@@ -173,12 +173,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       } else {
         game.scores[sender] = (game.scores[sender] || 0) - 1;
         await db.save();
-        return m.reply(claraWrap("Word Bomb", "Salah tema! -1 poin\nTema: " + game.theme, "warn"));
+        return m.reply(novaWrap("Word Bomb", "Salah tema! -1 poin\nTema: " + game.theme, "warn"));
       }
     }
 
     // DEFAULT - help
-    return m.reply(claraWrap("Word Bomb", [
+    return m.reply(novaWrap("Word Bomb", [
       "Bom kata — ketik kata sesuai tema sebelum bom meledak!",
       "",
       "CARA PAKAI:",
@@ -193,7 +193,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Word Bomb]", e);
-    m.reply(claraWrap("Word Bomb", "Error: " + e.message));
+    m.reply(novaWrap("Word Bomb", "Error: " + e.message));
   }
 }
 
@@ -205,7 +205,7 @@ async function nextTurn(db, groupId, conn) {
   await db.save();
 
   await conn.sendMessage(groupId, {
-    text: claraWrap("Word Bomb", [
+    text: novaWrap("Word Bomb", [
       "Giliran: @" + game.currentPlayer.split("@")[0],
       "Tema: " + game.theme,
       "Waktu: 15 detik!",
@@ -221,7 +221,7 @@ async function nextTurn(db, groupId, conn) {
       const g = db2.data.wordBomb[groupId];
       if (g && g.active && g.currentPlayer === cp && g.timer === t) {
         g.scores[cp] = (g.scores[cp] || 0) - 1;
-        await conn.sendMessage(groupId, { text: claraWrap("Word Bomb", [
+        await conn.sendMessage(groupId, { text: novaWrap("Word Bomb", [
           "BOM MELEDAK!",
           "@" + cp.split("@")[0] + " terlambat! -1 poin",
         ], "warn"), mentions: [cp] });
@@ -247,7 +247,7 @@ async function endGame(db, groupId, conn) {
   });
   await db.save();
   return conn.sendMessage(groupId, {
-    text: claraWrap("Word Bomb", result, "success"),
+    text: novaWrap("Word Bomb", result, "success"),
     mentions: scores.map(([p]) => p),
   });
 }

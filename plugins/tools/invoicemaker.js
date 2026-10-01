@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "invoicemaker",
   alias: ["invoicemaker"],
@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
   const parts = text.split("|").map((p) => p.trim());
 
   if (parts.length < 6) {
-    return m.reply(claraWrap("Invoicemaker", `❌ Format tidak lengkap! Butuh 6 parameter (toko|invoice|tanggal|status|items|total)`));
+    return m.reply(novaWrap("Invoicemaker", `❌ Format tidak lengkap! Butuh 6 parameter (toko|invoice|tanggal|status|items|total)`));
   }
 
   const [store, invoice, date, status, itemsRaw, totalRaw] = parts;
 
   if (!["paid", "unpaid"].includes(status.toLowerCase())) {
-    return m.reply(claraWrap("Invoicemaker", `❌ Status harus 'paid' atau 'unpaid'!`));
+    return m.reply(novaWrap("Invoicemaker", `❌ Status harus 'paid' atau 'unpaid'!`));
   }
 
   const itemsArr = itemsRaw.split(",").map((item) => {
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
   });
 
   if (itemsArr.length === 0 || itemsArr.some((i) => !i.name)) {
-    return m.reply(claraWrap("invoicemaker", `❌ Format items salah! Gunakan: Nama:unit:harga (pisah koma untuk multiple)`));
+    return m.reply(novaWrap("invoicemaker", `❌ Format items salah! Gunakan: Nama:unit:harga (pisah koma untuk multiple)`));
   }
 
   const total =
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
     );
   } catch (err) {
     await m.react("❌");
-    return m.reply(claraWrap("invoicemaker", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("invoicemaker", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

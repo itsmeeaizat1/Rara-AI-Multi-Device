@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      claraWrap("AI Image", [`Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
+      novaWrap("AI Image", [`Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
         "Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aiimggen <prompt> untuk gambar lain`) +

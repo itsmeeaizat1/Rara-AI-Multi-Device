@@ -7,7 +7,7 @@
 // ═════════════════════════════════════════════
 
 import { searchApiEngine, _setSearchApiHttpForTest, _setSearchApiKeyForTest } from "../../src/scraper/searchapi.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { SAPI_ENGINES, getEngineSpec, sapiErrorMessage } from "../../src/lib/nova-sapi-render.js";
 
 const pluginConfig = {
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     if (!sub || sub === "list" || sub === "daftar") {
       const keys = Object.keys(SAPI_ENGINES);
       const lines = keys.map((k) => `• ${k} — ${SAPI_ENGINES[k].desc}`);
-      return m.reply(claraWrap("sapi",
+      return m.reply(novaWrap("sapi",
         `🔌 *SEARCHAPI HUB — ${keys.length} ENGINE TERSEDIA*\n\n` +
         `Semua engine searchapi.io bisa dipanggil dari sini. Hasil = plain text lengkap (alamat, harga, rating, jam, dll — tanpa perlu klik link).\n\n` +
         `📖 *CARA PAKAI:*\n.sapi <engine> <query>\n\n` +
@@ -48,32 +48,32 @@ async function handler(m, { sock }) {
 
     // engine maps-directions/flights butuh param khusus → arahin command khusus
     if (["google_maps_directions", "grute"].includes(engineKey.toLowerCase())) {
-      return m.reply(claraWrap("sapi", `💡 Rute pakai command khusus: *.grute <dari> | <ke>* — contoh: .grute stasiun gambir | monas`));
+      return m.reply(novaWrap("sapi", `💡 Rute pakai command khusus: *.grute <dari> | <ke>* — contoh: .grute stasiun gambir | monas`));
     }
     if (engineKey.toLowerCase() === "google_flights") {
-      return m.reply(claraWrap("sapi", `💡 Tiket pesawat pakai command khusus: *.gtiket CGK | DPS | 20-09-2026* (kode IATA)`));
+      return m.reply(novaWrap("sapi", `💡 Tiket pesawat pakai command khusus: *.gtiket CGK | DPS | 20-09-2026* (kode IATA)`));
     }
 
     if (!query) {
-      return m.reply(claraWrap("sapi",
+      return m.reply(novaWrap("sapi",
         `💡 Engine *${engineKey}* butuh query.\n\nContoh: *${spec.usage}*`));
     }
 
     const r = await searchApiEngine(spec.engine, { q: query });
     if (!r.ok) {
       await m.react("❌");
-      return m.reply(claraWrap("sapi", sapiErrorMessage(r.error)));
+      return m.reply(novaWrap("sapi", sapiErrorMessage(r.error)));
     }
 
     const body = spec.render(r.data) || "⚠️ Gak ada hasil buat query itu — coba kata kunci lain.";
     await m.react("🐣");
-    return m.reply(claraWrap("sapi",
+    return m.reply(novaWrap("sapi",
       `🔌 *${(spec.desc || engineKey).toUpperCase().slice(0, 50)}*\n` +
       `🔍 Query: ${query.slice(0, 80)}\n\n${body}`));
   } catch (err) {
     console.error("[sapihub]", err.message);
     await m.react("❌");
-    return m.reply(claraWrap("sapi", `❌ *GAGAL: ${err?.message || "error"}*`));
+    return m.reply(novaWrap("sapi", `❌ *GAGAL: ${err?.message || "error"}*`));
   }
 }
 

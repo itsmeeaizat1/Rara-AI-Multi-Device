@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
 
   // === HELP ===
   if (!action || action === "help" || action === "bantuan") {
-    return m.reply( claraWrap("Anti-Spam Fitur", [
+    return m.reply( novaWrap("Anti-Spam Fitur", [
       "Anti-spam khusus command fitur (.sticker, .play, dll)",
       "Menu commands (.menu/.allmenu) gak kena, diatur via .antispammenuv2",
       "",
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
   if (action === "status" || action === "info") {
     const f = settings.group.fitur;
     const d = settings.dm.fitur;
-    return m.reply(claraWrap("Anti-Spam Fitur Status", [
+    return m.reply(novaWrap("Anti-Spam Fitur Status", [
       "*grup*",
       `  Status: ${f.enabled ? "AKTIF" : "MATI"}`,
       `  Limit: ${f.limit}x per ${f.windowMs / 1000}s`,
@@ -111,62 +111,62 @@ async function handler(m, { sock }) {
     if (subCmd === "on") {
       target.enabled = true;
       db.setting("antispamMenuV2", settings);
-      return m.reply(claraWrap("Anti-Spam Fitur", `${scopeLabel} fitur diaktifkan!`, "success"));
+      return m.reply(novaWrap("Anti-Spam Fitur", `${scopeLabel} fitur diaktifkan!`, "success"));
     }
 
     if (subCmd === "off") {
       target.enabled = false;
       db.setting("antispamMenuV2", settings);
-      return m.reply(claraWrap("Anti-Spam Fitur", `${scopeLabel} fitur dimatikan!`, "info"));
+      return m.reply(novaWrap("Anti-Spam Fitur", `${scopeLabel} fitur dimatikan!`, "info"));
     }
 
     if (subCmd === "limit") {
       const val = parseInt(subVal);
       if (!val || val < 1 || val > 50) {
-        return m.reply(claraWrap("Anti-Spam Fitur", `Limit 1-50!\n💡 *Contoh:* .antispamfitur ${action} limit 10`, "error"));
+        return m.reply(novaWrap("Anti-Spam Fitur", `Limit 1-50!\n💡 *Contoh:* .antispamfitur ${action} limit 10`, "error"));
       }
       target.limit = val;
       db.setting("antispamMenuV2", settings);
-      return m.reply(claraWrap("Anti-Spam Fitur", `${scopeLabel} limit: ${val}x`, "success"));
+      return m.reply(novaWrap("Anti-Spam Fitur", `${scopeLabel} limit: ${val}x`, "success"));
     }
 
     if (subCmd === "window") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(claraWrap("Anti-Spam Fitur", `Window 5-600 detik!\n💡 *Contoh:* .antispamfitur ${action} window 60`, "error"));
+        return m.reply(novaWrap("Anti-Spam Fitur", `Window 5-600 detik!\n💡 *Contoh:* .antispamfitur ${action} window 60`, "error"));
       }
       target.windowMs = val * 1000;
       db.setting("antispamMenuV2", settings);
-      return m.reply(claraWrap("Anti-Spam Fitur", `${scopeLabel} window: ${val}s`, "success"));
+      return m.reply(novaWrap("Anti-Spam Fitur", `${scopeLabel} window: ${val}s`, "success"));
     }
 
     if (subCmd === "cooldown") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(claraWrap("Anti-Spam Fitur", `Cooldown 5-600 detik!\n💡 *Contoh:* .antispamfitur ${action} cooldown 120`, "error"));
+        return m.reply(novaWrap("Anti-Spam Fitur", `Cooldown 5-600 detik!\n💡 *Contoh:* .antispamfitur ${action} cooldown 120`, "error"));
       }
       target.cooldownMs = val * 1000;
       db.setting("antispamMenuV2", settings);
-      return m.reply(claraWrap("Anti-Spam Fitur", `${scopeLabel} cooldown: ${val}s`, "success"));
+      return m.reply(novaWrap("Anti-Spam Fitur", `${scopeLabel} cooldown: ${val}s`, "success"));
     }
 
-    return m.reply(claraWrap("Anti-Spam Fitur", `Sub-perintah tidak dikenal.\nKetik .antispamfitur help`, "warn"));
+    return m.reply(novaWrap("Anti-Spam Fitur", `Sub-perintah tidak dikenal.\nKetik .antispamfitur help`, "warn"));
   }
 
   // === Legacy on/off (maps to DM) ===
   if (action === "on") {
     settings.dm.fitur.enabled = true;
     db.setting("antispamMenuV2", settings);
-    return m.reply(claraWrap("Anti-Spam Fitur", "DM fitur diaktifkan! (untuk grup: .antispamfitur gc on)", "success"));
+    return m.reply(novaWrap("Anti-Spam Fitur", "DM fitur diaktifkan! (untuk grup: .antispamfitur gc on)", "success"));
   }
 
   if (action === "off") {
     settings.dm.fitur.enabled = false;
     db.setting("antispamMenuV2", settings);
-    return m.reply(claraWrap("Anti-Spam Fitur", "DM fitur dimatikan! (untuk grup: .antispamfitur gc off)", "info"));
+    return m.reply(novaWrap("Anti-Spam Fitur", "DM fitur dimatikan! (untuk grup: .antispamfitur gc off)", "info"));
   }
 
-  return m.reply(claraWrap("Anti-Spam Fitur", `Perintah tidak dikenal: ${action}\nKetik .antispamfitur help`, "warn"));
+  return m.reply(novaWrap("Anti-Spam Fitur", `Perintah tidak dikenal: ${action}\nKetik .antispamfitur help`, "warn"));
 }
 
 export { pluginConfig as config, handler };

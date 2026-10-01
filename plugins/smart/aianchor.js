@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CronJob } from "cron";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -329,14 +329,14 @@ async function handler(m, { sock, db, config: botConfig }) {
       `  ${prefix}aianchor tone=marah Segera evakuasi!`,
       `  ${prefix}aianchor news gempa terkini`,
     ].join("\n");
-    await m.reply(claraWrap("AI Anchor", helpText));
+    await m.reply(novaWrap("AI Anchor", helpText));
     return { handled: true };
   }
 
   // ==================== AUTO (owner only) ====================
   if (subCmd === "auto") {
     if (!m.isOwner) {
-      await m.reply(claraWrap("AI Anchor", "Khusus owner.", "warn"));
+      await m.reply(novaWrap("AI Anchor", "Khusus owner.", "warn"));
       return { handled: true };
     }
 
@@ -347,7 +347,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       cfg.enabled = true;
       saveAutoConfig(db, cfg);
       startAutoJob(db, sock);
-      await m.reply(claraWrap("AI Anchor",
+      await m.reply(novaWrap("AI Anchor",
         `Auto-berita AKTIF!\nCron: ${cfg.cron || "0 7,12,18 * * *"}\nBot akan generate & kirim berita otomatis ke saluran.`,
         "success"));
       return { handled: true };
@@ -358,21 +358,21 @@ async function handler(m, { sock, db, config: botConfig }) {
       cfg.enabled = false;
       saveAutoConfig(db, cfg);
       stopAutoJob();
-      await m.reply(claraWrap("AI Anchor", "Auto-berita dimatikan.", "warn"));
+      await m.reply(novaWrap("AI Anchor", "Auto-berita dimatikan.", "warn"));
       return { handled: true };
     }
 
     if (autoSub === "cron") {
       const cronExpr = args.slice(3).join(" ").trim();
       if (!cronExpr) {
-        await m.reply(claraWrap("AI Anchor", `Format: ${prefix}aianchor auto cron <cron>\n💡 *Contoh:* 0 7,12,18 * * *`, "warn"));
+        await m.reply(novaWrap("AI Anchor", `Format: ${prefix}aianchor auto cron <cron>\n💡 *Contoh:* 0 7,12,18 * * *`, "warn"));
         return { handled: true };
       }
       const cfg = getAutoConfig(db);
       cfg.cron = cronExpr;
       saveAutoConfig(db, cfg);
       if (cfg.enabled) startAutoJob(db, sock);
-      await m.reply(claraWrap("AI Anchor", `Cron diupdate: ${cronExpr}`, "success"));
+      await m.reply(novaWrap("AI Anchor", `Cron diupdate: ${cronExpr}`, "success"));
       return { handled: true };
     }
 
@@ -380,7 +380,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const topicsStr = args.slice(3).join(" ").trim();
       if (!topicsStr) {
         const cfg = getAutoConfig(db);
-        await m.reply(claraWrap("AI Anchor",
+        await m.reply(novaWrap("AI Anchor",
           `Topics saat ini: ${cfg.topics.length > 0 ? cfg.topics.join(", ") : "(kosong, auto-random)"}`, "warn"));
         return { handled: true };
       }
@@ -388,18 +388,18 @@ async function handler(m, { sock, db, config: botConfig }) {
       const cfg = getAutoConfig(db);
       cfg.topics = topics;
       saveAutoConfig(db, cfg);
-      await m.reply(claraWrap("AI Anchor", `Topics disimpan: ${topics.length} topik`, "success"));
+      await m.reply(novaWrap("AI Anchor", `Topics disimpan: ${topics.length} topik`, "success"));
       return { handled: true };
     }
 
     if (autoSub === "status") {
       const cfg = getAutoConfig(db);
-      await m.reply(claraWrap("AI Anchor Status",
+      await m.reply(novaWrap("AI Anchor Status",
         `Status: ${cfg.enabled ? "AKTIF" : "MATI"}\nCron: ${cfg.cron || "0 7,12,18 * * *"}\nTopics: ${cfg.topics.length > 0 ? cfg.topics.join(", ") : "(auto-random)"}\nJob running: ${autoJobs.has("main") ? "YA" : "TIDAK"}`));
       return { handled: true };
     }
 
-    await m.reply(claraWrap("AI Anchor", `Sub-command tidak dikenal. Ketik ${prefix}aianchor help`, "warn"));
+    await m.reply(novaWrap("AI Anchor", `Sub-command tidak dikenal. Ketik ${prefix}aianchor help`, "warn"));
     return { handled: true };
   }
 
@@ -407,7 +407,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (subCmd === "news") {
     const topic = args.slice(2).join(" ").trim();
     if (!topic) {
-      await m.reply(claraWrap("AI Anchor", `Format: ${prefix}aianchor news <topik>\n💡 *Contoh:* ${prefix}aianchor news gempa terkini`, "warn"));
+      await m.reply(novaWrap("AI Anchor", `Format: ${prefix}aianchor news <topik>\n💡 *Contoh:* ${prefix}aianchor news gempa terkini`, "warn"));
       return { handled: true };
     }
     try {
@@ -431,11 +431,11 @@ async function handler(m, { sock, db, config: botConfig }) {
       const providerLabel = voiceResult.provider === "gemini"
         ? `Gemini Voice: ${voiceResult.voice}`
         : "Google Neural TTS";
-      await m.reply(claraWrap("AI Anchor", `${content}\n\nProvider: ${providerLabel}\nNada: ${voiceResult.tone}`));
+      await m.reply(novaWrap("AI Anchor", `${content}\n\nProvider: ${providerLabel}\nNada: ${voiceResult.tone}`));
 
       try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
     } catch (err) {
-      await m.reply(claraWrap("AI Anchor", `Error: ${err.message}`, "error"));
+      await m.reply(novaWrap("AI Anchor", `Error: ${err.message}`, "error"));
     }
     return { handled: true };
   }
@@ -460,7 +460,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (!text || text.length < 2) {
     await navReply(sock, m,
-      claraWrap("AI Anchor",
+      novaWrap("AI Anchor",
         [`Penggunaan: *${prefix}aianchor <text>*`,
           `Atau: *${prefix}aianchor tone=<nada> <text>*`,
           "",
@@ -476,7 +476,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   // Validate tone
   if (!TONE_INSTRUCTIONS[tone]) {
-    await m.reply(claraWrap("AI Anchor",
+    await m.reply(novaWrap("AI Anchor",
       `Nada tidak valid: ${tone}\nTersedia: netral, lembut, marah, sedih, semangat, serius, ramah, dramatis`, "warn"));
     return { handled: true };
   }
@@ -501,12 +501,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     const providerLabel = voiceResult.provider === "gemini"
       ? `Gemini (${voiceResult.voice})`
       : "Google Neural";
-    await m.reply(claraWrap("AI Anchor",
+    await m.reply(novaWrap("AI Anchor",
       `Teks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}\nNada: ${tone}\nProvider: ${providerLabel}`));
 
     try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
   } catch (err) {
-    await m.reply(claraWrap("AI Anchor", `Error: ${err.message}`, "error"));
+    await m.reply(novaWrap("AI Anchor", `Error: ${err.message}`, "error"));
   }
 
   return { handled: true };

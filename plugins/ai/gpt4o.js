@@ -2,7 +2,7 @@
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "gpt4o",
   alias: ["gpt4o"],
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   } catch (error) {
 
     console.log(error);
-    m.reply(claraWrap("gpt4o", te(m.prefix, m.command, m.pushName, error), "error"));
+    m.reply(novaWrap("gpt4o", te(m.prefix, m.command, m.pushName, error), "error"));
   }
 }
 

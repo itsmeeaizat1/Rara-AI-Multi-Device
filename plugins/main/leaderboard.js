@@ -5,7 +5,7 @@ import path from 'path'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { getRpgData, JOB_DB } from '../../src/lib/nova-rpg-service.js'
 import { getCintaData, getLovePower } from '../../src/lib/nova-rpg-cinta.js'
-import { toSC, claraWrap, bracketBox, tipText, formatNumber } from '../../src/lib/nova-menu-style.js'
+import { toSC, novaWrap, bracketBox, tipText, formatNumber } from '../../src/lib/nova-menu-style.js'
 import {
   trackActivity, getLeaderboard, getWeeklyStats,
   getRank, resetWeekly, getActivityStatus, setActivityTracking
@@ -201,7 +201,7 @@ async function showRpgLeaderboard(m, sock, subType) {
   const users = collectRpgUsers(senderJid)
 
   if (users.length === 0)
-    return m.reply(claraWrap('Leaderboard', 'Belum ada data player RPG terdaftar.'))
+    return m.reply(novaWrap('Leaderboard', 'Belum ada data player RPG terdaftar.'))
 
   // ── Overview ──
   if (subType === 'overview') {
@@ -244,7 +244,7 @@ async function showRpgLeaderboard(m, sock, subType) {
         ],
       })
     } catch {
-      await m.reply(claraWrap('Leaderboard RPG', lines.join('\n'), { mentions }))
+      await m.reply(novaWrap('Leaderboard RPG', lines.join('\n'), { mentions }))
     }
     return
   }
@@ -253,7 +253,7 @@ async function showRpgLeaderboard(m, sock, subType) {
   if (subType === 'cinta') {
     const cintaUsers = users.filter(u => u.hasSpouse)
     if (cintaUsers.length === 0)
-      return m.reply(claraWrap('Leaderboard Cinta', 'Belum ada couple terdaftar.\nMulai berpacaran dengan .jadian'))
+      return m.reply(novaWrap('Leaderboard Cinta', 'Belum ada couple terdaftar.\nMulai berpacaran dengan .jadian'))
 
     cintaUsers.sort((a, b) => b.lovePower - a.lovePower)
     const top10 = cintaUsers.slice(0, 10)
@@ -272,7 +272,7 @@ async function showRpgLeaderboard(m, sock, subType) {
     if (myRank !== -1) text += `\n\nPosisi kamu: *#${myRank + 1}* dari *${formatNumber(cintaUsers.length)}* couple.`
     else text += `\n\nKamu belum punya pasangan. Ketik .jadian untuk mulai!`
 
-    await m.reply(claraWrap('Leaderboard Cinta', text, { mentions }))
+    await m.reply(novaWrap('Leaderboard Cinta', text, { mentions }))
     return
   }
 
@@ -308,7 +308,7 @@ async function showRpgLeaderboard(m, sock, subType) {
   if (myRank !== -1) text += `\n\nPosisi kamu: *#${myRank + 1}* dari *${formatNumber(users.length)}* player.`
   else text += `\n\nKamu belum terdaftar di database RPG.`
 
-  await m.reply(claraWrap(field.title, text, { mentions }))
+  await m.reply(novaWrap(field.title, text, { mentions }))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -320,7 +320,7 @@ async function showGameLeaderboard(m, sock, catKey) {
   const users = collectRpgUsers(senderJid)
 
   if (users.length === 0)
-    return m.reply(claraWrap('Leaderboard', 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
+    return m.reply(novaWrap('Leaderboard', 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
 
   // hitung metrik tiap user lalu sort
   const scored = users
@@ -328,7 +328,7 @@ async function showGameLeaderboard(m, sock, catKey) {
     .sort((a, b) => b.score - a.score)
 
   if (scored[0].score <= 0 && !scored.some(u => u.score > 0))
-    return m.reply(claraWrap(`Leaderboard ${cat.raw}`, `Belum ada data untuk kategori ${cat.key}.\nMain dulu biar skormu terekam!`))
+    return m.reply(novaWrap(`Leaderboard ${cat.raw}`, `Belum ada data untuk kategori ${cat.key}.\nMain dulu biar skormu terekam!`))
 
   const top10 = scored.slice(0, 10)
   const mentions = []
@@ -346,7 +346,7 @@ async function showGameLeaderboard(m, sock, catKey) {
   if (myRank !== -1) text += `\n\nPosisi kamu: *#${myRank + 1}* dari *${formatNumber(scored.length)}* player (${formatNumber(scored[myRank].score)} ${cat.label.toLowerCase()}).`
   else text += `\n\nKamu belum terdaftar di database RPG.`
 
-  await m.reply(claraWrap(`TOP GLOBAL ${cat.raw.toUpperCase()}`, text, { mentions }))
+  await m.reply(novaWrap(`TOP GLOBAL ${cat.raw.toUpperCase()}`, text, { mentions }))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -354,7 +354,7 @@ async function showGameLeaderboard(m, sock, catKey) {
 // ═══════════════════════════════════════════════════════════
 async function showGroupLeaderboard(m, sock) {
   if (!m.isGroup)
-    return m.reply(claraWrap('Leaderboard', 'Hanya bisa digunakan di dalam grup.'))
+    return m.reply(novaWrap('Leaderboard', 'Hanya bisa digunakan di dalam grup.'))
 
   trackActivity(m, { isCommand: true })
   const args = m.args || []
@@ -483,7 +483,7 @@ async function showAllLeaderboards(m, sock, onlyGroup = null, titleOverride = nu
   const boardTitle = titleOverride || 'Leaderboard All'
 
   if (users.length === 0)
-    return m.reply(claraWrap(boardTitle, 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
+    return m.reply(novaWrap(boardTitle, 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
 
   const mkJid = (u) => u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net'
   const mentions = []
@@ -574,14 +574,14 @@ async function showAllLeaderboards(m, sock, onlyGroup = null, titleOverride = nu
   // kategori yang dimilih gak ada datanya sama sekali → jangan kirim pesan kosong
   if (boards.length === 0) {
     const emptyCat = SECTIONS.find(s => s.group === onlyGroup)
-    return m.reply(claraWrap(boardTitle, `Belum ada data untuk kategori ${emptyCat ? emptyCat.title.toLowerCase() : 'ini'}.\nMain dulu biar skormu terekam!`))
+    return m.reply(novaWrap(boardTitle, `Belum ada data untuk kategori ${emptyCat ? emptyCat.title.toLowerCase() : 'ini'}.\nMain dulu biar skormu terekam!`))
   }
 
 
   summary.push(`👇 Buka *Baca selengkapnya* buat liat Top 5 tiap board`)
 
   const content = summary.join('\n') + `\n` + READMORE + `\n\n` + boards.join(`\n`)
-  await m.reply(claraWrap(boardTitle, content, { mentions }))
+  await m.reply(novaWrap(boardTitle, content, { mentions }))
 }
 
 // ═══════════════════════════════════════════════════════════

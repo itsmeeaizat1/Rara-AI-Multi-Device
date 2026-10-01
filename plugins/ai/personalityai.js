@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kepribadianai — AI test kepribadian MBTI
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("kepribadianai", `Ceritain kepribadian kamu, nanti AI tebak MBTI-mu!\n\nContoh: ${m.prefix}kepribadianai saya introvert, suka planning, overthinking\n${m.prefix}kepribadianai gampang bergaul, spontan, suka party`, "guide"));
+      return m.reply(novaWrap("kepribadianai", `Ceritain kepribadian kamu, nanti AI tebak MBTI-mu!\n\nContoh: ${m.prefix}kepribadianai saya introvert, suka planning, overthinking\n${m.prefix}kepribadianai gampang bergaul, spontan, suka party`, "guide"));
     }
 
     await m.react("🕒");
@@ -48,7 +48,7 @@ Gunakan bahasa Indonesia. Analisis berdasarkan framework MBTI (Myers-Briggs Type
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("kepribadianai", "AI-nya lagi psychology test sendiri 🧠", "error"));
+      return m.reply(novaWrap("kepribadianai", "AI-nya lagi psychology test sendiri 🧠", "error"));
     }
 
     await m.react("🐣");
@@ -57,7 +57,7 @@ Gunakan bahasa Indonesia. Analisis berdasarkan framework MBTI (Myers-Briggs Type
   } catch (err) {
     console.error("kepribadianai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("kepribadianai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("kepribadianai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

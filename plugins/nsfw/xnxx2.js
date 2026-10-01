@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -17,7 +17,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url || (!url.includes("xnxx") && !url.includes("xvideos"))) {
-    return m.reply(claraWrap("XNXX Download", `Kirim URL video XNXX/XVideos.\n\nContoh: ${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx`));
+    return m.reply(novaWrap("XNXX Download", `Kirim URL video XNXX/XVideos.\n\nContoh: ${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx`));
   }
   try {
     const res = await axios.get(
@@ -25,11 +25,11 @@ async function handler(m, { sock }) {
       { timeout: 60000 }
     );
     if (!res.data?.status || !res.data?.data) {
-      return m.reply(claraWrap("XNXX Download", `Gagal download. URL mungkin tidak valid.`));
+      return m.reply(novaWrap("XNXX Download", `Gagal download. URL mungkin tidak valid.`));
     }
     const d = res.data.data;
     const info = `Title: ${d.title || "-"}\nDurasi: ${d.duration || "-"}\nQuality: ${d.quality || "-"}\n\nSedang mengirim video...`;
-    await m.reply(claraWrap("XNXX Download", info));
+    await m.reply(novaWrap("XNXX Download", info));
 
     if (d.url || d.downloadUrl) {
       const vidRes = await axios.get(d.url || d.downloadUrl, {
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
         return;
       }
     }
-    return m.reply(claraWrap("XNXX Download", `File gagal diunduh. Coba lagi nanti.`));
+    return m.reply(novaWrap("XNXX Download", `File gagal diunduh. Coba lagi nanti.`));
   } catch (err) {
     console.error("[XNXX2] Error:", err.message);
     return m.reply(te(m.prefix, m.command, m.pushName));

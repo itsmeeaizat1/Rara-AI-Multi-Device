@@ -6,7 +6,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { DailymotionDL } from "../../src/scraper/dailymotion.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Caption builder LOKAL (bukan shared lib — owner: tiap fitur punya sendiri, 14 Sep 2026)
 function mediaCaption({

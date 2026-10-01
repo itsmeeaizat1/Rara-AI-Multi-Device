@@ -17,7 +17,7 @@
  *   .beli2 riwayat                — riwayat pembelian
  */
 
-import { claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
 import {
   getProducts, getProduct, listByCategory, getCategories, searchProducts,
   getCart, addToCart, removeFromCart, clearCart, cartTotal,
@@ -47,7 +47,7 @@ const pluginConfig = {
 };
 
 async function sendTrackResult(m, result, resiNumber) {
-  if (result.error) return m.reply(claraWrap("Beli2", result.error));
+  if (result.error) return m.reply(novaWrap("Beli2", result.error));
   const lines = [""];
   if (result.summary) {
     lines.push(toSC("Resi") + ": " + (result.summary.awb || resiNumber));
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
       const cat = args[0] || "";
       const products = listByCategory(cat);
       if (!products.length) {
-        return m.reply(claraWrap("Beli2", toSC("Belum ada produk.") + (cat ? " Kategori: " + cat : "")));
+        return m.reply(novaWrap("Beli2", toSC("Belum ada produk.") + (cat ? " Kategori: " + cat : "")));
       }
       const cats = getCategories();
       const lines = [""];
@@ -121,9 +121,9 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "cari" || action === "search") {
       const query = args.join(" ").trim();
-      if (!query) return m.reply(claraWrap("Beli2", "Format: .beli2 cari <query>"));
+      if (!query) return m.reply(novaWrap("Beli2", "Format: .beli2 cari <query>"));
       const results = searchProducts(query);
-      if (!results.length) return m.reply(claraWrap("Beli2", toSC("Tidak ditemukan.") + " Query: " + query));
+      if (!results.length) return m.reply(novaWrap("Beli2", toSC("Tidak ditemukan.") + " Query: " + query));
       const lines = [""];
       for (const p of results) {
         lines.push(p.id + " — " + p.name);
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     if (action === "keranjang" || action === "cart" || action === "ker") {
       const cart = getCart(jid);
       if (!cart.items || !cart.items.length) {
-        return m.reply(claraWrap("Beli2", toSC("Keranjang kosong.") + "\n\nTambah: .beli2 <kode> [qty]\nKatalog: .beli2 katalog"));
+        return m.reply(novaWrap("Beli2", toSC("Keranjang kosong.") + "\n\nTambah: .beli2 <kode> [qty]\nKatalog: .beli2 katalog"));
       }
       const { subtotal, discount, total, itemCount } = cartTotal(jid);
       const lines = [""];
@@ -168,10 +168,10 @@ async function handler(m, { sock }) {
     if (action === "hapus" || action === "remove" || action === "del") {
       const kode = args[0] || "";
       const qty = parseInt(args[1] || "0");
-      if (!kode) return m.reply(claraWrap("Beli2", "Format: .beli2 hapus <kode> [qty]"));
+      if (!kode) return m.reply(novaWrap("Beli2", "Format: .beli2 hapus <kode> [qty]"));
       const result = removeFromCart(jid, kode, qty);
-      if (result.error) return m.reply(claraWrap("Beli2", result.error));
-      return m.reply(claraWrap("Beli2", toSC("Item dihapus dari keranjang.") + "\n\nLihat: .beli2 keranjang"));
+      if (result.error) return m.reply(novaWrap("Beli2", result.error));
+      return m.reply(novaWrap("Beli2", toSC("Item dihapus dari keranjang.") + "\n\nLihat: .beli2 keranjang"));
     }
 
     // ============================================================
@@ -179,7 +179,7 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "kosong" || action === "clear" || action === "reset") {
       clearCart(jid);
-      return m.reply(claraWrap("Beli2", toSC("Keranjang dikosongkan.")));
+      return m.reply(novaWrap("Beli2", toSC("Keranjang dikosongkan.")));
     }
 
     // ============================================================
@@ -187,11 +187,11 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "promo" || action === "diskon") {
       const kode = (args[0] || "").toUpperCase();
-      if (!kode) return m.reply(claraWrap("Beli2", "Format: .beli2 promo <kode>"));
+      if (!kode) return m.reply(novaWrap("Beli2", "Format: .beli2 promo <kode>"));
       const result = applyPromo(jid, kode);
-      if (result.error) return m.reply(claraWrap("Beli2", result.error));
+      if (result.error) return m.reply(novaWrap("Beli2", result.error));
       const { discount, total } = cartTotal(jid);
-      return m.reply(claraWrap("Beli2",
+      return m.reply(novaWrap("Beli2",
         toSC("Promo diterapkan") + ": " + result.promo.code + "\n" +
         toSC("Diskon") + ": -" + formatRupiah(discount) + "\n" +
         toSC("Total bayar") + ": " + formatRupiah(total) + "\n\n" +
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
     if (action === "checkout" || action === "bayar semua" || action === "co") {
       const buyerName = m.pushName || jid.split("@")[0];
       const result = checkout(jid, buyerName);
-      if (result.error) return m.reply(claraWrap("Beli2", result.error));
+      if (result.error) return m.reply(novaWrap("Beli2", result.error));
 
       const inv = result.invoice;
 
@@ -239,7 +239,7 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "metode" || action === "payment") {
       const payments = getActivePayments();
-      if (!payments.length) return m.reply(claraWrap("Beli2", toSC("Belum ada metode pembayaran.")));
+      if (!payments.length) return m.reply(novaWrap("Beli2", toSC("Belum ada metode pembayaran.")));
       const lines = [""];
       for (const p of payments) {
         lines.push(p.value + " — " + p.label);
@@ -256,16 +256,16 @@ async function handler(m, { sock }) {
       const kode = (args[0] || "").toUpperCase();
       const metode = (args[1] || "").toLowerCase();
       if (!kode || !metode) {
-        return m.reply(claraWrap("Beli2", "Format: .beli2 bayar <invoice> <metode>\n\nLihat metode: .beli2 metode"));
+        return m.reply(novaWrap("Beli2", "Format: .beli2 bayar <invoice> <metode>\n\nLihat metode: .beli2 metode"));
       }
       const inv = getInvoice(kode);
-      if (!inv) return m.reply(claraWrap("Beli2", toSC("Invoice tidak ditemukan.")));
-      if (inv.buyerJid !== jid && !m.isOwner) return m.reply(claraWrap("Beli2", toSC("Bukan invoice Anda.")));
-      if (inv.status !== "pending") return m.reply(claraWrap("Beli2", toSC("Status") + ": " + statusText(inv.status)));
+      if (!inv) return m.reply(novaWrap("Beli2", toSC("Invoice tidak ditemukan.")));
+      if (inv.buyerJid !== jid && !m.isOwner) return m.reply(novaWrap("Beli2", toSC("Bukan invoice Anda.")));
+      if (inv.status !== "pending") return m.reply(novaWrap("Beli2", toSC("Status") + ": " + statusText(inv.status)));
 
       const payments = getActivePayments();
       const selected = payments.find((p) => p.value === metode || p.label.toLowerCase() === metode);
-      if (!selected) return m.reply(claraWrap("Beli2", toSC("Metode tidak tersedia.") + " Ketik .beli2 metode"));
+      if (!selected) return m.reply(novaWrap("Beli2", toSC("Metode tidak tersedia.") + " Ketik .beli2 metode"));
 
       updateInvoice(kode, { paymentMethod: selected.label, status: "paid" });
 
@@ -343,10 +343,10 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "cek" || action === "status") {
       const kode = (args[0] || "").toUpperCase();
-      if (!kode) return m.reply(claraWrap("Beli2", "Format: .beli2 cek <invoice>"));
+      if (!kode) return m.reply(novaWrap("Beli2", "Format: .beli2 cek <invoice>"));
       const inv = getInvoice(kode);
-      if (!inv) return m.reply(claraWrap("Beli2", toSC("Invoice tidak ditemukan.")));
-      if (inv.buyerJid !== jid && !m.isOwner) return m.reply(claraWrap("Beli2", toSC("Bukan invoice Anda.")));
+      if (!inv) return m.reply(novaWrap("Beli2", toSC("Invoice tidak ditemukan.")));
+      if (inv.buyerJid !== jid && !m.isOwner) return m.reply(novaWrap("Beli2", toSC("Bukan invoice Anda.")));
       return m.reply(novaBox("STATUS INVOICE", formatReceipt(inv)));
     }
 
@@ -362,7 +362,7 @@ async function handler(m, { sock }) {
         const invoices = getInvoicesByBuyer(jid);
         const withResi = invoices.filter((inv) => inv.resi);
         if (!withResi.length) {
-          return m.reply(claraWrap("Beli2", toSC("Belum ada resi untuk Anda.") + "\n\nFormat: .beli2 lacak <nomor_resi> <kurir>"));
+          return m.reply(novaWrap("Beli2", toSC("Belum ada resi untuk Anda.") + "\n\nFormat: .beli2 lacak <nomor_resi> <kurir>"));
         }
         const lines = [""];
         for (const inv of withResi) {
@@ -382,7 +382,7 @@ async function handler(m, { sock }) {
           const result = await trackResi(resiNumber, found.kurir);
           return sendTrackResult(m, result, resiNumber);
         }
-        return m.reply(claraWrap("Beli2",
+        return m.reply(novaWrap("Beli2",
           toSC("Format: .beli2 lacak <nomor_resi> <kurir>") + "\n\n" +
           "Kurir: " + Object.keys(KURIR_LIST).join(", ")
         ));
@@ -397,7 +397,7 @@ async function handler(m, { sock }) {
     // ============================================================
     if (action === "riwayat" || action === "history") {
       const invoices = getInvoicesByBuyer(jid);
-      if (!invoices.length) return m.reply(claraWrap("Beli2", toSC("Belum ada riwayat pembelian.")));
+      if (!invoices.length) return m.reply(novaWrap("Beli2", toSC("Belum ada riwayat pembelian.")));
       const lines = [""];
       for (const inv of invoices.slice(0, 10)) {
         lines.push(inv.code + " — " + statusText(inv.status));
@@ -416,22 +416,22 @@ async function handler(m, { sock }) {
       const product = getProduct(kode);
 
       if (!product) {
-        return m.reply(claraWrap("Beli2", toSC("Produk tidak ditemukan.") + " Kode: " + kode + "\n\nKatalog: .beli2 katalog"));
+        return m.reply(novaWrap("Beli2", toSC("Produk tidak ditemukan.") + " Kode: " + kode + "\n\nKatalog: .beli2 katalog"));
       }
 
       const available = product.stock > 0 || product.stock === -1;
       if (!available) {
-        return m.reply(claraWrap("Beli2", toSC("Stok habis") + ": " + product.name));
+        return m.reply(novaWrap("Beli2", toSC("Stok habis") + ": " + product.name));
       }
       if (product.stock !== -1 && product.stock < qty) {
-        return m.reply(claraWrap("Beli2", toSC("Stok tidak cukup.") + " Tersedia: " + product.stock));
+        return m.reply(novaWrap("Beli2", toSC("Stok tidak cukup.") + " Tersedia: " + product.stock));
       }
 
       const result = addToCart(jid, product.id, qty);
-      if (result.error) return m.reply(claraWrap("Beli2", result.error));
+      if (result.error) return m.reply(novaWrap("Beli2", result.error));
 
       const { itemCount, total } = cartTotal(jid);
-      return m.reply(claraWrap("Beli2",
+      return m.reply(novaWrap("Beli2",
         toSC("Ditambah ke keranjang") + "\n\n" +
         toSC("Produk") + ": " + product.name + "\n" +
         toSC("Qty") + ": " + qty + "\n" +
@@ -464,7 +464,7 @@ async function handler(m, { sock }) {
     ]));
   } catch (error) {
     await m.react("❌");
-    return m.reply(claraWrap("Beli2", toSC("Error") + ": " + error.message));
+    return m.reply(novaWrap("Beli2", toSC("Error") + ": " + error.message));
   }
 }
 

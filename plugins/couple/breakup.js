@@ -2,7 +2,7 @@
 // Sistem Pacaran — Putus hubungan
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { novaGameBox, gameCTA } from "../../src/lib/nova-games.js";
 
 const pluginConfig = {
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
     if (!myData.fun.pasangan) {
       return m.reply(
-        claraWrap("putus",
+        novaWrap("putus",
           "Kamu tidak memiliki pasangan untuk diputuskan! 💔"
         )
       );
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
       db.setUser(m.sender, myData);
       db.save();
       return m.reply(
-        claraWrap("putus",
+        novaWrap("putus",
           "Hubungan sudah tidak aktif. Data pasangan dihapus. 🧹"
         )
       );

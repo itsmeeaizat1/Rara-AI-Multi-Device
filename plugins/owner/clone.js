@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "clone",
@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isGroup) {
       const text =
-        claraWrap("Clone", ["Perintah ini hanya untuk grup."].join("\n")) +
+        novaWrap("Clone", ["Perintah ini hanya untuk grup."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!picture) {
       const text =
-        claraWrap("Clone", ["Grup ini belum memiliki foto profil."].join("\n")) +
+        novaWrap("Clone", ["Grup ini belum memiliki foto profil."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("Clone", [`Group: *${m.chat}*`,
+      novaWrap("Clone", [`Group: *${m.chat}*`,
         "Status: *SUCCESS*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

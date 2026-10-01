@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "personacard",
@@ -149,7 +149,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const stars = "★".repeat(Math.min(5, Math.ceil(level / 20)));
   const bar = (stat, max) => "▰".repeat(Math.min(10, Math.floor(stat / max * 10))) + "▱".repeat(10 - Math.min(10, Math.floor(stat / max * 10)));
 
-  await m.reply(claraWrap("Persona Card", [
+  await m.reply(novaWrap("Persona Card", [
     (target === m.sender ? "" : "@" + target.split("@")[0] + " - "),
     title,
     stars,

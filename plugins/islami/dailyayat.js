@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "dailyayat",
@@ -37,7 +37,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const res = await axios.get(API_BASE + "/surat/" + surahNum, { timeout: 10000 });
       surahData = res.data;
       if (!surahData || !surahData.ayat) {
-        return m.reply(claraWrap("Daily Ayat", "Surah tidak ditemukan: " + surahNum));
+        return m.reply(novaWrap("Daily Ayat", "Surah tidak ditemukan: " + surahNum));
       }
 
       let ayat;
@@ -58,7 +58,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "",
         surahData.tempatTurun === "Mekkah" ? "Surah Makiyah" : "Surah Madaniyah",
       ];
-      return m.reply(claraWrap("Daily Ayat", lines.join("\n")));
+      return m.reply(novaWrap("Daily Ayat", lines.join("\n")));
     }
 
     // Random surah + random ayat
@@ -67,7 +67,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     surahData = res.data;
 
     if (!surahData || !surahData.ayat) {
-      return m.reply(claraWrap("Daily Ayat", "Gagal ambil nih ayat."));
+      return m.reply(novaWrap("Daily Ayat", "Gagal ambil nih ayat."));
     }
 
     const randomAyat = surahData.ayat[Math.floor(Math.random() * surahData.ayat.length)];
@@ -82,10 +82,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "",
       surahData.tempatTurun === "Mekkah" ? "Surah Makiyah" : "Surah Madaniyah",
     ];
-    return m.reply(claraWrap("Daily Ayat - Acak", lines.join("\n")));
+    return m.reply(novaWrap("Daily Ayat - Acak", lines.join("\n")));
   } catch (e) {
     console.error("dailyayat error:", e.message);
-    return m.reply(claraWrap("Daily Ayat", "Error: " + e.message));
+    return m.reply(novaWrap("Daily Ayat", "Error: " + e.message));
   }
 }
 

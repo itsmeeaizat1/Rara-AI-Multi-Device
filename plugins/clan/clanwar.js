@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "clanwar",
     alias: ["clanwar"],
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     const user = db.getUser(m.sender)
     const targetClanId = m.text?.trim()
 
-    if (!user?.clanId) return m.reply(claraWrap("clanwar", `❌ Kamu belum punya clan`))
+    if (!user?.clanId) return m.reply(novaWrap("clanwar", `❌ Kamu belum punya clan`))
 
     if (!targetClanId) {
         return m.reply(
@@ -91,11 +91,11 @@ async function handler(m, { sock }) {
         || Object.values(db.db.data.clans).find(c => c.name.toLowerCase() === targetClanId.toLowerCase())
         || Object.values(db.db.data.clans).find(c => c.id.toLowerCase() === targetClanId.toLowerCase())
 
-    if (!myClan) return m.reply(claraWrap("clanwar", `❌ Clan kamu tidak ditemukan`))
-    if (!enemyClan) return m.reply(claraWrap("clanwar", `❌ Clan lawan tidak ditemukan`))
-    if (user.clanId === targetClanId) return m.reply(claraWrap("clanwar", `❌ Tidak bisa war melawan clan sendiri`))
-    if (myClan.members.length < 3) return m.reply(claraWrap("Clanwar", `❌ Clan kamu butuh minimal 3 member`))
-    if (enemyClan.members.length < 3) return m.reply(claraWrap("Clanwar", `❌ Clan lawan butuh minimal 3 member`))
+    if (!myClan) return m.reply(novaWrap("clanwar", `❌ Clan kamu tidak ditemukan`))
+    if (!enemyClan) return m.reply(novaWrap("clanwar", `❌ Clan lawan tidak ditemukan`))
+    if (user.clanId === targetClanId) return m.reply(novaWrap("clanwar", `❌ Tidak bisa war melawan clan sendiri`))
+    if (myClan.members.length < 3) return m.reply(novaWrap("Clanwar", `❌ Clan kamu butuh minimal 3 member`))
+    if (enemyClan.members.length < 3) return m.reply(novaWrap("Clanwar", `❌ Clan lawan butuh minimal 3 member`))
 
     const myPower = calculatePower(db, myClan)
     const enemyPower = calculatePower(db, enemyClan)

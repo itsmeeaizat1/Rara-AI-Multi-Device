@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { CronJob } from "cron";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { resolveNewsletterJid } from "../../src/lib/nova-saluran.js";
 import { sendSaluranSafe } from "../../src/lib/nova-saluran-safe.js";
@@ -243,7 +243,7 @@ async function generateAndPostReport(db, groupId, sock) {
   savePulseData(db, groupId, data);
 
   // Post to saluran
-  const wrappedReport = claraWrap("AutoPulse Report", report);
+  const wrappedReport = novaWrap("AutoPulse Report", report);
   let saluranId = "";
   try { saluranId = await resolveNewsletterJid(sock) } catch {}
   if (saluranId && /^\d+@newsletter$/.test(saluranId)) {
@@ -382,7 +382,7 @@ async function handler(m, { sock, db }) {
       "Track pesan manual (untuk test):",
       `  ${prefix}autopulse track`,
     ].join("\n");
-    await m.reply(claraWrap("AutoPulse", helpText));
+    await m.reply(novaWrap("AutoPulse", helpText));
     return { handled: true };
   }
 
@@ -396,7 +396,7 @@ async function handler(m, { sock, db }) {
     const cronExpr = data.cron || "0 8 * * 0";
     if (sock) startJob(db, groupId, cronExpr, sock);
 
-    await m.reply(claraWrap("AutoPulse",
+    await m.reply(novaWrap("AutoPulse",
       `Monitor aktif!\n\nJadwal auto-report: ${cronExpr}\n(Setiap Minggu jam 08:00 WIB)\n\nBot akan track aktivitas grup dan kirim laporan otomatis ke saluran.`,
       "success"));
     return { handled: true };
@@ -406,14 +406,14 @@ async function handler(m, { sock, db }) {
   if (subCmd === "off" || subCmd === "mati" || subCmd === "disable") {
     const data = getPulseData(db, groupId);
     if (!data) {
-      await m.reply(claraWrap("AutoPulse", "Monitor belum aktif.", "warn"));
+      await m.reply(novaWrap("AutoPulse", "Monitor belum aktif.", "warn"));
       return { handled: true };
     }
     data.enabled = false;
     savePulseData(db, groupId, data);
     stopJob(groupId);
 
-    await m.reply(claraWrap("AutoPulse", "Monitor dimatikan. Data tersimpan.", "warn"));
+    await m.reply(novaWrap("AutoPulse", "Monitor dimatikan. Data tersimpan.", "warn"));
     return { handled: true };
   }
 
@@ -429,7 +429,7 @@ async function handler(m, { sock, db }) {
     const mentions = topUsers.map(([u]) => `${u}@s.whatsapp.net`);
 
     await sock.sendMessage(m.chat, {
-      text: claraWrap("AutoPulse Report", reportText),
+      text: novaWrap("AutoPulse Report", reportText),
       mentions,
     }, { quoted: m });
     return { handled: true };
@@ -439,7 +439,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "setcron" || subCmd === "setjadwal" || subCmd === "jadwal") {
     const cronExpr = args.slice(2).join(" ").trim();
     if (!cronExpr) {
-      await m.reply(claraWrap("AutoPulse",
+      await m.reply(novaWrap("AutoPulse",
         `Format: ${prefix}autopulse setcron <cron>\n💡 *Contoh:* ${prefix}autopulse setcron 0 8 * * 0\n\nFormat cron: menit jam * * hari\n0=Min 1=Sen 2=Sel 3=Rab 4=Kam 5=Jum 6=Sab`,
         "warn"));
       return { handled: true };
@@ -461,7 +461,7 @@ async function handler(m, { sock, db }) {
       startJob(db, groupId, cronExpr, sock);
     }
 
-    await m.reply(claraWrap("AutoPulse",
+    await m.reply(novaWrap("AutoPulse",
       `Jadwal auto-report diupdate!\nCron: ${cronExpr}\n${data.enabled ? "Monitor aktif, jadwal berlaku." : "Aktifkan dengan .autopulse on"}`,
       "success"));
     return { handled: true };
@@ -471,7 +471,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "status" || subCmd === "info") {
     const data = getPulseData(db, groupId);
     if (!data) {
-      await m.reply(claraWrap("AutoPulse", "Belum di-setup. Ketik .autopulse on untuk mulai.", "warn"));
+      await m.reply(novaWrap("AutoPulse", "Belum di-setup. Ketik .autopulse on untuk mulai.", "warn"));
       return { handled: true };
     }
 
@@ -490,7 +490,7 @@ async function handler(m, { sock, db }) {
       `Cron job running: ${activeJobs.has(groupId) ? "YA" : "TIDAK"}`,
     ].join("\n");
 
-    await m.reply(claraWrap("AutoPulse Status", statusText));
+    await m.reply(novaWrap("AutoPulse Status", statusText));
     return { handled: true };
   }
 
@@ -498,7 +498,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "reset" || subCmd === "clear") {
     const data = getPulseData(db, groupId);
     if (!data) {
-      await m.reply(claraWrap("AutoPulse", "Belum ada data untuk direset.", "warn"));
+      await m.reply(novaWrap("AutoPulse", "Belum ada data untuk direset.", "warn"));
       return { handled: true };
     }
 
@@ -513,7 +513,7 @@ async function handler(m, { sock, db }) {
     };
     savePulseData(db, groupId, data);
 
-    await m.reply(claraWrap("AutoPulse", "Statistik direset. Tracking dimulai dari nol.", "success"));
+    await m.reply(novaWrap("AutoPulse", "Statistik direset. Tracking dimulai dari nol.", "success"));
     return { handled: true };
   }
 
@@ -521,7 +521,7 @@ async function handler(m, { sock, db }) {
   if (subCmd === "history" || subCmd === "riwayat") {
     const data = getPulseData(db, groupId);
     if (!data || !data.history || data.history.length === 0) {
-      await m.reply(claraWrap("AutoPulse", "Belum ada history laporan.", "warn"));
+      await m.reply(novaWrap("AutoPulse", "Belum ada history laporan.", "warn"));
       return { handled: true };
     }
 
@@ -537,7 +537,7 @@ async function handler(m, { sock, db }) {
       histText += `${i + 1}. ${date}\n   ${h.totalMessages} pesan | ${h.activeUsers} aktif | ${h.healthScore}\n`;
     });
 
-    await m.reply(claraWrap("AutoPulse History", histText.trim()));
+    await m.reply(novaWrap("AutoPulse History", histText.trim()));
     return { handled: true };
   }
 
@@ -545,21 +545,21 @@ async function handler(m, { sock, db }) {
   if (subCmd === "track" || subCmd === "catat") {
     const data = ensureTracker(db, groupId);
     if (!data.enabled) {
-      await m.reply(claraWrap("AutoPulse", "Monitor belum aktif. Ketik .autopulse on dulu.", "warn"));
+      await m.reply(novaWrap("AutoPulse", "Monitor belum aktif. Ketik .autopulse on dulu.", "warn"));
       return { handled: true };
     }
 
     // Track this message as a test
     trackMessage(db, groupId, m.sender, Date.now());
 
-    await m.reply(claraWrap("AutoPulse",
+    await m.reply(novaWrap("AutoPulse",
       `Pesan ini di-track!\nTotal tracked: ${data.stats.totalMessages + 1}`,
       "success"));
     return { handled: true };
   }
 
   // Unknown command
-  await m.reply(claraWrap("AutoPulse",
+  await m.reply(novaWrap("AutoPulse",
     `Perintah tidak dikenal.\nKetik ${prefix}autopulse help untuk bantuan.`,
     "warn"));
   return { handled: true };

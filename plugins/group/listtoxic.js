@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { DEFAULT_TOXIC_WORDS } from './antitoxic.js'
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     text += `\`.addtoxic <kata>\` untuk tambah\n`
     text += `\`.deltoxic <kata>\` untuk hapus`
     
-    await m.reply(claraWrap("listtoxic", text))
+    await m.reply(novaWrap("listtoxic", text))
 }
 
 export { pluginConfig as config, handler }

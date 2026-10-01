@@ -6,7 +6,7 @@
 // 1 JAM (sama juga kalau ngirim spam/mobilitas aneh).
 // Media gak diteruskan (cuma teks). Flood guard + idle timeout 1 jam.
 import { getDatabase } from "./nova-database.js";
-import { claraWrap } from "./nova-menu-style.js";
+import { novaWrap } from "./nova-menu-style.js";
 
 // ── konstanta ──
 const IDLE_TIMEOUT_MS = 60 * 60 * 1000;   // gak ada yang balas > 1 jam → tutup
@@ -47,8 +47,8 @@ export async function closeSession(sock, db, jid, reasonText) {
   delete a.sessions[jid];
   delete a.sessions[partner];
   db.save();
-  await dm(sock, jid, claraWrap("Chat Anonim", `${reasonText}\n\nCari partner baru: .vibychatanonymouschat`));
-  await dm(sock, partner, claraWrap("Chat Anonim", `${reasonText}\n\nLawan chatmu keluar. Cari partner baru: .vibychatanonymouschat`));
+  await dm(sock, jid, novaWrap("Chat Anonim", `${reasonText}\n\nCari partner baru: .vibychatanonymouschat`));
+  await dm(sock, partner, novaWrap("Chat Anonim", `${reasonText}\n\nLawan chatmu keluar. Cari partner baru: .vibychatanonymouschat`));
   return true;
 }
 
@@ -57,11 +57,11 @@ export async function startChat(m, sock, db) {
   const a = getAnon(db);
   const jid = m.sender;
   if (a.sessions[jid]) {
-    return m.reply(claraWrap("Chat Anonim", `Kamu lagi di sesi chat. Keluar dulu pakai .vibychatstop atau ganti partner pakai .vibychatskip ya.`));
+    return m.reply(novaWrap("Chat Anonim", `Kamu lagi di sesi chat. Keluar dulu pakai .vibychatstop atau ganti partner pakai .vibychatskip ya.`));
   }
   const inQueue = a.queue.findIndex((q) => q.jid === jid);
   if (inQueue >= 0) {
-    return m.reply(claraWrap("Chat Anonim", `Kamu sudah masuk daftar tunggu. Sabar ya, kamu bakal di-cocokin begitu ada partner (${a.queue.length} di antrean).`));
+    return m.reply(novaWrap("Chat Anonim", `Kamu sudah masuk daftar tunggu. Sabar ya, kamu bakal di-cocokin begitu ada partner (${a.queue.length} di antrean).`));
   }
   // FIFO: cocokin sama yang paling lama nunggu
   let waited = null;
@@ -76,7 +76,7 @@ export async function startChat(m, sock, db) {
     a.sessions[jid] = { partner: waited.jid, startedAt: now, lastActive: now, lastRelayAt: 0 };
     a.sessions[waited.jid] = { partner: jid, startedAt: now, lastActive: now, lastRelayAt: 0 };
     db.save();
-    await m.reply(claraWrap("Chat Anonim", [
+    await m.reply(novaWrap("Chat Anonim", [
       `Kamu terhubung sama stranger! 💬`,
       "",
       "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu (link juga boleh).",
@@ -84,7 +84,7 @@ export async function startChat(m, sock, db) {
       "",
       "Catatan: sesi nutup otomatis kalau gak ada yang balas selama 1 jam.",
     ]));
-    await dm(sock, waited.jid, claraWrap("Chat Anonim", [
+    await dm(sock, waited.jid, novaWrap("Chat Anonim", [
       `Ada stranger yang terhubung sama kamu! 💬`,
       "",
       "Chat biasa aja — pesanmu diteruskan tanpa nunjukin nomor kamu (link juga boleh).",
@@ -98,7 +98,7 @@ export async function startChat(m, sock, db) {
   a.queue.push({ jid, at: Date.now() });
   db.save();
   try { await m.react("🔍"); } catch {}
-  return m.reply(claraWrap("Chat Anonim", [
+  return m.reply(novaWrap("Chat Anonim", [
     "Kamu masuk daftar tunggu chat anonim.",
     "Begitu ada user lain yang mulai chat juga, kamu otomatis di-cocokin — pantau DM kamu ya.",
     "",
@@ -112,7 +112,7 @@ export async function skipChat(m, sock, db) {
   const a = getAnon(db);
   const jid = m.sender;
   if (!a.sessions[jid]) {
-    return m.reply(claraWrap("Chat Anonim", "Kamu lagi gak di sesi chat. Mulai dulu: .vibychatanonymouschat"));
+    return m.reply(novaWrap("Chat Anonim", "Kamu lagi gak di sesi chat. Mulai dulu: .vibychatanonymouschat"));
   }
   await closeSession(sock, db, jid, "Sesi diputuskan (skip).");
   return startChat(m, sock, db);
@@ -126,13 +126,13 @@ export async function stopChat(m, sock, db) {
   if (qi >= 0) {
     a.queue.splice(qi, 1);
     db.save();
-    return m.reply(claraWrap("Chat Anonim", "Kamu keluar dari daftar tunggu. Kapan pun mau nyoba lagi: .vibychatanonymouschat"));
+    return m.reply(novaWrap("Chat Anonim", "Kamu keluar dari daftar tunggu. Kapan pun mau nyoba lagi: .vibychatanonymouschat"));
   }
   if (a.sessions[jid]) {
     await closeSession(sock, db, jid, "Lawan chatmu keluar dari sesi (stop).");
     return;
   }
-  return m.reply(claraWrap("Chat Anonim", "Kamu lagi gak di sesi/daftar tunggu chat anonim."));
+  return m.reply(novaWrap("Chat Anonim", "Kamu lagi gak di sesi/daftar tunggu chat anonim."));
 }
 
 // ── relay pesan (hook non-command di handler.js) ──
@@ -149,7 +149,7 @@ export async function relayMessage(m, sock, db) {
     if (now - lastNotice > 5000) {
       me._mediaNoticeAt = now;
       db.save();
-      await m.reply(claraWrap("Chat Anonim", "Media (foto/video/stiker/dll) gak bisa diteruskan di chat anonim — cuma teks ya."));
+      await m.reply(novaWrap("Chat Anonim", "Media (foto/video/stiker/dll) gak bisa diteruskan di chat anonim — cuma teks ya."));
     }
     return true;
   }
@@ -164,7 +164,7 @@ export async function relayMessage(m, sock, db) {
     if (now - lastNotice > 3000) {
       me._floodNoticeAt = now;
       db.save();
-      await m.reply(claraWrap("Chat Anonim", "Pelan-pelan ya, jangan spam."));
+      await m.reply(novaWrap("Chat Anonim", "Pelan-pelan ya, jangan spam."));
     }
     return true;
   }
@@ -174,7 +174,7 @@ export async function relayMessage(m, sock, db) {
   const partnerRec = a.sessions[me.partner];
   if (partnerRec) partnerRec.lastActive = now;
   db.save();
-  const sent = await dm(sock, me.partner, claraWrap("Stranger 💬", text.slice(0, MAX_LEN)));
+  const sent = await dm(sock, me.partner, novaWrap("Stranger 💬", text.slice(0, MAX_LEN)));
   if (!sent) {
     await closeSession(sock, db, m.sender, "Lawan chatmu gak bisa dihubungi — sesi ditutup.");
   }

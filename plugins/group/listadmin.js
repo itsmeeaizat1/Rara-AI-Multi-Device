@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getParticipantJid } from '../../src/lib/nova-lid.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         const admins = participants.filter(p => p.admin)
 
         if (admins.length === 0) {
-            await m.reply(claraWrap("listadmin", "Tidak ada admin di grup ini.", "error"));
+            await m.reply(novaWrap("listadmin", "Tidak ada admin di grup ini.", "error"));
             return
         }
 
@@ -49,13 +49,13 @@ async function handler(m, { sock }) {
         lines.push("")
         lines.push(`Total Admin: ${admins.length}`)
 
-        const adminList = claraWrap("List Admin", lines)
+        const adminList = novaWrap("List Admin", lines)
         const mentions = admins.map(a => getParticipantJid(a))
 
         await m.reply(adminList, { mentions })
 
     } catch (error) {
-        m.reply(claraWrap("listadmin", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("listadmin", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antidocument',
     alias: ["antidocument"],
@@ -62,11 +62,11 @@ async function handler(m, { sock }) {
 
     if (action === 'off') {
         db.setGroup(m.chat, { antidocument: false })
-        await m.reply(claraWrap("Antidocument", `antidocument dinonaktifkan`, "error"))
+        await m.reply(novaWrap("Antidocument", `antidocument dinonaktifkan`, "error"))
         return
     }
 
-    await m.reply(claraWrap("Anti document", `Gunakan \`.antidocument on\` atau \`.antidocument off\``, "error"))
+    await m.reply(novaWrap("Anti document", `Gunakan \`.antidocument on\` atau \`.antidocument off\``, "error"))
 }
 
 export { pluginConfig as config, handler, checkAntidocument }

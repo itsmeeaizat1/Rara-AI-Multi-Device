@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "storyrelay",
@@ -36,7 +36,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       game.startedAt = Date.now();
       await db.save();
 
-      return m.reply(claraWrap("Story Relay", [
+      return m.reply(novaWrap("Story Relay", [
         "Game sambung cerita dimulai!",
         "",
         "Cara main:",
@@ -64,7 +64,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       });
       let info = "Total kontribusi: " + game.story.length + " kalimat\n";
       info += "Status: " + (game.active ? "Aktif" : "Selesai");
-      return m.reply(claraWrap("Story Relay", info + "\n\n" + full.trim()));
+      return m.reply(novaWrap("Story Relay", info + "\n\n" + full.trim()));
     }
 
     // STOP
@@ -80,7 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         full += entry.text + " ";
       });
 
-      return m.reply(claraWrap("Story Relay", [
+      return m.reply(novaWrap("Story Relay", [
         "Cerita selesai!",
         "Total kontribusi: " + game.story.length + " kalimat",
         "",
@@ -115,7 +115,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       full += entry.text + " ";
     });
 
-    return m.reply(claraWrap("Story Relay", [
+    return m.reply(novaWrap("Story Relay", [
       "Kalimat ditambahkan! (ke-" + game.story.length + ")",
       "",
       full.trim(),

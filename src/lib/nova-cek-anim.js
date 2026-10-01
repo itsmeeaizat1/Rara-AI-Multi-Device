@@ -16,7 +16,7 @@ export function cekMeterBar(pct) {
  * Kirim kartu hasil langsung (tanpa animasi — loading react emoji urusan handler).
  * @param {object} m pesan handler
  * @param {object} sock (tidak dipakai lagi, pertahanin signature)
- * @param {string} finalText kartu hasil SUDAH jadi (claraWrap(...))
+ * @param {string} finalText kartu hasil SUDAH jadi (novaWrap(...))
  * @param {object} replyOpts opsi m.reply final (mis. { mentions })
  * @param {object} opts (tidak dipakai lagi)
  */

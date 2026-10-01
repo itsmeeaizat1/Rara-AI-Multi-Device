@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { parseMention, delay } from "../../src/lib/nova-utils.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aimentor",
@@ -43,7 +43,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const skill = args.slice(3).join(" ").trim();
 
     if (!role || !["mentor", "mentee"].includes(role)) {
-      await m.reply(claraWrap("Mentor Match", [
+      await m.reply(novaWrap("Mentor Match", [
         "Format: " + prefix + "aimentor daftar <mentor|mentee> <skill>",
         "Contoh:",
         prefix + "aimentor daftar mentor javascript",
@@ -52,7 +52,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (!skill) {
-      await m.reply(claraWrap("Mentor Match", "Ketik skill yang kamu bisa/butuh.\n💡 *Contoh:* " + prefix + "aimentor daftar mentor python"));
+      await m.reply(novaWrap("Mentor Match", "Ketik skill yang kamu bisa/butuh.\n💡 *Contoh:* " + prefix + "aimentor daftar mentor python"));
       return { handled: true };
     }
 
@@ -64,7 +64,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     saveMentor(db, gid, data);
     const label = role === "mentor" ? "Mentor" : "Mentee";
-    await m.reply(claraWrap("Mentor Match", label + " terdaftar!\nSkill: " + skill + "\n\nKetik " + prefix + "aimentor cari untuk match."));
+    await m.reply(novaWrap("Mentor Match", label + " terdaftar!\nSkill: " + skill + "\n\nKetik " + prefix + "aimentor cari untuk match."));
     return { handled: true };
   }
 
@@ -75,7 +75,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const isMentee = !!data.mentees[m.sender];
 
     if (!isMentor && !isMentee) {
-      await m.reply(claraWrap("Mentor Match", "Belum terdaftar. Ketik " + prefix + "aimentor daftar <mentor|mentee> <skill>."));
+      await m.reply(novaWrap("Mentor Match", "Belum terdaftar. Ketik " + prefix + "aimentor daftar <mentor|mentee> <skill>."));
       return { handled: true };
     }
 
@@ -85,11 +85,11 @@ async function handler(m, { sock, db, config: botConfig }) {
         v.skill.toLowerCase().includes(mySkill) || mySkill.includes(v.skill.toLowerCase().split(" ")[0])
       );
       if (matches.length === 0) {
-        await m.reply(claraWrap("Mentor Match", "Belum ada mentor yang cocok untuk: " + data.mentees[m.sender].skill));
+        await m.reply(novaWrap("Mentor Match", "Belum ada mentor yang cocok untuk: " + data.mentees[m.sender].skill));
         return { handled: true };
       }
       const list = matches.map(([jid, v], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + v.skill).join("\n");
-      await m.reply(claraWrap("Mentor Match", "Mentor yang cocok:\n" + list), { mentions: matches.map(([jid]) => jid) });
+      await m.reply(novaWrap("Mentor Match", "Mentor yang cocok:\n" + list), { mentions: matches.map(([jid]) => jid) });
       return { handled: true };
     }
 
@@ -99,11 +99,11 @@ async function handler(m, { sock, db, config: botConfig }) {
         v.skill.toLowerCase().includes(mySkill) || mySkill.includes(v.skill.toLowerCase().split(" ")[0])
       );
       if (matches.length === 0) {
-        await m.reply(claraWrap("Mentor Match", "Belum ada mentee yang butuh: " + data.mentors[m.sender].skill));
+        await m.reply(novaWrap("Mentor Match", "Belum ada mentee yang butuh: " + data.mentors[m.sender].skill));
         return { handled: true };
       }
       const list = matches.map(([jid, v], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + v.skill).join("\n");
-      await m.reply(claraWrap("Mentor Match", "Mentee yang butuh bimbingan:\n" + list), { mentions: matches.map(([jid]) => jid) });
+      await m.reply(novaWrap("Mentor Match", "Mentee yang butuh bimbingan:\n" + list), { mentions: matches.map(([jid]) => jid) });
       return { handled: true };
     }
   }
@@ -113,7 +113,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const data = getMentor(db, gid);
     const mentorList = Object.entries(data.mentors).map(([jid, v], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + v.skill).join("\n") || "(kosong)";
     const menteeList = Object.entries(data.mentees).map(([jid, v], i) => (i + 1) + ". @" + jid.split("@")[0] + " - " + v.skill).join("\n") || "(kosong)";
-    await m.reply(claraWrap("Mentor Directory", [
+    await m.reply(novaWrap("Mentor Directory", [
       "MENTOR:",
       mentorList,
       "",
@@ -131,12 +131,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     delete data.mentors[m.sender];
     delete data.mentees[m.sender];
     saveMentor(db, gid, data);
-    await m.reply(claraWrap("Mentor Match", "Kamu keluar dari program mentor."));
+    await m.reply(novaWrap("Mentor Match", "Kamu keluar dari program mentor."));
     return { handled: true };
   }
 
   // ==================== HELP
-  await m.reply(claraWrap("Mentor Match", [
+  await m.reply(novaWrap("Mentor Match", [
     "AI MENTOR MATCH",
     "",
     "Cara pakai:",

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 function randomKarakter(length) {
@@ -57,7 +57,7 @@ async function handler(m, { sock, command, args }) {
         if (LINODE_TYPES[cmd]) {
             const label = args[0]
             if (!label) {
-                return m.reply( claraWrap("linode2gb", `❌ Masukkan label untuk VPS!\n\n💡 *Contoh:* ${m.prefix}${cmd} myserver`), "linode2gb")
+                return m.reply( novaWrap("linode2gb", `❌ Masukkan label untuk VPS!\n\n💡 *Contoh:* ${m.prefix}${cmd} myserver`), "linode2gb")
             }
             
             const spec = LINODE_TYPES[cmd]
@@ -113,7 +113,7 @@ async function handler(m, { sock, command, args }) {
                 `📍 Region: ap-south`
             
             await m.react("🐣")
-            (claraWrap("linode", msg))
+            (novaWrap("linode", msg))
             return
         }
         
@@ -132,7 +132,7 @@ async function handler(m, { sock, command, args }) {
             if (!res.ok) throw new Error('Gagal mendapatkan daftar Linode')
             
             if (!data.data || data.data.length === 0) {
-                return m.reply(claraWrap("linode", `📋 *DaғTar Linode*\n\nTidak ada VPS aktif.`))
+                return m.reply(novaWrap("linode", `📋 *DaғTar Linode*\n\nTidak ada VPS aktif.`))
             }
             
             let msg = `📋 *DaғTar Linode Vps*\n\n`
@@ -150,7 +150,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'onlinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}onlinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( novaWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}onlinode 12345`), "linode2gb")
             
             
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}/boot`, {
@@ -173,7 +173,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'offlinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}offlinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( novaWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}offlinode 12345`), "linode2gb")
             
             
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}/shutdown`, {
@@ -196,7 +196,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'rebootlinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}rebootlinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( novaWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}rebootlinode 12345`), "linode2gb")
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}/reboot`, {
                 method: 'POST',
                 headers: {
@@ -218,7 +218,7 @@ async function handler(m, { sock, command, args }) {
         if (cmd === 'rebuildlinode') {
             const linodeId = args[0]
             const image = args[1] || 'linode/ubuntu20.04'
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}rebuildlinode 12345 linode/ubuntu20.04`), "linode2gb")
+            if (!linodeId) return m.reply( novaWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}rebuildlinode 12345 linode/ubuntu20.04`), "linode2gb")
             
             const rootPass = randomKarakter(4) + randomNomor(3)
             
@@ -247,7 +247,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'delinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}delinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( novaWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}delinode 12345`), "linode2gb")
             
             
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}`, {
@@ -289,7 +289,7 @@ async function handler(m, { sock, command, args }) {
                 `Balance: $${balance.toFixed(2)}\n` +
                 `Credit: $${credit.toFixed(2)}`
             
-            await m.reply(claraWrap("linode", msg))
+            await m.reply(novaWrap("linode", msg))
             return
         }
         
@@ -308,13 +308,13 @@ async function handler(m, { sock, command, args }) {
             
             const total = data.data?.length || 0
             await m.react("🐣")
-            (claraWrap("linode", `📊 *Total Linode Aktiғ*\n\n${total} VPS`))
+            (novaWrap("linode", `📊 *Total Linode Aktiғ*\n\n${total} VPS`))
             return
         }
         
         if (cmd === 'cekvpslinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}cekvpslinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( novaWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}cekvpslinode 12345`), "linode2gb")
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}`, {
                 method: 'GET',
                 headers: {
@@ -335,10 +335,10 @@ async function handler(m, { sock, command, args }) {
                 `Type: ${l.type}\n` +
                 `IP: \`${l.ipv4?.join(', ') || '-'}\``
             
-            await m.reply(claraWrap("linode", msg))
+            await m.reply(novaWrap("linode", msg))
             return
         }
-        await m.reply(claraWrap("linode", `Linode Commands\n\n` +
+        await m.reply(novaWrap("linode", `Linode Commands\n\n` +
             `.linode2gb <label> - Buat VPS 2GB\n` +
             `.linode4gb <label> - Buat VPS 4GB\n` +
             `.linode8gb <label> - Buat VPS 8GB\n` +
@@ -355,7 +355,7 @@ async function handler(m, { sock, command, args }) {
         
     } catch (err) {
         await m.react("❌")
-        m.reply(claraWrap("linode", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("linode", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

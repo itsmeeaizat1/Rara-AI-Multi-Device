@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antipollspam",
@@ -126,7 +126,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (windowArg && windowArg >= 5 && windowArg <= 1440) cfg.window = windowArg;
       await db.save();
 
-      return m.reply(claraWrap("Anti Poll Spam", [
+      return m.reply(novaWrap("Anti Poll Spam", [
         "Anti Poll Spam DIAKTIFKAN!",
         "",
         "Limit: " + cfg.limit + " poll per " + cfg.window + " menit",
@@ -142,18 +142,18 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.enabled = false;
       await db.save();
       if (pollTracker[groupId]) delete pollTracker[groupId];
-      return m.reply(claraWrap("Anti Poll Spam", "Anti Poll Spam DIMATIKAN.\nKetik .antipollspam on untuk aktifkan lagi."));
+      return m.reply(novaWrap("Anti Poll Spam", "Anti Poll Spam DIMATIKAN.\nKetik .antipollspam on untuk aktifkan lagi."));
     }
 
     // ACTION
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["delete", "warn", "kick"].includes(action)) {
-        return m.reply(claraWrap("Anti Poll Spam", "Pilih: delete, warn, atau kick"));
+        return m.reply(novaWrap("Anti Poll Spam", "Pilih: delete, warn, atau kick"));
       }
       cfg.action = action;
       await db.save();
-      return m.reply(claraWrap("Anti Poll Spam", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
+      return m.reply(novaWrap("Anti Poll Spam", "Action diubah ke: *" + action.toUpperCase() + "*", "success"));
     }
 
     // STATUS
@@ -164,7 +164,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         warnList = warnedUsers.map(([jid, count]) => "@" + jid.split("@")[0] + " (" + count + "x)").join("\n");
       }
 
-      return m.reply(claraWrap("Anti Poll Spam", [
+      return m.reply(novaWrap("Anti Poll Spam", [
         "Status: " + (cfg.enabled ? "*AKTIF*" : "Nonaktif"),
         "Limit: " + cfg.limit + " poll per " + cfg.window + " menit",
         "Action: " + (cfg.action || "delete").toUpperCase(),
@@ -182,11 +182,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       cfg.warns = {};
       await db.save();
       if (pollTracker[groupId]) delete pollTracker[groupId];
-      return m.reply(claraWrap("Anti Poll Spam", "Semua warning direset.", "success"));
+      return m.reply(novaWrap("Anti Poll Spam", "Semua warning direset.", "success"));
     }
 
     // HELP
-    return m.reply( claraWrap("Anti Poll Spam", [
+    return m.reply( novaWrap("Anti Poll Spam", [
       "Blokir spam poll di grup",
       "",
       "Batas jumlah poll yang boleh dibuat per member dalam waktu tertentu",
@@ -205,7 +205,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]), "antipollspam");
   } catch (e) {
     console.error("[Anti Poll Spam]", e);
-    m.reply(claraWrap("Anti Poll Spam", "Error: " + e.message));
+    m.reply(novaWrap("Anti Poll Spam", "Error: " + e.message));
   }
 }
 

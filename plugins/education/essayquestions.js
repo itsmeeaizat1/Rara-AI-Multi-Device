@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "soalessay",
@@ -182,7 +182,7 @@ async function handler(m, { sock, args }) {
     // User is answering current question
     const userAnswer = args.join(" ");
     if (userAnswer.length < 5) {
-      return m.reply(claraWrap("Soalessay", "Jawaban terlalu pendek! Tulis jawabanmu minimal 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
+      return m.reply(novaWrap("Soalessay", "Jawaban terlalu pendek! Tulis jawabanmu minimal 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
     }
 
     const q = session.questions[session.current];
@@ -191,7 +191,7 @@ async function handler(m, { sock, args }) {
     const _regDb = getDatabase();
     if (!_regDb.db.data.eduRegistered || !_regDb.db.data.eduRegistered[sender]) {
       essaySessions.delete(sender);
-      return m.reply(claraWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Essay dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
+      return m.reply(novaWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Essay dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
     }
     const _rateChk = _essayCheckRate(sender);
     if (!_rateChk.allowed) {
@@ -199,9 +199,9 @@ async function handler(m, { sock, args }) {
       if (_w >= 3) {
         essaySessions.delete(sender);
         _essaySpamWarn.delete(sender);
-        return m.reply(claraWrap("Soalessay", "Essay quiz dibatalkan karena spam!\n\nBaca soal dulu, jangan asal jawab.\n\nKetik .essay untuk mulai lagi."));
+        return m.reply(novaWrap("Soalessay", "Essay quiz dibatalkan karena spam!\n\nBaca soal dulu, jangan asal jawab.\n\nKetik .essay untuk mulai lagi."));
       }
-      return m.reply(claraWrap("Info", "\u23f3 Terlalu cepat! Tunggu " + Math.ceil(_rateChk.waitMs / 1000) + " detik.\n\nPeringatan " + _w + "/3 - jangan spam!"));
+      return m.reply(novaWrap("Info", "\u23f3 Terlalu cepat! Tunggu " + Math.ceil(_rateChk.waitMs / 1000) + " detik.\n\nPeringatan " + _w + "/3 - jangan spam!"));
     }
     _essaySpamWarn.delete(sender);
     const check = checkKeywords(userAnswer, q.keywords);
@@ -288,9 +288,9 @@ async function handler(m, { sock, args }) {
   if (jenjang === "stop" || jenjang === "batal" || jenjang === "cancel") {
     if (session) {
       essaySessions.delete(sender);
-      return m.reply(claraWrap("Soalessay", "Quiz essay dibatalkan."));
+      return m.reply(novaWrap("Soalessay", "Quiz essay dibatalkan."));
     }
-    return m.reply(claraWrap("Soalessay", "Tidak ada quiz essay yang sedang berjalan."));
+    return m.reply(novaWrap("Soalessay", "Tidak ada quiz essay yang sedang berjalan."));
   }
 
   // Help / Menu
@@ -328,7 +328,7 @@ async function handler(m, { sock, args }) {
   }
 
   if (jumlah < 1 || jumlah > 10) {
-    return m.reply(claraWrap("Soalessay", "Jumlah soal essay 1-10."));
+    return m.reply(novaWrap("Soalessay", "Jumlah soal essay 1-10."));
   }
   // Check registration
   const _eduDb = getDatabase();
@@ -340,7 +340,7 @@ async function handler(m, { sock, args }) {
     const bank = ESSAY_BANK[jenjang]?.[mapel];
     if (!bank || bank.length === 0) {
       const available = getAvailableSubjects(jenjang);
-      return m.reply(claraWrap("soalessay", `Mapel "${mapel}" tidak ditemukan untuk ${JENJANG_NAMES[jenjang]}!\n\nTersedia: ${available.join(", ")}`));
+      return m.reply(novaWrap("soalessay", `Mapel "${mapel}" tidak ditemukan untuk ${JENJANG_NAMES[jenjang]}!\n\nTersedia: ${available.join(", ")}`));
     }
 
     const shuffled = shuffle(bank);

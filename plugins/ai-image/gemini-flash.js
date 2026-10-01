@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gemini-flash — Edit gambar dengan prompt via Gemini Flash (IkyyXD)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim() || m.args?.join(" ").trim() || "";
 
     if (!text) {
-      return m.reply(claraWrap("Gemini Flash", [
+      return m.reply(novaWrap("Gemini Flash", [
         "Edit gambar dengan prompt via Gemini Flash AI",
         "",
         "CARA PAKAI:",
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     }
 
     if (!imageUrl) {
-      return m.reply(claraWrap("Gemini Flash", "Reply/kirim foto dengan prompt .gemini-flash untuk mengedit gambar."));
+      return m.reply(novaWrap("Gemini Flash", "Reply/kirim foto dengan prompt .gemini-flash untuk mengedit gambar."));
     }
 
     await m.react("🕒");
@@ -67,16 +67,16 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("Gemini Flash", `Prompt: ${text}`),
+        caption: novaWrap("Gemini Flash", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("Gemini Flash", data?.error || data?.message || "Gagal memproses. Coba lagi nanti."));
+      await m.reply(novaWrap("Gemini Flash", data?.error || data?.message || "Gagal memproses. Coba lagi nanti."));
     }
   } catch (e) {
     console.error("[gemini-flash.js]:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("Gemini Flash", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("Gemini Flash", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -3,7 +3,7 @@
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
 const pluginConfig = {
     name: 'dolphin',
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     }
     
     if (!text) {
-        return m.reply(claraWrap("Dolphin", `❌ Masukkan pertanyaan!`))
+        return m.reply(novaWrap("Dolphin", `❌ Masukkan pertanyaan!`))
     }
     try {
     await m.react("🕒");
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
       console.error("[dolphin.js] IkyyXD fallback failed:", ikyyErr.message);
     }
 
-        m.reply(claraWrap("dolphin", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaWrap("dolphin", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

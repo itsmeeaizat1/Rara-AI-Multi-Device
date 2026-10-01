@@ -1,6 +1,6 @@
 // E2E — htmlgames (.htmlsnake/.htmltetris/.htmldino/.htmlpong) + kategori HTML di menu
 // Game HTML dikirim sebagai dokumen .html self-contained — chat WA gak bisa render HTML.
-// GOTCHA: claraWrap = smallcaps → asersi teks WAJIB fromSC.
+// GOTCHA: novaWrap = smallcaps → asersi teks WAJIB fromSC.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

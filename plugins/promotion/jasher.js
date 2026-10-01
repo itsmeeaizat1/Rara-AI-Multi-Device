@@ -34,7 +34,7 @@
 //
 // PREMIUM-ONLY (bukan gratis — revisi owner 29 Sep). Owner & partner tetap
 // lolos (bypass middleware). Akses DM & grup (isGroup + isPrivate true).
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jasher",
@@ -226,7 +226,7 @@ async function broadcast(sock, m, targets, text, media) {
     ...(failList.length ? [`❌ Gagal: ${failList.length} (${failList.map(f => f.name).join(", ")})`] : []),
   ].join("\n");
   // laporan final edit pesan progress terakhir
-  const out = claraWrap("Jasher Promotion", body);
+  const out = novaWrap("Jasher Promotion", body);
   try {
     if (progressKey) await sock.sendMessage(m.chat, { text: out, edit: progressKey });
     else await m.reply(out);
@@ -266,7 +266,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     const wa = targets.filter(t => t.platform === "WA" && t.type === "group").length;
     const tg = targets.filter(t => t.platform === "TG" && t.type === "group").length;
     const ch = targets.filter(t => t.type === "channel").length;
-    const out = claraWrap("Jasher — Daftar Grup & Saluran", [
+    const out = novaWrap("Jasher — Daftar Grup & Saluran", [
       `Total: ${targets.length} target — grup WA ${wa} · grup TG ${tg} · saluran ${ch}`,
       `Aktif: grup ${st.group ? "🟢" : "🔴"} · saluran ${st.channel ? "🟢" : "🔴"} (ubah: ${prefix}jasher set group|channel on|off)`,
       "---",
@@ -285,18 +285,18 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
       const out = st.mins > 0
         ? `Cooldown broadcast: AKTIF (${st.mins} menit).\n${st.active ? `Tunggu ${Math.ceil(st.remainingMs / 60000)} menit lagi buat broadcast berikutnya.` : "Siap dipakai — broadcast terakhir udah lewat jeda."}`
         : `Cooldown broadcast: OFF (default). Set jeda antar broadcast biar gak spam grup: ${prefix}jasher cooldown <menit>`;
-      await m.reply(claraWrap("Jasher — Cooldown", out));
+      await m.reply(novaWrap("Jasher — Cooldown", out));
       return { handled: true };
     }
     if (val === "off" || val === "0") {
       j.jasher.cooldownMinutes = 0;
       await persist();
-      await m.reply(claraWrap("Jasher — Cooldown", `Cooldown broadcast: OFF. Broadcast bisa dilakukan kapan aja.`));
+      await m.reply(novaWrap("Jasher — Cooldown", `Cooldown broadcast: OFF. Broadcast bisa dilakukan kapan aja.`));
       return { handled: true };
     }
     const mins = parseInt(val, 10);
     if (!Number.isFinite(mins) || mins < 1 || mins > 1440) {
-      await m.reply(claraWrap("Jasher — Cooldown", [
+      await m.reply(novaWrap("Jasher — Cooldown", [
         "Nilai cooldown harus 1-1440 menit.",
         `Contoh: ${prefix}jasher cooldown 30 — jeda 30 menit antar broadcast`,
         `Matikan: ${prefix}jasher cooldown off`,
@@ -306,7 +306,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     j.jasher.cooldownMinutes = mins;
     await persist();
     await m.react("⚡");
-    await m.reply(claraWrap("Jasher — Cooldown", `Cooldown broadcast AKTIF: ${mins} menit antar broadcast. Gak bisa kirim .jasher lagi sebelum jeda lewat.`));
+    await m.reply(novaWrap("Jasher — Cooldown", `Cooldown broadcast AKTIF: ${mins} menit antar broadcast. Gak bisa kirim .jasher lagi sebelum jeda lewat.`));
     return { handled: true };
   }
 
@@ -323,18 +323,18 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
         "---",
         `Ubah: ${prefix}jasher set group on|off · ${prefix}jasher set channel on|off`,
       ].join("\n");
-      await m.reply(claraWrap("Jasher — Target", out));
+      await m.reply(novaWrap("Jasher — Target", out));
       return { handled: true };
     }
     if (kind !== "group" && kind !== "channel" && kind !== "grup" && kind !== "saluran") {
-      await m.reply(claraWrap("Jasher — Target", [
+      await m.reply(novaWrap("Jasher — Target", [
         "Tipe target harus: group atau channel.",
         `Contoh: ${prefix}jasher set channel on`,
       ].join("\n")));
       return { handled: true };
     }
     if (val !== "on" && val !== "off") {
-      await m.reply(claraWrap("Jasher — Target", [
+      await m.reply(novaWrap("Jasher — Target", [
         "Nilai harus on atau off.",
         `Contoh: ${prefix}jasher set channel on`,
       ].join("\n")));
@@ -349,7 +349,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     } catch {}
     const label = key === "group" ? "Grup" : "Saluran (WA & Telegram)";
     await m.react("⚡");
-    await m.reply(claraWrap("Jasher — Target", `Target ${label}: ${val === "on" ? "🟢 ON — bakal kekirim .jasher" : "🔴 OFF — dilewati broadcast"}`));
+    await m.reply(novaWrap("Jasher — Target", `Target ${label}: ${val === "on" ? "🟢 ON — bakal kekirim .jasher" : "🔴 OFF — dilewati broadcast"}`));
     return { handled: true };
   }
 
@@ -358,11 +358,11 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     const hist = dbData?.jasher?.history || [];
     if ((args[1] || "").toLowerCase() === "clear") {
       try { dbData.jasher ??= { groups: {} }; dbData.jasher.history = []; await persist(); } catch {}
-      await m.reply(claraWrap("Jasher — Riwayat", "Riwayat broadcast dibersihkan."));
+      await m.reply(novaWrap("Jasher — Riwayat", "Riwayat broadcast dibersihkan."));
       return { handled: true };
     }
     if (!hist.length) {
-      await m.reply(claraWrap("Jasher — Riwayat", [
+      await m.reply(novaWrap("Jasher — Riwayat", [
         "Belum ada riwayat broadcast yang tercatat.",
         `Setiap .jasher yang terkirim otomatis dicatat: siapa pengirim, cuplikan pesan, waktu, jumlah target.`,
       ].join("\n")));
@@ -379,7 +379,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     const rows = [...hist].sort((a, b) => (b?.at || 0) - (a?.at || 0)).slice(0, 10).map((h, i) =>
       `${i + 1}. ${fmtTime(h.at)} WIB · ${shortJid(h.by)}${h.aborted ? " ⛔dibatalkan" : ""}\n   "${h.snippet}" → ${h.ok}/${h.targets} target${h.mode ? ` (${h.mode})` : ""}`
     );
-    const out = claraWrap("Jasher — Riwayat Broadcast", [
+    const out = novaWrap("Jasher — Riwayat Broadcast", [
       `Total tercatat: ${hist.length} (menampilkan ${Math.min(10, hist.length)} terbaru)`,
       "---",
       rows.join("\n"),
@@ -393,16 +393,16 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
     if (running) {
       running.abort = true;
       await m.react("⚡");
-      await m.reply(claraWrap("Jasher", "Sinyal stop diterima — broadcast dibatalkan..."));
+      await m.reply(novaWrap("Jasher", "Sinyal stop diterima — broadcast dibatalkan..."));
     } else {
-      await m.reply(claraWrap("Jasher", "Gak ada broadcast yang lagi jalan."));
+      await m.reply(novaWrap("Jasher", "Gak ada broadcast yang lagi jalan."));
     }
     return { handled: true };
   }
 
   // ── guard broadcast dobel ──
   if (running) {
-    await m.reply(claraWrap("Jasher", [
+    await m.reply(novaWrap("Jasher", [
       `Masih ada broadcast jalan (${running.sent}/${running.targets} grup).`,
       `Tunggu selesai atau ketik ${prefix}jasher stop`,
     ].join("\n")));
@@ -425,7 +425,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
   if (args[0]?.toLowerCase() === "grup" || args[0]?.toLowerCase() === "target") {
     const keywords = (args[1] || "").split(",").map(k => k.trim().toLowerCase()).filter(Boolean);
     if (!keywords.length) {
-      await m.reply(claraWrap("Jasher", [
+      await m.reply(novaWrap("Jasher", [
         "Format target salah.",
         `Contoh: ${prefix}jasher grup warung, olshop | Diskon hari ini!`,
         "Kata kunci = potongan nama grup (bisa beberapa, pisah koma).",
@@ -447,7 +447,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
   }
 
   if (!text && !media) {
-    const out = claraWrap("Jasher", [
+    const out = novaWrap("Jasher", [
       "Broadcast promosi/pengumuman ke semua grup yang bot join (WA + Telegram).",
       "---",
       `📌 Format:`,
@@ -475,7 +475,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
   if (cd.active) {
     const sisa = Math.ceil(cd.remainingMs / 60000);
     await m.react("❌");
-    await m.reply(claraWrap("Jasher", [
+    await m.reply(novaWrap("Jasher", [
       `Cooldown broadcast aktif — tunggu ${sisa} menit lagi.`,
       `Jeda diatur lewat ${prefix}jasher cooldown <menit> (matikan: ${prefix}jasher cooldown off).`,
     ].join("\n")));
@@ -486,14 +486,14 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
   const st = getSettings(dbData);
   let targets = (await collectTargets(sock, dbData)).filter(t => t.type === "channel" ? st.channel : st.group);
   if (!st.group && !st.channel) {
-    await m.reply(claraWrap("Jasher", [
+    await m.reply(novaWrap("Jasher", [
       `Grup & saluran dua-duanya OFF — gak ada target broadcast.`,
       `Nyalakan salah satu: ${prefix}jasher set group on atau ${prefix}jasher set channel on`,
     ].join("\n")));
     return { handled: true };
   }
   if (!targets.length) {
-    await m.reply(claraWrap("Jasher", "Gak ada target aktif — bot belum join grup/saluran yang menyala (cek .jasher list & .jasher set)."));
+    await m.reply(novaWrap("Jasher", "Gak ada target aktif — bot belum join grup/saluran yang menyala (cek .jasher list & .jasher set)."));
     return { handled: true };
   }
   if (targetMode) {
@@ -501,7 +501,7 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
       targetMode.some(k => t.name.toLowerCase().includes(k) || t.jid.includes(k))
     );
     if (!targets.length) {
-      await m.reply(claraWrap("Jasher", `Gak ada grup yang cocok dengan: ${targetMode.join(", ")}`));
+      await m.reply(novaWrap("Jasher", `Gak ada grup yang cocok dengan: ${targetMode.join(", ")}`));
       return { handled: true };
     }
   }

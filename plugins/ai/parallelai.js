@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { parallelAI } from "../../src/scraper/parallelai.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "parallelai",
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!response || !response.trim()) {
-      return await m.reply(claraWrap("Error", ["Parallel AI tidak memberikan respons. Coba lagi nanti."].join("\n")), "parallelai");
+      return await m.reply(novaWrap("Error", ["Parallel AI tidak memberikan respons. Coba lagi nanti."].join("\n")), "parallelai");
     }
 
     // Clean markdown for WhatsApp
@@ -72,7 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
       .trim();
 
     const header = effort !== "low" ? `Parallel AI (effort: ${effort})` : "Parallel AI";
-    const text = claraWrap(header, cleanRes);
+    const text = novaWrap(header, cleanRes);
 
     return await m.reply(text, "parallelai");
   } catch (err) {
@@ -82,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
       : err?.message?.includes("401") || err?.message?.includes("403")
         ? "API key tidak valid atau expired."
         : `Error: ${err?.message || "Terjadi kesalasan"}`;
-    return await m.reply(claraWrap("Error", errMsg));
+    return await m.reply(novaWrap("Error", errMsg));
   }
 }
 

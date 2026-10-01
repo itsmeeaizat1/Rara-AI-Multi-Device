@@ -4,7 +4,7 @@ import os from "os";
 import { exec } from "child_process";
 import FormData from "form-data";
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 import config from "../../config.js";
 
@@ -56,7 +56,7 @@ export default {
 
     if (!aiConfig.apiKey) {
       const text =
-        claraWrap("Slang Translator", [
+        novaWrap("Slang Translator", [
           `Status: *Belum dikonfigurasi*`,
           ``,
           `Bot butuh AI API untuk menerjemahkan slang.`,
@@ -83,7 +83,7 @@ export default {
       const groqKey = config.APIkey?.groq;
       if (!groqKey) {
         const text =
-          claraWrap("Slang Translator", [
+          novaWrap("Slang Translator", [
             `Status: *Groq API belum dikonfigurasi*`,
             ``,
             `Untuk transcribe voice note, bot butuh Groq API key.`,
@@ -105,7 +105,7 @@ export default {
         const buffer = await quoted.download();
         if (!buffer || buffer.length < 1000) {
           await m.react("🐣");
-          await m.reply(claraWrap("Slang Translator", [
+          await m.reply(novaWrap("Slang Translator", [
             `Status: *Gagal*`,
             `Audio terlalu kecil atau gagal diunduh.`,
           ].join("\n")));
@@ -126,7 +126,7 @@ export default {
         try { fs.unlinkSync(wavPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
 
         if (!transcribedText || transcribedText.trim() === "") {
-          await m.reply(claraWrap("Slang Translator", [
+          await m.reply(novaWrap("Slang Translator", [
             `Status: *Gagal transcribe*`,
             `Tidak dapat mendeteksi suara dari voice note.`,
             `Pastikan audio jelas dan tidak terlalu pendek.`,
@@ -137,7 +137,7 @@ export default {
         inputText = transcribedText.trim();
 
         // Kirim info transcribe dulu
-        await m.reply(claraWrap("Transcribe VN", [
+        await m.reply(novaWrap("Transcribe VN", [
           `🎙️ Hasil transcribe:`,
           `"${inputText.length > 200 ? inputText.slice(0, 200) + "..." : inputText}"`,
           ``,
@@ -147,7 +147,7 @@ export default {
         try { fs.unlinkSync(inputPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
         try { fs.unlinkSync(wavPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
         const text =
-          claraWrap("Slang Translator - Error", [
+          novaWrap("Slang Translator - Error", [
             `Status: *Gagal transcribe*`,
             `Alasan: *${error.message}*`,
             ``,
@@ -163,7 +163,7 @@ export default {
         inputText = quoted.text.trim();
       } else {
         const text =
-          claraWrap("Slang Translator", [
+          novaWrap("Slang Translator", [
             `Status: *Format tidak didukung*`,
             ``,
             `Reply *teks* atau *voice note* yang ingin diterjemahkan.`,
@@ -280,7 +280,7 @@ Aturan:
       const sourceLabel = isAudio ? `🎙️ (dari Voice Note)` : "";
 
       const text =
-        claraWrap("Slang Translator", [
+        novaWrap("Slang Translator", [
           `${langFlag} Teks Asli ${sourceLabel}:`,
           `"${displayInput}"`,
           ``,
@@ -308,7 +308,7 @@ Aturan:
       await m.reply(text);
     } catch (error) {
       const text =
-        claraWrap("Slang Translator - Error", [
+        novaWrap("Slang Translator - Error", [
           `Status: *Gagal*`,
           `Alasan: *${error.message}*`,
           ``,

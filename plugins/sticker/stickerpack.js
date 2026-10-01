@@ -7,7 +7,7 @@ import axios from "axios"
 import config from "../../config.js"
 import te from "../../src/lib/nova-error.js"
 import { addExifToWebp } from "../../src/lib/nova-exif.js"
-import { novaError, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js"
+import { novaError, novaWrap, novaCaption } from "../../src/lib/nova-menu-style.js"
 
 function getSharp() { return _sharp }
 
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         // Step 1: Search sticker packs
         const packs = await searchStickerPacks(query)
         if (!packs.length) {
-            return m.reply(claraWrap("stickerpack", `Tidak ada sticker pack untuk: *${query}*`))
+            return m.reply(novaWrap("stickerpack", `Tidak ada sticker pack untuk: *${query}*`))
         }
 
         // Step 2: Pick random pack
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
             })
         } catch (packErr) {
             console.error("[StickerPack] Pack send failed:", packErr.message)
-            await m.reply(claraWrap("stickerpack", "Pack gagal, mengirim satu per satu..."))
+            await m.reply(novaWrap("stickerpack", "Pack gagal, mengirim satu per satu..."))
 
             let sent = 0
             for (const buf of stickerBuffers) {
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
             }
 
             if (sent > 0) {
-                await m.reply(claraWrap("stickerpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
+                await m.reply(novaWrap("stickerpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
             } else {
                 await m.reply(novaGagal("StickerPack"))
             }

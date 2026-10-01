@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("serverinfo", `❌ *akses ditolak*\n\n` +
+        return m.reply(novaWrap("serverinfo", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
         if (available.length > 0) {
             txt += `Server tersedia: *${available.join(', ')}*`
         }
-        return m.reply(claraWrap("serverinfo", txt))
+        return m.reply(novaWrap("serverinfo", txt))
     }
     
     if (!serverId || isNaN(serverId)) {
@@ -131,10 +131,10 @@ async function handler(m, { sock }) {
         txt += `🔌 \`Allocations\`: *${features.allocations}*\n`
         txt += ""
         
-        return m.reply(claraWrap("serverinfo", txt))
+        return m.reply(novaWrap("serverinfo", txt))
         
     } catch (err) {
-        return m.reply(claraWrap("serverinfo", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaWrap("serverinfo", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

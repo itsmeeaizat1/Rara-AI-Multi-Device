@@ -9,7 +9,7 @@ import { Canvas, loadImage, FontLibrary } from "skia-canvas";
 import sharp from "sharp";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 // Register Anton font (Impact-like, free Google Font)
 const FONT_PATH = path.join(process.cwd(), "assets", "fonts", "Anton.ttf");
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
       (m.quoted && (m.quoted.isSticker || m.quoted.type === "stickerMessage"));
 
     if (!isImage && !isSticker) {
-      const help = claraWrap(
+      const help = novaWrap(
         "smemev2",
         [
           "Meme Sticker Lokal (tanpa API)",
@@ -162,7 +162,7 @@ async function handler(m, { sock }) {
     } else if (input.length > 0) {
       topText = input;
     } else {
-      const help = claraWrap(
+      const help = novaWrap(
         "smemev2",
         [
           "Format: .smemev2 top|bottom",

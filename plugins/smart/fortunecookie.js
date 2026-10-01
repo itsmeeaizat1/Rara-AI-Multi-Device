@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fortunecookie",
@@ -109,7 +109,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const zodiac = ZODIAC_TIPS[(seed >> 10) % ZODIAC_TIPS.length];
   const mood = MOOD[(seed >> 3) % MOOD.length];
 
-  await m.reply(claraWrap("Fortune Cookie", [
+  await m.reply(novaWrap("Fortune Cookie", [
     "Tanggal: " + todayDate(),
     "@" + m.sender.split("@")[0],
     "",

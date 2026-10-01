@@ -2,7 +2,7 @@
 // emojimix.js — Gabungkan 2 emoji (oiapi → gstatic CDN, no API key)
 import axios from "axios";
 import config from "../../config.js";
-import { claraWrap, novaError, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaError, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "emojimix",
@@ -61,7 +61,7 @@ async function getEmojimixUrl(emoji1, emoji2) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(claraWrap("emojimix", `Gabungkan 2 emoji menjadi 1 sticker!\n\nContoh: ${m.prefix}emojimix 😎 😂`, "guide"));
+    return m.reply(novaWrap("emojimix", `Gabungkan 2 emoji menjadi 1 sticker!\n\nContoh: ${m.prefix}emojimix 😎 😂`, "guide"));
   }
 
   const emojiRegex = /\p{Extended_Pictographic}/gu;
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
 
     if (!imageUrl) {
       await m.react("❌");
-      return m.reply(claraWrap("emojimix", `Kombinasi ${emoji1} + ${emoji2} tidak tersedia!\n\nCoba kombinasi lain.`, "error"));
+      return m.reply(novaWrap("emojimix", `Kombinasi ${emoji1} + ${emoji2} tidak tersedia!\n\nCoba kombinasi lain.`, "error"));
     }
 
     const res = await axios.get(imageUrl, { responseType: "arraybuffer", timeout: 15000 });
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[EmojiMix]", err);
     await m.react("❌");
-    m.reply(claraWrap("emojimix", "Gagal membuat emoji mix. Coba lagi nanti!", "error"));
+    m.reply(novaWrap("emojimix", "Gagal membuat emoji mix. Coba lagi nanti!", "error"));
   }
 }
 

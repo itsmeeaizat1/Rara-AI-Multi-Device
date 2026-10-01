@@ -2,7 +2,7 @@
 // gptturbov2 — GPT Turbo dari OpenAI
 // API asli (restapii.rioooxdzz) udah mati → sekarang lewat rantai fallback multi-API
 // (nova-ai-fallback.js: Haidar model "gpt4" → Ikyy → Xemoz).
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { aiFallbackChat } from "../../src/lib/nova-ai-fallback.js";
 
@@ -15,7 +15,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
-  if (!text) return m.reply(claraWrap("gptturbov2", `Mau nanya apa?\nContoh: ${m.prefix}gptturbov2 jelaskan blockchain`, "guide"));
+  if (!text) return m.reply(novaWrap("gptturbov2", `Mau nanya apa?\nContoh: ${m.prefix}gptturbov2 jelaskan blockchain`, "guide"));
   try {
     await m.react("🕒");
     const reply = await aiFallbackChat(text, { persona: "GPT Turbo dari OpenAI", model: "gpt4" , sessionKey: "satuan:" + m.sender, quoted: m.quoted?.text, userName: m.pushName});
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("gptturbov2 error:", e.message);
     await m.react("❌");
-    return m.reply(claraWrap("gptturbov2", te(m.prefix, m.command, m.pushName, e), "error"));
+    return m.reply(novaWrap("gptturbov2", te(m.prefix, m.command, m.pushName, e), "error"));
   }
 }
 export { pluginConfig as config, handler };

@@ -2,7 +2,7 @@
 // AI Travel — AI travel planner
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("travelai", `Mau liburan ke mana?\n\nContoh:\n${m.prefix}travelai Bali 3 hari\n${m.prefix}travelai Jogja 2 hari\n${m.prefix}travelai Tokyo 5 hari`, "guide"));
+      return m.reply(novaWrap("travelai", `Mau liburan ke mana?\n\nContoh:\n${m.prefix}travelai Bali 3 hari\n${m.prefix}travelai Jogja 2 hari\n${m.prefix}travelai Tokyo 5 hari`, "guide"));
     }
 
     await m.react("🕒");
@@ -56,7 +56,7 @@ Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("travelai", "AI-nya lagi packing 🧳", "error"));
+      return m.reply(novaWrap("travelai", "AI-nya lagi packing 🧳", "error"));
     }
 
     const lines = result.answer.trim().split("\n");
@@ -104,7 +104,7 @@ Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan
   } catch (err) {
     console.error("travelai error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("travelai", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("travelai", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

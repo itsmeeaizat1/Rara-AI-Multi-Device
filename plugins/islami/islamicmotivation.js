@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "motivasiislam",
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     return await m.reply(txt);
   } catch (error) {
     await m.react("❌");
-    return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti."));
+    return m.reply(novaWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 

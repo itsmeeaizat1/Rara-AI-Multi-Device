@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/ai/deepaixemoz.js
@@ -78,9 +78,9 @@ async function handler(m, { sock }) {
     const key = sessionKey(m);
     if (sessions.has(key)) {
       sessions.delete(key);
-      return m.reply(claraWrap("DeepAI Chat", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
+      return m.reply(novaWrap("DeepAI Chat", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
     }
-    return m.reply(claraWrap("DeepAI Chat", "Tidak ada sesi aktif untuk direset."));
+    return m.reply(novaWrap("DeepAI Chat", "Tidak ada sesi aktif untuk direset."));
   }
   try {
   await m.react("🕒");
@@ -92,9 +92,9 @@ async function handler(m, { sock }) {
       sessions.set(key, result.sessionUuid);
     }
     await m.react("🐣");
-    return m.reply(claraWrap("DeepAI", result.response || "Tidak ada response."));
+    return m.reply(novaWrap("DeepAI", result.response || "Tidak ada response."));
   } catch (error) {
-    return m.reply(claraWrap("DeepAI Error", error.message || "Gagal hubungin AI nih"));
+    return m.reply(novaWrap("DeepAI Error", error.message || "Gagal hubungin AI nih"));
   }
 }
 

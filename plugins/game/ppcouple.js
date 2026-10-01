@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!couple) {
       const text =
-        claraWrap("PP Couple", ["Kamu belum memiliki pasangan!",
+        novaWrap("PP Couple", ["Kamu belum memiliki pasangan!",
           "",
           `Coba: *${prefix}marry @member*`,
           `Atau: *${prefix}couple*`].join("\n")) +
@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("PP Couple", [`Kamu: *${m.pushName || "Player"}*`,
+      novaWrap("PP Couple", [`Kamu: *${m.pushName || "Player"}*`,
         `Pasangan: *${couple.partner || "Unknown"}*`,
         "Status: *married*"].join("\n")) +
       "\n" +

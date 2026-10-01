@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import { novaError, novaEmpty, novaGuide, novaNoInput,   separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+  tipText,  novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "timecapsule",
@@ -29,13 +29,13 @@ const PRESETS = [
 
 function buildMenu(prefix) {
   return (
-    claraWrap("Time Capsule", ["Fitur: *time capsule*",
+    novaWrap("Time Capsule", ["Fitur: *time capsule*",
       "Konsep: *Pesan dikunci, terbuka nanti*",
       "Cooldown: *10 detik*"].join("\n")) +
     "\n" +
-    claraWrap("PresEt Idea", PRESETS) +
+    novaWrap("PresEt Idea", PRESETS) +
     "\n" +
-    claraWrap("Pakai", [`${prefix}timecapsule <hari>|<pesan>`, `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
+    novaWrap("Pakai", [`${prefix}timecapsule <hari>|<pesan>`, `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
     "\n" +
     tipText("Pesan tidak dikirim otomatis; ini simulasi konsep dulu") +
     "\n" +
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!Number.isInteger(days) || days <= 0 || !message) {
       const text =
-        claraWrap("Time Capsule", ["Alasan: *format salah*",
+        novaWrap("Time Capsule", ["Alasan: *format salah*",
           `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}timecapsule untuk melihat menu`);
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
     openDate.setDate(openDate.getDate() + days);
 
     const text =
-      claraWrap("Time Capsule", [`Durasi: *${days} hari*`,
+      novaWrap("Time Capsule", [`Durasi: *${days} hari*`,
         `Terbuka: *${openDate.toLocaleDateString("id-ID")}*`,
         `Pesan: *"${message}"*`].join("\n")) +
       "\n" +

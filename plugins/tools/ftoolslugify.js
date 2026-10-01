@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // .ftoolslugify — teks jadi URL slug (port altftool.com/tools/all/slug-generator)
-import { novaGuideV2, novaSalahV2, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuideV2, novaSalahV2, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ftoolslugify", alias: ["slugify", "slug", "slugteks"], category: "tools",
@@ -42,13 +42,13 @@ async function handler(m, { sock, config: botConfig }) {
       }), "ftoolslugify");
     }
     await m.react("🐣");
-    await m.reply(claraWrap("Slugify", ["SLUGIFY BERHASIL",
+    await m.reply(novaWrap("Slugify", ["SLUGIFY BERHASIL",
       "",
       `Input: ${text.substring(0, 120)}`,
       "Slug: ```" + slug + "```"].join("\n")));
   } catch (e) {
     await m.react("❌");
-    await m.reply(claraWrap("Slugify", ["ERROR: " + (e?.message || e)].join("\n")));
+    await m.reply(novaWrap("Slugify", ["ERROR: " + (e?.message || e)].join("\n")));
   }
   return { handled: true };
 }

@@ -2,7 +2,7 @@
 // alyamind — AlyaMind AI (khusus dari Alya bot)
 import { alyamind } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) {
-      return m.reply(claraWrap("alyamind", `Mau nanya apa ke AlyaMind?\n\nContoh: ${m.prefix}alyamind buatin jadwal belajar\n${m.prefix}alyamind bagaimana cara mengatasi stres?`, "guide"));
+      return m.reply(novaWrap("alyamind", `Mau nanya apa ke AlyaMind?\n\nContoh: ${m.prefix}alyamind buatin jadwal belajar\n${m.prefix}alyamind bagaimana cara mengatasi stres?`, "guide"));
     }
 
     await m.react("🕒");
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.answer) {
       await m.react("❌");
-      return m.reply(claraWrap("alyamind", "AlyaMind lagi offline 🧠", "error"));
+      return m.reply(novaWrap("alyamind", "AlyaMind lagi offline 🧠", "error"));
     }
 
     await m.react("🐣");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("alyamind error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("alyamind", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("alyamind", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

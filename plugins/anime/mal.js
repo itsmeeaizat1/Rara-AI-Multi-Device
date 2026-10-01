@@ -10,7 +10,7 @@
 
 import * as malScraper from "mal-scraper";
 import {
-  novaError, novaCaption, claraWrap, tipText,
+  novaError, novaCaption, novaWrap, tipText,
 } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -93,7 +93,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
         return `${i + 1}. *${judul}*${skor && skor !== "—" ? " — " + skor : ""}`;
       });
       const text =
-        claraWrap(`MyAnimeList`, [
+        novaWrap(`MyAnimeList`, [
           `🎬 Anime Musim *${season.toUpperCase()} ${year}*`,
           "",
           ...rows,
@@ -124,7 +124,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
         return `${i + 1}. *${judul}*${type ? ` (${type}${tahun ? " " + tahun : ""})` : ""}`;
       });
       const text =
-        claraWrap("MyAnimeList", [
+        novaWrap("MyAnimeList", [
           `🔍 Hasil pencarian: *${q}*`,
           "",
           ...rows,
@@ -149,7 +149,7 @@ async function handler(m, { config: botConfig, prefix: cmdPrefix }) {
     }
     const genres = (a.genres || []).map((g) => g?.name || g).filter(Boolean);
     const text =
-      claraWrap("MyAnimeList", [
+      novaWrap("MyAnimeList", [
         `🎌 *${a.title}*`,
         a.japaneseTitle ? `🈶 ${a.japaneseTitle}` : "",
         "",

@@ -7,7 +7,7 @@ function getSharp() {
   return _sharp;
 }
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 async function nerdfonts() {
   try {
     const { data } = await axios.get(
@@ -74,7 +74,7 @@ function formatNumber(num) {
 async function handler(m, { sock }) {
   const query = m.text?.trim()?.toLowerCase();
   if (!query)
-    { const __navText = claraWrap("NERD FONT", `Masukan nama font yang ingin didownload`); return await m.reply(__navText); };
+    { const __navText = novaWrap("NERD FONT", `Masukan nama font yang ingin didownload`); return await m.reply(__navText); };
   try {
     const res = await nerdfonts();
     const data = res.find(
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
 Jika kamu ingin mendownload lagi, ketik ${m.prefix}nerdfont lagi`,
     });
   } catch (err) {
-    return m.reply(claraWrap("nerdfont-ambil", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("nerdfont-ambil", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

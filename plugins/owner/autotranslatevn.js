@@ -2,7 +2,7 @@
 // Auto-Translate Voice Note — Real-time VN detection, transcribe, translate, respond VN
 // Toggle: .toggleautovn on/off  (owner only)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText, separator } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap, tipText, separator } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -35,7 +35,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (args[0] === "on") {
       cfg[gid] = { enabled: false, lang: cfg[gid]?.lang || "id" };
       db.db.write();
-      const text = claraWrap("Auto VN Translate", [
+      const text = novaWrap("Auto VN Translate", [
         "Status: ON",
         "Bahasa target: " + (cfg[gid].lang || "id"),
         "",
@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
-      const text = claraWrap("Auto VN Translate", [
+      const text = novaWrap("Auto VN Translate", [
         "Status: OFF",
         "Auto VN translate dimatikan di chat ini",
       ].join("\n"));
@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
       const lang = args[1] || "id";
       const supported = ["id", "en", "su", "jv", "ar", "ja", "ko", "zh"];
       if (!supported.includes(lang)) {
-        const text = claraWrap("Auto VN Translate", [
+        const text = novaWrap("Auto VN Translate", [
           "Bahasa tidak didukung!",
           "Tersedia: " + supported.join(", "),
         ].join("\n"));
@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
       cfg[gid].enabled = cfg[gid].enabled ?? true;
       db.db.write();
       const langNames = { id: "Indonesia", en: "English", su: "Sunda", jv: "Jawa", ar: "Arab", ja: "Jepang", ko: "Korea", zh: "Mandarin" };
-      const text = claraWrap("Auto VN Translate", [
+      const text = novaWrap("Auto VN Translate", [
         "Bahasa target diubah: " + (langNames[lang] || lang),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
       // Status
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const lang = cfg[gid]?.lang || "id";
-      const text = claraWrap("Auto VN Translate", [
+      const text = novaWrap("Auto VN Translate", [
         "Status: " + status,
         "Bahasa: " + lang,
         "",
@@ -90,7 +90,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "toggleautovn");
     }
   } catch (e) {
-    await m.reply(claraWrap("autotranslatevn", "Gagal proses. Coba lagi.", "error"));
+    await m.reply(novaWrap("autotranslatevn", "Gagal proses. Coba lagi.", "error"));
   }
   return { handled: true };
 }
@@ -187,7 +187,7 @@ export async function handleAutoVnTranslate(m, sock) {
     if (!transcribedText || transcribedText.length < 2) {
       await sock.sendReaction(m.key.remoteJid, "❌", m.key);
       await sock.sendMessage(m.key.remoteJid, {
-        text: claraWrap("Auto VN Translate", [
+        text: novaWrap("Auto VN Translate", [
           "Gagal transcribe voice note",
           "Coba kirim ulang dengan audio lebih jelas",
         ].join("\n")),
@@ -224,7 +224,7 @@ export async function handleAutoVnTranslate(m, sock) {
     }
 
     // Step 3: Send text result
-    const textReply = claraWrap("Auto VN Translate", [
+    const textReply = novaWrap("Auto VN Translate", [
       "Transkripsi: " + transcribedText.slice(0, 500),
       "",
       "Terjemahan (" + targetLangName + "):",

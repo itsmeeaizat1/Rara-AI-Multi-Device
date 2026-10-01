@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "regextest",
@@ -46,12 +46,12 @@ async function handler(m, { sock, config: botConfig }) {
       const afterFlags = text.substring(6).trim();
       const spaceIdx = afterFlags.indexOf(" ");
       if (spaceIdx === -1) {
-        return m.reply(claraWrap("Regex", "Format flags salah!\n💡 *Contoh:* " + prefix + "regex flags gi \\d+ | teks123"));
+        return m.reply(novaWrap("Regex", "Format flags salah!\n💡 *Contoh:* " + prefix + "regex flags gi \\d+ | teks123"));
       }
       flags = afterFlags.substring(0, spaceIdx).trim();
       // Validate flags
       if (!/^[gimsuy]*$/.test(flags)) {
-        return m.reply(claraWrap("Regex", "Flags tidak valid!\nValid: g, i, m, s, u, y"));
+        return m.reply(novaWrap("Regex", "Flags tidak valid!\nValid: g, i, m, s, u, y"));
       }
       input = afterFlags.substring(spaceIdx + 1).trim();
     }
@@ -59,24 +59,24 @@ async function handler(m, { sock, config: botConfig }) {
     // Split by pipe — first part is pattern, rest is text
     const pipeIdx = input.indexOf("|");
     if (pipeIdx === -1) {
-      return m.reply(claraWrap("Regex", "Gunakan | untuk pisahkan pattern dan teks\n💡 *Contoh:* " + prefix + "regex \\d+ | Halo 123"));
+      return m.reply(novaWrap("Regex", "Gunakan | untuk pisahkan pattern dan teks\n💡 *Contoh:* " + prefix + "regex \\d+ | Halo 123"));
     }
 
     const patternStr = input.substring(0, pipeIdx).trim();
     const testText = input.substring(pipeIdx + 1).trim();
 
     if (!patternStr) {
-      return m.reply(claraWrap("Regex", "Pattern tidak boleh kosong!"));
+      return m.reply(novaWrap("Regex", "Pattern tidak boleh kosong!"));
     }
     if (!testText) {
-      return m.reply(claraWrap("Regex", "Teks tidak boleh kosong!"));
+      return m.reply(novaWrap("Regex", "Teks tidak boleh kosong!"));
     }
     // Compile regex
     let regex;
     try {
       regex = new RegExp(patternStr, flags);
     } catch (e) {
-      return m.reply(claraWrap("Regex Error", "Pattern invalid: " + e.message));
+      return m.reply(novaWrap("Regex Error", "Pattern invalid: " + e.message));
     }
 
     // Find all matches
@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (matches.length === 0) {
-      return m.reply(claraWrap("Regex Result", [
+      return m.reply(novaWrap("Regex Result", [
         "Pattern: /" + patternStr + "/" + flags,
         "Teks: " + (testText.length > 60 ? testText.substring(0, 60) + "..." : testText),
         "",
@@ -192,11 +192,11 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("... (output dipotong)");
     }
     await m.react("🐣");
-    return m.reply(claraWrap("Regex Result", lines.join("\n")));
+    return m.reply(novaWrap("Regex Result", lines.join("\n")));
   } catch (e) {
     await m.react("❌");
     console.error("regextest error:", e);
-    return m.reply(claraWrap("Regex", "Error: " + e.message));
+    return m.reply(novaWrap("Regex", "Error: " + e.message));
   }
 }
 

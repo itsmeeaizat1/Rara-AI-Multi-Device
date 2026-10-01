@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaWrap } from '../../src/lib/nova-menu-style.js'
 import { novaGameBox, gameCTA } from '../../src/lib/nova-games.js'
 
 const pluginConfig = {
@@ -65,18 +65,18 @@ async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
       lines.push("d. " + q.d)
       lines.push("")
       lines.push("Ketik: " + usedPrefix + "cintaquiz <a/b/c/d>")
-      return m.reply(claraWrap("Kuis Cinta #1", lines.join("\n")))
+      return m.reply(novaWrap("Kuis Cinta #1", lines.join("\n")))
     }
 
     // Answer question
     const state = userState.get(userId)
     if (!state) {
-      return m.reply(claraWrap("Kuis Cinta", "Belum mulai kuis. Ketik: " + usedPrefix + "cintaquiz mulai"))
+      return m.reply(novaWrap("Kuis Cinta", "Belum mulai kuis. Ketik: " + usedPrefix + "cintaquiz mulai"))
     }
 
     const ans = input.toLowerCase().charAt(0)
     if (!["a", "b", "c", "d"].includes(ans)) {
-      return m.reply(claraWrap("Kuis Cinta", "Jawab dengan a, b, c, atau d saja."))
+      return m.reply(novaWrap("Kuis Cinta", "Jawab dengan a, b, c, atau d saja."))
     }
 
     // Score: a=10, b=8, c=7, d=9 (weighted)
@@ -125,10 +125,10 @@ async function handler(m, { conn, text, args, usedPrefix, command, sender }) {
     lines.push("Ketik: " + usedPrefix + "cintaquiz <a/b/c/d>")
 
     await m.react("🐣");
-    return m.reply(claraWrap("Kuis Cinta #" + (state.qIndex + 1), lines.join("\n")))
+    return m.reply(novaWrap("Kuis Cinta #" + (state.qIndex + 1), lines.join("\n")))
   } catch (e) {
     await m.react("❌");
-    return m.reply(claraWrap("Kuis Cinta", "Error: " + e.message))
+    return m.reply(novaWrap("Kuis Cinta", "Error: " + e.message))
   }
 }
 

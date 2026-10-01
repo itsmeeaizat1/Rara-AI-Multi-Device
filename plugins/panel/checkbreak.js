@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { hasAccessToServer, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
@@ -84,7 +84,7 @@ function handler(m, { sock }) {
     text += `_Owner: gunakan \`${m.prefix}jedacreate\` untuk setting_`;
   }
 
-  return m.reply(claraWrap("cekjeda", text));
+  return m.reply(novaWrap("cekjeda", text));
 }
 
 export { pluginConfig as config, handler }

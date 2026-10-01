@@ -5,7 +5,7 @@
 // yang udah ada; upstream-nya kadang lambat (504) → pesan gagal jujur.
 import axios from "axios";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { imageGeneration } from "../../src/lib/nova-onepunya.js";
 
 const pluginConfig = {
@@ -27,7 +27,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = (m.args || []).join(" ").trim();
   if (!prompt) {
-    return m.reply(claraWrap("Onepunya Image", `Masukkan deskripsi gambar!\n\nContoh: .oneimg kucing oren tidur di kasur awan`));
+    return m.reply(novaWrap("Onepunya Image", `Masukkan deskripsi gambar!\n\nContoh: .oneimg kucing oren tidur di kasur awan`));
   }
   const apiKey = getApiKey("onepunya");
   try {
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     const msg = String(e.message || e);
     const hint = /504|timeout|ETIMEDOUT/i.test(msg) ? "\n\nServer imagenya lagi lambat — coba lagi sebentar lagi." : "";
-    return m.reply(claraWrap("Onepunya Image", `Gagal: ${msg.slice(0, 180)}${hint}`));
+    return m.reply(novaWrap("Onepunya Image", `Gagal: ${msg.slice(0, 180)}${hint}`));
   }
 }
 

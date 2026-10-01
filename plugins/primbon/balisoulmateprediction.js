@@ -2,7 +2,7 @@
 // balisoulmateprediction.js — Ramalan jodoh bali
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { novaWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ramalanjodohbali",
@@ -19,13 +19,13 @@ async function handler(m, { sock }) {
   try {
     await m.react("\U0001F560");
     const text = m.args?.join(" ").trim();
-    if (!text) return m.reply(claraWrap("ramalanjodohbali", "Contoh: .ramalanjodohbali Aizat,7,7,2005", "guide"));
+    if (!text) return m.reply(novaWrap("ramalanjodohbali", "Contoh: .ramalanjodohbali Aizat,7,7,2005", "guide"));
     const [nama, tgl, bln, thn] = text.split(",");
-    if (!nama || !tgl || !bln || !thn) return m.reply(claraWrap("ramalanjodohbali", "Format: nama,tgl,bln,thn", "guide"));
+    if (!nama || !tgl || !bln || !thn) return m.reply(novaWrap("ramalanjodohbali", "Format: nama,tgl,bln,thn", "guide"));
 
     const res = await axios.get(`https://api.siputzx.my.id/api/primbon/ramalan-jodoh-bali?nama=${encodeURIComponent(nama)}&tgl=${tgl}&bln=${bln}&thn=${thn}`, { timeout: 15000 });
     const d = res.data?.data;
-    if (!d) return m.reply(claraWrap("ramalanjodohbali", "Data tidak ditemukan!", "error"));
+    if (!d) return m.reply(novaWrap("ramalanjodohbali", "Data tidak ditemukan!", "error"));
 
     let _lines = [];
     Object.entries(d).forEach(([k, v]) => {
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("ramalanjodohbali error:", err);
     await m.react("\u274C");
-    return m.reply(claraWrap("ramalanjodohbali", te(m.prefix, m.command, m.pushName), "error"));
+    return m.reply(novaWrap("ramalanjodohbali", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 export { pluginConfig as config, handler };

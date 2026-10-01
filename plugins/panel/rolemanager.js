@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaWrap } from "../../src/lib/nova-menu-style.js";
 import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
 import { addRole, removeRole, listByRole, canManageRole, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 const ROLES = ['owner', 'ceo', 'reseller']
@@ -124,7 +124,7 @@ function parsePanelAdd(m) {
 function handler(m, { sock }) {
     const parsed = parsePanelAdd(m) || parseCommand(m.command, m.args)
     if (!parsed) {
-        return m.reply(claraWrap("rolemanager", `❌ Command tidak valid.`))
+        return m.reply(novaWrap("rolemanager", `❌ Command tidak valid.`))
     }
     
     const { action, role, server } = parsed
@@ -134,7 +134,7 @@ function handler(m, { sock }) {
     if (action === 'list') {
         const list = listByRole(server, role)
         if (list.length === 0) {
-            return m.reply(claraWrap("rolemanager", `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\nBelum ada ${role} terdaftar.`))
+            return m.reply(novaWrap("rolemanager", `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\nBelum ada ${role} terdaftar.`))
         }
         
         let txt = `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\n`
@@ -143,12 +143,12 @@ function handler(m, { sock }) {
             txt += `${i + 1}. \`${num}\`\n`
         })
         txt += `\n_Role: ${roleLabel} | Server: ${serverLabel}_`
-        return m.reply(claraWrap("rolemanager", txt))
+        return m.reply(novaWrap("rolemanager", txt))
     }
     
     if (!canManageRole(m.sender, server, role, m.isOwner)) {
         const userRole = getUserRole(m.sender, server)
-        return m.reply(claraWrap("rolemanager", `❌ *akses ditolak*\n\n` +
+        return m.reply(novaWrap("rolemanager", `❌ *akses ditolak*\n\n` +
             `Kamu tidak bisa mengelola *${roleLabel}* di *${serverLabel}*\n` +
             `Role kamu: *${userRole ? capitalize(userRole) : 'Tidak ada'}*\n\n` +
             `Hirarki: Owner > CEO > Reseller`))
@@ -180,7 +180,7 @@ function handler(m, { sock }) {
     if (action === 'add') {
         const result = addRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *gagal*\n\n${result.error}`))
+            return m.reply(novaWrap("rolemanager", `❌ *gagal*\n\n${result.error}`))
         }
         return m.reply(`✅ *${roleLabel.toUpperCase()} Ditambahkan*\n\n` +
             "" +
@@ -194,7 +194,7 @@ function handler(m, { sock }) {
     if (action === 'del') {
         const result = removeRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *gagal*\n\n${result.error}`))
+            return m.reply(novaWrap("rolemanager", `❌ *gagal*\n\n${result.error}`))
         }
         return m.reply(`✅ *${roleLabel.toUpperCase()} Dihapus*\n\n` +
             `Nomor: \`${targetUser}\`\n` +

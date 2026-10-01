@@ -2,7 +2,7 @@
 import { load } from 'cheerio'
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "murrotal",
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply(claraWrap("murrotal", [
+    return m.reply(novaWrap("murrotal", [
       "Murottal Al-Quran audio per surah.",
       "",
       `📌 Format: ${m.prefix}murrotal <nama surah>`,
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
 
     if (!find || !find.audio) {
       await m.react("❌");
-      return m.reply(claraWrap("murrotal", `❌ Surah *${query}* tidak ditemukan`));
+      return m.reply(novaWrap("murrotal", `❌ Surah *${query}* tidak ditemukan`));
     }
     await m.react("🐣");
     await sock.sendMedia(m.chat, find.audio, null, m, {
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     });
   } catch (e) {
     await m.react("❌");
-    m.reply(claraWrap("murrotal", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaWrap("murrotal", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaWrap, novaLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekprem',
     alias: ["cekprem"],
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     const isConfigOwner = config.isOwner(targetNumber)
 
     if (!premData && !isConfigPrem && !isConfigOwner) {
-        return m.reply(claraWrap("Cekprem", `❌ @${targetNumber} bukan premium`))
+        return m.reply(novaWrap("Cekprem", `❌ @${targetNumber} bukan premium`))
     }
 
     const user = db.getUser(jid)
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
         lines.push(`Level: ${user.level ?? 1}`)
     }
 
-    await m.reply(claraWrap("Cek Premium", lines), { mentions: [jid] });
+    await m.reply(novaWrap("Cek Premium", lines), { mentions: [jid] });
 }
 
 export { pluginConfig as config, handler }

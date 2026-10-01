@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
 
   // === HELP ===
   if (!action || action === "help" || action === "bantuan") {
-    return m.reply( claraWrap("Auto Status View", [
+    return m.reply( novaWrap("Auto Status View", [
       "Auto view (read) & react status/story WA",
       "",
       "Perintah:",
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
 
   // === STATUS ===
   if (action === "status" || action === "info") {
-    return m.reply(claraWrap("Auto Status View", [
+    return m.reply(novaWrap("Auto Status View", [
       `Read: ${settings.read.enabled ? "AKTIF" : "MATI"}`,
       `React: ${settings.react.enabled ? "AKTIF" : "MATI"}`,
       `Emoji: ${settings.react.emoji}`,
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
       // Also update old key for backward compat with connection.js
       db.setting("autoReadSW", { enabled: true });
       db.save();
-      return m.reply(claraWrap("Auto Status View", "Auto read story diaktifkan!", "success"));
+      return m.reply(novaWrap("Auto Status View", "Auto read story diaktifkan!", "success"));
     }
     if (sub === "off") {
       settings.read.enabled = false;
@@ -91,9 +91,9 @@ async function handler(m, { sock }) {
       db.save();
       db.setting("autoReadSW", { enabled: false });
       db.save();
-      return m.reply(claraWrap("Auto Status View", "Auto read story dimatikan!", "info"));
+      return m.reply(novaWrap("Auto Status View", "Auto read story dimatikan!", "info"));
     }
-    return m.reply(claraWrap("Auto Status View", "Gunakan: .autostatusview read on/off", "warn"));
+    return m.reply(novaWrap("Auto Status View", "Gunakan: .autostatusview read on/off", "warn"));
   }
 
   // === REACT ON/OFF [emoji] ===
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       db.save();
       db.setting("autoReactSW", { enabled: true, emoji });
       db.save();
-      return m.reply(claraWrap("Auto Status View", [
+      return m.reply(novaWrap("Auto Status View", [
         "Auto react story diaktifkan!",
         `Emoji: ${emoji}`,
       ], "success"));
@@ -118,23 +118,23 @@ async function handler(m, { sock }) {
       db.save();
       db.setting("autoReactSW", { enabled: false, emoji: settings.react.emoji });
       db.save();
-      return m.reply(claraWrap("Auto Status View", "Auto react story dimatikan!", "info"));
+      return m.reply(novaWrap("Auto Status View", "Auto react story dimatikan!", "info"));
     }
-    return m.reply(claraWrap("Auto Status View", "Gunakan: .autostatusview react on/off [emoji]", "warn"));
+    return m.reply(novaWrap("Auto Status View", "Gunakan: .autostatusview react on/off [emoji]", "warn"));
   }
 
   // === EMOJI ===
   if (action === "emoji") {
     const emoji = args[1];
     if (!emoji) {
-      return m.reply(claraWrap("Auto Status View", `Emoji saat ini: ${settings.react.emoji}\nUbah: .autostatusview emoji 😍`, "warn"));
+      return m.reply(novaWrap("Auto Status View", `Emoji saat ini: ${settings.react.emoji}\nUbah: .autostatusview emoji 😍`, "warn"));
     }
     settings.react.emoji = emoji;
     db.setting("autoStatusView", settings);
     db.save();
     db.setting("autoReactSW", { enabled: settings.react.enabled, emoji });
     db.save();
-    return m.reply(claraWrap("Auto Status View", `Emoji react diatur ke ${emoji}`, "success"));
+    return m.reply(novaWrap("Auto Status View", `Emoji react diatur ke ${emoji}`, "success"));
   }
 
   // === ALL ON/OFF ===
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
       db.setting("autoReadSW", { enabled: true });
       db.setting("autoReactSW", { enabled: true, emoji: settings.react.emoji });
       db.save();
-      return m.reply(claraWrap("Auto Status View", [
+      return m.reply(novaWrap("Auto Status View", [
         "Auto read + react diaktifkan!",
         `Emoji: ${settings.react.emoji}`,
       ], "success"));
@@ -161,9 +161,9 @@ async function handler(m, { sock }) {
       db.setting("autoReadSW", { enabled: false });
       db.setting("autoReactSW", { enabled: false, emoji: settings.react.emoji });
       db.save();
-      return m.reply(claraWrap("Auto Status View", "Auto read + react dimatikan!", "info"));
+      return m.reply(novaWrap("Auto Status View", "Auto read + react dimatikan!", "info"));
     }
-    return m.reply(claraWrap("Auto Status View", "Gunakan: .autostatusview all on/off", "warn"));
+    return m.reply(novaWrap("Auto Status View", "Gunakan: .autostatusview all on/off", "warn"));
   }
 
   // === Legacy on/off ===
@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
     db.setting("autoReadSW", { enabled: true });
     db.setting("autoReactSW", { enabled: true, emoji: settings.react.emoji });
     db.save();
-    return m.reply(claraWrap("Auto Status View", [
+    return m.reply(novaWrap("Auto Status View", [
       "Auto read + react diaktifkan!",
       `Emoji: ${settings.react.emoji}`,
       "Untuk kontrol individual: .autostatusview help",
@@ -190,10 +190,10 @@ async function handler(m, { sock }) {
     db.setting("autoReadSW", { enabled: false });
     db.setting("autoReactSW", { enabled: false, emoji: settings.react.emoji });
     db.save();
-    return m.reply(claraWrap("Auto Status View", "Auto read + react dimatikan!", "info"));
+    return m.reply(novaWrap("Auto Status View", "Auto read + react dimatikan!", "info"));
   }
 
-  return m.reply(claraWrap("Auto Status View", `Perintah tidak dikenal: ${action}\nKetik .autostatusview help`, "warn"));
+  return m.reply(novaWrap("Auto Status View", `Perintah tidak dikenal: ${action}\nKetik .autostatusview help`, "warn"));
 }
 
 export { pluginConfig as config, handler };

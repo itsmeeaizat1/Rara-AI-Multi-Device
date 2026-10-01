@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, novaWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Reaction", [`Emoji: *${emoji}*`,
+      novaWrap("Reaction", [`Emoji: *${emoji}*`,
         "Status: *terkirim*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}reaction <emoji> untuk reaksi lain`) +

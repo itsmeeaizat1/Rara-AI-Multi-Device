@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wordle",
@@ -143,16 +143,16 @@ async function handler(m, { sock, db, config: botConfig }) {
     const guess = (args[2] || "").toLowerCase().trim();
 
     if (udata.solved) {
-      await m.reply(claraWrap("Wordle", "Kamu sudah menang hari ini! Jawaban: " + dailyWord + "\nStreak: " + udata.streak + "\nMain lagi besok!"));
+      await m.reply(novaWrap("Wordle", "Kamu sudah menang hari ini! Jawaban: " + dailyWord + "\nStreak: " + udata.streak + "\nMain lagi besok!"));
       return { handled: true };
     }
     if (udata.failed) {
-      await m.reply(claraWrap("Wordle", "Kamu sudah kalah hari ini. Jawaban: " + dailyWord + "\nMain lagi besok!"));
+      await m.reply(novaWrap("Wordle", "Kamu sudah kalah hari ini. Jawaban: " + dailyWord + "\nMain lagi besok!"));
       return { handled: true };
     }
     if (!guess) {
       const board = udata.attempts.length === 0 ? "(belum ada tebakan)" : udata.attempts.map((a, i) => (i + 1) + ". " + formatGuess(a.result)).join("\n");
-      await m.reply(claraWrap("Wordle " + today, [
+      await m.reply(novaWrap("Wordle " + today, [
         "Tebak kata 5 huruf! (" + udata.attempts.length + "/" + MAX_ATTEMPTS + ")",
         "",
         board,
@@ -164,12 +164,12 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
 
     if (guess.length !== 5) {
-      await m.reply(claraWrap("Wordle", "Kata harus 5 huruf!"));
+      await m.reply(novaWrap("Wordle", "Kata harus 5 huruf!"));
       return { handled: true };
     }
 
     if (!/^[a-z]+$/.test(guess)) {
-      await m.reply(claraWrap("Wordle", "Hanya huruf a-z!"));
+      await m.reply(novaWrap("Wordle", "Hanya huruf a-z!"));
       return { handled: true };
     }
 
@@ -187,7 +187,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const attemptsUsed = udata.attempts.length;
       const score = (MAX_ATTEMPTS - attemptsUsed + 1) * 10;
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("Wordle - MENANG!", [
+      await m.reply(novaWrap("Wordle - MENANG!", [
         "@" + m.sender.split("@")[0],
         "",
         board,
@@ -202,7 +202,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       udata.streak = 0;
       udata.lastPlayed = today;
       saveConfig(db, gid, cfg);
-      await m.reply(claraWrap("Wordle - KALAH", [
+      await m.reply(novaWrap("Wordle - KALAH", [
         "@" + m.sender.split("@")[0],
         "",
         board,
@@ -212,7 +212,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         "Coba lagi besok!",
       ].join("\n")), { mentions: [m.sender] });
     } else {
-      await m.reply(claraWrap("Wordle " + today, [
+      await m.reply(novaWrap("Wordle " + today, [
         "@" + m.sender.split("@")[0] + " (" + udata.attempts.length + "/" + MAX_ATTEMPTS + ")",
         "",
         board,
@@ -226,7 +226,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "streak" || sub === "streak") {
-    await m.reply(claraWrap("Wordle Streak", [
+    await m.reply(novaWrap("Wordle Streak", [
       "@" + m.sender.split("@")[0],
       "Streak: " + (udata.streak || 0) + " hari",
       "Last played: " + (udata.lastPlayed || "belum"),
@@ -241,25 +241,25 @@ async function handler(m, { sock, db, config: botConfig }) {
       .sort((a, b) => b[1].streak - a[1].streak)
       .slice(0, 10);
     if (sorted.length === 0) {
-      await m.reply(claraWrap("Wordle", "Belum ada pemenang hari ini."));
+      await m.reply(novaWrap("Wordle", "Belum ada pemenang hari ini."));
       return { handled: true };
     }
     const list = sorted.map(([jid, u], i) => (i + 1) + ". @" + jid.split("@")[0] + " - Streak: " + u.streak + " (" + u.attempts.length + " tebakan)").join("\n");
-    await m.reply(claraWrap("Wordle Leaderboard " + today, "Pemenang hari ini:\n" + list), { mentions: sorted.map(([jid]) => jid) });
+    await m.reply(novaWrap("Wordle Leaderboard " + today, "Pemenang hari ini:\n" + list), { mentions: sorted.map(([jid]) => jid) });
     return { handled: true };
   }
 
   if (sub === "hint" || sub === "petunjuk") {
     if (udata.solved || udata.failed) {
-      await m.reply(claraWrap("Wordle", "Game sudah selesai hari ini."));
+      await m.reply(novaWrap("Wordle", "Game sudah selesai hari ini."));
       return { handled: true };
     }
     const pos = Math.floor(Math.random() * 5);
-    await m.reply(claraWrap("Wordle Hint", "Huruf posisi " + (pos + 1) + " adalah: " + dailyWord[pos].toUpperCase()));
+    await m.reply(novaWrap("Wordle Hint", "Huruf posisi " + (pos + 1) + " adalah: " + dailyWord[pos].toUpperCase()));
     return { handled: true };
   }
 
-  await m.reply(claraWrap("Wordle", [
+  await m.reply(novaWrap("Wordle", [
     "WORDLE HARIAN",
     "",
     prefix + "wordle <kata5huruf> - tebak kata",
