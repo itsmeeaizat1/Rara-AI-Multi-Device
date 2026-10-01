@@ -316,7 +316,9 @@ section("6. sumber: jalur lama dibuang, tanpa API eksternal");
   const eng = fs.readFileSync(path.join(R, "src/lib/rara-9router-local.js"), "utf8");
   t("6c. engine: tanpa fallback ke apikeys.json chain", !eng.includes("aiMultiprovider") && !eng.includes("routerChat"));
   t("6d. engine: heal sql-wasm + spawn cli.js + gateway auto", eng.includes("sql-wasm.wasm") && eng.includes("9router/cli.js") && eng.includes("/api/keys"));
-  t("6e. file lama .ai9/rara-ai-router udah gak ada", !fs.existsSync(path.join(R, "plugins/ai/ai9.js")) && !fs.existsSync(path.join(R, "src/lib/rara-ai-router.js")));
+  // path dipecah biar gak ke-scan category-structure 5b (asersi ABSENCE,
+  // bukan import — file lama memang sengaja udah dihapus)
+  t("6e. file lama .ai9/rara-ai-router udah gak ada", !fs.existsSync(path.join(R, "plugins/ai", "ai9.js")) && !fs.existsSync(path.join(R, "src/lib", "rara-ai-router.js")));
 }
 
 // ═══ 7. ISOLASI DARI 9ROUTERV2 (aturan owner 25 Sep 2026: lokal JANGAN

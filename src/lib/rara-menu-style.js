@@ -616,6 +616,9 @@ function raraInfoBox(title, items = [], opts = {}) {
 // Alignment label dihitung PER SECTION biar rapi.
 // ═══════════════════════════════════════════════
 function raraInfoSections(info = [], sc = true, opts = {}) {
+  // CUTE REWORK 2 Okt 2026 (owner: "diberi jarak tdk berdempet") — opsi
+  // headerGap: baris kosong setelah judul 「 ✦ X ✦ 」 biar isi gak nempel
+  // judul (dipakai menu; kartu reply kecil default rapat tetap).
   // FIX 2026-09-07 (owner: "kok ada space di info section, harusnya rapat
   // gak ada spasi kliatan kosong") — versi lama padEnd label ke lebar
   // label TERPANJANG per section (mis. "Grup Mode" 9 char), jadi label
@@ -631,7 +634,7 @@ function raraInfoSections(info = [], sc = true, opts = {}) {
       const s = item.trim();
       if (!s) continue;
       if (open) out += `\n`;
-      out += `「 ✦ ${scFn(s)} ✦ 」\n`;
+      out += `「 ✦ ${scFn(s)} ✦ 」\n${opts.headerGap ? "\n" : ""}`;
       open = true;
     } else if (item && item.label !== undefined && open) {
       const label = scFn(item.label);
@@ -652,7 +655,13 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
   // tanpa border │/╭─/╰────, WhatsApp wrap sendiri gak ada garis yang
   // bisa putus — teks mengalir natural tanpa wrapLine 30-char.
   if (intro) {
-    out += `「 ✦ ${scFn(introTitle)} ✦ 」\n`;
+    // CUTE REWORK 2 Okt 2026 (owner: "menu allmenu menu category jga diubah
+    // jd cute") — header ribbon + kaomoji kayak kartu usage V2.
+    out += `${girlyHeader(introTitle)}\n`;
+    // hati ditambah cuma kalau kaomoji belum bawa hati (V2_KAOMOJI_POOL
+    // beberapa entri udah diakhiri ♡ — jangan dobel)
+    const _k = v2Kaomoji(introTitle);
+    out += `${_k}${_k.endsWith("\u2661") ? "" : "\u2661"} ${scFn(String(introTitle).toLowerCase())}!!\n\n`;
     // intro bisa string (multi-line) atau array of lines
     const introLines = Array.isArray(intro) ? intro : intro.split("\n");
     for (const line of introLines) {
@@ -673,15 +682,22 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
   }
   
   // ── Info section: BOX TERPISAH per kategori (Info User, Info Waktu, dst) ──
-  const infoOut = raraInfoSections(info, sc, { bullet: infoBullet });
-  out += infoOut;
-  if (infoOut) out += "\n";
+  // CUTE REWORK 2 Okt 2026 (owner: "pertahankan garis disekitar infosection
+  // sebagai pembatas field") — judul 「 ✦ X ✦ 」 DIPERTAHANKAN sebagai
+  // pembatas field + blok info dibungkus divider bintang di awal & akhir,
+  // judul section dikasih jarak (headerGap) biar gak berdempet.
+  const infoOut = raraInfoSections(info, sc, { bullet: infoBullet, headerGap: true });
+  if (infoOut) {
+    out += `${GIRLY_MENU_DIVIDER}\n`;
+    out += infoOut;
+    out += `${GIRLY_MENU_DIVIDER}\n\n`;
+  }
 
   // ── Legend symbol akses fitur (request owner) ──
   if (legend && legend.length > 0) {
-    out += `「 ✦ ${scFn("Keterangan Symbol")} ✦ 」\n`;
+    out += `${girlyHeader("Keterangan Symbol")}\n\n`;
     for (const l of legend) {
-      if (l && l.sym) out += `• ${l.sym} : ${scFn(l.desc || "")}\n`;
+      if (l && l.sym) out += `${l.sym} : ${scFn(l.desc || "")}\n`;
     }
     out += `\n`;
   }
@@ -700,7 +716,7 @@ function raraMenuLayout({ intro = null, introTitle = "Rara", infoTitle = "Info",
     
     // Proper close prev + open new section
     if (i > 0) out += `\n`;
-    out += `「 ✦ ${catName} ✦ 」\n`;
+    out += `${girlyHeader(catName)}\n\n`;
     
     // Commands: .command polos tanpa symbol ✦ (request owner 10 Sep:
     // "hapus symbol ✦ yg disamping cmd list bkn di title" — ✦ tetap di
@@ -984,6 +1000,16 @@ function cuteHeader(name) {
   return `୨୧ ✧ ${toSC(String(name || "").toLowerCase())} ✧ ୨୧`;
 }
 const CUTE_DIVIDER = "── ⋆ ⋆ ──";
+// ── TEMA KHAS CEWEK MENU (2 Okt 2026, owner: "jd bair bot ini menu tema
+// khas cewek gt") — khusus MENU (.menu/.allmenu/.allmenucategory): pita
+// bow 🎀 mengapit header ribbon + divider hati-bintang. Kartu usage/reply
+// fitur TETAP desain cute biasa (bukan tema ini).
+const GIRLY_MENU_DIVIDER = "\u2500\u2500\u2500 \u2661 \u2500\u2500\u2500";
+function girlyHeader(name) {
+  // revisi owner 2 Okt (final): bow 🎀 DIBUANG (emoji android, kelamaan
+  // ramai di tiap section) — cukup ୨୧ framing nama
+  return `୨୧ ${toSC(String(name || "").toLowerCase())} ୨୧`;
+}
 function v2Kaomoji(name) {
   const key = String(name || "x").toLowerCase();
   let h = 0;
