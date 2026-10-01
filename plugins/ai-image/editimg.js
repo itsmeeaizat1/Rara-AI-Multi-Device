@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // editimg — Edit gambar dengan AI (text-to-image editing)
 import { Img2Img } from "../../src/scraper/img2img.js";
 import { live3d } from "../../src/scraper/seaart.js";

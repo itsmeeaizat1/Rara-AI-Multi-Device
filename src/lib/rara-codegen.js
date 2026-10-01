@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/rara-codegen.js — generator kode LENGKAP buat agent (.aisuperagent
 // tool code/createfile + .raraagent createfile).
 // Request owner 12 Sep 2026: "knp agent klo disuruh buat kode (login web

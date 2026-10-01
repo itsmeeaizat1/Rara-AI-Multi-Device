@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-automation-hub.js — Central Automation Engine
 // Integrasi: servermonitor + crashguard + smartdigest + autoforward + automod
 // Run loop tiap 60 detik untuk cek semua sistem

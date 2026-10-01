@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // grupdashboard — Ringkasan aktivitas grup
 // 12 Sep 2026 fix: rewrite total — dulu baca db.data.groupActivity yang GAK
 // PERNAH ditulis (mati) + signature legacy (isGroupOnly, conn/usedPrefix, db.save())

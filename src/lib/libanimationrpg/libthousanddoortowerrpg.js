@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libthousanddoortowerrpg.js — LIB ANIMASI EMOJI-GRID khusus Thousand Door Tower / menara
 // (upgrade owner 28 Sep 2026: cutscene 3 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD tema+lantai · adegan tema (emoji tema + menara 🏰) · gerbang (gembok + slot kepingan 🧩) · status aksi.

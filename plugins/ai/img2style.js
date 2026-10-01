@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // img2style — foto → 80+ GAYA (Haidar img2style) — Studio Ghibli, Disney,
 // Pixar, Demon Slayer, Genshin-Like, Minecraft, Lego, Van Gogh, Manga, dll.
 // Fallback: KuroNeko toonmix (free prompt). Key: apikeys.json haidar.

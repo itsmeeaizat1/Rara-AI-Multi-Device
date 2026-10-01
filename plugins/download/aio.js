@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aio — All in one downloader
 // Primary: IkyyXD all-in-one | Fallback: builtin aiodl scraper
 import { ikyyAio } from "../../src/scraper/ikyydl.js";

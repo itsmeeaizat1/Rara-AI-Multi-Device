@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // nexray-dl.js — Scraper AIO downloader api.nexray.web.id (porting fitur
 // .aio script JPM APENBOTZ ke Rara sebagai .aio2, 21 Sep 2026).
 // Endpoint GET (redirect 301 otomatis diikuti axios):

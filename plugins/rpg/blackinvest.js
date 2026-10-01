@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // blackinvest.js — Investasi black market (high risk)
 import { ensureRpg, addGold, removeGold, checkCooldown, setCooldown, formatTime } from "../../src/lib/rara-rpg-service.js";
 import { reactCooldown } from "../../src/lib/rara-menu-style.js";

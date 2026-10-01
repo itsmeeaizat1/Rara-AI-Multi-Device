@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Berdagang — Trade goods between villages for profit
 // Rombak khas 9 Sep 2026 (batch #3 antrean animasi per-game):
 // - Animasi bentuk baru RUTE KARAVAN (🐪 merangkak di garis jarak)

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // 9router.js — 9ROUTER LOKAL NATIVE (rename owner 25 Sep: cmd .9router, bukan .ai9)
 //
 // Seakan-akan bot sudah menginstal & menjalankan 9router BENERAN di Node.js:

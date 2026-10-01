@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // setsewa.js — Owner: ubah harga sewa bot & premium LIVE dari WhatsApp
 // Harga persist di DB (settings.sewaOverrides), menimpa default
 // src/lib/sewa/sewa.js tanpa edit file / restart.

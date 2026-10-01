@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // panelmenu.js — Menu panel Pterodactyl (dipindah dari .cpanel yang kini jadi pusat kontrol)
 import config from '../../config.js'
 import { raraWrap } from "../../src/lib/rara-menu-style.js"

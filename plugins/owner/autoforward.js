@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // autoforward.js — Auto-forward pesan berdasarkan keyword ke PM owner
 // Integrated with automation hub (checkAutoForward hook)
 import { getDatabase } from '../../src/lib/rara-database.js'

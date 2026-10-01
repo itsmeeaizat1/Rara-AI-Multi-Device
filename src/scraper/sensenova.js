@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // sensenova.js — SenseNova AI (SenseTime) — OpenAI-compatible
 // Endpoint: https://token.sensenova.ai/v1/chat/completions
 // Key: apikeys.json raraai.sensenova (fallback env SENSENOVA_API_KEY)

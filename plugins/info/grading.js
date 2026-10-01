@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // grading.js — Beri penilaian bot (rating bintang) via popup tombol
 // Request owner 19 Sep 2026: "di tmbol menu support tmbah menu beri penilaian
 // pas diklik pilihan puas kyk bot org ini" — row "Beri Penilaian" ada di

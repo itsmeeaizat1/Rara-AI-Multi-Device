@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // onehentai.js — Onepunya API: HENTAI_SEARCH + HENTAI_EPISODE + HENTAI_DOWNLOAD (nhentai).
 // .hentaisearch <q>   — cari doujin di nhentai (list judul + id)
 // .hentaiep <url>     — ambil info episode/doujin dari link nhentai

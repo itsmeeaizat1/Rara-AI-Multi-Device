@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .memwatch — kontrol memory watchdog bot (OWNER ONLY, default OFF).
 // Watchdog = fitur yang matiin bot (process.exit) kalau RAM kepake
 // kelewat batas — bagus buat panen memory leak, TAPI ganggu .remini

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // nikparser2.js — NIK Parser v2 (siputzx API)
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

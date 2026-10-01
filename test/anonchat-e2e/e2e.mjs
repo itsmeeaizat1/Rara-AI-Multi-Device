@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: CHAT ANONIM ANTAR MEMBER + GUARD LINK
+// RARA AI - MULTI DEVICE — E2E: CHAT ANONIM ANTAR MEMBER + GUARD LINK
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

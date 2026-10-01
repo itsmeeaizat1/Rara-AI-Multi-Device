@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { LRUCache } from 'lru-cache'
 const userCache = new LRUCache({ max: 500, ttl: 1000 * 60 * 5 })
 const groupCache = new LRUCache({ max: 200, ttl: 1000 * 60 * 5 })

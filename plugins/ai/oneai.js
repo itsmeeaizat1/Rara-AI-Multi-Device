@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // oneai.js — Onepunya API: AI_CHAT_GENERATION + MULTIMODAL_CHAT.
 // .onechat [model] <teks>   — chat AI (model: chatgpt gemini qwen chat; default chatgpt)
 // .onechat <reply foto> <teks> — foto dijawab (vision via multimodal)

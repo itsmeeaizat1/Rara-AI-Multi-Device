@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import {
   downloadContentFromMessage,
   getContentType,
@@ -746,7 +746,7 @@ async function serialize(sock, msg, store = {}) {
   m.to = m.chat;
   m.botNumber = decodeJid(sock.user?.id)?.replace(/@.+/g, "") || "";
   m.botJid = decodeJid(sock.user?.id) || "";
-  m.botName = sock.user?.name || config.bot?.name || "Rara AI Whatsapp Bot";
+  m.botName = sock.user?.name || config.bot?.name || "Rara AI - Multi Device";
   m.messageId = m.id;
   m.chatId = m.chat;
   m.senderId = m.sender;
@@ -924,7 +924,7 @@ async function serialize(sock, msg, store = {}) {
                 mentionedJid: options?.mentions || [m?.sender] || [],
                 isForwarded: false,
                 externalAdReply: {
-                  title: config.bot?.name || "Rara AI Whatsapp Bot",
+                  title: config.bot?.name || "Rara AI - Multi Device",
                   body: weatherAddr || config.bot?.version || "",
                   thumbnail: __novaThumbField || undefined,
                   previewType: "PHOTO",

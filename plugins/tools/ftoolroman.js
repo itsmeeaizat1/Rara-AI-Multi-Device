@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolroman — konversi angka Arab ↔ angka Romawi (port altftool.com/tools/all/roman-numeral-converter)
 // Auto-detect: angka → Romawi, huruf romawi → angka. Range standar 1-3999.
 import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";

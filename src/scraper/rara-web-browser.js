@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 WEB BROWSER BERSAMA — chromium buka SITUS SEMBARANG (apkmirror,
 // apkpure, toko online, dokumentasi, dll) — engine generic buat tool

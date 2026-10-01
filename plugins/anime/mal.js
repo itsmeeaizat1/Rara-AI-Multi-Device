@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .mal — suite data MyAnimeList via package mal-scraper (16 Sep 2026, request
 // owner: audit dependencies → mal-scraper terverifikasi hidup, live Steins;Gate
 // skor 9.07). TANPA API key. STRICT satuan: error asli keluar tanpa fallback.

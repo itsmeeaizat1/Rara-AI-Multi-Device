@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-kyio.js — KyioAPI (api.kyio.web.id) engine: 330 endpoint v2.
 // Kategori: AI 69 · Downloader 50 · Tools 72 · Search 49 · Image 9 · News 12 ·
 // Islamic 6 · Maker 9 · Fun 7 · Games 5 · Information 17 · Movie & Anime 21 · TTS 4.

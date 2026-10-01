@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // hololive.js — Onepunya API: 7 endpoint HOLOLIVE (data HoloDex).
 // .hololive [org] [limit]    — VTuber yang lagi LIVE sekarang (org: Hololive/Holostars/All)
 // .holovideos [org] [limit]  — video/stream terbaru

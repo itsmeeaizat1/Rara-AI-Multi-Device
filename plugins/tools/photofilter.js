@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Photo Filter — 15 filter foto via sharp (local, no API needed)
 // Efek: grayscale, sepia, invert, blur, sharpen, vintage, cold, warm, dark, bright, neon, vintage2, dramatik, pastel, noir
 import sharp from "sharp";

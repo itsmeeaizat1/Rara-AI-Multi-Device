@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Travel — AI travel planner
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

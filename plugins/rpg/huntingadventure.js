@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Berburu — Hunt monsters for EXP, Gold, and item drops (animated combat)
 
 import {

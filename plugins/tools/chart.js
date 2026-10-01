@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // chart.js — Render data jadi grafik bar bergambar (canvas lokal @napi-rs/canvas)
 // Fitur baru 9 Sep 2026 (request owner: fitur baru biar nambah dependencies)
 // Mode:

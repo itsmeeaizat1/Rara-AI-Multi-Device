@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Distortion — Zona distorsi (random loot)
 import { ensureRpg, saveRpg, addItem, useEnergy } from "../../src/lib/rara-rpg-service.js";
 import { animGeneric } from "../../src/lib/rara-rpg-anim.js";

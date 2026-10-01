@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // llamav2 — Llama AI dari Meta
 // API asli (restapii.rioooxdzz) udah mati → sekarang lewat rantai fallback multi-API
 // (rara-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).

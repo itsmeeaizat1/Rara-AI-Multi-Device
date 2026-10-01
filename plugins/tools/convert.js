@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .convert — konversi satuan via mathjs (16 Sep 2026, request owner: audit
 // dependencies → mathjs unit conversion fitur baru). Panjang/berat/suhu/
 // data/waktu/kecepatan — alias Indonesia di-map otomatis. Tanpa API.

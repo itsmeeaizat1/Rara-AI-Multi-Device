@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Memory watchdog — DEFAULT OFF (request owner 2026-09-04): watchdog gak
 // aktif sampai owner nyalain manual via .memwatch on. Kenapa? Fitur .remini
 // Local AI emang butuh RAM 1-3GB — watchdog yang matiin bot pas RAM

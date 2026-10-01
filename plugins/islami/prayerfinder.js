@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // prayerfinder.js — Cari Doa Sehari-hari (30+ doa, fuzzy match, PELUASAN .doaharian offline).
 // Sumber: doa-doa-api-ahmadramadhan.fly.dev (daftar farizdotid) — TANPA API KEY.
 // .caridoa <nama doa> — misal ".caridoa sebelum makan" / ".caridoa makan" (fuzzy).

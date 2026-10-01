@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-cooking.js — COOKING RPG ENGINE (porting script owner 10 Sep 2026:
 // cooking.js + cookingData.js standalone). Game self-contained ala script:
 // gold/energy/level/inventory/tools/resep sendiri, state per-user persist

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // FIX 14 Sep 2026 (audit fitur canvas): ensureFile() nulis font ke path
 // relatif "../assets/fonts/..." — relatif ke process.cwd(), BUKAN ke lokasi
 // file plugin. Kalau bot dijalanin dari root repo, path itu nyasar SATU

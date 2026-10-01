@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: ONEPUNYA API (31 endpoint, 8 plugin, 34 command)
+// RARA AI - MULTI DEVICE — E2E: ONEPUNYA API (31 endpoint, 8 plugin, 34 command)
 // Cover: lib dasar (auth error, struktur respon, seam http), resolve command
 // via loader, handler happy/sad path tiap plugin, deteksi platform onedl,
 // format teks smallcaps-aware (raraWrap output).

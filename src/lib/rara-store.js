@@ -1,7 +1,7 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * rara-store.js
- * Sistem toko untuk Rara AI WhatsApp Bot.
+ * Sistem toko untuk Rara AI - Multi Device.
  * Katalog produk, stok, kategori, order, konfirmasi, notif buyer.
  * Data disimpan di database settings (rara-database.js).
  */

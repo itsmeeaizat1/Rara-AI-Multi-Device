@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // palung.js — PALUNG MISTERI (request owner 21 Sep 2026, game petualangan #6, standar Game Designer)
 // Petualangan bawah laut: makin DALAM makin kaya & berbahaya. 4 zona kedalaman (Cahaya/Senja/Abisal/Hadal),
 // kelola OKSIGEN (regen 1/5 mnt, naik ke permukaan = regen penuh), jalur AMAN vs RISIKO (loot ×2 tapi 35% bahaya),

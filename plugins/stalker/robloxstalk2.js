@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // robloxstalk2.js — Roblox Stalker v2 (velyn.mom API)
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

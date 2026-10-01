@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // allmenu.js — Semua command per kategori (Rara box style + thumbnail menu.jpg)
 import * as botmodePlugin from "../group/botmode.js";
 import { getCasesByCategory, getCaseCount } from "../../case/rara.js";
@@ -193,7 +193,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const expMax = userLevel * 20000;
     const expCurr = userExp - expMin;
 
-    const botName = config.bot?.name || "Rara AI Whatsapp Bot";
+    const botName = config.bot?.name || "Rara AI - Multi Device";
 
     // ── Info section lengkap (user, bot, database, server, weather) ──
     const { greeting: aiIntro, info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime, sock });

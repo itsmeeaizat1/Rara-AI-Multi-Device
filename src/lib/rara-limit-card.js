@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════
 // KARTU LIMIT + COUNTDOWN RESET HARIAN (13 Sep 2026, variasi fitur
 // polos batch 4 — ".energi/.mylimit gak ada pelengkap kyk penghitung")

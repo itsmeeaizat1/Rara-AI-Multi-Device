@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * rara-fun-ai.js
  * Helper untuk fitur "tanya" (mengapa, apakah, akankah, dll).

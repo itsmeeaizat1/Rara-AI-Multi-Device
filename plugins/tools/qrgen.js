@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // qrgen.js — QR Code Generator v2 (qrcode npm, local generation)
 import QRCode from "qrcode";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

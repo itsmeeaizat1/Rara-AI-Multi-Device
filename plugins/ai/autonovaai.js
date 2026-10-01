@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/ai/autonovaai.js — .anovaagent (dulu .autonovaai): bikin rule automation pakai bahasa manusia
 // Gabungan ai-agent (askAI) + autoflow engine — user ketik kalimat → AI terjemahin jadi JSON rule → validasi → simpan → langsung aktif
 

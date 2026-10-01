@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libmasterdetectiverpg.js — LIB ANIMASI EMOJI-GRID khusus Master Detective / detektif
 // (upgrade owner 28 Sep 2026: cutscene 3 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD (MENUJU/MENYIRIM · lokasi) · baris gerak (🚶 melintas kota / 🔍 menyisir sektor,

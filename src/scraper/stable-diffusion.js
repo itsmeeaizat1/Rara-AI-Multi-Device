@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // stable-diffusion.js — Scraper untuk Stable Diffusion image generation
 // Free via Pollinations (no API key) + fallback ke Stability AI (requires key)
 //

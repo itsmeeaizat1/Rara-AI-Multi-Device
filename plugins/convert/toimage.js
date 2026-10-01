@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Toimage — convert sticker (webp) → gambar, auto REMINI + UPSCALE biar jernih.
 // Request owner 9 Sep 2026: "pas di convert jd gambar, gambar di remini + upscale
 // dlu biar hasilnya pas jadi gambar ga burik plus jernih" + arahan:

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // lib/rara-autorole.js — Engine Auto Role Assignment (ESM)
 // Track poin per chat, auto-upgrade role, leaderboard, manual override
 

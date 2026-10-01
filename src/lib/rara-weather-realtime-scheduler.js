@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Scheduler notifikasi cuaca (.weathersystemwatch notification on)
 // — upgrade 8 Sep 2026 ala script standalone owner:
 //   * MODE JADWAL  : kirim di jam set (default lama, tetap jalan)

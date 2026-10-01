@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Engine IoT/MQTT: konek broker, publish & subscribe perangkat IoT langsung dari WhatsApp. Lazy-load library mqtt.
 import { getDatabase } from "./rara-database.js";
 

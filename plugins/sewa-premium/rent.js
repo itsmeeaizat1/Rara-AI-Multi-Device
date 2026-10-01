@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap, tipText, bracketBox } from "../../src/lib/rara-menu-style.js";
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { getCategories, getCommandsByCategory } from "../../src/lib/rara-plugins.js";
@@ -150,7 +150,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const ownerName = botConfig.owner?.name || "Owner";
     const ownerNumbers = botConfig.owner?.number || [];
     const ownerNumber = ownerNumbers[0] || "628174887770";
-    const botName = botConfig.bot?.name || "Rara AI Whatsapp Bot";
+    const botName = botConfig.bot?.name || "Rara AI - Multi Device";
     const botVersion = botConfig.bot?.version || "21.2.0";
 
     // ── BAGIAN 1: STATUS SEWA GRUP ──

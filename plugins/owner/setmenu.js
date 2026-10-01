@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .setmenu = alias semantik .setallmenu (dua-duanya ngatur varian thumbnail
 // menu yang sama — menuThumbVariant dipakai sendMenuCard SEMUA menu).
 import config from "../../config.js";

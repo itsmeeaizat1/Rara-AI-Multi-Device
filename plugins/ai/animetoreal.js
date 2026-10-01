@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // animetoreal — gambar ANIME → versi REALISTIS (kebalikan .jadianime)
 // Engine: KuroNeko animetoreal (live3d.io). Key: apikeys.json kuroneko.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

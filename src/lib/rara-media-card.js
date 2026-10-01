@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-media-card.js — Preview card (externalAdReply) untuk pesan media
 // Hasil unduhan (video/audio) tampil dengan card: thumbnail asli dari sumber
 // + judul + link, kayak link preview. Thumbnail diambil dari API sumber

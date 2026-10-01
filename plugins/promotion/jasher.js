@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .jasher — broadcast promosi/pengumuman ke semua grup yang bot join
 // (WA + Telegram via rarabridge). Viral ala fitur "Jasher" di Telegram:
 // owner kirim teks promosi (atau gambar/video + caption) dari DM/grup →

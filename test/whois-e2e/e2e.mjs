@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: .WHOIS — "Siapa nomor ini?" dossier AI dari histori persisten
+// RARA AI - MULTI DEVICE — E2E: .WHOIS — "Siapa nomor ini?" dossier AI dari histori persisten
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

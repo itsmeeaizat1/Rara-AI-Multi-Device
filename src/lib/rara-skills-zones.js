@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-skills-zones.js — mapping nama kota → IANA timezone (helper skill
 // "waktu" rara-skills.js, request owner 12 Sep 2026 tool lengkap agent).
 export const CITY_ZONES = {

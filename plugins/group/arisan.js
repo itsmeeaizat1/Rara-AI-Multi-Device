@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Arisan Manager
  * Fitur: .arisan — manajer arisan grup khas Indonesia:

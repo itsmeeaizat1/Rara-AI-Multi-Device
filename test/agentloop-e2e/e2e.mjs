@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: .AGENTLOOP — agent loop iteratif dengan self-critique
+// RARA AI - MULTI DEVICE — E2E: .AGENTLOOP — agent loop iteratif dengan self-critique
 // Upgrade #1 "bot masa depan" (owner 24 Sep 2026): plan → kerjakan → kritik diri
 // → koreksi → ulangi, budget putaran, laporan jujur saat budget habis.
 import fs from "node:fs";

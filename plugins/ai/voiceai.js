@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // suaraai — TTS natural multi-bahasa 42 voice (Haidar text2speech/voiser)
 // Indonesia: Gadis/Ardi/Siti/Dimas/Tuti/Jajang — Jepang: Aoi/Daichi/Mayu dll —
 // Korea: BongJin/JiMin dll — Inggris: Mia/Olivia dll.

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Huntwild — Berburu hewan liar
 // Rombak khas (batch #12): animasi Hewan dalam Semak +
 // item khas Taring Liar + tool Anjing Pemburu.

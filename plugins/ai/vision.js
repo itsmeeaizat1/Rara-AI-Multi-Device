@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // vision — Analisis gambar dengan Gemini Vision (gratis, pakai API key Gemini)
 import { visionScan } from "../../src/lib/rara-vision-chain.js";
 import { raraCaption, tipText, raraWrap } from "../../src/lib/rara-menu-style.js";

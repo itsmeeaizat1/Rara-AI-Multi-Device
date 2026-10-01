@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .bootdoctor — Cek kesehatan fitur (apikey expired / endpoint down / error)
 // Laporan OTOMATIS ke DM owner tiap bot nyala/restart (rara-boot-doctor.js).
 // Beda dari .autoapicheck (monitor berkala ping endpoint biasa):

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 rara-i18n-sock.js — pembungkus sock translate-aware + sanitizer
 // 🔹 Fix 18 Sep 2026 #1 (owner: "yg keubah cm caption doang, g semua

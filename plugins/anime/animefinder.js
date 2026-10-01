@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // animefinder.js — Cari anime manual (request owner 8 Sep 2026, ala script owner
 // "!search"). Sumber: AniList search → Kitsu fallback (AniList outage-proof).
 // Bonus koneksi V1: kalau judul cocok dengan ongoing winbu.net (V1 auto anime

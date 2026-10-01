@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zeldl — downloader ZelAPI (kategori /docs/download zelapi):
 //   all (generic multi-platform) | spotify (meta + preview) | scribd (meta + dl)

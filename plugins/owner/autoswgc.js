@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // autoswgc.js — AUTO SWGC: kirim Group Status (border hijau) ke semua grup
 // secara TERJADWAL (porting AutoSWGC script JPM APENBOTZ, 21 Sep 2026,
 // request owner "sw gc jga tmbah ke rara jka di rara blm ada"). Rara sudah

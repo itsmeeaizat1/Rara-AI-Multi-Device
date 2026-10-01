@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Rift — Portal dimensi, distortion, time travel
 
 import { ensureRpg, saveRpg } from "../../src/lib/rara-rpg-service.js";

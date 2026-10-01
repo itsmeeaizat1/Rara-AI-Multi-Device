@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .email — kirim & baca email langsung dari WhatsApp (SMTP + IMAP). OWNER-ONLY.
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { setEmailConfig, setEmailHosts, getEmailConfig, clearEmailConfig, sendEmail, readEmails, validateEmailAddr } from "../../src/lib/rara-emailbot.js";

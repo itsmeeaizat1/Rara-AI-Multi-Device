@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-apify.js — Helper Apify bersama (request owner 10 Sep 2026: token Apify
 // buat sumber data yang gak ada endpoint gratisnya — Liga 2 bola, LinkedIn jobs).
 //   • getApifyToken()  — env APIFY_TOKEN → apikeys.json apifyToken

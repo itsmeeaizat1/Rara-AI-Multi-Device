@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // fakecall — WhatsApp fake call screen (local canvas, no API)
 import { raraReply } from "../../src/lib/rara-menu-style.js";
 import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";

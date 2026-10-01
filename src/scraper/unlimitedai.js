@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Migrated from UnlimitedAI.chat → Google Gemini API (better data freshness)
 // Same export interface: UnlimitedAI(prompt, character) returns { status, answer, character, model }
 import { callGemini, callIkyy, resolveLatestGeminiModel } from "../lib/rara-ai-service.js";

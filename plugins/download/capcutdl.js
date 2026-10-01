@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // capcutdl — Download video CapCut
 // Primary: IkyyXD /download/capcut → /download/all-in-one | Fallback: btch-downloader
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // rara-ocode-agent.js — OPENCODE 9ROUTER: AI CODING AGENT DI DALAM BOT
 // (request owner 21 Sep 2026 — "asisten coding bsa coding bot kode js

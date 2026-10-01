@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .bypass — Bypass shortlink monetisasi (Linkvertise/ShrinkMe/Bicolink/
 //    BypassCity/Just2Earn/Tutwuri) via zelapi.eu.cc kategori Bypass.

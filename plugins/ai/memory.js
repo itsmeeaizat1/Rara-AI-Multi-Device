@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 MEMORY ENGINE COMMAND — .memory (request owner 12 Sep 2026)
 // 🔹 Lihat / cari / tambah / hapus kenangan yang bot simpan tentangmu

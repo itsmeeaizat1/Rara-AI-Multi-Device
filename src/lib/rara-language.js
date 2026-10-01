@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Multi-Language Engine — Auto translate AI response ke bahasa user
 // DEFAULT: OFF — Bahasa Indonesia murni, no translation
 // User harus explicit set .languagemenubot <code> untuk aktif

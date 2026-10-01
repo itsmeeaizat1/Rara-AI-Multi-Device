@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libguildwarrpg.js — LIB ANIMASI EMOJI-GRID khusus Guild War
 // (upgrade owner 28 Sep 2026: cutscene 3 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // warFrames grid: HUD ⚔️ guild vs guild · baris pasukan (5 emoji masing-masing saling mendekat) · adegan medan

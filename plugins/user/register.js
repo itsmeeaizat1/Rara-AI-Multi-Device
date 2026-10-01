@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/rara-ffmpeg.js";
 import fs from "fs";
 import path from "path";
@@ -185,7 +185,7 @@ async function sendRegistrationPrompt(sock, m, text, options = {}) {
             contextInfo: {
               ...getRegistrationContextInfo(),
               externalAdReply: {
-                title: config.bot?.name || "Rara AI Whatsapp Bot",
+                title: config.bot?.name || "Rara AI - Multi Device",
                 body: "Menu Daftar",
                 thumbnail,
                 previewType: "PHOTO",

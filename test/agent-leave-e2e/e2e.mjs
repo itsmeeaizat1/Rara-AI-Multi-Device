@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AGENT LEAVE GROUP BY NAME
+// RARA AI - MULTI DEVICE — E2E: AGENT LEAVE GROUP BY NAME
 // Request owner 21 Sep 2026: ".raraagent/.aisuperagent disuruh dari DM:
 // keluar dari grup cari teman sejati" — agent harus nemuin grup dari NAMA.
 import fs from "node:fs";

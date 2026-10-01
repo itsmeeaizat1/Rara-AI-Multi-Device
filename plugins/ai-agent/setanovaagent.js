@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/ai-agent/setanovaagent.js — .setanovaagent: bikin/set rule automation dari kalimat bebas
 // (request owner 11 Sep: "lupa hrsnya .setanovaagent buat set rulenya" —
 //  SET rule pakai .setanovaagent; .anovaagent khusus kelola list/del/on/off/reset)

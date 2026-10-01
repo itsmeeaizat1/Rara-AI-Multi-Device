@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .botdoctor — DOKTER BOT PRIBADI (26 Sep 2026)
 // Diagnosa kesehatan bot dari sampel denyut 24 jam (RAM/ping/CPU/error/
 // restart) dengan format dokter: gejala → dugaan akar → saran tindakan.

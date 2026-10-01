@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Compliment — AI generates creative compliments
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

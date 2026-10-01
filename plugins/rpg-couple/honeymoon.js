@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Honeymoon: bulan madu bareng pasangan (khusus nikah), sekali sebulan (revival dari RPG lama)
 
 import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/rara-rpg-service.js";

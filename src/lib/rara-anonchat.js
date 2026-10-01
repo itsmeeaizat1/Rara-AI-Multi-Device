@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-anonchat.js — engine chat anonim antar member bot (DM only).
 // Dua user di-pair acak, pesan diteruskan TANPA nunjukin nomor.
 // ATURAN (revisi owner 24 Sep 2026): ngirim link BOLEH (diteruskan

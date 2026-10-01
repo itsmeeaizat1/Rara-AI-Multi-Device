@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AUTO ORDER NOKOS 5SIM (rara-nokos.js + ordernokos.js)
+// RARA AI - MULTI DEVICE — E2E: AUTO ORDER NOKOS 5SIM (rara-nokos.js + ordernokos.js)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

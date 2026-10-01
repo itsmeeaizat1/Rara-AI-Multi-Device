@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-group-announce-ai.js — Pesan notifikasi grup ditutup/dibuka kembali
 // yang digenerate AI (IkyyXD /ai/gemini — free, no apikey) supaya berubah
 // tiap kali grup ditutup/dibuka. Fallback ke template lokal kalau API

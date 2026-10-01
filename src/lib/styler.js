@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // styler.js — GUARD format kotak rata kiri (request owner 2026-09-07)
 //
 // BUG yang difix: pesan berkotak menembus border kiri karena baris lebih

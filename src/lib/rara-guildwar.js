@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-guildwar.js — GUILD WAR ANTAR GRUP (26 Sep 2026, ide owner no.5 dari
 // sesi "fitur masa depan": RPG Rara naik level dari per-orang jadi SOSIAL —
 // tiap grup WhatsApp = satu guild, bisa perang lintas grup).

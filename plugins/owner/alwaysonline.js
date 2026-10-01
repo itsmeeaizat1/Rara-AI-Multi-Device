@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .alwaysonline — bot kelihatan ONLINE 24 JAM (presence keepalive).
 // Sistem langka bot MD luar sana (Jawad MD, AA MD) yang belum ada di RARA.
 // Heartbeat presence "available" berulang tiap N menit + auto start pas boot.

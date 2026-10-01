@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // melolo — Cari drama pendek Melolo (API covenant sedang down)
 import { raraReply } from "../../src/lib/rara-menu-style.js";
 

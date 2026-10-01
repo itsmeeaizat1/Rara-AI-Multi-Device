@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════
 // Rara AI Grup - Auto nimbrung handler
 // Dipanggil dari src/handler.js untuk setiap pesan grup

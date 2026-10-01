@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Cinta Service — Sistem pacaran battle-style tied to RPG stats
 // Affection = HP cinta, Couple War = battle pasangan, Kencan = quest affection
 

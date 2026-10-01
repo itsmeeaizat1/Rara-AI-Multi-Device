@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: .AUTOTASK — agent tugas otonom berjangka
+// RARA AI - MULTI DEVICE — E2E: .AUTOTASK — agent tugas otonom berjangka
 // Saran fitur #5: kerjain bertahap di background, lapor tiap milestone ke DM owner.
 import fs from "node:fs";
 import os from "node:os";

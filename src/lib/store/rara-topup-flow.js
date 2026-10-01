@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-topup-flow.js — Factory plugin beli satuan (satu alur untuk SEMUA jalur toko)
 // Dipakai: buylimit, buykoin, buydiamond, buyharta, buygems, buytokens, buycinta
 // Alur: validate → terekam pending → QRIS → notif owner → .approvetopup → masuk otomatis

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: MCP MANAGER + GITHUB MCP (request owner 25 Sep 2026:
+// RARA AI - MULTI DEVICE — E2E: MCP MANAGER + GITHUB MCP (request owner 25 Sep 2026:
 // "mcp digithub bsa diakses ai agent dan opencode"). Verifikasi:
 // env passthrough stdio (token GITHUB_PERSONAL_ACCESS_TOKEN dsb) pakai server
 // MCP stdio NYATA (node -e inline, tanpa npx/network), mcpSetEnv/mcpSetHeader,

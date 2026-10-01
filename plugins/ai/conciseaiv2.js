@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // conciseaiv2 — ConciseAI v2 (toki heroku, HMAC)
 import crypto from "crypto";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

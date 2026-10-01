@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // cryptoprice.js — Harga Kripto Realtime IDR dari Indodax (exchange kripto Indonesia).
 // Sumber: indodax.com Public API (btcid/indodax-official-api-docs, daftar farizdotid) — TANPA API KEY.
 // .hargakripto → 10 koin populer | .hargakripto <koin> → detail pair IDR | .hargakripto btc usdt → pair lain

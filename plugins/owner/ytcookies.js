@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/owner/ytcookies.js — LOGIN GOOGLE VIA WHATSAPP (1 Okt 2026)
 //
 // Fitur pendamping fix bot-check YouTube (.play lokal gagal terus):

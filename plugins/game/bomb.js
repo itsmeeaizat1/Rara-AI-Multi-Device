@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // bomb.js — Game jinakkan bom (potong kabel yang benar)
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";

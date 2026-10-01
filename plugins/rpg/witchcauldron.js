@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // witchcauldron.js — Witch's Cauldron (combine materials for special items)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { animGeneric } from "../../src/lib/rara-rpg-anim.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-store.js — PUSAT HARGA TOKO (premium roles + beli satuan)
 // Owner: utak-atik SEMUA harga toko cukup di file ini.
 // Tersambung ke: .buyprem, .buylimit, .buykoin, .approvetopup, .addprem

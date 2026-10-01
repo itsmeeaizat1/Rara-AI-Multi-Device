@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 zelff.js — scraper ZelAPI kategori /freefire (4 endpoint, live verified 15 Sep 2026):
 //   /freefire/search?q=  → cari pemain (nickname → list uid/region/level/liked)

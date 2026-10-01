@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // chatbotaiv2 — AI chatbot
 // API asli (abella.icu/onlinechatbot) udah mati → sekarang lewat rantai fallback multi-API
 // (rara-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).

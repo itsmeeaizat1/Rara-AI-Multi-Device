@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // config.js — Thin aggregator
 // Semua config dipindah ke src/lib/config/ per kategori
 // File ini tetap export object `config` dengan struktur sama persis

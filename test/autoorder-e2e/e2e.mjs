@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AUTO ORDER PANEL (porting selfbot JPM APENBOTZ)
+// RARA AI - MULTI DEVICE — E2E: AUTO ORDER PANEL (porting selfbot JPM APENBOTZ)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

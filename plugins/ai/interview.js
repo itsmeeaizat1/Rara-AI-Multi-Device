@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aiagentwawancara (dulu .wawancara, rename 12 Sep 2026) — Interview Simulator AI (ide fitur no 5):
 // AI jadi HRD buat latihan wawancara kerja.
 //   * .aiagentwawancara mulai <posisi> → sesi mulai, HRD nanya via VN

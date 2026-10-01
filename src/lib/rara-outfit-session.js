@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 rara-outfit-session.js — session sementara per-user buat .omnioutfitchanger
 // 🔹 WhatsApp gak bisa attach banyak foto dalam 1 pesan (tiap foto = pesan

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Scrape Telegram sticker pack via combot.org (tanpa API key)
 import { raraBerhasil, raraGagal, raraGangguan } from "../../src/lib/rara-menu-style.js";
 

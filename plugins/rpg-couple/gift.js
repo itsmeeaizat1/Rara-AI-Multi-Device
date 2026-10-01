@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Kado: kasih item dari inventory ke pasangan, dapat affection (revival dari RPG lama, disesuaikan sistem baru)
 
 import { ensureRpg, getRpgData, addItem, removeItem, addExp, ITEM_DB } from "../../src/lib/rara-rpg-service.js";

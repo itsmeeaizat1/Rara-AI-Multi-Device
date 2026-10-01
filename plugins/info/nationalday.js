@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // nationalday.js — kontrol NOTIFIER HARI BESAR & TANGGAL MERAH INDONESIA
 // (request owner 16 Sep 2026): jam 08:00 WIB bot kirim pesan SEKALI per hari
 // "Selamat Hari X" + tanggal + badge tanggal merah + pesan inspirasi AI.

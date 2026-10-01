@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/group/absenjam.js — Absen otomatis grup (1 file, ESM)
 // Command: .absenjam buka <durasi> [judul] | .absen tutup | .absen status | .absen
 

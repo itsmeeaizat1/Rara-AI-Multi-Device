@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // twittertrend.js — Trending Twitter/X (getdaytrends.com scrape)
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

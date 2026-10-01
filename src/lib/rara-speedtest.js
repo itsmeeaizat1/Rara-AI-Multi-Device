@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-speedtest.js — engine tes kecepatan internet (Cloudflare, tanpa key).
 // Request owner 11 Sep 2026: "untuk pertama kali pairing bot saat bot konek
 // coba speedtest sekali, hasilnya tersimpan sebagai tanda hasil kecepatan

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 zelsearch.js — scraper ZelAPI kategori /search (live verified 15 Sep 2026):
 //   /search/apkmody?q= — cari APK mod (name/version/feature/url)

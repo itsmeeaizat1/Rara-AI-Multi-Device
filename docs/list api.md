@@ -1,6 +1,6 @@
 # 📡 RARA AI — Daftar API Website
 
-> Dokumentasi semua API endpoint yang digunakan di Rara AI WhatsApp Bot
+> Dokumentasi semua API endpoint yang digunakan di Rara AI - Multi Device
 > Total: 400+ API endpoint dari 100+ provider (termasuk KuroNeko 221 endpoint)
 > Last updated: 14 September 2026
 

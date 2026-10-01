@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Mood-Driven Auto Theme Switcher — Bot baca emosi dari cara mengetik
 // Analisis: kecepatan kirim, panjang pesan, rasio kapital, tanda baca, emoji
 // Deteksi mood -> ubah gaya jawaban AI (ringkas/santai/empatik/etc)

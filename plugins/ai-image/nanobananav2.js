@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // nanobananav2 — Edit gambar dengan prompt via Gemini Flash (IkyyXD)
 // Original /edit/nanobananav2 down (lexcode.biz.id ENOTFOUND), redirected to /edit/gemini-flash
 import axios from "axios";

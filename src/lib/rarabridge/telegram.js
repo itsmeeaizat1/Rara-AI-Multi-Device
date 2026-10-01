@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Telegram Bot API client — fetch long-polling, TANPA dependency eksternal.
 // Dipakai oleh src/lib/rarabridge/ (fitur .bridge multi-platform).
 // Semua HTTP bisa di-seam lewat _setTelegramHttpForTest buat e2e.

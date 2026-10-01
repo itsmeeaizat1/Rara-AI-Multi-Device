@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // nexai — NexAI multi-provider (apinex.bond) — request owner 12 Sep 2026:
 // "tmbah ai multi provider baru nexai, jd pas ketik cmd .nexai mncul list
 // model yg tersedia ada model free jg defaultnya glm".

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .imgmotion — motion image (foto bergerak) WA native (port engine lama imgmotion.js)
 // 2 langkah: .imgmotion + gambar → kirim video (caption "2") → jadi motion image.
 import { prepareWAMessageMedia, generateWAMessageFromContent } from "nova";

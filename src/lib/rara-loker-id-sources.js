@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * rara-loker-id-sources.js
  * Fetcher lowongan kerja Indonesia.

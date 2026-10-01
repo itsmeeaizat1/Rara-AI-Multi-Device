@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .swpost — POSTING STATUS/STORY WA dari bot (teks & media).
 // Sistem langka bot MD luar sana yang belum ada di RARA:
 //   .swpost <teks>            → status teks warna

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * .autotask — Agent tugas otonom berjangka (saran fitur #5 owner, 21 Sep 2026).
  * "kerjakan X lalu lapor" → AI memecah jadi tahapan (milestone), dikerjain

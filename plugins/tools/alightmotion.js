@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AlightMotionV1 — Auto register AM premium via RyezenStore + CatchMail
 // Source: https://api.andaraz.com/snippets/ai1/alightmotionv3
 // © 2026 All Rights Reserved.

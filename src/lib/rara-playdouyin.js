@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-playdouyin.js — orkestrasi .playdouyin (DOUYIN MURNI, TIKTOK TIDAK
 // NYAMPUR — request owner "jlo douyin .douyin g nyampur sm tiktok").
 // Fitur BARU — .tiktok/.douyin/.playtiktok LAMA TIDAK DISENTUH (reuse import

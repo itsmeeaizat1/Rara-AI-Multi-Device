@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // inworldtts.js — Inworld AI: suara HD 200+ bahasa (platform.inworld.ai).
 // .inworldtts [voice]|<teks>   — teks → voice note (voice opsional, default = voice custom workspace / katalog)
 // .inworldvoice <deskripsi>|<teks> — DESAIN SUARA dari deskripsi bebas ("pria hangat kayak penyiar radio malam")

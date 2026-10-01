@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Soulmatch (Cek compatibility berdasarkan RPG stats)
 
 import { getRpgData } from "../../src/lib/rara-rpg-service.js";

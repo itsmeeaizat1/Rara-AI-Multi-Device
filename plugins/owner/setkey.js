@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .setkey — Set & lihat semua API key dari 1 tempat
 // .setkey — Lihat semua status API key
 // .setkey <nama> <value> — Set API key

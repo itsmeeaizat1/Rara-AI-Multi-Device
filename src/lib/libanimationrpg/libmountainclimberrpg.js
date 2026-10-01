@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libmountainclimberrpg.js — LIB ANIMASI EMOJI-GRID khusus Mountainclimber / gunung
 // (upgrade owner 28 Sep 2026: OPEN WORLD PER NEGARA — beda negara beda animasi, durasi TIDAK buru-buru:
 //  SITUASI MENENTUKAN LEVEL ANIMASI — zona + jalur risiko + cuaca buruk memperpanjang babak lintasan,

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 Google AI Mode — .googleaimode
 // 🔹 Jawaban AI Mode Google (udm=50) via searchapi.io + sumber riset.

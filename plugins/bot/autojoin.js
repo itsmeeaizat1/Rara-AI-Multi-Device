@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // autojoin.js — owner: jadwalkan bot join/leave grup & channel otomatis
 // (fitur "akses penuh di bot", 26 Sep 2026):
 //   Aturan waktu: pakai ":" (12:00) = JAM PASTI · tanpa ":" (7d/2j/30m) = COUNTDOWN

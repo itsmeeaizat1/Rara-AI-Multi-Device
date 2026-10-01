@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // gachaitem.js — GACHA ITEM BERBAYAR (request owner 21 Sep 2026): rolling item dengan ekonomi sungguhan.
 // Harga 2.000 uang/pull (atomic spendCash), limit 5x/hari reset 00:00 WIB (state {tanggal, jumlahHariIni}),
 // cooldown 3 dtk + lock in-flight anti spam, pity 5x tanpa Epic+ → garansi Epic+ lalu reset (.mypity),

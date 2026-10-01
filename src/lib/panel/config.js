@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/panel/config.js — CONFIG PANEL PTERODACTYL v1 - v100
 //
 // EDIT FILE INI buat daftarin semua domain panel lu (v1 - v100).

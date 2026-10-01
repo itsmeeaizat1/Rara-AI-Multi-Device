@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // totp.js — 2FA TOTP Authenticator: kode login 6-digit real-time
 // Fitur baru 9 Sep 2026 (request owner "fitur yg blm prnh ada di bot")
 // PRIVATE ONLY — kode 2FA gak boleh keliatan di grup.

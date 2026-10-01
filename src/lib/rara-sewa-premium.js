@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 //
 // rara-sewa-premium.js — Auto-grant Premium untuk nomor penyewa (26 Sep 2026)
 // Kebijakan owner: saat sewa SUKSES, nomor yang MENYEWA otomatis dapat Premium

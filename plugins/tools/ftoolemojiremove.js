@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolemojiremove — buang emoji dari teks (port altftool.com/tools/all/emoji-remover)
 import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .channelid — CONVERT URL/INVITE SALURAN WA → ID NEWSLETTER (120363xxx@newsletter)
 // Request owner 19 Sep 2026: "g ada fitur url saluran wa convert jadi id newsletternya".
 // Berguna buat: .setchannel manual, target broadcast saluran, integrasi fitur channel lain.

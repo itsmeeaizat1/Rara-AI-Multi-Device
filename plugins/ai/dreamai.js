@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Dream — AI interprets dreams
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

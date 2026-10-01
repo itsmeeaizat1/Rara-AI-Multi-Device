@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Werewolf — Social Deduction Game (5-15 players)
 import { raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";

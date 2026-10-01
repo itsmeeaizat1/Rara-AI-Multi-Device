@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooltextreverse — balik urutan teks (port altftool.com/tools/all/text-reverser)
 // Pakai spread [...str] biar emoji/surrogate pair gak rusak.
 import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // fishing.js — Mancing RPG (pancing ikan, rarity, sell) — dari kode owner
 // Rombak khas 9 Sep 2026 (batch #2 antrean animasi per-game):
 // - Animasi bentuk baru RIAK & TARIKAN (riak melebar + float tenggelem + tensi)

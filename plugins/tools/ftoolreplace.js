@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolreplace — ganti potongan teks massal (port altftool.com/tools/all/find-and-replace)
 import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

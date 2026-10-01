@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-report.js — Auto Daily Report ke Owner
 // Tiap hari di jam tertentu, kirim ringkasan: user baru, command terpopuler, error, uptime
 import { CronJob } from "cron";

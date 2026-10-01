@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 AI Roleplay Chat — .airoleplaychat
 // 🔹 Roleplay AI bareng 17 karakter (Sakura, Gojo Satoru, Anya, Luffy,

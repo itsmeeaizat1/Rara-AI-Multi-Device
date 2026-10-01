@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libhuntingadventurerpg.js — LIB ANIMASI EMOJI-GRID khusus Hunting Adventure / berburu
 // (upgrade owner 28 Sep 2026 #2: cutscene 2 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD (BURU <sasaran> · terkunci di frame akhir) · baris crosshair (🎯 merayap ke jejak 🐾,

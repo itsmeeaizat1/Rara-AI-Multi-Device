@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/download/alldownloaderv3.js — ALLDOWNLOADER V3 (MORI-STYLE)
 //
 // Referensi arsitektur: github.com/coflyn/Mori — client-side downloader

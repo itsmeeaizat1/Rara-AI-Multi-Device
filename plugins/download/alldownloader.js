@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: AllDownloader (Omnify AIO) — keluarga v2 dari .alldl
  *           (cmd beda: .alldownloader / .alldl2 — .alldl lama TETAP ada)

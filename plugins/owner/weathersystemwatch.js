@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // .weathersystemwatch — Unified Weather Control (owner only) (rename file owner 15 Sep 2026, wasal .autoweatherrealtime)
 //

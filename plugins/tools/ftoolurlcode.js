@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolurlcode — encode/decode URL (port altftool.com/tools/all/url-encoder-decoder)
 import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

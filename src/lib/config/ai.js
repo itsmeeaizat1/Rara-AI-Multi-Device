@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ai.js — Konfigurasi AI (Tio AI, autoai, personas)
 // API keys di-import dari apikey.js, bukan hardcoded di sini
 

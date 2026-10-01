@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 rara-conn-journal.js — jurnal koneksi WhatsApp (fix 18 Sep 2026)
 // 🔹 Report owner: "bot bntar reconnect stiap 10 menit atau brapa menit,

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ffstalk2.js — Free Fire Stalker v2 (nexray API, bandung-themed)
 import axios from "axios";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

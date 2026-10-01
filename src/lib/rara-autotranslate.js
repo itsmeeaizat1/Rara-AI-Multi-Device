@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * @file src/lib/rara-autotranslate.js
  * @description Auto-translate library for group messages with language detection and MyMemory API translation.

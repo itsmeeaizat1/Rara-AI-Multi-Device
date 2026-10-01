@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zsearch suite — 9 fitur cari zelapi kategori /search (live verified 15 Sep 2026):
 //   .zapkmody <app> — cari APK mod

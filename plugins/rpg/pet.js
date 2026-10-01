@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // pet.js — Pet System v2 (adopsi, feed, level up, battle)
 // Upgrade 9 Sep 2026: ekonomi Rp (rpg.cash) + 3 bentuk animasi BARU —
 // telur menetas (adopt), makanan menghilang (feed), arena hati HP (battle).

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Blacklist — pengganti .ban/.unban/.listban (request owner: jangan "ban", tapi "blacklist")
 // Sekarang pasangan konsisten: .whitelist (yang boleh) & .blacklist (yang diblokir)
 import config from '../../config.js'

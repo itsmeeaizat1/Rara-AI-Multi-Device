@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Multi-Language Menu Bot — User set bahasa preferensi
 // DEFAULT: OFF — Indonesia murni, no translation
 // Owner aktifkan dulu via .languagemenubot on (owner only)

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // holiday.js — daftar hari libur nasional mendatang.
 // ROMBAK (owner 16 Sep 2026): GAK PAKAI API EKSTERNAL lagi — data dari
 // PACKAGE date-holidays via lib rara-haribesar (satu sumber lokal, tahan lama).

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AUTO BROADCAST SALURAN (finalisasi Saluran WA
+// RARA AI - MULTI DEVICE — E2E: AUTO BROADCAST SALURAN (finalisasi Saluran WA
 // 25 Sep). Plugin .autobroadcastchannel tadinya GAK punya e2e — bug nyata
 // ketemu pas audit finalisasi: raraBox dipakai 4x tapi GAK pernah diimport
 // → ReferenceError crash di `.autobroadcastchannel all on/off` + toggle event

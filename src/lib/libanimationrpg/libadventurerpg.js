@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libadventurerpg.js — LIB ANIMASI EMOJI-GRID khusus Adventure / petualangan
 // (upgrade owner 28 Sep 2026 #2: "petualangan = animasinya PALING BANYAK" — cutscene 1 babak 6 frame
 //  → EKSPEDISI MULTI-BABAK ~12-13 frame: PERSIAPAN → PERJALANAN peta kompas → BABAK KHAS EVENT

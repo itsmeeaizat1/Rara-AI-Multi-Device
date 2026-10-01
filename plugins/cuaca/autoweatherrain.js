@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // autoweatherrain.js — Notifikasi "akan segera hujan dalam X menit" (request owner
 // 15 Sep 2026: "upgrade fitur cuaca klo mau hujan didaerah saya mncul notif
 // akan segera hujan dalam x menit mendatang" — konsep notif cuaca Bing,

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Putus (kehilangan affection, gold penalty)
 
 import { ensureRpg, getRpgData, removeGold } from "../../src/lib/rara-rpg-service.js";

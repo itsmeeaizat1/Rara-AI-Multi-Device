@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // autoorder.js — config AUTO ORDER PANEL (owner-only): on/off, slot panel,
 // kredensial Pakasir, harga per paket. Dengan ini fitur orderpanel bisa
 // dinyalakan/dimatikan & diatur harganya dari WA.

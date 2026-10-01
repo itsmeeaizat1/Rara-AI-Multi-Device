@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // dompet — Dompet AI (ide fitur no 1, 12 Sep 2026):
 //   * .dompet <bahasa natural> → catat pemasukan/pengeluaran (parser lokal,
 //     kalau nominal gak ketemu → AI parse), auto kategori + saldo

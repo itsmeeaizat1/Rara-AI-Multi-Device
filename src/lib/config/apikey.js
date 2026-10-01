@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // apikey.js — PUSAT SEMUA API KEY & TOKEN
 // Single source of truth untuk semua key/sandi/credentials
 // Key sensitif di sini, config non-key di file lain

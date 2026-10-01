@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .hotreload — auto reload plugin pas file berubah TANPA restart bot. OWNER-ONLY.
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 import {

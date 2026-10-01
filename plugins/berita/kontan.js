@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // kontan.js — Berita Kontan Finance
 import { fetchNewsList } from "../../src/lib/rara-rss-news.js";
 import te from "../../src/lib/rara-error.js";

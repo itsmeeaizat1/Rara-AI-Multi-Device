@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // HaidarApis helper — api.haidarxd.my.id (336 endpoint all-in-one)
 // Daftar gratis → API key: src/lib/apikey/apikeys.json → "haidar"
 // Docs: https://api.haidarxd.my.id/docs

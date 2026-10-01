@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftoolsortlines — urutkan baris teks (port altftool.com/tools/all/sort-text-lines)
 import { raraGuideV2, raraWrap } from "../../src/lib/rara-menu-style.js";
 

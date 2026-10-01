@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libtrenchdiverrpg.js — LIB ANIMASI EMOJI-GRID khusus Trenchdiver / palung
 // (upgrade owner 28 Sep 2026: cutscene teks → GRID EMOJI FRAME-BY-FRAME ala "scene situasional")
 // Tiap frame = grid 4 baris: HUD (sonar · zona · kedalaman) · kolom selam vertikal (gelembung 🫧 di atas

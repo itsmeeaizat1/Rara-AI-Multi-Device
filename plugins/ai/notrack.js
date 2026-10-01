@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 NoTrack AI — .notrack
 // 🔹 Chat AI stateless dari NoTrack (model C) via fazzcode.eu.cc.

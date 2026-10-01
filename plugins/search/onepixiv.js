@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // onepixiv.js — Onepunya API: PIXIV_SEARCH + PIXIV_R18_SEARCH.
 // .onepixiv <query>        — cari artwork Pixiv (hasil SFW dibarengin foto pertama)
 // .onepixiv18 <query>      — cari artwork Pixiv versi R-18 (konten dewasa)

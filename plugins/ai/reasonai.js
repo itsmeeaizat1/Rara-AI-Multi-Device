@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // alasanai — AI generator alasan (excuse generator)
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .jktai — chat AI persona member JKT48 (18 member) dari zelapi.eu.cc
 // 🔹 Kategori khusus JKT48 (folder plugins/jkt48/) — request owner 15 Sep 2026.

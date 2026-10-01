@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/tools/proxy.js — Proxy fetcher via ProxyScrape v4
 // (port dari script owner 9 Sep 2026).
 //

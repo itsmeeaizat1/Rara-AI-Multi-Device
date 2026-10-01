@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // orderprem.js — AUTO ORDER APP PREMIUM Premku (buyer): pilih produk premium
 // (Capcut Pro, dll) dari premku.com → bayar QRIS Pakasir → lunas → order
 // otomatis ke API → pantau invoice → struk/akun dikirim ke DM buyer.

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 GOOGLE MAPS BROWSER SEARCH + SCREENSHOT — chromium buka Google
 // Maps hasil pencarian tempat (cafe, resto, minimarket, dll) untuk

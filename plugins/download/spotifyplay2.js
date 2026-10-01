@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // spotifyplay2.js — Spotify Play v2 (spotifydown scrape + tikwm fallback)
 //
 // REVISI 14 Sep 2026 (owner: "disamain krna beda endpoint tp untuk dichat

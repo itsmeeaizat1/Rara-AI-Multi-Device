@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 //
 // .rentauto — AUTO SEWA & PREMIUM MANAGER (27 Sep 2026, fitur automation
 // no.2). Sewa & premium gak lagi "mati diam-diam": reminder H-3/H-1 ke

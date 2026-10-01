@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // douyin-search.js — Douyin (抖音 / TikTok China) keyword search via Apify
 // Kenapa Apify: Douyin gak ada API publik & anti-botnya ekstrem (signature
 // a_bogus + cookie) — semua instance API gratis udah mati. Apify actors

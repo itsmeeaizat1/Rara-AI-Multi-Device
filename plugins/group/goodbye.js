@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // goodbye.js — pesan perpisahan member keluar (single design, engine text)
 import { raraError, raraGuide, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { raraGameBox, gameCTA } from "../../src/lib/rara-games.js";

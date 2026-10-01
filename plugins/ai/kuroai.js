@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // kuroai — KuroNeko AI (wilz.web.id/api/ai/evernight)
 // Request owner 12 Sep 2026: "buat fitur ai baru .kuroai".
 // Persona KuroNeko, SESSION PERSIST per user (token session API disimpan di

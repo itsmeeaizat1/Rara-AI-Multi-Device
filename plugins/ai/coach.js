@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // coach — Fitness Coach AI (ide fitur no 8, 12 Sep 2026):
 //   * .coach mulai <goal> → AI bikin program latihan 7 hari (JSON strict,
 //     fallback program lokal — sesi gak pernah batal)

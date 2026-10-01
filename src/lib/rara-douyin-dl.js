@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-douyin-dl.js — fallback downloader douyin ekstra (request owner
 // 2026-09-10: "tambah rantai fallback buat .douyin <url> — ikyy, haidar,
 // sylvatica karena kebanyakan mereka ada fitur download video douyin").

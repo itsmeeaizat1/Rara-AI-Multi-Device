@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: .AIO2 + .AIO2DL — AIO downloader v2 dengan pemilih kualitas
+// RARA AI - MULTI DEVICE — E2E: .AIO2 + .AIO2DL — AIO downloader v2 dengan pemilih kualitas
 // Porting fitur .aio script JPM APENBOTZ (non-grup: AI/downloader/tools).
 import fs from "node:fs";
 import os from "node:os";

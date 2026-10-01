@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .obfuscate — obfuscator JavaScript LOKAL via package javascript-obfuscator
 // (16 Sep 2026, request owner: audit dependencies — backup lokal .zobfuscate
 // zelapi, jalan tanpa API). Output pendek inline, panjang jadi file .js.

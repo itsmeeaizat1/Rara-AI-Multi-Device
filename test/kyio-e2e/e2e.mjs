@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // test/kyio-e2e/e2e.mjs — E2E KyioAPI (api.kyio.web.id, 330 endpoint, 329 cmd .kyio*).
 // Semua akses HTTP lewat seam _setKyioHttpForTest — gak ada network di e2e.
 // Jalankan: node test/kyio-e2e/e2e.mjs

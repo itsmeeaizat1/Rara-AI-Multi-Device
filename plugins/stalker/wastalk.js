@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import moment from 'moment-timezone'
 import PhoneNum from 'awesome-phonenumber'

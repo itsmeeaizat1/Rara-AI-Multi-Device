@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ytmp3.js — Download audio YouTube
 // Primary: IkyyXD /download/ytmp3 → Sanka AIO → ytdl fallback
 import axios from "axios";

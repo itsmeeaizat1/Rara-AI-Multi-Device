@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // logiceaiv2 — LogicAI — AI fokus penalaran logis
 // API asli (velyn.biz.id/aicustom) udah mati → sekarang lewat rantai fallback multi-API
 // (rara-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).

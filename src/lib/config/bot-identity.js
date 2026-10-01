@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // bot-identity.js — Identitas bot, owner, session, mode, sticker, saluran
 
 export const botIdentity = {
@@ -21,7 +21,7 @@ export const botIdentity = {
   },
 
   bot: {
-    name: "Rara AI Whatsapp Bot",
+    name: "Rara AI - Multi Device",
     version: "24.0.0",
     developer: "Aizat",
     menuImage: {

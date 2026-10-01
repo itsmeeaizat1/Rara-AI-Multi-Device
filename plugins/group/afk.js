@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .afk v2 — interaktif (request owner 13 Sep 2026: "di .afk g ada wktu
 // kpan user mulai afk dan wktu brapa lama user afknya gt"):
 // kartu lengkap jam mulai + durasi + alasan + nama, persist di db

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Engine RAG dokumen: ingest PDF/DOCX/TXT → chunk → BM25 lokal → jawab pakai konteks via AI.
 // Tanpa embedding API: BM25 (retrieval klasik) — gratis, offline, gak butuh key.
 import fs from "fs";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { exec } from "child_process";
 import { promisify } from "util";
 // FIX: dulu import { chat as geminiChat } — "chat" TIDAK diexport geminiVision.js

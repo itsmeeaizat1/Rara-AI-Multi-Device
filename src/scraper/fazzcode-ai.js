@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // fazzcode-ai.js — fazzcode.eu.cc AI wrapper (NON-roleplay)
 // Sweep live 14 Sep 2026 dari 225 endpoint docs, YANG HIDUP:

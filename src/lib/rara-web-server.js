@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/rara-web-server.js — RARA LIVE WEB SERVER
 //
 // Fitur "live HTML di dalam WhatsApp" (request owner 2026-09-07, inspirasi

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: AI Sticker Generator
  * Fitur: .aisticker <prompt> — AI (nano-banana) bikin gambar dari teks

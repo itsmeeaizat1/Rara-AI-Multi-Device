@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-inworld.js — ENGINE Inworld AI (platform.inworld.ai)
 // Diverifikasi live 29 Sep 2026 pakai key owner. Endpoint yang jalan:
 //   TTS   : POST https://api.inworld.ai/tts/v1/voice → {audioContent: base64}

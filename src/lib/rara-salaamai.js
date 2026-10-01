@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/rara-salaamai.js — ai.salaam.world (Salaam World Islamic AI Assistant)
 // GRATIS TANPA API KEY — AI Engine Pro (WordPress) di baliknya:
 //   1) POST /wp-json/mwai/v1/start_session  → { sessionId, restNonce } (guest otomatis dapet nonce)

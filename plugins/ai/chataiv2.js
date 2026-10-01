@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // chataiv2 — AI asisten ChatAI
 // API asli (chatai.org) udah mati → sekarang lewat rantai fallback multi-API
 // (rara-ai-fallback.js: Haidar model "gpt4o" → Ikyy → Xemoz).

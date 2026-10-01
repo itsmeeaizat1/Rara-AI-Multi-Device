@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-auto-anime-notifier.js — Auto Anime Notifier V2 (rombak 8 Sep 2026,
 // request owner: "tdk hanya notif anime terbaru tp biar ada notifikasi episode
 // terbaru serta cmd manual .carianime" — ala script standalone owner).

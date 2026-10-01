@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .anticall — atur panggilan telepon masuk ke nomor bot (OWNER)
 // UPGRADE 18 Sep 2026 (request owner: "lbh baik klo ada org yg nlpon tnpa
 // ditolak mksdnya tkutnya keluarga saya yg nlpon jd mngkin hrs ada opsi

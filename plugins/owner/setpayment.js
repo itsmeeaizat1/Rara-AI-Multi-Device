@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * .setpayment — atur info pembayaran toko: Cash, QRIS, e-wallet, bank.
  * Data disimpan di database, override config.js.

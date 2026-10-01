@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // libanimationrpg/libgachaitemrpg.js — LIB ANIMASI EMOJI-GRID khusus Gacha Item
 // (upgrade owner 28 Sep 2026: cutscene 3 baris → GRID EMOJI FRAME-BY-FRAME 4 baris ala "scene situasional")
 // Grid per frame: HUD mesin slot · baris reel 3-reel (🟦 berputar → 🔒 terkunci satu per satu) · baris kunci

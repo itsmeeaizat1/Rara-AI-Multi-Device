@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Premium (Info & Harga)
  * Pembuat Code: Aizat
@@ -241,7 +241,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     premStatus += "\n\n";
 
     // ── BAGIAN 2: INFO BOT ──
-    const botName = botConfig.bot?.name || "Rara AI Whatsapp Bot";
+    const botName = botConfig.bot?.name || "Rara AI - Multi Device";
     const botVersion = botConfig.bot?.version || "21.2.0";
     const infoBox = bracketBox("⚡", "Info Bot", [
       "Nama: *" + botName + "*",

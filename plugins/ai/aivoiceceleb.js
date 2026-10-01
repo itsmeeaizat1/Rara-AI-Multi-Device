@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aivoiceceleb — TTS suara SELEBRITAS & KARAKTER (KuroNeko)
 // 12 voice: nahida, nami, ana, taylor_swift, elon_musk, angela_adkinsh,
 // eminem, miku, optimus_prime, goku, mickey_mouse, kendrick_lamar

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { startSchedulerByName, getFullSchedulerStatus } from '../../src/lib/rara-scheduler.js'
 import { initSholatScheduler } from '../../src/lib/rara-sholat-scheduler.js'
 import { getDatabase } from '../../src/lib/rara-database.js'

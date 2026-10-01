@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // heist.js — Heist system (rob targets, risk vs reward)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { raraGameBox, gameCTA, raraRpgBox } from "../../src/lib/rara-games.js";

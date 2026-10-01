@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ai-providers.js — Individual AI command per provider
 // .openai .gemini .claude .groq .grok .xai .qwen .cohere .perplexity .fireworks
 // .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina

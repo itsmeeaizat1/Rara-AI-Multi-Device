@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Roast — AI roasts the user based on their name/message
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

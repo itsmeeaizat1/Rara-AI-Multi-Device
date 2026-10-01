@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-rss-news.js — Engine berita RSS (fallback siputzx mati)
 // Sumber langsung: RSS situs berita (lebih stabil dr 3rd-party API) + Google News RSS
 // untuk situs yang gak punya RSS publik.

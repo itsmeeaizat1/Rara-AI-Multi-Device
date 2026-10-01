@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .index — panel kontrol bot saat run (request owner 26 Sep 2026: "di
 // kategori owner ada plugin index.js, kalau ketik .index muncul usage
 // dan list fitur yang tersedia untuk kontrol bot — mengontrol bagian

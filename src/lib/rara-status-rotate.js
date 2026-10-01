@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // 🔹 ROTASI STATUS LOADING (request owner 12 Sep 2026: "kenapa loading
 // raraagent cm sedang berpikir, gak ad loading sedang mencari / sedang
 // eksekusi / sedang mengerjakan"): fase 1 pesan status edit-in-place

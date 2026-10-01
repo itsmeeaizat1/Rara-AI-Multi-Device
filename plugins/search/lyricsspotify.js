@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // lyricsspotify.js — Lirik lagu versi Spotify via LRCLIB
 // Request owner 12 Sep 2026: "tmbah fitur baru lirik versi spotify .lirikspotify"
 // Engine: lrclib.net (src/scraper/spotify-lyrics.js — port kode owner) —

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .pollenai — free AI chat via pollinations.ai (port engine lama pollination.js)
 import { raraGuide, raraError, raraWrap } from "../../src/lib/rara-menu-style.js";
 

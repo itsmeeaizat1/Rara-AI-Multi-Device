@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * .qris — Kirim gambar QRIS pembayaran all-in-one (sewa/premium/topup/donasi).
  * Dipakai tombol "Kirim QRIS" di katalog .payment (quick_reply id ".qris").

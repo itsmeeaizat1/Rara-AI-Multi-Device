@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * rara-nav-buttons.js
  * Helper untuk kirim pesan dengan tombol Kembali + Tanya AI

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Kencan (Date Quest) — kasih affection + exp, burn energy + gold
 
 import { getRpgData, useEnergy, addExp, addGold, removeGold, checkCooldown } from "../../src/lib/rara-rpg-service.js";

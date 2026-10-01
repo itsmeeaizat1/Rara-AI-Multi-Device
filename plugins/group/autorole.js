@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/group/autorole.js — Auto Role Assignment System
 // Command: .autorole (toggle) | .profile | .roleboard | .addpoint | .setrole
 

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .htmldino — game Dino Run HTML self-contained (kategori HTML, port altftool "Dino Run Game")
 import fs from "node:fs";
 import path from "node:path";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Forage — Cari tanaman/herba di alam
 // Rombak khas (batch #11): animasi Keranjang Mengisi +
 // item khas Benih Langka + tool Keranjang Anyam.

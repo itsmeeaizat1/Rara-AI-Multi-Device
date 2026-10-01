@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // patrol.js — Patroli Ranger: event acak di perimeter pertahanan
 // Rombak khas 9 Sep 2026 (batch #6 antrean animasi per-game):
 // - Animasi bentuk baru RONDA PERIMETER (🛡️ pos-per-pos mengelilingi markas)

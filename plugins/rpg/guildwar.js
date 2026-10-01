@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .guild — GUILD WAR ANTAR GRUP (26 Sep 2026, ide owner no.5 "fitur masa
 // depan": RPG Rara jadi sosial — 1 grup = 1 guild, perang lintas grup,
 // papan peringkat global). Kekuatan guild = agregat stat RPG anggota.

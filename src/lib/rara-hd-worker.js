@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-hd-worker.js — worker thread buat engine upscale lokal (Swin2SR).
 // Kenapa worker? Inference ONNX itu CPU-bound — kalau jalan di main thread,
 // SELAMA render event loop Node keblok total: bot gak respon command lain,

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // AI Quiz — AI generates quiz questions with multiple choice
 
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/panel/ — PUSAT KONFIGURASI PANEL PTERODACTYL (v1-v100)
 // Semua set/get PTLA (application key) & PTLC (client key) + domain ada di sini.
 //

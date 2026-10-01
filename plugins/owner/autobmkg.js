@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 
 /**
  * .autobmkg — konfigurasi scheduler gempa BMKG otomatis (owner only).

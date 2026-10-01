@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rt.js — Bot runtime info
 import os from "os";
 import te from "../../src/lib/rara-error.js";

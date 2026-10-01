@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // min1ai — 1min.ai (app.1min.ai) AI multi provider
 // STRICT SATU RUTE (owner 11 Sep: satuan gak ada fallback) — 1min.ai down /
 // key mati / kredit kurang → error jelas, GAK nyamber ke brand lain.

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-movie-notifier.js — Auto Movie Notifier (request owner 9 Sep 2026, ala
 // script standalone "movie notifier free" — IMDbOT tanpa API key).
 //

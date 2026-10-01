@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-process-control.js — kontrol proses bot runtime (26 Sep 2026,
 // fitur no.2 dari panel .index owner: ".index restart — restart bot
 // dari chat, process.exit lalu pm2 bangunin lagi").

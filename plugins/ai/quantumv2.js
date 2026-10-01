@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // quantumv2 — Quantum AI
 // API asli (zelapioffciall.vercel.app) udah mati → sekarang lewat rantai fallback multi-API
 // (rara-ai-fallback.js: Haidar model "gemini" → Ikyy → Xemoz).

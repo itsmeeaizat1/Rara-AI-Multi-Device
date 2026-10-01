@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // survival.js — Survival mode (HP, hunger, thirst management)
 import { getDatabase } from "../../src/lib/rara-database.js";
 import { animSurvival } from "../../src/lib/rara-rpg-anim.js";

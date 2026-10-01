@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-aio2-session.js — sesi URL hasil popup .aio2 (anti abuse receiver).
 // Row id popup bawa `.aio2dl ext|mime|url` — receiver CUMA mau unduh URL
 // yang emang diberikan popup di chat itu (register → TTL 20 menit).

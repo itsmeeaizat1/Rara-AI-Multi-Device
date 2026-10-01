@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Unified Switch: Dispatcher untuk semua toggle on/off (channel, group, auto, fitur)
 import { getDatabase } from '../../src/lib/rara-database.js'
 import { setEnabled as setRainEnabled, isEnabled as isRainEnabled } from '../../src/lib/rara-rain-notify.js'

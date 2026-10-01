@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // alyamind — AlyaMind AI (khusus dari Alya bot)
 import { alyamind } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

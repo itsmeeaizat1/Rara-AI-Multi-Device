@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Auto Backup to Google Drive — backup otomatis project ke Google Drive
 // Gabungan rara-auto-backup.js (ZIP creation) + uploadgdrive.js (Drive upload)
 // .autobackupdrive on <interval> — enable auto backup ke Drive

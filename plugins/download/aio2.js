@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aio2.js — AIO Downloader v2 dengan PEMILIH KUALITAS (porting fitur .aio
 // script JPM APENBOTZ, 21 Sep 2026: "fitur yg work aja diporting jd v2").
 // Beda dari downloader lain di Rara (one-shot kirim 1 hasil terbaik):

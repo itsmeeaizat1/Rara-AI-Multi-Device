@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // weathersystemrpg.js — Sistem Cuaca Dunia RPG (upgrade owner 15 Sep 2026)
 // Dulu: dice acak kosong (cuacarpg/weatherrpg). Sekarang: cuaca harian global
 // deterministik yang BENERAN mempengaruhi .mancing / .berburu / .mining.

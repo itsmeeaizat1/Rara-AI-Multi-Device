@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Info Gempa BMKG
  * Fitur: .gempa — gempa terkini (animasi gelombang seismik + shakemap),

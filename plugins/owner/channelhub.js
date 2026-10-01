@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .channelhub — SALURAN HUB: pusat kendali integrasi Saluran WA (fitur no.1
 // "bot masa depan", 25 Sep 2026). Tiga modul:
 //   autopost  — konten harian AI-generated ke saluran (jam bebas, topic bebas)

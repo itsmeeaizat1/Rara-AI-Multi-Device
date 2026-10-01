@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-notif-card.js — SATU PINTU desain notifikasi sistem bot
 // Request owner 19 Sep 2026: "rapihkan menu yg blm ke desain kyk desain skrg,
 // cntoh notif bot doctor / notif fitur baru g pakai desain skrg kyk desain .play".

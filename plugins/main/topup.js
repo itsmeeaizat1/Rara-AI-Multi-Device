@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // topup.js — Katalog topup terpadu 4 JALUR (Akun, RPG, Item, Cinta)
 // Digenerate langsung dari TOPUP_ITEMS (src/lib/store/rara-store.js)
 // → menu SELALU sinkron dengan harga/jalur terbaru, gak ada harga stale.

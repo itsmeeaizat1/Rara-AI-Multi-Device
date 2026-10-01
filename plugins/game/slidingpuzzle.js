@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .slidingpuzzle — puzzle geser angka 15/8 (port altftool.com "Sliding Puzzle")
 // Reply w/a/s/d = tile dari arah itu digeser ke lubang. ANIMASI KHAS: tile angka meluncur ke slot kosong.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

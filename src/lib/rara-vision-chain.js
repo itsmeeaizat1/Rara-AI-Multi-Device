@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-vision-chain.js — RANTAI SCAN GAMBAR (vision) TANPA-WAYAR-KEY
 // Dipakai .vision + .aichatimg + fitur vision lain.
 //

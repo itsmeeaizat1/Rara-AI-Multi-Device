@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zhonesty — Honesty Score Game dari zelapi /games/honesty (live 15 Sep 2026).
 // 🔹 .zhonesty <pertanyaan> | <jujur|tidak jujur|ragu> → skor + level + feedback.

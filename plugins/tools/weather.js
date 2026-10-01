@@ -1,5 +1,5 @@
 // weather.js — Cek cuaca realtime + pilih provider (rename file owner 15 Sep 2026, wasal .cuaca)
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 
 import { raraError, raraEmpty, raraGuide, raraNoInput, 
   bracketBox,
@@ -185,7 +185,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         return { handled: true };
       }
 
-      await m.reply(`${footer.trim()}\n\n${botConfig?.bot?.name || `Rara AI WhatsApp Bot`}`);
+      await m.reply(`${footer.trim()}\n\n${botConfig?.bot?.name || `Rara AI - Multi Device`}`);
       return { handled: true };
     }
 

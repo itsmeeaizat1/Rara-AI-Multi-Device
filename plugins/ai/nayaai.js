@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // nayaai — Naya AI via api.cuki.biz.id
 import { nayaAI } from "../../src/scraper/cuki-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

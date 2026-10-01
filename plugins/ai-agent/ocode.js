@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // ocode.js — OPENCODE 9ROUTER: AI CODING AGENT VIA WHATSAPP (OWNER ONLY)
 // ".ocode perbaiki bug di fitur cuaca" → agent 9router baca file repo,

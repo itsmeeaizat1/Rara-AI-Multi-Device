@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-greeting.js — Ucapan pengenalan bot di menu/allmenu yang berubah
 // tiap menu dimuat. Digenerate AI gratis (IkyyXD /ai/gemini — free, no
 // apikey) supaya token DeepSeek gak kekuras. Prompt dibekali identitas

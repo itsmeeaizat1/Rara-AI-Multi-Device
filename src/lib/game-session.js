@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // game-session.js — Game Session Manager (singleton)
 // Menyimpan state game per-user agar bot "ingat" user sedang main
 import { EventEmitter } from 'events';

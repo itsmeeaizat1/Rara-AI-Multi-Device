@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // aimathv2 — AI Math solver v2 (nexray API + fallback)
 import { aimath as nexrayAimath } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

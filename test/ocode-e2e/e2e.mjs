@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: OPENCODE 9ROUTER (AI coding agent via chat, owner 21 Sep 2026)
+// RARA AI - MULTI DEVICE — E2E: OPENCODE 9ROUTER (AI coding agent via chat, owner 21 Sep 2026)
 // Verifikasi: loop agent (read→edit→done), path jail, blacklist rahasia, backup+undo,
 // lock 1 tugas, abort stop, gate owner, teks polos = ringkasan, plugin report.
 import assert from "node:assert/strict";

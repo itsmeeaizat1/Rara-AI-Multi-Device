@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // cowboyduel.js — Game tembak koboy (tebak posisi musuh)
 import { raraWrap } from "../../src/lib/rara-menu-style.js";
 import te from "../../src/lib/rara-error.js";

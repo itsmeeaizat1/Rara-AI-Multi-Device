@@ -1,5 +1,5 @@
 import { normalizeNewsletterMeta } from "../../src/lib/rara-saluran.js";
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import fs from "fs";
 import sharp from "sharp";

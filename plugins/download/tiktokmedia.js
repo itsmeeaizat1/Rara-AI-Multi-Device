@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // tiktokmedia.js — TikTok search by keyword dengan pilihan format (ala .play):
 //   .ttvideo <keyword> → kirim video random (no watermark)
 //   .ttaudio <keyword> → kirim original sound dari video random

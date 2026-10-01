@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // onettts.js — Onepunya API: 3 engine TTS + pendukungnya.
 // .onettts <voice>|<teks>      — Microsoft Neural TTS (voice id-ID-ArdiNeural dll)
 // .onettvoices [keyword]       — daftar voice tersedia (filter keyword opsional)

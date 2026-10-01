@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // likeedl — Download video Likee
 // Primary: IkyyXD /download/likee → all-in-one | Fallback: builtin likee.js
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: alihan endpoint 9router ke LOKAL (owner 21 Sep 2026)
+// RARA AI - MULTI DEVICE — E2E: alihan endpoint 9router ke LOKAL (owner 21 Sep 2026)
 // 9router bisa self-host (npm install -g 9router, 9router.com) — bot harus bisa
 // dialihin ke http://localhost:20128/v1 TANPA edit kode & TANPA restart:
 // satu pintu env-loader + getter di semua object literal + command .ai9v2 endpoint.

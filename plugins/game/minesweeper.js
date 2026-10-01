@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .minesweeper — cari ranjau 6x6 (port altftool.com "Minesweeper")
 // Reply koordinat (a1..f6) buat buka sel. Klik pertama DIJAMIN aman (bom digeser).
 // ANIMASI KHAS: radar ◎ menyapu ladang lalu kunci sasaran.

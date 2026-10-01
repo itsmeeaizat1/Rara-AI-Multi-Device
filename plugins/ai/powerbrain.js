@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // powerbrain — PowerBrain AI chat
 import { powerbrain } from "../../src/scraper/nexray-api.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";

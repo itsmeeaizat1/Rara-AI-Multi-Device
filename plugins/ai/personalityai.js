@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // kepribadianai — AI test kepribadian MBTI
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

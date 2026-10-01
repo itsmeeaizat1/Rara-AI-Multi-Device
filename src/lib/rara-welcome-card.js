@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-welcome-card.js — kartu canvas autosmartwelcome + helper welcome (detectCountry, fillWelcomeTemplate)
 // Desain welcome/goodbye v1-v5 sudah dihapus — nanti dibuat ulang kalau ada desain baru
 let _canvas = null;

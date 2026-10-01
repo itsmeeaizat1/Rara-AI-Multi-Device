@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .zlirik — AI Lyrics Generator via zelapi.eu.cc /ai-generate (suite z)
 // 🔹 Owner 14 Sep: minta "AI Music Generator" — dites live, suno/sunora/

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .ztools2 — BACKUP z-variant tools zelapi (owner 15 Sep 2026:
 //   "z di depan = cadangan, meski bot udah punya fiturnya").

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { downloadMediaMessage, getContentType } from "nova";
 import { ImageUploadService } from "node-upload-images";
 import axios from "axios";

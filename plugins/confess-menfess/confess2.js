@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Confess V2 (channel terpusat, dulu "v3") — porting script confess bot standalone
 // (owner, 9 Sep 2026): confess anonim / non-anonim ke CHANNEL TERPUSAT,
 // reply per confess, like dedup, list, detail, mode anon reply, stats, hapus (owner).

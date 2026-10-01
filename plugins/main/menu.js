@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // menu.js — Menu utama (Rara box style + type 1 buttons + thumbnail menu.jpg)
 import { getCaseCount, getCasesByCategory } from "../../case/rara.js";
 import config from "../../config.js";
@@ -124,7 +124,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
       info,
       categories: menuCats,
       prefix,
-      footerName: botConfig?.bot?.name || "Rara AI Whatsapp Bot",
+      footerName: botConfig?.bot?.name || "Rara AI - Multi Device",
     });
 
     let result = txt;
@@ -140,7 +140,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
-    const botName = botConfig.bot?.name || "Rara AI Whatsapp Bot";
+    const botName = botConfig.bot?.name || "Rara AI - Multi Device";
 
     // 6 tombol quick access — nativeFlowMessage (proven pattern, bukan legacy type 1)
     // "Kategori" pakai single_select → klik buka popup list semua kategori

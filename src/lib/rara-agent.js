@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-agent.js — AI AGENT OTONOM MULTI-LANGKAH (request owner 11 Sep 2026:
 // "buatkan no 1" — ide fitur paling canggih + revisi "biar ai agentnya bisa
 // browsing dan automation kayak kick org cm dari nama, tutup grup dll").
@@ -614,7 +614,7 @@ const CODE_BLOCKLIST = /child_process|require\(|process\.exit|eval\(|fs\.(write|
 
 function wrapPluginCode(name, desc, body) {
   const d = new Date().toISOString().slice(0, 10);
-  return `// RARA AI WHATSAPP BOT — plugin dibuat otomatis oleh AI Agent (.agent create)
+  return `// RARA AI - MULTI DEVICE — plugin dibuat otomatis oleh AI Agent (.agent create)
 // Fitur: ${desc} | dibuat ${d}
 // Template agent — self-contained, murni logika lokal, tanpa akses sistem.
 import { raraWrap } from "../../src/lib/rara-menu-style.js";

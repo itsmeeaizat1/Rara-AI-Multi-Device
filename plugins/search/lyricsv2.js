@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // lyricsv2.js — Cari lirik lagu via Genius (genius-lyrics) + nexray fallback
 import { Client as GeniusClient } from 'genius-lyrics'
 import axios from 'axios'

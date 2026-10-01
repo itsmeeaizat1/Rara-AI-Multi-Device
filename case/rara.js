@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { performance } from "perf_hooks";
 import { getDatabase } from "../src/lib/rara-database.js";
 import {
@@ -25,7 +25,7 @@ async function buildListAdReply(title) {
   const ctx = {
     externalAdReply: {
       title: String(title || config.bot?.name || "Rara AI").substring(0, 60),
-      body: "Rara AI Whatsapp Bot",
+      body: "Rara AI - Multi Device",
       mediaType: 1,
       sourceUrl: config.saluran?.link || config.info?.website || "",
       renderLargerThumbnail: false,

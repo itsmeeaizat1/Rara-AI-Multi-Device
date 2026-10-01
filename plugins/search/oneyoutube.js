@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // oneyoutube.js — Onepunya API: YOUTUBE_SEARCH + YTMUSIC_PLAY.
 // .oneyts <query>      — cari video YouTube (list 10 hasil)
 // .oneytmusic <judul>  — cari lagu di YT Music → kirim MP3-nya langsung

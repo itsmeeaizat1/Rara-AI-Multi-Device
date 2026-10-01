@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // quizarena.js — ARENA KUIS RPG: jawaban soal = senjata! (request owner 21 Sep 2026)
 // Bank soal 2003 (src/data/arenakuis.json, generator test/quizarena-e2e/generate.mjs).
 // MODE SOLO: tiap wave 1 soal — jawab BENAR = damage ke musuh, SALAH/timeout =

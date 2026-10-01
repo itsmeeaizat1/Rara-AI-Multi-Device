@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // system.js — Database, backup, scheduler, email OTP
 
 import { apiKeys } from "./apikey.js";

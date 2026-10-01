@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 //  Omnify AIO — Universal Media & Profile Engine (ESM port)
 //  Target  : https://aio.omnifylabs.sbs/

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Compat shim — logika pindah ke src/lib/panel/index.js (pusat PTLA/PTLC)
 export {
   MAX_PANELS,

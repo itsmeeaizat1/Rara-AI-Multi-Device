@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Voice Note Captcha Interrogation — Ujian suara untuk bukti manusia asli
 // Hook ke daftarotomatis: setelah captcha teks benar, user harus kirim VN baca kalimat acak
 // Bot verify via Gemini multimodal: cek suara manusia + cek konten kalimat cocok

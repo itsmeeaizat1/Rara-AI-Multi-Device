@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 .jkt48 — data SHOWROOM JKT48 dari zelapi.eu.cc (5 endpoint):
 //   info | comments | gift | rank | stream

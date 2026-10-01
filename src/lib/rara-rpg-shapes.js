@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-rpg-shapes.js — BENTUK ANIMASI KHAS PER-GAME (9 Sep 2026,
 // request owner: "beda game beda plugin = animasi beda bentuk, khas
 // game itu sendiri").

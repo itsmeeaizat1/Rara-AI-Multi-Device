@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .hiaiagent — AI agent framework MCP (engine src/lib/hiai/)
 // Nama cmd SENGAJA beda dari agent Rara (.raraagent/.mcp/.ai lain) biar gak bentrok.
 import { raraGuide, raraError, raraWrap, tipText } from "../../src/lib/rara-menu-style.js";

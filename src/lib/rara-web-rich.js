@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-web-rich.js — AI RICH buat command .web (owner 10 Sep 2026:
 // "fitur ai rich cm buat cmd .web — .web google yg kebuka ai rich google
 // search, kyk buka google chrome gt"). Dipakai plugins/browser/web.js.

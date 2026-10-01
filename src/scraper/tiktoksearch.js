@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // tiktoksearch.js — TikTok keyword search
 // UTAMA (request owner 12 Sep 2026): wilz.web.id/api/search/tiktok?q=&count=
 //   → result.data[] { title, duration "29s", play_url (mp4 no-wm), cover_url }

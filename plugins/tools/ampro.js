@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .ampro/.amrefresh — aktifin AlightMotion premium via magic link email (port engine lama alightmotion.js)
 import fs from "fs";
 import path from "path";

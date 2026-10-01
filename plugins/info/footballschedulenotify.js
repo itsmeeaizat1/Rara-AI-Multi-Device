@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // footballschedulenotify.js — Auto Jadwal Bola Notifier (request owner 10 Sep 2026,
 // "mirip kerja anime notifier"). Sumber: ESPN scoreboard (utama, no key)
 // → TheSportsDB (fallback). Per-chat opt-in:

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 YOUTUBE BROWSER SEARCH — pencarian YouTube pakai BROWSER BENERAN
 // (puppeteer/chromium), bukan AI & bukan HTTP scraper.

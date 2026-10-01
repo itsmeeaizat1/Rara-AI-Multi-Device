@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Plugin .voipcall / .voipvideocall — telepon WA dengan pemutar media (port engine lama)
 // Engine: src/lib/hivoip/ — OWNER-ONLY (anti penyalahgunaan, owner 28 Sep 2026)
 // REVISI 1 Okt 2026 (owner: "2 mode .voipcall telepon biasa untuk default klo

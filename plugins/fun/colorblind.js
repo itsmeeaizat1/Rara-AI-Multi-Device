@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Tes Buta Warna (Ishihara)
  * Fitur: .butawarna — 5 ronde plate Ishihara DIGENERASI canvas (tiap tes

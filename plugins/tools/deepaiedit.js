@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // DeepAI Image Editor V2 — Edit gambar dengan text prompt, no API key needed (salt scraping)
 import fs from "node:fs/promises";
 import path from "node:path";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // quranv4.js - Plugin Al-Quran via equran.id API v2
 
 const pluginConfig = {

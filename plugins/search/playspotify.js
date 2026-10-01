@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // playspotify.js — Play versi Spotify: cari lagu Spotify → download mp3 → kirim
 // Request owner 11 Sep 2026: "buat fitur play tp versi spotify .playspotify"
 // Engine: spotidown.app (src/scraper/spotidown.js) — meta lengkap dari Spotify

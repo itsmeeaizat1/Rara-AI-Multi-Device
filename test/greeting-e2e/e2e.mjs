@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: rara-greeting.js
+// RARA AI - MULTI DEVICE — E2E: rara-greeting.js
 // Cover 3 fix 20 Sep 2026: (1) timezone Asia/Jakarta bukan jam server lokal,
 // (2) prompt bervariasi tiap panggilan (nonce + fitur diacak, anti jawaban itu2 aja),
 // (3) cooldown 10 detik — cache basi dibalikin instan + refresh background.

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // All Downloader — fallback chain antar versi (V1 → V2 → V3 → V4).
 // Command tiap versi TETAP TERPISAH (biar keliatan engine mana yang down),
 // tapi kalau versi itu gagal, otomatis nyoba versi berikutnya.

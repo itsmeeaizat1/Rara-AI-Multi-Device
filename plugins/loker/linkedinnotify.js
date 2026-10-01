@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // linkedinnotify.js — Auto LinkedIn Job Notifier (request owner 10 Sep 2026).
 // Sumber: Apify valig/linkedin-jobs-scraper ($0.0004/job). Card per-lowongan
 // ala anime notifier: metadata lengkap + deskripsi ℅readmore + banner.

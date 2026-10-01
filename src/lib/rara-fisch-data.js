@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 const islands = {
   mousewood: { name: "Mousewood", listFish: [
     { name: "Red Snapper", rarity: "common", avgValue: 35, minKg: 1, maxKg: 4 },

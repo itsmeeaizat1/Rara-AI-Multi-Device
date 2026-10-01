@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // spotplay.js — Putar musik dari Spotify (engine azbry)
 //
 // REVISI 14 Sep 2026 (owner: "disamain krna beda endpoint tp untuk dichat

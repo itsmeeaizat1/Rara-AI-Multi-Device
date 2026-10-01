@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rss.js — Generic RSS feed reader (rss-parser, no API key)
 import RSSParser from 'rss-parser'
 import { raraGuide } from "../../src/lib/rara-menu-style.js"

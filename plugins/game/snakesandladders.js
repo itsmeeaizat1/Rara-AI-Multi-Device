@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // snakesandladders.js — Game ular tangga (snakes & ladders)
 import { raraWrap, raraBox } from "../../src/lib/rara-menu-style.js";
 import { raraGameBox } from "../../src/lib/rara-games.js";

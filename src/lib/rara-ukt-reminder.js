@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════
 // PENGINGAT UKT/SPP ENGINE (13 Sep 2026, batch 4 variasi polos)
 // Audit: fitur MATI TOTAL — db.setSetting BUKAN API (db.setting(key,value))

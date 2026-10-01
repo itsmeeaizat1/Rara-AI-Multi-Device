@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // multi-ai.js — OpenRouter-style: pilih provider + model lewat chat
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { callAI, DEFAULT_PROVIDERS, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/rara-ai-service.js";

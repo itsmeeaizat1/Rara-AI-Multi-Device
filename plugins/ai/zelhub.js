@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 ZelAI Hub — .zel (daftar 86 AI) + .zimage (gambar AI)
 // ═════════════════════════════════════════════

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import * as cheerio from 'cheerio'
 async function scrapeHokCharacter(name) {
     if (!name) throw new Error("Nama karakter kosong");

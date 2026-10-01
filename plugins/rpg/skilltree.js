@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Skill Tree — Tree progression, talent, learnskill, research, mutate
 
 import { ensureRpg, saveRpg, SKILL_DB } from "../../src/lib/rara-rpg-service.js";

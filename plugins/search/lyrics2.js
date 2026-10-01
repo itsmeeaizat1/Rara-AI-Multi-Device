@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Lirik2 (v2 — Genius no-key scraper)
  * Fitur: Cari lirik lagu via scrape Genius.com TANPA API KEY.

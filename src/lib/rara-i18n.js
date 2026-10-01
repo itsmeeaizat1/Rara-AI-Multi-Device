@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-i18n.js — Translation layer untuk UI bot
 // Translate semua teks UI (menu, tombol, response command) ke bahasa user
 // Pakai Google Translate API (gratis) + static dictionary untuk common phrases

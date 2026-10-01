@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-premku.js — API client Premku (premku.com) — app premium.
 // Auto order akun/layanan premium (Capcut Pro, dll): profile, products,
 // order, status. Auth: POST JSON {api_key} (form-encoded DITOLAK

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 zelapi.js — scraper zelapi.eu.cc (86 AI endpoint, suite .z)
 // 🔹 STRICT SATUAN: status:false / key kosong → error ASLI keluar, no fallback.

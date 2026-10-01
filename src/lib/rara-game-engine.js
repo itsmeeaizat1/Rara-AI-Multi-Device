@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-game-engine.js — Game engine rebuild dari nol
 // Fix: nyerah/surrender bug, reply detection, session management
 

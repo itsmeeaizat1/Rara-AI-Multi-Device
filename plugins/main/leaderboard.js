@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Unified Leaderboard — RPG (new fields) + Group Activity (semua dalam 1 file)
 import fs from 'fs'
 import path from 'path'

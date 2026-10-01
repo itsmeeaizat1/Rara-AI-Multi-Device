@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Nguli — simulasi kerja keras (upgrade ala script owner 9 Sep 2026)
 // 16 pekerjaan bergaji dengan syarat level • toko 10 alat (bonus gaji/energi)
 // bank tabung/ambil • animasi morphing • istirahat • leaderboard kuli terkaya

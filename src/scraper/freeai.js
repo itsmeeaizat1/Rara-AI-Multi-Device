@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/scraper/freeai.js — free.ai (gratis TANPA API KEY)
 // .freeai      → chat (api.free.ai/v1/chat, engine Qwen3-30B)
 // .freeaiimage  → text-to-image (gpu4.free.ai/v1/image/generate, sdxl)

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // .ftooljwt — decoder JSON Web Token native offline (port altftool.com/tools/all/jwt-decoder)
 // Decode header + payload base64url + status kadaluarsa. Signature TIDAK diverifikasi (cuma decode).
 import { raraGuideV2, raraSalahV2, raraWrap } from "../../src/lib/rara-menu-style.js";

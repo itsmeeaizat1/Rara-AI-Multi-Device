@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════════════════════════
 // METER KEHADIRAN ABSEN (13 Sep 2026, variasi fitur polos batch 4)
 // ".absen list doang gak ada progress" — kartu .absen & .cekabsen

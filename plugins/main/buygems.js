@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // buygems.js — Beli gems RPG satuan — masukin jumlah gems (via factory rara-topup-flow.js)
 import { buildTopupPlugin } from "../../src/lib/store/rara-topup-flow.js";
 

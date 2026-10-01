@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // pdftoimg.js — PDF ke gambar: reply PDF, tiap halaman jadi PNG
 // Fitur baru 9 Sep 2026 (request owner "fitur yg blm prnh ada di bot")
 import axios from "axios";

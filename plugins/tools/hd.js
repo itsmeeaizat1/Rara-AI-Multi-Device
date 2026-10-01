@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // HD Upscaler — pakai sharp local (Lanczos3 + sharpen) sebagai primary
 // DeepAI key expired, Azbry/Snowping down. Sharp local = gratis, no API, no rate limit
 import sharp from "sharp";

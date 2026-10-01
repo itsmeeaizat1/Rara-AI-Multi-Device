@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-welcome-canvas.js — kartu canvas WELCOME/GOODBYE ditanam di PREVIEW
 // (request owner 16 Sep 2026): digambar canvas → thumbnail → externalAdReply,
 // BUKAN media langsung → gak bisa disimpan ke galeri.

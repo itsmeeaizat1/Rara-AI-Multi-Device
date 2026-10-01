@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // src/lib/rara-stt.js — Speech-to-Text (STT) shared helper
 // Pipeline: Inworld STT-1 (utama, owner 29 Sep) → Gemini multimodal → OpenAI Whisper → Groq Whisper → null
 // Dipakai oleh: rara-auto-ai.js (fitur .autoai — respon VN), dst.

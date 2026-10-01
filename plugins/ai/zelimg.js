@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═════════════════════════════════════════════
 // 🔹 ZelAI Image — 22 generator gambar zelapi (text2img + edit foto)
 // 🔹 Prefix z. text2img: prompt → gambar. imgedit: WAJIB reply foto + prompt.

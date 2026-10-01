@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: 9ROUTER LOKAL NATIVE (owner 25 Sep 2026)
+// RARA AI - MULTI DEVICE — E2E: 9ROUTER LOKAL NATIVE (owner 25 Sep 2026)
 // "seakan-akan bot sudah menginstal & menjalankan 9router beneran di node js,
 // semua model lengkap" + rename cmd .9router (bukan .ai9).
 // Jalur: engine src/lib/rara-9router-local.js + plugin plugins/ai/9router.js.

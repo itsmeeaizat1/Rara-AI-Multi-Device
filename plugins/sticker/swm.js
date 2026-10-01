@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import te from '../../src/lib/rara-error.js'
 import { addExifToWebp, isAnimatedWebp, DEFAULT_METADATA } from '../../src/lib/rara-exif.js'

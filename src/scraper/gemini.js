@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 async function gemini(input = {}) {
   const payload = typeof input === "string" ? { message: input } : input || {};

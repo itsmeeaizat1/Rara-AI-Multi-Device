@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import sharp from "sharp";
 import { getAssetBuffer } from "./rara-asset-manager.js";
@@ -222,7 +222,7 @@ async function replyWithCardPreview(m, txt, cardData, opts = {}) {
     await m.reply(txt, {
       contextInfo: {
         externalAdReply: {
-          title: opts.title || config.bot?.name || "Rara AI Whatsapp Bot",
+          title: opts.title || config.bot?.name || "Rara AI - Multi Device",
           body: opts.body || "",
           thumbnail: thumb,
           previewType: "PHOTO",

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Command: .alldl4 (alias: alldownloader4, allv4, adl4, all4)
 // All Downloader V4 — engine NixDL (nixdl-5-1.vercel.app, resolver publik
 // 22 platform dengan fallback chain upstream ala v3, tapi satu pintu API).

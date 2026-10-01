@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 YOUTUBE SEARCH ENGINE BERSAMA — dipakai DUA agent:
 //   • .raraagent  (src/lib/aiagent.js — TOOLS.searchyt)

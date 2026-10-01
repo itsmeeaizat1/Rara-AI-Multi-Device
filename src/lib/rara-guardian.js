@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 GROUP GUARDIAN AI (request owner 12 Sep 2026, ide fitur no 6)
 // 🔹 Moderator grup 24/7 berbasis AI — beda dari anti-X regex:

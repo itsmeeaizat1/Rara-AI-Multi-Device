@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // plugins/sewa-premium/benefitsewa.js — Kartu manfaat sewa bot (pasangan .benefitpremium)
 // Harga live dari src/lib/sewa/sewa.js (ikutin override .setsewa otomatis)
 // Sistem sewa: sewaChecker (rara-scheduler.js) cek tiap 10 mnt — expired → bot auto keluar grup

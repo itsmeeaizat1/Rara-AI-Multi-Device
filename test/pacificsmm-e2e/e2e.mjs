@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT — E2E: AUTO ORDER SMM PACIFIC (api.pacific-pedia.co.id)
+// RARA AI - MULTI DEVICE — E2E: AUTO ORDER SMM PACIFIC (api.pacific-pedia.co.id)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

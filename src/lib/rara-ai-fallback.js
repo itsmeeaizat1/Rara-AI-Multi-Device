@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-ai-fallback.js — RUTE AI buat fitur AI satuan + rantai internal
 //
 // REQUEST OWNER 11 Sep 2026: "aku mah ai satuan jgn ada fallback jadi kyk

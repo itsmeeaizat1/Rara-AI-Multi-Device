@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";
 import { callIkyy } from "../../src/lib/rara-ai-service.js";
 
@@ -138,7 +138,7 @@ async function callOpenRouter(apiKey, modelId, messages) {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "HTTP-Referer": "https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device",
-      "X-Title": "Rara AI WhatsApp Bot",
+      "X-Title": "Rara AI - Multi Device",
     },
     body: JSON.stringify({
       model: modelId,

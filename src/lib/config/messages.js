@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // messages.js — Template pesan bot (wait, error, ownerOnly, dll) + groupProtection
 
 export const errorTemplate = `「 ✦ ⚠️ Kendala ✦ 」\nPerintah \`{prefix}{command}\` lagi bermasalah\nCoba lagi nanti ya, {pushName}\nMasih error? Hubungi owner bot`;

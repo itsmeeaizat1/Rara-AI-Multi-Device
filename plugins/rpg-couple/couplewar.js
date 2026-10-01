@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // RPG Cinta — Couple War (Duel pasangan vs pasangan lain)
 
 import { ensureRpg, getRpgData, addExp, addGold } from "../../src/lib/rara-rpg-service.js";

@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ============================================================
 // 🔹 AI AGENT PLUGIN — .raraai (merged with tanyaai)
 // 🔹 Bisa EKSEKUSI aksi grup (tutup/buka/kick/promote/dll) via TOOLS

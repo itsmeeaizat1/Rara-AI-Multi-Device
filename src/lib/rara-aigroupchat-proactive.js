@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════
 // Rara AI Grup - Proactive messaging (ANTI-BAN)
 // Bot ngomong sendiri dengan jeda aman & random

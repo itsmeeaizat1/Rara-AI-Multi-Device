@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // Berita Lengkap — 10 sumber berita Indonesia via Andaraz API
 // Source: antaranews, bbc, beritajakarta, bola, cnn, detik, idx, kompas, okezone, sindonews
 import { raraError, raraEmpty, raraGuide, raraNoInput, raraWrap } from "../../src/lib/rara-menu-style.js";

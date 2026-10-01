@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 /**
  * .whois — "Siapa nomor ini?" dossier AI dari histori persisten.
  * Saran fitur #2 owner (21 Sep 2026): reply pesan / mention / nomor /

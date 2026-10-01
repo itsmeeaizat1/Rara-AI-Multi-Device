@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // rara-ytdlp.js — YouTube downloader via yt-dlp binary (100% gratis, no API key)
 // Support: audio (128/192/256/320 kbps) + video (360/480/720/1080p)
 // yt-dlp binary: otomatis dari dependency youtube-dl-exec (npm install saja),

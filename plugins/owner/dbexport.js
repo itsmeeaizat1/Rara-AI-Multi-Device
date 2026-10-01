@@ -1,4 +1,4 @@
-// RARA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
 // dbexport.js — Export database bot jadi file Excel (.xlsx) pakai exceljs
 // Fitur baru 9 Sep 2026 (request owner: fitur baru biar nambah dependencies)
 // Owner only — data semua pemain sensitif.
