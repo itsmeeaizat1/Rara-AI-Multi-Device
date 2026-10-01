@@ -300,6 +300,17 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[Play]", err.message || err);
     await m.react("❌");
+    // 🔹 FIX 1 Okt 2026: kalau akar masalahnya bot-check YouTube, kasih
+    // pesan solusi (upload data/yt-cookies.txt) — JANGAN cuma "gangguan"
+    // generik yang bikin owner bingung "dulu bisa kok".
+    const msg = String(err?.message || "");
+    if (/verifikasi bot|cookies YouTube|Sign in to confirm|not a bot/i.test(msg)) {
+      return m.reply(
+        `⚠️ YouTube lagi ngeblokir IP server (nagih verifikasi bot).\n` +
+        `Semua jalur konversi (yt-dlp, cobalt, API mp3) lagi kena blokir barengan.\n\n` +
+        `🔧 *FIX:* ekspor cookies YouTube dari browser yang login (akun sekunder aja biar aman) pakai extension "Get cookies.txt LOCALLY" → simpan ke *data/yt-cookies.txt* → restart bot. Panduan lengkap: changelogs/FIXES.md`
+      );
+    }
     return m.reply(novaGangguan("Play"));
   }
 }

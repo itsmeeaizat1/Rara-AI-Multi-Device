@@ -88,6 +88,34 @@ async function isFfmpegAvailable() {
   return _ffmpegAvailable;
 }
 
+// 🔹 YT-DLP COOKIES (1 Okt 2026, fix .play lokal gagal terus):
+// YouTube sekarang nagih "Sign in to confirm you're not a bot" buat IP
+// datacenter (VPS/sandbox) — SEMUA player_client keblok tanpa auth, dan
+// cobalt.tools resmi sudah wajib JWT/Turnstile (400). Satu-satunya jalur
+// stabil: cookies YouTube dari browser yang login, diekspor ke file
+// cookies.txt (format Netscape). Lokasi yang dicek (urutan):
+//   1. env NOVA_YTDLP_COOKIES (path absolut file cookies.txt)
+//   2. data/yt-cookies.txt (repolokal/data — tinggal upload dari HP/laptop)
+// File gak ada → flag kosong, perilaku lama (bakal kena bot-check lagi).
+// CATATAN: pakai akun YouTube SEKUNDER (bukan akun utama) — scraping dari
+// akun utama berisiko. Cookies expire beberapa minggu → ganti file kalau
+// error bot-check balik lagi.
+function getYtCookiesArgs() {
+  const candidates = [
+    process.env.NOVA_YTDLP_COOKIES,
+    path.join(process.cwd(), "data", "yt-cookies.txt"),
+  ].filter(Boolean);
+  for (const c of candidates) {
+    try {
+      if (fs.existsSync(c) && fs.statSync(c).size > 100) {
+        console.log(`[nova-ytdlp] 🍪 pakai cookies YouTube: ${c}`);
+        return `--cookies "${c}"`;
+      }
+    } catch {}
+  }
+  return "";
+}
+
 /**
  * Download audio via yt-dlp dengan pilihan kbps
  * @param {string} url - YouTube URL
@@ -120,7 +148,7 @@ async function downloadAudioYtDlp(url, kbps = "128") {
 
     // Get title first
     const { stdout: titleOut } = await run(
-      `${getYtDlpCmd()} --get-title --no-warnings "${url}"`,
+      `${getYtDlpCmd()} ${getYtCookiesArgs()} --get-title --no-warnings "${url}"`,
       { timeout: 15000 },
     );
     const title = titleOut.trim() || "Audio";
@@ -128,6 +156,7 @@ async function downloadAudioYtDlp(url, kbps = "128") {
     // Download + convert to mp3 with specified bitrate
     const cmd = [
       getYtDlpCmd(),
+      getYtCookiesArgs(),
       ...getYtDlpFfmpegArgs(),
       "-x",                              // extract audio
       "--audio-format", "mp3",
@@ -187,7 +216,7 @@ async function downloadVideoYtDlp(url, quality = "720") {
   try {
     // Get title first
     const { stdout: titleOut } = await run(
-      `${getYtDlpCmd()} --get-title --no-warnings "${url}"`,
+      `${getYtDlpCmd()} ${getYtCookiesArgs()} --get-title --no-warnings "${url}"`,
       { timeout: 15000 },
     );
     const title = titleOut.trim() || "Video";
@@ -195,6 +224,7 @@ async function downloadVideoYtDlp(url, quality = "720") {
     // Download video with max quality constraint
     const cmd = [
       getYtDlpCmd(),
+      getYtCookiesArgs(),
       ...getYtDlpFfmpegArgs(),
       // WA-safe: prefer H.264 (avc1) + AAC (m4a) — AV1/Opus di mp4
       // sering gak bisa diputar di WhatsApp
@@ -271,6 +301,8 @@ async function downloadViaCobalt(url, { audioBitrate, videoQuality } = {}) {
   return null;
 }
 
+let _lastYtdlpBotCheck = 0;
+
 /**
  * Universal download audio — yt-dlp first, cobalt fallback, ytdl.js last resort
  */
@@ -284,6 +316,7 @@ async function downloadAudio(url, kbps = "128") {
       return result;
     } catch (err) {
       console.error("[nova-ytdlp] yt-dlp failed:", err.message);
+      if (/Sign in to confirm|not a bot|cookies/i.test(String(err.message))) _lastYtdlpBotCheck = Date.now();
     }
   }
 
@@ -299,6 +332,9 @@ async function downloadAudio(url, kbps = "128") {
   }
 
   // 3. Fallback to ytdl.js (ytmp3.mobi) — no kbps control, default 128
+  if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX: ekspor cookies YouTube ke file data/yt-cookies.txt (format Netscape) lalu restart — panduan: changelogs/FIXES.md");
+  }
   throw new Error("Semua API audio gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
 
@@ -315,6 +351,7 @@ async function downloadVideo(url, quality = "720") {
       return result;
     } catch (err) {
       console.error("[nova-ytdlp] yt-dlp video failed:", err.message);
+      if (/Sign in to confirm|not a bot|cookies/i.test(String(err.message))) _lastYtdlpBotCheck = Date.now();
     }
   }
 
@@ -329,6 +366,9 @@ async function downloadVideo(url, quality = "720") {
     console.error("[nova-ytdlp] cobalt video failed:", err.message);
   }
 
+  if (_lastYtdlpBotCheck && Date.now() - _lastYtdlpBotCheck < 60000) {
+    throw new Error("YouTube nagih verifikasi bot (IP server diblokir). FIX: ekspor cookies YouTube ke file data/yt-cookies.txt (format Netscape) lalu restart — panduan: changelogs/FIXES.md");
+  }
   throw new Error("Semua API video gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
 
