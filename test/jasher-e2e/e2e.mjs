@@ -420,5 +420,39 @@ t("23f. checkPermission: partner juga lolos", (() => {
   t("23g. guide tampil 💎 premium only", sc(replies.join("\n")).includes("premium only"))
 }
 
+// ═══ 24. BUG NYATA 1 Okt 2026: BROADCAST MULTI-BARIS/BERBOX HANCUR JADI SATU
+// PARAGRAF — owner kirim promo smallcaps berformat box+bullet+baris kosong,
+// hasil kekirim ke grup acak-acakan (semua newline ilang, jadi satu paragraf
+// rapat). Akar: text direkonstruksi dari args.join(" ") (args ke-tokenize per
+// whitespace, newline ikut ke-makan regex \s+) — bukan dari m.text ASLI.
+replies.length = 0; sends.length = 0; reacts.length = 0
+const promoAsli = [
+  "Nova AI Multi Device 🐣 — Asisten WhatsApp Paling Lengkap",
+  "",
+  "Tanya apa aja, Nova jawab!",
+  "",
+  "┏━━━「 💰 Sewa Bot 」",
+  "┃ ↷ 1 minggu : Rp 5.000",
+  "┃ ↷ 1 bulan : Rp 15.000",
+  "┗━━━✦",
+  "",
+  "• Fitur satu",
+  "• Fitur dua",
+].join("\n")
+await run(".jasher " + promoAsli)
+const sentMulti = sends.find(s => (s.msg?.text || "").includes("Fitur satu"))
+t("24a. teks terkirim PUNYA newline (bukan 1 baris rapat)", (sentMulti?.msg?.text || "").includes("\n"), JSON.stringify((sentMulti?.msg?.text || "").slice(0, 50)))
+t("24b. jumlah baris terkirim >= jumlah baris asli (format utuh, bukan di-flatten)", (sentMulti?.msg?.text || "").split("\n").length >= promoAsli.split("\n").length, "lines=" + (sentMulti?.msg?.text || "").split("\n").length)
+t("24c. baris kosong pemisah section TETAP ada (bukan ke-collapse)", /\n\n/.test(sentMulti?.msg?.text || ""))
+t("24d. baris box (┃ ↷ 1 minggu) tetap baris SENDIRI, gak nempel ke baris lain", (sentMulti?.msg?.text || "").split("\n").some(l => l.trim().startsWith("┃") && l.includes("1 minggu") && !l.includes("1 bulan")))
+t("24e. verbatim persis sama (char-for-char) dengan input asli", (sentMulti?.msg?.text || "") === promoAsli, "beda di: " + JSON.stringify({ got: (sentMulti?.msg?.text || "").slice(0, 80), want: promoAsli.slice(0, 80) }))
+
+// mode target (grup <keyword> <teks>) juga harus preserve multi-baris
+replies.length = 0; sends.length = 0; reacts.length = 0
+const promoTarget = "Judul Promo\n\nBaris kedua\n• poin satu\n• poin dua"
+await run(".jasher grup warung " + promoTarget)
+const sentTarget = sends.find(s => (s.msg?.text || "").includes("poin satu"))
+t("24f. mode target (grup <keyword>) juga preserve newline", (sentTarget?.msg?.text || "") === promoTarget, JSON.stringify((sentTarget?.msg?.text || "").slice(0, 60)))
+
 out("\n===== " + pass + " PASS, " + fail + " FAIL =====")
 process.exit(fail ? 1 : 0)

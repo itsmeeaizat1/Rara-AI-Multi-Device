@@ -413,6 +413,15 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
   let text = "";
   let targetMode = null; // array keyword
   const media = await grabMedia(m);
+  // Teks promosi WAJIB diambil dari m.text ASLI (afterCmd), BUKAN direkonstruksi
+  // dari args.join(" "). args sudah ke-tokenize per whitespace (termasuk newline —
+  // regex \s+ makan baris baru juga), jadi broadcast multi-baris/berbox (bullet •,
+  // kotak ┏━━━┃┗━━━, baris kosong pemisah section) bakal hancur jadi SATU paragraf
+  // rapat kalau direkonstruksi dari token array. args di sini CUMA dipakai buat
+  // deteksi subcommand (grup/target) & cek "ada teks atau kosong" — bukan buat
+  // nyusun ulang isi broadcast. (Bug nyata 1 Okt 2026: owner kirim promo berformat
+  // box+bullet+baris kosong, keluar jadi satu paragraf acak-acakan dipisah " | ".)
+  const afterCmd = String(m.text || "").replace(/^\S+\s*/, "");
   if (args[0]?.toLowerCase() === "grup" || args[0]?.toLowerCase() === "target") {
     const keywords = (args[1] || "").split(",").map(k => k.trim().toLowerCase()).filter(Boolean);
     if (!keywords.length) {
@@ -424,9 +433,12 @@ async function handler(m, { sock, config: botConfig, db: dbWrapper }) {
       return { handled: true };
     }
     targetMode = keywords;
-    text = args.slice(2).join(" ").trim();
+    // potong 2 token depan ("grup"/"target" + kata kunci) dari afterCmd, SISANYA
+    // (isi promosi) dipertahankan mentah apa adanya termasuk semua baris baru.
+    const twoTok = afterCmd.match(/^\s*\S+\s+\S+\s*/);
+    text = twoTok ? afterCmd.slice(twoTok[0].length) : args.slice(2).join(" ").trim();
   } else {
-    text = args.join(" ").trim();
+    text = args.length ? afterCmd.trim() : "";
     // media langsung dengan caption: strip command dari caption
     if (media && !m.quoted && /^\S+/.test(String(m.text || ""))) {
       const stripped = String(m.text || "").replace(/^\S+\s*/, "").trim();
