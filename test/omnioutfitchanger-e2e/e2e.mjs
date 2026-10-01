@@ -217,6 +217,9 @@ out("\n— pakai 1 item, endpoint down —");
   _setOmniOutfitDepsForTest({
     uguu: async (buf, name) => `https://uguu.se/${name}`,
     zelImage: async () => ({ ok: false, error: "UPSTREAM_500" }),
+    vision: async () => {
+      throw new Error("vision down");
+    }, // seam deterministik: vision juga gagal → error zelapi asli keluar (bukan nyamber vision live)
   });
   await handler(mockM({ args: [], quoted: quotedMock() }), { sock: sockMock });
   await handleOutfitPhotoHook(mockM({ isImage: true, isCommand: false }));
@@ -347,6 +350,33 @@ out("\n— pakai + lampir foto, tanpa foto orang —");
   await handler(mockM({ args: ["pakai"], isImage: true }), { sock: sockMock });
   t("20a. hint butuh foto orang", String(replies[0] || "").toLowerCase().includes("belum ada foto orang"));
   t("20b. gak ada session nyasar", !getSession(SENDER));
+}
+
+// ═══ 21z. FALLBACK: zelapi omnivton gagal (key invalid/down) → nano-banana chain ═══
+out("\n— 1 item zelapi down → fallback nano-banana —");
+{
+  reset();
+  let visionPrompt = "";
+  let editPrompt = "";
+  _setOmniOutfitDepsForTest({
+    uguu: async (buf, name) => `https://uguu.se/${name}`,
+    zelImage: async () => ({ ok: false, error: "API_KEY_INVALID (403)" }), // zelapi mati
+    vision: async ({ question }) => {
+      visionPrompt = question;
+      return "black leather jacket, cotton lining";
+    },
+    live3d: async (buf, prompt) => {
+      editPrompt = prompt;
+      return { image: Buffer.from([3, 3, 3, 3]) };
+    },
+  });
+  await handler(mockM({ args: [], quoted: quotedMock() }), { sock: sockMock }); // mulai session 1 item (one-shot di bawah)
+  await handler(mockM({ args: ["pakai"], quoted: quotedMock(), isImage: true }), { sock: sockMock }); // one-shot reply orang + lampir item
+  t("21z-a. hasil tetap dikirim walau zelapi down", sent.length === 1 && Buffer.isBuffer(sent[0].payload.image));
+  t("21z-b. vision dipakai buat describe item", norm(visionPrompt || "").length > 0);
+  t("21z-c. edit prompt nyebut item hasil describe", norm(editPrompt).includes("leather jacket"));
+  t("21z-d. caption sebut fallback engine", norm(String(sent[0].payload.caption)).includes("fallback"));
+  t("21z-e. session kehapus", !getSession(SENDER));
 }
 
 // ═══ 21. usage: ada cara cepet one-shot ═══
