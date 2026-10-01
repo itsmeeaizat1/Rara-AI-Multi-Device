@@ -51,3 +51,7 @@ src/lib/apikey/apikeys.json.bak
 
 # kredensial sesi WA jangan ke-commit (security)
 session/jadibot/
+
+# 🔹 cookies YouTube buat yt-dlp (JANGAN PERNAH di-commit — credential)
+data/yt-cookies.txt
+*.cookies.txt
