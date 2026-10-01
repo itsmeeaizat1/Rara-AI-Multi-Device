@@ -185,7 +185,12 @@ export async function createVoipDeps(sock) {
                         const deviceJids = await discoverPeerDevices(sock, baileysHelpers, peerLid);
                         out.push({ deviceJids });
                     }
-                    catch {
+                    catch (err) {
+                        // JANGAN telan error ini senyap — kalau getUSyncDevices/resolvePeerLid
+                        // throw karena network/auth/query gagal (BUKAN karena nomornya legit
+                        // gak ada device), yang keliatan ke user cuma "no device sessions..."
+                        // generik tanpa jejak kenapa. Log biar kelihatan di VPS logs.
+                        console.warn(`[hivoip] syncDeviceList gagal untuk ${jid}: ${err?.message || err}`);
                         out.push({ deviceJids: [] });
                     }
                 }

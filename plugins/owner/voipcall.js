@@ -35,6 +35,20 @@ function getVoip(conn) {
 
 const activeCalls = new Map();
 
+// "no device sessions to encrypt the call offer" = WA USync balikin NOL device
+// aktif buat nomor itu. Penyebab paling umum (bukan bug kode): nomor salah ketik /
+// gak lengkap, nomor gak terdaftar WA, atau privasi "siapa yang bisa menelepon saya"
+// di nomor target di-set ketat (blokir panggilan dari orang gak dikenal). Dump pesan
+// teknis mentah gak kasih tau SOLUSI — mapping ke pesan actionable. Diekspor biar
+// gampang di-unit-test tanpa perlu mock seluruh engine Voip.
+export function toFriendlyVoipError(message) {
+  const msg = String(message || "");
+  if (/no device sessions/i.test(msg)) {
+    return "Nomor ini gak ketemu device WhatsApp aktif. Cek lagi: (1) nomornya lengkap & bener (gak ada digit ilang), (2) nomor itu beneran aktif pakai WhatsApp, (3) kalau nomor dipastikan benar & aktif, coba lagi — bisa juga privasi ‘siapa yang bisa menelepon saya’ di nomor itu lagi di-set ketat.";
+  }
+  return `Gagal nelpon: ${msg.slice(0, 120)}`;
+}
+
 async function downloadQuotedMedia(quoted) {
   const mime = quoted?.mimetype || "";
   const kind = /^video/.test(mime) ? "video" : /^audio/.test(mime) ? "audio" : null;
@@ -169,7 +183,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[voipcall]:", error.message);
     await m.react("❌");
-    await m.reply(novaError("VOIP", `Gagal nelpon: ${String(error.message || error).slice(0, 120)}`));
+    await m.reply(novaError("VOIP", toFriendlyVoipError(error?.message || error)));
   }
 
   return { handled: true };
