@@ -204,13 +204,13 @@ async function handler(m, { sock }) {
     const detail = await getFullArticle(first.title);
     const r = detail.article;
 
-    let text = `📚 *ᴡɪᴋɪᴘᴇᴅɪᴀ ꜱᴇᴀʀᴄʜ* 📚\n\n`;
-    text += `*ᴊᴜᴅᴜʟ:* ${r.Title}\n`;
-    if (r.Description) text += `*ᴅᴇꜱᴋʀɪᴘꜱɪ:* ${r.Description}\n`;
-    text += `\n*ʀɪɴɢᴋᴀꜱᴀɴ:*\n${r.Extract || "Tidak ada ringkasan tersedia."}\n\n`;
+    let text = `📚 *wikipedia search* 📚\n\n`;
+    text += `*judul:* ${r.Title}\n`;
+    if (r.Description) text += `*deskripsi:* ${r.Description}\n`;
+    text += `\n*ringkasan:*\n${r.Extract || "Tidak ada ringkasan tersedia."}\n\n`;
 
     if (Object.keys(r.Infobox).length > 0) {
-      text += `*ɪɴꜰᴏ ᴛᴀᴍʙᴀʜᴀɴ:*\n`;
+      text += `*info tambahan:*\n`;
       let count = 0;
       for (const [key, val] of Object.entries(r.Infobox)) {
         if (count >= 5) break;
@@ -220,7 +220,7 @@ async function handler(m, { sock }) {
       text += `\n`;
     }
 
-    text += `\n🔗 *ꜱᴇʟᴇɴɢᴋᴀᴘɴʏᴀ:* ${r.Url}`;
+    text += `\n🔗 *selengkapnya:* ${r.Url}`;
 
     if (r.Images && r.Images.length > 0) {
       await sock.sendMessage(m.chat, {

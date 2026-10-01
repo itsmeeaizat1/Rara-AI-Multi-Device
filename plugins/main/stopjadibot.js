@@ -51,7 +51,7 @@ async function handler(m, { sock, isJadibot }) {
 
     if (!isJadibotActive(target)) {
         return m.reply(
-            `❌ *${target === sender ? "ᴋᴀᴍᴜ ᴛɪᴅᴀᴋ ᴍᴇɴᴊᴀᴅɪ" : "ɴᴏᴍᴏʀ ɪᴛᴜ ᴛɪᴅᴀᴋ ᴀᴋᴛɪꜰ"} ᴊᴀᴅɪʙᴏᴛ*\n\n` +
+            `❌ *${target === sender ? "kamu tidak menjadi" : "nomor itu tidak aktif"} jadibot*\n\n` +
             `Ketik \`${m.prefix}jadibot\` untuk menjadi bot`
         )
     }

@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
 
     const rpgCount = Object.values(db.data.users || {}).filter((u) => u.rpg).length;
     const caption =
-      `📗 *ᴅʙᴇxᴘᴏʀᴛ* *ꜱᴇʟᴇꜱᴀɪ*\n\n` +
+      `📗 *dbexport* *selesai*\n\n` +
       `${rpgOnly ? "Mode: RPG only\n" : "Mode: Full (Ringkasan + RPG + Users + Groups)\n"}` +
       `Pemain RPG: ${rpgCount} | User: ${Object.keys(db.data.users || {}).length}\n` +
       `Waktu: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}`;

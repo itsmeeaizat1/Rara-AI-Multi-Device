@@ -21,10 +21,11 @@ import { getPlugin } from "./nova-plugins.js";
 // │─ Content:  │ content
 // │─ Footer:   ╰────  •  ────
 // Small caps map (q & x tidak ada di Unicode smallcaps, tetap as-is)
-const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+const SC_MAP = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
 
 // toSC: convert a-zA-Z → smallcaps, sisanya tetap
-const toSC = (s) => String(s).replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+// UPDATE OWNER 1 Okt 2026: toSC passthrough — teks keluar bot jadi teks biasa.
+const toSC = (s) => String(s);
 
 // scLine: apply smallcaps to text content, tapi preserve:
 // - box drawing chars (╭╮╰╯│├─┊┃━)
@@ -271,19 +272,19 @@ function bracketBox(emoji, label, lines = []) {
   return buildBox(`${emojiStr}${toSC(label)}`, lines);
 }
 
-// getAccessSymbols — symbol akses fitur dari config plugin (shared, request owner). Urutan: ʀ ꜰ Ⓟ Ⓛ ᴜ ᴏ (R F P L U O):
+// getAccessSymbols — symbol akses fitur dari config plugin (shared, request owner). Urutan: r f Ⓟ Ⓛ u o (R F P L U O):
 // Ⓤ User (semua user), Ⓕ Free (quota gratis), Ⓟ Premium, Ⓞ Owner,
-// Ⓛ Limit (akses fitur — BUKAN energi game), ʀ Register (wajib .daftar — RPG), Ⓐ Admin, Ⓖ Grup
+// Ⓛ Limit (akses fitur — BUKAN energi game), r Register (wajib .daftar — RPG), Ⓐ Admin, Ⓖ Grup
 function getAccessSymbols(cfg) {
   if (!cfg) return "";
   // Khusus owner → satu symbol saja
   if (cfg.isOwner) return " Ⓞ";
-  // Urutan owner (konfirmasi): ʀ ꜰ Ⓟ Ⓛ ᴜ ᴏ → R F P L U O
+  // Urutan owner (konfirmasi): r f Ⓟ Ⓛ u o → R F P L U O
   const symbols = [];
   const cat = String(cfg.category || "");
   const gameCtx = ["rpg", "game", "rpg couple"].includes(cat);
-  // ʀ Register (wajib .daftar — RPG) — PALING DEPAN
-  if (cat === "rpg") symbols.push("ʀ");
+  // r Register (wajib .daftar — RPG) — PALING DEPAN
+  if (cat === "rpg") symbols.push("r");
   if (cfg.isPremium) {
     // Khusus premium — user biasa gak bisa → tanpa Ⓤ
     symbols.push("Ⓟ");
@@ -674,7 +675,7 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
 
   // FIX 20 Sep 2026 (owner: "nama bot disini dihapus aja soalnya udh ada
   // nama bot di fotter akhir") — dulu novaMenuLayout nambah baris nama bot
-  // sendiri di akhir body (mis. "ɴᴏᴠᴀ ᴀɪ ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ"), padahal sendMenuCard
+  // sendiri di akhir body (mis. "nova ai whatsapp bot"), padahal sendMenuCard
   // SUDAH nampilin nama bot di footer kartu ("✦ Nova AI Whatsapp Bot" dekat
   // jam) → dobel. footerName param DIBIARKAN (backward-compat call sites)
   // tapi gak dirender lagi di body.
@@ -846,7 +847,7 @@ function novaEmpty(commandName, detail) {
 // 📝 Cara Pakai (hint) + 💡 Contoh (example VERBATIM).
 function novaNoInput(commandName, hint, example) {
   // REWORK 25 Sep — DESAIN V2: frase noInput random jadi sapaan, hint jadi
-  // ᴄᴀʀᴀ, example jadi ᴄᴏɴᴛᴏʜ, spec otomatis dari pluginConfig. Game → klasik.
+  // cara, example jadi contoh, spec otomatis dari pluginConfig. Game → klasik.
   if (isGameCmd(commandName)) {
     let out = `「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
     out += `⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
@@ -1066,8 +1067,8 @@ export function novaDlUsage(brand, { prefix = ".", command, cara = null, contoh 
 }
 
 // novaGuideV2 — DESAIN USAGE BARU ala owner (25 Sep 2026, sesi "desain
-// kaomoji lucu"): 「✧ ɴᴀᴍᴀ ✧」 + kaomoji semangat + sapaan ajakan 1 baris +
-// 📍 baris ᴄᴀʀᴀ/ᴄᴏɴᴛᴏʜ/ɴᴏᴛᴇ mengalir (note = kalimat panduan natural per
+// kaomoji lucu"): 「✧ nama ✧」 + kaomoji semangat + sapaan ajakan 1 baris +
+// 📍 baris cara/contoh/note mengalir (note = kalimat panduan natural per
 // fitur) + (KHUSUS AI, request owner 25 Sep "usage kyk ai mngkin ada tmbahan
 // kyk field model yg dipakai dan yg tersedianya") ✨ model aktif + 📋 model
 // tersedia + baris spec ⚡⏱💸 (CUMA fakta nyata plugin — item gak ada dilewati,
@@ -1077,7 +1078,7 @@ export function novaDlUsage(brand, { prefix = ".", command, cara = null, contoh 
 // novaGuide/novaDlUsage/novaAiUsage lama TETAP dipakai plugin belum dimigrasi.
 // novaSalahV2 — REPLY SALAH PEMAKAIAN versi cute (owner 25 Sep: "hrs kirim
 // pesan salah cmd kyk 'yah kak kakak ketik cmd yang salah, ulangi ketik
-// .play nama lagu'"): kaomoji lucu + "ʏᴀʜ ᴋᴀᴋ..." + kalimat cute smallcaps
+// .play nama lagu'"): kaomoji lucu + "yah kak..." + kalimat cute smallcaps
 // (WAJIB custom & beda-beda per plugin) + ➤ contoh yang bener VERBATIM.
 // SINGKAT 3 baris — beda total dari kartu usage novaGuideV2 (aturan owner
 // 10 Sep: salah pemakaian singkat, usage detail).

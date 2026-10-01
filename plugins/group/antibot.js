@@ -144,9 +144,9 @@ function handler(m, { sock }) {
   const current = groupData.antibot || false;
 
   if (!args || args === "status") {
-    return m.reply( `🤖 *ᴀɴᴛɪʙᴏᴛ*\n\n` +
+    return m.reply( `🤖 *antibot*\n\n` +
       `Status: ${current ? "✅ Aktif" : "❌ Nonaktif"}\n\n` +
-      `Deteksi: *ꜱᴍᴀʀᴛ ʜᴇᴜʀɪꜱᴛɪᴄ*\n\n` +
+      `Deteksi: *smart heuristic*\n\n` +
       `\`.antibot on/off\``, "antibot");
   }
 

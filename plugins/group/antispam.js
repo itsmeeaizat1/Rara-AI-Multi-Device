@@ -4,10 +4,10 @@ import { novaWarning } from "../../src/lib/nova-group-protection.js"
 import { claraLine } from "../../src/lib/nova-menu-style.js";
 
 function claraWrap(title, text) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
-  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *ʙᴏʟᴅ*
+  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *bold*
   const scBody = body.split("\n").map(line => {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
     return toSC(line);
@@ -15,7 +15,7 @@ function claraWrap(title, text) {
   return `${toSC(title)}\n\n${scBody}`;
 }
 async function formatAndReply( text, cmdName) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const scMap = {a:'a',b:'b',c:'c',d:'d',e:'e',f:'f',g:'g',h:'h',i:'i',j:'j',k:'k',l:'l',m:'m',n:'n',o:'o',p:'p',r:'r',s:'s',t:'t',u:'u',v:'v',w:'w',y:'y',z:'z'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
   text = text.split("\n").map(line => {
@@ -54,12 +54,12 @@ async function handler(m, { sock, db }) {
     const delayMatch = action?.match(/^(\d+)(s|ms)?$/)
     
     if (!action || (!["on", "off", "warning", "kick", "delete"].includes(action) && !delayMatch)) {
-        return m.reply( `🛡️ *ᴀɴᴛɪ ꜱᴘᴀᴍ ɢʀᴏᴜᴘ*\n\n` +
+        return m.reply( `🛡️ *anti spam group*\n\n` +
             `Fitur ini melindungi grup dari member yang mengirim pesan berulang-ulang dengan sangat cepat dan brutal sehingga mengganggu kenyamanan member lain\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+            `*cara pakai:*\n` +
             `\`${m.prefix}antispam on\` (Aktifkan fitur antispam)\n` +
             `\`${m.prefix}antispam off\` (Matikan fitur antispam)\n\n` +
-            `*ᴘɪʟɪʜ ᴍᴇᴛᴏᴅᴇ ʜᴜᴋᴜᴍᴀɴ:*\n` +
+            `*pilih metode hukuman:*\n` +
             `\`${m.prefix}antispam warning\` (Beri teguran keras hingga 3 kali peringatan)\n` +
             `\`${m.prefix}antispam kick\` (Otomatis tendang spammer langsung tanpa ampun)\n` +
             `\`${m.prefix}antispam delete\` (Hapus seluruh pesan spam yang dikirimkan)\n\n` +
@@ -82,7 +82,7 @@ async function handler(m, { sock, db }) {
         groupData.antispamDelay = delayMs
         db.setGroup(m.chat, groupData)
         
-        return m.reply(claraWrap("antispam", `🛡️ *ꜱᴇɴꜱɪᴛɪᴠɪᴛᴀꜱ ᴀɴᴛɪ ꜱᴘᴀᴍ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
+        return m.reply(claraWrap("antispam", `🛡️ *sensitivitas anti spam diperbarui*\n\n` +
             `Jeda Maksimal: *${delayMs} ms* (${(delayMs/1000).toFixed(1)} detik)\n\n` +
             `Sistem kini akan menganggap pesan sebagai spam jika anggota mengirim beberapa pesan dengan jeda di bawah *${(delayMs/1000).toFixed(1)} detik* antar pesannya`))
     }
@@ -96,7 +96,7 @@ async function handler(m, { sock, db }) {
         groupData.antispam = isEnable
         db.setGroup(m.chat, groupData)
         
-        await m.reply(claraWrap("antispam", `🛡️ *ᴀɴᴛɪ ꜱᴘᴀᴍ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
+        await m.reply(claraWrap("antispam", `🛡️ *anti spam diperbarui*\n\n` +
             `Status: *${isEnable ? "AKTIF ✅" : "NONAKTIF ❌"}*\n\n` +
             `Sistem bot kini akan ${isEnable ? "mengawasi secara ketat" : "berhenti mengawasi"} setiap aktivitas spam atau flood pesan yang dilakukan oleh member di dalam grup ini`))
     } else {
@@ -108,7 +108,7 @@ async function handler(m, { sock, db }) {
         if (action === "kick") textAction = "Menendang member yang membandel secara otomatis"
         if (action === "delete") textAction = "Menghapus pesan spam yang mengganggu"
         
-        await m.reply(claraWrap("antispam", `🛡️ *ᴀᴋꜱɪ ᴀɴᴛɪ ꜱᴘᴀᴍ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
+        await m.reply(claraWrap("antispam", `🛡️ *aksi anti spam diperbarui*\n\n` +
             `Metode Hukuman: *${action.toUpperCase()}*\n\n` +
             `Sistem bot akan langsung mengambil tindakan berupa *${textAction}* apabila ada member yang terdeteksi melakukan pelanggaran berupa tindakan spam brutal`))
     }

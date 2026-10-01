@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("serverinfo", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("serverinfo", `❌ *akses ditolak*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     }
     
     if (!serverId || isNaN(serverId)) {
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return m.reply( `⚠️ *cara pakai*\n\n` +
             `\`${m.prefix}${m.command} serverid\`\n\n` +
             `Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "serverinfo")
     }

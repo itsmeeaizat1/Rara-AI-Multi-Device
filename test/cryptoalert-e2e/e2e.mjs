@@ -70,7 +70,7 @@ sent.length = 0;
 const nowRes = await lib.checkNow("chatA");
 check("19. checkNow: doge below kena → 1 fired", nowRes.fired === 1);
 check("20. checkNow: alert ke chatA", sent.length === 1 && sent[0].chatId === "chatA");
-check("21. pesan: TARGET KENA + harga sekarang", /ᴛᴀʀɢᴇᴛ ᴋᴇɴᴀ/.test(sent[0].text) && sent[0].text.includes("Rp 800"));
+check("21. pesan: TARGET KENA + harga sekarang", /target kena/.test(sent[0].text) && sent[0].text.includes("Rp 800"));
 
 // ── API down: no false fire ──
 lib.setPriceFetcher(async () => { throw new Error("timeout"); });
@@ -111,10 +111,10 @@ await handler(mockM([]), { sock: mockSock });
 check("31. no-arg: help reply", replies.length === 1 && replies[0].length > 50);
 
 await handler(mockM(["btc", "diatas", "150jt"]), { sock: mockSock });
-check("32. pasang via command (resolver alias btc)", /ᴀʟᴀʀᴍ ᴅɪᴘᴀꜱᴀɴɢ|alarm dipasang/i.test(replies.at(-1)));
+check("32. pasang via command (resolver alias btc)", /alarm dipasang|alarm dipasang/i.test(replies.at(-1)));
 
 await handler(mockM(["list"]), { sock: mockSock });
-check("33. list command", /ʙɪᴛᴄᴏɪɴ|bitcoin|ʙᴛᴄ/i.test(replies.at(-1)));
+check("33. list command", /bitcoin|bitcoin|btc/i.test(replies.at(-1)));
 
 market.bitcoin.idr = 160_000_000;
 sent.length = 0;
@@ -123,7 +123,7 @@ check("34. now: alarm kena terkirim ke chatD", sent.length === 1 && sent[0].chat
 check("35. now: one-shot alarm chatD terhapus", lib.listAlerts("chatD").length === 0);
 
 await handler(mockM(["info"]), { sock: mockSock });
-check("36. info: status tampil", /ꜱᴛᴀᴛᴜꜱ/.test(replies.at(-1)));
+check("36. info: status tampil", /status/.test(replies.at(-1)));
 
 // cleanup
 fs.rmSync("src/database/auto/cryptoalert.json");

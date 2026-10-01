@@ -476,7 +476,7 @@ function featureScopeInfo(name) {
 const scopeLine = (scope) => scope ? `${scope.icon} Berlaku: ${scope.label} — ${scope.desc}` : null
 
 // ── Format status baru (request owner 10 Sep 2026): nama fitur smallcaps +
-// status ON/OFF smallcaps di AKHIR baris, contoh "ʙᴇɴᴄᴀɴᴀᴡᴀᴛᴄʜ ᴏɴ" ──
+// status ON/OFF smallcaps di AKHIR baris, contoh "bencanawatch on" ──
 const scStatus = (on) => toSC(on ? "on" : "off")
 const scLine = (name, enabled) => `${toSC(name)} ${scStatus(enabled)}`
 
@@ -1515,11 +1515,11 @@ async function showMenu(m, sock) {
   const prefix = m.prefix || '.'
   const text = `Pilih kategori toggle:
 
-📢 *ꜱᴀʟᴜʀᴀɴ*
+📢 *saluran*
    Notifikasi event ke channel WhatsApp
    \`${prefix}switch channel\`
 
-🏠 *ɢʀᴏᴜᴘ*
+🏠 *group*
    Fitur grup (welcome, antilink, anti-toxic, dll)
    \`${prefix}switch group\`
 
@@ -1527,15 +1527,15 @@ async function showMenu(m, sock) {
    Semua fitur auto (backup, read, typing, BMKG, dll)
    \`${prefix}switch auto\`
 
-⚙️ *ꜰɪᴛᴜʀ*
+⚙️ *fitur*
    On/off command atau kategori plugin
    \`${prefix}switch fitur\`
 
-🛑 *ꜱᴇᴍᴜᴀ (ᴍᴀꜱᴛᴇʀ)*
+🛑 *semua (master)*
    SEMUANYA on/off sekaligus (auto + saluran + group)
    \`${prefix}switch semua on\` | \`${prefix}switch semua off\`
 
-📊 *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴍᴜᴀ*
+📊 *status semua*
    Semua status switch yang aktif & mati
    \`${prefix}switch status all\`
 

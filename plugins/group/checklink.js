@@ -429,7 +429,7 @@ function autoShieldCheck(msg, sock) {
             `URL: ${urls[0].substring(0, 80)}${urls[0].length > 80 ? "..." : ""}`,
             `Skor Bahaya: ${result.score}%`,
             "",
-            "*ᴀʟᴀꜱᴀɴ:*",
+            "*alasan:*",
             ...result.reasons.map((r, i) => `${i + 1}. ${r}`),
             "",
             "Tetap waspada. Jangan masukkan data pribadi atau klik link di dalam situs ini.",
@@ -518,7 +518,7 @@ async function handler(m, { sock }) {
       const delEnabledAt = groupData.deleteEnabledAt ? new Date(groupData.deleteEnabledAt).toLocaleString("id-ID") : "-";
 
       const statusBody = [
-        `*ꜱᴛᴀᴛᴜꜱ ʟɪɴᴋ ꜱʜɪᴇʟᴅ*`,
+        `*status link shield*`,
         ` `,
         `Auto-Shield (Warning): ${shieldStatus}`,
         `Aktif Sejak: ${shieldEnabledAt}`,
@@ -590,7 +590,7 @@ async function handler(m, { sock }) {
         ` `,
         `${redirectInfo}`,
         ` `,
-        `*ʜᴀꜱɪʟ ᴀɴᴀʟɪꜱɪꜱ:*`,
+        `*hasil analisis:*`,
         reasonsText,
       ].join("\n");
 

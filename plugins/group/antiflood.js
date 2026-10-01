@@ -170,7 +170,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
 
       return m.reply(claraWrap("Anti Flood", [
-        "Status: " + (cfg.enabled ? "*ᴀᴋᴛɪꜰ*" : "Nonaktif"),
+        "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Limit: " + (cfg.limit || 10) + " pesan",
         "Window: " + (cfg.window || 5) + " detik",
         "Action: " + (cfg.action || "warn").toUpperCase(),

@@ -222,7 +222,7 @@ out("\n— pakai 1 item, endpoint down —");
   await handleOutfitPhotoHook(mockM({ isImage: true, isCommand: false }));
   replies = [];
   await handler(mockM({ args: ["pakai"] }), { sock: sockMock });
-  t("12a. error asli keluar", replies[0]?.includes("upstream_500"));
+  t("12a. error asli keluar", String(replies[0] || "").toLowerCase().includes("upstream_500"));
   t("12b. session kehapus walau gagal", !getSession(SENDER));
 }
 
@@ -239,7 +239,7 @@ out("\n— pakai multi item, semua BUKAN_ITEM —");
   await handleOutfitPhotoHook(mockM({ isImage: true, isCommand: false }));
   replies = [];
   await handler(mockM({ args: ["pakai"] }), { sock: sockMock });
-  t("13a. pesan semua item gak kedeteksi", replies[0]?.includes("gak kedeteksi"));
+  t("13a. pesan semua item gak kedeteksi", String(replies[0] || "").toLowerCase().includes("gak kedeteksi"));
 }
 
 // ═══ 14. pakai — error: semua engine edit down (multi item) ═══
@@ -345,7 +345,7 @@ out("\n— pakai + lampir foto, tanpa foto orang —");
 {
   reset();
   await handler(mockM({ args: ["pakai"], isImage: true }), { sock: sockMock });
-  t("20a. hint butuh foto orang", replies[0]?.includes("belum ada foto orang"));
+  t("20a. hint butuh foto orang", String(replies[0] || "").toLowerCase().includes("belum ada foto orang"));
   t("20b. gak ada session nyasar", !getSession(SENDER));
 }
 

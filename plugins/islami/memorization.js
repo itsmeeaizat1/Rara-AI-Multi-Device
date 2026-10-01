@@ -194,7 +194,7 @@ function fireHafalanTicker(db, sender, item, sock, m, prefix) {
     const card = (remMs) => {
       if (remMs <= 0) {
         return [
-          "📖 *ᴡᴀᴋᴛᴜ ʀᴇᴠɪᴇᴡ!*",
+          "📖 *waktu review!*",
           "",
           "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd,
           "ID: `" + item.id + "`",
@@ -206,7 +206,7 @@ function fireHafalanTicker(db, sender, item, sock, m, prefix) {
       const mm = Math.floor((remMs % 3600000) / 60000);
       const ss = Math.floor((remMs % 60000) / 1000);
       return [
-        "🕒 *ʀᴇᴠɪᴇᴡ ꜱᴇᴅᴀɴɢ ᴅᴇᴋᴀᴛ*",
+        "🕒 *review sedang dekat*",
         "",
         "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd,
         "Status: " + getStatus(item),

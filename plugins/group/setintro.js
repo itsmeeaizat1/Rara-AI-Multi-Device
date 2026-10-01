@@ -23,9 +23,9 @@ async function handler(m, { sock }) {
     const introText = m.fullArgs?.trim() || m.text?.trim()
     
     if (!introText) {
-        return m.reply( `📝 *ꜱᴇᴛ ɪɴᴛʀᴏ*\n\n` +
+        return m.reply( `📝 *set intro*\n\n` +
             `Masukkan pesan intro!\n\n` +
-            `*ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ ʏᴀɴɢ ᴛᴇʀꜱᴇᴅɪᴀ:*\n` +
+            `*placeholder yang tersedia:*\n` +
             `@user - Nama pengguna\n` +
             `@group - Nama grup\n` +
             `@count - Jumlah member\n` +
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
             `@time - Waktu sekarang\n` +
             `@desc - Deskripsi grup\n` +
             `@botname - Nama bot\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*contoh:*\n` +
             `.setintro Selamat datang @user di grup @group! 👋`, "setintro")
     }
     

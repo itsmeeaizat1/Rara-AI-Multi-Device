@@ -105,32 +105,32 @@ async function handler(m, { sock }) {
     const args = m.args || []
     let name = args.join(' ') || m.pushName || m.sender.split('@')[0]
     
-    await m.reply(claraWrap("Mimpi", '🌙 *ᴍᴇᴍᴀꜱᴜᴋɪ ᴀʟᴀᴍ ᴍɪᴍᴘɪ...*'))
+    await m.reply(claraWrap("Mimpi", '🌙 *memasuki alam mimpi...*'))
     await new Promise(r => setTimeout(r, 1500))
     
     const dream = generateDream(name)
     
     let txt = ""
-    txt += `👤 *ᴇxᴘʟᴏʀᴇʀ:* ${name}\n`
-    txt += `⭐ *ʟᴇᴠᴇʟ:* ${dream.level}\n`
-    txt += `💫 *qᴜᴀʟɪᴛʏ:* ${dream.quality}\n`
-    txt += `🌈 *ᴇʟᴇᴍᴇɴᴛꜱ:*\n`
+    txt += `👤 *explorer:* ${name}\n`
+    txt += `⭐ *level:* ${dream.level}\n`
+    txt += `💫 *quality:* ${dream.quality}\n`
+    txt += `🌈 *elements:*\n`
     for (const el of dream.elements) {
         txt += `├ ${el}\n`
     }
-    txt += `🎪 *ᴇᴠᴇɴᴛꜱ:*\n`
+    txt += `🎪 *events:*\n`
     for (const ev of dream.events) {
         txt += `├ ${ev}\n`
     }
-    txt += `🌟 *ᴇɴᴄᴏᴜɴᴛᴇʀꜱ:*\n`
+    txt += `🌟 *encounters:*\n`
     for (const enc of dream.encounters) {
         txt += `├ ${enc}\n`
     }
-    txt += `💫 *ᴘᴏᴡᴇʀꜱ:*\n`
+    txt += `💫 *powers:*\n`
     for (const pow of dream.powers) {
         txt += `├ ${pow}\n`
     }
-    txt += `🔮 *ᴍᴇꜱꜱᴀɢᴇ:*\n`
+    txt += `🔮 *message:*\n`
     txt += `${dream.message}\n`
     txt += ""
     

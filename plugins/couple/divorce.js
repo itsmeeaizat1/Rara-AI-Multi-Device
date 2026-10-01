@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     db.setUser(partnerJid, partnerData);
     db.save();
 
-    let msg = `💔 *ᴄᴇʀᴀɪ*\n\n`;
+    let msg = `💔 *cerai*\n\n`;
     msg += `@${m.sender.split("@")[0]} cerai dengan @${partnerJid.split("@")[0]}\n`;
     if (durasiNikah > 0) {
       msg += `Durasi nikah: *${durasiNikah} hari*\n`;

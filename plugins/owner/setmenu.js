@@ -26,7 +26,7 @@ async function handler(m, { sock, db }) {
   const variant = parseVariantKey(args[0]);
 
   if (args[0] && !variant) {
-    m.reply(claraWrap("Setmenu", `❗ *ᴠᴀʀɪᴀɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
+    m.reply(claraWrap("Setmenu", `❗ *varian tidak valid*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
     return;
   }
 
@@ -37,7 +37,7 @@ async function handler(m, { sock, db }) {
 
   const current = db.setting("menuThumbVariant") === 2 ? 2 : 1;
   const v = VARIANTS[`v${current}`];
-  await m.reply(claraWrap("setmenu", `🖼️🎬 *ᴠᴀʀɪᴀɴ ᴛʜᴜᴍʙɴᴀɪʟ ᴍᴇɴᴜ*\n\n` +
+  await m.reply(claraWrap("setmenu", `🖼️🎬 *varian thumbnail menu*\n\n` +
     `Varian aktif saat ini: *V${current} — ${v?.name}* (${v?.desc})\n\n` +
     `Ganti: *.setmenu v1* (gambar) / *.setmenu v2* (video)`));
 }

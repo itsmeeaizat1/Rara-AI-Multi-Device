@@ -30,7 +30,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const query = m.text?.trim();
   if (!query) {
-    return m.reply( `🔍 *ᴘɪɴᴛᴇʀᴇꜱᴛ ꜱᴇᴀʀᴄʜ*\n\n` +
+    return m.reply( `🔍 *pinterest search*\n\n` +
       `Contoh:\n` +
       `\`${m.prefix}pins Zhao Lusi\``, "pins");
   }

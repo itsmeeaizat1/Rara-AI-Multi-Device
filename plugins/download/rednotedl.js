@@ -53,11 +53,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply( `📕 *ʀᴇᴅɴᴏᴛᴇ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
+    return m.reply( `📕 *rednote downloader*\n\n` +
         `Download video atau foto dari XiaoHongShu (RedNote).\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+        `*cara pakai:*\n` +
         `*${m.prefix}rednotedl <link>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
+        `*contoh:*\n` +
         `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
   }
   try {

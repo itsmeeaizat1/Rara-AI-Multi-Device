@@ -56,12 +56,12 @@ async function handler(m, { sock }) {
 
   if (!quoted) {
     return m.reply(
-      `🔄 *ɢᴀɴᴛɪ ᴄᴏᴅᴇ*\n\n` +
+      `🔄 *ganti code*\n\n` +
         `Reply code plugin baru dengan caption:\n` +
         `\`${m.prefix}ganticode\` - Auto detect\n` +
         `\`${m.prefix}ganticode namafile\` - Custom nama\n` +
         `\`${m.prefix}ganticode namafile folder\` - Custom nama + folder\n\n` +
-        `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ:*\nCode lama akan di-backup sebelum diganti`,
+        `⚠️ *peringatan:*\nCode lama akan di-backup sebelum diganti`,
     );
   }
 
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
 
   if (!fileName) {
     return m.reply(
-      `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa mendeteksi nama plugin\nGunakan \`${m.prefix}ganticode <namafile>\``,
+      `❌ *gagal*\n\nTidak bisa mendeteksi nama plugin\nGunakan \`${m.prefix}ganticode <namafile>\``,
     );
   }
 

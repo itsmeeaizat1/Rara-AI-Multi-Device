@@ -27,20 +27,20 @@ function handler(m, { sock }) {
     const current = groupData?.autodl || false
     
     if (!args || args === 'status') {
-        return m.reply( `🔗 *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n` +
+        return m.reply( `🔗 *auto download*\n\n` +
             `Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
-            `*ᴘʟᴀᴛꜰᴏʀᴍ ꜱᴜᴘᴘᴏʀᴛ:*\n` +
+            `*platform support:*\n` +
             `TikTok, Instagram, Facebook\n` +
             `YouTube, Twitter/X\n` +
             `Telegram, Discord\n\n` +
-            `*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
+            `*penggunaan:*\n` +
             `\`${m.prefix}autodl on\` - Aktifkan\n` +
             `\`${m.prefix}autodl off\` - Nonaktifkan`, "autodl")
     }
     
     if (args === 'on') {
         db.setGroup(m.chat, { ...groupData, autodl: true })
-        return m.reply(claraWrap("autodl", `✅ *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴋᴛɪꜰ*\n\n` +
+        return m.reply(claraWrap("autodl", `✅ *auto download aktif*\n\n` +
             `Kirim link sosmed dan bot akan auto download!\n` +
             `Support: TikTok, IG, FB, YouTube, Twitter/X`))
     }

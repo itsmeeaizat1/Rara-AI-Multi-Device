@@ -55,9 +55,9 @@ async function handler(m, { sock }) {
         
         const currentStatus = db.setting('autoreplyPrivate') ?? false
         return m.reply(
-            `📱 *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴘʀɪᴠᴀᴛᴇ*\n\n` +
+            `📱 *autoreply private*\n\n` +
             `Status: *${currentStatus ? '✅ AKTIF' : '❌ NONAKTIF'}*\n\n` +
-            `*ᴘᴇʀɪɴᴛᴀʜ ᴛᴇʀꜱᴇᴅɪᴀ:*\n` +
+            `*perintah tersedia:*\n` +
             `*${m.prefix}autoreply private on* — Aktifkan private\n` +
             `*${m.prefix}autoreply private off* — Nonaktifkan private`
         )
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
             db.setting('globalCustomReplies', globalCustomReplies)
             await db.save()
             return m.reply(
-                `✅ *ɢʟᴏʙᴀʟ ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+                `✅ *global autoreply ditambahkan*\n\n` +
                 `Trigger: *${trigger.trim()}*\n` +
                 `Total: *${globalCustomReplies.length}* replies\n\n` +
                 `_Aktif di semua grup dan private chat_`
@@ -125,17 +125,17 @@ async function handler(m, { sock }) {
         if (subAction === 'list' || !subAction) {
             if (globalCustomReplies.length === 0) {
                 return m.reply(
-                    `📋 *ɢʟᴏʙᴀʟ ᴀᴜᴛᴏʀᴇᴘʟʏ*\n\n` +
+                    `📋 *global autoreply*\n\n` +
                     `Status: *❌ TIDAK ADA DATA*\n\n` +
-                    `*ᴘᴇʀɪɴᴛᴀʜ ᴛᴇʀꜱᴇᴅɪᴀ:*\n` +
+                    `*perintah tersedia:*\n` +
                     `*${m.prefix}autoreply global add <trigger>|<reply>*`
                 )
             }
             
-            let text = `📋 *ɢʟᴏʙᴀʟ ᴀᴜᴛᴏʀᴇᴘʟʏ*\n\n`
+            let text = `📋 *global autoreply*\n\n`
             text += `Total: *${globalCustomReplies.length}* replies\n`
             text += `Berlaku di: *Semua Grup & Private Chat*\n\n`
-            text += `*ᴅᴀꜰᴛᴀʀ ᴛʀɪɢɢᴇʀ:*\n`
+            text += `*daftar trigger:*\n`
             globalCustomReplies.forEach((r, i) => {
                 const hasImage = r.image ? '🖼️' : ''
                 text += `${i + 1}. *${r.trigger}* ${hasImage}
@@ -145,7 +145,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         }
         
         return m.reply(
-            `📱 *ɢʟᴏʙᴀʟ ᴀᴜᴛᴏʀᴇᴘʟʏ*\n\n` +
+            `📱 *global autoreply*\n\n` +
             `\`${m.prefix}autoreply global add trigger|reply\`\n` +
             `\`${m.prefix}autoreply global del trigger\`\n` +
             `\`${m.prefix}autoreply global list\``
@@ -154,9 +154,9 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
     
     if (!m.isGroup) {
         return m.reply(
-            `📱 *ꜱɪꜱᴛᴇᴍ ᴀᴜᴛᴏʀᴇᴘʟʏ*\n\n` +
+            `📱 *sistem autoreply*\n\n` +
             `Autoreply Private: *${privateAutoreply ? '✅ AKTIF' : '❌ NONAKTIF'}*\n\n` +
-            `*ᴘᴇʀɪɴᴛᴀʜ ᴛᴇʀꜱᴇᴅɪᴀ:*\n` +
+            `*perintah tersedia:*\n` +
             `*${m.prefix}autoreply private on/off* — Toggle private\n` +
             `*${m.prefix}autoreply global add/del/list* — Global triggers\n\n` +
             `_Catatan: Untuk setting autoreply grup, gunakan perintah ini di dalam grup._`
@@ -175,13 +175,13 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         const effectiveStatus = groupStatus ?? globalSmartTriggers
         const customReplies = groupData.customReplies || []
         
-        let text = `🤖 *ꜱɪꜱᴛᴇᴍ ᴀᴜᴛᴏʀᴇᴘʟʏ ɢʀᴜᴘ*\n\n`
+        let text = `🤖 *sistem autoreply grup*\n\n`
         text += `Status Global: *${globalSmartTriggers ? '✅ AKTIF' : '❌ NONAKTIF'}*\n`
         text += `Status Grup Ini: *${groupStatus === undefined ? 'DEFAULT' : (groupStatus ? '✅ AKTIF' : '❌ NONAKTIF')}*\n`
         text += `Status Private: *${privateAutoreply ? '✅ AKTIF' : '❌ NONAKTIF'}*\n`
         text += `Efektif di Grup: *${effectiveStatus ? '✅ AKTIF' : '❌ NONAKTIF'}*\n`
         text += `Total Custom Reply (Grup): *${customReplies.length}*\n\n`
-        text += `*ᴍᴀɴᴀᴊᴇᴍᴇɴ ɢʀᴜᴘ:*\n`
+        text += `*manajemen grup:*\n`
         text += `*${m.prefix}autoreply on* — Aktifkan di grup ini\n`
         text += `*${m.prefix}autoreply off* — Nonaktifkan di grup ini\n`
         text += `*${m.prefix}autoreply add <trigger>|<reply>* — Tambah custom reply\n`
@@ -197,10 +197,10 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
             text += `*${m.prefix}autoreply private on/off* — Toggle bot reply di DM\n\n`
         }
         
-        text += `*ᴄᴀʀᴀ ᴘᴇɴᴀᴍʙᴀʜᴀɴ ɢᴀᴍʙᴀʀ:*\n`
+        text += `*cara penambahan gambar:*\n`
         text += `1. Kirim gambar beserta caption: *${m.prefix}autoreply add trigger|reply*\n`
         text += `2. Atau reply gambar dengan: *${m.prefix}autoreply add trigger|reply*\n\n`
-        text += `*ᴅᴀᴘᴀᴛ ᴍᴇɴɢɢᴜɴᴀᴋᴀɴ ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ:*\n`
+        text += `*dapat menggunakan placeholder:*\n`
         text += `{name} • {tag} • {sender} • {botname} • {time} • {date}`
         
         return await m.reply( text, "autoreply")
@@ -222,14 +222,14 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         
         if (pipeIdx === -1) {
             return m.reply(
-                `❌ *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*\n\n` +
+                `❌ *format salah*\n\n` +
                 `Gunakan format: *trigger|reply*\n\n` +
-                `*ᴛᴇxᴛ ᴏɴʟʏ:*\n` +
+                `*text only:*\n` +
                 `${m.prefix}ar add halo|Hai {name}! 👋\n\n` +
-                `*ᴅᴇɴɢᴀɴ ɢᴀᴍʙᴀʀ:*\n` +
+                `*dengan gambar:*\n` +
                 `1. Reply gambar + ${m.prefix}ar add trigger|caption\n` +
                 `2. Kirim gambar + caption ${m.prefix}ar add trigger|caption\n\n` +
-                `*ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ:*\n` +
+                `*placeholder:*\n` +
                 `{name} - Nama user\n` +
                 `{tag} - Tag @user\n` +
                 `{sender} - Nomor user\n` +
@@ -298,8 +298,8 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         }
         
         db.setGroup(m.chat, { ...groupData, customReplies })
-        let successMsg = `✅ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n`
-        successMsg += `*ᴅᴇᴛᴀɪʟ:*\n`
+        let successMsg = `✅ *autoreply ditambahkan*\n\n`
+        successMsg += `*detail:*\n`
         successMsg += `Trigger: *${trigger.trim()}*\n`
         if (reply) {
             successMsg += `Reply: ${reply.substring(0, 50)}${reply.length > 50 ? '...' : ''}\n`
@@ -338,7 +338,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         db.setGroup(m.chat, { ...groupData, customReplies })
         
         return m.reply(
-            `🗑️ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+            `🗑️ *autoreply dihapus*\n\n` +
             `Trigger *${trigger}* berhasil dihapus!\n` +
             `Sisa: *${customReplies.length}* replies`
         )
@@ -354,9 +354,9 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
             { trigger: 'assalamualaikum', reply: 'Waalaikumsalam saudaraku' }
         ]
         
-        let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴀᴜᴛᴏʀᴇᴘʟʏ ɢʀᴜᴘ*\n\n`
+        let text = `📋 *daftar autoreply grup*\n\n`
         
-        text += `*ᴅᴇꜰᴀᴜʟᴛ ᴛʀɪɢɢᴇʀꜱ:*\n`
+        text += `*default triggers:*\n`
         defaultTriggers.forEach((r, i) => {
             text += `*${r.trigger}*\n`
             text += `${r.reply}\n`
@@ -364,7 +364,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         text += `\n`
         
         if (customReplies.length > 0) {
-            text += `*ᴄᴜꜱᴛᴏᴍ ᴛʀɪɢɢᴇʀꜱ:*\n`
+            text += `*custom triggers:*\n`
             customReplies.forEach((r, i) => {
                 const hasImage = r.image ? '🖼️' : ''
                 text += `*${r.trigger}* ${hasImage}\n`
@@ -374,7 +374,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
             })
             text += `\n`
         } else {
-            text += `*ᴄᴜꜱᴛᴏᴍ ᴛʀɪɢɢᴇʀꜱ:*\n`
+            text += `*custom triggers:*\n`
             text += `_Belum ada custom trigger di grup ini_\n\n`
         }
         

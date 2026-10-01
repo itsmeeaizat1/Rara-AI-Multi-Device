@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     if (pending.length === 0) {
       return m.reply(claraWrap("approvetopup", "Tidak ada pesanan topup yang pending."));
     }
-    let txt = `${toSC("ᴘᴇꜱᴀɴᴀɴ ᴛᴏᴘᴜᴘ ᴘᴇɴᴅɪɴɢ")} — ${pending.length}\n`;
+    let txt = `${toSC("pesanan topup pending")} — ${pending.length}\n`;
     for (const [jid, o] of pending) {
       const it = TOPUP_ITEMS[o.type];
       const icon = o.type === "rpgitem" ? "📦" : it?.icon || "▫️";
@@ -85,10 +85,10 @@ async function handler(m, { sock }) {
       ? `${order.itemName} x${order.qty}`
       : `${order.qty.toLocaleString("id-ID")} ${item?.unit || order.type}`;
     await sock.sendMessage(jid, {
-      text: `❌ *ᴘᴇꜱᴀɴᴀɴ ᴛᴏᴘᴜᴘ ᴅɪᴛᴏʟᴀᴋ*\n\nItem: *${rejLabel}*\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
+      text: `❌ *pesanan topup ditolak*\n\nItem: *${rejLabel}*\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
     }).catch(() => {});
     return m.reply(claraWrap("approvetopup",
-      `Status: *ᴅɪᴛᴏʟᴀᴋ*\nPesanan ${order.type} dari *${target}* ditolak`));
+      `Status: *ditolak*\nPesanan ${order.type} dari *${target}* ditolak`));
   }
 
   // Approve → terapkan sesuai JALUR pesanan
@@ -140,11 +140,11 @@ async function handler(m, { sock }) {
     ? `${order.itemName} (x${order.qty})`
     : `${order.qty.toLocaleString("id-ID")} ${item?.unit || order.type}`;
   await sock.sendMessage(jid, {
-    text: `✅ *ᴛᴏᴘᴜᴘ ʙᴇʀʜᴀꜱɪʟ*\n\n+${unitLabel} sudah masuk ke akun kamu!\nTotal bayar: *${order.price}*\n\nTerima kasih sudah topup 🥳`,
+    text: `✅ *topup berhasil*\n\n+${unitLabel} sudah masuk ke akun kamu!\nTotal bayar: *${order.price}*\n\nTerima kasih sudah topup 🥳`,
   }).catch(() => {});
 
   return m.reply(claraWrap("approvetopup",
-    `Status: *ʙᴇʀʜᴀꜱɪʟ*\nUser: *${order.phoneNumber}*\nItem: *+${unitLabel}*\nJalur: *${order.jalur || "akun"}*\nHarga: *${order.price}*\n\n${order.type === "limit" && db.getUser(jid)?.energi === -1 ? "User unlimited (limit -1) — tidak ditambah" : applyNote || "Item sudah masuk otomatis & user dinotif"}`));
+    `Status: *berhasil*\nUser: *${order.phoneNumber}*\nItem: *+${unitLabel}*\nJalur: *${order.jalur || "akun"}*\nHarga: *${order.price}*\n\n${order.type === "limit" && db.getUser(jid)?.energi === -1 ? "User unlimited (limit -1) — tidak ditambah" : applyNote || "Item sudah masuk otomatis & user dinotif"}`));
 }
 
 export { pluginConfig as config, handler };

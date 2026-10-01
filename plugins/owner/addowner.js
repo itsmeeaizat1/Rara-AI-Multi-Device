@@ -143,7 +143,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       if (jbOwners.length === 0) {
         return m.reply(`*Daftar Owner Jadibot*\n\nBelum ada owner terdaftar.\nGunakan \`${m.prefix}addowner\` untuk menambah.`);
       }
-      let txt = `📋 *ᴅᴀꜰᴛᴀʀ ᴏᴡɴᴇʀ ᴊᴀᴅɪʙᴏᴛ* — ${jadibotId}\n\n`;
+      let txt = `📋 *daftar owner jadibot* — ${jadibotId}\n\n`;
       const mentions = jbOwners.map(toMentionJid).filter(Boolean);
       jbOwners.forEach((s, i) => {
         const number = String(s || "").replace(/[^0-9]/g, "");

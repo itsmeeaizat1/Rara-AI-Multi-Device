@@ -8,7 +8,8 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 const SC_MAP = { a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 const ITEMS = [
   { title: "5 HP Terbaik 2026", url: "https://gadgetrev.com/hp-terbaik", snippet: "daftar hp terbaik dengan harga" },
@@ -611,7 +612,7 @@ w("\n— plugin .agent: loading 1 chat edit berulang + reaksi + jawaban —");
   check("urutan reaksi sesuai fase", JSON.stringify(reacts) === JSON.stringify(["🧠","🔍","🧠","🐣"]), JSON.stringify(reacts));
   check("teks aktivitas teredit ≥ 5 fase (1 chat)", edits.length >= 5, String(edits.length));
   check("teks aktivitas tanpa sumber domain", !edits.slice(0, -1).some(e => e.text.includes("gadgetrev.com") || e.text.includes("sunlogin")), "domain bocor");
-  check("aktivitas smallcaps (ꜱᴇᴀʀᴄʜɪɴɢ... — label Inggris profesional, owner 29 Sep)", edits.some(e => e.text.includes("ꜱᴇᴀʀᴄʜɪɴɢ")), edits[1]?.text);
+  check("aktivitas (Searching... teks biasa — owner 1 Okt hapus smallcaps)", edits.some(e => e.text.includes("Searching")), edits[1]?.text);
   check("jawaban final di-EDIT ke chat yang sama", edits[edits.length - 1]?.text.includes("POCO X7"), edits[edits.length - 1]?.text.slice(0, 60));
   check("sumber dilampirkan di jawaban final", edits[edits.length - 1]?.text.includes("gadgetrev.com"));
   check("gak ada jawaban dobel di reply terpisah", !replies.some(r => r.text.includes("POCO X7")), String(replies.length));
@@ -741,8 +742,8 @@ w("\n— plugin: no-arg → usage —");
   };
   await agHandler(m, { sock: {} });
   const u = sent[0] || "";
-  check("header ✧ agent ✧ (desain V2)", u.includes(`「✧ ${toSC("AGENT")} ✧」`));
-  check("kaomoji + baris contoh 📍 (desain V2)", /\(๑ᵔ⤙ᵔ๑\)♡/.test(u) && u.includes(toSC("Contoh")));
+  check("header ✧ agent ✧ (desain V2 — teks biasa 1 Okt)", u.toLowerCase().includes("「✧ agent ✧」"));
+  check("kaomoji + baris contoh 📍 (desain V2 — teks biasa 1 Okt)", /\(๑ᵔ⤙ᵔ๑\)♡/.test(u) && u.toLowerCase().includes("contoh"));
   check("contoh verbatim", u.includes(".agent <tugas apa pun>"));
   check("pluginConfig benar", agConfig.name === "aisuperagent" && agConfig.category === "ai agent" && agConfig.isEnabled); // kategori ai agent 25 Sep
 }

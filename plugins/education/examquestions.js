@@ -454,7 +454,7 @@ async function handler(m, { sock, args }) {
       // MC answer
       const answer = jenjang.toUpperCase();
       if (!["A", "B", "C", "D"].includes(answer)) {
-        return m.reply(claraWrap("Soalujian", "Pilih *A*, *B*, *C*, atau *D*!\n\nAtau ketik *ꜱᴋɪᴘ* / *ꜱᴛᴏᴘ*."));
+        return m.reply(claraWrap("Soalujian", "Pilih *A*, *B*, *C*, atau *D*!\n\nAtau ketik *skip* / *stop*."));
       }
       const isCorrect = answer === q.correctLetter;
       session.answers.push({ question: q.question, given: answer, correct: q.correctLetter, isCorrect, type: "mc" });
@@ -464,7 +464,7 @@ async function handler(m, { sock, args }) {
       // Essay answer
       const userAnswer = args.join(" ");
       if (userAnswer.length < 5) {
-        return m.reply(claraWrap("Soalujian", "Jawaban terlalu pendek! Min 5 karakter.\n\nKetik *ꜱᴋɪᴘ* untuk lewati soal ini."));
+        return m.reply(claraWrap("Soalujian", "Jawaban terlalu pendek! Min 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
       }
       const check = checkKeywords(userAnswer, q.keywords);
       session.answers.push({
@@ -474,7 +474,7 @@ async function handler(m, { sock, args }) {
       session.essayTotal++;
       session.essayScoreSum += check.score;
 
-      let txt = check.score >= 70 ? `*Bagus!* (${check.score}%)` : check.score >= 40 ? `*ᴄᴜᴋᴜᴘ.* (${check.score}%)` : `*ᴋᴜʀᴀɴɢ ᴛᴇᴘᴀᴛ.* (${check.score}%)`;
+      let txt = check.score >= 70 ? `*Bagus!* (${check.score}%)` : check.score >= 40 ? `*cukup.* (${check.score}%)` : `*kurang tepat.* (${check.score}%)`;
       txt += `\n\nKunci: ${q.a}`;
       if (check.found.length > 0) txt += `\nTepat: ${check.found.join(", ")}`;
       if (check.missing.length > 0) txt += `\nKurang: ${check.missing.join(", ")}`;
@@ -512,8 +512,8 @@ async function handler(m, { sock, args }) {
       txt += `Skor Gabungan: *${finalScore}/100*\n`;
       if (finalScore >= 90) txt += `Predikat: *A - Luar Biasa!*`;
       else if (finalScore >= 80) txt += `Predikat: *B - Bagus!*`;
-      else if (finalScore >= 70) txt += `Predikat: *ᴄ - ᴄᴜᴋᴜᴘ*`;
-      else if (finalScore >= 60) txt += `Predikat: *ᴅ - ʙᴇʟᴀᴊᴀʀ ʟᴀɢɪ*`;
+      else if (finalScore >= 70) txt += `Predikat: *c - cukup*`;
+      else if (finalScore >= 60) txt += `Predikat: *d - belajar lagi*`;
       else txt += `Predikat: *E - Wajib ulang!*`;
 
       const xpGain = saveQuizScore(sender, m.pushName, session.jenjang, session.mapel, finalScore, session.mcCorrect, session.mcTotal, session.essayTotal, session.essayScoreSum, session.mode || "mix");
@@ -537,7 +537,7 @@ async function handler(m, { sock, args }) {
     } else {
       txt += `Tulis jawabanmu (min 5 karakter)`;
     }
-    txt += `\nKetik *ꜱᴋɪᴘ* untuk lewati, *ꜱᴛᴏᴘ* untuk berhenti`;
+    txt += `\nKetik *skip* untuk lewati, *stop* untuk berhenti`;
 
     await m.reply(txt);
     return;
@@ -605,7 +605,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}soal sd matematika 5\` (mix)\n`;
     txt += `\`${m.prefix}soal sma fisika 10 mc\` (PG only)\n`;
     txt += `\`${m.prefix}soal smk rpl 3 essay\` (essay only)\n\n`;
-    txt += `Saat quiz: balas A/B/C/D (PG) atau tulis jawaban (essay)\nKetik *ꜱᴋɪᴘ* / *ꜱᴛᴏᴘ*\n\nAnti-Spam:\n  - Max 20 quiz/hari\n  - Min 10 detik per jawaban\n  - 3x spam = quiz dibatalkan`;
+    txt += `Saat quiz: balas A/B/C/D (PG) atau tulis jawaban (essay)\nKetik *skip* / *stop*\n\nAnti-Spam:\n  - Max 20 quiz/hari\n  - Min 10 detik per jawaban\n  - 3x spam = quiz dibatalkan`;
     return await m.reply( txt, { commandName: "soalujian" });
   }
 
@@ -726,7 +726,7 @@ async function handler(m, { sock, args }) {
     } else {
       txt += `Tulis jawabanmu (min 5 karakter)`;
     }
-    txt += `\nKetik *ꜱᴋɪᴘ* / *ꜱᴛᴏᴘ*`;
+    txt += `\nKetik *skip* / *stop*`;
 
     await m.reply(txt);
   } catch (e) {

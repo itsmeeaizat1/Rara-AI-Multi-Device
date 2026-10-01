@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("Upscaler", ["Efek: *HD/2x*",
-        "Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
+        "Status: *success*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

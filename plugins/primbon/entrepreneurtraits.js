@@ -32,13 +32,13 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(novaError("SifatUsahaBisnis", `❌ *ɢᴀɢᴀʟ*\n\nGagal menganalisa`))
+            return m.reply(novaError("SifatUsahaBisnis", `❌ *gagal*\n\nGagal menganalisa`))
         }
         
         const r = data.data
         const response = `💼 *sIfat Usaha/Bisnis*\n\n` +
             `Lahir: *${r.hari_lahir}*\n\n` +
-            `📊 *ᴀɴᴀʟɪꜱᴀ:*\n${r.usaha}\n\n` +
+            `📊 *analisa:*\n${r.usaha}\n\n` +
             `_${r.catatan}_`
         await m.reply(response)
         

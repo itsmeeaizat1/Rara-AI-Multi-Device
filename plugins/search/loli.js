@@ -82,11 +82,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     await sock.sendMessage(m.chat, {
       image: fs.readFileSync(filePath),
-      caption: "Status: *ʙᴇʀʜᴀꜱɪʟ*",
+      caption: "Status: *berhasil*",
     }, { quoted: m });
 
     const text =
-      claraWrap("Foto", ["Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("Foto", ["Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}loli untuk hasil lain`) +
       "\n" +

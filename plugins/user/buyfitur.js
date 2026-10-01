@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     
     if (user.isPremium || config.isPremium(m.sender)) {
         return m.reply(
-            `*ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ*\n\n` +
+            `*premium user*\n\n` +
             `Kamu sudah premium!\n` +
             `Semua fitur sudah ter-unlock!`
         )
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
         const unlockedFeatures = user.unlockedFeatures || []
         
         let text = ""
-        text += `🛒 *ʙᴜʏ ꜰɪᴛᴜʀ*\n`
+        text += `🛒 *buy fitur*\n`
         text += `\n`
         
         text += `Harga: *${formatNumber(PRICE_PER_FEATURE)}* bal/fitur\n`
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         
         text += `---\n\n`
         text += `Gunakan: \`.buyfitur <id>\`\n`
-        text += `Atau jadi *ᴘʀᴇᴍɪᴜᴍ* unlock semua!`
+        text += `Atau jadi *premium* unlock semua!`
         
         await m.reply(claraWrap("buyfitur", text))
         return
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     
     if (!feature) {
         return m.reply(
-            `❌ *ɢᴀɢᴀʟ*\n\n` +
+            `❌ *gagal*\n\n` +
             `Fitur \`${featureName}\` tidak ditemukan\n` +
             `Ketik \`.buyfitur\` untuk lihat daftar`
         )
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     
     if ((user.koin || 0) < PRICE_PER_FEATURE) {
         return m.reply(
-            `❌ *ɢᴀɢᴀʟ*\n\n` +
+            `❌ *gagal*\n\n` +
             `Koin tidak cukup!\n` +
             `Butuh: *${formatNumber(PRICE_PER_FEATURE)}*\n` +
             `Kamu punya: *${formatNumber(user.koin || 0)}*`
@@ -107,13 +107,13 @@ async function handler(m, { sock }) {
     
     const newKoin = db.getUser(m.sender).koin
     await m.reply(
-        `✅ *ꜰɪᴛᴜʀ ᴅɪ-ᴜɴʟᴏᴄᴋ*\n\n` +
+        `✅ *fitur di-unlock*\n\n` +
         `🎁 Fitur: *${feature.name}*\n` +
         `💵 Harga: *-${formatNumber(PRICE_PER_FEATURE)}* bal\n` +
         `💰 sIsa: *${formatNumber(newKoin)}*\n` +
         `\n` +
         `_${feature.desc}_\n\n` +
-        `💡 Tip: Jadi *ᴘʀᴇᴍɪᴜᴍ* untuk unlock SEMUA!`
+        `💡 Tip: Jadi *premium* untuk unlock SEMUA!`
     )
 }
 

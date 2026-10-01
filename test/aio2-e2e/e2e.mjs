@@ -176,16 +176,16 @@ console.log("— section 4: handler .aio2 terabox + slides + guard —");
   // guard input
   sent.length = 0;
     await aio2.handler(mkM({ text: "" }), { sock, db: getDatabase(), config: cfg });
-    t("4e. tanpa link → panduan", /ʟɪɴᴋ/.test(sent[0]?.payload?.text || "") || /cara pakai/i.test(fromSC(sent[0]?.payload?.text)), sent[0]?.payload?.text?.slice(0, 60));
+    t("4e. tanpa link → panduan", /link/.test(sent[0]?.payload?.text || "") || /cara pakai/i.test(fromSC(sent[0]?.payload?.text)), sent[0]?.payload?.text?.slice(0, 60));
   sent.length = 0;
     await aio2.handler(mkM({ text: "bukanlink" }), { sock, db: getDatabase(), config: cfg });
-    t("4f. bukan URL → tolak", /ɢᴀᴋ ᴠᴀʟɪᴅ/.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 60));
+    t("4f. bukan URL → tolak", /gak valid/i.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 60));
 
   // API mati → pesan gagal + fallback saran
   sent.length = 0;
   nextResponses = {};
     await aio2.handler(mkM({ text: "https://youtube.com/watch?v=mati" }), { sock, db: getDatabase(), config: cfg });
-    t("4g. API mati → gagal + saran downloader lain", /ᴄᴏʙᴀ ʟɪɴᴋ ʟᴀɪɴ/.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 90));
+    t("4g. API mati → gagal + saran downloader lain", /coba link lain/i.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 90));
 }
 
 console.log("— section 5: receiver .aio2dl —");
@@ -195,7 +195,7 @@ console.log("— section 5: receiver .aio2dl —");
   sent.length = 0;
   // 5a URL gak terdaftar → ditolak
   await aio2dl.handler(mkM({ text: "mp4|video/mp4|https://cdn/hack.mp4" }), { sock, db: getDatabase(), config: cfg });
-  t("5a. URL gak terdaftar → ditolak anti-abuse", /ᴋᴇᴅᴀʟᴜᴡᴀʀꜱᴀ/.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 80));
+  t("5a. URL gak terdaftar → ditolak anti-abuse", /kedaluwarsa/i.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 80));
   // 5b URL terdaftar → unduh + document terkirim
   session._clearAio2SessionForTest();
   setResp("https://api.nexray.web.id/downloader/aio", YT_FIXTURE);
@@ -211,7 +211,7 @@ console.log("— section 5: receiver .aio2dl —");
   // 5c format rusak
   sent.length = 0;
   await aio2dl.handler(mkM({ text: "formatrusak" }), { sock, db: getDatabase(), config: cfg });
-  t("5e. format rusak → ditolak jelas", /ɢᴀᴋ ᴠᴀʟɪᴅ/.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 60));
+  t("5e. format rusak → ditolak jelas", /gak valid/i.test(sent[0]?.payload?.text || ""), sent[0]?.payload?.text?.slice(0, 60));
 }
 
 console.log("— section 6: single media → langsung kirim tanpa popup —");

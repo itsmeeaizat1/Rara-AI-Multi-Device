@@ -30,11 +30,11 @@ function handler(m, { sock }) {
             ? (existing.enabled ? '✅ Aktif' : '❌ Nonaktif')
             : '⚪ Belum diatur'
 
-        let info = `🌙 *ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ*\n\n`
-        info += `📌 *ꜱᴛᴀᴛᴜꜱ:* ${status}\n`
+        let info = `🌙 *pengingat tidur*\n\n`
+        info += `📌 *status:* ${status}\n`
 
         if (existing) {
-            info += `⏰ *ᴊᴀᴅᴡᴀʟ:* ${existing.jadwal.map(j => `*${j}* WIB`).join(', ')}\n`
+            info += `⏰ *jadwal:* ${existing.jadwal.map(j => `*${j}* WIB`).join(', ')}\n`
         }
 
         info += `\n*📋 Cara Pakai:*\n`
@@ -50,7 +50,7 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(claraWrap("Notiftidur", `❌ *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ* yang aktif di chat ini`))
+            return m.reply(claraWrap("Notiftidur", `❌ *belum ada pengingat tidur* yang aktif di chat ini`))
         }
         toggleNotif('tidur', sender, chatJid, false)
         return m.reply(`✅ *Pengingat Tidur Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)
@@ -79,7 +79,7 @@ function handler(m, { sock }) {
         setNotifTidur(sender, chatJid, jadwal)
 
         let reply = `✅ *Pengingat tidur aktif!* 🔔\n\n`
-        reply += `⏰ *ᴊᴀᴅᴡᴀʟ:*\n`
+        reply += `⏰ *jadwal:*\n`
         for (const j of jadwal) {
             reply += `🕐 *${j}* WIB\n`
         }
@@ -106,7 +106,7 @@ function handler(m, { sock }) {
         setNotifTidur(sender, chatJid, jadwal)
 
         let reply = `✅ *Jadwal tidur diperbarui!* ✏️\n\n`
-        reply += `⏰ *ᴊᴀᴅᴡᴀʟ ʙᴀʀᴜ:*\n`
+        reply += `⏰ *jadwal baru:*\n`
         for (const j of jadwal) {
             reply += `🕐 *${j}* WIB\n`
         }

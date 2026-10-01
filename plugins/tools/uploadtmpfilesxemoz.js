@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
   }
   try {
     const result = await uploadToXemoz(media, filename);
-    const response = `*ᴜᴘʟᴏᴀᴅ ᴛᴍᴘꜰɪʟᴇꜱ*\n\nFile: ${filename}\nSize: ${formatBytes(media.length)}\nURL: ${result.url}`;
+    const response = `*upload tmpfiles*\n\nFile: ${filename}\nSize: ${formatBytes(media.length)}\nURL: ${result.url}`;
     return m.reply(claraWrap("UploadTmpFiles", response));
   } catch (error) {
     await m.react("🐣");

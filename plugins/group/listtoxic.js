@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     const customWords = groupData.toxicWords || []
     const defaultWords = DEFAULT_TOXIC_WORDS || []
     
-    let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴋᴀᴛᴀ ᴛᴏxɪᴄ*\n\n`
+    let text = `📋 *daftar kata toxic*\n\n`
     
     if (customWords.length > 0) {
         text += ""

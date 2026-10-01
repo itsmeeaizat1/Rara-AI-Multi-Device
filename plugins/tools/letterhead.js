@@ -131,7 +131,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  Reply PDF, ketik:`,
       `  ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta telepon=021123456 email=info@ptmaju.com`,
       ``,
-      `*ᴘᴀʀᴀᴍᴇᴛᴇʀ:*`,
+      `*parameter:*`,
       `  instansi= (nama instansi/perusahaan)`,
       `  alamat= (alamat lengkap)`,
       `  telepon= (nomor telepon)`,

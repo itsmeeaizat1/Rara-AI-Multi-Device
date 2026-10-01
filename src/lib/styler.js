@@ -20,7 +20,11 @@
 //   exec, photoascii, sudoku, mindmap, fakechat, webclone)
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
 
-export const toSC = (s) => String(s).replace(/[a-zA-Z]/g, (c) => SC_MAP[c.toLowerCase()] || c);
+// UPDATE OWNER 1 Okt 2026: "ubah smallcaps ke teks biasa standar android
+// semuanya — smallcaps gak enak dilihat bikin bosen" — toSC jadi PASSTHROUGH
+// (identitas). fromSC & SC_MAP TETAP dipertahankan untuk parsing balik command
+// yang user copy dari pesan bot lama yang masih smallcaps.
+export const toSC = (s) => String(s);
 
 // REVERSE smallcaps → plain: ID/command yang di-copy user dari pesan bot
 // (yang udah ke-smallcaps guard global) tetap bisa di-match balik.
@@ -41,7 +45,11 @@ function scUrlSafe(text) {
  * @returns {string}
  */
 export function smallcapsText(text) {
+  // PASSTHROUGH (owner 1 Okt 2026): keluaran bot kini teks biasa standar.
+  // Fungsi tetap ada (dipakai nova-serialize/nova-socket) biar import gak putus.
   const str = String(text ?? "");
+  return str;
+  /* kode konversi lama dipertahankan di bawah untuk referensi
   if (!str) return str;
   if (!/[a-zA-Z]/.test(str)) return str;
   // pisahkan code fence — isi fence dikirim persis (kode/grid ASCII)
@@ -49,6 +57,7 @@ export function smallcapsText(text) {
   return chunks
     .map((chunk) => (chunk.startsWith("```") ? chunk : scUrlSafe(chunk)))
     .join("");
+  */
 }
 
 // UPDATE OWNER 2026-09-07: BUNGKUS CODE BLOCK DIHAPUS — pesan berkotak

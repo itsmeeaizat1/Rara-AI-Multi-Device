@@ -14,8 +14,9 @@ const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (
 
 
 // claraWrap smallcaps semua teks — assert WAJIB pakai smallcaps (gotcha lama)
-const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h', i: 'i', j: 'j', k: 'k', l: 'l', m: 'm', n: 'n', o: 'o', p: 'p', r: 'r', s: 's', t: 't', u: 'u', v: 'v', w: 'w', y: 'y', z: 'z' };
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 const DB_PATH = path.join(process.cwd(), "src", "database", "group", "donasi-db.json");
 const OWNER = "6281234567890@s.whatsapp.net";
@@ -87,7 +88,7 @@ w("\n— 3. toggle .donasioff / .donasion tetap jalan —");
 
   const on = mkM(".donasion");
   await donasiHandler(on.m, { sock: on.sock, config: botConfig });
-  check(".donasion → aktif lagi", (on.m._replies[0] || "").includes(toSC("aktif")), on.m._replies[0]);
+  check(".donasion → aktif lagi", (on.m._replies[0] || "").toLowerCase().includes("aktif"), on.m._replies[0]);
 
   // plain .donasi TETAP kirim QR walau gate off (tombol menu selalu jalan)
   const btn = mkM(".donasi");

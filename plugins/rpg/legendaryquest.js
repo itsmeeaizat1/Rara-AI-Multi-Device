@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
         let msg = "";
         msg += `🏆 🐉 Final Boss dikalahkan!\n`;
         msg += `\n`;
-        msg += `Title: *ʟᴇɢᴇɴᴅᴀʀʏ ʜᴇʀᴏ*\n`;
+        msg += `Title: *legendary hero*\n`;
         msg += `Reward:\n`;
         if (stage.reward.gold) msg += `💰 +${stage.reward.gold} Gold\n`;
         if (stage.reward.energi) msg += `⚡ +${stage.reward.energi} Energi\n`;
@@ -112,8 +112,8 @@ async function handler(m, { sock }) {
     // PROGRESS (default)
     if (progress.completed) {
       let msg = "";
-      msg += `🏆 *ᴄᴏᴍᴘʟᴇᴛᴇᴅ!*\n`;
-      msg += `Title: *ʟᴇɢᴇɴᴅᴀʀʏ ʜᴇʀᴏ*\n`;
+      msg += `🏆 *completed!*\n`;
+      msg += `Title: *legendary hero*\n`;
       msg += `Semua 7 stage selesai!\n`;
             return m.reply(msg);
     }

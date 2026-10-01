@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
   if (products.length === 0) {
     return m.reply(
-      `🏪 *ᴘʀᴏᴅᴜᴋ ʙᴇʟᴜᴍ ᴛᴇʀꜱᴇᴅɪᴀ*\n\n` +
+      `🏪 *produk belum tersedia*\n\n` +
         `Saat ini belum ada produk yang ditambahkan oleh admin 😔\n\n` +
         `Silakan cek kembali nanti atau hubungi admin untuk informasi lebih lanjut.\n\n` +
         `_Terima kasih atas ketertarikan Anda_ 🙏`,
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       // Show available categories
       const allCats = [...new Set(products.map((p) => p.kategori || "umum"))];
       return m.reply(
-        `🏷️ *ᴋᴀᴛᴇɢᴏʀɪ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
+        `🏷️ *kategori tidak ditemukan*\n\n` +
         `Kategori tersedia: ${allCats.join(", ")}\n\n` +
         `Ketik \`${m.prefix}listproduk <kategori>\` untuk filter\n` +
         `Atau \`${m.prefix}listproduk all\` untuk lihat semua`
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     }
   }
 
-  let txt = `🛍️ *ᴅᴀꜰᴛᴀʀ ᴘʀᴏᴅᴜᴋ${filterLabel}*\n\n`;
+  let txt = `🛍️ *daftar produk${filterLabel}*\n\n`;
   txt += catInfo;
   txt += `Untuk pembelian, ketik \`${m.prefix}beli <nomor>\`\n\n`;
 

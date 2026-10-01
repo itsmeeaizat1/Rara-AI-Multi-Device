@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const idx = parseInt(m.text?.trim()) - 1
 
     if (isNaN(idx) || idx < 0 || idx >= lists.length) {
-        let txt = `🗑️ *ᴘɪʟɪʜ ɪɴꜰᴏʀᴍᴀꜱɪ ʏᴀɴɢ ᴅɪʜᴀᴘᴜꜱ*\n\nKetik \`${m.prefix}hapuslist <nomor>\`\n\n`
+        let txt = `🗑️ *pilih informasi yang dihapus*\n\nKetik \`${m.prefix}hapuslist <nomor>\`\n\n`
         for (let i = 0; i < lists.length; i++) {
             const l = lists[i]
             const mediaIcon = l.image ? '🖼️' : l.video ? '🎬' : '📝'
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const deleted = lists.splice(idx, 1)[0]
     db.setting('storeLists', lists)
     return m.reply(
-        `🗑️ *ɪɴꜰᴏʀᴍᴀꜱɪ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+        `🗑️ *informasi dihapus*\n\n` +
         `🏷️ Nama: *${deleted.name}*\n\n` +
         `⚠️ _Informasi telah dihapus secara permanen dan tidak dapat dikembalikan._`
     )

@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
     
     if (!serverId) {
         return m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+            `⚠️ *cara pakai*\n\n` +
             `\`${m.prefix}delpanel ID\` - Hapus server saja\n` +
             `\`${m.prefix}delpanel ID full\` - Hapus server + user\n` +
             `\`${m.prefix}delpanel s2 ID\` - Dari server 2\n\n` +
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
                         'Accept': 'Application/vnd.pterodactyl.v1+json'
                     }
                 })
-                result += `\n✅ *ᴜꜱᴇʀ ᴅɪʜᴀᴘᴜꜱ*\n`
+                result += `\n✅ *user dihapus*\n`
                 result += `Username: \`${userInfo.username}\`\n`
                 result += `ID: \`${userId}\``
             } catch (userErr) {

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
-        return m.reply( `📨 *ᴄʟᴀɴ ɪɴᴠɪᴛᴇ*\n\n` +
+        return m.reply( `📨 *clan invite*\n\n` +
             `Tag atau reply user yang mau diundang\n\n` +
             `Contoh: *.claninvite @user*`, "claninvite")
     }

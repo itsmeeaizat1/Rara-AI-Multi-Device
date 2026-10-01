@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     const result = await DaFont(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("dafont", `❌ *ᴅᴀꜰᴏɴᴛ ɢᴀɢᴀʟ*\n\n${result.error}`));
+      return m.reply(claraWrap("dafont", `❌ *dafont gagal*\n\n${result.error}`));
     }
 
     const items = result.results.slice(0, 10);

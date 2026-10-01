@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     const targetJid = resolveTarget(m)
 
     if (!targetJid) {
-        return m.reply( `🔊 *ᴜɴᴍᴜᴛᴇ ᴍᴇᴍʙᴇʀ*\n\n` +
+        return m.reply( `🔊 *unmute member*\n\n` +
             `Membuka mute member tertentu\n\n` +
             `\`Contoh:\`\n` +
             `${m.prefix}unmutemember @user\n` +

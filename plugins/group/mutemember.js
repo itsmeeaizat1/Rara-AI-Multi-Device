@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     const targetJid = resolveTarget(m)
 
     if (!targetJid) {
-        return m.reply( `🔇 *ᴍᴜᴛᴇ ᴍᴇᴍʙᴇʀ*\n\n` +
+        return m.reply( `🔇 *mute member*\n\n` +
             `Bisukan member tertentu di grup ini\n` +
             `Pesan member yang dimute akan dihapus oleh bot\n\n` +
             `\`Contoh:\`\n` +

@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const text = args.join(" ");
 
   if (!text || !text.includes("|")) {
-    return m.reply( `🧾 *ɪɴᴠᴏɪᴄᴇ ᴍᴀᴋᴇʀ*\n\n` +
+    return m.reply( `🧾 *invoice maker*\n\n` +
         `\`${m.prefix}invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>\`\n` +
         `\n` +
         `• toko: Nama toko\n` +
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    let caption = `🧾 *ɪɴᴠᴏɪᴄᴇ ɢᴇɴᴇʀᴀᴛᴇᴅ*\n\n`;
+    let caption = `🧾 *invoice generated*\n\n`;
         caption += `🏪 Toko: *${data.store}*\n`;
     caption += `🔢 Invoice: *${data.invoice}*\n`;
     caption += `📅 Tanggal: *${data.date}*\n`;

@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
       msg += `🔄 Reinkarnasi = reset level untuk permanent bonus\n`;
       msg += `
 `;
-      msg += `📋 *sʏᴀʀᴀᴛ*\n`;
+      msg += `📋 *syarat*\n`;
       msg += `${rpg.level >= 100 ? "✅" : "❌"} Level 100+ (sekarang: *${rpg.level}*)\n`;
       msg += `${hasStone ? "✅" : "❌"} Batu Reinkarnasi (1x)\n`;
       msg += `
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 
       msg += `
 `;
-      msg += `📊 *ʀᴇɪɴᴋᴀʀɴᴀsɪ sᴇʙᴇʟᴜᴍɴʏᴀ*\n`;
+      msg += `📊 *reinkarnasi sebelumnya*\n`;
       msg += `Count: *${rpg.rebirthCount || 0}*\n`;
       msg += `Permanent Bonus: *+${rpg.permBonus || 0}%* ATK/DEF/HP/MP\n`;
       
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
 
     if (confirm !== "confirm" && confirm !== "ya") {
       let msg = "";
-      msg += `❗ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*\n`;
+      msg += `❗ *peringatan*\n`;
       msg += `
 `;
       msg += `Kamu akan kehilalian:\n`;

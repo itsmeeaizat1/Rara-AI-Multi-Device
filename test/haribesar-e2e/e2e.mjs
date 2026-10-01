@@ -93,7 +93,7 @@ t("3f. nextLibur dari 2026-12-26 → Tahun Baru", nextLibur("2026-12-26", 30)?.y
 // — dispatch H-7 (17 Des 2026 → cuti bersama 24 Des = 7 hari lagi) —
 const r7 = await _haribesarRunTickForTest(mockSock, "2026-12-17")
 t("3g. H-7: countdown minggu lagi (target cuti bersama 24-12) terkirim 3 chat", r7.sent === 3 && r7.events.includes("H-7"), JSON.stringify(r7))
-t("3h. isi H-7 ada nama libur (Cuti Bersama Menjelang Natal)", sent.some((s) => /ɴᴀᴛᴀʟ|Natal/.test(String(s.msg.text || ""))), (sent[0]?.msg.text || "").slice(0, 150))
+t("3h. isi H-7 ada nama libur (Cuti Bersama Menjelang Natal)", sent.some((s) => /natal|Natal/.test(String(s.msg.text || ""))), (sent[0]?.msg.text || "").slice(0, 150))
 
 // — dispatch 22 Desember 2026: greeting Hari Ibu + info libur panjang (chain mulai cuti 24-12) —
 sent.length = 0
@@ -108,7 +108,7 @@ sent.length = 0
 const rH1 = await _haribesarRunTickForTest(mockSock, "2026-12-24")
 t("3l. 24 Des cuti: greeting cuti (chain merge) + H-1 Natal, tanpa panjang terpisah", rH1.sent === 6 && rH1.events.includes("cuti") && rH1.events.includes("H-1") && !rH1.events.includes("panjang"), JSON.stringify(rH1))
 const dmMsgs = sent.filter((s) => s.to === DM).map((s) => String(s.msg.text || ""))
-t("3m. H-1 isi: besok libur + 4 hari beruntun (merge chain)", dmMsgs.some((x) => /ʙᴇꜱᴏᴋ/.test(x) && /4 ʜᴀʀɪ|ʙᴇʀᴜɴᴛᴜɴ/.test(x)), dmMsgs.join(" ||| ").slice(0, 250))
+t("3m. H-1 isi: besok libur + 4 hari beruntun (merge chain)", dmMsgs.some((x) => /besok/.test(x) && /4 hari|beruntun/.test(x)), dmMsgs.join(" ||| ").slice(0, 250))
 
 // — dispatch 20-03-2026: CUSTOM exact Idulfitri owner menimpa SKB cuti → greeting hariH —
 sent.length = 0
@@ -119,7 +119,7 @@ t("3m2. 20-03: custom owner (Idulfitri 1447 H) menimpa SKB cuti → hariH + H-1 
 sent.length = 0
 const rCuti2 = await _haribesarRunTickForTest(mockSock, "2026-03-23")
 t("3m3. hari cuti bersama polos: greeting cuti + H-1 (cuti 24-03)", rCuti2.sent === 6 && rCuti2.events.includes("cuti") && rCuti2.events.includes("H-1") && !rCuti2.events.includes("panjang"), JSON.stringify(rCuti2))
-t("3m4. isi pesan cuti: nama cuti bersama", sent.some((s) => /ᴄᴜᴛɪ ʙᴇʀꜱᴀᴍᴀ|cuti bersama/i.test(String(s.msg.text || ""))))
+t("3m4. isi pesan cuti: nama cuti bersama", sent.some((s) => /cuti bersama|cuti bersama/i.test(String(s.msg.text || ""))))
 
 // — dispatch 19 September 2026 (Sabtu biasa, libur 6 hari lagi = bukan checkpoint) —
 sent.length = 0
@@ -130,14 +130,14 @@ t("3n. bukan checkpoint → gak spam notif", rSat.sent === 0 && rSat.events.leng
 sent.length = 0
 const r2 = await _haribesarRunTickForTest(mockSock, "2026-12-25")
 t("3o. Natal: greeting (dgn info libur panjang) + H-7 Tahun Baru", r2.sent === 6 && r2.events.includes("hariH") && r2.events.includes("H-7"), JSON.stringify(r2))
-t("3p. greeting Natal ada info 3 hari beruntun", sent.some((s) => s.to === DM && /ʙᴇʀᴜɴᴛᴜɴ|beruntun/.test(String(s.msg.text || "")) && String(s.msg.text).includes("12112")))
+t("3p. greeting Natal ada info 3 hari beruntun", sent.some((s) => s.to === DM && /beruntun|beruntun/.test(String(s.msg.text || "")) && String(s.msg.text).includes("12112")))
 
 // — libur panjang TERPISAH: custom merah Senin 04-01-2027 → chain 4 hari mulai 01-01 —
 addCustomDay("04-01-2027", "Libur Uji Coba", true)
 sent.length = 0
 const rLong = await _haribesarRunTickForTest(mockSock, "2026-12-30")
 t("3q. notif LIBUR PANJANG terpisah (chain 5 hari mulai 01-01)", rLong.sent === 3 && rLong.events.includes("panjang"), JSON.stringify(rLong))
-t("3r. isi libur panjang: 5 hari (Tahun Baru+Uji Coba+Maulid paket)", sent.some((s) => /5 ʜᴀʀɪ|5 hari/.test(String(s.msg.text || ""))))
+t("3r. isi libur panjang: 5 hari (Tahun Baru+Uji Coba+Maulid paket)", sent.some((s) => /5 hari|5 hari/.test(String(s.msg.text || ""))))
 
 // — dispatch 2027-01-01: greeting Tahun Baru + chain 4-hari merge + H-3 (04-01) —
 sent.length = 0
@@ -177,7 +177,7 @@ t("5b. .haribesar on balas + langganan tersimpan", replies.length > 0 && isSubsc
 await handler(mockM(["status"]), { sock: mockSock, args: ["status"], prefix: "." })
 t("5c. status balas (hari ini + terdekat)", replies.length >= 2 && /20\d\d-\d\d-\d\d/.test(replies.at(-1) || ""))
 await handler(mockM(["test"]), { sock: mockSock, args: ["test"], prefix: "." })
-t("5d. .haribesar test kirim contoh kartu", /12112|🌷|ᴄᴏɴᴛᴏʜ/.test(replies.at(-1) || ""), (replies.at(-1) || "").slice(0, 100))
+t("5d. .haribesar test kirim contoh kartu", /12112|🌷|contoh/.test(replies.at(-1) || ""), (replies.at(-1) || "").slice(0, 100))
 
 // gate owner: non-owner gak boleh tambah custom
 const beforeCustom = listCustomDays().length
@@ -203,7 +203,7 @@ t("5h. list custom + upcoming muncul", /2027-06-15|20\d\d-\d\d-\d\d/.test(replie
   t("5j. listLiburMendatang baca libur demo (H-20)", listLiburMendatang(null, 90).some((x) => x.ymd === iso20 && x.h === 20), JSON.stringify(listLiburMendatang(null, 90).slice(0, 3)))
   await handler(mockM(["libur"]), { sock: mockSock, args: ["libur"], prefix: "." })
   const rlibur = replies.at(-1) || ""
-  t("5k. .haribesar libur nampilin tanggal + label H-20", rlibur.includes(customDate) && /ʜ-20|H-20/.test(rlibur), rlibur.slice(0, 200))
+  t("5k. .haribesar libur nampilin tanggal + label H-20", rlibur.includes(customDate) && /h-20|H-20/.test(rlibur), rlibur.slice(0, 200))
   t("5l. .haribesar libur baca libur BERGERAK package (25-12-2026)", rlibur.includes("25-12-2026"), rlibur.slice(0, 300))
 
   // .haripenting (alias tanpa sub) + .haribesar penting

@@ -9,7 +9,8 @@ let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
 const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 w("\n— 1. .ping2 DIHAPUS —");
 {
@@ -32,7 +33,7 @@ w("\n— 2. .ping baru — tanpa upload eksternal —");
   const r0 = await pingHandler(m, { sock: {} });
   const r = replies[0] || "";
   check("1 reply + handled", r0?.handled === true && replies.length === 1);
-  check("mulai 🏓 ᴘᴏɴɢ! (Xms)", r.startsWith(`🏓 ${toSC("Pong")}! (`) && /\(\d+(\.\d+)?ms\)/.test(r), r.slice(0, 30));
+  check("mulai 🏓 ᴘᴏɴɢ! (Xms)", r.toLowerCase().startsWith(`🏓 pong! (`) && /\(\d+(\.\d+)?ms\)/.test(r), r.slice(0, 30));
   check("section 「 ✦ ꜱɪꜱᴛᴇᴍ ✦ 」", r.includes(`「 ✦ ${toSC("Sistem")} ✦ 」`));
   check("section 「 ✦ ᴄᴘᴜ ✦ 」", r.includes(`「 ✦ ${toSC("CPU")} ✦ 」`));
   check("section 「 ✦ ᴍᴇᴍᴏʀɪ ✦ 」", r.includes(`「 ✦ ${toSC("Memori")} ✦ 」`));

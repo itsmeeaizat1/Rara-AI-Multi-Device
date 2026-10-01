@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("Reaction", [`Emoji: *${emoji}*`,
-        "Status: *ᴛᴇʀᴋɪʀɪᴍ*"].join("\n")) +
+        "Status: *terkirim*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}reaction <emoji> untuk reaksi lain`) +
       "\n" +

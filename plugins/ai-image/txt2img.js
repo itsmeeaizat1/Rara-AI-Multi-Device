@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
       "Generate gambar dari teks dengan AI",
       "",
       `💡 Contoh: ${m.prefix}txt2img beautiful sunset | anime`,
-      "🎭 ꜱᴛʏʟᴇꜱ",
+      "🎭 styles",
       "",
       `${STYLES.join(', ')}`,
     ]))

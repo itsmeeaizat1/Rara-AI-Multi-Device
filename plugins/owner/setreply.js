@@ -70,7 +70,7 @@ async function handler(m, { sock, db }) {
   ];
 
   const bodys =
-    `💬📨 *ʀᴇᴘʟʏ ᴠᴀʀɪᴀɴᴛ*\n\n` +
+    `💬📨 *reply variant*\n\n` +
     `Atur tampilan balasan bot ketika membalas pesan user 💬\n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n`
 

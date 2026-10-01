@@ -454,26 +454,26 @@ const ALL_FIELDS = [
   ...GAME_CATEGORIES.map(g => ({
     key: 'game:' + g.key,
     group: 'game',
-    title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ' + toSC(String(g.raw).toLowerCase()),
+    title: 'top global ' + toSC(String(g.raw).toLowerCase()),
     label: (u) => `${formatNumber(deepValue(u.rpg, g.metric))} ${g.label.toLowerCase()}`,
     raw: g.raw,
     sortBy: (users) => users.map(u => ({ ...u, _s: deepValue(u.rpg, g.metric) })).sort((a, b) => b._s - a._s),
   })),
   // ── Section 2: RPG CORE (di bawah) ──
-  { key: 'gold',        group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴏʟᴅ',     label: (u) => `${formatNumber(u.gold)} gold`,           raw: 'Gold' },
-  { key: 'totalExp',    group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟᴇᴠᴇʟ',    label: (u) => `Lv.${u.level} (${formatNumber(u.exp)} XP)`, raw: 'Level' },
-  { key: 'pvpRating',   group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴘᴠᴘ',       label: (u) => `${u.pvpRating} rating (W:${u.pvpWins} L:${u.pvpLosses})`, raw: 'PvP' },
-  { key: 'gems',        group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴇᴍꜱ',      label: (u) => `${formatNumber(u.gems)} gems`,            raw: 'Gems' },
-  { key: 'bossKills',   group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʙᴏꜱꜱ',      label: (u) => `${u.bossKills} boss kills`,              raw: 'Boss' },
-  { key: 'dungeonClears', group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴅᴜɴɢᴇᴏɴ', label: (u) => `${u.dungeonClears} dungeon clears`,      raw: 'Dungeon' },
-  { key: 'limit',       group: 'rpg', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟɪᴍɪᴛ',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
+  { key: 'gold',        group: 'rpg', title: 'top global gold',     label: (u) => `${formatNumber(u.gold)} gold`,           raw: 'Gold' },
+  { key: 'totalExp',    group: 'rpg', title: 'top global level',    label: (u) => `Lv.${u.level} (${formatNumber(u.exp)} XP)`, raw: 'Level' },
+  { key: 'pvpRating',   group: 'rpg', title: 'top global pvp',       label: (u) => `${u.pvpRating} rating (W:${u.pvpWins} L:${u.pvpLosses})`, raw: 'PvP' },
+  { key: 'gems',        group: 'rpg', title: 'top global gems',      label: (u) => `${formatNumber(u.gems)} gems`,            raw: 'Gems' },
+  { key: 'bossKills',   group: 'rpg', title: 'top global boss',      label: (u) => `${u.bossKills} boss kills`,              raw: 'Boss' },
+  { key: 'dungeonClears', group: 'rpg', title: 'top global dungeon', label: (u) => `${u.dungeonClears} dungeon clears`,      raw: 'Dungeon' },
+  { key: 'limit',       group: 'rpg', title: 'top global limit',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
 ]
 
 // Section header — pembeda kategori di .leaderboard all (mini game di atas, rpg, couple di bawah)
 const SECTIONS = [
-  { group: 'game',   title: 'ᴍɪɴɪ ɢᴀᴍᴇ & ꜱᴛᴀᴛꜱ' },
-  { group: 'rpg',    title: 'ʀᴘɢ ᴄᴏʀᴇ' },
-  { group: 'couple', title: 'ʀᴘɢ ᴄɪɴᴛᴀ' },
+  { group: 'game',   title: 'mini game & stats' },
+  { group: 'rpg',    title: 'rpg core' },
+  { group: 'couple', title: 'rpg cinta' },
 ]
 
 // onlyGroup = null → semua kategori (mode all); 'game'/'rpg'/'couple' → cuma kategori itu (akses per game)
@@ -536,21 +536,21 @@ async function showAllLeaderboards(m, sock, onlyGroup = null, titleOverride = nu
 
     // Love Power — kekuatan cinta (affection + level + bonus job)
     pushCoupleBoard(
-      'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴄɪɴᴛᴀ',
+      'top global cinta',
       `Cinta: ${formatNumber(cintaUsers.slice().sort((a, b) => b.lovePower - a.lovePower)[0].lovePower)} LP`,
       cintaUsers.slice().sort((a, b) => b.lovePower - a.lovePower),
       (u) => `${formatNumber(u.cinta)} affection | ${formatNumber(u.lovePower)} LP`
     )
     // Affection — poin kasih sayang murni
     pushCoupleBoard(
-      'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴀꜰꜰᴇᴄᴛɪᴏɴ',
+      'top global affection',
       `Affection: ${formatNumber(cintaUsers.slice().sort((a, b) => b.cinta - a.cinta)[0].cinta)} pts`,
       cintaUsers.slice().sort((a, b) => b.cinta - a.cinta),
       (u) => `${formatNumber(u.cinta)} affection | ${formatNumber(u.lovePower)} LP`
     )
     // Couple War — kemenangan duel pasangan
     pushCoupleBoard(
-      'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴄᴏᴜᴘʟᴇ ᴡᴀʀ',
+      'top global couple war',
       `Couple War: ${cintaUsers.slice().sort((a, b) => b.warWin - a.warWin)[0].warWin} wins`,
       cintaUsers.slice().sort((a, b) => b.warWin - a.warWin),
       (u) => `${u.warWin} couple war wins`
@@ -663,9 +663,9 @@ async function handler(m, { sock, config: cfg }) {
 
   if (mode === 'menu') return showMenu(m, sock)
   if (mode === 'all') return showAllLeaderboards(m, sock)
-  if (mode === 'cat:game') return showAllLeaderboards(m, sock, 'game', 'ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴍɪɴɪ ɢᴀᴍᴇ')
-  if (mode === 'cat:rpg') return showAllLeaderboards(m, sock, 'rpg', 'ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ʀᴘɢ')
-  if (mode === 'cat:couple') return showAllLeaderboards(m, sock, 'couple', 'ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴄᴏᴜᴘʟᴇ')
+  if (mode === 'cat:game') return showAllLeaderboards(m, sock, 'game', 'leaderboard mini game')
+  if (mode === 'cat:rpg') return showAllLeaderboards(m, sock, 'rpg', 'leaderboard rpg')
+  if (mode === 'cat:couple') return showAllLeaderboards(m, sock, 'couple', 'leaderboard couple')
   if (mode === 'group') return showGroupLeaderboard(m, sock)
   if (mode === 'limit') return showRpgLeaderboard(m, sock, 'limit')
   if (mode.startsWith('game:')) return showGameLeaderboard(m, sock, mode.slice(5))

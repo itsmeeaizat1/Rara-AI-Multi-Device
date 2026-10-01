@@ -79,11 +79,11 @@ async function handler(m, { sock }) {
     if (!st) {
       return m.reply(
         claraWrap("Yt Proxy", [
-          "🔴 *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴘʀᴏxʏ ᴛᴇʀᴘᴀꜱᴀɴɢ*",
+          "🔴 *tidak ada proxy terpasang*",
           "",
           "yt-dlp nyambung langsung dari IP server.",
           "",
-          "📍 ᴄᴀʀᴀ ꜱᴇᴛᴇʟ:",
+          "📍 cara setel:",
           "ketik .ytproxy <url-proxy>",
           "contoh: .ytproxy http://user:pass@host:8080",
         ].join("\n")),
@@ -91,10 +91,10 @@ async function handler(m, { sock }) {
     }
     return m.reply(
       claraWrap("Yt Proxy", [
-        "🟢 *ᴘʀᴏxʏ ᴀᴋᴛɪꜰ*",
-        `• ᴀᴅʀᴇꜱ : ${maskProxy(st.url)}`,
-        `• ꜱᴜᴍʙᴇʀ : ${st.source}`,
-        "• ʏᴛ-ᴅʟᴘ : otomatis pakai --proxy di download berikutnya",
+        "🟢 *proxy aktif*",
+        `• adres : ${maskProxy(st.url)}`,
+        `• sumber : ${st.source}`,
+        "• yt-dlp : otomatis pakai --proxy di download berikutnya",
         "",
         "📌 Ganti: ketik .ytproxy <url-baru>. Hapus: .ytproxy clear.",
       ].join("\n")),
@@ -106,14 +106,14 @@ async function handler(m, { sock }) {
     if (process.env.NOVA_YTDLP_PROXY) {
       return m.reply(
         claraWrap("Yt Proxy", [
-          "🟡 ᴀᴅᴀ ᴘʀᴏxʏ ᴅᴀʀɪ ᴇɴᴠ *NOVA_YTDLP_PROXY* — env ini gak bisa dihapus dari chat.",
+          "🟡 ada proxy dari env *NOVA_YTDLP_PROXY* — env ini gak bisa dihapus dari chat.",
           "Hapus lewat file .env / konfigurasi VPS lalu restart bot.",
         ].join("\n")),
       );
     }
     if (fs.existsSync(PROXY_PATH)) {
       fs.unlinkSync(PROXY_PATH);
-      return m.reply(claraWrap("Yt Proxy", ["🟡 *ᴘʀᴏxʏ ᴅɪʜᴀᴘᴜꜱ* — yt-dlp balik nyambung langsung dari IP server."].join("\n")));
+      return m.reply(claraWrap("Yt Proxy", ["🟡 *proxy dihapus* — yt-dlp balik nyambung langsung dari IP server."].join("\n")));
     }
     return m.reply(claraWrap("Yt Proxy", ["Tidak ada proxy tersimpan — sudah bersih dari awal."].join("\n")));
   }
@@ -155,10 +155,10 @@ async function handler(m, { sock }) {
   await m.react("🐣");
   return m.reply(
     claraWrap("Yt Proxy", [
-      "🟢 *ᴘʀᴏxʏ ʏᴏᴜᴛᴜʙᴇ ᴛᴇʀᴘᴀꜱᴀɴɢ* 🎉",
-      `• ᴀᴅʀᴇꜱ : ${maskProxy(res.url)}`,
-      "• ᴛᴇʀꜱɪᴍᴘᴀɴ : data/yt-proxy.txt",
-      `• ғʟᴀɢ ʏᴛ-ᴅʟᴘ : ${flag ? "aktif (—proxy)" : "belum terbaca ⚠️"}`,
+      "🟢 *proxy youtube terpasang* 🎉",
+      `• adres : ${maskProxy(res.url)}`,
+      "• tersimpan : data/yt-proxy.txt",
+      `• ғlag yt-dlp : ${flag ? "aktif (—proxy)" : "belum terbaca ⚠️"}`,
       "",
       "📌 Tes langsung: ketik *.play lathi* — kalau proxy-nya hidup, download lewat IP proxy.",
       "📌 Ganti proxy: ketik .ytproxy <url-baru>. Hapus: .ytproxy clear.",

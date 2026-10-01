@@ -24,9 +24,9 @@ const pluginConfig = {
 
 function helpText(m) {
   return claraWrap("cryptoalert", [
-    "🎯 *ᴄʀʏᴘᴛᴏ ᴀʟᴀʀᴍ*",
+    "🎯 *crypto alarm*",
     "",
-    "ᴘᴀꜱᴀɴɢ ᴛᴀʀɢᴇᴛ ʜᴀʀɢᴀ ᴄʀʏᴘᴛᴏ — ɴᴏᴛɪꜰ ᴏᴛᴏᴍᴀᴛɪꜱ ᴘᴀꜱ ᴋᴇɴᴀ",
+    "pasang target harga crypto — notif otomatis pas kena",
     "",
     `▸ ${m.prefix}cryptoalert <coin> <diatas|dibawah> <harga>`,
     "   pasang alarm (harga rupiah)",
@@ -39,13 +39,13 @@ function helpText(m) {
     `▸ ${m.prefix}cryptoalert info`,
     "   status monitor",
     "",
-    "*ᴄᴏɴᴛᴏʜ:*",
+    "*contoh:*",
     `${m.prefix}cryptoalert btc diatas 150jt`,
     `${m.prefix}cryptoalert eth dibawah 40.000.000`,
     "",
-    "🪙 ᴄᴏɪɴ: ʙᴛᴄ ᴇᴛʜ ꜱᴏʟ ʙɴʙ ᴅᴏɢᴇ ᴅꜱᴛ ꜱʜɪʙ ᴘᴇᴘᴇ ᴅʟʟ",
-    "✅ ᴀʟᴀʀᴍ ꜱᴀᴛᴜ ᴋᴀʟɪ ᴘᴀᴋᴀɪ — ᴏᴛᴏᴍᴀᴛɪꜱ ᴛᴇʀʜᴀᴘᴜꜱ ᴘᴀꜱ ᴋᴇɴᴀ",
-    "ᴍᴀᴋꜱ 5 ᴀʟᴀʀᴍ ᴘᴇʀ ᴄʜᴀᴛ",
+    "🪙 coin: btc eth sol bnb doge dst shib pepe dll",
+    "✅ alarm satu kali pakai — otomatis terhapus pas kena",
+    "maks 5 alarm per chat",
   ]);
 }
 
@@ -59,10 +59,10 @@ async function handler(m, { sock }) {
       if (!list.length) {
         return m.reply(claraWrap("cryptoalert", `Belum ada alarm harga di chat ini.\n\nKetik ${m.prefix}cryptoalert btc diatas 150jt buat mulai.`, "guide"));
       }
-      const lines = ["🎯 *ᴀʟᴀʀᴍ ʜᴀʀɢᴀ ᴅɪ ᴄʜᴀᴛ ɪɴɪ*", ""];
+      const lines = ["🎯 *alarm harga di chat ini*", ""];
       list.forEach((a, i) => {
         lines.push(`${i + 1}. 🪙 *${a.coinName}* (${a.symbol})`);
-        lines.push(`   🎯 ${a.direction === "above" ? "ᴅɪ ᴀᴛᴀꜱ" : "ᴅɪ ʙᴀᴡᴀʜ"} ${formatRp(a.target)}`);
+        lines.push(`   🎯 ${a.direction === "above" ? "di atas" : "di bawah"} ${formatRp(a.target)}`);
         lines.push(`   💵 Terakhir: ${formatRp(a.lastPrice)}`);
         lines.push("");
       });
@@ -104,12 +104,12 @@ async function handler(m, { sock }) {
       const st = getStatus();
       const mine = listAlerts(m.chat);
       return m.reply(claraWrap("cryptoalert", [
-        "🎯 *ꜱᴛᴀᴛᴜꜱ ᴄʀʏᴘᴛᴏ ᴀʟᴀʀᴍ*",
+        "🎯 *status crypto alarm*",
         "",
-        `ᴀᴋᴛɪꜰ: ${st.enabled ? "ʏᴀ" : "ᴛɪᴅᴀᴋ"} (ꜱᴡɪᴛᴄʜ ᴀᴜᴛᴏ)`,
-        `ᴍᴏɴɪᴛᴏʀ: ${st.running ? "🟢 ʙᴇʀᴊᴀʟᴀɴ" : "🔴 ᴍᴀᴛɪ"}`,
-        `ᴛᴏᴛᴀʟ ᴀʟᴀʀᴍ ꜱᴇᴍᴜᴀ ᴄʜᴀᴛ: ${st.total}`,
-        `ᴀʟᴀʀᴍ ᴅɪ ᴄʜᴀᴛ ɪɴɪ: ${mine.length}`,
+        `aktif: ${st.enabled ? "ya" : "tidak"} (switch auto)`,
+        `monitor: ${st.running ? "🟢 berjalan" : "🔴 mati"}`,
+        `total alarm semua chat: ${st.total}`,
+        `alarm di chat ini: ${mine.length}`,
       ].join("\n")));
     }
 
@@ -133,13 +133,13 @@ async function handler(m, { sock }) {
     const a = res.alert;
     await m.react("🐣");
     return m.reply(claraWrap("cryptoalert", [
-      "✅ *ᴀʟᴀʀᴍ ᴅɪᴘᴀꜱᴀɴɢ!*",
+      "✅ *alarm dipasang!*",
       "",
       `🪙 *${a.coinName}* (${a.symbol})`,
-      `🎯 ${a.direction === "above" ? "ᴅɪ ᴀᴛᴀꜱ" : "ᴅɪ ʙᴀᴡᴀʜ"} ${formatRp(a.target)}`,
+      `🎯 ${a.direction === "above" ? "di atas" : "di bawah"} ${formatRp(a.target)}`,
       `💵 Harga sekarang: ${formatRp(a.startPrice)}`,
       "",
-      "🔔 ɴᴏᴛɪꜰ ᴏᴛᴏᴍᴀᴛɪꜱ ᴍᴀꜱᴜᴋ ᴋᴇ ᴄʜᴀᴛ ɪɴɪ ᴘᴀꜱ ᴛᴀʀɢᴇᴛ ᴋᴇɴᴀ",
+      "🔔 notif otomatis masuk ke chat ini pas target kena",
     ].join("\n")));
   } catch (e) {
     await m.react("❌");

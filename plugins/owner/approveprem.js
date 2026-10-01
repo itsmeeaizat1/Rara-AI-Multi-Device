@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     if (pending.length === 0) {
       return m.reply(claraWrap("approveprem", "Tidak ada pesanan premium yang pending."));
     }
-    let txt = `${toSC("ᴘᴇꜱᴀɴᴀɴ ᴘʀᴇᴍɪᴜᴍ ᴘᴇɴᴅɪɴɢ")} — ${pending.length}\n`;
+    let txt = `${toSC("pesanan premium pending")} — ${pending.length}\n`;
     for (const [jid, o] of pending) {
       txt += `\n• ${o.phoneNumber} (${o.name || "Unknown"})\n  ⭐ ${o.label} (${o.days === 0 ? "Permanent" : o.days + " hari"}) — ${o.price}\n  Waktu: ${new Date(o.orderedAt).toLocaleString("id-ID")}\n`;
     }
@@ -93,10 +93,10 @@ async function handler(m, { sock }) {
     if (orders.history.length > 200) orders.history = orders.history.slice(-200);
     db.save();
     await sock.sendMessage(jid, {
-      text: `❌ *ᴘᴇꜱᴀɴᴀɴ ᴘʀᴇᴍɪᴜᴍ ᴅɪᴛᴏʟᴀᴋ*\n\nPaket: *${order.label}* — ${order.price}\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
+      text: `❌ *pesanan premium ditolak*\n\nPaket: *${order.label}* — ${order.price}\nAlasan: *${reason}*\n\nHubungi owner untuk info lebih lanjut.`,
     }).catch(() => {});
     return m.reply(claraWrap("approveprem",
-      `Status: *ᴅɪᴛᴏʟᴀᴋ*\nPesanan premium (${order.label}) dari *${target}* ditolak`));
+      `Status: *ditolak*\nPesanan premium (${order.label}) dari *${target}* ditolak`));
   }
 
   // ── Approve: terapkan premium (alur sama .addprem) ──
@@ -177,11 +177,11 @@ async function handler(m, { sock }) {
 
   const durLabel = order.days === 0 ? "PERMANENT (seumur hidup)" : `*${order.days} hari*`;
   await sock.sendMessage(jid, {
-    text: `✅ *ᴘʀᴇᴍɪᴜᴍ ʙᴇʀʜᴀꜱɪʟ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\nPaket: *${order.label}*\nDurasi: ${durLabel}\nTotal bayar: *${order.price}*\n${newExpired ? `Expired: *${formatDate(newExpired)}*` : ""}\n\nTerima kasih sudah beli premium 🥳`,
+    text: `✅ *premium berhasil diaktifkan*\n\nPaket: *${order.label}*\nDurasi: ${durLabel}\nTotal bayar: *${order.price}*\n${newExpired ? `Expired: *${formatDate(newExpired)}*` : ""}\n\nTerima kasih sudah beli premium 🥳`,
   }).catch(() => {});
 
   return m.reply(claraWrap("approveprem",
-    `Status: *ʙᴇʀʜᴀꜱɪʟ*\nUser: *${order.phoneNumber}*\nPaket: *${order.label}* (${durLabel})\nHarga: *${order.price}*\n${newExpired ? `Expired: *${formatDate(newExpired)}*` : "Tanpa expired (permanent)"}\n\nPremium aktif otomatis & user sudah dinotif`));
+    `Status: *berhasil*\nUser: *${order.phoneNumber}*\nPaket: *${order.label}* (${durLabel})\nHarga: *${order.price}*\n${newExpired ? `Expired: *${formatDate(newExpired)}*` : "Tanpa expired (permanent)"}\n\nPremium aktif otomatis & user sudah dinotif`));
 }
 
 export { pluginConfig as config, handler };

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Nova-large", `🖼️ *ɴᴏᴠᴀ ʟᴀʀɢᴇ ᴘʀᴇꜱᴇᴛ*\n\nKirim/reply gambar untuk mengganti kumpulan foto besar (nova.jpg, panel/panel-thumb.jpg, nova-v10.jpg) sekaligus.\nPastikan rasio gambar sesuai dengan yang diinginkan.`))
+        return m.reply(claraWrap("Nova-large", `🖼️ *nova large preset*\n\nKirim/reply gambar untuk mengganti kumpulan foto besar (nova.jpg, panel/panel-thumb.jpg, nova-v10.jpg) sekaligus.\nPastikan rasio gambar sesuai dengan yang diinginkan.`))
     }
     try {
         let buffer
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
             const targetPath = path.join(assetsDir, imgName)
             fs.writeFileSync(targetPath, buffer)
         }
-        { const __navText = `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\nGambar bundle *ɴᴏᴠᴀ-ʟᴀʀɢᴇ* berhasil diganti secara massal.\nMencakup: ${targetImages.join(', ')}\nRestart bot jika gambar tidak langsung berubah.`; await m.reply(__navText); }
+        { const __navText = `✅ *berhasil*\n\nGambar bundle *nova-large* berhasil diganti secara massal.\nMencakup: ${targetImages.join(', ')}\nRestart bot jika gambar tidak langsung berubah.`; await m.reply(__navText); }
         
     } catch (error) {
         await m.reply(claraWrap("nova-large", te(m.prefix, m.command, m.pushName), "error"))

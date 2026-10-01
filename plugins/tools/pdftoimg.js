@@ -63,8 +63,8 @@ async function handler(m, { sock }) {
     for (let i = 0; i < res.images.length; i++) {
       const img = res.images[i];
       const cap = [
-        `📄 *${name}* — ʜᴀʟᴀᴍᴀɴ ${img.pageNumber}/${res.totalPages}`,
-        res.truncated && i === res.images.length - 1 ? `\n⚠️ ᴍᴀᴋꜱ ${MAX_PAGES} ʜᴀʟᴀᴍᴀɴ — ꜱɪꜱᴀɴʏᴀ ʙɪᴀʀᴀɴ` : "",
+        `📄 *${name}* — halaman ${img.pageNumber}/${res.totalPages}`,
+        res.truncated && i === res.images.length - 1 ? `\n⚠️ maks ${MAX_PAGES} halaman — sisanya biaran` : "",
       ].join("\n").trim();
       await sock.sendMessage(m.chat, {
         image: img.png,

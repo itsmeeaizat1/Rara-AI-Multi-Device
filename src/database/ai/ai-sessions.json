@@ -1,1 +1,51 @@
-{}
+{
+  "satuan:62800@g.us": [
+    {
+      "role": "user",
+      "content": "jelaskan siapa presiden indonesia",
+      "ts": 1790859242645
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790859242645
+    },
+    {
+      "role": "user",
+      "content": "halo",
+      "ts": 1790859242781
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790859242781
+    },
+    {
+      "role": "user",
+      "content": "ini foto apa?",
+      "ts": 1790859242891
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock-multimodal",
+      "ts": 1790859242891
+    },
+    {
+      "role": "user",
+      "content": "halo",
+      "ts": 1790859242903
+    },
+    {
+      "role": "assistant",
+      "content": "jawaban-mock",
+      "ts": 1790859242903
+    }
+  ],
+  "agent:6281234567890@s.whatsapp.net": [
+    {
+      "role": "user",
+      "content": "suara apa itu pahlawan",
+      "ts": 1790859377762
+    }
+  ]
+}

@@ -159,7 +159,7 @@ async function handler(m, { sock }) {
     startIndex + PAGE_SIZE,
   );
 
-  let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴜꜱᴇʀ ᴛᴇʀᴅᴀꜰᴛᴀʀ*\n\n`;
+  let text = `📋 *daftar user terdaftar*\n\n`;
   text += `Total hasil: *${registeredUsers.length}* user\n`;
   text += `Halaman: *${page}/${totalPages}*\n`;
   text += `Urut: *${options.sort === "terbaru" ? "Terbaru" : "Default"}*\n`;

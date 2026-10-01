@@ -39,8 +39,8 @@ async function uploadToCatbox(buffer, filename = 'file.jpg') {
 async function handler(m, { sock }) {
     if (m.isGroup) {
         return m.reply(
-            `🚫 *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
-            `Untuk menjaga privasi 🛡️, pengeditan produk hanya dapat dilakukan di *ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ*.\n\n` +
+            `🚫 *akses ditolak*\n\n` +
+            `Untuk menjaga privasi 🛡️, pengeditan produk hanya dapat dilakukan di *private chat*.\n\n` +
             `Silakan chat bot secara langsung 📱`
         )
     }
@@ -57,19 +57,19 @@ async function handler(m, { sock }) {
 
     if (!match) {
         return m.reply(
-            `✏️ *ᴇᴅɪᴛ ᴘʀᴏᴅᴜᴋ*\n\n` +
+            `✏️ *edit produk*\n\n` +
             `📋 Format: \`${m.prefix}editproduk <nomor> <field> <nilai>\`\n\n` +
-            `📌 *ꜰɪᴇʟᴅ ʏᴀɴɢ ʙɪꜱᴀ ᴅɪᴇᴅɪᴛ:*\n` +
-            `*ɴᴀᴍᴀ* 🏷️ — Nama produk\n` +
-            `*ʜᴀʀɢᴀ* 💰 — Harga jual (angka)\n` +
-            `*ᴅɪꜱᴋᴏɴ* 🏷️ — Harga asli/coret (angka, 0 untuk hapus)\n` +
-            `*ꜱᴛᴏᴋ* 📊 — Jumlah stok atau \`unlimited\`\n` +
-            `*ᴛɪᴘᴇ* 🔑📦 — \`digital\` atau \`fisik\`\n` +
-            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* 📝 — Deskripsi produk\n*ᴋᴀᴛᴇɢᴏʀɪ* 🏷️ — Kategori produk (app, game, sembako, ppob, umum)\n` +
-            `*ᴅᴇᴛᴀɪʟ* 🔒 — Info rahasia (dikirim setelah beli)\n` +
-            `*ɢᴀᴍʙᴀʀ* 🖼️ — Upload gambar baru (reply gambar)\n` +
-            `*ᴠɪᴅᴇᴏ* 🎬 — Upload video baru (reply video)\n\n` +
-            `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
+            `📌 *field yang bisa diedit:*\n` +
+            `*nama* 🏷️ — Nama produk\n` +
+            `*harga* 💰 — Harga jual (angka)\n` +
+            `*diskon* 🏷️ — Harga asli/coret (angka, 0 untuk hapus)\n` +
+            `*stok* 📊 — Jumlah stok atau \`unlimited\`\n` +
+            `*tipe* 🔑📦 — \`digital\` atau \`fisik\`\n` +
+            `*deskripsi* 📝 — Deskripsi produk\n*kategori* 🏷️ — Kategori produk (app, game, sembako, ppob, umum)\n` +
+            `*detail* 🔒 — Info rahasia (dikirim setelah beli)\n` +
+            `*gambar* 🖼️ — Upload gambar baru (reply gambar)\n` +
+            `*video* 🎬 — Upload video baru (reply video)\n\n` +
+            `📝 *contoh:*\n` +
             `\`${m.prefix}editproduk 1 harga 30000\`\n` +
             `\`${m.prefix}editproduk 1 diskon 40000\`\n` +
             `\`${m.prefix}editproduk 1 kategori app\`\n` +
@@ -86,20 +86,20 @@ async function handler(m, { sock }) {
     let value = match[3]?.trim() || ''
 
     if (idx < 0 || idx >= products.length) {
-        return m.reply(claraWrap("editproduk", `❌ *ɴᴏᴍᴏʀ ᴘʀᴏᴅᴜᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${products.length} 📋`))
+        return m.reply(claraWrap("editproduk", `❌ *nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
     }
 
     const product = products[idx]
 
     switch (field) {
         case 'nama': {
-            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *ɴᴀᴍᴀ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.* Minimal 2 karakter 🏷️`))
+            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *nama terlalu pendek.* Minimal 2 karakter 🏷️`))
             product.name = value
             break
         }
         case 'harga': {
             const price = parseInt(value)
-            if (isNaN(price) || price < 1000) return m.reply(claraWrap("editproduk", `❌ *ʜᴀʀɢᴀ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.* Minimal Rp 1.000 💰`))
+            if (isNaN(price) || price < 1000) return m.reply(claraWrap("editproduk", `❌ *harga tidak valid.* Minimal Rp 1.000 💰`))
             product.price = price
             break
         }
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
             if (isNaN(origPrice) || origPrice === 0) {
                 product.originalPrice = null
             } else {
-                if (origPrice <= product.price) return m.reply(claraWrap("editproduk", `❌ *ʜᴀʀɢᴀ ᴅɪꜱᴋᴏɴ ʜᴀʀᴜꜱ ʟᴇʙɪʜ ʙᴇꜱᴀʀ ᴅᴀʀɪ ʜᴀʀɢᴀ ᴊᴜᴀʟ.*\n\nHarga jual saat ini: Rp ${product.price.toLocaleString('id-ID')} 💰`))
+                if (origPrice <= product.price) return m.reply(claraWrap("editproduk", `❌ *harga diskon harus lebih besar dari harga jual.*\n\nHarga jual saat ini: Rp ${product.price.toLocaleString('id-ID')} 💰`))
                 product.originalPrice = origPrice
             }
             break
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
             }
             if (newType === 'fisik' && product.type === 'digital' && product.stockItems?.length > 0) {
                 return m.reply(
-                    `⚠️ *ᴛɪᴅᴀᴋ ʙɪꜱᴀ ᴍᴇɴɢᴜʙᴀʜ ᴋᴇ ꜰɪꜱɪᴋ*\n\n` +
+                    `⚠️ *tidak bisa mengubah ke fisik*\n\n` +
                     `Produk ini memiliki *${product.stockItems.length}* data akun 🔑\n` +
                     `Hapus semua stock items terlebih dahulu sebelum mengubah tipe ke Fisik.\n\n` +
                     `🗑️ Hapus semua: \`${m.prefix}editproduk ${idx + 1} stok 0\``
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
             break
         }
         case 'kategori': {
-            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *ᴋᴀᴛᴇɢᴏʀɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.* Minimal 2 karakter 🏷️`))
+            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *kategori tidak valid.* Minimal 2 karakter 🏷️`))
             product.kategori = value.toLowerCase().trim()
             break
         }
@@ -151,44 +151,44 @@ async function handler(m, { sock }) {
         case 'gambar': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === 'imageMessage')
             const isDirectImage = m.isImage
-            if (!hasMedia && !isDirectImage) return m.reply(claraWrap("editproduk", `🖼️ *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ɢᴀᴍʙᴀʀ ʙᴀʀᴜ.*\n\nKirim gambar lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectImage) return m.reply(claraWrap("editproduk", `🖼️ *reply atau kirim gambar baru.*\n\nKirim gambar lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'image.jpg')
                     if (url) product.image = url
-                    else return m.reply(claraWrap("editproduk", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ɢᴀᴍʙᴀʀ.* Coba lagi nanti 🖼️`))
+                    else return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
                 }
             } catch {
-                return m.reply(claraWrap("editproduk", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ɢᴀᴍʙᴀʀ.* Coba lagi nanti 🖼️`))
+                return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
             }
             break
         }
         case 'video': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isVideo || m.quoted?.type === 'videoMessage')
             const isDirectVideo = m.isVideo
-            if (!hasMedia && !isDirectVideo) return m.reply(claraWrap("editproduk", `🎬 *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ᴠɪᴅᴇᴏ ʙᴀʀᴜ.*\n\nKirim video lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectVideo) return m.reply(claraWrap("editproduk", `🎬 *reply atau kirim video baru.*\n\nKirim video lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'video.mp4')
                     if (url) product.video = url
-                    else return m.reply(claraWrap("editproduk", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ᴠɪᴅᴇᴏ.* Coba lagi nanti 🎬`))
+                    else return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
                 }
             } catch {
-                return m.reply(claraWrap("editproduk", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ᴠɪᴅᴇᴏ.* Coba lagi nanti 🎬`))
+                return m.reply(claraWrap("editproduk", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
             }
             break
         }
         default:
-            return m.reply(claraWrap("editproduk", `❌ *ꜰɪᴇʟᴅ ᴛɪᴅᴀᴋ ᴅɪᴋᴇɴᴀʟɪ.*\n\nGunakan: nama, harga, diskon, stok, tipe, deskripsi, detail, gambar, video 📋`))
+            return m.reply(claraWrap("editproduk", `❌ *field tidak dikenali.*\n\nGunakan: nama, harga, diskon, stok, tipe, deskripsi, detail, gambar, video 📋`))
     }
 
     db.setting('storeProducts', products)
     const typeIcon = product.type === 'fisik' ? '📦' : '🔑'
     const typeLabel = product.type === 'fisik' ? 'Fisik' : 'Digital'
 
-    let reply = `✅ *ᴘʀᴏᴅᴜᴋ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n`
+    let reply = `✅ *produk diperbarui*\n\n`
     reply += `🏷️ Nama: *${product.name}*\n`
     reply += `💰 Harga: *Rp ${product.price.toLocaleString('id-ID')}*`
     if (product.originalPrice) reply += ` ~~Rp ${product.originalPrice.toLocaleString('id-ID')}~~`

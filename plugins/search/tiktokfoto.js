@@ -70,15 +70,15 @@ async function handler(m, { sock }) {
             return m.reply(novaError("TikTokFoto", `Gak nemu foto TikTok untuk: ${query} nih`))
         }
 
-        let caption = '📸 *ᴛɪᴋᴛᴏᴋ ꜰᴏᴛᴏ ꜱᴇᴀʀᴄʜ*\n\n'
-        caption += `🔎 *qᴜᴇʀʏ:* ${result.query || query}\n`
-        caption += `📌 *ᴊᴜᴅᴜʟ:* ${trimText(post.title || post.description)}\n`
-        caption += `👤 *ᴀᴜᴛʜᴏʀ:* ${post.author?.nickname || '-'}\n`
-        caption += `🌍 *ʀᴇɢɪᴏɴ:* ${post.region || '-'}\n`
-        caption += `🖼️ *ꜰᴏᴛᴏ:* ${post.image_count || images.length}\n`
-        caption += `❤️ *ʟɪᴋᴇ:* ${formatNumber(post.stats?.like)}\n`
-        caption += `💬 *ᴄᴏᴍᴍᴇɴᴛ:* ${formatNumber(post.stats?.comment)}\n`
-        caption += `🔁 *ꜱʜᴀʀᴇ:* ${formatNumber(post.stats?.share)}\n`
+        let caption = '📸 *tiktok foto search*\n\n'
+        caption += `🔎 *query:* ${result.query || query}\n`
+        caption += `📌 *judul:* ${trimText(post.title || post.description)}\n`
+        caption += `👤 *author:* ${post.author?.nickname || '-'}\n`
+        caption += `🌍 *region:* ${post.region || '-'}\n`
+        caption += `🖼️ *foto:* ${post.image_count || images.length}\n`
+        caption += `❤️ *like:* ${formatNumber(post.stats?.like)}\n`
+        caption += `💬 *comment:* ${formatNumber(post.stats?.comment)}\n`
+        caption += `🔁 *share:* ${formatNumber(post.stats?.share)}\n`
         caption += `🆔 *ID:* ${post.id || '-'}\n\n`
         caption += `📝 ${trimText(post.description || post.title, 220)}`
 

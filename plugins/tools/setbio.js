@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     const bioToSet = newBio?.toLowerCase() === 'clear' ? '' : (newBio || '')
     
     if (bioToSet.length > 139) {
-        await m.reply(claraWrap("setbio", `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ*\n\n` +
+        await m.reply(claraWrap("setbio", `⚠️ *validasi*\n\n` +
             `Bio maksimal 139 karakter.`))
         return
     }
@@ -41,18 +41,18 @@ async function handler(m, { sock }) {
         await sock.updateProfileStatus(bioToSet)
         
         if (bioToSet) {
-            await m.reply(claraWrap("setbio", `✅ *ʙɪᴏ ʙᴏᴛ ᴅɪᴜʙᴀʜ*\n\n` +
+            await m.reply(claraWrap("setbio", `✅ *bio bot diubah*\n\n` +
                 `Bio bot sekarang:\n` +
                 `_${bioToSet}_`))
         } else {
             await m.react("🐣");
-            await m.reply(claraWrap("setbio", `✅ *ʙɪᴏ ʙᴏᴛ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+            await m.reply(claraWrap("setbio", `✅ *bio bot dihapus*\n\n` +
                 `Bio bot berhasil dihapus!`))
         }
     } catch (error) {
     await m.react("❌");
         await m.reply(
-            `❌ *ɢᴀɢᴀʟ*\n\n` +
+            `❌ *gagal*\n\n` +
             `Tidak dapat mengubah bio bot.\n` +
             `_${error.message}_`
         )

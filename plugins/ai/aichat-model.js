@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isOwner) {
       const text =
-        claraWrap("aichat-model", "Perintah ini khusus owner — ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇʟ ᴀɪ.", "error") +
+        claraWrap("aichat-model", "Perintah ini khusus owner — hanya owner yang bisa mengganti model ai.", "error") +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

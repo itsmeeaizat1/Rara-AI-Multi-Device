@@ -71,13 +71,13 @@ Gunakan bahasa Indonesia. Resep harus praktis dan bisa dibuat di rumah.`;
 `;
       } else if (t.startsWith("BAHAN:")) {
         inSection = "bahan";
-        formatted += `📋 *ʙᴀʜᴀɴ:*\n`;
+        formatted += `📋 *bahan:*\n`;
       } else if (t.startsWith("LANGKAH:")) {
         inSection = "langkah";
-        formatted += `📝 *ᴄᴀʀᴀ ᴍᴇᴍᴀsᴀᴋ:*\n`;
+        formatted += `📝 *cara memasak:*\n`;
       } else if (t.startsWith("TIPS:")) {
         inSection = "";
-        formatted += `💡 *ᴛɪᴘs:* ${t.replace("TIPS:", "").trim()}\n`;
+        formatted += `💡 *tips:* ${t.replace("TIPS:", "").trim()}\n`;
       } else if (t.match(/^\d+\./) || t.startsWith("-")) {
         formatted += `${t}\n`;
       } else {

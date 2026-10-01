@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     }
     
     if (newName.length < 1 || newName.length > 25) {
-        await m.reply(claraWrap("setname", `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ*\n\n` +
+        await m.reply(claraWrap("setname", `⚠️ *validasi*\n\n` +
             `Nama bot harus 1-25 karakter.`))
         return
     }
@@ -40,12 +40,12 @@ async function handler(m, { sock }) {
         await sock.updateProfileName(newName)
         
         await m.react("🐣");
-        await m.reply(claraWrap("setname", `✅ *ɴᴀᴍᴀ ʙᴏᴛ ᴅɪᴜʙᴀʜ*\n\n` +
+        await m.reply(claraWrap("setname", `✅ *nama bot diubah*\n\n` +
             `Nama bot sekarang: *${newName}*`))
     } catch (error) {
     await m.react("❌");
         await m.reply(
-            `❌ *ɢᴀɢᴀʟ*\n\n` +
+            `❌ *gagal*\n\n` +
             `Tidak dapat mengubah nama bot.\n` +
             `_${error.message}_`
         )

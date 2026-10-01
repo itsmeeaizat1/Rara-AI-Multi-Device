@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
 
     if (!targetClanId) {
         return m.reply(
-            `⚔️ *ᴄʟᴀɴ ᴡᴀʀ*\n\n` +
+            `⚔️ *clan war*\n\n` +
             `Tantang clan lain untuk berperang!\n\n` +
             `Contoh: *.clanwar clan_123456*\n` +
             `Cek ID: *.clanleaderboard*\n\n` +
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
     const winnerE = isWin ? myE : enE
     const r = isWin ? myR : myR
 
-    let txt = `⚔️ *ᴡᴀʀ ʀᴇꜱᴜʟᴛ*\n\n`
+    let txt = `⚔️ *war result*\n\n`
     txt += `${myE} *${myClan.name}*  vs  *${enemyClan.name}* ${enE}\n`
     txt += `💪 ${myPower.toLocaleString('id-ID')}  vs  ${enemyPower.toLocaleString('id-ID')}\n`
     txt += `${bar}\n\n`

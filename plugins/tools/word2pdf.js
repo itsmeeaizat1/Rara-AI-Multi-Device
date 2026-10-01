@@ -121,7 +121,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `Auto-detect heading, bullet, paragraf`,
       `Hasil: PDF siap print`,
       ``,
-      `*ꜰᴏʀᴍᴀᴛ ᴅɪᴅᴜᴋᴜɴɢ:* .docx (Word 2007+)`,
+      `*format didukung:* .docx (Word 2007+)`,
       `.doc (Word lama) belum didukung`,
     ].join("\n"));
     return m.reply( help, "word2pdf");

@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
   try {
     const kota = await searchKota(city);
     if (!kota) {
-      return m.reply(novaError("Religi", `❌ *ɢᴀɢᴀʟ*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
+      return m.reply(novaError("Religi", `❌ *gagal*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
     }
     const jadwalData = await getTodaySchedule(kota.id);
     const times = extractPrayerTimes(jadwalData);
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const berikutnya = next
       ? `\n🕒 *Berikutnya: ${next.name} pukul ${next.timeStr}${next.isTomorrow ? " (besok)" : ""}* — countdown jalan di bawah!\n`
       : "";
-    const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*
+    const caption = `🕌 *jadwal sholat*
 📍 Lokasi: ${lokasi}
 📅 ${today}
 🗺️ ${daerah}

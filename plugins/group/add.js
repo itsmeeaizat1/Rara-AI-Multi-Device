@@ -138,7 +138,7 @@ Syarat:
         }
         
         if (invitedList.length > 0) {
-            resultText += `📨 *ᴅᴀɴ ᴀᴅᴀ ᴊᴜɢᴀ *${invitedList.length}* member yang diundang:*\n`
+            resultText += `📨 *dan ada juga *${invitedList.length}* member yang diundang:*\n`
             invitedList.forEach(n => resultText += `@${n}\n`)
             resultText += `\n`
         }

@@ -50,13 +50,13 @@ async function handler(m, { sock }) {
 
     if (!action) {
         const status = groupData.antisticker ? '✅ ON' : '❌ OFF'
-        await m.reply( `🎭 *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ*\n\nStatus: *${status}*\n\n\`.antisticker on/off\``, "antisticker")
+        await m.reply( `🎭 *antisticker*\n\nStatus: *${status}*\n\n\`.antisticker on/off\``, "antisticker")
         return
     }
 
     if (action === 'on') {
         db.setGroup(m.chat, { antisticker: true })
-        { const __navText = `✅ *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); }
+        { const __navText = `✅ *antisticker diaktifkan*`; await m.reply(__navText); }
         return
     }
 

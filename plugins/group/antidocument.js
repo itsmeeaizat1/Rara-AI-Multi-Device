@@ -50,13 +50,13 @@ async function handler(m, { sock }) {
 
     if (!action) {
         const status = groupData.antidocument ? '✅ ON' : '❌ OFF'
-        await m.reply( `📄 *ᴀɴᴛɪᴅᴏᴄᴜᴍᴇɴᴛ*\n\nStatus: *${status}*\n\n\`.antidocument on/off\``, "antidocument")
+        await m.reply( `📄 *antidocument*\n\nStatus: *${status}*\n\n\`.antidocument on/off\``, "antidocument")
         return
     }
 
     if (action === 'on') {
         db.setGroup(m.chat, { antidocument: true })
-        { const __navText = `✅ *ᴀɴᴛɪᴅᴏᴄᴜᴍᴇɴᴛ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); }
+        { const __navText = `✅ *antidocument diaktifkan*`; await m.reply(__navText); }
         return
     }
 

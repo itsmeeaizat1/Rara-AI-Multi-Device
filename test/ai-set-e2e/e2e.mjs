@@ -12,7 +12,8 @@ const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (
 
 // smallcaps map (claraWrap/toSC smallcaps semua label — assert pakai toSC)
 const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 function mkM(text, isOwner = true) {
   const replies = [];
@@ -65,7 +66,7 @@ w("\n— 3. salah pemakaian → novaSalah SINGKAT tanpa box —");
   const m = mkM(".ai-set model");
   await aiSetHandler(m, { sock: {}, config: botConfig() });
   const r = m._replies[0] || "";
-  check("mulai ❗ cara pemakaian salah", r.startsWith(`❗ ${toSC("Cara pemakaian salah")}`), r.slice(0, 40));
+  check("mulai ❗ cara pemakaian salah", r.toLowerCase().startsWith(`❗ cara pemakaian salah`), r.slice(0, 40));
   check("arahan ketik .ai-set", r.includes(toSC("Ketik .ai-set buat lihat cara pemakaian")), "");
   check("SINGKAT — gak ada box 「", !r.includes("「"), r.slice(0, 60));
 

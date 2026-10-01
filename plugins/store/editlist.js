@@ -39,8 +39,8 @@ async function uploadToCatbox(buffer, filename = 'file.jpg') {
 async function handler(m, { sock }) {
     if (m.isGroup) {
         return m.reply(
-            `🚫 *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
-            `Untuk menjaga keamanan data 🛡️, pengeditan informasi hanya dapat dilakukan di *ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ*.\n\n` +
+            `🚫 *akses ditolak*\n\n` +
+            `Untuk menjaga keamanan data 🛡️, pengeditan informasi hanya dapat dilakukan di *private chat*.\n\n` +
             `Silakan chat bot secara langsung 📱`
         )
     }
@@ -57,15 +57,15 @@ async function handler(m, { sock }) {
 
     if (!match) {
         return m.reply(
-            `✏️ *ᴇᴅɪᴛ ɪɴꜰᴏʀᴍᴀꜱɪ ᴛᴏᴋᴏ*\n\n` +
+            `✏️ *edit informasi toko*\n\n` +
             `📋 Format: \`${m.prefix}editlist <nomor> <field> <nilai>\`\n\n` +
-            `📌 *ꜰɪᴇʟᴅ ʏᴀɴɢ ʙɪꜱᴀ ᴅɪᴇᴅɪᴛ:*\n` +
-            `*ɴᴀᴍᴀ* 🏷️ — Judul informasi\n` +
-            `*ɪꜱɪ* 📝 — Konten informasi (gunakan \`;;\` untuk baris baru)\n` +
-            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* 📋 — Deskripsi singkat (preview di daftar)\n` +
-            `*ɢᴀᴍʙᴀʀ* 🖼️ — Upload gambar baru (reply gambar)\n` +
-            `*ᴠɪᴅᴇᴏ* 🎬 — Upload video baru (reply video)\n\n` +
-            `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
+            `📌 *field yang bisa diedit:*\n` +
+            `*nama* 🏷️ — Judul informasi\n` +
+            `*isi* 📝 — Konten informasi (gunakan \`;;\` untuk baris baru)\n` +
+            `*deskripsi* 📋 — Deskripsi singkat (preview di daftar)\n` +
+            `*gambar* 🖼️ — Upload gambar baru (reply gambar)\n` +
+            `*video* 🎬 — Upload video baru (reply video)\n\n` +
+            `📝 *contoh:*\n` +
             `\`${m.prefix}editlist 1 isi Syarat baru: blablabla;;Ketentuan: blablabla\`\n` +
             `\`${m.prefix}editlist 1 nama FAQ Pembayaran\`\n` +
             `\`${m.prefix}editlist 1 gambar\` (reply gambar 🖼️)\n\n` +
@@ -78,19 +78,19 @@ async function handler(m, { sock }) {
     let value = match[3]?.trim() || ''
 
     if (idx < 0 || idx >= lists.length) {
-        return m.reply(claraWrap("editlist", `❌ *ɴᴏᴍᴏʀ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${lists.length} 📋`))
+        return m.reply(claraWrap("editlist", `❌ *nomor tidak valid.*\n\nRentang: 1-${lists.length} 📋`))
     }
 
     const item = lists[idx]
 
     switch (field) {
         case 'nama': {
-            if (!value || value.length < 2) return m.reply(claraWrap("editlist", `❌ *ɴᴀᴍᴀ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.* Minimal 2 karakter 🏷️`))
+            if (!value || value.length < 2) return m.reply(claraWrap("editlist", `❌ *nama terlalu pendek.* Minimal 2 karakter 🏷️`))
             item.name = value
             break
         }
         case 'isi': {
-            if (!value || value.length < 3) return m.reply(claraWrap("editlist", `❌ *ɪꜱɪ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.* Minimal 3 karakter 📝`))
+            if (!value || value.length < 3) return m.reply(claraWrap("editlist", `❌ *isi terlalu pendek.* Minimal 3 karakter 📝`))
             item.content = value.replace(/;;/g, '\n')
             item.description = item.content.substring(0, 80).replace(/\n/g, ' ')
             break
@@ -102,41 +102,41 @@ async function handler(m, { sock }) {
         case 'gambar': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === 'imageMessage')
             const isDirectImage = m.isImage
-            if (!hasMedia && !isDirectImage) return m.reply(claraWrap("editlist", `🖼️ *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ɢᴀᴍʙᴀʀ ʙᴀʀᴜ.*\n\nKirim gambar lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectImage) return m.reply(claraWrap("editlist", `🖼️ *reply atau kirim gambar baru.*\n\nKirim gambar lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'image.jpg')
                     if (url) item.image = url
-                    else return m.reply(claraWrap("editlist", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ɢᴀᴍʙᴀʀ.* Coba lagi nanti 🖼️`))
+                    else return m.reply(claraWrap("editlist", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
                 }
             } catch {
-                return m.reply(claraWrap("editlist", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ɢᴀᴍʙᴀʀ.* Coba lagi nanti 🖼️`))
+                return m.reply(claraWrap("editlist", `❌ *gagal mengunggah gambar.* Coba lagi nanti 🖼️`))
             }
             break
         }
         case 'video': {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isVideo || m.quoted?.type === 'videoMessage')
             const isDirectVideo = m.isVideo
-            if (!hasMedia && !isDirectVideo) return m.reply(claraWrap("editlist", `🎬 *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ᴠɪᴅᴇᴏ ʙᴀʀᴜ.*\n\nKirim video lalu reply dengan command ini.`))
+            if (!hasMedia && !isDirectVideo) return m.reply(claraWrap("editlist", `🎬 *reply atau kirim video baru.*\n\nKirim video lalu reply dengan command ini.`))
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
                     const url = await uploadToCatbox(buffer, 'video.mp4')
                     if (url) item.video = url
-                    else return m.reply(claraWrap("editlist", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ᴠɪᴅᴇᴏ.* Coba lagi nanti 🎬`))
+                    else return m.reply(claraWrap("editlist", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
                 }
             } catch {
-                return m.reply(claraWrap("editlist", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴɢɢᴀʜ ᴠɪᴅᴇᴏ.* Coba lagi nanti 🎬`))
+                return m.reply(claraWrap("editlist", `❌ *gagal mengunggah video.* Coba lagi nanti 🎬`))
             }
             break
         }
         default:
-            return m.reply(claraWrap("editlist", `❌ *ꜰɪᴇʟᴅ ᴛɪᴅᴀᴋ ᴅɪᴋᴇɴᴀʟɪ.*\n\nGunakan: nama, isi, deskripsi, gambar, video 📋`))
+            return m.reply(claraWrap("editlist", `❌ *field tidak dikenali.*\n\nGunakan: nama, isi, deskripsi, gambar, video 📋`))
     }
 
     db.setting('storeLists', lists)
-    let reply = `✅ *ɪɴꜰᴏʀᴍᴀꜱɪ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n`
+    let reply = `✅ *informasi diperbarui*\n\n`
     reply += `🏷️ Nama: *${item.name}*\n`
     if (field === 'isi') reply += `📝 Isi:\n${item.content}\n\n`
     if (field === 'gambar') reply += `🖼️ Gambar: ✅\n`

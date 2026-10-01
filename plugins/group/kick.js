@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-        await m.reply( `❌ *ᴛᴀʀɢᴇᴛ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
+        await m.reply( `❌ *target tidak ditemukan*\n\n` +
             `Reply pesan user atau mention!\n` +
             `Contoh: \`${m.prefix}kick @user\``, "kick")
         return

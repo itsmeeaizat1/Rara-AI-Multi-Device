@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     let nomor = m.args.join('').replace(/[^0-9]/g, '')
     if (!nomor) {
-        { const __navText = `🍀 *ɴᴏᴍᴏʀ ʜᴏᴋɪ*\n\nMasukkan nomor HP\n\n\`Contoh: ${m.prefix}nomerhoki 6281234567890\``; return await m.reply( __navText, "nomerhoki"); }
+        { const __navText = `🍀 *nomor hoki*\n\nMasukkan nomor HP\n\n\`Contoh: ${m.prefix}nomerhoki 6281234567890\``; return await m.reply( __navText, "nomerhoki"); }
     }
     
     
@@ -37,15 +37,15 @@ async function handler(m, { sock }) {
         const ep = r.energi_positif.details
         const en = r.energi_negatif.details
         
-        const response = `🍀 *ɴᴏᴍᴏʀ ʜᴏᴋɪ*\n\n` +
+        const response = `🍀 *nomor hoki*\n\n` +
             `Nomor: *${r.nomor}*\n\n` +
-            `📊 *ᴀɴɢᴋᴀ ʙᴀɢᴜᴀ:* ${r.angka_bagua_shuzi.value}%\n\n` +
-            `✅ *Energi PoꜱItif:* ${r.energi_positif.total}%\n` +
+            `📊 *angka bagua:* ${r.angka_bagua_shuzi.value}%\n\n` +
+            `✅ *Energi PosItif:* ${r.energi_positif.total}%\n` +
             `├ Kekayaan: ${ep.kekayaan}\n` +
             `├ Kesehatan: ${ep.kesehatan}\n` +
             `├ Cinta: ${ep.cinta}\n` +
             `└ Kestabilan: ${ep.kestabilan}\n\n` +
-            `❌ *ᴇɴᴇʀɢɪ ɴᴇɢᴀᴛɪꜰ:* ${r.energi_negatif.total}%\n` +
+            `❌ *energi negatif:* ${r.energi_negatif.total}%\n` +
             `├ Perselisihan: ${en.perselisihan}\n` +
             `├ Kehilangan: ${en.kehilangan}\n` +
             `├ Malapetaka: ${en.malapetaka}\n` +

@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 
     if (isJadibotActive(targetJid)) {
         return m.reply(
-            `*ᴊᴀᴅɪʙᴏᴛ ꜱᴜᴅᴀʜ ᴀᴋᴛɪꜰ*\n\n` +
+            `*jadibot sudah aktif*\n\n` +
             (isSelf
                 ? `Nomor kamu sudah menjadi bot\nKetik \`${m.prefix}stopjadibot\` untuk menghentikan`
                 : `Nomor *${targetNumber}* sudah menjadi bot`)
@@ -92,13 +92,13 @@ async function handler(m, { sock }) {
 
     if (useQR) {
         await m.reply(
-            `*ᴊᴀᴅɪʙᴏᴛ - qʀ ᴍᴏᴅᴇ*${isSelf ? "" : ` (${targetNumber})`}\n\n` +
+            `*jadibot - qr mode*${isSelf ? "" : ` (${targetNumber})`}\n\n` +
             `Menyiapkan koneksi...\n` +
             `Scan QR Code yang akan dikirim`
         )
     } else {
         await m.reply(
-            `*ᴊᴀᴅɪʙᴏᴛ - ᴘᴀɪʀɪɴɢ ᴄᴏᴅᴇ*${isSelf ? "" : ` (${targetNumber})`}\n\n` +
+            `*jadibot - pairing code*${isSelf ? "" : ` (${targetNumber})`}\n\n` +
             (isSelf
                 ? `Menyiapkan koneksi...`
                 : `Menyiapkan session untuk nomor *${targetNumber}*...\nKode pairing akan dikirim di sini — teruskan ke pemilik nomor.`)
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
         await startJadibot(sock, m, targetJid, !useQR)
     } catch (e) {
         await m.reply(
-            `*ᴊᴀᴅɪʙᴏᴛ ɢᴀɢᴀʟ*\n\n` +
+            `*jadibot gagal*\n\n` +
             `${e.message || "Ada error nih"}\n\n` +
             `Coba lagi dalam beberapa menit.`
         )

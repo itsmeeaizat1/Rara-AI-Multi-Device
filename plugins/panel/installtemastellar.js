@@ -71,7 +71,7 @@ function handler(m, { sock }) {
 
                         await execSSH(conn, BUILD_CMD)
             await m.reply(claraWrap("installtemastellar", `
-│ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
+│ sTatus: *terinstall*
 │ Ip: ${ipvps}\n\n_Tema Stellar + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemastellar", te(m.prefix, m.command, m.pushName), "error"))

@@ -182,7 +182,7 @@ async function handler(m, { sock, args }) {
     // User is answering current question
     const userAnswer = args.join(" ");
     if (userAnswer.length < 5) {
-      return m.reply(claraWrap("Soalessay", "Jawaban terlalu pendek! Tulis jawabanmu minimal 5 karakter.\n\nKetik *ꜱᴋɪᴘ* untuk lewati soal ini."));
+      return m.reply(claraWrap("Soalessay", "Jawaban terlalu pendek! Tulis jawabanmu minimal 5 karakter.\n\nKetik *skip* untuk lewati soal ini."));
     }
 
     const q = session.questions[session.current];
@@ -210,9 +210,9 @@ async function handler(m, { sock, args }) {
     if (check.score >= 70) {
       txt = `*Bagus!* Skor kata kunci: ${check.score}%\n\n`;
     } else if (check.score >= 40) {
-      txt = `*ᴄᴜᴋᴜᴘ.* Skor kata kunci: ${check.score}%\n\n`;
+      txt = `*cukup.* Skor kata kunci: ${check.score}%\n\n`;
     } else {
-      txt = `*ᴋᴜʀᴀɴɢ ᴛᴇᴘᴀᴛ.* Skor kata kunci: ${check.score}%\n\n`;
+      txt = `*kurang tepat.* Skor kata kunci: ${check.score}%\n\n`;
     }
 
     txt += `Kunci Jawaban:\n${q.a}\n\n`;
@@ -240,9 +240,9 @@ async function handler(m, { sock, args }) {
       txt += `Total: ${total} soal\n`;
       txt += `Skor rata-rata kata kunci: *${avgScore}/100*\n\n`;
       if (avgScore >= 80) txt += `Predikat: *A - Sangat Baik!*\n`;
-      else if (avgScore >= 70) txt += `Predikat: *ʙ - ʙᴀɪᴋ*\n`;
-      else if (avgScore >= 60) txt += `Predikat: *ᴄ - ᴄᴜᴋᴜᴘ*\n`;
-      else if (avgScore >= 50) txt += `Predikat: *ᴅ - ʙᴇʟᴀᴊᴀʀ ʟᴀɢɪ*\n`;
+      else if (avgScore >= 70) txt += `Predikat: *b - baik*\n`;
+      else if (avgScore >= 60) txt += `Predikat: *c - cukup*\n`;
+      else if (avgScore >= 50) txt += `Predikat: *d - belajar lagi*\n`;
       else txt += `Predikat: *E - Wajib ulang!*\n`;
       txt += `\n_Skor berdasarkan kata kunci dalam jawabanmu. Tetap pelajari kunci jawaban untuk jawaban yang lebih lengkap._`;
       essaySessions.delete(sender);
@@ -255,7 +255,7 @@ async function handler(m, { sock, args }) {
     txt += `\n${"=".repeat(30)}\n`;
     txt += `Soal Essay ${session.current + 1}/${session.questions.length}\n\n`;
     txt += `${nextQ.q}\n\n`;
-    txt += `Tulis jawabanmu atau ketik *ꜱᴋɪᴘ* untuk lewati`;
+    txt += `Tulis jawabanmu atau ketik *skip* untuk lewati`;
     await m.reply(txt);
     return;
   }
@@ -279,7 +279,7 @@ async function handler(m, { sock, args }) {
     txt += `\n`;
     txt += `Soal Essay ${session.current + 1}/${session.questions.length}\n\n`;
     txt += `${nextQ.q}\n\n`;
-    txt += `Tulis jawabanmu atau ketik *ꜱᴋɪᴘ* untuk lewati`;
+    txt += `Tulis jawabanmu atau ketik *skip* untuk lewati`;
     await m.reply(txt);
     return;
   }
@@ -310,8 +310,8 @@ async function handler(m, { sock, args }) {
     txt += `Perintah:\n`;
     txt += `1. \`${m.prefix}essay <jenjang> <mapel> <jumlah>\` - Mulai soal essay\n`;
     txt += `2. Saat quiz: tulis jawabanmu langsung\n`;
-    txt += `3. Ketik *ꜱᴋɪᴘ* - lewati soal\n`;
-    txt += `4. Ketik *ꜱᴛᴏᴘ* - berhenti quiz\n`;
+    txt += `3. Ketik *skip* - lewati soal\n`;
+    txt += `4. Ketik *stop* - berhenti quiz\n`;
     txt += `5. \`${m.prefix}essay list\` - Lihat mapel tersedia\n\n`;
     txt += `Jenjang: sd, smp, sma, smk\n\n`;
     txt += `Contoh:\n`;
@@ -358,7 +358,7 @@ async function handler(m, { sock, args }) {
     const q = questions[0];
     let txt = `Soal Essay: ${JENJANG_NAMES[jenjang]} - ${mapel.toUpperCase()}\n\n`;
     txt += `${questions.length} soal | tulis jawabanmu langsung\n`;
-    txt += `Ketik *ꜱᴋɪᴘ* untuk lewati, *ꜱᴛᴏᴘ* untuk berhenti\n\n`;
+    txt += `Ketik *skip* untuk lewati, *stop* untuk berhenti\n\n`;
     txt += `Soal 1/${questions.length}\n\n`;
     txt += `${q.q}\n\n`;
     txt += `Tulis jawabanmu di bawah ini`;

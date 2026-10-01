@@ -30,7 +30,7 @@ function handler(m, { sock }) {
             return m.reply(novaEmpty('DelAntiLink', 'Daftar antilink di grup ini masih kosong nih!'))
         }
         
-        let txt = `🔗 *ᴅᴀꜰᴛᴀʀ ᴀɴᴛɪʟɪɴᴋ*\n\n`
+        let txt = `🔗 *daftar antilink*\n\n`
         antilinkList.forEach((l, i) => {
             txt += `${i + 1}. \`${l}\`\n`
         })

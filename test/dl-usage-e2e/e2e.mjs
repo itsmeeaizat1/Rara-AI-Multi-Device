@@ -11,8 +11,9 @@ import { config as yt3Config, handler as yt3Handler } from "../../plugins/downlo
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
-const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h', i: 'i', j: 'j', k: 'k', l: 'l', m: 'm', n: 'n', o: 'o', p: 'p', r: 'r', s: 's', t: 't', u: 'u', v: 'v', w: 'w', y: 'y', z: 'z' };
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 // ─── 1. RENDER .play — persis contoh owner ───
 w("\n— novaDlUsage Play (contoh owner) —");
@@ -24,9 +25,9 @@ w("\n— novaDlUsage Play (contoh owner) —");
     contoh: [".play Faded Alan Walker", ".play 320 Faded Alan Walker"],
   });
   const lines = out.split("\n");
-  check("header 「 ✦ ᴘʟᴀʏ ✦ 」", lines[0] === `「 ✦ ${toSC("play")} ✦ 」`, lines[0]);
-  check("📝 ᴄᴀʀᴀ ᴘᴀᴋᴀɪ: + .play [judul] verbatim", lines[1] === `📝 ${toSC("Cara Pakai")}:` && lines[2] === ".play [judul]", lines[1] + " / " + lines[2]);
-  check("💡 ᴄᴏɴᴛᴏʜ: + .play Faded Alan Walker", lines[4] === `💡 ${toSC("Contoh")}:` && lines[5] === ".play Faded Alan Walker", lines[4] + " / " + lines[5]);
+  check("header 「 ✦ play ✦ 」", lines[0].toLowerCase() === `「 ✦ play ✦ 」`, lines[0]);
+  check("📝 cara pakai: + .play [judul] verbatim", lines[1] === `📝 ${toSC("Cara Pakai")}:` && lines[2] === ".play [judul]", lines[1] + " / " + lines[2]);
+  check("💡 contoh: + .play Faded Alan Walker", lines[4] === `💡 ${toSC("Contoh")}:` && lines[5] === ".play Faded Alan Walker", lines[4] + " / " + lines[5]);
   check("gak ada section model (beda dari usage AI)", !out.includes("✨") && !out.includes("📋"));
   check("layout BEDA dari novaAiUsage output", !out.includes(toSC("Model Tersedia")));
 }
@@ -63,14 +64,14 @@ w("\n— handler plugins —");
   await playHandler(m1, {});
   const r1 = m1._replies[0];
   check(".play no-input → reply 1 pesan", m1._replies.length === 1 && !!r1);
-  check(".play → header 「✧ ᴘʟᴀʏ ✧」 + kaomoji + sapaan", r1.startsWith(`「✧ ${toSC("play")} ✧」`) && r1.includes(`${toSC("play")}!!`) && r1.includes(toSC("mau lagu favorit")), r1.split("\n").slice(0, 2).join(" | "));
-  check(".play → 📍 ᴄᴀʀᴀ + ᴄᴏɴᴛᴏʜ baris sendiri", r1.includes(`📍 ${toSC("Cara")}: ${toSC("ketik judul lagunya sesudah command")}`) && r1.includes(`ᴄᴏɴᴛᴏʜ: .play faded alan walker`), r1.split("\n").slice(5, 8).join(" | "));
-  check(".play → gak ada lagi layout bitrate lama", !r1.includes("128ᴋʙᴘs"));
+  check(".play → header 「✧ play ✧」 + kaomoji + sapaan", r1.startsWith(`「✧ ${toSC("play")} ✧」`) && r1.includes(`${toSC("play")}!!`) && r1.includes(toSC("mau lagu favorit")), r1.split("\n").slice(0, 2).join(" | "));
+  check(".play → 📍 cara + contoh baris sendiri", r1.toLowerCase().includes(`📍 cara: ketik judul lagunya sesudah command`) && r1.toLowerCase().includes(`contoh: .play faded alan walker`), r1.split("\n").slice(5, 8).join(" | "));
+  check(".play → gak ada lagi layout bitrate lama", !r1.includes("128kbps"));
 
   const m2 = mkM("instagramdl", "");
   await igHandler(m2, {});
   const r2 = m2._replies[0];
-  check(".instagramdl no-input → header 「✧ ɪɴꜱᴛᴀɢʀᴀᴍ ✧」 + contoh VERBATIM", r2.startsWith(`「✧ ${toSC("instagram")} ✧」`) && r2.includes("ᴄᴏɴᴛᴏʜ: .instagramdl https://www.instagram.com/reel/xxx"), r2.split("\n")[0]);
+  check(".instagramdl no-input → header 「✧ instagram ✧」 + contoh VERBATIM", r2.toLowerCase().startsWith(`「✧ instagram ✧」`) && r2.toLowerCase().includes("contoh: .instagramdl https://www.instagram.com/reel/xxx"), r2.split("\n")[0]);
   check(".instagramdl → contoh link reel", r2.includes(".instagramdl https://www.instagram.com/reel/xxx"));
   const m2b = mkM("instagramdl", "bukanlink");
   await igHandler(m2b, {});
@@ -79,7 +80,7 @@ w("\n— handler plugins —");
   const m3 = mkM("ytmp3", "");
   await yt3Handler(m3, {});
   const r3 = m3._replies[0];
-  check(".ytmp3 no-input → header 「✧ ʏᴛᴍᴘ3 ✧」 + contoh youtu.be VERBATIM", r3.startsWith(`「✧ ${toSC("ytmp3")} ✧」`) && r3.includes("ᴄᴏɴᴛᴏʜ: .ytmp3 https://youtu.be/xxx"), r3.split("\n")[0]);
+  check(".ytmp3 no-input → header 「✧ ytmp3 ✧」 + contoh youtu.be VERBATIM", r3.toLowerCase().startsWith(`「✧ ytmp3 ✧」`) && r3.toLowerCase().includes("contoh: .ytmp3 https://youtu.be/xxx"), r3.split("\n")[0]);
   check(".ytmp3 → contoh youtu.be", r3.includes(".ytmp3 https://youtu.be/xxx"));
 
   check("pluginConfig play/instagramdl/ytmp3 utuh", playConfig.name === "play" && igConfig.name && yt3Config.name);

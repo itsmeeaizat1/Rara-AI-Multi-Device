@@ -21,7 +21,7 @@ const pluginConfig = {
 if (!global.sulapSessions) global.sulapSessions = new Map()
 
 const successLines = [
-    '💨 *ᴘᴏᴏꜰ!* Dan... dia menghilang!',
+    '💨 *poof!* Dan... dia menghilang!',
     '🌟 Sulap berhasil! Sampai jumpa lagi~',
     'Absen dulu ya, ditunggu berikutnya!',
     '🎪 Pertunjukan selesai! 👏'
@@ -33,7 +33,7 @@ function sleep(ms) {
 
 async function handler(m, { sock }) {
 
-    const sent = await m.reply(claraWrap("sulap", `🎩 *ᴘᴇʀᴛᴜɴᴊᴜᴋᴀɴ ꜱᴜʟᴀᴘ*\n\n` +
+    const sent = await m.reply(claraWrap("sulap", `🎩 *pertunjukan sulap*\n\n` +
             `Siapa yang ingin dihilangkan?\n\n` +
             `Reply pesan ini + mention orangnya`))
 

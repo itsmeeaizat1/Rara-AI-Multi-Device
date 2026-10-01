@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     try {
         const isImage = m.isImage || (m.quoted && m.quoted.isImage);
         if (!isImage) {
-            return m.reply(claraWrap("Imgtoprompt", '❌ *ɢᴀᴍʙᴀʀ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\nReply atau kirim gambar dengan caption .imgtoprompt'));
+            return m.reply(claraWrap("Imgtoprompt", '❌ *gambar dibutuhkan*\n\nReply atau kirim gambar dengan caption .imgtoprompt'));
         }
         
         await m.react("🕒");
@@ -57,9 +57,9 @@ async function handler(m, { sock }) {
             fs.unlinkSync(tmpFile);
         } catch (e) { console.error('[imgtoprompt.js]:', e.message); }
         if (result.status === 'eror' || !result.prompt) {
-            return await m.reply(claraWrap("Imgtoprompt", `❌ *ɢᴀɢᴀʟ*\n\n${result.msg || 'Tidak dapat menghasilkan prompt dari gambar ini'}`));
+            return await m.reply(claraWrap("Imgtoprompt", `❌ *gagal*\n\n${result.msg || 'Tidak dapat menghasilkan prompt dari gambar ini'}`));
         }
-        const responseText = `🎨 *ɪᴍᴀɢᴇ ᴛᴏ ᴘʀᴏᴍᴘᴛ*\n\n` +
+        const responseText = `🎨 *image to prompt*\n\n` +
             `\`\`\`${result.prompt}\`\`\`\n\n` +
             `_Generated at: ${result.generatedAt || new Date().toISOString()}_`;
         await m.reply(responseText);

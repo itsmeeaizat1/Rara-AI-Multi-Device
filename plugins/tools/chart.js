@@ -168,7 +168,7 @@ const RPG_LABELS = {
 
 function chartHelp(m) {
   return claraWrap("chart", [
-    "📊 *ᴍᴏᴅᴇ ɢʀᴀꜰɪᴋ*",
+    "📊 *mode grafik*",
     "",
     `▸ ${m.prefix}chart rpg <tipe>`,
     "   top 10 pemain rpg",
@@ -177,15 +177,15 @@ function chartHelp(m) {
     `▸ ${m.prefix}chart <nilai>,<nilai>,...`,
     "   nilai aja, label otomatis",
     "",
-    "*ᴛɪᴘᴇ ʀᴘɢ:*",
+    "*tipe rpg:*",
     "gold | uang | level | pvp | kills | boss | achievement | gems | tokens | joblevel",
     "",
-    "*ᴄᴏɴᴛᴏʜ:*",
+    "*contoh:*",
     `${m.prefix}chart rpg uang`,
     `${m.prefix}chart pisang,jeruk,apel | 10,25,7`,
     `${m.prefix}chart 5,10,15,20`,
     "",
-    "ᴍᴀᴋꜱ 12 ᴅᴀᴛᴀ ᴘᴇʀ ɢʀᴀꜰɪᴋ",
+    "maks 12 data per grafik",
   ]);
 }
 
@@ -211,13 +211,13 @@ async function handler(m, { sock }) {
       if (!type) {
         await m.react("❌");
         return m.reply(claraWrap("chart", [
-          "❌ *ᴛɪᴘᴇ ʀᴘɢ ɴʏᴀ ᴛɪᴅᴀᴋ ᴋᴇᴛᴇᴍᴜ*",
+          "❌ *tipe rpg nya tidak ketemu*",
           "",
           `▸ ${m.prefix}chart rpg gold`,
           `▸ ${m.prefix}chart rpg uang`,
           `▸ ${m.prefix}chart rpg level`,
           "",
-          "ꜱᴇʟᴇɴɢᴋᴀᴘɴʏᴀ: gold | uang | level | pvp | kills | boss | achievement | gems | tokens | joblevel",
+          "selengkapnya: gold | uang | level | pvp | kills | boss | achievement | gems | tokens | joblevel",
         ], "error"));
       }
       const players = getLeaderboard(type, 10);

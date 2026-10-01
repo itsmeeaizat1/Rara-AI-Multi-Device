@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
         `├ 👥 Members · ${clan.members.length}/50\n` +
         `├ 🔓 Status · ${clan.isOpen ? 'Open' : 'Closed'}\n` +
         `└ 📅 Dibuat · ${new Date(clan.createdAt).toLocaleDateString('id-ID')}\n\n` +
-        `⚔️ *ᴡᴀʀ ꜱᴛᴀᴛꜱ*\n` +
+        `⚔️ *war stats*\n` +
         `${clan.wins || 0}W · ${clan.losses || 0}L · ${winRate}% WR\n\n` +
         `_${clan.description || 'Belum ada deskripsi'}_\n\n` +
         `ID: \`${clan.id}\``)

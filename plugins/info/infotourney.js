@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    let text = `🏆 *ɪɴꜰᴏ ᴛᴜʀɴᴀᴍᴇɴ ᴍᴏʙɪʟᴇ ʟᴇɢᴇɴᴅꜱ*\n\n`;
+    let text = `🏆 *info turnamen mobile legends*\n\n`;
     text += `5 Turnamen Terbaru\n\n`;
 
     for (let i = 0; i < tournaments.length; i++) {

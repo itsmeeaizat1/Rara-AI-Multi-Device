@@ -110,14 +110,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `📌 Format:`,
       `  ${prefix}kontrak <jenis> <detail>`,
       ``,
-      `*ᴊᴇɴɪꜱ:*`,
+      `*jenis:*`,
       `  kerja, MoU, kerjasama, jasa, sewa, NDA`,
       ``,
       `💡 Contoh:`,
       `  ${prefix}kontrak kerja PT Maju Jaya mereka Budi Santoso sebagai programmer, gaji 10jt/bln, kontrak 1 tahun mulai 1 Jan 2024`,
       `  ${prefix}kontrak MoU antara PT A dan PT B untuk kerjasama pengembangan aplikasi`,
       ``,
-      `*ʜᴀꜱɪʟ:* PDF dengan klausa standar, siap edit`,
+      `*hasil:* PDF dengan klausa standar, siap edit`,
     ].join("\n"));
     return m.reply( help, "kontrak");
   }

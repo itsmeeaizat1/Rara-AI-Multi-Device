@@ -69,7 +69,7 @@ const mockSock = {
 
 // tanpa reply → error ramah
 await handler(mockM([], null), { sock: mockSock });
-check("16. tanpa reply: minta reply PDF", /ʀᴇᴘʟʏ|reply/i.test(replies.at(-1)));
+check("16. tanpa reply: minta reply PDF", /reply|reply/i.test(replies.at(-1)));
 
 // reply bukan PDF
 await handler(mockM([], { mimetype: "image/jpeg", buffer: Buffer.from("x") }), { sock: mockSock });
@@ -79,13 +79,13 @@ check("17. reply bukan PDF: ditolak", replies.length === 2);
 const goodQuoted = { mimetype: "application/pdf", fileName: "laporan.pdf", buffer: pdf7 };
 await handler(mockM(["3"], goodQuoted), { sock: mockSock });
 check("18. render + kirim 3 image ke chat", sentImgs.length === 3 && sentImgs[0].chatId === "chatE");
-check("19. caption: nama file + halaman", sentImgs[0].caption.includes("laporan") && /ʜᴀʟᴀᴍᴀɴ|halaman/i.test(sentImgs[0].caption));
-check("20. caption halaman terakhir → truncated ⚠️", sentImgs.at(-1).caption.includes("ᴍᴀᴋꜱ") || sentImgs.at(-1).caption.includes("maks"));
+check("19. caption: nama file + halaman", sentImgs[0].caption.includes("laporan") && /halaman|halaman/i.test(sentImgs[0].caption));
+check("20. caption halaman terakhir → truncated ⚠️", sentImgs.at(-1).caption.includes("maks") || sentImgs.at(-1).caption.includes("maks"));
 check("21. PNG terkirim valid", sentImgs[0].png.slice(0, 8).toString("hex") === "89504e470d0a1a0a");
 
 // PDF rusak
 await handler(mockM([], { mimetype: "application/pdf", fileName: "rusak.pdf", buffer: Buffer.from("hancur") }), { sock: mockSock });
-check("22. PDF rusak: pesan error ramah", /ɢᴀᴋ ᴠᴀʟɪᴅ|gak valid/i.test(replies.at(-1)));
+check("22. PDF rusak: pesan error ramah", /gak valid|gak valid/i.test(replies.at(-1)));
 
 // default pagesArg = 5
 sentImgs.length = 0;

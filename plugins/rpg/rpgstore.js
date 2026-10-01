@@ -114,19 +114,19 @@ async function handler(m, { sock }) {
     if (!action || ["menu", "list"].includes(action)) {
       const msg = `💵 Uang kamu: ${formatRp(getCash(m))}
 
-⚔️  ᴇǫᴜɪᴘ ᴘʀᴇᴍɪᴜᴍ
+⚔️  eǫuip premium
    ${SHOP_EQUIP.length} gear kelas atas (naga & mithril) — ketik .tokorpg equip
 
-🧪  ᴄᴏɴsᴜᴍᴀʙʟᴇ
+🧪  consumable
    Ramuan & makanan borongan — ketik .tokorpg potion
 
-🔧  ᴀʟᴀᴛ ᴘʀᴏꜰᴇsɪ
+🔧  alat profesi
    Beli 1x permanen → gajian kerja +30% — ketik .tokorpg alat
 
-🎁  ᴋᴏᴛᴀᴋ ᴍɪsᴛᴇʀɪ
+🎁  kotak misteri
    ${formatRp(MYSTERY_PRICE)} — hadiah acak, bisa jackpot ${ITEM_DB.dragonSword?.name || "Pedang Naga"} — ketik .tokorpg kotak
 
-📝  ᴄᴀʀᴀ ʙᴇʟɪ
+📝  cara beli
    .tokorpg beli <id> [qty] — contoh: .tokorpg beli hpPotion 5`;
       await m.react("🐣");
       return m.reply(novaRpgBox("tokorpg", msg, "info"));
@@ -136,11 +136,11 @@ async function handler(m, { sock }) {
     if (["equip", "senjata", "gear"].includes(action)) {
       const msg = `💵 Uang kamu: ${formatRp(getCash(m))}
 
-⚔️  ᴇǫᴜɪᴘ ᴘʀᴇᴍɪᴜᴍ (ʀᴘ)
+⚔️  eǫuip premium (rp)
 
 ${equipList(rpg)}
 
-📝 ʙᴇʟɪ: .tokorpg beli <id>`;
+📝 beli: .tokorpg beli <id>`;
       await m.react("🐣");
       return m.reply(novaRpgBox("tokorpg", msg, "info"));
     }
@@ -149,11 +149,11 @@ ${equipList(rpg)}
     if (["potion", "consumable", "ramuan", "makan"].includes(action)) {
       const msg = `💵 Uang kamu: ${formatRp(getCash(m))}
 
-🧪  ᴄᴏɴsᴜᴍᴀʙʟᴇ (ʀᴘ)
+🧪  consumable (rp)
 
 ${SHOP_CONSUMABLE.map(c => `${ITEM_DB[c.id]?.name || c.id} — ${formatRp(c.price)}/pcs (${c.id})`).join("\n")}
 
-📝 ʙᴇʟɪ ʙᴏʀᴏɴɢᴀɴ: .tokorpg beli hpPotion 5`;
+📝 beli borongan: .tokorpg beli hpPotion 5`;
       await m.react("🐣");
       return m.reply(novaRpgBox("tokorpg", msg, "info"));
     }
@@ -163,14 +163,14 @@ ${SHOP_CONSUMABLE.map(c => `${ITEM_DB[c.id]?.name || c.id} — ${formatRp(c.pric
       const tools = rpg.jobTools || {};
       const msg = `💵 Uang kamu: ${formatRp(getCash(m))}
 
-🔧  ᴀʟᴀᴛ ᴘʀᴏꜰᴇsɪ (ʀᴘ) — ʙᴇʟɪ 1x ᴘᴇʀᴍᴀɴᴇɴ, ɢᴀᴊɪᴀɴ ᴋᴇʀᴊᴀ +30%
+🔧  alat profesi (rp) — beli 1x permanen, gajian kerja +30%
 
 ${SHOP_TOOLS.map(t => {
   const owned = tools[t.id] ? "✅ sudah punya" : `${formatRp(t.price)}`;
   return `${t.name} (${t.id}) — ${owned}`;
 }).join("\n")}
 
-📝 ʙᴇʟɪ: .tokorpg beli <idProfesi> — contoh: .tokorpg beli dokter`;
+📝 beli: .tokorpg beli <idProfesi> — contoh: .tokorpg beli dokter`;
       await m.react("🐣");
       return m.reply(novaRpgBox("tokorpg", msg, "info"));
     }

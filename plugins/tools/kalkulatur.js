@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Kalkulatur", [
       `Kalkulator Kantoran`,
       ``,
-      `*ᴍᴏᴅᴇ:*`,
+      `*mode:*`,
       `  ${prefix}kalkulatur pph21 <gaji> [k/tk] [tanggungan]`,
       `  ${prefix}kalkulatur thr <gaji> [masa kerja bulan]`,
       `  ${prefix}kalkulatur lembur <upah/jam> <jam> [kerja/libur/liburnasional]`,

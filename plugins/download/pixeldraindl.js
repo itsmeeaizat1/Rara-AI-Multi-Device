@@ -58,11 +58,11 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("pixeldrain.com")) {
-    return m.reply( `📥 *ᴘɪxᴇʟᴅʀᴀɪɴ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n` +
+    return m.reply( `📥 *pixeldrain download*\n\n` +
         `Download file dari Pixeldrain\n\n` +
-        `*ꜰᴏʀᴍᴀᴛ:*\n` +
+        `*format:*\n` +
         `\`${m.prefix}pixeldraindl <url>\`\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
+        `*contoh:*\n` +
         `\`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "pixeldraindl");
   }
   try {
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         contextInfo: { forwardingScore: 0, isForwarded: false },
       }, { quoted: m })
     } else if (sizeInMB > 100) {
-      await m.reply(claraWrap("Pixeldraindl", `⚠️ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
+      await m.reply(claraWrap("Pixeldraindl", `⚠️ *file terlalu besar*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
     }
       await m.react("🐣"); await m.react("🐣"); m.reply(novaBerhasil("pixeldraindl"));
   } catch (error) {

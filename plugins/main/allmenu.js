@@ -240,7 +240,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { sym: "Ⓟ", desc: "Premium - khusus premium" },
       { sym: "Ⓞ", desc: "Owner - hanya owner" },
       { sym: "Ⓛ", desc: "Limit - akses fitur" },
-      { sym: "ʀ", desc: "Register - wajib daftar" },
+      { sym: "r", desc: "Register - wajib daftar" },
       { sym: "Ⓐ", desc: "Admin - khusus admin grup" },
       { sym: "Ⓖ", desc: "Grup - khusus di grup" },
     ];

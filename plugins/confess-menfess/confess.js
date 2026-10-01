@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
   // bingung lagi), tapi isi confess-nya sendiri gak pernah lewat grup.
   if (m.isGroup) {
     await m.reply(claraWrap("confess", [
-      `Fitur ini dipakai di *ᴅᴍ* ya! 🤫`,
+      `Fitur ini dipakai di *dm* ya! 🤫`,
       ``,
       `Silakan ketik ${m.prefix}confess <nomor>|<pesan> di chat pribadi bot.`,
       `Confess kamu bakal tetap 100% rahasia — gak ada jejak apa pun di grup. 🔒`,
@@ -160,18 +160,18 @@ async function handler(m, { sock }) {
   if (isAnonim) {
     confessText =
       `💌 Ada seseorang yang ngirim pesan buat kamu\n\n` +
-      `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
+      `  💬 *isi pesan:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
-      `  🔒 _Pesan ini dikirim secara *ᴀɴᴏɴɪᴍ*_\n` +
+      `  🔒 _Pesan ini dikirim secara *anonim*_\n` +
       `Identitas pengirim dirahasiakan\n` +
       `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
       "";
   } else {
     confessText =
       `💌 *${senderName}* ngirim pesan buat kamu\n\n` +
-      `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
+      `  💬 *isi pesan:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
-      `  📝 _Pesan ini dikirim secara *ɴᴏɴ-ᴀɴᴏɴɪᴍ*_\n` +
+      `  📝 _Pesan ini dikirim secara *non-anonim*_\n` +
       `Pengirim: *${senderName}*\n` +
       `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
       "";
@@ -245,14 +245,14 @@ async function replyHandler(m, { sock }) {
     if (confessInfo.isAnonim) {
       replyText =
         `💕 Orang yang kamu confess balas pesanmu!\n\n` +
-        `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
+        `  💬 *isi balasan:*\n` +
         `  \`\`\`${replyMessage}\`\`\`\n\n` +
         `  🔒 _Identitas kamu tetap aman (anonim)_\n\n` +
         "";
     } else {
       replyText =
         `💕 *${confessInfo.senderName}* — orang yang kamu confess balas!\n\n` +
-        `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
+        `  💬 *isi balasan:*\n` +
         `  \`\`\`${replyMessage}\`\`\`\n\n` +
         `  📝 _Balasan untuk confess non-anonim kamu_\n\n` +
         "";

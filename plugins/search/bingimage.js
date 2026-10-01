@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data.status) {
-      return m.reply(claraWrap("bingimage", `❌ *ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ ʜᴀꜱɪʟ ᴜɴᴛᴜᴋ:* ${query}`));
+      return m.reply(claraWrap("bingimage", `❌ *tidak ditemukan hasil untuk:* ${query}`));
     }
     const results = data.result;
     const album = await Promise.all(

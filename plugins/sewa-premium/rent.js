@@ -162,7 +162,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       if (sewaData.isLifetime) {
         sewaStatus = bracketBox("♾️", "Status Sewa Grup Ini", [
           "Grup: *" + groupName + "*",
-          "Status: *ᴘᴇʀᴍᴀɴᴇɴᴛ* ♾️",
+          "Status: *permanent* ♾️",
           "Bot aktif selamanya di sini",
         ]);
       } else {
@@ -179,7 +179,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       sewaStatus += "\n\n";
     } else if (isGroup && !sewaData) {
       sewaStatus = bracketBox("⚠️", "Status Sewa Grup Ini", [
-        "Grup ini *ʙᴇʟᴜᴍ ᴛᴇʀᴅᴀꜰᴛᴀʀ* sewa",
+        "Grup ini *belum terdaftar* sewa",
         "Bot bisa keluar sewaktu-waktu",
         "Sewa sekarang biar bot tetap di sini!",
       ]);
@@ -270,7 +270,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         }
         await sock.sendMessage(m.chat, {
           image: qrisBuffer,
-          caption: "\n*ꜱᴄᴀɴ qʀɪꜱ ᴅɪ ᴀᴛᴀꜱ ᴜɴᴛᴜᴋ ᴘᴇᴍʙᴀʏᴀʀᴀɴ ꜱᴇᴡᴀ*"
+          caption: "\n*scan qris di atas untuk pembayaran sewa*"
         }, { quoted: m });
       } catch (e) { console.error('[rent.js]:', e.message); }
     }
@@ -278,7 +278,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const prefix = botConfig.command?.prefix || ".";
     await m.reply(
       claraWrap("Gagal", [
-        "Status: *ɢᴀɢᴀʟ*",
+        "Status: *gagal*",
         "Alasan: *" + error.message + "*",
         "Coba lagi nanti atau hubungi owner",
       ].join("\n")),

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT — E2E: DESAIN USAGE V2 (25 Sep 2026, sesi "desain
-// kaomoji lucu"): 「✧ ɴᴀᴍᴀ ✧」 + kaomoji semangat + sapaan ajakan + 📍 baris
-// ᴄᴀʀᴀ/ᴄᴏɴᴛᴏʜ/ɴᴏᴛᴇ mengalir + (khusus AI, request owner 25 Sep) ✨ model
+// kaomoji lucu"): 「✧ nama ✧」 + kaomoji semangat + sapaan ajakan + 📍 baris
+// cara/contoh/note mengalir + (khusus AI, request owner 25 Sep) ✨ model
 // aktif + 📋 model tersedia + baris spec ⚡⏱💸 fakta nyata.
 // Aturan owner: (1) "ubah satu satu jgn di batch / jd 1 konversi card" —
 // novaGuide lama TETAP ada & gak berubah; (2) "tiap plugin sapaannya beda
@@ -20,8 +20,9 @@ import fs from "node:fs";
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${String(extra).slice(0, 180)}` : "")); ok ? pass++ : fail++; };
-const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h', i: 'i', j: 'j', k: 'k', l: 'l', m: 'm', n: 'n', o: 'o', p: 'p', r: 'r', s: 's', t: 't', u: 'u', v: 'v', w: 'w', y: 'y', z: 'z' };
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 // ─── 1. RENDER — persis struktur contoh owner ───
 w("\n— novaGuideV2 render (struktur contoh owner) —");
@@ -35,11 +36,11 @@ w("\n— novaGuideV2 render (struktur contoh owner) —");
     spec: ["⚡ 300x/hari", "⏱ 3dtk", "💸 gratis"],
   });
   const L = out.split("\n");
-  check("1a. header 「✧ ᴘʟᴀʏ ✧」", L[0] === `「✧ ${toSC("play")} ✧」`, L[0]);
-  check("1b. baris kaomoji ヾ(≧▽≦*)o ᴘʟᴀʏ!!", L[1] === `ヾ(≧▽≦*)o ${toSC("play")}!!`, L[1]);
+  check("1a. header 「✧ play ✧」", L[0] === `「✧ ${toSC("play")} ✧」`, L[0]);
+  check("1b. baris kaomoji ヾ(≧▽≦*)o play!!", L[1] === `ヾ(≧▽≦*)o ${toSC("play")}!!`, L[1]);
   check("1c. sapaan ajakan smallcaps + kaomoji ujung", L[3] === `${toSC("mau lagu favorit? ketik aja judulnya!")} (≧◡≦) ♡`, L[3]);
-  check("1d. 📍 ᴄᴀʀᴀ: baris sendiri", L[5] === `📍 ${toSC("Cara")}: ${toSC("ketik judul lagu sesudah command")}`, L[5]);
-  check("1d2. ᴄᴏɴᴛᴏʜ: baris sendiri, command VERBATIM", L[6] === `${toSC("Contoh")}: .play faded`, L[6]);
+  check("1d. 📍 cara: baris sendiri", L[5] === `📍 ${toSC("Cara")}: ${toSC("ketik judul lagu sesudah command")}`, L[5]);
+  check("1d2. contoh: baris sendiri, command VERBATIM", L[6] === `${toSC("Contoh")}: .play faded`, L[6]);
   check("1d3. note: baris sendiri + akhiran ~", L[7] === `${toSC("nanti bot yang carin audionya otomatis")}~`, L[7]);
   check("1e. spec baris akhir join • (angka & emoji utuh)", L[9] === `⚡ 300x/${toSC("hari")} • ⏱ 3${toSC("dtk")} • 💸 ${toSC("gratis")}`, L[9]);
   check("1f. 10 baris total (blank antar blok)", L.length === 10 && L[2] === "" && L[4] === "" && L[8] === "", L.length);
@@ -59,8 +60,8 @@ w("\n— varian AI: ✨ model aktif + 📋 model tersedia —");
     spec: ["💸 gratis"],
   });
   const L = out.split("\n");
-  check("2a. ✨ ᴍᴏᴅᴇʟ ᴀᴋᴛɪꜰ + nama model VERBATIM", L.includes(`✨ ${toSC("Model aktif")}: gemini-2.0-flash`), L.slice(6, 10));
-  check("2b. 📋 ᴍᴏᴅᴇʟ ᴛᴇʀꜱᴇᴅɪᴀ join ' · ' VERBATIM", L.includes(`📋 ${toSC("Model tersedia")}: gemini-2.0-flash · gpt-4o · claude-3.5-sonnet`), L.slice(7, 11));
+  check("2a. ✨ model aktif + nama model VERBATIM", L.includes(`✨ ${toSC("Model aktif")}: gemini-2.0-flash`), L.slice(6, 10));
+  check("2b. 📋 model tersedia join ' · ' VERBATIM", L.includes(`📋 ${toSC("Model tersedia")}: gemini-2.0-flash · gpt-4o · claude-3.5-sonnet`), L.slice(7, 11));
   check("2c. urutan blok: 📍 lalu ✨📋 lalu spec", out.indexOf("📍") < out.indexOf("✨") && out.indexOf("✨") < out.lastIndexOf("💸"), out);
 }
 
@@ -111,15 +112,15 @@ w("\n— handler no-input → kartu V2 (fakta spec nyata) —");
   await run1("ssweb", ssH, null);
 
   const isV2 = (r) => r && r.startsWith("「✧ ") && r.split("\n")[1].includes("!!");
-  check("4a. play balas V2 + spec cd 15dtk nyata", isV2(first.play) && first.play.includes("⏱ 15ᴅᴛᴋ") && first.play.includes("💸 ɢʀᴀᴛɪꜱ"), first.play?.split("\n")[0]);
-  check("4b. playvideo V2 + cd 20dtk", isV2(first.playvideo) && first.playvideo.includes("⏱ 20ᴅᴛᴋ"), first.playvideo?.split("\n")[0]);
-  check("4c. instagramdl V2 + energi 1 cd 10dtk", isV2(first.instagramdl) && first.instagramdl.includes("⚡ ᴇɴᴇʀɢɪ 1") && first.instagramdl.includes("⏱ 10ᴅᴛᴋ"), first.instagramdl?.split("\n")[0]);
-  check("4d. ytmp3 V2 + energi 2 cd 20dtk", isV2(first.ytmp3) && first.ytmp3.includes("⚡ ᴇɴᴇʀɢɪ 2"), first.ytmp3?.split("\n")[0]);
-  check("4e. aio V2 + energi 1 cd 10dtk", isV2(first.aio) && first.aio.includes("⏱ 10ᴅᴛᴋ"), first.aio?.split("\n")[0]);
-  check("4f. aio2 V2 + energi 2 cd 12dtk + popup note", isV2(first.aio2) && first.aio2.includes("⏱ 12ᴅᴛᴋ") && /ᴘᴏᴘᴜᴘ/.test(first.aio2), first.aio2?.split("\n")[0]);
-  check("4g. shortlink V2 + cd 3dtk + provider di note", isV2(first.shortlink) && first.shortlink.includes("⏱ 3ᴅᴛᴋ") && first.shortlink.includes("ᴛɪɴʏᴜʀʟ"), first.shortlink?.split("\n")[0]);
-  check("4h. ocrsolve V2 + cd 3dtk", isV2(first.ocrsolve) && first.ocrsolve.includes("⏱ 3ᴅᴛᴋ"), first.ocrsolve?.split("\n")[0]);
-  check("4i. ssweb V2 + cd 15dtk", isV2(first.ssweb) && first.ssweb.includes("⏱ 15ᴅᴛᴋ"), first.ssweb?.split("\n")[0]);
+  check("4a. play balas V2 + spec cd 15dtk nyata", isV2(first.play) && first.play.includes("⏱ 15dtk") && first.play.includes("💸 gratis"), first.play?.split("\n")[0]);
+  check("4b. playvideo V2 + cd 20dtk", isV2(first.playvideo) && first.playvideo.includes("⏱ 20dtk"), first.playvideo?.split("\n")[0]);
+  check("4c. instagramdl V2 + energi 1 cd 10dtk", isV2(first.instagramdl) && first.instagramdl.includes("⚡ energi 1") && first.instagramdl.includes("⏱ 10dtk"), first.instagramdl?.split("\n")[0]);
+  check("4d. ytmp3 V2 + energi 2 cd 20dtk", isV2(first.ytmp3) && first.ytmp3.includes("⚡ energi 2"), first.ytmp3?.split("\n")[0]);
+  check("4e. aio V2 + energi 1 cd 10dtk", isV2(first.aio) && first.aio.includes("⏱ 10dtk"), first.aio?.split("\n")[0]);
+  check("4f. aio2 V2 + energi 2 cd 12dtk + popup note", isV2(first.aio2) && first.aio2.includes("⏱ 12dtk") && /popup/.test(first.aio2), first.aio2?.split("\n")[0]);
+  check("4g. shortlink V2 + cd 3dtk + provider di note", isV2(first.shortlink) && first.shortlink.includes("⏱ 3dtk") && first.shortlink.includes("tinyurl"), first.shortlink?.split("\n")[0]);
+  check("4h. ocrsolve V2 + cd 3dtk", isV2(first.ocrsolve) && first.ocrsolve.includes("⏱ 3dtk"), first.ocrsolve?.split("\n")[0]);
+  check("4i. ssweb V2 + cd 15dtk", isV2(first.ssweb) && first.ssweb.includes("⏱ 15dtk"), first.ssweb?.split("\n")[0]);
 
   // aturan "tiap plugin sapaannya beda beda" — kaomoji baris-2 & sapaan unik
   const kaomojiLines = Object.values(first).map((r) => (r || "").split("\n")[1]);
@@ -139,7 +140,7 @@ w("\n— novaSalahV2 + handler salah pemakaian → cute —");
     contoh: ".play nama lagu",
   });
   const L = out.split("\n");
-  check("4m1. salah render: kaomoji + ʏᴀʜ ᴋᴀᴋ...", L[0] === `(>_<) ${toSC("yah kak")}...`, L[0]);
+  check("4m1. salah render: kaomoji + yah kak...", L[0] === `(>_<) ${toSC("yah kak")}...`, L[0]);
   check("4m2. pesan cute smallcaps + ➤ contoh VERBATIM", L[1] === toSC("kakak malah ketik linknya, padahal ini mah mau judul lagunya~") && L[2] === "➤ .play nama lagu", L[1] + " / " + L[2]);
   check("4m3. singkat 3 baris (bukan kartu usage)", L.length === 3 && !out.includes("「"), L.length);
 

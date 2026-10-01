@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     try {
         await sock.groupRevokeInvite(m.chat)
-        { const __navText = `✅ *ʟɪɴᴋ ɢʀᴜᴘ ᴅɪʀᴇꜱᴇᴛ*\nLink grup lama sudah tidak berlaku.\nGunakan \`${m.prefix}linkgc\` untuk mendapatkan link baru.`; await m.reply(__navText); }
+        { const __navText = `✅ *link grup direset*\nLink grup lama sudah tidak berlaku.\nGunakan \`${m.prefix}linkgc\` untuk mendapatkan link baru.`; await m.reply(__navText); }
         
     } catch (err) {
         m.reply(claraWrap("resetlinkgc", te(m.prefix, m.command, m.pushName), "error"))

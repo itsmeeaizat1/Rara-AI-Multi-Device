@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
       return txt + "\n";
     };
 
-    let caption = `🌱 *ɢʀᴏᴡ ᴀ ɢᴀʀᴅᴇɴ ɪɴꜰᴏ* 🌱\n\n`;
+    let caption = `🌱 *grow a garden info* 🌱\n\n`;
 
     caption += formatStock(r.gearStock, "⚙️ Gear Stock");
     caption += formatStock(r.eggStock, "🥚 Egg Stock");

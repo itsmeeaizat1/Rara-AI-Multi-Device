@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return m.reply(claraWrap("pastebin", [
-      `📋 *ᴘᴀꜱᴛᴇʙɪɴ ᴜᴘʟᴏᴀᴅ*`,
+      `📋 *pastebin upload*`,
       `Kirim teks untuk di-upload ke Pastebin.`,
       ``,
       `📌 Format:`,
@@ -64,12 +64,12 @@ async function handler(m, { sock }) {
     const url = res.data;
 
     if (url.startsWith("Bad API request")) {
-      { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n${url}`;       await m.react("🐣");
+      { const __navText = `❌ *gagal*\n\n${url}`;       await m.react("🐣");
 return await m.reply(__navText); };
     }
 
     const responseText =
-      `✅ *ᴘᴀꜱᴛᴇʙɪɴ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
+      `✅ *pastebin berhasil*\n\n` +
       `📝 JUDUL: *${api_paste_name}*\n` +
       `📊 UKURAN: *${text.length} chars*\n` +
       `🔗 LINK: ${url}\n` +

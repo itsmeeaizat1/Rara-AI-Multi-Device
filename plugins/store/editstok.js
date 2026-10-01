@@ -20,8 +20,8 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.isGroup) {
-        return m.reply(claraWrap("editstok", `🚫 *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
-            `Untuk menjaga privasi 🛡️, pengeditan stok hanya dapat dilakukan di *ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ*.\n\n` +
+        return m.reply(claraWrap("editstok", `🚫 *akses ditolak*\n\n` +
+            `Untuk menjaga privasi 🛡️, pengeditan stok hanya dapat dilakukan di *private chat*.\n\n` +
             `Silakan chat bot secara langsung 📱`))
     }
 
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     if (firstPipe === -1) {
         return m.reply(`✏️ *Edit Stok*\n\n` +
             `📋 Format: \`${m.prefix}editstok <nomor_produk> <nomor_item>|<detail_baru>\`\n\n` +
-            `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
+            `📝 *contoh:*\n` +
             `\`${m.prefix}editstok 1 3|Email: baru@mail.com;;Password: newpass\`\n\n` +
             `Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
             `📋 Lihat nomor item: \`${m.prefix}liststok <nomor_produk>\`\n\n` +
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     const itemNo = parseInt(parts[1]) - 1
 
     if (isNaN(productNo) || productNo < 0 || productNo >= products.length) {
-        return m.reply(claraWrap("editstok", `❌ *ɴᴏᴍᴏʀ ᴘʀᴏᴅᴜᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${products.length} 📋`))
+        return m.reply(claraWrap("editstok", `❌ *nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
     }
 
     const product = products[productNo]

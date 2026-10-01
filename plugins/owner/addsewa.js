@@ -122,19 +122,19 @@ async function handler(m, { sock }) {
   const args = m.args;
   if (args.length < 2) {
     return m.reply(
-      `📝 *ᴛᴀᴍʙᴀʜ ꜱᴇᴡᴀ*\n\n` +
+      `📝 *tambah sewa*\n\n` +
         `Format: *${m.prefix}addsewa <link/id> <durasi> [harga]*\n\n` +
-        `*ꜰᴏʀᴍᴀᴛ ᴅᴜʀᴀꜱɪ:*\n` +
+        `*format durasi:*\n` +
         `30i = 30 menit\n` +
         `12h = 12 jam\n` +
         `7d = 7 hari\n` +
         `1m = 1 bulan (30 hari)\n` +
         `1y = 1 tahun\n` +
         `lifetime = Permanent\n\n` +
-        `*ɪɴᴘᴜᴛ ɢʀᴜᴘ:*\n` +
+        `*input grup:*\n` +
         `Link: https://chat.whatsapp.com/xxx\n` +
         `ID: 120363xxx@g.us\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
+        `*contoh:*\n` +
         `${m.prefix}addsewa https://chat.whatsapp.com/xxx 30d
   ${m.prefix}addsewa https://chat.whatsapp.com/xxx 7d "Rp 20.000"\n` +
         `${m.prefix}addsewa 120363xxx 1m\n\n` +
@@ -192,7 +192,7 @@ async function handler(m, { sock }) {
       isLifetime,
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
     }).catch((e) => { console.error('[addsewa.js]:', e.message); });
-    let text = `✅ *ꜱᴇᴡᴀ ʙᴇʀʜᴀꜱɪʟ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n`;
+    let text = `✅ *sewa berhasil ditambahkan*\n\n`;
     text += `Grup: *${groupName}*\n`;
     text += `ID: ${groupId.split("@")[0]}\n`;
     text += `Durasi: *${formatDuration(durationStr)}*\n`;

@@ -48,7 +48,7 @@ function convertToOpus(inputPath, outputPath) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text)
-    return m.reply( `🚀 *ᴇʟᴏɴ ᴍᴜꜱᴋ ᴛᴛꜱ*\n\nGunakan: \`${m.prefix}ttselon <text>\``, "ttselon");
+    return m.reply( `🚀 *elon musk tts*\n\nGunakan: \`${m.prefix}ttselon <text>\``, "ttselon");
 
 
   try {

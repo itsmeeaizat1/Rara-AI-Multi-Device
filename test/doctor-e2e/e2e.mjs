@@ -215,17 +215,17 @@ w("\n— plugin handler: status default off → on → scan → auto —");
     args: [], sender: "owner@x", reply: async (t) => replies.push(t), react: async () => {},
   };
   await docHandler({ ...m, args: [] }, { db });
-  check("status default OFF", replies[0].includes("ᴏꜰꜰ"), replies[0].slice(0, 80));
+  check("status default OFF", replies[0].includes("off"), replies[0].slice(0, 80));
   await docHandler({ ...m, args: ["on"] }, { sock: { sendMessage: async () => {} }, db });
-  check(".doctor on aktif", isDoctorOn(db) === true && replies[1].includes("ᴀᴋᴛɪꜰ"));
+  check(".doctor on aktif", isDoctorOn(db) === true && replies[1].toLowerCase().includes("aktif"));
   await docHandler({ ...m, args: ["test"] }, { db });
   check(".doctor test suntik dummy", getDoctorData(db).errors.length === 1, "no dummy recorded");
   await docHandler({ ...m, args: ["scan"] }, { db });
-  check("scan nampilin error", replies[3].includes("ᴅᴜᴍᴍʏ") || replies[3].includes("dummy"), replies[3].slice(0, 100));
+  check("scan nampilin error", replies[3].includes("dummy") || replies[3].includes("dummy"), replies[3].slice(0, 100));
   await docHandler({ ...m, args: ["auto", "on"] }, { db });
-  check("auto on dari plugin", isDoctorAuto(db) === true && replies[4].includes("ɴʏᴀʟᴀ"));
+  check("auto on dari plugin", isDoctorAuto(db) === true && replies[4].toLowerCase().includes("nyala"));
   await docHandler({ ...m, args: ["clean"] }, { db });
-  check("clean jalan", replies[5].includes("ʟᴏɢ ᴇʀʀᴏʀ") || replies[5].includes("ᴅɪʙᴇʀꜱɪʜɪɴ"));
+  check("clean jalan", replies[5].includes("log error") || replies[5].includes("dibersihin"));
   // config plugin
   check("isOwner gate", docConfig.isOwner === true);
   check("alias ada dokter", docConfig.alias.includes("dokter"));

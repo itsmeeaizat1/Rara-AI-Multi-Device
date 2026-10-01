@@ -52,11 +52,11 @@ async function handler(m, { sock }) {
     ]));
   }
   if (text.length > 500) {
-    { const __navText = `❌ *ᴛᴇᴋꜱ ᴛᴇʀʟᴀʟᴜ ᴘᴀɴᴊᴀɴɢ*\n\nMaksimal 500 karakter`; return await m.reply(__navText); };
+    { const __navText = `❌ *teks terlalu panjang*\n\nMaksimal 500 karakter`; return await m.reply(__navText); };
   }
   const inputUrl = getAssetBuffer("nova-kertas");
   if (!inputUrl) {
-    return m.reply(claraWrap("Nulis", `❌ *ᴛᴇᴍᴘʟᴀᴛᴇ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\nFile template kertas tidak ditemukan di config.assets`));
+    return m.reply(claraWrap("Nulis", `❌ *template tidak ada*\n\nFile template kertas tidak ditemukan di config.assets`));
   }
   await m.react("🕒");
   try {
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
     await sock.sendMedia(
       m.chat,
       buffer,
-      `✅ *ʟᴜʟɪꜱᴀɴ ᴛᴀɴɢᴀɴ*\n\nHatihati ketahuan! 📖`,
+      `✅ *lulisan tangan*\n\nHatihati ketahuan! 📖`,
       m,
       { type: "image", contextInfo: saluranCtx() },
     );

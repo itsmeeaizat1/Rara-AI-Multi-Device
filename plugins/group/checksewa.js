@@ -54,9 +54,9 @@ async function handler(m, { sock }) {
     const addedDate = sewaData.addedAt ? timeHelper.fromTimestamp(sewaData.addedAt, 'D MMMM YYYY') : '-'
 
     if (sewaData.isLifetime) {
-        return m.reply(claraWrap("checksewa", `♾️ *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴡᴀ*\n\n` +
+        return m.reply(claraWrap("checksewa", `♾️ *status sewa*\n\n` +
             `Grup: *${groupName}*\n` +
-            `Status: *ᴘᴇʀᴍᴀɴᴇɴᴛ* ♾️\n` +
+            `Status: *permanent* ♾️\n` +
             `Terdaftar sejak: *${addedDate}*\n\n` +
             `Bot akan aktif selamanya di grup ini.`))
     }
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     const expiredStr = timeHelper.fromTimestamp(sewaData.expiredAt, 'D MMMM YYYY HH:mm')
 
     if (countdown.expired) {
-        return m.reply(claraWrap("checksewa", `❌ *ꜱᴇᴡᴀ ᴇxᴘɪʀᴇᴅ*\n\n` +
+        return m.reply(claraWrap("checksewa", `❌ *sewa expired*\n\n` +
             `Grup: *${groupName}*\n` +
             `Berakhir: *${expiredStr}*\n\n` +
             `Hubungi owner bot untuk perpanjang sewa.`))
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
         barLine = `\n📊 ${'▰'.repeat(n)}${'▱'.repeat(10 - n)} ${pct}% terpakai`
     }
 
-    let text = `⏱️ *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴡᴀ*\n\n`
+    let text = `⏱️ *status sewa*\n\n`
     text += `Grup: *${groupName}*\n`
     text += `Sisa waktu: *${countdown.text}*`
     text += barLine
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
             const ss = Math.floor((remMs % 60000) / 1000)
             if (remMs <= 0) {
                 return [
-                    `❌ *ꜱᴇᴡᴀ ᴇxᴘɪʀᴇᴅ*`,
+                    `❌ *sewa expired*`,
                     ``,
                     `Grup: *${groupName}*`,
                     ``,
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
                 ].join('\n')
             }
             return [
-                `🕒 *ꜱᴇᴡᴀ ʜᴀᴍᴘɪʀ ʜᴀʙɪꜱ*`,
+                `🕒 *sewa hampir habis*`,
                 ``,
                 `Grup: *${groupName}*`,
                 `Sisa: *${h} jam ${String(mm).padStart(2, '0')} mnt ${String(ss).padStart(2, '0')} dtk*`,

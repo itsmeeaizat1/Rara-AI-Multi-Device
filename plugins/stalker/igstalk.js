@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     
     if (!username) {
         return m.reply(
-            `📸 *ɪɴꜱᴛᴀɢʀᴀᴍ ꜱᴛᴀʟᴋ*\n\n` +
+            `📸 *instagram stalk*\n\n` +
             `Masukkan username Instagram\n\n` +
             `\`Contoh: ${m.prefix}igstalk cristiano\``
         )
@@ -51,15 +51,15 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("igstalk", `❌ Akun *@${username}* tidak ditemukan`))
         }
         
-        const caption = `📸 *ɪɴꜱᴛᴀɢʀᴀᴍ ꜱᴛᴀʟᴋ*\n\n` +
-            `👤 *ᴜꜱᴇʀɴᴀᴍᴇ:* ${d.username}\n` +
-            `📛 *ɴᴀᴍᴀ:* ${d.full_name || '-'}\n` +
-            `✅ *ᴠᴇʀɪꜰɪᴇᴅ:* ${d.is_verified ? 'Ya' : 'Tidak'}\n` +
-            `🔒 *ᴘʀɪᴠᴀᴛᴇ:* ${d.is_private ? 'Ya' : 'Tidak'}\n\n` +
-            `👥 *ᴘᴇɴɢɪᴋᴜᴛ:* ${shortNum(d.stats?.followers)}\n` +
-            `👤 *ᴍᴇɴɢɪᴋᴜᴛɪ:* ${shortNum(d.stats?.following)}\n` +
-            `📷 *ᴘᴏꜱᴛɪɴɢᴀɴ:* ${shortNum(d.stats?.posts)}\n\n` +
-            `📝 *ʙɪᴏ:*\n${d.bio || '-'}\n\n` +
+        const caption = `📸 *instagram stalk*\n\n` +
+            `👤 *username:* ${d.username}\n` +
+            `📛 *nama:* ${d.full_name || '-'}\n` +
+            `✅ *verified:* ${d.is_verified ? 'Ya' : 'Tidak'}\n` +
+            `🔒 *private:* ${d.is_private ? 'Ya' : 'Tidak'}\n\n` +
+            `👥 *pengikut:* ${shortNum(d.stats?.followers)}\n` +
+            `👤 *mengikuti:* ${shortNum(d.stats?.following)}\n` +
+            `📷 *postingan:* ${shortNum(d.stats?.posts)}\n\n` +
+            `📝 *bio:*\n${d.bio || '-'}\n\n` +
             `🔗 https://instagram.com/${d.username}`
         const profilePic = d.profile_pic
         if (profilePic) {

@@ -43,13 +43,13 @@ async function handler(m, { sock }) {
     const toxicWords = groupData.toxicWords || []
     
     if (toxicWords.includes(word)) {
-        { const __navText = `❌ *ɢᴀɢᴀʟ*\n\nKata \`${word}\` sudah ada di daftar`; return await m.reply(__navText); }
+        { const __navText = `❌ *gagal*\n\nKata \`${word}\` sudah ada di daftar`; return await m.reply(__navText); }
     }
     
     toxicWords.push(word)
     db.setGroup(m.chat, { toxicWords })
     await m.reply(
-        `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪᴛᴀᴍʙᴀʜ*\n\n` +
+        `✅ *kata toxic ditambah*\n\n` +
         "" +
         `📝 Kata: \`${word}\`\n` +
         `📊 Total: \`${toxicWords.length}\` kata\n` +

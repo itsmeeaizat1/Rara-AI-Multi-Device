@@ -120,11 +120,11 @@ async function handler(m, { sock, args }) {
 
       const durStr = dur > 0 ? `${dur.toFixed(1)} dtk` : "?";
       const cap = [
-        "🎬 ᴛʜᴜᴍʙɴᴀɪʟ ᴀɴɪᴍᴀᴛᴇᴅ",
-        `⏱️ ᴍᴜʟᴀɪ ᴅɪᴛɪᴋ : ${clipStart.toFixed(1)} ᴅᴛᴋ`,
-        `🎬 ᴅᴜʀᴀꜱɪ ᴄʟɪᴘ : ${clipLen.toFixed(1)} ᴅᴛᴋ`,
-        `🎞️ ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ : ${durStr}`,
-        `📐 ʀᴇꜱᴏʟᴜꜱɪ : 480px`,
+        "🎬 thumbnail animated",
+        `⏱️ mulai ditik : ${clipStart.toFixed(1)} dtk`,
+        `🎬 durasi clip : ${clipLen.toFixed(1)} dtk`,
+        `🎞️ durasi video : ${durStr}`,
+        `📐 resolusi : 480px`,
       ].join("\n");
 
       await sock.sendMessage(m.chat, { video: clipBuf, caption: cap }, { quoted: m });
@@ -157,10 +157,10 @@ async function handler(m, { sock, args }) {
 
     const durStr = dur > 0 ? `${dur.toFixed(1)} dtk` : "?";
     const cap = [
-      "🎬 ᴛʜᴜᴍʙɴᴀɪʟ ᴠɪᴅᴇᴏ",
-      `⏱️ ꜰʀᴀᴍᴇ ᴅɪᴛɪᴋ : ${time.toFixed(1)} ᴅᴛᴋ`,
-      `🎬 ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ : ${durStr}`,
-      `📐 ʀᴇꜱᴏʟᴜꜱɪ : 320px`,
+      "🎬 thumbnail video",
+      `⏱️ frame ditik : ${time.toFixed(1)} dtk`,
+      `🎬 durasi video : ${durStr}`,
+      `📐 resolusi : 320px`,
     ].join("\n");
 
     await sock.sendMessage(m.chat, { image: thumbBuf, caption: cap }, { quoted: m });

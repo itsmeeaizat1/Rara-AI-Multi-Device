@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
           `AI lokal, hasil bersih, gratis tanpa API`,
           `Output: PNG transparan (full quality)`,
           ``,
-          `*ᴏᴘꜱɪ:*`,
+          `*opsi:*`,
           `${prefix}removebgv2 — kirim sebagai gambar`,
           `${prefix}removebgv2 doc — kirim sebagai dokumen (no compress)`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = await m.quoted.download();
     } else {
       const text =
-        claraWrap("RemoveBG V2", [`Status: *ɢᴀɢᴀʟ ᴅᴏᴡɴʟᴏᴀᴅ ɢᴀᴍʙᴀʀ*`,
+        claraWrap("RemoveBG V2", [`Status: *gagal download gambar*`,
           `Coba reply gambar yang valid`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        claraWrap("RemoveBG V2", [`Status: *ʙᴜꜰꜰᴇʀ ɢᴀᴍʙᴀʀ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*`,
+        claraWrap("RemoveBG V2", [`Status: *buffer gambar tidak valid*`,
           `Coba gambar lain`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
@@ -72,7 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (mediaBuffer.length > MAX_FILE_SIZE) {
       const sizeMB = (mediaBuffer.length / 1024 / 1024).toFixed(1);
       const text =
-        claraWrap("RemoveBG V2", [`Status: *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*`,
+        claraWrap("RemoveBG V2", [`Status: *file terlalu besar*`,
           `Ukuran: *${sizeMB} MB*`,
           `Maksimal: *10 MB*`,
           `Compress gambar dulu atau gunakan resolusi lebih kecil`].join("\n")) + "\n" +
@@ -94,7 +94,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!resultBuffer || resultBuffer.length === 0) {
       const text =
-        claraWrap("RemoveBG V2", [`Status: *ɢᴀɢᴀʟ ʜᴀᴘᴜꜱ ʙᴀᴄᴋɢʀᴏᴜɴᴅ*`,
+        claraWrap("RemoveBG V2", [`Status: *gagal hapus background*`,
           `Mungkin gambar tidak support, coba gambar lain`].join("\n")) + "\n" +
         tipText("Coba gambar dengan subjek yang jelas");
 
@@ -112,11 +112,11 @@ async function handler(m, { sock, config: botConfig }) {
         fileName: "removebg_result.png",
         mimetype: "image/png",
         caption:
-          claraWrap("RemoveBG V2", [`Status: *ʙᴀᴄᴋɢʀᴏᴜɴᴅ ᴅɪʜᴀᴘᴜꜱ*`,
+          claraWrap("RemoveBG V2", [`Status: *background dihapus*`,
             `Mode: *Dokumen (no compress)*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
-            `Format: *ᴘɴɢ ᴛʀᴀɴꜱᴘᴀʀᴀɴ*`,
-            `Engine: *ᴀɪ ᴏɴɴx ʟᴏᴋᴀʟ*`].join("\n")) + "\n" +
+            `Format: *png transparan*`,
+            `Engine: *ai onnx lokal*`].join("\n")) + "\n" +
           tipText("Hasil full quality tanpa kompresi"),
       }, { quoted: m });
     } else {
@@ -124,11 +124,11 @@ async function handler(m, { sock, config: botConfig }) {
       await sock.sendMessage(m.chat, {
         image: resultBuffer,
         caption:
-          claraWrap("RemoveBG V2", [`Status: *ʙᴀᴄᴋɢʀᴏᴜɴᴅ ᴅɪʜᴀᴘᴜꜱ*`,
-            `Mode: *ɢᴀᴍʙᴀʀ*`,
+          claraWrap("RemoveBG V2", [`Status: *background dihapus*`,
+            `Mode: *gambar*`,
             `Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
-            `Format: *ᴘɴɢ ᴛʀᴀɴꜱᴘᴀʀᴀɴ*`,
-            `Engine: *ᴀɪ ᴏɴɴx ʟᴏᴋᴀʟ*`].join("\n")) + "\n" +
+            `Format: *png transparan*`,
+            `Engine: *ai onnx lokal*`].join("\n")) + "\n" +
           tipText(`Untuk no compress: ${prefix}removebgv2 doc`),
       }, { quoted: m });
     }

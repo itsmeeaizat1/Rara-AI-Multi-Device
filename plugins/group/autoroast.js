@@ -182,7 +182,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const lastTargetStr = cfg.lastTarget ? "@" + cfg.lastTarget.split("@")[0] : "Belum ada";
 
       return m.reply(claraWrap("Auto Roast", [
-        "Status: " + (cfg.enabled ? "*ᴀᴋᴛɪꜰ*" : "Nonaktif"),
+        "Status: " + (cfg.enabled ? "*aktif*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total roast: " + (cfg.totalSent || 0),
         "Terakhir kirim: " + lastSentStr,

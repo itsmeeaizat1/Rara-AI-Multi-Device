@@ -304,16 +304,16 @@ async function handleKelola(m, sock) {
     m.chat,
     nativeFlowMsg(
       m,
-      `⚙️ *ᴋᴇʟᴏʟᴀ ᴘᴜꜱʜ ᴋᴏɴᴛᴀᴋ*
+      `⚙️ *kelola push kontak*
 
 ` +
-      `📋 *ꜱᴇᴛᴛɪɴɢ ꜱᴀᴀᴛ ɪɴɪ*\n\n` +
+      `📋 *setting saat ini*\n\n` +
       `💾 Auto VCF: *${s.autoVcf ? "✅ ON" : "❌ OFF"}*\n` +
       `🔑 Kode Unik: *${s.kodeUnik ? "✅ ON" : "❌ OFF"}*\n` +
       `📱 VCF Target: *${s.vcfTarget === "private" ? "Private" : "Group"}*\n` +
       `👑 Skip Admin: *${s.skipAdmin ? "✅ ON" : "❌ OFF"}*\n` +
       `⏱️ Jeda: *${s.jeda}ms (${(s.jeda / 1000).toFixed(1)}s)*\n\n` +
-      `📌 *ᴘɪʟɪʜ ᴅᴀʀɪ ᴛᴏᴍʙᴏʟ ᴅɪ ʙᴀᴡᴀʜ ᴜɴᴛᴜᴋ ᴍᴇɴɢᴜʙᴀʜ ꜱᴇᴛᴛɪɴɢ*`,
+      `📌 *pilih dari tombol di bawah untuk mengubah setting*`,
       buttons,
     ),
     { quoted: m },
@@ -384,17 +384,17 @@ async function handleSetJeda(m, sock) {
       m.chat,
       nativeFlowMsg(
         m,
-        `⏱️ *ꜱᴇᴛ ᴊᴇᴅᴀ ᴘᴜꜱʜ ᴋᴏɴᴛᴀᴋ*\n\n` +
-        `📋 *ᴍᴇɴɢᴀᴛᴜʀ ɪɴᴛᴇʀᴠᴀʟ ᴀɴᴛᴀʀ ᴘᴇɴɢɪʀɪᴍᴀɴ ᴘᴇꜱᴀɴ*\n\n` +
-        `⏱️ *ᴊᴇᴅᴀ ꜱᴀᴀᴛ ɪɴɪ:* ${current}ms (${(current / 1000).toFixed(1)} detik)\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+        `⏱️ *set jeda push kontak*\n\n` +
+        `📋 *mengatur interval antar pengiriman pesan*\n\n` +
+        `⏱️ *jeda saat ini:* ${current}ms (${(current / 1000).toFixed(1)} detik)\n\n` +
+        `*cara pakai:*\n` +
         `📝 *${m.prefix}setjedapush <milidetik>* — Mengubah jeda push\n\n` +
-        `*ᴘᴇɴᴊᴇʟᴀꜱᴀɴ:*\n` +
+        `*penjelasan:*\n` +
         `1. Jeda adalah waktu tunggu antar pengiriman pesan ke setiap member\n` +
         `2. Semakin kecil jeda, semakin cepat push selesai, tapi risiko ban lebih tinggi\n` +
         `3. Rekomendasi minimal *3000ms* (3 detik) agar aman\n` +
         `4. Nilai maksimal *30000ms* (30 detik)\n\n` +
-        `📌 *ᴘɪʟɪʜ ᴊᴇᴅᴀ ᴅᴀʀɪ ᴛᴏᴍʙᴏʟ ᴅɪ ʙᴀᴡᴀʜ ᴀᴛᴀᴜ ᴋᴇᴛɪᴋ ᴍᴀɴᴜᴀʟ*`,
+        `📌 *pilih jeda dari tombol di bawah atau ketik manual*`,
         buttons,
       ),
       { quoted: m },
@@ -427,9 +427,9 @@ async function handlePush(m, sock) {
       m.chat,
       nativeFlowMsg(
         m,
-        `❌ *ᴍᴏᴅᴇ ᴛɪᴅᴀᴋ ꜱᴇꜱᴜᴀɪ*\n\n` +
-        `🔒 *ɢʀᴜᴘ ɪɴɪ ʙᴇʟᴜᴍ ᴅᴀʟᴀᴍ ᴍᴏᴅᴇ ᴘᴜꜱʜᴋᴏɴᴛᴀᴋ*\n\n` +
-        `*ᴄᴀʀᴀ ᴀᴋᴛɪᴠᴀꜱɪ:*\n` +
+        `❌ *mode tidak sesuai*\n\n` +
+        `🔒 *grup ini belum dalam mode pushkontak*\n\n` +
+        `*cara aktivasi:*\n` +
         `1. Tekan tombol di bawah untuk mengaktifkan mode pushkontak\n` +
         `2. Setelah mode berubah, ulangi perintah push kontak`,
         buttons,
@@ -510,28 +510,28 @@ async function handlePush(m, sock) {
     m.chat,
     nativeFlowMsg(
       m,
-      `📢 *ᴘᴜꜱʜ ᴋᴏɴᴛᴀᴋ*\n\n` +
+      `📢 *push kontak*\n\n` +
       `📋 *Kirim pesan ke semua member grup secara otomatis + simpan kontak ke file VCF*\n\n` +
-      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+      `*cara pakai:*\n` +
       `📝 *${m.prefix}pushkontak <pesan>* — Push langsung dengan pesan\n` +
       `📢 *${m.prefix}pushkontak* — Buka menu interaktif\n` +
       `⏹️ *${m.prefix}stoppush* — Hentikan push yang sedang berjalan\n` +
       `⏱️ *${m.prefix}setjedapush <ms>* — Atur jeda antar pengiriman\n\n` +
-      `*ᴀʟᴜʀ ᴘᴀᴋᴀɪ:*\n` +
+      `*alur pakai:*\n` +
       `1. Pastikan grup dalam mode pushkontak: *${m.prefix}botmode pushkontak*\n` +
       `2. Ketik *${m.prefix}pushkontak* lalu pilih "Mulai Push" dari menu\n` +
       `3. Bot akan meminta kamu menginput pesan yang ingin dikirim via reply\n` +
       `4. Setelah konfirmasi, bot mengirim pesan ke setiap member satu per satu\n` +
       `5. Setiap pesan ditambahkan kode unik agar terdeteksi berbeda oleh WhatsApp\n` +
       `6. Setelah selesai, bot otomatis mengirimkan file VCF berisi semua kontak member\n\n` +
-      `*ɪɴꜰᴏ:*\n` +
-      `📋 *ꜱᴇᴛᴛɪɴɢ*\n\n` +
+      `*info:*\n` +
+      `📋 *setting*\n\n` +
       `💾 Auto VCF: *${s.autoVcf ? "✅ ON" : "❌ OFF"}*\n` +
       `🔑 Kode Unik: *${s.kodeUnik ? "✅ ON" : "❌ OFF"}*\n` +
       `📱 VCF Target: *${s.vcfTarget === "private" ? "Private" : "Group"}*\n` +
       `👑 Skip Admin: *${s.skipAdmin ? "✅ ON" : "❌ OFF"}*\n` +
       `⏱️ Jeda: *${s.jeda}ms (${(s.jeda / 1000).toFixed(1)}s)*\n\n` +
-      `🔑 *ᴀᴋꜱᴇꜱ:* Owner only`,
+      `🔑 *akses:* Owner only`,
       buttons,
     ),
     { quoted: m },
@@ -600,13 +600,13 @@ async function startPush(m, sock, text) {
       m.chat,
       nativeFlowMsg(
         m,
-        `📢 *ᴘᴜꜱʜ ᴋᴏɴᴛᴀᴋ ᴅɪᴍᴜʟᴀɪ*\n\n` +
-        `📝 *ᴘᴇꜱᴀɴ:* ${text.substring(0, 80)}${text.length > 80 ? "..." : ""}\n` +
-        `👥 *ᴛᴀʀɢᴇᴛ:* ${participants.length} member\n` +
-        `⏱️ *ᴊᴇᴅᴀ:* ${jedaPush}ms\n` +
-        `📊 *ᴇꜱᴛɪᴍᴀꜱɪ:* ${estimasi} menit\n` +
-        `💾 *ᴀᴜᴛᴏ ᴠᴄꜰ:* ${s.autoVcf ? "ON" : "OFF"} | 🔑 *ᴋᴏᴅᴇ ᴜɴɪᴋ:* ${s.kodeUnik ? "ON" : "OFF"}\n\n` +
-        `🔄 *ᴍᴇᴍᴜʟᴀɪ ᴘᴜꜱʜ...*`,
+        `📢 *push kontak dimulai*\n\n` +
+        `📝 *pesan:* ${text.substring(0, 80)}${text.length > 80 ? "..." : ""}\n` +
+        `👥 *target:* ${participants.length} member\n` +
+        `⏱️ *jeda:* ${jedaPush}ms\n` +
+        `📊 *estimasi:* ${estimasi} menit\n` +
+        `💾 *auto vcf:* ${s.autoVcf ? "ON" : "OFF"} | 🔑 *kode unik:* ${s.kodeUnik ? "ON" : "OFF"}\n\n` +
+        `🔄 *memulai push...*`,
         buttons,
       ),
       { quoted: m },
@@ -660,12 +660,12 @@ async function startPush(m, sock, text) {
       m.chat,
       nativeFlowMsg(
         m,
-        `✅ *ᴘᴜꜱʜ ꜱᴇʟᴇꜱᴀɪ*\n\n` +
-        `✅ *ʙᴇʀʜᴀꜱɪʟ:* ${success}\n` +
-        `❌ *ɢᴀɢᴀʟ:* ${failed}\n` +
-        `📊 *ᴛᴏᴛᴀʟ:* ${participants.length}\n` +
-        `💾 *ᴋᴏɴᴛᴀᴋ:* ${saved.length} disimpan\n\n` +
-        `📱 *ꜰɪʟᴇ ᴠᴄꜰ ᴛᴇʟᴀʜ ᴅɪᴋɪʀɪᴍ ᴋᴇ ᴄʜᴀᴛ ᴘʀɪʙᴀᴅɪ*`,
+        `✅ *push selesai*\n\n` +
+        `✅ *berhasil:* ${success}\n` +
+        `❌ *gagal:* ${failed}\n` +
+        `📊 *total:* ${participants.length}\n` +
+        `💾 *kontak:* ${saved.length} disimpan\n\n` +
+        `📱 *file vcf telah dikirim ke chat pribadi*`,
         doneButtons,
       ),
       { quoted: m },
@@ -689,7 +689,7 @@ async function pushkontakAnswerHandler(m, sock) {
 
   if (["batal", "cancel", "batalkan"].includes(lowText)) {
     clearSession(m.sender);
-    m.reply(claraWrap("Pushkontak", `❌ *ꜱᴇꜱɪ ᴘᴜꜱʜ ᴋᴏɴᴛᴀᴋ ᴅɪʙᴀᴛᴀʟᴋᴀɴ*\n\n📢 *ᴋᴇᴛɪᴋ* ${m.prefix}pushkontak *ᴜɴᴛᴜᴋ ᴍᴇᴍᴜʟᴀɪ ʟᴀɢɪ*`));
+    m.reply(claraWrap("Pushkontak", `❌ *sesi push kontak dibatalkan*\n\n📢 *ketik* ${m.prefix}pushkontak *untuk memulai lagi*`));
     return true;
   }
 

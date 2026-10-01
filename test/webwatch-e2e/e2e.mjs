@@ -78,7 +78,7 @@ sent.length = 0;
 sites["https://berita.com"].body = "headline BARU banget\nini body";
 const nowRes = await lib.checkNow("chatA");
 check("17. checkNow: 1 changed terkirim ke chatA", nowRes.changed === 1 && sent.length === 1 && sent[0].chatId === "chatA");
-check("18. pesan alert ada judul+url+ukuran", /ᴡᴇʙ ᴡᴀᴛᴄʜᴇʀ/.test(sent[0].text) && sent[0].text.includes("https://berita.com") && sent[0].text.includes("char"));
+check("18. pesan alert ada judul+url+ukuran", /web watcher/.test(sent[0].text) && sent[0].text.includes("https://berita.com") && sent[0].text.includes("char"));
 
 // 11. removeWatch by nomor & url & not found
 const r6 = lib.removeWatch("chatA", "1");
@@ -116,10 +116,10 @@ await handler(mockM([]), { sock: mockSock });
 check("28. no-arg: help reply", replies.length === 1 && replies[0].length > 50);
 
 await handler(mockM(["salahurl"]), { sock: mockSock });
-check("29. url salah: ditolak", /ɢᴀᴋ ᴠᴀʟɪᴅ|gak valid/i.test(replies.at(-1)));
+check("29. url salah: ditolak", /gak valid|gak valid/i.test(replies.at(-1)));
 
 await handler(mockM(["https://berita.com"]), { sock: mockSock });
-check("30. add via command: mulai dipantau", replies.at(-1).includes("ᴍᴜʟᴀɪ ᴅɪᴘᴀɴᴛᴀᴜ"));
+check("30. add via command: mulai dipantau", replies.at(-1).includes("mulai dipantau"));
 
 await handler(mockM(["list"]), { sock: mockSock });
 check("31. list command: tampil", replies.at(-1).includes("https://berita.com"));
@@ -130,10 +130,10 @@ await handler(mockM(["now"]), { sock: mockSock });
 check("32. now command: alert masuk chat", sent.length === 1 && sent[0].chatId === "chatC");
 
 await handler(mockM(["stop", "https://berita.com"]), { sock: mockSock });
-check("33. stop command: berhenti", /ꜱᴛᴏᴘ ᴘᴀɴᴛᴀᴜ|stop pantau/i.test(replies.at(-1)) && lib.listWatches("chatC").length === 0);
+check("33. stop command: berhenti", /stop pantau|stop pantau/i.test(replies.at(-1)) && lib.listWatches("chatC").length === 0);
 
 await handler(mockM(["info"]), { sock: mockSock });
-check("34. info command: status", replies.at(-1).includes("ꜱᴛᴀᴛᴜꜱ"));
+check("34. info command: status", replies.at(-1).includes("status"));
 
 // cleanup state test
 fs.rmSync("src/database/auto/webwatch.json");

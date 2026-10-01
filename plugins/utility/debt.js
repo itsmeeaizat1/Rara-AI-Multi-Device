@@ -119,7 +119,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Jatuh tempo: " + formatDate(dueDate));
         const days = daysUntil(dueDate);
         if (days !== null) {
-          lines.push(days <= 0 ? "Status: *ᴊᴀᴛᴜʜ ᴛᴇᴍᴘᴏ*" : "Sisa: " + days + " hari");
+          lines.push(days <= 0 ? "Status: *jatuh tempo*" : "Sisa: " + days + " hari");
         }
       }
       lines.push("ID: `" + id + "`");
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Jatuh tempo: " + formatDate(dueDate));
         const days = daysUntil(dueDate);
         if (days !== null) {
-          lines.push(days <= 0 ? "Status: *ᴊᴀᴛᴜʜ ᴛᴇᴍᴘᴏ*" : "Sisa: " + days + " hari");
+          lines.push(days <= 0 ? "Status: *jatuh tempo*" : "Sisa: " + days + " hari");
         }
       }
       lines.push("ID: `" + id + "`");
@@ -280,7 +280,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Jumlah: *" + formatRupiah(debt.amount) + "*",
         "Keterangan: " + debt.desc,
         "Dibuat: " + formatDate(debt.createdAt),
-        "Status: " + (debt.settled ? "*ʟᴜɴᴀꜱ*" : "Belum lunas"),
+        "Status: " + (debt.settled ? "*lunas*" : "Belum lunas"),
       ];
 
       if (debt.dueDate) {
@@ -288,7 +288,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (!debt.settled) {
           const days = daysUntil(debt.dueDate);
           if (days !== null) {
-            lines.push(days <= 0 ? "*ᴊᴀᴛᴜʜ ᴛᴇᴍᴘᴏ*" : "Sisa: " + days + " hari");
+            lines.push(days <= 0 ? "*jatuh tempo*" : "Sisa: " + days + " hari");
           }
         }
       }

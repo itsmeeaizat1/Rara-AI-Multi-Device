@@ -81,9 +81,9 @@ async function handler(m, { sock }) {
 
   if (!name) {
     return m.reply(
-      `🎮 *ʙʟᴜᴇ ᴀʀᴄʜɪᴠᴇ ᴄʜᴀʀᴀᴄᴛᴇʀ*\n\n` +
+      `🎮 *blue archive character*\n\n` +
         `Lihat info character Blue Archive\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
+        `*contoh:*\n` +
         `${m.prefix}bluearchive-char shiroko\n` +
         `${m.prefix}bachar hoshino\n` +
         `${m.prefix}ba aru`,

@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("NHentai", [`Query: *${query}*`,
         `Hasil: *${resultText}*`,
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+        "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

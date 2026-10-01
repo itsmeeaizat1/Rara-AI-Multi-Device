@@ -527,7 +527,7 @@ async function handlerCore(m, { sock }) {
     const body = [];
     body.push("Multi-engine fallback: engine pertama yang sukses dipakai — winner dilapor di caption hasil.");
     body.push("");
-    body.push("「 ✦ ᴇɴɢɪɴᴇ ᴄʜᴀɪɴ ᴘᴇʀ ᴘʟᴀᴛꜰᴏʀᴍ ✦ 」");
+    body.push("「 ✦ engine chain per platform ✦ 」");
     for (const [key, chain] of Object.entries(CHAINS)) {
       const p = PLATFORMS[key] || { icon: "🌐", name: "Generic/Lainnya" };
       body.push(`${p.icon} ${toSC(p.name)} — ${chain.map((c) => ENGINES[c].name).join(" → ")}`);
@@ -611,7 +611,7 @@ async function handlerCore(m, { sock }) {
   body.push(`✅ Berhasil: ${okCount}/${batch.length} link` + (skipped ? ` (skip ${skipped} link di atas limit ${MAX_BATCH})` : ""));
   if (failLogs.length) {
     body.push("");
-    body.push("「 ✦ ʏᴀɴɢ ɢᴀɢᴀʟ ✦ 」");
+    body.push("「 ✦ yang gagal ✦ 」");
     for (const l of failLogs) body.push("❌ " + l);
   }
   if (batch.length > 1 || failLogs.length || skipped) {

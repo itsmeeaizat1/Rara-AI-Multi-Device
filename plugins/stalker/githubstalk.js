@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `🐙 *ɢɪᴛʜᴜʙ ꜱᴛᴀʟᴋ*\n\nMasukkan username GitHub\n\n\`Contoh: ${m.prefix}githubstalk torvalds\``; return await m.reply( __navText, "githubstalk"); }
+        { const __navText = `🐙 *github stalk*\n\nMasukkan username GitHub\n\n\`Contoh: ${m.prefix}githubstalk torvalds\``; return await m.reply( __navText, "githubstalk"); }
     }
     try {
         const res = await axios.get(`https://firefly.maiku.my.id/api/stalk-github?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`, {
@@ -37,15 +37,15 @@ async function handler(m, { sock }) {
         
         const d = res.data.data
         
-        const caption = `🐙 *ɢɪᴛʜᴜʙ ꜱᴛᴀʟᴋ*\n\n` +
-            `👤 *ᴜꜱᴇʀɴᴀᴍᴇ:* ${d.username}\n` +
-            `📛 *ɴᴀᴍᴀ:* ${d.name || '-'}\n` +
-            `🏢 *ᴄᴏᴍᴘᴀɴʏ:* ${d.company || '-'}\n` +
-            `📍 *ʟᴏᴄᴀᴛɪᴏɴ:* ${d.location || '-'}\n\n` +
-            `📦 *ᴘᴜʙʟɪᴄ ʀᴇᴘᴏꜱ:* ${d.public_repos}\n` +
-            `👥 *ꜰᴏʟʟᴏᴡᴇʀꜱ:* ${d.followers}\n` +
-            `👤 *ꜰᴏʟʟᴏᴡɪɴɢ:* ${d.following}\n\n` +
-            `📝 *ʙɪᴏ:*\n${d.bio || '-'}\n\n` +
+        const caption = `🐙 *github stalk*\n\n` +
+            `👤 *username:* ${d.username}\n` +
+            `📛 *nama:* ${d.name || '-'}\n` +
+            `🏢 *company:* ${d.company || '-'}\n` +
+            `📍 *location:* ${d.location || '-'}\n\n` +
+            `📦 *public repos:* ${d.public_repos}\n` +
+            `👥 *followers:* ${d.followers}\n` +
+            `👤 *following:* ${d.following}\n\n` +
+            `📝 *bio:*\n${d.bio || '-'}\n\n` +
             `🔗 ${d.url}`
         await sock.sendMessage(m.chat, {
             image: { url: d.avatar },

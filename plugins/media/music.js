@@ -27,7 +27,7 @@ async function handler(m, { sock, command }) {
     const num = parseInt(musicNum)
     
     if (isNaN(num) || num < 1 || num > 65) {
-        { const __navText = `🎵 *ᴍᴜꜱɪᴄ ᴄᴏʟʟᴇᴄᴛɪᴏɴ*\n\nTersedia: .music1 - .music65`; return await m.reply(__navText); }
+        { const __navText = `🎵 *music collection*\n\nTersedia: .music1 - .music65`; return await m.reply(__navText); }
     }
     const musicUrl = `https://raw.githubusercontent.com/Rez4-3yz/Music-rd/master/music/music${num}.mp3`
     try {
@@ -37,7 +37,7 @@ async function handler(m, { sock, command }) {
             ptt: false
         })
     } catch (err) {
-        m.reply(claraWrap("music", `❌ *ᴇʀʀᴏʀ*\n\nMusik tidak ditemukan atau gagal diambil.`))
+        m.reply(claraWrap("music", `❌ *error*\n\nMusik tidak ditemukan atau gagal diambil.`))
     }
 }
 

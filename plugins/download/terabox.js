@@ -87,7 +87,7 @@ const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title
 
     const text =
       claraWrap("Terabox", [`Link: *${url}*`,
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+        "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}terabox <link> untuk download file lain`);
 

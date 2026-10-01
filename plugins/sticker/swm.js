@@ -41,9 +41,9 @@ async function handler(m, { sock, config: botConfig }) {
     
     const input = m.text?.trim()
     if (!input) {
-        return m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
+        return m.reply( `❌ *gagal*\n\n` +
             `Masukkan packname\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*contoh:*\n` +
             `\`${m.prefix}swm Nova-AI\`\n` +
             `\`${m.prefix}swm Nova-AI|LuckyArchz\` _(+ author)_`, "swm")
     }

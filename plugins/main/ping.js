@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
       { label: "DNS", value: getDnsServers() }
     );
 
-    await m.reply(`🏓 ᴘᴏɴɢ! (${execTime}ms)\n\n` + novaInfoSections(info));
+    await m.reply(`🏓 pong! (${execTime}ms)\n\n` + novaInfoSections(info));
   } catch (error) {
     await m.reply(novaError("ping", error.message));
   }

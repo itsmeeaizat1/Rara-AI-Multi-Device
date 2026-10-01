@@ -48,7 +48,7 @@ async function getDiskUsage() {
             const { stdout } = await execAsync('df -h /');
             const lines = stdout.trim().split('\n');
             const parts = lines[1].replace(/\s+/g, ' ').split(' ');
-            return `💿 *ᴅɪꜱᴋ ᴜꜱᴀɢᴇ*\nTotal: ${parts[1]}\nUsed: ${parts[2]}\nFree: ${parts[3]}\nUse%: ${parts[4]}`;
+            return `💿 *disk usage*\nTotal: ${parts[1]}\nUsed: ${parts[2]}\nFree: ${parts[3]}\nUse%: ${parts[4]}`;
         }
     } catch (e) {
         return 'Gagal ambil info disk nih';
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
                 const freeMem = os.freemem();
                 const usedMem = totalMem - freeMem;
                 
-                const text = `💻 *ʀᴀᴍ ᴜꜱᴀɢᴇ*\n\n` +
+                const text = `💻 *ram usage*\n\n` +
                              `Total: ${formatSize(totalMem)}\n` +
                              `Used: ${formatSize(usedMem)}\n` +
                              `Free: ${formatSize(freeMem)}\n` +
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
                 const speed = cpus[0].speed;
                 const cores = cpus.length;
                 
-                const text = `🖥️ *ᴄᴘᴜ ɪɴꜰᴏ*\n\n` +
+                const text = `🖥️ *cpu info*\n\n` +
                              `Model: ${model}\n` +
                              `Speed: ${speed} MHz\n` +
                              `Cores: ${cores} Core(s)\n` +

@@ -136,8 +136,8 @@ async function handler(m, { sock }) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
         `\n` +
-        `*ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ:* ${srcDuration.toFixed(1)}s\n` +
-        `*ᴍɪɴɪᴍᴀʟ ᴡᴀᴊɪʙ:* ${SRC_MIN_DURATION}s\n` +
+        `*durasi video:* ${srcDuration.toFixed(1)}s\n` +
+        `*minimal wajib:* ${SRC_MIN_DURATION}s\n` +
         `\n` +
         `Video sumber terlalu pendek! Minimal ${SRC_MIN_DURATION}s biar efek live-nya kelihatan dan pas.`
       );
@@ -170,8 +170,8 @@ async function handler(m, { sock }) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
         `\n` +
-        `*ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
-        `*ᴍɪɴɪᴍᴀʟ:* ${OUT_MIN_DURATION}s (wajib)\n` +
+        `*diminta:* ${duration}s\n` +
+        `*minimal:* ${OUT_MIN_DURATION}s (wajib)\n` +
         `\n` +
         `Durasi output minimal ${OUT_MIN_DURATION}s wajib biar efek live pas!`
       );
@@ -182,8 +182,8 @@ async function handler(m, { sock }) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
         `\n` +
-        `*ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
-        `*ᴍᴀᴋꜱɪᴍᴀʟ:* ${OUT_MAX_DURATION}s\n` +
+        `*diminta:* ${duration}s\n` +
+        `*maksimal:* ${OUT_MAX_DURATION}s\n` +
         `\n` +
         `Durasi output maksimal ${OUT_MAX_DURATION}s untuk performa optimal.`
       );
@@ -246,11 +246,11 @@ async function handler(m, { sock }) {
       gifPlayback: true,
       caption:
         `\n` +
-        `*ᴅᴜʀᴀꜱɪ:* ${durLabel}\n` +
-        `*ʀᴇꜱᴏʟᴜꜱɪ:* ${resolution}p\n` +
-        `*ꜰᴘꜱ:* ${fps}\n` +
-        `*ᴜᴋᴜʀᴀɴ:* ${formatSize(liveSize)}\n` +
-        (wasTrimmed ? `*ᴛʀɪᴍᴍᴇᴅ:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : ''),
+        `*durasi:* ${durLabel}\n` +
+        `*resolusi:* ${resolution}p\n` +
+        `*fps:* ${fps}\n` +
+        `*ukuran:* ${formatSize(liveSize)}\n` +
+        (wasTrimmed ? `*trimmed:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : ''),
     }, { quoted: m });
 
     // Cleanup output
@@ -266,7 +266,7 @@ async function handler(m, { sock }) {
 
     await m.reply(
       `\n` +
-      `*ᴇʀʀᴏʀ:* ${errMsg}\n` +
+      `*error:* ${errMsg}\n` +
       `\n` +
       `Coba video lain atau durasi lebih pendek.`
     );

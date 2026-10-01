@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     await m.react("🕒");
         const isImage = m.isImage || (m.quoted && m.quoted.isImage);
         if (!isImage) {
-            return m.reply(claraWrap("Removebg", '❌ *ɢᴀᴍʙᴀʀ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\nReply atau kirim gambar dengan caption .removebg'));
+            return m.reply(claraWrap("Removebg", '❌ *gambar dibutuhkan*\n\nReply atau kirim gambar dengan caption .removebg'));
         }
         let mediaBuffer;
         if (m.isImage && m.download) {
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         await sock.sendMessage(m.chat, {
             image: result,
-            caption: `✅ *ʙᴀᴄᴋɢʀᴏᴜɴᴅ ᴅɪʜᴀᴘᴜꜱ*\n\nBackground gambar berhasil dihapus`
+            caption: `✅ *background dihapus*\n\nBackground gambar berhasil dihapus`
         }, { quoted: m });
         try {
             fs.unlinkSync(pathnya);

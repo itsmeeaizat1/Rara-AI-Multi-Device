@@ -66,22 +66,22 @@ Gunakan bahasa Indonesia santai. Ramalan harus positif, jangan menakut-nakuti.`;
 
 `;
       } else if (t.startsWith("RAMALAN:")) {
-        formatted += `🔮 *ʀᴀᴍᴀʟᴀɴ*
+        formatted += `🔮 *ramalan*
 ${t.replace("RAMALAN:", "").trim()}
 
 `;
       } else if (t.startsWith("PERINGATAN:")) {
-        formatted += `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*
+        formatted += `⚠️ *peringatan*
 ${t.replace("PERINGATAN:", "").trim()}
 
 `;
       } else if (t.startsWith("KEBERUNTUNGAN:")) {
-        formatted += `🍀 *ᴋᴇʙᴇʀᴜɴᴛᴜɴɢᴀɴ*
+        formatted += `🍀 *keberuntungan*
 ${t.replace("KEBERUNTUNGAN:", "").trim()}
 
 `;
       } else if (t.startsWith("PESAN:")) {
-        formatted += `💬 *ᴘᴇsᴀɴ ᴅᴜᴋᴜɴ*
+        formatted += `💬 *pesan dukun*
 ${t.replace("PESAN:", "").trim()}\n`;
       } else {
         formatted += `${t}\n`;

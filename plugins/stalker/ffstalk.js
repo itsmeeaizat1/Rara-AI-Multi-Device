@@ -41,10 +41,10 @@ async function handler(m, { sock }) {
 
     const r = data.result;
     
-    let caption = `🔥 *ꜰʀᴇᴇ ꜰɪʀᴇ ꜱᴛᴀʟᴋ - ᴘʀᴏꜰɪʟᴇ ɪɴꜰᴏ* 🔥\n\n`;
+    let caption = `🔥 *free fire stalk - profile info* 🔥\n\n`;
     caption += `Halo! Ini dia hasil pencarian profil untuk UID *${r.uid}*:\n\n`;
     
-    caption += `👤 *ɪɴꜰᴏ ᴅᴀꜱᴀʀ*\n`;
+    caption += `👤 *info dasar*\n`;
     caption += `  - Nama: *${r.name || "-"}*\n`;
     caption += `  - Level: ${r.level || "-"} (EXP: ${r.exp || "-"})\n`;
     caption += `  - Region: ${r.region || "-"}\n`;
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     caption += `  - Akun Dibuat: ${r.created_at || "-"}\n`;
     caption += `  - Terakhir Login: ${r.last_login || "-"}\n\n`;
     
-    caption += `🛡️ *ɢᴜɪʟᴅ ɪɴꜰᴏ*\n`;
+    caption += `🛡️ *guild info*\n`;
     caption += `  - Nama Guild: ${r.guild_name && r.guild_name !== "None" ? r.guild_name : "Tidak ada guild"}\n`;
     if (r.guild_name && r.guild_name !== "None") {
       caption += `  - Level Guild: ${r.guild_level || "-"}\n`;
@@ -68,11 +68,11 @@ async function handler(m, { sock }) {
     }
     caption += `\n`;
     
-    caption += `🐾 *ᴘᴇᴛ ɪɴꜰᴏ*\n`;
+    caption += `🐾 *pet info*\n`;
     caption += `  - Pet Level: ${r.pet_level || "-"}\n`;
     caption += `  - Pet EXP: ${r.pet_exp || "-"}\n\n`;
     
-    caption += `🔧 *ʟᴀɪɴɴʏᴀ*\n`;
+    caption += `🔧 *lainnya*\n`;
     caption += `  - Bahasa: ${r.language ? r.language.replace("Language_", "") : "-"}\n`;
     caption += `  - Mode Favorit: ${r.mode_prefer ? r.mode_prefer.replace("ModePrefer_", "") : "-"}\n\n`;
 
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     }
   } catch (error) {
     console.error("[FFStalk]", error.message);
-    m.reply(claraWrap("ffstalk", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menarik data dari server Free Fire. Silakan coba beberapa saat lagi ya."));
+    m.reply(claraWrap("ffstalk", "😔 *terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Free Fire. Silakan coba beberapa saat lagi ya."));
   }
 }
 

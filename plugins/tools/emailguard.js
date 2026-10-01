@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
     if (!result.valid) {
       return m.reply(claraWrap("Email Guard", [
         "Email: " + email,
-        "Status: *ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*",
+        "Status: *tidak valid*",
         "",
         result.errors.join("\n"),
       ], "warn"));
@@ -191,7 +191,7 @@ async function handler(m, { sock }) {
     ];
 
     if (result.disposable) {
-      lines.push("*ᴅɪꜱᴘᴏꜱᴀʙʟᴇ/ᴛᴇᴍᴘ ᴍᴀɪʟ*");
+      lines.push("*disposable/temp mail*");
       lines.push("Email ini sekali pakai — tidak boleh dipakai untuk akun penting!");
       lines.push("");
     }

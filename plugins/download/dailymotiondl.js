@@ -60,11 +60,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply( `🎬 *ᴅᴀɪʟʏᴍᴏᴛɪᴏɴ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
+    return m.reply( `🎬 *dailymotion downloader*\n\n` +
         `Download video dari Dailymotion, otomatis dikonversi ke MP4.\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+        `*cara pakai:*\n` +
         `*${m.prefix}dailymotiondl <link>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
+        `*contoh:*\n` +
         `*${m.prefix}dailymotiondl https://www.dailymotion.com/video/xxx*\n\n` +
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }

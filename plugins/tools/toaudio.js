@@ -60,15 +60,15 @@ async function handler(m, { sock }) {
     }
     
     if (!mediaSource) {
-        await m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
+        await m.reply( `❌ *gagal*\n\n` +
             `Tidak ada video/voice note yang terdeteksi!\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
+            `*cara penggunaan:*\n` +
             `1. Kirim video + caption \`${m.prefix}toaudio\`\n` +
             `2. Reply video/VN dengan \`${m.prefix}toaudio\``, "toaudio")
         return
     }
     if (!isVideo && !isPtt) {
-        await m.reply( `⚠️ *ꜱᴜᴅᴀʜ ᴀᴜᴅɪᴏ*\n\n` +
+        await m.reply( `⚠️ *sudah audio*\n\n` +
             `Media ini sudah dalam format audio.\n` +
             `Gunakan \`${m.prefix}tovn\` jika ingin mengubah ke voice note.`, "toaudio")
         return
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            await m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
+            await m.reply( `❌ *gagal*\n\n` +
                 `Tidak dapat mengunduh media.\n` +
                 `Media mungkin sudah tidak tersedia.`, "toaudio")
             return
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -vn -ar 44100 -ac 2 -b:a 192k "${outputPath}"`)
 
         if (!fs.existsSync(outputPath)) {
-            await m.reply(claraWrap("toaudio", `❌ *ᴋᴏɴᴠᴇʀꜱɪ ɢᴀɢᴀʟ*\n\n` +
+            await m.reply(claraWrap("toaudio", `❌ *konversi gagal*\n\n` +
                 `Gagal mengekstrak audio dari media.\n` +
                 `Pastikan ffmpeg terinstall dengan benar.`))
             return
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
     } catch (error) {
         await m.reply(
-            `❌ *ᴇʀʀᴏʀ*\n\n` +
+            `❌ *error*\n\n` +
             `Terjadi kesalahan saat memproses.\n` +
             `_${error.message}_`
         )

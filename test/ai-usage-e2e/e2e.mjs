@@ -10,8 +10,9 @@ import { config as provConfig, handler as provHandler } from "../../plugins/ai/a
 let pass = 0, fail = 0;
 const w = (s) => process.stdout.write(s + "\n");
 const check = (name, ok, extra) => { w((ok ? "  ✅" : "  ❌") + " " + name + (ok ? "" : extra ? ` — ${extra}` : "")); ok ? pass++ : fail++; };
-const SC_MAP = { a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', r: 'ʀ', s: 'ꜱ', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', y: 'ʏ', z: 'ᴢ' };
-const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+const SC_MAP = { a: 'a', b: 'b', c: 'c', d: 'd', e: 'e', f: 'f', g: 'g', h: 'h', i: 'i', j: 'j', k: 'k', l: 'l', m: 'm', n: 'n', o: 'o', p: 'p', r: 'r', s: 's', t: 't', u: 'u', v: 'v', w: 'w', y: 'y', z: 'z' };
+// UPDATE 1 Okt: teks bot kini plain — toSC lokal jadi passthrough
+const toSC = (s) => String(s ?? "");
 
 const providers = getAllProviders();
 
@@ -21,19 +22,19 @@ w("\n— novaAiUsage gemini (V2) —");
   const p = providers.gemini;
   const out = novaAiUsage("gemini", { prefix: ".", command: "gemini", modelAktif: p.defaultModel, models: p.models });
   const lines = out.split("\n");
-  check("header 「✧ ɢᴇᴍɪɴɪ ✧」", lines[0] === `「✧ ${toSC("gemini")} ✧」`, lines[0]);
-  check("kaomoji + nama!! (baris cute)", /ɢᴇᴍɪɴɪ!!/.test(lines[1]) && /\(/.test(lines[1]), lines[1]);
-  check("📍 ᴄᴀʀᴀ: baris sendiri", lines[3] === `📍 ${toSC("Cara")}: .gemini [pertanyaan]`, lines[3]);
-  check("ᴄᴏɴᴛᴏʜ: baris sendiri VERBATIM", lines[4] === `${toSC("Contoh")}: .gemini apa itu AI?`, lines[4]);
+  check("header 「✧ gemini ✧」", lines[0] === `「✧ ${toSC("gemini")} ✧」`, lines[0]);
+  check("kaomoji + nama!! (baris cute)", /gemini!!/.test(lines[1]) && /\(/.test(lines[1]), lines[1]);
+  check("📍 cara: baris sendiri", lines[3] === `📍 ${toSC("Cara")}: .gemini [pertanyaan]`, lines[3]);
+  check("contoh: baris sendiri VERBATIM", lines[4] === `${toSC("Contoh")}: .gemini apa itu AI?`, lines[4]);
   const iModel = lines.findIndex((l) => l.startsWith(`✨ ${toSC("Model aktif")}:`));
-  check("✨ ᴍᴏᴅᴇʟ ᴀᴋᴛɪꜰ: section ada", iModel > -1);
+  check("✨ model aktif: section ada", iModel > -1);
   check("model aktif = auto-latest (verbatim, bukan smallcaps)", iModel > -1 && lines[iModel].endsWith("auto-latest"), lines[iModel]);
   const iList = lines.indexOf(`📋 ${toSC("Model tersedia")}:`);
-  check("📋 ᴍᴏᴅᴇʟ ᴛᴇʀꜱᴇᴅɪᴀ: section ada", iList > -1);
+  check("📋 model tersedia: section ada", iList > -1);
   const listed = lines.slice(iList + 1).filter((l) => l.trim());
   check("8 model ter-list semuanya (verbatim, bukan smallcaps)", listed.length === 8 && listed[0].trim() === "gemini-3.7-flash" && listed[7].trim() === "gemini-2.5-flash-lite");
   check("urutan model sesuai owner", listed.map((l) => l.trim()).join(",") === "gemini-3.7-flash,gemini-3.6-flash,gemini-3.5-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-2.5-pro,gemini-2.5-flash,gemini-2.5-flash-lite");
-  check("nama model TIDAK di-smallcaps", !listed.some((l) => l.includes("ɢ")));
+  check("nama model TIDAK di-smallcaps", !listed.some((l) => /[ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘʀꜱᴛᴜᴠᴡʏᴢ]/.test(l)));
 }
 
 // ─── 2. RENDER provider lain (openai / tanpa model) ───

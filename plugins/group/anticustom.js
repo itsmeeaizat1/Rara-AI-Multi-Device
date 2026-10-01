@@ -149,14 +149,14 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
   refreshSessionTimeout(sessionKey);
 
   const intro = isFirstSetup
-    ? `🛡️ *ꜱᴇʟᴀᴍᴀᴛ ᴅᴀᴛᴀɴɢ ᴅɪ ꜱᴇᴛᴜᴘ ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ*\n\n` +
+    ? `🛡️ *selamat datang di setup anticustom*\n\n` +
       `Aku akan bantu bikin AntiCustom per sesi, langkah demi langkah.\n\n` +
-      `*ᴀʟᴜʀɴʏᴀ:*\n` +
+      `*alurnya:*\n` +
       `1. Tentukan judul rule\n` +
       `2. Isi kata atau pattern yang ingin dideteksi\n` +
       `3. Pilih action saat terdeteksi\n` +
       `4. Konfirmasi detail akhir\n\n`
-    : `🛡️ *ʏᴜᴋ ᴛᴀᴍʙᴀʜ ʀᴜʟᴇ ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ʙᴀʀᴜ*\n\n`;
+    : `🛡️ *yuk tambah rule anticustom baru*\n\n`;
 
   session.promptId = await sendPrompt(
     sock,
@@ -171,7 +171,7 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
 
 function buildGuideMessage(m, status, mode, rules) {
   return (
-    `🛡️ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ*\n\n` +
+    `🛡️ *anticustom*\n\n` +
     `Status: *${status.toUpperCase()}*\n` +
     `Mode default: *${normalizeAction(mode).toUpperCase()}*\n` +
     `Total rule: *${rules.length}*\n\n` +
@@ -226,13 +226,13 @@ async function handler(m, { sock }) {
 
   if (sub === "on") {
     db.setGroup(m.chat, { anticustom: "on" });
-    await m.reply(claraWrap("Anticustom", "✅ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*"));
+    await m.reply(claraWrap("Anticustom", "✅ *anticustom diaktifkan*"));
     return;
   }
 
   if (sub === "off") {
     db.setGroup(m.chat, { anticustom: "off" });
-    await m.reply(claraWrap("Anticustom", "❌ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*"));
+    await m.reply(claraWrap("Anticustom", "❌ *anticustom dinonaktifkan*"));
     return;
   }
 
@@ -320,13 +320,13 @@ async function replyHandler(m, { sock }) {
         `Oke, judulnya *${session.title}*.\n\n` +
         `Sekarang, berikan kata-kata yang ingin dideteksi oleh aku.\n\n` +
         `Kamu bisa pilih salah satu format:\n` +
-        `*ᴄᴏɴᴛᴀɪɴꜱ*: kirim kata dipisah koma atau baris baru\n` +
-        `*ʀᴇɢᴇx*: awali jawaban dengan \`regex:\`\n\n` +
+        `*contains*: kirim kata dipisah koma atau baris baru\n` +
+        `*regex*: awali jawaban dengan \`regex:\`\n\n` +
         `Contoh contains:\n` +
         `\`anjing, goblok, tolol\`\n\n` +
         `Contoh regex:\n` +
         `\`regex: (anj|anjing|a+n+j+)\`\n\n` +
-        `*ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ᴅᴇɴɢᴀɴ ᴊᴀᴡᴀʙᴀɴᴍᴜ*`,
+        `*reply pesan ini dengan jawabanmu*`,
     );
     return true;
   }
@@ -348,8 +348,8 @@ async function replyHandler(m, { sock }) {
         `Berarti kamu mau ini ya:\n` +
         `${session.patterns.map((item, index) => `${index + 1}. \`${item}\``).join("\n")}\n\n` +
         `Tipe deteksi: *${session.type}*\n\n` +
-        `Oke siap, kalau pesan member mengandung kata-kata itu, kamu ingin aku *ʜᴀᴘᴜꜱ ᴘᴇꜱᴀɴ* atau langsung *ᴋɪᴄᴋ*?\n\n` +
-        `*ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ᴅᴇɴɢᴀɴ:* \`hapus\` atau \`kick\``,
+        `Oke siap, kalau pesan member mengandung kata-kata itu, kamu ingin aku *hapus pesan* atau langsung *kick*?\n\n` +
+        `*reply pesan ini dengan:* \`hapus\` atau \`kick\``,
     );
     return true;
   }
@@ -370,7 +370,7 @@ async function replyHandler(m, { sock }) {
         `Oke siap, berikut detail yang kamu mau:\n\n` +
         `${buildSummary(session)}\n\n` +
         `Apakah sudah sesuai?\n\n` +
-        `*ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ᴅᴇɴɢᴀɴ:* \`ya\` untuk simpan atau \`batal\` untuk membatalkan`,
+        `*reply pesan ini dengan:* \`ya\` untuk simpan atau \`batal\` untuk membatalkan`,
     );
     return true;
   }
@@ -427,7 +427,7 @@ async function replyHandler(m, { sock }) {
       m.chat,
       {
         text:
-          `✅ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ʙᴇʀʜᴀꜱɪʟ ᴅɪʙᴜᴀᴛ*\n\n` +
+          `✅ *anticustom berhasil dibuat*\n\n` +
           `${buildSummary(session)}\n\n` +
           `Status otomatis: *ON*\n` +
           `Total rule baru: *${generatedRules.length}*\n\n` +

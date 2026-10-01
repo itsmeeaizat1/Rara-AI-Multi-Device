@@ -30,16 +30,16 @@ async function handler(m, { sock }) {
 
   if (!trxId) {
     return m.reply(
-      `✅ *ᴋᴏɴꜰɪʀᴍᴀꜱɪ ᴛʀᴀɴꜱᴀᴋꜱɪ*\n\n` +
+      `✅ *konfirmasi transaksi*\n\n` +
         `📋 Format: \`${m.prefix}done <nomor_trx>\`\n\n` +
-        `📌 *ᴄᴀʀᴀ ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
+        `📌 *cara penggunaan:*\n` +
         `1️⃣ Reply pesan dari pembeli (yang sudah membayar 💰)\n` +
         `2️⃣ Ketik \`${m.prefix}done TRX-001\`\n\n` +
         `🤖 Bot akan otomatis:\n` +
         `Mengirim data produk ke nomor pembeli 📤\n` +
         `Menandai transaksi sebagai selesai ✅\n` +
         `Mengirim notifikasi ke pembeli 🔔\n\n` +
-        `🧾 *ɴᴏᴍᴏʀ ᴛʀᴀɴꜱᴀᴋꜱɪ* didapat ketika pembeli melakukan \`${m.prefix}beli <nomor_produk>\`\n\n` +
+        `🧾 *nomor transaksi* didapat ketika pembeli melakukan \`${m.prefix}beli <nomor_produk>\`\n\n` +
         `⚠️ _Pastikan Anda sudah menerima bukti pembayaran sebelum konfirmasi_ 📸`,
     );
   }
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
     if (pending.length > 0) {
       let txt = `❌ *Transaksi \`${trxId}\` tidak ditemukan.*\n\n`;
-      txt += `🕒 *ᴛʀᴀɴꜱᴀᴋꜱɪ ᴘᴇɴᴅɪɴɢ ꜱᴀᴀᴛ ɪɴɪ:*\n\n`;
+      txt += `🕒 *transaksi pending saat ini:*\n\n`;
       for (const t of pending) {
         const typeIcon = t.productType === "fisik" ? "📦" : "🔑";
         const time = new Date(t.createdAt).toLocaleString("id-ID", {
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
 
   if (trx.status === "completed") {
     return m.reply(
-      `⚠️ *ᴛʀᴀɴꜱᴀᴋꜱɪ ꜱᴜᴅᴀʜ ꜱᴇʟᴇꜱᴀɪ.*\n\n` +
+      `⚠️ *transaksi sudah selesai.*\n\n` +
         `🧾 TRX: \`${trxId}\`\n` +
         `${trx.productType === "fisik" ? "📦" : "🔑"} Produk: *${trx.productName}*\n` +
         `👤 Pembeli: ${trx.buyerName}\n` +
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
 
   if (!buyerJid) {
     return m.reply(
-      `❌ *ᴛɪᴅᴀᴋ ᴅᴀᴘᴀᴛ ᴍᴇɴᴇᴍᴜᴋᴀɴ ɴᴏᴍᴏʀ ᴘᴇᴍʙᴇʟɪ.*\n\nTransaksi ini tidak memiliki data pembeli yang valid 📱`,
+      `❌ *tidak dapat menemukan nomor pembeli.*\n\nTransaksi ini tidak memiliki data pembeli yang valid 📱`,
     );
   }
 
@@ -148,16 +148,16 @@ async function handler(m, { sock }) {
   const typeIcon = trx.productType === "fisik" ? "📦" : "🔑";
   const typeLabel = trx.productType === "fisik" ? "Fisik" : "Digital";
 
-  let invoiceTxt = `🎉 *ᴛʀᴀɴꜱᴀᴋꜱɪ ʙᴇʀʜᴀꜱɪʟ*\n\n`;
+  let invoiceTxt = `🎉 *transaksi berhasil*\n\n`;
   invoiceTxt += `🕐 Waktu: \`${timeStr}\`\n`;
-  invoiceTxt += `✅ Status: *ʙᴇʀʜᴀꜱɪʟ*\n\n`;
-  invoiceTxt += `📦 *ᴅᴇᴛᴀɪʟ ᴘᴇꜱᴀɴᴀɴ:*\n`;
+  invoiceTxt += `✅ Status: *berhasil*\n\n`;
+  invoiceTxt += `📦 *detail pesanan:*\n`;
   invoiceTxt += `${typeIcon} Produk: *${trx.productName}*\n`;
   invoiceTxt += `🏷️ Tipe: *${typeLabel}*\n`;
   invoiceTxt += `💰 Harga: *${formatPrice(trx.price)}*\n\n`;
 
   if (stockItemDetail) {
-    invoiceTxt += `🔑 *ᴅᴀᴛᴀ ᴘʀᴏᴅᴜᴋ:*\n\`\`\`\n${stockItemDetail}\n\`\`\`\n\n`;
+    invoiceTxt += `🔑 *data produk:*\n\`\`\`\n${stockItemDetail}\n\`\`\`\n\n`;
     invoiceTxt += `⚠️ _Simpan data di atas dengan baik. Jangan bagikan ke siapapun_ 🔒\n\n`;
   } else if (trx.productType === "fisik") {
     invoiceTxt += `📦 _Produk fisik akan dikirim oleh admin. Silakan konfirmasi alamat pengiriman._\n\n`;
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[Done] Failed to send to buyer:", buyerJid, e.message);
     await m.reply(
-      `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢɪʀɪᴍ ᴋᴇ ᴘᴇᴍʙᴇʟɪ.*\n\n📱 Nomor: \`${buyerNum}\`\n\n_Kemungkinan pembeli belum menyimpan nomor bot. Kirim manual data berikut:_\n\n${invoiceTxt}`,
+      `❌ *gagal mengirim ke pembeli.*\n\n📱 Nomor: \`${buyerNum}\`\n\n_Kemungkinan pembeli belum menyimpan nomor bot. Kirim manual data berikut:_\n\n${invoiceTxt}`,
     );
   }
 
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
       );
     }
   }
-  let confirmTxt = `✅ *ᴛʀᴀɴꜱᴀᴋꜱɪ ᴅɪᴋᴏɴꜰɪʀᴍᴀꜱɪ*\n\n`;
+  let confirmTxt = `✅ *transaksi dikonfirmasi*\n\n`;
   confirmTxt += `🧾 TRX: \`${trxId}\`\n`;
   confirmTxt += `${typeIcon} Produk: *${trx.productName}*\n`;
   confirmTxt += `👤 Pembeli: *${trx.buyerName}*\n`;

@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
       }
 
       msg += `\n`;
-      msg += `📊 *ᴛᴏᴛᴀʟ ʙᴏɴᴜs*\n`;
+      msg += `📊 *total bonus*\n`;
       msg += `ATK: *+${equip.atk}*\n`;
       msg += `DEF: *+${equip.def}*\n`;
       msg += `HP: *+${equip.hp}*\n`;
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         msg += `📦 Item: *${itemInfo.name}*\n`;
         msg += `🎒 Slot: *${SLOT_NAMES[itemInfo.type] || itemInfo.type}*\n`;
         msg += `\n`;
-        msg += `📊 *sᴛᴀᴛ ʙᴏɴᴜs*\n`;
+        msg += `📊 *stat bonus*\n`;
         if (itemInfo.atk) msg += `⚔️ ATK: *+${itemInfo.atk}*\n`;
         if (itemInfo.def) msg += `🛡️ DEF: *+${itemInfo.def}*\n`;
         if (itemInfo.hp) msg += `❤️ HP: *+${itemInfo.hp}*\n`;

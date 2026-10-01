@@ -50,7 +50,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("URL Shortener", [`Original: *${url}*`,
         `Short: *${short}*`,
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+        "Status: *berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}urlshortener <link> untuk pendekkan lagi`) +
       "\n" +

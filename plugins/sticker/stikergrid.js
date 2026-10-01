@@ -191,7 +191,7 @@ async function handler(m, { sock, db }) {
         await m.reply(
           claraWrap(
             "Stiker Grid",
-            `Foto ${count}/${MIN_PHOTOS} terkumpul.\nKirim ${MIN_PHOTOS - count} foto lagi, atau kirim ${MAX_PHOTOS - count} foto maksimal.\n\nKetik *ꜱᴇʟᴇꜱᴀɪ* untuk langsung buat, atau *ʙᴀᴛᴀʟ* untuk batalkan.`
+            `Foto ${count}/${MIN_PHOTOS} terkumpul.\nKirim ${MIN_PHOTOS - count} foto lagi, atau kirim ${MAX_PHOTOS - count} foto maksimal.\n\nKetik *selesai* untuk langsung buat, atau *batal* untuk batalkan.`
           )
         );
         return;
@@ -203,7 +203,7 @@ async function handler(m, { sock, db }) {
         await m.reply(
           claraWrap(
             "Stiker Grid",
-            `Foto ${count} terkumpul.\n\nKirim ${MAX_PHOTOS - count} foto lagi untuk grid lebih penuh, atau ketik *ꜱᴇʟᴇꜱᴀɪ* untuk buat stiker sekarang.\nKetik *ʙᴀᴛᴀʟ* untuk membatalkan.`
+            `Foto ${count} terkumpul.\n\nKirim ${MAX_PHOTOS - count} foto lagi untuk grid lebih penuh, atau ketik *selesai* untuk buat stiker sekarang.\nKetik *batal* untuk membatalkan.`
           )
         );
         return;
@@ -260,7 +260,7 @@ async function handler(m, { sock, db }) {
   await m.reply(
     claraWrap(
       "Stiker Grid",
-      `Mode kolase stiker aktif.\n\nKirim ${MIN_PHOTOS}-${MAX_PHOTOS} foto untuk digabung jadi satu stiker grid.\n\nFoto terkumpul: ${collected}/${MIN_PHOTOS}\n\nKetik *ꜱᴇʟᴇꜱᴀɪ* untuk buat stiker (min ${MIN_PHOTOS} foto).\nKetik *ʙᴀᴛᴀʟ* untuk membatalkan.\nSesi otomatis berakhir dalam 45 detik.`
+      `Mode kolase stiker aktif.\n\nKirim ${MIN_PHOTOS}-${MAX_PHOTOS} foto untuk digabung jadi satu stiker grid.\n\nFoto terkumpul: ${collected}/${MIN_PHOTOS}\n\nKetik *selesai* untuk buat stiker (min ${MIN_PHOTOS} foto).\nKetik *batal* untuk membatalkan.\nSesi otomatis berakhir dalam 45 detik.`
     )
   );
 }

@@ -56,7 +56,7 @@ async function applyMenuVariant(m, db, selected, cmdLabel) {
   db.setting("menuThumbVariant", selected.id);
   await db.save();
 
-  await m.reply(claraWrap(cmdLabel || "setallmenu", `✅ *ᴠᴀʀɪᴀɴ ᴛʜᴜᴍʙɴᴀɪʟ ᴍᴇɴᴜ ᴅɪᴜʙᴀʜ*\n\n` +
+  await m.reply(claraWrap(cmdLabel || "setallmenu", `✅ *varian thumbnail menu diubah*\n\n` +
     `${selected.emoji} *V${selected.id} — ${selected.name}*\n\n` +
     `${selected.asset}`));
 }
@@ -68,7 +68,7 @@ async function handler(m, { sock, db }) {
   const variant = parseVariantKey(args[0]);
 
   if (args[0] && !variant) {
-    m.reply(claraWrap("Setallmenu", `❗ *ᴠᴀʀɪᴀɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
+    m.reply(claraWrap("Setallmenu", `❗ *varian tidak valid*\n\nGunakan: *v1* (gambar) atau *v2* (video)`));
     return;
   }
 
@@ -99,7 +99,7 @@ async function handler(m, { sock, db }) {
   ];
 
   const bodyText =
-    `📋📑 *ᴠᴀʀɪᴀɴ ᴛʜᴜᴍʙɴᴀɪʟ ᴍᴇɴᴜ*\n\n` +
+    `📋📑 *varian thumbnail menu*\n\n` +
     `Atur tampilan header/thumbnail SEMUA menu (menu, allmenu, popup kategori, dll) 🖼️🎬\n` +
     `Varian aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name}* 🎯\n\n` +
     `Pilih varian dari tombol di bawah 👇`;

@@ -231,7 +231,7 @@ async function handler(m, { sock }) {
   const gcSellerAccess = isGcSeller(m.chat, serverVersion)
   if (!gcSellerAccess && !hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
-    return m.reply( `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+    return m.reply( `❌ *akses ditolak*\n\n` +
       `Kamu tidak punya akses ke *${serverVersion.toUpperCase()}*\n` +
       `Role kamu di ${serverVersion.toUpperCase()}: *${userRole || "Tidak ada"}*\n\n` +
       `Hubungi admin untuk mendapat akses.`, "Panel");
@@ -286,7 +286,7 @@ async function handler(m, { sock }) {
   if (!username) {
     const available = getAvailableServers(pteroConfig);
     const userRole = getUserRole(m.sender, serverVersion) || "Guest";
-    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+    return m.reply( `⚠️ *cara pakai*\n\n` +
       `*Custom disk+CPU:*\n` +
       `\`${m.prefix}${m.command} unli, nama\` (disk & CPU unli)\n` +
       `\`${m.prefix}${m.command} unli, 200, nama\` (CPU 200%)\n` +

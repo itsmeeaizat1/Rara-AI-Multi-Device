@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     ].join("\n")));
   }
 
-  let txt = `📊 *ᴛᴏᴛᴀʟ ᴄʜᴀᴛ*\nBerikut ini adalah jumlah pesan yang dikirim oleh member di grup ini (minggu ini):\n\n`;
+  let txt = `📊 *total chat*\nBerikut ini adalah jumlah pesan yang dikirim oleh member di grup ini (minggu ini):\n\n`;
   for (const u of board) {
     const name = (u.name || u.jid.split("@")[0]).slice(0, 20);
     const medal = u.rank === 1 ? "🥇" : u.rank === 2 ? "🥈" : u.rank === 3 ? "🥉" : "▸";

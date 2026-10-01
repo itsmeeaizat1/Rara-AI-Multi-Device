@@ -126,14 +126,14 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("searchthatsong", "⚠️ Lagu tidak ditemukan. Coba gunakan lirik yang lebih spesifik."));
     }
 
-    let caption = `🎵 *ꜱᴇᴀʀᴄʜ ᴛʜᴀᴛ ꜱᴏɴɢ* 🎵\n\n`;
-    caption += `*ᴊᴜᴅᴜʟ:* ${result.song}\n`;
-    if (result.artist) caption += `*ᴀʀᴛɪꜱ:* ${result.artist}\n`;
-    if (result.album) caption += `*ᴀʟʙᴜᴍ:* ${result.album}\n`;
-    if (result.year) caption += `*ᴛᴀʜᴜɴ:* ${result.year}\n`;
-    if (result.genre) caption += `*ɢᴇɴʀᴇ:* ${result.genre}\n`;
-    if (result.youtubeUrl) caption += `*ʏᴏᴜᴛᴜʙᴇ:* ${result.youtubeUrl}\n`;
-    if (result.relevantChunk) caption += `\n*ᴍᴀᴛᴄʜ:* ${result.relevantChunk}\n`;
+    let caption = `🎵 *search that song* 🎵\n\n`;
+    caption += `*judul:* ${result.song}\n`;
+    if (result.artist) caption += `*artis:* ${result.artist}\n`;
+    if (result.album) caption += `*album:* ${result.album}\n`;
+    if (result.year) caption += `*tahun:* ${result.year}\n`;
+    if (result.genre) caption += `*genre:* ${result.genre}\n`;
+    if (result.youtubeUrl) caption += `*youtube:* ${result.youtubeUrl}\n`;
+    if (result.relevantChunk) caption += `\n*match:* ${result.relevantChunk}\n`;
     
     if (result.albumArtwork) {
       await sock.sendMessage(m.chat, {
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
     }
 
     if (result.lyrics) {
-      await sock.sendMessage(m.chat, { text: `*ʟɪʀɪᴋ:*\n\n${result.lyrics}` }, { quoted: m });
+      await sock.sendMessage(m.chat, { text: `*lirik:*\n\n${result.lyrics}` }, { quoted: m });
     }
 
     if (result.previewUrl) {

@@ -113,7 +113,7 @@ function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return m.reply( `⚠️ *cara pakai*\n\n` +
             `\`${m.prefix}${cmd} @user\`\n` +
             `\`${m.prefix}${cmd} 628xxx\`\n` +
             `Reply pesan user`, "addseller")

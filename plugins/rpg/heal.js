@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     }
     msg += `
 `;
-    msg += `📦 *ʀᴇᴄᴏᴠᴇʀʏ*\n`;
+    msg += `📦 *recovery*\n`;
     for (const h of healed) {
       msg += `${h}\n`;
     }

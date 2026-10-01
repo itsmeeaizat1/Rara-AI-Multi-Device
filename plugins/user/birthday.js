@@ -57,9 +57,9 @@ async function handler(m, { sock }) {
         let today = `🎂 *Birthday InғO*\n\n`
         today += `🏷️ @${cleanJid}\n`
         today += `📅 ${day} ${months[month - 1]}\n`
-        today += `🎉 *ʜᴀʀɪ ɪɴɪ ᴜʟᴛᴀʜ!*\n`
+        today += `🎉 *hari ini ultah!*\n`
         today += `---`
-        today += `\n\n🎊 *ʜᴀᴘᴘʏ ʙɪʀᴛʜᴅᴀʏ!* 🎊\n`
+        today += `\n\n🎊 *happy birthday!* 🎊\n`
         today += `Semoga panjang umur dan\n`
         today += `sukses selalu! 🎉🎂`
         await m.reply(claraWrap("Birthday", today), { mentions: [target] })

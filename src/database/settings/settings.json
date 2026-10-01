@@ -1,6 +1,9 @@
 {
   "selfMode": false,
   "autoreactvnEnabled": false,
+  "disabledCommands": [],
+  "disabledCategories": [],
+  "menuThumbVariant": 2,
   "autoJokeEnabled": false,
   "autoFactEnabled": false,
   "autoRoastEnabled": false,

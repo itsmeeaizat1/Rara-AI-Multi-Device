@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const clanName = m.text?.trim()
 
     if (!clanName) {
-        return m.reply( `⚔️ *ᴄʀᴇᴀᴛᴇ ᴄʟᴀɴ*\n\n` +
+        return m.reply( `⚔️ *create clan*\n\n` +
             `Buat clan dan kumpulkan member!\n\n` +
             `Biaya: *Rp ${CLAN_CREATE_COST.toLocaleString('id-ID')}*\n` +
             `Max nama: *${MAX_CLAN_NAME} karakter*\n\n` +

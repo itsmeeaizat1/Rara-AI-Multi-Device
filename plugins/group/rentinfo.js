@@ -44,7 +44,7 @@ function handler(m, { sock }) {
     const groupName = sewaData.name || m.chat.split("@")[0];
 
     if (sewaData.isLifetime) {
-      return m.reply( claraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Status: *ᴘᴇʀᴍᴀɴᴇɴᴛ* ♾️", "Bot aktif selamanya di grup ini.", "", "Untuk sewa bot di grup lain, hubungi owner."].join("\n")), "sewainfo");
+      return m.reply( claraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Status: *permanent* ♾️", "Bot aktif selamanya di grup ini.", "", "Untuk sewa bot di grup lain, hubungi owner."].join("\n")), "sewainfo");
     }
 
     const countdown = formatCountdown(sewaData.expiredAt);
@@ -54,14 +54,14 @@ function handler(m, { sock }) {
   }
 
   // Grup tidak terdaftar - tampilkan info cara sewa
-  return m.reply( "📝 *ᴄᴀʀᴀ ꜱᴇᴡᴀ ʙᴏᴛ*\n\n" +
+  return m.reply( "📝 *cara sewa bot*\n\n" +
     "Mau pakai bot ini di grup kamu?\n\n" +
-    "*ᴄᴀʀᴀ ꜱᴇᴡᴀ:*\n" +
+    "*cara sewa:*\n" +
     "1. Hubungi owner bot\n" +
     "2. Kirim link invite grup kamu\n" +
     "3. Pilih durasi sewa\n" +
     "4. Bot auto-join ke grup\n\n" +
-    "*ꜰᴏʀᴍᴀᴛ ᴅᴜʀᴀꜱɪ:*\n" +
+    "*format durasi:*\n" +
     "30i = 30 menit\n" +
     "12h = 12 jam\n" +
     "7d = 7 hari\n" +

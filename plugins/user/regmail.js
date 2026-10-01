@@ -109,11 +109,11 @@ async function handler(m, { args, sock }) {
   }
 
   if (!args[0]) {
-    let txt = `📧 *ʀᴇɢɪꜱᴛʀᴀꜱɪ ᴇᴍᴀɪʟ*\n\n`;
+    let txt = `📧 *registrasi email*\n\n`;
     txt += `Daftar bot dengan verifikasi email OTP!\n\n`;
-    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
+    txt += `*cara pakai:*\n`;
     txt += `\`${m.prefix}regmail <nama>, <email>\`\n\n`;
-    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
+    txt += `*contoh:*\n`;
     txt += `\`${m.prefix}regmail Aizat, aizat@gmail.com\`\n\n`;
     txt += `Setelah itu, kode OTP akan dikirim ke email kamu.\n`;
     txt += `Verifikasi dengan: \`${m.prefix}verotp <kode>\``;

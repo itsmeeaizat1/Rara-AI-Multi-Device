@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
-        return m.reply( `👢 *ᴄʟᴀɴ ᴋɪᴄᴋ*\n\n` +
+        return m.reply( `👢 *clan kick*\n\n` +
             `Tag atau reply member yang mau dikeluarkan\n\n` +
             `Contoh: *.clankick @user*`, "clankick")
     }

@@ -39,9 +39,9 @@ async function handler(m, { args, sock }) {
     }
     
     const txt = claraWrap("Bypass Link", [
-      `*ʟɪɴᴋ ᴀꜱʟɪ:*`,
+      `*link asli:*`,
       `🔗 ${args[0]}`,
-      `*ʜᴀꜱɪʟ ʙʏᴘᴀꜱꜱ:*`,
+      `*hasil bypass:*`,
       `🚀 ${json.data.result.result}`,
     ]);
     

@@ -1232,7 +1232,7 @@ try {
             try { await m.react("❗"); } catch {}
             try {
               await m.reply(
-                "「 ✦ ᴇɴᴇʀɢɪ ɢᴀᴍᴇ ᴋᴜʀᴀɴɢ ✦ 」\n⚠ Butuh *" + energiCost + "* energi game\n⚡ Energi: *" + energiGame + "/" + maxEnergy + "*\n💡 Isi ulang via *.heal* (energy drink)"
+                "「 ✦ energi game kurang ✦ 」\n⚠ Butuh *" + energiCost + "* energi game\n⚡ Energi: *" + energiGame + "/" + maxEnergy + "*\n💡 Isi ulang via *.heal* (energy drink)"
               );
             } catch {}
           }

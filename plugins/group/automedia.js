@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     
     if (!arg) {
         const status = current ? '✅ Aktif' : '❌ Nonaktif'
-        return m.reply( `🎬 *ᴀᴜᴛᴏᴍᴇᴅɪᴀ*\n\n` +
+        return m.reply( `🎬 *automedia*\n\n` +
             `Status: ${status}\n\n` +
             `Gunakan:\n` +
             `\`${m.prefix}automedia on\` - aktifkan\n` +
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         }
         db.setGroup(m.chat, { automedia: false })
         await db.save()
-        { const __navText = `🎬 *ᴀᴜᴛᴏᴍᴇᴅɪᴀ*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
+        { const __navText = `🎬 *automedia*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
     return m.reply(claraWrap("Auto media", `Gunakan: \`${m.prefix}automedia on/off\``, "error"))

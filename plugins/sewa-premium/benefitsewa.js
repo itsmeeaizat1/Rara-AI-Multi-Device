@@ -22,13 +22,13 @@ async function handler(m) {
 
   const message =
     `🏠 *Apa Itu Sewa?*\n\n` +
-    `Sewa adalah *ɴʏᴇᴡᴀ ʙᴏᴛ* supaya bot dimasukin ke grup kamu selama durasi tertentu. *ᴛᴀɴᴘᴀ ꜱᴇᴡᴀ ʙᴏᴛ ᴛɪᴅᴀᴋ ʙɪꜱᴀ ᴅɪ-ꜱᴇᴛᴜᴘ ᴍᴀꜱᴜᴋ ɢʀᴜᴘ.*\n\n` +
+    `Sewa adalah *nyewa bot* supaya bot dimasukin ke grup kamu selama durasi tertentu. *tanpa sewa bot tidak bisa di-setup masuk grup.*\n\n` +
     `` +
     `\`⏳ Sistem Waktu:\`\n` +
-    `• Sewa pakai hitungan waktu + *ᴄᴏᴜɴᴛᴅᴏᴡɴ*\n` +
+    `• Sewa pakai hitungan waktu + *countdown*\n` +
     `• Sisa waktu kelihatan di \`\`\`${prefix}sewa\`\`\`\n` +
     `• Peringatan otomatis H-3 hari & 24 jam sebelum habis\n` +
-    `• Kalau sudah habis, bot *ᴏᴛᴏᴍᴀᴛɪꜱ ᴋᴇʟᴜᴀʀ ɢʀᴜᴘ*\n` +
+    `• Kalau sudah habis, bot *otomatis keluar grup*\n` +
     `• Mau lanjut? tinggal perpanjang sewa\n` +
     `---\n` +
     `` +

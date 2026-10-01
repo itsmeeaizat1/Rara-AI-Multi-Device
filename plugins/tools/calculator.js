@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
     } catch {
       const text =
         claraWrap("Calculator", [`Ekspresi: *${expr}*`,
-          "Status: *ᴇᴋꜱᴘʀᴇꜱɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*"].join("\n")) +
+          "Status: *ekspresi tidak valid*"].join("\n")) +
         "\n" +
         tipText(`Contoh valid: sqrt(16), 5^2 + sin(pi/2), 2 * (3 + 4)`);
       await m.reply(text, "calculator");

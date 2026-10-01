@@ -25,9 +25,9 @@ const pluginConfig = {
 
 function helpText(m) {
   return claraWrap("webwatch", [
-    "🌐 *ᴡᴇʙ ᴡᴀᴛᴄʜᴇʀ*",
+    "🌐 *web watcher*",
     "",
-    "ᴘᴀɴᴛᴀᴜ ᴜʀʟ 24 ᴊᴀᴍ — ɴᴏᴛɪꜰ ᴏᴛᴏᴍᴀᴛɪꜱ ᴘᴀꜱ ɪꜱɪɴʏᴀ ʙᴇʀᴜʙᴀʜ",
+    "pantau url 24 jam — notif otomatis pas isinya berubah",
     "",
     `▸ ${m.prefix}webwatch <url> [menit]`,
     "   mulai pantau (default 15 menit)",
@@ -40,10 +40,10 @@ function helpText(m) {
     `▸ ${m.prefix}webwatch info`,
     "   status monitor",
     "",
-    `⏱️ ᴍɪɴɪᴍᴀʟ ${MIN_INTERVAL} ᴍᴇɴɪᴛ, ᴍᴀᴋꜱ ${MAX_INTERVAL} ᴍᴇɴɪᴛ`,
-    "ᴍᴀᴋꜱ 5 ᴜʀʟ ᴘᴇʀ ᴄʜᴀᴛ",
+    `⏱️ minimal ${MIN_INTERVAL} menit, maks ${MAX_INTERVAL} menit`,
+    "maks 5 url per chat",
     "",
-    "*ᴄᴏɴᴛᴏʜ:*",
+    "*contoh:*",
     `${m.prefix}webwatch https://example.com 30`,
   ]);
 }
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
       if (!list.length) {
         return m.reply(claraWrap("webwatch", "Belum ada URL yang dipantau di chat ini.\n\n" + `Ketik ${m.prefix}webwatch <url> buat mulai.`, "guide"));
       }
-      const lines = ["🌐 *ᴜʀʟ ᴅɪᴘᴀɴᴛᴀᴜ ᴅɪ ᴄʜᴀᴛ ɪɴɪ*", ""];
+      const lines = ["🌐 *url dipantau di chat ini*", ""];
       list.forEach((w, i) => {
         const last = w.lastChanged
           ? "berubah " + new Date(w.lastChanged).toLocaleString("id-ID")
@@ -106,12 +106,12 @@ async function handler(m, { sock }) {
       const st = getStatus();
       const mine = listWatches(m.chat);
       return m.reply(claraWrap("webwatch", [
-        "🌐 *ꜱᴛᴀᴛᴜꜱ ᴡᴇʙ ᴡᴀᴛᴄʜᴇʀ*",
+        "🌐 *status web watcher*",
         "",
-        `ᴀᴋᴛɪꜰ: ${st.enabled ? "ʏᴀ" : "ᴛɪᴅᴀᴋ"} (ꜱᴡɪᴛᴄʜ ᴀᴜᴛᴏ)`,
-        `ᴍᴏɴɪᴛᴏʀ: ${st.running ? "🟢 ʙᴇʀᴊᴀʟᴀɴ" : "🔴 ᴍᴀᴛɪ"}`,
-        `ᴛᴏᴛᴀʟ ᴜʀʟ ꜱᴇᴍᴜᴀ ᴄʜᴀᴛ: ${st.total}`,
-        `ᴜʀʟ ᴅɪ ᴄʜᴀᴛ ɪɴɪ: ${mine.length}`,
+        `aktif: ${st.enabled ? "ya" : "tidak"} (switch auto)`,
+        `monitor: ${st.running ? "🟢 berjalan" : "🔴 mati"}`,
+        `total url semua chat: ${st.total}`,
+        `url di chat ini: ${mine.length}`,
       ].join("\n")));
     }
 
@@ -139,15 +139,15 @@ async function handler(m, { sock }) {
     }
     await m.react("🐣");
     return m.reply(claraWrap("webwatch", [
-      "✅ *ᴍᴜʟᴀɪ ᴅɪᴘᴀɴᴛᴀᴜ!*",
+      "✅ *mulai dipantau!*",
       "",
       `📰 *${res.watch.title}*`,
       `🔗 ${res.watch.url}`,
       "",
-      `⏱️ ᴅɪᴄᴇᴋ ᴛɪᴀᴘ ${res.watch.intervalMenit} ᴍᴇɴɪᴛ`,
-      `📊 ꜱɴᴀᴘꜱʜᴏᴛ ᴀᴡᴀʟ: ${res.watch.lastSize.toLocaleString("id-ID")} ᴄʜᴀʀ`,
+      `⏱️ dicek tiap ${res.watch.intervalMenit} menit`,
+      `📊 snapshot awal: ${res.watch.lastSize.toLocaleString("id-ID")} char`,
       "",
-      "ɴᴏᴛɪꜰ ᴏᴛᴏᴍᴀᴛɪꜱ ᴍᴀꜱᴜᴋ ᴋᴇ ᴄʜᴀᴛ ɪɴɪ ᴘᴀꜱ ɪꜱɪɴʏᴀ ʙᴇʀᴜʙᴀʜ 🔔",
+      "notif otomatis masuk ke chat ini pas isinya berubah 🔔",
     ].join("\n")));
   } catch (e) {
     await m.react("❌");

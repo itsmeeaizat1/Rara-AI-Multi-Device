@@ -26,7 +26,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.args.join(" ").trim();
     if (!text) {
-        const msg = `🎬 *ʙʀᴀᴛ ᴠɪᴅᴇᴏ ᴠ2*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratvid2 hello world\``;
+        const msg = `🎬 *brat video v2*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratvid2 hello world\``;
         return await m.reply(msg);
     }
     const tempFile = path.join(os.tmpdir(), `bratvid2-${Date.now()}.webp`);

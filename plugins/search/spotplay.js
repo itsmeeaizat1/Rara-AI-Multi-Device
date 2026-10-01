@@ -45,7 +45,7 @@ export function buildSpotplayCard({ title, album, genre, duration, artist, url }
 async function handler(m, { sock }) {
   const query = m.text?.trim();
   if (!query)
-    { const __navText = `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n\`${m.prefix}spotplay <query>\``; return await m.reply( __navText, "spotplay"); };
+    { const __navText = `⚠️ *cara pakai*\n\n\`${m.prefix}spotplay <query>\``; return await m.reply( __navText, "spotplay"); };
   try {
     await m.react("🕒");
 

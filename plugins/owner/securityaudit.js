@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 
   // Bot mode
   const isSelf = db.setting("selfMode") ?? false;
-  lines.push("Bot Mode: " + (isSelf ? "*SELF (Aman)*" : "*ᴘᴜʙʟɪᴄ* — semua orang bisa pakai"));
+  lines.push("Bot Mode: " + (isSelf ? "*SELF (Aman)*" : "*public* — semua orang bisa pakai"));
   if (!isSelf) {
     lines.push("⚠ Mode PUBLIC — siapapun bisa kirim perintah ke bot");
   }

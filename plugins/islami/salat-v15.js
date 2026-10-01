@@ -185,7 +185,7 @@ async function handler(m, { sock, config: botConfig }) {
           `Contoh: *${prefix}jadwalsholat Jakarta*`,
           `Contoh: *${prefix}jadwalsholat Serang*`].join("\n")) +
         "\n" +
-        claraWrap("ꜱTatuꜱ", [`Chat: *${chatLabel}*`, `Status: *${currentStatus}*`, `Kota: *${currentCity}*`, `Izin: *${permissionLabel}*`].join("\n")) +
+        claraWrap("sTatus", [`Chat: *${chatLabel}*`, `Status: *${currentStatus}*`, `Kota: *${currentCity}*`, `Izin: *${permissionLabel}*`].join("\n")) +
         "\n\n" +
         
         claraWrap("Fitur", ["🔔 Reminder 5 menit sebelum", "🕌 Notifikasi waktu sholat", "📿 Info iqamah/jamaah", "🤲 Auto pengingat harian"].join("\n")) +
@@ -220,8 +220,8 @@ async function handler(m, { sock, config: botConfig }) {
         db.setUser?.(chatTarget.id, { sholat: { enabled: false, city: null } });
       }
       const text =
-        claraWrap("Auto Sholat", ["Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
-          "Status: *ᴏꜰꜰ*",
+        claraWrap("Auto Sholat", ["Fitur: *auto sholat*",
+          "Status: *off*",
           `Chat: *${m.chatName || chatTarget.id}*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}jadwalsholat aktif <kota> untuk aktifkan`);
@@ -252,7 +252,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const modeText = chatTarget.type === "group" ? "👥 Grup" : "💬 Chat Pribadi";
       const text =
-        claraWrap("Auto Sholat", ["Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
+        claraWrap("Auto Sholat", ["Fitur: *auto sholat*",
           "Status: *ON*",
           `Mode: *${modeText}*`,
           `Kota: *${city}*`,
@@ -288,7 +288,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.setGroup?.(m.chat, { sholat: { enabled: groupData?.sholat?.enabled ?? false, city: groupData?.sholat?.city || null, permission: permissionRaw } });
       const label = SHOLAT_PERMISSION_LABELS[permissionRaw] || permissionRaw;
       const text =
-        claraWrap("Auto Sholat", ["Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
+        claraWrap("Auto Sholat", ["Fitur: *auto sholat*",
           `Izin: *${label}*`,
           `Chat: *${m.chatName || m.chat}*`].join("\n")) +
         "\n" +
@@ -312,7 +312,7 @@ async function handler(m, { sock, config: botConfig }) {
       timings = await fetchPrayerTimes(city);
     } catch (apiError) {
       const text =
-        novaError("Religi", ["Status: *ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴅᴀᴛᴀ*",
+        novaError("Religi", ["Status: *gagal mengambil data*",
           `Alasan: *${apiError.message}*`].join("\n")) +
         "\n" +
         tipText("Pastikan nama kota benar dan coba lagi");
@@ -323,8 +323,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     const next = findNextPrayer(timings);
     const reminderText = next.remainingMinutes <= ADVANCE_REMINDER_MINUTES
-      ? `⏰ *ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ ꜱᴜᴅᴀʜ ᴛɪʙᴀ*\n\nAyo sholat *${next.emoji} ${next.label}* sekarang!\nJangan sampai tertunda.`
-      : `🔔 *ᴘᴇɴɢɪɴɢᴀᴛ ꜱʜᴏʟᴀᴛ*\n\n${next.emoji} *${next.label}* tinggal *${next.remainingMinutes} menit* lagi.\nSiap-siap wudhu dan sholat tepat waktu.`;
+      ? `⏰ *waktu sholat sudah tiba*\n\nAyo sholat *${next.emoji} ${next.label}* sekarang!\nJangan sampai tertunda.`
+      : `🔔 *pengingat sholat*\n\n${next.emoji} *${next.label}* tinggal *${next.remainingMinutes} menit* lagi.\nSiap-siap wudhu dan sholat tepat waktu.`;
 
     const prayerLines = Object.entries(PRAYER_LABELS).map(([key, label]) => {
       const emoji = PRAYER_EMOJIS[key] || "🕌";
@@ -363,7 +363,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(text, "sholat");
   } catch (error) {
     const text =
-      novaError("Religi", [`Status: *ɢᴀɢᴀʟ*`,
+      novaError("Religi", [`Status: *gagal*`,
         `Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

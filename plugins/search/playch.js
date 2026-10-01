@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
   }
 
   if (!q)
-    return m.reply( `🎵 *ᴘʟᴀʏ ꜱᴀʟᴜʀᴀɴ*\n\n\`${m.prefix}playch <judul lagu>\`\n\`${m.prefix}playch --idch <id_saluran> <judul lagu>\``, "playch");
+    return m.reply( `🎵 *play saluran*\n\n\`${m.prefix}playch <judul lagu>\`\n\`${m.prefix}playch --idch <id_saluran> <judul lagu>\``, "playch");
   if (!chId)
     return m.reply( `❌ Saluran belum diatur. Gunakan \`--idch <id>\` atau atur di config.js`, "playch");
   try {
@@ -118,8 +118,8 @@ async function handler(m, { sock }) {
     const ytChannel = video.author?.name || video.author?.username || "Unknown";
 
     let info = `🎵 *NOW PLAYING (SALURAN)*\n\n`;
-    info += `📌 *ᴊᴜᴅᴜʟ:* ${video.title}\n\n`;
-    info += `*ᴅᴇᴛᴀɪʟ*\n`;
+    info += `📌 *judul:* ${video.title}\n\n`;
+    info += `*detail*\n`;
     info += `👤 Channel: *${ytChannel}*\n`;
     info += `⏱️ Durasi: *${video.duration.timestamp}*\n`;
     info += `👀 Views: *${formatViews(video.views)}*\n`;
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     info += `🆔 ID: \`${video.videoId}\`\n\n`;
     if (video.description) {
       const desc = video.description.substring(0, 150).replace(/\n/g, " ");
-      info += `*ᴅᴇꜱᴋʀɪᴘꜱɪ:*\n_${desc}${video.description.length > 150 ? "..." : ""}_\n\n`;
+      info += `*deskripsi:*\n_${desc}${video.description.length > 150 ? "..." : ""}_\n\n`;
     }
     info += `📡 Saluran: \`${chId}\`\n`;
     info += `🔗 ${video.url}\n\n`;

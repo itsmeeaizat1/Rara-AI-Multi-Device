@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
 
     const text =
-      claraWrap("Kick All", ["Status: *ʙᴇʀʜᴀꜱɪʟ*",
+      claraWrap("Kick All", ["Status: *berhasil*",
         "Semua member non-admin telah dikick."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);

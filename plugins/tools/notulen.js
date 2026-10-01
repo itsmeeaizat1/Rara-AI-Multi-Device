@@ -93,7 +93,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `💡 Contoh:`,
       `  ${prefix}notulen rapat evaluasi Q1 2024. Budi: perlu upgrade server. Sari: budget 50jt. Keputusan: beli server minggu depan. Budi beli, deadline Jumat`,
       ``,
-      `*ʜᴀꜱɪʟ:*`,
+      `*hasil:*`,
       `  Structured notulen: agenda, keputusan, action items`,
     ].join("\n"));
     return m.reply( help, "notulen");

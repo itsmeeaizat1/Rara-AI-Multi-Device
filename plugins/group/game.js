@@ -23,11 +23,11 @@ async function handler(m, { sock }) {
   const args = m.text?.trim()?.toLowerCase();
 
   if (args !== "on" && args !== "off") {
-    return m.reply( `🎮 *ꜰɪᴛᴜʀ ɢᴀᴍᴇ ɢʀᴜᴘ*\n\n` +
+    return m.reply( `🎮 *fitur game grup*\n\n` +
         `Gunakan perintah ini untuk mengatur akses member ke fitur game.\n\n` +
         `*${m.prefix}game on* - Member bisa main game\n` +
         `*${m.prefix}game off* - Member tidak bisa main game\n\n` +
-        `*ᴄᴀᴛᴀᴛᴀɴ:* Admin tetap bisa mengakses game meskipun dimatikan.`, "game");
+        `*catatan:* Admin tetap bisa mengakses game meskipun dimatikan.`, "game");
   }
 
   const db = getDatabase();

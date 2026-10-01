@@ -53,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
       rpg ? `Level: *${rpg.level || 0}*` : "Level: *-*",
       rpg ? `Gold: *${rpg.gold ?? 0}*` : "Gold: *-*",
       rpg ? `Exp: *${rpg.exp || 0}*` : "Exp: *-*",
-      "Status: *ʙᴇʀʜᴀꜱɪʟ*",
+      "Status: *berhasil*",
     ];
 
     const text =

@@ -162,7 +162,7 @@ async function handler(m, { sock, plugins }) {
       };
     });
     const listMessage = {
-      text: `🔓 *ᴄᴀʙᴜᴛ ᴀᴋꜱᴇꜱ*\n\nPilih akses command yang ingin dihapus dari @${target.split("@")[0]}`,
+      text: `🔓 *cabut akses*\n\nPilih akses command yang ingin dihapus dari @${target.split("@")[0]}`,
       title: "Manage Access",
       buttonText: "PILIH COMMAND",
       sections: [

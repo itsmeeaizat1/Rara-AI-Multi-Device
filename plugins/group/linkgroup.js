@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Link Group", [`Group: *${m.chatName || chat}*`,
         `Link: *${link}*`,
-        "Status: *ᴀᴄᴛɪᴠᴇ*"].join("\n")) +
+        "Status: *active*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

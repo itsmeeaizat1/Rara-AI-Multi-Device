@@ -127,7 +127,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Alasan: *" + reason + "*\n" +
         "Bukti: " + (proof || "-") + "\n" +
         "Total report: " + reportCount + "\n" +
-        "Status: " + (blacklist[number].verified ? "*ᴠᴇʀɪꜰɪᴇᴅ* (3+ report)" : "Pending verification")
+        "Status: " + (blacklist[number].verified ? "*verified* (3+ report)" : "Pending verification")
       ));
     }
 
@@ -150,7 +150,7 @@ async function handler(m, { sock, config: botConfig }) {
       let lines = [
         "Nomor: *" + formatPhone(number) + "*",
         "Total Report: " + entry.reports.length,
-        "Status: " + (entry.verified ? "*ᴠᴇʀɪꜰɪᴇᴅ*" : "Pending"),
+        "Status: " + (entry.verified ? "*verified*" : "Pending"),
         "Pertama dilaporkan: " + formatDate(entry.firstReported),
         "Terakhir dilaporkan: " + formatDate(entry.lastReported),
       ];
@@ -216,7 +216,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       let lines = [
         "Nomor: *" + formatPhone(number) + "*",
-        "Status: " + (entry.verified ? "*ᴠᴇʀɪꜰɪᴇᴅ*" : "Pending"),
+        "Status: " + (entry.verified ? "*verified*" : "Pending"),
         "Total Report: " + entry.reports.length,
         "Pertama: " + formatDate(entry.firstReported),
         "Terakhir: " + formatDate(entry.lastReported),

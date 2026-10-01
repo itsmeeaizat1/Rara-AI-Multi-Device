@@ -121,25 +121,25 @@ const botConfig = { command: { prefix: "." } };
 await handler(m, { config: botConfig });
 ok("reply terkirim", sent.length === 1);
 const out = sent[0] || "";
-ok("ada header Conn Log", out.includes("ᴄᴏɴɴ ʟᴏɢ") || out.toLowerCase().includes("conn log"), out.slice(0, 60));
+ok("ada header Conn Log", out.includes("conn log") || out.toLowerCase().includes("conn log"), out.slice(0, 60));
 ok("ada kode 515 di riwayat", out.includes("515"));
-ok("ada analisis interval", out.includes("ɪɴᴛᴇʀᴠᴀʟ"));
-ok("ada penyebab terbanyak", out.includes("ᴘᴇɴʏᴇʙᴀʙ"));
-ok("ada arti watchdog", out.includes("ᴡᴀᴛᴄʜᴅᴏɢ"));
-ok("ada uptime sesi", out.includes("10 ᴍɴᴛ"));
+ok("ada analisis interval", out.toLowerCase().includes("interval"));
+ok("ada penyebab terbanyak", out.toLowerCase().includes("penyebab"));
+ok("ada arti watchdog", out.includes("watchdog"));
+ok("ada uptime sesi", out.includes("10 mnt"));
 
 // .connlog clear
 sent.length = 0;
 m.text = "clear";
 await handler(m, { config: botConfig });
-ok("clear dibalas", sent.length === 1 && sent[0].includes("ᴅɪʜᴀᴘᴜꜱ"), sent[0]?.slice(0, 40));
+ok("clear dibalas", sent.length === 1 && sent[0].includes("dihapus"), sent[0]?.slice(0, 40));
 eq("jurnal kosong setelah clear", j.getJournal().length, 0);
 
 // jurnal kosong → pesan kosong informatif
 sent.length = 0;
 m.text = "";
 await handler(m, { config: botConfig });
-ok("jurnal kosong → info", sent.length === 1 && sent[0].includes("ᴋᴏꜱᴏɴɢ"), sent[0]?.slice(0, 40));
+ok("jurnal kosong → info", sent.length === 1 && sent[0].includes("kosong"), sent[0]?.slice(0, 40));
 
 // sem: journal balik ke default (jangan bocor ke test lain)
 j._setJournalFileForTest(undefined);

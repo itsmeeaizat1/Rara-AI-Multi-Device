@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
 
       // Current skills
       if (rpg.skills && rpg.skills.length > 0) {
-        msg += `📜 *sᴋɪʟʟ ᴀᴋᴛɪғ*\n`;
+        msg += `📜 *skill aktiғ*\n`;
         for (const skill of rpg.skills) {
           const sDef = SKILL_DB[skill.id];
           if (!sDef) continue;
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
 
         // Owned skills
         if (mySkills.length > 0) {
-          msg += `📜 *sᴋɪʟʟ ᴍɪʟɪᴋ* (${mySkills.length})\n`;
+          msg += `📜 *skill milik* (${mySkills.length})\n`;
           for (const s of mySkills) {
             const sDef = SKILL_DB[s.id];
             if (!sDef) continue;
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
 
         // Available to unlock
         if (available.length > 0) {
-          msg += `📋 *ʙɪsᴀ ᴅɪʙᴜᴋᴀ*\n`;
+          msg += `📋 *bisa dibuka*\n`;
           for (const s of available) {
             const sDef = SKILL_DB[s];
             if (!sDef) continue;

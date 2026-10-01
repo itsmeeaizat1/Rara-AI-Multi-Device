@@ -36,10 +36,10 @@ async function handler(m, { sock }) {
         }
         
         const result = data.data
-        const response = `🏥 *ᴘᴏᴛᴇɴꜱɪ ᴘᴇɴʏᴀᴋɪᴛ*\n\n` +
+        const response = `🏥 *potensi penyakit*\n\n` +
             `Tanggal: *${tgl}-${bln}-${thn}*\n\n` +
-            `📊 *ᴇʟᴇᴍᴇɴ:*\n${result.sektor}\n\n` +
-            `⚠️ *ᴘᴏᴛᴇɴꜱɪ:*\n${result.elemen}\n\n` +
+            `📊 *elemen:*\n${result.sektor}\n\n` +
+            `⚠️ *potensi:*\n${result.elemen}\n\n` +
             `_${result.catatan}_`
         await m.reply(response)
         

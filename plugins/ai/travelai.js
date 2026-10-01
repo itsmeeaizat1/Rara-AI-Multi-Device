@@ -79,7 +79,7 @@ Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan
       } else if (t.startsWith("HARI")) {
         formatted += `📌 *${t}*\n`;
       } else if (t.startsWith("TIPS:")) {
-        formatted += `💡 *ᴛɪᴘs:*\n`;
+        formatted += `💡 *tips:*\n`;
       } else if (t.startsWith("-")) {
         formatted += `${t}\n`;
       } else {

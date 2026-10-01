@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     const isMedia = isImage || isVideo || isAudio
 
     if (!isMedia && !caption) {
-        return m.reply( `📤 *ᴜᴘʟᴏᴀᴅ ꜱᴀʟᴜʀᴀɴ*\n\n` +
+        return m.reply( `📤 *upload saluran*\n\n` +
             `Kirim/reply media dengan caption:\n` +
             `  \`${m.prefix}upch 12xxx@newsletter <teks opsional>\`\n\n` +
             `*Support:*\n` +
