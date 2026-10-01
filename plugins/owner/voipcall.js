@@ -16,9 +16,12 @@ const pluginConfig = {
   // FIX LATEN 1 Okt: voipend/voipsilent gak pernah ke-registrasi — selama ini
   // .voipend/.voipsilent kena jalur command-not-found (suggestion), gak nyamper
   // ke handler sama sekali. Ditambah voipvideocall/videocall buat mode video.
-  alias: ["voip", "voipvideocall", "videocall", "voipend", "voipsilent"],
+  // ALIAS .aicall (1 Okt 2026, revisi owner: "ibaratkan voip ini fitur aicall
+  // bawaan"): .aicall = pintu utama fitur telepon bawaan bot (tanpa konfigurasi
+  // tambahan) — fitur AI voice call yang butuh service Go pindah ke .aicall2.
+  alias: ["voip", "aicall", "voipvideocall", "videocall", "voipend", "voipsilent"],
   category: "owner",
-  description: "Telepon nomor WA lewat bot + putar audio/video: .voipcall telepon biasa, .voipvideocall telepon video",
+  description: "Telepon nomor WA lewat bot + putar audio/video (alias .aicall): .voipcall telepon biasa, .voipvideocall telepon video",
   usage: ".voipcall <nomor> [url_media] [240p-1080p] [auto] [loop] (telepon biasa) | .voipvideocall <nomor> [url_video] (telepon video) | .voipend [force] | .voipsilent",
   example: ".voipcall 6281234567890 https://contoh.com/lagu.mp3 auto | .voipvideocall 6281234567890 https://contoh.com/video.mp4",
   isOwner: true,

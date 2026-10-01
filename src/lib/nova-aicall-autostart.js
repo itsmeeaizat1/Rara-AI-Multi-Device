@@ -97,7 +97,7 @@ function log(lines) {
 
 /**
  * Auto-run service AI Call pas bot boot. Fire-and-forget dari index.js —
- * return { started, reason } untuk yang mau nunggu (mis. .aicall status).
+ * return { started, reason } untuk yang mau nunggu (mis. .aicall2 status).
  */
 export async function ensureAicallRunning({ silent = false } = {}) {
   const aicallDir = path.join(process.cwd(), "aicall");

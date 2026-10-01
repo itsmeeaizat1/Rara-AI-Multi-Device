@@ -1,5 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// .aicall — Panggilan suara WhatsApp kesambung AI (service aicall/ Go)
+// .aicall2 — Panggilan suara WhatsApp kesambung AI (service aicall/ Go)
+// RENAME 1 Okt 2026 (owner: "fitur .aicall ubah jadi .aicall2 krna btuh
+// konfigurasi — ibaratkan voip ini fitur aicall bawaan"): command .aicall
+// diserahkan ke plugin VOIP (plugins/owner/voipcall.js, telepon WA + media),
+// plugin ini (butuh service Go aicall/ berjalan) pindah ke .aicall2.
 // Request owner 17 Sep 2026: "gmna supaya bot aku support tlpon kesambung ai
 // pakai fitur ini: github.com/krsna081/assisten-ai-call"
 //
@@ -8,14 +12,14 @@
 // folder aicall/) jalan berdampingan sebagai device WA ke-2 di nomor yang
 // sama. Plugin ini cuma PEMICU via HTTP lokal 127.0.0.1:8788.
 //
-// Alur: owner ".aicall 62xxx" → POST /call → service Go menelepon → AI
+// Alur: owner ".aicall2 62xxx" → POST /call → service Go menelepon → AI
 // bicara (rekam 6 dtk → Groq Whisper STT → Gemini → TTS → MLow).
 // Panggilan MASUK ke nomor bot dijawab AI otomatis (nomor di OWNER .env).
 //
-//   .aicall <nomor>       — bot AI menelepon nomor tujuan
-//   .aicall status        — status service AI Call
-//   .aicall engine <nama> — TTS engine live (edgetts/geminitts/elevenlabs/openai/animetts/google)
-//   .aicall voice <nama>  — suara live (id-ID-GadisNeural, id-ID-ArdiNeural, ms-MY-YasminNeural, Puck...)
+//   .aicall2 <nomor>       — bot AI menelepon nomor tujuan
+//   .aicall2 status        — status service AI Call
+//   .aicall2 engine <nama> — TTS engine live (edgetts/geminitts/elevenlabs/openai/animetts/google)
+//   .aicall2 voice <nama>  — suara live (id-ID-GadisNeural, id-ID-ArdiNeural, ms-MY-YasminNeural, Puck...)
 //
 // Key Gemini + Groq + GROK (xAI) diambil dari PUSAT apikeys.json dan
 // dikirim per-request — service Go pakai itu, .env cuma fallback.
@@ -24,7 +28,7 @@
 // "key Grok mahal gak dipasang, fallback tembak ke ai agent"), kalau
 // tidak GROQ (key owner 17 Sep, model gpt-oss-20b super cepat), kalau
 // tidak Gemini.
-// Ganti otak live: .aicall ai grok / agent / groq / gemini.
+// Ganti otak live: .aicall2 ai grok / agent / groq / gemini.
 // Deploy/aturan lengkap: aicall/INTEGRATION.md
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
@@ -110,12 +114,12 @@ const AINA_CALL_PROMPT = [
 ].join("\n");
 
 const pluginConfig = {
-  name: "aicall",
-  alias: ["aicall", "aicaller"],
+  name: "aicall2",
+  alias: ["aicall2", "aicaller"],
   category: "owner",
   description: "Panggilan suara AI — telepon kesambung AI (service aicall)",
-  usage: ".aicall <nomor> — bot AI menelepon nomor tujuan\n.aicall status — status service AI Call\n.aicall engine <edgetts|geminitts|elevenlabs|openai|animetts> — ganti TTS engine live\n.aicall voice <nama_suara> — ganti suara live\n.aicall ai <grok|agent|groq|gemini> — ganti otak percakapan live\n\nNomor format internasional tanpa + (contoh: 628123456789). Panggilan masuk ke nomor bot juga dijawab AI.",
-  example: ".aicall 628123456789\n.aicall status",
+  usage: ".aicall2 <nomor> — bot AI menelepon nomor tujuan\n.aicall2 status — status service AI Call\n.aicall2 engine <edgetts|geminitts|elevenlabs|openai|animetts> — ganti TTS engine live\n.aicall2 voice <nama_suara> — ganti suara live\n.aicall2 ai <grok|agent|groq|gemini> — ganti otak percakapan live\n\nNomor format internasional tanpa + (contoh: 628123456789). Panggilan masuk ke nomor bot juga dijawab AI.",
+  example: ".aicall2 628123456789\n.aicall2 status",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -132,12 +136,12 @@ async function handler(m) {
   try {
     if (!m.isOwner) {
       try { await m.react("🚫"); } catch {}
-      return m.reply(claraWrap("aicall", "Perintah ini khusus Owner bot."));
+      return m.reply(claraWrap("aicall2", "Perintah ini khusus Owner bot."));
     }
     const args = (m.text || "").trim().split(/\s+/).filter(Boolean);
     const sub = (args[0] || "").toLowerCase();
 
-    // ── .aicall status ──
+    // ── .aicall2 status ──
     if (sub === "status") {
       try { await m.react("🛠️"); } catch {}
       const r = await apiCall("/health");
@@ -146,10 +150,10 @@ async function handler(m) {
         try { await m.react("❌"); } catch {}
         // hasil auto-run boot terakhir — nunjukin KENAPA service gak jalan
         const auto = getAicallAutostartStatus();
-        return m.reply(claraWrap("aicall", `Service AI Call tidak merespons${j.error ? " — " + j.error : ""}. Auto-run saat boot: ${auto ? auto.reason : "belum ada catatan (bot baru start?)"}${auto && auto.reason.includes("belum merespon") ? " — cek pm2 logs nova-aicall (sesi mungkin belum pairing)" : ""}`));
+        return m.reply(claraWrap("aicall2", `Service AI Call tidak merespons${j.error ? " — " + j.error : ""}. Auto-run saat boot: ${auto ? auto.reason : "belum ada catatan (bot baru start?)"}${auto && auto.reason.includes("belum merespon") ? " — cek pm2 logs nova-aicall (sesi mungkin belum pairing)" : ""}`));
       }
       try { await m.react("🐣"); } catch {}
-      return m.reply(claraWrap("aicall", [
+      return m.reply(claraWrap("aicall2", [
         "AI Call Service — Status",
         "",
         "Sesi WA: " + (j.connected ? "terhubung" : "BELUM TERTAUT — cek pm2 logs nova-aicall (pairing code)"),
@@ -161,49 +165,49 @@ async function handler(m) {
         "Owner terdaftar: " + (j.owners ?? "-"),
         "Auto-run: aktif — bot otomatis menyalakan service ini saat boot",
         "",
-        "Ganti suara: .aicall voice id-ID-GadisNeural",
+        "Ganti suara: .aicall2 voice id-ID-GadisNeural",
       ].join("\n")));
     }
 
-    // ── .aicall engine <nama> ──
+    // ── .aicall2 engine <nama> ──
     if (sub === "engine") {
       const engine = (args[1] || "").toLowerCase();
       if (!ENGINES.includes(engine)) {
-        return m.reply(claraWrap("aicall", "Pilihan engine: " + ENGINES.join(" / ") + "\nContoh: .aicall engine edgetts"));
+        return m.reply(claraWrap("aicall2", "Pilihan engine: " + ENGINES.join(" / ") + "\nContoh: .aicall2 engine edgetts"));
       }
       try { await m.react("🛠️"); } catch {}
       const r = await apiCall("/config", { method: "POST", body: { engine } });
       const j = r.json || {};
       if (r.status !== 200 || j.ok !== true) {
         try { await m.react("❌"); } catch {}
-        return m.reply(claraWrap("aicall", `Gagal ganti engine${j.error ? " — " + j.error : ""}.`));
+        return m.reply(claraWrap("aicall2", `Gagal ganti engine${j.error ? " — " + j.error : ""}.`));
       }
       try { await m.react("🐣"); } catch {}
-      return m.reply(claraWrap("aicall", "TTS engine diganti ke " + (j.engine || engine) + ", suara aktif: " + (j.voice || "-") + "."));
+      return m.reply(claraWrap("aicall2", "TTS engine diganti ke " + (j.engine || engine) + ", suara aktif: " + (j.voice || "-") + "."));
     }
 
-    // ── .aicall voice <nama> ──
+    // ── .aicall2 voice <nama> ──
     if (sub === "voice") {
       const voice = (args.slice(1).join(" ") || "").trim();
       if (!voice) {
-        return m.reply(claraWrap("aicall", "Pilihan suara: " + VOICE_HINT + "\nContoh: .aicall voice id-ID-GadisNeural"));
+        return m.reply(claraWrap("aicall2", "Pilihan suara: " + VOICE_HINT + "\nContoh: .aicall2 voice id-ID-GadisNeural"));
       }
       try { await m.react("🛠️"); } catch {}
       const r = await apiCall("/config", { method: "POST", body: { voice } });
       const j = r.json || {};
       if (r.status !== 200 || j.ok !== true) {
         try { await m.react("❌"); } catch {}
-        return m.reply(claraWrap("aicall", `Gagal ganti suara${j.error ? " — " + j.error : ""}.`));
+        return m.reply(claraWrap("aicall2", `Gagal ganti suara${j.error ? " — " + j.error : ""}.`));
       }
       try { await m.react("🐣"); } catch {}
-      return m.reply(claraWrap("aicall", "Suara diganti ke " + (j.voice || voice) + "."));
+      return m.reply(claraWrap("aicall2", "Suara diganti ke " + (j.voice || voice) + "."));
     }
 
-    // ── .aicall ai <grok|groq|gemini> — ganti otak percakapan live ──
+    // ── .aicall2 ai <grok|groq|gemini> — ganti otak percakapan live ──
     if (sub === "ai" || sub === "otak" || sub === "provider") {
       const provider = (args[1] || "").toLowerCase();
       if (provider !== "grok" && provider !== "agent" && provider !== "groq" && provider !== "gemini") {
-        return m.reply(claraWrap("aicall", "Pilihan otak AI: grok (xAI) / agent (AI agent 9router) / groq (super cepat) / gemini\nContoh: .aicall ai agent"));
+        return m.reply(claraWrap("aicall2", "Pilihan otak AI: grok (xAI) / agent (AI agent 9router) / groq (super cepat) / gemini\nContoh: .aicall2 ai agent"));
       }
       try { await m.react("🛠️"); } catch {}
       const body = { ai_provider: provider };
@@ -220,36 +224,36 @@ async function handler(m) {
       const j = r.json || {};
       if (r.status !== 200 || j.ok !== true) {
         try { await m.react("❌"); } catch {}
-        return m.reply(claraWrap("aicall", "Gagal ganti otak AI" + (j.error ? " — " + j.error : "") + "."));
+        return m.reply(claraWrap("aicall2", "Gagal ganti otak AI" + (j.error ? " — " + j.error : "") + "."));
       }
       try { await m.react("🐣"); } catch {}
       let keyNote = "";
       if (provider === "grok" && !(pusatKey("grok") || pusatKey("xai"))) {
-        keyNote = "\n⚠️ Key Grok (xAI) belum ada di pusat apikeys.json (bagian xai/grok — key xAI diawali xai-). Sementara pakai .aicall ai groq dulu ya.";
+        keyNote = "\n⚠️ Key Grok (xAI) belum ada di pusat apikeys.json (bagian xai/grok — key xAI diawali xai-). Sementara pakai .aicall2 ai groq dulu ya.";
       }
       if (provider === "groq" && !pusatKey("groq")) {
         keyNote = "\n⚠️ Key Groq belum ada di pusat apikeys.json (bagian groq).";
       }
       if (provider === "agent" && !agentInfo().key) {
-        keyNote = "\n⚠️ Key gateway 9router belum ada di pusat apikeys.json (bagian tioApiKey). Sementara pakai .aicall ai groq dulu ya.";
+        keyNote = "\n⚠️ Key gateway 9router belum ada di pusat apikeys.json (bagian tioApiKey). Sementara pakai .aicall2 ai groq dulu ya.";
       }
       if (provider === "agent" && agentInfo().key) {
         keyNote = "\nPersona panggilan: Aina (sopan, saya/kamu) — seolah-olah telepon dengan AI agent.";
       }
-      return m.reply(claraWrap("aicall", "Otak AI panggilan diganti ke " + provider + "." + keyNote));
+      return m.reply(claraWrap("aicall2", "Otak AI panggilan diganti ke " + provider + "." + keyNote));
     }
 
-    // ── .aicall <nomor> ──
+    // ── .aicall2 <nomor> ──
     // ambil TEKS PENUH (bukan args[0]) — nomor bisa ditulis pakai spasi/tanda minus
     // "+62 812-3456-789" → dinormalisasi jadi 628123456789
     const numRaw = (m.text || "").trim();
     const num = normalizeNumber(numRaw);
     if (!num || num.length < 8 || !/^\d+$/.test(num)) {
-      return m.reply(claraWrap("aicall", [
+      return m.reply(claraWrap("aicall2", [
         "Cara pakai AI Call:",
-        ".aicall <nomor> — bot AI menelepon (contoh: .aicall 628123456789)",
-        ".aicall status — status service",
-        ".aicall engine / .aicall voice — ganti suara live",
+        ".aicall2 <nomor> — bot AI menelepon (contoh: .aicall2 628123456789)",
+        ".aicall2 status — status service",
+        ".aicall2 engine / .aicall2 voice — ganti suara live",
         "",
         "Panggilan masuk ke nomor bot juga otomatis dijawab AI.",
       ].join("\n")));
@@ -285,20 +289,20 @@ async function handler(m) {
     if (r.status !== 200 || j.ok !== true) {
       try { await m.react("❌"); } catch {}
       const reason = j.error || (r.status ? "HTTP " + r.status : "service tidak merespons");
-      return m.reply(claraWrap("aicall", [
+      return m.reply(claraWrap("aicall2", [
         "Panggilan AI gagal: " + reason,
         "",
-        r.status === 0 || !r.json ? "Service AI Call belum jalan di VPS — pm2 start ./ai-call --name nova-aicall (lihat aicall/INTEGRATION.md)" : "Cek .aicall status untuk detail.",
+        r.status === 0 || !r.json ? "Service AI Call belum jalan di VPS — pm2 start ./ai-call --name nova-aicall (lihat aicall/INTEGRATION.md)" : "Cek .aicall2 status untuk detail.",
       ].join("\n")));
     }
     try { await m.react("🐣"); } catch {}
-    return m.reply(claraWrap("aicall", "Bot AI sedang menelepon " + num + " — tunggu tersambung, AI akan menyapa duluan."));
+    return m.reply(claraWrap("aicall2", "Bot AI sedang menelepon " + num + " — tunggu tersambung, AI akan menyapa duluan."));
   } catch (e) {
     console.error("[AICALL] error:", e.message);
     try { await m.react("❌"); } catch {}
-    return m.reply(claraWrap("aicall", "Service AI Call tidak bisa dihubungi — pastikan service jalan di VPS (pm2 start nova-aicall). Detail: aicall/INTEGRATION.md"));
+    return m.reply(claraWrap("aicall2", "Service AI Call tidak bisa dihubungi — pastikan service jalan di VPS (pm2 start nova-aicall). Detail: aicall/INTEGRATION.md"));
   }
 }
 
 export { pluginConfig as config, handler };
-export default { pluginConfig, handler, command: ["aicall", "aicaller"] };
+export default { pluginConfig, handler, command: ["aicall2", "aicaller"] };
