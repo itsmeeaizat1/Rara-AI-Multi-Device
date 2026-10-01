@@ -901,7 +901,15 @@ async function serialize(sock, msg, store = {}) {
         } catch {}
       }
 
-      const msg = generateWAMessageFromContent(m.chat, {
+      // 🔹 RELAY FAULT-TOLERANT (fix 1 Okt 2026 — bug owner "fitur react ❌
+      // doang, pesan gak keluar" di outfitchanger + fitur lain): encode proto
+      // (generateWAMessageFromContent) MAUPUN relayMessage bisa throw di VPS
+      // → tanpa fallback, SELURUH reply V1 (default!) mati senyap — plugin
+      // udah react ❌ duluan, jadi user cuma lihat silang tanpa pesan apapun.
+      // Sekarang: kartu interactive gagal → reply TETAP jalan plain text.
+      let builtMsg = null;
+      try {
+        builtMsg = generateWAMessageFromContent(m.chat, {
         viewOnceMessage: {
           message: {
             messageContextInfo: {},
@@ -933,13 +941,40 @@ async function serialize(sock, msg, store = {}) {
         }
       }, { quoted: m, userJid: sock.user.jid });
 
-      // Return key pesan yang terkirim — banyak plugin (alldl delete-progress,
-      // family100/sulap session key, pushkontak reply-target) andalkan ini.
-      // relayMessage balikin void, tapi key.id udah ke-generate sebelum relay.
-      await sock.relayMessage(m.chat, msg.message, {
-        messageId: msg.key.id,
-      });
-      return { key: msg.key };
+      } catch (e) {
+        try {
+          console.error(
+            "[Serialize] build kartu V1 gagal (kirim plain text):",
+            e?.message?.split("\n")[0] || e
+          );
+        } catch {}
+      }
+
+      if (builtMsg) {
+        // Return key pesan yang terkirim — banyak plugin (alldl delete-progress,
+        // family100/sulap session key, pushkontak reply-target) andalkan ini.
+        // relayMessage balikin void, tapi key.id udah ke-generate sebelum relay.
+        try {
+          await sock.relayMessage(m.chat, builtMsg.message, {
+            messageId: builtMsg.key.id,
+          });
+          return { key: builtMsg.key };
+        } catch (e) {
+          try {
+            console.error(
+              "[Serialize] relay V1 gagal (kirim plain text):",
+              e?.message?.split("\n")[0] || e
+            );
+          } catch {}
+        }
+      }
+
+      // Fallback terakhir: PLAIN TEXT — pesan keluar bot GAK BOLEH mati senyap.
+      return sock.sendMessage(
+        m.chat,
+        { text, ...defaultOptions, ...options },
+        { quoted: quotedMsg },
+      );
     }
 
     // Fallback: plain text (untuk variant yang tidak dikenal)
