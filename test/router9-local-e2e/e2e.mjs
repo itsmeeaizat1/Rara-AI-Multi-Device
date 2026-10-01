@@ -11,6 +11,7 @@ import http from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { spawn } from "node:child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const R = path.resolve(__dirname, "..", "..");
@@ -46,6 +47,7 @@ const MODELS = [
 ];
 let conns = [];
 let failMode = null; // "401" | "404-nocred" | "429" | "503" | "down"
+let failKeys401Once = false; // POST /api/keys balik 401 SEKALI lalu normal (uji self-heal)
 
 const srv = http.createServer((req, res) => {
   const send = (code, json) => { res.writeHead(code, { "Content-Type": "application/json" }); res.end(JSON.stringify(json)); };
@@ -63,6 +65,7 @@ const srv = http.createServer((req, res) => {
     if (req.url === "/api/keys" && req.method === "POST") {
       calls.keys.push(j);
       if (!cli) return send(401, { error: "no cli token" });
+      if (failKeys401Once) { failKeys401Once = false; return send(401, { error: "stale auth — simulasikan proses basi" }); }
       const key = "sk-mock-gw-" + (calls.keys.length);
       gwKeys.push(key);
       return send(201, { key, name: j?.name || "?", id: "id-" + calls.keys.length });
@@ -118,6 +121,7 @@ const {
   router9IsUp, ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys,
   router9Models, router9FindModel, router9Chat, router9ImageGen, router9ImageModels,
   router9VisionModels, router9Stats, ROUTER9_DEFAULT_MODEL, getRouter9Base,
+  killStalePort9Router,
 } = engine;
 const plug = await import(pathToFileURL(path.join(R, "plugins/ai/9router.js")).href);
 const { handler } = plug;
@@ -332,6 +336,66 @@ section("7. isolasi dari 9routerv2 (cloud milik orang)");
   const baseStillLocal = getRouter9Base();
   t("7f. runtime: env v2 (TIO_API_URL/ROUTER_API_URL) di-set → base lokal TETAP 127.0.0.1", baseStillLocal.includes("127.0.0.1"), baseStillLocal);
   delete process.env.TIO_API_URL; delete process.env.ROUTER_API_URL; delete process.env.ROUTER_API_KEY;
+}
+
+// ═══ 8. SELF-HEAL PROSES BASI (bug nyata 1 Okt 2026: "padahal katanya udah
+// jalan" — health hijau tapi POST /api/keys 401 karena proses lama pegang
+// port dengan auth gak sinkron; nama proses "next-server" gak ketangkep
+// pattern) ═══
+section("8. self-heal proses basi + .9router restart");
+{
+  // 8a: mode mock (ROUTER9_URL di-set) → kill WAJIB no-op (jangan bunuh mock!)
+  const skip = await killStalePort9Router();
+  t("8a. killStalePort9Router: mode mock → NO-OP (safety gate ROUTER9_URL)", skip.killed === false && /eksternal|mock/.test(skip.reason || ""), JSON.stringify(skip));
+
+  // 8b: jalur kill beneran — dummy server WAJIB proses TERPISAH
+  // (kalau satu proses sama e2e, kill-by-port = bunuh suite sendiri!)
+  const dummyPort = 20190 + Math.floor(Math.random() * 500);
+  const dummy = spawn(process.execPath, ["-e", `require("http").createServer((q,s)=>s.end("dummy")).listen(${dummyPort},"127.0.0.1")`], { stdio: "ignore" });
+  let dummyUp = false;
+  for (let i = 0; i < 25 && !dummyUp; i++) {
+    await new Promise((r) => setTimeout(r, 200));
+    try { const p = await fetch(`http://127.0.0.1:${dummyPort}`); dummyUp = p.ok; } catch {}
+  }
+  let dummyExit = null;
+  dummy.on("exit", (code, sig) => { dummyExit = sig || code; });
+  const savedUrl = process.env.ROUTER9_URL, savedPort = process.env.ROUTER9_PORT;
+  delete process.env.ROUTER9_URL; process.env.ROUTER9_PORT = String(dummyPort);
+  const killed = await killStalePort9Router();
+  process.env.ROUTER9_URL = savedUrl; process.env.ROUTER9_PORT = savedPort;
+  t("8b. dummy server (proses terpisah) hidup duluan", dummyUp === true);
+  t("8c. killStalePort9Router: bunuh PEMILIK PORT beneran", killed.killed === true && typeof killed.pid === "number", JSON.stringify(killed));
+  // 8d: proses dummy beneran mati (exit event ke-trigger / SIGKILL fallback)
+  await new Promise((r) => setTimeout(r, 2500));
+  if (!dummyExit) { try { dummy.kill("SIGKILL"); dummyExit = "force-killed-cleanup"; } catch {} }
+  t("8d. proses dummy tercatat mati (exit signal)", dummyExit != null, String(dummyExit));
+
+  // 8d: self-heal ensureRouter9GatewayKey — 401 sekali → auto-retry → key tetap dapat
+  const cfgNow = JSON.parse(fs.readFileSync(CFG_PATH, "utf8"));
+  cfgNow.gateway.apikey = "";
+  fs.writeFileSync(CFG_PATH, JSON.stringify(cfgNow, null, 2));
+  failKeys401Once = true;
+  const keysBeforeHeal = calls.keys.length;
+  let healedKey = null, healErr = null;
+  try { healedKey = await ensureRouter9GatewayKey(); } catch (e) { healErr = e; }
+  t("8e. self-heal: 401 sekali → auto-retry → key DIDAPAT (gak nyerah)", healedKey != null && healedKey.startsWith("sk-mock-gw-") && healErr === null, healErr ? healErr.message : String(healedKey));
+  t("8f. self-heal: 2 percobaan POST /api/keys (401 lalu sukses)", calls.keys.length === keysBeforeHeal + 2, `calls=${calls.keys.length} vs ${keysBeforeHeal}+2`);
+  t("8g. self-heal: key tersimpan balik ke config", JSON.parse(fs.readFileSync(CFG_PATH, "utf8")).gateway.apikey === healedKey);
+
+  // 8g: .9router restart (owner) — jalan di mode mock, mock TETAP hidup
+  const mR = mkM({ args: ["restart"], isOwner: true });
+  await run(mR, mkSock());
+  t("8h. .9router restart owner → balasan box restart", mR._replies[0]?.includes("9Router") && mR._replies[0]?.includes("Proses lama") && mR._reacts.includes("🐣"), (mR._replies[0] || "").slice(0, 120));
+  t("8i. setelah .9router restart: mock server masih hidup (gak dibunuh mode mock)", await router9IsUp({ force: true }));
+
+  // 8i: restart non-owner → ditolak
+  const mN = mkM({ args: ["restart"], isOwner: false });
+  await run(mN, mkSock());
+  t("8j. .9router restart non-owner → khusus owner", mN._replies[0]?.includes("Khusus owner"), (mN._replies[0] || "").slice(0, 80));
+
+  // 8j: source guard — self-heal cuma sekali retry (gak infinite loop)
+  const engSrc8 = fs.readFileSync(path.join(R, "src/lib/nova-9router-local.js"), "utf8");
+  t("8k. engine: self-heal single-retry (_retried guard) + kill-by-port ada", engSrc8.includes("_retried") && engSrc8.includes("findPidOnPort") && engSrc8.includes("killStalePort9Router"));
 }
 
 srv.close();

@@ -28,9 +28,12 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import os from "node:os";
-import { spawn } from "node:child_process";
+import { spawn, execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
+
+const execFileAsync = promisify(execFile);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -187,6 +190,67 @@ async function mgmtApi(method, apiPath, body = null) {
   });
 }
 
+// ── SELF-HEAL: proses 9router "basi" di port tapi auth-nya gak sinkron ──
+// GOTCHA (1 Okt 2026, bug nyata report owner "padahal katanya udah jalan"):
+// server 9router (Next.js) GANTI PROCESS TITLE jadi "next-server" — jadi
+// kalau proses LAMA dari boot sebelumnya masih nyangkut (gagal dibunuh pas
+// restart bot, port 20128 masih dia pegang), /api/health TETAP 200 (proses
+// itu beneran hidup) TAPI secret di memorinya BEDA dari ~/.9router/auth/
+// cli-secret yang baru ditulis ulang (misal 9router regenerate pas upgrade
+// versi) → token x-9r-cli-token yang nova hitung dari file gak match →
+// POST /api/keys balik 401 TERUS walau health check hijau. ensure9RouterRunning()
+// gak nolong karena dia cuma cek health, bukan identitas proses.
+// FIX: cari PID pemilik port 20128 (BUKAN pattern "9router" — gagal karena
+// nama proses udah ganti), bunuh paksa, baru spawn proses segar yang auth-nya
+// pasti nyambung sama file ~/.9router terbaru.
+async function findPidOnPort(port) {
+  // Coba 3 cara berurutan — VPS beda-beda tool yang terpasang.
+  const attempts = [
+    { cmd: "lsof", args: ["-ti", `:${port}`] },
+    { cmd: "fuser", args: [`${port}/tcp`] },
+    { cmd: "ss", args: ["-ltnp"] },
+  ];
+  for (const a of attempts) {
+    try {
+      const { stdout } = await execFileAsync(a.cmd, a.args, { timeout: 5000 });
+      if (a.cmd === "ss") {
+        // ss -ltnp output: ... LISTEN 0 128 127.0.0.1:20128 ... users:(("node",pid=1234,fd=5))
+        const line = stdout.split("\n").find((l) => l.includes(`:${port} `));
+        const match = line && line.match(/pid=(\d+)/);
+        if (match) return Number(match[1]);
+        continue;
+      }
+      const pids = stdout.trim().split(/\s+/).map(Number).filter((n) => Number.isInteger(n) && n > 0);
+      if (pids.length) return pids[0];
+    } catch {
+      // tool gak ada / gak nemu apa-apa — coba cara berikutnya
+    }
+  }
+  return null;
+}
+
+export async function killStalePort9Router({ port = getRouter9Port() } = {}) {
+  // SAFETY: kalau ROUTER9_URL di-override (mock e2e / endpoint eksternal),
+  // kita gak mengelola proses 9router lokal mana pun — JANGAN bunuh apa pun
+  // yang kebetulan pegang port itu. Kill-by-port cuma sah saat engine
+  // jalan mode default (spawn bareng bot di 127.0.0.1:20128).
+  if (process.env.ROUTER9_URL) {
+    return { killed: false, reason: "mode eksternal/mock (ROUTER9_URL di-set) — engine gak mengelola proses lokal" };
+  }
+  const pid = await findPidOnPort(port);
+  if (!pid) return { killed: false, reason: "gak ketemu proses di port — mungkin memang belum jalan" };
+  try {
+    process.kill(pid, "SIGTERM");
+    await new Promise((r) => setTimeout(r, 1200));
+    try { process.kill(pid, 0); process.kill(pid, "SIGKILL"); } catch { /* udah mati duluan dari SIGTERM — bagus */ }
+  } catch (e) {
+    return { killed: false, reason: `gagal kill PID ${pid}: ${e.message}` };
+  }
+  _state.upSince = 0; // paksa health check berikutnya cek ulang, jangan percaya cache
+  _state.child = null;
+  return { killed: true, pid };
+}
+
 // ── konfigurasi apikey (src/lib/apikey/9routerapikey.json) ──
 function readRouter9Config() {
   try {
@@ -203,14 +267,27 @@ function writeRouter9Config(cfg) {
 
 // Gateway key: otomatis dibikin kalau belum ada — user gak perlu buka dashboard
 // cuma buat copy key. Disimpan balik ke 9routerapikey.json biar persist.
-export async function ensureRouter9GatewayKey({ create = true } = {}) {
+export async function ensureRouter9GatewayKey({ create = true, _retried = false } = {}) {
   const cfg = readRouter9Config();
   const existing = cfg?.gateway?.apikey?.trim();
   if (existing) return existing;
   if (!create) return "";
   const r = await mgmtApi("POST", "/api/keys", { name: "nova-bot" });
   const key = r.ok && r.json?.key;
-  if (!key) throw new Error(`gagal bikin gateway key 9router (HTTP ${r.status}) — cek .9router status`);
+  if (!key) {
+    // 🔹 SELF-HEAL 1 Okt 2026: 401/403 di sini SELALU berarti proses 9router
+    // yang lagi hidup di port itu auth-nya gak sinkron sama file ~/.9router
+    // terbaru (proses basi — lihat komentar killStalePort9Router). Health
+    // check doang gak bisa bedain ini, jadi coba benerin OTOMATIS sekali:
+    // bunuh proses di port → spawn ulang segar → ulang request SEKALI.
+    // Gagal lagi → baru nyerah jujur (jangan infinite retry).
+    if ((r.status === 401 || r.status === 403) && !_retried) {
+      await killStalePort9Router();
+      const up = await ensure9RouterRunning({ waitMs: 20000 });
+      if (up.up) return ensureRouter9GatewayKey({ create, _retried: true });
+    }
+    throw new Error(`gagal bikin gateway key 9router (HTTP ${r.status}) — proses lama kemungkinan basi, coba .9router restart`);
+  }
   cfg.gateway = { ...(cfg.gateway || {}), apikey: key };
   writeRouter9Config(cfg);
   return key;

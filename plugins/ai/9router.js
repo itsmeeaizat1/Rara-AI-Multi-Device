@@ -22,7 +22,7 @@
 import { novaBox, novaGuideV2 } from "../../src/lib/nova-menu-style.js";
 import { smallcapsText } from "../../src/lib/styler.js";
 import {
-  ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys,
+  ensure9RouterRunning, ensureRouter9GatewayKey, syncRouter9ProviderKeys, killStalePort9Router,
   router9Models, router9FindModel, router9Chat, router9ImageGen,
   router9ImageModels, router9VisionModels, router9Stats,
   getRouter9Base, getRouter9Port, ROUTER9_DEFAULT_MODEL,
@@ -35,7 +35,7 @@ const pluginConfig = {
   alias: ["ai9", "router9", "novarouter"], // nama lama tetap jalan
   category: "ai",
   description: "9Router Lokal — chat AI 747 model via 9router native yang jalan bareng bot (tanpa API luar)",
-  usage: ".9router <pesan> | .9router gambar <prompt> | .9router model [keyword] | .9router setmodel <id> | .9router status | .9router sync (owner)",
+  usage: ".9router <pesan> | .9router gambar <prompt> | .9router model [keyword] | .9router setmodel <id> | .9router status | .9router sync (owner) | .9router restart (owner)",
   example: ".9router jelaskan siapa presiden indonesia\n.9router buatkan gambar kucing\n.9router model glm\n.9router setmodel glm/glm-4.7\n.9router status",
   isOwner: false,
   isPremium: false,
@@ -46,7 +46,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const SUBS = ["model", "setmodel", "modelset", "status", "sync", "start", "gambar", "image", "img", "buat", "ag", "agent"];
+const SUBS = ["model", "setmodel", "modelset", "status", "sync", "start", "restart", "gambar", "image", "img", "buat", "ag", "agent"];
 const IMG_WORDS = ["gambar", "image", "img", "buat", "buatkan"];
 
 // ── helper pref model per chat ──
@@ -282,6 +282,39 @@ async function handler(m, { sock, args, botConfig, db, deps } = {}) {
       `9Router jalan di ${getRouter9Base()}`,
       `Model live: ${count}`,
       `Dashboard: ${getRouter9Base()}/dashboard`,
+    ]));
+  }
+
+  // .9router restart — paksa BUNUH proses lama (termasuk yang "basi":
+  // health check hijau tapi auth-nya gak sinkron sama ~/.9router terbaru,
+  // GOTCHA: nama proses udah ganti "next-server" — pattern "9router" gak
+  // nembak) lalu spawn ulang. Fix manual buat bug "gagal bikin gateway key
+  // 9router (HTTP 401)" padahal status bilang sudah hidup (1 Okt 2026).
+  if (sub === "restart") {
+    if (!m.isOwner) {
+      return m.reply(novaBox("9Router", ["Khusus owner."]));
+    }
+    await m.react("🕒");
+    const killed = await killStalePort9Router();
+    const up = await ensure9RouterRunning({ waitMs: 30000 });
+    if (!up.up) {
+      await m.react("❌");
+      return m.reply(novaBox("9Router", [
+        `Proses lama: ${killed.killed ? `dimatikan (PID ${killed.pid})` : killed.reason}`,
+        `Gagal nyalain ulang: ${up.error || "unknown"}`,
+        "Cek logs/9router-local.log",
+      ]));
+    }
+    let gw = "belum";
+    try { gw = (await ensureRouter9GatewayKey({ create: true })) ? "ok" : "belum"; } catch (e) { gw = `gagal (${e.message})`; }
+    let count = "-";
+    try { count = (await router9Models()).length; } catch { /* telat gak masalah */ }
+    await m.react("🐣");
+    return m.reply(novaBox("9Router — Restart", [
+      `Proses lama : ${killed.killed ? `dimatikan (PID ${killed.pid})` : killed.reason}`,
+      `9Router     : jalan di ${getRouter9Base()}`,
+      `Gateway key : ${gw}`,
+      `Model live  : ${count}`,
     ]));
   }
 
