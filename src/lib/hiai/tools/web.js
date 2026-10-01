@@ -2,6 +2,11 @@ import { ctx, MODELS, captureWebsiteScreenshot, createGeminiClient, detectPlatfo
 import { browserWebSearch, browserPageFacts } from '../../../scraper/nova-web-browser.js';
 import fs from 'fs'
 
+// Seam e2e: override browserWebSearch yang dipakai fallback search_web (jangan nyala chromium beneran di suite test).
+let _browserSearchImpl = browserWebSearch;
+export function __setBrowserSearchForTest(fn) { _browserSearchImpl = fn || browserWebSearch; }
+export function __resetBrowserSearchForTest() { _browserSearchImpl = browserWebSearch; }
+
 export default [
 {
     name: 'view_website',
@@ -278,21 +283,47 @@ export default [
         query: { type: 'string', description: 'Kata kunci atau pertanyaan yang ingin dicari', required: true }
     },
     execute: async ({ query }) => {
+        let groundedResult = null
+        let groundedError = null
         try {
-            const result = await searchWebGrounded(query)
-            if (!result?.answer) {
-                return 'Search tidak mengembalikan jawaban untuk query ini. Jawab dari pengetahuanmu dan tandai bahwa info mungkin tidak terkini.'
-            }
-
-            const sources = (result.sources || [])
-                .map(s => `• ${s.title}: ${s.url}`)
-                .join('\n')
-            const reminder = '\n\n[INSTRUKSI WAJIB: JANGAN jawab langsung ke user pakai teks biasa. Panggil tool send_rich_reply sekarang — body = rangkuman di atas dalam bahasa natural TANPA link apapun, citations = daftar {url, title} dari sumber di atas yang relevan (akan muncul sebagai tombol link di bawah pesan).]'
-            return result.answer + (sources ? `\n\nDaftar sumber (untuk dipasangkan via send_rich_reply, JANGAN ditempel mentah):\n${sources}` : '') + reminder
+            groundedResult = await searchWebGrounded(query)
         } catch (e) {
-            console.warn(`[search_web] Error: ${e.message}`)
-            return `Search gagal: ${e.message}. Jawab dari pengetahuanmu dan tandai bahwa info mungkin tidak terkini.`
+            groundedError = e
+            console.warn(`[search_web] Grounding gagal: ${e.message}`)
         }
+        if (!groundedResult?.answer) {
+            // FALLBACK ENGINE-LEVEL ke browsing chromium (gratis, tanpa API key).
+            // Kenapa di sini dan gak cuma nyuruh model lewat rule 12: kejadian nyata
+            // (1 Okt 2026) — grounding mati karena AI_KEYS kosong, error balik ke model,
+            // model CUMA meneruskan pesan error ke user ("API key tidak terpasang")
+            // dan gak jalanin rute cadangan browse_web padahal browsing masih hidup.
+            // Fallback deterministik di level engine ngejamin rute cadangan SELALU
+            // keambil, gak tergantung kepatuhan model baca rule 12.
+            // CATATAN: alasan detail kegagalan grounding SENGAJA gak ditempel ke hasil
+            // tool — kejadian nyata (1 Okt 2026): error mentah "AI_KEYS kosong" balik ke
+            // model, model malah MENERUSKANNYA ke user jadi "koneksi mesin pencari tidak
+            // tersedia (API key tidak terpasang)" dan gak jelasin solusinya. Model gak
+            // bakal bisa nyebut apa yang gak pernah dikasih tau.
+            try {
+                const items = await _browserSearchImpl(query, { limit: 8 })
+                if (items?.length) {
+                    const list = items.map((it, i) => `${i + 1}. ${it.title}\n   ${it.url}\n   ${it.snippet || ''}`).join('\n')
+                    return `[HASIL PENCARIAN WEB untuk "${query}" — ${items.length} hasil, via chromium:]\n${list}\n\n[Pilih hasil yang paling nyambung dengan pertanyaan user, lalu panggil browse_web lagi dengan URL hasilnya buat baca isi lengkapnya, TERUS jawab user secara natural. Kalau snippet udah cukup buat jawab, boleh langsung jawab tanpa buka halaman. JANGAN sebutkan kata "grounding"/"chromium"/detail teknis apapun ke user — dari sudut pandang user ini pencarian normal yang berhasil.]`
+                }
+            } catch (e2) {
+                console.warn(`[search_web] Fallback browsing juga gagal: ${e2.message}`)
+            }
+            const isNoKey = groundedError && /API key|AI_KEYS/i.test(String(groundedError.message))
+            return isNoKey
+                ? `Pencarian online grounding belum aktif di server ini (API key Gemini belum dipasang) dan browsing chromium juga gagal. JAWAB pertanyaan user dari pengetahuanmu dengan catatan info mungkin tidak terkini, LALU tambahkan satu kalimat singkat ke owner: fitur pencarian online .hiaiagent bisa diaktifkan dengan pasang API key Gemini via .setkey hiai (fitur ai-setkey bot). Jangan tempel pesan error mentah.`
+                : `Search online dan browsing chromium sama-sama gagal saat ini. Jawab dari pengetahuanmu dan tandai bahwa info mungkin tidak terkini. Jangan tempel pesan error mentah ke user.`
+        }
+
+        const sources = (groundedResult.sources || [])
+            .map(s => `• ${s.title}: ${s.url}`)
+            .join('\n')
+        const reminder = '\n\n[INSTRUKSI WAJIB: JANGAN jawab langsung ke user pakai teks biasa. Panggil tool send_rich_reply sekarang — body = rangkuman di atas dalam bahasa natural TANPA link apapun, citations = daftar {url, title} dari sumber di atas yang relevan (akan muncul sebagai tombol link di bawah pesan).]'
+        return groundedResult.answer + (sources ? `\n\nDaftar sumber (untuk dipasangkan via send_rich_reply, JANGAN ditempel mentah):\n${sources}` : '') + reminder
     }
 },
 {

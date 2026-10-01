@@ -132,6 +132,52 @@ global.settings = { ...(global.settings || {}), owner: [["628111", "Owner Test"]
 
 if (global.settings) global.settings.owner = prevOwner;
 
+// 5. SEARCH_WEB FALLBACK ENGINE-LEVEL (bug "API key tidak terpasang" diteruskan ke user,
+//    browse_web gak dipanggil model) — fallback browsing chromium harus jalan DETERMINISTIK
+//    di level tool, gak ngandelin kepatuhan model baca rule 12.
+{
+  const webMod = await import("../../src/lib/hiai/tools/web.js");
+  const searchTool = (webMod.default || []).find((t) => t.name === "search_web");
+  ok("tool search_web ter-ekspor dari tools/web.js", !!searchTool && typeof searchTool.execute === "function");
+
+  // pastikan gak ada key Gemini (persis kondisi VPS 1 Okt: AI_KEYS kosong + apikeys.json hiai kosong)
+  const savedAiKeys = process.env.AI_KEYS;
+  delete process.env.AI_KEYS;
+
+  // (a) grounding mati no-key → fallback chromium dapat hasil → hasil pencarian dibalikin, TANPA error mentah
+  webMod.__setBrowserSearchForTest(async () => ([
+    { title: "Berita MBG hari ini", url: "https://contoh.com/berita-mbg", snippet: "Ringkasan berita mbg terbaru." },
+    { title: "Update mbg", url: "https://contoh.com/update", snippet: "Info update." },
+  ]));
+  const r1 = await searchTool.execute({ query: "berita mbg" });
+  ok(
+    "grounding no-key → fallback chromium jalan otomatis (hasil pencarian dibalikin)",
+    /HASIL PENCARIAN WEB/.test(r1) && /berita mbg terbaru|Berita MBG hari ini/.test(r1) && r1.includes("https://contoh.com/berita-mbg"),
+    String(r1).slice(0, 120)
+  );
+  ok(
+    "fallback hasil: error mentah 'AI_KEYS kosong' TIDAK ditempel ke hasil tool (model gak bisa nyebut apa yang gak dikasih tau)",
+    !/AI_KEYS|Tidak ada API key tersedia/i.test(r1)
+  );
+
+  // (b) grounding mati + chromium juga gagal → pesan jujur + panduan solusi .setkey hiai (bukan error mentah)
+  webMod.__setBrowserSearchForTest(async () => { throw new Error("chromium gagal nyala"); });
+  const r2 = await searchTool.execute({ query: "berita mbg" });
+  ok(
+    "grounding + chromium sama-sama mati → panduan solusi .setkey hiai dibalikin (jujur & actionable)",
+    /\.setkey hiai/i.test(r2) && /jawab pertanyaan/i.test(r2),
+    String(r2).slice(0, 160)
+  );
+  ok(
+    "pesan kegagalan total: TIDAK ada error mentah 'Tidak ada API key tersedia' ditempel",
+    !/Tidak ada API key tersedia|AI_KEYS kosong/i.test(r2)
+  );
+
+  webMod.__resetBrowserSearchForTest();
+  if (savedAiKeys !== undefined) process.env.AI_KEYS = savedAiKeys;
+  else delete process.env.AI_KEYS;
+}
+
 // Beberin lagi auto-heal-log.json ke state semula (jangan ninggalin bekas test di repo)
 if (hadHealLog) {
   fs.writeFileSync(HEAL_LOG_PATH, healLogBackup);
