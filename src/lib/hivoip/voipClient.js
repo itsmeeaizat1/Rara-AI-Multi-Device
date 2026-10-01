@@ -1,4 +1,5 @@
 import { EventEmitter } from 'node:events';
+import { CallState } from './types.js';
 import { WaVoipCoordinator } from './WaVoipCoordinator.js';
 import { createVoipDeps } from './voip-deps.js';
 import { createConsoleLogger } from './shim/core.js';
@@ -51,6 +52,8 @@ export class ActiveCall extends EventEmitter {
     #endTimer = null;
     #ended = false;
     #connectedEmitted = false;
+    #acceptedEmitted = false;
+    #ringingEmitted = false;
     constructor(coordinator, callId, durationMs) {
         super();
         this.callId = callId;
@@ -62,8 +65,18 @@ export class ActiveCall extends EventEmitter {
     _onState(call) {
         if (call.callId !== this.callId)
             return;
-        if (call.isRinging)
+        // Sekali per fase: coordinator bisa emit call_state berkali-kali
+        // selama state yang sama - status lifecycle gak boleh dobel.
+        if (call.isRinging && !this.#ringingEmitted) {
+            this.#ringingEmitted = true;
             this.emit('ringing');
+        }
+        // 'accepted' = remote nyamber tombol hijau (remote_accepted, state
+        // Connecting) - sebelum media nyambung. Emit sekali saja.
+        if (call.stateData?.state === CallState.Connecting && !this.#acceptedEmitted) {
+            this.#acceptedEmitted = true;
+            this.emit('accepted');
+        }
         if (call.isActive && !this.#connectedEmitted) {
             this.#connectedEmitted = true;
             this.emit('connected');

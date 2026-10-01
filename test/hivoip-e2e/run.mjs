@@ -125,5 +125,55 @@ ok("handler: usage → novaGuide (gak nelpon)", res?.handled === true && /voipca
     "guard blank source gak ketemu");
 }
 
+// ═══ STATUS LIFECYCLE (request owner 1 Okt 2026: "bot kirim status Telepon
+// sedang berdering, telepon diangkat, telepon ditolak dan status lain"):
+// engine kini emit 'accepted' (remote nyamber tombol hijau), plugin edit-in-place
+// status tiap fase + alasan berakhir di-map human-friendly.
+{
+  // ActiveCall: urutan event ring → accepted → connected, masing-masing sekali
+  const { ActiveCall } = await import("../../src/lib/hivoip/voipClient.js");
+  const ac = new ActiveCall({}, "c1", 0);
+  const events = [];
+  for (const ev of ["ringing", "accepted", "connected"]) ac.on(ev, () => events.push(ev));
+  ac._onState({ callId: "c1", isRinging: true, stateData: { state: "ringing" } });
+  ac._onState({ callId: "c1", isRinging: true, stateData: { state: "ringing" } }); // dedupe: state ringing doang gak boleh dobel
+  ac._onState({ callId: "c1", stateData: { state: "connecting" } });
+  ac._onState({ callId: "c1", stateData: { state: "connecting" } }); // accepted doang sekali
+  ac._onState({ callId: "c1", isActive: true, stateData: { state: "active" } });
+  ok("ActiveCall: urutan event ringing → accepted → connected", events.join(",") === "ringing,accepted,connected", events.join(","));
+  ok("ActiveCall: 'ringing' gak dobel walau state berulang", events.filter(e => e === "ringing").length === 1);
+  ok("ActiveCall: 'accepted' cuma sekali (diangkat)", events.filter(e => e === "accepted").length === 1);
+
+  // describeVoipEnd: alasan berakhir human-friendly
+  const endDeclined = plugin.describeVoipEnd("declined", "628123");
+  ok("end: declined → DITOLAK", /ditolak/i.test(endDeclined), endDeclined);
+  const endTimeout = plugin.describeVoipEnd("timeout", "628123");
+  ok("end: timeout → gak diangkat", /gak diangkat|tidak diangkat/i.test(endTimeout), endTimeout);
+  const endBusy = plugin.describeVoipEnd("busy", "628123");
+  ok("end: busy → panggilan lain", /panggilan lain|sibuk/i.test(endBusy), endBusy);
+  const endDnd = plugin.describeVoipEnd("do_not_disturb", "628123");
+  ok("end: do_not_disturb → DND", /jangan diganggu|dnd/i.test(endDnd), endDnd);
+  const endUser = plugin.describeVoipEnd("user_ended", "628123");
+  ok("end: user_ended → selesai", /selesai/i.test(endUser), endUser);
+  const endUserDur = plugin.describeVoipEnd("user_ended", "628123", Date.now() - 65000);
+  ok("end: durasi ke-format (1 mnt lebih)", /durasi 1 mnt/i.test(endUserDur), endUserDur);
+  const endUnknown = plugin.describeVoipEnd("weird_reason", "628123");
+  ok("end: alasan asing tetap ditampilkan jujur", endUnknown.includes("weird_reason"), endUnknown);
+  const endNoDur = plugin.describeVoipEnd("user_ended", "628123", null);
+  ok("end: tanpa connectedAt → tanpa durasi (gak ngarang)", !/durasi/i.test(endNoDur), endNoDur);
+
+  // plugin wiring: semua fase kepasang listener
+  const pluginSrc = fsHere("../../plugins/owner/voipcall.js");
+  for (const ev of ["ringing", "accepted", "connected", "ended"]) {
+    ok(`plugin: listener '${ev}' kepasang`, pluginSrc.includes(`call.on("${ev}"`));
+  }
+  ok("plugin: status berdering pake teks 'berdering'", /telepon sedang berdering/i.test(pluginSrc));
+  ok("plugin: status diangkat pake teks 'diangkat'", /diangkat/i.test(pluginSrc) && pluginSrc.includes('call.on("accepted"'));
+
+  // engine index: re-emit accepted
+  const engineSrc2 = fsHere("../../src/lib/hivoip/index.js");
+  ok("engine: VoipCall re-emit 'accepted'", engineSrc2.includes("activeCall.on('accepted', () => this.emit('accepted'))"));
+}
+
 console.log(`─── hasil: ${pass}/${total} ${pass === total ? "PASSED ✓" : "ADA YANG GAGAL ✗"} ───`);
 process.exit(pass === total ? 0 : 1);

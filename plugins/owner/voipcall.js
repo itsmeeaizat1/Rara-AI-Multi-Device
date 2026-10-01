@@ -56,6 +56,28 @@ export function toFriendlyVoipError(message) {
   return `Gagal nelpon: ${msg.slice(0, 120)}`;
 }
 
+// STATUS LIFECYCLE (request owner 1 Okt 2026): bot kirim status tiap fase —
+// mengelepon → berdering → diangkat → terhubung → berakhir (dengan alasan
+// human-friendly: ditolak, gak diangkat, busy, DND, dll). Diekspor buat e2e.
+export function describeVoipEnd(reason, phoneNumber, connectedAtMs) {
+  const num = String(phoneNumber || "nomor");
+  let dur = "";
+  if (connectedAtMs) {
+    const s = Math.max(1, Math.round((Date.now() - connectedAtMs) / 1000));
+    dur = ` Durasi ${s >= 60 ? `${Math.floor(s / 60)} mnt ${s % 60} dtk` : `${s} detik`}.`;
+  }
+  switch (String(reason || "")) {
+    case "declined": return `Telepon ke ${num} DITOLAK.`;
+    case "timeout": return `${num} gak diangkat (timeout).`;
+    case "busy": return `${num} lagi ada panggilan lain (sibuk).`;
+    case "cancelled": return `Panggilan ke ${num} dibatalkan.`;
+    case "failed": return `Panggilan ke ${num} gagal terhubung.`;
+    case "do_not_disturb": return `${num} lagi mode jangan diganggu (DND).`;
+    case "user_ended": return `Panggilan ke ${num} selesai.${dur}`;
+    default: return `Panggilan ke ${num} berakhir: ${reason || "unknown"}.${dur}`;
+  }
+}
+
 async function downloadQuotedMedia(quoted) {
   const mime = quoted?.mimetype || "";
   const kind = /^video/.test(mime) ? "video" : /^audio/.test(mime) ? "audio" : null;
@@ -165,11 +187,29 @@ async function handler(m, { sock, config: botConfig }) {
     const call = await voip.call(phoneNumber, media, resolution, { autoEndCall, loop, callType });
     activeCalls.set(m.chat, { call, key, phoneNumber });
 
+    // STATUS LIFECYCLE: semua fase diedit ke SATU pesan status (biar rapi,
+    // gak banjir) - tiap fase kejadian sekali aja.
+    let connectedAtMs = null;
+    let phase = 0; // 1=berdering 2=diangkat 3=terhubung 4=berakhir
+    const editStatus = (text) => {
+      key && sock.sendMessage(m.chat, { text: claraWrap("VOIP", text), edit: key }).catch(() => {});
+    };
+
     call.on("ringing", () => {
-      key && sock.sendMessage(m.chat, { text: claraWrap("VOIP", `Nada sambung... ${phoneNumber}`), edit: key }).catch(() => {});
+      if (phase >= 1) return;
+      phase = 1;
+      editStatus(`Telepon sedang berdering... ${phoneNumber}${willBeVideo ? " (telepon video)" : ""}`);
+    });
+    call.on("accepted", () => {
+      if (phase >= 2) return;
+      phase = 2;
+      editStatus("Telepon diangkat! Nyambungin media...");
     });
     call.on("connected", () => {
-      key && sock.sendMessage(m.chat, { text: claraWrap("VOIP", "Terhubung! Ketik .voipend buat akhiri."), edit: key }).catch(() => {});
+      if (phase >= 3) return;
+      phase = 3;
+      connectedAtMs = Date.now();
+      editStatus(`Terhubung! Media diputar — akhiri ${prefix}voipend`);
     });
     call.on("item", ({ index, kind }) => {
       if (index === 0) return;
@@ -177,10 +217,10 @@ async function handler(m, { sock, config: botConfig }) {
     });
     call.on("ended", (reason) => {
       activeCalls.delete(m.chat);
-      const friendlyText = reason === "declined"
-        ? `Panggilan ke ${phoneNumber} ditolak.`
-        : `Panggilan ke ${phoneNumber} berakhir: ${reason}`;
-      key && sock.sendMessage(m.chat, { text: claraWrap("VOIP", friendlyText), edit: key }).catch(() => {});
+      if (phase < 4) {
+        phase = 4;
+        editStatus(describeVoipEnd(reason, phoneNumber, connectedAtMs));
+      }
       cleanupTempFiles();
     });
     call.on("error", (err) => {
