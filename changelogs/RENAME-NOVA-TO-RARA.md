@@ -41,3 +41,11 @@ pull branch → restart → tes `.raraai`, `.aboutrara`, `.ganti-rara` (asset cu
 - SKIP_FILES pakai prefix `./` GAK cocok dengan nama file git (`package.json` vs `./package.json`) → package-lock ikut ke-sweep. SELALU pakai endswith/nama persis.
 - URL di dalam string test fixture + asersi expected string NYAMBUNG — kalau URL diproteksi tapi expected string ke-sweep, asersi gagal. Audit pasangan URL↔expected.
 - pm2 name & alias npm = string konfigurasi runtime, BUKAN branding — masukin sentinel eksplisit.
+
+## Update 2 (commit af34128e): header credit baru
+Owner revisi: "jgn RARA AI WHATSAPP BOT TAPI RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA". Sweep 2.439 file:
+- line-1 semua JS: "// RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA"
+- package.json _watermark, LICENSE, .npmrc, .env.example, .buatfitur, docs, generator kyio
+- teks user-facing: "Rara AI WhatsApp Bot"/"Rara AI Whatsapp Bot" → "Rara AI - Multi Device"
+- tqto: "Base: Rara AI - Multi Device"
+- asersi tqto-e2e 5g regex di-update
