@@ -1,4 +1,5 @@
 // RARA AI - MULTI DEVICE, AIZAT, MADE IN INDONESIA
+import { raraWrap, raraError } from "../../src/lib/rara-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -54,12 +55,11 @@ async function handler(m, { sock }) {
   const story = await generateIsekai(names);
 
   if (!story) {
-    return m.reply("❌ Yah, gagal bikin ceritanya nih 😵\nCoba lagi yuk!", "isekai");
+    return m.reply(raraError("Isekai Story", "gagal bikin ceritanya, coba lagi ya kak..."), "isekai");
   }
 
-  const header = "⚔️ *Isekai Story*\n\nKarakter: " + names.join(", ") + "\n\n";
-  const footer = "\n\n Dibuat oleh Rara AI";
-  return m.reply( header + story + footer, "isekai");
+  const lines = [`Karakter: ${names.join(", ")}`, "", ...String(story || "").split("\n"), "", "♡ Dibuat oleh Rara AI ♡"];
+  return m.reply(raraWrap("Isekai Story", lines, "info"), "isekai");
 }
 
 export { pluginConfig as config, handler };

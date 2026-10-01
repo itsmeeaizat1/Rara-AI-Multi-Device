@@ -42,7 +42,7 @@ w("\n— raraGuideV2 render (struktur contoh owner) —");
     spec: ["⚡ 300x/hari", "⏱ 3dtk", "💸 gratis"],
   });
   const L = out.split("\n");
-  check("1a. header 「✧ play ✧」", L[0] === `「✧ ${toSC("play")} ✧」`, L[0]);
+  check("1a. header 「✧ play ✧」", L[0] === `୨୧ ✧ ${toSC("play")} ✧ ୨୧`, L[0]);
   check("1b. baris kaomoji ヾ(≧▽≦*)o play!!", L[1] === `ヾ(≧▽≦*)o ${toSC("play")}!!`, L[1]);
   check("1b2. blank setelah kaomoji", L[2] === "", L[2]);
 
@@ -142,7 +142,7 @@ w("\n— handler no-input → kartu V2 (fakta spec nyata) —");
   await run1("ocrsolve", ocrH, { config: { command: { prefix: "." } } });
   await run1("ssweb", ssH, null);
 
-  const isV2 = (r) => r && r.startsWith("「✧ ") && r.split("\n")[1].includes("!!");
+  const isV2 = (r) => r && r.startsWith("୨୧ ✧ ") && r.split("\n")[1].includes("!!");
   check("4a. play balas V2 + spec cd 15dtk nyata", isV2(first.play) && first.play.includes("⏱ 15dtk") && first.play.includes("💸 gratis"), first.play?.split("\n")[0]);
   check("4b. playvideo V2 + cd 20dtk", isV2(first.playvideo) && first.playvideo.includes("⏱ 20dtk"), first.playvideo?.split("\n")[0]);
   check("4c. instagramdl V2 + energi 1 cd 10dtk", isV2(first.instagramdl) && first.instagramdl.includes("⚡ energi 1") && first.instagramdl.includes("⏱ 10dtk"), first.instagramdl?.split("\n")[0]);
@@ -210,7 +210,7 @@ w("\n— raraSalahV2 + handler salah pemakaian → cute —");
 w("\n— global: raraGuide/raraNoInput/raraSalah auto-V2 + guard game —");
 {
   const old = raraGuide("Tes", "intronya", ".tes contoh", "catatan");
-  check("5a. raraGuide otomatis render V2 (semua plugin non-game kena)", old.startsWith(`「✧ ${toSC("tes")} ✧」`) && /\(.*\)\s[\u{1F600}-\u{1F64F}]/u.test(old.split("\n")[1] || ""), old.split("\n")[0] + " / " + (old.split("\n")[1] || ""));
+  check("5a. raraGuide otomatis render V2 (semua plugin non-game kena)", old.startsWith(`୨୧ ✧ ${toSC("tes")} ✧ ୨୧`) && /\(.*\)\s[\u{1F600}-\u{1F64F}]/u.test(old.split("\n")[1] || ""), old.split("\n")[0] + " / " + (old.split("\n")[1] || ""));
   // kaomoji WAJIB dibareng emoji muka cute (owner 25 Sep)
   const { raraNoInput: niF, raraSalah: salahF } = await import("../../src/lib/rara-menu-style.js");
   const niOut = niF("tesnoinput", "ketik teksnya", ".tesnoinput halo");

@@ -20,22 +20,30 @@ w("\n— raraGuide (V2) —");
 {
   const out = raraGuide("Mediafire DL", "Download file dari MediaFire! Kasih linknya ya!", ".mfdl https://www.mediafire.com/file/xxx", "Maksimal 200MB sekali download");
   const lines = out.split("\n");
-  check("header 「✧ mediafire dl ✧」", lines[0] === `「✧ ${toSC("mediafire dl")} ✧」`, lines[0]);
+  check("header 「✧ mediafire dl ✧」", lines[0] === `୨୧ ✧ ${toSC("mediafire dl")} ✧ ୨୧`, lines[0]);
   check("kaomoji + nama!! TANPA emoji unicode (revisi owner)", /mediafire dl!!$/.test(lines[1]) && /\(/.test(lines[1]) && !/[😀-🙏🤀-🧿]/u.test(lines[1]), lines[1]);
-  check("intro jadi sapaan (smallcaps)", lines[3] === toSC("Download file dari MediaFire! Kasih linknya ya!"), lines[3]);
+  // FIX BASI (2 Okt, guard lebar 1 Okt): intro/note di-scWrap multi-baris
+  // → rekonstruksi join spasi antara blok, bukan asumsi 1 baris per field.
   const iC = lines.findIndex((l) => l.startsWith(`📍 ${toSC("Contoh")}: `));
-  check("📍 contoh: baris sendiri, example VERBATIM (URL gak ke-smallcaps)", lines[5] === `📍 ${toSC("Contoh")}: .mfdl https://www.mediafire.com/file/xxx`, lines[5]);
-  check("note: baris sendiri + smallcaps + akhiran ~", lines[6] === `${toSC("Maksimal 200MB sekali download")}~`, lines[6]);
+  const introJoined = lines.slice(3, iC).filter((l) => l.trim()).join(" ");
+  check("intro jadi sapaan (rewrap utuh)", introJoined === toSC("Download file dari MediaFire! Kasih linknya ya!"), introJoined);
+  check("📍 contoh: baris sendiri, example VERBATIM (URL gak ke-smallcaps)", lines[iC] === `📍 ${toSC("Contoh")}: .mfdl https://www.mediafire.com/file/xxx`, lines[iC]);
+  const noteJoined = lines.slice(iC + 1).filter((l) => l.trim() && !l.startsWith("──")).map((l) => l.replace(/~$/, "")).join(" ");
+  check("note: baris sendiri + akhiran ~ (rewrap utuh)", noteJoined === toSC("Maksimal 200MB sekali download") && out.includes("download~"), noteJoined);
   check("gak ada lagi format lama 'Contoh: ' inline (baris tanpa 📍)", !out.split("\n").some((l) => l.startsWith("Contoh: .")));
 
   const noNote = raraGuide("Tes", "Intro doang", ".tes abc");
   check("tanpa note → baris contoh polos, gak ada baris note/~", noNote.includes(`📍 ${toSC("Contoh")}: .tes abc`) && !noNote.includes("~"), noNote);
   const multi = raraGuide("Welcome", "Atur pesan welcome member baru", ".welcome on", "Tipe:\n1. Welcome biasa\n2. Welcome dengan thumbnail foto profil");
   const ml = multi.split("\n");
-  check("note MULTI-BARIS: tiap baris jadi baris sendiri, ke-smallcaps", ml.includes(toSC("Tipe:")) && ml.includes(`1. ${toSC("Welcome biasa")}`) && ml.includes(`${toSC("2. Welcome dengan thumbnail foto profil")}~`), ml.join(" | "));
+  // FIX BASI (2 Okt, guard lebar 1 Okt): baris note panjang ke-wrap ≤30 →
+  // cek per-kalimat via rekonstruksi join, akhiran ~ di baris terakhir.
+  const iMTipe = ml.findIndex((l) => l === toSC("Tipe:"));
+  const lastNote = ml[ml.length - 1];
+  check("note MULTI-BARIS: tiap baris jadi baris sendiri (rewrap utuh)", iMTipe > -1 && ml.includes(`1. ${toSC("Welcome biasa")}`) && ml.slice(iMTipe + 2).filter((l) => l.trim()).map((l) => l.replace(/~$/, "")).join(" ") === toSC("2. Welcome dengan thumbnail foto profil") && lastNote.endsWith("profil~"), ml.join(" | "));
 
   const bare = raraGuide("Tes");
-  check("tanpa param apapun → gak crash, header + kaomoji doang", bare.startsWith(`「✧ ${toSC("tes")} ✧」`) && /tes!!$/.test(bare.split("\n")[1] || ""), bare);
+  check("tanpa param apapun → gak crash, header + kaomoji doang", bare.startsWith(`୨୧ ✧ ${toSC("tes")} ✧ ୨୧`) && /tes!!$/.test(bare.split("\n")[1] || ""), bare);
 }
 
 // ─── 2. raraNoInput — DESAIN V2 kaomoji (rework 25 Sep) ───
@@ -43,12 +51,12 @@ w("\n— raraNoInput (V2) —");
 {
   const out = raraNoInput("Ttp", "Kirim teks yang mau jadi sticker", ".ttp halo");
   const lines = out.split("\n");
-  check("header 「✧ ttp ✧」 + kaomoji nama!! tanpa emoji unicode", lines[0] === `「✧ ${toSC("ttp")} ✧」` && /ttp!!$/.test(lines[1]) && /\(/.test(lines[1]), lines[0] + " / " + lines[1]);
+  check("header 「✧ ttp ✧」 + kaomoji nama!! tanpa emoji unicode", lines[0] === `୨୧ ✧ ${toSC("ttp")} ✧ ୨୧` && /ttp!!$/.test(lines[1]) && /\(/.test(lines[1]), lines[0] + " / " + lines[1]);
   check("sapaan random cute (baris 3, tanpa emoji dekoratif)", lines[3] && lines[3].length > 5 && !/[😀-🙏🤀-🧿🫠]/u.test(lines[3]), lines[3]);
   check("📍 cara: hint smallcaps baris sendiri", lines[5] === `📍 ${toSC("Cara")}: ${toSC("Kirim teks yang mau jadi sticker")}`, lines[5]);
   check("contoh: verbatim baris sendiri", lines[6] === `${toSC("Contoh")}: .ttp halo`, lines[6]);
   const bare = raraNoInput("Tes");
-  check("noInput tanpa hint/example → tetap jalan (header + kaomoji + sapaan)", bare.startsWith(`「✧ ${toSC("tes")} ✧」`) && /tes!!$/.test(bare.split("\n")[1] || ""), bare);
+  check("noInput tanpa hint/example → tetap jalan (header + kaomoji + sapaan)", bare.startsWith(`୨୧ ✧ ${toSC("tes")} ✧ ୨୧`) && /tes!!$/.test(bare.split("\n")[1] || ""), bare);
 }
 
 // ─── 3. raraRpgGuide — label section konsisten ───
@@ -100,9 +108,10 @@ w("\n— raraSalah (V2 cute) —");
 w("\n— error helpers tetap —");
 {
   const e = raraError("Convert", "Format gak dikenal");
-  check("raraError tetap format ❌ (gak ada cara pakai)", e.includes("❌") && !e.includes("cara pakai"));
+  // DESAIN CUTE (2 Okt): kaomoji ganti ❌/✅ polos
+  check("raraError cute: header ribbon + kaomoji susah (gak ada ❌/cara pakai)", e.startsWith(`୨୧ ✧ ${toSC("convert")} ✧ ୨୧`) && /\(.*\)/.test(e) && !e.includes("❌") && !e.includes("cara pakai"), e.split("\n")[0]);
   const em = raraEmpty("Convert");
-  check("raraEmpty tetap format ❌", em.includes("❌"));
+  check("raraEmpty cute: header ribbon + kaomoji datar (gak ada ❌)", em.startsWith(`୨୧ ✧ ${toSC("convert")} ✧ ୨୧`) && /\(.*\)/.test(em) && !em.includes("❌"), em.split("\n")[0]);
 }
 
 w(`\n${pass} PASS / ${fail} FAIL`);

@@ -595,7 +595,9 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // body card di-smallcaps di sini. URL & isi code fence otomatis
     // dilindungi oleh smallcapsText (tetap persis).
     const _mBodyText = typeof text === "string" && text ? smallcapsText(text) : text;
-    const _mFooter = toSC(footer || `\u2726 ${botName}`);
+    // TEMA KHAS CEWEK MENU (2 Okt 2026, owner; revisi: tanpa emoji bow 🎀
+    // — cukup satu hati teks, gak ramai): caption/footer kartu menu.
+    const _mFooter = toSC(footer || `\u2661 ${botName}`);
 
     const interactiveObj = {
       body: proto.Message.InteractiveMessage.Body.fromObject({ text: _mBodyText }),
