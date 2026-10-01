@@ -1,6 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Plugin .voipcall — telepon/video call WA dengan pemutar media (port engine lama)
+// Plugin .voipcall / .voipvideocall — telepon WA dengan pemutar media (port engine lama)
 // Engine: src/lib/hivoip/ — OWNER-ONLY (anti penyalahgunaan, owner 28 Sep 2026)
+// REVISI 1 Okt 2026 (owner: "2 mode .voipcall telepon biasa untuk default klo
+// .voipvideocall untuk telepon video"): .voipcall = TELEPON BIASA (voice call,
+// media video dimainkan audionya aja), .voipvideocall = TELEPON VIDEO (video
+// call; tanpa media video → black screen beneran via ffmpeg lavfi).
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
@@ -9,11 +13,14 @@ import { novaGuide, novaError, claraWrap } from "../../src/lib/nova-menu-style.j
 
 const pluginConfig = {
   name: "voipcall",
-  alias: ["voip"],
+  // FIX LATEN 1 Okt: voipend/voipsilent gak pernah ke-registrasi — selama ini
+  // .voipend/.voipsilent kena jalur command-not-found (suggestion), gak nyamper
+  // ke handler sama sekali. Ditambah voipvideocall/videocall buat mode video.
+  alias: ["voip", "voipvideocall", "videocall", "voipend", "voipsilent"],
   category: "owner",
-  description: "Telepon/video call nomor WA lewat bot + putar audio/video (port engine lama)",
-  usage: ".voipcall <nomor> [url_media] [240p-1080p] [auto] [loop] | .voipend [force] | .voipsilent",
-  example: ".voipcall 6281234567890 https://contoh.com/lagu.mp3 auto",
+  description: "Telepon nomor WA lewat bot + putar audio/video: .voipcall telepon biasa, .voipvideocall telepon video",
+  usage: ".voipcall <nomor> [url_media] [240p-1080p] [auto] [loop] (telepon biasa) | .voipvideocall <nomor> [url_video] (telepon video) | .voipend [force] | .voipsilent",
+  example: ".voipcall 6281234567890 https://contoh.com/lagu.mp3 auto | .voipvideocall 6281234567890 https://contoh.com/video.mp4",
   isOwner: true,
   isPremium: false,
   isGroup: true,
@@ -65,9 +72,11 @@ async function handler(m, { sock, config: botConfig }) {
   const prefix = botConfig.command?.prefix || ".";
   try {
     const raw = m.text?.trim() || "";
-    const parts = raw.replace(new RegExp(`^${prefix}voip(call|end|silent)\\s*`, "i"), "").trim();
+    const parts = raw.replace(new RegExp(`^${prefix}voip(call|videocall|end|silent)\\s*`, "i"), "").trim();
     const bodyArgs = parts ? parts.split(/\s+/) : [];
-    const cmd = (raw.match(/voip(call|end|silent)/i) || [])[1]?.toLowerCase() || "call";
+    const cmd = (raw.match(/voip(call|videocall|end|silent)/i) || [])[1]?.toLowerCase() || "call";
+    // MODE (revisi owner 1 Okt): .voipcall = telepon biasa, .voipvideocall = telepon video
+    const callType = cmd === "videocall" ? "video" : "audio";
     const voip = getVoip(sock);
 
     if (cmd === "end") {
@@ -99,9 +108,9 @@ async function handler(m, { sock, config: botConfig }) {
       await m.react("🐣");
       await m.reply(novaGuide(
         "voipcall",
-        "Telepon nomor WA lewat bot, bisa putar audio/video (playlist URL di-support, reply audio/video juga bisa).",
+        `Telepon nomor WA lewat bot + putar media. 2 mode: ${prefix}voipcall = TELEPON BIASA (media video dimainkan audionya saja), ${prefix}voipvideocall = TELEPON VIDEO (tanpa URL video = black screen).`,
         `${prefix}voipcall 6281234567890 auto`,
-        `Opsi: resolusi 240p-1080p · auto (auto hangup habis media) · loop (replay). Akhiri: ${prefix}voipend · mute: ${prefix}voipsilent. Butuh ffmpeg+ffprobe di server.`
+        `Opsi: resolusi 240p-1080p (mode video) · auto (auto hangup habis media) · loop (replay) · playlist URL di-support, reply audio/video juga bisa. Akhiri: ${prefix}voipend · mute: ${prefix}voipsilent. Butuh ffmpeg+ffprobe di server.`
       ));
       return { handled: true };
     }
@@ -140,11 +149,11 @@ async function handler(m, { sock, config: botConfig }) {
     if (media.length === 0) media = "silence";
     else if (media.length === 1) media = media[0];
 
-    const willBeVideo = (Array.isArray(media) ? media : [media]).some((src) =>
-      src !== "silence" && /\.(mp4|mov|webm|mkv|avi|m4v|3gp)(\?|#|$)/i.test(src)
-    );
+    // Mode video = selalu telepon video; mode biasa = selalu telepon biasa
+    // (video media nanti dimainkan audionya aja oleh engine).
+    const willBeVideo = callType === "video";
 
-    const sent = await m.reply(claraWrap("VOIP", `Ngelpon ${phoneNumber}...${willBeVideo ? " (video)" : ""} — akhiri ${prefix}voipend`));
+    const sent = await m.reply(claraWrap("VOIP", `Ngelpon ${phoneNumber}...${willBeVideo ? " (telepon video)" : " (telepon biasa)"} — akhiri ${prefix}voipend`));
     const key = sent?.key;
 
     const cleanupTempFiles = () => {
@@ -153,7 +162,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     };
 
-    const call = await voip.call(phoneNumber, media, resolution, { autoEndCall, loop });
+    const call = await voip.call(phoneNumber, media, resolution, { autoEndCall, loop, callType });
     activeCalls.set(m.chat, { call, key, phoneNumber });
 
     call.on("ringing", () => {
