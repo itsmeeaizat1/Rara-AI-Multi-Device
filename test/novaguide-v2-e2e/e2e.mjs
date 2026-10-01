@@ -26,6 +26,12 @@ const toSC = (s) => String(s || "").replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCa
 // ─── 1. RENDER — persis struktur contoh owner ───
 w("\n— novaGuideV2 render (struktur contoh owner) —");
 {
+  // GUARD LEBAR SERAGAM (1 Okt 2026, owner: "aku mau semua pesan menu
+  // gelembung ukuran lebarnya standarnya kyk menu allmenu") — sapaan/cara/
+  // note kini dipotong ≤30 char/baris (scWrap) biar gelembung WA konsisten
+  // standar, BUKAN lagi 1 baris fisik panjang. contoh = command TETAP
+  // VERBATIM 1 baris gak dipotong. Asersi di bawah gak hardcode index baris
+  // (jumlah baris wrap berubah tiap kalimat) — cek per-blok via helper.
   const out = novaGuideV2("play", {
     kaomoji: "ヾ(≧▽≦*)o",
     sapaan: "mau lagu favorit? ketik aja judulnya! (≧◡≦) ♡",
@@ -37,12 +43,37 @@ w("\n— novaGuideV2 render (struktur contoh owner) —");
   const L = out.split("\n");
   check("1a. header 「✧ ᴘʟᴀʏ ✧」", L[0] === `「✧ ${toSC("play")} ✧」`, L[0]);
   check("1b. baris kaomoji ヾ(≧▽≦*)o ᴘʟᴀʏ!!", L[1] === `ヾ(≧▽≦*)o ${toSC("play")}!!`, L[1]);
-  check("1c. sapaan ajakan smallcaps + kaomoji ujung", L[3] === `${toSC("mau lagu favorit? ketik aja judulnya!")} (≧◡≦) ♡`, L[3]);
-  check("1d. 📍 ᴄᴀʀᴀ: baris sendiri", L[5] === `📍 ${toSC("Cara")}: ${toSC("ketik judul lagu sesudah command")}`, L[5]);
-  check("1d2. ᴄᴏɴᴛᴏʜ: baris sendiri, command VERBATIM", L[6] === `${toSC("Contoh")}: .play faded`, L[6]);
-  check("1d3. note: baris sendiri + akhiran ~", L[7] === `${toSC("nanti bot yang carin audionya otomatis")}~`, L[7]);
-  check("1e. spec baris akhir join • (angka & emoji utuh)", L[9] === `⚡ 300x/${toSC("hari")} • ⏱ 3${toSC("dtk")} • 💸 ${toSC("gratis")}`, L[9]);
-  check("1f. 10 baris total (blank antar blok)", L.length === 10 && L[2] === "" && L[4] === "" && L[8] === "", L.length);
+  check("1b2. blank setelah kaomoji", L[2] === "", L[2]);
+
+  // GUARD LEBAR: semua baris PROSA (bukan header/kaomoji/command verbatim/
+  // spec) WAJIB ≤30 char — ini inti perbaikan 1 Okt (standar kayak allmenu)
+  const proseLineMaxLen = Math.max(...L.filter((l) =>
+    l && !l.startsWith("「") && !l.includes("!!") && !l.startsWith(toSC("Contoh") + ":") &&
+    !l.includes("⚡") && !l.includes("💸")
+  ).map((l) => l.length));
+  check("1c. SEMUA baris prosa (sapaan/cara/note) ≤30 char — standar allmenu", proseLineMaxLen <= 30, `maxlen=${proseLineMaxLen}`);
+
+  // sapaan: baris 3..dst sampai blank berikutnya, rejoin spasi harus = toSC(sapaan utuh)
+  const blankIdx = L.map((l, i) => (l === "" ? i : -1)).filter((i) => i >= 0);
+  const sapaanLines = L.slice(3, blankIdx[1]);
+  check("1d. sapaan ter-rewrap utuh (rejoin = toSC asli)", sapaanLines.join(" ") === toSC("mau lagu favorit? ketik aja judulnya! (≧◡≦) ♡"), sapaanLines);
+  check("1d2. sapaan lebih dari 1 baris (kebuktian ke-wrap, kalimat >30 char)", sapaanLines.length > 1, sapaanLines.length);
+
+  const contohIdx = L.findIndex((l) => l.startsWith(toSC("Contoh") + ":"));
+  check("1e. ᴄᴏɴᴛᴏʜ: baris sendiri, command VERBATIM (gak ke-wrap)", L[contohIdx] === `${toSC("Contoh")}: .play faded`, L[contohIdx]);
+
+  const caraLines = L.slice(blankIdx[1] + 1, contohIdx);
+  const caraJoined = caraLines.join(" ").replace(`📍 ${toSC("Cara")}: `, "");
+  check("1f. 📍 ᴄᴀʀᴀ: ter-rewrap utuh = toSC asli", caraLines[0].startsWith(`📍 ${toSC("Cara")}: `) && caraJoined === toSC("ketik judul lagu sesudah command"), caraLines);
+
+  const noteStart = contohIdx + 1;
+  const noteEnd = blankIdx[2];
+  const noteLines = L.slice(noteStart, noteEnd);
+  const noteJoined = noteLines.join(" ");
+  check("1g. note ter-rewrap utuh + akhiran ~", noteJoined === toSC("nanti bot yang carin audionya otomatis") + "~", noteJoined);
+
+  check("1h. spec baris akhir join • (angka & emoji utuh, TETAP 1 baris)", L[L.length - 1] === `⚡ 300x/${toSC("hari")} • ⏱ 3${toSC("dtk")} • 💸 ${toSC("gratis")}`, L[L.length - 1]);
+  check("1i. 3 blank separator antar 4 blok (kaomoji/sapaan/cara-note/spec)", blankIdx.length === 3, blankIdx);
 }
 
 // ─── 2. VARIAN AI — field model aktif + model tersedia (owner 25 Sep) ───
