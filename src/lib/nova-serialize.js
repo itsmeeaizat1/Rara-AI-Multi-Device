@@ -880,6 +880,27 @@ async function serialize(sock, msg, store = {}) {
       const thumbnailBuf = srtImage || getAssetBuffer("serialize-thumb");
       const weatherAddr = await getWeatherAddress();
 
+      // 🔹 THUMBNAIL FAULT-TOLERANT (fix 1 Okt 2026 — bug .afk "gak
+      // berhenti"): asset serialize-thumb.jpg sempat jadi JPEG 1x1
+      // malformed → sharp() THROW → SELURUH m.reply V1 (default!) ikut
+      // mati senyap — kartu "AFK Berakhir" & semua reply bot gak pernah
+      // keluar. Sekarang: thumbnail ke-gagal (asset korup/hilang) →
+      // reply TETAP jalan TANPA thumbnail, gak ada asset yang boleh
+      // bunuh pesan keluar bot.
+      let __novaThumbField = null;
+      try {
+        if (thumbnailBuf) {
+          __novaThumbField = await sharp(thumbnailBuf).resize(640, 360).toBuffer();
+        }
+      } catch (e) {
+        try {
+          console.error(
+            "[Serialize] thumbnail reply gagal (dikirim tanpa thumbnail):",
+            e?.message?.split("\n")[0] || e
+          );
+        } catch {}
+      }
+
       const msg = generateWAMessageFromContent(m.chat, {
         viewOnceMessage: {
           message: {
@@ -897,7 +918,7 @@ async function serialize(sock, msg, store = {}) {
                 externalAdReply: {
                   title: config.bot?.name || "Nova AI Whatsapp Bot",
                   body: weatherAddr || config.bot?.version || "",
-                  thumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
+                  thumbnail: __novaThumbField || undefined,
                   previewType: "PHOTO",
                   showAdAttribution: false,
                   renderLargerThumbnail: true,

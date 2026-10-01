@@ -135,6 +135,54 @@ await plugin.handler(mo2, { sock: null });
 check("6k. .afk off pas gak AFK → info santai", mo2.__sent.length === 1 && mo2.__sent[0].text.includes("gak lagi afk"));
 
 // ═══════════════════════════════════════════════════════════════
+w("\n— thumbnail serialize-thumb & m.reply fault-tolerant (fix 1 Okt) —");
+// Akar bug owner ".afk gak berhenti": serialize-thumb.jpg sempat jadi JPEG
+// 1x1 malformed (commit a7a229e4) → sharp THROW → SEMUA m.reply V1
+// (default) mati senyap → kartu "AFK Berakhir" gak pernah keluar.
+{
+  const sharpMod = (await import("sharp")).default;
+  const thumbPath = path.join(R, "assets", "image", "serialize", "serialize-thumb.jpg");
+  const thumbBackup = fs.readFileSync(thumbPath);
+
+  // 7a. asset yang di-commit HARUS valid & bisa di-resize (persis alur m.reply)
+  try {
+    const t = await sharpMod(thumbBackup).resize(640, 360).toBuffer();
+    check("7a. serialize-thumb.jpg valid (sharp resize jalan)", t.length > 1000, "size: " + t.length);
+  } catch (e) {
+    check("7a. serialize-thumb.jpg valid (sharp resize jalan)", false, String(e.message).split("\n")[0]);
+  }
+
+  // 7b. m.reply V1 GAK BOLEH mati walau thumbnail korup (fault-tolerant)
+  let relayed = 0;
+  const fakeSock = {
+    user: { id: "bot@s.whatsapp.net", jid: "bot@s.whatsapp.net" },
+    sendMessage: async () => ({ key: { id: "S" } }),
+    relayMessage: async () => { relayed++; return true; },
+    groupMetadata: async () => ({ participants: [] }),
+    sendPresenceUpdate: async () => {},
+  };
+  // poison dulu file-nya (JPEG kepala doang, gak ada data gambar) —
+  // assetCache masih kosong buat key serialize-thumb di suite ini.
+  fs.writeFileSync(thumbPath, thumbBackup.subarray(0, 12));
+  let replyOk = false;
+  try {
+    const { serialize } = await import(R + "/src/lib/nova-serialize.js");
+    const msg = { key: { remoteJid: "6281234567890@s.whatsapp.net", fromMe: false, id: "T1" }, message: { conversation: "tes" }, pushName: "Rizky" };
+    const m = await serialize(fakeSock, msg, {});
+    await m.reply("halo dunia"); // V1 default (db tmp fresh → replyVariant 1)
+    replyOk = relayed >= 1;
+  } catch (e) {
+    replyOk = false;
+  } finally {
+    fs.writeFileSync(thumbPath, thumbBackup); // WAJIB restore
+  }
+  check("7b. m.reply V1 tetap jalan (relayMessage) walau thumbnail korup", replyOk, "relay: " + relayed);
+
+  // 7c. file ke-restore bener
+  check("7c. serialize-thumb.jpg ke-restore setelah tes", fs.readFileSync(thumbPath).length === thumbBackup.length);
+}
+
+// ═══════════════════════════════════════════════════════════════
 w("\n— guard: posisi hook di handler.js (fix 14 Sep) —");
 {
   const h = fs.readFileSync(R + "/src/handler.js", "utf8");
