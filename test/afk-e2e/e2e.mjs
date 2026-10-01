@@ -182,6 +182,29 @@ w("\n— thumbnail serialize-thumb & m.reply fault-tolerant (fix 1 Okt) —");
   check("7c. serialize-thumb.jpg ke-restore setelah tes", fs.readFileSync(thumbPath).length === thumbBackup.length);
 }
 
+// ═══ 7d. relay/generate V1 gagal → reply TETAP keluar plain (bug "react ❌ doang") ═══
+{
+  let plainSent = 0;
+  const fakeSock2 = {
+    user: { id: "bot@s.whatsapp.net", jid: "bot@s.whatsapp.net" },
+    sendMessage: async (chat, content) => { plainSent++; return { key: { id: "P" + plainSent } }; },
+    relayMessage: async () => { throw new Error("connection closed"); },
+    groupMetadata: async () => ({ participants: [] }),
+    sendPresenceUpdate: async () => {},
+  };
+  let ok7d = false;
+  try {
+    const { serialize } = await import(R + "/src/lib/nova-serialize.js");
+    const msg = { key: { remoteJid: "6281234567890@s.whatsapp.net", fromMe: false, id: "T2" }, message: { conversation: "tes" }, pushName: "Rizky" };
+    const m = await serialize(fakeSock2, msg, {});
+    const r = await m.reply("pesan penting"); // gak boleh throw
+    ok7d = plainSent >= 1; // fallback plain text kekirim
+  } catch (e) {
+    ok7d = false;
+  }
+  check("7d. relay V1 gagal → reply tetap keluar plain text", ok7d, "plain sent: " + plainSent);
+}
+
 // ═══════════════════════════════════════════════════════════════
 w("\n— guard: posisi hook di handler.js (fix 14 Sep) —");
 {
