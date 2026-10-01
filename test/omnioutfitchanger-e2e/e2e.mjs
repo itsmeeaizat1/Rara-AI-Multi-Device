@@ -379,6 +379,61 @@ out("\n— 1 item zelapi down → fallback nano-banana —");
   t("21z-e. session kehapus", !getSession(SENDER));
 }
 
+// ═══ 21y. PROMPT DOANG: reply foto orang + teks prompt → langsung edit ═══
+out("\n— reply foto orang + prompt teks —");
+{
+  reset();
+  let editPrompt = "";
+  _setOmniOutfitDepsForTest({
+    uguu: async (buf, name) => `https://uguu.se/${name}`,
+    live3d: async (buf, prompt) => {
+      editPrompt = prompt;
+      return { image: Buffer.from([5, 5, 5]) };
+    },
+  });
+  await handler(mockM({ args: ["ganti", "baju", "jadi", "jas", "hitam"], quoted: quotedMock() }), { sock: sockMock });
+  t("21y-a. langsung edit dari prompt (hasil dikirim)", sent.length === 1 && Buffer.isBuffer(sent[0].payload.image));
+  t("21y-b. template edit nyebut prompt user", norm(editPrompt).includes("jas hitam"));
+  t("21y-c. template jaga wajah/identitas", norm(editPrompt).includes("EXACTLY the same"));
+  t("21y-d. caption sebut dari prompt + engine", norm(String(sent[0].payload.caption)).includes("dari prompt") && norm(String(sent[0].payload.caption)).includes("nano-banana (prompt)"));
+  t("21y-e. session kehapus", !getSession(SENDER));
+}
+
+// ═══ 21x. PROMPT + SESSION AKTIF: gak reply/lampir foto → pakai foto orang session ═══
+out("\n— session aktif + prompt teks —");
+{
+  reset();
+  let liveBufs = 0;
+  _setOmniOutfitDepsForTest({
+    uguu: async (buf, name) => `https://uguu.se/${name}`,
+    live3d: async (buf) => {
+      liveBufs++;
+      return { image: Buffer.from([6, 6, 6]) };
+    },
+    zelImage: async () => ({ ok: true, buffer: Buffer.from([1]) }),
+  });
+  await handler(mockM({ args: [], quoted: quotedMock() }), { sock: sockMock }); // mulai session foto orang
+  sent = [];
+  await handler(mockM({ args: ["pakai", "hoodie", "merah"] }), { sock: sockMock }); // hmm pakai di-handle branch pakai — pakai prompt polos
+  // ^ "pakai" masuk branch pakai (dgn session kosong item → guide). Ulangi tanpa kata pakai:
+  reset();
+  await handler(mockM({ args: [], quoted: quotedMock() }), { sock: sockMock });
+  sent = [];
+  await handler(mockM({ args: ["hoodie", "merah"] }), { sock: sockMock });
+  t("21x-a. session foto orang dipakai buat edit", sent.length === 1 && Buffer.isBuffer(sent[0].payload.image) && liveBufs === 1);
+  t("21x-b. session kehapus setelah prompt", !getSession(SENDER));
+}
+
+// ═══ 21w. PROMPT TANPA FOTO & TANPA SESSION → guide ═══
+out("\n— prompt tanpa foto orang —");
+{
+  reset();
+  _setOmniOutfitDepsForTest({ uguu: async () => "https://uguu.se/x.jpg" });
+  await handler(mockM({ args: ["jas", "hitam"] }), { sock: sockMock });
+  t("21w-a. guide minta reply foto orang", String(replies[0] || "").toLowerCase().includes("belum ada foto orang"));
+  t("21w-b. gak ada session nyasar", !getSession(SENDER));
+}
+
 // ═══ 21. usage: ada cara cepet one-shot ═══
 out("\n— usage: cara cepet —");
 {

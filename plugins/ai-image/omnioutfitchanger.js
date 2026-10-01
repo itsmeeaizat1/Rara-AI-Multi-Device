@@ -98,6 +98,17 @@ export function buildMultiItemPrompt(descs) {
   );
 }
 
+/** Prompt TEKS user → template edit pakaian (request owner 1 Okt 2026:
+ * "knp outfitchanger g support prompt gt jd kyk reply gambar orang full body
+ * ganti pakaian cm dr prompt doang"). */
+export function buildTextPrompt(text) {
+  return (
+    `Change the outfit of the person in this photo so they are wearing: ${text}.\n\n` +
+    `Keep the person's face, identity, pose, and background EXACTLY the same — only change the clothing/accessories ` +
+    `to match the description above. Photorealistic, natural lighting, seamless integration.`
+  );
+}
+
 /** Rantai edit 1 gambar: live3d nano-banana → kuroneko. Throw kalau semua down. */
 async function runEditChain(personBuf, editPrompt) {
   try {
@@ -129,6 +140,7 @@ function usageMsg(prefix, cmd) {
     `👗 *${toSC("virtual try-on multi-item")}*\n\n` +
       `${toSC("cara cepet")}: ${toSC("reply foto orang + lampir foto pakaian + caption")} *${prefix}${cmd} pakai*\n\n` +
       `${toSC("reply foto orang")} → *${prefix}${cmd}* (${toSC("mulai session")})\n` +
+      `${toSC("atau dari prompt doang")}: ${toSC("reply foto orang")} + *${prefix}${cmd} ${toSC("ganti baju jadi jas hitam")}*\n` +
       `${toSC("lalu kirim foto item satu-satu")} (${toSC("max")} ${MAX_ITEMS}: ${toSC("topi/baju/celana/sepatu")})\n` +
       `*${prefix}${cmd} pakai* — ${toSC("proses semua item jadi 1 hasil")}\n` +
       `*${prefix}${cmd} batal* — ${toSC("batalin session")}\n\n` +
@@ -294,6 +306,57 @@ async function handler(m, { sock }) {
           caption: boxLeft(
             toSC("omni outfit changer"),
             `✨ ${toSC("try-on selesai")} — ${itemCount} ${toSC(itemCount === 1 ? "item" : "item")}\n⚙️ ${toSC("engine: " + usedEngine)}`
+          ),
+        },
+        { quoted: m }
+      );
+    }
+
+    // ── .omnioutfitchanger <prompt> — ganti pakaian dari TEKS doang (request
+    // owner 1 Okt 2026: "knp outfitchanger g support prompt gt jd kyk reply
+    // gambar orang full body ganti pakaian cm dr prompt doang"). Dua pintu:
+    //   (d) reply foto ORANG + caption prompt → langsung edit tanpa session
+    //   (e) session aktif + command prompt → edit foto orang yang tersimpan
+    //       (foto orang di-reply/lampir di pesan prompt juga boleh — diutamain)
+    const promptText = (m.args || [])
+      .map((a) => String(a || "").trim())
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    if (promptText) {
+      const qImg = !!(m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage" || m.quoted.isMedia));
+      const mImg = !!(m.isImage || m.isMedia);
+      let personBuf = null;
+      if (qImg) personBuf = await downloadQuoted(m);
+      else if (mImg) personBuf = await downloadImage(m);
+      else {
+        const sess = getSession(jid);
+        if (sess) personBuf = sess.personBuf;
+      }
+      if (!personBuf) {
+        await m.react("❌");
+        return m.reply(
+          claraWrap(
+            "omnioutfitchanger",
+            `⚠️ ${toSC("belum ada foto orang")} — ${toSC("reply foto orang full body bareng prompt")}, ` +
+              `${toSC("atau mulai session dengan foto orang dulu")}.\n\n${toSC("contoh")}: ${toSC("reply foto orang")} + *${prefix}${cmd} ${toSC("ganti baju jadi hoodie merah")}*.`,
+            "guide"
+          )
+        );
+      }
+      await m.react("🛠️");
+      const editPrompt = buildTextPrompt(promptText);
+      const result = await runEditChain(personBuf, editPrompt);
+      const outBuf = await toBuffer(result);
+      clearSession(jid); // session lama gak nyangkut — hasil prompt itu final
+      await m.react("🐣");
+      return sock.sendMessage(
+        m.chat,
+        {
+          image: outBuf,
+          caption: boxLeft(
+            toSC("omni outfit changer"),
+            `✨ ${toSC("try-on selesai")} — ${toSC("dari prompt")}: "${promptText.slice(0, 120)}"\n⚙️ ${toSC("engine: nano-banana (prompt)")}`
           ),
         },
         { quoted: m }
